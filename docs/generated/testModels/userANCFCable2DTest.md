@@ -13,7 +13,9 @@ You can view and download this file on Github: [userANCFCable2DTest.py](https://
 # Details:  A user finite element (#2987): the 2D ANCF cable element as ObjectUserBody on two NodePoint2DSlope1 nodes,
 #           minimal - mass matrix, axial strain and curvature with the integration rules of ObjectANCFCable2D, the
 #           position and its Jacobian; a cantilever of four such elements under a tip force swings side by side with
-#           a cantilever of ObjectANCFCable2D, and both must agree.
+#           a cantilever of ObjectANCFCable2D, and both must agree. The length, mass per length, axial and bending
+#           stiffness are the parameters of each element, named by a ParameterLayout (#3056), and the mass matrix is
+#           computed once (constantMassMatrix).
 #           Run alone, it draws the user bodies with their graphicsData and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
@@ -26,6 +28,7 @@ You can view and download this file on Github: [userANCFCable2DTest.py](https://
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.cMath import sqrt
+from exudyn.advancedUtilities import ParameterLayout
 import exudyn.graphics as graphics
 import numpy as np
 testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer
@@ -41,53 +44,57 @@ EA = 1000   #axial stiffness
 EI = 2      #bending stiffness
 tipForce = [0, -1, 0]
 
-#the cubic Hermite shape functions of the element and their derivatives at x in [0, Le], as 2 x 8 matrices for the
-#coordinates [x0, y0, x0', y0', x1, y1, x1', y1']
-def S(x):
-    xi = x/Le
-    return np.kron([1 - 3*xi**2 + 2*xi**3, x - 2*x**2/Le + x*xi**2, 3*xi**2 - 2*xi**3, -x*xi + x*xi**2], np.eye(2))
+#the parameters of the user element: its length, mass per length, axial and bending stiffness
+layout = ParameterLayout([('length', 1), ('rhoA', 1), ('EA', 1), ('EI', 1)])
+elementParameters = layout.ToVector({'length': Le, 'rhoA': rhoA, 'EA': EA, 'EI': EI})
 
-def S_x(x):
-    return np.kron([-6*x/Le**2 + 6*x**2/Le**3, 1 - 4*x/Le + 3*x**2/Le**2, 6*x/Le**2 - 6*x**2/Le**3, -2*x/Le + 3*x**2/Le**2], np.eye(2))
+#the cubic Hermite shape functions of an element of length L and their derivatives at x in [0, L], as 2 x 8 matrices
+#for the coordinates [x0, y0, x0', y0', x1, y1, x1', y1']
+def S(x, L):
+    xi = x/L
+    return np.kron([1 - 3*xi**2 + 2*xi**3, x - 2*x**2/L + x*xi**2, 3*xi**2 - 2*xi**3, -x*xi + x*xi**2], np.eye(2))
 
-def S_xx(x):
-    return np.kron([12*x/Le**3 - 6/Le**2, 6*x/Le**2 - 4/Le, 6/Le**2 - 12*x/Le**3, 6*x/Le**2 - 2/Le], np.eye(2))
+def S_x(x, L):
+    return np.kron([-6*x/L**2 + 6*x**2/L**3, 1 - 4*x/L + 3*x**2/L**2, 6*x/L**2 - 6*x**2/L**3, -2*x/L + 3*x**2/L**2], np.eye(2))
+
+def S_xx(x, L):
+    return np.kron([12*x/L**3 - 6/L**2, 6*x/L**2 - 4/L, 6/L**2 - 12*x/L**3, 6*x/L**2 - 2/L], np.eye(2))
 
 #Gauss rules as in ObjectANCFCable2D: order 9 for the axial strain, order 5 for the curvature, order 7 for the mass
-def GaussRule(n):
+def GaussRule(n, L):
     (points, weights) = np.polynomial.legendre.leggauss(n)
-    return [(0.5*Le*(p + 1), 0.5*Le*w) for (p, w) in zip(points, weights)]
+    return [(0.5*L*(p + 1), 0.5*L*w) for (p, w) in zip(points, weights)]
 
-axialRule = GaussRule(5)
-bendingRule = GaussRule(3)
-massMatrix = sum(w*rhoA*S(x).T @ S(x) for (x, w) in GaussRule(4))
-
+#the mass matrix does not depend on the coordinates: computed once per element with constantMassMatrix
 def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
-    return massMatrix
+    d = layout.ToDict(parameters)
+    return sum(w*d['rhoA']*S(x, d['length']).T @ S(x, d['length']) for (x, w) in GaussRule(4, d['length']))
 
-#the elastic forces, on the right-hand side; from the total coordinates qTotal
+#the elastic forces, on the right-hand side, from the total coordinates qTotal
 def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    d = layout.ToDict(parameters)
+    L = d['length']
     q = np.array(qTotal)
     f = np.zeros(8)
-    for (x, w) in axialRule:
-        rx = S_x(x) @ q
+    for (x, w) in GaussRule(5, L):
+        rx = S_x(x, L) @ q
         rxNorm = sqrt(rx @ rx)
-        f -= w*EA*(rxNorm - 1)/rxNorm * S_x(x).T @ rx
-    for (x, w) in bendingRule:
-        rx = S_x(x) @ q
-        rxx = S_xx(x) @ q
+        f -= w*d['EA']*(rxNorm - 1)/rxNorm * S_x(x, L).T @ rx
+    for (x, w) in GaussRule(3, L):
+        rx = S_x(x, L) @ q
+        rxx = S_xx(x, L) @ q
         g = rx @ rx
         cross = rx[0]*rxx[1] - rx[1]*rxx[0]
-        cross_q = S_x(x).T @ [rxx[1], -rxx[0]] + S_xx(x).T @ [-rx[1], rx[0]]
-        curvature_q = cross_q/g - 2*cross/g**2 * S_x(x).T @ rx
-        f -= w*EI*(cross/g) * curvature_q
+        cross_q = S_x(x, L).T @ [rxx[1], -rxx[0]] + S_xx(x, L).T @ [-rx[1], rx[0]]
+        curvature_q = cross_q/g - 2*cross/g**2 * S_x(x, L).T @ rx
+        f -= w*d['EI']*(cross/g) * curvature_q
     return f
 
 def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
-    return list(S(localPosition[0]) @ qTotal) + [0]
+    return list(S(localPosition[0], layout.ToDict(parameters)['length']) @ qTotal) + [0]
 
 def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
-    return np.vstack([S(localPosition[0]), np.zeros(8)])
+    return np.vstack([S(localPosition[0], layout.ToDict(parameters)['length']), np.zeros(8)])
 
 #the axis of the element, mapped by the positionUserFunction onto the deformed cable
 axisGraphics = graphics.Lines([[x, 0, 0] for x in np.linspace(0, Le, 9)], color=graphics.color.red)
@@ -99,7 +106,8 @@ for isUser in [False, True]:
     elements = []
     for i in range(nElements):
         if isUser:
-            elements += [mbs.AddObject(ObjectUserBody(nodeNumbers=nodes[i:i+2], massMatrixUserFunction=UFmass,
+            elements += [mbs.AddObject(ObjectUserBody(nodeNumbers=nodes[i:i+2], parameters=elementParameters,
+                                                      constantMassMatrix=True, massMatrixUserFunction=UFmass,
                                                       forceUserFunction=UFforce, positionUserFunction=UFposition,
                                                       positionJacobianUserFunction=UFpositionJacobian,
                                                       visualization=VObjectUserBody(graphicsData=[axisGraphics])))]

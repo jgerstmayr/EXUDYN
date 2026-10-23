@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 170 | 1.13.173 |
+| 1.13 | Newborn | 171 | 1.13.174 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.174** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The user rigid body and the user ANCF cable element take their physical constants from their parameters (#3068)
+  - description: Maintainer 2026-10-23: the user objects have parameters, but the test models do not use them. userRigidBodyTest.py: mass and inertia tensor (6 components) in a ParameterLayout, read by the Python and the symbolic user functions; userANCFCable2DTest.py: length, mass per length, axial and bending stiffness per element, the mass matrix computed once with constantMassMatrix. Results unchanged.
+  - **notes:** userRigidBodyTest.py and userANCFCable2DTest.py take mass, inertia, length, mass per length and stiffnesses from the parameters of their user bodies, through a ParameterLayout
+  - date resolved: **2026-10-23 15:13**, date raised: 2026-10-23
 - **1.13.173** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Documentation: how items work, and user items (#2979)
   - description: revision2026c step RG7.9 (docs/dev/design/pythonUserItems.md 1): a section that explains how each kind of item works conceptually and how a user item of that kind is set up, with one example per user item.
   - **notes:** The manual page User items: how a user body, user node and user connector are set up - their arguments, parameters, symbolic user functions, what they provide - with an example, linking the general pages of each kind of item

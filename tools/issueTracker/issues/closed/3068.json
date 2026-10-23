@@ -1,0 +1,16 @@
+{
+  "number": 3068,
+  "title": "The user rigid body and the user ANCF cable element take their physical constants from their parameters",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-23: the user objects have parameters, but the test models do not use them. userRigidBodyTest.py: mass and inertia tensor (6 components) in a ParameterLayout, read by the Python and the symbolic user functions; userANCFCable2DTest.py: length, mass per length, axial and bending stiffness per element, the mass matrix computed once with constantMassMatrix. Results unchanged.",
+  "dateRaised": "2026-10-23",
+  "deadline": "2027-04-21",
+  "dateResolved": "2026-10-23 15:13",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/userRigidBodyTest.py",
+  "releaseNotes": "userRigidBodyTest.py and userANCFCable2DTest.py take mass, inertia, length, mass per length and stiffnesses from the parameters of their user bodies, through a ParameterLayout",
+  "resolvedInVersion": "1.13.174"
+}

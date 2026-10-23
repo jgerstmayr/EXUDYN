@@ -17,6 +17,8 @@ You can view and download this file on Github: [userRigidBodyTest.py](https://gi
 #           A second user body has only symbolic user functions: the force and the position written once with
 #           components (#3007), so that the same function computes with floats and records with exudyn.symbolic, the
 #           mass matrix, the rotation matrix and the Jacobians as symbolic matrices with @ and .T (#3020, #3018).
+#           The mass and the inertia tensor are the parameters of the user bodies, named by a ParameterLayout and read
+#           by the Python and the symbolic user functions alike (#3056).
 #           The three bodies are solved one after the other, each alone, with the computation time shown.
 #           A new position user function, set with SetObjectParameter, is used at once.
 #           A rigid marker on a user body without rotationMatrixUserFunction is refused when it is evaluated.
@@ -33,7 +35,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.cUtilities as cu
 import exudyn.cMath as cMath
-from exudyn.advancedUtilities import CreateSymbolicUserFunction
+from exudyn.advancedUtilities import CreateSymbolicUserFunction, ParameterLayout
 import exudyn.graphics as graphics
 import numpy as np
 esym = exu.symbolic
@@ -43,20 +45,30 @@ SC = exu.SystemContainer()
 
 inertia = InertiaCuboid(density=1000, sideLengths=[0.4, 0.2, 0.1])
 m = inertia.Mass()
-J = inertia.inertiaTensor
 g = [0, -9.81, 0]
+
+#the parameters of the user rigid body: its mass and inertia tensor, [Jxx, Jyy, Jzz, Jyz, Jxz, Jxy] as in Exudyn
+layout = ParameterLayout([('mass', 1), ('inertia', 6)])
+bodyParameters = layout.ToVector({'mass': m, 'inertia': inertia.GetInertia6D()})
+
+def InertiaTensor(J6):
+    """the 3 x 3 inertia tensor, as list of lists, of the 6 components - numbers or symbolic"""
+    return [[J6[0], J6[5], J6[4]], [J6[5], J6[1], J6[3]], [J6[4], J6[3], J6[2]]]
 pSpring = [0.2, 0.1, 0.05] #local point of the spring-damper
 torque = [0.2, 0, 0.5]
 
 #the rigid body as user functions; qTotal = [position, Tait-Bryan angles], the total coordinates
 def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    d = layout.ToDict(parameters)
+    J = np.array(InertiaTensor(d['inertia']))
     G = cu.RotXYZ2GLocal(qTotal[3:6])
     M = np.zeros((6, 6))
-    M[0:3, 0:3] = m*np.eye(3)
+    M[0:3, 0:3] = d['mass']*np.eye(3)
     M[3:6, 3:6] = G.T @ J @ G
     return M
 
 def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    J = np.array(InertiaTensor(layout.ToDict(parameters)['inertia']))
     G = cu.RotXYZ2GLocal(qTotal[3:6])
     G_t = cu.RotXYZ2GLocal_t(qTotal[3:6], q_t[3:6])
     omegaLocal = G @ q_t[3:6]
@@ -112,7 +124,7 @@ def RotationMatrix(functions, rot):
             [s0*s1*c2 + c0*s2, -s0*s1*s2 + c0*c2, -s0*c1],
             [-c0*s1*c2 + s0*s2, c0*s1*s2 + s0*c2, c0*c1]]
 
-def ForceComponents(functions, q, q_t):
+def ForceComponents(functions, q, q_t, J):
     rot = [q[3], q[4], q[5]]
     rot_t = [q_t[3], q_t[4], q_t[5]]
     G = GLocal(functions, rot)
@@ -129,7 +141,7 @@ def PositionComponents(functions, localPosition, q):
     return [q[0] + p[0], q[1] + p[1], q[2] + p[2]]
 
 def UFforceSymbolic(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
-    return ForceComponents(esym, qTotal, q_t)
+    return ForceComponents(esym, qTotal, q_t, InertiaTensor(layout.ToDict(parameters)['inertia']))
 
 def UFpositionSymbolic(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return PositionComponents(esym, localPosition, qTotal)
@@ -144,9 +156,10 @@ def Blocks3x6(left, right):
 
 def UFmassSymbolic(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     q = qTotal
+    d = layout.ToDict(parameters)
     G = esym.Matrix(GLocal(esym, [q[3], q[4], q[5]]))
-    Mrot = G.T @ esym.Matrix(J) @ G
-    return esym.Matrix([[m if i == j else 0 for j in range(3)] + [0, 0, 0] for i in range(3)]
+    Mrot = G.T @ esym.Matrix(InertiaTensor(d['inertia'])) @ G
+    return esym.Matrix([[d['mass'] if i == j else 0 for j in range(3)] + [0, 0, 0] for i in range(3)]
                        + [[0, 0, 0] + [Mrot[i, j] for j in range(3)] for i in range(3)])
 
 def UFpositionJacobianSymbolic(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
@@ -168,8 +181,8 @@ def UFrotationJacobianSymbolic(mbs, t, itemNumber, localPosition, qRef, qTotal, 
 #the component functions compute what the matrix functions above compute
 qTest = [0.1, 0.2, 0.3, 0.2, -0.1, 0.3]
 qTest_t = [0.5, 0, 1, 1, 0.5, 2]
-componentsDifference = max(np.max(np.abs(np.array(ForceComponents(cMath, qTest, qTest_t)) - UFforce(0, 0, 0, np.array(qTest), np.array(qTest), np.array(qTest_t), np.array([])))),
-                           np.max(np.abs(np.array(PositionComponents(cMath, pSpring, qTest)) - UFposition(0, 0, 0, pSpring, np.array(qTest), np.array(qTest), np.array(qTest_t), np.array([])))))
+componentsDifference = max(np.max(np.abs(np.array(ForceComponents(cMath, qTest, qTest_t, InertiaTensor(inertia.GetInertia6D()))) - UFforce(0, 0, 0, np.array(qTest), np.array(qTest), np.array(qTest_t), bodyParameters))),
+                           np.max(np.abs(np.array(PositionComponents(cMath, pSpring, qTest)) - UFposition(0, 0, 0, pSpring, np.array(qTest), np.array(qTest), np.array(qTest_t), bodyParameters))))
 exu.Print('the component functions against the matrix functions:', componentsDifference)
 
 simulationSettings = exu.SimulationSettings()
@@ -200,7 +213,8 @@ def Solve(kind, show=False):
     if kind == 'standard':
         body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m, inertia=inertia.GetInertia6D()))
     else:
-        body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass, forceUserFunction=UFforce,
+        body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=bodyParameters,
+                                            massMatrixUserFunction=UFmass, forceUserFunction=UFforce,
                                             positionUserFunction=UFposition, positionJacobianUserFunction=UFpositionJacobian,
                                             rotationMatrixUserFunction=UFrotationMatrix,
                                             rotationJacobianUserFunction=UFrotationJacobian,
@@ -250,7 +264,7 @@ exu.Print('largest difference to ObjectRigidBody:', difference, ', between Pytho
 #a rigid marker on a user body without rotationMatrixUserFunction is refused when it is evaluated
 mbs2 = SC.AddSystem()
 node = mbs2.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0, 0, 0, 0, 0, 0]))
-body = mbs2.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass, positionUserFunction=UFposition,
+body = mbs2.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=bodyParameters, massMatrixUserFunction=UFmass, positionUserFunction=UFposition,
                                      positionJacobianUserFunction=UFpositionJacobian))
 mbs2.AddLoad(LoadTorqueVector(markerNumber=mbs2.AddMarker(MarkerBodyRigid(bodyNumber=body)), loadVector=torque))
 mbs2.Assemble()

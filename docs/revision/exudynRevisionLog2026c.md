@@ -2819,3 +2819,16 @@ positionUserFunction.)*
   ObjectConnectorUser, an example - two mass points of one kind with parameters, gravity through the mass integral,
   spheres, one symbolic recording; run before it was written - and the test models as complete examples.
 - In the manual after "Advanced topics" (index.md, pdfIndex.md); linked from the user functions of the basics.
+
+<a id="rg7-12-9"></a>
+### RG7.12.9 — the parameters in the user rigid body and the user ANCF cable (2026-10-23, #3068)
+*(Maintainer 2026-10-23: I see that the user objects include the parameters, but do not use them. So please, add the
+parameters at least to the interface in user rigid body and user ANCFCable2D.)*
+- userRigidBodyTest.py: `ParameterLayout([('mass', 1), ('inertia', 6)])`, the inertia in Exudyn's order
+  [Jxx, Jyy, Jzz, Jyz, Jxz, Jxy] and turned into the tensor by `InertiaTensor`, which serves numbers and symbolic
+  components; the Python mass matrix and force and the symbolic mass matrix and force read them, ForceComponents gets
+  the tensor as an argument; every user body of the model, also the one of the refusal, gets `bodyParameters`.
+- userANCFCable2DTest.py: `ParameterLayout([('length', 1), ('rhoA', 1), ('EA', 1), ('EI', 1)])`; the shape functions
+  and the Gauss rules take the length; the mass matrix is computed by its user function from the parameters, once per
+  element with `constantMassMatrix=True`, instead of a global matrix of the script.
+- Both results are bit-equal to their references (13.475755021376248, 7.797666638067246).

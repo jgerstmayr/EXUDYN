@@ -855,6 +855,11 @@ may move to total coordinates for performance; name them qTotal, a function may 
 undone, the argument renamed in the definitions, the symbolic recording and all user functions of the tests.
 [log](exudynRevisionLog2026c.md#rg7-12-8)
 
+#### **CLOSED_RG7.12.9** Take the constants of the user rigid body and the user ANCF cable element from their parameters
+
+CLOSED 2026-10-23 (#3068; maintainer: the user objects include the parameters, but do not use them): mass and inertia,
+length, mass per length and stiffnesses through a ParameterLayout; results bit-equal. [log](exudynRevisionLog2026c.md#rg7-12-9)
+
 ### **CLOSED_RG7.13** Give ObjectUserBody the mass integral access, for MarkerBodyMass and LoadMassProportional
 
 CLOSED 2026-10-23 (#3063; maintainer: do the mass-integral access): `massIntegralUserFunction` returns int(rho J_pos dV),
