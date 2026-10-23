@@ -2717,3 +2717,24 @@ clear.)*
   twice starts with `q = qTotal`. Results unchanged.
 - pythonUserItems.md 5.9, 5.10, 5.11 A and F, userFunctionBoundary.md (13), revisions.md and the ParameterLayout
   docstring say `qTotal`.
+
+<a id="rg7-13"></a>
+### RG7.13 — the mass integral of the user body (2026-10-23, #3063)
+*(Maintainer 2026-10-23: do RG7.9, the mass-integral access, RG7.5 and the graphics data drawn with the
+positionUserFunction.)*
+- The access function behind MarkerBodyMass is `CObjectBody::GetMassWeightedPositionJacobian(Matrix&)`, 3 x n,
+  int(rho J_pos dV); MarkerBodyMass puts it into the position Jacobian of its marker data, and the load of type
+  ForcePerMass (LoadMassProportional) adds its transpose times the load vector (CSystem::ComputeODE2SingleLoad). The
+  generator derives DisplacementMassIntegral_q from `ItemFunctionDef('GetMassWeightedPositionJacobian')`.
+- ObjectUserBody: `massIntegralUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)` returns the 3 x n
+  matrix, checked for its size; without it, a MarkerBodyMass or a load on it raises a ValueError that names the
+  function. `centerOfMass` (local position, default [0,0,0]) is what GetLocalCenterOfMass gives, where MarkerBodyMass
+  and LoadMassProportional are drawn.
+- Not changed: Assemble does not check that the body of a MarkerBodyMass provides DisplacementMassIntegral_q
+  (CSystem.cpp near the Position/Orientation checks); for the user body the evaluation reports it.
+- userMassIntegralTest.py: (1) a cantilever of four user ANCF cable elements under gravity, the mass integral the
+  integral of the shape functions times rhoA, against ObjectANCFCable2D: 5.4e-14; (2) a mass point as a user body
+  against MassPoint, with a Python and a symbolic mass integral: equal, and the exact parabola; (3) without the
+  function, refused.
+- pythonUserItems.md: the line of the table in 5.11 E had been written in a wrong encoding by a PowerShell edit of
+  #3062 (`∫ρ` as `âˆ«Ï`); restored.

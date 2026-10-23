@@ -23,14 +23,14 @@ __all__ = [
     'ObjectRigidBody2DGraphicsDataUserFunction', 'ObjectGenericODE2ForceUserFunction',
     'ObjectGenericODE2MassMatrixUserFunction', 'ObjectGenericODE2JacobianUserFunction',
     'ObjectGenericODE2GraphicsDataUserFunction', 'ObjectGenericODE1RhsUserFunction',
-    'ObjectUserBodyMassMatrixUserFunction', 'ObjectUserBodyForceUserFunction',
-    'ObjectUserBodyPositionUserFunction', 'ObjectUserBodyPositionJacobianUserFunction',
-    'ObjectUserBodyRotationMatrixUserFunction', 'ObjectUserBodyRotationJacobianUserFunction',
-    'ObjectUserBodyOutputVariableUserFunction', 'ObjectUserBodyGraphicsDataUserFunction',
-    'ObjectKinematicTreeForceUserFunction', 'ObjectFFRFForceUserFunction',
-    'ObjectFFRFMassMatrixUserFunction', 'ObjectFFRFreducedOrderForceUserFunction',
-    'ObjectFFRFreducedOrderMassMatrixUserFunction', 'ObjectANCFCable2DAxialForceUserFunction',
-    'ObjectANCFCable2DBendingMomentUserFunction',
+    'ObjectUserBodyMassMatrixUserFunction', 'ObjectUserBodyMassIntegralUserFunction',
+    'ObjectUserBodyForceUserFunction', 'ObjectUserBodyPositionUserFunction',
+    'ObjectUserBodyPositionJacobianUserFunction', 'ObjectUserBodyRotationMatrixUserFunction',
+    'ObjectUserBodyRotationJacobianUserFunction', 'ObjectUserBodyOutputVariableUserFunction',
+    'ObjectUserBodyGraphicsDataUserFunction', 'ObjectKinematicTreeForceUserFunction',
+    'ObjectFFRFForceUserFunction', 'ObjectFFRFMassMatrixUserFunction',
+    'ObjectFFRFreducedOrderForceUserFunction', 'ObjectFFRFreducedOrderMassMatrixUserFunction',
+    'ObjectANCFCable2DAxialForceUserFunction', 'ObjectANCFCable2DBendingMomentUserFunction',
     'ObjectConnectorSpringDamperSpringForceUserFunction',
     'ObjectConnectorCartesianSpringDamperSpringForceUserFunction',
     'ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction',
@@ -209,6 +209,7 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectGenericODE2,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectGenericODE2GraphicsDataUserFunction']],
         'ObjectGenericODE1,rhsUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['StdVector'], ['ObjectGenericODE1RhsUserFunction']],
         'ObjectUserBody,massMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyMassMatrixUserFunction']],
+        'ObjectUserBody,massIntegralUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyMassIntegralUserFunction']],
         'ObjectUserBody,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['StdVector'], ['ObjectUserBodyForceUserFunction']],
         'ObjectUserBody,positionUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'qRef', 'qTotal', 'q_t', 'parameters'], ['StdVector3D'], ['ObjectUserBodyPositionUserFunction']],
         'ObjectUserBody,positionJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'qRef', 'qTotal', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyPositionJacobianUserFunction']],
@@ -522,6 +523,29 @@ class ObjectUserBodyMassMatrixUserFunction(Protocol):
 
     Returns:
         exudyn.MatrixContainer: the mass matrix, as numpy array, list of lists or exu.MatrixContainer
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, qTotal: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
+
+class ObjectUserBodyMassIntegralUserFunction(Protocol):
+    r"""A user function, which computes the mass integral of the position Jacobian, :math:`\Jm_m = \int_V \rho\, \Jm_{pos} \, dV`, the mass-weighted position Jacobian: the generalized force of a load per unit mass :math:`\bv` (LoadMassProportional, gravity) is :math:`\Jm_m\tp \bv`.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs
+
+        qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
+
+        qTotal (np.ndarray): the total coordinates of the nodes - reference plus displacement coordinates - of the configuration asked for
+
+        q_t (np.ndarray): object velocity coordinates of the configuration asked for
+
+        parameters (np.ndarray): the parameters of the body, see parameters; empty if not given
+
+    Returns:
+        exudyn.MatrixContainer: the mass-weighted position Jacobian, as numpy array or list of lists
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, qTotal: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
@@ -3158,6 +3182,10 @@ class ObjectUserBody:
 
         massMatrixUserFunction: A Python user function which computes the mass matrix; it must be given; type: ObjectUserBodyMassMatrixUserFunction
 
+        massIntegralUserFunction: A Python user function which computes the mass integral of the position Jacobian; needed for MarkerBodyMass and the loads on it, such as LoadMassProportional (gravity); type: ObjectUserBodyMassIntegralUserFunction
+
+        centerOfMass: the local position of the center of mass; where MarkerBodyMass and the loads on it are drawn; type: [float,float,float]
+
         forceUserFunction: A Python user function which computes the generalized forces on the right-hand side; zero if not given; type: ObjectUserBodyForceUserFunction
 
         positionUserFunction: A Python user function which computes the global position of the point at localPosition; type: ObjectUserBodyPositionUserFunction
@@ -3176,12 +3204,14 @@ class ObjectUserBody:
         Object has/provides the following types: ``Body``, ``MultiNoded``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], parameters = [], constantMassMatrix = False, massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', nodeNumbers = [], parameters = [], constantMassMatrix = False, massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, massIntegralUserFunction: Union[ObjectUserBodyMassIntegralUserFunction, int] = 0, centerOfMass = [0.,0.,0.], forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.parameters = CheckForValidNumpyArray(parameters)
         self.constantMassMatrix = constantMassMatrix
         self.massMatrixUserFunction = massMatrixUserFunction
+        self.massIntegralUserFunction = massIntegralUserFunction
+        self.centerOfMass = np.array(centerOfMass)
         self.forceUserFunction = forceUserFunction
         self.positionUserFunction = positionUserFunction
         self.positionJacobianUserFunction = positionJacobianUserFunction
@@ -3197,6 +3227,8 @@ class ObjectUserBody:
         yield 'parameters', self.parameters
         yield 'constantMassMatrix', self.constantMassMatrix
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
+        yield 'massIntegralUserFunction', self.massIntegralUserFunction
+        yield 'centerOfMass', self.centerOfMass
         yield 'forceUserFunction', self.forceUserFunction
         yield 'positionUserFunction', self.positionUserFunction
         yield 'positionJacobianUserFunction', self.positionJacobianUserFunction

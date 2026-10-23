@@ -38,7 +38,8 @@ outputVariableUserFunction also gets `q_tt`, the graphicsDataUserFunction of Obj
 visualization configuration. One recorded symbolic user function serves every body of a kind with its own parameters.
 The outputVariableUserFunction of ObjectUserBody provides every output variable the body does not compute itself -
 strains, curvatures, stresses, forces, torques, potential energy, accelerations, the user types (#3057).
-`constantMassMatrix=True` calls its massMatrixUserFunction once and keeps the result (#3058).
+`constantMassMatrix=True` calls its massMatrixUserFunction once and keeps the result (#3058). With a
+`massIntegralUserFunction`, MarkerBodyMass and LoadMassProportional (gravity) act on it (#3063).
 
 **`NodeUser`**, a node with any number of coordinates whose position, and optionally orientation, are Python user
 functions; the Jacobians are computed by central differences if they are not given; node markers, SensorNode, loads

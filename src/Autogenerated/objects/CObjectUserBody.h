@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-22  15:51:08 (last modified)
+* @date         2026-10-23  07:18:08 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,6 +35,8 @@ public: // AUTO:
     Vector parameters;                            //!< AUTO: the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default
     bool constantMassMatrix;                      //!< AUTO: True: the mass matrix does not depend on the coordinates and the time; massMatrixUserFunction is called once, its result is kept and reused - computed again after a change of a parameter of the body or Assemble -, and the solvers treat the mass matrix as constant
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix; it must be given
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > massIntegralUserFunction;//!< AUTO: A Python user function which computes the mass integral of the position Jacobian; needed for MarkerBodyMass and the loads on it, such as LoadMassProportional (gravity)
+    Vector3D centerOfMass;                        //!< AUTO: the local position of the center of mass; where MarkerBodyMass and the loads on it are drawn
     PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized forces on the right-hand side; zero if not given
     PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the point at localPosition
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian at localPosition
@@ -48,6 +50,8 @@ public: // AUTO:
         parameters = Vector();
         constantMassMatrix = false;
         massMatrixUserFunction = 0;
+        massIntegralUserFunction = 0;
+        centerOfMass = Vector3D({0.,0.,0.});
         forceUserFunction = 0;
         positionUserFunction = 0;
         positionJacobianUserFunction = 0;
@@ -143,7 +147,7 @@ public: // AUTO:
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override
     {
-        return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::JacobianTtimesVector_q);
+        return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::JacobianTtimesVector_q + (Index)AccessFunctionType::DisplacementMassIntegral_q);
     }
 
     //! AUTO:  the position Jacobian d(v)/d(q_t) at localPosition, 3 x n
@@ -179,8 +183,11 @@ public: // AUTO:
     //! AUTO:  return the local position of the center of mass, needed for equations of motion and for massProportionalLoad
     virtual Vector3D GetLocalCenterOfMass() const override
     {
-        return Vector3D({0.,0.,0.});
+        return parameters.centerOfMass;
     }
+
+    //! AUTO:  the mass-weighted position Jacobian int(rho J_pos dV), 3 x n
+    virtual void GetMassWeightedPositionJacobian(Matrix& value) const override;
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
@@ -250,6 +257,9 @@ public: // AUTO:
 
     //! AUTO:  call of outputVariableUserFunction; implemented in evaluateUserFunctions.cpp
     void EvaluateUserFunctionOutputVariable(Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t, const Vector& coordinates_tt) const;
+
+    //! AUTO:  call of massIntegralUserFunction, with the size checked (#3063); implemented in evaluateUserFunctions.cpp
+    void EvaluateUserFunctionMassIntegral(Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of forceUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
     void EvaluateUserFunctionForce(Vector& force, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;

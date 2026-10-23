@@ -1,0 +1,16 @@
+{
+  "number": 3063,
+  "title": "ObjectUserBody: mass integral access for MarkerBodyMass and LoadMassProportional",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-10-23 (pythonUserItems.md 5.11 E): the user body gets an optional user function for the mass integral of the position Jacobian, int rho J_pos dV (3 x n), together with what MarkerBodyMass needs (mass, center of mass), so that MarkerBodyMass, LoadMassProportional (gravity) and a load on MarkerBodyMass act on it; with a test model against ObjectRigidBody and an ANCF element.",
+  "dateRaised": "2026-10-23",
+  "deadline": "2027-04-21",
+  "dateResolved": "2026-10-23 07:21",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "ObjectUserBody: massIntegralUserFunction for the mass integral of the position Jacobian, so that MarkerBodyMass and LoadMassProportional (gravity) act on the user body; centerOfMass where they are drawn",
+  "resolvedInVersion": "1.13.169"
+}

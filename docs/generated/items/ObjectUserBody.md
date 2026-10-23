@@ -10,7 +10,7 @@ A body whose equations of motion and whose position, and optionally orientation,
 
 ## Interface
 
-- Body markers that can be placed on it: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
 - Nodes: see the detailed description
 
 ## Parameters
@@ -24,6 +24,8 @@ The parameters of the item; in a dictionary, its type is 'UserBody':
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default |
 | **constantMassMatrix** | Bool |  | False | True: the mass matrix does not depend on the coordinates and the time; massMatrixUserFunction is called once, its result is kept and reused - computed again after a change of a parameter of the body or Assemble -, and the solvers treat the mass matrix as constant |
 | **massMatrixUserFunction** | ObjectUserBodyMassMatrixUserFunction |  | 0 | (symbol: $\Mm(\qv) \in \Rcal^{n\times n}$) A Python user function which computes the mass matrix; it must be given |
+| **massIntegralUserFunction** | ObjectUserBodyMassIntegralUserFunction |  | 0 | (symbol: $\Jm_m = \int_V \rho\, \Jm_{pos}\, dV \in \Rcal^{3\times n}$) A Python user function which computes the mass integral of the position Jacobian; needed for MarkerBodyMass and the loads on it, such as LoadMassProportional (gravity) |
+| **centerOfMass** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\pLocB_{COM}$) the local position of the center of mass; where MarkerBodyMass and the loads on it are drawn |
 | **forceUserFunction** | ObjectUserBodyForceUserFunction |  | 0 | (symbol: $\fv \in \Rcal^{n}$) A Python user function which computes the generalized forces on the right-hand side; zero if not given |
 | **positionUserFunction** | ObjectUserBodyPositionUserFunction |  | 0 | (symbol: $\LU{0}{\pv}(\pLocB, \qv)$) A Python user function which computes the global position of the point at localPosition |
 | **positionJacobianUserFunction** | ObjectUserBodyPositionJacobianUserFunction |  | 0 | (symbol: $\Jm_{pos}(\pLocB, \qv) \in \Rcal^{3\times n}$) A Python user function which computes the position Jacobian at localPosition |
@@ -118,6 +120,14 @@ $$
 with $\Mm$ from `massMatrixUserFunction` - called once and kept with `constantMassMatrix` (#3058) - and $\fv$ from `forceUserFunction` (zero without it). The
 Jacobian of the left-hand side is computed numerically, as for every item without an analytic one.
 
+### Mass-proportional loads
+
+With `massIntegralUserFunction`, the body provides the mass integral of the position Jacobian,
+$\Jm_m = \int_V \rho\, \Jm_{pos}\, dV$, so that MarkerBodyMass works on it and LoadMassProportional applies the
+generalized force $\Jm_m\tp \bv$ of a load per unit mass $\bv$ (#3063); the marker and the load are drawn at
+`centerOfMass`. For a rigid body with mass $m$ and center of mass $\pLocB_{COM}$ it is $m$ times the position
+Jacobian at $\pLocB_{COM}$, for a finite element the integral of the shape functions times $\rho$.
+
 ### Interface of the body
 
 | function | gives | needed for |
@@ -162,6 +172,22 @@ A user function, which computes the mass matrix of the body.
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | the mass matrix, as numpy array, list of lists or exu.MatrixContainer |
+
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
+**Userfunction**: `massIntegralUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)`
+A user function, which computes the mass integral of the position Jacobian, $\Jm_m = \int_V \rho\, \Jm_{pos} \, dV$, the mass-weighted position Jacobian: the generalized force of a load per unit mass $\bv$ (LoadMassProportional, gravity) is $\Jm_m\tp \bv$.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
+| `t` | Real | current time in mbs |
+| `itemNumber` | Index | integer number $i_N$ of the object in mbs |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
+| `qTotal` | Vector $\in \Rcal^n$ | the total coordinates of the nodes - reference plus displacement coordinates - of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
+| **return value** | MatrixContainer $\in \Rcal^{3 \times n}$ | the mass-weighted position Jacobian, as numpy array or list of lists |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
@@ -319,4 +345,4 @@ exu.sys['testResult'] = mbs.GetObjectOutputBody(body, exu.OutputVariableType.Pos
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFBeam3DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFBeam3DTest.py) (TM), [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userOutputVariablesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userOutputVariablesTest.py) (TM), [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM), [`userTetrahedronTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTetrahedronTest.py) (TM), [`userTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTypesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFBeam3DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFBeam3DTest.py) (TM), [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userMassIntegralTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userMassIntegralTest.py) (TM), [`userOutputVariablesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userOutputVariablesTest.py) (TM), [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM), [`userTetrahedronTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTetrahedronTest.py) (TM), [`userTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTypesTest.py) (TM)

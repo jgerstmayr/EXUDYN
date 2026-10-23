@@ -2035,6 +2035,22 @@ def ObjectUserBody_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: 
         $\in \Rcal^{n \times n}$ the mass matrix, as numpy array, list of lists or exu.MatrixContainer
     """
 
+def ObjectUserBody_massIntegralUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector,
+                                            qTotal: Vector, q_t: Vector, parameters: Vector) -> MatrixContainer:
+    r"""A user function, which computes the mass integral of the position Jacobian, $\Jm_m = \int_V \rho\, \Jm_{pos} \, dV$, the mass-weighted position Jacobian: the generalized force of a load per unit mass $\bv$ (LoadMassProportional, gravity) is $\Jm_m\tp \bv$.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs
+        qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
+        qTotal: $\in \Rcal^n$ the total coordinates of the nodes - reference plus displacement coordinates - of the configuration asked for
+        q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
+        parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
+    Returns:
+        $\in \Rcal^{3 \times n}$ the mass-weighted position Jacobian, as numpy array or list of lists
+    """
+
 def ObjectUserBody_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, qTotal: Vector,
                                      q_t: Vector, parameters: Vector) -> Vector:
     r"""A user function, which computes the generalized forces of the body: elastic forces, the quadratic velocity terms of a rigid body, damping; on the right-hand side, $\Mm \ddot\qv = \fv$.
@@ -2185,6 +2201,14 @@ definitions.append(ItemDefinition(
     with $\Mm$ from `massMatrixUserFunction` - called once and kept with `constantMassMatrix` (#3058) - and $\fv$ from `forceUserFunction` (zero without it). The
     Jacobian of the left-hand side is computed numerically, as for every item without an analytic one.
 
+    #### Mass-proportional loads
+
+    With `massIntegralUserFunction`, the body provides the mass integral of the position Jacobian,
+    $\Jm_m = \int_V \rho\, \Jm_{pos}\, dV$, so that MarkerBodyMass works on it and LoadMassProportional applies the
+    generalized force $\Jm_m\tp \bv$ of a load per unit mass $\bv$ (#3063); the marker and the load are drawn at
+    `centerOfMass`. For a rigid body with mass $m$ and center of mass $\pLocB_{COM}$ it is $m$ times the position
+    Jacobian at $\pLocB_{COM}$, for a finite element the integral of the shape functions times $\rho$.
+
     #### Interface of the body
 
     | function | gives | needed for |
@@ -2283,6 +2307,15 @@ definitions.append(ItemDefinition(
             description=r"""$\Mm(\qv) \in \Rcal^{n\times n}$A Python user function which computes the mass matrix; it must be given""",
             userFunction=ObjectUserBody_massMatrixUserFunction),
         ItemParameter(destination=DestComp+DestParam,
+            pythonName='massIntegralUserFunction',
+            defaultValue=0,
+            description=r"""$\Jm_m = \int_V \rho\, \Jm_{pos}\, dV \in \Rcal^{3\times n}$A Python user function which computes the mass integral of the position Jacobian; needed for MarkerBodyMass and the loads on it, such as LoadMassProportional (gravity)""",
+            userFunction=ObjectUserBody_massIntegralUserFunction),
+        ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
+            pythonName='centerOfMass',
+            defaultValue=DVZeroVector3D,
+            description=r"""$\pLocB_{COM}$the local position of the center of mass; where MarkerBodyMass and the loads on it are drawn"""),
+        ItemParameter(destination=DestComp+DestParam,
             pythonName='forceUserFunction',
             defaultValue=0,
             description=r"""$\fv \in \Rcal^{n}$A Python user function which computes the generalized forces on the right-hand side; zero if not given""",
@@ -2334,7 +2367,8 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('GetAngularVelocity'),
         ItemFunctionDef('GetAngularVelocityLocal'),
         ItemFunctionDef('GetLocalCenterOfMass',
-            implementation='return Vector3D({0.,0.,0.});'),
+            implementation='return parameters.centerOfMass;'),
+        ItemFunctionDef('GetMassWeightedPositionJacobian'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
             implementation='return "UserBody";',
@@ -2386,6 +2420,10 @@ definitions.append(ItemDefinition(
             pythonName='EvaluateUserFunctionOutputVariable',
             args='Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t, const Vector& coordinates_tt',
             description=r'call of outputVariableUserFunction; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionMassIntegral',
+            args='Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
+            description=r'call of massIntegralUserFunction, with the size checked (#3063); implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateUserFunctionForce',
             args='Vector& force, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',

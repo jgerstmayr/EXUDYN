@@ -286,7 +286,7 @@ settings is a path for later, different from that function, and has no issue.
 | beam outputs (strain, curvature, stress, force, torque), PotentialEnergy, accelerations, Rotation, directors | beams, rigid body, ANCF | through the outputVariableUserFunction, with `q_tt`: every output variable the body does not compute itself (#3057) | - |
 | Acceleration(Local), AngularAcceleration(Local), Rotation, VelocityLocal computed by the item | rigid body, beams | only through the outputVariableUserFunction | in C++ from the Jacobians: `J q_tt` plus the derivative of `J` along `q_t` by differences; Rotation from the rotation matrix |
 | constant mass matrix | ANCF, beams (and rigid body with rotation vector) | `constantMassMatrix`: computed once and stored (#3058) | - |
-| mass integral access (`DisplacementMassIntegral_q`): `MarkerBodyMass`, `LoadMassProportional` (gravity) | all four | missing - the user rigid-body test applies gravity as a force on its center | an optional user function for `âˆ«Ï J_pos dV`, or a center of mass in the parameters |
+| mass integral access (`DisplacementMassIntegral_q`): `MarkerBodyMass`, `LoadMassProportional` (gravity) | all four | `massIntegralUserFunction` for `∫ρ J_pos dV` and `centerOfMass`, where the marker is drawn (#3063) | - |
 | analytic Jacobian | ANCF, beams | numerical only | an optional jacobianUserFunction, later from the symbolic recording |
 | algebraic equations, data coordinates (plasticity), ODE1 | rigid body (EP in the node), some elements | none | not now (maintainer 2026-10-22); data and further quantities through MainSystem functions, later also for symbolic functions |
 | drawing with contour, tiling, numbers | all | only graphicsDataUserFunction, global | C and D |

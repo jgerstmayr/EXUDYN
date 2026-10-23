@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 165 | 1.13.168 |
+| 1.13 | Newborn | 166 | 1.13.169 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.169** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: mass integral access for MarkerBodyMass and LoadMassProportional (#3063)
+  - description: Maintainer 2026-10-23 (pythonUserItems.md 5.11 E): the user body gets an optional user function for the mass integral of the position Jacobian, int rho J\_pos dV (3 x n), together with what MarkerBodyMass needs (mass, center of mass), so that MarkerBodyMass, LoadMassProportional (gravity) and a load on MarkerBodyMass act on it; with a test model against ObjectRigidBody and an ANCF element.
+  - **notes:** ObjectUserBody: massIntegralUserFunction for the mass integral of the position Jacobian, so that MarkerBodyMass and LoadMassProportional (gravity) act on the user body; centerOfMass where they are drawn
+  - date resolved: **2026-10-23 07:21**, date raised: 2026-10-23
 - **1.13.168** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody and NodeUser: the user functions get the total coordinates again, as argument qTotal (#3062)
   - description: Maintainer 2026-10-22, revising \#3060: nearly all user bodies so far compute with qRef + q, as they need the total coordinates, and the C++ may move to total coordinates for performance. The user functions of ObjectUserBody and NodeUser get the total coordinates, named qTotal in the interface so that it is clear; a function may assign q = qTotal inside to keep expressions short. The C++ of \#3060 is undone (total coordinates gathered), the definitions, mini examples, test models, ParameterLayout docstring and the symbolic recording (sizes qTotal) use qTotal.
   - **notes:** The user functions of ObjectUserBody and NodeUser get the total coordinates as qTotal (reference plus displacement coordinates)

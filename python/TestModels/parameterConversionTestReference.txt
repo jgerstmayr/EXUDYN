@@ -263,6 +263,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectMass1D: referencePosition(class,dict,set)
   ObjectRigidBody: centerOfMass(class,dict,set) physicsCenterOfMass(set)
   ObjectRotationalMass1D: referencePosition(class,dict,set)
+  ObjectUserBody: centerOfMass(class,dict,set)
   SensorBody: localPosition(class,dict,set)
   SensorKinematicTree: localPosition(class,dict,set)
 
@@ -359,7 +360,7 @@ outcome: !ExudynTypeError int=0.0 !ExudynTypeError !ExudynTypeError !ExudynTypeE
   ObjectKinematicTree: forceUserFunction(class,dict,set)
   ObjectRigidBody: VgraphicsDataUserFunction(class,dict,set)
   ObjectRigidBody2D: VgraphicsDataUserFunction(class,dict,set)
-  ObjectUserBody: VgraphicsDataUserFunction(class,dict,set) forceUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set) outputVariableUserFunction(class,dict,set) positionJacobianUserFunction(class,dict,set) positionUserFunction(class,dict,set) rotationJacobianUserFunction(class,dict,set) rotationMatrixUserFunction(class,dict,set)
+  ObjectUserBody: VgraphicsDataUserFunction(class,dict,set) forceUserFunction(class,dict,set) massIntegralUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set) outputVariableUserFunction(class,dict,set) positionJacobianUserFunction(class,dict,set) positionUserFunction(class,dict,set) rotationJacobianUserFunction(class,dict,set) rotationMatrixUserFunction(class,dict,set)
   SensorUserFunction: sensorUserFunction(class,dict,set)
 
 outcome: !ExudynValueError
@@ -1204,7 +1205,7 @@ outcome: str=default
   ObjectRigidBody: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) inertia(omit) mass(omit) nodeNumber(omit) physicsCenterOfMass(omit) physicsInertia(omit)
   ObjectRigidBody2D: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) inertia(omit) mass(omit) nodeNumber(omit) physicsCenterOfMass(omit)
   ObjectRotationalMass1D: VgraphicsData(omit) Vshow(omit) inertia(omit) nodeNumber(omit) referencePosition(omit) referenceRotation(omit)
-  ObjectUserBody: VgraphicsDataUserFunction(omit) Vshow(omit) constantMassMatrix(omit) forceUserFunction(omit) massMatrixUserFunction(omit) nodeNumbers(omit) outputVariableUserFunction(omit) parameters(omit) positionJacobianUserFunction(omit) positionUserFunction(omit) rotationJacobianUserFunction(omit) rotationMatrixUserFunction(omit)
+  ObjectUserBody: VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) constantMassMatrix(omit) forceUserFunction(omit) massIntegralUserFunction(omit) massMatrixUserFunction(omit) nodeNumbers(omit) outputVariableUserFunction(omit) parameters(omit) positionJacobianUserFunction(omit) positionUserFunction(omit) rotationJacobianUserFunction(omit) rotationMatrixUserFunction(omit)
   SensorBody: Vshow(omit) bodyNumber(omit) fileName(omit) localPosition(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
   SensorKinematicTree: Vshow(omit) fileName(omit) localPosition(omit) objectNumber(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
   SensorLoad: Vshow(omit) fileName(omit) loadNumber(omit) storeInternal(omit) writeToFile(omit)

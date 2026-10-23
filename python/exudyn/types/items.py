@@ -450,7 +450,7 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': [],
-    'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q'],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'HomogeneousTransformation', 'AngularVelocity', 'AngularVelocityLocal', 'Coordinates', 'Coordinates_t', 'KineticEnergy', 'DisplacementLocal', 'VelocityLocal', 'Acceleration', 'AccelerationLocal', 'Rotation', 'AngularAcceleration', 'AngularAccelerationLocal', 'Director1', 'Director2', 'Director3', 'Force', 'ForceLocal', 'Torque', 'TorqueLocal', 'StrainLocal', 'StressLocal', 'CurvatureLocal', 'PotentialEnergy', 'UserType0', 'UserType1', 'UserType2', 'UserType3'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
@@ -458,6 +458,8 @@ items = {
       'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default'},
       'constantMassMatrix': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'True: the mass matrix does not depend on the coordinates and the time; massMatrixUserFunction is called once, its result is kept and reused - computed again after a change of a parameter of the body or Assemble -, and the solvers treat the mass matrix as constant'},
       'massMatrixUserFunction': {'type': 'ObjectUserBodyMassMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the mass matrix; it must be given'},
+      'massIntegralUserFunction': {'type': 'ObjectUserBodyMassIntegralUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the mass integral of the position Jacobian; needed for MarkerBodyMass and the loads on it, such as LoadMassProportional (gravity)'},
+      'centerOfMass': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'the local position of the center of mass; where MarkerBodyMass and the loads on it are drawn'},
       'forceUserFunction': {'type': 'ObjectUserBodyForceUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the generalized forces on the right-hand side; zero if not given'},
       'positionUserFunction': {'type': 'ObjectUserBodyPositionUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the global position of the point at localPosition'},
       'positionJacobianUserFunction': {'type': 'ObjectUserBodyPositionJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the position Jacobian at localPosition'},

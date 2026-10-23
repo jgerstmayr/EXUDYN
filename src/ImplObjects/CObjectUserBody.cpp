@@ -98,6 +98,14 @@ void CObjectUserBody::GetPositionJacobian(const Vector3D& localPosition, Matrix&
 	EvaluatePositionJacobian(value, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), localPosition, qRef, q, q_t);
 }
 
+//! the mass-weighted position Jacobian int(rho J_pos dV) from the massIntegralUserFunction (#3063)
+void CObjectUserBody::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	ResizableConstVector qRef, q, q_t;
+	GatherUserFunctionCoordinates(qRef, q, q_t, ConfigurationType::Current);
+	EvaluateUserFunctionMassIntegral(value, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t);
+}
+
 void CObjectUserBody::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
 {
 	ResizableConstVector qRef, q, q_t;

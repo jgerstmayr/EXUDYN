@@ -377,6 +377,20 @@ void CObjectUserBody::EvaluateUserFunctionForce(Vector& force, Real t, const Vec
 	CheckResultSize("forceUserFunction", force.NumberOfItems(), 1, coordinates.NumberOfItems(), 1);
 }
 
+void CObjectUserBody::EvaluateUserFunctionMassIntegral(Matrix& value, Real t, const Vector& qRef, const Vector& coordinates,
+	const Vector& coordinates_t) const
+{
+	if (!(parameters.massIntegralUserFunction))
+	{
+		PyError("ObjectUserBody: massIntegralUserFunction is not given, but MarkerBodyMass or a load on it needs it", PyErrorType::valueError);
+	}
+	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+	{
+		EvaluateUserFunctionIntoMatrix(parameters.massIntegralUserFunction, value, USERBODY_MAINSYSTEM, t, GetObjectNumber(), qRef, coordinates, coordinates_t, parameters.parameters);
+	}, "ObjectUserBody::massIntegralUserFunction");
+	CheckResultSize("massIntegralUserFunction", value.NumberOfRows(), value.NumberOfColumns(), 3, coordinates.NumberOfItems());
+}
+
 void CObjectUserBody::EvaluateUserFunctionOutputVariable(Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition,
 	const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t, const Vector& coordinates_tt) const
 {

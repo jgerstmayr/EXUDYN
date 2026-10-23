@@ -85,6 +85,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG7.6 Add a user joint on two position and orientation markers
   - RG7.8 Evaluate symbolic user items in parallel and in the graphics
   - RG7.9 Document how items work, and the user items
+  - RG7.14 Draw graphics data of ObjectUserBody in local coordinates, every point mapped by its positionUserFunction
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -127,7 +128,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | OPEN | 4 | Python user items |
+| RG7 | OPEN | 5 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -843,6 +844,16 @@ CLOSED 2026-10-22 (#3062; maintainer, revising RG7.12.6: nearly all user bodies 
 may move to total coordinates for performance; name them qTotal, a function may write q = qTotal): the C++ of #3060
 undone, the argument renamed in the definitions, the symbolic recording and all user functions of the tests.
 [log](exudynRevisionLog2026c.md#rg7-12-8)
+
+### **CLOSED_RG7.13** Give ObjectUserBody the mass integral access, for MarkerBodyMass and LoadMassProportional
+
+CLOSED 2026-10-23 (#3063; maintainer: do the mass-integral access): `massIntegralUserFunction` returns int(rho J_pos dV),
+`centerOfMass` where the marker is drawn; userMassIntegralTest.py: a user ANCF cable and a mass point under gravity.
+[log](exudynRevisionLog2026c.md#rg7-13)
+
+### **OPEN_RG7.14** Draw graphics data of ObjectUserBody in local coordinates, every point mapped by its positionUserFunction
+
+#3064 (maintainer 2026-10-23, pythonUserItems.md 5.11 C): graphicsData of VObjectUserBody in the reference configuration with a show flag, every point mapped with the positionUserFunction in the visualization configuration, the normals from the mapped triangles.
 
 ## **OPEN_RG8** Compiled C++ user items
 

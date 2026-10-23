@@ -133,6 +133,13 @@ public:
                     return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
                 };
         }
+        else if (itemTypeName == "ObjectUserBody" && userFunctionName == "massIntegralUserFunction")
+        {            //define the user function as lambda function of this
+            nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
+                };
+        }
         else if (itemTypeName == "ObjectUserBody" && userFunctionName == "forceUserFunction")
         {            //define the user function as lambda function of this
             objectUserBodyForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
