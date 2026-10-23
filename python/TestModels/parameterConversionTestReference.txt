@@ -283,6 +283,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectRigidBody: VgraphicsData(class,dict,set)
   ObjectRigidBody2D: VgraphicsData(class,dict,set)
   ObjectRotationalMass1D: VgraphicsData(class,dict,set)
+  ObjectUserBody: VgraphicsData(class,dict,set)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError numpy2f=[1.0,2.0] !ExudynValueError !ExudynValueError !ExudynValueError !ExudynTypeError !ExudynTypeError !ExudynTypeError numpy2f=[0.0,1.0] !ExudynTypeError
   NodePoint2D: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
@@ -1205,7 +1206,7 @@ outcome: str=default
   ObjectRigidBody: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) inertia(omit) mass(omit) nodeNumber(omit) physicsCenterOfMass(omit) physicsInertia(omit)
   ObjectRigidBody2D: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) inertia(omit) mass(omit) nodeNumber(omit) physicsCenterOfMass(omit)
   ObjectRotationalMass1D: VgraphicsData(omit) Vshow(omit) inertia(omit) nodeNumber(omit) referencePosition(omit) referenceRotation(omit)
-  ObjectUserBody: VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) constantMassMatrix(omit) forceUserFunction(omit) massIntegralUserFunction(omit) massMatrixUserFunction(omit) nodeNumbers(omit) outputVariableUserFunction(omit) parameters(omit) positionJacobianUserFunction(omit) positionUserFunction(omit) rotationJacobianUserFunction(omit) rotationMatrixUserFunction(omit)
+  ObjectUserBody: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) constantMassMatrix(omit) forceUserFunction(omit) massIntegralUserFunction(omit) massMatrixUserFunction(omit) nodeNumbers(omit) outputVariableUserFunction(omit) parameters(omit) positionJacobianUserFunction(omit) positionUserFunction(omit) rotationJacobianUserFunction(omit) rotationMatrixUserFunction(omit)
   SensorBody: Vshow(omit) bodyNumber(omit) fileName(omit) localPosition(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
   SensorKinematicTree: Vshow(omit) fileName(omit) localPosition(omit) objectNumber(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
   SensorLoad: Vshow(omit) fileName(omit) loadNumber(omit) storeInternal(omit) writeToFile(omit)

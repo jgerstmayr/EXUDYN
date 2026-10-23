@@ -20,6 +20,7 @@
 #define VISUALIZATIONPRIMITIVES__H
 
 #include "Graphics/VisualizationBasics.h" //for colors
+#include <functional>
 
 class VisualizationSystem; //avoid including Visualization classes
 
@@ -129,6 +130,12 @@ namespace EXUvis {
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, const Float3& position,
 		const Matrix3DF& rotation, Index itemID);
+
+	//! copy bodyGraphicsData in local coordinates into graphicsData, every point mapped by map - a general, also nonlinear,
+	//! map such as the position of a deformable body; the normals of the triangles are computed from the mapped points,
+	//! the radii of spheres and circles are kept (#3064)
+	void AddBodyGraphicsDataMapped(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData,
+		const std::function<Float3(const Float3&)>& map, Index itemID);
 	//{
 	//	AddBodyGraphicsDataColored(bodyGraphicsData, graphicsData, position, rotation, Float3(), Matrix3DF(), Float3(), Float3(), itemID, visualizationSettings, false);
 	//}

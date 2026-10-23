@@ -39,7 +39,9 @@ visualization configuration. One recorded symbolic user function serves every bo
 The outputVariableUserFunction of ObjectUserBody provides every output variable the body does not compute itself -
 strains, curvatures, stresses, forces, torques, potential energy, accelerations, the user types (#3057).
 `constantMassMatrix=True` calls its massMatrixUserFunction once and keeps the result (#3058). With a
-`massIntegralUserFunction`, MarkerBodyMass and LoadMassProportional (gravity) act on it (#3063).
+`massIntegralUserFunction`, MarkerBodyMass and LoadMassProportional (gravity) act on it (#3063). Its
+`graphicsData` is given in local coordinates and drawn with every point mapped by the positionUserFunction, so that a
+deformable user body is drawn deformed (#3064).
 
 **`NodeUser`**, a node with any number of coordinates whose position, and optionally orientation, are Python user
 functions; the Jacobians are computed by central differences if they are not given; node markers, SensorNode, loads

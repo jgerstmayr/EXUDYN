@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.169.dev1
+- Exudyn version = 1.13.170.dev1
 - last change = 2026-10-23
 - Number of issues = 3065
-- Number of resolved issues = 2946 (169 in current version)
+- Number of resolved issues = 2947 (170 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` ObjectUserBody: graphics data in local coordinates, drawn by mapping every point with the positionUserFunction (#3064)
-  - description: Maintainer 2026-10-23 (pythonUserItems.md 5.11 C): VObjectUserBody gets graphicsData in local (reference) coordinates and a show flag for it; the C++ maps every point with the positionUserFunction in the visualization configuration and computes the normals from the mapped triangles, so that a symbolic positionUserFunction draws a deformed body without a Python graphics function; with a test of the graphics data.
-  - date raised: 2026-10-23
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.
   - date raised: 2026-10-21

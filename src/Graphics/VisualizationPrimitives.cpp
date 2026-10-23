@@ -846,6 +846,69 @@ namespace EXUvis {
 		AppendMovedTriangles(bodyGraphicsData.glTexturedTriangles, graphicsData.glTexturedTriangles, applyRotation, position, rotation, itemID);
 	}
 
+	//! the triangles of body graphics, every point mapped, the normals from the mapped points (#3064)
+	template<class TTriangle>
+	void AppendMappedTriangles(const ResizableArray<TTriangle>& source, ResizableArray<TTriangle>& target,
+		const std::function<Float3(const Float3&)>& map, Index itemID)
+	{
+		for (TTriangle item : source) //copy objects
+		{
+			item.itemID = itemID;
+			for (Float3& point : item.points) { point = map(point); }
+			ComputeTriangleNormals(item.points, item.normals);
+			target.Append(item);
+		}
+	}
+
+	void AddBodyGraphicsDataMapped(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData,
+		const std::function<Float3(const Float3&)>& map, Index itemID)
+	{
+		for (GLLine item : bodyGraphicsData.glLines)
+		{
+			item.itemID = itemID;
+			item.point1 = map(item.point1);
+			item.point2 = map(item.point2);
+			graphicsData.glLines.Append(item);
+		}
+		for (GLCircleXY item : bodyGraphicsData.glCirclesXY)
+		{
+			item.itemID = itemID;
+			item.point = map(item.point);
+			graphicsData.glCirclesXY.Append(item);
+		}
+		for (GLSphere item : bodyGraphicsData.glSpheres)
+		{
+			item.itemID = itemID;
+			item.point = map(item.point);
+			graphicsData.glSpheres.Append(item);
+		}
+		for (GLTriangle6 item : bodyGraphicsData.glTriangles6) //the normals of the mapped geometry, computed by the split
+		{
+			item.itemID = itemID;
+			for (Float3& point : item.points) { point = map(point); }
+			for (Float3& normal : item.normals) { normal = Float3(0.f); }
+			item.hasNormals = false;
+			graphicsData.glTriangles6.Append(item);
+		}
+		for (GLLine3 item : bodyGraphicsData.glLines3)
+		{
+			item.itemID = itemID;
+			for (Float3& point : item.points) { point = map(point); }
+			graphicsData.glLines3.Append(item);
+		}
+		for (GLText item : bodyGraphicsData.glTexts) //the string is copied, as graphicsData deletes its own
+		{
+			item.itemID = itemID;
+			item.point = map(item.point);
+			char* temp = new char[strlen(item.text) + 1];
+			strcpy(temp, item.text);
+			item.text = temp;
+			graphicsData.glTexts.Append(item);
+		}
+		AppendMappedTriangles(bodyGraphicsData.glTriangles, graphicsData.glTriangles, map, itemID);
+		AppendMappedTriangles(bodyGraphicsData.glTexturedTriangles, graphicsData.glTexturedTriangles, map, itemID);
+	}
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! draw a simple spring in 2D with given endpoints p0,p1 a width, a (normalized) normal vector for the width drawing and number of spring points numberOfPoints
 	void DrawSpring2D(const Vector3D& p0, const Vector3D& p1, const Vector3D& vN, Index numberOfPoints, Real halfWidth, const Float4& color, 

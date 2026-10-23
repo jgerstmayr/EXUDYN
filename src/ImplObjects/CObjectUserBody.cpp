@@ -296,7 +296,33 @@ void CObjectUserBody::GetOutputVariableBody(OutputVariableType variableType, con
 	}
 }
 
-//! the body is drawn by its graphicsDataUserFunction only, see CallUserFunction
+//! graphicsData in local coordinates, every point mapped by the positionUserFunction in the visualization configuration
+//! (#3064); in the main thread, as the user body is drawn there (#3003); the graphicsDataUserFunction, in global
+//! coordinates, is drawn by CallUserFunction
 void VisualizationObjectUserBody::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	const BodyGraphicsData& data = graphicsData;
+	if (data.glLines.NumberOfItems() + data.glCirclesXY.NumberOfItems() + data.glTexts.NumberOfItems() + data.glTriangles.NumberOfItems()
+		+ data.glSpheres.NumberOfItems() + data.glTriangles6.NumberOfItems() + data.glLines3.NumberOfItems()
+		+ data.glTexturedTriangles.NumberOfItems() == 0) { return; }
+
+	const CObjectUserBody* cObject = (const CObjectUserBody*)vSystem->systemData->GetCObjects()[itemNumber];
+	if (!cObject->PythonCallPossible()) { return; }
+	ResizableConstVector qRef, q, q_t, zero;
+	cObject->GatherCoordinates(q, q_t, ConfigurationType::Visualization, true);
+	cObject->GatherCoordinates(qRef, zero, ConfigurationType::Reference, true);
+	Real t = vSystem->systemData->GetConfigurationTime(ConfigurationType::Visualization);
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
+
+	auto Map = [&](const Float3& localPosition)
+	{
+		Vector3D position;
+		cObject->EvaluatePosition(position, t, Vector3D({ localPosition[0], localPosition[1], localPosition[2] }), qRef, q, q_t);
+		return Float3({ (float)position[0], (float)position[1], (float)position[2] });
+	};
+	EXUvis::AddBodyGraphicsDataMapped(graphicsData, vSystem->graphicsData, Map, itemID);
+	if (visualizationSettings.bodies.showNumbers)
+	{
+		EXUvis::DrawItemNumber(Map(Float3(0.f)), vSystem, itemID, "", visualizationSettings.bodies.defaultColor);
+	}
 }

@@ -469,6 +469,7 @@ items = {
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
+      'graphicsData': {'type': 'BodyGraphicsData', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': 'graphics data in the local coordinates of the body - the coordinates of localPosition -, drawn with every point mapped by positionUserFunction in the visualization configuration (#3064)'},
       'graphicsDataUserFunction': {'type': 'ObjectUserBodyGraphicsDataUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body'},
     },
   },

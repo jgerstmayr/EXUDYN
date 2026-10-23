@@ -2,11 +2,15 @@
   "number": 3064,
   "title": "ObjectUserBody: graphics data in local coordinates, drawn by mapping every point with the positionUserFunction",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "Maintainer 2026-10-23 (pythonUserItems.md 5.11 C): VObjectUserBody gets graphicsData in local (reference) coordinates and a show flag for it; the C++ maps every point with the positionUserFunction in the visualization configuration and computes the normals from the mapped triangles, so that a symbolic positionUserFunction draws a deformed body without a Python graphics function; with a test of the graphics data.",
   "dateRaised": "2026-10-23",
   "deadline": "2027-04-21",
-  "file": "definitions/itemDefsObjects.py"
+  "dateResolved": "2026-10-23 07:42",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "ObjectUserBody: graphicsData in local coordinates, drawn with every point mapped by the positionUserFunction in the visualization configuration, the normals from the mapped triangles",
+  "resolvedInVersion": "1.13.170"
 }

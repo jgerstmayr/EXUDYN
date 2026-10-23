@@ -41,11 +41,12 @@ The parameters of `VObjectUserBody`, given as `visualization`:
 | name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
+| **graphicsData** | BodyGraphicsData |  |  | graphics data in the local coordinates of the body - the coordinates of localPosition -, drawn with every point mapped by positionUserFunction in the visualization configuration (#3064) |
 | **graphicsDataUserFunction** | ObjectUserBodyGraphicsDataUserFunction |  | 0 | A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body |
 
 ## Drawing
 
-Drawn as [all bodies](#sec-drawing-objectsbody); what its `graphicsDataUserFunction` returns, in global coordinates; nothing without it.
+Drawn as [all bodies](#sec-drawing-objectsbody); its `graphicsData` in local coordinates, every point mapped by the positionUserFunction, and what its `graphicsDataUserFunction` returns, in global coordinates; nothing without them.
 
 ## Output variables
 
@@ -142,6 +143,16 @@ $\LU{0}{\tomega} = \Jm_{rot} \dot\qv$ and the local one $\LU{b}{\tomega} = \LU{b
 of $\Jm_{pos}\tp \fv + \Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobians of connectors need, is computed
 by central differences of the Jacobian user functions. A marker that needs a function the body is not given
 raises when it is evaluated.
+
+### Drawing
+
+`graphicsData` (in VObjectUserBody) is given in the local coordinates of the body, the coordinates of `localPosition`:
+for a rigid body its body-fixed frame, for a finite element its element coordinates. Every point of it - the
+corners of the triangles, the end points of lines, the centers of spheres, circles and texts - is mapped with
+`positionUserFunction` in the visualization configuration, also by a nonlinear map, so that a deformable body is
+drawn deformed; the normals of the triangles are computed from the mapped corners, the radii of spheres and circles
+are kept (#3064). A symbolic positionUserFunction draws without calling Python. `graphicsDataUserFunction` returns
+graphics data in global coordinates for anything else; both are drawn, and `show` switches the body off.
 
 ### User output variables
 
@@ -345,4 +356,4 @@ exu.sys['testResult'] = mbs.GetObjectOutputBody(body, exu.OutputVariableType.Pos
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFBeam3DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFBeam3DTest.py) (TM), [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userMassIntegralTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userMassIntegralTest.py) (TM), [`userOutputVariablesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userOutputVariablesTest.py) (TM), [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM), [`userTetrahedronTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTetrahedronTest.py) (TM), [`userTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTypesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFBeam3DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFBeam3DTest.py) (TM), [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userGraphicsDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userGraphicsDataTest.py) (TM), [`userMassIntegralTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userMassIntegralTest.py) (TM), [`userOutputVariablesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userOutputVariablesTest.py) (TM), [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM), [`userTetrahedronTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTetrahedronTest.py) (TM), [`userTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTypesTest.py) (TM)

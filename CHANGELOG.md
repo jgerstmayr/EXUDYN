@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 166 | 1.13.169 |
+| 1.13 | Newborn | 167 | 1.13.170 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.170** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: graphics data in local coordinates, drawn by mapping every point with the positionUserFunction (#3064)
+  - description: Maintainer 2026-10-23 (pythonUserItems.md 5.11 C): VObjectUserBody gets graphicsData in local (reference) coordinates and a show flag for it; the C++ maps every point with the positionUserFunction in the visualization configuration and computes the normals from the mapped triangles, so that a symbolic positionUserFunction draws a deformed body without a Python graphics function; with a test of the graphics data.
+  - **notes:** ObjectUserBody: graphicsData in local coordinates, drawn with every point mapped by the positionUserFunction in the visualization configuration, the normals from the mapped triangles
+  - date resolved: **2026-10-23 07:42**, date raised: 2026-10-23
 - **1.13.169** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: mass integral access for MarkerBodyMass and LoadMassProportional (#3063)
   - description: Maintainer 2026-10-23 (pythonUserItems.md 5.11 E): the user body gets an optional user function for the mass integral of the position Jacobian, int rho J\_pos dV (3 x n), together with what MarkerBodyMass needs (mass, center of mass), so that MarkerBodyMass, LoadMassProportional (gravity) and a load on MarkerBodyMass act on it; with a test model against ObjectRigidBody and an ANCF element.
   - **notes:** ObjectUserBody: massIntegralUserFunction for the mass integral of the position Jacobian, so that MarkerBodyMass and LoadMassProportional (gravity) act on the user body; centerOfMass where they are drawn

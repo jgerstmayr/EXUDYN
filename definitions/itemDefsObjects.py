@@ -2140,7 +2140,7 @@ def ObjectUserBody_graphicsDataUserFunction(mbs: MainSystem, t: Real, itemNumber
 
 definitions.append(ItemDefinition(
     className='ObjectUserBody',
-    drawing=r'What its `graphicsDataUserFunction` returns, in global coordinates; nothing without it.',
+    drawing=r'Its `graphicsData` in local coordinates, every point mapped by the positionUserFunction, and what its `graphicsDataUserFunction` returns, in global coordinates; nothing without them.',
     drawingSettings=[],
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
@@ -2223,6 +2223,16 @@ definitions.append(ItemDefinition(
     of $\Jm_{pos}\tp \fv + \Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobians of connectors need, is computed
     by central differences of the Jacobian user functions. A marker that needs a function the body is not given
     raises when it is evaluated.
+
+    #### Drawing
+
+    `graphicsData` (in VObjectUserBody) is given in the local coordinates of the body, the coordinates of `localPosition`:
+    for a rigid body its body-fixed frame, for a finite element its element coordinates. Every point of it - the
+    corners of the triangles, the end points of lines, the centers of spheres, circles and texts - is mapped with
+    `positionUserFunction` in the visualization configuration, also by a nonlinear map, so that a deformable body is
+    drawn deformed; the normals of the triangles are computed from the mapped corners, the radii of spheres and circles
+    are kept (#3064). A symbolic positionUserFunction draws without calling Python. `graphicsDataUserFunction` returns
+    graphics data in global coordinates for anything else; both are drawn, and `show` switches the body off.
 
     #### User output variables
 
@@ -2441,6 +2451,10 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('HasUserFunction',
             destination=DestVisu,
             implementation='return true;'),
+        ItemParameter(type=TBodyGraphicsData, destination=DestVisu,
+            pythonName='graphicsData',
+            defaultValue=NoDefaultValue,
+            description=r'graphics data in the local coordinates of the body - the coordinates of localPosition -, drawn with every point mapped by positionUserFunction in the visualization configuration (#3064)'),
         ItemParameter(destination=DestVisu,
             pythonName='graphicsDataUserFunction',
             defaultValue=0,

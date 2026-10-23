@@ -259,16 +259,16 @@ item through `mbs.GetObjectParameter(itemNumber, 'V...')`, as it reads `'Vshow'`
 parameters, when it comes, is a parameter of VObjectUserBody reached the same way, and a later mapping function (C)
 gets a signature of its own.
 
-**C. Graphics data mapped by a user function (later).** The graphicsDataUserFunction builds the whole graphics data in
-Python at every redraw, `(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)` of the visualization configuration, in global
-coordinates. The alternative: the item keeps graphics data in local (reference) coordinates, as ObjectRigidBody keeps
-`graphicsData`, and every point is mapped with the positionUserFunction in the visualization configuration - which IS
-the map from a local point to its global position, for a rigid body and for an element whose local position covers
-its volume (the 3D ANCF beam, the tetrahedron); C++ loops over the points, so a symbolic positionUserFunction draws a
-deformed mesh without Python. The normals are computed again from the mapped triangles. Where the drawing map differs
-from the mechanical one - the 2D cable, whose position covers the axis only, or a scaled deformation - a separate
-mapping user function with the signature of the positionUserFunction. Both are additions; the graphicsDataUserFunction
-keeps its place for anything else.
+**C. Graphics data mapped by the positionUserFunction (#3064).** VObjectUserBody keeps `graphicsData` in local
+coordinates, as ObjectRigidBody does, and every point is mapped with the positionUserFunction in the visualization
+configuration - which IS the map from a local point to its global position, for a rigid body and for an element whose
+local position covers its volume (the 3D ANCF beam, the tetrahedron); C++ loops over the points
+(`EXUvis::AddBodyGraphicsDataMapped`), so a symbolic positionUserFunction draws a deformed mesh without Python. The
+normals of triangles are computed from the mapped corners, the radii of spheres and circles are kept; `show` switches
+the body off. The graphicsDataUserFunction, `(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)` of the visualization
+configuration and in global coordinates, keeps its place for anything else; both are drawn. **Later**, where the drawing
+map differs from the mechanical one - the 2D cable, whose position covers the axis only, or a scaled deformation - a
+separate mapping user function with the signature of the positionUserFunction; and contour colors (D).
 
 **D. Visualization settings in symbolic functions.** A Python function reads every setting through `mbs`; a symbolic
 function cannot. Most of what the built-in items do with the settings is done by their C++: contour colors
@@ -289,7 +289,7 @@ settings is a path for later, different from that function, and has no issue.
 | mass integral access (`DisplacementMassIntegral_q`): `MarkerBodyMass`, `LoadMassProportional` (gravity) | all four | `massIntegralUserFunction` for `∫ρ J_pos dV` and `centerOfMass`, where the marker is drawn (#3063) | - |
 | analytic Jacobian | ANCF, beams | numerical only | an optional jacobianUserFunction, later from the symbolic recording |
 | algebraic equations, data coordinates (plasticity), ODE1 | rigid body (EP in the node), some elements | none | not now (maintainer 2026-10-22); data and further quantities through MainSystem functions, later also for symbolic functions |
-| drawing with contour, tiling, numbers | all | only graphicsDataUserFunction, global | C and D |
+| drawing with contour, tiling, numbers | all | `graphicsData` mapped by the positionUserFunction (#3064), numbers; no contour, no tiling | C and D |
 | cable markers (MarkerBodyCable2DShape, ...), GeneralContact cables | ANCF only, by type name | refused | out of scope; these name the C++ classes |
 | node types | RigidBody, Point2DSlope1, ... | NodeUser always Position+Orientation, also without rotation | the type from the given user functions, and the user types of #2989 |
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-22  15:08:27 (last modified)
+* @date         2026-10-23  07:33:05 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,6 +28,7 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class VisualizationObjectUserBody: public VisualizationObject // AUTO:
 {
 protected: // AUTO:
+    BodyGraphicsData graphicsData;                //!< AUTO: graphics data in the local coordinates of the body - the coordinates of localPosition -, drawn with every point mapped by positionUserFunction in the visualization configuration (#3064)
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > graphicsDataUserFunction;//!< AUTO: A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body
 
 public: // AUTO:
@@ -50,6 +51,13 @@ public: // AUTO:
     {
         return true;
     }
+
+    //! AUTO:  Write (Reference) access to:graphics data in the local coordinates of the body - the coordinates of localPosition -, drawn with every point mapped by positionUserFunction in the visualization configuration (#3064)
+    void SetGraphicsData(const BodyGraphicsData& value) { graphicsData = value; }
+    //! AUTO:  Read (Reference) access to:graphics data in the local coordinates of the body - the coordinates of localPosition -, drawn with every point mapped by positionUserFunction in the visualization configuration (#3064)
+    const BodyGraphicsData& GetGraphicsData() const { return graphicsData; }
+    //! AUTO:  Read (Reference) access to:graphics data in the local coordinates of the body - the coordinates of localPosition -, drawn with every point mapped by positionUserFunction in the visualization configuration (#3064)
+    BodyGraphicsData& GetGraphicsData() { return graphicsData; }
 
     //! AUTO:  Write (Reference) access to:A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body
     void SetGraphicsDataUserFunction(const PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& value) { graphicsDataUserFunction = value; }

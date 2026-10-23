@@ -3152,15 +3152,19 @@ class VObjectUserBody:
     Args:
         show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
+        graphicsData: graphics data in the local coordinates of the body - the coordinates of localPosition -, drawn with every point mapped by positionUserFunction in the visualization configuration (#3064); type: BodyGraphicsData
+
         graphicsDataUserFunction: A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body; type: ObjectUserBodyGraphicsDataUserFunction
 
     """
-    def __init__(self, show = True, graphicsDataUserFunction: Union[ObjectUserBodyGraphicsDataUserFunction, int] = 0):
+    def __init__(self, show = True, graphicsData = [], graphicsDataUserFunction: Union[ObjectUserBodyGraphicsDataUserFunction, int] = 0):
         self.show = show
+        self.graphicsData = copy.copy(graphicsData)
         self.graphicsDataUserFunction = graphicsDataUserFunction
 
     def __iter__(self):
         yield 'show', self.show
+        yield 'graphicsData', self.graphicsData
         yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
 
     def __repr__(self):
@@ -3204,7 +3208,7 @@ class ObjectUserBody:
         Object has/provides the following types: ``Body``, ``MultiNoded``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], parameters = [], constantMassMatrix = False, massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, massIntegralUserFunction: Union[ObjectUserBodyMassIntegralUserFunction, int] = 0, centerOfMass = [0.,0.,0.], forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', nodeNumbers = [], parameters = [], constantMassMatrix = False, massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, massIntegralUserFunction: Union[ObjectUserBodyMassIntegralUserFunction, int] = 0, centerOfMass = [0.,0.,0.], forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = {'show': True, 'graphicsData': [], 'graphicsDataUserFunction': 0}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.parameters = CheckForValidNumpyArray(parameters)
@@ -3236,6 +3240,7 @@ class ObjectUserBody:
         yield 'rotationJacobianUserFunction', self.rotationJacobianUserFunction
         yield 'outputVariableUserFunction', self.outputVariableUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
 
     def __repr__(self):

@@ -2738,3 +2738,21 @@ positionUserFunction.)*
   function, refused.
 - pythonUserItems.md: the line of the table in 5.11 E had been written in a wrong encoding by a PowerShell edit of
   #3062 (`∫ρ` as `âˆ«Ï`); restored.
+
+<a id="rg7-14"></a>
+### RG7.14 — graphics data of the user body, mapped by the positionUserFunction (2026-10-23, #3064)
+*(Maintainer 2026-10-23: the graphics data list which is drawn using the transformation from positionUserFunction,
+together with a "show" visualization flag.)*
+- VObjectUserBody gets `graphicsData` (TBodyGraphicsData, as VObjectRigidBody); the flag is the `show` the item already
+  has, which switches the whole body - no second flag. `VisualizationObjectUserBody::UpdateGraphics`, which runs in
+  the main thread for the user body (#3003), gathers the coordinates of the visualization configuration once and maps
+  every point with `EvaluatePosition` - one call of the positionUserFunction per point, no point kept between redraws.
+- `EXUvis::AddBodyGraphicsDataMapped(bodyGraphicsData, graphicsData, map, itemID)` (VisualizationPrimitives.cpp): lines,
+  circles, spheres, lines3 and texts by their points (radii kept, texts copied), triangles and textured triangles with
+  the normals computed from the mapped corners (flat - the triangle list keeps no connectivity), triangles6 with
+  `hasNormals=false`, so that the split computes the normals of the mapped geometry. The item number is drawn at the
+  mapped local origin with `bodies.showNumbers`.
+- userGraphicsDataTest.py: (1) a rigid body as user body draws a brick, a sphere and lines where ObjectRigidBody draws
+  the same graphics data, points within 6e-8 and normals within 2e-7 (float); (2) a bent user ANCF cable element maps a
+  line along its axis to the positions the body gives (2e-8) and a strip across it with normals in the plane of
+  bending, normal to the axis; (3) a symbolic positionUserFunction draws the same; (4) `show=False` draws nothing.

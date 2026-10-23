@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-23  07:18:08 (last modified)
+* @date         2026-10-23  07:33:05 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -130,6 +130,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "outputVariableUserFunction")) { cObjectUserBody->GetParameters().outputVariableUserFunction = d["outputVariableUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectUserBody->GetShow(), "ObjectUserBody.Vshow"); }
+        if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectUserBody->GetGraphicsData()); }
         if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { visualizationObjectUserBody->GetGraphicsDataUserFunction() = d["VgraphicsDataUserFunction"]; }
         GetCObject()->ParametersHaveChanged();
     }
@@ -153,6 +154,7 @@ public: // AUTO:
         d["outputVariableUserFunction"] = (py::object)cObjectUserBody->GetParameters().outputVariableUserFunction;
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationObjectUserBody->GetShow();
+        d["VgraphicsData"] = PyGetBodyGraphicsDataList(visualizationObjectUserBody->GetGraphicsData(), addGraphicsData);
         d["VgraphicsDataUserFunction"] = (py::object)visualizationObjectUserBody->GetGraphicsDataUserFunction();
         return d;
     }
@@ -174,6 +176,7 @@ public: // AUTO:
         else if (parameterName.compare("rotationJacobianUserFunction") == 0) { return cObjectUserBody->GetParameters().rotationJacobianUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("outputVariableUserFunction") == 0) { return cObjectUserBody->GetParameters().outputVariableUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectUserBody->GetShow()); } //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsData") == 0) { return PyGetBodyGraphicsDataList(visualizationObjectUserBody->GetGraphicsData(), true); } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return visualizationObjectUserBody->GetGraphicsDataUserFunction().GetPythonDictionary(); } //! AUTO: get parameter
         else {PyError(STDstring("ObjectUserBody::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
@@ -197,6 +200,7 @@ public: // AUTO:
         else if (parameterName.compare("rotationJacobianUserFunction") == 0) { cObjectUserBody->GetParameters().rotationJacobianUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("outputVariableUserFunction") == 0) { cObjectUserBody->GetParameters().outputVariableUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectUserBody->GetShow(), "ObjectUserBody.Vshow"); } //! AUTO: set parameter
+        else if (parameterName.compare("VgraphicsData") == 0) { PyWriteBodyGraphicsDataList(value, visualizationObjectUserBody->GetGraphicsData()); } //! AUTO: set parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectUserBody->GetGraphicsDataUserFunction() = value; } //! AUTO: set parameter
         else {PyError(STDstring("ObjectUserBody::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
