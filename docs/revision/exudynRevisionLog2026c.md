@@ -2832,3 +2832,25 @@ parameters at least to the interface in user rigid body and user ANCFCable2D.)*
   and the Gauss rules take the length; the mass matrix is computed by its user function from the parameters, once per
   element with `constantMassMatrix=True`, instead of a global matrix of the script.
 - Both results are bit-equal to their references (13.475755021376248, 7.797666638067246).
+
+<a id="rg12-47-1"></a>
+### RG12.47.1 — rotation utilities for symbolic user items: the analysis (2026-10-23, #3069)
+*(Maintainer 2026-10-23: regarding cUtilities / rigidBodyUtilities: make a selected list of functions that are useful
+for symbolic user items; add symbolicUtilities.py in exudyn/config; each function shall have the same name and the same
+args, except for "functions" as last arg, e.g. RotationVector2GLocal(rotationVector, functions=exudyn.symbolic),
+RotXYZ2RotationMatrix(rot, functions=exudyn.symbolic); exudyn.symbolic could be replaced with exudyn.cMath, numpy or
+math in most cases as well; also check what would fail or what is missing first; this should simplify the example
+scripts when using functions=exudyn.symbolic; adapt the test scripts; add a step and issue, the first substep the
+analysis and recommendation - do the analysis now.)*
+- docs/dev/design/symbolicUtilities.md: the 30 functions of cUtilities and what rigidBodyUtilities adds; the math
+  names the four modules share (sin ... pow; not abs/sign/min/max in math and cMath, no pi in exudyn.symbolic);
+  measured: a function written once equals cUtilities with math, cMath and numpy and recorded with exudyn.symbolic
+  (0.0); cMath and math refuse symbolic values; numpy's functions record them; IfThenElse needs symbolic branches,
+  ignores the 0/0 of the unused one; no cross product of symbolic vectors; numeric cost 0.63 us (cUtilities) against
+  1.2-2.4 us.
+- Recommended: `exudyn.symbolicUtilities` (exudyn.config is the module of the runtime settings - to confirm), 21
+  forward functions (Skew, Cross, Inertia6D2InertiaTensor, RotationMatrixX/Y/Z, RotationMatrix2D, the RotXYZ,
+  Euler-parameter and rotation-vector functions with their G matrices and derivatives), no inverse conversions;
+  `functions=exudyn.symbolic` last, the helpers _Matrix, _IfThenElse, _Pi; a test model against cUtilities; then
+  userRigidBodyTest.py and userANCFBeam3DTest.py use it. Missing in exudyn.symbolic, each an issue if wanted: cross,
+  pi, IfThenElse with a number.

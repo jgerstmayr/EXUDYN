@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.174.dev1
 - last change = 2026-10-23
-- Number of issues = 3069
+- Number of issues = 3070
 - Number of resolved issues = 2951 (174 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Rotation utilities for symbolic user items: the functions of cUtilities with an argument functions (#3069)
+  - description: Maintainer 2026-10-23: a selected list of the functions of exudyn.cUtilities / rigidBodyUtilities useful for symbolic user items, in a new module, with the same names and arguments plus a last argument functions (default exudyn.symbolic), which may also be exudyn.cMath, numpy or math; check first what fails or is missing; then adapt the test scripts (userRigidBodyTest.py, ...), which shrink. First the analysis and recommendation (docs/dev/design/symbolicUtilities.md).
+  - date raised: 2026-10-23
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` User markers: decide what they provide beyond ObjectConnectorUser and ObjectUserBody, then add them (#3065)
   - description: revision2026c step RG7.5 (pythonUserItems.md 5.3), split from \#2975: a user marker (position, orientation, coordinates; on a node, several nodes or a body) whose value and Jacobian are user functions. ObjectConnectorUser reaches any point of a body through its markers (GetBodyPosition, ApplyBodyForce) and ObjectUserBody defines what a local position means, so a user marker on one body adds little; what remains is a marker on several nodes or bodies (an average, a point between two bodies), which needs a marker with the coordinates of several items in the system's LTG. To decide with the maintainer before it is built.
   - date raised: 2026-10-23
