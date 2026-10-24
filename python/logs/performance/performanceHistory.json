@@ -391,24 +391,789 @@
    "version": "1.11.0",
    "module": "regular",
    "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
-   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD (32 threads)",
    "system": "win32",
    "python": "3.13",
-   "date": "2026-08-05 13:58:11",
-   "source": "text",
-   "timers": false,
-   "cpuLoadBefore": 4.503125,
+   "date": "2026-10-24 21:42:31",
+   "source": "json, tolerant",
+   "timers": true,
+   "cpuLoadBefore": 2.828125,
    "files": {
-    "generalContactSpheresTest.py": 4.46843695640564,
-    "perf3DRigidBodies.py": 7.09683632850647,
-    "perfObjectFFRFreducedOrder.py": 3.8466970920562744,
-    "perfRigidPendulum.py": 5.305007457733154,
-    "perfSpringDamperExplicit.py": 3.5393199920654297,
-    "perfSpringDamperUserFunction.py": 3.0573606491088867
+    "perfRigidPendulum.py": 5.071751356124878,
+    "perfSpringDamperExplicit.py": 4.451253414154053,
+    "perfSpringDamperUserFunction.py": 3.022812843322754,
+    "generalContactSpheresPerf.py": 9.578317403793335,
+    "perf3DRigidBodies.py": 4.669328451156616,
+    "perfObjectFFRFreducedOrder.py": 3.752401828765869,
+    "perfLargeMassSpringChain.py": 10.504000186920166,
+    "perfConnectorInterface.py": 2.631477117538452
    },
-   "runs": {},
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 5.0699688,
+     "timers": {
+      "factorization": 0.01005600000011242,
+      "newtonIncrement": 0.21798359999916084,
+      "integrationFormula": 0.2506688999997424,
+      "ODE2RHS": 1.3422294000007495,
+      "ODE1RHS": 0.14385660000053146,
+      "AERHS": 0.8540011999997672,
+      "totalJacobian": 0.03087270000002018,
+      "jacobianODE2": 0.0019660000000696343,
+      "jacobianODE1": 0.001755499999966048,
+      "jacobianAE": 0.01404019999994155,
+      "massMatrix": 0.002336200000052635,
+      "reactionForces": 1.086129199999771,
+      "overhead": 0.026464699999771746,
+      "python": 0.0014928000000136166,
+      "visualization": 0.021230400000010974
+     }
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 2.9373491000000005,
+     "timers": {
+      "newtonIncrement": 0.17768650000010844,
+      "integrationFormula": 0.3111452999996658,
+      "ODE2RHS": 0.7429829000018646,
+      "overhead": 0.1693804000007919,
+      "visualization": 0.1289040000002739
+     }
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 3.0212237,
+     "timers": {
+      "factorization": 0.0344810000001079,
+      "newtonIncrement": 0.013327799999714784,
+      "integrationFormula": 0.046822399999529196,
+      "ODE2RHS": 1.343593300001606,
+      "ODE1RHS": 0.021565599999121332,
+      "AERHS": 0.022472200000537512,
+      "totalJacobian": 1.2179895000000194,
+      "jacobianODE2": 1.1056440999998962,
+      "jacobianODE1": 0.012885599999934882,
+      "jacobianAE": 0.011720900000108614,
+      "massMatrix": 0.014728599999934033,
+      "reactionForces": 0.023515599999443637,
+      "writeSolution": 0.035130899999957776,
+      "overhead": 0.012027099999700752,
+      "python": 0.009943799999893699,
+      "visualization": 0.01009330000001718
+     }
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.10507169999999988,
+     "timers": {
+      "newtonIncrement": 0.006574099999962613,
+      "integrationFormula": 0.006361799999790918,
+      "ODE2RHS": 0.0706190000002227,
+      "overhead": 0.001040900000063516,
+      "visualization": 0.0008534999999838533
+     }
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 4.775656499999998,
+     "timers": {
+      "newtonIncrement": 0.0141670999999981,
+      "integrationFormula": 0.0043157999999934304,
+      "ODE2RHS": 4.719881399999988,
+      "overhead": 0.005731499999992451,
+      "visualization": 2.209999999536194e-05
+     }
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 2.3016237000000004,
+     "timers": {
+      "newtonIncrement": 0.01628920000001699,
+      "integrationFormula": 0.00290960000001661,
+      "ODE2RHS": 2.2450075999999797,
+      "overhead": 0.00302329999998463,
+      "visualization": 2.7900000006297887e-05
+     }
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.256577,
+     "timers": {
+      "newtonIncrement": 0.01642320000001618,
+      "integrationFormula": 0.001757699999998863,
+      "ODE2RHS": 1.2025099000000097,
+      "overhead": 0.002224100000024265,
+      "visualization": 2.7200000015881187e-05
+     }
+    },
+    "perf3DRigidBodies.py": {
+     "time": 4.6001075,
+     "timers": {
+      "factorization": 2.2772801000000022,
+      "newtonIncrement": 0.7018424000001247,
+      "integrationFormula": 0.01191019999990317,
+      "ODE2RHS": 0.20295200000004954,
+      "ODE1RHS": 0.0001430000001079179,
+      "AERHS": 0.153094099999862,
+      "totalJacobian": 0.4749481000000131,
+      "jacobianODE2": 0.275322299999992,
+      "jacobianODE1": 4.290000002882266e-05,
+      "jacobianAE": 0.194689400000005,
+      "massMatrix": 0.15542619999995821,
+      "reactionForces": 0.5960054999999862,
+      "overhead": 0.0004193000000292102,
+      "python": 1.6599999980826396e-05,
+      "visualization": 2.9900000022564655e-05
+     }
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 3.586076600000002,
+     "timers": {
+      "factorization": 0.010662200000037814,
+      "newtonIncrement": 0.035743700000395506,
+      "integrationFormula": 0.008793699999547044,
+      "ODE2RHS": 1.6455293000001134,
+      "ODE1RHS": 0.003945700000258512,
+      "AERHS": 0.007592000000020249,
+      "totalJacobian": 1.469537499999884,
+      "jacobianODE2": 1.466949899999836,
+      "jacobianODE1": 0.00016809999996070246,
+      "jacobianAE": 0.0004247000000674461,
+      "massMatrix": 0.3554685000004447,
+      "reactionForces": 0.010974900000086052,
+      "writeSolution": 0.0004879999999296558,
+      "overhead": 0.0007619999996748561,
+      "python": 0.00012419999998414255,
+      "visualization": 0.00041559999998597164
+     }
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.543239799999995,
+     "timers": {
+      "newtonIncrement": 0.008533099999858962,
+      "integrationFormula": 0.0009988000001044384,
+      "ODE2RHS": 1.222156200000093,
+      "massMatrix": 0.3043929999997914,
+      "overhead": 0.0011380999998991115,
+      "visualization": 3.079999998334415e-05
+     }
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.1872073999999984,
+     "timers": {
+      "factorization": 0.001964600000000871,
+      "newtonIncrement": 0.11445570000002192,
+      "integrationFormula": 0.002499200000151802,
+      "ODE2RHS": 0.920382299999936,
+      "ODE1RHS": 3.2200000028126397e-05,
+      "AERHS": 4.100000001017179e-05,
+      "totalJacobian": 0.015385500000000718,
+      "jacobianODE2": 0.015378800000000581,
+      "jacobianODE1": 5.999999999062311e-07,
+      "jacobianAE": 1.0000000116860974e-07,
+      "massMatrix": 0.12404459999991246,
+      "reactionForces": 4.010000000675973e-05,
+      "overhead": 0.00011199999997302257,
+      "visualization": 1.599999996670931e-05
+     }
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 1.526500999999996,
+     "timers": {
+      "newtonIncrement": 0.008386399999984917,
+      "integrationFormula": 0.0011619000000067103,
+      "ODE2RHS": 1.2100977000000412,
+      "massMatrix": 0.29954139999993146,
+      "overhead": 0.0012497999999681042,
+      "visualization": 1.0000000024490419e-05
+     }
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 0.9650376000000023,
+     "timers": {
+      "factorization": 0.009275500000001102,
+      "newtonIncrement": 0.08677690000001093,
+      "integrationFormula": 0.0019178999999169832,
+      "ODE2RHS": 0.6886477000000468,
+      "ODE1RHS": 6.299999959935576e-06,
+      "AERHS": 1.130000002547149e-05,
+      "totalJacobian": 0.077366099999999,
+      "jacobianODE2": 0.0773375999999999,
+      "jacobianODE1": 3.999999975690116e-07,
+      "jacobianAE": 2.0000000233721948e-07,
+      "massMatrix": 0.09492299999995168,
+      "reactionForces": 1.0699999990038123e-05,
+      "overhead": 0.00020199999996606266,
+      "visualization": 8.499999999855845e-06
+     }
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.663912400000001,
+     "timers": {
+      "newtonIncrement": 0.0068578999999857615,
+      "integrationFormula": 0.0011007999999890217,
+      "ODE2RHS": 1.3698847,
+      "massMatrix": 0.2772686000000064,
+      "overhead": 0.0019506000000006907,
+      "visualization": 7.599999996443785e-06
+     }
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.39887070000000335,
+     "timers": {
+      "factorization": 0.19430440000002136,
+      "newtonIncrement": 0.008451599999958148,
+      "integrationFormula": 0.00021260000008282987,
+      "ODE2RHS": 0.041646400000082906,
+      "ODE1RHS": 7.599999968022075e-06,
+      "AERHS": 0.0011763000000613033,
+      "totalJacobian": 0.14252030000000815,
+      "jacobianODE2": 0.14012590000005787,
+      "jacobianODE1": 1.1899999982745157e-05,
+      "jacobianAE": 0.0015810999999743558,
+      "massMatrix": 0.00886049999995464,
+      "reactionForces": 0.0017250999999873784,
+      "overhead": 9.000000004277808e-05,
+      "python": 4.599999989807202e-06,
+      "visualization": 3.699999972184287e-06
+     }
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.31995640000000236,
+     "timers": {
+      "newtonIncrement": 0.009796699999988334,
+      "integrationFormula": 0.030222699999782776,
+      "ODE2RHS": 0.2789781000000815,
+      "overhead": 0.00014060000000171158,
+      "visualization": 9.50000001864737e-06
+     }
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.7302630999999948,
+     "timers": {
+      "factorization": 0.1556456999998943,
+      "newtonIncrement": 0.011076300000048889,
+      "integrationFormula": 0.0005883999999909406,
+      "ODE2RHS": 0.07789450000001352,
+      "ODE1RHS": 3.60999999244882e-05,
+      "AERHS": 4.490000002022043e-05,
+      "totalJacobian": 0.4833235000000897,
+      "jacobianODE2": 0.48268189999994604,
+      "jacobianODE1": 2.920000000017353e-05,
+      "jacobianAE": 2.1099999997886698e-05,
+      "massMatrix": 0.00044840000003887326,
+      "reactionForces": 4.340000005242928e-05,
+      "overhead": 0.0001163000000019565,
+      "python": 1.3600000023927805e-05,
+      "visualization": 2.2200000046268542e-05
+     }
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.4165846000000002,
+     "timers": {
+      "newtonIncrement": 0.025905900000047666,
+      "integrationFormula": 0.0017496000001386847,
+      "ODE2RHS": 0.38584499999990385,
+      "overhead": 0.0002524999999948818,
+      "visualization": 2.6699999999379997e-05
+     }
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.3773411000000024,
+     "timers": {
+      "factorization": 0.1088331000000764,
+      "newtonIncrement": 0.00407059999997017,
+      "integrationFormula": 0.00012020000001200515,
+      "ODE2RHS": 0.014588000000038903,
+      "ODE1RHS": 6.900000016685226e-06,
+      "AERHS": 0.000553399999994042,
+      "totalJacobian": 0.24411660000000523,
+      "jacobianODE2": 0.24305190000000465,
+      "jacobianODE1": 8.599999993919027e-06,
+      "jacobianAE": 0.0006913999999795806,
+      "massMatrix": 0.004136600000002488,
+      "reactionForces": 0.0008089000000097712,
+      "overhead": 0.00013169999995454873,
+      "python": 4.4999999957440195e-06,
+      "visualization": 3.099999979383483e-06
+     }
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.34173640000000205,
+     "timers": {
+      "newtonIncrement": 0.011222900000049663,
+      "integrationFormula": 0.03424150000043369,
+      "ODE2RHS": 0.2948186999998299,
+      "overhead": 0.0001534999999890374,
+      "visualization": 1.9199999989893968e-05
+     }
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.37738440000000395,
+     "timers": {
+      "factorization": 0.10755899999997354,
+      "newtonIncrement": 0.004081500000054916,
+      "integrationFormula": 0.00012539999996619144,
+      "ODE2RHS": 0.014439400000028968,
+      "ODE1RHS": 6.700000028558861e-06,
+      "AERHS": 0.0005482000000398557,
+      "totalJacobian": 0.24559969999988596,
+      "jacobianODE2": 0.24453840000001748,
+      "jacobianODE1": 1.0000000010279564e-05,
+      "jacobianAE": 0.0006852999999367171,
+      "massMatrix": 0.0040991999999349105,
+      "reactionForces": 0.0008015999999031465,
+      "overhead": 0.00010090000001383714,
+      "python": 4.399999973259128e-06,
+      "visualization": 3.999999975690116e-06
+     }
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.5056119000000052,
+     "timers": {
+      "factorization": 0.11520659999994365,
+      "newtonIncrement": 0.004205300000037937,
+      "integrationFormula": 0.00012949999997147188,
+      "ODE2RHS": 0.022397399999924517,
+      "ODE1RHS": 8.60000001523531e-06,
+      "AERHS": 1.059999999597494e-05,
+      "totalJacobian": 0.3593483999998881,
+      "jacobianODE2": 0.3590192000000698,
+      "jacobianODE1": 1.200000000523005e-05,
+      "jacobianAE": 1.1799999988681975e-05,
+      "massMatrix": 0.004052500000028658,
+      "reactionForces": 1.2600000047768845e-05,
+      "overhead": 9.470000001954304e-05,
+      "python": 5.199999989713433e-06,
+      "visualization": 3.00000001374201e-06
+     }
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.4023961999999983,
+     "timers": {
+      "factorization": 0.18229419999981644,
+      "newtonIncrement": 0.021830900000040288,
+      "integrationFormula": 0.0005734999999091883,
+      "ODE2RHS": 0.16807340000020332,
+      "massMatrix": 0.02835050000002326,
+      "overhead": 0.0001823999999572834,
+      "visualization": 1.4999999997655777e-05
+     }
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.1633382999999995,
+     "timers": {
+      "factorization": 0.06599730000002779,
+      "newtonIncrement": 0.005463199999937274,
+      "integrationFormula": 0.00018040000011865231,
+      "ODE2RHS": 0.0349148000000028,
+      "ODE1RHS": 1.3599999938662677e-05,
+      "AERHS": 1.6299999991531422e-05,
+      "totalJacobian": 0.056098900000009166,
+      "jacobianODE2": 0.055791499999969574,
+      "jacobianODE1": 1.2800000050106064e-05,
+      "jacobianAE": 1.0199999991300501e-05,
+      "massMatrix": 0.00022090000005192678,
+      "reactionForces": 1.5399999959697652e-05,
+      "overhead": 0.00016310000002306424,
+      "python": 8.5999999868136e-06,
+      "visualization": 5.099999988544823e-06
+     }
+    }
+   },
    "totals": {
-    "total": 27.313658475875854
+    "small": 12.666782855987549,
+    "large": 32.61084342002869,
+    "total": 45.277626276016235
+   }
+  },
+  {
+   "version": "1.12.0.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD (32 threads)",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-24 21:43:30",
+   "source": "json, tolerant",
+   "timers": true,
+   "cpuLoadBefore": 1.515625,
+   "files": {
+    "perfRigidPendulum.py": 4.989147424697876,
+    "perfSpringDamperExplicit.py": 4.263726234436035,
+    "perfSpringDamperUserFunction.py": 2.9029743671417236,
+    "generalContactSpheresPerf.py": 9.832576036453247,
+    "perf3DRigidBodies.py": 4.753878593444824,
+    "perfObjectFFRFreducedOrder.py": 3.8848612308502197,
+    "perfLargeMassSpringChain.py": 11.679147243499756,
+    "perfConnectorInterface.py": 2.6538846492767334
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 4.9874052,
+     "timers": {
+      "factorization": 0.01092940000005349,
+      "newtonIncrement": 0.22322470000002692,
+      "integrationFormula": 0.21831560000075,
+      "ODE2RHS": 1.234622599998482,
+      "ODE1RHS": 0.14467380000025098,
+      "AERHS": 0.8840907999988126,
+      "totalJacobian": 0.031868199999999014,
+      "jacobianODE2": 0.002019999999971489,
+      "jacobianODE1": 0.0017858000000643415,
+      "jacobianAE": 0.014874899999914426,
+      "massMatrix": 0.0023097999998951124,
+      "reactionForces": 1.1031035000015859,
+      "overhead": 0.026816199999990076,
+      "python": 0.0014951000000245074,
+      "visualization": 0.021432899999888733
+     }
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 2.8078945000000006,
+     "timers": {
+      "newtonIncrement": 0.1814026000000073,
+      "integrationFormula": 0.2959957000009439,
+      "ODE2RHS": 0.7156204999998632,
+      "overhead": 0.160982900000338,
+      "visualization": 0.12890670000017934
+     }
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.9014685999999994,
+     "timers": {
+      "factorization": 0.03509139999943223,
+      "newtonIncrement": 0.013213400000445574,
+      "integrationFormula": 0.03833779999973608,
+      "ODE2RHS": 1.3070061999993534,
+      "ODE1RHS": 0.02148820000047813,
+      "AERHS": 0.022243100000622462,
+      "totalJacobian": 1.1569895999998892,
+      "jacobianODE2": 1.0451135999998868,
+      "jacobianODE1": 0.012810800000133682,
+      "jacobianAE": 0.011739300000039421,
+      "massMatrix": 0.014573300000167322,
+      "reactionForces": 0.023310099999825695,
+      "writeSolution": 0.03502240000009138,
+      "overhead": 0.011887099999567496,
+      "python": 0.009836699999683063,
+      "visualization": 0.010001900000210284
+     }
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.10012490000000085,
+     "timers": {
+      "newtonIncrement": 0.0055456999997200995,
+      "integrationFormula": 0.006205500000113773,
+      "ODE2RHS": 0.067706100000132,
+      "overhead": 0.0009812999999905259,
+      "visualization": 0.0008464000001158212
+     }
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 4.877580000000002,
+     "timers": {
+      "newtonIncrement": 0.014734900000007656,
+      "integrationFormula": 0.009133100000013883,
+      "ODE2RHS": 4.813324699999992,
+      "overhead": 0.006859200000029375,
+      "visualization": 2.600000001251601e-05
+     }
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 2.2821470999999995,
+     "timers": {
+      "newtonIncrement": 0.016109699999997673,
+      "integrationFormula": 0.004818099999972958,
+      "ODE2RHS": 2.222238100000002,
+      "overhead": 0.003985900000024856,
+      "visualization": 2.6999999999333113e-05
+     }
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.3003944999999995,
+     "timers": {
+      "newtonIncrement": 0.01677379999999218,
+      "integrationFormula": 0.0032650000000060686,
+      "ODE2RHS": 1.2412823999999745,
+      "overhead": 0.004229699999953596,
+      "visualization": 2.5999999976988875e-05
+     }
+    },
+    "perf3DRigidBodies.py": {
+     "time": 4.6754128,
+     "timers": {
+      "factorization": 2.3399527999999883,
+      "newtonIncrement": 0.6835983999997275,
+      "integrationFormula": 0.026325599999776017,
+      "ODE2RHS": 0.2088033999997414,
+      "ODE1RHS": 0.00014290000007477488,
+      "AERHS": 0.15438759999993934,
+      "totalJacobian": 0.4781144999999718,
+      "jacobianODE2": 0.2756908000000209,
+      "jacobianODE1": 4.6599999990348806e-05,
+      "jacobianAE": 0.19673169999998308,
+      "massMatrix": 0.1552355000001313,
+      "reactionForces": 0.6001183999998005,
+      "overhead": 0.0004925000000248758,
+      "python": 1.3600000034585946e-05,
+      "visualization": 2.8500000013309545e-05
+     }
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 3.7321607000000014,
+     "timers": {
+      "factorization": 0.011650800000040817,
+      "newtonIncrement": 0.041417000001487736,
+      "integrationFormula": 0.008692299999619735,
+      "ODE2RHS": 1.7029445999999098,
+      "ODE1RHS": 0.004041300000331205,
+      "AERHS": 0.007884699998971456,
+      "totalJacobian": 1.5373742000000838,
+      "jacobianODE2": 1.5345080000001445,
+      "jacobianODE1": 0.00019980000000074938,
+      "jacobianAE": 0.0004958999998549984,
+      "massMatrix": 0.3677534000000122,
+      "reactionForces": 0.01074570000034214,
+      "writeSolution": 0.0005371999999397303,
+      "overhead": 0.0007952999997868915,
+      "python": 0.00012060000002378501,
+      "visualization": 0.00045799999986329
+     }
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.6054001999999983,
+     "timers": {
+      "newtonIncrement": 0.008555800000038971,
+      "integrationFormula": 0.0035375999999089913,
+      "ODE2RHS": 1.2761128000000923,
+      "massMatrix": 0.30868020000001906,
+      "overhead": 0.0014155999998877178,
+      "visualization": 3.620000004644908e-05
+     }
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.2676119999999997,
+     "timers": {
+      "factorization": 0.0023474999999990587,
+      "newtonIncrement": 0.12063500000005689,
+      "integrationFormula": 0.007172100000012449,
+      "ODE2RHS": 0.9823421000001957,
+      "ODE1RHS": 3.4199999937811754e-05,
+      "AERHS": 4.289999998974281e-05,
+      "totalJacobian": 0.015378499999997075,
+      "jacobianODE2": 0.015371399999999369,
+      "jacobianODE1": 2.9999999640040187e-07,
+      "jacobianAE": 4.999999987376214e-07,
+      "massMatrix": 0.1294991999999553,
+      "reactionForces": 4.40999998403413e-05,
+      "overhead": 0.00013160000001732897,
+      "visualization": 1.429999998947551e-05
+     }
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 1.8330468999999994,
+     "timers": {
+      "newtonIncrement": 0.009267899999962026,
+      "integrationFormula": 0.0031748000000177967,
+      "ODE2RHS": 1.4627671000001072,
+      "massMatrix": 0.3470202000000384,
+      "overhead": 0.001927199999975926,
+      "visualization": 2.4399999965396546e-05
+     }
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.0115189000000058,
+     "timers": {
+      "factorization": 0.008745900000000972,
+      "newtonIncrement": 0.09139260000001315,
+      "integrationFormula": 0.004925200000066354,
+      "ODE2RHS": 0.7259728999999808,
+      "ODE1RHS": 8.700000002193065e-06,
+      "AERHS": 1.179999997447112e-05,
+      "totalJacobian": 0.07782879999999892,
+      "jacobianODE2": 0.0777982000000037,
+      "jacobianODE1": 8.000000022434506e-07,
+      "jacobianAE": 1.9999999523179213e-07,
+      "massMatrix": 0.09533159999995888,
+      "reactionForces": 1.2400000024115343e-05,
+      "overhead": 0.00019000000000346517,
+      "python": 1.0000000116860974e-07,
+      "visualization": 5.299999990882043e-06
+     }
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.8466962999999978,
+     "timers": {
+      "newtonIncrement": 0.0071659000000110495,
+      "integrationFormula": 0.00233489999995129,
+      "ODE2RHS": 1.4973082000000062,
+      "massMatrix": 0.329412500000025,
+      "overhead": 0.002260399999983065,
+      "visualization": 7.600000017760067e-06
+     }
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.40898040000000435,
+     "timers": {
+      "factorization": 0.19983139999997235,
+      "newtonIncrement": 0.00867730000009459,
+      "integrationFormula": 0.0006269999999801712,
+      "ODE2RHS": 0.042326300000084416,
+      "ODE1RHS": 7.2999999716216735e-06,
+      "AERHS": 0.0012179000000358542,
+      "totalJacobian": 0.14524019999998927,
+      "jacobianODE2": 0.14281250000000512,
+      "jacobianODE1": 1.2999999967178155e-05,
+      "jacobianAE": 0.001589800000012076,
+      "massMatrix": 0.009235399999987237,
+      "reactionForces": 0.0017573999999456191,
+      "overhead": 0.00010519999999303309,
+      "python": 5.900000012104556e-06,
+      "visualization": 3.899999974521506e-06
+     }
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.3211961999999957,
+     "timers": {
+      "newtonIncrement": 0.010286299999911819,
+      "integrationFormula": 0.030716999999853556,
+      "ODE2RHS": 0.2789363999998713,
+      "overhead": 0.00026470000006639793,
+      "visualization": 1.0199999962878792e-05
+     }
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.728262100000002,
+     "timers": {
+      "factorization": 0.1551008999999013,
+      "newtonIncrement": 0.011244300000086582,
+      "integrationFormula": 0.0015055999999376013,
+      "ODE2RHS": 0.07784589999983638,
+      "ODE1RHS": 3.389999999114934e-05,
+      "AERHS": 4.3799999978944015e-05,
+      "totalJacobian": 0.48063940000024274,
+      "jacobianODE2": 0.4799954000000355,
+      "jacobianODE1": 2.760000008095176e-05,
+      "jacobianAE": 2.13000000215402e-05,
+      "massMatrix": 0.00046029999995766957,
+      "reactionForces": 4.1000000024382643e-05,
+      "overhead": 0.00013070000000681148,
+      "python": 1.7300000074271793e-05,
+      "visualization": 1.7400000018596984e-05
+     }
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.4082279,
+     "timers": {
+      "newtonIncrement": 0.026584599999964098,
+      "integrationFormula": 0.005057499999999493,
+      "ODE2RHS": 0.3725283000001198,
+      "overhead": 0.0003957000000198718,
+      "visualization": 3.649999993626807e-05
+     }
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.38688259999999985,
+     "timers": {
+      "factorization": 0.11083080000003775,
+      "newtonIncrement": 0.004069999999956053,
+      "integrationFormula": 0.0002876000000000545,
+      "ODE2RHS": 0.014916100000036181,
+      "ODE1RHS": 8.500000035382982e-06,
+      "AERHS": 0.0005612000000354556,
+      "totalJacobian": 0.2510489999999166,
+      "jacobianODE2": 0.24993639999990336,
+      "jacobianODE1": 1.200000000523005e-05,
+      "jacobianAE": 0.0007179999999920028,
+      "massMatrix": 0.004188000000006298,
+      "reactionForces": 0.0008086999999861177,
+      "overhead": 0.00011079999998742096,
+      "python": 4.799999977933567e-06,
+      "visualization": 3.999999968584689e-06
+     }
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.34270440000000235,
+     "timers": {
+      "newtonIncrement": 0.011841200000077379,
+      "integrationFormula": 0.03509289999991694,
+      "ODE2RHS": 0.2940022999997325,
+      "overhead": 0.00022719999996212437,
+      "visualization": 1.839999995212338e-05
+     }
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.37901740000000217,
+     "timers": {
+      "factorization": 0.1081066000000348,
+      "newtonIncrement": 0.004002199999995071,
+      "integrationFormula": 0.00027880000003221994,
+      "ODE2RHS": 0.014564200000052097,
+      "ODE1RHS": 6.900000030896081e-06,
+      "AERHS": 0.0005528999999597772,
+      "totalJacobian": 0.24652389999994995,
+      "jacobianODE2": 0.245488700000017,
+      "jacobianODE1": 6.800000029727471e-06,
+      "jacobianAE": 0.0006603999999725829,
+      "massMatrix": 0.00404519999994335,
+      "reactionForces": 0.0007942000000156213,
+      "overhead": 0.00013349999996847828,
+      "python": 4.9999999873762135e-06,
+      "visualization": 4.700000033608376e-06
+     }
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.5208984000000001,
+     "timers": {
+      "factorization": 0.12011270000006391,
+      "newtonIncrement": 0.004236799999993934,
+      "integrationFormula": 0.00029329999998850553,
+      "ODE2RHS": 0.0237474999999705,
+      "ODE1RHS": 9.59999999139427e-06,
+      "AERHS": 9.499999947593096e-06,
+      "totalJacobian": 0.36801219999996704,
+      "jacobianODE2": 0.36766619999998085,
+      "jacobianODE1": 1.2200000043094406e-05,
+      "jacobianAE": 8.299999990413198e-06,
+      "massMatrix": 0.004195900000013353,
+      "reactionForces": 1.099999997222767e-05,
+      "overhead": 9.349999996999259e-05,
+      "python": 6.0999999575983566e-06,
+      "visualization": 4.100000012385863e-06
+     }
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.3979149999999976,
+     "timers": {
+      "factorization": 0.17928149999985976,
+      "newtonIncrement": 0.021174999999836075,
+      "integrationFormula": 0.0015777999999500025,
+      "ODE2RHS": 0.16819060000011632,
+      "massMatrix": 0.026153100000144036,
+      "overhead": 0.00022939999992388493,
+      "visualization": 1.430000006763521e-05
+     }
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.1639324000000002,
+     "timers": {
+      "factorization": 0.0648708999999883,
+      "newtonIncrement": 0.005589300000004016,
+      "integrationFormula": 0.0004644000000340043,
+      "ODE2RHS": 0.036061100000125634,
+      "ODE1RHS": 1.2399999931744787e-05,
+      "AERHS": 1.5600000025983718e-05,
+      "totalJacobian": 0.056201000000022816,
+      "jacobianODE2": 0.055881099999979256,
+      "jacobianODE1": 1.4599999978770484e-05,
+      "jacobianAE": 9.899999973583817e-06,
+      "massMatrix": 0.00022750000000115733,
+      "reactionForces": 1.5600000004667436e-05,
+      "overhead": 9.699999993273423e-05,
+      "python": 8.20000001056087e-06,
+      "visualization": 6.599999998968542e-06
+     }
+    }
+   },
+   "totals": {
+    "small": 12.258689641952515,
+    "large": 34.29626774787903,
+    "total": 46.55495738983154
    }
   },
   {
@@ -537,6 +1302,2546 @@
    },
    "totals": {
     "total": 42.7187442779541
+   }
+  },
+  {
+   "version": "1.13.42.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-10 19:10:11",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 9.790625,
+   "files": {
+    "perfRigidPendulum.py": 4.88985013961792,
+    "perfSpringDamperExplicit.py": 5.56299614906311,
+    "perfSpringDamperUserFunction.py": 2.7304601669311523,
+    "generalContactSpheresPerf.py": 11.552069902420044,
+    "perf3DRigidBodies.py": 5.209942817687988,
+    "perfObjectFFRFreducedOrder.py": 4.798725366592407,
+    "perfLargeMassSpringChain.py": 13.697558879852295,
+    "perfConnectorInterface.py": 1.890913963317871,
+    "perfAccessFunctionsAD.py": 1.8950235843658447
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 4.889,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.551,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.729,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 6.258,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 2.216,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.33,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.088,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 4.65,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.519,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.262,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 2.042,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.432,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 2.026,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.205,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.431,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.21,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.442,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.036,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.502,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.055,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.088,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.389,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.069,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.671,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.576,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 52.22754096984863
+   }
+  },
+  {
+   "version": "1.13.53.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-11 00:29:47",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 7.565625,
+   "files": {
+    "perfRigidPendulum.py": 4.628999471664429,
+    "perfSpringDamperExplicit.py": 5.342115163803101,
+    "perfSpringDamperUserFunction.py": 2.364739179611206,
+    "generalContactSpheresPerf.py": 10.89772891998291,
+    "perf3DRigidBodies.py": 5.471518039703369,
+    "perfObjectFFRFreducedOrder.py": 5.418007850646973,
+    "perfLargeMassSpringChain.py": 14.028936862945557,
+    "perfConnectorInterface.py": 2.0785975456237793,
+    "perfAccessFunctionsAD.py": 1.6682109832763672
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 4.628,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.796,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.363,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 5.725,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 2.385,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.31,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.395,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 5.283,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 2.015,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.362,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 1.64,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.18,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.909,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.207,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.435,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.215,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.573,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.054,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.513,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.037,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.08,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.423,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.067,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.636,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.381,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 51.89885401725769
+   }
+  },
+  {
+   "version": "1.13.100.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-16 13:36:06",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 7.76875,
+   "files": {
+    "perfRigidPendulum.py": 5.042345762252808,
+    "perfSpringDamperExplicit.py": 5.368005990982056,
+    "perfSpringDamperUserFunction.py": 3.21413254737854,
+    "perfUserFunctions.py": 4.1079840660095215,
+    "generalContactSpheresPerf.py": 10.438604831695557,
+    "perf3DRigidBodies.py": 4.468348026275635,
+    "perfObjectFFRFreducedOrder.py": 5.16064715385437,
+    "perfLargeMassSpringChain.py": 15.442129611968994,
+    "perfConnectorInterface.py": 1.748131275177002,
+    "perfAccessFunctionsAD.py": 1.992798089981079
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 5.041,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.73,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 3.212,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.137,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.056,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.235,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.086,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.119,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.061,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.513,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.064,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.666,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.099,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 1.239,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.828,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 5.719,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 1.91,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.231,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 4.398,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 4.986,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.845,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.45,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 2.291,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 0.983,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.833,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.145,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.382,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.156,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.605,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.036,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.352,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.036,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.077,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.419,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.063,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.765,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.59,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 56.98312735557556
+   }
+  },
+  {
+   "version": "1.13.102.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-16 14:13:10",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 8.00625,
+   "files": {
+    "perfRigidPendulum.py": 4.680400133132935,
+    "perfSpringDamperExplicit.py": 5.818008661270142,
+    "perfSpringDamperUserFunction.py": 2.734820604324341,
+    "perfUserFunctions.py": 4.603233814239502,
+    "generalContactSpheresPerf.py": 9.35960841178894,
+    "perf3DRigidBodies.py": 4.679313898086548,
+    "perfObjectFFRFreducedOrder.py": 3.995159387588501,
+    "perfLargeMassSpringChain.py": 11.91936445236206,
+    "perfConnectorInterface.py": 1.5502543449401855,
+    "perfAccessFunctionsAD.py": 1.6307425498962402
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 4.679,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.42,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.733,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.08,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.032,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.162,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.079,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.164,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.102,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.823,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.064,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.925,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.083,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 1.316,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.768,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 5.048,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 1.972,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.077,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 4.611,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 3.825,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.549,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.228,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 1.458,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 0.924,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.93,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.183,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.29,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.131,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.443,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.059,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.377,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.035,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.075,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.401,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.06,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.586,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.439,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 50.970906257629395
+   }
+  },
+  {
+   "version": "1.13.104.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-16 17:36:03",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 7.665625,
+   "files": {
+    "perfRigidPendulum.py": 4.981165170669556,
+    "perfSpringDamperExplicit.py": 5.884436130523682,
+    "perfSpringDamperUserFunction.py": 2.661785125732422,
+    "perfUserFunctions.py": 3.691226005554199,
+    "generalContactSpheresPerf.py": 10.754721879959106,
+    "perf3DRigidBodies.py": 5.44374942779541,
+    "perfObjectFFRFreducedOrder.py": 4.8430702686309814,
+    "perfLargeMassSpringChain.py": 14.395609855651855,
+    "perfConnectorInterface.py": 1.5939528942108154,
+    "perfAccessFunctionsAD.py": 1.969733715057373
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 4.98,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.741,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.649,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.097,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.038,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.199,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.116,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.184,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.069,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.48,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.038,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.468,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.081,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 1.035,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.88,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 5.868,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 1.985,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.179,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.37,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 4.696,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.805,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.47,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 2.019,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.08,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.959,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.205,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.377,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.142,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.399,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.038,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.37,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.043,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.114,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.591,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.065,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.675,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.435,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 56.2194504737854
+   }
+  },
+  {
+   "version": "1.13.109.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-17 09:28:12",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 7.925,
+   "files": {
+    "perfRigidPendulum.py": 5.8078272342681885,
+    "perfSpringDamperExplicit.py": 5.2426698207855225,
+    "perfSpringDamperUserFunction.py": 2.8019120693206787,
+    "perfUserFunctions.py": 4.390621185302734,
+    "generalContactSpheresPerf.py": 11.02778434753418,
+    "perf3DRigidBodies.py": 5.213778972625732,
+    "perfObjectFFRFreducedOrder.py": 4.508180141448975,
+    "perfLargeMassSpringChain.py": 14.225434064865112,
+    "perfConnectorInterface.py": 2.0922491550445557,
+    "perfAccessFunctionsAD.py": 1.7202026844024658
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 5.806,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.415,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.8,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.123,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.055,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.756,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.113,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.377,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.093,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.544,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.059,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.498,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.056,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 0.869,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.841,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 6.058,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 2.126,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.247,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.115,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 4.335,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.796,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.384,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 2.006,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.317,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.976,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.204,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.441,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.207,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.585,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.055,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.515,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.055,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.115,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.498,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.06,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.603,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.346,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 57.030659675598145
+   }
+  },
+  {
+   "version": "1.13.111.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-17 10:23:56",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 10.15625,
+   "files": {
+    "perfRigidPendulum.py": 5.34898829460144,
+    "perfSpringDamperExplicit.py": 5.630452632904053,
+    "perfSpringDamperUserFunction.py": 2.4883055686950684,
+    "perfUserFunctions.py": 4.501053094863892,
+    "generalContactSpheresPerf.py": 10.987973690032959,
+    "perf3DRigidBodies.py": 5.1797802448272705,
+    "perfObjectFFRFreducedOrder.py": 5.2854204177856445,
+    "perfLargeMassSpringChain.py": 14.29458737373352,
+    "perfConnectorInterface.py": 2.0726282596588135,
+    "perfAccessFunctionsAD.py": 2.1802425384521484
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 5.348,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.459,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.486,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.127,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.053,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.689,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.114,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.375,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.096,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.529,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.058,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.504,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.071,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 1.003,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.874,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 6.218,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 2.081,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.213,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.079,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 5.124,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.848,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.172,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 2.272,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.31,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 2.161,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.204,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.412,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.209,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.6,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.054,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.512,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.055,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.111,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.572,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.06,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.759,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.575,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 57.96943211555481
+   }
+  },
+  {
+   "version": "1.13.117.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-17 16:19:14",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 8.153125,
+   "files": {
+    "perfRigidPendulum.py": 4.9073381423950195,
+    "perfSpringDamperExplicit.py": 5.610438346862793,
+    "perfSpringDamperUserFunction.py": 2.8560168743133545,
+    "perfUserFunctions.py": 4.37505030632019,
+    "generalContactSpheresPerf.py": 9.851036310195923,
+    "perf3DRigidBodies.py": 5.545471668243408,
+    "perfObjectFFRFreducedOrder.py": 4.623167276382446,
+    "perfLargeMassSpringChain.py": 13.62257170677185,
+    "perfConnectorInterface.py": 1.7009944915771484,
+    "perfAccessFunctionsAD.py": 2.0769128799438477
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 4.906,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.459,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.854,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.118,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.056,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.704,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.111,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.365,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.096,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.522,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.058,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.53,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.079,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 0.962,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.767,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 5.251,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 2.098,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.234,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.451,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 4.449,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 2.0,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.397,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 1.644,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.089,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.521,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.136,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.29,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.168,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.517,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.053,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.463,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.047,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.085,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.564,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.069,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.71,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.555,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 55.16899800300598
+   }
+  },
+  {
+   "version": "1.13.121.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-17 17:52:51",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 8.975,
+   "files": {
+    "perfRigidPendulum.py": 5.207742691040039,
+    "perfSpringDamperExplicit.py": 5.78105616569519,
+    "perfSpringDamperUserFunction.py": 2.3900983333587646,
+    "perfUserFunctions.py": 4.379899501800537,
+    "generalContactSpheresPerf.py": 10.770901679992676,
+    "perf3DRigidBodies.py": 5.486564874649048,
+    "perfObjectFFRFreducedOrder.py": 5.508843660354614,
+    "perfLargeMassSpringChain.py": 13.423810958862305,
+    "perfConnectorInterface.py": 1.8825652599334717,
+    "perfAccessFunctionsAD.py": 2.224118709564209
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 5.206,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.493,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.388,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.088,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.035,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.71,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.112,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.367,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.089,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.502,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.055,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.547,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.076,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 1.01,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.781,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 5.82,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 2.113,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.267,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.387,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 5.302,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.834,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.15,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 1.692,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.288,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.606,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.141,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.35,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.2,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.567,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.055,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.493,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.055,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.111,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.57,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.097,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.833,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.506,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 57.055601835250854
+   }
+  },
+  {
+   "version": "1.13.141.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-18 22:56:30",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 7.225,
+   "files": {
+    "perfRigidPendulum.py": 5.775076627731323,
+    "perfSpringDamperExplicit.py": 5.060253381729126,
+    "perfSpringDamperUserFunction.py": 2.9514002799987793,
+    "perfUserFunctions.py": 7.512613296508789,
+    "generalContactSpheresPerf.py": 9.440095663070679,
+    "perf3DRigidBodies.py": 5.496629238128662,
+    "perfObjectFFRFreducedOrder.py": 4.81744647026062,
+    "perfLargeMassSpringChain.py": 15.298675060272217,
+    "perfConnectorInterface.py": 1.6168932914733887,
+    "perfAccessFunctionsAD.py": 2.4188101291656494
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 5.774,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.525,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.949,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.13,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.056,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.826,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.089,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.357,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.102,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.577,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.063,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.524,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.053,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 0.979,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.982,
+     "timers": {}
+    },
+    "perfUserFunctions:rigid6-python": {
+     "time": 1.053,
+     "timers": {}
+    },
+    "perfUserFunctions:rigid6-symbolic": {
+     "time": 0.333,
+     "timers": {}
+    },
+    "perfUserFunctions:ode1x6-python": {
+     "time": 0.291,
+     "timers": {}
+    },
+    "perfUserFunctions:ode1x6-symbolic": {
+     "time": 0.044,
+     "timers": {}
+    },
+    "perfUserFunctions:mass6-python": {
+     "time": 0.845,
+     "timers": {}
+    },
+    "perfUserFunctions:mass6-symbolic": {
+     "time": 0.09,
+     "timers": {}
+    },
+    "perfUserFunctions:preStep-python": {
+     "time": 0.063,
+     "timers": {}
+    },
+    "perfUserFunctions:preStep-symbolic": {
+     "time": 0.045,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 4.666,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 1.968,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.161,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.391,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 4.644,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 2.22,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.363,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 2.297,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.325,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.975,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.2,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.296,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.135,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.369,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.037,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.518,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.057,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.116,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.601,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.103,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.882,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.602,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 60.38789343833923
+   }
+  },
+  {
+   "version": "1.13.150.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-19 23:22:33",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 8.5625,
+   "files": {
+    "perfRigidPendulum.py": 5.309895992279053,
+    "perfSpringDamperExplicit.py": 5.069018125534058,
+    "perfSpringDamperUserFunction.py": 2.5067875385284424,
+    "perfUserFunctions.py": 6.853111267089844,
+    "generalContactSpheresPerf.py": 10.657507181167603,
+    "perf3DRigidBodies.py": 5.232618570327759,
+    "perfObjectFFRFreducedOrder.py": 5.043092250823975,
+    "perfLargeMassSpringChain.py": 13.68306279182434,
+    "perfConnectorInterface.py": 1.346733570098877,
+    "perfAccessFunctionsAD.py": 1.8164496421813965
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 5.308,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.195,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.505,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.099,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.045,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.748,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.115,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.292,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.07,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.36,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.037,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.524,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.078,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 1.055,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.846,
+     "timers": {}
+    },
+    "perfUserFunctions:rigid6-python": {
+     "time": 1.015,
+     "timers": {}
+    },
+    "perfUserFunctions:rigid6-symbolic": {
+     "time": 0.309,
+     "timers": {}
+    },
+    "perfUserFunctions:ode1x6-python": {
+     "time": 0.277,
+     "timers": {}
+    },
+    "perfUserFunctions:ode1x6-symbolic": {
+     "time": 0.042,
+     "timers": {}
+    },
+    "perfUserFunctions:mass6-python": {
+     "time": 0.694,
+     "timers": {}
+    },
+    "perfUserFunctions:mass6-symbolic": {
+     "time": 0.088,
+     "timers": {}
+    },
+    "perfUserFunctions:preStep-python": {
+     "time": 0.072,
+     "timers": {}
+    },
+    "perfUserFunctions:preStep-symbolic": {
+     "time": 0.077,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 5.896,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 2.026,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.21,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.13,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 4.884,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.866,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.303,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 2.042,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.084,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.768,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.138,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.283,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.139,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.356,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.036,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.338,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.035,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.074,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.418,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.063,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.603,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.584,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 57.51827692985535
+   }
+  },
+  {
+   "version": "1.13.160.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-20 22:56:35",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 2.196875,
+   "files": {
+    "perfRigidPendulum.py": 4.478344917297363,
+    "perfSpringDamperExplicit.py": 4.117915391921997,
+    "perfSpringDamperUserFunction.py": 2.00895094871521,
+    "perfUserFunctions.py": 5.627587556838989,
+    "generalContactSpheresPerf.py": 8.798091650009155,
+    "perf3DRigidBodies.py": 4.555612802505493,
+    "perfObjectFFRFreducedOrder.py": 3.7821884155273438,
+    "perfLargeMassSpringChain.py": 11.12265157699585,
+    "perfConnectorInterface.py": 1.3289566040039062,
+    "perfAccessFunctionsAD.py": 1.5251209735870361
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 4.477,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 2.763,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.007,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.078,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.036,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.513,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.076,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.246,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.057,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.359,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.036,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.376,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.049,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 0.827,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.76,
+     "timers": {}
+    },
+    "perfUserFunctions:rigid6-python": {
+     "time": 0.978,
+     "timers": {}
+    },
+    "perfUserFunctions:rigid6-symbolic": {
+     "time": 0.255,
+     "timers": {}
+    },
+    "perfUserFunctions:ode1x6-python": {
+     "time": 0.178,
+     "timers": {}
+    },
+    "perfUserFunctions:ode1x6-symbolic": {
+     "time": 0.024,
+     "timers": {}
+    },
+    "perfUserFunctions:mass6-python": {
+     "time": 0.577,
+     "timers": {}
+    },
+    "perfUserFunctions:mass6-symbolic": {
+     "time": 0.092,
+     "timers": {}
+    },
+    "perfUserFunctions:preStep-python": {
+     "time": 0.059,
+     "timers": {}
+    },
+    "perfUserFunctions:preStep-symbolic": {
+     "time": 0.043,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 4.571,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 1.854,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.053,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 4.483,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 3.618,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.423,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.111,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 1.45,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 0.911,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.574,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.138,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.281,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.137,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.348,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.036,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.336,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.037,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.074,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.389,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.06,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.58,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.348,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 47.345420837402344
+   }
+  },
+  {
+   "version": "1.13.161.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-22 15:26:55",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 2.03125,
+   "files": {
+    "perfRigidPendulum.py": 4.69058632850647,
+    "perfSpringDamperExplicit.py": 4.532215356826782,
+    "perfSpringDamperUserFunction.py": 2.1373136043548584,
+    "perfUserFunctions.py": 6.055455207824707,
+    "generalContactSpheresPerf.py": 9.15718674659729,
+    "perf3DRigidBodies.py": 5.088422060012817,
+    "perfObjectFFRFreducedOrder.py": 3.9178590774536133,
+    "perfLargeMassSpringChain.py": 11.484650611877441,
+    "perfConnectorInterface.py": 1.3874380588531494,
+    "perfAccessFunctionsAD.py": 1.6009385585784912
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 4.689,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.022,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.136,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.087,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.038,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.542,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.099,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.27,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.067,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.378,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.041,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.384,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.054,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 0.874,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.816,
+     "timers": {}
+    },
+    "perfUserFunctions:rigid6-python": {
+     "time": 1.042,
+     "timers": {}
+    },
+    "perfUserFunctions:rigid6-symbolic": {
+     "time": 0.291,
+     "timers": {}
+    },
+    "perfUserFunctions:ode1x6-python": {
+     "time": 0.189,
+     "timers": {}
+    },
+    "perfUserFunctions:ode1x6-symbolic": {
+     "time": 0.033,
+     "timers": {}
+    },
+    "perfUserFunctions:mass6-python": {
+     "time": 0.579,
+     "timers": {}
+    },
+    "perfUserFunctions:mass6-symbolic": {
+     "time": 0.146,
+     "timers": {}
+    },
+    "perfUserFunctions:preStep-python": {
+     "time": 0.067,
+     "timers": {}
+    },
+    "perfUserFunctions:preStep-symbolic": {
+     "time": 0.048,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 4.623,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 1.973,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.224,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.019,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 3.766,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.531,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.201,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 1.517,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 0.937,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 1.478,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.141,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.311,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.134,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.36,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.038,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.349,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.046,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.078,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.413,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.066,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.594,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.366,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 50.05206561088562
+   }
+  },
+  {
+   "version": "1.13.174.dev1",
+   "module": "regular",
+   "machine": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+   "system": "win32",
+   "python": "3.13",
+   "date": "2026-10-24 16:03:57",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 52.96875,
+   "files": {
+    "perfRigidPendulum.py": 5.307585954666138,
+    "perfSpringDamperExplicit.py": 4.899276494979858,
+    "perfSpringDamperUserFunction.py": 2.307143449783325,
+    "perfUserFunctions.py": 6.5048229694366455,
+    "generalContactSpheresPerf.py": 10.643089056015015,
+    "perf3DRigidBodies.py": 5.616379499435425,
+    "perfObjectFFRFreducedOrder.py": 5.3089563846588135,
+    "perfLargeMassSpringChain.py": 12.930920124053955,
+    "perfConnectorInterface.py": 1.510913372039795,
+    "perfAccessFunctionsAD.py": 1.7164828777313232
+   },
+   "runs": {
+    "perfRigidPendulum.py": {
+     "time": 5.297,
+     "timers": {}
+    },
+    "perfSpringDamperExplicit.py": {
+     "time": 3.232,
+     "timers": {}
+    },
+    "perfSpringDamperUserFunction.py": {
+     "time": 2.284,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-python": {
+     "time": 0.095,
+     "timers": {}
+    },
+    "perfUserFunctions:spring-symbolic": {
+     "time": 0.043,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-python": {
+     "time": 0.574,
+     "timers": {}
+    },
+    "perfUserFunctions:cartesian-symbolic": {
+     "time": 0.11,
+     "timers": {}
+    },
+    "perfUserFunctions:load-python": {
+     "time": 0.279,
+     "timers": {}
+    },
+    "perfUserFunctions:load-symbolic": {
+     "time": 0.073,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-python": {
+     "time": 0.395,
+     "timers": {}
+    },
+    "perfUserFunctions:generic6-symbolic": {
+     "time": 0.041,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-python": {
+     "time": 0.401,
+     "timers": {}
+    },
+    "perfUserFunctions:generic10-symbolic": {
+     "time": 0.061,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-python": {
+     "time": 0.946,
+     "timers": {}
+    },
+    "perfUserFunctions:generic100-symbolic": {
+     "time": 0.858,
+     "timers": {}
+    },
+    "perfUserFunctions:rigid6-python": {
+     "time": 1.068,
+     "timers": {}
+    },
+    "perfUserFunctions:rigid6-symbolic": {
+     "time": 0.322,
+     "timers": {}
+    },
+    "perfUserFunctions:ode1x6-python": {
+     "time": 0.207,
+     "timers": {}
+    },
+    "perfUserFunctions:ode1x6-symbolic": {
+     "time": 0.03,
+     "timers": {}
+    },
+    "perfUserFunctions:mass6-python": {
+     "time": 0.709,
+     "timers": {}
+    },
+    "perfUserFunctions:mass6-symbolic": {
+     "time": 0.155,
+     "timers": {}
+    },
+    "perfUserFunctions:preStep-python": {
+     "time": 0.069,
+     "timers": {}
+    },
+    "perfUserFunctions:preStep-symbolic": {
+     "time": 0.046,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt1": {
+     "time": 5.409,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt4": {
+     "time": 2.217,
+     "timers": {}
+    },
+    "generalContactSpheresPerf:nt8": {
+     "time": 1.374,
+     "timers": {}
+    },
+    "perf3DRigidBodies.py": {
+     "time": 5.53,
+     "timers": {}
+    },
+    "perfObjectFFRFreducedOrder.py": {
+     "time": 4.042,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-explicit": {
+     "time": 1.629,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n1000-implicit": {
+     "time": 1.281,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-explicit": {
+     "time": 1.886,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n5000-implicit": {
+     "time": 1.013,
+     "timers": {}
+    },
+    "perfLargeMassSpringChain:rigid-n20000-explicit": {
+     "time": 2.016,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-implicit": {
+     "time": 0.149,
+     "timers": {}
+    },
+    "perfConnectorInterface:spring-n200-explicit": {
+     "time": 0.324,
+     "timers": {}
+    },
+    "perfConnectorInterface:gravity-n200-implicit": {
+     "time": 0.134,
+     "timers": {}
+    },
+    "perfConnectorInterface:coordinate-n1000-explicit": {
+     "time": 0.424,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-implicit": {
+     "time": 0.043,
+     "timers": {}
+    },
+    "perfConnectorInterface:rigid-n100-explicit": {
+     "time": 0.362,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidEP-n100-implicit": {
+     "time": 0.04,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-implicit": {
+     "time": 0.082,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigidRxyz-n100-explicit": {
+     "time": 0.429,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-implicit": {
+     "time": 0.075,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:cable-n200-implicit": {
+     "time": 0.658,
+     "timers": {}
+    },
+    "perfAccessFunctionsAD:rigid2D-n200-explicit": {
+     "time": 0.382,
+     "timers": {}
+    }
+   },
+   "totals": {
+    "total": 56.74557018280029
    }
   },
   {
@@ -1183,6 +4488,54 @@
     "small": 16.81576442718506,
     "large": 28.772062063217163,
     "total": 45.58782649040222
+   }
+  },
+  {
+   "version": "1.10.0",
+   "module": "regular",
+   "machine": "x86_64",
+   "cpu": "x86_64",
+   "system": "linux",
+   "python": "3.13",
+   "date": "2025-07-09 19:49:32",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 0.0,
+   "files": {
+    "generalContactSpheresTest.py": 2.709519624710083,
+    "perf3DRigidBodies.py": 5.24358057975769,
+    "perfObjectFFRFreducedOrder.py": 2.7561469078063965,
+    "perfRigidPendulum.py": 4.5461509227752686,
+    "perfSpringDamperExplicit.py": 2.665987730026245,
+    "perfSpringDamperUserFunction.py": 2.1837663650512695
+   },
+   "runs": {},
+   "totals": {
+    "total": 20.105152130126953
+   }
+  },
+  {
+   "version": "1.11.35.dev1",
+   "module": "regular",
+   "machine": "x86_64",
+   "cpu": "x86_64",
+   "system": "linux",
+   "python": "3.13",
+   "date": "2026-09-12 11:39:44",
+   "source": "text",
+   "timers": false,
+   "cpuLoadBefore": 0.0,
+   "files": {
+    "generalContactSpheresTest.py": 2.884904623031616,
+    "perf3DRigidBodies.py": 4.941861867904663,
+    "perfObjectFFRFreducedOrder.py": 2.7701334953308105,
+    "perfRigidPendulum.py": 4.21750020980835,
+    "perfSpringDamperExplicit.py": 2.840763807296753,
+    "perfSpringDamperUserFunction.py": 2.463038682937622
+   },
+   "runs": {},
+   "totals": {
+    "total": 20.118202686309814
    }
   }
  ]

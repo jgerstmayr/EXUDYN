@@ -81,70 +81,99 @@ module. Times in seconds: of each test file the wall-clock time, of each single 
 
 ### Test files
 
-| | 1.9.0 | 1.10.0 | 1.11.0 | 1.13.6* | 1.13.183.dev1 |
-|---|---:|---:|---:|---:|---:|
-| generalContactSpheresPerf.py |  |  |  | 8.885 | 7.919 |
-| generalContactSpheresTest.py | 3.484 | 3.503 | 4.468 |  |  |
-| perf3DRigidBodies.py | 5.512 | 5.417 | 7.097 | 3.649 | 3.740 |
-| perfAccessFunctionsAD.py |  |  |  | 1.422 | 1.498 |
-| perfConnectorInterface.py |  |  |  | 1.278 | 1.286 |
-| perfLargeMassSpringChain.py |  |  |  | 12.295 | 10.624 |
-| perfObjectFFRFreducedOrder.py | 3.778 | 3.674 | 3.847 | 3.819 | 3.705 |
-| perfRigidPendulum.py | 4.994 | 5.101 | 5.305 | 4.596 | 4.378 |
-| perfSpringDamperExplicit.py | 3.373 | 3.382 | 3.539 | 4.375 | 4.275 |
-| perfSpringDamperUserFunction.py |  | 2.997 | 3.057 | 2.401 | 1.976 |
-| perfUserFunctions.py |  |  |  |  | 6.187 |
-| total | 21.141 | 24.073 | 27.314 | 42.719 | 45.588 |
+| | 1.9.0 | 1.10.0 | 1.11.0 | 1.12.0.dev1 | 1.13.6* | 1.13.42.dev1 | 1.13.53.dev1 | 1.13.100.dev1 | 1.13.102.dev1 | 1.13.104.dev1 | 1.13.109.dev1 | 1.13.111.dev1 | 1.13.117.dev1 | 1.13.121.dev1 | 1.13.141.dev1 | 1.13.150.dev1 | 1.13.160.dev1 | 1.13.161.dev1 | 1.13.174.dev1* | 1.13.183.dev1 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| generalContactSpheresPerf.py |  |  | 9.578 | 9.833 | 8.885 | 11.552 | 10.898 | 10.439 | 9.360 | 10.755 | 11.028 | 10.988 | 9.851 | 10.771 | 9.440 | 10.658 | 8.798 | 9.157 | 10.643 | 7.919 |
+| generalContactSpheresTest.py | 3.484 | 3.503 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| perf3DRigidBodies.py | 5.512 | 5.417 | 4.669 | 4.754 | 3.649 | 5.210 | 5.472 | 4.468 | 4.679 | 5.444 | 5.214 | 5.180 | 5.545 | 5.487 | 5.497 | 5.233 | 4.556 | 5.088 | 5.616 | 3.740 |
+| perfAccessFunctionsAD.py |  |  |  |  | 1.422 | 1.895 | 1.668 | 1.993 | 1.631 | 1.970 | 1.720 | 2.180 | 2.077 | 2.224 | 2.419 | 1.816 | 1.525 | 1.601 | 1.716 | 1.498 |
+| perfConnectorInterface.py |  |  | 2.631 | 2.654 | 1.278 | 1.891 | 2.079 | 1.748 | 1.550 | 1.594 | 2.092 | 2.073 | 1.701 | 1.883 | 1.617 | 1.347 | 1.329 | 1.387 | 1.511 | 1.286 |
+| perfLargeMassSpringChain.py |  |  | 10.504 | 11.679 | 12.295 | 13.698 | 14.029 | 15.442 | 11.919 | 14.396 | 14.225 | 14.295 | 13.623 | 13.424 | 15.299 | 13.683 | 11.123 | 11.485 | 12.931 | 10.624 |
+| perfObjectFFRFreducedOrder.py | 3.778 | 3.674 | 3.752 | 3.885 | 3.819 | 4.799 | 5.418 | 5.161 | 3.995 | 4.843 | 4.508 | 5.285 | 4.623 | 5.509 | 4.817 | 5.043 | 3.782 | 3.918 | 5.309 | 3.705 |
+| perfRigidPendulum.py | 4.994 | 5.101 | 5.072 | 4.989 | 4.596 | 4.890 | 4.629 | 5.042 | 4.680 | 4.981 | 5.808 | 5.349 | 4.907 | 5.208 | 5.775 | 5.310 | 4.478 | 4.691 | 5.308 | 4.378 |
+| perfSpringDamperExplicit.py | 3.373 | 3.382 | 4.451 | 4.264 | 4.375 | 5.563 | 5.342 | 5.368 | 5.818 | 5.884 | 5.243 | 5.630 | 5.610 | 5.781 | 5.060 | 5.069 | 4.118 | 4.532 | 4.899 | 4.275 |
+| perfSpringDamperUserFunction.py |  | 2.997 | 3.023 | 2.903 | 2.401 | 2.730 | 2.365 | 3.214 | 2.735 | 2.662 | 2.802 | 2.488 | 2.856 | 2.390 | 2.951 | 2.507 | 2.009 | 2.137 | 2.307 | 1.976 |
+| perfUserFunctions.py |  |  |  |  |  |  |  | 4.108 | 4.603 | 3.691 | 4.391 | 4.501 | 4.375 | 4.380 | 7.513 | 6.853 | 5.628 | 6.055 | 6.505 | 6.187 |
+| total | 21.141 | 24.073 | 45.278 | 46.555 | 42.719 | 52.228 | 51.899 | 56.983 | 50.971 | 56.219 | 57.031 | 57.969 | 55.169 | 57.056 | 60.388 | 57.518 | 47.345 | 50.052 | 56.746 | 45.588 |
 
 ### Single runs, solver time
 
-| | 1.9.0 | 1.10.0 | 1.11.0 | 1.13.6* | 1.13.183.dev1 |
-|---|---:|---:|---:|---:|---:|
-| generalContactSpheresPerf:nt1 |  |  |  | 5.147 | 4.347 |
-| generalContactSpheresPerf:nt4 |  |  |  | 1.571 | 1.497 |
-| generalContactSpheresPerf:nt8 |  |  |  | 0.902 | 0.876 |
-| perf3DRigidBodies.py |  |  |  | 3.557 | 3.674 |
-| perfAccessFunctionsAD:cable-n200-implicit |  |  |  | 0.554 | 0.576 |
-| perfAccessFunctionsAD:rigid2D-n200-explicit |  |  |  | 0.305 | 0.338 |
-| perfAccessFunctionsAD:rigid2D-n200-implicit |  |  |  | 0.054 | 0.061 |
-| perfAccessFunctionsAD:rigidEP-n100-implicit |  |  |  | 0.035 | 0.035 |
-| perfAccessFunctionsAD:rigidRxyz-n100-explicit |  |  |  | 0.364 | 0.382 |
-| perfAccessFunctionsAD:rigidRxyz-n100-implicit |  |  |  | 0.072 | 0.072 |
-| perfConnectorInterface:coordinate-n1000-explicit |  |  |  | 0.319 | 0.339 |
-| perfConnectorInterface:gravity-n200-implicit |  |  |  | 0.132 | 0.126 |
-| perfConnectorInterface:rigid-n100-explicit |  |  |  | 0.323 | 0.325 |
-| perfConnectorInterface:rigid-n100-implicit |  |  |  | 0.035 | 0.035 |
-| perfConnectorInterface:spring-n200-explicit |  |  |  | 0.280 | 0.278 |
-| perfConnectorInterface:spring-n200-implicit |  |  |  | 0.134 | 0.131 |
-| perfLargeMassSpringChain:rigid-n1000-explicit |  |  |  | 1.446 | 1.412 |
-| perfLargeMassSpringChain:rigid-n1000-implicit |  |  |  | 1.111 | 1.098 |
-| perfLargeMassSpringChain:rigid-n20000-explicit |  |  |  | 1.986 | 1.509 |
-| perfLargeMassSpringChain:rigid-n5000-explicit |  |  |  | 1.633 | 1.380 |
-| perfLargeMassSpringChain:rigid-n5000-implicit |  |  |  | 1.053 | 0.869 |
-| perfObjectFFRFreducedOrder.py |  |  |  | 3.670 | 3.551 |
-| perfRigidPendulum.py |  |  |  | 4.594 | 4.377 |
-| perfSpringDamperExplicit.py |  |  |  | 2.975 | 2.804 |
-| perfSpringDamperUserFunction.py |  |  |  | 2.400 | 1.974 |
-| perfUserFunctions:cartesian-python |  |  |  |  | 0.519 |
-| perfUserFunctions:cartesian-symbolic |  |  |  |  | 0.124 |
-| perfUserFunctions:generic10-python |  |  |  |  | 0.385 |
-| perfUserFunctions:generic10-symbolic |  |  |  |  | 0.079 |
-| perfUserFunctions:generic100-python |  |  |  |  | 0.819 |
-| perfUserFunctions:generic100-symbolic |  |  |  |  | 0.755 |
-| perfUserFunctions:generic6-python |  |  |  |  | 0.373 |
-| perfUserFunctions:generic6-symbolic |  |  |  |  | 0.066 |
-| perfUserFunctions:load-python |  |  |  |  | 0.265 |
-| perfUserFunctions:load-symbolic |  |  |  |  | 0.092 |
-| perfUserFunctions:mass6-python |  |  |  |  | 0.584 |
-| perfUserFunctions:mass6-symbolic |  |  |  |  | 0.173 |
-| perfUserFunctions:ode1x6-python |  |  |  |  | 0.207 |
-| perfUserFunctions:ode1x6-symbolic |  |  |  |  | 0.061 |
-| perfUserFunctions:preStep-python |  |  |  |  | 0.122 |
-| perfUserFunctions:preStep-symbolic |  |  |  |  | 0.109 |
-| perfUserFunctions:rigid6-python |  |  |  |  | 0.967 |
-| perfUserFunctions:rigid6-symbolic |  |  |  |  | 0.308 |
-| perfUserFunctions:spring-python |  |  |  |  | 0.104 |
-| perfUserFunctions:spring-symbolic |  |  |  |  | 0.067 |
+| | 1.9.0 | 1.10.0 | 1.11.0 | 1.12.0.dev1 | 1.13.6* | 1.13.42.dev1 | 1.13.53.dev1 | 1.13.100.dev1 | 1.13.102.dev1 | 1.13.104.dev1 | 1.13.109.dev1 | 1.13.111.dev1 | 1.13.117.dev1 | 1.13.121.dev1 | 1.13.141.dev1 | 1.13.150.dev1 | 1.13.160.dev1 | 1.13.161.dev1 | 1.13.174.dev1* | 1.13.183.dev1 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| generalContactSpheresPerf:nt1 |  |  | 4.776 | 4.878 | 5.147 | 6.258 | 5.725 | 5.719 | 5.048 | 5.868 | 6.058 | 6.218 | 5.251 | 5.820 | 4.666 | 5.896 | 4.571 | 4.623 | 5.409 | 4.347 |
+| generalContactSpheresPerf:nt4 |  |  | 2.302 | 2.282 | 1.571 | 2.216 | 2.385 | 1.910 | 1.972 | 1.985 | 2.126 | 2.081 | 2.098 | 2.113 | 1.968 | 2.026 | 1.854 | 1.973 | 2.217 | 1.497 |
+| generalContactSpheresPerf:nt8 |  |  | 1.257 | 1.300 | 0.902 | 1.330 | 1.310 | 1.231 | 1.077 | 1.179 | 1.247 | 1.213 | 1.234 | 1.267 | 1.161 | 1.210 | 1.053 | 1.224 | 1.374 | 0.876 |
+| perf3DRigidBodies.py |  |  | 4.600 | 4.675 | 3.557 | 5.088 | 5.395 | 4.398 | 4.611 | 5.370 | 5.115 | 5.079 | 5.451 | 5.387 | 5.391 | 5.130 | 4.483 | 5.019 | 5.530 | 3.674 |
+| perfAccessFunctionsAD:cable-n200-implicit |  |  |  |  | 0.554 | 0.671 | 0.636 | 0.765 | 0.586 | 0.675 | 0.603 | 0.759 | 0.710 | 0.833 | 0.882 | 0.603 | 0.580 | 0.594 | 0.658 | 0.576 |
+| perfAccessFunctionsAD:rigid2D-n200-explicit |  |  |  |  | 0.305 | 0.576 | 0.381 | 0.590 | 0.439 | 0.435 | 0.346 | 0.575 | 0.555 | 0.506 | 0.602 | 0.584 | 0.348 | 0.366 | 0.382 | 0.338 |
+| perfAccessFunctionsAD:rigid2D-n200-implicit |  |  | 0.163 | 0.164 | 0.054 | 0.069 | 0.067 | 0.063 | 0.060 | 0.065 | 0.060 | 0.060 | 0.069 | 0.097 | 0.103 | 0.063 | 0.060 | 0.066 | 0.075 | 0.061 |
+| perfAccessFunctionsAD:rigidEP-n100-implicit |  |  | 0.377 | 0.379 | 0.035 | 0.055 | 0.037 | 0.036 | 0.035 | 0.043 | 0.055 | 0.055 | 0.047 | 0.055 | 0.057 | 0.035 | 0.037 | 0.046 | 0.040 | 0.035 |
+| perfAccessFunctionsAD:rigidRxyz-n100-explicit |  |  | 0.402 | 0.398 | 0.364 | 0.389 | 0.423 | 0.419 | 0.401 | 0.591 | 0.498 | 0.572 | 0.564 | 0.570 | 0.601 | 0.418 | 0.389 | 0.413 | 0.429 | 0.382 |
+| perfAccessFunctionsAD:rigidRxyz-n100-implicit |  |  | 0.506 | 0.521 | 0.072 | 0.088 | 0.080 | 0.077 | 0.075 | 0.114 | 0.115 | 0.111 | 0.085 | 0.111 | 0.116 | 0.074 | 0.074 | 0.078 | 0.082 | 0.072 |
+| perfConnectorInterface:coordinate-n1000-explicit |  |  | 0.417 | 0.408 | 0.319 | 0.442 | 0.573 | 0.605 | 0.443 | 0.399 | 0.585 | 0.600 | 0.517 | 0.567 | 0.369 | 0.356 | 0.348 | 0.360 | 0.424 | 0.339 |
+| perfConnectorInterface:gravity-n200-implicit |  |  | 0.730 | 0.728 | 0.132 | 0.210 | 0.215 | 0.156 | 0.131 | 0.142 | 0.207 | 0.209 | 0.168 | 0.200 | 0.135 | 0.139 | 0.137 | 0.134 | 0.134 | 0.126 |
+| perfConnectorInterface:rigid-n100-explicit |  |  | 0.342 | 0.343 | 0.323 | 0.502 | 0.513 | 0.352 | 0.377 | 0.370 | 0.515 | 0.512 | 0.463 | 0.493 | 0.518 | 0.338 | 0.336 | 0.349 | 0.362 | 0.325 |
+| perfConnectorInterface:rigid-n100-implicit |  |  | 0.377 | 0.387 | 0.035 | 0.036 | 0.054 | 0.036 | 0.059 | 0.038 | 0.055 | 0.054 | 0.053 | 0.055 | 0.037 | 0.036 | 0.036 | 0.038 | 0.043 | 0.035 |
+| perfConnectorInterface:spring-n200-explicit |  |  | 0.320 | 0.321 | 0.280 | 0.431 | 0.435 | 0.382 | 0.290 | 0.377 | 0.441 | 0.412 | 0.290 | 0.350 | 0.296 | 0.283 | 0.281 | 0.311 | 0.324 | 0.278 |
+| perfConnectorInterface:spring-n200-implicit |  |  | 0.399 | 0.409 | 0.134 | 0.205 | 0.207 | 0.145 | 0.183 | 0.205 | 0.204 | 0.204 | 0.136 | 0.141 | 0.200 | 0.138 | 0.138 | 0.141 | 0.149 | 0.131 |
+| perfLargeMassSpringChain:rigid-n1000-explicit |  |  | 1.543 | 1.605 | 1.446 | 1.519 | 2.015 | 1.845 | 1.549 | 1.805 | 1.796 | 1.848 | 2.000 | 1.834 | 2.220 | 1.866 | 1.423 | 1.531 | 1.629 | 1.412 |
+| perfLargeMassSpringChain:rigid-n1000-implicit |  |  | 1.187 | 1.268 | 1.111 | 1.262 | 1.362 | 1.450 | 1.228 | 1.470 | 1.384 | 1.172 | 1.397 | 1.150 | 1.363 | 1.303 | 1.111 | 1.201 | 1.281 | 1.098 |
+| perfLargeMassSpringChain:rigid-n20000-explicit |  |  | 1.664 | 1.847 | 1.986 | 2.026 | 1.909 | 1.833 | 1.930 | 1.959 | 1.976 | 2.161 | 1.521 | 1.606 | 1.975 | 1.768 | 1.574 | 1.478 | 2.016 | 1.509 |
+| perfLargeMassSpringChain:rigid-n5000-explicit |  |  | 1.527 | 1.833 | 1.633 | 2.042 | 1.640 | 2.291 | 1.458 | 2.019 | 2.006 | 2.272 | 1.644 | 1.692 | 2.297 | 2.042 | 1.450 | 1.517 | 1.886 | 1.380 |
+| perfLargeMassSpringChain:rigid-n5000-implicit |  |  | 0.965 | 1.012 | 1.053 | 1.432 | 1.180 | 0.983 | 0.924 | 1.080 | 1.317 | 1.310 | 1.089 | 1.288 | 1.325 | 1.084 | 0.911 | 0.937 | 1.013 | 0.869 |
+| perfObjectFFRFreducedOrder.py |  |  | 3.586 | 3.732 | 3.670 | 4.650 | 5.283 | 4.986 | 3.825 | 4.696 | 4.335 | 5.124 | 4.449 | 5.302 | 4.644 | 4.884 | 3.618 | 3.766 | 4.042 | 3.551 |
+| perfRigidPendulum.py |  |  | 5.070 | 4.987 | 4.594 | 4.889 | 4.628 | 5.041 | 4.679 | 4.980 | 5.806 | 5.348 | 4.906 | 5.206 | 5.774 | 5.308 | 4.477 | 4.689 | 5.297 | 4.377 |
+| perfSpringDamperExplicit.py |  |  | 2.937 | 2.808 | 2.975 | 3.551 | 3.796 | 3.730 | 3.420 | 3.741 | 3.415 | 3.459 | 3.459 | 3.493 | 3.525 | 3.195 | 2.763 | 3.022 | 3.232 | 2.804 |
+| perfSpringDamperUserFunction.py |  |  | 3.021 | 2.901 | 2.400 | 2.729 | 2.363 | 3.212 | 2.733 | 2.649 | 2.800 | 2.486 | 2.854 | 2.388 | 2.949 | 2.505 | 2.007 | 2.136 | 2.284 | 1.974 |
+| perfUserFunctions:cartesian-python |  |  |  |  |  |  |  | 0.235 | 0.162 | 0.199 | 0.756 | 0.689 | 0.704 | 0.710 | 0.826 | 0.748 | 0.513 | 0.542 | 0.574 | 0.519 |
+| perfUserFunctions:cartesian-symbolic |  |  |  |  |  |  |  | 0.086 | 0.079 | 0.116 | 0.113 | 0.114 | 0.111 | 0.112 | 0.089 | 0.115 | 0.076 | 0.099 | 0.110 | 0.124 |
+| perfUserFunctions:generic10-python |  |  |  |  |  |  |  | 0.666 | 0.925 | 0.468 | 0.498 | 0.504 | 0.530 | 0.547 | 0.524 | 0.524 | 0.376 | 0.384 | 0.401 | 0.385 |
+| perfUserFunctions:generic10-symbolic |  |  |  |  |  |  |  | 0.099 | 0.083 | 0.081 | 0.056 | 0.071 | 0.079 | 0.076 | 0.053 | 0.078 | 0.049 | 0.054 | 0.061 | 0.079 |
+| perfUserFunctions:generic100-python |  |  |  |  |  |  |  | 1.239 | 1.316 | 1.035 | 0.869 | 1.003 | 0.962 | 1.010 | 0.979 | 1.055 | 0.827 | 0.874 | 0.946 | 0.819 |
+| perfUserFunctions:generic100-symbolic |  |  |  |  |  |  |  | 0.828 | 0.768 | 0.880 | 0.841 | 0.874 | 0.767 | 0.781 | 0.982 | 0.846 | 0.760 | 0.816 | 0.858 | 0.755 |
+| perfUserFunctions:generic6-python |  |  |  |  |  |  |  | 0.513 | 0.823 | 0.480 | 0.544 | 0.529 | 0.522 | 0.502 | 0.577 | 0.360 | 0.359 | 0.378 | 0.395 | 0.373 |
+| perfUserFunctions:generic6-symbolic |  |  |  |  |  |  |  | 0.064 | 0.064 | 0.038 | 0.059 | 0.058 | 0.058 | 0.055 | 0.063 | 0.037 | 0.036 | 0.041 | 0.041 | 0.066 |
+| perfUserFunctions:load-python |  |  |  |  |  |  |  | 0.119 | 0.164 | 0.184 | 0.377 | 0.375 | 0.365 | 0.367 | 0.357 | 0.292 | 0.246 | 0.270 | 0.279 | 0.265 |
+| perfUserFunctions:load-symbolic |  |  |  |  |  |  |  | 0.061 | 0.102 | 0.069 | 0.093 | 0.096 | 0.096 | 0.089 | 0.102 | 0.070 | 0.057 | 0.067 | 0.073 | 0.092 |
+| perfUserFunctions:mass6-python |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 0.845 | 0.694 | 0.577 | 0.579 | 0.709 | 0.584 |
+| perfUserFunctions:mass6-symbolic |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 0.090 | 0.088 | 0.092 | 0.146 | 0.155 | 0.173 |
+| perfUserFunctions:ode1x6-python |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 0.291 | 0.277 | 0.178 | 0.189 | 0.207 | 0.207 |
+| perfUserFunctions:ode1x6-symbolic |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 0.044 | 0.042 | 0.024 | 0.033 | 0.030 | 0.061 |
+| perfUserFunctions:preStep-python |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 0.063 | 0.072 | 0.059 | 0.067 | 0.069 | 0.122 |
+| perfUserFunctions:preStep-symbolic |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 0.045 | 0.077 | 0.043 | 0.048 | 0.046 | 0.109 |
+| perfUserFunctions:rigid6-python |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 1.053 | 1.015 | 0.978 | 1.042 | 1.068 | 0.967 |
+| perfUserFunctions:rigid6-symbolic |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 0.333 | 0.309 | 0.255 | 0.291 | 0.322 | 0.308 |
+| perfUserFunctions:spring-python |  |  | 0.105 | 0.100 |  |  |  | 0.137 | 0.080 | 0.097 | 0.123 | 0.127 | 0.118 | 0.088 | 0.130 | 0.099 | 0.078 | 0.087 | 0.095 | 0.104 |
+| perfUserFunctions:spring-symbolic |  |  |  |  |  |  |  | 0.056 | 0.032 | 0.038 | 0.055 | 0.053 | 0.056 | 0.035 | 0.056 | 0.045 | 0.036 | 0.038 | 0.043 | 0.067 |
+
+### Solver sub-timers of 1.12.0.dev1
+
+| run | total | ODE2RHS | massMatrix | totalJacobian | factorization | newtonIncrement | userFunctions |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| generalContactSpheresPerf:nt1 | 4.878 | 4.813 |  |  |  | 0.015 |  |
+| generalContactSpheresPerf:nt4 | 2.282 | 2.222 |  |  |  | 0.016 |  |
+| generalContactSpheresPerf:nt8 | 1.300 | 1.241 |  |  |  | 0.017 |  |
+| perf3DRigidBodies.py | 4.675 | 0.209 | 0.155 | 0.478 | 2.340 | 0.684 |  |
+| perfAccessFunctionsAD:rigid2D-n200-implicit | 0.164 | 0.036 | 0.000 | 0.056 | 0.065 | 0.006 |  |
+| perfAccessFunctionsAD:rigidEP-n100-implicit | 0.379 | 0.015 | 0.004 | 0.247 | 0.108 | 0.004 |  |
+| perfAccessFunctionsAD:rigidRxyz-n100-explicit | 0.398 | 0.168 | 0.026 |  | 0.179 | 0.021 |  |
+| perfAccessFunctionsAD:rigidRxyz-n100-implicit | 0.521 | 0.024 | 0.004 | 0.368 | 0.120 | 0.004 |  |
+| perfConnectorInterface:coordinate-n1000-explicit | 0.408 | 0.373 |  |  |  | 0.027 |  |
+| perfConnectorInterface:gravity-n200-implicit | 0.728 | 0.078 | 0.000 | 0.481 | 0.155 | 0.011 |  |
+| perfConnectorInterface:rigid-n100-explicit | 0.343 | 0.294 |  |  |  | 0.012 |  |
+| perfConnectorInterface:rigid-n100-implicit | 0.387 | 0.015 | 0.004 | 0.251 | 0.111 | 0.004 |  |
+| perfConnectorInterface:spring-n200-explicit | 0.321 | 0.279 |  |  |  | 0.010 |  |
+| perfConnectorInterface:spring-n200-implicit | 0.409 | 0.042 | 0.009 | 0.145 | 0.200 | 0.009 |  |
+| perfLargeMassSpringChain:rigid-n1000-explicit | 1.605 | 1.276 | 0.309 |  |  | 0.009 |  |
+| perfLargeMassSpringChain:rigid-n1000-implicit | 1.268 | 0.982 | 0.129 | 0.015 | 0.002 | 0.121 |  |
+| perfLargeMassSpringChain:rigid-n20000-explicit | 1.847 | 1.497 | 0.329 |  |  | 0.007 |  |
+| perfLargeMassSpringChain:rigid-n5000-explicit | 1.833 | 1.463 | 0.347 |  |  | 0.009 |  |
+| perfLargeMassSpringChain:rigid-n5000-implicit | 1.012 | 0.726 | 0.095 | 0.078 | 0.009 | 0.091 |  |
+| perfObjectFFRFreducedOrder.py | 3.732 | 1.703 | 0.368 | 1.537 | 0.012 | 0.041 |  |
+| perfRigidPendulum.py | 4.987 | 1.235 | 0.002 | 0.032 | 0.011 | 0.223 |  |
+| perfSpringDamperExplicit.py | 2.808 | 0.716 |  |  |  | 0.181 |  |
+| perfSpringDamperUserFunction.py | 2.901 | 1.307 | 0.015 | 1.157 | 0.035 | 0.013 |  |
+| perfUserFunctions:spring-python | 0.100 | 0.068 |  |  |  | 0.006 |  |
 
 ### Solver sub-timers of 1.13.183.dev1
 
@@ -195,3 +224,19 @@ module. Times in seconds: of each test file the wall-clock time, of each single 
 | perfUserFunctions:rigid6-symbolic | 0.308 | 0.194 | 0.037 |  | 0.029 | 0.011 | 0.091 |
 | perfUserFunctions:spring-python | 0.104 | 0.071 |  |  |  | 0.006 | 0.053 |
 | perfUserFunctions:spring-symbolic | 0.067 | 0.035 |  |  |  | 0.006 | 0.020 |
+
+## machine x86_64, linux, Python 3.13, regular module
+
+![machine x86_64, linux, Python 3.13, regular module](performanceHistory2.png)
+
+### Test files
+
+| | 1.10.0 | 1.11.35.dev1 |
+|---|---:|---:|
+| generalContactSpheresTest.py | 2.710 | 2.885 |
+| perf3DRigidBodies.py | 5.244 | 4.942 |
+| perfObjectFFRFreducedOrder.py | 2.756 | 2.770 |
+| perfRigidPendulum.py | 4.546 | 4.218 |
+| perfSpringDamperExplicit.py | 2.666 | 2.841 |
+| perfSpringDamperUserFunction.py | 2.184 | 2.463 |
+| total | 20.105 | 20.118 |

@@ -75,6 +75,9 @@ mbs = SC.AddSystem()
 writeToConsole = True  #do not output to console / shell
 overwriteLog = False   #--overwrite-log: replace an existing log instead of diverting to tmp
 useExitCode = False    #--exit-code: exit non-zero when a performance test failed (#2504)
+#--tolerant: the suite of today with an older Exudyn, down to 1.11 (#3080): a model that raises is skipped, a result
+#that differs from today's reference is recorded and not a failure, and the exit code is 0; the log is named _tolerant
+tolerant = False
 #copyLog = False         #copy log to final logs/performance
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
@@ -87,12 +90,21 @@ if len(sys.argv) > 1:
             overwriteLog = True
         elif sys.argv[i+1] == '--exit-code':
             useExitCode = True
+        elif sys.argv[i+1] == '--tolerant':
+            tolerant = True
         elif sys.argv[i+1] == '--fast-module':
             pass #already acted upon, before the exudyn import; listed so it is not "unknown"
         # elif sys.argv[i+1] == '-copylog': #not needed any more
         #     copyLog = True
         else:
             print("ERROR in runPerformanceTests: unknown command line argument '"+sys.argv[i+1]+"'")
+
+#an older version than the renames of 1.12.256 gets the new names of the models translated (#3080)
+import performanceCompatibility
+useCompatibility = tolerant and performanceCompatibility.NeedsCompatibility(exu.config.Version())
+if useCompatibility:
+    print('runPerformanceTests --tolerant: Exudyn ' + exu.config.Version() + ', '
+          + str(performanceCompatibility.ApplyRenames(exu)) + ' item classes and Create functions take the new names')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #current date and time
@@ -147,7 +159,8 @@ elif multiprocessing.cpu_count() == 20:
 if subFolder != '' and not os.path.exists('../logs/performance/'+subFolder):
     os.makedirs('../logs/performance/'+subFolder, exist_ok=True)
 
-logFileName = '../logs/performance/'+subFolder+'performanceLog_V'+exu.config.Version()+'_'+platformString+'.txt'
+logFileName = ('../logs/performance/'+subFolder+'performanceLog_V'+exu.config.Version()+'_'+platformString
+               +'_tolerant'*tolerant+'.txt')
 #never truncate an existing (committed) log by accident; see testRunnerTools.ResolveLogFile
 logFileName = testRunnerTools.ResolveLogFile(logFileName, allowOverwrite=overwriteLog)
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
@@ -217,6 +230,7 @@ for groupName in ['small', 'large']:
 
 totalTests = len(testFileList)
 testPassed = {}  #file name -> whether its result equals the reference
+testRaised = {}  #file name -> whether the model raised an exception, which --tolerant skips (#3080)
 testsFailed = [] #list of numbers containing the test numbers of failed tests
 #the channel a model uses is exu.sys, as for the test models
 
@@ -261,9 +275,14 @@ for file in testFileList:
     testError = -1
     exu.sys['testResult'] = invalidResult #a value that says 'the model set none'
     timeStart= -time.time()
+    testRaised[name] = False
     try:
-        exec(open(file).read(), globals())
+        source = open(file).read()
+        if useCompatibility:
+            source = performanceCompatibility.TranslateSource(source)
+        exec(source, globals())
     except Exception as e:
+        testRaised[name] = True
         exu.Print('PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
         print('PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
 
@@ -378,8 +397,11 @@ exu.Print('Reference value (i9, 2023-12, Linux  )= 42 - 44 seconds (regular) / 3
 exu.Print('****************************************************')
 
     
-from exudyn.basicUtilities import OutputFilePath
-logFilePath = OutputFilePath(logFileName, 'runPerformanceTests') #where the C++ writer put it (#2500)
+try:
+    from exudyn.basicUtilities import OutputFilePath
+    logFilePath = OutputFilePath(logFileName, 'runPerformanceTests') #where the C++ writer put it (#2500)
+except ImportError: #a version before #2500, in a --tolerant run (#3080), writes where it is told
+    logFilePath = logFileName
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the machine-readable record of this run (#3078): one JSON object after the line '#JSON' at the end of
@@ -391,10 +413,11 @@ record = {'format': 1,
           'machine': {'id': subFolder.strip('/'), 'cpu': testRunnerTools.CpuInfoString(), 'system': sys.platform,
                       'python': '.'.join(str(v) for v in sys.version_info[0:3]),
                       'numpy': np.__version__},
-          'date': dateStr,
+          'date': dateStr, 'tolerant': tolerant,
           'cpuLoad': {key: {'mean': sum(value)/len(value), 'max': max(value)} for (key, value) in cpuLoad.items() if len(value)},
           'files': {name: {'group': testFileGroup[name], 'time': testTimings.get(name, None),
-                           'result': examplesTestSolList.get(name, None), 'passed': testPassed.get(name, False)}
+                           'result': examplesTestSolList.get(name, None), 'passed': testPassed.get(name, False),
+                           'raised': testRaised.get(name, True)}
                     for name in testFileList},
           'runs': {run['name']: {'time': run['time'], 'result': run['result'], 'error': run.get('error', None),
                                  'passed': run.get('passed', False), 'timers': run.get('timers', {})}
@@ -413,7 +436,7 @@ testRunnerTools.HideHomeDirectoryInLog(logFilePath) #the logs are committed (#29
 #so a failed performance test was invisible to anything that called it. There is no known-failure
 #list here: unlike the examples, every performance test passes today, and one that does not is a
 #result worth going red for.
-if useExitCode:
+if useExitCode and not tolerant: #a tolerant run records what an older version can, and fails on nothing (#3080)
     #a coverage failure is a real failure: a performance model in no reference list is never
     #measured and nobody would notice
     sys.exit(1 if (len(testsFailed) != 0 or coverageFailed) else 0)

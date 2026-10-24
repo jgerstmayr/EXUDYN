@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 182 | 1.13.185 |
+| 1.13 | Newborn | 183 | 1.13.186 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.186** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Performance tests: a tolerant mode for older Exudyn versions down to 1.11 (#3080)
+  - description: Maintainer 2026-10-24: the performance suite of today run with an installed older Exudyn (not older than 1.11), recording the models that are compatible with it and skipping the others, so that the history gets the same models for older versions.
+  - **notes:** runPerformanceTests.py --tolerant measures an older installed Exudyn, down to 1.11, with the performance models of today: models that raise are skipped, differing results recorded, and for versions before the renames of 1.12.256 the new item, Create and settings names are translated (performanceCompatibility.py); the performance history holds the tolerant runs of 1.11.0 and 1.12.0.dev1 and the text logs of 1.9.0 to 1.13.174.
+  - date resolved: **2026-10-24 21:52**, date raised: 2026-10-24
 - **1.13.185** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Performance history: a summary over Exudyn versions, with a table and a plot (#3079)
   - description: Maintainer 2026-10-24: a data summary of many Exudyn versions in the repository (JSON), to which a performance run is added when a change is expected - before and after an optimization -, not for every micro version; tests may appear and disappear between versions. exudev creates a table and a plot of the main timings from it. Older logs without the JSON section (1.9.0, 1.10.0, 1.11.0, 1.13.x) are read from their text: the time of each test file.
   - **notes:** Performance history over the Exudyn versions: exudev perf --history-add LOG adds a performance log - from its JSON section, or for older logs from their text - to python/logs/performance/performanceHistory.json, and performanceHistory.md shows per machine and module the times of the test files and single runs over the versions, the solver sub-timers and a plot (exudev perf --history-report).

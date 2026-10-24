@@ -44,15 +44,17 @@ def VersionKey(version):
 def EntryFromJson(record):
     """the history entry of the JSON record of a log"""
     timersActive = any(len(run.get('timers', {})) for run in record['runs'].values())
+    tolerant = record.get('tolerant', False) #an older version with the suite of today: what ran, whatever its result (#3080)
     return {'version': record['exudyn']['version'], 'module': record['exudyn']['module'],
             'machine': record['machine']['id'] or re.sub(r' \(\d+ threads\)$', '', record['machine']['cpu']),
             'cpu': record['machine']['cpu'],
             'system': record['machine']['system'], 'python': '.'.join(record['machine']['python'].split('.')[0:2]),
-            'date': record['date'], 'source': 'json', 'timers': timersActive,
+            'date': record['date'], 'source': 'json' + ', tolerant'*tolerant, 'timers': timersActive,
             'cpuLoadBefore': record.get('cpuLoad', {}).get('before', {}).get('mean', None),
-            'files': {name: value['time'] for (name, value) in record['files'].items() if value['passed']},
+            'files': {name: value['time'] for (name, value) in record['files'].items()
+                      if value['passed'] or (tolerant and not value.get('raised', True))},
             'runs': {name: {'time': value['time'], 'timers': value.get('timers', {})}
-                     for (name, value) in record['runs'].items() if value['passed']},
+                     for (name, value) in record['runs'].items() if value['passed'] or tolerant},
             'totals': record['totals']}
 
 

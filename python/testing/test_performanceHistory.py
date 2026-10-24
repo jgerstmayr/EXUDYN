@@ -76,3 +76,22 @@ def test_history(tmp_path, monkeypatch):
     assert '| | 1.10.0 | 1.13.183.dev1 |' in report
     assert '| perfC.py |  | 4.000 |' in report         #a test that did not exist yet is an empty cell
     assert '| perfC:n10 | 3.500 | 2.000 |' in report    #the sub-timers of the newest run with timers
+
+
+def test_compatibility():
+    """the new names of the performance models for a version before the renames of 1.12.256 (#3080)"""
+    import performanceCompatibility as compatibility
+    assert compatibility.NeedsCompatibility('1.11.0') and compatibility.NeedsCompatibility('1.12.0.dev1')
+    assert not compatibility.NeedsCompatibility('1.13.6')
+    source = ('s.solution.file.write = False\ns.solution.file.writePeriod = 0.1\ns.show.computationTime = True\n'
+              's.timeIntegration.explicit.useLieGroupIntegration = False\ns.linearSolver.solverType = t\n')
+    assert compatibility.TranslateSource(source) == (
+        's.solutionSettings.writeSolutionToFile = False\ns.solutionSettings.solutionWritePeriod = 0.1\n'
+        's.displayComputationTime = True\ns.timeIntegration.explicitIntegration.useLieGroupIntegration = False\n'
+        's.linearSolverType = t\n')
+    items = compatibility.RenamesFromDocstrings('itemInterface.py', r'\nclass (\w+)\b',
+                                                r'(\w+): deprecated since [\d.]+, removed in \d+: use (\w+)')
+    assert items['ObjectMassPoint']['mass'] == 'physicsMass'
+    creates = compatibility.RenamesFromDocstrings('misc/mainSystemExtensions.py', r'\ndef MainSystem(\w+)\(',
+                                                  r'(\w+): deprecated name of (\w+)')
+    assert creates['CreateRevoluteJoint']['itemNumbers'] == 'bodyNumbers'

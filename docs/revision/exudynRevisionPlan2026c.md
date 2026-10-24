@@ -78,7 +78,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.3 Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
-  - RG5.6 Track the performance over the versions: a machine-readable log, a history, a report (1 open sub-step)
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
 - **RG7** Python user items
@@ -125,7 +124,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
-| RG5 | OPEN | 11 | Performance |
+| RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 4 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -428,7 +427,7 @@ functions in Python for specific objects - as the user rigid body of userRigidBo
 GPU whether the approach works; the list of operations of the flat evaluation (`GetFlatProgram()`, #3053, #3054) is
 the input.
 
-### **OPEN_RG5.6** Track the performance over the versions: a machine-readable log, a history, a report
+### **CLOSED_RG5.6** Track the performance over the versions: a machine-readable log, a history, a report
 
 Maintainer 2026-10-24: the performance is tracked neither readably for humans nor for machines. A machine-readable
 section of each performance log with the machine, its load and every run with its timers; a history over the versions
@@ -447,10 +446,11 @@ CLOSED 2026-10-24 (#3079): python/testing/performanceHistory.py, `exudev perf --
 `--history-report`; seeded with 1.9.0, 1.10.0, 1.11.0, 1.13.6 and 1.13.183 (regular; 1.13.6 and 1.13.183 also fast).
 [log](exudynRevisionLog2026c.md#rg5-6)
 
-#### **OPEN_RG5.6.3** A tolerant mode for older Exudyn versions down to 1.11
+#### **CLOSED_RG5.6.3** A tolerant mode for older Exudyn versions down to 1.11
 
-#3080: the suite of today with an installed older version, recording the models that run and skipping the others;
-needs environments with the older wheels from PyPI.
+CLOSED 2026-10-24 (#3080; maintainer: 1.11.0 by pip, 1.12.0.dev1 from tmp, in venvP313; the other versions from the
+text logs): `--tolerant` and performanceCompatibility.py; 8 of 10 models run with 1.11.0 and 1.12.0.dev1, with today's
+results; the history holds 24 entries. [log](exudynRevisionLog2026c.md#rg5-6-3)
 
 ## **OPEN_RG6** Graphics and rendering
 

@@ -2944,3 +2944,26 @@ timers per model, which slow them down a little but show effects much more clear
 - Seeded with the Windows Python 3.13 logs of this machine: 1.9.0, 1.10.0, 1.11.0, 1.13.6 (regular and fast, load 35 %
   before the regular run) and 1.13.183.dev1 (regular and fast, new runs). python/testing/test_performanceHistory.py.
 - Open (RG5.6.3, #3080): the tolerant mode for older versions needs environments with exudyn 1.11 ... from PyPI.
+
+<a id="rg5-6-3"></a>
+### RG5.6.3 — the tolerant mode for older versions, the history filled (2026-10-24, #3080)
+*(Maintainer 2026-10-24: I put exudyn-1.12.0.dev1-cp313-cp313-win_amd64.whl into tmp and you can install 1.11.0 via pip
+install. Run the tests in venvP313. The other results shall be taken from the performance results (text files) in
+logs/performance. If you see important versions to test, many 3.13 wheels are in dist. Only the regular module.)*
+- The first tolerant run with 1.11.0 failed in every model: the models use the names of 1.12.256 and later (`mass`,
+  `itemNumbers`, `simulationSettings.solution.file.write`, `show.computationTime`, `linearSolver.solverType`,
+  `timeIntegration.explicit`). python/testing/performanceCompatibility.py, used by `--tolerant` for a version before
+  1.12.256: the item classes and Create functions of the installed version (38) are wrapped to take the new argument
+  names, read from the docstrings of the repository's itemInterface.py and mainSystemExtensions.py; the settings
+  paths of the models are replaced in their source by the old ones (a table of 15, from the deprecated entries of
+  structureDefsSimulationSettings.py). OutputFilePath, missing before #2500, falls back to the given name.
+- 1.11.0 (pip, PyPI) and 1.12.0.dev1 (the wheel in tmp) in venvP313: 8 of 10 models run and give today's results
+  bit-equal (FINISHED SUCCESSFUL), which also checks the translation; perfUserFunctions (symbolic user functions with
+  vectors, later) and perfAccessFunctionsAD (raises in SolveDynamic) are skipped, the runs before the exception kept.
+  Totals of the 8 files: 45.3 s (1.11.0); 1.13.183: 45.6 s for all 10. venvP313 has the current build again.
+- The history: all Windows Python 3.13 logs of python/logs/performance read from their text (1.9.0, 1.10.0, 1.11.0,
+  1.13.6 regular and fast, 1.13.42 ... 1.13.174, 15 versions), the JSON of 1.13.183 regular and fast, and the two
+  tolerant runs, which replace the text entries of 1.11.0; the Linux logs of 1.10.0 and 1.11.35 as a series of their
+  own: 24 entries in 3 series. No dist wheel was run: the text logs cover the 1.13 versions.
+- The dev logs of 1.13.42-1.13.174 scatter by up to 30 % (13.7-15.4 s for perfLargeMassSpringChain between versions
+  without a change in it); several were taken with load and without a load record that the report could mark.

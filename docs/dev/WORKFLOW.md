@@ -355,7 +355,7 @@ The gates that require them are §8.
 | full local check | all test models and mini examples, and the tests that are not models - graphics, settings, dialogs, tools | `exudev test` (22 s) and `exudev pytest` (about a minute in 8 processes) |
 | graphics | what the renderer would draw, every item through its MiniExample, small raytraced images | `exudev pytest --graphics` (15 s); `--record` after an intended change, then read the diff of `python/testing/graphicsReferences/` |
 | performance of the items | every MiniExample, the solver timers | `exudev perf --mini` (regular), `--full` for a comparison, `--compare LOG1 LOG2` |
-| performance over versions | the performance tests, before and after a change expected to matter, regular and fast module | `exudev perf` and `exudev perf --fast`, then `exudev perf --history-add LOG ...`: the run goes into `python/logs/performance/performanceHistory.json`, and `performanceHistory.md` shows the tables and plots (#3079) |
+| performance over versions | the performance tests, before and after a change expected to matter, regular and fast module | `exudev perf` and `exudev perf --fast`, then `exudev perf --history-add LOG ...`: the run goes into `python/logs/performance/performanceHistory.json`, and `performanceHistory.md` shows the tables and plots (#3079); an older version, down to 1.11, installed in an environment of its own: `exudev perf --env ENV -- --tolerant` (#3080) |
 | nightly / release | models, performance tests, all examples and the pytest files | `exudev build --complete`, or `exudev release`, which calls the runners |
 | examples | all 171 examples, in parallel, as an API check | `exudev examples`, i.e. `runTestExamples.py` (49 s; `--serial`, `--parallel=N`, `--timeout=S`, `--exit-code`) |
 | C++ unit tests | the `lest` tests in `src/Tests/` | only in a build with the `performUnitTests` switch, or the VS `Debug` configuration; then `runTestSuite.py` runs them |
@@ -431,6 +431,10 @@ simulation run and sets `simulationSettings.show.computationTime = True`, so tha
 solver sub-timers of each run. The log of `runPerformanceTests.py` ends with a section `#JSON`: the version and
 module, the machine and its load before and after, each test file and each run with its solver time and sub-timers
 (#3078); `python/testing/performanceHistory.py` reads it, and the CPU TIME of each file from older logs without it.
+With `--tolerant` the runner measures an older installed Exudyn with the models of today: a model that raises is
+skipped, a result that differs is recorded, and for a version before the renames of 1.12.256
+`performanceCompatibility.py` gives the item classes, the Create functions and the simulation settings the new names of
+the models (#3080); the log is named `..._tolerant.txt`.
 
 ### pytest
 
