@@ -452,6 +452,11 @@ CLOSED 2026-10-24 (#3080; maintainer: 1.11.0 by pip, 1.12.0.dev1 from tmp, in ve
 text logs): `--tolerant` and performanceCompatibility.py; 8 of 10 models run with 1.11.0 and 1.12.0.dev1, with today's
 results; the history holds 24 entries. [log](exudynRevisionLog2026c.md#rg5-6-3)
 
+#### **CLOSED_RG5.6.4** Remove performanceCompatibility.py again
+
+CLOSED 2026-10-24 (#3081; maintainer: the data is recorded now): removed with its use in the runner and its test;
+`--tolerant` stays for versions with the names of today. [log](exudynRevisionLog2026c.md#rg5-6-3)
+
 ## **OPEN_RG6** Graphics and rendering
 
 The renderer, the settings dialogs, and the rendering revision they are heading for. Not planned, by decision: a

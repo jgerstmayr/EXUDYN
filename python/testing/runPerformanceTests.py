@@ -99,13 +99,6 @@ if len(sys.argv) > 1:
         else:
             print("ERROR in runPerformanceTests: unknown command line argument '"+sys.argv[i+1]+"'")
 
-#an older version than the renames of 1.12.256 gets the new names of the models translated (#3080)
-import performanceCompatibility
-useCompatibility = tolerant and performanceCompatibility.NeedsCompatibility(exu.config.Version())
-if useCompatibility:
-    print('runPerformanceTests --tolerant: Exudyn ' + exu.config.Version() + ', '
-          + str(performanceCompatibility.ApplyRenames(exu)) + ' item classes and Create functions take the new names')
-
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #current date and time
 def NumTo2digits(n):
@@ -277,10 +270,7 @@ for file in testFileList:
     timeStart= -time.time()
     testRaised[name] = False
     try:
-        source = open(file).read()
-        if useCompatibility:
-            source = performanceCompatibility.TranslateSource(source)
-        exec(source, globals())
+        exec(open(file).read(), globals())
     except Exception as e:
         testRaised[name] = True
         exu.Print('PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))

@@ -432,9 +432,8 @@ solver sub-timers of each run. The log of `runPerformanceTests.py` ends with a s
 module, the machine and its load before and after, each test file and each run with its solver time and sub-timers
 (#3078); `python/testing/performanceHistory.py` reads it, and the CPU TIME of each file from older logs without it.
 With `--tolerant` the runner measures an older installed Exudyn with the models of today: a model that raises is
-skipped, a result that differs is recorded, and for a version before the renames of 1.12.256
-`performanceCompatibility.py` gives the item classes, the Create functions and the simulation settings the new names of
-the models (#3080); the log is named `..._tolerant.txt`.
+skipped and a result that differs is recorded (#3080); the log is named `..._tolerant.txt`. A version before the
+renames of 1.12.256 does not run them; its runs of 1.11.0 and 1.12.0.dev1 are in the history.
 
 ### pytest
 

@@ -2967,3 +2967,7 @@ logs/performance. If you see important versions to test, many 3.13 wheels are in
   own: 24 entries in 3 series. No dist wheel was run: the text logs cover the 1.13 versions.
 - The dev logs of 1.13.42-1.13.174 scatter by up to 30 % (13.7-15.4 s for perfLargeMassSpringChain between versions
   without a change in it); several were taken with load and without a load record that the report could mark.
+
+*2026-10-24, RG5.6.4 (#3081; maintainer: as the data is recorded now, remove performanceCompatibility.py again):*
+removed, with its use in runPerformanceTests.py, its test in test_performanceHistory.py and the paragraph of WORKFLOW.md;
+`--tolerant` stays. The entries of 1.11.0 and 1.12.0.dev1 in performanceHistory.json are kept.

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 183 | 1.13.186 |
+| 1.13 | Newborn | 184 | 1.13.187 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.187** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Remove performanceCompatibility.py after the runs of 1.11.0 and 1.12.0.dev1 (#3081)
+  - description: Maintainer 2026-10-24: as the data is recorded now, remove performanceCompatibility.py again (\#3080); --tolerant stays for versions with the names of today.
+  - **notes:** performanceCompatibility.py removed again, after the performance runs of 1.11.0 and 1.12.0.dev1 were recorded; runPerformanceTests.py --tolerant stays.
+  - date resolved: **2026-10-24 21:56**, date raised: 2026-10-24
 - **1.13.186** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Performance tests: a tolerant mode for older Exudyn versions down to 1.11 (#3080)
   - description: Maintainer 2026-10-24: the performance suite of today run with an installed older Exudyn (not older than 1.11), recording the models that are compatible with it and skipping the others, so that the history gets the same models for older versions.
   - **notes:** runPerformanceTests.py --tolerant measures an older installed Exudyn, down to 1.11, with the performance models of today: models that raise are skipped, differing results recorded, and for versions before the renames of 1.12.256 the new item, Create and settings names are translated (performanceCompatibility.py); the performance history holds the tolerant runs of 1.11.0 and 1.12.0.dev1 and the text logs of 1.9.0 to 1.13.174.

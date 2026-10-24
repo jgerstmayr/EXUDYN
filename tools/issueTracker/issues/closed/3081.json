@@ -1,0 +1,16 @@
+{
+  "number": 3081,
+  "title": "Remove performanceCompatibility.py after the runs of 1.11.0 and 1.12.0.dev1",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-24: as the data is recorded now, remove performanceCompatibility.py again (#3080); --tolerant stays for versions with the names of today.",
+  "dateRaised": "2026-10-24",
+  "deadline": "2027-04-22",
+  "dateResolved": "2026-10-24 21:56",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/runPerformanceTests.py",
+  "releaseNotes": "performanceCompatibility.py removed again, after the performance runs of 1.11.0 and 1.12.0.dev1 were recorded; runPerformanceTests.py --tolerant stays.",
+  "resolvedInVersion": "1.13.187"
+}
