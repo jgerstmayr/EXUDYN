@@ -14,7 +14,7 @@ A revolute joint in 2D; constrains the absolute 2D position of two points given 
 ## Interface
 
 - Python names: `ObjectJointRevolute2D` or `RevoluteJoint2D`, and `VRevoluteJoint2D` for its visualization
-- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid), [](#sec-item-markeruser)
 
 ## Parameters
 

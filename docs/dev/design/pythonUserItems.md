@@ -99,9 +99,16 @@ not exist - a natural first user node (example 3 in section 6).
 
 ### 5.3 Markers, and a step for the C++ side
 
-**The user markers are open** (#3065): ObjectConnectorUser reaches any point of a body through its markers, and
-ObjectUserBody defines what a local position means, so a user marker on one body adds little; a marker on several nodes
-or bodies needs the coordinates of several items in the LTG of the marker - to decide before it is built.
+**Built** (#3065, maintainer 2026-10-24: do the open RG7 steps): `MarkerUser` on any number of bodies - what a user
+connector and a user body cannot give: a point of several bodies or nodes where the BUILT-IN connectors, joints, loads
+and sensors act. The marker composes the coordinates of the nodes of its bodies, body by body, as the system composes
+the LTG of a multi-object marker; `positionUserFunction` and optionally `rotationMatrixUserFunction` (then it has
+Orientation, otherwise a rigid connector is refused at Assemble) and their Jacobians (central differences if not
+given) get `(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)`. No Jacobian derivative: connectors on it compute their
+Jacobian numerically. userMarkerTest.py: the midpoint of two mass points, a rigid marker in a revolute joint. The design
+as written before it was built: ObjectConnectorUser reaches any point of a body through its markers, and ObjectUserBody
+defines what a local position means, so a user marker on one body adds little; a marker on several nodes or bodies needs
+the coordinates of several items in the LTG of the marker.
 
 Contact and sliding on flexible bodies need markers that can move along the body: MarkerBodyCable2DShape and
 MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only. **Proposed new step (C++, outside RG7, e.g. in RG9)**:
@@ -179,7 +186,11 @@ is why every user function gets mbs. Which kind of item the numbers are is the u
   new points of action.
 - **user constraint**: ObjectConnectorCoordinateVector exists for `Coordinates` markers; the user JOINT extends it to
   position and orientation markers: `constraint(...)` with n equations of the marker quantities, `jacobian(...)`,
-  reaction forces; C++ applies the chain rule with the marker Jacobians.
+  reaction forces; C++ applies the chain rule with the marker Jacobians. **Built** (#2976): `ObjectJointUser` on two
+  rigid markers, `constraintUserFunction(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1,
+  parameters)` with `numberOfConstraints` (1-6) equations, `jacobianUserFunction` by the 12 translations and global
+  rotation increments or central differences, on the connector interface of rigid markers (#2745); at velocity level
+  the Jacobian times the marker velocities plus dc/dt. userJointTest.py: a screw joint, a spherical joint.
 
 **How a user item is written**: as an item with user-function parameters, like every existing user function, not as a
 Python class derived from a C++ class: items stay validated dicts (the C++/Python split), the functions can be symbolic

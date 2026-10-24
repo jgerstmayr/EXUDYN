@@ -12,7 +12,7 @@ A 3D beam finite element based on the absolute nodal coordinate formulation, usi
 
 - Python names: `ObjectANCFBeam` or `ANCFBeam`, and `VANCFBeam` for its visualization
 - Nodes it takes: [](#sec-item-nodepointslope23)
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
 
 ## Parameters
 

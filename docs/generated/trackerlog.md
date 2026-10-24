@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.187.dev1
+- Exudyn version = 1.13.189.dev1
 - last change = 2026-10-24
 - Number of issues = 3082
-- Number of resolved issues = 2964 (187 in current version)
+- Number of resolved issues = 2966 (189 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` User markers: decide what they provide beyond ObjectConnectorUser and ObjectUserBody, then add them (#3065)
-  - description: revision2026c step RG7.5 (pythonUserItems.md 5.3), split from \#2975: a user marker (position, orientation, coordinates; on a node, several nodes or a body) whose value and Jacobian are user functions. ObjectConnectorUser reaches any point of a body through its markers (GetBodyPosition, ApplyBodyForce) and ObjectUserBody defines what a local position means, so a user marker on one body adds little; what remains is a marker on several nodes or bodies (an average, a point between two bodies), which needs a marker with the coordinates of several items in the system's LTG. To decide with the maintainer before it is built.
-  - date raised: 2026-10-23
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.
   - date raised: 2026-10-21
@@ -9063,9 +9060,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-12
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic user items: parallel evaluation and graphics (#2978)
   - description: revision2026c step RG7.8 (docs/dev/design/pythonUserItems.md 5.5): user items whose user functions are all symbolic run in parallel and are drawn directly; example 8; waits for the revision of the symbolic user functions (group RG12).
-  - date raised: 2026-10-12
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` User joint on two position and orientation markers (#2976)
-  - description: revision2026c step RG7.6 (docs/dev/design/pythonUserItems.md 5.8): n constraint equations of the marker quantities, Jacobian (or numerical), reaction forces, chain rule with the marker Jacobians in C++; example 6: a screw joint.
   - date raised: 2026-10-12
 - `EXTENSION` `raised by: Claude-JG` exudyn.cUtilities: the time derivatives of the Euler parameter functions (#2965)
   - description: Decision D7 of revision2026c step RG11.10.1 (tmp/compareRBU.md, maintainer 2026-10-11: not now, an issue): RigidBodyMath has EP2RotationMatrix\_t, EP\_t2G\_t and EP\_t2Glocal\_t, which neither rigidBodyUtilities nor exudyn.cUtilities offers; when wanted, add them to definitions/pybindCUtilities.py and PyCUtilities.h, with a check in cUtilitiesTest.py.

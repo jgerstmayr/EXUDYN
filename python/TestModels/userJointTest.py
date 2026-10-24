@@ -1,0 +1,149 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  ObjectJointUser (#2976), a joint whose constraint equations are a Python user function of the frames of its
+#           two rigid markers. (1) A screw joint: a rigid body turns about the x-axis of the ground and moves along it by
+#           the pitch times the angle, under a torque and an axial force; the angle against the analytic solution
+#           phi = (M + F h) t^2 / (2 (Jxx + m h^2)), at position level (index 3) and at velocity level (index 2).
+#           (2) A spherical joint of a pendulum, c = p1 - p0, with the Jacobian by central differences and given by the
+#           jacobianUserFunction, against ObjectJointSpherical. (3) What the joint refuses.
+#           Run alone, it draws the screw and opens the SolutionViewer.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-24
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+import exudyn.cMath as cMath
+import numpy as np
+testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer
+
+SC = exu.SystemContainer()
+
+endTime = 1.
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 500
+simulationSettings.timeIntegration.endTime = endTime
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.timeIntegration.newton.relativeTolerance = 1e-12
+simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-12
+simulationSettings.solution.file.write = False
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#(1) the screw joint along the x-axis of the ground, pitch h in the parameters
+inertia = InertiaCuboid(density=1000, sideLengths=[0.2, 0.1, 0.1])
+m = inertia.Mass()
+Jxx = inertia.Inertia()[0, 0]
+pitch = 0.05
+torque = 0.01
+axialForce = 0.1
+
+def UFscrew(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    Arel = rotationMatrix0.T @ rotationMatrix1  #the frame of marker 1 in the frame of marker 0
+    d = rotationMatrix0.T @ (position1 - position0)
+    angle = cMath.atan2(Arel[2, 1], Arel[1, 1]) #the rotation about x
+    return [Arel[0, 1], Arel[0, 2], d[1], d[2], d[0] - parameters[0]*angle]
+
+def SolveScrew(index2, show=False):
+    mbs = SC.AddSystem()
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 0, 0] + list(eulerParameters0)))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m, inertia=inertia.GetInertia6D(),
+                                         visualization=VObjectRigidBody(graphicsData=[graphics.Brick(size=[0.2, 0.1, 0.1], color=graphics.color.steelblue, addEdges=True)])))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround())))
+    joint = mbs.AddObject(ObjectJointUser(markerNumbers=[mGround, mBody], numberOfConstraints=5, parameters=[pitch],
+                                          constraintUserFunction=UFscrew))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=mBody, loadVector=[torque, 0, 0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[axialForce, 0, 0]))
+    mbs.Assemble()
+    simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = index2 #velocity level, with Newmark
+    simulationSettings.timeIntegration.generalizedAlpha.useNewmark = index2
+    if show and not testIsActive:
+        simulationSettings.solution.file.write = True
+        SC.renderer.Start()
+    mbs.SolveDynamic(simulationSettings)
+    if show and not testIsActive:
+        SC.renderer.Stop()
+        simulationSettings.solution.file.write = False
+        mbs.SolutionViewer()
+    simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
+    simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
+    A = np.array(mbs.GetNodeOutput(node, exu.OutputVariableType.RotationMatrix)).reshape(3, 3)
+    angle = cMath.atan2(A[2, 1], A[1, 1])
+    x = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+    drift = np.max(np.abs(mbs.GetObjectOutput(joint, exu.OutputVariableType.ConstraintEquation)))
+    return angle, x, drift, mbs.GetObjectOutput(joint, exu.OutputVariableType.Force)
+
+angleAnalytic = (torque + axialForce*pitch)*endTime**2/(2*(Jxx + m*pitch**2))
+results = [SolveScrew(index2, show=not index2) for index2 in [False, True]]
+differenceScrew = 0
+u = 0
+for (angle, x, drift, force) in results:
+    differenceScrew = max(differenceScrew, abs(angle - angleAnalytic), abs(x - pitch*angle))
+    u += angle + x
+exu.Print('screw joint: angle', results[0][0], 'analytic', angleAnalytic, ', index 2:', results[1][0], ', largest difference:', differenceScrew)
+exu.Print('screw joint: drift of the constraints at index 3:', results[0][2], ', Lagrange multipliers:', results[0][3])
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#(2) a pendulum on a spherical joint: built-in, user joint with numerical and with given Jacobian
+def UFspherical(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    return position1 - position0
+
+def UFsphericalJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    jacobian = np.zeros((3, 12))
+    jacobian[:, 0:3] = -np.eye(3)
+    jacobian[:, 6:9] = np.eye(3)
+    return jacobian
+
+def SolvePendulum(kind):
+    mbs = SC.AddSystem()
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.5, 0, 0, 0, 0, 0], initialVelocities=[0, 0, 1, 0, -2, 0])) #omega x r = v
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m, inertia=inertia.GetInertia6D()))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[-0.5, 0, 0]))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround())))
+    if kind == 'builtIn':
+        mbs.AddObject(ObjectJointSpherical(markerNumbers=[mGround, mBody]))
+    else:
+        mbs.AddObject(ObjectJointUser(markerNumbers=[mGround, mBody], numberOfConstraints=3, constraintUserFunction=UFspherical,
+                                      jacobianUserFunction=UFsphericalJacobian if kind == 'jacobian' else 0))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0, -9.81, 0]))
+    mbs.Assemble()
+    mbs.SolveDynamic(simulationSettings)
+    return np.hstack((mbs.GetNodeOutput(node, exu.OutputVariableType.Position), mbs.GetNodeOutput(node, exu.OutputVariableType.AngularVelocity)))
+
+pendulums = [SolvePendulum(kind) for kind in ['builtIn', 'numerical', 'jacobian']]
+differencePendulum = max(np.max(np.abs(pendulums[1] - pendulums[0])), np.max(np.abs(pendulums[2] - pendulums[0])))
+u += np.sum(pendulums[0])
+exu.Print('spherical joint: largest difference of the user joints to ObjectJointSpherical:', differencePendulum)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#(3) what the joint refuses
+def Refused(numberOfConstraints, function, message):
+    mbs = SC.AddSystem()
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 0, 0] + list(eulerParameters0)))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m, inertia=inertia.GetInertia6D()))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround())))
+    mbs.AddObject(ObjectJointUser(markerNumbers=[mGround, mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))],
+                                  numberOfConstraints=numberOfConstraints, constraintUserFunction=function))
+    try:
+        mbs.Assemble()
+        mbs.SolveDynamic(simulationSettings)
+    except Exception as e:
+        return int(message in str(e))
+    return 0
+
+refused = (Refused(7, UFspherical, 'numberOfConstraints must be 1 to 6')
+           + Refused(3, 0, 'constraintUserFunction is not given')
+           + Refused(2, UFspherical, 'constraintUserFunction returned 3 values, but numberOfConstraints is 2'))
+exu.Print('refused, of 3:', refused)
+
+#the screw against the analytic angle up to the time integration error of the rotation, 2e-7 with 500 steps
+u += int(differenceScrew > 1e-6) + int(differencePendulum > 1e-8) + (3 - refused)
+exu.Print('solution of userJointTest=', u)
+
+exu.sys['testResult'] = u

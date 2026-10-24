@@ -17,7 +17,7 @@ A revolute joint in 3D; constrains the position of two rigid body markers and th
 ## Interface
 
 - Python names: `ObjectJointRevoluteZ` or `RevoluteJointZ`, and `VRevoluteJointZ` for its visualization
-- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid), [](#sec-item-markeruser)
 
 ## Parameters
 

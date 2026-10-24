@@ -10,7 +10,7 @@ A body whose equations of motion and whose position, and optionally orientation,
 
 ## Interface
 
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
 - Nodes: see the detailed description
 
 ## Parameters

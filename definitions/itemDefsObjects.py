@@ -9496,6 +9496,198 @@ definitions.append(ItemDefinition(
     ))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   ObjectJointUser   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectJointUser_constraintUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, position0: Vector3D,
+                                           rotationMatrix0: Matrix3D, position1: Vector3D, rotationMatrix1: Matrix3D,
+                                           parameters: Vector) -> Vector:
+    r"""A user function, which computes the constraint equations of the joint at position level from the frames of its two markers.
+
+    Args:
+        mbs: provides MainSystem mbs to which the joint belongs
+        t: current time in mbs
+        itemNumber: integer number of the joint in mbs
+        position0: $\LU{0}{\pv}_{m0}$ global position of marker 0
+        rotationMatrix0: $\LU{0,m0}{\Rot}$ rotation matrix of marker 0, local to global
+        position1: $\LU{0}{\pv}_{m1}$ global position of marker 1
+        rotationMatrix1: $\LU{0,m1}{\Rot}$ rotation matrix of marker 1, local to global
+        parameters: $\in \Rcal^{n_p}$ the parameters of the joint, see parameters; empty if not given
+    Returns:
+        $\cv \in \Rcal^{n_c}$ the constraint equations, numberOfConstraints values, as list or numpy array
+    """
+
+def ObjectJointUser_jacobianUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, position0: Vector3D,
+                                         rotationMatrix0: Matrix3D, position1: Vector3D, rotationMatrix1: Matrix3D,
+                                         parameters: Vector) -> MatrixContainer:
+    r"""A user function, which computes the derivative of the constraint equations by the translations and global rotation increments of the two markers.
+
+    Args:
+        mbs: provides MainSystem mbs to which the joint belongs
+        t: current time in mbs
+        itemNumber: integer number of the joint in mbs
+        position0: $\LU{0}{\pv}_{m0}$ global position of marker 0
+        rotationMatrix0: $\LU{0,m0}{\Rot}$ rotation matrix of marker 0, local to global
+        position1: $\LU{0}{\pv}_{m1}$ global position of marker 1
+        rotationMatrix1: $\LU{0,m1}{\Rot}$ rotation matrix of marker 1, local to global
+        parameters: $\in \Rcal^{n_p}$ the parameters of the joint, see parameters; empty if not given
+    Returns:
+        $\partial \cv / \partial [\pv_{m0},\, \ttheta_{m0},\, \pv_{m1},\, \ttheta_{m1}] \in \Rcal^{n_c \times 12}$ as numpy array or list of lists
+    """
+
+definitions.append(ItemDefinition(
+    className='ObjectJointUser',
+    drawing=r'Nothing; the number with `connectors.showNumbers`, at marker 0.',
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+""",
+    cParentClass=ParentClassCObjectConstraint,
+    overallDescription=r"""A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the Jacobian is computed numerically if it is not given.""",
+    classType=ClassTypeObject,
+    detailedDescription=r"""    #### Constraint equations
+
+    The `constraintUserFunction(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters)`
+    returns the $n_c$ = `numberOfConstraints` equations at position level (#2976),
+
+    $$
+    \cv(\LU{0}{\pv}_{m0},\, \LU{0,m0}{\Rot},\, \LU{0}{\pv}_{m1},\, \LU{0,m1}{\Rot},\, t) = \Null .
+    $$
+
+    The derivative of the equations is taken by the translations $\pv_{mi}$ and the global rotation increments
+    $\ttheta_{mi}$ of the markers, $\Rot_{mi}(\ttheta_{mi}) = (\ImThree + \tilde \ttheta_{mi}) \Rot_{mi}$,
+
+    $$
+    \Cm = \frac{\partial \cv}{\partial [\pv_{m0},\, \ttheta_{m0},\, \pv_{m1},\, \ttheta_{m1}]} \in \Rcal^{n_c \times 12} ,
+    $$
+
+    which the `jacobianUserFunction` returns if it is given; otherwise it is computed by central differences of the
+    constraintUserFunction, 24 calls. The system multiplies it with the position and rotation Jacobians of the markers,
+    and the Lagrange multipliers $\tlambda$ give the reaction forces and torques $\Cm\tp \tlambda$ on the markers. For a
+    solver at velocity level (index 2), the equations are
+
+    $$
+    \Cm \, [\LU{0}{\vv}_{m0},\, \LU{0}{\tomega}_{m0},\, \LU{0}{\vv}_{m1},\, \LU{0}{\tomega}_{m1}]\tp + \partial \cv / \partial t = \Null ,
+    $$
+
+    the time derivative by central differences.
+
+    With `activeConnector = False`, the equations are $\tlambda = \Null$. The user functions are called serially, in the
+    main thread.
+    """,
+    miniExample=r"""    #a body that slides along a circle of radius 1 around the ground, as user joint on two rigid markers
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[1,0,0,0,0,0], initialVelocities=[0,1,0,0,0,0]))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=1, inertia=[0.01,0.01,0.01,0,0,0]))
+    def UFconstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+        d = position1 - position0
+        return [d[0]**2 + d[1]**2 - 1., d[2]]
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround())))
+    mbs.AddObject(ObjectJointUser(markerNumbers=[mGround, mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))],
+                                  numberOfConstraints=2, constraintUserFunction=UFconstraint))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the radius stays 1
+    p = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
+    exu.sys['testResult'] = (p[0]**2 + p[1]**2)**0.5
+    """,
+    miniExamplePerformanceTest={'numberOfSteps': 1000},
+    mainParentClass=MainParentClassMainObjectConnector,
+    objectType=ObjectTypeConstraint,
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r'$\LU{0}{\pv}_{m0}$current global position of marker 0'),
+        ItemOutputVariable(OVDisplacement, r'$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$the position of marker 1 relative to marker 0, global'),
+        ItemOutputVariable(OVForce, r'$\tlambda$the Lagrange multipliers of the constraint equations'),
+        ItemOutputVariable(OVConstraintEquation, r'$\cv$residual of the constraint equations at position level, the drift (#565)'),
+        ],
+    visuParentClass=VisuParentClassVisualizationObject,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"constraints's unique name"),
+        ItemParameter(type=TArrayIndex(ItemMarker, size=2), destination=DestComp+DestParam,
+            pythonName='markerNumbers',
+            defaultValue='ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })',
+            description=r'$[m0,m1]\tp$two rigid markers, whose frames the constraintUserFunction gets'),
+        ItemParameter(type=TIndex(greaterThan=0), destination=DestComp+DestParam,
+            pythonName='numberOfConstraints',
+            defaultValue=1,
+            description=r'$n_c$the number of constraint equations, 1 to 6'),
+        ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
+            pythonName='parameters',
+            defaultValue='Vector()',
+            description=r"""$\pv_{par} \in \Rcal^{n_p}$the parameters of the joint, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout"""),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='activeConnector',
+            defaultValue=True,
+            description=r'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='constraintUserFunction',
+            defaultValue=0,
+            description=r"""A Python user function which computes the constraint equations from the frames of the two markers; needed for an active joint""",
+            userFunction=ObjectJointUser_constraintUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='jacobianUserFunction',
+            defaultValue=0,
+            description=r"""A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; optional, computed by central differences if not given""",
+            userFunction=ObjectJointUser_jacobianUserFunction),
+        ItemFunctionDef('HasUserFunction',
+            implementation='return true;'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags=CFConst,
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags='',
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('IsPenaltyConnector',
+            implementation='return false;'),
+        ItemFunctionDef('GetAvailableJacobians',
+            implementation='return parameters.activeConnector ? (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function) : (JacobianType::Type)(JacobianType::AE_AE + JacobianType::AE_AE_function);'),
+        *ItemConnectorInterface('Rigid', constraint=True),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeConstraintEquationsRigid', args='const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations',
+            description=r'the equations of the constraintUserFunction, at velocity level by the Jacobian (#2976)'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeConstraintEquationsRigidDiff', args='const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda, Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations',
+            description=r'the equations with their derivatives by the 12 increments of the markers, from the jacobianUserFunction or by central differences (#2976)'),
+        ItemFunctionDef('GetOutputVariableConnector'),
+        ItemRequestedTypes('Marker', ['Position', 'Orientation']),
+        ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
+            pythonName='GetType',
+            implementation='return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);',
+            description=r'return object type (for node treatment in computation)'),
+        ItemFunctionDef('GetAlgebraicEquationsSize',
+            implementation='return parameters.numberOfConstraints;'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
+            pythonName='GetTypeName',
+            implementation='return "JointUser";',
+            description=r"Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?"),
+        ItemFunctionDef('IsActive',
+            implementation='return parameters.activeConnector;'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionConstraint',
+            args='Vector& equations, Real t, const Vector3D& position0, const Matrix3D& rotation0, const Vector3D& position1, const Matrix3D& rotation1',
+            description=r'call of constraintUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionJacobian',
+            args='Matrix& jacobian, Real t, const Vector3D& position0, const Matrix3D& rotation0, const Vector3D& position1, const Matrix3D& rotation1',
+            description=r'call of jacobianUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ComputeJacobianIncrements',
+            args='Matrix& jacobian, Real t, const Vector3D* positions, const Matrix3D* rotations',
+            description=r'dc/d[p0, theta0, p1, theta1], n_c x 12: the jacobianUserFunction or central differences of the constraintUserFunction (#2976)'),
+        ItemFunctionDef('UpdateGraphics'),
+        ItemFunctionDef('IsConnector',
+            implementation='return true;'),
+        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
+            pythonName='show',
+            defaultValue=True,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ],
+    ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorReevingSystemSprings   +++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(

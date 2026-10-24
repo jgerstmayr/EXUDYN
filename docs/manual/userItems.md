@@ -15,6 +15,8 @@ gives to the solver and takes from it is explained on the general page of its ki
 | {ref}`ObjectUserBody <sec-item-objectuserbody>` | mass matrix, generalized forces, position (and rotation) at a local position, their Jacobians, output variables, mass integral | a new finite element, a rigid body in other coordinates |
 | {ref}`NodeUser <sec-item-nodeuser>` | position (and rotation) of the node from its coordinates | nodes that Exudyn does not have, e.g. an ANCF node with full gradients |
 | {ref}`ObjectConnectorUser <sec-item-objectconnectoruser>` | the forces, applied through its markers | contact on flexible bodies, force laws between several markers |
+| {ref}`ObjectJointUser <sec-item-objectjointuser>` | 1 to 6 constraint equations of the frames of two rigid markers | a screw joint, couplings of rotation and translation |
+| {ref}`MarkerUser <sec-item-markeruser>` | position (and rotation) from the coordinates of several bodies, their Jacobians | a point between bodies or nodes, where built-in connectors, joints, loads and sensors act |
 | ObjectGenericODE2, SensorUserFunction, the `...UserFunction` of the built-in items | a force law, a load, a sensor value | see {ref}`sec-userfunctions` |
 
 ## The arguments of a user function
@@ -87,6 +89,18 @@ The forceUserFunction of ObjectConnectorUser gets `markers`, one {ref}`Connector
 A contact can so search the closest point on a flexible body and act there; userConnectorTest.py rests a ball on an
 ANCF cable this way. A ConnectorMarker is valid during the call only.
 
+## A user joint and a user marker
+
+ObjectJointUser constrains two rigid markers by `constraintUserFunction(mbs, t, itemNumber, position0, rotationMatrix0,
+position1, rotationMatrix1, parameters)`, which returns `numberOfConstraints` equations; their derivative by the
+translations and rotation increments of the markers is given by `jacobianUserFunction` or computed by central
+differences, and the Lagrange multipliers are the reaction forces (#2976). userJointTest.py writes a screw joint.
+
+MarkerUser is a marker on any number of bodies: its `positionUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t,
+parameters)` gets the coordinates of the nodes of these bodies, body by body, and every built-in connector, joint, load
+and sensor acts at that point (#3065); with a `rotationMatrixUserFunction` it is a rigid marker. The Jacobians are
+computed by central differences if they are not given - then a Newton tolerance below about 1e-10 is not reached.
+
 ## Example
 
 Two mass points on springs as user bodies of one kind - each with its own mass and stiffness, gravity through the mass
@@ -144,5 +158,6 @@ Every user item has a short example on its reference page. The test models are c
 built-in item or an exact solution, and run alone they show their bodies and open the SolutionViewer:
 userRigidBodyTest.py (a rigid body), userANCFCable2DTest.py and userMassIntegralTest.py (a 2D ANCF cable element),
 userANCFBeam3DTest.py (a fully parametrized ANCF beam on NodeUser), userTetrahedronTest.py (a solid element),
-userParametersTest.py, userOutputVariablesTest.py, userGraphicsDataTest.py, userNodeTest.py and userConnectorTest.py,
+userParametersTest.py, userOutputVariablesTest.py, userGraphicsDataTest.py, userNodeTest.py, userConnectorTest.py,
+userJointTest.py and userMarkerTest.py,
 in `python/TestModels`.

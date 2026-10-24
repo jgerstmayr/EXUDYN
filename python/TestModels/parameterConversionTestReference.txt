@@ -7,6 +7,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   MarkerKinematicTreeRigid: localHT(set)
   MarkerNodeRigid: localHT(set)
   MarkerSuperElementRigid: localHT(set)
+  MarkerUser: bodyNumbers(class,dict,set)
   ObjectALEANCFCable2D: nodeNumbers(class,dict,set)
   ObjectANCFBeam: nodeNumbers(class,dict,set) sectionData(class,dict,set)
   ObjectANCFCable: nodeNumbers(class,dict,set)
@@ -73,6 +74,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectJointSliding: markerNumbers(class,dict,set) slidingMarkerNumbers(class,dict,set)
   ObjectJointSliding2D: markerNumbers(class,dict,set) slidingMarkerNumbers(class,dict,set)
   ObjectJointSpherical: markerNumbers(class,dict,set)
+  ObjectJointUser: markerNumbers(class,dict,set)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list2=[0.0,1.0] !ExudynTypeError
   MarkerSuperElementPosition: meshNodeNumbers(class,dict,set)
@@ -342,6 +344,7 @@ outcome: !ExudynTypeError int=0.0 !ExudynTypeError !ExudynTypeError !ExudynTypeE
   LoadForceVector: loadVectorUserFunction(class,dict,set)
   LoadMassProportional: loadVectorUserFunction(class,dict,set)
   LoadTorqueVector: loadVectorUserFunction(class,dict,set)
+  MarkerUser: positionJacobianUserFunction(class,dict,set) positionUserFunction(class,dict,set) rotationJacobianUserFunction(class,dict,set) rotationMatrixUserFunction(class,dict,set)
   NodeUser: positionJacobianUserFunction(class,dict,set) positionUserFunction(class,dict,set) rotationJacobianUserFunction(class,dict,set) rotationMatrixUserFunction(class,dict,set)
   ObjectANCFCable2D: axialForceUserFunction(class,dict,set) bendingMomentUserFunction(class,dict,set)
   ObjectConnectorCartesianSpringDamper: springForceUserFunction(class,dict,set)
@@ -360,6 +363,7 @@ outcome: !ExudynTypeError int=0.0 !ExudynTypeError !ExudynTypeError !ExudynTypeE
   ObjectGenericODE2: VgraphicsDataUserFunction(class,dict,set) forceUserFunction(class,dict,set) jacobianUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set)
   ObjectGround: VgraphicsDataUserFunction(class,dict,set)
   ObjectJointGeneric: offsetUserFunction(class,dict,set) offsetUserFunction_t(class,dict,set)
+  ObjectJointUser: constraintUserFunction(class,dict,set) jacobianUserFunction(class,dict,set)
   ObjectKinematicTree: forceUserFunction(class,dict,set)
   ObjectRigidBody: VgraphicsDataUserFunction(class,dict,set)
   ObjectRigidBody2D: VgraphicsDataUserFunction(class,dict,set)
@@ -447,6 +451,7 @@ outcome: !ExudynValueError !ExudynValueError int=2.0 !ExudynTypeError !ExudynTyp
   NodeGenericODE2: numberOfODE2Coordinates(class,dict,set)
   NodeUser: numberOfODE2Coordinates(class,dict,set)
   ObjectContactFrictionCircleCable2D: numberOfContactSegments(class,dict,set)
+  ObjectJointUser: numberOfConstraints(class,dict,set)
   SimulationSettings.parallel: multithreadedLowerLimitJacobians(attribute,dict) multithreadedLowerLimitLoads(attribute,dict) multithreadedLowerLimitMassMatrices(attribute,dict) multithreadedLowerLimitResiduals(attribute,dict) numberOfThreads(attribute,dict) taskSplitMinItems(attribute,dict) taskSplitTasksPerThread(attribute,dict)
   SimulationSettings.solution.file: flushAboveCoordinates(attribute,dict)
   SimulationSettings.staticSolver: numberOfLoadSteps(attribute,dict)
@@ -654,6 +659,7 @@ outcome: MarkerIndex MarkerIndex
   MarkerObjectODE2Coordinates: (defaults)
   MarkerSuperElementPosition: (defaults)
   MarkerSuperElementRigid: (defaults)
+  MarkerUser: (defaults)
 
 outcome: MarkerIndex MarkerIndex MarkerIndex !ExudynTypeError !ExudynTypeError MarkerIndex !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   LoadCoordinate: markerNumber(class,dict,set)
@@ -746,6 +752,7 @@ outcome: ObjectIndex ObjectIndex
   ObjectJointSliding: (defaults)
   ObjectJointSliding2D: (defaults)
   ObjectJointSpherical: (defaults)
+  ObjectJointUser: (defaults)
   ObjectKinematicTree: (defaults)
   ObjectMass1D: (defaults)
   ObjectMassPoint: (defaults)
@@ -803,6 +810,7 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !ExudynTypeError bool=1.0 !ExudynTy
   MarkerNodeRigid: Vshow(class,dict,set)
   MarkerSuperElementPosition: Vshow(class,dict,set) VshowMarkerNodes(class,dict,set)
   MarkerSuperElementRigid: Vshow(class,dict,set) VshowMarkerNodes(class,dict,set) useAlternativeApproach(class,dict,set)
+  MarkerUser: Vshow(class,dict,set)
   NodePoint: Vshow(class,dict,set)
   NodePoint2D: Vshow(class,dict,set)
   NodePoint2DSlope1: Vshow(class,dict,set)
@@ -859,6 +867,7 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !ExudynTypeError bool=1.0 !ExudynTy
   ObjectJointSliding: Vshow(class,dict,set) activeConnector(class,dict,set)
   ObjectJointSliding2D: Vshow(class,dict,set) activeConnector(class,dict,set) classicalFormulation(set) constrainRotation(class,dict,set) useClassicalFormulation(set)
   ObjectJointSpherical: Vshow(class,dict,set) activeConnector(class,dict,set)
+  ObjectJointUser: Vshow(class,dict,set) activeConnector(class,dict,set)
   ObjectKinematicTree: Vshow(class,dict,set) VshowJoints(class,dict,set) VshowLinks(class,dict,set)
   ObjectMass1D: Vshow(class,dict,set)
   ObjectMassPoint: Vshow(class,dict,set)
@@ -1068,6 +1077,7 @@ outcome: int=-1.0 int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int=1.0 !Exu
   VisualizationSettings.view3.camera: trackMarker(attribute,dict) trackMarkerMbsNumber(attribute,dict)
 
 outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !InternalError !InternalError !InternalError numpy2f=[0.0,1.0] !InternalError
+  MarkerUser: parameters(class,dict)
   NodeUser: parameters(class,dict)
   ObjectConnectorCoordinateVector: offset(class,dict)
   ObjectConnectorUser: parameters(class,dict)
@@ -1077,12 +1087,14 @@ outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError 
   ObjectFFRFreducedOrder: referencePositions(class,dict)
   ObjectGenericODE1: rhsVector(class,dict)
   ObjectGenericODE2: forceVector(class,dict)
+  ObjectJointUser: parameters(class,dict)
   ObjectUserBody: parameters(class,dict)
 
 outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !InternalError !InternalError !InternalError numpy2f=[0.0,1.0] numpy0f=[]
   ObjectANCFThinPlate: physicsThickness(class,dict)
 
 outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !ValueError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !InternalError !InternalError !InternalError numpy2f=[0.0,1.0] !InternalError
+  MarkerUser: parameters(set)
   NodeUser: parameters(set)
   ObjectANCFThinPlate: physicsThickness(set) thickness(set)
   ObjectConnectorCoordinateVector: offset(set)
@@ -1093,6 +1105,7 @@ outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !ValueError nu
   ObjectFFRFreducedOrder: referencePositions(set)
   ObjectGenericODE1: rhsVector(set)
   ObjectGenericODE2: forceVector(set)
+  ObjectJointUser: parameters(set)
   ObjectUserBody: parameters(set)
 
 outcome: numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] !RuntimeError numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] !InternalError !InternalError !InternalError numpy1f=[1.0] !InternalError
@@ -1144,6 +1157,7 @@ outcome: str=default
   MarkerObjectODE2Coordinates: objectNumber(omit)
   MarkerSuperElementPosition: Vshow(omit) VshowMarkerNodes(omit) bodyNumber(omit) meshNodeNumbers(omit) weightingFactors(omit)
   MarkerSuperElementRigid: Vshow(omit) VshowMarkerNodes(omit) bodyNumber(omit) localHT(omit) meshNodeNumbers(omit) offset(omit) rotationsExponentialMap(omit) useAlternativeApproach(omit) weightingFactors(omit)
+  MarkerUser: Vshow(omit) bodyNumbers(omit) parameters(omit) positionJacobianUserFunction(omit) positionUserFunction(omit) rotationJacobianUserFunction(omit) rotationMatrixUserFunction(omit)
   Node1D: initialCoordinates(omit) initialVelocities(omit) referenceCoordinates(omit)
   NodeGenericAE: initialCoordinates(omit) referenceCoordinates(omit)
   NodeGenericData: initialCoordinates(omit) numberOfDataCoordinates(omit)
@@ -1206,6 +1220,7 @@ outcome: str=default
   ObjectJointSliding: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) axialForce(omit) constrainRotations(omit) constrainTranslations(omit) markerNumbers(omit) nodeNumber(omit) slidingMarkerNumbers(omit) slidingMarkerOffsets(omit)
   ObjectJointSliding2D: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) axialForce(omit) classicalFormulation(omit) constrainRotation(omit) markerNumbers(omit) nodeNumber(omit) slidingMarkerNumbers(omit) slidingMarkerOffsets(omit) useClassicalFormulation(omit)
   ObjectJointSpherical: Vcolor(omit) VjointRadius(omit) Vshow(omit) activeConnector(omit) constrainedAxes(omit) markerNumbers(omit)
+  ObjectJointUser: Vshow(omit) activeConnector(omit) constraintUserFunction(omit) jacobianUserFunction(omit) markerNumbers(omit) numberOfConstraints(omit) parameters(omit)
   ObjectKinematicTree: Vcolor(omit) VgraphicsDataList(omit) Vshow(omit) VshowJoints(omit) VshowLinks(omit) baseOffset(omit) forceUserFunction(omit) gravity(omit) jointDControlVector(omit) jointForceVector(omit) jointHTs(omit) jointOffsets(omit) jointPControlVector(omit) jointPositionOffsetVector(omit) jointTransformations(omit) jointTypes(omit) jointVelocityOffsetVector(omit) linkCOMs(omit) linkForces(omit) linkInertiasCOM(omit) linkMasses(omit) linkParents(omit) linkTorques(omit) nodeNumber(omit)
   ObjectMass1D: VgraphicsData(omit) Vshow(omit) mass(omit) nodeNumber(omit) referencePosition(omit) referenceRotation(omit)
   ObjectMassPoint: VgraphicsData(omit) Vshow(omit) mass(omit) nodeNumber(omit)

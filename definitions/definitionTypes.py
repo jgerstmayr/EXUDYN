@@ -880,14 +880,16 @@ def ItemConnectorInterface(markers, constraint=False, jacobian=True, markerDataP
     return members
 
 
-def ItemTypes(kind, types, description):
+def ItemTypes(kind, types, description, implementation=None):
     """Use site: the type bits of a node or marker (GetType), as a declared list (revision plan step
-    83c); kind is 'Node' or 'Marker', types are value names of Node::Type / Marker::Type"""
+    83c); kind is 'Node' or 'Marker', types are value names of Node::Type / Marker::Type; implementation: the C++ of
+    an item whose types depend on its parameters, types then the most it has (MarkerUser, #3065)"""
     if kind not in ('Node', 'Marker'):
         raise ValueError('ItemTypes: kind must be Node or Marker, not ' + repr(kind))
     member = ItemFunction(type=kind + '::Type', destination=DestComp, cFlags=CFConst,
                           pythonName='GetType',
-                          implementation=_TypeSumImplementation(kind + '::Type', types),
+                          implementation=implementation if implementation is not None
+                              else _TypeSumImplementation(kind + '::Type', types),
                           description=description)
     member['itemTypes'] = list(types)
     return member

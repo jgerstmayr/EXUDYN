@@ -18,7 +18,7 @@ A 2D rigid body which is attached to a rigid body 2D node. The body obtains coor
 
 - Python names: `ObjectRigidBody2D` or `RigidBody2D`, and `VRigidBody2D` for its visualization
 - Nodes it takes: [](#sec-item-noderigidbody2d), [](#sec-item-nodepoint2dslope1)
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
 
 ## Parameters
 

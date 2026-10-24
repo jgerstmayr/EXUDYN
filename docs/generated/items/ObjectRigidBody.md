@@ -18,7 +18,7 @@ A 3D rigid body which is attached to a 3D rigid body node. The rotation parametr
 
 - Python names: `ObjectRigidBody` or `RigidBody`, and `VRigidBody` for its visualization
 - Nodes it takes: [](#sec-item-noderigidbodyep), [](#sec-item-noderigidbodyrxyz), [](#sec-item-noderigidbodyrotveclg)
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
 
 ## Parameters
 

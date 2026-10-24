@@ -12,7 +12,7 @@ Authors: Gerstmayr Johannes, Zwölfer Andreas
 
 ## Interface
 
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markeruser)
 - Nodes: see the detailed description
 
 ## Parameters

@@ -572,6 +572,17 @@ bool MainObjectConnectorUserIsRegistered = ClassFactoryItemsSystemData<MainObjec
 		return object;
 	});
 
+bool MainObjectJointUserIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("JointUser", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectJointUser();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectJointUser(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectJointUser* vObject = new VisualizationObjectJointUser();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectConnectorReevingSystemSpringsIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ConnectorReevingSystemSprings", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectConnectorReevingSystemSprings();
@@ -991,6 +1002,16 @@ bool MainMarkerBodyBeamShapeIsRegistered = ClassFactoryItem<MainMarker>::Get().R
 		MainMarker* item = new MainMarkerBodyBeamShape(); //new main item
 		item->SetCMarker(cItem);
 		VisualizationMarkerBodyBeamShape* vItem = new VisualizationMarkerBodyBeamShape();
+		item->SetVisualizationMarker(vItem);
+		return item;
+	});
+
+bool MainMarkerUserIsRegistered = ClassFactoryItem<MainMarker>::Get().RegisterClass("User", []
+	{ //AUTO: 
+		CMarkerUser* cItem = new CMarkerUser();							//new point Marker
+		MainMarker* item = new MainMarkerUser(); //new main item
+		item->SetCMarker(cItem);
+		VisualizationMarkerUser* vItem = new VisualizationMarkerUser();
 		item->SetVisualizationMarker(vItem);
 		return item;
 	});

@@ -39,11 +39,14 @@ __all__ = [
     'ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction',
     'ObjectConnectorCoordinateSpringDamperSpringForceUserFunction',
     'ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction',
-    'ObjectConnectorUserForceUserFunction', 'ObjectConnectorCoordinateOffsetUserFunction',
+    'ObjectConnectorUserForceUserFunction', 'ObjectJointUserConstraintUserFunction',
+    'ObjectJointUserJacobianUserFunction', 'ObjectConnectorCoordinateOffsetUserFunction',
     'ObjectConnectorCoordinateOffsetUserFunction_t',
     'ObjectConnectorCoordinateVectorConstraintUserFunction',
     'ObjectConnectorCoordinateVectorJacobianUserFunction', 'ObjectJointGenericOffsetUserFunction',
-    'ObjectJointGenericOffsetUserFunction_t', 'LoadForceVectorLoadVectorUserFunction',
+    'ObjectJointGenericOffsetUserFunction_t', 'MarkerUserPositionUserFunction',
+    'MarkerUserPositionJacobianUserFunction', 'MarkerUserRotationMatrixUserFunction',
+    'MarkerUserRotationJacobianUserFunction', 'LoadForceVectorLoadVectorUserFunction',
     'LoadTorqueVectorLoadVectorUserFunction', 'LoadMassProportionalLoadVectorUserFunction',
     'LoadCoordinateLoadUserFunction', 'SensorUserFunctionSensorUserFunction', 'VNodePoint',
     'NodePoint', 'Point', 'VPoint', 'VNodePoint2D', 'NodePoint2D', 'Point2D', 'VPoint2D',
@@ -84,12 +87,13 @@ __all__ = [
     'ObjectConnectorGravity', 'ConnectorGravity', 'VConnectorGravity',
     'VObjectConnectorHydraulicActuatorSimple', 'ObjectConnectorHydraulicActuatorSimple',
     'HydraulicActuatorSimple', 'VHydraulicActuatorSimple', 'VObjectConnectorUser',
-    'ObjectConnectorUser', 'VObjectConnectorReevingSystemSprings',
-    'ObjectConnectorReevingSystemSprings', 'ReevingSystemSprings', 'VReevingSystemSprings',
-    'VObjectConnectorDistance', 'ObjectConnectorDistance', 'DistanceConstraint',
-    'VDistanceConstraint', 'VObjectConnectorCoordinate', 'ObjectConnectorCoordinate',
-    'CoordinateConstraint', 'VCoordinateConstraint', 'VObjectConnectorCoordinateVector',
-    'ObjectConnectorCoordinateVector', 'CoordinateVectorConstraint', 'VCoordinateVectorConstraint',
+    'ObjectConnectorUser', 'VObjectJointUser', 'ObjectJointUser',
+    'VObjectConnectorReevingSystemSprings', 'ObjectConnectorReevingSystemSprings',
+    'ReevingSystemSprings', 'VReevingSystemSprings', 'VObjectConnectorDistance',
+    'ObjectConnectorDistance', 'DistanceConstraint', 'VDistanceConstraint',
+    'VObjectConnectorCoordinate', 'ObjectConnectorCoordinate', 'CoordinateConstraint',
+    'VCoordinateConstraint', 'VObjectConnectorCoordinateVector', 'ObjectConnectorCoordinateVector',
+    'CoordinateVectorConstraint', 'VCoordinateVectorConstraint',
     'VObjectConnectorRollingDiscPenalty', 'ObjectConnectorRollingDiscPenalty', 'RollingDiscPenalty',
     'VRollingDiscPenalty', 'VObjectContactConvexRoll', 'ObjectContactConvexRoll',
     'VObjectContactCoordinate', 'ObjectContactCoordinate', 'VObjectContactCircleCable2D',
@@ -119,13 +123,13 @@ __all__ = [
     'MarkerSuperElementRigid', 'VMarkerKinematicTreeRigid', 'MarkerKinematicTreeRigid',
     'VMarkerObjectODE2Coordinates', 'MarkerObjectODE2Coordinates', 'VMarkerBodyCable2DShape',
     'MarkerBodyCable2DShape', 'VMarkerBodyCable2DCoordinates', 'MarkerBodyCable2DCoordinates',
-    'VMarkerBodyBeamShape', 'MarkerBodyBeamShape', 'VLoadForceVector', 'LoadForceVector', 'Force',
-    'VForce', 'VLoadTorqueVector', 'LoadTorqueVector', 'Torque', 'VTorque', 'VLoadMassProportional',
-    'LoadMassProportional', 'Gravity', 'VGravity', 'VLoadCoordinate', 'LoadCoordinate',
-    'VSensorNode', 'SensorNode', 'VSensorObject', 'SensorObject', 'VSensorBody', 'SensorBody',
-    'VSensorSuperElement', 'SensorSuperElement', 'VSensorKinematicTree', 'SensorKinematicTree',
-    'VSensorMarker', 'SensorMarker', 'VSensorLoad', 'SensorLoad', 'VSensorUserFunction',
-    'SensorUserFunction',
+    'VMarkerBodyBeamShape', 'MarkerBodyBeamShape', 'VMarkerUser', 'MarkerUser', 'VLoadForceVector',
+    'LoadForceVector', 'Force', 'VForce', 'VLoadTorqueVector', 'LoadTorqueVector', 'Torque',
+    'VTorque', 'VLoadMassProportional', 'LoadMassProportional', 'Gravity', 'VGravity',
+    'VLoadCoordinate', 'LoadCoordinate', 'VSensorNode', 'SensorNode', 'VSensorObject',
+    'SensorObject', 'VSensorBody', 'SensorBody', 'VSensorSuperElement', 'SensorSuperElement',
+    'VSensorKinematicTree', 'SensorKinematicTree', 'VSensorMarker', 'SensorMarker', 'VSensorLoad',
+    'SensorLoad', 'VSensorUserFunction', 'SensorUserFunction',
     ]
 
 
@@ -235,12 +239,18 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectConnectorCoordinateSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset'], ['Real'], ['ObjectConnectorCoordinateSpringDamperSpringForceUserFunction']],
         'ObjectConnectorCoordinateSpringDamperExt,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset', 'velocityOffset', 'dynamicFrictionForce', 'staticFrictionOffsetForce', 'exponentialDecayStatic', 'viscousFrictionFactor', 'frictionProportionalZone'], ['Real'], ['ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction']],
         'ObjectConnectorUser,forceUserFunction': [['MainSystem', 'Real', 'Index', 'py::object', 'StdVector'], ['mbs', 't', 'itemNumber', 'markers', 'parameters'], ['void'], ['ObjectConnectorUserForceUserFunction']],
+        'ObjectJointUser,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdMatrix3D', 'StdVector3D', 'StdMatrix3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'position0', 'rotationMatrix0', 'position1', 'rotationMatrix1', 'parameters'], ['StdVector'], ['ObjectJointUserConstraintUserFunction']],
+        'ObjectJointUser,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdMatrix3D', 'StdVector3D', 'StdMatrix3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'position0', 'rotationMatrix0', 'position1', 'rotationMatrix1', 'parameters'], ['py::object'], ['ObjectJointUserJacobianUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction_t']],
         'ObjectConnectorCoordinateVector,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'velocityLevel'], ['StdVector'], ['ObjectConnectorCoordinateVectorConstraintUserFunction']],
         'ObjectConnectorCoordinateVector,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'velocityLevel'], ['py::object'], ['ObjectConnectorCoordinateVectorJacobianUserFunction']],
         'ObjectJointGeneric,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 't', 'itemNumber', 'offsetUserFunctionParameters'], ['StdVector6D'], ['ObjectJointGenericOffsetUserFunction']],
         'ObjectJointGeneric,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 't', 'itemNumber', 'offsetUserFunctionParameters'], ['StdVector6D'], ['ObjectJointGenericOffsetUserFunction_t']],
+        'MarkerUser,positionUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['StdVector3D'], ['MarkerUserPositionUserFunction']],
+        'MarkerUser,positionJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['py::object'], ['MarkerUserPositionJacobianUserFunction']],
+        'MarkerUser,rotationMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['py::object'], ['MarkerUserRotationMatrixUserFunction']],
+        'MarkerUser,rotationJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['py::object'], ['MarkerUserRotationJacobianUserFunction']],
         'LoadForceVector,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 't', 'loadVector'], ['StdVector3D'], ['LoadForceVectorLoadVectorUserFunction']],
         'LoadTorqueVector,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 't', 'loadVector'], ['StdVector3D'], ['LoadTorqueVectorLoadVectorUserFunction']],
         'LoadMassProportional,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 't', 'loadVector'], ['StdVector3D'], ['LoadMassProportionalLoadVectorUserFunction']],
@@ -1209,6 +1219,56 @@ class ObjectConnectorUserForceUserFunction(Protocol):
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, markers: list, parameters: np.ndarray) -> None: ...
 
+class ObjectJointUserConstraintUserFunction(Protocol):
+    r"""A user function, which computes the constraint equations of the joint at position level from the frames of its two markers.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the joint belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number of the joint in mbs
+
+        position0 (np.ndarray): :math:`{}^{0}{\mathbf{p}}_{m0}` global position of marker 0
+
+        rotationMatrix0 (np.ndarray): :math:`{}^{0,m0}{\Rot}` rotation matrix of marker 0, local to global
+
+        position1 (np.ndarray): :math:`{}^{0}{\mathbf{p}}_{m1}` global position of marker 1
+
+        rotationMatrix1 (np.ndarray): :math:`{}^{0,m1}{\Rot}` rotation matrix of marker 1, local to global
+
+        parameters (np.ndarray): the parameters of the joint, see parameters; empty if not given
+
+    Returns:
+        np.ndarray: :math:`\cv \in \Rcal^{n_c}` the constraint equations, numberOfConstraints values, as list or numpy array
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, position0: np.ndarray, rotationMatrix0: np.ndarray, position1: np.ndarray, rotationMatrix1: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
+
+class ObjectJointUserJacobianUserFunction(Protocol):
+    r"""A user function, which computes the derivative of the constraint equations by the translations and global rotation increments of the two markers.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the joint belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number of the joint in mbs
+
+        position0 (np.ndarray): :math:`{}^{0}{\mathbf{p}}_{m0}` global position of marker 0
+
+        rotationMatrix0 (np.ndarray): :math:`{}^{0,m0}{\Rot}` rotation matrix of marker 0, local to global
+
+        position1 (np.ndarray): :math:`{}^{0}{\mathbf{p}}_{m1}` global position of marker 1
+
+        rotationMatrix1 (np.ndarray): :math:`{}^{0,m1}{\Rot}` rotation matrix of marker 1, local to global
+
+        parameters (np.ndarray): the parameters of the joint, see parameters; empty if not given
+
+    Returns:
+        exudyn.MatrixContainer: :math:`\partial \cv / \partial [\mathbf{p}_{m0},\, \ttheta_{m0},\, \mathbf{p}_{m1},\, \ttheta_{m1}] \in \Rcal^{n_c \times 12}` as numpy array or list of lists
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, position0: np.ndarray, rotationMatrix0: np.ndarray, position1: np.ndarray, rotationMatrix1: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
+
 class ObjectConnectorCoordinateOffsetUserFunction(Protocol):
     r"""A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
     
@@ -1372,6 +1432,98 @@ class ObjectJointGenericOffsetUserFunction_t(Protocol):
         np.ndarray: computed offset velocity vector for given time
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, offsetUserFunctionParameters: np.ndarray) -> np.ndarray: ...
+
+class MarkerUserPositionUserFunction(Protocol):
+    """A user function, which computes the global position of the marker from the coordinates of its bodies.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the marker belongs
+
+        t (float): time of the configuration asked for
+
+        itemNumber (int): integer number of the marker in mbs
+
+        qRef (np.ndarray): the reference coordinates of the nodes of the bodies, body by body in the order of bodyNumbers and of the nodes of each body
+
+        qTotal (np.ndarray): the total coordinates of these nodes - reference plus displacement coordinates - of the configuration asked for
+
+        q_t (np.ndarray): the velocity coordinates of these nodes; zero in the reference configuration
+
+        parameters (np.ndarray): the parameters of the marker, see parameters; empty if not given
+
+    Returns:
+        np.ndarray: the global position of the marker
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, qTotal: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
+
+class MarkerUserPositionJacobianUserFunction(Protocol):
+    r"""A user function of the marker that returns a matrix: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the marker belongs
+
+        t (float): time of the configuration asked for
+
+        itemNumber (int): integer number of the marker in mbs
+
+        qRef (np.ndarray): the reference coordinates of the nodes of the bodies, body by body in the order of bodyNumbers and of the nodes of each body
+
+        qTotal (np.ndarray): the total coordinates of these nodes - reference plus displacement coordinates - of the configuration asked for
+
+        q_t (np.ndarray): the velocity coordinates of these nodes; zero in the reference configuration
+
+        parameters (np.ndarray): the parameters of the marker, see parameters; empty if not given
+
+    Returns:
+        exudyn.MatrixContainer: the matrix, as numpy array or list of lists
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, qTotal: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
+
+class MarkerUserRotationMatrixUserFunction(Protocol):
+    r"""A user function of the marker that returns a matrix: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the marker belongs
+
+        t (float): time of the configuration asked for
+
+        itemNumber (int): integer number of the marker in mbs
+
+        qRef (np.ndarray): the reference coordinates of the nodes of the bodies, body by body in the order of bodyNumbers and of the nodes of each body
+
+        qTotal (np.ndarray): the total coordinates of these nodes - reference plus displacement coordinates - of the configuration asked for
+
+        q_t (np.ndarray): the velocity coordinates of these nodes; zero in the reference configuration
+
+        parameters (np.ndarray): the parameters of the marker, see parameters; empty if not given
+
+    Returns:
+        exudyn.MatrixContainer: the matrix, as numpy array or list of lists
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, qTotal: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
+
+class MarkerUserRotationJacobianUserFunction(Protocol):
+    r"""A user function of the marker that returns a matrix: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the marker belongs
+
+        t (float): time of the configuration asked for
+
+        itemNumber (int): integer number of the marker in mbs
+
+        qRef (np.ndarray): the reference coordinates of the nodes of the bodies, body by body in the order of bodyNumbers and of the nodes of each body
+
+        qTotal (np.ndarray): the total coordinates of these nodes - reference plus displacement coordinates - of the configuration asked for
+
+        q_t (np.ndarray): the velocity coordinates of these nodes; zero in the reference configuration
+
+        parameters (np.ndarray): the parameters of the marker, see parameters; empty if not given
+
+    Returns:
+        exudyn.MatrixContainer: the matrix, as numpy array or list of lists
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, qTotal: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class LoadForceVectorLoadVectorUserFunction(Protocol):
     r"""A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
@@ -5594,6 +5746,74 @@ class ObjectConnectorUser:
     def __repr__(self):
         return str(dict(self))
 
+class VObjectJointUser:
+    """Visualization data for ObjectJointUser.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
+
+    """
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectJointUser:
+    """A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers.
+    
+    It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the Jacobian is computed numerically if it is not given.
+    
+    Args:
+        name: constraints's unique name
+
+        markerNumbers: two rigid markers, whose frames the constraintUserFunction gets; type: ArrayMarkerIndex
+
+        numberOfConstraints: the number of constraint equations, 1 to 6
+
+        parameters: the parameters of the joint, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout; type: array_like
+
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        constraintUserFunction: A Python user function which computes the constraint equations from the frames of the two markers; needed for an active joint; type: ObjectJointUserConstraintUserFunction
+
+        jacobianUserFunction: A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; optional, computed by central differences if not given; type: ObjectJointUserJacobianUserFunction
+
+        visualization: visualization data, see VObjectJointUser
+
+    Notes:
+        Object has/provides the following types: ``Connector``, ``Constraint``
+
+        Requested Marker type: ``Position`` + ``Orientation``
+
+    """
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], numberOfConstraints = 1, parameters = [], activeConnector = True, constraintUserFunction: Union[ObjectJointUserConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectJointUserJacobianUserFunction, int] = 0, visualization = {'show': True}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.numberOfConstraints = numberOfConstraints
+        self.parameters = CheckForValidNumpyArray(parameters)
+        self.activeConnector = activeConnector
+        self.constraintUserFunction = constraintUserFunction
+        self.jacobianUserFunction = jacobianUserFunction
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'JointUser'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'numberOfConstraints', self.numberOfConstraints
+        yield 'parameters', self.parameters
+        yield 'activeConnector', self.activeConnector
+        yield 'constraintUserFunction', self.constraintUserFunction
+        yield 'jacobianUserFunction', self.jacobianUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+
+    def __repr__(self):
+        return str(dict(self))
+
 class VObjectConnectorReevingSystemSprings:
     """Visualization data for ObjectConnectorReevingSystemSprings.
     
@@ -8634,6 +8854,72 @@ class MarkerBodyBeamShape:
         yield 'markerType', 'BodyBeamShape'
         yield 'name', self.name
         yield 'bodyNumber', self.bodyNumber
+        yield 'Vshow', dict(self.visualization)["show"]
+
+    def __repr__(self):
+        return str(dict(self))
+
+class VMarkerUser:
+    """Visualization data for MarkerUser.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
+
+    """
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+    def __repr__(self):
+        return str(dict(self))
+
+class MarkerUser:
+    """A marker on any number of bodies whose position, and optionally rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh.
+    
+    Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.
+    
+    Args:
+        name: marker's unique name; type: str
+
+        bodyNumbers: the bodies whose coordinates the user functions get, at least one; type: ArrayObjectIndex
+
+        parameters: the parameters of the marker, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout; type: array_like
+
+        positionUserFunction: A Python user function which computes the global position of the marker; it must be given; type: MarkerUserPositionUserFunction
+
+        positionJacobianUserFunction: A Python user function which computes the position Jacobian; by central differences of the position if not given; type: MarkerUserPositionJacobianUserFunction
+
+        rotationMatrixUserFunction: A Python user function which computes the rotation matrix of the marker; optional, for rigid markers; type: MarkerUserRotationMatrixUserFunction
+
+        rotationJacobianUserFunction: A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given; type: MarkerUserRotationJacobianUserFunction
+
+        visualization: visualization data, see VMarkerUser
+
+    Notes:
+        Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``
+
+    """
+    def __init__(self, name = '', bodyNumbers = [], parameters = [], positionUserFunction: Union[MarkerUserPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[MarkerUserPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[MarkerUserRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[MarkerUserRotationJacobianUserFunction, int] = 0, visualization = {'show': True}):
+        self.name = name
+        self.bodyNumbers = copy.copy(bodyNumbers)
+        self.parameters = CheckForValidNumpyArray(parameters)
+        self.positionUserFunction = positionUserFunction
+        self.positionJacobianUserFunction = positionJacobianUserFunction
+        self.rotationMatrixUserFunction = rotationMatrixUserFunction
+        self.rotationJacobianUserFunction = rotationJacobianUserFunction
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'markerType', 'User'
+        yield 'name', self.name
+        yield 'bodyNumbers', self.bodyNumbers
+        yield 'parameters', self.parameters
+        yield 'positionUserFunction', self.positionUserFunction
+        yield 'positionJacobianUserFunction', self.positionJacobianUserFunction
+        yield 'rotationMatrixUserFunction', self.rotationMatrixUserFunction
+        yield 'rotationJacobianUserFunction', self.rotationJacobianUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):

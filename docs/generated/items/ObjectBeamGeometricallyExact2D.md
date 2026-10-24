@@ -12,7 +12,7 @@ A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRig
 
 - Python names: `ObjectBeamGeometricallyExact2D` or `Beam2D`, and `VBeam2D` for its visualization
 - Nodes it takes: [](#sec-item-noderigidbody2d), [](#sec-item-nodepoint2dslope1)
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
 
 ## Parameters
 

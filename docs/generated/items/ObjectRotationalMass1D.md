@@ -12,7 +12,7 @@ A 1D rotational inertia (mass) which is attached to Node1D.
 
 - Python names: `ObjectRotationalMass1D` or `Rotor1D`, and `VRotor1D` for its visualization
 - Nodes it takes: [](#sec-item-node1d), [](#sec-item-nodegenericode2), [](#sec-item-nodepointground)
-- Body markers that can be placed on it: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+- Body markers that can be placed on it: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
 
 ## Parameters
 

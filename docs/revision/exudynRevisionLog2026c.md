@@ -2971,3 +2971,36 @@ logs/performance. If you see important versions to test, many 3.13 wheels are in
 *2026-10-24, RG5.6.4 (#3081; maintainer: as the data is recorded now, remove performanceCompatibility.py again):*
 removed, with its use in runPerformanceTests.py, its test in test_performanceHistory.py and the paragraph of WORKFLOW.md;
 `--tolerant` stays. The entries of 1.11.0 and 1.12.0.dev1 in performanceHistory.json are kept.
+
+<a id="rg7-5-2"></a>
+### RG7.5.2, RG7.6 and RG7.8.1-2 — MarkerUser, ObjectJointUser, the symbolic user items in parallel analysed (2026-10-24, #3065, #2976, #2978)
+*(Maintainer 2026-10-24: do the open RG7 tasks now.)*
+- RG7.5.2, the decision: what a user marker adds beyond ObjectConnectorUser (reaches any point of its markers' bodies)
+  and ObjectUserBody (defines its local positions) is a point of SEVERAL bodies where the built-in connectors, joints,
+  loads and sensors act. MarkerUser (itemDefsMarkers.py, CMarkerUser.cpp): `bodyNumbers`, `parameters`,
+  positionUserFunction, positionJacobianUserFunction, rotationMatrixUserFunction, rotationJacobianUserFunction with
+  `(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)`; the coordinates of the nodes of the bodies body by body (the
+  order of ComputeMarkerODE2LTGarray for a multi-object marker, CObjectBody::GatherCoordinates); the Jacobians by central
+  differences as NodeUser; GetType has Orientation only with a rotationMatrixUserFunction (ItemTypes got an
+  `implementation` for types that depend on parameters), so a joint on a marker without it is refused at Assemble; no
+  JacobianDerivativeAvailable, so connectors on it compute their Jacobian numerically; CMarker::AccessFunctionsCallUserFunctions
+  draws it and what depends on it in the main thread (VisualizationSystem). Found while testing: with the numerical
+  Jacobians a Newton tolerance of 1e-12 is not reached in every step, the step size is reduced and the result differs
+  by 1e-4; with the default tolerances the variants agree to 1e-10 - said on the manual page.
+- RG7.6: ObjectJointUser (itemDefsObjects.py, CObjectJointUser.cpp) on the connector interface of rigid markers (#2745):
+  ComputeConstraintEquationsRigid calls the constraintUserFunction with the positions and rotation matrices, at velocity
+  level C [v0, omega0, v1, omega1] + dc/dt by central differences in t; ComputeConstraintEquationsRigidDiff takes the
+  increments of each AutoDiff direction from the seeded markers (skew(dtheta) = dA A^T) and multiplies them with
+  C = dc/d[p0, theta0, p1, theta1] from the jacobianUserFunction or 24 central differences; numberOfConstraints 1-6,
+  checked at Assemble with the constraintUserFunction; outputs Position, Displacement, Force (the multipliers),
+  ConstraintEquation.
+- userJointTest.py (-1.8272301913592162): a screw joint (5 equations) against phi = (M + F h) t^2/(2 (Jxx + m h^2)),
+  2e-7 at index 3, 9e-8 at index 2 (Newmark); a spherical joint without and with jacobianUserFunction against
+  ObjectJointSpherical, 1.6e-11; the refusals. userMarkerTest.py (-0.3569348653534026): the midpoint of two mass points
+  with spring and force against two mass points with half of each, 8e-11, the SensorMarker; a pendulum on a rigid
+  MarkerUser written with exudyn.symbolicUtilities and numpy against MarkerBodyRigid, 3e-10; the refusals. Mini examples
+  of both items.
+- RG7.8: the graphics part is #3064. The parallel part needs the symbolic engine first: PySymbolicUserFunction copies the
+  arguments into its named variables (argRealList), FlatProgram keeps the values in `slots`, and vector and matrix
+  expressions return references to buffers inside their nodes; one recording serves every item of a kind (#3056), so
+  two threads would overwrite each other. Planned as RG7.8.3.

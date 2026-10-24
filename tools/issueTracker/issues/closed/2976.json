@@ -1,0 +1,15 @@
+{
+  "number": 2976,
+  "title": "User joint on two position and orientation markers",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.6 (docs/dev/design/pythonUserItems.md 5.8): n constraint equations of the marker quantities, Jacobian (or numerical), reaction forces, chain rule with the marker Jacobians in C++; example 6: a screw joint.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-24 23:10",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "New ObjectJointUser: a joint on two rigid markers whose 1 to 6 constraint equations are a Python user function of the positions and rotation matrices of the markers, e.g. a screw joint; the Jacobian by the translations and rotation increments of the markers is given by jacobianUserFunction or computed by central differences; works with index 3 and index 2 solvers; test model userJointTest.py.",
+  "resolvedInVersion": "1.13.188"
+}

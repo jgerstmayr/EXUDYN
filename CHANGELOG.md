@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 184 | 1.13.187 |
+| 1.13 | Newborn | 186 | 1.13.189 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.189** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User markers: decide what they provide beyond ObjectConnectorUser and ObjectUserBody, then add them (#3065)
+  - description: revision2026c step RG7.5 (pythonUserItems.md 5.3), split from \#2975: a user marker (position, orientation, coordinates; on a node, several nodes or a body) whose value and Jacobian are user functions. ObjectConnectorUser reaches any point of a body through its markers (GetBodyPosition, ApplyBodyForce) and ObjectUserBody defines what a local position means, so a user marker on one body adds little; what remains is a marker on several nodes or bodies (an average, a point between two bodies), which needs a marker with the coordinates of several items in the system's LTG. To decide with the maintainer before it is built.
+  - **notes:** New MarkerUser: a marker on any number of bodies whose position, and optionally rotation, are Python user functions of the coordinates of the nodes of these bodies, so that the built-in connectors, joints, loads and sensors act at a point of several bodies; the Jacobians by central differences if not given; test model userMarkerTest.py.
+  - date resolved: **2026-10-24 23:10**, date raised: 2026-10-23
+- **1.13.188** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User joint on two position and orientation markers (#2976)
+  - description: revision2026c step RG7.6 (docs/dev/design/pythonUserItems.md 5.8): n constraint equations of the marker quantities, Jacobian (or numerical), reaction forces, chain rule with the marker Jacobians in C++; example 6: a screw joint.
+  - **notes:** New ObjectJointUser: a joint on two rigid markers whose 1 to 6 constraint equations are a Python user function of the positions and rotation matrices of the markers, e.g. a screw joint; the Jacobian by the translations and rotation increments of the markers is given by jacobianUserFunction or computed by central differences; works with index 3 and index 2 solvers; test model userJointTest.py.
+  - date resolved: **2026-10-24 23:10**, date raised: 2026-10-12
 - **1.13.187** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Remove performanceCompatibility.py after the runs of 1.11.0 and 1.12.0.dev1 (#3081)
   - description: Maintainer 2026-10-24: as the data is recorded now, remove performanceCompatibility.py again (\#3080); --tolerant stays for versions with the names of today.
   - **notes:** performanceCompatibility.py removed again, after the performance runs of 1.11.0 and 1.12.0.dev1 were recorded; runPerformanceTests.py --tolerant stays.

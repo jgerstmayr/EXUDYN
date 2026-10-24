@@ -302,7 +302,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 - **output**: 3x3 matrix GLocal as np.array
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`userNodeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userNodeTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`userMarkerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userMarkerTest.py) (TM), [`userNodeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userNodeTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
 
 
 (sec-rigidbodyutilities-rotxyz2glocal-t)=

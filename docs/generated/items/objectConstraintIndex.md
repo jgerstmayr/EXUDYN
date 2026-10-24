@@ -7,6 +7,7 @@ A Constraint is a special Object and Connector, which links two or more markers.
 :maxdepth: 1
 
 objectConstraintGeneral
+ObjectJointUser
 ObjectConnectorDistance
 ObjectConnectorCoordinate
 ObjectConnectorCoordinateVector

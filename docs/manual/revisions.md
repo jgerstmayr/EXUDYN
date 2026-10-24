@@ -48,6 +48,9 @@ deformable user body is drawn deformed (#3064).
 them - also any point of a marker's body - and applies forces and torques through them, so that a contact can search the
 closest point on a flexible body and act there (#2975).
 The new page {ref}`sec-useritems` explains how the user items are set up (#2979).
+**ObjectJointUser** constrains two rigid markers by 1 to 6 equations of their frames, written in Python, e.g. a screw
+joint (#2976). **MarkerUser** is a marker on several bodies whose position and rotation are Python functions of their
+coordinates; the built-in connectors, joints, loads and sensors act on it (#3065).
 **`exudyn.symbolicUtilities`** has the rotation matrices, G matrices and their conversions of `exudyn.cUtilities` with
 the same names and arguments and a last argument `functions`: with `exudyn.symbolic` they return symbolic matrices and
 vectors for symbolic user functions, with `numpy`, `math` or `exudyn.cMath` numpy arrays (#3069).

@@ -117,7 +117,8 @@ void VisualizationSystem::UpdateMainThreadItems()
 	for (Index i = 0; i < nMarkers; i++)
 	{
 		const CMarker* marker = data.GetCMarkers()[i];
-		if (marker->GetType() & (Marker::Body + Marker::Object)) //a marker on one object
+		if (marker->AccessFunctionsCallUserFunctions()) { mainThreadMarkers[i] = true; } //MarkerUser (#3065)
+		else if (marker->GetType() & (Marker::Body + Marker::Object)) //a marker on one object
 		{
 			Index objectNumber = marker->GetObjectNumber();
 			mainThreadMarkers[i] = (objectNumber >= 0 && objectNumber < nObjects && mainThreadObjects[objectNumber]);

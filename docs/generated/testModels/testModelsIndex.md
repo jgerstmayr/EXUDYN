@@ -210,6 +210,8 @@ userANCFCable2DTest
 userConnectorTest
 userFunctionTimerTest
 userGraphicsDataTest
+userJointTest
+userMarkerTest
 userMassIntegralTest
 userNodeTest
 userOutputVariablesTest

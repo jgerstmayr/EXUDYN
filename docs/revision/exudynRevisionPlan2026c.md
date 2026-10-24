@@ -49,9 +49,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - changed without a
    screen; the space key works on macOS (2026-10-16).
-2. **The user items and symbolic access to the system**: user markers and joints (RG7.5, RG7.6), the MainSystem in
-   symbolic user functions (RG12.4, proposal RG12.4.1 to decide), symbolic items in parallel (RG7.8); each user
-   function change measured against 1.13.6 (userFunctionBoundary.md sections 12, 13).
+2. **Symbolic access to the system and symbolic items in parallel**: the MainSystem in symbolic user functions
+   (RG12.4, proposal RG12.4.1 to decide), the thread-safe evaluation of a recording for symbolic items in parallel
+   (RG7.8); each user function change measured against 1.13.6 (userFunctionBoundary.md sections 12, 13).
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
@@ -81,9 +81,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
 - **RG7** Python user items
-  - RG7.5 Add user markers and a user connector with access to its markers (1 open sub-step)
-  - RG7.6 Add a user joint on two position and orientation markers
-  - RG7.8 Evaluate symbolic user items in parallel and in the graphics
+  - RG7.8 Evaluate symbolic user items in parallel and in the graphics (1 open sub-step)
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -126,7 +124,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | OPEN | 4 | Python user items |
+| RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -765,7 +763,7 @@ CLOSED 2026-10-19: userANCFBeam3DTest.py - NodeUser with the frame of the cross 
 a St.Venant-Kirchhoff continuum by 4 x 2 x 2 Gauss points; tip force: 6.3, 1.7, 0.5 % from Timoshenko with 2, 4, 8
 elements; tip torque on MarkerNodeRigid: M L/(E I) to 1e-6. [log](exudynRevisionLog2026c.md#rg7-4-2)
 
-### **OPEN_RG7.5** Add user markers and a user connector with access to its markers
+### **CLOSED_RG7.5** Add user markers and a user connector with access to its markers
 
 #2975. Design 5.3, 5.4: the marker functions as Python objects per call; example: a sphere rolling on a flexible cable.
 
@@ -775,13 +773,17 @@ CLOSED 2026-10-23 (#2975; maintainer: do RG7.5): any number of markers, `exudyn.
 the forces through the marker Jacobians, numerical Jacobian; userConnectorTest.py with a ball on an ANCF cable.
 [log](exudynRevisionLog2026c.md#rg7-5-1)
 
-#### **OPEN_RG7.5.2** Decide what user markers provide beyond ObjectConnectorUser and ObjectUserBody, then add them
+#### **CLOSED_RG7.5.2** Decide what user markers provide beyond ObjectConnectorUser and ObjectUserBody, then add them
 
-#3065: a marker on several nodes or bodies is what remains; it needs the coordinates of several items in its LTG.
+CLOSED 2026-10-24 (#3065; maintainer: do the open RG7 steps): MarkerUser on any number of bodies, position and optional
+rotation as user functions of their coordinates, so that the built-in connectors, joints, loads and sensors act at a
+point of several bodies; userMarkerTest.py. [log](exudynRevisionLog2026c.md#rg7-5-2)
 
-### **OPEN_RG7.6** Add a user joint on two position and orientation markers
+### **CLOSED_RG7.6** Add a user joint on two position and orientation markers
 
-#2976. Design 5.8; example: a screw joint.
+CLOSED 2026-10-24 (#2976; maintainer: do the open RG7 steps): ObjectJointUser, 1 to 6 equations of the frames of two
+rigid markers, the Jacobian given or by central differences, index 3 and 2; userJointTest.py with a screw joint.
+[log](exudynRevisionLog2026c.md#rg7-5-2)
 
 ### **CLOSED_RG7.7** Give SensorUserFunction itemNumbers beside sensorNumbers
 
@@ -791,6 +793,23 @@ both refused at Assemble; test model sensorUserFunctionItemsTest.py. [log](exudy
 ### **OPEN_RG7.8** Evaluate symbolic user items in parallel and in the graphics
 
 #2978. Design 5.5. Waits for the revision of the symbolic user functions, group RG12.
+
+#### **CLOSED_RG7.8.1** Draw the symbolic user bodies without Python
+
+CLOSED 2026-10-24 (#2978): done by #3064 - the graphicsData of ObjectUserBody mapped by a symbolic positionUserFunction
+in C++. [log](exudynRevisionLog2026c.md#rg7-5-2)
+
+#### **CLOSED_RG7.8.2** Analyse what the parallel evaluation of symbolic user functions needs
+
+CLOSED 2026-10-24 (#2978): the evaluation of a recording is not thread-safe - the arguments are copied into its named
+variables, the flat program keeps its values in its slots, and vector and matrix nodes return references to their own
+buffers; one recording serves many items. [log](exudynRevisionLog2026c.md#rg7-5-2)
+
+#### **OPEN_RG7.8.3** Evaluate a recording with the values of one call outside the expression nodes, then in parallel
+
+#2978: the arguments and the slots of the flat program per call (per thread), the vector and matrix values in these
+slots; then items whose user functions are all symbolic leave the serial lists (HasUserFunction) and are computed in the
+parallel loops; measured on the user rigid body and the ANCF cable.
 
 ### **CLOSED_RG7.9** Document how items work, and the user items
 

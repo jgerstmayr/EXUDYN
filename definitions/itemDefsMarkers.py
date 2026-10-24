@@ -2068,3 +2068,179 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('UpdateGraphics'),
         ],
     ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   MarkerUser   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def MarkerUser_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, qTotal: Vector, q_t: Vector,
+                                    parameters: Vector) -> Vector3D:
+    r"""A user function, which computes the global position of the marker from the coordinates of its bodies.
+
+    Args:
+        mbs: provides MainSystem mbs to which the marker belongs
+        t: time of the configuration asked for
+        itemNumber: integer number of the marker in mbs
+        qRef: $\in \Rcal^n$ the reference coordinates of the nodes of the bodies, body by body in the order of bodyNumbers and of the nodes of each body
+        qTotal: $\in \Rcal^n$ the total coordinates of these nodes - reference plus displacement coordinates - of the configuration asked for
+        q_t: $\in \Rcal^n$ the velocity coordinates of these nodes; zero in the reference configuration
+        parameters: $\in \Rcal^{n_p}$ the parameters of the marker, see parameters; empty if not given
+    Returns:
+        $\in \Rcal^{3}$ the global position of the marker
+    """
+
+def MarkerUser_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, qTotal: Vector, q_t: Vector,
+                                  parameters: Vector) -> MatrixContainer:
+    r"""A user function of the marker that returns a matrix: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
+
+    Args:
+        mbs: provides MainSystem mbs to which the marker belongs
+        t: time of the configuration asked for
+        itemNumber: integer number of the marker in mbs
+        qRef: $\in \Rcal^n$ the reference coordinates of the nodes of the bodies, body by body in the order of bodyNumbers and of the nodes of each body
+        qTotal: $\in \Rcal^n$ the total coordinates of these nodes - reference plus displacement coordinates - of the configuration asked for
+        q_t: $\in \Rcal^n$ the velocity coordinates of these nodes; zero in the reference configuration
+        parameters: $\in \Rcal^{n_p}$ the parameters of the marker, see parameters; empty if not given
+    Returns:
+        the matrix, as numpy array or list of lists
+    """
+
+definitions.append(ItemDefinition(
+    className='MarkerUser',
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+""",
+    addProtectedC=r"""    //! the coordinates of the nodes of the bodies, body by body: reference, total and velocity coordinates of a configuration
+    void GatherCoordinates(const CSystemData& cSystemData, ConfigurationType configuration, Vector& qRef, Vector& q, Vector& q_t) const;
+    //! the number of the marker in the system, for the user functions
+    Index GetMarkerNumber(const CSystemData& cSystemData) const;
+    //! a matrix user function, its size checked
+    template<class TUserFunction>
+    void EvaluateMatrixUserFunction(const CSystemData& cSystemData, const TUserFunction& function, const char* name, Index rows, Index columns,
+        Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
+""",
+    cParentClass=ParentClassCMarker,
+    overallDescription=r"""A marker on any number of bodies whose position, and optionally rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.""",
+    classType=ClassTypeMarker,
+    miniExample=r"""    #a marker at the midpoint of two mass points, held by a spring to the ground
+    nA = mbs.AddNode(NodePoint(referenceCoordinates=[-0.5,0,0], initialCoordinates=[0,0.1,0]))
+    nB = mbs.AddNode(NodePoint(referenceCoordinates=[0.5,0,0], initialCoordinates=[0,0.1,0]))
+    bA = mbs.AddObject(MassPoint(nodeNumber=nA, mass=1))
+    bB = mbs.AddObject(MassPoint(nodeNumber=nB, mass=1))
+    def UFposition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+        return 0.5*(qTotal[0:3] + qTotal[3:6])
+    mMid = mbs.AddMarker(MarkerUser(bodyNumbers=[bA, bB], positionUserFunction=UFposition))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
+    k = 100
+    mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround, mMid], stiffness=[k,k,k]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the midpoint oscillates with omega = sqrt(k/(2 m)), from 0.1: 0.1*cos(omega) at t=1
+    exu.sys['testResult'] = mbs.GetMarkerOutput(mMid, exu.OutputVariableType.Position)[1]
+    """,
+    miniExamplePerformanceTest={'numberOfSteps': 1000},
+    detailedDescription=r"""    #### Coordinates and user functions
+
+    The marker acts on the coordinates of the nodes of its bodies, body by body in the order of `bodyNumbers`, and for
+    each body in the order of its nodes - $\qv \in \Rcal^n$, as a connector on the marker gets them (#3065). The user
+    functions get the reference coordinates `qRef`, the total coordinates `qTotal` (reference plus displacement), the
+    velocities `q_t` and the `parameters`, as those of NodeUser and ObjectUserBody do.
+
+    | user function | gives | needed for |
+    |---|---|---|
+    | `positionUserFunction` | $\LU{0}{\pv}(\qv)$ | always |
+    | `positionJacobianUserFunction` | $\Jm_{pos} = \partial \LU{0}{\pv} / \partial \qv \in \Rcal^{3 \times n}$ | optional, by central differences of the position |
+    | `rotationMatrixUserFunction` | $\LU{0m}{\Rot}(\qv)$ | rigid markers: joints, torques |
+    | `rotationJacobianUserFunction` | $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv \in \Rcal^{3 \times n}$ | optional, by central differences of the rotation matrix |
+
+    The velocity is $\Jm_{pos} \dot \qv$, the angular velocity $\Jm_{rot} \dot \qv$. A force $\fv$ on the marker gives
+    the generalized forces $\Jm_{pos}\tp \fv$, a torque $\Jm_{rot}\tp \mv$. A marker without
+    rotationMatrixUserFunction has no Orientation: a joint or a torque on it is refused at Assemble. The user functions
+    are called serially, in the main thread; the marker and what depends on it are drawn in the main thread. Connectors
+    on the marker compute their Jacobian numerically.
+    """,
+    mainParentClass=MainParentClassMainMarker,
+    visuParentClass=VisuParentClassVisualizationMarker,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"marker's unique name"),
+        ItemParameter(type=TArrayIndex(ItemObject), destination=DestComp+DestParam,
+            pythonName='bodyNumbers',
+            defaultValue='ArrayIndex()',
+            description=r"""$[b_0,\,b_1,\,\ldots]\tp$the bodies whose coordinates the user functions get, at least one"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
+            pythonName='parameters',
+            defaultValue='Vector()',
+            description=r"""$\pv_{par} \in \Rcal^{n_p}$the parameters of the marker, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout"""),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='positionUserFunction',
+            defaultValue=0,
+            description=r"""$\LU{0}{\pv}(\qv)$A Python user function which computes the global position of the marker; it must be given""",
+            userFunction=MarkerUser_positionUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='positionJacobianUserFunction',
+            defaultValue=0,
+            description=r"""$\Jm_{pos}(\qv) \in \Rcal^{3\times n}$A Python user function which computes the position Jacobian; by central differences of the position if not given""",
+            userFunction=MarkerUser_matrixUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='rotationMatrixUserFunction',
+            defaultValue=0,
+            description=r"""$\LU{0m}{\Rot}(\qv) \in \Rcal^{3\times 3}$A Python user function which computes the rotation matrix of the marker; optional, for rigid markers""",
+            userFunction=MarkerUser_matrixUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='rotationJacobianUserFunction',
+            defaultValue=0,
+            description=r"""$\Jm_{rot}(\qv) \in \Rcal^{3\times n}$A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given""",
+            userFunction=MarkerUser_matrixUserFunction),
+        ItemFunctionDef('GetObjectNumber',
+            implementation='return parameters.bodyNumbers[localIndex];'),
+        ItemFunctionDef('SetObjectNumber',
+            args='Index objectNumber, Index localIndex = 0',
+            implementation='parameters.bodyNumbers[localIndex] = objectNumber;'),
+        ItemFunctionDef('GetNumberOfObjects',
+            implementation='return parameters.bodyNumbers.NumberOfItems();'),
+        ItemTypes('Marker', ['Body', 'Object', 'Position', 'Orientation'],
+            description=r'Orientation only with a rotationMatrixUserFunction, so that a joint or torque on a marker without it is refused at Assemble',
+            implementation='return parameters.rotationMatrixUserFunction ? (Marker::Type)(Marker::Body + Marker::Object + Marker::Position + Marker::Orientation) : (Marker::Type)(Marker::Body + Marker::Object + Marker::Position);'),
+        ItemFunctionDef('GetDimension',
+            implementation='return 3;'),
+        ItemFunctionDef('GetPosition'),
+        ItemFunctionDef('GetVelocity'),
+        ItemFunctionDef('GetRotationMatrix'),
+        ItemFunctionDef('GetAngularVelocity'),
+        ItemFunctionDef('GetAngularVelocityLocal'),
+        ItemFunctionDef('ComputeMarkerData'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
+            pythonName='AccessFunctionsCallUserFunctions', implementation='return true;',
+            description=r'the marker and what depends on it are drawn in the main thread (#3003)'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
+            pythonName='GetTypeName',
+            implementation='return "User";',
+            description=r"Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?"),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluatePosition',
+            args='const CSystemData& cSystemData, Vector3D& position, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
+            description=r'call of positionUserFunction; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluatePositionJacobian',
+            args='const CSystemData& cSystemData, Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
+            description=r'call of positionJacobianUserFunction, or central differences of the position; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateRotationMatrix',
+            args='const CSystemData& cSystemData, Matrix3D& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
+            description=r'call of rotationMatrixUserFunction; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateRotationJacobian',
+            args='const CSystemData& cSystemData, Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
+            description=r'call of rotationJacobianUserFunction, or central differences of the rotation matrix; implemented in evaluateUserFunctions.cpp'),
+        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
+            pythonName='show',
+            defaultValue=True,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunctionDef('UpdateGraphics'),
+        ],
+    ))

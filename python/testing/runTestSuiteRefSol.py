@@ -139,7 +139,7 @@ def TestExamplesReferenceSolution():
         'constraintDriftTest.py':9.796449624399628e-06, #new 2026-10-15: the drift of TrapezoidalIndex2 checked, the drift in the current state four ways (#565)
         'systemUtilitiesTest.py':1.670836871616957, #new 2026-10-16: SystemEnergy, SystemConstraintDrift and ComputeSystemGraph of exudyn.systemUtilities (#2997)
         'pythonUserFunctionArgumentsTest.py':0.5418115020412166, #new 2026-10-16: numpy arrays as vector arguments of Python user functions, userFunctionListArguments (#3008)
-        'symbolicUserFunctionSignaturesTest.py':44.302161797439574, #2026-10-23: with the massIntegralUserFunction of ObjectUserBody (#3063), before 43.302161797439574; 2026-10-17: with the 9 signatures of matrix results and ObjectGenericODE2 with mass matrix and Jacobian (#3020), before 30.255735007657506; new 2026-10-16: the 30 symbolic user function signatures and seven items against their Python versions (#2985); 2026-10-18: 43 with the 4 of NodeUser (#2974)
+        'symbolicUserFunctionSignaturesTest.py':50.302161797439574, #2026-10-24: with the 2 signatures of ObjectJointUser and the 4 of MarkerUser (#2976, #3065), before 44.302161797439574; 2026-10-23: with the massIntegralUserFunction of ObjectUserBody (#3063), before 43.302161797439574; 2026-10-17: with the 9 signatures of matrix results and ObjectGenericODE2 with mass matrix and Jacobian (#3020), before 30.255735007657506; new 2026-10-16: the 30 symbolic user function signatures and seven items against their Python versions (#2985); 2026-10-18: 43 with the 4 of NodeUser (#2974)
         'symbolicNumpyCompatibilityTest.py':306.26230077004766, #2026-10-17: with A.T, rows, slices, scalars and np.sin of vectors (#3018), before 242.87935007040414; new 2026-10-17: numpy and symbolic agree where symbolic has the operation and refuse what numpy defines differently (#3015)
         'symbolicSparseMatrixTest.py':0.19711034463698704, #new 2026-10-17: sparse matrix results of symbolic user functions with the pattern fixed when recorded, Python and symbolic, sparse and dense solver (#3022)
         'orientTrianglesTest.py':475.0, #new 2026-10-18: graphics.OrientTriangles and CheckTriangleOrientation, the STL import with orientTriangles (#2281)
@@ -154,6 +154,8 @@ def TestExamplesReferenceSolution():
         'ANCFBeamGeometricallyExactComparisonTest.py':5.999501744103005, #2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992); before 5.9995017472560175; new 2026-10-13: ObjectANCFBeam against ObjectBeamGeometricallyExact, tip torque on node and element (#2228)
         'ANCFThinPlateRotationTest.py':0.009394817004517305, #new 2026-10-13: the frame of ObjectANCFThinPlate and NodePointSlope12, torque on element and node (#2228)
         'symbolicUtilitiesTest.py':7.024076141931356, #new 2026-10-23: exudyn.symbolicUtilities with exudyn.symbolic, numpy, math and cMath against cUtilities (#3069)
+        'userJointTest.py':-1.8272301913592162, #new 2026-10-24: ObjectJointUser, a screw joint against the analytic solution at index 3 and 2, a spherical joint against ObjectJointSpherical, the refusals (#2976)
+        'userMarkerTest.py':-0.3569348653534026, #new 2026-10-24: MarkerUser, the midpoint of two mass points and a rigid marker in a revolute joint against built-in markers, the refusals (#3065)
         'userConnectorTest.py':0.3942810318186798, #new 2026-10-23: ObjectConnectorUser with ConnectorMarkers: a spring-damper, a rigid body, a ball on an ANCF cable, the refusals (#2975)
         'userGraphicsDataTest.py':5.65312, #new 2026-10-23: graphicsData of ObjectUserBody in local coordinates, mapped by the positionUserFunction, against ObjectRigidBody and on a bent user cable, Python and symbolic (#3064)
         'userMassIntegralTest.py':-5.686955690889934, #new 2026-10-23: MarkerBodyMass and LoadMassProportional on ObjectUserBody by its massIntegralUserFunction, a user ANCF cable and a mass point (#3063)
@@ -513,6 +515,8 @@ def MiniExamplesReferenceSolution():
         'ObjectJointSliding.py':1.0999999999999979,
         'ObjectConnectorReevingSystemSprings.py':-0.9999999999998965,
         'ObjectConnectorUser.py':0.07074575611653322, #new 2026-10-23 (#2975)
+        'ObjectJointUser.py':1.0, #new 2026-10-24 (#2976)
+        'MarkerUser.py':0.0707457561058372, #new 2026-10-24 (#3065)
         'ObjectConnectorHydraulicActuatorSimple.py':1.0,
         #the markers, loads and sensors (#2732)
         'MarkerBodyMass.py':-4.904999999999998,

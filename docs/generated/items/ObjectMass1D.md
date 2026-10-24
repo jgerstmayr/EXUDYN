@@ -12,7 +12,7 @@ A 1D (translational) mass which is attached to Node1D. Note, that the mass does 
 
 - Python names: `ObjectMass1D` or `Mass1D`, and `VMass1D` for its visualization
 - Nodes it takes: [](#sec-item-node1d), [](#sec-item-nodegenericode2), [](#sec-item-nodepointground)
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
 
 ## Parameters
 

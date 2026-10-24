@@ -1008,6 +1008,24 @@ items = {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
+  'ObjectJointUser': {
+    'kind': 'Object',
+    'types': ['Connector', 'Constraint'],
+    'requestedMarkerTypes': ['Position', 'Orientation'],
+    'outputVariables': ['Position', 'Displacement', 'Force', 'ConstraintEquation'],
+    'parameters': {
+      'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
+      'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'two rigid markers, whose frames the constraintUserFunction gets'},
+      'numberOfConstraints': {'type': 'PInt', 'size': '', 'range': '> 0', 'default': '1', 'mustBeGiven': False, 'description': 'the number of constraint equations, 1 to 6'},
+      'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the joint, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout'},
+      'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'},
+      'constraintUserFunction': {'type': 'ObjectJointUserConstraintUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the constraint equations from the frames of the two markers; needed for an active joint'},
+      'jacobianUserFunction': {'type': 'ObjectJointUserJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; optional, computed by central differences if not given'},
+    },
+    'visualization': {
+      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
+    },
+  },
   'ObjectConnectorReevingSystemSprings': {
     'kind': 'Object',
     'types': ['Connector'],
@@ -1786,6 +1804,23 @@ items = {
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
       'bodyNumber': {'type': 'ObjectIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'body number to which marker is attached to (beam type)'},
+    },
+    'visualization': {
+      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
+    },
+  },
+  'MarkerUser': {
+    'kind': 'Marker',
+    'types': ['Body', 'Object', 'Position', 'Orientation'],
+    'outputVariables': [],
+    'parameters': {
+      'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
+      'bodyNumbers': {'type': 'ArrayObjectIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the bodies whose coordinates the user functions get, at least one'},
+      'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the marker, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout'},
+      'positionUserFunction': {'type': 'MarkerUserPositionUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the global position of the marker; it must be given'},
+      'positionJacobianUserFunction': {'type': 'MarkerUserPositionJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the position Jacobian; by central differences of the position if not given'},
+      'rotationMatrixUserFunction': {'type': 'MarkerUserRotationMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation matrix of the marker; optional, for rigid markers'},
+      'rotationJacobianUserFunction': {'type': 'MarkerUserRotationJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},

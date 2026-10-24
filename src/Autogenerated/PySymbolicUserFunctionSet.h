@@ -25,6 +25,8 @@ public:
     std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)> objectConnectorRigidBodySpringDamperPostNewtonStepUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)> objectConnectorCoordinateSpringDamperExtSpringForceUserFunction;
     std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&)> objectConnectorUserForceUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)> objectJointUserConstraintUserFunction;
+    std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)> objectJointUserJacobianUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real)> objectConnectorCoordinateOffsetUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)> objectConnectorCoordinateVectorConstraintUserFunction;
     std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)> objectConnectorCoordinateVectorJacobianUserFunction;
@@ -288,6 +290,20 @@ public:
                     return this->EvaluateReal(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
                 };
         }
+        else if (itemTypeName == "ObjectJointUser" && userFunctionName == "constraintUserFunction")
+        {            //define the user function as lambda function of this
+            objectJointUserConstraintUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, StdMatrix3D arg3, StdVector3D arg4, StdMatrix3D arg5, const StdVector& arg6)
+                {
+                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+                };
+        }
+        else if (itemTypeName == "ObjectJointUser" && userFunctionName == "jacobianUserFunction")
+        {            //define the user function as lambda function of this
+            objectJointUserJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, StdMatrix3D arg3, StdVector3D arg4, StdMatrix3D arg5, const StdVector& arg6)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+                };
+        }
         else if (itemTypeName == "ObjectConnectorCoordinate" && userFunctionName == "offsetUserFunction")
         {            //define the user function as lambda function of this
             objectConnectorCoordinateOffsetUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, Real arg2)
@@ -328,6 +344,34 @@ public:
             objectJointGenericOffsetUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector6D arg2)
                 {
                     return this->EvaluateStdVector6D(mainSystem, arg0, arg1, arg2);
+                };
+        }
+        else if (itemTypeName == "MarkerUser" && userFunctionName == "positionUserFunction")
+        {            //define the user function as lambda function of this
+            nodeUserPositionUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
+                {
+                    return this->EvaluateStdVector3D(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
+                };
+        }
+        else if (itemTypeName == "MarkerUser" && userFunctionName == "positionJacobianUserFunction")
+        {            //define the user function as lambda function of this
+            nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
+                };
+        }
+        else if (itemTypeName == "MarkerUser" && userFunctionName == "rotationMatrixUserFunction")
+        {            //define the user function as lambda function of this
+            nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
+                };
+        }
+        else if (itemTypeName == "MarkerUser" && userFunctionName == "rotationJacobianUserFunction")
+        {            //define the user function as lambda function of this
+            nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
                 };
         }
         else if (itemTypeName == "LoadForceVector" && userFunctionName == "loadVectorUserFunction")
@@ -455,6 +499,14 @@ public:
         else if constexpr (std::is_same_v<UFT, std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&)>>)
 		{
 			return objectConnectorUserForceUserFunction;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)>>)
+		{
+			return objectJointUserConstraintUserFunction;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)>>)
+		{
+			return objectJointUserJacobianUserFunction;
 		}
         else if constexpr (std::is_same_v<UFT, std::function<Real(const MainSystem&,Real,Index,Real)>>)
 		{
