@@ -107,6 +107,7 @@ for run in runList:
     simulationSettings.timeIntegration.endTime = run['numberOfSteps']*h
     simulationSettings.solution.file.write = False
     simulationSettings.timeIntegration.verboseMode = 1
+    simulationSettings.show.computationTime = True #the solver sub-timers of each run, recorded in the regular module (#3078)
     simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44 if run['explicit']
                      else exu.DynamicSolverType.GeneralizedAlpha)

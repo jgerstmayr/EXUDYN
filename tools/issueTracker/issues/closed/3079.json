@@ -1,0 +1,16 @@
+{
+  "number": 3079,
+  "title": "Performance history: a summary over Exudyn versions, with a table and a plot",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-10-24: a data summary of many Exudyn versions in the repository (JSON), to which a performance run is added when a change is expected - before and after an optimization -, not for every micro version; tests may appear and disappear between versions. exudev creates a table and a plot of the main timings from it. Older logs without the JSON section (1.9.0, 1.10.0, 1.11.0, 1.13.x) are read from their text: the time of each test file.",
+  "dateRaised": "2026-10-24",
+  "deadline": "2027-04-22",
+  "dateResolved": "2026-10-24 21:28",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/runPerformanceTests.py",
+  "releaseNotes": "Performance history over the Exudyn versions: exudev perf --history-add LOG adds a performance log - from its JSON section, or for older logs from their text - to python/logs/performance/performanceHistory.json, and performanceHistory.md shows per machine and module the times of the test files and single runs over the versions, the solver sub-timers and a plot (exudev perf --history-report).",
+  "resolvedInVersion": "1.13.185"
+}

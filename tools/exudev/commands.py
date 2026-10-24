@@ -901,6 +901,8 @@ def Performance(options):
     MiniExamples instead (runMiniExamplePerformance.py, #2745, #2760)."""
     if getattr(options, 'mini', False):
         return MiniExamplePerformance(options)
+    if getattr(options, 'history_add', None) or getattr(options, 'history_report', False):
+        return PerformanceHistory(options)
     extra = ExtraArguments(options)
     steps = []
 
@@ -923,6 +925,24 @@ def Performance(options):
                        argv=runner.InEnvironment(environment, argv, options),
                        cwd=ModelsDirectory(), env=stepEnvironment, check=False)]
 
+    return steps
+
+
+#%%******************************************************************************************************
+def PerformanceHistory(options):
+    """'perf --history-add LOG ...' and 'perf --history-report': the performance history over the versions
+    (performanceHistory.py, #3079); a log path is taken as given or relative to python/logs/performance"""
+    steps = []
+    environment = TargetEnvironments(options, 'P313')[0][1]
+    if options.history_add:
+        logDirectory = os.path.join(runner.RepositoryRoot(), 'python', 'logs', 'performance')
+        paths = [path if os.path.exists(path) else os.path.join(logDirectory, path) for path in options.history_add]
+        steps += [Step('add ' + str(len(paths)) + ' log(s) to the performance history',
+                       argv=runner.InEnvironment(environment, ['python', 'performanceHistory.py', 'add'] + paths, options),
+                       cwd=ModelsDirectory())]
+    steps += [Step('performance history report',
+                   argv=runner.InEnvironment(environment, ['python', 'performanceHistory.py', 'report'], options),
+                   cwd=ModelsDirectory())]
     return steps
 
 

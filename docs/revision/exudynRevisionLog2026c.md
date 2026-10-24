@@ -2912,3 +2912,35 @@ TestModels are not sorted alphabetically, as in Examples.)*
   unchanged (the checks count into cntWrong).
 - tools/generators/examplesDocsEmitter.py: the TestModels sorted as the Examples, case-insensitive (#3077).
 - Seen, not changed: a Diff that is not possible raises exudyn.InternalError, not a ValueError.
+
+<a id="rg5-6"></a>
+### RG5.6.1 and RG5.6.2 — the machine-readable performance log and the performance history (2026-10-24, #3078, #3079)
+*(Maintainer 2026-10-24: we do not have a good tracking of performance, neither human- nor machine-readable.
+performanceLogs could include a machine-readable section - general data like the testing machine and its load during
+the test, then the timing for each single test, even with subtimers - as JSON section or a separate file. From that an
+exudev feature could create a data summary for many Exudyn versions, and from that a table and plot of the main test
+timings over time; the summary, where tests evolve and disappear, stored in the repo, and a new performance test added
+not for every micro version but when expecting changes, before and after performance improvements. The adapted suite
+could be run for older versions, not older than 1.11, in a tolerant mode recording the compatible models; older
+results are in the text of the logs of 1.9.0, 1.10.0, ... Compare the fast module, and in the regular module the
+timers per model, which slow them down a little but show effects much more clearly.)*
+- The JSON goes INTO the log, after a line `#JSON`, as runMiniExamplePerformance.py does (#2745) - one file per run, and
+  one parser for both. It is printed by exu.Print before the C++ writer closes the log: a Python append was overtaken
+  by the writer's buffer. Contents: version, module, AVX2, build date; machine id (EXUDYN_MACHINE_ID), CPU, system,
+  Python, numpy; the date; the CPU load before and after (mean and maximum of the threads); every test file with group,
+  wall time, result and whether it passed; every single run with solver time, result, error, passed and the solver
+  sub-timers; the totals of the groups.
+- testRunnerTools.AddTiming records the sub-timers that are not zero when timer.useTimer is set
+  (solverSubTimerNames). perfConnectorInterface, perfAccessFunctionsAD, perfUserFunctions and perfLargeMassSpringChain
+  (which had it off) now set show.computationTime = True, as the six others did: all 45 runs of the regular module
+  have sub-timers, the fast module none (compiled away). The total was 45.6 s regular, 36.5 s fast (load before 0.6 %).
+- python/testing/performanceHistory.py: `add LOG ...` reads a log - the JSON section, or for an older log the CPU TIME
+  of each passed test file and, since #2460, the table of the single runs - and adds or replaces the entry of its series
+  (machine, system, Python, module) and version in python/logs/performance/performanceHistory.json; `report` writes
+  performanceHistory.md, per series the test files and the single runs over the versions (missing tests empty), the
+  sub-timers of the two newest runs with timers, versions with a CPU load above 20 % marked, and a plot of the file
+  times (matplotlib, Agg). The machine of a log without EXUDYN_MACHINE_ID is its processor string, in old and new logs
+  alike. exudev: `perf --history-add LOG ...` (paths relative to python/logs/performance) and `perf --history-report`.
+- Seeded with the Windows Python 3.13 logs of this machine: 1.9.0, 1.10.0, 1.11.0, 1.13.6 (regular and fast, load 35 %
+  before the regular run) and 1.13.183.dev1 (regular and fast, new runs). python/testing/test_performanceHistory.py.
+- Open (RG5.6.3, #3080): the tolerant mode for older versions needs environments with exudyn 1.11 ... from PyPI.

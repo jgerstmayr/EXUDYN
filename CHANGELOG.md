@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 180 | 1.13.183 |
+| 1.13 | Newborn | 182 | 1.13.185 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.185** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Performance history: a summary over Exudyn versions, with a table and a plot (#3079)
+  - description: Maintainer 2026-10-24: a data summary of many Exudyn versions in the repository (JSON), to which a performance run is added when a change is expected - before and after an optimization -, not for every micro version; tests may appear and disappear between versions. exudev creates a table and a plot of the main timings from it. Older logs without the JSON section (1.9.0, 1.10.0, 1.11.0, 1.13.x) are read from their text: the time of each test file.
+  - **notes:** Performance history over the Exudyn versions: exudev perf --history-add LOG adds a performance log - from its JSON section, or for older logs from their text - to python/logs/performance/performanceHistory.json, and performanceHistory.md shows per machine and module the times of the test files and single runs over the versions, the solver sub-timers and a plot (exudev perf --history-report).
+  - date resolved: **2026-10-24 21:28**, date raised: 2026-10-24
+- **1.13.184** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Performance log: a machine-readable section with the machine, its load and every run with its solver timers (#3078)
+  - description: Maintainer 2026-10-24: the performance logs are readable by humans only. A JSON section at the end of the log (as the MiniExample performance log has, \#2745): the version and module, the machine and its load before and after, every test file with its time and result, every single run with its solver time and, in the regular module, the solver sub-timers; all performance models with the timers active in the regular module.
+  - **notes:** The log of the performance tests ends with a machine-readable section (\#JSON): version and module, the machine and its CPU load before and after, every test file with its time and result, every single run with its solver time and, in the regular module, the solver sub-timers; all performance models run with the timers active.
+  - date resolved: **2026-10-24 21:28**, date raised: 2026-10-24
 - **1.13.183** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The TestModels in the documentation in alphabetical order (#3077)
   - description: Maintainer 2026-10-24: the index of the TestModels lists them in the order of the reference solutions of the test suite, the Examples alphabetically; sort the TestModels as the Examples (examplesDocsEmitter.py).
   - **notes:** The TestModels in the documentation are in alphabetical order, as the Examples.

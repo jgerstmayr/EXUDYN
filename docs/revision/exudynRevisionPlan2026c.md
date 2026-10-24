@@ -78,6 +78,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.3 Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
+  - RG5.6 Track the performance over the versions: a machine-readable log, a history, a report (1 open sub-step)
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
 - **RG7** Python user items
@@ -124,7 +125,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
-| RG5 | OPEN | 9 | Performance |
+| RG5 | OPEN | 11 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 4 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -426,6 +427,30 @@ transformations in the rigid-body kinematics, the object loop of `ODE2RHS`; stee
 functions in Python for specific objects - as the user rigid body of userRigidBodyTest.py -, record them and test on a
 GPU whether the approach works; the list of operations of the flat evaluation (`GetFlatProgram()`, #3053, #3054) is
 the input.
+
+### **OPEN_RG5.6** Track the performance over the versions: a machine-readable log, a history, a report
+
+Maintainer 2026-10-24: the performance is tracked neither readably for humans nor for machines. A machine-readable
+section of each performance log with the machine, its load and every run with its timers; a history over the versions
+in the repository, to which a run is added before and after a change that is expected to matter, with a table and a
+plot; the fast module for the speed, the regular module with the solver sub-timers for the detail; older versions down
+to 1.11 run with the suite of today where their models are compatible, older logs read from their text.
+
+#### **CLOSED_RG5.6.1** A JSON section at the end of the performance log, the sub-timers of every run
+
+CLOSED 2026-10-24 (#3078): `#JSON` as in the MiniExample performance log; every performance model with
+show.computationTime, AddTiming records the sub-timers that are not zero. [log](exudynRevisionLog2026c.md#rg5-6)
+
+#### **CLOSED_RG5.6.2** The history file, its report, and the older logs read from their text
+
+CLOSED 2026-10-24 (#3079): python/testing/performanceHistory.py, `exudev perf --history-add LOG ...` and
+`--history-report`; seeded with 1.9.0, 1.10.0, 1.11.0, 1.13.6 and 1.13.183 (regular; 1.13.6 and 1.13.183 also fast).
+[log](exudynRevisionLog2026c.md#rg5-6)
+
+#### **OPEN_RG5.6.3** A tolerant mode for older Exudyn versions down to 1.11
+
+#3080: the suite of today with an installed older version, recording the models that run and skipping the others;
+needs environments with the older wheels from PyPI.
 
 ## **OPEN_RG6** Graphics and rendering
 

@@ -42,6 +42,8 @@ epilogText = """examples:
   exudev test --fast                the test suite against the fast module
   exudev perf --fast                the performance tests against the fast module
   exudev perf --mini                the performance run of the MiniExamples (--full: ~2 s each)
+  exudev perf --history-add LOG     adds a performance log to performanceHistory.json, writes the report
+  exudev perf --history-report      writes performanceHistory.md and its plots from performanceHistory.json
   exudev pytest                     the pytest files of python/testing, 8 processes
   exudev pytest --graphics          the graphics tests only; --record writes their references anew
   exudev env                        which environment has which python, exudyn and numpy
@@ -362,6 +364,11 @@ def BuildParsers():
     performance.add_argument('--only', metavar='NAME,...', help='--mini: only these items')
     performance.add_argument('--compare', nargs=2, metavar=('LOG1', 'LOG2'),
                              help='--mini: compare two logs instead of running')
+    performance.add_argument('--history-add', nargs='+', metavar='LOG',
+                             help='add these performance logs to python/logs/performance/performanceHistory.json '
+                                  'instead of running, and write the report (#3079)')
+    performance.add_argument('--history-report', action='store_true',
+                             help='write performanceHistory.md and its plots from performanceHistory.json (#3079)')
     performance.add_argument('extra', nargs=argparse.REMAINDER,
                              help="after '--': arguments passed to the runner verbatim")
     performance.set_defaults(function=commands.Performance)

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.183.dev1
+- Exudyn version = 1.13.185.dev1
 - last change = 2026-10-24
-- Number of issues = 3078
-- Number of resolved issues = 2960 (183 in current version)
+- Number of issues = 3081
+- Number of resolved issues = 2962 (185 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Performance tests: a tolerant mode for older Exudyn versions down to 1.11 (#3080)
+  - description: Maintainer 2026-10-24: the performance suite of today run with an installed older Exudyn (not older than 1.11), recording the models that are compatible with it and skipping the others, so that the history gets the same models for older versions.
+  - date raised: 2026-10-24
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` User markers: decide what they provide beyond ObjectConnectorUser and ObjectUserBody, then add them (#3065)
   - description: revision2026c step RG7.5 (pythonUserItems.md 5.3), split from \#2975: a user marker (position, orientation, coordinates; on a node, several nodes or a body) whose value and Jacobian are user functions. ObjectConnectorUser reaches any point of a body through its markers (GetBodyPosition, ApplyBodyForce) and ObjectUserBody defines what a local position means, so a user marker on one body adds little; what remains is a marker on several nodes or bodies (an average, a point between two bodies), which needs a marker with the coordinates of several items in the system's LTG. To decide with the maintainer before it is built.
   - date raised: 2026-10-23

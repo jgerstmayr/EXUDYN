@@ -310,8 +310,10 @@ def AddTiming(name, mbs, result, solverName='dynamicSolver'):
 
     The time reported is the SOLVER time (solver.timer.total), not the wall-clock time of the file:
     it excludes building the model, assembling and the Python overhead around it. timer.total is
-    filled unconditionally in the solver, so displayComputationTime may stay False and the value is
-    also valid in the exudynFast build, where the sub-timers are compiled away.
+    filled unconditionally in the solver, so the value is also valid in the exudynFast build, where
+    the sub-timers are compiled away. With simulationSettings.show.computationTime = True, which the
+    performance models set, the regular module also fills the sub-timers - ODE2RHS, massMatrix,
+    jacobianODE2, factorization, ... -, and the run records those that are not zero (#3078).
 
     Args:
         name (str): what distinguishes this run, e.g. 'perfLargeMassSpringChain:rigid-n5000-implicit'
@@ -330,12 +332,26 @@ def AddTiming(name, mbs, result, solverName='dynamicSolver'):
         return
 
     solverTime = -1.0       #says 'not measured', never silently a wrong time
+    timers = {}
     try:
-        solverTime = mbs.sys[solverName].timer.total
+        timer = mbs.sys[solverName].timer
+        solverTime = timer.total
+        if timer.useTimer:
+            for timerName in solverSubTimerNames:
+                value = getattr(timer, timerName, 0.)   #an older version may lack one
+                if value > 0.:
+                    timers[timerName] = value
     except Exception:
         pass
 
-    timings.append({'name': name, 'time': solverTime, 'result': float(result)})
+    timings.append({'name': name, 'time': solverTime, 'result': float(result), 'timers': timers})
+
+#the sub-timers of the solver (CSolverTimer), in the order the solver prints them; total, the idle time of
+#the realtime mode and the flag useTimer are not among them (#3078)
+solverSubTimerNames = ['factorization', 'newtonIncrement', 'integrationFormula', 'ODE2RHS', 'ODE1RHS', 'AERHS',
+                       'totalJacobian', 'jacobianODE2', 'jacobianODE2_t', 'jacobianODE1', 'jacobianAE',
+                       'massMatrix', 'reactionForces', 'postNewton', 'errorEstimator', 'writeSolution',
+                       'overhead', 'python', 'userFunctions', 'visualization']
 
 
 #%%******************************************************************************************************

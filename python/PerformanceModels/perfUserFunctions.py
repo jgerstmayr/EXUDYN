@@ -184,6 +184,7 @@ def Solve(function, kind):
     simulationSettings.timeIntegration.numberOfSteps = runs[function]
     simulationSettings.timeIntegration.endTime = 1e-4*runs[function]
     simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.show.computationTime = True #the solver sub-timers of each run, recorded in the regular module (#3078)
     simulationSettings.solution.file.write = False
     simulationSettings.solution.sensors.active = False
     allocations = np.array(exu.special.InfoStat(False))

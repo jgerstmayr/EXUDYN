@@ -170,8 +170,10 @@ exu.Print('python version      = '+str(sys.version_info.major)+'.'+str(sys.versi
 exu.Print(testRunnerTools.PackageVersionReport())
 exu.Print('test tolerance      = ',testTolerance)
 exu.Print('test date (now)     = '+dateStr)
+cpuLoad = {} #the load of the machine before and after the tests, for the machine-readable record (#3078)
 if psutilExists:
-    exu.Print('CPU usage (%/thread)= '+str(psutil.cpu_percent(interval=1, percpu=True)))
+    cpuLoad['before'] = psutil.cpu_percent(interval=1, percpu=True)
+    exu.Print('CPU usage (%/thread)= '+str(cpuLoad['before']))
     if psutil.sensors_battery()!=None:
         exu.Print('Power plugged       = '+str(psutil.sensors_battery().power_plugged))
 exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
@@ -214,6 +216,7 @@ for groupName in ['small', 'large']:
 
 
 totalTests = len(testFileList)
+testPassed = {}  #file name -> whether its result equals the reference
 testsFailed = [] #list of numbers containing the test numbers of failed tests
 #the channel a model uses is exu.sys, as for the test models
 
@@ -284,6 +287,7 @@ for file in testFileList:
         exu.Print('  PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") *FAILED*')
         testsFailed = testsFailed + [testExamplesCnt]
 
+    testPassed[name] = abs(testError) < modelTolerance
     exu.Print('  RESULT   = ' + str(testResult))
     exu.Print('  ERROR    = ' + str(testError))
     exu.Print('  CPU TIME = ' + str(timeStart))
@@ -298,7 +302,8 @@ exu.config.printToConsole = True #final output always written
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=True) #write also to file (needed?)
 
 if psutilExists:
-    exu.Print('CPU usage (%/thread)= '+str(psutil.cpu_percent(interval=1, percpu=True)))
+    cpuLoad['after'] = psutil.cpu_percent(interval=1, percpu=True)
+    exu.Print('CPU usage (%/thread)= '+str(cpuLoad['after']))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the single simulation runs (#2460). A model may solve several
@@ -313,15 +318,18 @@ if len(allRuns) != 0:
     runsFailed = []
     for run in allRuns:
         reference = performanceTestRefSol.get(run['name'], None)
+        run['error'] = None
         if reference is None:
             errorString = 'NO REFERENCE'
             runsFailed += [run['name']]
         else:
             error = run['result'] - reference
+            run['error'] = error
             errorString = '%12.3e' % error
             if not abs(error) < testTolerance:
                 errorString += ' *FAILED*'
                 runsFailed += [run['name']]
+        run['passed'] = run['name'] not in runsFailed
         exu.Print('%-48s %10.3f %24.16g %12s' % (run['name'], run['time'], run['result'],
                                                  errorString))
     exu.Print('')
@@ -372,6 +380,31 @@ exu.Print('****************************************************')
     
 from exudyn.basicUtilities import OutputFilePath
 logFilePath = OutputFilePath(logFileName, 'runPerformanceTests') #where the C++ writer put it (#2500)
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the machine-readable record of this run (#3078): one JSON object after the line '#JSON' at the end of
+#the log, as in the log of runMiniExamplePerformance.py; performanceHistory.py reads it
+import json
+record = {'format': 1,
+          'exudyn': {'version': exu.config.Version(), 'module': 'regular' if testRunnerTools.ModuleIsRegular() else 'fast',
+                     'avx2': testRunnerTools.ModuleUsesAVX2(), 'buildDate': exuDateStr},
+          'machine': {'id': subFolder.strip('/'), 'cpu': testRunnerTools.CpuInfoString(), 'system': sys.platform,
+                      'python': '.'.join(str(v) for v in sys.version_info[0:3]),
+                      'numpy': np.__version__},
+          'date': dateStr,
+          'cpuLoad': {key: {'mean': sum(value)/len(value), 'max': max(value)} for (key, value) in cpuLoad.items() if len(value)},
+          'files': {name: {'group': testFileGroup[name], 'time': testTimings.get(name, None),
+                           'result': examplesTestSolList.get(name, None), 'passed': testPassed.get(name, False)}
+                    for name in testFileList},
+          'runs': {run['name']: {'time': run['time'], 'result': run['result'], 'error': run.get('error', None),
+                                 'passed': run.get('passed', False), 'timers': run.get('timers', {})}
+                   for run in allRuns},
+          'totals': {'small': sum(testTimings.get(name, 0.) for name in testGroups['small']),
+                     'large': sum(testTimings.get(name, 0.) for name in testGroups['large']), 'total': totalTime},
+          }
+exu.config.printToConsole = False #written by the writer of the log, which a Python write would overtake
+exu.Print('\n#JSON' + json.dumps(record, indent=1, default=lambda value: value.item())) #item(): numpy scalars
+exu.config.printToConsole = True
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
 testRunnerTools.HideHomeDirectoryInLog(logFilePath) #the logs are committed (#2923)
 

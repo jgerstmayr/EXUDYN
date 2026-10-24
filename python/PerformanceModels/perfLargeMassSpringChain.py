@@ -114,7 +114,7 @@ for run in runList:
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.solution.file.write = False
     simulationSettings.timeIntegration.verboseMode = 1
-    simulationSettings.show.computationTime = False
+    simulationSettings.show.computationTime = True #the solver sub-timers of each run, recorded in the regular module (#3078)
 
     simulationSettings.timeIntegration.explicit.useLieGroupIntegration = False
 
