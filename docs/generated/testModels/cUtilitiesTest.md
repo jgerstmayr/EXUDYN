@@ -55,6 +55,9 @@ for (name, R) in [('RotXYZ', A), ('EulerParameters', cu.EulerParameters2Rotation
 Close(cu.EulerParameters2RotationMatrix(ep), A, 'RotXYZ2EulerParameters and RotXYZ2RotationMatrix')
 Close(cu.RotationMatrixX(rot[0]) @ cu.RotationMatrixY(rot[1]) @ cu.RotationMatrixZ(rot[2]), A, 'A = Ax*Ay*Az')
 Close(cu.ExpSO3(v), cu.RotationVector2RotationMatrix(v), 'ExpSO3 and RotationVector2RotationMatrix')
+for angle in [7., 13.]: #a rotation vector longer than 2 pi rotates by its length (#3073)
+    Close(cu.RotationVector2RotationMatrix([angle, 0, 0]), cu.RotationMatrixX(angle), 'RotationVector2RotationMatrix beyond 2 pi')
+    Close(cu.RotationVector2RotationMatrix([0, 0, -angle]), cu.ExpSO3([0, 0, -angle]), 'RotationVector2RotationMatrix and ExpSO3 beyond 2 pi')
 Close(cu.RotationMatrix2D(0.7), cu.RotationMatrixZ(0.7)[0:2, 0:2], 'RotationMatrix2D')
 
 #each conversion and its inverse

@@ -2,11 +2,15 @@
   "number": 3073,
   "title": "RotationVector2RotationMatrix is wrong for a rotation vector longer than 2 pi",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "Found for #3069: RigidBodyMath::RotationVector2RotationMatrix reduces the angle by fmod(angle, 2 pi) but keeps the unreduced vector in the skew matrix, so sin(angle)/angle and the second term get the wrong factor: cUtilities.RotationVector2RotationMatrix([7,0,0]) has the entries -22.47 and 6.42 instead of RotationMatrixX(7) = cos 7, sin 7. Without the fmod the formula is right for every angle.",
   "dateRaised": "2026-10-23",
   "deadline": "2027-04-21",
-  "file": "src/Linalg/RigidBodyMath.h"
+  "dateResolved": "2026-10-24 20:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/RigidBodyMath.h",
+  "releaseNotes": "cUtilities.RotationVector2RotationMatrix (and rigidBodyUtilities) of a rotation vector longer than 2 pi rotates by its length; the angle was reduced by 2 pi without the vector, which gave no rotation matrix.",
+  "resolvedInVersion": "1.13.179"
 }

@@ -78,7 +78,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='', 
-                        description="(UNTESTED!) return derivative of stored expression with respect to given symbolic named variable; NOTE: when defining the expression of the variable which shall be differentiated, the variable may only be changed with the SetValue(...) method hereafter!",
+                        description="return the derivative of the stored expression with respect to the given named variable, at the current values; the variable may be changed hereafter with SetValue(...) only. round, ceil, floor, mod, min, max, isfinite, Not and the comparisons have no derivative and raise an error",
                         example = r"""x=esym.Real('x',2)\\f=3*x+x**2*esym.sin(x)\\f.Diff(x) #evaluate derivative w.r.t. x""",
                         returnType='float',
                         argList=['var'],
@@ -104,14 +104,17 @@ symbolicModule.AddDocu(r"""The remaining operators and mathematical functions ar
 
 symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='realOperators')
 
-symbolicModule.AddDocu(r"""Mathematical functions may be called with an `SymReal` or with a `float`. Most standard mathematical functions exist for `symbolic`, e.g., as `symbolic.abs`. **HINT**: function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:""")
+symbolicModule.AddDocu(r"""Mathematical functions may be called with a `SymReal` or with a `float` and return a `SymReal`. Their names, arguments and results are those of Python's math module - so that `math.sin` and `esym.sin` can be exchanged, e.g. as `functions=esym` - and the functions with one argument `x` are `isfinite`, `abs`, `round`, `ceil`, `floor`, `sqrt`, `exp`, `log`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `sinh`, `cosh`, `tanh`, `asinh`, `acosh` and `atanh`; the others are in the table below. They are computed
+
+- `exp`, `log`, `pow`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `sinh`, `cosh`, `tanh`: by the portable implementation compiled into Exudyn (from musl libc), the functions of `exudyn.cMath`, which give the same bits on every platform, see [](#sec-exudyn-cmath) - not by the C++ library of the platform;
+- `sqrt`, `abs`, `round`, `ceil`, `floor`, `mod`, `min`, `max`, `isfinite`: by the C++ library, exactly, so the same on every platform;
+- `asinh`, `acosh`, `atanh`: by the C++ library of the platform, whose results may differ in the last bit between platforms.""")
 
 symbolicModule.StubCode('\n#functions directly in symbolic module:\n')
 
 pyClassStr = 'symbolic'
 classStr = ''
-#these functions are in symbolic.Real:
-symbolicModule.DefStartTable(pyClassStr)
+#these functions are in symbolic.Real; documented by the text above, the stubs only (#3074)
 fnList=['isfinite','abs',#'sign',
         'round','ceil','floor',
         'sqrt','exp','log',
@@ -119,28 +122,32 @@ fnList=['isfinite','abs',#'sign',
         'sinh','cosh','tanh','asinh','acosh','atanh',
                 ]
 
+portableFunctions = ['exp', 'log', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sinh', 'cosh', 'tanh']
+platformFunctions = ['asinh', 'acosh', 'atanh']
 for fnName in fnList:
-    cfnName = fnName
-    if fnName=='abs' or fnName=='mod':
-        cfnName = 'f'+cfnName
+    if fnName in portableFunctions:
+        computed = "computed as exudyn.cMath." + fnName + ", the same bits on every platform"
+    elif fnName in platformFunctions:
+        computed = "computed by the C++ library of the platform"
+    else:
+        computed = "computed exactly by the C++ library"
     #empty class indicates that these are functions in symbolic:
     symbolicModule.DefPyFunctionAccess(cClass='', pyName=fnName, cName='', 
-                            description="according to specification of C++ std::"+cfnName,
+                            description=fnName + "(x) as in Python's math module, recorded; " + computed,
                             argList=['x'],
                             argTypes=['symbolic.Real'],
                             returnType='symbolic.Real',
+                            addDocu=False,
                             )
-
-symbolicModule.DefFinishTable()#only finalize latex table
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-symbolicModule.AddDocu(r"""The following table lists special functions for `SymReal`: """)
+symbolicModule.AddDocu(r"""The following table lists the functions with two or more arguments, the special functions and the module data: """)
 
 symbolicModule.DefStartTable(pyClassStr)
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='sign', cName='', 
-                        description="returns 0 for x=0, -1 for x<0 and 1 for x>1.",
+                        description="returns 0 for x=0, -1 for x<0 and 1 for x>0.",
                         argList=['x'],
                         argTypes=['symbolic.Real'],
                         returnType='symbolic.Real',
@@ -174,6 +181,13 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='mod', cName='',
                         returnType='symbolic.Real',
                         )
 
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='atan2', cName='', 
+                        description=r"""return the angle of the point (x, y) in $[-\pi, \pi]$, as math.atan2; y is the first argument.""",
+                        argList=['y','x'],
+                        argTypes=['symbolic.Real','symbolic.Real'],
+                        returnType='symbolic.Real',
+                        )
+
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='pow', cName='', 
                         description=r"""return $x^y$. """,
                         argList=['x','y'],
@@ -182,12 +196,23 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='pow', cName='',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='IfThenElse', cName='', 
-                        description="Symbolic function for conditional evaluation. If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated",
+                        description="Symbolic function for conditional evaluation. If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated; the condition and the branches may be symbolic or numbers (#3072)",
                         example = r"""x=esym.Real(-1)\\y=esym.Real('y',2)\\a=esym.IfThenElse(x<0, y+1, y-1)""",
                         argList=['condition','ifTrue','ifFalse'],
                         argTypes=['symbolic.Real','symbolic.Real','symbolic.Real'],
                         returnType='symbolic.Real',
                         )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='cross', cName='', 
+                        description="the cross product of two vectors of 3 components, symbolic or one of them a list or numpy array, as numpy.cross (#3070)",
+                        example = r"""a = esym.Vector([1,0,0])\\b = esym.Vector([0,1,0])\\c = esym.cross(a, b) #gives [0,0,1]""",
+                        argList=['a','b'],
+                        argTypes=['symbolic.Vector','symbolic.Vector'],
+                        returnType='symbolic.Vector',
+                        )
+
+symbolicModule.DefDataAccess('pi', 'the float closest to pi, the same as math.pi, so that a function written with functions.pi works with exudyn.symbolic (#3071)',
+                       dataType = 'float', isTopLevel=True)
 
 #+++++++++++++++++++++++
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetRecording', cName='', 

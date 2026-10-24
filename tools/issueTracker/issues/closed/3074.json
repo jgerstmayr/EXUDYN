@@ -1,0 +1,16 @@
+{
+  "number": 3074,
+  "title": "Symbolic documentation: the mathematical functions in one short list, with what computes them",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-24: the section of exudyn.symbolic lists every function with 'according to specification of C++ std::...', copy-paste text. Write it shorter, and say what computes them: sin, cos, ..., exp, log, pow, atan2 are the portable musl implementation of exudyn.cMath, not std::; sqrt, abs, round, ceil, floor, mod, min, max, isfinite are exact as in C++; asinh, acosh, atanh are the C++ library of the platform. atan2 is missing from the documentation.",
+  "dateRaised": "2026-10-24",
+  "deadline": "2027-04-22",
+  "dateResolved": "2026-10-24 20:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/pybindSymbolic.py",
+  "releaseNotes": "The documentation of exudyn.symbolic lists the mathematical functions in one paragraph and says what computes them: the portable musl implementation of exudyn.cMath (exp, log, pow, the trigonometric and hyperbolic functions, atan2), exactly the C++ library (sqrt, abs, round, ceil, floor, mod, min, max, isfinite), or the C++ library of the platform (asinh, acosh, atanh); atan2 is documented.",
+  "resolvedInVersion": "1.13.180"
+}

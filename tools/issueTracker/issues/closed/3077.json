@@ -1,0 +1,16 @@
+{
+  "number": 3077,
+  "title": "The TestModels in the documentation in alphabetical order",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-24: the index of the TestModels lists them in the order of the reference solutions of the test suite, the Examples alphabetically; sort the TestModels as the Examples (examplesDocsEmitter.py).",
+  "dateRaised": "2026-10-24",
+  "deadline": "2027-04-22",
+  "dateResolved": "2026-10-24 20:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/examplesDocsEmitter.py",
+  "releaseNotes": "The TestModels in the documentation are in alphabetical order, as the Examples.",
+  "resolvedInVersion": "1.13.183"
+}

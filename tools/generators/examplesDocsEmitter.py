@@ -77,12 +77,12 @@ def Write(markdownDir, fileName, text):
 
 
 def TestModelNames():
-    """the test models, in the order of the reference solution of the test suite"""
+    """the test models of the test suite (those with a reference solution), sorted as the Examples (#3077)"""
     testingDirectory = os.path.join(paths.repositoryRoot, 'python', 'testing')
     if testingDirectory not in sys.path:
         sys.path.append(testingDirectory)
     from runTestSuiteRefSol import TestExamplesReferenceSolution
-    return list(TestExamplesReferenceSolution().keys())
+    return sorted(TestExamplesReferenceSolution().keys(), key=str.lower)
 
 
 def ExampleNames():

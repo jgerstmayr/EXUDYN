@@ -26,6 +26,8 @@ on Windows and Linux to the last bit; models with contact or friction change sli
 **`exudyn.cUtilities`** computes the rotation and kinematics functions of `exudyn.rigidBodyUtilities` in C++, which
 calls it: `ComputeOrthonormalBasisVectors` and `GramSchmidt` return a 3x3 array of the vectors as rows (unpacked as
 before), and a wrong size or a singular input raises a `ValueError` (#2960, #2961).
+`RotationVector2RotationMatrix` of a rotation vector longer than 2 pi rotates by its length; the angle was reduced by
+2 pi without the vector, which gave no rotation matrix (#3073).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It
@@ -128,6 +130,9 @@ While recording, a symbolic expression or named variable converted to float rais
 and `x.Evaluate()` gives the value (#3017).
 `esym.Matrix` has `A.T`, `transpose()` and rows `A[i]`, `esym.Vector` slices `v[a:b]`, a scalar or a list added, and
 numpy's functions of each component, `np.sin(v)` (#3018).
+`esym.cross(a, b)` is the cross product of two vectors, as `np.cross` (#3070), `esym.pi` is `math.pi` (#3071), and
+`IfThenElse` takes numbers as the condition and the branches (#3072). The derivative `Diff` of `atan2` had the wrong
+sign (#3076).
 
 **Symbolic user functions with matrix results** (#3020): the mass matrices and Jacobians of ObjectGenericODE2 and
 ObjectUserBody, the rotation matrix of ObjectUserBody, the mass matrices of ObjectFFRF and ObjectFFRFreducedOrder and

@@ -25,7 +25,9 @@ class Real:
         ...
     @overload
     def Diff(self, var: Real) -> float: 
-        """(UNTESTED!) return derivative of stored expression with respect to given symbolic named variable; NOTE: when defining the expression of the variable which shall be differentiated, the variable may only be changed with the SetValue(...) method hereafter!.
+        """Return the derivative of the stored expression with respect to the given named variable, at the current values; the variable may be changed hereafter with SetValue(...) only.
+        
+        round, ceil, floor, mod, min, max, isfinite, Not and the comparisons have no derivative and raise an error
         
         Examples:
             x=esym.Real('x',2)
@@ -45,87 +47,87 @@ class Real:
 #functions directly in symbolic module:
 @overload
 def isfinite(x: Real) -> Real: 
-    """According to specification of C++ std::isfinite."""
+    """Isfinite(x) as in Python's math module, recorded; computed exactly by the C++ library."""
     ...
 @overload
 def abs(x: Real) -> Real: 
-    """According to specification of C++ std::fabs."""
+    """Abs(x) as in Python's math module, recorded; computed exactly by the C++ library."""
     ...
 @overload
 def round(x: Real) -> Real: 
-    """According to specification of C++ std::round."""
+    """Round(x) as in Python's math module, recorded; computed exactly by the C++ library."""
     ...
 @overload
 def ceil(x: Real) -> Real: 
-    """According to specification of C++ std::ceil."""
+    """Ceil(x) as in Python's math module, recorded; computed exactly by the C++ library."""
     ...
 @overload
 def floor(x: Real) -> Real: 
-    """According to specification of C++ std::floor."""
+    """Floor(x) as in Python's math module, recorded; computed exactly by the C++ library."""
     ...
 @overload
 def sqrt(x: Real) -> Real: 
-    """According to specification of C++ std::sqrt."""
+    """Sqrt(x) as in Python's math module, recorded; computed exactly by the C++ library."""
     ...
 @overload
 def exp(x: Real) -> Real: 
-    """According to specification of C++ std::exp."""
+    """Exp(x) as in Python's math module, recorded; computed as exudyn.cMath.exp, the same bits on every platform."""
     ...
 @overload
 def log(x: Real) -> Real: 
-    """According to specification of C++ std::log."""
+    """Log(x) as in Python's math module, recorded; computed as exudyn.cMath.log, the same bits on every platform."""
     ...
 @overload
 def sin(x: Real) -> Real: 
-    """According to specification of C++ std::sin."""
+    """Sin(x) as in Python's math module, recorded; computed as exudyn.cMath.sin, the same bits on every platform."""
     ...
 @overload
 def cos(x: Real) -> Real: 
-    """According to specification of C++ std::cos."""
+    """Cos(x) as in Python's math module, recorded; computed as exudyn.cMath.cos, the same bits on every platform."""
     ...
 @overload
 def tan(x: Real) -> Real: 
-    """According to specification of C++ std::tan."""
+    """Tan(x) as in Python's math module, recorded; computed as exudyn.cMath.tan, the same bits on every platform."""
     ...
 @overload
 def asin(x: Real) -> Real: 
-    """According to specification of C++ std::asin."""
+    """Asin(x) as in Python's math module, recorded; computed as exudyn.cMath.asin, the same bits on every platform."""
     ...
 @overload
 def acos(x: Real) -> Real: 
-    """According to specification of C++ std::acos."""
+    """Acos(x) as in Python's math module, recorded; computed as exudyn.cMath.acos, the same bits on every platform."""
     ...
 @overload
 def atan(x: Real) -> Real: 
-    """According to specification of C++ std::atan."""
+    """Atan(x) as in Python's math module, recorded; computed as exudyn.cMath.atan, the same bits on every platform."""
     ...
 @overload
 def sinh(x: Real) -> Real: 
-    """According to specification of C++ std::sinh."""
+    """Sinh(x) as in Python's math module, recorded; computed as exudyn.cMath.sinh, the same bits on every platform."""
     ...
 @overload
 def cosh(x: Real) -> Real: 
-    """According to specification of C++ std::cosh."""
+    """Cosh(x) as in Python's math module, recorded; computed as exudyn.cMath.cosh, the same bits on every platform."""
     ...
 @overload
 def tanh(x: Real) -> Real: 
-    """According to specification of C++ std::tanh."""
+    """Tanh(x) as in Python's math module, recorded; computed as exudyn.cMath.tanh, the same bits on every platform."""
     ...
 @overload
 def asinh(x: Real) -> Real: 
-    """According to specification of C++ std::asinh."""
+    """Asinh(x) as in Python's math module, recorded; computed by the C++ library of the platform."""
     ...
 @overload
 def acosh(x: Real) -> Real: 
-    """According to specification of C++ std::acosh."""
+    """Acosh(x) as in Python's math module, recorded; computed by the C++ library of the platform."""
     ...
 @overload
 def atanh(x: Real) -> Real: 
-    """According to specification of C++ std::atanh."""
+    """Atanh(x) as in Python's math module, recorded; computed by the C++ library of the platform."""
     ...
 @overload
 def sign(x: Real) -> Real: 
-    """Returns 0 for x=0, -1 for x<0 and 1 for x>1."""
+    """Returns 0 for x=0, -1 for x<0 and 1 for x>0."""
     ...
 @overload
 def Not(x: Real) -> Real: 
@@ -150,6 +152,10 @@ def mod(x: Real, y: Real) -> Real:
     """
     ...
 @overload
+def atan2(y: Real, x: Real) -> Real: 
+    r"""Return the angle of the point (x, y) in $[-\pi, \pi]$, as math.atan2; y is the first argument."""
+    ...
+@overload
 def pow(x: Real, y: Real) -> Real: 
     """Return $x^y$."""
     ...
@@ -157,7 +163,7 @@ def pow(x: Real, y: Real) -> Real:
 def IfThenElse(condition: Real, ifTrue: Real, ifFalse: Real) -> Real: 
     """Symbolic function for conditional evaluation.
     
-    If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated
+    If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated; the condition and the branches may be symbolic or numbers (#3072)
     
     Examples:
         x=esym.Real(-1)
@@ -165,6 +171,18 @@ def IfThenElse(condition: Real, ifTrue: Real, ifFalse: Real) -> Real:
         a=esym.IfThenElse(x<0, y+1, y-1)
     """
     ...
+@overload
+def cross(a: Vector, b: Vector) -> Vector: 
+    """The cross product of two vectors of 3 components, symbolic or one of them a list or numpy array, as numpy.cross (#3070).
+    
+    Examples:
+        a = esym.Vector([1,0,0])
+        b = esym.Vector([0,1,0])
+        c = esym.cross(a, b) #gives [0,0,1]
+    """
+    ...
+pi:float
+"""the float closest to pi, the same as math.pi, so that a function written with functions.pi works with exudyn.symbolic (#3071)."""
 @overload
 def SetRecording(flag: bool) -> None: 
     """Set current (global / module-wide) status of expression recording.

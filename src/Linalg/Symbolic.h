@@ -1081,7 +1081,7 @@ public:
 		double denominator = EXUstd::Square(arg1Val) + EXUstd::Square(arg2Val);
 		if (denominator == 0) { return std::numeric_limits<double>::quiet_NaN(); }
 
-		return (arg1Val * arg2->Diff(var) - arg2Val * arg1->Diff(var)) / denominator;
+		return (arg2Val * arg1->Diff(var) - arg1Val * arg2->Diff(var)) / denominator; //d atan2(y, x) = (x dy - y dx)/(x^2 + y^2) (#3076)
 	}
 	virtual STDstring ToString() const override { return "atan2(" + arg1->ToString() + ", " + arg2->ToString() + ")"; } //use Python name ...
 

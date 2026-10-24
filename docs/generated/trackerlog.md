@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.175.dev1
-- last change = 2026-10-23
-- Number of issues = 3074
-- Number of resolved issues = 2952 (175 in current version)
+- Exudyn version = 1.13.183.dev1
+- last change = 2026-10-24
+- Number of issues = 3078
+- Number of resolved issues = 2960 (183 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,15 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` exudyn.symbolic.IfThenElse: accept a number as branch (#3072)
-  - description: Maintainer 2026-10-23 (on the analysis of \#3069): IfThenElse(condition, 1., a) raises a TypeError, the branches must be symbolic Reals; a number shall be converted to a constant Real, as the arithmetic operators of Real do.
-  - date raised: 2026-10-23
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` exudyn.symbolic: the constant pi (#3071)
-  - description: Maintainer 2026-10-23 (on the analysis of \#3069): exudyn.symbolic has no pi, while exudyn.cMath, math and numpy have it, so a function written with functions.pi fails for functions=exudyn.symbolic. Add exudyn.symbolic.pi as a float.
-  - date raised: 2026-10-23
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` exudyn.symbolic: a cross product of symbolic vectors (#3070)
-  - description: Maintainer 2026-10-23 (on the analysis of \#3069): exudyn.symbolic.Vector has no cross product; a user function writes the components out or uses exudyn.symbolicUtilities.Cross. Add Vector.cross / a function Cross for symbolic vectors of length 3, recorded as one operation.
-  - date raised: 2026-10-23
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` User markers: decide what they provide beyond ObjectConnectorUser and ObjectUserBody, then add them (#3065)
   - description: revision2026c step RG7.5 (pythonUserItems.md 5.3), split from \#2975: a user marker (position, orientation, coordinates; on a node, several nodes or a body) whose value and Jacobian are user functions. ObjectConnectorUser reaches any point of a body through its markers (GetBodyPosition, ApplyBodyForce) and ObjectUserBody defines what a local position means, so a user marker on one body adds little; what remains is a marker on several nodes or bodies (an average, a point between two bodies), which needs a marker with the coordinates of several items in the system's LTG. To decide with the maintainer before it is built.
   - date raised: 2026-10-23
@@ -9483,9 +9474,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` RotationVector2RotationMatrix is wrong for a rotation vector longer than 2 pi (#3073)
-  - description: Found for \#3069: RigidBodyMath::RotationVector2RotationMatrix reduces the angle by fmod(angle, 2 pi) but keeps the unreduced vector in the skew matrix, so sin(angle)/angle and the second term get the wrong factor: cUtilities.RotationVector2RotationMatrix(\[7,0,0\]) has the entries -22.47 and 6.42 instead of RotationMatrixX(7) = cos 7, sin 7. Without the fmod the formula is right for every angle.
-  - date raised: 2026-10-23
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
   - date raised: 2026-10-23

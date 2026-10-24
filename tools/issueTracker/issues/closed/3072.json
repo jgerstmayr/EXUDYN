@@ -2,11 +2,15 @@
   "number": 3072,
   "title": "exudyn.symbolic.IfThenElse: accept a number as branch",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "LOW",
   "description": "Maintainer 2026-10-23 (on the analysis of #3069): IfThenElse(condition, 1., a) raises a TypeError, the branches must be symbolic Reals; a number shall be converted to a constant Real, as the arithmetic operators of Real do.",
   "dateRaised": "2026-10-23",
   "deadline": "2027-04-21",
-  "file": "src\\Linalg\\Symbolic.h"
+  "dateResolved": "2026-10-24 20:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src\\Linalg\\Symbolic.h",
+  "releaseNotes": "exudyn.symbolic.IfThenElse takes numbers as the condition and the branches, e.g. IfThenElse(x < 1e-8, 1., f).",
+  "resolvedInVersion": "1.13.178"
 }

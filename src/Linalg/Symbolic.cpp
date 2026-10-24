@@ -164,6 +164,20 @@ Symbolic::SymbolicRealVector SymbolicVectorPlusScalar(const Symbolic::SymbolicRe
 	return Symbolic::SymbolicRealVector(items);
 }
 
+//! the cross product of two vectors of 3 components, as numpy.cross (#3070)
+Symbolic::SymbolicRealVector SymbolicVectorCross(const Symbolic::SymbolicRealVector& a, const Symbolic::SymbolicRealVector& b)
+{
+	if (SymbolicVectorSize(a) != 3 || SymbolicVectorSize(b) != 3)
+	{
+		throw py::value_error("symbolic.cross: both vectors must have 3 components, not " + EXUstd::ToString(a.NumberOfItems()) + " and " + EXUstd::ToString(b.NumberOfItems()));
+	}
+	py::list items;
+	items.append(py::cast(a[1]*b[2] - a[2]*b[1]));
+	items.append(py::cast(a[2]*b[0] - a[0]*b[2]));
+	items.append(py::cast(a[0]*b[1] - a[1]*b[0]));
+	return Symbolic::SymbolicRealVector(items);
+}
+
 //! a numpy array or scalar as operand of the symbolic types: a vector, a matrix or a float; everything else as it is
 py::object SymbolicUfuncOperand(const py::module& m, const py::handle& x)
 {
@@ -706,8 +720,23 @@ void Init_Pybind_Symbolic(py::module& m) {
 	m.def("max", &Symbolic::SReal::max<Real, Symbolic::SReal>);
 	m.def("max", &Symbolic::SReal::max<Real, Real>);
 
-	//++++++++++ with 3 args
+	//++++++++++ with 3 args; a branch or the condition may be a number, as for the operators (#3072)
 	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Symbolic::SReal, Symbolic::SReal, Symbolic::SReal>);
+	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Symbolic::SReal, Real, Symbolic::SReal>);
+	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Symbolic::SReal, Symbolic::SReal, Real>);
+	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Symbolic::SReal, Real, Real>);
+	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Real, Symbolic::SReal, Symbolic::SReal>);
+	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Real, Real, Symbolic::SReal>);
+	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Real, Symbolic::SReal, Real>);
+	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Real, Real, Real>);
+
+	//++++++++++ vectors
+	m.def("cross", [](const Symbolic::SymbolicRealVector& a, const Symbolic::SymbolicRealVector& b) { return SymbolicVectorCross(a, b); });
+	m.def("cross", [](const Symbolic::SymbolicRealVector& a, const std::vector<Real>& b) { return SymbolicVectorCross(a, Symbolic::SymbolicRealVector(Vector(b))); });
+	m.def("cross", [](const std::vector<Real>& a, const Symbolic::SymbolicRealVector& b) { return SymbolicVectorCross(Symbolic::SymbolicRealVector(Vector(a)), b); });
+
+	//the constant pi, as math.pi, so that functions.pi works for exudyn.symbolic as for math, numpy and cMath (#3071)
+	m.attr("pi") = EXUstd::pi;
 
 	//+++++++++++++++++++++++++++++++++++++++++++
 	m.def("GetRecording", &Symbolic::SReal::GetRecording,

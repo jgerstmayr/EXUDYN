@@ -474,6 +474,56 @@ def ExtendedSymbolicChecks():
         y = SymReal('y', value)
         wrong += Check(f.Diff(y) == 0., 'Diff of an unrelated variable')
 
+    #--- Diff of every operator and function against a central difference (#3075), and of atan2 with
+    #either argument, whose sign was wrong (#3076)
+    x = SymReal('x', 0.4)
+    y = SymReal('y', 0.7)
+    expressions = [x + y*x, x - y*x, x*y*x, y/x, +x*x, -x*x, esym.abs(x - 1), esym.sign(x)*x, esym.sqrt(x),
+                   esym.exp(x), esym.log(x), esym.sin(x), esym.cos(x), esym.tan(x), esym.asin(x), esym.acos(x),
+                   esym.atan(x), esym.sinh(x), esym.cosh(x), esym.tanh(x), esym.asinh(x), esym.acosh(x + 1),
+                   esym.atanh(x), esym.pow(x, y), esym.pow(y, x), x**3, esym.atan2(x, y), esym.atan2(y, x),
+                   esym.atan2(x, -y), esym.IfThenElse(x < 1, x*x, x), esym.IfThenElse(x > 1, x*x, x), SymReal(3.) + x]
+    h = 1e-6
+    for f in expressions:
+        f_x = f.Diff(x)
+        x.SetValue(0.4 + h)
+        fPlus = f.Evaluate()
+        x.SetValue(0.4 - h)
+        fMinus = f.Evaluate()
+        x.SetValue(0.4)
+        wrong += Check(abs(f_x - (fPlus - fMinus)/(2*h)) < 1e-8, 'Diff of ' + str(f))
+
+    #the functions without a derivative refuse it
+    for f in [esym.round(x), esym.ceil(x), esym.floor(x), esym.mod(x, y), esym.min(x, y), esym.max(x, y),
+              esym.isfinite(x), esym.Not(x), x < y, x <= y, x > y, x >= y, x == y, x != y]:
+        try:
+            f.Diff(x)
+            wrong += Check(False, 'Diff of ' + str(f) + ' must raise')
+        except Exception as e:
+            wrong += Check('not possible' in str(e), 'Diff of ' + str(f) + ' raises: ' + str(e))
+
+    #--- the cross product (#3070), pi (#3071) and IfThenElse with numbers (#3072)
+    a = esym.Vector('a', [1., 2., 3.])
+    b = esym.Vector('b', [-0.5, 0.25, 2.])
+    for c in [esym.cross(a, b), esym.cross(a, [-0.5, 0.25, 2.]), esym.cross([1., 2., 3.], b)]:
+        wrong += Check(np.max(np.abs(np.array(c.Evaluate()) - np.cross([1., 2., 3.], [-0.5, 0.25, 2.]))) == 0., 'cross')
+    c = esym.cross(a, b)
+    a.SetVector([0., 1., 0.])
+    wrong += Check(list(c.Evaluate()) == [2., 0., 0.5], 'a recorded cross product follows its vectors')
+    try:
+        esym.cross(esym.Vector([1., 2.]), b)
+        wrong += Check(False, 'a cross product of 2 components must raise')
+    except ValueError:
+        pass
+    wrong += Check(esym.pi == math.pi, 'pi')
+    wrong += Check(esym.IfThenElse(x < 1, 1., x).Evaluate() == 1. and esym.IfThenElse(x > 1, 1., 2).Evaluate() == 2.
+                   and esym.IfThenElse(x > 1, x, 2.5).Evaluate() == 2.5 and esym.IfThenElse(1, 1.5, x).Evaluate() == 1.5
+                   and esym.IfThenElse(0, 1.5, 3.).Evaluate() == 3., 'IfThenElse with numbers')
+    f = esym.IfThenElse(x < 1, 1., x)
+    x.SetValue(2.)
+    wrong += Check(f.Evaluate() == 2., 'a recorded IfThenElse with a number follows its condition')
+    x.SetValue(0.4)
+
     #--- the VariableSet, which no test touched so far
     variables = esym.VariableSet()
     wrong += Check(variables.NumberOfItems() == 0, 'VariableSet starts empty')

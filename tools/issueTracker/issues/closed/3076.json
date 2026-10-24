@@ -1,0 +1,16 @@
+{
+  "number": 3076,
+  "title": "symbolic atan2(y, x).Diff has the wrong sign",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "Found for the Diff test: ExpressionAtan2::Diff returns (y x' - x y')/(x^2+y^2) instead of (x y' - y x')/(x^2+y^2); atan2(x, 0.7).Diff(x) at x=0.4 gives -1.077 instead of 1.077.",
+  "dateRaised": "2026-10-24",
+  "deadline": "2027-04-22",
+  "dateResolved": "2026-10-24 20:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/Symbolic.h",
+  "releaseNotes": "The derivative Diff of symbolic atan2(y, x) had the wrong sign.",
+  "resolvedInVersion": "1.13.182"
+}

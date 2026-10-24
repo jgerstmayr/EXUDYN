@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 172 | 1.13.175 |
+| 1.13 | Newborn | 180 | 1.13.183 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,38 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.183** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The TestModels in the documentation in alphabetical order (#3077)
+  - description: Maintainer 2026-10-24: the index of the TestModels lists them in the order of the reference solutions of the test suite, the Examples alphabetically; sort the TestModels as the Examples (examplesDocsEmitter.py).
+  - **notes:** The TestModels in the documentation are in alphabetical order, as the Examples.
+  - date resolved: **2026-10-24 20:55**, date raised: 2026-10-24
+- **1.13.182** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` symbolic atan2(y, x).Diff has the wrong sign (#3076)
+  - description: Found for the Diff test: ExpressionAtan2::Diff returns (y x' - x y')/(x^2+y^2) instead of (x y' - y x')/(x^2+y^2); atan2(x, 0.7).Diff(x) at x=0.4 gives -1.077 instead of 1.077.
+  - **notes:** The derivative Diff of symbolic atan2(y, x) had the wrong sign.
+  - date resolved: **2026-10-24 20:55**, date raised: 2026-10-24
+- **1.13.181** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` symbolic.Real.Diff: test the derivative of every operation and function, remove UNTESTED (#3075)
+  - description: Maintainer 2026-10-24: the documentation of Diff says (UNTESTED!). symbolicModuleTest.py checks Diff for a few expressions only (\#2479); a test of every operator and function against a central difference, and of the ones refused, lets the remark go.
+  - **notes:** symbolicModuleTest.py checks symbolic.Real.Diff of every operator and function against a central difference and the refusals of those without a derivative; the documentation no longer marks Diff as untested.
+  - date resolved: **2026-10-24 20:55**, date raised: 2026-10-24
+- **1.13.180** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic documentation: the mathematical functions in one short list, with what computes them (#3074)
+  - description: Maintainer 2026-10-24: the section of exudyn.symbolic lists every function with 'according to specification of C++ std::...', copy-paste text. Write it shorter, and say what computes them: sin, cos, ..., exp, log, pow, atan2 are the portable musl implementation of exudyn.cMath, not std::; sqrt, abs, round, ceil, floor, mod, min, max, isfinite are exact as in C++; asinh, acosh, atanh are the C++ library of the platform. atan2 is missing from the documentation.
+  - **notes:** The documentation of exudyn.symbolic lists the mathematical functions in one paragraph and says what computes them: the portable musl implementation of exudyn.cMath (exp, log, pow, the trigonometric and hyperbolic functions, atan2), exactly the C++ library (sqrt, abs, round, ceil, floor, mod, min, max, isfinite), or the C++ library of the platform (asinh, acosh, atanh); atan2 is documented.
+  - date resolved: **2026-10-24 20:55**, date raised: 2026-10-24
+- **1.13.179** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RotationVector2RotationMatrix is wrong for a rotation vector longer than 2 pi (#3073)
+  - description: Found for \#3069: RigidBodyMath::RotationVector2RotationMatrix reduces the angle by fmod(angle, 2 pi) but keeps the unreduced vector in the skew matrix, so sin(angle)/angle and the second term get the wrong factor: cUtilities.RotationVector2RotationMatrix(\[7,0,0\]) has the entries -22.47 and 6.42 instead of RotationMatrixX(7) = cos 7, sin 7. Without the fmod the formula is right for every angle.
+  - **notes:** cUtilities.RotationVector2RotationMatrix (and rigidBodyUtilities) of a rotation vector longer than 2 pi rotates by its length; the angle was reduced by 2 pi without the vector, which gave no rotation matrix.
+  - date resolved: **2026-10-24 20:55**, date raised: 2026-10-23
+- **1.13.178** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic.IfThenElse: accept a number as branch (#3072)
+  - description: Maintainer 2026-10-23 (on the analysis of \#3069): IfThenElse(condition, 1., a) raises a TypeError, the branches must be symbolic Reals; a number shall be converted to a constant Real, as the arithmetic operators of Real do.
+  - **notes:** exudyn.symbolic.IfThenElse takes numbers as the condition and the branches, e.g. IfThenElse(x \< 1e-8, 1., f).
+  - date resolved: **2026-10-24 20:55**, date raised: 2026-10-23
+- **1.13.177** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: the constant pi (#3071)
+  - description: Maintainer 2026-10-23 (on the analysis of \#3069): exudyn.symbolic has no pi, while exudyn.cMath, math and numpy have it, so a function written with functions.pi fails for functions=exudyn.symbolic. Add exudyn.symbolic.pi as a float.
+  - **notes:** exudyn.symbolic.pi: the float of math.pi, so that a function written with functions.pi works with exudyn.symbolic as with math, numpy and exudyn.cMath.
+  - date resolved: **2026-10-24 20:55**, date raised: 2026-10-23
+- **1.13.176** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: a cross product of symbolic vectors (#3070)
+  - description: Maintainer 2026-10-23 (on the analysis of \#3069): exudyn.symbolic.Vector has no cross product; a user function writes the components out or uses exudyn.symbolicUtilities.Cross. Add Vector.cross / a function Cross for symbolic vectors of length 3, recorded as one operation.
+  - **notes:** exudyn.symbolic.cross(a, b): the cross product of two vectors of 3 components, symbolic or one of them a list or numpy array, as numpy.cross; recorded.
+  - date resolved: **2026-10-24 20:55**, date raised: 2026-10-23
 - **1.13.175** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Rotation utilities for symbolic user items: the functions of cUtilities with an argument functions (#3069)
   - description: Maintainer 2026-10-23: a selected list of the functions of exudyn.cUtilities / rigidBodyUtilities useful for symbolic user items, in a new module, with the same names and arguments plus a last argument functions (default exudyn.symbolic), which may also be exudyn.cMath, numpy or math; check first what fails or is missing; then adapt the test scripts (userRigidBodyTest.py, ...), which shrink. First the analysis and recommendation (docs/dev/design/symbolicUtilities.md).
   - **notes:** New module exudyn.symbolicUtilities: 21 rotation and kinematics functions of exudyn.cUtilities / rigidBodyUtilities (Skew, Cross, Inertia6D2InertiaTensor, RotationMatrixX/Y/Z, RotationMatrix2D, the Tait-Bryan, Euler-parameter and rotation-vector rotation matrices, G matrices and their derivatives) with the same names and arguments and a last argument functions: with exudyn.symbolic (default) they take symbolic values and return symbolic matrices and vectors for symbolic user functions, with numpy, math or exudyn.cMath they return numpy arrays; test model symbolicUtilitiesTest.py, userRigidBodyTest.py uses it.

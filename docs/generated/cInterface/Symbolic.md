@@ -77,7 +77,7 @@ The class **symbolic.Real** has the following **functions and structures**:
   ```
 
 - **`Evaluate()`**: return evaluated expression (prioritized) or stored Real value.
-- **`Diff(var)`**: (UNTESTED!) return derivative of stored expression with respect to given symbolic named variable; NOTE: when defining the expression of the variable which shall be differentiated, the variable may only be changed with the SetValue(...) method hereafter!
+- **`Diff(var)`**: return the derivative of the stored expression with respect to the given named variable, at the current values; the variable may be changed hereafter with SetValue(...) only. round, ceil, floor, mod, min, max, isfinite, Not and the comparisons have no derivative and raise an error
 
   *Example*:
 
@@ -122,42 +122,24 @@ c = (a >= b)
 c = a*7 + esym.sin(8)
 ```
 
-Mathematical functions may be called with an `SymReal` or with a `float`. Most standard mathematical functions exist for `symbolic`, e.g., as `symbolic.abs`. **HINT**: function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:
+Mathematical functions may be called with a `SymReal` or with a `float` and return a `SymReal`. Their names, arguments and results are those of Python's math module - so that `math.sin` and `esym.sin` can be exchanged, e.g. as `functions=esym` - and the functions with one argument `x` are `isfinite`, `abs`, `round`, `ceil`, `floor`, `sqrt`, `exp`, `log`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `sinh`, `cosh`, `tanh`, `asinh`, `acosh` and `atanh`; the others are in the table below. They are computed
+
+- `exp`, `log`, `pow`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `sinh`, `cosh`, `tanh`: by the portable implementation compiled into Exudyn (from musl libc), the functions of `exudyn.cMath`, which give the same bits on every platform, see [](#sec-exudyn-cmath) - not by the C++ library of the platform;
+- `sqrt`, `abs`, `round`, `ceil`, `floor`, `mod`, `min`, `max`, `isfinite`: by the C++ library, exactly, so the same on every platform;
+- `asinh`, `acosh`, `atanh`: by the C++ library of the platform, whose results may differ in the last bit between platforms.
+
+The following table lists the functions with two or more arguments, the special functions and the module data:
 
 The class **symbolic** has the following **functions and structures**:
 
-- **`isfinite(x)`**: according to specification of C++ std::isfinite
-- **`abs(x)`**: according to specification of C++ std::fabs
-- **`round(x)`**: according to specification of C++ std::round
-- **`ceil(x)`**: according to specification of C++ std::ceil
-- **`floor(x)`**: according to specification of C++ std::floor
-- **`sqrt(x)`**: according to specification of C++ std::sqrt
-- **`exp(x)`**: according to specification of C++ std::exp
-- **`log(x)`**: according to specification of C++ std::log
-- **`sin(x)`**: according to specification of C++ std::sin
-- **`cos(x)`**: according to specification of C++ std::cos
-- **`tan(x)`**: according to specification of C++ std::tan
-- **`asin(x)`**: according to specification of C++ std::asin
-- **`acos(x)`**: according to specification of C++ std::acos
-- **`atan(x)`**: according to specification of C++ std::atan
-- **`sinh(x)`**: according to specification of C++ std::sinh
-- **`cosh(x)`**: according to specification of C++ std::cosh
-- **`tanh(x)`**: according to specification of C++ std::tanh
-- **`asinh(x)`**: according to specification of C++ std::asinh
-- **`acosh(x)`**: according to specification of C++ std::acosh
-- **`atanh(x)`**: according to specification of C++ std::atanh
-
-The following table lists special functions for `SymReal`:
-
-The class **symbolic** has the following **functions and structures**:
-
-- **`sign(x)`**: returns 0 for x=0, -1 for x<0 and 1 for x>1.
+- **`sign(x)`**: returns 0 for x=0, -1 for x<0 and 1 for x>0.
 - **`Not(x)`**: returns logical not of expression, equal to Python's 'not'. Not(True)=False, Not(0.)=True, Not(-0.1)=False
 - **`min(x, y)`**: return minimum of x and y.
 - **`max(x, y)`**: return maximum of x and y.
 - **`mod(x, y)`**: return floating-point remainder of the division operation x / y. For example, mod(5.1, 3) gives 2.1 as a remainder.
+- **`atan2(y, x)`**: return the angle of the point (x, y) in $[-\pi, \pi]$, as math.atan2; y is the first argument.
 - **`pow(x, y)`**: return $x^y$.
-- **`IfThenElse(condition, ifTrue, ifFalse)`**: Symbolic function for conditional evaluation. If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated
+- **`IfThenElse(condition, ifTrue, ifFalse)`**: Symbolic function for conditional evaluation. If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated; the condition and the branches may be symbolic or numbers (#3072)
 
   *Example*:
 
@@ -167,6 +149,17 @@ The class **symbolic** has the following **functions and structures**:
   a=esym.IfThenElse(x<0, y+1, y-1)
   ```
 
+- **`cross(a, b)`**: the cross product of two vectors of 3 components, symbolic or one of them a list or numpy array, as numpy.cross (#3070)
+
+  *Example*:
+
+  ```python
+  a = esym.Vector([1,0,0])
+  b = esym.Vector([0,1,0])
+  c = esym.cross(a, b) #gives [0,0,1]
+  ```
+
+- **`pi`**: the float closest to pi, the same as math.pi, so that a function written with functions.pi works with exudyn.symbolic (#3071)
 - **`SetRecording(flag)`**: Set current (global / module-wide) status of expression recording. By default, recording is on.
 
   *Example*:

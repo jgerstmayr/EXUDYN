@@ -588,12 +588,8 @@ namespace RigidBodyMath {
 		}
 		else
 		{
-			const double twoPi = 2.0 * EXUstd::pi;
-			if (angle > twoPi)
-			{
-				angle = std::fmod(angle, twoPi);
-			}
-
+			//the factors sin(angle)/angle and 2 sin(angle/2)^2/angle^2 belong to the unreduced vector v, so the angle is
+			//not reduced by 2 pi (#3073)
 			Matrix3D mat(EXUmath::unitMatrix3D);
 			Matrix3D vTilde(Vector2SkewMatrix(v));
 

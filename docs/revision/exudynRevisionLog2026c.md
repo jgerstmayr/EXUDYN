@@ -2877,3 +2877,38 @@ yes. The gaps of exudyn.symbolic get issues: yes. The list: as proposed.)*
 - Found while testing: slicing a symbolic vector gives a symbolic vector (the analysis said a list; corrected in the
   design document); cUtilities.RotationVector2RotationMatrix([7, 0, 0]) is wrong (#3073, RG12.47.7). Raised as asked:
   #3070, #3071, #3072 (RG12.47.4-6).
+
+<a id="rg12-47-4"></a>
+### RG12.47.4 to RG12.47.7 — cross, pi, IfThenElse with numbers in exudyn.symbolic; RotationVector2RotationMatrix beyond 2 pi (2026-10-24, #3070-#3073)
+*(Maintainer 2026-10-24: then do the open RG12.47 steps.)*
+- src/Linalg/Symbolic.cpp: `cross(a, b)` in the module, of two symbolic vectors or one of them a list / numpy array,
+  recorded as the three component expressions; a vector of another size than 3 raises a ValueError (#3070).
+  `m.attr("pi") = EXUstd::pi` (#3071). IfThenElse bound for the eight combinations of SReal and Real of the
+  condition and the branches - the template took numbers already (#3072). Documented in definitions/pybindSymbolic.py
+  with their stubs.
+- src/Linalg/RigidBodyMath.h: RotationVector2RotationMatrix reduced the angle by fmod(angle, 2 pi) and kept the
+  vector, so the factors sin(a)/a and 2 sin(a/2)^2/a^2 belonged to another angle; the reduction is removed (#3073).
+  The Lie group nodes call the function as well; their test models give the same results (rotations below 2 pi).
+- Tests: symbolicModuleTest.py (cross of the three kinds, recorded and after SetVector, the refusal; pi; IfThenElse
+  with numbers, also recorded), cUtilitiesTest.py (rotation vectors of length 7 and 13 against RotationMatrixX and
+  ExpSO3); results unchanged.
+
+<a id="rg12-48"></a>
+### RG12.48 — the mathematical functions of exudyn.symbolic, Diff tested, atan2 Diff; the TestModels sorted (2026-10-24, #3074-#3077)
+*(Maintainer 2026-10-24: the symbolic part lists isfinite(x): according to specification of C++ std::isfinite and so
+on - write it shorter; the interface and the behaviour are as std::, but they do not call std:: any more, they are
+reimplemented with musl - clarify. Diff says (UNTESTED!) - if untested, add tests and remove UNTESTED. The models in
+TestModels are not sorted alphabetically, as in Examples.)*
+- Checked in src/Linalg/Symbolic.h what computes each function: exp, log, pow, sin, cos, tan, asin, acos, atan, atan2,
+  sinh, cosh, tanh call EM:: (musl, as exudyn.cMath); sqrt, fabs, round, ceil, floor, fmod, min, max, isfinite std::
+  (exact); asinh, acosh, atanh std:: of the platform (not in cMath). definitions/pybindSymbolic.py: one paragraph with
+  the names and these three groups instead of 20 entries "according to specification of C++ std::..."; the functions
+  keep their stubs (addDocu=False), with one line each; atan2, which was bound but missing from the documentation and
+  the stubs, documented; sign said 1 for x>1, now x>0 (#3074).
+- Diff was tested since #2479 for x^3, sin cos, exp/x, sqrt and pow. symbolicModuleTest.py now checks 32 expressions -
+  every operator and function with a derivative, IfThenElse in both branches, atan2 in either argument - against a
+  central difference, and the 14 functions and comparisons without one raise "not possible"; UNTESTED removed (#3075).
+  Found: atan2(y, x).Diff returned (y x' - x y')/(x^2+y^2), the negative; corrected (#3076). The test result is
+  unchanged (the checks count into cntWrong).
+- tools/generators/examplesDocsEmitter.py: the TestModels sorted as the Examples, case-insensitive (#3077).
+- Seen, not changed: a Diff that is not possible raises exudyn.InternalError, not a ValueError.
