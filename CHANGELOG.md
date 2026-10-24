@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 186 | 1.13.189 |
+| 1.13 | Newborn | 187 | 1.13.190 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.190** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The design notes of docs/dev/design out of the published documentation (#3082)
+  - description: Maintainer 2026-10-24: the documents of docs/dev/design went into the documentation, which was not intended - they contain planning, not the current state of the implementation. Mention them once in the development section; they are used for development like the plans and logs of docs/revision and do not belong to the docs.
+  - **notes:** The design notes of docs/dev/design are development records like the revision plans and logs: they are no longer part of the published documentation and are listed once in the developer section.
+  - date resolved: **2026-10-24 23:18**, date raised: 2026-10-24
 - **1.13.189** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User markers: decide what they provide beyond ObjectConnectorUser and ObjectUserBody, then add them (#3065)
   - description: revision2026c step RG7.5 (pythonUserItems.md 5.3), split from \#2975: a user marker (position, orientation, coordinates; on a node, several nodes or a body) whose value and Jacobian are user functions. ObjectConnectorUser reaches any point of a body through its markers (GetBodyPosition, ApplyBodyForce) and ObjectUserBody defines what a local position means, so a user marker on one body adds little; what remains is a marker on several nodes or bodies (an average, a point between two bodies), which needs a marker with the coordinates of several items in the system's LTG. To decide with the maintainer before it is built.
   - **notes:** New MarkerUser: a marker on any number of bodies whose position, and optionally rotation, are Python user functions of the coordinates of the nodes of these bodies, so that the built-in connectors, joints, loads and sensors act at a point of several bodies; the Jacobians by central differences if not given; test model userMarkerTest.py.

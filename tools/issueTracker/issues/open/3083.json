@@ -1,0 +1,13 @@
+{
+  "number": 3083,
+  "title": "Proposed issues of contributors, raised by the maintainer, and a way to merge contributions without a conflict in the version",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-10-24: contributors cannot raise issues - their numbers would interfere with the maintainer's. A folder of proposals: whenever the maintainer raises an issue, the proposed ones are raised first (exudev issue add-proposed, which also works alone). A similar mechanism for merging, because the versions depend on the resolved issues and their dates, so a pull would cause trouble; to suggest.",
+  "dateRaised": "2026-10-24",
+  "deadline": "2027-04-22",
+  "file": "tools/issueTracker/issueTracker.py",
+  "workingRemarks": "2026-10-24: proposed issues built (exudev issue propose, add-proposed, raised before every raise, RG11.11.1); the merging mechanism is proposed in docs/dev/design/contributions.md section 3 and waits for the decision (RG11.11.2)."
+}

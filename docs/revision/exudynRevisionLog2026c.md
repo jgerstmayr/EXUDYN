@@ -3004,3 +3004,21 @@ removed, with its use in runPerformanceTests.py, its test in test_performanceHis
   arguments into its named variables (argRealList), FlatProgram keeps the values in `slots`, and vector and matrix
   expressions return references to buffers inside their nodes; one recording serves every item of a kind (#3056), so
   two threads would overwrite each other. Planned as RG7.8.3.
+
+<a id="rg11-11"></a>
+### RG11.8.26 and RG11.11.1 — the design notes out of the docs; proposed issues (2026-10-24, #3082, #3083)
+*(Maintainer 2026-10-24: the docs/dev/design documents went into the docs - not intended, they contain planning, not
+the current state; mention them once in the development section, like the plans and logs of the revision folder. And:
+contributors should be able to propose issues; they cannot raise them, as that interferes with the numbers; a raise
+folder, whose issues the maintainer's next raise raises first, with a command like "exudev issue add-proposed" that
+also works alone; a similar mechanism for merging, as versions depend on the resolved dates - suggest one.)*
+- conf.py excludes `docs/dev/design/*`; docs/dev/README.md lists the folder in one row (a GitHub link, as the revision
+  files) instead of seven rows and seven toctree entries. Nothing published linked them.
+- issueStore.ProposedDirectory(); issueTracker.ProposeIssue (checked as RaiseIssue, without a number; file
+  `<YYYYMMDD-HHMMSS>-<author>-<title>.json`), ProposedIssues, AddProposedIssues (in the order of the names, the proposer
+  as author, "(proposed DATE by NAME)" appended, the file removed); RaiseIssue calls AddProposedIssues first
+  (addProposedFirst). exudev: `issue propose` and `issue add-proposed`. test_issueTracker.py
+  testProposedIssuesAreRaisedFirst.
+- The merging mechanism is written as a proposal in docs/dev/design/contributions.md section 3 - proposed resolutions,
+  `apply-proposed` after a merge in the maintainer's sequence, a check of the contribution's changed files - and waits
+  for the decision (RG11.11.2).

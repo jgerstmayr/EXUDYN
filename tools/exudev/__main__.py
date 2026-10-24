@@ -146,7 +146,9 @@ def IssueParser(subParsers, globalParser):
                         help='who does this (default JG); Claude passes Claude-JG')
 
     raiseIssue = verbs.add_parser('raise', parents=[globalParser, author],
-        help='raise a new issue', description='The type is checked against the one list of types.')
+        help='raise a new issue (the proposed issues first)',
+        description='The type is checked against the one list of types. The proposed issues of '
+                    'tools/issueTracker/issues/proposed/ are raised before it, in their order (#3083).')
     raiseIssue.add_argument('title', help='the issue in one line')
     raiseIssue.add_argument('description', help='what it is about, in prose')
     raiseIssue.add_argument('--type', required=True, metavar='TYPE',
@@ -156,6 +158,27 @@ def IssueParser(subParsers, globalParser):
     raiseIssue.add_argument('--priority', metavar='P', help='LOW, NORMAL, HIGH')
     raiseIssue.add_argument('--file', metavar='PATH', help='the file it is about')
     raiseIssue.add_argument('--line', metavar='N', help='the line it is about')
+
+    propose = verbs.add_parser('propose', parents=[globalParser],
+        help='propose an issue without a number, for contributors',
+        description='Writes the proposal as a file into tools/issueTracker/issues/proposed/, named by date, author '
+                    'and title: no number, no version change, and no conflict when two contributions are merged. '
+                    'The maintainer raises the proposals with "add-proposed" or the next "raise" (#3083).')
+    propose.add_argument('title', help='the issue in one line')
+    propose.add_argument('description', help='what it is about, in prose')
+    propose.add_argument('--author', required=True, metavar='NAME', help='who proposes it')
+    propose.add_argument('--type', required=True, metavar='TYPE',
+                         help='BUG, FIX, CHANGE, EXTENSION, IMPROVEMENT, TESTING, DOCU, EXAMPLE, CHECK, IDEA')
+    propose.add_argument('--effort', default='', metavar='E', help='LOW, MEDIUM, HIGH, HUGE')
+    propose.add_argument('--priority', default='', metavar='P', help='LOW, NORMAL, HIGH')
+    propose.add_argument('--file', default='', metavar='PATH', help='the file it is about')
+    propose.add_argument('--line', default='', metavar='N', help='the line it is about')
+
+    verbs.add_parser('add-proposed', parents=[globalParser],
+        help='raise the proposed issues, in their order (the maintainer)',
+        description='Raises every proposal of tools/issueTracker/issues/proposed/ in the order of the file names - '
+                    'the proposer as author, the date of the proposal in the description - and removes its file '
+                    '(#3083). "raise" does this first anyway.')
 
     extend = verbs.add_parser('extend', parents=[globalParser, author],
         help='append to the description of an open issue',

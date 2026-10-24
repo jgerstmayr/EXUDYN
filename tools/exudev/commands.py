@@ -1666,6 +1666,23 @@ def Issue(options):
                 tracker.ChangeIssue(number, 'effort', options.effort)
             return 0
 
+    elif verb == 'propose':
+        note = 'propose a ' + options.type.upper() + ' issue "' + options.title + '" (author ' + options.author + ')'
+
+        def Action():
+            tracker.ProposeIssue(options.title, options.description, issueType=options.type, effort=options.effort,
+                                 priority=options.priority, fileName=options.file, lineNumber=options.line,
+                                 author=options.author)
+            return 0
+
+    elif verb == 'add-proposed':
+        note = 'raise the ' + str(len(tracker.ProposedIssues())) + ' proposed issue(s)'
+
+        def Action():
+            numbers = tracker.AddProposedIssues()
+            print(str(len(numbers)) + ' proposed issue(s) raised' + (': #' + ', #'.join(str(n) for n in numbers) if numbers else ''))
+            return 0
+
     elif verb == 'extend':
         note = 'extend the description of issue ' + str(options.number)
 

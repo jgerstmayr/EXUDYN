@@ -85,6 +85,11 @@ only because the number was written down once.
 where it belongs; small issues may share a step. The tracker describes the issue, the plan says
 when and together with what it is done (plan §12).
 
+**Proposed issues** (#3083): a contributor writes `exudev issue propose "title" "description" --type T --author NAME`,
+a file without a number in `tools/issueTracker/issues/proposed/`, named by date, author and title, so that proposals of
+two branches never collide and no version changes. `exudev issue add-proposed` raises them in the order of their names,
+the proposer as author, and removes the files; every `raise` does this first.
+
 Run it from its own directory — it uses relative and Windows-style paths:
 
 ```bash

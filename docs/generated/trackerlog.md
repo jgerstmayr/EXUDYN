@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.189.dev1
+- Exudyn version = 1.13.190.dev1
 - last change = 2026-10-24
-- Number of issues = 3082
-- Number of resolved issues = 2966 (189 in current version)
+- Number of issues = 3084
+- Number of resolved issues = 2967 (190 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,10 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Proposed issues of contributors, raised by the maintainer, and a way to merge contributions without a conflict in the version (#3083)
+  - description: Maintainer 2026-10-24: contributors cannot raise issues - their numbers would interfere with the maintainer's. A folder of proposals: whenever the maintainer raises an issue, the proposed ones are raised first (exudev issue add-proposed, which also works alone). A similar mechanism for merging, because the versions depend on the resolved issues and their dates, so a pull would cause trouble; to suggest.
+  - **remarks:** 2026-10-24: proposed issues built (exudev issue propose, add-proposed, raised before every raise, RG11.11.1); the merging mechanism is proposed in docs/dev/design/contributions.md section 3 and waits for the decision (RG11.11.2).
+  - date raised: 2026-10-24
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.
   - date raised: 2026-10-21

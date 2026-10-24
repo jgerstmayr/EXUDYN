@@ -94,6 +94,11 @@ def ArchiveDirectory():
     return os.path.join(storeDirectory, 'archive')
 
 
+def ProposedDirectory():
+    """the issues a contributor proposes, without a number, until the maintainer raises them (#3083)"""
+    return os.path.join(storeDirectory, 'proposed')
+
+
 def IssueFileName(number):
     """padded to four digits, so that a directory listing is in issue order"""
     return str(int(number)).rjust(4, '0') + '.json'

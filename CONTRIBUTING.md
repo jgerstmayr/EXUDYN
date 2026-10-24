@@ -55,6 +55,10 @@ Read the two pages that carry the conventions:
 - [`docs/dev/WORKFLOW.md`](docs/dev/WORKFLOW.md) — the issue tracker, the version numbering and the
   gates a change passes before it is committed.
 
+An issue of the tracker is not raised in a contribution - its number and the version are the maintainer's. A
+change proposes it instead: `exudev issue propose "title" "description" --type BUG --author NAME` writes a file without
+a number into `tools/issueTracker/issues/proposed/`, and the maintainer's next raise gives it its number (#3083).
+
 The short form of those gates, which is what a pull request is checked against:
 
 1. **Never edit a generated file.** Change what it is generated from and run

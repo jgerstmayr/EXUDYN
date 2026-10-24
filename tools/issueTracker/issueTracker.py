@@ -982,6 +982,75 @@ def RaiseIssueDict(issueDict): #raise a new issue into list (append to end of li
     return number
 
 #%%******************************************************************************************************
+#proposed issues (#3083): a contributor cannot raise an issue - its number would collide with the numbers the maintainer
+#raises meanwhile, and the version is counted from the issues. A proposal is a file without a number in issues/proposed/,
+#named by its date and author, so that two proposals never collide in a merge; the maintainer's next raise, or
+#AddProposedIssues alone, raises them in the order of their names and removes the files.
+proposalFields = ['title', 'description', 'type', 'effort', 'priority', 'file', 'line', 'author', 'dateProposed']
+
+def ProposalFileName(author, title, date=None):
+    """date-time, author and the first words of the title: sorted by time, and unique in practice"""
+    date = date or datetime.datetime.now()
+    def Clean(text, length):
+        return ''.join(c if c.isalnum() else '-' for c in text.strip())[:length].strip('-') or 'x'
+    return date.strftime('%Y%m%d-%H%M%S') + '-' + Clean(author, 20) + '-' + Clean(title, 40) + '.json'
+
+
+def ProposeIssue(title, description, issueType='EXTENSION', effort='', priority='', fileName='', lineNumber='', author=''):
+    """write a proposal into issues/proposed/: checked as an issue is, but without a number, so the version does not
+    change; returns the path of the file"""
+    if author.strip() == '':
+        raise ValueError('ProposeIssue: the author is needed - who proposes it')
+    if title.strip() == '' or description.strip() == '':
+        raise ValueError('ProposeIssue: title and description are needed')
+    issueType = issueType.strip().upper()
+    if issueType not in issueTypes:
+        raise ValueError('ProposeIssue: unknown issue type "' + issueType + '". Use one of: ' + ', '.join(issueTypes))
+    proposal = {'title': title, 'description': description, 'type': issueType,
+                'effort': CheckedEnumValue('effort', effort, issueEfforts),
+                'priority': CheckedEnumValue('priority', priority, issuePriorities),
+                'file': fileName, 'line': str(lineNumber), 'author': author, 'dateProposed': GetDateStr()}
+    directory = issueStore.ProposedDirectory()
+    os.makedirs(directory, exist_ok=True)
+    path = os.path.join(directory, ProposalFileName(author, title))
+    if os.path.exists(path):
+        raise ValueError('ProposeIssue: ' + path + ' exists already')
+    issueStore.WriteJson(path, proposal)
+    print('issue proposed: ' + os.path.basename(path) + ' "' + title.strip() + '"')
+    return path
+
+
+def ProposedIssues():
+    """the paths of the proposals, in the order they are raised"""
+    directory = issueStore.ProposedDirectory()
+    if not os.path.isdir(directory):
+        return []
+    return [os.path.join(directory, name) for name in sorted(os.listdir(directory)) if name.endswith('.json')]
+
+
+def AddProposedIssues():
+    """raise every proposal in the order of the file names, the proposer as author and the date of the proposal in the
+    description, and remove its file; returns the numbers"""
+    numbers = []
+    for path in ProposedIssues():
+        proposal = issueStore.ReadJson(path)
+        unknown = [key for key in proposal if key not in proposalFields]
+        if unknown or 'title' not in proposal or 'description' not in proposal or 'type' not in proposal:
+            raise ValueError('AddProposedIssues: ' + path + ' is no proposal (fields ' + ', '.join(proposalFields)
+                             + '; title, description and type needed)')
+        description = (proposal['description'].rstrip() + ' (proposed ' + proposal.get('dateProposed', '')
+                       + ' by ' + proposal.get('author', '') + ')')
+        number = RaiseIssue(proposal['title'], description, issueType=proposal['type'], fileName=proposal.get('file', ''),
+                            lineNumber=proposal.get('line', ''), author=proposal.get('author', ''),
+                            priority=proposal.get('priority', ''), addProposedFirst=False)
+        if proposal.get('effort', ''):
+            ChangeIssue(number, 'effort', proposal['effort'])
+        os.remove(path)
+        numbers.append(number)
+    return numbers
+
+
+#%%******************************************************************************************************
 #modify an existing issue
 #use this to overwrite ONE field of an issue
 def ChangeIssue(issueNumber, key, value, force=False): #raise a new issue into list (append to end of list)
@@ -1330,8 +1399,13 @@ def AbandonIssue(issueNumber, reason, author='JG'):
 
 #%%******************************************************************************************************
 #use this to quickly raise a new issue
-def RaiseIssue(issueName, description, issueType='EXTENSION', fileName='', lineNumber='', deadline='', author='JG', priority=''): #raise a new issue into list (append to end of list)
-    
+def RaiseIssue(issueName, description, issueType='EXTENSION', fileName='', lineNumber='', deadline='', author='JG', priority='',
+               addProposedFirst=True): #raise a new issue into list (append to end of list)
+    """raise an issue; the proposed issues are raised before it, so that they keep the order in which they came
+    (addProposedFirst, #3083)"""
+    if addProposedFirst:
+        AddProposedIssues()
+
     if deadline == '': #create 120 days deadline
         date=datetime.datetime.now() + datetime.timedelta(days=180)
         monthZero = '' #add leading zero for month

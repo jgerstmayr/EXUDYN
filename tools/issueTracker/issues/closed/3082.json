@@ -1,0 +1,16 @@
+{
+  "number": 3082,
+  "title": "The design notes of docs/dev/design out of the published documentation",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-24: the documents of docs/dev/design went into the documentation, which was not intended - they contain planning, not the current state of the implementation. Mention them once in the development section; they are used for development like the plans and logs of docs/revision and do not belong to the docs.",
+  "dateRaised": "2026-10-24",
+  "deadline": "2027-04-22",
+  "dateResolved": "2026-10-24 23:18",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/README.md",
+  "releaseNotes": "The design notes of docs/dev/design are development records like the revision plans and logs: they are no longer part of the published documentation and are listed once in the developer section.",
+  "resolvedInVersion": "1.13.190"
+}

@@ -99,6 +99,7 @@ exclude_patterns = ['rotorAnsys.rst',
                     #since myst_parser was added, and everything it can read must either be in a
                     #toctree or excluded - a page in neither fails the strict build (step R7.1.2).
                     'docs/revision/*',   #the revision plan, log and info: a working record
+                    'docs/dev/design/*', #the design notes: planning, not the state of the implementation (#3082)
                     'CLAUDE.md',         #the working contract for Claude Code sessions
                     '.github/*',         #issue and pull request templates: GitHub reads them,
                                          #Sphinx must not

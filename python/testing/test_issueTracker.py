@@ -1215,3 +1215,24 @@ def testTheStoreRefusesADeferredClosedIssue(tracker):
     issue['deferredUntil'] = '2099-01-01'
     tracker.issueStore.Save(issue)
     assert any('deferred' in message for message in tracker.issueStore.CheckStore())
+
+
+def testProposedIssuesAreRaisedFirst(tracker):
+    """a proposal has no number and changes no version; the next raise raises the proposals first, in the order of
+    their file names, with the proposer as author, and removes their files (#3083)"""
+    before = tracker.NumberOfIssues()
+    first = tracker.ProposeIssue('a proposal', 'what it is about', issueType='docu', effort='LOW', author='Contributor A')
+    second = tracker.ProposeIssue('another proposal', 'more', issueType='BUG', author='Contributor B')
+    assert tracker.NumberOfIssues() == before
+    assert tracker.ProposedIssues() == sorted([first, second])
+    with pytest.raises(ValueError):
+        tracker.ProposeIssue('a proposal', 'of an unknown type', issueType='WISH', author='Contributor A')
+
+    number = tracker.RaiseIssue('the maintainer\'s issue', 'raised after the proposals', issueType='CHANGE')
+    assert number == before + 2
+    raised = [tracker.GetIssue(before + i) for i in range(2)]
+    assert sorted(issue['author'] for issue in raised) == ['Contributor A', 'Contributor B']
+    proposalA = [issue for issue in raised if issue['author'] == 'Contributor A'][0]
+    assert proposalA['type'] == 'DOCU' and proposalA['effort'] == 'LOW' and 'proposed ' in proposalA['description']
+    assert tracker.ProposedIssues() == []
+    assert tracker.AddProposedIssues() == [] #alone, with nothing proposed
