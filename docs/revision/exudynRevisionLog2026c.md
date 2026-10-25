@@ -3095,3 +3095,21 @@ enough. Update the concept, list the decisions and recommendations.)*
   as 0/1, IfThenElse); sympy as the common structure for C, C++, Fortran, Rust, Julia, Matlab, LaTeX, lambdify, cse and
   codegen, with what it changes (simplifies and reorders while building, optional); nine decisions with
   recommendations. Plan sub-steps RG12.50.2-3 renamed to match.
+
+<a id="rg12-49-1-revised"></a>
+### RG12.49.1, revised — the optimization on the expressions (2026-10-25, #3085)
+*(Maintainer 2026-10-25: the optimization could belong to the symbolic expressions, not only to the flat program - a
+function expression = symbolic.optimize(expression, options) or simplify, generating a new tree, with levels: exact and
+unproblematic simplifications (level 1), the rest (level 2); merging of duplicates, mergeDuplicates=True, so that q[3]
+is one single leaf; would mergeDuplicates > 1 be a depth of comparison, only in the flat program - is
+sin(q[1]+3)*cos(q[2]-q[0]) written twice evaluated once today? Defaults level=1, mergeDuplicates=True. Update the
+design file, revised recommendations and decisions.)*
+- Measured: `sin(q[1]+3)*cos(q[2]-q[0])` written twice is 11 operations in the flat program, 6 needed; the flat program
+  merges by pointer only, at no depth; every `q[1]` is a new component node with a new index leaf.
+- docs/dev/design/symbolicFlatProgramOptimization.md revised: `esym.Optimize(expressions, level=1, mergeDuplicates=True)`
+  builds a new graph, sharing what does not change; one pass from the leaves up with a key of class and new operand
+  pointers (commutative operands sorted, numbers by bits, variables and arguments by pointer), so merging compares any
+  depth and a depth parameter is not needed - a bool; the leaves merge; level 1 exact (`1*x`, `x**1`, `x**0`, numbers,
+  IfThenElse of a number, components of a vector number, and `x+0` with only the sign of a zero), level 2 `0*x`, `0/x`,
+  `x-x`, `x/x`, combined numbers; CreateSymbolicUserFunction(optimize=...) with the same defaults; the flat program
+  unchanged; eight decisions with recommendations. Plan RG12.49 and RG12.49.2 renamed.

@@ -107,7 +107,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG12** Symbolic
   - RG12.2 Measure the user function interfaces as they are (1 open sub-step)
   - RG12.4 Give symbolic user functions access to the MainSystem and the item functions (1 open sub-step)
-  - RG12.49 Simplify the flat program and merge its equal subexpressions (1 open sub-step)
+  - RG12.49 Optimize symbolic expressions: simplification and merging of duplicates (1 open sub-step)
   - RG12.50 The flat program of expressions, the export of recordings and the symbolic model of a system (4 open sub-steps)
 - **RG13** Total coordinates
   - RG13.1 Measure the solvers on more models, solvers and configurations, as the baseline
@@ -1773,9 +1773,10 @@ CLOSED 2026-10-24 (#3075): symbolicModuleTest.py, 32 expressions against a centr
 
 CLOSED 2026-10-24 (#3076): found by RG12.48.2. [log](exudynRevisionLog2026c.md#rg12-48)
 
-### **OPEN_RG12.49** Simplify the flat program and merge its equal subexpressions
+### **OPEN_RG12.49** Optimize symbolic expressions: simplification and merging of duplicates
 
-Maintainer 2026-10-25: `x*0`, `x+0` and numbers; `cos(q[2])` written twice is two nodes of the recording, computed twice.
+Maintainer 2026-10-25: `x*0`, `x+0` and numbers; `cos(q[2])` written twice is two nodes of the recording, computed twice;
+the optimization belongs to the expressions, as a function with levels and merging of duplicates, leaves included.
 
 #### **CLOSED_RG12.49.1** Evaluate the simplification and the merging, and propose
 
@@ -1784,9 +1785,9 @@ numbers are folded when recording already; 20 % of the operations of userRigidBo
 operations of a numpy object product trivial; proposed: merging by class and operand slots (any depth, the same bits)
 and the rules, in FlatProgram::Build with a switch; waiting for the decision. [log](exudynRevisionLog2026c.md#rg12-49)
 
-#### **OPEN_RG12.49.2** Implement the optimizing pass of FlatProgram::Build
+#### **OPEN_RG12.49.2** esym.Optimize and the optimize argument of CreateSymbolicUserFunction
 
-After the decision on RG12.49.1.
+After the decision on RG12.49.1 (revised proposal: [symbolicFlatProgramOptimization.md](../dev/design/symbolicFlatProgramOptimization.md)).
 
 ### **OPEN_RG12.50** The flat program of expressions, the export of recordings and the symbolic model of a system
 
