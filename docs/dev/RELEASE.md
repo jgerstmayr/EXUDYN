@@ -14,6 +14,7 @@ two modes are in [WORKFLOW.md](WORKFLOW.md) §3, the remotes in §4.
 | release tag | `vX.Y.Z` on the release commit, on both remotes | the maintainer, **after** GitHub CI is green |
 | GitHub CI `wheels.yml` | 24 jobs: Windows, Linux x86-64, Linux ARM, macOS (universal2), Python 3.10-3.15 each; cibuildwheel builds and runs the test suite with `--exit-code`; the artifact `merged-wheels` holds all wheels | a push to `master`, a pull request, or *Run workflow* - **not** a tag |
 | GitHub Pages `documentation.yaml` | the HTML documentation on jgerstmayr.github.io | a push to `master`, or *Run workflow* |
+| GitHub CI `contribution.yml` | `tools/checkIssues.py --contribution` against the base branch: no numbered issue and no version file changed (#3084) | a pull request from a fork |
 | Read the Docs | `latest` from `master` | a push to `master`; other branches and tags only as configured in the Read the Docs project (*Versions*, *Automation rules*) |
 | GitLab CI `.gitlab-ci.yml` | Linux x86-64 wheels and tests | a tag, the schedule, or *Run pipeline* - **not** a branch push |
 | PyPI | the wheels, uploaded with twine | the maintainer |

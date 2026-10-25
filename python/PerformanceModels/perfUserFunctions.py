@@ -124,7 +124,7 @@ def Model(function, kind):
     elif function == 'rigid6':
         node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0]*6, initialCoordinates=[0.01, 0.02, 0.03, 0.01, 0.02, 0.03],
                                              initialVelocities=[0, 0, 0, 0.1, 0.2, 0.3]))
-        body = mbs.AddObject(ObjectRigidBody(physicsMass=1, physicsInertia=[1, 1, 1, 0, 0, 0], nodeNumber=node))
+        body = mbs.AddObject(ObjectRigidBody(mass=1, inertia=[1, 1, 1, 0, 0, 0], nodeNumber=node))
         ground = mbs.AddObject(ObjectGround())
         markers = [mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground)), mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))]
         item = mbs.AddObject(RigidBodySpringDamper(markerNumbers=markers, stiffness=k*np.eye(6), damping=d*np.eye(6),

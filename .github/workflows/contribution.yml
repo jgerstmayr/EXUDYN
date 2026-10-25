@@ -1,0 +1,31 @@
+#  workflow that checks a contribution: it changes no numbered issue and no version (#3084)
+name: Check contribution
+
+# A pull request from a fork must not raise or resolve issues of the tracker nor change the version files - the
+# numbers and the versions are those of the maintainer's branch. It proposes issues and resolutions instead
+# ("exudev issue propose", "propose-resolution"), and the maintainer applies them after the merge
+# ("exudev issue apply-proposed"); see CONTRIBUTING.md and docs/dev/WORKFLOW.md (#3083).
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+# actions pinned to the same major versions as documentation.yaml and wheels.yml (revision2026 step R5.14.1)
+jobs:
+  issues-and-version:
+    # a pull request of the maintainer's own branches resolves issues legitimately, so only forks are checked
+    if: github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0                   # the history back to the base, for git diff BASE...HEAD
+    - name: Setup Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.x'
+    - name: Check the changed files
+      run: |
+        python tools/checkIssues.py --contribution origin/${{ github.base_ref }}

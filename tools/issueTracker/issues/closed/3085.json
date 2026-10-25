@@ -1,0 +1,14 @@
+{
+  "number": 3085,
+  "title": "Evaluate simplification and merging of equal subexpressions in the flat program of symbolic user functions",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "revision2026c step RG12.49.1 (maintainer 2026-10-25): x*0, x*1, x+0 and numbers; equal subexpressions recorded twice, e.g. cos(q[2]) written two times, are two nodes and computed twice; measure the recorded models, propose how and where, the impact on the implementation and on D18.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23",
+  "dateResolved": "2026-10-25 08:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Evaluated: simplifying the flat program of symbolic user functions (x*0, x*1, x+0) and merging its equal subexpressions, with measurements and a proposal in docs/dev/design/symbolicFlatProgramOptimization.md.",
+  "resolvedInVersion": "1.13.193"
+}

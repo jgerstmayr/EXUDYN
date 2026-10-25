@@ -63,7 +63,8 @@ maintainer's. A change proposes them instead, and you stay the author of both (#
 - `exudev issue propose-resolution ISSUE "release notes" --author NAME` proposes the resolution of an open issue (its
   number) or of an issue the change proposes itself (the name of its file); the maintainer applies it after the merge,
   with the date of the merge;
-- `python tools/checkIssues.py --contribution master` checks that the change touches no numbered issue and no version file.
+- `python tools/checkIssues.py --contribution master` checks that the change touches no numbered issue and no version
+  file; the workflow `.github/workflows/contribution.yml` runs the same check on every pull request from a fork (#3084).
 
 The short form of those gates, which is what a pull request is checked against:
 

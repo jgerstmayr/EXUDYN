@@ -1,0 +1,14 @@
+{
+  "number": 3086,
+  "title": "Evaluate the flat program of symbolic expressions and the export of recordings and of a model of user items",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "revision2026c step RG12.50.1 (maintainer 2026-10-25): GetFlatProgram for expressions, the export of the evaluation graph as text or another format, an export to sympy, a symbolic assembly of a system of symbolic user items in symbolicUtilities.py for control; evaluation and proposal.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23",
+  "dateResolved": "2026-10-25 08:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Evaluated: the flat program of symbolic expressions, the export of recordings (a Python structure, Python source, sympy) and a symbolic model of a system of user items, proposed in docs/dev/design/symbolicExport.md.",
+  "resolvedInVersion": "1.13.194"
+}

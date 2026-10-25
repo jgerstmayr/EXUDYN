@@ -270,7 +270,8 @@ for file in testFileList:
     timeStart= -time.time()
     testRaised[name] = False
     try:
-        exec(open(file).read(), globals())
+        with open(file, encoding='utf-8') as modelFile:
+            exec(modelFile.read(), globals())
     except Exception as e:
         testRaised[name] = True
         exu.Print('PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))

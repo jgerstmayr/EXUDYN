@@ -42,7 +42,8 @@ tracker as proposals, and the merge turns them into issues and resolutions in th
 4. **The check of a contribution.** `tools/checkIssues.py --contribution BASE` lists what the branch changed against
    BASE (`git diff --name-only BASE...HEAD`) and refuses the numbered issue files (`open/`, `closed/`, `archive/`,
    `meta.json`), `releases.json`, `versionName.txt`, the version files, `CHANGELOG.md` and `trackerlog.md`; the proposals
-   pass. As a step of a GitHub workflow for pull requests it would touch `.github/workflows/` - not done, to be asked.
+   pass. The workflow `.github/workflows/contribution.yml` runs it on every pull request from a fork, against the base
+   branch (#3084, maintainer 2026-10-25); the pull requests of the maintainer's own branches are not checked.
 5. **Conflicts in generated files** are never merged by hand: the maintainer's version is taken and `exudev generate`
    writes them again.
 6. **The maintainer's own second branch** follows the same rule: it proposes, and the main branch raises and resolves.

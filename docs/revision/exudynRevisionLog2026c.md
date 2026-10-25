@@ -3038,3 +3038,42 @@ should be a warning when resolving an issue saying that there are proposed ones 
   contributionForbidden; checked against the last commit, which lists the version files it changed.
 - Tests in test_issueTracker.py. WORKFLOW.md, CONTRIBUTING.md, the exudev README and docs/dev/design/contributions.md
   describe it. A GitHub workflow step for pull requests is not added (.github/workflows/ - to ask).
+
+<a id="rg11-11-3"></a>
+### RG11.11.3 — the check of a contribution as a GitHub workflow (2026-10-25, #3084)
+*(Maintainer 2026-10-25: yes, add a workflow step under .github/workflows/; I assume that it is described in the docs.)*
+- `.github/workflows/contribution.yml`: on `pull_request`, only when the head repository is not this one (a fork - the
+  maintainer's own branches resolve issues); checkout with the full history, Python 3.x, `python tools/checkIssues.py
+  --contribution origin/<base>`; the actions at the majors of the other two workflows. checkIssues.py needs only the
+  standard library.
+- Described in CONTRIBUTING.md, WORKFLOW.md (the paragraph of proposed resolutions), the CI table of RELEASE.md and
+  docs/dev/design/contributions.md section 3.4.
+- Not run on GitHub from here (no push); the check itself is tested by test_issueTracker.py.
+
+<a id="rg12-49"></a>
+### RG12.49.1 — simplification and merging of the flat program, evaluated (2026-10-25, #3085)
+*(Maintainer 2026-10-25: would a basic simplify (x*0, etc.) help, in particular when computing the flat program? a+0 and
+a*0 often appear. Pure numbers could also be optimized, like sin(Real(13)). If we add sin(q0) two times, they would
+become independent leaves; compare leaves up to a certain depth - write a concept and whether it impacts the current
+implementation a lot. Is cos(rot[2]) written twice efficient with the flat evaluation?)*
+- Measured with GetFlatProgram() of 1.13.190: the matrix of the question 11 operations, 3 duplicates (8 with the values
+  shared by hand); a numpy object product of a constant 3x3 matrix 16 operations, 7 trivial, 3 duplicates; as a Python
+  sum 19, 10, 4; userRigidBodyTest.py 314 operations, 0 trivial, 63 duplicates. `esym.sin(esym.Real(13))*q[2]` is
+  recorded as `(0.420167 * q[2])`: an operation of numbers is computed while recording.
+- Proposal in docs/dev/design/symbolicFlatProgramOptimization.md: in FlatProgram::Build, a key of class and operand
+  slots (the operands are merged first, so one level compares any depth), numbers by bits, variables and arguments by
+  pointer, commutative operands sorted - the same bits as the tree; the exact rules and `0*x` → 0 (which loses a nan
+  of x), a switch to turn it off. No change to the expression classes beyond two virtual functions with defaults.
+  Waiting for the decision: where, and `0*x`.
+
+<a id="rg12-50"></a>
+### RG12.50.1 — the flat program of expressions, the export and the symbolic model of a system, evaluated (2026-10-25, #3086)
+*(Maintainer 2026-10-25: GetFlatProgram() - could it be available for symbolic expressions, or would we need functions
+in symbolic more generally? Export the evaluation tree, for the symbolic code of a model of user items - a symbolic
+system assembly in symbolicUtilities.py, interesting for control people; as text or another format; to sympy?)*
+- docs/dev/design/symbolicExport.md: FlatProgram::Build takes any roots, so `esym.GetFlatProgram(expressions)` is a
+  binding; the export as a Python structure (operations with names and operand slots, leaves with values or names),
+  writers to Python source and to sympy (optional), a round-trip test; `SymbolicSystem(mbs)` renames the argument
+  leaves by the local-to-global maps and adds mass matrices, forces and constraints; the marker Jacobians of the
+  connectors are computed in C++ and exudyn.symbolic has no derivative as an expression, so the connectors go through
+  sympy. Sub-steps RG12.50.2-5; waiting for the decision.

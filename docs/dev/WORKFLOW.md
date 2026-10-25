@@ -98,8 +98,10 @@ ascending issue number, each with the date of the merge - the version describes 
 on - and the contributor, who did the work, as author of the raised issue and as resolvedAuthor. It stays a deliberate
 command, as it changes the version; while proposals wait, every `resolve` says so and names the command.
 `python tools/checkIssues.py --contribution BASE` refuses a branch that changes the numbered issues (`open/`, `closed/`,
-`archive/`, `meta.json`), `releases.json`, the version files, `CHANGELOG.md` or `trackerlog.md`. A conflict in a generated
-file is never merged by hand: take the maintainer's version and run `exudev generate`.
+`archive/`, `meta.json`), `releases.json`, the version files, `CHANGELOG.md` or `trackerlog.md`; the GitHub workflow
+`contribution.yml` runs it against the base branch on every pull request from a fork, not on the maintainer's own
+branches, which resolve issues (#3084). A conflict in a generated file is never merged by hand: take the maintainer's
+version and run `exudev generate`.
 
 Run it from its own directory — it uses relative and Windows-style paths:
 

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 188 | 1.13.191 |
+| 1.13 | Newborn | 191 | 1.13.194 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.194** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` Evaluate the flat program of symbolic expressions and the export of recordings and of a model of user items (#3086)
+  - description: revision2026c step RG12.50.1 (maintainer 2026-10-25): GetFlatProgram for expressions, the export of the evaluation graph as text or another format, an export to sympy, a symbolic assembly of a system of symbolic user items in symbolicUtilities.py for control; evaluation and proposal.
+  - **notes:** Evaluated: the flat program of symbolic expressions, the export of recordings (a Python structure, Python source, sympy) and a symbolic model of a system of user items, proposed in docs/dev/design/symbolicExport.md.
+  - date resolved: **2026-10-25 08:59**, date raised: 2026-10-25
+- **1.13.193** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` Evaluate simplification and merging of equal subexpressions in the flat program of symbolic user functions (#3085)
+  - description: revision2026c step RG12.49.1 (maintainer 2026-10-25): x\*0, x\*1, x+0 and numbers; equal subexpressions recorded twice, e.g. cos(q\[2\]) written two times, are two nodes and computed twice; measure the recorded models, propose how and where, the impact on the implementation and on D18.
+  - **notes:** Evaluated: simplifying the flat program of symbolic user functions (x\*0, x\*1, x+0) and merging its equal subexpressions, with measurements and a proposal in docs/dev/design/symbolicFlatProgramOptimization.md.
+  - date resolved: **2026-10-25 08:59**, date raised: 2026-10-25
+- **1.13.192** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` GitHub workflow: check a pull request from a fork with checkIssues.py --contribution (#3084)
+  - description: revision2026c step RG11.11.3 (maintainer 2026-10-25): a workflow .github/workflows/contribution.yml runs tools/checkIssues.py --contribution against the base branch for pull requests from forks, so a contribution that numbers or versions is refused before the review.
+  - **notes:** A GitHub workflow, .github/workflows/contribution.yml, checks every pull request from a fork with tools/checkIssues.py --contribution against its base branch: a contribution that changes a numbered issue or a version file is refused.
+  - date resolved: **2026-10-25 08:59**, date raised: 2026-10-25
 - **1.13.191** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Proposed issues of contributors, raised by the maintainer, and a way to merge contributions without a conflict in the version (#3083)
   - description: Maintainer 2026-10-24: contributors cannot raise issues - their numbers would interfere with the maintainer's. A folder of proposals: whenever the maintainer raises an issue, the proposed ones are raised first (exudev issue add-proposed, which also works alone). A similar mechanism for merging, because the versions depend on the resolved issues and their dates, so a pull would cause trouble; to suggest.
   - **notes:** Contributions propose instead of raising or resolving issues: exudev issue propose and propose-resolution write files without a number; the maintainer's raise raises the proposed issues first, and exudev issue apply-proposed raises them and resolves the proposed resolutions after a merge, with the date of the merge and the contributor as author; every resolve notes waiting proposals; tools/checkIssues.py --contribution BASE refuses a branch that changes numbered issues or the version.
