@@ -126,8 +126,8 @@ if not testIsActive:
 mbs.SolveDynamic(simulationSettings)
 if not testIsActive:
     SC.renderer.Stop()
+    mbs.SolutionViewer() #it reads the solution file of this run (#3098)
     simulationSettings.solution.file.write = False
-    mbs.SolutionViewer()
 
 differenceCable = 0
 u = 0

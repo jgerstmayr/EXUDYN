@@ -1,0 +1,11 @@
+{
+  "number": 3102,
+  "title": "ObjectConnectorUser: data coordinates of a NodeGenericData and a postNewtonStepUserFunction",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "revision2026c step RG7.15 (maintainer 2026-10-25): a NodeGenericData as in ObjectConnectorRigidBodySpringDamper, its data coordinates passed to forceUserFunction (empty without node), needed for any kind of contact; a postNewtonStepUserFunction updating the data coordinates, with a clearer return than a vector mixing them with the error and the recommended step size; the sphere-sphere contact re-implemented in a new test model.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23"
+}

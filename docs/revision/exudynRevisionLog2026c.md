@@ -3421,3 +3421,19 @@ doing.)*
   recording shared by several items, C a matrix view through the flat evaluation. For large matrix arguments, C is the
   one to take, with the conversion of the item.
 - The test suite passes.
+
+<a id="rg7-15-1"></a>
+### RG7.15, RG7.15.1, RG7.15.2 — the review of the user items; the SolutionViewer of their test models, ObjectJointUser a joint (2026-10-25, #3098, #3099)
+*(Maintainer 2026-10-25, the review of ObjectConnectorUser - its arguments, a NodeGenericData and its data coordinates
+for any kind of contact, a postNewtonStepUserFunction, a sphere-sphere contact as test -, of ObjectJointUser - the screw
+joint of userJointTest.py does not work beyond 180 degrees; nowhere in Exudyn is the constraint Jacobian approximated by
+numerical differentiation, as it leads to severe artifacts, so a jacobianUserFunction is always required and a missing
+one fails in Assemble; check what the other user items need at least -, of MarkerUser - it is a body marker, MarkerBodyUser
+with a parameter markerType -; physicsMass in symbolicItemOutputTest.py; solution.file.write = False before
+mbs.SolutionViewer() in several test models, so the viewer refuses; ObjectJointUser listed under Constraint.)*
+- Written down as RG7.15 with six sub-steps, one issue each (#3098 to #3103).
+- RG7.15.1: userANCFBeam3DTest, userANCFCable2DTest, userJointTest, userMarkerTest, userMassIntegralTest,
+  userOutputVariablesTest, userParametersTest, userRigidBodyTest, userTetrahedronTest: `mbs.SolutionViewer()` before
+  `simulationSettings.solution.file.write = False` - the viewer reads the solution file of the run and refuses when
+  writing is off. The results are unchanged.
+- RG7.15.2: ObjectJointUser has objectType Joint: its page moved from the constraint index to the joint index.

@@ -78,8 +78,8 @@ def SolveScrew(index2, show=False):
     mbs.SolveDynamic(simulationSettings)
     if show and not testIsActive:
         SC.renderer.Stop()
+        mbs.SolutionViewer() #it reads the solution file of this run (#3098)
         simulationSettings.solution.file.write = False
-        mbs.SolutionViewer()
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
     A = np.array(mbs.GetNodeOutput(node, exu.OutputVariableType.RotationMatrix)).reshape(3, 3)

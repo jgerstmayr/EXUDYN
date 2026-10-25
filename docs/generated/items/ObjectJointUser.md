@@ -37,7 +37,7 @@ The parameters of `VObjectJointUser`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all constraints](#sec-drawing-objectsconstraint); nothing; the number with `connectors.showNumbers`, at marker 0.
+Drawn as [all joints](#sec-drawing-objectsjoint); nothing; the number with `connectors.showNumbers`, at marker 0.
 
 ## Output variables
 

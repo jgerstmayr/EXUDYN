@@ -113,8 +113,8 @@ if not testIsActive:
 mbs.SolveStatic(simulationSettings)
 if not testIsActive:
     SC.renderer.Stop()
+    mbs.SolutionViewer() #it reads the solution file of this run (#3098)
     simulationSettings.solution.file.write = False
-    mbs.SolutionViewer()
 
 #the exact solution: a*E*(a^2-1)/2 = force for the stretch a, and the lateral stretch b from S22 = 0
 a = 1

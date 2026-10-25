@@ -75,6 +75,8 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
+- **RG7** Python user items
+  - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker (4 open sub-steps)
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -117,7 +119,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | CLOSED | 0 | Python user items |
+| RG7 | OPEN | 5 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -675,7 +677,7 @@ with the raytracer the bar shows at once): done as asked. [log](exudynRevisionLo
 
 CLOSED 2026-10-20 (#3051): a gear wheel after the sensors, as the key V. [log](exudynRevisionLog2026c.md#rg6-19-11)
 
-## **CLOSED_RG7** Python user items
+## **OPEN_RG7** Python user items
 
 Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8).
 
@@ -935,6 +937,34 @@ by `show`; userGraphicsDataTest.py. [log](exudynRevisionLog2026c.md#rg7-14)
 
 CLOSED 2026-10-23 (#3067; maintainer: add useful graphics to the existing user body examples, run with graphics and the
 SolutionViewer when not in test mode): seven test models, results unchanged. [log](exudynRevisionLog2026c.md#rg7-14-1)
+
+### **OPEN_RG7.15** Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
+
+Maintainer 2026-10-25, the review of ObjectConnectorUser, ObjectJointUser and MarkerUser, and two findings in the test models.
+
+#### **CLOSED_RG7.15.1** Open the SolutionViewer before the solution file is switched off again in the user item test models
+
+CLOSED 2026-10-25 (#3098): the nine user item test models open the SolutionViewer before they switch the solution file off; symbolicItemOutputTest.py reads mass instead of physicsMass. [log](exudynRevisionLog2026c.md#rg7-15-1)
+
+#### **CLOSED_RG7.15.2** List ObjectJointUser among the joints
+
+CLOSED 2026-10-25 (#3099): objectType Joint; its page is in the index of the joints. [log](exudynRevisionLog2026c.md#rg7-15-1)
+
+#### **OPEN_RG7.15.3** Make the screw joint of userJointTest.py work beyond 180 degrees
+
+#3100: the constraint by atan2, or the numerical Jacobian.
+
+#### **OPEN_RG7.15.4** Require the jacobianUserFunction of ObjectJointUser and check the required user functions of the user items in Assemble
+
+#3101: no numerical constraint Jacobian anywhere in Exudyn, as it leads to severe artifacts.
+
+#### **OPEN_RG7.15.5** Give ObjectConnectorUser the data coordinates of a NodeGenericData and a postNewtonStepUserFunction, checked by a sphere-sphere contact
+
+#3102.
+
+#### **OPEN_RG7.15.6** Rename MarkerUser to MarkerBodyUser with a parameter markerType
+
+#3103.
 
 ## **OPEN_RG8** Compiled C++ user items
 

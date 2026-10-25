@@ -1,0 +1,11 @@
+{
+  "number": 3100,
+  "title": "The screw joint of userJointTest.py with ObjectJointUser fails beyond 180 degrees of rotation",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.15 (maintainer 2026-10-25): the screw joint drafted in userJointTest.py does not work beyond a rotation of 180 degrees; find whether the constraint (the angle by atan2) or the numerical Jacobian causes it, and fix it.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23"
+}

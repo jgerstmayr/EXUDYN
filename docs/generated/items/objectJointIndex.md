@@ -7,6 +7,7 @@ A Joint is a special Object, Connector and Constraint, which is attached to posi
 :maxdepth: 1
 
 objectJointGeneral
+ObjectJointUser
 ObjectJointGeneric
 ObjectJointRevoluteZ
 ObjectJointPrismaticX

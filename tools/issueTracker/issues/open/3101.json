@@ -1,0 +1,11 @@
+{
+  "number": 3101,
+  "title": "ObjectJointUser requires a jacobianUserFunction; the required user functions of the user items are checked in Assemble",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.15 (maintainer 2026-10-25): nowhere in Exudyn is a constraint Jacobian approximated by numerical differentiation, as it leads to severe artifacts; ObjectJointUser needs constraintUserFunction and jacobianUserFunction, and a missing one fails in Assemble; check what each other user item needs at least.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23"
+}

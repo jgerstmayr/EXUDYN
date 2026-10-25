@@ -141,8 +141,8 @@ def Cantilever(nElements, tipForce=[0, 0, 0], tipTorque=[0, 0, 0], show=False):
     mbs.SolveStatic(simulationSettings)
     if show and not testIsActive:
         SC.renderer.Stop()
+        mbs.SolutionViewer() #it reads the solution file of this run (#3098)
         simulationSettings.solution.file.write = False
-        mbs.SolutionViewer()
     return (np.array(mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)),
             np.array(mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.RotationMatrix)).reshape((3, 3)))
 

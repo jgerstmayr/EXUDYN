@@ -9585,7 +9585,7 @@ definitions.append(ItemDefinition(
     """,
     miniExamplePerformanceTest={'numberOfSteps': 1000},
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConstraint,
+    objectType=ObjectTypeJoint, #a joint of two rigid markers (#3099)
     outputVariables=[
         ItemOutputVariable(OVPosition, r'$\LU{0}{\pv}_{m0}$current global position of marker 0'),
         ItemOutputVariable(OVDisplacement, r'$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$the position of marker 1 relative to marker 0, global'),

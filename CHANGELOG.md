@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 204 | 1.13.207 |
+| 1.13 | Newborn | 206 | 1.13.210 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.210** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJointUser is listed among the constraints instead of the joints (#3099)
+  - description: revision2026c step RG7.15 (maintainer 2026-10-25): its definition has objectType Constraint; it constrains the frames of two rigid markers and is a joint.
+  - **notes:** ObjectJointUser is listed among the joints of the reference manual instead of the constraints.
+  - date resolved: **2026-10-25 23:39**, date raised: 2026-10-25
+- **1.13.209** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The user item test models reset solution.file.write before the SolutionViewer, which then refuses (#3098)
+  - description: revision2026c step RG7.15 (maintainer 2026-10-25): userANCFBeam3DTest, userANCFCable2DTest, userJointTest, userMarkerTest, userMassIntegralTest, userOutputVariablesTest, userParametersTest, userRigidBodyTest, userTetrahedronTest set simulationSettings.solution.file.write = False before mbs.SolutionViewer() when run alone, so the viewer raises that no solution file exists; symbolicItemOutputTest.py reads the deprecated physicsMass.
+  - **notes:** The user item test models open the SolutionViewer, when they run alone, before they switch the solution file off again; before, the viewer refused, as no solution file was written.
+  - date resolved: **2026-10-25 23:39**, date raised: 2026-10-25
 - **1.13.207** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic: access to the MainSystem and the item functions (#2984)
   - description: revision2026c step RG12.4: inside a symbolic user function, read what the system has - e.g. the current position of a node, a sensor value - as symbolic expressions evaluated in C++.
   - **notes:** Symbolic user functions read other items: in a function recorded by CreateSymbolicUserFunction, mbs.GetNodeOutput, GetObjectOutput, GetObjectOutputBody, GetMarkerOutput and GetSensorValues are symbolic expressions, which C++ reads from the MainSystem at every call, with the same results as the Python function (a load reading a node, a body point, a marker, a sensor and a connector about 9 times faster); a scalar output is a symbolic Real, the others a Vector; every other attribute of mbs raises an AttributeError while recording, as its value would be a constant of the recording. Such a function is evaluated in the main thread.

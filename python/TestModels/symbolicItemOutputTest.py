@@ -121,7 +121,7 @@ failed += int('mbs.GetNodeOutput(' not in recorded[0].GetFlatProgram())
 
 #while recording, another attribute of mbs raises, and an output of two dimensions is refused
 def ReadsObject(mbs, t, loadVector):
-    return mbs.GetObject(body)['physicsMass']*loadVector
+    return mbs.GetObject(body)['mass']*loadVector
 def ReadsRotationMatrix(mbs, t, loadVector):
     return mbs.GetObjectOutputBody(body, ovt.RotationMatrix)[0:3]
 def SetsAttribute(mbs, t, loadVector):

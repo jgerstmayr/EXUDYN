@@ -1,0 +1,15 @@
+{
+  "number": 3099,
+  "title": "ObjectJointUser is listed among the constraints instead of the joints",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "revision2026c step RG7.15 (maintainer 2026-10-25): its definition has objectType Constraint; it constrains the frames of two rigid markers and is a joint.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23",
+  "dateResolved": "2026-10-25 23:39",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectJointUser is listed among the joints of the reference manual instead of the constraints.",
+  "resolvedInVersion": "1.13.210"
+}

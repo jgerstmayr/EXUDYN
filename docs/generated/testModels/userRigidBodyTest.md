@@ -194,8 +194,8 @@ def Solve(kind, show=False):
     mbs.SolveDynamic(simulationSettings)
     if show and not testIsActive:
         SC.renderer.Stop()
+        mbs.SolutionViewer() #it reads the solution file of this run (#3098)
         simulationSettings.solution.file.write = False
-        mbs.SolutionViewer()
     values = [np.array(mbs.GetObjectOutputBody(body, output, localPosition=pSpring)) for output in outputs]
     energy = mbs.GetObjectOutputBody(body, exu.OutputVariableType.KineticEnergy, localPosition=[0, 0, 0])
     return values, energy

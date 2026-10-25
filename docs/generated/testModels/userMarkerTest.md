@@ -123,8 +123,8 @@ def SolvePendulum(kind, show=False):
     mbs.SolveDynamic(simulationSettings)
     if show and not testIsActive:
         SC.renderer.Stop()
+        mbs.SolutionViewer() #it reads the solution file of this run (#3098)
         simulationSettings.solution.file.write = False
-        mbs.SolutionViewer()
     return np.hstack((mbs.GetNodeOutput(node, exu.OutputVariableType.Position), mbs.GetNodeOutput(node, exu.OutputVariableType.AngularVelocity)))
 
 pendulums = [SolvePendulum(kind, show=(kind == 'jacobian')) for kind in ['builtIn', 'numerical', 'jacobian']]

@@ -102,8 +102,8 @@ def Solve(kind, show=False):
     mbs.SolveDynamic(simulationSettings)
     if show and not testIsActive:
         SC.renderer.Stop()
+        mbs.SolutionViewer() #it reads the solution file of this run (#3098)
         simulationSettings.solution.file.write = False
-        mbs.SolutionViewer()
     #a single value comes as float, the symbolic function gives three values for every type
     outputs = [np.atleast_1d(mbs.GetObjectOutputBody(body, variable, localPosition=[0, 0, 0]))
                for variable in [OVT.StrainLocal, OVT.PotentialEnergy, OVT.AccelerationLocal]]

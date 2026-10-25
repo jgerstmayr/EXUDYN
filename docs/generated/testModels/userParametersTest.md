@@ -95,8 +95,8 @@ def Solve(kind, changedStiffness=None, constantMassMatrix=False, show=False):
     mbs.SolveDynamic(simulationSettings)
     if show and not testIsActive:
         SC.renderer.Stop()
+        mbs.SolutionViewer() #it reads the solution file of this run (#3098)
         simulationSettings.solution.file.write = False
-        mbs.SolutionViewer()
     return [mbs.GetObjectOutputBody(body, exu.OutputVariableType.Displacement, localPosition=[0, 0, 0])[0] for body in bodies]
 
 python = Solve('python')

@@ -16,8 +16,8 @@ objectSuperElementIndex
 objectObjectIndex
 objectFiniteElementIndex
 objectConnectorIndex
-objectConstraintIndex
 objectJointIndex
+objectConstraintIndex
 markerIndex
 loadIndex
 sensorIndex
