@@ -47,8 +47,9 @@ and is open. **Open steps** and the **groups** table are generated - never edit 
 
 The title of each says what it does; the sentence after it, why it comes now.
 
-1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - changed without a
-   screen; the space key works on macOS (2026-10-16).
+1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - the ground moves
+   (maintainer 2026-10-25); its pendulum hangs from the moving ground now, to look at once more; the space key works on
+   macOS (2026-10-16).
 2. **Constant matrix arguments of symbolic user functions** (RG12.2.2, #3039, to decide): copied only when they
    change; each user function change measured against 1.13.6 (docs/dev/internals/userFunctions.md, section 5).
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel

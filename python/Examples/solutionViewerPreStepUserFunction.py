@@ -4,7 +4,8 @@
 #
 # Details:  A ground object - a brick with its frame drawn - moves along a screw (a rotation about z and a
 #           translation along z), prescribed by a PreStepUserFunction that sets its referenceHT as an exu.HT;
-#           a pendulum hangs beside it. The SolutionViewer shows the solution with
+#           a pendulum hangs from a corner of it by a spherical joint and is swung by its motion. The SolutionViewer
+#           shows the solution with
 #           callPreStepUserFunction=True, so the ground moves in the viewer as in the simulation: the
 #           function is called with the time of each shown step before it is drawn. Space starts the
 #           viewer in 'Continuous run' and stops it in 'Static'.
@@ -30,11 +31,14 @@ graphicsGround = [graphics.Brick(size=[0.4, 0.3, 0.2], color=graphics.color.stee
                   graphics.Basis(length=0.5, radius=0.01)]
 oGround = mbs.CreateGround(graphicsDataList=graphicsGround)
 
-#a pendulum beside it, so that there is a solution to show
-oBody = mbs.CreateRigidBody(inertia=InertiaCuboid(density=1000, sideLengths=[0.1, 0.5, 0.1]),
-                            referencePosition=[1, -0.25, 0], gravity=[0, -9.81, 0],
-                            graphicsDataList=[graphics.Brick(size=[0.1, 0.5, 0.1], color=graphics.color.orange)])
-mbs.CreateSphericalJoint(itemNumbers=[mbs.CreateGround(), oBody], position=[1, 0, 0])
+#a pendulum hanging from the corner [0.2, 0, 0.1] of the ground, which moves with it; the joint is defined in the
+#reference configuration, in which the ground has its referenceHT of t=0, the identity
+oBody = mbs.CreateRigidBody(inertia=InertiaCuboid(density=1000, sideLengths=[0.05, 0.5, 0.05]),
+                            referencePosition=[0.2, -0.25, 0.1], gravity=[0, -9.81, 0],
+                            initialAngularVelocity=[2, 0, 0], initialVelocity=[0, 0, -0.5], #about the joint, out of
+                            #the plane of the rotation of the ground: omega x (center of mass - joint)
+                            graphicsDataList=[graphics.Brick(size=[0.05, 0.5, 0.05], color=graphics.color.orange)])
+mbs.CreateSphericalJoint(itemNumbers=[oGround, oBody], position=[0.2, 0, 0.1])
 
 def GroundHT(t):
     """the screw motion: one turn about z in 4 s, rising 0.25 per turn"""
