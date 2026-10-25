@@ -90,6 +90,17 @@ a file without a number in `tools/issueTracker/issues/proposed/`, named by date,
 two branches never collide and no version changes. `exudev issue add-proposed` raises them in the order of their names,
 the proposer as author, and removes the files; every `raise` does this first.
 
+**Proposed resolutions and merging** (#3083): a contribution does not resolve an issue either - two branches would produce
+the same version for different code. `exudev issue propose-resolution ISSUE "release notes" --author NAME` writes a file
+into `issues/proposed/resolutions/`, for an open issue by its number or for a proposed issue by its file name. After the
+merge the maintainer runs `exudev issue apply-proposed`: the proposed issues are raised, then the resolutions applied in
+ascending issue number, each with the date of the merge - the version describes what the main branch contains from then
+on - and the contributor, who did the work, as author of the raised issue and as resolvedAuthor. It stays a deliberate
+command, as it changes the version; while proposals wait, every `resolve` says so and names the command.
+`python tools/checkIssues.py --contribution BASE` refuses a branch that changes the numbered issues (`open/`, `closed/`,
+`archive/`, `meta.json`), `releases.json`, the version files, `CHANGELOG.md` or `trackerlog.md`. A conflict in a generated
+file is never merged by hand: take the maintainer's version and run `exudev generate`.
+
 Run it from its own directory — it uses relative and Windows-style paths:
 
 ```bash

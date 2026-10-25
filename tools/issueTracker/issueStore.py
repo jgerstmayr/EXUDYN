@@ -99,6 +99,11 @@ def ProposedDirectory():
     return os.path.join(storeDirectory, 'proposed')
 
 
+def ProposedResolutionsDirectory():
+    """the resolutions a contribution proposes, applied by the maintainer after the merge (#3083)"""
+    return os.path.join(storeDirectory, 'proposed', 'resolutions')
+
+
 def IssueFileName(number):
     """padded to four digits, so that a directory listing is in issue order"""
     return str(int(number)).rjust(4, '0') + '.json'

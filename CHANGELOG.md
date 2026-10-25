@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 187 | 1.13.190 |
+| 1.13 | Newborn | 188 | 1.13.191 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.191** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Proposed issues of contributors, raised by the maintainer, and a way to merge contributions without a conflict in the version (#3083)
+  - description: Maintainer 2026-10-24: contributors cannot raise issues - their numbers would interfere with the maintainer's. A folder of proposals: whenever the maintainer raises an issue, the proposed ones are raised first (exudev issue add-proposed, which also works alone). A similar mechanism for merging, because the versions depend on the resolved issues and their dates, so a pull would cause trouble; to suggest.
+  - **notes:** Contributions propose instead of raising or resolving issues: exudev issue propose and propose-resolution write files without a number; the maintainer's raise raises the proposed issues first, and exudev issue apply-proposed raises them and resolves the proposed resolutions after a merge, with the date of the merge and the contributor as author; every resolve notes waiting proposals; tools/checkIssues.py --contribution BASE refuses a branch that changes numbered issues or the version.
+  - date resolved: **2026-10-25 08:26**, date raised: 2026-10-24
 - **1.13.190** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The design notes of docs/dev/design out of the published documentation (#3082)
   - description: Maintainer 2026-10-24: the documents of docs/dev/design went into the documentation, which was not intended - they contain planning, not the current state of the implementation. Mention them once in the development section; they are used for development like the plans and logs of docs/revision and do not belong to the docs.
   - **notes:** The design notes of docs/dev/design are development records like the revision plans and logs: they are no longer part of the published documentation and are listed once in the developer section.

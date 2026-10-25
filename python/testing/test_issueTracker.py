@@ -1236,3 +1236,42 @@ def testProposedIssuesAreRaisedFirst(tracker):
     assert proposalA['type'] == 'DOCU' and proposalA['effort'] == 'LOW' and 'proposed ' in proposalA['description']
     assert tracker.ProposedIssues() == []
     assert tracker.AddProposedIssues() == [] #alone, with nothing proposed
+
+
+def testProposedResolutionsAreAppliedAfterTheMerge(tracker, capsys):
+    """a contribution proposes the resolution of an open issue and of an issue it proposes itself; apply-proposed raises
+    the proposal and resolves both in ascending number, the contributor as resolvedAuthor; a resolve meanwhile says that
+    proposals wait (#3083)"""
+    openNumber = tracker.RaiseIssue('an open issue', 'to be resolved by a contribution', issueType='FIX')
+    proposal = os.path.basename(tracker.ProposeIssue('found and fixed', 'by the contributor', issueType='BUG',
+                                                     author='Contributor C'))
+    tracker.ProposeResolution(proposal, 'fixed the bug', author='Contributor C')
+    tracker.ProposeResolution(openNumber, 'did the fix', author='Contributor D')
+    with pytest.raises(ValueError):
+        tracker.ProposeResolution('no-such-proposal.json', 'notes', author='Contributor C')
+
+    other = tracker.RaiseIssue('the maintainer\'s', 'resolved meanwhile', issueType='CHANGE', addProposedFirst=False)
+    capsys.readouterr()
+    tracker.ResolveIssue(other, notes='done', author='JG')
+    assert 'apply-proposed' in capsys.readouterr().out
+
+    (raised, resolved) = tracker.ApplyProposed()
+    assert len(raised) == 1 and resolved == sorted([openNumber, raised[0]])
+    assert tracker.GetIssue(openNumber)['resolvedAuthor'] == 'Contributor D'
+    assert tracker.GetIssue(raised[0])['author'] == 'Contributor C'
+    assert tracker.GetIssue(raised[0])['resolvedAuthor'] == 'Contributor C'
+    assert tracker.GetIssue(raised[0])['releaseNotes'] == 'fixed the bug'
+    assert tracker.ProposedIssues() == [] and tracker.ProposedResolutions() == []
+
+
+def testAContributionChangesNoNumberAndNoVersion():
+    """the check of a contribution refuses the numbered issues and the version files, not the proposals (#3083)"""
+    specification = importlib.util.spec_from_file_location( #a tool of tools/, loaded as IssueTracker() loads the tracker
+        'checkIssuesUnderTest', os.path.normpath(os.path.join(trackerDirectory, '..', 'checkIssues.py')))
+    checkIssues = importlib.util.module_from_spec(specification)
+    specification.loader.exec_module(checkIssues)
+    assert checkIssues.ForbiddenContributionChanges([
+        'tools/issueTracker/issues/proposed/20261025-120000-A-title.json',
+        'tools/issueTracker/issues/proposed/resolutions/20261025-120000-A-3000.json',
+        'tools/issueTracker/issues/open/3000.json', 'version.txt', 'src/Main/CSystem.cpp']) == [
+        'tools/issueTracker/issues/open/3000.json', 'version.txt']

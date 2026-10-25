@@ -1031,6 +1031,11 @@ def ProposedIssues():
 def AddProposedIssues():
     """raise every proposal in the order of the file names, the proposer as author and the date of the proposal in the
     description, and remove its file; returns the numbers"""
+    return [number for (name, number) in AddProposedIssuesByName()]
+
+
+def AddProposedIssuesByName():
+    """AddProposedIssues, with the file name of each proposal: [(name, number), ...]"""
     numbers = []
     for path in ProposedIssues():
         proposal = issueStore.ReadJson(path)
@@ -1046,8 +1051,84 @@ def AddProposedIssues():
         if proposal.get('effort', ''):
             ChangeIssue(number, 'effort', proposal['effort'])
         os.remove(path)
-        numbers.append(number)
+        numbers.append((os.path.basename(path), number))
     return numbers
+
+
+#proposed resolutions (#3083): a contribution does not resolve an issue - the version is counted from the resolved issues
+#of the main branch. It proposes the resolution, of an existing issue or of an issue it proposes itself, and the
+#maintainer applies the proposals after the merge: each resolved with the date of the merge, in the maintainer's
+#sequence, and the contributor, who did the work, as its author.
+resolutionFields = ['issue', 'notes', 'author', 'dateProposed']
+
+def ProposeResolution(issue, notes, author=''):
+    """write a proposed resolution into issues/proposed/resolutions/: issue is the number of an existing open issue,
+    or the file name of a proposed issue; notes are the release notes; returns the path of the file"""
+    if author.strip() == '' or notes.strip() == '':
+        raise ValueError('ProposeResolution: the author and the release notes are needed')
+    issue = str(issue).strip()
+    if issue.isdigit():
+        number = int(issue)
+        if number < 0 or number >= NumberOfIssues():
+            raise ValueError('ProposeResolution: there is no issue ' + issue)
+        if GetIssue(number)['status'].strip() != 'RAISED':
+            raise ValueError('ProposeResolution: issue ' + issue + ' is not open')
+    elif not os.path.exists(os.path.join(issueStore.ProposedDirectory(), issue)):
+        raise ValueError('ProposeResolution: "' + issue + '" is neither an issue number nor a proposed issue of '
+                         + issueStore.ProposedDirectory())
+    directory = issueStore.ProposedResolutionsDirectory()
+    os.makedirs(directory, exist_ok=True)
+    path = os.path.join(directory, ProposalFileName(author, issue.replace('.json', '')))
+    if os.path.exists(path):
+        raise ValueError('ProposeResolution: ' + path + ' exists already')
+    issueStore.WriteJson(path, {'issue': issue, 'notes': notes, 'author': author, 'dateProposed': GetDateStr()})
+    print('resolution proposed: ' + os.path.basename(path) + ' for ' + issue)
+    return path
+
+
+def ProposedResolutions():
+    """the paths of the proposed resolutions"""
+    directory = issueStore.ProposedResolutionsDirectory()
+    if not os.path.isdir(directory):
+        return []
+    return [os.path.join(directory, name) for name in sorted(os.listdir(directory)) if name.endswith('.json')]
+
+
+def ProposalsWaitingNote():
+    """what a resolve says while proposals wait, or an empty string"""
+    issues, resolutions = len(ProposedIssues()), len(ProposedResolutions())
+    if issues + resolutions == 0:
+        return ''
+    return ('NOTE: ' + str(issues) + ' proposed issue(s) and ' + str(resolutions) + ' proposed resolution(s) wait in '
+            + issueStore.ProposedDirectory() + '; apply them with "exudev issue apply-proposed" (#3083)')
+
+
+def ApplyProposed():
+    """after a merge: raise the proposed issues, then resolve the proposed resolutions in ascending issue number, each
+    with the date of now - the merge - and its proposer as resolvedAuthor; a resolution of an issue that is no longer
+    open is reported and its file kept. Returns (raised numbers, resolved numbers)"""
+    numberOfProposal = dict(AddProposedIssuesByName())
+    resolutions = []
+    for path in ProposedResolutions():
+        resolution = issueStore.ReadJson(path)
+        unknown = [key for key in resolution if key not in resolutionFields]
+        if unknown or 'issue' not in resolution or 'notes' not in resolution:
+            raise ValueError('ApplyProposed: ' + path + ' is no proposed resolution (fields ' + ', '.join(resolutionFields) + ')')
+        issue = str(resolution['issue'])
+        number = int(issue) if issue.isdigit() else numberOfProposal.get(issue, None)
+        if number is None:
+            print('WARNING: ' + os.path.basename(path) + ' resolves "' + issue + '", which is not proposed (any more); kept')
+            continue
+        resolutions.append((number, path, resolution))
+    resolved = []
+    for (number, path, resolution) in sorted(resolutions, key=lambda item: item[0]):
+        if GetIssue(number)['status'].strip() != 'RAISED':
+            print('WARNING: ' + os.path.basename(path) + ' resolves issue ' + str(number) + ', which is not open; kept')
+            continue
+        ResolveIssue(number, notes=resolution['notes'], author=resolution.get('author', ''), noteProposals=False)
+        os.remove(path)
+        resolved.append(number)
+    return (list(numberOfProposal.values()), resolved)
 
 
 #%%******************************************************************************************************
@@ -1316,7 +1397,8 @@ def StampVersion(issue):
 
 #%%******************************************************************************************************
 #use this to resolve an issue
-def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into list (append to end of list)
+def ResolveIssue(issueNumber, notes='', author='JG', noteProposals=True): #raise a new issue into list (append to end of list)
+    """resolve an issue; noteProposals: say so if proposals of contributors wait to be applied (#3083)"""
 
     if not((issueNumber >= 0) and (issueNumber < NumberOfIssues())):
         print('Issue: invalid number! Nothing done')
@@ -1342,6 +1424,8 @@ def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into li
 
     UpdateDateAndVersion()
     WritePages()
+    if noteProposals and ProposalsWaitingNote():
+        print(ProposalsWaitingNote())
 
     return issueNumber
 

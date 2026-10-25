@@ -3022,3 +3022,19 @@ also works alone; a similar mechanism for merging, as versions depend on the res
 - The merging mechanism is written as a proposal in docs/dev/design/contributions.md section 3 - proposed resolutions,
   `apply-proposed` after a merge in the maintainer's sequence, a check of the contribution's changed files - and waits
   for the decision (RG11.11.2).
+
+<a id="rg11-11-2"></a>
+### RG11.11.2 — proposed resolutions, apply-proposed, the check of a contribution (2026-10-25, #3083)
+*(Maintainer 2026-10-25: you mentioned "the maintainer as resolvedAuthor" - the original author who proposed to raise or
+resolve the issue shall appear as author of the raised or resolved issue, he/she did the work and this is the main
+thing. Resolution date = date of merge, otherwise it would not work. apply-proposed stays a deliberate command: there
+should be a warning when resolving an issue saying that there are proposed ones and how to apply.)*
+- issueTracker: ProposeResolution (an open issue by number, or a proposed issue by its file name; file
+  `issues/proposed/resolutions/<date>-<author>-<issue>.json`), ProposedResolutions, ApplyProposed (AddProposedIssuesByName,
+  then the resolutions in ascending number with ResolveIssue(author = the proposer), the date of now; one that is no
+  longer open is reported and kept), ProposalsWaitingNote, printed by every ResolveIssue while proposals wait
+  (noteProposals). The raised proposal keeps its proposer as author (RG11.11.1).
+- exudev: `issue propose-resolution`, `issue apply-proposed`. tools/checkIssues.py `--contribution BASE` with the list
+  contributionForbidden; checked against the last commit, which lists the version files it changed.
+- Tests in test_issueTracker.py. WORKFLOW.md, CONTRIBUTING.md, the exudev README and docs/dev/design/contributions.md
+  describe it. A GitHub workflow step for pull requests is not added (.github/workflows/ - to ask).

@@ -1675,6 +1675,23 @@ def Issue(options):
                                  author=options.author)
             return 0
 
+    elif verb == 'propose-resolution':
+        note = 'propose the resolution of ' + options.issue + ' (author ' + options.author + ')'
+
+        def Action():
+            tracker.ProposeResolution(options.issue, options.notes, author=options.author)
+            return 0
+
+    elif verb == 'apply-proposed':
+        note = ('raise the ' + str(len(tracker.ProposedIssues())) + ' proposed issue(s) and resolve the '
+                + str(len(tracker.ProposedResolutions())) + ' proposed resolution(s) - this BUMPS THE MICRO VERSION once per resolution')
+
+        def Action():
+            (raised, resolved) = tracker.ApplyProposed()
+            print(str(len(raised)) + ' proposed issue(s) raised, ' + str(len(resolved)) + ' resolved'
+                  + (': #' + ', #'.join(str(n) for n in resolved) if resolved else ''))
+            return 0
+
     elif verb == 'add-proposed':
         note = 'raise the ' + str(len(tracker.ProposedIssues())) + ' proposed issue(s)'
 

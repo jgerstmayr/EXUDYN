@@ -55,9 +55,15 @@ Read the two pages that carry the conventions:
 - [`docs/dev/WORKFLOW.md`](docs/dev/WORKFLOW.md) — the issue tracker, the version numbering and the
   gates a change passes before it is committed.
 
-An issue of the tracker is not raised in a contribution - its number and the version are the maintainer's. A
-change proposes it instead: `exudev issue propose "title" "description" --type BUG --author NAME` writes a file without
-a number into `tools/issueTracker/issues/proposed/`, and the maintainer's next raise gives it its number (#3083).
+An issue of the tracker is not raised or resolved in a contribution - its number and the version are the
+maintainer's. A change proposes them instead, and you stay the author of both (#3083):
+
+- `exudev issue propose "title" "description" --type BUG --author NAME` writes a file without a number into
+  `tools/issueTracker/issues/proposed/`; the maintainer's next raise gives it its number;
+- `exudev issue propose-resolution ISSUE "release notes" --author NAME` proposes the resolution of an open issue (its
+  number) or of an issue the change proposes itself (the name of its file); the maintainer applies it after the merge,
+  with the date of the merge;
+- `python tools/checkIssues.py --contribution master` checks that the change touches no numbered issue and no version file.
 
 The short form of those gates, which is what a pull request is checked against:
 

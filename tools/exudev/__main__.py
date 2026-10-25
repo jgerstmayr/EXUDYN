@@ -174,6 +174,20 @@ def IssueParser(subParsers, globalParser):
     propose.add_argument('--file', default='', metavar='PATH', help='the file it is about')
     propose.add_argument('--line', default='', metavar='N', help='the line it is about')
 
+    proposeResolution = verbs.add_parser('propose-resolution', parents=[globalParser],
+        help='propose the resolution of an issue, for contributors',
+        description='Writes the resolution into tools/issueTracker/issues/proposed/resolutions/: of an open issue by its '
+                    'number, or of a proposed issue by its file name. No version changes; the maintainer applies it '
+                    'after the merge with "apply-proposed", with the date of the merge and the contributor as author (#3083).')
+    proposeResolution.add_argument('issue', help='the number of an open issue, or the file name of a proposed issue')
+    proposeResolution.add_argument('notes', help='the release notes, published')
+    proposeResolution.add_argument('--author', required=True, metavar='NAME', help='who did the work')
+
+    verbs.add_parser('apply-proposed', parents=[globalParser],
+        help='raise the proposed issues and resolve the proposed resolutions (the maintainer, after a merge)',
+        description='add-proposed, then each proposed resolution in ascending issue number with the date of now and '
+                    'its proposer as author; each BUMPS THE MICRO VERSION (#3083).')
+
     verbs.add_parser('add-proposed', parents=[globalParser],
         help='raise the proposed issues, in their order (the maintainer)',
         description='Raises every proposal of tools/issueTracker/issues/proposed/ in the order of the file names - '
