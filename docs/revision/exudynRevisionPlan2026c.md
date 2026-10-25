@@ -964,7 +964,7 @@ CLOSED 2026-10-26 (#3102): nodeNumber of a NodeGenericData, its data coordinates
 
 #### **OPEN_RG7.15.6** Rename MarkerUser to MarkerBodyUser with a parameter markerType
 
-#3103.
+#3103. Proposal, waiting for the decision (2026-10-26): className MarkerBodyUser, type name BodyUser, CMarkerUser.cpp renamed by git mv; a parameter markerType of exu.MarkerType, the default Position, Position | Orientation with the rotationMatrixUserFunction (a rotation function given with Position only refused), stored as Marker::Type and read from an enum or the int of a combination - a new parameter type for the generators; Coordinates as a further type with a coordinatesUserFunction (values and their Jacobian) for CoordinateSpringDamper, CoordinateConstraint and LoadCoordinate, as an option; whether the Jacobian functions become required when a joint uses the marker (#3101).
 
 ## **OPEN_RG8** Compiled C++ user items
 
