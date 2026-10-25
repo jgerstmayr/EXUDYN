@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 191 | 1.13.194 |
+| 1.13 | Newborn | 193 | 1.13.196 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.196** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` Executable formats of symbolic expressions and flat programs: symbolic, numpy, sympy; ToString(format=...) (#3088)
+  - description: revision2026c step RG12.50.3 (maintainer 2026-10-25): the formats 'symbolic', 'numpy' and 'sympy' written by exudyn/misc/symbolicExport.py from the structure, computing what Exudyn computes (mod, round, comparisons, IfThenElse); ToString(format=...) of esym.Real, Vector, Matrix and GetFlatProgram(format=...); the round trip of every operation; the speed of the translation measured, with the C++ text kept for 'Python'.
+  - **notes:** GetFlatProgram(format='symbolic' \| 'numpy' \| 'sympy') of a symbolic user function or of expressions, and ToString(format=...) of exudyn.symbolic.Real, Vector and Matrix, write executable Python of exudyn.symbolic, numpy or sympy, which computes what Exudyn computes (mod as C fmod, round halves away from zero, comparisons 0 or 1); exudyn.misc.symbolicExport writes them, with ToFunction and ToSympy.
+  - date resolved: **2026-10-25 11:44**, date raised: 2026-10-25
+- **1.13.195** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` The flat program of symbolic user functions and expressions as a Python structure, GetFlatProgram of expressions and flatten (#3087)
+  - description: revision2026c step RG12.50.2 (maintainer 2026-10-25): GetFlatProgramData() of a UserFunction and esym.GetFlatProgramData(expressions, arguments, resultNames): the operations of the flat program as a list, entry k = node k, operands by number; esym.GetFlatProgram(expressions, ...) and flatten=True/False; an operation name per expression class; the writer of the format 'Python' in exudyn/misc/symbolicExport.py, equal to the text of C++.
+  - **notes:** GetFlatProgramData() of a symbolic UserFunction and exudyn.symbolic.GetFlatProgramData(expressions, arguments, resultNames) give the flat program as a Python structure: arguments, operations (entry k is the tK of the text, its operands by number) and results. exudyn.symbolic.GetFlatProgram(expressions, ...) writes the flat program of expressions; flatten=False writes each result as one expression.
+  - date resolved: **2026-10-25 11:44**, date raised: 2026-10-25
 - **1.13.194** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` Evaluate the flat program of symbolic expressions and the export of recordings and of a model of user items (#3086)
   - description: revision2026c step RG12.50.1 (maintainer 2026-10-25): GetFlatProgram for expressions, the export of the evaluation graph as text or another format, an export to sympy, a symbolic assembly of a system of symbolic user items in symbolicUtilities.py for control; evaluation and proposal.
   - **notes:** Evaluated: the flat program of symbolic expressions, the export of recordings (a Python structure, Python source, sympy) and a symbolic model of a system of user items, proposed in docs/dev/design/symbolicExport.md.

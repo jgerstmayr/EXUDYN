@@ -176,6 +176,7 @@ public:
 		for (Index i = 0; i < exprList.NumberOfItems(); i++) { buffer[i] = values[i].real; }
 		return buffer;
 	}
+	virtual const char* FlatName() const override { return "vector"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override
 	{
 		STDstring str = "[";
@@ -234,6 +235,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(), "symbolic.Vector::operator+ : inconsistent vector sizes"); buffer.SetNumberOfItems(leftExpr.NumberOfItems()); for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] + rightExpr[i]; } return buffer; }
+	virtual const char* FlatName() const override { return "+"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " + " + operands[1] + ")"; }
 };
 
@@ -268,6 +270,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(), "symbolic.Vector::operator- : inconsistent vector sizes"); buffer.SetNumberOfItems(leftExpr.NumberOfItems()); for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] - rightExpr[i]; } return buffer; }
+	virtual const char* FlatName() const override { return "-"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " - " + operands[1] + ")"; }
 };
 
@@ -302,6 +305,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { Real factor = values[0].real; const ResizableConstVector& vector = (*values[1].vector); buffer.SetNumberOfItems(vector.NumberOfItems()); for (Index i = 0; i < vector.NumberOfItems(); i++) { buffer[i] = factor * vector[i]; } return buffer; }
+	virtual const char* FlatName() const override { return "*"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " * " + operands[1] + ")"; }
 };
 
@@ -336,6 +340,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { EXUmath::MultMatrixVector((*values[0].matrix), (*values[1].vector), buffer); return buffer; }
+	virtual const char* FlatName() const override { return "@"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " @ " + operands[1] + ")"; }
 };
 
@@ -369,6 +374,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { EXUmath::MultMatrixTransposedVector((*values[0].matrix), (*values[1].vector), buffer); return buffer; }
+	virtual const char* FlatName() const override { return "vector@matrix"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[1] + " @ " + operands[0] + ")"; }
 };
 
@@ -397,6 +403,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 1; }
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { return (*values[0].vector); }
+	virtual const char* FlatName() const override { return "pos"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0]; }
 };
 
@@ -424,6 +431,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 1; }
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& vector = (*values[0].vector); buffer.SetNumberOfItems(vector.NumberOfItems()); for (Index i = 0; i < vector.NumberOfItems(); i++) { buffer[i] = -vector[i]; } return buffer; }
+	virtual const char* FlatName() const override { return "neg"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(-" + operands[0] + ")"; }
 };
 
@@ -462,6 +470,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& l = (*values[0].vector); const ResizableConstVector& r = (*values[1].vector); CHECKandTHROW(l.NumberOfItems() == r.NumberOfItems(), "symbolic.MultComponents(...): inconsistent vector sizes"); buffer.SetNumberOfItems(l.NumberOfItems()); EXUmath::MultVectorComponents(l, r, buffer); return buffer; }
+	virtual const char* FlatName() const override { return "multiply"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0] + ".multiply(" + operands[1] + ")"; }
 };
 
@@ -504,6 +513,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(), "symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes"); return leftExpr * rightExpr; }
+	virtual const char* FlatName() const override { return "@"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " @ " + operands[1] + ")"; }
 };
 
@@ -529,6 +539,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 1; }
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return (*values[0].vector).GetL2Norm(); }
+	virtual const char* FlatName() const override { return "NormL2"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "NormL2(" + operands[0] + ")"; }
 };
 
@@ -569,6 +580,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(operand) : FlatNode(index); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { Real iReal = values[1].real; Index i = (Index)iReal; CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer"); const ResizableConstVector& v = (*values[0].vector); if (SReal::recordExpressions && v.NumberOfItems() == 0 && i >= 0) { return 0.; } CHECKandTHROW((i >= 0) && (i < v.NumberOfItems()), "VectorExpressionBase::operator[] index out of range"); return v[i]; }
+	virtual const char* FlatName() const override { return "component"; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0] + "[" + operands[1] + "]"; }
 };
 
@@ -597,6 +609,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real((*values[0].vector) == (*values[1].vector)); }
+	virtual const char* FlatName() const override { return "=="; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " == " + operands[1] + ")"; }
 };
 
@@ -624,6 +637,7 @@ public:
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(!((*values[0].vector) == (*values[1].vector))); }
+	virtual const char* FlatName() const override { return "!="; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " != " + operands[1] + ")"; }
 };
 

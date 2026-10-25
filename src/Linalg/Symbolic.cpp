@@ -528,6 +528,425 @@ PyUFobject PythonUserFunctionBase<UFT>::GetPythonDictionary() const
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the flat program as a Python structure (#3087): entry k is node k, the tK of GetFlatProgram(), with its operands by
+//number - always earlier entries; exudyn/misc/symbolicExport.py writes the formats from it
+namespace Symbolic {
+
+class FlatProgramData
+{
+	std::unordered_map<const void*, Index> slotOfNode;
+	std::vector<bool> inlineEntry;
+	py::list operations;
+	std::vector<const void*> namedNodes;	//!< the named variables, in the order of their first appearance
+	std::vector<Index> namedEntries;
+
+	//! IfThenElse is a leaf of the flat evaluation, which computes it as a tree; here it has its three operands
+	static const ExpressionIfThenElse* IfThenElseOf(const FlatNode& node)
+	{
+		return node.kind == FlatKind::Real ? dynamic_cast<const ExpressionIfThenElse*>((const ExpressionBase*)node.node) : nullptr;
+	}
+	static Index NumberOfOperands(const FlatNode& node)
+	{
+		if (IfThenElseOf(node)) { return 3; }
+		switch (node.kind)
+		{
+		case FlatKind::Real: return ((const ExpressionBase*)node.node)->NumberOfOperands();
+		case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->NumberOfOperands();
+		default: return ((const MatrixExpressionBase*)node.node)->NumberOfOperands();
+		}
+	}
+	static FlatNode GetOperand(const FlatNode& node, Index i)
+	{
+		const ExpressionIfThenElse* ifThenElse = IfThenElseOf(node);
+		if (ifThenElse) { return FlatNode(i == 0 ? ifThenElse->Condition() : (i == 1 ? ifThenElse->IfTrue() : ifThenElse->IfFalse())); }
+		switch (node.kind)
+		{
+		case FlatKind::Real: return ((const ExpressionBase*)node.node)->GetOperand(i);
+		case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->GetOperand(i);
+		default: return ((const MatrixExpressionBase*)node.node)->GetOperand(i);
+		}
+	}
+	static const char* FlatName(const FlatNode& node)
+	{
+		switch (node.kind)
+		{
+		case FlatKind::Real: return ((const ExpressionBase*)node.node)->FlatName();
+		case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->FlatName();
+		default: return ((const MatrixExpressionBase*)node.node)->FlatName();
+		}
+	}
+	static STDstring ToString(const FlatNode& node)
+	{
+		switch (node.kind)
+		{
+		case FlatKind::Real: return ((const ExpressionBase*)node.node)->ToString();
+		case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->ToString();
+		default: return ((const MatrixExpressionBase*)node.node)->ToString();
+		}
+	}
+	static const char* KindName(FlatKind kind) { return kind == FlatKind::Real ? "Real" : (kind == FlatKind::Vector ? "Vector" : "Matrix"); }
+	static py::list ToList(const ResizableConstVector& vector)
+	{
+		py::list list;
+		for (Real value : vector) { list.append(value); }
+		return list;
+	}
+	static py::list ToList(const ResizableMatrix& matrix)
+	{
+		py::list rows;
+		for (Index row = 0; row < matrix.NumberOfRows(); row++)
+		{
+			py::list columns;
+			for (Index column = 0; column < matrix.NumberOfColumns(); column++) { columns.append(matrix(row, column)); }
+			rows.append(columns);
+		}
+		return rows;
+	}
+
+	//! a number, a vector or matrix of numbers, or a named variable
+	py::dict LeafEntry(const FlatNode& node, bool& isNamed)
+	{
+		py::dict entry;
+		entry["kind"] = KindName(node.kind);
+		entry["text"] = ToString(node);
+		entry["inline"] = true;
+		isNamed = false;
+		if (node.kind == FlatKind::Real)
+		{
+			const ExpressionBase* expression = (const ExpressionBase*)node.node;
+			const ExpressionNamedReal* named = dynamic_cast<const ExpressionNamedReal*>(expression);
+			const ExpressionReal* number = dynamic_cast<const ExpressionReal*>(expression);
+			if (named) { entry["op"] = "variable"; entry["name"] = named->GetName(); isNamed = true; }
+			else if (number) { entry["op"] = "number"; }
+			else { entry["op"] = "tree"; return entry; } //an expression class without the operand interface
+			entry["value"] = number->GetValue();
+		}
+		else if (node.kind == FlatKind::Vector)
+		{
+			const VectorExpressionBase* expression = (const VectorExpressionBase*)node.node;
+			const VectorExpressionNamedReal* named = dynamic_cast<const VectorExpressionNamedReal*>(expression);
+			const VectorExpressionReal* number = dynamic_cast<const VectorExpressionReal*>(expression);
+			if (named) { entry["op"] = "variable"; entry["name"] = named->GetName(); isNamed = true; }
+			else if (number) { entry["op"] = "number"; }
+			else { entry["op"] = "tree"; return entry; }
+			entry["value"] = ToList(number->GetVector());
+			entry["size"] = number->GetVector().NumberOfItems();
+		}
+		else
+		{
+			const MatrixExpressionBase* expression = (const MatrixExpressionBase*)node.node;
+			const MatrixExpressionNamedReal* named = dynamic_cast<const MatrixExpressionNamedReal*>(expression);
+			const MatrixExpressionReal* number = dynamic_cast<const MatrixExpressionReal*>(expression);
+			if (named) { entry["op"] = "variable"; entry["name"] = named->GetName(); isNamed = true; }
+			else if (number) { entry["op"] = "number"; }
+			else { entry["op"] = "tree"; return entry; }
+			entry["value"] = ToList(number->GetMatrix());
+			entry["rows"] = number->GetMatrix().NumberOfRows();
+			entry["columns"] = number->GetMatrix().NumberOfColumns();
+		}
+		return entry;
+	}
+
+	Index Append(const py::dict& entry, const void* node)
+	{
+		Index slot = (Index)inlineEntry.size();
+		if (node) { slotOfNode[node] = slot; }
+		inlineEntry.push_back(py::cast<bool>(entry["inline"]));
+		operations.append(entry);
+		return slot;
+	}
+
+public:
+	//! the entries of a node and of its operands, which are not there yet; returns the entry of the node
+	Index Add(const FlatNode& root)
+	{
+		CHECKandTHROW(root.node != nullptr, "GetFlatProgramData: a result is no expression");
+		if (slotOfNode.find(root.node) != slotOfNode.end()) { return slotOfNode[root.node]; }
+		std::vector<std::pair<FlatNode, Index>> stack;	//the node and the number of its operands already done
+		stack.push_back({ root, 0 });
+		while (stack.size())
+		{
+			FlatNode node = stack.back().first;
+			Index done = stack.back().second;
+			Index n = NumberOfOperands(node);
+			if (done < n) //first the operands, depth first, as FlatProgram::Build
+			{
+				FlatNode operand = GetOperand(node, done);
+				stack.back().second++;
+				if (slotOfNode.find(operand.node) == slotOfNode.end()) { stack.push_back({ operand, 0 }); }
+				continue;
+			}
+			py::dict entry;
+			if (n == 0)
+			{
+				bool isNamed;
+				entry = LeafEntry(node, isNamed);
+				if (isNamed) { namedNodes.push_back(node.node); namedEntries.push_back((Index)inlineEntry.size()); }
+			}
+			else
+			{
+				const char* name = FlatName(node);
+				CHECKandTHROW(name[0] != 0, STDstring("GetFlatProgramData: the operation has no name: ") + ToString(node));
+				entry["op"] = name;
+				entry["kind"] = KindName(node.kind);
+				py::list operands;
+				bool operandsInline = true;
+				for (Index i = 0; i < n; i++)
+				{
+					Index slot = slotOfNode[GetOperand(node, i).node];
+					operands.append(slot);
+					operandsInline = operandsInline && inlineEntry[slot];
+				}
+				entry["operands"] = operands;
+				//as FlatProgram::Build: a component of an argument is written into its users
+				entry["inline"] = node.kind == FlatKind::Real && ((const ExpressionBase*)node.node)->InlineInFlatText() && operandsInline;
+				const MatrixExpressionSReal* components = node.kind == FlatKind::Matrix ? dynamic_cast<const MatrixExpressionSReal*>((const MatrixExpressionBase*)node.node) : nullptr;
+				if (components) { entry["rows"] = components->NumberOfRows(); entry["columns"] = components->NumberOfColumns(); }
+			}
+			Append(entry, node.node);
+			stack.pop_back();
+		}
+		return slotOfNode[root.node];
+	}
+	//! a result that is no expression: a number, a vector or a matrix of numbers
+	Index AddConstant(const py::object& value, const STDstring& text, const char* kind)
+	{
+		py::dict entry;
+		entry["op"] = "number";
+		entry["kind"] = kind;
+		entry["text"] = text;
+		entry["inline"] = true;
+		entry["value"] = value;
+		return Append(entry, nullptr);
+	}
+	Index Add(const SReal& x)
+	{
+		if (x.GetExpression()) { return Add(FlatNode(x.GetExpression())); }
+		return AddConstant(py::float_(x.GetValue()), x.ToString(), "Real");
+	}
+	Index Add(const SymbolicRealVector& x)
+	{
+		if (x.GetExpression()) { return Add(FlatNode(x.GetExpression())); }
+		Index slot = AddConstant(ToList(x.Evaluate()), x.ToString(), "Vector");
+		operations[slot]["size"] = x.NumberOfItems();
+		return slot;
+	}
+	Index Add(const SymbolicRealMatrix& x)
+	{
+		if (x.GetExpression()) { return Add(FlatNode(x.GetExpression())); }
+		ResizableConstMatrix value = x.Evaluate();
+		Index slot = AddConstant(ToList(value), x.ToString(), "Matrix");
+		operations[slot]["rows"] = value.NumberOfRows();
+		operations[slot]["columns"] = value.NumberOfColumns();
+		return slot;
+	}
+	//! an esym.Real, Vector or Matrix, or a number
+	Index Add(const py::object& x)
+	{
+		if (py::isinstance<SReal>(x)) { return Add(py::cast<const SReal&>(x)); }
+		if (py::isinstance<SymbolicRealVector>(x)) { return Add(py::cast<const SymbolicRealVector&>(x)); }
+		if (py::isinstance<SymbolicRealMatrix>(x)) { return Add(py::cast<const SymbolicRealMatrix&>(x)); }
+		if (py::isinstance<py::float_>(x) || py::isinstance<py::int_>(x)) { return Add(SReal(py::cast<Real>(x))); }
+		throw py::type_error("GetFlatProgramData: expected exudyn.symbolic.Real, Vector or Matrix, or a number, but received " + py::cast<STDstring>(py::str(x)));
+	}
+	//! the node of a named variable, or nullptr
+	static const void* NamedNode(const py::object& x)
+	{
+		if (py::isinstance<SReal>(x))
+		{
+			const SReal& real = py::cast<const SReal&>(x);
+			return real.IsExpressionNamedReal() ? (const void*)real.GetExpression() : nullptr;
+		}
+		if (py::isinstance<SymbolicRealVector>(x)) { return dynamic_cast<const VectorExpressionNamedReal*>(py::cast<const SymbolicRealVector&>(x).GetExpression()); }
+		if (py::isinstance<SymbolicRealMatrix>(x)) { return dynamic_cast<const MatrixExpressionNamedReal*>(py::cast<const SymbolicRealMatrix&>(x).GetExpression()); }
+		return nullptr;
+	}
+	//! the description of a named variable as an argument: name, kind, value and size
+	static py::dict ArgumentEntry(const py::dict& leaf)
+	{
+		py::dict argument;
+		for (const char* key : { "name", "kind", "value", "size", "rows", "columns" })
+		{
+			if (leaf.contains(key)) { argument[key] = leaf[key]; }
+		}
+		return argument;
+	}
+	//! the description of a named variable given as esym.Real, Vector or Matrix, also if the program does not use it
+	py::dict ArgumentEntry(const py::object& x)
+	{
+		const void* node = NamedNode(x);
+		CHECKandTHROW(node != nullptr, "GetFlatProgramData: an argument must be a named variable, esym.Real('x', 1.), esym.Vector('v', [...]) or esym.Matrix('M', [[...]]), but received " + py::cast<STDstring>(py::str(x)));
+		if (slotOfNode.find(node) != slotOfNode.end()) { return ArgumentEntry(py::cast<py::dict>(operations[slotOfNode[node]])); }
+		FlatProgramData single; //an argument that the expressions do not use
+		return ArgumentEntry(py::cast<py::dict>(single.operations[single.Add(x)]));
+	}
+	const std::vector<const void*>& NamedNodes() const { return namedNodes; }
+	py::dict NamedEntry(Index i) const { return py::cast<py::dict>(operations[namedEntries[i]]); }
+	py::list Operations() const { return operations; }
+	py::dict Entry(Index k) const { return py::cast<py::dict>(operations[k]); }
+};
+
+//! the expressions: one esym.Real, Vector or Matrix, or a list or tuple of them
+std::vector<py::object> FlatProgramRoots(const py::object& expressions)
+{
+	if (py::isinstance<py::list>(expressions) || py::isinstance<py::tuple>(expressions)) { return py::cast<std::vector<py::object>>(expressions); }
+	return { expressions };
+}
+
+//! the names of the results: given, or result for one, result[i] for several, as FlatProgram::ToString
+std::vector<STDstring> FlatProgramResultNames(const py::object& resultNames, Index numberOfResults)
+{
+	std::vector<STDstring> names;
+	if (!resultNames.is_none()) { names = py::cast<std::vector<STDstring>>(resultNames); }
+	CHECKandTHROW(resultNames.is_none() || (Index)names.size() == numberOfResults, "GetFlatProgramData: resultNames must have one name per expression");
+	if (resultNames.is_none())
+	{
+		for (Index i = 0; i < numberOfResults; i++) { names.push_back(numberOfResults == 1 ? "result" : "result[" + EXUstd::ToString(i) + "]"); }
+	}
+	return names;
+}
+
+//! esym.GetFlatProgramData(expressions, arguments, resultNames) (#3087)
+py::dict FlatProgramDataOfExpressions(const py::object& expressions, const py::object& arguments, const py::object& resultNames)
+{
+	FlatProgramData data;
+	std::vector<py::object> roots = FlatProgramRoots(expressions);
+	std::vector<STDstring> names = FlatProgramResultNames(resultNames, (Index)roots.size());
+	py::list results;
+	for (Index i = 0; i < (Index)roots.size(); i++)
+	{
+		Index slot = data.Add(roots[i]);
+		py::dict result;
+		result["name"] = names[i];
+		result["node"] = slot;
+		result["kind"] = data.Entry(slot)["kind"];
+		results.append(result);
+	}
+	py::list argumentList;
+	if (arguments.is_none()) //the named variables, in the order of their first appearance
+	{
+		for (Index i = 0; i < (Index)data.NamedNodes().size(); i++) { argumentList.append(FlatProgramData::ArgumentEntry(data.NamedEntry(i))); }
+	}
+	else
+	{
+		std::vector<const void*> given;
+		for (const py::object& argument : FlatProgramRoots(arguments))
+		{
+			argumentList.append(data.ArgumentEntry(argument));
+			given.push_back(FlatProgramData::NamedNode(argument));
+		}
+		for (Index i = 0; i < (Index)data.NamedNodes().size(); i++)
+		{
+			if (std::find(given.begin(), given.end(), data.NamedNodes()[i]) == given.end())
+			{
+				throw py::value_error("GetFlatProgramData: the expressions depend on the variable '" + py::cast<STDstring>(data.NamedEntry(i)["name"])
+					+ "', which is not in arguments");
+			}
+		}
+	}
+	py::dict dict;
+	dict["arguments"] = argumentList;
+	dict["operations"] = data.Operations();
+	dict["results"] = results;
+	return dict;
+}
+
+//! UserFunction.GetFlatProgramData() (#3087): the arguments of the Python signature, the variables of
+//! exudyn.symbolic.variables that the recording reads, the operations and the result
+py::dict FlatProgramDataOfUserFunction(const PySymbolicUserFunction& function)
+{
+	FlatProgramData data;
+	const SymbolicGeneric& returnValue = function.GetReturnValue();
+	Index slot = -1;
+	if (returnValue.IsReal() && returnValue.GetReal()) { slot = data.Add(*returnValue.GetReal()); }
+	else if (returnValue.IsVector() && returnValue.GetVector()) { slot = data.Add(*returnValue.GetVector()); }
+	else if (returnValue.IsMatrix() && returnValue.GetMatrix()) { slot = data.Add(*returnValue.GetMatrix()); }
+	CHECKandTHROW(slot >= 0, "UserFunction.GetFlatProgramData: the user function has no recorded result");
+
+	const py::dict& functionDict = function.GetFunctionDict();
+	py::list argList = functionDict["argList"];
+	py::list argTypeList = functionDict["argTypeList"];
+	py::list argNameList = functionDict.contains("argNameList") ? py::list(functionDict["argNameList"]) : py::list();
+	py::list argumentList;
+	std::vector<const void*> argumentNodes;
+	for (Index i = 0; i < (Index)py::len(argList); i++)
+	{
+		py::object argument = argList[i];
+		STDstring type = py::cast<STDstring>(argTypeList[i]);
+		py::dict entry;
+		if (type == "MainSystem") { entry["name"] = "mbs"; entry["kind"] = "MainSystem"; }
+		else { entry = data.ArgumentEntry(argument); argumentNodes.push_back(FlatProgramData::NamedNode(argument)); }
+		if (i < (Index)py::len(argNameList)) { entry["name"] = argNameList[i]; }
+		entry["type"] = type;
+		argumentList.append(entry);
+	}
+	py::list variables; //named variables that are no arguments: exudyn.symbolic.variables
+	for (Index i = 0; i < (Index)data.NamedNodes().size(); i++)
+	{
+		if (std::find(argumentNodes.begin(), argumentNodes.end(), data.NamedNodes()[i]) == argumentNodes.end())
+		{
+			variables.append(FlatProgramData::ArgumentEntry(data.NamedEntry(i)));
+		}
+	}
+	py::list results;
+	py::dict result;
+	result["name"] = "result";
+	result["node"] = slot;
+	result["kind"] = data.Entry(slot)["kind"];
+	results.append(result);
+
+	py::dict dict;
+	dict["name"] = function.GetFunctionName();
+	dict["arguments"] = argumentList;
+	dict["variables"] = variables;
+	dict["operations"] = data.Operations();
+	dict["results"] = results;
+	return dict;
+}
+
+//! a format other than 'Python', written by exudyn/misc/symbolicExport.py from the structure (#3088)
+STDstring WriteFlatProgramFormat(const py::dict& data, const STDstring& format, bool flatten, const STDstring& name, bool expressionOnly)
+{
+	py::object write = py::module_::import("exudyn.misc.symbolicExport").attr("Write");
+	return py::cast<STDstring>(write(data, format, flatten, name, expressionOnly));
+}
+
+//! esym.GetFlatProgram(expressions, ...): the format 'Python' by FlatProgram::ToString, the others from the structure
+STDstring FlatProgramOfExpressions(const py::object& expressions, const py::object& arguments, const py::object& resultNames,
+	const STDstring& format, bool flatten, const STDstring& name)
+{
+	std::vector<py::object> objects = FlatProgramRoots(expressions);
+	if (format == "Python")
+	{
+		std::vector<FlatNode> roots;
+		for (const py::object& x : objects)
+		{
+			if (py::isinstance<SReal>(x) && py::cast<const SReal&>(x).GetExpression()) { roots.push_back(FlatNode(py::cast<const SReal&>(x).GetExpression())); }
+			else if (py::isinstance<SymbolicRealVector>(x) && py::cast<const SymbolicRealVector&>(x).GetExpression()) { roots.push_back(FlatNode(py::cast<const SymbolicRealVector&>(x).GetExpression())); }
+			else if (py::isinstance<SymbolicRealMatrix>(x) && py::cast<const SymbolicRealMatrix&>(x).GetExpression()) { roots.push_back(FlatNode(py::cast<const SymbolicRealMatrix&>(x).GetExpression())); }
+		}
+		if (roots.size() == objects.size()) //all of them expressions; a number is written by the writer
+		{
+			FlatProgram program;
+			program.Build(roots);
+			return program.ToString(FlatProgramResultNames(resultNames, (Index)roots.size()), flatten);
+		}
+	}
+	return WriteFlatProgramFormat(FlatProgramDataOfExpressions(expressions, arguments, resultNames), format, flatten, name, false);
+}
+
+//! ToString(format) of esym.Real, Vector, Matrix: 'Python' is the text of the tree, the others one expression of the writer
+template<class TSymbolic>
+STDstring SymbolicToString(const TSymbolic& x, const STDstring& format)
+{
+	if (format == "Python") { return x.ToString(); }
+	py::object object = py::cast(x, py::return_value_policy::reference);
+	return WriteFlatProgramFormat(FlatProgramDataOfExpressions(object, py::none(), py::none()), format, false, "", true);
+}
+
+} //namespace Symbolic
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Init_Pybind_Symbolic(py::module& m) {
 
@@ -635,6 +1054,9 @@ void Init_Pybind_Symbolic(py::module& m) {
 
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//representation:
+		.def("ToString", [](const Symbolic::SReal& item, const STDstring& format) { return Symbolic::SymbolicToString(item, format); },
+			"the expression as text: format='Python' (default) the text of str(); 'symbolic', 'numpy' or 'sympy' executable Python of that module, written by exudyn.misc.symbolicExport (#3088)",
+			py::arg("format") = "Python")
 		.def("__str__", [](const Symbolic::SReal& item) {
 		return item.ToString();
 			}, "return evaluated expression (prioritized) or stored Real value")
@@ -739,6 +1161,14 @@ void Init_Pybind_Symbolic(py::module& m) {
 	m.attr("pi") = EXUstd::pi;
 
 	//+++++++++++++++++++++++++++++++++++++++++++
+	m.def("GetFlatProgramData", &Symbolic::FlatProgramDataOfExpressions,
+		"the flat program of expressions as a Python structure: arguments, operations (entry k is node k, its operands by number) and results (#3087)",
+		py::arg("expressions"), py::arg("arguments") = py::none(), py::arg("resultNames") = py::none());
+	m.def("GetFlatProgram", &Symbolic::FlatProgramOfExpressions,
+		"the flat program of expressions as text: format 'Python', 'symbolic', 'numpy' or 'sympy'; flatten=False writes each result as one expression (#3087, #3088)",
+		py::arg("expressions"), py::arg("arguments") = py::none(), py::arg("resultNames") = py::none(),
+		py::arg("format") = "Python", py::arg("flatten") = true, py::arg("name") = "F");
+
 	m.def("GetRecording", &Symbolic::SReal::GetRecording,
 		"get current (global / module-wide) status of recording");
 	m.def("SetRecording", &Symbolic::SReal::SetRecording,
@@ -790,6 +1220,9 @@ void Init_Pybind_Symbolic(py::module& m) {
 
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//representation:
+		.def("ToString", [](const Symbolic::SymbolicRealVector& item, const STDstring& format) { return Symbolic::SymbolicToString(item, format); },
+			"the expression as text: format='Python' (default) the text of str(); 'symbolic', 'numpy' or 'sympy' executable Python of that module, written by exudyn.misc.symbolicExport (#3088)",
+			py::arg("format") = "Python")
 		.def("__str__", [](const Symbolic::SymbolicRealVector& item) {
 		return item.ToString();
 			}, "return evaluated expression (prioritized) or stored vector")
@@ -919,6 +1352,9 @@ void Init_Pybind_Symbolic(py::module& m) {
 
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//representation:
+		.def("ToString", [](const Symbolic::SymbolicRealMatrix& item, const STDstring& format) { return Symbolic::SymbolicToString(item, format); },
+			"the expression as text: format='Python' (default) the text of str(); 'symbolic', 'numpy' or 'sympy' executable Python of that module, written by exudyn.misc.symbolicExport (#3088)",
+			py::arg("format") = "Python")
 		.def("__str__", [](const Symbolic::SymbolicRealMatrix& item) {
 		return item.ToString();
 			}, "return evaluated expression (prioritized) or stored matrix")
@@ -1080,8 +1516,15 @@ void Init_Pybind_Symbolic(py::module& m) {
 			"for testing: evaluate user function; note: this version is much slower than the C++ version because of the overhead in the interface")
 		.def_property("flatEvaluation", &Symbolic::PySymbolicUserFunction::GetFlatEvaluation, &Symbolic::PySymbolicUserFunction::SetFlatEvaluation,
 			"True (default): the result is evaluated by the list of operations built after the recording, each shared node once; False: as a tree, for comparison (#3053, #3054)")
-		.def("GetFlatProgram", &Symbolic::PySymbolicUserFunction::FlatProgramToString,
-			"the list of operations of the flat evaluation as text, one operation tK = ... per line and then the results (#3053)")
+		.def("GetFlatProgram", [](const Symbolic::PySymbolicUserFunction& item, const STDstring& format, bool flatten)
+			{
+				if (format == "Python") { return item.FlatProgramToString(flatten); }
+				return Symbolic::WriteFlatProgramFormat(Symbolic::FlatProgramDataOfUserFunction(item), format, flatten, item.GetFunctionName(), false);
+			},
+			"the list of operations of the flat evaluation as text, one operation tK = ... per line and then the results (#3053); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function (#3088); flatten=False: the result as one expression (#3087)",
+			py::arg("format") = "Python", py::arg("flatten") = true)
+		.def("GetFlatProgramData", &Symbolic::FlatProgramDataOfUserFunction,
+			"the flat program as a Python structure: name, arguments, variables, operations (entry k is node k, its operands by number) and results (#3087)")
 
 		.def("__str__", [](const Symbolic::PySymbolicUserFunction& item) {
 		return item.ToString();

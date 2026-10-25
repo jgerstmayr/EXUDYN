@@ -76,6 +76,16 @@ The class **symbolic.Real** has the following **functions and structures**:
   #b.SetValue(a+3.) #not possible!
   ```
 
+- **`ToString(format = 'Python')`**: the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088)
+
+  *Example*:
+
+  ```python
+  x=esym.Real('x',2)
+  f=esym.cos(x)*x
+  f.ToString(format='numpy') #'(np.cos(x) * x)'
+  ```
+
 - **`Evaluate()`**: return evaluated expression (prioritized) or stored Real value.
 - **`Diff(var)`**: return the derivative of the stored expression with respect to the given named variable, at the current values; the variable may be changed hereafter with SetValue(...) only. round, ceil, floor, mod, min, max, isfinite, Not and the comparisons have no derivative and raise an error
 
@@ -168,6 +178,26 @@ The class **symbolic** has the following **functions and structures**:
   esym.SetRecording(True)
   ```
 
+- **`GetFlatProgramData(expressions, arguments = None, resultNames = None)`**: the flat program of expressions as a Python structure, a dict of arguments, operations and results: entry k of operations is node k of the recording, the tK of GetFlatProgram(), its operands given by their numbers, which are smaller than k; arguments are the named variables, in the order given or of their first appearance, results named by resultNames, else result or result[i] (#3087)
+
+  *Example*:
+
+  ```python
+  x=esym.Real('x',2)
+  y=esym.Real('y',3)
+  data=esym.GetFlatProgramData([x**2+y, esym.cos(x)*y])
+  ```
+
+- **`GetFlatProgram(expressions, arguments = None, resultNames = None, format = 'Python', flatten = True, name = 'F')`**: the flat program of one expression or of a list of them as text; format 'Python': one line tK = ... per operation, each node computed once, then the results, as UserFunction.GetFlatProgram(); 'symbolic', 'numpy', 'sympy': a Python function name(arguments) of that module, written by exudyn.misc.symbolicExport, which computes what Exudyn computes (#3088); flatten=False: each result as one expression; arguments and resultNames as in GetFlatProgramData (#3087)
+
+  *Example*:
+
+  ```python
+  x=esym.Real('x',2)
+  y=esym.Real('y',3)
+  print(esym.GetFlatProgram([x**2+y, esym.cos(x)*y], format='numpy', name='F'))
+  ```
+
 - **`GetRecording()`**: Get current (global / module-wide) status of expression recording.
 
   *Example*:
@@ -231,6 +261,16 @@ The class **symbolic.Vector** has the following **functions and structures**:
 
 - **`__init__(vector)`**: Construct symbolic.Vector from vector represented as numpy array or list (which may contain symbolic expressions).
 - **`__init__(name, vector)`**: Construct named symbolic.Vector from name and vector represented as numpy array or list (which may contain symbolic expressions).
+- **`ToString(format = 'Python')`**: the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088)
+
+  *Example*:
+
+  ```python
+  x=esym.Real('x',2)
+  f=esym.cos(x)*x
+  f.ToString(format='numpy') #'(np.cos(x) * x)'
+  ```
+
 - **`Evaluate()`**: Return evaluated expression (prioritized) or stored vector value. (not recorded)
 - **`SetVector(vector)`**: Set stored vector or named vector expression to new given (non-symbolic) vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)
 - **`NumberOfItems()`**: Get size of Vector (may require to evaluate expression; not recording)
@@ -347,6 +387,16 @@ The class **symbolic.Matrix** has the following **functions and structures**:
 
 - **`__init__(matrix)`**: Construct symbolic.Matrix from vector represented as numpy array or list of lists (which may contain symbolic expressions).
 - **`__init__(name, matrix)`**: Construct named symbolic.Matrix from name and vector represented as numpy array or list of lists (which may contain symbolic expressions).
+- **`ToString(format = 'Python')`**: the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088)
+
+  *Example*:
+
+  ```python
+  x=esym.Real('x',2)
+  f=esym.cos(x)*x
+  f.ToString(format='numpy') #'(np.cos(x) * x)'
+  ```
+
 - **`Evaluate()`**: Return evaluated expression (prioritized) or stored Matrix value. (not recorded)
 - **`SetMatrix(matrix)`**: Set stored Matrix or named Matrix expression to new given (non-symbolic) Matrix. Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)
 - **`NumberOfRows()`**: Get number of rows (may require to evaluate expression; not recording)
@@ -524,7 +574,8 @@ The class **symbolic.UserFunction** has the following **functions and structures
 
 - **`Evaluate()`**: Evaluate symbolic function with test values; requires exactly same args as Python user functions; this is slow and only intended for testing
 - **`SetUserFunctionFromDict(mainSystem, fcnDict, itemIndex, userFunctionName)`**: Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(...).
-- **`GetFlatProgram()`**: the list of operations by which the result is evaluated, as text: one operation tK = ... per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054)
+- **`GetFlatProgram(format = 'Python', flatten = True)`**: the list of operations by which the result is evaluated, as text: one operation tK = ... per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function, written by exudyn.misc.symbolicExport, the variables of exudyn.symbolic.variables read from there (symbolic) or as keyword arguments (#3088); flatten=False: the result as one expression (#3087)
+- **`GetFlatProgramData()`**: the flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.symbolic.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.misc.symbolicExport writes it as code (#3087)
 - **`flatEvaluation`**: True (default): the result is evaluated by the list of operations of GetFlatProgram(); False: as a tree, with the same results, for comparison (#3053, #3054)
 - **`operator __repr__()`**: Representation of Symbolic function
 - **`operator __str__()`**: Convert stored symbolic function to string

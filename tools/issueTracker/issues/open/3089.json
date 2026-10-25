@@ -1,0 +1,10 @@
+{
+  "number": 3089,
+  "title": "IfThenElse is a leaf of the flat program of symbolic user functions",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "description": "revision2026c step RG12.49.3 (found in RG12.50.2): ExpressionIfThenElse has no operand interface, so FlatProgram::Build takes it as a leaf: its condition and branches are evaluated as a tree, nodes they share with the rest of the recording are computed again, and GetFlatProgram() writes the whole tree inline. Give it its operands with the selected branch evaluated only, or evaluate both branches; GetFlatProgramData() has them already.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23"
+}

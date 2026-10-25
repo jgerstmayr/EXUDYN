@@ -20,6 +20,16 @@ class Real:
         """
         ...
     @overload
+    def ToString(self, format: str='Python') -> str: 
+        """The expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088).
+        
+        Examples:
+            x=esym.Real('x',2)
+            f=esym.cos(x)*x
+            f.ToString(format='numpy') #'(np.cos(x) * x)'
+        """
+        ...
+    @overload
     def Evaluate(self) -> float: 
         """Return evaluated expression (prioritized) or stored Real value."""
         ...
@@ -194,6 +204,28 @@ def SetRecording(flag: bool) -> None:
     """
     ...
 @overload
+def GetFlatProgramData(expressions: Any, arguments: Any=None, resultNames: Any=None) -> dict: 
+    """The flat program of expressions as a Python structure, a dict of arguments, operations and results: entry k of operations is node k of the recording, the tK of GetFlatProgram(), its operands given by their numbers, which are smaller than k; arguments are the named variables, in the order given or of their first appearance, results named by resultNames, else result or result[i] (#3087).
+    
+    Examples:
+        x=esym.Real('x',2)
+        y=esym.Real('y',3)
+        data=esym.GetFlatProgramData([x**2+y, esym.cos(x)*y])
+    """
+    ...
+@overload
+def GetFlatProgram(expressions: Any, arguments: Any=None, resultNames: Any=None, format: str='Python', flatten: bool=True, name: str='F') -> str: 
+    """The flat program of one expression or of a list of them as text; format 'Python': one line tK = ...
+    
+    per operation, each node computed once, then the results, as UserFunction.GetFlatProgram(); 'symbolic', 'numpy', 'sympy': a Python function name(arguments) of that module, written by exudyn.misc.symbolicExport, which computes what Exudyn computes (#3088); flatten=False: each result as one expression; arguments and resultNames as in GetFlatProgramData (#3087)
+    
+    Examples:
+        x=esym.Real('x',2)
+        y=esym.Real('y',3)
+        print(esym.GetFlatProgram([x**2+y, esym.cos(x)*y], format='numpy', name='F'))
+    """
+    ...
+@overload
 def GetRecording() -> bool: 
     """Get current (global / module-wide) status of expression recording.
     
@@ -212,6 +244,16 @@ class Vector:
     @overload
     def __init__(self, name: str, vector: List[float]) -> None: 
         """Construct named Vector from name and vector represented as numpy array or list (which may contain symbolic expressions)."""
+        ...
+    @overload
+    def ToString(self, format: str='Python') -> str: 
+        """The expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088).
+        
+        Examples:
+            x=esym.Real('x',2)
+            f=esym.cos(x)*x
+            f.ToString(format='numpy') #'(np.cos(x) * x)'
+        """
         ...
     @overload
     def Evaluate(self) -> List[float]: 
@@ -294,6 +336,16 @@ class Matrix:
     @overload
     def __init__(self, name: str, matrix: List[List[float]]) -> None: 
         """Construct named Matrix from name and vector represented as numpy array or list of lists (which may contain symbolic expressions)."""
+        ...
+    @overload
+    def ToString(self, format: str='Python') -> str: 
+        """The expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088).
+        
+        Examples:
+            x=esym.Real('x',2)
+            f=esym.cos(x)*x
+            f.ToString(format='numpy') #'(np.cos(x) * x)'
+        """
         ...
     @overload
     def Evaluate(self) -> List[float]: 
@@ -400,11 +452,15 @@ class UserFunction:
         """Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(...)."""
         ...
     @overload
-    def GetFlatProgram(self) -> str: 
+    def GetFlatProgram(self, format: str='Python', flatten: bool=True) -> str: 
         """The list of operations by which the result is evaluated, as text: one operation tK = ...
         
-        per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054)
+        per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function, written by exudyn.misc.symbolicExport, the variables of exudyn.variables read from there (symbolic) or as keyword arguments (#3088); flatten=False: the result as one expression (#3087)
         """
+        ...
+    @overload
+    def GetFlatProgramData(self) -> dict: 
+        """The flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.misc.symbolicExport writes it as code (#3087)."""
         ...
     flatEvaluation:bool
     """True (default): the result is evaluated by the list of operations of GetFlatProgram(); False: as a tree, with the same results, for comparison (#3053, #3054)."""

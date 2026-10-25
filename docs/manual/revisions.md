@@ -54,6 +54,10 @@ coordinates; the built-in connectors, joints, loads and sensors act on it (#3065
 **`exudyn.symbolicUtilities`** has the rotation matrices, G matrices and their conversions of `exudyn.cUtilities` with
 the same names and arguments and a last argument `functions`: with `exudyn.symbolic` they return symbolic matrices and
 vectors for symbolic user functions, with `numpy`, `math` or `exudyn.cMath` numpy arrays (#3069).
+**A symbolic recording as code**: `GetFlatProgram(format='numpy' | 'symbolic' | 'sympy', flatten=...)` of a symbolic
+user function, `exudyn.symbolic.GetFlatProgram(expressions, ...)` and `ToString(format=...)` of an expression write it
+as Python of numpy, exudyn.symbolic or sympy, which compute what Exudyn computes; `GetFlatProgramData()` gives the
+operations as a Python structure, and `exudyn.misc.symbolicExport` writes the formats from it (#3087, #3088).
 
 **`NodeUser`**, a node with any number of coordinates whose position, and optionally orientation, are Python user
 functions; the Jacobians are computed by central differences if they are not given; node markers, SensorNode, loads

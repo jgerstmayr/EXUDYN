@@ -184,13 +184,15 @@ public:
 	void SetFlatEvaluation(bool flag) { flatEvaluation = flag; }
 	bool GetFlatEvaluation() const { return flatEvaluation; }
 
-	//! the flat program as text, one operation per line (#3053)
-	STDstring FlatProgramToString() const
+	//! the flat program as text, one operation per line (#3053); flatten = false: the result as one expression (#3087)
+	STDstring FlatProgramToString(bool flatten = true) const
 	{
 		if (!flatProgram.IsBuilt()) { return "#" + functionName + ": no flat program; the result is evaluated as a tree\n"; }
 		return "#" + functionName + ": " + EXUstd::ToString(flatProgram.NumberOfComputations()) + " operations\n"
-			+ flatProgram.ToString({ "result" });
+			+ flatProgram.ToString({ "result" }, flatten);
 	}
+	//! the recorded result, for GetFlatProgramData() (#3087)
+	const SymbolicGeneric& GetReturnValue() const { return returnValue; }
 
 	//! true, if the matrix result is sparse (#3022)
 	bool HasSparseMatrixResult() const { return resultComponents != nullptr; }
@@ -272,6 +274,9 @@ class PySymbolicUserFunction : public SymbolicFunction
 	//std::function<Real(const MainSystem&, Real, Index, Real, Real, Real, Real, Real)> mbsScalarIndexScalar5;
 public:
 	PySymbolicUserFunction() : SymbolicFunction() {}
+
+	//! the dictionary of the recording: the arguments and their types, for GetFlatProgramData() (#3087)
+	const py::dict& GetFunctionDict() const { return functionDict; }
 
 	//! read out and store user function from given Python dictionary
 	//! this function is called by particular user function

@@ -145,6 +145,15 @@ Items whose behaviour is written in user functions - a body, a node, a connector
   from one call to the next. `symbolicFunction.GetFlatProgram()` gives the list as text, one line per operation -
   `t5 = cos(q[1])`, `t20 = t19.T` -, and `symbolicFunction.flatEvaluation = False` evaluates the recording as a tree
   instead, with the same results (#3053, #3054).
+- **A recording as code**: `symbolicFunction.GetFlatProgram(format='numpy')` writes it as a Python function with the
+  arguments of the user function, which runs without Exudyn; `format='symbolic'` writes it with `exudyn.symbolic`, so
+  that it is recorded again, and `format='sympy'` builds sympy expressions, from which sympy writes C, C++, Fortran,
+  Matlab or LaTeX and computes derivatives. `flatten=False` writes the result as one expression instead of one line per
+  operation. `exudyn.symbolic.GetFlatProgram(expressions, ...)` does the same for expressions of named variables, and
+  `ToString(format=...)` of an expression gives the expression alone. The formats compute what Exudyn computes:
+  `mod` is the C `fmod`, `round` rounds halves away from zero and a comparison is the number 0 or 1. The program is
+  written by `exudyn.misc.symbolicExport` from `GetFlatProgramData()`, a Python structure of the operations, entry k
+  being the `tK` of the text (#3087, #3088).
 
 `exudyn.special.deprecations.userFunctionListArguments = True` gives the vector and matrix arguments as lists, as before
 version 1.13.104, for scripts that change them or add lists to them; it is deprecated and removed in 2031 (#3008).

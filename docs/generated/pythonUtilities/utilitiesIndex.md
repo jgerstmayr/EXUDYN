@@ -31,6 +31,7 @@ graphics
 graphicsDataUtilities
 misc.GUI
 misc.settingsUtilities
+misc.symbolicExport
 interactive
 kinematicTree
 lieGroupBasics

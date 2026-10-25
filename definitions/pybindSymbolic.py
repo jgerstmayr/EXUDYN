@@ -72,6 +72,15 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetValue', cName='',
                         returnType='None',
                         )
 
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='ToString', cName='',
+                        description="the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088)",
+                        example = r"""x=esym.Real('x',2)\\f=esym.cos(x)*x\\f.ToString(format='numpy') #'(np.cos(x) * x)'""",
+                        argList=['format'],
+                        defaultArgs=["'Python'"],
+                        argTypes=['str'],
+                        returnType='str',
+                        )
+
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
                         description="return evaluated expression (prioritized) or stored Real value.",
                         returnType='float',
@@ -223,6 +232,24 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetRecording', cName
                         returnType='None',
                         )
 
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgramData', cName='',
+                        description="the flat program of expressions as a Python structure, a dict of arguments, operations and results: entry k of operations is node k of the recording, the tK of GetFlatProgram(), its operands given by their numbers, which are smaller than k; arguments are the named variables, in the order given or of their first appearance, results named by resultNames, else result or result[i] (#3087)",
+                        example = r"""x=esym.Real('x',2)\\y=esym.Real('y',3)\\data=esym.GetFlatProgramData([x**2+y, esym.cos(x)*y])""",
+                        argList=['expressions', 'arguments', 'resultNames'],
+                        defaultArgs=['', 'None', 'None'],
+                        argTypes=['Any', 'Any', 'Any'],
+                        returnType='dict',
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgram', cName='',
+                        description="the flat program of one expression or of a list of them as text; format 'Python': one line tK = ... per operation, each node computed once, then the results, as UserFunction.GetFlatProgram(); 'symbolic', 'numpy', 'sympy': a Python function name(arguments) of that module, written by exudyn.misc.symbolicExport, which computes what Exudyn computes (#3088); flatten=False: each result as one expression; arguments and resultNames as in GetFlatProgramData (#3087)",
+                        example = r"""x=esym.Real('x',2)\\y=esym.Real('y',3)\\print(esym.GetFlatProgram([x**2+y, esym.cos(x)*y], format='numpy', name='F'))""",
+                        argList=['expressions', 'arguments', 'resultNames', 'format', 'flatten', 'name'],
+                        defaultArgs=['', 'None', 'None', "'Python'", 'True', "'F'"],
+                        argTypes=['Any', 'Any', 'Any', 'str', 'bool', 'str'],
+                        returnType='str',
+                        )
+
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetRecording', cName='', 
                         description="Get current (global / module-wide) status of expression recording.",
                         example = "esym.GetRecording()",
@@ -260,6 +287,15 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='',
                         argList=['name', 'vector'],
                         argTypes=['str', 'List[float]'],
                         returnType='None',
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='ToString', cName='',
+                        description="the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088)",
+                        example = r"""x=esym.Real('x',2)\\f=esym.cos(x)*x\\f.ToString(format='numpy') #'(np.cos(x) * x)'""",
+                        argList=['format'],
+                        defaultArgs=["'Python'"],
+                        argTypes=['str'],
+                        returnType='str',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
@@ -410,6 +446,15 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='',
                         argList=['name', 'matrix'],
                         argTypes=['str', 'List[List[float]]'],
                         returnType='None',
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='ToString', cName='',
+                        description="the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088)",
+                        example = r"""x=esym.Real('x',2)\\f=esym.cos(x)*x\\f.ToString(format='numpy') #'(np.cos(x) * x)'""",
+                        argList=['format'],
+                        defaultArgs=["'Python'"],
+                        argTypes=['str'],
+                        returnType='str',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
@@ -638,8 +683,16 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetUserFunctionFromD
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgram', cName='',
-                        description="the list of operations by which the result is evaluated, as text: one operation tK = ... per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054)",
+                        description="the list of operations by which the result is evaluated, as text: one operation tK = ... per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function, written by exudyn.misc.symbolicExport, the variables of exudyn.symbolic.variables read from there (symbolic) or as keyword arguments (#3088); flatten=False: the result as one expression (#3087)",
+                        argList=['format', 'flatten'],
+                        defaultArgs=["'Python'", 'True'],
+                        argTypes=['str', 'bool'],
                         returnType='str',
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgramData', cName='',
+                        description="the flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.symbolic.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.misc.symbolicExport writes it as code (#3087)",
+                        returnType='dict',
                         )
 
 symbolicModule.DefDataAccess('flatEvaluation','True (default): the result is evaluated by the list of operations of GetFlatProgram(); False: as a tree, with the same results, for comparison (#3053, #3054)',

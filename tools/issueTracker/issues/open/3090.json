@@ -1,0 +1,10 @@
+{
+  "number": 3090,
+  "title": "Deep symbolic recordings overflow the C++ stack",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "description": "revision2026c step RG12.49.4 (found in RG12.50.3): a chain x = sin(x*q[1] + c)*q[2] recorded 8000 times (about 32000 nested nodes) crashes Python with a stack overflow in str(); 30000 times already while recording. ToString, Evaluate, Diff and Destroy of the expression tree are recursive; FlatProgram::Build and GetFlatProgramData are not. Make the tree functions iterative or refuse the depth with an error.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23"
+}

@@ -1,0 +1,14 @@
+{
+  "number": 3088,
+  "title": "Executable formats of symbolic expressions and flat programs: symbolic, numpy, sympy; ToString(format=...)",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "revision2026c step RG12.50.3 (maintainer 2026-10-25): the formats 'symbolic', 'numpy' and 'sympy' written by exudyn/misc/symbolicExport.py from the structure, computing what Exudyn computes (mod, round, comparisons, IfThenElse); ToString(format=...) of esym.Real, Vector, Matrix and GetFlatProgram(format=...); the round trip of every operation; the speed of the translation measured, with the C++ text kept for 'Python'.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23",
+  "dateResolved": "2026-10-25 11:44",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "GetFlatProgram(format='symbolic' | 'numpy' | 'sympy') of a symbolic user function or of expressions, and ToString(format=...) of exudyn.symbolic.Real, Vector and Matrix, write executable Python of exudyn.symbolic, numpy or sympy, which computes what Exudyn computes (mod as C fmod, round halves away from zero, comparisons 0 or 1); exudyn.misc.symbolicExport writes them, with ToFunction and ToSympy.",
+  "resolvedInVersion": "1.13.196"
+}

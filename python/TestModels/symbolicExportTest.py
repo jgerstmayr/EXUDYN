@@ -1,0 +1,162 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The flat program of symbolic user functions and expressions as a Python structure and as code (#3087,
+#           #3088): GetFlatProgramData(), GetFlatProgram(format=..., flatten=...) and ToString(format=...), written by
+#           exudyn.misc.symbolicExport. Three recorded user functions - a scalar one with every function and operator
+#           of exudyn.symbolic, a vector and a matrix one with their operations - and two expressions: the format
+#           'Python' of the writer equals the text of C++; the format 'numpy' computes what the recording computes, at
+#           random arguments; the format 'symbolic' records the same flat program again; the format 'sympy' gives the
+#           same values, if sympy is installed (it is optional), and refuses isfinite.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-25
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import NodeGenericODE2, ObjectGenericODE2
+from exudyn.advancedUtilities import CreateSymbolicUserFunction
+import exudyn.misc.symbolicExport as symbolicExport
+import numpy as np
+esym = exu.symbolic
+
+try:
+    import sympy #optional; the result of the test does not depend on it
+except ImportError:
+    sympy = None
+
+esym.variables.Add('kExport', 7.)
+
+def SpringForce(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
+    """every function and operator of exudyn.symbolic but IfThenElse and isfinite; round and mod where numpy and sympy
+    differ from C: round(2.5) and mod of a negative number"""
+    x = 0.5*deltaL + 0.1
+    v = deltaL_t
+    k = esym.variables.Get('kExport')
+    terms = [x + v, x - v, x*v, x/(1 + v*v), x == v, x != v, x > v, x >= v, x <= v, x < v, -x, esym.abs(v),
+             esym.sign(v), esym.Not(v), esym.round(10*x), esym.ceil(10*x), esym.floor(10*x), esym.sqrt(x), esym.exp(x),
+             esym.log(x), esym.sin(x), esym.cos(x), esym.tan(x), esym.asin(x), esym.acos(x), esym.atan(x), esym.sinh(x),
+             esym.cosh(x), esym.tanh(x), esym.asinh(v), esym.acosh(1 + x*x), esym.atanh(x), esym.pow(x, 2.5),
+             esym.atan2(x, v), esym.mod(-7*x, 0.3), esym.min(x, v), esym.max(x, v), k*stiffness, damping*v, force*t]
+    result = terms[0]
+    for (i, term) in enumerate(terms[1:]):
+        result = result + (i + 2)*term
+    return result
+
+def SpringForceConditional(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
+    """IfThenElse, which the flat evaluation computes as a tree, and isfinite, which sympy refuses"""
+    x = 0.5*deltaL + 0.1
+    return esym.IfThenElse(x > 0.2, stiffness*x, damping*deltaL_t) + esym.isfinite(x)*force
+
+def Force(mbs, t, itemNumber, q, q_t):
+    """the vector operations: matrix times vector, vector times matrix, scalar product, norm, components"""
+    A = esym.Matrix([[esym.cos(q[0]), 0, 1], [0, 2, esym.sin(q[1])], [1, 0, 3]])
+    v = A @ q - np.multiply(q_t, np.array([1., 2., 3.]))
+    w = q @ A
+    return -v + (q @ q_t)*w - 0.5*q.multiply(q_t) + esym.Vector([q.NormL2(), v[1]*w[2], q_t[2]])
+
+def MassMatrix(mbs, t, itemNumber, q, q_t):
+    """the matrix operations: products, transposed, a number matrix, a component"""
+    G = esym.Matrix([[esym.cos(q[1]), esym.sin(q[2]), 0], [-esym.sin(q[2]), esym.cos(q[1]), 0], [0, 0, 1]])
+    J = esym.Matrix(np.diag([1., 2., 3.]))
+    M = G.T @ J @ G + 0.1*G - (-G)
+    return M + M[0, 1]*J
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+node = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0]*3, initialCoordinates=[0]*3, initialCoordinates_t=[0]*3,
+                                   numberOfODE2Coordinates=3))
+body = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node]))
+recorded = [(SpringForce, 'springForceUserFunction', 'ObjectConnectorSpringDamper', 'scalar'),
+            (SpringForceConditional, 'springForceUserFunction', 'ObjectConnectorSpringDamper', 'scalar'),
+            (Force, 'forceUserFunction', body, 'vector'),
+            (MassMatrix, 'massMatrixUserFunction', body, 'vector')]
+
+rng = np.random.default_rng(3)
+def Arguments(kind):
+    """random arguments of a user function, where all functions of SpringForce are defined"""
+    if kind == 'scalar':
+        return [None, rng.uniform(0, 1), 0, rng.uniform(0.1, 0.8), rng.uniform(-1, 1), rng.uniform(1, 10),
+                rng.uniform(0, 1), rng.uniform(-1, 1)]
+    return [None, rng.uniform(0, 1), 0, rng.uniform(-1, 1, 3), rng.uniform(-1, 1, 3)]
+
+def Evaluate(function, arguments):
+    """the recorded function, evaluated by Exudyn, as numpy array"""
+    return np.array(function.Evaluate(mbs, *arguments[1:]), dtype=float)
+
+u = 0.          #the sum of the values of the recordings
+failed = 0      #the number of failed checks
+largestDifference = {'numpy': 0., 'sympy': 0.}
+for (function, name, item, kind) in recorded:
+    if isinstance(item, str):
+        uf = CreateSymbolicUserFunction(mbs, function, name, itemTypeName=item)
+    else:
+        uf = CreateSymbolicUserFunction(mbs, function, name, item)
+    data = uf.GetFlatProgramData()
+    #the format Python of the writer is the text of C++; IfThenElse is a leaf of the flat program of C++ (#3089)
+    if function is not SpringForceConditional:
+        for flatten in [True, False]:
+            failed += int(symbolicExport.Write(data, 'Python', flatten) != uf.GetFlatProgram(flatten=flatten))
+    #numpy: the same values, flat and nested
+    numpyFunctions = [symbolicExport.ToFunction(data, 'numpy', flatten) for flatten in [True, False]]
+    sympyFunction = None
+    if sympy is not None and function is not SpringForceConditional:
+        (symbols, results) = symbolicExport.ToSympy(data)
+        sympyFunction = sympy.lambdify([symbols[a['name']] for a in data['arguments'] + data['variables']
+                                        if a['kind'] != 'MainSystem'], results[0], 'numpy')
+    for sample in range(5):
+        arguments = Arguments(kind)
+        expected = Evaluate(uf, arguments)
+        scale = max(1., float(np.max(np.abs(expected)))) #the differences relative to the values
+        u += float(np.sum(expected))
+        for numpyFunction in numpyFunctions:
+            difference = np.max(np.abs(np.array(numpyFunction(*arguments), dtype=float) - expected))/scale
+            largestDifference['numpy'] = max(largestDifference['numpy'], float(difference))
+        if sympyFunction is not None:
+            values = arguments[1:] + [v['value'] for v in data['variables']]
+            result = np.array(sympyFunction(*values), dtype=float).reshape(expected.shape)
+            largestDifference['sympy'] = max(largestDifference['sympy'], float(np.max(np.abs(result - expected)))/scale)
+    #symbolic: recorded again, the same flat program
+    again = CreateSymbolicUserFunction(mbs, symbolicExport.ToFunction(data, 'symbolic'), name,
+                                       **({'itemTypeName': item} if isinstance(item, str) else {'itemIndex': item}))
+    failed += int(again.GetFlatProgram().split('\n')[1:] != uf.GetFlatProgram().split('\n')[1:])
+
+if sympy is not None: #isfinite has no meaning for a symbol
+    try:
+        symbolicExport.ToSympy(CreateSymbolicUserFunction(mbs, SpringForceConditional, 'springForceUserFunction',
+                                                          itemTypeName='ObjectConnectorSpringDamper').GetFlatProgramData())
+        failed += 1
+    except ValueError:
+        pass
+
+#expressions: the named variables as arguments, the results named
+x = esym.Real('x', 0.3)
+y = esym.Real('y', -1.2)
+c = esym.cos(x)
+expressions = [x**2 + 4*x + y, c*c + c*y]
+data = esym.GetFlatProgramData(expressions, resultNames=['e', 'f'])
+failed += int([a['name'] for a in data['arguments']] != ['x', 'y'])
+failed += int(symbolicExport.Write(data) != esym.GetFlatProgram(expressions, resultNames=['e', 'f']))
+failed += int(symbolicExport.Write(data, flatten=False) != esym.GetFlatProgram(expressions, resultNames=['e', 'f'], flatten=False))
+EF = symbolicExport.ToFunction(esym.GetFlatProgramData(expressions, arguments=[y, x]))
+largestDifference['numpy'] = max(largestDifference['numpy'], float(np.max(np.abs(np.array(EF(-1.2, 0.3))
+                                                                                  - [e.Evaluate() for e in expressions]))))
+u += sum(e.Evaluate() for e in expressions)
+try: #an expression that depends on a variable not in arguments
+    esym.GetFlatProgramData(expressions, arguments=[x])
+    failed += 1
+except ValueError:
+    pass
+failed += int(expressions[1].ToString() != str(expressions[1]))
+failed += int(expressions[1].ToString(format='numpy') != '((np.cos(x) * np.cos(x)) + (np.cos(x) * y))')
+failed += int(esym.GetFlatProgram(expressions[1], format='numpy', name='G').count('np.cos') != 1)
+
+exu.Print('largest difference of numpy and sympy to the recordings, relative:', largestDifference)
+exu.Print('failed checks:', failed)
+u += failed + int(largestDifference['numpy'] > 1e-14) + int(largestDifference['sympy'] > 1e-13)
+exu.Print('solution of symbolicExportTest=', u)
+
+exu.sys['testResult'] = u

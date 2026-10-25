@@ -905,6 +905,7 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
     return {'functionName': fnName, 
             'argList': argList, 
             'argTypeList': argTypeList,
+            'argNameList': list(fnArgs[:nArgs]), #the names of the Python signature, for GetFlatProgramData (#3087)
             'returnValue': returnValue,
             'returnType': returnType}
 

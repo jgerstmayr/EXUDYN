@@ -107,8 +107,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG12** Symbolic
   - RG12.2 Measure the user function interfaces as they are (1 open sub-step)
   - RG12.4 Give symbolic user functions access to the MainSystem and the item functions (1 open sub-step)
-  - RG12.49 Optimize symbolic expressions: simplification and merging of duplicates (1 open sub-step)
-  - RG12.50 The flat program of expressions, the export of recordings and the symbolic model of a system (4 open sub-steps)
+  - RG12.49 Optimize symbolic expressions: simplification and merging of duplicates (3 open sub-steps)
+  - RG12.50 The flat program of expressions, the export of recordings and the symbolic model of a system (2 open sub-steps)
 - **RG13** Total coordinates
   - RG13.1 Measure the solvers on more models, solvers and configurations, as the baseline
   - RG13.2 Evaluate how the total coordinates are provided efficiently
@@ -1789,10 +1789,22 @@ and the rules, in FlatProgram::Build with a switch; waiting for the decision. [l
 
 After the decision on RG12.49.1 (revised proposal: [symbolicFlatProgramOptimization.md](../dev/design/symbolicFlatProgramOptimization.md)).
 
+#### **OPEN_RG12.49.3** IfThenElse in the flat program
+
+#3089 (found in RG12.50.2): IfThenElse has no operand interface; the flat evaluation computes it as a tree, nodes it
+shares with the rest again, and GetFlatProgram() writes it inline.
+
+#### **OPEN_RG12.49.4** Deep recordings without a stack overflow
+
+#3090 (found in RG12.50.3): str() of about 32000 nested nodes and the recording of about 120000 crash with a stack
+overflow; the tree functions are recursive.
+
 ### **OPEN_RG12.50** The flat program of expressions, the export of recordings and the symbolic model of a system
 
 Maintainer 2026-10-25: GetFlatProgram for expressions; the evaluation graph exported as text or another format, to
-sympy; a symbolic assembly of a model of symbolic user items in symbolicUtilities.py, for control.
+sympy; a symbolic assembly of a model of symbolic user items, for control. Decided 2026-10-25: the formats 'Python',
+'symbolic', 'numpy', 'sympy', flatten, exudyn/misc/symbolicExport.py, the speed measured; the system model later, in
+its own design file. [design](../dev/design/symbolicExport.md)
 
 #### **CLOSED_RG12.50.1** Evaluate the flat program of expressions, the export formats and the assembly, and propose
 
@@ -1801,13 +1813,26 @@ needs no function concept; a Python structure of the operations as the export, w
 SymbolicSystem(mbs) by the local-to-global maps, the connectors through sympy, which differentiates the marker
 functions; waiting for the decision. [log](exudynRevisionLog2026c.md#rg12-50)
 
-#### **OPEN_RG12.50.2** The flat program as a Python structure, for user functions and expressions, and its plain writer
+#### **CLOSED_RG12.50.2** The flat program as a Python structure, for user functions and expressions, and its plain writer
 
-#### **OPEN_RG12.50.3** The executable formats exudyn.symbolic, numpy and sympy, and ToString(format=...)
+CLOSED 2026-10-25 (#3087): GetFlatProgramData() of UserFunction and esym, esym.GetFlatProgram(expressions, arguments,
+resultNames, format, flatten, name), flatten, FlatName() per expression class; the format 'Python' of
+exudyn/misc/symbolicExport.py equals the C++ text. [log](exudynRevisionLog2026c.md#rg12-50-2)
 
-#### **OPEN_RG12.50.4** The symbolic model of a system of generic objects and user bodies
+#### **CLOSED_RG12.50.3** The executable formats exudyn.symbolic, numpy and sympy, and ToString(format=...)
 
-#### **OPEN_RG12.50.5** The connectors and joints of user items in the symbolic model, through sympy
+CLOSED 2026-10-25 (#3088): 'symbolic', 'numpy', 'sympy' computing what Exudyn computes, ToFunction, ToSympy,
+ToString(format=...); symbolicExportTest.py; 0.7 M entries per second against 4 M of the C++ text.
+[log](exudynRevisionLog2026c.md#rg12-50-2)
+
+#### **OPEN_RG12.50.4** Design the symbolic model of a system of user items
+
+After the symbolic steps are completed (maintainer 2026-10-25): its own design file, with a deeper analysis than
+symbolicExport.md gave; to be written as exudyn/misc/symbolicSystem.py.
+
+#### **OPEN_RG12.50.5** Implement the symbolic model of a system of user items
+
+After RG12.50.4.
 
 ## **OPEN_RG13** Total coordinates
 

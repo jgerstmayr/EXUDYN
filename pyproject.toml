@@ -94,6 +94,7 @@ tests = [
     "networkx",
     "psutil",
     "ngsolve",          #also provides the 'netgen' import used by the NGsolve tests
+    "sympy",            #optional in symbolicExportTest.py and for the format sympy of exudyn.misc.symbolicExport (#3088)
     ]
 common = [
     "exudyn[tests]",

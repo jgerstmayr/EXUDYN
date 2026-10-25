@@ -3113,3 +3113,35 @@ design file, revised recommendations and decisions.)*
   IfThenElse of a number, components of a vector number, and `x+0` with only the sign of a zero), level 2 `0*x`, `0/x`,
   `x-x`, `x/x`, combined numbers; CreateSymbolicUserFunction(optimize=...) with the same defaults; the flat program
   unchanged; eight decisions with recommendations. Plan RG12.49 and RG12.49.2 renamed.
+
+<a id="rg12-50-2"></a>
+### RG12.50.2-3 — the flat program as a Python structure and as code (2026-10-25, #3087, #3088)
+*(Maintainer 2026-10-25: esym.GetFlatProgram(e) shall have flatten=True, which keeps the expressions unflattened,
+still convertible; format 'plain' shall be called 'Python', 'exudyn.symbolic' 'symbolic'; symbolicExport.py into
+misc/, later also misc/symbolicSystem.py and misc/symbolicUserItems.py; the speed of the translation through the
+structure evaluated, and compatible to go back to C++; the symbolic model in a separate design file, later; the rest of
+the recommendations accepted; start with RG12.50.2 and RG12.50.3.)*
+- C++: `FlatName()` in the 63 expression classes with operands (empty for the leaves); IfThenElse with FlatName and its operands
+  (Condition, IfTrue, IfFalse); `FlatProgram::ToString(resultNames, flatten)`; in Symbolic.cpp the class
+  FlatProgramData (the traversal of FlatProgram::Build, IfThenElse with three operands, leaves as number or variable
+  with value, text and size), FlatProgramDataOfExpressions, FlatProgramDataOfUserFunction (arguments from the stored
+  dictionary, argNameList from CreateSymbolicUserFunction, the named variables that are no arguments as variables),
+  FlatProgramOfExpressions (the format Python by C++), SymbolicToString; bindings esym.GetFlatProgramData,
+  esym.GetFlatProgram, UserFunction.GetFlatProgram(format, flatten), UserFunction.GetFlatProgramData,
+  ToString(format) of Real, Vector and Matrix; the definitions in pybindSymbolic.py.
+- python/exudyn/misc/symbolicExport.py: Write (formats Python, symbolic, numpy, sympy; flat and nested), ToFunction,
+  ToSympy; the functions where numpy and sympy differ written as Exudyn computes them (mod = fmod, sympy.trunc being
+  the truncation of polynomials; round half away from zero; comparisons 0/1; IfThenElse; Not; isfinite refused by
+  sympy); the variables of exudyn.symbolic.variables read with esym.variables.Get by the format symbolic, which keeps the
+  signature that CreateSymbolicUserFunction checks, keyword arguments otherwise. In the reference manual
+  (utilityDocsModel), sympy in the extra [tests] of pyproject.toml (checkExtras).
+- python/TestModels/symbolicExportTest.py: three recorded user functions (every scalar function and operator; the
+  vector and the matrix operations) and two expressions: the writer's Python equals the C++ text flat and nested, numpy
+  within 1.1e-16 relative of the recording at random arguments, the format symbolic recorded again gives the same flat
+  program, sympy within 3.9e-16 (sympy 1.14, installed into venvExuP313 from PyPI for it), isfinite refused, an
+  argument missing refused; reference 11450.057870734236.
+- Speed (docs/dev/design/symbolicExport.md section 5): C++ text 3.8-4.8 M entries/s, structure 1.1-1.4 M/s, Write
+  1.1-1.9 M/s. Found: IfThenElse a leaf of the flat program (#3089, RG12.49.3); deep recordings overflow the stack
+  (#3090, RG12.49.4). Unary + of vectors and matrices and == of vectors cannot be recorded from Python, so the writer
+  has them untested.
+- Docs: introductionBasics.md (a recording as code), revisions.md, the design note rewritten to what is built.

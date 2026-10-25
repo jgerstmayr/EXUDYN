@@ -153,6 +153,7 @@ def TestExamplesReferenceSolution():
         'systemContainerComputeOnlyTest.py':4.0, #new 2026-10-14: SystemContainer(attachToRenderer=False), the renderer stays with the container of the model, also for InverseKinematicsNumerical (#2259)
         'ANCFBeamGeometricallyExactComparisonTest.py':5.999501744103005, #2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992); before 5.9995017472560175; new 2026-10-13: ObjectANCFBeam against ObjectBeamGeometricallyExact, tip torque on node and element (#2228)
         'ANCFThinPlateRotationTest.py':0.009394817004517305, #new 2026-10-13: the frame of ObjectANCFThinPlate and NodePointSlope12, torque on element and node (#2228)
+        'symbolicExportTest.py':11450.057870734236, #new 2026-10-25: GetFlatProgramData, GetFlatProgram and ToString in the formats Python, symbolic, numpy and sympy against the recordings (#3087, #3088)
         'symbolicUtilitiesTest.py':7.024076141931356, #new 2026-10-23: exudyn.symbolicUtilities with exudyn.symbolic, numpy, math and cMath against cUtilities (#3069)
         'userJointTest.py':-1.8272301913592162, #new 2026-10-24: ObjectJointUser, a screw joint against the analytic solution at index 3 and 2, a spherical joint against ObjectJointSpherical, the refusals (#2976)
         'userMarkerTest.py':-0.3569348653534026, #new 2026-10-24: MarkerUser, the midpoint of two mass points and a rigid marker in a revolute joint against built-in markers, the refusals (#3065)

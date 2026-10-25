@@ -190,6 +190,7 @@ springDamperVelocityOffsetTest
 stiffFlyballGovernor
 superElementRigidJointTest
 SwitchingConstraintsTest
+symbolicExportTest
 symbolicModuleTest
 symbolicNumpyCompatibilityTest
 symbolicSparseMatrixTest
