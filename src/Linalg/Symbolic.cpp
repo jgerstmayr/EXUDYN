@@ -927,6 +927,64 @@ STDstring ExpressionText(const FlatNode& node)
 	return text.substr(3, text.size() - 4);
 }
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the outputs of items in symbolic user functions (#2984)
+
+//! the functions mbs.Get...Output calls, without Python and without the checks, which the recording did
+const ResizableConstVector& VectorExpressionItemOutput::EvaluateRef() const
+{
+	if (mainSystem == nullptr) { return buffer; } //outside an evaluation of its function: the value at recording
+	const CSystemData& data = mainSystem->GetCSystem().GetSystemData();
+	OutputVariableType type = (OutputVariableType)variableType;
+	ConfigurationType configurationType = (ConfigurationType)configuration;
+	switch (kind)
+	{
+	case Kind::Node: data.GetCNodes()[itemNumber]->GetOutputVariable(type, configurationType, buffer); break;
+	case Kind::Object:
+	{
+		const CObject* object = data.GetCObjects()[itemNumber];
+		if ((Index)object->GetType() & (Index)CObjectType::Connector)
+		{
+			TemporaryMarkerDataStructure temporary; //as MainSystem::PyGetObjectOutputVariable
+			MarkerDataStructure& markerDataStructure = temporary.Get();
+			data.ComputeMarkerDataStructure((const CObjectConnector*)object, false, markerDataStructure);
+			GetConnectorOutputVariable(*(const CObjectConnector*)object, type, markerDataStructure, buffer);
+		}
+		else { object->GetOutputVariable(type, buffer, configurationType); }
+		break;
+	}
+	case Kind::ObjectBody: ((const CObjectBody*)data.GetCObjects()[itemNumber])->GetOutputVariableBody(type, localPosition, configurationType, buffer); break;
+	case Kind::Marker: data.GetCMarkers()[itemNumber]->GetOutputVariable(data, type, configurationType, buffer); break;
+	default: data.GetCSensors()[itemNumber]->GetSensorValues(data, buffer, configurationType); break;
+	}
+	return buffer;
+}
+
+STDstring VectorExpressionItemOutput::ToString() const
+{
+	const char* functions[] = { "GetNodeOutput", "GetObjectOutput", "GetObjectOutputBody", "GetMarkerOutput", "GetSensorValues" };
+	STDstring text = STDstring("mbs.") + functions[(Index)kind] + "(" + EXUstd::ToString(itemNumber);
+	if (kind != Kind::Sensor) { text += STDstring(", ") + GetOutputVariableTypeString((OutputVariableType)variableType); }
+	if (kind == Kind::ObjectBody) { text += ", [" + EXUstd::ToString(localPosition[0]) + ", " + EXUstd::ToString(localPosition[1]) + ", " + EXUstd::ToString(localPosition[2]) + "]"; }
+	const char* configurations[] = { "_None", "Initial", "Current", "Reference", "StartOfStep", "Visualization" };
+	if ((ConfigurationType)configuration != ConfigurationType::Current && configuration >= 0 && configuration < 6) { text += STDstring(", ") + configurations[configuration]; }
+	return text + ")";
+}
+
+//! esym._ItemOutput, for the MainSystem of CreateSymbolicUserFunction: the node of an output, with its value at recording
+SymbolicRealVector ItemOutputExpression(const STDstring& kind, Index itemNumber, OutputVariableType variableType,
+	ConfigurationType configuration, const std::vector<Real>& localPosition, const std::vector<Real>& valueAtRecording)
+{
+	const STDstring kinds[] = { "Node", "Object", "ObjectBody", "Marker", "Sensor" };
+	Index k = 0;
+	while (k < 5 && kinds[k] != kind) { k++; }
+	CHECKandTHROW(k < 5, "symbolic._ItemOutput: invalid kind " + kind);
+	CHECKandTHROW(localPosition.size() == 3, "symbolic._ItemOutput: localPosition must have 3 components");
+	VectorExpressionBase::NewCount()++;
+	return SymbolicRealVector(new VectorExpressionItemOutput((VectorExpressionItemOutput::Kind)k, itemNumber, (Index64)variableType,
+		(Index)configuration, Vector3D({ localPosition[0], localPosition[1], localPosition[2] }), Vector(valueAtRecording)));
+}
+
 //! esym.GetDepth(expressions): the depth of each, in the structure of expressions (#3090)
 py::object DepthOfExpressions(const py::object& expressions)
 {
@@ -1867,6 +1925,10 @@ void Init_Pybind_Symbolic(py::module& m) {
 		"set current (global / module-wide) status of recording");
 	m.def("_SetRecordingFunction", [](bool flag) { Symbolic::SReal::recordingFunction = flag; },
 		"for CreateSymbolicUserFunction: a user function is recorded, SetValue of a named variable raises (#3090)");
+	m.def("_ItemOutput", &Symbolic::ItemOutputExpression,
+		"for the MainSystem of CreateSymbolicUserFunction: the output of an item, read at each evaluation (#2984)",
+		py::arg("kind"), py::arg("itemNumber"), py::arg("variableType"), py::arg("configuration"), py::arg("localPosition"),
+		py::arg("valueAtRecording"));
 	m.def("GetDepth", &Symbolic::DepthOfExpressions, "the number of operations on the longest path to a leaf (#3090)",
 		py::arg("expressions"));
 

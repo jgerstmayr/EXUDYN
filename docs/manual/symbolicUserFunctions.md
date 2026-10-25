@@ -101,6 +101,39 @@ decides is decided then.
   argument of the recording, named by a `ParameterLayout`, so a user beam records its functions once for all its
   elements, see {ref}`sec-useritems`.
 
+## Reading other items
+
+Inside a recorded function, `mbs.GetNodeOutput`, `mbs.GetObjectOutput` (of connectors and the other objects that have
+outputs), `mbs.GetObjectOutputBody`, `mbs.GetMarkerOutput` and `mbs.GetSensorValues` are symbolic expressions: C++
+reads the item at every call, from the state the solver is computing, without Python (#2984). A load that follows a node
+of another body:
+
+```python
+def LoadFollowing(mbs, t, loadVector):
+    p0 = mbs.GetNodeOutput(nodeMass, exu.OutputVariableType.Position)
+    p1 = mbs.GetNodeOutput(nodeBody, exu.OutputVariableType.Position)
+    return 20.*(p1 - p0) + loadVector
+
+mbs.Assemble()
+function = CreateSymbolicUserFunction(mbs, LoadFollowing, 'loadVectorUserFunction', load)
+mbs.SetLoadParameter(load, 'loadVectorUserFunction', function)
+mbs.Assemble()
+```
+
+- A scalar output is an `esym.Real`, the others an `esym.Vector`, a rotation matrix one of 9 components; an output of
+  two dimensions, such as `HomogeneousTransformation`, is refused. The output is read once while recording, for its
+  size: before `mbs.Assemble()` only in the reference configuration, so velocities and forces need the system
+  assembled before the recording.
+- Every other attribute of `mbs` raises an `AttributeError` while recording - its value would be a constant of the
+  recording. `mbs.variables` are Python values, constants of the recording; a value that changes is a variable of
+  `esym.variables`.
+- A function that reads items is evaluated in the main thread, also with several threads. The Jacobian of an item does
+  not see what it reads from other items: a coupling through such a read lags in Newton, which is fine for loads,
+  controllers and outputs, and not for stiff coupling, which belongs in a connector. An item cannot read its own output
+  in its user function.
+- `UserFunction.Evaluate(mbs, ...)` reads the outputs from the `mbs` it gets; outside a call, an expression has the
+  value of the recording.
+
 ## Speed and threads
 
 - `CreateSymbolicUserFunction(..., optimize=True)`, the default, applies `esym.Optimize`: an expression written twice

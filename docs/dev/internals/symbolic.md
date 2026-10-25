@@ -206,7 +206,7 @@ For numbers alone, cUtilities stays the fast way (0.63 us against 1.2 to 2.4 us 
 | | | |
 |---|---|---|
 | the tree evaluation deeper than 10000 operations | `Evaluate()`, `Diff()` and `flatEvaluation = False` raise a `ValueError`; recording, deleting, `str()`, the flat program and Optimize work at any depth | #3090 |
-| the MainSystem in an expression | `mbs.GetNodeOutput(...)` inside a recorded function is a constant | #2984 |
+| the MainSystem in an expression | read only: the outputs of items; parameters of items are constants of the recording, writing to the MainSystem is refused | #2984 |
 | derivatives | `Diff` of scalars only, a number: the forward derivative at the current values | - |
 | matrix functions | no inverse, no product of the components of matrices; vectors have `esym.cross` (#3070) | - |
 | constant matrix arguments | copied into the named matrices at every call | #3039 |

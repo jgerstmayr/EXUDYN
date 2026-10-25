@@ -746,6 +746,77 @@ def LoadDictFromHDF5(fileName, callerGlobals=None):
         return RecursivelyLoadDictFromHDF5(h5file)
 
 
+class _SymbolicMainSystem:
+    """the mbs of a function recorded by CreateSymbolicUserFunction (#2984): GetNodeOutput, GetObjectOutput,
+    GetObjectOutputBody, GetMarkerOutput and GetSensorValues give symbolic expressions, which read the item at every call
+    of the user function in C++; mbs.variables are Python values, constants of the recording; every other attribute
+    raises, as its value would be a constant of the recording"""
+
+    def __init__(self, mbs):
+        object.__setattr__(self, '_mbs', mbs)
+
+    @property
+    def variables(self):
+        """mbs.variables, read while recording"""
+        return self._mbs.variables
+
+    def _Output(self, kind, function, itemNumber, variableType, configuration, localPosition=None):
+        """the symbolic output: a Real for a scalar output, a Vector else; the value at recording gives its size"""
+        arguments = [itemNumber, variableType] if kind != 'Sensor' else [itemNumber]
+        if kind == 'ObjectBody':
+            arguments += [localPosition]
+        try:
+            value = function(*arguments, configuration=configuration)
+        except Exception as error: #the system not assembled: the size from the reference configuration, if it has one
+            try:
+                value = function(*arguments, configuration=exudyn.ConfigurationType.Reference)
+            except Exception:
+                raise ValueError('mbs.' + function.__name__ + ' in a symbolic user function: the output is read '
+                                 'once while recording, for its size, which failed: ' + str(error)
+                                 + '; call mbs.Assemble() before CreateSymbolicUserFunction') from None
+        value = np.asarray(value, dtype=float)
+        if value.ndim > 1:
+            raise ValueError('mbs.' + function.__name__ + ' in a symbolic user function: an output of ' + str(value.ndim)
+                             + ' dimensions is not available as symbolic expression; read a vector output, '
+                             'e.g. RotationMatrix as 9 components')
+        output = exudyn.symbolic._ItemOutput(kind, int(itemNumber), variableType, configuration,
+                                             [0., 0., 0.] if localPosition is None else list(localPosition),
+                                             list(np.atleast_1d(value)))
+        return output[0] if value.ndim == 0 else output
+
+    def GetNodeOutput(self, nodeNumber, variableType, configuration=exudyn.ConfigurationType.Current):
+        """as MainSystem.GetNodeOutput, read at every call"""
+        return self._Output('Node', self._mbs.GetNodeOutput, nodeNumber, variableType, configuration)
+
+    def GetObjectOutput(self, objectNumber, variableType, configuration=exudyn.ConfigurationType.Current):
+        """as MainSystem.GetObjectOutput, read at every call"""
+        return self._Output('Object', self._mbs.GetObjectOutput, objectNumber, variableType, configuration)
+
+    def GetObjectOutputBody(self, objectNumber, variableType, localPosition=[0, 0, 0],
+                            configuration=exudyn.ConfigurationType.Current):
+        """as MainSystem.GetObjectOutputBody, read at every call"""
+        return self._Output('ObjectBody', self._mbs.GetObjectOutputBody, objectNumber, variableType, configuration,
+                            localPosition)
+
+    def GetMarkerOutput(self, markerNumber, variableType, configuration=exudyn.ConfigurationType.Current):
+        """as MainSystem.GetMarkerOutput, read at every call"""
+        return self._Output('Marker', self._mbs.GetMarkerOutput, markerNumber, variableType, configuration)
+
+    def GetSensorValues(self, sensorNumber, configuration=exudyn.ConfigurationType.Current):
+        """as MainSystem.GetSensorValues, read at every call"""
+        return self._Output('Sensor', self._mbs.GetSensorValues, sensorNumber, exudyn.OutputVariableType._None,
+                            configuration)
+
+    def __getattr__(self, name):
+        raise AttributeError('mbs.' + name + ' is not available in a symbolic user function, as it would be a constant '
+                             'of the recording: read it before and pass it as parameter or as symbolic variable '
+                             '(exudyn.symbolic.variables); mbs.GetNodeOutput, GetObjectOutput, GetObjectOutputBody, '
+                             'GetMarkerOutput and GetSensorValues are read at every call (#2984)')
+
+    def __setattr__(self, name, value):
+        raise AttributeError('mbs.' + name + ' cannot be set in a symbolic user function (#2984)')
+
+
 
 
 
@@ -866,8 +937,8 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
             if '3D' in varType: rowsColumns = 3
             if '6D' in varType: rowsColumns = 6
             var = exudyn.symbolic.Matrix(arg,np.zeros((rowsColumns,rowsColumns)).tolist())
-        elif varType == 'MainSystem':
-            var = mbs
+        elif varType == 'MainSystem': #its outputs read at every call, its other attributes refused (#2984)
+            var = _SymbolicMainSystem(mbs)
         else:
             raise ValueError("ConvertFunctionToSymbolic: unrecognized type in user function; type probably implemented")
     
@@ -970,7 +1041,7 @@ def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, 
 
     Args:
         mbs: MainSystem, needed currently for interface
-        function: Python function with interface according to desired user function
+        function: Python function with interface according to desired user function; in it, mbs.GetNodeOutput, GetObjectOutput, GetObjectOutputBody, GetMarkerOutput and GetSensorValues are symbolic expressions read at every call, and every other attribute of mbs raises (#2984)
         itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
         itemTypeName: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
         userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished

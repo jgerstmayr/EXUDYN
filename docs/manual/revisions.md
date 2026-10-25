@@ -78,6 +78,10 @@ counted twice in `Matrix.__newCount` (#3092).
 **A Python `if` on a symbolic value raises a `TypeError` while recording**, and so do `and`, `or` and `not`: Python
 took every symbolic value as true, so a recorded function silently took the first branch for every call. A decision at
 each call is `exudyn.symbolic.IfThenElse(condition, a, b)`, a decision at recording `x.Evaluate()` (#3096).
+**Symbolic user functions read other items**: in a function recorded by `CreateSymbolicUserFunction`,
+`mbs.GetNodeOutput`, `GetObjectOutput`, `GetObjectOutputBody`, `GetMarkerOutput` and `GetSensorValues` are read by C++
+at every call, with the same results as the Python function; they were constants of the recording. Every other
+attribute of `mbs` raises an `AttributeError` while recording (#2984), see {ref}`sec-symbolicuserfunctions`.
 **Deep symbolic recordings**: a recording takes a time linear in its size - a chain of 4000 steps records in 0.013 s
 instead of 1.0 s - and does not overflow the stack at any depth, nor does deleting or printing it; the value of a new
 expression is computed from the values of its operands when they were recorded. `Evaluate()` and `Diff()` of an

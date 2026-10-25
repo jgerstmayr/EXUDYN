@@ -21,7 +21,8 @@
 #include "Linalg/Symbolic.h"
 #include "Pymodules/PybindUtilities.h"
 
-extern bool linalgPrintUsePythonFormat; 
+extern bool linalgPrintUsePythonFormat;
+class MainSystem; //VectorExpressionItemOutput (#2984)
 
 namespace Symbolic
 {
@@ -84,6 +85,30 @@ public:
 	virtual const STDstring& GetName() const { return name; }
 };
 
+//! the output of an item, read from the MainSystem at each evaluation (#2984): mbs.GetNodeOutput, GetObjectOutput,
+//! GetObjectOutputBody, GetMarkerOutput and GetSensorValues in a function recorded by CreateSymbolicUserFunction; a
+//! leaf; the symbolic function sets the MainSystem of its call, without one the value is the one at recording
+class VectorExpressionItemOutput : public VectorExpressionBase
+{
+public:
+	enum class Kind { Node, Object, ObjectBody, Marker, Sensor };
+	Kind kind;
+	Index itemNumber;
+	Index64 variableType;		//!< an OutputVariableType
+	Index configuration;		//!< a ConfigurationType
+	Vector3D localPosition;		//!< of ObjectBody
+	mutable const MainSystem* mainSystem = nullptr;
+
+	VectorExpressionItemOutput(Kind kindInit, Index itemNumberInit, Index64 variableTypeInit, Index configurationInit,
+		const Vector3D& localPositionInit, const Vector& valueAtRecording) : VectorExpressionBase(), kind(kindInit),
+		itemNumber(itemNumberInit), variableType(variableTypeInit), configuration(configurationInit), localPosition(localPositionInit)
+	{
+		buffer = valueAtRecording;
+	}
+	virtual void Destroy() override {}
+	virtual const ResizableConstVector& EvaluateRef() const override; //in Symbolic.cpp, which has the MainSystem
+	virtual STDstring ToString() const override;
+};
 
 //! class which represents a vector of expressions
 //! in contrast to SReal, SymbolicRealVector stores a VectorExpressionBase*, thus needing VectorExpressionSReal to store a list of expressions

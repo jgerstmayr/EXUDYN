@@ -1,0 +1,14 @@
+{
+  "number": 2984,
+  "title": "Symbolic: access to the MainSystem and the item functions",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "revision2026c step RG12.4: inside a symbolic user function, read what the system has - e.g. the current position of a node, a sensor value - as symbolic expressions evaluated in C++.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-25 21:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Symbolic user functions read other items: in a function recorded by CreateSymbolicUserFunction, mbs.GetNodeOutput, GetObjectOutput, GetObjectOutputBody, GetMarkerOutput and GetSensorValues are symbolic expressions, which C++ reads from the MainSystem at every call, with the same results as the Python function (a load reading a node, a body point, a marker, a sensor and a connector about 9 times faster); a scalar output is a symbolic Real, the others a Vector; every other attribute of mbs raises an AttributeError while recording, as its value would be a constant of the recording. Such a function is evaluated in the main thread.",
+  "resolvedInVersion": "1.13.207"
+}

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 203 | 1.13.206 |
+| 1.13 | Newborn | 204 | 1.13.207 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.207** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic: access to the MainSystem and the item functions (#2984)
+  - description: revision2026c step RG12.4: inside a symbolic user function, read what the system has - e.g. the current position of a node, a sensor value - as symbolic expressions evaluated in C++.
+  - **notes:** Symbolic user functions read other items: in a function recorded by CreateSymbolicUserFunction, mbs.GetNodeOutput, GetObjectOutput, GetObjectOutputBody, GetMarkerOutput and GetSensorValues are symbolic expressions, which C++ reads from the MainSystem at every call, with the same results as the Python function (a load reading a node, a body point, a marker, a sensor and a connector about 9 times faster); a scalar output is a symbolic Real, the others a Vector; every other attribute of mbs raises an AttributeError while recording, as its value would be a constant of the recording. Such a function is evaluated in the main thread.
+  - date resolved: **2026-10-25 21:34**, date raised: 2026-10-12
 - **1.13.206** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` Deep symbolic recordings overflow the C++ stack (#3090)
   - description: revision2026c step RG12.49.4 (found in RG12.50.3): a chain x = sin(x\*q\[1\] + c)\*q\[2\] recorded 8000 times (about 32000 nested nodes) crashes Python with a stack overflow in str(); 30000 times already while recording. ToString, Evaluate, Diff and Destroy of the expression tree are recursive; FlatProgram::Build and GetFlatProgramData are not. Make the tree functions iterative or refuse the depth with an error.
   - **notes:** Deep symbolic recordings: recording takes a time linear in the size of the recording at any depth (a chain of 4000 steps 0.013 s instead of 1.0 s) and neither recording, deleting nor printing overflows the stack; the value of a new expression is computed from the recorded values of its operands. Evaluate() and Diff() of an expression deeper than 10000 operations, and flatEvaluation = False, raise a ValueError instead of crashing; exudyn.symbolic.GetDepth gives the depth; SetValue, SetVector, SetMatrix of a named variable raise while CreateSymbolicUserFunction records a function.

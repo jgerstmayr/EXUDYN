@@ -193,6 +193,7 @@ superElementRigidJointTest
 SwitchingConstraintsTest
 symbolicDeepRecordingTest
 symbolicExportTest
+symbolicItemOutputTest
 symbolicModuleTest
 symbolicNumpyCompatibilityTest
 symbolicOptimizeTest

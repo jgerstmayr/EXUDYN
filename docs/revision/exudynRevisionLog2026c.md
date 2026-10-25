@@ -3369,3 +3369,31 @@ suggestion plus an exception, if not needed in our current cases. The algorithmi
   recording; a user function of 20000 operations, flatEvaluation = False refused; SetValue while recording refused.
   Reference 41.235299378685376. The test suite, the pytest files and the 4 examples with exudyn.symbolic pass.
 - RG12.49 closed with it.
+
+<a id="rg12-4-1"></a>
+### RG12.4.1 — item outputs in symbolic user functions (2026-10-25, #2984)
+*(Maintainer 2026-10-25: do RG12.4.1 now - the proposal as written.)*
+- Recording: CreateSymbolicUserFunction passes `_SymbolicMainSystem(mbs)` (advancedUtilities.py) as the mbs argument.
+  GetNodeOutput, GetObjectOutput, GetObjectOutputBody, GetMarkerOutput and GetSensorValues call the real function once,
+  for the size of the output - in the requested configuration, else in the reference configuration, else an error that
+  asks for mbs.Assemble() before the recording -, and return `esym._ItemOutput(...)`: an esym.Vector, its component 0 for
+  a scalar output; an output of two dimensions (HomogeneousTransformation, exu.HT) is refused. `variables` gives
+  mbs.variables; every other attribute raises an AttributeError, also setting one.
+- Evaluation: `VectorExpressionItemOutput` (SymbolicVector.h, evaluated in Symbolic.cpp), a vector leaf with the kind,
+  item number, OutputVariableType, ConfigurationType and local position; it evaluates into its buffer by
+  CNode::GetOutputVariable, CObject::GetOutputVariable (a connector through ComputeMarkerDataStructure and
+  GetConnectorOutputVariable, as MainSystem::PyGetObjectOutputVariable), CObjectBody::GetOutputVariableBody,
+  CMarker::GetOutputVariable or CSensor::GetSensorValues, without Python and without the checks the recording did.
+  SymbolicFunction collects these leaves from its flat program; ItemOutputScope in each of the 12 evaluation templates
+  sets the MainSystem of the call into them and takes it back, also on an error, and refuses a second evaluation of the
+  same function inside the first (an item reading its own output). Without a MainSystem the leaf has the value of the
+  recording; UserFunction.Evaluate takes it from its mbs argument and requires it. The leaves are no leaves of values,
+  so such a recording is not copied for the threads and its item is computed in the main thread.
+- Measured, symbolicItemOutputTest.py: a mass point pulled by three loads that read a node, a body point, a marker, a
+  sensor and the length of a spring-damper, 500 steps: Python functions 0.069 s, symbolic 0.0074 s; the same result
+  to the bit, also with 4 threads. Found while writing it: GetObjectOutput has outputs for connectors and objects such as
+  GenericODE2, not for bodies (GetObjectOutputBody).
+- The test suite, the pytest files and the 4 examples with CreateSymbolicUserFunction pass: no recording used another
+  attribute of mbs.
+- Docs: symbolicUserFunctions.md (Reading other items), pybindSymbolic.py, internals/symbolic.md and userFunctions.md,
+  the docstring of CreateSymbolicUserFunction, revisions.md. RG12.4 closed with it.

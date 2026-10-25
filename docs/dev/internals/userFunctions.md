@@ -87,8 +87,12 @@ function); the classes say what crosses the boundary beyond `mbs`, `t` and the i
 
 Without a symbolic version: the five `graphicsDataUserFunction`s, whose result is a Python dict of graphics data,
 `ObjectConnectorUser.forceUserFunction`, which gets Python objects of its markers, and
-`SensorUserFunction.sensorUserFunction`, which reads through `mbs`. A symbolic function is recorded with the real
-`mbs`: what it reads from there is a constant (#2984).
+`SensorUserFunction.sensorUserFunction`, which reads through `mbs`. A symbolic function is recorded with
+`_SymbolicMainSystem` (advancedUtilities.py) as `mbs`: its output functions give `VectorExpressionItemOutput` leaves,
+which call `CNode::GetOutputVariable`, `CObject::GetOutputVariable` (connectors through their marker data),
+`CObjectBody::GetOutputVariableBody`, `CMarker::GetOutputVariable` or `CSensor::GetSensorValues` of the MainSystem
+that the evaluation templates get - set into the leaves for the call by `ItemOutputScope` -, and its other attributes
+raise (#2984). Such a recording is not copied for the threads.
 
 ## 5. The cost of a call
 

@@ -392,7 +392,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-convertfunctiontosymbolic)=
 ## Function: ConvertFunctionToSymbolic
 
-[`ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0, optimize = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L762)
+[`ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0, optimize = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L833)
 
 - **function description**: Internal function to convert a Python user function into a dictionary containing the symbolic representation; this function is under development and should be used with care
 - **input**:
@@ -410,7 +410,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities--objectparameterssize)=
 ## Function: _ObjectParametersSize
 
-[`_ObjectParametersSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L921)
+[`_ObjectParametersSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L992)
 
 - **function description**: the length of the parameters of a user item, which its user functions get, or 0 where it is not known (#3056)
 - **input**:
@@ -422,7 +422,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities--objectcoordinatessize)=
 ## Function: _ObjectCoordinatesSize
 
-[`_ObjectCoordinatesSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L939)
+[`_ObjectCoordinatesSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1010)
 
 - **function description**: the number of coordinates q of the nodes of an object, which its user functions get, or 0 where it is not known; a vector argument recorded with its size can be combined with constant vectors and has len() (#3015)
 - **input**:
@@ -434,12 +434,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-createsymbolicuserfunction)=
 ## Function: CreateSymbolicUserFunction
 
-[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0, optimize = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L967)
+[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0, optimize = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1038)
 
 - **function description**: Helper function to convert a Python user function into a symbolic user function; this function is under development and should be used with care
 - **input**:
   - `mbs`: MainSystem, needed currently for interface
-  - `function`: Python function with interface according to desired user function
+  - `function`: Python function with interface according to desired user function; in it, mbs.GetNodeOutput, GetObjectOutput, GetObjectOutputBody, GetMarkerOutput and GetSensorValues are symbolic expressions read at every call, and every other attribute of mbs raises (#2984)
   - `itemIndex`: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
   - `itemTypeName`: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
   - `userFunctionName`: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
@@ -467,13 +467,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSpringDamperUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py) (Ex), [`SpringDamperMassUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringDamperMassUserFunction.py) (Ex), [`symbolicUserFunctionMasses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicUserFunctionMasses.py) (Ex), [`loadUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/loadUserFunctionTest.py) (TM), [`multithreadingUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/multithreadingUserFunctionTest.py) (TM), [`symbolicDeepRecordingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicDeepRecordingTest.py) (TM), [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM), [`symbolicNumpyCompatibilityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicNumpyCompatibilityTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSpringDamperUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py) (Ex), [`SpringDamperMassUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringDamperMassUserFunction.py) (Ex), [`symbolicUserFunctionMasses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicUserFunctionMasses.py) (Ex), [`loadUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/loadUserFunctionTest.py) (TM), [`multithreadingUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/multithreadingUserFunctionTest.py) (TM), [`symbolicDeepRecordingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicDeepRecordingTest.py) (TM), [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM), [`symbolicItemOutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicItemOutputTest.py) (TM), ...
 
 
 (sec-advancedutilities-createtcpipconnection)=
 ## Function: CreateTCPIPconnection
 
-[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1111)
+[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1182)
 
 - **function description**: function which has to be called before simulation to setup TCP/IP socket (server) for sending and receiving data; can be used to communicate with other Python interpreters or for communication with MATLAB/Simulink
 - **input**:
@@ -529,7 +529,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-tcpipsendreceive)=
 ## Function: TCPIPsendReceive
 
-[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1182)
+[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1253)
 
 - **function description**: call this function at every simulation step at which you intend to communicate with other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
 - **input**:
@@ -553,7 +553,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-closetcpipconnection)=
 ## Function: CloseTCPIPconnection
 
-[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1210)
+[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1281)
 
 - **function description**: close a previously created TCPIP connection
 
@@ -565,6 +565,68 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 ## CLASS ExpectedType(Enum) (in module advancedUtilities)
 
 **class description**: internal type which is used for type checking in exudyn Python user functions; used to create unique error messages
+
+
+(sec-module-advancedutilities-class--symbolicmainsystem)=
+## CLASS _SymbolicMainSystem (in module advancedUtilities)
+
+**class description**: the mbs of a function recorded by CreateSymbolicUserFunction (#2984): GetNodeOutput, GetObjectOutput, GetObjectOutputBody, GetMarkerOutput and GetSensorValues give symbolic expressions, which read the item at every call of the user function in C++; mbs.variables are Python values, constants of the recording; every other attribute raises, as its value would be a constant of the recording
+
+
+(sec-advancedutilities--symbolicmainsystem-variables)=
+### Class function: variables
+
+[`variables(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L759)
+
+- **class function description**: mbs.variables, read while recording
+
+
+(sec-advancedutilities--symbolicmainsystem--output)=
+### Class function: _Output
+
+[`_Output(self, kind, function, itemNumber, variableType, configuration, localPosition = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L763)
+
+- **class function description**: the symbolic output: a Real for a scalar output, a Vector else; the value at recording gives its size
+
+
+(sec-advancedutilities--symbolicmainsystem-getnodeoutput)=
+### Class function: GetNodeOutput
+
+[`GetNodeOutput(self, nodeNumber, variableType, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L787)
+
+- **class function description**: as MainSystem.GetNodeOutput, read at every call
+
+
+(sec-advancedutilities--symbolicmainsystem-getobjectoutput)=
+### Class function: GetObjectOutput
+
+[`GetObjectOutput(self, objectNumber, variableType, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L791)
+
+- **class function description**: as MainSystem.GetObjectOutput, read at every call
+
+
+(sec-advancedutilities--symbolicmainsystem-getobjectoutputbody)=
+### Class function: GetObjectOutputBody
+
+[`GetObjectOutputBody(self, objectNumber, variableType, localPosition = [0, 0, 0], configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L795)
+
+- **class function description**: as MainSystem.GetObjectOutputBody, read at every call
+
+
+(sec-advancedutilities--symbolicmainsystem-getmarkeroutput)=
+### Class function: GetMarkerOutput
+
+[`GetMarkerOutput(self, markerNumber, variableType, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L801)
+
+- **class function description**: as MainSystem.GetMarkerOutput, read at every call
+
+
+(sec-advancedutilities--symbolicmainsystem-getsensorvalues)=
+### Class function: GetSensorValues
+
+[`GetSensorValues(self, sensorNumber, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L805)
+
+- **class function description**: as MainSystem.GetSensorValues, read at every call
 
 
 (sec-module-advancedutilities-class-parameterlayout)=
@@ -589,7 +651,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-parameterlayout-size)=
 ### Class function: Size
 
-[`Size(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1039)
+[`Size(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1110)
 
 - **class function description**: The length of the parameter vector.
 - **output**: the sum of the sizes of the entries
@@ -598,7 +660,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-parameterlayout-tovector)=
 ### Class function: ToVector
 
-[`ToVector(self, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1047)
+[`ToVector(self, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1118)
 
 - **class function description**: The parameter vector of named quantities.
 - **input**:
@@ -609,7 +671,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-parameterlayout-todict)=
 ### Class function: ToDict
 
-[`ToDict(self, parameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1071)
+[`ToDict(self, parameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1142)
 
 - **class function description**: The named quantities of a parameter vector.
 - **input**:

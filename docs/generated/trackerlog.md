@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.206.dev1
+- Exudyn version = 1.13.207.dev1
 - last change = 2026-10-25
 - Number of issues = 3098
-- Number of resolved issues = 2983 (206 in current version)
+- Number of resolved issues = 2984 (207 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9052,9 +9052,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
   - description: revision2026c step RG13.1 (maintainer 2026-10-16): before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
   - date raised: 2026-10-16
-- `EXTENSION` `raised by: Claude-JG` Symbolic: access to the MainSystem and the item functions (#2984)
-  - description: revision2026c step RG12.4: inside a symbolic user function, read what the system has - e.g. the current position of a node, a sensor value - as symbolic expressions evaluated in C++.
-  - date raised: 2026-10-12
 - `CHANGE` `raised by: Claude-JG` General markers for curves, surfaces and volumes instead of the Cable2D markers (#2980)
   - description: revision2026c step RG9.7 (maintainer 2026-10-11; docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
   - **remarks:** 2026-10-25 (\#3097): docs/dev/design/pythonUserItems.md is merged into docs/dev/internals/userItems.md; its section 5.3 is there in section 5 (cable markers, a general shape marker).

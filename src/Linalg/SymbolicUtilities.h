@@ -140,6 +140,31 @@ protected:
 	std::vector<ThreadCopy*> threadCopies; //!< the copy of thread t is threadCopies[t-1]
 	bool copyable = false;				 //!< the recording can be evaluated in the threads, see ThreadCopiesPossible()
 
+	//the outputs of items the recording reads (#2984): they get the MainSystem of the call while it evaluates; a
+	//recording with them is evaluated in the main thread, as they are no leaves of values
+	std::vector<const VectorExpressionItemOutput*> itemOutputs;
+	bool evaluatingItemOutputs = false;
+	//! sets the MainSystem of the call into the outputs of items and takes it back, also on an error; an output that
+	//! calls this function again - the item reading itself - raises instead of overwriting the evaluation
+	struct ItemOutputScope
+	{
+		SymbolicFunction& function;
+		ItemOutputScope(SymbolicFunction& functionInit, const MainSystem& mainSystem) : function(functionInit)
+		{
+			if (function.itemOutputs.empty()) { return; }
+			CHECKandTHROW(!function.evaluatingItemOutputs, "symbolic user function " + function.functionName
+				+ ": an output that it reads by the MainSystem calls the function again; an item cannot read its own output in its user function");
+			function.evaluatingItemOutputs = true;
+			for (const VectorExpressionItemOutput* output : function.itemOutputs) { output->mainSystem = &mainSystem; }
+		}
+		~ItemOutputScope()
+		{
+			if (function.itemOutputs.empty()) { return; }
+			for (const VectorExpressionItemOutput* output : function.itemOutputs) { output->mainSystem = nullptr; }
+			function.evaluatingItemOutputs = false;
+		}
+	};
+
 	//! the copy of the thread that evaluates, nullptr for the main thread
 	ThreadCopy* CurrentThreadCopy() const
 	{
@@ -170,9 +195,17 @@ protected:
 		DeleteThreadCopies();
 		flatProgram.Clear();
 		FlatNode root = ResultNode();
+		itemOutputs.clear();
 		if (root.node != nullptr) //not a constant result
 		{
 			flatProgram.Build({ root });
+			for (Index k = 0; k < flatProgram.NumberOfOperations(); k++) //the outputs of items (#2984)
+			{
+				const FlatNode& node = flatProgram.OperationNode(k);
+				const VectorExpressionItemOutput* output = node.kind == FlatKind::Vector ?
+					dynamic_cast<const VectorExpressionItemOutput*>((const VectorExpressionBase*)node.node) : nullptr;
+				if (output) { itemOutputs.push_back(output); }
+			}
 			if (flatProgram.NumberOfComputations() == 0) { flatProgram.Clear(); } //a leaf: nothing to sort
 		}
 		copyable = ThreadCopiesPossible();
@@ -489,6 +522,7 @@ public:
 	{
 		// Process the rest of the arguments
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 
@@ -504,6 +538,7 @@ public:
 	{
 		// Process the rest of the arguments
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 
@@ -516,6 +551,7 @@ public:
 	{
 		// Process the rest of the arguments
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 
@@ -528,6 +564,7 @@ public:
 	{
 		// Process the rest of the arguments
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 
@@ -540,6 +577,7 @@ public:
 	{
 		// Process the rest of the arguments
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 
@@ -552,6 +590,7 @@ public:
 	{
 		// Process the rest of the arguments
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 
@@ -564,6 +603,7 @@ public:
 	void EvaluateIntoVector(Vector& result, const MainSystem& mainSystem, const Args&... args)
 	{
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 
@@ -576,6 +616,7 @@ public:
 	{
 		// Process the rest of the arguments
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 
@@ -588,6 +629,7 @@ public:
 	{
 		// Process the rest of the arguments
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 
@@ -600,6 +642,7 @@ public:
 	{
 		// Process the rest of the arguments
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 
@@ -618,6 +661,7 @@ public:
 	void EvaluateIntoMatrix(Matrix& result, const MainSystem& mainSystem, const Args&... args)
 	{
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 		result.CopyFrom(EvaluateReturnMatrixRef(copy));
@@ -629,6 +673,7 @@ public:
 	void EvaluateIntoMatrixContainer(EXUmath::MatrixContainer& result, const ArrayIndex& ltg, const MainSystem& mainSystem, const Args&... args)
 	{
 		ThreadCopy* copy = CurrentThreadCopy();
+		ItemOutputScope itemOutputScope(*this, mainSystem);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 		if (resultComponents && ltg.NumberOfItems() != 0) //sparse: only the components that are not the constant 0 (#3022)
@@ -669,8 +714,9 @@ public:
 		//the arguments as the function was recorded with them, after mbs: a Real - also an int, a bool and an
 		//OutputVariableType -, a vector or a matrix (#2985)
 		Index argIndex = 0;
+		const MainSystem* mainSystem = nullptr; //for the outputs of items the recording reads (#2984)
 		for (const auto& arg : args) {
-			if (py::isinstance<MainSystem>(arg)) { continue; } //MainSystem is not stored for now
+			if (py::isinstance<MainSystem>(arg)) { mainSystem = &py::cast<const MainSystem&>(arg); continue; }
 			CHECKandTHROW(argIndex < argRealList.NumberOfItems(), "Symbolic::SymbolicFunction::Evaluate: too many arguments");
 			SymbolicGeneric& symbolicArg = argRealList[argIndex];
 			if (symbolicArg.IsReal())
@@ -692,6 +738,9 @@ public:
 			argIndex++;
 		}
 
+		CHECKandTHROW(mainSystem || itemOutputs.empty(), "symbolic user function " + functionName
+			+ ": Evaluate needs the MainSystem as first argument, as the function reads outputs of items");
+		std::unique_ptr<ItemOutputScope> itemOutputScope(mainSystem ? new ItemOutputScope(*this, *mainSystem) : nullptr);
 		if (returnValue.IsReal())
 		{
 			return py::cast<Real>(EvaluateReturnValue());
