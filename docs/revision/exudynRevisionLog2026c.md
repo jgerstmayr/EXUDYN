@@ -3397,3 +3397,27 @@ suggestion plus an exception, if not needed in our current cases. The algorithmi
   attribute of mbs.
 - Docs: symbolicUserFunctions.md (Reading other items), pybindSymbolic.py, internals/symbolic.md and userFunctions.md,
   the docstring of CreateSymbolicUserFunction, revisions.md. RG12.4 closed with it.
+
+<a id="rg12-2-2"></a>
+### RG12.2.2 — the fixed-size arguments of symbolic user functions copied in one pass (2026-10-25, #3039, #2930)
+*(Maintainer 2026-10-25: #2930 tested, everything looks good now. RG12.2.2: do the measurement; for larger matrices this
+would matter in the future; if it does not extend the code significantly and the speedup is about 10 %, it is worth
+doing.)*
+- Not the race of RG7.8.3: the argument leaves exist per thread (each thread copy has its own), and each call writes
+  those of its thread. The arguments of springForceTorqueUserFunction of ObjectConnectorRigidBodySpringDamper are
+  copied three times: Matrix6D -> std::array by the item, through the std::function by value, into the named leaf by
+  processArgument; only the last is the symbolic code.
+- Measured with tools/benchmarks/userFunctionPerformance.py (rigid6, RK44, fastest of 9), against 1.13.185 from venvP313
+  as reference: 1.13.185 0.571, 1.13.207 0.576-0.587 us per call (no change by today's steps; the table of 1.13.141
+  has 0.407, an other state of the machine). processArgument skipping the matrices after their first call (a
+  measurement build, not kept): 0.449-0.463 us, so the copy by components - SetNumberOfRowsAndColumns and 36 range
+  checked matrix(i, j) per 6x6 matrix, an initializer list per 3x3 - cost about 0.125 us, 21 % of the call.
+- Done: processArgumentMatrix copies a std::array matrix by one std::copy into the memory of the leaf, both by rows
+  (static_assert on the contiguity), resized only if the size differs; the same for std::array vectors (StdVector2D,
+  3D, 6D: one template instead of the initializer lists). rigid6 0.580 -> 0.428 us (0.74 of 1.13.185), cartesian
+  0.38 -> 0.31, load unchanged; results bit for bit. About 20 lines less.
+- Not done: copying only on a change (option B) or reading in place (option C) would save the remaining ~0.03 us, about
+  6 %, below the 10 % of the decision; B needs a change counter of the item at every call site and gains nothing for a
+  recording shared by several items, C a matrix view through the flat evaluation. For large matrix arguments, C is the
+  one to take, with the conversion of the item.
+- The test suite passes.

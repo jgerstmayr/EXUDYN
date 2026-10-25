@@ -82,6 +82,9 @@ each call is `exudyn.symbolic.IfThenElse(condition, a, b)`, a decision at record
 `mbs.GetNodeOutput`, `GetObjectOutput`, `GetObjectOutputBody`, `GetMarkerOutput` and `GetSensorValues` are read by C++
 at every call, with the same results as the Python function; they were constants of the recording. Every other
 attribute of `mbs` raises an `AttributeError` while recording (#2984), see {ref}`sec-symbolicuserfunctions`.
+**Symbolic user functions with fixed-size vector and matrix arguments** copy them in one pass: the
+springForceTorqueUserFunction of ObjectConnectorRigidBodySpringDamper takes 0.43 instead of 0.58 microseconds per call
+(#3039).
 **Deep symbolic recordings**: a recording takes a time linear in its size - a chain of 4000 steps records in 0.013 s
 instead of 1.0 s - and does not overflow the stack at any depth, nor does deleting or printing it; the value of a new
 expression is computed from the values of its operands when they were recorded. `Evaluate()` and `Diff()` of an

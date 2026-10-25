@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.207.dev1
+- Exudyn version = 1.13.208.dev1
 - last change = 2026-10-25
 - Number of issues = 3098
-- Number of resolved issues = 2984 (207 in current version)
+- Number of resolved issues = 2985 (208 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9042,9 +9042,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.
   - date raised: 2026-10-21
-- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Symbolic user functions copy their constant matrix arguments at every call (#3039)
-  - description: Found by revision2026c step RG12.2: the springForceTorqueUserFunction of ObjectConnectorRigidBodySpringDamper takes two 6x6 and two 3x3 matrices, 90 values copied into the named symbolic matrices per call; it costs 0.41 microseconds against 0.23 for the 3D vectors of CartesianSpringDamper. Arguments that are parameters of the item could be copied only when the parameter changes.
-  - date raised: 2026-10-18
 - `CHANGE` `LOW EFF` `raised by: Claude-JG` Make \* of symbolic vectors and matrices the product of the components, as numpy, and remove special.deprecations.symbolicStarProduct (#3016)
   - description: Maintainer 2026-10-17: \* of two symbolic vectors (or with a matrix) raises a TypeError since the issue before, so that scripts change to dot(), @ and multiply(); in about two to three years, when the problems have shown up, \* becomes the component-wise product as in numpy, and the deprecation flag symbolicStarProduct is removed.
   - **remarks:** Delayed on purpose (maintainer 2026-10-17): the plan step RG12.6 is closed, the issue waits for its deadline 2029-01-01.; deferred until 2029-01-01 (Claude-JG, 2026-10-17): \* of symbolic vectors becomes the product of the components once the scripts that used it for the scalar product have shown up through the TypeError of \#3015 (maintainer 2026-10-17)

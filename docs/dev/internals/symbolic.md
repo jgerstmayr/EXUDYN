@@ -209,7 +209,7 @@ For numbers alone, cUtilities stays the fast way (0.63 us against 1.2 to 2.4 us 
 | the MainSystem in an expression | read only: the outputs of items; parameters of items are constants of the recording, writing to the MainSystem is refused | #2984 |
 | derivatives | `Diff` of scalars only, a number: the forward derivative at the current values | - |
 | matrix functions | no inverse, no product of the components of matrices; vectors have `esym.cross` (#3070) | - |
-| constant matrix arguments | copied into the named matrices at every call | #3039 |
+| fixed-size arguments | copied into the named vectors and matrices at every call, in one pass; not read in place | #3039 |
 
 ## 9. Decisions
 

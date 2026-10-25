@@ -116,7 +116,11 @@ of the user functions is measured against (maintainer 2026-10-16: the performanc
 | mass6 (GenericODE2 mass matrix) | matrix out | 4.339 | 3.406 | crashed | 0.373 | 9 |
 
 - **Symbolic**: what remains is the arithmetic and what is copied. `rigid6` copies two 6 x 6 and two 3 x 3 matrices
-  into the named matrices per call (#3039); `mass6` builds 36 expressions, 30 of them constant zeros.
+  into the named matrices per call; the copy in one pass instead of by components took it from 0.58 to 0.43 us on the
+  machine of 1.13.207 (skipping the copy altogether: 0.455 us with the copy by components, so the one-pass copy is
+  about 0.03 us, 6 % of the call, #3039). The item converts its matrices into the std::array arguments once more
+  before; for large matrices, reading them in place would be the next step. `mass6` builds 36 expressions, 30 of them
+  constant zeros.
 - **Python**: the call costs about 0.2 us, the rest is the numpy work of the body; the arguments as numpy views make
   a function of 100 coordinates cost what one of 6 costs.
 - `tools/benchmarks/userFunctionBoundary.py` measures one call with vectors of 1 to 1000 items;

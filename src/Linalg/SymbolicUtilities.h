@@ -880,24 +880,15 @@ protected:
 		vector.SetNumberOfItems(arg.NumberOfItems());
 		std::copy(arg.begin(), arg.end(), vector.begin());
 	}
-	void processArgument(const StdVector3D& arg, ThreadCopy* copy, Index& argIndex)
-	{
-		//directly inject values into stored vector (no new for larger vectors)
-		VectorExpressionNamedReal* leaf = ArgumentVector(copy, argIndex++);
-		if (!leaf) { return; }
-		ResizableConstVector& vector = leaf->GetVector();
-		vector.SetVector({ arg[0], arg[1], arg[2] });
-
-		//argRealList[argIndex++].GetVector()->SetExpressionNamedVector(ResizableConstVector({ arg[0], arg[1], arg[2]}));
-	}
-	void processArgument(const StdVector6D& arg, ThreadCopy* copy, Index& argIndex)
+	//! a vector of fixed size, std::array, copied into the memory of the named vector in one pass (#3039)
+	template<std::size_t n>
+	void processArgument(const std::array<Real, n>& arg, ThreadCopy* copy, Index& argIndex)
 	{
 		VectorExpressionNamedReal* leaf = ArgumentVector(copy, argIndex++);
 		if (!leaf) { return; }
 		ResizableConstVector& vector = leaf->GetVector();
-		vector.SetVector({ arg[0], arg[1], arg[2],  arg[3], arg[4], arg[5] });
-		//argRealList[argIndex++].GetVector()->SetExpressionNamedVector(
-		//	ResizableConstVector({ arg[0], arg[1], arg[2],  arg[3], arg[4], arg[5] }));
+		if (vector.NumberOfItems() != (Index)n) { vector.SetNumberOfItems(n); }
+		std::copy(arg.begin(), arg.end(), vector.begin());
 	}
 
 	void processArgument(const ResizableConstMatrix& arg, ThreadCopy* copy, Index& argIndex)
@@ -907,37 +898,23 @@ protected:
 	}
 	void processArgument(const StdMatrix3D & arg, ThreadCopy* copy, Index& argIndex)
 	{
-		//directly inject values into stored matrix (no new for larger vectors)
-		MatrixExpressionNamedReal* leaf = ArgumentMatrix(copy, argIndex++);
-		if (!leaf) { return; }
-		ResizableConstMatrix& matrix = leaf->GetMatrix();
-		matrix.SetMatrix(3,3, 
-				{ arg[0][0], arg[0][1], arg[0][2],
-				  arg[1][0], arg[1][1], arg[1][2],
-				  arg[2][0], arg[2][1], arg[2][2]
-				});
-
-		//argRealList[argIndex++].GetMatrix()->SetExpressionNamedMatrix(ResizableConstMatrix(3, 3,
-		//	{ arg[0][0], arg[0][1], arg[0][2],
-		//	  arg[1][0], arg[1][1], arg[1][2],
-		//	  arg[2][0], arg[2][1], arg[2][2]
-		//	}));
+		processArgumentMatrix(arg, copy, argIndex);
 	}
 	void processArgument(const StdMatrix6D& arg, ThreadCopy* copy, Index& argIndex)
 	{
+		processArgumentMatrix(arg, copy, argIndex);
+	}
+	//! a matrix of fixed size, std::array of rows, copied into the memory of the named matrix in one pass, as both are
+	//! stored by rows; the copy by components cost about a fifth of a call of RigidBodySpringDamper (#3039)
+	template<std::size_t rows, std::size_t columns>
+	void processArgumentMatrix(const std::array<std::array<Real, columns>, rows>& arg, ThreadCopy* copy, Index& argIndex)
+	{
+		static_assert(sizeof(arg) == rows*columns*sizeof(Real), "a std::array matrix must be contiguous");
 		MatrixExpressionNamedReal* leaf = ArgumentMatrix(copy, argIndex++);
 		if (!leaf) { return; }
 		ResizableConstMatrix& matrix = leaf->GetMatrix();
-		matrix.SetNumberOfRowsAndColumns(6, 6);
-		//ResizableConstMatrix matrix(6, 6);
-		for (Index i = 0; i < 6; i++)
-		{
-			for (Index j = 0; j < 6; j++)
-			{
-				matrix(i, j) = arg[i][j];
-			}
-		}
-		//argRealList[argIndex++].GetMatrix()->SetExpressionNamedMatrix(m);
+		if (matrix.NumberOfRows() != (Index)rows || matrix.NumberOfColumns() != (Index)columns) { matrix.SetNumberOfRowsAndColumns(rows, columns); }
+		std::copy(arg[0].data(), arg[0].data() + rows*columns, matrix.GetDataPointer());
 	}
 	// Function to process Index arguments
 	//void processArgument(Index arg, ResizableArray<SReal*>& argRealList, Index& argIndex)
