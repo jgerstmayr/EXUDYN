@@ -3207,3 +3207,19 @@ the depth? do the evaluation first, then suggest a way to go or a fix.)*
 - python/TestModels/multithreadingUserFunctionTest.py: the chain with a Python user function at the first and a symbolic
   one at the 50th spring-damper, 4 threads against 1 thread: difference 0; reference 0.04949999999999993.
 - RG7.8.3 analysed (plan text): A the evaluation with a context per thread, B the parallel lists; not started.
+
+<a id="rg12-52"></a>
+### RG12.52 — the introduction of exudyn.symbolic (2026-10-25, #3094)
+*(Maintainer 2026-10-25: regarding symbolic, in either case, the introduction section to Python-C++ interface/Symbolic
+has to be improved significantly, giving an overview and the background of the capabilities.)*
+- The introduction of docs/generated/cInterface/Symbolic.md, written in definitions/pybindSymbolic.py: what
+  exudyn.symbolic is for and what a symbolic user function gains (5 to 44 times the Python function, no Python at the
+  call, drawn by the render thread, written out as code); what is recorded (the types, named variables, nodes, numbers
+  computed at once, numpy's meaning, the refusals, the portable functions, symbolicUtilities); symbolic user functions
+  (CreateSymbolicUserFunction, keep it alive, what is supported, the user items); how a recording is evaluated (flat
+  program, Optimize, GetFlatProgram, flatEvaluation, Evaluate, Diff a number); a recording as code (the formats,
+  symbolicExport); what to know (a Python if decided once while recording, IfThenElse; loops unrolled; only
+  exudyn.symbolic and numpy recorded; not yet in the parallel loops; the depth limit; verify against the Python function).
+- Checked while writing it: a Python `if` on a symbolic comparison does not raise while recording but takes the branch
+  of the values of the arguments at the recording, which are zero.
+- A list in a pybind description is a Markdown list; checkDefinitions refuses `i ... \ei` there.

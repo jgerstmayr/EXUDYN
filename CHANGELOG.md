@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 196 | 1.13.199 |
+| 1.13 | Newborn | 197 | 1.13.200 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.200** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` The introduction of exudyn.symbolic: an overview of its capabilities and their background (#3094)
+  - description: revision2026c step RG12.52 (maintainer 2026-10-25: the introduction section of Python-C++ interface/Symbolic has to be improved significantly, giving an overview and the background of the capabilities): what is recorded, symbolic user functions, how a recording is evaluated and optimized, a recording as code, what to know (Python if, what is recorded, threads, depth, verify).
+  - **notes:** The reference page of exudyn.symbolic opens with an overview: what is recorded, symbolic user functions, how a recording is evaluated and optimized, a recording as code, and what to know - a Python if decided once while recording, what is recorded, threads, the depth of a recording, the check against the Python function.
+  - date resolved: **2026-10-25 13:58**, date raised: 2026-10-25
 - **1.13.199** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` Multithreaded ODE2 residual computes the objects with user functions in the threads and skips others (#3093)
   - description: revision2026c step RG7.8.4 (found in RG7.8.3): CSystem::ComputeSystemODE2RHS runs its parallel loop over the number of objects without user functions, but takes them from listComputeObjectODE2Lhs, the list of all; with an object with a user function in that list, objects with user functions are computed in the worker threads and again in the serial loop, and the last objects without user functions are not computed. 100 mass points with spring-dampers, the first with a symbolic springForceUserFunction, 4 threads: the end position 0.0495 against 0.0424613 with 1 thread; with a Python user function the simulation hangs. Fix: listComputeObjectODE2LhsNoUF.
   - **notes:** With more than one thread, the forces of bodies and connectors are computed in parallel for the objects without user functions only; an object with a user function was computed in a worker thread and again in the main thread, and the last objects of the list were left out, which gave wrong results with symbolic user functions and a hang with Python user functions.

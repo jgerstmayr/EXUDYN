@@ -1,0 +1,14 @@
+{
+  "number": 3094,
+  "title": "The introduction of exudyn.symbolic: an overview of its capabilities and their background",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "revision2026c step RG12.52 (maintainer 2026-10-25: the introduction section of Python-C++ interface/Symbolic has to be improved significantly, giving an overview and the background of the capabilities): what is recorded, symbolic user functions, how a recording is evaluated and optimized, a recording as code, what to know (Python if, what is recorded, threads, depth, verify).",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23",
+  "dateResolved": "2026-10-25 13:58",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The reference page of exudyn.symbolic opens with an overview: what is recorded, symbolic user functions, how a recording is evaluated and optimized, a recording as code, and what to know - a Python if decided once while recording, what is recorded, threads, the depth of a recording, the check against the Python function.",
+  "resolvedInVersion": "1.13.200"
+}

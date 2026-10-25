@@ -1873,6 +1873,12 @@ exudyn/misc/symbolicSystem.py.
 
 After RG12.51.1.
 
+### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
+
+CLOSED 2026-10-25 (#3094; maintainer 2026-10-25: the introduction section to Python-C++ interface/Symbolic has to be
+improved significantly, giving an overview and the background of the capabilities): six paragraphs in
+definitions/pybindSymbolic.py instead of one sentence. [log](exudynRevisionLog2026c.md#rg12-52)
+
 ## **OPEN_RG13** Total coordinates
 
 Total coordinates - reference plus current - beside the Current and Reference configurations, in the system data, the
