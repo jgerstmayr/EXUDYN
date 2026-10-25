@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.200.dev1
+- Exudyn version = 1.13.203.dev1
 - last change = 2026-10-25
-- Number of issues = 3095
-- Number of resolved issues = 2977 (200 in current version)
+- Number of issues = 3097
+- Number of resolved issues = 2980 (203 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` bool() of a symbolic value refuses while recording, as float() does (#3096)
+  - description: revision2026c step RG12.49.6 (maintainer 2026-10-25: first a way to still use the if): a Python if on a symbolic comparison is decided once while recording, with the values of the arguments then (zero in CreateSymbolicUserFunction), and records only that branch, silently. bool() shall raise a TypeError while recording, with a message that names both ways that exist: exudyn.symbolic.IfThenElse(condition, a, b), decided at every evaluation, and x.Evaluate() or x.value, decided once at recording, explicitly; before that, the recordings of the test models and examples are checked for an if or a library function that reads bool() of a symbolic value.
+  - date raised: 2026-10-25
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.
   - date raised: 2026-10-21
@@ -9057,9 +9060,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-12
 - `CHANGE` `raised by: Claude-JG` General markers for curves, surfaces and volumes instead of the Cable2D markers (#2980)
   - description: revision2026c step RG9.7 (maintainer 2026-10-11; docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
-  - date raised: 2026-10-12
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic user items: parallel evaluation and graphics (#2978)
-  - description: revision2026c step RG7.8 (docs/dev/design/pythonUserItems.md 5.5): user items whose user functions are all symbolic run in parallel and are drawn directly; example 8; waits for the revision of the symbolic user functions (group RG12).
   - date raised: 2026-10-12
 - `EXTENSION` `raised by: Claude-JG` exudyn.cUtilities: the time derivatives of the Euler parameter functions (#2965)
   - description: Decision D7 of revision2026c step RG11.10.1 (tmp/compareRBU.md, maintainer 2026-10-11: not now, an issue): RigidBodyMath has EP2RotationMatrix\_t, EP\_t2G\_t and EP\_t2Glocal\_t, which neither rigidBodyUtilities nor exudyn.cUtilities offers; when wanted, add them to definitions/pybindCUtilities.py and PyCUtilities.h, with a check in cUtilitiesTest.py.
@@ -9468,9 +9468,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `raised by: Claude-JG` A named exudyn.symbolic.Matrix is never freed (#3092)
-  - description: revision2026c step RG12.49.5 (found in RG12.49.2): esym.Matrix('M', \[\[1., 2.\], \[3., 4.\]\]) leaves one matrix node when it is deleted (esym.Matrix.\_\_newCount - \_\_deleteCount grows by 1); MatrixExpressionReal increments its reference counter in its constructor, and the holder once more. A named vector and a named Real are freed.
-  - date raised: 2026-10-25
 - <span class="textred">`BUG`</span> `raised by: Claude-JG` Deep symbolic recordings overflow the C++ stack (#3090)
   - description: revision2026c step RG12.49.4 (found in RG12.50.3): a chain x = sin(x\*q\[1\] + c)\*q\[2\] recorded 8000 times (about 32000 nested nodes) crashes Python with a stack overflow in str(); 30000 times already while recording. ToString, Evaluate, Diff and Destroy of the expression tree are recursive; FlatProgram::Build and GetFlatProgramData are not. Make the tree functions iterative or refuse the depth with an error.
   - **remarks:** evaluated 2026-10-25 (RG12.49.4): deepest recording of the test models 44; limits with the 2 MB stack of python.exe: recording and Evaluate 34000 nested nodes, Diff 28000, str 9000; recording quadratic in depth (SReal evaluates its tree); proposal in the log, waiting for the decision

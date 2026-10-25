@@ -447,8 +447,9 @@ void CObjectUserBody::EvaluatePositionJacobian(Matrix& value, Real t, const Vect
 void CObjectUserBody::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates,
 	const Vector& coordinates_t) const
 {
-	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, bufferRotation, t, localPosition, qRef, coordinates, coordinates_t);
-	value.CopyFrom(bufferRotation);
+	static thread_local ResizableMatrix rotation; //memory kept between the calls (#3046), per thread (#2978)
+	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, rotation, t, localPosition, qRef, coordinates, coordinates_t);
+	value.CopyFrom(rotation);
 }
 
 void CObjectUserBody::EvaluateRotationJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates,
@@ -595,8 +596,9 @@ void CNodeUser::EvaluatePositionJacobian(Matrix& value, Real t, const Vector& qR
 void CNodeUser::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	if (!(parameters.rotationMatrixUserFunction)) { PyError("NodeUser: rotationMatrixUserFunction is not given, but a rigid marker, sensor or output asks for the orientation", PyErrorType::valueError); }
-	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, 3, bufferRotation, t, qRef, coordinates, coordinates_t);
-	value.CopyFrom(bufferRotation);
+	static thread_local ResizableMatrix rotation; //memory kept between the calls (#3049), per thread (#2978)
+	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, 3, rotation, t, qRef, coordinates, coordinates_t);
+	value.CopyFrom(rotation);
 }
 
 //! the user function, or column k the axial vector of (dR/dq_k) R^T, dR/dq_k by central differences

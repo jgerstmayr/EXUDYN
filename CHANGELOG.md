@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 197 | 1.13.200 |
+| 1.13 | Newborn | 200 | 1.13.203 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.203** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The parallel PostNewtonStep loop computes connectors with Python user functions in the threads (#3095)
+  - description: revision2026c step RG7.8.5 (found in RG7.8.3): CSystem::PostNewtonStep runs listDiscontinuousIteration in the threads without regard to user functions; an ObjectConnectorRigidBodySpringDamper with a Python postNewtonStepUserFunction and numberOfThreads=4 hangs, as the worker thread waits for the GIL that the main thread holds (measured: 4 such connectors, 50 steps, no end after 60 s).
+  - **notes:** The post-Newton step of the connectors runs in the main thread if one of them has a user function that is computed there, e.g. a Python postNewtonStepUserFunction of ObjectConnectorRigidBodySpringDamper, which hung with more than one thread; symbolicUserFunctionThreadsTest.py.
+  - date resolved: **2026-10-25 15:22**, date raised: 2026-10-25
+- **1.13.202** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` A named exudyn.symbolic.Matrix is never freed (#3092)
+  - description: revision2026c step RG12.49.5 (found in RG12.49.2): esym.Matrix('M', \[\[1., 2.\], \[3., 4.\]\]) leaves one matrix node when it is deleted (esym.Matrix.\_\_newCount - \_\_deleteCount grows by 1); MatrixExpressionReal increments its reference counter in its constructor, and the holder once more. A named vector and a named Real are freed.
+  - **notes:** A named exudyn.symbolic.Matrix is freed with its last reference; its constructor from an array counted the node twice in Matrix.\_\_newCount, which looked like a node left over. symbolicOptimizeTest.py counts the named matrix.
+  - date resolved: **2026-10-25 15:22**, date raised: 2026-10-25
+- **1.13.201** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic user items: parallel evaluation and graphics (#2978)
+  - description: revision2026c step RG7.8 (docs/dev/design/pythonUserItems.md 5.5): user items whose user functions are all symbolic run in parallel and are drawn directly; example 8; waits for the revision of the symbolic user functions (group RG12).
+  - **notes:** With more than one thread, an item whose user functions are all symbolic is computed in the threads of the parallel loops, as an item without user functions: each thread evaluates its own copy of the recording, with the same results; an item with a Python user function, and the connectors, loads, markers and bodies that read it, are computed in the main thread, also after a user function was set during the simulation. ObjectUserBody and NodeUser keep their buffers per thread. 200 symbolic user rigid bodies take 0.31 s with 4 threads instead of 0.77 s; symbolicUserFunctionThreadsTest.py.
+  - date resolved: **2026-10-25 15:22**, date raised: 2026-10-12
 - **1.13.200** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` The introduction of exudyn.symbolic: an overview of its capabilities and their background (#3094)
   - description: revision2026c step RG12.52 (maintainer 2026-10-25: the introduction section of Python-C++ interface/Symbolic has to be improved significantly, giving an overview and the background of the capabilities): what is recorded, symbolic user functions, how a recording is evaluated and optimized, a recording as code, what to know (Python if, what is recorded, threads, depth, verify).
   - **notes:** The reference page of exudyn.symbolic opens with an overview: what is recorded, symbolic user functions, how a recording is evaluated and optimized, a recording as code, and what to know - a Python if decided once while recording, what is recorded, threads, the depth of a recording, the check against the Python function.

@@ -20,6 +20,8 @@
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 
+class UserFunctionBase;
+
 class CLoad //
 {
 protected: //
@@ -57,6 +59,8 @@ public: //
 
   //! determine if load has user function, used for Static computations, avoiding to conflict between load user function and loadFactor
   virtual bool HasUserFunction() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::IsVector"); return false; }
+  //! the user functions of the item, for the lists of the parallel loops (#2978); the generated items with user functions list them
+  virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const {}
 
   //! Read (Reference) access to: general load vector (e.g. force or torque) as a function of time; used if LoadType::IsVector = 1
   virtual Vector3D GetLoadVector(const MainSystemBase& mbs, Real t) const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadVector(Real t) const"); Vector3D* v = new Vector3D(0.); return *v;

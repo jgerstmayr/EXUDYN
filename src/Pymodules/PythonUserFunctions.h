@@ -68,14 +68,45 @@ inline const char* GetUserFunctionTypeString(UserFunctionType var)
 	}
 }
 
+//! the number of user functions set so far, Python or symbolic, to any item: the lists of the parallel loops follow
+//! a user function set during a simulation (#2978)
+Index UserFunctionAssignmentCount();
+
+//! what every user function has, whatever its arguments: its kind and its symbolic function; for the lists of the
+//! parallel loops (#2978)
+class UserFunctionBase
+{
+protected:
+	UserFunctionType ufType;
+	Symbolic::PySymbolicUserFunction* symbolicFunction; //!< the symbolic function held by pyObject, or nullptr (#3006)
+	bool pythonArgument; //!< an argument is a Python object (ObjectConnectorUser): computed in the main thread
+public:
+	UserFunctionBase() : ufType(UserFunctionType::_None), symbolicFunction(nullptr), pythonArgument(false) {}
+
+	UserFunctionType GetUFtype() const { return ufType; }
+	//! the symbolic function, for an evaluation without the std::function (EvaluateUserFunctionIntoVector); nullptr for
+	//! a Python function, and for a symbolic one set only as std::function (#3006)
+	Symbolic::PySymbolicUserFunction* GetSymbolicFunction() const { return symbolicFunction; }
+	//! return true, if user functions exists
+	bool IsValid() const { return ufType != UserFunctionType::_None; }
+	//! true, if it can be computed in the threads of the parallel loops: none, or a symbolic function evaluated by its
+	//! flat program, which has a copy of its recording per thread; a Python function holds the GIL (#2978)
+	bool ComputableInThreads() const;
+	//! the copies of the recording of a symbolic function for numberOfThreads threads; nothing for the other kinds (#2978)
+	void PrepareThreads(Index numberOfThreads) const;
+};
+
+//! true, if an argument of the user function is a Python object
+template<typename T> struct UserFunctionHasPythonArgument : std::false_type {};
+template<typename R, typename... Args> struct UserFunctionHasPythonArgument<std::function<R(Args...)>>
+	: std::integral_constant<bool, (std::is_same_v<std::decay_t<Args>, pybind11::object> || ...)> {};
+
 //! class to encapsulate user functions, according to UserFunctionType
 template <typename UFT>
-class PythonUserFunctionBase
+class PythonUserFunctionBase : public UserFunctionBase
 {
 private:
 	pybind11::object* pyObject;
-	UserFunctionType ufType;
-	Symbolic::PySymbolicUserFunction* symbolicFunction; //!< the symbolic function held by pyObject, or nullptr (#3006)
 public:
 	UFT userFunction;
 
@@ -95,14 +126,8 @@ public:
 
 	//! flag: true=stored valid user function (UF!=0); false=no user function (UF==0)
 	void SetUFtype(UserFunctionType typeInit) { ufType = typeInit; }
-	UserFunctionType GetUFtype() const { return ufType; }
-	//! the symbolic function, for an evaluation without the std::function (EvaluateUserFunctionIntoVector); nullptr for
-	//! a Python function, and for a symbolic one set only as std::function (#3006)
-	Symbolic::PySymbolicUserFunction* GetSymbolicFunction() const { return symbolicFunction; }
 	//! the Python function (UserFunctionType::Python), for a call without the std::function (#3008)
 	const pybind11::object& GetPythonObject() const { return *pyObject; }
-	//! return true, if user functions exists
-	bool IsValid() const { return ufType != UserFunctionType::_None; }
 	void Reset();
 
 	//! comparison operator, just for comparison with 0

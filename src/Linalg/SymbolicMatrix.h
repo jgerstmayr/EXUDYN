@@ -779,7 +779,7 @@ public:
 	{
 		EPyUtils::FromPython(matrixInit, matrix);
 		if (SReal::recordExpressions) {
-			MatrixExpressionBase::newCount += 1 + (exprMatrix == 0);
+			MatrixExpressionBase::NewCount()++;
 			exprMatrix = new MatrixExpressionNamedReal(matrix, name);
 		}
 	}

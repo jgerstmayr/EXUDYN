@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-23  07:18:08 (last modified)
+* @date         2026-10-25  15:08:34 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -99,14 +99,7 @@ protected: // AUTO:
     void CheckResultSize(const char* name, Index rows, Index columns, Index requiredRows, Index requiredColumns) const;
     //! a Jacobian times the velocity coordinates, in a configuration (#2995)
     Vector3D JacobianTimesVelocity(bool rotation, const Vector3D& localPosition, ConfigurationType configuration) const;
-    //! the matrices and vectors of the computations above, which keep their memory between the calls (#3046); each is
-    //! written by a copy after a user function returned, so that a user function that asks the body again does not
-    //! change what its caller reads
-    mutable ResizableMatrix bufferJacobian;
-    mutable ResizableMatrix bufferRotation;
-    mutable ResizableVector bufferPlus;
-    mutable ResizableVector bufferMinus;
-    //! the mass matrix of constantMassMatrix, in the local coordinates of the body: computed once, as in the ANCF
+//! the mass matrix of constantMassMatrix, in the local coordinates of the body: computed once, as in the ANCF
     //! elements, and again after a change of a parameter or Assemble (#3058, approved storage of a value, D18)
     mutable bool massMatrixComputed = false;
     mutable EXUmath::MatrixContainer storedMassMatrix;
@@ -120,13 +113,26 @@ public: // AUTO:
     //! AUTO: Read access to parameters
     virtual const CObjectUserBodyParameters& GetParameters() const { return parameters; }
 
+    //! AUTO: the user functions of the item, for the parallel computation (#2978)
+    virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const override
+    {
+        list.Append(&parameters.massMatrixUserFunction);
+        list.Append(&parameters.massIntegralUserFunction);
+        list.Append(&parameters.forceUserFunction);
+        list.Append(&parameters.positionUserFunction);
+        list.Append(&parameters.positionJacobianUserFunction);
+        list.Append(&parameters.rotationMatrixUserFunction);
+        list.Append(&parameters.rotationJacobianUserFunction);
+        list.Append(&parameters.outputVariableUserFunction);
+    }
+
     //! AUTO:  no PotentialEnergy: the user function defines the forces
     virtual bool PotentialEnergyAvailable() const override
     {
         return false;
     }
 
-    //! AUTO:  the user functions are called serially
+    //! AUTO:  the body has user functions; with symbolic ones only, it is computed in the threads of the parallel loops (#2978)
     virtual bool HasUserFunction() const override
     {
         return true;

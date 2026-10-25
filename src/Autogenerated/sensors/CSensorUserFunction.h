@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-16  13:28:11 (last modified)
+* @date         2026-10-25  14:35:54 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -84,6 +84,12 @@ public: // AUTO:
     virtual CSensorUserFunctionParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
     virtual const CSensorUserFunctionParameters& GetParameters() const { return parameters; }
+
+    //! AUTO: the user functions of the item, for the parallel computation (#2978)
+    virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const override
+    {
+        list.Append(&parameters.sensorUserFunction);
+    }
 
     //! AUTO:  general access to sensor number
     virtual Index GetSensorNumber(Index localIndex) const override

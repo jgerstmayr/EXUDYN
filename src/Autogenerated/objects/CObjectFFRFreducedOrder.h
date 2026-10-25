@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  13:28:01 (last modified)
+* @date         2026-10-25  14:35:54 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -147,6 +147,13 @@ public: // AUTO:
     virtual CObjectFFRFreducedOrderParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
     virtual const CObjectFFRFreducedOrderParameters& GetParameters() const { return parameters; }
+
+    //! AUTO: the user functions of the item, for the parallel computation (#2978)
+    virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const override
+    {
+        list.Append(&parameters.forceUserFunction);
+        list.Append(&parameters.massMatrixUserFunction);
+    }
 
     //! AUTO:  Write (Reference) access to:ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, some internal (constant) ABRV:FFRF matrices are recomputed during Assemble()
     void SetObjectIsInitialized(const bool& value) { objectIsInitialized = value; }

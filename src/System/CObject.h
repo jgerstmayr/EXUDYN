@@ -61,6 +61,7 @@ public:
 
 class CObject;
 class CSystemData;
+class UserFunctionBase;
 
 //! this is a class belonging to CObject, which can be used to derive object-specific special functions, to be called under certain events (e.g. start of time step)
 class SpecialObjectFunctionsContainer
@@ -127,6 +128,8 @@ public:
 
 	//! function to be overwritten, if object has user function
 	virtual bool HasUserFunction() const { return false; }
+	//! the user functions of the item, for the lists of the parallel loops (#2978); the generated items with user functions list them
+	virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const {}
 
 	//! false where the object cannot compute its PotentialEnergy with its current parameters, e.g. with a user function
 	//! defining its force (#2202); mbs.Inspect then does not list it (#2203)

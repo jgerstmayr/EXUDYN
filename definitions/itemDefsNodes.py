@@ -2154,8 +2154,6 @@ definitions.append(ItemDefinition(
         const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
     //! the velocity coordinates of a configuration, zero in the reference configuration (#3056)
     void Velocities(ResizableConstVector& q_t, ConfigurationType configuration) const;
-    //! the matrix of the rotation user function, which keeps its memory between the calls (#3049)
-    mutable ResizableMatrix bufferRotation;
 """,
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A node with any number of ABRV:ODE2 coordinates, whose position, and optionally orientation, are computed from its coordinates by Python user functions: a node for elements whose nodes are not in Exudyn, such as an ANCF node with full gradients. The node markers (MarkerNodePosition, MarkerNodeRigid, MarkerNodeCoordinate), SensorNode, loads on these markers and every connector work on it.""",

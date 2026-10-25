@@ -31,6 +31,7 @@
 
 class CData;
 class CSystemData;
+class UserFunctionBase;
 
 ////! nodetype is used to know, which quantities can be measured (position, rotation) and which actions are possible (force, moment)
 //enum class CNodeType {
@@ -133,6 +134,8 @@ public:
 	virtual void SetCSystemData(CSystemData* cSystemData) {}
 	//! true if the access functions of the node call Python user functions: it is drawn in the main thread (#2974, #3003)
 	virtual bool AccessFunctionsCallUserFunctions() const { return false; }
+	//! the user functions of the item, for the lists of the parallel loops (#2978); the generated items with user functions list them
+	virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const {}
     virtual Node::Type GetType() const { CHECKandTHROWstring("CNode::GetType"); return Node::_None; }
 
     friend std::ostream& operator<<(std::ostream& os, const CNode& object) {

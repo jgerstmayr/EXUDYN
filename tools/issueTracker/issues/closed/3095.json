@@ -1,0 +1,16 @@
+{
+  "number": 3095,
+  "title": "The parallel PostNewtonStep loop computes connectors with Python user functions in the threads",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "revision2026c step RG7.8.5 (found in RG7.8.3): CSystem::PostNewtonStep runs listDiscontinuousIteration in the threads without regard to user functions; an ObjectConnectorRigidBodySpringDamper with a Python postNewtonStepUserFunction and numberOfThreads=4 hangs, as the worker thread waits for the GIL that the main thread holds (measured: 4 such connectors, 50 steps, no end after 60 s).",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23",
+  "dateResolved": "2026-10-25 15:22",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/CSystem.cpp",
+  "releaseNotes": "The post-Newton step of the connectors runs in the main thread if one of them has a user function that is computed there, e.g. a Python postNewtonStepUserFunction of ObjectConnectorRigidBodySpringDamper, which hung with more than one thread; symbolicUserFunctionThreadsTest.py.",
+  "resolvedInVersion": "1.13.203"
+}

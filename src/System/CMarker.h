@@ -22,6 +22,8 @@
 #include "Main/MarkerData.h" 
 
 
+class UserFunctionBase;
+
 class CMarker // 
 {
 protected: // 
@@ -105,6 +107,8 @@ public: //
 	//! true if the marker calls Python user functions itself (MarkerUser, #3065): it and what depends on it are drawn in
 	//! the main thread (#3003)
 	virtual bool AccessFunctionsCallUserFunctions() const { return false; }
+	//! the user functions of the item, for the lists of the parallel loops (#2978); the generated items with user functions list them
+	virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const {}
 
 	//should be filled directly into markerdata
 	////! Jacobian of position with respect to all body/node DOF

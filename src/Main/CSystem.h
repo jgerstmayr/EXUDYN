@@ -90,6 +90,8 @@ protected:
 	//Index numberOfThreads;				//!< multithreading information set by solver
 
 	bool systemIsConsistent = false;		//!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
+	Index userFunctionAssignmentsOfLists = -1; //!< UserFunctionAssignmentCount() when the item lists were computed (#2978)
+	Index threadsOfUserFunctions = 0;		//!< the threads the symbolic user functions have copies for since then (#2978)
 	ResizableArray<GeneralContact*> generalContacts;	//!< array of general contacts, that are not objects
 
 public:
@@ -201,6 +203,10 @@ public:
 
 	//! precompute item lists (special lists for constraints, connectors, etc.)
 	void PreComputeItemLists();
+
+	//! before a parallel loop: the item lists follow the user functions set since they were computed, e.g. in a
+	//! preStepUserFunction, and the symbolic user functions computed in the threads have their copies for them (#2978)
+	void UpdateUserFunctionsForThreads();
 
 	//! reset lists for Lie groups when Assemble is called; this should require no memory (e.g. in expl. integrators)
 	void InitLieGroupLists();

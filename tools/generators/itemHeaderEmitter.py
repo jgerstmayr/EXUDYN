@@ -399,8 +399,19 @@ def ItemCppHeaders(definition):
             sList[i+2]+=space4+'virtual ' + classNames[i] + '& GetParameters() { return parameters; }\n'
             sList[i+2]+=space4+'//! AUTO: Read access to parameters\n'
             sList[i+2]+=space4+'virtual const ' + classNames[i] + '& GetParameters() const { return parameters; }\n\n'
-            
-        
+
+    #the user functions of the computation, for the lists of the parallel loops (#2978)
+    userFunctionNames = [CppName(parameter) for parameter in parameterList
+                         if TypeName(parameter).find('PyFunction') != -1 and IsOwnVariable(parameter)
+                         and DestinationNr(Destination(parameter)) == 0]
+    if len(userFunctionNames) != 0:
+        sList[2]+=space4+'//! AUTO: the user functions of the item, for the parallel computation (#2978)\n'
+        sList[2]+=space4+'virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const override\n'
+        sList[2]+=space4+'{\n'
+        for name in userFunctionNames:
+            sList[2]+=space8+'list.Append(&parameters.' + name + ');\n'
+        sList[2]+=space4+'}\n\n'
+
 
     #GetClone() function:
     # should not be done with objects; with parameters it should not be necessary (no ObjectList<parameterObject>)

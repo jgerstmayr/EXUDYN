@@ -1,0 +1,130 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  Symbolic user functions in the threads of the parallel loops (#2978): a chain of mass points and
+#           spring-dampers, all with one symbolic springForceUserFunction, one with a Python function; at t = 0.02 a
+#           preStepUserFunction gives a connector a Python function and another one a second symbolic function; mass
+#           points as ObjectUserBody with symbolic user functions - a constant mass matrix and a position - and
+#           spring-dampers without user functions between them, which are computed in the threads as the bodies; a
+#           rigid body on an ObjectConnectorRigidBodySpringDamper with a Python postNewtonStepUserFunction, whose
+#           loop is then computed in the main thread. The positions with 4 threads equal those with 1 thread.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-25
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import ObjectGround, MarkerBodyPosition, MarkerBodyRigid, NodePoint, NodeRigidBodyEP, NodeGenericData, \
+    MassPoint, RigidBody, MarkerNodePosition, ObjectConnectorSpringDamper, ObjectConnectorRigidBodySpringDamper, \
+    ObjectUserBody, LoadForceVector, RotationMatrix2EulerParameters
+from exudyn.advancedUtilities import CreateSymbolicUserFunction
+import numpy as np
+esym = exu.symbolic
+
+def SpringForce(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
+    """a spring twice as stiff as the parameter"""
+    return 2*stiffness*deltaL + damping*deltaL_t
+
+def SpringForceSoft(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
+    """a spring half as stiff as the parameter"""
+    return 0.5*stiffness*deltaL + damping*deltaL_t
+
+def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return esym.Matrix(np.eye(3)) #a constant: the evaluation only reads it
+
+def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return qTotal + localPosition
+
+def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return esym.Matrix(np.eye(3))
+
+def PostNewton(mbs, t, itemNumber, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping,
+               rotJ0, rotJ1, offset):
+    """no error, no recommended step size, the data coordinate counts the steps"""
+    return [0, -1, dataCoordinates[0] + 1]
+
+n = 40
+def Solve(numberOfThreads):
+    """the system, solved with numberOfThreads; the positions of the mass points, user bodies and rigid body"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    ground = mbs.AddObject(ObjectGround())
+    keep = [] #the symbolic user functions
+    connectors = []
+    #the chain of mass points
+    markers = [mbs.AddMarker(MarkerBodyPosition(bodyNumber=ground))]
+    nodes = []
+    for i in range(n):
+        nodes.append(mbs.AddNode(NodePoint(referenceCoordinates=[i + 1., 0, 0])))
+        mbs.AddObject(MassPoint(nodeNumber=nodes[-1], mass=1.))
+        markers.append(mbs.AddMarker(MarkerNodePosition(nodeNumber=nodes[-1])))
+    for i in range(n):
+        connectors.append(mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[markers[i], markers[i+1]], referenceLength=1,
+                                                                    stiffness=100 + i, damping=0.1)))
+        if i == 0:
+            keep += [CreateSymbolicUserFunction(mbs, SpringForce, 'springForceUserFunction', connectors[0]),
+                     CreateSymbolicUserFunction(mbs, SpringForceSoft, 'springForceUserFunction', connectors[0])]
+        mbs.SetObjectParameter(connectors[-1], 'springForceUserFunction', SpringForce if i == n//2 else keep[0])
+    mbs.AddLoad(LoadForceVector(markerNumber=markers[-1], loadVector=[10, 0, 0]))
+
+    #mass points as user bodies, connected by spring-dampers without user functions
+    bodyMarkers = [mbs.AddMarker(MarkerBodyPosition(bodyNumber=ground, localPosition=[0, -1, 0]))]
+    for i in range(10):
+        node = mbs.AddNode(NodePoint(referenceCoordinates=[i + 1., -1, 0]))
+        body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node]))
+        for (name, function) in [('massMatrixUserFunction', UFmass), ('positionUserFunction', UFposition),
+                                 ('positionJacobianUserFunction', UFpositionJacobian)]:
+            keep += [CreateSymbolicUserFunction(mbs, function, name, body)]
+            mbs.SetObjectParameter(body, name, keep[-1])
+        bodyMarkers.append(mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)))
+        mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[bodyMarkers[-2], bodyMarkers[-1]], referenceLength=1,
+                                                  stiffness=200, damping=0.2))
+    mbs.AddLoad(LoadForceVector(markerNumber=bodyMarkers[-1], loadVector=[0, -5, 0]))
+
+    #a rigid body with a postNewtonStepUserFunction in Python
+    nRigid = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, -2, 0] + list(RotationMatrix2EulerParameters(np.eye(3)))))
+    oRigid = mbs.AddObject(RigidBody(nodeNumber=nRigid, mass=1, inertia=[0.1, 0.1, 0.1, 0, 0, 0]))
+    nData = mbs.AddNode(NodeGenericData(initialCoordinates=[0], numberOfDataCoordinates=1))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground, localPosition=[0, -2, 0]))
+    mRigid = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oRigid))
+    mbs.AddObject(ObjectConnectorRigidBodySpringDamper(markerNumbers=[mGround, mRigid], nodeNumber=nData,
+                                                       stiffness=100*np.eye(6), damping=0.1*np.eye(6),
+                                                       postNewtonStepUserFunction=PostNewton))
+    mbs.AddLoad(LoadForceVector(markerNumber=mRigid, loadVector=[1, 0, 0]))
+
+    def PreStep(mbs, t):
+        if t >= 0.02 - 1e-12 and t < 0.02 + 1e-5: #user functions set during the simulation
+            mbs.SetObjectParameter(connectors[5], 'springForceUserFunction', SpringForce)
+            mbs.SetObjectParameter(connectors[7], 'springForceUserFunction', keep[1])
+        return True
+    mbs.SetPreStepUserFunction(PreStep)
+    mbs.Assemble()
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 50
+    simulationSettings.timeIntegration.endTime = 0.05
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.file.write = False
+    simulationSettings.parallel.numberOfThreads = numberOfThreads
+    simulationSettings.parallel.multithreadedLowerLimitResiduals = 1
+    simulationSettings.parallel.multithreadedLowerLimitMassMatrices = 1
+    simulationSettings.parallel.multithreadedLowerLimitLoads = 1
+    mbs.SolveDynamic(simulationSettings)
+    positions = [mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] for node in nodes]
+    positions += [mbs.GetObjectOutputBody(b, exu.OutputVariableType.Position, localPosition=[0, 0, 0])[1]
+                  for b in range(mbs.systemData.NumberOfObjects()) if mbs.GetObject(b)['objectType'] == 'UserBody']
+    positions += [mbs.GetNodeOutput(nRigid, exu.OutputVariableType.Position)[0], float(mbs.GetNodeOutput(nData, exu.OutputVariableType.Coordinates))]
+    return np.array(positions)
+
+serial = Solve(1)
+parallel = Solve(4)
+difference = float(np.max(np.abs(parallel - serial)))
+exu.Print('largest difference of 4 threads to 1 thread:', difference)
+
+u = float(np.sum(serial)) + int(difference > 1e-14)
+exu.Print('solution of symbolicUserFunctionThreadsTest=', u)
+
+exu.sys['testResult'] = u

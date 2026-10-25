@@ -16,6 +16,7 @@
 
 #include <initializer_list> //for initializer_list in constructor
 #include "Linalg/MatrixContainer.h" //matrix results of symbolic user functions (#3020)
+#include "Utilities/Threading.h" //the thread of an evaluation in the parallel loops (#2978)
 
 extern bool linalgPrintUsePythonFormat; 
 
@@ -127,20 +128,77 @@ protected:
 	FlatProgram flatProgram;
 	bool flatEvaluation = true;
 
+	//the evaluation in the threads of the parallel loops (#2978): the thread t > 0 evaluates its own copy of the
+	//recording - its operations, which keep the values of their vectors and matrices, its arguments and its flat
+	//program; the numbers and the variables other than the arguments are shared, as an evaluation only reads them
+	struct ThreadCopy
+	{
+		FlatNode root;					//!< the result of the copy, referenced by it
+		std::vector<FlatNode> arguments; //!< the leaf of argument i in the copy, referenced by it; empty if the recording does not use it
+		FlatProgram flatProgram;
+	};
+	std::vector<ThreadCopy*> threadCopies; //!< the copy of thread t is threadCopies[t-1]
+	bool copyable = false;				 //!< the recording can be evaluated in the threads, see ThreadCopiesPossible()
+
+	//! the copy of the thread that evaluates, nullptr for the main thread
+	ThreadCopy* CurrentThreadCopy() const
+	{
+		Index thread = ExuThreading::TaskManager::GetThreadId();
+		if (thread == 0) { return nullptr; }
+		CHECKandTHROW(thread <= (Index)threadCopies.size(), "symbolic user function " + functionName
+			+ ": evaluated in a thread for which it has no copy of its recording");
+		return threadCopies[thread - 1];
+	}
+	//! true, if the recording can be evaluated in the threads (#2978): by copies of its flat program, if every operation
+	//! without operands is a number, a vector, a matrix or a variable; without a flat program, if the result is a
+	//! constant or a leaf other than an argument, which an evaluation only reads
+	bool ThreadCopiesPossible() const;
+	//! the node of the result; nullptr for a constant result
+	FlatNode ResultNode() const
+	{
+		if (returnValue.IsReal() && returnValue.GetReal()) { return FlatNode(returnValue.GetReal()->GetExpression()); }
+		if (returnValue.IsVector() && returnValue.GetVector()) { return FlatNode(returnValue.GetVector()->GetExpression()); }
+		if (returnValue.IsMatrix() && returnValue.GetMatrix()) { return FlatNode(returnValue.GetMatrix()->GetExpression()); }
+		return FlatNode();
+	}
+//! free the copies of the threads; they refer to the leaves of the recording
+	void DeleteThreadCopies();
+
 	//! build the flat program of the result
 	void BuildFlatProgram()
 	{
+		DeleteThreadCopies();
 		flatProgram.Clear();
-		FlatNode root;
-		if (returnValue.IsReal() && returnValue.GetReal()) { root = FlatNode(returnValue.GetReal()->GetExpression()); }
-		else if (returnValue.IsVector() && returnValue.GetVector()) { root = FlatNode(returnValue.GetVector()->GetExpression()); }
-		else if (returnValue.IsMatrix() && returnValue.GetMatrix()) { root = FlatNode(returnValue.GetMatrix()->GetExpression()); }
-		if (root.node == nullptr) { return; } //a constant result
-		flatProgram.Build({ root });
-		if (flatProgram.NumberOfComputations() == 0) { flatProgram.Clear(); } //a leaf: nothing to sort
+		FlatNode root = ResultNode();
+		if (root.node != nullptr) //not a constant result
+		{
+			flatProgram.Build({ root });
+			if (flatProgram.NumberOfComputations() == 0) { flatProgram.Clear(); } //a leaf: nothing to sort
+		}
+		copyable = ThreadCopiesPossible();
 	}
 	//! true, if the result is evaluated by the flat program
 	bool UseFlatProgram() const { return flatEvaluation && flatProgram.IsBuilt(); }
+
+	//! the leaf of argument i that an evaluation writes: of the recording, or of the copy of its thread; nullptr if the
+	//! copy does not use the argument (#2978)
+	ExpressionNamedReal* ArgumentReal(ThreadCopy* copy, Index i)
+	{
+		if (copy) { return (ExpressionNamedReal*)copy->arguments[i].node; }
+		SReal* real = argRealList[i].GetReal();
+		CHECKandTHROW(real->IsExpressionNamedReal(), "SReal::SetExpressionNamedReal expects ExpressionNamedReal in expression");
+		return &real->GetExpressionNamedReal();
+	}
+	VectorExpressionNamedReal* ArgumentVector(ThreadCopy* copy, Index i)
+	{
+		if (copy) { return (VectorExpressionNamedReal*)copy->arguments[i].node; }
+		return &argRealList[i].GetVector()->GetExpressionNamedReal();
+	}
+	MatrixExpressionNamedReal* ArgumentMatrix(ThreadCopy* copy, Index i)
+	{
+		if (copy) { return (MatrixExpressionNamedReal*)copy->arguments[i].node; }
+		return &argRealList[i].GetMatrix()->GetExpressionNamedReal();
+	}
 
 public:
 	SymbolicFunction() : //scalarType(true), vectorSize(0), 
@@ -184,6 +242,13 @@ public:
 	void SetFlatEvaluation(bool flag) { flatEvaluation = flag; }
 	bool GetFlatEvaluation() const { return flatEvaluation; }
 
+	//! true, if it can be evaluated in the threads of the parallel loops: by its flat program, which can be copied (#2978)
+	bool CanEvaluateInThreads() const { return copyable && (flatEvaluation || !flatProgram.IsBuilt()); }
+	//! the copies of the recording for the threads 1 ... numberOfThreads-1 that are missing (#2978)
+	void PrepareThreads(Index numberOfThreads);
+	//! the number of copies of the recording for the threads
+	Index NumberOfThreadCopies() const { return (Index)threadCopies.size(); }
+
 	//! the flat program as text, one operation per line (#3053); flatten = false: the result as one expression (#3087)
 	STDstring FlatProgramToString(bool flatten = true) const
 	{
@@ -205,6 +270,7 @@ public:
 
 	virtual void Delete()
 	{
+		DeleteThreadCopies(); //before the recording, whose leaves they share
 		//done by destructors:
 		for (SymbolicGeneric& linkedRealPtr : argRealList)
 		{
@@ -220,35 +286,44 @@ public:
 		return returnValue.ToString();
 	}
 
-	virtual Real EvaluateReturnValue() const
+	//! the flat program that evaluates: of the copy of the thread, of the recording, or none for the tree and for a
+	//! constant result, which a copy only reads (#2978)
+	const FlatProgram* EvaluatingProgram(const ThreadCopy* copy) const
 	{
-		if (UseFlatProgram()) { flatProgram.Evaluate(); return flatProgram.Result(0); }
+		if (copy) { return copy->flatProgram.IsBuilt() ? &copy->flatProgram : nullptr; }
+		return UseFlatProgram() ? &flatProgram : nullptr;
+	}
+
+	//! the result; copy: the copy of the recording of the thread that evaluates, nullptr in the main thread (#2978)
+	virtual Real EvaluateReturnValue(const ThreadCopy* copy = nullptr) const
+	{
+		if (const FlatProgram* program = EvaluatingProgram(copy)) { program->Evaluate(); return program->Result(0); }
 		return returnValue.GetReal()->Evaluate();
 	}
 
-	virtual ResizableConstVector EvaluateReturnVector() const
+	virtual ResizableConstVector EvaluateReturnVector(const ThreadCopy* copy = nullptr) const
 	{
-		if (UseFlatProgram()) { return EvaluateReturnVectorRef(); }
+		if (EvaluatingProgram(copy)) { return EvaluateReturnVectorRef(copy); }
 		return returnValue.GetVector()->Evaluate();
 	}
 
 	//! the returned vector without a copy, valid until the function is evaluated again (#3006)
-	const ResizableConstVector& EvaluateReturnVectorRef() const
+	const ResizableConstVector& EvaluateReturnVectorRef(const ThreadCopy* copy = nullptr) const
 	{
-		if (UseFlatProgram()) { flatProgram.Evaluate(); return flatProgram.VectorResult(0); }
+		if (const FlatProgram* program = EvaluatingProgram(copy)) { program->Evaluate(); return program->VectorResult(0); }
 		return returnValue.GetVector()->EvaluateRef();
 	}
 
-	virtual ResizableConstMatrix EvaluateReturnMatrix() const
+	virtual ResizableConstMatrix EvaluateReturnMatrix(const ThreadCopy* copy = nullptr) const
 	{
-		if (UseFlatProgram()) { return EvaluateReturnMatrixRef(); }
+		if (EvaluatingProgram(copy)) { return EvaluateReturnMatrixRef(copy); }
 		return returnValue.GetMatrix()->Evaluate();
 	}
 
 	//! the returned matrix without a copy, valid until the function is evaluated again (#3021)
-	const ResizableConstMatrix& EvaluateReturnMatrixRef() const
+	const ResizableConstMatrix& EvaluateReturnMatrixRef(const ThreadCopy* copy = nullptr) const
 	{
-		if (UseFlatProgram()) { flatProgram.Evaluate(); return flatProgram.MatrixResult(0); }
+		if (const FlatProgram* program = EvaluatingProgram(copy)) { program->Evaluate(); return program->MatrixResult(0); }
 		return returnValue.GetMatrix()->EvaluateRef();
 	}
 	////evaluate all expression trees, storing results in Real*, which are linked to destination of function 
@@ -409,10 +484,11 @@ public:
 	Real EvaluateReal(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 
-		return EvaluateReturnValue();
+		return EvaluateReturnValue(copy);
 		//EvaluateReturnValues(); //evaluate symbolic expression trees
 
 		//return returnValues[0];
@@ -423,10 +499,11 @@ public:
 	bool EvaluateBool(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 
-		return bool(EvaluateReturnValue());
+		return bool(EvaluateReturnValue(copy));
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -434,10 +511,11 @@ public:
 	StdVector2D EvaluateStdVector2D(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 
-		return (StdVector2D)EvaluateReturnVectorRef();
+		return (StdVector2D)EvaluateReturnVectorRef(copy);
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -445,10 +523,11 @@ public:
 	StdVector3D EvaluateStdVector3D(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 
-		return (StdVector3D)EvaluateReturnVectorRef();
+		return (StdVector3D)EvaluateReturnVectorRef(copy);
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -456,10 +535,11 @@ public:
 	StdVector6D EvaluateStdVector6D(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 
-		return (StdVector6D)EvaluateReturnVectorRef();
+		return (StdVector6D)EvaluateReturnVectorRef(copy);
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -467,10 +547,11 @@ public:
 	std::vector<Real> EvaluateStdVector(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 
-		return (StdVector)EvaluateReturnVectorRef();
+		return (StdVector)EvaluateReturnVectorRef(copy);
 	}
 
 	//! a user function that returns a vector, evaluated into result, which keeps its memory when it has the size;
@@ -478,10 +559,11 @@ public:
 	template<typename... Args>
 	void EvaluateIntoVector(Vector& result, const MainSystem& mainSystem, const Args&... args)
 	{
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 
-		result.CopyFrom(EvaluateReturnVectorRef());
+		result.CopyFrom(EvaluateReturnVectorRef(copy));
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -489,10 +571,11 @@ public:
 	StdMatrix3D EvaluateStdMatrix3D(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 
-		return (StdMatrix3D)EvaluateReturnMatrix();
+		return (StdMatrix3D)EvaluateReturnMatrix(copy);
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -500,10 +583,11 @@ public:
 	StdMatrix6D EvaluateStdMatrix6D(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 
-		return (StdMatrix6D)EvaluateReturnMatrix();
+		return (StdMatrix6D)EvaluateReturnMatrix(copy);
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -511,10 +595,11 @@ public:
 	NumpyMatrix EvaluateNumpyMatrix(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 
-		return EPyUtils::ToPython(EvaluateReturnMatrix()); //a numpy array of the rows and columns
+		return EPyUtils::ToPython(EvaluateReturnMatrix(copy)); //a numpy array of the rows and columns
 	}
 
 	//! a matrix result as Python object, for the std::function of a user function that returns a MatrixContainer (#3020)
@@ -528,9 +613,10 @@ public:
 	template<typename... Args>
 	void EvaluateIntoMatrix(Matrix& result, const MainSystem& mainSystem, const Args&... args)
 	{
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
-		result.CopyFrom(EvaluateReturnMatrixRef());
+		(..., processArgument(args, copy, argIndex));
+		result.CopyFrom(EvaluateReturnMatrixRef(copy));
 	}
 
 	//! a matrix result evaluated into a MatrixContainer as CopyOrAddTriplets does it with the result of a Python function:
@@ -538,18 +624,19 @@ public:
 	template<typename... Args>
 	void EvaluateIntoMatrixContainer(EXUmath::MatrixContainer& result, const ArrayIndex& ltg, const MainSystem& mainSystem, const Args&... args)
 	{
+		ThreadCopy* copy = CurrentThreadCopy();
 		Index argIndex = 0;
-		(..., processArgument(args, argRealList, argIndex));
+		(..., processArgument(args, copy, argIndex));
 		if (resultComponents && ltg.NumberOfItems() != 0) //sparse: only the components that are not the constant 0 (#3022)
 		{
 			CHECKandTHROW(resultComponents->NumberOfRows() <= ltg.NumberOfItems() && resultComponents->NumberOfColumns() <= ltg.NumberOfItems(),
 				"symbolic user function: the matrix result is larger than the coordinates of the item");
 			result.SetUseDenseMatrix(false);
 			ResizableArray<EXUmath::Triplet>& triplets = result.GetInternalSparseTripletMatrix().GetTriplets();
-			if (UseFlatProgram()) //all components in one pass (#3053)
+			if (const FlatProgram* program = EvaluatingProgram(copy)) //all components in one pass (#3053), in a thread by its copy (#2978)
 			{
-				flatProgram.Evaluate();
-				const ResizableMatrix& matrix = flatProgram.MatrixResult(0);
+				program->Evaluate();
+				const ResizableMatrix& matrix = program->MatrixResult(0);
 				for (const std::pair<Index, Index>& item : resultPattern)
 				{
 					triplets.AppendPure(EXUmath::Triplet(ltg[item.first], ltg[item.second], matrix(item.first, item.second)));
@@ -563,7 +650,7 @@ public:
 			return;
 		}
 		result.SetUseDenseMatrix(true);
-		result.GetInternalDenseMatrix().CopyFrom(EvaluateReturnMatrixRef());
+		result.GetInternalDenseMatrix().CopyFrom(EvaluateReturnMatrixRef(copy));
 	}
 
 
@@ -698,63 +785,79 @@ public:
 
 
 protected:
+	//the arguments, written into the leaves of the evaluation, of the recording or of the copy of the thread; an
+	//argument the copy does not use has no leaf (#2978)
 	// Function to process Real arguments
-	void processArgument(Real arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(Real arg, ThreadCopy* copy, Index& argIndex)
 	{
-		argRealList[argIndex++].GetReal()->SetExpressionNamedReal(arg);
+		ExpressionNamedReal* leaf = ArgumentReal(copy, argIndex++);
+		if (leaf) { leaf->SetValue(arg); }
 	}
 	//! an OutputVariableType as the Real of its value, as an Index is passed (#2989)
-	void processArgument(OutputVariableType arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(OutputVariableType arg, ThreadCopy* copy, Index& argIndex)
 	{
-		argRealList[argIndex++].GetReal()->SetExpressionNamedReal((Real)(Index64)arg);
+		processArgument((Real)(Index64)arg, copy, argIndex);
 	}
-	void processArgument(const ResizableConstVector& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(const ResizableConstVector& arg, ThreadCopy* copy, Index& argIndex)
 	{
-		argRealList[argIndex++].GetVector()->SetExpressionNamedVector(arg);
+		VectorExpressionNamedReal* leaf = ArgumentVector(copy, argIndex++);
+		if (leaf) { leaf->SetVector(arg); }
 	}
 	//! a vector argument, copied into the memory of the named vector, which keeps it: no allocation (#3006)
-	void processArgument(const StdVector& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(const StdVector& arg, ThreadCopy* copy, Index& argIndex)
 	{
-		argRealList[argIndex++].GetVector()->GetExpressionNamedReal().SetVector(arg);
+		VectorExpressionNamedReal* leaf = ArgumentVector(copy, argIndex++);
+		if (leaf) { leaf->SetVector(arg); }
 	}
 	//! a vector of fixed size, e.g. the Vector3D of a local position (#2995)
 	template<Index n>
-	void processArgument(const SlimVectorBase<Real, n>& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(const SlimVectorBase<Real, n>& arg, ThreadCopy* copy, Index& argIndex)
 	{
-		ResizableConstVector& vector = argRealList[argIndex++].GetVector()->GetExpressionNamedReal().GetVector();
+		VectorExpressionNamedReal* leaf = ArgumentVector(copy, argIndex++);
+		if (!leaf) { return; }
+		ResizableConstVector& vector = leaf->GetVector();
 		vector.SetNumberOfItems(n);
 		std::copy(arg.begin(), arg.end(), vector.begin());
 	}
-	void processArgument(const VectorBase<Real>& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(const VectorBase<Real>& arg, ThreadCopy* copy, Index& argIndex)
 	{
-		ResizableConstVector& vector = argRealList[argIndex++].GetVector()->GetExpressionNamedReal().GetVector();
+		VectorExpressionNamedReal* leaf = ArgumentVector(copy, argIndex++);
+		if (!leaf) { return; }
+		ResizableConstVector& vector = leaf->GetVector();
 		vector.SetNumberOfItems(arg.NumberOfItems());
 		std::copy(arg.begin(), arg.end(), vector.begin());
 	}
-	void processArgument(const StdVector3D& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(const StdVector3D& arg, ThreadCopy* copy, Index& argIndex)
 	{
 		//directly inject values into stored vector (no new for larger vectors)
-		ResizableConstVector& vector = argRealList[argIndex++].GetVector()->GetExpressionNamedReal().GetVector();
+		VectorExpressionNamedReal* leaf = ArgumentVector(copy, argIndex++);
+		if (!leaf) { return; }
+		ResizableConstVector& vector = leaf->GetVector();
 		vector.SetVector({ arg[0], arg[1], arg[2] });
 
 		//argRealList[argIndex++].GetVector()->SetExpressionNamedVector(ResizableConstVector({ arg[0], arg[1], arg[2]}));
 	}
-	void processArgument(const StdVector6D& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(const StdVector6D& arg, ThreadCopy* copy, Index& argIndex)
 	{
-		ResizableConstVector& vector = argRealList[argIndex++].GetVector()->GetExpressionNamedReal().GetVector();
+		VectorExpressionNamedReal* leaf = ArgumentVector(copy, argIndex++);
+		if (!leaf) { return; }
+		ResizableConstVector& vector = leaf->GetVector();
 		vector.SetVector({ arg[0], arg[1], arg[2],  arg[3], arg[4], arg[5] });
 		//argRealList[argIndex++].GetVector()->SetExpressionNamedVector(
 		//	ResizableConstVector({ arg[0], arg[1], arg[2],  arg[3], arg[4], arg[5] }));
 	}
 
-	void processArgument(const ResizableConstMatrix& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(const ResizableConstMatrix& arg, ThreadCopy* copy, Index& argIndex)
 	{
-		argRealList[argIndex++].GetMatrix()->SetExpressionNamedMatrix(arg);
+		MatrixExpressionNamedReal* leaf = ArgumentMatrix(copy, argIndex++);
+		if (leaf) { leaf->SetMatrix(arg); }
 	}
-	void processArgument(const StdMatrix3D & arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(const StdMatrix3D & arg, ThreadCopy* copy, Index& argIndex)
 	{
 		//directly inject values into stored matrix (no new for larger vectors)
-		ResizableConstMatrix& matrix = argRealList[argIndex++].GetMatrix()->GetExpressionNamedReal().GetMatrix();
+		MatrixExpressionNamedReal* leaf = ArgumentMatrix(copy, argIndex++);
+		if (!leaf) { return; }
+		ResizableConstMatrix& matrix = leaf->GetMatrix();
 		matrix.SetMatrix(3,3, 
 				{ arg[0][0], arg[0][1], arg[0][2],
 				  arg[1][0], arg[1][1], arg[1][2],
@@ -767,9 +870,11 @@ protected:
 		//	  arg[2][0], arg[2][1], arg[2][2]
 		//	}));
 	}
-	void processArgument(const StdMatrix6D& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	void processArgument(const StdMatrix6D& arg, ThreadCopy* copy, Index& argIndex)
 	{
-		ResizableConstMatrix& matrix = argRealList[argIndex++].GetMatrix()->GetExpressionNamedReal().GetMatrix();
+		MatrixExpressionNamedReal* leaf = ArgumentMatrix(copy, argIndex++);
+		if (!leaf) { return; }
+		ResizableConstMatrix& matrix = leaf->GetMatrix();
 		matrix.SetNumberOfRowsAndColumns(6, 6);
 		//ResizableConstMatrix matrix(6, 6);
 		for (Index i = 0; i < 6; i++)

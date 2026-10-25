@@ -83,8 +83,8 @@ $$
 
 the time derivative by central differences.
 
-With `activeConnector = False`, the equations are $\tlambda = \Null$. The user functions are called serially, in the
-main thread.
+With `activeConnector = False`, the equations are $\tlambda = \Null$. A Python user function is called in the main
+thread; with symbolic user functions only, the joint is computed in the threads of the parallel loops (#2978).
 
 **Userfunction**: `constraintUserFunction(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters)`
 A user function, which computes the constraint equations of the joint at position level from the frames of its two markers.

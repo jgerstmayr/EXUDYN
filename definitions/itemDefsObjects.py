@@ -2157,14 +2157,7 @@ definitions.append(ItemDefinition(
     void CheckResultSize(const char* name, Index rows, Index columns, Index requiredRows, Index requiredColumns) const;
     //! a Jacobian times the velocity coordinates, in a configuration (#2995)
     Vector3D JacobianTimesVelocity(bool rotation, const Vector3D& localPosition, ConfigurationType configuration) const;
-    //! the matrices and vectors of the computations above, which keep their memory between the calls (#3046); each is
-    //! written by a copy after a user function returned, so that a user function that asks the body again does not
-    //! change what its caller reads
-    mutable ResizableMatrix bufferJacobian;
-    mutable ResizableMatrix bufferRotation;
-    mutable ResizableVector bufferPlus;
-    mutable ResizableVector bufferMinus;
-    //! the mass matrix of constantMassMatrix, in the local coordinates of the body: computed once, as in the ANCF
+//! the mass matrix of constantMassMatrix, in the local coordinates of the body: computed once, as in the ANCF
     //! elements, and again after a change of a parameter or Assemble (#3058, approved storage of a value, D18)
     mutable bool massMatrixComputed = false;
     mutable EXUmath::MatrixContainer storedMassMatrix;
@@ -2360,7 +2353,7 @@ definitions.append(ItemDefinition(
             description=r'no PotentialEnergy: the user function defines the forces'),
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
             pythonName='HasUserFunction', implementation='return true;',
-            description=r'the user functions are called serially'),
+            description=r'the body has user functions; with symbolic ones only, it is computed in the threads of the parallel loops (#2978)'),
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
@@ -9570,8 +9563,8 @@ definitions.append(ItemDefinition(
 
     the time derivative by central differences.
 
-    With `activeConnector = False`, the equations are $\tlambda = \Null$. The user functions are called serially, in the
-    main thread.
+    With `activeConnector = False`, the equations are $\tlambda = \Null$. A Python user function is called in the main
+    thread; with symbolic user functions only, the joint is computed in the threads of the parallel loops (#2978).
     """,
     miniExample=r"""    #a body that slides along a circle of radius 1 around the ground, as user joint on two rigid markers
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[1,0,0,0,0,0], initialVelocities=[0,1,0,0,0,0]))

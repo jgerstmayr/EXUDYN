@@ -24,6 +24,8 @@
 #include "Main/OutputVariable.h"
 
 
+class UserFunctionBase;
+
 class CSensor
 {
 protected: 
@@ -57,6 +59,8 @@ public:
 		default: SysError("Sensor::GetTypeDependentIndex: invalid sensor type");  return 0;
 		}
 	}
+	//! the user functions of the item, for the lists of the parallel loops (#2978); the generated items with user functions list them
+	virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const {}
 	//! check if sensor has object number
 	virtual bool HasObjectNumber() const {
 		if ((GetType() == SensorType::Object) || 

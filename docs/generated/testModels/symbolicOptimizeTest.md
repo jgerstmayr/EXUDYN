@@ -53,8 +53,8 @@ def Cases(q):
 
 failed = 0
 u = 0.
-M = esym.Matrix('M', [[1., 2.], [3., 4.]]) #before the count of the nodes: a named matrix is not freed (#3092)
 live = LiveNodes()
+M = esym.Matrix('M', [[1., 2.], [3., 4.]]) #a named matrix is counted once (#3092)
 q = esym.Vector('q', [0.1, 0.2, 0.3])
 counts = {}
 for (i, case) in enumerate(Cases(q)):
@@ -96,7 +96,7 @@ results = esym.Optimize([x*2, 2*x, esym.Real(3.)])
 failed += int(Operations(results[:2]) != 1) + int(results[2].Evaluate() != 3.)
 
 #no node left over after the expressions are deleted
-del q, x, case, optimized, results, expression, cases, values
+del q, x, M, case, optimized, results, expression, cases, values
 gc.collect()
 failed += int(LiveNodes() != live)
 

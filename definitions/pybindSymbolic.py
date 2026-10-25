@@ -42,7 +42,7 @@ pb.AddDocu(r"""The sub-module `exudyn.symbolic` (abbreviated `esym`) records mat
 
 - A Python `if` on a symbolic value is decided once, while recording, with the values the arguments have then; a decision of each call is written with `esym.IfThenElse(condition, a, b)`, which computes both branches. A loop is recorded as often as it runs, so its count cannot depend on a symbolic value.
 - Only `exudyn.symbolic`, its types and numpy's functions of them are recorded: a call into another library, a value read from the `mbs` or from another item inside the function, is a constant of the recording.
-- The symbolic user functions are evaluated in the main thread, not yet in the parallel loops (#2978).
+- With `simulationSettings.parallel.numberOfThreads` > 1, an item whose user functions are all symbolic is computed in the threads of the parallel loops, as the items without user functions: each thread evaluates its own copy of the recording, with the same results. An item with a Python user function, and an item that reads it - a connector on its marker, a body on its node -, is computed in the main thread (#2978).
 - A recording nested deeper than about 30000 operations - a sum of that many terms in a loop - overflows the stack of the main thread (#3090); the recordings of the test models are at most 44 deep.
 - **Always verify a symbolic user function** against its Python function, with `UserFunction.Evaluate` or a short simulation of both.
 """,

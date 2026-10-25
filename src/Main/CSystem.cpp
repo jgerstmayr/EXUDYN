@@ -42,6 +42,7 @@
 //#include "Utilities/AdvancedMath.h"
 #include "Utilities/Differentiation.h" //include after 
 #include "Main/Experimental.h"
+#include "Pymodules/PythonUserFunctions.h" //UserFunctionBase, for the lists of the parallel loops (#2978)
 
 
 //! Prepare a newly created System of nodes, objects, loads, ... for computation
@@ -877,10 +878,122 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 	//pout << "ltgAE=" << ltgListAE << "\n";
 }
 
+//! true, if one of the user functions must be computed in the main thread (#2978)
+static bool UserFunctionsInMainThread(const ResizableArray<const UserFunctionBase*>& functions)
+{
+	for (const UserFunctionBase* function : functions)
+	{
+		if (!function->ComputableInThreads()) { return true; }
+	}
+	return false;
+}
+
+//! the items computed in the main thread (#2978): those with a user function that cannot be computed in the threads -
+//! a Python function, which holds the GIL, or a symbolic one without a flat program -, and those that compute the
+//! access functions of such an item: the objects on such a node, the markers on such a node or object, the
+//! connectors and loads on such a marker; the same dependencies as of the drawing in the main thread (#3003)
+static void ComputeMainThreadItems(const CSystemData& data, std::vector<bool>& mainThreadObjects, std::vector<bool>& mainThreadLoads)
+{
+	Index nNodes = data.GetCNodes().NumberOfItems();
+	Index nObjects = data.GetCObjects().NumberOfItems();
+	Index nMarkers = data.GetCMarkers().NumberOfItems();
+	Index nLoads = data.GetCLoads().NumberOfItems();
+	std::vector<bool> mainThreadNodes(nNodes, false);
+	std::vector<bool> mainThreadMarkers(nMarkers, false);
+	mainThreadObjects.assign(nObjects, false);
+	mainThreadLoads.assign(nLoads, false);
+
+	ResizableArray<const UserFunctionBase*> functions;
+	for (Index i = 0; i < nNodes; i++)
+	{
+		functions.SetNumberOfItems(0);
+		data.GetCNodes()[i]->GetUserFunctions(functions);
+		mainThreadNodes[i] = UserFunctionsInMainThread(functions);
+	}
+	for (Index i = 0; i < nObjects; i++)
+	{
+		const CObject* object = data.GetCObjects()[i];
+		functions.SetNumberOfItems(0);
+		object->GetUserFunctions(functions);
+		//a user function the generated list does not name, of an item written by hand: in the main thread
+		mainThreadObjects[i] = UserFunctionsInMainThread(functions) || (functions.NumberOfItems() == 0 && object->HasUserFunction());
+		for (Index k = 0; k < object->GetNumberOfNodes() && !mainThreadObjects[i]; k++)
+		{
+			Index node = object->GetNodeNumber(k);
+			mainThreadObjects[i] = (node >= 0 && node < nNodes && mainThreadNodes[node]);
+		}
+	}
+	for (Index i = 0; i < nMarkers; i++)
+	{
+		const CMarker* marker = data.GetCMarkers()[i];
+		functions.SetNumberOfItems(0);
+		marker->GetUserFunctions(functions);
+		if (UserFunctionsInMainThread(functions)) { mainThreadMarkers[i] = true; } //MarkerUser
+		else if (marker->GetType() & (Marker::Body + Marker::Object)) //a marker on one object
+		{
+			Index objectNumber = marker->GetObjectNumber();
+			mainThreadMarkers[i] = (objectNumber >= 0 && objectNumber < nObjects && mainThreadObjects[objectNumber]);
+		}
+		else if (marker->GetType() & Marker::Node) //a marker on one node
+		{
+			Index nodeNumber = marker->GetNodeNumber();
+			mainThreadMarkers[i] = (nodeNumber >= 0 && nodeNumber < nNodes && mainThreadNodes[nodeNumber]);
+		}
+	}
+	for (Index i = 0; i < nObjects; i++) //the connectors and joints on these markers
+	{
+		const CObject* object = data.GetCObjects()[i];
+		if (EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+		{
+			for (Index marker : ((const CObjectConnector*)object)->GetMarkerNumbers())
+			{
+				if (marker >= 0 && marker < nMarkers && mainThreadMarkers[marker]) { mainThreadObjects[i] = true; }
+			}
+		}
+	}
+	for (Index i = 0; i < nLoads; i++)
+	{
+		const CLoad* load = data.GetCLoads()[i];
+		functions.SetNumberOfItems(0);
+		load->GetUserFunctions(functions);
+		Index marker = load->GetMarkerNumber();
+		mainThreadLoads[i] = UserFunctionsInMainThread(functions) || (functions.NumberOfItems() == 0 && load->HasUserFunction())
+			|| (marker >= 0 && marker < nMarkers && mainThreadMarkers[marker]);
+	}
+}
+
+//! the copies of the symbolic user functions of the items for numberOfThreads threads (#2978)
+static void PrepareUserFunctionsForThreads(const ResizableArray<const UserFunctionBase*>& functions, Index numberOfThreads)
+{
+	for (const UserFunctionBase* function : functions) { function->PrepareThreads(numberOfThreads); }
+}
+
+void CSystem::UpdateUserFunctionsForThreads()
+{
+	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
+	if (nThreads <= 1) { return; }
+	if (userFunctionAssignmentsOfLists != UserFunctionAssignmentCount()) { PreComputeItemLists(); }
+	if (threadsOfUserFunctions >= nThreads) { return; }
+
+	ResizableArray<const UserFunctionBase*> functions;
+	for (const CNode* node : cSystemData.GetCNodes()) { functions.SetNumberOfItems(0); node->GetUserFunctions(functions); PrepareUserFunctionsForThreads(functions, nThreads); }
+	for (const CObject* object : cSystemData.GetCObjects()) { functions.SetNumberOfItems(0); object->GetUserFunctions(functions); PrepareUserFunctionsForThreads(functions, nThreads); }
+	for (const CMarker* marker : cSystemData.GetCMarkers()) { functions.SetNumberOfItems(0); marker->GetUserFunctions(functions); PrepareUserFunctionsForThreads(functions, nThreads); }
+	for (const CLoad* load : cSystemData.GetCLoads()) { functions.SetNumberOfItems(0); load->GetUserFunctions(functions); PrepareUserFunctionsForThreads(functions, nThreads); }
+	threadsOfUserFunctions = nThreads;
+}
+
 //! precompute item lists (special lists for constraints, connectors, etc.)
 void CSystem::PreComputeItemLists()
 {
-	cSystemData.objectsBodyWithODE2Coords.Flush();
+	//the items computed in the main thread, the others in the parallel loops (#2978)
+	std::vector<bool> mainThreadObjects, mainThreadLoads;
+	ComputeMainThreadItems(cSystemData, mainThreadObjects, mainThreadLoads);
+	userFunctionAssignmentsOfLists = UserFunctionAssignmentCount();
+	threadsOfUserFunctions = 0;
+	cSystemData.discontinuousIterationInMainThread = false;
+
+cSystemData.objectsBodyWithODE2Coords.Flush();
 	cSystemData.objectsBodyWithODE2CoordsUF.Flush();
 	cSystemData.objectsBodyWithODE2CoordsNoUF.Flush();
 	cSystemData.listComputeObjectODE2Lhs.Flush();
@@ -928,8 +1041,8 @@ void CSystem::PreComputeItemLists()
 			if (EXUstd::IsOfType(object->GetType(), CObjectType::Body) ||
 				EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
 			{
-				cSystemData.listComputeObjectODE2Lhs.Append(i); 
-				if (object->HasUserFunction()) { cSystemData.listComputeObjectODE2LhsUF.Append(i); }
+				cSystemData.listComputeObjectODE2Lhs.Append(i);
+				if (mainThreadObjects[i]) { cSystemData.listComputeObjectODE2LhsUF.Append(i); }
 				else { cSystemData.listComputeObjectODE2LhsNoUF.Append(i); }
 			}
 			else 
@@ -951,7 +1064,7 @@ void CSystem::PreComputeItemLists()
 			if (cSystemData.GetLocalToGlobalODE2()[i].NumberOfItems() != 0)
 			{
 				cSystemData.objectsBodyWithODE2Coords.Append(i);
-				if (object->HasUserFunction()) { cSystemData.objectsBodyWithODE2CoordsUF.Append(i); }
+				if (mainThreadObjects[i]) { cSystemData.objectsBodyWithODE2CoordsUF.Append(i); }
 				else { cSystemData.objectsBodyWithODE2CoordsNoUF.Append(i); }
 			}
 		}
@@ -971,7 +1084,7 @@ void CSystem::PreComputeItemLists()
 				AEavailable = true;
 				cSystemData.objectsWithAlgebraicEquations.Append(i);
 				cSystemData.objectsConstraintWithAE.Append(i);
-				if (object->HasUserFunction()) 
+				if (mainThreadObjects[i])
 				{
 					cSystemData.objectsConstraintWithAEUF.Append(i); //with UserFunctoin
 				}
@@ -994,7 +1107,7 @@ void CSystem::PreComputeItemLists()
 			if (AEavailable && cSystemData.GetLocalToGlobalODE2()[i].NumberOfItems() != 0)
 			{
 				cSystemData.listObjectProjectedReactionForcesODE2.Append(i); //for constraints, reaction forces on ODE2 coordinates
-				if (object->HasUserFunction()) 
+				if (mainThreadObjects[i])
 				{
 					cSystemData.listObjectProjectedReactionForcesODE2UF.Append(i); //with UserFunctoin
 				} 
@@ -1015,7 +1128,8 @@ void CSystem::PreComputeItemLists()
 			if (((CObjectConnector*)object)->HasDiscontinuousIteration())
 			{
 				cSystemData.listDiscontinuousIteration.Append(i);
-			}
+				if (mainThreadObjects[i]) { cSystemData.discontinuousIterationInMainThread = true; }
+}
 		}
 	}
 
@@ -1033,8 +1147,7 @@ void CSystem::PreComputeItemLists()
 	//compute list of loads with/without user functions
 	for (Index i = 0; i < cSystemData.GetCLoads().NumberOfItems(); i++)
 	{
-		CLoad* load = cSystemData.GetCLoads()[i];
-		if (load->HasUserFunction())
+		if (mainThreadLoads[i])
 		{
 			cSystemData.listOfLoadsUF.Append(i);
 		}
@@ -1273,7 +1386,8 @@ void CSystem::AssembleSystemInitialize(const MainSystem& mainSystem)
 //! compute system massmatrix; massmatrix must have according size; must be set to zero before calling!
 void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, GeneralMatrix& massMatrix, bool computeInverse)
 {
-	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
+	UpdateUserFunctionsForThreads();
+//size needs to be set accordingly in the caller function; components are addd to massMatrix!
 	//only call bodies with ODE2
     if (EXUstd::IsOfType(LinearSolverType::Dense, massMatrix.GetSystemMatrixType()))
     //if (massMatrix.GetSystemMatrixType() == LinearSolverType::EXUdense)
@@ -1511,6 +1625,7 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 {
 	//STARTGLOBALTIMER(TScomputeObjectODE2);
 	systemODE2Rhs.SetAll(0.);
+	UpdateUserFunctionsForThreads();
 
 	int nItems = cSystemData.listComputeObjectODE2LhsNoUF.NumberOfItems();
 	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
@@ -1712,6 +1827,7 @@ void CSystem::ComputeODE2LoadsRHS(TemporaryComputationDataArray& tempArray, Vect
 	//Index nLoads = cSystemData.GetCLoads().NumberOfItems();
 	Real currentTime = cSystemData.GetCData().currentState.time;
 
+	UpdateUserFunctionsForThreads();
 	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
 	Index nItems = cSystemData.listOfLoadsNoUF.NumberOfItems(); 
 
@@ -2235,7 +2351,8 @@ void CSystem::ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE
 //! compute system right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
 void CSystem::ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray, Vector& algebraicEquations, bool velocityLevel)
 {
-	//Still needed? algebraicEquations.SetNumberOfItems(cSystemData.GetNumberOfCoordinatesAE()); //needed for numerical differentiation
+	UpdateUserFunctionsForThreads();
+//Still needed? algebraicEquations.SetNumberOfItems(cSystemData.GetNumberOfCoordinatesAE()); //needed for numerical differentiation
 	algebraicEquations.SetAll(0.);
 	TemporaryComputationData& temp = tempArray[0];
 
@@ -2402,7 +2519,8 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray
 //! recommendedStepSize must be initialized with -1 or previous recommendation: [< 0: no recommendation, 0: use minimum step size, >0: use specific step size, if no smaller size requested by other reason]
 Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& recommendedStepSize)
 {
-	//recommendedStepSize (must be initialized with -1 or appropriately)
+	UpdateUserFunctionsForThreads();
+//recommendedStepSize (must be initialized with -1 or appropriately)
 	Real PNerror = 0;
 	int nItems = cSystemData.listDiscontinuousIteration.NumberOfItems();
 	if (nItems != 0) //save time here!
@@ -2415,7 +2533,8 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 		{
             tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
 			
-            if (nItems >= solverData.multithreadedLowerLimitResiduals)
+            //a connector with a user function computed in the main thread: the loop in the main thread (#2978)
+            if (nItems >= solverData.multithreadedLowerLimitResiduals && !cSystemData.discontinuousIterationInMainThread)
             {
                 outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
                 doMultiThreading = true;
@@ -3303,7 +3422,8 @@ TimerStructureRegistrator TSRreactionForces2("TSreactionForces2", TSreactionForc
 //! ode2ReactionForces += C_{q2}^T * \lambda
 void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& tempArray, const Vector& reactionForces, Vector& ode2ReactionForces)
 {
-	//Index nAE = cSystemData.GetNumberOfCoordinatesAE();
+	UpdateUserFunctionsForThreads();
+//Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 	//Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 	//Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
 	TemporaryComputationData& temp = tempArray[0];

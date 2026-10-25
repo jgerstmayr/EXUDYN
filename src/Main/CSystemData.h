@@ -72,6 +72,7 @@ public:
 	ResizableArray<Index> listComputeObjectODE2LhsNoUF;	//!< list of objects that need to evaluate ComputeObjectODE2Lhs, but have no user function
 	ResizableArray<Index> listComputeObjectODE1Rhs;		//!< list of objects that need to evaluate ComputeObjectODE1Rhs
 	ResizableArray<Index> listDiscontinuousIteration;	//!< list of objects that need discontinuous iteration (PostNewtonStep, PostDiscontinuousIteration)
+	bool discontinuousIterationInMainThread = false;	//!< an object of listDiscontinuousIteration is computed in the main thread (#2978)
 
     ResizableArray<Index> listOfLoadsNoUF;				//!< list of loads without user functions (can be processes multithreaded)
 	ResizableArray<Index> listOfLoadsUF;				//!< list of loads WITH user functions (must be processed serially)

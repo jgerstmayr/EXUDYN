@@ -49,9 +49,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - changed without a
    screen; the space key works on macOS (2026-10-16).
-2. **Symbolic access to the system and symbolic items in parallel**: the MainSystem in symbolic user functions
-   (RG12.4, proposal RG12.4.1 to decide), the thread-safe evaluation of a recording for symbolic items in parallel
-   (RG7.8); each user function change measured against 1.13.6 (userFunctionBoundary.md sections 12, 13).
+2. **Symbolic access to the system**: the MainSystem in symbolic user functions (RG12.4, proposal RG12.4.1 to
+   decide); each user function change measured against 1.13.6 (userFunctionBoundary.md sections 12, 13).
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
@@ -80,8 +79,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
-- **RG7** Python user items
-  - RG7.8 Evaluate symbolic user items in parallel and in the graphics (1 open sub-step)
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -126,7 +123,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | OPEN | 2 | Python user items |
+| RG7 | CLOSED | 0 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -684,7 +681,7 @@ with the raytracer the bar shows at once): done as asked. [log](exudynRevisionLo
 
 CLOSED 2026-10-20 (#3051): a gear wheel after the sensors, as the key V. [log](exudynRevisionLog2026c.md#rg6-19-11)
 
-## **OPEN_RG7** Python user items
+## **CLOSED_RG7** Python user items
 
 Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8).
 
@@ -792,7 +789,7 @@ rigid markers, the Jacobian given or by central differences, index 3 and 2; user
 CLOSED 2026-10-13 (#2977, maintainer: do it now): `itemNumbers`, given to the user function instead of sensorNumbers;
 both refused at Assemble; test model sensorUserFunctionItemsTest.py. [log](exudynRevisionLog2026c.md#rg7-7)
 
-### **OPEN_RG7.8** Evaluate symbolic user items in parallel and in the graphics
+### **CLOSED_RG7.8** Evaluate symbolic user items in parallel and in the graphics
 
 #2978. Design 5.5. Waits for the revision of the symbolic user functions, group RG12.
 
@@ -807,17 +804,15 @@ CLOSED 2026-10-24 (#2978): the evaluation of a recording is not thread-safe - th
 variables, the flat program keeps its values in its slots, and vector and matrix nodes return references to their own
 buffers; one recording serves many items. [log](exudynRevisionLog2026c.md#rg7-5-2)
 
-#### **OPEN_RG7.8.3** Evaluate a recording with the values of one call outside the expression nodes, then in parallel
+#### **CLOSED_RG7.8.3** Evaluate a recording with the values of one call outside the expression nodes, then in parallel
 
-#2978: the arguments and the slots of the flat program per call (per thread), the vector and matrix values in these
-slots; then items whose user functions are all symbolic leave the serial lists (HasUserFunction) and are computed in the
-parallel loops; measured on the user rigid body and the ANCF cable.
-
-Analysed 2026-10-25 (maintainer: do the next recommended steps): two parts, A the evaluation with a context per thread -
-the slots of the flat program, the vector and matrix results (EvaluateFromOperands into a result of the context instead
-of the buffer of the node, about 30 classes) and the arguments set into the slots of the context instead of the nodes;
-B the lists of CSystem: an item whose user functions are all symbolic and flat goes into the parallel lists, which needs
-a HasPythonUserFunction() of every item (generated) besides HasUserFunction(). Not started; found RG7.8.4 on the way.
+CLOSED 2026-10-25 (#2978; maintainer: RG7.8.3, parts A and B): A as a copy of the recording per thread - its
+operations, which keep their vectors and matrices, its arguments and its flat program, the numbers and variables shared
+- instead of a context through about 30 classes; B the lists of CSystem from GetUserFunctions() of every item
+(generated): an item whose user functions are all symbolic, and what reads it, in the parallel loops; ObjectUserBody
+and NodeUser with buffers per thread; the lists follow a user function set during the simulation. 200 symbolic user
+rigid bodies 0.77 -> 0.31 s with 4 threads; the test suite with 4 threads forced passes.
+[log](exudynRevisionLog2026c.md#rg7-8-3)
 
 #### **CLOSED_RG7.8.4** The multithreaded ODE2 residual takes the objects without user functions from the right list
 
@@ -825,6 +820,12 @@ CLOSED 2026-10-25 (#3093, found in RG7.8.3): the parallel loop of ComputeSystemO
 functions but took them from the list of all; objects with user functions were computed in the threads and again in the
 main thread, the last ones without were left out (symbolic: a wrong result, Python: a hang).
 multithreadingUserFunctionTest.py. [log](exudynRevisionLog2026c.md#rg7-8-4)
+
+#### **CLOSED_RG7.8.5** The parallel post-Newton step leaves connectors with Python user functions to the main thread
+
+CLOSED 2026-10-25 (#3095, found in RG7.8.3): CSystem::PostNewtonStep ran listDiscontinuousIteration in the threads, also
+a Python postNewtonStepUserFunction, which hung; the loop runs in the main thread if one of its connectors is computed
+there. symbolicUserFunctionThreadsTest.py. [log](exudynRevisionLog2026c.md#rg7-8-3)
 
 ### **CLOSED_RG7.9** Document how items work, and the user items
 
@@ -1818,9 +1819,17 @@ the depth, as each new SReal evaluates its whole tree. Proposed, waiting for the
 the values of its operands, iterative Destroy, str() through the flat program, a depth check for Evaluate and Diff of the
 tree, and esym.GetDepth. [log](exudynRevisionLog2026c.md#rg12-49-4)
 
-#### **OPEN_RG12.49.5** Free a named symbolic matrix
+#### **CLOSED_RG12.49.5** Free a named symbolic matrix
 
-#3092 (found in RG12.49.2): esym.Matrix('M', ...) leaves one node when it is deleted.
+CLOSED 2026-10-25 (#3092): the node was freed; the constructor of a named matrix from an array counted it twice in
+Matrix.__newCount. symbolicOptimizeTest.py counts the named matrix. [log](exudynRevisionLog2026c.md#rg12-49-5)
+
+#### **OPEN_RG12.49.6** bool() of a symbolic value refuses while recording
+
+#3096 (maintainer 2026-10-25: first a way to still use the if): the two ways exist - exudyn.symbolic.IfThenElse, decided
+at each evaluation, and x.Evaluate() or x.value, decided once at recording; bool() then raises a TypeError that names
+both, as float() does. First the recordings of the test models and examples are checked for an if or a library
+function that reads bool() of a symbolic value.
 
 ### **CLOSED_RG12.50** The flat program of expressions, the export of recordings and the symbolic model of a system
 

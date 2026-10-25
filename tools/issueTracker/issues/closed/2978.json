@@ -1,0 +1,15 @@
+{
+  "number": 2978,
+  "title": "Symbolic user items: parallel evaluation and graphics",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.8 (docs/dev/design/pythonUserItems.md 5.5): user items whose user functions are all symbolic run in parallel and are drawn directly; example 8; waits for the revision of the symbolic user functions (group RG12).",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-25 15:22",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "With more than one thread, an item whose user functions are all symbolic is computed in the threads of the parallel loops, as an item without user functions: each thread evaluates its own copy of the recording, with the same results; an item with a Python user function, and the connectors, loads, markers and bodies that read it, are computed in the main thread, also after a user function was set during the simulation. ObjectUserBody and NodeUser keep their buffers per thread. 200 symbolic user rigid bodies take 0.31 s with 4 threads instead of 0.77 s; symbolicUserFunctionThreadsTest.py.",
+  "resolvedInVersion": "1.13.201"
+}

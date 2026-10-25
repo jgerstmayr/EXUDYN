@@ -199,6 +199,7 @@ symbolicSparseMatrixTest
 symbolicUserFunctionCopyTest
 symbolicUserFunctionSignaturesTest
 symbolicUserFunctionTest
+symbolicUserFunctionThreadsTest
 symbolicUtilitiesTest
 symbolicVectorUserFunctionTest
 systemContainerComputeOnlyTest

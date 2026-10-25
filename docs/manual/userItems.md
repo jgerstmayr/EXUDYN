@@ -77,8 +77,10 @@ built-in force, a symbolic one 0.06 µs.
   positionUserFunction, so that a deformable body is drawn deformed - with a symbolic positionUserFunction without
   Python; the graphicsDataUserFunction returns graphics data in global coordinates for anything else.
 
-The user functions are called serially in the main thread; the renderer draws the user items and what depends on them
-in the main thread as well.
+With more than one thread (`simulationSettings.parallel.numberOfThreads`), a user item whose user functions are all
+symbolic is computed in the threads of the parallel loops, as are the connectors and loads on it; a user item with a
+Python user function, and what depends on it, is computed in the main thread (#2978). The renderer draws the user
+items and what depends on them in the main thread.
 
 ## A user connector and its markers
 

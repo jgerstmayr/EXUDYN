@@ -2,24 +2,24 @@
  "generatedBy": "tools/checkDescriptions.py --mark - do not edit by hand (#2717)",
  "items": {
   "LoadCoordinate": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "d327d5e66328"
+   "fingerprint": "3b04451439f2"
   },
   "LoadForceVector": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "e6a29e568ca8"
+   "fingerprint": "02ebd5eaffa5"
   },
   "LoadMassProportional": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "9e1b4dc4d35c"
+   "fingerprint": "a158530adf4e"
   },
   "LoadTorqueVector": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "c050df12e6bf"
+   "fingerprint": "05680455be7f"
   },
   "MarkerBodiesRelativeRotationCoordinate": {
    "checked": "2026-10-10",
@@ -192,9 +192,9 @@
    "fingerprint": "43b37a1518e6"
   },
   "NodeUser": {
-   "checked": "2026-10-22",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "4bafc3e4b65c"
+   "fingerprint": "04c5a6ff9efe"
   },
   "ObjectALEANCFCable2D": {
    "checked": "2026-10-17",
@@ -212,9 +212,9 @@
    "fingerprint": "a85f06fd3e8d"
   },
   "ObjectANCFCable2D": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "83c18623460a"
+   "fingerprint": "e2a531e7864f"
   },
   "ObjectANCFThinPlate": {
    "checked": "2026-10-17",
@@ -232,29 +232,29 @@
    "fingerprint": "fb52e06a9aa6"
   },
   "ObjectConnectorCartesianSpringDamper": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "9d5453b52dd5"
+   "fingerprint": "9f874c1e0f53"
   },
   "ObjectConnectorCoordinate": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "7972db5bb7fc"
+   "fingerprint": "d6043cee8966"
   },
   "ObjectConnectorCoordinateSpringDamper": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "fb426158585e"
+   "fingerprint": "d4284722fd84"
   },
   "ObjectConnectorCoordinateSpringDamperExt": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "5aadc3b9a4b3"
+   "fingerprint": "2a11c64d1dec"
   },
   "ObjectConnectorCoordinateVector": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "a399811d98c4"
+   "fingerprint": "18319f458dc4"
   },
   "ObjectConnectorDistance": {
    "checked": "2026-10-17",
@@ -272,9 +272,9 @@
    "fingerprint": "e9c5f7e8972e"
   },
   "ObjectConnectorLinearSpringDamper": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "4324c731a02b"
+   "fingerprint": "366064d045e5"
   },
   "ObjectConnectorReevingSystemSprings": {
    "checked": "2026-10-17",
@@ -282,9 +282,9 @@
    "fingerprint": "0f9edfa82900"
   },
   "ObjectConnectorRigidBodySpringDamper": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "37abc3094ce5"
+   "fingerprint": "c4824ed9564a"
   },
   "ObjectConnectorRollingDiscPenalty": {
    "checked": "2026-10-17",
@@ -292,19 +292,19 @@
    "fingerprint": "5b8e7a1c5471"
   },
   "ObjectConnectorSpringDamper": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "19852fd028b6"
+   "fingerprint": "c6cefe52c43f"
   },
   "ObjectConnectorTorsionalSpringDamper": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "f8f14f861072"
+   "fingerprint": "95c62e36426e"
   },
   "ObjectConnectorUser": {
-   "checked": "2026-10-23",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "f5fcfa1182a2"
+   "fingerprint": "e9aacda26c95"
   },
   "ObjectContactCircleCable2D": {
    "checked": "2026-10-17",
@@ -347,24 +347,24 @@
    "fingerprint": "a936ab222cda"
   },
   "ObjectFFRF": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "f95b7203530b"
+   "fingerprint": "9f3e33e98cfc"
   },
   "ObjectFFRFreducedOrder": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "3d806e6188cd"
+   "fingerprint": "ea1d3488ea6e"
   },
   "ObjectGenericODE1": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "4dd9e1d92e9f"
+   "fingerprint": "7dea30ffeaa9"
   },
   "ObjectGenericODE2": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "7b3e616de5e2"
+   "fingerprint": "2402d96107b1"
   },
   "ObjectGround": {
    "checked": "2026-10-17",
@@ -377,9 +377,9 @@
    "fingerprint": "b53d16e676ed"
   },
   "ObjectJointGeneric": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "470e8304cf94"
+   "fingerprint": "e7c68872b4db"
   },
   "ObjectJointPrismatic2D": {
    "checked": "2026-10-17",
@@ -422,9 +422,9 @@
    "fingerprint": "0e219eb55535"
   },
   "ObjectKinematicTree": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "a8dc505c15c8"
+   "fingerprint": "3dc64ba5cc62"
   },
   "ObjectMass1D": {
    "checked": "2026-10-17",
@@ -457,9 +457,9 @@
    "fingerprint": "35c0d5a5acfb"
   },
   "ObjectUserBody": {
-   "checked": "2026-10-23",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "d66d25117880"
+   "fingerprint": "1a97a0ea364b"
   },
   "SensorBody": {
    "checked": "2026-10-17",
@@ -497,9 +497,9 @@
    "fingerprint": "f33c3053e9e8"
   },
   "SensorUserFunction": {
-   "checked": "2026-10-16",
+   "checked": "2026-10-25",
    "by": "Claude-JG",
-   "fingerprint": "4752e78264b4"
+   "fingerprint": "b5f6daf566e2"
   }
  }
 }

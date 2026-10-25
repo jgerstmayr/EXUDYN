@@ -2,9 +2,13 @@
   "number": 3092,
   "title": "A named exudyn.symbolic.Matrix is never freed",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "description": "revision2026c step RG12.49.5 (found in RG12.49.2): esym.Matrix('M', [[1., 2.], [3., 4.]]) leaves one matrix node when it is deleted (esym.Matrix.__newCount - __deleteCount grows by 1); MatrixExpressionReal increments its reference counter in its constructor, and the holder once more. A named vector and a named Real are freed.",
   "dateRaised": "2026-10-25",
-  "deadline": "2027-04-23"
+  "deadline": "2027-04-23",
+  "dateResolved": "2026-10-25 15:22",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "A named exudyn.symbolic.Matrix is freed with its last reference; its constructor from an array counted the node twice in Matrix.__newCount, which looked like a node left over. symbolicOptimizeTest.py counts the named matrix.",
+  "resolvedInVersion": "1.13.202"
 }

@@ -67,6 +67,14 @@ of the function again (#3089).
 user functions are computed in parallel; an object with a user function at the start of the list was computed there as
 well and once more in the main thread, and the last objects were left out - a wrong result with a symbolic user
 function, a hang with a Python one. Fixed (#3093).
+**Symbolic user functions in the parallel loops**: with more than one thread, an item whose user functions are all
+symbolic is computed in the threads, as an item without user functions - each thread evaluates its own copy of the
+recording, with the same results; an item with a Python user function, and the connectors, loads and bodies that read
+it, are computed in the main thread. A chain of 4000 spring-dampers with one symbolic springForceUserFunction takes
+0.77 s with 4 threads instead of 1.30 s (#2978). The post-Newton step of the connectors, e.g. a Python
+postNewtonStepUserFunction of ObjectConnectorRigidBodySpringDamper, ran in the threads and hung; it runs in the main
+thread if a connector has a Python user function (#3095). A named `exudyn.symbolic.Matrix` created from an array was
+counted twice in `Matrix.__newCount` (#3092).
 
 **`NodeUser`**, a node with any number of coordinates whose position, and optionally orientation, are Python user
 functions; the Jacobians are computed by central differences if they are not given; node markers, SensorNode, loads

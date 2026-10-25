@@ -2182,6 +2182,14 @@ public:
 	const ResizableConstVector& VectorResult(Index i) const { return *slots[results[i]].vector; }
 	const ResizableMatrix& MatrixResult(Index i) const { return *slots[results[i]].matrix; }
 	Index NumberOfResults() const { return (Index)results.size(); }
+	//! the operations in their order, for a copy of the recording (#2978)
+	Index NumberOfOperations() const { return (Index)operations.size(); }
+	const FlatNode& OperationNode(Index k) const { return operations[k].node; }
+	Index NumberOfOperationOperands(Index k) const { return operations[k].numberOfOperands; }
+	//! the operation that computes operand i of operation k
+	Index OperandSlot(Index k, Index i) const { return operandSlots[operations[k].firstOperand + i]; }
+	//! the operation that computes result i
+	Index ResultSlot(Index i) const { return results[i]; }
 	//! the number of operations that have operands, the arithmetic of one evaluation
 	Index NumberOfComputations() const
 	{

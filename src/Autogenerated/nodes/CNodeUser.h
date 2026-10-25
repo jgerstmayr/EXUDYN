@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-22  15:08:27 (last modified)
+* @date         2026-10-25  14:57:13 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -89,8 +89,6 @@ protected: // AUTO:
         const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
     //! the velocity coordinates of a configuration, zero in the reference configuration (#3056)
     void Velocities(ResizableConstVector& q_t, ConfigurationType configuration) const;
-    //! the matrix of the rotation user function, which keeps its memory between the calls (#3049)
-    mutable ResizableMatrix bufferRotation;
     CNodeUserParameters parameters; //! AUTO: contains all parameters for CNodeUser
 
 public: // AUTO:
@@ -100,6 +98,15 @@ public: // AUTO:
     virtual CNodeUserParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
     virtual const CNodeUserParameters& GetParameters() const { return parameters; }
+
+    //! AUTO: the user functions of the item, for the parallel computation (#2978)
+    virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const override
+    {
+        list.Append(&parameters.positionUserFunction);
+        list.Append(&parameters.positionJacobianUserFunction);
+        list.Append(&parameters.rotationMatrixUserFunction);
+        list.Append(&parameters.rotationJacobianUserFunction);
+    }
 
     //! AUTO:  return number of second order diff. eq. coordinates
     virtual Index GetNumberOfODE2Coordinates() const override

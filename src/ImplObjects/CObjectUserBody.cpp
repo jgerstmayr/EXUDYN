@@ -18,6 +18,9 @@
 
 //the coordinates are gathered into local ResizableConstVector: up to 7 items without memory allocation, and no buffer
 //that a nested call - a user function that asks for an output of the body - could overwrite (#2995)
+//the matrices and vectors of the computations below keep their memory between the calls (#3046), one per thread, as
+//the connectors on a body are computed in the threads of the parallel loops (#2978); each is written by a copy after
+//a user function returned, so that a user function that asks the body again does not change what its caller reads
 
 //! the coordinates the user functions get: the reference ones, the total ones and their velocities (#3056)
 void CObjectUserBody::GatherUserFunctionCoordinates(ResizableConstVector& qRef, ResizableConstVector& q, ResizableConstVector& q_t,
@@ -130,9 +133,9 @@ bool CObjectUserBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D&
 	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
 	value.SetNumberOfRowsAndColumns(n, n);
 
-	Matrix& jacobian = bufferJacobian; //memory kept between the calls (#3046)
-	Vector& plus = bufferPlus;
-	Vector& minus = bufferMinus;
+	static thread_local ResizableMatrix jacobian; //memory kept between the calls (#3046), per thread (#2978)
+	static thread_local ResizableVector plus;
+	static thread_local ResizableVector minus;
 	plus.SetNumberOfItems(n);
 	minus.SetNumberOfItems(n);
 	//J^T force + J_rot^T torque at the coordinates q, varied
@@ -190,7 +193,7 @@ Vector3D CObjectUserBody::JacobianTimesVelocity(bool rotation, const Vector3D& l
 	ResizableConstVector qRef, q, q_t;
 	GatherUserFunctionCoordinates(qRef, q, q_t, configuration);
 	Real t = GetCSystemData()->GetConfigurationTime(configuration);
-	Matrix& jacobian = bufferJacobian; //memory kept between the calls (#3046)
+	static thread_local ResizableMatrix jacobian; //memory kept between the calls (#3046), per thread (#2978)
 	if (rotation) { EvaluateRotationJacobian(jacobian, t, localPosition, qRef, q, q_t); }
 	else { EvaluatePositionJacobian(jacobian, t, localPosition, qRef, q, q_t); }
 	Vector3D result(0.);
