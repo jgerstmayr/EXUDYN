@@ -3077,3 +3077,21 @@ system assembly in symbolicUtilities.py, interesting for control people; as text
   leaves by the local-to-global maps and adds mass matrices, forces and constraints; the marker Jacobians of the
   connectors are computed in C++ and exudyn.symbolic has no derivative as an expression, so the connectors go through
   sympy. Sub-steps RG12.50.2-5; waiting for the decision.
+
+<a id="rg12-50-1-refined"></a>
+### RG12.50.1, refined — one structure behind every output (2026-10-25, #3086)
+*(Maintainer 2026-10-25: how would esym.GetFlatProgram(expressions, names) work, with examples - input and output? Why
+not make the text executable, ToString(format='plain' / 'exudyn.symbolic' / 'numpy' / 'sympy'), and would the
+dependencies (q, q_t) need a separate export? How does GetFlatProgramData() describe the tree - are there indices of
+the nodes? ToString of the data and of an expression should work the same, with little overhead; a common structure
+from which another code (C++, ...) is written in Python without Exudyn - if sympy offers that, a conversion to sympy is
+enough. Update the concept, list the decisions and recommendations.)*
+- docs/dev/design/symbolicExport.md rewritten: the recording is a graph; the structure is the flat program, entry k =
+  node k = tK of the text, operands by number and always earlier; one Python writer with a flat and a nested layout
+  writes every format, and reproduces str() and GetFlatProgram() of today as the test; the arguments and results are
+  part of the structure (the full signature of a user function, the named variables of expressions, VariableSet
+  variables as keyword parameters); esym.GetFlatProgram/GetFlatProgramData(expressions, arguments, resultNames) with
+  examples; the four formats; the functions whose meaning differs (mod = fmod, round half away from zero, comparisons
+  as 0/1, IfThenElse); sympy as the common structure for C, C++, Fortran, Rust, Julia, Matlab, LaTeX, lambdify, cse and
+  codegen, with what it changes (simplifies and reorders while building, optional); nine decisions with
+  recommendations. Plan sub-steps RG12.50.2-3 renamed to match.

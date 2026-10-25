@@ -1800,9 +1800,9 @@ needs no function concept; a Python structure of the operations as the export, w
 SymbolicSystem(mbs) by the local-to-global maps, the connectors through sympy, which differentiates the marker
 functions; waiting for the decision. [log](exudynRevisionLog2026c.md#rg12-50)
 
-#### **OPEN_RG12.50.2** GetFlatProgram of symbolic expressions
+#### **OPEN_RG12.50.2** The flat program as a Python structure, for user functions and expressions, and its plain writer
 
-#### **OPEN_RG12.50.3** Export a recording as a Python structure, and write it as Python source and to sympy
+#### **OPEN_RG12.50.3** The executable formats exudyn.symbolic, numpy and sympy, and ToString(format=...)
 
 #### **OPEN_RG12.50.4** The symbolic model of a system of generic objects and user bodies
 
