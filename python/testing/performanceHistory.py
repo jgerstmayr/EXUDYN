@@ -195,7 +195,8 @@ def Report():
                                       else '') for entry in entries]
         plotName = 'performanceHistory' + str(number) + '.png'
         if Plot(entries, title, os.path.join(performanceLogDir, plotName)):
-            text += '![' + title + '](' + plotName + ')\n\n'
+            #the plots are not committed, they are written again by every report: the alt text says how
+            text += '![create figure with exudev.bat perf --history-report](' + plotName + ')\n\n'
         fileNames = sorted(set(name for entry in entries for name in entry['files']), key=str.lower)
         text += '### Test files\n\n' + Table(fileNames + ["total"], entries, labels,
             lambda entry, name: entry['totals'].get('total') if name == 'total' else entry['files'].get(name)) + '\n'

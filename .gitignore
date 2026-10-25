@@ -128,6 +128,8 @@ tools/issueTracker/trackerlog.html
 # so a run never truncates a committed log (see testRunnerTools.ResolveLogFile).
 # One shared directory, so it is trivial to delete (revision2026 step R3.8).
 python/logs/tmp/
+# the plots of performanceHistory.md, written again by every "exudev perf --history-report" (#3079)
+python/logs/performance/performanceHistory*.png
 
 # build byproducts from setup.py
 # compiler object files

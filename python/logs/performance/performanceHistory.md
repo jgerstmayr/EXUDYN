@@ -7,7 +7,7 @@ module. Times in seconds: of each test file the wall-clock time, of each single 
 
 ## machine AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD, win32, Python 3.13, fast module
 
-![machine AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD, win32, Python 3.13, fast module](performanceHistory0.png)
+![create figure with exudev.bat perf --history-report](performanceHistory0.png)
 
 ### Test files
 
@@ -77,7 +77,7 @@ module. Times in seconds: of each test file the wall-clock time, of each single 
 
 ## machine AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD, win32, Python 3.13, regular module
 
-![machine AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD, win32, Python 3.13, regular module](performanceHistory1.png)
+![create figure with exudev.bat perf --history-report](performanceHistory1.png)
 
 ### Test files
 
@@ -227,7 +227,7 @@ module. Times in seconds: of each test file the wall-clock time, of each single 
 
 ## machine x86_64, linux, Python 3.13, regular module
 
-![machine x86_64, linux, Python 3.13, regular module](performanceHistory2.png)
+![create figure with exudev.bat perf --history-report](performanceHistory2.png)
 
 ### Test files
 
