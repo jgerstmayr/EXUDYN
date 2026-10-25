@@ -6,7 +6,7 @@
 (sec-item-objectjointuser)=
 # ObjectJointUser
 
-A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the Jacobian is computed numerically if it is not given.
+A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the derivative of the equations is a second user function.
 
 ## Interface
 
@@ -24,7 +24,7 @@ The parameters of the item; in a dictionary, its type is 'JointUser':
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the joint, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **constraintUserFunction** | ObjectJointUserConstraintUserFunction |  | 0 | A Python user function which computes the constraint equations from the frames of the two markers; needed for an active joint |
-| **jacobianUserFunction** | ObjectJointUserJacobianUserFunction |  | 0 | A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; optional, computed by central differences if not given |
+| **jacobianUserFunction** | ObjectJointUserJacobianUserFunction |  | 0 | A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; needed for an active joint, it is not approximated numerically (#3101) |
 | **visualization** | VObjectJointUser |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -72,8 +72,9 @@ $$
 \Cm = \frac{\partial \cv}{\partial [\pv_{m0},\, \ttheta_{m0},\, \pv_{m1},\, \ttheta_{m1}]} \in \Rcal^{n_c \times 12} ,
 $$
 
-which the `jacobianUserFunction` returns if it is given; otherwise it is computed by central differences of the
-constraintUserFunction, 24 calls. The system multiplies it with the position and rotation Jacobians of the markers,
+which the `jacobianUserFunction` returns. Both functions are needed for an active joint, and `Assemble` raises if one
+is missing: a constraint Jacobian approximated numerically gives artifacts, and Exudyn computes none so (#3101). The
+system multiplies it with the position and rotation Jacobians of the markers,
 and the Lagrange multipliers $\tlambda$ give the reaction forces and torques $\Cm\tp \tlambda$ on the markers. For a
 solver at velocity level (index 2), the equations are
 
@@ -131,9 +132,17 @@ body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=1, inertia=[0.01,0.01
 def UFconstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
     d = position1 - position0
     return [d[0]**2 + d[1]**2 - 1., d[2]]
+def UFjacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    d = position1 - position0 #columns: position 0, rotation 0, position 1, rotation 1
+    jacobian = np.zeros((2, 12))
+    jacobian[0, 0:3] = [-2*d[0], -2*d[1], 0]
+    jacobian[0, 6:9] = [2*d[0], 2*d[1], 0]
+    jacobian[1, [2, 8]] = [-1, 1]
+    return jacobian
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround())))
 mbs.AddObject(ObjectJointUser(markerNumbers=[mGround, mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))],
-                              numberOfConstraints=2, constraintUserFunction=UFconstraint))
+                              numberOfConstraints=2, constraintUserFunction=UFconstraint,
+                              jacobianUserFunction=UFjacobian))
 
 mbs.Assemble()
 mbs.SolveDynamic()

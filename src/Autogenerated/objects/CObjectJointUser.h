@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-10-25  23:42:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -36,7 +36,7 @@ public: // AUTO:
     Vector parameters;                            //!< AUTO: the parameters of the joint, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)> > constraintUserFunction;//!< AUTO: A Python user function which computes the constraint equations from the frames of the two markers; needed for an active joint
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)> > jacobianUserFunction;//!< AUTO: A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; optional, computed by central differences if not given
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)> > jacobianUserFunction;//!< AUTO: A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; needed for an active joint, it is not approximated numerically (#3101)
     //! AUTO: default constructor with parameter initialization
     CObjectJointUserParameters()
     {
@@ -52,7 +52,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectJointUser
-* @brief        A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the Jacobian is computed numerically if it is not given.
+* @brief        A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the derivative of the equations is a second user function.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -154,7 +154,7 @@ public: // AUTO:
     //! AUTO:  the equations of the constraintUserFunction, at velocity level by the Jacobian (#2976)
     virtual void ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const override;
 
-    //! AUTO:  the equations with their derivatives by the 12 increments of the markers, from the jacobianUserFunction or by central differences (#2976)
+    //! AUTO:  the equations with their derivatives by the 12 increments of the markers, from the jacobianUserFunction (#2976)
     virtual void ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda, Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const override;
 
     //! AUTO:  provide according output variable in 'value'
@@ -190,7 +190,7 @@ public: // AUTO:
     //! AUTO:  call of jacobianUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
     void EvaluateUserFunctionJacobian(Matrix& jacobian, Real t, const Vector3D& position0, const Matrix3D& rotation0, const Vector3D& position1, const Matrix3D& rotation1) const;
 
-    //! AUTO:  dc/d[p0, theta0, p1, theta1], n_c x 12: the jacobianUserFunction or central differences of the constraintUserFunction (#2976)
+    //! AUTO:  dc/d[p0, theta0, p1, theta1], n_c x 12: the jacobianUserFunction (#2976, #3101)
     void ComputeJacobianIncrements(Matrix& jacobian, Real t, const Vector3D* positions, const Matrix3D* rotations) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override

@@ -1020,7 +1020,7 @@ items = {
       'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the joint, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout'},
       'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'},
       'constraintUserFunction': {'type': 'ObjectJointUserConstraintUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the constraint equations from the frames of the two markers; needed for an active joint'},
-      'jacobianUserFunction': {'type': 'ObjectJointUserJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; optional, computed by central differences if not given'},
+      'jacobianUserFunction': {'type': 'ObjectJointUserJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; needed for an active joint, it is not approximated numerically (#3101)'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},

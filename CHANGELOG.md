@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 206 | 1.13.210 |
+| 1.13 | Newborn | 208 | 1.13.212 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.212** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJointUser requires a jacobianUserFunction; the required user functions of the user items are checked in Assemble (#3101)
+  - description: revision2026c step RG7.15 (maintainer 2026-10-25): nowhere in Exudyn is a constraint Jacobian approximated by numerical differentiation, as it leads to severe artifacts; ObjectJointUser needs constraintUserFunction and jacobianUserFunction, and a missing one fails in Assemble; check what each other user item needs at least.
+  - **notes:** ObjectJointUser needs its jacobianUserFunction: Assemble raises for an active joint without it, as a constraint Jacobian approximated by central differences gives artifacts; the numerical approximation is removed.
+  - date resolved: **2026-10-25 23:48**, date raised: 2026-10-25
+- **1.13.211** <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The screw joint of userJointTest.py with ObjectJointUser fails beyond 180 degrees of rotation (#3100)
+  - description: revision2026c step RG7.15 (maintainer 2026-10-25): the screw joint drafted in userJointTest.py does not work beyond a rotation of 180 degrees; find whether the constraint (the angle by atan2) or the numerical Jacobian causes it, and fix it.
+  - **notes:** The screw joint of userJointTest.py works over several turns: its coupling of angle and translation is written periodic, pitch\*sin(angle - x/pitch) = 0, with its jacobianUserFunction; an angle computed by atan2 jumps by 2 pi at half a turn, so that the constraint had no continuous solution beyond 180 degrees.
+  - date resolved: **2026-10-25 23:48**, date raised: 2026-10-25
 - **1.13.210** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJointUser is listed among the constraints instead of the joints (#3099)
   - description: revision2026c step RG7.15 (maintainer 2026-10-25): its definition has objectType Constraint; it constrains the frames of two rigid markers and is a joint.
   - **notes:** ObjectJointUser is listed among the joints of the reference manual instead of the constraints.

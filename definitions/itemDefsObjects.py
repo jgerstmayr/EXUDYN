@@ -9534,7 +9534,7 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the Jacobian is computed numerically if it is not given.""",
+    overallDescription=r"""A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the derivative of the equations is a second user function.""",
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Constraint equations
 
@@ -9552,8 +9552,9 @@ definitions.append(ItemDefinition(
     \Cm = \frac{\partial \cv}{\partial [\pv_{m0},\, \ttheta_{m0},\, \pv_{m1},\, \ttheta_{m1}]} \in \Rcal^{n_c \times 12} ,
     $$
 
-    which the `jacobianUserFunction` returns if it is given; otherwise it is computed by central differences of the
-    constraintUserFunction, 24 calls. The system multiplies it with the position and rotation Jacobians of the markers,
+    which the `jacobianUserFunction` returns. Both functions are needed for an active joint, and `Assemble` raises if one
+    is missing: a constraint Jacobian approximated numerically gives artifacts, and Exudyn computes none so (#3101). The
+    system multiplies it with the position and rotation Jacobians of the markers,
     and the Lagrange multipliers $\tlambda$ give the reaction forces and torques $\Cm\tp \tlambda$ on the markers. For a
     solver at velocity level (index 2), the equations are
 
@@ -9572,9 +9573,17 @@ definitions.append(ItemDefinition(
     def UFconstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
         d = position1 - position0
         return [d[0]**2 + d[1]**2 - 1., d[2]]
+    def UFjacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+        d = position1 - position0 #columns: position 0, rotation 0, position 1, rotation 1
+        jacobian = np.zeros((2, 12))
+        jacobian[0, 0:3] = [-2*d[0], -2*d[1], 0]
+        jacobian[0, 6:9] = [2*d[0], 2*d[1], 0]
+        jacobian[1, [2, 8]] = [-1, 1]
+        return jacobian
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround())))
     mbs.AddObject(ObjectJointUser(markerNumbers=[mGround, mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))],
-                                  numberOfConstraints=2, constraintUserFunction=UFconstraint))
+                                  numberOfConstraints=2, constraintUserFunction=UFconstraint,
+                                  jacobianUserFunction=UFjacobian))
 
     mbs.Assemble()
     mbs.SolveDynamic()
@@ -9622,7 +9631,7 @@ definitions.append(ItemDefinition(
         ItemParameter(destination=DestComp+DestParam,
             pythonName='jacobianUserFunction',
             defaultValue=0,
-            description=r"""A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; optional, computed by central differences if not given""",
+            description=r"""A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; needed for an active joint, it is not approximated numerically (#3101)""",
             userFunction=ObjectJointUser_jacobianUserFunction),
         ItemFunctionDef('HasUserFunction',
             implementation='return true;'),
@@ -9642,7 +9651,7 @@ definitions.append(ItemDefinition(
             description=r'the equations of the constraintUserFunction, at velocity level by the Jacobian (#2976)'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
             pythonName='ComputeConstraintEquationsRigidDiff', args='const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda, Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations',
-            description=r'the equations with their derivatives by the 12 increments of the markers, from the jacobianUserFunction or by central differences (#2976)'),
+            description=r'the equations with their derivatives by the 12 increments of the markers, from the jacobianUserFunction (#2976)'),
         ItemFunctionDef('GetOutputVariableConnector'),
         ItemRequestedTypes('Marker', ['Position', 'Orientation']),
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
@@ -9669,7 +9678,7 @@ definitions.append(ItemDefinition(
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeJacobianIncrements',
             args='Matrix& jacobian, Real t, const Vector3D* positions, const Matrix3D* rotations',
-            description=r'dc/d[p0, theta0, p1, theta1], n_c x 12: the jacobianUserFunction or central differences of the constraintUserFunction (#2976)'),
+            description=r'dc/d[p0, theta0, p1, theta1], n_c x 12: the jacobianUserFunction (#2976, #3101)'),
         ItemFunctionDef('UpdateGraphics'),
         ItemFunctionDef('IsConnector',
             implementation='return true;'),

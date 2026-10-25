@@ -5765,7 +5765,7 @@ class VObjectJointUser:
 class ObjectJointUser:
     """A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers.
     
-    It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the Jacobian is computed numerically if it is not given.
+    It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the derivative of the equations is a second user function.
     
     Args:
         name: constraints's unique name
@@ -5780,7 +5780,7 @@ class ObjectJointUser:
 
         constraintUserFunction: A Python user function which computes the constraint equations from the frames of the two markers; needed for an active joint; type: ObjectJointUserConstraintUserFunction
 
-        jacobianUserFunction: A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; optional, computed by central differences if not given; type: ObjectJointUserJacobianUserFunction
+        jacobianUserFunction: A Python user function which computes the derivative of the constraint equations by the translations and rotation increments of the markers; needed for an active joint, it is not approximated numerically (#3101); type: ObjectJointUserJacobianUserFunction
 
         visualization: visualization data, see VObjectJointUser
 

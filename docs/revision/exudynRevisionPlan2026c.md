@@ -76,7 +76,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
 - **RG7** Python user items
-  - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker (4 open sub-steps)
+  - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker (2 open sub-steps)
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -119,7 +119,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | OPEN | 5 | Python user items |
+| RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -950,13 +950,13 @@ CLOSED 2026-10-25 (#3098): the nine user item test models open the SolutionViewe
 
 CLOSED 2026-10-25 (#3099): objectType Joint; its page is in the index of the joints. [log](exudynRevisionLog2026c.md#rg7-15-1)
 
-#### **OPEN_RG7.15.3** Make the screw joint of userJointTest.py work beyond 180 degrees
+#### **CLOSED_RG7.15.3** Make the screw joint of userJointTest.py work beyond 180 degrees
 
-#3100: the constraint by atan2, or the numerical Jacobian.
+CLOSED 2026-10-25 (#3100): the constraint by atan2 jumps by 2 pi h at half a turn; written periodic, h sin(angle - x/h), with its analytic Jacobian the screw follows the analytic solution through 2.5 turns. [log](exudynRevisionLog2026c.md#rg7-15-3)
 
-#### **OPEN_RG7.15.4** Require the jacobianUserFunction of ObjectJointUser and check the required user functions of the user items in Assemble
+#### **CLOSED_RG7.15.4** Require the jacobianUserFunction of ObjectJointUser and check the required user functions of the user items in Assemble
 
-#3101: no numerical constraint Jacobian anywhere in Exudyn, as it leads to severe artifacts.
+CLOSED 2026-10-25 (#3101): Assemble refuses an active ObjectJointUser without jacobianUserFunction, the central differences removed; the minimum of the other user items listed in the log - the Jacobians of NodeUser, ObjectUserBody and MarkerUser by central differences under a joint are left for the decision. [log](exudynRevisionLog2026c.md#rg7-15-3)
 
 #### **OPEN_RG7.15.5** Give ObjectConnectorUser the data coordinates of a NodeGenericData and a postNewtonStepUserFunction, checked by a sphere-sphere contact
 

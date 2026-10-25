@@ -1447,7 +1447,7 @@ bool MainObjectConnectorUser::CheckPreAssembleConsistency(const MainSystem& main
 	return true;
 }
 
-//! 1 to 6 equations, the constraintUserFunction of an active joint (#2976)
+//! 1 to 6 equations, the constraintUserFunction and the jacobianUserFunction of an active joint (#2976, #3101)
 bool MainObjectJointUser::CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const
 {
 	CObjectJointUser* cObject = (CObjectJointUser*)GetCObject();
@@ -1460,6 +1460,12 @@ bool MainObjectJointUser::CheckPreAssembleConsistency(const MainSystem& mainSyst
 	if (cObject->GetParameters().activeConnector && !cObject->GetParameters().constraintUserFunction)
 	{
 		errorString = "ObjectJointUser: constraintUserFunction is not given, but the joint is active";
+		return false;
+	}
+	if (cObject->GetParameters().activeConnector && !cObject->GetParameters().jacobianUserFunction)
+	{
+		errorString = "ObjectJointUser: jacobianUserFunction is not given, but the joint is active; the derivative of the constraint "
+			"equations is needed, it is not approximated numerically";
 		return false;
 	}
 	return true;

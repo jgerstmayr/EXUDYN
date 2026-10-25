@@ -78,6 +78,8 @@ counted twice in `Matrix.__newCount` (#3092).
 **A Python `if` on a symbolic value raises a `TypeError` while recording**, and so do `and`, `or` and `not`: Python
 took every symbolic value as true, so a recorded function silently took the first branch for every call. A decision at
 each call is `exudyn.symbolic.IfThenElse(condition, a, b)`, a decision at recording `x.Evaluate()` (#3096).
+**ObjectJointUser needs its jacobianUserFunction**: `Assemble` raises for an active joint without it; the Jacobian was
+computed by central differences, which gives artifacts in a constraint (#3101).
 **Symbolic user functions read other items**: in a function recorded by `CreateSymbolicUserFunction`,
 `mbs.GetNodeOutput`, `GetObjectOutput`, `GetObjectOutputBody`, `GetMarkerOutput` and `GetSensorValues` are read by C++
 at every call, with the same results as the Python function; they were constants of the recording. Every other

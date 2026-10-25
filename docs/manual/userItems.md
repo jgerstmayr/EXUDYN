@@ -95,8 +95,11 @@ ANCF cable this way. A ConnectorMarker is valid during the call only.
 
 ObjectJointUser constrains two rigid markers by `constraintUserFunction(mbs, t, itemNumber, position0, rotationMatrix0,
 position1, rotationMatrix1, parameters)`, which returns `numberOfConstraints` equations; their derivative by the
-translations and rotation increments of the markers is given by `jacobianUserFunction` or computed by central
-differences, and the Lagrange multipliers are the reaction forces (#2976). userJointTest.py writes a screw joint.
+translations and rotation increments of the markers is given by `jacobianUserFunction`, which an active joint needs -
+a constraint Jacobian approximated numerically gives artifacts (#3101) -, and the Lagrange multipliers are the reaction
+forces (#2976). userJointTest.py writes a screw joint over several turns: the coupling of angle and translation is
+written periodic, as $\sin(\varphi - x/h) = 0$, because an angle computed by `atan2` jumps by $2\pi$ at half a turn and
+gives no continuous constraint beyond it (#3100).
 
 MarkerUser is a marker on any number of bodies: its `positionUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t,
 parameters)` gets the coordinates of the nodes of these bodies, body by body, and every built-in connector, joint, load

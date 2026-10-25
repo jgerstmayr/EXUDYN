@@ -3222,7 +3222,7 @@ has to be improved significantly, giving an overview and the background of the c
   exudyn.symbolic and numpy recorded; not yet in the parallel loops; the depth limit; verify against the Python function).
 - Checked while writing it: a Python `if` on a symbolic comparison does not raise while recording but takes the branch
   of the values of the arguments at the recording, which are zero.
-- A list in a pybind description is a Markdown list; checkDefinitions refuses `i ... \ei` there.
+- A list in a pybind description is a Markdown list; checkDefinitions refuses `\bi ... \ei` there.
 
 <a id="rg7-8-3"></a>
 ### RG7.8.3, RG7.8.5 — symbolic user functions in the parallel loops (2026-10-25, #2978, #3095)
@@ -3437,3 +3437,36 @@ mbs.SolutionViewer() in several test models, so the viewer refuses; ObjectJointU
   `simulationSettings.solution.file.write = False` - the viewer reads the solution file of the run and refuses when
   writing is off. The results are unchanged.
 - RG7.15.2: ObjectJointUser has objectType Joint: its page moved from the constraint index to the joint index.
+
+<a id="rg7-15-3"></a>
+### RG7.15.3, RG7.15.4 — the screw joint beyond 180 degrees; the Jacobian of ObjectJointUser required (2026-10-25, #3100, #3101)
+- The cause of #3100 is the constraint, not the Jacobian: `d[0] - h*atan2(Arel[2,1], Arel[1,1])` jumps by 2 pi h when
+  the angle passes 180 degrees, so beyond half a turn there is no continuous solution. Measured with a torque that
+  turns the body further: the atan2 version follows the analytic angle exactly up to x/h = pi and stops there (the
+  solver reduces the step to its minimum).
+- Written periodic, `h*(Arel[2,1]*cos(phi) - Arel[1,1]*sin(phi))` with phi = d[0]/h, which is h*sin(angle - phi):
+  smooth for any number of turns, the same derivative as before at the solution. With its analytic Jacobian (rows of
+  Arel[i,j] by (a1_j x a0_i).(theta1 - theta0), of d = A0^T (p1 - p0) by A0^T and A0^T skew(p1 - p0) theta0; checked
+  against central differences of the rotations to 1e-10) it follows the analytic solution through 2.5 turns: angle
+  15.2990 against 15.3 at index 3 (1.2e-3 in the rotation matrix with 500 steps, the time integration), 15.299994 at
+  index 2.
+- The numerical Jacobian of CObjectJointUser equals the analytic one to 7e-11 for this constraint, but with it the
+  solver failed at t = 0.24 with the Newton tolerances 1e-12 of the test (passed with 1e-8): the accuracy of central
+  differences limits what Newton reaches, as userItems.md said for MarkerUser.
+- #3101: CheckPreAssembleConsistency of ObjectJointUser requires the jacobianUserFunction of an active joint, with the
+  reason; ComputeJacobianIncrements calls only it (the central differences removed); dc/dt at velocity level stays a
+  central difference in t, it is no Jacobian. The definition, its mini example (with UFjacobian), userItems.md and
+  revisions.md say so.
+- userJointTest.py: the screw periodic with UFscrewJacobian over 2.5 turns (torque 0.25), compared by the rotation
+  matrix of the analytic angle and the translation; the pendulum with the given Jacobian only; a missing
+  jacobianUserFunction among the refusals. Reference 28.411748466345937 (before -1.8272301913592162).
+- What the other user items need at least, as they are: ObjectUserBody the massMatrixUserFunction (forces, positions,
+  rotations and their Jacobians optional; the Jacobians of positions and rotations by central differences if not
+  given); NodeUser the positionUserFunction (its Jacobians by central differences if not given); MarkerUser the
+  positionUserFunction (likewise); ObjectConnectorUser nothing (no forces without forceUserFunction). A joint on a
+  NodeUser, an ObjectUserBody or a MarkerUser without their Jacobian functions gets a constraint Jacobian that contains
+  central differences; left for the maintainer's decision.
+- Found while writing this step: a Bash heredoc turns a double backslash into one; an edit script wrote a vertical tab
+  instead of \v into userItems.md, and an earlier one a backspace instead of \b into the log of RG12.52 (`\bi ... \ei`);
+  both repaired, the files of the session searched for control characters.
+- The test suite passes.

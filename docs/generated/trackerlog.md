@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.210.dev1
+- Exudyn version = 1.13.212.dev1
 - last change = 2026-10-25
 - Number of issues = 3104
-- Number of resolved issues = 2987 (210 in current version)
+- Number of resolved issues = 2989 (212 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9045,9 +9045,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` ObjectConnectorUser: data coordinates of a NodeGenericData and a postNewtonStepUserFunction (#3102)
   - description: revision2026c step RG7.15 (maintainer 2026-10-25): a NodeGenericData as in ObjectConnectorRigidBodySpringDamper, its data coordinates passed to forceUserFunction (empty without node), needed for any kind of contact; a postNewtonStepUserFunction updating the data coordinates, with a clearer return than a vector mixing them with the error and the recommended step size; the sphere-sphere contact re-implemented in a new test model.
   - date raised: 2026-10-25
-- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` ObjectJointUser requires a jacobianUserFunction; the required user functions of the user items are checked in Assemble (#3101)
-  - description: revision2026c step RG7.15 (maintainer 2026-10-25): nowhere in Exudyn is a constraint Jacobian approximated by numerical differentiation, as it leads to severe artifacts; ObjectJointUser needs constraintUserFunction and jacobianUserFunction, and a missing one fails in Assemble; check what each other user item needs at least.
-  - date raised: 2026-10-25
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.
   - date raised: 2026-10-21
@@ -9469,9 +9466,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` The screw joint of userJointTest.py with ObjectJointUser fails beyond 180 degrees of rotation (#3100)
-  - description: revision2026c step RG7.15 (maintainer 2026-10-25): the screw joint drafted in userJointTest.py does not work beyond a rotation of 180 degrees; find whether the constraint (the angle by atan2) or the numerical Jacobian causes it, and fix it.
-  - date raised: 2026-10-25
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
   - date raised: 2026-10-23
