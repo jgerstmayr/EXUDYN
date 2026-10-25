@@ -239,7 +239,11 @@ public:
 	}
 
 	//! True (default): the result is evaluated by the flat program, if it has one; False: as a tree (#3053)
-	void SetFlatEvaluation(bool flag) { flatEvaluation = flag; }
+	void SetFlatEvaluation(bool flag)
+	{
+		if (!flag) { CheckTreeDepth(ResultNode(), "the tree evaluation (flatEvaluation = False)"); } //it recurses (#3090)
+		flatEvaluation = flag;
+	}
 	bool GetFlatEvaluation() const { return flatEvaluation; }
 
 	//! true, if it can be evaluated in the threads of the parallel loops: by its flat program, which can be copied (#2978)

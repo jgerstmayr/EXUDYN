@@ -82,6 +82,7 @@ extern PySpecial pySpecial; //special.deprecations.userFunctionListArguments (#3
 
 // Initialize the static flag
 bool Symbolic::SReal::recordExpressions = true; //advantageous, if on by default; otherwise, users may forget ...
+bool Symbolic::SReal::recordingFunction = false;
 bool Symbolic::SReal::flagDebug = false;
 
 int Symbolic::ExpressionBase::newCount = 0;
@@ -800,6 +801,150 @@ public:
 	py::dict Entry(Index k) const { return py::cast<py::dict>(operations[k]); }
 };
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//deep recordings without recursion (#3090)
+
+//! the nodes to delete, for the loop of DeleteNodes; per thread, as a recording may be deleted in any thread
+static thread_local std::vector<FlatNode> nodesToDelete;
+static thread_local bool deletingNodes = false;
+
+static void DeleteNodes(const FlatNode& first)
+{
+	nodesToDelete.push_back(first);
+	if (deletingNodes) { return; } //an operand released by a Destroy() below: the loop deletes it
+	deletingNodes = true;
+	while (nodesToDelete.size())
+	{
+		FlatNode node = nodesToDelete.back();
+		nodesToDelete.pop_back();
+		switch (node.kind)
+		{
+		case FlatKind::Real: { ExpressionBase* e = (ExpressionBase*)node.node; e->Destroy(); delete e; ExpressionBase::deleteCount++; break; }
+		case FlatKind::Vector: { VectorExpressionBase* e = (VectorExpressionBase*)node.node; e->Destroy(); delete e; VectorExpressionBase::deleteCount++; break; }
+		default: { MatrixExpressionBase* e = (MatrixExpressionBase*)node.node; e->Destroy(); delete e; MatrixExpressionBase::deleteCount++; break; }
+		}
+	}
+	deletingNodes = false;
+}
+void DeleteNode(ExpressionBase* node) { DeleteNodes(FlatNode(node)); }
+void DeleteNode(VectorExpressionBase* node) { DeleteNodes(FlatNode(node)); }
+void DeleteNode(MatrixExpressionBase* node) { DeleteNodes(FlatNode(node)); }
+
+static bool IsRecorded(const FlatNode& node)
+{
+	if (FlatProgramData::NumberOfOperands(node) == 0) { return true; } //a leaf has its present value
+	switch (node.kind)
+	{
+	case FlatKind::Real: return ((const ExpressionBase*)node.node)->recordedDepth != 0;
+	case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->recordedDepth != 0;
+	default: return ((const MatrixExpressionBase*)node.node)->recordedDepth != 0;
+	}
+}
+
+//! the value of a recorded node, or of a leaf
+static FlatValue RecordedValue(const FlatNode& node)
+{
+	FlatValue value;
+	bool leaf = FlatProgramData::NumberOfOperands(node) == 0;
+	switch (node.kind)
+	{
+	case FlatKind::Real: { const ExpressionBase* e = (const ExpressionBase*)node.node; value.real = leaf ? e->Evaluate() : e->recordedValue; break; }
+	case FlatKind::Vector: { const VectorExpressionBase* e = (const VectorExpressionBase*)node.node; value.vector = leaf ? &e->EvaluateRef() : e->recordedValue; break; }
+	default: { const MatrixExpressionBase* e = (const MatrixExpressionBase*)node.node; value.matrix = leaf ? &e->EvaluateRef() : e->recordedValue; break; }
+	}
+	return value;
+}
+
+void RecordNode(const FlatNode& root)
+{
+	if (IsRecorded(root)) { return; }
+	std::vector<std::pair<FlatNode, Index>> stack; //node and the number of its operands already done, as FlatProgram::Build
+	std::vector<FlatValue> values;
+	stack.push_back({ root, 0 });
+	while (stack.size())
+	{
+		FlatNode node = stack.back().first;
+		Index done = stack.back().second;
+		Index n = FlatProgramData::NumberOfOperands(node);
+		if (done < n)
+		{
+			FlatNode operand = FlatProgramData::GetOperand(node, done);
+			stack.back().second++;
+			if (!IsRecorded(operand)) { stack.push_back({ operand, 0 }); }
+			continue;
+		}
+		values.resize(n);
+		Index depth = 0;
+		for (Index i = 0; i < n; i++)
+		{
+			FlatNode operand = FlatProgramData::GetOperand(node, i);
+			values[i] = RecordedValue(operand);
+			depth = EXUstd::Maximum(depth, RecordedDepth(operand));
+		}
+		switch (node.kind) //may throw, e.g. for vectors of different sizes, which then is reported where it is recorded
+		{
+		case FlatKind::Real: { const ExpressionBase* e = (const ExpressionBase*)node.node; e->recordedValue = e->EvaluateFromOperands(values.data()); e->recordedDepth = depth + 1; break; }
+		case FlatKind::Vector: { const VectorExpressionBase* e = (const VectorExpressionBase*)node.node; e->recordedValue = &e->EvaluateFromOperands(values.data()); e->recordedDepth = depth + 1; break; }
+		default: { const MatrixExpressionBase* e = (const MatrixExpressionBase*)node.node; e->recordedValue = &e->EvaluateFromOperands(values.data()); e->recordedDepth = depth + 1; break; }
+		}
+		stack.pop_back();
+	}
+}
+
+Real RecordedReal(const ExpressionBase* node) { RecordNode(FlatNode(node)); return RecordedValue(FlatNode(node)).real; }
+const ResizableConstVector& RecordedVector(const VectorExpressionBase* node) { RecordNode(FlatNode(node)); return *RecordedValue(FlatNode(node)).vector; }
+const ResizableMatrix& RecordedMatrix(const MatrixExpressionBase* node) { RecordNode(FlatNode(node)); return *RecordedValue(FlatNode(node)).matrix; }
+
+Index RecordedDepth(const FlatNode& node)
+{
+	if (FlatProgramData::NumberOfOperands(node) == 0) { return 0; }
+	RecordNode(node);
+	switch (node.kind)
+	{
+	case FlatKind::Real: return ((const ExpressionBase*)node.node)->recordedDepth;
+	case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->recordedDepth;
+	default: return ((const MatrixExpressionBase*)node.node)->recordedDepth;
+	}
+}
+
+void CheckTreeDepth(const FlatNode& node, const char* what)
+{
+	if (node.node == nullptr) { return; }
+	Index depth = RecordedDepth(node);
+	if (depth > maximumTreeDepth)
+	{
+		throw py::value_error(STDstring("exudyn.symbolic: ") + what + " of an expression " + EXUstd::ToString(depth)
+			+ " operations deep, which recurses and would overflow the stack above " + EXUstd::ToString(maximumTreeDepth)
+			+ ": evaluate it as a symbolic user function with the flat evaluation, or by esym.GetFlatProgram");
+	}
+}
+
+STDstring ExpressionText(const FlatNode& node)
+{
+	FlatProgram program;
+	program.Build({ node });
+	STDstring text = program.ToString({ "" }, false); //" = (x + 1)\n"
+	return text.substr(3, text.size() - 4);
+}
+
+//! esym.GetDepth(expressions): the depth of each, in the structure of expressions (#3090)
+py::object DepthOfExpressions(const py::object& expressions)
+{
+	bool isList = py::isinstance<py::list>(expressions) || py::isinstance<py::tuple>(expressions);
+	std::vector<py::object> objects = isList ? py::cast<std::vector<py::object>>(expressions) : std::vector<py::object>{ expressions };
+	py::list results;
+	for (const py::object& x : objects)
+	{
+		FlatNode node;
+		if (py::isinstance<SReal>(x)) { node = FlatNode(py::cast<const SReal&>(x).GetExpression()); }
+		else if (py::isinstance<SymbolicRealVector>(x)) { node = FlatNode(py::cast<const SymbolicRealVector&>(x).GetExpression()); }
+		else if (py::isinstance<SymbolicRealMatrix>(x)) { node = FlatNode(py::cast<const SymbolicRealMatrix&>(x).GetExpression()); }
+		else { throw py::type_error("GetDepth: expected exudyn.symbolic.Real, Vector or Matrix, but received " + py::cast<STDstring>(py::str(x))); }
+		results.append(node.node ? RecordedDepth(node) : 0);
+	}
+	return isList ? py::object(results) : py::object(results[0]);
+}
+
 //! the expressions: one esym.Real, Vector or Matrix, or a list or tuple of them
 std::vector<py::object> FlatProgramRoots(const py::object& expressions)
 {
@@ -980,21 +1125,21 @@ class Optimizer
 		{
 			ExpressionBase* e = (ExpressionBase*)node.node;
 			e->DecreaseReferenceCounter();
-			if (e->ReferenceCounter() == 0) { e->Destroy(); delete e; ExpressionBase::deleteCount++; }
+			if (e->ReferenceCounter() == 0) { DeleteNode(e); }
 			break;
 		}
 		case FlatKind::Vector:
 		{
 			VectorExpressionBase* e = (VectorExpressionBase*)node.node;
 			e->DecreaseReferenceCounter();
-			if (e->ReferenceCounter() == 0) { e->Destroy(); delete e; VectorExpressionBase::deleteCount++; }
+			if (e->ReferenceCounter() == 0) { DeleteNode(e); }
 			break;
 		}
 		default:
 		{
 			MatrixExpressionBase* e = (MatrixExpressionBase*)node.node;
 			e->DecreaseReferenceCounter();
-			if (e->ReferenceCounter() == 0) { e->Destroy(); delete e; MatrixExpressionBase::deleteCount++; }
+			if (e->ReferenceCounter() == 0) { DeleteNode(e); }
 			break;
 		}
 		}
@@ -1497,14 +1642,17 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def("SetValue", &Symbolic::SReal::SetSymbolicValue<Symbolic::SReal>,
 			"set value of symbolic Real quantity")
 
-		.def("Evaluate", &Symbolic::SReal::Evaluate,
-			"return evaluated expression (prioritized) or stored Real value")
+		.def("Evaluate", [](const Symbolic::SReal& item) {
+				Symbolic::CheckTreeDepth(Symbolic::FlatNode(item.GetExpression()), "Evaluate()");
+				return item.Evaluate();
+			}, "return evaluated expression (prioritized) or stored Real value; raises for an expression deeper than 10000 operations (#3090)")
 
 		//.def("Diff", py::overload_cast<const Symbolic::SReal&>(&Symbolic::SReal::Diff),
 		//	"return derivative of stored expression w.r.t. given variable")
-		.def("Diff", &Symbolic::SReal::DiffSReal,
-			//static_cast<Real (Symbolic::SReal::Diff::*)(const Symbolic::SReal&)>(&Symbolic::SReal::Diff),
-			"return derivative of stored expression w.r.t. given variable")
+		.def("Diff", [](const Symbolic::SReal& item, const Symbolic::SReal& var) {
+				Symbolic::CheckTreeDepth(Symbolic::FlatNode(item.GetExpression()), "Diff()");
+				return item.DiffSReal(var);
+			}, "return derivative of stored expression w.r.t. given variable; raises for an expression deeper than 10000 operations (#3090)")
 
 		//.def("ToString", &Symbolic::SReal::ToString,
 		//	"return string representation")
@@ -1717,6 +1865,10 @@ void Init_Pybind_Symbolic(py::module& m) {
 		"get current (global / module-wide) status of recording");
 	m.def("SetRecording", &Symbolic::SReal::SetRecording,
 		"set current (global / module-wide) status of recording");
+	m.def("_SetRecordingFunction", [](bool flag) { Symbolic::SReal::recordingFunction = flag; },
+		"for CreateSymbolicUserFunction: a user function is recorded, SetValue of a named variable raises (#3090)");
+	m.def("GetDepth", &Symbolic::DepthOfExpressions, "the number of operations on the longest path to a leaf (#3090)",
+		py::arg("expressions"));
 
 
 
@@ -1738,8 +1890,10 @@ void Init_Pybind_Symbolic(py::module& m) {
 		//.def(py::init<Symbolic::SReal, Symbolic::SReal, Symbolic::SReal >()) //cast from list of SReal
 
 		//+++++++++++++++++++++++++++++++++++++++++++
-		.def("Evaluate", &Symbolic::SymbolicRealVector::PyEvaluate,
-			"return evaluated expression (prioritized) or stored Real value")
+		.def("Evaluate", [](const Symbolic::SymbolicRealVector& item) {
+				Symbolic::CheckTreeDepth(Symbolic::FlatNode(item.GetExpression()), "Evaluate()");
+				return item.PyEvaluate();
+			}, "return evaluated expression (prioritized) or stored Real value; raises for an expression deeper than 10000 operations (#3090)")
 
 		.def("SetVector", &Symbolic::SymbolicRealVector::SetSymbolicVector,
 			"set symbolic Vector quantity")
@@ -1880,8 +2034,10 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def_readwrite_static("__deleteCount", &Symbolic::MatrixExpressionBase::deleteCount)
 
 		//+++++++++++++++++++++++++++++++++++++++++++
-		.def("Evaluate", &Symbolic::SymbolicRealMatrix::PyEvaluate,
-			"return evaluated expression (prioritized) or stored Real value")
+		.def("Evaluate", [](const Symbolic::SymbolicRealMatrix& item) {
+				Symbolic::CheckTreeDepth(Symbolic::FlatNode(item.GetExpression()), "Evaluate()");
+				return item.PyEvaluate();
+			}, "return evaluated expression (prioritized) or stored Real value; raises for an expression deeper than 10000 operations (#3090)")
 
 		.def("SetMatrix", &Symbolic::SymbolicRealMatrix::SetSymbolicMatrix,
 			"set symbolic Matrix quantity")

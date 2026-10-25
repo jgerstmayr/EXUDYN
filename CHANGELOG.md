@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 202 | 1.13.205 |
+| 1.13 | Newborn | 203 | 1.13.206 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.206** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` Deep symbolic recordings overflow the C++ stack (#3090)
+  - description: revision2026c step RG12.49.4 (found in RG12.50.3): a chain x = sin(x\*q\[1\] + c)\*q\[2\] recorded 8000 times (about 32000 nested nodes) crashes Python with a stack overflow in str(); 30000 times already while recording. ToString, Evaluate, Diff and Destroy of the expression tree are recursive; FlatProgram::Build and GetFlatProgramData are not. Make the tree functions iterative or refuse the depth with an error.
+  - **notes:** Deep symbolic recordings: recording takes a time linear in the size of the recording at any depth (a chain of 4000 steps 0.013 s instead of 1.0 s) and neither recording, deleting nor printing overflows the stack; the value of a new expression is computed from the recorded values of its operands. Evaluate() and Diff() of an expression deeper than 10000 operations, and flatEvaluation = False, raise a ValueError instead of crashing; exudyn.symbolic.GetDepth gives the depth; SetValue, SetVector, SetMatrix of a named variable raise while CreateSymbolicUserFunction records a function.
+  - date resolved: **2026-10-25 17:50**, date raised: 2026-10-25
 - **1.13.205** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` bool() of a symbolic value refuses while recording, as float() does (#3096)
   - description: revision2026c step RG12.49.6 (maintainer 2026-10-25: first a way to still use the if): a Python if on a symbolic comparison is decided once while recording, with the values of the arguments then (zero in CreateSymbolicUserFunction), and records only that branch, silently. bool() shall raise a TypeError while recording, with a message that names both ways that exist: exudyn.symbolic.IfThenElse(condition, a, b), decided at every evaluation, and x.Evaluate() or x.value, decided once at recording, explicitly; before that, the recordings of the test models and examples are checked for an if or a library function that reads bool() of a symbolic value.
   - **notes:** A Python if, and, or, not on a symbolic value (exudyn.symbolic.Real) raises a TypeError while recording, which names exudyn.symbolic.IfThenElse for a decision at each call and Evaluate() for a decision at recording; before, Python took every symbolic value as true, so a recorded function took the first branch for every call. A symbolic number, and a comparison with recording off, are conditions by their value.

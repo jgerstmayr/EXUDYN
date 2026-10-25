@@ -32,11 +32,26 @@ or, without a node, a value.
   reference its operands - the holder or the creating code does. The constructors of the leaves of values
   (`ExpressionReal`, `VectorExpressionReal`, `MatrixExpressionReal`) count one user at once, so code that creates one
   for a user that counts again normalizes with one decrement (`Optimizer::Number`, `NewWithOperands` of
-  `VectorExpressionSReal`). A node whose count reaches zero is destroyed, and its `Destroy()` releases its operands,
-  recursively. `esym.Real.__newCount - esym.Real.__deleteCount` (and of `Vector`, `Matrix`) is the number of nodes
-  that exist; symbolicOptimizeTest.py checks that it returns to its start.
-- **The value of a new holder**: `SReal(ExpressionBase*)` evaluates the new node at once, which for a deep graph means
-  its whole subtree - the recording of a chain is quadratic in its depth (#3090).
+  `VectorExpressionSReal`). A node whose count reaches zero is destroyed, and its `Destroy()` releases its operands.
+  `esym.Real.__newCount - esym.Real.__deleteCount` (and of `Vector`, `Matrix`) is the number of nodes
+  that exist; symbolicOptimizeTest.py checks that it returns to its start. `DeleteNode` deletes a node whose count
+  reached zero; its `Destroy()` releases its operands, and those that reach zero are deleted by the same loop
+  (a thread-local list), not by a recursion (#3090).
+- **The value of a new holder** (#3090): `SReal(ExpressionBase*)`, `SymbolicRealVector(VectorExpressionBase*)` and
+  `SymbolicRealMatrix(MatrixExpressionBase*)` record the new node: `RecordNode` computes it by `EvaluateFromOperands`
+  from the recorded values of its operands - `recordedValue` of an operation, a number or a pointer to the vector or
+  matrix it evaluated into, and `recordedDepth`, 1 + the deepest operand -; a leaf has its present value and depth 0.
+  An operation not recorded yet (made by Optimize or for a thread) is recorded with its operands, depth first with an
+  explicit stack. So a recording is linear in its size, and a size error is raised where it is recorded. The value of
+  an expression is that of its operands when they were recorded: after `x.SetValue(5.)`, `b = a*2` with `a = x + 1`
+  recorded before has the value 2, while `b.Evaluate()` gives 12. `NumberOfItems()`, `NumberOfRows()` and
+  `NumberOfColumns()` read the recorded value. `str()` is the flat program written with `flatten = False`, without
+  recursion, in a time quadratic in the depth, as each operation copies the text of its operands.
+- **The tree evaluation**: `Evaluate()` and `Diff()` from Python, and `flatEvaluation = False`, check `recordedDepth`
+  against `maximumTreeDepth` = 10000 and raise a `ValueError` above (about 60 and 70 bytes of stack per level;
+  700 kB, below the 1 MB of a thread on Windows); `esym.GetDepth` gives it.
+- **While a user function is recorded** (`esym._SetRecordingFunction`, set by CreateSymbolicUserFunction), `SetValue`,
+  `SetVector`, `SetMatrix` and a component of a named variable raise: the recording would not follow the value.
 - **Refused while recording**: `float(x)`, `math.sin(x)` and a float array of a symbolic value, which would record a
   constant (#3017); `*` of two vectors or with a matrix and `==` of two vectors, which numpy defines differently
   (#3015, `exudyn.special.deprecations.symbolicStarProduct` for the transition, #3016). The three holder types implement
@@ -190,7 +205,7 @@ For numbers alone, cUtilities stays the fast way (0.63 us against 1.2 to 2.4 us 
 
 | | | |
 |---|---|---|
-| a recording deeper than about 34000 nested nodes | overflows the 2 MB stack of python.exe while recording or in `Evaluate`; `Diff` at 28000, `str()` at 9000; the flat program, the structure and Optimize do not recurse | #3090 |
+| the tree evaluation deeper than 10000 operations | `Evaluate()`, `Diff()` and `flatEvaluation = False` raise a `ValueError`; recording, deleting, `str()`, the flat program and Optimize work at any depth | #3090 |
 | the MainSystem in an expression | `mbs.GetNodeOutput(...)` inside a recorded function is a constant | #2984 |
 | derivatives | `Diff` of scalars only, a number: the forward derivative at the current values | - |
 | matrix functions | no inverse, no product of the components of matrices; vectors have `esym.cross` (#3070) | - |

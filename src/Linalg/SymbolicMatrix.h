@@ -173,9 +173,7 @@ public:
 				item->DecreaseReferenceCounter();
 				if (item->ReferenceCounter() == 0)
 				{
-					item->Destroy();
-					delete item;
-					ExpressionBase::deleteCount++;
+					DeleteNode(item);
 				}
 			}
 		}
@@ -252,8 +250,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; MatrixExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; MatrixExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	//! get sizes
@@ -314,8 +312,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; MatrixExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; MatrixExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	//! get sizes
@@ -376,8 +374,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; ExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; MatrixExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	//! get sizes
@@ -432,7 +430,7 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; MatrixExpressionBase::deleteCount++; } }
+		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } }
 	}
 
 	//! get sizes
@@ -475,7 +473,7 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; MatrixExpressionBase::deleteCount++; } }
+		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } }
 	}
 
 	//! get sizes
@@ -525,8 +523,8 @@ public:
 //
 //	virtual void Destroy()
 //	{
-//		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; MatrixExpressionBase::deleteCount++; } }
-//		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; MatrixExpressionBase::deleteCount++; } }
+//		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+//		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 //	}
 //
 //	virtual ResizableMatrix Evaluate() const override
@@ -562,8 +560,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; MatrixExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; MatrixExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	//! get sizes
@@ -634,7 +632,7 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; MatrixExpressionBase::deleteCount++; } }
+		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } }
 	}
 
 	virtual Index NumberOfRows() const override { return operand->NumberOfColumns(); }
@@ -668,7 +666,7 @@ public:
 //public:
 //	MatrixExpressionNormL2(MatrixExpressionBase* op) : ExpressionBase(), operand(op) {}
 //
-//	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; MatrixExpressionBase::deleteCount++; } } }
+//	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 //
 //	virtual Real Evaluate() const override
 //	{
@@ -690,9 +688,9 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; MatrixExpressionBase::deleteCount++; } }
-		if (indexRow) { indexRow->DecreaseReferenceCounter(); if (indexRow->ReferenceCounter() == 0) { indexRow->Destroy(); delete indexRow; ExpressionBase::deleteCount++; } }
-		if (indexColumn) { indexColumn->DecreaseReferenceCounter(); if (indexColumn->ReferenceCounter() == 0) { indexColumn->Destroy(); delete indexColumn; ExpressionBase::deleteCount++; } }
+		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } }
+		if (indexRow) { indexRow->DecreaseReferenceCounter(); if (indexRow->ReferenceCounter() == 0) { DeleteNode(indexRow); } }
+		if (indexColumn) { indexColumn->DecreaseReferenceCounter(); if (indexColumn->ReferenceCounter() == 0) { DeleteNode(indexColumn); } }
 	}
 
 	//! get sizes
@@ -869,12 +867,20 @@ public:
 		}
 
 	}
+	//! take ownership of an expression; its value from the recorded values of its operands (#3090)
 	SymbolicRealMatrix(MatrixExpressionBase* e) : exprMatrix(e)
 	{
 		if (e) 
 		{ 
-			matrix = e->Evaluate();
 			e->IncreaseReferenceCounter(); 
+			try { matrix = RecordedMatrix(e); }
+			catch (...) //as SReal: this object never completes, so the expression is released here (#2481)
+			{
+				exprMatrix = nullptr;
+				e->DecreaseReferenceCounter();
+				if (e->ReferenceCounter() == 0) { DeleteNode(e); }
+				throw;
+			}
 		}
 		else
 		{
@@ -924,6 +930,7 @@ public:
 		EPyUtils::FromPython(matrixInit, temp);
 		if (IsExpressionNamedReal())
 		{
+			SReal::CheckNotRecordingFunction();
 			GetExpressionNamedReal().SetMatrix(temp);
 			matrix = temp; //for consistency
 		}
@@ -939,6 +946,7 @@ public:
 	{
 		if (IsExpressionNamedReal())
 		{
+			SReal::CheckNotRecordingFunction();
 			CHECKandTHROW(row < GetExpressionNamedReal().NumberOfRows(),
 				"SymbolicRealMatrix::SetExpressionNamedMatrixComponent: row out of range");
 			CHECKandTHROW(column < GetExpressionNamedReal().NumberOfColumns(),
@@ -985,17 +993,17 @@ public:
 	}
 
 	virtual Index NumberOfColumns() const {
-		if (exprMatrix) { return exprMatrix->Evaluate().NumberOfColumns(); }
+		if (exprMatrix) { return RecordedMatrix(exprMatrix).NumberOfColumns(); }
 		return matrix.NumberOfColumns();
 	}
 
 	virtual Index NumberOfRows() const {
-		if (exprMatrix) { return exprMatrix->Evaluate().NumberOfRows(); }
+		if (exprMatrix) { return RecordedMatrix(exprMatrix).NumberOfRows(); }
 		return matrix.NumberOfRows();
 	}
 
 	virtual STDstring ToString() const {
-		if (exprMatrix) { return exprMatrix->ToString(); }
+		if (exprMatrix) { return ExpressionText(FlatNode(exprMatrix)); }
 		return matrix.ToString();
 	}
 
@@ -1012,9 +1020,7 @@ public:
 			if (exprMatrix->ReferenceCounter() == 0)
 			{
 				if (GetFlagDebug()) { std::cout << "now we delete: " << ToString() << "\n"; }
-				exprMatrix->Destroy();
-				delete exprMatrix;
-				MatrixExpressionBase::deleteCount++;
+				DeleteNode(exprMatrix);
 			}
 		}
 	}
@@ -1057,7 +1063,7 @@ public:
 			if (exprMatrix) //if expression is not used any more, destroy!
 			{
 				exprMatrix->DecreaseReferenceCounter();
-				if (exprMatrix->ReferenceCounter() == 0) { exprMatrix->Destroy(); delete exprMatrix; MatrixExpressionBase::deleteCount++; }
+				if (exprMatrix->ReferenceCounter() == 0) { DeleteNode(exprMatrix); }
 			}
 
 			matrix = other.matrix;

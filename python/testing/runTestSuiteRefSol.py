@@ -155,6 +155,7 @@ def TestExamplesReferenceSolution():
         'ANCFThinPlateRotationTest.py':0.009394817004517305, #new 2026-10-13: the frame of ObjectANCFThinPlate and NodePointSlope12, torque on element and node (#2228)
         'multithreadingUserFunctionTest.py':0.04949999999999993, #new 2026-10-25: connectors with Python and symbolic user functions with 4 threads against 1 thread (#3093)
         'symbolicOptimizeTest.py':212.46417414604238, #new 2026-10-25: exudyn.symbolic.Optimize, the operations per level, the values, the nodes freed, CreateSymbolicUserFunction(optimize) (#3085)
+        'symbolicDeepRecordingTest.py':41.235299378685376, #new 2026-10-25: a recording of 200000 operations recorded, measured and deleted, Evaluate and Diff refused above 10000, a deep symbolic user function, SetValue refused while recording (#3090)
         'symbolicUserFunctionThreadsTest.py':860.0074721246586, #new 2026-10-25: symbolic user functions and user bodies in the threads, user functions set during the simulation, a Python postNewtonStepUserFunction, 4 threads against 1 thread (#2978, #3095)
         'symbolicExportTest.py':11450.057870734236, #new 2026-10-25: GetFlatProgramData, GetFlatProgram and ToString in the formats Python, symbolic, numpy and sympy against the recordings (#3087, #3088)
         'symbolicUtilitiesTest.py':7.024076141931356, #new 2026-10-23: exudyn.symbolicUtilities with exudyn.symbolic, numpy, math and cMath against cUtilities (#3069)

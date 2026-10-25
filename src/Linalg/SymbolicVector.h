@@ -150,9 +150,7 @@ public:
 			item->DecreaseReferenceCounter();
 			if (item->ReferenceCounter() == 0)
 			{
-				item->Destroy();
-				delete item;
-				ExpressionBase::deleteCount++;
+				DeleteNode(item);
 			}
 		}
 		//released: the destructor calls Destroy() again after SymbolicRealVector::Destroy() did, which freed them twice (#2876)
@@ -220,8 +218,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	virtual const ResizableConstVector& EvaluateRef() const override
@@ -256,8 +254,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	virtual const ResizableConstVector& EvaluateRef() const override
@@ -293,8 +291,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; ExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	virtual const ResizableConstVector& EvaluateRef() const override
@@ -330,8 +328,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; MatrixExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	virtual const ResizableConstVector& EvaluateRef() const override
@@ -365,8 +363,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; MatrixExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	virtual const ResizableConstVector& EvaluateRef() const override
@@ -401,7 +399,7 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
+		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } }
 	}
 
 	virtual const ResizableConstVector& EvaluateRef() const override {
@@ -428,7 +426,7 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
+		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } }
 	}
 
 	virtual const ResizableConstVector& EvaluateRef() const override {
@@ -459,8 +457,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	virtual const ResizableConstVector& EvaluateRef() const override
@@ -504,8 +502,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	virtual Real Evaluate() const override
@@ -542,7 +540,7 @@ public:
 
 	virtual void Destroy() override 
 	{ 
-		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
+		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } }
 	}
 
 	virtual Real Evaluate() const override 
@@ -572,8 +570,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
-		if (index) { index->DecreaseReferenceCounter(); if (index->ReferenceCounter() == 0) { index->Destroy(); delete index; ExpressionBase::deleteCount++; } }
+		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } }
+		if (index) { index->DecreaseReferenceCounter(); if (index->ReferenceCounter() == 0) { DeleteNode(index); } }
 	}
 
 	virtual Real Evaluate() const override
@@ -611,8 +609,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	virtual Real Evaluate() const override
@@ -641,8 +639,8 @@ public:
 
 	virtual void Destroy() override
 	{
-		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
-		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
+		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { DeleteNode(left); } }
+		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { DeleteNode(right); } }
 	}
 
 	virtual Real Evaluate() const override {
@@ -736,9 +734,21 @@ public:
 		}
 
 	} 
-	SymbolicRealVector(VectorExpressionBase* e) : exprList(e), vector(e ? e->Evaluate() : 0)
+	//! take ownership of an expression; its value from the recorded values of its operands (#3090)
+	SymbolicRealVector(VectorExpressionBase* e) : exprList(e)
 	{
-		if (e) { e->IncreaseReferenceCounter(); }
+		if (e)
+		{
+			e->IncreaseReferenceCounter();
+			try { vector = RecordedVector(e); }
+			catch (...) //as SReal: this object never completes, so the expression is released here (#2481)
+			{
+				exprList = nullptr;
+				e->DecreaseReferenceCounter();
+				if (e->ReferenceCounter() == 0) { DeleteNode(e); }
+				throw;
+			}
+		}
 	}
 	SymbolicRealVector(const SymbolicRealVector& other) : exprList(other.exprList), vector(other.vector)
 	{
@@ -796,6 +806,7 @@ public:
 	{
 		if (IsExpressionNamedReal())
 		{
+			SReal::CheckNotRecordingFunction();
 			GetExpressionNamedReal().SetVector(ResizableConstVector(vectorInit));
 			vector = ResizableConstVector(vectorInit); //for consistency
 		}
@@ -811,6 +822,7 @@ public:
 	{
 		if (IsExpressionNamedReal())
 		{
+			SReal::CheckNotRecordingFunction();
 			CHECKandTHROW(index < GetExpressionNamedReal().NumberOfItems(),
 				"SymbolicRealVector::SetExpressionNamedVectorComponent: index out of range");
 			GetExpressionNamedReal().SetComponent(index, value);
@@ -854,12 +866,12 @@ public:
 	}
 
 	virtual Index NumberOfItems() const {
-		if (exprList) { return exprList->EvaluateRef().NumberOfItems(); }
+		if (exprList) { return RecordedVector(exprList).NumberOfItems(); }
 		return vector.NumberOfItems();
 	}
 
 	virtual STDstring ToString() const {
-		if (exprList) { return exprList->ToString(); }
+		if (exprList) { return ExpressionText(FlatNode(exprList)); }
 		return vector.ToString();
 	}
 
@@ -876,9 +888,7 @@ public:
 			if (exprList->ReferenceCounter() == 0)
 			{
 				if (GetFlagDebug()) { std::cout << "now we delete: " << ToString() << "\n"; }
-				exprList->Destroy();
-				delete exprList;
-				VectorExpressionBase::deleteCount++;
+				DeleteNode(exprList);
 			}
 		}
 	}
@@ -921,7 +931,7 @@ public:
 			if (exprList) //if expression is not used any more, destroy!
 			{
 				exprList->DecreaseReferenceCounter();
-				if (exprList->ReferenceCounter() == 0) { exprList->Destroy(); delete exprList; VectorExpressionBase::deleteCount++; }
+				if (exprList->ReferenceCounter() == 0) { DeleteNode(exprList); }
 			}
 
 			vector = other.vector;

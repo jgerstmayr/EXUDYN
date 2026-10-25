@@ -78,6 +78,11 @@ counted twice in `Matrix.__newCount` (#3092).
 **A Python `if` on a symbolic value raises a `TypeError` while recording**, and so do `and`, `or` and `not`: Python
 took every symbolic value as true, so a recorded function silently took the first branch for every call. A decision at
 each call is `exudyn.symbolic.IfThenElse(condition, a, b)`, a decision at recording `x.Evaluate()` (#3096).
+**Deep symbolic recordings**: a recording takes a time linear in its size - a chain of 4000 steps records in 0.013 s
+instead of 1.0 s - and does not overflow the stack at any depth, nor does deleting or printing it; the value of a new
+expression is computed from the values of its operands when they were recorded. `Evaluate()` and `Diff()` of an
+expression deeper than 10000 operations raise a `ValueError` instead of crashing, `exudyn.symbolic.GetDepth` gives the
+depth, and `SetValue` of a named variable raises while `CreateSymbolicUserFunction` records a function (#3090).
 
 **`NodeUser`**, a node with any number of coordinates whose position, and optionally orientation, are Python user
 functions; the Jacobians are computed by central differences if they are not given; node markers, SensorNode, loads

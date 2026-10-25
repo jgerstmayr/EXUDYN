@@ -3338,3 +3338,34 @@ now.)*
 different - the more algorithmic view of functions, where in future one could use a.Assign(a+1), which would allow an
 algorithmic approach, including for-loops. Add this as an RG step in symbolic, optional, no open issue now.)*
 - Written down as the optional step RG12.53, without an issue.
+
+<a id="rg12-49-4-2"></a>
+### RG12.49.4 — deep recordings without a stack overflow (2026-10-25, #3090)
+*(Maintainer 2026-10-25: everything recommended is good to go; SetValue during recording is dangerous anyway - so the
+suggestion plus an exception, if not needed in our current cases. The algorithmic view with Assign is RG12.53.)*
+- The value of a new expression (Symbolic.cpp, RecordNode): `recordedValue` and `recordedDepth` in the three node
+  bases - a number, or a pointer to the vector or matrix the node evaluated into -; a new holder computes its node by
+  EvaluateFromOperands from the recorded values of its operands, a leaf has its present value. A node made by Optimize
+  or for a thread is recorded when first needed, with its operands, by an explicit stack. NumberOfItems, NumberOfRows,
+  NumberOfColumns read the recorded value (they evaluated the tree); the in-place operators keep the value as well.
+  The values are those of the tree evaluation at the time, except after SetValue of a variable between recording an
+  operand and its user: then the stored value is from the operands, and Evaluate() gives the present one.
+- DeleteNode: the 109 places `x->Destroy(); delete x; deleteCount++` replaced; a thread-local list of nodes to delete,
+  drained by the first caller. The counts of new and deleted nodes stay balanced (symbolicModuleTest.py,
+  symbolicOptimizeTest.py, the new test).
+- str() of Real, Vector and Matrix: FlatProgram::ToString with flatten = false, the same text; quadratic in the depth,
+  as each operation copies the text of its operands (3000 steps of the chain, 12000 operations, 0.4 s).
+- The tree evaluation: Evaluate and Diff from Python of the three types, and flatEvaluation = False, raise a ValueError
+  above 10000 operations (maximumTreeDepth; about 60 and 70 bytes per level, below the 1 MB stack of a Windows thread).
+- esym.GetDepth(expressions); esym._SetRecordingFunction, set by CreateSymbolicUserFunction around the call of the
+  function (with try/finally, which also restores SetRecording on an error): SetValue, SetVector, SetMatrix and a
+  component of a named variable raise meanwhile. No recording of the test models and examples sets a value.
+- Measured (the chain x = sin(x*z + 0.1)*z of the evaluation): 1000/4000/16000/60000 steps record in
+  0.003/0.013/0.049/0.18 s (before 0.07/1.0/- /-, a crash above about 8500 steps), deleted in 0.006 s at 60000 steps;
+  a symbolic user function of 5000 steps (20000 operations) created in 0.04 s, its flat evaluation the bits of the loop
+  with cMath.
+- python/TestModels/symbolicDeepRecordingTest.py: 200000 operations recorded, measured, deleted, the nodes balanced;
+  str of 12000; Evaluate and Diff refused above, equal to cMath below; the value from the operands; a size error at
+  recording; a user function of 20000 operations, flatEvaluation = False refused; SetValue while recording refused.
+  Reference 41.235299378685376. The test suite, the pytest files and the 4 examples with exudyn.symbolic pass.
+- RG12.49 closed with it.

@@ -43,7 +43,7 @@ pb.AddDocu(r"""The sub-module `exudyn.symbolic` (abbreviated `esym`) records mat
 - A Python `if`, `and`, `or` or `not` on a symbolic value raises a `TypeError` while recording, as it would take one branch for every call (#3096): a decision of each call is written with `esym.IfThenElse(condition, a, b)`, which computes both branches, a decision at recording with `x.Evaluate()`. An `if` on a Python value - a setting of the script - is decided at recording, as any Python code of the function. A loop is recorded as often as it runs, so its count cannot depend on a symbolic value.
 - Only `exudyn.symbolic`, its types and numpy's functions of them are recorded: a call into another library, a value read from the `mbs` or from another item inside the function, is a constant of the recording.
 - With `simulationSettings.parallel.numberOfThreads` > 1, an item whose user functions are all symbolic is computed in the threads of the parallel loops, as the items without user functions: each thread evaluates its own copy of the recording, with the same results. An item with a Python user function, and an item that reads it - a connector on its marker, a body on its node -, is computed in the main thread (#2978).
-- A recording nested deeper than about 30000 operations - a sum of that many terms in a loop - overflows the stack of the main thread (#3090); the recordings of the test models are at most 44 deep.
+- A recording is linear in its size at any depth - a sum of many terms in a loop, a chain of 200000 operations -: the value of a new expression is computed from the values its operands had when they were recorded, and recording, deleting, `str()`, the flat program and Optimize do not recurse (#3090). `Evaluate()` and `Diff()` of an expression evaluate the tree, which recurses: deeper than 10000 operations (`esym.GetDepth`) they raise a `ValueError`, and so does `flatEvaluation = False`; a symbolic user function of any depth is evaluated by its flat program. The recordings of the test models are at most 44 deep.
 - **Always verify a symbolic user function** against its Python function, with `UserFunction.Evaluate` or a short simulation of both.
 """,
             section='Symbolic', sectionLevel=1,sectionLabel='sec:cinterface:symbolic')
@@ -82,7 +82,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetValue', cName='', 
-                        description="Set either internal float value or value of named expression; cannot change symbolic expressions.",
+                        description="Set either internal float value or value of named expression; cannot change symbolic expressions. Raises while CreateSymbolicUserFunction records a function, as the recording would not follow the new value (#3090); SetVector, SetMatrix and a component of a named vector or matrix do the same.",
                         example = r"""b = esym.Real(13)\\b.SetValue(14) #now b is 14\\#b.SetValue(a+3.) #not possible!""",
                         argList=['valueInit'],
                         argTypes=['float'],
@@ -277,6 +277,14 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgram', cNa
                         defaultArgs=['', 'None', 'None', "'Python'", 'True', "'F'"],
                         argTypes=['Any', 'Any', 'Any', 'str', 'bool', 'str'],
                         returnType='str',
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetDepth', cName='',
+                        description="the depth of one esym.Real, Vector or Matrix, or of each of a list of them: the number of operations on the longest path to a leaf, 0 for a number or a named variable; Evaluate() and Diff() of an expression deeper than 10000 raise, as they recurse (#3090)",
+                        example = r"""x=esym.Real('x',2)\\esym.GetDepth([x, esym.sin(x*x + 1)]) #[0, 3]""",
+                        argList=['expressions'],
+                        argTypes=['Any'],
+                        returnType='Any',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetRecording', cName='', 

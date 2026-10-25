@@ -879,9 +879,13 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
         exudyn.Print('\nargList=[mbs]+', argList[1:])
         exudyn.Print('\nfnDict=', fnDict)
 
-    #now we record the function:
-    returnValue = function(**fnDict)
-    exudyn.symbolic.SetRecording(recStored)
+    #now we record the function; SetValue of a named variable raises meanwhile, as the recording would not follow it (#3090)
+    exudyn.symbolic._SetRecordingFunction(True)
+    try:
+        returnValue = function(**fnDict)
+    finally:
+        exudyn.symbolic._SetRecordingFunction(False)
+        exudyn.symbolic.SetRecording(recStored)
 
 
     if type(returnValue) is list and len(returnValue) != 0 and type(returnValue[0]) is list:

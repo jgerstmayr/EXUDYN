@@ -103,6 +103,8 @@ class Real:
     def SetValue(self, valueInit: float) -> None: 
         """Set either internal float value or value of named expression; cannot change symbolic expressions.
         
+        Raises while CreateSymbolicUserFunction records a function, as the recording would not follow the new value (#3090); SetVector, SetMatrix and a component of a named vector or matrix do the same.
+        
         Examples:
             b = esym.Real(13)
             b.SetValue(14) #now b is 14
@@ -326,6 +328,15 @@ def GetFlatProgram(expressions: Any, arguments: Any=None, resultNames: Any=None,
         x=esym.Real('x',2)
         y=esym.Real('y',3)
         print(esym.GetFlatProgram([x**2+y, esym.cos(x)*y], format='numpy', name='F'))
+    """
+    ...
+@overload
+def GetDepth(expressions: Any) -> Any: 
+    """The depth of one esym.Real, Vector or Matrix, or of each of a list of them: the number of operations on the longest path to a leaf, 0 for a number or a named variable; Evaluate() and Diff() of an expression deeper than 10000 raise, as they recurse (#3090).
+    
+    Examples:
+        x=esym.Real('x',2)
+        esym.GetDepth([x, esym.sin(x*x + 1)]) #[0, 3]
     """
     ...
 @overload

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.205.dev1
+- Exudyn version = 1.13.206.dev1
 - last change = 2026-10-25
 - Number of issues = 3098
-- Number of resolved issues = 2982 (205 in current version)
+- Number of resolved issues = 2983 (206 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9466,10 +9466,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `raised by: Claude-JG` Deep symbolic recordings overflow the C++ stack (#3090)
-  - description: revision2026c step RG12.49.4 (found in RG12.50.3): a chain x = sin(x\*q\[1\] + c)\*q\[2\] recorded 8000 times (about 32000 nested nodes) crashes Python with a stack overflow in str(); 30000 times already while recording. ToString, Evaluate, Diff and Destroy of the expression tree are recursive; FlatProgram::Build and GetFlatProgramData are not. Make the tree functions iterative or refuse the depth with an error.
-  - **remarks:** evaluated 2026-10-25 (RG12.49.4): deepest recording of the test models 44; limits with the 2 MB stack of python.exe: recording and Evaluate 34000 nested nodes, Diff 28000, str 9000; recording quadratic in depth (SReal evaluates its tree); proposal in the log, waiting for the decision
-  - date raised: 2026-10-25
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
   - date raised: 2026-10-23

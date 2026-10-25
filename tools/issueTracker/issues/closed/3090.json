@@ -1,0 +1,14 @@
+{
+  "number": 3090,
+  "title": "Deep symbolic recordings overflow the C++ stack",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "revision2026c step RG12.49.4 (found in RG12.50.3): a chain x = sin(x*q[1] + c)*q[2] recorded 8000 times (about 32000 nested nodes) crashes Python with a stack overflow in str(); 30000 times already while recording. ToString, Evaluate, Diff and Destroy of the expression tree are recursive; FlatProgram::Build and GetFlatProgramData are not. Make the tree functions iterative or refuse the depth with an error.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23",
+  "dateResolved": "2026-10-25 17:50",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Deep symbolic recordings: recording takes a time linear in the size of the recording at any depth (a chain of 4000 steps 0.013 s instead of 1.0 s) and neither recording, deleting nor printing overflows the stack; the value of a new expression is computed from the recorded values of its operands. Evaluate() and Diff() of an expression deeper than 10000 operations, and flatEvaluation = False, raise a ValueError instead of crashing; exudyn.symbolic.GetDepth gives the depth; SetValue, SetVector, SetMatrix of a named variable raise while CreateSymbolicUserFunction records a function.",
+  "resolvedInVersion": "1.13.206"
+}
