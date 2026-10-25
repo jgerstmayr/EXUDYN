@@ -104,8 +104,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG12** Symbolic
   - RG12.2 Measure the user function interfaces as they are (1 open sub-step)
   - RG12.4 Give symbolic user functions access to the MainSystem and the item functions (1 open sub-step)
-  - RG12.49 Optimize symbolic expressions: simplification and merging of duplicates (2 open sub-steps)
+  - RG12.49 Optimize symbolic expressions: simplification and merging of duplicates (1 open sub-step)
   - RG12.51 Symbolic system models (2 open sub-steps)
+  - RG12.53 Algorithmic symbolic functions: assignments by Assign, loops recorded as loops
 - **RG13** Total coordinates
   - RG13.1 Measure the solvers on more models, solvers and configurations, as the baseline
   - RG13.2 Evaluate how the total coordinates are provided efficiently
@@ -1826,18 +1827,20 @@ at about 34000 nested nodes for the recording and Evaluate, 28000 for Diff, 8500
 the depth, as each new SReal evaluates its whole tree. Proposed, waiting for the decision: the value of a new SReal from
 the values of its operands, iterative Destroy, str() through the flat program, a depth check for Evaluate and Diff of the
 tree, and esym.GetDepth. [log](exudynRevisionLog2026c.md#rg12-49-4)
+Decided 2026-10-25 (maintainer): all five, the stored value of an expression being the value from its operands at
+recording; and SetValue of a named variable raises while a user function is recorded, if no recording of the test
+models and examples needs it - an assignment during the recording is the algorithmic view of RG12.53.
 
 #### **CLOSED_RG12.49.5** Free a named symbolic matrix
 
 CLOSED 2026-10-25 (#3092): the node was freed; the constructor of a named matrix from an array counted it twice in
 Matrix.__newCount. symbolicOptimizeTest.py counts the named matrix. [log](exudynRevisionLog2026c.md#rg12-49-5)
 
-#### **OPEN_RG12.49.6** bool() of a symbolic value refuses while recording
+#### **CLOSED_RG12.49.6** bool() of a symbolic value refuses while recording
 
-#3096 (maintainer 2026-10-25: first a way to still use the if): the two ways exist - exudyn.symbolic.IfThenElse, decided
-at each evaluation, and x.Evaluate() or x.value, decided once at recording; bool() then raises a TypeError that names
-both, as float() does. First the recordings of the test models and examples are checked for an if or a library
-function that reads bool() of a symbolic value.
+CLOSED 2026-10-25 (#3096; maintainer 2026-10-25: an if on a symbolic value is meaningless while recording, an if on a
+Python value stays): `__bool__` of esym.Real raises a TypeError naming IfThenElse and Evaluate(); before, every symbolic
+value was true. [log](exudynRevisionLog2026c.md#rg12-49-6)
 
 ### **CLOSED_RG12.50** The flat program of expressions, the export of recordings and the symbolic model of a system
 
@@ -1895,6 +1898,12 @@ After RG12.51.1.
 CLOSED 2026-10-25 (#3094; maintainer 2026-10-25: the introduction section to Python-C++ interface/Symbolic has to be
 improved significantly, giving an overview and the background of the capabilities): six paragraphs in
 definitions/pybindSymbolic.py instead of one sentence. [log](exudynRevisionLog2026c.md#rg12-52)
+
+### **OPEN_RG12.53** Algorithmic symbolic functions: assignments by Assign, loops recorded as loops
+
+Optional, no issue (maintainer 2026-10-25): a recorded function as an algorithm instead of one expression - a
+variable assigned during the recording, `a.Assign(a + 1)`, as an operation of the flat program, and with it loops whose
+count is a symbolic value. SetValue during the recording raises (RG12.49.4), as a changed value is not recorded.
 
 ## **OPEN_RG13** Total coordinates
 

@@ -2,11 +2,15 @@
   "number": 3096,
   "title": "bool() of a symbolic value refuses while recording, as float() does",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "MEDIUM",
   "description": "revision2026c step RG12.49.6 (maintainer 2026-10-25: first a way to still use the if): a Python if on a symbolic comparison is decided once while recording, with the values of the arguments then (zero in CreateSymbolicUserFunction), and records only that branch, silently. bool() shall raise a TypeError while recording, with a message that names both ways that exist: exudyn.symbolic.IfThenElse(condition, a, b), decided at every evaluation, and x.Evaluate() or x.value, decided once at recording, explicitly; before that, the recordings of the test models and examples are checked for an if or a library function that reads bool() of a symbolic value.",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
-  "file": "src/Linalg/Symbolic.cpp"
+  "dateResolved": "2026-10-25 17:13",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/Symbolic.cpp",
+  "releaseNotes": "A Python if, and, or, not on a symbolic value (exudyn.symbolic.Real) raises a TypeError while recording, which names exudyn.symbolic.IfThenElse for a decision at each call and Evaluate() for a decision at recording; before, Python took every symbolic value as true, so a recorded function took the first branch for every call. A symbolic number, and a comparison with recording off, are conditions by their value.",
+  "resolvedInVersion": "1.13.205"
 }

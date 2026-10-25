@@ -14,7 +14,7 @@ The sub-module `exudyn.symbolic` (abbreviated `esym`) records mathematical expre
 
 **What to know.**
 
-- A Python `if` on a symbolic value is decided once, while recording, with the values the arguments have then; a decision of each call is written with `esym.IfThenElse(condition, a, b)`, which computes both branches. A loop is recorded as often as it runs, so its count cannot depend on a symbolic value.
+- A Python `if`, `and`, `or` or `not` on a symbolic value raises a `TypeError` while recording, as it would take one branch for every call (#3096): a decision of each call is written with `esym.IfThenElse(condition, a, b)`, which computes both branches, a decision at recording with `x.Evaluate()`. An `if` on a Python value - a setting of the script - is decided at recording, as any Python code of the function. A loop is recorded as often as it runs, so its count cannot depend on a symbolic value.
 - Only `exudyn.symbolic`, its types and numpy's functions of them are recorded: a call into another library, a value read from the `mbs` or from another item inside the function, is a constant of the recording.
 - With `simulationSettings.parallel.numberOfThreads` > 1, an item whose user functions are all symbolic is computed in the threads of the parallel loops, as the items without user functions: each thread evaluates its own copy of the recording, with the same results. An item with a Python user function, and an item that reads it - a connector on its marker, a body on its node -, is computed in the main thread (#2978).
 - A recording nested deeper than about 30000 operations - a sum of that many terms in a loop - overflows the stack of the main thread (#3090); the recordings of the test models are at most 44 deep.
@@ -115,6 +115,7 @@ The class **symbolic.Real** has the following **functions and structures**:
 
 - **`value`**: access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)
 - **`operator __float__()`**: conversion of symbolic.Real to Python float; while recording, an expression or a named variable raises a TypeError, as math.sin(x) or float(x) would record a constant - use Evaluate() for the value (#3017)
+- **`operator __bool__()`**: symbolic.Real as a condition (if, and, or, not), its value not zero; while recording, an expression or a named variable raises a TypeError, as one branch would be taken for every call - use esym.IfThenElse(condition, a, b), or Evaluate() for a decision with the value at recording (#3096)
 - **`operator __str__()`**: conversion of symbolic.Real to string
 - **`operator __repr__()`**: representation of symbolic.Real in Python
 

@@ -1523,6 +1523,18 @@ void Init_Pybind_Symbolic(py::module& m) {
 				return (Real)item;
 			}, "the value of a number; refused for an expression or a named variable while recording, use Evaluate() (#3017)")
 
+		//a Python if, and, or, not on a symbolic value while recording would take one branch for every call; without
+		//__bool__, Python took every symbolic value as True (#3096)
+		.def("__bool__", [](const Symbolic::SReal& item) {
+				if (Symbolic::SReal::recordExpressions && item.GetExpression())
+				{
+					throw py::type_error("exudyn.symbolic: a symbolic.Real expression is used as a condition while recording (if, and, or, not), "
+						"which would take one branch for every call: use esym.IfThenElse(condition, a, b) for a decision at each call, "
+						"or x.Evaluate() for a decision with the value at recording");
+				}
+				return item.Evaluate() != 0.;
+			}, "the value as a condition; refused for an expression or a named variable while recording, use esym.IfThenElse or Evaluate() (#3096)")
+
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//add operators: (right now, we do not have implicit conversion from Real to Symbolic::SReal)
 		.def(py::self + py::self)

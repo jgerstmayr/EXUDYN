@@ -514,6 +514,16 @@ def ExtendedSymbolicChecks():
     x.SetValue(2.)
     wrong += Check(f.Evaluate() == 2., 'a recorded IfThenElse with a number follows its condition')
     x.SetValue(0.4)
+    #a Python if, and, or, not on a symbolic value raises while recording; a number is a condition (#3096)
+    for (condition, text) in [(lambda: 1 if x > 1 else 0, 'if'), (lambda: x > 0 and x < 1, 'and'),
+                              (lambda: x < 0 or x > 1, 'or'), (lambda: not x, 'not')]:
+        try:
+            condition()
+            wrong += Check(False, 'a Python ' + text + ' on a symbolic value must raise while recording')
+        except TypeError:
+            pass
+    wrong += Check(bool(SymReal(2.)) and not bool(SymReal(0.)), 'a symbolic number is a condition by its value')
+    wrong += Check((1 if x.Evaluate() > 1 else 0) == 0, 'a decision at recording with Evaluate()')
 
     #--- the VariableSet, which no test touched so far
     variables = esym.VariableSet()
@@ -538,6 +548,7 @@ def ExtendedSymbolicChecks():
     x.SetValue(5.)
     wrong += Check(f.Evaluate() == 4., 'an unrecorded expression does NOT follow its variable')
     wrong += Check(float(str(f)) == 4., 'an unrecorded expression prints its value')
+    wrong += Check((1 if x > 3 else 0) == 1 and not (x < 3), 'an unrecorded comparison is a condition (#3096)')
     esym.SetRecording(True)
 
     #--- __str__ prints the expression tree

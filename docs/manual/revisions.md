@@ -75,6 +75,9 @@ it, are computed in the main thread. A chain of 4000 spring-dampers with one sym
 postNewtonStepUserFunction of ObjectConnectorRigidBodySpringDamper, ran in the threads and hung; it runs in the main
 thread if a connector has a Python user function (#3095). A named `exudyn.symbolic.Matrix` created from an array was
 counted twice in `Matrix.__newCount` (#3092).
+**A Python `if` on a symbolic value raises a `TypeError` while recording**, and so do `and`, `or` and `not`: Python
+took every symbolic value as true, so a recorded function silently took the first branch for every call. A decision at
+each call is `exudyn.symbolic.IfThenElse(condition, a, b)`, a decision at recording `x.Evaluate()` (#3096).
 
 **`NodeUser`**, a node with any number of coordinates whose position, and optionally orientation, are Python user
 functions; the Jacobians are computed by central differences if they are not given; node markers, SensorNode, loads

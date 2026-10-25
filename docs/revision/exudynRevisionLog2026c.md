@@ -3313,3 +3313,28 @@ merging: move to tmp/delete/; symbolic as a chapter or a subchapter, without dup
 - WORKFLOW.md §8.4: a design note lives while its step is open; when it closes, the user part goes into the manual, the
   inside into docs/dev/internals/, the history into the log, the note leaves the repository and its scripts go to
   tools/benchmarks/.
+
+<a id="rg12-49-6"></a>
+### RG12.49.6 — bool() of a symbolic value refuses while recording (2026-10-25, #3096)
+*(Maintainer 2026-10-25: at recording, "if x>0" would take the current value of x, which is meaningless; this should
+only work if x is not symbolic; "if y>0" still works if y is a regular Python value, decided at recording. Can be done
+now.)*
+- Found first: esym.Real had no `__bool__` and no `__len__`, so Python took every symbolic value as true - `bool(x > 1)`
+  with x = 0 was True, and so was `bool(esym.Real(0.))` with recording off. A Python `if` in a recorded function took
+  the first branch for every call, not the branch of the values at recording, as the log of RG12.52 says (note
+  2026-10-25: that statement was not measured and is wrong; the reference page, the manual and internals/symbolic.md
+  are corrected).
+- `__bool__` of esym.Real (Symbolic.cpp, next to `__float__`): while recording, an expression or a named variable raises
+  a TypeError that names esym.IfThenElse and x.Evaluate(); otherwise the value, not zero. `and`, `or`, `not` go through
+  it as well.
+- Checked: the test suite, the pytest files and the 4 examples with exudyn.symbolic pass - none of them reads bool() of
+  a symbolic value while recording. symbolicModuleTest.py: if, and, or, not raise; a number and an unrecorded comparison
+  are conditions; the reference is unchanged.
+- Docs: pybindSymbolic.py (What to know, `__bool__`), symbolicUserFunctions.md, internals/symbolic.md, revisions.md.
+
+<a id="rg12-53"></a>
+### RG12.53 — algorithmic symbolic functions, written down (2026-10-25)
+*(Maintainer 2026-10-25: SetValue during recording is dangerous anyway; the intended assignments in algorithms would be
+different - the more algorithmic view of functions, where in future one could use a.Assign(a+1), which would allow an
+algorithmic approach, including for-loops. Add this as an RG step in symbolic, optional, no open issue now.)*
+- Written down as the optional step RG12.53, without an issue.

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 201 | 1.13.204 |
+| 1.13 | Newborn | 202 | 1.13.205 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.205** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` bool() of a symbolic value refuses while recording, as float() does (#3096)
+  - description: revision2026c step RG12.49.6 (maintainer 2026-10-25: first a way to still use the if): a Python if on a symbolic comparison is decided once while recording, with the values of the arguments then (zero in CreateSymbolicUserFunction), and records only that branch, silently. bool() shall raise a TypeError while recording, with a message that names both ways that exist: exudyn.symbolic.IfThenElse(condition, a, b), decided at every evaluation, and x.Evaluate() or x.value, decided once at recording, explicitly; before that, the recordings of the test models and examples are checked for an if or a library function that reads bool() of a symbolic value.
+  - **notes:** A Python if, and, or, not on a symbolic value (exudyn.symbolic.Real) raises a TypeError while recording, which names exudyn.symbolic.IfThenElse for a decision at each call and Evaluate() for a decision at recording; before, Python took every symbolic value as true, so a recorded function took the first branch for every call. A symbolic number, and a comparison with recording off, are conditions by their value.
+  - date resolved: **2026-10-25 17:13**, date raised: 2026-10-25
 - **1.13.204** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The design notes of closed steps distributed: docs/dev/internals/ and a manual chapter on symbolic user functions (#3097)
   - description: revision2026c step RG11.12 (maintainer 2026-10-25: the design notes grew in number and size; what is implemented goes into the docs, merged notes contain only the implemented status and the decisions; docs/dev/internals/; closed notes moved to tmp/delete/; symbolic gets a place of its own in the manual): the eleven notes of docs/dev/design for closed steps merged into docs/dev/internals/symbolic.md, userFunctions.md, userItems.md, systemUtilities.md, symmetricBasis.md, contributions into WORKFLOW.md; a chapter docs/manual/symbolicUserFunctions.md; the measurement scripts to tools/benchmarks; the rule for design notes in WORKFLOW.md.
   - **notes:** The manual has a chapter on symbolic user functions: a first one with its check, how to write a function that records, vectors, matrices and the user items, speed and threads, a recording as code. The developer documentation has docs/dev/internals/ - exudyn.symbolic inside, the user functions at the C++/Python boundary, the user items, systemUtilities and the symmetric basis -, from the design notes of the closed steps, whose measurement scripts are in tools/benchmarks.

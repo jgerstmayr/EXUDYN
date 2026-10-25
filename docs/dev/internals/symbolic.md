@@ -40,8 +40,8 @@ or, without a node, a value.
 - **Refused while recording**: `float(x)`, `math.sin(x)` and a float array of a symbolic value, which would record a
   constant (#3017); `*` of two vectors or with a matrix and `==` of two vectors, which numpy defines differently
   (#3015, `exudyn.special.deprecations.symbolicStarProduct` for the transition, #3016). The three holder types implement
-  numpy's `__array_ufunc__`, so `np.sin(x)` and `K @ q` with a numpy `K` record. `bool(x)` is not refused yet: a
-  Python `if` takes the branch of the values at recording (#3096).
+  numpy's `__array_ufunc__`, so `np.sin(x)` and `K @ q` with a numpy `K` record; `bool(x)` - a Python `if`, `and`,
+  `or`, `not` - of an expression or a named variable, which took every symbolic value as true (#3096).
 
 ## 2. A symbolic user function
 
@@ -191,7 +191,6 @@ For numbers alone, cUtilities stays the fast way (0.63 us against 1.2 to 2.4 us 
 | | | |
 |---|---|---|
 | a recording deeper than about 34000 nested nodes | overflows the 2 MB stack of python.exe while recording or in `Evaluate`; `Diff` at 28000, `str()` at 9000; the flat program, the structure and Optimize do not recurse | #3090 |
-| a Python `if` on a symbolic value | takes the branch of the values at recording, silently | #3096 |
 | the MainSystem in an expression | `mbs.GetNodeOutput(...)` inside a recorded function is a constant | #2984 |
 | derivatives | `Diff` of scalars only, a number: the forward derivative at the current values | - |
 | matrix functions | no inverse, no product of the components of matrices; vectors have `esym.cross` (#3070) | - |
