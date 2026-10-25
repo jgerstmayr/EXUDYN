@@ -94,6 +94,8 @@ public:
 	virtual Real EvaluateFromOperands(const FlatValue* values) const { return Evaluate(); }
 	//! the name of the operation in GetFlatProgramData() (#3087); empty for a leaf
 	virtual const char* FlatName() const { return ""; }
+	//! a node of the same class with these operands, for Optimize (#3085); the operands are not referenced yet
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const { return FlatNode(); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const { return ToString(); }
 	//! true for a component of a vector or matrix argument, q[1]: the text of the flat program writes it into the
 	//! operations that use it, as a leaf, and does not count it
@@ -162,6 +164,8 @@ public:
 	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const { return EvaluateRef(); }
 	//! the name of the operation in GetFlatProgramData() (#3087); empty for a leaf
 	virtual const char* FlatName() const { return ""; }
+	//! a node of the same class with these operands, for Optimize (#3085); the operands are not referenced yet
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const { return FlatNode(); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const { return ToString(); }
 protected:
 	mutable ResizableConstVector buffer; //!< the value of an operator node, see EvaluateRef()
@@ -208,6 +212,8 @@ public:
 	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const { return EvaluateRef(); }
 	//! the name of the operation in GetFlatProgramData() (#3087); empty for a leaf
 	virtual const char* FlatName() const { return ""; }
+	//! a node of the same class with these operands, for Optimize (#3085); the operands are not referenced yet
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const { return FlatNode(); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const { return ToString(); }
 protected:
 	mutable ResizableMatrix buffer; //!< the value of an operator node, see EvaluateRef()
@@ -245,6 +251,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real + values[1].real; }
 	virtual const char* FlatName() const override { return "+"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionOperatorPlus((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " + " + operands[1] + ")"; }
 };
 
@@ -274,6 +281,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real - values[1].real; }
 	virtual const char* FlatName() const override { return "-"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionOperatorMinus((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " - " + operands[1] + ")"; }
 };
 
@@ -307,6 +315,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real * values[1].real; }
 	virtual const char* FlatName() const override { return "*"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionOperatorMul((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " * " + operands[1] + ")"; }
 };
 
@@ -345,6 +354,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real / values[1].real; }
 	virtual const char* FlatName() const override { return "/"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionOperatorDiv((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " / " + operands[1] + ")"; }
 };
 
@@ -375,6 +385,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real == values[1].real); }
 	virtual const char* FlatName() const override { return "=="; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionOperatorEQ((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " == " + operands[1] + ")"; }
 };
 
@@ -402,6 +413,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real != values[1].real); }
 	virtual const char* FlatName() const override { return "!="; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionOperatorNEQ((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " != " + operands[1] + ")"; }
 };
 
@@ -429,6 +441,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real > values[1].real); }
 	virtual const char* FlatName() const override { return ">"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionOperatorGT((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " > " + operands[1] + ")"; }
 };
 
@@ -456,6 +469,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real >= values[1].real); }
 	virtual const char* FlatName() const override { return ">="; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionOperatorGE((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " >= " + operands[1] + ")"; }
 };
 
@@ -483,6 +497,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real <= values[1].real); }
 	virtual const char* FlatName() const override { return "<="; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionOperatorLE((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " <= " + operands[1] + ")"; }
 };
 
@@ -510,6 +525,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real < values[1].real); }
 	virtual const char* FlatName() const override { return "<"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionOperatorLT((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " < " + operands[1] + ")"; }
 };
 
@@ -539,6 +555,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real; }
 	virtual const char* FlatName() const override { return "pos"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionUnaryPlus((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0]; }
 };
 
@@ -565,6 +582,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return -values[0].real; }
 	virtual const char* FlatName() const override { return "neg"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionUnaryMinus((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(-" + operands[0] + ")"; }
 };
 
@@ -590,6 +608,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::isfinite(values[0].real); }
 	virtual const char* FlatName() const override { return "isfinite"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionIsFinite((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "isfinite(" + operands[0] + ")"; }
 };
 
@@ -614,6 +633,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::fabs(values[0].real); }
 	virtual const char* FlatName() const override { return "abs"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionAbs((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "abs(" + operands[0] + ")"; }
 };
 
@@ -634,6 +654,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EXUstd::SignReal(values[0].real); }
 	virtual const char* FlatName() const override { return "sign"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionSign((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "sign(" + operands[0] + ")"; }
 };
 
@@ -655,6 +676,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return !(values[0].real); }
 	virtual const char* FlatName() const override { return "Not"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionNot((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "Not(" + operands[0] + ")"; }
 };
 
@@ -675,6 +697,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::round(values[0].real); }
 	virtual const char* FlatName() const override { return "round"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionRound((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "round(" + operands[0] + ")"; }
 };
 
@@ -695,6 +718,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::ceil(values[0].real); }
 	virtual const char* FlatName() const override { return "ceil"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionCeil((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "ceil(" + operands[0] + ")"; }
 };
 
@@ -715,6 +739,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::floor(values[0].real); }
 	virtual const char* FlatName() const override { return "floor"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionFloor((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "floor(" + operands[0] + ")"; }
 };
 
@@ -742,6 +767,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::sqrt(values[0].real); }
 	virtual const char* FlatName() const override { return "sqrt"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionSqrt((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "sqrt(" + operands[0] + ")"; }
 };
 
@@ -762,6 +788,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Exp(values[0].real); }
 	virtual const char* FlatName() const override { return "exp"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionExp((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "exp(" + operands[0] + ")"; }
 };
 
@@ -782,6 +809,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Log(values[0].real); }
 	virtual const char* FlatName() const override { return "log"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionLog((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "log(" + operands[0] + ")"; }
 };
 
@@ -803,6 +831,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Sin(values[0].real); }
 	virtual const char* FlatName() const override { return "sin"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionSin((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "sin(" + operands[0] + ")"; }
 };
 
@@ -823,6 +852,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Cos(values[0].real); }
 	virtual const char* FlatName() const override { return "cos"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionCos((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "cos(" + operands[0] + ")"; }
 };
 
@@ -846,6 +876,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Tan(values[0].real); }
 	virtual const char* FlatName() const override { return "tan"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionTan((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "tan(" + operands[0] + ")"; }
 };
 
@@ -873,6 +904,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Asin(values[0].real); }
 	virtual const char* FlatName() const override { return "asin"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionASin((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "asin(" + operands[0] + ")"; }
 };
 
@@ -900,6 +932,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Acos(values[0].real); }
 	virtual const char* FlatName() const override { return "acos"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionACos((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "acos(" + operands[0] + ")"; }
 };
 
@@ -923,6 +956,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Atan(values[0].real); }
 	virtual const char* FlatName() const override { return "atan"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionATan((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "atan(" + operands[0] + ")"; }
 };
 
@@ -945,6 +979,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Sinh(values[0].real); }
 	virtual const char* FlatName() const override { return "sinh"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionSinh((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "sinh(" + operands[0] + ")"; }
 };
 
@@ -965,6 +1000,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Cosh(values[0].real); }
 	virtual const char* FlatName() const override { return "cosh"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionCosh((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "cosh(" + operands[0] + ")"; }
 };
 
@@ -985,6 +1021,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Tanh(values[0].real); }
 	virtual const char* FlatName() const override { return "tanh"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionTanh((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "tanh(" + operands[0] + ")"; }
 };
 
@@ -1008,6 +1045,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::asinh(values[0].real); }
 	virtual const char* FlatName() const override { return "asinh"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionASinh((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "asinh(" + operands[0] + ")"; }
 };
 
@@ -1033,6 +1071,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::acosh(values[0].real); }
 	virtual const char* FlatName() const override { return "acosh"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionACosh((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "acosh(" + operands[0] + ")"; }
 };
 
@@ -1058,6 +1097,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::atanh(values[0].real); }
 	virtual const char* FlatName() const override { return "atanh"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionATanh((ExpressionBase*)operands[0].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "atanh(" + operands[0] + ")"; }
 };
 
@@ -1099,6 +1139,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(base) : FlatNode(exponent); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Pow(values[0].real, values[1].real); }
 	virtual const char* FlatName() const override { return "pow"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionPower((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "pow(" + operands[0] + ", " + operands[1] + ")"; }
 };
 
@@ -1131,6 +1172,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(arg1) : FlatNode(arg2); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Atan2(values[0].real, values[1].real); }
 	virtual const char* FlatName() const override { return "atan2"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionAtan2((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "atan2(" + operands[0] + ", " + operands[1] + ")"; }
 };
 
@@ -1155,6 +1197,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(arg1) : FlatNode(arg2); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::fmod(values[0].real, values[1].real); }
 	virtual const char* FlatName() const override { return "mod"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionMod((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "mod(" + operands[0] + ", " + operands[1] + ")"; }
 };
 
@@ -1179,6 +1222,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(arg1) : FlatNode(arg2); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::min(values[0].real, values[1].real); }
 	virtual const char* FlatName() const override { return "min"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionMin((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "min(" + operands[0] + ", " + operands[1] + ")"; }
 };
 
@@ -1203,6 +1247,7 @@ public:
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(arg1) : FlatNode(arg2); }
 	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::max(values[0].real, values[1].real); }
 	virtual const char* FlatName() const override { return "max"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionMax((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "max(" + operands[0] + ", " + operands[1] + ")"; }
 };
 
@@ -1257,12 +1302,14 @@ public:
 	{
 		return "IfThenElse(" + condition->ToString() +"," + ifTrue->ToString() +"," + ifFalse->ToString() + ")";
 	}
-	//! the operands for GetFlatProgramData() (#3087); the flat evaluation computes IfThenElse as a tree, only the branch
-	//! that the condition selects
+	//the flat evaluation (#3089): the condition and both branches are operands, computed before it, as a flat program
+	//has no branches; the result is that of the tree, which computes only the branch that the condition selects
+	virtual Index NumberOfOperands() const override { return 3; }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(i == 0 ? condition : (i == 1 ? ifTrue : ifFalse)); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real ? values[1].real : values[2].real; }
 	virtual const char* FlatName() const override { return "IfThenElse"; }
-	const ExpressionBase* Condition() const { return condition; }
-	const ExpressionBase* IfTrue() const { return ifTrue; }
-	const ExpressionBase* IfFalse() const { return ifFalse; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionIfThenElse((ExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node, (ExpressionBase*)operands[2].node)); }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "IfThenElse(" + operands[0] + "," + operands[1] + "," + operands[2] + ")"; }
 };
 
 

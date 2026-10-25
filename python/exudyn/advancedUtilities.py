@@ -759,7 +759,7 @@ def LoadDictFromHDF5(fileName, callerGlobals=None):
 
 
 
-def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, itemTypeName=None, verbose=0):
+def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, itemTypeName=None, verbose=0, optimize=True):
     """Internal function to convert a Python user function into a dictionary containing the symbolic representation;
     this function is under development and should be used with care
 
@@ -771,6 +771,7 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
         itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem
         userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
         verbose: if > 0, according output is printed
+        optimize: True: the recorded result is optimized by exudyn.symbolic.Optimize with level=1 and mergeDuplicates=True, which keep the result; a dict: the arguments of Optimize; False: as recorded (#3085)
 
     Returns:
         return dictionary with 'functionName', 'argList', and 'returnList'
@@ -899,6 +900,9 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
         #a constant, e.g. True of a preStepUserFunction (#3038)
         returnValue = exudyn.symbolic.Real(float(returnValue))
 
+    if optimize: #equal subexpressions computed once, 1*x and x+0 removed, without changing the result (#3085)
+        returnValue = exudyn.symbolic.Optimize(returnValue, **(optimize if isinstance(optimize, dict) else {}))
+
     if verbose:
         exudyn.Print('return value=', returnValue)
 
@@ -956,7 +960,7 @@ def _ObjectCoordinatesSize(mbs, itemIndex):
     return size
 
 
-def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, itemTypeName=None, verbose=0):
+def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, itemTypeName=None, verbose=0, optimize=True):
     """Helper function to convert a Python user function into a symbolic user function;
     this function is under development and should be used with care
 
@@ -967,6 +971,7 @@ def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, 
         itemTypeName: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
         userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
         verbose: if > 0, according output may be printed
+        optimize: True (default): the recording is optimized by exudyn.symbolic.Optimize(level=1, mergeDuplicates=True) - equal subexpressions are computed once, 1*x, x+0 and operations of numbers are removed, and the results stay the same; a dict: the arguments of Optimize, e.g. dict(level=2); False: evaluated as recorded (#3085)
 
     Returns:
         returns symbolic user function; this can be transfered into an item using TransferUserFunction2Item
@@ -988,7 +993,7 @@ def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, 
                            springForceUserFunction=symbolicFunc))
         exudyn.Print(symbolicFunc.Evaluate(mbs, 0., 0, 1.1, 0.,  100., 0., 13.) )
     """
-    fnDict = ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex, itemTypeName, verbose)
+    fnDict = ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex, itemTypeName, verbose, optimize)
     symbolicFunc = exudyn.symbolic.UserFunction()
     symbolicFunc.SetUserFunctionFromDict(mbs, fnDict, userFunctionName, itemIndex, str(itemTypeName))
     return symbolicFunc

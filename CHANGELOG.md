@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 193 | 1.13.196 |
+| 1.13 | Newborn | 195 | 1.13.198 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.198** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` esym.Optimize: simplification and merging of duplicates of symbolic expressions, and optimize in CreateSymbolicUserFunction (#3091)
+  - description: revision2026c step RG12.49.2 (maintainer 2026-10-25: as recommended in symbolicFlatProgramOptimization.md): esym.Optimize(expressions, level=1, mergeDuplicates=True) builds a new graph in one pass from the leaves up; duplicates merged by class and new operands, leaves included; level 1 exact rules, level 2 the rules that lose a nan or change the rounding; CreateSymbolicUserFunction(..., optimize=True) with these defaults.
+  - **notes:** exudyn.symbolic.Optimize(expressions, level=1, mergeDuplicates=True) builds new symbolic expressions in which equal subexpressions and leaves are one node and 1\*x, x+0, x\*\*0 and operations of numbers are removed, with the same results; level=2 also removes 0\*x, x-x, x/x and combines numbers. CreateSymbolicUserFunction applies it by default (optimize=True).
+  - date resolved: **2026-10-25 13:13**, date raised: 2026-10-25
+- **1.13.197** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` IfThenElse is a leaf of the flat program of symbolic user functions (#3089)
+  - description: revision2026c step RG12.49.3 (found in RG12.50.2): ExpressionIfThenElse has no operand interface, so FlatProgram::Build takes it as a leaf: its condition and branches are evaluated as a tree, nodes they share with the rest of the recording are computed again, and GetFlatProgram() writes the whole tree inline. Give it its operands with the selected branch evaluated only, or evaluate both branches; GetFlatProgramData() has them already.
+  - **notes:** IfThenElse is an operation of the flat program of a symbolic user function: its condition and both branches are computed once with the other operations, and the condition selects the result; before, it was evaluated as a tree, which computed values shared with the rest of the function again.
+  - date resolved: **2026-10-25 13:13**, date raised: 2026-10-25
 - **1.13.196** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` Executable formats of symbolic expressions and flat programs: symbolic, numpy, sympy; ToString(format=...) (#3088)
   - description: revision2026c step RG12.50.3 (maintainer 2026-10-25): the formats 'symbolic', 'numpy' and 'sympy' written by exudyn/misc/symbolicExport.py from the structure, computing what Exudyn computes (mod, round, comparisons, IfThenElse); ToString(format=...) of esym.Real, Vector, Matrix and GetFlatProgram(format=...); the round trip of every operation; the speed of the translation measured, with the C++ text kept for 'Python'.
   - **notes:** GetFlatProgram(format='symbolic' \| 'numpy' \| 'sympy') of a symbolic user function or of expressions, and ToString(format=...) of exudyn.symbolic.Real, Vector and Matrix, write executable Python of exudyn.symbolic, numpy or sympy, which computes what Exudyn computes (mod as C fmod, round halves away from zero, comparisons 0 or 1); exudyn.misc.symbolicExport writes them, with ToFunction and ToSympy.

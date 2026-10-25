@@ -193,6 +193,7 @@ SwitchingConstraintsTest
 symbolicExportTest
 symbolicModuleTest
 symbolicNumpyCompatibilityTest
+symbolicOptimizeTest
 symbolicSparseMatrixTest
 symbolicUserFunctionCopyTest
 symbolicUserFunctionSignaturesTest

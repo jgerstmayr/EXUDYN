@@ -392,7 +392,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-convertfunctiontosymbolic)=
 ## Function: ConvertFunctionToSymbolic
 
-[`ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L762)
+[`ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0, optimize = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L762)
 
 - **function description**: Internal function to convert a Python user function into a dictionary containing the symbolic representation; this function is under development and should be used with care
 - **input**:
@@ -403,13 +403,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
   - `itemIndex`: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem
   - `userFunctionName`: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
   - `verbose`: if > 0, according output is printed
+  - `optimize`: True: the recorded result is optimized by exudyn.symbolic.Optimize with level=1 and mergeDuplicates=True, which keep the result; a dict: the arguments of Optimize; False: as recorded (#3085)
 - **output**: return dictionary with 'functionName', 'argList', and 'returnList'
 
 
 (sec-advancedutilities--objectparameterssize)=
 ## Function: _ObjectParametersSize
 
-[`_ObjectParametersSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L913)
+[`_ObjectParametersSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L917)
 
 - **function description**: the length of the parameters of a user item, which its user functions get, or 0 where it is not known (#3056)
 - **input**:
@@ -421,7 +422,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities--objectcoordinatessize)=
 ## Function: _ObjectCoordinatesSize
 
-[`_ObjectCoordinatesSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L931)
+[`_ObjectCoordinatesSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L935)
 
 - **function description**: the number of coordinates q of the nodes of an object, which its user functions get, or 0 where it is not known; a vector argument recorded with its size can be combined with constant vectors and has len() (#3015)
 - **input**:
@@ -433,7 +434,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-createsymbolicuserfunction)=
 ## Function: CreateSymbolicUserFunction
 
-[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L959)
+[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0, optimize = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L963)
 
 - **function description**: Helper function to convert a Python user function into a symbolic user function; this function is under development and should be used with care
 - **input**:
@@ -443,6 +444,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
   - `itemTypeName`: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
   - `userFunctionName`: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
   - `verbose`: if > 0, according output may be printed
+  - `optimize`: True (default): the recording is optimized by exudyn.symbolic.Optimize(level=1, mergeDuplicates=True) - equal subexpressions are computed once, 1*x, x+0 and operations of numbers are removed, and the results stay the same; a dict: the arguments of Optimize, e.g. dict(level=2); False: evaluated as recorded (#3085)
 - **output**: returns symbolic user function; this can be transfered into an item using TransferUserFunction2Item
 - **notes**: keep the return value alive in a variable (or list), as it contains the expression tree which must exist for the lifetime of the user function
 
@@ -465,13 +467,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSpringDamperUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py) (Ex), [`SpringDamperMassUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringDamperMassUserFunction.py) (Ex), [`symbolicUserFunctionMasses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicUserFunctionMasses.py) (Ex), [`loadUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/loadUserFunctionTest.py) (TM), [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM), [`symbolicNumpyCompatibilityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicNumpyCompatibilityTest.py) (TM), [`symbolicSparseMatrixTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSparseMatrixTest.py) (TM), [`symbolicUserFunctionCopyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserFunctionCopyTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSpringDamperUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py) (Ex), [`SpringDamperMassUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringDamperMassUserFunction.py) (Ex), [`symbolicUserFunctionMasses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicUserFunctionMasses.py) (Ex), [`loadUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/loadUserFunctionTest.py) (TM), [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM), [`symbolicNumpyCompatibilityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicNumpyCompatibilityTest.py) (TM), [`symbolicOptimizeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicOptimizeTest.py) (TM), [`symbolicSparseMatrixTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSparseMatrixTest.py) (TM), ...
 
 
 (sec-advancedutilities-createtcpipconnection)=
 ## Function: CreateTCPIPconnection
 
-[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1102)
+[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1107)
 
 - **function description**: function which has to be called before simulation to setup TCP/IP socket (server) for sending and receiving data; can be used to communicate with other Python interpreters or for communication with MATLAB/Simulink
 - **input**:
@@ -527,7 +529,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-tcpipsendreceive)=
 ## Function: TCPIPsendReceive
 
-[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1173)
+[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1178)
 
 - **function description**: call this function at every simulation step at which you intend to communicate with other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
 - **input**:
@@ -551,7 +553,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-closetcpipconnection)=
 ## Function: CloseTCPIPconnection
 
-[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1201)
+[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1206)
 
 - **function description**: close a previously created TCPIP connection
 
@@ -587,7 +589,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-parameterlayout-size)=
 ### Class function: Size
 
-[`Size(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1030)
+[`Size(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1035)
 
 - **class function description**: The length of the parameter vector.
 - **output**: the sum of the sizes of the entries
@@ -596,7 +598,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-parameterlayout-tovector)=
 ### Class function: ToVector
 
-[`ToVector(self, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1038)
+[`ToVector(self, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1043)
 
 - **class function description**: The parameter vector of named quantities.
 - **input**:
@@ -607,7 +609,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-parameterlayout-todict)=
 ### Class function: ToDict
 
-[`ToDict(self, parameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1062)
+[`ToDict(self, parameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1067)
 
 - **class function description**: The named quantities of a parameter vector.
 - **input**:

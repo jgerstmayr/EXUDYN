@@ -144,7 +144,12 @@ Items whose behaviour is written in user functions - a body, a node, a connector
   is sorted into a list of operations, and each call computes every operation once, in this order; nothing is kept
   from one call to the next. `symbolicFunction.GetFlatProgram()` gives the list as text, one line per operation -
   `t5 = cos(q[1])`, `t20 = t19.T` -, and `symbolicFunction.flatEvaluation = False` evaluates the recording as a tree
-  instead, with the same results (#3053, #3054).
+  instead, with the same results (#3053, #3054). The same value written twice in the Python function -
+  `esym.cos(q[2])` in two places - is merged into one node, and `1*x`, `x+0` and operations of numbers are removed,
+  by `exudyn.symbolic.Optimize`, which `CreateSymbolicUserFunction` applies with `optimize=True` (the default); the
+  results stay the same bit for bit; `optimize=dict(level=2)` also removes `0*x`, `x-x` and combines numbers, which may
+  lose a `nan` and change the last bit (#3085). `IfThenElse` computes both branches in the flat program and takes the
+  one its condition selects (#3089).
 - **A recording as code**: `symbolicFunction.GetFlatProgram(format='numpy')` writes it as a Python function with the
   arguments of the user function, which runs without Exudyn; `format='symbolic'` writes it with `exudyn.symbolic`, so
   that it is recorded again, and `format='sympy'` builds sympy expressions, from which sympy writes C, C++, Fortran,

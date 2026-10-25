@@ -47,7 +47,7 @@ def SpringForce(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)
     return result
 
 def SpringForceConditional(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
-    """IfThenElse, which the flat evaluation computes as a tree, and isfinite, which sympy refuses"""
+    """IfThenElse and isfinite, which sympy refuses"""
     x = 0.5*deltaL + 0.1
     return esym.IfThenElse(x > 0.2, stiffness*x, damping*deltaL_t) + esym.isfinite(x)*force
 
@@ -96,10 +96,9 @@ for (function, name, item, kind) in recorded:
     else:
         uf = CreateSymbolicUserFunction(mbs, function, name, item)
     data = uf.GetFlatProgramData()
-    #the format Python of the writer is the text of C++; IfThenElse is a leaf of the flat program of C++ (#3089)
-    if function is not SpringForceConditional:
-        for flatten in [True, False]:
-            failed += int(symbolicExport.Write(data, 'Python', flatten) != uf.GetFlatProgram(flatten=flatten))
+    #the format Python of the writer is the text of C++
+    for flatten in [True, False]:
+        failed += int(symbolicExport.Write(data, 'Python', flatten) != uf.GetFlatProgram(flatten=flatten))
     #numpy: the same values, flat and nested
     numpyFunctions = [symbolicExport.ToFunction(data, 'numpy', flatten) for flatten in [True, False]]
     sympyFunction = None

@@ -37,6 +37,7 @@ namespace py = pybind11;
 #include "Pymodules/PybindUtilities.h"
 
 #include <typeinfo>  //for typeid
+#include <typeindex> //std::type_index, in Optimize
 
 //temporarily, for user function:
 #include "Main/MainSystem.h"
@@ -540,14 +541,10 @@ class FlatProgramData
 	std::vector<const void*> namedNodes;	//!< the named variables, in the order of their first appearance
 	std::vector<Index> namedEntries;
 
-	//! IfThenElse is a leaf of the flat evaluation, which computes it as a tree; here it has its three operands
-	static const ExpressionIfThenElse* IfThenElseOf(const FlatNode& node)
-	{
-		return node.kind == FlatKind::Real ? dynamic_cast<const ExpressionIfThenElse*>((const ExpressionBase*)node.node) : nullptr;
-	}
+public:
+	//the access to a node of any kind, also used by Optimizer
 	static Index NumberOfOperands(const FlatNode& node)
 	{
-		if (IfThenElseOf(node)) { return 3; }
 		switch (node.kind)
 		{
 		case FlatKind::Real: return ((const ExpressionBase*)node.node)->NumberOfOperands();
@@ -557,8 +554,6 @@ class FlatProgramData
 	}
 	static FlatNode GetOperand(const FlatNode& node, Index i)
 	{
-		const ExpressionIfThenElse* ifThenElse = IfThenElseOf(node);
-		if (ifThenElse) { return FlatNode(i == 0 ? ifThenElse->Condition() : (i == 1 ? ifThenElse->IfTrue() : ifThenElse->IfFalse())); }
 		switch (node.kind)
 		{
 		case FlatKind::Real: return ((const ExpressionBase*)node.node)->GetOperand(i);
@@ -603,6 +598,7 @@ class FlatProgramData
 		return rows;
 	}
 
+private:
 	//! a number, a vector or matrix of numbers, or a named variable
 	py::dict LeafEntry(const FlatNode& node, bool& isNamed)
 	{
@@ -935,6 +931,390 @@ STDstring FlatProgramOfExpressions(const py::object& expressions, const py::obje
 	return WriteFlatProgramFormat(FlatProgramDataOfExpressions(expressions, arguments, resultNames), format, flatten, name, false);
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//esym.Optimize (#3085): a new graph, built in one pass from the leaves up, which shares with the old one what does not
+//change. A node equal to one built before - the same class and the same new operands, a number with the same bits, the
+//same named variable - is that node, so that comparing one level compares the whole subexpression; level 1 applies
+//the rules that give the same result, level 2 also those that lose a nan of an operand or change the rounding.
+class Optimizer
+{
+	Index level;
+	bool mergeDuplicates;
+	std::unordered_map<const void*, FlatNode> newOf;		//!< the new node of an old one
+	std::unordered_map<std::string, FlatNode> nodeOfKey;	//!< the nodes built so far, by their key
+	std::vector<FlatNode> created;							//!< the nodes created, in their order
+
+	static void IncreaseReferenceCounter(const FlatNode& node)
+	{
+		switch (node.kind)
+		{
+		case FlatKind::Real: ((ExpressionBase*)node.node)->IncreaseReferenceCounter(); break;
+		case FlatKind::Vector: ((VectorExpressionBase*)node.node)->IncreaseReferenceCounter(); break;
+		default: ((MatrixExpressionBase*)node.node)->IncreaseReferenceCounter(); break;
+		}
+	}
+	//! remove a reference; a node without references is destroyed, which removes the references to its operands
+	static void DecreaseReferenceCounter(const FlatNode& node)
+	{
+		switch (node.kind)
+		{
+		case FlatKind::Real:
+		{
+			ExpressionBase* e = (ExpressionBase*)node.node;
+			e->DecreaseReferenceCounter();
+			if (e->ReferenceCounter() == 0) { e->Destroy(); delete e; ExpressionBase::deleteCount++; }
+			break;
+		}
+		case FlatKind::Vector:
+		{
+			VectorExpressionBase* e = (VectorExpressionBase*)node.node;
+			e->DecreaseReferenceCounter();
+			if (e->ReferenceCounter() == 0) { e->Destroy(); delete e; VectorExpressionBase::deleteCount++; }
+			break;
+		}
+		default:
+		{
+			MatrixExpressionBase* e = (MatrixExpressionBase*)node.node;
+			e->DecreaseReferenceCounter();
+			if (e->ReferenceCounter() == 0) { e->Destroy(); delete e; MatrixExpressionBase::deleteCount++; }
+			break;
+		}
+		}
+	}
+	static std::string Bytes(const void* data, size_t size) { return std::string((const char*)data, size); }
+
+	//! a number leaf: not a named variable, which may change
+	static bool IsNumber(const FlatNode& node, Real& value)
+	{
+		if (node.kind != FlatKind::Real) { return false; }
+		const ExpressionBase* e = (const ExpressionBase*)node.node;
+		const ExpressionReal* number = dynamic_cast<const ExpressionReal*>(e);
+		if (!number || dynamic_cast<const ExpressionNamedReal*>(e)) { return false; }
+		value = number->GetValue();
+		return true;
+	}
+	//! a number, a vector or a matrix of numbers
+	static bool IsConstant(const FlatNode& node)
+	{
+		Real value;
+		if (node.kind == FlatKind::Real) { return IsNumber(node, value); }
+		if (node.kind == FlatKind::Vector)
+		{
+			const VectorExpressionBase* e = (const VectorExpressionBase*)node.node;
+			return dynamic_cast<const VectorExpressionReal*>(e) && !dynamic_cast<const VectorExpressionNamedReal*>(e);
+		}
+		const MatrixExpressionBase* e = (const MatrixExpressionBase*)node.node;
+		return dynamic_cast<const MatrixExpressionReal*>(e) && !dynamic_cast<const MatrixExpressionNamedReal*>(e);
+	}
+	template<class T> static bool Is(const FlatNode& node, FlatKind kind)
+	{
+		if (node.kind != kind) { return false; }
+		switch (kind)
+		{
+		case FlatKind::Real: return dynamic_cast<const T*>((const ExpressionBase*)node.node) != nullptr;
+		case FlatKind::Vector: return dynamic_cast<const T*>((const VectorExpressionBase*)node.node) != nullptr;
+		default: return dynamic_cast<const T*>((const MatrixExpressionBase*)node.node) != nullptr;
+		}
+	}
+	static std::type_index TypeOf(const FlatNode& node)
+	{
+		switch (node.kind)
+		{
+		case FlatKind::Real: return std::type_index(typeid(*(const ExpressionBase*)node.node));
+		case FlatKind::Vector: return std::type_index(typeid(*(const VectorExpressionBase*)node.node));
+		default: return std::type_index(typeid(*(const MatrixExpressionBase*)node.node));
+		}
+	}
+
+	//! the key of a leaf: a number, a vector or a matrix of numbers by its bits, a named variable by its node
+	static std::string LeafKey(const FlatNode& node)
+	{
+		if (IsConstant(node))
+		{
+			std::string key = std::to_string((int)node.kind) + "#";
+			if (node.kind == FlatKind::Real) { Real value = ((const ExpressionReal*)node.node)->GetValue(); return key + Bytes(&value, sizeof(Real)); }
+			if (node.kind == FlatKind::Vector)
+			{
+				const ResizableConstVector& v = ((const VectorExpressionReal*)node.node)->GetVector();
+				return key + std::to_string(v.NumberOfItems()) + "#" + Bytes(v.GetDataPointer(), sizeof(Real)*v.NumberOfItems());
+			}
+			const ResizableMatrix& m = ((const MatrixExpressionReal*)node.node)->GetMatrix();
+			return key + std::to_string(m.NumberOfRows()) + "x" + std::to_string(m.NumberOfColumns()) + "#"
+				+ Bytes(m.GetDataPointer(), sizeof(Real)*m.NumberOfRows()*m.NumberOfColumns());
+		}
+		return "leaf#" + Bytes(&node.node, sizeof(void*));
+	}
+	//! the key of an operation: its class and its operands; the two operands of +, *, == and != sorted, which is exact
+	static std::string OperationKey(const FlatNode& node, std::vector<FlatNode> operands)
+	{
+		if (operands.size() == 2 && (Is<ExpressionOperatorPlus>(node, FlatKind::Real) || Is<ExpressionOperatorMul>(node, FlatKind::Real)
+			|| Is<ExpressionOperatorEQ>(node, FlatKind::Real) || Is<ExpressionOperatorNEQ>(node, FlatKind::Real)))
+		{
+			if (std::less<const void*>()(operands[1].node, operands[0].node)) { std::swap(operands[0], operands[1]); }
+		}
+		std::string key = TypeOf(node).name();
+		for (const FlatNode& operand : operands) { key += "#" + Bytes(&operand.node, sizeof(void*)); }
+		return key;
+	}
+
+	//! the node, if one with this key exists; otherwise, it is entered
+	FlatNode Merged(const std::string& key, const FlatNode& node)
+	{
+		if (!mergeDuplicates) { return node; }
+		auto found = nodeOfKey.find(key);
+		if (found != nodeOfKey.end()) { return found->second; }
+		nodeOfKey[key] = node;
+		return node;
+	}
+	//! a number of the new graph
+	FlatNode Number(Real value)
+	{
+		std::string key = std::to_string((int)FlatKind::Real) + "#" + Bytes(&value, sizeof(Real));
+		if (mergeDuplicates && nodeOfKey.find(key) != nodeOfKey.end()) { return nodeOfKey[key]; }
+		ExpressionReal* expression = new ExpressionReal(value);
+		expression->DecreaseReferenceCounter(); //referenced by its users, as the other nodes
+		FlatNode number((const ExpressionBase*)expression);
+		ExpressionBase::NewCount()++;
+		created.push_back(number);
+		return Merged(key, number);
+	}
+	//! the operation of the class of prototype with these operands: an equal node, the old node, or a new one
+	FlatNode Operation(const FlatNode& prototype, const std::vector<FlatNode>& operands)
+	{
+		std::string key = OperationKey(prototype, operands);
+		if (mergeDuplicates && nodeOfKey.find(key) != nodeOfKey.end()) { return nodeOfKey[key]; }
+		bool unchanged = true;
+		for (Index i = 0; i < (Index)operands.size(); i++) { unchanged = unchanged && operands[i].node == FlatProgramData::GetOperand(prototype, i).node; }
+		FlatNode node = prototype;
+		if (!unchanged)
+		{
+			switch (prototype.kind)
+			{
+			case FlatKind::Real: node = ((const ExpressionBase*)prototype.node)->NewWithOperands(operands.data()); ExpressionBase::NewCount()++; break;
+			case FlatKind::Vector: node = ((const VectorExpressionBase*)prototype.node)->NewWithOperands(operands.data()); VectorExpressionBase::newCount++; break;
+			default: node = ((const MatrixExpressionBase*)prototype.node)->NewWithOperands(operands.data()); MatrixExpressionBase::newCount++; break;
+			}
+			CHECKandTHROW(node.node != nullptr, "Optimize: the expression class cannot be copied: " + FlatProgramData::ToString(prototype));
+			for (const FlatNode& operand : operands) { IncreaseReferenceCounter(operand); }
+			created.push_back(node);
+		}
+		return Merged(key, node);
+	}
+
+	//! the rules of the level; true, if one applies, with its result
+	bool Rule(const FlatNode& node, const std::vector<FlatNode>& operands, FlatNode& result)
+	{
+		Real a = 0., b = 0.;
+		bool isNumber0 = operands.size() > 0 && IsNumber(operands[0], a);
+		bool isNumber1 = operands.size() > 1 && IsNumber(operands[1], b);
+		if (node.kind == FlatKind::Real)
+		{
+			bool allConstant = true;
+			for (const FlatNode& operand : operands) { allConstant = allConstant && IsConstant(operand); }
+			if (allConstant) //computed by the function of the node, as the evaluation computes it
+			{
+				std::vector<FlatValue> values(operands.size());
+				for (Index i = 0; i < (Index)operands.size(); i++)
+				{
+					if (operands[i].kind == FlatKind::Real) { values[i].real = ((const ExpressionReal*)operands[i].node)->GetValue(); }
+					else if (operands[i].kind == FlatKind::Vector) { values[i].vector = &((const VectorExpressionBase*)operands[i].node)->EvaluateRef(); }
+					else { values[i].matrix = &((const MatrixExpressionBase*)operands[i].node)->EvaluateRef(); }
+				}
+				result = Number(((const ExpressionBase*)node.node)->EvaluateFromOperands(values.data()));
+				return true;
+			}
+			if (Is<ExpressionOperatorMul>(node, FlatKind::Real))
+			{
+				if (isNumber0 && a == 1) { result = operands[1]; return true; }
+				if (isNumber1 && b == 1) { result = operands[0]; return true; }
+				if (level >= 2 && ((isNumber0 && a == 0) || (isNumber1 && b == 0))) { result = Number(0.); return true; }
+				if (level >= 2 && (isNumber0 || isNumber1)) //a*(c*x) -> (a*c)*x
+				{
+					const FlatNode& other = operands[isNumber0 ? 1 : 0];
+					Real c;
+					if (Is<ExpressionOperatorMul>(other, FlatKind::Real))
+					{
+						for (Index i = 0; i < 2; i++)
+						{
+							if (IsNumber(FlatProgramData::GetOperand(other, i), c))
+							{
+								result = Operation(node, { Number((isNumber0 ? a : b)*c), FlatProgramData::GetOperand(other, 1 - i) });
+								return true;
+							}
+						}
+					}
+				}
+			}
+			else if (Is<ExpressionOperatorPlus>(node, FlatKind::Real))
+			{
+				if (isNumber0 && a == 0) { result = operands[1]; return true; }
+				if (isNumber1 && b == 0) { result = operands[0]; return true; }
+				if (level >= 2 && (isNumber0 || isNumber1)) //a+(c+x) -> (a+c)+x
+				{
+					const FlatNode& other = operands[isNumber0 ? 1 : 0];
+					Real c;
+					if (Is<ExpressionOperatorPlus>(other, FlatKind::Real))
+					{
+						for (Index i = 0; i < 2; i++)
+						{
+							if (IsNumber(FlatProgramData::GetOperand(other, i), c))
+							{
+								result = Operation(node, { Number((isNumber0 ? a : b) + c), FlatProgramData::GetOperand(other, 1 - i) });
+								return true;
+							}
+						}
+					}
+				}
+			}
+			else if (Is<ExpressionOperatorMinus>(node, FlatKind::Real))
+			{
+				if (isNumber1 && b == 0) { result = operands[0]; return true; }
+				if (level >= 2 && operands[0].node == operands[1].node) { result = Number(0.); return true; }
+			}
+			else if (Is<ExpressionOperatorDiv>(node, FlatKind::Real))
+			{
+				if (isNumber1 && b == 1) { result = operands[0]; return true; }
+				if (level >= 2 && isNumber0 && a == 0) { result = Number(0.); return true; }
+				if (level >= 2 && operands[0].node == operands[1].node) { result = Number(1.); return true; }
+			}
+			else if (Is<ExpressionPower>(node, FlatKind::Real))
+			{
+				if (isNumber1 && b == 1) { result = operands[0]; return true; }
+				if (isNumber1 && b == 0) { result = Number(1.); return true; } //pow(x, 0) is 1, also for nan
+			}
+			else if (Is<ExpressionUnaryPlus>(node, FlatKind::Real)) { result = operands[0]; return true; }
+			else if (Is<ExpressionUnaryMinus>(node, FlatKind::Real) && Is<ExpressionUnaryMinus>(operands[0], FlatKind::Real))
+			{
+				result = FlatProgramData::GetOperand(operands[0], 0); return true;
+			}
+			else if (Is<ExpressionIfThenElse>(node, FlatKind::Real) && isNumber0) { result = a ? operands[1] : operands[2]; return true; }
+			else if (Is<VectorExpressionOperatorBracket>(node, FlatKind::Real) && isNumber1 && Is<VectorExpressionSReal>(operands[0], FlatKind::Vector))
+			{
+				Index i = (Index)b;
+				if ((Real)i == b && i >= 0 && i < FlatProgramData::NumberOfOperands(operands[0])) { result = FlatProgramData::GetOperand(operands[0], i); return true; }
+			}
+			else if (Is<MatrixExpressionOperatorBracket>(node, FlatKind::Real) && isNumber1 && Is<MatrixExpressionSReal>(operands[0], FlatKind::Matrix))
+			{
+				Real c;
+				const MatrixExpressionBase* m = (const MatrixExpressionBase*)operands[0].node;
+				if (IsNumber(operands[2], c) && (Index)b == b && (Index)c == c && b >= 0 && c >= 0 && (Index)b < m->NumberOfRows() && (Index)c < m->NumberOfColumns())
+				{
+					result = FlatProgramData::GetOperand(operands[0], (Index)b*m->NumberOfColumns() + (Index)c); return true;
+				}
+			}
+		}
+		else if (node.kind == FlatKind::Vector)
+		{
+			if (Is<VectorExpressionUnaryPlus>(node, FlatKind::Vector)) { result = operands[0]; return true; }
+			if (Is<VectorExpressionUnaryMinus>(node, FlatKind::Vector) && Is<VectorExpressionUnaryMinus>(operands[0], FlatKind::Vector))
+			{
+				result = FlatProgramData::GetOperand(operands[0], 0); return true;
+			}
+			if (Is<VectorExpressionOperatorMultScalarVector>(node, FlatKind::Vector) && isNumber0 && a == 1) { result = operands[1]; return true; }
+		}
+		else
+		{
+			if (Is<MatrixExpressionUnaryPlus>(node, FlatKind::Matrix)) { result = operands[0]; return true; }
+			if ((Is<MatrixExpressionUnaryMinus>(node, FlatKind::Matrix) && Is<MatrixExpressionUnaryMinus>(operands[0], FlatKind::Matrix))
+				|| (Is<MatrixExpressionTransposed>(node, FlatKind::Matrix) && Is<MatrixExpressionTransposed>(operands[0], FlatKind::Matrix)))
+			{
+				result = FlatProgramData::GetOperand(operands[0], 0); return true;
+			}
+			if (Is<MatrixExpressionOperatorMultScalarMatrix>(node, FlatKind::Matrix) && isNumber0 && a == 1) { result = operands[1]; return true; }
+		}
+		return false;
+	}
+
+public:
+	Optimizer(Index levelInit, bool mergeDuplicatesInit) : level(levelInit), mergeDuplicates(mergeDuplicatesInit)
+	{
+		CHECKandTHROW(level >= 0 && level <= 2, "Optimize: level must be 0, 1 or 2");
+	}
+
+	//! the new node of a root, after its operands, depth first and without recursion, as FlatProgram::Build
+	FlatNode Optimized(const FlatNode& root)
+	{
+		if (newOf.find(root.node) != newOf.end()) { return newOf[root.node]; }
+		std::vector<std::pair<FlatNode, Index>> stack;
+		stack.push_back({ root, 0 });
+		while (stack.size())
+		{
+			FlatNode node = stack.back().first;
+			Index done = stack.back().second;
+			Index n = FlatProgramData::NumberOfOperands(node);
+			if (done < n)
+			{
+				FlatNode operand = FlatProgramData::GetOperand(node, done);
+				stack.back().second++;
+				if (newOf.find(operand.node) == newOf.end()) { stack.push_back({ operand, 0 }); }
+				continue;
+			}
+			FlatNode result;
+			if (n == 0) { result = Merged(LeafKey(node), node); }
+			else
+			{
+				std::vector<FlatNode> operands(n);
+				for (Index i = 0; i < n; i++) { operands[i] = newOf[FlatProgramData::GetOperand(node, i).node]; }
+				if (level == 0 || !Rule(node, operands, result)) { result = Operation(node, operands); }
+			}
+			newOf[node.node] = result;
+			stack.pop_back();
+		}
+		return newOf[root.node];
+	}
+
+	//! the nodes created but not used by the new graph are destroyed; the roots must be referenced before
+	void RemoveUnused()
+	{
+		for (const FlatNode& node : created) { IncreaseReferenceCounter(node); } //so that no node is deleted by its user first
+		for (Index i = (Index)created.size() - 1; i >= 0; i--) { DecreaseReferenceCounter(created[i]); }
+		created.clear();
+	}
+	static bool IsNumberLeaf(const FlatNode& node, Real& value) { return IsNumber(node, value); }
+};
+
+//! esym.Optimize(expressions, level, mergeDuplicates) (#3085): the same structure as expressions, with new expressions
+py::object OptimizeExpressions(const py::object& expressions, Index level, bool mergeDuplicates)
+{
+	bool isList = py::isinstance<py::list>(expressions) || py::isinstance<py::tuple>(expressions);
+	std::vector<py::object> objects = FlatProgramRoots(expressions);
+	bool recording = SReal::recordExpressions;
+	SReal::recordExpressions = true; //a vector argument without size gives no error, as while recording
+	Optimizer optimizer(level, mergeDuplicates);
+	py::list results;
+	try
+	{
+		std::vector<FlatNode> roots;
+		for (const py::object& x : objects)
+		{
+			FlatNode root;
+			if (py::isinstance<SReal>(x)) { root = FlatNode(py::cast<const SReal&>(x).GetExpression()); }
+			else if (py::isinstance<SymbolicRealVector>(x)) { root = FlatNode(py::cast<const SymbolicRealVector&>(x).GetExpression()); }
+			else if (py::isinstance<SymbolicRealMatrix>(x)) { root = FlatNode(py::cast<const SymbolicRealMatrix&>(x).GetExpression()); }
+			else { throw py::type_error("Optimize: expected exudyn.symbolic.Real, Vector or Matrix, but received " + py::cast<STDstring>(py::str(x))); }
+			roots.push_back(root.node ? optimizer.Optimized(root) : root);
+		}
+		for (Index i = 0; i < (Index)roots.size(); i++)
+		{
+			const FlatNode& root = roots[i];
+			Real value;
+			if (root.node == nullptr) { results.append(objects[i]); } //a number, which has no expression
+			else if (Optimizer::IsNumberLeaf(root, value)) { results.append(py::cast(SReal(value))); }
+			else if (root.kind == FlatKind::Real) { results.append(py::cast(SReal((ExpressionBase*)root.node))); }
+			else if (root.kind == FlatKind::Vector) { results.append(py::cast(SymbolicRealVector((VectorExpressionBase*)root.node))); }
+			else { results.append(py::cast(SymbolicRealMatrix((MatrixExpressionBase*)root.node))); }
+		}
+		optimizer.RemoveUnused();
+	}
+	catch (...)
+	{
+		SReal::recordExpressions = recording;
+		throw;
+	}
+	SReal::recordExpressions = recording;
+	return isList ? py::object(results) : py::object(results[0]);
+}
+
 //! ToString(format) of esym.Real, Vector, Matrix: 'Python' is the text of the tree, the others one expression of the writer
 template<class TSymbolic>
 STDstring SymbolicToString(const TSymbolic& x, const STDstring& format)
@@ -1161,6 +1541,9 @@ void Init_Pybind_Symbolic(py::module& m) {
 	m.attr("pi") = EXUstd::pi;
 
 	//+++++++++++++++++++++++++++++++++++++++++++
+	m.def("Optimize", &Symbolic::OptimizeExpressions,
+		"new expressions, built from one or a list of esym.Real, Vector and Matrix: level 1 the rules that keep the result (1*x, x+0, x**0, numbers), level 2 also 0*x, x-x, x/x and the combination of numbers; mergeDuplicates: equal subexpressions and leaves are one node (#3085)",
+		py::arg("expressions"), py::arg("level") = 1, py::arg("mergeDuplicates") = true);
 	m.def("GetFlatProgramData", &Symbolic::FlatProgramDataOfExpressions,
 		"the flat program of expressions as a Python structure: arguments, operations (entry k is node k, its operands by number) and results (#3087)",
 		py::arg("expressions"), py::arg("arguments") = py::none(), py::arg("resultNames") = py::none());

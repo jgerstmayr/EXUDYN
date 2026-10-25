@@ -115,9 +115,9 @@ the writer gives the same text, a format could move to C++ again without a chang
 
 ## 6. Found, and planned separately
 
-- **IfThenElse is a leaf of the flat program** (#3089, RG12.49.3): it has no operand interface, so the flat evaluation
-  computes it as a tree - nodes it shares with the rest are computed again - and `GetFlatProgram()` writes it inline as
-  a whole tree. The structure gives it its three operands, so the writer's `'Python'` text differs from the C++ text
-  only for a recording with IfThenElse.
+- **IfThenElse was a leaf of the flat program** (#3089, RG12.49.3, fixed): without an operand interface, the flat
+  evaluation computed it as a tree - nodes it shares with the rest again - and `GetFlatProgram()` wrote it inline as a
+  whole tree. It has its three operands now, both branches are computed and the condition selects; the writer's
+  `'Python'` text equals the C++ text also with IfThenElse.
 - **Deep recordings overflow the C++ stack** (#3090, RG12.49.4): `str()` of about 32000 nested nodes, the recording of
   about 120000; the tree functions are recursive, the flat program and the structure are not.

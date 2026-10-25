@@ -204,6 +204,17 @@ def SetRecording(flag: bool) -> None:
     """
     ...
 @overload
+def Optimize(expressions: Any, level: int=1, mergeDuplicates: bool=True) -> Any: 
+    """New expressions, built from one esym.Real, Vector or Matrix or a list of them, which share with them what does not change: mergeDuplicates=True makes equal subexpressions and leaves one node - the same class and the same operands, a number with the same bits, the same named variable - so that a value written twice is computed once; level=1 applies the rules that keep the result bit for bit (1*x, x/1, x+0, x**1, x**0 -> 1, -(-x), operations of numbers, IfThenElse of a number, a component of a vector or matrix of components), level=2 also 0*x, 0/x, x-x, x/x (which lose a nan or inf of x) and the combination of numbers, 2*(3*x) -> 6*x (which changes the rounding); level=0 merges only.
+    
+    CreateSymbolicUserFunction optimizes with level=1 by default (#3085)
+    
+    Examples:
+        x=esym.Real('x',2)
+        e=esym.Optimize(1*x + 0 + esym.sin(x)*esym.sin(x)) #(x + (sin(x) * sin(x))), sin(x) one node
+    """
+    ...
+@overload
 def GetFlatProgramData(expressions: Any, arguments: Any=None, resultNames: Any=None) -> dict: 
     """The flat program of expressions as a Python structure, a dict of arguments, operations and results: entry k of operations is node k of the recording, the tK of GetFlatProgram(), its operands given by their numbers, which are smaller than k; arguments are the named variables, in the order given or of their first appearance, results named by resultNames, else result or result[i] (#3087).
     

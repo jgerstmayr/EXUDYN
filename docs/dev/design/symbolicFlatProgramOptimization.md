@@ -176,3 +176,20 @@ An optimized graph is exported like any other (symbolicExport.md). sympy simplif
 | 6 | `x+0` → `x` | **level 1** (only the sign of a zero changes) | level 2 |
 | 7 | level 2 | **`0*x`, `0/x`, `x-x`, `x/x`, combining numbers** | without combining numbers |
 | 8 | user functions | **`CreateSymbolicUserFunction(..., optimize=...)`**, by default `level=1, mergeDuplicates=True` | off by default |
+
+## 8. Built (RG12.49.2, #3085; maintainer 2026-10-25: as recommended)
+
+- `esym.Optimize(expressions, level=1, mergeDuplicates=True)` and `CreateSymbolicUserFunction(..., optimize=True)`
+  (a dict passes the arguments of Optimize, False records as before), with the recommendations 1-8 of section 7.
+- C++: `Optimizer` in Symbolic.cpp, one pass without recursion; `NewWithOperands()` in each expression class, one
+  line, the copy with new operands; the nodes created and not used are freed at the end (each held once more while
+  the list is freed in reverse order, so that no node is deleted by its user before its own turn). The numbers created
+  keep the reference counting of the other nodes (ExpressionReal counts its first user in its constructor).
+- The rules as in section 3.2. Measured (symbolicOptimizeTest.py): the rotation matrix 11 → 8, the duplicated
+  `sin*cos` 11 → 6, the numpy product 16 → 13 (level 0, merging only) → 12 (level 1) → 3 (level 2); userRigidBodyTest.py
+  314 → 227 operations, with its reference unchanged; all 215 test models unchanged with optimize on by default.
+- Time: a rigid-body force with `RotXYZ2GLocal` written three times, ObjectGenericODE2, 200000 explicit steps:
+  0.31 s → 0.15 s, 56 → 33 operations, the same coordinates.
+- IfThenElse got the operand interface in the same change (#3089, RG12.49.3), so that Optimize and the flat program
+  see its branches.
+- Found: a named `esym.Matrix` is never freed (#3092, RG12.49.5).
