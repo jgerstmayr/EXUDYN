@@ -9343,7 +9343,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 def ObjectConnectorUser_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, markers: ConnectorMarkerList,
-                                          parameters: Vector) -> None:
+                                          dataCoordinates: Vector, parameters: Vector) -> None:
     r"""A user function, which computes the forces of the connector and applies them through its markers.
 
     Args:
@@ -9351,9 +9351,27 @@ def ObjectConnectorUser_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: 
         t: current time in mbs
         itemNumber: integer number of the connector in mbs
         markers: one exudyn.ConnectorMarker per marker of markerNumbers, in their order: it reads the marker - position, velocity, rotation, coordinates, and for a body marker positions and velocities anywhere on its body - and applies forces and torques to it; valid during the call only
+        dataCoordinates: $\dv \in \Rcal^{n_d}$ the data coordinates of the NodeGenericData nodeNumber, as the postNewtonStepUserFunction last set them; empty without a data node
         parameters: $\in \Rcal^{n_p}$ the parameters of the connector, see parameters; empty if not given
     Returns:
         nothing; the forces are applied with the ApplyForce, ApplyTorque, ApplyBodyForce and ApplyCoordinateForces functions of the markers
+    """
+
+def ObjectConnectorUser_postNewtonStepUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, markers: ConnectorMarkerList,
+                                                   dataCoordinates: Vector, dataCoordinatesStartOfStep: Vector,
+                                                   parameters: Vector) -> PostNewtonResult:
+    r"""A user function, which updates the data coordinates of the connector after each Newton iteration of a step and measures the error of the switch, for contact, friction and other discontinuous states.
+
+    Args:
+        mbs: provides MainSystem mbs to which the connector belongs
+        t: current time in mbs
+        itemNumber: integer number of the connector in mbs
+        markers: one exudyn.ConnectorMarker per marker of markerNumbers, as in forceUserFunction, for reading only: applying a force raises
+        dataCoordinates: $\dv^{k-1}$ the data coordinates of the previous iteration of the step
+        dataCoordinatesStartOfStep: $\dv^{0}$ the data coordinates at the start of the step, to which a state is set back that may not change during the iterations
+        parameters: $\in \Rcal^{n_p}$ the parameters of the connector, see parameters; empty if not given
+    Returns:
+        the tuple (dataCoordinates, discontinuousError) or (dataCoordinates, discontinuousError, recommendedStepSize): $\dv^{k}$ the new data coordinates, of the size of the data node; $\varepsilon_{PN}$, an error of the switch in units of a force, 0 if nothing switched; $\Delta t_{recom}$, a step size the solver should reduce to, or a value < 0 for none
     """
 
 definitions.append(ItemDefinition(
@@ -9362,11 +9380,11 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    overallDescription=r"""A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; its Jacobian is computed numerically.""",
+    overallDescription=r"""A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; a NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.""",
     classType=ClassTypeObject,
     detailedDescription=r"""    #### The markers in the user function
 
-    `forceUserFunction(mbs, t, itemNumber, markers, parameters)` gets `markers`, a list with one `exudyn.ConnectorMarker`
+    `forceUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)` gets `markers`, a list with one `exudyn.ConnectorMarker`
     per entry of `markerNumbers`, in their order, for the configuration of the call (#2975). A ConnectorMarker gives what
     its marker provides:
 
@@ -9391,6 +9409,18 @@ definitions.append(ItemDefinition(
     provide raises a ValueError naming the marker. The ConnectorMarker is valid during the call only; kept and used
     later, it raises.
 
+    #### Data coordinates and the post-Newton step
+
+    With `nodeNumber`, a NodeGenericData, the user functions get its data coordinates $\dv$ - the state of a contact,
+    of friction or of any switch (#3102); without it, `dataCoordinates` is empty. During the Newton iterations of a step,
+    $\dv$ is constant. After each iteration, the solver calls
+    `postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters)`,
+    with the markers for reading; it returns the tuple `(dataCoordinates, discontinuousError)` or
+    `(dataCoordinates, discontinuousError, recommendedStepSize)`. The new $\dv$ is stored, and the step is iterated
+    again while the error is above `discontinuous.iterationTolerance`; a recommended step size $\geq 0$ makes the
+    solver reduce the step to it, as for the built-in contacts. A state that may not change during the iterations, such
+    as the velocity at impact, is set back to `dataCoordinatesStartOfStep`.
+
     #### Jacobian and evaluation
 
     The connector couples the coordinates of all its markers; its Jacobian is computed numerically, by calling the user
@@ -9401,7 +9431,7 @@ definitions.append(ItemDefinition(
     k = 100
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialCoordinates=[0.1,0,0]))
     mass = mbs.AddObject(MassPoint(nodeNumber=node, mass=2))
-    def UFforce(mbs, t, itemNumber, markers, parameters):
+    def UFforce(mbs, t, itemNumber, markers, dataCoordinates, parameters):
         (ground, point) = markers
         force = k*(point.GetPosition() - ground.GetPosition() - np.array([1,0,0]))
         point.ApplyForce(-force)
@@ -9430,6 +9460,10 @@ definitions.append(ItemDefinition(
             pythonName='markerNumbers',
             defaultValue='ArrayIndex()',
             description=r"""$[m_0,\,m_1,\,\ldots]\tp$list of markers of any type, at least one; the user function gets them in this order"""),
+        ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
+            pythonName='nodeNumber',
+            defaultValue=DVInvalidIndex,
+            description=r"""$n_d$node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102)"""),
         ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
             pythonName='parameters',
             defaultValue='Vector()',
@@ -9443,12 +9477,30 @@ definitions.append(ItemDefinition(
             defaultValue=0,
             description=r"""A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces""",
             userFunction=ObjectConnectorUser_forceUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='postNewtonStepUserFunction',
+            defaultValue=0,
+            description=r"""A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102)""",
+            userFunction=ObjectConnectorUser_postNewtonStepUserFunction),
         ItemFunctionDef('GetMarkerNumbers',
             cFlags=CFConst,
             implementation='return parameters.markerNumbers;'),
         ItemFunctionDef('GetMarkerNumbers',
             cFlags='',
             implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('GetNodeNumber',
+            implementation="""CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);
+        return parameters.nodeNumber;"""),
+        ItemFunctionDef('SetNodeNumber',
+            implementation='parameters.nodeNumber=nodeNumber;'),
+        ItemFunctionDef('GetNumberOfNodes',
+            implementation='return (parameters.nodeNumber != EXUstd::InvalidIndex);'),
+        ItemRequestedTypes('Node', ['GenericData']),
+        ItemFunctionDef('HasDiscontinuousIteration',
+            implementation='return (parameters.postNewtonStepUserFunction!=0);'),
+        ItemFunctionDef('PostNewtonStep'),
+        ItemFunctionDef('PostDiscontinuousIterationStep',
+            implementation=''),
         ItemFunctionDef('RequestedNumberOfMarkers',
             implementation='return 0;'),
         ItemFunctionDef('HasUserFunction',
@@ -9478,6 +9530,14 @@ definitions.append(ItemDefinition(
             pythonName='EvaluateUserFunctionForce',
             args='Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes',
             description=r'call of forceUserFunction with the ConnectorMarkers of the markers, each writing into its block of ode2Lhs (#2975); implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=TReal, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionPostNewtonStep',
+            args='const MarkerDataStructure& markerData, Vector& dataCoordinates, Real& recommendedStepSize',
+            description=r'call of postNewtonStepUserFunction with ConnectorMarkers that only read; writes the new data coordinates and returns the error (#3102); implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='GetDataCoordinates',
+            args='ConfigurationType configuration, StdVector& data',
+            description=r'the data coordinates of the data node, empty without one (#3102); implemented in evaluateUserFunctions.cpp'),
         ItemFunctionDef('UpdateGraphics'),
         ItemFunctionDef('IsConnector',
             implementation='return true;'),

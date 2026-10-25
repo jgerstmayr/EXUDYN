@@ -995,14 +995,17 @@ items = {
   'ObjectConnectorUser': {
     'kind': 'Object',
     'types': ['Connector'],
+    'requestedNodeTypes': ['GenericData'],
     'requestedMarkerTypes': [],
     'outputVariables': [],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "connector's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'list of markers of any type, at least one; the user function gets them in this order'},
+      'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102)'},
       'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout'},
       'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector'},
       'forceUserFunction': {'type': 'ObjectConnectorUserForceUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces'},
+      'postNewtonStepUserFunction': {'type': 'ObjectConnectorUserPostNewtonStepUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102)'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},

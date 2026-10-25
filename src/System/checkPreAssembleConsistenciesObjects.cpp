@@ -1435,13 +1435,18 @@ bool MainObjectGenericODE1::CheckPreAssembleConsistency(const MainSystem& mainSy
 }
 
 
-//! at least one marker (#2975)
+//! at least one marker (#2975); a data node for a postNewtonStepUserFunction (#3102)
 bool MainObjectConnectorUser::CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const
 {
 	CObjectConnectorUser* cObject = (CObjectConnectorUser*)GetCObject();
 	if (cObject->GetParameters().markerNumbers.NumberOfItems() == 0)
 	{
 		errorString = "ObjectConnectorUser: markerNumbers is empty, but at least one marker is needed";
+		return false;
+	}
+	if (cObject->GetParameters().postNewtonStepUserFunction && cObject->GetParameters().nodeNumber == EXUstd::InvalidIndex)
+	{
+		errorString = "ObjectConnectorUser: postNewtonStepUserFunction is given, but no nodeNumber of a NodeGenericData for its data coordinates (#3102)";
 		return false;
 	}
 	return true;

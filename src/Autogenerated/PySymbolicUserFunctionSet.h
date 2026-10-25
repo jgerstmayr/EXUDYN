@@ -24,7 +24,8 @@ public:
     std::function<StdVector6D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)> objectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)> objectConnectorRigidBodySpringDamperPostNewtonStepUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)> objectConnectorCoordinateSpringDamperExtSpringForceUserFunction;
-    std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&)> objectConnectorUserForceUserFunction;
+    std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)> objectConnectorUserForceUserFunction;
+    std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)> objectConnectorUserPostNewtonStepUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)> objectJointUserConstraintUserFunction;
     std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)> objectJointUserJacobianUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real)> objectConnectorCoordinateOffsetUserFunction;
@@ -496,9 +497,13 @@ public:
 		{
 			return objectConnectorCoordinateSpringDamperExtSpringForceUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)>>)
 		{
 			return objectConnectorUserForceUserFunction;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)>>)
+		{
+			return objectConnectorUserPostNewtonStepUserFunction;
 		}
         else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)>>)
 		{

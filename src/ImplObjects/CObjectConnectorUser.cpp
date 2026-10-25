@@ -38,6 +38,20 @@ void CObjectConnectorUser::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStruc
 	EvaluateUserFunctionForce(ode2Lhs, markerData, blockSizes);
 }
 
+//! the postNewtonStepUserFunction: the new data coordinates are stored, its error and its recommended step size go to
+//! the solver; a switch updates the Jacobian, as the built-in contacts do (#3102)
+Real CObjectConnectorUser::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+{
+	flags = PostNewtonFlags::_None;
+	if (!parameters.postNewtonStepUserFunction || !parameters.activeConnector || parameters.nodeNumber == EXUstd::InvalidIndex) { return 0.; }
+	Vector newData;
+	Real error = EvaluateUserFunctionPostNewtonStep(markerDataCurrent, newData, recommendedStepSize);
+	LinkedDataVector data = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);
+	data.CopyFrom(newData);
+	if (error != 0.) { flags = PostNewtonFlags::UpdateJacobian; }
+	return error;
+}
+
 //! nothing but the number, at the first marker
 void VisualizationObjectConnectorUser::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {

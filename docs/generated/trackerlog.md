@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.212.dev1
-- last change = 2026-10-25
+- Exudyn version = 1.13.213.dev1
+- last change = 2026-10-26
 - Number of issues = 3104
-- Number of resolved issues = 2989 (212 in current version)
+- Number of resolved issues = 2990 (213 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9041,9 +9041,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` MarkerUser becomes MarkerBodyUser with a parameter markerType (#3103)
   - description: revision2026c step RG7.15 (maintainer 2026-10-25): MarkerUser takes bodies only and always provides Position and Orientation; as MarkerBodyUser it gets a parameter markerType that selects what it provides - Position, Position and Orientation, possibly Coordinates and others; the old C++ files removed.
-  - date raised: 2026-10-25
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` ObjectConnectorUser: data coordinates of a NodeGenericData and a postNewtonStepUserFunction (#3102)
-  - description: revision2026c step RG7.15 (maintainer 2026-10-25): a NodeGenericData as in ObjectConnectorRigidBodySpringDamper, its data coordinates passed to forceUserFunction (empty without node), needed for any kind of contact; a postNewtonStepUserFunction updating the data coordinates, with a clearer return than a vector mixing them with the error and the recommended step size; the sphere-sphere contact re-implemented in a new test model.
   - date raised: 2026-10-25
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.

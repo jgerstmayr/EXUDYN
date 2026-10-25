@@ -76,7 +76,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
 - **RG7** Python user items
-  - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker (2 open sub-steps)
+  - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker (1 open sub-step)
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -119,7 +119,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | OPEN | 3 | Python user items |
+| RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -958,9 +958,9 @@ CLOSED 2026-10-25 (#3100): the constraint by atan2 jumps by 2 pi h at half a tur
 
 CLOSED 2026-10-25 (#3101): Assemble refuses an active ObjectJointUser without jacobianUserFunction, the central differences removed; the minimum of the other user items listed in the log - the Jacobians of NodeUser, ObjectUserBody and MarkerUser by central differences under a joint are left for the decision. [log](exudynRevisionLog2026c.md#rg7-15-3)
 
-#### **OPEN_RG7.15.5** Give ObjectConnectorUser the data coordinates of a NodeGenericData and a postNewtonStepUserFunction, checked by a sphere-sphere contact
+#### **CLOSED_RG7.15.5** Give ObjectConnectorUser the data coordinates of a NodeGenericData and a postNewtonStepUserFunction, checked by a sphere-sphere contact
 
-#3102.
+CLOSED 2026-10-26 (#3102): nodeNumber of a NodeGenericData, its data coordinates in the forceUserFunction, a postNewtonStepUserFunction returning (dataCoordinates, error[, recommendedStepSize]); userConnectorContactTest.py gives the rebounds of ObjectContactSphereSphere to 9e-16. [log](exudynRevisionLog2026c.md#rg7-15-5)
 
 #### **OPEN_RG7.15.6** Rename MarkerUser to MarkerBodyUser with a parameter markerType
 

@@ -3470,3 +3470,28 @@ mbs.SolutionViewer() in several test models, so the viewer refuses; ObjectJointU
   instead of \v into userItems.md, and an earlier one a backspace instead of \b into the log of RG12.52 (`\bi ... \ei`);
   both repaired, the files of the session searched for control characters.
 - The test suite passes.
+
+<a id="rg7-15-5"></a>
+### RG7.15.5 — ObjectConnectorUser with data coordinates and a postNewtonStepUserFunction (2026-10-26, #3102)
+- `nodeNumber`, a NodeGenericData as in ObjectConnectorRigidBodySpringDamper (GetNodeNumber, SetNodeNumber,
+  GetNumberOfNodes 1 with a node, requested type GenericData). `forceUserFunction(mbs, t, itemNumber, markers,
+  dataCoordinates, parameters)`: the data coordinates of the current configuration, empty without node - the signature
+  changes without deprecation, the item is not released yet.
+- `postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters)`
+  returns a tuple, `(dataCoordinates, discontinuousError)` or `(dataCoordinates, discontinuousError,
+  recommendedStepSize)`, instead of the one vector [error, step size, data...] of RigidBodySpringDamper: the
+  annotation PostNewtonResult (py::object in C++, tuple in Python), read in EvaluateUserFunctionPostNewtonStep, with a
+  TypeError for another result and a ValueError for data of the wrong size. The start of step is passed because a
+  contact sets the impact velocity back to it during the iterations, as CObjectContactSphereSphere does.
+  CObjectConnectorUser::PostNewtonStep stores the data, gives error and step size to the solver and updates the
+  Jacobian when the error is not zero; HasDiscontinuousIteration with the function. The markers of the call read only:
+  PyConnectorMarker without ode2Lhs refuses Apply... ("in the postNewtonStepUserFunction the markers are for reading");
+  the markers of the post-Newton step are computed without Jacobians, so a force would have been dropped silently.
+- CheckPreAssembleConsistency: a postNewtonStepUserFunction needs nodeNumber.
+- python/TestModels/userConnectorContactTest.py: the test of ObjectContactSphereSphere (a sphere between two fixed ones,
+  linear stiffness 1e6, impact model 2, restitution 0.7, 0.5 s) with the user connector, data [gap, impact velocity]:
+  the speeds after the impacts 10, 7.083057, 5.009789, 3.519707 as the built-in contact to 9e-16, the same end position;
+  the refusals (no data node, a force in the post-Newton step, data of the wrong size). Reference 26.270810078732666.
+- parameterConversionTestReference.txt: the two new parameters of ObjectConnectorUser recorded, as for the other items.
+  userFunctionInterfaces.py: 58 user functions, 50 with a symbolic version, 32 signatures (userFunctions.md).
+- Docs: the definition (Data coordinates and the post-Newton step, mini example), userItems.md, revisions.md.

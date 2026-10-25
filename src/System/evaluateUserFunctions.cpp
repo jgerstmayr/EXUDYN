@@ -482,11 +482,66 @@ void CObjectConnectorUser::EvaluateUserFunctionForce(Vector& ode2Lhs, const Mark
 		~Invalidator() { for (auto marker : markers) { marker.cast<PyConnectorMarker&>().Invalidate(); } }
 	} invalidator{ markers };
 
+	StdVector data;
+	GetDataCoordinates(ConfigurationType::Current, data);
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		EvaluateUserFunction(parameters.forceUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(), markerData.GetTime(),
-			GetObjectNumber(), (py::object)markers, parameters.parameters);
+			GetObjectNumber(), (py::object)markers, data, parameters.parameters);
 	}, "ObjectConnectorUser::forceUserFunction");
+}
+
+//! the data coordinates of the data node, empty without one (#3102)
+void CObjectConnectorUser::GetDataCoordinates(ConfigurationType configuration, StdVector& data) const
+{
+	data.clear();
+	if (parameters.nodeNumber == EXUstd::InvalidIndex) { return; }
+	LinkedDataVector values = ((const CNodeData*)GetCNode(0))->GetCoordinateVector(configuration);
+	data.assign(values.begin(), values.end());
+}
+
+//! the postNewtonStepUserFunction with ConnectorMarkers that read only, and the tuple it returns (#3102)
+Real CObjectConnectorUser::EvaluateUserFunctionPostNewtonStep(const MarkerDataStructure& markerData, Vector& dataCoordinates,
+	Real& recommendedStepSize) const
+{
+	py::gil_scoped_acquire gil;
+	py::list markers;
+	for (Index i = 0; i < parameters.markerNumbers.NumberOfItems(); i++)
+	{
+		markers.append(py::cast(PyConnectorMarker(cSystemData, parameters.markerNumbers[i], &markerData.GetMarkerData(i), nullptr, 0, 0)));
+	}
+	struct Invalidator
+	{
+		py::list& markers;
+		~Invalidator() { for (auto marker : markers) { marker.cast<PyConnectorMarker&>().Invalidate(); } }
+	} invalidator{ markers };
+
+	Real error = 0.;
+	recommendedStepSize = -1.;
+	StdVector data, dataStartOfStep;
+	GetDataCoordinates(ConfigurationType::Current, data);
+	GetDataCoordinates(ConfigurationType::StartOfStep, dataStartOfStep);
+	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+	{
+		py::object result = EvaluateUserFunction(parameters.postNewtonStepUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
+			markerData.GetTime(), GetObjectNumber(), (py::object)markers, data, dataStartOfStep, parameters.parameters);
+		if (!py::isinstance<py::tuple>(result) || (py::len(result) != 2 && py::len(result) != 3))
+		{
+			PyError("ObjectConnectorUser::postNewtonStepUserFunction: returns the tuple (dataCoordinates, discontinuousError) or "
+				"(dataCoordinates, discontinuousError, recommendedStepSize), but returned " + py::cast<STDstring>(py::str(result)), PyErrorType::typeError);
+		}
+		py::tuple values = py::cast<py::tuple>(result);
+		EPyUtils::CopyFromPython(values[0], dataCoordinates);
+		if (dataCoordinates.NumberOfItems() != ((const CNodeData*)GetCNode(0))->GetNumberOfDataCoordinates())
+		{
+			PyError("ObjectConnectorUser::postNewtonStepUserFunction: returned " + EXUstd::ToString(dataCoordinates.NumberOfItems())
+				+ " data coordinates, but the data node has " + EXUstd::ToString(((const CNodeData*)GetCNode(0))->GetNumberOfDataCoordinates()),
+				PyErrorType::valueError);
+		}
+		error = py::cast<Real>(values[1]);
+		if (py::len(values) == 3) { recommendedStepSize = py::cast<Real>(values[2]); }
+	}, "ObjectConnectorUser::postNewtonStepUserFunction");
+	return error;
 }
 
 //ObjectJointUser (#2976): the constraint equations and their Jacobian of the frames of the two markers

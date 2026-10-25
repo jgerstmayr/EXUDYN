@@ -1,0 +1,167 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The contact of ObjectContactSphereSphere written as ObjectConnectorUser with a NodeGenericData and a
+#           postNewtonStepUserFunction (#3102): a sphere bounces between two fixed spheres, linear contact stiffness and
+#           the impact model of Gonthier et al. and Carvalho and Martins with restitution coefficient 0.7, without
+#           gravity. The data coordinates are the gap of the last iteration and the velocity at impact; the
+#           forceUserFunction acts while the gap of the data is negative, the postNewtonStepUserFunction switches the
+#           contact, measures the error of the switch, recommends the step size to the switch and keeps the impact
+#           velocity from the start of the step. The velocities after the impacts, against the built-in contact and
+#           against the restitution coefficient; what the connector refuses.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-25
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+import exudyn.cMath as cMath
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+radius = 0.1
+mass = 1.6
+contactStiffness = 1e6
+restitution = 0.7
+yInit = 0.5
+vyInit = 10
+tEnd = 0.5
+stepSize = 4e-4
+#the factor of the impact model 2 for a restitution coefficient above 1/3, as in CObjectContactSphereSphere
+impactFactor = 1.5*(restitution - 1.)*(11. - restitution)/(1. + 9.*restitution)
+
+def Contact(markers):
+    """gap, normal and normal velocity of the two spheres"""
+    (m0, m1) = markers
+    deltaP = m1.GetPosition() - m0.GetPosition()
+    distance = cMath.norm(deltaP)
+    normal = deltaP/distance
+    return distance - 2*radius, normal, normal @ (m1.GetVelocity() - m0.GetVelocity())
+
+def UFforce(mbs, t, itemNumber, markers, dataCoordinates, parameters):
+    """the contact force while the gap of the data is negative, linear with the damping of the impact model"""
+    if dataCoordinates[0] >= 0:
+        return
+    (gap, normal, vNormal) = Contact(markers)
+    force = contactStiffness*(-gap)
+    if dataCoordinates[1] > 0:
+        force += contactStiffness/dataCoordinates[1]*impactFactor*(-gap)*vNormal
+    markers[1].ApplyForce(force*normal)
+    markers[0].ApplyForce(-force*normal)
+
+def UFpostNewton(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters):
+    """the gap of this iteration, the error and the step size of a switch, the impact velocity"""
+    (gap, normal, vNormal) = Contact(markers)
+    lastGap = dataCoordinates[0]
+    gapStartOfStep = dataCoordinatesStartOfStep[0]
+    error = 0.
+    recommendedStepSize = -1.
+    if (gap > 0 and lastGap <= 0) or (gap <= 0 and lastGap > 0):
+        error = abs(gap*contactStiffness)
+        if vNormal != 0 and gapStartOfStep != 0:
+            recommendedStepSize = abs(gapStartOfStep/vNormal)
+    impactVelocity = -vNormal if (gapStartOfStep > 0 and gap <= 0) else dataCoordinatesStartOfStep[1]
+    return ([gap, impactVelocity], error, recommendedStepSize)
+
+def Model(isUser):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    body = mbs.CreateRigidBody(referencePosition=[0, yInit, 0], initialVelocity=[0, vyInit, 0],
+                               inertia=InertiaSphere(mass, radius),
+                               graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.orange, nTiles=32)])
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))
+    for y in [-2*radius, 1 + 2*radius]:
+        mbs.CreateGround(referencePosition=[0, y, 0],
+                         graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.green, nTiles=32)])
+        mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=mbs.AddNode(NodePointGround(referenceCoordinates=[0, y, 0]))))
+        if isUser:
+            data = mbs.AddNode(NodeGenericData(initialCoordinates=[0.1, 0], numberOfDataCoordinates=2))
+            mbs.AddObject(ObjectConnectorUser(markerNumbers=[mGround, mBody], nodeNumber=data,
+                                              forceUserFunction=UFforce, postNewtonStepUserFunction=UFpostNewton))
+        else:
+            data = mbs.AddNode(NodeGenericData(initialCoordinates=[0.1, 0, 0, 0], numberOfDataCoordinates=4))
+            mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround, mBody], nodeNumber=data,
+                                                    spheresRadii=[radius, radius], contactStiffness=contactStiffness,
+                                                    impactModel=2, restitutionCoefficient=restitution))
+    sVelocity = mbs.AddSensor(SensorBody(bodyNumber=body, storeInternal=True, outputVariableType=exu.OutputVariableType.Velocity))
+    mbs.Assemble()
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.solution.file.write = not testIsActive and isUser
+    simulationSettings.solution.file.writePeriod = 0.005
+    simulationSettings.solution.sensors.writePeriod = stepSize
+    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
+    simulationSettings.timeIntegration.endTime = tEnd
+    simulationSettings.timeIntegration.newton.useModifiedNewton = True
+    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
+    simulationSettings.timeIntegration.verboseMode = 0
+    mbs.SolveDynamic(simulationSettings)
+    if not testIsActive and isUser:
+        mbs.SolutionViewer() #it reads the solution file of this run
+    velocity = mbs.GetSensorStoredData(sVelocity)[:, 2]
+    return mbs.GetNodeOutput(mbs.GetObject(body)['nodeNumber'], exu.OutputVariableType.Position)[1], velocity
+
+def Rebounds(v):
+    """the largest speed of each flight between two impacts, which changes the sign of the velocity"""
+    switches = np.where(np.sign(v[1:]) != np.sign(v[:-1]))[0] + 1
+    segments = np.split(np.abs(v), switches)
+    return [np.max(segment) for segment in segments if len(segment) > 1]
+
+(yBuiltIn, vBuiltIn) = Model(False)
+(yUser, vUser) = Model(True)
+reboundsBuiltIn = Rebounds(vBuiltIn)
+reboundsUser = Rebounds(vUser)
+n = min(len(reboundsBuiltIn), len(reboundsUser))
+ratios = [reboundsUser[i + 1]/reboundsUser[i] for i in range(len(reboundsUser) - 1)]
+exu.Print('speeds after the impacts, built-in:', np.round(reboundsBuiltIn, 6))
+exu.Print('speeds after the impacts, user    :', np.round(reboundsUser, 6))
+exu.Print('their ratios, user:', np.round(ratios, 5), '; position at the end, built-in', yBuiltIn, ', user', yUser)
+differenceRebounds = np.max(np.abs(np.array(reboundsUser[:n]) - np.array(reboundsBuiltIn[:n])))
+differenceRestitution = max(abs(r - restitution) for r in ratios)
+
+#what the connector refuses: a postNewtonStepUserFunction without data node, a force applied in it, a wrong result
+def Refused(kind):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    node = mbs.AddNode(NodePoint(referenceCoordinates=[0, 0, 0]))
+    mbs.AddObject(MassPoint(nodeNumber=node, mass=1))
+    marker = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
+    data = mbs.AddNode(NodeGenericData(initialCoordinates=[0, 0], numberOfDataCoordinates=2))
+    def PostNewtonForce(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters):
+        markers[0].ApplyForce([1, 0, 0])
+        return (dataCoordinates, 0.)
+    def PostNewtonSize(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters):
+        return ([0.], 0.)
+    function = {'noNode': UFpostNewton, 'force': PostNewtonForce, 'size': PostNewtonSize}[kind]
+    mbs.AddObject(ObjectConnectorUser(markerNumbers=[marker], nodeNumber=-1 if kind == 'noNode' else data,
+                                      postNewtonStepUserFunction=function))
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 2
+    simulationSettings.timeIntegration.endTime = 0.01
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.file.write = False
+    try:
+        mbs.Assemble()
+        mbs.SolveDynamic(simulationSettings)
+    except Exception as e:
+        return str(e)
+    return ''
+
+messages = [Refused(kind) for kind in ['noNode', 'force', 'size']]
+refused = (int('no nodeNumber of a NodeGenericData' in messages[0]) + int('the markers are for reading' in messages[1])
+           + int('returned 1 data coordinates, but the data node has 2' in messages[2]))
+exu.Print('refused, of 3:', refused)
+
+u = yUser + sum(reboundsUser)
+u += int(n < 3) + int(differenceRebounds > 1e-3*vyInit) + int(differenceRestitution > 0.02) + (3 - refused)
+exu.Print('largest difference of the rebound speeds to the built-in contact:', differenceRebounds,
+          ', of their ratios to the restitution coefficient:', differenceRestitution)
+exu.Print('solution of userConnectorContactTest=', u)
+
+exu.sys['testResult'] = u

@@ -492,6 +492,11 @@ class ConnectorMarkerList:
     """the list of exudyn.ConnectorMarker that the forceUserFunction of ObjectConnectorUser gets, one per marker (#2975)"""
 
 
+class PostNewtonResult:
+    """the tuple a postNewtonStepUserFunction of ObjectConnectorUser returns: (dataCoordinates, discontinuousError) or
+    (dataCoordinates, discontinuousError, recommendedStepSize) (#3102)"""
+
+
 #the array types. A user function receives and returns numpy arrays; these names say the SIZE where
 #the size is fixed, because that is what the argument table of a user function has always said and
 #what the C++ signature needs (StdVector3D and StdVector are not the same argument). A size that is
@@ -688,7 +693,7 @@ annotationToCpp = {'MainSystem': 'const MainSystem&', 'Real': 'Real', 'Index': '
                    'Matrix3D': 'StdMatrix3D', 'Matrix6D': 'StdMatrix6D', 'NumpyMatrix': 'NumpyMatrix',
                    'Array': 'StdArrayIndex', 'ConfigurationType': 'ConfigurationType', 'OutputVariableType': 'OutputVariableType',
                    'BodyGraphicsData': 'py::object', 'MatrixContainer': 'py::object',
-                   'ConnectorMarkerList': 'py::object', 'None': 'void'}
+                   'ConnectorMarkerList': 'py::object', 'PostNewtonResult': 'py::object', 'None': 'void'}
 #an argument of a size known only at run time is passed by const reference, not copied (#2996)
 annotationToCppArgument = {'Vector': 'const StdVector&'}
 

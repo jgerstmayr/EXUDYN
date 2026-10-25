@@ -199,6 +199,7 @@ annotationToPython = {'MainSystem': 'exudyn.MainSystem',
                       'ConfigurationType': 'exudyn.ConfigurationType',
                       'OutputVariableType': 'exudyn.OutputVariableType',
                       'ConnectorMarkerList': 'list',
+                      'PostNewtonResult': 'tuple',
                       'None': 'None',
                       }
 

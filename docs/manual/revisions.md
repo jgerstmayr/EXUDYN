@@ -46,7 +46,8 @@ strains, curvatures, stresses, forces, torques, potential energy, accelerations,
 deformable user body is drawn deformed (#3064).
 **ObjectConnectorUser** is a connector whose Python user function gets its markers as `exudyn.ConnectorMarker`: it reads
 them - also any point of a marker's body - and applies forces and torques through them, so that a contact can search the
-closest point on a flexible body and act there (#2975).
+closest point on a flexible body and act there (#2975). With a NodeGenericData, its user functions get the data
+coordinates, which a postNewtonStepUserFunction updates, for contact and friction (#3102).
 The new page {ref}`sec-useritems` explains how the user items are set up (#2979).
 **ObjectJointUser** constrains two rigid markers by 1 to 6 equations of their frames, written in Python, e.g. a screw
 joint (#2976). **MarkerUser** is a marker on several bodies whose position and rotation are Python functions of their

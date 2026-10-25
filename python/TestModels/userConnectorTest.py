@@ -34,7 +34,7 @@ simulationSettings.solution.file.write = False
 k, d = [200., 300., 400.], [2., 1., 3.]
 offset = [0.5, 0., 0.1]
 
-def UFspringDamper(mbs, t, itemNumber, markers, parameters):
+def UFspringDamper(mbs, t, itemNumber, markers, dataCoordinates, parameters):
     (m0, m1) = markers
     force = np.array(k)*(m1.GetPosition() - m0.GetPosition() - offset) + np.array(d)*(m1.GetVelocity() - m0.GetVelocity())
     m0.ApplyForce(force)
@@ -67,7 +67,7 @@ dRot = 0.5          #rotational damping
 kPoint = 50.        #stiffness of the spring at pPoint
 pPoint = [0.3, 0.1, 0]
 
-def UFrigid(mbs, t, itemNumber, markers, parameters):
+def UFrigid(mbs, t, itemNumber, markers, dataCoordinates, parameters):
     (ground, body) = markers
     body.ApplyTorque(-dRot*body.GetAngularVelocity())
     #the spring to the ground position of pPoint in the reference configuration, at the point of the body
@@ -140,7 +140,7 @@ def ClosestPoint(marker, point):
     return x
 
 contactForce = [np.zeros(3)]  #the contact force on the ball of the last call
-def UFcontact(mbs, t, itemNumber, markers, parameters):
+def UFcontact(mbs, t, itemNumber, markers, dataCoordinates, parameters):
     """the contact at the closest point of the cable: of all elements the one closest to the ball, so that a ball
     above a node, which two elements share, touches once"""
     ball = markers[0]
@@ -214,7 +214,7 @@ exu.Print('(3) ball on cable: mid-span deflection', middleContact[1], ', with th
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #(4) a torque on a position marker is refused, and a ConnectorMarker kept after the call
 kept = []
-def UFrefused(mbs, t, itemNumber, markers, parameters):
+def UFrefused(mbs, t, itemNumber, markers, dataCoordinates, parameters):
     kept.append(markers[0])
     if t > 0:
         markers[0].ApplyTorque([0, 0, 1])
@@ -226,7 +226,7 @@ for when in ['during', 'after']:
     node = mbs.AddNode(NodePoint())
     mbs.AddObject(MassPoint(nodeNumber=node, mass=1))
     mbs.AddObject(ObjectConnectorUser(markerNumbers=[mbs.AddMarker(MarkerNodePosition(nodeNumber=node))],
-                                      forceUserFunction=UFrefused if when == 'during' else lambda mbs, t, i, markers, p: kept.append(markers[0])))
+                                      forceUserFunction=UFrefused if when == "during" else lambda mbs, t, i, markers, d, p: kept.append(markers[0])))
     mbs.Assemble()
     try:
         mbs.SolveDynamic(simulationSettings)

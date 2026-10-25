@@ -213,6 +213,7 @@ textureTest
 typeInformationTest
 userANCFBeam3DTest
 userANCFCable2DTest
+userConnectorContactTest
 userConnectorTest
 userFunctionTimerTest
 userGraphicsDataTest

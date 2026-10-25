@@ -39,9 +39,9 @@ __all__ = [
     'ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction',
     'ObjectConnectorCoordinateSpringDamperSpringForceUserFunction',
     'ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction',
-    'ObjectConnectorUserForceUserFunction', 'ObjectJointUserConstraintUserFunction',
-    'ObjectJointUserJacobianUserFunction', 'ObjectConnectorCoordinateOffsetUserFunction',
-    'ObjectConnectorCoordinateOffsetUserFunction_t',
+    'ObjectConnectorUserForceUserFunction', 'ObjectConnectorUserPostNewtonStepUserFunction',
+    'ObjectJointUserConstraintUserFunction', 'ObjectJointUserJacobianUserFunction',
+    'ObjectConnectorCoordinateOffsetUserFunction', 'ObjectConnectorCoordinateOffsetUserFunction_t',
     'ObjectConnectorCoordinateVectorConstraintUserFunction',
     'ObjectConnectorCoordinateVectorJacobianUserFunction', 'ObjectJointGenericOffsetUserFunction',
     'ObjectJointGenericOffsetUserFunction_t', 'MarkerUserPositionUserFunction',
@@ -238,7 +238,8 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectConnectorTorsionalSpringDamper,springTorqueUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'rotation', 'angularVelocity', 'stiffness', 'damping', 'offset'], ['Real'], ['ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction']],
         'ObjectConnectorCoordinateSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset'], ['Real'], ['ObjectConnectorCoordinateSpringDamperSpringForceUserFunction']],
         'ObjectConnectorCoordinateSpringDamperExt,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset', 'velocityOffset', 'dynamicFrictionForce', 'staticFrictionOffsetForce', 'exponentialDecayStatic', 'viscousFrictionFactor', 'frictionProportionalZone'], ['Real'], ['ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction']],
-        'ObjectConnectorUser,forceUserFunction': [['MainSystem', 'Real', 'Index', 'py::object', 'StdVector'], ['mbs', 't', 'itemNumber', 'markers', 'parameters'], ['void'], ['ObjectConnectorUserForceUserFunction']],
+        'ObjectConnectorUser,forceUserFunction': [['MainSystem', 'Real', 'Index', 'py::object', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'markers', 'dataCoordinates', 'parameters'], ['void'], ['ObjectConnectorUserForceUserFunction']],
+        'ObjectConnectorUser,postNewtonStepUserFunction': [['MainSystem', 'Real', 'Index', 'py::object', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'markers', 'dataCoordinates', 'dataCoordinatesStartOfStep', 'parameters'], ['py::object'], ['ObjectConnectorUserPostNewtonStepUserFunction']],
         'ObjectJointUser,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdMatrix3D', 'StdVector3D', 'StdMatrix3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'position0', 'rotationMatrix0', 'position1', 'rotationMatrix1', 'parameters'], ['StdVector'], ['ObjectJointUserConstraintUserFunction']],
         'ObjectJointUser,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdMatrix3D', 'StdVector3D', 'StdMatrix3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'position0', 'rotationMatrix0', 'position1', 'rotationMatrix1', 'parameters'], ['py::object'], ['ObjectJointUserJacobianUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction']],
@@ -1201,7 +1202,7 @@ class ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction(Protocol):
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, displacement: float, velocity: float, stiffness: float, damping: float, offset: float, velocityOffset: float, dynamicFrictionForce: float, staticFrictionOffsetForce: float, exponentialDecayStatic: float, viscousFrictionFactor: float, frictionProportionalZone: float) -> float: ...
 
 class ObjectConnectorUserForceUserFunction(Protocol):
-    """A user function, which computes the forces of the connector and applies them through its markers.
+    r"""A user function, which computes the forces of the connector and applies them through its markers.
     
     Args:
         mbs (exudyn.MainSystem): provides MainSystem mbs to which the connector belongs
@@ -1212,12 +1213,37 @@ class ObjectConnectorUserForceUserFunction(Protocol):
 
         markers (list): one exudyn.ConnectorMarker per marker of markerNumbers, in their order: it reads the marker - position, velocity, rotation, coordinates, and for a body marker positions and velocities anywhere on its body - and applies forces and torques to it; valid during the call only
 
+        dataCoordinates (np.ndarray): :math:`\dv \in \Rcal^{n_d}` the data coordinates of the NodeGenericData nodeNumber, as the postNewtonStepUserFunction last set them; empty without a data node
+
         parameters (np.ndarray): the parameters of the connector, see parameters; empty if not given
 
     Returns:
         None: nothing; the forces are applied with the ApplyForce, ApplyTorque, ApplyBodyForce and ApplyCoordinateForces functions of the markers
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, markers: list, parameters: np.ndarray) -> None: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, markers: list, dataCoordinates: np.ndarray, parameters: np.ndarray) -> None: ...
+
+class ObjectConnectorUserPostNewtonStepUserFunction(Protocol):
+    r"""A user function, which updates the data coordinates of the connector after each Newton iteration of a step and measures the error of the switch, for contact, friction and other discontinuous states.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the connector belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number of the connector in mbs
+
+        markers (list): one exudyn.ConnectorMarker per marker of markerNumbers, as in forceUserFunction, for reading only: applying a force raises
+
+        dataCoordinates (np.ndarray): :math:`\dv^{k-1}` the data coordinates of the previous iteration of the step
+
+        dataCoordinatesStartOfStep (np.ndarray): :math:`\dv^{0}` the data coordinates at the start of the step, to which a state is set back that may not change during the iterations
+
+        parameters (np.ndarray): the parameters of the connector, see parameters; empty if not given
+
+    Returns:
+        tuple: the tuple (dataCoordinates, discontinuousError) or (dataCoordinates, discontinuousError, recommendedStepSize): :math:`\dv^{k}` the new data coordinates, of the size of the data node; :math:`\varepsilon_{PN}`, an error of the switch in units of a force, 0 if nothing switched; :math:`\Delta t_{recom}`, a step size the solver should reduce to, or a value < 0 for none
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, markers: list, dataCoordinates: np.ndarray, dataCoordinatesStartOfStep: np.ndarray, parameters: np.ndarray) -> tuple: ...
 
 class ObjectJointUserConstraintUserFunction(Protocol):
     r"""A user function, which computes the constraint equations of the joint at position level from the frames of its two markers.
@@ -5705,18 +5731,22 @@ class VObjectConnectorUser:
 class ObjectConnectorUser:
     """A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body.
     
-    So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; its Jacobian is computed numerically.
+    So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; a NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
     
     Args:
         name: connector's unique name; type: str
 
         markerNumbers: list of markers of any type, at least one; the user function gets them in this order; type: ArrayMarkerIndex
 
+        nodeNumber: node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102); type: NodeIndex
+
         parameters: the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout; type: array_like
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector; type: bool
 
         forceUserFunction: A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces; type: ObjectConnectorUserForceUserFunction
+
+        postNewtonStepUserFunction: A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102); type: ObjectConnectorUserPostNewtonStepUserFunction
 
         visualization: visualization data, see VObjectConnectorUser
 
@@ -5725,22 +5755,28 @@ class ObjectConnectorUser:
 
         Requested Marker type: ``_None``
 
+        Requested Node type: ``GenericData``
+
     """
-    def __init__(self, name = '', markerNumbers = [], parameters = [], activeConnector = True, forceUserFunction: Union[ObjectConnectorUserForceUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumbers = [], nodeNumber = exudyn.InvalidIndex(), parameters = [], activeConnector = True, forceUserFunction: Union[ObjectConnectorUserForceUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorUserPostNewtonStepUserFunction, int] = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
+        self.nodeNumber = nodeNumber
         self.parameters = CheckForValidNumpyArray(parameters)
         self.activeConnector = activeConnector
         self.forceUserFunction = forceUserFunction
+        self.postNewtonStepUserFunction = postNewtonStepUserFunction
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorUser'
         yield 'name', self.name
         yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
         yield 'parameters', self.parameters
         yield 'activeConnector', self.activeConnector
         yield 'forceUserFunction', self.forceUserFunction
+        yield 'postNewtonStepUserFunction', self.postNewtonStepUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):

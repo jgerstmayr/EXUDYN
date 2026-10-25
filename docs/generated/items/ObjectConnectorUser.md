@@ -6,7 +6,11 @@
 (sec-item-objectconnectoruser)=
 # ObjectConnectorUser
 
-A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; its Jacobian is computed numerically.
+A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; a NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
+
+## Interface
+
+- Nodes it takes: [](#sec-item-nodegenericdata)
 
 ## Parameters
 
@@ -16,9 +20,11 @@ The parameters of the item; in a dictionary, its type is 'ConnectorUser':
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [] | (symbol: $[m_0,\,m_1,\,\ldots]\tp$) list of markers of any type, at least one; the user function gets them in this order |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102) |
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector |
 | **forceUserFunction** | ObjectConnectorUserForceUserFunction |  | 0 | A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces |
+| **postNewtonStepUserFunction** | ObjectConnectorUserPostNewtonStepUserFunction |  | 0 | A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102) |
 | **visualization** | VObjectConnectorUser |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -37,7 +43,7 @@ Drawn as [all connectors](#sec-drawing-objectsconnector); nothing; the number wi
 
 ### The markers in the user function
 
-`forceUserFunction(mbs, t, itemNumber, markers, parameters)` gets `markers`, a list with one `exudyn.ConnectorMarker`
+`forceUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)` gets `markers`, a list with one `exudyn.ConnectorMarker`
 per entry of `markerNumbers`, in their order, for the configuration of the call (#2975). A ConnectorMarker gives what
 its marker provides:
 
@@ -62,13 +68,25 @@ A force and a torque act as a load does: on the marker, in global coordinates. A
 provide raises a ValueError naming the marker. The ConnectorMarker is valid during the call only; kept and used
 later, it raises.
 
+### Data coordinates and the post-Newton step
+
+With `nodeNumber`, a NodeGenericData, the user functions get its data coordinates $\dv$ - the state of a contact,
+of friction or of any switch (#3102); without it, `dataCoordinates` is empty. During the Newton iterations of a step,
+$\dv$ is constant. After each iteration, the solver calls
+`postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters)`,
+with the markers for reading; it returns the tuple `(dataCoordinates, discontinuousError)` or
+`(dataCoordinates, discontinuousError, recommendedStepSize)`. The new $\dv$ is stored, and the step is iterated
+again while the error is above `discontinuous.iterationTolerance`; a recommended step size $\geq 0$ makes the
+solver reduce the step to it, as for the built-in contacts. A state that may not change during the iterations, such
+as the velocity at impact, is set back to `dataCoordinatesStartOfStep`.
+
 ### Jacobian and evaluation
 
 The connector couples the coordinates of all its markers; its Jacobian is computed numerically, by calling the user
 function for each perturbed coordinate. The user function is called serially, in the main thread. With
 `activeConnector=False` the connector applies no forces.
 
-**Userfunction**: `forceUserFunction(mbs, t, itemNumber, markers, parameters)`
+**Userfunction**: `forceUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)`
 A user function, which computes the forces of the connector and applies them through its markers.
 
 | arguments / return | type or size | description |
@@ -77,8 +95,25 @@ A user function, which computes the forces of the connector and applies them thr
 | `t` | Real | current time in mbs |
 | `itemNumber` | Index | integer number of the connector in mbs |
 | `markers` | ConnectorMarkerList | one exudyn.ConnectorMarker per marker of markerNumbers, in their order: it reads the marker - position, velocity, rotation, coordinates, and for a body marker positions and velocities anywhere on its body - and applies forces and torques to it; valid during the call only |
+| `dataCoordinates` | Vector | $\dv \in \Rcal^{n_d}$ the data coordinates of the NodeGenericData nodeNumber, as the postNewtonStepUserFunction last set them; empty without a data node |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the connector, see parameters; empty if not given |
 | **return value** | None | nothing; the forces are applied with the ApplyForce, ApplyTorque, ApplyBodyForce and ApplyCoordinateForces functions of the markers |
+
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
+**Userfunction**: `postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters)`
+A user function, which updates the data coordinates of the connector after each Newton iteration of a step and measures the error of the switch, for contact, friction and other discontinuous states.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which the connector belongs |
+| `t` | Real | current time in mbs |
+| `itemNumber` | Index | integer number of the connector in mbs |
+| `markers` | ConnectorMarkerList | one exudyn.ConnectorMarker per marker of markerNumbers, as in forceUserFunction, for reading only: applying a force raises |
+| `dataCoordinates` | Vector | $\dv^{k-1}$ the data coordinates of the previous iteration of the step |
+| `dataCoordinatesStartOfStep` | Vector | $\dv^{0}$ the data coordinates at the start of the step, to which a state is set back that may not change during the iterations |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the connector, see parameters; empty if not given |
+| **return value** | PostNewtonResult | the tuple (dataCoordinates, discontinuousError) or (dataCoordinates, discontinuousError, recommendedStepSize): $\dv^{k}$ the new data coordinates, of the size of the data node; $\varepsilon_{PN}$, an error of the switch in units of a force, 0 if nothing switched; $\Delta t_{recom}$, a step size the solver should reduce to, or a value < 0 for none |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
@@ -91,7 +126,7 @@ A Python user function gets its vector and matrix arguments as read-only numpy a
 k = 100
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialCoordinates=[0.1,0,0]))
 mass = mbs.AddObject(MassPoint(nodeNumber=node, mass=2))
-def UFforce(mbs, t, itemNumber, markers, parameters):
+def UFforce(mbs, t, itemNumber, markers, dataCoordinates, parameters):
     (ground, point) = markers
     force = k*(point.GetPosition() - ground.GetPosition() - np.array([1,0,0]))
     point.ApplyForce(-force)
@@ -108,4 +143,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacem
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userConnectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userConnectorContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorContactTest.py) (TM), [`userConnectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorTest.py) (TM)

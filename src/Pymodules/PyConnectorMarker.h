@@ -43,7 +43,7 @@ private:
 		if (!valid)
 		{
 			PyError(STDstring("ConnectorMarker.") + function + ": the ConnectorMarker of marker " + EXUstd::ToString(markerNumber)
-				+ " is used after the forceUserFunction call it was passed to; it is valid during that call only", PyErrorType::valueError);
+				+ " is used after the user function call it was passed to; it is valid during that call only", PyErrorType::valueError);
 		}
 		if (type != Marker::_None && !HasType(type))
 		{
@@ -68,6 +68,11 @@ private:
 	template<class TMatrix, class TVector>
 	void AddForce(const TMatrix& jacobian, const TVector& force, const char* function)
 	{
+		if (ode2Lhs == nullptr) //the postNewtonStepUserFunction reads the markers only (#3102)
+		{
+			PyError(STDstring("ConnectorMarker.") + function + ": forces are applied in the forceUserFunction; in the postNewtonStepUserFunction "
+				"the markers are for reading", PyErrorType::valueError);
+		}
 		if (jacobian.NumberOfColumns() == 0) { return; } //ground
 		if (jacobian.NumberOfColumns() != blockSize || jacobian.NumberOfRows() != force.NumberOfItems())
 		{

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 208 | 1.13.212 |
+| 1.13 | Newborn | 209 | 1.13.213 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.213** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorUser: data coordinates of a NodeGenericData and a postNewtonStepUserFunction (#3102)
+  - description: revision2026c step RG7.15 (maintainer 2026-10-25): a NodeGenericData as in ObjectConnectorRigidBodySpringDamper, its data coordinates passed to forceUserFunction (empty without node), needed for any kind of contact; a postNewtonStepUserFunction updating the data coordinates, with a clearer return than a vector mixing them with the error and the recommended step size; the sphere-sphere contact re-implemented in a new test model.
+  - **notes:** ObjectConnectorUser takes the nodeNumber of a NodeGenericData: its forceUserFunction gets the data coordinates, (mbs, t, itemNumber, markers, dataCoordinates, parameters), and a postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters) updates them after each Newton iteration, returning the tuple (dataCoordinates, discontinuousError) or (dataCoordinates, discontinuousError, recommendedStepSize), for contact, friction and other switches; its markers are for reading. Test model userConnectorContactTest.py writes the contact of ObjectContactSphereSphere this way, with the same results.
+  - date resolved: **2026-10-26 00:04**, date raised: 2026-10-25
 - **1.13.212** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJointUser requires a jacobianUserFunction; the required user functions of the user items are checked in Assemble (#3101)
   - description: revision2026c step RG7.15 (maintainer 2026-10-25): nowhere in Exudyn is a constraint Jacobian approximated by numerical differentiation, as it leads to severe artifacts; ObjectJointUser needs constraintUserFunction and jacobianUserFunction, and a missing one fails in Assemble; check what each other user item needs at least.
   - **notes:** ObjectJointUser needs its jacobianUserFunction: Assemble raises for an active joint without it, as a constraint Jacobian approximated by central differences gives artifacts; the numerical approximation is removed.

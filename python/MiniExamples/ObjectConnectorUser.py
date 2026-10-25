@@ -24,7 +24,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 k = 100
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialCoordinates=[0.1,0,0]))
 mass = mbs.AddObject(MassPoint(nodeNumber=node, mass=2))
-def UFforce(mbs, t, itemNumber, markers, parameters):
+def UFforce(mbs, t, itemNumber, markers, dataCoordinates, parameters):
     (ground, point) = markers
     force = k*(point.GetPosition() - ground.GetPosition() - np.array([1,0,0]))
     point.ApplyForce(-force)

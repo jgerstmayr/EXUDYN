@@ -74,19 +74,19 @@ thread_local` in the functions that use them.
 ## 4. The interfaces
 
 `tools/benchmarks/userFunctionInterfaces.py` reads the signatures from the definitions (`--all` lists every user
-function); the classes say what crosses the boundary beyond `mbs`, `t` and the item number. As of 1.13.203:
+function); the classes say what crosses the boundary beyond `mbs`, `t` and the item number. As of 1.13.213:
 
 | signature class | user functions | with a symbolic version | distinct signatures |
 |---|---:|---:|---:|
 | run-time vectors in, matrix out | 17 | 17 | 7 |
-| run-time vectors | 15 | 13 | 11 |
+| run-time vectors | 16 | 13 | 12 |
 | scalars | 12 | 12 | 6 |
 | fixed-size vectors and matrices | 8 | 8 | 5 |
 | graphics | 5 | 0 | 2 |
-| **all** | 57 | 50 | 31 |
+| **all** | 58 | 50 | 32 |
 
 Without a symbolic version: the five `graphicsDataUserFunction`s, whose result is a Python dict of graphics data,
-`ObjectConnectorUser.forceUserFunction`, which gets Python objects of its markers, and
+`ObjectConnectorUser.forceUserFunction` and `postNewtonStepUserFunction`, which get Python objects of its markers, and
 `SensorUserFunction.sensorUserFunction`, which reads through `mbs`. A symbolic function is recorded with
 `_SymbolicMainSystem` (advancedUtilities.py) as `mbs`: its output functions give `VectorExpressionItemOutput` leaves,
 which call `CNode::GetOutputVariable`, `CObject::GetOutputVariable` (connectors through their marker data),

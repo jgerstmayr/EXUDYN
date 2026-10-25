@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-10-25  23:57:46 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,23 +32,27 @@ class CObjectConnectorUserParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers of any type, at least one; the user function gets them in this order
+    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102)
     Vector parameters;                            //!< AUTO: the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector
-    PythonUserFunctionBase< std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces
+    PythonUserFunctionBase< std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)> > postNewtonStepUserFunction;//!< AUTO: A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102)
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorUserParameters()
     {
         markerNumbers = ArrayIndex();
+        nodeNumber = EXUstd::InvalidIndex;
         parameters = Vector();
         activeConnector = true;
         forceUserFunction = 0;
+        postNewtonStepUserFunction = 0;
     };
 };
 
 
 /** ***********************************************************************************************
 * @class        CObjectConnectorUser
-* @brief        A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; its Jacobian is computed numerically.
+* @brief        A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; a NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -84,6 +88,7 @@ public: // AUTO:
     virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const override
     {
         list.Append(&parameters.forceUserFunction);
+        list.Append(&parameters.postNewtonStepUserFunction);
     }
 
     //! AUTO:  default (read) function to return Marker numbers
@@ -96,6 +101,40 @@ public: // AUTO:
     virtual ArrayIndex& GetMarkerNumbers() override
     {
         return parameters.markerNumbers;
+    }
+
+    //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
+    virtual Index GetNodeNumber(Index localIndex) const override
+    {
+        CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);
+        return parameters.nodeNumber;
+    }
+
+    //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
+    virtual void SetNodeNumber(Index localIndex, Index nodeNumber) override
+    {
+        parameters.nodeNumber=nodeNumber;
+    }
+
+    //! AUTO:  number of nodes; needed for every object; can depend on the configuration
+    virtual Index GetNumberOfNodes() const override
+    {
+        return (parameters.nodeNumber != EXUstd::InvalidIndex);
+    }
+
+    //! AUTO:  flag to be set for connectors, which use DiscontinuousIteration
+    virtual bool HasDiscontinuousIteration() const override
+    {
+        return (parameters.postNewtonStepUserFunction!=0);
+    }
+
+    //! AUTO:  function called after Newton method; returns a residual error (force)
+    virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize) override;
+
+    //! AUTO:  function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
+    virtual void PostDiscontinuousIterationStep() override
+    {
+
     }
 
     //! AUTO:  number of markers; 0 means no requirements
@@ -151,6 +190,12 @@ public: // AUTO:
 
     //! AUTO:  call of forceUserFunction with the ConnectorMarkers of the markers, each writing into its block of ode2Lhs (#2975); implemented in evaluateUserFunctions.cpp
     void EvaluateUserFunctionForce(Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes) const;
+
+    //! AUTO:  call of postNewtonStepUserFunction with ConnectorMarkers that only read; writes the new data coordinates and returns the error (#3102); implemented in evaluateUserFunctions.cpp
+    Real EvaluateUserFunctionPostNewtonStep(const MarkerDataStructure& markerData, Vector& dataCoordinates, Real& recommendedStepSize) const;
+
+    //! AUTO:  the data coordinates of the data node, empty without one (#3102); implemented in evaluateUserFunctions.cpp
+    void GetDataCoordinates(ConfigurationType configuration, StdVector& data) const;
 
 };
 

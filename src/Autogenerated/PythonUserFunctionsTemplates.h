@@ -24,7 +24,8 @@ template class PythonUserFunctionBase<std::function<StdVector3D(const MainSystem
 template class PythonUserFunctionBase<std::function<StdVector6D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)>>;
 template class PythonUserFunctionBase<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)>>;
-template class PythonUserFunctionBase<std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&)>>;
+template class PythonUserFunctionBase<std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)>>;
+template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<Real(const MainSystem&,Real,Index,Real)>>;

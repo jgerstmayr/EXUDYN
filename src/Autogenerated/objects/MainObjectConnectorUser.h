@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-23  07:52:38 (last modified)
+* @date         2026-10-25  23:57:46 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectConnectorUser
-* @brief        A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; its Jacobian is computed numerically.
+* @brief        A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; a NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -96,6 +96,12 @@ public: // AUTO:
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
     virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectConnectorUser = (VisualizationObjectConnectorUser*)pVisualizationObject; }
 
+    //! AUTO:  provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity(); where no exact type can be given, a generic type is used and the check is done in CheckPreAssembleConsistency(...)
+    virtual Node::Type GetRequestedNodeType() const override
+    {
+        return Node::GenericData;
+    }
+
     //! AUTO:  Get type name of object; could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
@@ -110,9 +116,11 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorUser->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectConnectorUser->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "parameters")) { EPyUtils::FromPython(d["parameters"], cObjectConnectorUser->GetParameters().parameters); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorUser->GetParameters().activeConnector, "ObjectConnectorUser.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectConnectorUser->GetParameters().forceUserFunction = d["forceUserFunction"]; }
+        if (EPyUtils::DictItemExists(d, "postNewtonStepUserFunction")) { cObjectConnectorUser->GetParameters().postNewtonStepUserFunction = d["postNewtonStepUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorUser->GetShow(), "ObjectConnectorUser.Vshow"); }
         GetCObject()->ParametersHaveChanged();
@@ -124,9 +132,11 @@ public: // AUTO:
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorUser->GetParameters().markerNumbers);
+        d["nodeNumber"] = (NodeIndex)cObjectConnectorUser->GetParameters().nodeNumber;
         d["parameters"] = EPyUtils::ToPython(cObjectConnectorUser->GetParameters().parameters);
         d["activeConnector"] = (bool)cObjectConnectorUser->GetParameters().activeConnector;
         d["forceUserFunction"] = (py::object)cObjectConnectorUser->GetParameters().forceUserFunction;
+        d["postNewtonStepUserFunction"] = (py::object)cObjectConnectorUser->GetParameters().postNewtonStepUserFunction;
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationObjectConnectorUser->GetShow();
         return d;
@@ -137,9 +147,11 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorUser->GetParameters().markerNumbers)); } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectConnectorUser->GetParameters().nodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("parameters") == 0) { return EPyUtils::ToPython(cObjectConnectorUser->GetParameters().parameters); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorUser->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("forceUserFunction") == 0) { return cObjectConnectorUser->GetParameters().forceUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
+        else if (parameterName.compare("postNewtonStepUserFunction") == 0) { return cObjectConnectorUser->GetParameters().postNewtonStepUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorUser->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("ObjectConnectorUser::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
@@ -151,9 +163,11 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorUser->GetParameters().markerNumbers); } //! AUTO: set parameter
+        else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectConnectorUser->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("parameters") == 0) { EPyUtils::FromPython(value, cObjectConnectorUser->GetParameters().parameters); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorUser->GetParameters().activeConnector, "ObjectConnectorUser.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("forceUserFunction") == 0) { cObjectConnectorUser->GetParameters().forceUserFunction = value; } //! AUTO: set parameter
+        else if (parameterName.compare("postNewtonStepUserFunction") == 0) { cObjectConnectorUser->GetParameters().postNewtonStepUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorUser->GetShow(), "ObjectConnectorUser.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("ObjectConnectorUser::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

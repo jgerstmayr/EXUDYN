@@ -37,7 +37,7 @@ Every user function of ObjectUserBody and NodeUser is called with
 
 All vectors are read-only numpy arrays that view the memory of Exudyn ({ref}`sec-userfunctions`); a result is a list
 or a numpy array, a matrix also a list of lists, and a result of the wrong size raises a ValueError that names the function.
-The forceUserFunction of ObjectConnectorUser gets `(mbs, t, itemNumber, markers, parameters)` instead, see below.
+The forceUserFunction of ObjectConnectorUser gets `(mbs, t, itemNumber, markers, dataCoordinates, parameters)` instead, see below.
 
 ## Parameters
 
@@ -90,6 +90,12 @@ The forceUserFunction of ObjectConnectorUser gets `markers`, one {ref}`Connector
 `ApplyForce(force)`, `ApplyTorque(torque)`, `ApplyBodyForce(force, localPosition)` and `ApplyCoordinateForces(forces)`.
 A contact can so search the closest point on a flexible body and act there; userConnectorTest.py rests a ball on an
 ANCF cable this way. A ConnectorMarker is valid during the call only.
+
+With a NodeGenericData as `nodeNumber`, the user functions get its `dataCoordinates`, the state of a contact or of
+friction, and a `postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep,
+parameters)` updates them after each Newton iteration: it returns `(dataCoordinates, discontinuousError)` or, with a
+step size the solver shall reduce to, `(dataCoordinates, discontinuousError, recommendedStepSize)` (#3102).
+userConnectorContactTest.py writes the contact of ObjectContactSphereSphere this way.
 
 ## A user joint and a user marker
 
