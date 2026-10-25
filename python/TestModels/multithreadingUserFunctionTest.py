@@ -1,0 +1,67 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  Multithreading with connectors that have user functions (#3093): a chain of 100 mass points and
+#           spring-dampers, the first spring-damper with a Python springForceUserFunction, one in the middle with a
+#           symbolic one; the connectors without user functions are computed in 4 threads, those with user functions
+#           in the main thread. The positions equal those of the solution with 1 thread.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-25
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import ObjectGround, MarkerBodyPosition, NodePoint, MassPoint, MarkerNodePosition, \
+    ObjectConnectorSpringDamper, LoadForceVector
+from exudyn.advancedUtilities import CreateSymbolicUserFunction
+import numpy as np
+
+def SpringForce(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
+    """a spring twice as stiff as the parameter"""
+    return 2*stiffness*deltaL + damping*deltaL_t
+
+n = 100
+def Solve(numberOfThreads):
+    """the chain, solved with numberOfThreads; the positions of the mass points"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    ground = mbs.AddObject(ObjectGround())
+    markers = [mbs.AddMarker(MarkerBodyPosition(bodyNumber=ground))]
+    nodes = []
+    for i in range(n):
+        nodes.append(mbs.AddNode(NodePoint(referenceCoordinates=[i + 1., 0, 0])))
+        mbs.AddObject(MassPoint(nodeNumber=nodes[-1], mass=1.))
+        markers.append(mbs.AddMarker(MarkerNodePosition(nodeNumber=nodes[-1])))
+    for i in range(n):
+        connector = mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[markers[i], markers[i+1]], referenceLength=1,
+                                                              stiffness=100 + i, damping=0.1))
+        if i == 0:
+            mbs.SetObjectParameter(connector, 'springForceUserFunction', SpringForce)
+        if i == n//2:
+            symbolic = CreateSymbolicUserFunction(mbs, SpringForce, 'springForceUserFunction', connector)
+            mbs.SetObjectParameter(connector, 'springForceUserFunction', symbolic)
+    mbs.AddLoad(LoadForceVector(markerNumber=markers[-1], loadVector=[10, 0, 0]))
+    mbs.Assemble()
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 100
+    simulationSettings.timeIntegration.endTime = 0.1
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.file.write = False
+    simulationSettings.parallel.numberOfThreads = numberOfThreads
+    simulationSettings.parallel.multithreadedLowerLimitResiduals = 10
+    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+    return np.array([mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[0] for node in nodes])
+
+serial = Solve(1)
+parallel = Solve(4)
+difference = float(np.max(np.abs(parallel - serial)))
+exu.Print('largest difference of 4 threads to 1 thread:', difference)
+
+u = float(np.sum(serial)) + int(difference > 1e-14)
+exu.Print('solution of multithreadingUserFunctionTest=', u)
+
+exu.sys['testResult'] = u

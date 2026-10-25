@@ -3192,3 +3192,18 @@ the depth? do the evaluation first, then suggest a way to go or a fix.)*
   which is iterative; (4) Evaluate and Diff of the tree (flatEvaluation=False, esym.Real.Evaluate) check the depth, which
   the flat program has when it is built, and raise a ValueError above 10000 instead of crashing; (5)
   esym.GetDepth(expressions) for the user. With (1)-(3) only the tree evaluation keeps a limit, and it is reported.
+
+<a id="rg7-8-4"></a>
+### RG7.8.4 — the multithreaded ODE2 residual and user functions (2026-10-25, #3093)
+*(Found while analysing RG7.8.3, maintainer 2026-10-25: do the next recommended steps.)*
+- CSystem::ComputeSystemODE2RHS: `nItems` is the number of listComputeObjectODE2LhsNoUF, but the parallel loop took
+  `listComputeObjectODE2Lhs[j]`, the list of all objects. With an object with a user function among the first nItems,
+  it was computed in a worker thread and once more in the serial loop of the user functions, and as many objects
+  without user functions at the end of the list were not computed at all. Measured: 100 mass points with
+  spring-dampers, the first with a symbolic springForceUserFunction, 4 threads, ExplicitEuler 100 steps: the last mass
+  point at 0.0495 (its spring left out) against 0.0424613 with 1 thread; with a Python user function the run hangs (a
+  Python call from a worker thread). Fix: `listComputeObjectODE2LhsNoUF[j]`. The other parallel loops (mass matrix,
+  loads, algebraic equations, projected reaction forces) take their NoUF lists.
+- python/TestModels/multithreadingUserFunctionTest.py: the chain with a Python user function at the first and a symbolic
+  one at the 50th spring-damper, 4 threads against 1 thread: difference 0; reference 0.04949999999999993.
+- RG7.8.3 analysed (plan text): A the evaluation with a context per thread, B the parallel lists; not started.

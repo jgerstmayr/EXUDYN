@@ -1,0 +1,14 @@
+{
+  "number": 3093,
+  "title": "Multithreaded ODE2 residual computes the objects with user functions in the threads and skips others",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "revision2026c step RG7.8.4 (found in RG7.8.3): CSystem::ComputeSystemODE2RHS runs its parallel loop over the number of objects without user functions, but takes them from listComputeObjectODE2Lhs, the list of all; with an object with a user function in that list, objects with user functions are computed in the worker threads and again in the serial loop, and the last objects without user functions are not computed. 100 mass points with spring-dampers, the first with a symbolic springForceUserFunction, 4 threads: the end position 0.0495 against 0.0424613 with 1 thread; with a Python user function the simulation hangs. Fix: listComputeObjectODE2LhsNoUF.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23",
+  "dateResolved": "2026-10-25 13:38",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "With more than one thread, the forces of bodies and connectors are computed in parallel for the objects without user functions only; an object with a user function was computed in a worker thread and again in the main thread, and the last objects of the list were left out, which gave wrong results with symbolic user functions and a hang with Python user functions.",
+  "resolvedInVersion": "1.13.199"
+}

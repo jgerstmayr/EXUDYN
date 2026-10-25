@@ -63,6 +63,10 @@ operations as a Python structure, and `exudyn.misc.symbolicExport` writes the fo
 (`optimize=True`), which computes a symbolic user function written for clarity about twice as fast (#3085). The flat
 evaluation computes `IfThenElse` with its operands instead of as a tree, which computed values it shares with the rest
 of the function again (#3089).
+**Multithreading with user functions**: with more than one thread, the forces of the bodies and connectors without
+user functions are computed in parallel; an object with a user function at the start of the list was computed there as
+well and once more in the main thread, and the last objects were left out - a wrong result with a symbolic user
+function, a hang with a Python one. Fixed (#3093).
 
 **`NodeUser`**, a node with any number of coordinates whose position, and optionally orientation, are Python user
 functions; the Jacobians are computed by central differences if they are not given; node markers, SensorNode, loads

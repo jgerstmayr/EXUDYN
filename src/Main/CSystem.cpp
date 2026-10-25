@@ -1529,7 +1529,7 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 		Index taskSplit = GetTaskSplit(nItems, nThreads);
 		ExuThreading::ParallelFor(nItems, [this, &systemODE2Rhs, &tempArray, &nItems](ParallelSizeType j) //&temp,&systemODE2Rhs,&cSystemData
 		{
-			Index i = cSystemData.listComputeObjectODE2Lhs[(Index)j];
+			Index i = cSystemData.listComputeObjectODE2LhsNoUF[(Index)j];
 			Index threadID = ExuThreading::TaskManager::GetThreadId();
 
 			TemporaryComputationData& temp = tempArray[threadID];

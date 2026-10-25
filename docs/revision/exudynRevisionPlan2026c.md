@@ -813,6 +813,19 @@ buffers; one recording serves many items. [log](exudynRevisionLog2026c.md#rg7-5-
 slots; then items whose user functions are all symbolic leave the serial lists (HasUserFunction) and are computed in the
 parallel loops; measured on the user rigid body and the ANCF cable.
 
+Analysed 2026-10-25 (maintainer: do the next recommended steps): two parts, A the evaluation with a context per thread -
+the slots of the flat program, the vector and matrix results (EvaluateFromOperands into a result of the context instead
+of the buffer of the node, about 30 classes) and the arguments set into the slots of the context instead of the nodes;
+B the lists of CSystem: an item whose user functions are all symbolic and flat goes into the parallel lists, which needs
+a HasPythonUserFunction() of every item (generated) besides HasUserFunction(). Not started; found RG7.8.4 on the way.
+
+#### **CLOSED_RG7.8.4** The multithreaded ODE2 residual takes the objects without user functions from the right list
+
+CLOSED 2026-10-25 (#3093, found in RG7.8.3): the parallel loop of ComputeSystemODE2RHS counted the objects without user
+functions but took them from the list of all; objects with user functions were computed in the threads and again in the
+main thread, the last ones without were left out (symbolic: a wrong result, Python: a hang).
+multithreadingUserFunctionTest.py. [log](exudynRevisionLog2026c.md#rg7-8-4)
+
 ### **CLOSED_RG7.9** Document how items work, and the user items
 
 CLOSED 2026-10-23 (#2979; maintainer: do RG7.9): the manual page docs/manual/userItems.md - the user items, their

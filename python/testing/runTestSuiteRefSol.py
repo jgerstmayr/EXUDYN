@@ -153,6 +153,7 @@ def TestExamplesReferenceSolution():
         'systemContainerComputeOnlyTest.py':4.0, #new 2026-10-14: SystemContainer(attachToRenderer=False), the renderer stays with the container of the model, also for InverseKinematicsNumerical (#2259)
         'ANCFBeamGeometricallyExactComparisonTest.py':5.999501744103005, #2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992); before 5.9995017472560175; new 2026-10-13: ObjectANCFBeam against ObjectBeamGeometricallyExact, tip torque on node and element (#2228)
         'ANCFThinPlateRotationTest.py':0.009394817004517305, #new 2026-10-13: the frame of ObjectANCFThinPlate and NodePointSlope12, torque on element and node (#2228)
+        'multithreadingUserFunctionTest.py':0.04949999999999993, #new 2026-10-25: connectors with Python and symbolic user functions with 4 threads against 1 thread (#3093)
         'symbolicOptimizeTest.py':212.46417414604238, #new 2026-10-25: exudyn.symbolic.Optimize, the operations per level, the values, the nodes freed, CreateSymbolicUserFunction(optimize) (#3085)
         'symbolicExportTest.py':11450.057870734236, #new 2026-10-25: GetFlatProgramData, GetFlatProgram and ToString in the formats Python, symbolic, numpy and sympy against the recordings (#3087, #3088)
         'symbolicUtilitiesTest.py':7.024076141931356, #new 2026-10-23: exudyn.symbolicUtilities with exudyn.symbolic, numpy, math and cMath against cUtilities (#3069)

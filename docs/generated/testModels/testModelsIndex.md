@@ -134,6 +134,7 @@ MathematicalPendulumTest
 matrixContainerTest
 mecanumWheelRollingDiscTest
 movingGroundRobotTest
+multithreadingUserFunctionTest
 NGsolveCMStest
 objectFFRFreducedOrderAccelerations
 objectFFRFreducedOrderTest
