@@ -1,8 +1,8 @@
-#comparison for docs/dev/design/userFunctionBoundary.md, section 12 (revision2026c step RG12.3, #2996): the typical user
+#comparison for docs/dev/internals/userFunctions.md, section 5 (revision2026c step RG12.3, #2996): the typical user
 #functions of python/PerformanceModels/perfUserFunctions.py, Python and symbolic, in the current version and in a
 #reference version; each run in a process of its own, so that a crash of one version is reported and not fatal.
 #
-#usage:  python docs/dev/design/userFunctionPerformance.py --reference <dir> [--repeat 5] [--functions spring,load]
+#usage:  python tools/benchmarks/userFunctionPerformance.py --reference <dir> [--repeat 5] [--functions spring,load]
 #        --reference: a directory that holds an installed exudyn package of the reference version (e.g. a copy of
 #                     site-packages/exudyn of 1.13.6), for the same Python version; it is put in front of PYTHONPATH
 #        the current version is the one installed for this Python
@@ -15,7 +15,7 @@ import os
 import subprocess
 import sys
 
-performanceModelsDirectory = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..',
+performanceModelsDirectory = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..',
                                                            'python', 'PerformanceModels'))
 kinds = ['none', 'python', 'symbolic']
 

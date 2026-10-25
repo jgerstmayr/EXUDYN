@@ -3276,3 +3276,40 @@ has to be improved significantly, giving an overview and the background of the c
   other constructors. The description of #3092 (a reference too many) was wrong; its release note says what it was.
 - symbolicOptimizeTest.py creates the named matrix after the first count of the nodes and deletes it before the last;
   reference unchanged.
+
+<a id="rg11-12"></a>
+### RG11.12 — the design notes of the closed steps distributed (2026-10-25, #3097)
+*(Maintainer 2026-10-25: which of the information goes into the docs; the files merged to the implemented status, no
+plan, no status before, no recommendations, decisions can stay; docs/dev/internals/: yes; closed notes deleted after
+merging: move to tmp/delete/; symbolic as a chapter or a subchapter, without duplicating the reference page.)*
+- The eleven notes of docs/dev/design were all of closed steps. Merged, each into the state as implemented with its
+  decisions and the measurements that support them, without the analyses of options, the proposals, the steps and the
+  earlier states:
+  - docs/dev/internals/symbolic.md from symbolicStatus, symbolicIntermediateValues, symbolicFlatProgramOptimization,
+    symbolicExport and symbolicUtilities, plus the copies for the threads of RG7.8.3; three statements of the notes were
+    out of date and are written as they are now: esym.cross (#3070), esym.pi (#3071), numbers as branches of IfThenElse
+    (#3072);
+  - docs/dev/internals/userFunctions.md from userFunctionBoundary (the path of a call, the threads, the interfaces, the
+    performance against 1.13.6 of section 13); the counts of the interfaces from userFunctionInterfaces.py today (57
+    user functions, 50 with a symbolic version, 31 signatures, against 45, 39, 24 at 1.13.141);
+  - docs/dev/internals/userItems.md from pythonUserItems (what each kind gives the solver, the user items, the common
+    pattern, the parameters, the interfaces, the cost, the decisions);
+  - docs/dev/internals/systemUtilities.md and symmetricBasis.md, their notes without the history;
+  - contributions: WORKFLOW.md had the mechanism; added the rule for a second branch of the maintainer.
+- The notes are in tmp/delete/design/ (untracked) and removed from the repository; docs/dev/design/ stays for the
+  notes of open steps, excluded from the published documentation (#3082). The links of the plan point to the pages that
+  have the content now; the log keeps the names of the notes, which git has.
+- The scripts to tools/benchmarks/: measureUserFunctions.py, userFunctionBoundary.py, userFunctionInterfaces.py,
+  userFunctionPerformance.py, symmetricBasis.py, symmetricBasisBenchmark.cpp, with their paths; userFunctionInterfaces.py
+  and symmetricBasis.py run. symbolicGraphSize.py went to tmp/delete/ instead: it parsed functions of
+  userRigidBodyTest.py that are gone since #3069, and it measured graph against tree for the flat evaluation, which is
+  built.
+- docs/manual/symbolicUserFunctions.md, a chapter between the advanced introduction and the user items: a first
+  symbolic user function with its check (the example run: the recording equals the Python function exactly), writing a
+  function that records, vectors, matrices and the user items, speed and threads, a recording as code. The overview,
+  the types and "what to know" stay on the reference page, which the chapter links; the three bullets on symbolic user
+  functions of the user functions section of introductionBasics.md moved into the chapter, one sentence and the link
+  remain there.
+- WORKFLOW.md §8.4: a design note lives while its step is open; when it closes, the user part goes into the manual, the
+  inside into docs/dev/internals/, the history into the log, the note leaves the repository and its scripts go to
+  tools/benchmarks/.

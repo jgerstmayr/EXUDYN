@@ -13,7 +13,7 @@
 #           (7) mass6: the massMatrixUserFunction of ObjectGenericODE2 with 6 coordinates, a matrix out;
 #           (8) preStep: the preStepUserFunction of the MainSystem, once per step (#2982).
 #           The Python and the symbolic function compute the same; the result of a run is the norm of the final
-#           coordinates. docs/dev/design/userFunctionPerformance.py compares the runs with a reference version; it
+#           coordinates. tools/benchmarks/userFunctionPerformance.py compares the runs with a reference version; it
 #           imports this file and solves single runs.
 #
 # Author:   Johannes Gerstmayr

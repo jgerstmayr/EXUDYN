@@ -9,12 +9,17 @@
   },
   {
    "kind": "box too high",
-   "key": "\\PYG{n}{SC}\\PYG{o}{.}\\PYG{n}{renderer}\\PYG{o}{.}\\PYG{n+nf}{Stop}\\PYG{p}{(}\\PYG{p}{)}",
+   "key": "\\PYG{n+nb}{print}\\PYG{p}{(}\\PYG{p}{[}\\PYG{n}{SC2}\\PYG{o}{.}\\PYG{n}{renderer}\\PYG{o}{.}\\PYG{n}{materi",
    "count": 1
   },
   {
    "kind": "box too high",
-   "key": "\\PYG{n}{exudyn}\\PYG{o}{.}\\PYG{n}{misc}\\PYG{o}{.}\\PYG{n}{GUI}\\PYG{o}{.}\\PYG{n}{textHeightFactor} \\PYG",
+   "key": "\\PYG{n}{SC}\\PYG{o}{.}\\PYG{n+nf}{visualizationSettings}\\PYG{o}{.}\\PYG{n}{contour}\\PYG{o}{.}\\PYG{n}{ou",
+   "count": 1
+  },
+  {
+   "kind": "box too high",
+   "key": "\\PYG{n}{esym}\\PYG{o}{.}\\PYG{n+nf}{SetRecording}\\PYG{p}{(}\\PYG{k+kc}{True}\\PYG{p}{)}",
    "count": 1
   },
   {
@@ -29,22 +34,22 @@
   },
   {
    "kind": "box too high",
-   "key": "\\PYG{n}{mbs}\\PYG{o}{.}\\PYG{n+nf}{SolveDynamic}\\PYG{p}{(}\\PYG{n}{simulationSettings}\\PYG{p}{)}",
+   "key": "\\PYG{n}{variableType}\\PYG{o}{=}\\PYG{n}{exu}\\PYG{o}{.}\\PYG{n+nc}{OutputVariableType}\\PYG{o}{.}\\PYG{n}",
    "count": 1
   },
   {
    "kind": "box too high",
-   "key": "\\PYG{n}{mbs}\\PYG{o}{.}\\PYG{n+nf}{systemData}\\PYG{o}{.}\\PYG{n+nf}{InfoLTG}\\PYG{p}{(}\\PYG{p}{)}",
+   "key": "\\PYG{n}{visualization}\\PYG{o}{=}\\PYG{n}{vGround}\\PYG{p}{)}\\PYG{p}{)}",
    "count": 1
   },
   {
    "kind": "box too high",
-   "key": "\\PYG{n}{visualization}\\PYG{o}{=}\\PYG{n+nc}{VObjectGenericODE2}\\PYG{p}{(}\\PYG{n}{graphicsDataUserFunc",
+   "key": "object 0 Data LTG=[]",
    "count": 1
   },
   {
-   "kind": "float too large",
-   "key": "\\caption{View of visualization settings}\\label{\\detokenize{docs/manual/GUI:id1}}\\label{\\detokenize{d",
+   "kind": "box too high",
+   "key": "pi= 3.141592653589793",
    "count": 1
   },
   {
@@ -269,6 +274,11 @@
   },
   {
    "kind": "line too wide",
+   "key": "\\PYG{n}{python} \\PYG{n}{\\PYGZhy{}c} \\PYG{l+s+s2}{\\PYGZdq{}}\\PYG{l+s+s2}{import sys; sys.path[:0]=[\\P",
+   "count": 1
+  },
+  {
+   "kind": "line too wide",
    "key": "\\delta_f f_{c,k} \\frac{\\mu_s}{v_{\\mu,reg}} \\left(\\Im - \\ANCFdkO \\otimes \\ANCFdkO \\right) \\right)\\dif",
    "count": 1
   },
@@ -286,11 +296,6 @@
    "kind": "line too wide",
    "key": "\\fv_{v}(\\qv,\\dot \\qv) + \\vp{\\fv\\indr}{\\LURU{0b}{\\Am}{bd}{\\mathrm{T}} \\fv\\indf} + \\fv_{user}(mbs, t, ",
    "count": 1
-  },
-  {
-   "kind": "line too wide",
-   "key": "\\label{\\detokenize{docs/generated/items/ObjectANCFThinPlate:strains-and-elastic-forces}}",
-   "count": 2
   },
   {
    "kind": "line too wide",

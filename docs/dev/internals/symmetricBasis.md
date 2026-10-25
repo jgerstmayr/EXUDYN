@@ -1,33 +1,17 @@
-# The symmetric basis of two slope vectors: concept
+# The symmetric basis of two slope vectors
 
-The frame of a node with two slope vectors - NodePointSlope12 now, and the other 3D nodes with two slopes - as an
-average of both slopes, with its rotation Jacobian and the derivative the implicit solvers need (#2228, revision2026c
-step RG11.8.8). The Python reference and its checks are [symmetricBasis.py](symmetricBasis.py), next to this document.
+The frame of a node with two slope vectors as an average of both slopes, with its rotation Jacobian and the derivative
+the implicit solvers need (#2228). It is the templates `RigidBodyMath::SymmetricBasis` and
+`RigidBodyMath::SymmetricBasisRotationJacobian` (src/Linalg/RigidBodyMath.h), bound as
+`exudyn.cUtilities.SymmetricBasis` and `SymmetricBasisRotationJacobian`; the frame, angular velocity, rotation Jacobian
+and the derivative of its transpose times a torque of NodePointSlope12, NodePointSlope23, ObjectANCFBeam and
+ObjectANCFThinPlate are in `AccessFunctionsAD` (src/Utilities/AccessFunctionsAD.h). The Python reference of the
+formulas and their checks is `tools/benchmarks/symmetricBasis.py`; cUtilitiesTest.py tests the C++ functions.
 
-Decided 2026-10-13: the symmetric basis, combined form (section 5). It is implemented as the templates
-`RigidBodyMath::SymmetricBasis` and `RigidBodyMath::SymmetricBasisRotationJacobian` (src/Linalg/RigidBodyMath.h),
-bound as `exudyn.cUtilities.SymmetricBasis` and `SymmetricBasisRotationJacobian`; the frame, angular velocity,
-rotation Jacobian and the derivative of its transpose times a torque (automatic differentiation of the closed-form
-Jacobian) of NodePointSlope12, NodePointSlope23, ObjectANCFBeam and ObjectANCFThinPlate are in
-`AccessFunctionsAD` (src/Utilities/AccessFunctionsAD.h). Section 1 describes the state before.
+Gram-Schmidt, which the node used before, prefers the first slope - it differs from the symmetric frame by up to 42
+degrees - and its least-squares angular velocity did not belong to its rotation when the slopes deform.
 
-## 1. What the node computes now
-
-`CNodePointSlope12` (src/ImplNodes/CNodePointSlope12.cpp) has the slope vectors $\av = \rv_{,x}$, $\bv = \rv_{,y}$:
-
-| quantity | computed as |
-|---|---|
-| rotation matrix | Gram-Schmidt, `EXUmath::OrthogonalBasisFromVectorsXY`: $\ev_1$ along $\av$, $\ev_2$ from $\bv$ |
-| angular velocity, rotation Jacobian | least squares: $\tomega$ with $\tomega \times \av \approx \dot\av$, $\tomega \times \bv \approx \dot\bv$ |
-| `GetRotationJacobianTTimesVector_q` | not implemented |
-
-The two definitions agree for a rigid motion of the slopes, but not when the slopes deform: in the script the
-least-squares $\tomega$ differs from the angular velocity of the Gram-Schmidt frame by up to 130 % (random slopes and
-rates). A rigid marker on such a node therefore has a rotation and an angular velocity that do not belong to each
-other, and an implicit solver gets no derivative of its rotation Jacobian. The Gram-Schmidt frame also prefers
-$\av$: it differs from the symmetric frame by up to 42 degrees in the samples.
-
-## 2. The symmetric basis
+## 1. The symmetric basis
 
 With the unit vectors $\hat\av = \av/|\av|$, $\hat\bv = \bv/|\bv|$ and their sum and difference
 $\uv = \hat\av + \hat\bv$, $\vv = \hat\av - \hat\bv$, which are orthogonal because $|\hat\av| = |\hat\bv|$:
@@ -38,7 +22,7 @@ $$
 \ev_3 = \ev_1 \times \ev_2 , \quad \Am = [\ev_1,\, \ev_2,\, \ev_3]
 $$
 
-$\ev_1$ and $\ev_2$ lie in the plane of the slopes, at 45 degrees to their bisector. Checked in the script, to
+$\ev_1$ and $\ev_2$ lie in the plane of the slopes, at 45 degrees to their bisector. Checked in `tools/benchmarks/symmetricBasis.py`, to
 round-off over 1000 random pairs:
 - orthonormal and right-handed; symmetric: swapping $\av$, $\bv$ swaps $\ev_1$, $\ev_2$;
 - independent of the lengths of $\av$ and $\bv$, so stretching the plate does not rotate the frame;
@@ -47,9 +31,9 @@ round-off over 1000 random pairs:
   computed without an SVD.
 
 Cost: 4 square roots ($|\av|$, $|\bv|$, $|\uv|$, $|\vv|$) against 2 of Gram-Schmidt - 1.6 times its time, see
-section 5. It is defined for non-parallel slopes; parallel slopes are a degenerate plate in any case.
+section 4. It is defined for non-parallel slopes; parallel slopes are a degenerate plate in any case.
 
-## 3. The rotation Jacobian
+## 2. The rotation Jacobian
 
 The global angular velocity is $\tomega = \Gm\,[\dot\av;\,\dot\bv]$ with $\Gm \in \Rcal^{3 \times 6}$. From
 $\dot\ev_i = \tomega \times \ev_i$,
@@ -62,22 +46,21 @@ and with $\mathrm{d}(\xv/|\xv|) = (\Im - \hat\xv\hat\xv\tp)\,\mathrm{d}\xv/|\xv|
 \ev_3\cdot\hat\bv = \ev_3\cdot\hat\uv = \ev_3\cdot\hat\vv = 0$, $\ev_1\cdot\hat\uv = \ev_1\cdot\hat\vv = 1/\sqrt 2$,
 each of the three rows reduces to dot products with $\ev_3$, $\hat\uv$, $\hat\vv$ and the projections of $\hat\uv$,
 $\hat\vv$ onto the planes normal to $\hat\av$ and $\hat\bv$ - no 3 x 3 matrix is formed
-(`SymmetricBasisRotationJacobian` in the script). Checked against the numerical time derivative of $\Am$, and for a
-rigid motion of the slopes it gives the rigid angular velocity, as the least-squares fit and the Gram-Schmidt frame do.
+(`SymmetricBasisRotationJacobian`). Checked against the numerical time derivative of $\Am$; for a rigid motion of the slopes it gives the rigid angular
+velocity.
 For the node, $\Gm$ is the rotation Jacobian on its slope coordinates (columns 4-9; zero on the position), the local
-one is $\Am\tp\Gm$, and `GetAngularVelocity` becomes $\Gm\,\dot\qv$ - consistent with `GetRotationMatrix`.
+one is $\Am\tp\Gm$, and `GetAngularVelocity` is $\Gm\,\dot\qv$ - consistent with `GetRotationMatrix`.
 
-## 4. The derivative for the implicit solvers
+## 3. The derivative for the implicit solvers
 
-A rigid marker or a torque on the node needs $\partial(\Gm\tp\mv)/\partial\qv$ (6 x 6 on the slopes) -
-`GetRotationJacobianTTimesVector_q`. Proposal: write the basis and $\Gm$ once in C++, templated on the scalar type as
-`CNodePointSlope12FRot` already is, and get the derivative by `EXUmath::AutoDiff` with 6 directions. An analytic
-derivative is possible along the same lines as section 3, but long; the AD version is the reference it would be
-checked against, and it is only worth writing if a measurement shows the AD version as a cost.
+A rigid marker or a torque on the node needs $\partial(\Gm\tp\mv)/\partial\qv$ (6 x 6 on the slopes),
+`GetRotationJacobianTTimesVector_q`: the basis and $\Gm$ are written once in C++, templated on the scalar type, and the
+derivative is computed by `EXUmath::AutoDiff` with 6 directions. An analytic derivative is possible along the lines of
+section 2, but long; it is worth writing only if a measurement shows the AD version as a cost.
 
-## 5. Faster variants, measured
+## 4. The variants, measured
 
-Measured with [symmetricBasisBenchmark.cpp](symmetricBasisBenchmark.cpp), next to this document: MSVC 2022 `/O2
+Measured with `tools/benchmarks/symmetricBasisBenchmark.cpp`: MSVC 2022 `/O2
 /fp:precise`, Windows x64, the machine of the cMath measurement of RG4.1.3.5 - there `sqrt` took 1.35 ns per evaluation
 in a loop over independent arguments, `exp` 1.6 ns, `sin` 2.6 ns. The time per frame is the fastest of 5 runs over
 1024 slope pairs - a random rotation, stretched by up to the strain and sheared by up to the angle; the deviation is the
@@ -85,7 +68,7 @@ largest entry of the difference to the exact symmetric basis:
 
 | variant | square roots | ns per frame | deviation, strain 0.001 / shear 0.01 | 0.01 / 0.1 | 0.1 / 0.5 |
 |---|---|---|---|---|---|
-| Gram-Schmidt (now) | 2 | 7.9 | 4.9e-3 | 4.9e-2 | 2.4e-1 |
+| Gram-Schmidt | 2 | 7.9 | 4.9e-3 | 4.9e-2 | 2.4e-1 |
 | symmetric, direct ($\uv$, $\vv$ normalized) | 4 | 13.4 | 0 | 0 | 0 |
 | symmetric, combined (below) | 4 | 12.5 | 8e-16 | 7e-16 | 7e-16 |
 | polar rotation of $[\av, \bv]$, closed form (below) | 2, 1 division | 9.3 | 3.6e-6 | 3.5e-4 | 1.8e-2 |
@@ -102,10 +85,10 @@ m\,\hat\bv$, $\ev_2 = m\,\hat\av + p\,\hat\bv$ and $\ev_3 = 2 k_u k_v\,(\hat\av 
 unit slopes, two for the half angle - $\cos(\theta/2)$ and $\sin(\theta/2)$ need one each, and computing one of them
 from $\sin\theta$ needs a square root for $\sin\theta$.
 
-**Polar rotation of $[\av, \bv]$.** The rotation $\Rm$ of $\Fm = \Rm\Um$ for $\Fm = [\av, \bv]$ (3 x 2), in closed
+**Polar rotation of $[\av, \bv]$.** The rotation $\Rm$ of $\Fm = \Rm\mathbf{U}$ for $\Fm = [\av, \bv]$ (3 x 2), in closed
 form: $\Rm = \Fm\,\Sm^{-1/2}$ with the 2 x 2 matrix $\Sm = \Fm\tp\Fm$, whose square root is $(\Sm + d\,\Im)/t$ with
 $d = \sqrt{\det \Sm}$, $t = \sqrt{\mathrm{tr}\,\Sm + 2d}$ - 2 square roots and one division, 1.2 times Gram-Schmidt
-(`PolarRotationAB` in the script). It is symmetric in $\av$ and $\bv$, orthonormal, equal to the symmetric basis for
+(`PolarRotationAB` in symmetricBasis.py). It is symmetric in $\av$ and $\bv$, orthonormal, equal to the symmetric basis for
 $|\av| = |\bv|$, and it is the rotation of continuum mechanics: for slopes that are orthonormal in the reference
 configuration, $[\av, \bv]$ is the in-plane deformation gradient. It is not independent of the slope lengths:
 stretching one of two non-orthogonal slopes turns it by an angle of the order of strain times shear - 3.6e-6 for small
@@ -126,14 +109,5 @@ microseconds; the choice is decided by the definition and the derivative more th
 - the **polar rotation of $[\av, \bv]$** (9.3 ns): the rotation of the deformation gradient, close to Gram-Schmidt in
   time, but turned slightly by stretching.
 
-Both have closed-form rotation Jacobians (section 3 for the symmetric basis; the polar rotation along the same lines)
-and get the derivative of section 4 by AutoDiff.
-
-## 6. Steps, when decided
-
-1. The functions `SymmetricBasis` and `SymmetricBasisRotationJacobian` in C++ (RigidBodyMath, templated), bound to
-   `exudyn.cUtilities` and called by `exudyn.rigidBodyUtilities`; the script becomes their test.
-2. NodePointSlope12: rotation matrix, angular velocity and rotation Jacobian from them, the derivative by AD; a test
-   model with a rigid marker on a deforming plate (consistency of rotation and angular velocity, Newton convergence).
-   This changes the frame of the node, and so the results of models that use it - the references are recorded again.
-3. The same for NodePointSlope23 and, when it exists, for the other nodes with two slopes.
+Both have closed-form rotation Jacobians (section 2 for the symmetric basis; the polar rotation along the same lines)
+and get the derivative of section 3 by AutoDiff. The symmetric basis, combined, was chosen (maintainer 2026-10-13).

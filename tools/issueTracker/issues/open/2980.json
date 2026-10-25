@@ -6,5 +6,6 @@
   "type": "CHANGE",
   "description": "revision2026c step RG9.7 (maintainer 2026-10-11; docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.",
   "dateRaised": "2026-10-12",
-  "deadline": "2027-04-10"
+  "deadline": "2027-04-10",
+  "workingRemarks": "2026-10-25 (#3097): docs/dev/design/pythonUserItems.md is merged into docs/dev/internals/userItems.md; its section 5.3 is there in section 5 (cable markers, a general shape marker)."
 }

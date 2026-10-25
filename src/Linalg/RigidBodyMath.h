@@ -780,7 +780,7 @@ namespace RigidBodyMath {
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//the symmetric basis of two non-parallel vectors, the frame of two slope vectors (#2228, docs/dev/design/symmetricBasis.md);
+	//the symmetric basis of two non-parallel vectors, the frame of two slope vectors (#2228, docs/dev/internals/symmetricBasis.md);
 	//templated on the number type, so that automatic differentiation takes them
 
 	//! the symmetric basis of the non-parallel vectors a, b: with the unit vectors ah, bh, c = ah.bh, ku = 1/|ah+bh| =

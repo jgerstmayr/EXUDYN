@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.203.dev1
+- Exudyn version = 1.13.204.dev1
 - last change = 2026-10-25
-- Number of issues = 3097
-- Number of resolved issues = 2980 (203 in current version)
+- Number of issues = 3098
+- Number of resolved issues = 2981 (204 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9060,6 +9060,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-12
 - `CHANGE` `raised by: Claude-JG` General markers for curves, surfaces and volumes instead of the Cable2D markers (#2980)
   - description: revision2026c step RG9.7 (maintainer 2026-10-11; docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
+  - **remarks:** 2026-10-25 (\#3097): docs/dev/design/pythonUserItems.md is merged into docs/dev/internals/userItems.md; its section 5.3 is there in section 5 (cable markers, a general shape marker).
   - date raised: 2026-10-12
 - `EXTENSION` `raised by: Claude-JG` exudyn.cUtilities: the time derivatives of the Euler parameter functions (#2965)
   - description: Decision D7 of revision2026c step RG11.10.1 (tmp/compareRBU.md, maintainer 2026-10-11: not now, an issue): RigidBodyMath has EP2RotationMatrix\_t, EP\_t2G\_t and EP\_t2Glocal\_t, which neither rigidBodyUtilities nor exudyn.cUtilities offers; when wanted, add them to definitions/pybindCUtilities.py and PyCUtilities.h, with a check in cUtilitiesTest.py.

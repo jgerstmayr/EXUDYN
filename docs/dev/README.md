@@ -14,7 +14,12 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 | [GUI_MANUAL_CHECK.md](GUI_MANUAL_CHECK.md) | the manual check of the render window and the dialogs before a release, per platform |
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
 | [../../tools/generators/README.md](../../tools/generators/README.md) | the new generator code and how to re-emit the definitions |
-| [docs/dev/design/](https://github.com/jgerstmayr/EXUDYN/tree/master/docs/dev/design) | the design notes of single developments - analyses, options, decisions, measurements, written while planning a step; development records like the plans and logs below, not the documentation of what is implemented (#3082) |
+| [internals/symbolic.md](internals/symbolic.md) | exudyn.symbolic inside: the recording, symbolic user functions, the flat program, the copies for the threads, Optimize, the export, symbolicUtilities |
+| [internals/userFunctions.md](internals/userFunctions.md) | the C++/Python boundary of the user functions: the stored function, the path of a call, the threads, the cost |
+| [internals/userItems.md](internals/userItems.md) | what each kind of item gives the solver, and how the user items are built |
+| [internals/systemUtilities.md](internals/systemUtilities.md) | exudyn.systemUtilities: SystemQuantity, the energy, the constraint drift, the system graph |
+| [internals/symmetricBasis.md](internals/symmetricBasis.md) | the frame of two slope vectors, its rotation Jacobian and the variants measured |
+| `docs/dev/design/` | the design notes of the steps that are open - analyses, options, decisions, measurements, written while planning a step; not published. When the step closes, what it built goes into the manual and into internals/, and the note leaves the repository (WORKFLOW.md §8.4) |
 | [exudynRevisionInfo2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md) | general information on the v1.11.0 → v2.0 restructuring: rules, facts, decisions |
 | [exudynRevisionPlan2026c.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026c.md) | **the plan that is open**, by group RG1 ... RG12; checked and partly written by `docs/revision/planManager.py` |
 | [exudynRevisionPlan2026b.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026b.md) | the second plan, closed 2026-10-10 - one line per step |
@@ -36,6 +41,11 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 /docs/dev/RELEASE
 /docs/dev/NEW_ITEM
 /docs/dev/GUI_MANUAL_CHECK
+/docs/dev/internals/symbolic
+/docs/dev/internals/userFunctions
+/docs/dev/internals/userItems
+/docs/dev/internals/systemUtilities
+/docs/dev/internals/symmetricBasis
 /docs/generated/deprecations
 /definitions/README
 /tools/generators/README

@@ -1,5 +1,5 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// This is an EXUDYN design benchmark (#2228, docs/dev/design/symmetricBasis.md)
+// This is an EXUDYN design benchmark (#2228, docs/dev/internals/symmetricBasis.md)
 //
 // Details:  the time per frame of the variants of an orthonormal frame from two slope vectors a, b: Gram-Schmidt,
 //           the symmetric basis exact (4 square roots), the polar rotation of [a, b] in closed form (2 square

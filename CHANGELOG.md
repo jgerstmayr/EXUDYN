@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 200 | 1.13.203 |
+| 1.13 | Newborn | 201 | 1.13.204 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.204** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The design notes of closed steps distributed: docs/dev/internals/ and a manual chapter on symbolic user functions (#3097)
+  - description: revision2026c step RG11.12 (maintainer 2026-10-25: the design notes grew in number and size; what is implemented goes into the docs, merged notes contain only the implemented status and the decisions; docs/dev/internals/; closed notes moved to tmp/delete/; symbolic gets a place of its own in the manual): the eleven notes of docs/dev/design for closed steps merged into docs/dev/internals/symbolic.md, userFunctions.md, userItems.md, systemUtilities.md, symmetricBasis.md, contributions into WORKFLOW.md; a chapter docs/manual/symbolicUserFunctions.md; the measurement scripts to tools/benchmarks; the rule for design notes in WORKFLOW.md.
+  - **notes:** The manual has a chapter on symbolic user functions: a first one with its check, how to write a function that records, vectors, matrices and the user items, speed and threads, a recording as code. The developer documentation has docs/dev/internals/ - exudyn.symbolic inside, the user functions at the C++/Python boundary, the user items, systemUtilities and the symmetric basis -, from the design notes of the closed steps, whose measurement scripts are in tools/benchmarks.
+  - date resolved: **2026-10-25 15:37**, date raised: 2026-10-25
 - **1.13.203** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The parallel PostNewtonStep loop computes connectors with Python user functions in the threads (#3095)
   - description: revision2026c step RG7.8.5 (found in RG7.8.3): CSystem::PostNewtonStep runs listDiscontinuousIteration in the threads without regard to user functions; an ObjectConnectorRigidBodySpringDamper with a Python postNewtonStepUserFunction and numberOfThreads=4 hangs, as the worker thread waits for the GIL that the main thread holds (measured: 4 such connectors, 50 steps, no end after 60 s).
   - **notes:** The post-Newton step of the connectors runs in the main thread if one of them has a user function that is computed there, e.g. a Python postNewtonStepUserFunction of ObjectConnectorRigidBodySpringDamper, which hung with more than one thread; symbolicUserFunctionThreadsTest.py.

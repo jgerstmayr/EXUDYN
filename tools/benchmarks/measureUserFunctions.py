@@ -1,4 +1,4 @@
-#measurement for docs/dev/design/pythonUserItems.md (revision2026c group RG7, #2971): the cost of a call into Python from the solver
+#measurement for docs/dev/internals/userItems.md (revision2026c group RG7, #2971): the cost of a call into Python from the solver
 #a chain of n mass points on coordinate springs, explicit RK4 (5 evaluations per step, no Jacobian), 3 variants:
 #C++ spring, Python springForceUserFunction, symbolic springForceUserFunction; and ObjectGenericODE2 with a Python
 #forceUserFunction for the whole chain (one call per evaluation), and one ObjectGenericODE2 per mass point (unconnected)

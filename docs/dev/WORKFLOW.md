@@ -101,7 +101,8 @@ command, as it changes the version; while proposals wait, every `resolve` says s
 `archive/`, `meta.json`), `releases.json`, the version files, `CHANGELOG.md` or `trackerlog.md`; the GitHub workflow
 `contribution.yml` runs it against the base branch on every pull request from a fork, not on the maintainer's own
 branches, which resolve issues (#3084). A conflict in a generated file is never merged by hand: take the maintainer's
-version and run `exudev generate`.
+version and run `exudev generate`. A second branch of the maintainer follows the same rule: it proposes, and the main
+branch raises and resolves.
 
 Run it from its own directory — it uses relative and Windows-style paths:
 
@@ -827,6 +828,11 @@ with `exudev examples` for releases and large steps only.
   `exudev docs --check` - the PDF as well, its log against the baseline (§1, #2856).
 - The step status in `docs/revision/exudynRevisionPlan2026.md`. If a fact in info document §3 turned out to
   be wrong, correct it there rather than working around it.
+- **A design note lives while its step is open.** `docs/dev/design/` holds the analyses, options and decisions of the
+  steps being planned; it is not published. When the step closes, what it built goes where it is read: what a user
+  does into the manual, how it works inside into `docs/dev/internals/` - the state as implemented, with the decisions
+  and the measurements that support them, no plan, no earlier state, no open option -, the history stays in the log.
+  Then the note leaves the repository; git keeps it. Its measurement scripts go to `tools/benchmarks/`.
 
 ## 9. Committing
 

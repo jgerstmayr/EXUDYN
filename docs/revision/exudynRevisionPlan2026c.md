@@ -50,7 +50,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - changed without a
    screen; the space key works on macOS (2026-10-16).
 2. **Symbolic access to the system**: the MainSystem in symbolic user functions (RG12.4, proposal RG12.4.1 to
-   decide); each user function change measured against 1.13.6 (userFunctionBoundary.md sections 12, 13).
+   decide); each user function change measured against 1.13.6 (docs/dev/internals/userFunctions.md, section 5).
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
@@ -353,7 +353,7 @@ the new functions may change; ComputeSystemDegreeOfFreedom needs the solver and 
 `AddSensor`), `LoadPotentialEnergy`, `NumericalJacobian`, `ComputeConstraintResiduals`, `ComputeSystemGraph`,
 `DrawSystemGraph`; `CreateLoadEnergySensor` and `SensorUFSystemConstraintDrift` removed; in `exudyn.utilities`; the
 manual section *Quantities of the whole system*; test model systemUtilitiesTest.py.
-[design/systemUtilities.md](../dev/design/systemUtilities.md), [log](exudynRevisionLog2026c.md#rg4-25-3)
+[internals/systemUtilities.md](../dev/internals/systemUtilities.md), [log](exudynRevisionLog2026c.md#rg4-25-3)
 
 ##### **CLOSED_RG4.25.3.1** Revise NumericalJacobian and remove ItemODE2Coordinates before the move
 
@@ -687,7 +687,7 @@ Items whose behaviour is written in Python, and where the line runs against comp
 
 ### **CLOSED_RG7.1** Plan the Python user items: what exists, what each kind needs, the cost of a call into Python
 
-CLOSED 2026-10-12 (#2971, maintainer 2026-10-11/12: the decisions are in the design document): [docs/dev/design/pythonUserItems.md](../dev/design/pythonUserItems.md), with the measurement script next to it. [log](exudynRevisionLog2026c.md#rg7-1)
+CLOSED 2026-10-12 (#2971, maintainer 2026-10-11/12: the decisions are in the design document): [internals/userItems.md](../dev/internals/userItems.md), with the measurement script next to it. [log](exudynRevisionLog2026c.md#rg7-1)
 
 ### **CLOSED_RG7.2** Set up the common pattern of the user items and the user types
 
@@ -868,14 +868,14 @@ pythonUserItems.md section 5.11 are left for later.
 
 #### **CLOSED_RG7.12.1** Evaluate the parameter vector and its mapping, and recommend
 
-CLOSED 2026-10-21 (#3056): [pythonUserItems.md](../dev/design/pythonUserItems.md) section 5.10 - `parameters` as the
+CLOSED 2026-10-21 (#3056): [internals/userItems.md](../dev/internals/userItems.md) section 5.10 - `parameters` as the
 last argument of all user functions, one recording for every item of a kind, structural parameters stay Python
 constants; the mapping as a Python helper `ParameterLayout` next to the user functions, not in the item. Waiting for
 the decision. [log](exudynRevisionLog2026c.md#rg7-12-1)
 
 #### **CLOSED_RG7.12.2** The interfaces that last: configurations, visualization parameters, graphics mapping, what is missing
 
-CLOSED 2026-10-22 (#3056; maintainer's considerations of 2026-10-21): [pythonUserItems.md](../dev/design/pythonUserItems.md)
+CLOSED 2026-10-22 (#3056; maintainer's considerations of 2026-10-21): [internals/userItems.md](../dev/internals/userItems.md)
 section 5.11 - `qRef` before `q` in every user function, a second vector `visualizationParameters`, graphics data in
 local coordinates mapped by the positionUserFunction (later), contour colors by the C++ of the item, the gaps against
 the rigid body and the beams, and what to fix before the interfaces are public. Waiting for the decisions.
@@ -1017,7 +1017,7 @@ classes.
 
 #2980. Maintainer 2026-10-11: MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only;
 contact and sliding on beams, plates, shells and general flexible surfaces need a marker that gives the shape of a
-body, positions at varying local coordinates and their Jacobians (docs/dev/design/pythonUserItems.md 5.3).
+body, positions at varying local coordinates and their Jacobians (docs/dev/internals/userItems.md, section 5).
 
 ### **CLOSED_RG9.8** Give every object its number in CSystemData when it is added, and renumber only in DeleteObject
 
@@ -1299,7 +1299,7 @@ CLOSED 2026-10-11 (#1912): m0 implicit, m1 explicit (RK44), coupled in the PreSt
 CLOSED 2026-10-13 (#2228, maintainer: the symmetric basis, combined; templated for AutoDiff; in the ANCF plate and
 its node, and in the ANCF beam and NodePointSlope23 instead of Gram-Schmidt): RigidBodyMath::SymmetricBasis and its
 closed-form rotation Jacobian, exudyn.cUtilities; test models ANCFBeamGeometricallyExactComparisonTest.py,
-ANCFThinPlateRotationTest.py. Concept: [design/symmetricBasis.md](../dev/design/symmetricBasis.md).
+ANCFThinPlateRotationTest.py. Concept: [internals/symmetricBasis.md](../dev/internals/symmetricBasis.md).
 [log](exudynRevisionLog2026c.md#rg11-8-8)
 
 #### **CLOSED_RG11.8.9** Warn when the initial velocities do not fulfill the constraints
@@ -1461,7 +1461,7 @@ CLOSED 2026-10-11 (#2970): the titles in pybindEmitter and autoGenerateHelper; t
 ### **CLOSED_RG11.11** Let contributors propose issues and resolutions without a conflict in the version
 
 #3083 (maintainer 2026-10-24): contributors cannot raise issues, as the numbers and the version are the maintainer's;
-proposals that the maintainer's next raise raises first, and a mechanism for merging. [design](../dev/design/contributions.md)
+proposals that the maintainer's next raise raises first, and a mechanism for merging. [WORKFLOW.md](../dev/WORKFLOW.md)
 
 #### **CLOSED_RG11.11.1** Proposed issues: exudev issue propose and add-proposed, raised before every raise
 
@@ -1478,6 +1478,14 @@ merge, apply-proposed deliberate with a note at every resolve): propose-resoluti
 CLOSED 2026-10-25 (#3084, maintainer 2026-10-25): `.github/workflows/contribution.yml` runs `checkIssues.py
 --contribution` against the base branch. [log](exudynRevisionLog2026c.md#rg11-11-3)
 
+### **CLOSED_RG11.12** Distribute the design notes of the closed steps into the documentation
+
+CLOSED 2026-10-25 (#3097; maintainer 2026-10-25: what is implemented goes into the docs, a merged note keeps the
+implemented state and the decisions only, docs/dev/internals/, closed notes to tmp/delete/, symbolic a place of its own
+in the manual): docs/dev/internals/ symbolic, userFunctions, userItems, systemUtilities, symmetricBasis;
+docs/manual/symbolicUserFunctions.md; the scripts in tools/benchmarks; WORKFLOW.md §8.4 the rule for design notes.
+[log](exudynRevisionLog2026c.md#rg11-12)
+
 ## **OPEN_RG12** Symbolic
 
 `exudyn.symbolic` and its user functions (maintainer 2026-10-12): the interface of the symbolic user functions was the
@@ -1486,7 +1494,7 @@ access to the MainSystem, before symbolic user items (RG7.8) are built on it.
 
 ### **CLOSED_RG12.1** Describe the status of exudyn.symbolic and its user functions
 
-CLOSED 2026-10-16 (#2981): [design/symbolicStatus.md](../dev/design/symbolicStatus.md) - recording, the expression
+CLOSED 2026-10-16 (#2981): [internals/symbolic.md](../dev/internals/symbolic.md) - recording, the expression
 types, the 30 signatures, what is missing (matrix results, MainSystem access, matrix functions, parallel evaluation),
 the tests. [log](exudynRevisionLog2026c.md#rg12-5)
 
@@ -1494,7 +1502,7 @@ the tests. [log](exudynRevisionLog2026c.md#rg12-5)
 
 #2982. Per signature: arguments, return types, the transfer to C++, against the Python user functions.
 
-Measured 2026-10-18 (open for RG12.2.2): 45 user functions in 24 signatures, 39 with a symbolic version (docs/dev/design/userFunctionInterfaces.py);
+Measured 2026-10-18 (open for RG12.2.2): 45 user functions in 24 signatures, 39 with a symbolic version (tools/benchmarks/userFunctionInterfaces.py);
 one representative per class measured against 1.13.6 (perfUserFunctions.py with rigid6, ode1x6, mass6, preStep): no
 Exudyn allocation per call, symbolic 5 to 44 times faster than Python; userFunctionBoundary.md section 13.
 [log](exudynRevisionLog2026c.md#rg12-2)
@@ -1532,7 +1540,7 @@ decision, info document D18): values are recomputed; the symbolic rigid body is 
 
 #3048 (maintainer 2026-10-20): an automatic value per tree node, statements and loops, variables by hand, others; the
 scope of variables; whether the C++ items can be recorded. CLOSED 2026-10-20:
-[symbolicIntermediateValues.md](../dev/design/symbolicIntermediateValues.md) recommends a flat evaluation of the
+[internals/symbolic.md](../dev/internals/symbolic.md) recommends a flat evaluation of the
 recorded graph (the force of userRigidBodyTest.py: 122 nodes, 1171 operations as a tree), and finds the connectors,
 joints and ANCF elements recordable through their AD templates; waiting for the decision.
 [log](exudynRevisionLog2026c.md#rg12-2-5)
@@ -1560,7 +1568,7 @@ userFunctionBoundary.md section 11 are done.
 #### **CLOSED_RG12.3.1** Pre-analyze the allocations of vectors at the C++/Python boundary of the user functions
 
 CLOSED 2026-10-15 (#2996 stays open for the options; maintainer: Python user functions run serially, no GIL
-question): [design/userFunctionBoundary.md](../dev/design/userFunctionBoundary.md). 14 of 26 user function signatures
+question): [internals/userFunctions.md](../dev/internals/userFunctions.md). 14 of 26 user function signatures
 take `StdVector`; about a dozen heap allocations per call, most of them copies by value; a symbolic call with vectors
 0.31 microseconds against 0.04 with scalars, Python lists (not numpy) 0.25 plus 25 ns per value. Options A to E,
 proposal: #2998, then A, then C with RG7.8, D as a decision of its own. [log](exudynRevisionLog2026c.md#rg12-3-1)
@@ -1574,7 +1582,7 @@ tests under AddressSanitizer, test model symbolicVectorUserFunctionTest.py (10 c
 #### **CLOSED_RG12.3.3** Propose the vector and matrix classes and the call of the user functions for Python and symbolic
 
 CLOSED 2026-10-16 (#2996 stays open for the steps; maintainer: no allocation on the Exudyn side in both, the symbolic
-path first): [design/userFunctionBoundary.md](../dev/design/userFunctionBoundary.md) sections 5 to 11 - read-only
+path first): [internals/userFunctions.md](../dev/internals/userFunctions.md) sections 5 to 11 - read-only
 views (`LinkedDataVector`/`LinkedDataMatrix`) as arguments, `ResizableVector`/`ResizableMatrix` as results, a
 generated `Evaluate` per signature that dispatches on the kind, symbolic named variables that link and nodes that
 evaluate into their own buffers, numpy views for Python, the user items on top. Steps 1-5 in section 11, for decision.
@@ -1744,7 +1752,7 @@ slices of matrices. [log](exudynRevisionLog2026c.md#rg12-8)
 
 #### **CLOSED_RG12.47.1** Analyse which functions are useful and what fails, and recommend the module
 
-CLOSED 2026-10-23 (#3069): [symbolicUtilities.md](../dev/design/symbolicUtilities.md) - 21 functions, the shared math names, what fails (cMath and math on symbolic values, IfThenElse with a number, no cross product), numpy records too; recommended exudyn.symbolicUtilities with functions=exudyn.symbolic and three helpers. Waiting for the decisions. [log](exudynRevisionLog2026c.md#rg12-47-1)
+CLOSED 2026-10-23 (#3069): [internals/symbolic.md](../dev/internals/symbolic.md) - 21 functions, the shared math names, what fails (cMath and math on symbolic values, IfThenElse with a number, no cross product), numpy records too; recommended exudyn.symbolicUtilities with functions=exudyn.symbolic and three helpers. Waiting for the decisions. [log](exudynRevisionLog2026c.md#rg12-47-1)
 
 #### **CLOSED_RG12.47.2** Write the module and its test model against cUtilities
 
@@ -1794,7 +1802,7 @@ the optimization belongs to the expressions, as a function with levels and mergi
 
 #### **CLOSED_RG12.49.1** Evaluate the simplification and the merging, and propose
 
-CLOSED 2026-10-25 (#3085): [symbolicFlatProgramOptimization.md](../dev/design/symbolicFlatProgramOptimization.md) -
+CLOSED 2026-10-25 (#3085): [internals/symbolic.md](../dev/internals/symbolic.md) -
 numbers are folded when recording already; 20 % of the operations of userRigidBodyTest.py are duplicates, 7 of the 16
 operations of a numpy object product trivial; proposed: merging by class and operand slots (any depth, the same bits)
 and the rules, in FlatProgram::Build with a switch; waiting for the decision. [log](exudynRevisionLog2026c.md#rg12-49)
@@ -1836,11 +1844,11 @@ function that reads bool() of a symbolic value.
 Maintainer 2026-10-25: GetFlatProgram for expressions; the evaluation graph exported as text or another format, to
 sympy; a symbolic assembly of a model of symbolic user items, for control. Decided 2026-10-25: the formats 'Python',
 'symbolic', 'numpy', 'sympy', flatten, exudyn/misc/symbolicExport.py, the speed measured; the system model later, in
-its own design file. [design](../dev/design/symbolicExport.md)
+its own design file. [internals/symbolic.md](../dev/internals/symbolic.md)
 
 #### **CLOSED_RG12.50.1** Evaluate the flat program of expressions, the export formats and the assembly, and propose
 
-CLOSED 2026-10-25 (#3086): [symbolicExport.md](../dev/design/symbolicExport.md) - esym.GetFlatProgram for expressions
+CLOSED 2026-10-25 (#3086): [internals/symbolic.md](../dev/internals/symbolic.md) - esym.GetFlatProgram for expressions
 needs no function concept; a Python structure of the operations as the export, writers to Python source and sympy;
 SymbolicSystem(mbs) by the local-to-global maps, the connectors through sympy, which differentiates the marker
 functions; waiting for the decision. [log](exudynRevisionLog2026c.md#rg12-50)
@@ -1869,7 +1877,7 @@ CLOSED 2026-10-25: moved to RG12.51.
 
 Maintainer 2026-10-25: from a model built of user items with symbolic user functions, the equations of motion as one
 symbolic program - mass matrix, forces, constraints - for control, linearization and code generation; first ideas in
-[symbolicExport.md](../dev/design/symbolicExport.md) (its first version, section 7). After the symbolic steps of RG12
+the first version of docs/dev/design/symbolicExport.md, section 7, in git at commit 9790d8c5. After the symbolic steps of RG12
 are completed.
 
 #### **OPEN_RG12.51.1** Design the symbolic system model, in its own design file

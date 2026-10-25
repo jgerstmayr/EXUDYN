@@ -131,34 +131,8 @@ Items whose behaviour is written in user functions - a body, a node, a connector
   it for later must copy it, `q.copy()`; writing into it raises - return a new vector instead.
 - **Results**: a vector is returned as numpy array or as list; a numpy array is copied in one pass.
 - **Symbolic user functions**: `exudyn.advancedUtilities.CreateSymbolicUserFunction` records the same Python function
-  as an expression, which C++ evaluates without calling Python - at about the cost of the built-in force laws. The
-  operators and numpy's functions mean the same for symbolic vectors and matrices as for numpy arrays - `a.dot(b)`,
-  `a @ b`, `K @ q`, `np.multiply(a, b)`, `a / s`, `np.sin(x)` - so that one function serves both; what numpy defines
-  differently raises a TypeError: `*` of two symbolic vectors or with a symbolic matrix (numpy multiplies the
-  components) and `==` of two vectors (#3015), and so does a conversion to float while recording, `math.sin(x)` or
-  `float(x)`, which would record a constant - `np.sin(x)` and `esym.sin(x)` record (#3017).`exudyn.special.deprecations.symbolicStarProduct = True` makes `*` the
-  scalar and matrix product, as before version 1.13.115, for the transition; `*` is to become the product of the
-  components, as in numpy (#3016).
-- **How a symbolic function is evaluated**: the recording is a graph, in which a value that the Python function uses
-  several times - a number `c = esym.cos(q[1])`, a matrix `G` in `G.T @ J @ G` - is one node. After the recording it
-  is sorted into a list of operations, and each call computes every operation once, in this order; nothing is kept
-  from one call to the next. `symbolicFunction.GetFlatProgram()` gives the list as text, one line per operation -
-  `t5 = cos(q[1])`, `t20 = t19.T` -, and `symbolicFunction.flatEvaluation = False` evaluates the recording as a tree
-  instead, with the same results (#3053, #3054). The same value written twice in the Python function -
-  `esym.cos(q[2])` in two places - is merged into one node, and `1*x`, `x+0` and operations of numbers are removed,
-  by `exudyn.symbolic.Optimize`, which `CreateSymbolicUserFunction` applies with `optimize=True` (the default); the
-  results stay the same bit for bit; `optimize=dict(level=2)` also removes `0*x`, `x-x` and combines numbers, which may
-  lose a `nan` and change the last bit (#3085). `IfThenElse` computes both branches in the flat program and takes the
-  one its condition selects (#3089).
-- **A recording as code**: `symbolicFunction.GetFlatProgram(format='numpy')` writes it as a Python function with the
-  arguments of the user function, which runs without Exudyn; `format='symbolic'` writes it with `exudyn.symbolic`, so
-  that it is recorded again, and `format='sympy'` builds sympy expressions, from which sympy writes C, C++, Fortran,
-  Matlab or LaTeX and computes derivatives. `flatten=False` writes the result as one expression instead of one line per
-  operation. `exudyn.symbolic.GetFlatProgram(expressions, ...)` does the same for expressions of named variables, and
-  `ToString(format=...)` of an expression gives the expression alone. The formats compute what Exudyn computes:
-  `mod` is the C `fmod`, `round` rounds halves away from zero and a comparison is the number 0 or 1. The program is
-  written by `exudyn.misc.symbolicExport` from `GetFlatProgramData()`, a Python structure of the operations, entry k
-  being the `tK` of the text (#3087, #3088).
+  as an expression, which C++ evaluates without calling Python - at about the cost of the built-in force laws, and in
+  the threads of the parallel loops; how to write and check one is {ref}`sec-symbolicuserfunctions`.
 
 `exudyn.special.deprecations.userFunctionListArguments = True` gives the vector and matrix arguments as lists, as before
 version 1.13.104, for scripts that change them or add lists to them; it is deprecated and removed in 2031 (#3008).

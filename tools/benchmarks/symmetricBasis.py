@@ -1,5 +1,5 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN design script (#2228, docs/dev/design/symmetricBasis.md)
+# This is an EXUDYN design script (#2228, docs/dev/internals/symmetricBasis.md)
 #
 # Details:  The symmetric basis of two non-parallel vectors a, b - the slope vectors of NodePointSlope12 and of the
 #           other 3D nodes with two slopes - and the rotation Jacobian G with omega = G [a_t; b_t], in Python as the
@@ -11,7 +11,7 @@
 #           decomposition, G equal to the numerical derivative of the basis, and the comparison with what
 #           NodePointSlope12 computes now (Gram-Schmidt for the rotation, a least squares fit for omega).
 #
-# Usage:    python docs/dev/design/symmetricBasis.py
+# Usage:    python tools/benchmarks/symmetricBasis.py
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-13
