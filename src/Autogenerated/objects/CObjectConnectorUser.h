@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  23:57:46 (last modified)
+* @date         2026-10-26  19:46:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,6 +32,7 @@ class CObjectConnectorUserParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers of any type, at least one; the user function gets them in this order
+    Marker::Type requestedMarkerType;             //!< AUTO: the types every marker must provide, checked at Assemble, e.g. exu.MarkerType.Position, or exu.MarkerType.Position | exu.MarkerType.Orientation for torques; exu.MarkerType._None: markers of any type (#3105)
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102)
     Vector parameters;                            //!< AUTO: the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector
@@ -41,6 +42,7 @@ public: // AUTO:
     CObjectConnectorUserParameters()
     {
         markerNumbers = ArrayIndex();
+        requestedMarkerType = Marker::_None;
         nodeNumber = EXUstd::InvalidIndex;
         parameters = Vector();
         activeConnector = true;
@@ -164,10 +166,10 @@ public: // AUTO:
         return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
     }
 
-    //! AUTO:  provide requested markerType for connector
+    //! AUTO:  the requestedMarkerType of the parameters (#3105)
     virtual Marker::Type GetRequestedMarkerType() const override
     {
-        return Marker::_None;
+        return parameters.requestedMarkerType;
     }
 
     //! AUTO:  Get type of object, e.g. to decide for loads, markers, ... which type of computation is needed

@@ -1,0 +1,15 @@
+{
+  "number": 3110,
+  "title": "SymbolicSystem: the mass matrix, forces and residual of a system of symbolic user items",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.51.2 (maintainer 2026-10-26: residual and sparse mass matrix both available, exudyn.symbolic and numpy first, exudyn/misc/symbolicSystem.py): kinds of objects with the same recordings, the local-to-global maps, the mass matrix as triplets or sparse matrix, the forces and the residual M q_tt - f, checked against MainSolverImplicitSecondOrder.",
+  "dateRaised": "2026-10-26",
+  "deadline": "2027-04-24",
+  "dateResolved": "2026-10-26 20:00",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.misc.symbolicSystem.SymbolicSystem(mbs): the objects with symbolic user functions (ObjectUserBody, ObjectGenericODE2) grouped in kinds of the same recordings, with the mass matrix as triplets, dense or scipy sparse matrix, the forces and the residual M q_tt - f, evaluated by exudyn.symbolic or numpy; equal to the solver's mass matrix and right-hand side.",
+  "resolvedInVersion": "1.13.218"
+}

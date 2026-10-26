@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.216.dev1
+- Exudyn version = 1.13.218.dev1
 - last change = 2026-10-26
-- Number of issues = 3110
-- Number of resolved issues = 2993 (216 in current version)
+- Number of issues = 3112
+- Number of resolved issues = 2995 (218 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` exudyn/misc/symbolicUserItems.py: user items with the interfaces of the built-in items (#3111)
+  - description: revision2026c step RG12.55 (maintainer 2026-10-26): a collection of user items with symbolic user functions whose creation has the same interface as the built-in items of itemInterface (a user rigid body as ObjectRigidBody, parameters the user item lacks refused or ignored with a note), so that the same systems are built with the same calls: at least mass point 3D, rigid body 3D, revolute, prismatic, spherical and distance joint, spring-damper, torsional spring-damper, sphere-sphere contact; first the list of what a good representation of multibody systems needs. Before the symbolic system model goes deeper.
+  - date raised: 2026-10-26
 - `IDEA` `HIGH EFF` `raised by: Claude-JG` The Jacobians of symbolic user functions by the automatic differentiation of exudyn.symbolic (#3108)
   - description: revision2026c step RG12.54 (maintainer 2026-10-26): instead of central differences, the Jacobian of a symbolic user function (position, rotation, constraint, residual) could be derived by esym.Diff - per coordinate q\[i\] and q\_t\[i\] it works now, but slowly; to be analyzed: a derivative as one more flat program, and whether n derivatives of a function of n arguments need a local stack of their own.
   - date raised: 2026-10-26
@@ -9047,9 +9050,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-26
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` MarkerBodyUser of type Coordinates, and user shapes for contact and flexible interfaces (#3106)
   - description: revision2026c step RG7.16 (maintainer 2026-10-26): markerType Coordinates with a coordinatesUserFunction returning the values and their Jacobian, for CoordinateSpringDamper, CoordinateConstraint and LoadCoordinate; then shapes defined by the user, such as a polynomial curve and a polynomial shell surface, for contact and flexible interfaces.
-  - date raised: 2026-10-26
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` ObjectConnectorUser and ObjectJointUser state the marker types they need, by a parameter markerType (#3105)
-  - description: revision2026c step RG7.15.8 (maintainer 2026-10-26): the user connector and the user joint take a parameter of exu.MarkerType, given at creation, saying which marker type their markers must provide (Position, Position\|Orientation, ...); Assemble checks the markers against it, and the user function can rely on it.
   - date raised: 2026-10-26
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.

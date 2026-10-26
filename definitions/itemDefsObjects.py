@@ -9407,7 +9407,9 @@ definitions.append(ItemDefinition(
 
     A force and a torque act as a load does: on the marker, in global coordinates. A function that the marker does not
     provide raises a ValueError naming the marker. The ConnectorMarker is valid during the call only; kept and used
-    later, it raises.
+    later, it raises. With `requestedMarkerType`, e.g. `exu.MarkerType.Position | exu.MarkerType.Orientation`,
+    Assemble refuses a marker that does not provide all of these types, so that the user function can rely on them
+    (#3105); the default `exu.MarkerType._None` takes markers of any type.
 
     #### Data coordinates and the post-Newton step
 
@@ -9460,6 +9462,10 @@ definitions.append(ItemDefinition(
             pythonName='markerNumbers',
             defaultValue='ArrayIndex()',
             description=r"""$[m_0,\,m_1,\,\ldots]\tp$list of markers of any type, at least one; the user function gets them in this order"""),
+        ItemParameter(type=TMarkerType, destination=DestComp+DestParam,
+            pythonName='requestedMarkerType',
+            defaultValue='Marker::_None',
+            description=r"""the types every marker must provide, checked at Assemble, e.g. exu.MarkerType.Position, or exu.MarkerType.Position | exu.MarkerType.Orientation for torques; exu.MarkerType._None: markers of any type (#3105)"""),
         ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
@@ -9510,7 +9516,8 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
-        ItemRequestedTypes('Marker', []),
+        dict(ItemRequestedTypes('Marker', [], description=r'the requestedMarkerType of the parameters (#3105)'),
+             implementation='return parameters.requestedMarkerType;'),
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
             pythonName='GetType',
             implementation='return CObjectType::Connector;',

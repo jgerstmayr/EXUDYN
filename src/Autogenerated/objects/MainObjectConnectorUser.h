@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  23:57:46 (last modified)
+* @date         2026-10-26  19:46:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -116,6 +116,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorUser->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "requestedMarkerType")) { cObjectConnectorUser->GetParameters().requestedMarkerType = (Marker::Type)py::cast<Index>(d["requestedMarkerType"]); }
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectConnectorUser->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "parameters")) { EPyUtils::FromPython(d["parameters"], cObjectConnectorUser->GetParameters().parameters); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorUser->GetParameters().activeConnector, "ObjectConnectorUser.activeConnector"); }
@@ -132,6 +133,7 @@ public: // AUTO:
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorUser->GetParameters().markerNumbers);
+        d["requestedMarkerType"] = (Marker::Type)cObjectConnectorUser->GetParameters().requestedMarkerType;
         d["nodeNumber"] = (NodeIndex)cObjectConnectorUser->GetParameters().nodeNumber;
         d["parameters"] = EPyUtils::ToPython(cObjectConnectorUser->GetParameters().parameters);
         d["activeConnector"] = (bool)cObjectConnectorUser->GetParameters().activeConnector;
@@ -147,6 +149,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorUser->GetParameters().markerNumbers)); } //! AUTO: get parameter
+        else if (parameterName.compare("requestedMarkerType") == 0) { return py::cast((Marker::Type)cObjectConnectorUser->GetParameters().requestedMarkerType); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectConnectorUser->GetParameters().nodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("parameters") == 0) { return EPyUtils::ToPython(cObjectConnectorUser->GetParameters().parameters); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorUser->GetParameters().activeConnector); } //! AUTO: get parameter
@@ -163,6 +166,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorUser->GetParameters().markerNumbers); } //! AUTO: set parameter
+        else if (parameterName.compare("requestedMarkerType") == 0) { cObjectConnectorUser->GetParameters().requestedMarkerType = (Marker::Type)py::cast<Index>(value); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectConnectorUser->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("parameters") == 0) { EPyUtils::FromPython(value, cObjectConnectorUser->GetParameters().parameters); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorUser->GetParameters().activeConnector, "ObjectConnectorUser.activeConnector"); } //! AUTO: set parameter

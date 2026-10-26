@@ -60,6 +60,8 @@ vectors for symbolic user functions, with `numpy`, `math` or `exudyn.cMath` nump
 user function, `exudyn.symbolic.GetFlatProgram(expressions, ...)` and `ToString(format=...)` of an expression write it
 as Python of numpy, exudyn.symbolic or sympy, which compute what Exudyn computes; `GetFlatProgramData()` gives the
 operations as a Python structure, and `exudyn.misc.symbolicExport` writes the formats from it (#3087, #3088).
+`exudyn.misc.symbolicSystem.SymbolicSystem(mbs)` evaluates the mass matrix (also sparse), the forces and the residual
+`M q_tt - f` of a system of user bodies and generic ODE2 objects with symbolic user functions (#3110).
 **`exudyn.symbolic.Optimize`** merges equal subexpressions of symbolic expressions into one node and removes `1*x`,
 `x+0` and operations of numbers, with the same results; `CreateSymbolicUserFunction` applies it by default
 (`optimize=True`), which computes a symbolic user function written for clarity about twice as fast (#3085). The flat

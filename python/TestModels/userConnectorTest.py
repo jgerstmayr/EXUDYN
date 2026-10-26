@@ -8,7 +8,7 @@
 #           GetBodyVelocity, ApplyBodyForce), against RigidBodySpringDamper and CartesianSpringDamper. (3) A ball
 #           resting on a simply supported ANCF cable: the contact searches the closest point on each element of the
 #           cable and acts there; the static solution carries the weight and deflects the cable as a point load
-#           does. (4) What a ConnectorMarker refuses.
+#           does. (4) What a ConnectorMarker refuses; a marker without the requestedMarkerType refused at Assemble.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-23
@@ -86,7 +86,8 @@ def RigidModel(isUser):
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground))
     if isUser:
         mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))
-        mbs.AddObject(ObjectConnectorUser(markerNumbers=[mGround, mBody], forceUserFunction=UFrigid))
+        mbs.AddObject(ObjectConnectorUser(markerNumbers=[mGround, mBody], forceUserFunction=UFrigid,
+                                          requestedMarkerType=exu.MarkerType.Position | exu.MarkerType.Orientation))
     else:
         mbs.AddObject(RigidBodySpringDamper(markerNumbers=[mGround, mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))],
                                             stiffness=np.zeros((6, 6)), damping=np.diag([0, 0, 0, dRot, dRot, dRot])))
@@ -236,12 +237,24 @@ for when in ['during', 'after']:
         refusedMessages.append(str(e))
     except Exception as e: #the solver reports the error of the user function as its own
         refusedMessages.append(str(e))
-refused = int(any('not of type Orientation' in m for m in refusedMessages)) + int(any('valid during that call only' in m for m in refusedMessages))
-exu.Print('(4) refused:', refused, 'of 2')
+#a position marker for a connector that requests Position and Orientation (#3105)
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+node = mbs.AddNode(NodePoint())
+mbs.AddObject(MassPoint(nodeNumber=node, mass=1))
+mbs.AddObject(ObjectConnectorUser(markerNumbers=[mbs.AddMarker(MarkerNodePosition(nodeNumber=node))], forceUserFunction=UFrefused,
+                                  requestedMarkerType=exu.MarkerType.Position | exu.MarkerType.Orientation))
+try:
+    mbs.Assemble()
+except Exception as e:
+    refusedMessages.append(str(e))
+refused = (int(any('not of type Orientation' in m for m in refusedMessages)) + int(any('valid during that call only' in m for m in refusedMessages))
+           + int(any("invalid type 'NodePosition'" in m for m in refusedMessages)))
+exu.Print('(4) refused:', refused, 'of 3')
 
 u = np.sum(springs[1]) + np.sum(rigid[1]) + middleContact[1]
 u += int(differenceSpring > 1e-10) + int(differenceRigid > 1e-10) + int(max(errorsCable[0:2]) > 1e-8)
-u += int(errorsCable[2] > 1e-2) + int(errorsCable[3] > 1e-5) + (2 - refused)
+u += int(errorsCable[2] > 1e-2) + int(errorsCable[3] > 1e-5) + (3 - refused)
 exu.Print('solution of userConnectorTest=', u)
 
 exu.sys['testResult'] = u

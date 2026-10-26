@@ -670,6 +670,7 @@ outcome: MarkerIndex MarkerIndex MarkerIndex !ExudynTypeError !ExudynTypeError M
 
 outcome: MarkerType MarkerType MarkerType !RuntimeError !RuntimeError MarkerType !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError MarkerType MarkerType !RuntimeError !RuntimeError
   MarkerBodyUser: providedMarkerType(class,dict,set)
+  ObjectConnectorUser: requestedMarkerType(class,dict,set)
 
 outcome: NodeIndex NodeIndex
   Node1D: (defaults)
@@ -1200,7 +1201,7 @@ outcome: str=default
   ObjectConnectorRollingDiscPenalty: Vcolor(omit) VdiscWidth(omit) Vshow(omit) activeConnector(omit) contactDamping(omit) contactStiffness(omit) discAxis(omit) dryFriction(omit) dryFrictionAngle(omit) dryFrictionProportionalZone(omit) markerNumbers(omit) nodeNumber(omit) planeNormal(omit) rollingViscousFriction(omit) useLinearProportionalZone(omit) viscousFriction(omit)
   ObjectConnectorSpringDamper: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) damping(omit) force(omit) markerNumbers(omit) referenceLength(omit) springForceUserFunction(omit) stiffness(omit) velocityOffset(omit)
   ObjectConnectorTorsionalSpringDamper: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) damping(omit) markerNumbers(omit) nodeNumber(omit) offset(omit) rotationMarker0(omit) rotationMarker1(omit) springTorqueUserFunction(omit) stiffness(omit) torque(omit) velocityOffset(omit)
-  ObjectConnectorUser: Vshow(omit) activeConnector(omit) forceUserFunction(omit) markerNumbers(omit) nodeNumber(omit) parameters(omit) postNewtonStepUserFunction(omit)
+  ObjectConnectorUser: Vshow(omit) activeConnector(omit) forceUserFunction(omit) markerNumbers(omit) nodeNumber(omit) parameters(omit) postNewtonStepUserFunction(omit) requestedMarkerType(omit)
   ObjectContactCircleCable2D: Vcolor(omit) VdrawSize(omit) Vshow(omit) VshowContactCircle(omit) activeConnector(omit) circleRadius(omit) contactStiffness(omit) markerNumbers(omit) nodeNumber(omit) numberOfContactSegments(omit) offset(omit)
   ObjectContactConvexRoll: Vcolor(omit) Vshow(omit) activeConnector(omit) coefficientsHull(omit) contactDamping(omit) contactStiffness(omit) dynamicFriction(omit) exponentialDecayStatic(omit) frictionProportionalZone(omit) markerNumbers(omit) nodeNumber(omit) rollLength(omit) staticFrictionOffset(omit) viscousFriction(omit)
   ObjectContactCoordinate: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) contactDamping(omit) contactStiffness(omit) contactStiffnessExponent(omit) impactModel(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) offset(omit) restitutionCoefficient(omit)

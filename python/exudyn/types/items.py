@@ -1001,6 +1001,7 @@ items = {
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "connector's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'list of markers of any type, at least one; the user function gets them in this order'},
+      'requestedMarkerType': {'type': 'MarkerType', 'size': '', 'range': '', 'default': 'exudyn.MarkerType._None', 'mustBeGiven': False, 'description': 'the types every marker must provide, checked at Assemble, e.g. exu.MarkerType.Position, or exu.MarkerType.Position | exu.MarkerType.Orientation for torques; exu.MarkerType._None: markers of any type (#3105)'},
       'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102)'},
       'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout'},
       'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector'},

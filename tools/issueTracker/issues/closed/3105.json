@@ -2,10 +2,14 @@
   "number": 3105,
   "title": "ObjectConnectorUser and ObjectJointUser state the marker types they need, by a parameter markerType",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "revision2026c step RG7.15.8 (maintainer 2026-10-26): the user connector and the user joint take a parameter of exu.MarkerType, given at creation, saying which marker type their markers must provide (Position, Position|Orientation, ...); Assemble checks the markers against it, and the user function can rely on it.",
   "dateRaised": "2026-10-26",
-  "deadline": "2027-04-24"
+  "deadline": "2027-04-24",
+  "dateResolved": "2026-10-26 20:00",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectConnectorUser has a parameter requestedMarkerType (exu.MarkerType, default _None for markers of any type), e.g. exu.MarkerType.Position | exu.MarkerType.Orientation; Assemble refuses markers that do not provide these types. ObjectJointUser always takes two rigid markers and needs no such parameter.",
+  "resolvedInVersion": "1.13.217"
 }

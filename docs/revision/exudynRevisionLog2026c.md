@@ -3547,3 +3547,41 @@ mbs.SolutionViewer() in several test models, so the viewer refuses; ObjectJointU
   term by term against the solver API and in time against SolveDynamic. Proposed in exudyn/misc/symbolicSystem.py,
   not systemUtilities.py, whose rule keeps the solver functions in solver.py - decision 3.
 - Five sub-steps and four decisions proposed; RG12.51.2 waits for them.
+
+<a id="rg7-15-8"></a>
+### RG7.15.8 — requestedMarkerType of ObjectConnectorUser (2026-10-26, #3105)
+- ObjectConnectorUser.requestedMarkerType, of the parameter type MarkerType of #3103, default exu.MarkerType._None
+  (markers of any type, as before); GetRequestedMarkerType returns it, so the check of CSystem refuses at Assemble a
+  marker that lacks one of the types ("... contains marker with invalid type 'NodePosition', but expected marker type
+  'PositionOrientation'"). The default Marker::_None is written as exudyn.MarkerType._None in Python.
+- ObjectJointUser gets no such parameter: it computes on the rigid connector interface (ItemConnectorInterface('Rigid'))
+  and requests Position | Orientation; no other value would work.
+- userConnectorTest.py: the rigid connector requests Position | Orientation, a position marker under that request is
+  refused; refusals 2 -> 3, result unchanged. parameterConversionTestReference.txt re-recorded.
+- Docs: the definition (the paragraph in "The markers in the user function"), userItems.md.
+
+<a id="rg12-51-2"></a>
+### RG12.51.2 — SymbolicSystem of user bodies and generic ODE2 objects (2026-10-26, #3110)
+- The decisions of the design (maintainer 2026-10-26) recorded in docs/dev/design/symbolicSystem.md §7/§8 and in the
+  plan: RG12.51.3-.6, RG12.54.1-.2 and RG12.55 (#3111, the user items with the interfaces of the built-in items, before
+  RG12.51.4).
+- python/exudyn/misc/symbolicSystem.py: SymbolicSystem(mbs, evaluator='symbolic' | 'numpy') after Assemble. The objects
+  are grouped in kinds by object type and the text of the flat programs of their recordings; a SymbolicKind holds the
+  recordings, the object numbers, the LTG table (objects x local coordinates) and the parameters. ObjectUserBody with
+  symbolic massMatrixUserFunction (required) and forceUserFunction; ObjectGenericODE2 with M, K, D, the force vector and
+  symbolic user functions; objects without coordinates are skipped; a Python user function, other objects with
+  coordinates and loads are refused with the list. The evaluator 'symbolic' calls the recording (Evaluate), 'numpy' the
+  function symbolicExport.ToFunction writes from it, once per kind.
+- MassMatrixTriplets (rows, columns, values of the nonzero local entries), MassMatrix(sparse=False | True, scipy
+  csr_matrix, an ImportError naming scipy otherwise), Forces (the ODE2 part of the right-hand side: f + f_user - K q -
+  D q_t for GenericODE2), Residual (M q_tt - f, object by object without the global matrix).
+- python/TestModels/symbolicSystemTest.py: 3 kinds - two user bodies with one recording (nonlinear spring, damping),
+  one with a mass matrix depending on q and a force depending on t, a GenericODE2 with a symbolic force -, 11 ODE2
+  coordinates; at 3 random states mass matrix, forces and residual by both evaluators and the sparse mass matrix equal
+  ComputeMassMatrix/ComputeODE2RHS of MainSolverImplicitSecondOrder to 4.4e-16; the refusals. Reference 3.
+- The user functions of the test are recorded only, so they use exudyn.symbolic functions (esym.sin): exudyn.cMath
+  takes no symbolic arguments, and checkPythonMath refuses np.sin.
+- Docs: utilityDocsModel.py lists the module (its page generated), revisions.md, internals/symbolic.md. A docstring
+  section "Attributes:" is not one of the parsed sections (Args, Returns, Note, Example): written as Note.
+- The test suite passes (222 test models, 98 mini examples), the docs build; pytest -n 8 passes except the flaky
+  browser test of test_issueTracker.py (a timeout), which passes alone.

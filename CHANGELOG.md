@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 212 | 1.13.216 |
+| 1.13 | Newborn | 214 | 1.13.218 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.218** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem: the mass matrix, forces and residual of a system of symbolic user items (#3110)
+  - description: revision2026c step RG12.51.2 (maintainer 2026-10-26: residual and sparse mass matrix both available, exudyn.symbolic and numpy first, exudyn/misc/symbolicSystem.py): kinds of objects with the same recordings, the local-to-global maps, the mass matrix as triplets or sparse matrix, the forces and the residual M q\_tt - f, checked against MainSolverImplicitSecondOrder.
+  - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem(mbs): the objects with symbolic user functions (ObjectUserBody, ObjectGenericODE2) grouped in kinds of the same recordings, with the mass matrix as triplets, dense or scipy sparse matrix, the forces and the residual M q\_tt - f, evaluated by exudyn.symbolic or numpy; equal to the solver's mass matrix and right-hand side.
+  - date resolved: **2026-10-26 20:00**, date raised: 2026-10-26
+- **1.13.217** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorUser and ObjectJointUser state the marker types they need, by a parameter markerType (#3105)
+  - description: revision2026c step RG7.15.8 (maintainer 2026-10-26): the user connector and the user joint take a parameter of exu.MarkerType, given at creation, saying which marker type their markers must provide (Position, Position\|Orientation, ...); Assemble checks the markers against it, and the user function can rely on it.
+  - **notes:** ObjectConnectorUser has a parameter requestedMarkerType (exu.MarkerType, default \_None for markers of any type), e.g. exu.MarkerType.Position \| exu.MarkerType.Orientation; Assemble refuses markers that do not provide these types. ObjectJointUser always takes two rigid markers and needs no such parameter.
+  - date resolved: **2026-10-26 20:00**, date raised: 2026-10-26
 - **1.13.216** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Design file for the symbolic system models (#3109)
   - description: revision2026c step RG12.51.1 (maintainer 2026-10-26): docs/dev/design/symbolicSystem.md - the assembly by the local-to-global maps of systemData, sparse matrices, the export of the equations of motion and their evaluation by Numba or on the GPU with explicit integration (residuals per object), an implicit generalized-alpha solver in Python with the settings of SimulationSettings, compared against the internal solvers, and the Jacobians by esym.Diff.
   - **notes:** docs/dev/design/symbolicSystem.md: the design of symbolic system models - per object flat programs grouped by kind, assembly by the local-to-global maps into sparse triplets, export and Numba/GPU evaluation with explicit integration from residuals, a generalized-alpha solver in Python checked against the internal solvers, and Jacobians by symbolic differentiation; sub-steps and decisions proposed.

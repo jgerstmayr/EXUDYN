@@ -170,6 +170,7 @@ namedDefaultValues = {
     #0 rather than the enum, so that an unset type gives a readable error and not an unreadable one
     'OutputVariableType::_None': ('0', 'OutputVariableType::_None'),
     'Marker::Position': ('exudyn.MarkerType.Position', 'MarkerType.Position'),
+    'Marker::_None': ('exudyn.MarkerType._None', 'MarkerType._None'),
     #a C++ pointer member; it is not in the Python interface, and the page says what the C++ says
     'nullptr': ('nullptr', 'nullptr'),
 }

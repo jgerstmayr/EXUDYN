@@ -5738,6 +5738,8 @@ class ObjectConnectorUser:
 
         markerNumbers: list of markers of any type, at least one; the user function gets them in this order; type: ArrayMarkerIndex
 
+        requestedMarkerType: the types every marker must provide, checked at Assemble, e.g. exu.MarkerType.Position, or exu.MarkerType.Position | exu.MarkerType.Orientation for torques; exu.MarkerType._None: markers of any type (#3105)
+
         nodeNumber: node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102); type: NodeIndex
 
         parameters: the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout; type: array_like
@@ -5753,14 +5755,13 @@ class ObjectConnectorUser:
     Notes:
         Object has/provides the following types: ``Connector``
 
-        Requested Marker type: ``_None``
-
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [], nodeNumber = exudyn.InvalidIndex(), parameters = [], activeConnector = True, forceUserFunction: Union[ObjectConnectorUserForceUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorUserPostNewtonStepUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumbers = [], requestedMarkerType = exudyn.MarkerType._None, nodeNumber = exudyn.InvalidIndex(), parameters = [], activeConnector = True, forceUserFunction: Union[ObjectConnectorUserForceUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorUserPostNewtonStepUserFunction, int] = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
+        self.requestedMarkerType = requestedMarkerType
         self.nodeNumber = nodeNumber
         self.parameters = CheckForValidNumpyArray(parameters)
         self.activeConnector = activeConnector
@@ -5772,6 +5773,7 @@ class ObjectConnectorUser:
         yield 'objectType', 'ConnectorUser'
         yield 'name', self.name
         yield 'markerNumbers', self.markerNumbers
+        yield 'requestedMarkerType', self.requestedMarkerType
         yield 'nodeNumber', self.nodeNumber
         yield 'parameters', self.parameters
         yield 'activeConnector', self.activeConnector

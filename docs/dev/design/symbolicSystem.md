@@ -141,24 +141,23 @@ system; the functions that need a solver - `ComputeLinearizedSystem`, `ComputeOD
 (docs/dev/internals/systemUtilities.md §1). The solver works on a `SymbolicSystem`, not on `mbs`, so the proposal is
 `exudyn/misc/symbolicSystem.py` for the model and its solver together; see decision 3.
 
-## 7. Proposed sub-steps of RG12.51
+## 7. Sub-steps of RG12.51 (as planned after the decisions)
 
-- RG12.51.2: `SymbolicSystem(mbs)` for ObjectGenericODE2 and ObjectUserBody: kinds, LTG tables, residual and mass
-  matrix as sparse triplets; the term check against the solver API (section 6, check 1).
-- RG12.51.3: the generalized-alpha solver in Python with the Jacobians by `esym.Diff` (option B); the time-integration
-  check against `SolveDynamic`.
-- RG12.51.4: the evaluation by Numba per kind, an explicit integrator with a constant mass matrix and the matrix-free
-  product; a measurement against `SolveDynamic` with `ExplicitEuler`/`RK44`.
-- RG12.51.5: the export (G1): the programs, the sparsity pattern and the scatter as C++ and as Python, with a small
-  driver that evaluates them outside Exudyn.
-- RG12.51.6: joints and connectors through the marker programs, after RG12.54 gives option D.
+- RG12.51.2 (done, #3110): `SymbolicSystem(mbs, evaluator)` for ObjectGenericODE2 and ObjectUserBody: kinds, LTG
+  tables, mass matrix as triplets or (scipy) sparse matrix, forces and residual; equal to the solver API.
+- RG12.51.3: the generalized-alpha solver in Python with the Jacobian column by column by `esym.Diff` (RG12.54.1); the
+  time-integration check against `SolveDynamic`.
+- RG12.55 first: user items with the interfaces of the built-in items (`exudyn/misc/symbolicUserItems.py`).
+- RG12.51.4: those user items in the system - rigid bodies, joints, connectors, loads, the constraints.
+- RG12.51.5: the export (G1): the programs, the sparsity pattern and the scatter as C++ and as Python.
+- RG12.51.6: the evaluation by Numba for the GPU, an explicit integrator with a constant mass matrix and the
+  matrix-free product.
 
-## 8. Decisions needed
+## 8. Decisions (maintainer 2026-10-26)
 
-1. The residual $\rv_e(\qv, \dot\qv, \ddot\qv)$ as the basic term, the mass matrix derived from it - or the mass matrix
-   and the force as separate programs as today (both are exported in G1 either way).
-2. Numba as the first evaluator (optional dependency) - or plain numpy code first.
-3. The place: `exudyn/misc/symbolicSystem.py` for model and solver - or the solver in `systemUtilities.py` as
-   suggested, or in `solver.py`.
-4. Whether option D of section 5 (symbolic differentiation into a new program) is the target of RG12.54, with C left
-   for later.
+1. Both available: the residual for the implicit integrators, which need only it, and the (sparse) mass matrix, needed
+   e.g. to invert it.
+2. exudyn.symbolic and numpy first; Numba for the GPU.
+3. `exudyn/misc/symbolicSystem.py` for model and solver, for now: special, not for the broad use, of large potential.
+4. Option D is the target of RG12.54; before it a Jacobian without a new program, column by column by `esym.Diff`
+   (RG12.54.1), which stays as an option and as the comparison.

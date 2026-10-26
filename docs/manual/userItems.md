@@ -90,7 +90,9 @@ The forceUserFunction of ObjectConnectorUser gets `markers`, one {ref}`Connector
 `GetCoordinates()`, and for a body marker `GetBodyPosition(localPosition)` anywhere on the body - and applies forces:
 `ApplyForce(force)`, `ApplyTorque(torque)`, `ApplyBodyForce(force, localPosition)` and `ApplyCoordinateForces(forces)`.
 A contact can so search the closest point on a flexible body and act there; userConnectorTest.py rests a ball on an
-ANCF cable this way. A ConnectorMarker is valid during the call only.
+ANCF cable this way. A ConnectorMarker is valid during the call only. `requestedMarkerType`, e.g.
+`exu.MarkerType.Position | exu.MarkerType.Orientation`, makes Assemble refuse markers that do not provide these types
+(#3105). ObjectJointUser needs no such parameter: it always takes two rigid markers.
 
 With a NodeGenericData as `nodeNumber`, the user functions get its `dataCoordinates`, the state of a contact or of
 friction, and a `postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep,

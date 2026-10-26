@@ -198,6 +198,7 @@ symbolicModuleTest
 symbolicNumpyCompatibilityTest
 symbolicOptimizeTest
 symbolicSparseMatrixTest
+symbolicSystemTest
 symbolicUserFunctionCopyTest
 symbolicUserFunctionSignaturesTest
 symbolicUserFunctionTest

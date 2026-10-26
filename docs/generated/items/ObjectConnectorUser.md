@@ -20,6 +20,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorUser':
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [] | (symbol: $[m_0,\,m_1,\,\ldots]\tp$) list of markers of any type, at least one; the user function gets them in this order |
+| **requestedMarkerType** | MarkerType |  | MarkerType._None | the types every marker must provide, checked at Assemble, e.g. exu.MarkerType.Position, or exu.MarkerType.Position \| exu.MarkerType.Orientation for torques; exu.MarkerType._None: markers of any type (#3105) |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102) |
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector |
@@ -66,7 +67,9 @@ and applies forces, each added to what the function applied before in the same c
 
 A force and a torque act as a load does: on the marker, in global coordinates. A function that the marker does not
 provide raises a ValueError naming the marker. The ConnectorMarker is valid during the call only; kept and used
-later, it raises.
+later, it raises. With `requestedMarkerType`, e.g. `exu.MarkerType.Position | exu.MarkerType.Orientation`,
+Assemble refuses a marker that does not provide all of these types, so that the user function can rely on them
+(#3105); the default `exu.MarkerType._None` takes markers of any type.
 
 ### Data coordinates and the post-Newton step
 
