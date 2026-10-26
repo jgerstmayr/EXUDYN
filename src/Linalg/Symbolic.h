@@ -55,6 +55,15 @@ struct FlatValue
 };
 class ExpressionNamedReal;
 
+//! the variable by which Diff differentiates (#3115): a named scalar (component -1), or the component of a named vector,
+//! row*columns+column of a named matrix; a variable is identified by its node, not by its name
+struct DiffSeed
+{
+	const void* variable = nullptr;
+	Index component = -1;
+	DiffSeed(const void* variableInit, Index componentInit = -1) : variable(variableInit), component(componentInit) {}
+};
+
 
 //! base class for expression tree
 class ExpressionBase
@@ -83,7 +92,7 @@ public:
 	// Evaluate the expression tree
 	virtual Real Evaluate() const = 0;
 	//Build derivative w.r.t. var
-	virtual Real Diff(ExpressionNamedReal* var) const = 0;
+	virtual Real Diff(const DiffSeed& var) const = 0;
 	virtual STDstring ToString() const = 0; // Convert the expression tree to a string
 
 	//the flat evaluation (#3053): a node computes its value from the values of its operands, which the flat program has
@@ -162,6 +171,13 @@ public:
 	//! the value, evaluated into the memory of this node (buffer), which is kept for the next evaluation: no allocation
 	//! once the sizes are set; valid until the node is evaluated again (#3006)
 	virtual const ResizableConstVector& EvaluateRef() const = 0;
+	//! the derivative by a seed at the current values, into the derivative memory of this node (diffBuffer), kept as
+	//! the buffer of EvaluateRef; valid until the node is differentiated again (#3115)
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const
+	{
+		CHECKandTHROWstring(STDstring("symbolic Diff: the vector operation '") + FlatName() + "' has no derivative");
+		return diffBuffer;
+	}
 	virtual STDstring ToString() const = 0;
 	//the flat evaluation (#3054): as ExpressionBase; the value is the vector the node evaluated into
 	virtual Index NumberOfOperands() const { return 0; }
@@ -177,6 +193,7 @@ public:
 	mutable Index recordedDepth = 0;
 protected:
 	mutable ResizableConstVector buffer; //!< the value of an operator node, see EvaluateRef()
+	mutable ResizableConstVector diffBuffer; //!< the derivative of the node, see DiffRef()
 };
 
 
@@ -210,6 +227,12 @@ public:
 	//! the value, evaluated into the memory of this node (buffer), which is kept for the next evaluation: no allocation
 	//! once the sizes are set; valid until the node is evaluated again (#3021, as #3006 for vectors)
 	virtual const ResizableMatrix& EvaluateRef() const = 0;
+	//! the derivative by a seed, as VectorExpressionBase::DiffRef (#3115)
+	virtual const ResizableMatrix& DiffRef(const DiffSeed& var) const
+	{
+		CHECKandTHROWstring(STDstring("symbolic Diff: the matrix operation '") + FlatName() + "' has no derivative");
+		return diffBuffer;
+	}
 	virtual Real EvaluateComponent(Index row, Index column) const = 0;
 	virtual Index NumberOfRows() const = 0;
 	virtual Index NumberOfColumns() const = 0;
@@ -228,6 +251,7 @@ public:
 	mutable Index recordedDepth = 0;
 protected:
 	mutable ResizableMatrix buffer; //!< the value of an operator node, see EvaluateRef()
+	mutable ResizableMatrix diffBuffer; //!< the derivative of the node, see DiffRef()
 };
 
 //! delete a node whose reference counter reached zero: its Destroy() releases its operands, and those that reach
@@ -271,7 +295,7 @@ public:
 	{
 		return left->Evaluate() + right->Evaluate();
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override
+	virtual Real Diff(const DiffSeed& var) const override
 	{
 		return left->Diff(var) + right->Diff(var);
 	}
@@ -302,7 +326,7 @@ public:
 	virtual Real Evaluate() const override {
 		return left->Evaluate() - right->Evaluate();
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override
+	virtual Real Diff(const DiffSeed& var) const override
 	{
 		return left->Diff(var) - right->Diff(var);
 	}
@@ -335,7 +359,7 @@ public:
 	{
 		return left->Evaluate() * right->Evaluate();
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override
+	virtual Real Diff(const DiffSeed& var) const override
 	{
 		return left->Diff(var) * right->Evaluate() + left->Evaluate() * right->Diff(var);
 	}
@@ -367,7 +391,7 @@ public:
 	virtual Real Evaluate() const override {
 		return left->Evaluate() / right->Evaluate(); // Consider handling division by zero
 	}
-	virtual double Diff(ExpressionNamedReal* var) const override {
+	virtual double Diff(const DiffSeed& var) const override {
 		double numVal = left->Evaluate();
 		double denVal = right->Evaluate();
 		double numDiff = left->Diff(var);
@@ -409,7 +433,7 @@ public:
 	virtual Real Evaluate() const override {
 		return Real(left->Evaluate() == right->Evaluate()); // Consider handling division by zero
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator==::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::operator==::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " == " + right->ToString() + ")";
 	}
@@ -437,7 +461,7 @@ public:
 	virtual Real Evaluate() const override {
 		return Real(left->Evaluate() != right->Evaluate()); // Consider handling division by zero
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator!=::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::operator!=::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " != " + right->ToString() + ")";
 	}
@@ -465,7 +489,7 @@ public:
 	virtual Real Evaluate() const override {
 		return Real(left->Evaluate() > right->Evaluate()); // Consider handling division by zero
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator>::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::operator>::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " > " + right->ToString() + ")";
 	}
@@ -493,7 +517,7 @@ public:
 	virtual Real Evaluate() const override {
 		return Real(left->Evaluate() >= right->Evaluate()); // Consider handling division by zero
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator>=::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::operator>=::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " >= " + right->ToString() + ")";
 	}
@@ -521,7 +545,7 @@ public:
 	virtual Real Evaluate() const override {
 		return Real(left->Evaluate() <= right->Evaluate()); // Consider handling division by zero
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator<=::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::operator<=::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " <= " + right->ToString() + ")";
 	}
@@ -549,7 +573,7 @@ public:
 	virtual Real Evaluate() const override {
 		return Real(left->Evaluate() < right->Evaluate()); // Consider handling division by zero
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator<::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::operator<::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " < " + right->ToString() + ")";
 	}
@@ -578,7 +602,7 @@ public:
 	virtual Real Evaluate() const override {
 		return operand->Evaluate();
 	}
-	virtual double Diff(ExpressionNamedReal* var) const override { return operand->Diff(var); }
+	virtual double Diff(const DiffSeed& var) const override { return operand->Diff(var); }
 	virtual STDstring ToString() const override {
 		return operand->ToString();
 		//return "(+" + operand->ToString() + ")";
@@ -606,7 +630,7 @@ public:
 	virtual Real Evaluate() const override {
 		return -operand->Evaluate();
 	}
-	virtual double Diff(ExpressionNamedReal* var) const override { return -operand->Diff(var); }
+	virtual double Diff(const DiffSeed& var) const override { return -operand->Diff(var); }
 	virtual STDstring ToString() const override {
 		return "(-" + operand->ToString() + ")";
 	}
@@ -634,7 +658,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return std::isfinite(operand->Evaluate()); }
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::isfinite::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::isfinite::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override { return "isfinite(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -655,7 +679,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return std::fabs(operand->Evaluate()); }
-	virtual Real Diff(ExpressionNamedReal* var) const override {
+	virtual Real Diff(const DiffSeed& var) const override {
 		Real val = operand->Evaluate();
 		if (val == 0)
 			return std::numeric_limits<Real>::quiet_NaN();
@@ -680,7 +704,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EXUstd::SignReal(operand->Evaluate()); }
-	virtual Real Diff(ExpressionNamedReal* var) const override { return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { return 0.; }
 	virtual STDstring ToString() const override { return "sign(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -702,7 +726,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return !(operand->Evaluate()); }
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::not::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::not::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override { return "Not(" + operand->ToString() + ")"; } //"not" is reserved in C++ and Python
 
 	//the flat evaluation (#3053)
@@ -723,7 +747,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return std::round(operand->Evaluate()); }
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::round::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::round::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override { return "round(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -744,7 +768,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return std::ceil(operand->Evaluate()); }
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::ceil::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::ceil::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override { return "ceil(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -765,7 +789,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return std::floor(operand->Evaluate()); }
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::floor::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::floor::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override { return "floor(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -788,7 +812,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return std::sqrt(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override 
+	virtual double Diff(const DiffSeed& var) const override 
 	{
 		double val = operand->Evaluate();
 		if (val <= 0) { return std::numeric_limits<double>::quiet_NaN(); }
@@ -814,7 +838,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Exp(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Exp(operand->Evaluate()) * operand->Diff(var); }
+	virtual double Diff(const DiffSeed& var) const override { return EM::Exp(operand->Evaluate()) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "exp(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -835,7 +859,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Log(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return (1 / operand->Evaluate()) * operand->Diff(var); }
+	virtual double Diff(const DiffSeed& var) const override { return (1 / operand->Evaluate()) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "log(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -857,7 +881,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Sin(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Cos(operand->Evaluate()) * operand->Diff(var); }	
+	virtual double Diff(const DiffSeed& var) const override { return EM::Cos(operand->Evaluate()) * operand->Diff(var); }	
 	virtual STDstring ToString() const override { return "sin(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -878,7 +902,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Cos(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return -EM::Sin(operand->Evaluate()) * operand->Diff(var); }
+	virtual double Diff(const DiffSeed& var) const override { return -EM::Sin(operand->Evaluate()) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "cos(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -899,7 +923,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Tan(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override 
+	virtual double Diff(const DiffSeed& var) const override 
 	{
 		return (1 + EXUstd::Square(EM::Tan(operand->Evaluate())) ) * operand->Diff(var);
 	}
@@ -923,7 +947,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Asin(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override 
+	virtual double Diff(const DiffSeed& var) const override 
 	{
 		double val = operand->Evaluate();
 		if (val <= -1 || val >= 1) {
@@ -951,7 +975,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Acos(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override 
+	virtual double Diff(const DiffSeed& var) const override 
 	{
 		double val = operand->Evaluate();
 		if (val <= -1 || val >= 1) {
@@ -979,7 +1003,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Atan(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override 
+	virtual double Diff(const DiffSeed& var) const override 
 	{
 		return operand->Diff(var) / (1 + EXUstd::Square(operand->Evaluate()));
 	}
@@ -1005,7 +1029,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Sinh(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Cosh(operand->Evaluate()) * operand->Diff(var); }
+	virtual double Diff(const DiffSeed& var) const override { return EM::Cosh(operand->Evaluate()) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "sinh(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -1026,7 +1050,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Cosh(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Sinh(operand->Evaluate()) * operand->Diff(var); }
+	virtual double Diff(const DiffSeed& var) const override { return EM::Sinh(operand->Evaluate()) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "cosh(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -1047,7 +1071,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return EM::Tanh(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return (1 - EXUstd::Square(EM::Tanh(operand->Evaluate()))) * operand->Diff(var); }
+	virtual double Diff(const DiffSeed& var) const override { return (1 - EXUstd::Square(EM::Tanh(operand->Evaluate()))) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "tanh(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3053)
@@ -1068,7 +1092,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return std::asinh(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override 
+	virtual double Diff(const DiffSeed& var) const override 
 	{
 		return operand->Diff(var) / std::sqrt(EXUstd::Square(operand->Evaluate()) + 1);
 	}
@@ -1092,7 +1116,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return std::acosh(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override 
+	virtual double Diff(const DiffSeed& var) const override 
 	{
 		double val = operand->Evaluate();
 		if (val < 1) { return std::numeric_limits<double>::quiet_NaN(); }
@@ -1118,7 +1142,7 @@ public:
 	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
 
 	virtual Real Evaluate() const override { return std::atanh(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override 
+	virtual double Diff(const DiffSeed& var) const override 
 	{
 		double val = operand->Evaluate();
 		if (val <= -1 || val >= 1) { return std::numeric_limits<double>::quiet_NaN(); }
@@ -1155,7 +1179,7 @@ public:
 
 	virtual Real Evaluate() const override { return EM::Pow(base->Evaluate(), exponent->Evaluate()); }
 
-	virtual double Diff(ExpressionNamedReal* var) const override 
+	virtual double Diff(const DiffSeed& var) const override 
 	{
 		double baseVal = base->Evaluate();
 		double exponentVal = exponent->Evaluate();
@@ -1190,7 +1214,7 @@ public:
 	}
 
 	virtual Real Evaluate() const override { return EM::Atan2(arg1->Evaluate(), arg2->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override
+	virtual double Diff(const DiffSeed& var) const override
 	{
 		double arg1Val = arg1->Evaluate();
 		double arg2Val = arg2->Evaluate();
@@ -1223,7 +1247,7 @@ public:
 	}
 
 	virtual Real Evaluate() const override { return std::fmod(arg1->Evaluate(), arg2->Evaluate()); }
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::mod::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::mod::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override { return "mod(" + arg1->ToString() + ", " + arg2->ToString() + ")"; } //use Python name ...
 
 	//the flat evaluation (#3053)
@@ -1248,7 +1272,7 @@ public:
 	}
 
 	virtual Real Evaluate() const override { return std::min(arg1->Evaluate(), arg2->Evaluate()); }
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::min::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::min::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override { return "min(" + arg1->ToString() + ", " + arg2->ToString() + ")"; } //use Python name ...
 
 	//the flat evaluation (#3053)
@@ -1273,7 +1297,7 @@ public:
 	}
 
 	virtual Real Evaluate() const override { return std::max(arg1->Evaluate(), arg2->Evaluate()); }
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::max::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::max::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override { return "max(" + arg1->ToString() + ", " + arg2->ToString() + ")"; } //use Python name ...
 
 	//the flat evaluation (#3053)
@@ -1321,7 +1345,7 @@ public:
 			return ifFalse->Evaluate();
 		}
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override {
+	virtual Real Diff(const DiffSeed& var) const override {
 		Real checkCondition = condition->Evaluate();
 		if (checkCondition)
 		{
@@ -1368,9 +1392,9 @@ public:
 	virtual Real Evaluate() const override {
 		return value;
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override 
+	virtual Real Diff(const DiffSeed& var) const override 
 	{
-		return this == (ExpressionReal*)var ? 1 : 0;
+		return (var.variable == (const void*)this && var.component < 0) ? 1 : 0;
 	}
 	virtual STDstring ToString() const override
 	{
@@ -1611,7 +1635,7 @@ public:
 		if (expr) { return expr->Evaluate(); }
 		return value;
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const
+	virtual Real Diff(const DiffSeed& var) const
 	{
 		if (expr) { return expr->Diff(var); }
 		return 0.; //diff(value) = 0
@@ -1621,7 +1645,7 @@ public:
 	{
 		CHECKandTHROW(var.IsExpressionNamedReal(), "Symbolic::SReal::SetExpressionNamedReal expects ExpressionNamedReal in expression");
 
-		if (expr) { return expr->Diff((ExpressionNamedReal*)var.GetExpression()); }
+		if (expr) { return expr->Diff(DiffSeed(var.GetExpression())); }
 		return 0.; //diff(value) = 0
 	}
 

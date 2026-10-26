@@ -1,0 +1,11 @@
+{
+  "number": 3120,
+  "title": "ObjectUserBody with computeMassMatrixInversePerBody of the explicit solvers",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "revision2026c step RG12.56.4: ObjectUserBody refuses timeIntegration.explicit.computeMassMatrixInversePerBody (NotImplementedFeatureError), so a system of user bodies cannot use the inverse per body in Exudyn's explicit solvers, and SolveExplicit of exudyn.misc.symbolicSystem can compare its inverse per body only with the global solve; the user body inverts its local mass matrix, as the other bodies on one node do.",
+  "dateRaised": "2026-10-26",
+  "deadline": "2027-04-24"
+}

@@ -30,7 +30,7 @@ pb.AddDocu(r"""The submodule `exudyn.cMath` gives Python the math functions the 
 pb.AddDocu(r"""The transcendental functions - `sin`, `exp`, `atan2`, ... - are not correctly rounded by the libraries of the platforms, and each library rounds some results differently: the libraries of Windows and Linux differ by 1 to 3 units in the last place for between 0.1 and 55 percent of the arguments, depending on the function (#2947). A difference in the last bit is usually harmless, but models with contact, friction or impacts amplify it: a contact model gave results differing by a relative 1e-5 between Windows and Linux. Exudyn therefore compiles one portable implementation of these functions (from musl libc) into its C++ code, which gives the same bits on every platform, and `exudyn.cMath` gives the same functions to Python, for the values that enter a model: initial velocities, rotations, points of a geometry. With both, the test models of Exudyn give the same results on Windows and Linux to the last bit.""",
             section='Why own math in Exudyn?', sectionLevel=2, sectionLabel='sec-exudyn-cmath-why')
 
-pb.AddDocu(r"""Each function takes a float, which gives a float, or a list or numpy array, which gives a numpy array of the same shape; the two arguments of `atan2` and `pow` are broadcast like numpy does. A call with one float takes about 0.2 microseconds, against 0.03 of `math.sin`; on arrays the functions are as fast as numpy. `sqrt` is correctly rounded on every platform, also in `math` and `numpy`; it is here so that one import serves. Python's `x**0.5` and `x**y` call the library's `pow` and differ per platform: use `sqrt`, or `pow` of this module. A complex array is not supported: it loses its imaginary part, with the ComplexWarning of numpy.""",
+pb.AddDocu(r"""Each function takes a float, which gives a float, or a list or numpy array, which gives a numpy array of the same shape; the two arguments of `atan2` and `pow` are broadcast like numpy does. A symbolic argument, an `exudyn.symbolic.Real`, gives the function of `exudyn.symbolic` (all but `cbrt`; for `atan2` and `pow` also mixed with a float), so that one function written with `exudyn.cMath` runs on numbers and is recorded as symbolic user function (#3114). A call with one float takes about 0.2 microseconds, against 0.03 of `math.sin`; on arrays the functions are as fast as numpy. `sqrt` is correctly rounded on every platform, also in `math` and `numpy`; it is here so that one import serves. Python's `x**0.5` and `x**y` call the library's `pow` and differ per platform: use `sqrt`, or `pow` of this module. A complex array is not supported: it loses its imaginary part, with the ComplexWarning of numpy.""",
             section='Functions', sectionLevel=2, sectionLabel='sec-exudyn-cmath-functions')
 
 module.AddDocu(r"""Usage: `from exudyn.cMath import sin, cos, pi`, or `import exudyn.cMath as cm` and `cm.sin(x)`. The functions are:""")
@@ -63,9 +63,15 @@ returnType = 'Union[float, NDArray]'
 #conversion, so a float takes it at once and a float64 array the vectorized one; an int or a list is converted and takes
 #the vectorized one. A float through py::vectorize took 530 ns per call, this overload 155 ns (math.sin: 30 ns)
 scalarOverload = '        m.def("{name}", []({arguments}) {{ return {call}; }}, {pyArgs});\n'
+#a symbolic argument, exudyn.symbolic.Real, goes to the function of exudyn.symbolic (#3114): one function written with
+#cMath runs on numbers and is recorded as symbolic user function; cbrt has no symbolic counterpart
+symbolicOverload = '        m.def("{name}", &Symbolic::SReal::{name}<{types}>, {pyArgs});\n'
+symbolicNames = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'exp', 'log', 'sinh', 'cosh', 'tanh', 'sqrt', 'atan2', 'pow']
 
 for (name, cName, description) in functions1:
     module.CppCode(scalarOverload.format(name=name, arguments='Real x', call=cName + '(x)', pyArgs='py::arg("x")'))
+    if name in symbolicNames:
+        module.CppCode(symbolicOverload.format(name=name, types='Symbolic::SReal', pyArgs='py::arg("x")'))
     module.DefPyFunctionAccess(cClass='', pyName=name, cName='py::vectorize([](Real x) { return ' + cName + '(x); })',
                                     isLambdaFunction=True,
                                     description=description + '; calls ' + cName + ' of the C++ code',
@@ -78,6 +84,8 @@ for (name, cName, description) in functions2:
     (a0, a1) = ('y', 'x') if name == 'atan2' else ('x', 'y')
     module.CppCode(scalarOverload.format(name=name, arguments='Real ' + a0 + ', Real ' + a1, call=cName + '(' + a0 + ', ' + a1 + ')',
                                               pyArgs='py::arg("' + a0 + '"), py::arg("' + a1 + '")'))
+    for types in ['Symbolic::SReal, Symbolic::SReal', 'Symbolic::SReal, Real', 'Real, Symbolic::SReal']:
+        module.CppCode(symbolicOverload.format(name=name, types=types, pyArgs='py::arg("' + a0 + '"), py::arg("' + a1 + '")'))
     module.DefPyFunctionAccess(cClass='', pyName=name, cName='py::vectorize([](Real ' + a0 + ', Real ' + a1 + ') { return ' + cName + '(' + a0 + ', ' + a1 + '); })',
                                     isLambdaFunction=True,
                                     description=description + '; calls ' + cName + ' of the C++ code',

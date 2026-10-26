@@ -63,7 +63,16 @@ operations as a Python structure, and `exudyn.misc.symbolicExport` writes the fo
 `exudyn.misc.symbolicSystem.SymbolicSystem(mbs)` evaluates the mass matrix (also sparse), the forces and the residual
 `M q_tt - f` of a system of user bodies and generic ODE2 objects with symbolic user functions, by exudyn.symbolic, and
 writes a computed state back into mbs for the renderer and the sensors; its base class `SymbolicSystemBase` is the
-interface of the solvers (#3110, #3113).
+interface of the solvers (#3110, #3113), its Jacobian of the residual by `Diff` of the recordings (#3115).
+`SolveExplicit(system, simulationSettings, solverType)` integrates such a system - or equations written with numpy as
+`NumpySystem` - by explicit Euler, RK44 or velocity Verlet with constant step size, as Exudyn's explicit solver does,
+with the mass matrix inverted per body if `timeIntegration.explicit.computeMassMatrixInversePerBody`, and writes the
+solution file and the sensors of mbs (#3112).
+**`Diff` of symbolic vectors and matrices**: `exudyn.symbolic.Vector.Diff` and `Matrix.Diff` by a named scalar or by a
+component of a named vector, `Real.Diff(vector, component)`, and `UserFunction.EvaluateJacobian(argumentName, ...)`, the
+Jacobian of a recorded user function by one of its arguments (#3115). The functions of **`exudyn.cMath`** take an
+`exudyn.symbolic.Real` and then compute as those of `exudyn.symbolic`, so that one function written with cMath is also
+recorded (#3114).
 **`exudyn.symbolic.Optimize`** merges equal subexpressions of symbolic expressions into one node and removes `1*x`,
 `x+0` and operations of numbers, with the same results; `CreateSymbolicUserFunction` applies it by default
 (`optimize=True`), which computes a symbolic user function written for clarity about twice as fast (#3085). The flat

@@ -7,8 +7,10 @@
 #           mbs.Assemble(), from the objects with symbolic user functions, collected in kinds - the objects whose user
 #           functions are the same recordings -, each with the table of its objects, their parameters and the global
 #           indices of their ODE2 coordinates (the local-to-global maps of systemData). It evaluates the residual
-#           r = M q_tt - f, the sparse mass matrix and the forces by exudyn.symbolic, and writes a computed state back
-#           into mbs, where the renderer, the sensors and the output functions read it.
+#           r = M q_tt - f, the sparse mass matrix, the forces and the Jacobian of r by exudyn.symbolic, and writes a
+#           computed state back into mbs, where the renderer, the sensors and the output functions read it.
+#           NumpySystem takes equations written by hand. SolveExplicit integrates any of them by explicit Euler, RK44
+#           or velocity Verlet, as Exudyn's explicit solver does (#3112).
 #           Special: not for the broad use, a basis for the export of the equations of motion and their evaluation
 #           outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
 #           forceUserFunction, ObjectGenericODE2 with constant matrices and symbolic user functions, and items without
@@ -25,15 +27,18 @@ import numpy as np
 import exudyn
 try:
     import scipy.sparse
+    import scipy.sparse.linalg
 except ImportError:
     raise ImportError('exudyn.misc.symbolicSystem needs scipy for its sparse matrices: pip install scipy')
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
-__all__ = ['SymbolicSystemBase', 'SymbolicKind', 'SymbolicSystem']
+__all__ = ['SymbolicSystemBase', 'NumpySystem', 'SymbolicKind', 'SymbolicSystem', 'explicitSolverTypes', 'SolveExplicit']
 
 #the user functions of a kind, by object type
 _userFunctionNames = {'UserBody': ['massMatrixUserFunction', 'forceUserFunction'],
                       'GenericODE2': ['massMatrixUserFunction', 'forceUserFunction']}
+#the positions of the arguments q (the total coordinates for UserBody) and q_t in the user functions, mbs at 0
+_argumentPositions = {'UserBody': (4, 5), 'GenericODE2': (3, 4)}
 
 
 class SymbolicSystemBase:
@@ -65,6 +70,12 @@ class SymbolicSystemBase:
     def MassMatrix(self, q=None, q_t=None, t=0., sparse=False):
         """the mass matrix M(q, t); sparse=True: a scipy.sparse.csr_matrix, else a dense array"""
         return self._Matrix(*self.MassMatrixTriplets(q, q_t, t), sparse)
+
+    def MassMatrixBlocks(self, q=None, q_t=None, t=0.):
+        """the mass matrix in blocks of bodies: a list of (ltg, blocks), ltg the global indices (n_b x n) of n_b bodies
+        of n coordinates and blocks their mass matrices (n_b x n x n); for the inverse per body of the explicit solvers
+        (#3112). The base class gives one block of all coordinates"""
+        return [(np.arange(self.nODE2)[np.newaxis, :], self.MassMatrix(q, q_t, t)[np.newaxis, :, :])]
 
     def Residual(self, q=None, q_t=None, q_tt=None, t=0.):
         """the residual r = M(q, t) q_tt - f(q, q_t, t), of size nODE2"""
@@ -117,6 +128,62 @@ class SymbolicSystemBase:
         matrix = np.zeros((self.nODE2, self.nODE2))
         np.add.at(matrix, (rows, columns), values)
         return matrix
+
+
+class NumpySystem(SymbolicSystemBase):
+    """ODE2 equations M q_tt = f(q, q_t, t) written by hand, e.g. with numpy: the simplest system for a solver of this
+    module, and a check of it independent of Exudyn (#3112)
+
+    Args:
+        massMatrix: the mass matrix, constant (numpy array or scipy sparse matrix) or a function (q, q_t, t) -> matrix
+        forces: the function (q, q_t, t) -> f, of size nODE2
+        initialState: (q0, q_t0); None: zero
+        massMatrixBlocks: the blocks of bodies as SymbolicSystemBase.MassMatrixBlocks returns them, for a constant mass
+            matrix; None: one block of all coordinates
+    """
+    def __init__(self, massMatrix, forces, initialState=None, massMatrixBlocks=None):
+        self._massMatrix = massMatrix
+        self._forces = forces
+        self.nODE2 = (len(initialState[0]) if initialState is not None else massMatrix.shape[0])
+        self._initialState = initialState
+        self._massMatrixBlocks = massMatrixBlocks
+
+    def InitialState(self):
+        """(q0, q_t0) as given, zero otherwise"""
+        if self._initialState is None:
+            return SymbolicSystemBase.InitialState(self)
+        return tuple(np.array(x, dtype=float) for x in self._initialState)
+
+    def IsMassMatrixConstant(self):
+        """True for a mass matrix given as matrix"""
+        return not callable(self._massMatrix)
+
+    def Forces(self, q=None, q_t=None, t=0.):
+        """f(q, q_t, t) of the function given"""
+        (q, q_t, _) = self._State(q, q_t)
+        return np.asarray(self._forces(q, q_t, t), dtype=float)
+
+    def MassMatrix(self, q=None, q_t=None, t=0., sparse=False):
+        """the mass matrix given, or of the function given; sparse=True: a scipy.sparse.csr_matrix"""
+        if callable(self._massMatrix):
+            (q, q_t, _) = self._State(q, q_t)
+            matrix = self._massMatrix(q, q_t, t)
+        else:
+            matrix = self._massMatrix
+        if sparse:
+            return scipy.sparse.csr_matrix(matrix)
+        return matrix.toarray() if scipy.sparse.issparse(matrix) else np.array(matrix, dtype=float)
+
+    def MassMatrixTriplets(self, q=None, q_t=None, t=0.):
+        """the triplets of MassMatrix"""
+        matrix = self.MassMatrix(q, q_t, t, sparse=True).tocoo()
+        return matrix.row, matrix.col, matrix.data
+
+    def MassMatrixBlocks(self, q=None, q_t=None, t=0.):
+        """the blocks given, else one block of all coordinates"""
+        if self._massMatrixBlocks is not None:
+            return self._massMatrixBlocks
+        return SymbolicSystemBase.MassMatrixBlocks(self, q, q_t, t)
 
 
 def _Recording(value, objectNumber, name):
@@ -250,15 +317,24 @@ class SymbolicSystem(SymbolicSystemBase):
         if t is not None:
             systemData.SetTime(t, configuration)
 
-    def _Call(self, kind, name, i, q, q_t, t):
-        """the result of the user function name of object i of kind, by its recording, as numpy array"""
+    def _Arguments(self, kind, i, q, q_t, t):
+        """the arguments of the user functions of object i of kind, after mbs"""
         ltg = kind.ltg[i]
         if kind.objectType == 'UserBody':
             qRef = self.qRef[ltg]
-            arguments = (t, kind.objects[i], qRef, qRef + q[ltg], q_t[ltg], kind.parameters[i])
-        else:
-            arguments = (t, kind.objects[i], q[ltg], q_t[ltg])
-        return np.array(kind.recordings[name].Evaluate(self.mbs, *arguments), dtype=float)
+            return (t, kind.objects[i], qRef, qRef + q[ltg], q_t[ltg], kind.parameters[i])
+        return (t, kind.objects[i], q[ltg], q_t[ltg])
+
+    def _Call(self, kind, name, i, q, q_t, t):
+        """the result of the user function name of object i of kind, by its recording, as numpy array"""
+        return np.array(kind.recordings[name].Evaluate(self.mbs, *self._Arguments(kind, i, q, q_t, t)), dtype=float)
+
+    def _Jacobian(self, kind, name, i, position, q, q_t, t):
+        """the Jacobian of the user function name of object i of kind by its argument at position, by Diff of the
+        recording (#3115)"""
+        recording = kind.recordings[name]
+        argumentName = recording.GetFlatProgramData()['arguments'][position]['name']
+        return np.array(recording.EvaluateJacobian(argumentName, self.mbs, *self._Arguments(kind, i, q, q_t, t)), dtype=float)
 
     def _LocalMassMatrix(self, kind, i, q, q_t, t):
         if 'massMatrixUserFunction' in kind.recordings:
@@ -315,6 +391,13 @@ class SymbolicSystem(SymbolicSystemBase):
             return np.zeros(0, dtype=int), np.zeros(0, dtype=int), np.zeros(0)
         return np.concatenate(rows), np.concatenate(columns), np.concatenate(values)
 
+    def MassMatrixBlocks(self, q=None, q_t=None, t=0.):
+        """the local mass matrices of the objects, per kind: a list of (ltg, blocks), the LTG table of the kind and its
+        mass matrices (objects x n x n)"""
+        (q, q_t, _) = self._State(q, q_t)
+        return [(kind.ltg, np.array([self._LocalMassMatrix(kind, i, q, q_t, t) for i in range(len(kind.objects))]))
+                for kind in self.kinds]
+
     def Residual(self, q=None, q_t=None, q_tt=None, t=0.):
         """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations, object by object without forming M"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
@@ -326,9 +409,229 @@ class SymbolicSystem(SymbolicSystemBase):
                 np.add.at(r, ltg, local)
         return r
 
+    def ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
+                         sparse=False):
+        """the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, object by object
+        by Diff of the recordings (UserFunction.EvaluateJacobian, #3115): exact, one derivative of the tree per column;
+        factor_q_tt=1 alone gives the mass matrix, a Newton step of an implicit integrator combines the three
+
+        Args:
+            q: the ODE2 coordinates, of size nODE2; None: zero
+            q_t: the ODE2 velocities; None: zero
+            q_tt: the ODE2 accelerations; None: zero
+            t: the time
+            factor_q: the factor of dr/dq
+            factor_q_t: the factor of dr/dq_t
+            factor_q_tt: the factor of dr/dq_tt
+            sparse: True: a scipy.sparse.csr_matrix, else a dense array
+
+        Returns:
+            the matrix (nODE2 x nODE2)
+        """
+        (q, q_t, q_tt) = self._State(q, q_t, q_tt)
+        rows, columns, values = [], [], []
+        for kind in self.kinds:
+            (position_q, position_q_t) = _argumentPositions[kind.objectType]
+            for i in range(len(kind.objects)):
+                ltg = kind.ltg[i]
+                local = np.zeros((len(ltg), len(ltg)))
+                if 'forceUserFunction' in kind.recordings: #r = M q_tt - f
+                    if factor_q != 0.:
+                        local -= factor_q*self._Jacobian(kind, 'forceUserFunction', i, position_q, q, q_t, t)
+                    if factor_q_t != 0.:
+                        local -= factor_q_t*self._Jacobian(kind, 'forceUserFunction', i, position_q_t, q, q_t, t)
+                if 'massMatrixUserFunction' in kind.recordings:
+                    if factor_q != 0.: #d(M q_tt)/dq
+                        local += factor_q*np.einsum('ijk,j->ik', self._Jacobian(kind, 'massMatrixUserFunction', i, position_q,
+                                                                               q, q_t, t), q_tt[ltg])
+                    if factor_q_tt != 0.:
+                        local += factor_q_tt*self._Call(kind, 'massMatrixUserFunction', i, q, q_t, t)
+                if kind.objectType == 'GenericODE2': #the constant matrices of r = M q_tt + D q_t + K q - f
+                    matrices = kind.parameters[i]
+                    for (name, factor) in [('K', factor_q), ('D', factor_q_t), ('M', factor_q_tt)]:
+                        if name == 'M' and 'massMatrixUserFunction' in kind.recordings:
+                            continue #the user function computes the mass matrix instead
+                        if matrices[name].size and factor != 0.:
+                            local += factor*matrices[name]
+                (r, c) = np.nonzero(local)
+                rows.append(ltg[r])
+                columns.append(ltg[c])
+                values.append(local[r, c])
+        if not rows:
+            return self._Matrix(np.zeros(0, dtype=int), np.zeros(0, dtype=int), np.zeros(0), sparse)
+        return self._Matrix(np.concatenate(rows), np.concatenate(columns), np.concatenate(values), sparse)
+
     def __repr__(self):
         lines = ['SymbolicSystem: ' + str(self.nODE2) + ' ODE2 coordinates, ' + str(len(self.kinds)) + ' kinds']
         for kind in self.kinds:
             lines.append('  ' + kind.objectType + ': ' + str(len(kind.objects)) + ' objects of ' + str(kind.ltg.shape[1])
                          + ' coordinates, user functions ' + str(sorted(kind.recordings)))
         return '\n'.join(lines)
+
+
+#the explicit solvers of SolveExplicit
+explicitSolverTypes = [exudyn.DynamicSolverType.ExplicitEuler, exudyn.DynamicSolverType.RK44,
+                       exudyn.DynamicSolverType.VelocityVerlet]
+
+#the Butcher tableaus (A, weights, times) of src/Solver/CSolverExplicit.cpp
+_butcherTableaus = {exudyn.DynamicSolverType.ExplicitEuler: ([[0.]], [1.], [0.]),
+                    exudyn.DynamicSolverType.RK44: ([[0., 0., 0., 0.], [0.5, 0., 0., 0.], [0., 0.5, 0., 0.], [0., 0., 1., 0.]],
+                                                    [1./6., 1./3., 1./3., 1./6.], [0., 0.5, 0.5, 1.])}
+
+
+class _MassMatrixSolver:
+    """the accelerations a = M^-1 f of a system: by the inverse per body, or by the sparse LU decomposition of M; the
+    inverse or the decomposition computed once for a constant mass matrix"""
+    def __init__(self, system, perBody, reuseConstant):
+        self.system = system
+        self.perBody = perBody
+        self.constant = reuseConstant and system.IsMassMatrixConstant()
+        self.stored = None
+        self.evaluations = 0
+        if perBody:
+            ltg = np.concatenate([block[0].ravel() for block in system.MassMatrixBlocks()])
+            if len(ltg) != len(np.unique(ltg)):
+                raise ValueError('SolveExplicit: explicit.computeMassMatrixInversePerBody needs bodies that share no '
+                                 'coordinates, but two bodies share a coordinate')
+
+    def _Inverse(self, q, q_t, t):
+        self.evaluations += 1
+        if self.perBody:
+            return [(ltg, np.linalg.inv(blocks)) for (ltg, blocks) in self.system.MassMatrixBlocks(q, q_t, t)]
+        return scipy.sparse.linalg.splu(self.system.MassMatrix(q, q_t, t, sparse=True).tocsc())
+
+    def Accelerations(self, q, q_t, t, f):
+        inverse = self.stored if self.stored is not None else self._Inverse(q, q_t, t)
+        if self.constant:
+            self.stored = inverse
+        if not self.perBody:
+            return inverse.solve(f)
+        a = np.zeros(len(f))
+        for (ltg, inverses) in inverse:
+            a[ltg] = np.einsum('kij,kj->ki', inverses, f[ltg])
+        return a
+
+
+class _MbsOutput:
+    """the output of a solver of this module through the MainSystem of a SymbolicSystem: an Exudyn solver object, which
+    writes the solution file and the sensors and updates the renderer in FinishStep, by simulationSettings.solution; it
+    runs as explicit Euler without inverse per body, which only decides what its initialization computes"""
+    def __init__(self, system, simulationSettings):
+        self.system = system
+        self.simulationSettings = exudyn.SimulationSettings()
+        self.simulationSettings.SetDictionary(simulationSettings.GetDictionary())
+        self.simulationSettings.timeIntegration.solverType = exudyn.DynamicSolverType.ExplicitEuler
+        self.simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = False
+        simulationSettings = self.simulationSettings
+        self.solver = exudyn.MainSolverExplicit()
+        self.solver.InitializeSolver(system.mbs, simulationSettings)
+
+    def Step(self, stepIndex, t, h, q, q_t, q_tt):
+        self.system.SetSystemState(q, q_t, q_tt, t)
+        self.solver.it.currentStepIndex = stepIndex
+        self.solver.it.currentTime = t
+        self.solver.it.currentStepSize = h
+        self.solver.FinishStep(self.system.mbs, self.simulationSettings)
+
+    def Finalize(self):
+        self.solver.FinalizeSolver(self.system.mbs, self.simulationSettings)
+
+
+def SolveExplicit(system, simulationSettings=None, solverType=None):
+    """the explicit time integration of a SymbolicSystemBase with constant step size, by explicit Euler, RK44 or
+    velocity Verlet, as Exudyn's explicit solver computes them (#3112, design docs/dev/design/symbolicSystem.md §10):
+    the steps from timeIntegration.startTime, endTime and numberOfSteps; the accelerations by the inverse per body with
+    timeIntegration.explicit.computeMassMatrixInversePerBody, else by the sparse LU decomposition of the mass
+    matrix, both once for a constant mass matrix (timeIntegration.reuseConstantMassMatrix); for a SymbolicSystem the
+    solution file, the sensors and the renderer of its mbs by simulationSettings.solution, as after SolveDynamic
+
+    Args:
+        system: the system, a SymbolicSystemBase
+        simulationSettings: exudyn.SimulationSettings; None: the defaults
+        solverType: an exudyn.DynamicSolverType of explicitSolverTypes; None: timeIntegration.solverType
+
+    Returns:
+        dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2) at the steps of solution.file.writePeriod and
+        the last step, and the statistics 'steps', 'forceEvaluations', 'massMatrixEvaluations'
+    """
+    if simulationSettings is None:
+        simulationSettings = exudyn.SimulationSettings()
+    timeIntegration = simulationSettings.timeIntegration
+    if solverType is None:
+        solverType = timeIntegration.solverType
+    if solverType not in explicitSolverTypes:
+        raise ValueError('SolveExplicit: solverType must be one of ' + str(explicitSolverTypes) + ', not ' + str(solverType))
+    mbs = getattr(system, 'mbs', None)
+    if mbs is not None and timeIntegration.explicit.useLieGroupIntegration:
+        for nodeNumber in range(mbs.systemData.NumberOfNodes()):
+            if mbs.GetNode(nodeNumber)['nodeType'].endswith('LG'):
+                raise ValueError('SolveExplicit: node ' + str(nodeNumber) + ' is a Lie group node, which Exudyn integrates '
+                                 'by the Lie group formulas (explicit.useLieGroupIntegration); they are not implemented here')
+
+    n = int(timeIntegration.numberOfSteps)
+    (tStart, tEnd) = (timeIntegration.startTime, timeIntegration.endTime)
+    h = (tEnd - tStart)/n
+    massSolver = _MassMatrixSolver(system, timeIntegration.explicit.computeMassMatrixInversePerBody,
+                                   timeIntegration.reuseConstantMassMatrix)
+    forceEvaluations = [0]
+    def Accelerations(q, q_t, t):
+        forceEvaluations[0] += 1
+        return massSolver.Accelerations(q, q_t, t, system.Forces(q, q_t, t))
+
+    (q, q_t) = system.InitialState()
+    q_tt = np.zeros(system.nODE2)
+    if solverType == exudyn.DynamicSolverType.VelocityVerlet:
+        q_tt = Accelerations(q, q_t, tStart)
+
+    #the output as CSolverBase writes it: the start, then each time a write period is passed, and the last step
+    period = simulationSettings.solution.file.writePeriod
+    result = {'time': [], 'q': [], 'q_t': [], 'q_tt': []}
+    lastWritten = [tStart]
+    def Write(t, last):
+        if last:
+            lastWritten[0] = tEnd - h
+        if t == tStart or t - lastWritten[0] >= -1e-10:
+            lastWritten[0] = max(lastWritten[0] + period, t)
+            for (name, value) in [('time', t), ('q', q), ('q_t', q_t), ('q_tt', q_tt)]:
+                result[name].append(np.copy(value))
+    Write(tStart, False)
+    output = _MbsOutput(system, simulationSettings) if mbs is not None else None
+    if output is not None:
+        output.Step(0, tStart, h, q, q_t, q_tt) #the initial state, as SolveDynamic writes it
+
+    for step in range(1, n + 1):
+        t0 = tStart + (step - 1)*h
+        t = tStart + step*h
+        if solverType == exudyn.DynamicSolverType.VelocityVerlet:
+            q_t = q_t + (0.5*h)*q_tt
+            q = q + h*q_t
+            q_tt = Accelerations(q, q_t, t)
+            q_t = q_t + (0.5*h)*q_tt
+        else:
+            (A, weights, times) = _butcherTableaus[solverType]
+            K, K_t = [], []
+            for i in range(len(weights)):
+                (g, g_t) = (q.copy(), q_t.copy())
+                for j in range(i):
+                    if A[i][j] != 0.:
+                        g += (A[i][j]*h)*K[j]
+                        g_t += (A[i][j]*h)*K_t[j]
+                K.append(g_t)
+                K_t.append(Accelerations(g, g_t, t0 + h*times[i]))
+            for i in range(len(weights)):
+                if weights[i] != 0.:
+                    q = q + (weights[i]*h)*K[i]
+                    q_t = q_t + (weights[i]*h)*K_t[i]
+            if timeIntegration.explicit.computeEndOfStepAccelerations:
+                q_tt = Accelerations(q, q_t, t)
+            else:
+                q_tt = K_t[-1]
+        Write(t, step == n)
+        if output is not None:
+            output.Step(step, t, h, q, q_t, q_tt)
+    if output is not None:
+        output.Finalize()
+
+    result = {name: np.array(value) for (name, value) in result.items()}
+    result.update({'steps': n, 'forceEvaluations': forceEvaluations[0], 'massMatrixEvaluations': massSolver.evaluations})
+    return result

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.219.dev1
+- Exudyn version = 1.13.222.dev1
 - last change = 2026-10-26
-- Number of issues = 3120
-- Number of resolved issues = 2996 (219 in current version)
+- Number of issues = 3121
+- Number of resolved issues = 2999 (222 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `LOW EFF` `raised by: Claude-JG` ObjectUserBody with computeMassMatrixInversePerBody of the explicit solvers (#3120)
+  - description: revision2026c step RG12.56.4: ObjectUserBody refuses timeIntegration.explicit.computeMassMatrixInversePerBody (NotImplementedFeatureError), so a system of user bodies cannot use the inverse per body in Exudyn's explicit solvers, and SolveExplicit of exudyn.misc.symbolicSystem can compare its inverse per body only with the global solve; the user body inverts its local mass matrix, as the other bodies on one node do.
+  - date raised: 2026-10-26
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` ObjectConnectorUser with a symbolic force function of the states of its markers (#3119)
   - description: revision2026c step RG12.55.6 (maintainer 2026-10-26: extend ObjectConnectorUser instead of user bodies without mass): the forceUserFunction of ObjectConnectorUser gets ConnectorMarker objects, whose methods apply forces as side effects, which a recording cannot represent. A second user function that gets the positions, velocities, rotations and angular velocities of the markers and returns the forces and torques on them, which the connector applies through the marker Jacobians - recorded as symbolic user function, with the Jacobian numerically first and by RG12.58 later. Design docs/dev/design/symbolicUserItems.md.
   - date raised: 2026-10-26
@@ -9050,15 +9053,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-26
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` The forward derivative of a flat program by all its variables in one pass, with a local memory of the program (#3116)
   - description: revision2026c step RG12.59 (maintainer 2026-10-26): per slot of the flat program its value and the derivatives by n variables, in one pass in the order of the program, for the Jacobians of the symbolic user functions in C++ (the position and rotation Jacobians of NodeUser, ObjectUserBody, MarkerBodyUser, the connector and joint Jacobians, RG7.17). The memory of the derivatives (slots x n) is one block of the program, sized at the first evaluation and kept, one per thread in the parallel evaluation; a fixed size by a setting only if a bound must be known in advance. Design docs/dev/design/symbolicSystem.md.
-  - date raised: 2026-10-26
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Diff of exudyn.symbolic Vector and Matrix expressions, by a component of a vector variable, and the Jacobian of a recording by an argument (#3115)
-  - description: revision2026c step RG12.58 (maintainer 2026-10-26): the vector and matrix expressions of exudyn.symbolic have no derivative (operator\[\]::Diff not implemented), and Diff takes a scalar named variable only, so a recording cannot be differentiated by a component of its vector arguments. Proposal in docs/dev/design/symbolicSystem.md: a derivative seed (variable, component), a derivative buffer per vector and matrix node like the evaluation buffer, Diff for every vector and matrix operation, Vector.Diff, Matrix.Diff, and UserFunction.EvaluateJacobian(argument, ...) for the Jacobian of a recording by one of its arguments.
-  - date raised: 2026-10-26
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` exudyn.cMath functions forward a symbolic argument to exudyn.symbolic (#3114)
-  - description: revision2026c step RG12.57 (maintainer 2026-10-26): cMath.sin and the other functions of exudyn.cMath take numbers and numpy arrays only; with an exudyn.symbolic Real (or Vector, where the symbolic function exists) they call the function of exudyn.symbolic, so that one function written with cMath runs on numbers and is recorded as a symbolic user function, also mixed between symbolic and numeric arguments.
-  - date raised: 2026-10-26
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Explicit solvers in Python for the symbolic system: explicit Euler, velocity Verlet, RK44 (#3112)
-  - description: revision2026c step RG12.56 (maintainer 2026-10-26): before the generalized-alpha solver, constant step size explicit Euler, velocity Verlet and RK44 in exudyn/misc/symbolicSystem.py, with the settings of SimulationSettings.timeIntegration and checked against SolveDynamic with the same DynamicSolverType; for simple user items (mass points, spring-dampers); the solvers take any system with the interface of SymbolicSystem, also one written with numpy. The concept first, in docs/dev/design/symbolicSystem.md.
   - date raised: 2026-10-26
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` exudyn/misc/symbolicUserItems.py: user items with the interfaces of the built-in items (#3111)
   - description: revision2026c step RG12.55 (maintainer 2026-10-26): a collection of user items with symbolic user functions whose creation has the same interface as the built-in items of itemInterface (a user rigid body as ObjectRigidBody, parameters the user item lacks refused or ignored with a note), so that the same systems are built with the same calls: at least mass point 3D, rigid body 3D, revolute, prismatic, spherical and distance joint, spring-damper, torsional spring-damper, sphere-sphere contact; first the list of what a good representation of multibody systems needs. Before the symbolic system model goes deeper.

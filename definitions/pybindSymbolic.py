@@ -104,7 +104,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='', 
-                        description="return the derivative of the stored expression with respect to the given named variable, at the current values; the variable may be changed hereafter with SetValue(...) only. round, ceil, floor, mod, min, max, isfinite, Not and the comparisons have no derivative and raise an error",
+                        description="return the derivative of the stored expression with respect to the given named variable, at the current values; the variable may be changed hereafter with SetValue(...) only; Diff(vectorVariable, component) differentiates by a component of a named symbolic.Vector (#3115). round, ceil, floor, mod, min, max, isfinite, Not and the comparisons have no derivative and raise an error",
                         example = r"""x=esym.Real('x',2)\\f=3*x+x**2*esym.sin(x)\\f.Diff(x) #evaluate derivative w.r.t. x""",
                         returnType='float',
                         argList=['var'],
@@ -340,6 +340,14 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='',
                         returnType='List[float]',
                         )
 
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='', 
+                        description="the derivative of the vector expression by a named symbolic.Real, or by a component of a named symbolic.Vector with Diff(vectorVariable, component), at the current values, as numpy array (#3115); a comparison and an output of an item have no derivative and raise",
+                        example = r"""q=esym.Vector('q',[1,2,3])\\v=esym.sin(q[0])*q\\v.Diff(q, 0) #derivative by q[0]""",
+                        returnType='NDArray',
+                        argList=['var'],
+                        argTypes=['symbolic.Real'],
+                        )
+
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetVector', cName='', 
                         description="Set stored vector or named vector expression to new given (non-symbolic) vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)",
                         argList=['vector'],
@@ -497,6 +505,13 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='ToString', cName='',
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
                         description="Return evaluated expression (prioritized) or stored Matrix value. (not recorded)",
                         returnType='List[float]',
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='', 
+                        description="the derivative of the matrix expression by a named symbolic.Real, or by a component of a named symbolic.Vector with Diff(vectorVariable, component), at the current values, as numpy array (#3115)",
+                        returnType='NDArray',
+                        argList=['var'],
+                        argTypes=['symbolic.Real'],
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetMatrix', cName='', 
@@ -710,6 +725,13 @@ symbolicModule.DefStartTable(pyClassStr)
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
                         description="Evaluate symbolic function with test values; requires exactly same args as Python user functions; this is slow and only intended for testing",
                         # returnType='None', #Real or Vector
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='EvaluateJacobian', cName='', 
+                        description="the Jacobian of the result by the argument named argumentName - e.g. 'qTotal' -, at the arguments given after it as for Evaluate, by Diff of the recording, one column per component of the argument: a vector for a scalar result, a matrix (result x argument) for a vector result, an array (rows x columns x argument) for a matrix result; slow, as Evaluate (#3115)",
+                        argList=['argumentName'],
+                        argTypes=['str'],
+                        returnType='NDArray',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetUserFunctionFromDict', cName='', 

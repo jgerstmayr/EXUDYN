@@ -208,7 +208,7 @@ For numbers alone, cUtilities stays the fast way (0.63 us against 1.2 to 2.4 us 
 |---|---|---|
 | the tree evaluation deeper than 10000 operations | `Evaluate()`, `Diff()` and `flatEvaluation = False` raise a `ValueError`; recording, deleting, `str()`, the flat program and Optimize work at any depth | #3090 |
 | the MainSystem in an expression | read only: the outputs of items; parameters of items are constants of the recording, writing to the MainSystem is refused | #2984 |
-| derivatives | `Diff` of scalars only, a number: the forward derivative at the current values | - |
+| derivatives | `Diff` gives numbers, the forward derivative at the current values by the tree; for scalars, vectors and matrices, by a named scalar or a component of a named vector, and `UserFunction.EvaluateJacobian`; no derivative as a new program (RG12.54.2) | #3115 |
 | matrix functions | no inverse, no product of the components of matrices; vectors have `esym.cross` (#3070) | - |
 | fixed-size arguments | copied into the named vectors and matrices at every call, in one pass; not read in place | #3039 |
 
@@ -231,6 +231,7 @@ For numbers alone, cUtilities stays the fast way (0.63 us against 1.2 to 2.4 us 
 | test | what |
 |---|---|
 | symbolicModuleTest.py | the expressions, the operators, `Diff` |
+| symbolicVectorDiffTest.py | `Diff` of vectors and matrices, `EvaluateJacobian`, `exudyn.cMath` with symbolic arguments |
 | symbolicUserFunctionSignaturesTest.py | every signature against its Python function; seven items simulated with both |
 | symbolicVectorUserFunctionTest.py, symbolicSparseMatrixTest.py | vectors above 7 items, every kind of vector node; matrix results, sparse |
 | symbolicNumpyCompatibilityTest.py | the same expressions with numpy and symbolic, the refused operators |

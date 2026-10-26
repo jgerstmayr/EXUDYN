@@ -103,7 +103,7 @@ The class **symbolic.Real** has the following **functions and structures**:
   ```
 
 - **`Evaluate()`**: return evaluated expression (prioritized) or stored Real value.
-- **`Diff(var)`**: return the derivative of the stored expression with respect to the given named variable, at the current values; the variable may be changed hereafter with SetValue(...) only. round, ceil, floor, mod, min, max, isfinite, Not and the comparisons have no derivative and raise an error
+- **`Diff(var)`**: return the derivative of the stored expression with respect to the given named variable, at the current values; the variable may be changed hereafter with SetValue(...) only; Diff(vectorVariable, component) differentiates by a component of a named symbolic.Vector (#3115). round, ceil, floor, mod, min, max, isfinite, Not and the comparisons have no derivative and raise an error
 
   *Example*:
 
@@ -307,6 +307,16 @@ The class **symbolic.Vector** has the following **functions and structures**:
   ```
 
 - **`Evaluate()`**: Return evaluated expression (prioritized) or stored vector value. (not recorded)
+- **`Diff(var)`**: the derivative of the vector expression by a named symbolic.Real, or by a component of a named symbolic.Vector with Diff(vectorVariable, component), at the current values, as numpy array (#3115); a comparison and an output of an item have no derivative and raise
+
+  *Example*:
+
+  ```python
+  q=esym.Vector('q',[1,2,3])
+  v=esym.sin(q[0])*q
+  v.Diff(q, 0) #derivative by q[0]
+  ```
+
 - **`SetVector(vector)`**: Set stored vector or named vector expression to new given (non-symbolic) vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)
 - **`NumberOfItems()`**: Get size of Vector (may require to evaluate expression; not recording)
 - **`operator __setitem__(index)`**: bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)
@@ -433,6 +443,7 @@ The class **symbolic.Matrix** has the following **functions and structures**:
   ```
 
 - **`Evaluate()`**: Return evaluated expression (prioritized) or stored Matrix value. (not recorded)
+- **`Diff(var)`**: the derivative of the matrix expression by a named symbolic.Real, or by a component of a named symbolic.Vector with Diff(vectorVariable, component), at the current values, as numpy array (#3115)
 - **`SetMatrix(matrix)`**: Set stored Matrix or named Matrix expression to new given (non-symbolic) Matrix. Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)
 - **`NumberOfRows()`**: Get number of rows (may require to evaluate expression; not recording)
 - **`NumberOfColumns()`**: Get number of columns (may require to evaluate expression; not recording)
@@ -608,6 +619,7 @@ load user function:  10.0
 The class **symbolic.UserFunction** has the following **functions and structures**:
 
 - **`Evaluate()`**: Evaluate symbolic function with test values; requires exactly same args as Python user functions; this is slow and only intended for testing
+- **`EvaluateJacobian(argumentName)`**: the Jacobian of the result by the argument named argumentName - e.g. 'qTotal' -, at the arguments given after it as for Evaluate, by Diff of the recording, one column per component of the argument: a vector for a scalar result, a matrix (result x argument) for a vector result, an array (rows x columns x argument) for a matrix result; slow, as Evaluate (#3115)
 - **`SetUserFunctionFromDict(mainSystem, fcnDict, itemIndex, userFunctionName)`**: Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(...).
 - **`GetFlatProgram(format = 'Python', flatten = True)`**: the list of operations by which the result is evaluated, as text: one operation tK = ... per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function, written by exudyn.misc.symbolicExport, the variables of exudyn.symbolic.variables read from there (symbolic) or as keyword arguments (#3088); flatten=False: the result as one expression (#3087)
 - **`GetFlatProgramData()`**: the flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.symbolic.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.misc.symbolicExport writes it as code (#3087)

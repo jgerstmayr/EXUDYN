@@ -36,7 +36,17 @@ function is recorded by calling the Python function once with symbolic arguments
 - the number and the types of the markers are free, and `ApplyBodyForce` at a local position computed in the function
   needs the Jacobian of the body at that point during the call.
 
-This form stays: it is what makes a contact on a flexible body possible (the closest point searched in the function).
+**Does the ConnectorMarker form need to stay?** Its one use that the returning form cannot take is a force at a point
+the function computes itself on a body of many coordinates: `GetBodyPosition(localPosition)` and
+`ApplyBodyForce(force, localPosition)`, which need the body Jacobian at that point during the call - e.g. a ball on an
+ANCF cable whose closest point is searched along the cable. This exists once, in userConnectorTest.py (part 3, a test,
+no example); every other use - spring-dampers, the rotational damper, the contact of userConnectorContactTest.py -
+reads the marker states and applies forces at the markers, which the returning form covers. ObjectConnectorUser came
+after the 1.13.0 release (#2975, 2026-10-23), so its interface can still change without deprecation. Proposal: the
+returning function becomes **the** forceUserFunction - documented first, used by the user items and the symbolic
+system -, and the ConnectorMarker form is kept under another name (e.g. `markerAccessUserFunction`), its description
+saying that it is for forces at computed points of flexible bodies, with that one test as its use, and that it cannot
+be recorded. Removing it entirely is the alternative, if no such contact is wanted; the decision is the maintainer's.
 
 **The solution: a second user function of the marker states, which returns the forces.** As ObjectJointUser gets the
 positions and rotation matrices of its markers and returns the constraint equations, the connector gets the states of
@@ -132,5 +142,8 @@ per group.
 4. (The mass of connector bodies: not needed with 3.)
 5. A connector is drawn by a graphicsDataUserFunction, in Python only.
 
-Open, for the maintainer: **the form of the markerForceUserFunction**, (a) two markers with named arguments, as
-ObjectJointUser (proposed), or (b) any number of markers, stacked; and its name.
+6. The function of the marker states (#3119): (a), two markers with named arguments as ObjectJointUser, named
+   `markerForceUserFunction` (2026-10-26); returning the forces is the form for symbolic user items in general.
+
+Open, for the maintainer: whether the returning function takes the name `forceUserFunction` and the ConnectorMarker
+form is kept under another name for forces at computed points of flexible bodies, or removed (section 2).

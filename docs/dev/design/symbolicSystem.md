@@ -137,10 +137,11 @@ B, which both need for their check, of RG12.58 (#3115).
 The marker Jacobians of the joints and connectors (section 3) are derivatives of the marker position and rotation
 programs by D - the reason the earlier plan needed sympy.
 
-**Now (#3113):** `SymbolicSystem.ResidualJacobian` is the central differences of `SymbolicSystemBase` (A); B comes back
-as its override once `Diff` works on vectors and by the components of a vector argument (#3115). A Jacobian by `Diff`
-built through a wrapper of `esym.Real` in Python (#3108) was removed again - section 11 lists what exudyn.symbolic
-needs instead.
+**Now (#3115):** `SymbolicSystem.ResidualJacobian` is B: object by object `UserFunction.EvaluateJacobian` of the force
+and mass matrix recordings by their arguments q and q_t (section 11, S1), $\partial(\Mm\ddot\qv)/\partial\qv$ from the
+derivative of the mass matrix, and the constant matrices of ObjectGenericODE2; equal to the central differences of
+`SymbolicSystemBase` (A) to their error, 6e-9. A, in the base class, stays the Jacobian of a system without derivatives
+of its own and the comparison.
 
 ## 6. The implicit solver in Python (G3)
 
@@ -175,8 +176,8 @@ its solver are together in `exudyn/misc/symbolicSystem.py` (decision 3).
   matrix as triplets or sparse matrix, forces and residual; equal to the solver API.
 - RG12.51.7 (done, #3113): `SymbolicSystemBase`, exudyn.symbolic only, `SetSystemState`, `InitialState`,
   `IsMassMatrixConstant`, scipy at the start of the module.
-- RG12.56 (#3112, before RG12.51.3): explicit Euler, velocity Verlet and RK44 in Python, on the base class (sections 9
-  and 10).
+- RG12.56 (done, #3112): explicit Euler, velocity Verlet and RK44 in Python, on the base class (sections 9 and 10),
+  `NumpySystem`; RG12.56.4 the inverse per body of ObjectUserBody in Exudyn, for the comparison of that setting.
 - RG12.51.3: the generalized-alpha solver in Python; the time-integration check against `SolveDynamic`.
 - RG12.55 first: user items with the interfaces of the built-in items (`exudyn/misc/symbolicUserItems.py`).
 - RG12.51.8 (#3118): the built-in loads, constant or with a symbolic user function.
@@ -186,9 +187,9 @@ its solver are together in `exudyn/misc/symbolicSystem.py` (decision 3).
 - RG12.51.6: the evaluation by Numba for the GPU, an explicit integrator with a constant mass matrix and the
   matrix-free product.
 
-And in exudyn.symbolic (section 11): RG12.57 cMath with symbolic arguments (#3114), RG12.58 `Diff` of vectors and
-matrices (#3115), RG12.59 the forward derivative of a flat program (#3116), RG12.60 a recording called with symbolic
-arguments (#3117).
+And in exudyn.symbolic (section 11): RG12.57 cMath with symbolic arguments (done, #3114), RG12.58 `Diff` of vectors
+and matrices (done, #3115), RG12.59 the forward derivative of a flat program (#3116), RG12.60 a recording called with
+symbolic arguments (#3117). The evaluation of a whole step on the GPU by levels: section 12, an outlook.
 
 ## 8. Decisions (maintainer 2026-10-26)
 
@@ -218,6 +219,7 @@ The interface is the base class `SymbolicSystemBase` in `exudyn/misc/symbolicSys
 | `Forces(q, q_t, t)` | $\fv$, the right-hand side | computed by the derived class |
 | `MassMatrixTriplets(q, q_t, t)` | $\Mm$ as (rows, columns, values) | computed by the derived class (or it overrides `MassMatrix`) |
 | `MassMatrix(q, q_t, t, sparse)` | $\Mm$, dense or `scipy.sparse.csr_matrix` | from the triplets |
+| `MassMatrixBlocks(q, q_t, t)` | the mass matrices of the bodies, a list of (LTG table, blocks) - for the inverse per body | one block of all coordinates |
 | `IsMassMatrixConstant()` | True: the solver factors $\Mm$ once | False |
 | `Residual(q, q_t, q_tt, t)` | $\rv = \Mm\ddot\qv - \fv$ | from MassMatrix and Forces |
 | `ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, sparse)` | the combined Jacobian | central differences of Residual |
@@ -226,12 +228,13 @@ The interface is the base class `SymbolicSystemBase` in `exudyn/misc/symbolicSys
 from `constantMassMatrix` of the user bodies and the constant matrix of ObjectGenericODE2, `Residual` object by object,
 and `SetSystemState` for the output (section 3). The kind of evaluation is decided once, by the class of the system:
 `SymbolicSystem` by exudyn.symbolic, the exported system (RG12.51.5) by its generated code, a system written by hand
-(RG12.56.2: `NumpySystem(nODE2, massMatrix, forces, initialState)`, a constant matrix or a function and a function) by
-its own functions. The solvers use only this interface; the explicit ones only `InitialState`, `Forces`, `MassMatrix`
-and `IsMassMatrixConstant`.
+(`NumpySystem(massMatrix, forces, initialState, massMatrixBlocks)`, a constant matrix or a function, and a function) by
+its own functions. The solvers use only this interface; the explicit ones only `InitialState`, `Forces`, `MassMatrix`,
+`MassMatrixBlocks` and `IsMassMatrixConstant`; `SymbolicSystem` gives one block per object, the kinds as stacks
+(objects x n x n).
 
 The result of a solver, the same for all: a dict with `'time'` (n_out), `'q'`, `'q_t'`, `'q_tt'` (n_out x nODE2), at
-the steps of `solution.solutionWritePeriod`, and the statistics (steps, evaluations of the forces, factorizations); for
+the steps of `solution.file.writePeriod`, and the statistics (steps, evaluations of the forces, factorizations); for
 a `SymbolicSystem` also the solution file and the sensors of mbs (section 3).
 
 ## 10. Explicit solvers (RG12.56.1, #3112)
@@ -240,7 +243,8 @@ The first solvers, before generalized-alpha: they need no Jacobian and no constr
 mass points and spring-dampers (RG12.55.2; the spring-damper as ObjectConnectorUser with a symbolic force function,
 #3119), and before them an ObjectGenericODE2 or user bodies with symbolic forces. Constant step size
 $h = (t_{end} - t_{start})/n$ from `timeIntegration.startTime`, `endTime`, `numberOfSteps`; the method from
-`timeIntegration.explicitIntegration.dynamicSolverType` (or an argument, as `SolveDynamic(solverType=...)`):
+`timeIntegration.solverType` (or an argument, as `SolveDynamic(solverType=...)`). `SolveExplicit(system,
+simulationSettings, solverType)` in `exudyn/misc/symbolicSystem.py` (#3112):
 
 - **ExplicitEuler**: $\qv_{n+1} = \qv_n + h\,\dot\qv_n$, $\dot\qv_{n+1} = \dot\qv_n + h\,\av_n$, with
   $\av_n = \Mm^{-1}\fv(\qv_n, \dot\qv_n, t_n)$ - the first-order system $[\qv, \dot\qv]$ with the Butcher tableau of one
@@ -252,30 +256,44 @@ $h = (t_{end} - t_{start})/n$ from `timeIntegration.startTime`, `endTime`, `numb
   $\dot\qv_{n+1} = \dot\qv_{n+1/2} + \tfrac{h}{2}\av_{n+1}$ - the force at the half-step velocity, as in Exudyn; the
   initial acceleration from the initial state.
 
-**The accelerations.** $\av = \Mm^{-1}\fv$: with `IsMassMatrixConstant()` the matrix is factored once
-(`scipy.sparse.linalg.splu`); otherwise solved per stage. `explicitIntegration.computeMassMatrixInversePerBody` has a
-counterpart later: a block per kind object, as the kinds know their blocks. The settings that have no meaning here
-(`automaticStepSize`, the tolerances, `useLieGroupIntegration`, `eliminateConstraints`) raise if set to a value other
-than the default, so that a comparison is not silently different.
+**The accelerations: the inverse per body.** An explicit integrator is only worth its cost if $\av = \Mm^{-1}\fv$ is
+cheap. Solving the system mass matrix in every stage - a sparse LU decomposition, or a dense one - costs as much as
+everything else together, does not run in parallel, and is hard to do on a GPU at all. Exudyn's explicit solvers
+therefore have `timeIntegration.explicit.computeMassMatrixInversePerBody`: each body inverts its own mass matrix, and
+$\av$ is the product of the block-diagonal inverse with $\fv$ - correct as long as no two bodies share a coordinate,
+which holds for the single-noded bodies (mass points, rigid bodies). The symbolic system has the blocks by
+construction: per kind a stack of the local mass matrices (objects x n x n, `MassMatrixBlocks`) and its LTG table, so
+the inverse is one batched inversion per kind (`numpy.linalg.inv` of the stack), and the product one batched
+matrix-vector product - the operation a GPU does best, one thread or one warp per object. A constant mass matrix
+(`IsMassMatrixConstant()`, `timeIntegration.reuseConstantMassMatrix`) is inverted once, so a step is then only forces
+and products. With the setting, `SolveExplicit` checks at the start that the blocks share no coordinate and raises
+otherwise; without it, the mass matrix is solved by `scipy.sparse.linalg.splu`, once if constant. On the GPU (G2) the
+inverse per body is the only form: the global solve is not done there.
 
-**The check** (a test model): a system of symbolic items and the same system written by hand as `NumpySystem`; each of
-the three methods against `mbs.SolveDynamic` with `solverType=exu.DynamicSolverType.ExplicitEuler | VelocityVerlet |
-RK44`, `automaticStepSize=False` and the same steps: equal to rounding (the same formulas; only the solve of $\Mm$
-differs), about 1e-12 relative after 1000 steps; the hand-written system equal to the symbolic one; the sensors of mbs
-written by the solver equal to those of `SolveDynamic`. A measurement of the time per step against Exudyn, for the
-record only.
+**The settings.** `explicit.computeEndOfStepAccelerations` as in Exudyn (one more evaluation per step, else the
+accelerations of the last stage); `explicit.useLieGroupIntegration` with a Lie group node raises, as its formulas are
+not implemented here; `automaticStepSize` has no meaning for these three methods, as in Exudyn. The output through
+mbs (section 3) runs an Exudyn solver object as explicit Euler without the inverse per body: its initialization
+computes and decomposes the mass matrix once by Exudyn, which only costs time.
+
+**The check** (symbolicExplicitSolverTest.py): two user bodies of one kind, one with a variable mass matrix and an
+ObjectGenericODE2, each of the three methods with and without the inverse per body against `mbs.SolveDynamic` with
+the same solver type and 400 steps: 4e-15 relative - the same formulas, only the solve of $\Mm$ differs; the sensor
+written through mbs equal to the one of `SolveDynamic` to 5e-14; the same equations written as `NumpySystem` equal to
+8e-17. `SolveDynamic` cannot run the inverse per body here, as ObjectUserBody refuses it (RG12.56.4).
 
 **Sub-steps of RG12.56**: .1 this concept; .2 `NumpySystem` on `SymbolicSystemBase` (the base class itself is
-RG12.51.7); .3 the three explicit solvers, their output through mbs, and their test model.
+RG12.51.7); .3 the three explicit solvers, their output through mbs, and their test model; .4 the inverse per body of
+ObjectUserBody in Exudyn.
 
 ## 11. What exudyn.symbolic lacks for the system, and the proposals
 
-Building the system now meets four gaps. Each is a step of its own in exudyn.symbolic; `SymbolicSystem` does not work
-around them.
+Building the system met four gaps. Each is a step of its own in exudyn.symbolic; `SymbolicSystem` does not work
+around them. S1 and S4 are done, S2 and S3 open.
 
-**S1 `Diff` of vectors and matrices, by the components of vector variables (RG12.58, #3115).** Today `Diff(var)`
-exists for scalar expressions and scalar named variables. A recording has vector and matrix arguments, `q[i]` is an
-`operator[]` node without derivative, and the vector and matrix operations have none. Proposal:
+**S1 `Diff` of vectors and matrices, by the components of vector variables (RG12.58, #3115, done).** `Diff(var)`
+existed for scalar expressions and scalar named variables only; a recording has vector and matrix arguments, `q[i]`
+was an `operator[]` node without derivative, and the vector and matrix operations had none. As implemented:
 
 - **A seed** `(variable, component)`: a scalar named variable, or component i of a named vector (i = row x columns +
   column of a named matrix). `ExpressionBase::Diff(const DiffSeed&)` replaces `Diff(ExpressionNamedReal*)`; a named
@@ -288,12 +306,16 @@ exists for scalar expressions and scalar named variables. A recording has vector
   the scalar results of vectors: `v[i]` gives component i of the operand's derivative, `dot` $\dot\uv \cdot \vv +
   \uv \cdot \dot\vv$, `NormL2` $(\vv \cdot \dot\vv) / \|\vv\|$. `IfThenElse` takes the derivative of the branch that
   the condition selects, as for scalars; item outputs raise.
-- **In Python**: `Real.Diff(var)` as now, and `Real.Diff(vectorVariable, i)`; `Vector.Diff(var[, i])` and
-  `Matrix.Diff(var[, i])` return numpy arrays; `UserFunction.EvaluateJacobian(argumentName, *arguments)` returns the
-  Jacobian of the result of a recording by one of its vector arguments at the given arguments, column by column.
-- **What it gives**: the Jacobian of the residual by `Diff` (option B) without any wrapper, the marker Jacobians of
-  the joints and connectors as numbers, and the comparison for C and D. Its test: every operation against central
-  differences, as symbolicModuleTest.py does for the scalar functions (#3075).
+- **In Python**: `Real.Diff(var)` as before, and `Real.Diff(vectorVariable, component)`; `Vector.Diff(var)`,
+  `Vector.Diff(vectorVariable, component)`, `Matrix.Diff(var)` and `Matrix.Diff(vectorVariable, component)` return
+  numpy arrays; `UserFunction.EvaluateJacobian(argumentName, *arguments)` returns the Jacobian of the result of a
+  recording by one of its arguments at the given arguments, column by column: a vector for a scalar result, a matrix
+  (result x argument) for a vector result, an array (rows x columns x argument) for a matrix result. A matrix
+  variable as seed exists in C++; Python has no named matrix variable to pass yet.
+- **What it gives**: the Jacobian of the residual by `Diff` (option B) without any wrapper (section 5), the marker
+  Jacobians of the joints and connectors as numbers, and the comparison for C and D. The test,
+  symbolicVectorDiffTest.py: 18 vector and matrix expressions by a scalar and by the components of a vector, against
+  central differences, 1.9e-10; EvaluateJacobian of a force and a mass matrix recording, 1.1e-10; the refusals.
 
 **S2 the forward derivative of a flat program in one pass (RG12.59, #3116).** S1 walks the tree once per seed, n times
 for n coordinates. Over the flat program, each slot keeps its value and its n derivatives, computed in the order of the
@@ -313,7 +335,76 @@ one expression per kind ($\Mm(\qv)\,\ddot\qv - \fv(\qv, \dot\qv, t)$ of the two 
 connector composed with the marker kinematics of its bodies, and for the export of one program per kind (RG12.51.5).
 As numbers, the system needs no S3: it evaluates each recording and composes the results; S3 is for the programs.
 
-**S4 cMath with symbolic arguments (RG12.57, #3114).** `np.sin` of an `esym.Real` records - numpy calls the method
-`sin()` of the object -, `cMath.sin` raises, and the math check of the test models refuses `np.sin` (#2964). With S4
-the functions of `exudyn.cMath` call those of exudyn.symbolic for a symbolic argument, so that one function written
-with cMath runs on numbers and is recorded, also with arguments mixed between numbers and symbolic values.
+**S4 cMath with symbolic arguments (RG12.57, #3114, done).** `np.sin` of an `esym.Real` records - numpy calls the
+method `sin()` of the object -, and the math check of the test models refuses `np.sin` (#2964). The functions of
+`exudyn.cMath` take an `esym.Real` as well, by an overload of the compiled function that calls the one of
+exudyn.symbolic - all but `cbrt`, `atan2` and `pow` also mixed with a float -, so that one function written with cMath
+runs on numbers and is recorded; a float costs nothing more, as its overload comes first.
+
+## 12. Outlook: one step of all objects in parallel on the GPU, by levels
+
+Section 4 maps a **kind** to a GPU kernel: one thread per object, all threads of the kernel running the same program.
+That is the simplest way and fits systems of few kinds of many objects - particles, a mesh of one element type. It
+does not fit a system of many different trees: each kind is a launch of its own, and the threads of a warp that run
+different programs diverge and wait for each other. The maintainer's idea (2026-10-26): evaluate **one time step of the
+whole system in parallel, whatever the trees are**, by making all trees regular.
+
+**The idea.** The flat programs of all kinds and objects are one directed acyclic graph of scalar operations - the
+flat programs with vectors and matrices written as scalars, as `GetFlatProgram(flatten=True)` already does for the
+text. Each operation gets a **level**, the length of its longest path from the inputs (ASAP scheduling); all
+operations of one level depend only on lower levels and are independent of each other. A value needed at a higher
+level than the next is carried up by a **no-op** $x \to x$, so that every operation reads only from the level directly
+below. The evaluation is then a sequence of levels, each a wide, uniform, element-wise operation over arrays: the
+values of level k are an array, the operands of level k+1 are gathered from it by index arrays, and the results form
+the array of level k+1 - for all objects of all kinds at once.
+
+**Uniform operations.** Two ways to keep the threads of a warp on the same instruction:
+
+1. **Sorted by operation**: within a level, the operations are sorted by their kind - all `+`, then all `*`, all
+   `sin`, ... -, so a warp runs mostly one operation; divergence only at the borders of the groups. No extra levels.
+2. **A fixed cycle of operation layers**, the maintainer's proposal: the levels follow a fixed sequence of operation
+   kinds, e.g. `+`, `*`, `/`, `sin`, `cos`, `pow`, `-x`, repeated; an operation is placed in the next layer of its kind,
+   and every other value passes the layer as a no-op. Each layer is one operation for all its entries, without any
+   divergence - the cost is the padding: a tree of depth d becomes at most (number of kinds) x d layers, and the
+   no-ops move values. With the small set of operations most residuals use (`+`, `*`, `-x`, `/`, `sin`, `cos`, `sqrt`,
+   `pow`), the overhead factor can be measured on real programs before choosing; the other functions are rare and can
+   be a layer of their own in each cycle, or be written by the set (`tan = sin/cos`).
+
+Comparisons and `IfThenElse` become a select of both branches computed (predication), the usual form on a GPU.
+
+**A step.** Per stage of the explicit integrator (section 10), one pass over the levels gives the forces of all
+objects; the scatter by the LTG tables is a further level of sums - by atomic adds, or by a fixed reduction tree, which
+gives the same bits in every run -; then the batched product with the inverse mass matrices per body (section 10) and
+the update of q and q_t, element-wise. A whole step is a fixed sequence of kernels on arrays that stay on the GPU; only
+the output steps copy back. With the Jacobian program of D (section 5) the same holds for the Newton matrix of an
+implicit step.
+
+**Memory.** The values of two adjacent levels are enough for the evaluation (double buffering), plus the values that
+are carried, which the no-ops count; the index arrays of the levels are built once, when the system is built, as the
+LTG tables are. The width of a level is the parallelism: a system of 10^5 objects gives levels of 10^5 to 10^6 entries,
+which fills a GPU.
+
+**What it needs from Exudyn**: the flat programs (they exist), the scalar flattening of vectors and matrices (exists as
+text, needed as data), the leveling and the padding as a Python function on `GetFlatProgramData()`, and the export
+(RG12.51.5) of the level arrays. A first prototype runs the levels as numpy operations on the CPU - each level a
+gather and one vectorized ufunc call - and is checked against `SymbolicSystem`; CuPy runs the same arrays on the GPU
+without own kernels; a CUDA kernel per layer type comes last. The numbers differ from Exudyn's in the last bits, as
+`sin` on the GPU is not the portable function of the C++ code.
+
+**Related work** (from memory, not checked against the sources; to be confirmed when the step is planned):
+
+- *Levelized evaluation of logic circuits on GPUs*: gate-level simulators sort the gates of a netlist into levels and
+  evaluate each level in parallel, with a small set of gate types - the closest analogy; e.g. Chatterjee, DeOrio and
+  Bertacco, "GCS: high-performance gate-level simulation with GP-GPUs", DATE 2009.
+- *Genetic programming on GPUs*: many different expression trees evaluated in parallel, by an interpreter per thread
+  or by evaluating one tree on many data; e.g. Langdon and Banzhaf, "A SIMD interpreter for linear genetic programming
+  on GPU graphics cards", EuroGP 2008.
+- *Cartesian genetic programming* (Miller, *Cartesian Genetic Programming*, Springer 2011): programs as a fixed grid of
+  nodes in columns, with a function set and connections only to earlier columns - the layered form of idea 2.
+- *Level scheduling* of sparse triangular solves (Anderson and Saad, 1989): the same leveling of a dependency graph.
+- *Wavefront path tracing* (Laine, Karras and Aila, "Megakernels considered harmful", HPG 2013): sorting the work by
+  its kind instead of one kernel with branches - idea 1.
+- The tensor compilers (XLA, TVM) fuse and schedule graphs of array operations, but for one program on many data, not
+  for many different scalar programs.
+
+A step for this is proposed when the export (RG12.51.5) exists; until then it is this outlook.

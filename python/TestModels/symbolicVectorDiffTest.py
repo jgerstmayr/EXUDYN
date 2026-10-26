@@ -1,0 +1,128 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  Diff of exudyn.symbolic vectors and matrices (#3115): every vector and matrix operation, and the scalars
+#           of vectors (component, dot product, norm), differentiated by a named scalar and by the components of a
+#           named vector, against central differences; UserFunction.EvaluateJacobian of a recorded user function by
+#           its vector arguments, for a vector and a matrix result; what has no derivative. The functions of
+#           exudyn.cMath with a symbolic argument (#3114): one function written with cMath gives numbers and a
+#           recording, which compute the same.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-26
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.advancedUtilities import CreateSymbolicUserFunction
+import exudyn.cMath as cMath
+import numpy as np
+esym = exu.symbolic
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+#the variables: a named scalar and a named vector; A, B constant
+values = {'x': 0.3, 'q': [0.1, 0.2, -0.3]}
+x = esym.Real('x', values['x'])
+q = esym.Vector('q', values['q'])
+A = esym.Matrix([[1., 2., 0.], [0., 3., 1.], [1., 0., 2.]])
+B = esym.Matrix([[x, 1.], [2., x*x]])
+
+def SetValues(xValue, qValue):
+    x.SetValue(xValue)
+    q.SetVector(qValue)
+
+#each expression once, of x and q; its value is evaluated again at perturbed values for the central difference
+expressions = {
+    'A@q': A @ q, 'q@A': q @ A, 'x*q': x*q, 'sin(q[0])*q': esym.sin(q[0])*q, 'q.multiply(A@q)': q.multiply(A @ q),
+    'q - x*(A@q)': q - x*(A @ q), '-q': -q, 'cross(q, A@q)': esym.cross(q, A @ q),
+    'Vector of scalars': esym.Vector([x*q[0], esym.cos(q[1]), q[2]*q[2]]),
+    'q @ (A@q)': q @ (A @ q), 'NormL2(q)': q.NormL2(), '(A@q)[1]': (A @ q)[1],
+    'B@B': B @ B, 'B.T': B.T, 'x*B - B': x*B - B, '-B + B@B': -B + B @ B,
+    'Matrix of scalars': esym.Matrix([[q[0]*q[1], x], [esym.exp(q[2]), 1.]]), '(B@B)[1,1]': (B @ B)[1, 1],
+}
+
+def Value(expression):
+    return np.array(expression.Evaluate(), dtype=float)
+
+difference = 0.
+epsilon = 1e-6
+for (name, expression) in expressions.items():
+    for (variable, component) in [('x', -1), ('q', 0), ('q', 1), ('q', 2)]:
+        derivative = np.array(expression.Diff(x) if variable == 'x' else expression.Diff(q, component), dtype=float)
+        valuesPerturbed = []
+        for sign in [1, -1]:
+            (xValue, qValue) = (values['x'], list(values['q']))
+            if variable == 'x':
+                xValue += sign*epsilon
+            else:
+                qValue[component] += sign*epsilon
+            SetValues(xValue, qValue)
+            valuesPerturbed.append(Value(expression))
+        SetValues(values['x'], values['q'])
+        difference = max(difference, np.max(np.abs(derivative - (valuesPerturbed[0] - valuesPerturbed[1])/(2*epsilon))))
+exu.Print('Diff of', len(expressions), 'vector and matrix expressions: difference to central differences', difference)
+
+#what has no derivative: the norm of a zero vector, a comparison of vectors, a component out of range
+def Raises(function):
+    try:
+        function()
+    except Exception:
+        return 1
+    return 0
+
+zero = esym.Vector('zero', [0., 0., 0.])
+refused = (Raises(lambda: zero.NormL2().Diff(zero, 0)) + Raises(lambda: (q == A @ q).Diff(x))
+           + Raises(lambda: (A @ q).Diff(q, 3)))
+exu.Print('refused, of 3:', refused)
+
+#the Jacobian of a recorded user function by its vector arguments: a vector and a matrix result
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+node = mbs.AddNode(NodePoint())
+
+def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    u = qTotal - qRef
+    return parameters[0]*(1 + u @ u)*np.eye(3)
+
+def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    u = qTotal - qRef
+    return -parameters[1]*u - parameters[2]*(u @ u)*u - parameters[3]*q_t + esym.Vector([esym.sin(u[0]), 0, 0])
+
+body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=[1., 2., 3., 0.4], massMatrixUserFunction=UFmass,
+                                    forceUserFunction=UFforce))
+recordings = {'force': CreateSymbolicUserFunction(mbs, UFforce, 'forceUserFunction', body),
+              'mass': CreateSymbolicUserFunction(mbs, UFmass, 'massMatrixUserFunction', body)}
+arguments = [0.5, 0, [0., 0., 0.], [0.1, 0.2, -0.3], [0.3, 0.1, 0.2], [1., 2., 3., 0.4]]
+
+differenceJacobian = 0.
+for (name, argumentName, position) in [('force', 'qTotal', 3), ('force', 'q_t', 4), ('mass', 'qTotal', 3)]:
+    jacobian = np.array(recordings[name].EvaluateJacobian(argumentName, mbs, *arguments))
+    columns = []
+    for j in range(3):
+        results = []
+        for sign in [1, -1]:
+            perturbed = [list(a) if isinstance(a, list) else a for a in arguments]
+            perturbed[position][j] += sign*epsilon
+            results.append(np.array(recordings[name].Evaluate(mbs, *perturbed)))
+        columns.append((results[0] - results[1])/(2*epsilon))
+    differenceJacobian = max(differenceJacobian, np.max(np.abs(jacobian - np.moveaxis(np.array(columns), 0, -1))))
+refused += Raises(lambda: recordings['force'].EvaluateJacobian('w', mbs, *arguments))
+exu.Print('EvaluateJacobian: difference to central differences', differenceJacobian)
+
+#exudyn.cMath with symbolic arguments: one function gives numbers and, recorded, an expression of the same value
+def F(y, z):
+    return cMath.sin(y)*cMath.exp(z) + cMath.atan2(y, 2.) + cMath.pow(z, 2.) + cMath.sqrt(cMath.cosh(y))
+
+(y, z) = (esym.Real('y', 0.7), esym.Real('z', -0.2))
+recorded = F(y, z)
+differenceCMath = abs(recorded.Evaluate() - F(0.7, -0.2)) + int(not isinstance(recorded, esym.Real))
+exu.Print('cMath with symbolic arguments:', recorded, '; difference to the numbers', differenceCMath)
+
+u = int(difference > 1e-7) + int(differenceJacobian > 1e-7) + (4 - refused) + int(differenceCMath > 1e-15) + len(expressions) - 18 + 1
+exu.Print('solution of symbolicVectorDiffTest=', u)
+
+exu.sys['testResult'] = u

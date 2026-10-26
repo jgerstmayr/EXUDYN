@@ -3660,3 +3660,52 @@ mbs.SolutionViewer() in several test models, so the viewer refuses; ObjectJointU
   result - and the extension: a second user function of the marker states that returns the forces, applied through
   the marker Jacobians; two markers as ObjectJointUser proposed, any number stacked as the alternative. RG12.55.6
   (#3119), open for that decision.
+
+<a id="rg12-56-2"></a>
+### RG12.56.2 and RG12.56.3 — NumpySystem and the explicit solvers SolveExplicit (2026-10-26, #3112)
+- The maintainer's addition (2026-10-26): an explicit integrator only pays if the inverse of the mass matrix is taken
+  per body (single-noded bodies), as computeMassMatrixInversePerBody does in Exudyn; otherwise the system mass matrix
+  is solved in every stage, the speedup is gone and the GPU hard to use.
+- python/exudyn/misc/symbolicSystem.py: SymbolicSystemBase.MassMatrixBlocks (one block of all coordinates), in
+  SymbolicSystem per kind the LTG table and the stack of the local mass matrices; NumpySystem(massMatrix, forces,
+  initialState, massMatrixBlocks), a constant matrix (numpy or scipy sparse) or a function; SolveExplicit(system,
+  simulationSettings, solverType): explicit Euler, RK44 and velocity Verlet with the Butcher tableaus and the order of
+  operations of CSolverExplicit, the steps of startTime, endTime, numberOfSteps, the accelerations by the inverse per
+  body (batched numpy.linalg.inv per kind, the blocks checked to share no coordinate) or by scipy splu, once for a
+  constant mass matrix (reuseConstantMassMatrix), computeEndOfStepAccelerations, a Lie group node refused with
+  useLieGroupIntegration; the result dict at solution.file.writePeriod as CSolverBase writes it; for a SymbolicSystem
+  the output through an Exudyn MainSolverExplicit - InitializeSolver, the initial state and per step SetSystemState
+  and FinishStep, run as explicit Euler without the inverse per body (ObjectUserBody refuses it in Exudyn, #3120).
+- symbolicExplicitSolverTest.py: two user bodies of one kind, one with a variable mass matrix, an ObjectGenericODE2; the
+  three methods with and without the inverse per body against SolveDynamic, 400 steps: 4.2e-15 relative; a sensor
+  written through mbs against that of SolveDynamic 5.1e-14 (the initial row needed the call of FinishStep at the start
+  time); the same equations as NumpySystem 8.5e-17; the numbers of force and mass matrix evaluations as in Exudyn
+  (800 for explicit Euler with end-of-step accelerations, 2000 for RK44, 401 for velocity Verlet). Result 1.
+- docs/dev/design/symbolicSystem.md §10 the inverse per body, the settings and the check as done; §12 an outlook,
+  asked for by the maintainer: one step of all objects in parallel on the GPU by levels of the flat programs, with
+  no-ops and uniform operation layers, and related work from memory (levelized gate-level simulation, GPU genetic
+  programming, Cartesian genetic programming, level scheduling, wavefront path tracing), not checked online.
+- docs/dev/design/symbolicUserItems.md §2: decision (a) and the name markerForceUserFunction; the answer to the
+  question whether the ConnectorMarker form is needed - its one use is a force at a computed point of a flexible body
+  (userConnectorTest.py part 3), ObjectConnectorUser is not released yet; proposed: the returning function becomes the
+  forceUserFunction, the other form kept under another name or removed, for the maintainer.
+
+<a id="rg12-58"></a>
+### RG12.57 and RG12.58 — cMath with symbolic arguments; Diff of vectors and matrices (2026-10-26, #3114, #3115)
+- definitions/pybindCMath.py: per function of exudyn.cMath an overload with Symbolic::SReal calling SReal::sin<SReal>
+  and so on - all but cbrt; atan2 and pow also (SReal, Real) and (Real, SReal) -, registered after the float overload,
+  so a float costs nothing more; src/Pymodules/Pybind_manual_classes.cpp includes Linalg/Symbolic.h.
+- src/Linalg/Symbolic.h: struct DiffSeed (variable, component); Diff(const DiffSeed&) instead of
+  Diff(ExpressionNamedReal*); VectorExpressionBase and MatrixExpressionBase get DiffRef(seed) and a diffBuffer next to
+  the evaluation buffer (sized at the first call and kept, no heap of their own), a default that raises naming the
+  operation. SymbolicVector.h, SymbolicMatrix.h: DiffRef of the named vector and matrix (unit component), the vectors
+  and matrices of scalars, +, -, scalar times, matrix @ vector, vector @ matrix, multiply, unary minus and plus, matrix @
+  matrix, transposed; Diff of the dot product, NormL2 (raises at zero), the components; an item output raises.
+- Python: Real.Diff(vector, component), Vector.Diff(var), Vector.Diff(vector, component), Matrix.Diff likewise,
+  UserFunction.EvaluateJacobian(argumentName, *args) - a vector, matrix or array (rows x columns x argument) -,
+  documented in definitions/pybindSymbolic.py. SymbolicSystem.ResidualJacobian by EvaluateJacobian of the force and
+  mass matrix recordings by the arguments at the positions of q and q_t (their names from GetFlatProgramData).
+- symbolicVectorDiffTest.py: 18 expressions by x and the components of q against central differences 1.9e-10;
+  EvaluateJacobian of a force and a mass matrix recording 1.1e-10; four refusals; cMath of symbolic arguments, recorded
+  and evaluated, equal to the numbers. symbolicSystemTest.py: the Jacobian by Diff against central differences 6.0e-9,
+  result unchanged, 3. symbolicExplicitSolverTest.py writes its numpy system with cMath.sin.

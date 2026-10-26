@@ -127,7 +127,7 @@ class Real:
         ...
     @overload
     def Diff(self, var: Real) -> float: 
-        """Return the derivative of the stored expression with respect to the given named variable, at the current values; the variable may be changed hereafter with SetValue(...) only.
+        """Return the derivative of the stored expression with respect to the given named variable, at the current values; the variable may be changed hereafter with SetValue(...) only; Diff(vectorVariable, component) differentiates by a component of a named Vector (#3115).
         
         round, ceil, floor, mod, min, max, isfinite, Not and the comparisons have no derivative and raise an error
         
@@ -377,6 +377,16 @@ class Vector:
         """
         ...
     @overload
+    def Diff(self, var: Real) -> NDArray: 
+        """The derivative of the vector expression by a named Real, or by a component of a named Vector with Diff(vectorVariable, component), at the current values, as numpy array (#3115); a comparison and an output of an item have no derivative and raise.
+        
+        Examples:
+            q=esym.Vector('q',[1,2,3])
+            v=esym.sin(q[0])*q
+            v.Diff(q, 0) #derivative by q[0]
+        """
+        ...
+    @overload
     def SetVector(self, vector: Vector) -> None: 
         """Set stored vector or named vector expression to new given (non-symbolic) vector.
         
@@ -467,6 +477,10 @@ class Matrix:
         
         (not recorded)
         """
+        ...
+    @overload
+    def Diff(self, var: Real) -> NDArray: 
+        """The derivative of the matrix expression by a named Real, or by a component of a named Vector with Diff(vectorVariable, component), at the current values, as numpy array (#3115)."""
         ...
     @overload
     def SetMatrix(self, matrix: NDArray[Any, float]) -> None: 
@@ -561,6 +575,10 @@ class VariableSet:
 
 #stub information for class UserFunction functions
 class UserFunction:
+    @overload
+    def EvaluateJacobian(self, argumentName: str) -> NDArray: 
+        """The Jacobian of the result by the argument named argumentName - e.g. 'qTotal' -, at the arguments given after it as for Evaluate, by Diff of the recording, one column per component of the argument: a vector for a scalar result, a matrix (result x argument) for a vector result, an array (rows x columns x argument) for a matrix result; slow, as Evaluate (#3115)."""
+        ...
     @overload
     def SetUserFunctionFromDict(self, mainSystem: MainSystem, fcnDict: dict, itemIndex: ItemIndex, userFunctionName: str) -> None: 
         """Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(...)."""

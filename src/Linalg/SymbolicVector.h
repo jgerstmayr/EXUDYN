@@ -50,6 +50,18 @@ public:
 	{
 		return vector;
 	}
+	//! the derivative (#3115): the unit vector of the component for the seed of this vector, zero otherwise
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override
+	{
+		diffBuffer.SetNumberOfItems(vector.NumberOfItems());
+		diffBuffer.SetAll(0.);
+		if (var.variable == (const void*)this)
+		{
+			CHECKandTHROW(var.component >= 0 && var.component < vector.NumberOfItems(), "symbolic Diff: the component of the vector variable is out of range");
+			diffBuffer[var.component] = 1.;
+		}
+		return diffBuffer;
+	}
 	virtual STDstring ToString() const override
 	{
 		return vector.ToString();
@@ -107,6 +119,11 @@ public:
 	}
 	virtual void Destroy() override {}
 	virtual const ResizableConstVector& EvaluateRef() const override; //in Symbolic.cpp, which has the MainSystem
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override
+	{
+		CHECKandTHROWstring("symbolic Diff: an output of an item read from the MainSystem has no derivative");
+		return diffBuffer;
+	}
 	virtual STDstring ToString() const override;
 };
 
@@ -214,6 +231,12 @@ public:
 		for (Index i = 0; i < exprList.NumberOfItems(); i++) { str += (i > 0 ? ", " : "") + operands[i]; }
 		return str + "]";
 	}
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override
+	{
+		diffBuffer.SetNumberOfItems(exprList.NumberOfItems());
+		for (Index i = 0; i < exprList.NumberOfItems(); i++) { diffBuffer[i] = exprList.GetItem(i)->Diff(var); }
+		return diffBuffer;
+	}
 	virtual STDstring ToString() const override
 	{
 		STDstring str = "[";
@@ -257,6 +280,14 @@ public:
 		for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] + rightExpr[i]; }
 		return buffer;
 	}
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override
+	{
+		const ResizableConstVector& leftDiff = left->DiffRef(var);
+		const ResizableConstVector& rightDiff = right->DiffRef(var);
+		diffBuffer.SetNumberOfItems(leftDiff.NumberOfItems());
+		for (Index i = 0; i < leftDiff.NumberOfItems(); i++) { diffBuffer[i] = leftDiff[i] + rightDiff[i]; }
+		return diffBuffer;
+	}
 	virtual STDstring ToString() const override
 	{
 		return "(" + left->ToString() + " + " + right->ToString() + ")";
@@ -292,6 +323,14 @@ public:
 		buffer.SetNumberOfItems(leftExpr.NumberOfItems());
 		for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] - rightExpr[i]; }
 		return buffer;
+	}
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override
+	{
+		const ResizableConstVector& leftDiff = left->DiffRef(var);
+		const ResizableConstVector& rightDiff = right->DiffRef(var);
+		diffBuffer.SetNumberOfItems(leftDiff.NumberOfItems());
+		for (Index i = 0; i < leftDiff.NumberOfItems(); i++) { diffBuffer[i] = leftDiff[i] - rightDiff[i]; }
+		return diffBuffer;
 	}
 	virtual STDstring ToString() const override
 	{
@@ -329,6 +368,17 @@ public:
 		for (Index i = 0; i < vector.NumberOfItems(); i++) { buffer[i] = factor * vector[i]; }
 		return buffer;
 	}
+	//! d(s v) = ds v + s dv
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override
+	{
+		Real factor = left->Evaluate();
+		Real factorDiff = left->Diff(var);
+		const ResizableConstVector& vector = right->EvaluateRef();
+		const ResizableConstVector& vectorDiff = right->DiffRef(var);
+		diffBuffer.SetNumberOfItems(vector.NumberOfItems());
+		for (Index i = 0; i < vector.NumberOfItems(); i++) { diffBuffer[i] = factorDiff * vector[i] + factor * vectorDiff[i]; }
+		return diffBuffer;
+	}
 	virtual STDstring ToString() const override
 	{
 		return "(" + left->ToString() + " * " + right->ToString() + ")";
@@ -365,6 +415,23 @@ public:
 		return buffer;
 	}
 
+	//! d(A v) = dA v + A dv
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override
+	{
+		const ResizableMatrix& matrix = left->EvaluateRef();
+		const ResizableMatrix& matrixDiff = left->DiffRef(var);
+		const ResizableConstVector& vector = right->EvaluateRef();
+		const ResizableConstVector& vectorDiff = right->DiffRef(var);
+		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(), "symbolic Diff of matrix @ vector: inconsistent sizes");
+		diffBuffer.SetNumberOfItems(matrix.NumberOfRows());
+		for (Index i = 0; i < matrix.NumberOfRows(); i++)
+		{
+			Real value = 0.;
+			for (Index j = 0; j < matrix.NumberOfColumns(); j++) { value += matrixDiff(i, j) * vector[j] + matrix(i, j) * vectorDiff[j]; }
+			diffBuffer[i] = value;
+		}
+		return diffBuffer;
+	}
 	virtual STDstring ToString() const override
 	{
 		return "(" + left->ToString() + " @ " + right->ToString() + ")";
@@ -400,6 +467,23 @@ public:
 		return buffer;
 	}
 
+	//! d(A^T v) = dA^T v + A^T dv
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override
+	{
+		const ResizableMatrix& matrix = left->EvaluateRef();
+		const ResizableMatrix& matrixDiff = left->DiffRef(var);
+		const ResizableConstVector& vector = right->EvaluateRef();
+		const ResizableConstVector& vectorDiff = right->DiffRef(var);
+		CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(), "symbolic Diff of vector @ matrix: inconsistent sizes");
+		diffBuffer.SetNumberOfItems(matrix.NumberOfColumns());
+		for (Index j = 0; j < matrix.NumberOfColumns(); j++)
+		{
+			Real value = 0.;
+			for (Index i = 0; i < matrix.NumberOfRows(); i++) { value += matrixDiff(i, j) * vector[i] + matrix(i, j) * vectorDiff[i]; }
+			diffBuffer[j] = value;
+		}
+		return diffBuffer;
+	}
 	virtual STDstring ToString() const override
 	{
 		return "(" + right->ToString() + " @ " + left->ToString() + ")"; //vector @ matrix
@@ -430,6 +514,7 @@ public:
 	virtual const ResizableConstVector& EvaluateRef() const override {
 		return operand->EvaluateRef();
 	}
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override { return operand->DiffRef(var); }
 	virtual STDstring ToString() const override {
 		return operand->ToString();
 		//return "(+" + operand->ToString() + ")";
@@ -459,6 +544,13 @@ public:
 		buffer.SetNumberOfItems(vector.NumberOfItems());
 		for (Index i = 0; i < vector.NumberOfItems(); i++) { buffer[i] = -vector[i]; }
 		return buffer;
+	}
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override
+	{
+		const ResizableConstVector& vectorDiff = operand->DiffRef(var);
+		diffBuffer.SetNumberOfItems(vectorDiff.NumberOfItems());
+		for (Index i = 0; i < vectorDiff.NumberOfItems(); i++) { diffBuffer[i] = -vectorDiff[i]; }
+		return diffBuffer;
 	}
 	virtual STDstring ToString() const override {
 		return "(-" + operand->ToString() + ")";
@@ -499,6 +591,17 @@ public:
 		return buffer;
 	}
 
+	//! d(u_i v_i) = du_i v_i + u_i dv_i
+	virtual const ResizableConstVector& DiffRef(const DiffSeed& var) const override
+	{
+		const ResizableConstVector& l = left->EvaluateRef();
+		const ResizableConstVector& r = right->EvaluateRef();
+		const ResizableConstVector& lDiff = left->DiffRef(var);
+		const ResizableConstVector& rDiff = right->DiffRef(var);
+		diffBuffer.SetNumberOfItems(l.NumberOfItems());
+		for (Index i = 0; i < l.NumberOfItems(); i++) { diffBuffer[i] = lDiff[i] * r[i] + l[i] * rDiff[i]; }
+		return diffBuffer;
+	}
 	virtual STDstring ToString() const override
 	{
 		return left->ToString() + ".multiply(" + right->ToString() + ")";
@@ -542,7 +645,18 @@ public:
 
 		//return left->Evaluate() * right->Evaluate();
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator*::Diff(vector, vector): not implemented"); return 0.; }
+	//! d(u . v) = du . v + u . dv (#3115)
+	virtual Real Diff(const DiffSeed& var) const override
+	{
+		const ResizableConstVector& l = left->EvaluateRef();
+		const ResizableConstVector& r = right->EvaluateRef();
+		const ResizableConstVector& lDiff = left->DiffRef(var);
+		const ResizableConstVector& rDiff = right->DiffRef(var);
+		CHECKandTHROW(l.NumberOfItems() == r.NumberOfItems(), "symbolic Diff of vector @ vector: inconsistent sizes");
+		Real value = 0.;
+		for (Index i = 0; i < l.NumberOfItems(); i++) { value += lDiff[i] * r[i] + l[i] * rDiff[i]; }
+		return value;
+	}
 	virtual STDstring ToString() const override
 	{
 		return "(" + left->ToString() + " @ " + right->ToString() + ")";
@@ -572,7 +686,17 @@ public:
 	{ 
 		return operand->EvaluateRef().GetL2Norm(); 
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::Vector::NormL2(vector): not implemented"); return 0.; }
+	//! d|v| = (v . dv) / |v|, not defined at v = 0 (#3115)
+	virtual Real Diff(const DiffSeed& var) const override
+	{
+		const ResizableConstVector& v = operand->EvaluateRef();
+		const ResizableConstVector& vDiff = operand->DiffRef(var);
+		Real norm = v.GetL2Norm();
+		CHECKandTHROW(norm != 0., "symbolic Diff of NormL2: the derivative of the norm of a zero vector is not defined");
+		Real value = 0.;
+		for (Index i = 0; i < v.NumberOfItems(); i++) { value += v[i] * vDiff[i]; }
+		return value / norm;
+	}
 	virtual STDstring ToString() const override { return "NormL2(" + operand->ToString() + ")"; }
 
 	//the flat evaluation (#3054)
@@ -610,7 +734,16 @@ public:
 		CHECKandTHROW((i >= 0) && (i < v.NumberOfItems()), "VectorExpressionBase::operator[] index out of range");
 		return v[i];
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator[]::Diff(vector, vector): not implemented"); return 0.; }
+	//! the component of the derivative of the vector (#3115)
+	virtual Real Diff(const DiffSeed& var) const override
+	{
+		Real iReal = index->Evaluate();
+		Index i = (Index)iReal;
+		CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer");
+		const ResizableConstVector& vectorDiff = operand->DiffRef(var);
+		CHECKandTHROW((i >= 0) && (i < vectorDiff.NumberOfItems()), "VectorExpressionBase::operator[] index out of range");
+		return vectorDiff[i];
+	}
 	virtual STDstring ToString() const override
 	{
 		return operand->ToString() + "[" + index->ToString() + "]";
@@ -642,7 +775,7 @@ public:
 	{
 		return Real(left->EvaluateRef() == right->EvaluateRef());
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator==::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::operator==::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " == " + right->ToString() + ")";
 	}
@@ -671,7 +804,7 @@ public:
 	virtual Real Evaluate() const override {
 		return Real(!(left->EvaluateRef() == right->EvaluateRef()));
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator!=::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(const DiffSeed& var) const override { CHECKandTHROWstring("Symbolic::operator!=::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " != " + right->ToString() + ")";
 	}

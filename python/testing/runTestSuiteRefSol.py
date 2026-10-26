@@ -160,6 +160,8 @@ def TestExamplesReferenceSolution():
         'symbolicUserFunctionThreadsTest.py':860.0074721246586, #new 2026-10-25: symbolic user functions and user bodies in the threads, user functions set during the simulation, a Python postNewtonStepUserFunction, 4 threads against 1 thread (#2978, #3095)
         'symbolicExportTest.py':11450.057870734236, #new 2026-10-25: GetFlatProgramData, GetFlatProgram and ToString in the formats Python, symbolic, numpy and sympy against the recordings (#3087, #3088)
         'symbolicSystemTest.py':3, #new 2026-10-26: SymbolicSystem, 3 kinds of user bodies and a generic ODE2, mass matrix, forces and residual equal to the solver (#3110)
+        'symbolicExplicitSolverTest.py':1, #new 2026-10-26: SolveExplicit, explicit Euler, RK44 and velocity Verlet on a SymbolicSystem equal to SolveDynamic, NumpySystem (#3112)
+        'symbolicVectorDiffTest.py':1, #new 2026-10-26: Diff of symbolic vectors and matrices, EvaluateJacobian, cMath with symbolic arguments (#3115, #3114)
         'symbolicUtilitiesTest.py':7.024076141931356, #new 2026-10-23: exudyn.symbolicUtilities with exudyn.symbolic, numpy, math and cMath against cUtilities (#3069)
         'userJointTest.py':28.411748466345937, #2026-10-25: the screw over 2.5 turns, periodic, with its jacobianUserFunction, a missing Jacobian refused (#3100, #3101), before -1.8272301913592162; new 2026-10-24: ObjectJointUser, a screw joint against the analytic solution at index 3 and 2, a spherical joint against ObjectJointSpherical, the refusals (#2976)
         'userMarkerTest.py':-0.3569348653534026, #new 2026-10-24: MarkerUser, the midpoint of two mass points and a rigid marker in a revolute joint against built-in markers, the refusals (#3065)

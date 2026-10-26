@@ -2,10 +2,14 @@
   "number": 3114,
   "title": "exudyn.cMath functions forward a symbolic argument to exudyn.symbolic",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "LOW",
   "description": "revision2026c step RG12.57 (maintainer 2026-10-26): cMath.sin and the other functions of exudyn.cMath take numbers and numpy arrays only; with an exudyn.symbolic Real (or Vector, where the symbolic function exists) they call the function of exudyn.symbolic, so that one function written with cMath runs on numbers and is recorded as a symbolic user function, also mixed between symbolic and numeric arguments.",
   "dateRaised": "2026-10-26",
-  "deadline": "2027-04-24"
+  "deadline": "2027-04-24",
+  "dateResolved": "2026-10-26 23:57",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The functions of exudyn.cMath take an exudyn.symbolic.Real and then compute as the functions of exudyn.symbolic (all but cbrt; atan2 and pow also mixed with a float), so that one function written with cMath runs on numbers and is recorded as symbolic user function.",
+  "resolvedInVersion": "1.13.221"
 }

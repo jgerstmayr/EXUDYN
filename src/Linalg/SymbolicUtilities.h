@@ -766,6 +766,71 @@ public:
 		//}
 	}
 
+	//! the Jacobian of the result by the argument of this name, at the arguments of the call (as for Evaluate), by Diff
+	//! of the tree, one column per component of the argument (#3115): a Real result gives a vector, a vector result a
+	//! matrix (size of result x size of argument), a matrix result an array (rows x columns x size of argument)
+	py::object PyEvaluateJacobian(const STDstring& argumentName, const py::args& args)
+	{
+		py::object value = PyEvaluateUF(args); //sets the arguments: the values at which the derivative is taken
+		const void* variable = nullptr;
+		Index size = 0;
+		for (SymbolicGeneric& argument : argRealList)
+		{
+			if (argument.IsReal() && argument.GetReal()->IsExpressionNamedReal() && argument.GetReal()->GetExpressionNamedReal().GetName() == argumentName)
+			{
+				variable = &argument.GetReal()->GetExpressionNamedReal(); size = -1;
+			}
+			else if (argument.IsVector() && argument.GetVector()->IsExpressionNamedReal() && argument.GetVector()->GetExpressionNamedReal().GetName() == argumentName)
+			{
+				variable = &argument.GetVector()->GetExpressionNamedReal(); size = argument.GetVector()->GetExpressionNamedReal().NumberOfItems();
+			}
+			else if (argument.IsMatrix() && argument.GetMatrix()->IsExpressionNamedReal() && argument.GetMatrix()->GetExpressionNamedReal().GetName() == argumentName)
+			{
+				const MatrixExpressionNamedReal& matrix = argument.GetMatrix()->GetExpressionNamedReal();
+				variable = &matrix; size = matrix.NumberOfRows()*matrix.NumberOfColumns();
+			}
+		}
+		CHECKandTHROW(variable != nullptr, "symbolic user function " + functionName + ": EvaluateJacobian: no argument named '" + argumentName + "'");
+		CHECKandTHROW(itemOutputs.empty(), "symbolic user function " + functionName + ": EvaluateJacobian: the function reads outputs of items, which have no derivative");
+		Index columns = (size < 0) ? 1 : size;
+		FlatNode root = ResultNode();
+		CheckTreeDepth(root, "EvaluateJacobian()");
+		auto Seed = [&](Index j) { return DiffSeed(variable, size < 0 ? -1 : j); };
+		if (returnValue.IsReal())
+		{
+			py::array_t<Real> jacobian(columns);
+			for (Index j = 0; j < columns; j++) { jacobian.mutable_at(j) = root.node ? ((const ExpressionBase*)root.node)->Diff(Seed(j)) : 0.; }
+			return std::move(jacobian);
+		}
+		else if (returnValue.IsVector())
+		{
+			Index rows = (Index)py::len(value);
+			py::array_t<Real> jacobian(std::vector<ptrdiff_t>{ rows, columns });
+			for (Index j = 0; j < columns; j++)
+			{
+				const ResizableConstVector* column = root.node ? &((const VectorExpressionBase*)root.node)->DiffRef(Seed(j)) : nullptr;
+				for (Index i = 0; i < rows; i++) { jacobian.mutable_at(i, j) = column ? (*column)[i] : 0.; }
+			}
+			return std::move(jacobian);
+		}
+		else
+		{
+			py::array_t<Real> valueArray = py::array_t<Real>::ensure(value);
+			Index rows = (Index)valueArray.shape(0);
+			Index matrixColumns = (Index)valueArray.shape(1);
+			py::array_t<Real> jacobian(std::vector<ptrdiff_t>{ rows, matrixColumns, columns });
+			for (Index j = 0; j < columns; j++)
+			{
+				const ResizableMatrix* column = root.node ? &((const MatrixExpressionBase*)root.node)->DiffRef(Seed(j)) : nullptr;
+				for (Index i = 0; i < rows; i++)
+				{
+					for (Index k = 0; k < matrixColumns; k++) { jacobian.mutable_at(i, k, j) = column ? (*column)(i, k) : 0.; }
+				}
+			}
+			return std::move(jacobian);
+		}
+	}
+
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! get itemName from itemIndex

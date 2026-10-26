@@ -2,10 +2,14 @@
   "number": 3115,
   "title": "Diff of exudyn.symbolic Vector and Matrix expressions, by a component of a vector variable, and the Jacobian of a recording by an argument",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "revision2026c step RG12.58 (maintainer 2026-10-26): the vector and matrix expressions of exudyn.symbolic have no derivative (operator[]::Diff not implemented), and Diff takes a scalar named variable only, so a recording cannot be differentiated by a component of its vector arguments. Proposal in docs/dev/design/symbolicSystem.md: a derivative seed (variable, component), a derivative buffer per vector and matrix node like the evaluation buffer, Diff for every vector and matrix operation, Vector.Diff, Matrix.Diff, and UserFunction.EvaluateJacobian(argument, ...) for the Jacobian of a recording by one of its arguments.",
   "dateRaised": "2026-10-26",
-  "deadline": "2027-04-24"
+  "deadline": "2027-04-24",
+  "dateResolved": "2026-10-26 23:57",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Diff of exudyn.symbolic vectors and matrices: Vector.Diff and Matrix.Diff by a named Real or by a component of a named Vector, Real.Diff(vector, component), and UserFunction.EvaluateJacobian(argumentName, ...), the Jacobian of a recorded user function by one of its arguments; SymbolicSystem.ResidualJacobian uses it.",
+  "resolvedInVersion": "1.13.222"
 }
