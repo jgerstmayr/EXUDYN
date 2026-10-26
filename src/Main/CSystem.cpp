@@ -928,7 +928,7 @@ static void ComputeMainThreadItems(const CSystemData& data, std::vector<bool>& m
 		const CMarker* marker = data.GetCMarkers()[i];
 		functions.SetNumberOfItems(0);
 		marker->GetUserFunctions(functions);
-		if (UserFunctionsInMainThread(functions)) { mainThreadMarkers[i] = true; } //MarkerUser
+		if (UserFunctionsInMainThread(functions)) { mainThreadMarkers[i] = true; } //MarkerBodyUser
 		else if (marker->GetType() & (Marker::Body + Marker::Object)) //a marker on one object
 		{
 			Index objectNumber = marker->GetObjectNumber();

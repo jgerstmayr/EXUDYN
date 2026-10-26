@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
-* @class        VisualizationMarkerUser
-* @brief        A marker on any number of bodies whose position, and optionally rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.
+* @class        VisualizationMarkerBodyUser
+* @brief        A marker on any number of bodies whose position, and with providedMarkerType Position | Orientation its rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-24  22:30:32 (last modified)
+* @date         2026-10-26  09:52:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -13,8 +13,8 @@
 
 ************************************************************************************************ */
 
-#ifndef VISUALIZATIONMARKERUSER__H
-#define VISUALIZATIONMARKERUSER__H
+#ifndef VISUALIZATIONMARKERBODYUSER__H
+#define VISUALIZATIONMARKERBODYUSER__H
 
 #include <ostream>
 
@@ -22,13 +22,13 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-class VisualizationMarkerUser: public VisualizationMarker // AUTO:
+class VisualizationMarkerBodyUser: public VisualizationMarker // AUTO:
 {
 protected: // AUTO:
 
 public: // AUTO:
     //! AUTO: default constructor with parameter initialization
-    VisualizationMarkerUser()
+    VisualizationMarkerBodyUser()
     {
         show = true;
     };

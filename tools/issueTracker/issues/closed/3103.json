@@ -1,0 +1,15 @@
+{
+  "number": 3103,
+  "title": "MarkerUser becomes MarkerBodyUser with a parameter markerType",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "HIGH",
+  "description": "revision2026c step RG7.15 (maintainer 2026-10-25): MarkerUser takes bodies only and always provides Position and Orientation; as MarkerBodyUser it gets a parameter markerType that selects what it provides - Position, Position and Orientation, possibly Coordinates and others; the old C++ files removed.",
+  "dateRaised": "2026-10-25",
+  "deadline": "2027-04-23",
+  "dateResolved": "2026-10-26 10:04",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "MarkerUser is renamed to MarkerBodyUser (type name BodyUser). Its new parameter providedMarkerType says what it provides: exu.MarkerType.Position (default) or exu.MarkerType.Position | exu.MarkerType.Orientation together with the rotationMatrixUserFunction; Assemble refuses a rotation function without Orientation, Orientation without it, and other values. The parameter is not called markerType, because that is the key of the type name in every marker dictionary.",
+  "resolvedInVersion": "1.13.214"
+}

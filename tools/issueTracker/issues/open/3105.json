@@ -1,0 +1,11 @@
+{
+  "number": 3105,
+  "title": "ObjectConnectorUser and ObjectJointUser state the marker types they need, by a parameter markerType",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.15.8 (maintainer 2026-10-26): the user connector and the user joint take a parameter of exu.MarkerType, given at creation, saying which marker type their markers must provide (Position, Position|Orientation, ...); Assemble checks the markers against it, and the user function can rely on it.",
+  "dateRaised": "2026-10-26",
+  "deadline": "2027-04-24"
+}

@@ -50,8 +50,9 @@ closest point on a flexible body and act there (#2975). With a NodeGenericData, 
 coordinates, which a postNewtonStepUserFunction updates, for contact and friction (#3102).
 The new page {ref}`sec-useritems` explains how the user items are set up (#2979).
 **ObjectJointUser** constrains two rigid markers by 1 to 6 equations of their frames, written in Python, e.g. a screw
-joint (#2976). **MarkerUser** is a marker on several bodies whose position and rotation are Python functions of their
-coordinates; the built-in connectors, joints, loads and sensors act on it (#3065).
+joint (#2976). **MarkerBodyUser** is a marker on several bodies whose position and rotation are Python functions of their
+coordinates, with `providedMarkerType` Position or Position | Orientation; the built-in connectors, joints, loads and
+sensors act on it (#3065, #3103). ObjectUserBody needs no mass matrix for a static problem (#3104).
 **`exudyn.symbolicUtilities`** has the rotation matrices, G matrices and their conversions of `exudyn.cUtilities` with
 the same names and arguments and a last argument `functions`: with `exudyn.symbolic` they return symbolic matrices and
 vectors for symbolic user functions, with `numpy`, `math` or `exudyn.cMath` numpy arrays (#3069).

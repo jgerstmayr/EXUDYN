@@ -16,7 +16,7 @@ gives to the solver and takes from it is explained on the general page of its ki
 | {ref}`NodeUser <sec-item-nodeuser>` | position (and rotation) of the node from its coordinates | nodes that Exudyn does not have, e.g. an ANCF node with full gradients |
 | {ref}`ObjectConnectorUser <sec-item-objectconnectoruser>` | the forces, applied through its markers | contact on flexible bodies, force laws between several markers |
 | {ref}`ObjectJointUser <sec-item-objectjointuser>` | 1 to 6 constraint equations of the frames of two rigid markers | a screw joint, couplings of rotation and translation |
-| {ref}`MarkerUser <sec-item-markeruser>` | position (and rotation) from the coordinates of several bodies, their Jacobians | a point between bodies or nodes, where built-in connectors, joints, loads and sensors act |
+| {ref}`MarkerBodyUser <sec-item-markerbodyuser>` | position (and rotation) from the coordinates of several bodies, their Jacobians | a point between bodies or nodes, where built-in connectors, joints, loads and sensors act |
 | ObjectGenericODE2, SensorUserFunction, the `...UserFunction` of the built-in items | a force law, a load, a sensor value | see {ref}`sec-userfunctions` |
 
 ## The arguments of a user function
@@ -64,7 +64,8 @@ built-in force, a symbolic one 0.06 µs.
 ## What a user body provides
 
 - **Equations of motion** $\Mm\, \ddot\qv = \fv + \fv_{loads}$ from `massMatrixUserFunction` and `forceUserFunction`;
-  with `constantMassMatrix=True` the mass matrix is computed once and kept. The Jacobian is computed numerically.
+  with `constantMassMatrix=True` the mass matrix is computed once and kept. The Jacobian is computed numerically. A
+  static problem needs no `massMatrixUserFunction`; without it, a dynamic solver and the kinetic energy raise (#3104).
 - **The body interface** from `positionUserFunction` and `positionJacobianUserFunction` - and for rigid markers
   `rotationMatrixUserFunction` and `rotationJacobianUserFunction`: MarkerBodyPosition, MarkerBodyRigid, SensorBody, the
   loads on them and every connector work on the body.
@@ -107,9 +108,11 @@ forces (#2976). userJointTest.py writes a screw joint over several turns: the co
 written periodic, as $\sin(\varphi - x/h) = 0$, because an angle computed by `atan2` jumps by $2\pi$ at half a turn and
 gives no continuous constraint beyond it (#3100).
 
-MarkerUser is a marker on any number of bodies: its `positionUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t,
+MarkerBodyUser is a marker on any number of bodies: its `positionUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t,
 parameters)` gets the coordinates of the nodes of these bodies, body by body, and every built-in connector, joint, load
-and sensor acts at that point (#3065); with a `rotationMatrixUserFunction` it is a rigid marker. The Jacobians are
+and sensor acts at that point (#3065). `providedMarkerType` says what it provides: `exu.MarkerType.Position`, the
+default, or `exu.MarkerType.Position | exu.MarkerType.Orientation` with a `rotationMatrixUserFunction` for a rigid
+marker; Assemble refuses a rotation function without Orientation and Orientation without it (#3103). The Jacobians are
 computed by central differences if they are not given - then a Newton tolerance below about 1e-10 is not reached.
 
 ## Example

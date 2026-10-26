@@ -1006,12 +1006,12 @@ bool MainMarkerBodyBeamShapeIsRegistered = ClassFactoryItem<MainMarker>::Get().R
 		return item;
 	});
 
-bool MainMarkerUserIsRegistered = ClassFactoryItem<MainMarker>::Get().RegisterClass("User", []
+bool MainMarkerBodyUserIsRegistered = ClassFactoryItem<MainMarker>::Get().RegisterClass("BodyUser", []
 	{ //AUTO: 
-		CMarkerUser* cItem = new CMarkerUser();							//new point Marker
-		MainMarker* item = new MainMarkerUser(); //new main item
+		CMarkerBodyUser* cItem = new CMarkerBodyUser();							//new point Marker
+		MainMarker* item = new MainMarkerBodyUser(); //new main item
 		item->SetCMarker(cItem);
-		VisualizationMarkerUser* vItem = new VisualizationMarkerUser();
+		VisualizationMarkerBodyUser* vItem = new VisualizationMarkerBodyUser();
 		item->SetVisualizationMarker(vItem);
 		return item;
 	});

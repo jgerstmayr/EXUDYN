@@ -1,13 +1,14 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  MarkerUser (#3065), a marker on several bodies whose position and rotation are Python user functions of the
+# Details:  MarkerBodyUser (#3065, #3103), a marker on several bodies whose position and rotation are Python user functions of the
 #           coordinates of the nodes of these bodies. (1) A marker at the midpoint of two mass points, held by a
 #           Cartesian spring to the ground and loaded by a force: with equal initial conditions, each mass point carries
 #           half of it, as two mass points with half the spring and half the force each; the SensorMarker of the marker.
 #           (2) A pendulum: a rigid marker on a rigid body, its position and rotation written with
 #           exudyn.symbolicUtilities and numpy, in a revolute joint, against MarkerBodyRigid; the Jacobians by central
-#           differences and given by user functions. (3) What the marker refuses.
+#           differences and given by user functions; providedMarkerType Position | Orientation. (3) What the marker
+#           refuses, and the type it reports.
 #           Run alone, it draws the pendulum and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
@@ -57,7 +58,7 @@ def SolveMidpoint(kind):
                                                 offset=mbs.GetObjectOutputBody(body, exu.OutputVariableType.Position, configuration=exu.ConfigurationType.Reference)))
             mbs.AddLoad(LoadForceVector(markerNumber=marker, loadVector=0.5*np.array(force)))
     else:
-        marker = mbs.AddMarker(MarkerUser(bodyNumbers=bodies, positionUserFunction=UFmidpoint,
+        marker = mbs.AddMarker(MarkerBodyUser(bodyNumbers=bodies, positionUserFunction=UFmidpoint,
                                           positionJacobianUserFunction=UFmidpointJacobian if kind == 'jacobian' else 0))
         mbs.AddObject(CartesianSpringDamper(markerNumbers=[ground, marker], stiffness=[k]*3))
         mbs.AddLoad(LoadForceVector(markerNumber=marker, loadVector=force))
@@ -104,7 +105,8 @@ def SolvePendulum(kind, show=False):
         marker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=pLocal))
     else:
         jacobians = {} if kind == 'numerical' else {'positionJacobianUserFunction': UFpositionJacobian, 'rotationJacobianUserFunction': UFrotationJacobian}
-        marker = mbs.AddMarker(MarkerUser(bodyNumbers=[body], positionUserFunction=UFposition, rotationMatrixUserFunction=UFrotation, **jacobians))
+        marker = mbs.AddMarker(MarkerBodyUser(bodyNumbers=[body], providedMarkerType=exu.MarkerType.Position | exu.MarkerType.Orientation,
+                                              positionUserFunction=UFposition, rotationMatrixUserFunction=UFrotation, **jacobians))
     mbs.AddObject(RevoluteJointZ(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround()))), marker]))
     mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0, -9.81, 0]))
     mbs.Assemble()
@@ -121,16 +123,19 @@ def SolvePendulum(kind, show=False):
 pendulums = [SolvePendulum(kind, show=(kind == 'jacobian')) for kind in ['builtIn', 'numerical', 'jacobian']]
 differencePendulum = max(np.max(np.abs(pendulums[1] - pendulums[0])), np.max(np.abs(pendulums[2] - pendulums[0])))
 u += np.sum(pendulums[0])
-exu.Print('pendulum on MarkerUser: largest difference to MarkerBodyRigid:', differencePendulum)
+exu.Print('pendulum on MarkerBodyUser: largest difference to MarkerBodyRigid:', differencePendulum)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#(3) what the marker refuses: a joint on a marker without rotation, a marker without bodies
-def Refused(bodies, message):
+#(3) what the marker refuses: a joint on a marker of type Position, a marker without bodies, a rotation without
+#Orientation, Orientation without rotation, another type; the type the marker reports
+rigidType = exu.MarkerType.Position | exu.MarkerType.Orientation
+def Refused(bodies, message, providedMarkerType=exu.MarkerType.Position, rotation=0, joint=False):
     mbs = SC.AddSystem()
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.5, 0, 0, 0, 0, 0]))
     body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
-    marker = mbs.AddMarker(MarkerUser(bodyNumbers=[body]*bodies, positionUserFunction=UFposition))
-    if bodies: #a joint needs Orientation
+    marker = mbs.AddMarker(MarkerBodyUser(bodyNumbers=[body]*bodies, providedMarkerType=providedMarkerType,
+                                          positionUserFunction=UFposition, rotationMatrixUserFunction=rotation))
+    if joint: #a joint needs Orientation
         mbs.AddObject(RevoluteJointZ(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround()))), marker]))
     try:
         mbs.Assemble()
@@ -138,10 +143,18 @@ def Refused(bodies, message):
         return int(message in str(e))
     return 0
 
-refused = Refused(1, 'Orientation') + Refused(0, 'bodyNumbers is empty')
-exu.Print('refused, of 2:', refused)
+refused = (Refused(1, 'Orientation', joint=True) + Refused(0, 'bodyNumbers is empty')
+           + Refused(1, 'rotationMatrixUserFunction is given, but providedMarkerType is Position', rotation=UFrotation)
+           + Refused(1, 'providedMarkerType is Position|Orientation, but the rotationMatrixUserFunction is not given', providedMarkerType=rigidType)
+           + Refused(1, 'providedMarkerType is 128, but must be', providedMarkerType=exu.MarkerType.Coordinate))
+mbsType = SC.AddSystem()
+nodeType = mbsType.AddNode(NodePoint())
+markerType = mbsType.AddMarker(MarkerBodyUser(bodyNumbers=[mbsType.AddObject(MassPoint(nodeNumber=nodeType, mass=1))],
+                                              providedMarkerType=rigidType, positionUserFunction=UFmidpoint, rotationMatrixUserFunction=UFrotation))
+refused += int(int(mbsType.GetMarker(markerType)['providedMarkerType']) == int(rigidType)) + int(mbsType.GetMarker(markerType)['markerType'] == 'BodyUser')
+exu.Print('refused and types, of 7:', refused)
 
-u += int(differenceMidpoint > 1e-10) + int(differencePendulum > 1e-8) + (2 - refused)
+u += int(differenceMidpoint > 1e-10) + int(differencePendulum > 1e-8) + (7 - refused)
 exu.Print('solution of userMarkerTest=', u)
 
 exu.sys['testResult'] = u

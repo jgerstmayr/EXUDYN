@@ -3495,3 +3495,55 @@ mbs.SolutionViewer() in several test models, so the viewer refuses; ObjectJointU
 - parameterConversionTestReference.txt: the two new parameters of ObjectConnectorUser recorded, as for the other items.
   userFunctionInterfaces.py: 58 user functions, 50 with a symbolic version, 32 signatures (userFunctions.md).
 - Docs: the definition (Data coordinates and the post-Newton step, mini example), userItems.md, revisions.md.
+
+<a id="rg7-15-6"></a>
+### RG7.15.6 and RG7.15.7 — MarkerBodyUser with providedMarkerType; ObjectUserBody without mass matrix (2026-10-26, #3103, #3104)
+- Maintainer 2026-10-26: the proposal of RG7.15.6 accepted; the marker type Coordinates and the user shapes (polynomial
+  curve, polynomial shell surface) became RG7.16 (#3106), the Jacobians by central differences of NodeUser,
+  ObjectUserBody and MarkerBodyUser RG7.17 (#3107, tbd, kept for now, perhaps behind an exudyn.special flag), the
+  derivatives of symbolic user functions by esym.Diff RG12.54 (#3108), a requested marker type of ObjectConnectorUser
+  and ObjectJointUser RG7.15.8 (#3105); the massMatrixUserFunction of ObjectUserBody not required (RG7.15.7).
+- MarkerUser is MarkerBodyUser, type name BodyUser: CMarkerUser.cpp renamed by git mv to CMarkerBodyUser.cpp, the three
+  generated headers, the generated page and the mini example of the old name removed, the vcxproj, its filters,
+  sources.json, the includes and the reference of the mini example renamed. The item is not released, so no deprecation.
+- The parameter is **providedMarkerType**, not markerType: markerType is the key of the type name in the dictionary of
+  every marker ('markerType': 'BodyUser'), and the generated GetDictionary wrote both into the same key. Default
+  exu.MarkerType.Position; exu.MarkerType.Position | exu.MarkerType.Orientation for a rigid marker. GetType returns Body +
+  Object + providedMarkerType instead of deciding by the rotationMatrixUserFunction. CheckPreAssembleConsistency: Position
+  with a rotationMatrixUserFunction refused, Position | Orientation without it refused, any other value refused.
+- The parameter type MarkerType of the generators (definitionTypes.TMarkerType, typeModel: Marker::Type): written by
+  `(Marker::Type)py::cast<Index>(...)`, so that the enum and the int that | gives both work; read back as exu.MarkerType,
+  which shows a combination as `<MarkerType.???: 96>` and converts by int(). Default Marker::Position, in Python
+  exudyn.MarkerType.Position. RG7.15.8 uses the same type.
+- userMarkerTest.py: the pendulum marker with Position | Orientation, the refusals 2 -> 5 and the type read back
+  (providedMarkerType 96, markerType 'BodyUser'); result unchanged, -0.3569348653534026. A joint on a wrong marker is
+  refused by the object check before the marker check, so the marker refusals are tested without the joint.
+- ObjectUserBody: Assemble no longer requires the massMatrixUserFunction; EvaluateUserFunctionMassMatrix raises "...
+  massMatrixUserFunction is not given, but the mass matrix is needed - by a dynamic solver or an output such as the
+  kinetic energy". userTetrahedronTest.py: the patch test without mass matrix gives the same static solution (difference
+  0.0), SolveDynamic raises; result unchanged.
+- parameterConversionTestReference.txt re-recorded (the new name, the outcome row of MarkerType).
+- Docs: the definition (overall description, Marker type section, the table), userItems.md (manual and internals, there
+  also the signatures of ObjectConnectorUser and the required Jacobian of ObjectJointUser of #3101/#3102 brought up to
+  date), revisions.md, symbolicUserFunctions.md.
+- The test suite passes (221 test models, 98 mini examples); pytest -n 8 passes. Its first run failed for the graphics
+  test of the mini example MarkerBodyUser.py, which writes a missing reference and fails once: the new reference is
+  byte-identical to the one of MarkerUser.py, which is removed.
+
+<a id="rg12-51-1"></a>
+### RG12.51.1 — The design of the symbolic system models (2026-10-26, #3109)
+- docs/dev/design/symbolicSystem.md, from the maintainer's points of 2026-10-26 and the section 4 of the first
+  symbolicExport.md (commit 9790d8c5): the goals export, GPU/CPU evaluation and a check by a Python solver; what exists
+  (flat programs and their writers, Optimize, one recording for many objects, the LTG maps, the solver API in Python,
+  esym.Diff as a recursion that returns numbers, MatrixContainer triplets).
+- The design: per object a flat program, the objects of one recording as a kind with tables of parameters and LTG
+  indices; the residual M q_tt - f per object as the basic term; global matrices only as triplets.
+- Own considerations: explicit integration from residuals still needs M^-1 f - a constant mass matrix factored once, or
+  the matrix-free product M a = r(q, q_t, a) - r(q, q_t, 0) with conjugate gradients; the Jacobians best by symbolic
+  differentiation into a new flat program (one function per node class next to NewWithOperands, then Optimize), which is
+  exportable and also gives the marker Jacobians without sympy; forward mode with n tangents per slot (the "local
+  stack") as the runtime form; esym.Diff per coordinate as the fallback for the Python solver.
+- The solver: generalized-alpha in the form Exudyn uses, the settings of SimulationSettings.timeIntegration, checked
+  term by term against the solver API and in time against SolveDynamic. Proposed in exudyn/misc/symbolicSystem.py,
+  not systemUtilities.py, whose rule keeps the solver functions in solver.py - decision 3.
+- Five sub-steps and four decisions proposed; RG12.51.2 waits for them.

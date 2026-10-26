@@ -3,10 +3,10 @@
 \clearpage
 ```
 
-(sec-item-markeruser)=
-# MarkerUser
+(sec-item-markerbodyuser)=
+# MarkerBodyUser
 
-A marker on any number of bodies whose position, and optionally rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.
+A marker on any number of bodies whose position, and with providedMarkerType Position | Orientation its rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.
 
 ## Interface
 
@@ -16,22 +16,23 @@ A marker on any number of bodies whose position, and optionally rotation, are co
 
 ## Parameters
 
-The parameters of the item; in a dictionary, its type is 'User':
+The parameters of the item; in a dictionary, its type is 'BodyUser':
 
 | name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **bodyNumbers** | ArrayObjectIndex |  | [] | (symbol: $[b_0,\,b_1,\,\ldots]\tp$) the bodies whose coordinates the user functions get, at least one |
+| **providedMarkerType** | MarkerType |  | MarkerType.Position | what the marker provides besides Body and Object: exu.MarkerType.Position, or exu.MarkerType.Position \| exu.MarkerType.Orientation with the rotationMatrixUserFunction |
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the marker, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout |
-| **positionUserFunction** | MarkerUserPositionUserFunction |  | 0 | (symbol: $\LU{0}{\pv}(\qv)$) A Python user function which computes the global position of the marker; it must be given |
-| **positionJacobianUserFunction** | MarkerUserPositionJacobianUserFunction |  | 0 | (symbol: $\Jm_{pos}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the position Jacobian; by central differences of the position if not given |
-| **rotationMatrixUserFunction** | MarkerUserRotationMatrixUserFunction |  | 0 | (symbol: $\LU{0m}{\Rot}(\qv) \in \Rcal^{3\times 3}$) A Python user function which computes the rotation matrix of the marker; optional, for rigid markers |
-| **rotationJacobianUserFunction** | MarkerUserRotationJacobianUserFunction |  | 0 | (symbol: $\Jm_{rot}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given |
-| **visualization** | VMarkerUser |  |  | parameters for visualization of item |
+| **positionUserFunction** | MarkerBodyUserPositionUserFunction |  | 0 | (symbol: $\LU{0}{\pv}(\qv)$) A Python user function which computes the global position of the marker; it must be given |
+| **positionJacobianUserFunction** | MarkerBodyUserPositionJacobianUserFunction |  | 0 | (symbol: $\Jm_{pos}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the position Jacobian; by central differences of the position if not given |
+| **rotationMatrixUserFunction** | MarkerBodyUserRotationMatrixUserFunction |  | 0 | (symbol: $\LU{0m}{\Rot}(\qv) \in \Rcal^{3\times 3}$) A Python user function which computes the rotation matrix of the marker; given exactly for providedMarkerType Position \| Orientation |
+| **rotationJacobianUserFunction** | MarkerBodyUserRotationJacobianUserFunction |  | 0 | (symbol: $\Jm_{rot}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given |
+| **visualization** | VMarkerBodyUser |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
-The parameters of `VMarkerUser`, given as `visualization`:
+The parameters of `VMarkerBodyUser`, given as `visualization`:
 
 | name | type | size | default | description |
 |---|---|---|---|---|
@@ -40,7 +41,7 @@ The parameters of `VMarkerUser`, given as `visualization`:
 ## Drawing
 
 Drawn as [all markers](#sec-drawing-markers).
-(description-markeruser)=
+(description-markerbodyuser)=
 ## Detailed description
 
 ### Coordinates and user functions
@@ -54,12 +55,18 @@ velocities `q_t` and the `parameters`, as those of NodeUser and ObjectUserBody d
 |---|---|---|
 | `positionUserFunction` | $\LU{0}{\pv}(\qv)$ | always |
 | `positionJacobianUserFunction` | $\Jm_{pos} = \partial \LU{0}{\pv} / \partial \qv \in \Rcal^{3 \times n}$ | optional, by central differences of the position |
-| `rotationMatrixUserFunction` | $\LU{0m}{\Rot}(\qv)$ | rigid markers: joints, torques |
+| `rotationMatrixUserFunction` | $\LU{0m}{\Rot}(\qv)$ | providedMarkerType Position \| Orientation: joints, torques |
 | `rotationJacobianUserFunction` | $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv \in \Rcal^{3 \times n}$ | optional, by central differences of the rotation matrix |
 
 The velocity is $\Jm_{pos} \dot \qv$, the angular velocity $\Jm_{rot} \dot \qv$. A force $\fv$ on the marker gives
-the generalized forces $\Jm_{pos}\tp \fv$, a torque $\Jm_{rot}\tp \mv$. A marker without
-rotationMatrixUserFunction has no Orientation: a joint or a torque on it is refused at Assemble. The user functions
+the generalized forces $\Jm_{pos}\tp \fv$, a torque $\Jm_{rot}\tp \mv$.
+
+### Marker type
+
+`providedMarkerType` says what the marker provides, besides Body and Object (#3103): `exu.MarkerType.Position`, the
+default, or `exu.MarkerType.Position | exu.MarkerType.Orientation` for a rigid marker. Position | Orientation needs
+the rotationMatrixUserFunction, and a rotation function given with Position alone is refused at Assemble; a joint
+or a torque on a marker of type Position is refused as on any position marker. The user functions
 are called serially, in the main thread; the marker and what depends on it are drawn in the main thread. Connectors
 on the marker compute their Jacobian numerically.
 
@@ -127,7 +134,7 @@ A user function of the marker that returns a matrix: the position Jacobian $\Jm_
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-(miniexample-markeruser)=
+(miniexample-markerbodyuser)=
 ## Mini example
 
 
@@ -139,7 +146,7 @@ bA = mbs.AddObject(MassPoint(nodeNumber=nA, mass=1))
 bB = mbs.AddObject(MassPoint(nodeNumber=nB, mass=1))
 def UFposition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return 0.5*(qTotal[0:3] + qTotal[3:6])
-mMid = mbs.AddMarker(MarkerUser(bodyNumbers=[bA, bB], positionUserFunction=UFposition))
+mMid = mbs.AddMarker(MarkerBodyUser(bodyNumbers=[bA, bB], positionUserFunction=UFposition))
 mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
 k = 100
 mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround, mMid], stiffness=[k,k,k]))

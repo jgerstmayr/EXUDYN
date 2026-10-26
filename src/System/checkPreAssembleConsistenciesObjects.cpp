@@ -1494,11 +1494,7 @@ bool MainObjectUserBody::CheckPreAssembleConsistency(const MainSystem& mainSyste
 			return false;
 		}
 	}
-	if (!cObject->GetParameters().massMatrixUserFunction)
-	{
-		errorString = "ObjectUserBody: massMatrixUserFunction must be given";
-		return false;
-	}
+	//no massMatrixUserFunction is needed for a static problem; the mass matrix raises without it (#3104)
 	return true;
 }
 

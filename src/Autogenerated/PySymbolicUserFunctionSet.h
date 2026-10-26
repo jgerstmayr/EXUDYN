@@ -347,28 +347,28 @@ public:
                     return this->EvaluateStdVector6D(mainSystem, arg0, arg1, arg2);
                 };
         }
-        else if (itemTypeName == "MarkerUser" && userFunctionName == "positionUserFunction")
+        else if (itemTypeName == "MarkerBodyUser" && userFunctionName == "positionUserFunction")
         {            //define the user function as lambda function of this
             nodeUserPositionUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
                 {
                     return this->EvaluateStdVector3D(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
                 };
         }
-        else if (itemTypeName == "MarkerUser" && userFunctionName == "positionJacobianUserFunction")
+        else if (itemTypeName == "MarkerBodyUser" && userFunctionName == "positionJacobianUserFunction")
         {            //define the user function as lambda function of this
             nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
                 {
                     return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
                 };
         }
-        else if (itemTypeName == "MarkerUser" && userFunctionName == "rotationMatrixUserFunction")
+        else if (itemTypeName == "MarkerBodyUser" && userFunctionName == "rotationMatrixUserFunction")
         {            //define the user function as lambda function of this
             nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
                 {
                     return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
                 };
         }
-        else if (itemTypeName == "MarkerUser" && userFunctionName == "rotationJacobianUserFunction")
+        else if (itemTypeName == "MarkerBodyUser" && userFunctionName == "rotationJacobianUserFunction")
         {            //define the user function as lambda function of this
             nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
                 {

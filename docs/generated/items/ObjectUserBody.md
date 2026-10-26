@@ -10,7 +10,7 @@ A body whose equations of motion and whose position, and optionally orientation,
 
 ## Interface
 
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markerbodyuser)
 - Nodes: see the detailed description
 
 ## Parameters
@@ -23,7 +23,7 @@ The parameters of the item; in a dictionary, its type is 'UserBody':
 | **nodeNumbers** | ArrayNodeIndex |  | [] | (symbol: $\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$) the nodes whose {ref}`ODE2 <ODE2>` coordinates are the coordinates of the body, in this order |
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default |
 | **constantMassMatrix** | Bool |  | False | True: the mass matrix does not depend on the coordinates and the time; massMatrixUserFunction is called once, its result is kept and reused - computed again after a change of a parameter of the body or Assemble -, and the solvers treat the mass matrix as constant |
-| **massMatrixUserFunction** | ObjectUserBodyMassMatrixUserFunction |  | 0 | (symbol: $\Mm(\qv) \in \Rcal^{n\times n}$) A Python user function which computes the mass matrix; it must be given |
+| **massMatrixUserFunction** | ObjectUserBodyMassMatrixUserFunction |  | 0 | (symbol: $\Mm(\qv) \in \Rcal^{n\times n}$) A Python user function which computes the mass matrix; it is needed by a dynamic solver and the kinetic energy, not for a static problem (#3104) |
 | **massIntegralUserFunction** | ObjectUserBodyMassIntegralUserFunction |  | 0 | (symbol: $\Jm_m = \int_V \rho\, \Jm_{pos}\, dV \in \Rcal^{3\times n}$) A Python user function which computes the mass integral of the position Jacobian; needed for MarkerBodyMass and the loads on it, such as LoadMassProportional (gravity) |
 | **centerOfMass** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\pLocB_{COM}$) the local position of the center of mass; where MarkerBodyMass and the loads on it are drawn |
 | **forceUserFunction** | ObjectUserBodyForceUserFunction |  | 0 | (symbol: $\fv \in \Rcal^{n}$) A Python user function which computes the generalized forces on the right-hand side; zero if not given |

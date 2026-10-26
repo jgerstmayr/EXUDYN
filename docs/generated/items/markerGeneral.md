@@ -92,4 +92,4 @@ The settings: [`markers.show`](#sec-vsettingsmarkers), [`markers.defaultSize`](#
 | [](#sec-item-markerbodycable2dshape) | a body | `Coordinate` | 5 items |
 | [](#sec-item-markerbodycable2dcoordinates) | a body | `Coordinate` | 5 items |
 | [](#sec-item-markerbodybeamshape) | a body | `Beam3DShape` | the items that name it |
-| [](#sec-item-markeruser) | a body | `Position`, `Orientation` | 24 items |
+| [](#sec-item-markerbodyuser) | a body | `Position`, `Orientation` | 24 items |

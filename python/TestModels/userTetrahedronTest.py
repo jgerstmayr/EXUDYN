@@ -5,7 +5,8 @@
 #           Saint Venant-Kirchhoff material (Green strain, large deformation) and the consistent mass matrix. A unit
 #           cube of six tetrahedra in uniaxial tension (the patch test) has the exact homogeneous solution
 #           F = diag(a, b, b) of the nonlinear material, which the static solution reproduces; a cube moving with a
-#           uniform velocity has the kinetic energy of a rigid body.
+#           uniform velocity has the kinetic energy of a rigid body. Without massMatrixUserFunction the static
+#           solution is the same, and a dynamic solver raises (#3104).
 #           Run alone, it draws the user bodies with their graphicsData and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
@@ -67,7 +68,7 @@ tetGraphics = {'type': 'TriangleList',
                'colors': list(graphics.color.lightgreen)*4,
                'triangles': [0, 2, 1, 0, 1, 3, 0, 3, 2, 1, 2, 3]}
 
-def AddCube(mbs, initialVelocity=[0, 0, 0]):
+def AddCube(mbs, initialVelocity=[0, 0, 0], massMatrixUserFunction=UFmass):
     points = [np.array([i % 2, (i//2) % 2, i//4], dtype=float) for i in range(8)]
     nodes = [mbs.AddNode(NodePoint(referenceCoordinates=list(p), initialVelocities=initialVelocity)) for p in points]
     tets = []
@@ -81,7 +82,7 @@ def AddCube(mbs, initialVelocity=[0, 0, 0]):
             D = (X[1:] - X[0]).T
         gradN = np.vstack([np.zeros(3), np.linalg.inv(D)])
         gradN[0] = -np.sum(gradN[1:], axis=0)
-        tet = mbs.AddObject(ObjectUserBody(nodeNumbers=[nodes[i] for i in corners], massMatrixUserFunction=UFmass,
+        tet = mbs.AddObject(ObjectUserBody(nodeNumbers=[nodes[i] for i in corners], massMatrixUserFunction=massMatrixUserFunction,
                                            forceUserFunction=UFforce, positionUserFunction=UFposition,
                                            positionJacobianUserFunction=UFpositionJacobian,
                                            visualization=VObjectUserBody(graphicsData=[tetGraphics])))
@@ -91,18 +92,21 @@ def AddCube(mbs, initialVelocity=[0, 0, 0]):
 
 #+++++++++++++++++++++++++++++++++++++++++++++++
 #patch test: uniaxial tension, the faces x=0, y=0, z=0 held by the fewest constraints that keep the cube from moving
-mbs = SC.AddSystem()
-(nodes, points, tets) = AddCube(mbs)
-nGround = mbs.AddNode(NodePointGround())
-for (coordinate, held) in [(0, [0, 2, 4, 6]), (1, [0, 4]), (2, [0, 2])]:
-    for i in held:
-        mbs.AddObject(CoordinateConstraint(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0)),
-                                                          mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[i], coordinate=coordinate))]))
-#the consistent nodal forces of the face x=1, whose two triangles share the diagonal from node 1 to node 7
-for (i, share) in [(1, 1/3), (3, 1/6), (5, 1/6), (7, 1/3)]:
-    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nodes[i])), loadVector=[share*force, 0, 0]))
+def PatchTest(mbs, massMatrixUserFunction=UFmass):
+    (nodes, points, tets) = AddCube(mbs, massMatrixUserFunction=massMatrixUserFunction)
+    nGround = mbs.AddNode(NodePointGround())
+    for (coordinate, held) in [(0, [0, 2, 4, 6]), (1, [0, 4]), (2, [0, 2])]:
+        for i in held:
+            mbs.AddObject(CoordinateConstraint(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0)),
+                                                              mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[i], coordinate=coordinate))]))
+    #the consistent nodal forces of the face x=1, whose two triangles share the diagonal from node 1 to node 7
+    for (i, share) in [(1, 1/3), (3, 1/6), (5, 1/6), (7, 1/3)]:
+        mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nodes[i])), loadVector=[share*force, 0, 0]))
+    mbs.Assemble()
+    return (nodes, points, tets)
 
-mbs.Assemble()
+mbs = SC.AddSystem()
+(nodes, points, tets) = PatchTest(mbs)
 simulationSettings = exu.SimulationSettings()
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-12
 simulationSettings.staticSolver.verboseMode = 0
@@ -140,7 +144,25 @@ kineticEnergy = sum(mbs2.GetObjectOutputBody(tet, exu.OutputVariableType.Kinetic
 energyError = abs(kineticEnergy - 0.5*rho*np.dot(velocity, velocity))
 exu.Print('kinetic energy', kineticEnergy, '; error', energyError)
 
-u = a + b + kineticEnergy + int(error > 1e-10) + int(energyError > 1e-10)
+#+++++++++++++++++++++++++++++++++++++++++++++++
+#a static problem needs no massMatrixUserFunction (#3104): the same patch test without it; a dynamic solver raises
+mbs3 = SC.AddSystem()
+(nodes3, points3, tets3) = PatchTest(mbs3, massMatrixUserFunction=0)
+mbs3.SolveStatic(simulationSettings)
+errorStatic = max(np.max(np.abs(mbs3.GetNodeOutput(nodes3[i], exu.OutputVariableType.Position)
+                                - mbs.GetNodeOutput(nodes[i], exu.OutputVariableType.Position))) for i in range(8))
+simulationSettings.timeIntegration.numberOfSteps = 2
+simulationSettings.timeIntegration.endTime = 0.01
+simulationSettings.timeIntegration.verboseMode = 0
+try:
+    mbs3.SolveDynamic(simulationSettings)
+    message = ''
+except Exception as e:
+    message = str(e)
+refused = int('massMatrixUserFunction is not given, but the mass matrix is needed' in message)
+exu.Print('without mass matrix: static difference', errorStatic, '; dynamic refused:', refused)
+
+u = a + b + kineticEnergy + int(error > 1e-10) + int(energyError > 1e-10) + int(errorStatic > 1e-14) + (1 - refused)
 exu.Print('solution of userTetrahedronTest=', u)
 
 exu.sys['testResult'] = u

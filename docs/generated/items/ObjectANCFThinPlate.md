@@ -14,7 +14,7 @@ OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the
 ## Interface
 
 - Nodes it takes: [](#sec-item-nodepointslope12)
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markerbodyuser)
 
 ## Parameters
 

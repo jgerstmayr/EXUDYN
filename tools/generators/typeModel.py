@@ -75,9 +75,11 @@ names = {
     'cppStorage': {
         'Int': 'Index',                             #C++ uses Index for every integer
         'NumpyMatrixI': 'MatrixI',
+        'MarkerType': 'Marker::Type',               #a combination of the flags, as exu.MarkerType or int (#3103)
     },
     'cppExchange': {
         'Int': 'Index',
+        'MarkerType': 'Marker::Type',
         'JointTypeList': 'std::vector<Joint::Type>',
         'NumpyVector': 'py::array_t<Real>', 'NumpyMatrix': 'py::array_t<Real>', 'NumpyMatrixI': 'py::array_t<Index>',
         'PyObject': 'py::object',

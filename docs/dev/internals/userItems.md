@@ -1,7 +1,7 @@
 # User items: what each kind gives the solver, and how the user items are built
 
 What an item of each kind gives the solver in C++, what a new item needs, and how the user items - ObjectUserBody,
-NodeUser, MarkerUser, ObjectConnectorUser, ObjectJointUser, SensorUserFunction with item numbers - are built on it. How
+NodeUser, MarkerBodyUser, ObjectConnectorUser, ObjectJointUser, SensorUserFunction with item numbers - are built on it. How
 a user writes them is {ref}`sec-useritems`; the calls of their user functions are {doc}`userFunctions`.
 
 ## 1. What an item of each kind gives the solver
@@ -37,11 +37,11 @@ user body with them is complete.
 
 | item | what it is | its user functions | test models |
 |---|---|---|---|
-| ObjectUserBody (#2972, #2986) | a body - a finite element or a rigid body - on existing nodes | mass matrix (or `constantMassMatrix`), force, position, position Jacobian, optionally rotation matrix and rotation Jacobian, mass integral (#3063), output variables (#3057) | userRigidBodyTest.py, userANCFCable2DTest.py, userANCFBeam3DTest.py, userTetrahedronTest.py, userMassIntegralTest.py |
+| ObjectUserBody (#2972, #2986) | a body - a finite element or a rigid body - on existing nodes | mass matrix (or `constantMassMatrix`; not needed for a static problem, #3104), force, position, position Jacobian, optionally rotation matrix and rotation Jacobian, mass integral (#3063), output variables (#3057) | userRigidBodyTest.py, userANCFCable2DTest.py, userANCFBeam3DTest.py, userTetrahedronTest.py, userMassIntegralTest.py |
 | NodeUser (#2974) | a node of any number of ODE2 coordinates | position, optionally rotation matrix, and their Jacobians (central differences if not given) | userNodeTest.py |
-| MarkerUser (#3065) | a point of several bodies or nodes, for the built-in connectors, joints, loads and sensors | position, optionally rotation matrix (then it has Orientation), their Jacobians; no Jacobian derivative | userMarkerTest.py |
-| ObjectConnectorUser (#2975) | a connector of any markers, with access to them | `forceUserFunction(mbs, t, itemNumber, markers, parameters)`, one `exudyn.ConnectorMarker` per marker, valid during the call; its Jacobian numerical | userConnectorTest.py |
-| ObjectJointUser (#2976) | a joint on two rigid markers | `constraintUserFunction` of 1 to 6 equations of the marker positions and rotations, `jacobianUserFunction` or central differences | userJointTest.py |
+| MarkerBodyUser (#3065, #3103) | a point of several bodies or nodes, for the built-in connectors, joints, loads and sensors | position, with `providedMarkerType` Position \| Orientation the rotation matrix, their Jacobians; no Jacobian derivative | userMarkerTest.py |
+| ObjectConnectorUser (#2975, #3102) | a connector of any markers, with access to them | `forceUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)`, one `exudyn.ConnectorMarker` per marker, valid during the call; the data of a NodeGenericData and a `postNewtonStepUserFunction`; its Jacobian numerical | userConnectorTest.py, userConnectorContactTest.py |
+| ObjectJointUser (#2976, #3101) | a joint on two rigid markers | `constraintUserFunction` of 1 to 6 equations of the marker positions and rotations and its `jacobianUserFunction`, both required | userJointTest.py |
 | SensorUserFunction with `itemNumbers` (#2977) | a sensor of any items | reads the items through `mbs` | sensorUserFunctionItemsTest.py |
 
 No user load (the loads have user functions for their value and act through markers) and no user constraint beyond

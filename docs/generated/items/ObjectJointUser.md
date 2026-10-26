@@ -10,7 +10,7 @@ A joint on two rigid markers whose constraint equations are a Python user functi
 
 ## Interface
 
-- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid), [](#sec-item-markeruser)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid), [](#sec-item-markerbodyuser)
 
 ## Parameters
 

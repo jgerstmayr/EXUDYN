@@ -154,7 +154,7 @@ python/exudyn/itemInterface.py
     DOC108: Method `ObjectConnectorCoordinate.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectConnectorCoordinateVector.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectJointGeneric.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
-    DOC108: Method `MarkerUser.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `MarkerBodyUser.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `LoadForceVector.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `LoadTorqueVector.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `LoadMassProportional.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature

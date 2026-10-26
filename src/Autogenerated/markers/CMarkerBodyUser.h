@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
-* @class        CMarkerUserParameters
-* @brief        Parameter class for CMarkerUser
+* @class        CMarkerBodyUserParameters
+* @brief        Parameter class for CMarkerBodyUser
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-10-26  09:52:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -13,8 +13,8 @@
 
 ************************************************************************************************ */
 
-#ifndef CMARKERUSERPARAMETERS__H
-#define CMARKERUSERPARAMETERS__H
+#ifndef CMARKERBODYUSERPARAMETERS__H
+#define CMARKERBODYUSERPARAMETERS__H
 
 #include <ostream>
 
@@ -27,20 +27,22 @@
 namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
-//! AUTO: Parameters for class CMarkerUserParameters
-class CMarkerUserParameters // AUTO:
+//! AUTO: Parameters for class CMarkerBodyUserParameters
+class CMarkerBodyUserParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex bodyNumbers;                       //!< AUTO: the bodies whose coordinates the user functions get, at least one
+    Marker::Type providedMarkerType;              //!< AUTO: what the marker provides besides Body and Object: exu.MarkerType.Position, or exu.MarkerType.Position | exu.MarkerType.Orientation with the rotationMatrixUserFunction
     Vector parameters;                            //!< AUTO: the parameters of the marker, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout
     PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the marker; it must be given
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian; by central differences of the position if not given
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix of the marker; optional, for rigid markers
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix of the marker; given exactly for providedMarkerType Position | Orientation
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given
     //! AUTO: default constructor with parameter initialization
-    CMarkerUserParameters()
+    CMarkerBodyUserParameters()
     {
         bodyNumbers = ArrayIndex();
+        providedMarkerType = Marker::Position;
         parameters = Vector();
         positionUserFunction = 0;
         positionJacobianUserFunction = 0;
@@ -51,8 +53,8 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
-* @class        CMarkerUser
-* @brief        A marker on any number of bodies whose position, and optionally rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.
+* @class        CMarkerBodyUser
+* @brief        A marker on any number of bodies whose position, and with providedMarkerType Position | Orientation its rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -70,8 +72,8 @@ public: // AUTO:
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-//! AUTO: CMarkerUser
-class CMarkerUser: public CMarker // AUTO:
+//! AUTO: CMarkerBodyUser
+class CMarkerBodyUser: public CMarker // AUTO:
 {
 protected: // AUTO:
     //! the coordinates of the nodes of the bodies, body by body: reference, total and velocity coordinates of a configuration
@@ -82,15 +84,15 @@ protected: // AUTO:
     template<class TUserFunction>
     void EvaluateMatrixUserFunction(const CSystemData& cSystemData, const TUserFunction& function, const char* name, Index rows, Index columns,
         Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
-    CMarkerUserParameters parameters; //! AUTO: contains all parameters for CMarkerUser
+    CMarkerBodyUserParameters parameters; //! AUTO: contains all parameters for CMarkerBodyUser
 
 public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
-    virtual CMarkerUserParameters& GetParameters() { return parameters; }
+    virtual CMarkerBodyUserParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
-    virtual const CMarkerUserParameters& GetParameters() const { return parameters; }
+    virtual const CMarkerBodyUserParameters& GetParameters() const { return parameters; }
 
     //! AUTO: the user functions of the item, for the parallel computation (#2978)
     virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const override
@@ -119,10 +121,10 @@ public: // AUTO:
         return parameters.bodyNumbers.NumberOfItems();
     }
 
-    //! AUTO:  Orientation only with a rotationMatrixUserFunction, so that a joint or torque on a marker without it is refused at Assemble
+    //! AUTO:  Body and Object, and what providedMarkerType gives: Position, or Position and Orientation
     virtual Marker::Type GetType() const override
     {
-        return parameters.rotationMatrixUserFunction ? (Marker::Type)(Marker::Body + Marker::Object + Marker::Position + Marker::Orientation) : (Marker::Type)(Marker::Body + Marker::Object + Marker::Position);
+        return (Marker::Type)(Marker::Body + Marker::Object + parameters.providedMarkerType);
     }
 
     //! AUTO:  return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 209 | 1.13.213 |
+| 1.13 | Newborn | 212 | 1.13.216 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.216** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Design file for the symbolic system models (#3109)
+  - description: revision2026c step RG12.51.1 (maintainer 2026-10-26): docs/dev/design/symbolicSystem.md - the assembly by the local-to-global maps of systemData, sparse matrices, the export of the equations of motion and their evaluation by Numba or on the GPU with explicit integration (residuals per object), an implicit generalized-alpha solver in Python with the settings of SimulationSettings, compared against the internal solvers, and the Jacobians by esym.Diff.
+  - **notes:** docs/dev/design/symbolicSystem.md: the design of symbolic system models - per object flat programs grouped by kind, assembly by the local-to-global maps into sparse triplets, export and Numba/GPU evaluation with explicit integration from residuals, a generalized-alpha solver in Python checked against the internal solvers, and Jacobians by symbolic differentiation; sub-steps and decisions proposed.
+  - date resolved: **2026-10-26 10:04**, date raised: 2026-10-26
+- **1.13.215** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody without massMatrixUserFunction for static problems (#3104)
+  - description: revision2026c step RG7.15.7 (maintainer 2026-10-26): a user finite element may be used for a static problem only, so Assemble no longer requires the massMatrixUserFunction; the mass matrix raises when a solver or an output needs it.
+  - **notes:** ObjectUserBody no longer requires a massMatrixUserFunction at Assemble, so a user finite element can be used for a static problem; without it, a dynamic solver or the kinetic energy raises a clear error.
+  - date resolved: **2026-10-26 10:04**, date raised: 2026-10-26
+- **1.13.214** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` MarkerUser becomes MarkerBodyUser with a parameter markerType (#3103)
+  - description: revision2026c step RG7.15 (maintainer 2026-10-25): MarkerUser takes bodies only and always provides Position and Orientation; as MarkerBodyUser it gets a parameter markerType that selects what it provides - Position, Position and Orientation, possibly Coordinates and others; the old C++ files removed.
+  - **notes:** MarkerUser is renamed to MarkerBodyUser (type name BodyUser). Its new parameter providedMarkerType says what it provides: exu.MarkerType.Position (default) or exu.MarkerType.Position \| exu.MarkerType.Orientation together with the rotationMatrixUserFunction; Assemble refuses a rotation function without Orientation, Orientation without it, and other values. The parameter is not called markerType, because that is the key of the type name in every marker dictionary.
+  - date resolved: **2026-10-26 10:04**, date raised: 2026-10-25
 - **1.13.213** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorUser: data coordinates of a NodeGenericData and a postNewtonStepUserFunction (#3102)
   - description: revision2026c step RG7.15 (maintainer 2026-10-25): a NodeGenericData as in ObjectConnectorRigidBodySpringDamper, its data coordinates passed to forceUserFunction (empty without node), needed for any kind of contact; a postNewtonStepUserFunction updating the data coordinates, with a clearer return than a vector mixing them with the error and the recommended step size; the sphere-sphere contact re-implemented in a new test model.
   - **notes:** ObjectConnectorUser takes the nodeNumber of a NodeGenericData: its forceUserFunction gets the data coordinates, (mbs, t, itemNumber, markers, dataCoordinates, parameters), and a postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters) updates them after each Newton iteration, returning the tuple (dataCoordinates, discontinuousError) or (dataCoordinates, discontinuousError, recommendedStepSize), for contact, friction and other switches; its markers are for reading. Test model userConnectorContactTest.py writes the contact of ObjectContactSphereSphere this way, with the same results.

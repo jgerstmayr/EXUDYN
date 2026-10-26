@@ -35,7 +35,7 @@
         "src/ImplMarkers/CMarkerObjectODE2Coordinates.cpp",
         "src/ImplMarkers/CMarkerSuperElementPosition.cpp",
         "src/ImplMarkers/CMarkerSuperElementRigid.cpp",
-        "src/ImplMarkers/CMarkerUser.cpp",
+        "src/ImplMarkers/CMarkerBodyUser.cpp",
         "src/ImplNodes/CNode1D.cpp",
         "src/ImplNodes/CNodeGenericAE.cpp",
         "src/ImplNodes/CNodeGenericData.cpp",

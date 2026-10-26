@@ -1,0 +1,15 @@
+{
+  "number": 3104,
+  "title": "ObjectUserBody without massMatrixUserFunction for static problems",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "revision2026c step RG7.15.7 (maintainer 2026-10-26): a user finite element may be used for a static problem only, so Assemble no longer requires the massMatrixUserFunction; the mass matrix raises when a solver or an output needs it.",
+  "dateRaised": "2026-10-26",
+  "deadline": "2027-04-24",
+  "dateResolved": "2026-10-26 10:04",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectUserBody no longer requires a massMatrixUserFunction at Assemble, so a user finite element can be used for a static problem; without it, a dynamic solver or the kinetic energy raises a clear error.",
+  "resolvedInVersion": "1.13.215"
+}

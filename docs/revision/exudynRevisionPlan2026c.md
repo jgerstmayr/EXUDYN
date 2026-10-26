@@ -77,6 +77,8 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG6.8 Fix the remaining graphics problems with a test each
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker (1 open sub-step)
+  - RG7.16 Add the marker type Coordinates to MarkerBodyUser, and user shapes for contact and flexible interfaces
+  - RG7.17 Decide on the position and rotation Jacobians by central differences of NodeUser, ObjectUserBody and MarkerBodyUser
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -100,8 +102,9 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG11.8 Resolve the quick old issues (4 open sub-steps)
   - RG11.10 Provide the math and kinematics functions of the C++ code to Python as exudyn.cMath and exudyn.cUtilities (1 open sub-step)
 - **RG12** Symbolic
-  - RG12.51 Symbolic system models (2 open sub-steps)
+  - RG12.51 Symbolic system models (1 open sub-step)
   - RG12.53 Algorithmic symbolic functions: assignments by Assign, loops recorded as loops
+  - RG12.54 Derive the Jacobians of symbolic user functions by esym.Diff
 - **RG13** Total coordinates
   - RG13.1 Measure the solvers on more models, solvers and configurations, as the baseline
   - RG13.2 Evaluate how the total coordinates are provided efficiently
@@ -119,7 +122,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | OPEN | 2 | Python user items |
+| RG7 | OPEN | 4 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -962,9 +965,25 @@ CLOSED 2026-10-25 (#3101): Assemble refuses an active ObjectJointUser without ja
 
 CLOSED 2026-10-26 (#3102): nodeNumber of a NodeGenericData, its data coordinates in the forceUserFunction, a postNewtonStepUserFunction returning (dataCoordinates, error[, recommendedStepSize]); userConnectorContactTest.py gives the rebounds of ObjectContactSphereSphere to 9e-16. [log](exudynRevisionLog2026c.md#rg7-15-5)
 
-#### **OPEN_RG7.15.6** Rename MarkerUser to MarkerBodyUser with a parameter markerType
+#### **CLOSED_RG7.15.6** Rename MarkerUser to MarkerBodyUser with a parameter markerType
 
-#3103. Proposal, waiting for the decision (2026-10-26): className MarkerBodyUser, type name BodyUser, CMarkerUser.cpp renamed by git mv; a parameter markerType of exu.MarkerType, the default Position, Position | Orientation with the rotationMatrixUserFunction (a rotation function given with Position only refused), stored as Marker::Type and read from an enum or the int of a combination - a new parameter type for the generators; Coordinates as a further type with a coordinatesUserFunction (values and their Jacobian) for CoordinateSpringDamper, CoordinateConstraint and LoadCoordinate, as an option; whether the Jacobian functions become required when a joint uses the marker (#3101).
+CLOSED 2026-10-26 (#3103; maintainer 2026-10-26: rename, parameter of exu.MarkerType, Coordinates and the Jacobians as new steps RG7.16 and RG7.17): MarkerBodyUser, type name BodyUser, the parameter named providedMarkerType - markerType is the type name in the dictionary of every marker -, Position or Position | Orientation with the rotationMatrixUserFunction, checked at Assemble; the parameter type MarkerType of the generators; the old C++ files removed. [log](exudynRevisionLog2026c.md#rg7-15-6)
+
+#### **CLOSED_RG7.15.7** Let ObjectUserBody go without massMatrixUserFunction for a static problem
+
+CLOSED 2026-10-26 (#3104; maintainer 2026-10-26: a user finite element may be used for the static case only): Assemble no longer requires it; without it the static patch test of userTetrahedronTest.py gives the same solution and a dynamic solver raises. [log](exudynRevisionLog2026c.md#rg7-15-6)
+
+#### **OPEN_RG7.15.8** Give ObjectConnectorUser and ObjectJointUser a parameter requestedMarkerType for the type their markers must provide
+
+#3105 (maintainer 2026-10-26): a regular item parameter of the parameter type MarkerType (#3103), given at creation, returned by GetRequestedMarkerType; Assemble checks the markers against it.
+
+### **OPEN_RG7.16** Add the marker type Coordinates to MarkerBodyUser, and user shapes for contact and flexible interfaces
+
+#3106 (maintainer 2026-10-26): a coordinatesUserFunction returning the values and their Jacobian, for CoordinateSpringDamper, CoordinateConstraint and LoadCoordinate; then shapes given by the user, such as a polynomial curve and a polynomial shell surface, for contact and flexible interfaces.
+
+### **OPEN_RG7.17** Decide on the position and rotation Jacobians by central differences of NodeUser, ObjectUserBody and MarkerBodyUser
+
+#3107, tbd (maintainer 2026-10-26): kept for now - the central differences keep the items simple. The options: require the Jacobian functions, at least when a joint uses the item; keep central differences behind an exudyn.special flag, with the dangers documented (a partly numerical constraint Jacobian, #3100). For symbolic user functions RG12.54 may give a better way.
 
 ## **OPEN_RG8** Compiled C++ user items
 
@@ -1875,15 +1894,19 @@ symbolic program - mass matrix, forces, constraints - for control, linearization
 the first version of docs/dev/design/symbolicExport.md, section 7, in git at commit 9790d8c5. After the symbolic steps of RG12
 are completed.
 
-#### **OPEN_RG12.51.1** Design the symbolic system model, in its own design file
+#### **CLOSED_RG12.51.1** Design the symbolic system model, in its own design file
 
-A deeper analysis: the global coordinates and the local-to-global maps, which items and user functions can be
-assembled, the connectors and joints through sympy (the marker Jacobians), the result as one program; to be written as
-exudyn/misc/symbolicSystem.py.
+CLOSED 2026-10-26 (#3109; maintainer 2026-10-26: a design file; the assembly by the LTG maps, sparse matrices, export
+and GPU evaluation with Numba first, explicit integration by residuals per object, a generalized-alpha solver in Python
+with the settings of SimulationSettings checked against the internal solvers, the Jacobians by esym.Diff):
+docs/dev/design/symbolicSystem.md - per object a flat program, kinds of objects
+sharing one recording, the global matrices as triplets; explicit integration with a constant mass matrix or a
+matrix-free product from the residuals; the Jacobians as programs by symbolic differentiation (RG12.54); five
+sub-steps and four decisions proposed. [log](exudynRevisionLog2026c.md#rg12-51-1)
 
 #### **OPEN_RG12.51.2** Implement the symbolic system model
 
-After RG12.51.1.
+After the decisions of docs/dev/design/symbolicSystem.md §8; split then into the sub-steps of its §7.
 
 ### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
 
@@ -1896,6 +1919,12 @@ definitions/pybindSymbolic.py instead of one sentence. [log](exudynRevisionLog20
 Optional, no issue (maintainer 2026-10-25): a recorded function as an algorithm instead of one expression - a
 variable assigned during the recording, `a.Assign(a + 1)`, as an operation of the flat program, and with it loops whose
 count is a symbolic value. SetValue during the recording raises (RG12.49.4), as a changed value is not recorded.
+
+### **OPEN_RG12.54** Derive the Jacobians of symbolic user functions by esym.Diff
+
+#3108 (maintainer 2026-10-26), an analysis first: the Jacobians of position, rotation, constraint and residual
+functions by forward differentiation - per coordinate q[i] and q_t[i] it works now, but slowly; whether a derivative
+can be one more flat program, and whether n derivatives of a function of n arguments need a local stack of their own.
 
 ## **OPEN_RG13** Total coordinates
 

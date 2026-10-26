@@ -15,7 +15,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosi
 
 - Python names: `ObjectANCFCable2D` or `Cable2D`, and `VCable2D` for its visualization
 - Nodes it takes: [](#sec-item-nodepoint2dslope1)
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markerbodyuser)
 
 ## Parameters
 

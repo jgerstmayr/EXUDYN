@@ -457,7 +457,7 @@ items = {
       'nodeNumbers': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the nodes whose ODE2 coordinates are the coordinates of the body, in this order'},
       'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default'},
       'constantMassMatrix': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'True: the mass matrix does not depend on the coordinates and the time; massMatrixUserFunction is called once, its result is kept and reused - computed again after a change of a parameter of the body or Assemble -, and the solvers treat the mass matrix as constant'},
-      'massMatrixUserFunction': {'type': 'ObjectUserBodyMassMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the mass matrix; it must be given'},
+      'massMatrixUserFunction': {'type': 'ObjectUserBodyMassMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the mass matrix; it is needed by a dynamic solver and the kinetic energy, not for a static problem (#3104)'},
       'massIntegralUserFunction': {'type': 'ObjectUserBodyMassIntegralUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the mass integral of the position Jacobian; needed for MarkerBodyMass and the loads on it, such as LoadMassProportional (gravity)'},
       'centerOfMass': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'the local position of the center of mass; where MarkerBodyMass and the loads on it are drawn'},
       'forceUserFunction': {'type': 'ObjectUserBodyForceUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the generalized forces on the right-hand side; zero if not given'},
@@ -1812,18 +1812,19 @@ items = {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
-  'MarkerUser': {
+  'MarkerBodyUser': {
     'kind': 'Marker',
     'types': ['Body', 'Object', 'Position', 'Orientation'],
     'outputVariables': [],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
       'bodyNumbers': {'type': 'ArrayObjectIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the bodies whose coordinates the user functions get, at least one'},
+      'providedMarkerType': {'type': 'MarkerType', 'size': '', 'range': '', 'default': 'exudyn.MarkerType.Position', 'mustBeGiven': False, 'description': 'what the marker provides besides Body and Object: exu.MarkerType.Position, or exu.MarkerType.Position | exu.MarkerType.Orientation with the rotationMatrixUserFunction'},
       'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the marker, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout'},
-      'positionUserFunction': {'type': 'MarkerUserPositionUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the global position of the marker; it must be given'},
-      'positionJacobianUserFunction': {'type': 'MarkerUserPositionJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the position Jacobian; by central differences of the position if not given'},
-      'rotationMatrixUserFunction': {'type': 'MarkerUserRotationMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation matrix of the marker; optional, for rigid markers'},
-      'rotationJacobianUserFunction': {'type': 'MarkerUserRotationJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given'},
+      'positionUserFunction': {'type': 'MarkerBodyUserPositionUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the global position of the marker; it must be given'},
+      'positionJacobianUserFunction': {'type': 'MarkerBodyUserPositionJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the position Jacobian; by central differences of the position if not given'},
+      'rotationMatrixUserFunction': {'type': 'MarkerBodyUserRotationMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation matrix of the marker; given exactly for providedMarkerType Position | Orientation'},
+      'rotationJacobianUserFunction': {'type': 'MarkerBodyUserRotationJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},

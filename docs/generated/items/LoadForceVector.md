@@ -17,7 +17,7 @@ Load with (3D) force vector; attached to position-based marker.
 ## Interface
 
 - Python names: `LoadForceVector` or `Force`, and `VForce` for its visualization
-- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid), [](#sec-item-markeruser)
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid), [](#sec-item-markerbodyuser)
 
 ## Parameters
 

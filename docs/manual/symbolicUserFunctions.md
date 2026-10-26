@@ -96,7 +96,7 @@ decides is decided then.
   `esym.Vector` of the size of the item while recording; `K @ q` with a numpy matrix `K` records `K` as a constant.
 - A matrix result - a mass matrix, a Jacobian - is an `esym.Matrix`; one built from components with constant zeros
   is evaluated as a sparse matrix (#3022).
-- **The user items** (ObjectUserBody, NodeUser, MarkerUser, ObjectJointUser) are written with symbolic user
+- **The user items** (ObjectUserBody, NodeUser, MarkerBodyUser, ObjectJointUser) are written with symbolic user
   functions as with Python ones. One recording serves every item of a kind: the `parameters` of each item are an
   argument of the recording, named by a `ParameterLayout`, so a user beam records its functions once for all its
   elements, see {ref}`sec-useritems`.

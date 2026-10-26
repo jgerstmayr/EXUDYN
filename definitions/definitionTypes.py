@@ -169,6 +169,7 @@ namedDefaultValues = {
         ('[[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]]', '[[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]]'),
     #0 rather than the enum, so that an unset type gives a readable error and not an unreadable one
     'OutputVariableType::_None': ('0', 'OutputVariableType::_None'),
+    'Marker::Position': ('exudyn.MarkerType.Position', 'MarkerType.Position'),
     #a C++ pointer member; it is not in the Python interface, and the page says what the C++ says
     'nullptr': ('nullptr', 'nullptr'),
 }
@@ -455,6 +456,7 @@ TNumpyVector                       = TypeSpec('NumpyVector')
 TNumpyMatrix                       = TypeSpec('NumpyMatrix')
 TPyObject                          = TypeSpec('PyObject')      #any Python object: GetSystemJacobian gives a numpy array or a scipy matrix (#1529)
 TOutputVariableType                = TypeSpec('OutputVariableType')
+TMarkerType                        = TypeSpec('MarkerType')    #exu.MarkerType or the int of a combination by |, as Marker::Type (#3103)
 TResizableVector                   = TypeSpec('ResizableVector')
 
 
@@ -888,7 +890,7 @@ def ItemConnectorInterface(markers, constraint=False, jacobian=True, markerDataP
 def ItemTypes(kind, types, description, implementation=None):
     """Use site: the type bits of a node or marker (GetType), as a declared list (revision plan step
     83c); kind is 'Node' or 'Marker', types are value names of Node::Type / Marker::Type; implementation: the C++ of
-    an item whose types depend on its parameters, types then the most it has (MarkerUser, #3065)"""
+    an item whose types depend on its parameters, types then the most it has (MarkerBodyUser, #3065)"""
     if kind not in ('Node', 'Marker'):
         raise ValueError('ItemTypes: kind must be Node or Marker, not ' + repr(kind))
     member = ItemFunction(type=kind + '::Type', destination=DestComp, cFlags=CFConst,

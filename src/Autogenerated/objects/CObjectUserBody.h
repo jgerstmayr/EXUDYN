@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  15:08:34 (last modified)
+* @date         2026-10-26  09:51:16 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,7 +34,7 @@ public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: the nodes whose ABRV:ODE2 coordinates are the coordinates of the body, in this order
     Vector parameters;                            //!< AUTO: the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default
     bool constantMassMatrix;                      //!< AUTO: True: the mass matrix does not depend on the coordinates and the time; massMatrixUserFunction is called once, its result is kept and reused - computed again after a change of a parameter of the body or Assemble -, and the solvers treat the mass matrix as constant
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix; it must be given
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix; it is needed by a dynamic solver and the kinetic energy, not for a static problem (#3104)
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > massIntegralUserFunction;//!< AUTO: A Python user function which computes the mass integral of the position Jacobian; needed for MarkerBodyMass and the loads on it, such as LoadMassProportional (gravity)
     Vector3D centerOfMass;                        //!< AUTO: the local position of the center of mass; where MarkerBodyMass and the loads on it are drawn
     PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized forces on the right-hand side; zero if not given

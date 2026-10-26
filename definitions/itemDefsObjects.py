@@ -2307,7 +2307,7 @@ definitions.append(ItemDefinition(
         ItemParameter(destination=DestComp+DestParam,
             pythonName='massMatrixUserFunction',
             defaultValue=0,
-            description=r"""$\Mm(\qv) \in \Rcal^{n\times n}$A Python user function which computes the mass matrix; it must be given""",
+            description=r"""$\Mm(\qv) \in \Rcal^{n\times n}$A Python user function which computes the mass matrix; it is needed by a dynamic solver and the kinetic energy, not for a static problem (#3104)""",
             userFunction=ObjectUserBody_massMatrixUserFunction),
         ItemParameter(destination=DestComp+DestParam,
             pythonName='massIntegralUserFunction',

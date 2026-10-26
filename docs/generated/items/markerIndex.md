@@ -25,5 +25,5 @@ MarkerObjectODE2Coordinates
 MarkerBodyCable2DShape
 MarkerBodyCable2DCoordinates
 MarkerBodyBeamShape
-MarkerUser
+MarkerBodyUser
 ```

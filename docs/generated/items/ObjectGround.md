@@ -16,7 +16,7 @@ A ground object behaving like a rigid body, but having no degrees of freedom. Us
 
 ## Interface
 
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markeruser)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markerbodyuser)
 
 ## Parameters
 
