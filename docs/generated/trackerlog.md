@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.218.dev1
 - last change = 2026-10-26
-- Number of issues = 3112
+- Number of issues = 3113
 - Number of resolved issues = 2995 (218 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Explicit solvers in Python for the symbolic system: explicit Euler, velocity Verlet, RK44 (#3112)
+  - description: revision2026c step RG12.56 (maintainer 2026-10-26): before the generalized-alpha solver, constant step size explicit Euler, velocity Verlet and RK44 in exudyn/misc/symbolicSystem.py, with the settings of SimulationSettings.timeIntegration and checked against SolveDynamic with the same DynamicSolverType; for simple user items (mass points, spring-dampers); the solvers take any system with the interface of SymbolicSystem, also one written with numpy. The concept first, in docs/dev/design/symbolicSystem.md.
+  - date raised: 2026-10-26
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` exudyn/misc/symbolicUserItems.py: user items with the interfaces of the built-in items (#3111)
   - description: revision2026c step RG12.55 (maintainer 2026-10-26): a collection of user items with symbolic user functions whose creation has the same interface as the built-in items of itemInterface (a user rigid body as ObjectRigidBody, parameters the user item lacks refused or ignored with a note), so that the same systems are built with the same calls: at least mass point 3D, rigid body 3D, revolute, prismatic, spherical and distance joint, spring-damper, torsional spring-damper, sphere-sphere contact; first the list of what a good representation of multibody systems needs. Before the symbolic system model goes deeper.
   - date raised: 2026-10-26

@@ -51,6 +51,74 @@ def _Dense(matrix):
     return np.array(matrix, dtype=float)
 
 
+def _Value(x):
+    """the exudyn.symbolic.Real or the number in a _Scalar, or x itself"""
+    return x.value if isinstance(x, _Scalar) else x
+
+
+class _Scalar:
+    """one exudyn.symbolic.Real or number, so that numpy object arrays of them compute component by component (#3108):
+    the numpy code of a recording, run with arrays of _Scalar, gives each component of a vector or matrix result as an
+    expression of its own, which esym.Diff differentiates - a vector or matrix expression of exudyn.symbolic has no
+    derivative, and esym.Real times a numpy array would give one"""
+    __slots__ = ['value']
+    __array_priority__ = -1 #numpy computes with an array of _Scalar, not _Scalar with the array
+
+    def __init__(self, value):
+        self.value = value
+
+    def _Binary(self, other, operation):
+        if isinstance(other, np.ndarray):
+            return NotImplemented
+        return _Scalar(operation(self.value, _Value(other)))
+
+    def __add__(self, other): return self._Binary(other, lambda a, b: a + b)
+    def __radd__(self, other): return self._Binary(other, lambda a, b: b + a)
+    def __sub__(self, other): return self._Binary(other, lambda a, b: a - b)
+    def __rsub__(self, other): return self._Binary(other, lambda a, b: b - a)
+    def __mul__(self, other): return self._Binary(other, lambda a, b: a * b)
+    def __rmul__(self, other): return self._Binary(other, lambda a, b: b * a)
+    def __truediv__(self, other): return self._Binary(other, lambda a, b: a / b)
+    def __rtruediv__(self, other): return self._Binary(other, lambda a, b: b / a)
+    def __pow__(self, other): return self._Binary(other, lambda a, b: a ** b)
+    def __rpow__(self, other): return self._Binary(other, lambda a, b: b ** a)
+    def __neg__(self): return _Scalar(-self.value)
+    def __pos__(self): return self
+    def __abs__(self): return _Scalar(_esym.abs(self.value))
+    def __bool__(self): return bool(_Evaluate(self.value)) #a branch at the current values, as the derivative there
+    def __float__(self): return float(_Evaluate(self.value))
+    def __int__(self): return int(_Evaluate(self.value))
+    def __index__(self): return int(_Evaluate(self.value))
+    def __lt__(self, other): return _Scalar(float(_Evaluate(self.value) < _Evaluate(_Value(other))))
+    def __le__(self, other): return _Scalar(float(_Evaluate(self.value) <= _Evaluate(_Value(other))))
+    def __gt__(self, other): return _Scalar(float(_Evaluate(self.value) > _Evaluate(_Value(other))))
+    def __ge__(self, other): return _Scalar(float(_Evaluate(self.value) >= _Evaluate(_Value(other))))
+
+
+_esym = exudyn.symbolic
+#the functions numpy calls on the objects of an object array, by the name of the numpy function
+for (_numpyName, _function) in [('sin', _esym.sin), ('cos', _esym.cos), ('tan', _esym.tan), ('arcsin', _esym.asin),
+                                ('arccos', _esym.acos), ('arctan', _esym.atan), ('sinh', _esym.sinh),
+                                ('cosh', _esym.cosh), ('tanh', _esym.tanh), ('arcsinh', _esym.asinh),
+                                ('arccosh', _esym.acosh), ('arctanh', _esym.atanh), ('exp', _esym.exp),
+                                ('log', _esym.log), ('sqrt', _esym.sqrt), ('sign', _esym.sign), ('floor', _esym.floor),
+                                ('ceil', _esym.ceil)]:
+    setattr(_Scalar, _numpyName, (lambda function: lambda self: _Scalar(function(self.value)))(_function))
+for (_numpyName, _function) in [('arctan2', _esym.atan2), ('fmod', _esym.mod), ('minimum', _esym.min),
+                                ('maximum', _esym.max)]:
+    setattr(_Scalar, _numpyName, (lambda function: lambda self, other: _Scalar(function(self.value, _Value(other))))(_function))
+
+
+def _Evaluate(x):
+    """the value of an exudyn.symbolic.Real or of a number"""
+    return x.Evaluate() if hasattr(x, 'Evaluate') else x
+
+
+def _Diff(expression, variable):
+    """the derivative of an exudyn.symbolic.Real or of a number by a named variable"""
+    return expression.Diff(variable) if hasattr(expression, 'Diff') else 0.
+
+
 class SymbolicKind:
     """the objects of one object type whose user functions are the same recordings: one program per user function,
     the table of the objects, their parameters and the global indices of their ODE2 coordinates
@@ -68,6 +136,7 @@ class SymbolicKind:
         self.ltg = []
         self.parameters = []
         self._functions = {} #the numpy functions of the recordings, written when first used
+        self._residual = None #the residual as scalar expressions of named variables, built when first used
 
     def Function(self, name, evaluator):
         """the function that evaluates the recording name, with the arguments of the user function"""
@@ -77,6 +146,42 @@ class SymbolicKind:
         if name not in self._functions:
             self._functions[name] = symbolicExport.ToFunction(recording.GetFlatProgramData(), format='numpy')
         return self._functions[name]
+
+    def ResidualExpressions(self):
+        """the local residual of the kind, r = M(q) q_tt - f(q, q_t, t) (with + K q + D q_t for GenericODE2), as one
+        exudyn.symbolic.Real (or number) per component, of the named variables q, q_t, q_tt, t, and qRef and the
+        parameters for a UserBody; built once per kind, the values of an object are set by SetValue (#3108)
+
+        Returns:
+            dict with 'residual' (list of expressions) and the lists of named variables 'q', 'q_t', 'q_tt', 'qRef',
+            'parameters' and 't'
+        """
+        if self._residual is not None:
+            return self._residual
+        n = self.ltg.shape[1]
+        Named = lambda name, size: [_esym.Real(name + str(i), 0.) for i in range(size)]
+        variables = {'q': Named('q', n), 'q_t': Named('q_t', n), 'q_tt': Named('q_tt', n), 't': _esym.Real('t', 0.),
+                     'qRef': Named('qRef', n),
+                     'parameters': Named('p', len(self.parameters[0]) if self.objectType == 'UserBody' else 0)}
+        S = lambda values: np.array([_Scalar(v) for v in values], dtype=object)
+        (q, q_t, q_tt) = (S(variables['q']), S(variables['q_t']), S(variables['q_tt']))
+        t = _Scalar(variables['t'])
+        if self.objectType == 'UserBody':
+            qRef = S(variables['qRef'])
+            arguments = (None, t, 0, qRef, qRef + q, q_t, S(variables['parameters']))
+        else:
+            arguments = (None, t, 0, q, q_t)
+        Call = lambda name: np.array(self.Function(name, 'numpy')(*arguments), dtype=object)
+        if 'massMatrixUserFunction' in self.recordings:
+            M = Call('massMatrixUserFunction')
+        else: #GenericODE2: its constant matrices are added in ResidualJacobian
+            M = np.zeros((n, n), dtype=object)
+        residual = M @ q_tt
+        if 'forceUserFunction' in self.recordings:
+            residual = residual - Call('forceUserFunction')
+        variables['residual'] = [_Value(r) for r in residual]
+        self._residual = variables
+        return variables
 
 
 class SymbolicSystem:
@@ -208,15 +313,7 @@ class SymbolicSystem:
     def MassMatrix(self, q=None, q_t=None, t=0., sparse=False):
         """the global mass matrix M(q, t); sparse=True: a scipy.sparse.csr_matrix (scipy needed), else a dense array"""
         (rows, columns, values) = self.MassMatrixTriplets(q, q_t, t)
-        if sparse:
-            try:
-                import scipy.sparse
-            except ImportError:
-                raise ImportError('SymbolicSystem.MassMatrix(sparse=True) needs scipy; use sparse=False or MassMatrixTriplets()')
-            return scipy.sparse.csr_matrix((values, (rows, columns)), shape=(self.nODE2, self.nODE2))
-        M = np.zeros((self.nODE2, self.nODE2))
-        np.add.at(M, (rows, columns), values)
-        return M
+        return self._Matrix(rows, columns, values, sparse, 'MassMatrix')
 
     def Residual(self, q=None, q_t=None, q_tt=None, t=0.):
         """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations, object by object without forming M"""
@@ -229,6 +326,68 @@ class SymbolicSystem:
                 local = self._LocalMassMatrix(kind, i, q, q_t, t) @ q_tt[ltg] - self._LocalForces(kind, i, q, q_t, t)
                 np.add.at(r, ltg, local)
         return r
+
+    def ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
+                         sparse=False):
+        """the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, column by column
+        by exudyn.symbolic.Diff of each component by each coordinate (#3108): exact, but slow - one derivative of a tree
+        per entry; the residual of a kind is built once as expressions of named variables, whose values are set per
+        object. factor_q_tt=1 alone gives the mass matrix; a Newton step of an implicit integrator combines the three.
+
+        Args:
+            q, q_t, q_tt: the ODE2 coordinates, velocities and accelerations, of size nODE2; None: zero
+            t: the time
+            factor_q, factor_q_t, factor_q_tt: the factors of the three derivatives
+            sparse: True: a scipy.sparse.csr_matrix (scipy needed), else a dense array
+
+        Returns:
+            the matrix (nODE2 x nODE2)
+        """
+        q, q_t = self._State(q, q_t)
+        q_tt = np.zeros(self.nODE2) if q_tt is None else np.asarray(q_tt, dtype=float)
+        rows, columns, values = [], [], []
+        for kind in self.kinds:
+            expressions = kind.ResidualExpressions()
+            for i in range(len(kind.objects)):
+                ltg = kind.ltg[i]
+                values_i = {'q': q[ltg], 'q_t': q_t[ltg], 'q_tt': q_tt[ltg], 'qRef': self.qRef[ltg],
+                            'parameters': kind.parameters[i] if kind.objectType == 'UserBody' else []}
+                for (name, numbers) in values_i.items():
+                    for (variable, number) in zip(expressions[name], numbers):
+                        variable.SetValue(float(number))
+                expressions['t'].SetValue(float(t))
+                local = np.zeros((len(ltg), len(ltg)))
+                for (name, factor) in [('q', factor_q), ('q_t', factor_q_t), ('q_tt', factor_q_tt)]:
+                    if factor == 0.:
+                        continue
+                    for (column, variable) in enumerate(expressions[name]):
+                        for (row, expression) in enumerate(expressions['residual']):
+                            local[row, column] += factor*_Diff(expression, variable)
+                if kind.objectType == 'GenericODE2': #the constant matrices of r = M q_tt + D q_t + K q - f
+                    matrices = kind.parameters[i]
+                    for (name, factor) in [('K', factor_q), ('D', factor_q_t), ('M', factor_q_tt)]:
+                        if matrices[name].size and factor != 0.:
+                            local += factor*matrices[name]
+                (r, c) = np.nonzero(local)
+                rows.append(ltg[r])
+                columns.append(ltg[c])
+                values.append(local[r, c])
+        rows = np.concatenate(rows) if rows else np.zeros(0, dtype=int)
+        columns = np.concatenate(columns) if columns else np.zeros(0, dtype=int)
+        values = np.concatenate(values) if values else np.zeros(0)
+        return self._Matrix(rows, columns, values, sparse, 'ResidualJacobian')
+
+    def _Matrix(self, rows, columns, values, sparse, name):
+        """the global matrix of triplets, dense or as scipy sparse matrix"""
+        if sparse:
+            try:
+                import scipy.sparse
+            except ImportError:
+                raise ImportError('SymbolicSystem.' + name + '(sparse=True) needs scipy; use sparse=False')
+            return scipy.sparse.csr_matrix((values, (rows, columns)), shape=(self.nODE2, self.nODE2))
+        matrix = np.zeros((self.nODE2, self.nODE2))
+        np.add.at(matrix, (rows, columns), values)
+        return matrix
 
     def __repr__(self):
         lines = ['SymbolicSystem: ' + str(self.nODE2) + ' ODE2 coordinates, ' + str(len(self.kinds)) + ' kinds']

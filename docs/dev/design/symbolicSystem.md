@@ -114,6 +114,14 @@ until then, correct but slow, and acceptable for the Python solver of G3.
 The marker Jacobians of the joints and connectors (section 3) are derivatives of the marker position and rotation
 programs by D - the reason the earlier plan needed sympy.
 
+**B as implemented (RG12.54.1, #3108).** `SymbolicSystem.ResidualJacobian` builds the residual of each kind once as
+scalar expressions of named variables: it runs the numpy code of the recordings with numpy object arrays of a small
+wrapper of `esym.Real` (`_Scalar`), so that each component of a vector or matrix result is an `esym.Real` of its own.
+Run directly with `esym.Real` components, a numpy constant times an `esym.Real` becomes an `esym.Matrix`, and a
+component of an `esym.Vector` or `esym.Matrix` expression has no `Diff` ("operator[]::Diff not implemented"): the
+vector and matrix expressions of exudyn.symbolic have no derivatives at all. Per object the named variables get its
+values by SetValue, and one `Diff` per entry gives the column; a `float` component has the derivative 0.
+
 ## 6. The implicit solver in Python (G3)
 
 Generalized-alpha (Chung and Hulbert, in the form of Arnold and Brüls that Exudyn uses), index 3 with the constraints
@@ -145,6 +153,8 @@ system; the functions that need a solver - `ComputeLinearizedSystem`, `ComputeOD
 
 - RG12.51.2 (done, #3110): `SymbolicSystem(mbs, evaluator)` for ObjectGenericODE2 and ObjectUserBody: kinds, LTG
   tables, mass matrix as triplets or (scipy) sparse matrix, forces and residual; equal to the solver API.
+- RG12.56 (#3112, before RG12.51.3): explicit Euler, velocity Verlet and RK44 in Python, on the interface of section 9
+  (section 10).
 - RG12.51.3: the generalized-alpha solver in Python with the Jacobian column by column by `esym.Diff` (RG12.54.1); the
   time-integration check against `SolveDynamic`.
 - RG12.55 first: user items with the interfaces of the built-in items (`exudyn/misc/symbolicUserItems.py`).
@@ -161,3 +171,63 @@ system; the functions that need a solver - `ComputeLinearizedSystem`, `ComputeOD
 3. `exudyn/misc/symbolicSystem.py` for model and solver, for now: special, not for the broad use, of large potential.
 4. Option D is the target of RG12.54; before it a Jacobian without a new program, column by column by `esym.Diff`
    (RG12.54.1), which stays as an option and as the comparison.
+
+## 9. One interface for every solver: the system as equations
+
+The solvers of RG12.56 and RG12.51.3 work on the **equations**, not on `mbs` and not on the recordings, so that the
+same solver runs a SymbolicSystem, a system written by hand with numpy, or later an exported one (G1) - and a hand-written
+numpy system is the simplest check of a solver, independent of Exudyn.
+
+The interface, as a Python base class `SystemEquations` in `exudyn/misc/symbolicSystem.py`:
+
+| member | what | default in the base class |
+|---|---|---|
+| `nODE2` | the number of ODE2 coordinates | - (required) |
+| `InitialState()` | `(q0, q_t0, t0)` | zeros, t0 = 0 |
+| `Forces(q, q_t, t)` | $\fv$, the right-hand side | - (required, or Residual) |
+| `MassMatrix(q, q_t, t, sparse)` | $\Mm$ | - (required, or Residual) |
+| `IsMassMatrixConstant()` | True: the solver factors $\Mm$ once | False |
+| `Residual(q, q_t, q_tt, t)` | $\rv = \Mm\ddot\qv - \fv$ | from MassMatrix and Forces |
+| `ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, sparse)` | the combined Jacobian | central differences of Residual - for a numpy system and as comparison only; SymbolicSystem overrides it by esym.Diff |
+
+`SymbolicSystem` derives from it and adds `InitialState()` from `mbs` (the initial coordinates and velocities of
+systemData) and `IsMassMatrixConstant()` from the kinds (`constantMassMatrix` of the user bodies, the constant matrix of
+ObjectGenericODE2). A numpy system is a small class with `nODE2`, `Forces` and `MassMatrix`; a helper
+`NumpySystem(nODE2, massMatrix, forces, initialState)` takes a constant matrix (or a function) and a function, for tests
+and for users who write their equations directly. The solvers use only this interface; the explicit ones only
+`InitialState`, `Forces`, `MassMatrix` and `IsMassMatrixConstant`.
+
+The result of a solver, the same for all: a dict with `'time'` (n_out), `'q'`, `'q_t'`, `'q_tt'` (n_out x nODE2), at
+the steps of `solution.solutionWritePeriod`, and the statistics (steps, evaluations of the forces, factorizations).
+
+## 10. Explicit solvers (RG12.56.1, #3112)
+
+The first solvers, before generalized-alpha: they need no Jacobian and no constraints, so simple user items suffice -
+mass points and spring-dampers (as user bodies of RG12.55 on the nodes of the bodies they connect). Constant step size
+$h = (t_{end} - t_{start})/n$ from `timeIntegration.startTime`, `endTime`, `numberOfSteps`; the method from
+`timeIntegration.explicitIntegration.dynamicSolverType` (or an argument, as `SolveDynamic(solverType=...)`): 
+
+- **ExplicitEuler**: $\qv_{n+1} = \qv_n + h\,\dot\qv_n$, $\dot\qv_{n+1} = \dot\qv_n + h\,\av_n$, with
+  $\av_n = \Mm^{-1}\fv(\qv_n, \dot\qv_n, t_n)$ - the first-order system $[\qv, \dot\qv]$ with the Butcher tableau of one
+  stage, as `CSolverExplicit` does.
+- **RK44**: the classical 4-stage tableau on $[\qv, \dot\qv]$, the stages as `src/Solver/CSolverExplicit.cpp`
+  computes them: $K_i = (\dot\qv, \av)$ at $g_i = u + h \sum_j A_{ij} K_j$, $t + c_i h$, then $u + h \sum_i b_i K_i$.
+- **VelocityVerlet**, as `CSolverExplicit` writes it: $\dot\qv_{n+1/2} = \dot\qv_n + \tfrac{h}{2}\av_n$,
+  $\qv_{n+1} = \qv_n + h\,\dot\qv_{n+1/2}$, $\av_{n+1} = \Mm^{-1}\fv(\qv_{n+1}, \dot\qv_{n+1/2}, t_{n+1})$,
+  $\dot\qv_{n+1} = \dot\qv_{n+1/2} + \tfrac{h}{2}\av_{n+1}$ - the force at the half-step velocity, as in Exudyn; the
+  initial acceleration from the initial state.
+
+**The accelerations.** $\av = \Mm^{-1}\fv$: with `IsMassMatrixConstant()` the matrix is factored once (scipy.sparse.linalg
+`splu` for a sparse one, `scipy.linalg.lu_factor` or `numpy.linalg.inv` for a dense one); otherwise solved per stage.
+`explicitIntegration.computeMassMatrixInversePerBody` has a counterpart later: a block per kind object, as the kinds
+know their blocks. The settings that have no meaning here (`automaticStepSize`, the tolerances, `useLieGroupIntegration`,
+`eliminateConstraints`) raise if set to a value other than the default, so that a comparison is not silently different.
+
+**The check** (a test model): mass points on spring-dampers as user bodies with symbolic functions, and the same system
+written with numpy as `NumpySystem`; each of the three methods against `mbs.SolveDynamic` with
+`solverType=exu.DynamicSolverType.ExplicitEuler | VelocityVerlet | RK44`, `automaticStepSize=False` and the same
+steps: equal to rounding (the same formulas; only the solve of $\Mm$ differs), about 1e-12 relative after 1000 steps;
+the numpy system equal to the symbolic one. A measurement of the time per step against Exudyn, for the record only.
+
+**Sub-steps of RG12.56**: .1 this concept; .2 `SystemEquations`, `NumpySystem` and `SymbolicSystem` on it
+(`InitialState`, `IsMassMatrixConstant`); .3 the three explicit solvers and their test model.

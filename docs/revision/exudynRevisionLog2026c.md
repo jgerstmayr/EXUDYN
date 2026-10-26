@@ -3585,3 +3585,47 @@ mbs.SolutionViewer() in several test models, so the viewer refuses; ObjectJointU
   section "Attributes:" is not one of the parsed sections (Args, Returns, Note, Example): written as Note.
 - The test suite passes (222 test models, 98 mini examples), the docs build; pytest -n 8 passes except the flaky
   browser test of test_issueTracker.py (a timeout), which passes alone.
+
+<a id="rg12-54-1"></a>
+### RG12.54.1 — The Jacobian of the residual column by column by esym.Diff (2026-10-26, #3108)
+- SymbolicSystem.ResidualJacobian(q, q_t, q_tt, t, factor_q=1, factor_q_t=0, factor_q_tt=0, sparse=False): factor_q
+  dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, as dense array or scipy sparse matrix; factor_q_tt alone gives
+  the mass matrix, a Newton step combines the three. For GenericODE2 the constant K, D, M are added to the derivatives
+  of its user functions.
+- SymbolicKind.ResidualExpressions(): the residual of a kind, once, as one esym.Real per component of named variables
+  (q, q_t, q_tt, t, and qRef and the parameters of a user body); per object the values are set by SetValue and one
+  Diff per entry gives each column.
+- Why the wrapper _Scalar: the 'symbolic' code of a recording gives esym.Vector and esym.Matrix results, and a
+  component of a vector or matrix expression has no Diff ("Symbolic::operator[]::Diff(vector, vector): not
+  implemented" - the vector and matrix expressions have no derivatives); the 'numpy' code with esym.Real components
+  fails where an esym.Real multiplies a numpy constant, which gives an esym.Matrix. The numpy code with object arrays of
+  _Scalar, a wrapper that returns NotImplemented for numpy arrays and implements the functions numpy calls on objects
+  (sin, arctan2, ...) by those of exudyn.symbolic, gives each component as its own esym.Real.
+- symbolicSystemTest.py: the Jacobian of each derivative and of a combination against central differences of the
+  residual, 6.0e-9 (the error of the differences); against ComputeJacobianODE2RHS of the solver at q_tt = 0 - which is
+  the Jacobian of f = -r, and computed by central differences for the user bodies - 4.7e-6 at entries of 400, checked
+  relative to 1e-6. Result unchanged, 3.
+- The answer to the question of 2026-10-26 on esym.sin in the test: np.sin of an esym.Real does work - numpy calls the
+  method sin() of an object, and esym.Real has one -, while exudyn.cMath.sin takes numbers and numpy arrays only;
+  checkPythonMath refuses np.sin in test models (#2964, platform-dependent for numbers), so a recorded function writes
+  esym.sin, which records and also takes numbers.
+
+<a id="rg12-55-1"></a>
+### RG12.55.1 and RG12.56.1 — The design of the user items and of the explicit solvers (2026-10-26, #3111, #3112)
+- docs/dev/design/symbolicUserItems.md: what exists (ObjectUserBody, the built-in markers on it, ObjectJointUser and
+  ObjectConnectorCoordinateVector symbolic, ObjectConnectorUser not - its markers are Python objects); connectors and
+  contacts therefore as ObjectUserBody without mass on the nodes of both bodies; the connectors need mbs at creation,
+  so the interface proposed is the Create functions of mbs with the same signatures on a creator object
+  (UserItemCreator(mbs), or mbs itself), Python user functions first and one recording per kind by Record(); the table
+  of the items of the maintainer's list with what each becomes and the arguments supported and refused, the further
+  items for a good representation (planar bodies, bushings, coordinate constraints, generic joint, sensors unchanged),
+  the order (ground, mass point, spring-damper, force first, for the explicit solvers), five decisions. RG12.55.2-.5
+  planned.
+- docs/dev/design/symbolicSystem.md §9: the interface SystemEquations of every solver - nODE2, InitialState, Forces,
+  MassMatrix, IsMassMatrixConstant, Residual and ResidualJacobian with defaults (central differences only as fallback
+  for numpy systems) -, SymbolicSystem and NumpySystem on it, one result dict. §10: explicit Euler, RK44 and velocity
+  Verlet as src/Solver/CSolverExplicit.cpp computes them (the first-order system with the Butcher tableau; Verlet with
+  the force at the half-step velocity), the constant step size of startTime, endTime, numberOfSteps, the mass matrix
+  factored once when constant, the settings without meaning refused when not default, the check against SolveDynamic
+  with the same solver type and a NumpySystem. RG12.56 (#3112, new, maintainer 2026-10-26) with .2 and .3 planned;
+  RG12.51.3 after it. §5 says how option B is implemented.
