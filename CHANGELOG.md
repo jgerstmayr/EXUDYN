@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 214 | 1.13.218 |
+| 1.13 | Newborn | 215 | 1.13.219 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.219** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem on a base class SymbolicSystemBase, evaluated by exudyn.symbolic only, with the state written back to mbs (#3113)
+  - description: revision2026c step RG12.51.7 (maintainer 2026-10-26): SymbolicSystem(mbs) extracts the symbolic system from an assembled mbs and refuses what is not compatible; it reuses the LTG maps and the system data, and writes computed coordinates back into mbs (current or visualization configuration), so that visualization, sensors and outputs work as for Exudyn's solvers - only the solve is new. It evaluates by exudyn.symbolic only; a conversion to numpy or other formats comes later from the flat programs, as export. A base class SymbolicSystemBase is the interface of every solver (nODE2, InitialState, MassMatrix, Forces, Residual, IsMassMatrixConstant, ResidualJacobian). The workaround of \#3108 for the Jacobian (numpy object arrays of a wrapper of esym.Real) is removed: the missing functionality of exudyn.symbolic gets its own steps. scipy is imported at the start of the module.
+  - **notes:** exudyn.misc.symbolicSystem: SymbolicSystemBase is the interface of the solvers (nODE2, InitialState, IsMassMatrixConstant, Forces, MassMatrixTriplets, MassMatrix, Residual, ResidualJacobian by central differences); SymbolicSystem(mbs) derives from it, evaluates by exudyn.symbolic only (no evaluator argument), writes a state back into mbs by SetSystemState for the renderer, the sensors and the outputs, and also refuses recordings that read mbs, ODE1 coordinates, algebraic equations and data coordinates; scipy is required by the module.
+  - date resolved: **2026-10-26 22:54**, date raised: 2026-10-26
 - **1.13.218** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem: the mass matrix, forces and residual of a system of symbolic user items (#3110)
   - description: revision2026c step RG12.51.2 (maintainer 2026-10-26: residual and sparse mass matrix both available, exudyn.symbolic and numpy first, exudyn/misc/symbolicSystem.py): kinds of objects with the same recordings, the local-to-global maps, the mass matrix as triplets or sparse matrix, the forces and the residual M q\_tt - f, checked against MainSolverImplicitSecondOrder.
   - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem(mbs): the objects with symbolic user functions (ObjectUserBody, ObjectGenericODE2) grouped in kinds of the same recordings, with the mass matrix as triplets, dense or scipy sparse matrix, the forces and the residual M q\_tt - f, evaluated by exudyn.symbolic or numpy; equal to the solver's mass matrix and right-hand side.

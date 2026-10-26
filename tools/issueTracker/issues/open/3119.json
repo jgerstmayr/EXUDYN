@@ -1,0 +1,11 @@
+{
+  "number": 3119,
+  "title": "ObjectConnectorUser with a symbolic force function of the states of its markers",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "revision2026c step RG12.55.6 (maintainer 2026-10-26: extend ObjectConnectorUser instead of user bodies without mass): the forceUserFunction of ObjectConnectorUser gets ConnectorMarker objects, whose methods apply forces as side effects, which a recording cannot represent. A second user function that gets the positions, velocities, rotations and angular velocities of the markers and returns the forces and torques on them, which the connector applies through the marker Jacobians - recorded as symbolic user function, with the Jacobian numerically first and by RG12.58 later. Design docs/dev/design/symbolicUserItems.md.",
+  "dateRaised": "2026-10-26",
+  "deadline": "2027-04-24"
+}

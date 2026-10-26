@@ -1,0 +1,11 @@
+{
+  "number": 3117,
+  "title": "Call a symbolic recording with symbolic arguments: its expressions with the arguments substituted",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.60 (maintainer 2026-10-26): a recording evaluated with exudyn.symbolic arguments returns a copy of its expressions in which its argument variables are replaced by the given expressions, as Optimize copies nodes; for one expression per kind of the symbolic system (the residual M q_tt - f), for the forces of connectors composed with the marker kinematics of the bodies, and for the export of one program per kind (RG12.51.5).",
+  "dateRaised": "2026-10-26",
+  "deadline": "2027-04-24"
+}

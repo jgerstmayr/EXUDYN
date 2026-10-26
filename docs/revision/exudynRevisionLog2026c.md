@@ -3629,3 +3629,34 @@ mbs.SolutionViewer() in several test models, so the viewer refuses; ObjectJointU
   factored once when constant, the settings without meaning refused when not default, the check against SolveDynamic
   with the same solver type and a NumpySystem. RG12.56 (#3112, new, maintainer 2026-10-26) with .2 and .3 planned;
   RG12.51.3 after it. §5 says how option B is implemented.
+
+<a id="rg12-51-7"></a>
+### RG12.51.7 — SymbolicSystem on SymbolicSystemBase, exudyn.symbolic only; the planning of 2026-10-26 (2026-10-26, #3113)
+- The maintainer's direction (2026-10-26): the system is extracted from mbs, only if every item is compatible, and
+  reuses its data; a computed state goes back into mbs, where the renderer, the sensors and the outputs read it - only
+  the solve is new; it evaluates by exudyn.symbolic, numpy and other formats come from an export of the whole system;
+  what exudyn.symbolic lacks is added there, not worked around in SymbolicSystem; a base class for the solvers.
+- python/exudyn/misc/symbolicSystem.py: SymbolicSystemBase (nODE2, InitialState, IsMassMatrixConstant, Forces,
+  MassMatrixTriplets, MassMatrix, Residual, ResidualJacobian by central differences of Residual); SymbolicSystem(mbs)
+  on it, without the evaluator argument and the numpy code of symbolicExport; InitialState from the Initial
+  configuration, IsMassMatrixConstant from constantMassMatrix and the GenericODE2 objects, SetSystemState(q, q_t, q_tt,
+  t, configuration); refused as well: recordings that read mbs (an item output, 'mbs.' in the flat program), ODE1
+  coordinates, algebraic equations, data coordinates. The wrapper _Scalar of RG12.54.1 is removed, so the Jacobian is
+  central differences until #3115. scipy is imported at the start of the module, with a clear ImportError.
+- symbolicSystemTest.py: one system; the sparse mass matrix in every state; the Jacobian by q_tt against the mass
+  matrix 2.3e-9, against the solver's (also central differences for user bodies) 4.7e-6 at entries of 400; the initial
+  state, the state written back and read by GetNodeOutput (6e-17); IsMassMatrixConstant False; three refusals. Result
+  unchanged, 3.
+- The gaps of exudyn.symbolic, in docs/dev/design/symbolicSystem.md §11 with the proposals, each a new step (maintainer
+  2026-10-26): RG12.57 cMath with symbolic arguments (#3114); RG12.58 Diff of vector and matrix expressions by a seed
+  (variable, component), a derivative buffer per node next to its evaluation buffer, UserFunction.EvaluateJacobian
+  (#3115); RG12.59 the forward derivative of a flat program in one pass, in one memory block per program sized at the
+  first evaluation (#3116); RG12.60 a recording called with symbolic arguments (#3117). RG12.51.8 the built-in loads
+  in the system (#3118). §3 the system model as extracted from mbs and written back, §9 SymbolicSystemBase instead of
+  SystemEquations.
+- docs/dev/design/symbolicUserItems.md: the decisions on the user items (the Create signatures on UserItemCreator,
+  a small set first, a Python graphicsDataUserFunction for the drawing), and §2 why a symbolic ObjectConnectorUser is
+  not possible now - its ConnectorMarker objects are no symbolic arguments and its forces are side effects, not a
+  result - and the extension: a second user function of the marker states that returns the forces, applied through
+  the marker Jacobians; two markers as ObjectJointUser proposed, any number stacked as the alternative. RG12.55.6
+  (#3119), open for that decision.

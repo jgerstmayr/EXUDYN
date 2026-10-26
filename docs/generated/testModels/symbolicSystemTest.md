@@ -15,10 +15,10 @@ You can view and download this file on Github: [symbolicSystemTest.py](https://g
 #           NodePoint - two of one kind (a mass on a nonlinear spring with damping, its own parameters each), one of a
 #           second kind with a mass matrix depending on the coordinates - and an ObjectGenericODE2 with constant
 #           matrices, a force vector and a symbolic nonlinear force. At random states the mass matrix, the forces and
-#           the residual M q_tt - f of the symbolic system, by exudyn.symbolic and by numpy, equal those of
-#           MainSolverImplicitSecondOrder; the mass matrix also as scipy sparse matrix if scipy is installed. What
-#           SymbolicSystem refuses. The Jacobian of the residual by esym.Diff (#3108) against central differences
-#           and against the Jacobian of the solver.
+#           the residual M q_tt - f of the symbolic system, evaluated by exudyn.symbolic, equal those of
+#           MainSolverImplicitSecondOrder, the mass matrix also as scipy sparse matrix. The Jacobian of the residual
+#           of SymbolicSystemBase against the Jacobian of the solver and the mass matrix; the initial state, the
+#           state written back into mbs (#3113). What SymbolicSystem refuses.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-26
@@ -100,9 +100,9 @@ def SolverTerms(q, q_t, t):
     solver.ComputeODE2RHS(mbs)
     return solver.GetSystemMassMatrix(), np.array(solver.GetSystemResidual()[0:nODE2])
 
-systems = {evaluator: SymbolicSystem(mbs, evaluator=evaluator) for evaluator in ['symbolic', 'numpy']}
-exu.Print(systems['symbolic'])
-numberOfKinds = len(systems['symbolic'].kinds)
+system = SymbolicSystem(mbs)
+exu.Print(system)
+numberOfKinds = len(system.kinds)
 
 random = np.random.default_rng(1)
 difference = 0.
@@ -110,54 +110,50 @@ for state in range(3):
     (q, q_t, q_tt) = [0.2*random.standard_normal(nODE2) for i in range(3)]
     t = 0.3*state
     (M, f) = SolverTerms(q, q_t, t)
-    for system in systems.values():
-        difference = max(difference, np.max(np.abs(system.MassMatrix(q, q_t, t) - M)),
-                         np.max(np.abs(system.Forces(q, q_t, t) - f)),
-                         np.max(np.abs(system.Residual(q, q_t, q_tt, t) - (M @ q_tt - f))))
+    difference = max(difference, np.max(np.abs(system.MassMatrix(q, q_t, t) - M)),
+                     np.max(np.abs(system.MassMatrix(q, q_t, t, sparse=True).toarray() - M)),
+                     np.max(np.abs(system.Forces(q, q_t, t) - f)),
+                     np.max(np.abs(system.Residual(q, q_t, q_tt, t) - (M @ q_tt - f))))
 
-#the Jacobian of the residual by esym.Diff (#3108): against central differences of the residual, of each derivative and
-#of a combination as a Newton step uses it; against the Jacobian of the solver, which the user bodies compute by central
-#differences, at q_tt = 0 (the solver omits the derivative of the mass matrix) and of the right-hand side f = -r
-system = systems['symbolic']
-def CentralDifferences(q, q_t, q_tt, t, factors, epsilon=1e-6):
-    J = np.zeros((nODE2, nODE2))
-    for (k, factor) in enumerate(factors):
-        for j in range(nODE2):
-            states = [[q.copy(), q_t.copy(), q_tt.copy()] for sign in [1, -1]]
-            for (state, sign) in zip(states, [1, -1]):
-                state[k][j] += sign*epsilon
-            J[:, j] += factor*(system.Residual(*states[0], t) - system.Residual(*states[1], t))/(2*epsilon)
-    return J
-
-differenceJacobian = 0.
-for factors in [(1., 0., 0.), (0., 1., 0.), (0., 0., 1.), (1., 0.5, 0.25)]:
-    J = system.ResidualJacobian(q, q_t, q_tt, t, *factors)
-    differenceJacobian = max(differenceJacobian, np.max(np.abs(J - CentralDifferences(q, q_t, q_tt, t, factors))))
-differenceJacobian = max(differenceJacobian, np.max(np.abs(system.ResidualJacobian(q, q_t, q_tt, t, 0, 0, 1) - M)))
+#the Jacobian of the residual by central differences of SymbolicSystemBase: the derivative by q_tt is the mass matrix;
+#against the Jacobian of the solver, which the user bodies also compute by central differences, at q_tt = 0 (the solver
+#omits the derivative of the mass matrix) and of the right-hand side f = -r
+differenceJacobian = np.max(np.abs(system.ResidualJacobian(q, q_t, q_tt, t, 0, 0, 1) - M))
 mbs.systemData.SetODE2Coordinates(q)
 mbs.systemData.SetODE2Coordinates_t(q_t)
 mbs.systemData.SetTime(t)
 solver.ComputeJacobianODE2RHS(mbs, scalarFactor_ODE2=1, scalarFactor_ODE2_t=0.5)
 JSolver = solver.GetSystemJacobian()[0:nODE2, 0:nODE2]
-differenceSolverJacobian = np.max(np.abs(system.ResidualJacobian(q, q_t, None, t, 1, 0.5, 0) + JSolver)) #the solver: of f = -r
-exu.Print('Jacobian by esym.Diff: difference to central differences', differenceJacobian, ', to the solver', differenceSolverJacobian)
+differenceSolverJacobian = np.max(np.abs(system.ResidualJacobian(q, q_t, None, t, 1, 0.5, 0, sparse=True).toarray() + JSolver))
+exu.Print('Jacobian: difference to the mass matrix', differenceJacobian, ', to the solver', differenceSolverJacobian)
 solver.FinalizeSolver(mbs, simulationSettings)
 
-try: #the sparse mass matrix, if scipy is installed
-    import scipy.sparse
-    difference = max(difference, np.max(np.abs(systems['numpy'].MassMatrix(q, q_t, t, sparse=True).toarray() - M)))
-except ImportError:
-    pass
+#the initial state, and a state written back into mbs, where the output functions read it (the displacement as
+#position minus reference, to rounding)
+(q0, q_t0) = system.InitialState()
+system.SetSystemState(q, q_t, t=t)
+nodeBody = mbs.GetObject(bodies[1])['nodeNumbers'][0]
+ltgBody = list(mbs.systemData.GetObjectLTGODE2(bodies[1]))
+differenceState = (np.max(np.abs(q0)) + np.max(np.abs(q_t0))
+                   + np.max(np.abs(mbs.GetNodeOutput(nodeBody, exu.OutputVariableType.Displacement) - q[ltgBody]))
+                   + np.max(np.abs(mbs.GetNodeOutput(nodeBody, exu.OutputVariableType.Velocity) - q_t[ltgBody])))
+exu.Print('mass matrix constant:', system.IsMassMatrixConstant(), '; state difference:', differenceState)
+
 exu.Print('kinds', numberOfKinds, '; largest difference to the solver:', difference)
 
-#what SymbolicSystem refuses: a Python user function, a load
+#what SymbolicSystem refuses: a Python user function, a load, a recording that reads mbs
+def UFforceOutput(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return -mbs.GetNodeOutput(0, exu.OutputVariableType.Displacement)
+
 def Refused(kind):
     mbs2 = SC.AddSystem()
     node = mbs2.AddNode(NodePoint())
     body = mbs2.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=[1., 1., 0., 0.], massMatrixUserFunction=UFmass, forceUserFunction=UFforce))
-    if kind == 'load':
+    if kind != 'python':
         mbs2.SetObjectParameter(body, 'massMatrixUserFunction', CreateSymbolicUserFunction(mbs2, UFmass, 'massMatrixUserFunction', body))
-        mbs2.SetObjectParameter(body, 'forceUserFunction', CreateSymbolicUserFunction(mbs2, UFforce, 'forceUserFunction', body))
+        mbs2.SetObjectParameter(body, 'forceUserFunction', CreateSymbolicUserFunction(mbs2, UFforceOutput if kind == 'output' else UFforce,
+                                                                                    'forceUserFunction', body))
+    if kind == 'load':
         mbs2.AddLoad(LoadForceVector(markerNumber=mbs2.AddMarker(MarkerNodePosition(nodeNumber=node)), loadVector=[1, 0, 0]))
     mbs2.Assemble()
     try:
@@ -166,10 +162,12 @@ def Refused(kind):
         return str(e)
     return ''
 
-refused = int('has a Python massMatrixUserFunction' in Refused('python')) + int('cannot be assembled (yet): loads' in Refused('load'))
-exu.Print('refused, of 2:', refused)
+refused = (int('has a Python massMatrixUserFunction' in Refused('python')) + int('cannot be assembled (yet): loads' in Refused('load'))
+           + int('reads the MainSystem' in Refused('output')))
+exu.Print('refused, of 3:', refused)
 
-u = numberOfKinds + int(difference > 1e-12) + int(differenceJacobian > 1e-7) + int(differenceSolverJacobian > 1e-6*np.max(np.abs(JSolver))) + (2 - refused)
+u = (numberOfKinds + int(difference > 1e-12) + int(differenceJacobian > 1e-7) + int(differenceSolverJacobian > 1e-6*np.max(np.abs(JSolver)))
+     + int(differenceState > 1e-14) + int(system.IsMassMatrixConstant()) + (3 - refused))
 exu.Print('solution of symbolicSystemTest=', u)
 
 exu.sys['testResult'] = u

@@ -1,0 +1,15 @@
+{
+  "number": 3113,
+  "title": "SymbolicSystem on a base class SymbolicSystemBase, evaluated by exudyn.symbolic only, with the state written back to mbs",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.51.7 (maintainer 2026-10-26): SymbolicSystem(mbs) extracts the symbolic system from an assembled mbs and refuses what is not compatible; it reuses the LTG maps and the system data, and writes computed coordinates back into mbs (current or visualization configuration), so that visualization, sensors and outputs work as for Exudyn's solvers - only the solve is new. It evaluates by exudyn.symbolic only; a conversion to numpy or other formats comes later from the flat programs, as export. A base class SymbolicSystemBase is the interface of every solver (nODE2, InitialState, MassMatrix, Forces, Residual, IsMassMatrixConstant, ResidualJacobian). The workaround of #3108 for the Jacobian (numpy object arrays of a wrapper of esym.Real) is removed: the missing functionality of exudyn.symbolic gets its own steps. scipy is imported at the start of the module.",
+  "dateRaised": "2026-10-26",
+  "deadline": "2027-04-24",
+  "dateResolved": "2026-10-26 22:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.misc.symbolicSystem: SymbolicSystemBase is the interface of the solvers (nODE2, InitialState, IsMassMatrixConstant, Forces, MassMatrixTriplets, MassMatrix, Residual, ResidualJacobian by central differences); SymbolicSystem(mbs) derives from it, evaluates by exudyn.symbolic only (no evaluator argument), writes a state back into mbs by SetSystemState for the renderer, the sensors and the outputs, and also refuses recordings that read mbs, ODE1 coordinates, algebraic equations and data coordinates; scipy is required by the module.",
+  "resolvedInVersion": "1.13.219"
+}

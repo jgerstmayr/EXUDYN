@@ -118,8 +118,9 @@ $$
 \Mm(\qv)\, \ddot\qv = \fv(t, \qv, \dot\qv) + \fv_{loads} \, ,
 $$
 
-with $\Mm$ from `massMatrixUserFunction` - called once and kept with `constantMassMatrix` (#3058) - and $\fv$ from `forceUserFunction` (zero without it). The
-Jacobian of the left-hand side is computed numerically, as for every item without an analytic one.
+with $\Mm$ from `massMatrixUserFunction` - called once and kept with `constantMassMatrix` (#3058) - and $\fv$ from `forceUserFunction` (zero without it). A static
+problem needs no mass matrix (#3104). The Jacobian of the left-hand side is computed numerically, as for every item
+without an analytic one.
 
 ### Mass-proportional loads
 
