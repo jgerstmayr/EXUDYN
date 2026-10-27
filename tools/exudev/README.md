@@ -36,7 +36,7 @@ three from any platform.
 | `exudev docs [--keep-cache] [--open] [--pdf]` | `sphinx-build -b html . _build -E`; `--pdf` adds the printable documentation in `dist/` (LaTeX needed, release only) |
 | `exudev linux [--manylinux \| --wsl-conda]` | the linux wheels: through WSL on Windows, in this shell on linux; refused on macOS |
 | `exudev release [--dev] [--no-linux]` | `build --complete` over every version, with the guards a release needs |
-| `exudev clean [--dist] [--linux] [--all]` | the build directories and eggs |
+| `exudev clean [--dist] [--linux] [--vs] [--all]` | the build directories and eggs, the caches of pytest, ruff and mypy, `_buildpdf`, a `solution/` in the root; `--vs` also `bin/` and `msvc/x64/`; never `_build`, `build/` itself or `tmp/` (#3122) |
 | `exudev env [--py]` | python, exudyn, numpy, scipy and matplotlib per environment |
 | `exudev issue <verb>` | the issue tracker: `raise` (the proposed issues first), `propose`, `propose-resolution`, `add-proposed` and `apply-proposed` (issues and resolutions of contributors, applied by the maintainer, #3083), `extend`, `remark`, `defer` (an open issue that waits on purpose until a date, #3024), `resolve`, `close`, `show`, `list`, `modify`, `triage`, `plot`, `html`, `serve`, `mode`. Runs in the current interpreter, without conda; `resolve` and `abandon` rewrite the version files |
 | `exudev issue bump` | start a new release: `--minor` (1.11 → 1.12), `--major` (1.11 → 2.0) or `--to <version>`; appends it to `releases.json` and restarts the micro version |

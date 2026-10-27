@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 221 | 1.13.225 |
+| 1.13 | Newborn | 222 | 1.13.226 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.226** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev clean removes the tool caches, the PDF build and the solution directory of the root, --vs the Visual Studio output (#3122)
+  - description: The repository root collects directories that are only output: the caches of pytest, ruff and mypy, the LaTeX build of exudev docs --pdf in \_buildpdf (the PDF is copied out of it), a solution directory written by runs from the root, and the Visual Studio output in bin/ and msvc/x64/ (about 2 GB). exudev clean removed only the setuptools build directories and eggs. It now removes the caches, \_buildpdf and solution/ as well; --vs removes bin/ and msvc/x64/, which costs a full rebuild in Visual Studio; --all includes --vs. Kept: \_build (the HTML documentation), build/ itself with its flag stamp, tmp/, dist/ unless --dist.
+  - **notes:** exudev clean also removes the caches of pytest, ruff and mypy, the LaTeX build \_buildpdf and a solution/ directory in the root; clean --vs removes the Visual Studio output bin/ and msvc/x64/, and --all includes --vs. \_build, build/ itself and tmp/ are kept.
+  - date resolved: **2026-10-27 08:11**, date raised: 2026-10-27
 - **1.13.225** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorUser with a symbolic forceUserFunction in the symbolic system (#3121)
   - description: revision2026c step RG12.51.9 (maintainer 2026-10-26: the explicit solver with a relevant system): SymbolicSystem takes ObjectConnectorUser with a symbolic forceUserFunction of the marker states (\#3119) on position markers of point nodes (NodePoint) and of the ground (NodePointGround, ObjectGround), the forces scattered to the coordinates of the markers, the Jacobian by EvaluateJacobian of the recording by the positions and velocities; markers on bodies and the rotations of the markers later (RG12.51.4).
   - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem takes ObjectConnectorUser with a symbolic forceUserFunction on position markers of point nodes and of the ground, with the Jacobian by Diff of the recording.

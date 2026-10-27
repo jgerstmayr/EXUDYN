@@ -1217,6 +1217,12 @@ CLOSED 2026-10-17 (#3024; maintainer: a delayed issue, the plan step closes): `d
 list --open and triage leave a deferred issue out, CheckStore checks the field, planManager names the deferred
 issues and their steps. [log](exudynRevisionLog2026c.md#rg10-32)
 
+### **CLOSED_RG10.33** Let exudev clean remove the tool caches and the other output in the root
+
+CLOSED 2026-10-27 (#3122; maintainer: the temporary directories in the root, removed by exudev clean): the caches of
+pytest, ruff and mypy, `_buildpdf` and `solution/` by default, `bin/` and `msvc/x64/` with `--vs`.
+[log](exudynRevisionLog2026c.md#rg10-33)
+
 ## **OPEN_RG11** Misc
 
 What belongs to no group, including what was left of revision2026b groups 12 to 18. Put off, by decision of

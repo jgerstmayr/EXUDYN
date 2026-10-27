@@ -451,7 +451,7 @@ def Build(options):
 
     steps = []
     if options.clean:
-        steps += Clean(OptionsWith(options, dist=False, linux=False, all=False))
+        steps += Clean(OptionsWith(options, dist=False, linux=False, vs=False, all=False))
 
     #ALWAYS, not only with --clean: a module deleted from python/exudyn survives in build/lib.* and
     #is copied into the wheel from there (#2560)
@@ -509,7 +509,7 @@ def Complete(options):
     steps = []
 
     if not options.no_clean:
-        steps += Clean(OptionsWith(options, dist=False, linux=False, all=False))
+        steps += Clean(OptionsWith(options, dist=False, linux=False, vs=False, all=False))
 
     #a release must not silently regenerate, so there it is 'generate --check'; an ordinary
     #--complete is allowed to update the generated files
@@ -1379,8 +1379,11 @@ def LinuxWslConda(options):
 
 #%%******************************************************************************************************
 def Clean(options):
-    """Exactly what removeBuildsAndEggs.bat removed. dist/ and the linux build directories are KEPT
-    unless asked for: removing the linux directories used to break the linux build."""
+    """The build directories and eggs of setuptools, the tool caches, the LaTeX build of the PDF
+    and a solution/ written into the root (#3122). KEPT unless asked for: dist/, the linux build
+    directories - removing them used to break the linux build - and the Visual Studio output
+    (--vs), which costs a full rebuild in Visual Studio. Never touched: _build (the HTML
+    documentation), build/ itself with its flag stamp, and tmp/."""
     root = runner.RepositoryRoot()
 
     #setuptools names its build directories after the platform - build/lib.win-amd64-*,
@@ -1392,11 +1395,16 @@ def Clean(options):
         'macosx' if sys.platform == 'darwin' else 'win')
     patterns = ['build/lib.' + platform + '*', 'build/temp.' + platform + '*',
                 'build/bdist.' + platform + '*',
-                '.eggs', 'exudyn.egg-info', 'python/exudyn.egg-info']
+                '.eggs', 'exudyn.egg-info', 'python/exudyn.egg-info',
+                '.pytest_cache', '.ruff_cache', '.mypy_cache',    #written again by the next run
+                pdfBuildDirectory,      #"exudev docs --pdf" copies the PDF out of it
+                'solution']             #a model run from the root writes coordinatesSolution there
     filePatterns = ['dist/*.egg']
 
     if options.linux or options.all:
         patterns += ['build/*linux*']    #the WSL/manylinux output, which is not this platform's
+    if options.vs or options.all:
+        patterns += ['bin', 'msvc/x64']  #OutDir and IntDir of msvc/cppsrc.vcxproj
     if options.dist or options.all:
         filePatterns += ['dist/*.whl']
 
@@ -1432,7 +1440,7 @@ def Clean(options):
     if not listing:
         listing = ['nothing matches the clean patterns at the moment']
 
-    return [Step('clean build directories and eggs', action=Action, note='\n'.join(listing))]
+    return [Step('clean build directories, caches and eggs', action=Action, note='\n'.join(listing))]
 
 
 #%%******************************************************************************************************

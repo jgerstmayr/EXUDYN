@@ -519,13 +519,18 @@ def BuildParsers():
     release.set_defaults(function=commands.Release)
 
     clean = subParsers.add_parser('clean', parents=[globalParser],
-        help='remove the Windows build directories and eggs',
-        description='The set removeBuildsAndEggs.bat removed. dist/ and the linux build directories '
-                    'are kept unless asked for - removing the linux directories used to break the '
-                    'linux build.')
+        help='remove the build directories, caches and eggs',
+        description='The build directories and eggs of this platform, the caches of pytest, ruff '
+                    'and mypy, the LaTeX build _buildpdf and a solution/ in the root (#3122). '
+                    'dist/, the linux build directories and the Visual Studio output are kept '
+                    'unless asked for - removing the linux directories used to break the linux '
+                    'build. Never removed: _build (the HTML documentation), build/ itself and tmp/.')
     clean.add_argument('--dist', action='store_true', help='also delete the wheels in dist/')
     clean.add_argument('--linux', action='store_true', help='also delete build/*linux*')
-    clean.add_argument('--all', action='store_true', help='--dist and --linux together')
+    clean.add_argument('--vs', action='store_true',
+                       help='also delete bin/ and msvc/x64/, the Visual Studio output (a full '
+                            'rebuild in Visual Studio afterwards)')
+    clean.add_argument('--all', action='store_true', help='--dist, --linux and --vs together')
     clean.set_defaults(function=commands.Clean)
 
     IssueParser(subParsers, globalParser)

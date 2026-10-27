@@ -1,0 +1,16 @@
+{
+  "number": 3122,
+  "title": "exudev clean removes the tool caches, the PDF build and the solution directory of the root, --vs the Visual Studio output",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "The repository root collects directories that are only output: the caches of pytest, ruff and mypy, the LaTeX build of exudev docs --pdf in _buildpdf (the PDF is copied out of it), a solution directory written by runs from the root, and the Visual Studio output in bin/ and msvc/x64/ (about 2 GB). exudev clean removed only the setuptools build directories and eggs. It now removes the caches, _buildpdf and solution/ as well; --vs removes bin/ and msvc/x64/, which costs a full rebuild in Visual Studio; --all includes --vs. Kept: _build (the HTML documentation), build/ itself with its flag stamp, tmp/, dist/ unless --dist.",
+  "dateRaised": "2026-10-27",
+  "deadline": "2027-04-25",
+  "dateResolved": "2026-10-27 08:11",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "exudev clean also removes the caches of pytest, ruff and mypy, the LaTeX build _buildpdf and a solution/ directory in the root; clean --vs removes the Visual Studio output bin/ and msvc/x64/, and --all includes --vs. _build, build/ itself and tmp/ are kept.",
+  "resolvedInVersion": "1.13.226"
+}

@@ -209,7 +209,13 @@ For Python-level debugging, `python3 -m pdb myModel.py`.
 
 ```powershell
 python tools/exudev clean          #the build directories and eggs of this platform; keeps dist/
+python tools/exudev clean --vs     #also bin/ and msvc/x64/: a full rebuild in Visual Studio
 ```
+
+`clean` also removes what tools leave in the root: `.pytest_cache`, `.ruff_cache`, `.mypy_cache`,
+the LaTeX build `_buildpdf` (the PDF is copied out of it) and a `solution/` written by a model run
+from the root. It keeps `_build` (the HTML documentation), `build/` itself with its flag stamp, and
+`tmp/` (#3122).
 
 or by hand:
 

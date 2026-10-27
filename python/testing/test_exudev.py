@@ -67,7 +67,7 @@ def testCleanRemovesTheBuildDirectoriesOfThisPlatform(onPlatform, platform, expe
     seen = []
     monkeypatch.setattr(commands.glob, 'glob', lambda pattern: seen.append(pattern) or [])
 
-    commands.Clean(Options(linux=False, dist=False, all=False))
+    commands.Clean(Options(linux=False, dist=False, vs=False, all=False))
     patterns = [pattern.replace(os.sep, '/') for pattern in seen]
     assert any(pattern.endswith(expected + '*') for pattern in patterns), patterns
     assert not any('win-amd64' in pattern for pattern in patterns) or platform == 'win32'
@@ -81,7 +81,7 @@ def testCleanNamesEachDirectoryOnce(onPlatform, monkeypatch):
                         if 'linux' in pattern else [])
     monkeypatch.setattr(os.path, 'isdir', lambda path: True)
 
-    steps = commands.Clean(Options(linux=True, dist=False, all=False))
+    steps = commands.Clean(Options(linux=True, dist=False, vs=False, all=False))
     assert steps[0].note.count('build') == 1, steps[0].note
 
 

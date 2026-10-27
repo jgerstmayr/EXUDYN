@@ -3744,3 +3744,20 @@ mbs.SolutionViewer() in several test models, so the viewer refuses; ObjectJointU
   against MassPoint and ObjectConnectorSpringDamper 1.1e-16; the net as NumpySystem 8.3e-17; the Jacobian of the
   residual by Diff against central differences 7.3e-11 relative to the stiffness. For the record, 200 steps of RK44:
   0.29 s SolveExplicit on the symbolic system, 0.12 s on the NumpySystem, 0.02 s SolveDynamic. Result 1.
+
+<a id="rg10-33"></a>
+### RG10.33 — exudev clean and the output in the root (2026-10-27, #3122)
+*(Maintainer 2026-10-27: .pytest_cache, .ruff_cache, .mypy_cache, the PDF build, build, bin and solution in the root -
+are they needed, and can exudev clean remove them; _build is needed for the HTML documentation, tmp is intended.)*
+- What each is: `.pytest_cache`, `.ruff_cache`, `.mypy_cache` - the caches of pytest, ruff and of the stubtest of
+  `tools/checkPython.py --stubs` (21 MB), each ignoring itself by its own .gitignore, written again by the next run;
+  `_buildpdf` - the LaTeX build of `exudev docs --pdf` (62 MB), which copies the PDF out of it; `solution/` - a
+  coordinatesSolution.txt of 2026-10-27 07:35 (14 ODE2, 2 AE, 100 steps) from a model run with the root as working
+  directory and no EXUDYN_OUTPUTDIRECTORY; `bin/` - OutDir of msvc/cppsrc.vcxproj, the Debug and Release module of
+  Visual Studio (187 MB), with its IntDir `msvc/x64/` (2.0 GB of object files); `build/` - only the flag stamp
+  exudynBuildFlags.txt of setup.py, the empty linux directories of the WSL build and an asanpdb.pdb of 2026-09-17.
+- tools/exudev/commands.py `Clean`: by default also the three caches, `_buildpdf` and `solution/`; `--vs` the Visual
+  Studio output `bin/` and `msvc/x64/` (a full rebuild in Visual Studio afterwards); `--all` includes `--vs`. Never
+  removed: `_build`, `build/` itself, `tmp/`. `build --clean` and `build --complete` pass `vs=False`.
+- tools/exudev/README.md, docs/dev/BUILD.md. `exudev clean -n` lists the five directories; with `--vs` also bin and
+  msvc/x64. pytest test_exudev.py passes.
