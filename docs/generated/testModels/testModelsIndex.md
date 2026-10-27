@@ -205,6 +205,7 @@ symbolicUserFunctionCopyTest
 symbolicUserFunctionSignaturesTest
 symbolicUserFunctionTest
 symbolicUserFunctionThreadsTest
+symbolicUserItemsTest
 symbolicUtilitiesTest
 symbolicVectorDiffTest
 symbolicVectorUserFunctionTest

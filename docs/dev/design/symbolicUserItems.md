@@ -76,15 +76,16 @@ outside the list of connectors (drawing, outputs, `activeConnector`); the extens
 
 Every item of the list has a Create function of mbs with bodies and local positions instead of markers -
 `mbs.CreateMassPoint`, `CreateRigidBody`, `CreateSpringDamper`, `CreateRevoluteJoint`, ... -, and these are what most
-models use. **A creator object with the same methods and the same arguments** (decisions 1 and 2):
+models use. **A creator object with the same methods and the same arguments** (decisions 1 and 2; done for ground, mass
+point, spring-damper and force, #3125):
 
 ```python
 import exudyn.misc.symbolicUserItems as sui
 creator = sui.UserItemCreator(mbs)        #or creator = mbs: the same script with the built-in items
 b0 = creator.CreateMassPoint(referencePosition=[1,0,0], mass=2, gravity=[0,-9.81,0])
-creator.CreateSpringDamper(bodyNumbers=[oGround, b0], stiffness=100, damping=1)
-mbs.Assemble()
+creator.CreateSpringDamper(itemNumbers=[creator.CreateGround(), b0], stiffness=100, damping=1)
 creator.Record()                          #one symbolic recording per kind, as SymbolicSystem groups them
+mbs.Assemble()
 ```
 
 - The methods add the same nodes, markers and loads as the built-in functions (a NodePoint, a MarkerBodyMass and a
@@ -97,6 +98,14 @@ creator.Record()                          #one symbolic recording per kind, as S
   the connector (section 2).
 - **A small set first** (decision 2): ground, mass point, spring-damper, force - enough for the explicit solvers and to
   test the interface; the others as the steps below.
+- **Done** (#3125): `UserItemCreator` with `CreateGround` (the built-in ground), `CreateMassPoint` (ObjectUserBody on
+  a NodePoint with its mass, mass integral, position, rotation and Jacobian functions), `CreateSpringDamper`
+  (ObjectConnectorUser, its force with cMath) and `CreateForce` (the built-in load, a Python loadVectorUserFunction
+  recorded by `Record`); `items` lists the items of each kind, `recordings` keeps the recordings alive. At the center
+  of a user mass point the spring-damper takes a marker on its node instead of the body: the position is the same,
+  and SymbolicSystem takes node markers until RG12.51.4 brings body markers. symbolicUserItemsTest.py: the same
+  script with `creator = mbs` and with the creator, the Python and the recorded user items equal to the built-in
+  items to 7e-16, SolveExplicit on the recorded system to 1.3e-15.
 
 ## 4. The items, what they become, what they support
 
@@ -105,12 +114,12 @@ creator.Record()                          #one symbolic recording per kind, as S
 | CreateGround | the built-in ObjectGround (no coordinates) | all | - |
 | CreateMassPoint | ObjectUserBody on NodePoint: $\Mm = m\Im$, $\fv = 0$, position $\qv + \pLoc$, Jacobian $\Im$, mass integral $m\Im$ | referencePosition, initialDisplacement, initialVelocity, mass, gravity, graphicsDataList, drawSize, color, show | create2D (later: NodePoint2D), physicsMass (deprecated) |
 | CreateRigidBody | ObjectUserBody on the rigid-body node: mass matrix and quadratic velocity vector of the node type, by symbolicUtilities; position and rotation of a local point | referencePosition, referenceRotationMatrix, initialVelocity, initialAngularVelocity, initialDisplacement, initialRotationMatrix, inertia (with center of mass), gravity, nodeType RotationRotationVector and RotationRxyz, graphicsDataList, referenceHT, initialHT | nodeType EulerParameters (the algebraic equation of the node is needed in the system model - later), create2D (later: NodeRigidBody2D) |
-| CreateSpringDamper | ObjectConnectorUser on two position markers with the forceUserFunction of the marker states (section 2): $\fv_1 = -\fv_0 = -(k(L - L_0) + d\dot L + f_0)\,\nv$ | bodyNumbers, localPosition0/1, referenceLength, stiffness, damping, force, velocityOffset, show, drawSize, color | springForceUserFunction (later: a symbolic one inside the recording), bodyOrNodeList with nodes |
-| CreateTorsionalSpringDamper | ObjectConnectorUser on two rigid markers: the torque of the relative rotation about the axis | bodyNumbers, position, axis, stiffness, damping, offset, velocityOffset, torque, useGlobalFrame | unlimitedRotations (needs the data of the turns), springTorqueUserFunction |
-| CreateRevoluteJoint, CreatePrismaticJoint | ObjectJointUser on MarkerBodyRigid of both bodies, the constraint and its Jacobian of the built-in joint, symbolic | bodyNumbers, position, axis, useGlobalFrame, show, axisRadius, axisLength, color | - |
-| CreateSphericalJoint | ObjectJointUser as above | bodyNumbers, position, constrainedAxes, useGlobalFrame, show, jointRadius, color | - |
-| CreateDistanceConstraint | ObjectJointUser of one equation, $\|\pv_1 - \pv_0\| - d$ | bodyNumbers, localPosition0/1, distance, show, drawSize, color | - |
-| CreateSphereSphereContact | ObjectConnectorUser on two position markers: linear contact stiffness and damping, $\fv = (k\,g + d\,\dot g)\,\nv$ while the gap $g < 0$, by `esym.IfThenElse` | bodyNumbers, localPosition0/1, spheresRadii, contactStiffness, contactDamping | the impact models, restitution, friction, adhesion, plasticity (they need the data node and the post-Newton step of a symbolic connector), isHollowSphere1 |
+| CreateSpringDamper | ObjectConnectorUser on two position markers with the forceUserFunction of the marker states (section 2): $\fv_1 = -\fv_0 = -(k(L - L_0) + d\dot L + f_0)\,\nv$ | itemNumbers, localPosition0/1, referenceLength, stiffness, damping, force, velocityOffset, show, drawSize, color | springForceUserFunction (later: a symbolic one inside the recording), the deprecated bodyNumbers and bodyOrNodeList |
+| CreateTorsionalSpringDamper | ObjectConnectorUser on two rigid markers: the torque of the relative rotation about the axis | itemNumbers, position, axis, stiffness, damping, offset, velocityOffset, torque, useGlobalFrame | unlimitedRotations (needs the data of the turns), springTorqueUserFunction |
+| CreateRevoluteJoint, CreatePrismaticJoint | ObjectJointUser on MarkerBodyRigid of both bodies, the constraint and its Jacobian of the built-in joint, symbolic | itemNumbers, position, axis, useGlobalFrame, show, axisRadius, axisLength, color | - |
+| CreateSphericalJoint | ObjectJointUser as above | itemNumbers, position, constrainedAxes, useGlobalFrame, show, jointRadius, color | - |
+| CreateDistanceConstraint | ObjectJointUser of one equation, $\|\pv_1 - \pv_0\| - d$ | itemNumbers, localPosition0/1, distance, show, drawSize, color | - |
+| CreateSphereSphereContact | ObjectConnectorUser on two position markers: linear contact stiffness and damping, $\fv = (k\,g + d\,\dot g)\,\nv$ while the gap $g < 0$, by `esym.IfThenElse` | itemNumbers, localPosition0/1, spheresRadii, contactStiffness, contactDamping | the impact models, restitution, friction, adhesion, plasticity (they need the data node and the post-Newton step of a symbolic connector), isHollowSphere1 |
 | CreateForce, CreateTorque | the built-in LoadForceVector / LoadTorqueVector on a marker of the user body | all but loadVectorUserFunction | - |
 
 For a **good representation of multibody systems** beyond the list: planar mass points and rigid bodies (NodePoint2D,

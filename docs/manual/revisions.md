@@ -70,7 +70,10 @@ with the mass matrix inverted per body if `timeIntegration.explicit.computeMassM
 solution file and the sensors of mbs (#3112); it takes ObjectConnectorUser with a symbolic forceUserFunction on
 markers of point nodes and of the ground (#3121), and LoadForceVector, LoadTorqueVector, LoadMassProportional and
 LoadCoordinate, constant or with a symbolic user function, on markers of point nodes, node coordinates and user bodies
-(#3118).
+(#3118). `exudyn.misc.symbolicUserItems.UserItemCreator(mbs)` has `CreateGround`, `CreateMassPoint`,
+`CreateSpringDamper` and `CreateForce` with the arguments of those of mbs and creates ObjectUserBody and
+ObjectConnectorUser instead of the built-in objects, so that one script builds a system of either; `Record()` makes
+their user functions symbolic, one recording per kind of item (#3125).
 **ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
 two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
 also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a

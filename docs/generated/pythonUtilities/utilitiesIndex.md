@@ -33,6 +33,7 @@ misc.GUI
 misc.settingsUtilities
 misc.symbolicExport
 misc.symbolicSystem
+misc.symbolicUserItems
 interactive
 kinematicTree
 lieGroupBasics

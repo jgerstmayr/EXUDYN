@@ -106,6 +106,7 @@ filesParsed=[
              'misc/settingsUtilities.py',
              'misc/symbolicExport.py',
              'misc/symbolicSystem.py',
+             'misc/symbolicUserItems.py',
              'interactive.py',
              'kinematicTree.py',
              'lieGroupBasics.py', #Stefan Holzinger

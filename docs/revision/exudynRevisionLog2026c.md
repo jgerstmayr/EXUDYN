@@ -3800,3 +3800,28 @@ comes back.)*
   force on the ground. SolveExplicit RK44 against SolveDynamic 1.5e-15, the Jacobian of the residual (factor_q 1,
   factor_q_t 0.5) against central differences 1.7e-10, two refusals. Result 1.
 - docs/dev/design/symbolicSystem.md §3, docs/manual/revisions.md.
+
+<a id="rg12-55-2"></a>
+### RG12.55.2 — UserItemCreator: ground, mass point, spring-damper, force (2026-10-27, #3125)
+*(Maintainer 2026-10-27: three of the next RG12 steps; decisions of 2026-10-26: the Create signatures on
+UserItemCreator(mbs), a small set first.)*
+- python/exudyn/misc/symbolicUserItems.py, `UserItemCreator(mbs)`; its Create functions have the arguments and defaults
+  of those of mbs, the deprecated ones included, which raise when given:
+  - `CreateGround`: mbs.CreateGround, the built-in ground has no coordinates;
+  - `CreateMassPoint`: the NodePoint and the gravity load (MarkerBodyMass, LoadMassProportional) of mbs.CreateMassPoint,
+    an ObjectUserBody with `parameters=[mass]`, `constantMassMatrix`, the mass, mass integral, position (node position
+    plus local position, as MassPoint), rotation and Jacobian functions; `create2D` and `physicsMass` refused;
+  - `CreateSpringDamper`: the markers of mbs.CreateSpringDamper (GetMarkersPosRot), an ObjectConnectorUser with
+    `parameters=[k, d, L0, f, v0]` and the forceUserFunction of ObjectConnectorSpringDamper written with cMath; at the
+    center of a user mass point the marker is on its node, which SymbolicSystem takes until RG12.51.4; drawn by a
+    graphicsDataUserFunction, a line, or a cylinder of diameter drawSize; `springForceUserFunction` refused;
+  - `CreateForce`: mbs.CreateForce; a Python loadVectorUserFunction is recorded by Record.
+  - `Record()`: each user function of a kind recorded once and set in every item of the kind; `recordings` keeps
+    them alive.
+- symbolicUserItemsTest.py: one function builds a chain of three mass points on spring-dampers from the ground,
+  gravity, a force of sin(10t), with `creator = mbs` and `creator = UserItemCreator(mbs)`: the Python user items and the
+  recorded ones against the built-in items 5.6e-16 / 6.7e-16 (generalized-alpha) and 1.4e-17 / 2.2e-16 (RK44); the
+  recorded system as SymbolicSystem (3 kinds, 4 loads), SolveExplicit against SolveDynamic 1.3e-15; the four
+  signatures equal by inspect; two refusals. Result 1.
+- tools/generators/utilityDocsModel.py: the module's page; docs/dev/design/symbolicUserItems.md §3 and §4
+  (itemNumbers instead of the deprecated bodyNumbers), docs/manual/revisions.md.

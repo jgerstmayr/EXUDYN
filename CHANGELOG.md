@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 225 | 1.13.229 |
+| 1.13 | Newborn | 226 | 1.13.230 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.230** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UserItemCreator: the Create functions of mbs for user items, ground, mass point, spring-damper and force (#3125)
+  - description: revision2026c step RG12.55.2 (maintainer 2026-10-26: UserItemCreator(mbs) with the Create signatures, a small set of items first): exudyn/misc/symbolicUserItems.py, UserItemCreator with CreateGround, CreateMassPoint, CreateSpringDamper and CreateForce with the arguments of those of mbs, creating ObjectUserBody and ObjectConnectorUser with Python user functions, and Record() replacing them by one symbolic recording per kind.
+  - **notes:** exudyn.misc.symbolicUserItems.UserItemCreator(mbs): CreateGround, CreateMassPoint, CreateSpringDamper and CreateForce with the arguments of those of mbs, creating ObjectUserBody and ObjectConnectorUser with Python user functions; Record() makes them symbolic, one recording per kind. symbolicUserItemsTest.py: equal to the built-in items to 7e-16.
+  - date resolved: **2026-10-27 21:42**, date raised: 2026-10-27
 - **1.13.229** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Loads in the symbolic system: LoadForceVector, LoadTorqueVector, LoadCoordinate and LoadMassProportional, constant or with a symbolic user function (#3118)
   - description: revision2026c step RG12.51.8 (maintainer 2026-10-26: a full user system needs forces): SymbolicSystem takes the built-in loads with a constant load vector or a symbolic loadVectorUserFunction of the time; first on markers whose Jacobian is constant - node markers of point nodes and coordinates, MarkerBodyMass of a mass point - as a constant or time-dependent generalized force at the LTG indices of the marker, then on body markers of user bodies with the Jacobians of RG12.58.
   - **notes:** SymbolicSystem takes LoadForceVector, LoadTorqueVector, LoadMassProportional and LoadCoordinate, constant or with a symbolic user function of the time: on MarkerNodePosition of point nodes and MarkerNodeCoordinate directly, on the body markers of ObjectUserBody by its symbolic position or rotation Jacobian or mass integral function, bodyFixed by its rotation matrix; the Jacobian by EvaluateJacobian. symbolicSystemLoadsTest.py: SolveExplicit equal to SolveDynamic to 1.5e-15.

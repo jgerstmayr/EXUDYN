@@ -54,7 +54,7 @@ recordings that read mbs are refused.
 - **output**: dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2) at the steps of solution.file.writePeriod and the last step, and the statistics 'steps', 'forceEvaluations', 'massMatrixEvaluations'
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM), [`symbolicUserItemsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserItemsTest.py) (TM)
 
 
 (sec-module-misc.symbolicsystem-class-symbolicsystembase)=
@@ -421,7 +421,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 - **class function description**: the local Jacobian of the residual -f of a connector: the derivatives of its forces by the positions (arguments 3 and 7) and velocities (4 and 8) of its markers, which are the coordinates of point nodes
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM), [`symbolicSystemTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM), [`symbolicSystemTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemTest.py) (TM), [`symbolicUserItemsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserItemsTest.py) (TM)
 
 
 (sec-module-misc.symbolicsystem-class--massmatrixsolver)=

@@ -1,0 +1,16 @@
+{
+  "number": 3125,
+  "title": "UserItemCreator: the Create functions of mbs for user items, ground, mass point, spring-damper and force",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.55.2 (maintainer 2026-10-26: UserItemCreator(mbs) with the Create signatures, a small set of items first): exudyn/misc/symbolicUserItems.py, UserItemCreator with CreateGround, CreateMassPoint, CreateSpringDamper and CreateForce with the arguments of those of mbs, creating ObjectUserBody and ObjectConnectorUser with Python user functions, and Record() replacing them by one symbolic recording per kind.",
+  "dateRaised": "2026-10-27",
+  "deadline": "2027-04-25",
+  "dateResolved": "2026-10-27 21:42",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/symbolicUserItems.py",
+  "releaseNotes": "exudyn.misc.symbolicUserItems.UserItemCreator(mbs): CreateGround, CreateMassPoint, CreateSpringDamper and CreateForce with the arguments of those of mbs, creating ObjectUserBody and ObjectConnectorUser with Python user functions; Record() makes them symbolic, one recording per kind. symbolicUserItemsTest.py: equal to the built-in items to 7e-16.",
+  "resolvedInVersion": "1.13.230"
+}
