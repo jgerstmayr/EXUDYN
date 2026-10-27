@@ -158,6 +158,15 @@ It reads `SimulationSettings.timeIntegration`: `numberOfSteps`, `endTime`, `gene
 `newton.maxIterations`, `newton.useModifiedNewton` - so that the same settings run in Exudyn and in Python. Sparse
 linear algebra by scipy.sparse.
 
+**Done** (#3126): `SolveGeneralizedAlpha(system, simulationSettings)` for systems without constraints: the predictor,
+the Newton iteration and the update of the algorithmic accelerations of `CSolverImplicitSecondOrder.cpp`, the
+Jacobian by `ResidualJacobian(q, q_t, q_tt, t, 1, gamma', beta')` - exact for a SymbolicSystem, with the term
+d(M q_tt)/dq that Exudyn leaves out, which changes the iterates, not the solution -, sparse LU by scipy, the
+convergence as `CSolverBase::Newton` (relative to the initial residual or absolute, weighted per coordinate), a
+constant step size: a Newton iteration that does not converge raises. symbolicGeneralizedAlphaTest.py: equal to
+`SolveDynamic` to 1e-10 relative with relativeTolerance 1e-10. The constraints and the index-2 form come with
+RG12.51.4.
+
 **The check** in two steps, each a test model:
 
 1. Terms: at random states, $\Mm$, $\rv$, $\gv$ and the Jacobians of the symbolic model against
@@ -181,7 +190,8 @@ its solver are together in `exudyn/misc/symbolicSystem.py` (decision 3).
   `NumpySystem`; RG12.56.4 (done, #3120) the inverse per body of ObjectUserBody in Exudyn.
 - RG12.51.9 (done, #3121): ObjectConnectorUser with a symbolic forceUserFunction on position markers of point nodes
   and of the ground.
-- RG12.51.3: the generalized-alpha solver in Python; the time-integration check against `SolveDynamic`.
+- RG12.51.3 (done, #3126): `SolveGeneralizedAlpha`, the generalized-alpha and Newmark methods in Python; the
+  time-integration check against `SolveDynamic`.
 - RG12.55 first: user items with the interfaces of the built-in items (`exudyn/misc/symbolicUserItems.py`).
 - RG12.51.8 (done, #3118): the built-in loads, constant or with a symbolic user function.
 - RG12.51.4: those user items in the system - rigid bodies, joints, connectors, the constraints.

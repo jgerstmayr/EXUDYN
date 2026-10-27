@@ -161,6 +161,7 @@ def TestExamplesReferenceSolution():
         'symbolicExportTest.py':11450.057870734236, #new 2026-10-25: GetFlatProgramData, GetFlatProgram and ToString in the formats Python, symbolic, numpy and sympy against the recordings (#3087, #3088)
         'symbolicSystemTest.py':3, #new 2026-10-26: SymbolicSystem, 3 kinds of user bodies and a generic ODE2, mass matrix, forces and residual equal to the solver (#3110)
         'symbolicExplicitSolverTest.py':1, #new 2026-10-26: SolveExplicit, explicit Euler, RK44 and velocity Verlet on a SymbolicSystem equal to SolveDynamic, NumpySystem (#3112)
+        'symbolicGeneralizedAlphaTest.py':1, #new 2026-10-27: SolveGeneralizedAlpha on a stiff chain of recorded user items against SolveDynamic, generalized-alpha, Newmark, modified Newton (#3126)
         'symbolicSystemLoadsTest.py':1, #new 2026-10-27: the built-in loads in SymbolicSystem on point nodes, coordinates and a user rigid body, SolveExplicit equal to SolveDynamic, the Jacobian, the refusals (#3118)
         'symbolicUserItemsTest.py':1, #new 2026-10-27: UserItemCreator, a chain of user mass points and spring-dampers by the Create functions of mbs, equal to the built-in items, recorded, SolveExplicit (#3125)
         'symbolicVectorDiffTest.py':1, #new 2026-10-26: Diff of symbolic vectors and matrices, EvaluateJacobian, cMath with symbolic arguments (#3115, #3114)

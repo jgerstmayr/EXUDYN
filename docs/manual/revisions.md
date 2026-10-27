@@ -73,7 +73,9 @@ LoadCoordinate, constant or with a symbolic user function, on markers of point n
 (#3118). `exudyn.misc.symbolicUserItems.UserItemCreator(mbs)` has `CreateGround`, `CreateMassPoint`,
 `CreateSpringDamper` and `CreateForce` with the arguments of those of mbs and creates ObjectUserBody and
 ObjectConnectorUser instead of the built-in objects, so that one script builds a system of either; `Record()` makes
-their user functions symbolic, one recording per kind of item (#3125).
+their user functions symbolic, one recording per kind of item (#3125). `SolveGeneralizedAlpha(system,
+simulationSettings)` integrates a system of `exudyn.misc.symbolicSystem` by the generalized-alpha or Newmark method with
+constant step size, as `SolveDynamic` does, with the Jacobian of the residual by `Diff` of the recordings (#3126).
 **ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
 two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
 also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a

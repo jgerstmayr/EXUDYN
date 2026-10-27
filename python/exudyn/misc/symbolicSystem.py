@@ -10,7 +10,8 @@
 #           r = M q_tt - f, the sparse mass matrix, the forces and the Jacobian of r by exudyn.symbolic, and writes a
 #           computed state back into mbs, where the renderer, the sensors and the output functions read it.
 #           NumpySystem takes equations written by hand. SolveExplicit integrates any of them by explicit Euler, RK44
-#           or velocity Verlet, as Exudyn's explicit solver does (#3112).
+#           or velocity Verlet, as Exudyn's explicit solver does (#3112), SolveGeneralizedAlpha by the generalized-alpha
+#           method, as Exudyn's implicit solver does (#3126).
 #           Special: not for the broad use, a basis for the export of the equations of motion and their evaluation
 #           outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
 #           forceUserFunction, ObjectGenericODE2 with constant matrices and symbolic user functions,
@@ -29,6 +30,7 @@
 
 import numpy as np
 import exudyn
+import exudyn.cMath as cMath
 try:
     import scipy.sparse
     import scipy.sparse.linalg
@@ -37,7 +39,7 @@ except ImportError:
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = ['SymbolicSystemBase', 'NumpySystem', 'SymbolicKind', 'SymbolicLoad', 'SymbolicSystem', 'explicitSolverTypes',
-           'SolveExplicit']
+           'SolveExplicit', 'SolveGeneralizedAlpha']
 
 #the user functions of a kind, by object type
 _userFunctionNames = {'UserBody': ['massMatrixUserFunction', 'forceUserFunction'],
@@ -755,29 +757,67 @@ class _MassMatrixSolver:
         return a
 
 
-class _MbsOutput:
-    """the output of a solver of this module through the MainSystem of a SymbolicSystem: an Exudyn solver object, which
-    writes the solution file and the sensors and updates the renderer in FinishStep, by simulationSettings.solution; it
-    runs as explicit Euler without inverse per body, which only decides what its initialization computes"""
-    def __init__(self, system, simulationSettings):
+class _Output:
+    """the output of a solver of this module: the states at the steps of solution.file.writePeriod, as CSolverBase writes
+    them - the start, then each time a write period is passed, and the last step -, and for a SymbolicSystem the output
+    through its mbs: an Exudyn solver object, which writes the solution file and the sensors and updates the renderer in
+    FinishStep, by simulationSettings.solution; it runs as explicit Euler without inverse per body, which only decides
+    what its initialization computes"""
+    def __init__(self, system, simulationSettings, tStart, tEnd, h):
+        (self.tStart, self.tEnd, self.h) = (tStart, tEnd, h)
+        self.period = simulationSettings.solution.file.writePeriod
+        self.lastWritten = tStart
+        self.result = {'time': [], 'q': [], 'q_t': [], 'q_tt': []}
         self.system = system
-        self.simulationSettings = exudyn.SimulationSettings()
-        self.simulationSettings.SetDictionary(simulationSettings.GetDictionary())
-        self.simulationSettings.timeIntegration.solverType = exudyn.DynamicSolverType.ExplicitEuler
-        self.simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = False
-        simulationSettings = self.simulationSettings
-        self.solver = exudyn.MainSolverExplicit()
-        self.solver.InitializeSolver(system.mbs, simulationSettings)
+        self.solver = None
+        if getattr(system, 'mbs', None) is not None:
+            self.simulationSettings = exudyn.SimulationSettings()
+            self.simulationSettings.SetDictionary(simulationSettings.GetDictionary())
+            self.simulationSettings.timeIntegration.solverType = exudyn.DynamicSolverType.ExplicitEuler
+            self.simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = False
+            self.solver = exudyn.MainSolverExplicit()
+            self.solver.InitializeSolver(system.mbs, self.simulationSettings)
 
-    def Step(self, stepIndex, t, h, q, q_t, q_tt):
-        self.system.SetSystemState(q, q_t, q_tt, t)
-        self.solver.it.currentStepIndex = stepIndex
-        self.solver.it.currentTime = t
-        self.solver.it.currentStepSize = h
-        self.solver.FinishStep(self.system.mbs, self.simulationSettings)
+    def Step(self, stepIndex, t, q, q_t, q_tt, last=False):
+        """the state after step stepIndex at t; stepIndex 0 is the initial state, as SolveDynamic writes it"""
+        if last:
+            self.lastWritten = self.tEnd - self.h
+        if stepIndex == 0 or t - self.lastWritten >= -1e-10:
+            self.lastWritten = max(self.lastWritten + self.period, t)
+            for (name, value) in [('time', t), ('q', q), ('q_t', q_t), ('q_tt', q_tt)]:
+                self.result[name].append(np.copy(value))
+        if self.solver is not None:
+            self.system.SetSystemState(q, q_t, q_tt, t)
+            self.solver.it.currentStepIndex = stepIndex
+            self.solver.it.currentTime = t
+            self.solver.it.currentStepSize = self.h
+            self.solver.FinishStep(self.system.mbs, self.simulationSettings)
 
-    def Finalize(self):
-        self.solver.FinalizeSolver(self.system.mbs, self.simulationSettings)
+    def Finalize(self, statistics):
+        """the result dict, with the statistics of the solver"""
+        if self.solver is not None:
+            self.solver.FinalizeSolver(self.system.mbs, self.simulationSettings)
+        result = {name: np.array(value) for (name, value) in self.result.items()}
+        result.update(statistics)
+        return result
+
+
+def _Steps(simulationSettings):
+    """the number of steps, the start and end time and the step size of timeIntegration"""
+    timeIntegration = simulationSettings.timeIntegration
+    n = int(timeIntegration.numberOfSteps)
+    (tStart, tEnd) = (timeIntegration.startTime, timeIntegration.endTime)
+    return (n, tStart, tEnd, (tEnd - tStart)/n)
+
+
+def _RefuseLieGroupNodes(system, useLieGroupIntegration, where):
+    """Lie group nodes are integrated by Exudyn with the Lie group formulas, which are not implemented here"""
+    mbs = getattr(system, 'mbs', None)
+    if mbs is not None and useLieGroupIntegration:
+        for nodeNumber in range(mbs.systemData.NumberOfNodes()):
+            if mbs.GetNode(nodeNumber)['nodeType'].endswith('LG'):
+                raise ValueError(where + ': node ' + str(nodeNumber) + ' is a Lie group node, which Exudyn integrates '
+                                 'by the Lie group formulas (useLieGroupIntegration); they are not implemented here')
 
 
 def SolveExplicit(system, simulationSettings=None, solverType=None):
@@ -804,16 +844,9 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
         solverType = timeIntegration.solverType
     if solverType not in explicitSolverTypes:
         raise ValueError('SolveExplicit: solverType must be one of ' + str(explicitSolverTypes) + ', not ' + str(solverType))
-    mbs = getattr(system, 'mbs', None)
-    if mbs is not None and timeIntegration.explicit.useLieGroupIntegration:
-        for nodeNumber in range(mbs.systemData.NumberOfNodes()):
-            if mbs.GetNode(nodeNumber)['nodeType'].endswith('LG'):
-                raise ValueError('SolveExplicit: node ' + str(nodeNumber) + ' is a Lie group node, which Exudyn integrates '
-                                 'by the Lie group formulas (explicit.useLieGroupIntegration); they are not implemented here')
+    _RefuseLieGroupNodes(system, timeIntegration.explicit.useLieGroupIntegration, 'SolveExplicit')
 
-    n = int(timeIntegration.numberOfSteps)
-    (tStart, tEnd) = (timeIntegration.startTime, timeIntegration.endTime)
-    h = (tEnd - tStart)/n
+    (n, tStart, tEnd, h) = _Steps(simulationSettings)
     massSolver = _MassMatrixSolver(system, timeIntegration.explicit.computeMassMatrixInversePerBody,
                                    timeIntegration.reuseConstantMassMatrix)
     forceEvaluations = [0]
@@ -825,22 +858,8 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     q_tt = np.zeros(system.nODE2)
     if solverType == exudyn.DynamicSolverType.VelocityVerlet:
         q_tt = Accelerations(q, q_t, tStart)
-
-    #the output as CSolverBase writes it: the start, then each time a write period is passed, and the last step
-    period = simulationSettings.solution.file.writePeriod
-    result = {'time': [], 'q': [], 'q_t': [], 'q_tt': []}
-    lastWritten = [tStart]
-    def Write(t, last):
-        if last:
-            lastWritten[0] = tEnd - h
-        if t == tStart or t - lastWritten[0] >= -1e-10:
-            lastWritten[0] = max(lastWritten[0] + period, t)
-            for (name, value) in [('time', t), ('q', q), ('q_t', q_t), ('q_tt', q_tt)]:
-                result[name].append(np.copy(value))
-    Write(tStart, False)
-    output = _MbsOutput(system, simulationSettings) if mbs is not None else None
-    if output is not None:
-        output.Step(0, tStart, h, q, q_t, q_tt) #the initial state, as SolveDynamic writes it
+    output = _Output(system, simulationSettings, tStart, tEnd, h)
+    output.Step(0, tStart, q, q_t, q_tt)
 
     for step in range(1, n + 1):
         t0 = tStart + (step - 1)*h
@@ -869,12 +888,102 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
                 q_tt = Accelerations(q, q_t, t)
             else:
                 q_tt = K_t[-1]
-        Write(t, step == n)
-        if output is not None:
-            output.Step(step, t, h, q, q_t, q_tt)
-    if output is not None:
-        output.Finalize()
+        output.Step(step, t, q, q_t, q_tt, last=(step == n))
 
-    result = {name: np.array(value) for (name, value) in result.items()}
-    result.update({'steps': n, 'forceEvaluations': forceEvaluations[0], 'massMatrixEvaluations': massSolver.evaluations})
-    return result
+    return output.Finalize({'steps': n, 'forceEvaluations': forceEvaluations[0],
+                            'massMatrixEvaluations': massSolver.evaluations})
+
+
+def SolveGeneralizedAlpha(system, simulationSettings=None):
+    """the implicit time integration of a SymbolicSystemBase with constant step size by the generalized-alpha method
+    in the form of Arnold and Bruls, as Exudyn's MainSolverImplicitSecondOrder computes it (#3126, design
+    docs/dev/design/symbolicSystem.md §6): per step the predictor of the displacements, velocities and algorithmic
+    accelerations, then Newton's method for the accelerations with the residual r = M q_tt - f and the Jacobian
+    beta' M + gamma' dr/dq_t + dr/dq of ResidualJacobian; by timeIntegration: numberOfSteps, startTime, endTime,
+    generalizedAlpha.spectralRadius, useNewmark with newmarkBeta and newmarkGamma, computeInitialAccelerations, and
+    newton.relativeTolerance, absoluteTolerance, maxIterations, useModifiedNewton (the Jacobian once per step) and
+    weightTolerancePerCoordinate; for a SymbolicSystem the solution file, the sensors and the renderer of its mbs, as
+    SolveExplicit. A step whose Newton iteration does not converge raises: the step size is constant
+
+    Args:
+        system: the system, a SymbolicSystemBase
+        simulationSettings: exudyn.SimulationSettings; None: the defaults
+
+    Returns:
+        dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2) at the steps of solution.file.writePeriod and
+        the last step, and the statistics 'steps', 'newtonIterations', 'jacobianEvaluations'
+    """
+    if simulationSettings is None:
+        simulationSettings = exudyn.SimulationSettings()
+    timeIntegration = simulationSettings.timeIntegration
+    generalizedAlpha = timeIntegration.generalizedAlpha
+    newton = timeIntegration.newton
+    _RefuseLieGroupNodes(system, True, 'SolveGeneralizedAlpha') #the implicit solver of Exudyn integrates them always so
+    if generalizedAlpha.useIndex2Constraints:
+        raise ValueError('SolveGeneralizedAlpha: useIndex2Constraints is not implemented, as the system has no constraints yet')
+
+    #the parameters of src/Solver/CSolverImplicitSecondOrder.cpp, PreInitializeSolverSpecific
+    if generalizedAlpha.useNewmark:
+        (alphaM, alphaF) = (0.5, 0.5) #a spectral radius of 1; the predictor takes the accelerations directly
+        (beta, gamma) = (generalizedAlpha.newmarkBeta, generalizedAlpha.newmarkGamma)
+    else:
+        rho = generalizedAlpha.spectralRadius
+        (alphaM, alphaF) = ((2*rho - 1)/(rho + 1), rho/(rho + 1))
+        gamma = 0.5 + alphaF - alphaM
+        beta = 0.25*(gamma + 0.5)**2
+    (n, tStart, tEnd, h) = _Steps(simulationSettings)
+    betaPrime = (1 - alphaM)/(h**2*beta*(1 - alphaF))
+    gammaPrime = gamma/(h*beta)
+    errorFactor = np.sqrt(system.nODE2) if (newton.weightTolerancePerCoordinate and system.nODE2) else 1.
+
+    (q, q_t) = system.InitialState()
+    q_tt = np.zeros(system.nODE2)
+    if generalizedAlpha.computeInitialAccelerations:
+        q_tt = scipy.sparse.linalg.spsolve(system.MassMatrix(q, q_t, tStart, sparse=True).tocsc(), system.Forces(q, q_t, tStart))
+    aAlgorithmic = q_tt.copy()
+    output = _Output(system, simulationSettings, tStart, tEnd, h)
+    output.Step(0, tStart, q, q_t, q_tt)
+
+    (newtonIterations, jacobianEvaluations) = (0, 0)
+    for step in range(1, n + 1):
+        t = tStart + step*h
+        #the predictor, ComputeNewtonUpdate(initial=True)
+        if generalizedAlpha.useNewmark:
+            q = q + h*q_t + (h**2*(0.5 - beta))*q_tt
+            q_t = q_t + (h*(1 - gamma))*q_tt
+        else:
+            q = q + h*q_t + (h**2*(0.5 - beta))*aAlgorithmic
+            q_t = q_t + (h*(1 - gamma))*aAlgorithmic
+            aAlgorithmic = (alphaF*q_tt - alphaM*aAlgorithmic)/(1 - alphaM)
+            q = q + (h**2*beta)*aAlgorithmic
+            q_t = q_t + (h*gamma)*aAlgorithmic
+        q_tt = np.zeros(system.nODE2)
+
+        #Newton's method, as CSolverBase::Newton: converged by the residual relative to the initial one or absolute
+        initialResidual = cMath.norm(system.Residual(q, q_t, q_tt, t))/errorFactor
+        if initialResidual <= newton.absoluteTolerance:
+            initialResidual = 2*newton.absoluteTolerance #at least one Newton step
+        factorization = None
+        converged = False
+        for iteration in range(int(newton.maxIterations)):
+            if factorization is None or not newton.useModifiedNewton:
+                factorization = scipy.sparse.linalg.splu(system.ResidualJacobian(q, q_t, q_tt, t, factor_q=1., factor_q_t=gammaPrime,
+                                                                                 factor_q_tt=betaPrime, sparse=True).tocsc())
+                jacobianEvaluations += 1
+            increment = factorization.solve(system.Residual(q, q_t, q_tt, t))
+            q = q - increment
+            q_t = q_t - gammaPrime*increment
+            q_tt = q_tt - betaPrime*increment
+            newtonIterations += 1
+            residual = cMath.norm(system.Residual(q, q_t, q_tt, t))/errorFactor
+            if residual/initialResidual <= newton.relativeTolerance or residual <= newton.absoluteTolerance:
+                converged = True
+                break
+        if not converged:
+            raise ValueError('SolveGeneralizedAlpha: Newton did not converge in step ' + str(step) + ' at t=' + str(t)
+                             + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
+        if not generalizedAlpha.useNewmark:
+            aAlgorithmic = aAlgorithmic + ((1 - alphaF)/(1 - alphaM))*q_tt #FinalizeNewton
+        output.Step(step, t, q, q_t, q_tt, last=(step == n))
+
+    return output.Finalize({'steps': n, 'newtonIterations': newtonIterations, 'jacobianEvaluations': jacobianEvaluations})

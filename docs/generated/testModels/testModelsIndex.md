@@ -194,6 +194,7 @@ SwitchingConstraintsTest
 symbolicDeepRecordingTest
 symbolicExplicitSolverTest
 symbolicExportTest
+symbolicGeneralizedAlphaTest
 symbolicItemOutputTest
 symbolicModuleTest
 symbolicNumpyCompatibilityTest

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 226 | 1.13.230 |
+| 1.13 | Newborn | 227 | 1.13.231 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.231** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolveGeneralizedAlpha: the generalized-alpha solver in Python on SymbolicSystemBase (#3126)
+  - description: revision2026c step RG12.51.3 (maintainer 2026-10-26: a generalized-alpha solver in Python with the settings of SimulationSettings, checked against the internal solver): exudyn.misc.symbolicSystem.SolveGeneralizedAlpha, the algorithm of MainSolverImplicitSecondOrder (Arnold and Bruls) with Newton's method on ResidualJacobian, the settings of timeIntegration, the output through mbs.
+  - **notes:** exudyn.misc.symbolicSystem.SolveGeneralizedAlpha(system, simulationSettings): the generalized-alpha and Newmark methods of MainSolverImplicitSecondOrder in Python, with constant step size, Newton's method on the exact Jacobian of the residual, the settings of timeIntegration and the output through mbs. symbolicGeneralizedAlphaTest.py: equal to SolveDynamic to 1e-10.
+  - date resolved: **2026-10-27 21:55**, date raised: 2026-10-27
 - **1.13.230** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UserItemCreator: the Create functions of mbs for user items, ground, mass point, spring-damper and force (#3125)
   - description: revision2026c step RG12.55.2 (maintainer 2026-10-26: UserItemCreator(mbs) with the Create signatures, a small set of items first): exudyn/misc/symbolicUserItems.py, UserItemCreator with CreateGround, CreateMassPoint, CreateSpringDamper and CreateForce with the arguments of those of mbs, creating ObjectUserBody and ObjectConnectorUser with Python user functions, and Record() replacing them by one symbolic recording per kind.
   - **notes:** exudyn.misc.symbolicUserItems.UserItemCreator(mbs): CreateGround, CreateMassPoint, CreateSpringDamper and CreateForce with the arguments of those of mbs, creating ObjectUserBody and ObjectConnectorUser with Python user functions; Record() makes them symbolic, one recording per kind. symbolicUserItemsTest.py: equal to the built-in items to 7e-16.

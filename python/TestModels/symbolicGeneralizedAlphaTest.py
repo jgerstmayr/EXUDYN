@@ -1,0 +1,83 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  exudyn.misc.symbolicSystem.SolveGeneralizedAlpha (#3126) against mbs.SolveDynamic with the same settings:
+#           a chain of five mass points on stiff spring-dampers, hanging from the ground under gravity and a force of
+#           the time on the last point, built with exudyn.misc.symbolicUserItems.UserItemCreator and recorded, as
+#           SymbolicSystem. The generalized-alpha method with spectral radius 1 and 0.6, Newmark's method, with and
+#           without initial accelerations, with full and modified Newton; the coordinates, velocities and accelerations
+#           at the end and a sensor written through mbs. A stiff system: the step is at the stability limit of the
+#           explicit methods, 2/omega_max.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-27
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.misc.symbolicUserItems import UserItemCreator
+from exudyn.misc.symbolicSystem import SymbolicSystem, SolveGeneralizedAlpha
+import exudyn.cMath as cMath
+import numpy as np
+
+def UFforce(mbs, t, loadVector):
+    return cMath.sin(20*t)*loadVector
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+creator = UserItemCreator(mbs)
+previous = creator.CreateGround()
+mass, stiffness = 0.1, 1e5
+for i in range(5):
+    body = creator.CreateMassPoint(referencePosition=[0.2*(i + 1), 0, 0], initialVelocity=[0, 0, 0.5], mass=mass,
+                                   gravity=[0, -9.81, 0])
+    creator.CreateSpringDamper(itemNumbers=[previous, body], stiffness=stiffness, damping=5)
+    previous = body
+creator.CreateForce(itemNumber=body, loadVector=[0, 0, 2], loadVectorUserFunction=UFforce)
+creator.Record()
+sensor = mbs.AddSensor(SensorBody(bodyNumber=body, storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
+mbs.Assemble()
+system = SymbolicSystem(mbs)
+exu.Print(system)
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 100
+simulationSettings.timeIntegration.endTime = 0.1 #h = 1e-3, about 2/omega_max = 2/sqrt(4 k/m) of the chain
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = 0.01
+simulationSettings.solution.file.writePeriod = 0.01
+
+difference = 0.
+differenceSensor = 0.
+for (name, spectralRadius, useNewmark, initialAccelerations, modifiedNewton) in [
+        ('trapezoidal rule', 1., False, True, False), ('generalized-alpha 0.6', 0.6, False, True, False),
+        ('Newmark', 1., True, True, False), ('without initial accelerations', 0.6, False, False, False),
+        ('modified Newton', 0.6, False, True, True)]:
+    generalizedAlpha = simulationSettings.timeIntegration.generalizedAlpha
+    generalizedAlpha.spectralRadius = spectralRadius
+    generalizedAlpha.useNewmark = useNewmark
+    generalizedAlpha.computeInitialAccelerations = initialAccelerations
+    simulationSettings.timeIntegration.newton.useModifiedNewton = modifiedNewton
+    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.GeneralizedAlpha)
+    exudynState = [np.array(get()) for get in [mbs.systemData.GetODE2Coordinates, mbs.systemData.GetODE2Coordinates_t,
+                                               mbs.systemData.GetODE2Coordinates_tt]]
+    sensorExudyn = mbs.GetSensorStoredData(sensor)
+    result = SolveGeneralizedAlpha(system, simulationSettings)
+    differences = [np.max(np.abs(result[key][-1] - value))/np.max(np.abs(value)) for (key, value) in zip(['q', 'q_t', 'q_tt'], exudynState)]
+    sensorPython = mbs.GetSensorStoredData(sensor)
+    differenceSensor = max(differenceSensor, float(sensorPython.shape != sensorExudyn.shape) or
+                           np.max(np.abs(sensorPython - sensorExudyn))/np.max(np.abs(sensorExudyn)))
+    exu.Print(name + ': relative difference of q, q_t, q_tt', differences, ', Newton iterations', result['newtonIterations'],
+              ', Jacobians', result['jacobianEvaluations'])
+    difference = max(difference, max(differences))
+exu.Print('largest difference to SolveDynamic:', difference, ', of the sensor:', differenceSensor)
+
+u = 1 + int(difference > 1e-8) + int(differenceSensor > 1e-8)
+exu.Print('solution of symbolicGeneralizedAlphaTest=', u)
+
+exu.sys['testResult'] = u

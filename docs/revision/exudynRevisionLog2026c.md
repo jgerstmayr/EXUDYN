@@ -3825,3 +3825,28 @@ UserItemCreator(mbs), a small set first.)*
   signatures equal by inspect; two refusals. Result 1.
 - tools/generators/utilityDocsModel.py: the module's page; docs/dev/design/symbolicUserItems.md §3 and §4
   (itemNumbers instead of the deprecated bodyNumbers), docs/manual/revisions.md.
+
+<a id="rg12-51-3"></a>
+### RG12.51.3 — the generalized-alpha solver in Python (2026-10-27, #3126)
+*(Maintainer 2026-10-27: three of the next RG12 steps.)*
+- exudyn/misc/symbolicSystem.py `SolveGeneralizedAlpha(system, simulationSettings)`, as
+  src/Solver/CSolverImplicitSecondOrder.cpp computes it (Arnold and Bruls 2007, Algorithm 1):
+  - the parameters of PreInitializeSolverSpecific: alphaM, alphaF, gamma, beta of the spectral radius; with
+    `useNewmark` alphaM = alphaF = 0.5 and beta, gamma of the settings; beta' and gamma';
+  - initial accelerations M^-1 f with `computeInitialAccelerations`, else zero; the algorithmic accelerations start
+    equal to them;
+  - the predictor of ComputeNewtonUpdate(initial), the accelerations set to zero; Newton with the increment of
+    `ResidualJacobian(q, q_t, q_tt, t, 1, gamma', beta')` by scipy's splu: q -= d, q_t -= gamma' d, q_tt -= beta' d;
+    the convergence of CSolverBase::Newton - the residual relative to the initial one, or absolute, divided by
+    sqrt(n) with `weightTolerancePerCoordinate`; `useModifiedNewton` keeps the Jacobian over the iterations of a step;
+    after convergence the algorithmic accelerations as FinalizeNewton;
+  - constant step size: a step that does not converge raises; `useIndex2Constraints` and Lie group nodes are refused.
+  - The output of SolveExplicit moved into one class `_Output` of the stored results and the output through mbs, which
+    both solvers use; SolveExplicit computes as before (its test unchanged).
+- The Jacobian contains d(M q_tt)/dq, which Exudyn leaves out: the iterates differ, the solution not.
+- symbolicGeneralizedAlphaTest.py: a chain of five recorded user mass points on spring-dampers of k = 1e5 (made with
+  UserItemCreator), gravity, a force of sin(20t), h = 1e-3, about 2/omega_max; relativeTolerance 1e-10. Against
+  SolveDynamic: the trapezoidal rule (rho = 1), rho = 0.6, Newmark, without initial accelerations, modified Newton -
+  q 1.1e-15 to 1.1e-11, q_t to 1.2e-11, q_tt to 1.1e-10 relative, the sensor 1.0e-12; 2 Newton iterations per step,
+  modified Newton 1 Jacobian per step. Result 1.
+- docs/dev/design/symbolicSystem.md §6 and §7, docs/manual/revisions.md.
