@@ -3761,3 +3761,10 @@ are they needed, and can exudev clean remove them; _build is needed for the HTML
   removed: `_build`, `build/` itself, `tmp/`. `build --clean` and `build --complete` pass `vs=False`.
 - tools/exudev/README.md, docs/dev/BUILD.md. `exudev clean -n` lists the five directories; with `--vs` also bin and
   msvc/x64. pytest test_exudev.py passes.
+
+<a id="rg10-33-1"></a>
+### RG10.33.1 — the pytest cache in build/ (2026-10-27, #3123)
+*(Maintainer 2026-10-27: yes, the pytest cache under build/.)*
+- pyproject.toml `[tool.pytest.ini_options]`: `cache_dir = 'build/.pytest_cache'`, relative to the root directory of
+  pytest, which is the repository root by pyproject.toml. exudev clean removes `build/.pytest_cache`, and still a
+  `.pytest_cache` in the root from older runs. docs/dev/BUILD.md.

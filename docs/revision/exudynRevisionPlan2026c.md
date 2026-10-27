@@ -1223,6 +1223,11 @@ CLOSED 2026-10-27 (#3122; maintainer: the temporary directories in the root, rem
 pytest, ruff and mypy, `_buildpdf` and `solution/` by default, `bin/` and `msvc/x64/` with `--vs`.
 [log](exudynRevisionLog2026c.md#rg10-33)
 
+#### **CLOSED_RG10.33.1** Write the pytest cache into build/
+
+CLOSED 2026-10-27 (#3123; maintainer: yes, the pytest cache under build/): `cache_dir = 'build/.pytest_cache'` in
+pyproject.toml, removed by exudev clean. [log](exudynRevisionLog2026c.md#rg10-33-1)
+
 ## **OPEN_RG11** Misc
 
 What belongs to no group, including what was left of revision2026b groups 12 to 18. Put off, by decision of

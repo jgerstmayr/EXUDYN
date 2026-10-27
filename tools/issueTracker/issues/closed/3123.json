@@ -1,0 +1,16 @@
+{
+  "number": 3123,
+  "title": "The pytest cache in build/ instead of the root",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "pytest wrote .pytest_cache into the repository root on every run. cache_dir in [tool.pytest.ini_options] puts it into build/.pytest_cache; exudev clean removes it there, and still a .pytest_cache in the root left by older runs.",
+  "dateRaised": "2026-10-27",
+  "deadline": "2027-04-25",
+  "dateResolved": "2026-10-27 08:30",
+  "resolvedAuthor": "Claude-JG",
+  "file": "pyproject.toml",
+  "releaseNotes": "The pytest cache is written into build/.pytest_cache instead of the repository root (cache_dir in pyproject.toml); exudev clean removes it.",
+  "resolvedInVersion": "1.13.227"
+}

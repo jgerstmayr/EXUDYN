@@ -203,6 +203,8 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ['python/testing']
 addopts = '-q'
+#the cache (last failures for --lf) in build/, not in the root; "exudev clean" removes it (#3123)
+cache_dir = 'build/.pytest_cache'
 #markers of revision2026 step R5.2; the data behind them lives in runTestSuiteRefSol.py
 markers = [
     'slow: takes noticeably longer than the other models',
