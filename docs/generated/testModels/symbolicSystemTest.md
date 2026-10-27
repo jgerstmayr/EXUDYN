@@ -146,7 +146,8 @@ exu.Print('mass matrix constant:', system.IsMassMatrixConstant(), '; state diffe
 
 exu.Print('kinds', numberOfKinds, '; largest difference to the solver:', difference)
 
-#what SymbolicSystem refuses: a Python user function, a load, a recording that reads mbs
+#what SymbolicSystem refuses: a Python user function, a load on a body without the function it acts through, a
+#recording that reads mbs
 def UFforceOutput(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return -mbs.GetNodeOutput(0, exu.OutputVariableType.Displacement)
 
@@ -159,7 +160,7 @@ def Refused(kind):
         mbs2.SetObjectParameter(body, 'forceUserFunction', CreateSymbolicUserFunction(mbs2, UFforceOutput if kind == 'output' else UFforce,
                                                                                     'forceUserFunction', body))
     if kind == 'load':
-        mbs2.AddLoad(LoadForceVector(markerNumber=mbs2.AddMarker(MarkerNodePosition(nodeNumber=node)), loadVector=[1, 0, 0]))
+        mbs2.AddLoad(LoadForceVector(markerNumber=mbs2.AddMarker(MarkerBodyPosition(bodyNumber=body)), loadVector=[1, 0, 0]))
     mbs2.Assemble()
     try:
         SymbolicSystem(mbs2)
@@ -167,7 +168,7 @@ def Refused(kind):
         return str(e)
     return ''
 
-refused = (int('has a Python massMatrixUserFunction' in Refused('python')) + int('cannot be assembled (yet): loads' in Refused('load'))
+refused = (int('has a Python massMatrixUserFunction' in Refused('python')) + int('has no positionJacobianUserFunction' in Refused('load'))
            + int('reads the MainSystem' in Refused('output')))
 exu.Print('refused, of 3:', refused)
 

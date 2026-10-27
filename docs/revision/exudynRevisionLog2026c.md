@@ -3776,3 +3776,27 @@ comes back.)*
 - pyproject.toml `[tool.ruff]`: `cache-dir = "build/.ruff_cache"`, for the editor and a ruff run by hand;
   tools/checkPython.py runs ruff with `--no-cache`. A `ruff check` wrote build/.ruff_cache and nothing in the root.
   exudev clean removes `build/.ruff_cache`, and still a `.ruff_cache` in the root from older runs. docs/dev/BUILD.md.
+
+<a id="rg12-51-8"></a>
+### RG12.51.8 — the built-in loads in the symbolic system (2026-10-27, #3118)
+*(Maintainer 2026-10-27: then do three of the next RG12 steps - this one, RG12.55.2 and RG12.51.3.)*
+- exudyn/misc/symbolicSystem.py: `SymbolicLoad` (load number, type, LTG indices, value, the recording of its user
+  function, the user body it acts through); `SymbolicSystem.loads`. LoadForceVector, LoadTorqueVector,
+  LoadMassProportional and LoadCoordinate, the value constant or by a symbolic loadVectorUserFunction /
+  loadUserFunction of the time:
+  - on MarkerNodePosition of a NodePoint (force) and MarkerNodeCoordinate (LoadCoordinate) the value at the LTG
+    indices of the marker, as the Jacobian of these markers is the unit matrix;
+  - on MarkerBodyPosition, MarkerBodyRigid and MarkerBodyMass of an ObjectUserBody $\Jm\tp \vv$ with $\Jm$ of its
+    symbolic positionJacobianUserFunction, rotationJacobianUserFunction or massIntegralUserFunction at the local
+    position of the marker; `bodyFixed` rotates $\vv$ by its rotationMatrixUserFunction, as CSystem.cpp applies loads;
+  - the Jacobian of $-\fv$ by `EvaluateJacobian` of these functions, $d(\Jm\tp \Rot \vv) = d\Jm\tp \Rot\vv + \Jm\tp
+    d\Rot\,\vv$; a load on a node or coordinate depends on the time only;
+  - a load on the ground acts on nothing and is left out; other loads, a torque or bodyFixed on a point node, other
+    markers and bodies are refused with the reason, a Python user function of the load or the body raises.
+- The ObjectIndex of a marker is passed to the recordings as int, as `Evaluate` takes numbers only.
+- symbolicSystemLoadsTest.py: a user rigid body on NodeRigidBodyRxyz (all functions symbolic, symbolicUtilities) under
+  gravity by MarkerBodyMass, a force of sin(10t) off the center of mass, a body-fixed force and torque and a constant
+  torque on MarkerBodyRigid; a user mass point with a force on MarkerNodePosition and a LoadCoordinate of cos(5t); a
+  force on the ground. SolveExplicit RK44 against SolveDynamic 1.5e-15, the Jacobian of the residual (factor_q 1,
+  factor_q_t 0.5) against central differences 1.7e-10, two refusals. Result 1.
+- docs/dev/design/symbolicSystem.md §3, docs/manual/revisions.md.

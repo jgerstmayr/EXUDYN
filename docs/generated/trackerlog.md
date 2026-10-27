@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.228.dev1
+- Exudyn version = 1.13.229.dev1
 - last change = 2026-10-27
 - Number of issues = 3125
-- Number of resolved issues = 3005 (228 in current version)
+- Number of resolved issues = 3006 (229 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Loads in the symbolic system: LoadForceVector, LoadTorqueVector, LoadCoordinate and LoadMassProportional, constant or with a symbolic user function (#3118)
-  - description: revision2026c step RG12.51.8 (maintainer 2026-10-26: a full user system needs forces): SymbolicSystem takes the built-in loads with a constant load vector or a symbolic loadVectorUserFunction of the time; first on markers whose Jacobian is constant - node markers of point nodes and coordinates, MarkerBodyMass of a mass point - as a constant or time-dependent generalized force at the LTG indices of the marker, then on body markers of user bodies with the Jacobians of RG12.58.
-  - date raised: 2026-10-26
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Call a symbolic recording with symbolic arguments: its expressions with the arguments substituted (#3117)
   - description: revision2026c step RG12.60 (maintainer 2026-10-26): a recording evaluated with exudyn.symbolic arguments returns a copy of its expressions in which its argument variables are replaced by the given expressions, as Optimize copies nodes; for one expression per kind of the symbolic system (the residual M q\_tt - f), for the forces of connectors composed with the marker kinematics of the bodies, and for the export of one program per kind (RG12.51.5).
   - date raised: 2026-10-26

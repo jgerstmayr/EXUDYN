@@ -17,8 +17,10 @@ Special: not for the broad use, a basis for the export of the equations of motio
 outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
 forceUserFunction, ObjectGenericODE2 with constant matrices and symbolic user functions,
 ObjectConnectorUser with a symbolic forceUserFunction on position markers of point nodes and of the ground
-(#3121), and items without coordinates (ground); every other object, loads, constraints and recordings that
-read mbs are refused.
+(#3121), items without coordinates (ground), and the loads LoadForceVector, LoadTorqueVector,
+LoadMassProportional and LoadCoordinate, constant or with a symbolic user function of the time, on markers
+of point nodes, node coordinates and user bodies (#3118); every other object and load, constraints and
+recordings that read mbs are refused.
 
 - **Author**: Johannes Gerstmayr
 - **Date**: 2026-10-26 (created)
@@ -26,7 +28,7 @@ read mbs are refused.
 (sec-symbolicsystem--recording)=
 ## Function: _Recording
 
-[`_Recording(value, objectNumber, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L192)
+[`_Recording(value, itemNumber, name, itemKind = 'object')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L201)
 
 - **function description**: the recorded symbolic user function of a parameter, None if there is none; a Python function, or a recording that reads mbs, raises
 
@@ -34,7 +36,7 @@ read mbs are refused.
 (sec-symbolicsystem--dense)=
 ## Function: _Dense
 
-[`_Dense(matrix)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L207)
+[`_Dense(matrix)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L216)
 
 - **function description**: a MatrixContainer or array as dense numpy array; empty if not given
 
@@ -42,7 +44,7 @@ read mbs are refused.
 (sec-symbolicsystem-solveexplicit)=
 ## Function: SolveExplicit
 
-[`SolveExplicit(system, simulationSettings = None, solverType = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L625)
+[`SolveExplicit(system, simulationSettings = None, solverType = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L783)
 
 - **function description**: the explicit time integration of a SymbolicSystemBase with constant step size, by explicit Euler, RK44 or velocity Verlet, as Exudyn's explicit solver computes them (#3112, design docs/dev/design/symbolicSystem.md §10): the steps from timeIntegration.startTime, endTime and numberOfSteps; the accelerations by the inverse per body with timeIntegration.explicit.computeMassMatrixInversePerBody, else by the sparse LU decomposition of the mass matrix, both once for a constant mass matrix (timeIntegration.reuseConstantMassMatrix); for a SymbolicSystem the solution file, the sensors and the renderer of its mbs by simulationSettings.solution, as after SolveDynamic
 - **input**:
@@ -52,7 +54,7 @@ read mbs are refused.
 - **output**: dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2) at the steps of solution.file.writePeriod and the last step, and the statistics 'steps', 'forceEvaluations', 'massMatrixEvaluations'
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM)
 
 
 (sec-module-misc.symbolicsystem-class-symbolicsystembase)=
@@ -65,7 +67,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystembase-initialstate)=
 ### Class function: InitialState
 
-[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L57)
+[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L66)
 
 - **class function description**: the initial coordinates and velocities (q0, q_t0); zero unless the derived class gives them
 
@@ -73,7 +75,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystembase-ismassmatrixconstant)=
 ### Class function: IsMassMatrixConstant
 
-[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L61)
+[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L70)
 
 - **class function description**: True if the mass matrix depends neither on q nor on t, so that a solver factorizes it once
 
@@ -81,7 +83,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystembase-forces)=
 ### Class function: Forces
 
-[`Forces(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L65)
+[`Forces(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L74)
 
 - **class function description**: the forces f(q, q_t, t) of the right-hand side, of size nODE2
 
@@ -89,7 +91,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystembase-massmatrixtriplets)=
 ### Class function: MassMatrixTriplets
 
-[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L69)
+[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L78)
 
 - **class function description**: the mass matrix as triplets (rows, columns, values); equal rows and columns are added
 
@@ -97,7 +99,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystembase-massmatrix)=
 ### Class function: MassMatrix
 
-[`MassMatrix(self, q = None, q_t = None, t = 0., sparse = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L73)
+[`MassMatrix(self, q = None, q_t = None, t = 0., sparse = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L82)
 
 - **class function description**: the mass matrix M(q, t); sparse=True: a scipy.sparse.csr_matrix, else a dense array
 
@@ -105,7 +107,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystembase-massmatrixblocks)=
 ### Class function: MassMatrixBlocks
 
-[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L77)
+[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L86)
 
 - **class function description**: the mass matrix in blocks of bodies: a list of (ltg, blocks), ltg the global indices (n_b x n) of n_b bodies of n coordinates and blocks their mass matrices (n_b x n x n); for the inverse per body of the explicit solvers (#3112). The base class gives one block of all coordinates
 
@@ -113,7 +115,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystembase-residual)=
 ### Class function: Residual
 
-[`Residual(self, q = None, q_t = None, q_tt = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L83)
+[`Residual(self, q = None, q_t = None, q_tt = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L92)
 
 - **class function description**: the residual r = M(q, t) q_tt - f(q, q_t, t), of size nODE2
 
@@ -121,7 +123,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystembase-residualjacobian)=
 ### Class function: ResidualJacobian
 
-[`ResidualJacobian(self, q = None, q_t = None, q_tt = None, t = 0., factor_q = 1., factor_q_t = 0., factor_q_tt = 0., sparse = False, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L88)
+[`ResidualJacobian(self, q = None, q_t = None, q_tt = None, t = 0., factor_q = 1., factor_q_t = 0., factor_q_tt = 0., sparse = False, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L97)
 
 - **class function description**: the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, by central differences of Residual - for a system without derivatives of its own; factor_q_tt=1 alone gives the mass matrix, a Newton step of an implicit integrator combines the three
 - **input**:
@@ -140,7 +142,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystembase--state)=
 ### Class function: _State
 
-[`_State(self, q, q_t, q_tt = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L123)
+[`_State(self, q, q_t, q_tt = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L132)
 
 - **class function description**: the state as float arrays; None: zero
 
@@ -148,7 +150,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystembase--matrix)=
 ### Class function: _Matrix
 
-[`_Matrix(self, rows, columns, values, sparse)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L127)
+[`_Matrix(self, rows, columns, values, sparse)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L136)
 
 - **class function description**: the matrix (nODE2 x nODE2) of triplets, dense or as scipy.sparse.csr_matrix
 
@@ -167,7 +169,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-numpysystem(symbolicsystembase)-initialstate)=
 ### Class function: InitialState
 
-[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L154)
+[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L163)
 
 - **class function description**: (q0, q_t0) as given, zero otherwise
 
@@ -175,7 +177,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-numpysystem(symbolicsystembase)-ismassmatrixconstant)=
 ### Class function: IsMassMatrixConstant
 
-[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L160)
+[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L169)
 
 - **class function description**: True for a mass matrix given as matrix
 
@@ -183,7 +185,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-numpysystem(symbolicsystembase)-forces)=
 ### Class function: Forces
 
-[`Forces(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L164)
+[`Forces(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L173)
 
 - **class function description**: f(q, q_t, t) of the function given
 
@@ -191,7 +193,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-numpysystem(symbolicsystembase)-massmatrix)=
 ### Class function: MassMatrix
 
-[`MassMatrix(self, q = None, q_t = None, t = 0., sparse = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L169)
+[`MassMatrix(self, q = None, q_t = None, t = 0., sparse = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L178)
 
 - **class function description**: the mass matrix given, or of the function given; sparse=True: a scipy.sparse.csr_matrix
 
@@ -199,7 +201,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-numpysystem(symbolicsystembase)-massmatrixtriplets)=
 ### Class function: MassMatrixTriplets
 
-[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L180)
+[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L189)
 
 - **class function description**: the triplets of MassMatrix
 
@@ -207,7 +209,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-numpysystem(symbolicsystembase)-massmatrixblocks)=
 ### Class function: MassMatrixBlocks
 
-[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L185)
+[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L194)
 
 - **class function description**: the blocks given, else one block of all coordinates
 
@@ -222,6 +224,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 
 - **notes**: Its members: objectType, the type name 'UserBody', 'GenericODE2' or 'ConnectorUser'; recordings, the dict of the recorded user functions by name (a name without recording is missing); objects, the list of the object numbers; ltg, the array (number of objects x local coordinates) of the global ODE2 indices; parameters, the list of the parameter vectors of the objects (UserBody), of the dicts of the constant matrices and the force vector (GenericODE2), or of the dicts of the parameter vector and the markers (ConnectorUser: per marker its local coordinate indices, empty for a fixed marker, and its reference position)
 
+(sec-module-misc.symbolicsystem-class-symbolicload)=
+## CLASS SymbolicLoad (in module misc.symbolicSystem)
+
+**class description**: a load of the system (#3118): its value, constant or by the recording of its user function of the time, and how it acts on the coordinates - directly on the coordinates of a point node or on one node coordinate, or through a user function of the user body of its marker
+
+- **notes**: Its members: loadNumber; loadType, 'ForceVector', 'TorqueVector', 'MassProportional' or 'Coordinate'; ltg, the global ODE2 indices it acts on; value, the loadVector or load; recording, the recorded loadVectorUserFunction or loadUserFunction, None if constant; body, None for a node marker, else the dict of the user body: 'objectNumber', 'localPosition', 'qRef', 'parameters', 'projection' (the recording of the function whose transposed maps the load into the coordinates) with its 'projectionName', and 'rotation' (the recorded rotationMatrixUserFunction for bodyFixed, else None)
+
 (sec-module-misc.symbolicsystem-class-symbolicsystem(symbolicsystembase))=
 ## CLASS SymbolicSystem(SymbolicSystemBase) (in module misc.symbolicSystem)
 
@@ -229,20 +238,28 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 
 - **input**:
   - `mbs`: the assembled MainSystem
-- **notes**: Its members: mbs; kinds, the list of SymbolicKind; nODE2, the number of ODE2 coordinates of the system; qRef, the reference values of the ODE2 coordinates
+- **notes**: Its members: mbs; kinds, the list of SymbolicKind; loads, the list of SymbolicLoad; nODE2, the number of ODE2 coordinates of the system; qRef, the reference values of the ODE2 coordinates
 
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)--connectormarkers)=
 ### Class function: _ConnectorMarkers
 
-[`_ConnectorMarkers(self, objectNumber, item)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L310)
+[`_ConnectorMarkers(self, objectNumber, item)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L346)
 
 - **class function description**: the markers of an ObjectConnectorUser: per marker its local coordinate indices (empty for a fixed marker) and its reference position, the global indices of the coordinates of the connector, and the reason it is refused, empty if it is taken
+
+
+(sec-symbolicsystem-symbolicsystem(symbolicsystembase)--load)=
+### Class function: _Load
+
+[`_Load(self, loadNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L373)
+
+- **class function description**: the SymbolicLoad of a load and the reason it is refused, empty if it is taken; None for a load on the ground, which acts on no coordinate
 
 
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)-initialstate)=
 ### Class function: InitialState
 
-[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L337)
+[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L423)
 
 - **class function description**: the initial coordinates and velocities (q0, q_t0) of the ODE2 coordinates of mbs
 
@@ -250,7 +267,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)-ismassmatrixconstant)=
 ### Class function: IsMassMatrixConstant
 
-[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L343)
+[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L429)
 
 - **class function description**: True if every user body has constantMassMatrix and no ObjectGenericODE2 has a massMatrixUserFunction
 
@@ -258,7 +275,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)-setsystemstate)=
 ### Class function: SetSystemState
 
-[`SetSystemState(self, q, q_t = None, q_tt = None, t = None, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L347)
+[`SetSystemState(self, q, q_t = None, q_tt = None, t = None, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L433)
 
 - **class function description**: write a state into mbs: the ODE2 coordinates, velocities and accelerations and the time - None leaves one unchanged -, so that the sensors, the output functions (Current) and the renderer (Visualization) show it
 - **input**:
@@ -272,7 +289,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)--arguments)=
 ### Class function: _Arguments
 
-[`_Arguments(self, kind, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L366)
+[`_Arguments(self, kind, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L452)
 
 - **class function description**: the arguments of the user functions of object i of kind, after mbs
 
@@ -280,7 +297,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)--call)=
 ### Class function: _Call
 
-[`_Call(self, kind, name, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L382)
+[`_Call(self, kind, name, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L468)
 
 - **class function description**: the result of the user function name of object i of kind, by its recording, as numpy array
 
@@ -288,15 +305,55 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)--jacobian)=
 ### Class function: _Jacobian
 
-[`_Jacobian(self, kind, name, i, position, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L386)
+[`_Jacobian(self, kind, name, i, position, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L472)
 
 - **class function description**: the Jacobian of the user function name of object i of kind by its argument at position, by Diff of the recording (#3115)
+
+
+(sec-symbolicsystem-symbolicsystem(symbolicsystembase)--recordingjacobian)=
+### Class function: _RecordingJacobian
+
+[`_RecordingJacobian(self, recording, position, arguments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L477)
+
+- **class function description**: the Jacobian of a recording by its argument at position (mbs at 0), for the arguments after mbs: the dimensions of the result, then the one of the argument
+
+
+(sec-symbolicsystem-symbolicsystem(symbolicsystembase)--bodyarguments)=
+### Class function: _BodyArguments
+
+[`_BodyArguments(self, load, name, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L483)
+
+- **class function description**: the arguments after mbs of the user function name of the user body of a load
+
+
+(sec-symbolicsystem-symbolicsystem(symbolicsystembase)--loadvalue)=
+### Class function: _LoadValue
+
+[`_LoadValue(self, load, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L491)
+
+- **class function description**: the value of a load at t: its loadVector or load, or what its recorded user function returns
+
+
+(sec-symbolicsystem-symbolicsystem(symbolicsystembase)--loadforces)=
+### Class function: _LoadForces
+
+[`_LoadForces(self, load, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L497)
+
+- **class function description**: the generalized forces of a load on its coordinates: the value itself on a point node or a coordinate, else J^T v by the projection J of the user body - J_pos, J_rot or the mass integral -, v rotated by the rotation matrix of the marker for bodyFixed, as CSystem applies loads
+
+
+(sec-symbolicsystem-symbolicsystem(symbolicsystembase)--loadjacobian)=
+### Class function: _LoadJacobian
+
+[`_LoadJacobian(self, load, q, q_t, t, factor_q, factor_q_t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L511)
+
+- **class function description**: the local Jacobian of the residual -f of a load on a user body, by Diff of the recordings of the body; a load on a node or a coordinate depends on the time only
 
 
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)--localforces)=
 ### Class function: _LocalForces
 
-[`_LocalForces(self, kind, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L400)
+[`_LocalForces(self, kind, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L545)
 
 - **class function description**: the forces on the right-hand side; for ObjectGenericODE2 f + f_user - K q - D q_t
 
@@ -304,7 +361,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)-forces)=
 ### Class function: Forces
 
-[`Forces(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L421)
+[`Forces(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L566)
 
 - **class function description**: the global forces f(q, q_t, t) of the right-hand side, as the ODE2 part of the solver's right-hand side
 - **input**:
@@ -317,7 +374,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)-massmatrixtriplets)=
 ### Class function: MassMatrixTriplets
 
-[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L439)
+[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L586)
 
 - **class function description**: the global mass matrix as triplets (rows, columns, values), a value per nonzero local entry; equal rows and columns are added when the matrix is formed
 
@@ -325,7 +382,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)-massmatrixblocks)=
 ### Class function: MassMatrixBlocks
 
-[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L455)
+[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L602)
 
 - **class function description**: the local mass matrices of the objects, per kind: a list of (ltg, blocks), the LTG table of the kind and its mass matrices (objects x n x n)
 
@@ -333,7 +390,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)-residual)=
 ### Class function: Residual
 
-[`Residual(self, q = None, q_t = None, q_tt = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L462)
+[`Residual(self, q = None, q_t = None, q_tt = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L609)
 
 - **class function description**: the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations, object by object without forming M
 
@@ -341,7 +398,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)-residualjacobian)=
 ### Class function: ResidualJacobian
 
-[`ResidualJacobian(self, q = None, q_t = None, q_tt = None, t = 0., factor_q = 1., factor_q_t = 0., factor_q_tt = 0., sparse = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L473)
+[`ResidualJacobian(self, q = None, q_t = None, q_tt = None, t = 0., factor_q = 1., factor_q_t = 0., factor_q_tt = 0., sparse = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L622)
 
 - **class function description**: the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, object by object by Diff of the recordings (UserFunction.EvaluateJacobian, #3115): exact, one derivative of the tree per column; factor_q_tt=1 alone gives the mass matrix, a Newton step of an implicit integrator combines the three
 - **input**:
@@ -359,12 +416,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-symbolicsystem-symbolicsystem(symbolicsystembase)--connectorjacobian)=
 ### Class function: _ConnectorJacobian
 
-[`_ConnectorJacobian(self, kind, i, q, q_t, t, factor_q, factor_q_t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L532)
+[`_ConnectorJacobian(self, kind, i, q, q_t, t, factor_q, factor_q_t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicSystem.py#L687)
 
 - **class function description**: the local Jacobian of the residual -f of a connector: the derivatives of its forces by the positions (arguments 3 and 7) and velocities (4 and 8) of its markers, which are the coordinates of point nodes
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSystemTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM), [`symbolicSystemTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemTest.py) (TM)
 
 
 (sec-module-misc.symbolicsystem-class--massmatrixsolver)=

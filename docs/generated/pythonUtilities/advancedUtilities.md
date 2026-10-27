@@ -679,7 +679,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 - **output**: dict with a number - or symbolic Real - for size 1 and a list otherwise
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userOutputVariablesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userOutputVariablesTest.py) (TM), [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM), [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userOutputVariablesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userOutputVariablesTest.py) (TM), [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
 
 
 (sec-module-advancedutilities-class-tcpipdata)=

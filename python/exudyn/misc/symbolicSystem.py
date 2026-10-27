@@ -15,8 +15,10 @@
 #           outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
 #           forceUserFunction, ObjectGenericODE2 with constant matrices and symbolic user functions,
 #           ObjectConnectorUser with a symbolic forceUserFunction on position markers of point nodes and of the ground
-#           (#3121), and items without coordinates (ground); every other object, loads, constraints and recordings that
-#           read mbs are refused.
+#           (#3121), items without coordinates (ground), and the loads LoadForceVector, LoadTorqueVector,
+#           LoadMassProportional and LoadCoordinate, constant or with a symbolic user function of the time, on markers
+#           of point nodes, node coordinates and user bodies (#3118); every other object and load, constraints and
+#           recordings that read mbs are refused.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-26 (created)
@@ -34,7 +36,8 @@ except ImportError:
     raise ImportError('exudyn.misc.symbolicSystem needs scipy for its sparse matrices: pip install scipy')
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
-__all__ = ['SymbolicSystemBase', 'NumpySystem', 'SymbolicKind', 'SymbolicSystem', 'explicitSolverTypes', 'SolveExplicit']
+__all__ = ['SymbolicSystemBase', 'NumpySystem', 'SymbolicKind', 'SymbolicLoad', 'SymbolicSystem', 'explicitSolverTypes',
+           'SolveExplicit']
 
 #the user functions of a kind, by object type
 _userFunctionNames = {'UserBody': ['massMatrixUserFunction', 'forceUserFunction'],
@@ -42,6 +45,12 @@ _userFunctionNames = {'UserBody': ['massMatrixUserFunction', 'forceUserFunction'
                       'ConnectorUser': ['forceUserFunction']}
 #the positions of the arguments q (the total coordinates for UserBody) and q_t in the user functions, mbs at 0
 _argumentPositions = {'UserBody': (4, 5), 'GenericODE2': (3, 4)}
+#the user function of ObjectUserBody that projects a load on a body marker into its coordinates (#3118), and the
+#positions of qTotal and q_t in it; the functions of a local position get it after itemNumber
+_loadProjections = {'ForceVector': 'positionJacobianUserFunction', 'TorqueVector': 'rotationJacobianUserFunction',
+                    'MassProportional': 'massIntegralUserFunction'}
+_bodyArgumentPositions = {'positionJacobianUserFunction': (5, 6), 'rotationJacobianUserFunction': (5, 6),
+                          'rotationMatrixUserFunction': (5, 6), 'massIntegralUserFunction': (4, 5)}
 
 
 class SymbolicSystemBase:
@@ -189,17 +198,17 @@ class NumpySystem(SymbolicSystemBase):
         return SymbolicSystemBase.MassMatrixBlocks(self, q, q_t, t)
 
 
-def _Recording(value, objectNumber, name):
+def _Recording(value, itemNumber, name, itemKind='object'):
     """the recorded symbolic user function of a parameter, None if there is none; a Python function, or a recording
     that reads mbs, raises"""
     if isinstance(value, dict) and value.get('type') == 'Symbolic':
         recording = value['function']
         if 'mbs.' in recording.GetFlatProgram():
-            raise ValueError('SymbolicSystem: the ' + name + ' of object ' + str(objectNumber) + ' reads the MainSystem '
+            raise ValueError('SymbolicSystem: the ' + name + ' of ' + itemKind + ' ' + str(itemNumber) + ' reads the MainSystem '
                              '(an item output), which is not part of the equations of the symbolic system')
         return recording
     if isinstance(value, dict) or (not isinstance(value, int) and value is not None):
-        raise ValueError('SymbolicSystem: object ' + str(objectNumber) + ' has a Python ' + name
+        raise ValueError('SymbolicSystem: ' + itemKind + ' ' + str(itemNumber) + ' has a Python ' + name
                          + '; only symbolic user functions can be assembled, see CreateSymbolicUserFunction')
     return None
 
@@ -231,6 +240,28 @@ class SymbolicKind:
         self.parameters = []
 
 
+class SymbolicLoad:
+    """a load of the system (#3118): its value, constant or by the recording of its user function of the time, and how
+    it acts on the coordinates - directly on the coordinates of a point node or on one node coordinate, or through a
+    user function of the user body of its marker
+
+    Note:
+        Its members: loadNumber; loadType, 'ForceVector', 'TorqueVector', 'MassProportional' or 'Coordinate'; ltg, the
+        global ODE2 indices it acts on; value, the loadVector or load; recording, the recorded loadVectorUserFunction or
+        loadUserFunction, None if constant; body, None for a node marker, else the dict of the user body: 'objectNumber',
+        'localPosition', 'qRef', 'parameters', 'projection' (the recording of the function whose transposed maps the
+        load into the coordinates) with its 'projectionName', and 'rotation' (the recorded rotationMatrixUserFunction for
+        bodyFixed, else None)
+    """
+    def __init__(self, loadNumber, loadType, ltg, value, recording, body=None):
+        self.loadNumber = loadNumber
+        self.loadType = loadType
+        self.ltg = np.array(ltg, dtype=int)
+        self.value = value
+        self.recording = recording
+        self.body = body
+
+
 class SymbolicSystem(SymbolicSystemBase):
     """the ODE2 equations of motion of mbs, by kinds of objects with symbolic user functions, evaluated by
     exudyn.symbolic (#3110, #3113); mbs must be assembled; see the Details of this module for the items it takes
@@ -239,8 +270,8 @@ class SymbolicSystem(SymbolicSystemBase):
         mbs: the assembled MainSystem
 
     Note:
-        Its members: mbs; kinds, the list of SymbolicKind; nODE2, the number of ODE2 coordinates of the system; qRef,
-        the reference values of the ODE2 coordinates
+        Its members: mbs; kinds, the list of SymbolicKind; loads, the list of SymbolicLoad; nODE2, the number of ODE2
+        coordinates of the system; qRef, the reference values of the ODE2 coordinates
     """
     def __init__(self, mbs):
         if not mbs.systemIsConsistent:
@@ -249,8 +280,13 @@ class SymbolicSystem(SymbolicSystemBase):
         self.nODE2 = mbs.systemData.ODE2Size()
         self.qRef = np.array(mbs.systemData.GetODE2Coordinates(configuration=exudyn.ConfigurationType.Reference))
         refused = []
-        if mbs.systemData.NumberOfLoads() > 0:
-            refused += ['loads']
+        self.loads = []
+        for loadNumber in range(mbs.systemData.NumberOfLoads()):
+            (load, reason) = self._Load(loadNumber)
+            if reason:
+                refused += ['load ' + str(loadNumber) + ' (' + mbs.GetLoad(loadNumber)['loadType'] + ': ' + reason + ')']
+            elif load is not None:
+                self.loads.append(load)
         for (name, size) in [('ODE1 coordinates', mbs.systemData.ODE1Size()), ('algebraic equations', mbs.systemData.AEsize()),
                              ('data coordinates', mbs.systemData.DataSize())]:
             if size > 0:
@@ -334,6 +370,56 @@ class SymbolicSystem(SymbolicSystemBase):
             ltg += coordinates
         return (markers, ltg, '')
 
+    def _Load(self, loadNumber):
+        """the SymbolicLoad of a load and the reason it is refused, empty if it is taken; None for a load on the
+        ground, which acts on no coordinate"""
+        mbs = self.mbs
+        item = mbs.GetLoad(loadNumber)
+        loadType = item['loadType']
+        if loadType not in ['ForceVector', 'TorqueVector', 'MassProportional', 'Coordinate']:
+            return (None, 'not taken (yet)')
+        if loadType == 'Coordinate':
+            (value, userFunctionName) = (float(item['load']), 'loadUserFunction')
+        else:
+            (value, userFunctionName) = (np.array(item['loadVector'], dtype=float), 'loadVectorUserFunction')
+        recording = _Recording(item[userFunctionName], loadNumber, userFunctionName, 'load')
+        bodyFixed = item.get('bodyFixed', False)
+        marker = mbs.GetMarker(item['markerNumber'])
+        markerType = marker['markerType']
+        if markerType in ['NodeCoordinate', 'NodePosition']:
+            if (markerType == 'NodeCoordinate') != (loadType == 'Coordinate') or loadType not in ['ForceVector', 'Coordinate']:
+                return (None, 'a marker of type ' + markerType)
+            node = mbs.GetNode(marker['nodeNumber'])
+            ltg = list(mbs.systemData.GetNodeLTGODE2(marker['nodeNumber']))
+            if markerType == 'NodeCoordinate':
+                return (SymbolicLoad(loadNumber, loadType, ltg[marker['coordinate']:marker['coordinate'] + 1], value, recording)
+                        if len(ltg) else None, '')
+            if node['nodeType'] == 'PointGround':
+                return (None, '')
+            if node['nodeType'] != 'Point' or bodyFixed:
+                return (None, 'a force on a node of type ' + node['nodeType'] + (', bodyFixed' if bodyFixed else ''))
+            return (SymbolicLoad(loadNumber, loadType, ltg, value, recording), '')
+        if markerType not in ['BodyPosition', 'BodyRigid', 'BodyMass'] or loadType == 'Coordinate':
+            return (None, 'a marker of type ' + markerType)
+        bodyNumber = marker['bodyNumber']
+        body = mbs.GetObject(bodyNumber)
+        if body['objectType'] == 'Ground':
+            return (None, '')
+        if body['objectType'] != 'UserBody':
+            return (None, 'a marker on an object of type ' + body['objectType'])
+        projectionName = _loadProjections[loadType]
+        projection = _Recording(body[projectionName], bodyNumber, projectionName)
+        rotation = (_Recording(body['rotationMatrixUserFunction'], bodyNumber, 'rotationMatrixUserFunction')
+                    if bodyFixed else None)
+        if projection is None or (bodyFixed and rotation is None):
+            return (None, 'the user body ' + str(bodyNumber) + ' has no '
+                    + (projectionName if projection is None else 'rotationMatrixUserFunction for bodyFixed'))
+        ltg = list(mbs.systemData.GetObjectLTGODE2(bodyNumber))
+        return (SymbolicLoad(loadNumber, loadType, ltg, value, recording,
+                             {'objectNumber': int(bodyNumber), 'localPosition': np.array(marker.get('localPosition', np.zeros(3)), dtype=float),
+                              'qRef': self.qRef[ltg], 'parameters': np.array(body['parameters'], dtype=float),
+                              'projectionName': projectionName, 'projection': projection, 'rotation': rotation}), '')
+
     def InitialState(self):
         """the initial coordinates and velocities (q0, q_t0) of the ODE2 coordinates of mbs"""
         systemData = self.mbs.systemData
@@ -386,9 +472,68 @@ class SymbolicSystem(SymbolicSystemBase):
     def _Jacobian(self, kind, name, i, position, q, q_t, t):
         """the Jacobian of the user function name of object i of kind by its argument at position, by Diff of the
         recording (#3115)"""
-        recording = kind.recordings[name]
+        return self._RecordingJacobian(kind.recordings[name], position, self._Arguments(kind, i, q, q_t, t))
+
+    def _RecordingJacobian(self, recording, position, arguments):
+        """the Jacobian of a recording by its argument at position (mbs at 0), for the arguments after mbs: the
+        dimensions of the result, then the one of the argument"""
         argumentName = recording.GetFlatProgramData()['arguments'][position]['name']
-        return np.array(recording.EvaluateJacobian(argumentName, self.mbs, *self._Arguments(kind, i, q, q_t, t)), dtype=float)
+        return np.array(recording.EvaluateJacobian(argumentName, self.mbs, *arguments), dtype=float)
+
+    def _BodyArguments(self, load, name, q, q_t, t):
+        """the arguments after mbs of the user function name of the user body of a load"""
+        body = load.body
+        arguments = (t, body['objectNumber'], body['qRef'], body['qRef'] + q[load.ltg], q_t[load.ltg], body['parameters'])
+        if name == 'massIntegralUserFunction':
+            return arguments
+        return arguments[:2] + (body['localPosition'],) + arguments[2:]
+
+    def _LoadValue(self, load, t):
+        """the value of a load at t: its loadVector or load, or what its recorded user function returns"""
+        if load.recording is None:
+            return load.value
+        return np.array(load.recording.Evaluate(self.mbs, t, load.value), dtype=float)
+
+    def _LoadForces(self, load, q, q_t, t):
+        """the generalized forces of a load on its coordinates: the value itself on a point node or a coordinate, else
+        J^T v by the projection J of the user body - J_pos, J_rot or the mass integral -, v rotated by the rotation
+        matrix of the marker for bodyFixed, as CSystem applies loads"""
+        value = self._LoadValue(load, t)
+        if load.body is None:
+            return np.atleast_1d(value)
+        body = load.body
+        J = np.array(body['projection'].Evaluate(self.mbs, *self._BodyArguments(load, body['projectionName'], q, q_t, t)), dtype=float)
+        if body['rotation'] is not None:
+            value = np.array(body['rotation'].Evaluate(self.mbs, *self._BodyArguments(load, 'rotationMatrixUserFunction', q, q_t, t)),
+                             dtype=float) @ value
+        return J.T @ value
+
+    def _LoadJacobian(self, load, q, q_t, t, factor_q, factor_q_t):
+        """the local Jacobian of the residual -f of a load on a user body, by Diff of the recordings of the body; a load on
+        a node or a coordinate depends on the time only"""
+        n = len(load.ltg)
+        local = np.zeros((n, n))
+        body = load.body
+        if body is None:
+            return local
+        value = self._LoadValue(load, t)
+        name = body['projectionName']
+        arguments = self._BodyArguments(load, name, q, q_t, t)
+        if body['rotation'] is not None:
+            rotationArguments = self._BodyArguments(load, 'rotationMatrixUserFunction', q, q_t, t)
+            R = np.array(body['rotation'].Evaluate(self.mbs, *rotationArguments), dtype=float)
+            J = np.array(body['projection'].Evaluate(self.mbs, *arguments), dtype=float)
+        for (k, factor) in enumerate([factor_q, factor_q_t]):
+            if factor == 0.:
+                continue
+            dJ = self._RecordingJacobian(body['projection'], _bodyArgumentPositions[name][k], arguments)
+            if body['rotation'] is None:
+                local -= factor*np.einsum('ijk,i->jk', dJ, value)
+            else: #d(J^T R v) = dJ^T R v + J^T dR v
+                dR = self._RecordingJacobian(body['rotation'], _bodyArgumentPositions['rotationMatrixUserFunction'][k],
+                                             rotationArguments)
+                local -= factor*(np.einsum('ijk,i->jk', dJ, R @ value) + J.T @ np.einsum('ijk,j->ik', dR, value))
+        return local
 
     def _LocalMassMatrix(self, kind, i, q, q_t, t):
         if kind.objectType == 'ConnectorUser':
@@ -434,6 +579,8 @@ class SymbolicSystem(SymbolicSystemBase):
         for kind in self.kinds:
             for i in range(len(kind.objects)):
                 np.add.at(f, kind.ltg[i], self._LocalForces(kind, i, q, q_t, t))
+        for load in self.loads:
+            np.add.at(f, load.ltg, self._LoadForces(load, q, q_t, t))
         return f
 
     def MassMatrixTriplets(self, q=None, q_t=None, t=0.):
@@ -468,6 +615,8 @@ class SymbolicSystem(SymbolicSystemBase):
                 ltg = kind.ltg[i]
                 local = self._LocalMassMatrix(kind, i, q, q_t, t) @ q_tt[ltg] - self._LocalForces(kind, i, q, q_t, t)
                 np.add.at(r, ltg, local)
+        for load in self.loads:
+            np.add.at(r, load.ltg, -self._LoadForces(load, q, q_t, t))
         return r
 
     def ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
@@ -525,6 +674,12 @@ class SymbolicSystem(SymbolicSystemBase):
                 rows.append(ltg[r])
                 columns.append(ltg[c])
                 values.append(local[r, c])
+        for load in self.loads:
+            local = self._LoadJacobian(load, q, q_t, t, factor_q, factor_q_t)
+            (r, c) = np.nonzero(local)
+            rows.append(load.ltg[r])
+            columns.append(load.ltg[c])
+            values.append(local[r, c])
         if not rows:
             return self._Matrix(np.zeros(0, dtype=int), np.zeros(0, dtype=int), np.zeros(0), sparse)
         return self._Matrix(np.concatenate(rows), np.concatenate(columns), np.concatenate(values), sparse)
@@ -551,6 +706,9 @@ class SymbolicSystem(SymbolicSystemBase):
         for kind in self.kinds:
             lines.append('  ' + kind.objectType + ': ' + str(len(kind.objects)) + ' objects of ' + str(kind.ltg.shape[1])
                          + ' coordinates, user functions ' + str(sorted(kind.recordings)))
+        if self.loads:
+            lines.append('  loads: ' + ', '.join(load.loadType + (' (user function)' if load.recording is not None else '')
+                                                for load in self.loads))
         return '\n'.join(lines)
 
 

@@ -302,7 +302,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 - **output**: 3x3 matrix GLocal as np.array
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`userMarkerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userMarkerTest.py) (TM), [`userNodeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userNodeTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM), [`userMarkerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userMarkerTest.py) (TM), [`userNodeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userNodeTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
 
 
 (sec-rigidbodyutilities-rotxyz2glocal-t)=
@@ -317,7 +317,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 - **output**: 3x3 matrix GLocal_t as np.array
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`userNodeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userNodeTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM), [`userNodeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userNodeTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
 
 
 (sec-rigidbodyutilities-angularvelocity2rotxyz-t)=
@@ -699,7 +699,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 - **function description**: convert a list or numpy array with 6 inertia components (sorted as [J00, J11, J22, J12, J02, J01]) (list or numpy array) into a 3x3 matrix (np.array)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
 
 
 (sec-rigidbodyutilities-strnodetype2nodetype)=

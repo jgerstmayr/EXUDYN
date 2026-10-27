@@ -48,7 +48,7 @@ it is the objects' programs plus the scatter of their results, which is what Exu
 
 - **Extracted from mbs**, and only if every item is compatible with the symbolic system: an item that is not - a
   built-in body, a Python user function, a recording that reads mbs (an item output), ODE1 coordinates, algebraic
-  equations, data coordinates, and loads until #3118 - is refused, with the list of these items. No item is
+  equations, data coordinates, a load other than those of the table below - is refused, with the list of these items. No item is
   approximated or skipped.
 - **The data of mbs are reused**: the LTG maps, the reference and initial coordinates, the parameters of the items; the
   system adds nothing that mbs already knows.
@@ -74,7 +74,7 @@ it is the objects' programs plus the scatter of their results, which is what Exu
      \fv_e(\qv_e, \dot\qv_e, t)$, scattered by the LTG into $\rv$;
    - the mass matrix $\Mm_e$ as local triplets (i, j, program), scattered into a sparse global matrix;
    - the constraints $\gv_k(\qv, t)$ of the joints, and the term $\Cm_q\tp \lambdav$;
-   - the loads, as forces through the marker Jacobians.
+   - the loads, as forces through the Jacobians of their markers (#3118).
 4. **Sparse throughout.** The global matrices exist only as triplets (row, column, kind, object, local entry); the
    pattern is known from the LTG maps before any evaluation. Dense matrices are formed only on request, for small
    systems and tests.
@@ -91,7 +91,7 @@ use it.
 | ObjectUserBody | its mass matrix and force functions in its coordinates (#3110); the positions of points by its positionUserFunction |
 | ObjectConnectorUser with a symbolic forceUserFunction of its marker states (#3119) on position markers of point nodes and of the ground | directly (#3121): the marker states from the node coordinates or the fixed positions, the forces scattered to the coordinates of the markers, the Jacobian by `EvaluateJacobian` by the positions and velocities |
 | ObjectConnectorUser on markers of bodies or with rotations, ObjectJointUser, MarkerBodyUser | the force or constraint is symbolic; the marker positions and rotations as programs, their Jacobians by differentiation (section 5) - no sympy needed (RG12.51.4) |
-| LoadForceVector, LoadTorqueVector, LoadCoordinate, LoadMassProportional (#3118) | a constant load vector or a symbolic loadVectorUserFunction; on node markers of point nodes and coordinates a generalized force at the LTG indices of the marker; on body markers by the marker Jacobian |
+| LoadForceVector, LoadTorqueVector, LoadCoordinate, LoadMassProportional | directly (#3118): the value constant or by its symbolic user function of the time; on MarkerNodePosition of a point node and on MarkerNodeCoordinate the value at the LTG indices of the marker; on MarkerBodyPosition, MarkerBodyRigid and MarkerBodyMass of an ObjectUserBody $\Jm\tp \vv$ by its symbolic positionJacobian-, rotationJacobian- or massIntegralUserFunction, for `bodyFixed` $\vv$ rotated by its rotationMatrixUserFunction, as CSystem applies loads; the Jacobian by `EvaluateJacobian` of these functions; loads on the ground act on nothing |
 | built-in items, Python (not symbolic) user functions, recordings that read mbs | refused, with the list of items; the built-in items need recordings of their own (the AD templates, #3048) - not proposed |
 
 ## 4. Evaluation: explicit on the GPU, Numba first
@@ -183,7 +183,7 @@ its solver are together in `exudyn/misc/symbolicSystem.py` (decision 3).
   and of the ground.
 - RG12.51.3: the generalized-alpha solver in Python; the time-integration check against `SolveDynamic`.
 - RG12.55 first: user items with the interfaces of the built-in items (`exudyn/misc/symbolicUserItems.py`).
-- RG12.51.8 (#3118): the built-in loads, constant or with a symbolic user function.
+- RG12.51.8 (done, #3118): the built-in loads, constant or with a symbolic user function.
 - RG12.51.4: those user items in the system - rigid bodies, joints, connectors, the constraints.
 - RG12.51.5: the export (G1): the programs, the sparsity pattern and the scatter as C++ and as Python, and a system
   class of the exported numpy code.

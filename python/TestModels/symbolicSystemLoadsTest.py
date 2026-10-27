@@ -1,0 +1,172 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The built-in loads in exudyn.misc.symbolicSystem.SymbolicSystem (#3118): a rigid body as ObjectUserBody on
+#           a NodeRigidBodyRxyz, all its user functions symbolic, written with exudyn.symbolicUtilities, under
+#           gravity as LoadMassProportional on MarkerBodyMass (by its massIntegralUserFunction), a force of a symbolic
+#           loadVectorUserFunction of the time at a point off the center of mass (MarkerBodyPosition), a body-fixed force
+#           and a body-fixed torque on MarkerBodyRigid and a constant torque; a mass point as ObjectUserBody on a
+#           NodePoint with a force on MarkerNodePosition and a LoadCoordinate of a symbolic loadUserFunction on
+#           MarkerNodeCoordinate; a force on the ground, which acts on nothing. SolveExplicit with RK44 against
+#           mbs.SolveDynamic with the same settings; the Jacobian of the residual - with the derivatives of the
+#           Jacobians and the rotation matrix of the body by which the loads act - against central differences; a
+#           load with a Python user function and a load on a body without the user function it needs are refused.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-27
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.symbolicUtilities as su
+import exudyn.cMath as cMath
+from exudyn.advancedUtilities import CreateSymbolicUserFunction, ParameterLayout
+from exudyn.misc.symbolicSystem import SymbolicSystem, SymbolicSystemBase, SolveExplicit
+import numpy as np
+esym = exu.symbolic
+
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4, 0.2, 0.1])
+layout = ParameterLayout([('mass', 1), ('inertia', 6)])
+bodyParameters = layout.ToVector({'mass': inertia.Mass(), 'inertia': inertia.GetInertia6D()})
+massPoint = 0.5
+g = [0, -9.81, 0]
+
+#the user rigid body, qTotal = [position, Tait-Bryan angles], as in userRigidBodyTest.py
+def Blocks3x6(left, right):
+    #the 3 x 6 matrix [left, right] of two 3 x 3 symbolic matrices; None is a zero block
+    return esym.Matrix([[left[i, j] if left is not None else 0 for j in range(3)]
+                        + [right[i, j] if right is not None else 0 for j in range(3)] for i in range(3)])
+
+def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    d = layout.ToDict(parameters)
+    G = su.RotXYZ2GLocal(qTotal[3:6])
+    Mrot = G.T @ su.Inertia6D2InertiaTensor(d['inertia']) @ G
+    return esym.Matrix([[d['mass'] if i == j else 0 for j in range(3)] + [0, 0, 0] for i in range(3)]
+                       + [[0, 0, 0] + [Mrot[i, j] for j in range(3)] for i in range(3)])
+
+def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    rot, rot_t = qTotal[3:6], q_t[3:6]
+    J = su.Inertia6D2InertiaTensor(layout.ToDict(parameters)['inertia'])
+    G = su.RotXYZ2GLocal(rot)
+    omegaLocal = G @ rot_t
+    torques = -(G.T @ (J @ (su.RotXYZ2GLocal_t(rot, rot_t) @ rot_t) + su.Cross(omegaLocal, J @ omegaLocal)))
+    return [0, 0, 0, torques[0], torques[1], torques[2]]
+
+def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return qTotal[0:3] + su.RotXYZ2RotationMatrix(qTotal[3:6]) @ localPosition
+
+def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    rot = qTotal[3:6]
+    return Blocks3x6(esym.Matrix(np.eye(3)), -(su.RotXYZ2RotationMatrix(rot) @ su.Skew(localPosition) @ su.RotXYZ2GLocal(rot)))
+
+def UFrotationMatrix(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return su.RotXYZ2RotationMatrix(qTotal[3:6])
+
+def UFrotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    rot = qTotal[3:6]
+    return Blocks3x6(None, su.RotXYZ2RotationMatrix(rot) @ su.RotXYZ2GLocal(rot))
+
+def UFmassIntegral(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    #m J_pos at the center of mass, the origin of the body
+    m = layout.ToDict(parameters)['mass']
+    return Blocks3x6(esym.Matrix([[m if i == j else 0 for j in range(3)] for i in range(3)]), None)
+
+#the mass point: M = m I
+def UFmassPoint(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return esym.Matrix([[parameters[0] if i == j else 0 for j in range(3)] for i in range(3)])
+
+def UFpositionJacobianPoint(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return esym.Matrix(np.eye(3))
+
+#the loads of a user function of the time
+def UFforceOfTime(mbs, t, loadVector):
+    return esym.sin(10*t)*loadVector
+
+def UFcoordinateLoad(mbs, t, load):
+    return load*esym.cos(5*t)
+
+def Model(pythonLoadFunction=False, withoutMassIntegral=False):
+    """the rigid body and the mass point with their loads; pythonLoadFunction: one load with a Python user function;
+    withoutMassIntegral: the rigid body without massIntegralUserFunction"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.AddObject(ObjectGround())
+    keep = [] #the symbolic functions live as long as the model
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0, 0, 0, 0.2, -0.1, 0.3],
+                                         initialVelocities=[0.5, 0, 1, 1, 0.5, 2]))
+    body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=bodyParameters))
+    functions = [('massMatrixUserFunction', UFmass), ('forceUserFunction', UFforce), ('positionUserFunction', UFposition),
+                 ('positionJacobianUserFunction', UFpositionJacobian), ('rotationMatrixUserFunction', UFrotationMatrix),
+                 ('rotationJacobianUserFunction', UFrotationJacobian)]
+    if not withoutMassIntegral:
+        functions += [('massIntegralUserFunction', UFmassIntegral)]
+    nodePoint = mbs.AddNode(NodePoint(referenceCoordinates=[1, 0, 0], initialVelocities=[0, 1, 0]))
+    point = mbs.AddObject(ObjectUserBody(nodeNumbers=[nodePoint], parameters=[massPoint], constantMassMatrix=True))
+    for (item, name, function) in [(body, name, function) for (name, function) in functions] + [
+            (point, 'massMatrixUserFunction', UFmassPoint), (point, 'positionJacobianUserFunction', UFpositionJacobianPoint)]:
+        keep += [CreateSymbolicUserFunction(mbs, function, name, item)]
+        mbs.SetObjectParameter(item, name, keep[-1])
+
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=g))
+    loadOfTime = mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0.2, 0.1, 0.05])),
+                                             loadVector=[0, 2, 5]))
+    markerRigid = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[-0.2, 0, 0.05]))
+    mbs.AddLoad(LoadForceVector(markerNumber=markerRigid, loadVector=[3, 0, 1], bodyFixed=True))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=markerRigid, loadVector=[0.5, 0.2, 0], bodyFixed=True))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=markerRigid, loadVector=[0, 0, 0.4]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nodePoint)), loadVector=[0, -massPoint*9.81, 1]))
+    coordinateLoad = mbs.AddLoad(LoadCoordinate(markerNumber=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodePoint, coordinate=0)), load=-2))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround)), loadVector=[100, 0, 0]))
+    for (load, name, function, typeName) in [(loadOfTime, 'loadVectorUserFunction', UFforceOfTime, 'LoadForceVector'),
+                                             (coordinateLoad, 'loadUserFunction', UFcoordinateLoad, 'LoadCoordinate')]:
+        keep += [CreateSymbolicUserFunction(mbs, function, name, itemTypeName=typeName)]
+        mbs.SetLoadParameter(load, name, keep[-1])
+    if pythonLoadFunction:
+        mbs.SetLoadParameter(loadOfTime, 'loadVectorUserFunction', lambda mbs, t, loadVector: cMath.sin(10*t)*loadVector)
+    mbs.variables['keep'] = keep
+    mbs.Assemble()
+    return (SC, mbs)
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 500
+simulationSettings.timeIntegration.endTime = 0.5
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.solution.file.write = False
+
+(SC, mbs) = Model()
+system = SymbolicSystem(mbs)
+exu.Print(system)
+
+mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
+qExudyn = np.array(mbs.systemData.GetODE2Coordinates())
+q_tExudyn = np.array(mbs.systemData.GetODE2Coordinates_t())
+result = SolveExplicit(system, simulationSettings, solverType=exu.DynamicSolverType.RK44)
+difference = max(np.max(np.abs(result['q'][-1] - qExudyn))/np.max(np.abs(qExudyn)),
+                 np.max(np.abs(result['q_t'][-1] - q_tExudyn))/np.max(np.abs(q_tExudyn)))
+exu.Print('SolveExplicit with loads against SolveDynamic, RK44:', difference)
+
+#the Jacobian of the residual by Diff against central differences, at a state of the solution
+(q, q_t, q_tt, t) = (result['q'][-1], result['q_t'][-1], result['q_tt'][-1], 0.37)
+J = system.ResidualJacobian(q, q_t, q_tt, t, factor_q=1., factor_q_t=0.5)
+JDifferences = SymbolicSystemBase.ResidualJacobian(system, q, q_t, q_tt, t, factor_q=1., factor_q_t=0.5)
+differenceJacobian = np.max(np.abs(J - JDifferences))/np.max(np.abs(J))
+exu.Print('the Jacobian of the residual against central differences:', differenceJacobian)
+
+#a load with a Python user function, a load on a body without its massIntegralUserFunction
+refused = 0
+for (arguments, text) in [(dict(pythonLoadFunction=True), 'has a Python loadVectorUserFunction'),
+                          (dict(withoutMassIntegral=True), 'has no massIntegralUserFunction')]:
+    (SC2, mbs2) = Model(**arguments)
+    try:
+        SymbolicSystem(mbs2)
+    except ValueError as e:
+        refused += int(text in str(e))
+exu.Print('refused, as they must be:', refused, 'of 2')
+
+u = 1 + int(difference > 1e-12) + int(differenceJacobian > 1e-6) + (2 - refused)
+exu.Print('solution of symbolicSystemLoadsTest=', u)
+
+exu.sys['testResult'] = u
