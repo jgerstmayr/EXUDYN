@@ -67,7 +67,13 @@ interface of the solvers (#3110, #3113), its Jacobian of the residual by `Diff` 
 `SolveExplicit(system, simulationSettings, solverType)` integrates such a system - or equations written with numpy as
 `NumpySystem` - by explicit Euler, RK44 or velocity Verlet with constant step size, as Exudyn's explicit solver does,
 with the mass matrix inverted per body if `timeIntegration.explicit.computeMassMatrixInversePerBody`, and writes the
-solution file and the sensors of mbs (#3112).
+solution file and the sensors of mbs (#3112); it takes ObjectConnectorUser with a symbolic forceUserFunction on
+markers of point nodes and of the ground (#3121).
+**ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
+two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
+also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a
+function computes itself, is the `markerAccessUserFunction`; a `graphicsDataUserFunction` draws the connector (#3119).
+ObjectUserBody works with `timeIntegration.explicit.computeMassMatrixInversePerBody` (#3120).
 **`Diff` of symbolic vectors and matrices**: `exudyn.symbolic.Vector.Diff` and `Matrix.Diff` by a named scalar or by a
 component of a named vector, `Real.Diff(vector, component)`, and `UserFunction.EvaluateJacobian(argumentName, ...)`, the
 Jacobian of a recorded user function by one of its arguments (#3115). The functions of **`exudyn.cMath`** take an

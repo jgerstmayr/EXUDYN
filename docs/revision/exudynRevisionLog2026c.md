@@ -3709,3 +3709,38 @@ mbs.SolutionViewer() in several test models, so the viewer refuses; ObjectJointU
   EvaluateJacobian of a force and a mass matrix recording 1.1e-10; four refusals; cMath of symbolic arguments, recorded
   and evaluated, equal to the numbers. symbolicSystemTest.py: the Jacobian by Diff against central differences 6.0e-9,
   result unchanged, 3. symbolicExplicitSolverTest.py writes its numpy system with cMath.sin.
+
+<a id="rg12-55-6"></a>
+### RG12.55.6, RG12.56.4 and RG12.51.9 — ObjectConnectorUser with the forces of the marker states; the user body inverted per body; connectors in the symbolic system (2026-10-26, #3119, #3120, #3121)
+- The maintainer's decisions (2026-10-26): two markers with named arguments, as ObjectJointUser; the returning function
+  becomes the forceUserFunction and the ConnectorMarker form is kept under another name for forces at computed points
+  of flexible bodies; then the inverse per body of ObjectUserBody, then the explicit solver with a relevant system.
+- definitions/itemDefsObjects.py, ObjectConnectorUser: forceUserFunction(mbs, t, itemNumber, position0, velocity0,
+  rotationMatrix0, angularVelocity0, position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates,
+  parameters) returning [f0, f1], or [f0, m0, f1, m1] with Orientation in requestedMarkerType - the rotations then of
+  the markers, else unit matrices and zeros; the former form as markerAccessUserFunction; GetRequestedMarkerType adds
+  Position for a forceUserFunction; a graphicsDataUserFunction (Python, global coordinates) with HasUserFunction and
+  CallUserFunction of the visualization, written out in the definition as the library has no entry for connectors.
+  C++: EvaluateUserFunctionForce applies -J^T f by the position and rotation Jacobians of the markers, a result of the
+  wrong size raises naming the sizes; EvaluateUserFunctionMarkerAccess is the former function; Assemble refuses both
+  functions and a forceUserFunction of other than two markers. ConnectorMarker, its documentation and errors name the
+  markerAccessUserFunction. The description: the forces of the two markers first, the access to the markers second,
+  the drawing; the mini example with the new form.
+- userConnectorTest.py: the spring-damper as forceUserFunction and as markerAccessUserFunction against
+  CartesianSpringDamper 1.6e-15; a rotational damper and a spring of a rigid body as forceUserFunction with torques
+  against RigidBodySpringDamper 1.4e-13; three new refusals (both functions, one marker, three values); result
+  unchanged. userConnectorContactTest.py: the contact force by the forceUserFunction, the switch by the
+  postNewtonStepUserFunction reading the markers; result unchanged. docs/manual/userItems.md, internals/userItems.md.
+- src/ImplObjects/CObjectUserBody.cpp: with computeInverse the local mass matrix - stored if constant - into a dense
+  matrix and inverted, a singular one raises (#3120).
+- exudyn/misc/symbolicSystem.py: ObjectConnectorUser with a symbolic forceUserFunction on MarkerNodePosition of
+  NodePoint (coordinates) or NodePointGround and MarkerBodyPosition of ObjectGround (fixed, the reference position of
+  the marker); a kind per pattern of markers; the forces scattered, MassMatrixBlocks without connectors, the Jacobian
+  by EvaluateJacobian of the recording by position0/1 and velocity0/1; a markerAccessUserFunction, a
+  postNewtonStepUserFunction, Orientation and other markers refused; an inactive connector left out (#3121).
+- symbolicExplicitSolverTest.py rewritten on a net of 4 x 4 mass points, the upper corners fixed, 24 spring-dampers,
+  gravity, written with cMath.sqrt and recorded: the three methods with and without the inverse per body against
+  SolveDynamic with the same settings 2.6e-14; the sensor 6.9e-16; the mass matrix in every stage equal; the user items
+  against MassPoint and ObjectConnectorSpringDamper 1.1e-16; the net as NumpySystem 8.3e-17; the Jacobian of the
+  residual by Diff against central differences 7.3e-11 relative to the stiffness. For the record, 200 steps of RK44:
+  0.29 s SolveExplicit on the symbolic system, 0.12 s on the NumpySystem, 0.02 s SolveDynamic. Result 1.

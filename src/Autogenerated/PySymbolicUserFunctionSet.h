@@ -24,7 +24,8 @@ public:
     std::function<StdVector6D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)> objectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)> objectConnectorRigidBodySpringDamperPostNewtonStepUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)> objectConnectorCoordinateSpringDamperExtSpringForceUserFunction;
-    std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)> objectConnectorUserForceUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdMatrix3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix3D,StdVector3D,const StdVector&,const StdVector&)> objectConnectorUserForceUserFunction;
+    std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)> objectConnectorUserMarkerAccessUserFunction;
     std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)> objectConnectorUserPostNewtonStepUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)> objectJointUserConstraintUserFunction;
     std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdMatrix3D,StdVector3D,StdMatrix3D,const StdVector&)> objectJointUserJacobianUserFunction;
@@ -291,6 +292,13 @@ public:
                     return this->EvaluateReal(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
                 };
         }
+        else if (itemTypeName == "ObjectConnectorUser" && userFunctionName == "forceUserFunction")
+        {            //define the user function as lambda function of this
+            objectConnectorUserForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, StdVector3D arg3, StdMatrix3D arg4, StdVector3D arg5, StdVector3D arg6, StdVector3D arg7, StdMatrix3D arg8, StdVector3D arg9, const StdVector& arg10, const StdVector& arg11)
+                {
+                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
+                };
+        }
         else if (itemTypeName == "ObjectJointUser" && userFunctionName == "constraintUserFunction")
         {            //define the user function as lambda function of this
             objectJointUserConstraintUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, StdMatrix3D arg3, StdVector3D arg4, StdMatrix3D arg5, const StdVector& arg6)
@@ -497,9 +505,13 @@ public:
 		{
 			return objectConnectorCoordinateSpringDamperExtSpringForceUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdMatrix3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix3D,StdVector3D,const StdVector&,const StdVector&)>>)
 		{
 			return objectConnectorUserForceUserFunction;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)>>)
+		{
+			return objectConnectorUserMarkerAccessUserFunction;
 		}
         else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)>>)
 		{

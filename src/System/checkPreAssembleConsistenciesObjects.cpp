@@ -1435,13 +1435,25 @@ bool MainObjectGenericODE1::CheckPreAssembleConsistency(const MainSystem& mainSy
 }
 
 
-//! at least one marker (#2975); a data node for a postNewtonStepUserFunction (#3102)
+//! at least one marker (#2975), two for a forceUserFunction and not both user functions (#3119); a data node for a
+//! postNewtonStepUserFunction (#3102)
 bool MainObjectConnectorUser::CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const
 {
 	CObjectConnectorUser* cObject = (CObjectConnectorUser*)GetCObject();
 	if (cObject->GetParameters().markerNumbers.NumberOfItems() == 0)
 	{
 		errorString = "ObjectConnectorUser: markerNumbers is empty, but at least one marker is needed";
+		return false;
+	}
+	if (cObject->GetParameters().forceUserFunction && cObject->GetParameters().markerAccessUserFunction)
+	{
+		errorString = "ObjectConnectorUser: forceUserFunction and markerAccessUserFunction are both given, but only one of them may be";
+		return false;
+	}
+	if (cObject->GetParameters().forceUserFunction && cObject->GetParameters().markerNumbers.NumberOfItems() != 2)
+	{
+		errorString = "ObjectConnectorUser: the forceUserFunction needs two markers, but markerNumbers has "
+			+ EXUstd::ToString(cObject->GetParameters().markerNumbers.NumberOfItems()) + "; any number of markers works with the markerAccessUserFunction";
 		return false;
 	}
 	if (cObject->GetParameters().postNewtonStepUserFunction && cObject->GetParameters().nodeNumber == EXUstd::InvalidIndex)

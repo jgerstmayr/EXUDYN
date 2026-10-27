@@ -14,7 +14,8 @@ You can view and download this file on Github: [userConnectorContactTest.py](htt
 #           postNewtonStepUserFunction (#3102): a sphere bounces between two fixed spheres, linear contact stiffness and
 #           the impact model of Gonthier et al. and Carvalho and Martins with restitution coefficient 0.7, without
 #           gravity. The data coordinates are the gap of the last iteration and the velocity at impact; the
-#           forceUserFunction acts while the gap of the data is negative, the postNewtonStepUserFunction switches the
+#           forceUserFunction of the marker states (#3119) returns the force while the gap of the data is negative, the
+#           postNewtonStepUserFunction, which reads the markers as ConnectorMarker objects, switches the
 #           contact, measures the error of the switch, recommends the step size to the switch and keeps the impact
 #           velocity from the start of the step. The velocities after the impacts, against the built-in contact and
 #           against the restitution coefficient; what the connector refuses.
@@ -45,28 +46,29 @@ stepSize = 4e-4
 #the factor of the impact model 2 for a restitution coefficient above 1/3, as in CObjectContactSphereSphere
 impactFactor = 1.5*(restitution - 1.)*(11. - restitution)/(1. + 9.*restitution)
 
-def Contact(markers):
+def Contact(position0, velocity0, position1, velocity1):
     """gap, normal and normal velocity of the two spheres"""
-    (m0, m1) = markers
-    deltaP = m1.GetPosition() - m0.GetPosition()
+    deltaP = position1 - position0
     distance = cMath.norm(deltaP)
     normal = deltaP/distance
-    return distance - 2*radius, normal, normal @ (m1.GetVelocity() - m0.GetVelocity())
+    return distance - 2*radius, normal, normal @ (velocity1 - velocity0)
 
-def UFforce(mbs, t, itemNumber, markers, dataCoordinates, parameters):
-    """the contact force while the gap of the data is negative, linear with the damping of the impact model"""
+def UFforce(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
+            position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
+    """the contact forces on the two spheres while the gap of the data is negative, linear with the damping of the
+    impact model"""
     if dataCoordinates[0] >= 0:
-        return
-    (gap, normal, vNormal) = Contact(markers)
+        return np.zeros(6)
+    (gap, normal, vNormal) = Contact(position0, velocity0, position1, velocity1)
     force = contactStiffness*(-gap)
     if dataCoordinates[1] > 0:
         force += contactStiffness/dataCoordinates[1]*impactFactor*(-gap)*vNormal
-    markers[1].ApplyForce(force*normal)
-    markers[0].ApplyForce(-force*normal)
+    return np.hstack([-force*normal, force*normal])
 
 def UFpostNewton(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters):
     """the gap of this iteration, the error and the step size of a switch, the impact velocity"""
-    (gap, normal, vNormal) = Contact(markers)
+    (m0, m1) = markers
+    (gap, normal, vNormal) = Contact(m0.GetPosition(), m0.GetVelocity(), m1.GetPosition(), m1.GetVelocity())
     lastGap = dataCoordinates[0]
     gapStartOfStep = dataCoordinatesStartOfStep[0]
     error = 0.

@@ -1000,16 +1000,18 @@ items = {
     'outputVariables': [],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "connector's unique name"},
-      'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'list of markers of any type, at least one; the user function gets them in this order'},
+      'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the markers: two Position markers for the forceUserFunction; at least one of any type for the markerAccessUserFunction; the user functions get them in this order'},
       'requestedMarkerType': {'type': 'MarkerType', 'size': '', 'range': '', 'default': 'exudyn.MarkerType._None', 'mustBeGiven': False, 'description': 'the types every marker must provide, checked at Assemble, e.g. exu.MarkerType.Position, or exu.MarkerType.Position | exu.MarkerType.Orientation for torques; exu.MarkerType._None: markers of any type (#3105)'},
       'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102)'},
       'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout'},
       'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector'},
-      'forceUserFunction': {'type': 'ObjectConnectorUserForceUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces'},
+      'forceUserFunction': {'type': 'ObjectConnectorUserForceUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python or symbolic user function which returns the forces (and torques) on the two markers from their states (#3119); without it and without markerAccessUserFunction, the connector applies no forces'},
+      'markerAccessUserFunction': {'type': 'ObjectConnectorUserMarkerAccessUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which reads the markers and applies forces through them, also at points of their bodies it computes, e.g. for a contact on a flexible body; instead of forceUserFunction, not recordable (#2975)'},
       'postNewtonStepUserFunction': {'type': 'ObjectConnectorUserPostNewtonStepUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102)'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
+      'graphicsDataUserFunction': {'type': 'ObjectConnectorUserGraphicsDataUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python function which returns a list of graphics data in global coordinates, drawn for the connector, e.g. a spring as a line (#3119); it is called in the main thread and may slow down the visualization'},
     },
   },
   'ObjectJointUser': {

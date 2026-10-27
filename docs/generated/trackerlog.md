@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.222.dev1
-- last change = 2026-10-26
-- Number of issues = 3121
-- Number of resolved issues = 2999 (222 in current version)
+- Exudyn version = 1.13.225.dev1
+- last change = 2026-10-27
+- Number of issues = 3122
+- Number of resolved issues = 3002 (225 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,12 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` ObjectUserBody with computeMassMatrixInversePerBody of the explicit solvers (#3120)
-  - description: revision2026c step RG12.56.4: ObjectUserBody refuses timeIntegration.explicit.computeMassMatrixInversePerBody (NotImplementedFeatureError), so a system of user bodies cannot use the inverse per body in Exudyn's explicit solvers, and SolveExplicit of exudyn.misc.symbolicSystem can compare its inverse per body only with the global solve; the user body inverts its local mass matrix, as the other bodies on one node do.
-  - date raised: 2026-10-26
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` ObjectConnectorUser with a symbolic force function of the states of its markers (#3119)
-  - description: revision2026c step RG12.55.6 (maintainer 2026-10-26: extend ObjectConnectorUser instead of user bodies without mass): the forceUserFunction of ObjectConnectorUser gets ConnectorMarker objects, whose methods apply forces as side effects, which a recording cannot represent. A second user function that gets the positions, velocities, rotations and angular velocities of the markers and returns the forces and torques on them, which the connector applies through the marker Jacobians - recorded as symbolic user function, with the Jacobian numerically first and by RG12.58 later. Design docs/dev/design/symbolicUserItems.md.
-  - date raised: 2026-10-26
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Loads in the symbolic system: LoadForceVector, LoadTorqueVector, LoadCoordinate and LoadMassProportional, constant or with a symbolic user function (#3118)
   - description: revision2026c step RG12.51.8 (maintainer 2026-10-26: a full user system needs forces): SymbolicSystem takes the built-in loads with a constant load vector or a symbolic loadVectorUserFunction of the time; first on markers whose Jacobian is constant - node markers of point nodes and coordinates, MarkerBodyMass of a mass point - as a constant or time-dependent generalized force at the LTG indices of the marker, then on body markers of user bodies with the Jacobians of RG12.58.
   - date raised: 2026-10-26

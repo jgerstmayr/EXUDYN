@@ -89,7 +89,8 @@ use it.
 |---|---|
 | ObjectGenericODE2 with constant matrices and symbolic mass and force functions | directly (#3110) |
 | ObjectUserBody | its mass matrix and force functions in its coordinates (#3110); the positions of points by its positionUserFunction |
-| ObjectConnectorUser with the symbolic force function of its marker states (#3119), ObjectJointUser, MarkerBodyUser | the force or constraint is symbolic; the marker positions and rotations as programs, their Jacobians by differentiation (section 5) - no sympy needed |
+| ObjectConnectorUser with a symbolic forceUserFunction of its marker states (#3119) on position markers of point nodes and of the ground | directly (#3121): the marker states from the node coordinates or the fixed positions, the forces scattered to the coordinates of the markers, the Jacobian by `EvaluateJacobian` by the positions and velocities |
+| ObjectConnectorUser on markers of bodies or with rotations, ObjectJointUser, MarkerBodyUser | the force or constraint is symbolic; the marker positions and rotations as programs, their Jacobians by differentiation (section 5) - no sympy needed (RG12.51.4) |
 | LoadForceVector, LoadTorqueVector, LoadCoordinate, LoadMassProportional (#3118) | a constant load vector or a symbolic loadVectorUserFunction; on node markers of point nodes and coordinates a generalized force at the LTG indices of the marker; on body markers by the marker Jacobian |
 | built-in items, Python (not symbolic) user functions, recordings that read mbs | refused, with the list of items; the built-in items need recordings of their own (the AD templates, #3048) - not proposed |
 
@@ -177,7 +178,9 @@ its solver are together in `exudyn/misc/symbolicSystem.py` (decision 3).
 - RG12.51.7 (done, #3113): `SymbolicSystemBase`, exudyn.symbolic only, `SetSystemState`, `InitialState`,
   `IsMassMatrixConstant`, scipy at the start of the module.
 - RG12.56 (done, #3112): explicit Euler, velocity Verlet and RK44 in Python, on the base class (sections 9 and 10),
-  `NumpySystem`; RG12.56.4 the inverse per body of ObjectUserBody in Exudyn, for the comparison of that setting.
+  `NumpySystem`; RG12.56.4 (done, #3120) the inverse per body of ObjectUserBody in Exudyn.
+- RG12.51.9 (done, #3121): ObjectConnectorUser with a symbolic forceUserFunction on position markers of point nodes
+  and of the ground.
 - RG12.51.3: the generalized-alpha solver in Python; the time-integration check against `SolveDynamic`.
 - RG12.55 first: user items with the interfaces of the built-in items (`exudyn/misc/symbolicUserItems.py`).
 - RG12.51.8 (#3118): the built-in loads, constant or with a symbolic user function.
@@ -276,15 +279,20 @@ not implemented here; `automaticStepSize` has no meaning for these three methods
 mbs (section 3) runs an Exudyn solver object as explicit Euler without the inverse per body: its initialization
 computes and decomposes the mass matrix once by Exudyn, which only costs time.
 
-**The check** (symbolicExplicitSolverTest.py): two user bodies of one kind, one with a variable mass matrix and an
-ObjectGenericODE2, each of the three methods with and without the inverse per body against `mbs.SolveDynamic` with
-the same solver type and 400 steps: 4e-15 relative - the same formulas, only the solve of $\Mm$ differs; the sensor
-written through mbs equal to the one of `SolveDynamic` to 5e-14; the same equations written as `NumpySystem` equal to
-8e-17. `SolveDynamic` cannot run the inverse per body here, as ObjectUserBody refuses it (RG12.56.4).
+**The check** (symbolicExplicitSolverTest.py): a net of 4 x 4 mass points in a vertical plane, the two upper corners
+fixed, neighbours connected by spring-dampers, under gravity and with an initial velocity out of the plane - the mass
+points ObjectUserBody, the spring-dampers ObjectConnectorUser with the forceUserFunction of the marker states (#3119,
+#3121), both recorded, written with `cMath.sqrt` (#3114). Each of the three methods, with and without the inverse per
+body (#3120), against `mbs.SolveDynamic` with the same solver type, setting and 200 steps: 2.6e-14 relative - the same
+formulas; the sensor written through mbs 7e-16; the mass matrix inverted in every stage instead of once equal; the user
+items against MassPoint and ObjectConnectorSpringDamper 1e-16; the same net as `NumpySystem` 8e-17; the Jacobian of the
+residual by `Diff` against central differences 7e-11 relative to the stiffness. For the record: 200 steps of RK44 take
+0.29 s in Python on the symbolic system, 0.12 s as `NumpySystem`, 0.02 s in `SolveDynamic`. The earlier check with
+a mass matrix depending on the coordinates is in symbolicSystemTest.py for the terms.
 
 **Sub-steps of RG12.56**: .1 this concept; .2 `NumpySystem` on `SymbolicSystemBase` (the base class itself is
 RG12.51.7); .3 the three explicit solvers, their output through mbs, and their test model; .4 the inverse per body of
-ObjectUserBody in Exudyn.
+ObjectUserBody in Exudyn (done, #3120: the user body inverts its local mass matrix).
 
 ## 11. What exudyn.symbolic lacks for the system, and the proposals
 

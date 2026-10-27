@@ -14,7 +14,7 @@ gives to the solver and takes from it is explained on the general page of its ki
 |---|---|---|
 | {ref}`ObjectUserBody <sec-item-objectuserbody>` | mass matrix, generalized forces, position (and rotation) at a local position, their Jacobians, output variables, mass integral | a new finite element, a rigid body in other coordinates |
 | {ref}`NodeUser <sec-item-nodeuser>` | position (and rotation) of the node from its coordinates | nodes that Exudyn does not have, e.g. an ANCF node with full gradients |
-| {ref}`ObjectConnectorUser <sec-item-objectconnectoruser>` | the forces, applied through its markers | contact on flexible bodies, force laws between several markers |
+| {ref}`ObjectConnectorUser <sec-item-objectconnectoruser>` | the forces on its two markers from their states; or forces applied through any markers | spring-dampers, bushings, contacts of two points; contact on flexible bodies |
 | {ref}`ObjectJointUser <sec-item-objectjointuser>` | 1 to 6 constraint equations of the frames of two rigid markers | a screw joint, couplings of rotation and translation |
 | {ref}`MarkerBodyUser <sec-item-markerbodyuser>` | position (and rotation) from the coordinates of several bodies, their Jacobians | a point between bodies or nodes, where built-in connectors, joints, loads and sensors act |
 | ObjectGenericODE2, SensorUserFunction, the `...UserFunction` of the built-in items | a force law, a load, a sensor value | see {ref}`sec-userfunctions` |
@@ -37,7 +37,7 @@ Every user function of ObjectUserBody and NodeUser is called with
 
 All vectors are read-only numpy arrays that view the memory of Exudyn ({ref}`sec-userfunctions`); a result is a list
 or a numpy array, a matrix also a list of lists, and a result of the wrong size raises a ValueError that names the function.
-The forceUserFunction of ObjectConnectorUser gets `(mbs, t, itemNumber, markers, dataCoordinates, parameters)` instead, see below.
+The user functions of ObjectConnectorUser get the states of its markers, or the markers themselves, see below.
 
 ## Parameters
 
@@ -85,12 +85,21 @@ items and what depends on them in the main thread.
 
 ## A user connector and its markers
 
-The forceUserFunction of ObjectConnectorUser gets `markers`, one {ref}`ConnectorMarker <sec-connectormarker>` per marker of
-`markerNumbers`. It reads the marker - `GetPosition()`, `GetVelocity()`, `GetRotationMatrix()`, `GetAngularVelocity()`,
+The forceUserFunction of ObjectConnectorUser gets the states of its two markers, `(mbs, t, itemNumber, position0,
+velocity0, rotationMatrix0, angularVelocity0, position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates,
+parameters)`, and returns the global forces on them, `[f0, f1]`, or with `exu.MarkerType.Orientation` in
+`requestedMarkerType` also the torques, `[f0, m0, f1, m1]`; the connector applies them through the marker Jacobians.
+It is the form for spring-dampers, bushings and contacts of two points, and it can be recorded as symbolic user
+function (#3119).
+
+For forces at points that the function computes itself, the markerAccessUserFunction of ObjectConnectorUser gets
+`markers`, one {ref}`ConnectorMarker <sec-connectormarker>` per marker of `markerNumbers`, of any number and type. It
+reads the marker - `GetPosition()`, `GetVelocity()`, `GetRotationMatrix()`, `GetAngularVelocity()`,
 `GetCoordinates()`, and for a body marker `GetBodyPosition(localPosition)` anywhere on the body - and applies forces:
 `ApplyForce(force)`, `ApplyTorque(torque)`, `ApplyBodyForce(force, localPosition)` and `ApplyCoordinateForces(forces)`.
 A contact can so search the closest point on a flexible body and act there; userConnectorTest.py rests a ball on an
-ANCF cable this way. A ConnectorMarker is valid during the call only. `requestedMarkerType`, e.g.
+ANCF cable this way. A ConnectorMarker is valid during the call only, and this function cannot be recorded, as it
+returns no result. `requestedMarkerType`, e.g.
 `exu.MarkerType.Position | exu.MarkerType.Orientation`, makes Assemble refuse markers that do not provide these types
 (#3105). ObjectJointUser needs no such parameter: it always takes two rigid markers.
 

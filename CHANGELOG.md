@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 218 | 1.13.222 |
+| 1.13 | Newborn | 221 | 1.13.225 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.225** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorUser with a symbolic forceUserFunction in the symbolic system (#3121)
+  - description: revision2026c step RG12.51.9 (maintainer 2026-10-26: the explicit solver with a relevant system): SymbolicSystem takes ObjectConnectorUser with a symbolic forceUserFunction of the marker states (\#3119) on position markers of point nodes (NodePoint) and of the ground (NodePointGround, ObjectGround), the forces scattered to the coordinates of the markers, the Jacobian by EvaluateJacobian of the recording by the positions and velocities; markers on bodies and the rotations of the markers later (RG12.51.4).
+  - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem takes ObjectConnectorUser with a symbolic forceUserFunction on position markers of point nodes and of the ground, with the Jacobian by Diff of the recording.
+  - date resolved: **2026-10-27 07:21**, date raised: 2026-10-27
+- **1.13.224** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody with computeMassMatrixInversePerBody of the explicit solvers (#3120)
+  - description: revision2026c step RG12.56.4: ObjectUserBody refuses timeIntegration.explicit.computeMassMatrixInversePerBody (NotImplementedFeatureError), so a system of user bodies cannot use the inverse per body in Exudyn's explicit solvers, and SolveExplicit of exudyn.misc.symbolicSystem can compare its inverse per body only with the global solve; the user body inverts its local mass matrix, as the other bodies on one node do.
+  - **notes:** ObjectUserBody takes timeIntegration.explicit.computeMassMatrixInversePerBody of the explicit solvers: it inverts its local mass matrix.
+  - date resolved: **2026-10-27 07:21**, date raised: 2026-10-26
+- **1.13.223** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorUser with a symbolic force function of the states of its markers (#3119)
+  - description: revision2026c step RG12.55.6 (maintainer 2026-10-26: extend ObjectConnectorUser instead of user bodies without mass): the forceUserFunction of ObjectConnectorUser gets ConnectorMarker objects, whose methods apply forces as side effects, which a recording cannot represent. A second user function that gets the positions, velocities, rotations and angular velocities of the markers and returns the forces and torques on them, which the connector applies through the marker Jacobians - recorded as symbolic user function, with the Jacobian numerically first and by RG12.58 later. Design docs/dev/design/symbolicUserItems.md.
+  - **notes:** ObjectConnectorUser: the forceUserFunction gets the positions, velocities, rotations and angular velocities of its two markers and returns the forces (and with exu.MarkerType.Orientation in requestedMarkerType the torques) on them, applied through the marker Jacobians, also as symbolic user function; the former function with exudyn.ConnectorMarker objects is the markerAccessUserFunction, for forces at points it computes itself; a Python graphicsDataUserFunction draws the connector.
+  - date resolved: **2026-10-27 07:21**, date raised: 2026-10-26
 - **1.13.222** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Diff of exudyn.symbolic Vector and Matrix expressions, by a component of a vector variable, and the Jacobian of a recording by an argument (#3115)
   - description: revision2026c step RG12.58 (maintainer 2026-10-26): the vector and matrix expressions of exudyn.symbolic have no derivative (operator\[\]::Diff not implemented), and Diff takes a scalar named variable only, so a recording cannot be differentiated by a component of its vector arguments. Proposal in docs/dev/design/symbolicSystem.md: a derivative seed (variable, component), a derivative buffer per vector and matrix node like the evaluation buffer, Diff for every vector and matrix operation, Vector.Diff, Matrix.Diff, and UserFunction.EvaluateJacobian(argument, ...) for the Jacobian of a recording by one of its arguments.
   - **notes:** Diff of exudyn.symbolic vectors and matrices: Vector.Diff and Matrix.Diff by a named Real or by a component of a named Vector, Real.Diff(vector, component), and UserFunction.EvaluateJacobian(argumentName, ...), the Jacobian of a recorded user function by one of its arguments; SymbolicSystem.ResidualJacobian uses it.

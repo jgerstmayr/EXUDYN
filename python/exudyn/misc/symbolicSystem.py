@@ -13,8 +13,10 @@
 #           or velocity Verlet, as Exudyn's explicit solver does (#3112).
 #           Special: not for the broad use, a basis for the export of the equations of motion and their evaluation
 #           outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
-#           forceUserFunction, ObjectGenericODE2 with constant matrices and symbolic user functions, and items without
-#           coordinates (ground); every other object, loads, constraints and recordings that read mbs are refused.
+#           forceUserFunction, ObjectGenericODE2 with constant matrices and symbolic user functions,
+#           ObjectConnectorUser with a symbolic forceUserFunction on position markers of point nodes and of the ground
+#           (#3121), and items without coordinates (ground); every other object, loads, constraints and recordings that
+#           read mbs are refused.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-26 (created)
@@ -36,7 +38,8 @@ __all__ = ['SymbolicSystemBase', 'NumpySystem', 'SymbolicKind', 'SymbolicSystem'
 
 #the user functions of a kind, by object type
 _userFunctionNames = {'UserBody': ['massMatrixUserFunction', 'forceUserFunction'],
-                      'GenericODE2': ['massMatrixUserFunction', 'forceUserFunction']}
+                      'GenericODE2': ['massMatrixUserFunction', 'forceUserFunction'],
+                      'ConnectorUser': ['forceUserFunction']}
 #the positions of the arguments q (the total coordinates for UserBody) and q_t in the user functions, mbs at 0
 _argumentPositions = {'UserBody': (4, 5), 'GenericODE2': (3, 4)}
 
@@ -213,10 +216,12 @@ class SymbolicKind:
     the table of the objects, their parameters and the global indices of their ODE2 coordinates
 
     Note:
-        Its members: objectType, the type name 'UserBody' or 'GenericODE2'; recordings, the dict of the recorded user
-        functions by name (a name without recording is missing); objects, the list of the object numbers; ltg, the
-        array (number of objects x local coordinates) of the global ODE2 indices; parameters, the list of the parameter
-        vectors of the objects (UserBody) or of the dicts of the constant matrices and the force vector (GenericODE2)
+        Its members: objectType, the type name 'UserBody', 'GenericODE2' or 'ConnectorUser'; recordings, the dict of the
+        recorded user functions by name (a name without recording is missing); objects, the list of the object numbers;
+        ltg, the array (number of objects x local coordinates) of the global ODE2 indices; parameters, the list of the
+        parameter vectors of the objects (UserBody), of the dicts of the constant matrices and the force vector
+        (GenericODE2), or of the dicts of the parameter vector and the markers (ConnectorUser: per marker its local
+        coordinate indices, empty for a fixed marker, and its reference position)
     """
     def __init__(self, objectType, recordings):
         self.objectType = objectType
@@ -260,6 +265,14 @@ class SymbolicSystem(SymbolicSystemBase):
                 if len(ltg):
                     refused += ['object ' + str(objectNumber) + ' (' + objectType + ')']
                 continue
+            markers = None
+            if objectType == 'ConnectorUser':
+                (markers, ltg, reason) = self._ConnectorMarkers(objectNumber, item)
+                if reason:
+                    refused += ['object ' + str(objectNumber) + ' (ConnectorUser: ' + reason + ')']
+                    continue
+                if not item['activeConnector']:
+                    continue
             recordings = {}
             for name in _userFunctionNames[objectType]:
                 recording = _Recording(item[name], objectNumber, name)
@@ -269,9 +282,13 @@ class SymbolicSystem(SymbolicSystemBase):
                 if 'massMatrixUserFunction' not in recordings:
                     raise ValueError('SymbolicSystem: object ' + str(objectNumber) + ' (UserBody) has no massMatrixUserFunction')
                 self._constantMassMatrix &= bool(item['constantMassMatrix'])
-            else:
+            elif objectType == 'GenericODE2':
                 self._constantMassMatrix &= 'massMatrixUserFunction' not in recordings
+            elif 'forceUserFunction' not in recordings:
+                continue #a connector without forces
             key = (objectType,) + tuple((name, recordings[name].GetFlatProgram()) for name in sorted(recordings))
+            if markers is not None: #the connectors of a kind have the same pattern of coordinates of their markers
+                key += tuple(len(indices) for (indices, position) in markers)
             if key not in kinds:
                 kinds[key] = SymbolicKind(objectType, recordings)
             kind = kinds[key]
@@ -279,6 +296,8 @@ class SymbolicSystem(SymbolicSystemBase):
             kind.ltg.append(ltg)
             if objectType == 'UserBody':
                 kind.parameters.append(np.array(item['parameters'], dtype=float))
+            elif objectType == 'ConnectorUser':
+                kind.parameters.append({'parameters': np.array(item['parameters'], dtype=float), 'markers': markers})
             else:
                 kind.parameters.append({'M': _Dense(item['massMatrix']), 'K': _Dense(item['stiffnessMatrix']),
                                         'D': _Dense(item['dampingMatrix']), 'f': np.array(item['forceVector'], dtype=float)})
@@ -287,6 +306,33 @@ class SymbolicSystem(SymbolicSystemBase):
         self.kinds = list(kinds.values())
         for kind in self.kinds:
             kind.ltg = np.array(kind.ltg, dtype=int)
+
+    def _ConnectorMarkers(self, objectNumber, item):
+        """the markers of an ObjectConnectorUser: per marker its local coordinate indices (empty for a fixed marker) and
+        its reference position, the global indices of the coordinates of the connector, and the reason it is refused,
+        empty if it is taken"""
+        mbs = self.mbs
+        if item['markerAccessUserFunction'] != 0 or item['postNewtonStepUserFunction'] != 0:
+            return (None, None, 'a markerAccessUserFunction or postNewtonStepUserFunction')
+        if int(item['requestedMarkerType']) & int(exudyn.MarkerType.Orientation):
+            return (None, None, 'the forces of rotations, requestedMarkerType Orientation')
+        (markers, ltg) = ([], [])
+        for markerNumber in item['markerNumbers']:
+            marker = mbs.GetMarker(markerNumber)
+            position = np.array(mbs.GetMarkerOutput(markerNumber, exudyn.OutputVariableType.Position,
+                                                    configuration=exudyn.ConfigurationType.Reference))
+            coordinates = []
+            if marker['markerType'] == 'NodePosition':
+                nodeType = mbs.GetNode(marker['nodeNumber'])['nodeType']
+                if nodeType == 'Point':
+                    coordinates = list(mbs.systemData.GetNodeLTGODE2(marker['nodeNumber']))
+                elif nodeType != 'PointGround':
+                    return (None, None, 'a marker on a node of type ' + nodeType)
+            elif not (marker['markerType'] == 'BodyPosition' and mbs.GetObject(marker['bodyNumber'])['objectType'] == 'Ground'):
+                return (None, None, 'a marker of type ' + marker['markerType'] + ' other than on a point node or the ground')
+            markers.append((np.arange(len(ltg), len(ltg) + len(coordinates), dtype=int), position))
+            ltg += coordinates
+        return (markers, ltg, '')
 
     def InitialState(self):
         """the initial coordinates and velocities (q0, q_t0) of the ODE2 coordinates of mbs"""
@@ -323,6 +369,14 @@ class SymbolicSystem(SymbolicSystemBase):
         if kind.objectType == 'UserBody':
             qRef = self.qRef[ltg]
             return (t, kind.objects[i], qRef, qRef + q[ltg], q_t[ltg], kind.parameters[i])
+        if kind.objectType == 'ConnectorUser': #the states of the two markers; positions only: unit rotations, no angular velocities
+            states = []
+            for (indices, position) in kind.parameters[i]['markers']:
+                if len(indices):
+                    states += [position + q[ltg[indices]], q_t[ltg[indices]], np.eye(3), np.zeros(3)]
+                else: #a fixed marker
+                    states += [position, np.zeros(3), np.eye(3), np.zeros(3)]
+            return (t, kind.objects[i], *states, [], kind.parameters[i]['parameters'])
         return (t, kind.objects[i], q[ltg], q_t[ltg])
 
     def _Call(self, kind, name, i, q, q_t, t):
@@ -337,6 +391,8 @@ class SymbolicSystem(SymbolicSystemBase):
         return np.array(recording.EvaluateJacobian(argumentName, self.mbs, *self._Arguments(kind, i, q, q_t, t)), dtype=float)
 
     def _LocalMassMatrix(self, kind, i, q, q_t, t):
+        if kind.objectType == 'ConnectorUser':
+            return np.zeros((kind.ltg.shape[1], kind.ltg.shape[1]))
         if 'massMatrixUserFunction' in kind.recordings:
             return self._Call(kind, 'massMatrixUserFunction', i, q, q_t, t)
         return kind.parameters[i]['M']
@@ -344,6 +400,11 @@ class SymbolicSystem(SymbolicSystemBase):
     def _LocalForces(self, kind, i, q, q_t, t):
         """the forces on the right-hand side; for ObjectGenericODE2 f + f_user - K q - D q_t"""
         f = np.zeros(kind.ltg.shape[1])
+        if kind.objectType == 'ConnectorUser': #the force on marker k acts on its coordinates, as the Jacobian of a point node is the unit matrix
+            forces = self._Call(kind, 'forceUserFunction', i, q, q_t, t)
+            for (k, (indices, position)) in enumerate(kind.parameters[i]['markers']):
+                f[indices] += forces[3*k:3*k + len(indices)]
+            return f
         if 'forceUserFunction' in kind.recordings:
             f += self._Call(kind, 'forceUserFunction', i, q, q_t, t)
         if kind.objectType == 'GenericODE2':
@@ -396,7 +457,7 @@ class SymbolicSystem(SymbolicSystemBase):
         mass matrices (objects x n x n)"""
         (q, q_t, _) = self._State(q, q_t)
         return [(kind.ltg, np.array([self._LocalMassMatrix(kind, i, q, q_t, t) for i in range(len(kind.objects))]))
-                for kind in self.kinds]
+                for kind in self.kinds if kind.objectType != 'ConnectorUser']
 
     def Residual(self, q=None, q_t=None, q_tt=None, t=0.):
         """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations, object by object without forming M"""
@@ -431,10 +492,17 @@ class SymbolicSystem(SymbolicSystemBase):
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
         rows, columns, values = [], [], []
         for kind in self.kinds:
-            (position_q, position_q_t) = _argumentPositions[kind.objectType]
             for i in range(len(kind.objects)):
                 ltg = kind.ltg[i]
                 local = np.zeros((len(ltg), len(ltg)))
+                if kind.objectType == 'ConnectorUser':
+                    local = self._ConnectorJacobian(kind, i, q, q_t, t, factor_q, factor_q_t)
+                    (r, c) = np.nonzero(local)
+                    rows.append(ltg[r])
+                    columns.append(ltg[c])
+                    values.append(local[r, c])
+                    continue
+                (position_q, position_q_t) = _argumentPositions[kind.objectType]
                 if 'forceUserFunction' in kind.recordings: #r = M q_tt - f
                     if factor_q != 0.:
                         local -= factor_q*self._Jacobian(kind, 'forceUserFunction', i, position_q, q, q_t, t)
@@ -460,6 +528,23 @@ class SymbolicSystem(SymbolicSystemBase):
         if not rows:
             return self._Matrix(np.zeros(0, dtype=int), np.zeros(0, dtype=int), np.zeros(0), sparse)
         return self._Matrix(np.concatenate(rows), np.concatenate(columns), np.concatenate(values), sparse)
+
+    def _ConnectorJacobian(self, kind, i, q, q_t, t, factor_q, factor_q_t):
+        """the local Jacobian of the residual -f of a connector: the derivatives of its forces by the positions
+        (arguments 3 and 7) and velocities (4 and 8) of its markers, which are the coordinates of point nodes"""
+        n = kind.ltg.shape[1]
+        markers = kind.parameters[i]['markers']
+        scatter = np.zeros((n, 6)) #the result rows of each marker into its local coordinates
+        for (k, (indices, position)) in enumerate(markers):
+            scatter[indices, 3*k:3*k + len(indices)] = np.eye(len(indices))
+        local = np.zeros((n, n))
+        for (k, (indices, position)) in enumerate(markers):
+            if not len(indices):
+                continue
+            for (argument, factor) in [(3 + 4*k, factor_q), (4 + 4*k, factor_q_t)]:
+                if factor != 0.:
+                    local[:, indices] -= factor*(scatter @ self._Jacobian(kind, 'forceUserFunction', i, argument, q, q_t, t))
+        return local
 
     def __repr__(self):
         lines = ['SymbolicSystem: ' + str(self.nODE2) + ' ODE2 coordinates, ' + str(len(self.kinds)) + ' kinds']

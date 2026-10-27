@@ -247,7 +247,7 @@ The class **HT** has the following **functions and structures**:
 (sec-connectormarker)=
 ## ConnectorMarker
 
-A ConnectorMarker is one marker of ObjectConnectorUser in its forceUserFunction, which gets one per marker: it reads the marker in the configuration of the call - its position, velocity, rotation and coordinates, and for a body marker positions and velocities anywhere on its body - and applies forces and torques through the Jacobians of the marker. A force and a torque act on the marker as a load does, in global coordinates; the functions applied in one call add up. A function that the marker does not provide raises a ValueError; a ConnectorMarker is valid during the call it was passed to only.
+A ConnectorMarker is one marker of ObjectConnectorUser in its markerAccessUserFunction and postNewtonStepUserFunction, which get one per marker: it reads the marker in the configuration of the call - its position, velocity, rotation and coordinates, and for a body marker positions and velocities anywhere on its body - and applies forces and torques through the Jacobians of the marker. A force and a torque act on the marker as a load does, in global coordinates; the functions applied in one call add up. A function that the marker does not provide raises a ValueError; a ConnectorMarker is valid during the call it was passed to only.
 
 
 The class **ConnectorMarker** has the following **functions and structures**:

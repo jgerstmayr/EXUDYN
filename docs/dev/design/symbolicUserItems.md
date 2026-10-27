@@ -22,13 +22,12 @@ the decisions. It lives while RG12.55 is open (WORKFLOW.md §8.4).
 markers on them. So the classes of itemInterface - which are only dicts, added by `mbs.AddObject` without access to
 mbs - do not fit; the Create functions do (section 3).
 
-## 2. ObjectConnectorUser for symbolic forces (#3119)
+## 2. ObjectConnectorUser for symbolic forces (#3119, done)
 
-**The problem.** `forceUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)` gets one
-`exudyn.ConnectorMarker` per marker and returns nothing: it reads the marker by methods (`GetPosition()`, ...) and
-applies the forces by methods (`ApplyForce(force)`, `ApplyBodyForce(force, localPosition)`, ...). A symbolic user
-function is recorded by calling the Python function once with symbolic arguments and keeping the expressions of its
-**return value**. Neither part fits:
+**Why the ConnectorMarker form cannot be recorded.** A function that gets one `exudyn.ConnectorMarker` per marker and
+returns nothing - it reads the markers by methods (`GetPosition()`, ...) and applies the forces by methods
+(`ApplyForce(force)`, `ApplyBodyForce(force, localPosition)`, ...) - does not fit a recording, which calls the Python
+function once with symbolic arguments and keeps the expressions of its **return value**:
 
 - a ConnectorMarker is not a symbolic argument: its methods return the numbers of the current call, and the recording
   would keep these numbers as constants;
@@ -36,44 +35,38 @@ function is recorded by calling the Python function once with symbolic arguments
 - the number and the types of the markers are free, and `ApplyBodyForce` at a local position computed in the function
   needs the Jacobian of the body at that point during the call.
 
-**Does the ConnectorMarker form need to stay?** Its one use that the returning form cannot take is a force at a point
-the function computes itself on a body of many coordinates: `GetBodyPosition(localPosition)` and
-`ApplyBodyForce(force, localPosition)`, which need the body Jacobian at that point during the call - e.g. a ball on an
-ANCF cable whose closest point is searched along the cable. This exists once, in userConnectorTest.py (part 3, a test,
-no example); every other use - spring-dampers, the rotational damper, the contact of userConnectorContactTest.py -
-reads the marker states and applies forces at the markers, which the returning form covers. ObjectConnectorUser came
-after the 1.13.0 release (#2975, 2026-10-23), so its interface can still change without deprecation. Proposal: the
-returning function becomes **the** forceUserFunction - documented first, used by the user items and the symbolic
-system -, and the ConnectorMarker form is kept under another name (e.g. `markerAccessUserFunction`), its description
-saying that it is for forces at computed points of flexible bodies, with that one test as its use, and that it cannot
-be recorded. Removing it entirely is the alternative, if no such contact is wanted; the decision is the maintainer's.
+**The forceUserFunction of the marker states.** As ObjectJointUser gets the positions and rotation matrices of its
+markers and returns the constraint equations, the connector gets the states of its two markers and returns the forces
+on them, and applies them through the marker Jacobians, as `ApplyForce` and `ApplyTorque` do,
+$\fv_{gen} = -\sum_i (\Jm_{pos,i}\tp \fv_i + \Jm_{rot,i}\tp \mv_i)$ (decision 6):
 
-**The solution: a second user function of the marker states, which returns the forces.** As ObjectJointUser gets the
-positions and rotation matrices of its markers and returns the constraint equations, the connector gets the states of
-its markers and returns the forces on them; the connector applies them through the marker Jacobians, exactly as
-`ApplyForce` and `ApplyTorque` do now, $\Qv = -\sum_i (\Jm_{pos,i}\tp \fv_i + \Jm_{rot,i}\tp \mv_i)$. Its arguments
-and its result are vectors and matrices of fixed sizes, so it can be recorded. Two forms are possible:
+```python
+def UFspringDamper(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
+                   position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
+    ...
+    return np.hstack([force0, force1])     #with Orientation requested: [force0, torque0, force1, torque1]
+```
 
-| | (a) two markers, as ObjectJointUser (proposed) | (b) any number of markers, stacked |
-|---|---|---|
-| signature | `markerForceUserFunction(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0, position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters)` | `markerForceUserFunction(mbs, t, itemNumber, positions, velocities, rotationMatrices, angularVelocities, dataCoordinates, parameters)`, each of all markers in one vector (3 per marker; 9 per rotation matrix) |
-| returns | `[f0, f1]` (6 values) or with orientation `[f0, m0, f1, m1]` (12 values), global | 3 or 6 values per marker, global |
-| for | spring-damper, torsional spring-damper, bushings, sphere-sphere contact - every item of the list | items of more than two markers (a cable through pulleys) |
-| reads as | the joint, every argument named | index arithmetic in the function |
+- Its arguments and result are vectors and matrices of fixed sizes, so it is recorded by `CreateSymbolicUserFunction`.
+- The connector requests Position for it; with `exu.MarkerType.Orientation` in `requestedMarkerType` it gets the
+  rotations and angular velocities and returns the torques too, otherwise unit matrices and zeros.
+- Assemble refuses it with other than two markers, and together with the markerAccessUserFunction.
+- The Jacobian is numerical in Exudyn, as before; in the symbolic system by `EvaluateJacobian` of the recording (#3121).
+- `dataCoordinates` and the postNewtonStepUserFunction are as before (#3102); userConnectorContactTest.py computes
+  the contact force by the forceUserFunction and switches the contact in the postNewtonStepUserFunction, which reads
+  the markers.
+- **Drawing**: a `graphicsDataUserFunction(mbs, itemNumber)` of the connector returning a graphics list in global
+  coordinates, Python only, as the drawing of ObjectGenericODE2.
+- **In the symbolic system** (#3121): a kind of its own per pattern of markers; the marker states of a point node from
+  the node coordinates, of the ground from the fixed position; the forces scattered to the coordinates of the markers.
+  Markers on bodies and the rotations follow with RG12.51.4.
 
-- `requestedMarkerType` (#3105) decides what the markers provide: `Position` gives the positions and velocities (the
-  rotation arguments are unit matrices and zero), `Position | Orientation` also the rotations and angular velocities,
-  and the torques in the result.
-- Exactly one of `forceUserFunction` and `markerForceUserFunction` is given; Assemble refuses both or none.
-- The Jacobian is computed numerically, as ObjectConnectorUser does now; once exudyn.symbolic differentiates vectors
-  (#3115), the derivative of the recording by the marker states times the marker Jacobians.
-- `dataCoordinates` and the postNewtonStepUserFunction stay as they are (#3102); the post-Newton step of a symbolic
-  connector (contact with impact models) is a later step.
-- **Drawing**: a `graphicsDataUserFunction(mbs, itemNumber)` of the connector returning a graphics list, Python only -
-  a spring drawn as line or spring, a contact as two spheres -, as the drawing of ObjectGenericODE2.
-- **In the symbolic system** (RG12.51.4): the connector is a kind of its own, the marker states computed from the
-  bodies - a node marker of a point node from the node coordinates, a body marker by the position function of the
-  user body -, the forces scattered by the LTG indices of both bodies.
+**The markerAccessUserFunction**: the former ConnectorMarker form under its own name. It is for forces at points that
+the function computes itself on a body of many coordinates - `GetBodyPosition(localPosition)` and
+`ApplyBodyForce(force, localPosition)`, which need the body Jacobian at that point during the call; its use is the ball
+on an ANCF cable whose closest point is searched along the cable (userConnectorTest.py, part 3). Its description says
+so, and that it cannot be recorded. ObjectConnectorUser came after the 1.13.0 release (#2975), so the change of names
+needed no deprecation.
 
 Why not the alternative of RG12.55.1, a user body without mass on the nodes of both bodies: it would bypass the
 markers, compute the marker kinematics again in each connector, need a zero mass matrix, and leave the connector
@@ -112,7 +105,7 @@ creator.Record()                          #one symbolic recording per kind, as S
 | CreateGround | the built-in ObjectGround (no coordinates) | all | - |
 | CreateMassPoint | ObjectUserBody on NodePoint: $\Mm = m\Im$, $\fv = 0$, position $\qv + \pLoc$, Jacobian $\Im$, mass integral $m\Im$ | referencePosition, initialDisplacement, initialVelocity, mass, gravity, graphicsDataList, drawSize, color, show | create2D (later: NodePoint2D), physicsMass (deprecated) |
 | CreateRigidBody | ObjectUserBody on the rigid-body node: mass matrix and quadratic velocity vector of the node type, by symbolicUtilities; position and rotation of a local point | referencePosition, referenceRotationMatrix, initialVelocity, initialAngularVelocity, initialDisplacement, initialRotationMatrix, inertia (with center of mass), gravity, nodeType RotationRotationVector and RotationRxyz, graphicsDataList, referenceHT, initialHT | nodeType EulerParameters (the algebraic equation of the node is needed in the system model - later), create2D (later: NodeRigidBody2D) |
-| CreateSpringDamper | ObjectConnectorUser on two position markers with the markerForceUserFunction (section 2): $\fv_1 = -\fv_0 = -(k(L - L_0) + d\dot L + f_0)\,\nv$ | bodyNumbers, localPosition0/1, referenceLength, stiffness, damping, force, velocityOffset, show, drawSize, color | springForceUserFunction (later: a symbolic one inside the recording), bodyOrNodeList with nodes |
+| CreateSpringDamper | ObjectConnectorUser on two position markers with the forceUserFunction of the marker states (section 2): $\fv_1 = -\fv_0 = -(k(L - L_0) + d\dot L + f_0)\,\nv$ | bodyNumbers, localPosition0/1, referenceLength, stiffness, damping, force, velocityOffset, show, drawSize, color | springForceUserFunction (later: a symbolic one inside the recording), bodyOrNodeList with nodes |
 | CreateTorsionalSpringDamper | ObjectConnectorUser on two rigid markers: the torque of the relative rotation about the axis | bodyNumbers, position, axis, stiffness, damping, offset, velocityOffset, torque, useGlobalFrame | unlimitedRotations (needs the data of the turns), springTorqueUserFunction |
 | CreateRevoluteJoint, CreatePrismaticJoint | ObjectJointUser on MarkerBodyRigid of both bodies, the constraint and its Jacobian of the built-in joint, symbolic | bodyNumbers, position, axis, useGlobalFrame, show, axisRadius, axisLength, color | - |
 | CreateSphericalJoint | ObjectJointUser as above | bodyNumbers, position, constrainedAxes, useGlobalFrame, show, jointRadius, color | - |
@@ -141,9 +134,7 @@ per group.
 3. Connectors and contacts by an extension of ObjectConnectorUser, not as user bodies without mass (section 2).
 4. (The mass of connector bodies: not needed with 3.)
 5. A connector is drawn by a graphicsDataUserFunction, in Python only.
-
-6. The function of the marker states (#3119): (a), two markers with named arguments as ObjectJointUser, named
-   `markerForceUserFunction` (2026-10-26); returning the forces is the form for symbolic user items in general.
-
-Open, for the maintainer: whether the returning function takes the name `forceUserFunction` and the ConnectorMarker
-form is kept under another name for forces at computed points of flexible bodies, or removed (section 2).
+6. The function of the marker states (#3119): two markers with named arguments as ObjectJointUser; returning the forces
+   is the form for symbolic user items in general (2026-10-26).
+7. It is the `forceUserFunction`; the ConnectorMarker form is kept as `markerAccessUserFunction`, for forces at computed
+   points of flexible bodies (2026-10-26).

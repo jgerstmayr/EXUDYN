@@ -302,9 +302,9 @@
    "fingerprint": "95c62e36426e"
   },
   "ObjectConnectorUser": {
-   "checked": "2026-10-26",
+   "checked": "2026-10-27",
    "by": "Claude-JG",
-   "fingerprint": "7748a365142e"
+   "fingerprint": "5de17d9f8a3a"
   },
   "ObjectContactCircleCable2D": {
    "checked": "2026-10-17",
@@ -457,9 +457,9 @@
    "fingerprint": "35c0d5a5acfb"
   },
   "ObjectUserBody": {
-   "checked": "2026-10-26",
+   "checked": "2026-10-27",
    "by": "Claude-JG",
-   "fingerprint": "f983d1e233a5"
+   "fingerprint": "950d29924dd5"
   },
   "SensorBody": {
    "checked": "2026-10-17",

@@ -2192,7 +2192,8 @@ definitions.append(ItemDefinition(
     $$
 
     with $\Mm$ from `massMatrixUserFunction` - called once and kept with `constantMassMatrix` (#3058) - and $\fv$ from `forceUserFunction` (zero without it). A static
-    problem needs no mass matrix (#3104). The Jacobian of the left-hand side is computed numerically, as for every item
+    problem needs no mass matrix (#3104); with `timeIntegration.explicit.computeMassMatrixInversePerBody`, the
+    explicit solvers take the inverse of the local mass matrix (#3120). The Jacobian of the left-hand side is computed numerically, as for every item
     without an analytic one.
 
     #### Mass-proportional loads
@@ -9343,9 +9344,33 @@ definitions.append(ItemDefinition(
 #++++++++++++++++   ObjectConnectorUser   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-def ObjectConnectorUser_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, markers: ConnectorMarkerList,
-                                          dataCoordinates: Vector, parameters: Vector) -> None:
-    r"""A user function, which computes the forces of the connector and applies them through its markers.
+def ObjectConnectorUser_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, position0: Vector3D,
+                                          velocity0: Vector3D, rotationMatrix0: Matrix3D, angularVelocity0: Vector3D,
+                                          position1: Vector3D, velocity1: Vector3D, rotationMatrix1: Matrix3D,
+                                          angularVelocity1: Vector3D, dataCoordinates: Vector, parameters: Vector) -> Vector:
+    r"""A user function, which computes the forces of the connector on its two markers from their positions, velocities, rotations and angular velocities.
+
+    Args:
+        mbs: provides MainSystem mbs to which the connector belongs
+        t: current time in mbs
+        itemNumber: integer number of the connector in mbs
+        position0: $\LU{0}{\pv}_{m0}$ global position of marker 0
+        velocity0: $\LU{0}{\vv}_{m0}$ global velocity of marker 0
+        rotationMatrix0: $\LU{0,m0}{\Rot}$ rotation matrix of marker 0, local to global; the unit matrix if requestedMarkerType has no Orientation
+        angularVelocity0: $\LU{0}{\tomega}_{m0}$ global angular velocity of marker 0; zero if requestedMarkerType has no Orientation
+        position1: $\LU{0}{\pv}_{m1}$ global position of marker 1
+        velocity1: $\LU{0}{\vv}_{m1}$ global velocity of marker 1
+        rotationMatrix1: $\LU{0,m1}{\Rot}$ rotation matrix of marker 1, as for marker 0
+        angularVelocity1: $\LU{0}{\tomega}_{m1}$ global angular velocity of marker 1, as for marker 0
+        dataCoordinates: $\dv \in \Rcal^{n_d}$ the data coordinates of the NodeGenericData nodeNumber, as the postNewtonStepUserFunction last set them; empty without a data node
+        parameters: $\in \Rcal^{n_p}$ the parameters of the connector, see parameters; empty if not given
+    Returns:
+        the global forces acting on the markers, $[\fv_0,\, \fv_1]$ (6 values), or with exu.MarkerType.Orientation in requestedMarkerType also the torques, $[\fv_0,\, \mv_0,\, \fv_1,\, \mv_1]$ (12 values), as list or numpy array
+    """
+
+def ObjectConnectorUser_markerAccessUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, markers: ConnectorMarkerList,
+                                                 dataCoordinates: Vector, parameters: Vector) -> None:
+    r"""A user function, which reads the markers of the connector and applies forces through them, also at points of their bodies that it computes itself; it cannot be recorded as symbolic user function.
 
     Args:
         mbs: provides MainSystem mbs to which the connector belongs
@@ -9358,6 +9383,16 @@ def ObjectConnectorUser_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: 
         nothing; the forces are applied with the ApplyForce, ApplyTorque, ApplyBodyForce and ApplyCoordinateForces functions of the markers
     """
 
+def ObjectConnectorUser_graphicsDataUserFunction(mbs: MainSystem, itemNumber: Index) -> BodyGraphicsData:
+    r"""A user function, which returns the graphics of the connector in global coordinates.
+
+    Args:
+        mbs: provides MainSystem mbs to which the connector belongs
+        itemNumber: integer number of the connector in mbs
+    Returns:
+        a list of graphics data, e.g. of exudyn.graphics, in global coordinates
+    """
+
 def ObjectConnectorUser_postNewtonStepUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, markers: ConnectorMarkerList,
                                                    dataCoordinates: Vector, dataCoordinatesStartOfStep: Vector,
                                                    parameters: Vector) -> PostNewtonResult:
@@ -9367,7 +9402,7 @@ def ObjectConnectorUser_postNewtonStepUserFunction(mbs: MainSystem, t: Real, ite
         mbs: provides MainSystem mbs to which the connector belongs
         t: current time in mbs
         itemNumber: integer number of the connector in mbs
-        markers: one exudyn.ConnectorMarker per marker of markerNumbers, as in forceUserFunction, for reading only: applying a force raises
+        markers: one exudyn.ConnectorMarker per marker of markerNumbers, as in markerAccessUserFunction, for reading only: applying a force raises
         dataCoordinates: $\dv^{k-1}$ the data coordinates of the previous iteration of the step
         dataCoordinatesStartOfStep: $\dv^{0}$ the data coordinates at the start of the step, to which a state is set back that may not change during the iterations
         parameters: $\in \Rcal^{n_p}$ the parameters of the connector, see parameters; empty if not given
@@ -9377,17 +9412,37 @@ def ObjectConnectorUser_postNewtonStepUserFunction(mbs: MainSystem, t: Real, ite
 
 definitions.append(ItemDefinition(
     className='ObjectConnectorUser',
-    drawing=r'Nothing; the number with `connectors.showNumbers`, at the first marker.',
+    drawing=r'The graphics of the graphicsDataUserFunction, in global coordinates; the number with `connectors.showNumbers`, at the first marker.',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    overallDescription=r"""A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; a NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.""",
+    overallDescription=r"""A connector of two markers whose forces are a user function of the positions, velocities, rotations and angular velocities of the markers: it returns the forces and torques on the markers, which the connector applies through the marker Jacobians - a spring-damper, a bushing, a contact of two points -, also as symbolic user function. For forces at points of a body that the function computes itself, as a contact searching the closest point on a flexible body, a second user function reads any number of markers of any type and applies forces through them. A NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.""",
     classType=ClassTypeObject,
-    detailedDescription=r"""    #### The markers in the user function
+    detailedDescription=r"""    #### The forces of the two markers
 
-    `forceUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)` gets `markers`, a list with one `exudyn.ConnectorMarker`
-    per entry of `markerNumbers`, in their order, for the configuration of the call (#2975). A ConnectorMarker gives what
-    its marker provides:
+    `forceUserFunction(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0, position1, velocity1,
+    rotationMatrix1, angularVelocity1, dataCoordinates, parameters)` gets the states of the two markers of
+    `markerNumbers` and returns the global forces $\fv_i$ acting on them, $[\fv_0,\, \fv_1]$; with
+    `exu.MarkerType.Orientation` in `requestedMarkerType`, it gets their rotation matrices and global angular velocities
+    and returns also the torques $\mv_i$, $[\fv_0,\, \mv_0,\, \fv_1,\, \mv_1]$; without, the rotation matrices are unit
+    matrices and the angular velocities zero (#3119). The connector applies them through the Jacobians of the markers,
+
+    $$
+    \fv_{gen} = -\sum_{i=0}^{1} \left( \Jm_{pos,i}\tp \fv_i + \Jm_{rot,i}\tp \mv_i \right) ,
+    $$
+
+    added to the left-hand side, as loads act on the markers. The markers must provide Position, which the connector
+    requests for this function. As its arguments and result are vectors and matrices of fixed sizes, the function can be
+    recorded by `CreateSymbolicUserFunction`, one recording for all connectors of a kind with their own `parameters`.
+    `Assemble` refuses a forceUserFunction with other than two markers, and both user functions together.
+
+    #### Access to the markers
+
+    `markerAccessUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)` gets `markers`, a list with one
+    `exudyn.ConnectorMarker` per entry of `markerNumbers`, in their order, for the configuration of the call (#2975); it
+    is for forces at points of a body that the function computes itself, e.g. the closest point of a contact on a
+    flexible body, which the forces of the marker states cannot express; it cannot be recorded, as the forces are
+    applied by calls of the markers and not returned. A ConnectorMarker gives what its marker provides:
 
     | function | gives | marker |
     |---|---|---|
@@ -9429,16 +9484,20 @@ definitions.append(ItemDefinition(
     The connector couples the coordinates of all its markers; its Jacobian is computed numerically, by calling the user
     function for each perturbed coordinate. The user function is called serially, in the main thread. With
     `activeConnector=False` the connector applies no forces.
+
+    #### Drawing
+
+    The `graphicsDataUserFunction(mbs, itemNumber)` returns a list of graphics data in global coordinates - a spring as a
+    line, a contact as two spheres -, a Python function, drawn as the graphics of ObjectGenericODE2 are.
     """,
     miniExample=r"""    #a spring of stiffness k between the ground and a mass point, written as user connector
     k = 100
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialCoordinates=[0.1,0,0]))
     mass = mbs.AddObject(MassPoint(nodeNumber=node, mass=2))
-    def UFforce(mbs, t, itemNumber, markers, dataCoordinates, parameters):
-        (ground, point) = markers
-        force = k*(point.GetPosition() - ground.GetPosition() - np.array([1,0,0]))
-        point.ApplyForce(-force)
-        ground.ApplyForce(force)
+    def UFforce(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
+                position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
+        force = k*(position1 - position0 - np.array([1,0,0]))
+        return np.hstack([force, -force]) #the forces on marker 0 and marker 1
     groundMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber=mbs.AddObject(ObjectGround())))
     mbs.AddObject(ObjectConnectorUser(markerNumbers=[groundMarker, mbs.AddMarker(MarkerNodePosition(nodeNumber=node))],
                                       forceUserFunction=UFforce))
@@ -9462,7 +9521,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TArrayIndex(ItemMarker), destination=DestComp+DestParam,
             pythonName='markerNumbers',
             defaultValue='ArrayIndex()',
-            description=r"""$[m_0,\,m_1,\,\ldots]\tp$list of markers of any type, at least one; the user function gets them in this order"""),
+            description=r"""$[m_0,\,m_1,\,\ldots]\tp$the markers: two Position markers for the forceUserFunction; at least one of any type for the markerAccessUserFunction; the user functions get them in this order"""),
         ItemParameter(type=TMarkerType, destination=DestComp+DestParam,
             pythonName='requestedMarkerType',
             defaultValue='Marker::_None',
@@ -9482,8 +9541,13 @@ definitions.append(ItemDefinition(
         ItemParameter(destination=DestComp+DestParam,
             pythonName='forceUserFunction',
             defaultValue=0,
-            description=r"""A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces""",
+            description=r"""A Python or symbolic user function which returns the forces (and torques) on the two markers from their states (#3119); without it and without markerAccessUserFunction, the connector applies no forces""",
             userFunction=ObjectConnectorUser_forceUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='markerAccessUserFunction',
+            defaultValue=0,
+            description=r"""A Python user function which reads the markers and applies forces through them, also at points of their bodies it computes, e.g. for a contact on a flexible body; instead of forceUserFunction, not recordable (#2975)""",
+            userFunction=ObjectConnectorUser_markerAccessUserFunction),
         ItemParameter(destination=DestComp+DestParam,
             pythonName='postNewtonStepUserFunction',
             defaultValue=0,
@@ -9517,8 +9581,8 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
-        dict(ItemRequestedTypes('Marker', [], description=r'the requestedMarkerType of the parameters (#3105)'),
-             implementation='return parameters.requestedMarkerType;'),
+        dict(ItemRequestedTypes('Marker', [], description=r'the requestedMarkerType of the parameters (#3105), with Position for a forceUserFunction (#3119)'),
+             implementation='return (Marker::Type)(parameters.requestedMarkerType | (parameters.forceUserFunction != 0 ? Marker::Position : Marker::_None));'),
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
             pythonName='GetType',
             implementation='return CObjectType::Connector;',
@@ -9537,7 +9601,11 @@ definitions.append(ItemDefinition(
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateUserFunctionForce',
             args='Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes',
-            description=r'call of forceUserFunction with the ConnectorMarkers of the markers, each writing into its block of ode2Lhs (#2975); implemented in evaluateUserFunctions.cpp'),
+            description=r'call of forceUserFunction with the states of the two markers; the returned forces and torques by the marker Jacobians into the blocks of ode2Lhs (#3119); implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionMarkerAccess',
+            args='Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes',
+            description=r'call of markerAccessUserFunction with the ConnectorMarkers of the markers, each writing into its block of ode2Lhs (#2975); implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=TReal, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateUserFunctionPostNewtonStep',
             args='const MarkerDataStructure& markerData, Vector& dataCoordinates, Real& recommendedStepSize',
@@ -9553,6 +9621,16 @@ definitions.append(ItemDefinition(
             pythonName='show',
             defaultValue=True,
             description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunctionDef('CallUserFunction'),
+        ItemFunction(type=TBool, destination=DestVisu, cFlags=CFConst,
+            pythonName='HasUserFunction',
+            implementation='return graphicsDataUserFunction!=0;',
+            description=r'true, if the connector has a graphicsDataUserFunction to be called during redraw (#3119)'),
+        ItemParameter(destination=DestVisu,
+            pythonName='graphicsDataUserFunction',
+            defaultValue=0,
+            description=r'A Python function which returns a list of graphics data in global coordinates, drawn for the connector, e.g. a spring as a line (#3119); it is called in the main thread and may slow down the visualization',
+            userFunction=ObjectConnectorUser_graphicsDataUserFunction),
         ],
     ))
 

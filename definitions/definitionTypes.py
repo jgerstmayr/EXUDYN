@@ -492,7 +492,7 @@ class MatrixContainer:
 
 
 class ConnectorMarkerList:
-    """the list of exudyn.ConnectorMarker that the forceUserFunction of ObjectConnectorUser gets, one per marker (#2975)"""
+    """the list of exudyn.ConnectorMarker that the markerAccessUserFunction and the postNewtonStepUserFunction of ObjectConnectorUser get, one per marker (#2975)"""
 
 
 class PostNewtonResult:

@@ -1,6 +1,6 @@
 /** ***********************************************************************************************
 * @class        PyConnectorMarker
-* @brief        The access to one marker of ObjectConnectorUser in its forceUserFunction (#2975): reads the marker - its
+* @brief        The access to one marker of ObjectConnectorUser in its markerAccessUserFunction (#2975, #3119): reads the marker - its
 *               marker data, and positions and velocities anywhere on its body - and applies forces and torques through
 *               the Jacobians of the marker into the block of the marker in the generalized forces of the connector.
 * @details      Details:
@@ -70,7 +70,7 @@ private:
 	{
 		if (ode2Lhs == nullptr) //the postNewtonStepUserFunction reads the markers only (#3102)
 		{
-			PyError(STDstring("ConnectorMarker.") + function + ": forces are applied in the forceUserFunction; in the postNewtonStepUserFunction "
+			PyError(STDstring("ConnectorMarker.") + function + ": forces are applied in the markerAccessUserFunction; in the postNewtonStepUserFunction "
 				"the markers are for reading", PyErrorType::valueError);
 		}
 		if (jacobian.NumberOfColumns() == 0) { return; } //ground
@@ -98,10 +98,10 @@ public:
 		cSystemData(cSystemDataInit), markerNumber(markerNumberInit), markerData(markerDataInit), ode2Lhs(ode2LhsInit),
 		blockStart(blockStartInit), blockSize(blockSizeInit), valid(true) {}
 
-	//! a ConnectorMarker exists only in the forceUserFunction of ObjectConnectorUser
+	//! a ConnectorMarker exists only in the markerAccessUserFunction and postNewtonStepUserFunction of ObjectConnectorUser
 	static PyConnectorMarker* ForbidConstructor()
 	{
-		PyError("exudyn.ConnectorMarker() may not be called: ObjectConnectorUser passes one per marker to its forceUserFunction", PyErrorType::typeError);
+		PyError("exudyn.ConnectorMarker() may not be called: ObjectConnectorUser passes one per marker to its markerAccessUserFunction", PyErrorType::typeError);
 		return nullptr; //never reached
 	}
 

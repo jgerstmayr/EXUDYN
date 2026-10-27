@@ -59,24 +59,45 @@ Index CObjectUserBody::GetODE2Size() const
 
 void CObjectUserBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
-	CHECKandTHROW(!computeInverse, "ObjectUserBody: computeMassMatrixInversePerBody=True is not possible, change the solver settings", ExudynNotImplementedError);
 	ResizableConstVector qRef, q, q_t;
 	GatherUserFunctionCoordinates(qRef, q, q_t, ConfigurationType::Current);
-	if (parameters.constantMassMatrix) //computed once, in local coordinates, and added with ltg (#3058)
+	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
+	ArrayIndex localLtg;
+	localLtg.SetNumberOfItems(q.NumberOfItems());
+	for (Index i = 0; i < q.NumberOfItems(); i++) { localLtg[i] = i; }
+	if (parameters.constantMassMatrix && !massMatrixComputed) //computed once, in local coordinates, and added with ltg (#3058)
 	{
-		if (!massMatrixComputed)
+		storedMassMatrix = EXUmath::MatrixContainer();
+		EvaluateUserFunctionMassMatrix(storedMassMatrix, t, qRef, q, q_t, localLtg);
+		massMatrixComputed = true;
+	}
+	if (computeInverse) //the inverse of the local mass matrix, for computeMassMatrixInversePerBody of the explicit solvers (#3120)
+	{
+		EXUmath::MatrixContainer local;
+		if (!parameters.constantMassMatrix) { EvaluateUserFunctionMassMatrix(local, t, qRef, q, q_t, localLtg); }
+		const EXUmath::MatrixContainer& massMatrixLocal = parameters.constantMassMatrix ? storedMassMatrix : local;
+		Index n = q.NumberOfItems();
+		massMatrixC.SetUseDenseMatrix(true);
+		ResizableMatrix& inverse = massMatrixC.GetInternalDenseMatrix();
+		if (massMatrixLocal.UseDenseMatrix()) { inverse = massMatrixLocal.GetInternalDenseMatrix(); }
+		else
 		{
-			ArrayIndex localLtg;
-			localLtg.SetNumberOfItems(q.NumberOfItems());
-			for (Index i = 0; i < q.NumberOfItems(); i++) { localLtg[i] = i; }
-			storedMassMatrix = EXUmath::MatrixContainer();
-			EvaluateUserFunctionMassMatrix(storedMassMatrix, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t, localLtg);
-			massMatrixComputed = true;
+			inverse.SetNumberOfRowsAndColumns(n, n);
+			inverse.SetAll(0.);
+			for (const EXUmath::Triplet& item : massMatrixLocal.GetInternalSparseTripletMatrix().GetTriplets()) { inverse(item.row(), item.col()) += item.value(); }
 		}
+		if (!inverse.Invert())
+		{
+			CHECKandTHROWstring("ObjectUserBody: the mass matrix of the massMatrixUserFunction is singular, so computeMassMatrixInversePerBody=True cannot invert it", ExudynValueError);
+		}
+		return;
+	}
+	if (parameters.constantMassMatrix)
+	{
 		massMatrixC.CopyOrAddTriplets(storedMassMatrix, ltg);
 		return;
 	}
-	EvaluateUserFunctionMassMatrix(massMatrixC, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t, ltg);
+	EvaluateUserFunctionMassMatrix(massMatrixC, t, qRef, q, q_t, ltg);
 }
 
 //! the left-hand side is the negative force of the user function

@@ -6,7 +6,7 @@
 (sec-item-objectconnectoruser)=
 # ObjectConnectorUser
 
-A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; a NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
+A connector of two markers whose forces are a user function of the positions, velocities, rotations and angular velocities of the markers: it returns the forces and torques on the markers, which the connector applies through the marker Jacobians - a spring-damper, a bushing, a contact of two points -, also as symbolic user function. For forces at points of a body that the function computes itself, as a contact searching the closest point on a flexible body, a second user function reads any number of markers of any type and applies forces through them. A NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
 
 ## Interface
 
@@ -19,12 +19,13 @@ The parameters of the item; in a dictionary, its type is 'ConnectorUser':
 | name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** | ArrayMarkerIndex |  | [] | (symbol: $[m_0,\,m_1,\,\ldots]\tp$) list of markers of any type, at least one; the user function gets them in this order |
+| **markerNumbers** | ArrayMarkerIndex |  | [] | (symbol: $[m_0,\,m_1,\,\ldots]\tp$) the markers: two Position markers for the forceUserFunction; at least one of any type for the markerAccessUserFunction; the user functions get them in this order |
 | **requestedMarkerType** | MarkerType |  | MarkerType._None | the types every marker must provide, checked at Assemble, e.g. exu.MarkerType.Position, or exu.MarkerType.Position \| exu.MarkerType.Orientation for torques; exu.MarkerType._None: markers of any type (#3105) |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102) |
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector |
-| **forceUserFunction** | ObjectConnectorUserForceUserFunction |  | 0 | A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces |
+| **forceUserFunction** | ObjectConnectorUserForceUserFunction |  | 0 | A Python or symbolic user function which returns the forces (and torques) on the two markers from their states (#3119); without it and without markerAccessUserFunction, the connector applies no forces |
+| **markerAccessUserFunction** | ObjectConnectorUserMarkerAccessUserFunction |  | 0 | A Python user function which reads the markers and applies forces through them, also at points of their bodies it computes, e.g. for a contact on a flexible body; instead of forceUserFunction, not recordable (#2975) |
 | **postNewtonStepUserFunction** | ObjectConnectorUserPostNewtonStepUserFunction |  | 0 | A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102) |
 | **visualization** | VObjectConnectorUser |  |  | parameters for visualization of item |
 
@@ -35,18 +36,39 @@ The parameters of `VObjectConnectorUser`, given as `visualization`:
 | name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
+| **graphicsDataUserFunction** | ObjectConnectorUserGraphicsDataUserFunction |  | 0 | A Python function which returns a list of graphics data in global coordinates, drawn for the connector, e.g. a spring as a line (#3119); it is called in the main thread and may slow down the visualization |
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); nothing; the number with `connectors.showNumbers`, at the first marker.
+Drawn as [all connectors](#sec-drawing-objectsconnector); the graphics of the graphicsDataUserFunction, in global coordinates; the number with `connectors.showNumbers`, at the first marker.
 (description-objectconnectoruser)=
 ## Detailed description
 
-### The markers in the user function
+### The forces of the two markers
 
-`forceUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)` gets `markers`, a list with one `exudyn.ConnectorMarker`
-per entry of `markerNumbers`, in their order, for the configuration of the call (#2975). A ConnectorMarker gives what
-its marker provides:
+`forceUserFunction(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0, position1, velocity1,
+rotationMatrix1, angularVelocity1, dataCoordinates, parameters)` gets the states of the two markers of
+`markerNumbers` and returns the global forces $\fv_i$ acting on them, $[\fv_0,\, \fv_1]$; with
+`exu.MarkerType.Orientation` in `requestedMarkerType`, it gets their rotation matrices and global angular velocities
+and returns also the torques $\mv_i$, $[\fv_0,\, \mv_0,\, \fv_1,\, \mv_1]$; without, the rotation matrices are unit
+matrices and the angular velocities zero (#3119). The connector applies them through the Jacobians of the markers,
+
+$$
+\fv_{gen} = -\sum_{i=0}^{1} \left( \Jm_{pos,i}\tp \fv_i + \Jm_{rot,i}\tp \mv_i \right) ,
+$$
+
+added to the left-hand side, as loads act on the markers. The markers must provide Position, which the connector
+requests for this function. As its arguments and result are vectors and matrices of fixed sizes, the function can be
+recorded by `CreateSymbolicUserFunction`, one recording for all connectors of a kind with their own `parameters`.
+`Assemble` refuses a forceUserFunction with other than two markers, and both user functions together.
+
+### Access to the markers
+
+`markerAccessUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)` gets `markers`, a list with one
+`exudyn.ConnectorMarker` per entry of `markerNumbers`, in their order, for the configuration of the call (#2975); it
+is for forces at points of a body that the function computes itself, e.g. the closest point of a contact on a
+flexible body, which the forces of the marker states cannot express; it cannot be recorded, as the forces are
+applied by calls of the markers and not returned. A ConnectorMarker gives what its marker provides:
 
 | function | gives | marker |
 |---|---|---|
@@ -89,8 +111,35 @@ The connector couples the coordinates of all its markers; its Jacobian is comput
 function for each perturbed coordinate. The user function is called serially, in the main thread. With
 `activeConnector=False` the connector applies no forces.
 
-**Userfunction**: `forceUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)`
-A user function, which computes the forces of the connector and applies them through its markers.
+### Drawing
+
+The `graphicsDataUserFunction(mbs, itemNumber)` returns a list of graphics data in global coordinates - a spring as a
+line, a contact as two spheres -, a Python function, drawn as the graphics of ObjectGenericODE2 are.
+
+**Userfunction**: `forceUserFunction(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0, position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters)`
+A user function, which computes the forces of the connector on its two markers from their positions, velocities, rotations and angular velocities.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which the connector belongs |
+| `t` | Real | current time in mbs |
+| `itemNumber` | Index | integer number of the connector in mbs |
+| `position0` | Vector3D | $\LU{0}{\pv}_{m0}$ global position of marker 0 |
+| `velocity0` | Vector3D | $\LU{0}{\vv}_{m0}$ global velocity of marker 0 |
+| `rotationMatrix0` | Matrix3D | $\LU{0,m0}{\Rot}$ rotation matrix of marker 0, local to global; the unit matrix if requestedMarkerType has no Orientation |
+| `angularVelocity0` | Vector3D | $\LU{0}{\tomega}_{m0}$ global angular velocity of marker 0; zero if requestedMarkerType has no Orientation |
+| `position1` | Vector3D | $\LU{0}{\pv}_{m1}$ global position of marker 1 |
+| `velocity1` | Vector3D | $\LU{0}{\vv}_{m1}$ global velocity of marker 1 |
+| `rotationMatrix1` | Matrix3D | $\LU{0,m1}{\Rot}$ rotation matrix of marker 1, as for marker 0 |
+| `angularVelocity1` | Vector3D | $\LU{0}{\tomega}_{m1}$ global angular velocity of marker 1, as for marker 0 |
+| `dataCoordinates` | Vector | $\dv \in \Rcal^{n_d}$ the data coordinates of the NodeGenericData nodeNumber, as the postNewtonStepUserFunction last set them; empty without a data node |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the connector, see parameters; empty if not given |
+| **return value** | Vector | the global forces acting on the markers, $[\fv_0,\, \fv_1]$ (6 values), or with exu.MarkerType.Orientation in requestedMarkerType also the torques, $[\fv_0,\, \mv_0,\, \fv_1,\, \mv_1]$ (12 values), as list or numpy array |
+
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
+**Userfunction**: `markerAccessUserFunction(mbs, t, itemNumber, markers, dataCoordinates, parameters)`
+A user function, which reads the markers of the connector and applies forces through them, also at points of their bodies that it computes itself; it cannot be recorded as symbolic user function.
 
 | arguments / return | type or size | description |
 |---|---|---|
@@ -112,13 +161,22 @@ A user function, which updates the data coordinates of the connector after each 
 | `mbs` | MainSystem | provides MainSystem mbs to which the connector belongs |
 | `t` | Real | current time in mbs |
 | `itemNumber` | Index | integer number of the connector in mbs |
-| `markers` | ConnectorMarkerList | one exudyn.ConnectorMarker per marker of markerNumbers, as in forceUserFunction, for reading only: applying a force raises |
+| `markers` | ConnectorMarkerList | one exudyn.ConnectorMarker per marker of markerNumbers, as in markerAccessUserFunction, for reading only: applying a force raises |
 | `dataCoordinates` | Vector | $\dv^{k-1}$ the data coordinates of the previous iteration of the step |
 | `dataCoordinatesStartOfStep` | Vector | $\dv^{0}$ the data coordinates at the start of the step, to which a state is set back that may not change during the iterations |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the connector, see parameters; empty if not given |
 | **return value** | PostNewtonResult | the tuple (dataCoordinates, discontinuousError) or (dataCoordinates, discontinuousError, recommendedStepSize): $\dv^{k}$ the new data coordinates, of the size of the data node; $\varepsilon_{PN}$, an error of the switch in units of a force, 0 if nothing switched; $\Delta t_{recom}$, a step size the solver should reduce to, or a value < 0 for none |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
+**Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
+A user function, which returns the graphics of the connector in global coordinates.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which the connector belongs |
+| `itemNumber` | Index | integer number of the connector in mbs |
+| **return value** | BodyGraphicsData | a list of graphics data, e.g. of exudyn.graphics, in global coordinates |
 
 (miniexample-objectconnectoruser)=
 ## Mini example
@@ -129,11 +187,10 @@ A Python user function gets its vector and matrix arguments as read-only numpy a
 k = 100
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialCoordinates=[0.1,0,0]))
 mass = mbs.AddObject(MassPoint(nodeNumber=node, mass=2))
-def UFforce(mbs, t, itemNumber, markers, dataCoordinates, parameters):
-    (ground, point) = markers
-    force = k*(point.GetPosition() - ground.GetPosition() - np.array([1,0,0]))
-    point.ApplyForce(-force)
-    ground.ApplyForce(force)
+def UFforce(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
+            position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
+    force = k*(position1 - position0 - np.array([1,0,0]))
+    return np.hstack([force, -force]) #the forces on marker 0 and marker 1
 groundMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber=mbs.AddObject(ObjectGround())))
 mbs.AddObject(ObjectConnectorUser(markerNumbers=[groundMarker, mbs.AddMarker(MarkerNodePosition(nodeNumber=node))],
                                   forceUserFunction=UFforce))
@@ -146,4 +203,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacem
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userConnectorContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorContactTest.py) (TM), [`userConnectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`userConnectorContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorContactTest.py) (TM), [`userConnectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorTest.py) (TM)

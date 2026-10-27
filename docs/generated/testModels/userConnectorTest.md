@@ -10,14 +10,17 @@ You can view and download this file on Github: [userConnectorTest.py](https://gi
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  ObjectConnectorUser (#2975), a connector whose Python user function gets its markers as
-#           exudyn.ConnectorMarker objects. (1) A Cartesian spring-damper between two mass points, written with
-#           GetPosition, GetVelocity and ApplyForce, against CartesianSpringDamper. (2) A rigid body with a
+# Details:  ObjectConnectorUser (#2975, #3119): its forceUserFunction of the marker states, which returns the forces,
+#           and its markerAccessUserFunction, which gets the markers as exudyn.ConnectorMarker objects. (1) A Cartesian
+#           spring-damper between two mass points, as forceUserFunction and as markerAccessUserFunction with
+#           GetPosition, GetVelocity and ApplyForce, against CartesianSpringDamper; a rotational damper and a spring
+#           of a rigid body to the ground as forceUserFunction with the rotations of the markers. (2) A rigid body with a
 #           rotational damper (GetAngularVelocity, ApplyTorque) and a spring at a point of the body (GetBodyPosition,
 #           GetBodyVelocity, ApplyBodyForce), against RigidBodySpringDamper and CartesianSpringDamper. (3) A ball
 #           resting on a simply supported ANCF cable: the contact searches the closest point on each element of the
 #           cable and acts there; the static solution carries the weight and deflects the cable as a point load
-#           does. (4) What a ConnectorMarker refuses; a marker without the requestedMarkerType refused at Assemble.
+#           does. (4) What a ConnectorMarker refuses; a marker without the requestedMarkerType refused at Assemble; both user
+#           functions, a forceUserFunction of one marker or of a wrong result size refused.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-23
@@ -49,6 +52,12 @@ def UFspringDamper(mbs, t, itemNumber, markers, dataCoordinates, parameters):
     m0.ApplyForce(force)
     m1.ApplyForce(-force)
 
+#the same as forceUserFunction of the marker states, returning the forces on marker 0 and marker 1
+def UFspringDamperForces(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
+                         position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
+    force = np.array(k)*(position1 - position0 - offset) + np.array(d)*(velocity1 - velocity0)
+    return np.hstack([force, -force])
+
 def SpringModel(isUser):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
@@ -57,8 +66,10 @@ def SpringModel(isUser):
     for (node, m) in zip(nodes, [1., 2.]):
         mbs.AddObject(MassPoint(nodeNumber=node, mass=m))
     markers = [mbs.AddMarker(MarkerNodePosition(nodeNumber=node)) for node in nodes]
-    if isUser:
-        mbs.AddObject(ObjectConnectorUser(markerNumbers=markers, forceUserFunction=UFspringDamper))
+    if isUser == 'markerAccess':
+        mbs.AddObject(ObjectConnectorUser(markerNumbers=markers, markerAccessUserFunction=UFspringDamper))
+    elif isUser == 'forces':
+        mbs.AddObject(ObjectConnectorUser(markerNumbers=markers, forceUserFunction=UFspringDamperForces))
     else:
         mbs.AddObject(CartesianSpringDamper(markerNumbers=markers, stiffness=k, damping=d, offset=offset))
     mbs.AddLoad(LoadForceVector(markerNumber=markers[1], loadVector=[0, -9.81*2, 0]))
@@ -66,9 +77,17 @@ def SpringModel(isUser):
     mbs.SolveDynamic(simulationSettings)
     return np.array([mbs.GetNodeOutput(node, exu.OutputVariableType.Position) for node in nodes])
 
-springs = [SpringModel(isUser) for isUser in [False, True]]
-differenceSpring = np.max(np.abs(springs[1] - springs[0]))
+springs = [SpringModel(isUser) for isUser in [False, 'markerAccess', 'forces']]
+differenceSpring = max(np.max(np.abs(springs[1] - springs[0])), np.max(np.abs(springs[2] - springs[0])))
 exu.Print('(1) spring-damper: largest difference to CartesianSpringDamper', differenceSpring)
+
+#the rotational damper and a spring of the body origin to the ground as forceUserFunction: the angular velocities and
+#a torque of the markers, with Orientation requested
+def UFrigidForces(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
+                  position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
+    torque = -dRot*(angularVelocity1 - angularVelocity0)
+    force = -kPoint*(position1 - position0) - 0.1*(velocity1 - velocity0)
+    return np.hstack([-force, -torque, force, torque])
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #(2) a rigid body: a rotational damper and a spring at a point of the body
@@ -85,6 +104,30 @@ def UFrigid(mbs, t, itemNumber, markers, dataCoordinates, parameters):
     body.ApplyBodyForce(force, pPoint)
     ground.ApplyForce(-force)
 
+def RigidForcesModel(isUser):
+    """the rotational damper and a spring at the origin of the body, as forceUserFunction or as built-in connectors"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4, 0.2, 0.1])
+    body = mbs.CreateRigidBody(inertia=inertia, referencePosition=[0, 0, 0], initialAngularVelocity=[1, 2, 5],
+                               initialVelocity=[0.2, 0, 0], gravity=[0, -9.81, 0])
+    ground = mbs.AddObject(ObjectGround())
+    markers = [mbs.AddMarker(MarkerBodyRigid(bodyNumber=item)) for item in [ground, body]]
+    if isUser:
+        mbs.AddObject(ObjectConnectorUser(markerNumbers=markers, forceUserFunction=UFrigidForces,
+                                          requestedMarkerType=exu.MarkerType.Position | exu.MarkerType.Orientation))
+    else:
+        mbs.AddObject(RigidBodySpringDamper(markerNumbers=markers, stiffness=np.diag([kPoint]*3 + [0]*3),
+                                            damping=np.diag([0.1]*3 + [dRot]*3)))
+    mbs.Assemble()
+    mbs.SolveDynamic(simulationSettings)
+    return np.hstack([mbs.GetObjectOutputBody(body, exu.OutputVariableType.Position, localPosition=[0, 0, 0]),
+                      mbs.GetObjectOutputBody(body, exu.OutputVariableType.AngularVelocity, localPosition=[0, 0, 0])])
+
+rigidForces = [RigidForcesModel(isUser) for isUser in [False, True]]
+differenceRigidForces = np.max(np.abs(rigidForces[1] - rigidForces[0]))
+exu.Print('(2) rigid body, forceUserFunction with torques: largest difference to RigidBodySpringDamper', differenceRigidForces)
+
 def RigidModel(isUser):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
@@ -95,7 +138,7 @@ def RigidModel(isUser):
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground))
     if isUser:
         mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))
-        mbs.AddObject(ObjectConnectorUser(markerNumbers=[mGround, mBody], forceUserFunction=UFrigid,
+        mbs.AddObject(ObjectConnectorUser(markerNumbers=[mGround, mBody], markerAccessUserFunction=UFrigid,
                                           requestedMarkerType=exu.MarkerType.Position | exu.MarkerType.Orientation))
     else:
         mbs.AddObject(RigidBodySpringDamper(markerNumbers=[mGround, mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))],
@@ -196,7 +239,7 @@ def CableModel(kind):
                                              stiffness=1.))
         mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[0, -massBall*gravity, 0]))
         markers = [mBall] + [mbs.AddMarker(MarkerBodyPosition(bodyNumber=element)) for element in elements]
-        mbs.AddObject(ObjectConnectorUser(markerNumbers=markers, forceUserFunction=UFcontact))
+        mbs.AddObject(ObjectConnectorUser(markerNumbers=markers, markerAccessUserFunction=UFcontact))
     else:
         mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=elements[1], localPosition=[Le, 0, 0])),
                                     loadVector=[0, -massBall*gravity, 0]))
@@ -236,7 +279,7 @@ for when in ['during', 'after']:
     node = mbs.AddNode(NodePoint())
     mbs.AddObject(MassPoint(nodeNumber=node, mass=1))
     mbs.AddObject(ObjectConnectorUser(markerNumbers=[mbs.AddMarker(MarkerNodePosition(nodeNumber=node))],
-                                      forceUserFunction=UFrefused if when == "during" else lambda mbs, t, i, markers, d, p: kept.append(markers[0])))
+                                      markerAccessUserFunction=UFrefused if when == "during" else lambda mbs, t, i, markers, d, p: kept.append(markers[0])))
     mbs.Assemble()
     try:
         mbs.SolveDynamic(simulationSettings)
@@ -251,19 +294,42 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 node = mbs.AddNode(NodePoint())
 mbs.AddObject(MassPoint(nodeNumber=node, mass=1))
-mbs.AddObject(ObjectConnectorUser(markerNumbers=[mbs.AddMarker(MarkerNodePosition(nodeNumber=node))], forceUserFunction=UFrefused,
+mbs.AddObject(ObjectConnectorUser(markerNumbers=[mbs.AddMarker(MarkerNodePosition(nodeNumber=node))], markerAccessUserFunction=UFrefused,
                                   requestedMarkerType=exu.MarkerType.Position | exu.MarkerType.Orientation))
 try:
     mbs.Assemble()
 except Exception as e:
     refusedMessages.append(str(e))
-refused = (int(any('not of type Orientation' in m for m in refusedMessages)) + int(any('valid during that call only' in m for m in refusedMessages))
-           + int(any("invalid type 'NodePosition'" in m for m in refusedMessages)))
-exu.Print('(4) refused:', refused, 'of 3')
+#the forceUserFunction (#3119): both user functions, one marker, a result of the wrong size
+def RefusedForces(kind):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    nodes = [mbs.AddNode(NodePoint(referenceCoordinates=[i, 0, 0])) for i in range(2)]
+    for node in nodes:
+        mbs.AddObject(MassPoint(nodeNumber=node, mass=1))
+    markers = [mbs.AddMarker(MarkerNodePosition(nodeNumber=node)) for node in nodes]
+    if kind == 'both':
+        mbs.AddObject(ObjectConnectorUser(markerNumbers=markers, forceUserFunction=UFspringDamperForces, markerAccessUserFunction=UFspringDamper))
+    elif kind == 'oneMarker':
+        mbs.AddObject(ObjectConnectorUser(markerNumbers=markers[0:1], forceUserFunction=UFspringDamperForces))
+    else:
+        mbs.AddObject(ObjectConnectorUser(markerNumbers=markers, forceUserFunction=lambda mbs, t, i, *states: [0, 0, 0]))
+    try:
+        mbs.Assemble()
+        mbs.SolveDynamic(simulationSettings)
+    except Exception as e:
+        return str(e)
+    return ''
+
+refused = (int('are both given' in RefusedForces('both')) + int('needs two markers' in RefusedForces('oneMarker'))
+            + int('returned 3 values, but 6' in RefusedForces('size')))
+refused += (int(any('not of type Orientation' in m for m in refusedMessages)) + int(any('valid during that call only' in m for m in refusedMessages))
+            + int(any("invalid type 'NodePosition'" in m for m in refusedMessages)))
+exu.Print('(4) refused:', refused, 'of 6')
 
 u = np.sum(springs[1]) + np.sum(rigid[1]) + middleContact[1]
-u += int(differenceSpring > 1e-10) + int(differenceRigid > 1e-10) + int(max(errorsCable[0:2]) > 1e-8)
-u += int(errorsCable[2] > 1e-2) + int(errorsCable[3] > 1e-5) + (3 - refused)
+u += int(differenceSpring > 1e-10) + int(differenceRigid > 1e-10) + int(differenceRigidForces > 1e-10) + int(max(errorsCable[0:2]) > 1e-8)
+u += int(errorsCable[2] > 1e-2) + int(errorsCable[3] > 1e-5) + (6 - refused)
 exu.Print('solution of userConnectorTest=', u)
 
 exu.sys['testResult'] = u

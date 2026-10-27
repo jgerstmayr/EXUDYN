@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-26  19:46:49 (last modified)
+* @date         2026-10-27  07:09:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,12 +31,13 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 class CObjectConnectorUserParameters // AUTO:
 {
 public: // AUTO:
-    ArrayIndex markerNumbers;                     //!< AUTO: list of markers of any type, at least one; the user function gets them in this order
+    ArrayIndex markerNumbers;                     //!< AUTO: the markers: two Position markers for the forceUserFunction; at least one of any type for the markerAccessUserFunction; the user functions get them in this order
     Marker::Type requestedMarkerType;             //!< AUTO: the types every marker must provide, checked at Assemble, e.g. exu.MarkerType.Position, or exu.MarkerType.Position | exu.MarkerType.Orientation for torques; exu.MarkerType._None: markers of any type (#3105)
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData, whose data coordinates the user functions get, e.g. the state of a contact; optional, needed for a postNewtonStepUserFunction (#3102)
     Vector parameters;                            //!< AUTO: the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector
-    PythonUserFunctionBase< std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdMatrix3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix3D,StdVector3D,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python or symbolic user function which returns the forces (and torques) on the two markers from their states (#3119); without it and without markerAccessUserFunction, the connector applies no forces
+    PythonUserFunctionBase< std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)> > markerAccessUserFunction;//!< AUTO: A Python user function which reads the markers and applies forces through them, also at points of their bodies it computes, e.g. for a contact on a flexible body; instead of forceUserFunction, not recordable (#2975)
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)> > postNewtonStepUserFunction;//!< AUTO: A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102)
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorUserParameters()
@@ -47,6 +48,7 @@ public: // AUTO:
         parameters = Vector();
         activeConnector = true;
         forceUserFunction = 0;
+        markerAccessUserFunction = 0;
         postNewtonStepUserFunction = 0;
     };
 };
@@ -54,7 +56,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectConnectorUser
-* @brief        A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; a NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
+* @brief        A connector of two markers whose forces are a user function of the positions, velocities, rotations and angular velocities of the markers: it returns the forces and torques on the markers, which the connector applies through the marker Jacobians - a spring-damper, a bushing, a contact of two points -, also as symbolic user function. For forces at points of a body that the function computes itself, as a contact searching the closest point on a flexible body, a second user function reads any number of markers of any type and applies forces through them. A NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -90,6 +92,7 @@ public: // AUTO:
     virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const override
     {
         list.Append(&parameters.forceUserFunction);
+        list.Append(&parameters.markerAccessUserFunction);
         list.Append(&parameters.postNewtonStepUserFunction);
     }
 
@@ -166,10 +169,10 @@ public: // AUTO:
         return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
     }
 
-    //! AUTO:  the requestedMarkerType of the parameters (#3105)
+    //! AUTO:  the requestedMarkerType of the parameters (#3105), with Position for a forceUserFunction (#3119)
     virtual Marker::Type GetRequestedMarkerType() const override
     {
-        return parameters.requestedMarkerType;
+        return (Marker::Type)(parameters.requestedMarkerType | (parameters.forceUserFunction != 0 ? Marker::Position : Marker::_None));
     }
 
     //! AUTO:  Get type of object, e.g. to decide for loads, markers, ... which type of computation is needed
@@ -190,8 +193,11 @@ public: // AUTO:
         return OutputVariableType::_None;
     }
 
-    //! AUTO:  call of forceUserFunction with the ConnectorMarkers of the markers, each writing into its block of ode2Lhs (#2975); implemented in evaluateUserFunctions.cpp
+    //! AUTO:  call of forceUserFunction with the states of the two markers; the returned forces and torques by the marker Jacobians into the blocks of ode2Lhs (#3119); implemented in evaluateUserFunctions.cpp
     void EvaluateUserFunctionForce(Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes) const;
+
+    //! AUTO:  call of markerAccessUserFunction with the ConnectorMarkers of the markers, each writing into its block of ode2Lhs (#2975); implemented in evaluateUserFunctions.cpp
+    void EvaluateUserFunctionMarkerAccess(Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes) const;
 
     //! AUTO:  call of postNewtonStepUserFunction with ConnectorMarkers that only read; writes the new data coordinates and returns the error (#3102); implemented in evaluateUserFunctions.cpp
     Real EvaluateUserFunctionPostNewtonStep(const MarkerDataStructure& markerData, Vector& dataCoordinates, Real& recommendedStepSize) const;

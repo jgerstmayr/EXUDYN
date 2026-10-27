@@ -461,10 +461,10 @@ void CObjectUserBody::EvaluateRotationJacobian(Matrix& value, Real t, const Vect
 #undef USERBODY_MAINSYSTEM
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//ObjectConnectorUser (#2975): the forceUserFunction gets one ConnectorMarker per marker; they are owned by Python, so
-//that one kept after the call stays an object, and invalidated after the call, as the marker data and the forces they
-//point to belong to it
-void CObjectConnectorUser::EvaluateUserFunctionForce(Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes) const
+//ObjectConnectorUser (#2975): the markerAccessUserFunction gets one ConnectorMarker per marker; they are owned by
+//Python, so that one kept after the call stays an object, and invalidated after the call, as the marker data and the
+//forces they point to belong to it
+void CObjectConnectorUser::EvaluateUserFunctionMarkerAccess(Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes) const
 {
 	py::gil_scoped_acquire gil;
 	py::list markers;
@@ -486,9 +486,9 @@ void CObjectConnectorUser::EvaluateUserFunctionForce(Vector& ode2Lhs, const Mark
 	GetDataCoordinates(ConfigurationType::Current, data);
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EvaluateUserFunction(parameters.forceUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(), markerData.GetTime(),
+		EvaluateUserFunction(parameters.markerAccessUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(), markerData.GetTime(),
 			GetObjectNumber(), (py::object)markers, data, parameters.parameters);
-	}, "ObjectConnectorUser::forceUserFunction");
+	}, "ObjectConnectorUser::markerAccessUserFunction");
 }
 
 //! the data coordinates of the data node, empty without one (#3102)
@@ -553,6 +553,58 @@ static StdMatrix3D ToStdMatrix3D(const Matrix3D& A)
 		for (Index j = 0; j < 3; j++) { result[i][j] = A(i, j); }
 	}
 	return result;
+}
+
+//ObjectConnectorUser (#3119): the forceUserFunction gets the states of the two markers and returns the global forces
+//(and torques) on them, applied as ApplyForce and ApplyTorque do: -J^T f into the block of each marker
+void CObjectConnectorUser::EvaluateUserFunctionForce(Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes) const
+{
+	bool orientation = EXUstd::IsOfType(parameters.requestedMarkerType, Marker::Orientation);
+	StdMatrix3D rotation[2];
+	Vector3D angularVelocity[2];
+	for (Index i = 0; i < 2; i++)
+	{
+		const MarkerData& marker = markerData.GetMarkerData(i);
+		rotation[i] = ToStdMatrix3D(orientation ? marker.orientation : EXUmath::unitMatrix3D);
+		angularVelocity[i] = orientation ? marker.orientation*marker.angularVelocityLocal : Vector3D(0.);
+	}
+	StdVector data;
+	GetDataCoordinates(ConfigurationType::Current, data);
+	Vector forces;
+	const MarkerData& marker0 = markerData.GetMarkerData(0);
+	const MarkerData& marker1 = markerData.GetMarkerData(1);
+	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+	{
+		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, forces, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
+			markerData.GetTime(), GetObjectNumber(), marker0.position, marker0.velocity, rotation[0], angularVelocity[0],
+			marker1.position, marker1.velocity, rotation[1], angularVelocity[1], data, parameters.parameters);
+	}, "ObjectConnectorUser::forceUserFunction");
+	Index perMarker = orientation ? 6 : 3;
+	if (forces.NumberOfItems() != 2*perMarker)
+	{
+		PyError("ObjectConnectorUser::forceUserFunction: returned " + EXUstd::ToString(forces.NumberOfItems()) + " values, but "
+			+ EXUstd::ToString(2*perMarker) + (orientation ? " (the forces and torques of the two markers) are needed"
+			: " (the forces of the two markers) are needed; torques need exu.MarkerType.Orientation in requestedMarkerType"), PyErrorType::valueError);
+	}
+	Index blockStart = 0;
+	for (Index i = 0; i < 2; i++)
+	{
+		const MarkerData& marker = markerData.GetMarkerData(i);
+		LinkedDataVector block(ode2Lhs, blockStart, blockSizes[i]);
+		for (Index k = 0; k < (orientation ? 2 : 1); k++)
+		{
+			const ResizableMatrix& jacobian = (k == 0) ? marker.positionJacobian : marker.rotationJacobian;
+			if (jacobian.NumberOfColumns() == 0) { continue; } //ground
+			CHECKandTHROW(jacobian.NumberOfColumns() == blockSizes[i] && jacobian.NumberOfRows() == 3,
+				"ObjectConnectorUser::forceUserFunction: the Jacobian of a marker does not fit its coordinates");
+			Index offset = i*perMarker + 3*k;
+			for (Index j = 0; j < blockSizes[i]; j++)
+			{
+				block[j] -= jacobian(0, j)*forces[offset] + jacobian(1, j)*forces[offset + 1] + jacobian(2, j)*forces[offset + 2];
+			}
+		}
+		blockStart += blockSizes[i];
+	}
 }
 
 void CObjectJointUser::EvaluateUserFunctionConstraint(Vector& equations, Real t, const Vector3D& position0, const Matrix3D& rotation0,

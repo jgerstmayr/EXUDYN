@@ -119,7 +119,8 @@ $$
 $$
 
 with $\Mm$ from `massMatrixUserFunction` - called once and kept with `constantMassMatrix` (#3058) - and $\fv$ from `forceUserFunction` (zero without it). A static
-problem needs no mass matrix (#3104). The Jacobian of the left-hand side is computed numerically, as for every item
+problem needs no mass matrix (#3104); with `timeIntegration.explicit.computeMassMatrixInversePerBody`, the
+explicit solvers take the inverse of the local mass matrix (#3120). The Jacobian of the left-hand side is computed numerically, as for every item
 without an analytic one.
 
 ### Mass-proportional loads

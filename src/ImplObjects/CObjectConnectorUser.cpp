@@ -34,8 +34,9 @@ void CObjectConnectorUser::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStruc
 	}
 	ode2Lhs.SetNumberOfItems(n);
 	ode2Lhs.SetAll(0.);
-	if (!parameters.activeConnector || !parameters.forceUserFunction) { return; }
-	EvaluateUserFunctionForce(ode2Lhs, markerData, blockSizes);
+	if (!parameters.activeConnector) { return; }
+	if (parameters.forceUserFunction) { EvaluateUserFunctionForce(ode2Lhs, markerData, blockSizes); } //the forces of the marker states (#3119)
+	else if (parameters.markerAccessUserFunction) { EvaluateUserFunctionMarkerAccess(ode2Lhs, markerData, blockSizes); }
 }
 
 //! the postNewtonStepUserFunction: the new data coordinates are stored, its error and its recommended step size go to
