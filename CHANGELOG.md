@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 223 | 1.13.227 |
+| 1.13 | Newborn | 224 | 1.13.228 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.228** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The ruff cache in build/ instead of the root (#3124)
+  - description: A ruff run of the editor or by hand wrote .ruff\_cache into the repository root. cache-dir in \[tool.ruff\] puts it into build/.ruff\_cache; exudev clean removes it there, and still a .ruff\_cache in the root left by older runs.
+  - **notes:** The ruff cache is written into build/.ruff\_cache instead of the repository root (cache-dir in pyproject.toml); exudev clean removes it.
+  - date resolved: **2026-10-27 21:18**, date raised: 2026-10-27
 - **1.13.227** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The pytest cache in build/ instead of the root (#3123)
   - description: pytest wrote .pytest\_cache into the repository root on every run. cache\_dir in \[tool.pytest.ini\_options\] puts it into build/.pytest\_cache; exudev clean removes it there, and still a .pytest\_cache in the root left by older runs.
   - **notes:** The pytest cache is written into build/.pytest\_cache instead of the repository root (cache\_dir in pyproject.toml); exudev clean removes it.

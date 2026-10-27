@@ -1,0 +1,16 @@
+{
+  "number": 3124,
+  "title": "The ruff cache in build/ instead of the root",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "A ruff run of the editor or by hand wrote .ruff_cache into the repository root. cache-dir in [tool.ruff] puts it into build/.ruff_cache; exudev clean removes it there, and still a .ruff_cache in the root left by older runs.",
+  "dateRaised": "2026-10-27",
+  "deadline": "2027-04-25",
+  "dateResolved": "2026-10-27 21:18",
+  "resolvedAuthor": "Claude-JG",
+  "file": "pyproject.toml",
+  "releaseNotes": "The ruff cache is written into build/.ruff_cache instead of the repository root (cache-dir in pyproject.toml); exudev clean removes it.",
+  "resolvedInVersion": "1.13.228"
+}

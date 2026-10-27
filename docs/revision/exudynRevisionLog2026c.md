@@ -3768,3 +3768,11 @@ are they needed, and can exudev clean remove them; _build is needed for the HTML
 - pyproject.toml `[tool.pytest.ini_options]`: `cache_dir = 'build/.pytest_cache'`, relative to the root directory of
   pytest, which is the repository root by pyproject.toml. exudev clean removes `build/.pytest_cache`, and still a
   `.pytest_cache` in the root from older runs. docs/dev/BUILD.md.
+
+<a id="rg10-33-2"></a>
+### RG10.33.2 — the ruff cache in build/ (2026-10-27, #3124)
+*(Maintainer 2026-10-27: move the ruff cache into build; the solution directory of the root: see first whether it
+comes back.)*
+- pyproject.toml `[tool.ruff]`: `cache-dir = "build/.ruff_cache"`, for the editor and a ruff run by hand;
+  tools/checkPython.py runs ruff with `--no-cache`. A `ruff check` wrote build/.ruff_cache and nothing in the root.
+  exudev clean removes `build/.ruff_cache`, and still a `.ruff_cache` in the root from older runs. docs/dev/BUILD.md.

@@ -212,8 +212,8 @@ python tools/exudev clean          #the build directories and eggs of this platf
 python tools/exudev clean --vs     #also bin/ and msvc/x64/: a full rebuild in Visual Studio
 ```
 
-`clean` also removes the pytest cache `build/.pytest_cache` (#3123) and what tools leave in the
-root: `.pytest_cache` of older runs, `.ruff_cache`, `.mypy_cache`,
+`clean` also removes the caches `build/.pytest_cache` and `build/.ruff_cache` (#3123, #3124) and
+what tools leave in the root: `.pytest_cache` and `.ruff_cache` of older runs, `.mypy_cache`,
 the LaTeX build `_buildpdf` (the PDF is copied out of it) and a `solution/` written by a model run
 from the root. It keeps `_build` (the HTML documentation), `build/` itself with its flag stamp, and
 `tmp/` (#3122).

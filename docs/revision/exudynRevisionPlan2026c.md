@@ -1228,6 +1228,12 @@ pytest, ruff and mypy, `_buildpdf` and `solution/` by default, `bin/` and `msvc/
 CLOSED 2026-10-27 (#3123; maintainer: yes, the pytest cache under build/): `cache_dir = 'build/.pytest_cache'` in
 pyproject.toml, removed by exudev clean. [log](exudynRevisionLog2026c.md#rg10-33-1)
 
+#### **CLOSED_RG10.33.2** Write the ruff cache into build/
+
+CLOSED 2026-10-27 (#3124; maintainer: move the ruff cache into build; the solution directory of the root: watch whether it
+comes back): `cache-dir = "build/.ruff_cache"` in pyproject.toml, removed by exudev clean.
+[log](exudynRevisionLog2026c.md#rg10-33-2)
+
 ## **OPEN_RG11** Misc
 
 What belongs to no group, including what was left of revision2026b groups 12 to 18. Put off, by decision of
