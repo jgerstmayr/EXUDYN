@@ -1859,14 +1859,12 @@ void FlatProgram::Differentiate(const void* variable, Index n, bool scalarVariab
 		}
 		case RealPos: for (Index j = 0; j < n; j++) { out[j] = d[0][j]; } break;
 		case RealNeg: for (Index j = 0; j < n; j++) { out[j] = -d[0][j]; } break;
-		case RealPow: //as ExpressionPower::Diff; a constant exponent also for a base <= 0
+		case RealPow: //as ExpressionPower::Diff: an exponent constant in a column also for a base <= 0 (#3135)
 		{
 			Real a = v[0].real, b = v[1].real;
-			bool constantExponent = true;
-			for (Index j = 0; j < n; j++) { constantExponent &= (d[1][j] == 0.); }
 			for (Index j = 0; j < n; j++)
 			{
-				if (constantExponent) { out[j] = (d[0][j] == 0.) ? 0. : b*EM::Pow(a, b - 1)*d[0][j]; }
+				if (d[1][j] == 0.) { out[j] = (d[0][j] == 0.) ? 0. : b*EM::Pow(a, b - 1)*d[0][j]; }
 				else { out[j] = (a <= 0) ? nan : b*EM::Pow(a, b - 1)*d[0][j] + EM::Log(a)*EM::Pow(a, b)*d[1][j]; }
 			}
 			break;

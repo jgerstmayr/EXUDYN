@@ -448,13 +448,15 @@ def ExtendedSymbolicChecks():
         for (f, analytic) in cases:
             wrong += Check(abs(f.Diff(x) - analytic) < 1e-12, 'Diff value ' + str(value))
 
-        #pow is differentiated as exp(exponent*log(base)), so its derivative is NaN for base<=0 -
-        #a deliberate answer, not a failure, and nothing said so before
+        #pow with an exponent constant in x: b*a^(b-1)*da also for a base <= 0 (#3135); an exponent depending on x
+        #needs log(a), so that its derivative is NaN for a base <= 0
         f = esym.pow(x, 4)
+        wrong += Check(abs(f.Diff(x) - 4*value**3) < 1e-12, 'Diff pow value ' + str(value))
+        f = esym.pow(x, x)
         if value > 0:
-            wrong += Check(abs(f.Diff(x) - 4*value**3) < 1e-12, 'Diff pow value ' + str(value))
+            wrong += Check(abs(f.Diff(x) - value**value*(cMath.log(value) + 1)) < 1e-12, 'Diff pow x^x value ' + str(value))
         else:
-            wrong += Check(math.isnan(f.Diff(x)), 'Diff pow of a negative base is NaN')
+            wrong += Check(math.isnan(f.Diff(x)), 'Diff pow x^x of a base <= 0 is NaN')
 
         #the derivative follows the variable, just as the value does
         f = esym.sin(x*x)

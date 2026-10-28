@@ -1183,11 +1183,15 @@ public:
 	{
 		double baseVal = base->Evaluate();
 		double exponentVal = exponent->Evaluate();
+		double baseDiff = base->Diff(var);
+		double exponentDiff = exponent->Diff(var);
 
+		//an exponent constant in var needs no log, so that x**2 has a derivative also for x <= 0 (#3135)
+		if (exponentDiff == 0) { return (baseDiff == 0) ? 0. : exponentVal * EM::Pow(baseVal, exponentVal - 1) * baseDiff; }
 		if (baseVal <= 0) { return std::numeric_limits<Real>::quiet_NaN(); }
 
-		return exponentVal * EM::Pow(baseVal, exponentVal - 1) * base->Diff(var) +
-			EM::Log(baseVal) * EM::Pow(baseVal, exponentVal) * exponent->Diff(var);
+		return exponentVal * EM::Pow(baseVal, exponentVal - 1) * baseDiff +
+			EM::Log(baseVal) * EM::Pow(baseVal, exponentVal) * exponentDiff;
 	}
 
 	virtual STDstring ToString() const override { return "pow(" + base->ToString() + ", " + exponent->ToString() + ")"; }

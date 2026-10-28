@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.239.dev1
+- Exudyn version = 1.13.241.dev1
 - last change = 2026-10-28
 - Number of issues = 3136
-- Number of resolved issues = 3016 (239 in current version)
+- Number of resolved issues = 3018 (241 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `FIX` `LOW EFF` `raised by: Claude-JG` test\_guiValues: testStorePositionsStoresEveryOpenWindow presses the store button with confirm\[1\] (#3133)
-  - description: Since 9af22ac6 (\#3041-\#3043, 2026-10-19) OnStorePositions passes confirm as a list of (label, function, tooltip) entries; the test calls confirm\[1\]() and raises IndexError. It ran into it on 2026-10-28 when Tk was available to the test run; before, the runs apparently skipped it. The test should call confirm\[0\]\[1\]().
-  - date raised: 2026-10-28
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Call a symbolic recording with symbolic arguments: its expressions with the arguments substituted (#3117)
   - description: revision2026c step RG12.60 (maintainer 2026-10-26): a recording evaluated with exudyn.symbolic arguments returns a copy of its expressions in which its argument variables are replaced by the given expressions, as Optimize copies nodes; for one expression per kind of the symbolic system (the residual M q\_tt - f), for the forces of connectors composed with the marker kinematics of the bodies, and for the export of one program per kind (RG12.51.5).
   - date raised: 2026-10-26
@@ -9478,9 +9475,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` Diff of pow is NaN for a base \<= 0 also with a constant exponent, so x\*\*2 of a negative x has no derivative (#3135)
-  - description: ExpressionPower::Diff returns NaN whenever the base is \<= 0, also when the exponent does not depend on the variable, where d(a^b) = b a^(b-1) da is defined; x\*\*2 records as pow, so the tree derivative (Real.Diff, Vector.Diff, EvaluateJacobian with flatEvaluation = False) of any square of a negative value is NaN. Found 2026-10-28 by symbolicOnePassJacobianTest.py (\#3116), whose one pass treats a constant exponent apart.
-  - date raised: 2026-10-28
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
   - date raised: 2026-10-23

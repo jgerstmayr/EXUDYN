@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 235 | 1.13.239 |
+| 1.13 | Newborn | 237 | 1.13.241 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.241** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Diff of pow is NaN for a base \<= 0 also with a constant exponent, so x\*\*2 of a negative x has no derivative (#3135)
+  - description: ExpressionPower::Diff returns NaN whenever the base is \<= 0, also when the exponent does not depend on the variable, where d(a^b) = b a^(b-1) da is defined; x\*\*2 records as pow, so the tree derivative (Real.Diff, Vector.Diff, EvaluateJacobian with flatEvaluation = False) of any square of a negative value is NaN. Found 2026-10-28 by symbolicOnePassJacobianTest.py (\#3116), whose one pass treats a constant exponent apart.
+  - **notes:** exudyn.symbolic: Diff of pow with an exponent that does not depend on the variable is b\*a^(b-1)\*da also for a base \<= 0, so that x\*\*2 of a negative x has a derivative; NaN for a base \<= 0 only where the exponent depends on the variable. The same per column in the one-pass Jacobian.
+  - date resolved: **2026-10-28 13:32**, date raised: 2026-10-28
+- **1.13.240** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` test\_guiValues: testStorePositionsStoresEveryOpenWindow presses the store button with confirm\[1\] (#3133)
+  - description: Since 9af22ac6 (\#3041-\#3043, 2026-10-19) OnStorePositions passes confirm as a list of (label, function, tooltip) entries; the test calls confirm\[1\]() and raises IndexError. It ran into it on 2026-10-28 when Tk was available to the test run; before, the runs apparently skipped it. The test should call confirm\[0\]\[1\]().
+  - **notes:** test\_guiValues.py: the store positions test presses the store button of the list of confirm entries, which ShowCodeLines takes since \#3041; it raised IndexError once Tk was available to the run.
+  - date resolved: **2026-10-28 13:32**, date raised: 2026-10-28
 - **1.13.239** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The forward derivative of a flat program by all its variables in one pass, with a local memory of the program (#3116)
   - description: revision2026c step RG12.59 (maintainer 2026-10-26): per slot of the flat program its value and the derivatives by n variables, in one pass in the order of the program, for the Jacobians of the symbolic user functions in C++ (the position and rotation Jacobians of NodeUser, ObjectUserBody, MarkerBodyUser, the connector and joint Jacobians, RG7.17). The memory of the derivatives (slots x n) is one block of the program, sized at the first evaluation and kept, one per thread in the parallel evaluation; a fixed size by a setting only if a bound must be known in advance. Design docs/dev/design/symbolicSystem.md.
   - **notes:** UserFunction.EvaluateJacobian differentiates a recording by all components of an argument in one pass over its flat program, in a memory block of the program kept between calls, each operation by its own rule (a rigid body force by its 6 coordinates in 6 us instead of 454 us); SymbolicSystem.ResidualJacobian uses it on the composed system, SolveGeneralizedAlpha 35 times faster

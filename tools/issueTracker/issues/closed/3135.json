@@ -2,11 +2,15 @@
   "number": 3135,
   "title": "Diff of pow is NaN for a base <= 0 also with a constant exponent, so x**2 of a negative x has no derivative",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "ExpressionPower::Diff returns NaN whenever the base is <= 0, also when the exponent does not depend on the variable, where d(a^b) = b a^(b-1) da is defined; x**2 records as pow, so the tree derivative (Real.Diff, Vector.Diff, EvaluateJacobian with flatEvaluation = False) of any square of a negative value is NaN. Found 2026-10-28 by symbolicOnePassJacobianTest.py (#3116), whose one pass treats a constant exponent apart.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
-  "file": "src/Linalg/Symbolic.h"
+  "dateResolved": "2026-10-28 13:32",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/Symbolic.h",
+  "releaseNotes": "exudyn.symbolic: Diff of pow with an exponent that does not depend on the variable is b*a^(b-1)*da also for a base <= 0, so that x**2 of a negative x has a derivative; NaN for a base <= 0 only where the exponent depends on the variable. The same per column in the one-pass Jacobian.",
+  "resolvedInVersion": "1.13.241"
 }

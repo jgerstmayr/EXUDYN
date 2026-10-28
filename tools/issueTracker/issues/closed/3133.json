@@ -2,12 +2,16 @@
   "number": 3133,
   "title": "test_guiValues: testStorePositionsStoresEveryOpenWindow presses the store button with confirm[1]",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "FIX",
   "effort": "LOW",
   "description": "Since 9af22ac6 (#3041-#3043, 2026-10-19) OnStorePositions passes confirm as a list of (label, function, tooltip) entries; the test calls confirm[1]() and raises IndexError. It ran into it on 2026-10-28 when Tk was available to the test run; before, the runs apparently skipped it. The test should call confirm[0][1]().",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
+  "dateResolved": "2026-10-28 13:32",
+  "resolvedAuthor": "Claude-JG",
   "file": "python/testing/test_guiValues.py",
-  "line": "835"
+  "line": "835",
+  "releaseNotes": "test_guiValues.py: the store positions test presses the store button of the list of confirm entries, which ShowCodeLines takes since #3041; it raised IndexError once Tk was available to the run.",
+  "resolvedInVersion": "1.13.240"
 }

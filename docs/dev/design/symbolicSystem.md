@@ -382,8 +382,8 @@ jacobianUserFunction (RG7.17). After S1, which is its check.
 **As implemented**: `FlatProgram::Differentiate(variable, n, scalarVariable)` after `Evaluate()`: the derivatives of every
 slot, component after component with n columns, in one block of the program (`derivatives`, offsets per slot from the
 sizes of this evaluation), which grows once and is kept; each operation by a rule found once per program from its
-`FlatName()` and the kinds of its operands - the arithmetic, the functions sin to atanh, pow (a constant exponent also
-for a base <= 0, which the tree's Diff gives as NaN, #3135), atan2, IfThenElse by its condition, the comparisons and
+`FlatName()` and the kinds of its operands - the arithmetic, the functions sin to atanh, pow (an exponent constant in a
+column without the log term, so also for a base <= 0, as the tree's Diff, #3135), atan2, IfThenElse by its condition, the comparisons and
 other piecewise constant functions as zero, the dot product, the norm, the components, the vector and matrix
 operations; a node without rule (abs, min, max, mod, an item output) by its Diff or DiffRef per component, as before.
 `UserFunction.EvaluateJacobian` uses it with the flat evaluation, the tree with `flatEvaluation = False`. Measured on

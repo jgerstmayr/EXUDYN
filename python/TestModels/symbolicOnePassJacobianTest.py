@@ -6,9 +6,10 @@
 #           massMatrixUserFunction of an ObjectUserBody use every operation with a rule - +, -, *, /, the functions
 #           sin to atanh, pow with a constant and with a variable exponent, atan2, the dot product, the norm,
 #           vector and matrix sums, scalar products, A v, v A, multiply, A B, A^T, the components of vectors and
-#           matrices, IfThenElse - and abs, which has none and is differentiated as before. The Jacobians by the vector arguments against those of the tree (flatEvaluation = False) and
-#           against central differences; the times of both are printed, not judged. The tree gives NaN for pow of a
-#           negative base also with a constant exponent (#3135); the one pass gives the derivative.
+#           matrices, IfThenElse - and abs, which has none and is differentiated as before. The Jacobians by the
+#           vector arguments against those of the tree (flatEvaluation = False) and against central differences;
+#           the times of both are printed, not judged. A third recording has pow of a negative base with a constant
+#           exponent, which both differentiate (#3135).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-28
@@ -38,7 +39,7 @@ def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return [u[0] + functions, u[1]*x[4] + other, u[2] - parameters[0]*q_t[1]*q_t[2], (A @ A)[1, 2] + A[2, 0]*x[3], s, w[1]]
 
 def UFnegativeBase(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
-    #pow of a negative base with a constant exponent: the tree gives NaN (#3135), the one pass the derivative
+    #pow of a negative base with a constant exponent: a derivative without the log of the base (#3135)
     x = qTotal
     return [esym.pow(x[2] - 3.0, 3)*x[0], esym.pow(x[1] - 2.0, 2) + q_t[0]*x[3], x[4], 0, 0, 0]
 
@@ -60,7 +61,7 @@ recordings = {'force': CreateSymbolicUserFunction(mbs, UFforce, 'forceUserFuncti
 
 rng = np.random.default_rng(3)
 (differenceTree, differenceFD) = (0., 0.)
-(notFinite, treeNaN) = (0, 0)
+notFinite = 0
 times = {'one pass': 0., 'tree': 0.}
 for state in range(4):
     qTotal = 0.4*rng.standard_normal(5)
@@ -75,15 +76,9 @@ for state in range(4):
                 jacobians[mode] = np.array(recording.EvaluateJacobian(argument, mbs, *arguments))
                 times[mode] += time.perf_counter() - start
             recording.flatEvaluation = True
-            finite = np.isfinite(jacobians['tree']) #the tree gives NaN for pow of a negative base (#3135)
-            notFinite += int(not np.all(np.isfinite(jacobians['one pass'])))
-            if name == 'negativeBase':
-                treeNaN += int(np.sum(~finite))
-            else:
-                notFinite += int(np.sum(~finite))
+            notFinite += int(not np.all(np.isfinite(jacobians['one pass']))) + int(not np.all(np.isfinite(jacobians['tree'])))
             scale = max(1., np.max(np.abs(jacobians['one pass'])))
-            if np.any(finite):
-                differenceTree = max(differenceTree, np.max(np.abs(jacobians['one pass'][finite] - jacobians['tree'][finite]))/scale)
+            differenceTree = max(differenceTree, np.max(np.abs(jacobians['one pass'] - jacobians['tree']))/scale)
             columns = []
             for j in range(5): #central differences of the result by component j of the argument
                 values = []
@@ -94,10 +89,10 @@ for state in range(4):
                 columns.append((values[0] - values[1])/2e-6)
             differenceFD = max(differenceFD, np.max(np.abs(np.stack(columns, axis=-1) - jacobians['one pass']))/scale)
 exu.Print('one pass against the tree:', differenceTree, ', against central differences:', differenceFD,
-          ', Jacobians with NaN:', notFinite, ', NaN of the tree (pow of a negative base):', treeNaN)
+          ', Jacobians with NaN:', notFinite)
 exu.Print('time of 24 Jacobians: one pass', round(times['one pass']*1e3, 3), 'ms, tree', round(times['tree']*1e3, 3), 'ms')
 
-u = 1 + int(not differenceTree <= 1e-13) + int(not differenceFD <= 1e-7) + notFinite + int(treeNaN == 0)
+u = 1 + int(not differenceTree <= 1e-13) + int(not differenceFD <= 1e-7) + notFinite
 exu.Print('solution of symbolicOnePassJacobianTest=', u)
 
 exu.sys['testResult'] = u

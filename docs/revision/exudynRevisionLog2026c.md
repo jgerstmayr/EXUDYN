@@ -4082,3 +4082,23 @@ currently not capable of - they also need to be extended)".)*
   made the tree NaN everywhere - the test compares only finite entries and counts the NaN now.
 - #3135 raised for the tree's pow, plan step RG12.54.3.
 - docs/dev/design/symbolicSystem.md §11 S2, docs/manual/revisions.md.
+
+<a id="rg11-8-27"></a>
+### RG11.8.27 — the test of store positions presses the store button (2026-10-28, #3133)
+*(Maintainer 2026-10-28: "Fix #3135 and #3133; => do them first.")*
+- python/testing/test_guiValues.py `testStorePositionsStoresEveryOpenWindow`: `confirm[0][1]()` - ShowCodeLines takes
+  confirm as a list of (text, function, tooltip) since #3041; the test indexed the old single tuple and raised
+  IndexError once Tk was available to the run. Passes with Tk.
+
+<a id="rg12-54-3"></a>
+### RG12.54.3 — Diff of pow for a base <= 0 with a constant exponent (2026-10-28, #3135)
+*(Maintainer 2026-10-28: "Fix #3135 and #3133; => do them first.")*
+- src/Linalg/Symbolic.h `ExpressionPower::Diff`: the derivatives of base and exponent first; where the exponent's is
+  zero, b a^(b-1) da without the log term, also for a <= 0 (x**2 of a negative x); NaN for a <= 0 only where the
+  exponent depends on the variable, as before.
+- src/Linalg/Symbolic.cpp `FlatProgram::Differentiate`, RealPow: the same per column - before, a constant exponent was
+  decided over all columns, so that an exponent depending on one column gave NaN in every column for a <= 0.
+- python/TestModels/symbolicOnePassJacobianTest.py: the recording with pow of a negative base is compared against the
+  tree like the others; no NaN in either.
+- python/TestModels/symbolicModuleTest.py checked NaN for Diff of pow(x, 4) at x <= 0, the old answer: now 4 x^3 at every
+  x, and pow(x, x) - an exponent depending on x - NaN for x <= 0 and x^x (log x + 1) else; the result is unchanged.

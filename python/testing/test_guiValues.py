@@ -832,7 +832,7 @@ def testStorePositionsStoresEveryOpenWindow(tkRoot, tmp_path, monkeypatch):
 
     def Capture(title, lines, description, confirm=None):
         shown['lines'] = [line for (_, line) in lines]
-        confirm[1]()                                   #press "store"
+        confirm[0][1]()                                #press "store": confirm is a list of (text, function, tooltip)
     monkeypatch.setattr(dialog, 'ShowCodeLines', Capture)
     dialog.OnStorePositions()
 
