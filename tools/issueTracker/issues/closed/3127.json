@@ -1,0 +1,16 @@
+{
+  "number": 3127,
+  "title": "pytest writes solution/coordinatesSolution.txt into the repository root",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "test_connectorInterface, test_accessFunctionsAD, test_specialBeams and test_graphicsData initialize or run a solver with the default solution file settings, so a pytest run from the root writes solution/coordinatesSolution.txt there. conftest.py sets EXUDYN_OUTPUTDIRECTORY to a directory per worker under build/pytestOutput, unless it is set already, as the runners do for their models; exudev clean removes it.",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26",
+  "dateResolved": "2026-10-28 07:17",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/conftest.py",
+  "releaseNotes": "pytest writes the output of the models it runs into build/pytestOutput/<worker> instead of the directory it was started from: python/testing/conftest.py sets EXUDYN_OUTPUTDIRECTORY unless it is set; a fixture noOutputDirectory for the tests of absolute file names and of the config defaults; exudev clean removes the directory",
+  "resolvedInVersion": "1.13.232"
+}

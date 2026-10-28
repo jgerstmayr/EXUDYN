@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 227 | 1.13.231 |
+| 1.13 | Newborn | 228 | 1.13.232 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.232** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pytest writes solution/coordinatesSolution.txt into the repository root (#3127)
+  - description: test\_connectorInterface, test\_accessFunctionsAD, test\_specialBeams and test\_graphicsData initialize or run a solver with the default solution file settings, so a pytest run from the root writes solution/coordinatesSolution.txt there. conftest.py sets EXUDYN\_OUTPUTDIRECTORY to a directory per worker under build/pytestOutput, unless it is set already, as the runners do for their models; exudev clean removes it.
+  - **notes:** pytest writes the output of the models it runs into build/pytestOutput/\<worker\> instead of the directory it was started from: python/testing/conftest.py sets EXUDYN\_OUTPUTDIRECTORY unless it is set; a fixture noOutputDirectory for the tests of absolute file names and of the config defaults; exudev clean removes the directory
+  - date resolved: **2026-10-28 07:17**, date raised: 2026-10-28
 - **1.13.231** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolveGeneralizedAlpha: the generalized-alpha solver in Python on SymbolicSystemBase (#3126)
   - description: revision2026c step RG12.51.3 (maintainer 2026-10-26: a generalized-alpha solver in Python with the settings of SimulationSettings, checked against the internal solver): exudyn.misc.symbolicSystem.SolveGeneralizedAlpha, the algorithm of MainSolverImplicitSecondOrder (Arnold and Bruls) with Newton's method on ResidualJacobian, the settings of timeIntegration, the output through mbs.
   - **notes:** exudyn.misc.symbolicSystem.SolveGeneralizedAlpha(system, simulationSettings): the generalized-alpha and Newmark methods of MainSolverImplicitSecondOrder in Python, with constant step size, Newton's method on the exact Jacobian of the residual, the settings of timeIntegration and the output through mbs. symbolicGeneralizedAlphaTest.py: equal to SolveDynamic to 1e-10.

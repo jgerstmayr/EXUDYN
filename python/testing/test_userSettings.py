@@ -319,7 +319,7 @@ def test_setDictionaryWritesWhatCanBeWrittenAndIgnoresTheRest():
         exu.config.outputPrecision = previous
 
 
-def test_storeWritesTheConfigSettingsThatDifferAndNoOthers(settingsFile):
+def test_storeWritesTheConfigSettingsThatDifferAndNoOthers(settingsFile, noOutputDirectory):
     """it used to store every value that was not '', 0 or False - a guess, without the defaults
 
     printToConsole is True by default, so the old rule stored it from every run that never touched
@@ -334,7 +334,7 @@ def test_storeWritesTheConfigSettingsThatDifferAndNoOthers(settingsFile):
         exu.config.outputPrecision = previous
 
 
-def test_aConfigSettingThatWasNeverTouchedIsNotStored(settingsFile):
+def test_aConfigSettingThatWasNeverTouchedIsNotStored(settingsFile, noOutputDirectory):
     settingsFile({})
     assert settings.Store(config=exu.config)['config'] == {}
 

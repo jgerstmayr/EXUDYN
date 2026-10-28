@@ -1398,6 +1398,7 @@ def Clean(options):
                 '.eggs', 'exudyn.egg-info', 'python/exudyn.egg-info',
                 '.pytest_cache', '.ruff_cache', '.mypy_cache',    #written again by the next run
                 'build/.pytest_cache', 'build/.ruff_cache',  #pyproject.toml (#3123, #3124); the root ones are older
+                'build/pytestOutput',   #the output of the models pytest runs, python/testing/conftest.py (#3127)
                 pdfBuildDirectory,      #"exudev docs --pdf" copies the PDF out of it
                 'solution']             #a model run from the root writes coordinatesSolution there
     filePatterns = ['dist/*.egg']

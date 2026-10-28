@@ -3850,3 +3850,19 @@ UserItemCreator(mbs), a small set first.)*
   q 1.1e-15 to 1.1e-11, q_t to 1.2e-11, q_tt to 1.1e-10 relative, the sensor 1.0e-12; 2 Newton iterations per step,
   modified Newton 1 Jacobian per step. Result 1.
 - docs/dev/design/symbolicSystem.md §6 and §7, docs/manual/revisions.md.
+
+<a id="rg10-33-3"></a>
+### RG10.33.3 — the output of the models pytest runs in build/pytestOutput (2026-10-28, #3127)
+*(Maintainer 2026-10-28: solution/: raise an issue and fix now.)*
+- `solution/coordinatesSolution.txt` came back in the root during `pytest -n 8 python/testing`. Each test file run
+  alone from the root: test_connectorInterface, test_accessFunctionsAD, test_specialBeams and test_graphicsData write
+  it - a solver initialized or run with the default `solution.file.write`.
+- python/testing/conftest.py `pytest_configure`: EXUDYN_OUTPUTDIRECTORY = `build/pytestOutput/<worker id>` (`main`
+  without pytest-xdist) unless it is set already; the controller of `-n` sets nothing, because its workers inherit
+  its environment and would all write into one directory. It runs before the test modules import exudyn.
+- An output directory refuses an absolute file name, and changes the config defaults: a fixture `noOutputDirectory`
+  (exudyn.config.outputDirectory empty for one test) in the 7 tests that needed it - test_exceptions (3, the solver
+  file in tmp_path), test_graphicsData (2, PlotImage into tmp_path), test_userSettings (2, the stored config
+  settings).
+- exudev clean removes `build/pytestOutput`; docs/dev/BUILD.md, tools/exudev/README.md.
+- `pytest -n 8 python/testing`: 1427 passed, no `solution/` in the root, the files in build/pytestOutput/gw*.

@@ -1234,6 +1234,12 @@ CLOSED 2026-10-27 (#3124; maintainer: move the ruff cache into build; the soluti
 comes back): `cache-dir = "build/.ruff_cache"` in pyproject.toml, removed by exudev clean.
 [log](exudynRevisionLog2026c.md#rg10-33-2)
 
+#### **CLOSED_RG10.33.3** Keep the output of the models pytest runs out of the root
+
+CLOSED 2026-10-28 (#3127; maintainer: solution/: raise an issue and fix now): python/testing/conftest.py sets
+EXUDYN_OUTPUTDIRECTORY to `build/pytestOutput/<worker>` unless it is set; a fixture `noOutputDirectory` for the tests
+of absolute file names and of the defaults; removed by exudev clean. [log](exudynRevisionLog2026c.md#rg10-33-3)
+
 ## **OPEN_RG11** Misc
 
 What belongs to no group, including what was left of revision2026b groups 12 to 18. Put off, by decision of

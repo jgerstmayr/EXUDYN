@@ -135,7 +135,7 @@ def testTheTextExportIsGone():
     assert not hasattr(plot, 'LoadImage')
 
 
-def testPlotImageDrawsTheGraphicsData(tmp_path):
+def testPlotImageDrawsTheGraphicsData(tmp_path, noOutputDirectory):
     import matplotlib
     matplotlib.use('Agg')
     from exudyn.plot import PlotImage
@@ -146,7 +146,7 @@ def testPlotImageDrawsTheGraphicsData(tmp_path):
     assert os.path.getsize(fileName) > 0
 
 
-def testPlotImageDrawsIn3D(tmp_path):
+def testPlotImageDrawsIn3D(tmp_path, noOutputDirectory):
     """the 3D mode is the one that draws triangles; it failed with every matplotlib since 3.6 (#2701)"""
     import matplotlib
     matplotlib.use('Agg')

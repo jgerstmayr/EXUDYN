@@ -262,7 +262,7 @@ def _SolveAndReadTheSolverFile(tmp_path, buildSystem):
         return (caught, solverFile.read())
 
 
-def test_aMacroErrorReachesTheSolverFile(tmp_path):
+def test_aMacroErrorReachesTheSolverFile(tmp_path, noOutputDirectory):
     """THE point of #2538. PyError and SysError could write to the solver file themselves;
     CHECKandTHROW could not, and it is 1100+ call sites - so the message that ended a run could
     be missing from exactly the file someone opens to find out why. The one writer is now
@@ -302,7 +302,7 @@ def test_aMacroErrorReachesTheSolverFile(tmp_path):
     assert "=====" in fileText                        #as the same block every other channel gets
 
 
-def test_aSolverFailureReachesTheSolverFile(tmp_path):
+def test_aSolverFailureReachesTheSolverFile(tmp_path, noOutputDirectory):
     """the other half: a SysError used to write the file through an ofstream overload that step
     #2538 removed, so this path now depends on the same single writer"""
     from exudyn.itemInterface import (NodePoint, ObjectMassPoint, MarkerNodeCoordinate,
@@ -331,7 +331,7 @@ def test_aSolverFailureReachesTheSolverFile(tmp_path):
 
 
 @pytest.mark.parametrize('adaptiveStep', [False, True])
-def test_aSingularJacobianIsAFailedStepWithAdaptiveSteps(tmp_path, adaptiveStep):
+def test_aSingularJacobianIsAFailedStepWithAdaptiveSteps(tmp_path, adaptiveStep, noOutputDirectory):
     """#1337: with adaptive steps a singular Jacobian fails the step, which is reduced; a singularity of the system
     stays and ends at the minimum step size, with the message in the solver file and the causing row; without
     adaptive steps it raises at once; in both cases the exception says why (#1977)"""
