@@ -4012,3 +4012,38 @@ massInversePerBody-option is the most important for further tests, I believe; th
 - symbolicSystemEquationsTest.py: mass matrix, forces and the mass matrices of the bodies, 7.5e-15; the two examples
   print M and f instead of the residual.
 - docs/dev/design/symbolicSystem.md §11, docs/manual/revisions.md.
+
+<a id="rg12-51-13"></a>
+### RG12.51.13 — ODE1 and algebraic coordinates in the interface and the solvers of the symbolic system (2026-10-28, #3134)
+*(Maintainer 2026-10-28: "There is only the ODE2 in the symbolicSystem so far, but we also have to include the ODE1 and
+AE case, such there is no gap in the future; adapt the symbolic system & solver and check the function interfaces;
+There will be a final object that may carry a coupling of all kinds of coordinates (which the internal solvers are
+currently not capable of - they also need to be extended)".)*
+- exudyn/misc/symbolicSystem.py `SymbolicSystemBase`: nODE1, nAE (zero by default), InitialStateODE1, Forces(q, q_t, t,
+  y), ODE1RightHandSide(q, q_t, y, t), AlgebraicEquations(q, q_t, y, lam, t, velocityLevel), ReactionForces(q, q_t, y,
+  lam, t); Residual(..., y) and ResidualJacobian(..., y); SystemResidual = [M q_tt - f + C_q^T lambda, g - y_t, c] as
+  ComputeNewtonResidual of CSolverImplicitSecondOrder; SystemJacobian by columns of the Newton unknowns, the ODE2 block
+  by ResidualJacobian and the reaction forces, the ODE1 and algebraic rows and columns by central differences. Every
+  equation may depend on every kind of coordinate. SymbolicSystem: y accepted and not used.
+- `NumpySystem(..., ode1RightHandSide, initialStateODE1, constraints, constraintJacobian, numberOfConstraints)`;
+  forces(q, q_t, t, y) with ODE1 coordinates.
+- `SolveExplicit`: the ODE1 coordinates in the Runge-Kutta stages (CSolverExplicit), y_t zero at the start and g at the
+  end of each step; algebraic equations refused, velocity Verlet with ODE1 refused.
+- `SolveGeneralizedAlpha` read from CSolverImplicitSecondOrder.cpp: the ODE1 coordinates by the trapezoidal rule as
+  ComputeNewtonUpdate does it (y += h/2 y_t, y_t = 0, then y -= Delta, y_t -= 2/h Delta), the Jacobian columns of the
+  ODE1 unknowns d/dy + 2/h d/dy_t; the multipliers kept from the step before; the scaling of useScaling (ODE2 rows times
+  beta h^2, algebraic columns divided, lambda -= Delta/(beta h^2)), the convergence on the unscaled residual of all
+  equations divided by sqrt(nSys); the initial accelerations of FactorizeInitialSystemJacobian, [M C_q^T; C_q 0] with
+  a unit matrix for ODE1 and -(C_q q_t)_q q_t, C_q by central differences, the multipliers with
+  storeInitialAlgebraicCoordinates. Without ODE1 and algebraic coordinates the sparse path of #3126 is unchanged.
+  `_InitialAccelerations`.
+- python/TestModels/symbolicSystemODE1AETest.py: three masses with K and D, one ODE1 coordinate y_t = -a y + b q0 +
+  sin(5 t) acting on mass 0 by -c y, a constraint q2 - q1 = 0; in Exudyn ObjectGenericODE2 and ObjectGenericODE1 with
+  Python user functions that read each other's node, ObjectConnectorCoordinate. SolveGeneralizedAlpha against
+  SolveDynamic with and without the constraint, rho = 0.6, the trapezoidal rule, Newmark, without initial accelerations:
+  1.1e-10 to 1.9e-10 relative (relativeTolerance 1e-10); SolveExplicit RK44 and explicit Euler without the constraint
+  5.9e-15 and 6.5e-15; the constraint refused by SolveExplicit. Result 1.
+- Exudyn's ODE1 velocities start at zero in both solvers, so that the first trapezoidal step uses y_t0 = 0, not g at
+  the start; the symbolic solvers do the same, to compare.
+- SymbolicSystem still refuses items with ODE1 and algebraic coordinates (joints RG12.51.4, ODE1 items later).
+- docs/dev/design/symbolicSystem.md §6, docs/manual/revisions.md.

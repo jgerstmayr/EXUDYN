@@ -181,6 +181,37 @@ system; the functions that need a solver - `ComputeLinearizedSystem`, `ComputeOD
 (docs/dev/internals/systemUtilities.md §1). The solver works on a `SymbolicSystemBase`, not on `mbs`, so the model and
 its solver are together in `exudyn/misc/symbolicSystem.py` (decision 3).
 
+### ODE1 and algebraic coordinates (#3134)
+
+The interface has the three kinds of coordinates of Exudyn, so that the system and its solvers have no gap when items
+with ODE1 coordinates and constraints come, and an item may couple all kinds:
+
+$$
+\Mm(\qv, t)\,\ddot\qv = \fv(\qv, \dot\qv, t, \yv) - \Cm_{\qv}\tp\tlambda, \qquad
+\dot\yv = \gv(\qv, \dot\qv, \yv, t), \qquad \cv(\qv, \dot\qv, \yv, \tlambda, t) = \Null .
+$$
+
+`SymbolicSystemBase`: `nODE1`, `nAE`, `InitialStateODE1()`, `Forces(q, q_t, t, y)`, `ODE1RightHandSide(q, q_t, y,
+t)`, `AlgebraicEquations(q, q_t, y, lam, t, velocityLevel)`, `ReactionForces(q, q_t, y, lam, t)` ($\Cm_{\qv}\tp
+\tlambda$); `SystemResidual` is the residual of Exudyn's implicit solver, $[\Mm\ddot\qv - \fv + \Cm_{\qv}\tp\tlambda,\;
+\gv - \dot\yv,\; \cv]$, and `SystemJacobian` its Jacobian by columns of the Newton unknowns - the ODE2 block by
+`ResidualJacobian` (exact for a SymbolicSystem), the rest by central differences. The solvers as
+CSolverExplicit and CSolverImplicitSecondOrder:
+
+- `SolveExplicit`: the ODE1 coordinates in the stages of explicit Euler and RK44, their velocities zero at the start;
+  algebraic equations refused (Exudyn's explicit solver eliminates only constraints of coordinates on the ground),
+  velocity Verlet refuses ODE1 coordinates.
+- `SolveGeneralizedAlpha`: the ODE1 coordinates by the trapezoidal rule ($\yv \mathrel{+}= \frac{h}{2}\dot\yv$ in the
+  predictor, $\dot\yv = 0$, the update $\yv \mathrel{-}= \Delta$, $\dot\yv \mathrel{-}= \frac{2}{h}\Delta$), their
+  velocities zero at the start as in Exudyn; index-3 constraints with the scaling of Exudyn (ODE2 rows times $\beta
+  h^2$, algebraic columns divided by it, $\tlambda \mathrel{-}= \Delta/(\beta h^2)$); the initial accelerations of
+  $[\Mm\;\Cm_{\qv}\tp; \Cm_{\qv}\;\Null]$ with $-(\Cm_{\qv}\dot\qv)_{\qv}\dot\qv$, the multipliers kept with
+  `storeInitialAlgebraicCoordinates`; the convergence over all equations. Without ODE1 and algebraic coordinates the
+  path of #3126 is unchanged (sparse). `useIndex2Constraints` is refused.
+- `NumpySystem` takes `ode1RightHandSide`, `initialStateODE1`, `constraints`, `constraintJacobian`.
+- `SymbolicSystem` still refuses items with ODE1 or algebraic coordinates; they come with the joints (RG12.51.4) and the
+  ODE1 items. The coupling of all kinds in one item also needs Exudyn's internal solvers extended.
+
 ## 7. Sub-steps of RG12.51 (as planned after the decisions)
 
 - RG12.51.2 (done, #3110): `SymbolicSystem(mbs)` for ObjectGenericODE2 and ObjectUserBody: kinds, LTG tables, mass

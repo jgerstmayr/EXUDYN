@@ -2,8 +2,9 @@
 # This is an EXUDYN python utility library
 #
 # Details:  The equations of motion of a system as symbolic programs (#3110, #3113, design:
-#           docs/dev/design/symbolicSystem.md): SymbolicSystemBase is the interface of the ODE2 equations
-#           M(q, t) q_tt = f(q, q_t, t) on which the solvers work. SymbolicSystem(mbs) extracts them, after
+#           docs/dev/design/symbolicSystem.md): SymbolicSystemBase is the interface of the equations on which the
+#           solvers work, in Exudyn's form M(q, t) q_tt = f(q, q_t, t, y) - C_q^T lambda, y_t = g(q, q_t, y, t),
+#           c(q, q_t, y, lambda, t) = 0 with ODE2, ODE1 and algebraic coordinates (#3134). SymbolicSystem(mbs) extracts them, after
 #           mbs.Assemble(), from the objects with symbolic user functions, collected in kinds - the objects whose user
 #           functions are the same recordings -, each with the table of its objects, their parameters and the global
 #           indices of their ODE2 coordinates (the local-to-global maps of systemData). It evaluates the residual
@@ -67,26 +68,59 @@ _markerFunctions = {False: ['positionUserFunction', 'positionJacobianUserFunctio
 
 
 class SymbolicSystemBase:
-    """the ODE2 equations of motion M(q, t) q_tt = f(q, q_t, t) of nODE2 coordinates, the interface on which the solvers
-    work (#3113): a derived class sets nODE2 and computes Forces and MassMatrixTriplets (or MassMatrix); the residual and
-    its Jacobian follow from them, unless the derived class computes them itself
+    """the equations of a system, the interface on which the solvers work (#3113, #3134), in Exudyn's form: nODE2
+    second order coordinates q, nODE1 first order coordinates y and nAE algebraic coordinates lambda with
+
+        M(q, t) q_tt = f(q, q_t, t, y) - C_q^T lambda      (ODE2, the reaction forces C_q^T lambda by ReactionForces)
+        y_t = g(q, q_t, y, t)                               (ODE1, ODE1RightHandSide)
+        c(q, q_t, y, lambda, t) = 0                         (AE, AlgebraicEquations)
+
+    A derived class sets nODE2 (nODE1 and nAE, zero by default) and computes Forces and MassMatrixTriplets (or
+    MassMatrix), and ODE1RightHandSide, AlgebraicEquations and ReactionForces if it has such coordinates; the residuals
+    and their Jacobians follow from them, unless the derived class computes them itself. Any equation may depend on
+    the coordinates of every kind, so that an item coupling all of them fits
 
     Note:
-        Its member: nODE2, the number of ODE2 coordinates
+        Its members: nODE2, nODE1, nAE, the numbers of coordinates
     """
     nODE2 = 0
+    nODE1 = 0
+    nAE = 0
 
     def InitialState(self):
         """the initial coordinates and velocities (q0, q_t0); zero unless the derived class gives them"""
         return np.zeros(self.nODE2), np.zeros(self.nODE2)
 
+    def InitialStateODE1(self):
+        """the initial ODE1 coordinates y0; zero unless the derived class gives them"""
+        return np.zeros(self.nODE1)
+
     def IsMassMatrixConstant(self):
         """True if the mass matrix depends neither on q nor on t, so that a solver factorizes it once"""
         return False
 
-    def Forces(self, q=None, q_t=None, t=0.):
-        """the forces f(q, q_t, t) of the right-hand side, of size nODE2"""
+    def Forces(self, q=None, q_t=None, t=0., y=None):
+        """the forces f(q, q_t, t, y) of the right-hand side, of size nODE2, without the reaction forces; y, the ODE1
+        coordinates, is given only if nODE1 > 0"""
         raise NotImplementedError('SymbolicSystemBase.Forces: computed by the derived class')
+
+    def ODE1RightHandSide(self, q, q_t, y, t):
+        """the right-hand side g(q, q_t, y, t) = y_t of the ODE1 coordinates, of size nODE1"""
+        if self.nODE1:
+            raise NotImplementedError('SymbolicSystemBase.ODE1RightHandSide: computed by the derived class')
+        return np.zeros(0)
+
+    def AlgebraicEquations(self, q, q_t, y, lam, t, velocityLevel=False):
+        """the algebraic equations c(q, q_t, y, lambda, t), of size nAE; velocityLevel: their time derivative (index 2)"""
+        if self.nAE:
+            raise NotImplementedError('SymbolicSystemBase.AlgebraicEquations: computed by the derived class')
+        return np.zeros(0)
+
+    def ReactionForces(self, q, q_t, y, lam, t):
+        """the reaction forces C_q^T lambda of the algebraic coordinates, of size nODE2, which the ODE2 residual adds"""
+        if self.nAE:
+            raise NotImplementedError('SymbolicSystemBase.ReactionForces: computed by the derived class')
+        return np.zeros(self.nODE2)
 
     def MassMatrixTriplets(self, q=None, q_t=None, t=0.):
         """the mass matrix as triplets (rows, columns, values); equal rows and columns are added"""
@@ -102,13 +136,88 @@ class SymbolicSystemBase:
         (#3112). The base class gives one block of all coordinates"""
         return [(np.arange(self.nODE2)[np.newaxis, :], self.MassMatrix(q, q_t, t)[np.newaxis, :, :])]
 
-    def Residual(self, q=None, q_t=None, q_tt=None, t=0.):
-        """the residual r = M(q, t) q_tt - f(q, q_t, t), of size nODE2"""
+    def Residual(self, q=None, q_t=None, q_tt=None, t=0., y=None):
+        """the residual r = M(q, t) q_tt - f(q, q_t, t, y) of the ODE2 equations, of size nODE2, without reaction forces"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
-        return self.MassMatrix(q, q_t, t, sparse=True) @ q_tt - self.Forces(q, q_t, t)
+        forces = self.Forces(q, q_t, t) if y is None else self.Forces(q, q_t, t, y=y)
+        return self.MassMatrix(q, q_t, t, sparse=True) @ q_tt - forces
+
+    def SystemResidual(self, q, q_t, q_tt, y, y_t, lam, t, velocityLevel=False):
+        """the residual of all equations as the implicit solver of Exudyn has it (#3134): [M q_tt - f + C_q^T lambda,
+        g - y_t, c], of size nODE2 + nODE1 + nAE"""
+        yArgument = y if self.nODE1 else None
+        parts = [self.Residual(q, q_t, q_tt, t, y=yArgument)]
+        if self.nAE:
+            parts[0] = parts[0] + self.ReactionForces(q, q_t, y, lam, t)
+        if self.nODE1:
+            parts.append(self.ODE1RightHandSide(q, q_t, y, t) - y_t)
+        if self.nAE:
+            parts.append(self.AlgebraicEquations(q, q_t, y, lam, t, velocityLevel))
+        return np.concatenate(parts)
+
+    def SystemJacobian(self, q, q_t, q_tt, y, y_t, lam, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
+                       factor_y_t=0., velocityLevel=False, epsilon=1e-6):
+        """the Jacobian of SystemResidual (#3134), column by column: ODE2 columns factor_q d/dq + factor_q_t d/dq_t +
+        factor_q_tt d/dq_tt, ODE1 columns factor_y d/dy + factor_y_t d/dy_t, AE columns d/dlambda; the ODE2 block by
+        ResidualJacobian (exact for a SymbolicSystem), the others by central differences of SystemResidual
+
+        Args:
+            q: the ODE2 coordinates
+            q_t: the ODE2 velocities
+            q_tt: the ODE2 accelerations
+            y: the ODE1 coordinates
+            y_t: their velocities
+            lam: the algebraic coordinates
+            t: the time
+            factor_q: the factor of d/dq
+            factor_q_t: the factor of d/dq_t
+            factor_q_tt: the factor of d/dq_tt
+            factor_y: the factor of d/dy
+            factor_y_t: the factor of d/dy_t
+            velocityLevel: the algebraic equations on velocity level
+            epsilon: the step of the differences
+
+        Returns:
+            the dense matrix (nSys x nSys), nSys = nODE2 + nODE1 + nAE
+        """
+        (n2, n1, nAE) = (self.nODE2, self.nODE1, self.nAE)
+        nSys = n2 + n1 + nAE
+        state = [np.array(x, dtype=float) for x in [q, q_t, q_tt, y, y_t, lam]]
+        J = np.zeros((nSys, nSys))
+        if n1:
+            J[:n2, :n2] = self.ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, y=y)
+        else:
+            J[:n2, :n2] = self.ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
+
+        def Difference(direction, rows): #the derivative of the residual rows along a direction of the state
+            residuals = []
+            for sign in [1., -1.]:
+                perturbed = [x + sign*epsilon*d for (x, d) in zip(state, direction)]
+                residuals.append(self.SystemResidual(*perturbed, t, velocityLevel)[rows] if rows != 'reaction'
+                                 else self.ReactionForces(perturbed[0], perturbed[1], perturbed[3], perturbed[5], t))
+            return (residuals[0] - residuals[1])/(2*epsilon)
+
+        zeros = [np.zeros(len(x)) for x in state]
+        for j in range(nSys):
+            direction = [x.copy() for x in zeros]
+            if j < n2: #the ODE2 block is there; the reaction forces and the rows of the other equations
+                for (k, factor) in enumerate([factor_q, factor_q_t, factor_q_tt]):
+                    direction[k][j] = factor
+                if nAE:
+                    J[:n2, j] += Difference(direction, 'reaction')
+                if n1 + nAE:
+                    J[n2:, j] = Difference(direction, slice(n2, nSys))
+            elif j < n2 + n1:
+                direction[3][j - n2] = factor_y
+                direction[4][j - n2] = factor_y_t
+                J[:, j] = Difference(direction, slice(0, nSys))
+            else:
+                direction[5][j - n2 - n1] = 1.
+                J[:, j] = Difference(direction, slice(0, nSys))
+        return J
 
     def ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
-                         sparse=False, epsilon=1e-6):
+                         sparse=False, epsilon=1e-6, y=None):
         """the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, by central
         differences of Residual - for a system without derivatives of its own; factor_q_tt=1 alone gives the mass
         matrix, a Newton step of an implicit integrator combines the three
@@ -123,6 +232,7 @@ class SymbolicSystemBase:
             factor_q_tt: the factor of dr/dq_tt
             sparse: True: a scipy.sparse.csr_matrix, else a dense array
             epsilon: the step of the differences
+            y: the ODE1 coordinates, if the forces depend on them
 
         Returns:
             the matrix (nODE2 x nODE2)
@@ -137,7 +247,7 @@ class SymbolicSystemBase:
                 for sign in [1., -1.]:
                     perturbed = [x.copy() for x in state]
                     perturbed[k][j] += sign*epsilon
-                    residuals.append(self.Residual(*perturbed, t))
+                    residuals.append(self.Residual(*perturbed, t, y=y))
                 J[:, j] += factor*(residuals[0] - residuals[1])/(2*epsilon)
         (rows, columns) = np.nonzero(J)
         return self._Matrix(rows, columns, J[rows, columns], sparse)
@@ -156,22 +266,58 @@ class SymbolicSystemBase:
 
 
 class NumpySystem(SymbolicSystemBase):
-    """ODE2 equations M q_tt = f(q, q_t, t) written by hand, e.g. with numpy: the simplest system for a solver of this
-    module, and a check of it independent of Exudyn (#3112)
+    """equations written by hand, e.g. with numpy: the simplest system for a solver of this module, and a check of it
+    independent of Exudyn (#3112); ODE2 equations M q_tt = f, optionally ODE1 coordinates and constraints (#3134)
 
     Args:
         massMatrix: the mass matrix, constant (numpy array or scipy sparse matrix) or a function (q, q_t, t) -> matrix
-        forces: the function (q, q_t, t) -> f, of size nODE2
+        forces: the function (q, q_t, t) -> f, of size nODE2; with ODE1 coordinates (q, q_t, t, y) -> f
         initialState: (q0, q_t0); None: zero
         massMatrixBlocks: the blocks of bodies as SymbolicSystemBase.MassMatrixBlocks returns them, for a constant mass
             matrix; None: one block of all coordinates
+        ode1RightHandSide: None, or the function (q, q_t, y, t) -> y_t of the ODE1 coordinates
+        initialStateODE1: the initial ODE1 coordinates y0, which also give their number
+        constraints: None, or the function (q, q_t, y, lam, t) -> c of the algebraic equations on position level
+        constraintJacobian: the function (q, q_t, y, t) -> C_q (nAE x nODE2) of the reaction forces C_q^T lambda
+        numberOfConstraints: nAE
     """
-    def __init__(self, massMatrix, forces, initialState=None, massMatrixBlocks=None):
+    def __init__(self, massMatrix, forces, initialState=None, massMatrixBlocks=None, ode1RightHandSide=None,
+                 initialStateODE1=None, constraints=None, constraintJacobian=None, numberOfConstraints=0):
         self._massMatrix = massMatrix
         self._forces = forces
         self.nODE2 = (len(initialState[0]) if initialState is not None else massMatrix.shape[0])
         self._initialState = initialState
         self._massMatrixBlocks = massMatrixBlocks
+        self._ode1 = ode1RightHandSide
+        self._y0 = np.array(initialStateODE1 if initialStateODE1 is not None else [], dtype=float)
+        self.nODE1 = len(self._y0) if ode1RightHandSide is not None else 0
+        self._constraints = constraints
+        self._constraintJacobian = constraintJacobian
+        self.nAE = int(numberOfConstraints) if constraints is not None else 0
+
+    def InitialStateODE1(self):
+        """y0 as given"""
+        return self._y0.copy()
+
+    def ODE1RightHandSide(self, q, q_t, y, t):
+        """g(q, q_t, y, t) of the function given"""
+        if self._ode1 is None:
+            return np.zeros(0)
+        return np.asarray(self._ode1(q, q_t, y, t), dtype=float)
+
+    def AlgebraicEquations(self, q, q_t, y, lam, t, velocityLevel=False):
+        """c of the function given; velocity level not supported"""
+        if velocityLevel:
+            raise ValueError('NumpySystem.AlgebraicEquations: the constraints are given on position level only')
+        if self._constraints is None:
+            return np.zeros(0)
+        return np.asarray(self._constraints(q, q_t, y, lam, t), dtype=float)
+
+    def ReactionForces(self, q, q_t, y, lam, t):
+        """C_q^T lambda of the constraint Jacobian given"""
+        if self._constraints is None:
+            return np.zeros(self.nODE2)
+        return np.asarray(self._constraintJacobian(q, q_t, y, t), dtype=float).T @ lam
 
     def InitialState(self):
         """(q0, q_t0) as given, zero otherwise"""
@@ -183,9 +329,11 @@ class NumpySystem(SymbolicSystemBase):
         """True for a mass matrix given as matrix"""
         return not callable(self._massMatrix)
 
-    def Forces(self, q=None, q_t=None, t=0.):
-        """f(q, q_t, t) of the function given"""
+    def Forces(self, q=None, q_t=None, t=0., y=None):
+        """f(q, q_t, t) of the function given, or f(q, q_t, t, y) with ODE1 coordinates"""
         (q, q_t, _) = self._State(q, q_t)
+        if self.nODE1:
+            return np.asarray(self._forces(q, q_t, t, self._y0 if y is None else y), dtype=float)
         return np.asarray(self._forces(q, q_t, t), dtype=float)
 
     def MassMatrix(self, q=None, q_t=None, t=0., sparse=False):
@@ -677,13 +825,15 @@ class SymbolicSystem(SymbolicSystemBase):
                 f -= matrices['D'] @ q_t[ltg]
         return f
 
-    def Forces(self, q=None, q_t=None, t=0.):
-        """the global forces f(q, q_t, t) of the right-hand side, as the ODE2 part of the solver's right-hand side
+    def Forces(self, q=None, q_t=None, t=0., y=None):
+        """the global forces f(q, q_t, t) of the right-hand side, as the ODE2 part of the solver's right-hand side; y is
+        not used, as the system has no ODE1 coordinates yet
 
         Args:
             q: the ODE2 coordinates (displacements), of size nODE2; None: zero
             q_t: the ODE2 velocities; None: zero
             t: the time
+            y: the ODE1 coordinates, not used
 
         Returns:
             the vector f of size nODE2
@@ -734,9 +884,9 @@ class SymbolicSystem(SymbolicSystemBase):
         return [(kind.ltg, np.array([self._LocalMassMatrix(kind, i, q, q_t, t) for i in range(len(kind.objects))]))
                 for kind in kinds]
 
-    def Residual(self, q=None, q_t=None, q_tt=None, t=0.):
+    def Residual(self, q=None, q_t=None, q_tt=None, t=0., y=None):
         """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations without forming M: by the recordings of the
-        composed system, else object by object"""
+        composed system, else object by object; y is not used, as the system has no ODE1 coordinates yet"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
         if self.composed is not None:
             (rows, columns, values) = self.MassMatrixTriplets(q, q_t, t)
@@ -752,7 +902,7 @@ class SymbolicSystem(SymbolicSystemBase):
         return r
 
     def ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
-                         sparse=False):
+                         sparse=False, y=None):
         """the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, object by object
         by Diff of the recordings (UserFunction.EvaluateJacobian, #3115): exact, one derivative of the tree per column;
         factor_q_tt=1 alone gives the mass matrix, a Newton step of an implicit integrator combines the three
@@ -766,6 +916,7 @@ class SymbolicSystem(SymbolicSystemBase):
             factor_q_t: the factor of dr/dq_t
             factor_q_tt: the factor of dr/dq_tt
             sparse: True: a scipy.sparse.csr_matrix, else a dense array
+            y: the ODE1 coordinates, not used
 
         Returns:
             the matrix (nODE2 x nODE2)
@@ -1187,6 +1338,10 @@ class _Output:
         self.period = simulationSettings.solution.file.writePeriod
         self.lastWritten = tStart
         self.result = {'time': [], 'q': [], 'q_t': [], 'q_tt': []}
+        if system.nODE1:
+            self.result.update({'y': [], 'y_t': []})
+        if system.nAE:
+            self.result['lambda'] = []
         self.system = system
         self.solver = None
         if getattr(system, 'mbs', None) is not None:
@@ -1197,14 +1352,15 @@ class _Output:
             self.solver = exudyn.MainSolverExplicit()
             self.solver.InitializeSolver(system.mbs, self.simulationSettings)
 
-    def Step(self, stepIndex, t, q, q_t, q_tt, last=False):
+    def Step(self, stepIndex, t, q, q_t, q_tt, last=False, y=None, y_t=None, lam=None):
         """the state after step stepIndex at t; stepIndex 0 is the initial state, as SolveDynamic writes it"""
         if last:
             self.lastWritten = self.tEnd - self.h
         if stepIndex == 0 or t - self.lastWritten >= -1e-10:
             self.lastWritten = max(self.lastWritten + self.period, t)
-            for (name, value) in [('time', t), ('q', q), ('q_t', q_t), ('q_tt', q_tt)]:
-                self.result[name].append(np.copy(value))
+            for (name, value) in [('time', t), ('q', q), ('q_t', q_t), ('q_tt', q_tt), ('y', y), ('y_t', y_t), ('lambda', lam)]:
+                if name in self.result:
+                    self.result[name].append(np.copy(value))
         if self.solver is not None:
             self.system.SetSystemState(q, q_t, q_tt, t)
             self.solver.it.currentStepIndex = stepIndex
@@ -1244,7 +1400,9 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     velocity Verlet, as Exudyn's explicit solver computes them (#3112, design docs/dev/design/symbolicSystem.md §10):
     the steps from timeIntegration.startTime, endTime and numberOfSteps; the accelerations by the inverse per body with
     timeIntegration.explicit.computeMassMatrixInversePerBody, else by the sparse LU decomposition of the mass
-    matrix, both once for a constant mass matrix (timeIntegration.reuseConstantMassMatrix); for a SymbolicSystem the
+    matrix, both once for a constant mass matrix (timeIntegration.reuseConstantMassMatrix); ODE1 coordinates in the
+    stages of explicit Euler and RK44, with zero initial velocities, as Exudyn (#3134); algebraic equations are refused
+    (Exudyn's explicit solver eliminates only constraints of coordinates on the ground); for a SymbolicSystem the
     solution file, the sensors and the renderer of its mbs by simulationSettings.solution, as after SolveDynamic
 
     Args:
@@ -1253,8 +1411,9 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
         solverType: an exudyn.DynamicSolverType of explicitSolverTypes; None: timeIntegration.solverType
 
     Returns:
-        dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2) at the steps of solution.file.writePeriod and
-        the last step, and the statistics 'steps', 'forceEvaluations', 'massMatrixEvaluations'
+        dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2) - with ODE1 coordinates 'y', 'y_t' (n_out x
+        nODE1) - at the steps of solution.file.writePeriod and the last step, and the statistics 'steps',
+        'forceEvaluations', 'massMatrixEvaluations'
     """
     if simulationSettings is None:
         simulationSettings = exudyn.SimulationSettings()
@@ -1264,21 +1423,28 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     if solverType not in explicitSolverTypes:
         raise ValueError('SolveExplicit: solverType must be one of ' + str(explicitSolverTypes) + ', not ' + str(solverType))
     _RefuseLieGroupNodes(system, timeIntegration.explicit.useLieGroupIntegration, 'SolveExplicit')
+    if system.nAE:
+        raise ValueError('SolveExplicit: the system has algebraic equations, which an explicit solver does not integrate; '
+                         'use SolveGeneralizedAlpha')
+    if system.nODE1 and solverType == exudyn.DynamicSolverType.VelocityVerlet:
+        raise ValueError('SolveExplicit: VelocityVerlet integrates ODE2 coordinates only; use ExplicitEuler or RK44')
 
     (n, tStart, tEnd, h) = _Steps(simulationSettings)
     massSolver = _MassMatrixSolver(system, timeIntegration.explicit.computeMassMatrixInversePerBody,
                                    timeIntegration.reuseConstantMassMatrix)
     forceEvaluations = [0]
-    def Accelerations(q, q_t, t):
+    def Accelerations(q, q_t, t, y=None):
         forceEvaluations[0] += 1
-        return massSolver.Accelerations(q, q_t, t, system.Forces(q, q_t, t))
+        forces = system.Forces(q, q_t, t, y=y) if system.nODE1 else system.Forces(q, q_t, t)
+        return massSolver.Accelerations(q, q_t, t, forces)
 
     (q, q_t) = system.InitialState()
     q_tt = np.zeros(system.nODE2)
+    (y, y_t) = (system.InitialStateODE1(), np.zeros(system.nODE1))
     if solverType == exudyn.DynamicSolverType.VelocityVerlet:
         q_tt = Accelerations(q, q_t, tStart)
     output = _Output(system, simulationSettings, tStart, tEnd, h)
-    output.Step(0, tStart, q, q_t, q_tt)
+    output.Step(0, tStart, q, q_t, q_tt, y=y, y_t=y_t)
 
     for step in range(1, n + 1):
         t0 = tStart + (step - 1)*h
@@ -1290,24 +1456,29 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
             q_t = q_t + (0.5*h)*q_tt
         else:
             (A, weights, times) = _butcherTableaus[solverType]
-            K, K_t = [], []
+            K, K_t, K_y = [], [], []
             for i in range(len(weights)):
-                (g, g_t) = (q.copy(), q_t.copy())
+                (g, g_t, g_y) = (q.copy(), q_t.copy(), y.copy())
                 for j in range(i):
                     if A[i][j] != 0.:
                         g += (A[i][j]*h)*K[j]
                         g_t += (A[i][j]*h)*K_t[j]
+                        g_y += (A[i][j]*h)*K_y[j]
                 K.append(g_t)
-                K_t.append(Accelerations(g, g_t, t0 + h*times[i]))
+                K_t.append(Accelerations(g, g_t, t0 + h*times[i], g_y))
+                K_y.append(system.ODE1RightHandSide(g, g_t, g_y, t0 + h*times[i]) if system.nODE1 else g_y)
             for i in range(len(weights)):
                 if weights[i] != 0.:
                     q = q + (weights[i]*h)*K[i]
                     q_t = q_t + (weights[i]*h)*K_t[i]
+                    y = y + (weights[i]*h)*K_y[i]
+            if system.nODE1:
+                y_t = system.ODE1RightHandSide(q, q_t, y, t)
             if timeIntegration.explicit.computeEndOfStepAccelerations:
-                q_tt = Accelerations(q, q_t, t)
+                q_tt = Accelerations(q, q_t, t, y)
             else:
                 q_tt = K_t[-1]
-        output.Step(step, t, q, q_t, q_tt, last=(step == n))
+        output.Step(step, t, q, q_t, q_tt, last=(step == n), y=y, y_t=y_t)
 
     return output.Finalize({'steps': n, 'forceEvaluations': forceEvaluations[0],
                             'massMatrixEvaluations': massSolver.evaluations})
@@ -1315,22 +1486,26 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
 
 def SolveGeneralizedAlpha(system, simulationSettings=None):
     """the implicit time integration of a SymbolicSystemBase with constant step size by the generalized-alpha method
-    in the form of Arnold and Bruls, as Exudyn's MainSolverImplicitSecondOrder computes it (#3126, design
+    in the form of Arnold and Bruls, as Exudyn's MainSolverImplicitSecondOrder computes it (#3126, #3134, design
     docs/dev/design/symbolicSystem.md §6): per step the predictor of the displacements, velocities and algorithmic
-    accelerations, then Newton's method for the accelerations with the residual r = M q_tt - f and the Jacobian
-    beta' M + gamma' dr/dq_t + dr/dq of ResidualJacobian; by timeIntegration: numberOfSteps, startTime, endTime,
-    generalizedAlpha.spectralRadius, useNewmark with newmarkBeta and newmarkGamma, computeInitialAccelerations, and
-    newton.relativeTolerance, absoluteTolerance, maxIterations, useModifiedNewton (the Jacobian once per step) and
-    weightTolerancePerCoordinate; for a SymbolicSystem the solution file, the sensors and the renderer of its mbs, as
-    SolveExplicit. A step whose Newton iteration does not converge raises: the step size is constant
+    accelerations, the ODE1 coordinates by the trapezoidal rule, then Newton's method for the accelerations, the ODE1
+    coordinates and the algebraic coordinates with the residual of SystemResidual - r = M q_tt - f + C_q^T lambda,
+    g - y_t, c - and its Jacobian, the ODE2 rows scaled by beta h^2 and the algebraic columns by 1/(beta h^2), as
+    Exudyn; by timeIntegration: numberOfSteps, startTime, endTime, generalizedAlpha.spectralRadius, useNewmark with
+    newmarkBeta and newmarkGamma, computeInitialAccelerations - with constraints of [M C_q^T; C_q 0] [q_tt; lambda] =
+    [f; -(C_q q_t)_q q_t] -, storeInitialAlgebraicCoordinates, and newton.relativeTolerance, absoluteTolerance,
+    maxIterations, useModifiedNewton (the Jacobian once per step) and weightTolerancePerCoordinate; for a
+    SymbolicSystem the solution file, the sensors and the renderer of its mbs, as SolveExplicit. A step whose Newton
+    iteration does not converge raises: the step size is constant. The ODE1 velocities start at zero, as in Exudyn
 
     Args:
         system: the system, a SymbolicSystemBase
         simulationSettings: exudyn.SimulationSettings; None: the defaults
 
     Returns:
-        dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2) at the steps of solution.file.writePeriod and
-        the last step, and the statistics 'steps', 'newtonIterations', 'jacobianEvaluations'
+        dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2), with ODE1 coordinates 'y', 'y_t', with algebraic
+        equations 'lambda', at the steps of solution.file.writePeriod and the last step, and the statistics 'steps',
+        'newtonIterations', 'jacobianEvaluations'
     """
     if simulationSettings is None:
         simulationSettings = exudyn.SimulationSettings()
@@ -1339,7 +1514,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     newton = timeIntegration.newton
     _RefuseLieGroupNodes(system, True, 'SolveGeneralizedAlpha') #the implicit solver of Exudyn integrates them always so
     if generalizedAlpha.useIndex2Constraints:
-        raise ValueError('SolveGeneralizedAlpha: useIndex2Constraints is not implemented, as the system has no constraints yet')
+        raise ValueError('SolveGeneralizedAlpha: useIndex2Constraints is not implemented')
 
     #the parameters of src/Solver/CSolverImplicitSecondOrder.cpp, PreInitializeSolverSpecific
     if generalizedAlpha.useNewmark:
@@ -1353,15 +1528,30 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     (n, tStart, tEnd, h) = _Steps(simulationSettings)
     betaPrime = (1 - alphaM)/(h**2*beta*(1 - alphaF))
     gammaPrime = gamma/(h*beta)
-    errorFactor = np.sqrt(system.nODE2) if (newton.weightTolerancePerCoordinate and system.nODE2) else 1.
+    (n2, n1, nAE) = (system.nODE2, system.nODE1, system.nAE)
+    nSys = n2 + n1 + nAE
+    general = (n1 + nAE) > 0 #with ODE1 or algebraic coordinates: the residual and Jacobian of all equations, dense
+    scaling = beta*h**2 #of the ODE2 rows and, inverse, the algebraic columns, as Exudyn's useScaling
+    errorFactor = np.sqrt(nSys) if (newton.weightTolerancePerCoordinate and nSys) else 1.
 
     (q, q_t) = system.InitialState()
-    q_tt = np.zeros(system.nODE2)
+    q_tt = np.zeros(n2)
+    (y, y_t, lam) = (system.InitialStateODE1(), np.zeros(n1), np.zeros(nAE))
     if generalizedAlpha.computeInitialAccelerations:
-        q_tt = scipy.sparse.linalg.spsolve(system.MassMatrix(q, q_t, tStart, sparse=True).tocsc(), system.Forces(q, q_t, tStart))
+        if not general:
+            q_tt = scipy.sparse.linalg.spsolve(system.MassMatrix(q, q_t, tStart, sparse=True).tocsc(), system.Forces(q, q_t, tStart))
+        else:
+            (q_tt, lamInitial) = _InitialAccelerations(system, q, q_t, y, tStart)
+            if generalizedAlpha.storeInitialAlgebraicCoordinates:
+                lam = lamInitial
     aAlgorithmic = q_tt.copy()
     output = _Output(system, simulationSettings, tStart, tEnd, h)
-    output.Step(0, tStart, q, q_t, q_tt)
+    output.Step(0, tStart, q, q_t, q_tt, y=y, y_t=y_t, lam=lam)
+
+    def Residual():
+        if general:
+            return system.SystemResidual(q, q_t, q_tt, y, y_t, lam, t)
+        return system.Residual(q, q_t, q_tt, t)
 
     (newtonIterations, jacobianEvaluations) = (0, 0)
     for step in range(1, n + 1):
@@ -1376,25 +1566,43 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
             aAlgorithmic = (alphaF*q_tt - alphaM*aAlgorithmic)/(1 - alphaM)
             q = q + (h**2*beta)*aAlgorithmic
             q_t = q_t + (h*gamma)*aAlgorithmic
-        q_tt = np.zeros(system.nODE2)
+        q_tt = np.zeros(n2)
+        y = y + (0.5*h)*y_t #the trapezoidal rule y = y0 + h/2 (y_t0 + y_t)
+        y_t = np.zeros(n1)
 
         #Newton's method, as CSolverBase::Newton: converged by the residual relative to the initial one or absolute
-        initialResidual = cMath.norm(system.Residual(q, q_t, q_tt, t))/errorFactor
+        initialResidual = cMath.norm(Residual())/errorFactor
         if initialResidual <= newton.absoluteTolerance:
             initialResidual = 2*newton.absoluteTolerance #at least one Newton step
         factorization = None
         converged = False
         for iteration in range(int(newton.maxIterations)):
             if factorization is None or not newton.useModifiedNewton:
-                factorization = scipy.sparse.linalg.splu(system.ResidualJacobian(q, q_t, q_tt, t, factor_q=1., factor_q_t=gammaPrime,
-                                                                                 factor_q_tt=betaPrime, sparse=True).tocsc())
+                if general:
+                    J = system.SystemJacobian(q, q_t, q_tt, y, y_t, lam, t, factor_q=1., factor_q_t=gammaPrime, factor_q_tt=betaPrime,
+                                              factor_y=1., factor_y_t=2./h)
+                    J[:n2, :] *= scaling
+                    J[:, n2 + n1:] /= scaling
+                    factorization = scipy.linalg.lu_factor(J)
+                else:
+                    factorization = scipy.sparse.linalg.splu(system.ResidualJacobian(q, q_t, q_tt, t, factor_q=1., factor_q_t=gammaPrime,
+                                                                                     factor_q_tt=betaPrime, sparse=True).tocsc())
                 jacobianEvaluations += 1
-            increment = factorization.solve(system.Residual(q, q_t, q_tt, t))
+            if general:
+                r = Residual()
+                r[:n2] *= scaling
+                increment = scipy.linalg.lu_solve(factorization, r)
+                y = y - increment[n2:n2 + n1]
+                y_t = y_t - (2./h)*increment[n2:n2 + n1]
+                lam = lam - increment[n2 + n1:]/scaling
+                increment = increment[:n2]
+            else:
+                increment = factorization.solve(Residual())
             q = q - increment
             q_t = q_t - gammaPrime*increment
             q_tt = q_tt - betaPrime*increment
             newtonIterations += 1
-            residual = cMath.norm(system.Residual(q, q_t, q_tt, t))/errorFactor
+            residual = cMath.norm(Residual())/errorFactor
             if residual/initialResidual <= newton.relativeTolerance or residual <= newton.absoluteTolerance:
                 converged = True
                 break
@@ -1403,6 +1611,31 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
                              + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
         if not generalizedAlpha.useNewmark:
             aAlgorithmic = aAlgorithmic + ((1 - alphaF)/(1 - alphaM))*q_tt #FinalizeNewton
-        output.Step(step, t, q, q_t, q_tt, last=(step == n))
+        output.Step(step, t, q, q_t, q_tt, last=(step == n), y=y, y_t=y_t, lam=lam)
 
     return output.Finalize({'steps': n, 'newtonIterations': newtonIterations, 'jacobianEvaluations': jacobianEvaluations})
+
+
+def _InitialAccelerations(system, q, q_t, y, t, epsilon=1e-6):
+    """the initial accelerations and algebraic coordinates of CSolverImplicitSecondOrder: [M C_q^T; C_q 0] [q_tt; lambda]
+    = [f; -(C_q q_t)_q q_t], the ODE1 rows a unit matrix with zero right-hand side; C_q by central differences of the
+    algebraic equations, (C_q q_t)_q q_t as their second derivative along q_t"""
+    (n2, n1, nAE) = (system.nODE2, system.nODE1, system.nAE)
+    nSys = n2 + n1 + nAE
+    lam = np.zeros(nAE)
+    A = np.zeros((nSys, nSys))
+    rhs = np.zeros(nSys)
+    A[:n2, :n2] = system.MassMatrix(q, q_t, t)
+    rhs[:n2] = system.Forces(q, q_t, t, y=y) if n1 else system.Forces(q, q_t, t)
+    A[n2:n2 + n1, n2:n2 + n1] = np.eye(n1)
+    if nAE:
+        def Equations(qq):
+            return system.AlgebraicEquations(qq, q_t, y, lam, t)
+        Cq = np.array([(Equations(q + epsilon*e) - Equations(q - epsilon*e))/(2*epsilon) for e in np.eye(n2)]).T
+        A[n2 + n1:, :n2] = Cq
+        A[:n2, n2 + n1:] = Cq.T
+        if cMath.norm(q_t) > 1e-10:
+            delta = 1e-4
+            rhs[n2 + n1:] = -(Equations(q + delta*q_t) - 2*Equations(q) + Equations(q - delta*q_t))/delta**2
+    solution = np.linalg.solve(A, rhs)
+    return solution[:n2], solution[n2 + n1:]

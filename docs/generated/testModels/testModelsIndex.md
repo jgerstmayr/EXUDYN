@@ -202,6 +202,7 @@ symbolicOptimizeTest
 symbolicSparseMatrixTest
 symbolicSystemEquationsTest
 symbolicSystemLoadsTest
+symbolicSystemODE1AETest
 symbolicSystemTest
 symbolicUserFunctionCopyTest
 symbolicUserFunctionSignaturesTest

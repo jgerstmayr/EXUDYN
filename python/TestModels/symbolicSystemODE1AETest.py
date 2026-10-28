@@ -1,0 +1,120 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The interface of exudyn.misc.symbolicSystem for ODE1 and algebraic coordinates (#3134): a NumpySystem of
+#           three masses (ODE2) on springs and dampers, coupled both ways with one ODE1 coordinate - a first order
+#           lag driven by mass 0, whose state acts as a force on mass 0 -, and a constraint q2 - q1 = 0 with its
+#           Lagrange multiplier, against the same system in Exudyn: ObjectGenericODE2 and ObjectGenericODE1 with
+#           Python user functions that read each other's node, ObjectConnectorCoordinate. SolveGeneralizedAlpha against
+#           SolveDynamic (the generalized-alpha method, Newmark and the trapezoidal rule, with and without initial
+#           accelerations), SolveExplicit RK44 and explicit Euler against SolveDynamic without the constraint; the
+#           explicit solver refuses the constraint.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-28
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.misc.symbolicSystem import NumpySystem, SolveGeneralizedAlpha, SolveExplicit
+import exudyn.cMath as cMath
+import numpy as np
+
+M = np.diag([1., 0.5, 0.8])
+K = np.array([[300., -100., 0.], [-100., 250., -50.], [0., -50., 120.]])
+D = 0.01*K
+q0 = np.array([0.05, 0.02, 0.02]) #consistent with q2 - q1 = 0
+q_t0 = np.array([0., 0.3, 0.3])
+(a, b, c) = (20., 50., 3.) #the lag: y_t = -a y + b q0 + sin(5 t); its force on mass 0: -c y
+y0 = np.array([0.1])
+
+def Forces(q, q_t, t, y):
+    f = -K @ q - D @ q_t
+    f[0] += -c*y[0] + 2*cMath.sin(10*t)
+    return f
+
+def Lag(q, q_t, y, t):
+    return np.array([-a*y[0] + b*q[0] + cMath.sin(5*t)])
+
+def Constraint(q, q_t, y, lam, t):
+    return np.array([q[2] - q[1]])
+
+def ConstraintJacobian(q, q_t, y, t):
+    return np.array([[0., -1., 1.]])
+
+def Numpy(constrained):
+    return NumpySystem(M, Forces, initialState=(q0, q_t0), ode1RightHandSide=Lag, initialStateODE1=y0,
+                       constraints=Constraint if constrained else None, constraintJacobian=ConstraintJacobian,
+                       numberOfConstraints=1)
+
+def Exudyn(constrained):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    node2 = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=3, referenceCoordinates=[0]*3, initialCoordinates=q0,
+                                        initialCoordinates_t=q_t0))
+    node1 = mbs.AddNode(NodeGenericODE1(numberOfODE1Coordinates=1, referenceCoordinates=[0], initialCoordinates=y0))
+    def UFforce(mbs, t, itemNumber, q, q_t):
+        y = mbs.GetNodeOutput(node1, exu.OutputVariableType.Coordinates)
+        return [-c*float(np.atleast_1d(y)[0]) + 2*cMath.sin(10*t), 0, 0]
+    def UFlag(mbs, t, itemNumber, y):
+        q = mbs.GetNodeOutput(node2, exu.OutputVariableType.Coordinates)
+        return [b*q[0] + cMath.sin(5*t)]
+    mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node2], massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
+                                    forceUserFunction=UFforce))
+    mbs.AddObject(ObjectGenericODE1(nodeNumbers=[node1], systemMatrix=[[-a]], rhsVector=[0], rhsUserFunction=UFlag))
+    if constrained:
+        markers = [mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node2, coordinate=i)) for i in [1, 2]]
+        mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=markers))
+    mbs.Assemble()
+    return (SC, mbs)
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 200
+simulationSettings.timeIntegration.endTime = 0.4
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10
+simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-12
+simulationSettings.solution.file.write = False
+
+def Final(mbs):
+    data = mbs.systemData
+    return [np.array(data.GetODE2Coordinates()), np.array(data.GetODE2Coordinates_t()), np.array(data.GetODE1Coordinates())]
+
+def Difference(result, exudynState):
+    return max(np.max(np.abs(result[key][-1] - value))/np.max(np.abs(value)) for (key, value) in zip(['q', 'q_t', 'y'], exudynState))
+
+differences = {}
+generalizedAlpha = simulationSettings.timeIntegration.generalizedAlpha
+for constrained in [False, True]:
+    for (name, spectralRadius, useNewmark, initialAccelerations) in [('generalized-alpha 0.6', 0.6, False, True),
+            ('trapezoidal rule', 1., False, True), ('Newmark', 1., True, True), ('without initial accelerations', 0.6, False, False)]:
+        (generalizedAlpha.spectralRadius, generalizedAlpha.useNewmark) = (spectralRadius, useNewmark)
+        generalizedAlpha.computeInitialAccelerations = initialAccelerations
+        (SC, mbs) = Exudyn(constrained)
+        mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.GeneralizedAlpha)
+        result = SolveGeneralizedAlpha(Numpy(constrained), simulationSettings)
+        key = ('constrained, ' if constrained else '') + name
+        differences[key] = Difference(result, Final(mbs))
+        if constrained:
+            differences[key] = max(differences[key], abs(result['q'][-1][2] - result['q'][-1][1]))
+for solverType in [exu.DynamicSolverType.RK44, exu.DynamicSolverType.ExplicitEuler]:
+    (SC, mbs) = Exudyn(False)
+    mbs.SolveDynamic(simulationSettings, solverType=solverType)
+    differences[str(solverType)] = Difference(SolveExplicit(Numpy(False), simulationSettings, solverType), Final(mbs))
+for (key, value) in differences.items():
+    exu.Print(key + ': relative difference to SolveDynamic', value)
+
+refused = 0
+try:
+    SolveExplicit(Numpy(True), simulationSettings, exu.DynamicSolverType.RK44)
+except ValueError as e:
+    refused = int('algebraic equations' in str(e))
+exu.Print('the explicit solver refuses the constraint:', refused)
+
+u = 1 + sum(int(value > 1e-8) for value in differences.values()) + (1 - refused)
+exu.Print('solution of symbolicSystemODE1AETest=', u)
+
+exu.sys['testResult'] = u

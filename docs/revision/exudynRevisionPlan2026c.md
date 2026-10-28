@@ -2011,6 +2011,14 @@ inverse per body, which matters most for the next tests; remove the residual): E
 massMatrixBlocks), the blocks also recorded for the composed system (RK44 with the inverse per body 0.054 -> 0.043 s);
 GetFlatProgram(results) a function Equations(q, q_t, t). [log](exudynRevisionLog2026c.md#rg12-51-12)
 
+#### **CLOSED_RG12.51.13** ODE1 and algebraic coordinates in the interface and the solvers of the symbolic system
+
+CLOSED 2026-10-28 (#3134; maintainer 2026-10-28: include ODE1 and AE so that there is no gap; a final object may couple all
+kinds of coordinates): SymbolicSystemBase with nODE1, nAE, ODE1RightHandSide, AlgebraicEquations, ReactionForces,
+SystemResidual, SystemJacobian; SolveExplicit with ODE1; SolveGeneralizedAlpha with ODE1 (trapezoidal rule) and index-3
+constraints as Exudyn; NumpySystem with both; symbolicSystemODE1AETest.py equal to SolveDynamic to 1.9e-10 (Newton
+tolerance), explicit 6.5e-15. [log](exudynRevisionLog2026c.md#rg12-51-13)
+
 ### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
 
 CLOSED 2026-10-25 (#3094; maintainer 2026-10-25: the introduction section to Python-C++ interface/Symbolic has to be

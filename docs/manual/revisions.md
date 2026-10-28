@@ -81,7 +81,9 @@ constant step size, as `SolveDynamic` does, with the Jacobian of the residual by
 bodies of such a system as expressions in the variables `q`, `q_t` and `t` - exudyn.symbolic or sympy -, and
 `GetFlatProgram(format)` writes them as flat program, or as numpy, exudyn.symbolic or sympy code (#3130, #3132); the examples
 symbolicSystemSpringDamper.py and symbolicSystemRigidBodyPendulum.py show them. `SymbolicSystem` evaluates the forces
-and the mass matrix by two recordings of the composed system, one call each (`composeSystem=True`, #3131).
+and the mass matrix by two recordings of the composed system, one call each (`composeSystem=True`, #3131). The
+interface `SymbolicSystemBase` and its solvers have ODE1 and algebraic coordinates, as Exudyn's: `SolveExplicit`
+integrates ODE1 coordinates, `SolveGeneralizedAlpha` also index-3 constraints, and `NumpySystem` takes both (#3134).
 **ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
 two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
 also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a
