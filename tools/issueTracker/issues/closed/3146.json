@@ -2,10 +2,14 @@
   "number": 3146,
   "title": "The constraint equations of the joints in SymbolicSystem.Equations and GetFlatProgram",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "Equations() gives the mass matrix and the forces; the constraints of ObjectJointUser (#3141) and their reaction forces C_q^T lambda are not in it, so the export of the equations of motion (RG12.51.5) misses them. Results algebraicEquations (of q and t) and reactionForces (of q, t and the algebraic coordinates), composed of the joint recordings and the marker kinematics as the connectors.",
   "dateRaised": "2026-10-28",
-  "deadline": "2027-04-26"
+  "deadline": "2027-04-26",
+  "dateResolved": "2026-10-28 16:58",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.misc.symbolicSystem.SymbolicSystem.Equations(algebraicEquations=True, reactionForces=True) gives the constraint equations of the joints and their reaction forces as expressions of q, t and the algebraic coordinates lambda_, and GetFlatProgram(results=[...]) writes them as code.",
+  "resolvedInVersion": "1.13.249"
 }

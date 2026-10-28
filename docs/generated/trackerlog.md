@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.248.dev1
+- Exudyn version = 1.13.249.dev1
 - last change = 2026-10-28
 - Number of issues = 3149
-- Number of resolved issues = 3025 (248 in current version)
+- Number of resolved issues = 3026 (249 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9041,9 +9041,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `EXTENSION` `LOW EFF` `raised by: Claude-JG` Draw ObjectJointUser by a graphicsDataUserFunction, and the joints of UserItemCreator as the built-in joints (#3147)
   - description: ObjectJointUser draws nothing, so the revolute, prismatic, spherical and distance joints of UserItemCreator (\#3140) are invisible and their drawing arguments are accepted and not used. A graphicsDataUserFunction as ObjectConnectorUser has (\#3119), and the drawings of the built-in joints from the drawing arguments.
-  - date raised: 2026-10-28
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` The constraint equations of the joints in SymbolicSystem.Equations and GetFlatProgram (#3146)
-  - description: Equations() gives the mass matrix and the forces; the constraints of ObjectJointUser (\#3141) and their reaction forces C\_q^T lambda are not in it, so the export of the equations of motion (RG12.51.5) misses them. Results algebraicEquations (of q and t) and reactionForces (of q, t and the algebraic coordinates), composed of the joint recordings and the marker kinematics as the connectors.
   - date raised: 2026-10-28
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` ObjectGenericDAE: an object coupling ODE2, ODE1 and algebraic coordinates, linear by matrices and nonlinear by user functions (#3143)
   - description: Maintainer 2026-10-28: good as suggested. An object on ODE2 nodes, ODE1 nodes and algebraic coordinates of its own, with the linear equations M q\_tt + D q\_t + K q + E y + C\_q^T lambda = f, y\_t + C\_y^T lambda = A y + B q + B\_t q\_t + g, C\_q q + C\_y y = c0, and user functions for the mass matrix, the ODE2 forces, the ODE1 right-hand side and the constraints, each with the arguments (mbs, t, itemNumber, q, q\_t, y, ..., parameters) of the existing user items, parameters a vector of the item as in ObjectUserBody; the Jacobians by a jacobianUserFunction or the one-pass derivative of a symbolic recording, never by numerical differences (\#3101). Exudyn's implicit solver needs the coupling blocks between ODE2 and ODE1, the explicit solver both kinds in every stage and algebraic equations only where they can be eliminated. The general form of SymbolicSystemBase; the generic object of \#1104.

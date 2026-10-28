@@ -447,8 +447,8 @@ class SymbolicSystem(SymbolicSystemBase):
 
     Note:
         Its members: mbs; kinds, the list of SymbolicKind; jointKinds, the list of SymbolicKind of the ObjectJointUser
-        (#3141), whose constraint equations are AlgebraicEquations and whose reaction forces are ReactionForces - they are
-        not in Equations() -; ode1Kinds, the list of SymbolicKind of the ObjectGenericODE1 (#3144), whose right-hand
+        (#3141), whose constraint equations are AlgebraicEquations and whose reaction forces are ReactionForces - in Equations() on request
+        (#3146) -; ode1Kinds, the list of SymbolicKind of the ObjectGenericODE1 (#3144), whose right-hand
         side is ODE1RightHandSide; loads, the list of SymbolicLoad on ODE2 coordinates, ode1Loads those on ODE1
         coordinates; nODE2, nODE1, the numbers of ODE2 and ODE1 coordinates of the system; nAE, the number of the
         algebraic equations; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
@@ -1328,7 +1328,7 @@ class SymbolicSystem(SymbolicSystemBase):
         return local
 
     def Equations(self, format='symbolic', optimize=True, variables=None, massMatrix=True, forces=True,
-                  massMatrixBlocks=False):
+                  massMatrixBlocks=False, algebraicEquations=False, reactionForces=False):
         """the equations of motion M(q, t) q_tt = f(q, q_t, t) of the system as expressions in its variables (#3130,
         #3132), composed of the recordings of the kinds, the marker kinematics of the connectors and the loads; each
         recording is called with symbolic arguments through its code of exudyn.misc.symbolicExport, the parameters of
@@ -1344,28 +1344,40 @@ class SymbolicSystem(SymbolicSystemBase):
             optimize: for 'symbolic', simplify the expressions by exudyn.symbolic.Optimize, level 2 (1*x, x+0, 0*x,
                 the combination of numbers, ...)
             variables: None, or (q, q_t, t) of the format given by the caller - e.g. the arguments of a function being
-                recorded -, used instead of new variables
+                recorded -, used instead of new variables; (q, q_t, t, lambda_) with the algebraic coordinates
             massMatrix: True: the global mass matrix, 'massMatrix' (nODE2 x nODE2)
             forces: True: the forces, 'forces' (nODE2)
             massMatrixBlocks: True: the mass matrices of the bodies, 'massMatrixBlocks', as MassMatrixBlocks() gives
                 them: a list per kind of bodies of (ltg, matrices), the LTG table of the kind (bodies x n) and the list
                 of their n x n matrices
+            algebraicEquations: True: the constraint equations c(q, t) of the joints, 'algebraicEquations' (nAE), as
+                AlgebraicEquations (#3146)
+            reactionForces: True: the reaction forces C_q^T lambda of the joints, 'reactionForces' (nODE2), as
+                ReactionForces, of the algebraic coordinates lambda - the variable 'lambda_' (#3146)
 
         Returns:
-            dict with 'q', 'q_t', 't' (the variables) and the results asked for, exudyn.symbolic.Matrix and Vector or
-            sympy.Matrix
+            dict with 'q', 'q_t', 't' (the variables), 'lambda_' if reactionForces, and the results asked for,
+            exudyn.symbolic.Matrix and Vector or sympy.Matrix
         """
         backend = _Backend(format)
         n = self.nODE2
         (q0, q_t0) = self.InitialState()
+        lambda_ = None
         if variables is None:
             (q, q_t) = (backend.Variable(name, n, value) for (name, value) in [('q', q0), ('q_t', q_t0)])
             t = backend.Real('t')
         else:
-            (q, q_t, t) = variables
-        (M, f, blocks) = self._EquationLists(backend, q, q_t, t)
+            (q, q_t, t) = variables[:3]
+            if len(variables) > 3:
+                lambda_ = variables[3]
+        if reactionForces and lambda_ is None:
+            lambda_ = backend.Variable('lambda_', self.nAE, np.zeros(self.nAE))
+        (M, f, blocks, c, r) = self._EquationLists(backend, q, q_t, t, lambda_ if reactionForces else None,
+                                                   algebraicEquations or reactionForces)
         (names, results) = ([], [])
-        for (name, wanted, Result) in [('massMatrix', massMatrix, lambda: backend.Matrix(M)), ('forces', forces, lambda: backend.Vector(f))]:
+        for (name, wanted, Result) in [('massMatrix', massMatrix, lambda: backend.Matrix(M)), ('forces', forces, lambda: backend.Vector(f)),
+                                       ('algebraicEquations', algebraicEquations, lambda: backend.Vector(c)),
+                                       ('reactionForces', reactionForces, lambda: backend.Vector(r))]:
             if wanted:
                 names.append(name)
                 results.append(Result())
@@ -1376,6 +1388,8 @@ class SymbolicSystem(SymbolicSystemBase):
             results = [exudyn.symbolic.Optimize(result, level=2) if name != 'massMatrixBlocks' or result else result
                        for (name, result) in zip(names, results)]
         equations = {'q': q, 'q_t': q_t, 't': t}
+        if reactionForces:
+            equations['lambda_'] = lambda_
         for (name, result) in zip(names, results):
             equations[name] = result
         if massMatrixBlocks: #back into the kinds
@@ -1386,9 +1400,11 @@ class SymbolicSystem(SymbolicSystemBase):
                 matrices = matrices[len(kindBlocks):]
         return equations
 
-    def _EquationLists(self, backend, q, q_t, t):
+    def _EquationLists(self, backend, q, q_t, t, lambda_=None, constraints=False):
         """the mass matrix as list of rows, the forces as list of the expressions of Equations, of the variables q, q_t
-        and t of backend, and the local mass matrices of the bodies, per kind (ltg, list of their lists of rows)"""
+        and t of backend, the local mass matrices of the bodies, per kind (ltg, list of their lists of rows), and with
+        constraints the constraint equations of the joints and - for the algebraic coordinates lambda_ - their reaction
+        forces as lists (#3146)"""
         n = self.nODE2
         format = backend.format
         (qs, q_ts) = ([x[i] for i in range(n)] for x in [q, q_t]) #the components, to be gathered per item
@@ -1469,13 +1485,18 @@ class SymbolicSystem(SymbolicSystemBase):
             if body['rotation'] is not None:
                 value = Call(body['rotation'], *withPosition) @ value
             Add(f, load.ltg, Components(J.T @ value, len(load.ltg)))
-        return (M, f, blocks)
+        (c, r) = ([0]*self.nAE, [0]*n)
+        if constraints:
+            lambdas = None if lambda_ is None else [lambda_[i] for i in range(self.nAE)]
+            for kind in self.jointKinds:
+                for index in range(len(kind.objects)):
+                    self._JointEquations(kind, index, backend, Call, t, qs, q_ts, lambdas, c, r)
+        return (M, f, blocks, c, r)
 
-    def _ConnectorEquations(self, kind, index, backend, Call, t, qs, q_ts, f):
-        """add the generalized forces of connector index of kind to the list f, as expressions: the marker states as in
-        _ConnectorStates, the forces of the recording, J_pos^T f + J_rot^T m of each marker"""
-        (ltg, connector) = (kind.ltg[index], kind.parameters[index])
-        stride = 6 if connector['orientation'] else 3
+    def _MarkerStateExpressions(self, connector, ltg, backend, Call, t, qs, q_ts):
+        """the states of the markers of a connector or joint as expressions, as _ConnectorStates: per marker its
+        position, velocity, rotation matrix and angular velocity in the list of states, and (kind, J_pos, J_rot) or
+        None for a fixed marker in the list of Jacobians"""
         (states, jacobians) = ([], [])
         (zero, unit) = (backend.Vector([0., 0., 0.]), backend.Matrix(np.eye(3)))
         for marker in connector['markers']:
@@ -1501,8 +1522,11 @@ class SymbolicSystem(SymbolicSystemBase):
                     angularVelocity = Jrot @ q_tLocal
                 states += [Call(recordings['positionUserFunction'], *arguments), Jpos @ q_tLocal, rotation, angularVelocity]
                 jacobians.append(('body', Jpos, Jrot))
-        forces = Call(kind.recordings['forceUserFunction'], t, kind.objects[index], *states, backend.Vector([]),
-                      backend.Vector(connector['parameters']))
+        return (states, jacobians)
+
+    def _AddMarkerForces(self, connector, ltg, backend, forces, stride, jacobians, f):
+        """add J_pos^T f + J_rot^T m of each marker of a connector or joint to the list f, the forces and torques of
+        marker k at stride*k of forces"""
         for (k, (marker, jacobian)) in enumerate(zip(connector['markers'], jacobians)):
             if jacobian is None:
                 continue
@@ -1518,19 +1542,54 @@ class SymbolicSystem(SymbolicSystemBase):
             for (i, value) in zip(indices, generalized):
                 f[i] = _Sum(f[i], value)
 
+    def _JointEquations(self, kind, index, backend, Call, t, qs, q_ts, lambdas, c, r):
+        """put the constraint equations of joint index of kind into the list c and, for lambdas, add its reaction forces
+        C_q^T lambda to the list r, as expressions: the marker states as in _JointArguments, the recorded
+        constraintUserFunction and the forces and torques C^T lambda of the recorded jacobianUserFunction, as
+        AlgebraicEquations and ReactionForces (#3146)"""
+        (ltg, joint) = (kind.ltg[index], kind.parameters[index])
+        (states, jacobians) = self._MarkerStateExpressions(joint, ltg, backend, Call, t, qs, q_ts)
+        arguments = (t, kind.objects[index], states[0], states[2], states[4], states[6], backend.Vector(joint['parameters']))
+        ltgAE = joint['ltgAE']
+        equations = Call(kind.recordings['constraintUserFunction'], *arguments)
+        for (k, i) in enumerate(ltgAE):
+            c[i] = equations[k]
+        if lambdas is None:
+            return
+        C = Call(kind.recordings['jacobianUserFunction'], *arguments)
+        forces = C.T @ backend.Vector([lambdas[i] for i in ltgAE])
+        self._AddMarkerForces(joint, ltg, backend, forces, 6, jacobians, r)
+
+    def _ConnectorEquations(self, kind, index, backend, Call, t, qs, q_ts, f):
+        """add the generalized forces of connector index of kind to the list f, as expressions: the marker states as in
+        _ConnectorStates, the forces of the recording, J_pos^T f + J_rot^T m of each marker"""
+        (ltg, connector) = (kind.ltg[index], kind.parameters[index])
+        stride = 6 if connector['orientation'] else 3
+        (states, jacobians) = self._MarkerStateExpressions(connector, ltg, backend, Call, t, qs, q_ts)
+        forces = Call(kind.recordings['forceUserFunction'], t, kind.objects[index], *states, backend.Vector([]),
+                      backend.Vector(connector['parameters']))
+        self._AddMarkerForces(connector, ltg, backend, forces, stride, jacobians, f)
+
     def GetFlatProgram(self, format='Python', flatten=True, results=['forces', 'massMatrix']):
-        """the flat program of results of Equations(), a function of q, q_t and t (#3130, #3132)
+        """the flat program of results of Equations(), a function of q, q_t and t - and lambda with 'reactionForces'
+        (#3130, #3132, #3146)
 
         Args:
             format: 'Python' (the text), or the executable 'symbolic', 'numpy' or 'sympy' of exudyn.misc.symbolicExport
             flatten: True: one line per operation; False: each result as one expression
-            results: the names of the results, 'forces' and 'massMatrix'
+            results: the names of the results: 'forces', 'massMatrix', 'algebraicEquations', 'reactionForces'
 
         Returns:
-            the program as str, for the executable formats a function Equations(q, q_t, t) returning the results
+            the program as str, for the executable formats a function Equations(q, q_t, t) - Equations(q, q_t, t,
+            lambda_) with 'reactionForces' - returning the results
         """
-        equations = self.Equations('symbolic', massMatrix='massMatrix' in results, forces='forces' in results)
-        return exudyn.symbolic.GetFlatProgram([equations[name] for name in results], arguments=[equations[name] for name in ['q', 'q_t', 't']],
+        names = ['forces', 'massMatrix', 'algebraicEquations', 'reactionForces']
+        unknown = [name for name in results if name not in names]
+        if unknown:
+            raise ValueError('SymbolicSystem.GetFlatProgram: unknown results ' + str(unknown) + '; possible: ' + str(names))
+        equations = self.Equations('symbolic', **{name: name in results for name in names})
+        variables = ['q', 'q_t', 't'] + (['lambda_'] if 'reactionForces' in results else [])
+        return exudyn.symbolic.GetFlatProgram([equations[name] for name in results], arguments=[equations[name] for name in variables],
                                               resultNames=list(results), format=format, flatten=flatten, name='Equations')
 
     def __repr__(self):

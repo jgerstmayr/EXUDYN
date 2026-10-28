@@ -79,7 +79,9 @@ the center of mass) and `CreateTorsionalSpringDamper` (#3128); `CreateRevoluteJo
 (#3140); `SymbolicSystem` takes them, with their constraint equations and reaction forces, and `SolveGeneralizedAlpha`
 integrates the system with the joints (#3141); it takes ObjectGenericODE1 with a symbolic rhsUserFunction and
 LoadCoordinate on ODE1 coordinates (`ODE1RightHandSide`, `ODE1Jacobian`, #3144); its `SystemJacobian` is exact, with
-the constraint blocks of the joints and the derivative of their reaction forces (#3145). `SolveGeneralizedAlpha(system,
+the constraint blocks of the joints and the derivative of their reaction forces (#3145);
+`Equations(algebraicEquations=True, reactionForces=True)` and `GetFlatProgram(results=[...])` give the constraint
+equations of the joints and their reaction forces, of q, t and the algebraic coordinates `lambda_` (#3146). `SolveGeneralizedAlpha(system,
 simulationSettings)` integrates a system of `exudyn.misc.symbolicSystem` by the generalized-alpha or Newmark method with
 constant step size, as `SolveDynamic` does, with the Jacobian of the residual by `Diff` of the recordings (#3126).
 `SymbolicSystem.Equations(format)` gives the mass matrix, the forces of `M q_tt = f` and the mass matrices of the

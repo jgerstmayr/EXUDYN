@@ -4265,3 +4265,20 @@ RG12.51.14, .15 and .16 as well as RG12.61 (as recommended) now".)*
   design note). The test keeps the tolerance 1e-13 (1.1e-11), with the reason corrected in its comment.
 - symbolicSystemJointsTest.py checks the exact Jacobian against the central differences (1.2e-13).
 - docs/dev/design/symbolicSystem.md sections 6 and 12.1, docs/manual/revisions.md.
+
+<a id="rg12-51-16"></a>
+### RG12.51.16 — the constraints of the joints in Equations and GetFlatProgram (2026-10-28, #3146)
+*(Maintainer 2026-10-28: "Do RG12.51.14, .15 and .16 as well as RG12.61 (as recommended) now".)*
+- python/exudyn/misc/symbolicSystem.py: `Equations(..., algebraicEquations=False, reactionForces=False)`: the results
+  'algebraicEquations' (nAE, of q and t) and 'reactionForces' (nODE2, of q, t and the algebraic coordinates), the
+  variable of the algebraic coordinates 'lambda_' - a named vector of exudyn.symbolic, the sympy symbols lambda_0,
+  ... -, or given as fourth of `variables`. `_JointEquations` composes them as AlgebraicEquations and ReactionForces do:
+  the marker states by `_MarkerStateExpressions`, the recorded constraintUserFunction, C^T lambda of the recorded
+  jacobianUserFunction mapped by `_AddMarkerForces` - both helpers taken out of `_ConnectorEquations`, which uses them
+  now. `GetFlatProgram(results=[...])` takes the four results and refuses others; with 'reactionForces' the function
+  is Equations(q, q_t, t, lambda_). The name is lambda_, as lambda is a keyword of Python and the exported code uses
+  the variable names as arguments.
+- python/TestModels/symbolicSystemJointsTest.py: both results as numpy code of GetFlatProgram and as sympy expressions
+  equal to AlgebraicEquations and ReactionForces, 4.1e-15 relative.
+- Open: the ODE1 equations in Equations().
+- docs/dev/design/symbolicSystem.md sections 6 and 12.1, docs/manual/revisions.md.

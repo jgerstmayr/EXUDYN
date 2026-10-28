@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 244 | 1.13.248 |
+| 1.13 | Newborn | 245 | 1.13.249 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.249** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The constraint equations of the joints in SymbolicSystem.Equations and GetFlatProgram (#3146)
+  - description: Equations() gives the mass matrix and the forces; the constraints of ObjectJointUser (\#3141) and their reaction forces C\_q^T lambda are not in it, so the export of the equations of motion (RG12.51.5) misses them. Results algebraicEquations (of q and t) and reactionForces (of q, t and the algebraic coordinates), composed of the joint recordings and the marker kinematics as the connectors.
+  - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem.Equations(algebraicEquations=True, reactionForces=True) gives the constraint equations of the joints and their reaction forces as expressions of q, t and the algebraic coordinates lambda\_, and GetFlatProgram(results=\[...\]) writes them as code.
+  - date resolved: **2026-10-28 16:58**, date raised: 2026-10-28
 - **1.13.248** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Exact constraint blocks of ObjectJointUser in SymbolicSystem.SystemJacobian (#3145)
   - description: The constraint blocks of SystemJacobian are central differences (\#3141): SolveGeneralizedAlpha with joints is 90 times slower than SolveDynamic and stops at other Newton iterates. C\_q is the recorded jacobianUserFunction times the position and rotation Jacobians of the markers, already formed for the reaction forces; the derivative of C\_q^T lambda by q from the one-pass derivative of the recordings (\#3116), as for the connectors (\#3129).
   - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem.SystemJacobian is exact: the constraint blocks of ObjectJointUser from the recorded Jacobian and the marker Jacobians, the derivative of the reaction forces, and the ODE1 block; SolveGeneralizedAlpha with joints is ten times faster.

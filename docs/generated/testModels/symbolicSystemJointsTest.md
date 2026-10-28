@@ -15,8 +15,9 @@ You can view and download this file on Github: [symbolicSystemJointsTest.py](htt
 #           point on a distance constraint to it, as ObjectJointUser with recorded user functions. The constraint
 #           equations vanish in the initial state, the reaction forces C_q^T lambda equal the derivative of lambda^T c(q)
 #           by central differences, the exact Jacobian of the system (#3145) equals the central differences of
-#           SymbolicSystemBase, and SolveGeneralizedAlpha equals SolveDynamic; the times of both are printed, not
-#           judged.
+#           SymbolicSystemBase, the constraint equations and reaction forces of Equations() (#3146) - as numpy code of
+#           GetFlatProgram and, if sympy is installed, as sympy expressions - equal those of the system, and
+#           SolveGeneralizedAlpha equals SolveDynamic; the times of both are printed, not judged.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-28
@@ -31,6 +32,10 @@ from exudyn.misc.symbolicUserItems import UserItemCreator
 from exudyn.misc.symbolicSystem import SymbolicSystem, SymbolicSystemBase, SolveGeneralizedAlpha
 import numpy as np
 import time
+try:
+    import sympy
+except ImportError:
+    sympy = None
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -83,6 +88,19 @@ jacobian = system.SystemJacobian(*state, **factors)
 differenceJacobian = np.max(np.abs(jacobian - SymbolicSystemBase.SystemJacobian(system, *state, **factors)))/np.max(np.abs(jacobian))
 exu.Print('exact Jacobian against central differences', differenceJacobian)
 
+#the constraint equations and the reaction forces as expressions: numpy code of the flat program, and sympy
+space = {}
+exec(system.GetFlatProgram(format='numpy', results=['algebraicEquations', 'reactionForces']), space) #Equations(q, q_t, t, lambda_)
+reference = [system.AlgebraicEquations(q, q_t0, None, lambda_, 0.3), system.ReactionForces(q, q_t0, None, lambda_, 0.3)]
+results = [space['Equations'](q, q_t0, 0.3, lambda_)]
+if sympy is not None:
+    equations = system.Equations(format='sympy', massMatrix=False, forces=False, algebraicEquations=True, reactionForces=True)
+    Sympy = sympy.lambdify([list(equations['q']), list(equations['q_t']), equations['t'], list(equations['lambda_'])],
+                           [equations['algebraicEquations'], equations['reactionForces']], 'numpy')
+    results.append(Sympy(q, q_t0, 0.3, lambda_))
+differenceEquations = max(np.max(np.abs(np.ravel(result[k]) - reference[k]))/np.max(np.abs(reference[k])) for result in results for k in [0, 1])
+exu.Print('constraint equations and reaction forces of Equations() against the system', differenceEquations)
+
 #SolveGeneralizedAlpha against SolveDynamic
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 100
@@ -105,7 +123,7 @@ exu.Print('SolveGeneralizedAlpha against SolveDynamic', differenceSolver, '; tim
           's, of SolveGeneralizedAlpha', round(timeSymbolic, 4), 's')
 
 u = 1 + int(not residual0 < 1e-12) + int(not differenceReaction < 1e-7) + int(not differenceSolver < 1e-9)
-u += int(not differenceJacobian < 1e-8)
+u += int(not differenceJacobian < 1e-8) + int(not differenceEquations < 1e-13)
 exu.Print('solution of symbolicSystemJointsTest=', u)
 
 exu.sys['testResult'] = u
