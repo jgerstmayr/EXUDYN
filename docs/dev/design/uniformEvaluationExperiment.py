@@ -321,7 +321,7 @@ inputs = {'t': graph.Add('input', value=0), 'itemNumber': graph.Add('number', va
           'q': [graph.Add('input', value=1 + i) for i in range(n)],
           'q_t': [graph.Add('input', value=1 + n + i) for i in range(n)]}
 inputs['mbs'] = None
-[forces] = Scalarize(graph, system.composed['forces'].GetFlatProgramData(), inputs)
+[forces] = Scalarize(graph, system.composed['ODE2RHS'].GetFlatProgramData(), inputs)
 [blocks] = Scalarize(graph, system.composed['massMatrixBlocks'].GetFlatProgramData(), inputs)
 results = forces + blocks
 operationCounts = collections.Counter(op for (op, operands, value) in graph.nodes if operands)
@@ -370,7 +370,7 @@ for (name, schedule) in schedules.items():
     difference = 0.
     for s in range(states):
         reference = np.concatenate([matrices.ravel() for (ltg, matrices) in system.MassMatrixBlocks(qs[:, s], q_ts[:, s], t)])
-        referenceForces = system.Forces(qs[:, s], q_ts[:, s], t)
+        referenceForces = system.ODE2RHS(qs[:, s], q_ts[:, s], t)
         difference = max(difference, np.max(np.abs(f[:, s] - referenceForces))/np.max(np.abs(referenceForces)),
                          np.max(np.abs(b[:, s] - reference))/np.max(np.abs(reference)))
     exu.Print('  ' + name + ': largest relative difference to SymbolicSystem.Forces and MassMatrixBlocks:', difference)
@@ -380,7 +380,7 @@ def Time(function, repeat):
     for _ in range(repeat):
         function()
     return (time.perf_counter() - start)/repeat
-timeSystem = Time(lambda: (system.Forces(q0, q_t0, t), system.MassMatrixBlocks(q0, q_t0, t)), 200)
+timeSystem = Time(lambda: (system.ODE2RHS(q0, q_t0, t), system.MassMatrixBlocks(q0, q_t0, t)), 200)
 exu.Print('time per state of f and the mass matrices: SymbolicSystem %.1f us; by numpy:' % (timeSystem*1e6))
 (qBatch, q_tBatch) = (np.repeat(q0[:, None], 1000, axis=1), np.repeat(q_t0[:, None], 1000, axis=1))
 for name in ['by levels, as late as possible', 'one array of all values']:

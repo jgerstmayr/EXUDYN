@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 248 | 1.13.252 |
+| 1.13 | Newborn | 249 | 1.13.253 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.253** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The names of exudyn.misc.symbolicSystem as Exudyn names them: ODE2RHS, ODE1RHS, ODE2ReactionForcesLHS, ODE1ReactionTermsLHS, ODE2Residual (#3155)
+  - description: Maintainer 2026-10-28: keep the distinction of RHS and LHS forces of Exudyn, M a + LHS force = RHS force, to avoid sign issues; say ODE2 in the name of what is only for ODE2. As docs/dev/design/symbolicSystem.md section 12.5: Forces -\> ODE2RHS, ODE1RightHandSide -\> ODE1RHS, ReactionForces -\> ODE2ReactionForcesLHS, the missing C\_y^T z as ODE1ReactionTermsLHS, Residual -\> ODE2Residual, ResidualJacobian -\> ODE2ResidualJacobian, the results and arguments of Equations and GetFlatProgram, the arguments of NumpySystem.
+  - **notes:** exudyn.misc.symbolicSystem names its equations as Exudyn does: ODE2RHS, ODE1RHS, ODE2ReactionForcesLHS, the new ODE1ReactionTermsLHS, ODE2Residual and ODE2ResidualJacobian; Equations and GetFlatProgram give 'ODE2RHS' and 'ODE2ReactionForcesLHS'; NumpySystem takes ode2RHS and ode1RHS.
+  - date resolved: **2026-10-29 00:33**, date raised: 2026-10-29
 - **1.13.252** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Recordings with declared inputs: a VariableSet as the scope of named variables, and esym.Function of expressions and a set of inputs (#3149)
   - description: Maintainer 2026-10-28: R2 of docs/dev/design/symbolicSystem.md section 12.6 is accepted. A recording is bound to the signature of an item user function today; the composed system borrows the signature of ObjectGenericODE2 and cannot add y, lambda or parameters. A VariableSet becomes the scope of named variables - scalars, vectors and matrices, a name unique in its set -, a recording declares its inputs as a set, esym.Function(expressions, inputs), evaluated, differentiated and exported as a UserFunction; CreateSymbolicUserFunction builds the set of the item signature. Needed by the parameters as variables and the system variables (section 12.7).
   - **notes:** exudyn.symbolic.Function(result, inputs, name) records an expression in declared inputs - a list of named variables or a VariableSet - as a UserFunction without item and mbs; VariableSet holds named Reals, Vectors and Matrices in the order they were added and is the scope of their names; SymbolicSystem composes its system by it.

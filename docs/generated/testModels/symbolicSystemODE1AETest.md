@@ -40,7 +40,7 @@ q_t0 = np.array([0., 0.3, 0.3])
 (a, b, c) = (20., 50., 3.) #the lag: y_t = -a y + b q0 + sin(5 t); its force on mass 0: -c y
 y0 = np.array([0.1])
 
-def Forces(q, q_t, t, y):
+def ODE2RHS(q, q_t, t, y):
     f = -K @ q - D @ q_t
     f[0] += -c*y[0] + 2*cMath.sin(10*t)
     return f
@@ -55,7 +55,7 @@ def ConstraintJacobian(q, q_t, y, t):
     return np.array([[0., -1., 1.]])
 
 def Numpy(constrained):
-    return NumpySystem(M, Forces, initialState=(q0, q_t0), ode1RightHandSide=Lag, initialStateODE1=y0,
+    return NumpySystem(M, ODE2RHS, initialState=(q0, q_t0), ode1RHS=Lag, initialStateODE1=y0,
                        constraints=Constraint if constrained else None, constraintJacobian=ConstraintJacobian,
                        numberOfConstraints=1)
 

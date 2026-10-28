@@ -95,19 +95,19 @@ for Build in [GenericSystem, RigidBodySystem]:
     equations = system.Equations(massMatrixBlocks=True)
     variables = [equations[name] for name in ['q', 'q_t', 't']]
     blockMatrices = [matrix for (ltg, matrices) in equations['massMatrixBlocks'] for matrix in matrices]
-    Numpy = ToFunction(esym.GetFlatProgramData([equations['massMatrix'], equations['forces']] + blockMatrices, arguments=variables), 'numpy')
+    Numpy = ToFunction(esym.GetFlatProgramData([equations['massMatrix'], equations['ODE2RHS']] + blockMatrices, arguments=variables), 'numpy')
     space = {}
     exec(system.GetFlatProgram(format='numpy'), space) #Equations(q, q_t, t) returns (forces, massMatrix)
     states = [(0.1*rng.standard_normal(n), rng.standard_normal(n), rng.uniform()) for i in range(3)]
     if sympy is not None:
         equationsSympy = system.Equations(format='sympy')
         symbols = [list(equationsSympy[name]) for name in ['q', 'q_t']] + [equationsSympy['t']]
-        Sympy = sympy.lambdify(symbols, [equationsSympy['massMatrix'], equationsSympy['forces']], 'numpy')
+        Sympy = sympy.lambdify(symbols, [equationsSympy['massMatrix'], equationsSympy['ODE2RHS']], 'numpy')
     for (q, q_t, t) in states:
-        reference = [perObject.MassMatrix(q, q_t, t), perObject.Forces(q, q_t, t)]
+        reference = [perObject.MassMatrix(q, q_t, t), perObject.ODE2RHS(q, q_t, t)]
         referenceBlocks = np.concatenate([blocks.ravel() for (ltg, blocks) in perObject.MassMatrixBlocks(q, q_t, t)])
         scale = max(np.max(np.abs(x)) for x in reference)
-        composed = [system.MassMatrix(q, q_t, t), system.Forces(q, q_t, t),
+        composed = [system.MassMatrix(q, q_t, t), system.ODE2RHS(q, q_t, t),
                     np.concatenate([blocks.ravel() for (ltg, blocks) in system.MassMatrixBlocks(q, q_t, t)])]
         differences.append(max(np.max(np.abs(a - b)) for (a, b) in zip(composed, reference + [referenceBlocks]))/scale)
         values = Numpy(q, q_t, t)

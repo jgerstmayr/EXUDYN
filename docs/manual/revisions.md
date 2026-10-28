@@ -78,9 +78,9 @@ the center of mass) and `CreateTorsionalSpringDamper` (#3128); `CreateRevoluteJo
 `CreateSphericalJoint` and `CreateDistanceConstraint` as ObjectJointUser with the equations of the built-in joints
 (#3140); `SymbolicSystem` takes them, with their constraint equations and reaction forces, and `SolveGeneralizedAlpha`
 integrates the system with the joints (#3141); it takes ObjectGenericODE1 with a symbolic rhsUserFunction and
-LoadCoordinate on ODE1 coordinates (`ODE1RightHandSide`, `ODE1Jacobian`, #3144); its `SystemJacobian` is exact, with
+LoadCoordinate on ODE1 coordinates (`ODE1RHS`, `ODE1Jacobian`, #3144); its `SystemJacobian` is exact, with
 the constraint blocks of the joints and the derivative of their reaction forces (#3145);
-`Equations(algebraicEquations=True, reactionForces=True)` and `GetFlatProgram(results=[...])` give the constraint
+`Equations(algebraicEquations=True, ODE2ReactionForcesLHS=True)` and `GetFlatProgram(results=[...])` give the constraint
 equations of the joints and their reaction forces, of q, t and the algebraic coordinates `z` (#3146). `SolveGeneralizedAlpha(system,
 simulationSettings)` integrates a system of `exudyn.misc.symbolicSystem` by the generalized-alpha or Newmark method with
 constant step size, as `SolveDynamic` does, with the Jacobian of the residual by `Diff` of the recordings (#3126).
@@ -92,7 +92,7 @@ and the mass matrix by two recordings of the composed system, one call each (`co
 interface `SymbolicSystemBase` and its solvers have ODE1 and algebraic coordinates, as Exudyn's: `SolveExplicit`
 integrates ODE1 coordinates, `SolveGeneralizedAlpha` also index-3 constraints, and `NumpySystem` takes both (#3134).
 `UserFunction.EvaluateJacobian` differentiates a recording by all components of an argument in one pass over its flat
-program, in a memory block of the program kept between the calls (#3116); `SymbolicSystem.ResidualJacobian` uses it on
+program, in a memory block of the program kept between the calls (#3116); `SymbolicSystem.ODE2ResidualJacobian` uses it on
 the composed system. `exudyn.symbolic.GetStatistics(expressions, detailed)` and `GetStatistics()` of an expression or a
 recording count its nodes, operations, leaves, shared nodes, depth, the size of its tree and the operations of its flat
 program, with `detailed=True` per operation and per kind (#3142). `exudyn.symbolic.Function(result, inputs, name)` records an

@@ -15,7 +15,7 @@
 #           method, as Exudyn's implicit solver does (#3126).
 #           Equations() gives the equations of the system as expressions in the system variables q, q_t and t -
 #           exudyn.symbolic, whose flat program GetFlatProgram() writes, or sympy - composed of the recordings (#3130);
-#           the forces and the mass matrix of these expressions, recorded once, are what Forces, MassMatrix and Residual
+#           the forces and the mass matrix of these expressions, recorded once, are what ODE2RHS, MassMatrix and ODE2Residual
 #           evaluate: one call each for the whole system (#3131).
 #           Special: not for the broad use, a basis for the export of the equations of motion and their evaluation
 #           outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
@@ -76,12 +76,12 @@ class SymbolicSystemBase:
     second order coordinates q, nODE1 first order coordinates y and nAE algebraic coordinates z - the Lagrange
     multipliers lambda of the documentation, named z in the code, as lambda is a keyword of Python - with
 
-        M(q, t) q_tt = f(q, q_t, t, y) - C_q^T z      (ODE2, the reaction forces C_q^T z by ReactionForces)
-        y_t = g(q, q_t, y, t)                               (ODE1, ODE1RightHandSide)
+        M(q, t) q_tt = f(q, q_t, t, y) - C_q^T z      (ODE2, the reaction forces C_q^T z by ODE2ReactionForcesLHS)
+        y_t = g(q, q_t, y, t)                               (ODE1, ODE1RHS)
         c(q, q_t, y, z, t) = 0                              (AE, AlgebraicEquations)
 
-    A derived class sets nODE2 (nODE1 and nAE, zero by default) and computes Forces and MassMatrixTriplets (or
-    MassMatrix), and ODE1RightHandSide, AlgebraicEquations and ReactionForces if it has such coordinates; the residuals
+    A derived class sets nODE2 (nODE1 and nAE, zero by default) and computes ODE2RHS and MassMatrixTriplets (or
+    MassMatrix), and ODE1RHS, AlgebraicEquations and ODE2ReactionForcesLHS if it has such coordinates; the residuals
     and their Jacobians follow from them, unless the derived class computes them itself. Any equation may depend on
     the coordinates of every kind, so that an item coupling all of them fits
 
@@ -104,15 +104,15 @@ class SymbolicSystemBase:
         """True if the mass matrix depends neither on q nor on t, so that a solver factorizes it once"""
         return False
 
-    def Forces(self, q=None, q_t=None, t=0., y=None):
+    def ODE2RHS(self, q=None, q_t=None, t=0., y=None):
         """the forces f(q, q_t, t, y) of the right-hand side, of size nODE2, without the reaction forces; y, the ODE1
         coordinates, is given only if nODE1 > 0"""
-        raise NotImplementedError('SymbolicSystemBase.Forces: computed by the derived class')
+        raise NotImplementedError('SymbolicSystemBase.ODE2RHS: computed by the derived class')
 
-    def ODE1RightHandSide(self, q, q_t, y, t):
+    def ODE1RHS(self, q, q_t, y, t):
         """the right-hand side g(q, q_t, y, t) = y_t of the ODE1 coordinates, of size nODE1"""
         if self.nODE1:
-            raise NotImplementedError('SymbolicSystemBase.ODE1RightHandSide: computed by the derived class')
+            raise NotImplementedError('SymbolicSystemBase.ODE1RHS: computed by the derived class')
         return np.zeros(0)
 
     def AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel=False):
@@ -121,11 +121,16 @@ class SymbolicSystemBase:
             raise NotImplementedError('SymbolicSystemBase.AlgebraicEquations: computed by the derived class')
         return np.zeros(0)
 
-    def ReactionForces(self, q, q_t, y, z, t):
+    def ODE2ReactionForcesLHS(self, q, q_t, y, z, t):
         """the reaction forces C_q^T z of the algebraic coordinates, of size nODE2, which the ODE2 residual adds"""
         if self.nAE:
-            raise NotImplementedError('SymbolicSystemBase.ReactionForces: computed by the derived class')
+            raise NotImplementedError('SymbolicSystemBase.ODE2ReactionForcesLHS: computed by the derived class')
         return np.zeros(self.nODE2)
+
+    def ODE1ReactionTermsLHS(self, q, q_t, y, z, t):
+        """the reaction terms C_y^T z of the algebraic coordinates in the ODE1 equations, on their left-hand side, of
+        size nODE1 (#3155); zero, unless a derived class has algebraic equations of ODE1 coordinates"""
+        return np.zeros(self.nODE1)
 
     def MassMatrixTriplets(self, q=None, q_t=None, t=0.):
         """the mass matrix as triplets (rows, columns, values); equal rows and columns are added"""
@@ -141,21 +146,21 @@ class SymbolicSystemBase:
         (#3112). The base class gives one block of all coordinates"""
         return [(np.arange(self.nODE2)[np.newaxis, :], self.MassMatrix(q, q_t, t)[np.newaxis, :, :])]
 
-    def Residual(self, q=None, q_t=None, q_tt=None, t=0., y=None):
+    def ODE2Residual(self, q=None, q_t=None, q_tt=None, t=0., y=None):
         """the residual r = M(q, t) q_tt - f(q, q_t, t, y) of the ODE2 equations, of size nODE2, without reaction forces"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
-        forces = self.Forces(q, q_t, t) if y is None else self.Forces(q, q_t, t, y=y)
+        forces = self.ODE2RHS(q, q_t, t) if y is None else self.ODE2RHS(q, q_t, t, y=y)
         return self.MassMatrix(q, q_t, t, sparse=True) @ q_tt - forces
 
     def SystemResidual(self, q, q_t, q_tt, y, y_t, z, t, velocityLevel=False):
         """the residual of all equations as the implicit solver of Exudyn has it (#3134): [M q_tt - f + C_q^T z,
-        g - y_t, c], of size nODE2 + nODE1 + nAE"""
+        g - y_t - C_y^T z, c], of size nODE2 + nODE1 + nAE"""
         yArgument = y if self.nODE1 else None
-        parts = [self.Residual(q, q_t, q_tt, t, y=yArgument)]
+        parts = [self.ODE2Residual(q, q_t, q_tt, t, y=yArgument)]
         if self.nAE:
-            parts[0] = parts[0] + self.ReactionForces(q, q_t, y, z, t)
-        if self.nODE1:
-            parts.append(self.ODE1RightHandSide(q, q_t, y, t) - y_t)
+            parts[0] = parts[0] + self.ODE2ReactionForcesLHS(q, q_t, y, z, t)
+        if self.nODE1: #the ODE1 rows RHS minus LHS, as CSolverImplicitSecondOrder
+            parts.append(self.ODE1RHS(q, q_t, y, t) - y_t - (self.ODE1ReactionTermsLHS(q, q_t, y, z, t) if self.nAE else 0.))
         if self.nAE:
             parts.append(self.AlgebraicEquations(q, q_t, y, z, t, velocityLevel))
         return np.concatenate(parts)
@@ -164,7 +169,7 @@ class SymbolicSystemBase:
                        factor_y_t=0., velocityLevel=False, epsilon=1e-6):
         """the Jacobian of SystemResidual (#3134), column by column: ODE2 columns factor_q d/dq + factor_q_t d/dq_t +
         factor_q_tt d/dq_tt, ODE1 columns factor_y d/dy + factor_y_t d/dy_t, AE columns d/dz; the ODE2 block by
-        ResidualJacobian (exact for a SymbolicSystem), the others by central differences of SystemResidual
+        ODE2ResidualJacobian (exact for a SymbolicSystem), the others by central differences of SystemResidual
 
         Args:
             q: the ODE2 coordinates
@@ -190,16 +195,16 @@ class SymbolicSystemBase:
         state = [np.array(x, dtype=float) for x in [q, q_t, q_tt, y, y_t, z]]
         J = np.zeros((nSystem, nSystem))
         if nODE1:
-            J[:nODE2, :nODE2] = self.ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, y=y)
+            J[:nODE2, :nODE2] = self.ODE2ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, y=y)
         else:
-            J[:nODE2, :nODE2] = self.ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
+            J[:nODE2, :nODE2] = self.ODE2ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
 
         def Difference(direction, rows): #the derivative of the residual rows along a direction of the state
             residuals = []
             for sign in [1., -1.]:
                 perturbed = [x + sign*epsilon*d for (x, d) in zip(state, direction)]
                 residuals.append(self.SystemResidual(*perturbed, t, velocityLevel)[rows] if rows != 'reaction'
-                                 else self.ReactionForces(perturbed[0], perturbed[1], perturbed[3], perturbed[5], t))
+                                 else self.ODE2ReactionForcesLHS(perturbed[0], perturbed[1], perturbed[3], perturbed[5], t))
             return (residuals[0] - residuals[1])/(2*epsilon)
 
         zeros = [np.zeros(len(x)) for x in state]
@@ -221,10 +226,10 @@ class SymbolicSystemBase:
                 J[:, j] = Difference(direction, slice(0, nSystem))
         return J
 
-    def ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
+    def ODE2ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
                          sparse=False, epsilon=1e-6, y=None):
         """the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, by central
-        differences of Residual - for a system without derivatives of its own; factor_q_tt=1 alone gives the mass
+        differences of ODE2Residual - for a system without derivatives of its own; factor_q_tt=1 alone gives the mass
         matrix, a Newton step of an implicit integrator combines the three
 
         Args:
@@ -252,7 +257,7 @@ class SymbolicSystemBase:
                 for sign in [1., -1.]:
                     perturbed = [x.copy() for x in state]
                     perturbed[k][j] += sign*epsilon
-                    residuals.append(self.Residual(*perturbed, t, y=y))
+                    residuals.append(self.ODE2Residual(*perturbed, t, y=y))
                 J[:, j] += factor*(residuals[0] - residuals[1])/(2*epsilon)
         (rows, columns) = np.nonzero(J)
         return self._Matrix(rows, columns, J[rows, columns], sparse)
@@ -276,26 +281,27 @@ class NumpySystem(SymbolicSystemBase):
 
     Args:
         massMatrix: the mass matrix, constant (numpy array or scipy sparse matrix) or a function (q, q_t, t) -> matrix
-        forces: the function (q, q_t, t) -> f, of size nODE2; with ODE1 coordinates (q, q_t, t, y) -> f
+        ode2RHS: the function (q, q_t, t) -> f of the right-hand side, of size nODE2; with ODE1 coordinates (q, q_t, t,
+            y) -> f
         initialState: (q0, q_t0); None: zero
         massMatrixBlocks: the blocks of bodies as SymbolicSystemBase.MassMatrixBlocks returns them, for a constant mass
             matrix; None: one block of all coordinates
-        ode1RightHandSide: None, or the function (q, q_t, y, t) -> y_t of the ODE1 coordinates
+        ode1RHS: None, or the function (q, q_t, y, t) -> y_t of the ODE1 coordinates
         initialStateODE1: the initial ODE1 coordinates y0, which also give their number
         constraints: None, or the function (q, q_t, y, z, t) -> c of the algebraic equations on position level
         constraintJacobian: the function (q, q_t, y, t) -> C_q (nAE x nODE2) of the reaction forces C_q^T z
         numberOfConstraints: nAE
     """
-    def __init__(self, massMatrix, forces, initialState=None, massMatrixBlocks=None, ode1RightHandSide=None,
+    def __init__(self, massMatrix, ode2RHS, initialState=None, massMatrixBlocks=None, ode1RHS=None,
                  initialStateODE1=None, constraints=None, constraintJacobian=None, numberOfConstraints=0):
         self._massMatrix = massMatrix
-        self._forces = forces
+        self._forces = ode2RHS
         self.nODE2 = (len(initialState[0]) if initialState is not None else massMatrix.shape[0])
         self._initialState = initialState
         self._massMatrixBlocks = massMatrixBlocks
-        self._ode1 = ode1RightHandSide
+        self._ode1 = ode1RHS
         self._y0 = np.array(initialStateODE1 if initialStateODE1 is not None else [], dtype=float)
-        self.nODE1 = len(self._y0) if ode1RightHandSide is not None else 0
+        self.nODE1 = len(self._y0) if ode1RHS is not None else 0
         self._constraints = constraints
         self._constraintJacobian = constraintJacobian
         self.nAE = int(numberOfConstraints) if constraints is not None else 0
@@ -304,7 +310,7 @@ class NumpySystem(SymbolicSystemBase):
         """y0 as given"""
         return self._y0.copy()
 
-    def ODE1RightHandSide(self, q, q_t, y, t):
+    def ODE1RHS(self, q, q_t, y, t):
         """g(q, q_t, y, t) of the function given"""
         if self._ode1 is None:
             return np.zeros(0)
@@ -318,7 +324,7 @@ class NumpySystem(SymbolicSystemBase):
             return np.zeros(0)
         return np.asarray(self._constraints(q, q_t, y, z, t), dtype=float)
 
-    def ReactionForces(self, q, q_t, y, z, t):
+    def ODE2ReactionForcesLHS(self, q, q_t, y, z, t):
         """C_q^T z of the constraint Jacobian given"""
         if self._constraints is None:
             return np.zeros(self.nODE2)
@@ -334,7 +340,7 @@ class NumpySystem(SymbolicSystemBase):
         """True for a mass matrix given as matrix"""
         return not callable(self._massMatrix)
 
-    def Forces(self, q=None, q_t=None, t=0., y=None):
+    def ODE2RHS(self, q=None, q_t=None, t=0., y=None):
         """f(q, q_t, t) of the function given, or f(q, q_t, t, y) with ODE1 coordinates"""
         (q, q_t, _) = self._State(q, q_t)
         if self.nODE1:
@@ -442,18 +448,18 @@ class SymbolicSystem(SymbolicSystemBase):
 
     Args:
         mbs: the assembled MainSystem
-        composeSystem: True: Forces, MassMatrix and Residual evaluate two recordings of the composed system - the
+        composeSystem: True: ODE2RHS, MassMatrix and ODE2Residual evaluate two recordings of the composed system - the
             forces and the nonzero entries of the mass matrix of Equations(), each one flat program (#3131) -; False:
             each object and load by its own recordings, one call each
 
     Note:
         Its members: mbs; kinds, the list of SymbolicKind; jointKinds, the list of SymbolicKind of the ObjectJointUser
-        (#3141), whose constraint equations are AlgebraicEquations and whose reaction forces are ReactionForces - in Equations() on request
+        (#3141), whose constraint equations are AlgebraicEquations and whose reaction forces are ODE2ReactionForcesLHS - in Equations() on request
         (#3146) -; ode1Kinds, the list of SymbolicKind of the ObjectGenericODE1 (#3144), whose right-hand
-        side is ODE1RightHandSide; loads, the list of SymbolicLoad on ODE2 coordinates, ode1Loads those on ODE1
+        side is ODE1RHS; loads, the list of SymbolicLoad on ODE2 coordinates, ode1Loads those on ODE1
         coordinates; nODE2, nODE1, the numbers of ODE2 and ODE1 coordinates of the system; nAE, the number of the
         algebraic equations; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
-        the recordings 'forces', 'massMatrix' and 'massMatrixBlocks' - esym.Function of the inputs q, q_t and t, the
+        the recordings 'ODE2RHS', 'massMatrix' and 'massMatrixBlocks' - esym.Function of the inputs q, q_t and t, the
         VariableSet 'inputs' (#3149) - and the 'rows' and 'columns' of the entries of the mass matrix
     """
     def __init__(self, mbs, composeSystem=True):
@@ -570,7 +576,7 @@ class SymbolicSystem(SymbolicSystemBase):
         def Function(values, name):
             return exudyn.symbolic.Function(exudyn.symbolic.Optimize(backend.Vector(values)), inputs, name)
 
-        return {'forces': Function(f, 'forces'), 'massMatrix': Function(massMatrix, 'massMatrix'),
+        return {'ODE2RHS': Function(f, 'ODE2RHS'), 'massMatrix': Function(massMatrix, 'massMatrix'),
                 'massMatrixBlocks': Function(blockEntries if blockEntries else [0.], 'massMatrixBlocks'),
                 'inputs': inputs, 'rows': rows, 'columns': columns}
 
@@ -731,7 +737,7 @@ class SymbolicSystem(SymbolicSystemBase):
         """True if every user body has constantMassMatrix and no ObjectGenericODE2 has a massMatrixUserFunction"""
         return self._constantMassMatrix
 
-    def ODE1RightHandSide(self, q, q_t, y, t):
+    def ODE1RHS(self, q, q_t, y, t):
         """the right-hand side g(y, t) of the ODE1 equations y_t = g (#3144): per ObjectGenericODE1 A y + f and its
         recorded rhsUserFunction of its coordinates, as CObjectGenericODE1 computes it, and the LoadCoordinate on ODE1
         coordinates
@@ -749,12 +755,12 @@ class SymbolicSystem(SymbolicSystemBase):
         g = np.zeros(self.nODE1)
         for kind in self.ode1Kinds:
             for i in range(len(kind.objects)):
-                np.add.at(g, kind.ltg[i], self._LocalODE1RightHandSide(kind, i, y, t))
+                np.add.at(g, kind.ltg[i], self._LocalODE1RHS(kind, i, y, t))
         for load in self.ode1Loads:
             np.add.at(g, load.ltg, np.atleast_1d(self._LoadValue(load, t)))
         return g
 
-    def _LocalODE1RightHandSide(self, kind, i, y, t):
+    def _LocalODE1RHS(self, kind, i, y, t):
         """the right-hand side of ObjectGenericODE1 i of kind, A y + f + f_user(mbs, t, itemNumber, y)"""
         (ltg, matrices) = (kind.ltg[i], kind.parameters[i])
         g = np.zeros(len(ltg))
@@ -767,7 +773,7 @@ class SymbolicSystem(SymbolicSystemBase):
         return g
 
     def ODE1Jacobian(self, y, t):
-        """the derivative of ODE1RightHandSide by y (nODE1 x nODE1), exact: A and the derivative of the recorded
+        """the derivative of ODE1RHS by y (nODE1 x nODE1), exact: A and the derivative of the recorded
         rhsUserFunction (#3144, #3116)"""
         y = np.asarray(y, dtype=float)
         J = np.zeros((self.nODE1, self.nODE1))
@@ -875,7 +881,7 @@ class SymbolicSystem(SymbolicSystemBase):
                                                           dtype=float)
         return c
 
-    def ReactionForces(self, q, q_t, y, z, t):
+    def ODE2ReactionForcesLHS(self, q, q_t, y, z, t):
         """the reaction forces C_q^T z of the joints (#3141): the recorded jacobianUserFunction C by the marker
         translations and global rotation increments, C^T z the forces and torques on the markers, projected into the
         coordinates by the position and rotation Jacobians of the markers, as the forces of a connector
@@ -956,7 +962,7 @@ class SymbolicSystem(SymbolicSystemBase):
 
     def SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
                        factor_y_t=0., velocityLevel=False, epsilon=1e-6):
-        """the Jacobian of SystemResidual, exact (#3145): the ODE2 block by ResidualJacobian plus the derivative of the
+        """the Jacobian of SystemResidual, exact (#3145): the ODE2 block by ODE2ResidualJacobian plus the derivative of the
         reaction forces, the blocks C_q^T and C_q of the joints by _JointJacobian, the ODE1 block by ODE1Jacobian; the
         arguments as SymbolicSystemBase.SystemJacobian, epsilon not used
 
@@ -985,7 +991,7 @@ class SymbolicSystem(SymbolicSystemBase):
         nSystem = nODE2 + nODE1 + nAE
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
         J = np.zeros((nSystem, nSystem))
-        J[:nODE2, :nODE2] = self.ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
+        J[:nODE2, :nODE2] = self.ODE2ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
         if nAE:
             z = np.asarray(z, dtype=float)
             offset = nODE2 + nODE1 #the first algebraic coordinate
@@ -1107,7 +1113,7 @@ class SymbolicSystem(SymbolicSystemBase):
                 f -= matrices['D'] @ q_t[ltg]
         return f
 
-    def Forces(self, q=None, q_t=None, t=0., y=None):
+    def ODE2RHS(self, q=None, q_t=None, t=0., y=None):
         """the global forces f(q, q_t, t) of the right-hand side, as the ODE2 part of the solver's right-hand side; y is
         not used, as no item taken couples the ODE1 coordinates into the ODE2 equations
 
@@ -1122,7 +1128,7 @@ class SymbolicSystem(SymbolicSystemBase):
         """
         (q, q_t, _) = self._State(q, q_t)
         if self.composed is not None:
-            return np.array(self.composed['forces'].Evaluate(q, q_t, t), dtype=float)
+            return np.array(self.composed['ODE2RHS'].Evaluate(q, q_t, t), dtype=float)
         f = np.zeros(self.nODE2)
         for kind in self.kinds:
             for i in range(len(kind.objects)):
@@ -1166,14 +1172,14 @@ class SymbolicSystem(SymbolicSystemBase):
         return [(kind.ltg, np.array([self._LocalMassMatrix(kind, i, q, q_t, t) for i in range(len(kind.objects))]))
                 for kind in kinds]
 
-    def Residual(self, q=None, q_t=None, q_tt=None, t=0., y=None):
+    def ODE2Residual(self, q=None, q_t=None, q_tt=None, t=0., y=None):
         """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations without forming M: by the recordings of the
         composed system, else object by object; y is not used, as no item taken couples the ODE1 coordinates into the
         ODE2 equations"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
         if self.composed is not None:
             (rows, columns, values) = self.MassMatrixTriplets(q, q_t, t)
-            return np.bincount(rows, values*q_tt[columns], minlength=self.nODE2) - self.Forces(q, q_t, t)
+            return np.bincount(rows, values*q_tt[columns], minlength=self.nODE2) - self.ODE2RHS(q, q_t, t)
         r = np.zeros(self.nODE2)
         for kind in self.kinds:
             for i in range(len(kind.objects)):
@@ -1184,7 +1190,7 @@ class SymbolicSystem(SymbolicSystemBase):
             np.add.at(r, load.ltg, -self._LoadForces(load, q, q_t, t))
         return r
 
-    def ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
+    def ODE2ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
                          sparse=False, y=None):
         """the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, exact by the
         derivatives of the recordings (UserFunction.EvaluateJacobian, #3115, in one pass over the flat program #3116):
@@ -1212,7 +1218,7 @@ class SymbolicSystem(SymbolicSystemBase):
             J = np.zeros((self.nODE2, self.nODE2))
             for (name, factor) in [('q', factor_q), ('q_t', factor_q_t)]:
                 if factor != 0.:
-                    J -= factor*np.array(composed['forces'].EvaluateJacobian(name, q, q_t, t), dtype=float)
+                    J -= factor*np.array(composed['ODE2RHS'].EvaluateJacobian(name, q, q_t, t), dtype=float)
             (rows, columns) = (composed['rows'], composed['columns'])
             if factor_q != 0. and len(rows) and not self._constantMassMatrix: #d(M q_tt)/dq
                 dM = np.array(composed['massMatrix'].EvaluateJacobian('q', q, q_t, t), dtype=float)[:len(rows)]
@@ -1323,8 +1329,8 @@ class SymbolicSystem(SymbolicSystemBase):
                     local[np.ix_(indices, indices)] -= factor_q*np.einsum('ijk,i->jk', dJrot, forces[torque])
         return local
 
-    def Equations(self, format='symbolic', optimize=True, variables=None, massMatrix=True, forces=True,
-                  massMatrixBlocks=False, algebraicEquations=False, reactionForces=False):
+    def Equations(self, format='symbolic', optimize=True, variables=None, massMatrix=True, ODE2RHS=True,
+                  massMatrixBlocks=False, algebraicEquations=False, ODE2ReactionForcesLHS=False):
         """the equations of motion M(q, t) q_tt = f(q, q_t, t) of the system as expressions in its variables (#3130,
         #3132), composed of the recordings of the kinds, the marker kinematics of the connectors and the loads; each
         recording is called with symbolic arguments through its code of exudyn.misc.symbolicExport, the parameters of
@@ -1342,17 +1348,17 @@ class SymbolicSystem(SymbolicSystemBase):
             variables: None, or (q, q_t, t) of the format given by the caller - e.g. the arguments of a function being
                 recorded -, used instead of new variables; (q, q_t, t, z) with the algebraic coordinates
             massMatrix: True: the global mass matrix, 'massMatrix' (nODE2 x nODE2)
-            forces: True: the forces, 'forces' (nODE2)
+            ODE2RHS: True: the forces of the right-hand side, 'ODE2RHS' (nODE2)
             massMatrixBlocks: True: the mass matrices of the bodies, 'massMatrixBlocks', as MassMatrixBlocks() gives
                 them: a list per kind of bodies of (ltg, matrices), the LTG table of the kind (bodies x n) and the list
                 of their n x n matrices
             algebraicEquations: True: the constraint equations c(q, t) of the joints, 'algebraicEquations' (nAE), as
                 AlgebraicEquations (#3146)
-            reactionForces: True: the reaction forces C_q^T z of the joints, 'reactionForces' (nODE2), as
-                ReactionForces, of the algebraic coordinates, the variable 'z' (#3146)
+            ODE2ReactionForcesLHS: True: the reaction forces C_q^T z of the joints, 'ODE2ReactionForcesLHS' (nODE2), as
+                ODE2ReactionForcesLHS, of the algebraic coordinates, the variable 'z' (#3146)
 
         Returns:
-            dict with 'q', 'q_t', 't' (the variables), 'z' if reactionForces, and the results asked for,
+            dict with 'q', 'q_t', 't' (the variables), 'z' if ODE2ReactionForcesLHS, and the results asked for,
             exudyn.symbolic.Matrix and Vector or sympy.Matrix
         """
         backend = _Backend(format)
@@ -1366,14 +1372,14 @@ class SymbolicSystem(SymbolicSystemBase):
             (q, q_t, t) = variables[:3]
             if len(variables) > 3:
                 z = variables[3]
-        if reactionForces and z is None:
+        if ODE2ReactionForcesLHS and z is None:
             z = backend.Variable('z', self.nAE, np.zeros(self.nAE))
-        (M, f, blocks, c, r) = self._EquationLists(backend, q, q_t, t, z if reactionForces else None,
-                                                   algebraicEquations or reactionForces)
+        (M, f, blocks, c, r) = self._EquationLists(backend, q, q_t, t, z if ODE2ReactionForcesLHS else None,
+                                                   algebraicEquations or ODE2ReactionForcesLHS)
         (names, results) = ([], [])
-        for (name, wanted, Result) in [('massMatrix', massMatrix, lambda: backend.Matrix(M)), ('forces', forces, lambda: backend.Vector(f)),
+        for (name, wanted, Result) in [('massMatrix', massMatrix, lambda: backend.Matrix(M)), ('ODE2RHS', ODE2RHS, lambda: backend.Vector(f)),
                                        ('algebraicEquations', algebraicEquations, lambda: backend.Vector(c)),
-                                       ('reactionForces', reactionForces, lambda: backend.Vector(r))]:
+                                       ('ODE2ReactionForcesLHS', ODE2ReactionForcesLHS, lambda: backend.Vector(r))]:
             if wanted:
                 names.append(name)
                 results.append(Result())
@@ -1384,7 +1390,7 @@ class SymbolicSystem(SymbolicSystemBase):
             results = [exudyn.symbolic.Optimize(result, level=2) if name != 'massMatrixBlocks' or result else result
                        for (name, result) in zip(names, results)]
         equations = {'q': q, 'q_t': q_t, 't': t}
-        if reactionForces:
+        if ODE2ReactionForcesLHS:
             equations['z'] = z
         for (name, result) in zip(names, results):
             equations[name] = result
@@ -1542,7 +1548,7 @@ class SymbolicSystem(SymbolicSystemBase):
         """put the constraint equations of joint index of kind into the list c and, for zComponents, add its reaction forces
         C_q^T z to the list r, as expressions: the marker states as in _JointArguments, the recorded
         constraintUserFunction and the forces and torques C^T z of the recorded jacobianUserFunction, as
-        AlgebraicEquations and ReactionForces (#3146)"""
+        AlgebraicEquations and ODE2ReactionForcesLHS (#3146)"""
         (ltg, joint) = (kind.ltg[index], kind.parameters[index])
         (states, jacobians) = self._MarkerStateExpressions(joint, ltg, backend, Call, t, qs, q_ts)
         arguments = (t, kind.objects[index], states[0], states[2], states[4], states[6], backend.Vector(joint['parameters']))
@@ -1566,25 +1572,25 @@ class SymbolicSystem(SymbolicSystemBase):
                       backend.Vector(connector['parameters']))
         self._AddMarkerForces(connector, ltg, backend, forces, stride, jacobians, f)
 
-    def GetFlatProgram(self, format='Python', flatten=True, results=['forces', 'massMatrix']):
-        """the flat program of results of Equations(), a function of q, q_t and t - and z with 'reactionForces'
+    def GetFlatProgram(self, format='Python', flatten=True, results=['ODE2RHS', 'massMatrix']):
+        """the flat program of results of Equations(), a function of q, q_t and t - and z with 'ODE2ReactionForcesLHS'
         (#3130, #3132, #3146)
 
         Args:
             format: 'Python' (the text), or the executable 'symbolic', 'numpy' or 'sympy' of exudyn.misc.symbolicExport
             flatten: True: one line per operation; False: each result as one expression
-            results: the names of the results: 'forces', 'massMatrix', 'algebraicEquations', 'reactionForces'
+            results: the names of the results: 'ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS'
 
         Returns:
             the program as str, for the executable formats a function Equations(q, q_t, t) - Equations(q, q_t, t,
-            z) with 'reactionForces' - returning the results
+            z) with 'ODE2ReactionForcesLHS' - returning the results
         """
-        names = ['forces', 'massMatrix', 'algebraicEquations', 'reactionForces']
+        names = ['ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS']
         unknown = [name for name in results if name not in names]
         if unknown:
             raise ValueError('SymbolicSystem.GetFlatProgram: unknown results ' + str(unknown) + '; possible: ' + str(names))
         equations = self.Equations('symbolic', **{name: name in results for name in names})
-        variables = ['q', 'q_t', 't'] + (['z'] if 'reactionForces' in results else [])
+        variables = ['q', 'q_t', 't'] + (['z'] if 'ODE2ReactionForcesLHS' in results else [])
         return exudyn.symbolic.GetFlatProgram([equations[name] for name in results], arguments=[equations[name] for name in variables],
                                               resultNames=list(results), format=format, flatten=flatten, name='Equations')
 
@@ -1810,7 +1816,7 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     forceEvaluations = [0]
     def Accelerations(q, q_t, t, y=None):
         forceEvaluations[0] += 1
-        forces = system.Forces(q, q_t, t, y=y) if system.nODE1 else system.Forces(q, q_t, t)
+        forces = system.ODE2RHS(q, q_t, t, y=y) if system.nODE1 else system.ODE2RHS(q, q_t, t)
         return massSolver.Accelerations(q, q_t, t, forces)
 
     (q, q_t) = system.InitialState()
@@ -1841,14 +1847,14 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
                         g_y += (A[i][j]*h)*K_y[j]
                 K.append(g_t)
                 K_t.append(Accelerations(g, g_t, t0 + h*times[i], g_y))
-                K_y.append(system.ODE1RightHandSide(g, g_t, g_y, t0 + h*times[i]) if system.nODE1 else g_y)
+                K_y.append(system.ODE1RHS(g, g_t, g_y, t0 + h*times[i]) if system.nODE1 else g_y)
             for i in range(len(weights)):
                 if weights[i] != 0.:
                     q = q + (weights[i]*h)*K[i]
                     q_t = q_t + (weights[i]*h)*K_t[i]
                     y = y + (weights[i]*h)*K_y[i]
             if system.nODE1:
-                y_t = system.ODE1RightHandSide(q, q_t, y, t)
+                y_t = system.ODE1RHS(q, q_t, y, t)
             if timeIntegration.explicit.computeEndOfStepAccelerations:
                 q_tt = Accelerations(q, q_t, t, y)
             else:
@@ -1914,7 +1920,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     (y, y_t, z) = (system.InitialStateODE1(), np.zeros(nODE1), np.zeros(nAE))
     if generalizedAlpha.computeInitialAccelerations:
         if not general:
-            q_tt = scipy.sparse.linalg.spsolve(system.MassMatrix(q, q_t, tStart, sparse=True).tocsc(), system.Forces(q, q_t, tStart))
+            q_tt = scipy.sparse.linalg.spsolve(system.MassMatrix(q, q_t, tStart, sparse=True).tocsc(), system.ODE2RHS(q, q_t, tStart))
         else:
             (q_tt, zInitial) = _InitialAccelerations(system, q, q_t, y, tStart)
             if generalizedAlpha.storeInitialAlgebraicCoordinates:
@@ -1923,10 +1929,10 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     output = _Output(system, simulationSettings, tStart, tEnd, h)
     output.Step(0, tStart, q, q_t, q_tt, y=y, y_t=y_t, z=z)
 
-    def Residual():
+    def ODE2Residual():
         if general:
             return system.SystemResidual(q, q_t, q_tt, y, y_t, z, t)
-        return system.Residual(q, q_t, q_tt, t)
+        return system.ODE2Residual(q, q_t, q_tt, t)
 
     (newtonIterations, jacobianEvaluations) = (0, 0)
     for step in range(1, n + 1):
@@ -1946,7 +1952,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
         y_t = np.zeros(nODE1)
 
         #Newton's method, as CSolverBase::Newton: converged by the residual relative to the initial one or absolute
-        initialResidual = cMath.norm(Residual())/errorFactor
+        initialResidual = cMath.norm(ODE2Residual())/errorFactor
         if initialResidual <= newton.absoluteTolerance:
             initialResidual = 2*newton.absoluteTolerance #at least one Newton step
         factorization = None
@@ -1960,11 +1966,11 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
                     J[:, nODE2 + nODE1:] /= scaling
                     factorization = scipy.linalg.lu_factor(J)
                 else:
-                    factorization = scipy.sparse.linalg.splu(system.ResidualJacobian(q, q_t, q_tt, t, factor_q=1., factor_q_t=gammaPrime,
+                    factorization = scipy.sparse.linalg.splu(system.ODE2ResidualJacobian(q, q_t, q_tt, t, factor_q=1., factor_q_t=gammaPrime,
                                                                                      factor_q_tt=betaPrime, sparse=True).tocsc())
                 jacobianEvaluations += 1
             if general:
-                r = Residual()
+                r = ODE2Residual()
                 r[:nODE2] *= scaling
                 increment = scipy.linalg.lu_solve(factorization, r)
                 y = y - increment[nODE2:nODE2 + nODE1]
@@ -1972,12 +1978,12 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
                 z = z - increment[nODE2 + nODE1:]/scaling
                 increment = increment[:nODE2]
             else:
-                increment = factorization.solve(Residual())
+                increment = factorization.solve(ODE2Residual())
             q = q - increment
             q_t = q_t - gammaPrime*increment
             q_tt = q_tt - betaPrime*increment
             newtonIterations += 1
-            residual = cMath.norm(Residual())/errorFactor
+            residual = cMath.norm(ODE2Residual())/errorFactor
             if residual/initialResidual <= newton.relativeTolerance or residual <= newton.absoluteTolerance:
                 converged = True
                 break
@@ -2001,7 +2007,7 @@ def _InitialAccelerations(system, q, q_t, y, t, epsilon=1e-6):
     A = np.zeros((nSystem, nSystem))
     rhs = np.zeros(nSystem)
     A[:nODE2, :nODE2] = system.MassMatrix(q, q_t, t)
-    rhs[:nODE2] = system.Forces(q, q_t, t, y=y) if nODE1 else system.Forces(q, q_t, t)
+    rhs[:nODE2] = system.ODE2RHS(q, q_t, t, y=y) if nODE1 else system.ODE2RHS(q, q_t, t)
     A[nODE2:nODE2 + nODE1, nODE2:nODE2 + nODE1] = np.eye(nODE1)
     if nAE:
         def Equations(qq):

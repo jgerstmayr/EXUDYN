@@ -16,7 +16,7 @@ You can view and download this file on Github: [symbolicSystemSpringDamper.py](h
 #           collects the system; Equations() gives the mass matrix M and the forces f of M q_tt = f in the variables
 #           q, q_t and t, as exudyn.symbolic expressions - with their flat program - or as sympy expressions;
 #           GetFlatProgram(format='numpy') writes them as a numpy function. The equations are checked against
-#           SymbolicSystem.Forces and MassMatrix, and the system is integrated by SolveExplicit and SolveDynamic.
+#           SymbolicSystem.ODE2RHS and MassMatrix, and the system is integrated by SolveExplicit and SolveDynamic.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-28
@@ -59,7 +59,7 @@ exu.Print(system)
 #the equations M q_tt = f(q, q_t, t) as exudyn.symbolic expressions in the named variables q, q_t, t
 equations = system.Equations()
 exu.Print('M =', equations['massMatrix'])
-exu.Print('f =', equations['forces'])
+exu.Print('f =', equations['ODE2RHS'])
 exu.Print('the flat program of f and M:\n' + system.GetFlatProgram())
 
 #as sympy expressions, if sympy is installed: readable, and sympy writes C, LaTeX, ...
@@ -67,8 +67,8 @@ try:
     import sympy
     equationsSympy = system.Equations(format='sympy')
     exu.Print('M =', equationsSympy['massMatrix'])
-    exu.Print('f =', sympy.simplify(equationsSympy['forces']))
-    exu.Print('as LaTeX: f =', sympy.latex(sympy.simplify(equationsSympy['forces'])))
+    exu.Print('f =', sympy.simplify(equationsSympy['ODE2RHS']))
+    exu.Print('as LaTeX: f =', sympy.latex(sympy.simplify(equationsSympy['ODE2RHS'])))
 except ImportError:
     exu.Print('sympy is not installed: the sympy form is left out')
 
@@ -77,8 +77,8 @@ space = {}
 exec(system.GetFlatProgram(format='numpy'), space)
 (q, q_t, t) = (np.array([0.05, -0.02]), np.array([0.3, 0.1]), 0.4)
 (f, M) = space['Equations'](q, q_t, t)
-difference = max(np.max(np.abs(f - system.Forces(q, q_t, t))), np.max(np.abs(M - system.MassMatrix(q, q_t, t))))
-exu.Print('f and M of the program against SymbolicSystem.Forces and MassMatrix:', difference)
+difference = max(np.max(np.abs(f - system.ODE2RHS(q, q_t, t))), np.max(np.abs(M - system.MassMatrix(q, q_t, t))))
+exu.Print('f and M of the program against SymbolicSystem.ODE2RHS and MassMatrix:', difference)
 
 #the system integrated by the solver of the symbolic system and by Exudyn
 simulationSettings = exu.SimulationSettings()

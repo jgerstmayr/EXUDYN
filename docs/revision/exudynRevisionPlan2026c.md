@@ -2089,6 +2089,10 @@ CLOSED 2026-10-28 (#3148; maintainer 2026-10-28: use lambda, not lam, and no abb
 
 CLOSED 2026-10-28 (#3150; maintainer 2026-10-28: lambda_ is not readable, z is the quantity of the nomenclature; the formulas of the documentation keep lambda): z for lambda_ in the arguments, variables, the variable of Equations() and the result of the solvers; the docstrings say "the Lagrange multipliers lambda of the documentation"; notation.md. [log](exudynRevisionLog2026c.md#rg12-51-18)
 
+#### **CLOSED_RG12.51.19** Name the equations of symbolicSystem.py as Exudyn: ODE2RHS, ODE1RHS, ODE2ReactionForcesLHS, ODE1ReactionTermsLHS, ODE2Residual
+
+CLOSED 2026-10-29 (#3155; maintainer 2026-10-28: RHS and LHS forces kept apart as in Exudyn, ODE2 in the name of what is only for ODE2; do the renames of design section 12.5): the methods, the results and arguments of Equations and GetFlatProgram, NumpySystem(massMatrix, ode2RHS, ..., ode1RHS); ODE1ReactionTermsLHS new, zero in the base class. [log](exudynRevisionLog2026c.md#rg12-51-19)
+
 ### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
 
 CLOSED 2026-10-25 (#3094; maintainer 2026-10-25: the introduction section to Python-C++ interface/Symbolic has to be

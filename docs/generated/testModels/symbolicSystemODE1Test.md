@@ -13,7 +13,7 @@ You can view and download this file on Github: [symbolicSystemODE1Test.py](https
 # Details:  ObjectGenericODE1 in exudyn.misc.symbolicSystem.SymbolicSystem (#3144): two Van der Pol oscillators as
 #           ObjectGenericODE1 with one recorded rhsUserFunction - one kind of two objects -, a linear first order system
 #           with systemMatrix and rhsVector driven by a LoadCoordinate with a recorded loadUserFunction, and a mass on a
-#           spring as ObjectGenericODE2 with a recorded forceUserFunction. ODE1RightHandSide against the solver of
+#           spring as ObjectGenericODE2 with a recorded forceUserFunction. ODE1RHS against the solver of
 #           Exudyn, ODE1Jacobian against central differences, SolveGeneralizedAlpha and SolveExplicit (RK44, explicit
 #           Euler) against SolveDynamic, the ODE1 coordinates written back into mbs, a Python rhsUserFunction refused.
 #
@@ -93,12 +93,12 @@ mbs.systemData.SetODE1Coordinates(y)
 mbs.systemData.SetTime(t)
 solver.ComputeODE1RHS(mbs)
 reference = np.array(solver.GetSystemResidual())[system.nODE2:system.nODE2 + system.nODE1]
-rightHandSide = system.ODE1RightHandSide(None, None, y, t)
+rightHandSide = system.ODE1RHS(None, None, y, t)
 difference = np.max(np.abs(rightHandSide - reference))
-exu.Print('ODE1RightHandSide against ComputeODE1RHS:', difference)
+exu.Print('ODE1RHS against ComputeODE1RHS:', difference)
 failed += int(not difference < 1e-12)
 epsilon = 1e-6
-differences = np.array([(system.ODE1RightHandSide(None, None, y + epsilon*e, t) - system.ODE1RightHandSide(None, None, y - epsilon*e, t))/(2*epsilon)
+differences = np.array([(system.ODE1RHS(None, None, y + epsilon*e, t) - system.ODE1RHS(None, None, y - epsilon*e, t))/(2*epsilon)
                         for e in np.eye(system.nODE1)]).T
 difference = np.max(np.abs(system.ODE1Jacobian(y, t) - differences))
 exu.Print('ODE1Jacobian against central differences:', difference)

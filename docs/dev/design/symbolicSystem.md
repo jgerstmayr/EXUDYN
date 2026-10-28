@@ -91,7 +91,7 @@ use it.
 | ObjectUserBody | its mass matrix and force functions in its coordinates (#3110); the positions of points by its positionUserFunction |
 | ObjectConnectorUser with a symbolic forceUserFunction of its marker states (#3119) on position markers of point nodes and of the ground | directly (#3121): the marker states from the node coordinates or the fixed positions, the forces scattered to the coordinates of the markers, the Jacobian by `EvaluateJacobian` by the positions and velocities |
 | ObjectConnectorUser on MarkerBodyPosition and MarkerBodyRigid of user bodies and of the ground, with the rotations if it requests Orientation | directly (#3129): the marker states by the recorded position, rotation and Jacobian functions of the body - $\vv = \Jm_{pos}\dot\qv$, $\tomega = \Jm_{rot}\dot\qv$, the rotation of the marker after the one of the body -, the forces and torques by $\Jm_{pos}\tp\fv + \Jm_{rot}\tp\mv$; the Jacobian by `EvaluateJacobian` of the force by the marker states, composed with the derivatives of the states ($\Jm_{pos}$, $\partial\Jm_{pos}/\partial\qv\,\dot\qv$, $\partial\Rot/\partial\qv$, $\Jm_{rot}$, $\partial\Jm_{rot}/\partial\qv\,\dot\qv$), and the derivatives of the Jacobians times the forces |
-| ObjectGenericODE1 with its systemMatrix, rhsVector and a symbolic rhsUserFunction; LoadCoordinate on its coordinates | directly (#3144): `ODE1RightHandSide` $\Am\yv + \fv + \fv_{user}(\yv, t)$ per object as CObjectGenericODE1, the objects with the same recording one kind, the loads added; `ODE1Jacobian` exact, $\Am$ and `EvaluateJacobian` of the recording |
+| ObjectGenericODE1 with its systemMatrix, rhsVector and a symbolic rhsUserFunction; LoadCoordinate on its coordinates | directly (#3144): `ODE1RHS` $\Am\yv + \fv + \fv_{user}(\yv, t)$ per object as CObjectGenericODE1, the objects with the same recording one kind, the loads added; `ODE1Jacobian` exact, $\Am$ and `EvaluateJacobian` of the recording |
 | ObjectJointUser, MarkerBodyUser | the constraint is symbolic; the marker kinematics as above, the constraints and $\Cm_{\qv}\tp\tlambda$ (RG12.51.4) |
 | LoadForceVector, LoadTorqueVector, LoadCoordinate, LoadMassProportional | directly (#3118): the value constant or by its symbolic user function of the time; on MarkerNodePosition of a point node and on MarkerNodeCoordinate the value at the LTG indices of the marker; on MarkerBodyPosition, MarkerBodyRigid and MarkerBodyMass of an ObjectUserBody $\Jm\tp \vv$ by its symbolic positionJacobian-, rotationJacobian- or massIntegralUserFunction, for `bodyFixed` $\vv$ rotated by its rotationMatrixUserFunction, as CSystem applies loads; the Jacobian by `EvaluateJacobian` of these functions; loads on the ground act on nothing |
 | built-in items, Python (not symbolic) user functions, recordings that read mbs | refused, with the list of items; the built-in items need recordings of their own (the AD templates, #3048) - not proposed |
@@ -136,7 +136,7 @@ B, which both need for their check, of RG12.58 (#3115).
 The marker Jacobians of the joints and connectors (section 3) are derivatives of the marker position and rotation
 programs by D - the reason the earlier plan needed sympy.
 
-**Now (#3115):** `SymbolicSystem.ResidualJacobian` is B: object by object `UserFunction.EvaluateJacobian` of the force
+**Now (#3115):** `SymbolicSystem.ODE2ResidualJacobian` is B: object by object `UserFunction.EvaluateJacobian` of the force
 and mass matrix recordings by their arguments q and q_t (section 11, S1), $\partial(\Mm\ddot\qv)/\partial\qv$ from the
 derivative of the mass matrix, and the constant matrices of ObjectGenericODE2; equal to the central differences of
 `SymbolicSystemBase` (A) to their error, 6e-9. A, in the base class, stays the Jacobian of a system without derivatives
@@ -158,7 +158,7 @@ linear algebra by scipy.sparse.
 
 **Done** (#3126): `SolveGeneralizedAlpha(system, simulationSettings)` for systems without constraints: the predictor,
 the Newton iteration and the update of the algorithmic accelerations of `CSolverImplicitSecondOrder.cpp`, the
-Jacobian by `ResidualJacobian(q, q_t, q_tt, t, 1, gamma', beta')` - exact for a SymbolicSystem, with the term
+Jacobian by `ODE2ResidualJacobian(q, q_t, q_tt, t, 1, gamma', beta')` - exact for a SymbolicSystem, with the term
 d(M q_tt)/dq that Exudyn leaves out, which changes the iterates, not the solution -, sparse LU by scipy, the
 convergence as `CSolverBase::Newton` (relative to the initial residual or absolute, weighted per coordinate), a
 constant step size: a Newton iteration that does not converge raises. symbolicGeneralizedAlphaTest.py: equal to
@@ -188,11 +188,11 @@ $$
 \dot\yv = \gv(\qv, \dot\qv, \yv, t), \qquad \cv(\qv, \dot\qv, \yv, \tlambda, t) = \Null .
 $$
 
-`SymbolicSystemBase`: `nODE1`, `nAE`, `InitialStateODE1()`, `Forces(q, q_t, t, y)`, `ODE1RightHandSide(q, q_t, y,
-t)`, `AlgebraicEquations(q, q_t, y, z, t, velocityLevel)`, `ReactionForces(q, q_t, y, z, t)` ($\Cm_{\qv}\tp
+`SymbolicSystemBase`: `nODE1`, `nAE`, `InitialStateODE1()`, `ODE2RHS(q, q_t, t, y)`, `ODE1RHS(q, q_t, y,
+t)`, `AlgebraicEquations(q, q_t, y, z, t, velocityLevel)`, `ODE2ReactionForcesLHS(q, q_t, y, z, t)` ($\Cm_{\qv}\tp
 \tlambda$); `SystemResidual` is the residual of Exudyn's implicit solver, $[\Mm\ddot\qv - \fv + \Cm_{\qv}\tp\tlambda,\;
 \gv - \dot\yv,\; \cv]$, and `SystemJacobian` its Jacobian by columns of the Newton unknowns - the ODE2 block by
-`ResidualJacobian` (exact for a SymbolicSystem), the rest by central differences. The solvers as
+`ODE2ResidualJacobian` (exact for a SymbolicSystem), the rest by central differences. The solvers as
 CSolverExplicit and CSolverImplicitSecondOrder:
 
 - `SolveExplicit`: the ODE1 coordinates in the stages of explicit Euler and RK44, their velocities zero at the start;
@@ -205,9 +205,9 @@ CSolverExplicit and CSolverImplicitSecondOrder:
   $[\Mm\;\Cm_{\qv}\tp; \Cm_{\qv}\;\Null]$ with $-(\Cm_{\qv}\dot\qv)_{\qv}\dot\qv$, the multipliers kept with
   `storeInitialAlgebraicCoordinates`; the convergence over all equations. Without ODE1 and algebraic coordinates the
   path of #3126 is unchanged (sparse). `useIndex2Constraints` is refused.
-- `NumpySystem` takes `ode1RightHandSide`, `initialStateODE1`, `constraints`, `constraintJacobian`.
+- `NumpySystem` takes `ode1RHS`, `initialStateODE1`, `constraints`, `constraintJacobian`.
 - `SymbolicSystem` takes ObjectJointUser with symbolic constraint and Jacobian functions (#3141): `AlgebraicEquations`
-  from the constraint recording with the marker states, `ReactionForces` = $\Cm_{\qv}\tp\tlambda$ from the Jacobian
+  from the constraint recording with the marker states, `ODE2ReactionForcesLHS` = $\Cm_{\qv}\tp\tlambda$ from the Jacobian
   recording (by the marker translations and global rotation increments), mapped into the coordinates by the position
   and rotation Jacobians of the markers as the forces of a connector. `SystemJacobian` of `SymbolicSystem` is exact
   (#3145): $\Cm_{\qv}$ is the Jacobian recording times the marker Jacobians, the derivative of
@@ -218,7 +218,7 @@ CSolverExplicit and CSolverImplicitSecondOrder:
   relativeTolerance 1e-10 - also with the exact blocks and also without the derivative of the reaction forces: the
   difference is in the ODE2 block, where Exudyn leaves out $\partial(\Mm\ddot\qv)/\partial\qv$.
 - `SymbolicSystem` takes ObjectGenericODE1 with a symbolic rhsUserFunction and LoadCoordinate on its coordinates
-  (#3144). `Equations(algebraicEquations=True, reactionForces=True)` gives the constraint equations of the joints and
+  (#3144). `Equations(algebraicEquations=True, ODE2ReactionForcesLHS=True)` gives the constraint equations of the joints and
   their reaction forces as expressions of q, t and the variable `z`, `GetFlatProgram(results=[...])` writes them
   (#3146); the ODE1 equations are not in `Equations()` yet. The coupling of all kinds in one
   item, ObjectGenericDAE (#3143), also needs Exudyn's internal solvers extended.
@@ -275,20 +275,20 @@ The interface is the base class `SymbolicSystemBase` in `exudyn/misc/symbolicSys
 |---|---|---|
 | `nODE2` | the number of ODE2 coordinates | set by the derived class |
 | `InitialState()` | `(q0, q_t0)`; the start time is `timeIntegration.startTime` | zeros |
-| `Forces(q, q_t, t)` | $\fv$, the right-hand side | computed by the derived class |
+| `ODE2RHS(q, q_t, t)` | $\fv$, the right-hand side | computed by the derived class |
 | `MassMatrixTriplets(q, q_t, t)` | $\Mm$ as (rows, columns, values) | computed by the derived class (or it overrides `MassMatrix`) |
 | `MassMatrix(q, q_t, t, sparse)` | $\Mm$, dense or `scipy.sparse.csr_matrix` | from the triplets |
 | `MassMatrixBlocks(q, q_t, t)` | the mass matrices of the bodies, a list of (LTG table, blocks) - for the inverse per body | one block of all coordinates |
 | `IsMassMatrixConstant()` | True: the solver factors $\Mm$ once | False |
-| `Residual(q, q_t, q_tt, t)` | $\rv = \Mm\ddot\qv - \fv$ | from MassMatrix and Forces |
-| `ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, sparse)` | the combined Jacobian | central differences of Residual |
+| `ODE2Residual(q, q_t, q_tt, t)` | $\rv = \Mm\ddot\qv - \fv$ | from MassMatrix and Forces |
+| `ODE2ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, sparse)` | the combined Jacobian | central differences of Residual |
 
 `SymbolicSystem` derives from it: `InitialState()` from the initial configuration of mbs, `IsMassMatrixConstant()`
-from `constantMassMatrix` of the user bodies and the constant matrix of ObjectGenericODE2, `Residual` object by object,
+from `constantMassMatrix` of the user bodies and the constant matrix of ObjectGenericODE2, `ODE2Residual` object by object,
 and `SetSystemState` for the output (section 3). The kind of evaluation is decided once, by the class of the system:
 `SymbolicSystem` by exudyn.symbolic, the exported system (RG12.51.5) by its generated code, a system written by hand
 (`NumpySystem(massMatrix, forces, initialState, massMatrixBlocks)`, a constant matrix or a function, and a function) by
-its own functions. The solvers use only this interface; the explicit ones only `InitialState`, `Forces`, `MassMatrix`,
+its own functions. The solvers use only this interface; the explicit ones only `InitialState`, `ODE2RHS`, `MassMatrix`,
 `MassMatrixBlocks` and `IsMassMatrixConstant`; `SymbolicSystem` gives one block per object, the kinds as stacks
 (objects x n x n).
 
@@ -401,7 +401,7 @@ operations; a node without rule (abs, min, max, mod, an item output) by its Diff
 `UserFunction.EvaluateJacobian` uses it with the flat evaluation, the tree with `flatEvaluation = False`. Measured on
 the rigid body of symbolicUserRigidBodiesTest.py: the Jacobian of the force by qTotal (6 columns) 454 us by the tree,
 6.1 us in one pass; of the mass matrix 243 us and 6.6 us; of a connector force by a rotation matrix 29 us and 4.5 us.
-With it, `SymbolicSystem.ResidualJacobian` takes the Jacobian of the two recordings of the composed system (up to 200
+With it, `SymbolicSystem.ODE2ResidualJacobian` takes the Jacobian of the two recordings of the composed system (up to 200
 coordinates; per object above): SolveGeneralizedAlpha on the chain of three rigid bodies, 50 steps, 0.96 s -> 0.027 s,
 SolveDynamic with the same recordings 0.039 s.
 
@@ -428,7 +428,7 @@ Python around it: 0.59 ms, while the arithmetic is a few microseconds. The force
 of its mass matrix, recorded once as functions (mbs, t, itemNumber, q, q_t) of the signature of ObjectGenericODE2
 (0.03 s), evaluate by one flat program each: forces 14 us (1591 operations), mass matrix 4.5 us; Exudyn's
 `ComputeODE2RHS` with the same user items takes 88 us. `SymbolicSystem(mbs, composeSystem=True)`, the default, uses them
-in Forces, MassMatrixTriplets and Residual; MassMatrixBlocks and ResidualJacobian stay per object (the Jacobian of the
+in Forces, MassMatrixTriplets and Residual; MassMatrixBlocks and ODE2ResidualJacobian stay per object (the Jacobian of the
 composed recording would walk its tree per seed - RG12.59). The mass matrix of up to 200 coordinates is decomposed dense
 by scipy.linalg: forming the sparse matrix cost more than the evaluation.
 
@@ -515,28 +515,28 @@ option of their own.
 
 ### 12.5 The names of symbolicSystem.py
 
-`q` stays (12.3). The others against Exudyn's names - Exudyn keeps the right-hand side and the left-hand side apart
-for the sign (`notation.md`, *LHS-RHS naming conventions*): an object computes its LHS terms, the system its RHS
-$\fv_{sys}$, with $\Mm\ddot\qv$ and the reaction forces on the LHS.
+`q` stays (12.3). The others follow Exudyn's names (maintainer 2026-10-28, #3155) - Exudyn keeps the right-hand side
+and the left-hand side apart for the sign (`notation.md`, *LHS-RHS naming conventions*): an object computes its LHS
+terms, the system its RHS $\fv_{sys}$, with $\Mm\ddot\qv$ and the reaction forces on the LHS.
 
-| now | what it computes | proposed | in Exudyn |
-|---|---|---|---|
-| `Forces(q, q_t, t, y)` | $\fv$, the RHS of the ODE2 equations, the loads included, the reaction forces not | `ODE2RHS` | `MainSolver.ComputeODE2RHS`, `CSystem::ComputeSystemODE2RHS` |
-| `ODE1RightHandSide(q, q_t, y, t)` | $\gv$ of $\dot\yv = \gv$ | `ODE1RHS` | `ComputeODE1RHS` |
-| `ReactionForces(q, q_t, y, z, t)` | $\Cm_{\qv}\tp\tlambda$, ODE2 only, on the LHS | `ODE2ReactionForcesLHS` | the LHS term of the system equations in `solver.md` |
-| (missing) | $\Cm_{\yv}\tp\tlambda$ of the ODE1 equations | `ODE1ReactionTermsLHS` | `solver.md`, the ODE1 rows; needed by ObjectGenericDAE |
-| `Residual(q, q_t, q_tt, t, y)` | $\Mm\ddot\qv - \fv$, LHS minus RHS | `ODE2Residual` | |
-| `ResidualJacobian(...)` | its Jacobian | `ODE2ResidualJacobian` | |
-| `SystemResidual`, `SystemJacobian` | all rows, as the implicit solver | kept | `ComputeNewtonResidual`, `ComputeNewtonJacobian` |
-| `AlgebraicEquations` | $\cv$ | kept | `ComputeAlgebraicEquations` |
-| `Equations()['forces']` | $\fv$ | `'ODE2RHS'` | |
+| name | what it computes | in Exudyn |
+|---|---|---|
+| `ODE2RHS(q, q_t, t, y)` | $\fv$, the RHS of the ODE2 equations, the loads included, the reaction forces not | `MainSolver.ComputeODE2RHS`, `CSystem::ComputeSystemODE2RHS` |
+| `ODE1RHS(q, q_t, y, t)` | $\gv$ of $\dot\yv = \gv$ | `ComputeODE1RHS` |
+| `ODE2ReactionForcesLHS(q, q_t, y, z, t)` | $\Cm_{\qv}\tp\tlambda$, ODE2 only, on the LHS | the LHS term of the system equations in `solver.md` |
+| `ODE1ReactionTermsLHS(q, q_t, y, z, t)` | $\Cm_{\yv}\tp\tlambda$ of the ODE1 equations, on the LHS; zero unless a derived class computes it | `solver.md`, the ODE1 rows; for ObjectGenericDAE |
+| `ODE2Residual(q, q_t, q_tt, t, y)` | $\Mm\ddot\qv - \fv$, LHS minus RHS | |
+| `ODE2ResidualJacobian(...)` | its Jacobian | |
+| `SystemResidual`, `SystemJacobian` | all rows, as the implicit solver | `ComputeNewtonResidual`, `ComputeNewtonJacobian` |
+| `AlgebraicEquations` | $\cv$ | `ComputeAlgebraicEquations` |
+| `Equations()['ODE2RHS']`, `['ODE2ReactionForcesLHS']` | $\fv$, $\Cm_{\qv}\tp\tlambda$ | |
+| `NumpySystem(massMatrix, ode2RHS, ..., ode1RHS, ...)` | the functions given | |
 
-`SystemResidual` has the ODE2 rows as LHS minus RHS and the ODE1 rows as RHS minus LHS, $\gv - \dot\yv$, as
-`CSolverImplicitSecondOrder` computes them ("different from ODE2"), while `solver.md` writes both as LHS minus RHS;
-the docstring says so, the manual does not. The module names the constraints $\cv$ and the ODE1 right-hand side $\gv$;
-`solver.md` names the constraints $\gv$ and the ODE1 right-hand side $\fv_\FO$; ObjectGenericODE1 names its
-coordinates `q`. **Recommendation**: the names of the table, and the letters of `solver.md` in the docstrings. The
-module is in no release yet (it came after 1.13.0), so the rename needs no deprecation.
+`SystemResidual` has the ODE2 rows as LHS minus RHS and the ODE1 rows as RHS minus LHS, $\gv - \dot\yv -
+\Cm_{\yv}\tp\tlambda$, as `CSolverImplicitSecondOrder` computes them ("different from ODE2"), while `solver.md` writes
+both as LHS minus RHS; the docstring says so, the manual does not. The module names the constraints $\cv$ and the ODE1
+right-hand side $\gv$; `solver.md` names the constraints $\gv$ and the ODE1 right-hand side $\fv_\FO$; ObjectGenericODE1
+names its coordinates `q`. Open: the letters of `solver.md` in the docstrings.
 
 ### 12.6 The structure of exudyn.symbolic, checked
 

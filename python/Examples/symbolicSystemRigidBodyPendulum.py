@@ -67,8 +67,8 @@ try:
     exu.Print('M[0:3,3:6] - the coupling of translation and rotation by the center of mass:', sympy.simplify(M[0:3, 3:6]))
     exu.Print('M[3,3] =', sympy.simplify(M[3, 3]))
     #the forces are long: sympy.simplify of them takes minutes; count their operations instead
-    exu.Print('f has', sympy.count_ops(equationsSympy['forces']), 'operations; f[8], the force on the mass point in z =',
-              equationsSympy['forces'][8])
+    exu.Print('f has', sympy.count_ops(equationsSympy['ODE2RHS']), 'operations; f[8], the force on the mass point in z =',
+              equationsSympy['ODE2RHS'][8])
 except ImportError:
     exu.Print('sympy is not installed: the sympy form is left out')
 
@@ -78,8 +78,8 @@ exec(system.GetFlatProgram(format='numpy'), space)
 rng = np.random.default_rng(1)
 (q, q_t, t) = (0.1*rng.standard_normal(9), rng.standard_normal(9), 0.3)
 (f, M) = space['Equations'](q, q_t, t)
-difference = max(np.max(np.abs(f - system.Forces(q, q_t, t))), np.max(np.abs(M - system.MassMatrix(q, q_t, t))))
-exu.Print('f and M of the program against SymbolicSystem.Forces and MassMatrix:', difference)
+difference = max(np.max(np.abs(f - system.ODE2RHS(q, q_t, t))), np.max(np.abs(M - system.MassMatrix(q, q_t, t))))
+exu.Print('f and M of the program against SymbolicSystem.ODE2RHS and MassMatrix:', difference)
 
 #the system integrated by the solver of the symbolic system and by Exudyn
 simulationSettings = exu.SimulationSettings()

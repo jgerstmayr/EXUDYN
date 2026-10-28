@@ -79,7 +79,7 @@ spring-damper, a mass point, gravity and a load of the time - with a chain of `n
    by a cycle of all kinds, by a cycle of the four most frequent kinds and one layer for the rest; and one array of
    all values. `BuildLayers` gives per layer a slice and the index arrays of the operands per kind, `Evaluate` one
    numpy ufunc call per kind and layer, for a batch of states (an array per layer of nodes x states).
-3. Checked against `SymbolicSystem.Forces` and `MassMatrixBlocks` at 20 random states.
+3. Checked against `SymbolicSystem.ODE2RHS` and `MassMatrixBlocks` at 20 random states.
 4. An ensemble of 100 states integrated by RK44 with the mass matrix of each body solved by `np.linalg.solve` on all
    bodies and states at once; member 0 against `SolveExplicit`.
 

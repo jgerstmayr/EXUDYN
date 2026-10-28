@@ -104,23 +104,23 @@ for state in range(3):
     (M, f) = SolverTerms(q, q_t, t)
     difference = max(difference, np.max(np.abs(system.MassMatrix(q, q_t, t) - M)),
                      np.max(np.abs(system.MassMatrix(q, q_t, t, sparse=True).toarray() - M)),
-                     np.max(np.abs(system.Forces(q, q_t, t) - f)),
-                     np.max(np.abs(system.Residual(q, q_t, q_tt, t) - (M @ q_tt - f))))
+                     np.max(np.abs(system.ODE2RHS(q, q_t, t) - f)),
+                     np.max(np.abs(system.ODE2Residual(q, q_t, q_tt, t) - (M @ q_tt - f))))
 
 #the Jacobian of the residual by Diff of the recordings: against central differences of SymbolicSystemBase, each
 #derivative and a combination as a Newton step uses it; the derivative by q_tt is the mass matrix; against the Jacobian
 #of the solver, which the user bodies compute by central differences, at q_tt = 0 (the solver omits the derivative of
 #the mass matrix) and of the right-hand side f = -r
-differenceJacobian = np.max(np.abs(system.ResidualJacobian(q, q_t, q_tt, t, 0, 0, 1) - M))
+differenceJacobian = np.max(np.abs(system.ODE2ResidualJacobian(q, q_t, q_tt, t, 0, 0, 1) - M))
 for factors in [(1., 0., 0.), (0., 1., 0.), (1., 0.5, 0.25)]:
-    differenceJacobian = max(differenceJacobian, np.max(np.abs(system.ResidualJacobian(q, q_t, q_tt, t, *factors)
-                                                               - SymbolicSystemBase.ResidualJacobian(system, q, q_t, q_tt, t, *factors))))
+    differenceJacobian = max(differenceJacobian, np.max(np.abs(system.ODE2ResidualJacobian(q, q_t, q_tt, t, *factors)
+                                                               - SymbolicSystemBase.ODE2ResidualJacobian(system, q, q_t, q_tt, t, *factors))))
 mbs.systemData.SetODE2Coordinates(q)
 mbs.systemData.SetODE2Coordinates_t(q_t)
 mbs.systemData.SetTime(t)
 solver.ComputeJacobianODE2RHS(mbs, scalarFactor_ODE2=1, scalarFactor_ODE2_t=0.5)
 JSolver = solver.GetSystemJacobian()[0:nODE2, 0:nODE2]
-differenceSolverJacobian = np.max(np.abs(system.ResidualJacobian(q, q_t, None, t, 1, 0.5, 0, sparse=True).toarray() + JSolver))
+differenceSolverJacobian = np.max(np.abs(system.ODE2ResidualJacobian(q, q_t, None, t, 1, 0.5, 0, sparse=True).toarray() + JSolver))
 exu.Print('Jacobian: difference to central differences and the mass matrix', differenceJacobian, ', to the solver', differenceSolverJacobian)
 solver.FinalizeSolver(mbs, simulationSettings)
 

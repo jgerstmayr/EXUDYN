@@ -4340,3 +4340,24 @@ the function args".)*
 - python/TestModels/symbolicFunctionTest.py; definitions/pybindSymbolic.py (Function, the VariableSet functions, whose
   NumberOfItems was described as "Return True, if variable name exists"), docs/manual/symbolicUserFunctions.md,
   docs/manual/revisions.md, the design note section 12.7.
+
+<a id="rg12-51-19"></a>
+### RG12.51.19 — the names of the equations in exudyn.misc.symbolicSystem (2026-10-29, #3155)
+*(Maintainer 2026-10-28: "forces: I always distinguish between RHS and LHS forces, for a good reason (see the docs);
+M*a + LHSforce = RHSforce; keep that to avoid sign-issues and consistency with the internal functionality.
+ReactionForces: if only for ODE2, say so in the function name"; then "do ... the §12.5 renames (ODE2RHS,
+ODE2ReactionForcesLHS, ...)".)*
+- python/exudyn/misc/symbolicSystem.py: `Forces` -> `ODE2RHS`, `ODE1RightHandSide` -> `ODE1RHS`, `ReactionForces` ->
+  `ODE2ReactionForcesLHS`, `Residual` -> `ODE2Residual`, `ResidualJacobian` -> `ODE2ResidualJacobian`, in
+  SymbolicSystemBase, NumpySystem and SymbolicSystem and in the solvers; `ODE1ReactionTermsLHS(q, q_t, y, z, t)`, the
+  term C_y^T z of the ODE1 equations, new in the base class, zero there, subtracted in the ODE1 rows of SystemResidual
+  when there are algebraic coordinates. `Equations(..., ODE2RHS=True, ..., ODE2ReactionForcesLHS=False)` and its
+  results 'ODE2RHS', 'ODE2ReactionForcesLHS' (were forces/'forces', reactionForces/'reactionForces'), the same names in
+  GetFlatProgram(results) and the key of the composed recording; NumpySystem(massMatrix, ode2RHS, ..., ode1RHS, ...)
+  (were forces, ode1RightHandSide). The module is in no release, so no deprecation.
+- Kept: SystemResidual, SystemJacobian, AlgebraicEquations, MassMatrix, MassMatrixTriplets, MassMatrixBlocks (the
+  names of the solver functions of Exudyn); the internal `_LocalForces`, `_LoadForces` of the items' forces;
+  `_LocalODE1RightHandSide` is `_LocalODE1RHS`. Open: the letters of solver.md in the docstrings.
+- The test models of the symbolic system, the examples symbolicSystemSpringDamper.py and
+  symbolicSystemRigidBodyPendulum.py, docs/dev/design/uniformEvaluationExperiment.py, the design notes (section 12.5
+  now the table of the names), docs/manual/revisions.md; all results unchanged.

@@ -129,8 +129,8 @@ for (solverType, steps, Solve) in [(exu.DynamicSolverType.RK44, 250, lambda: Sol
 
 #the Jacobian of the residual by Diff against central differences, at the last state
 (q, q_t, q_tt) = (result['q'][-1], result['q_t'][-1], result['q_tt'][-1])
-J = system.ResidualJacobian(q, q_t, q_tt, 0.2, factor_q=1., factor_q_t=0.5)
-JDifferences = SymbolicSystemBase.ResidualJacobian(system, q, q_t, q_tt, 0.2, factor_q=1., factor_q_t=0.5)
+J = system.ODE2ResidualJacobian(q, q_t, q_tt, 0.2, factor_q=1., factor_q_t=0.5)
+JDifferences = SymbolicSystemBase.ODE2ResidualJacobian(system, q, q_t, q_tt, 0.2, factor_q=1., factor_q_t=0.5)
 differenceJacobian = np.max(np.abs(J - JDifferences))/np.max(np.abs(J))
 exu.Print('the Jacobian of the residual against central differences:', differenceJacobian)
 

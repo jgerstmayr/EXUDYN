@@ -75,7 +75,7 @@ for j in range(system.nODE2):
     dq[j] = 1e-6
     differences.append((z @ system.AlgebraicEquations(q + dq, q_t0, None, z, 0.)
                         - z @ system.AlgebraicEquations(q - dq, q_t0, None, z, 0.))/2e-6)
-reaction = system.ReactionForces(q, q_t0, None, z, 0.)
+reaction = system.ODE2ReactionForcesLHS(q, q_t0, None, z, 0.)
 differenceReaction = np.max(np.abs(reaction - np.array(differences)))/np.max(np.abs(reaction))
 exu.Print('constraint equations in the initial state', residual0, '; reaction forces against central differences',
           differenceReaction)
@@ -90,13 +90,13 @@ exu.Print('exact Jacobian against central differences', differenceJacobian)
 
 #the constraint equations and the reaction forces as expressions: numpy code of the flat program, and sympy
 space = {}
-exec(system.GetFlatProgram(format='numpy', results=['algebraicEquations', 'reactionForces']), space) #Equations(q, q_t, t, z)
-reference = [system.AlgebraicEquations(q, q_t0, None, z, 0.3), system.ReactionForces(q, q_t0, None, z, 0.3)]
+exec(system.GetFlatProgram(format='numpy', results=['algebraicEquations', 'ODE2ReactionForcesLHS']), space) #Equations(q, q_t, t, z)
+reference = [system.AlgebraicEquations(q, q_t0, None, z, 0.3), system.ODE2ReactionForcesLHS(q, q_t0, None, z, 0.3)]
 results = [space['Equations'](q, q_t0, 0.3, z)]
 if sympy is not None:
-    equations = system.Equations(format='sympy', massMatrix=False, forces=False, algebraicEquations=True, reactionForces=True)
+    equations = system.Equations(format='sympy', massMatrix=False, ODE2RHS=False, algebraicEquations=True, ODE2ReactionForcesLHS=True)
     Sympy = sympy.lambdify([list(equations['q']), list(equations['q_t']), equations['t'], list(equations['z'])],
-                           [equations['algebraicEquations'], equations['reactionForces']], 'numpy')
+                           [equations['algebraicEquations'], equations['ODE2ReactionForcesLHS']], 'numpy')
     results.append(Sympy(q, q_t0, 0.3, z))
 differenceEquations = max(np.max(np.abs(np.ravel(result[k]) - reference[k]))/np.max(np.abs(reference[k])) for result in results for k in [0, 1])
 exu.Print('constraint equations and reaction forces of Equations() against the system', differenceEquations)
