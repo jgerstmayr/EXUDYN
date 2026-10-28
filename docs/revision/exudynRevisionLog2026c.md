@@ -4297,3 +4297,17 @@ Python code if lambda is not possible. Add this as substep, to switch to z consi
 - symbolicUserItems.py has no algebraic coordinates as arguments or variables.
 - docs/manual/notation.md, the row Lagrange multipliers: `z` in Python code where `lambda` is a keyword; the design
   note, revisions.md and the two test models.
+
+<a id="rg12-65-1"></a>
+### RG12.65.1 — the old planning comments of Symbolic.cpp removed (2026-10-28, #3154)
+*(Maintainer 2026-10-28: "By the way: I saw some strange old planning comments in symbolic.cpp - you can remove
+that.")*
+- src/Linalg/Symbolic.cpp: the comment "plan:" before the flat program section, 113 lines - about 60 items marked DONE,
+  and open notes: the matrix operations (done since), mbs.symbolic for item outputs (#2984 done, the system variables
+  RG12.63), assignments and loops (RG12.53), an EXUDYN_MINIMAL_COMPILATION flag and SReal for Real in general (not
+  pursued, no step). No code changed.
+- The same commit: steps RG12.63 (#3151, the system variables), RG12.64 (#3152, named esym.Real in the parameters,
+  checked to work with the variables kept in Python beside the numbers of the C++ items), RG12.65 (#3153, the table of
+  operations, with its stages .2 to .5); docs/dev/design/symbolicSystem.md section 12.7 with the refined parameters
+  and the revised R1; docs/dev/design/symbolicUserItems.md section 6, the possible C++ items with numerical and
+  symbolic parameters.

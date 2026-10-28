@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 246 | 1.13.250 |
+| 1.13 | Newborn | 247 | 1.13.251 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.251** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Remove the old planning comments of Symbolic.cpp (#3154)
+  - description: Maintainer 2026-10-28: the list of DONE and open plans of 2023/2024 at the start of the flat program section of src/Linalg/Symbolic.cpp is obsolete; what is open of it has steps (assignments and loops RG12.53, the access to mbs \#2984 done).
+  - **notes:** src/Linalg/Symbolic.cpp: the obsolete planning comments removed.
+  - date resolved: **2026-10-29 00:02**, date raised: 2026-10-28
 - **1.13.250** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Name the algebraic coordinates z in exudyn.misc.symbolicSystem, and in the nomenclature for Python code (#3150)
   - description: Maintainer 2026-10-28: lambda\_ is not readable; z is the quantity of the nomenclature for algebraic coordinates; the formulas of the documentation keep lambda, the symbolic system and the user items use z, and the docstring of each argument says what it represents; the nomenclature says that z is used in Python code where lambda is not possible.
   - **notes:** exudyn.misc.symbolicSystem names the algebraic coordinates z - the Lagrange multipliers lambda of the documentation - in its arguments, Equations() and the results of SolveGeneralizedAlpha.

@@ -157,3 +157,12 @@ per group.
    is the form for symbolic user items in general (2026-10-26).
 7. It is the `forceUserFunction`; the ConnectorMarker form is kept as `markerAccessUserFunction`, for forces at computed
    points of flexible bodies (2026-10-26).
+
+## 6. A possible way to more fully symbolic items
+
+The user items are symbolic because their user functions are recordings, while the built-in items compute in C++ and
+have no recording (#3048 proposed recordings of their own). A C++ item could offer both ways: its parameters numbers or
+symbolic variables, and with them, next to its computation with numbers, the symbolic interfaces of a user item - its
+equations as expressions of its coordinates and parameters, for the symbolic system, the derivatives and the export.
+With the parameters as named variables (#3152) and the system variables (#3151) such an item would be a symbolic item
+without user functions. Not planned as a step (maintainer 2026-10-28).

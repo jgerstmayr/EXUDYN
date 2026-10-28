@@ -579,7 +579,7 @@ when RG14.2.2 needs it; R3 with R1.
 
 ### 12.7 The maintainer's answers, and the refinements (2026-10-28)
 
-**R2 is accepted** - recordings with declared inputs; step RG12.62 (#3149). The other points refined here, as asked:
+**R2 is accepted** - recordings with declared inputs; step RG12.62 (#3149). **C is accepted** - the system variables as written below; step RG12.63 (#3151). The other points refined here, as asked:
 
 **Variables in a scope.** What is global today, precisely: a named variable is a node, identified by the node and not
 by its name - two recordings with an argument `q` each have two different nodes, and C++ never mixes them up. Global
@@ -612,47 +612,52 @@ and a fixed marker depend on q. C makes that a part of exudyn.symbolic:
 - What `SymbolicSystem` does with this by hand becomes the use of the set, so `Equations()`, the Jacobians and the
   export share one composition. Built-in bodies need their own recordings for it (#3048), as before.
 
-**The parameters, refined: a parameter is a number or a symbolic variable, set in the item.** The item decides how a
-parameter enters the recording: a number is a constant, a named variable (of a set) is an input.
+**The parameters as named variables in the parameters of the user items** (maintainer 2026-10-28; step RG12.64,
+#3152). Instead of a variable set into an item parameter of C++, the `parameters` of a user item - ObjectUserBody,
+ObjectConnectorUser, ObjectJointUser - are given as a list of numbers and named `esym.Real`, e.g. a mass
+`m1 = esym.Real('m1', 5.)`; the expressions keep the names where the user gave them, numbers elsewhere, and a variable
+shared by several items is one variable. Checked (2026-10-28):
 
-- Where it is stored: the item keeps the number for its C++ computation - the value of the variable when it is set -,
-  and `mbs` keeps the variable in a table of the item and parameter (a dict of Python, as `mbs.variables`), so that the
-  C++ items and the dict interface are unchanged. `SetObjectParameter(item, 'stiffness', k)` with a variable `k` sets
-  both; setting the variable's value later sets the number of every item that uses it.
-- Who reads it: `CreateSymbolicUserFunction` passes the variables of the item's parameters - and of the `parameters`
-  vector, component by component - as inputs instead of numbers; `SymbolicSystem` takes them as the inputs of its
-  composed recordings, so that the derivative by a parameter, a parameterized evaluation and an ensemble over the
-  parameters (RG14) follow without new code. One variable in several items is one input.
-- What it needs first: R2 (inputs declared as a set) and the scopes above. Open: whether the built-in items, which have
-  no recording, may take a variable at all - they could only update their number.
+- The C++ item cannot hold them: `ObjectUserBody(parameters=[m1, 3.])` is refused, as the item stores a vector of
+  numbers. So the item gets the values, and the variables are kept beside it, in Python: by `UserItemCreator`, whose
+  Create functions take an `esym.Real` for a value (`mass=m1`), and by a helper for items created directly.
+- The recording of a kind stays as it is, with `parameters` as its argument: one recording serves all items of the
+  kind in C++, each with its numbers - a recording in which `m1` were a node would serve only the items with `m1`.
+- The names enter where the system is composed: `Equations()` passes for each item its list of variables and numbers
+  as `parameters` instead of the numbers alone (`backend.Vector(...)` of `_EquationLists`), so the forces, the mass
+  matrix and the constraints carry `m1`. `Diff` by `m1` works through such a vector (checked: the derivative of
+  `v[0]*q[0] + v[1]` with `v = esym.Vector([m1, 3.])` by `m1` is `q[0]`); the flat program lists `m1` as an argument;
+  with R2 the composed recordings take the variables as inputs, so the Jacobian by them comes from the one-pass
+  derivative.
+- A changed value of a variable reaches the numbers of the items by an explicit call (`SetParameterValues` of the
+  system or the creator), not behind the user's back.
 
-**R1 refined - one table of operations** (for the decision, not decided):
+**R1, the table of operations, revised** (maintainer 2026-10-28: "important to go that way"; step RG12.65, #3153):
 
-- **Today** an operation is a C++ class of about ten virtual functions - `Evaluate`, `Diff`, `ToString`,
-  `NumberOfOperands`, `GetOperand`, `EvaluateFromOperands`, `FlatName`, `NewWithOperands`, `ToStringFromOperands`,
-  `InlineInFlatText`, `Destroy`, and `EvaluateRef`/`DiffRef` for vectors and matrices -, plus its rule in the switch of
-  `FlatProgram::Differentiate`, in the rules of `Optimize` and in the writers of `symbolicExport.py`.
-- **R1**: a recording is a program - arrays of nodes, each an operation code, the kind (Real, Vector, Matrix), its
-  size, its operands by number and its constant data (a number, vector, matrix, the name of a variable) -, and a table
-  gives per operation code its name, arity and kinds of operands, the size of the result, the evaluation (a function of
-  the operand values), the forward derivative (of operand values and derivatives), the derivative as new nodes (option
-  D of section 5), the simplification rules, and the text per format (Python, numpy, sympy, C++). Evaluation,
-  differentiation, `Optimize`, the export, the count (RG12.61) and the uniform evaluation (RG14) all read the table.
-- **The types of Python** `esym.Real`, `Vector`, `Matrix` become handles - a program and a node number; recording
-  appends nodes, and equal nodes can be merged as they are appended (the merging of `Optimize`, at recording).
-  Evaluation is one loop over the program with a frame of values per call (R3), so the threads need no copies of the
-  graph.
-- **What goes**: the tree evaluation (`Evaluate()`, `Diff()` of an expression by recursion, `flatEvaluation = False`)
-  and with it the depth limit of 10000; the eight places per operation become one entry of the table.
-- **What stays the same for users**: the Python interface, the recordings, `str()`, the flat program, the export
-  formats; the results bit for bit (the same operations in the same order).
-- **What is hard**: the item outputs (a node that reads mbs - an operation code with a side table of the item and
-  output), the sparse matrix results with a pattern fixed at recording (#3022), vectors of run-time size, the buffers
-  of vector and matrix values in the frame, the transition of about 9200 lines.
-- **A transition in four stages, each tested against the present results**: 1. the table beside the classes - the
-  operation codes from `FlatName`, the flat evaluation and the one-pass derivative read the table; 2. `Optimize`, the
-  export and the count on the table; 3. recording builds the program directly, the classes only for the transition;
-  4. the classes and the tree evaluation removed.
-- **The decisions it needs**: handles instead of node objects; merging at recording; the tree evaluation removed; the
-  export written from the table in C++ or kept in Python reading the names of the table. Best decided with RG12.54.2,
-  whose derivative program needs exactly the column "derivative as new nodes".
+- **The expression tree stays** for the recording - the Python types, the operators, `str()` - and for the simple
+  evaluation of an expression; every other operation - the flat evaluation of a recording, the derivatives, `Optimize`,
+  the export, the count (RG12.61), the uniform evaluation (RG14) - works on a program built from the tree and on the
+  table of operations.
+- **New files** `src/Linalg/SymbolicTable.h` and `SymbolicTable.cpp`: the operation codes, the table - per code its
+  name, arity and kinds, the size of the result, the evaluation, the forward derivative, later the derivative as new
+  nodes, the simplification and the text per format -, and the program `SymbolicProgram`: built from the roots as
+  `FlatProgram::Build` does, evaluated in a frame of values, differentiated in one pass.
+- **The old code stays during the transition** as the fallback: `FlatProgram` and the classes are unchanged until the
+  new path gives the same results bit for bit on every symbolic test model; a switch selects the path, as
+  `flatEvaluation` selects between the flat and the tree evaluation now. At the end `SymbolicProgram` takes the place
+  of `FlatProgram` and its name.
+- **Item outputs are not hard**: the program has a link to the MainSystem - null if there is none - and an item output
+  is an operation code whose data (kind, item, output variable, configuration) the program keeps; its evaluation
+  reads mbs through the link, as `VectorExpressionItemOutput` does now. The mbs of the recording is already a class of
+  its own, `_SymbolicMainSystem` of advancedUtilities.py, which turns `GetNodeOutput` and the like into item-output
+  nodes. With the system variables (option C, RG12.63) it can map an output to the symbolic states instead - the
+  position of a node as an expression of its coordinates in the system variables -, so that the recording becomes
+  fully symbolic and its derivative sees the coupling; item-output nodes remain for what has no symbolic state
+  (sensors, built-in items without recordings).
+- **The stages**, each a sub-step tested against the present results: 1. the table and `SymbolicProgram` beside the
+  classes, for the scalar operations first and the vector and matrix operations through their present implementation,
+  the flat evaluation and the one-pass derivative of a UserFunction by the switch; 2. `Optimize`, the export and the
+  count on the table; 3. recording builds the program directly; 4. the old flat evaluation, the rules of
+  `FlatProgram::Differentiate` and the tree derivative removed.
+- **The decisions that remain**: handles instead of node objects in stage 3, merging equal nodes at recording, and
+  whether the export is written from the table in C++ or stays in Python reading the names of the table.
