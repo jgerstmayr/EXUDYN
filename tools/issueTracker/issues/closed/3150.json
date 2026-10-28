@@ -1,0 +1,15 @@
+{
+  "number": 3150,
+  "title": "Name the algebraic coordinates z in exudyn.misc.symbolicSystem, and in the nomenclature for Python code",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-28: lambda_ is not readable; z is the quantity of the nomenclature for algebraic coordinates; the formulas of the documentation keep lambda, the symbolic system and the user items use z, and the docstring of each argument says what it represents; the nomenclature says that z is used in Python code where lambda is not possible.",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26",
+  "dateResolved": "2026-10-28 23:53",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.misc.symbolicSystem names the algebraic coordinates z - the Lagrange multipliers lambda of the documentation - in its arguments, Equations() and the results of SolveGeneralizedAlpha.",
+  "resolvedInVersion": "1.13.250"
+}

@@ -4282,3 +4282,18 @@ RG12.51.14, .15 and .16 as well as RG12.61 (as recommended) now".)*
   equal to AlgebraicEquations and ReactionForces, 4.1e-15 relative.
 - Open: the ODE1 equations in Equations().
 - docs/dev/design/symbolicSystem.md sections 6 and 12.1, docs/manual/revisions.md.
+
+<a id="rg12-51-18"></a>
+### RG12.51.18 — z for the algebraic coordinates in exudyn.misc.symbolicSystem (2026-10-28, #3150)
+*(Maintainer 2026-10-28: "lambda_ is not very readable: z would be the logical quantity ... for the formulas in the
+docs, we keep lambda but in the symbolic system and in user items, I believe that z is a good alternative. Anyway, it
+needs to be written in the docstring for args what it represents. In the nomenclature, then mention that z is used in
+Python code if lambda is not possible. Add this as substep, to switch to z consistently.")*
+- python/exudyn/misc/symbolicSystem.py: `z` for `lambda_` of RG12.51.17 (#3148) in every argument and variable,
+  `zInitial`, `zJoint`, `zComponents`; the variable of `Equations(reactionForces=True)` and its key 'z', the result 'z'
+  of SolveGeneralizedAlpha (was 'lambda'), `Equations(q, q_t, t, z)` of GetFlatProgram; the formulas of the docstrings
+  in z (`C_q^T z`), each argument "z: the algebraic coordinates, the Lagrange multipliers lambda of the
+  documentation", the class docstring of SymbolicSystemBase says why.
+- symbolicUserItems.py has no algebraic coordinates as arguments or variables.
+- docs/manual/notation.md, the row Lagrange multipliers: `z` in Python code where `lambda` is a keyword; the design
+  note, revisions.md and the two test models.

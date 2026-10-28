@@ -3,8 +3,8 @@
 #
 # Details:  The equations of motion of a system as symbolic programs (#3110, #3113, design:
 #           docs/dev/design/symbolicSystem.md): SymbolicSystemBase is the interface of the equations on which the
-#           solvers work, in Exudyn's form M(q, t) q_tt = f(q, q_t, t, y) - C_q^T lambda, y_t = g(q, q_t, y, t),
-#           c(q, q_t, y, lambda, t) = 0 with ODE2, ODE1 and algebraic coordinates (#3134). SymbolicSystem(mbs) extracts them, after
+#           solvers work, in Exudyn's form M(q, t) q_tt = f(q, q_t, t, y) - C_q^T z, y_t = g(q, q_t, y, t),
+#           c(q, q_t, y, z, t) = 0 with ODE2, ODE1 and algebraic coordinates (#3134). SymbolicSystem(mbs) extracts them, after
 #           mbs.Assemble(), from the objects with symbolic user functions, collected in kinds - the objects whose user
 #           functions are the same recordings -, each with the table of its objects, their parameters and the global
 #           indices of their ODE2 coordinates (the local-to-global maps of systemData). It evaluates the residual
@@ -73,11 +73,12 @@ _markerFunctions = {False: ['positionUserFunction', 'positionJacobianUserFunctio
 
 class SymbolicSystemBase:
     """the equations of a system, the interface on which the solvers work (#3113, #3134), in Exudyn's form: nODE2
-    second order coordinates q, nODE1 first order coordinates y and nAE algebraic coordinates lambda with
+    second order coordinates q, nODE1 first order coordinates y and nAE algebraic coordinates z - the Lagrange
+    multipliers lambda of the documentation, named z in the code, as lambda is a keyword of Python - with
 
-        M(q, t) q_tt = f(q, q_t, t, y) - C_q^T lambda      (ODE2, the reaction forces C_q^T lambda by ReactionForces)
+        M(q, t) q_tt = f(q, q_t, t, y) - C_q^T z      (ODE2, the reaction forces C_q^T z by ReactionForces)
         y_t = g(q, q_t, y, t)                               (ODE1, ODE1RightHandSide)
-        c(q, q_t, y, lambda, t) = 0                         (AE, AlgebraicEquations)
+        c(q, q_t, y, z, t) = 0                              (AE, AlgebraicEquations)
 
     A derived class sets nODE2 (nODE1 and nAE, zero by default) and computes Forces and MassMatrixTriplets (or
     MassMatrix), and ODE1RightHandSide, AlgebraicEquations and ReactionForces if it has such coordinates; the residuals
@@ -114,14 +115,14 @@ class SymbolicSystemBase:
             raise NotImplementedError('SymbolicSystemBase.ODE1RightHandSide: computed by the derived class')
         return np.zeros(0)
 
-    def AlgebraicEquations(self, q, q_t, y, lambda_, t, velocityLevel=False):
-        """the algebraic equations c(q, q_t, y, lambda, t), of size nAE; velocityLevel: their time derivative (index 2)"""
+    def AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel=False):
+        """the algebraic equations c(q, q_t, y, z, t), of size nAE; velocityLevel: their time derivative (index 2)"""
         if self.nAE:
             raise NotImplementedError('SymbolicSystemBase.AlgebraicEquations: computed by the derived class')
         return np.zeros(0)
 
-    def ReactionForces(self, q, q_t, y, lambda_, t):
-        """the reaction forces C_q^T lambda of the algebraic coordinates, of size nODE2, which the ODE2 residual adds"""
+    def ReactionForces(self, q, q_t, y, z, t):
+        """the reaction forces C_q^T z of the algebraic coordinates, of size nODE2, which the ODE2 residual adds"""
         if self.nAE:
             raise NotImplementedError('SymbolicSystemBase.ReactionForces: computed by the derived class')
         return np.zeros(self.nODE2)
@@ -146,23 +147,23 @@ class SymbolicSystemBase:
         forces = self.Forces(q, q_t, t) if y is None else self.Forces(q, q_t, t, y=y)
         return self.MassMatrix(q, q_t, t, sparse=True) @ q_tt - forces
 
-    def SystemResidual(self, q, q_t, q_tt, y, y_t, lambda_, t, velocityLevel=False):
-        """the residual of all equations as the implicit solver of Exudyn has it (#3134): [M q_tt - f + C_q^T lambda,
+    def SystemResidual(self, q, q_t, q_tt, y, y_t, z, t, velocityLevel=False):
+        """the residual of all equations as the implicit solver of Exudyn has it (#3134): [M q_tt - f + C_q^T z,
         g - y_t, c], of size nODE2 + nODE1 + nAE"""
         yArgument = y if self.nODE1 else None
         parts = [self.Residual(q, q_t, q_tt, t, y=yArgument)]
         if self.nAE:
-            parts[0] = parts[0] + self.ReactionForces(q, q_t, y, lambda_, t)
+            parts[0] = parts[0] + self.ReactionForces(q, q_t, y, z, t)
         if self.nODE1:
             parts.append(self.ODE1RightHandSide(q, q_t, y, t) - y_t)
         if self.nAE:
-            parts.append(self.AlgebraicEquations(q, q_t, y, lambda_, t, velocityLevel))
+            parts.append(self.AlgebraicEquations(q, q_t, y, z, t, velocityLevel))
         return np.concatenate(parts)
 
-    def SystemJacobian(self, q, q_t, q_tt, y, y_t, lambda_, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
+    def SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
                        factor_y_t=0., velocityLevel=False, epsilon=1e-6):
         """the Jacobian of SystemResidual (#3134), column by column: ODE2 columns factor_q d/dq + factor_q_t d/dq_t +
-        factor_q_tt d/dq_tt, ODE1 columns factor_y d/dy + factor_y_t d/dy_t, AE columns d/dlambda; the ODE2 block by
+        factor_q_tt d/dq_tt, ODE1 columns factor_y d/dy + factor_y_t d/dy_t, AE columns d/dz; the ODE2 block by
         ResidualJacobian (exact for a SymbolicSystem), the others by central differences of SystemResidual
 
         Args:
@@ -171,7 +172,7 @@ class SymbolicSystemBase:
             q_tt: the ODE2 accelerations
             y: the ODE1 coordinates
             y_t: their velocities
-            lambda_: the algebraic coordinates lambda
+            z: the algebraic coordinates, the Lagrange multipliers lambda of the documentation
             t: the time
             factor_q: the factor of d/dq
             factor_q_t: the factor of d/dq_t
@@ -186,7 +187,7 @@ class SymbolicSystemBase:
         """
         (nODE2, nODE1, nAE) = (self.nODE2, self.nODE1, self.nAE)
         nSystem = nODE2 + nODE1 + nAE
-        state = [np.array(x, dtype=float) for x in [q, q_t, q_tt, y, y_t, lambda_]]
+        state = [np.array(x, dtype=float) for x in [q, q_t, q_tt, y, y_t, z]]
         J = np.zeros((nSystem, nSystem))
         if nODE1:
             J[:nODE2, :nODE2] = self.ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, y=y)
@@ -281,8 +282,8 @@ class NumpySystem(SymbolicSystemBase):
             matrix; None: one block of all coordinates
         ode1RightHandSide: None, or the function (q, q_t, y, t) -> y_t of the ODE1 coordinates
         initialStateODE1: the initial ODE1 coordinates y0, which also give their number
-        constraints: None, or the function (q, q_t, y, lambda_, t) -> c of the algebraic equations on position level
-        constraintJacobian: the function (q, q_t, y, t) -> C_q (nAE x nODE2) of the reaction forces C_q^T lambda
+        constraints: None, or the function (q, q_t, y, z, t) -> c of the algebraic equations on position level
+        constraintJacobian: the function (q, q_t, y, t) -> C_q (nAE x nODE2) of the reaction forces C_q^T z
         numberOfConstraints: nAE
     """
     def __init__(self, massMatrix, forces, initialState=None, massMatrixBlocks=None, ode1RightHandSide=None,
@@ -309,19 +310,19 @@ class NumpySystem(SymbolicSystemBase):
             return np.zeros(0)
         return np.asarray(self._ode1(q, q_t, y, t), dtype=float)
 
-    def AlgebraicEquations(self, q, q_t, y, lambda_, t, velocityLevel=False):
+    def AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel=False):
         """c of the function given; velocity level not supported"""
         if velocityLevel:
             raise ValueError('NumpySystem.AlgebraicEquations: the constraints are given on position level only')
         if self._constraints is None:
             return np.zeros(0)
-        return np.asarray(self._constraints(q, q_t, y, lambda_, t), dtype=float)
+        return np.asarray(self._constraints(q, q_t, y, z, t), dtype=float)
 
-    def ReactionForces(self, q, q_t, y, lambda_, t):
-        """C_q^T lambda of the constraint Jacobian given"""
+    def ReactionForces(self, q, q_t, y, z, t):
+        """C_q^T z of the constraint Jacobian given"""
         if self._constraints is None:
             return np.zeros(self.nODE2)
-        return np.asarray(self._constraintJacobian(q, q_t, y, t), dtype=float).T @ lambda_
+        return np.asarray(self._constraintJacobian(q, q_t, y, t), dtype=float).T @ z
 
     def InitialState(self):
         """(q0, q_t0) as given, zero otherwise"""
@@ -594,7 +595,7 @@ class SymbolicSystem(SymbolicSystemBase):
     def _AddJoint(self, jointKinds, objectNumber, item):
         """an ObjectJointUser into its kind, grouped as the connectors; the reason it is refused, empty if it is taken"""
         if not item['activeConnector']:
-            return 'not active (its equations lambda = 0 are not given)'
+            return 'not active (its equations z = 0 are not given)'
         (markers, ltg, reason) = self._ConnectorMarkers(objectNumber, item, orientation=True)
         if reason:
             return reason
@@ -854,7 +855,7 @@ class SymbolicSystem(SymbolicSystemBase):
         (t, objectNumber, p0, v0, R0, w0, p1, v1, R1, w1, data, parameters) = arguments
         return ((t, objectNumber, p0, R0, p1, R1, parameters), markerData)
 
-    def AlgebraicEquations(self, q, q_t, y, lambda_, t, velocityLevel=False):
+    def AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel=False):
         """the constraint equations c(q, t) of the joints at position level (#3141), by their recorded
         constraintUserFunction; the velocity level is not given
 
@@ -862,7 +863,7 @@ class SymbolicSystem(SymbolicSystemBase):
             q: the ODE2 coordinates
             q_t: the ODE2 velocities, not used
             y: the ODE1 coordinates, not used
-            lambda_: the algebraic coordinates lambda, not used
+            z: the algebraic coordinates, the Lagrange multipliers lambda of the documentation, not used
             t: the time
             velocityLevel: must be False
 
@@ -879,29 +880,29 @@ class SymbolicSystem(SymbolicSystemBase):
                                                           dtype=float)
         return c
 
-    def ReactionForces(self, q, q_t, y, lambda_, t):
-        """the reaction forces C_q^T lambda of the joints (#3141): the recorded jacobianUserFunction C by the marker
-        translations and global rotation increments, C^T lambda the forces and torques on the markers, projected into the
+    def ReactionForces(self, q, q_t, y, z, t):
+        """the reaction forces C_q^T z of the joints (#3141): the recorded jacobianUserFunction C by the marker
+        translations and global rotation increments, C^T z the forces and torques on the markers, projected into the
         coordinates by the position and rotation Jacobians of the markers, as the forces of a connector
 
         Args:
             q: the ODE2 coordinates
             q_t: the ODE2 velocities, not used
             y: the ODE1 coordinates, not used
-            lambda_: the algebraic coordinates lambda
+            z: the algebraic coordinates, the Lagrange multipliers lambda of the documentation
             t: the time
 
         Returns:
             the vector of size nODE2
         """
-        (q, lambda_) = (np.asarray(q, dtype=float), np.asarray(lambda_, dtype=float))
+        (q, z) = (np.asarray(q, dtype=float), np.asarray(z, dtype=float))
         f = np.zeros(self.nODE2)
         for kind in self.jointKinds:
             for i in range(len(kind.objects)):
                 joint = kind.parameters[i]
                 (arguments, markerData) = self._JointArguments(kind, i, q, t)
                 C = np.array(kind.recordings['jacobianUserFunction'].Evaluate(self.mbs, *arguments), dtype=float).reshape(-1, 12)
-                forces = C.T @ lambda_[joint['ltgAE']]
+                forces = C.T @ z[joint['ltgAE']]
                 local = np.zeros(kind.ltg.shape[1])
                 for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(joint['markers'], markerData)):
                     if Jpos is not None:
@@ -911,36 +912,36 @@ class SymbolicSystem(SymbolicSystemBase):
                 np.add.at(f, kind.ltg[i], local)
         return f
 
-    def _JointJacobian(self, kind, i, q, lambda_, t):
+    def _JointJacobian(self, kind, i, q, z, t):
         """the derivatives of joint i of kind in its local coordinates (#3145): C_q, the derivative of its constraint
         equations by the coordinates - the recorded jacobianUserFunction C by the marker translations and global
         rotation increments times the position and rotation Jacobians of the markers -, and the derivative of its
-        reaction forces C_q^T lambda by the coordinates: the derivatives of C by the positions and rotation matrices of
+        reaction forces C_q^T z by the coordinates: the derivatives of C by the positions and rotation matrices of
         the markers (arguments 3 + 2k and 4 + 2k of the recording), composed with J_pos and dA/dq of the bodies, and the
-        derivatives of J_pos and J_rot of the bodies times the forces and torques C^T lambda"""
+        derivatives of J_pos and J_rot of the bodies times the forces and torques C^T z"""
         n = kind.ltg.shape[1]
         joint = kind.parameters[i]
         (arguments, markerData) = self._JointArguments(kind, i, q, t)
         recording = kind.recordings['jacobianUserFunction']
         C = np.array(recording.Evaluate(self.mbs, *arguments), dtype=float).reshape(-1, 12)
-        lambdaJoint = lambda_[joint['ltgAE']]
-        forces = C.T @ lambdaJoint #the forces and torques on the markers
+        zJoint = z[joint['ltgAE']]
+        forces = C.T @ zJoint #the forces and torques on the markers
         C_q = np.zeros((C.shape[0], n))
-        dForces = np.zeros((12, n)) #the derivative of C^T lambda by the local coordinates
+        dForces = np.zeros((12, n)) #the derivative of C^T z by the local coordinates
         for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(joint['markers'], markerData)):
             if Jpos is None:
                 continue
             indices = marker['indices']
             C_q[:, indices] += C[:, 6*k:6*k + 3] @ Jpos
             dForces[:, indices] += np.einsum('ijk,i->jk', self._RecordingJacobian(recording, 3 + 2*k, arguments).reshape(-1, 12, 3),
-                                             lambdaJoint) @ Jpos
+                                             zJoint) @ Jpos
             if Jrot is not None:
                 C_q[:, indices] += C[:, 6*k + 3:6*k + 6] @ Jrot
             if bodyArguments is not None and Jrot is not None: #the rotation of the marker after the one of the body
                 dA = np.einsum('ijk,jl->ilk', self._BodyJacobian(marker, 'rotationMatrixUserFunction', bodyArguments),
                                marker['rotation'])
                 dForces[:, indices] += np.einsum('ijk,i->jk', self._RecordingJacobian(recording, 4 + 2*k, arguments).reshape(-1, 12, 9),
-                                                 lambdaJoint) @ dA.reshape(9, len(indices))
+                                                 zJoint) @ dA.reshape(9, len(indices))
         dReaction = np.zeros((n, n))
         for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(joint['markers'], markerData)):
             if Jpos is None:
@@ -958,7 +959,7 @@ class SymbolicSystem(SymbolicSystemBase):
                     dReaction[np.ix_(indices, indices)] += np.einsum('ijk,i->jk', dJrot, forces[torque])
         return (C_q, dReaction)
 
-    def SystemJacobian(self, q, q_t, q_tt, y, y_t, lambda_, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
+    def SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
                        factor_y_t=0., velocityLevel=False, epsilon=1e-6):
         """the Jacobian of SystemResidual, exact (#3145): the ODE2 block by ResidualJacobian plus the derivative of the
         reaction forces, the blocks C_q^T and C_q of the joints by _JointJacobian, the ODE1 block by ODE1Jacobian; the
@@ -970,7 +971,7 @@ class SymbolicSystem(SymbolicSystemBase):
             q_tt: the ODE2 accelerations
             y: the ODE1 coordinates
             y_t: their velocities
-            lambda_: the algebraic coordinates lambda
+            z: the algebraic coordinates, the Lagrange multipliers lambda of the documentation
             t: the time
             factor_q: the factor of d/dq
             factor_q_t: the factor of d/dq_t
@@ -991,12 +992,12 @@ class SymbolicSystem(SymbolicSystemBase):
         J = np.zeros((nSystem, nSystem))
         J[:nODE2, :nODE2] = self.ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
         if nAE:
-            lambda_ = np.asarray(lambda_, dtype=float)
+            z = np.asarray(z, dtype=float)
             offset = nODE2 + nODE1 #the first algebraic coordinate
             for kind in self.jointKinds:
                 for i in range(len(kind.objects)):
                     (ltg, ltgAE) = (kind.ltg[i], kind.parameters[i]['ltgAE'] + offset)
-                    (C_q, dReaction) = self._JointJacobian(kind, i, q, lambda_, t)
+                    (C_q, dReaction) = self._JointJacobian(kind, i, q, z, t)
                     J[np.ix_(ltg, ltg)] += factor_q*dReaction
                     J[np.ix_(ltg, ltgAE)] += C_q.T
                     J[np.ix_(ltgAE, ltg)] += factor_q*C_q
@@ -1344,7 +1345,7 @@ class SymbolicSystem(SymbolicSystemBase):
             optimize: for 'symbolic', simplify the expressions by exudyn.symbolic.Optimize, level 2 (1*x, x+0, 0*x,
                 the combination of numbers, ...)
             variables: None, or (q, q_t, t) of the format given by the caller - e.g. the arguments of a function being
-                recorded -, used instead of new variables; (q, q_t, t, lambda_) with the algebraic coordinates
+                recorded -, used instead of new variables; (q, q_t, t, z) with the algebraic coordinates
             massMatrix: True: the global mass matrix, 'massMatrix' (nODE2 x nODE2)
             forces: True: the forces, 'forces' (nODE2)
             massMatrixBlocks: True: the mass matrices of the bodies, 'massMatrixBlocks', as MassMatrixBlocks() gives
@@ -1352,27 +1353,27 @@ class SymbolicSystem(SymbolicSystemBase):
                 of their n x n matrices
             algebraicEquations: True: the constraint equations c(q, t) of the joints, 'algebraicEquations' (nAE), as
                 AlgebraicEquations (#3146)
-            reactionForces: True: the reaction forces C_q^T lambda of the joints, 'reactionForces' (nODE2), as
-                ReactionForces, of the algebraic coordinates lambda - the variable 'lambda_' (#3146)
+            reactionForces: True: the reaction forces C_q^T z of the joints, 'reactionForces' (nODE2), as
+                ReactionForces, of the algebraic coordinates, the variable 'z' (#3146)
 
         Returns:
-            dict with 'q', 'q_t', 't' (the variables), 'lambda_' if reactionForces, and the results asked for,
+            dict with 'q', 'q_t', 't' (the variables), 'z' if reactionForces, and the results asked for,
             exudyn.symbolic.Matrix and Vector or sympy.Matrix
         """
         backend = _Backend(format)
         n = self.nODE2
         (q0, q_t0) = self.InitialState()
-        lambda_ = None
+        z = None
         if variables is None:
             (q, q_t) = (backend.Variable(name, n, value) for (name, value) in [('q', q0), ('q_t', q_t0)])
             t = backend.Real('t')
         else:
             (q, q_t, t) = variables[:3]
             if len(variables) > 3:
-                lambda_ = variables[3]
-        if reactionForces and lambda_ is None:
-            lambda_ = backend.Variable('lambda_', self.nAE, np.zeros(self.nAE))
-        (M, f, blocks, c, r) = self._EquationLists(backend, q, q_t, t, lambda_ if reactionForces else None,
+                z = variables[3]
+        if reactionForces and z is None:
+            z = backend.Variable('z', self.nAE, np.zeros(self.nAE))
+        (M, f, blocks, c, r) = self._EquationLists(backend, q, q_t, t, z if reactionForces else None,
                                                    algebraicEquations or reactionForces)
         (names, results) = ([], [])
         for (name, wanted, Result) in [('massMatrix', massMatrix, lambda: backend.Matrix(M)), ('forces', forces, lambda: backend.Vector(f)),
@@ -1389,7 +1390,7 @@ class SymbolicSystem(SymbolicSystemBase):
                        for (name, result) in zip(names, results)]
         equations = {'q': q, 'q_t': q_t, 't': t}
         if reactionForces:
-            equations['lambda_'] = lambda_
+            equations['z'] = z
         for (name, result) in zip(names, results):
             equations[name] = result
         if massMatrixBlocks: #back into the kinds
@@ -1400,10 +1401,10 @@ class SymbolicSystem(SymbolicSystemBase):
                 matrices = matrices[len(kindBlocks):]
         return equations
 
-    def _EquationLists(self, backend, q, q_t, t, lambda_=None, constraints=False):
+    def _EquationLists(self, backend, q, q_t, t, z=None, constraints=False):
         """the mass matrix as list of rows, the forces as list of the expressions of Equations, of the variables q, q_t
         and t of backend, the local mass matrices of the bodies, per kind (ltg, list of their lists of rows), and with
-        constraints the constraint equations of the joints and - for the algebraic coordinates lambda_ - their reaction
+        constraints the constraint equations of the joints and - for the algebraic coordinates z - their reaction
         forces as lists (#3146)"""
         n = self.nODE2
         format = backend.format
@@ -1487,10 +1488,10 @@ class SymbolicSystem(SymbolicSystemBase):
             Add(f, load.ltg, Components(J.T @ value, len(load.ltg)))
         (c, r) = ([0]*self.nAE, [0]*n)
         if constraints:
-            lambdas = None if lambda_ is None else [lambda_[i] for i in range(self.nAE)]
+            zComponents = None if z is None else [z[i] for i in range(self.nAE)]
             for kind in self.jointKinds:
                 for index in range(len(kind.objects)):
-                    self._JointEquations(kind, index, backend, Call, t, qs, q_ts, lambdas, c, r)
+                    self._JointEquations(kind, index, backend, Call, t, qs, q_ts, zComponents, c, r)
         return (M, f, blocks, c, r)
 
     def _MarkerStateExpressions(self, connector, ltg, backend, Call, t, qs, q_ts):
@@ -1542,10 +1543,10 @@ class SymbolicSystem(SymbolicSystemBase):
             for (i, value) in zip(indices, generalized):
                 f[i] = _Sum(f[i], value)
 
-    def _JointEquations(self, kind, index, backend, Call, t, qs, q_ts, lambdas, c, r):
-        """put the constraint equations of joint index of kind into the list c and, for lambdas, add its reaction forces
-        C_q^T lambda to the list r, as expressions: the marker states as in _JointArguments, the recorded
-        constraintUserFunction and the forces and torques C^T lambda of the recorded jacobianUserFunction, as
+    def _JointEquations(self, kind, index, backend, Call, t, qs, q_ts, zComponents, c, r):
+        """put the constraint equations of joint index of kind into the list c and, for zComponents, add its reaction forces
+        C_q^T z to the list r, as expressions: the marker states as in _JointArguments, the recorded
+        constraintUserFunction and the forces and torques C^T z of the recorded jacobianUserFunction, as
         AlgebraicEquations and ReactionForces (#3146)"""
         (ltg, joint) = (kind.ltg[index], kind.parameters[index])
         (states, jacobians) = self._MarkerStateExpressions(joint, ltg, backend, Call, t, qs, q_ts)
@@ -1554,10 +1555,10 @@ class SymbolicSystem(SymbolicSystemBase):
         equations = Call(kind.recordings['constraintUserFunction'], *arguments)
         for (k, i) in enumerate(ltgAE):
             c[i] = equations[k]
-        if lambdas is None:
+        if zComponents is None:
             return
         C = Call(kind.recordings['jacobianUserFunction'], *arguments)
-        forces = C.T @ backend.Vector([lambdas[i] for i in ltgAE])
+        forces = C.T @ backend.Vector([zComponents[i] for i in ltgAE])
         self._AddMarkerForces(joint, ltg, backend, forces, 6, jacobians, r)
 
     def _ConnectorEquations(self, kind, index, backend, Call, t, qs, q_ts, f):
@@ -1571,7 +1572,7 @@ class SymbolicSystem(SymbolicSystemBase):
         self._AddMarkerForces(connector, ltg, backend, forces, stride, jacobians, f)
 
     def GetFlatProgram(self, format='Python', flatten=True, results=['forces', 'massMatrix']):
-        """the flat program of results of Equations(), a function of q, q_t and t - and lambda with 'reactionForces'
+        """the flat program of results of Equations(), a function of q, q_t and t - and z with 'reactionForces'
         (#3130, #3132, #3146)
 
         Args:
@@ -1581,14 +1582,14 @@ class SymbolicSystem(SymbolicSystemBase):
 
         Returns:
             the program as str, for the executable formats a function Equations(q, q_t, t) - Equations(q, q_t, t,
-            lambda_) with 'reactionForces' - returning the results
+            z) with 'reactionForces' - returning the results
         """
         names = ['forces', 'massMatrix', 'algebraicEquations', 'reactionForces']
         unknown = [name for name in results if name not in names]
         if unknown:
             raise ValueError('SymbolicSystem.GetFlatProgram: unknown results ' + str(unknown) + '; possible: ' + str(names))
         equations = self.Equations('symbolic', **{name: name in results for name in names})
-        variables = ['q', 'q_t', 't'] + (['lambda_'] if 'reactionForces' in results else [])
+        variables = ['q', 'q_t', 't'] + (['z'] if 'reactionForces' in results else [])
         return exudyn.symbolic.GetFlatProgram([equations[name] for name in results], arguments=[equations[name] for name in variables],
                                               resultNames=list(results), format=format, flatten=flatten, name='Equations')
 
@@ -1710,7 +1711,7 @@ class _Output:
         if system.nODE1:
             self.result.update({'y': [], 'y_t': []})
         if system.nAE:
-            self.result['lambda'] = []
+            self.result['z'] = []
         self.system = system
         self.solver = None
         if getattr(system, 'mbs', None) is not None:
@@ -1725,13 +1726,13 @@ class _Output:
                 self.solver = exudyn.MainSolverExplicit()
             self.solver.InitializeSolver(system.mbs, self.simulationSettings)
 
-    def Step(self, stepIndex, t, q, q_t, q_tt, last=False, y=None, y_t=None, lambda_=None):
+    def Step(self, stepIndex, t, q, q_t, q_tt, last=False, y=None, y_t=None, z=None):
         """the state after step stepIndex at t; stepIndex 0 is the initial state, as SolveDynamic writes it"""
         if last:
             self.lastWritten = self.tEnd - self.h
         if stepIndex == 0 or t - self.lastWritten >= -1e-10:
             self.lastWritten = max(self.lastWritten + self.period, t)
-            for (name, value) in [('time', t), ('q', q), ('q_t', q_t), ('q_tt', q_tt), ('y', y), ('y_t', y_t), ('lambda', lambda_)]:
+            for (name, value) in [('time', t), ('q', q), ('q_t', q_t), ('q_tt', q_tt), ('y', y), ('y_t', y_t), ('z', z)]:
                 if name in self.result:
                     self.result[name].append(np.copy(value))
         if self.solver is not None:
@@ -1740,8 +1741,8 @@ class _Output:
                 self.system.mbs.systemData.SetODE1Coordinates(np.asarray(y, dtype=float))
                 if y_t is not None:
                     self.system.mbs.systemData.SetODE1Coordinates_t(np.asarray(y_t, dtype=float))
-            if lambda_ is not None and len(lambda_):
-                self.system.mbs.systemData.SetAECoordinates(np.asarray(lambda_, dtype=float))
+            if z is not None and len(z):
+                self.system.mbs.systemData.SetAECoordinates(np.asarray(z, dtype=float))
             self.solver.it.currentStepIndex = stepIndex
             self.solver.it.currentTime = t
             self.solver.it.currentStepSize = self.h
@@ -1868,10 +1869,10 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     in the form of Arnold and Bruls, as Exudyn's MainSolverImplicitSecondOrder computes it (#3126, #3134, design
     docs/dev/design/symbolicSystem.md §6): per step the predictor of the displacements, velocities and algorithmic
     accelerations, the ODE1 coordinates by the trapezoidal rule, then Newton's method for the accelerations, the ODE1
-    coordinates and the algebraic coordinates with the residual of SystemResidual - r = M q_tt - f + C_q^T lambda,
+    coordinates and the algebraic coordinates with the residual of SystemResidual - r = M q_tt - f + C_q^T z,
     g - y_t, c - and its Jacobian, the ODE2 rows scaled by beta h^2 and the algebraic columns by 1/(beta h^2), as
     Exudyn; by timeIntegration: numberOfSteps, startTime, endTime, generalizedAlpha.spectralRadius, useNewmark with
-    newmarkBeta and newmarkGamma, computeInitialAccelerations - with constraints of [M C_q^T; C_q 0] [q_tt; lambda] =
+    newmarkBeta and newmarkGamma, computeInitialAccelerations - with constraints of [M C_q^T; C_q 0] [q_tt; z] =
     [f; -(C_q q_t)_q q_t] -, storeInitialAlgebraicCoordinates, and newton.relativeTolerance, absoluteTolerance,
     maxIterations, useModifiedNewton (the Jacobian once per step) and weightTolerancePerCoordinate; for a
     SymbolicSystem the solution file, the sensors and the renderer of its mbs, as SolveExplicit. A step whose Newton
@@ -1883,7 +1884,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
 
     Returns:
         dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2), with ODE1 coordinates 'y', 'y_t', with algebraic
-        equations 'lambda', at the steps of solution.file.writePeriod and the last step, and the statistics 'steps',
+        equations 'z', at the steps of solution.file.writePeriod and the last step, and the statistics 'steps',
         'newtonIterations', 'jacobianEvaluations'
     """
     if simulationSettings is None:
@@ -1915,21 +1916,21 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
 
     (q, q_t) = system.InitialState()
     q_tt = np.zeros(nODE2)
-    (y, y_t, lambda_) = (system.InitialStateODE1(), np.zeros(nODE1), np.zeros(nAE))
+    (y, y_t, z) = (system.InitialStateODE1(), np.zeros(nODE1), np.zeros(nAE))
     if generalizedAlpha.computeInitialAccelerations:
         if not general:
             q_tt = scipy.sparse.linalg.spsolve(system.MassMatrix(q, q_t, tStart, sparse=True).tocsc(), system.Forces(q, q_t, tStart))
         else:
-            (q_tt, lambdaInitial) = _InitialAccelerations(system, q, q_t, y, tStart)
+            (q_tt, zInitial) = _InitialAccelerations(system, q, q_t, y, tStart)
             if generalizedAlpha.storeInitialAlgebraicCoordinates:
-                lambda_ = lambdaInitial
+                z = zInitial
     aAlgorithmic = q_tt.copy()
     output = _Output(system, simulationSettings, tStart, tEnd, h)
-    output.Step(0, tStart, q, q_t, q_tt, y=y, y_t=y_t, lambda_=lambda_)
+    output.Step(0, tStart, q, q_t, q_tt, y=y, y_t=y_t, z=z)
 
     def Residual():
         if general:
-            return system.SystemResidual(q, q_t, q_tt, y, y_t, lambda_, t)
+            return system.SystemResidual(q, q_t, q_tt, y, y_t, z, t)
         return system.Residual(q, q_t, q_tt, t)
 
     (newtonIterations, jacobianEvaluations) = (0, 0)
@@ -1958,7 +1959,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
         for iteration in range(int(newton.maxIterations)):
             if factorization is None or not newton.useModifiedNewton:
                 if general:
-                    J = system.SystemJacobian(q, q_t, q_tt, y, y_t, lambda_, t, factor_q=1., factor_q_t=gammaPrime, factor_q_tt=betaPrime,
+                    J = system.SystemJacobian(q, q_t, q_tt, y, y_t, z, t, factor_q=1., factor_q_t=gammaPrime, factor_q_tt=betaPrime,
                                               factor_y=1., factor_y_t=2./h)
                     J[:nODE2, :] *= scaling
                     J[:, nODE2 + nODE1:] /= scaling
@@ -1973,7 +1974,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
                 increment = scipy.linalg.lu_solve(factorization, r)
                 y = y - increment[nODE2:nODE2 + nODE1]
                 y_t = y_t - (2./h)*increment[nODE2:nODE2 + nODE1]
-                lambda_ = lambda_ - increment[nODE2 + nODE1:]/scaling
+                z = z - increment[nODE2 + nODE1:]/scaling
                 increment = increment[:nODE2]
             else:
                 increment = factorization.solve(Residual())
@@ -1990,18 +1991,18 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
                              + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
         if not generalizedAlpha.useNewmark:
             aAlgorithmic = aAlgorithmic + ((1 - alphaF)/(1 - alphaM))*q_tt #FinalizeNewton
-        output.Step(step, t, q, q_t, q_tt, last=(step == n), y=y, y_t=y_t, lambda_=lambda_)
+        output.Step(step, t, q, q_t, q_tt, last=(step == n), y=y, y_t=y_t, z=z)
 
     return output.Finalize({'steps': n, 'newtonIterations': newtonIterations, 'jacobianEvaluations': jacobianEvaluations})
 
 
 def _InitialAccelerations(system, q, q_t, y, t, epsilon=1e-6):
-    """the initial accelerations and algebraic coordinates of CSolverImplicitSecondOrder: [M C_q^T; C_q 0] [q_tt; lambda]
+    """the initial accelerations and algebraic coordinates of CSolverImplicitSecondOrder: [M C_q^T; C_q 0] [q_tt; z]
     = [f; -(C_q q_t)_q q_t], the ODE1 rows a unit matrix with zero right-hand side; C_q by central differences of the
     algebraic equations, (C_q q_t)_q q_t as their second derivative along q_t"""
     (nODE2, nODE1, nAE) = (system.nODE2, system.nODE1, system.nAE)
     nSystem = nODE2 + nODE1 + nAE
-    lambda_ = np.zeros(nAE)
+    z = np.zeros(nAE)
     A = np.zeros((nSystem, nSystem))
     rhs = np.zeros(nSystem)
     A[:nODE2, :nODE2] = system.MassMatrix(q, q_t, t)
@@ -2009,7 +2010,7 @@ def _InitialAccelerations(system, q, q_t, y, t, epsilon=1e-6):
     A[nODE2:nODE2 + nODE1, nODE2:nODE2 + nODE1] = np.eye(nODE1)
     if nAE:
         def Equations(qq):
-            return system.AlgebraicEquations(qq, q_t, y, lambda_, t)
+            return system.AlgebraicEquations(qq, q_t, y, z, t)
         Cq = np.array([(Equations(q + epsilon*e) - Equations(q - epsilon*e))/(2*epsilon) for e in np.eye(nODE2)]).T
         A[nODE2 + nODE1:, :nODE2] = Cq
         A[:nODE2, nODE2 + nODE1:] = Cq.T

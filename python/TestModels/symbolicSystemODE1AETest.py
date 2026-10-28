@@ -39,7 +39,7 @@ def Forces(q, q_t, t, y):
 def Lag(q, q_t, y, t):
     return np.array([-a*y[0] + b*q[0] + cMath.sin(5*t)])
 
-def Constraint(q, q_t, y, lambda_, t):
+def Constraint(q, q_t, y, z, t):
     return np.array([q[2] - q[1]])
 
 def ConstraintJacobian(q, q_t, y, t):

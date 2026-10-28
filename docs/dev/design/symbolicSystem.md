@@ -189,7 +189,7 @@ $$
 $$
 
 `SymbolicSystemBase`: `nODE1`, `nAE`, `InitialStateODE1()`, `Forces(q, q_t, t, y)`, `ODE1RightHandSide(q, q_t, y,
-t)`, `AlgebraicEquations(q, q_t, y, lambda_, t, velocityLevel)`, `ReactionForces(q, q_t, y, lambda_, t)` ($\Cm_{\qv}\tp
+t)`, `AlgebraicEquations(q, q_t, y, z, t, velocityLevel)`, `ReactionForces(q, q_t, y, z, t)` ($\Cm_{\qv}\tp
 \tlambda$); `SystemResidual` is the residual of Exudyn's implicit solver, $[\Mm\ddot\qv - \fv + \Cm_{\qv}\tp\tlambda,\;
 \gv - \dot\yv,\; \cv]$, and `SystemJacobian` its Jacobian by columns of the Newton unknowns - the ODE2 block by
 `ResidualJacobian` (exact for a SymbolicSystem), the rest by central differences. The solvers as
@@ -219,7 +219,7 @@ CSolverExplicit and CSolverImplicitSecondOrder:
   difference is in the ODE2 block, where Exudyn leaves out $\partial(\Mm\ddot\qv)/\partial\qv$.
 - `SymbolicSystem` takes ObjectGenericODE1 with a symbolic rhsUserFunction and LoadCoordinate on its coordinates
   (#3144). `Equations(algebraicEquations=True, reactionForces=True)` gives the constraint equations of the joints and
-  their reaction forces as expressions of q, t and the variable `lambda_`, `GetFlatProgram(results=[...])` writes them
+  their reaction forces as expressions of q, t and the variable `z`, `GetFlatProgram(results=[...])` writes them
   (#3146); the ODE1 equations are not in `Equations()` yet. The coupling of all kinds in one
   item, ObjectGenericDAE (#3143), also needs Exudyn's internal solvers extended.
 
@@ -523,7 +523,7 @@ $\fv_{sys}$, with $\Mm\ddot\qv$ and the reaction forces on the LHS.
 |---|---|---|---|
 | `Forces(q, q_t, t, y)` | $\fv$, the RHS of the ODE2 equations, the loads included, the reaction forces not | `ODE2RHS` | `MainSolver.ComputeODE2RHS`, `CSystem::ComputeSystemODE2RHS` |
 | `ODE1RightHandSide(q, q_t, y, t)` | $\gv$ of $\dot\yv = \gv$ | `ODE1RHS` | `ComputeODE1RHS` |
-| `ReactionForces(q, q_t, y, lambda_, t)` | $\Cm_{\qv}\tp\tlambda$, ODE2 only, on the LHS | `ODE2ReactionForcesLHS` | the LHS term of the system equations in `solver.md` |
+| `ReactionForces(q, q_t, y, z, t)` | $\Cm_{\qv}\tp\tlambda$, ODE2 only, on the LHS | `ODE2ReactionForcesLHS` | the LHS term of the system equations in `solver.md` |
 | (missing) | $\Cm_{\yv}\tp\tlambda$ of the ODE1 equations | `ODE1ReactionTermsLHS` | `solver.md`, the ODE1 rows; needed by ObjectGenericDAE |
 | `Residual(q, q_t, q_tt, t, y)` | $\Mm\ddot\qv - \fv$, LHS minus RHS | `ODE2Residual` | |
 | `ResidualJacobian(...)` | its Jacobian | `ODE2ResidualJacobian` | |
@@ -603,7 +603,7 @@ on the coordinates is in the background, through the body that the marker is on.
 and a fixed marker depend on q. C makes that a part of exudyn.symbolic:
 
 - **A set of system variables** `esym.SystemVariables(mbs)`, a `VariableSet` with the special variables `q`, `q_t`,
-  `y`, `y_t`, `lambda_`, `data` and `t` of the sizes of `systemData`.
+  `y`, `y_t`, `z`, `data` and `t` of the sizes of `systemData`.
 - **The marker states as expressions of them**: `MarkerPosition(marker)`, `MarkerRotation(marker)`, ... of the set
   return expressions of the system variables - of the node coordinates for a node marker, through the recorded
   functions of the user body for a body marker, constants for the ground. A connector recording composed with them is

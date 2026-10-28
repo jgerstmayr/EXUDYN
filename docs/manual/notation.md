@@ -99,7 +99,7 @@ General **coordinates** are:
 | rotation coordinates ({ref}`ODE2 <ODE2>`) | $\tpsi = [\psi_0,\, \ldots,\, \psi_\eta]\tp$ | vector of $\eta$ **rotation based coordinates** in any configuration; these coordinates are added to reference rotation parameters to provide the current rotation parameters; used for second order differential equations |
 | coordinates ({ref}`ODE1 <ODE1>`) | $\yv = [y_0,\, \ldots,\, y_n]\tp$ | vector of $n$ coordinates for first order ordinary differential equations ({ref}`ODE1 <ODE1>`) in any configuration |
 | algebraic coordinates | $\zv = [z_0,\, \ldots,\, z_m]\tp$ | vector of $m$ algebraic coordinates if not Lagrange multipliers in any configuration |
-| Lagrange multipliers | $\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$ | vector of $m$ Lagrange multipliers (=algebraic coordinates) in any configuration |
+| Lagrange multipliers | $\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$ | vector of $m$ Lagrange multipliers (=algebraic coordinates) in any configuration; `z` in Python code, where `lambda` is a keyword (e.g. `exudyn.misc.symbolicSystem`) |
 | data coordinates | $\xv = [x_0,\, \ldots,\, x_l]\tp$ | vector of $l$ data coordinates in any configuration |
 
 The following parameters represent possible **OutputVariable** (list is not complete):

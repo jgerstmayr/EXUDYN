@@ -59,21 +59,21 @@ exu.Print(system)
 (q0, q_t0) = system.InitialState()
 residual0 = np.max(np.abs(system.AlgebraicEquations(q0, q_t0, None, None, 0.)))
 rng = np.random.default_rng(2)
-(q, lambda_) = (q0 + 0.05*rng.standard_normal(system.nODE2), rng.standard_normal(system.nAE))
+(q, z) = (q0 + 0.05*rng.standard_normal(system.nODE2), rng.standard_normal(system.nAE))
 differences = []
 for j in range(system.nODE2):
     dq = np.zeros(system.nODE2)
     dq[j] = 1e-6
-    differences.append((lambda_ @ system.AlgebraicEquations(q + dq, q_t0, None, lambda_, 0.)
-                        - lambda_ @ system.AlgebraicEquations(q - dq, q_t0, None, lambda_, 0.))/2e-6)
-reaction = system.ReactionForces(q, q_t0, None, lambda_, 0.)
+    differences.append((z @ system.AlgebraicEquations(q + dq, q_t0, None, z, 0.)
+                        - z @ system.AlgebraicEquations(q - dq, q_t0, None, z, 0.))/2e-6)
+reaction = system.ReactionForces(q, q_t0, None, z, 0.)
 differenceReaction = np.max(np.abs(reaction - np.array(differences)))/np.max(np.abs(reaction))
 exu.Print('constraint equations in the initial state', residual0, '; reaction forces against central differences',
           differenceReaction)
 
 #the exact Jacobian of all equations against the central differences of the base class, with the factors of a Newton
 #step of the generalized-alpha method
-state = (q, q_t0 + 0.1, rng.standard_normal(system.nODE2), np.zeros(0), np.zeros(0), lambda_, 0.1)
+state = (q, q_t0 + 0.1, rng.standard_normal(system.nODE2), np.zeros(0), np.zeros(0), z, 0.1)
 factors = dict(factor_q=1., factor_q_t=30., factor_q_tt=4000.)
 jacobian = system.SystemJacobian(*state, **factors)
 differenceJacobian = np.max(np.abs(jacobian - SymbolicSystemBase.SystemJacobian(system, *state, **factors)))/np.max(np.abs(jacobian))
@@ -81,14 +81,14 @@ exu.Print('exact Jacobian against central differences', differenceJacobian)
 
 #the constraint equations and the reaction forces as expressions: numpy code of the flat program, and sympy
 space = {}
-exec(system.GetFlatProgram(format='numpy', results=['algebraicEquations', 'reactionForces']), space) #Equations(q, q_t, t, lambda_)
-reference = [system.AlgebraicEquations(q, q_t0, None, lambda_, 0.3), system.ReactionForces(q, q_t0, None, lambda_, 0.3)]
-results = [space['Equations'](q, q_t0, 0.3, lambda_)]
+exec(system.GetFlatProgram(format='numpy', results=['algebraicEquations', 'reactionForces']), space) #Equations(q, q_t, t, z)
+reference = [system.AlgebraicEquations(q, q_t0, None, z, 0.3), system.ReactionForces(q, q_t0, None, z, 0.3)]
+results = [space['Equations'](q, q_t0, 0.3, z)]
 if sympy is not None:
     equations = system.Equations(format='sympy', massMatrix=False, forces=False, algebraicEquations=True, reactionForces=True)
-    Sympy = sympy.lambdify([list(equations['q']), list(equations['q_t']), equations['t'], list(equations['lambda_'])],
+    Sympy = sympy.lambdify([list(equations['q']), list(equations['q_t']), equations['t'], list(equations['z'])],
                            [equations['algebraicEquations'], equations['reactionForces']], 'numpy')
-    results.append(Sympy(q, q_t0, 0.3, lambda_))
+    results.append(Sympy(q, q_t0, 0.3, z))
 differenceEquations = max(np.max(np.abs(np.ravel(result[k]) - reference[k]))/np.max(np.abs(reference[k])) for result in results for k in [0, 1])
 exu.Print('constraint equations and reaction forces of Equations() against the system', differenceEquations)
 
