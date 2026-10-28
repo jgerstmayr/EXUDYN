@@ -62,14 +62,14 @@ exu.Print(system)
 (q0, q_t0) = system.InitialState()
 residual0 = np.max(np.abs(system.AlgebraicEquations(q0, q_t0, None, None, 0.)))
 rng = np.random.default_rng(2)
-(q, lam) = (q0 + 0.05*rng.standard_normal(system.nODE2), rng.standard_normal(system.nAE))
+(q, lambda_) = (q0 + 0.05*rng.standard_normal(system.nODE2), rng.standard_normal(system.nAE))
 differences = []
 for j in range(system.nODE2):
     dq = np.zeros(system.nODE2)
     dq[j] = 1e-6
-    differences.append((lam @ system.AlgebraicEquations(q + dq, q_t0, None, lam, 0.)
-                        - lam @ system.AlgebraicEquations(q - dq, q_t0, None, lam, 0.))/2e-6)
-reaction = system.ReactionForces(q, q_t0, None, lam, 0.)
+    differences.append((lambda_ @ system.AlgebraicEquations(q + dq, q_t0, None, lambda_, 0.)
+                        - lambda_ @ system.AlgebraicEquations(q - dq, q_t0, None, lambda_, 0.))/2e-6)
+reaction = system.ReactionForces(q, q_t0, None, lambda_, 0.)
 differenceReaction = np.max(np.abs(reaction - np.array(differences)))/np.max(np.abs(reaction))
 exu.Print('constraint equations in the initial state', residual0, '; reaction forces against central differences',
           differenceReaction)

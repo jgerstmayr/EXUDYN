@@ -188,7 +188,7 @@ $$
 $$
 
 `SymbolicSystemBase`: `nODE1`, `nAE`, `InitialStateODE1()`, `Forces(q, q_t, t, y)`, `ODE1RightHandSide(q, q_t, y,
-t)`, `AlgebraicEquations(q, q_t, y, lam, t, velocityLevel)`, `ReactionForces(q, q_t, y, lam, t)` ($\Cm_{\qv}\tp
+t)`, `AlgebraicEquations(q, q_t, y, lambda_, t, velocityLevel)`, `ReactionForces(q, q_t, y, lambda_, t)` ($\Cm_{\qv}\tp
 \tlambda$); `SystemResidual` is the residual of Exudyn's implicit solver, $[\Mm\ddot\qv - \fv + \Cm_{\qv}\tp\tlambda,\;
 \gv - \dot\yv,\; \cv]$, and `SystemJacobian` its Jacobian by columns of the Newton unknowns - the ODE2 block by
 `ResidualJacobian` (exact for a SymbolicSystem), the rest by central differences. The solvers as
@@ -460,7 +460,7 @@ Jacobian of its item does not see.
 |---|---|---|---|
 | A as now | local arguments per item, composed by the LTG maps | the Jacobian of an item is local, its sparsity known; one recording per kind | a coupling across items needs a connector or an item output |
 | B system coordinates as nodes that read mbs | `esym.SystemCoordinate('ODE2', i)`, read at evaluation as the item outputs | any coupling in one line | the dependency is hidden from the LTG map, the sparsity and the Jacobian - the lag of the item outputs, now for every coordinate; the global indices change when the model changes |
-| C system variables for the recordings of a system | the named vectors `q`, `q_t`, `y`, `lam`, `t` (and `p`, 12.4) of a system, and helpers that give the part of a node or item, e.g. `variables.ODE2(node)` | equations written directly in system coordinates - what `Equations()` does internally (`_Backend.Variable`); a controller or a coupling written by hand | for the system only, not inside an item of mbs |
+| C system variables for the recordings of a system | the named vectors `q`, `q_t`, `y`, `lambda`, `t` (and `p`, 12.4) of a system, and helpers that give the part of a node or item, e.g. `variables.ODE2(node)` | equations written directly in system coordinates - what `Equations()` does internally (`_Backend.Variable`); a controller or a coupling written by hand | for the system only, not inside an item of mbs |
 
 **Recommendation**: C, in `exudyn.misc.symbolicSystem`, as the public form of what `Equations()` does already. Inside
 mbs, an item that couples the coordinates of several nodes is ObjectGenericDAE (RG9.10): its node lists give the LTG
@@ -515,7 +515,7 @@ $\fv_{sys}$, with $\Mm\ddot\qv$ and the reaction forces on the LHS.
 |---|---|---|---|
 | `Forces(q, q_t, t, y)` | $\fv$, the RHS of the ODE2 equations, the loads included, the reaction forces not | `ODE2RHS` | `MainSolver.ComputeODE2RHS`, `CSystem::ComputeSystemODE2RHS` |
 | `ODE1RightHandSide(q, q_t, y, t)` | $\gv$ of $\dot\yv = \gv$ | `ODE1RHS` | `ComputeODE1RHS` |
-| `ReactionForces(q, q_t, y, lam, t)` | $\Cm_{\qv}\tp\tlambda$, ODE2 only, on the LHS | `ODE2ReactionForcesLHS` | the LHS term of the system equations in `solver.md` |
+| `ReactionForces(q, q_t, y, lambda_, t)` | $\Cm_{\qv}\tp\tlambda$, ODE2 only, on the LHS | `ODE2ReactionForcesLHS` | the LHS term of the system equations in `solver.md` |
 | (missing) | $\Cm_{\yv}\tp\tlambda$ of the ODE1 equations | `ODE1ReactionTermsLHS` | `solver.md`, the ODE1 rows; needed by ObjectGenericDAE |
 | `Residual(q, q_t, q_tt, t, y)` | $\Mm\ddot\qv - \fv$, LHS minus RHS | `ODE2Residual` | |
 | `ResidualJacobian(...)` | its Jacobian | `ODE2ResidualJacobian` | |

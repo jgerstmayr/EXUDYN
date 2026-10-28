@@ -2068,6 +2068,10 @@ tolerance), explicit 6.5e-15. [log](exudynRevisionLog2026c.md#rg12-51-13)
 
 #3146. Needed by the export, RG12.51.5.
 
+#### **CLOSED_RG12.51.17** Name the algebraic coordinates lambda_ and the sizes without abbreviations in symbolicSystem.py and its test models
+
+CLOSED 2026-10-28 (#3148; maintainer 2026-10-28: use lambda, not lam, and no abbreviations): lambda_ in the arguments and variables, as lambda is a keyword of Python; nODE1, nODE2, nSystem for n1, n2, nSys. [log](exudynRevisionLog2026c.md#rg12-51-17)
+
 ### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
 
 CLOSED 2026-10-25 (#3094; maintainer 2026-10-25: the introduction section to Python-C++ interface/Symbolic has to be

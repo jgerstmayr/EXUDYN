@@ -4209,3 +4209,17 @@ RG12.61 (as recommended) now".)*
   the component; Optimize of (x*1 + 0)*cos(x + 1) + cos(x + 1), 13 nodes to 6; a recorded spring force, 17 nodes of
   which 9 operations, flatOperations equal to the lines of its flat program.
 - docs/manual/symbolicUserFunctions.md, docs/manual/revisions.md.
+
+<a id="rg12-51-17"></a>
+### RG12.51.17 — lambda_ instead of lam in exudyn.misc.symbolicSystem (2026-10-28, #3148)
+*(Maintainer 2026-10-28, while RG12.51.14 to .16 were being done: "don't use lam for a name in function args, variables
+or docs - use lambda. Like always, avoid abbreviations. check the symbolicSystem.* files in particular.")*
+- `lambda` is a keyword of Python and cannot name an argument or a variable; the arguments and variables are `lambda_`,
+  the trailing underscore of PEP 8 for such a name, and the text says lambda: `AlgebraicEquations`, `ReactionForces`,
+  `SystemResidual`, `SystemJacobian` of SymbolicSystemBase, NumpySystem and SymbolicSystem, the `constraints` function of
+  NumpySystem, `_Output.Step`, the solvers; `lamInitial` is `lambdaInitial`.
+- The other abbreviations of python/exudyn/misc/symbolicSystem.py: the locals `n1`, `n2`, `nSys` of SystemJacobian and
+  SolveGeneralizedAlpha are `nODE1`, `nODE2`, `nSystem`. Kept: `nAE` (Exudyn's name, as `nODE2`), `ltg`, `Jpos`, `Jrot`
+  (Exudyn's names), `J` and `dq` (the mathematical symbols).
+- docs/dev/design/symbolicSystem.md (the signatures, the named vector `lambda` of section 12.2),
+  python/TestModels/symbolicSystemJointsTest.py and symbolicSystemODE1AETest.py; their results unchanged.

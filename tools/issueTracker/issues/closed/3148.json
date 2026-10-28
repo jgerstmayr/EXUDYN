@@ -1,0 +1,15 @@
+{
+  "number": 3148,
+  "title": "Name the algebraic coordinates lambda_ instead of lam in exudyn.misc.symbolicSystem",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-28: do not use lam for a name of arguments, variables or in the docs - use lambda, and avoid abbreviations; check the symbolicSystem files in particular. lambda is a keyword of Python, so the arguments and variables are lambda_ (PEP 8 for a name that collides with a keyword), the text says lambda; the local n1, n2, nSys of the solvers become nODE1, nODE2, nSystem.",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26",
+  "dateResolved": "2026-10-28 16:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.misc.symbolicSystem names the algebraic coordinates lambda_ in the arguments of AlgebraicEquations, ReactionForces, SystemResidual and SystemJacobian and in the constraints function of NumpySystem, as lambda is a keyword of Python.",
+  "resolvedInVersion": "1.13.246"
+}

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 241 | 1.13.245 |
+| 1.13 | Newborn | 242 | 1.13.246 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.246** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Name the algebraic coordinates lambda\_ instead of lam in exudyn.misc.symbolicSystem (#3148)
+  - description: Maintainer 2026-10-28: do not use lam for a name of arguments, variables or in the docs - use lambda, and avoid abbreviations; check the symbolicSystem files in particular. lambda is a keyword of Python, so the arguments and variables are lambda\_ (PEP 8 for a name that collides with a keyword), the text says lambda; the local n1, n2, nSys of the solvers become nODE1, nODE2, nSystem.
+  - **notes:** exudyn.misc.symbolicSystem names the algebraic coordinates lambda\_ in the arguments of AlgebraicEquations, ReactionForces, SystemResidual and SystemJacobian and in the constraints function of NumpySystem, as lambda is a keyword of Python.
+  - date resolved: **2026-10-28 16:32**, date raised: 2026-10-28
 - **1.13.245** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Count the nodes of symbolic expressions and flat programs, in total and per kind of operation (#3142)
   - description: Maintainer 2026-10-28: to understand the complexity of a symbolic expression, a method that counts its nodes - in detail per kind of node (+, sin, numbers, variables, ...) - for the expressions (esym.Real, Vector, Matrix) and for the flat program of a recording. One traversal in C++ as FlatProgramData::Add, without cost at evaluation: the distinct nodes of the graph, the operations, the leaves (numbers, variables, item outputs), the shared nodes, the depth, the size of the tree when every shared node is counted per path (what ToString and the tree Diff walk), and with detailed=True the counts per FlatName and per kind (Real, Vector, Matrix); for the flat program also the entries that are written and those written into their users.
   - **notes:** exudyn.symbolic.GetStatistics(expressions, detailed) and GetStatistics() of esym.Real, Vector, Matrix and UserFunction count the nodes of an expression or recording by one traversal: the distinct nodes, operations, leaves, shared nodes, depth, the size of the tree counted per path and the operations of the flat program; with detailed=True per operation and per kind.
