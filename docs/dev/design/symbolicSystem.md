@@ -579,7 +579,8 @@ when RG14.2.2 needs it; R3 with R1.
 
 ### 12.7 The maintainer's answers, and the refinements (2026-10-28)
 
-**R2 is accepted** - recordings with declared inputs; step RG12.62 (#3149). **C is accepted** - the system variables as written below; step RG12.63 (#3151). The other points refined here, as asked:
+**R2 is accepted and done** - recordings with declared inputs, `esym.Function(result, inputs, name)`, and a
+`VariableSet` of named Reals, Vectors and Matrices in their order as the scope; step RG12.62 (#3149). **C is accepted** - the system variables as written below; step RG12.63 (#3151). The other points refined here, as asked:
 
 **Variables in a scope.** What is global today, precisely: a named variable is a node, identified by the node and not
 by its name - two recordings with an argument `q` each have two different nodes, and C++ never mixes them up. Global

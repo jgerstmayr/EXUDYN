@@ -2,10 +2,14 @@
   "number": 3149,
   "title": "Recordings with declared inputs: a VariableSet as the scope of named variables, and esym.Function of expressions and a set of inputs",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "Maintainer 2026-10-28: R2 of docs/dev/design/symbolicSystem.md section 12.6 is accepted. A recording is bound to the signature of an item user function today; the composed system borrows the signature of ObjectGenericODE2 and cannot add y, lambda or parameters. A VariableSet becomes the scope of named variables - scalars, vectors and matrices, a name unique in its set -, a recording declares its inputs as a set, esym.Function(expressions, inputs), evaluated, differentiated and exported as a UserFunction; CreateSymbolicUserFunction builds the set of the item signature. Needed by the parameters as variables and the system variables (section 12.7).",
   "dateRaised": "2026-10-28",
-  "deadline": "2027-04-26"
+  "deadline": "2027-04-26",
+  "dateResolved": "2026-10-29 00:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.symbolic.Function(result, inputs, name) records an expression in declared inputs - a list of named variables or a VariableSet - as a UserFunction without item and mbs; VariableSet holds named Reals, Vectors and Matrices in the order they were added and is the scope of their names; SymbolicSystem composes its system by it.",
+  "resolvedInVersion": "1.13.252"
 }

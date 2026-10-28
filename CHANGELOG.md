@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 247 | 1.13.251 |
+| 1.13 | Newborn | 248 | 1.13.252 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.252** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Recordings with declared inputs: a VariableSet as the scope of named variables, and esym.Function of expressions and a set of inputs (#3149)
+  - description: Maintainer 2026-10-28: R2 of docs/dev/design/symbolicSystem.md section 12.6 is accepted. A recording is bound to the signature of an item user function today; the composed system borrows the signature of ObjectGenericODE2 and cannot add y, lambda or parameters. A VariableSet becomes the scope of named variables - scalars, vectors and matrices, a name unique in its set -, a recording declares its inputs as a set, esym.Function(expressions, inputs), evaluated, differentiated and exported as a UserFunction; CreateSymbolicUserFunction builds the set of the item signature. Needed by the parameters as variables and the system variables (section 12.7).
+  - **notes:** exudyn.symbolic.Function(result, inputs, name) records an expression in declared inputs - a list of named variables or a VariableSet - as a UserFunction without item and mbs; VariableSet holds named Reals, Vectors and Matrices in the order they were added and is the scope of their names; SymbolicSystem composes its system by it.
+  - date resolved: **2026-10-29 00:24**, date raised: 2026-10-28
 - **1.13.251** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Remove the old planning comments of Symbolic.cpp (#3154)
   - description: Maintainer 2026-10-28: the list of DONE and open plans of 2023/2024 at the start of the flat program section of src/Linalg/Symbolic.cpp is obsolete; what is open of it has steps (assignments and loops RG12.53, the access to mbs \#2984 done).
   - **notes:** src/Linalg/Symbolic.cpp: the obsolete planning comments removed.

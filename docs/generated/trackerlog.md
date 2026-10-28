@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.251.dev1
+- Exudyn version = 1.13.252.dev1
 - last change = 2026-10-29
 - Number of issues = 3155
-- Number of resolved issues = 3028 (251 in current version)
+- Number of resolved issues = 3029 (252 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9047,9 +9047,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-28
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` System variables in exudyn.symbolic: a set of the system coordinates and the marker states as their expressions (#3151)
   - description: Maintainer 2026-10-28: option C of docs/dev/design/symbolicSystem.md section 12.7 is good to go. The signatures of the user functions stay; a body keeps q, q\_t as arguments. Marker-based items - connectors, joints, loads - get marker states, and their dependence on the system coordinates is in the background. esym.SystemVariables(mbs), a VariableSet of q, q\_t, y, y\_t, z, data and t, gives the marker states as expressions of them (node markers by the node coordinates, body markers through the recorded functions of the user body, the ground as constants), so that a connector recording composed with them is a function of the system coordinates, its Jacobian by the one-pass derivative; SymbolicSystem uses it instead of its own composition. After \#3149.
-  - date raised: 2026-10-28
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Recordings with declared inputs: a VariableSet as the scope of named variables, and esym.Function of expressions and a set of inputs (#3149)
-  - description: Maintainer 2026-10-28: R2 of docs/dev/design/symbolicSystem.md section 12.6 is accepted. A recording is bound to the signature of an item user function today; the composed system borrows the signature of ObjectGenericODE2 and cannot add y, lambda or parameters. A VariableSet becomes the scope of named variables - scalars, vectors and matrices, a name unique in its set -, a recording declares its inputs as a set, esym.Function(expressions, inputs), evaluated, differentiated and exported as a UserFunction; CreateSymbolicUserFunction builds the set of the item signature. Needed by the parameters as variables and the system variables (section 12.7).
   - date raised: 2026-10-28
 - `EXTENSION` `LOW EFF` `raised by: Claude-JG` Draw ObjectJointUser by a graphicsDataUserFunction, and the joints of UserItemCreator as the built-in joints (#3147)
   - description: ObjectJointUser draws nothing, so the revolute, prismatic, spherical and distance joints of UserItemCreator (\#3140) are invisible and their drawing arguments are accepted and not used. A graphicsDataUserFunction as ObjectConnectorUser has (\#3119), and the drawings of the built-in joints from the drawing arguments.

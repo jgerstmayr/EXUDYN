@@ -4311,3 +4311,32 @@ that.")*
   operations, with its stages .2 to .5); docs/dev/design/symbolicSystem.md section 12.7 with the refined parameters
   and the revised R1; docs/dev/design/symbolicUserItems.md section 6, the possible C++ items with numerical and
   symbolic parameters.
+
+<a id="rg12-62"></a>
+### RG12.62 — recordings with declared inputs, a VariableSet as scope (2026-10-29, #3149)
+*(Maintainer 2026-10-28: "R2 is definitely accepted and shall be done"; on the scope: "would it help to assign the
+variable set (or something better) to the named variables, so they would have a local scope? This would also enable
+the function args".)*
+- src/Linalg/Symbolic.h, `VariableSet`: besides the named Reals (SReal, which C++ reads) the named vectors and
+  matrices as their Python objects, and the order in which the names were added; a name is unique in its set, not in
+  the module. `GetNames` gives that order (was the order of an unordered_map), `NumberOfItems`, `Reset`, `ToString`
+  over all kinds.
+- src/Linalg/Symbolic.cpp, the Python interface: `Add(name, value)` - a number gives a named Real, a list or 1D array a
+  named Vector, a 2D array a named Matrix - and `Add(variable)` of a named Real, Vector or Matrix return the variable
+  (returned None); `Get`, `Set`, `[]` for all kinds. `esym.Function(result, inputs, name='Function')`: the inputs a
+  list of named variables or a VariableSet (its variables in their order), names unique, every other named variable of
+  the result refused unless it is the variable of esym.variables, which the function reads at every call; a
+  PySymbolicUserFunction set up by SetupUserFunction from the dict of a recording, with the inputs as its arguments
+  after the mbs placeholder that every user function has and `withoutMainSystem`, so that GetFlatProgramData and the
+  export leave mbs out: `Evaluate(*inputs)`, `EvaluateJacobian(name, *inputs)`, `GetFlatProgram(format)` (def
+  F(q, t, K)), `GetStatistics`. The errors are ExudynValueError (a ValueError).
+- python/exudyn/misc/symbolicSystem.py: the composed system (#3131) by esym.Function of the inputs q, q_t, t in a
+  VariableSet, optimized by esym.Optimize as CreateSymbolicUserFunction did, instead of the borrowed signature (mbs, t,
+  itemNumber, q, q_t) of ObjectGenericODE2; the results of all symbolic system test models unchanged, the experiment of
+  RG14.2.1 too.
+- Not done of the issue text: CreateSymbolicUserFunction builds no VariableSet of the signature - the argument
+  variables of each recording are its own nodes already, and the scope matters only where names meet, in Function and
+  in the export.
+- python/TestModels/symbolicFunctionTest.py; definitions/pybindSymbolic.py (Function, the VariableSet functions, whose
+  NumberOfItems was described as "Return True, if variable name exists"), docs/manual/symbolicUserFunctions.md,
+  docs/manual/revisions.md, the design note section 12.7.

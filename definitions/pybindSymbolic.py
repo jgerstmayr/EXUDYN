@@ -295,6 +295,15 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetDepth', cName='',
                         returnType='Any',
                         )
 
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Function', cName='',
+                        description="a recording of one esym.Real, Vector or Matrix in declared inputs, without an item (#3149): inputs is a list of named variables or a VariableSet, whose variables are the inputs in their order; the result is an esym.UserFunction whose Evaluate(*inputs), EvaluateJacobian(inputName, *inputs), GetFlatProgram and GetStatistics work as for a recorded user function, without MainSystem; the expressions may read variables of esym.variables, every other named variable must be an input",
+                        example = r"""scope = esym.VariableSet()\\q = scope.Add('q', [1., 2.])\\t = scope.Add('t', 0.)\\F = esym.Function(esym.sin(t)*q, scope, 'F')\\F.Evaluate([1., 1.], 0.5)""",
+                        argList=['result', 'inputs', 'name'],
+                        defaultArgs=['', '', "'Function'"],
+                        argTypes=['Any', 'Any', 'str'],
+                        returnType='Any',
+                        )
+
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetStatistics', cName='',
                         description="the counts of the nodes of one esym.Real, Vector or Matrix, or of a list of them together, by one traversal of the graph, a dict: nodes (the distinct nodes of the graph), operations, leaves (numbers, variables, item outputs), shared (the nodes used by more than one operation), depth (as GetDepth), treeSize (the nodes counted once per path, as str() of a tree and the tree Diff walk them; a float), flatOperations (the operations the flat program writes, as GetFlatProgram() counts them); detailed=True also byOperation (the count per operation of the flat program, '+', 'sin', 'number', 'variable', 'itemOutput', ...) and byKind (per Real, Vector and Matrix) (#3142)",
                         example = r"""x=esym.Real('x',2)\\y=esym.sin(x)*x\\esym.GetStatistics([y, y+x], detailed=True)""",
@@ -646,7 +655,9 @@ classStr = 'Symbolic::VariableSet'
 symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 
 symbolicModule.AddDocu("A container for symbolic variables, in particular for exchange between "+
-            "user functions and the model. "+
+            "user functions and the model, and the scope of the names of its variables: named Reals, Vectors and Matrices, "+
+            "a name unique in its set, in the order they were added - the inputs of esym.Function (#3149). "+
+            "exudyn.symbolic.variables is the set that the recordings read at every call. "+
             "For details, see the following example:"
             )
 
@@ -661,32 +672,33 @@ symbolicModule.DefStartTable(pyClassStr)
 # 		.def("__setitem__", [](Symbolic::SymbolicVariableSet& self, std::string name, Real value)
 # 			{ return self.SetVariable(name, value); })
 
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Add', cName='', 
-                        description="Add a variable with name and value (name may not exist)",
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Add', cName='',
+                        description="Add a variable with name and value, which may not exist, and return it: a number gives a named symbolic.Real, a list or 1D array a named symbolic.Vector, a 2D array a named symbolic.Matrix (#3149)",
+                        example = r"""scope = esym.VariableSet()\\q = scope.Add('q', [0., 1.])\\t = scope.Add('t', 0.)""",
                         argList=['name','value'],
-                        argTypes=['str','float'],
-                        returnType='None',
+                        argTypes=['str','Any'],
+                        returnType='Any',
                         )
 
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Add', cName='', 
-                        description="Add a variable with named real (name may not exist)",
-                        argList=['namedReal'],
-                        argTypes=['symbolic.Real'],
-                        returnType='None',
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Add', cName='',
+                        description="Add a named symbolic.Real, Vector or Matrix under its name, which may not exist, and return it",
+                        argList=['namedVariable'],
+                        argTypes=['Any'],
+                        returnType='Any',
                         )
 
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Set', cName='', 
-                        description="Set a variable with name and value (adds new or overrides existing)",
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Set', cName='',
+                        description="Set a variable with name and value - a number for a Real, a list or array for a Vector or Matrix -; adds new or overrides existing",
                         argList=['name','value'],
-                        argTypes=['str','float'],
+                        argTypes=['str','Any'],
                         returnType='None',
                         )
 
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Get', cName='', 
-                        description="Get a variable by name",
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Get', cName='',
+                        description="Get a variable by name: a named symbolic.Real, Vector or Matrix",
                         argList=['name'],
                         argTypes=['str'],
-                        returnType='symbolic.Real',
+                        returnType='Any',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Exists', cName='', 
@@ -701,15 +713,13 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='',
                         returnType='None',
                         )
 
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfItems', cName='', 
-                        description="Return True, if variable name exists",
-                        argList=['name'],
-                        argTypes=['str'],
-                        returnType='bool',
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfItems', cName='',
+                        description="Return the number of variables",
+                        returnType='int',
                         )
 
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetNames', cName='', 
-                        description="Get list of stored variable names",
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetNames', cName='',
+                        description="Get list of stored variable names, in the order they were added",
                         returnType='List[str]',
                         )
 

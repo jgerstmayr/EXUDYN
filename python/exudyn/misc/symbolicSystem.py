@@ -453,7 +453,8 @@ class SymbolicSystem(SymbolicSystemBase):
         side is ODE1RightHandSide; loads, the list of SymbolicLoad on ODE2 coordinates, ode1Loads those on ODE1
         coordinates; nODE2, nODE1, the numbers of ODE2 and ODE1 coordinates of the system; nAE, the number of the
         algebraic equations; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
-        the recordings 'forces' and 'massMatrix' and the 'rows' and 'columns' of the entries of the mass matrix
+        the recordings 'forces', 'massMatrix' and 'massMatrixBlocks' - esym.Function of the inputs q, q_t and t, the
+        VariableSet 'inputs' (#3149) - and the 'rows' and 'columns' of the entries of the mass matrix
     """
     def __init__(self, mbs, composeSystem=True):
         if not mbs.systemIsConsistent:
@@ -548,9 +549,8 @@ class SymbolicSystem(SymbolicSystemBase):
 
     def _Compose(self):
         """the recordings of the composed system (#3131): the forces f(q, q_t, t) and the entries of the mass matrix at
-        the rows and columns of the local mass matrices, recorded as functions of the arguments (mbs, t, itemNumber, q,
-        q_t) of ObjectGenericODE2 from the expressions of Equations; one call of each evaluates the system"""
-        from exudyn.advancedUtilities import CreateSymbolicUserFunction
+        the rows and columns of the local mass matrices, as esym.Function of the inputs q, q_t and t (#3149) of the
+        expressions of Equations, optimized as CreateSymbolicUserFunction does; one call of each evaluates the system"""
         entries = set()
         for kind in self.kinds:
             if kind.objectType != 'ConnectorUser':
@@ -560,24 +560,19 @@ class SymbolicSystem(SymbolicSystemBase):
         rows = np.array([i for (i, j) in entries], dtype=int)
         columns = np.array([j for (i, j) in entries], dtype=int)
         backend = _Backend('symbolic')
+        (q0, q_t0) = self.InitialState()
+        inputs = exudyn.symbolic.VariableSet() #the scope of the inputs, in the order of the arguments of Evaluate
+        (q, q_t, t) = (inputs.Add('q', q0), inputs.Add('q_t', q_t0), inputs.Add('t', 0.))
+        (M, f, blocks) = self._EquationLists(backend, q, q_t, t)[:3]
+        massMatrix = [M[i][j] for (i, j) in entries] if entries else [0.]
+        blockEntries = [x for (ltg, kindBlocks) in blocks for block in kindBlocks for row in block for x in row]
 
-        def UFforces(mbs, t, itemNumber, q, q_t):
-            return backend.Vector(self._EquationLists(backend, q, q_t, t)[1])
+        def Function(values, name):
+            return exudyn.symbolic.Function(exudyn.symbolic.Optimize(backend.Vector(values)), inputs, name)
 
-        def UFmassMatrix(mbs, t, itemNumber, q, q_t):
-            M = self._EquationLists(backend, q, q_t, t)[0]
-            return backend.Vector([M[i][j] for (i, j) in entries] if entries else [0.])
-
-        def UFmassMatrixBlocks(mbs, t, itemNumber, q, q_t): #the entries of all local mass matrices, row by row
-            blocks = self._EquationLists(backend, q, q_t, t)[2]
-            values = [x for (ltg, kindBlocks) in blocks for block in kindBlocks for row in block for x in row]
-            return backend.Vector(values if values else [0.])
-
-        def Record(function):
-            return CreateSymbolicUserFunction(self.mbs, function, 'forceUserFunction', itemTypeName='ObjectGenericODE2')
-
-        return {'forces': Record(UFforces), 'massMatrix': Record(UFmassMatrix), 'massMatrixBlocks': Record(UFmassMatrixBlocks),
-                'rows': rows, 'columns': columns}
+        return {'forces': Function(f, 'forces'), 'massMatrix': Function(massMatrix, 'massMatrix'),
+                'massMatrixBlocks': Function(blockEntries if blockEntries else [0.], 'massMatrixBlocks'),
+                'inputs': inputs, 'rows': rows, 'columns': columns}
 
     def _AddODE1Object(self, ode1Kinds, objectNumber, item):
         """an ObjectGenericODE1 into its kind (#3144): the objects with the same recorded rhsUserFunction, or without
@@ -1127,7 +1122,7 @@ class SymbolicSystem(SymbolicSystemBase):
         """
         (q, q_t, _) = self._State(q, q_t)
         if self.composed is not None:
-            return np.array(self.composed['forces'].Evaluate(self.mbs, t, 0, q, q_t), dtype=float)
+            return np.array(self.composed['forces'].Evaluate(q, q_t, t), dtype=float)
         f = np.zeros(self.nODE2)
         for kind in self.kinds:
             for i in range(len(kind.objects)):
@@ -1141,7 +1136,7 @@ class SymbolicSystem(SymbolicSystemBase):
         and columns are added when the matrix is formed"""
         (q, q_t, _) = self._State(q, q_t)
         if self.composed is not None:
-            values = np.array(self.composed['massMatrix'].Evaluate(self.mbs, t, 0, q, q_t), dtype=float)
+            values = np.array(self.composed['massMatrix'].Evaluate(q, q_t, t), dtype=float)
             return self.composed['rows'], self.composed['columns'], values[:len(self.composed['rows'])]
         rows, columns, values = [], [], []
         for kind in self.kinds:
@@ -1161,7 +1156,7 @@ class SymbolicSystem(SymbolicSystemBase):
         (q, q_t, _) = self._State(q, q_t)
         kinds = [kind for kind in self.kinds if kind.objectType != 'ConnectorUser']
         if self.composed is not None: #one call: the entries of all blocks, kind after kind
-            values = np.array(self.composed['massMatrixBlocks'].Evaluate(self.mbs, t, 0, q, q_t), dtype=float)
+            values = np.array(self.composed['massMatrixBlocks'].Evaluate(q, q_t, t), dtype=float)
             (result, start) = ([], 0)
             for kind in kinds:
                 (m, nLocal) = kind.ltg.shape
@@ -1217,10 +1212,10 @@ class SymbolicSystem(SymbolicSystemBase):
             J = np.zeros((self.nODE2, self.nODE2))
             for (name, factor) in [('q', factor_q), ('q_t', factor_q_t)]:
                 if factor != 0.:
-                    J -= factor*np.array(composed['forces'].EvaluateJacobian(name, self.mbs, t, 0, q, q_t), dtype=float)
+                    J -= factor*np.array(composed['forces'].EvaluateJacobian(name, q, q_t, t), dtype=float)
             (rows, columns) = (composed['rows'], composed['columns'])
             if factor_q != 0. and len(rows) and not self._constantMassMatrix: #d(M q_tt)/dq
-                dM = np.array(composed['massMatrix'].EvaluateJacobian('q', self.mbs, t, 0, q, q_t), dtype=float)[:len(rows)]
+                dM = np.array(composed['massMatrix'].EvaluateJacobian('q', q, q_t, t), dtype=float)[:len(rows)]
                 np.add.at(J, rows, factor_q*dM*q_tt[columns][:, np.newaxis])
             if factor_q_tt != 0. and len(rows):
                 np.add.at(J, (rows, columns), factor_q_tt*self.MassMatrixTriplets(q, q_t, t)[2])

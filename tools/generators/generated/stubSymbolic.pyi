@@ -254,6 +254,18 @@ def GetDepth(expressions: Any) -> Any:
     """
     ...
 @overload
+def Function(result: Any, inputs: Any, name: str='Function') -> Any: 
+    """A recording of one esym.Real, Vector or Matrix in declared inputs, without an item (#3149): inputs is a list of named variables or a VariableSet, whose variables are the inputs in their order; the result is an esym.UserFunction whose Evaluate(*inputs), EvaluateJacobian(inputName, *inputs), GetFlatProgram and GetStatistics work as for a recorded user function, without MainSystem; the expressions may read variables of esym.variables, every other named variable must be an input.
+    
+    Examples:
+        scope = esym.VariableSet()
+        q = scope.Add('q', [1., 2.])
+        t = scope.Add('t', 0.)
+        F = esym.Function(esym.sin(t)*q, scope, 'F')
+        F.Evaluate([1., 1.], 0.5)
+    """
+    ...
+@overload
 def GetStatistics(expressions: Any, detailed: bool=False) -> dict: 
     """The counts of the nodes of one esym.Real, Vector or Matrix, or of a list of them together, by one traversal of the graph, a dict: nodes (the distinct nodes of the graph), operations, leaves (numbers, variables, item outputs), shared (the nodes used by more than one operation), depth (as GetDepth), treeSize (the nodes counted once per path, as str() of a tree and the tree Diff walk them; a float), flatOperations (the operations the flat program writes, as GetFlatProgram() counts them); detailed=True also byOperation (the count per operation of the flat program, '+', 'sin', 'number', 'variable', 'itemOutput', ...) and byKind (per Real, Vector and Matrix) (#3142).
     
@@ -461,20 +473,26 @@ class Matrix:
 #stub information for class VariableSet functions
 class VariableSet:
     @overload
-    def Add(self, name: str, value: float) -> None: 
-        """Add a variable with name and value (name may not exist)."""
+    def Add(self, name: str, value: Any) -> Any: 
+        """Add a variable with name and value, which may not exist, and return it: a number gives a named Real, a list or 1D array a named Vector, a 2D array a named Matrix (#3149).
+        
+        Examples:
+            scope = esym.VariableSet()
+            q = scope.Add('q', [0., 1.])
+            t = scope.Add('t', 0.)
+        """
         ...
     @overload
-    def Add(self, namedReal: Real) -> None: 
-        """Add a variable with named real (name may not exist)."""
+    def Add(self, namedVariable: Any) -> Any: 
+        """Add a named Real, Vector or Matrix under its name, which may not exist, and return it."""
         ...
     @overload
-    def Set(self, name: str, value: float) -> None: 
-        """Set a variable with name and value (adds new or overrides existing)."""
+    def Set(self, name: str, value: Any) -> None: 
+        """Set a variable with name and value - a number for a Real, a list or array for a Vector or Matrix -; adds new or overrides existing."""
         ...
     @overload
-    def Get(self, name: str) -> Real: 
-        """Get a variable by name."""
+    def Get(self, name: str) -> Any: 
+        """Get a variable by name: a named Real, Vector or Matrix."""
         ...
     @overload
     def Exists(self, name: str) -> bool: 
@@ -485,12 +503,12 @@ class VariableSet:
         """Erase all variables and reset VariableSet."""
         ...
     @overload
-    def NumberOfItems(self, name: str) -> bool: 
-        """Return True, if variable name exists."""
+    def NumberOfItems(self) -> int: 
+        """Return the number of variables."""
         ...
     @overload
     def GetNames(self) -> List[str]: 
-        """Get list of stored variable names."""
+        """Get list of stored variable names, in the order they were added."""
         ...
     @overload
     def __setitem__(self, name: str, value: float) -> None: 

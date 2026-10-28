@@ -95,7 +95,10 @@ integrates ODE1 coordinates, `SolveGeneralizedAlpha` also index-3 constraints, a
 program, in a memory block of the program kept between the calls (#3116); `SymbolicSystem.ResidualJacobian` uses it on
 the composed system. `exudyn.symbolic.GetStatistics(expressions, detailed)` and `GetStatistics()` of an expression or a
 recording count its nodes, operations, leaves, shared nodes, depth, the size of its tree and the operations of its flat
-program, with `detailed=True` per operation and per kind (#3142).
+program, with `detailed=True` per operation and per kind (#3142). `exudyn.symbolic.Function(result, inputs, name)` records an
+expression in declared inputs - a list of named variables or an `esym.VariableSet`, which now holds named Vectors and
+Matrices as well and keeps the order in which they were added - as a UserFunction without item and without `mbs`;
+`SymbolicSystem` composes its system by it (#3149).
 **ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
 two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
 also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a

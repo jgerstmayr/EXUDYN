@@ -889,6 +889,105 @@ py::object DepthOfExpressions(const py::object& expressions)
 	return isList ? py::object(results) : py::object(results[0]);
 }
 
+//! VariableSet.Add(name, value) of a list or array: a named esym.Vector (1D) or esym.Matrix (2D) (#3149)
+py::object AddArrayVariable(VariableSet& set, const STDstring& name, const py::object& value)
+{
+	py::array_t<Real> array = py::array_t<Real>::ensure(value);
+	CHECKandTHROW(array && (array.ndim() == 1 || array.ndim() == 2), "VariableSet.Add: the value of '" + name + "' must be a number, a list or 1D array (a Vector) or a 2D array (a Matrix)", ExudynValueError);
+	py::object variable = (array.ndim() == 1) ? py::cast(SymbolicRealVector(name, Vector(py::cast<std::vector<Real>>(value))))
+		: py::cast(SymbolicRealMatrix(name, array));
+	set.AddArray(name, variable);
+	return variable;
+}
+
+//! VariableSet.Add(variable): a named esym.Real, Vector or Matrix under its name (#3149)
+py::object AddNamedVariable(VariableSet& set, const py::object& variable)
+{
+	if (py::isinstance<SReal>(variable)) { set.AddVariable(py::cast<const SReal&>(variable)); return py::cast(set.GetVariable(py::cast<const SReal&>(variable).GetExpressionNamedReal().GetName())); }
+	STDstring name;
+	if (py::isinstance<SymbolicRealVector>(variable) && py::cast<const SymbolicRealVector&>(variable).IsExpressionNamedReal()) { name = py::cast<const SymbolicRealVector&>(variable).GetExpressionNamedReal().GetName(); }
+	else if (py::isinstance<SymbolicRealMatrix>(variable) && py::cast<const SymbolicRealMatrix&>(variable).IsExpressionNamedReal()) { name = py::cast<const SymbolicRealMatrix&>(variable).GetExpressionNamedReal().GetName(); }
+	else { throw py::type_error("VariableSet.Add: expected a named esym.Real, Vector or Matrix, but received " + py::cast<STDstring>(py::str(variable))); }
+	set.AddArray(name, variable);
+	return variable;
+}
+
+//! VariableSet.Set(name, value): a number for a Real, a list or array for a Vector or Matrix; a new name is added
+void SetSetVariable(VariableSet& set, const STDstring& name, const py::object& value)
+{
+	if (!set.HasVariable(name))
+	{
+		if (py::isinstance<py::float_>(value) || py::isinstance<py::int_>(value)) { set.AddVariable(name, py::cast<Real>(value)); }
+		else { AddArrayVariable(set, name, value); }
+		return;
+	}
+	if (!set.IsArray(name)) { set.SetVariable(name, py::cast<Real>(value)); return; }
+	const py::object& variable = set.GetArray(name);
+	if (py::isinstance<SymbolicRealVector>(variable)) { py::cast<SymbolicRealVector&>(variable).SetExpressionNamedVector(ResizableConstVector(py::cast<std::vector<Real>>(value))); }
+	else { py::cast<SymbolicRealMatrix&>(variable).SetSymbolicMatrix(py::array_t<Real>::ensure(value)); }
+}
+
+//! esym.Function(result, inputs, name) (#3149): a recording of an expression in declared inputs, without an item;
+//! a UserFunction whose arguments are the inputs, in their order, and which needs no MainSystem
+py::object FunctionOfExpression(const py::object& result, const py::object& inputs, const STDstring& name)
+{
+	std::vector<py::object> inputList;
+	if (py::isinstance<VariableSet>(inputs))
+	{
+		VariableSet& set = py::cast<VariableSet&>(inputs);
+		for (const STDstring& key : set.GetNames()) { inputList.push_back(set.IsArray(key) ? set.GetArray(key) : py::cast(set.GetVariable(key))); }
+	}
+	else if (py::isinstance<py::list>(inputs) || py::isinstance<py::tuple>(inputs)) { inputList = py::cast<std::vector<py::object>>(inputs); }
+	else { inputList = { inputs }; }
+	py::list argList, argTypeList, argNameList;
+	argList.append(py::none()); argTypeList.append("MainSystem"); argNameList.append("mbs"); //skipped as for every user function
+	std::vector<const void*> inputNodes;
+	std::vector<STDstring> names;
+	for (const py::object& input : inputList)
+	{
+		const void* node = FlatProgramData::NamedNode(input);
+		CHECKandTHROW(node != nullptr, "esym.Function: an input must be a named variable, esym.Real('x', 1.), esym.Vector('v', [...]) or esym.Matrix('M', [[...]]), but received " + py::cast<STDstring>(py::str(input)), ExudynValueError);
+		STDstring inputName = py::isinstance<SReal>(input) ? py::cast<const SReal&>(input).GetExpressionNamedReal().GetName()
+			: (py::isinstance<SymbolicRealVector>(input) ? py::cast<const SymbolicRealVector&>(input).GetExpressionNamedReal().GetName()
+			: py::cast<const SymbolicRealMatrix&>(input).GetExpressionNamedReal().GetName());
+		CHECKandTHROW(std::find(names.begin(), names.end(), inputName) == names.end(), "esym.Function: two inputs are named '" + inputName + "'", ExudynValueError);
+		names.push_back(inputName);
+		inputNodes.push_back(node);
+		argList.append(input);
+		argTypeList.append(py::isinstance<SReal>(input) ? "Real" : (py::isinstance<SymbolicRealVector>(input) ? "StdVector" : "NumpyMatrix"));
+		argNameList.append(inputName);
+	}
+	py::object returnValue = result;
+	if (py::isinstance<py::float_>(result) || py::isinstance<py::int_>(result)) { returnValue = py::cast(SReal(py::cast<Real>(result))); }
+	CHECKandTHROW(py::isinstance<SReal>(returnValue) || py::isinstance<SymbolicRealVector>(returnValue) || py::isinstance<SymbolicRealMatrix>(returnValue),
+		"esym.Function: the result must be an esym.Real, Vector or Matrix, but received " + py::cast<STDstring>(py::str(result)), ExudynValueError);
+	//every named variable of the result is an input, or a variable of esym.variables, which the function reads at every call
+	FlatProgramData data;
+	data.Add(returnValue);
+	VariableSet& globalVariables = py::module_::import("exudyn").attr("symbolic").attr("variables").cast<VariableSet&>();
+	for (Index i = 0; i < (Index)data.NamedNodes().size(); i++)
+	{
+		const void* node = data.NamedNodes()[i];
+		if (std::find(inputNodes.begin(), inputNodes.end(), node) != inputNodes.end()) { continue; }
+		STDstring variableName = py::cast<STDstring>(data.NamedEntry(i)["name"]);
+		bool global = globalVariables.HasVariable(variableName) && !globalVariables.IsArray(variableName)
+			&& (const void*)globalVariables.GetVariable(variableName).GetExpression() == node;
+		CHECKandTHROW(global, "esym.Function " + name + ": the result depends on the variable '" + variableName
+			+ "', which is no input and not in esym.variables", ExudynValueError);
+	}
+	py::dict functionDict;
+	functionDict["functionName"] = name;
+	functionDict["argList"] = argList;
+	functionDict["argTypeList"] = argTypeList;
+	functionDict["argNameList"] = argNameList;
+	functionDict["returnValue"] = returnValue;
+	functionDict["returnType"] = py::isinstance<SReal>(returnValue) ? "Real" : (py::isinstance<SymbolicRealVector>(returnValue) ? "StdVector" : "NumpyMatrix");
+	functionDict["withoutMainSystem"] = true;
+	PySymbolicUserFunction* function = new PySymbolicUserFunction();
+	function->SetupUserFunction(functionDict, "Function", name);
+	return py::cast(function, py::return_value_policy::take_ownership);
+}
+
 //! the name of a node in the counts of GetStatistics: the FlatName of an operation, number, variable or itemOutput of a leaf
 static const char* StatisticsName(const FlatNode& node)
 {
@@ -1103,6 +1202,7 @@ py::dict FlatProgramDataOfUserFunction(const PySymbolicUserFunction& function)
 		py::object argument = argList[i];
 		STDstring type = py::cast<STDstring>(argTypeList[i]);
 		py::dict entry;
+		if (type == "MainSystem" && functionDict.contains("withoutMainSystem")) { continue; } //esym.Function (#3149)
 		if (type == "MainSystem") { entry["name"] = "mbs"; entry["kind"] = "MainSystem"; }
 		else { entry = data.ArgumentEntry(argument); argumentNodes.push_back(FlatProgramData::NamedNode(argument)); }
 		if (i < (Index)py::len(argNameList)) { entry["name"] = argNameList[i]; }
@@ -2313,6 +2413,9 @@ void Init_Pybind_Symbolic(py::module& m) {
 		py::arg("valueAtRecording"));
 	m.def("GetDepth", &Symbolic::DepthOfExpressions, "the number of operations on the longest path to a leaf (#3090)",
 		py::arg("expressions"));
+	m.def("Function", &Symbolic::FunctionOfExpression,
+		"a recording of one esym.Real, Vector or Matrix in declared inputs - a list of named variables or a VariableSet -, an esym.UserFunction without item: Evaluate(*inputs), EvaluateJacobian, GetFlatProgram (#3149)",
+		py::arg("result"), py::arg("inputs"), py::arg("name") = "Function");
 	m.def("GetStatistics", &Symbolic::StatisticsOfExpressions,
 		"the counts of the nodes of one or a list of esym.Real, Vector and Matrix, a dict; detailed: also per operation and per kind (#3142)",
 		py::arg("expressions"), py::arg("detailed") = false);
@@ -2611,22 +2714,22 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def(py::init<>())
 
 		//+++++++++++++++++++++++++++++++++++++++++++
-		.def("Add", 
-			(void (Symbolic::VariableSet::*)(const STDstring&, Real))& Symbolic::VariableSet::AddVariable,
-			//&Symbolic::VariableSet::AddVariable,
-			"add a new variable to the set, which may not exist")
+		.def("Add", [](Symbolic::VariableSet& self, const STDstring& name, Real value)
+			{ self.AddVariable(name, value); return py::cast(self.GetVariable(name)); },
+			"add a new named Real to the set, which may not exist, and return it", py::arg("name"), py::arg("value"))
+		.def("Add", [](Symbolic::VariableSet& self, const STDstring& name, const py::object& value)
+			{ return Symbolic::AddArrayVariable(self, name, value); },
+			"add a new named Vector (a list or 1D array) or Matrix (2D) to the set, which may not exist, and return it (#3149)",
+			py::arg("name"), py::arg("value"))
+		.def("Add", [](Symbolic::VariableSet& self, const py::object& variable) { return Symbolic::AddNamedVariable(self, variable); },
+			"add a named esym.Real, Vector or Matrix to the set under its name, which may not exist, and return it (#3149)")
 
-		.def("Add",
-			(void (Symbolic::VariableSet::*)(const Symbolic::SReal&))& Symbolic::VariableSet::AddVariable,
-			"add a new variable to the set, which may not exist")
-
-		.def("Get",
-			&Symbolic::VariableSet::GetVariable,
+		.def("Get", [](Symbolic::VariableSet& self, const STDstring& name)
+			{ return self.IsArray(name) ? self.GetArray(name) : py::cast(self.GetVariable(name)); },
 			"return variable with given name")
 
-		.def("Set",
-			(void (Symbolic::VariableSet::*)(const STDstring&, Real))& Symbolic::VariableSet::SetVariable,
-			"set given variable to new value or add new variable, if none exists")
+		.def("Set", [](Symbolic::VariableSet& self, const STDstring& name, const py::object& value) { Symbolic::SetSetVariable(self, name, value); },
+			"set given variable to new value - a number, or a list or array for a Vector or Matrix - or add new variable, if none exists")
 
 		.def("Exists",
 			&Symbolic::VariableSet::HasVariable,
@@ -2647,10 +2750,10 @@ void Init_Pybind_Symbolic(py::module& m) {
 		//this could be allowed in certain cases, such as if we carry a VectorExpressionSReal or VectorExpressionReal
 		//but it would be not possible then to record operations in the tree ...
 		.def("__getitem__", [](Symbolic::VariableSet& self, std::string name)
-			{ return self.GetVariable(name); })
+			{ return self.IsArray(name) ? self.GetArray(name) : py::cast(self.GetVariable(name)); })
 
-		.def("__setitem__", [](Symbolic::VariableSet& self, std::string name, Real value)
-			{ return self.SetVariable(name, value); })
+		.def("__setitem__", [](Symbolic::VariableSet& self, std::string name, const py::object& value)
+			{ Symbolic::SetSetVariable(self, name, value); })
 
 
 		//representation:

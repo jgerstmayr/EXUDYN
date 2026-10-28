@@ -164,6 +164,20 @@ leaves, the shared nodes, the depth, `treeSize` - the nodes counted once per pat
 operations of the flat program, and per operation (`'*'`, `'tanh'`, `'number'`, ...); `esym.GetStatistics(expressions)`
 does the same for expressions (#3142).
 
+**A recording without item**: `esym.Function(result, inputs, name)` records an expression in declared inputs - a list
+of named variables, or an `esym.VariableSet`, which is the scope of their names and holds named Reals, Vectors and
+Matrices in the order they were added. The result is an `esym.UserFunction` whose `Evaluate`, `EvaluateJacobian`,
+`GetFlatProgram` and `GetStatistics` take the inputs in their order, without `mbs` (#3149):
+
+```python
+scope = esym.VariableSet()
+q = scope.Add('q', [1., 2.])
+t = scope.Add('t', 0.)
+F = esym.Function(esym.sin(t)*q, scope, 'F')
+F.Evaluate([1., 1.], 0.5)             #[0.479..., 0.479...]
+F.EvaluateJacobian('q', [1., 1.], 0.5) #sin(0.5) times the unit matrix
+```
+
 `format='symbolic'` writes it with `exudyn.symbolic`, so that it is recorded again, and `format='sympy'` builds sympy
 expressions, from which sympy writes C, C++, Fortran, Matlab or LaTeX and computes derivatives; `flatten=False`
 writes the result as one expression. Every format computes what Exudyn computes: `mod` is the C `fmod`, `round` rounds

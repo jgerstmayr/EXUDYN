@@ -2337,12 +2337,15 @@ public:
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-//! variable space, available as exudyn.symbolic.variables as well as mbs.symbolic.variables
+//! a set of named variables and the scope of their names (#3149), available as exudyn.symbolic.variables and as sets
+//! of its own; scalars as SReal, which C++ reads, named vectors and matrices as their Python objects, esym.Vector and
+//! esym.Matrix; the names in the order they were added, the inputs of esym.Function in this order
 class VariableSet
 {
 private:
-	//std::vector<SReal> variables;
 	std::unordered_map<std::string, SReal> variables;
+	std::unordered_map<std::string, py::object> arrays;	//!< the named vectors and matrices
+	std::vector<STDstring> order;						//!< all names, in the order they were added
 public:
 	VariableSet() {}
 
@@ -2365,15 +2368,32 @@ public:
 			PyError("VariableSet::AddVariable(symbolic.Real): variable name already exists", PyErrorType::valueError);
 		}
 		variables[name] = sreal;
+		order.push_back(name);
+	}
+
+	//! add a named vector or matrix, esym.Vector or esym.Matrix, under its name
+	void AddArray(const STDstring& name, const py::object& variable)
+	{
+		if (HasVariable(name))
+		{
+			PyError("VariableSet::Add: variable name '" + name + "' already exists", PyErrorType::valueError);
+		}
+		arrays[name] = variable;
+		order.push_back(name);
 	}
 
 	//! returns true, if variable exists
-	bool HasVariable(const STDstring& name)
+	bool HasVariable(const STDstring& name) const
 	{
-		return (variables.find(name) != variables.end());
+		return (variables.find(name) != variables.end()) || (arrays.find(name) != arrays.end());
 	}
 
-	//! returns specific variable
+	//! true, if the variable is a named vector or matrix
+	bool IsArray(const STDstring& name) const { return arrays.find(name) != arrays.end(); }
+	//! the named vector or matrix of this name
+	const py::object& GetArray(const STDstring& name) const { return arrays.at(name); }
+
+	//! returns specific variable, a scalar
 	const SReal& GetVariable(const STDstring& name)
 	{
 		auto search = variables.find(name);
@@ -2396,24 +2416,17 @@ public:
 	}
 
 	//! number of variables in container
-	Index NumberOfItems() const { return (Index)variables.size(); }
+	Index NumberOfItems() const { return (Index)order.size(); }
 
-	//! get list of variable names
-	std::vector<STDstring> GetNames() const 
-	{ 
-		std::vector<STDstring> keys;
-		keys.reserve(variables.size());
-
-		for (auto keyValue : variables) {
-			keys.push_back(keyValue.first);
-		}
-		return keys;
-	}
+	//! the names of the variables, in the order they were added
+	std::vector<STDstring> GetNames() const { return order; }
 
 	//! clear all variables
 	void Reset()
 	{
 		variables.clear();
+		arrays.clear();
+		order.clear();
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2423,9 +2436,11 @@ public:
 	{
 		STDstring s = "{";
 		STDstring sep = "";
-		for (const auto& [key, value] : variables)
+		for (const STDstring& key : order)
 		{
-			s+= sep + "'" + key + "': " + EXUstd::ToString(value.Evaluate());
+			auto scalar = variables.find(key);
+			s += sep + "'" + key + "': " + (scalar != variables.end() ? EXUstd::ToString(scalar->second.Evaluate())
+				: py::cast<STDstring>(py::str(arrays.at(key).attr("Evaluate")())));
 			sep = ", ";
 		}
 		s += "}";
