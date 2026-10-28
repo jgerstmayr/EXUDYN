@@ -92,7 +92,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 - **output**: the function, with the arguments of the user function or of the named variables
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM), [`symbolicSystemEquationsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemEquationsTest.py) (TM)
 
 
 (sec-symbolicexport-tosympy)=

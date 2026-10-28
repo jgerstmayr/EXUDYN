@@ -1982,6 +1982,14 @@ symbolicSystemLoadsTest.py 1.5e-15 to SolveDynamic. [log](exudynRevisionLog2026c
 
 CLOSED 2026-10-26 (#3121; maintainer 2026-10-26: the explicit solver with a relevant system): the marker states from the node coordinates or the fixed positions, the forces scattered, the Jacobian by EvaluateJacobian; symbolicExplicitSolverTest.py on a net of 4 x 4 mass points with spring-dampers, 2.6e-14 to SolveDynamic. [log](exudynRevisionLog2026c.md#rg12-55-6)
 
+#### **CLOSED_RG12.51.10** The equations of motion of the system as symbolic expressions and flat program
+
+CLOSED 2026-10-28 (#3130; maintainer 2026-10-28: retrieve the symbolic equations and the flat program of a system, two
+examples): SymbolicSystem.Equations(format='symbolic'|'sympy') - mass matrix, forces, residual in q, q_t, q_tt, t, each
+recording called with symbolic arguments through its symbolicExport code - and GetFlatProgram(format); examples
+symbolicSystemSpringDamper.py (2 coordinates) and symbolicSystemRigidBodyPendulum.py (9); symbolicSystemEquationsTest.py
+equal to the system to 7.5e-15. [log](exudynRevisionLog2026c.md#rg12-51-10)
+
 ### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
 
 CLOSED 2026-10-25 (#3094; maintainer 2026-10-25: the introduction section to Python-C++ interface/Symbolic has to be
@@ -2091,7 +2099,7 @@ CLOSED 2026-10-26 (#3115; maintainer 2026-10-26: Diff of esym.Vector and esym.Ma
 
 ### **OPEN_RG12.60** Call a recording with symbolic arguments, returning its expressions with the arguments substituted
 
-#3117: for one program per kind of the symbolic system, connector forces composed with the marker kinematics, and the export (RG12.51.5). Design docs/dev/design/symbolicSystem.md §11 S3.
+#3117: for one program per kind of the symbolic system, connector forces composed with the marker kinematics, and the export (RG12.51.5). Design docs/dev/design/symbolicSystem.md §11 S3. Done in Python for the system by RG12.51.10 (#3130), through the code of exudyn.misc.symbolicExport; open: whether the C++ copy is still needed.
 
 ## **OPEN_RG13** Total coordinates
 

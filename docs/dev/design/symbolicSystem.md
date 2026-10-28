@@ -355,6 +355,14 @@ the given expressions - the copy that `Optimize` makes by `NewWithOperands`, wit
 one expression per kind ($\Mm(\qv)\,\ddot\qv - \fv(\qv, \dot\qv, t)$ of the two recordings), for the forces of a
 connector composed with the marker kinematics of its bodies, and for the export of one program per kind (RG12.51.5).
 As numbers, the system needs no S3: it evaluates each recording and composes the results; S3 is for the programs.
+**In Python** (#3130): the code of a recording in the format 'symbolic' of exudyn.misc.symbolicExport (`ToFunction`),
+called with exudyn.symbolic arguments, records the same graph with the arguments replaced - S3 without C++, at the cost
+of recording the graph again; in the format 'sympy' the same with sympy symbols. `SymbolicSystem.Equations(format)`
+composes the system of it: the mass matrix, the forces and the residual in the variables q, q_t, q_tt and t (the
+parameters and reference coordinates as numbers), with the connectors on their marker kinematics and the loads;
+`GetFlatProgram(format)` writes the residual. Measured: 9 coordinates of a rigid body and a mass point, 474 operations,
+composed in 0.01 s (exudyn.symbolic) and 0.15 s (sympy). Whether RG12.60 still needs the copy in C++ by `NewWithOperands`
+is open.
 
 **S4 cMath with symbolic arguments (RG12.57, #3114, done).** `np.sin` of an `esym.Real` records - numpy calls the
 method `sin()` of the object -, and the math check of the test models refuses `np.sin` (#2964). The functions of

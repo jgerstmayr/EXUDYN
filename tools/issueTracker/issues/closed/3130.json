@@ -1,0 +1,16 @@
+{
+  "number": 3130,
+  "title": "SymbolicSystem.Equations: the equations of motion of the system as symbolic expressions and flat program",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.51.10 (maintainer 2026-10-28: retrieve the symbolic equations and the flat program of a system; two examples): the mass matrix, forces and residual M q_tt - f in the system variables q, q_t, q_tt, t, composed of the recordings of the kinds, connectors with their marker kinematics and loads, each recording called with symbolic arguments by its code of exudyn.misc.symbolicExport - as exudyn.symbolic expressions (flat program, numpy code) or sympy expressions; two examples, a test model.",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26",
+  "dateResolved": "2026-10-28 09:02",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/symbolicSystem.py",
+  "releaseNotes": "exudyn.misc.symbolicSystem: SymbolicSystem.Equations(format) gives the mass matrix, forces and residual M q_tt - f of the system as exudyn.symbolic or sympy expressions in q, q_t, q_tt and t, composed of the recordings of the items, connectors and loads; GetFlatProgram(format) writes the residual as flat program or as numpy, exudyn.symbolic or sympy code; examples symbolicSystemSpringDamper.py and symbolicSystemRigidBodyPendulum.py",
+  "resolvedInVersion": "1.13.235"
+}

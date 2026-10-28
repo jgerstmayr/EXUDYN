@@ -160,6 +160,8 @@ stiffFlyballGovernor2
 stiffFlyballGovernorKT
 stlFileImport
 switchingConstraintsPendulum
+symbolicSystemRigidBodyPendulum
+symbolicSystemSpringDamper
 symbolicUserFunctionMasses
 TCPIPclientTest
 TCPIPexudynMatlab

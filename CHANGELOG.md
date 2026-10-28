@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 230 | 1.13.234 |
+| 1.13 | Newborn | 231 | 1.13.235 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.235** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem.Equations: the equations of motion of the system as symbolic expressions and flat program (#3130)
+  - description: revision2026c step RG12.51.10 (maintainer 2026-10-28: retrieve the symbolic equations and the flat program of a system; two examples): the mass matrix, forces and residual M q\_tt - f in the system variables q, q\_t, q\_tt, t, composed of the recordings of the kinds, connectors with their marker kinematics and loads, each recording called with symbolic arguments by its code of exudyn.misc.symbolicExport - as exudyn.symbolic expressions (flat program, numpy code) or sympy expressions; two examples, a test model.
+  - **notes:** exudyn.misc.symbolicSystem: SymbolicSystem.Equations(format) gives the mass matrix, forces and residual M q\_tt - f of the system as exudyn.symbolic or sympy expressions in q, q\_t, q\_tt and t, composed of the recordings of the items, connectors and loads; GetFlatProgram(format) writes the residual as flat program or as numpy, exudyn.symbolic or sympy code; examples symbolicSystemSpringDamper.py and symbolicSystemRigidBodyPendulum.py
+  - date resolved: **2026-10-28 09:02**, date raised: 2026-10-28
 - **1.13.234** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem: ObjectConnectorUser on markers of user bodies and of the ground, with rotations (#3129)
   - description: revision2026c step RG12.51.4: the connector markers BodyPosition and BodyRigid on ObjectUserBody (by its symbolic position, rotation and Jacobian functions) and on the ground, the rotations and angular velocities when the connector requests Orientation, the forces and torques by J\_pos^T f + J\_rot^T m, the exact Jacobian by Diff of the recordings; the joints and constraints follow.
   - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem takes ObjectConnectorUser on MarkerBodyPosition and MarkerBodyRigid of user bodies and of the ground, with the rotations and angular velocities when the connector requests Orientation; the forces and torques act through the Jacobians of the body, the Jacobian of the residual is exact by Diff of the recordings; symbolicUserRigidBodiesTest.py: SolveExplicit and SolveGeneralizedAlpha equal to SolveDynamic

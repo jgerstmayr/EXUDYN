@@ -77,6 +77,10 @@ their user functions symbolic, one recording per kind of item (#3125); `CreateRi
 the center of mass) and `CreateTorsionalSpringDamper` (#3128). `SolveGeneralizedAlpha(system,
 simulationSettings)` integrates a system of `exudyn.misc.symbolicSystem` by the generalized-alpha or Newmark method with
 constant step size, as `SolveDynamic` does, with the Jacobian of the residual by `Diff` of the recordings (#3126).
+`SymbolicSystem.Equations(format)` gives the mass matrix, the forces and the residual `M q_tt - f` of such a system as
+expressions in the variables `q`, `q_t`, `q_tt` and `t` - exudyn.symbolic or sympy -, and `GetFlatProgram(format)`
+writes the residual as flat program, or as numpy, exudyn.symbolic or sympy code (#3130); the examples
+symbolicSystemSpringDamper.py and symbolicSystemRigidBodyPendulum.py show them.
 **ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
 two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
 also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a

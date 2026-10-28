@@ -3927,3 +3927,37 @@ RG12.51.4, whose joints and constraints need the joints of RG12.55.4 first.
   generalized-alpha, the cost being the per-object Python calls and the tree derivatives, not the arithmetic.
 - symbolicExplicitSolverTest.py read the markers of a connector kind as (indices, position) pairs; it reads the dicts.
 - docs/dev/design/symbolicSystem.md §2 and §7, symbolicUserItems.md §2/§3, docs/manual/revisions.md.
+
+<a id="rg12-51-10"></a>
+### RG12.51.10 — the equations of motion of the system as symbolic expressions and flat program (2026-10-28, #3130)
+*(Maintainer 2026-10-28: "I did not see how I would be able to get the symbolic equations for the system"; two
+examples, a simple one of 2 equations and one of 6-10 coordinates with couplings, the symbolic equations and the flat
+program; extensions as a (sub)step.)*
+- exudyn/misc/symbolicSystem.py `SymbolicSystem.Equations(format='symbolic', optimize=True)`: the variables q, q_t,
+  q_tt (named exudyn.symbolic vectors, the initial state as values) and t, or sympy symbols q0, ..., t; each recording
+  called with symbolic arguments through `exudyn.misc.symbolicExport.ToFunction(recording.GetFlatProgramData(),
+  format)` - which records the same graph with the arguments replaced (S3 of the design, here in Python) -; the
+  parameters, reference coordinates and constant matrices as numbers. Composed as the numbers: user bodies (mass matrix
+  and forces), ObjectGenericODE2 (M, K, D, f and user functions), ObjectConnectorUser on their marker kinematics (fixed,
+  point node, user body with the rotations) with J_pos^T f + J_rot^T m, the loads (constant or of a user function, on
+  nodes, coordinates and through the body functions, bodyFixed by the rotation). Returns a dict of the variables and
+  'massMatrix', 'forces', 'residual' (M q_tt - f); with optimize, esym.Optimize level 2 removes 0*x, 1*x, x+0 of the
+  assembly. `GetFlatProgram(format='Python', flatten=True)`: the residual as function Residual(q, q_t, q_tt, t), as text
+  or as the code of the formats of symbolicExport. `_Backend` holds the two types; `_Sum` starts a sum without 0 +.
+- python/Examples/symbolicSystemSpringDamper.py: two masses, ObjectGenericODE2 with M, K, D and a symbolic
+  forceUserFunction (a hardening spring, a force of the time): the residual as expression and flat program (24
+  operations), M and f by sympy, the residual in LaTeX; the numpy code equal to SymbolicSystem.Residual (0.0); RK44 of
+  SolveExplicit and SolveDynamic.
+- python/Examples/symbolicSystemRigidBodyPendulum.py: of UserItemCreator a bar on Tait-Bryan angles (center of mass off
+  the node) held by three spring-dampers and a torsional spring-damper, a mass point on a spring-damper at its end,
+  gravity, a force of the time - 9 coordinates; the flat program of 474 operations, by sympy the coupling block
+  M[0:3,3:6] and M[3,3], the count of operations of f (sympy.simplify of the forces took 184 s, so the example does not
+  simplify them); the numpy code equal to the residual to 2e-13; SolveGeneralizedAlpha equal to SolveDynamic. 2 s.
+- python/TestModels/symbolicSystemEquationsTest.py: both kinds of system, the second with a body-fixed force and a
+  LoadCoordinate of a user function as well; at 3 random states each, the mass matrix, forces and residual of the numpy
+  code of the flat program and of sympy.lambdify of the sympy expressions against MassMatrix, Forces and Residual:
+  7.5e-15 relative. sympy is optional: without it the sympy part is left out. Result 1.
+- Measured: Equations 0.009 s, GetFlatProgram 0.006 s, Equations(format='sympy') 0.15 s for the 9 coordinates.
+- RG12.60 (#3117) stays open: the system no longer needs it; whether a C++ copy by NewWithOperands is still wanted
+  is the maintainer's question.
+- docs/dev/design/symbolicSystem.md §11 S3, docs/manual/revisions.md.

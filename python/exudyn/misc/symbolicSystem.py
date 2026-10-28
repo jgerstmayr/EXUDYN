@@ -12,6 +12,8 @@
 #           NumpySystem takes equations written by hand. SolveExplicit integrates any of them by explicit Euler, RK44
 #           or velocity Verlet, as Exudyn's explicit solver does (#3112), SolveGeneralizedAlpha by the generalized-alpha
 #           method, as Exudyn's implicit solver does (#3126).
+#           Equations() gives the equations of the system as expressions in the system variables q, q_t, q_tt and t -
+#           exudyn.symbolic, whose flat program GetFlatProgram() writes, or sympy - composed of the recordings (#3130).
 #           Special: not for the broad use, a basis for the export of the equations of motion and their evaluation
 #           outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
 #           forceUserFunction, ObjectGenericODE2 with constant matrices and symbolic user functions,
@@ -32,6 +34,7 @@
 import numpy as np
 import exudyn
 import exudyn.cMath as cMath
+from exudyn.misc.symbolicExport import ToFunction
 try:
     import scipy.sparse
     import scipy.sparse.linalg
@@ -811,6 +814,175 @@ class SymbolicSystem(SymbolicSystemBase):
                     local[np.ix_(indices, indices)] -= factor_q*np.einsum('ijk,i->jk', dJrot, forces[torque])
         return local
 
+    def Equations(self, format='symbolic', optimize=True):
+        """the equations of motion of the system as expressions in its variables (#3130): the mass matrix M(q, t), the
+        forces f(q, q_t, t) and the residual r = M q_tt - f, composed of the recordings of the kinds, the marker
+        kinematics of the connectors and the loads; each recording is called with symbolic arguments through its code
+        of exudyn.misc.symbolicExport, the parameters of the items and the reference coordinates are numbers
+
+        Args:
+            format: 'symbolic': exudyn.symbolic expressions, the variables named vectors q, q_t, q_tt (with the initial
+                state as values) and the real t; 'sympy': sympy expressions of the symbols q0, q1, ..., q_t0, ..., q_tt0,
+                ..., t (sympy must be installed)
+            optimize: for 'symbolic', simplify the expressions by exudyn.symbolic.Optimize, level 2 (1*x, x+0, 0*x,
+                the combination of numbers, ...)
+
+        Returns:
+            dict with 'q', 'q_t', 'q_tt', 't' (the variables), 'massMatrix' (nODE2 x nODE2), 'forces' and 'residual'
+            (nODE2), as exudyn.symbolic.Matrix and Vector or sympy.Matrix
+        """
+        backend = _Backend(format)
+        n = self.nODE2
+        (q0, q_t0) = self.InitialState()
+        (q, q_t, q_tt) = (backend.Variable(name, n, value) for (name, value) in [('q', q0), ('q_t', q_t0), ('q_tt', np.zeros(n))])
+        t = backend.Real('t')
+        (qs, q_ts, q_tts) = ([x[i] for i in range(n)] for x in [q, q_t, q_tt]) #the components, to be gathered per item
+        M = [[0]*n for i in range(n)]
+        f = [0]*n
+        functions = {} #the function of each recording, written once
+
+        def Call(recording, *arguments):
+            if id(recording) not in functions:
+                functions[id(recording)] = ToFunction(recording.GetFlatProgramData(), format)
+            return functions[id(recording)](None, *arguments)
+
+        def Add(target, ltg, values):
+            for (i, value) in zip(ltg, values):
+                target[i] = _Sum(target[i], value)
+
+        def Local(values, ltg, offset=None):
+            return backend.Vector([(float(offset[k]) + values[i] if offset is not None else values[i]) for (k, i) in enumerate(ltg)])
+
+        def Components(vector, size):
+            return [vector[i] for i in range(size)]
+
+        for kind in self.kinds:
+            for (index, objectNumber) in enumerate(kind.objects):
+                ltg = kind.ltg[index]
+                nLocal = len(ltg)
+                if kind.objectType == 'UserBody':
+                    qRef = self.qRef[ltg]
+                    arguments = (t, objectNumber, backend.Vector(qRef), Local(qs, ltg, qRef), Local(q_ts, ltg),
+                                 backend.Vector(kind.parameters[index]))
+                    Mlocal = Call(kind.recordings['massMatrixUserFunction'], *arguments)
+                    for i in range(nLocal):
+                        for j in range(nLocal):
+                            M[ltg[i]][ltg[j]] = _Sum(M[ltg[i]][ltg[j]], Mlocal[i, j])
+                    if 'forceUserFunction' in kind.recordings:
+                        Add(f, ltg, Components(Call(kind.recordings['forceUserFunction'], *arguments), nLocal))
+                elif kind.objectType == 'GenericODE2':
+                    matrices = kind.parameters[index]
+                    arguments = (t, objectNumber, Local(qs, ltg), Local(q_ts, ltg))
+                    if 'massMatrixUserFunction' in kind.recordings:
+                        Mlocal = Call(kind.recordings['massMatrixUserFunction'], *arguments)
+                    else:
+                        Mlocal = matrices['M']
+                    for i in range(nLocal):
+                        for j in range(nLocal):
+                            M[ltg[i]][ltg[j]] = _Sum(M[ltg[i]][ltg[j]], float(Mlocal[i, j]) if isinstance(Mlocal, np.ndarray) else Mlocal[i, j])
+                    if 'forceUserFunction' in kind.recordings:
+                        Add(f, ltg, Components(Call(kind.recordings['forceUserFunction'], *arguments), nLocal))
+                    if len(matrices['f']):
+                        Add(f, ltg, [float(x) for x in matrices['f']])
+                    for (name, x) in [('K', qs), ('D', q_ts)]: #f - K q - D q_t
+                        if matrices[name].size:
+                            Add(f, ltg, [-sum(float(matrices[name][i, j])*x[ltg[j]] for j in range(nLocal) if matrices[name][i, j] != 0)
+                                         for i in range(nLocal)])
+                else:
+                    self._ConnectorEquations(kind, index, backend, Call, t, qs, q_ts, f)
+        for load in self.loads:
+            if load.recording is None:
+                value = backend.Vector(np.atleast_1d(load.value))
+            elif load.loadType == 'Coordinate':
+                value = backend.Vector([Call(load.recording, t, float(load.value))])
+            else:
+                value = Call(load.recording, t, backend.Vector(load.value))
+            if load.body is None:
+                Add(f, load.ltg, Components(value, len(load.ltg)))
+                continue
+            body = load.body
+            arguments = (t, body['objectNumber'], backend.Vector(body['qRef']), Local(qs, load.ltg, body['qRef']), Local(q_ts, load.ltg),
+                         backend.Vector(body['parameters']))
+            withPosition = arguments[:2] + (backend.Vector(body['localPosition']),) + arguments[2:]
+            J = Call(body['projection'], *(arguments if body['projectionName'] == 'massIntegralUserFunction' else withPosition))
+            if body['rotation'] is not None:
+                value = Call(body['rotation'], *withPosition) @ value
+            Add(f, load.ltg, Components(J.T @ value, len(load.ltg)))
+
+        residual = []
+        for i in range(n):
+            inertia = 0
+            for j in range(n):
+                if not (isinstance(M[i][j], (int, float)) and M[i][j] == 0):
+                    inertia = _Sum(inertia, M[i][j]*q_tts[j])
+            residual.append(inertia - f[i])
+        result = [backend.Matrix(M), backend.Vector(f), backend.Vector(residual)]
+        if optimize and format == 'symbolic':
+            result = exudyn.symbolic.Optimize(result, level=2)
+        return {'q': q, 'q_t': q_t, 'q_tt': q_tt, 't': t, 'massMatrix': result[0], 'forces': result[1], 'residual': result[2]}
+
+    def _ConnectorEquations(self, kind, index, backend, Call, t, qs, q_ts, f):
+        """add the generalized forces of connector index of kind to the list f, as expressions: the marker states as in
+        _ConnectorStates, the forces of the recording, J_pos^T f + J_rot^T m of each marker"""
+        (ltg, connector) = (kind.ltg[index], kind.parameters[index])
+        stride = 6 if connector['orientation'] else 3
+        (states, jacobians) = ([], [])
+        (zero, unit) = (backend.Vector([0., 0., 0.]), backend.Matrix(np.eye(3)))
+        for marker in connector['markers']:
+            indices = ltg[marker['indices']]
+            if marker['type'] == 'fixed':
+                states += [backend.Vector(marker['position']), zero, backend.Matrix(marker['rotation']), zero]
+                jacobians.append(None)
+            elif marker['type'] == 'point':
+                states += [backend.Vector([float(marker['position'][a]) + qs[i] for (a, i) in enumerate(indices)]),
+                           backend.Vector([q_ts[i] for i in indices]), unit, zero]
+                jacobians.append(('point', None, None))
+            else:
+                recordings = marker['recordings']
+                q_tLocal = backend.Vector([q_ts[i] for i in indices])
+                arguments = (t, marker['objectNumber'], backend.Vector(marker['position']), backend.Vector(marker['qRef']),
+                             backend.Vector([float(marker['qRef'][a]) + qs[i] for (a, i) in enumerate(indices)]), q_tLocal,
+                             backend.Vector(marker['parameters']))
+                Jpos = Call(recordings['positionJacobianUserFunction'], *arguments)
+                (rotation, angularVelocity, Jrot) = (unit, zero, None)
+                if connector['orientation']:
+                    Jrot = Call(recordings['rotationJacobianUserFunction'], *arguments)
+                    rotation = Call(recordings['rotationMatrixUserFunction'], *arguments) @ backend.Matrix(marker['rotation'])
+                    angularVelocity = Jrot @ q_tLocal
+                states += [Call(recordings['positionUserFunction'], *arguments), Jpos @ q_tLocal, rotation, angularVelocity]
+                jacobians.append(('body', Jpos, Jrot))
+        forces = Call(kind.recordings['forceUserFunction'], t, kind.objects[index], *states, backend.Vector([]),
+                      backend.Vector(connector['parameters']))
+        for (k, (marker, jacobian)) in enumerate(zip(connector['markers'], jacobians)):
+            if jacobian is None:
+                continue
+            indices = ltg[marker['indices']]
+            force = backend.Vector([forces[stride*k + a] for a in range(3)])
+            if jacobian[0] == 'point':
+                generalized = [force[a] for a in range(len(indices))]
+            else:
+                vector = jacobian[1].T @ force
+                if jacobian[2] is not None:
+                    vector = vector + jacobian[2].T @ backend.Vector([forces[stride*k + 3 + a] for a in range(3)])
+                generalized = [vector[a] for a in range(len(indices))]
+            for (i, value) in zip(indices, generalized):
+                f[i] = _Sum(f[i], value)
+
+    def GetFlatProgram(self, format='Python', flatten=True):
+        """the flat program of the residual r = M(q, t) q_tt - f(q, q_t, t) of Equations(), a function of q, q_t, q_tt
+        and t (#3130)
+
+        Args:
+            format: 'Python' (the text), or the executable 'symbolic', 'numpy' or 'sympy' of exudyn.misc.symbolicExport
+            flatten: True: one line per operation; False: the result as one expression
+
+        Returns:
+            the program as str
+        """
+        equations = self.Equations('symbolic')
+        return exudyn.symbolic.GetFlatProgram([equations['residual']], arguments=[equations[name] for name in ['q', 'q_t', 'q_tt', 't']],
+                                              resultNames=['residual'], format=format, flatten=flatten, name='Residual')
+
     def __repr__(self):
         lines = ['SymbolicSystem: ' + str(self.nODE2) + ' ODE2 coordinates, ' + str(len(self.kinds)) + ' kinds']
         for kind in self.kinds:
@@ -820,6 +992,41 @@ class SymbolicSystem(SymbolicSystemBase):
             lines.append('  loads: ' + ', '.join(load.loadType + (' (user function)' if load.recording is not None else '')
                                                 for load in self.loads))
         return '\n'.join(lines)
+
+
+def _Sum(a, b):
+    """a + b, without the sum when a is the number 0 that a sum starts with"""
+    return b if isinstance(a, int) and a == 0 else a + b
+
+
+class _Backend:
+    """the types of Equations: exudyn.symbolic or sympy"""
+    def __init__(self, format):
+        if format not in ['symbolic', 'sympy']:
+            raise ValueError("SymbolicSystem.Equations: format must be 'symbolic' or 'sympy', not " + str(format))
+        self.format = format
+        if format == 'sympy':
+            try:
+                import sympy
+            except ImportError:
+                raise ImportError("SymbolicSystem.Equations(format='sympy') needs sympy: pip install sympy")
+            self.sympy = sympy
+
+    def Variable(self, name, size, value):
+        if self.format == 'symbolic':
+            return exudyn.symbolic.Vector(name, [float(x) for x in value])
+        return self.sympy.Matrix([self.sympy.Symbol(name + str(i)) for i in range(size)])
+
+    def Real(self, name):
+        return exudyn.symbolic.Real(name, 0.) if self.format == 'symbolic' else self.sympy.Symbol(name)
+
+    def Vector(self, components):
+        components = [float(x) if isinstance(x, (np.floating, np.integer)) else x for x in components]
+        return exudyn.symbolic.Vector(components) if self.format == 'symbolic' else self.sympy.Matrix(components)
+
+    def Matrix(self, rows):
+        rows = [[float(x) if isinstance(x, (np.floating, np.integer)) else x for x in row] for row in rows]
+        return exudyn.symbolic.Matrix(rows) if self.format == 'symbolic' else self.sympy.Matrix(rows)
 
 
 #the explicit solvers of SolveExplicit
