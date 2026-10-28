@@ -2135,7 +2135,7 @@ symbolicOnePassJacobianTest.py. [log](exudynRevisionLog2026c.md#rg12-59)
 
 ### **OPEN_RG12.60** Call a recording with symbolic arguments, returning its expressions with the arguments substituted
 
-#3117: for one program per kind of the symbolic system, connector forces composed with the marker kinematics, and the export (RG12.51.5). Design docs/dev/design/symbolicSystem.md §11 S3. Done in Python for the system by RG12.51.10 (#3130), through the code of exudyn.misc.symbolicExport; open: whether the C++ copy is still needed.
+#3117: for one program per kind of the symbolic system, connector forces composed with the marker kinematics, and the export (RG12.51.5). Design docs/dev/design/symbolicSystem.md §11 S3. Done in Python for the system by RG12.51.10 (#3130), through the code of exudyn.misc.symbolicExport; open: whether the C++ copy is still needed. Maintainer 2026-10-28: keep it open - first check whether the Python code performs well enough for real-life problems, and whether other cases need the C++.
 
 ## **OPEN_RG13** Total coordinates
 
