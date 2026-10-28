@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.249.dev1
 - last change = 2026-10-28
-- Number of issues = 3149
+- Number of issues = 3150
 - Number of resolved issues = 3026 (249 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Recordings with declared inputs: a VariableSet as the scope of named variables, and esym.Function of expressions and a set of inputs (#3149)
+  - description: Maintainer 2026-10-28: R2 of docs/dev/design/symbolicSystem.md section 12.6 is accepted. A recording is bound to the signature of an item user function today; the composed system borrows the signature of ObjectGenericODE2 and cannot add y, lambda or parameters. A VariableSet becomes the scope of named variables - scalars, vectors and matrices, a name unique in its set -, a recording declares its inputs as a set, esym.Function(expressions, inputs), evaluated, differentiated and exported as a UserFunction; CreateSymbolicUserFunction builds the set of the item signature. Needed by the parameters as variables and the system variables (section 12.7).
+  - date raised: 2026-10-28
 - `EXTENSION` `LOW EFF` `raised by: Claude-JG` Draw ObjectJointUser by a graphicsDataUserFunction, and the joints of UserItemCreator as the built-in joints (#3147)
   - description: ObjectJointUser draws nothing, so the revolute, prismatic, spherical and distance joints of UserItemCreator (\#3140) are invisible and their drawing arguments are accepted and not used. A graphicsDataUserFunction as ObjectConnectorUser has (\#3119), and the drawings of the built-in joints from the drawing arguments.
   - date raised: 2026-10-28

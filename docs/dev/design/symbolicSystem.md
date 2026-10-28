@@ -441,8 +441,8 @@ runs on numbers and is recorded; a float costs nothing more, as its overload com
 ## 12. Status, analysis and options (2026-10-28)
 
 The symbolic user items and the symbolic system after RG12.51.4.2: what they are, what is open, and the questions of
-the maintainer of 2026-10-28 with options and a recommendation each. Nothing of 12.2 to 12.6 is a step yet; the
-maintainer decides which become one. What clearly has to be done got a step and an issue: the ODE1 items (RG12.51.14,
+the maintainer of 2026-10-28 with options and a recommendation each. Of 12.2 to 12.6, R2 is a step (RG12.62,
+#3149), the answers of the maintainer and the refinements are 12.7. What clearly has to be done got a step and an issue: the ODE1 items (RG12.51.14,
 #3144), the exact constraint blocks (RG12.51.15, #3145), the constraints in `Equations()` (RG12.51.16, #3146), the
 drawing of the joints (RG12.55.7, #3147), the node count (RG12.61, #3142) and ObjectGenericDAE (RG9.10, #3143).
 
@@ -576,3 +576,83 @@ items, the composed system - this is complete.
 **Recommendation**: R2 first - it unblocks the parameters (12.4) and the system variables (12.2), and it is small; R1
 as a planned refactoring once RG12.54.2 has decided the derivative program, which needs exactly the table of R1; R4
 when RG14.2.2 needs it; R3 with R1.
+
+### 12.7 The maintainer's answers, and the refinements (2026-10-28)
+
+**R2 is accepted** - recordings with declared inputs; step RG12.62 (#3149). The other points refined here, as asked:
+
+**Variables in a scope.** What is global today, precisely: a named variable is a node, identified by the node and not
+by its name - two recordings with an argument `q` each have two different nodes, and C++ never mixes them up. Global
+are (a) `esym.variables`, one `VariableSet` of named scalars, read by name with `Get` and `Set`, and (b) the names in
+the exported code: a flat program writes its variables as the arguments of a function, so two different variables of
+the same name in one composed expression would collide there. The plan, with R2:
+
+- A `VariableSet` is a **scope**: it creates and owns named variables - scalars, and also vectors and matrices, which
+  it cannot hold today - and a name is unique in its set, not in the module. `esym.variables` stays as the global set
+  that a recording reads at every call (the controller gain set during the simulation).
+- **A recording declares its inputs as a set** (R2): `esym.Function(expressions, inputs)` takes the variables of the
+  set as its arguments, in their order, so the export writes them without collision; `CreateSymbolicUserFunction`
+  builds the set of the signature of the item, as it builds the named variables now. Composing recordings (S3) maps the
+  inputs of the inner set to expressions of the outer one, so names never meet.
+
+**C, the system variables, as the maintainer describes it**: the signatures of the user functions stay; only the
+recording becomes simpler. A body keeps `q`, `q_t` (`qRef`, `qTotal`) as arguments, as now. What is marker-based - a
+connector, a joint, a load - gets marker states, and the marker functions get no system coordinates: their dependence
+on the coordinates is in the background, through the body that the marker is on. `SymbolicSystem` reconstructs it in
+`_MarkerStateExpressions` (and per call in `_ConnectorStates`), the code that knows how a point marker, a body marker
+and a fixed marker depend on q. C makes that a part of exudyn.symbolic:
+
+- **A set of system variables** `esym.SystemVariables(mbs)`, a `VariableSet` with the special variables `q`, `q_t`,
+  `y`, `y_t`, `lambda_`, `data` and `t` of the sizes of `systemData`.
+- **The marker states as expressions of them**: `MarkerPosition(marker)`, `MarkerRotation(marker)`, ... of the set
+  return expressions of the system variables - of the node coordinates for a node marker, through the recorded
+  functions of the user body for a body marker, constants for the ground. A connector recording composed with them is
+  a function of the system coordinates, and its Jacobian follows by the one-pass derivative, without the composition
+  rules of `_ConnectorJacobian` and `_JointJacobian`.
+- What `SymbolicSystem` does with this by hand becomes the use of the set, so `Equations()`, the Jacobians and the
+  export share one composition. Built-in bodies need their own recordings for it (#3048), as before.
+
+**The parameters, refined: a parameter is a number or a symbolic variable, set in the item.** The item decides how a
+parameter enters the recording: a number is a constant, a named variable (of a set) is an input.
+
+- Where it is stored: the item keeps the number for its C++ computation - the value of the variable when it is set -,
+  and `mbs` keeps the variable in a table of the item and parameter (a dict of Python, as `mbs.variables`), so that the
+  C++ items and the dict interface are unchanged. `SetObjectParameter(item, 'stiffness', k)` with a variable `k` sets
+  both; setting the variable's value later sets the number of every item that uses it.
+- Who reads it: `CreateSymbolicUserFunction` passes the variables of the item's parameters - and of the `parameters`
+  vector, component by component - as inputs instead of numbers; `SymbolicSystem` takes them as the inputs of its
+  composed recordings, so that the derivative by a parameter, a parameterized evaluation and an ensemble over the
+  parameters (RG14) follow without new code. One variable in several items is one input.
+- What it needs first: R2 (inputs declared as a set) and the scopes above. Open: whether the built-in items, which have
+  no recording, may take a variable at all - they could only update their number.
+
+**R1 refined - one table of operations** (for the decision, not decided):
+
+- **Today** an operation is a C++ class of about ten virtual functions - `Evaluate`, `Diff`, `ToString`,
+  `NumberOfOperands`, `GetOperand`, `EvaluateFromOperands`, `FlatName`, `NewWithOperands`, `ToStringFromOperands`,
+  `InlineInFlatText`, `Destroy`, and `EvaluateRef`/`DiffRef` for vectors and matrices -, plus its rule in the switch of
+  `FlatProgram::Differentiate`, in the rules of `Optimize` and in the writers of `symbolicExport.py`.
+- **R1**: a recording is a program - arrays of nodes, each an operation code, the kind (Real, Vector, Matrix), its
+  size, its operands by number and its constant data (a number, vector, matrix, the name of a variable) -, and a table
+  gives per operation code its name, arity and kinds of operands, the size of the result, the evaluation (a function of
+  the operand values), the forward derivative (of operand values and derivatives), the derivative as new nodes (option
+  D of section 5), the simplification rules, and the text per format (Python, numpy, sympy, C++). Evaluation,
+  differentiation, `Optimize`, the export, the count (RG12.61) and the uniform evaluation (RG14) all read the table.
+- **The types of Python** `esym.Real`, `Vector`, `Matrix` become handles - a program and a node number; recording
+  appends nodes, and equal nodes can be merged as they are appended (the merging of `Optimize`, at recording).
+  Evaluation is one loop over the program with a frame of values per call (R3), so the threads need no copies of the
+  graph.
+- **What goes**: the tree evaluation (`Evaluate()`, `Diff()` of an expression by recursion, `flatEvaluation = False`)
+  and with it the depth limit of 10000; the eight places per operation become one entry of the table.
+- **What stays the same for users**: the Python interface, the recordings, `str()`, the flat program, the export
+  formats; the results bit for bit (the same operations in the same order).
+- **What is hard**: the item outputs (a node that reads mbs - an operation code with a side table of the item and
+  output), the sparse matrix results with a pattern fixed at recording (#3022), vectors of run-time size, the buffers
+  of vector and matrix values in the frame, the transition of about 9200 lines.
+- **A transition in four stages, each tested against the present results**: 1. the table beside the classes - the
+  operation codes from `FlatName`, the flat evaluation and the one-pass derivative read the table; 2. `Optimize`, the
+  export and the count on the table; 3. recording builds the program directly, the classes only for the transition;
+  4. the classes and the tree evaluation removed.
+- **The decisions it needs**: handles instead of node objects; merging at recording; the tree evaluation removed; the
+  export written from the table in C++ or kept in Python reading the names of the table. Best decided with RG12.54.2,
+  whose derivative program needs exactly the column "derivative as new nodes".
