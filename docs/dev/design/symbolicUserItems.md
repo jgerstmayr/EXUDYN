@@ -59,7 +59,8 @@ def UFspringDamper(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, an
   coordinates, Python only, as the drawing of ObjectGenericODE2.
 - **In the symbolic system** (#3121): a kind of its own per pattern of markers; the marker states of a point node from
   the node coordinates, of the ground from the fixed position; the forces scattered to the coordinates of the markers.
-  Markers on bodies and the rotations follow with RG12.51.4.
+  The markers on user bodies and on the ground, with the rotations, as their position, rotation and Jacobian
+  functions give them (#3129).
 
 **The markerAccessUserFunction**: the former ConnectorMarker form under its own name. It is for forces at points that
 the function computes itself on a body of many coordinates - `GetBodyPosition(localPosition)` and
@@ -103,7 +104,7 @@ mbs.Assemble()
   (ObjectConnectorUser, its force with cMath) and `CreateForce` (the built-in load, a Python loadVectorUserFunction
   recorded by `Record`); `items` lists the items of each kind, `recordings` keeps the recordings alive. At the center
   of a user mass point the spring-damper takes a marker on its node instead of the body: the position is the same,
-  and SymbolicSystem takes node markers until RG12.51.4 brings body markers. symbolicUserItemsTest.py: the same
+  and SymbolicSystem took node markers only before #3129. symbolicUserItemsTest.py: the same
   script with `creator = mbs` and with the creator, the Python and the recorded user items equal to the built-in
   items to 7e-16, SolveExplicit on the recorded system to 1.3e-15.
 - **Done** (#3128): `CreateRigidBody`, ObjectUserBody on NodeRigidBodyRxyz with the parameters [mass, inertia about

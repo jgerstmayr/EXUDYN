@@ -1952,6 +1952,13 @@ symbolicGeneralizedAlphaTest.py 1e-10 to SolveDynamic. Constraints with RG12.51.
 
 After RG12.55; the constraints and C_q^T lambda, the marker Jacobians by differentiation (RG12.58); the loads are RG12.51.8.
 
+##### **CLOSED_RG12.51.4.1** Take ObjectConnectorUser on markers of user bodies and of the ground, with the rotations
+
+CLOSED 2026-10-28 (#3129; maintainer 2026-10-28: do the suggested RG12 steps, measure the CPU times): MarkerBodyPosition
+and MarkerBodyRigid on ObjectUserBody and the ground, the rotations when the connector requests Orientation, the exact
+Jacobian composed of the marker derivatives; symbolicUserRigidBodiesTest.py: SolveExplicit 1.0e-15 and
+SolveGeneralizedAlpha 3.2e-11 to SolveDynamic, the Jacobian 9.3e-11, and the times. [log](exudynRevisionLog2026c.md#rg12-51-4-1)
+
 #### **OPEN_RG12.51.5** Export the equations of motion: the programs, the sparsity pattern and the scatter as C++ and Python
 
 Design §1 G1, with a small driver that evaluates them outside Exudyn.

@@ -157,7 +157,7 @@ springs = []
 for kind in system.kinds:
     if kind.objectType == 'ConnectorUser':
         for i in range(len(kind.objects)):
-            springs.append([(kind.ltg[i][indices], position) for (indices, position) in kind.parameters[i]['markers']])
+            springs.append([(kind.ltg[i][marker['indices']], marker['position']) for marker in kind.parameters[i]['markers']])
 
 def NumpyForces(q, q_t, t):
     f = np.zeros(system.nODE2)

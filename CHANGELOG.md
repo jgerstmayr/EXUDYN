@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 229 | 1.13.233 |
+| 1.13 | Newborn | 230 | 1.13.234 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.234** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem: ObjectConnectorUser on markers of user bodies and of the ground, with rotations (#3129)
+  - description: revision2026c step RG12.51.4: the connector markers BodyPosition and BodyRigid on ObjectUserBody (by its symbolic position, rotation and Jacobian functions) and on the ground, the rotations and angular velocities when the connector requests Orientation, the forces and torques by J\_pos^T f + J\_rot^T m, the exact Jacobian by Diff of the recordings; the joints and constraints follow.
+  - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem takes ObjectConnectorUser on MarkerBodyPosition and MarkerBodyRigid of user bodies and of the ground, with the rotations and angular velocities when the connector requests Orientation; the forces and torques act through the Jacobians of the body, the Jacobian of the residual is exact by Diff of the recordings; symbolicUserRigidBodiesTest.py: SolveExplicit and SolveGeneralizedAlpha equal to SolveDynamic
+  - date resolved: **2026-10-28 08:07**, date raised: 2026-10-28
 - **1.13.233** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UserItemCreator: CreateRigidBody and CreateTorsionalSpringDamper (#3128)
   - description: revision2026c step RG12.55.3: a rigid body as ObjectUserBody on NodeRigidBodyRxyz with the mass matrix and quadratic velocity terms of ObjectRigidBody (center of mass included), position, rotation, their Jacobians and the mass integral; a torsional spring-damper as ObjectConnectorUser on the rigid markers of mbs.CreateTorsionalSpringDamper, requesting the orientation; the arguments of mbs, unsupported ones refused.
   - **notes:** exudyn.misc.symbolicUserItems.UserItemCreator: CreateRigidBody, ObjectUserBody on NodeRigidBodyRxyz with the mass matrix and quadratic velocity terms of ObjectRigidBody including a center of mass off the node, and CreateTorsionalSpringDamper, ObjectConnectorUser on the rigid markers of the built-in function, both with the arguments of mbs and recorded by Record; symbolicUserRigidBodiesTest.py equal to the built-in items

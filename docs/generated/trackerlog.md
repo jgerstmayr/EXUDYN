@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.233.dev1
+- Exudyn version = 1.13.234.dev1
 - last change = 2026-10-28
 - Number of issues = 3130
-- Number of resolved issues = 3010 (233 in current version)
+- Number of resolved issues = 3011 (234 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` SymbolicSystem: ObjectConnectorUser on markers of user bodies and of the ground, with rotations (#3129)
-  - description: revision2026c step RG12.51.4: the connector markers BodyPosition and BodyRigid on ObjectUserBody (by its symbolic position, rotation and Jacobian functions) and on the ground, the rotations and angular velocities when the connector requests Orientation, the forces and torques by J\_pos^T f + J\_rot^T m, the exact Jacobian by Diff of the recordings; the joints and constraints follow.
-  - date raised: 2026-10-28
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Call a symbolic recording with symbolic arguments: its expressions with the arguments substituted (#3117)
   - description: revision2026c step RG12.60 (maintainer 2026-10-26): a recording evaluated with exudyn.symbolic arguments returns a copy of its expressions in which its argument variables are replaced by the given expressions, as Optimize copies nodes; for one expression per kind of the symbolic system (the residual M q\_tt - f), for the forces of connectors composed with the marker kinematics of the bodies, and for the export of one program per kind (RG12.51.5).
   - date raised: 2026-10-26

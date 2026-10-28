@@ -17,8 +17,11 @@ You can view and download this file on Github: [symbolicUserRigidBodiesTest.py](
 #           ObjectConnectorSpringDamper, ObjectConnectorTorsionalSpringDamper) and once with
 #           creator = UserItemCreator(mbs) (ObjectUserBody, ObjectConnectorUser). The user items with their Python user
 #           functions and after Record with symbolic ones equal the built-in items, with RK44 and with the implicit
-#           solver. The Create functions have the arguments of those of mbs; an argument the user item does not
-#           support raises, naming it. The times of the runs are printed, not judged.
+#           solver. The system of the recorded user items as SymbolicSystem (#3129) - its connectors on the rigid
+#           markers of user bodies and the ground, with the rotations - by SolveExplicit and SolveGeneralizedAlpha equals
+#           SolveDynamic, its Jacobian of the residual the one of central differences. The Create functions have the
+#           arguments of those of mbs; an argument the user item does not support raises, naming it. The times of the
+#           runs are printed, not judged.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-28
@@ -30,6 +33,7 @@ You can view and download this file on Github: [symbolicUserRigidBodiesTest.py](
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.misc.symbolicUserItems import UserItemCreator
+from exudyn.misc.symbolicSystem import SymbolicSystem, SymbolicSystemBase, SolveExplicit, SolveGeneralizedAlpha
 import exudyn.cMath as cMath
 import numpy as np
 import inspect
@@ -87,7 +91,7 @@ def State(mbs, bodies):
                      for body in bodies])
 
 differences = {} #of the user items to the built-in items, by solver
-times = {} #CPU times of SolveDynamic
+times = {} #the times of SolveDynamic
 for (solverType, cases) in [(exu.DynamicSolverType.RK44, [(False, False), (True, False), (True, True)]),
                             (exu.DynamicSolverType.GeneralizedAlpha, [(False, False), (True, True)])]:
     results = []
@@ -99,9 +103,40 @@ for (solverType, cases) in [(exu.DynamicSolverType.RK44, [(False, False), (True,
         results.append(State(mbs, bodies))
     differences[solverType] = max(np.max(np.abs(result - results[0])) for result in results[1:])/np.max(np.abs(results[0]))
     exu.Print(str(solverType) + ': relative difference of the user items to the built-in items', differences[solverType])
+
+#the recorded user items as SymbolicSystem: SolveExplicit (RK44) and SolveGeneralizedAlpha against SolveDynamic
+(SC, mbs, bodies) = Build(True, True)
+system = SymbolicSystem(mbs)
+exu.Print(system)
+differencesSymbolic = {}
+settings = exu.SimulationSettings()
+settings.SetDictionary(simulationSettings.GetDictionary())
+for (solverType, steps, Solve) in [(exu.DynamicSolverType.RK44, 250, lambda: SolveExplicit(system, settings, exu.DynamicSolverType.RK44)),
+                                   (exu.DynamicSolverType.GeneralizedAlpha, 50, lambda: SolveGeneralizedAlpha(system, settings))]:
+    settings.timeIntegration.numberOfSteps = steps #fewer for the generalized-alpha method, which is slower here
+    settings.timeIntegration.endTime = 0.001*steps
+    start = time.perf_counter()
+    mbs.SolveDynamic(settings, solverType=solverType)
+    timeExudyn = time.perf_counter() - start
+    qExudyn = np.array(mbs.systemData.GetODE2Coordinates())
+    start = time.perf_counter()
+    result = Solve()
+    timeSymbolic = time.perf_counter() - start
+    differencesSymbolic[solverType] = np.max(np.abs(result['q'][-1] - qExudyn))/np.max(np.abs(qExudyn))
+    exu.Print(str(solverType) + ', ' + str(steps) + ' steps: relative difference of the symbolic system to SolveDynamic',
+              differencesSymbolic[solverType], '; time of SolveDynamic', round(timeExudyn, 4), 's, of the symbolic system',
+              round(timeSymbolic, 4), 's')
+
+#the Jacobian of the residual by Diff against central differences, at the last state
+(q, q_t, q_tt) = (result['q'][-1], result['q_t'][-1], result['q_tt'][-1])
+J = system.ResidualJacobian(q, q_t, q_tt, 0.2, factor_q=1., factor_q_t=0.5)
+JDifferences = SymbolicSystemBase.ResidualJacobian(system, q, q_t, q_tt, 0.2, factor_q=1., factor_q_t=0.5)
+differenceJacobian = np.max(np.abs(J - JDifferences))/np.max(np.abs(J))
+exu.Print('the Jacobian of the residual against central differences:', differenceJacobian)
+
 for ((solverType, userItems, record), cpuTime) in times.items():
-    exu.Print('time of SolveDynamic,', solverType + ',', 'recorded user items' if record else
-              ('Python user items' if userItems else 'built-in items') + ':', round(cpuTime, 4), 's')
+    exu.Print('time of SolveDynamic, 250 steps,', solverType + ',', 'recorded user items' if record else
+              ('Python user items' if userItems else 'built-in items'), ':', round(cpuTime, 4), 's')
 
 #the arguments of the Create functions are those of mbs
 SC = exu.SystemContainer()
@@ -128,7 +163,8 @@ for (function, arguments, text) in [(creator.CreateRigidBody, dict(inertia=inert
 exu.Print('refused, as they must be:', refused, 'of 2')
 
 u = (1 + int(differences[exu.DynamicSolverType.RK44] > 1e-12) + int(differences[exu.DynamicSolverType.GeneralizedAlpha] > 1e-8)
-     + (2 - sameArguments) + (2 - refused))
+     + int(differencesSymbolic[exu.DynamicSolverType.RK44] > 1e-12) + int(differencesSymbolic[exu.DynamicSolverType.GeneralizedAlpha] > 1e-8)
+     + int(differenceJacobian > 1e-6) + (2 - sameArguments) + (2 - refused))
 exu.Print('solution of symbolicUserRigidBodiesTest=', u)
 
 exu.sys['testResult'] = u

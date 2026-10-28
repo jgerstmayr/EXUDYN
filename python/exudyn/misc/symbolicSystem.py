@@ -15,8 +15,9 @@
 #           Special: not for the broad use, a basis for the export of the equations of motion and their evaluation
 #           outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
 #           forceUserFunction, ObjectGenericODE2 with constant matrices and symbolic user functions,
-#           ObjectConnectorUser with a symbolic forceUserFunction on position markers of point nodes and of the ground
-#           (#3121), items without coordinates (ground), and the loads LoadForceVector, LoadTorqueVector,
+#           ObjectConnectorUser with a symbolic forceUserFunction on position markers of point nodes, on position and
+#           rigid markers of the ground and of user bodies, with the rotations if it requests them (#3121, #3129), items
+#           without coordinates (ground), and the loads LoadForceVector, LoadTorqueVector,
 #           LoadMassProportional and LoadCoordinate, constant or with a symbolic user function of the time, on markers
 #           of point nodes, node coordinates and user bodies (#3118); every other object and load, constraints and
 #           recordings that read mbs are refused.
@@ -53,6 +54,10 @@ _loadProjections = {'ForceVector': 'positionJacobianUserFunction', 'TorqueVector
                     'MassProportional': 'massIntegralUserFunction'}
 _bodyArgumentPositions = {'positionJacobianUserFunction': (5, 6), 'rotationJacobianUserFunction': (5, 6),
                           'rotationMatrixUserFunction': (5, 6), 'massIntegralUserFunction': (4, 5)}
+#the user functions of ObjectUserBody a connector marker on it needs, without and with the rotations (#3129)
+_markerFunctions = {False: ['positionUserFunction', 'positionJacobianUserFunction'],
+                    True: ['positionUserFunction', 'positionJacobianUserFunction', 'rotationMatrixUserFunction',
+                           'rotationJacobianUserFunction']}
 
 
 class SymbolicSystemBase:
@@ -231,8 +236,11 @@ class SymbolicKind:
         recorded user functions by name (a name without recording is missing); objects, the list of the object numbers;
         ltg, the array (number of objects x local coordinates) of the global ODE2 indices; parameters, the list of the
         parameter vectors of the objects (UserBody), of the dicts of the constant matrices and the force vector
-        (GenericODE2), or of the dicts of the parameter vector and the markers (ConnectorUser: per marker its local
-        coordinate indices, empty for a fixed marker, and its reference position)
+        (GenericODE2), or of the dicts of the parameter vector, 'orientation' (the connector gets the rotations and
+        returns the torques) and the markers (ConnectorUser: per marker a dict of its 'type' - 'fixed', 'point' or
+        'body' -, its local coordinate indices 'indices', its reference 'position' and 'rotation' - for a marker on a
+        user body its local position and rotation, 'objectNumber', 'qRef', 'parameters' and the 'recordings' of the
+        body that give its kinematics)
     """
     def __init__(self, objectType, recordings):
         self.objectType = objectType
@@ -325,8 +333,10 @@ class SymbolicSystem(SymbolicSystemBase):
             elif 'forceUserFunction' not in recordings:
                 continue #a connector without forces
             key = (objectType,) + tuple((name, recordings[name].GetFlatProgram()) for name in sorted(recordings))
-            if markers is not None: #the connectors of a kind have the same pattern of coordinates of their markers
-                key += tuple(len(indices) for (indices, position) in markers)
+            if markers is not None: #the connectors of a kind have the same pattern of markers and of their bodies
+                key += tuple((marker['type'], len(marker['indices']))
+                             + tuple(recording.GetFlatProgram() for recording in marker.get('recordings', {}).values())
+                             for marker in markers)
             if key not in kinds:
                 kinds[key] = SymbolicKind(objectType, recordings)
             kind = kinds[key]
@@ -335,7 +345,8 @@ class SymbolicSystem(SymbolicSystemBase):
             if objectType == 'UserBody':
                 kind.parameters.append(np.array(item['parameters'], dtype=float))
             elif objectType == 'ConnectorUser':
-                kind.parameters.append({'parameters': np.array(item['parameters'], dtype=float), 'markers': markers})
+                kind.parameters.append({'parameters': np.array(item['parameters'], dtype=float), 'markers': markers,
+                                        'orientation': bool(int(item['requestedMarkerType']) & int(exudyn.MarkerType.Orientation))})
             else:
                 kind.parameters.append({'M': _Dense(item['massMatrix']), 'K': _Dense(item['stiffnessMatrix']),
                                         'D': _Dense(item['dampingMatrix']), 'f': np.array(item['forceVector'], dtype=float)})
@@ -346,29 +357,51 @@ class SymbolicSystem(SymbolicSystemBase):
             kind.ltg = np.array(kind.ltg, dtype=int)
 
     def _ConnectorMarkers(self, objectNumber, item):
-        """the markers of an ObjectConnectorUser: per marker its local coordinate indices (empty for a fixed marker) and
-        its reference position, the global indices of the coordinates of the connector, and the reason it is refused,
-        empty if it is taken"""
+        """the markers of an ObjectConnectorUser as the dicts of SymbolicKind, the global indices of the coordinates of
+        the connector, and the reason it is refused, empty if it is taken"""
         mbs = self.mbs
         if item['markerAccessUserFunction'] != 0 or item['postNewtonStepUserFunction'] != 0:
             return (None, None, 'a markerAccessUserFunction or postNewtonStepUserFunction')
-        if int(item['requestedMarkerType']) & int(exudyn.MarkerType.Orientation):
-            return (None, None, 'the forces of rotations, requestedMarkerType Orientation')
+        orientation = bool(int(item['requestedMarkerType']) & int(exudyn.MarkerType.Orientation))
         (markers, ltg) = ([], [])
         for markerNumber in item['markerNumbers']:
             marker = mbs.GetMarker(markerNumber)
-            position = np.array(mbs.GetMarkerOutput(markerNumber, exudyn.OutputVariableType.Position,
-                                                    configuration=exudyn.ConfigurationType.Reference))
+            markerType = marker['markerType']
+            reference = exudyn.ConfigurationType.Reference
+            position = np.array(mbs.GetMarkerOutput(markerNumber, exudyn.OutputVariableType.Position, configuration=reference))
+            data = {'type': 'fixed', 'position': position, 'rotation': np.eye(3)}
             coordinates = []
-            if marker['markerType'] == 'NodePosition':
+            if markerType == 'NodePosition':
                 nodeType = mbs.GetNode(marker['nodeNumber'])['nodeType']
                 if nodeType == 'Point':
+                    data['type'] = 'point'
                     coordinates = list(mbs.systemData.GetNodeLTGODE2(marker['nodeNumber']))
                 elif nodeType != 'PointGround':
                     return (None, None, 'a marker on a node of type ' + nodeType)
-            elif not (marker['markerType'] == 'BodyPosition' and mbs.GetObject(marker['bodyNumber'])['objectType'] == 'Ground'):
-                return (None, None, 'a marker of type ' + marker['markerType'] + ' other than on a point node or the ground')
-            markers.append((np.arange(len(ltg), len(ltg) + len(coordinates), dtype=int), position))
+            elif markerType in ['BodyPosition', 'BodyRigid']:
+                bodyNumber = marker['bodyNumber']
+                body = mbs.GetObject(bodyNumber)
+                localRotation = np.array(marker['localHT'], dtype=float)[0:3, 0:3] if markerType == 'BodyRigid' else np.eye(3)
+                if body['objectType'] == 'Ground':
+                    if orientation:
+                        data['rotation'] = np.array(mbs.GetMarkerOutput(markerNumber, exudyn.OutputVariableType.RotationMatrix,
+                                                                        configuration=reference)).reshape(3, 3)
+                elif body['objectType'] == 'UserBody':
+                    recordings = {}
+                    for name in _markerFunctions[orientation]:
+                        recordings[name] = _Recording(body[name], bodyNumber, name)
+                        if recordings[name] is None:
+                            return (None, None, 'a marker on the user body ' + str(bodyNumber) + ', which has no ' + name)
+                    coordinates = list(mbs.systemData.GetObjectLTGODE2(bodyNumber))
+                    data = {'type': 'body', 'position': np.array(marker['localPosition'], dtype=float), 'rotation': localRotation,
+                            'objectNumber': int(bodyNumber), 'qRef': self.qRef[coordinates],
+                            'parameters': np.array(body['parameters'], dtype=float), 'recordings': recordings}
+                else:
+                    return (None, None, 'a marker on an object of type ' + body['objectType'])
+            else:
+                return (None, None, 'a marker of type ' + markerType)
+            data['indices'] = np.arange(len(ltg), len(ltg) + len(coordinates), dtype=int)
+            markers.append(data)
             ltg += coordinates
         return (markers, ltg, '')
 
@@ -457,15 +490,41 @@ class SymbolicSystem(SymbolicSystemBase):
         if kind.objectType == 'UserBody':
             qRef = self.qRef[ltg]
             return (t, kind.objects[i], qRef, qRef + q[ltg], q_t[ltg], kind.parameters[i])
-        if kind.objectType == 'ConnectorUser': #the states of the two markers; positions only: unit rotations, no angular velocities
-            states = []
-            for (indices, position) in kind.parameters[i]['markers']:
-                if len(indices):
-                    states += [position + q[ltg[indices]], q_t[ltg[indices]], np.eye(3), np.zeros(3)]
-                else: #a fixed marker
-                    states += [position, np.zeros(3), np.eye(3), np.zeros(3)]
-            return (t, kind.objects[i], *states, [], kind.parameters[i]['parameters'])
+        if kind.objectType == 'ConnectorUser':
+            return self._ConnectorStates(kind, i, q, q_t, t)[0]
         return (t, kind.objects[i], q[ltg], q_t[ltg])
+
+    def _ConnectorStates(self, kind, i, q, q_t, t):
+        """the arguments after mbs of the forceUserFunction of connector i of kind - the position, velocity, rotation
+        matrix and angular velocity of each marker, unit rotations and no angular velocities if it requests no
+        orientation -, and per marker its position and rotation Jacobians (None for a fixed marker) and the arguments
+        of the user functions of its body (None for a point node or a fixed marker)"""
+        (ltg, connector) = (kind.ltg[i], kind.parameters[i])
+        (states, markerData) = ([], [])
+        for marker in connector['markers']:
+            (Jpos, Jrot, bodyArguments) = (None, None, None)
+            if marker['type'] == 'fixed':
+                states += [marker['position'], np.zeros(3), marker['rotation'], np.zeros(3)]
+            elif marker['type'] == 'point':
+                indices = ltg[marker['indices']]
+                Jpos = np.eye(3)
+                states += [marker['position'] + q[indices], q_t[indices], np.eye(3), np.zeros(3)]
+            else: #on a user body: v = J_pos q_t, omega = J_rot q_t, the rotation of the marker after the one of the body
+                indices = ltg[marker['indices']]
+                recordings = marker['recordings']
+                bodyArguments = (t, marker['objectNumber'], marker['position'], marker['qRef'], marker['qRef'] + q[indices],
+                                 q_t[indices], marker['parameters'])
+                values = {name: np.array(recording.Evaluate(self.mbs, *bodyArguments), dtype=float)
+                          for (name, recording) in recordings.items()} #with Orientation the rotation functions too
+                Jpos = values['positionJacobianUserFunction']
+                (rotation, angularVelocity) = (np.eye(3), np.zeros(3))
+                if connector['orientation']:
+                    Jrot = values['rotationJacobianUserFunction']
+                    rotation = values['rotationMatrixUserFunction'] @ marker['rotation']
+                    angularVelocity = Jrot @ q_t[indices]
+                states += [values['positionUserFunction'], Jpos @ q_t[indices], rotation, angularVelocity]
+            markerData.append((Jpos, Jrot, bodyArguments))
+        return ((t, kind.objects[i], *states, [], connector['parameters']), markerData)
 
     def _Call(self, kind, name, i, q, q_t, t):
         """the result of the user function name of object i of kind, by its recording, as numpy array"""
@@ -481,6 +540,10 @@ class SymbolicSystem(SymbolicSystemBase):
         dimensions of the result, then the one of the argument"""
         argumentName = recording.GetFlatProgramData()['arguments'][position]['name']
         return np.array(recording.EvaluateJacobian(argumentName, self.mbs, *arguments), dtype=float)
+
+    def _BodyJacobian(self, marker, name, bodyArguments):
+        """the derivative by qTotal of the user function name of the user body of a connector marker"""
+        return self._RecordingJacobian(marker['recordings'][name], _bodyArgumentPositions[name][0], bodyArguments)
 
     def _BodyArguments(self, load, name, q, q_t, t):
         """the arguments after mbs of the user function name of the user body of a load"""
@@ -547,10 +610,15 @@ class SymbolicSystem(SymbolicSystemBase):
     def _LocalForces(self, kind, i, q, q_t, t):
         """the forces on the right-hand side; for ObjectGenericODE2 f + f_user - K q - D q_t"""
         f = np.zeros(kind.ltg.shape[1])
-        if kind.objectType == 'ConnectorUser': #the force on marker k acts on its coordinates, as the Jacobian of a point node is the unit matrix
-            forces = self._Call(kind, 'forceUserFunction', i, q, q_t, t)
-            for (k, (indices, position)) in enumerate(kind.parameters[i]['markers']):
-                f[indices] += forces[3*k:3*k + len(indices)]
+        if kind.objectType == 'ConnectorUser': #J_pos^T f + J_rot^T m of each marker, into the coordinates of its node or body
+            (arguments, markerData) = self._ConnectorStates(kind, i, q, q_t, t)
+            forces = np.array(kind.recordings['forceUserFunction'].Evaluate(self.mbs, *arguments), dtype=float)
+            stride = 6 if kind.parameters[i]['orientation'] else 3
+            for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(kind.parameters[i]['markers'], markerData)):
+                if Jpos is not None:
+                    f[marker['indices']] += Jpos.T @ forces[stride*k:stride*k + 3]
+                if Jrot is not None:
+                    f[marker['indices']] += Jrot.T @ forces[stride*k + 3:stride*k + 6]
             return f
         if 'forceUserFunction' in kind.recordings:
             f += self._Call(kind, 'forceUserFunction', i, q, q_t, t)
@@ -687,20 +755,60 @@ class SymbolicSystem(SymbolicSystemBase):
         return self._Matrix(np.concatenate(rows), np.concatenate(columns), np.concatenate(values), sparse)
 
     def _ConnectorJacobian(self, kind, i, q, q_t, t, factor_q, factor_q_t):
-        """the local Jacobian of the residual -f of a connector: the derivatives of its forces by the positions
-        (arguments 3 and 7) and velocities (4 and 8) of its markers, which are the coordinates of point nodes"""
+        """the local Jacobian of the residual -f of a connector, -d(sum_k J_pos,k^T f_k + J_rot,k^T m_k): the derivatives
+        of its forces by the states of its markers (arguments 3 + 4k to 6 + 4k) composed with the derivatives of the
+        states by the coordinates - J_pos, dJ_pos/dq q_t, dA/dq, J_rot, dJ_rot/dq q_t, by Diff of the recordings of the
+        bodies -, and the derivatives of the Jacobians of the bodies times the forces (#3129)"""
         n = kind.ltg.shape[1]
-        markers = kind.parameters[i]['markers']
-        scatter = np.zeros((n, 6)) #the result rows of each marker into its local coordinates
-        for (k, (indices, position)) in enumerate(markers):
-            scatter[indices, 3*k:3*k + len(indices)] = np.eye(len(indices))
-        local = np.zeros((n, n))
-        for (k, (indices, position)) in enumerate(markers):
-            if not len(indices):
+        connector = kind.parameters[i]
+        orientation = connector['orientation']
+        stride = 6 if orientation else 3
+        (arguments, markerData) = self._ConnectorStates(kind, i, q, q_t, t)
+        recording = kind.recordings['forceUserFunction']
+        forces = np.array(recording.Evaluate(self.mbs, *arguments), dtype=float)
+        nForces = len(forces)
+        (dF_q, dF_q_t) = (np.zeros((nForces, n)), np.zeros((nForces, n)))
+        bodyDerivatives = [] #per marker on a user body: dJ_pos/dq, dJ_rot/dq
+        for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(connector['markers'], markerData)):
+            indices = marker['indices']
+            if Jpos is None:
+                bodyDerivatives.append(None)
                 continue
-            for (argument, factor) in [(3 + 4*k, factor_q), (4 + 4*k, factor_q_t)]:
+            (dJpos, dJrot) = (None, None)
+            dF_dv = self._RecordingJacobian(recording, 4 + 4*k, arguments)
+            if factor_q != 0.: #by the position, and the velocity by q through J_pos
+                dF_q[:, indices] += self._RecordingJacobian(recording, 3 + 4*k, arguments) @ Jpos
+            if factor_q_t != 0.:
+                dF_q_t[:, indices] += dF_dv @ Jpos
+            if bodyArguments is not None and factor_q != 0.:
+                dJpos = self._BodyJacobian(marker, 'positionJacobianUserFunction', bodyArguments)
+                dF_q[:, indices] += dF_dv @ np.einsum('ijk,j->ik', dJpos, bodyArguments[5])
+            if orientation and Jrot is not None:
+                dF_domega = self._RecordingJacobian(recording, 6 + 4*k, arguments)
+                if factor_q_t != 0.:
+                    dF_q_t[:, indices] += dF_domega @ Jrot
+                if factor_q != 0.:
+                    dJrot = self._BodyJacobian(marker, 'rotationJacobianUserFunction', bodyArguments)
+                    dA = np.einsum('ijk,jl->ilk', self._BodyJacobian(marker, 'rotationMatrixUserFunction', bodyArguments),
+                                   marker['rotation'])
+                    dF_q[:, indices] += (self._RecordingJacobian(recording, 5 + 4*k, arguments) @ dA.reshape(9, len(indices))
+                                         + dF_domega @ np.einsum('ijk,j->ik', dJrot, bodyArguments[5]))
+            bodyDerivatives.append((dJpos, dJrot))
+        local = np.zeros((n, n))
+        for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(connector['markers'], markerData)):
+            if Jpos is None:
+                continue
+            indices = marker['indices']
+            (force, torque) = (slice(stride*k, stride*k + 3), slice(stride*k + 3, stride*k + 6))
+            for (dF, factor) in [(dF_q, factor_q), (dF_q_t, factor_q_t)]:
                 if factor != 0.:
-                    local[:, indices] -= factor*(scatter @ self._Jacobian(kind, 'forceUserFunction', i, argument, q, q_t, t))
+                    local[indices, :] -= factor*(Jpos.T @ dF[force] + (Jrot.T @ dF[torque] if Jrot is not None else 0.))
+            if factor_q != 0. and bodyDerivatives[k] is not None:
+                (dJpos, dJrot) = bodyDerivatives[k]
+                if dJpos is not None:
+                    local[np.ix_(indices, indices)] -= factor_q*np.einsum('ijk,i->jk', dJpos, forces[force])
+                if dJrot is not None:
+                    local[np.ix_(indices, indices)] -= factor_q*np.einsum('ijk,i->jk', dJrot, forces[torque])
         return local
 
     def __repr__(self):

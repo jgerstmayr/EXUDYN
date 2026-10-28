@@ -68,7 +68,7 @@ interface of the solvers (#3110, #3113), its Jacobian of the residual by `Diff` 
 `NumpySystem` - by explicit Euler, RK44 or velocity Verlet with constant step size, as Exudyn's explicit solver does,
 with the mass matrix inverted per body if `timeIntegration.explicit.computeMassMatrixInversePerBody`, and writes the
 solution file and the sensors of mbs (#3112); it takes ObjectConnectorUser with a symbolic forceUserFunction on
-markers of point nodes and of the ground (#3121), and LoadForceVector, LoadTorqueVector, LoadMassProportional and
+markers of point nodes and of the ground (#3121) and on markers of user bodies, with the rotations (#3129), and LoadForceVector, LoadTorqueVector, LoadMassProportional and
 LoadCoordinate, constant or with a symbolic user function, on markers of point nodes, node coordinates and user bodies
 (#3118). `exudyn.misc.symbolicUserItems.UserItemCreator(mbs)` has `CreateGround`, `CreateMassPoint`,
 `CreateSpringDamper` and `CreateForce` with the arguments of those of mbs and creates ObjectUserBody and

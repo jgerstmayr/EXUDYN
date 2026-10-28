@@ -3895,3 +3895,35 @@ symbolic and the internal integration.)*
 - The times of SolveDynamic, 250 steps (printed, not judged): RK44 built-in 0.016 s, Python user items 1.75 s, recorded
   0.11 s; generalized-alpha built-in 0.03 s, recorded 0.22 s.
 - docs/dev/design/symbolicUserItems.md §3/§4, docs/manual/revisions.md.
+
+<a id="rg12-51-4-1"></a>
+### RG12.51.4.1 — connectors on markers of user bodies and of the ground, with rotations (2026-10-28, #3129)
+*(Maintainer 2026-10-28: do the suggested RG12 steps now; when building a test, also measure the CPU time of the
+symbolic and the internal integration - "I expect that the symbolic version performs well already".)* A sub-step of
+RG12.51.4, whose joints and constraints need the joints of RG12.55.4 first.
+- exudyn/misc/symbolicSystem.py `_ConnectorMarkers`: per marker a dict - 'fixed' (a point ground node, a marker on the
+  ground: its reference position and, for Orientation, rotation), 'point' (NodePosition of a NodePoint), 'body'
+  (MarkerBodyPosition or MarkerBodyRigid of an ObjectUserBody: local position, the rotation of localHT, the recordings
+  of positionUserFunction and positionJacobianUserFunction, with Orientation also rotationMatrixUserFunction and
+  rotationJacobianUserFunction - a missing one refuses the connector). The requestedMarkerType Orientation is no
+  longer refused; the kind key adds the marker types and the flat programs of the body functions.
+- `_ConnectorStates`: the arguments of the forceUserFunction - p by positionUserFunction, v = J_pos q_t, A = A_body
+  A_marker, omega = J_rot q_t; unit rotations and zero angular velocities without Orientation, as Exudyn - and the
+  Jacobians of each marker; the forces J_pos^T f + J_rot^T m, the torques after the force of each marker (stride 6).
+- `_ConnectorJacobian`: dF/dq = sum over markers of dF/dp J_pos + dF/dv (dJ_pos/dq q_t) + dF/dA dA/dq + dF/domega
+  (dJ_rot/dq q_t), dF/dq_t = dF/dv J_pos + dF/domega J_rot, by EvaluateJacobian of the force by each marker state - the
+  derivative by a matrix argument is (result x 9), row by row, which the check confirms - and of the body functions by
+  qTotal; then J_pos^T dF + J_rot^T dM and the derivatives of the Jacobians times the forces.
+- python/TestModels/symbolicUserRigidBodiesTest.py (of RG12.55.3) extended: the recorded chain as SymbolicSystem
+  (3 user bodies, 4 kinds of connectors, 4 loads); against SolveDynamic SolveExplicit RK44 1.0e-15 (250 steps),
+  SolveGeneralizedAlpha 3.2e-11 (50 steps, relativeTolerance 1e-10); the Jacobian of the residual 9.3e-11 to central
+  differences. Result 1.
+- **The times** (wall clock, one thread; 250 steps unless noted): SolveDynamic RK44 built-in items 0.014 s, recorded
+  user items 0.11 s, Python user items 1.7 s; SolveExplicit on the SymbolicSystem 0.96 s. Generalized-alpha: built-in
+  0.021 s, recorded 0.21 s; 50 steps: SolveDynamic recorded 0.041 s, SolveGeneralizedAlpha 1.30 s. Measured parts: one
+  Forces 0.58 ms - 120 calls of Evaluate at about 3 us each, the rest the Python around them -, Exudyn's right-hand
+  side with the recorded items about 0.11 ms; one ResidualJacobian 19.6 ms, one EvaluateJacobian by a matrix argument
+  29 us. So the symbolic system is not yet fast: about 8 times Exudyn with the same recordings for RK44, 30 times for
+  generalized-alpha, the cost being the per-object Python calls and the tree derivatives, not the arithmetic.
+- symbolicExplicitSolverTest.py read the markers of a connector kind as (indices, position) pairs; it reads the dicts.
+- docs/dev/design/symbolicSystem.md §2 and §7, symbolicUserItems.md §2/§3, docs/manual/revisions.md.
