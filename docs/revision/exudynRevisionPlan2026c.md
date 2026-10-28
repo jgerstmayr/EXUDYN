@@ -104,9 +104,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG12** Symbolic
   - RG12.51 Symbolic system models (3 open sub-steps)
   - RG12.53 Algorithmic symbolic functions: assignments by Assign, loops recorded as loops
-  - RG12.54 Derive the Jacobians of symbolic user functions by esym.Diff (1 open sub-step)
+  - RG12.54 Derive the Jacobians of symbolic user functions by esym.Diff (2 open sub-steps)
   - RG12.55 Collect user items with the interfaces of the built-in items in exudyn/misc/symbolicUserItems.py (2 open sub-steps)
-  - RG12.59 Differentiate a flat program by all its variables in one pass, in a memory block of the program
   - RG12.60 Call a recording with symbolic arguments, returning its expressions with the arguments substituted
 - **RG13** Total coordinates
   - RG13.1 Measure the solvers on more models, solvers and configurations, as the baseline
@@ -2053,6 +2052,11 @@ one Diff per entry; against central differences 6e-9, against the solver 1.2e-8 
 A function per node class that builds the derivative from the derivatives of its operands, then Optimize; its cost and
 size against RG12.54.1. Design docs/dev/design/symbolicSystem.md §5, option D.
 
+#### **OPEN_RG12.54.3** Give Diff of pow the derivative of a constant exponent for a base <= 0
+
+#3135 (found 2026-10-28 by symbolicOnePassJacobianTest.py of RG12.59): ExpressionPower::Diff is NaN for every base <= 0,
+so that x**2 of a negative x has no tree derivative; the one pass of #3116 already treats a constant exponent apart.
+
 ### **OPEN_RG12.55** Collect user items with the interfaces of the built-in items in exudyn/misc/symbolicUserItems.py
 
 #3111 (maintainer 2026-10-26): user items with symbolic user functions, created with the same interface as the built-in
@@ -2122,9 +2126,12 @@ CLOSED 2026-10-26 (#3114): an overload per function of exudyn.cMath with exudyn.
 
 CLOSED 2026-10-26 (#3115; maintainer 2026-10-26: Diff of esym.Vector and esym.Matrix first, the way proposed): DiffSeed (variable, component), DiffRef into a derivative buffer of each vector and matrix node, the rule of every operation, Vector.Diff, Matrix.Diff, Real.Diff(vector, component), UserFunction.EvaluateJacobian; SymbolicSystem.ResidualJacobian by it; symbolicVectorDiffTest.py 1.9e-10 to central differences. [log](exudynRevisionLog2026c.md#rg12-58)
 
-### **OPEN_RG12.59** Differentiate a flat program by all its variables in one pass, in a memory block of the program
+### **CLOSED_RG12.59** Differentiate a flat program by all its variables in one pass, in a memory block of the program
 
-#3116 (maintainer 2026-10-26: Diff may need a local heap; a step for it in Exudyn, possibly with a setting of its size, or allocation for now). Proposal in docs/dev/design/symbolicSystem.md §11 S2: one block per program sized at the first evaluation and kept, one per thread; a setting only for a fixed bound (GPU); an allocation per call not proposed. After RG12.58, its check; for the Jacobians of RG7.17.
+CLOSED 2026-10-28 (#3116; maintainer 2026-10-28: do RG12.59, the one-pass derivative in C++): FlatProgram::Differentiate,
+a rule per operation, the block of the program kept; UserFunction.EvaluateJacobian by it (6 us instead of 454 us for a
+rigid body force); SymbolicSystem.ResidualJacobian on the composed system, SolveGeneralizedAlpha 0.96 s -> 0.027 s;
+symbolicOnePassJacobianTest.py. [log](exudynRevisionLog2026c.md#rg12-59)
 
 ### **OPEN_RG12.60** Call a recording with symbolic arguments, returning its expressions with the arguments substituted
 

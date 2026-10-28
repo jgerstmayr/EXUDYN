@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.238.dev1
+- Exudyn version = 1.13.239.dev1
 - last change = 2026-10-28
-- Number of issues = 3135
-- Number of resolved issues = 3015 (238 in current version)
+- Number of issues = 3136
+- Number of resolved issues = 3016 (239 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9045,9 +9045,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Call a symbolic recording with symbolic arguments: its expressions with the arguments substituted (#3117)
   - description: revision2026c step RG12.60 (maintainer 2026-10-26): a recording evaluated with exudyn.symbolic arguments returns a copy of its expressions in which its argument variables are replaced by the given expressions, as Optimize copies nodes; for one expression per kind of the symbolic system (the residual M q\_tt - f), for the forces of connectors composed with the marker kinematics of the bodies, and for the export of one program per kind (RG12.51.5).
   - date raised: 2026-10-26
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` The forward derivative of a flat program by all its variables in one pass, with a local memory of the program (#3116)
-  - description: revision2026c step RG12.59 (maintainer 2026-10-26): per slot of the flat program its value and the derivatives by n variables, in one pass in the order of the program, for the Jacobians of the symbolic user functions in C++ (the position and rotation Jacobians of NodeUser, ObjectUserBody, MarkerBodyUser, the connector and joint Jacobians, RG7.17). The memory of the derivatives (slots x n) is one block of the program, sized at the first evaluation and kept, one per thread in the parallel evaluation; a fixed size by a setting only if a bound must be known in advance. Design docs/dev/design/symbolicSystem.md.
-  - date raised: 2026-10-26
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` exudyn/misc/symbolicUserItems.py: user items with the interfaces of the built-in items (#3111)
   - description: revision2026c step RG12.55 (maintainer 2026-10-26): a collection of user items with symbolic user functions whose creation has the same interface as the built-in items of itemInterface (a user rigid body as ObjectRigidBody, parameters the user item lacks refused or ignored with a note), so that the same systems are built with the same calls: at least mass point 3D, rigid body 3D, revolute, prismatic, spherical and distance joint, spring-damper, torsional spring-damper, sphere-sphere contact; first the list of what a good representation of multibody systems needs. Before the symbolic system model goes deeper.
   - date raised: 2026-10-26
@@ -9481,6 +9478,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` Diff of pow is NaN for a base \<= 0 also with a constant exponent, so x\*\*2 of a negative x has no derivative (#3135)
+  - description: ExpressionPower::Diff returns NaN whenever the base is \<= 0, also when the exponent does not depend on the variable, where d(a^b) = b a^(b-1) da is defined; x\*\*2 records as pow, so the tree derivative (Real.Diff, Vector.Diff, EvaluateJacobian with flatEvaluation = False) of any square of a negative value is NaN. Found 2026-10-28 by symbolicOnePassJacobianTest.py (\#3116), whose one pass treats a constant exponent apart.
+  - date raised: 2026-10-28
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
   - date raised: 2026-10-23

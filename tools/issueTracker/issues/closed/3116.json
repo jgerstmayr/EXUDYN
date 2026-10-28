@@ -2,10 +2,14 @@
   "number": 3116,
   "title": "The forward derivative of a flat program by all its variables in one pass, with a local memory of the program",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "revision2026c step RG12.59 (maintainer 2026-10-26): per slot of the flat program its value and the derivatives by n variables, in one pass in the order of the program, for the Jacobians of the symbolic user functions in C++ (the position and rotation Jacobians of NodeUser, ObjectUserBody, MarkerBodyUser, the connector and joint Jacobians, RG7.17). The memory of the derivatives (slots x n) is one block of the program, sized at the first evaluation and kept, one per thread in the parallel evaluation; a fixed size by a setting only if a bound must be known in advance. Design docs/dev/design/symbolicSystem.md.",
   "dateRaised": "2026-10-26",
-  "deadline": "2027-04-24"
+  "deadline": "2027-04-24",
+  "dateResolved": "2026-10-28 10:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "UserFunction.EvaluateJacobian differentiates a recording by all components of an argument in one pass over its flat program, in a memory block of the program kept between calls, each operation by its own rule (a rigid body force by its 6 coordinates in 6 us instead of 454 us); SymbolicSystem.ResidualJacobian uses it on the composed system, SolveGeneralizedAlpha 35 times faster",
+  "resolvedInVersion": "1.13.239"
 }

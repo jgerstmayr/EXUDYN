@@ -903,9 +903,11 @@ class SymbolicSystem(SymbolicSystemBase):
 
     def ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
                          sparse=False, y=None):
-        """the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, object by object
-        by Diff of the recordings (UserFunction.EvaluateJacobian, #3115): exact, one derivative of the tree per column;
-        factor_q_tt=1 alone gives the mass matrix, a Newton step of an implicit integrator combines the three
+        """the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, exact by the
+        derivatives of the recordings (UserFunction.EvaluateJacobian, #3115, in one pass over the flat program #3116):
+        of the composed system up to _denseMassMatrixSize coordinates - two calls, a dense Jacobian -, else object by
+        object, sparse; factor_q_tt=1 alone gives the mass matrix, a Newton step of an implicit integrator combines
+        the three
 
         Args:
             q: the ODE2 coordinates, of size nODE2; None: zero
@@ -922,6 +924,20 @@ class SymbolicSystem(SymbolicSystemBase):
             the matrix (nODE2 x nODE2)
         """
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
+        if self.composed is not None and self.nODE2 <= _denseMassMatrixSize: #r = M q_tt - f of the two recordings
+            composed = self.composed
+            J = np.zeros((self.nODE2, self.nODE2))
+            for (name, factor) in [('q', factor_q), ('q_t', factor_q_t)]:
+                if factor != 0.:
+                    J -= factor*np.array(composed['forces'].EvaluateJacobian(name, self.mbs, t, 0, q, q_t), dtype=float)
+            (rows, columns) = (composed['rows'], composed['columns'])
+            if factor_q != 0. and len(rows) and not self._constantMassMatrix: #d(M q_tt)/dq
+                dM = np.array(composed['massMatrix'].EvaluateJacobian('q', self.mbs, t, 0, q, q_t), dtype=float)[:len(rows)]
+                np.add.at(J, rows, factor_q*dM*q_tt[columns][:, np.newaxis])
+            if factor_q_tt != 0. and len(rows):
+                np.add.at(J, (rows, columns), factor_q_tt*self.MassMatrixTriplets(q, q_t, t)[2])
+            (r, c) = np.nonzero(J)
+            return self._Matrix(r, c, J[r, c], sparse)
         rows, columns, values = [], [], []
         for kind in self.kinds:
             for i in range(len(kind.objects)):

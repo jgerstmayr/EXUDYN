@@ -84,6 +84,9 @@ symbolicSystemSpringDamper.py and symbolicSystemRigidBodyPendulum.py show them. 
 and the mass matrix by two recordings of the composed system, one call each (`composeSystem=True`, #3131). The
 interface `SymbolicSystemBase` and its solvers have ODE1 and algebraic coordinates, as Exudyn's: `SolveExplicit`
 integrates ODE1 coordinates, `SolveGeneralizedAlpha` also index-3 constraints, and `NumpySystem` takes both (#3134).
+`UserFunction.EvaluateJacobian` differentiates a recording by all components of an argument in one pass over its flat
+program, in a memory block of the program kept between the calls (#3116); `SymbolicSystem.ResidualJacobian` uses it on
+the composed system.
 **ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
 two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
 also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a

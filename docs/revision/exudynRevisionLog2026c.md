@@ -4047,3 +4047,38 @@ currently not capable of - they also need to be extended)".)*
   the start; the symbolic solvers do the same, to compare.
 - SymbolicSystem still refuses items with ODE1 and algebraic coordinates (joints RG12.51.4, ODE1 items later).
 - docs/dev/design/symbolicSystem.md §6, docs/manual/revisions.md.
+
+<a id="rg12-59"></a>
+### RG12.59 — the forward derivative of a flat program in one pass, in a block of the program (2026-10-28, #3116)
+*(Maintainer 2026-10-28: "Then do the suggested RG12.59: the one-pass derivative in C++.")*
+- Before: EvaluateJacobian walked the tree once per component of the argument, and every rule evaluated its operands
+  again as trees - shared subexpressions many times: 454 us for the 6 columns of a rigid body force whose evaluation
+  takes 3 us.
+- src/Linalg/Symbolic.h `FlatProgram`: `Differentiate(variable, n, scalarVariable)`, `ResultDerivative(i)`; members
+  `derivatives` (the block: per slot its components times n), `derivativeOffsets`, `derivativeRules`,
+  `operandDerivatives`; Clear() drops the rules. src/Linalg/Symbolic.cpp: `DerivativeRule`, `FindDerivativeRule` (once
+  per program, by FlatName() and the kinds of the operands), `Differentiate`: the variable a unit matrix; rules for +, -,
+  *, /, pos, neg, sin ... atanh (with the domains of their Diff), pow (a constant exponent by b a^(b-1) da also for a
+  base <= 0 - the tree's Diff is NaN there, #3135 -, else as Diff), atan2, IfThenElse (the branch of the condition),
+  zero for the comparisons, Not, isfinite, sign, round, ceil, floor (the conditions are slots of the program and were
+  differentiated otherwise, which raises), the dot product, NormL2, the components of vectors and matrices, the vector
+  of components, vector +, -, scalar times, A v, A^T v (vector@matrix), pos, neg, multiply, the matrix of components,
+  matrix +, -, scalar times, pos, neg, A B, A^T; every other node (abs, min, max, mod, item outputs, leaves) by its Diff
+  or DiffRef per component, as before. No allocation after the block has its size; a thread copy has its own program.
+- src/Linalg/SymbolicUtilities.h `PyEvaluateJacobian`: with UseFlatProgram() Evaluate, Differentiate and the result
+  block; else the tree, as before (flatEvaluation = False).
+- python/exudyn/misc/symbolicSystem.py `SymbolicSystem.ResidualJacobian`: up to _denseMassMatrixSize coordinates the
+  Jacobian of the composed recordings - forces by q and q_t, d(M q_tt)/dq by the mass matrix entries, M - in two
+  calls; above, object by object as before (the composed Jacobian is dense).
+- Measured (the chain of symbolicUserRigidBodiesTest.py): EvaluateJacobian of the rigid body force by qTotal 454 -> 6.1
+  us, its mass matrix 243 -> 6.6 us, a torsional spring-damper force by a rotation matrix 29 -> 4.5 us, by a position
+  12 -> 4 us; one pass and tree equal to the last bit there. ResidualJacobian per object 19.6 -> 9.4 ms, composed
+  further down; SolveGeneralizedAlpha, 50 steps, 0.96 s -> 0.027 s (SolveDynamic with the same recordings 0.039 s;
+  3.2e-11 to it as before).
+- python/TestModels/symbolicOnePassJacobianTest.py: a force and a mass matrix recording with every operation that has
+  a rule, at 4 random states, by qTotal and q_t: one pass against the tree 3e-18, against central differences 5.9e-10,
+  no NaN; a third recording with pow of a negative base: the tree gives NaN (80 entries), the one pass the derivative.
+  Result 1. The first version of the test compared NaN and passed silently, and squares x**2 of negative coordinates
+  made the tree NaN everywhere - the test compares only finite entries and counts the NaN now.
+- #3135 raised for the tree's pow, plan step RG12.54.3.
+- docs/dev/design/symbolicSystem.md §11 S2, docs/manual/revisions.md.

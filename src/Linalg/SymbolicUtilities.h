@@ -766,7 +766,8 @@ public:
 		//}
 	}
 
-	//! the Jacobian of the result by the argument of this name, at the arguments of the call (as for Evaluate), by Diff
+	//! the Jacobian of the result by the argument of this name, at the arguments of the call (as for Evaluate): with the
+	//! flat evaluation in one pass over the flat program, all components of the argument at once (#3116), else by Diff
 	//! of the tree, one column per component of the argument (#3115): a Real result gives a vector, a vector result a
 	//! matrix (size of result x size of argument), a matrix result an array (rows x columns x size of argument)
 	py::object PyEvaluateJacobian(const STDstring& argumentName, const py::args& args)
@@ -794,18 +795,30 @@ public:
 		CHECKandTHROW(itemOutputs.empty(), "symbolic user function " + functionName + ": EvaluateJacobian: the function reads outputs of items, which have no derivative");
 		Index columns = (size < 0) ? 1 : size;
 		FlatNode root = ResultNode();
-		CheckTreeDepth(root, "EvaluateJacobian()");
+		const Real* onePass = nullptr; //the derivatives of the result, component c by component j at [c*columns + j]
+		if (UseFlatProgram())
+		{
+			flatProgram.Evaluate();
+			flatProgram.Differentiate(variable, columns, size < 0);
+			onePass = flatProgram.ResultDerivative(0);
+		}
+		else { CheckTreeDepth(root, "EvaluateJacobian()"); }
 		auto Seed = [&](Index j) { return DiffSeed(variable, size < 0 ? -1 : j); };
 		if (returnValue.IsReal())
 		{
 			py::array_t<Real> jacobian(columns);
-			for (Index j = 0; j < columns; j++) { jacobian.mutable_at(j) = root.node ? ((const ExpressionBase*)root.node)->Diff(Seed(j)) : 0.; }
+			for (Index j = 0; j < columns; j++) { jacobian.mutable_at(j) = onePass ? onePass[j] : (root.node ? ((const ExpressionBase*)root.node)->Diff(Seed(j)) : 0.); }
 			return std::move(jacobian);
 		}
 		else if (returnValue.IsVector())
 		{
 			Index rows = (Index)py::len(value);
 			py::array_t<Real> jacobian(std::vector<ptrdiff_t>{ rows, columns });
+			if (onePass)
+			{
+				for (Index i = 0; i < rows; i++) { for (Index j = 0; j < columns; j++) { jacobian.mutable_at(i, j) = onePass[i*columns + j]; } }
+				return std::move(jacobian);
+			}
 			for (Index j = 0; j < columns; j++)
 			{
 				const ResizableConstVector* column = root.node ? &((const VectorExpressionBase*)root.node)->DiffRef(Seed(j)) : nullptr;
@@ -819,6 +832,17 @@ public:
 			Index rows = (Index)valueArray.shape(0);
 			Index matrixColumns = (Index)valueArray.shape(1);
 			py::array_t<Real> jacobian(std::vector<ptrdiff_t>{ rows, matrixColumns, columns });
+			if (onePass)
+			{
+				for (Index i = 0; i < rows; i++)
+				{
+					for (Index k = 0; k < matrixColumns; k++)
+					{
+						for (Index j = 0; j < columns; j++) { jacobian.mutable_at(i, k, j) = onePass[(i*matrixColumns + k)*columns + j]; }
+					}
+				}
+				return std::move(jacobian);
+			}
 			for (Index j = 0; j < columns; j++)
 			{
 				const ResizableMatrix* column = root.node ? &((const MatrixExpressionBase*)root.node)->DiffRef(Seed(j)) : nullptr;

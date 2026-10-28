@@ -369,7 +369,7 @@ was an `operator[]` node without derivative, and the vector and matrix operation
   symbolicVectorDiffTest.py: 18 vector and matrix expressions by a scalar and by the components of a vector, against
   central differences, 1.9e-10; EvaluateJacobian of a force and a mass matrix recording, 1.1e-10; the refusals.
 
-**S2 the forward derivative of a flat program in one pass (RG12.59, #3116).** S1 walks the tree once per seed, n times
+**S2 the forward derivative of a flat program in one pass (RG12.59, #3116, done).** S1 walks the tree once per seed, n times
 for n coordinates. Over the flat program, each slot keeps its value and its n derivatives, computed in the order of the
 program from those of its operands - one pass. The memory is slots x n numbers (x the size of a vector or matrix slot):
 **one block per program, sized at the first evaluation from the program and kept**, a local memory of the program - so
@@ -379,6 +379,19 @@ bound must be known in advance (a GPU kernel); an allocation per call would be s
 harder to remove later - not proposed. It is the runtime Jacobian of the symbolic user functions in C++: the position
 and rotation Jacobians of NodeUser, ObjectUserBody and MarkerBodyUser, the connector, and a joint without
 jacobianUserFunction (RG7.17). After S1, which is its check.
+**As implemented**: `FlatProgram::Differentiate(variable, n, scalarVariable)` after `Evaluate()`: the derivatives of every
+slot, component after component with n columns, in one block of the program (`derivatives`, offsets per slot from the
+sizes of this evaluation), which grows once and is kept; each operation by a rule found once per program from its
+`FlatName()` and the kinds of its operands - the arithmetic, the functions sin to atanh, pow (a constant exponent also
+for a base <= 0, which the tree's Diff gives as NaN, #3135), atan2, IfThenElse by its condition, the comparisons and
+other piecewise constant functions as zero, the dot product, the norm, the components, the vector and matrix
+operations; a node without rule (abs, min, max, mod, an item output) by its Diff or DiffRef per component, as before.
+`UserFunction.EvaluateJacobian` uses it with the flat evaluation, the tree with `flatEvaluation = False`. Measured on
+the rigid body of symbolicUserRigidBodiesTest.py: the Jacobian of the force by qTotal (6 columns) 454 us by the tree,
+6.1 us in one pass; of the mass matrix 243 us and 6.6 us; of a connector force by a rotation matrix 29 us and 4.5 us.
+With it, `SymbolicSystem.ResidualJacobian` takes the Jacobian of the two recordings of the composed system (up to 200
+coordinates; per object above): SolveGeneralizedAlpha on the chain of three rigid bodies, 50 steps, 0.96 s -> 0.027 s,
+SolveDynamic with the same recordings 0.039 s.
 
 **S3 a recording called with symbolic arguments (RG12.60, #3117).** A recording evaluates with numbers only. Called
 with exudyn.symbolic arguments, it returns a copy of its expressions in which its argument variables are replaced by

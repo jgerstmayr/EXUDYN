@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 234 | 1.13.238 |
+| 1.13 | Newborn | 235 | 1.13.239 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.239** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The forward derivative of a flat program by all its variables in one pass, with a local memory of the program (#3116)
+  - description: revision2026c step RG12.59 (maintainer 2026-10-26): per slot of the flat program its value and the derivatives by n variables, in one pass in the order of the program, for the Jacobians of the symbolic user functions in C++ (the position and rotation Jacobians of NodeUser, ObjectUserBody, MarkerBodyUser, the connector and joint Jacobians, RG7.17). The memory of the derivatives (slots x n) is one block of the program, sized at the first evaluation and kept, one per thread in the parallel evaluation; a fixed size by a setting only if a bound must be known in advance. Design docs/dev/design/symbolicSystem.md.
+  - **notes:** UserFunction.EvaluateJacobian differentiates a recording by all components of an argument in one pass over its flat program, in a memory block of the program kept between calls, each operation by its own rule (a rigid body force by its 6 coordinates in 6 us instead of 454 us); SymbolicSystem.ResidualJacobian uses it on the composed system, SolveGeneralizedAlpha 35 times faster
+  - date resolved: **2026-10-28 10:24**, date raised: 2026-10-26
 - **1.13.238** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystemBase, SolveExplicit, SolveGeneralizedAlpha: ODE1 and algebraic coordinates (#3134)
   - description: revision2026c step RG12.51.13 (maintainer 2026-10-28: include ODE1 and AE in the symbolic system and solver so that there is no gap; a future object may couple all kinds of coordinates): the interface nODE1, nAE, InitialStateODE1, Forces(..., y), ODE1RightHandSide, AlgebraicEquations, ReactionForces, SystemResidual and SystemJacobian; NumpySystem with them; SolveExplicit with ODE1 in the stages, refusing constraints; SolveGeneralizedAlpha with the trapezoidal rule for ODE1 and index-3 constraints with Exudyn's scaling and initial accelerations; a test against SolveDynamic. SymbolicSystem takes the items with such coordinates later.
   - **notes:** exudyn.misc.symbolicSystem: SymbolicSystemBase has ODE1 and algebraic coordinates (ODE1RightHandSide, AlgebraicEquations, ReactionForces, SystemResidual, SystemJacobian), NumpySystem takes them, SolveExplicit integrates ODE1 coordinates and SolveGeneralizedAlpha ODE1 coordinates and index-3 constraints as Exudyn's implicit solver

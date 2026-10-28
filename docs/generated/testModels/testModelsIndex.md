@@ -198,6 +198,7 @@ symbolicGeneralizedAlphaTest
 symbolicItemOutputTest
 symbolicModuleTest
 symbolicNumpyCompatibilityTest
+symbolicOnePassJacobianTest
 symbolicOptimizeTest
 symbolicSparseMatrixTest
 symbolicSystemEquationsTest

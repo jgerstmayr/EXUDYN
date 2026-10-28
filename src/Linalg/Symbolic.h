@@ -2157,6 +2157,13 @@ class FlatProgram
 	std::vector<Index> results;		 //!< the slots of the results, in the order of the roots
 	mutable std::vector<FlatValue> slots;		   //!< the values of one evaluation
 	mutable std::vector<FlatValue> operandValues;   //!< the operands of one operation
+	//the forward derivative by the components of one variable in one pass (#3116): the derivatives of every slot,
+	//component after component with n columns each, in one block of the program, sized at the first call and kept;
+	//the rule of each operation, found at the first call
+	mutable std::vector<Real> derivatives;
+	mutable std::vector<Index> derivativeOffsets;
+	mutable std::vector<int> derivativeRules;
+	mutable std::vector<const Real*> operandDerivatives;
 
 	static Index NumberOfOperands(const FlatNode& node)
 	{
@@ -2224,7 +2231,7 @@ public:
 
 	//! true, if Build has been called with at least one root
 	bool IsBuilt() const { return results.size() != 0; }
-	void Clear() { operations.clear(); operandSlots.clear(); results.clear(); slots.clear(); operandValues.clear(); }
+	void Clear() { operations.clear(); operandSlots.clear(); results.clear(); slots.clear(); operandValues.clear(); derivativeRules.clear(); }
 
 	//! compute all operations in their order
 	void Evaluate() const
@@ -2245,6 +2252,14 @@ public:
 			k++;
 		}
 	}
+	//! after Evaluate(): the derivatives of all slots by the n components of variable - a named Real (n = 1), vector or
+	//! matrix (n = rows*columns) node of the recording - in one pass in the order of the program, each operation by
+	//! its rule from the values and derivatives of its operands; a node without rule (a leaf other than the variable,
+	//! IfThenElse, abs, min, ...) by Diff or DiffRef per component, as before (#3116)
+	void Differentiate(const void* variable, Index n, bool scalarVariable) const;
+	//! the derivatives of result i after Differentiate: component c by component j of the variable at [c*n + j]
+	const Real* ResultDerivative(Index i) const { return derivatives.data() + derivativeOffsets[results[i]]; }
+
 	//! the value of result i of the last evaluation
 	Real Result(Index i) const { return slots[results[i]].real; }
 	const ResizableConstVector& VectorResult(Index i) const { return *slots[results[i]].vector; }

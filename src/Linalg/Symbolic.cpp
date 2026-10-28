@@ -1706,6 +1706,341 @@ py::array_t<Real> PyMatrixDiff(const SymbolicRealMatrix& item, const DiffSeed& s
 	return EPyUtils::ToPython(item.GetExpression()->DiffRef(seed));
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the forward derivative of a flat program in one pass (#3116, design docs/dev/design/symbolicSystem.md §11 S2)
+
+//! the rules of FlatProgram::Differentiate; Fallback: Diff or DiffRef of the node per component of the variable
+enum DerivativeRule
+{
+	Fallback = 0, Variable, Zero, RealIfThenElse,
+	RealPlus, RealMinus, RealMul, RealDiv, RealPos, RealNeg, RealSin, RealCos, RealTan, RealExp, RealLog, RealSqrt,
+	RealASin, RealACos, RealATan, RealSinh, RealCosh, RealTanh, RealASinh, RealACosh, RealATanh, RealPow, RealAtan2,
+	RealDot, RealNorm, RealVectorComponent, RealMatrixComponent,
+	VectorComponents, VectorPlus, VectorMinus, VectorScalar, VectorMatrixVector, VectorMatrixTransposedVector,
+	VectorPos, VectorNeg, VectorMultiply,
+	MatrixComponents, MatrixPlus, MatrixMinus, MatrixScalar, MatrixPos, MatrixNeg, MatrixMatrix, MatrixTransposed
+};
+
+static const char* FlatNameOf(const FlatNode& node)
+{
+	switch (node.kind)
+	{
+	case FlatKind::Real: return ((const ExpressionBase*)node.node)->FlatName();
+	case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->FlatName();
+	default: return ((const MatrixExpressionBase*)node.node)->FlatName();
+	}
+}
+
+//! the rule of an operation by its kind, its name and the kinds of its operands
+static int FindDerivativeRule(const FlatNode& node, const std::vector<FlatKind>& operandKinds)
+{
+	const STDstring name = FlatNameOf(node);
+	Index n = (Index)operandKinds.size();
+	auto Kinds = [&](FlatKind a, FlatKind b) { return n == 2 && operandKinds[0] == a && operandKinds[1] == b; };
+	if (n == 0) { return Fallback; }
+	if (node.kind == FlatKind::Real)
+	{
+		//piecewise constant: the conditions of IfThenElse; their derivative is zero where it exists
+		static const std::unordered_map<STDstring, int> constant = { {"==", Zero}, {"!=", Zero}, {">", Zero}, {">=", Zero},
+			{"<=", Zero}, {"<", Zero}, {"Not", Zero}, {"isfinite", Zero}, {"sign", Zero}, {"round", Zero}, {"ceil", Zero},
+			{"floor", Zero} };
+		if (constant.find(name) != constant.end()) { return Zero; }
+		if (n == 1 && operandKinds[0] == FlatKind::Real)
+		{
+			static const std::unordered_map<STDstring, int> unary = { {"pos", RealPos}, {"neg", RealNeg}, {"sin", RealSin},
+				{"cos", RealCos}, {"tan", RealTan}, {"exp", RealExp}, {"log", RealLog}, {"sqrt", RealSqrt}, {"asin", RealASin},
+				{"acos", RealACos}, {"atan", RealATan}, {"sinh", RealSinh}, {"cosh", RealCosh}, {"tanh", RealTanh},
+				{"asinh", RealASinh}, {"acosh", RealACosh}, {"atanh", RealATanh} };
+			auto found = unary.find(name);
+			return found == unary.end() ? Fallback : found->second;
+		}
+		if (Kinds(FlatKind::Real, FlatKind::Real))
+		{
+			static const std::unordered_map<STDstring, int> binary = { {"+", RealPlus}, {"-", RealMinus}, {"*", RealMul},
+				{"/", RealDiv}, {"pow", RealPow}, {"atan2", RealAtan2} };
+			auto found = binary.find(name);
+			return found == binary.end() ? Fallback : found->second;
+		}
+		if (name == "IfThenElse" && n == 3) { return RealIfThenElse; }
+		if (name == "@" && Kinds(FlatKind::Vector, FlatKind::Vector)) { return RealDot; }
+		if (name == "NormL2" && n == 1 && operandKinds[0] == FlatKind::Vector) { return RealNorm; }
+		if (name == "component" && n == 2 && operandKinds[0] == FlatKind::Vector) { return RealVectorComponent; }
+		if (name == "component" && n == 3 && operandKinds[0] == FlatKind::Matrix) { return RealMatrixComponent; }
+		return Fallback;
+	}
+	if (node.kind == FlatKind::Vector)
+	{
+		if (name == "vector") { return VectorComponents; }
+		if (name == "+" && Kinds(FlatKind::Vector, FlatKind::Vector)) { return VectorPlus; }
+		if (name == "-" && Kinds(FlatKind::Vector, FlatKind::Vector)) { return VectorMinus; }
+		if (name == "*" && Kinds(FlatKind::Real, FlatKind::Vector)) { return VectorScalar; }
+		if (name == "@" && Kinds(FlatKind::Matrix, FlatKind::Vector)) { return VectorMatrixVector; }
+		if (name == "vector@matrix" && Kinds(FlatKind::Matrix, FlatKind::Vector)) { return VectorMatrixTransposedVector; }
+		if (name == "pos" && n == 1) { return VectorPos; }
+		if (name == "neg" && n == 1) { return VectorNeg; }
+		if (name == "multiply" && Kinds(FlatKind::Vector, FlatKind::Vector)) { return VectorMultiply; }
+		return Fallback;
+	}
+	if (name == "matrix") { return MatrixComponents; }
+	if (name == "+" && Kinds(FlatKind::Matrix, FlatKind::Matrix)) { return MatrixPlus; }
+	if (name == "-" && Kinds(FlatKind::Matrix, FlatKind::Matrix)) { return MatrixMinus; }
+	if (name == "*" && Kinds(FlatKind::Real, FlatKind::Matrix)) { return MatrixScalar; }
+	if (name == "pos" && n == 1) { return MatrixPos; }
+	if (name == "neg" && n == 1) { return MatrixNeg; }
+	if (name == "@" && Kinds(FlatKind::Matrix, FlatKind::Matrix)) { return MatrixMatrix; }
+	if (name == "T" && n == 1) { return MatrixTransposed; }
+	return Fallback;
+}
+
+//! the number of components of a slot: 1, the size of a vector or rows*columns of a matrix
+static Index SlotComponents(const FlatNode& node, const FlatValue& value)
+{
+	switch (node.kind)
+	{
+	case FlatKind::Real: return 1;
+	case FlatKind::Vector: return value.vector->NumberOfItems();
+	default: return value.matrix->NumberOfRows()*value.matrix->NumberOfColumns();
+	}
+}
+
+void FlatProgram::Differentiate(const void* variable, Index n, bool scalarVariable) const
+{
+	const Index numberOfOperations = (Index)operations.size();
+	if ((Index)derivativeRules.size() != numberOfOperations) //the rules, once per program
+	{
+		derivativeRules.resize(numberOfOperations);
+		std::vector<FlatKind> kinds;
+		for (Index k = 0; k < numberOfOperations; k++)
+		{
+			const Operation& operation = operations[k];
+			kinds.resize(operation.numberOfOperands);
+			for (Index i = 0; i < operation.numberOfOperands; i++) { kinds[i] = operations[operandSlots[operation.firstOperand + i]].node.kind; }
+			derivativeRules[k] = FindDerivativeRule(operation.node, kinds);
+		}
+		operandDerivatives.resize(operandValues.size());
+	}
+	//the offsets of the slots in the block; the sizes of vectors and matrices are those of this evaluation
+	derivativeOffsets.resize(numberOfOperations + 1);
+	derivativeOffsets[0] = 0;
+	for (Index k = 0; k < numberOfOperations; k++) { derivativeOffsets[k + 1] = derivativeOffsets[k] + SlotComponents(operations[k].node, slots[k])*n; }
+	derivatives.resize(derivativeOffsets[numberOfOperations]); //allocates only when the block grows
+
+	for (Index k = 0; k < numberOfOperations; k++)
+	{
+		const Operation& operation = operations[k];
+		const FlatNode& node = operation.node;
+		Real* out = derivatives.data() + derivativeOffsets[k];
+		const Index m = SlotComponents(node, slots[k]); //components of this node
+		int rule = (node.node == variable) ? (int)Variable : derivativeRules[k];
+		const FlatValue* v = operandValues.data();
+		const Real** d = operandDerivatives.data();
+		for (Index i = 0; i < operation.numberOfOperands; i++)
+		{
+			Index slot = operandSlots[operation.firstOperand + i];
+			operandValues[i] = slots[slot];
+			operandDerivatives[i] = derivatives.data() + derivativeOffsets[slot];
+		}
+		const Real nan = std::numeric_limits<Real>::quiet_NaN();
+		switch (rule)
+		{
+		case Variable: //the unit matrix
+			for (Index c = 0; c < m; c++) { for (Index j = 0; j < n; j++) { out[c*n + j] = (c == j) ? 1. : 0.; } }
+			break;
+		case Zero: for (Index i = 0; i < m*n; i++) { out[i] = 0.; } break;
+		case RealIfThenElse: { const Real* chosen = v[0].real ? d[1] : d[2]; for (Index j = 0; j < n; j++) { out[j] = chosen[j]; } break; }
+		case RealPlus: for (Index j = 0; j < n; j++) { out[j] = d[0][j] + d[1][j]; } break;
+		case RealMinus: for (Index j = 0; j < n; j++) { out[j] = d[0][j] - d[1][j]; } break;
+		case RealMul: for (Index j = 0; j < n; j++) { out[j] = d[0][j]*v[1].real + v[0].real*d[1][j]; } break;
+		case RealDiv:
+		{
+			Real den = v[1].real;
+			for (Index j = 0; j < n; j++) { out[j] = (den == 0) ? nan : (d[0][j]*den - v[0].real*d[1][j])/(den*den); }
+			break;
+		}
+		case RealPos: for (Index j = 0; j < n; j++) { out[j] = d[0][j]; } break;
+		case RealNeg: for (Index j = 0; j < n; j++) { out[j] = -d[0][j]; } break;
+		case RealPow: //as ExpressionPower::Diff; a constant exponent also for a base <= 0
+		{
+			Real a = v[0].real, b = v[1].real;
+			bool constantExponent = true;
+			for (Index j = 0; j < n; j++) { constantExponent &= (d[1][j] == 0.); }
+			for (Index j = 0; j < n; j++)
+			{
+				if (constantExponent) { out[j] = (d[0][j] == 0.) ? 0. : b*EM::Pow(a, b - 1)*d[0][j]; }
+				else { out[j] = (a <= 0) ? nan : b*EM::Pow(a, b - 1)*d[0][j] + EM::Log(a)*EM::Pow(a, b)*d[1][j]; }
+			}
+			break;
+		}
+		case RealAtan2:
+		{
+			Real y = v[0].real, x = v[1].real, den = y*y + x*x;
+			for (Index j = 0; j < n; j++) { out[j] = (den == 0) ? nan : (x*d[0][j] - y*d[1][j])/den; }
+			break;
+		}
+		case RealSin: case RealCos: case RealTan: case RealExp: case RealLog: case RealSqrt: case RealASin: case RealACos:
+		case RealATan: case RealSinh: case RealCosh: case RealTanh: case RealASinh: case RealACosh: case RealATanh:
+		{
+			Real x = v[0].real, f = slots[k].real, factor = 0.;
+			switch (rule) //f'(x), with the domains of the Diff of each function
+			{
+			case RealSin: factor = EM::Cos(x); break;
+			case RealCos: factor = -EM::Sin(x); break;
+			case RealTan: factor = 1 + f*f; break;
+			case RealExp: factor = f; break;
+			case RealLog: factor = 1/x; break;
+			case RealSqrt: factor = (x <= 0) ? nan : 0.5/f; break;
+			case RealASin: factor = (x <= -1 || x >= 1) ? nan : 1/std::sqrt(1 - x*x); break;
+			case RealACos: factor = (x <= -1 || x >= 1) ? nan : -1/std::sqrt(1 - x*x); break;
+			case RealATan: factor = 1/(1 + x*x); break;
+			case RealSinh: factor = EM::Cosh(x); break;
+			case RealCosh: factor = EM::Sinh(x); break;
+			case RealTanh: factor = 1 - f*f; break;
+			case RealASinh: factor = 1/std::sqrt(x*x + 1); break;
+			case RealACosh: factor = (x < 1) ? nan : 1/std::sqrt(x*x - 1); break;
+			default: factor = (x <= -1 || x >= 1) ? nan : 1/(1 - x*x); break; //atanh
+			}
+			for (Index j = 0; j < n; j++) { out[j] = factor*d[0][j]; }
+			break;
+		}
+		case RealDot:
+		{
+			const ResizableConstVector& a = *v[0].vector, & b = *v[1].vector;
+			for (Index j = 0; j < n; j++)
+			{
+				Real sum = 0.;
+				for (Index c = 0; c < a.NumberOfItems(); c++) { sum += d[0][c*n + j]*b[c] + a[c]*d[1][c*n + j]; }
+				out[j] = sum;
+			}
+			break;
+		}
+		case RealNorm:
+		{
+			const ResizableConstVector& a = *v[0].vector;
+			Real norm = slots[k].real;
+			for (Index j = 0; j < n; j++)
+			{
+				Real sum = 0.;
+				for (Index c = 0; c < a.NumberOfItems(); c++) { sum += a[c]*d[0][c*n + j]; }
+				out[j] = (norm == 0) ? nan : sum/norm;
+			}
+			break;
+		}
+		case RealVectorComponent:
+		{
+			Index c = (Index)v[1].real;
+			for (Index j = 0; j < n; j++) { out[j] = d[0][c*n + j]; }
+			break;
+		}
+		case RealMatrixComponent:
+		{
+			Index c = (Index)v[1].real*v[0].matrix->NumberOfColumns() + (Index)v[2].real;
+			for (Index j = 0; j < n; j++) { out[j] = d[0][c*n + j]; }
+			break;
+		}
+		case VectorComponents: case MatrixComponents: //component c is operand c
+			for (Index c = 0; c < m; c++) { for (Index j = 0; j < n; j++) { out[c*n + j] = d[c][j]; } }
+			break;
+		case VectorPlus: case MatrixPlus: for (Index i = 0; i < m*n; i++) { out[i] = d[0][i] + d[1][i]; } break;
+		case VectorMinus: case MatrixMinus: for (Index i = 0; i < m*n; i++) { out[i] = d[0][i] - d[1][i]; } break;
+		case VectorPos: case MatrixPos: for (Index i = 0; i < m*n; i++) { out[i] = d[0][i]; } break;
+		case VectorNeg: case MatrixNeg: for (Index i = 0; i < m*n; i++) { out[i] = -d[0][i]; } break;
+		case VectorScalar: case MatrixScalar: //s x: ds x + s dx
+		{
+			Real factor = v[0].real;
+			const Real* x = (rule == VectorScalar) ? v[1].vector->GetDataPointer() : v[1].matrix->GetDataPointer();
+			for (Index c = 0; c < m; c++) { for (Index j = 0; j < n; j++) { out[c*n + j] = d[0][j]*x[c] + factor*d[1][c*n + j]; } }
+			break;
+		}
+		case VectorMultiply:
+		{
+			const ResizableConstVector& a = *v[0].vector, & b = *v[1].vector;
+			for (Index c = 0; c < m; c++) { for (Index j = 0; j < n; j++) { out[c*n + j] = d[0][c*n + j]*b[c] + a[c]*d[1][c*n + j]; } }
+			break;
+		}
+		case VectorMatrixVector: case VectorMatrixTransposedVector: //A x or A^T x: dA x + A dx
+		{
+			const ResizableMatrix& A = *v[0].matrix;
+			const ResizableConstVector& x = *v[1].vector;
+			Index columns = A.NumberOfColumns();
+			bool transposed = (rule == VectorMatrixTransposedVector);
+			Index inner = transposed ? A.NumberOfRows() : columns;
+			for (Index c = 0; c < m; c++)
+			{
+				for (Index j = 0; j < n; j++)
+				{
+					Real sum = 0.;
+					for (Index l = 0; l < inner; l++)
+					{
+						Index a = transposed ? l*columns + c : c*columns + l; //component of A
+						sum += d[0][a*n + j]*x[l] + A.GetDataPointer()[a]*d[1][l*n + j];
+					}
+					out[c*n + j] = sum;
+				}
+			}
+			break;
+		}
+		case MatrixMatrix: //A B: dA B + A dB
+		{
+			const ResizableMatrix& A = *v[0].matrix, & B = *v[1].matrix;
+			Index rows = A.NumberOfRows(), inner = A.NumberOfColumns(), columns = B.NumberOfColumns();
+			for (Index r = 0; r < rows; r++)
+			{
+				for (Index c = 0; c < columns; c++)
+				{
+					Real* target = out + (r*columns + c)*n;
+					for (Index j = 0; j < n; j++) { target[j] = 0.; }
+					for (Index l = 0; l < inner; l++)
+					{
+						Real a = A(r, l), b = B(l, c);
+						const Real* dA = d[0] + (r*inner + l)*n;
+						const Real* dB = d[1] + (l*columns + c)*n;
+						for (Index j = 0; j < n; j++) { target[j] += dA[j]*b + a*dB[j]; }
+					}
+				}
+			}
+			break;
+		}
+		case MatrixTransposed:
+		{
+			const ResizableMatrix& A = *v[0].matrix;
+			Index rows = A.NumberOfRows(), columns = A.NumberOfColumns(); //of A; the result is columns x rows
+			for (Index r = 0; r < rows; r++)
+			{
+				for (Index c = 0; c < columns; c++)
+				{
+					for (Index j = 0; j < n; j++) { out[(c*rows + r)*n + j] = d[0][(r*columns + c)*n + j]; }
+				}
+			}
+			break;
+		}
+		default: //Fallback: the derivative of the node per component of the variable, as Diff and DiffRef compute it
+		{
+			for (Index j = 0; j < n; j++)
+			{
+				DiffSeed seed(variable, scalarVariable ? -1 : j);
+				switch (node.kind)
+				{
+				case FlatKind::Real: out[j] = ((const ExpressionBase*)node.node)->Diff(seed); break;
+				case FlatKind::Vector:
+				{
+					const ResizableConstVector& column = ((const VectorExpressionBase*)node.node)->DiffRef(seed);
+					for (Index c = 0; c < m; c++) { out[c*n + j] = column[c]; }
+					break;
+				}
+				default:
+				{
+					const ResizableMatrix& column = ((const MatrixExpressionBase*)node.node)->DiffRef(seed);
+					for (Index c = 0; c < m; c++) { out[c*n + j] = column.GetDataPointer()[c]; }
+					break;
+				}
+				}
+			}
+			break;
+		}
+		}
+	}
+}
+
 } //namespace Symbolic
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
