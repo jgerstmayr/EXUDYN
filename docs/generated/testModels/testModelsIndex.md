@@ -206,6 +206,7 @@ symbolicSystemEquationsTest
 symbolicSystemJointsTest
 symbolicSystemLoadsTest
 symbolicSystemODE1AETest
+symbolicSystemODE1Test
 symbolicSystemTest
 symbolicUserFunctionCopyTest
 symbolicUserFunctionSignaturesTest

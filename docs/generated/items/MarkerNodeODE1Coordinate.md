@@ -67,3 +67,6 @@ mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK44)
 #q(1) = 1 - exp(-1)
 exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.632
 ```
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSystemODE1Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemODE1Test.py) (TM)

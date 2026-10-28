@@ -24,8 +24,10 @@
 #           rigid markers of the ground and of user bodies, with the rotations if it requests them (#3121, #3129), items
 #           without coordinates (ground), and the loads LoadForceVector, LoadTorqueVector,
 #           LoadMassProportional and LoadCoordinate, constant or with a symbolic user function of the time, on markers
-#           of point nodes, node coordinates and user bodies (#3118); every other object and load, constraints and
-#           recordings that read mbs are refused.
+#           of point nodes, node coordinates and user bodies (#3118); ObjectJointUser with symbolic constraint and
+#           Jacobian functions (#3141); ObjectGenericODE1 with its matrix, vector and a symbolic rhsUserFunction, and
+#           LoadCoordinate on its coordinates (#3144); every other object and load, data coordinates and recordings
+#           that read mbs are refused.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-26 (created)
@@ -388,15 +390,18 @@ class SymbolicKind:
     the table of the objects, their parameters and the global indices of their ODE2 coordinates
 
     Note:
-        Its members: objectType, the type name 'UserBody', 'GenericODE2' or 'ConnectorUser'; recordings, the dict of the
-        recorded user functions by name (a name without recording is missing); objects, the list of the object numbers;
-        ltg, the array (number of objects x local coordinates) of the global ODE2 indices; parameters, the list of the
+        Its members: objectType, the type name 'UserBody', 'GenericODE2', 'ConnectorUser', 'JointUser' or
+        'GenericODE1'; recordings, the dict of the recorded user functions by name (a name without recording is
+        missing); objects, the list of the object numbers; ltg, the array (number of objects x local coordinates) of the
+        global ODE2 indices - of the global ODE1 indices for GenericODE1 -; parameters, the list of the
         parameter vectors of the objects (UserBody), of the dicts of the constant matrices and the force vector
         (GenericODE2), or of the dicts of the parameter vector, 'orientation' (the connector gets the rotations and
         returns the torques) and the markers (ConnectorUser: per marker a dict of its 'type' - 'fixed', 'point' or
         'body' -, its local coordinate indices 'indices', its reference 'position' and 'rotation' - for a marker on a
         user body its local position and rotation, 'objectNumber', 'qRef', 'parameters' and the 'recordings' of the
-        body that give its kinematics)
+        body that give its kinematics), of the dicts of 'parameters', 'markers', 'orientation' and the global indices
+        'ltgAE' of its algebraic coordinates (JointUser), or of the dicts of the system matrix 'A' and the vector 'f'
+        (GenericODE1)
     """
     def __init__(self, objectType, recordings):
         self.objectType = objectType
@@ -417,15 +422,17 @@ class SymbolicLoad:
         loadUserFunction, None if constant; body, None for a node marker, else the dict of the user body: 'objectNumber',
         'localPosition', 'qRef', 'parameters', 'projection' (the recording of the function whose transposed maps the
         load into the coordinates) with its 'projectionName', and 'rotation' (the recorded rotationMatrixUserFunction for
-        bodyFixed, else None)
+        bodyFixed, else None); ode1, True for a LoadCoordinate on an ODE1 coordinate, whose ltg are global ODE1 indices
+        and which adds to the right-hand side of the ODE1 equations (#3144)
     """
-    def __init__(self, loadNumber, loadType, ltg, value, recording, body=None):
+    def __init__(self, loadNumber, loadType, ltg, value, recording, body=None, ode1=False):
         self.loadNumber = loadNumber
         self.loadType = loadType
         self.ltg = np.array(ltg, dtype=int)
         self.value = value
         self.recording = recording
         self.body = body
+        self.ode1 = ode1
 
 
 class SymbolicSystem(SymbolicSystemBase):
@@ -441,8 +448,10 @@ class SymbolicSystem(SymbolicSystemBase):
     Note:
         Its members: mbs; kinds, the list of SymbolicKind; jointKinds, the list of SymbolicKind of the ObjectJointUser
         (#3141), whose constraint equations are AlgebraicEquations and whose reaction forces are ReactionForces - they are
-        not in Equations() -; loads, the list of SymbolicLoad; nODE2, the number of ODE2 coordinates of the system; nAE,
-        the number of their equations; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
+        not in Equations() -; ode1Kinds, the list of SymbolicKind of the ObjectGenericODE1 (#3144), whose right-hand
+        side is ODE1RightHandSide; loads, the list of SymbolicLoad on ODE2 coordinates, ode1Loads those on ODE1
+        coordinates; nODE2, nODE1, the numbers of ODE2 and ODE1 coordinates of the system; nAE, the number of the
+        algebraic equations; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
         the recordings 'forces' and 'massMatrix' and the 'rows' and 'columns' of the entries of the mass matrix
     """
     def __init__(self, mbs, composeSystem=True):
@@ -453,17 +462,19 @@ class SymbolicSystem(SymbolicSystemBase):
         self.qRef = np.array(mbs.systemData.GetODE2Coordinates(configuration=exudyn.ConfigurationType.Reference))
         refused = []
         self.loads = []
+        self.ode1Loads = []
         for loadNumber in range(mbs.systemData.NumberOfLoads()):
             (load, reason) = self._Load(loadNumber)
             if reason:
                 refused += ['load ' + str(loadNumber) + ' (' + mbs.GetLoad(loadNumber)['loadType'] + ': ' + reason + ')']
             elif load is not None:
-                self.loads.append(load)
-        for (name, size) in [('ODE1 coordinates', mbs.systemData.ODE1Size()), ('data coordinates', mbs.systemData.DataSize())]:
-            if size > 0:
-                refused += [name]
+                (self.ode1Loads if load.ode1 else self.loads).append(load)
+        if mbs.systemData.DataSize() > 0:
+            refused += ['data coordinates']
+        self.nODE1 = mbs.systemData.ODE1Size()
         self.nAE = mbs.systemData.AEsize()
         kinds = {}
+        ode1Kinds = {}
         jointKinds = {}
         self._constantMassMatrix = True
         for objectNumber in range(mbs.systemData.NumberOfObjects()):
@@ -474,6 +485,9 @@ class SymbolicSystem(SymbolicSystemBase):
                 reason = self._AddJoint(jointKinds, objectNumber, item)
                 if reason:
                     refused += ['object ' + str(objectNumber) + ' (JointUser: ' + reason + ')']
+                continue
+            if objectType == 'GenericODE1':
+                self._AddODE1Object(ode1Kinds, objectNumber, item)
                 continue
             if objectType not in _userFunctionNames:
                 if len(ltg):
@@ -519,12 +533,15 @@ class SymbolicSystem(SymbolicSystemBase):
                 kind.parameters.append({'M': _Dense(item['massMatrix']), 'K': _Dense(item['stiffnessMatrix']),
                                         'D': _Dense(item['dampingMatrix']), 'f': np.array(item['forceVector'], dtype=float)})
         self.jointKinds = list(jointKinds.values())
+        self.ode1Kinds = list(ode1Kinds.values())
         if not refused and sum(len(joint['ltgAE']) for kind in self.jointKinds for joint in kind.parameters) != self.nAE:
             refused += ['algebraic equations of other items than ObjectJointUser']
+        if not refused and sum(len(ltg) for kind in self.ode1Kinds for ltg in kind.ltg) != self.nODE1:
+            refused += ['ODE1 coordinates of other items than ObjectGenericODE1']
         if refused:
             raise ValueError('SymbolicSystem: these items cannot be assembled (yet): ' + ', '.join(refused))
         self.kinds = list(kinds.values())
-        for kind in self.kinds + self.jointKinds:
+        for kind in self.kinds + self.jointKinds + self.ode1Kinds:
             kind.ltg = np.array(kind.ltg, dtype=int)
         self.composed = self._Compose() if composeSystem else None
 
@@ -560,6 +577,19 @@ class SymbolicSystem(SymbolicSystemBase):
 
         return {'forces': Record(UFforces), 'massMatrix': Record(UFmassMatrix), 'massMatrixBlocks': Record(UFmassMatrixBlocks),
                 'rows': rows, 'columns': columns}
+
+    def _AddODE1Object(self, ode1Kinds, objectNumber, item):
+        """an ObjectGenericODE1 into its kind (#3144): the objects with the same recorded rhsUserFunction, or without
+        one; a Python rhsUserFunction raises"""
+        recording = _Recording(item['rhsUserFunction'], objectNumber, 'rhsUserFunction')
+        recordings = {} if recording is None else {'rhsUserFunction': recording}
+        key = None if recording is None else recording.GetFlatProgram()
+        if key not in ode1Kinds:
+            ode1Kinds[key] = SymbolicKind('GenericODE1', recordings)
+        kind = ode1Kinds[key]
+        kind.objects.append(objectNumber)
+        kind.ltg.append(list(self.mbs.systemData.GetObjectLTGODE1(objectNumber)))
+        kind.parameters.append({'A': _Dense(item['systemMatrix']), 'f': np.array(item['rhsVector'], dtype=float)})
 
     def _AddJoint(self, jointKinds, objectNumber, item):
         """an ObjectJointUser into its kind, grouped as the connectors; the reason it is refused, empty if it is taken"""
@@ -651,6 +681,12 @@ class SymbolicSystem(SymbolicSystemBase):
         bodyFixed = item.get('bodyFixed', False)
         marker = mbs.GetMarker(item['markerNumber'])
         markerType = marker['markerType']
+        if markerType == 'NodeODE1Coordinate': #on the right-hand side of the ODE1 equation of the coordinate (#3144)
+            if loadType != 'Coordinate':
+                return (None, 'a marker of type ' + markerType)
+            ltg = list(mbs.systemData.GetNodeLTGODE1(marker['nodeNumber']))
+            return (SymbolicLoad(loadNumber, loadType, ltg[marker['coordinate']:marker['coordinate'] + 1], value, recording,
+                                 ode1=True), '')
         if markerType in ['NodeCoordinate', 'NodePosition']:
             if (markerType == 'NodeCoordinate') != (loadType == 'Coordinate') or loadType not in ['ForceVector', 'Coordinate']:
                 return (None, 'a marker of type ' + markerType)
@@ -691,9 +727,64 @@ class SymbolicSystem(SymbolicSystemBase):
         return (np.array(systemData.GetODE2Coordinates(configuration=exudyn.ConfigurationType.Initial)),
                 np.array(systemData.GetODE2Coordinates_t(configuration=exudyn.ConfigurationType.Initial)))
 
+    def InitialStateODE1(self):
+        """the initial ODE1 coordinates y0 of mbs"""
+        return np.array(self.mbs.systemData.GetODE1Coordinates(configuration=exudyn.ConfigurationType.Initial))
+
     def IsMassMatrixConstant(self):
         """True if every user body has constantMassMatrix and no ObjectGenericODE2 has a massMatrixUserFunction"""
         return self._constantMassMatrix
+
+    def ODE1RightHandSide(self, q, q_t, y, t):
+        """the right-hand side g(y, t) of the ODE1 equations y_t = g (#3144): per ObjectGenericODE1 A y + f and its
+        recorded rhsUserFunction of its coordinates, as CObjectGenericODE1 computes it, and the LoadCoordinate on ODE1
+        coordinates
+
+        Args:
+            q: the ODE2 coordinates, not used
+            q_t: the ODE2 velocities, not used
+            y: the ODE1 coordinates, of size nODE1
+            t: the time
+
+        Returns:
+            the vector g of size nODE1
+        """
+        y = np.asarray(y, dtype=float)
+        g = np.zeros(self.nODE1)
+        for kind in self.ode1Kinds:
+            for i in range(len(kind.objects)):
+                np.add.at(g, kind.ltg[i], self._LocalODE1RightHandSide(kind, i, y, t))
+        for load in self.ode1Loads:
+            np.add.at(g, load.ltg, np.atleast_1d(self._LoadValue(load, t)))
+        return g
+
+    def _LocalODE1RightHandSide(self, kind, i, y, t):
+        """the right-hand side of ObjectGenericODE1 i of kind, A y + f + f_user(mbs, t, itemNumber, y)"""
+        (ltg, matrices) = (kind.ltg[i], kind.parameters[i])
+        g = np.zeros(len(ltg))
+        if matrices['A'].size:
+            g += matrices['A'] @ y[ltg]
+        if len(matrices['f']):
+            g += matrices['f']
+        if 'rhsUserFunction' in kind.recordings:
+            g += np.array(kind.recordings['rhsUserFunction'].Evaluate(self.mbs, t, kind.objects[i], y[ltg]), dtype=float)
+        return g
+
+    def ODE1Jacobian(self, y, t):
+        """the derivative of ODE1RightHandSide by y (nODE1 x nODE1), exact: A and the derivative of the recorded
+        rhsUserFunction (#3144, #3116)"""
+        y = np.asarray(y, dtype=float)
+        J = np.zeros((self.nODE1, self.nODE1))
+        for kind in self.ode1Kinds:
+            for i in range(len(kind.objects)):
+                (ltg, matrices) = (kind.ltg[i], kind.parameters[i])
+                local = np.zeros((len(ltg), len(ltg)))
+                if matrices['A'].size:
+                    local += matrices['A']
+                if 'rhsUserFunction' in kind.recordings:
+                    local += self._RecordingJacobian(kind.recordings['rhsUserFunction'], 3, (t, kind.objects[i], y[ltg]))
+                J[np.ix_(ltg, ltg)] += local
+        return J
 
     def SetSystemState(self, q, q_t=None, q_tt=None, t=None, configuration=exudyn.ConfigurationType.Current):
         """write a state into mbs: the ODE2 coordinates, velocities and accelerations and the time - None leaves one
@@ -929,7 +1020,7 @@ class SymbolicSystem(SymbolicSystemBase):
 
     def Forces(self, q=None, q_t=None, t=0., y=None):
         """the global forces f(q, q_t, t) of the right-hand side, as the ODE2 part of the solver's right-hand side; y is
-        not used, as the system has no ODE1 coordinates yet
+        not used, as no item taken couples the ODE1 coordinates into the ODE2 equations
 
         Args:
             q: the ODE2 coordinates (displacements), of size nODE2; None: zero
@@ -988,7 +1079,8 @@ class SymbolicSystem(SymbolicSystemBase):
 
     def Residual(self, q=None, q_t=None, q_tt=None, t=0., y=None):
         """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations without forming M: by the recordings of the
-        composed system, else object by object; y is not used, as the system has no ODE1 coordinates yet"""
+        composed system, else object by object; y is not used, as no item taken couples the ODE1 coordinates into the
+        ODE2 equations"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
         if self.composed is not None:
             (rows, columns, values) = self.MassMatrixTriplets(q, q_t, t)
@@ -1356,9 +1448,13 @@ class SymbolicSystem(SymbolicSystemBase):
         for kind in self.jointKinds:
             lines.append('  JointUser: ' + str(len(kind.objects)) + ' joints of ' + str(len(kind.parameters[0]['ltgAE']))
                          + ' equations on ' + str(kind.ltg.shape[1]) + ' coordinates')
-        if self.loads:
-            lines.append('  loads: ' + ', '.join(load.loadType + (' (user function)' if load.recording is not None else '')
-                                                for load in self.loads))
+        for kind in self.ode1Kinds:
+            lines.append('  GenericODE1: ' + str(len(kind.objects)) + ' objects of ' + str(kind.ltg.shape[1])
+                         + ' ODE1 coordinates, user functions ' + str(sorted(kind.recordings)))
+        if self.loads or self.ode1Loads:
+            lines.append('  loads: ' + ', '.join(load.loadType + (' (ODE1)' if load.ode1 else '')
+                                                + (' (user function)' if load.recording is not None else '')
+                                                for load in self.loads + self.ode1Loads))
         return '\n'.join(lines)
 
 
@@ -1488,6 +1584,10 @@ class _Output:
                     self.result[name].append(np.copy(value))
         if self.solver is not None:
             self.system.SetSystemState(q, q_t, q_tt, t)
+            if y is not None and len(y):
+                self.system.mbs.systemData.SetODE1Coordinates(np.asarray(y, dtype=float))
+                if y_t is not None:
+                    self.system.mbs.systemData.SetODE1Coordinates_t(np.asarray(y_t, dtype=float))
             if lambda_ is not None and len(lambda_):
                 self.system.mbs.systemData.SetAECoordinates(np.asarray(lambda_, dtype=float))
             self.solver.it.currentStepIndex = stepIndex

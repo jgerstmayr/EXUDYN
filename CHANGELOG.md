@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 242 | 1.13.246 |
+| 1.13 | Newborn | 243 | 1.13.247 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.247** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Take ObjectGenericODE1 with a symbolic rhsUserFunction into SymbolicSystem (#3144)
+  - description: Maintainer 2026-10-28 (make SymbolicSystem take ODE1 items and joints): nODE1, InitialStateODE1 and ODE1RightHandSide from ObjectGenericODE1 - its systemMatrix, rhsVector and a symbolic rhsUserFunction - grouped in kinds as the ODE2 objects, the LTG maps of GetObjectLTGODE1; ODE1 coordinates no longer refused. A test model against SolveDynamic with SolveExplicit and SolveGeneralizedAlpha.
+  - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem takes ObjectGenericODE1 with its systemMatrix, rhsVector and a symbolic rhsUserFunction, and LoadCoordinate on ODE1 coordinates: ODE1RightHandSide, the exact ODE1Jacobian and InitialStateODE1; SolveGeneralizedAlpha and SolveExplicit integrate such systems as SolveDynamic does.
+  - date resolved: **2026-10-28 16:42**, date raised: 2026-10-28
 - **1.13.246** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Name the algebraic coordinates lambda\_ instead of lam in exudyn.misc.symbolicSystem (#3148)
   - description: Maintainer 2026-10-28: do not use lam for a name of arguments, variables or in the docs - use lambda, and avoid abbreviations; check the symbolicSystem files in particular. lambda is a keyword of Python, so the arguments and variables are lambda\_ (PEP 8 for a name that collides with a keyword), the text says lambda; the local n1, n2, nSys of the solvers become nODE1, nODE2, nSystem.
   - **notes:** exudyn.misc.symbolicSystem names the algebraic coordinates lambda\_ in the arguments of AlgebraicEquations, ReactionForces, SystemResidual and SystemJacobian and in the constraints function of NumpySystem, as lambda is a keyword of Python.

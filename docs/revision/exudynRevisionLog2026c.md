@@ -4223,3 +4223,23 @@ or docs - use lambda. Like always, avoid abbreviations. check the symbolicSystem
   (Exudyn's names), `J` and `dq` (the mathematical symbols).
 - docs/dev/design/symbolicSystem.md (the signatures, the named vector `lambda` of section 12.2),
   python/TestModels/symbolicSystemJointsTest.py and symbolicSystemODE1AETest.py; their results unchanged.
+
+<a id="rg12-51-14"></a>
+### RG12.51.14 — ObjectGenericODE1 in SymbolicSystem (2026-10-28, #3144)
+*(Maintainer 2026-10-28, on the proposal to make SymbolicSystem take ODE1 items and joints: "=> yes"; then "Do
+RG12.51.14, .15 and .16 as well as RG12.61 (as recommended) now".)*
+- python/exudyn/misc/symbolicSystem.py: `nODE1` from systemData; ObjectGenericODE1 grouped in `ode1Kinds` by its
+  recorded rhsUserFunction (or none), with its systemMatrix and rhsVector and the LTG map of GetObjectLTGODE1; a Python
+  rhsUserFunction raises as every Python user function; ODE1 coordinates of other items are refused.
+  `ODE1RightHandSide(q, q_t, y, t)` is A y + f + f_user(mbs, t, itemNumber, y) per object, as
+  CObjectGenericODE1::ComputeODE1RHS, plus the LoadCoordinate on MarkerNodeODE1Coordinate (`ode1Loads`, constant or
+  with a symbolic loadUserFunction); `ODE1Jacobian(y, t)` exact from A and EvaluateJacobian of the recording;
+  `InitialStateODE1` from the initial configuration. `_Output.Step` writes y and y_t into mbs.
+- Not taken: the ODE1 equations in `Equations()` and `GetFlatProgram()`; `SystemJacobian` keeps the ODE1 columns by
+  central differences (RG12.51.15 makes it exact).
+- python/TestModels/symbolicSystemODE1Test.py: two Van der Pol oscillators of one recording (one kind of two objects),
+  a linear system driven by a LoadCoordinate with a recorded user function, a mass on a nonlinear spring as
+  ObjectGenericODE2. ODE1RightHandSide equal to ComputeODE1RHS of the solver (0.0), ODE1Jacobian against central
+  differences 2.6e-10; SolveGeneralizedAlpha 8.3e-14, RK44 6.5e-15, explicit Euler 6.5e-15 relative to SolveDynamic,
+  the ODE1 coordinates written into mbs; a Python rhsUserFunction refused.
+- docs/dev/design/symbolicSystem.md sections 3, 6 and 12.1; docs/manual/revisions.md.

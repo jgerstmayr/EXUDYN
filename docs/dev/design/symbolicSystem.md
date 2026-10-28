@@ -47,8 +47,8 @@ it is the objects' programs plus the scatter of their results, which is what Exu
 `SymbolicSystem(mbs)`, after `mbs.Assemble()`, in `exudyn/misc/symbolicSystem.py` (#3110, #3113):
 
 - **Extracted from mbs**, and only if every item is compatible with the symbolic system: an item that is not - a
-  built-in body, a Python user function, a recording that reads mbs (an item output), ODE1 coordinates, algebraic
-  equations, data coordinates, a load other than those of the table below - is refused, with the list of these items. No item is
+  built-in body, a Python user function, a recording that reads mbs (an item output), ODE1 coordinates or algebraic
+  equations of other items than those of the table below, data coordinates, a load other than those of the table - is refused, with the list of these items. No item is
   approximated or skipped.
 - **The data of mbs are reused**: the LTG maps, the reference and initial coordinates, the parameters of the items; the
   system adds nothing that mbs already knows.
@@ -91,6 +91,7 @@ use it.
 | ObjectUserBody | its mass matrix and force functions in its coordinates (#3110); the positions of points by its positionUserFunction |
 | ObjectConnectorUser with a symbolic forceUserFunction of its marker states (#3119) on position markers of point nodes and of the ground | directly (#3121): the marker states from the node coordinates or the fixed positions, the forces scattered to the coordinates of the markers, the Jacobian by `EvaluateJacobian` by the positions and velocities |
 | ObjectConnectorUser on MarkerBodyPosition and MarkerBodyRigid of user bodies and of the ground, with the rotations if it requests Orientation | directly (#3129): the marker states by the recorded position, rotation and Jacobian functions of the body - $\vv = \Jm_{pos}\dot\qv$, $\tomega = \Jm_{rot}\dot\qv$, the rotation of the marker after the one of the body -, the forces and torques by $\Jm_{pos}\tp\fv + \Jm_{rot}\tp\mv$; the Jacobian by `EvaluateJacobian` of the force by the marker states, composed with the derivatives of the states ($\Jm_{pos}$, $\partial\Jm_{pos}/\partial\qv\,\dot\qv$, $\partial\Rot/\partial\qv$, $\Jm_{rot}$, $\partial\Jm_{rot}/\partial\qv\,\dot\qv$), and the derivatives of the Jacobians times the forces |
+| ObjectGenericODE1 with its systemMatrix, rhsVector and a symbolic rhsUserFunction; LoadCoordinate on its coordinates | directly (#3144): `ODE1RightHandSide` $\Am\yv + \fv + \fv_{user}(\yv, t)$ per object as CObjectGenericODE1, the objects with the same recording one kind, the loads added; `ODE1Jacobian` exact, $\Am$ and `EvaluateJacobian` of the recording |
 | ObjectJointUser, MarkerBodyUser | the constraint is symbolic; the marker kinematics as above, the constraints and $\Cm_{\qv}\tp\tlambda$ (RG12.51.4) |
 | LoadForceVector, LoadTorqueVector, LoadCoordinate, LoadMassProportional | directly (#3118): the value constant or by its symbolic user function of the time; on MarkerNodePosition of a point node and on MarkerNodeCoordinate the value at the LTG indices of the marker; on MarkerBodyPosition, MarkerBodyRigid and MarkerBodyMass of an ObjectUserBody $\Jm\tp \vv$ by its symbolic positionJacobian-, rotationJacobian- or massIntegralUserFunction, for `bodyFixed` $\vv$ rotated by its rotationMatrixUserFunction, as CSystem applies loads; the Jacobian by `EvaluateJacobian` of these functions; loads on the ground act on nothing |
 | built-in items, Python (not symbolic) user functions, recordings that read mbs | refused, with the list of items; the built-in items need recordings of their own (the AD templates, #3048) - not proposed |
@@ -211,8 +212,8 @@ CSolverExplicit and CSolverImplicitSecondOrder:
   and rotation Jacobians of the markers as the forces of a connector. The constraint blocks of `SystemJacobian` are
   central differences (exact ones by the one-pass derivative are open), which makes `SolveGeneralizedAlpha` slow - 4.2
   s against 0.048 s of SolveDynamic for the 33 unknowns of symbolicSystemJointsTest.py - and makes it stop at other
-  Newton iterates than Exudyn (#3145). The constraints are not in `Equations()` yet (#3146). ODE1 items are still
-  refused (#3144). The coupling of all kinds in one item, ObjectGenericDAE (#3143), also needs Exudyn's internal
+  Newton iterates than Exudyn (#3145). The constraints are not in `Equations()` yet (#3146). ObjectGenericODE1 is
+  taken (#3144), its ODE1 block of `SystemJacobian` still by central differences. The coupling of all kinds in one item, ObjectGenericDAE (#3143), also needs Exudyn's internal
   solvers extended.
 
 ## 7. Sub-steps of RG12.51 (as planned after the decisions)
@@ -443,7 +444,7 @@ drawing of the joints (RG12.55.7, #3147), the node count (RG12.61, #3142) and Ob
 | part | done | open |
 |---|---|---|
 | user items (`UserItemCreator`) | ground, mass point, rigid body, spring-damper, torsional spring-damper, force, revolute, prismatic, spherical and distance joint - equal to the built-in items to the Newton tolerance | the sphere-sphere contact (RG12.55.5); the joints are not drawn (#3147); free axes of the spherical joint and nodes in the distance constraint are refused |
-| `SymbolicSystem` | ObjectUserBody, ObjectGenericODE2, ObjectConnectorUser on point, body and ground markers, ObjectJointUser, the four loads; two composed recordings (forces, mass matrix) | ObjectGenericODE1 (#3144), data coordinates, the constraints in `Equations()` (#3146) |
+| `SymbolicSystem` | ObjectUserBody, ObjectGenericODE2, ObjectConnectorUser on point, body and ground markers, ObjectJointUser, ObjectGenericODE1 (#3144), the four loads; two composed recordings (forces, mass matrix) | data coordinates, the constraints in `Equations()` (#3146), the ODE1 equations in `Equations()` |
 | solvers in Python | explicit Euler, RK44, velocity Verlet (with the inverse per body), generalized-alpha with ODE1 coordinates and index-3 constraints, all equal to `SolveDynamic` | with joints 90 times slower than `SolveDynamic` (#3145); index 2 refused |
 | derivatives | `Diff` of vectors and matrices (#3115), the one pass over a flat program (#3116), pow without the log term (#3135) | the derivative as a new program (RG12.54.2, #3108) |
 | export | a recording as Python, numpy, symbolic, sympy and C++ text; `Equations()` and `GetFlatProgram()` of the system | the whole system with its sparsity and scatter (RG12.51.5) |
