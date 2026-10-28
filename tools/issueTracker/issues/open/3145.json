@@ -1,0 +1,11 @@
+{
+  "number": 3145,
+  "title": "Exact constraint blocks of ObjectJointUser in SymbolicSystem.SystemJacobian",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "The constraint blocks of SystemJacobian are central differences (#3141): SolveGeneralizedAlpha with joints is 90 times slower than SolveDynamic and stops at other Newton iterates. C_q is the recorded jacobianUserFunction times the position and rotation Jacobians of the markers, already formed for the reaction forces; the derivative of C_q^T lambda by q from the one-pass derivative of the recordings (#3116), as for the connectors (#3129).",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26"
+}

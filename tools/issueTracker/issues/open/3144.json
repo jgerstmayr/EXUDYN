@@ -1,0 +1,11 @@
+{
+  "number": 3144,
+  "title": "Take ObjectGenericODE1 with a symbolic rhsUserFunction into SymbolicSystem",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-10-28 (make SymbolicSystem take ODE1 items and joints): nODE1, InitialStateODE1 and ODE1RightHandSide from ObjectGenericODE1 - its systemMatrix, rhsVector and a symbolic rhsUserFunction - grouped in kinds as the ODE2 objects, the LTG maps of GetObjectLTGODE1; ODE1 coordinates no longer refused. A test model against SolveDynamic with SolveExplicit and SolveGeneralizedAlpha.",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26"
+}

@@ -211,7 +211,9 @@ CSolverExplicit and CSolverImplicitSecondOrder:
   and rotation Jacobians of the markers as the forces of a connector. The constraint blocks of `SystemJacobian` are
   central differences (exact ones by the one-pass derivative are open), which makes `SolveGeneralizedAlpha` slow - 4.2
   s against 0.048 s of SolveDynamic for the 33 unknowns of symbolicSystemJointsTest.py - and makes it stop at other
-  Newton iterates than Exudyn. The constraints are not in `Equations()` yet. ODE1 items are still refused. The coupling of all kinds in one item also needs Exudyn's internal solvers extended.
+  Newton iterates than Exudyn (#3145). The constraints are not in `Equations()` yet (#3146). ODE1 items are still
+  refused (#3144). The coupling of all kinds in one item, ObjectGenericDAE (#3143), also needs Exudyn's internal
+  solvers extended.
 
 ## 7. Sub-steps of RG12.51 (as planned after the decisions)
 
@@ -229,7 +231,9 @@ CSolverExplicit and CSolverImplicitSecondOrder:
 - RG12.51.8 (done, #3118): the built-in loads, constant or with a symbolic user function.
 - RG12.51.4: those user items in the system - rigid bodies, joints, connectors, the constraints; RG12.51.4.1 (done,
   #3129) the connectors on markers of user bodies and of the ground, with the rotations, so that the rigid bodies and
-  torsional spring-dampers of UserItemCreator are taken; the joints and constraints are open.
+  torsional spring-dampers of UserItemCreator are taken; RG12.51.4.2 (done, #3141) the joints.
+- RG12.51.14 ObjectGenericODE1 (#3144), RG12.51.15 the exact constraint blocks (#3145), RG12.51.16 the constraints in
+  `Equations()` (#3146) - section 12.
 - RG12.51.5: the export (G1): the programs, the sparsity pattern and the scatter as C++ and as Python, and a system
   class of the exported numpy code.
 - RG12.51.6: the evaluation by Numba for the GPU - moved to group RG14, [uniformEvaluation.md](uniformEvaluation.md).
@@ -425,3 +429,142 @@ method `sin()` of the object -, and the math check of the test models refuses `n
 `exudyn.cMath` take an `esym.Real` as well, by an overload of the compiled function that calls the one of
 exudyn.symbolic - all but `cbrt`, `atan2` and `pow` also mixed with a float -, so that one function written with cMath
 runs on numbers and is recorded; a float costs nothing more, as its overload comes first.
+
+## 12. Status, analysis and options (2026-10-28)
+
+The symbolic user items and the symbolic system after RG12.51.4.2: what they are, what is open, and the questions of
+the maintainer of 2026-10-28 with options and a recommendation each. Nothing of 12.2 to 12.6 is a step yet; the
+maintainer decides which become one. What clearly has to be done got a step and an issue: the ODE1 items (RG12.51.14,
+#3144), the exact constraint blocks (RG12.51.15, #3145), the constraints in `Equations()` (RG12.51.16, #3146), the
+drawing of the joints (RG12.55.7, #3147), the node count (RG12.61, #3142) and ObjectGenericDAE (RG9.10, #3143).
+
+### 12.1 Status
+
+| part | done | open |
+|---|---|---|
+| user items (`UserItemCreator`) | ground, mass point, rigid body, spring-damper, torsional spring-damper, force, revolute, prismatic, spherical and distance joint - equal to the built-in items to the Newton tolerance | the sphere-sphere contact (RG12.55.5); the joints are not drawn (#3147); free axes of the spherical joint and nodes in the distance constraint are refused |
+| `SymbolicSystem` | ObjectUserBody, ObjectGenericODE2, ObjectConnectorUser on point, body and ground markers, ObjectJointUser, the four loads; two composed recordings (forces, mass matrix) | ObjectGenericODE1 (#3144), data coordinates, the constraints in `Equations()` (#3146) |
+| solvers in Python | explicit Euler, RK44, velocity Verlet (with the inverse per body), generalized-alpha with ODE1 coordinates and index-3 constraints, all equal to `SolveDynamic` | with joints 90 times slower than `SolveDynamic` (#3145); index 2 refused |
+| derivatives | `Diff` of vectors and matrices (#3115), the one pass over a flat program (#3116), pow without the log term (#3135) | the derivative as a new program (RG12.54.2, #3108) |
+| export | a recording as Python, numpy, symbolic, sympy and C++ text; `Equations()` and `GetFlatProgram()` of the system | the whole system with its sparsity and scatter (RG12.51.5) |
+| GPU | the experiment of RG14.2.1 | RG14.2.2 to RG14.4 |
+
+### 12.2 The system coordinates in exudyn.symbolic
+
+**Now.** Every user function gets the coordinates of its own item - ObjectUserBody `qRef` and `qTotal` of its nodes, a
+connector the states of its markers, ObjectGenericODE2 `q` and `q_t` of its nodes -, and `SymbolicSystem` composes them
+by the LTG maps. A function that needs the coordinates of other items reads them as item outputs (#2984), which the
+Jacobian of its item does not see.
+
+| option | what | for | against |
+|---|---|---|---|
+| A as now | local arguments per item, composed by the LTG maps | the Jacobian of an item is local, its sparsity known; one recording per kind | a coupling across items needs a connector or an item output |
+| B system coordinates as nodes that read mbs | `esym.SystemCoordinate('ODE2', i)`, read at evaluation as the item outputs | any coupling in one line | the dependency is hidden from the LTG map, the sparsity and the Jacobian - the lag of the item outputs, now for every coordinate; the global indices change when the model changes |
+| C system variables for the recordings of a system | the named vectors `q`, `q_t`, `y`, `lam`, `t` (and `p`, 12.4) of a system, and helpers that give the part of a node or item, e.g. `variables.ODE2(node)` | equations written directly in system coordinates - what `Equations()` does internally (`_Backend.Variable`); a controller or a coupling written by hand | for the system only, not inside an item of mbs |
+
+**Recommendation**: C, in `exudyn.misc.symbolicSystem`, as the public form of what `Equations()` does already. Inside
+mbs, an item that couples the coordinates of several nodes is ObjectGenericDAE (RG9.10): its node lists give the LTG
+map, so the Jacobian sees the coupling. Not B. Data coordinates stay refused: they change in the post-Newton step
+(contact, friction), which an equation of the system does not express.
+
+### 12.3 q, qRef and qTotal in symbolicSystem.py
+
+**What it is.** In `SymbolicSystemBase`, its solvers, `Equations()` and the composed recordings, `q` are the ODE2
+coordinates of Exudyn's solvers: relative to the reference configuration, what `systemData.GetODE2Coordinates()`
+returns and `SetSystemState` writes - the `q` of `solver.md` and of `MainSolver`. The reference values are
+`SymbolicSystem.qRef`, read from mbs once. A user body gets `qRef` and `qTotal = qRef + q`, as ObjectUserBody defines
+its arguments; ObjectGenericODE2 gets `q`; in `Equations()` the reference values are numbers.
+
+**Is it right?** Yes for the solvers: the state is that of `SolveDynamic`, without conversion, and the total coordinates
+are formed where the items need them, as in Exudyn. Three weaknesses: the base class does not say that `q` is relative
+(the docstrings of `SymbolicSystem` say "displacements" in some places only); `NumpySystem` has no reference values, so
+a solver cannot form `qTotal` for every system; the exported equations contain the reference configuration as numbers,
+so a changed reference needs a new export.
+
+**Recommendation**: keep `q` - the name of the solvers - and say it once in the base class: "q: the ODE2 coordinates
+relative to the reference configuration, qTotal = qRef + q"; `qRef` a member of the base class (zero in
+`NumpySystem`); the reference values an optional variable of `Equations()`, with the parameters of 12.4. Whether user
+functions get total coordinates in general is RG13.2.
+
+### 12.4 Further dependencies: the parameters
+
+**Now.** The dependencies are q, q_t, y, lambda and t. The parameters of the items are an argument of the recordings
+of ObjectUserBody, ObjectConnectorUser and ObjectJointUser (`parameters`, named by a ParameterLayout), so one recording
+serves a kind; `SymbolicSystem` keeps them in the tables of the kinds, and `Equations()` writes them as numbers. The
+values of the loads and the matrices of ObjectGenericODE2 are numbers as well. `esym.variables` are global named
+variables, read by a recording at every call.
+
+| option | what | gives |
+|---|---|---|
+| P1 a parameter vector p of the system | every parameter of the items and loads in one vector, with a table (item, name, index) to its slot; p an input of the composed recordings and a variable of `Equations()`; `SetParameters(p)` | the derivative by p by the one-pass derivative (the recordings take `parameters` as an argument already): sensitivities, optimization, identification; a parameterized model evaluated for another p without recording again, also as an ensemble over p (RG14) |
+| P2 `esym.variables` | named variables, as now | a few global parameters (gravity, the stiffness of all springs); one global namespace, not per item |
+| P3 as now | numbers | nothing more |
+
+**Recommendation**: P1, after the free signature of 12.6 R2 - the composed recordings take the signature of
+ObjectGenericODE2, `(mbs, t, itemNumber, q, q_t)`, which has no parameters. The parameters are the `parameters`
+vectors, the load values and the matrices of ObjectGenericODE2; not the reference coordinates (12.3), which are an
+option of their own.
+
+### 12.5 The names of symbolicSystem.py
+
+`q` stays (12.3). The others against Exudyn's names - Exudyn keeps the right-hand side and the left-hand side apart
+for the sign (`notation.md`, *LHS-RHS naming conventions*): an object computes its LHS terms, the system its RHS
+$\fv_{sys}$, with $\Mm\ddot\qv$ and the reaction forces on the LHS.
+
+| now | what it computes | proposed | in Exudyn |
+|---|---|---|---|
+| `Forces(q, q_t, t, y)` | $\fv$, the RHS of the ODE2 equations, the loads included, the reaction forces not | `ODE2RHS` | `MainSolver.ComputeODE2RHS`, `CSystem::ComputeSystemODE2RHS` |
+| `ODE1RightHandSide(q, q_t, y, t)` | $\gv$ of $\dot\yv = \gv$ | `ODE1RHS` | `ComputeODE1RHS` |
+| `ReactionForces(q, q_t, y, lam, t)` | $\Cm_{\qv}\tp\tlambda$, ODE2 only, on the LHS | `ODE2ReactionForcesLHS` | the LHS term of the system equations in `solver.md` |
+| (missing) | $\Cm_{\yv}\tp\tlambda$ of the ODE1 equations | `ODE1ReactionTermsLHS` | `solver.md`, the ODE1 rows; needed by ObjectGenericDAE |
+| `Residual(q, q_t, q_tt, t, y)` | $\Mm\ddot\qv - \fv$, LHS minus RHS | `ODE2Residual` | |
+| `ResidualJacobian(...)` | its Jacobian | `ODE2ResidualJacobian` | |
+| `SystemResidual`, `SystemJacobian` | all rows, as the implicit solver | kept | `ComputeNewtonResidual`, `ComputeNewtonJacobian` |
+| `AlgebraicEquations` | $\cv$ | kept | `ComputeAlgebraicEquations` |
+| `Equations()['forces']` | $\fv$ | `'ODE2RHS'` | |
+
+`SystemResidual` has the ODE2 rows as LHS minus RHS and the ODE1 rows as RHS minus LHS, $\gv - \dot\yv$, as
+`CSolverImplicitSecondOrder` computes them ("different from ODE2"), while `solver.md` writes both as LHS minus RHS;
+the docstring says so, the manual does not. The module names the constraints $\cv$ and the ODE1 right-hand side $\gv$;
+`solver.md` names the constraints $\gv$ and the ODE1 right-hand side $\fv_\FO$; ObjectGenericODE1 names its
+coordinates `q`. **Recommendation**: the names of the table, and the letters of `solver.md` in the docstrings. The
+module is in no release yet (it came after 1.13.0), so the rename needs no deprecation.
+
+### 12.6 The structure of exudyn.symbolic, checked
+
+**What is good.** A function is recorded by running it once with symbolic arguments, so the same Python function -
+with cMath - computes numbers and records; the graph shares subexpressions, and `Optimize` merges them; the flat
+program, its export, its one-pass derivative and its parallel evaluation in the threads of the solver are there; one
+recording serves all items of a kind through `parameters`. For the known use cases - user functions of items, user
+items, the composed system - this is complete.
+
+**What costs.** Facts from the code (2026-10-28):
+
+- **Every operation is written up to eight times**: the tree `Evaluate`/`EvaluateRef`, the tree `Diff`/`DiffRef`,
+  `EvaluateFromOperands` of the flat program, its derivative rule (a switch by `FlatName` in
+  `FlatProgram::Differentiate`), `ToString` and `ToStringFromOperands`, `NewWithOperands`, the rules of `Optimize`,
+  and the writers of `symbolicExport.py`; about 80 expression classes in 9200 lines of C++. The fix of pow (#3135) was
+  made twice, in the tree and in the one pass.
+- **Values live in the graph**: a named variable holds its value, a vector or matrix node its evaluation and derivative
+  buffers; so the graph is state, and the threads need values of their own (#2978).
+- **A recording has the signature of an item's user function**, `CreateSymbolicUserFunction(mbs, function, name,
+  item)`; the composed system borrows the signature of ObjectGenericODE2 for its two recordings and cannot add the
+  parameters (12.4), y or lambda.
+- **One namespace of variables**, `esym.variables`, global; the arguments of a recording are named variables of their
+  parameter names.
+- **Vectors and matrices are nodes** next to their scalar components: comfortable to record, but the derivative, the
+  GPU levels (RG14) and the export scalarize them again.
+
+**What would simplify a lot:**
+
+| | change | effect | size |
+|---|---|---|---|
+| R1 | **one table of operations**: per operation code its name, arity, value, derivative rule, simplification and text, used by the flat evaluation, the derivative, `Optimize`, the export, the count and the uniform evaluation; the tree classes only record and build the program | one place per operation instead of eight; the derivative as a new program (RG12.54.2, option D) is one more column of the table; about half of the C++ | large: a C++ refactoring with a transition, after RG12.54.2 |
+| R2 | **recordings with a free signature**: a recording of expressions in declared inputs, e.g. `esym.Function(expressions, inputs)` - `GetFlatProgram(expressions)` nearly does it -; an item user function is such a function whose inputs match its signature | the composed system with its natural inputs (q, q_t, y, lambda, t, p); local names instead of the global namespace; the export and the GPU take any function | small to medium |
+| R3 | **values outside the graph**: evaluation frames - the slot arrays of the flat program - per thread or per state | threads and ensembles without copies of the graph; follows from R1 | with R1 |
+| R4 | **a scalar program on request**: the vector and matrix nodes expanded into scalar operations, as the experiment of RG14.2.1 does in Python | the GPU levels, the export to plain C, the count per scalar operation | medium, independent |
+| R5 | **the count** (RG12.61) | the measure for R1 to R4 | small, a step |
+
+**Recommendation**: R2 first - it unblocks the parameters (12.4) and the system variables (12.2), and it is small; R1
+as a planned refactoring once RG12.54.2 has decided the derivative program, which needs exactly the table of R1; R4
+when RG14.2.2 needs it; R3 with R1.

@@ -1,0 +1,11 @@
+{
+  "number": 3142,
+  "title": "Count the nodes of symbolic expressions and flat programs, in total and per kind of operation",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-28: to understand the complexity of a symbolic expression, a method that counts its nodes - in detail per kind of node (+, sin, numbers, variables, ...) - for the expressions (esym.Real, Vector, Matrix) and for the flat program of a recording. One traversal in C++ as FlatProgramData::Add, without cost at evaluation: the distinct nodes of the graph, the operations, the leaves (numbers, variables, item outputs), the shared nodes, the depth, the size of the tree when every shared node is counted per path (what ToString and the tree Diff walk), and with detailed=True the counts per FlatName and per kind (Real, Vector, Matrix); for the flat program also the entries that are written and those written into their users.",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26"
+}
