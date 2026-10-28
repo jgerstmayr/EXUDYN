@@ -76,7 +76,8 @@ ObjectConnectorUser instead of the built-in objects, so that one script builds a
 their user functions symbolic, one recording per kind of item (#3125); `CreateRigidBody` (on NodeRigidBodyRxyz, with
 the center of mass) and `CreateTorsionalSpringDamper` (#3128); `CreateRevoluteJoint`, `CreatePrismaticJoint`,
 `CreateSphericalJoint` and `CreateDistanceConstraint` as ObjectJointUser with the equations of the built-in joints
-(#3140). `SolveGeneralizedAlpha(system,
+(#3140); `SymbolicSystem` takes them, with their constraint equations and reaction forces, and `SolveGeneralizedAlpha`
+integrates the system with the joints (#3141). `SolveGeneralizedAlpha(system,
 simulationSettings)` integrates a system of `exudyn.misc.symbolicSystem` by the generalized-alpha or Newmark method with
 constant step size, as `SolveDynamic` does, with the Jacobian of the residual by `Diff` of the recordings (#3126).
 `SymbolicSystem.Equations(format)` gives the mass matrix, the forces of `M q_tt = f` and the mass matrices of the

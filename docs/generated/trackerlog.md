@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.243.dev1
+- Exudyn version = 1.13.244.dev1
 - last change = 2026-10-28
 - Number of issues = 3142
-- Number of resolved issues = 3020 (243 in current version)
+- Number of resolved issues = 3021 (244 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` SymbolicSystem takes ObjectJointUser: algebraic equations and reaction forces of the recorded joints (#3141)
-  - description: SymbolicSystem with ObjectJointUser on rigid markers of user bodies and the ground: nAE, AlgebraicEquations from the recorded constraintUserFunction with the marker states, ReactionForces C\_q^T lambda from the recorded jacobianUserFunction projected by the marker Jacobians as the connector forces; SolveGeneralizedAlpha against SolveDynamic. Maintainer 2026-10-28.
-  - date raised: 2026-10-28
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Evaluate the kinds of a symbolic system by one Numba-compiled function per kind, with explicit integration (#3139)
   - description: The numpy code of exudyn.misc.symbolicExport per kind compiled by numba.njit, a parallel loop over the objects of a kind through the LTG and parameter tables; explicit integration with a constant mass matrix factored once or the matrix-free product from the residuals; Numba optional at the point of use. Formerly revision2026c step RG12.51.6. Design docs/dev/design/uniformEvaluation.md section 1.
   - date raised: 2026-10-28

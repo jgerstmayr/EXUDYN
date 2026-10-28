@@ -202,6 +202,7 @@ symbolicOnePassJacobianTest
 symbolicOptimizeTest
 symbolicSparseMatrixTest
 symbolicSystemEquationsTest
+symbolicSystemJointsTest
 symbolicSystemLoadsTest
 symbolicSystemODE1AETest
 symbolicSystemTest

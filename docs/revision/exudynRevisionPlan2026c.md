@@ -1968,6 +1968,13 @@ and MarkerBodyRigid on ObjectUserBody and the ground, the rotations when the con
 Jacobian composed of the marker derivatives; symbolicUserRigidBodiesTest.py: SolveExplicit 1.0e-15 and
 SolveGeneralizedAlpha 3.2e-11 to SolveDynamic, the Jacobian 9.3e-11, and the times. [log](exudynRevisionLog2026c.md#rg12-51-4-1)
 
+##### **CLOSED_RG12.51.4.2** Take ObjectJointUser into the symbolic system: constraint equations and reaction forces
+
+CLOSED 2026-10-28 (#3141; maintainer 2026-10-28: make SymbolicSystem take ODE1 items and joints): AlgebraicEquations and
+ReactionForces from the recorded joint functions and the marker Jacobians; SolveGeneralizedAlpha equal to SolveDynamic
+to 1.1e-11 at Newton tolerance 1e-13, 90 times slower (constraint blocks by central differences).
+[log](exudynRevisionLog2026c.md#rg12-51-4-2)
+
 #### **OPEN_RG12.51.5** Export the equations of motion: the programs, the sparsity pattern and the scatter as C++ and Python
 
 Design §1 G1, with a small driver that evaluates them outside Exudyn.

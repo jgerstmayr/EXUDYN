@@ -205,8 +205,13 @@ CSolverExplicit and CSolverImplicitSecondOrder:
   `storeInitialAlgebraicCoordinates`; the convergence over all equations. Without ODE1 and algebraic coordinates the
   path of #3126 is unchanged (sparse). `useIndex2Constraints` is refused.
 - `NumpySystem` takes `ode1RightHandSide`, `initialStateODE1`, `constraints`, `constraintJacobian`.
-- `SymbolicSystem` still refuses items with ODE1 or algebraic coordinates; they come with the joints (RG12.51.4) and the
-  ODE1 items. The coupling of all kinds in one item also needs Exudyn's internal solvers extended.
+- `SymbolicSystem` takes ObjectJointUser with symbolic constraint and Jacobian functions (#3141): `AlgebraicEquations`
+  from the constraint recording with the marker states, `ReactionForces` = $\Cm_{\qv}\tp\tlambda$ from the Jacobian
+  recording (by the marker translations and global rotation increments), mapped into the coordinates by the position
+  and rotation Jacobians of the markers as the forces of a connector. The constraint blocks of `SystemJacobian` are
+  central differences (exact ones by the one-pass derivative are open), which makes `SolveGeneralizedAlpha` slow - 4.2
+  s against 0.048 s of SolveDynamic for the 33 unknowns of symbolicSystemJointsTest.py - and makes it stop at other
+  Newton iterates than Exudyn. The constraints are not in `Equations()` yet. ODE1 items are still refused. The coupling of all kinds in one item also needs Exudyn's internal solvers extended.
 
 ## 7. Sub-steps of RG12.51 (as planned after the decisions)
 

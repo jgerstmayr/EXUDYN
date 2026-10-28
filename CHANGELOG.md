@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 239 | 1.13.243 |
+| 1.13 | Newborn | 240 | 1.13.244 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.244** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem takes ObjectJointUser: algebraic equations and reaction forces of the recorded joints (#3141)
+  - description: SymbolicSystem with ObjectJointUser on rigid markers of user bodies and the ground: nAE, AlgebraicEquations from the recorded constraintUserFunction with the marker states, ReactionForces C\_q^T lambda from the recorded jacobianUserFunction projected by the marker Jacobians as the connector forces; SolveGeneralizedAlpha against SolveDynamic. Maintainer 2026-10-28.
+  - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem takes ObjectJointUser with symbolic constraint and Jacobian functions: AlgebraicEquations and ReactionForces (C\_q^T lambda through the marker Jacobians), so that SolveGeneralizedAlpha integrates systems with the joints of UserItemCreator; the output of the solvers with joints by Exudyn's implicit solver.
+  - date resolved: **2026-10-28 14:06**, date raised: 2026-10-28
 - **1.13.243** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UserItemCreator: revolute, prismatic and spherical joint and distance constraint as ObjectJointUser with the equations of the built-in joints (#3140)
   - description: CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint and CreateDistanceConstraint of UserItemCreator with the arguments of mbs: ObjectJointUser on the rigid markers of the built-in joint, the constraint equations of ObjectJointRevoluteZ, ObjectJointPrismaticX, ObjectJointSpherical and ObjectConnectorDistance and their derivative by the marker translations and global rotation increments, recordable; checked against the built-in joints with SolveDynamic. Maintainer 2026-10-28 (make SymbolicSystem take joints, which needs them).
   - **notes:** exudyn.misc.symbolicUserItems.UserItemCreator: CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint and CreateDistanceConstraint with the arguments of mbs, as ObjectJointUser with the equations of the built-in joints and their derivative, recordable; equal to the built-in joints to the Newton tolerance.

@@ -4169,3 +4169,23 @@ RG12.55.4: "=> yes".)*
   with recorded functions, SolveDynamic (generalized-alpha, 200 steps, relativeTolerance 1e-10): 2.1e-12 and 7.3e-13
   relative. Result 1.
 - docs/dev/design/symbolicUserItems.md table, docs/manual/revisions.md.
+
+<a id="rg12-51-4-2"></a>
+### RG12.51.4.2 — ObjectJointUser in the symbolic system (2026-10-28, #3141)
+*(Maintainer 2026-10-28, on the proposal to make SymbolicSystem take ODE1 items and joints: "=> yes".)*
+- exudyn/misc/symbolicSystem.py `SymbolicSystem`: ObjectJointUser taken by `_AddJoint` into `jointKinds`, grouped as the
+  connectors (the flat programs of both recordings and the pattern of the markers); `_ConnectorMarkers(..., orientation=True)`
+  for its rigid markers; refused if not active or not symbolic. nAE from mbs, checked against the equations of the
+  joints (other items with algebraic equations stay refused). `AlgebraicEquations` (position level only) by the
+  constraintUserFunction with the marker positions and rotation matrices; `ReactionForces` C_q^T lambda: C^T lambda of
+  the recorded jacobianUserFunction - forces and torques on the markers -, mapped by J_pos^T and J_rot^T of each marker.
+  `__repr__` lists the joints. `_Output`: with algebraic coordinates MainSolverImplicitSecondOrder writes the output -
+  the explicit one refuses constraints at InitializeSolver -, and lambda is written into mbs.
+- python/TestModels/symbolicSystemJointsTest.py, the system of symbolicUserJointsTest.py recorded: the equations in the
+  initial state 6.1e-16; the reaction forces against central differences of lambda^T c(q) 2.4e-11 relative;
+  SolveGeneralizedAlpha against SolveDynamic, 100 steps: 1.1e-8 at relativeTolerance 1e-10, 1.1e-11 at 1e-13 - both stop
+  at other iterates, as the constraint blocks of SystemJacobian are central differences; without initial accelerations
+  the same 1.1e-8. Times 4.2 s against 0.048 s. Result 1.
+- Open: exact constraint blocks (the Jacobian of the constraint recording by the one pass through the marker
+  kinematics), the constraints in Equations(), ODE1 items.
+- docs/dev/design/symbolicSystem.md §6, docs/manual/revisions.md.

@@ -2,11 +2,15 @@
   "number": 3141,
   "title": "SymbolicSystem takes ObjectJointUser: algebraic equations and reaction forces of the recorded joints",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "SymbolicSystem with ObjectJointUser on rigid markers of user bodies and the ground: nAE, AlgebraicEquations from the recorded constraintUserFunction with the marker states, ReactionForces C_q^T lambda from the recorded jacobianUserFunction projected by the marker Jacobians as the connector forces; SolveGeneralizedAlpha against SolveDynamic. Maintainer 2026-10-28.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
-  "file": "python/exudyn/misc/symbolicSystem.py"
+  "dateResolved": "2026-10-28 14:06",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/symbolicSystem.py",
+  "releaseNotes": "exudyn.misc.symbolicSystem.SymbolicSystem takes ObjectJointUser with symbolic constraint and Jacobian functions: AlgebraicEquations and ReactionForces (C_q^T lambda through the marker Jacobians), so that SolveGeneralizedAlpha integrates systems with the joints of UserItemCreator; the output of the solvers with joints by Exudyn's implicit solver.",
+  "resolvedInVersion": "1.13.244"
 }

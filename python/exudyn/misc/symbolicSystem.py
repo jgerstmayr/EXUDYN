@@ -53,6 +53,8 @@ __all__ = ['SymbolicSystemBase', 'NumpySystem', 'SymbolicKind', 'SymbolicLoad', 
 _userFunctionNames = {'UserBody': ['massMatrixUserFunction', 'forceUserFunction'],
                       'GenericODE2': ['massMatrixUserFunction', 'forceUserFunction'],
                       'ConnectorUser': ['forceUserFunction']}
+#the user functions of a joint, ObjectJointUser on two rigid markers (#3141)
+_jointFunctionNames = ['constraintUserFunction', 'jacobianUserFunction']
 #the positions of the arguments q (the total coordinates for UserBody) and q_t in the user functions, mbs at 0
 _argumentPositions = {'UserBody': (4, 5), 'GenericODE2': (3, 4)}
 #the user function of ObjectUserBody that projects a load on a body marker into its coordinates (#3118), and the
@@ -437,8 +439,10 @@ class SymbolicSystem(SymbolicSystemBase):
             each object and load by its own recordings, one call each
 
     Note:
-        Its members: mbs; kinds, the list of SymbolicKind; loads, the list of SymbolicLoad; nODE2, the number of ODE2
-        coordinates of the system; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
+        Its members: mbs; kinds, the list of SymbolicKind; jointKinds, the list of SymbolicKind of the ObjectJointUser
+        (#3141), whose constraint equations are AlgebraicEquations and whose reaction forces are ReactionForces - they are
+        not in Equations() -; loads, the list of SymbolicLoad; nODE2, the number of ODE2 coordinates of the system; nAE,
+        the number of their equations; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
         the recordings 'forces' and 'massMatrix' and the 'rows' and 'columns' of the entries of the mass matrix
     """
     def __init__(self, mbs, composeSystem=True):
@@ -455,16 +459,22 @@ class SymbolicSystem(SymbolicSystemBase):
                 refused += ['load ' + str(loadNumber) + ' (' + mbs.GetLoad(loadNumber)['loadType'] + ': ' + reason + ')']
             elif load is not None:
                 self.loads.append(load)
-        for (name, size) in [('ODE1 coordinates', mbs.systemData.ODE1Size()), ('algebraic equations', mbs.systemData.AEsize()),
-                             ('data coordinates', mbs.systemData.DataSize())]:
+        for (name, size) in [('ODE1 coordinates', mbs.systemData.ODE1Size()), ('data coordinates', mbs.systemData.DataSize())]:
             if size > 0:
                 refused += [name]
+        self.nAE = mbs.systemData.AEsize()
         kinds = {}
+        jointKinds = {}
         self._constantMassMatrix = True
         for objectNumber in range(mbs.systemData.NumberOfObjects()):
             item = mbs.GetObject(objectNumber)
             objectType = item['objectType']
             ltg = list(mbs.systemData.GetObjectLTGODE2(objectNumber))
+            if objectType == 'JointUser':
+                reason = self._AddJoint(jointKinds, objectNumber, item)
+                if reason:
+                    refused += ['object ' + str(objectNumber) + ' (JointUser: ' + reason + ')']
+                continue
             if objectType not in _userFunctionNames:
                 if len(ltg):
                     refused += ['object ' + str(objectNumber) + ' (' + objectType + ')']
@@ -508,10 +518,13 @@ class SymbolicSystem(SymbolicSystemBase):
             else:
                 kind.parameters.append({'M': _Dense(item['massMatrix']), 'K': _Dense(item['stiffnessMatrix']),
                                         'D': _Dense(item['dampingMatrix']), 'f': np.array(item['forceVector'], dtype=float)})
+        self.jointKinds = list(jointKinds.values())
+        if not refused and sum(len(joint['ltgAE']) for kind in self.jointKinds for joint in kind.parameters) != self.nAE:
+            refused += ['algebraic equations of other items than ObjectJointUser']
         if refused:
             raise ValueError('SymbolicSystem: these items cannot be assembled (yet): ' + ', '.join(refused))
         self.kinds = list(kinds.values())
-        for kind in self.kinds:
+        for kind in self.kinds + self.jointKinds:
             kind.ltg = np.array(kind.ltg, dtype=int)
         self.composed = self._Compose() if composeSystem else None
 
@@ -548,13 +561,38 @@ class SymbolicSystem(SymbolicSystemBase):
         return {'forces': Record(UFforces), 'massMatrix': Record(UFmassMatrix), 'massMatrixBlocks': Record(UFmassMatrixBlocks),
                 'rows': rows, 'columns': columns}
 
-    def _ConnectorMarkers(self, objectNumber, item):
-        """the markers of an ObjectConnectorUser as the dicts of SymbolicKind, the global indices of the coordinates of
-        the connector, and the reason it is refused, empty if it is taken"""
+    def _AddJoint(self, jointKinds, objectNumber, item):
+        """an ObjectJointUser into its kind, grouped as the connectors; the reason it is refused, empty if it is taken"""
+        if not item['activeConnector']:
+            return 'not active (its equations lambda = 0 are not given)'
+        (markers, ltg, reason) = self._ConnectorMarkers(objectNumber, item, orientation=True)
+        if reason:
+            return reason
+        recordings = {name: _Recording(item[name], objectNumber, name) for name in _jointFunctionNames}
+        if any(recording is None for recording in recordings.values()):
+            return 'the constraintUserFunction and the jacobianUserFunction must be symbolic'
+        key = (tuple((name, recordings[name].GetFlatProgram()) for name in _jointFunctionNames)
+               + tuple((marker['type'], len(marker['indices']))
+                       + tuple(recording.GetFlatProgram() for recording in marker.get('recordings', {}).values())
+                       for marker in markers))
+        if key not in jointKinds:
+            jointKinds[key] = SymbolicKind('JointUser', recordings)
+        kind = jointKinds[key]
+        kind.objects.append(objectNumber)
+        kind.ltg.append(ltg)
+        kind.parameters.append({'parameters': np.array(item['parameters'], dtype=float), 'markers': markers, 'orientation': True,
+                                'ltgAE': np.array(self.mbs.systemData.GetObjectLTGAE(objectNumber), dtype=int)})
+        return ''
+
+    def _ConnectorMarkers(self, objectNumber, item, orientation=None):
+        """the markers of an ObjectConnectorUser - or of an ObjectJointUser, orientation=True - as the dicts of
+        SymbolicKind, the global indices of the coordinates of the connector, and the reason it is refused, empty if it
+        is taken"""
         mbs = self.mbs
-        if item['markerAccessUserFunction'] != 0 or item['postNewtonStepUserFunction'] != 0:
-            return (None, None, 'a markerAccessUserFunction or postNewtonStepUserFunction')
-        orientation = bool(int(item['requestedMarkerType']) & int(exudyn.MarkerType.Orientation))
+        if orientation is None:
+            if item['markerAccessUserFunction'] != 0 or item['postNewtonStepUserFunction'] != 0:
+                return (None, None, 'a markerAccessUserFunction or postNewtonStepUserFunction')
+            orientation = bool(int(item['requestedMarkerType']) & int(exudyn.MarkerType.Orientation))
         (markers, ltg) = ([], [])
         for markerNumber in item['markerNumbers']:
             marker = mbs.GetMarker(markerNumber)
@@ -717,6 +755,70 @@ class SymbolicSystem(SymbolicSystemBase):
                 states += [values['positionUserFunction'], Jpos @ q_t[indices], rotation, angularVelocity]
             markerData.append((Jpos, Jrot, bodyArguments))
         return ((t, kind.objects[i], *states, [], connector['parameters']), markerData)
+
+    def _JointArguments(self, kind, i, q, t):
+        """the arguments after mbs of the user functions of joint i of kind - the position and rotation matrix of each
+        marker -, and per marker its Jacobians and the arguments of its body, as _ConnectorStates"""
+        (arguments, markerData) = self._ConnectorStates(kind, i, q, np.zeros(self.nODE2), t)
+        (t, objectNumber, p0, v0, R0, w0, p1, v1, R1, w1, data, parameters) = arguments
+        return ((t, objectNumber, p0, R0, p1, R1, parameters), markerData)
+
+    def AlgebraicEquations(self, q, q_t, y, lam, t, velocityLevel=False):
+        """the constraint equations c(q, t) of the joints at position level (#3141), by their recorded
+        constraintUserFunction; the velocity level is not given
+
+        Args:
+            q: the ODE2 coordinates
+            q_t: the ODE2 velocities, not used
+            y: the ODE1 coordinates, not used
+            lam: the algebraic coordinates, not used
+            t: the time
+            velocityLevel: must be False
+
+        Returns:
+            the vector c of size nAE
+        """
+        if velocityLevel:
+            raise ValueError('SymbolicSystem.AlgebraicEquations: the joints give their equations at position level only')
+        c = np.zeros(self.nAE)
+        for kind in self.jointKinds:
+            for i in range(len(kind.objects)):
+                arguments = self._JointArguments(kind, i, np.asarray(q, dtype=float), t)[0]
+                c[kind.parameters[i]['ltgAE']] = np.array(kind.recordings['constraintUserFunction'].Evaluate(self.mbs, *arguments),
+                                                          dtype=float)
+        return c
+
+    def ReactionForces(self, q, q_t, y, lam, t):
+        """the reaction forces C_q^T lambda of the joints (#3141): the recorded jacobianUserFunction C by the marker
+        translations and global rotation increments, C^T lambda the forces and torques on the markers, projected into the
+        coordinates by the position and rotation Jacobians of the markers, as the forces of a connector
+
+        Args:
+            q: the ODE2 coordinates
+            q_t: the ODE2 velocities, not used
+            y: the ODE1 coordinates, not used
+            lam: the algebraic coordinates
+            t: the time
+
+        Returns:
+            the vector of size nODE2
+        """
+        (q, lam) = (np.asarray(q, dtype=float), np.asarray(lam, dtype=float))
+        f = np.zeros(self.nODE2)
+        for kind in self.jointKinds:
+            for i in range(len(kind.objects)):
+                joint = kind.parameters[i]
+                (arguments, markerData) = self._JointArguments(kind, i, q, t)
+                C = np.array(kind.recordings['jacobianUserFunction'].Evaluate(self.mbs, *arguments), dtype=float).reshape(-1, 12)
+                forces = C.T @ lam[joint['ltgAE']]
+                local = np.zeros(kind.ltg.shape[1])
+                for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(joint['markers'], markerData)):
+                    if Jpos is not None:
+                        local[marker['indices']] += Jpos.T @ forces[6*k:6*k + 3]
+                    if Jrot is not None:
+                        local[marker['indices']] += Jrot.T @ forces[6*k + 3:6*k + 6]
+                np.add.at(f, kind.ltg[i], local)
+        return f
 
     def _Call(self, kind, name, i, q, q_t, t):
         """the result of the user function name of object i of kind, by its recording, as numpy array"""
@@ -1251,6 +1353,9 @@ class SymbolicSystem(SymbolicSystemBase):
         for kind in self.kinds:
             lines.append('  ' + kind.objectType + ': ' + str(len(kind.objects)) + ' objects of ' + str(kind.ltg.shape[1])
                          + ' coordinates, user functions ' + str(sorted(kind.recordings)))
+        for kind in self.jointKinds:
+            lines.append('  JointUser: ' + str(len(kind.objects)) + ' joints of ' + str(len(kind.parameters[0]['ltgAE']))
+                         + ' equations on ' + str(kind.ltg.shape[1]) + ' coordinates')
         if self.loads:
             lines.append('  loads: ' + ', '.join(load.loadType + (' (user function)' if load.recording is not None else '')
                                                 for load in self.loads))
@@ -1363,9 +1468,13 @@ class _Output:
         if getattr(system, 'mbs', None) is not None:
             self.simulationSettings = exudyn.SimulationSettings()
             self.simulationSettings.SetDictionary(simulationSettings.GetDictionary())
-            self.simulationSettings.timeIntegration.solverType = exudyn.DynamicSolverType.ExplicitEuler
-            self.simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = False
-            self.solver = exudyn.MainSolverExplicit()
+            if system.nAE: #Exudyn's explicit solver refuses the joints; the implicit one writes the same output
+                self.simulationSettings.timeIntegration.solverType = exudyn.DynamicSolverType.GeneralizedAlpha
+                self.solver = exudyn.MainSolverImplicitSecondOrder()
+            else:
+                self.simulationSettings.timeIntegration.solverType = exudyn.DynamicSolverType.ExplicitEuler
+                self.simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = False
+                self.solver = exudyn.MainSolverExplicit()
             self.solver.InitializeSolver(system.mbs, self.simulationSettings)
 
     def Step(self, stepIndex, t, q, q_t, q_tt, last=False, y=None, y_t=None, lam=None):
@@ -1379,6 +1488,8 @@ class _Output:
                     self.result[name].append(np.copy(value))
         if self.solver is not None:
             self.system.SetSystemState(q, q_t, q_tt, t)
+            if lam is not None and len(lam):
+                self.system.mbs.systemData.SetAECoordinates(np.asarray(lam, dtype=float))
             self.solver.it.currentStepIndex = stepIndex
             self.solver.it.currentTime = t
             self.solver.it.currentStepSize = self.h
