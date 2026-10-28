@@ -10,8 +10,8 @@ nodes, markers and loads. The user functions are Python functions, so that the s
 built; Record() replaces them by one symbolic recording per kind of item, which SymbolicSystem and the
 export take. A script that builds a system with creator = mbs builds the same system of user items with
 creator = UserItemCreator(mbs).
-The items: CreateGround, CreateMassPoint, CreateSpringDamper, CreateForce. An argument a user item does
-not support raises, naming it.
+The items: CreateGround, CreateMassPoint, CreateRigidBody (on NodeRigidBodyRxyz), CreateSpringDamper,
+CreateTorsionalSpringDamper, CreateForce. An argument a user item does not support raises, naming it.
 
 - **Author**: Johannes Gerstmayr
 - **Date**: 2026-10-27 (created)
@@ -19,7 +19,7 @@ not support raises, naming it.
 (sec-symbolicuseritems--refuse)=
 ## Function: _Refuse
 
-[`_Refuse(where, name, value, default, reason = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L75)
+[`_Refuse(where, name, value, default, reason = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L166)
 
 - **function description**: raise naming an argument the user item does not support, if it differs from its default
 
@@ -31,12 +31,12 @@ not support raises, naming it.
 
 - **input**:
   - `mbs`: the MainSystem where the items are created
-- **notes**: Its members: mbs; items, the dict of the item numbers of each kind ('massPoint', 'springDamper'); loads, the list of the loads with a user function created by CreateForce; recordings, the symbolic user functions of Record, which must live as long as the system. Example: creator = UserItemCreator(mbs) #or creator = mbs: the same script with the built-in items b0 = creator.CreateMassPoint(referencePosition=[1,0,0], mass=2, gravity=[0,-9.81,0]) creator.CreateSpringDamper(itemNumbers=[creator.CreateGround(), b0], stiffness=100, damping=1) creator.Record() mbs.Assemble()
+- **notes**: Its members: mbs; items, the dict of the item numbers of each kind ('massPoint', 'rigidBody', 'springDamper', 'torsionalSpringDamper'); loads, the list of the loads with a user function created by CreateForce; recordings, the symbolic user functions of Record, which must live as long as the system. Example: creator = UserItemCreator(mbs) #or creator = mbs: the same script with the built-in items b0 = creator.CreateMassPoint(referencePosition=[1,0,0], mass=2, gravity=[0,-9.81,0]) creator.CreateSpringDamper(itemNumbers=[creator.CreateGround(), b0], stiffness=100, damping=1) creator.Record() mbs.Assemble()
 
 (sec-symbolicuseritems-useritemcreator-createground)=
 ### Class function: CreateGround
 
-[`CreateGround(self, name = '', referencePosition = None, referenceRotationMatrix = None, graphicsDataList = [], graphicsDataUserFunction = 0, show = True, referenceHT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L112)
+[`CreateGround(self, name = '', referencePosition = None, referenceRotationMatrix = None, graphicsDataList = [], graphicsDataUserFunction = 0, show = True, referenceHT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L204)
 
 - **class function description**: the built-in ObjectGround, as mbs.CreateGround: it has no coordinates
 - **input**:
@@ -53,7 +53,7 @@ not support raises, naming it.
 (sec-symbolicuseritems-useritemcreator-createmasspoint)=
 ### Class function: CreateMassPoint
 
-[`CreateMassPoint(self, name = '', referencePosition = [0., 0., 0.], initialDisplacement = [0., 0., 0.], initialVelocity = [0., 0., 0.], mass = 0, gravity = [0., 0., 0.], graphicsDataList = [], drawSize = -1, color = [-1., -1., -1., -1.], show = True, create2D = False, returnDict = False, physicsMass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L132)
+[`CreateMassPoint(self, name = '', referencePosition = [0., 0., 0.], initialDisplacement = [0., 0., 0.], initialVelocity = [0., 0., 0.], mass = 0, gravity = [0., 0., 0.], graphicsDataList = [], drawSize = -1, color = [-1., -1., -1., -1.], show = True, create2D = False, returnDict = False, physicsMass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L224)
 
 - **class function description**: a mass point as ObjectUserBody on a NodePoint, with the nodes, markers and loads of mbs.CreateMassPoint and its arguments
 - **input**:
@@ -73,10 +73,39 @@ not support raises, naming it.
 - **output**: the ObjectIndex of the body, or with returnDict the dict of mbs.CreateMassPoint
 
 
+(sec-symbolicuseritems-useritemcreator-createrigidbody)=
+### Class function: CreateRigidBody
+
+[`CreateRigidBody(self, name = '', referencePosition = None, referenceRotationMatrix = None, initialVelocity = [0., 0., 0.], initialAngularVelocity = [0., 0., 0.], initialDisplacement = None, initialRotationMatrix = None, inertia = None, gravity = [0., 0., 0.], nodeType = exudyn.NodeType.RotationEulerParameters, graphicsDataList = [], graphicsDataUserFunction = 0, drawSize = -1, color = [-1., -1., -1., -1.], show = True, create2D = False, returnDict = False, referenceHT = None, initialHT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L269)
+
+- **class function description**: a rigid body as ObjectUserBody on a NodeRigidBodyRxyz, with the node, markers and loads of mbs.CreateRigidBody and its arguments; nodeType must be exu.NodeType.RotationRxyz
+- **input**:
+  - `name`: as in mbs.CreateRigidBody
+  - `referencePosition`: as in mbs.CreateRigidBody
+  - `referenceRotationMatrix`: as in mbs.CreateRigidBody
+  - `initialVelocity`: as in mbs.CreateRigidBody
+  - `initialAngularVelocity`: as in mbs.CreateRigidBody
+  - `initialDisplacement`: as in mbs.CreateRigidBody
+  - `initialRotationMatrix`: as in mbs.CreateRigidBody
+  - `inertia`: as in mbs.CreateRigidBody; its mass, inertia about the node and center of mass are the parameters of the user body
+  - `gravity`: as in mbs.CreateRigidBody
+  - `nodeType`: exu.NodeType.RotationRxyz; the default RotationEulerParameters is refused (the user body does not give the algebraic equation of the Euler parameters), RotationRotationVector too (a Lie group node)
+  - `graphicsDataList`: as in mbs.CreateRigidBody, the graphicsData of the user body; empty: the graphics of inertia
+  - `graphicsDataUserFunction`: refused if given: the one of ObjectUserBody has other arguments
+  - `drawSize`: as in mbs.CreateRigidBody
+  - `color`: as in mbs.CreateRigidBody
+  - `show`: as in mbs.CreateRigidBody
+  - `create2D`: refused if True: a planar user rigid body does not exist yet
+  - `returnDict`: as in mbs.CreateRigidBody
+  - `referenceHT`: as in mbs.CreateRigidBody
+  - `initialHT`: as in mbs.CreateRigidBody
+- **output**: the ObjectIndex of the body, or with returnDict the dict of mbs.CreateRigidBody
+
+
 (sec-symbolicuseritems-useritemcreator-createspringdamper)=
 ### Class function: CreateSpringDamper
 
-[`CreateSpringDamper(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], referenceLength = None, stiffness = 0., damping = 0., force = 0., velocityOffset = 0., springForceUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L177)
+[`CreateSpringDamper(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], referenceLength = None, stiffness = 0., damping = 0., force = 0., velocityOffset = 0., springForceUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L351)
 
 - **class function description**: a spring-damper as ObjectConnectorUser on the markers of mbs.CreateSpringDamper, with its arguments and its force; at the center of a user mass point the marker is on its node, which has the same position; drawn by a graphicsDataUserFunction
 - **input**:
@@ -98,10 +127,37 @@ not support raises, naming it.
 - **output**: the ObjectIndex of the connector
 
 
+(sec-symbolicuseritems-useritemcreator-createtorsionalspringdamper)=
+### Class function: CreateTorsionalSpringDamper
+
+[`CreateTorsionalSpringDamper(self, name = '', itemNumbers = [None, None], position = [0., 0., 0.], axis = [0., 0., 0.], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., torque = 0., useGlobalFrame = True, springTorqueUserFunction = 0, unlimitedRotations = True, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L411)
+
+- **class function description**: a torsional spring-damper as ObjectConnectorUser on the rigid markers of mbs.CreateTorsionalSpringDamper, with its arguments and its torque about the axis; the angle is that of the relative rotation in (-pi, pi], so unlimitedRotations must be False; drawn by a graphicsDataUserFunction
+- **input**:
+  - `name`: as in mbs.CreateTorsionalSpringDamper
+  - `itemNumbers`: as in mbs.CreateTorsionalSpringDamper, two bodies or the ground
+  - `position`: as in mbs.CreateTorsionalSpringDamper
+  - `axis`: as in mbs.CreateTorsionalSpringDamper
+  - `stiffness`: as in mbs.CreateTorsionalSpringDamper
+  - `damping`: as in mbs.CreateTorsionalSpringDamper
+  - `offset`: as in mbs.CreateTorsionalSpringDamper
+  - `velocityOffset`: as in mbs.CreateTorsionalSpringDamper
+  - `torque`: as in mbs.CreateTorsionalSpringDamper
+  - `useGlobalFrame`: as in mbs.CreateTorsionalSpringDamper
+  - `springTorqueUserFunction`: refused if given: the torque is the forceUserFunction of the connector
+  - `unlimitedRotations`: must be False: the turns need a data coordinate, which the symbolic system does not take
+  - `show`: as in mbs.CreateTorsionalSpringDamper
+  - `drawSize`: the diameter of a cylinder along the axis; not positive: a line
+  - `color`: the color of the drawing; the default: grey
+  - `bodyNumbers`: refused if given: use itemNumbers
+  - `bodyOrNodeList`: refused if given: use itemNumbers
+- **output**: the ObjectIndex of the connector
+
+
 (sec-symbolicuseritems-useritemcreator-createforce)=
 ### Class function: CreateForce
 
-[`CreateForce(self, name = '', itemNumber = None, loadVector = [0., 0., 0.], localPosition = [0., 0., 0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L237)
+[`CreateForce(self, name = '', itemNumber = None, loadVector = [0., 0., 0.], localPosition = [0., 0., 0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L483)
 
 - **class function description**: the built-in LoadForceVector of mbs.CreateForce, with its arguments: on a user mass point, its marker acts by the Jacobian of the user body
 - **input**:
@@ -119,9 +175,9 @@ not support raises, naming it.
 (sec-symbolicuseritems-useritemcreator-record)=
 ### Class function: Record
 
-[`Record(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L262)
+[`Record(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/symbolicUserItems.py#L508)
 
 - **class function description**: replace the Python user functions of the items by symbolic ones: each user function of a kind recorded once, with the first item of the kind, and set in every item of the kind - one recording per kind, as SymbolicSystem groups them -; the loadVectorUserFunction of each force of CreateForce recorded on its own. The recordings are kept in recordings, as long as this object lives
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicGeneralizedAlphaTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicGeneralizedAlphaTest.py) (TM), [`symbolicUserItemsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserItemsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicGeneralizedAlphaTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicGeneralizedAlphaTest.py) (TM), [`symbolicUserItemsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserItemsTest.py) (TM), [`symbolicUserRigidBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserRigidBodiesTest.py) (TM)

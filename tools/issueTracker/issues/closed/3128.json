@@ -1,0 +1,16 @@
+{
+  "number": 3128,
+  "title": "UserItemCreator: CreateRigidBody and CreateTorsionalSpringDamper",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.55.3: a rigid body as ObjectUserBody on NodeRigidBodyRxyz with the mass matrix and quadratic velocity terms of ObjectRigidBody (center of mass included), position, rotation, their Jacobians and the mass integral; a torsional spring-damper as ObjectConnectorUser on the rigid markers of mbs.CreateTorsionalSpringDamper, requesting the orientation; the arguments of mbs, unsupported ones refused.",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26",
+  "dateResolved": "2026-10-28 07:47",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/symbolicUserItems.py",
+  "releaseNotes": "exudyn.misc.symbolicUserItems.UserItemCreator: CreateRigidBody, ObjectUserBody on NodeRigidBodyRxyz with the mass matrix and quadratic velocity terms of ObjectRigidBody including a center of mass off the node, and CreateTorsionalSpringDamper, ObjectConnectorUser on the rigid markers of the built-in function, both with the arguments of mbs and recorded by Record; symbolicUserRigidBodiesTest.py equal to the built-in items",
+  "resolvedInVersion": "1.13.233"
+}

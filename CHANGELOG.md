@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 228 | 1.13.232 |
+| 1.13 | Newborn | 229 | 1.13.233 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.233** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UserItemCreator: CreateRigidBody and CreateTorsionalSpringDamper (#3128)
+  - description: revision2026c step RG12.55.3: a rigid body as ObjectUserBody on NodeRigidBodyRxyz with the mass matrix and quadratic velocity terms of ObjectRigidBody (center of mass included), position, rotation, their Jacobians and the mass integral; a torsional spring-damper as ObjectConnectorUser on the rigid markers of mbs.CreateTorsionalSpringDamper, requesting the orientation; the arguments of mbs, unsupported ones refused.
+  - **notes:** exudyn.misc.symbolicUserItems.UserItemCreator: CreateRigidBody, ObjectUserBody on NodeRigidBodyRxyz with the mass matrix and quadratic velocity terms of ObjectRigidBody including a center of mass off the node, and CreateTorsionalSpringDamper, ObjectConnectorUser on the rigid markers of the built-in function, both with the arguments of mbs and recorded by Record; symbolicUserRigidBodiesTest.py equal to the built-in items
+  - date resolved: **2026-10-28 07:47**, date raised: 2026-10-28
 - **1.13.232** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pytest writes solution/coordinatesSolution.txt into the repository root (#3127)
   - description: test\_connectorInterface, test\_accessFunctionsAD, test\_specialBeams and test\_graphicsData initialize or run a solver with the default solution file settings, so a pytest run from the root writes solution/coordinatesSolution.txt there. conftest.py sets EXUDYN\_OUTPUTDIRECTORY to a directory per worker under build/pytestOutput, unless it is set already, as the runners do for their models; exudev clean removes it.
   - **notes:** pytest writes the output of the models it runs into build/pytestOutput/\<worker\> instead of the directory it was started from: python/testing/conftest.py sets EXUDYN\_OUTPUTDIRECTORY unless it is set; a fixture noOutputDirectory for the tests of absolute file names and of the config defaults; exudev clean removes the directory

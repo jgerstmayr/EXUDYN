@@ -322,7 +322,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bricardMech
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`symbolicUserRigidBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserRigidBodiesTest.py) (TM)
 
 
 (sec-mainsystemextensions-createlinearspringdamper)=

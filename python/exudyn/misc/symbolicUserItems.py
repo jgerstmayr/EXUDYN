@@ -8,8 +8,8 @@
 #           built; Record() replaces them by one symbolic recording per kind of item, which SymbolicSystem and the
 #           export take. A script that builds a system with creator = mbs builds the same system of user items with
 #           creator = UserItemCreator(mbs).
-#           The items: CreateGround, CreateMassPoint, CreateSpringDamper, CreateForce. An argument a user item does
-#           not support raises, naming it.
+#           The items: CreateGround, CreateMassPoint, CreateRigidBody (on NodeRigidBodyRxyz), CreateSpringDamper,
+#           CreateTorsionalSpringDamper, CreateForce. An argument a user item does not support raises, naming it.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-27 (created)
@@ -24,7 +24,9 @@ import exudyn.itemInterface as eii
 import exudyn.cMath as cMath
 import exudyn.graphics as graphics
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
-from exudyn.misc.mainSystemExtensions import GetMarkersPosRot
+import exudyn.symbolicUtilities as su
+from exudyn.rigidBodyUtilities import RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, ComputeOrthonormalBasis
+from exudyn.misc.mainSystemExtensions import GetMarkersPosRot, JointPreCheckCalcBodyMarkers, _FrameFromHT
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = ['UserItemCreator']
@@ -50,6 +52,71 @@ def _UFmassPointRotationMatrix(mbs, t, itemNumber, localPosition, qRef, qTotal, 
 def _UFmassPointRotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return np.zeros((3, 3))
 
+#the functions of exudyn.symbolicUtilities for an argument: exudyn.symbolic while a function is recorded, else cMath,
+#so that the rigid body computes numbers in Exudyn and is recorded by Record
+def _Functions(argument):
+    return exudyn.symbolic if isinstance(argument, (exudyn.symbolic.Vector, exudyn.symbolic.Matrix)) else cMath
+
+def _Matrix(rows, functions):
+    return exudyn.symbolic.Matrix(rows) if functions is exudyn.symbolic else np.array(rows, dtype=float)
+
+def _Vector(components, functions):
+    return exudyn.symbolic.Vector(components) if functions is exudyn.symbolic else np.array(components, dtype=float)
+
+def _Blocks3x6(left, right, functions):
+    #the 3 x 6 matrix [left, right] of two 3 x 3 matrices; None is a zero block
+    return _Matrix([[left[i, j] if left is not None else 0 for j in range(3)]
+                    + [right[i, j] if right is not None else 0 for j in range(3)] for i in range(3)], functions)
+
+#the rigid body, ObjectUserBody on a NodeRigidBodyRxyz, qTotal = [position, Tait-Bryan angles], parameters [mass,
+#inertia (6 components, about the node, as ObjectRigidBody), centerOfMass]: the mass matrix and the forces of
+#src/ImplObjects/CObjectRigidBody.cpp with the local G matrix, the position of a local point p + A pLocal
+def _UFrigidBodyMass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    F = _Functions(qTotal)
+    (m, A, G) = (parameters[0], su.RotXYZ2RotationMatrix(qTotal[3:6], F), su.RotXYZ2GLocal(qTotal[3:6], F))
+    Mrot = G.T @ su.Inertia6D2InertiaTensor(parameters[1:7], F) @ G
+    Mtr = (-m)*(A @ su.Skew(parameters[7:10], F) @ G) #the coupling of a center of mass off the node
+    return _Matrix([[m if i == j else 0 for j in range(3)] + [Mtr[i, j] for j in range(3)] for i in range(3)]
+                   + [[Mtr[j, i] for j in range(3)] + [Mrot[i, j] for j in range(3)] for i in range(3)], F)
+
+def _UFrigidBodyForce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    #the right-hand side of the quadratic velocity terms: -G^T (omega x J omega + J G_t rot_t) on the rotations, and
+    #-A (omega x (U x omega) + U x G_t rot_t) on the translations, U = -m centerOfMass, omega local
+    F = _Functions(qTotal)
+    (rot, rot_t) = (qTotal[3:6], q_t[3:6])
+    J = su.Inertia6D2InertiaTensor(parameters[1:7], F)
+    G = su.RotXYZ2GLocal(rot, F)
+    omega = G @ rot_t
+    G_tRot_t = su.RotXYZ2GLocal_t(rot, rot_t, F) @ rot_t
+    torques = G.T @ (su.Cross(omega, J @ omega, F) + J @ G_tRot_t)
+    U = (-parameters[0])*parameters[7:10]
+    forces = su.RotXYZ2RotationMatrix(rot, F) @ (su.Cross(omega, su.Cross(U, omega, F), F) + su.Cross(U, G_tRot_t, F))
+    return _Vector([-forces[i] for i in range(3)] + [-torques[i] for i in range(3)], F)
+
+def _UFrigidBodyMassIntegral(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    #m J_pos at the center of mass
+    F = _Functions(qTotal)
+    m = parameters[0]
+    rot = qTotal[3:6]
+    return _Blocks3x6(_Matrix([[m if i == j else 0 for j in range(3)] for i in range(3)], F),
+                      (-m)*(su.RotXYZ2RotationMatrix(rot, F) @ su.Skew(parameters[7:10], F) @ su.RotXYZ2GLocal(rot, F)), F)
+
+def _UFrigidBodyPosition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return qTotal[0:3] + su.RotXYZ2RotationMatrix(qTotal[3:6], _Functions(qTotal)) @ localPosition
+
+def _UFrigidBodyPositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    F = _Functions(qTotal)
+    rot = qTotal[3:6]
+    return _Blocks3x6(_Matrix(np.eye(3), F), -(su.RotXYZ2RotationMatrix(rot, F) @ su.Skew(localPosition, F) @ su.RotXYZ2GLocal(rot, F)), F)
+
+def _UFrigidBodyRotationMatrix(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return su.RotXYZ2RotationMatrix(qTotal[3:6], _Functions(qTotal))
+
+def _UFrigidBodyRotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    F = _Functions(qTotal)
+    rot = qTotal[3:6]
+    return _Blocks3x6(None, su.RotXYZ2RotationMatrix(rot, F) @ su.RotXYZ2GLocal(rot, F), F)
+
 #the spring-damper, ObjectConnectorUser on two position markers, parameters [stiffness, damping, referenceLength, force,
 #velocityOffset]: as ObjectConnectorSpringDamper, the force k (L - L0) + d (dL/dt - v0) + f along the axis, pulling
 #marker 0 towards marker 1 if positive; with cMath, it computes numbers and is recorded
@@ -62,6 +129,22 @@ def _UFspringDamperForce(mbs, t, itemNumber, position0, velocity0, rotationMatri
              + parameters[3])
     return np.hstack([force*axis, -force*axis])
 
+#the torsional spring-damper, ObjectConnectorUser on two rigid markers, parameters [stiffness, damping, offset,
+#velocityOffset, torque]: as ObjectConnectorTorsionalSpringDamper, the torque k (phi - phi0) + d (omega - omega0) + tau0
+#about the z-axis of marker 0, phi the z-angle of the relative rotation A0^T A1 as Tait-Bryan angle, omega the z-component
+#of the relative angular velocity in the frame of marker 0; no forces. As the forces of the spring-damper, the torques act
+#on the markers: a positive torque turns marker 0 about the axis and marker 1 back
+def _UFtorsionalSpringDamperForce(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
+                                  position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
+    F = _Functions(rotationMatrix0)
+    A0 = rotationMatrix0
+    relative = A0.T @ rotationMatrix1
+    angle = F.atan2(-relative[0, 1], relative[0, 0])
+    omega = (A0.T @ (angularVelocity1 - angularVelocity0))[2]
+    torque = parameters[0]*(angle - parameters[2]) + parameters[1]*(omega - parameters[3]) + parameters[4]
+    torque0 = [torque*A0[i, 2] for i in range(3)]
+    return _Vector([0, 0, 0] + torque0 + [0, 0, 0] + [-x for x in torque0], F)
+
 #the user functions of each kind of item, which Record records once per kind
 _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                                 ('massIntegralUserFunction', _UFmassPointMassIntegral),
@@ -69,7 +152,15 @@ _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                                 ('positionJacobianUserFunction', _UFmassPointPositionJacobian),
                                 ('rotationMatrixUserFunction', _UFmassPointRotationMatrix),
                                 ('rotationJacobianUserFunction', _UFmassPointRotationJacobian)],
-                  'springDamper': [('forceUserFunction', _UFspringDamperForce)]}
+                  'rigidBody': [('massMatrixUserFunction', _UFrigidBodyMass),
+                                ('forceUserFunction', _UFrigidBodyForce),
+                                ('massIntegralUserFunction', _UFrigidBodyMassIntegral),
+                                ('positionUserFunction', _UFrigidBodyPosition),
+                                ('positionJacobianUserFunction', _UFrigidBodyPositionJacobian),
+                                ('rotationMatrixUserFunction', _UFrigidBodyRotationMatrix),
+                                ('rotationJacobianUserFunction', _UFrigidBodyRotationJacobian)],
+                  'springDamper': [('forceUserFunction', _UFspringDamperForce)],
+                  'torsionalSpringDamper': [('forceUserFunction', _UFtorsionalSpringDamperForce)]}
 
 
 def _Refuse(where, name, value, default, reason=''):
@@ -92,7 +183,8 @@ class UserItemCreator:
         mbs: the MainSystem where the items are created
 
     Note:
-        Its members: mbs; items, the dict of the item numbers of each kind ('massPoint', 'springDamper'); loads, the
+        Its members: mbs; items, the dict of the item numbers of each kind ('massPoint', 'rigidBody', 'springDamper',
+        'torsionalSpringDamper'); loads, the
         list of the loads with a user function created by CreateForce; recordings, the symbolic user functions of
         Record, which must live as long as the system. Example:
 
@@ -174,6 +266,88 @@ class UserItemCreator:
             result['loadNumber'] = mbs.AddLoad(eii.LoadMassProportional(markerNumber=result['markerBodyMass'], loadVector=gravity))
         return result if returnDict else bodyNumber
 
+    def CreateRigidBody(self, name='', referencePosition=None, referenceRotationMatrix=None, initialVelocity=[0., 0., 0.],
+                        initialAngularVelocity=[0., 0., 0.], initialDisplacement=None, initialRotationMatrix=None,
+                        inertia=None, gravity=[0., 0., 0.], nodeType=exudyn.NodeType.RotationEulerParameters,
+                        graphicsDataList=[], graphicsDataUserFunction=0, drawSize=-1, color=[-1., -1., -1., -1.],
+                        show=True, create2D=False, returnDict=False, referenceHT=None, initialHT=None):
+        """a rigid body as ObjectUserBody on a NodeRigidBodyRxyz, with the node, markers and loads of
+        mbs.CreateRigidBody and its arguments; nodeType must be exu.NodeType.RotationRxyz
+
+        Args:
+            name: as in mbs.CreateRigidBody
+            referencePosition: as in mbs.CreateRigidBody
+            referenceRotationMatrix: as in mbs.CreateRigidBody
+            initialVelocity: as in mbs.CreateRigidBody
+            initialAngularVelocity: as in mbs.CreateRigidBody
+            initialDisplacement: as in mbs.CreateRigidBody
+            initialRotationMatrix: as in mbs.CreateRigidBody
+            inertia: as in mbs.CreateRigidBody; its mass, inertia about the node and center of mass are the parameters
+                of the user body
+            gravity: as in mbs.CreateRigidBody
+            nodeType: exu.NodeType.RotationRxyz; the default RotationEulerParameters is refused (the user body does not
+                give the algebraic equation of the Euler parameters), RotationRotationVector too (a Lie group node)
+            graphicsDataList: as in mbs.CreateRigidBody, the graphicsData of the user body; empty: the graphics of inertia
+            graphicsDataUserFunction: refused if given: the one of ObjectUserBody has other arguments
+            drawSize: as in mbs.CreateRigidBody
+            color: as in mbs.CreateRigidBody
+            show: as in mbs.CreateRigidBody
+            create2D: refused if True: a planar user rigid body does not exist yet
+            returnDict: as in mbs.CreateRigidBody
+            referenceHT: as in mbs.CreateRigidBody
+            initialHT: as in mbs.CreateRigidBody
+
+        Returns:
+            the ObjectIndex of the body, or with returnDict the dict of mbs.CreateRigidBody
+        """
+        where = 'UserItemCreator.CreateRigidBody'
+        _Refuse('CreateRigidBody', 'create2D', create2D, False, 'a planar user rigid body does not exist yet')
+        _Refuse('CreateRigidBody', 'graphicsDataUserFunction', graphicsDataUserFunction, 0,
+                'the one of ObjectUserBody has other arguments')
+        if nodeType != exudyn.NodeType.RotationRxyz:
+            raise ValueError(where + ': the argument nodeType ' + str(nodeType) + ' is not supported by the user item '
+                             '(only exu.NodeType.RotationRxyz: Euler parameters need their algebraic equation, the '
+                             'rotation vector node is a Lie group node)')
+        if inertia is None:
+            raise ValueError(where + ': inertia must be given')
+        (referencePosition, referenceRotationMatrix) = _FrameFromHT(where, 'referenceHT', referenceHT, 'referencePosition',
+                                                                    referencePosition, 'referenceRotationMatrix', referenceRotationMatrix)
+        (initialDisplacement, initialRotationMatrix) = _FrameFromHT(where, 'initialHT', initialHT, 'initialDisplacement',
+                                                                    initialDisplacement, 'initialRotationMatrix', initialRotationMatrix)
+        referencePosition = [0., 0., 0.] if referencePosition is None else list(referencePosition)
+        referenceRotationMatrix = np.eye(3) if referenceRotationMatrix is None else np.array(referenceRotationMatrix)
+        mbs = self.mbs
+        graphicsDataList0 = graphicsDataList
+        if len(graphicsDataList) == 0:
+            inertiaGraphics = inertia.GetGraphics(color)
+            graphicsDataList0 = [inertiaGraphics] if inertiaGraphics is not None else []
+        if len(graphicsDataList0) != 0:
+            drawSize = 0 #the node is shown (number, basis), but not drawn, as mbs.CreateRigidBody does
+        #the node as mbs.CreateRigidBody computes it for RotationRxyz
+        referenceRotation = RotationMatrix2RotXYZ(referenceRotationMatrix)
+        initialCoordinates = [0.]*6
+        if initialDisplacement is not None or initialRotationMatrix is not None:
+            initialDisplacement = [0., 0., 0.] if initialDisplacement is None else initialDisplacement
+            initialRotationMatrix = np.eye(3) if initialRotationMatrix is None else initialRotationMatrix
+            initialCoordinates = list(initialDisplacement) + list(RotationMatrix2RotXYZ(referenceRotationMatrix @ initialRotationMatrix)
+                                                                 - referenceRotation)
+        nodeNumber = mbs.AddNode(eii.NodeRigidBodyRxyz(name='Node:' + name if name != '' else '',
+                                                       referenceCoordinates=referencePosition + list(referenceRotation),
+                                                       initialCoordinates=initialCoordinates,
+                                                       initialVelocities=list(initialVelocity) + list(AngularVelocity2RotXYZ_t(initialAngularVelocity, referenceRotation)),
+                                                       visualization=eii.VNodeRigidBodyRxyz(show=show, drawSize=drawSize, color=color)))
+        bodyNumber = mbs.AddObject(eii.ObjectUserBody(name=name, nodeNumbers=[nodeNumber],
+                                                      parameters=[inertia.mass] + list(inertia.GetInertia6D()) + list(inertia.com),
+                                                      centerOfMass=list(inertia.com),
+                                                      **{functionName: function for (functionName, function) in _kindFunctions['rigidBody']},
+                                                      visualization=eii.VObjectUserBody(show=show, graphicsData=graphicsDataList0)))
+        self.items['rigidBody'].append(bodyNumber)
+        result = {'nodeNumber': nodeNumber, 'bodyNumber': bodyNumber}
+        if cMath.norm(gravity) != 0.:
+            result['markerBodyMass'] = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=bodyNumber))
+            result['loadNumber'] = mbs.AddLoad(eii.LoadMassProportional(markerNumber=result['markerBodyMass'], loadVector=gravity))
+        return result if returnDict else bodyNumber
+
     def CreateSpringDamper(self, name='', itemNumbers=[None, None], localPosition0=[0., 0., 0.], localPosition1=[0., 0., 0.],
                            referenceLength=None, stiffness=0., damping=0., force=0., velocityOffset=0.,
                            springForceUserFunction=0, show=True, drawSize=-1, color=exudyn.graphics.color.default,
@@ -232,6 +406,78 @@ class UserItemCreator:
                                                           forceUserFunction=_UFspringDamperForce,
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
         self.items['springDamper'].append(connector)
+        return connector
+
+    def CreateTorsionalSpringDamper(self, name='', itemNumbers=[None, None], position=[0., 0., 0.], axis=[0., 0., 0.],
+                                    stiffness=0., damping=0., offset=0., velocityOffset=0., torque=0., useGlobalFrame=True,
+                                    springTorqueUserFunction=0, unlimitedRotations=True, show=True, drawSize=-1,
+                                    color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None):
+        """a torsional spring-damper as ObjectConnectorUser on the rigid markers of mbs.CreateTorsionalSpringDamper,
+        with its arguments and its torque about the axis; the angle is that of the relative rotation in (-pi, pi], so
+        unlimitedRotations must be False; drawn by a graphicsDataUserFunction
+
+        Args:
+            name: as in mbs.CreateTorsionalSpringDamper
+            itemNumbers: as in mbs.CreateTorsionalSpringDamper, two bodies or the ground
+            position: as in mbs.CreateTorsionalSpringDamper
+            axis: as in mbs.CreateTorsionalSpringDamper
+            stiffness: as in mbs.CreateTorsionalSpringDamper
+            damping: as in mbs.CreateTorsionalSpringDamper
+            offset: as in mbs.CreateTorsionalSpringDamper
+            velocityOffset: as in mbs.CreateTorsionalSpringDamper
+            torque: as in mbs.CreateTorsionalSpringDamper
+            useGlobalFrame: as in mbs.CreateTorsionalSpringDamper
+            springTorqueUserFunction: refused if given: the torque is the forceUserFunction of the connector
+            unlimitedRotations: must be False: the turns need a data coordinate, which the symbolic system does not take
+            show: as in mbs.CreateTorsionalSpringDamper
+            drawSize: the diameter of a cylinder along the axis; not positive: a line
+            color: the color of the drawing; the default: grey
+            bodyNumbers: refused if given: use itemNumbers
+            bodyOrNodeList: refused if given: use itemNumbers
+
+        Returns:
+            the ObjectIndex of the connector
+        """
+        _Refuse('CreateTorsionalSpringDamper', 'springTorqueUserFunction', springTorqueUserFunction, 0,
+                'the torque is the forceUserFunction of the connector')
+        _Refuse('CreateTorsionalSpringDamper', 'unlimitedRotations', unlimitedRotations, False,
+                'the turns need a data coordinate; pass unlimitedRotations=False')
+        _Refuse('CreateTorsionalSpringDamper', 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
+        _Refuse('CreateTorsionalSpringDamper', 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
+        if any(isinstance(item, exudyn.MarkerIndex) for item in itemNumbers):
+            raise ValueError('UserItemCreator.CreateTorsionalSpringDamper: the argument itemNumbers with a marker is not '
+                             'supported by the user item (give the bodies)')
+        mbs = self.mbs
+        #the markers as mbs.CreateTorsionalSpringDamper adds them: the frame of the joint, its z-axis the axis
+        [p0, A0, p1, A1, marker0, marker1, pJoint] = JointPreCheckCalcBodyMarkers('UserItemCreator.CreateTorsionalSpringDamper', mbs,
+                                                                                  name, itemNumbers, position, show, useGlobalFrame)
+        B = ComputeOrthonormalBasis(np.array(axis) if useGlobalFrame else A0 @ axis)
+        AJ = np.array([-B[:, 2], B[:, 1], B[:, 0]]).T
+        markers = [marker0, marker1]
+        for (k, (p, A)) in enumerate([(p0, A0), (p1, A1)]):
+            if markers[k] is None:
+                markers[k] = mbs.AddMarker(eii.MarkerBodyRigid(name='Marker' + str(k) + ':' + name if name != '' else '',
+                                                               bodyNumber=itemNumbers[k],
+                                                               localHT=exudyn.HT(rotation=A.T @ AJ, translation=A.T @ (np.array(pJoint) - p))))
+        length = drawSize if drawSize > 0 else 0.1
+        drawColor = list(color) if color[0] >= 0 else graphics.color.grey
+
+        def UFgraphics(mbs, itemNumber):
+            p = np.array(mbs.GetMarkerOutput(markers[0], exudyn.OutputVariableType.Position,
+                                             configuration=exudyn.ConfigurationType.Visualization))
+            A = np.array(mbs.GetMarkerOutput(markers[0], exudyn.OutputVariableType.RotationMatrix,
+                                             configuration=exudyn.ConfigurationType.Visualization)).reshape(3, 3)
+            if drawSize > 0:
+                return [graphics.Cylinder(pAxis=p - 0.5*length*A[:, 2], vAxis=length*A[:, 2], radius=0.5*drawSize,
+                                          color=drawColor, nTiles=8)]
+            return [graphics.Lines([p - 0.5*length*A[:, 2], p + 0.5*length*A[:, 2]], color=drawColor)]
+
+        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=markers,
+                                                          parameters=[stiffness, damping, offset, velocityOffset, torque],
+                                                          requestedMarkerType=exudyn.MarkerType.Position | exudyn.MarkerType.Orientation,
+                                                          forceUserFunction=_UFtorsionalSpringDamperForce,
+                                                          visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
+        self.items['torsionalSpringDamper'].append(connector)
         return connector
 
     def CreateForce(self, name='', itemNumber=None, loadVector=[0., 0., 0.], localPosition=[0., 0., 0.], bodyFixed=False,

@@ -3866,3 +3866,32 @@ UserItemCreator(mbs), a small set first.)*
   settings).
 - exudev clean removes `build/pytestOutput`; docs/dev/BUILD.md, tools/exudev/README.md.
 - `pytest -n 8 python/testing`: 1427 passed, no `solution/` in the root, the files in build/pytestOutput/gw*.
+
+<a id="rg12-55-3"></a>
+### RG12.55.3 — the user rigid body and torsional spring-damper in UserItemCreator (2026-10-28, #3128)
+*(Maintainer 2026-10-28: do the suggested RG12 steps now; when building a test, also measure the CPU time of the
+symbolic and the internal integration.)*
+- exudyn/misc/symbolicUserItems.py `CreateRigidBody`: ObjectUserBody on NodeRigidBodyRxyz, the node as
+  mbs.CreateRigidBody computes it (reference and initial rotation, the angular velocity as Tait-Bryan rates), the
+  parameters [mass, inertia about the node (6), centerOfMass (3)]; the user functions written once with
+  exudyn.symbolicUtilities and the functions module of the argument - cMath for the numbers in Exudyn, exudyn.symbolic
+  while recorded: the mass matrix of CObjectRigidBody::ComputeMassMatrix (G^T J G, the coupling -m A skew(c) G of a
+  center of mass off the node), the forces of ComputeODE2LHS on the right-hand side, the position, rotation, their
+  Jacobians, the mass integral; gravity by MarkerBodyMass and LoadMassProportional as the built-in function. Refused:
+  every nodeType but RotationRxyz - the default Euler parameters need their algebraic equation, the rotation vector
+  node is a Lie group node -, graphicsDataUserFunction, create2D.
+- `CreateTorsionalSpringDamper`: the MarkerBodyRigid of the built-in function (the frame of the joint, its z-axis the
+  axis), ObjectConnectorUser requesting Position | Orientation, the torque of CObjectConnectorTorsionalSpringDamper -
+  the z Tait-Bryan angle of A0^T A1 by atan2, the z-component of A0^T (omega1 - omega0) -; drawn as a line or cylinder
+  along the axis. The torques act on the markers, as the forces of the spring-damper: +tau A0 e_z on marker 0, the
+  sign checked against the built-in item (the opposite sign drove the chain unstable). Refused: unlimitedRotations
+  True, its default - the turns need a data coordinate -, springTorqueUserFunction, markers in itemNumbers.
+- python/TestModels/symbolicUserRigidBodiesTest.py: three bars with the center of mass off the node, each end held by
+  three spring-dampers of length 0.1 (a spring of length zero has no direction) and three torsional spring-dampers
+  (global x, y, local [0,1,1]) - a first model with one torsional spring per joint left the spin about the bar axis
+  free and became chaotic, so that step size and Newton iterates decided the result -; gravity, a force of
+  sin(10 t). Built-in against Python and recorded user items: RK44 1.9e-14, generalized-alpha 5.5e-13 relative; the
+  arguments of both Create functions equal to those of mbs; nodeType and unlimitedRotations refused. Result 1.
+- The times of SolveDynamic, 250 steps (printed, not judged): RK44 built-in 0.016 s, Python user items 1.75 s, recorded
+  0.11 s; generalized-alpha built-in 0.03 s, recorded 0.22 s.
+- docs/dev/design/symbolicUserItems.md §3/§4, docs/manual/revisions.md.
