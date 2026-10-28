@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 237 | 1.13.241 |
+| 1.13 | Newborn | 238 | 1.13.242 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.242** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Design the uniform evaluation of a symbolic system on the CPU and the GPU: levels, schedules, ensembles, limits (#3136)
+  - description: A design note docs/dev/design/uniformEvaluation.md: the composed recordings of a symbolic system as a graph of scalar operations evaluated level by level as uniform array operations (numpy on the CPU, CuPy or kernels on the GPU), the schedules (sorted by operation, a fixed cycle of operation layers, one array of all values), the step of an explicit integrator, ensembles of states, the limits (results not bitwise equal on the GPU, double precision, branches); the GPU parts of symbolicSystem.md moved there. Maintainer 2026-10-28.
+  - **notes:** docs/dev/design/uniformEvaluation.md: the design of the uniform evaluation of a symbolic system - its graph of scalar operations in levels, evaluated as uniform array operations by numpy on the CPU and later on the GPU, the schedules, ensembles of states, the limits (results not bitwise equal on the GPU), with the measurements of an experiment on the rigid-body example.
+  - date resolved: **2026-10-28 13:40**, date raised: 2026-10-28
 - **1.13.241** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Diff of pow is NaN for a base \<= 0 also with a constant exponent, so x\*\*2 of a negative x has no derivative (#3135)
   - description: ExpressionPower::Diff returns NaN whenever the base is \<= 0, also when the exponent does not depend on the variable, where d(a^b) = b a^(b-1) da is defined; x\*\*2 records as pow, so the tree derivative (Real.Diff, Vector.Diff, EvaluateJacobian with flatEvaluation = False) of any square of a negative value is NaN. Found 2026-10-28 by symbolicOnePassJacobianTest.py (\#3116), whose one pass treats a constant exponent apart.
   - **notes:** exudyn.symbolic: Diff of pow with an exponent that does not depend on the variable is b\*a^(b-1)\*da also for a base \<= 0, so that x\*\*2 of a negative x has a derivative; NaN for a base \<= 0 only where the exponent depends on the variable. The same per column in the one-pass Jacobian.

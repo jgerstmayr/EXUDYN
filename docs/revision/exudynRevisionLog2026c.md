@@ -4102,3 +4102,45 @@ currently not capable of - they also need to be extended)".)*
   tree like the others; no NaN in either.
 - python/TestModels/symbolicModuleTest.py checked NaN for Diff of pow(x, 4) at x <= 0, the old answer: now 4 x^3 at every
   x, and pow(x, x) - an exponent depending on x - NaN for x <= 0 and x^x (log x + 1) else; the result is unchanged.
+
+<a id="rg14-1"></a>
+### RG14.1 — the design of the uniform evaluation on the CPU and the GPU (2026-10-28, #3136)
+*(Maintainer 2026-10-28: "Regarding GPU/CUDA - Uniform operations: build a separate design .md file for that and move
+the existing part from symbolicSystem.md to that; add a new RG for that task and if some related tasks are given in
+RG12, close them there and add to the new RG (with a planning step, the Python-CPU/Numpy implementation step, and the
+Python-CUDA implementation step as suggested with CuPy and the limitations that results won't be identical, like
+sin(x))".)*
+- docs/dev/design/uniformEvaluation.md: §1 one kernel per kind (Numba) and one step by levels; §2 levels and the block
+  of numbers and inputs; §3 the two ways to uniform operations and one array of all values; §4 a step and ensembles;
+  §5 the experiment with its measurements (RG14.2.1); §6 the limits - not the bits of Exudyn on the GPU (CUDA's sin,
+  cos, sqrt, fused multiply-adds, atomic sums), double precision on consumer GPUs, small systems only as ensembles,
+  branches; §7 the steps; §8 related work.
+- Moved from docs/dev/design/symbolicSystem.md: the Numba paragraph of §4 and §12 (the outlook by levels), replaced by
+  links; §7 says RG12.51.6 moved.
+- Plan: group RG14 with RG14.1 (this), RG14.2 numpy on the CPU (#3137) with RG14.2.1 the experiment and RG14.2.2 into
+  exudyn.misc, RG14.3 CuPy (#3138), RG14.4 Numba per kind (#3139, was RG12.51.6, closed there).
+
+<a id="rg14-2-1"></a>
+### RG14.2.1 — the levels tried on the rigid-body example in Python (2026-10-28, #3137 stays open)
+*(Maintainer 2026-10-28: "I would like to start with e.g. a Python-based version that builds the vector operations and
+applies it to one of the current example systems - so to see how that works and to make it more transparent (it does
+not need to be very general in this case); this Python experiment would rather belong to dev/design as well, before
+putting it to the exudyn library.")*
+- docs/dev/design/uniformEvaluationExperiment.py [nBars] [ensembleSize]: the system of
+  python/Examples/symbolicSystemRigidBodyPendulum.py as a chain of nBars bars; `Scalarize` writes the flat programs of
+  the composed forces and mass matrices of the bodies (GetFlatProgramData) as one graph of scalar operations (common
+  nodes reused, numbers combined, x*1, x+0, 0*x dropped); schedules by levels (as soon and as late as possible), by a
+  cycle of all kinds, by a cycle of four kinds and the rest, and one array of all values; one numpy ufunc per layer and
+  kind over arrays of nodes x states; the numbers and inputs a block read by every layer.
+- Measured (one core): 1 bar 523 operations in 29 levels, 10 bars 7732 in 33. Entries per operation: by levels 3.4,
+  as late as possible 2.5 and 2.9, a cycle of all 9 kinds 19.9 and 19.1, a cycle of 4 kinds + the rest 11.2 and 10.8,
+  one array 1. Equal to SymbolicSystem.Forces and MassMatrixBlocks: 0 (1 bar) and 1.1e-16 relative (10 bars). Per state:
+  SymbolicSystem 11 and 57 us; one array 162 and 315 us for one state, 1.1 and 29 us each for 1000 states; as late as
+  possible 4.2 and 83 us each for 1000 states. RK44, 200 steps, an ensemble of 100 states: member 0 against
+  SolveExplicit 1.3e-15 and 2.2e-15; 0.21 s and 1.5 s for the ensemble, 0.028 s and 0.10 s for one state by
+  SolveExplicit.
+- First version: the inputs t, q, q_t carried by copies through all levels (1376 copies for the bar); in the block
+  1272; as late as possible 775. Ten bars with h = 1 ms are unstable for RK44 also in SolveExplicit: h = 1 ms/nBars.
+- What it shows (design §5): the values are Exudyn's on the CPU; copies dominate the levelled form; the fixed cycle
+  costs a factor of 11 to 20 for these programs, dominated by * and +; one array of all values is fastest on the CPU and
+  needs no copies.

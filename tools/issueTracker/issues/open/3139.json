@@ -1,0 +1,11 @@
+{
+  "number": 3139,
+  "title": "Evaluate the kinds of a symbolic system by one Numba-compiled function per kind, with explicit integration",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "The numpy code of exudyn.misc.symbolicExport per kind compiled by numba.njit, a parallel loop over the objects of a kind through the LTG and parameter tables; explicit integration with a constant mass matrix factored once or the matrix-free product from the residuals; Numba optional at the point of use. Formerly revision2026c step RG12.51.6. Design docs/dev/design/uniformEvaluation.md section 1.",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26"
+}

@@ -97,12 +97,8 @@ use it.
 
 ## 4. Evaluation: explicit on the GPU, Numba first
 
-**Numba first.** The `numpy` writer of `symbolicExport` gives scalar Python code per program - in the export, not in
-`SymbolicSystem`; `numba.njit` compiles it, and a loop over the objects of a kind (`prange`) evaluates the kind for all
-objects, reading the coordinates through the LTG table and the parameters from the parameter table - one compiled
-function per kind. Numba is optional (rule 6): imported at the point of use, with a clear failure. The same structure
-maps to `numba.cuda` or CuPy kernels later: one thread per object, the scatter by atomic adds or by a coloring of the
-objects.
+**On the GPU**: one compiled function per kind (Numba), or the whole system by levels as uniform array operations -
+the design is [uniformEvaluation.md](uniformEvaluation.md) (group RG14).
 
 **Explicit integration without a mass matrix.** The first GPU stage needs no Jacobians and no constraints, but an
 explicit method still needs $\ddot\qv$ from $\Mm\ddot\qv = \fv$. From residuals only, three ways:
@@ -231,12 +227,11 @@ CSolverExplicit and CSolverImplicitSecondOrder:
   torsional spring-dampers of UserItemCreator are taken; the joints and constraints are open.
 - RG12.51.5: the export (G1): the programs, the sparsity pattern and the scatter as C++ and as Python, and a system
   class of the exported numpy code.
-- RG12.51.6: the evaluation by Numba for the GPU, an explicit integrator with a constant mass matrix and the
-  matrix-free product.
+- RG12.51.6: the evaluation by Numba for the GPU - moved to group RG14, [uniformEvaluation.md](uniformEvaluation.md).
 
 And in exudyn.symbolic (section 11): RG12.57 cMath with symbolic arguments (done, #3114), RG12.58 `Diff` of vectors
 and matrices (done, #3115), RG12.59 the forward derivative of a flat program (#3116), RG12.60 a recording called with
-symbolic arguments (#3117). The evaluation of a whole step on the GPU by levels: section 12, an outlook.
+symbolic arguments (#3117). The evaluation of a whole step on the GPU by levels: [uniformEvaluation.md](uniformEvaluation.md).
 
 ## 8. Decisions (maintainer 2026-10-26)
 
@@ -425,71 +420,3 @@ method `sin()` of the object -, and the math check of the test models refuses `n
 `exudyn.cMath` take an `esym.Real` as well, by an overload of the compiled function that calls the one of
 exudyn.symbolic - all but `cbrt`, `atan2` and `pow` also mixed with a float -, so that one function written with cMath
 runs on numbers and is recorded; a float costs nothing more, as its overload comes first.
-
-## 12. Outlook: one step of all objects in parallel on the GPU, by levels
-
-Section 4 maps a **kind** to a GPU kernel: one thread per object, all threads of the kernel running the same program.
-That is the simplest way and fits systems of few kinds of many objects - particles, a mesh of one element type. It
-does not fit a system of many different trees: each kind is a launch of its own, and the threads of a warp that run
-different programs diverge and wait for each other. The maintainer's idea (2026-10-26): evaluate **one time step of the
-whole system in parallel, whatever the trees are**, by making all trees regular.
-
-**The idea.** The flat programs of all kinds and objects are one directed acyclic graph of scalar operations - the
-flat programs with vectors and matrices written as scalars, as `GetFlatProgram(flatten=True)` already does for the
-text. Each operation gets a **level**, the length of its longest path from the inputs (ASAP scheduling); all
-operations of one level depend only on lower levels and are independent of each other. A value needed at a higher
-level than the next is carried up by a **no-op** $x \to x$, so that every operation reads only from the level directly
-below. The evaluation is then a sequence of levels, each a wide, uniform, element-wise operation over arrays: the
-values of level k are an array, the operands of level k+1 are gathered from it by index arrays, and the results form
-the array of level k+1 - for all objects of all kinds at once.
-
-**Uniform operations.** Two ways to keep the threads of a warp on the same instruction:
-
-1. **Sorted by operation**: within a level, the operations are sorted by their kind - all `+`, then all `*`, all
-   `sin`, ... -, so a warp runs mostly one operation; divergence only at the borders of the groups. No extra levels.
-2. **A fixed cycle of operation layers**, the maintainer's proposal: the levels follow a fixed sequence of operation
-   kinds, e.g. `+`, `*`, `/`, `sin`, `cos`, `pow`, `-x`, repeated; an operation is placed in the next layer of its kind,
-   and every other value passes the layer as a no-op. Each layer is one operation for all its entries, without any
-   divergence - the cost is the padding: a tree of depth d becomes at most (number of kinds) x d layers, and the
-   no-ops move values. With the small set of operations most residuals use (`+`, `*`, `-x`, `/`, `sin`, `cos`, `sqrt`,
-   `pow`), the overhead factor can be measured on real programs before choosing; the other functions are rare and can
-   be a layer of their own in each cycle, or be written by the set (`tan = sin/cos`).
-
-Comparisons and `IfThenElse` become a select of both branches computed (predication), the usual form on a GPU.
-
-**A step.** Per stage of the explicit integrator (section 10), one pass over the levels gives the forces of all
-objects; the scatter by the LTG tables is a further level of sums - by atomic adds, or by a fixed reduction tree, which
-gives the same bits in every run -; then the batched product with the inverse mass matrices per body (section 10) and
-the update of q and q_t, element-wise. A whole step is a fixed sequence of kernels on arrays that stay on the GPU; only
-the output steps copy back. With the Jacobian program of D (section 5) the same holds for the Newton matrix of an
-implicit step.
-
-**Memory.** The values of two adjacent levels are enough for the evaluation (double buffering), plus the values that
-are carried, which the no-ops count; the index arrays of the levels are built once, when the system is built, as the
-LTG tables are. The width of a level is the parallelism: a system of 10^5 objects gives levels of 10^5 to 10^6 entries,
-which fills a GPU.
-
-**What it needs from Exudyn**: the flat programs (they exist), the scalar flattening of vectors and matrices (exists as
-text, needed as data), the leveling and the padding as a Python function on `GetFlatProgramData()`, and the export
-(RG12.51.5) of the level arrays. A first prototype runs the levels as numpy operations on the CPU - each level a
-gather and one vectorized ufunc call - and is checked against `SymbolicSystem`; CuPy runs the same arrays on the GPU
-without own kernels; a CUDA kernel per layer type comes last. The numbers differ from Exudyn's in the last bits, as
-`sin` on the GPU is not the portable function of the C++ code.
-
-**Related work** (from memory, not checked against the sources; to be confirmed when the step is planned):
-
-- *Levelized evaluation of logic circuits on GPUs*: gate-level simulators sort the gates of a netlist into levels and
-  evaluate each level in parallel, with a small set of gate types - the closest analogy; e.g. Chatterjee, DeOrio and
-  Bertacco, "GCS: high-performance gate-level simulation with GP-GPUs", DATE 2009.
-- *Genetic programming on GPUs*: many different expression trees evaluated in parallel, by an interpreter per thread
-  or by evaluating one tree on many data; e.g. Langdon and Banzhaf, "A SIMD interpreter for linear genetic programming
-  on GPU graphics cards", EuroGP 2008.
-- *Cartesian genetic programming* (Miller, *Cartesian Genetic Programming*, Springer 2011): programs as a fixed grid of
-  nodes in columns, with a function set and connections only to earlier columns - the layered form of idea 2.
-- *Level scheduling* of sparse triangular solves (Anderson and Saad, 1989): the same leveling of a dependency graph.
-- *Wavefront path tracing* (Laine, Karras and Aila, "Megakernels considered harmful", HPG 2013): sorting the work by
-  its kind instead of one kernel with branches - idea 1.
-- The tensor compilers (XLA, TVM) fuse and schedule graphs of array operations, but for one program on many data, not
-  for many different scalar programs.
-
-A step for this is proposed when the export (RG12.51.5) exists; until then it is this outlook.

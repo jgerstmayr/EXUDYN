@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.241.dev1
+- Exudyn version = 1.13.242.dev1
 - last change = 2026-10-28
-- Number of issues = 3136
-- Number of resolved issues = 3018 (241 in current version)
+- Number of issues = 3140
+- Number of resolved issues = 3019 (242 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Evaluate the kinds of a symbolic system by one Numba-compiled function per kind, with explicit integration (#3139)
+  - description: The numpy code of exudyn.misc.symbolicExport per kind compiled by numba.njit, a parallel loop over the objects of a kind through the LTG and parameter tables; explicit integration with a constant mass matrix factored once or the matrix-free product from the residuals; Numba optional at the point of use. Formerly revision2026c step RG12.51.6. Design docs/dev/design/uniformEvaluation.md section 1.
+  - date raised: 2026-10-28
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Evaluate a symbolic system by uniform array operations with CuPy on the GPU (#3138)
+  - description: The arrays and index arrays of the numpy evaluation (uniform evaluation by levels) run by CuPy on the GPU, optional at the point of use; checked against numpy by a tolerance, as the GPU's sin, cos, sqrt and fused multiply-adds do not give the bits of the CPU, and sums by atomic adds differ between runs; double and single precision measured. Design docs/dev/design/uniformEvaluation.md. Maintainer 2026-10-28.
+  - date raised: 2026-10-28
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Evaluate a symbolic system by uniform array operations with numpy on the CPU, for one state and for ensembles (#3137)
+  - description: The forces and the mass matrices of the bodies of a SymbolicSystem as a graph of scalar operations, scheduled in levels and evaluated per level and kind of operation by numpy ufuncs on arrays of nodes x states; first as an experiment in docs/dev/design on an example system, then in exudyn.misc once the form is chosen, with ensembles of states in the explicit solver. Design docs/dev/design/uniformEvaluation.md. Maintainer 2026-10-28.
+  - date raised: 2026-10-28
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Call a symbolic recording with symbolic arguments: its expressions with the arguments substituted (#3117)
   - description: revision2026c step RG12.60 (maintainer 2026-10-26): a recording evaluated with exudyn.symbolic arguments returns a copy of its expressions in which its argument variables are replaced by the given expressions, as Optimize copies nodes; for one expression per kind of the symbolic system (the residual M q\_tt - f), for the forces of connectors composed with the marker kinematics of the bodies, and for the export of one program per kind (RG12.51.5).
   - date raised: 2026-10-26
