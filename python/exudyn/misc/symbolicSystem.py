@@ -13,7 +13,9 @@
 #           or velocity Verlet, as Exudyn's explicit solver does (#3112), SolveGeneralizedAlpha by the generalized-alpha
 #           method, as Exudyn's implicit solver does (#3126).
 #           Equations() gives the equations of the system as expressions in the system variables q, q_t, q_tt and t -
-#           exudyn.symbolic, whose flat program GetFlatProgram() writes, or sympy - composed of the recordings (#3130).
+#           exudyn.symbolic, whose flat program GetFlatProgram() writes, or sympy - composed of the recordings (#3130);
+#           the forces and the mass matrix of these expressions, recorded once, are what Forces, MassMatrix and Residual
+#           evaluate: one call each for the whole system (#3131).
 #           Special: not for the broad use, a basis for the export of the equations of motion and their evaluation
 #           outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
 #           forceUserFunction, ObjectGenericODE2 with constant matrices and symbolic user functions,
@@ -36,6 +38,7 @@ import exudyn
 import exudyn.cMath as cMath
 from exudyn.misc.symbolicExport import ToFunction
 try:
+    import scipy.linalg
     import scipy.sparse
     import scipy.sparse.linalg
 except ImportError:
@@ -281,12 +284,16 @@ class SymbolicSystem(SymbolicSystemBase):
 
     Args:
         mbs: the assembled MainSystem
+        composeSystem: True: Forces, MassMatrix and Residual evaluate two recordings of the composed system - the
+            forces and the nonzero entries of the mass matrix of Equations(), each one flat program (#3131) -; False:
+            each object and load by its own recordings, one call each
 
     Note:
         Its members: mbs; kinds, the list of SymbolicKind; loads, the list of SymbolicLoad; nODE2, the number of ODE2
-        coordinates of the system; qRef, the reference values of the ODE2 coordinates
+        coordinates of the system; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
+        the recordings 'forces' and 'massMatrix' and the 'rows' and 'columns' of the entries of the mass matrix
     """
-    def __init__(self, mbs):
+    def __init__(self, mbs, composeSystem=True):
         if not mbs.systemIsConsistent:
             raise ValueError('SymbolicSystem: mbs must be assembled first')
         self.mbs = mbs
@@ -358,6 +365,33 @@ class SymbolicSystem(SymbolicSystemBase):
         self.kinds = list(kinds.values())
         for kind in self.kinds:
             kind.ltg = np.array(kind.ltg, dtype=int)
+        self.composed = self._Compose() if composeSystem else None
+
+    def _Compose(self):
+        """the recordings of the composed system (#3131): the forces f(q, q_t, t) and the entries of the mass matrix at
+        the rows and columns of the local mass matrices, recorded as functions of the arguments (mbs, t, itemNumber, q,
+        q_t) of ObjectGenericODE2 from the expressions of Equations; one call of each evaluates the system"""
+        from exudyn.advancedUtilities import CreateSymbolicUserFunction
+        entries = set()
+        for kind in self.kinds:
+            if kind.objectType != 'ConnectorUser':
+                for ltg in kind.ltg:
+                    entries.update((int(i), int(j)) for i in ltg for j in ltg)
+        entries = sorted(entries)
+        rows = np.array([i for (i, j) in entries], dtype=int)
+        columns = np.array([j for (i, j) in entries], dtype=int)
+        backend = _Backend('symbolic')
+
+        def UFforces(mbs, t, itemNumber, q, q_t):
+            return backend.Vector(self._EquationLists(backend, q, q_t, t)[1])
+
+        def UFmassMatrix(mbs, t, itemNumber, q, q_t):
+            M = self._EquationLists(backend, q, q_t, t)[0]
+            return backend.Vector([M[i][j] for (i, j) in entries] if entries else [0.])
+
+        return {'forces': CreateSymbolicUserFunction(self.mbs, UFforces, 'forceUserFunction', itemTypeName='ObjectGenericODE2'),
+                'massMatrix': CreateSymbolicUserFunction(self.mbs, UFmassMatrix, 'forceUserFunction', itemTypeName='ObjectGenericODE2'),
+                'rows': rows, 'columns': columns}
 
     def _ConnectorMarkers(self, objectNumber, item):
         """the markers of an ObjectConnectorUser as the dicts of SymbolicKind, the global indices of the coordinates of
@@ -648,6 +682,8 @@ class SymbolicSystem(SymbolicSystemBase):
             the vector f of size nODE2
         """
         (q, q_t, _) = self._State(q, q_t)
+        if self.composed is not None:
+            return np.array(self.composed['forces'].Evaluate(self.mbs, t, 0, q, q_t), dtype=float)
         f = np.zeros(self.nODE2)
         for kind in self.kinds:
             for i in range(len(kind.objects)):
@@ -660,6 +696,9 @@ class SymbolicSystem(SymbolicSystemBase):
         """the global mass matrix as triplets (rows, columns, values), a value per nonzero local entry; equal rows
         and columns are added when the matrix is formed"""
         (q, q_t, _) = self._State(q, q_t)
+        if self.composed is not None:
+            values = np.array(self.composed['massMatrix'].Evaluate(self.mbs, t, 0, q, q_t), dtype=float)
+            return self.composed['rows'], self.composed['columns'], values[:len(self.composed['rows'])]
         rows, columns, values = [], [], []
         for kind in self.kinds:
             for i in range(len(kind.objects)):
@@ -680,8 +719,12 @@ class SymbolicSystem(SymbolicSystemBase):
                 for kind in self.kinds if kind.objectType != 'ConnectorUser']
 
     def Residual(self, q=None, q_t=None, q_tt=None, t=0.):
-        """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations, object by object without forming M"""
+        """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations without forming M: by the recordings of the
+        composed system, else object by object"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
+        if self.composed is not None:
+            (rows, columns, values) = self.MassMatrixTriplets(q, q_t, t)
+            return np.bincount(rows, values*q_tt[columns], minlength=self.nODE2) - self.Forces(q, q_t, t)
         r = np.zeros(self.nODE2)
         for kind in self.kinds:
             for i in range(len(kind.objects)):
@@ -814,7 +857,7 @@ class SymbolicSystem(SymbolicSystemBase):
                     local[np.ix_(indices, indices)] -= factor_q*np.einsum('ijk,i->jk', dJrot, forces[torque])
         return local
 
-    def Equations(self, format='symbolic', optimize=True):
+    def Equations(self, format='symbolic', optimize=True, variables=None):
         """the equations of motion of the system as expressions in its variables (#3130): the mass matrix M(q, t), the
         forces f(q, q_t, t) and the residual r = M q_tt - f, composed of the recordings of the kinds, the marker
         kinematics of the connectors and the loads; each recording is called with symbolic arguments through its code
@@ -826,6 +869,8 @@ class SymbolicSystem(SymbolicSystemBase):
                 ..., t (sympy must be installed)
             optimize: for 'symbolic', simplify the expressions by exudyn.symbolic.Optimize, level 2 (1*x, x+0, 0*x,
                 the combination of numbers, ...)
+            variables: None, or (q, q_t, q_tt, t) of the format given by the caller - e.g. the arguments of a
+                function being recorded -, used instead of new variables
 
         Returns:
             dict with 'q', 'q_t', 'q_tt', 't' (the variables), 'massMatrix' (nODE2 x nODE2), 'forces' and 'residual'
@@ -834,9 +879,31 @@ class SymbolicSystem(SymbolicSystemBase):
         backend = _Backend(format)
         n = self.nODE2
         (q0, q_t0) = self.InitialState()
-        (q, q_t, q_tt) = (backend.Variable(name, n, value) for (name, value) in [('q', q0), ('q_t', q_t0), ('q_tt', np.zeros(n))])
-        t = backend.Real('t')
-        (qs, q_ts, q_tts) = ([x[i] for i in range(n)] for x in [q, q_t, q_tt]) #the components, to be gathered per item
+        if variables is None:
+            (q, q_t, q_tt) = (backend.Variable(name, n, value) for (name, value) in [('q', q0), ('q_t', q_t0), ('q_tt', np.zeros(n))])
+            t = backend.Real('t')
+        else:
+            (q, q_t, q_tt, t) = variables
+        (M, f) = self._EquationLists(backend, q, q_t, t)
+        q_tts = [q_tt[i] for i in range(n)]
+        residual = []
+        for i in range(n):
+            inertia = 0
+            for j in range(n):
+                if not (isinstance(M[i][j], (int, float)) and M[i][j] == 0):
+                    inertia = _Sum(inertia, M[i][j]*q_tts[j])
+            residual.append(inertia - f[i])
+        result = [backend.Matrix(M), backend.Vector(f), backend.Vector(residual)]
+        if optimize and format == 'symbolic':
+            result = exudyn.symbolic.Optimize(result, level=2)
+        return {'q': q, 'q_t': q_t, 'q_tt': q_tt, 't': t, 'massMatrix': result[0], 'forces': result[1], 'residual': result[2]}
+
+    def _EquationLists(self, backend, q, q_t, t):
+        """the mass matrix as list of rows and the forces as list of the expressions of Equations, of the variables q,
+        q_t and t of backend"""
+        n = self.nODE2
+        format = backend.format
+        (qs, q_ts) = ([x[i] for i in range(n)] for x in [q, q_t]) #the components, to be gathered per item
         M = [[0]*n for i in range(n)]
         f = [0]*n
         functions = {} #the function of each recording, written once
@@ -908,18 +975,7 @@ class SymbolicSystem(SymbolicSystemBase):
             if body['rotation'] is not None:
                 value = Call(body['rotation'], *withPosition) @ value
             Add(f, load.ltg, Components(J.T @ value, len(load.ltg)))
-
-        residual = []
-        for i in range(n):
-            inertia = 0
-            for j in range(n):
-                if not (isinstance(M[i][j], (int, float)) and M[i][j] == 0):
-                    inertia = _Sum(inertia, M[i][j]*q_tts[j])
-            residual.append(inertia - f[i])
-        result = [backend.Matrix(M), backend.Vector(f), backend.Vector(residual)]
-        if optimize and format == 'symbolic':
-            result = exudyn.symbolic.Optimize(result, level=2)
-        return {'q': q, 'q_t': q_t, 'q_tt': q_tt, 't': t, 'massMatrix': result[0], 'forces': result[1], 'residual': result[2]}
+        return (M, f)
 
     def _ConnectorEquations(self, kind, index, backend, Call, t, qs, q_ts, f):
         """add the generalized forces of connector index of kind to the list f, as expressions: the marker states as in
@@ -1039,12 +1095,18 @@ _butcherTableaus = {exudyn.DynamicSolverType.ExplicitEuler: ([[0.]], [1.], [0.])
                                                     [1./6., 1./3., 1./3., 1./6.], [0., 0.5, 0.5, 1.])}
 
 
+#up to this number of coordinates, the mass matrix is decomposed as dense matrix: forming a sparse one costs more (#3131)
+_denseMassMatrixSize = 200
+
+
 class _MassMatrixSolver:
-    """the accelerations a = M^-1 f of a system: by the inverse per body, or by the sparse LU decomposition of M; the
-    inverse or the decomposition computed once for a constant mass matrix"""
+    """the accelerations a = M^-1 f of a system: by the inverse per body, or by the LU decomposition of M, dense up to
+    _denseMassMatrixSize coordinates, else sparse; the inverse or the decomposition computed once for a constant mass
+    matrix"""
     def __init__(self, system, perBody, reuseConstant):
         self.system = system
         self.perBody = perBody
+        self.dense = system.nODE2 <= _denseMassMatrixSize
         self.constant = reuseConstant and system.IsMassMatrixConstant()
         self.stored = None
         self.evaluations = 0
@@ -1058,6 +1120,8 @@ class _MassMatrixSolver:
         self.evaluations += 1
         if self.perBody:
             return [(ltg, np.linalg.inv(blocks)) for (ltg, blocks) in self.system.MassMatrixBlocks(q, q_t, t)]
+        if self.dense:
+            return scipy.linalg.lu_factor(self.system.MassMatrix(q, q_t, t))
         return scipy.sparse.linalg.splu(self.system.MassMatrix(q, q_t, t, sparse=True).tocsc())
 
     def Accelerations(self, q, q_t, t, f):
@@ -1065,7 +1129,7 @@ class _MassMatrixSolver:
         if self.constant:
             self.stored = inverse
         if not self.perBody:
-            return inverse.solve(f)
+            return scipy.linalg.lu_solve(inverse, f) if self.dense else inverse.solve(f)
         a = np.zeros(len(f))
         for (ltg, inverses) in inverse:
             a[ltg] = np.einsum('kij,kj->ki', inverses, f[ltg])

@@ -1990,6 +1990,14 @@ recording called with symbolic arguments through its symbolicExport code - and G
 symbolicSystemSpringDamper.py (2 coordinates) and symbolicSystemRigidBodyPendulum.py (9); symbolicSystemEquationsTest.py
 equal to the system to 7.5e-15. [log](exudynRevisionLog2026c.md#rg12-51-10)
 
+#### **CLOSED_RG12.51.11** Evaluate the forces and the mass matrix by one recording of the composed system
+
+CLOSED 2026-10-28 (#3131; maintainer 2026-10-28: why is the symbolic system slow with the explicit solver - improve it):
+the forces and the mass matrix entries of Equations recorded once, Forces, MassMatrix and Residual one call each
+(composeSystem=True); a dense LU up to 200 coordinates. SolveExplicit RK44 of the chain of symbolicUserRigidBodiesTest.py
+0.96 s -> 0.049 s, explicit Euler 0.020 s; SolveDynamic 0.11 s with the same recordings, 0.014 s with the built-in items.
+[log](exudynRevisionLog2026c.md#rg12-51-11)
+
 ### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
 
 CLOSED 2026-10-25 (#3094; maintainer 2026-10-25: the introduction section to Python-C++ interface/Symbolic has to be

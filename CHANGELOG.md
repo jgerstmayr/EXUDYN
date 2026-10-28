@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 231 | 1.13.235 |
+| 1.13 | Newborn | 232 | 1.13.236 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.236** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem: evaluate the forces and the mass matrix by one recording of the composed system (#3131)
+  - description: revision2026c step RG12.51.11 (maintainer 2026-10-28: why is the symbolic system slow in the explicit solver; improve it): the per-object evaluation makes about 120 calls of Evaluate per force evaluation, each about 3 us of call overhead, 0.59 ms in all; the forces and the nonzero entries of the mass matrix of Equations recorded once as two symbolic user functions of (q, q\_t, t) evaluate by one flat program each (forces 14 us). Forces, MassMatrix and Residual use them; the Jacobian stays per object.
+  - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem evaluates the forces and the mass matrix of the system by two recordings of the composed equations, one call each instead of one per object, marker and load (composeSystem=True, the default); small mass matrices are decomposed dense; SolveExplicit RK44 on a chain of three rigid bodies 20 times faster
+  - date resolved: **2026-10-28 09:12**, date raised: 2026-10-28
 - **1.13.235** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem.Equations: the equations of motion of the system as symbolic expressions and flat program (#3130)
   - description: revision2026c step RG12.51.10 (maintainer 2026-10-28: retrieve the symbolic equations and the flat program of a system; two examples): the mass matrix, forces and residual M q\_tt - f in the system variables q, q\_t, q\_tt, t, composed of the recordings of the kinds, connectors with their marker kinematics and loads, each recording called with symbolic arguments by its code of exudyn.misc.symbolicExport - as exudyn.symbolic expressions (flat program, numpy code) or sympy expressions; two examples, a test model.
   - **notes:** exudyn.misc.symbolicSystem: SymbolicSystem.Equations(format) gives the mass matrix, forces and residual M q\_tt - f of the system as exudyn.symbolic or sympy expressions in q, q\_t, q\_tt and t, composed of the recordings of the items, connectors and loads; GetFlatProgram(format) writes the residual as flat program or as numpy, exudyn.symbolic or sympy code; examples symbolicSystemSpringDamper.py and symbolicSystemRigidBodyPendulum.py

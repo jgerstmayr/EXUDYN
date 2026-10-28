@@ -80,7 +80,8 @@ constant step size, as `SolveDynamic` does, with the Jacobian of the residual by
 `SymbolicSystem.Equations(format)` gives the mass matrix, the forces and the residual `M q_tt - f` of such a system as
 expressions in the variables `q`, `q_t`, `q_tt` and `t` - exudyn.symbolic or sympy -, and `GetFlatProgram(format)`
 writes the residual as flat program, or as numpy, exudyn.symbolic or sympy code (#3130); the examples
-symbolicSystemSpringDamper.py and symbolicSystemRigidBodyPendulum.py show them.
+symbolicSystemSpringDamper.py and symbolicSystemRigidBodyPendulum.py show them. `SymbolicSystem` evaluates the forces
+and the mass matrix by two recordings of the composed system, one call each (`composeSystem=True`, #3131).
 **ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
 two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
 also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a

@@ -3961,3 +3961,34 @@ program; extensions as a (sub)step.)*
 - RG12.60 (#3117) stays open: the system no longer needs it; whether a C++ copy by NewWithOperands is still wanted
   is the maintainer's question.
 - docs/dev/design/symbolicSystem.md §11 S3, docs/manual/revisions.md.
+
+<a id="rg12-51-11"></a>
+### RG12.51.11 — the forces and the mass matrix by one recording of the composed system (2026-10-28, #3131)
+*(Maintainer 2026-10-28: "why the symbolic system (Python solver) for the explicit integrator case is so slow - it does
+not include Diff() ... the symbolic evaluation is fast and there is a huge overhead in the Exudyn internal solver ... Is
+the evaluation only done for each scalar equation separately? Can you improve that or does it require some extension to
+vectorized evaluation?")*
+- The cause: not per scalar equation, but per object, marker and load. On the chain of symbolicUserRigidBodiesTest.py
+  (3 rigid bodies, 18 connectors, 4 loads, 18 coordinates) one Forces made about 120 calls of Evaluate - each about 3 us,
+  mostly the call from Python with its arguments - and the Python around them: 0.59 ms. Evaluating the composed
+  expressions of Equations as one tree was slower (3.8 ms: the tree walk evaluates shared subexpressions again), their
+  numpy code 0.28 ms; recorded as a user function, evaluated by its flat program: 14 us. No vectorized evaluation was
+  needed.
+- exudyn/misc/symbolicSystem.py: `SymbolicSystem(mbs, composeSystem=True)` and `_Compose`: the forces and the entries of
+  the mass matrix at the rows and columns of the local mass matrices, recorded by CreateSymbolicUserFunction as functions
+  (mbs, t, itemNumber, q, q_t) of ObjectGenericODE2 from `_EquationLists` - the composition of Equations moved there, so
+  that Equations and the recordings share it -; `composed` holds them. Forces, MassMatrixTriplets and Residual (by
+  np.bincount of the triplets) use them; MassMatrixBlocks and ResidualJacobian stay per object. `Equations(variables=...)`
+  takes given variables, the arguments of the function being recorded.
+- `_MassMatrixSolver`: up to 200 coordinates a dense LU (scipy.linalg.lu_factor) - forming the sparse matrix and its
+  checks cost 100 us per stage, more than the evaluation.
+- Measured, the chain, 250 steps (wall clock, one thread): SolveExplicit RK44 0.96 s before, 0.049 s now (0.054 s with
+  the inverse per body), explicit Euler 0.020 s; SolveDynamic RK44 0.115 s with the same recorded user items, 0.014 s
+  with the built-in items. Per evaluation: forces 14-17 us by the recording against 88 us of ComputeODE2RHS of Exudyn
+  with the user items; what is left in SolveExplicit is the Python loop and the LU of the 18 x 18 matrix. As an
+  experiment, the composed recordings as forceUserFunction and massMatrixUserFunction of one ObjectGenericODE2 in Exudyn
+  ran the 250 steps in 0.020 s, equal to 2e-16.
+- SolveGeneralizedAlpha is unchanged (0.96 s for 50 steps): its Jacobian is per object by Diff of the trees (RG12.59).
+- symbolicSystemEquationsTest.py: the references are those of SymbolicSystem(mbs, composeSystem=False), and the composed
+  Forces, MassMatrix and Residual are compared too; 7.5e-15. The symbolic test models unchanged in their results.
+- docs/dev/design/symbolicSystem.md §11, docs/manual/revisions.md.

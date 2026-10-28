@@ -364,6 +364,16 @@ parameters and reference coordinates as numbers), with the connectors on their m
 composed in 0.01 s (exudyn.symbolic) and 0.15 s (sympy). Whether RG12.60 still needs the copy in C++ by `NewWithOperands`
 is open.
 
+**The composed system as two recordings** (#3131). Evaluated object by object, one force evaluation of a chain of 3
+rigid bodies with 18 connectors and 4 loads made about 120 calls of `Evaluate`, each about 3 us of call overhead and
+Python around it: 0.59 ms, while the arithmetic is a few microseconds. The forces of `Equations()` and the nonzero entries
+of its mass matrix, recorded once as functions (mbs, t, itemNumber, q, q_t) of the signature of ObjectGenericODE2
+(0.03 s), evaluate by one flat program each: forces 14 us (1591 operations), mass matrix 4.5 us; Exudyn's
+`ComputeODE2RHS` with the same user items takes 88 us. `SymbolicSystem(mbs, composeSystem=True)`, the default, uses them
+in Forces, MassMatrixTriplets and Residual; MassMatrixBlocks and ResidualJacobian stay per object (the Jacobian of the
+composed recording would walk its tree per seed - RG12.59). The mass matrix of up to 200 coordinates is decomposed dense
+by scipy.linalg: forming the sparse matrix cost more than the evaluation.
+
 **S4 cMath with symbolic arguments (RG12.57, #3114, done).** `np.sin` of an `esym.Real` records - numpy calls the
 method `sin()` of the object -, and the math check of the test models refuses `np.sin` (#2964). The functions of
 `exudyn.cMath` take an `esym.Real` as well, by an overload of the compiled function that calls the one of

@@ -16,7 +16,9 @@ You can view and download this file on Github: [symbolicSystemEquationsTest.py](
 #           mass point, spring-dampers on body markers, a torsional spring-damper, gravity, a load of a user function
 #           of the time on the point, a body-fixed force on the body and a LoadCoordinate (9 coordinates). At random
 #           states, the mass matrix, the forces and the residual of the expressions - by the numpy code of their flat
-#           program - and, if sympy is installed, of the sympy expressions equal those of SymbolicSystem.
+#           program - and, if sympy is installed, of the sympy expressions equal those of SymbolicSystem evaluated
+#           object by object (composeSystem=False); so do those of the default SymbolicSystem, which evaluates two
+#           recordings of the composed system (#3131).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-28
@@ -96,6 +98,7 @@ except ImportError:
 for Build in [GenericSystem, RigidBodySystem]:
     (SC, mbs) = Build()
     system = SymbolicSystem(mbs)
+    perObject = SymbolicSystem(mbs, composeSystem=False) #the reference: each object by its own recordings
     n = system.nODE2
     equations = system.Equations()
     variables = [equations[name] for name in ['q', 'q_t', 'q_tt', 't']]
@@ -109,8 +112,10 @@ for Build in [GenericSystem, RigidBodySystem]:
         symbols = [list(equationsSympy[name]) for name in ['q', 'q_t', 'q_tt']] + [equationsSympy['t']]
         Sympy = sympy.lambdify(symbols, [equationsSympy['massMatrix'], equationsSympy['forces'], equationsSympy['residual']], 'numpy')
     for (q, q_t, q_tt, t) in states:
-        reference = [system.MassMatrix(q, q_t, t), system.Forces(q, q_t, t), system.Residual(q, q_t, q_tt, t)]
+        reference = [perObject.MassMatrix(q, q_t, t), perObject.Forces(q, q_t, t), perObject.Residual(q, q_t, q_tt, t)]
         scale = max(np.max(np.abs(x)) for x in reference)
+        composed = [system.MassMatrix(q, q_t, t), system.Forces(q, q_t, t), system.Residual(q, q_t, q_tt, t)]
+        differences.append(max(np.max(np.abs(a - b)) for (a, b) in zip(composed, reference))/scale)
         (M, f, r) = Numpy(q, q_t, q_tt, t)
         differences.append(max(np.max(np.abs(np.array(a, dtype=float) - b)) for (a, b) in zip([M, f, r], reference))/scale)
         differences.append(np.max(np.abs(space['Residual'](q, q_t, q_tt, t) - reference[2]))/scale)

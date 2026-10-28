@@ -1,0 +1,16 @@
+{
+  "number": 3131,
+  "title": "SymbolicSystem: evaluate the forces and the mass matrix by one recording of the composed system",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.51.11 (maintainer 2026-10-28: why is the symbolic system slow in the explicit solver; improve it): the per-object evaluation makes about 120 calls of Evaluate per force evaluation, each about 3 us of call overhead, 0.59 ms in all; the forces and the nonzero entries of the mass matrix of Equations recorded once as two symbolic user functions of (q, q_t, t) evaluate by one flat program each (forces 14 us). Forces, MassMatrix and Residual use them; the Jacobian stays per object.",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26",
+  "dateResolved": "2026-10-28 09:12",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/symbolicSystem.py",
+  "releaseNotes": "exudyn.misc.symbolicSystem.SymbolicSystem evaluates the forces and the mass matrix of the system by two recordings of the composed equations, one call each instead of one per object, marker and load (composeSystem=True, the default); small mass matrices are decomposed dense; SolveExplicit RK44 on a chain of three rigid bodies 20 times faster",
+  "resolvedInVersion": "1.13.236"
+}
