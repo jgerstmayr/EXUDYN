@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.244.dev1
+- Exudyn version = 1.13.245.dev1
 - last change = 2026-10-28
 - Number of issues = 3148
-- Number of resolved issues = 3021 (244 in current version)
+- Number of resolved issues = 3022 (245 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9053,9 +9053,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-28
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` ObjectGenericDAE: an object coupling ODE2, ODE1 and algebraic coordinates, linear by matrices and nonlinear by user functions (#3143)
   - description: Maintainer 2026-10-28: good as suggested. An object on ODE2 nodes, ODE1 nodes and algebraic coordinates of its own, with the linear equations M q\_tt + D q\_t + K q + E y + C\_q^T lambda = f, y\_t + C\_y^T lambda = A y + B q + B\_t q\_t + g, C\_q q + C\_y y = c0, and user functions for the mass matrix, the ODE2 forces, the ODE1 right-hand side and the constraints, each with the arguments (mbs, t, itemNumber, q, q\_t, y, ..., parameters) of the existing user items, parameters a vector of the item as in ObjectUserBody; the Jacobians by a jacobianUserFunction or the one-pass derivative of a symbolic recording, never by numerical differences (\#3101). Exudyn's implicit solver needs the coupling blocks between ODE2 and ODE1, the explicit solver both kinds in every stage and algebraic equations only where they can be eliminated. The general form of SymbolicSystemBase; the generic object of \#1104.
-  - date raised: 2026-10-28
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` Count the nodes of symbolic expressions and flat programs, in total and per kind of operation (#3142)
-  - description: Maintainer 2026-10-28: to understand the complexity of a symbolic expression, a method that counts its nodes - in detail per kind of node (+, sin, numbers, variables, ...) - for the expressions (esym.Real, Vector, Matrix) and for the flat program of a recording. One traversal in C++ as FlatProgramData::Add, without cost at evaluation: the distinct nodes of the graph, the operations, the leaves (numbers, variables, item outputs), the shared nodes, the depth, the size of the tree when every shared node is counted per path (what ToString and the tree Diff walk), and with detailed=True the counts per FlatName and per kind (Real, Vector, Matrix); for the flat program also the entries that are written and those written into their users.
   - date raised: 2026-10-28
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Evaluate the kinds of a symbolic system by one Numba-compiled function per kind, with explicit integration (#3139)
   - description: The numpy code of exudyn.misc.symbolicExport per kind compiled by numba.njit, a parallel loop over the objects of a kind through the LTG and parameter tables; explicit integration with a constant mass matrix factored once or the matrix-free product from the residuals; Numba optional at the point of use. Formerly revision2026c step RG12.51.6. Design docs/dev/design/uniformEvaluation.md section 1.

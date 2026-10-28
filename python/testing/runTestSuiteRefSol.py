@@ -159,6 +159,7 @@ def TestExamplesReferenceSolution():
         'symbolicDeepRecordingTest.py':41.235299378685376, #new 2026-10-25: a recording of 200000 operations recorded, measured and deleted, Evaluate and Diff refused above 10000, a deep symbolic user function, SetValue refused while recording (#3090)
         'symbolicUserFunctionThreadsTest.py':860.0074721246586, #new 2026-10-25: symbolic user functions and user bodies in the threads, user functions set during the simulation, a Python postNewtonStepUserFunction, 4 threads against 1 thread (#2978, #3095)
         'symbolicExportTest.py':11450.057870734236, #new 2026-10-25: GetFlatProgramData, GetFlatProgram and ToString in the formats Python, symbolic, numpy and sympy against the recordings (#3087, #3088)
+        'symbolicStatisticsTest.py':0, #new 2026-10-28: esym.GetStatistics and GetStatistics() of expressions and recordings, the counts by hand, a tree of 2^61-1 nodes, Optimize, flatOperations (#3142)
         'symbolicSystemTest.py':3, #new 2026-10-26: SymbolicSystem, 3 kinds of user bodies and a generic ODE2, mass matrix, forces and residual equal to the solver (#3110)
         'symbolicExplicitSolverTest.py':1, #new 2026-10-26: SolveExplicit, explicit Euler, RK44 and velocity Verlet on a SymbolicSystem equal to SolveDynamic, NumpySystem (#3112)
         'symbolicGeneralizedAlphaTest.py':1, #new 2026-10-27: SolveGeneralizedAlpha on a stiff chain of recorded user items against SolveDynamic, generalized-alpha, Newmark, modified Newton (#3126)

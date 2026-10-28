@@ -4189,3 +4189,23 @@ RG12.55.4: "=> yes".)*
 - Open: exact constraint blocks (the Jacobian of the constraint recording by the one pass through the marker
   kinematics), the constraints in Equations(), ODE1 items.
 - docs/dev/design/symbolicSystem.md §6, docs/manual/revisions.md.
+
+<a id="rg12-61"></a>
+### RG12.61 — the counts of the nodes of expressions and recordings (2026-10-28, #3142)
+*(Maintainer 2026-10-28: "In order to understand the complexity of symbolic expressions, I like to have a method that
+allows to count the nodes (a more deep evaluation could count every single kind of expression ...); I see this feature
+in the expressions themselves, but also for the flat program => add an RG step, with a recommendation"; then "Do ...
+RG12.61 (as recommended) now".)*
+- src/Linalg/Symbolic.cpp: `StatisticsOfNodes` builds the FlatProgram of the roots - the traversal without recursion
+  that the evaluation uses - and counts in its order: nodes, leaves, operations, the nodes used by more than one
+  operation (`shared`), the depth and the tree size per node from those of its operands (a float: 2^61 - 1 for a chain
+  x = x*x of 60 steps), `flatOperations` as `FlatProgram::NumberOfComputations` - the lines tK = ... of
+  GetFlatProgram() -; with detailed per FlatName of the operations and number, variable or itemOutput of the leaves,
+  and per kind. A result that is a number counts as one leaf. Nothing is counted at evaluation.
+- Python: `esym.GetStatistics(expressions, detailed=False)` for one or a list of expressions together, and
+  `GetStatistics(detailed=False)` of esym.Real, Vector, Matrix and UserFunction; definitions/pybindSymbolic.py.
+- python/TestModels/symbolicStatisticsTest.py: y = sin(x)*x and z = y + x counted by hand (4 nodes, 3 operations, 1
+  shared, depth 3, tree 10); the chain of 61 nodes and a tree of 2^61 - 1; A @ q + sin(q[0])*q with its kinds and
+  the component; Optimize of (x*1 + 0)*cos(x + 1) + cos(x + 1), 13 nodes to 6; a recorded spring force, 17 nodes of
+  which 9 operations, flatOperations equal to the lines of its flat program.
+- docs/manual/symbolicUserFunctions.md, docs/manual/revisions.md.

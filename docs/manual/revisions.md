@@ -89,7 +89,9 @@ interface `SymbolicSystemBase` and its solvers have ODE1 and algebraic coordinat
 integrates ODE1 coordinates, `SolveGeneralizedAlpha` also index-3 constraints, and `NumpySystem` takes both (#3134).
 `UserFunction.EvaluateJacobian` differentiates a recording by all components of an argument in one pass over its flat
 program, in a memory block of the program kept between the calls (#3116); `SymbolicSystem.ResidualJacobian` uses it on
-the composed system.
+the composed system. `exudyn.symbolic.GetStatistics(expressions, detailed)` and `GetStatistics()` of an expression or a
+recording count its nodes, operations, leaves, shared nodes, depth, the size of its tree and the operations of its flat
+program, with `detailed=True` per operation and per kind (#3142).
 **ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
 two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
 also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a

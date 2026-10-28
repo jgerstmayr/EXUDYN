@@ -22,6 +22,7 @@
 #include "Utilities/BasicDefinitions.h"
 #include <thread>
 #include <atomic>
+#include <map>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
@@ -1001,6 +1002,132 @@ py::object DepthOfExpressions(const py::object& expressions)
 		results.append(node.node ? RecordedDepth(node) : 0);
 	}
 	return isList ? py::object(results) : py::object(results[0]);
+}
+
+//! the name of a node in the counts of GetStatistics: the FlatName of an operation, number, variable or itemOutput of a leaf
+static const char* StatisticsName(const FlatNode& node)
+{
+	if (FlatProgramData::NumberOfOperands(node) != 0)
+	{
+		const char* name = FlatProgramData::FlatName(node);
+		return name[0] ? name : "unnamed";
+	}
+	switch (node.kind)
+	{
+	case FlatKind::Real:
+	{
+		const ExpressionBase* e = (const ExpressionBase*)node.node;
+		if (dynamic_cast<const ExpressionNamedReal*>(e)) { return "variable"; }
+		return dynamic_cast<const ExpressionReal*>(e) ? "number" : "leaf";
+	}
+	case FlatKind::Vector:
+	{
+		const VectorExpressionBase* e = (const VectorExpressionBase*)node.node;
+		if (dynamic_cast<const VectorExpressionNamedReal*>(e)) { return "variable"; }
+		if (dynamic_cast<const VectorExpressionItemOutput*>(e)) { return "itemOutput"; }
+		return dynamic_cast<const VectorExpressionReal*>(e) ? "number" : "leaf";
+	}
+	default:
+	{
+		const MatrixExpressionBase* e = (const MatrixExpressionBase*)node.node;
+		if (dynamic_cast<const MatrixExpressionNamedReal*>(e)) { return "variable"; }
+		return dynamic_cast<const MatrixExpressionReal*>(e) ? "number" : "leaf";
+	}
+	}
+}
+
+//! the counts of esym.GetStatistics and UserFunction.GetStatistics (#3142), from the flat program of the roots - one
+//! traversal without recursion -; numbers: results that are no expression, each counted as a leaf
+py::dict StatisticsOfNodes(const std::vector<FlatNode>& roots, Index numbers, bool detailed)
+{
+	FlatProgram program;
+	if (roots.size()) { program.Build(roots); }
+	Index n = roots.size() ? program.NumberOfOperations() : 0;
+	std::vector<Index> uses(n, 0);
+	std::vector<Index> depth(n, 0);
+	std::vector<Real> treeSize(n, 1.);	//a float: with shared nodes it grows exponentially
+	std::map<STDstring, Index> byOperation;
+	std::map<STDstring, Index> byKind;
+	Index leaves = numbers;
+	for (Index k = 0; k < n; k++)
+	{
+		Index m = program.NumberOfOperationOperands(k);
+		leaves += (m == 0);
+		for (Index i = 0; i < m; i++)
+		{
+			Index operand = program.OperandSlot(k, i);
+			uses[operand]++;
+			depth[k] = EXUstd::Maximum(depth[k], depth[operand] + 1);
+			treeSize[k] += treeSize[operand];
+		}
+		if (detailed)
+		{
+			const FlatNode& node = program.OperationNode(k);
+			byOperation[StatisticsName(node)]++;
+			byKind[FlatProgramData::KindName(node.kind)]++;
+		}
+	}
+	Index shared = 0;
+	for (Index k = 0; k < n; k++) { shared += (uses[k] > 1); }
+	Real totalTreeSize = (Real)numbers;
+	Index maximumDepth = 0;
+	for (Index i = 0; i < (Index)roots.size(); i++)
+	{
+		totalTreeSize += treeSize[program.ResultSlot(i)];
+		maximumDepth = EXUstd::Maximum(maximumDepth, depth[program.ResultSlot(i)]);
+	}
+	py::dict statistics;
+	statistics["nodes"] = n + numbers;
+	statistics["operations"] = n + numbers - leaves;
+	statistics["leaves"] = leaves;
+	statistics["shared"] = shared;
+	statistics["depth"] = maximumDepth;
+	statistics["treeSize"] = totalTreeSize;
+	statistics["flatOperations"] = roots.size() ? program.NumberOfComputations() : 0;
+	if (detailed)
+	{
+		if (numbers) { byOperation["number"] += numbers; byKind["Real"] += numbers; }
+		py::dict operationCounts, kindCounts;
+		for (const auto& item : byOperation) { operationCounts[py::str(item.first)] = item.second; }
+		for (const auto& item : byKind) { kindCounts[py::str(item.first)] = item.second; }
+		statistics["byOperation"] = operationCounts;
+		statistics["byKind"] = kindCounts;
+	}
+	return statistics;
+}
+
+//! esym.GetStatistics(expressions, detailed), and GetStatistics() of esym.Real, Vector and Matrix (#3142)
+py::dict StatisticsOfExpressions(const py::object& expressions, bool detailed)
+{
+	bool isList = py::isinstance<py::list>(expressions) || py::isinstance<py::tuple>(expressions);
+	std::vector<py::object> objects = isList ? py::cast<std::vector<py::object>>(expressions) : std::vector<py::object>{ expressions };
+	std::vector<FlatNode> roots;
+	Index numbers = 0;
+	for (const py::object& x : objects)
+	{
+		FlatNode node;
+		if (py::isinstance<SReal>(x)) { node = FlatNode(py::cast<const SReal&>(x).GetExpression()); }
+		else if (py::isinstance<SymbolicRealVector>(x)) { node = FlatNode(py::cast<const SymbolicRealVector&>(x).GetExpression()); }
+		else if (py::isinstance<SymbolicRealMatrix>(x)) { node = FlatNode(py::cast<const SymbolicRealMatrix&>(x).GetExpression()); }
+		else if (py::isinstance<py::float_>(x) || py::isinstance<py::int_>(x)) {}
+		else { throw py::type_error("GetStatistics: expected exudyn.symbolic.Real, Vector or Matrix, or a number, but received " + py::cast<STDstring>(py::str(x))); }
+		if (node.node) { roots.push_back(node); }
+		else { numbers++; }
+	}
+	return StatisticsOfNodes(roots, numbers, detailed);
+}
+
+//! UserFunction.GetStatistics(detailed): the counts of its recorded result (#3142)
+py::dict StatisticsOfUserFunction(const PySymbolicUserFunction& function, bool detailed)
+{
+	const SymbolicGeneric& returnValue = function.GetReturnValue();
+	FlatNode node;
+	if (returnValue.IsReal() && returnValue.GetReal()) { node = FlatNode(returnValue.GetReal()->GetExpression()); }
+	else if (returnValue.IsVector() && returnValue.GetVector()) { node = FlatNode(returnValue.GetVector()->GetExpression()); }
+	else if (returnValue.IsMatrix() && returnValue.GetMatrix()) { node = FlatNode(returnValue.GetMatrix()->GetExpression()); }
+	else { throw py::value_error("UserFunction.GetStatistics: the user function has no recorded result"); }
+	if (node.node) { return StatisticsOfNodes({ node }, 0, detailed); }
+	return StatisticsOfNodes({}, 1, detailed); //a constant result
 }
 
 //! the expressions: one esym.Real, Vector or Matrix, or a list or tuple of them
@@ -2070,6 +2197,8 @@ void Init_Pybind_Symbolic(py::module& m) {
 
 		//.def("Diff", py::overload_cast<const Symbolic::SReal&>(&Symbolic::SReal::Diff),
 		//	"return derivative of stored expression w.r.t. given variable")
+		.def("GetStatistics", [](const Symbolic::SReal& item, bool detailed) { return Symbolic::StatisticsOfExpressions(py::cast(item), detailed); },
+			"the counts of the nodes of the expression, a dict; detailed: also per operation and per kind (#3142)", py::arg("detailed") = false)
 		.def("Diff", [](const Symbolic::SReal& item, const Symbolic::SReal& var) {
 				Symbolic::CheckTreeDepth(Symbolic::FlatNode(item.GetExpression()), "Diff()");
 				return item.DiffSReal(var);
@@ -2299,6 +2428,9 @@ void Init_Pybind_Symbolic(py::module& m) {
 		py::arg("valueAtRecording"));
 	m.def("GetDepth", &Symbolic::DepthOfExpressions, "the number of operations on the longest path to a leaf (#3090)",
 		py::arg("expressions"));
+	m.def("GetStatistics", &Symbolic::StatisticsOfExpressions,
+		"the counts of the nodes of one or a list of esym.Real, Vector and Matrix, a dict; detailed: also per operation and per kind (#3142)",
+		py::arg("expressions"), py::arg("detailed") = false);
 
 
 
@@ -2320,6 +2452,8 @@ void Init_Pybind_Symbolic(py::module& m) {
 		//.def(py::init<Symbolic::SReal, Symbolic::SReal, Symbolic::SReal >()) //cast from list of SReal
 
 		//+++++++++++++++++++++++++++++++++++++++++++
+		.def("GetStatistics", [](const Symbolic::SymbolicRealVector& item, bool detailed) { return Symbolic::StatisticsOfExpressions(py::cast(item), detailed); },
+			"the counts of the nodes of the expression, a dict; detailed: also per operation and per kind (#3142)", py::arg("detailed") = false)
 		.def("Diff", [](const Symbolic::SymbolicRealVector& item, const Symbolic::SReal& var) {
 				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Vector.Diff: the variable must be a named symbolic.Real");
 				return Symbolic::PyVectorDiff(item, Symbolic::DiffSeed(var.GetExpression()));
@@ -2472,6 +2606,8 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def_readwrite_static("__deleteCount", &Symbolic::MatrixExpressionBase::deleteCount)
 
 		//+++++++++++++++++++++++++++++++++++++++++++
+		.def("GetStatistics", [](const Symbolic::SymbolicRealMatrix& item, bool detailed) { return Symbolic::StatisticsOfExpressions(py::cast(item), detailed); },
+			"the counts of the nodes of the expression, a dict; detailed: also per operation and per kind (#3142)", py::arg("detailed") = false)
 		.def("Diff", [](const Symbolic::SymbolicRealMatrix& item, const Symbolic::SReal& var) {
 				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Matrix.Diff: the variable must be a named symbolic.Real");
 				return Symbolic::PyMatrixDiff(item, Symbolic::DiffSeed(var.GetExpression()));
@@ -2671,6 +2807,8 @@ void Init_Pybind_Symbolic(py::module& m) {
 			},
 			"the list of operations of the flat evaluation as text, one operation tK = ... per line and then the results (#3053); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function (#3088); flatten=False: the result as one expression (#3087)",
 			py::arg("format") = "Python", py::arg("flatten") = true)
+		.def("GetStatistics", &Symbolic::StatisticsOfUserFunction,
+			"the counts of the nodes of the recording, a dict; detailed: also per operation and per kind (#3142)", py::arg("detailed") = false)
 		.def("GetFlatProgramData", &Symbolic::FlatProgramDataOfUserFunction,
 			"the flat program as a Python structure: name, arguments, variables, operations (entry k is node k, its operands by number) and results (#3087)")
 

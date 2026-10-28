@@ -113,6 +113,7 @@ The class **symbolic.Real** has the following **functions and structures**:
   f.Diff(x) #evaluate derivative w.r.t. x
   ```
 
+- **`GetStatistics(detailed = False)`**: the counts of the nodes of the expression, as esym.GetStatistics (#3142)
 - **`value`**: access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)
 - **`operator __float__()`**: conversion of symbolic.Real to Python float; while recording, an expression or a named variable raises a TypeError, as math.sin(x) or float(x) would record a constant - use Evaluate() for the value (#3017)
 - **`operator __bool__()`**: symbolic.Real as a condition (if, and, or, not), its value not zero; while recording, an expression or a named variable raises a TypeError, as one branch would be taken for every call - use esym.IfThenElse(condition, a, b), or Evaluate() for a decision with the value at recording (#3096)
@@ -233,6 +234,16 @@ The class **symbolic** has the following **functions and structures**:
   esym.GetDepth([x, esym.sin(x*x + 1)]) #[0, 3]
   ```
 
+- **`GetStatistics(expressions, detailed = False)`**: the counts of the nodes of one esym.Real, Vector or Matrix, or of a list of them together, by one traversal of the graph, a dict: nodes (the distinct nodes of the graph), operations, leaves (numbers, variables, item outputs), shared (the nodes used by more than one operation), depth (as GetDepth), treeSize (the nodes counted once per path, as str() of a tree and the tree Diff walk them; a float), flatOperations (the operations the flat program writes, as GetFlatProgram() counts them); detailed=True also byOperation (the count per operation of the flat program, '+', 'sin', 'number', 'variable', 'itemOutput', ...) and byKind (per Real, Vector and Matrix) (#3142)
+
+  *Example*:
+
+  ```python
+  x=esym.Real('x',2)
+  y=esym.sin(x)*x
+  esym.GetStatistics([y, y+x], detailed=True)
+  ```
+
 - **`GetRecording()`**: Get current (global / module-wide) status of expression recording.
 
   *Example*:
@@ -317,6 +328,7 @@ The class **symbolic.Vector** has the following **functions and structures**:
   v.Diff(q, 0) #derivative by q[0]
   ```
 
+- **`GetStatistics(detailed = False)`**: the counts of the nodes of the expression, as esym.GetStatistics (#3142)
 - **`SetVector(vector)`**: Set stored vector or named vector expression to new given (non-symbolic) vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)
 - **`NumberOfItems()`**: Get size of Vector (may require to evaluate expression; not recording)
 - **`operator __setitem__(index)`**: bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)
@@ -444,6 +456,7 @@ The class **symbolic.Matrix** has the following **functions and structures**:
 
 - **`Evaluate()`**: Return evaluated expression (prioritized) or stored Matrix value. (not recorded)
 - **`Diff(var)`**: the derivative of the matrix expression by a named symbolic.Real, or by a component of a named symbolic.Vector with Diff(vectorVariable, component), at the current values, as numpy array (#3115)
+- **`GetStatistics(detailed = False)`**: the counts of the nodes of the expression, as esym.GetStatistics (#3142)
 - **`SetMatrix(matrix)`**: Set stored Matrix or named Matrix expression to new given (non-symbolic) Matrix. Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)
 - **`NumberOfRows()`**: Get number of rows (may require to evaluate expression; not recording)
 - **`NumberOfColumns()`**: Get number of columns (may require to evaluate expression; not recording)
@@ -623,6 +636,7 @@ The class **symbolic.UserFunction** has the following **functions and structures
 - **`SetUserFunctionFromDict(mainSystem, fcnDict, itemIndex, userFunctionName)`**: Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(...).
 - **`GetFlatProgram(format = 'Python', flatten = True)`**: the list of operations by which the result is evaluated, as text: one operation tK = ... per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function, written by exudyn.misc.symbolicExport, the variables of exudyn.symbolic.variables read from there (symbolic) or as keyword arguments (#3088); flatten=False: the result as one expression (#3087)
 - **`GetFlatProgramData()`**: the flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.symbolic.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.misc.symbolicExport writes it as code (#3087)
+- **`GetStatistics(detailed = False)`**: the counts of the nodes of the recorded result, as esym.GetStatistics (#3142)
 - **`flatEvaluation`**: True (default): the result is evaluated by the list of operations of GetFlatProgram(); False: as a tree, with the same results, for comparison (#3053, #3054)
 - **`operator __repr__()`**: Representation of Symbolic function
 - **`operator __str__()`**: Convert stored symbolic function to string

@@ -201,6 +201,7 @@ symbolicNumpyCompatibilityTest
 symbolicOnePassJacobianTest
 symbolicOptimizeTest
 symbolicSparseMatrixTest
+symbolicStatisticsTest
 symbolicSystemEquationsTest
 symbolicSystemJointsTest
 symbolicSystemLoadsTest

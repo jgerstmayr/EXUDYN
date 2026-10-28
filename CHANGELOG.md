@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 240 | 1.13.244 |
+| 1.13 | Newborn | 241 | 1.13.245 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.245** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Count the nodes of symbolic expressions and flat programs, in total and per kind of operation (#3142)
+  - description: Maintainer 2026-10-28: to understand the complexity of a symbolic expression, a method that counts its nodes - in detail per kind of node (+, sin, numbers, variables, ...) - for the expressions (esym.Real, Vector, Matrix) and for the flat program of a recording. One traversal in C++ as FlatProgramData::Add, without cost at evaluation: the distinct nodes of the graph, the operations, the leaves (numbers, variables, item outputs), the shared nodes, the depth, the size of the tree when every shared node is counted per path (what ToString and the tree Diff walk), and with detailed=True the counts per FlatName and per kind (Real, Vector, Matrix); for the flat program also the entries that are written and those written into their users.
+  - **notes:** exudyn.symbolic.GetStatistics(expressions, detailed) and GetStatistics() of esym.Real, Vector, Matrix and UserFunction count the nodes of an expression or recording by one traversal: the distinct nodes, operations, leaves, shared nodes, depth, the size of the tree counted per path and the operations of the flat program; with detailed=True per operation and per kind.
+  - date resolved: **2026-10-28 16:26**, date raised: 2026-10-28
 - **1.13.244** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem takes ObjectJointUser: algebraic equations and reaction forces of the recorded joints (#3141)
   - description: SymbolicSystem with ObjectJointUser on rigid markers of user bodies and the ground: nAE, AlgebraicEquations from the recorded constraintUserFunction with the marker states, ReactionForces C\_q^T lambda from the recorded jacobianUserFunction projected by the marker Jacobians as the connector forces; SolveGeneralizedAlpha against SolveDynamic. Maintainer 2026-10-28.
   - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem takes ObjectJointUser with symbolic constraint and Jacobian functions: AlgebraicEquations and ReactionForces (C\_q^T lambda through the marker Jacobians), so that SolveGeneralizedAlpha integrates systems with the joints of UserItemCreator; the output of the solvers with joints by Exudyn's implicit solver.

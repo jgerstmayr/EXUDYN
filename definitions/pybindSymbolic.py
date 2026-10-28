@@ -111,6 +111,14 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='',
                         argTypes=['symbolic.Real'],
                         )
 
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetStatistics', cName='',
+                        description="the counts of the nodes of the expression, as esym.GetStatistics (#3142)",
+                        argList=['detailed'],
+                        defaultArgs=['False'],
+                        argTypes=['bool'],
+                        returnType='dict',
+                        )
+
 symbolicModule.DefDataAccess('value','access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)',
                        dataType = 'float')
 
@@ -287,6 +295,15 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetDepth', cName='',
                         returnType='Any',
                         )
 
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetStatistics', cName='',
+                        description="the counts of the nodes of one esym.Real, Vector or Matrix, or of a list of them together, by one traversal of the graph, a dict: nodes (the distinct nodes of the graph), operations, leaves (numbers, variables, item outputs), shared (the nodes used by more than one operation), depth (as GetDepth), treeSize (the nodes counted once per path, as str() of a tree and the tree Diff walk them; a float), flatOperations (the operations the flat program writes, as GetFlatProgram() counts them); detailed=True also byOperation (the count per operation of the flat program, '+', 'sin', 'number', 'variable', 'itemOutput', ...) and byKind (per Real, Vector and Matrix) (#3142)",
+                        example = r"""x=esym.Real('x',2)\\y=esym.sin(x)*x\\esym.GetStatistics([y, y+x], detailed=True)""",
+                        argList=['expressions', 'detailed'],
+                        defaultArgs=['', 'False'],
+                        argTypes=['Any', 'bool'],
+                        returnType='dict',
+                        )
+
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetRecording', cName='', 
                         description="Get current (global / module-wide) status of expression recording.",
                         example = "esym.GetRecording()",
@@ -346,6 +363,14 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='',
                         returnType='NDArray',
                         argList=['var'],
                         argTypes=['symbolic.Real'],
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetStatistics', cName='',
+                        description="the counts of the nodes of the expression, as esym.GetStatistics (#3142)",
+                        argList=['detailed'],
+                        defaultArgs=['False'],
+                        argTypes=['bool'],
+                        returnType='dict',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetVector', cName='', 
@@ -512,6 +537,14 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='',
                         returnType='NDArray',
                         argList=['var'],
                         argTypes=['symbolic.Real'],
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetStatistics', cName='',
+                        description="the counts of the nodes of the expression, as esym.GetStatistics (#3142)",
+                        argList=['detailed'],
+                        defaultArgs=['False'],
+                        argTypes=['bool'],
+                        returnType='dict',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetMatrix', cName='', 
@@ -751,6 +784,14 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgram', cNa
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgramData', cName='',
                         description="the flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.symbolic.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.misc.symbolicExport writes it as code (#3087)",
+                        returnType='dict',
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetStatistics', cName='',
+                        description="the counts of the nodes of the recorded result, as esym.GetStatistics (#3142)",
+                        argList=['detailed'],
+                        defaultArgs=['False'],
+                        argTypes=['bool'],
                         returnType='dict',
                         )
 

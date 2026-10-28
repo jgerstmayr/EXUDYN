@@ -159,6 +159,11 @@ def SpringForce(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)
     return t16
 ```
 
+`symbolicForce.GetStatistics(detailed=True)` counts what the recording holds: its distinct nodes, operations and
+leaves, the shared nodes, the depth, `treeSize` - the nodes counted once per path, which `str()` writes -, the
+operations of the flat program, and per operation (`'*'`, `'tanh'`, `'number'`, ...); `esym.GetStatistics(expressions)`
+does the same for expressions (#3142).
+
 `format='symbolic'` writes it with `exudyn.symbolic`, so that it is recorded again, and `format='sympy'` builds sympy
 expressions, from which sympy writes C, C++, Fortran, Matlab or LaTeX and computes derivatives; `flatten=False`
 writes the result as one expression. Every format computes what Exudyn computes: `mod` is the C `fmod`, `round` rounds

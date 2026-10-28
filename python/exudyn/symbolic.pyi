@@ -137,6 +137,10 @@ class Real:
             f.Diff(x) #evaluate derivative w.r.t. x
         """
         ...
+    @overload
+    def GetStatistics(self, detailed: bool=False) -> dict: 
+        """The counts of the nodes of the expression, as esym.GetStatistics (#3142)."""
+        ...
     value:float
     """access to internal float value, which is used in case that Real has been built from a float (but without a name and without symbolic expression)."""
     @overload
@@ -340,6 +344,16 @@ def GetDepth(expressions: Any) -> Any:
     """
     ...
 @overload
+def GetStatistics(expressions: Any, detailed: bool=False) -> dict: 
+    """The counts of the nodes of one esym.Real, Vector or Matrix, or of a list of them together, by one traversal of the graph, a dict: nodes (the distinct nodes of the graph), operations, leaves (numbers, variables, item outputs), shared (the nodes used by more than one operation), depth (as GetDepth), treeSize (the nodes counted once per path, as str() of a tree and the tree Diff walk them; a float), flatOperations (the operations the flat program writes, as GetFlatProgram() counts them); detailed=True also byOperation (the count per operation of the flat program, '+', 'sin', 'number', 'variable', 'itemOutput', ...) and byKind (per Real, Vector and Matrix) (#3142).
+    
+    Examples:
+        x=esym.Real('x',2)
+        y=esym.sin(x)*x
+        esym.GetStatistics([y, y+x], detailed=True)
+    """
+    ...
+@overload
 def GetRecording() -> bool: 
     """Get current (global / module-wide) status of expression recording.
     
@@ -385,6 +399,10 @@ class Vector:
             v=esym.sin(q[0])*q
             v.Diff(q, 0) #derivative by q[0]
         """
+        ...
+    @overload
+    def GetStatistics(self, detailed: bool=False) -> dict: 
+        """The counts of the nodes of the expression, as esym.GetStatistics (#3142)."""
         ...
     @overload
     def SetVector(self, vector: Vector) -> None: 
@@ -481,6 +499,10 @@ class Matrix:
     @overload
     def Diff(self, var: Real) -> NDArray: 
         """The derivative of the matrix expression by a named Real, or by a component of a named Vector with Diff(vectorVariable, component), at the current values, as numpy array (#3115)."""
+        ...
+    @overload
+    def GetStatistics(self, detailed: bool=False) -> dict: 
+        """The counts of the nodes of the expression, as esym.GetStatistics (#3142)."""
         ...
     @overload
     def SetMatrix(self, matrix: NDArray[Any, float]) -> None: 
@@ -593,6 +615,10 @@ class UserFunction:
     @overload
     def GetFlatProgramData(self) -> dict: 
         """The flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.misc.symbolicExport writes it as code (#3087)."""
+        ...
+    @overload
+    def GetStatistics(self, detailed: bool=False) -> dict: 
+        """The counts of the nodes of the recorded result, as esym.GetStatistics (#3142)."""
         ...
     flatEvaluation:bool
     """True (default): the result is evaluated by the list of operations of GetFlatProgram(); False: as a tree, with the same results, for comparison (#3053, #3054)."""
