@@ -911,6 +911,99 @@ class SymbolicSystem(SymbolicSystemBase):
                 np.add.at(f, kind.ltg[i], local)
         return f
 
+    def _JointJacobian(self, kind, i, q, lambda_, t):
+        """the derivatives of joint i of kind in its local coordinates (#3145): C_q, the derivative of its constraint
+        equations by the coordinates - the recorded jacobianUserFunction C by the marker translations and global
+        rotation increments times the position and rotation Jacobians of the markers -, and the derivative of its
+        reaction forces C_q^T lambda by the coordinates: the derivatives of C by the positions and rotation matrices of
+        the markers (arguments 3 + 2k and 4 + 2k of the recording), composed with J_pos and dA/dq of the bodies, and the
+        derivatives of J_pos and J_rot of the bodies times the forces and torques C^T lambda"""
+        n = kind.ltg.shape[1]
+        joint = kind.parameters[i]
+        (arguments, markerData) = self._JointArguments(kind, i, q, t)
+        recording = kind.recordings['jacobianUserFunction']
+        C = np.array(recording.Evaluate(self.mbs, *arguments), dtype=float).reshape(-1, 12)
+        lambdaJoint = lambda_[joint['ltgAE']]
+        forces = C.T @ lambdaJoint #the forces and torques on the markers
+        C_q = np.zeros((C.shape[0], n))
+        dForces = np.zeros((12, n)) #the derivative of C^T lambda by the local coordinates
+        for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(joint['markers'], markerData)):
+            if Jpos is None:
+                continue
+            indices = marker['indices']
+            C_q[:, indices] += C[:, 6*k:6*k + 3] @ Jpos
+            dForces[:, indices] += np.einsum('ijk,i->jk', self._RecordingJacobian(recording, 3 + 2*k, arguments).reshape(-1, 12, 3),
+                                             lambdaJoint) @ Jpos
+            if Jrot is not None:
+                C_q[:, indices] += C[:, 6*k + 3:6*k + 6] @ Jrot
+            if bodyArguments is not None and Jrot is not None: #the rotation of the marker after the one of the body
+                dA = np.einsum('ijk,jl->ilk', self._BodyJacobian(marker, 'rotationMatrixUserFunction', bodyArguments),
+                               marker['rotation'])
+                dForces[:, indices] += np.einsum('ijk,i->jk', self._RecordingJacobian(recording, 4 + 2*k, arguments).reshape(-1, 12, 9),
+                                                 lambdaJoint) @ dA.reshape(9, len(indices))
+        dReaction = np.zeros((n, n))
+        for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(joint['markers'], markerData)):
+            if Jpos is None:
+                continue
+            indices = marker['indices']
+            (force, torque) = (slice(6*k, 6*k + 3), slice(6*k + 3, 6*k + 6))
+            dReaction[indices, :] += Jpos.T @ dForces[force]
+            if Jrot is not None:
+                dReaction[indices, :] += Jrot.T @ dForces[torque]
+            if bodyArguments is not None:
+                dJpos = self._BodyJacobian(marker, 'positionJacobianUserFunction', bodyArguments)
+                dReaction[np.ix_(indices, indices)] += np.einsum('ijk,i->jk', dJpos, forces[force])
+                if Jrot is not None:
+                    dJrot = self._BodyJacobian(marker, 'rotationJacobianUserFunction', bodyArguments)
+                    dReaction[np.ix_(indices, indices)] += np.einsum('ijk,i->jk', dJrot, forces[torque])
+        return (C_q, dReaction)
+
+    def SystemJacobian(self, q, q_t, q_tt, y, y_t, lambda_, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
+                       factor_y_t=0., velocityLevel=False, epsilon=1e-6):
+        """the Jacobian of SystemResidual, exact (#3145): the ODE2 block by ResidualJacobian plus the derivative of the
+        reaction forces, the blocks C_q^T and C_q of the joints by _JointJacobian, the ODE1 block by ODE1Jacobian; the
+        arguments as SymbolicSystemBase.SystemJacobian, epsilon not used
+
+        Args:
+            q: the ODE2 coordinates
+            q_t: the ODE2 velocities
+            q_tt: the ODE2 accelerations
+            y: the ODE1 coordinates
+            y_t: their velocities
+            lambda_: the algebraic coordinates lambda
+            t: the time
+            factor_q: the factor of d/dq
+            factor_q_t: the factor of d/dq_t
+            factor_q_tt: the factor of d/dq_tt
+            factor_y: the factor of d/dy
+            factor_y_t: the factor of d/dy_t
+            velocityLevel: must be False, as for AlgebraicEquations
+            epsilon: not used
+
+        Returns:
+            the dense matrix (nSystem x nSystem), nSystem = nODE2 + nODE1 + nAE
+        """
+        if velocityLevel and self.nAE:
+            raise ValueError('SymbolicSystem.SystemJacobian: the joints give their equations at position level only')
+        (nODE2, nODE1, nAE) = (self.nODE2, self.nODE1, self.nAE)
+        nSystem = nODE2 + nODE1 + nAE
+        (q, q_t, q_tt) = self._State(q, q_t, q_tt)
+        J = np.zeros((nSystem, nSystem))
+        J[:nODE2, :nODE2] = self.ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
+        if nAE:
+            lambda_ = np.asarray(lambda_, dtype=float)
+            offset = nODE2 + nODE1 #the first algebraic coordinate
+            for kind in self.jointKinds:
+                for i in range(len(kind.objects)):
+                    (ltg, ltgAE) = (kind.ltg[i], kind.parameters[i]['ltgAE'] + offset)
+                    (C_q, dReaction) = self._JointJacobian(kind, i, q, lambda_, t)
+                    J[np.ix_(ltg, ltg)] += factor_q*dReaction
+                    J[np.ix_(ltg, ltgAE)] += C_q.T
+                    J[np.ix_(ltgAE, ltg)] += factor_q*C_q
+        if nODE1: #the rows g - y_t
+            J[nODE2:nODE2 + nODE1, nODE2:nODE2 + nODE1] = factor_y*self.ODE1Jacobian(y, t) - factor_y_t*np.eye(nODE1)
+        return J
+
     def _Call(self, kind, name, i, q, q_t, t):
         """the result of the user function name of object i of kind, by its recording, as numpy array"""
         return np.array(kind.recordings[name].Evaluate(self.mbs, *self._Arguments(kind, i, q, q_t, t)), dtype=float)

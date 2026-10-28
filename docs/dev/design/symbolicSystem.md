@@ -209,12 +209,17 @@ CSolverExplicit and CSolverImplicitSecondOrder:
 - `SymbolicSystem` takes ObjectJointUser with symbolic constraint and Jacobian functions (#3141): `AlgebraicEquations`
   from the constraint recording with the marker states, `ReactionForces` = $\Cm_{\qv}\tp\tlambda$ from the Jacobian
   recording (by the marker translations and global rotation increments), mapped into the coordinates by the position
-  and rotation Jacobians of the markers as the forces of a connector. The constraint blocks of `SystemJacobian` are
-  central differences (exact ones by the one-pass derivative are open), which makes `SolveGeneralizedAlpha` slow - 4.2
-  s against 0.048 s of SolveDynamic for the 33 unknowns of symbolicSystemJointsTest.py - and makes it stop at other
-  Newton iterates than Exudyn (#3145). The constraints are not in `Equations()` yet (#3146). ObjectGenericODE1 is
-  taken (#3144), its ODE1 block of `SystemJacobian` still by central differences. The coupling of all kinds in one item, ObjectGenericDAE (#3143), also needs Exudyn's internal
-  solvers extended.
+  and rotation Jacobians of the markers as the forces of a connector. `SystemJacobian` of `SymbolicSystem` is exact
+  (#3145): $\Cm_{\qv}$ is the Jacobian recording times the marker Jacobians, the derivative of
+  $\Cm_{\qv}\tp\tlambda$ by $\qv$ comes from the one-pass derivatives of the Jacobian recording by the marker
+  positions and rotation matrices and of the body functions, as for the connectors; the ODE1 block is `ODE1Jacobian`.
+  For the 33 unknowns of symbolicSystemJointsTest.py `SolveGeneralizedAlpha` takes 0.44 s against 0.059 s of
+  SolveDynamic (4.2 s with central differences). Both stop at other Newton iterates - 1.1e-8 apart after 100 steps at
+  relativeTolerance 1e-10 - also with the exact blocks and also without the derivative of the reaction forces: the
+  difference is in the ODE2 block, where Exudyn leaves out $\partial(\Mm\ddot\qv)/\partial\qv$.
+- `SymbolicSystem` takes ObjectGenericODE1 with a symbolic rhsUserFunction and LoadCoordinate on its coordinates
+  (#3144). The constraints and the ODE1 equations are not in `Equations()` yet (#3146). The coupling of all kinds in one
+  item, ObjectGenericDAE (#3143), also needs Exudyn's internal solvers extended.
 
 ## 7. Sub-steps of RG12.51 (as planned after the decisions)
 
@@ -445,7 +450,7 @@ drawing of the joints (RG12.55.7, #3147), the node count (RG12.61, #3142) and Ob
 |---|---|---|
 | user items (`UserItemCreator`) | ground, mass point, rigid body, spring-damper, torsional spring-damper, force, revolute, prismatic, spherical and distance joint - equal to the built-in items to the Newton tolerance | the sphere-sphere contact (RG12.55.5); the joints are not drawn (#3147); free axes of the spherical joint and nodes in the distance constraint are refused |
 | `SymbolicSystem` | ObjectUserBody, ObjectGenericODE2, ObjectConnectorUser on point, body and ground markers, ObjectJointUser, ObjectGenericODE1 (#3144), the four loads; two composed recordings (forces, mass matrix) | data coordinates, the constraints in `Equations()` (#3146), the ODE1 equations in `Equations()` |
-| solvers in Python | explicit Euler, RK44, velocity Verlet (with the inverse per body), generalized-alpha with ODE1 coordinates and index-3 constraints, all equal to `SolveDynamic` | with joints 90 times slower than `SolveDynamic` (#3145); index 2 refused |
+| solvers in Python | explicit Euler, RK44, velocity Verlet (with the inverse per body), generalized-alpha with ODE1 coordinates and index-3 constraints, all equal to `SolveDynamic` | with joints 7 times slower than `SolveDynamic` with the exact Jacobian (#3145); index 2 refused |
 | derivatives | `Diff` of vectors and matrices (#3115), the one pass over a flat program (#3116), pow without the log term (#3135) | the derivative as a new program (RG12.54.2, #3108) |
 | export | a recording as Python, numpy, symbolic, sympy and C++ text; `Equations()` and `GetFlatProgram()` of the system | the whole system with its sparsity and scatter (RG12.51.5) |
 | GPU | the experiment of RG14.2.1 | RG14.2.2 to RG14.4 |

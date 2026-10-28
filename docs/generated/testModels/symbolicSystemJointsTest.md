@@ -14,7 +14,8 @@ You can view and download this file on Github: [symbolicSystemJointsTest.py](htt
 #           axes, a body on a prismatic joint pulled by a spring-damper, a spinning bar on a spherical joint and a mass
 #           point on a distance constraint to it, as ObjectJointUser with recorded user functions. The constraint
 #           equations vanish in the initial state, the reaction forces C_q^T lambda equal the derivative of lambda^T c(q)
-#           by central differences, and SolveGeneralizedAlpha equals SolveDynamic; the times of both are printed, not
+#           by central differences, the exact Jacobian of the system (#3145) equals the central differences of
+#           SymbolicSystemBase, and SolveGeneralizedAlpha equals SolveDynamic; the times of both are printed, not
 #           judged.
 #
 # Author:   Johannes Gerstmayr
@@ -27,7 +28,7 @@ You can view and download this file on Github: [symbolicSystemJointsTest.py](htt
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.misc.symbolicUserItems import UserItemCreator
-from exudyn.misc.symbolicSystem import SymbolicSystem, SolveGeneralizedAlpha
+from exudyn.misc.symbolicSystem import SymbolicSystem, SymbolicSystemBase, SolveGeneralizedAlpha
 import numpy as np
 import time
 
@@ -74,13 +75,21 @@ differenceReaction = np.max(np.abs(reaction - np.array(differences)))/np.max(np.
 exu.Print('constraint equations in the initial state', residual0, '; reaction forces against central differences',
           differenceReaction)
 
+#the exact Jacobian of all equations against the central differences of the base class, with the factors of a Newton
+#step of the generalized-alpha method
+state = (q, q_t0 + 0.1, rng.standard_normal(system.nODE2), np.zeros(0), np.zeros(0), lambda_, 0.1)
+factors = dict(factor_q=1., factor_q_t=30., factor_q_tt=4000.)
+jacobian = system.SystemJacobian(*state, **factors)
+differenceJacobian = np.max(np.abs(jacobian - SymbolicSystemBase.SystemJacobian(system, *state, **factors)))/np.max(np.abs(jacobian))
+exu.Print('exact Jacobian against central differences', differenceJacobian)
+
 #SolveGeneralizedAlpha against SolveDynamic
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 100
 simulationSettings.timeIntegration.endTime = 0.1
 simulationSettings.timeIntegration.verboseMode = 0
-#tight: the Jacobian of SolveGeneralizedAlpha differs from Exudyn's (its constraint blocks by central differences), so
-#that both solvers stop at other iterates; with 1e-10 they differ by 1.1e-8 after 100 steps
+#tight: the Jacobian of SolveGeneralizedAlpha differs from Exudyn's in the ODE2 block (with d(M q_tt)/dq, which
+#Exudyn leaves out), so that both solvers stop at other iterates; with 1e-10 they differ by 1.1e-8 after 100 steps
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-13
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-14
 simulationSettings.solution.file.write = False
@@ -96,6 +105,7 @@ exu.Print('SolveGeneralizedAlpha against SolveDynamic', differenceSolver, '; tim
           's, of SolveGeneralizedAlpha', round(timeSymbolic, 4), 's')
 
 u = 1 + int(not residual0 < 1e-12) + int(not differenceReaction < 1e-7) + int(not differenceSolver < 1e-9)
+u += int(not differenceJacobian < 1e-8)
 exu.Print('solution of symbolicSystemJointsTest=', u)
 
 exu.sys['testResult'] = u

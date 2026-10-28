@@ -4243,3 +4243,25 @@ RG12.51.14, .15 and .16 as well as RG12.61 (as recommended) now".)*
   differences 2.6e-10; SolveGeneralizedAlpha 8.3e-14, RK44 6.5e-15, explicit Euler 6.5e-15 relative to SolveDynamic,
   the ODE1 coordinates written into mbs; a Python rhsUserFunction refused.
 - docs/dev/design/symbolicSystem.md sections 3, 6 and 12.1; docs/manual/revisions.md.
+
+<a id="rg12-51-15"></a>
+### RG12.51.15 — the exact Jacobian of SymbolicSystem with joints and ODE1 objects (2026-10-28, #3145)
+*(Maintainer 2026-10-28: "Do RG12.51.14, .15 and .16 as well as RG12.61 (as recommended) now".)*
+- python/exudyn/misc/symbolicSystem.py: `SymbolicSystem.SystemJacobian` overrides the one of the base class, which takes
+  every block but the ODE2 one by central differences. Per joint `_JointJacobian`: C_q = sum over the markers of the
+  columns of the recorded jacobianUserFunction times J_pos and J_rot; the derivative of C_q^T lambda by q from
+  EvaluateJacobian of the Jacobian recording by the marker positions and rotation matrices (arguments 3 + 2k, 4 + 2k),
+  contracted with lambda and composed with J_pos and dA/dq of the user body, plus dJ_pos/dq and dJ_rot/dq of the body
+  times the forces and torques C^T lambda - as `_ConnectorJacobian` (#3129). The blocks: ODE2 x ODE2 ResidualJacobian
+  plus factor_q times that derivative, ODE2 x AE C_q^T, AE x ODE2 factor_q C_q, ODE1 x ODE1 factor_y ODE1Jacobian -
+  factor_y_t I (the rows g - y_t). velocityLevel raises, as AlgebraicEquations does.
+- Measured on symbolicSystemJointsTest.py (33 unknowns, 100 steps): against the central differences of the base class
+  1.6e-12 (factor_q only) and 1.2e-13 relative (the factors of a Newton step); SolveGeneralizedAlpha 4.2 s -> 0.44 s,
+  SolveDynamic 0.059 s.
+- **Correction of the log of RG12.51.4.2** (2026-10-28): it gave the central differences of the constraint blocks as
+  the reason why SolveGeneralizedAlpha and SolveDynamic differ by 1.1e-8 at relativeTolerance 1e-10. They differ by
+  the same 1.1e-8 with the exact blocks, and by 1.0e-8 also without the derivative of the reaction forces: the
+  iterates differ by the ODE2 block, where SolveGeneralizedAlpha has d(M q_tt)/dq and Exudyn not (section 6 of the
+  design note). The test keeps the tolerance 1e-13 (1.1e-11), with the reason corrected in its comment.
+- symbolicSystemJointsTest.py checks the exact Jacobian against the central differences (1.2e-13).
+- docs/dev/design/symbolicSystem.md sections 6 and 12.1, docs/manual/revisions.md.

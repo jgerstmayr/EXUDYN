@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 243 | 1.13.247 |
+| 1.13 | Newborn | 244 | 1.13.248 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.248** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Exact constraint blocks of ObjectJointUser in SymbolicSystem.SystemJacobian (#3145)
+  - description: The constraint blocks of SystemJacobian are central differences (\#3141): SolveGeneralizedAlpha with joints is 90 times slower than SolveDynamic and stops at other Newton iterates. C\_q is the recorded jacobianUserFunction times the position and rotation Jacobians of the markers, already formed for the reaction forces; the derivative of C\_q^T lambda by q from the one-pass derivative of the recordings (\#3116), as for the connectors (\#3129).
+  - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem.SystemJacobian is exact: the constraint blocks of ObjectJointUser from the recorded Jacobian and the marker Jacobians, the derivative of the reaction forces, and the ODE1 block; SolveGeneralizedAlpha with joints is ten times faster.
+  - date resolved: **2026-10-28 16:50**, date raised: 2026-10-28
 - **1.13.247** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Take ObjectGenericODE1 with a symbolic rhsUserFunction into SymbolicSystem (#3144)
   - description: Maintainer 2026-10-28 (make SymbolicSystem take ODE1 items and joints): nODE1, InitialStateODE1 and ODE1RightHandSide from ObjectGenericODE1 - its systemMatrix, rhsVector and a symbolic rhsUserFunction - grouped in kinds as the ODE2 objects, the LTG maps of GetObjectLTGODE1; ODE1 coordinates no longer refused. A test model against SolveDynamic with SolveExplicit and SolveGeneralizedAlpha.
   - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem takes ObjectGenericODE1 with its systemMatrix, rhsVector and a symbolic rhsUserFunction, and LoadCoordinate on ODE1 coordinates: ODE1RightHandSide, the exact ODE1Jacobian and InitialStateODE1; SolveGeneralizedAlpha and SolveExplicit integrate such systems as SolveDynamic does.
