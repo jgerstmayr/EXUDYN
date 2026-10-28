@@ -15,8 +15,9 @@ You can view and download this file on Github: [symbolicSystemEquationsTest.py](
 #           symbolic forceUserFunction (2 coordinates), and of UserItemCreator a rigid body on Tait-Bryan angles with a
 #           mass point, spring-dampers on body markers, a torsional spring-damper, gravity, a load of a user function
 #           of the time on the point, a body-fixed force on the body and a LoadCoordinate (9 coordinates). At random
-#           states, the mass matrix, the forces and the residual of the expressions - by the numpy code of their flat
-#           program - and, if sympy is installed, of the sympy expressions equal those of SymbolicSystem evaluated
+#           states, the mass matrix, the forces and the mass matrices of the bodies of the expressions (#3132) - by the
+#           numpy code of their flat program - and, if sympy is installed, of the sympy expressions equal those of
+#           SymbolicSystem evaluated
 #           object by object (composeSystem=False); so do those of the default SymbolicSystem, which evaluates two
 #           recordings of the composed system (#3131).
 #
@@ -100,28 +101,32 @@ for Build in [GenericSystem, RigidBodySystem]:
     system = SymbolicSystem(mbs)
     perObject = SymbolicSystem(mbs, composeSystem=False) #the reference: each object by its own recordings
     n = system.nODE2
-    equations = system.Equations()
-    variables = [equations[name] for name in ['q', 'q_t', 'q_tt', 't']]
-    Numpy = ToFunction(esym.GetFlatProgramData([equations['massMatrix'], equations['forces'], equations['residual']],
-                                               arguments=variables), 'numpy')
+    equations = system.Equations(massMatrixBlocks=True)
+    variables = [equations[name] for name in ['q', 'q_t', 't']]
+    blockMatrices = [matrix for (ltg, matrices) in equations['massMatrixBlocks'] for matrix in matrices]
+    Numpy = ToFunction(esym.GetFlatProgramData([equations['massMatrix'], equations['forces']] + blockMatrices, arguments=variables), 'numpy')
     space = {}
-    exec(system.GetFlatProgram(format='numpy'), space)
-    states = [(0.1*rng.standard_normal(n), rng.standard_normal(n), rng.standard_normal(n), rng.uniform()) for i in range(3)]
+    exec(system.GetFlatProgram(format='numpy'), space) #Equations(q, q_t, t) returns (forces, massMatrix)
+    states = [(0.1*rng.standard_normal(n), rng.standard_normal(n), rng.uniform()) for i in range(3)]
     if sympy is not None:
         equationsSympy = system.Equations(format='sympy')
-        symbols = [list(equationsSympy[name]) for name in ['q', 'q_t', 'q_tt']] + [equationsSympy['t']]
-        Sympy = sympy.lambdify(symbols, [equationsSympy['massMatrix'], equationsSympy['forces'], equationsSympy['residual']], 'numpy')
-    for (q, q_t, q_tt, t) in states:
-        reference = [perObject.MassMatrix(q, q_t, t), perObject.Forces(q, q_t, t), perObject.Residual(q, q_t, q_tt, t)]
+        symbols = [list(equationsSympy[name]) for name in ['q', 'q_t']] + [equationsSympy['t']]
+        Sympy = sympy.lambdify(symbols, [equationsSympy['massMatrix'], equationsSympy['forces']], 'numpy')
+    for (q, q_t, t) in states:
+        reference = [perObject.MassMatrix(q, q_t, t), perObject.Forces(q, q_t, t)]
+        referenceBlocks = np.concatenate([blocks.ravel() for (ltg, blocks) in perObject.MassMatrixBlocks(q, q_t, t)])
         scale = max(np.max(np.abs(x)) for x in reference)
-        composed = [system.MassMatrix(q, q_t, t), system.Forces(q, q_t, t), system.Residual(q, q_t, q_tt, t)]
-        differences.append(max(np.max(np.abs(a - b)) for (a, b) in zip(composed, reference))/scale)
-        (M, f, r) = Numpy(q, q_t, q_tt, t)
-        differences.append(max(np.max(np.abs(np.array(a, dtype=float) - b)) for (a, b) in zip([M, f, r], reference))/scale)
-        differences.append(np.max(np.abs(space['Residual'](q, q_t, q_tt, t) - reference[2]))/scale)
+        composed = [system.MassMatrix(q, q_t, t), system.Forces(q, q_t, t),
+                    np.concatenate([blocks.ravel() for (ltg, blocks) in system.MassMatrixBlocks(q, q_t, t)])]
+        differences.append(max(np.max(np.abs(a - b)) for (a, b) in zip(composed, reference + [referenceBlocks]))/scale)
+        values = Numpy(q, q_t, t)
+        blocks = np.concatenate([np.array(x, dtype=float).ravel() for x in values[2:]])
+        differences.append(max(np.max(np.abs(np.array(a, dtype=float) - b)) for (a, b) in zip(values[:2] + (blocks,), reference + [referenceBlocks]))/scale)
+        (f, M) = space['Equations'](q, q_t, t)
+        differences.append(max(np.max(np.abs(M - reference[0])), np.max(np.abs(f - reference[1])))/scale)
         if sympy is not None:
-            (M, f, r) = Sympy(q, q_t, q_tt, t)
-            differences.append(max(np.max(np.abs(np.array(a, dtype=float).reshape(np.shape(b)) - b)) for (a, b) in zip([M, f, r], reference))/scale)
+            (M, f) = Sympy(q, q_t, t)
+            differences.append(max(np.max(np.abs(np.array(a, dtype=float).reshape(np.shape(b)) - b)) for (a, b) in zip([M, f], reference))/scale)
             sympyChecked += 1
     exu.Print(Build.__name__ + ':', n, 'coordinates, flat program of', len(system.GetFlatProgram().splitlines()) - 1,
               'operations, largest relative difference', max(differences))

@@ -3992,3 +3992,23 @@ vectorized evaluation?")*
 - symbolicSystemEquationsTest.py: the references are those of SymbolicSystem(mbs, composeSystem=False), and the composed
   Forces, MassMatrix and Residual are compared too; 7.5e-15. The symbolic test models unchanged in their results.
 - docs/dev/design/symbolicSystem.md §11, docs/manual/revisions.md.
+
+<a id="rg12-51-12"></a>
+### RG12.51.12 — Equations: flags for the results, the mass matrices of the bodies, no residual (2026-10-28, #3132)
+*(Maintainer 2026-10-28: "system.Equations() returns a couple of terms, some of them not needed; add flags for that;
+further: it is not clear what forces means (it would differ if we have a massInversePerBody or not); the
+massInversePerBody-option is the most important for further tests, I believe; the residual seems to be less relevant
+... if no objection, remove it.")*
+- exudyn/misc/symbolicSystem.py `Equations(format, optimize, variables, massMatrix=True, forces=True,
+  massMatrixBlocks=False)`: the results asked for; 'massMatrixBlocks' the mass matrices of the bodies per kind,
+  (ltg, list of matrices), as MassMatrixBlocks() gives them. The docstring says what f is: the whole right-hand side of
+  M q_tt = f - the quadratic velocity terms of the bodies, the connectors, the loads -, the same with the global mass
+  matrix and with the inverse per body, which only solves differently. The residual and the variable q_tt removed;
+  variables=(q, q_t, t). `_EquationLists` also gives the local mass matrices.
+- The composed system records the entries of all local mass matrices as a third recording, so that MassMatrixBlocks is
+  one call too: SolveExplicit RK44 with the inverse per body on the chain of symbolicUserRigidBodiesTest.py 0.054 s ->
+  0.043 s, explicit Euler 0.018 s; the einsum of the inverse per body is one numpy call per kind, not per acceleration.
+- `GetFlatProgram(format, flatten, results=['forces', 'massMatrix'])`: a function Equations(q, q_t, t).
+- symbolicSystemEquationsTest.py: mass matrix, forces and the mass matrices of the bodies, 7.5e-15; the two examples
+  print M and f instead of the residual.
+- docs/dev/design/symbolicSystem.md §11, docs/manual/revisions.md.

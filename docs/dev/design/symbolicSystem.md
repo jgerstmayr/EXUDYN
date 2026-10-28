@@ -358,9 +358,11 @@ As numbers, the system needs no S3: it evaluates each recording and composes the
 **In Python** (#3130): the code of a recording in the format 'symbolic' of exudyn.misc.symbolicExport (`ToFunction`),
 called with exudyn.symbolic arguments, records the same graph with the arguments replaced - S3 without C++, at the cost
 of recording the graph again; in the format 'sympy' the same with sympy symbols. `SymbolicSystem.Equations(format)`
-composes the system of it: the mass matrix, the forces and the residual in the variables q, q_t, q_tt and t (the
-parameters and reference coordinates as numbers), with the connectors on their marker kinematics and the loads;
-`GetFlatProgram(format)` writes the residual. Measured: 9 coordinates of a rigid body and a mass point, 474 operations,
+composes the system of it: the mass matrix, the forces of $\Mm\ddot\qv = \fv$ and, with `massMatrixBlocks`, the
+mass matrices of the bodies for the inverse per body, in the variables q, q_t and t (the parameters and reference
+coordinates as numbers), with the connectors on their marker kinematics and the loads; `GetFlatProgram(format)` writes
+the results asked for (#3132). The forces are the same with and without the inverse per body; the residual is not
+offered, as neither solver uses it in this form. Measured: 9 coordinates of a rigid body and a mass point, 474 operations,
 composed in 0.01 s (exudyn.symbolic) and 0.15 s (sympy). Whether RG12.60 still needs the copy in C++ by `NewWithOperands`
 is open.
 

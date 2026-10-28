@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.236.dev1
+- Exudyn version = 1.13.237.dev1
 - last change = 2026-10-28
-- Number of issues = 3132
-- Number of resolved issues = 3013 (236 in current version)
+- Number of issues = 3134
+- Number of resolved issues = 3014 (237 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `FIX` `LOW EFF` `raised by: Claude-JG` test\_guiValues: testStorePositionsStoresEveryOpenWindow presses the store button with confirm\[1\] (#3133)
+  - description: Since 9af22ac6 (\#3041-\#3043, 2026-10-19) OnStorePositions passes confirm as a list of (label, function, tooltip) entries; the test calls confirm\[1\]() and raises IndexError. It ran into it on 2026-10-28 when Tk was available to the test run; before, the runs apparently skipped it. The test should call confirm\[0\]\[1\]().
+  - date raised: 2026-10-28
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Call a symbolic recording with symbolic arguments: its expressions with the arguments substituted (#3117)
   - description: revision2026c step RG12.60 (maintainer 2026-10-26): a recording evaluated with exudyn.symbolic arguments returns a copy of its expressions in which its argument variables are replaced by the given expressions, as Optimize copies nodes; for one expression per kind of the symbolic system (the residual M q\_tt - f), for the forces of connectors composed with the marker kinematics of the bodies, and for the export of one program per kind (RG12.51.5).
   - date raised: 2026-10-26

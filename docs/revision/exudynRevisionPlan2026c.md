@@ -124,7 +124,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
-| RG6 | OPEN | 1 | Graphics and rendering |
+| RG6 | OPEN | 2 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -682,6 +682,12 @@ with the raytracer the bar shows at once): done as asked. [log](exudynRevisionLo
 #### **CLOSED_RG6.19.11** An icon for the visualization settings
 
 CLOSED 2026-10-20 (#3051): a gear wheel after the sensors, as the key V. [log](exudynRevisionLog2026c.md#rg6-19-11)
+
+#### **OPEN_RG6.19.12** The test of store positions presses the store button of the list of confirm entries
+
+#3133 (found 2026-10-28 by the pytest run of RG12.51.12): OnStorePositions passes confirm as a list of (label, function,
+tooltip) since #3041-#3043; test_guiValues.py calls confirm[1]() and raises IndexError, which shows once Tk is available
+to the run. The test should call confirm[0][1]().
 
 ## **OPEN_RG7** Python user items
 
@@ -1997,6 +2003,13 @@ the forces and the mass matrix entries of Equations recorded once, Forces, MassM
 (composeSystem=True); a dense LU up to 200 coordinates. SolveExplicit RK44 of the chain of symbolicUserRigidBodiesTest.py
 0.96 s -> 0.049 s, explicit Euler 0.020 s; SolveDynamic 0.11 s with the same recordings, 0.014 s with the built-in items.
 [log](exudynRevisionLog2026c.md#rg12-51-11)
+
+#### **CLOSED_RG12.51.12** Equations: flags for the results, the mass matrices of the bodies, no residual
+
+CLOSED 2026-10-28 (#3132; maintainer 2026-10-28: flags for the terms of Equations, what forces means with and without the
+inverse per body, which matters most for the next tests; remove the residual): Equations(massMatrix, forces,
+massMatrixBlocks), the blocks also recorded for the composed system (RK44 with the inverse per body 0.054 -> 0.043 s);
+GetFlatProgram(results) a function Equations(q, q_t, t). [log](exudynRevisionLog2026c.md#rg12-51-12)
 
 ### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
 

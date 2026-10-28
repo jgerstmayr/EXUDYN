@@ -6,9 +6,9 @@
 #           torsional spring-damper, a mass point (3 coordinates) hangs from the end of the bar by a spring-damper,
 #           under gravity, the point pulled by a force of the time - 9 equations, coupled through the rotations. The
 #           system is built with exudyn.misc.symbolicUserItems.UserItemCreator - the same calls as with mbs - and
-#           recorded. SymbolicSystem(mbs).Equations() gives the mass matrix, the forces and the residual in the
-#           variables q, q_t, q_tt, t, as exudyn.symbolic expressions with their flat program, or as sympy
-#           expressions; they are checked against SymbolicSystem.Residual, and the system is integrated by
+#           recorded. SymbolicSystem(mbs).Equations() gives the mass matrix and the forces of M q_tt = f in the
+#           variables q, q_t, t, as exudyn.symbolic expressions with their flat program, or as sympy expressions, and
+#           the mass matrices of the bodies; they are checked against SymbolicSystem, and the system is integrated by
 #           SolveGeneralizedAlpha and SolveDynamic.
 #
 # Author:   Johannes Gerstmayr
@@ -52,9 +52,11 @@ system = SymbolicSystem(mbs)
 exu.Print(system)
 
 #the equations as exudyn.symbolic expressions and their flat program
-equations = system.Equations()
+equations = system.Equations(massMatrixBlocks=True)
+exu.Print('the mass matrices of the bodies, for computeMassMatrixInversePerBody:',
+          [(ltg.tolist(), len(matrices)) for (ltg, matrices) in equations['massMatrixBlocks']])
 program = system.GetFlatProgram()
-exu.Print('the flat program of the residual r = M q_tt - f has', len(program.splitlines()) - 1, 'operations; its start:\n'
+exu.Print('the flat program of f and M has', len(program.splitlines()) - 1, 'operations; its start:\n'
           + '\n'.join(program.splitlines()[:12]) + '\n...')
 
 #as sympy expressions, if sympy is installed
@@ -70,13 +72,14 @@ try:
 except ImportError:
     exu.Print('sympy is not installed: the sympy form is left out')
 
-#the residual as a numpy function, compared with the residual of the system at a state
+#f and M as a numpy function, compared with those of the system at a state
 space = {}
 exec(system.GetFlatProgram(format='numpy'), space)
 rng = np.random.default_rng(1)
-(q, q_t, q_tt, t) = (0.1*rng.standard_normal(9), rng.standard_normal(9), rng.standard_normal(9), 0.3)
-difference = np.max(np.abs(space['Residual'](q, q_t, q_tt, t) - system.Residual(q, q_t, q_tt, t)))
-exu.Print('the residual of the program against SymbolicSystem.Residual:', difference)
+(q, q_t, t) = (0.1*rng.standard_normal(9), rng.standard_normal(9), 0.3)
+(f, M) = space['Equations'](q, q_t, t)
+difference = max(np.max(np.abs(f - system.Forces(q, q_t, t))), np.max(np.abs(M - system.MassMatrix(q, q_t, t))))
+exu.Print('f and M of the program against SymbolicSystem.Forces and MassMatrix:', difference)
 
 #the system integrated by the solver of the symbolic system and by Exudyn
 simulationSettings = exu.SimulationSettings()

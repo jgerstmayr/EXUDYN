@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 232 | 1.13.236 |
+| 1.13 | Newborn | 233 | 1.13.237 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.237** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem.Equations: flags for the results, the mass matrices of the bodies, no residual (#3132)
+  - description: revision2026c step RG12.51.12 (maintainer 2026-10-28: flags for the terms of Equations, what forces means with and without the inverse per body, remove the residual): Equations(massMatrix, forces, massMatrixBlocks) returns what is asked for; massMatrixBlocks the mass matrices of the bodies as MassMatrixBlocks, also recorded for the composed system so that the inverse per body is one call; the residual removed from Equations and GetFlatProgram, which writes the results asked for as a function of q, q\_t, t; the docstring says what f is.
+  - **notes:** exudyn.misc.symbolicSystem: SymbolicSystem.Equations(massMatrix, forces, massMatrixBlocks) returns the results asked for, with the mass matrices of the bodies for the inverse per body, also recorded for the composed system; the residual removed; GetFlatProgram(results) writes a function Equations(q, q\_t, t)
+  - date resolved: **2026-10-28 09:54**, date raised: 2026-10-28
 - **1.13.236** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem: evaluate the forces and the mass matrix by one recording of the composed system (#3131)
   - description: revision2026c step RG12.51.11 (maintainer 2026-10-28: why is the symbolic system slow in the explicit solver; improve it): the per-object evaluation makes about 120 calls of Evaluate per force evaluation, each about 3 us of call overhead, 0.59 ms in all; the forces and the nonzero entries of the mass matrix of Equations recorded once as two symbolic user functions of (q, q\_t, t) evaluate by one flat program each (forces 14 us). Forces, MassMatrix and Residual use them; the Jacobian stays per object.
   - **notes:** exudyn.misc.symbolicSystem.SymbolicSystem evaluates the forces and the mass matrix of the system by two recordings of the composed equations, one call each instead of one per object, marker and load (composeSystem=True, the default); small mass matrices are decomposed dense; SolveExplicit RK44 on a chain of three rigid bodies 20 times faster
