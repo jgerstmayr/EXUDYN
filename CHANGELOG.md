@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 238 | 1.13.242 |
+| 1.13 | Newborn | 239 | 1.13.243 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.243** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UserItemCreator: revolute, prismatic and spherical joint and distance constraint as ObjectJointUser with the equations of the built-in joints (#3140)
+  - description: CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint and CreateDistanceConstraint of UserItemCreator with the arguments of mbs: ObjectJointUser on the rigid markers of the built-in joint, the constraint equations of ObjectJointRevoluteZ, ObjectJointPrismaticX, ObjectJointSpherical and ObjectConnectorDistance and their derivative by the marker translations and global rotation increments, recordable; checked against the built-in joints with SolveDynamic. Maintainer 2026-10-28 (make SymbolicSystem take joints, which needs them).
+  - **notes:** exudyn.misc.symbolicUserItems.UserItemCreator: CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint and CreateDistanceConstraint with the arguments of mbs, as ObjectJointUser with the equations of the built-in joints and their derivative, recordable; equal to the built-in joints to the Newton tolerance.
+  - date resolved: **2026-10-28 13:59**, date raised: 2026-10-28
 - **1.13.242** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Design the uniform evaluation of a symbolic system on the CPU and the GPU: levels, schedules, ensembles, limits (#3136)
   - description: A design note docs/dev/design/uniformEvaluation.md: the composed recordings of a symbolic system as a graph of scalar operations evaluated level by level as uniform array operations (numpy on the CPU, CuPy or kernels on the GPU), the schedules (sorted by operation, a fixed cycle of operation layers, one array of all values), the step of an explicit integrator, ensembles of states, the limits (results not bitwise equal on the GPU, double precision, branches); the GPU parts of symbolicSystem.md moved there. Maintainer 2026-10-28.
   - **notes:** docs/dev/design/uniformEvaluation.md: the design of the uniform evaluation of a symbolic system - its graph of scalar operations in levels, evaluated as uniform array operations by numpy on the CPU and later on the GPU, the schedules, ensembles of states, the limits (results not bitwise equal on the GPU), with the measurements of an experiment on the rigid-body example.

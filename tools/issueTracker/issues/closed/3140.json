@@ -1,0 +1,16 @@
+{
+  "number": 3140,
+  "title": "UserItemCreator: revolute, prismatic and spherical joint and distance constraint as ObjectJointUser with the equations of the built-in joints",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint and CreateDistanceConstraint of UserItemCreator with the arguments of mbs: ObjectJointUser on the rigid markers of the built-in joint, the constraint equations of ObjectJointRevoluteZ, ObjectJointPrismaticX, ObjectJointSpherical and ObjectConnectorDistance and their derivative by the marker translations and global rotation increments, recordable; checked against the built-in joints with SolveDynamic. Maintainer 2026-10-28 (make SymbolicSystem take joints, which needs them).",
+  "dateRaised": "2026-10-28",
+  "deadline": "2027-04-26",
+  "dateResolved": "2026-10-28 13:59",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/symbolicUserItems.py",
+  "releaseNotes": "exudyn.misc.symbolicUserItems.UserItemCreator: CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint and CreateDistanceConstraint with the arguments of mbs, as ObjectJointUser with the equations of the built-in joints and their derivative, recordable; equal to the built-in joints to the Newton tolerance.",
+  "resolvedInVersion": "1.13.243"
+}

@@ -210,6 +210,7 @@ symbolicUserFunctionSignaturesTest
 symbolicUserFunctionTest
 symbolicUserFunctionThreadsTest
 symbolicUserItemsTest
+symbolicUserJointsTest
 symbolicUserRigidBodiesTest
 symbolicUtilitiesTest
 symbolicVectorDiffTest

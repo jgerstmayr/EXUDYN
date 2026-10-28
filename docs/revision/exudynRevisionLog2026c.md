@@ -4144,3 +4144,28 @@ putting it to the exudyn library.")*
 - What it shows (design §5): the values are Exudyn's on the CPU; copies dominate the levelled form; the fixed cycle
   costs a factor of 11 to 20 for these programs, dominated by * and +; one array of all values is fastest on the CPU and
   needs no copies.
+
+<a id="rg12-55-4"></a>
+### RG12.55.4 — the joints of UserItemCreator (2026-10-28, #3140)
+*(Maintainer 2026-10-28, on the proposal to make SymbolicSystem take ODE1 items and joints, RG12.51.4 which needs
+RG12.55.4: "=> yes".)*
+- exudyn/misc/symbolicUserItems.py: CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint,
+  CreateDistanceConstraint with the arguments of mbs. Each an ObjectJointUser on MarkerBodyRigid of the two bodies, the
+  markers those of mbs.Create...Joint - their rotation the joint frame (revolute: z the axis, prismatic: x the axis), as
+  `_JointMarkers` computes it from JointPreCheckCalcBodyMarkers; the spherical joint and the distance constraint on
+  rigid markers without rotation, the distance constraint by GetMarkersPosRot(useRigidMarker=True), so also on a user
+  mass point (its rotationMatrixUserFunction is the unit matrix).
+- The equations as src/ImplObjects/CObjectJointRevoluteZ.cpp, CObjectJointPrismaticX.cpp, CObjectJointSpherical.cpp,
+  CObjectConnectorDistance.cpp at position level; the jacobianUserFunction by the marker translations and global
+  rotation increments: -I and I for a relative position, u x v and v x u for a scalar product of an axis u of marker 0
+  and v of marker 1, u x d for an axis u of marker 0 times the relative position d, -/+ d/|d| for the distance. Python
+  functions with cMath, recorded by Record, one recording per kind of joint.
+- Refused: markers in itemNumbers; constrainedAxes other than [1, 1, 1] (ObjectJointUser has no equation lambda = 0);
+  nodes in the distance constraint, distance 0. Not drawn: ObjectJointUser draws nothing; the drawing arguments are
+  accepted and not used.
+- python/TestModels/symbolicUserJointsTest.py: a double pendulum on revolute joints with tilted axes, a body on a
+  tilted prismatic joint with a spring-damper, a spinning bar on a spherical joint, a mass point on a distance constraint
+  to it, gravity; initial velocities that fulfill the constraints. The built-in joints, ObjectJointUser with Python and
+  with recorded functions, SolveDynamic (generalized-alpha, 200 steps, relativeTolerance 1e-10): 2.1e-12 and 7.3e-13
+  relative. Result 1.
+- docs/dev/design/symbolicUserItems.md table, docs/manual/revisions.md.

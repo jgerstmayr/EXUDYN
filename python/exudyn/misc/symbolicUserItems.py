@@ -9,7 +9,9 @@
 #           export take. A script that builds a system with creator = mbs builds the same system of user items with
 #           creator = UserItemCreator(mbs).
 #           The items: CreateGround, CreateMassPoint, CreateRigidBody (on NodeRigidBodyRxyz), CreateSpringDamper,
-#           CreateTorsionalSpringDamper, CreateForce. An argument a user item does not support raises, naming it.
+#           CreateTorsionalSpringDamper, CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint,
+#           CreateDistanceConstraint (ObjectJointUser, #3140), CreateForce. An argument a user item does not support
+#           raises, naming it.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-27 (created)
@@ -145,6 +147,80 @@ def _UFtorsionalSpringDamperForce(mbs, t, itemNumber, position0, velocity0, rota
     torque0 = [torque*A0[i, 2] for i in range(3)]
     return _Vector([0, 0, 0] + torque0 + [0, 0, 0] + [-x for x in torque0], F)
 
+#the joints, ObjectJointUser on two rigid markers whose frames are the joint frame: the equations of the built-in joint
+#at position level, and their derivative by the translations and global rotation increments [p0, theta0, p1, theta1] of
+#the markers, R(theta) = (I + skew(theta)) R. For the scalar product u.v of an axis u of marker 0 and an axis v of
+#marker 1 the rotation columns are u x v and v x u
+def _Column(R, j):
+    return [R[i, j] for i in range(3)]
+
+def _Dot(u, v):
+    return u[0]*v[0] + u[1]*v[1] + u[2]*v[2]
+
+def _Cross(u, v):
+    return [u[1]*v[2] - u[2]*v[1], u[2]*v[0] - u[0]*v[2], u[0]*v[1] - u[1]*v[0]]
+
+def _JacobianRows(rows, functions):
+    #the n x 12 matrix of rows of four blocks [p0, theta0, p1, theta1], None a zero block
+    return _Matrix([[x for block in row for x in (block if block is not None else [0, 0, 0])] for row in rows], functions)
+
+def _Unit(k, sign=1):
+    return [sign if i == k else 0 for i in range(3)]
+
+#the revolute joint, as ObjectJointRevoluteZ: the relative position, and the z-axis of marker 0 perpendicular to the
+#x- and y-axes of marker 1; no parameters
+def _UFrevoluteJointConstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    F = _Functions(rotationMatrix0)
+    z0 = _Column(rotationMatrix0, 2)
+    return _Vector([position1[i] - position0[i] for i in range(3)]
+                   + [_Dot(z0, _Column(rotationMatrix1, 0)), _Dot(z0, _Column(rotationMatrix1, 1))], F)
+
+def _UFrevoluteJointJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    F = _Functions(rotationMatrix0)
+    z0 = _Column(rotationMatrix0, 2)
+    rows = [[_Unit(k, -1), None, _Unit(k), None] for k in range(3)]
+    for j in [0, 1]:
+        v = _Column(rotationMatrix1, j)
+        rows.append([None, _Cross(z0, v), None, _Cross(v, z0)])
+    return _JacobianRows(rows, F)
+
+#the prismatic joint, as ObjectJointPrismaticX: the relative position along the y- and z-axes of marker 0, and the
+#axes z0.y1, z0.x1, x0.y1; no parameters
+def _UFprismaticJointConstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    F = _Functions(rotationMatrix0)
+    d = [position1[i] - position0[i] for i in range(3)]
+    (x0, y0, z0) = (_Column(rotationMatrix0, 0), _Column(rotationMatrix0, 1), _Column(rotationMatrix0, 2))
+    (x1, y1) = (_Column(rotationMatrix1, 0), _Column(rotationMatrix1, 1))
+    return _Vector([_Dot(y0, d), _Dot(z0, d), _Dot(z0, y1), _Dot(z0, x1), _Dot(x0, y1)], F)
+
+def _UFprismaticJointJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    F = _Functions(rotationMatrix0)
+    d = [position1[i] - position0[i] for i in range(3)]
+    (x0, y0, z0) = (_Column(rotationMatrix0, 0), _Column(rotationMatrix0, 1), _Column(rotationMatrix0, 2))
+    (x1, y1) = (_Column(rotationMatrix1, 0), _Column(rotationMatrix1, 1))
+    rows = [[[-x for x in u], _Cross(u, d), u, None] for u in [y0, z0]]
+    rows += [[None, _Cross(u, v), None, _Cross(v, u)] for (u, v) in [(z0, y1), (z0, x1), (x0, y1)]]
+    return _JacobianRows(rows, F)
+
+#the spherical joint, as ObjectJointSpherical with all axes constrained: the relative position; no parameters
+def _UFsphericalJointConstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    return _Vector([position1[i] - position0[i] for i in range(3)], _Functions(rotationMatrix0))
+
+def _UFsphericalJointJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    return _JacobianRows([[_Unit(k, -1), None, _Unit(k), None] for k in range(3)], _Functions(rotationMatrix0))
+
+#the distance constraint, as ObjectConnectorDistance: |p1 - p0| - distance; parameters [distance]
+def _UFdistanceConstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    F = _Functions(rotationMatrix0)
+    d = [position1[i] - position0[i] for i in range(3)]
+    return _Vector([F.sqrt(_Dot(d, d)) - parameters[0]], F)
+
+def _UFdistanceConstraintJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+    F = _Functions(rotationMatrix0)
+    d = [position1[i] - position0[i] for i in range(3)]
+    axis = [x*(1/F.sqrt(_Dot(d, d))) for x in d]
+    return _JacobianRows([[[-x for x in axis], None, axis, None]], F)
+
 #the user functions of each kind of item, which Record records once per kind
 _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                                 ('massIntegralUserFunction', _UFmassPointMassIntegral),
@@ -160,7 +236,17 @@ _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                                 ('rotationMatrixUserFunction', _UFrigidBodyRotationMatrix),
                                 ('rotationJacobianUserFunction', _UFrigidBodyRotationJacobian)],
                   'springDamper': [('forceUserFunction', _UFspringDamperForce)],
-                  'torsionalSpringDamper': [('forceUserFunction', _UFtorsionalSpringDamperForce)]}
+                  'torsionalSpringDamper': [('forceUserFunction', _UFtorsionalSpringDamperForce)],
+                  'revoluteJoint': [('constraintUserFunction', _UFrevoluteJointConstraint),
+                                    ('jacobianUserFunction', _UFrevoluteJointJacobian)],
+                  'prismaticJoint': [('constraintUserFunction', _UFprismaticJointConstraint),
+                                     ('jacobianUserFunction', _UFprismaticJointJacobian)],
+                  'sphericalJoint': [('constraintUserFunction', _UFsphericalJointConstraint),
+                                     ('jacobianUserFunction', _UFsphericalJointJacobian)],
+                  'distanceConstraint': [('constraintUserFunction', _UFdistanceConstraint),
+                                         ('jacobianUserFunction', _UFdistanceConstraintJacobian)]}
+#the number of equations of each kind of joint
+_jointConstraints = {'revoluteJoint': 5, 'prismaticJoint': 5, 'sphericalJoint': 3, 'distanceConstraint': 1}
 
 
 def _Refuse(where, name, value, default, reason=''):
@@ -184,7 +270,7 @@ class UserItemCreator:
 
     Note:
         Its members: mbs; items, the dict of the item numbers of each kind ('massPoint', 'rigidBody', 'springDamper',
-        'torsionalSpringDamper'); loads, the
+        'torsionalSpringDamper', 'revoluteJoint', 'prismaticJoint', 'sphericalJoint', 'distanceConstraint'); loads, the
         list of the loads with a user function created by CreateForce; recordings, the symbolic user functions of
         Record, which must live as long as the system. Example:
 
@@ -479,6 +565,153 @@ class UserItemCreator:
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
         self.items['torsionalSpringDamper'].append(connector)
         return connector
+
+    def _JointMarkers(self, where, name, itemNumbers, position, axis, useGlobalFrame, show, frame):
+        """the two rigid markers of a joint at position, as mbs.Create...Joint computes them: their rotation the joint
+        frame - frame 'z' its z-axis the axis (revolute), 'x' its x-axis the axis (prismatic), None the body frame"""
+        if any(isinstance(item, exudyn.MarkerIndex) for item in itemNumbers):
+            raise ValueError('UserItemCreator.' + where + ': the argument itemNumbers with a marker is not supported by the '
+                             'user item (give the bodies)')
+        mbs = self.mbs
+        [p0, A0, p1, A1, _, _, pJoint] = JointPreCheckCalcBodyMarkers('UserItemCreator.' + where, mbs, name, itemNumbers,
+                                                                      position, show, useGlobalFrame)
+        AJ = np.eye(3)
+        if frame is not None:
+            B = ComputeOrthonormalBasis(np.array(axis) if useGlobalFrame else A0 @ axis)
+            AJ = np.array([-B[:, 2], B[:, 1], B[:, 0]]).T if frame == 'z' else B
+        return [mbs.AddMarker(eii.MarkerBodyRigid(name='Marker' + str(k) + ':' + name if name != '' else '', bodyNumber=itemNumbers[k],
+                                                  localHT=exudyn.HT(rotation=(A.T @ AJ) if frame is not None else np.eye(3),
+                                                                    translation=A.T @ (np.array(pJoint) - p))))
+                for (k, (p, A)) in enumerate([(p0, A0), (p1, A1)])]
+
+    def _Joint(self, kind, name, markers, parameters, show):
+        """an ObjectJointUser of a kind of joint on two rigid markers"""
+        joint = self.mbs.AddObject(eii.ObjectJointUser(name=name, markerNumbers=markers, numberOfConstraints=_jointConstraints[kind],
+                                                       parameters=parameters,
+                                                       **{functionName: function for (functionName, function) in _kindFunctions[kind]},
+                                                       visualization=eii.VObjectJointUser(show=show)))
+        self.items[kind].append(joint)
+        return joint
+
+    def CreateRevoluteJoint(self, name='', itemNumbers=[None, None], position=[], axis=[], useGlobalFrame=True, show=True,
+                            axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default, bodyNumbers=None,
+                            bodyOrNodeList=None):
+        """a revolute joint as ObjectJointUser on the rigid markers of mbs.CreateRevoluteJoint, with its arguments and
+        the equations of ObjectJointRevoluteZ; not drawn, as ObjectJointUser draws nothing
+
+        Args:
+            name: as in mbs.CreateRevoluteJoint
+            itemNumbers: as in mbs.CreateRevoluteJoint, two bodies or the ground
+            position: as in mbs.CreateRevoluteJoint
+            axis: as in mbs.CreateRevoluteJoint
+            useGlobalFrame: as in mbs.CreateRevoluteJoint
+            show: as in mbs.CreateRevoluteJoint
+            axisRadius: not used, the joint is not drawn
+            axisLength: not used, the joint is not drawn
+            color: not used, the joint is not drawn
+            bodyNumbers: refused if given: use itemNumbers
+            bodyOrNodeList: refused if given: use itemNumbers
+
+        Returns:
+            the ObjectIndex of the joint
+        """
+        _Refuse('CreateRevoluteJoint', 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
+        _Refuse('CreateRevoluteJoint', 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
+        markers = self._JointMarkers('CreateRevoluteJoint', name, itemNumbers, position, axis, useGlobalFrame, show, 'z')
+        return self._Joint('revoluteJoint', name, markers, [], show)
+
+    def CreatePrismaticJoint(self, name='', itemNumbers=[None, None], position=[], axis=[], useGlobalFrame=True, show=True,
+                             axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default, bodyNumbers=None,
+                             bodyOrNodeList=None):
+        """a prismatic joint as ObjectJointUser on the rigid markers of mbs.CreatePrismaticJoint, with its arguments and
+        the equations of ObjectJointPrismaticX; not drawn, as ObjectJointUser draws nothing
+
+        Args:
+            name: as in mbs.CreatePrismaticJoint
+            itemNumbers: as in mbs.CreatePrismaticJoint, two bodies or the ground
+            position: as in mbs.CreatePrismaticJoint
+            axis: as in mbs.CreatePrismaticJoint
+            useGlobalFrame: as in mbs.CreatePrismaticJoint
+            show: as in mbs.CreatePrismaticJoint
+            axisRadius: not used, the joint is not drawn
+            axisLength: not used, the joint is not drawn
+            color: not used, the joint is not drawn
+            bodyNumbers: refused if given: use itemNumbers
+            bodyOrNodeList: refused if given: use itemNumbers
+
+        Returns:
+            the ObjectIndex of the joint
+        """
+        _Refuse('CreatePrismaticJoint', 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
+        _Refuse('CreatePrismaticJoint', 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
+        markers = self._JointMarkers('CreatePrismaticJoint', name, itemNumbers, position, axis, useGlobalFrame, show, 'x')
+        return self._Joint('prismaticJoint', name, markers, [], show)
+
+    def CreateSphericalJoint(self, name='', itemNumbers=[None, None], position=[], constrainedAxes=[1, 1, 1],
+                             useGlobalFrame=True, show=True, jointRadius=0.1, color=exudyn.graphics.color.default,
+                             bodyNumbers=None, bodyOrNodeList=None):
+        """a spherical joint as ObjectJointUser on rigid markers at the points of mbs.CreateSphericalJoint, with its
+        arguments and the equations of ObjectJointSpherical; not drawn, as ObjectJointUser draws nothing
+
+        Args:
+            name: as in mbs.CreateSphericalJoint
+            itemNumbers: as in mbs.CreateSphericalJoint, two bodies or the ground
+            position: as in mbs.CreateSphericalJoint
+            constrainedAxes: must be [1, 1, 1]: an axis left free has the equation lambda = 0, which ObjectJointUser
+                does not give
+            useGlobalFrame: as in mbs.CreateSphericalJoint
+            show: as in mbs.CreateSphericalJoint
+            jointRadius: not used, the joint is not drawn
+            color: not used, the joint is not drawn
+            bodyNumbers: refused if given: use itemNumbers
+            bodyOrNodeList: refused if given: use itemNumbers
+
+        Returns:
+            the ObjectIndex of the joint
+        """
+        _Refuse('CreateSphericalJoint', 'constrainedAxes', list(constrainedAxes), [1, 1, 1],
+                'an axis left free has the equation lambda = 0, which ObjectJointUser does not give')
+        _Refuse('CreateSphericalJoint', 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
+        _Refuse('CreateSphericalJoint', 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
+        markers = self._JointMarkers('CreateSphericalJoint', name, itemNumbers, position, None, useGlobalFrame, show, None)
+        return self._Joint('sphericalJoint', name, markers, [], show)
+
+    def CreateDistanceConstraint(self, name='', itemNumbers=[None, None], localPosition0=[0., 0., 0.],
+                                 localPosition1=[0., 0., 0.], distance=None, show=True, drawSize=-1.,
+                                 color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None):
+        """a distance constraint as ObjectJointUser on rigid markers of the two bodies, with the arguments of
+        mbs.CreateDistanceConstraint and the equation of ObjectConnectorDistance; on a user mass point the marker is on
+        the body; not drawn, as ObjectJointUser draws nothing
+
+        Args:
+            name: as in mbs.CreateDistanceConstraint
+            itemNumbers: two bodies or the ground; a node or a marker is refused
+            localPosition0: as in mbs.CreateDistanceConstraint
+            localPosition1: as in mbs.CreateDistanceConstraint
+            distance: as in mbs.CreateDistanceConstraint; None: the distance in the reference configuration; 0 is
+                refused (mbs.CreateDistanceConstraint creates a spherical joint then)
+            show: as in mbs.CreateDistanceConstraint
+            drawSize: not used, the constraint is not drawn
+            color: not used, the constraint is not drawn
+            bodyNumbers: refused if given: use itemNumbers
+            bodyOrNodeList: refused if given: use itemNumbers
+
+        Returns:
+            the ObjectIndex of the constraint
+        """
+        _Refuse('CreateDistanceConstraint', 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
+        _Refuse('CreateDistanceConstraint', 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
+        if not all(isinstance(item, exudyn.ObjectIndex) for item in itemNumbers):
+            raise ValueError('UserItemCreator.CreateDistanceConstraint: the argument itemNumbers must be two bodies or the '
+                             'ground; a node or a marker is not supported by the user item')
+        [marker0, marker1, p0, p1, A0, A1] = GetMarkersPosRot(self.mbs, name, itemNumbers, localPosition0, localPosition1,
+                                                              getPosition=distance is None, useRigidMarker=True)
+        if distance is None:
+            distance = cMath.norm(np.array(p1) - p0)
+        if distance == 0:
+            raise ValueError('UserItemCreator.CreateDistanceConstraint: the distance 0 is not supported by the user item '
+                             '(use CreateSphericalJoint)')
+        return self._Joint('distanceConstraint', name, [marker0, marker1], [distance], show)
 
     def CreateForce(self, name='', itemNumber=None, loadVector=[0., 0., 0.], localPosition=[0., 0., 0.], bodyFixed=False,
                     loadVectorUserFunction=0, show=True, bodyNumber=None):
