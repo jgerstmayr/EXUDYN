@@ -12,9 +12,10 @@ You can view and download this file on Github: [genericODE1duplicateNodeTest.py]
 #
 # Details:  The numerical Jacobian of ODE1 coordinates that an object addresses twice (#1424): an
 #           ObjectGenericODE1 on the same NodeGenericODE1 twice, q_t = -q written as two halves, against the
-#           same equations on the node once. The Jacobian is computed numerically for ObjectGenericODE1;
-#           with each coordinate differentiated once, the linear problem converges in one Newton step per
-#           time step in both models (a coordinate differentiated twice doubled its column: four steps).
+#           same equations on the node once. The equations are given by a rhsUserFunction, so the Jacobian
+#           is computed numerically (by systemMatrix it is analytic, #3143); with each coordinate differentiated
+#           once, the linear problem converges in one Newton step per time step in both models (a coordinate
+#           differentiated twice doubled its column: four steps).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-30
@@ -35,8 +36,10 @@ for twice in [False, True]:
     SC = exu.SystemContainer(); mbs = SC.AddSystem()
     node = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0, 0], initialCoordinates=[1, 0.5], numberOfODE1Coordinates=2))
     n = 4 if twice else 2
-    mbs.AddObject(ObjectGenericODE1(nodeNumbers=[node, node] if twice else [node],
-                                    systemMatrix=-np.eye(n)*(0.5 if twice else 1), rhsVector=[0]*n))
+    systemMatrix = -np.eye(n)*(0.5 if twice else 1)
+    def UFrhs(mbs, t, itemNumber, q, systemMatrix=systemMatrix):
+        return systemMatrix @ np.array(q)
+    mbs.AddObject(ObjectGenericODE1(nodeNumbers=[node, node] if twice else [node], rhsUserFunction=UFrhs))
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = 100

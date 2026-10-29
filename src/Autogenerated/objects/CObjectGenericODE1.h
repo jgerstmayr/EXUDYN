@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-10-29  22:43:50 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -132,10 +132,13 @@ public: // AUTO:
     //! AUTO:  Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs'
     virtual void ComputeODE1RHS(Vector& ode1Rhs) const override;
 
+    //! AUTO:  Computational function: the analytic Jacobian of the ABRV:ODE1 ABRV:RHS by the local ABRV:ODE1 coordinates, and by the ABRV:ODE2 coordinates and velocities if the object depends on them (#3143)
+    virtual void ComputeJacobianODE1RHS(ResizableMatrix& jacobianODE1, ResizableMatrix& jacobianODE2, ResizableMatrix& jacobianODE2_t) const override;
+
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
     {
-        return (JacobianType::Type)(JacobianType::ODE1_ODE1);
+        return (JacobianType::Type)(JacobianType::ODE1_ODE1 + (parameters.rhsUserFunction ? 0 : JacobianType::ODE1_ODE1_function));
     }
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible

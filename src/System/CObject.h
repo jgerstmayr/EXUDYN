@@ -207,6 +207,15 @@ public:
 	//! this is the local tangent stiffness matrix;
 	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const {CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianODE2_ODE2");}
 
+	//! the analytic Jacobian of the ODE1 right-hand side by the local ODE1 coordinates (GetODE1Size() x GetODE1Size()), called if
+	//! the flag ODE1_ODE1_function is set; by the local ODE2 coordinates and velocities (GetODE1Size() x GetODE2Size()) if
+	//! ODE1_ODE2_function and ODE1_ODE2_t_function are set, else these two are not touched (#3143)
+	virtual void ComputeJacobianODE1RHS(ResizableMatrix& jacobianODE1, ResizableMatrix& jacobianODE2, ResizableMatrix& jacobianODE2_t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianODE1RHS"); }
+
+	//! the analytic Jacobian of the ODE2 left-hand side by the local ODE1 coordinates (GetODE2Size() x GetODE1Size()), called if
+	//! the flag ODE2_ODE1_function is set (#3143)
+	virtual void ComputeJacobianODE2_ODE1(ResizableMatrix& jacobian) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianODE2_ODE1"); }
+
     //! compute derivative of algebraic equations w.r.t. ODE2 in jacobian_ODE2 [and w.r.t. ODE2_t coordinates in jacobian_ODE2_t if flag ODE2_t_AE_function is set] [and w.r.t. ODE1 coordinates in jacobian_ODE1 if flag ODE1_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size(); q are the system coordinates
     virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }
 

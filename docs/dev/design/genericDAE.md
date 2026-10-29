@@ -57,41 +57,38 @@ equations of its own (`GetAlgebraicEquationsSize`, `ComputeAlgebraicEquations`, 
 blocks). Each user function gets a symbolic version (PySymbolicUserFunctionSet), so that a recording is evaluated
 in C++, in the threads too (#2978), and SymbolicSystem takes the object.
 
-## 3. What the solvers have, and what they lack (checked in the C++, 2026-10-29)
+## 3. What the solvers have (checked in the C++ 2026-10-29, completed by #3167)
 
 - **ODE2 rows**: the mass matrix, the LHS, its analytic Jacobian by $\qv$, $\dot\qv$ (`ComputeJacobianODE2_ODE2`)
-  and the reaction forces $\Cm_{\qv}\tp\tlambda$ (`ComputeODE2ProjectedReactionForces`) exist. The coupling
-  $\partial/\partial\yv$ of the ODE2 rows (`JacobianType::ODE2_ODE1`) is **numerical only**, and only for an object
-  without an analytic ODE2 Jacobian: `CSystem::JacobianODE2RHS` differentiates `ComputeODE2LHS` by the ODE1
-  coordinates in the branch of the numerical ODE2 Jacobian; an object with `ComputeJacobianODE2_ODE2` gets no
-  ODE2-ODE1 block at all.
-- **ODE1 rows**: `ComputeODE1RHS` exists; its Jacobian by $\yv$, and by $\qv$, $\dot\qv$ (`ODE1_ODE2`,
-  `ODE1_ODE2_t`), is **numerical only** (`CSystem::NumericalJacobianODE1RHS`); CObject has no analytic ODE1 Jacobian.
-- **The term $\Cm_{\yv}\tp\tlambda$ in the ODE1 rows is missing**: `CSolverImplicitSecondOrder::ComputeNewtonResidual`
-  computes the ODE1 rows as $\gv - \dot\yv$ without it, while `CSystem::JacobianAE` already adds the transposed block
-  `AE_ODE1` into the ODE1 rows of the Jacobian; and `ComputeODE2ProjectedReactionForces` raises "not implemented for
-  ODE1 jacobian of algebraic equations". No item gives `AE_ODE1` today, so nothing is wrong yet; ObjectGenericDAE would
-  be the first.
+  and the reaction forces $\Cm_{\qv}\tp\tlambda$ (`ComputeODE2ProjectedReactionForces`). The coupling
+  $\partial/\partial\yv$ of the ODE2 rows (`JacobianType::ODE2_ODE1`) is the object's own `ComputeJacobianODE2_ODE1` if it
+  sets `ODE2_ODE1_function`, else numerical - also for an object with an analytic ODE2 Jacobian, which got no coupling
+  block before #3167.
+- **ODE1 rows**: `ComputeODE1RHS`, and its Jacobian by $\yv$, $\qv$, $\dot\qv$: the object's own
+  `ComputeJacobianODE1RHS` if it sets `ODE1_ODE1_function` (and `ODE1_ODE2_function`, `ODE1_ODE2_t_function` for the
+  coupling), else numerical (`CSystem::JacobianODE1RHS`). ObjectGenericODE1 gives it without rhsUserFunction: the
+  system matrix. Connectors with ODE1 coordinates (ObjectConnectorHydraulicActuatorSimple) stay numerical.
+- **The term $\Cm_{\yv}\tp\tlambda$**: the implicit solver subtracts it in the ODE1 rows of its residual
+  ($\gv - \dot\yv - \Cm_{\yv}\tp\tlambda$, `ComputeODE1ProjectedReactionTerms`) and `JacobianAE` adds the block
+  $-\Cm_{\yv}\tp$ at the ODE1 rows and the AE columns, $\Cm_{\yv}$ at the AE rows and the ODE1 columns, with the factors
+  of the solver; the static solver adds $+\Cm_{\yv}\tp\tlambda$, as it does $\Cm_{\qv}\tp\tlambda$ in its ODE2 rows. The
+  objects are those with algebraic equations, ODE1 coordinates and `AE_ODE1`; no built-in item has them, ObjectGenericDAE
+  is the first, and its test models check this part (RG9.10.3).
 - **AE rows**: `ComputeAlgebraicEquations` and `ComputeJacobianAE` with the blocks AE_ODE2, AE_ODE2_t, AE_ODE1 and AE_AE
-  exist for objects (the bodies with algebraic equations).
+  for objects (the bodies with algebraic equations).
 - **Explicit solver**: it ignores algebraic equations with a warning, or eliminates CoordinateConstraints
   (`eliminateConstraints`); it evaluates ODE2 and ODE1 rows in each stage. ObjectGenericDAE with $\tlambda$ is for the
   implicit solver; without algebraic equations it runs in both.
 
-## 4. Decisions
+## 4. Decisions (maintainer 2026-10-29)
 
-1. **The ODE1 Jacobians and the coupling ODE2-ODE1**: (a) new analytic interfaces of CObject - `ComputeJacobianODE1`
-   (the ODE1 rows by $\yv$, $\qv$, $\dot\qv$) and the ODE2 rows by $\yv$ - which the jacobianUserFunction or the
-   one-pass derivative fill, and CSystem uses them where an object gives them; or (b) the numerical blocks of today
-   for the ODE1 rows and the coupling, the analytic ones for ODE2 and AE. #3101 forbids numerical differences for
-   constraint Jacobians; (b) keeps them out of the AE rows, but the step text says "never by numerical differences".
-   **Recommendation: (a)**, as a sub-step of its own before the item; (b) would be the interim if (a) is postponed.
-2. **$\Cm_{\yv}\tp\tlambda$**: added to the ODE1 residual of the implicit solver and to the reaction forces - a
-   change of the solver that no present model sees (no item gives AE_ODE1), checked by a model against
+1. **The ODE1 Jacobians and the coupling ODE2-ODE1 are analytic**: the new functions `ComputeJacobianODE1RHS` and
+   `ComputeJacobianODE2_ODE1` of CObject, called only for an object that sets their flags, so no cost for the others;
+   ObjectGenericDAE fills them from its matrices and its jacobianUserFunction, or the one-pass derivative of its
+   recordings.
+2. **$\Cm_{\yv}\tp\tlambda$** in the ODE1 residual and the Jacobian (section 3), checked against
    SymbolicSystemBase.SystemResidual, which has the term (#3155).
-3. **One jacobianUserFunction of all blocks**, or one per block: one function of all rows by all coordinates, with the
-   factors, is what an implicit solver needs and what a recording differentiates in one pass; per block is easier to
-   write by hand. **Recommendation: one**, the blocks taken from it by the object.
+3. **One jacobianUserFunction of all blocks**, with the factors of the solver; the object takes the blocks from it.
 
 ## 5. Sub-steps
 

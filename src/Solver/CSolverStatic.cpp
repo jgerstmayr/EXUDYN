@@ -170,6 +170,8 @@ Real CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
     {
         //unclear if this works:
         computationalSystem.ComputeSystemODE1RHS(data.tempCompData, ode1Residual);
+        computationalSystem.ComputeODE1ProjectedReactionTerms(data.tempCompDataArray,
+            computationalSystem.GetSystemData().GetCData().currentState.AECoords, ode1Residual, 1.); //C_y^T lambda, as C_q^T lambda in the ODE2 rows (#3143)
     }
     STOPTIMER(timer.ODE1RHS);
 
@@ -258,7 +260,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
     else
     {
         //unclear if this works:
-        computationalSystem.NumericalJacobianODE1RHS(data.tempCompDataArray, newton.numericalDifferentiation,
+        computationalSystem.JacobianODE1RHS(data.tempCompDataArray, newton.numericalDifferentiation,
             *(data.systemJacobian), 1., 0., 1.);
     }
     //in time integration, but not needed for static computation: data.systemJacobian->AddDiagonalMatrix(-2. / it.currentStepSize, data.nODE1, data.nODE2, data.nODE2); //for qODE1_t part
@@ -266,7 +268,8 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 
 	STARTTIMER(timer.jacobianAE);
 	//add jacobian algebraic equations part to system jacobian:
-	computationalSystem.JacobianAE(data.tempCompDataArray, newton, *(data.systemJacobian), 1., 1., 1., false);// , true);
+	computationalSystem.JacobianAE(data.tempCompDataArray, newton, *(data.systemJacobian), 1., 1., 1., false, 1.,
+		simulationSettings.staticSolver.constrainODE1Coordinates ? 0. : 1.);// the ODE1 rows without lambda if they are constrained (#3143)
 	STOPTIMER(timer.jacobianAE);
 
 	//pout << "stabilizerODE2term=" << simulationSettings.staticSolver.stabilizerODE2term << "\n";

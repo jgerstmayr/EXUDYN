@@ -268,6 +268,8 @@ public:
     //! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
 	//! ode2ReactionForces += C_{q2}^T * \lambda
 	void ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& tempArray, const Vector& reactionForces, Vector& ode2ReactionForces);
+	//! the reaction terms C_y^T lambda in the ODE1 equations, times factor, ADDed to ode1ReactionTerms (#3143)
+	void ComputeODE1ProjectedReactionTerms(TemporaryComputationDataArray& tempArray, const Vector& reactionForces, Vector& ode1ReactionTerms, Real factor);
 
 	//! compute numerically the derivative of (C_{q2} * v), v being an arbitrary vector, system-wide
 	//! jacobianCqV = scalarFactor*d/dq2(C_{q2} * v)
@@ -306,9 +308,9 @@ public:
 	void JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
 		GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1, Index computeLoadsJacobian);
 
-	//! compute numerical differentiation of ODE1RHS; result is a jacobian;  multiply the added entries with scalarFactor
+	//! the Jacobian of ODE1RHS, the analytic one of an object that has it (#3143), else by numerical differentiation; multiplied with the factors
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
-	void NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+	void JacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
 		GeneralMatrix& jacobianGM, Real factorODE2 = 1., Real factorODE2_t = 0., Real factorODE1 = 1.);
 
 	//! numerical computation of constraint jacobian with respect to ODE2 and ODE1 (fillIntoSystemMatrix=true: also w.r.t. AE) coordinates
@@ -326,12 +328,6 @@ public:
 	//void NumericalJacobianAE_ODE2_t(const NumericalDifferentiation& numDiff,
 	//	TemporaryComputationData& temp, Vector& f0, Vector& f1, ResizableMatrix& jacobian, Real factor, bool velocityLevel = false);
 
-
-	//! compute object-wise jacobian of ODE1RHS w.r.t. ODE1 coordinates
-	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
-	//! The factor 'factor_ODE1' is used to scale the jacobian
-	void JacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
-		GeneralMatrix& jacobianGM, Real factorODE2 = 1., Real factorODE2_t = 0., Real factorODE1 = 1.) {}; //used in future!
 
 	//! the analytic ODE2 Jacobian of one object, factorODE2 d(LHS)/dq + factorODE2_t d(LHS)/dq_t, into
 	//! temp.jacobianODE2Container; false if it has none for these settings (#2782)

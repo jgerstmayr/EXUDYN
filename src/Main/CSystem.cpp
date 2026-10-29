@@ -1014,6 +1014,7 @@ cSystemData.objectsBodyWithODE2Coords.Flush();
 	cSystemData.listObjectProjectedReactionForcesODE2.Flush();
 	cSystemData.listObjectProjectedReactionForcesODE2UF.Flush();
 	cSystemData.listObjectProjectedReactionForcesODE2NoUF.Flush();
+	cSystemData.listObjectProjectedReactionTermsODE1.Flush();
 
 
 	//compute localToGlobalODE2 coordinate indices
@@ -1115,6 +1116,11 @@ cSystemData.objectsBodyWithODE2Coords.Flush();
 				{
 					cSystemData.listObjectProjectedReactionForcesODE2NoUF.Append(i); //without UserFunctoin
 				}
+			}
+			//the reaction terms C_y^T lambda in the ODE1 equations (#3143)
+			if (AEavailable && cSystemData.GetLocalToGlobalODE1()[i].NumberOfItems() != 0 && (object->GetAvailableJacobians() & JacobianType::AE_ODE1))
+			{
+				cSystemData.listObjectProjectedReactionTermsODE1.Append(i);
 			}
 
 		}
@@ -2779,6 +2785,31 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 							jacobianGM.AddSparseTriplets(temp.jacobianODE2Container.GetInternalSparseTripletMatrix().GetTriplets());
 							temp.jacobianODE2Container.GetInternalSparseTripletMatrix().SetAllZero();
 						}
+						//the coupling by the ODE1 coordinates: the object's own, else numerical (#3143)
+						if (diffODE1 && (jacType & JacobianType::ODE2_ODE1))
+						{
+							if (jacType & JacobianType::ODE2_ODE1_function)
+							{
+								object->ComputeJacobianODE2_ODE1(localJacobian);
+								jacobianGM.AddSubmatrix(localJacobian, -factorODE1, ltgODE2, cSystemData.GetLocalToGlobalODE1()[j], 0, nODE2); //minus (-): RHS = -LHS
+							}
+							else
+							{
+								ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1NumDiff()[j]; //columns without duplicates (#1424)
+								f0.SetNumberOfItems(nLocalODE2);
+								f1.SetNumberOfItems(nLocalODE2);
+								if (ComputeObjectODE2LHS(temp, object, f0))
+								{
+									localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, ltgODE1.NumberOfItems());
+									AddNumDiffObject(numDiff, factorODE1, xODE1, xRefODE1, localJacobian, f0, f1, ltgODE1,
+										[this, &temp, &object, &f1]
+									{
+										ComputeObjectODE2LHS(temp, object, f1);
+									}, true); //true=set values
+									jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE1, 0, nODE2); //fill into ODE2 rows, ODE1 columns
+								}
+							}
+						}
 					}
 
 
@@ -2916,9 +2947,10 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 
 
 
-//! compute numerical differentiation of ODE1RHS; result is a jacobian;  multiply the added entries with scalarFactor
+//! the Jacobian of ODE1RHS by the ODE1 coordinates, the ODE2 coordinates and velocities, multiplied with the factors: the
+//! analytic one of an object that has it (ComputeJacobianODE1RHS, #3143), else by numerical differentiation;
 //! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
-void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+void CSystem::JacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
 	GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1)
 {
 	//size needs to be set accordingly in the caller function; components are added to jacobian!
@@ -2963,7 +2995,19 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray,
 			f1.SetNumberOfItems(nLocalODE1);
 			JacobianType::Type jacType = object->GetAvailableJacobians();
 
-			if (ComputeObjectODE1RHS(temp, object, f0))
+			if ((jacType & JacobianType::ODE1_ODE1_function) && !EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+			{
+				if (!object->IsActive()) { continue; }
+				object->ComputeJacobianODE1RHS(localJacobian, temp.tempMatrix, temp.tempMatrix2);
+				jacobianGM.AddSubmatrix(localJacobian, factorODE1, ltgODE1, ltgODE1, nODE2, nODE2);
+				if (nLocalODE2 && (jacType & JacobianType::ODE1_ODE2_function))
+				{
+					ArrayIndex& ltgODE2all = cSystemData.GetLocalToGlobalODE2()[j]; //analytic: the duplicates add up
+					if (diffODE2) { jacobianGM.AddSubmatrix(temp.tempMatrix, factorODE2, ltgODE1, ltgODE2all, nODE2, 0); }
+					if (diffODE2_t) { jacobianGM.AddSubmatrix(temp.tempMatrix2, factorODE2_t, ltgODE1, ltgODE2all, nODE2, 0); }
+				}
+			}
+			else if (ComputeObjectODE1RHS(temp, object, f0))
 			{
 				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//compute ODE1-ODE1:
@@ -3336,8 +3380,6 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 		Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
 		
 		Index offsetAE = nODE2 + nODE1; //offset for algebraic equations in system jacobian
-		Real factorAE_ODE1 = 1.; //currently no scaling from integrators
-		Real factorODE1_AE = 1.; //currently no scaling from integrators
 
 		//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
 		//for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
@@ -3349,8 +3391,6 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 			ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
 
 			bool objectUsesVelocityLevel;// = false;
-
-			CHECKandTHROW(ltgODE1.NumberOfItems() == 0, "CSystem::JacobianAE: not implemented for constraints/joints with ODE1 coordinates", ExudynNotImplementedError);
 
 			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, filledJacobians/*, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled*/);
 
@@ -3376,8 +3416,8 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 
 			if (filledJacobians & JacobianType::AE_ODE1) //(flagAE_ODE1filled)
 			{
-				jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE1, factorAE_ODE1, ltgAE, ltgODE1, nODE2);
-				jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE1, factorODE1_AE, ltgODE1, ltgAE, 0, nODE2);
+				jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE1, factorAE_ODE1, ltgAE, ltgODE1, offsetAE, nODE2);
+				jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE1, factorODE1_AE, ltgODE1, ltgAE, nODE2, offsetAE); //C_y^T in the ODE1 rows (#3143)
 			}
 
 			if (filledJacobians & JacobianType::AE_AE) //(flagAE_AEfilled) //pure algebraic equations: only depend on their algebraic part ...
@@ -3501,10 +3541,6 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& 
 						}
 					}
 				}
-				else if (filledJacobians & JacobianType::AE_ODE1)//(flagAE_ODE1filled)
-				{
-					CHECKandTHROWstring("ComputeODE2ProjectedReactionForces: not implemented for ODE1 jacobian of algebraic equations", ExudynNotImplementedError);
-				}
 			}
 			else //NODES WITH AE
 			{
@@ -3601,22 +3637,6 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& 
 					}
 				}
 			}
-			else if (filledJacobians & JacobianType::AE_ODE1)//(flagAE_ODE1filled)
-			{
-				CHECKandTHROWstring("ComputeODE2ProjectedReactionForces: not implemented for ODE1 jacobian of algebraic equations", ExudynNotImplementedError);
-
-				//use following code, but add ode1ReactionForces first to function interface ...
-				//const ResizableMatrix& jac = temp.localJacobianAE_ODE1;
-				////multiply Cq^T * lambda:
-				//for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
-				//{
-				//	for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
-				//	{
-				//		ode1ReactionForces[ltgODE1[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
-				//	}
-				//}
-
-			}
 		}
 	}
 	//nodes with AE: usually only Euler Parameters
@@ -3649,6 +3669,33 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& 
 		}
 	}//for cSystemData.nodesODE2WithAE
 	//STOPGLOBALTIMER(TSreactionForces2);
+}
+
+//! the reaction terms C_y^T lambda of the algebraic equations of objects by ODE1 coordinates, times factor, ADDed to
+//! ode1ReactionTerms (#3143); serial, as no built-in item has such equations
+void CSystem::ComputeODE1ProjectedReactionTerms(TemporaryComputationDataArray& tempArray, const Vector& reactionForces, Vector& ode1ReactionTerms, Real factor)
+{
+	TemporaryComputationData& temp = tempArray[0];
+	CHECKandTHROW(ode1ReactionTerms.NumberOfItems() == cSystemData.GetNumberOfCoordinatesODE1(), "CSystem::ComputeODE1ProjectedReactionTerms: ode1ReactionTerms size mismatch!");
+	JacobianType::Type filledJacobians;
+	for (Index i : cSystemData.listObjectProjectedReactionTermsODE1)
+	{
+		ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[i];
+		ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[i];
+		bool objectUsesVelocityLevel;
+		ComputeObjectJacobianAE(i, temp, objectUsesVelocityLevel, filledJacobians);
+		if (filledJacobians & JacobianType::AE_ODE1)
+		{
+			const ResizableMatrix& jac = temp.localJacobianAE_ODE1;
+			for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+			{
+				for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+				{
+					ode1ReactionTerms[ltgODE1[jj]] += factor * reactionForces[ltgAE[ii]] * jac(ii, jj);
+				}
+			}
+		}
+	}
 }
 
 

@@ -208,7 +208,8 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamElbowCantilever.py':-5.579926018617533, #2026-09-30: consistent mass matrix (#1273); #right-angle cantilever of Simo and Vu-Quoc 1988, free oscillations (#2730)
         'geometricallyExactBeamMassTest.py':2.9942070791403967, #consistent mass matrix of the 3D beam: rigid motion exact (#1273)
         'geometricallyExactBeam2DquadraticTest.py':0.7426300926718995, #the 3-node planar geometrically exact beam (#2208)
-        'genericODE1duplicateNodeTest.py':3.1091750014354522, #numerical ODE1 Jacobian with a coordinate addressed twice (#1424)
+        'genericODE1duplicateNodeTest.py':3.1091750014354522, #2026-10-29: by a rhsUserFunction, so still numerical (#3143); #numerical ODE1 Jacobian with a coordinate addressed twice (#1424)
+        'genericODE1JacobianTest.py':5.4903220576244625, #new 2026-10-29: the analytic ODE1 Jacobian of ObjectGenericODE1, the system matrix, against the numerical one of a rhsUserFunction (#3143)
         'contactSphereTorusMomentumTest.py':4.227231105376637, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.227231105610667; #momentum conservation of the sphere-torus contact (#2127)
         'explicitSolversPostNewtonTest.py':4.563482002223684, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 4.563482002223224;2026-10-01: Jacobian of the torsional spring-damper by AD (#2745); before 4.563482002223096;  #2026-09-30: DOPRI5 with large steps added, and the step size recommended where a contact ends (#2109); before 4.097033066855782; #PostNewton states with every explicit integrator (#2754)
         'contactComparisonTest.py':4.773734739232028, #2026-10-05: GeneralContact with keepContactWhilePenetrating as a fifth case (#2848); before 4.561317500364976; #2026-10-04: GeneralContact as a fourth case and the sliding ball (#1848, #1947); before 1.200116276111891; #2026-09-30: step size recommended also where a contact ends (#2109); before 1.200040705928356; #deepest points and end heights, three contact objects, two laws (#2749, #2750)
@@ -275,7 +276,7 @@ def TestExamplesReferenceSolution():
         'superElementRigidJointTest.py':0.015217208913989099,       #before 2022-02-20 (accuracy of internal sensors is higher): 0.015217208913983024,
         'symbolicUserFunctionTest.py':0.10039884426884882,          #2023-12-13
         'symbolicModuleTest.py':0.9484129575069745,                 #2023-12-14
-        'taskmanagerTest.py':-0.23406814272950313,                  #2024-10-08
+        'taskmanagerTest.py':-0.23406814273662005,                  #2026-10-29: the analytic Jacobian of ObjectGenericODE1 (#3167); before -0.23406814272950313; #2024-10-08
         'velocityVerletTest.py':4.365184132226787,                  #2024-10-07
         }
 

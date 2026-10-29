@@ -634,6 +634,12 @@ objectFunctions = [
         args='Vector& ode1Rhs',
         description="Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs'"),
 
+    ItemFunctionLib(classType='Object', parentClass='CObject', pythonName='ComputeJacobianODE1RHS',
+        type=Tvoid, destination=DestComp,
+        cFlags=CFConst,
+        args='ResizableMatrix& jacobianODE1, ResizableMatrix& jacobianODE2, ResizableMatrix& jacobianODE2_t',
+        description="Computational function: the analytic Jacobian of the ABRV:ODE1 ABRV:RHS by the local ABRV:ODE1 coordinates, and by the ABRV:ODE2 coordinates and velocities if the object depends on them (#3143)"),
+
     ItemFunctionLib(classType='Object', parentClass='CObject', pythonName='HasUserFunction',
         type=TBool, destination=DestComp,
         cFlags=CFConst,

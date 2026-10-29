@@ -1851,6 +1851,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     CoordinateLoads are added for the respective ABRV:ODE1 coordinate on the RHS of the latter equation.
 
+    The implicit solvers take the Jacobian of the right-hand side from the object, its system matrix, if no
+    rhsUserFunction is given; with a rhsUserFunction it is computed by numerical differentiation (#3167).
+
     #### Marker interfaces
 
     The object is no body: markers act on its coordinates only, `MarkerNodeODE1Coordinate` on a
@@ -1967,8 +1970,9 @@ oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
         ItemFunctionDef('HasUserFunction',
             implementation='return (parameters.rhsUserFunction!=0);'),
         ItemFunctionDef('ComputeODE1RHS'),
+        ItemFunctionDef('ComputeJacobianODE1RHS'),
         ItemFunctionDef('GetAvailableJacobians',
-            implementation='return (JacobianType::Type)(JacobianType::ODE1_ODE1);'),
+            implementation='return (JacobianType::Type)(JacobianType::ODE1_ODE1 + (parameters.rhsUserFunction ? 0 : JacobianType::ODE1_ODE1_function));'),
         ItemAccessFunctionTypes(),
         ItemFunctionDef('GetAccessFunction'),
         ItemFunctionDef('GetOutputVariable'),

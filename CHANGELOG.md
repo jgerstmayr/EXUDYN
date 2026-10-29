@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 258 | 1.13.263 |
+| 1.13 | Newborn | 259 | 1.13.264 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.264** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Solvers: analytic ODE1 Jacobians and the ODE2-ODE1 coupling of objects, C\_y^T lambda in the ODE1 rows (#3167)
+  - description: For ObjectGenericDAE (\#3143; maintainer 2026-10-29: analytic Jacobians by new C++ functions, only for objects with ODE1 coordinates). CObject::ComputeJacobianODE1RHS (the ODE1 RHS by the local ODE1, ODE2 coordinates and velocities) and ComputeJacobianODE2\_ODE1 (the ODE2 LHS by the ODE1 coordinates), called for an object that sets the flags ODE1\_ODE1\_function (ODE1\_ODE2\_function, ODE1\_ODE2\_t\_function) or ODE2\_ODE1\_function, else numerical; the coupling block also for an object with an analytic ODE2 Jacobian, which got none. CSystem::NumericalJacobianODE1RHS becomes JacobianODE1RHS, replacing an empty placeholder of that name that solver.ComputeJacobianODE1RHS called (it added nothing). ObjectGenericODE1 gives its Jacobian without rhsUserFunction: the system matrix. The reaction terms C\_y^T lambda in the ODE1 rows of the implicit (and static) solver residual, ComputeODE1ProjectedReactionTerms; JacobianAE puts the block AE\_ODE1 and its transpose at their rows and columns (they were at wrong offsets and refused objects with ODE1 coordinates), with the factors of the solver.
+  - **notes:** CObject::ComputeJacobianODE1RHS and ComputeJacobianODE2\_ODE1: analytic ODE1 Jacobians and ODE2-ODE1 coupling of objects that set their flags, else numerical, the coupling also for objects with an analytic ODE2 Jacobian; ObjectGenericODE1 without rhsUserFunction gives its system matrix as Jacobian; solver.ComputeJacobianODE1RHS adds the ODE1 Jacobian (it added nothing); C\_y^T lambda in the ODE1 rows of the implicit and static solver, the AE\_ODE1 block of JacobianAE at its rows and columns
+  - date resolved: **2026-10-29 22:55**, date raised: 2026-10-29
 - **1.13.263** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolics: a package for the Python parts of the symbolic system and the symbolic utilities (#3165)
   - description: Maintainer 2026-10-29: give the symbolic Python parts more space in a directory of their own, exudyn.symbolics (exudyn.symbolic is the C++ module). misc/symbolicSystem.py split into symbolics/systemModel.py (SymbolicSystemBase, NumpySystem, SymbolicSystem, SystemVariables) and symbolics/solvers.py (SolveExplicit, SolveGeneralizedAlpha), misc/symbolicUserItems.py -\> symbolics/userItems.py, misc/symbolicExport.py -\> symbolics/codeExport.py, symbolicUtilities.py -\> symbolics/kinematics.py; no deprecation, as none of them was in a release (1.13.6). Specific module names instead of system.py and export.py: a variable system and the existing exudyn.solver, exudyn.utilities.
   - **notes:** the Python parts built on exudyn.symbolic are the package exudyn.symbolics: kinematics (the rotation and kinematics functions for symbolic user functions), codeExport, userItems (UserItemCreator), systemModel (SymbolicSystem, NumpySystem, SystemVariables) and solvers (SolveExplicit, SolveGeneralizedAlpha)

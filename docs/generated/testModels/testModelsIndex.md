@@ -89,6 +89,7 @@ generalContactSpheresTest
 generalContactTriangleMomentumTest
 genericJointUserFunctionTest
 genericODE1duplicateNodeTest
+genericODE1JacobianTest
 genericODE2matrixFormatsTest
 genericODE2test
 geneticOptimizationTest

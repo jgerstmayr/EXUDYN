@@ -88,6 +88,7 @@ public:
 	ResizableArray<Index> listObjectProjectedReactionForcesODE2;//!< list of objects that produce projected reaction forces for constraints
 	ResizableArray<Index> listObjectProjectedReactionForcesODE2UF;//!< list of objects that produce projected reaction forces for constraints
 	ResizableArray<Index> listObjectProjectedReactionForcesODE2NoUF;//!< list of objects that produce projected reaction forces for constraints
+	ResizableArray<Index> listObjectProjectedReactionTermsODE1;//!< list of objects whose algebraic equations depend on ODE1 coordinates: C_y^T lambda (#3143)
 
 	//lists for Lie groups (only needed for implicit integration / Jacobians)
 	//DELETE: ResizableArray<Index> listLieGroupDUNodes;			//!< list of lie group nodes
@@ -154,6 +155,7 @@ public: //
 		objectsConstraintWithAE.Flush();
 		objectsWithAlgebraicEquations.Flush();
 		listObjectProjectedReactionForcesODE2.Flush();
+		listObjectProjectedReactionTermsODE1.Flush();
 
 		localToGlobalODE2numDiff.Flush();
 		localToGlobalODE1numDiff.Flush();

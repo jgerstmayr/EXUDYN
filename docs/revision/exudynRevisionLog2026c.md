@@ -4534,3 +4534,33 @@ class and the changes of the solvers.)*
   ComputeODE2ProjectedReactionForces raises for AE_ODE1; no item gives AE_ODE1, so no present model is affected.
 - Sub-steps RG9.10.2 to .5: the solver, the item, the symbolic user functions, SymbolicSystem. Decisions asked: the
   analytic ODE1 Jacobians (recommended) or numerical blocks as interim; one jacobianUserFunction of all blocks.
+
+<a id="rg9-10-2"></a>
+### RG9.10.2 — the solver for ObjectGenericDAE: analytic ODE1 Jacobians, C_y^T lambda (2026-10-29, #3167)
+*(Maintainer 2026-10-29: "yes, Analytic Jacobians; new C++ functions (only required in case that ODE1 is nonzero, so
+little overhead)"; "jacobianUserFunction for all blocks: ... one for all".)*
+- src/System/CObject.h: `ComputeJacobianODE1RHS(jacobianODE1, jacobianODE2, jacobianODE2_t)` - the ODE1 RHS by the
+  local ODE1 coordinates, and by the ODE2 coordinates and velocities if ODE1_ODE2_function and ODE1_ODE2_t_function are
+  set - and `ComputeJacobianODE2_ODE1(jacobian)` - the ODE2 LHS by the local ODE1 coordinates -, called for an object
+  that sets ODE1_ODE1_function or ODE2_ODE1_function (the flags existed, unused).
+- src/Main/CSystem.cpp: `NumericalJacobianODE1RHS` renamed `JacobianODE1RHS`, with the analytic branch per object
+  (connectors stay numerical); CSystem.h had an empty `JacobianODE1RHS` "used in future", which
+  MainSolverBase::ComputeJacobianODE1RHS - `solver.ComputeJacobianODE1RHS` in Python - called, so it added nothing;
+  removed. `JacobianODE2RHS`: the coupling block ODE2-ODE1 also for an object with an analytic ODE2 Jacobian, its own or
+  numerical; before, such an object got none. `ComputeODE1ProjectedReactionTerms(reactionForces, ode1ReactionTerms,
+  factor)` over the new list `listObjectProjectedReactionTermsODE1` (objects with algebraic equations, ODE1 coordinates
+  and AE_ODE1); `ComputeODE2ProjectedReactionForces` no longer raises for AE_ODE1. `JacobianAE`: the block AE_ODE1 at
+  the AE rows and ODE1 columns, its transpose at the ODE1 rows and AE columns - they were at the ODE1 rows and ODE2
+  columns, the factors of the solver were overwritten by 1, and objects with ODE1 coordinates raised; no item had them.
+- Solvers: CSolverImplicitSecondOrder subtracts C_y^T lambda in the ODE1 residual (g - y_t - C_y^T lambda, as
+  SymbolicSystemBase.SystemResidual, #3155) and passes factorODE1_AE = -scalAE; CSolverStatic adds +C_y^T lambda, as
+  its ODE2 rows do, and leaves it out with constrainODE1Coordinates.
+- ObjectGenericODE1 (definitions/itemFunctions.py, itemDefsObjects.py, CObjectGenericODE1.cpp): ODE1_ODE1_function
+  without rhsUserFunction, the Jacobian its system matrix.
+- python/TestModels/genericODE1JacobianTest.py: the Jacobian equals A exactly (by the user function 3.3e-8), the
+  implicit solution the same to 1.3e-11, one Newton step per step with both. genericODE1duplicateNodeTest.py now gives
+  its equations by a rhsUserFunction, so it still checks the numerical Jacobian of #1424; its result unchanged.
+- The part C_y^T lambda has no item yet to check it; the test models of ObjectGenericDAE do (RG9.10.3).
+- taskmanagerTest.py: its ObjectGenericODE1 now with the analytic Jacobian, the result -0.23406814273662005 (before
+  -0.23406814272950313, 7e-12). The description of ObjectGenericODE1 says which Jacobian the solvers take.
+- docs/dev/design/genericDAE.md sections 3 and 4.

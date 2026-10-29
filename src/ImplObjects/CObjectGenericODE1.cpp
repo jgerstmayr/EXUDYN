@@ -91,6 +91,21 @@ void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs) const
 }
 
 
+//! the analytic Jacobian of the right-hand side without rhsUserFunction: the system matrix (#3143)
+void CObjectGenericODE1::ComputeJacobianODE1RHS(ResizableMatrix& jacobianODE1, ResizableMatrix& jacobianODE2, ResizableMatrix& jacobianODE2_t) const
+{
+	Index nODE1 = GetODE1Size();
+	if (parameters.systemMatrix.NumberOfRows() != 0)
+	{
+		jacobianODE1.CopyFrom(parameters.systemMatrix);
+	}
+	else
+	{
+		jacobianODE1.SetNumberOfRowsAndColumns(nODE1, nODE1);
+		jacobianODE1.SetAll(0.);
+	}
+}
+
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectGenericODE1::GetAccessFunction(AccessFunctionType accessType, Matrix& value) const
 {
