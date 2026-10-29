@@ -28,6 +28,9 @@
 #           Jacobian functions (#3141); ObjectGenericODE1 with its matrix, vector and a symbolic rhsUserFunction, and
 #           LoadCoordinate on its coordinates (#3144); every other object and load, data coordinates and recordings
 #           that read mbs are refused.
+#           SystemVariables(system) gives the system variables as one exudyn.symbolic.VariableSet and the states of the
+#           markers as expressions of them (#3151). The parameters of the user items may be named exudyn.symbolic.Real,
+#           SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (#3152).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-26 (created)
@@ -48,8 +51,8 @@ except ImportError:
     raise ImportError('exudyn.misc.symbolicSystem needs scipy for its sparse matrices: pip install scipy')
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
-__all__ = ['SymbolicSystemBase', 'NumpySystem', 'SymbolicKind', 'SymbolicLoad', 'SymbolicSystem', 'explicitSolverTypes',
-           'SolveExplicit', 'SolveGeneralizedAlpha']
+__all__ = ['SymbolicSystemBase', 'NumpySystem', 'SymbolicKind', 'SymbolicLoad', 'SymbolicSystem', 'SystemVariables',
+           'explicitSolverTypes', 'SolveExplicit', 'SolveGeneralizedAlpha']
 
 #the user functions of a kind, by object type
 _userFunctionNames = {'UserBody': ['massMatrixUserFunction', 'forceUserFunction'],
@@ -452,6 +455,10 @@ class SymbolicSystem(SymbolicSystemBase):
         composeSystem: True: ODE2RHS, MassMatrix and ODE2ResidualLHS evaluate two recordings of the composed system - the
             forces and the nonzero entries of the mass matrix of Equations(), each one flat program (#3131) -; False:
             each object and load by its own recordings, one call each
+        parameters: None, or the dict of the parameters of user items - ObjectUserBody, ObjectConnectorUser,
+            ObjectJointUser - by item number, each a list of numbers and named exudyn.symbolic.Real, the values those of
+            the item: UserItemCreator.parameterVariables; Equations() keeps the variables, a variable of several items is
+            one variable (#3152)
 
     Note:
         Its members: mbs; kinds, the list of SymbolicKind; jointKinds, the list of SymbolicKind of the ObjectJointUser
@@ -461,9 +468,10 @@ class SymbolicSystem(SymbolicSystemBase):
         coordinates; nODE2, nODE1, the numbers of ODE2 and ODE1 coordinates of the system; nAE, the number of the
         algebraic equations; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
         the recordings 'ODE2RHS', 'massMatrix' and 'massMatrixBlocks' - esym.Function of the inputs q, q_t and t, the
-        VariableSet 'inputs' (#3149) - and the 'rows' and 'columns' of the entries of the mass matrix
+        VariableSet 'inputs' (#3149) - and the 'rows' and 'columns' of the entries of the mass matrix; parameterVariables,
+        the dict of parameters, checked
     """
-    def __init__(self, mbs, composeSystem=True):
+    def __init__(self, mbs, composeSystem=True, parameters=None):
         if not mbs.systemIsConsistent:
             raise ValueError('SymbolicSystem: mbs must be assembled first')
         self.mbs = mbs
@@ -552,7 +560,57 @@ class SymbolicSystem(SymbolicSystemBase):
         self.kinds = list(kinds.values())
         for kind in self.kinds + self.jointKinds + self.ode1Kinds:
             kind.ltg = np.array(kind.ltg, dtype=int)
+        self.parameterVariables = self._ParameterVariables(parameters)
         self.composed = self._Compose() if composeSystem else None
+
+    def _ParameterVariables(self, parameters):
+        """the parameters of the items given as numbers and named exudyn.symbolic.Real, checked: the number of the
+        parameters of the item, the values those of the item, one variable per name (#3152)"""
+        (variables, self._parameterNames) = ({}, {})
+        for (objectNumber, values) in (parameters or {}).items():
+            numbers = list(self.mbs.GetObject(int(objectNumber))['parameters'])
+            where = 'SymbolicSystem: the parameters of object ' + str(int(objectNumber))
+            if len(values) != len(numbers):
+                raise ValueError(where + ' are ' + str(len(numbers)) + ' numbers, not ' + str(len(values)))
+            for (value, number) in zip(values, numbers):
+                if isinstance(value, exudyn.symbolic.Real):
+                    name = str(value)
+                    if not name.isidentifier():
+                        raise ValueError(where + ': ' + name + ' is no named exudyn.symbolic.Real')
+                    if self._parameterNames.setdefault(name, value) is not value:
+                        raise ValueError(where + ': two different variables are named ' + name)
+                    value = value.Evaluate()
+                if float(value) != float(number):
+                    raise ValueError(where + ': the value ' + str(value) + ' differs from the number ' + str(number)
+                                     + ' of the item; SetParameterValues sets both')
+            variables[int(objectNumber)] = list(values)
+        return variables
+
+    def SetParameterValues(self, values):
+        """set named parameters (#3152): the values of the variables, the numbers of the items in mbs, then the system
+        again from mbs
+
+        Args:
+            values: dict of the names of variables of parameterVariables and their new values
+        """
+        unknown = [name for name in values if name not in self._parameterNames]
+        if unknown:
+            raise ValueError('SymbolicSystem.SetParameterValues: no parameter named ' + str(unknown) + '; the parameters: '
+                             + str(list(self._parameterNames)))
+        for (name, value) in values.items():
+            self._parameterNames[name].SetValue(float(value))
+        for (objectNumber, parameters) in self.parameterVariables.items():
+            self.mbs.SetObjectParameter(objectNumber, 'parameters', [float(value.Evaluate()) if isinstance(value, exudyn.symbolic.Real)
+                                                                     else value for value in parameters])
+        self.__init__(self.mbs, self.composed is not None, self.parameterVariables)
+
+    def _ParameterVector(self, backend, objectNumber, numbers):
+        """the parameters of an item for Equations: its numbers, or with named parameters its list of variables and
+        numbers, if the backend takes them (#3152)"""
+        variables = self.parameterVariables.get(int(objectNumber)) if backend.parameterVariables else None
+        if variables is None:
+            return backend.Vector(numbers)
+        return backend.Vector([backend.Parameter(value) for value in variables])
 
     def _Compose(self):
         """the recordings of the composed system (#3131): the forces f(q, q_t, t) and the entries of the mass matrix at
@@ -566,7 +624,7 @@ class SymbolicSystem(SymbolicSystemBase):
         entries = sorted(entries)
         rows = np.array([i for (i, j) in entries], dtype=int)
         columns = np.array([j for (i, j) in entries], dtype=int)
-        backend = _Backend('symbolic')
+        backend = _Backend('symbolic', parameterVariables=False) #the numbers of the items; SetParameterValues composes again
         (q0, q_t0) = self.InitialState()
         inputs = exudyn.symbolic.VariableSet() #the scope of the inputs, in the order of the arguments of Evaluate
         (q, q_t, t) = (inputs.Add('q', q0), inputs.Add('q_t', q_t0), inputs.Add('t', 0.))
@@ -621,52 +679,60 @@ class SymbolicSystem(SymbolicSystemBase):
         """the markers of an ObjectConnectorUser - or of an ObjectJointUser, orientation=True - as the dicts of
         SymbolicKind, the global indices of the coordinates of the connector, and the reason it is refused, empty if it
         is taken"""
-        mbs = self.mbs
         if orientation is None:
             if item['markerAccessUserFunction'] != 0 or item['postNewtonStepUserFunction'] != 0:
                 return (None, None, 'a markerAccessUserFunction or postNewtonStepUserFunction')
             orientation = bool(int(item['requestedMarkerType']) & int(exudyn.MarkerType.Orientation))
         (markers, ltg) = ([], [])
         for markerNumber in item['markerNumbers']:
-            marker = mbs.GetMarker(markerNumber)
-            markerType = marker['markerType']
-            reference = exudyn.ConfigurationType.Reference
-            position = np.array(mbs.GetMarkerOutput(markerNumber, exudyn.OutputVariableType.Position, configuration=reference))
-            data = {'type': 'fixed', 'position': position, 'rotation': np.eye(3)}
-            coordinates = []
-            if markerType == 'NodePosition':
-                nodeType = mbs.GetNode(marker['nodeNumber'])['nodeType']
-                if nodeType == 'Point':
-                    data['type'] = 'point'
-                    coordinates = list(mbs.systemData.GetNodeLTGODE2(marker['nodeNumber']))
-                elif nodeType != 'PointGround':
-                    return (None, None, 'a marker on a node of type ' + nodeType)
-            elif markerType in ['BodyPosition', 'BodyRigid']:
-                bodyNumber = marker['bodyNumber']
-                body = mbs.GetObject(bodyNumber)
-                localRotation = np.array(marker['localHT'], dtype=float)[0:3, 0:3] if markerType == 'BodyRigid' else np.eye(3)
-                if body['objectType'] == 'Ground':
-                    if orientation:
-                        data['rotation'] = np.array(mbs.GetMarkerOutput(markerNumber, exudyn.OutputVariableType.RotationMatrix,
-                                                                        configuration=reference)).reshape(3, 3)
-                elif body['objectType'] == 'UserBody':
-                    recordings = {}
-                    for name in _markerFunctions[orientation]:
-                        recordings[name] = _Recording(body[name], bodyNumber, name)
-                        if recordings[name] is None:
-                            return (None, None, 'a marker on the user body ' + str(bodyNumber) + ', which has no ' + name)
-                    coordinates = list(mbs.systemData.GetObjectLTGODE2(bodyNumber))
-                    data = {'type': 'body', 'position': np.array(marker['localPosition'], dtype=float), 'rotation': localRotation,
-                            'objectNumber': int(bodyNumber), 'qRef': self.qRef[coordinates],
-                            'parameters': np.array(body['parameters'], dtype=float), 'recordings': recordings}
-                else:
-                    return (None, None, 'a marker on an object of type ' + body['objectType'])
-            else:
-                return (None, None, 'a marker of type ' + markerType)
+            (data, coordinates, reason) = self._MarkerData(markerNumber, orientation)
+            if reason:
+                return (None, None, reason)
             data['indices'] = np.arange(len(ltg), len(ltg) + len(coordinates), dtype=int)
             markers.append(data)
             ltg += coordinates
         return (markers, ltg, '')
+
+    def _MarkerData(self, markerNumber, orientation):
+        """the dict of a marker as in SymbolicKind, the global indices of its coordinates and the reason it is refused,
+        empty if it is taken; orientation: its rotation is needed"""
+        mbs = self.mbs
+        marker = mbs.GetMarker(markerNumber)
+        markerType = marker['markerType']
+        if markerType not in ['NodePosition', 'BodyPosition', 'BodyRigid']:
+            return (None, None, 'a marker of type ' + markerType)
+        reference = exudyn.ConfigurationType.Reference
+        position = np.array(mbs.GetMarkerOutput(markerNumber, exudyn.OutputVariableType.Position, configuration=reference))
+        data = {'type': 'fixed', 'position': position, 'rotation': np.eye(3)}
+        coordinates = []
+        if markerType == 'NodePosition':
+            nodeType = mbs.GetNode(marker['nodeNumber'])['nodeType']
+            if nodeType == 'Point':
+                data['type'] = 'point'
+                coordinates = list(mbs.systemData.GetNodeLTGODE2(marker['nodeNumber']))
+            elif nodeType != 'PointGround':
+                return (None, None, 'a marker on a node of type ' + nodeType)
+        else:
+            bodyNumber = marker['bodyNumber']
+            body = mbs.GetObject(bodyNumber)
+            localRotation = np.array(marker['localHT'], dtype=float)[0:3, 0:3] if markerType == 'BodyRigid' else np.eye(3)
+            if body['objectType'] == 'Ground':
+                if orientation:
+                    data['rotation'] = np.array(mbs.GetMarkerOutput(markerNumber, exudyn.OutputVariableType.RotationMatrix,
+                                                                    configuration=reference)).reshape(3, 3)
+            elif body['objectType'] == 'UserBody':
+                recordings = {}
+                for name in _markerFunctions[orientation]:
+                    recordings[name] = _Recording(body[name], bodyNumber, name)
+                    if recordings[name] is None:
+                        return (None, None, 'a marker on the user body ' + str(bodyNumber) + ', which has no ' + name)
+                coordinates = list(mbs.systemData.GetObjectLTGODE2(bodyNumber))
+                data = {'type': 'body', 'position': np.array(marker['localPosition'], dtype=float), 'rotation': localRotation,
+                        'objectNumber': int(bodyNumber), 'qRef': self.qRef[coordinates],
+                        'parameters': np.array(body['parameters'], dtype=float), 'recordings': recordings}
+            else:
+                return (None, None, 'a marker on an object of type ' + body['objectType'])
+        return (data, coordinates, '')
 
     def _Load(self, loadNumber):
         """the SymbolicLoad of a load and the reason it is refused, empty if it is taken; None for a load on the
@@ -1359,8 +1425,9 @@ class SymbolicSystem(SymbolicSystemBase):
                 ODE2ReactionForcesLHS, of the algebraic coordinates, the variable 'z' (#3146)
 
         Returns:
-            dict with 'q', 'q_t', 't' (the variables), 'z' if ODE2ReactionForcesLHS, and the results asked for,
-            exudyn.symbolic.Matrix and Vector or sympy.Matrix
+            dict with 'q', 'q_t', 't' (the variables), 'z' if ODE2ReactionForcesLHS, 'parameters' - the named parameters
+            of parameterVariables, as exudyn.symbolic.Real or sympy symbols - if there are any (#3152), and the results
+            asked for, exudyn.symbolic.Matrix and Vector or sympy.Matrix
         """
         backend = _Backend(format)
         n = self.nODE2
@@ -1393,6 +1460,8 @@ class SymbolicSystem(SymbolicSystemBase):
         equations = {'q': q, 'q_t': q_t, 't': t}
         if ODE2ReactionForcesLHS:
             equations['z'] = z
+        if self._parameterNames:
+            equations['parameters'] = [backend.Parameter(value) for value in self._parameterNames.values()]
         for (name, result) in zip(names, results):
             equations[name] = result
         if massMatrixBlocks: #back into the kinds
@@ -1415,12 +1484,7 @@ class SymbolicSystem(SymbolicSystemBase):
         f = [0]*n
         blocks = [(kind.ltg, []) for kind in self.kinds if kind.objectType != 'ConnectorUser']
         blocksOfKind = {id(kind): blocks[k][1] for (k, kind) in enumerate(kind for kind in self.kinds if kind.objectType != 'ConnectorUser')}
-        functions = {} #the function of each recording, written once
-
-        def Call(recording, *arguments):
-            if id(recording) not in functions:
-                functions[id(recording)] = ToFunction(recording.GetFlatProgramData(), format)
-            return functions[id(recording)](None, *arguments)
+        Call = _Caller(format)
 
         def Add(target, ltg, values):
             for (i, value) in zip(ltg, values):
@@ -1439,7 +1503,7 @@ class SymbolicSystem(SymbolicSystemBase):
                 if kind.objectType == 'UserBody':
                     qRef = self.qRef[ltg]
                     arguments = (t, objectNumber, backend.Vector(qRef), Local(qs, ltg, qRef), Local(q_ts, ltg),
-                                 backend.Vector(kind.parameters[index]))
+                                 self._ParameterVector(backend, objectNumber, kind.parameters[index]))
                     Mlocal = Call(kind.recordings['massMatrixUserFunction'], *arguments)
                     blocksOfKind[id(kind)].append([[Mlocal[i, j] for j in range(nLocal)] for i in range(nLocal)])
                     for i in range(nLocal):
@@ -1482,7 +1546,7 @@ class SymbolicSystem(SymbolicSystemBase):
                 continue
             body = load.body
             arguments = (t, body['objectNumber'], backend.Vector(body['qRef']), Local(qs, load.ltg, body['qRef']), Local(q_ts, load.ltg),
-                         backend.Vector(body['parameters']))
+                         self._ParameterVector(backend, body['objectNumber'], body['parameters']))
             withPosition = arguments[:2] + (backend.Vector(body['localPosition']),) + arguments[2:]
             J = Call(body['projection'], *(arguments if body['projectionName'] == 'massIntegralUserFunction' else withPosition))
             if body['rotation'] is not None:
@@ -1501,31 +1565,35 @@ class SymbolicSystem(SymbolicSystemBase):
         position, velocity, rotation matrix and angular velocity in the list of states, and (kind, J_pos, J_rot) or
         None for a fixed marker in the list of Jacobians"""
         (states, jacobians) = ([], [])
-        (zero, unit) = (backend.Vector([0., 0., 0.]), backend.Matrix(np.eye(3)))
         for marker in connector['markers']:
-            indices = ltg[marker['indices']]
-            if marker['type'] == 'fixed':
-                states += [backend.Vector(marker['position']), zero, backend.Matrix(marker['rotation']), zero]
-                jacobians.append(None)
-            elif marker['type'] == 'point':
-                states += [backend.Vector([float(marker['position'][a]) + qs[i] for (a, i) in enumerate(indices)]),
-                           backend.Vector([q_ts[i] for i in indices]), unit, zero]
-                jacobians.append(('point', None, None))
-            else:
-                recordings = marker['recordings']
-                q_tLocal = backend.Vector([q_ts[i] for i in indices])
-                arguments = (t, marker['objectNumber'], backend.Vector(marker['position']), backend.Vector(marker['qRef']),
-                             backend.Vector([float(marker['qRef'][a]) + qs[i] for (a, i) in enumerate(indices)]), q_tLocal,
-                             backend.Vector(marker['parameters']))
-                Jpos = Call(recordings['positionJacobianUserFunction'], *arguments)
-                (rotation, angularVelocity, Jrot) = (unit, zero, None)
-                if connector['orientation']:
-                    Jrot = Call(recordings['rotationJacobianUserFunction'], *arguments)
-                    rotation = Call(recordings['rotationMatrixUserFunction'], *arguments) @ backend.Matrix(marker['rotation'])
-                    angularVelocity = Jrot @ q_tLocal
-                states += [Call(recordings['positionUserFunction'], *arguments), Jpos @ q_tLocal, rotation, angularVelocity]
-                jacobians.append(('body', Jpos, Jrot))
+            (state, jacobian) = self._MarkerState(marker, ltg[marker['indices']], backend, Call, t, qs, q_ts, connector['orientation'])
+            states += state
+            jacobians.append(jacobian)
         return (states, jacobians)
+
+    def _MarkerState(self, marker, indices, backend, Call, t, qs, q_ts, orientation):
+        """the state of one marker as expressions of the components qs, q_ts of the system coordinates: the list of its
+        position, velocity, rotation matrix and angular velocity, and (kind, J_pos, J_rot), None for a fixed marker;
+        indices: the global indices of its coordinates; orientation: with the rotation of a body marker (#3151)"""
+        (zero, unit) = (backend.Vector([0., 0., 0.]), backend.Matrix(np.eye(3)))
+        if marker['type'] == 'fixed':
+            return ([backend.Vector(marker['position']), zero, backend.Matrix(marker['rotation']), zero], None)
+        if marker['type'] == 'point':
+            return ([backend.Vector([float(marker['position'][a]) + qs[i] for (a, i) in enumerate(indices)]),
+                     backend.Vector([q_ts[i] for i in indices]), unit, zero], ('point', None, None))
+        recordings = marker['recordings']
+        q_tLocal = backend.Vector([q_ts[i] for i in indices])
+        arguments = (t, marker['objectNumber'], backend.Vector(marker['position']), backend.Vector(marker['qRef']),
+                     backend.Vector([float(marker['qRef'][a]) + qs[i] for (a, i) in enumerate(indices)]), q_tLocal,
+                     self._ParameterVector(backend, marker['objectNumber'], marker['parameters']))
+        Jpos = Call(recordings['positionJacobianUserFunction'], *arguments)
+        (rotation, angularVelocity, Jrot) = (unit, zero, None)
+        if orientation:
+            Jrot = Call(recordings['rotationJacobianUserFunction'], *arguments)
+            rotation = Call(recordings['rotationMatrixUserFunction'], *arguments) @ backend.Matrix(marker['rotation'])
+            angularVelocity = Jrot @ q_tLocal
+        return ([Call(recordings['positionUserFunction'], *arguments), Jpos @ q_tLocal, rotation, angularVelocity],
+                ('body', Jpos, Jrot))
 
     def _AddMarkerForces(self, connector, ltg, backend, forces, stride, jacobians, f):
         """add J_pos^T f + J_rot^T m of each marker of a connector or joint to the list f, the forces and torques of
@@ -1552,7 +1620,8 @@ class SymbolicSystem(SymbolicSystemBase):
         AlgebraicEquations and ODE2ReactionForcesLHS (#3146)"""
         (ltg, joint) = (kind.ltg[index], kind.parameters[index])
         (states, jacobians) = self._MarkerStateExpressions(joint, ltg, backend, Call, t, qs, q_ts)
-        arguments = (t, kind.objects[index], states[0], states[2], states[4], states[6], backend.Vector(joint['parameters']))
+        arguments = (t, kind.objects[index], states[0], states[2], states[4], states[6],
+                     self._ParameterVector(backend, kind.objects[index], joint['parameters']))
         ltgAE = joint['ltgAE']
         equations = Call(kind.recordings['constraintUserFunction'], *arguments)
         for (k, i) in enumerate(ltgAE):
@@ -1570,7 +1639,7 @@ class SymbolicSystem(SymbolicSystemBase):
         stride = 6 if connector['orientation'] else 3
         (states, jacobians) = self._MarkerStateExpressions(connector, ltg, backend, Call, t, qs, q_ts)
         forces = Call(kind.recordings['forceUserFunction'], t, kind.objects[index], *states, backend.Vector([]),
-                      backend.Vector(connector['parameters']))
+                      self._ParameterVector(backend, kind.objects[index], connector['parameters']))
         self._AddMarkerForces(connector, ltg, backend, forces, stride, jacobians, f)
 
     def GetFlatProgram(self, format='Python', flatten=True, results=['ODE2RHS', 'massMatrix']):
@@ -1584,7 +1653,7 @@ class SymbolicSystem(SymbolicSystemBase):
 
         Returns:
             the program as str, for the executable formats a function Equations(q, q_t, t) - Equations(q, q_t, t,
-            z) with 'ODE2ReactionForcesLHS' - returning the results
+            z) with 'ODE2ReactionForcesLHS', followed by the named parameters (#3152) - returning the results
         """
         names = ['ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS']
         unknown = [name for name in results if name not in names]
@@ -1592,7 +1661,8 @@ class SymbolicSystem(SymbolicSystemBase):
             raise ValueError('SymbolicSystem.GetFlatProgram: unknown results ' + str(unknown) + '; possible: ' + str(names))
         equations = self.Equations('symbolic', **{name: name in results for name in names})
         variables = ['q', 'q_t', 't'] + (['z'] if 'ODE2ReactionForcesLHS' in results else [])
-        return exudyn.symbolic.GetFlatProgram([equations[name] for name in results], arguments=[equations[name] for name in variables],
+        return exudyn.symbolic.GetFlatProgram([equations[name] for name in results],
+                                              arguments=[equations[name] for name in variables] + equations.get('parameters', []),
                                               resultNames=list(results), format=format, flatten=flatten, name='Equations')
 
     def __repr__(self):
@@ -1613,17 +1683,100 @@ class SymbolicSystem(SymbolicSystemBase):
         return '\n'.join(lines)
 
 
+class SystemVariables:
+    """the system variables of a SymbolicSystem in one exudyn.symbolic.VariableSet (#3151): the named vectors q and q_t
+    (the ODE2 coordinates and velocities, relative to the reference coordinates, as in systemData), y and y_t (the
+    ODE1 coordinates and their derivatives), z (the algebraic coordinates, the Lagrange multipliers lambda of the
+    documentation) and the real t, with the initial state as values; the states of markers as expressions of them - of
+    the coordinates of the node for a marker on a point node, by the recordings of the user body for a marker on it,
+    constants for the ground -, by the same composition as Equations(); an expression of marker states is a function
+    of the system coordinates, whose Jacobian EvaluateJacobian of Function gives in one pass
+
+    Args:
+        system: the SymbolicSystem
+
+    Note:
+        Its members: system; variables, the VariableSet of q, q_t, y, y_t, z and t in this order; q, q_t, y, y_t, z, t,
+        its variables. Example:
+
+        variables = SystemVariables(system)
+        distance = variables.MarkerPosition(m1) - variables.MarkerPosition(m0)
+        F = variables.Function(distance)
+        F.EvaluateJacobian('q', q, q_t, y, y_t, z, t) #the Jacobian of the distance by the ODE2 coordinates
+    """
+    def __init__(self, system):
+        self.system = system
+        (q0, q_t0) = system.InitialState()
+        self.variables = exudyn.symbolic.VariableSet()
+        self.q = self.variables.Add('q', q0)
+        self.q_t = self.variables.Add('q_t', q_t0)
+        self.y = self.variables.Add('y', system.InitialStateODE1())
+        self.y_t = self.variables.Add('y_t', np.zeros(system.nODE1))
+        self.z = self.variables.Add('z', np.zeros(system.nAE))
+        self.t = self.variables.Add('t', 0.)
+        self._backend = _Backend('symbolic')
+        self._Call = _Caller('symbolic')
+        (self._qs, self._q_ts) = ([x[i] for i in range(system.nODE2)] for x in [self.q, self.q_t])
+
+    def _MarkerState(self, markerNumber, orientation, where):
+        (marker, coordinates, reason) = self.system._MarkerData(markerNumber, orientation)
+        if reason:
+            raise ValueError('SystemVariables.' + where + ': marker ' + str(int(markerNumber)) + ' is not taken: ' + reason)
+        return self.system._MarkerState(marker, np.array(coordinates, dtype=int), self._backend, self._Call, self.t,
+                                        self._qs, self._q_ts, orientation)[0]
+
+    def MarkerPosition(self, markerNumber):
+        """the global position of a marker, an exudyn.symbolic.Vector of the system variables"""
+        return self._MarkerState(markerNumber, False, 'MarkerPosition')[0]
+
+    def MarkerVelocity(self, markerNumber):
+        """the global velocity of a marker, an exudyn.symbolic.Vector of the system variables"""
+        return self._MarkerState(markerNumber, False, 'MarkerVelocity')[1]
+
+    def MarkerRotationMatrix(self, markerNumber):
+        """the rotation matrix of a marker - of a rigid marker, its local frame included -, an exudyn.symbolic.Matrix of
+        the system variables; the unit matrix for a marker on a point node"""
+        return self._MarkerState(markerNumber, True, 'MarkerRotationMatrix')[2]
+
+    def MarkerAngularVelocity(self, markerNumber):
+        """the global angular velocity of a marker, an exudyn.symbolic.Vector of the system variables"""
+        return self._MarkerState(markerNumber, True, 'MarkerAngularVelocity')[3]
+
+    def Function(self, result, name='Function'):
+        """an expression of the system variables as exudyn.symbolic.Function of variables (#3149): Evaluate(q, q_t, y,
+        y_t, z, t) and EvaluateJacobian(name, q, q_t, y, y_t, z, t) of name 'q', 'q_t', 'y', 'y_t', 'z' or 't'"""
+        return exudyn.symbolic.Function(result, self.variables, name)
+
+    def Equations(self, **options):
+        """Equations() of the system in these variables: q, q_t, t and z; options as in SymbolicSystem.Equations"""
+        return self.system.Equations(variables=(self.q, self.q_t, self.t, self.z), **options)
+
+
 def _Sum(a, b):
     """a + b, without the sum when a is the number 0 that a sum starts with"""
     return b if isinstance(a, int) and a == 0 else a + b
 
 
+def _Caller(format):
+    """the function that calls a recording with arguments of the format, by its code of exudyn.misc.symbolicExport,
+    written once per recording"""
+    functions = {}
+
+    def Call(recording, *arguments):
+        if id(recording) not in functions:
+            functions[id(recording)] = ToFunction(recording.GetFlatProgramData(), format)
+        return functions[id(recording)](None, *arguments)
+    return Call
+
+
 class _Backend:
-    """the types of Equations: exudyn.symbolic or sympy"""
-    def __init__(self, format):
+    """the types of Equations: exudyn.symbolic or sympy; parameterVariables: the named parameters of the items as
+    variables, else their numbers (#3152)"""
+    def __init__(self, format, parameterVariables=True):
         if format not in ['symbolic', 'sympy']:
             raise ValueError("SymbolicSystem.Equations: format must be 'symbolic' or 'sympy', not " + str(format))
         self.format = format
+        self.parameterVariables = parameterVariables
         if format == 'sympy':
             try:
                 import sympy
@@ -1638,6 +1791,12 @@ class _Backend:
 
     def Real(self, name):
         return exudyn.symbolic.Real(name, 0.) if self.format == 'symbolic' else self.sympy.Symbol(name)
+
+    def Parameter(self, value):
+        """a parameter of an item: a number, or a named exudyn.symbolic.Real - for sympy the symbol of its name"""
+        if isinstance(value, exudyn.symbolic.Real) and self.format == 'sympy':
+            return self.sympy.Symbol(str(value))
+        return value
 
     def Vector(self, components):
         components = [float(x) if isinstance(x, (np.floating, np.integer)) else x for x in components]

@@ -1,0 +1,114 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  SystemVariables of exudyn.misc.symbolicSystem (#3151): the system variables of a SymbolicSystem as one
+#           exudyn.symbolic.VariableSet, and the states of its markers as expressions of them - a marker on the node of
+#           a user mass point, rigid markers on user rigid bodies and on the ground. At a state off the initial one,
+#           the positions, velocities, rotation matrices and angular velocities equal the marker outputs of mbs, and the
+#           Jacobian of the distance of two markers by q, in one pass by EvaluateJacobian, equals central differences;
+#           an expression of the markers of the spring-damper is its length; Equations() in these variables equals
+#           Equations() of the system.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-29
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.misc.symbolicUserItems import UserItemCreator
+from exudyn.misc.symbolicSystem import SymbolicSystem, SystemVariables
+import exudyn.cMath as cMath
+import numpy as np
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+creator = UserItemCreator(mbs)
+ground = creator.CreateGround()
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4, 0.05, 0.03]).Translated([0.02, 0.01, 0])
+b0 = creator.CreateRigidBody(inertia=inertia, referencePosition=[0.2, 0, 0], initialAngularVelocity=[0.3, -0.2, 1.],
+                             gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationRxyz)
+b1 = creator.CreateRigidBody(inertia=inertia, referencePosition=[0.6, 0.1, 0], referenceRotationMatrix=RotationMatrixZ(0.4),
+                             initialVelocity=[0, 0.5, 0.1], nodeType=exu.NodeType.RotationRxyz)
+point = creator.CreateMassPoint(referencePosition=[0.5, -0.3, 0.8], mass=0.2, initialVelocity=[0, 0.4, -0.3])
+spring = creator.CreateSpringDamper(itemNumbers=[ground, point], localPosition0=[0, 0.2, 0.8], stiffness=100, damping=1)
+creator.CreateTorsionalSpringDamper(itemNumbers=[b0, b1], position=[0.4, 0.05, 0], axis=[0.1, 0.2, 1], stiffness=10,
+                                    unlimitedRotations=False)
+creator.CreateRevoluteJoint(itemNumbers=[ground, b0], position=[0, 0, 0], axis=[0, 0.2, 1])
+creator.Record()
+mbs.Assemble()
+
+system = SymbolicSystem(mbs)
+variables = SystemVariables(system)
+exu.Print(variables.variables.GetNames())
+failed = int(variables.variables.GetNames() != ['q', 'q_t', 'y', 'y_t', 'z', 't'])
+
+#a state off the initial one, also written into mbs for its marker outputs
+rng = np.random.default_rng(3)
+(q0, q_t0) = system.InitialState()
+(q, q_t) = (q0 + 0.05*rng.standard_normal(system.nODE2), q_t0 + 0.3*rng.standard_normal(system.nODE2))
+(y, y_t, z, t) = (np.zeros(0), np.zeros(0), np.zeros(system.nAE), 0.)
+system.SetSystemState(q, q_t)
+state = (q, q_t, y, y_t, z, t)
+
+markers = [mbs.GetObject(item)['markerNumbers'] for item in creator.items['torsionalSpringDamper'] + creator.items['revoluteJoint']]
+markers = [marker for pair in markers for marker in pair] #rigid markers on the bodies and the ground
+pointMarkers = mbs.GetObject(spring)['markerNumbers'] #on the ground and on the node of the mass point
+differences = []
+for marker in markers + pointMarkers:
+    for (Expression, outputVariable, rigid) in [(variables.MarkerPosition, exu.OutputVariableType.Position, False),
+                                                (variables.MarkerVelocity, exu.OutputVariableType.Velocity, False),
+                                                (variables.MarkerRotationMatrix, exu.OutputVariableType.RotationMatrix, True),
+                                                (variables.MarkerAngularVelocity, exu.OutputVariableType.AngularVelocity, True)]:
+        if rigid and marker in pointMarkers:
+            continue
+        value = np.array(variables.Function(Expression(marker)).Evaluate(*state)).flatten()
+        reference = np.array(mbs.GetMarkerOutput(marker, outputVariable)).flatten()
+        differences.append(np.max(np.abs(value - reference)))
+differenceStates = max(differences)
+exu.Print('marker states against the marker outputs of mbs:', differenceStates)
+failed += int(not differenceStates < 1e-14)
+
+#the Jacobian of the distance of a marker on b1 and the mass point by q, in one pass, against central differences
+distance = variables.MarkerPosition(markers[1]) - variables.MarkerPosition(pointMarkers[1])
+D = variables.Function(exu.symbolic.sqrt(distance @ distance), 'Distance')
+jacobian = np.array(D.EvaluateJacobian('q', *state))
+epsilon = 1e-6
+differencesQ = np.array([(D.Evaluate(q + epsilon*e, *state[1:]) - D.Evaluate(q - epsilon*e, *state[1:]))/(2*epsilon)
+                         for e in np.eye(system.nODE2)])
+differenceJacobian = np.max(np.abs(jacobian - differencesQ))
+exu.Print('Jacobian of a distance against central differences:', differenceJacobian)
+failed += int(not differenceJacobian < 1e-8)
+
+#the length of the spring-damper from its markers
+positions = [np.array(mbs.GetMarkerOutput(marker, exu.OutputVariableType.Position)) for marker in pointMarkers]
+length = variables.MarkerPosition(pointMarkers[1]) - variables.MarkerPosition(pointMarkers[0])
+differenceLength = abs(variables.Function(exu.symbolic.sqrt(length @ length)).Evaluate(*state) - cMath.norm(positions[1] - positions[0]))
+exu.Print('length of the spring-damper:', differenceLength)
+failed += int(not differenceLength < 1e-15)
+
+#Equations() in these variables against Equations() of the system
+equations = variables.Equations(algebraicEquations=True)
+reference = system.Equations(algebraicEquations=True)
+differenceEquations = 0.
+for name in ['ODE2RHS', 'massMatrix', 'algebraicEquations']:
+    value = np.array(variables.Function(equations[name]).Evaluate(*state))
+    referenceValue = np.array(exu.symbolic.Function(reference[name], [reference['q'], reference['q_t'], reference['t']]).Evaluate(q, q_t, t))
+    differenceEquations = max(differenceEquations, np.max(np.abs(value - referenceValue)))
+exu.Print('Equations() in the system variables:', differenceEquations)
+failed += int(not differenceEquations == 0)
+
+#a marker the system does not take
+refused = 0
+try:
+    variables.MarkerPosition(mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=0, coordinate=0)))
+except ValueError as e:
+    refused = int('NodeCoordinate' in str(e))
+failed += 1 - refused
+
+u = failed
+exu.Print('solution of symbolicSystemVariablesTest=', u)
+
+exu.sys['testResult'] = u

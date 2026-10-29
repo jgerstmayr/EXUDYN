@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 251 | 1.13.255 |
+| 1.13 | Newborn | 253 | 1.13.257 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.257** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Named esym.Real in the parameters of the user items, kept beside the numbers of the items and used by the symbolic system (#3152)
+  - description: Maintainer 2026-10-28: the parameters of a user item given as numbers and named esym.Real (a mass m1 = esym.Real('m1', 5.)), so that the expressions keep the names and a variable shared by several items is one variable, and parts of the equations can be differentiated by them. Checked: the C++ item stores numbers and refuses esym.Real, so the item gets the values and UserItemCreator (and a helper for items made directly) keeps the variables; the recording of a kind keeps parameters as its argument; SymbolicSystem.Equations passes the variables as the parameters of each item, the flat program lists them as arguments, Diff by them works; changed values reach the items by an explicit call. Design symbolicSystem.md section 12.7.
+  - **notes:** the parameters of user items as named exudyn.symbolic.Real: UserItemCreator.CreateMassPoint(mass=m1) and the spring-dampers give the item the value and keep the variable in parameterVariables; SymbolicSystem(mbs, parameters=...) keeps the variables in Equations(), its export takes them as arguments, so the derivatives by them follow; SetParameterValues sets the variables and the items
+  - date resolved: **2026-10-29 09:59**, date raised: 2026-10-28
+- **1.13.256** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` System variables in exudyn.symbolic: a set of the system coordinates and the marker states as their expressions (#3151)
+  - description: Maintainer 2026-10-28: option C of docs/dev/design/symbolicSystem.md section 12.7 is good to go. The signatures of the user functions stay; a body keeps q, q\_t as arguments. Marker-based items - connectors, joints, loads - get marker states, and their dependence on the system coordinates is in the background. esym.SystemVariables(mbs), a VariableSet of q, q\_t, y, y\_t, z, data and t, gives the marker states as expressions of them (node markers by the node coordinates, body markers through the recorded functions of the user body, the ground as constants), so that a connector recording composed with them is a function of the system coordinates, its Jacobian by the one-pass derivative; SymbolicSystem uses it instead of its own composition. After \#3149.
+  - **notes:** exudyn.misc.symbolicSystem.SystemVariables(system): the system variables q, q\_t, y, y\_t, z and t as one exudyn.symbolic.VariableSet, and the positions, velocities, rotation matrices and angular velocities of markers as expressions of them, by the same composition as Equations(); Function(result) gives an expression of them with its Jacobian in one pass
+  - date resolved: **2026-10-29 09:59**, date raised: 2026-10-28
 - **1.13.255** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: SymbolicProgram, the evaluation and the one-pass derivative of the user functions by the table of operations (#3157)
   - description: Stage 1 of \#3153 (maintainer 2026-10-28: R1 important, go with the first transition step; 2026-10-29: slightly different results would be acceptable, but check the full equivalence for now). New files src/Linalg/SymbolicTable.h/.cpp: the operation codes and the table (name, number of operands, rule of the forward derivative), SymbolicProgram built from the flat program, the scalar operations of scalar operands computed by the table, the rest by the nodes; the rules of the forward derivative moved there and shared with FlatProgram; esym.SetTableEvaluation(flag) selects the path, FlatProgram the fallback; every symbolic test model equal to the bit on both paths.
   - **notes:** exudyn.symbolic: the user functions are evaluated and differentiated by a table of their operations, SymbolicProgram, which computes the scalar operations without calling their nodes - the same results bit for bit, less than half the time for a force of many scalar operations; esym.SetTableEvaluation(False) selects the evaluation by the nodes

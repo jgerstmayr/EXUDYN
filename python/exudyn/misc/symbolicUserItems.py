@@ -11,7 +11,9 @@
 #           The items: CreateGround, CreateMassPoint, CreateRigidBody (on NodeRigidBodyRxyz), CreateSpringDamper,
 #           CreateTorsionalSpringDamper, CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint,
 #           CreateDistanceConstraint (ObjectJointUser, #3140), CreateForce. An argument a user item does not support
-#           raises, naming it.
+#           raises, naming it. A parameter of a mass point or a spring-damper may be a named exudyn.symbolic.Real
+#           (mass=m1): the item gets its value, the creator keeps the variable in parameterVariables, for
+#           SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-27 (created)
@@ -249,6 +251,11 @@ _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
 _jointConstraints = {'revoluteJoint': 5, 'prismaticJoint': 5, 'sphericalJoint': 3, 'distanceConstraint': 1}
 
 
+def _Numbers(values):
+    """the values of parameters given as numbers or named exudyn.symbolic.Real, for the item (#3152)"""
+    return [float(value.Evaluate()) if isinstance(value, exudyn.symbolic.Real) else value for value in values]
+
+
 def _Refuse(where, name, value, default, reason=''):
     """raise naming an argument the user item does not support, if it differs from its default"""
     if isinstance(value, (list, tuple, np.ndarray)) or isinstance(default, (list, tuple, np.ndarray)):
@@ -272,7 +279,9 @@ class UserItemCreator:
         Its members: mbs; items, the dict of the item numbers of each kind ('massPoint', 'rigidBody', 'springDamper',
         'torsionalSpringDamper', 'revoluteJoint', 'prismaticJoint', 'sphericalJoint', 'distanceConstraint'); loads, the
         list of the loads with a user function created by CreateForce; recordings, the symbolic user functions of
-        Record, which must live as long as the system. Example:
+        Record, which must live as long as the system; parameterVariables, the dict of the parameters of the items
+        with a named exudyn.symbolic.Real among them - CreateMassPoint(mass=m1) -, by the int of the item number, as
+        SymbolicSystem(mbs, parameters=...) takes it (#3152). Example:
 
         creator = UserItemCreator(mbs) #or creator = mbs: the same script with the built-in items
         b0 = creator.CreateMassPoint(referencePosition=[1,0,0], mass=2, gravity=[0,-9.81,0])
@@ -286,6 +295,12 @@ class UserItemCreator:
         self.loads = []
         self.recordings = []
         self._massPointNodes = {} #the node of each user mass point, by the int of its body number
+        self.parameterVariables = {}
+
+    def _KeepParameters(self, itemNumber, values):
+        """keep the parameters of an item if a named exudyn.symbolic.Real is among them (#3152)"""
+        if any(isinstance(value, exudyn.symbolic.Real) for value in values):
+            self.parameterVariables[int(itemNumber)] = list(values)
 
     def CreateGround(self, name='', referencePosition=None, referenceRotationMatrix=None, graphicsDataList=[],
                      graphicsDataUserFunction=0, show=True, referenceHT=None):
@@ -318,7 +333,7 @@ class UserItemCreator:
             referencePosition: as in mbs.CreateMassPoint
             initialDisplacement: as in mbs.CreateMassPoint
             initialVelocity: as in mbs.CreateMassPoint
-            mass: as in mbs.CreateMassPoint; the parameter of the user body
+            mass: as in mbs.CreateMassPoint; the parameter of the user body, a number or a named exudyn.symbolic.Real
             gravity: as in mbs.CreateMassPoint
             graphicsDataList: as in mbs.CreateMassPoint, the graphicsData of the user body
             drawSize: as in mbs.CreateMassPoint
@@ -339,12 +354,13 @@ class UserItemCreator:
         nodeNumber = mbs.AddNode(eii.NodePoint(name='Node:' + name if name != '' else '', referenceCoordinates=referencePosition,
                                                initialCoordinates=initialDisplacement, initialVelocities=initialVelocity,
                                                visualization=eii.VNodePoint(show=show, drawSize=drawSize, color=color)))
-        bodyNumber = mbs.AddObject(eii.ObjectUserBody(name=name, nodeNumbers=[nodeNumber], parameters=[mass],
+        bodyNumber = mbs.AddObject(eii.ObjectUserBody(name=name, nodeNumbers=[nodeNumber], parameters=_Numbers([mass]),
                                                       constantMassMatrix=True,
                                                       **{functionName: function for (functionName, function) in _kindFunctions['massPoint']},
                                                       visualization=eii.VObjectUserBody(show=graphicsDataList != [],
                                                                                         graphicsData=graphicsDataList)))
         self.items['massPoint'].append(bodyNumber)
+        self._KeepParameters(bodyNumber, [mass])
         self._massPointNodes[int(bodyNumber)] = nodeNumber
         result = {'nodeNumber': nodeNumber, 'bodyNumber': bodyNumber}
         if list(gravity) != [0., 0., 0.]:
@@ -447,11 +463,11 @@ class UserItemCreator:
             itemNumbers: as in mbs.CreateSpringDamper
             localPosition0: as in mbs.CreateSpringDamper
             localPosition1: as in mbs.CreateSpringDamper
-            referenceLength: as in mbs.CreateSpringDamper
-            stiffness: as in mbs.CreateSpringDamper
-            damping: as in mbs.CreateSpringDamper
-            force: as in mbs.CreateSpringDamper
-            velocityOffset: as in mbs.CreateSpringDamper
+            referenceLength: as in mbs.CreateSpringDamper; a number or a named exudyn.symbolic.Real
+            stiffness: as in mbs.CreateSpringDamper; a number or a named exudyn.symbolic.Real
+            damping: as in mbs.CreateSpringDamper; a number or a named exudyn.symbolic.Real
+            force: as in mbs.CreateSpringDamper; a number or a named exudyn.symbolic.Real
+            velocityOffset: as in mbs.CreateSpringDamper; a number or a named exudyn.symbolic.Real
             springForceUserFunction: refused if given: the force is the forceUserFunction of the connector
             show: as in mbs.CreateSpringDamper
             drawSize: a line if not positive, else a cylinder of diameter drawSize
@@ -476,6 +492,7 @@ class UserItemCreator:
                                                               getPosition=True, getRotationMatrix=False, useRigidMarker=False)
         if referenceLength is None:
             referenceLength = cMath.norm(np.array(p1) - p0)
+        parameters = [stiffness, damping, referenceLength, force, velocityOffset]
         drawColor = list(color) if color[0] >= 0 else graphics.color.grey
 
         def UFgraphics(mbs, itemNumber):
@@ -488,10 +505,11 @@ class UserItemCreator:
             return [graphics.Lines(positions, color=drawColor)]
 
         connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1],
-                                                          parameters=[stiffness, damping, referenceLength, force, velocityOffset],
+                                                          parameters=_Numbers(parameters),
                                                           forceUserFunction=_UFspringDamperForce,
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
         self.items['springDamper'].append(connector)
+        self._KeepParameters(connector, parameters)
         return connector
 
     def CreateTorsionalSpringDamper(self, name='', itemNumbers=[None, None], position=[0., 0., 0.], axis=[0., 0., 0.],
@@ -507,11 +525,11 @@ class UserItemCreator:
             itemNumbers: as in mbs.CreateTorsionalSpringDamper, two bodies or the ground
             position: as in mbs.CreateTorsionalSpringDamper
             axis: as in mbs.CreateTorsionalSpringDamper
-            stiffness: as in mbs.CreateTorsionalSpringDamper
-            damping: as in mbs.CreateTorsionalSpringDamper
-            offset: as in mbs.CreateTorsionalSpringDamper
-            velocityOffset: as in mbs.CreateTorsionalSpringDamper
-            torque: as in mbs.CreateTorsionalSpringDamper
+            stiffness: as in mbs.CreateTorsionalSpringDamper; a number or a named exudyn.symbolic.Real
+            damping: as in mbs.CreateTorsionalSpringDamper; a number or a named exudyn.symbolic.Real
+            offset: as in mbs.CreateTorsionalSpringDamper; a number or a named exudyn.symbolic.Real
+            velocityOffset: as in mbs.CreateTorsionalSpringDamper; a number or a named exudyn.symbolic.Real
+            torque: as in mbs.CreateTorsionalSpringDamper; a number or a named exudyn.symbolic.Real
             useGlobalFrame: as in mbs.CreateTorsionalSpringDamper
             springTorqueUserFunction: refused if given: the torque is the forceUserFunction of the connector
             unlimitedRotations: must be False: the turns need a data coordinate, which the symbolic system does not take
@@ -559,11 +577,12 @@ class UserItemCreator:
             return [graphics.Lines([p - 0.5*length*A[:, 2], p + 0.5*length*A[:, 2]], color=drawColor)]
 
         connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=markers,
-                                                          parameters=[stiffness, damping, offset, velocityOffset, torque],
+                                                          parameters=_Numbers([stiffness, damping, offset, velocityOffset, torque]),
                                                           requestedMarkerType=exudyn.MarkerType.Position | exudyn.MarkerType.Orientation,
                                                           forceUserFunction=_UFtorsionalSpringDamperForce,
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
         self.items['torsionalSpringDamper'].append(connector)
+        self._KeepParameters(connector, [stiffness, damping, offset, velocityOffset, torque])
         return connector
 
     def _JointMarkers(self, where, name, itemNumbers, position, axis, useGlobalFrame, show, frame):

@@ -612,6 +612,13 @@ and a fixed marker depend on q. C makes that a part of exudyn.symbolic:
   rules of `_ConnectorJacobian` and `_JointJacobian`.
 - What `SymbolicSystem` does with this by hand becomes the use of the set, so `Equations()`, the Jacobians and the
   export share one composition. Built-in bodies need their own recordings for it (#3048), as before.
+- **Done** (RG12.63, #3151), in Python, as the marker kinematics are there: `SystemVariables(system)` of
+  symbolicSystem.py, a `VariableSet` of `q`, `q_t`, `y`, `y_t`, `z` and `t` (no `data`: SymbolicSystem refuses data
+  coordinates), and `MarkerPosition`, `MarkerVelocity`, `MarkerRotationMatrix`, `MarkerAngularVelocity` of a marker,
+  `Function(result)` - an `esym.Function` of the set - and `Equations()` in these variables. One marker is composed by
+  `_MarkerData` and `_MarkerState`, which the connectors, the joints and the set share. Open: `_ConnectorJacobian` and
+  `_JointJacobian` still compose their Jacobians by hand; with the set they could be the one-pass derivative of the
+  composed functions, which changes their rounding and is measured first.
 
 **The parameters as named variables in the parameters of the user items** (maintainer 2026-10-28; step RG12.64,
 #3152). Instead of a variable set into an item parameter of C++, the `parameters` of a user item - ObjectUserBody,
@@ -632,6 +639,12 @@ shared by several items is one variable. Checked (2026-10-28):
   derivative.
 - A changed value of a variable reaches the numbers of the items by an explicit call (`SetParameterValues` of the
   system or the creator), not behind the user's back.
+- **Done** (RG12.64, #3152): `UserItemCreator` takes a named `esym.Real` for the parameters of `CreateMassPoint` and
+  the two spring-dampers and keeps them in `parameterVariables`; `SymbolicSystem(mbs, parameters=...)` checks them
+  against the numbers of the items and passes them per item in `Equations()` (sympy: the symbol of the name), whose
+  result `'parameters'` lists them and whose export takes them as arguments; the composed system of the evaluation
+  keeps the numbers. `SetParameterValues(values)` sets the variables, writes the items and builds the system again.
+  Not yet: the inertia of `CreateRigidBody` and the joints, whose parameters are not single values given by the user.
 
 **R1, the table of operations, revised** (maintainer 2026-10-28: "important to go that way"; step RG12.65, #3153):
 

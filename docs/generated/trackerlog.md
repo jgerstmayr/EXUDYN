@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.255.dev1
+- Exudyn version = 1.13.257.dev1
 - last change = 2026-10-29
 - Number of issues = 3158
-- Number of resolved issues = 3032 (255 in current version)
+- Number of resolved issues = 3034 (257 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9041,12 +9041,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `IMPROVEMENT` `HUGE EFF` `raised by: Claude-JG` One table of the symbolic operations: SymbolicProgram and the operation table in SymbolicTable.h/.cpp beside the expression classes (#3153)
   - description: Maintainer 2026-10-28: R1 of docs/dev/design/symbolicSystem.md, important to go that way. The expression tree stays for the recording and the simple evaluation; the flat evaluation, the derivatives, Optimize, the export, the count and the uniform evaluation work on a program built from the tree and a table per operation code (name, arity, kinds, size, evaluation, forward derivative, later derivative as new nodes, simplification, text per format). New files src/Linalg/SymbolicTable.h and .cpp; the old code stays as fallback, selected by a switch, until the new path gives the same results bit for bit; item outputs as an operation code with the data of the item and a link to the MainSystem. Four stages, design section 12.7.
-  - date raised: 2026-10-28
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Named esym.Real in the parameters of the user items, kept beside the numbers of the items and used by the symbolic system (#3152)
-  - description: Maintainer 2026-10-28: the parameters of a user item given as numbers and named esym.Real (a mass m1 = esym.Real('m1', 5.)), so that the expressions keep the names and a variable shared by several items is one variable, and parts of the equations can be differentiated by them. Checked: the C++ item stores numbers and refuses esym.Real, so the item gets the values and UserItemCreator (and a helper for items made directly) keeps the variables; the recording of a kind keeps parameters as its argument; SymbolicSystem.Equations passes the variables as the parameters of each item, the flat program lists them as arguments, Diff by them works; changed values reach the items by an explicit call. Design symbolicSystem.md section 12.7.
-  - date raised: 2026-10-28
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` System variables in exudyn.symbolic: a set of the system coordinates and the marker states as their expressions (#3151)
-  - description: Maintainer 2026-10-28: option C of docs/dev/design/symbolicSystem.md section 12.7 is good to go. The signatures of the user functions stay; a body keeps q, q\_t as arguments. Marker-based items - connectors, joints, loads - get marker states, and their dependence on the system coordinates is in the background. esym.SystemVariables(mbs), a VariableSet of q, q\_t, y, y\_t, z, data and t, gives the marker states as expressions of them (node markers by the node coordinates, body markers through the recorded functions of the user body, the ground as constants), so that a connector recording composed with them is a function of the system coordinates, its Jacobian by the one-pass derivative; SymbolicSystem uses it instead of its own composition. After \#3149.
   - date raised: 2026-10-28
 - `EXTENSION` `LOW EFF` `raised by: Claude-JG` Draw ObjectJointUser by a graphicsDataUserFunction, and the joints of UserItemCreator as the built-in joints (#3147)
   - description: ObjectJointUser draws nothing, so the revolute, prismatic, spherical and distance joints of UserItemCreator (\#3140) are invisible and their drawing arguments are accepted and not used. A graphicsDataUserFunction as ObjectConnectorUser has (\#3119), and the drawings of the built-in joints from the drawing arguments.

@@ -208,7 +208,9 @@ symbolicSystemJointsTest
 symbolicSystemLoadsTest
 symbolicSystemODE1AETest
 symbolicSystemODE1Test
+symbolicSystemParametersTest
 symbolicSystemTest
+symbolicSystemVariablesTest
 symbolicUserFunctionCopyTest
 symbolicUserFunctionSignaturesTest
 symbolicUserFunctionTest

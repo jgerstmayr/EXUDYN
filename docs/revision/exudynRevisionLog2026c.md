@@ -4404,3 +4404,52 @@ check the full equivalence.")*
   terms of sin, cos and exp per coordinate, 20000 steps: RK44 0.80 s -> 0.33 s, generalized-alpha 0.49 s -> 0.21 s.
 - docs: the evaluation paragraph of the symbolic module (definitions/pybindSymbolic.py), revisions.md, the design note
   section 12.7.
+
+<a id="rg12-63"></a>
+### RG12.63 — the system variables and the marker states as their expressions (2026-10-29, #3151)
+*(Maintainer 2026-10-28: "option 'C' is highly welcome"; "good to go as a new step"; 2026-10-29: "Do the next 3 steps
+you mentioned".)*
+- python/exudyn/misc/symbolicSystem.py, `SystemVariables(system)`: `variables`, an exudyn.symbolic.VariableSet of the
+  named vectors q, q_t (initial state), y (initial ODE1 state), y_t, z (zeros) and the real t, in this order; `q`, ...,
+  `t` its variables; `MarkerPosition`, `MarkerVelocity` (without the rotation functions of the body, so a marker on a
+  mass point body needs only its position functions), `MarkerRotationMatrix`, `MarkerAngularVelocity` (with them):
+  expressions of the system variables; `Function(result, name)`, esym.Function of the set, whose EvaluateJacobian
+  gives the Jacobian of an expression of marker states in one pass; `Equations(**options)` of the system in the
+  variables q, q_t, t, z. A marker the system does not take raises a ValueError naming it.
+- In Python and not in the C++ module as `esym.SystemVariables(mbs)`, as the design note had it: the composition of a
+  marker - a point node, the recordings of a user body, the ground - is in symbolicSystem.py. Data coordinates are
+  left out, as SymbolicSystem refuses them.
+- One composition: `_MarkerData(markerNumber, orientation)` (the dict of a marker, from the loop of
+  `_ConnectorMarkers`, which now calls it; the type of the marker checked before its output is read) and
+  `_MarkerState(marker, indices, ...)` (the state of one marker, from `_MarkerStateExpressions`, which now calls it
+  per marker); the recording call `_Caller(format)` from `_EquationLists`. The expressions are built by the same
+  operations in the same order, the results of the test models unchanged.
+- python/TestModels/symbolicSystemVariablesTest.py: two user rigid bodies, a mass point, a spring-damper, a torsional
+  spring-damper, a revolute joint; at a random state the positions, velocities, rotation matrices and angular
+  velocities of 6 markers equal GetMarkerOutput (difference 0.0), the Jacobian of a distance by q against central
+  differences 4e-11, the length of the spring 0.0, Equations() in the set equal to Equations() of the system.
+- Open: `_ConnectorJacobian` and `_JointJacobian` compose their Jacobians by hand; by the set they would be the
+  one-pass derivative of the composed functions - a change of the rounding, to be measured first (design note 12.7).
+
+<a id="rg12-64"></a>
+### RG12.64 — named exudyn.symbolic.Real as parameters of the user items (2026-10-29, #3152)
+*(Maintainer 2026-10-28: "parameters ... could be a vector of named esym.Real ... recorded, exactly as they are defined
+by the user, such as mass m1=5kg ... if m1 is shared across several elements, it would be fine ... differentiation ...
+w.r.t. these quantities"; 2026-10-29: "Do the next 3 steps you mentioned".)*
+- python/exudyn/misc/symbolicUserItems.py: `_Numbers` gives the values for the item; `UserItemCreator.parameterVariables`
+  keeps, by the int of the item number, the parameters of an item with a named esym.Real among them: CreateMassPoint
+  (mass), CreateSpringDamper (stiffness, damping, referenceLength, force, velocityOffset), CreateTorsionalSpringDamper
+  (stiffness, damping, offset, velocityOffset, torque). Not the inertia of CreateRigidBody nor the joints.
+- python/exudyn/misc/symbolicSystem.py: `SymbolicSystem(mbs, composeSystem, parameters)`; `_ParameterVariables` checks
+  the number of the parameters, that each value is that of the item and that a name is one variable, and keeps
+  `parameterVariables`; `_ParameterVector` gives Equations the variables and numbers of an item - for the user bodies,
+  the markers on them, the loads on them, the connectors and the joints -, sympy the symbol of the name
+  (`_Backend.Parameter`); the composed system of the evaluation keeps the numbers (`_Backend(...,
+  parameterVariables=False)`). `Equations()['parameters']` lists the variables; `GetFlatProgram` takes them as
+  arguments after q, q_t, t (and z). `SetParameterValues(values)`: the values of the variables, the numbers of the
+  items by SetObjectParameter, the system built again from mbs.
+- python/TestModels/symbolicSystemParametersTest.py: two mass points of mass m1, a spring of stiffness k; the forces
+  and the mass matrix of Equations() equal those of the system (0.0), their derivatives by m1 and k by one
+  EvaluateJacobian against central differences by SetParameterValues (1.6e-10), the numpy code with m1 and k as
+  arguments (0.0), a value that is not that of the item refused.
+- docs: revisions.md, the design note section 12.7, the Details of both modules.
