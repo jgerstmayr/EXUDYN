@@ -455,10 +455,6 @@ class SymbolicSystem(SymbolicSystemBase):
             ObjectJointUser - by item number, each a list of numbers and named exudyn.symbolic.Real, the values those of
             the item: UserItemCreator.parameterVariables; Equations() keeps the variables, a variable of several items is
             one variable (#3152)
-        itemJacobians: how the Jacobians of the connectors and joints are computed (#3166): 'chainRule', the derivatives
-            of their recordings by the marker states composed with the marker Jacobians; 'onePass', the generalized
-            forces of a connector - the constraint equations and reaction forces of a joint - as one expression of the
-            coordinates of its bodies and nodes, differentiated in one pass per body or node
 
     Note:
         Its members: mbs; kinds, the list of SymbolicKind; jointKinds, the list of SymbolicKind of the ObjectJointUser
@@ -471,14 +467,11 @@ class SymbolicSystem(SymbolicSystemBase):
         VariableSet 'inputs' (#3149) - and the 'rows' and 'columns' of the entries of the mass matrix; parameterVariables,
         the dict of parameters, checked
     """
-    def __init__(self, mbs, composeSystem=True, parameters=None, itemJacobians='chainRule'):
+    def __init__(self, mbs, composeSystem=True, parameters=None):
         if not mbs.systemIsConsistent:
             raise ValueError('SymbolicSystem: mbs must be assembled first')
-        if itemJacobians not in ['chainRule', 'onePass']:
-            raise ValueError("SymbolicSystem: itemJacobians must be 'chainRule' or 'onePass', not " + str(itemJacobians))
         self.mbs = mbs
-        self.itemJacobians = itemJacobians
-        self._itemFunctions = {} #the functions of 'onePass' by (kind, index), built at their first use
+        self._itemFunctions = {} #the functions of the connectors and joints for their Jacobians, built at their first use
         self.nODE2 = mbs.systemData.ODE2Size()
         self.qRef = np.array(mbs.systemData.GetODE2Coordinates(configuration=exudyn.ConfigurationType.Reference))
         refused = []
@@ -606,7 +599,7 @@ class SymbolicSystem(SymbolicSystemBase):
         for (objectNumber, parameters) in self.parameterVariables.items():
             self.mbs.SetObjectParameter(objectNumber, 'parameters', [float(value.Evaluate()) if isinstance(value, exudyn.symbolic.Real)
                                                                      else value for value in parameters])
-        self.__init__(self.mbs, self.composed is not None, self.parameterVariables, self.itemJacobians)
+        self.__init__(self.mbs, self.composed is not None, self.parameterVariables)
 
     def _ParameterVector(self, backend, objectNumber, numbers):
         """the parameters of an item for Equations: its numbers, or with named parameters its list of variables and
@@ -984,53 +977,6 @@ class SymbolicSystem(SymbolicSystemBase):
                 np.add.at(f, kind.ltg[i], local)
         return f
 
-    def _JointJacobian(self, kind, i, q, z, t):
-        """the derivatives of joint i of kind in its local coordinates (#3145): C_q, the derivative of its constraint
-        equations by the coordinates - the recorded jacobianUserFunction C by the marker translations and global
-        rotation increments times the position and rotation Jacobians of the markers -, and the derivative of its
-        reaction forces C_q^T z by the coordinates: the derivatives of C by the positions and rotation matrices of
-        the markers (arguments 3 + 2k and 4 + 2k of the recording), composed with J_pos and dA/dq of the bodies, and the
-        derivatives of J_pos and J_rot of the bodies times the forces and torques C^T z"""
-        n = kind.ltg.shape[1]
-        joint = kind.parameters[i]
-        (arguments, markerData) = self._JointArguments(kind, i, q, t)
-        recording = kind.recordings['jacobianUserFunction']
-        C = np.array(recording.Evaluate(self.mbs, *arguments), dtype=float).reshape(-1, 12)
-        zJoint = z[joint['ltgAE']]
-        forces = C.T @ zJoint #the forces and torques on the markers
-        C_q = np.zeros((C.shape[0], n))
-        dForces = np.zeros((12, n)) #the derivative of C^T z by the local coordinates
-        for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(joint['markers'], markerData)):
-            if Jpos is None:
-                continue
-            indices = marker['indices']
-            C_q[:, indices] += C[:, 6*k:6*k + 3] @ Jpos
-            dForces[:, indices] += np.einsum('ijk,i->jk', self._RecordingJacobian(recording, 3 + 2*k, arguments).reshape(-1, 12, 3),
-                                             zJoint) @ Jpos
-            if Jrot is not None:
-                C_q[:, indices] += C[:, 6*k + 3:6*k + 6] @ Jrot
-            if bodyArguments is not None and Jrot is not None: #the rotation of the marker after the one of the body
-                dA = np.einsum('ijk,jl->ilk', self._BodyJacobian(marker, 'rotationMatrixUserFunction', bodyArguments),
-                               marker['rotation'])
-                dForces[:, indices] += np.einsum('ijk,i->jk', self._RecordingJacobian(recording, 4 + 2*k, arguments).reshape(-1, 12, 9),
-                                                 zJoint) @ dA.reshape(9, len(indices))
-        dReaction = np.zeros((n, n))
-        for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(joint['markers'], markerData)):
-            if Jpos is None:
-                continue
-            indices = marker['indices']
-            (force, torque) = (slice(6*k, 6*k + 3), slice(6*k + 3, 6*k + 6))
-            dReaction[indices, :] += Jpos.T @ dForces[force]
-            if Jrot is not None:
-                dReaction[indices, :] += Jrot.T @ dForces[torque]
-            if bodyArguments is not None:
-                dJpos = self._BodyJacobian(marker, 'positionJacobianUserFunction', bodyArguments)
-                dReaction[np.ix_(indices, indices)] += np.einsum('ijk,i->jk', dJpos, forces[force])
-                if Jrot is not None:
-                    dJrot = self._BodyJacobian(marker, 'rotationJacobianUserFunction', bodyArguments)
-                    dReaction[np.ix_(indices, indices)] += np.einsum('ijk,i->jk', dJrot, forces[torque])
-        return (C_q, dReaction)
-
     def SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
                        factor_y_t=0., velocityLevel=False, epsilon=1e-6):
         """the Jacobian of SystemResidual, exact (#3145): the ODE2 block by ODE2ResidualLHSJacobian plus the derivative of the
@@ -1069,10 +1015,7 @@ class SymbolicSystem(SymbolicSystemBase):
             for kind in self.jointKinds:
                 for i in range(len(kind.objects)):
                     (ltg, ltgAE) = (kind.ltg[i], kind.parameters[i]['ltgAE'] + offset)
-                    if self.itemJacobians == 'onePass':
-                        (C_q, dReaction) = self._JointJacobianOnePass(kind, i, q, z, t)
-                    else:
-                        (C_q, dReaction) = self._JointJacobian(kind, i, q, z, t)
+                    (C_q, dReaction) = self._JointJacobian(kind, i, q, z, t)
                     J[np.ix_(ltg, ltg)] += factor_q*dReaction
                     J[np.ix_(ltg, ltgAE)] += C_q.T
                     J[np.ix_(ltgAE, ltg)] += factor_q*C_q
@@ -1307,10 +1250,7 @@ class SymbolicSystem(SymbolicSystemBase):
                 ltg = kind.ltg[i]
                 local = np.zeros((len(ltg), len(ltg)))
                 if kind.objectType == 'ConnectorUser':
-                    if self.itemJacobians == 'onePass':
-                        local = self._ConnectorJacobianOnePass(kind, i, q, q_t, t, factor_q, factor_q_t)
-                    else:
-                        local = self._ConnectorJacobian(kind, i, q, q_t, t, factor_q, factor_q_t)
+                    local = self._ConnectorJacobian(kind, i, q, q_t, t, factor_q, factor_q_t)
                     (r, c) = np.nonzero(local)
                     rows.append(ltg[r])
                     columns.append(ltg[c])
@@ -1348,63 +1288,6 @@ class SymbolicSystem(SymbolicSystemBase):
         if not rows:
             return self._Matrix(np.zeros(0, dtype=int), np.zeros(0, dtype=int), np.zeros(0), sparse)
         return self._Matrix(np.concatenate(rows), np.concatenate(columns), np.concatenate(values), sparse)
-
-    def _ConnectorJacobian(self, kind, i, q, q_t, t, factor_q, factor_q_t):
-        """the local Jacobian of the residual -f of a connector, -d(sum_k J_pos,k^T f_k + J_rot,k^T m_k): the derivatives
-        of its forces by the states of its markers (arguments 3 + 4k to 6 + 4k) composed with the derivatives of the
-        states by the coordinates - J_pos, dJ_pos/dq q_t, dA/dq, J_rot, dJ_rot/dq q_t, by Diff of the recordings of the
-        bodies -, and the derivatives of the Jacobians of the bodies times the forces (#3129)"""
-        n = kind.ltg.shape[1]
-        connector = kind.parameters[i]
-        orientation = connector['orientation']
-        stride = 6 if orientation else 3
-        (arguments, markerData) = self._ConnectorStates(kind, i, q, q_t, t)
-        recording = kind.recordings['forceUserFunction']
-        forces = np.array(recording.Evaluate(self.mbs, *arguments), dtype=float)
-        nForces = len(forces)
-        (dF_q, dF_q_t) = (np.zeros((nForces, n)), np.zeros((nForces, n)))
-        bodyDerivatives = [] #per marker on a user body: dJ_pos/dq, dJ_rot/dq
-        for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(connector['markers'], markerData)):
-            indices = marker['indices']
-            if Jpos is None:
-                bodyDerivatives.append(None)
-                continue
-            (dJpos, dJrot) = (None, None)
-            dF_dv = self._RecordingJacobian(recording, 4 + 4*k, arguments)
-            if factor_q != 0.: #by the position, and the velocity by q through J_pos
-                dF_q[:, indices] += self._RecordingJacobian(recording, 3 + 4*k, arguments) @ Jpos
-            if factor_q_t != 0.:
-                dF_q_t[:, indices] += dF_dv @ Jpos
-            if bodyArguments is not None and factor_q != 0.:
-                dJpos = self._BodyJacobian(marker, 'positionJacobianUserFunction', bodyArguments)
-                dF_q[:, indices] += dF_dv @ np.einsum('ijk,j->ik', dJpos, bodyArguments[5])
-            if orientation and Jrot is not None:
-                dF_domega = self._RecordingJacobian(recording, 6 + 4*k, arguments)
-                if factor_q_t != 0.:
-                    dF_q_t[:, indices] += dF_domega @ Jrot
-                if factor_q != 0.:
-                    dJrot = self._BodyJacobian(marker, 'rotationJacobianUserFunction', bodyArguments)
-                    dA = np.einsum('ijk,jl->ilk', self._BodyJacobian(marker, 'rotationMatrixUserFunction', bodyArguments),
-                                   marker['rotation'])
-                    dF_q[:, indices] += (self._RecordingJacobian(recording, 5 + 4*k, arguments) @ dA.reshape(9, len(indices))
-                                         + dF_domega @ np.einsum('ijk,j->ik', dJrot, bodyArguments[5]))
-            bodyDerivatives.append((dJpos, dJrot))
-        local = np.zeros((n, n))
-        for (k, (marker, (Jpos, Jrot, bodyArguments))) in enumerate(zip(connector['markers'], markerData)):
-            if Jpos is None:
-                continue
-            indices = marker['indices']
-            (force, torque) = (slice(stride*k, stride*k + 3), slice(stride*k + 3, stride*k + 6))
-            for (dF, factor) in [(dF_q, factor_q), (dF_q_t, factor_q_t)]:
-                if factor != 0.:
-                    local[indices, :] -= factor*(Jpos.T @ dF[force] + (Jrot.T @ dF[torque] if Jrot is not None else 0.))
-            if factor_q != 0. and bodyDerivatives[k] is not None:
-                (dJpos, dJrot) = bodyDerivatives[k]
-                if dJpos is not None:
-                    local[np.ix_(indices, indices)] -= factor_q*np.einsum('ijk,i->jk', dJpos, forces[force])
-                if dJrot is not None:
-                    local[np.ix_(indices, indices)] -= factor_q*np.einsum('ijk,i->jk', dJrot, forces[torque])
-        return local
 
     def _ItemFunction(self, kind, i, joint):
         """connector i of kind as one exudyn.symbolic.Function (#3166): its generalized forces, J_pos^T f + J_rot^T m of
@@ -1469,9 +1352,9 @@ class SymbolicSystem(SymbolicSystemBase):
             derivatives.append((list(group), d_q, d_q_t))
         return derivatives
 
-    def _ConnectorJacobianOnePass(self, kind, i, q, q_t, t, factor_q, factor_q_t):
-        """the local Jacobian of the residual -f of a connector, as _ConnectorJacobian, by the one-pass derivative of its
-        generalized forces (#3166)"""
+    def _ConnectorJacobian(self, kind, i, q, q_t, t, factor_q, factor_q_t):
+        """the local Jacobian of the residual -f of a connector, -(factor_q df/dq + factor_q_t df/dq_t) of its generalized
+        forces f, by the one-pass derivative of their expression (_ItemFunction, #3166)"""
         n = kind.ltg.shape[1]
         local = np.zeros((n, n))
         for (columns, d_q, d_q_t) in self._ItemJacobians(kind, i, q, q_t, None, t, False, factor_q_t != 0.):
@@ -1481,9 +1364,10 @@ class SymbolicSystem(SymbolicSystemBase):
                 local[:, columns] -= factor_q_t*d_q_t
         return local
 
-    def _JointJacobianOnePass(self, kind, i, q, z, t):
-        """C_q and the derivative of the reaction forces C_q^T z by the coordinates of joint i of kind, as _JointJacobian,
-        by the one-pass derivative of its constraint equations and reaction forces (#3166)"""
+    def _JointJacobian(self, kind, i, q, z, t):
+        """the derivatives of joint i of kind in its local coordinates: C_q, the derivative of its constraint equations,
+        and the derivative of its reaction forces C_q^T z by the coordinates, by the one-pass derivative of their
+        expression (_ItemFunction, #3166)"""
         n = kind.ltg.shape[1]
         nConstraints = len(kind.parameters[i]['ltgAE'])
         (C_q, dReaction) = (np.zeros((nConstraints, n)), np.zeros((n, n)))

@@ -2028,6 +2028,10 @@ to 1.1e-11 at Newton tolerance 1e-13, 90 times slower (constraint blocks by cent
 
 CLOSED 2026-10-29 (#3166; maintainer 2026-10-29: per body for body markers, per node for node markers, ltg maps for both; small differences to the C++ items accepted): SymbolicSystem(mbs, itemJacobians='onePass'), one esym.Function per connector or joint in the variables of its bodies and nodes, z and t; equal to the chain rule to 1.2e-19, the system Jacobian 5.7 times faster, SolveGeneralizedAlpha 1.6 times; the default stays chainRule until decided. [log](exudynRevisionLog2026c.md#rg12-51-4-3)
 
+##### **CLOSED_RG12.51.4.4** The one-pass Jacobians of connectors and joints the only method; the chain rule removed
+
+CLOSED 2026-10-29 (#3169; maintainer 2026-10-29: yes, onePass, remove the chain-rule code): the argument itemJacobians removed (not released), _ConnectorJacobian and _JointJacobian by _ItemFunction, about 120 lines less; symbolicSystemItemJacobiansTest.py against central differences 1.0e-13 and SolveDynamic 5.1e-12. [log](exudynRevisionLog2026c.md#rg12-51-4-4)
+
 #### **OPEN_RG12.51.5** Export the equations of motion: the programs, the sparsity pattern and the scatter as C++ and Python
 
 Design §1 G1, with a small driver that evaluates them outside Exudyn.

@@ -10,13 +10,13 @@ You can view and download this file on Github: [symbolicSystemItemJacobiansTest.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  The Jacobians of the connectors and joints of SymbolicSystem by itemJacobians='onePass' (#3166): the
-#           generalized forces of a connector - the constraint equations and reaction forces of a joint - as one
-#           expression of the coordinates of its bodies and nodes, differentiated in one pass per body or node, against
-#           the chain rule of itemJacobians='chainRule'. Rigid bodies on revolute, prismatic and spherical joints, a
-#           distance constraint to a mass point, spring-dampers between bodies, mass points and the ground, and a
-#           torsional spring-damper. The Jacobian of the system with the factors of a Newton step agrees to rounding,
-#           and SolveGeneralizedAlpha gives the same solution with both; the times are printed, not judged.
+# Details:  The Jacobians of the connectors and joints of SymbolicSystem (#3166): the generalized forces of a
+#           connector - the constraint equations and reaction forces of a joint - as one expression of the coordinates
+#           of its bodies and nodes, differentiated in one pass per body or node. Rigid bodies on revolute, prismatic and
+#           spherical joints, a distance constraint to a mass point, spring-dampers between bodies, mass points and the
+#           ground, and a torsional spring-damper. The Jacobian of the system with the factors of a Newton step equals
+#           the central differences of SymbolicSystemBase, and SolveGeneralizedAlpha equals SolveDynamic; the times are
+#           printed, not judged.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-29
@@ -28,7 +28,7 @@ You can view and download this file on Github: [symbolicSystemItemJacobiansTest.
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.symbolics.userItems import UserItemCreator
-from exudyn.symbolics.systemModel import SymbolicSystem
+from exudyn.symbolics.systemModel import SymbolicSystem, SymbolicSystemBase
 from exudyn.symbolics.solvers import SolveGeneralizedAlpha
 import numpy as np
 import time
@@ -62,30 +62,27 @@ creator.CreateSpringDamper(itemNumbers=[point, point2], stiffness=100, damping=1
 creator.Record()
 mbs.Assemble()
 
-systems = {method: SymbolicSystem(mbs, itemJacobians=method) for method in ['chainRule', 'onePass']}
-exu.Print(systems['onePass'])
+system = SymbolicSystem(mbs)
+exu.Print(system)
 
 #the Jacobian of all equations with the factors of a Newton step of the generalized-alpha method, at a perturbed state
-system = systems['chainRule']
 (q0, q_t0) = system.InitialState()
 rng = np.random.default_rng(3)
 state = (q0 + 0.05*rng.standard_normal(system.nODE2), q_t0 + 0.1*rng.standard_normal(system.nODE2),
          rng.standard_normal(system.nODE2), np.zeros(0), np.zeros(0), rng.standard_normal(system.nAE), 0.1)
 factors = dict(factor_q=1., factor_q_t=30., factor_q_tt=4000.)
-jacobians = {}
-for (method, s) in systems.items():
-    start = time.perf_counter()
-    jacobians[method] = s.SystemJacobian(*state, **factors) #the first call builds the functions of onePass
-    timeFirst = time.perf_counter() - start
-    start = time.perf_counter()
-    for k in range(10):
-        s.SystemJacobian(*state, **factors)
-    exu.Print(method, ': time of the first SystemJacobian', round(timeFirst*1e3, 3), 'ms, of each further one',
-              round((time.perf_counter() - start)/10*1e3, 3), 'ms')
-differenceJacobian = np.max(np.abs(jacobians['onePass'] - jacobians['chainRule']))/np.max(np.abs(jacobians['chainRule']))
-exu.Print('onePass against chainRule: Jacobian', differenceJacobian)
+start = time.perf_counter()
+jacobian = system.SystemJacobian(*state, **factors) #the first call builds the functions of the items
+timeFirst = time.perf_counter() - start
+start = time.perf_counter()
+for k in range(10):
+    system.SystemJacobian(*state, **factors)
+exu.Print('time of the first SystemJacobian', round(timeFirst*1e3, 3), 'ms, of each further one',
+          round((time.perf_counter() - start)/10*1e3, 3), 'ms')
+differenceJacobian = np.max(np.abs(jacobian - SymbolicSystemBase.SystemJacobian(system, *state, **factors)))/np.max(np.abs(jacobian))
+exu.Print('Jacobian against central differences', differenceJacobian)
 
-#SolveGeneralizedAlpha with both
+#SolveGeneralizedAlpha against SolveDynamic
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 50
 simulationSettings.timeIntegration.endTime = 0.05
@@ -93,15 +90,18 @@ simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-13
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-14
 simulationSettings.solution.file.write = False
-solutions = {}
-for (method, s) in systems.items():
-    start = time.perf_counter()
-    solutions[method] = SolveGeneralizedAlpha(s, simulationSettings)['q'][-1]
-    exu.Print(method, ': time of SolveGeneralizedAlpha', round(time.perf_counter() - start, 4), 's')
-differenceSolver = np.max(np.abs(solutions['onePass'] - solutions['chainRule']))/np.max(np.abs(solutions['chainRule']))
-exu.Print('onePass against chainRule: solution', differenceSolver)
+start = time.perf_counter()
+mbs.SolveDynamic(simulationSettings)
+timeExudyn = time.perf_counter() - start
+qExudyn = np.array(mbs.systemData.GetODE2Coordinates())
+start = time.perf_counter()
+qSymbolic = SolveGeneralizedAlpha(system, simulationSettings)['q'][-1]
+timeSymbolic = time.perf_counter() - start
+differenceSolver = np.max(np.abs(qSymbolic - qExudyn))/np.max(np.abs(qExudyn))
+exu.Print('SolveGeneralizedAlpha against SolveDynamic', differenceSolver, '; time of SolveDynamic', round(timeExudyn, 4),
+          's, of SolveGeneralizedAlpha', round(timeSymbolic, 4), 's')
 
-u = 1 + int(not differenceJacobian < 1e-12) + int(not differenceSolver < 1e-10)
+u = 1 + int(not differenceJacobian < 1e-7) + int(not differenceSolver < 1e-9)
 exu.Print('solution of symbolicSystemItemJacobiansTest=', u)
 
 exu.sys['testResult'] = u

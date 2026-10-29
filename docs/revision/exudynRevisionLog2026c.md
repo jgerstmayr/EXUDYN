@@ -4613,3 +4613,15 @@ per node. If 'always nodes' is easier to implement, that is also ok ... ltg-maps
   this on the recording's expressions; it is not wired into the items yet (RG14, RG12.51.5).
 - New sub-step RG12.65.7 (#3168): sparse matrices in the table (maintainer 2026-10-29).
 - docs/dev/design/symbolicSystem.md sections 2 and 12.7, the module description, revisions.md.
+
+<a id="rg12-51-4-4"></a>
+### RG12.51.4.4 — the one-pass Jacobians the only method (2026-10-29, #3169)
+*(Maintainer 2026-10-29: "RG12.51.4.3: yes, implement your recommendation with onePass and remove the chain-rule code".)*
+- python/exudyn/symbolics/systemModel.py: the argument `itemJacobians` of SymbolicSystem removed (introduced by #3166,
+  not released, no deprecation); the chain-rule `_ConnectorJacobian` and `_JointJacobian` removed, the one-pass
+  versions take their names; `_ConnectorStates`, `_JointArguments`, `_RecordingJacobian` and `_BodyJacobian` stay for
+  the equations and the loads.
+- python/TestModels/symbolicSystemItemJacobiansTest.py: the Jacobian against the central differences of
+  SymbolicSystemBase (1.0e-13), SolveGeneralizedAlpha against SolveDynamic (5.1e-12); symbolicSystemJointsTest.py
+  (1.2e-13, 1.1e-11) and symbolicUserRigidBodiesTest.py (9.1e-11) unchanged in their results.
+- docs/dev/design/symbolicSystem.md, revisions.md.

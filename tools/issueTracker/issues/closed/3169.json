@@ -1,0 +1,15 @@
+{
+  "number": 3169,
+  "title": "SymbolicSystem: the one-pass Jacobians of connectors and joints the only method, the chain rule removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-29: implement the recommendation of #3166 - onePass the method, the chain-rule code removed. The argument itemJacobians, introduced by #3166 and not released, goes; _ConnectorJacobian and _JointJacobian are the one-pass derivatives of _ItemFunction; symbolicSystemItemJacobiansTest.py against the central differences of SymbolicSystemBase and SolveDynamic.",
+  "dateRaised": "2026-10-29",
+  "deadline": "2027-04-27",
+  "dateResolved": "2026-10-29 23:46",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SymbolicSystem: the Jacobians of the connectors and joints by the one-pass derivative of one expression per item, the only method; the argument itemJacobians and the chain rule written by hand removed",
+  "resolvedInVersion": "1.13.267"
+}

@@ -459,7 +459,7 @@ drawing of the joints (RG12.55.7, #3147), the node count (RG12.61, #3142) and Ob
 |---|---|---|
 | user items (`UserItemCreator`) | ground, mass point, rigid body, spring-damper, torsional spring-damper, force, revolute, prismatic, spherical and distance joint - equal to the built-in items to the Newton tolerance | the sphere-sphere contact (RG12.55.5); the joints are not drawn (#3147); free axes of the spherical joint and nodes in the distance constraint are refused |
 | `SymbolicSystem` | ObjectUserBody, ObjectGenericODE2, ObjectConnectorUser on point, body and ground markers, ObjectJointUser, ObjectGenericODE1 (#3144), the four loads; two composed recordings (forces, mass matrix); the constraints and reaction forces in `Equations()` (#3146) | data coordinates (RG12.66, #3158) |
-| solvers in Python | explicit Euler, RK44, velocity Verlet (with the inverse per body), generalized-alpha with ODE1 coordinates and index-3 constraints, all equal to `SolveDynamic` | with joints 7 times slower than `SolveDynamic` with the exact Jacobian (#3145), less with `itemJacobians='onePass'` (#3166); index 2 refused |
+| solvers in Python | explicit Euler, RK44, velocity Verlet (with the inverse per body), generalized-alpha with ODE1 coordinates and index-3 constraints, all equal to `SolveDynamic` | with joints 4 to 5 times slower than `SolveDynamic`, the Jacobians of the connectors and joints in one pass (#3145, #3166); index 2 refused |
 | derivatives | `Diff` of vectors and matrices (#3115), the one pass over a flat program (#3116), pow without the log term (#3135) | the derivative as a new program (RG12.54.2, #3108) |
 | export | a recording as Python, numpy, symbolic, sympy and C++ text; `Equations()` and `GetFlatProgram()` of the system | the whole system with its sparsity and scatter (RG12.51.5) |
 | GPU | the experiment of RG14.2.1 | RG14.2.2 to RG14.4 |
@@ -615,8 +615,8 @@ and a fixed marker depend on q. C makes that a part of exudyn.symbolic:
 - **The marker states as expressions of them**: `MarkerPosition(marker)`, `MarkerRotation(marker)`, ... of the set
   return expressions of the system variables - of the node coordinates for a node marker, through the recorded
   functions of the user body for a body marker, constants for the ground. A connector recording composed with them is
-  a function of the system coordinates, and its Jacobian follows by the one-pass derivative, without the composition
-  rules of `_ConnectorJacobian` and `_JointJacobian`.
+  a function of the system coordinates, and its Jacobian follows by the one-pass derivative, without composition
+  rules written by hand.
 - What `SymbolicSystem` does with this by hand becomes the use of the set, so `Equations()`, the Jacobians and the
   export share one composition. Built-in bodies need their own recordings for it (#3048), as before.
 - **Done** (RG12.63, #3151), in Python, as the marker kinematics are there: `SystemVariables(system)` of
@@ -624,17 +624,16 @@ and a fixed marker depend on q. C makes that a part of exudyn.symbolic:
   coordinates until step RG12.66, #3158), and `MarkerPosition`, `MarkerVelocity`, `MarkerRotationMatrix`, `MarkerAngularVelocity` of a marker,
   `Function(result)` - an `esym.Function` of the set - and `Equations()` in these variables. One marker is composed by
   `_MarkerData` and `_MarkerState`, which the connectors, the joints and the set share.
-- **The Jacobians of connectors and joints** (RG12.51.4.3, #3166): `SymbolicSystem(mbs, itemJacobians=...)`.
-  `'chainRule'` (the default) composes them by hand in `_ConnectorJacobian` and `_JointJacobian` - the derivatives of
-  the recordings by the marker states times the marker Jacobians, plus the terms of marker Jacobians that depend on q.
-  `'onePass'` builds per connector one `esym.Function` of its generalized forces - per joint of its constraint
+- **The Jacobians of connectors and joints** (RG12.51.4.3, #3166, #3169): `_ItemFunction` builds per connector one
+  `esym.Function` of its generalized forces - per joint of its constraint
   equations and reaction forces C_q^T z, one vector - by the composition of `Equations()`, in the variables `q<g>`,
   `q_t<g>` of each body or node g of its markers (one variable of all its coordinates if a node marker is on a node of
   a body marker), `z` of a joint and `t`; the Jacobian is one EvaluateJacobian per body or node, its columns
-  scattered by the ltg of the item. Measured (symbolicSystemItemJacobiansTest.py: 4 rigid bodies, 2 mass points, 5
-  joints, 4 connectors): the Jacobian of the system equal to 1.2e-19 relative, 0.49 ms instead of 2.8 ms per
-  evaluation after a first one of 14.5 ms that builds the functions; SolveGeneralizedAlpha 0.15 s instead of 0.24 s,
-  the solutions equal to 7e-15. The other coordinates an item may depend on enter as further variables: ODE1
+  scattered by the ltg of the item (`_ConnectorJacobian`, `_JointJacobian`). Measured
+  (symbolicSystemItemJacobiansTest.py: 4 rigid bodies, 2 mass points, 5 joints, 4 connectors) against the chain rule
+  written by hand that it replaced: the Jacobian of the system equal to 1.2e-19 relative, 0.49 ms instead of 2.8 ms
+  per evaluation after a first one of 14.5 ms that builds the functions; SolveGeneralizedAlpha 0.15 s instead of
+  0.24 s. The other coordinates an item may depend on enter as further variables: ODE1
   coordinates (ObjectConnectorHydraulicActuatorSimple, not taken by SymbolicSystem), data coordinates (RG12.66, #3158).
 
 **The parameters as named variables in the parameters of the user items** (maintainer 2026-10-28; step RG12.64,

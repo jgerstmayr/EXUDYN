@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 261 | 1.13.266 |
+| 1.13 | Newborn | 262 | 1.13.267 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.267** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem: the one-pass Jacobians of connectors and joints the only method, the chain rule removed (#3169)
+  - description: Maintainer 2026-10-29: implement the recommendation of \#3166 - onePass the method, the chain-rule code removed. The argument itemJacobians, introduced by \#3166 and not released, goes; \_ConnectorJacobian and \_JointJacobian are the one-pass derivatives of \_ItemFunction; symbolicSystemItemJacobiansTest.py against the central differences of SymbolicSystemBase and SolveDynamic.
+  - **notes:** SymbolicSystem: the Jacobians of the connectors and joints by the one-pass derivative of one expression per item, the only method; the argument itemJacobians and the chain rule written by hand removed
+  - date resolved: **2026-10-29 23:46**, date raised: 2026-10-29
 - **1.13.266** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: the derivative as new nodes, a column of the table of operations (#3163)
   - description: Superseding \#3108 (maintainer 2026-10-29: check whether RG12.54.2 is still needed with the table). The numbers of a Jacobian are given by the one-pass forward derivative (\#3116), the table and SymbolicProgram (\#3157). Still needed is the Jacobian as an expression - a flat program of its own - for the export of the Newton matrix (G1, numpy, sympy), the uniform evaluation on the GPU (RG14) and second derivatives: per operation code its derivative as new nodes from the derivatives of the operands, a column of the table instead of a function per node class, then Optimize; its cost and size against the one-pass derivative. After stage 3 of \#3153.
   - **notes:** esym.Jacobian(expression, variable, optimize=True): the derivative of an exudyn.symbolic Real or Vector by a named Real or Vector as new expressions, each operation by the rule of the table of operations, vector and matrix operations kept as such; it can be evaluated, recorded, exported and differentiated again (Hessians)
