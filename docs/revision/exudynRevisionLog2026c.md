@@ -4518,3 +4518,19 @@ replaced by specific names; "symbolicUtilities.py was not part of 1.13.6 ... sti
   pages removed), pyproject.toml, the test models, the examples, docs/dev (README, internals/symbolic.md, the design
   notes) and docs/manual; the imports of misc.symbolicSystem split into systemModel and solvers. The closed plan steps
   and log entries keep the old names, as they were then.
+
+<a id="rg9-10-1"></a>
+### RG9.10.1 — ObjectGenericDAE, the design note (2026-10-29, #3143)
+*(Maintainer 2026-10-29: "RG9.10 is good to go now"; the step says: first a design note with the equations, the C++
+class and the changes of the solvers.)*
+- docs/dev/design/genericDAE.md: the equations with Exudyn's LHS/RHS convention, the parameters (the names of
+  ObjectGenericODE2 and ObjectGenericODE1 and the new coupling and constraint matrices), the user functions with
+  (mbs, t, itemNumber, q, q_t, y, ..., parameters), the C++ class as a body with several nodes, ODE1 coordinates and
+  algebraic equations of its own.
+- Read in the C++: CSystem::JacobianODE2RHS adds the block ODE2-ODE1 only numerically and only in the branch of a
+  numerical ODE2 Jacobian; CSystem::NumericalJacobianODE1RHS is the only Jacobian of the ODE1 rows; CObject has no
+  analytic ODE1 Jacobian. CSolverImplicitSecondOrder::ComputeNewtonResidual has the ODE1 rows g - y_t without
+  C_y^T lambda, while CSystem::JacobianAE puts the transposed AE_ODE1 block into the ODE1 rows of the Jacobian, and
+  ComputeODE2ProjectedReactionForces raises for AE_ODE1; no item gives AE_ODE1, so no present model is affected.
+- Sub-steps RG9.10.2 to .5: the solver, the item, the symbolic user functions, SymbolicSystem. Decisions asked: the
+  analytic ODE1 Jacobians (recommended) or numerical blocks as interim; one jacobianUserFunction of all blocks.
