@@ -614,7 +614,7 @@ and a fixed marker depend on q. C makes that a part of exudyn.symbolic:
   export share one composition. Built-in bodies need their own recordings for it (#3048), as before.
 - **Done** (RG12.63, #3151), in Python, as the marker kinematics are there: `SystemVariables(system)` of
   symbolicSystem.py, a `VariableSet` of `q`, `q_t`, `y`, `y_t`, `z` and `t` (no `data`: SymbolicSystem refuses data
-  coordinates), and `MarkerPosition`, `MarkerVelocity`, `MarkerRotationMatrix`, `MarkerAngularVelocity` of a marker,
+  coordinates until step RG12.66, #3158), and `MarkerPosition`, `MarkerVelocity`, `MarkerRotationMatrix`, `MarkerAngularVelocity` of a marker,
   `Function(result)` - an `esym.Function` of the set - and `Equations()` in these variables. One marker is composed by
   `_MarkerData` and `_MarkerState`, which the connectors, the joints and the set share. Open: `_ConnectorJacobian` and
   `_JointJacobian` still compose their Jacobians by hand; with the set they could be the one-pass derivative of the
@@ -644,7 +644,8 @@ shared by several items is one variable. Checked (2026-10-28):
   against the numbers of the items and passes them per item in `Equations()` (sympy: the symbol of the name), whose
   result `'parameters'` lists them and whose export takes them as arguments; the composed system of the evaluation
   keeps the numbers. `SetParameterValues(values)` sets the variables, writes the items and builds the system again.
-  Not yet: the inertia of `CreateRigidBody` and the joints, whose parameters are not single values given by the user.
+  Not yet: the inertia of `CreateRigidBody` and the joints, whose parameters are not single values given by the user;
+  the general solution, parameters of any structure for every item, is step RG12.67 (#3159).
 
 **R1, the table of operations, revised** (maintainer 2026-10-28: "important to go that way"; step RG12.65, #3153):
 
