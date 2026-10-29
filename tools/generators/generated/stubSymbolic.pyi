@@ -280,6 +280,19 @@ def GetTableEvaluation() -> bool:
     """True, if the symbolic user functions are evaluated by the table of operations, see SetTableEvaluation (#3157)."""
     ...
 @overload
+def Jacobian(expression: Any, variable: Any, optimize: bool=True) -> Any: 
+    """The derivative of an esym.Real or Vector by a named esym.Real or Vector as new expressions, not as numbers: of a Real by a Real a Real, by a Vector the Vector of the derivatives by its components; of a Vector by a Real a Vector, by a Vector the Jacobian Matrix.
+    
+    Each operation is differentiated by the rule of its row of the table of operations, the rules of the one-pass derivative of EvaluateJacobian; vector and matrix operations stay vector and matrix operations of the derivatives. The result is an expression as any other: it can be evaluated, recorded by esym.Function, exported by GetFlatProgram and differentiated again, for second derivatives. optimize=True applies Optimize(level=1). Operations without a rule - abs, min, max, mod - raise (#3163)
+    
+    Examples:
+        x = esym.Vector('x', [1., 2.])
+        f = esym.Vector([x[0]*x[1], esym.sin(x[0])])
+        J = esym.Jacobian(f, x) #a 2x2 esym.Matrix
+        H = esym.Jacobian(esym.Jacobian(x[0]**2*x[1], x), x) #the Hessian
+    """
+    ...
+@overload
 def GetStatistics(expressions: Any, detailed: bool=False) -> dict: 
     """The counts of the nodes of one esym.Real, Vector or Matrix, or of a list of them together, by one traversal of the graph, a dict: nodes (the distinct nodes of the graph), operations, leaves (numbers, variables, item outputs), shared (the nodes used by more than one operation), depth (as GetDepth), treeSize (the nodes counted once per path, as str() of a tree and the tree Diff walk them; a float), flatOperations (the operations the flat program writes, as GetFlatProgram() counts them), tableOperations (those of them computed by the table of operations, the scalar operations of scalar operands, #3160); detailed=True also byOperation (the count per operation of the flat program, '+', 'sin', 'number', 'variable', 'itemOutput', ...) and byKind (per Real, Vector and Matrix) (#3142).
     

@@ -22,6 +22,8 @@ namespace py = pybind11;
 
 #include "Linalg/Symbolic.h"
 #include "Linalg/SymbolicTable.h"
+#include "Linalg/SymbolicVector.h" //the derivative as new nodes
+#include "Linalg/SymbolicMatrix.h"
 
 namespace Symbolic
 {
@@ -498,6 +500,338 @@ void SymbolicProgram::Differentiate(const void* variable, Index n, bool scalarVa
 		ForwardDerivative(rule, step.node, slots[k], operandValues.data(), operandDerivatives.data(),
 			SlotComponents(step.node, slots[k]), n, derivatives.data() + derivativeOffsets[k], variable, scalarVariable);
 	}
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//THE DERIVATIVE AS NEW NODES (#3163): per operation its derivative by one component of the variable, an expression of
+//the operands and of the derivatives of the operands, by the rule of the table - the same rules as ForwardDerivative,
+//which computes their numbers
+
+//! a derivative of one slot by one component of the variable: zero, or an expression of the kind of the slot
+struct SymbolicDerivativeValue
+{
+	bool zero = true;
+	SReal real;
+	SymbolicRealVector vector;
+	SymbolicRealMatrix matrix;
+};
+
+//! the expression of a node of the recording, as the operand of a derivative
+struct SymbolicOperand
+{
+	SReal real;
+	SymbolicRealVector vector;
+	SymbolicRealMatrix matrix;
+	SymbolicOperand(const FlatNode& node)
+	{
+		switch (node.kind)
+		{
+		case FlatKind::Real: real = SReal((ExpressionBase*)node.node); break;
+		case FlatKind::Vector: vector = SymbolicRealVector((VectorExpressionBase*)node.node); break;
+		default: matrix = SymbolicRealMatrix((MatrixExpressionBase*)node.node); break;
+		}
+	}
+};
+
+static SymbolicDerivativeValue DerivativeOfReal(const SReal& x) { SymbolicDerivativeValue d; d.zero = false; d.real = x; return d; }
+static SymbolicDerivativeValue DerivativeOfVector(const SymbolicRealVector& x) { SymbolicDerivativeValue d; d.zero = false; d.vector = x; return d; }
+static SymbolicDerivativeValue DerivativeOfMatrix(const SymbolicRealMatrix& x) { SymbolicDerivativeValue d; d.zero = false; d.matrix = x; return d; }
+
+//! a vector of scalar expressions, a node "vector" of the recording
+static SymbolicRealVector VectorOfComponents(const std::vector<SReal>& components)
+{
+	VectorExpressionBase::NewCount()++;
+	VectorExpressionSReal* e = new VectorExpressionSReal(components); //referenced once by itself
+	SymbolicRealVector result(e);
+	e->DecreaseReferenceCounter();
+	return result;
+}
+
+//! a matrix of scalar expressions, a node "matrix" of the recording
+static SymbolicRealMatrix MatrixOfComponents(const std::vector<std::vector<SReal>>& components)
+{
+	MatrixExpressionBase::NewCount()++;
+	return SymbolicRealMatrix(new MatrixExpressionSReal(components));
+}
+
+//! the derivative of operation k by one component j of the variable, by its rule; d: the derivatives of its operands
+static SymbolicDerivativeValue SymbolicDerivativeOfOperation(int rule, const FlatNode& node, const FlatValue& value,
+	const SymbolicOperand& f, const std::vector<const SymbolicOperand*>& x, const std::vector<const SymbolicDerivativeValue*>& d)
+{
+	auto IsZero = [](Index i, const std::vector<const SymbolicDerivativeValue*>& d) { return d[i]->zero; };
+	SymbolicDerivativeValue result;
+	switch (rule)
+	{
+	case Zero: return result;
+	case RealIfThenElse:
+		if (IsZero(1, d) && IsZero(2, d)) { return result; }
+		return DerivativeOfReal(SReal::IfThenElse(x[0]->real, IsZero(1, d) ? SReal(0.) : d[1]->real, IsZero(2, d) ? SReal(0.) : d[2]->real));
+	case RealPlus: case RealMinus:
+		if (IsZero(1, d)) { return *d[0]; }
+		if (IsZero(0, d)) { return DerivativeOfReal(rule == RealPlus ? d[1]->real : -d[1]->real); }
+		return DerivativeOfReal(rule == RealPlus ? d[0]->real + d[1]->real : d[0]->real - d[1]->real);
+	case RealPos: return *d[0];
+	case RealNeg: return IsZero(0, d) ? result : DerivativeOfReal(-d[0]->real);
+	case RealMul:
+		if (IsZero(1, d)) { return IsZero(0, d) ? result : DerivativeOfReal(d[0]->real*x[1]->real); }
+		if (IsZero(0, d)) { return DerivativeOfReal(x[0]->real*d[1]->real); }
+		return DerivativeOfReal(d[0]->real*x[1]->real + x[0]->real*d[1]->real);
+	case RealDiv: //(dx0 - f dx1)/x1
+		if (IsZero(1, d)) { return IsZero(0, d) ? result : DerivativeOfReal(d[0]->real/x[1]->real); }
+		if (IsZero(0, d)) { return DerivativeOfReal(-(f.real*d[1]->real)/x[1]->real); }
+		return DerivativeOfReal((d[0]->real - f.real*d[1]->real)/x[1]->real);
+	case RealPow: //b a^(b-1) da + log(a) a^b db
+	{
+		SymbolicDerivativeValue byBase, byExponent;
+		if (!IsZero(0, d)) { byBase = DerivativeOfReal(x[1]->real*SReal::pow(x[0]->real, x[1]->real - SReal(1.))*d[0]->real); }
+		if (IsZero(1, d)) { return byBase; }
+		byExponent = DerivativeOfReal(SReal::log(x[0]->real)*f.real*d[1]->real);
+		return byBase.zero ? byExponent : DerivativeOfReal(byBase.real + byExponent.real);
+	}
+	case RealAtan2: //(x dy - y dx)/(x^2 + y^2) of atan2(y, x)
+	{
+		if (IsZero(0, d) && IsZero(1, d)) { return result; }
+		SReal denominator = x[0]->real*x[0]->real + x[1]->real*x[1]->real;
+		if (IsZero(1, d)) { return DerivativeOfReal(x[1]->real*d[0]->real/denominator); }
+		if (IsZero(0, d)) { return DerivativeOfReal(-(x[0]->real*d[1]->real)/denominator); }
+		return DerivativeOfReal((x[1]->real*d[0]->real - x[0]->real*d[1]->real)/denominator);
+	}
+	case RealSin: case RealCos: case RealTan: case RealExp: case RealLog: case RealSqrt: case RealASin: case RealACos:
+	case RealATan: case RealSinh: case RealCosh: case RealTanh: case RealASinh: case RealACosh: case RealATanh:
+	{
+		if (IsZero(0, d)) { return result; }
+		const SReal& a = x[0]->real;
+		const SReal& da = d[0]->real;
+		switch (rule) //f'(a) da
+		{
+		case RealSin: return DerivativeOfReal(SReal::cos(a)*da);
+		case RealCos: return DerivativeOfReal(-(SReal::sin(a)*da));
+		case RealTan: return DerivativeOfReal((SReal(1.) + f.real*f.real)*da);
+		case RealExp: return DerivativeOfReal(f.real*da);
+		case RealLog: return DerivativeOfReal(da/a);
+		case RealSqrt: return DerivativeOfReal(da/(SReal(2.)*f.real));
+		case RealASin: return DerivativeOfReal(da/SReal::sqrt(SReal(1.) - a*a));
+		case RealACos: return DerivativeOfReal(-(da/SReal::sqrt(SReal(1.) - a*a)));
+		case RealATan: return DerivativeOfReal(da/(SReal(1.) + a*a));
+		case RealSinh: return DerivativeOfReal(SReal::cosh(a)*da);
+		case RealCosh: return DerivativeOfReal(SReal::sinh(a)*da);
+		case RealTanh: return DerivativeOfReal((SReal(1.) - f.real*f.real)*da);
+		case RealASinh: return DerivativeOfReal(da/SReal::sqrt(a*a + SReal(1.)));
+		case RealACosh: return DerivativeOfReal(da/SReal::sqrt(a*a - SReal(1.)));
+		default: return DerivativeOfReal(da/(SReal(1.) - a*a)); //atanh
+		}
+	}
+	case RealDot:
+		if (IsZero(1, d)) { return IsZero(0, d) ? result : DerivativeOfReal(d[0]->vector*x[1]->vector); }
+		if (IsZero(0, d)) { return DerivativeOfReal(x[0]->vector*d[1]->vector); }
+		return DerivativeOfReal(d[0]->vector*x[1]->vector + x[0]->vector*d[1]->vector);
+	case RealNorm: return IsZero(0, d) ? result : DerivativeOfReal((x[0]->vector*d[0]->vector)/f.real);
+	case RealVectorComponent: return IsZero(0, d) ? result : DerivativeOfReal(d[0]->vector[x[1]->real]);
+	case RealMatrixComponent: return IsZero(0, d) ? result : DerivativeOfReal(d[0]->matrix(x[1]->real, x[2]->real));
+	case VectorComponents: case MatrixComponents: //component c is operand c
+	{
+		bool allZero = true;
+		for (const SymbolicDerivativeValue* operand : d) { allZero &= operand->zero; }
+		if (allZero) { return result; }
+		if (rule == VectorComponents)
+		{
+			std::vector<SReal> components;
+			for (const SymbolicDerivativeValue* operand : d) { components.push_back(operand->zero ? SReal(0.) : operand->real); }
+			return DerivativeOfVector(VectorOfComponents(components));
+		}
+		Index rows = value.matrix->NumberOfRows(), columns = value.matrix->NumberOfColumns();
+		std::vector<std::vector<SReal>> components(rows, std::vector<SReal>(columns));
+		for (Index c = 0; c < rows*columns; c++) { components[c/columns][c%columns] = d[c]->zero ? SReal(0.) : d[c]->real; }
+		return DerivativeOfMatrix(MatrixOfComponents(components));
+	}
+	case VectorPlus: case VectorMinus:
+		if (IsZero(1, d)) { return *d[0]; }
+		if (IsZero(0, d)) { return DerivativeOfVector(rule == VectorPlus ? d[1]->vector : -d[1]->vector); }
+		return DerivativeOfVector(rule == VectorPlus ? d[0]->vector + d[1]->vector : d[0]->vector - d[1]->vector);
+	case MatrixPlus: case MatrixMinus:
+		if (IsZero(1, d)) { return *d[0]; }
+		if (IsZero(0, d)) { return DerivativeOfMatrix(rule == MatrixPlus ? d[1]->matrix : SReal(-1.)*d[1]->matrix); }
+		return DerivativeOfMatrix(rule == MatrixPlus ? d[0]->matrix + d[1]->matrix : d[0]->matrix - d[1]->matrix);
+	case VectorPos: case MatrixPos: return *d[0];
+	case VectorNeg: return IsZero(0, d) ? result : DerivativeOfVector(-d[0]->vector);
+	case MatrixNeg: return IsZero(0, d) ? result : DerivativeOfMatrix(SReal(-1.)*d[0]->matrix);
+	case VectorScalar: //s x: ds x + s dx
+		if (IsZero(1, d)) { return IsZero(0, d) ? result : DerivativeOfVector(d[0]->real*x[1]->vector); }
+		if (IsZero(0, d)) { return DerivativeOfVector(x[0]->real*d[1]->vector); }
+		return DerivativeOfVector(d[0]->real*x[1]->vector + x[0]->real*d[1]->vector);
+	case MatrixScalar:
+		if (IsZero(1, d)) { return IsZero(0, d) ? result : DerivativeOfMatrix(d[0]->real*x[1]->matrix); }
+		if (IsZero(0, d)) { return DerivativeOfMatrix(x[0]->real*d[1]->matrix); }
+		return DerivativeOfMatrix(d[0]->real*x[1]->matrix + x[0]->real*d[1]->matrix);
+	case VectorMultiply:
+	{
+		SymbolicRealVector a = x[0]->vector, b = x[1]->vector;
+		if (IsZero(1, d)) { return IsZero(0, d) ? result : DerivativeOfVector(SymbolicRealVector(d[0]->vector).MultComponents(b)); }
+		if (IsZero(0, d)) { return DerivativeOfVector(a.MultComponents(d[1]->vector)); }
+		return DerivativeOfVector(SymbolicRealVector(d[0]->vector).MultComponents(b) + a.MultComponents(d[1]->vector));
+	}
+	case VectorMatrixVector: //A x: dA x + A dx
+		if (IsZero(1, d)) { return IsZero(0, d) ? result : DerivativeOfVector(d[0]->matrix*x[1]->vector); }
+		if (IsZero(0, d)) { return DerivativeOfVector(x[0]->matrix*d[1]->vector); }
+		return DerivativeOfVector(d[0]->matrix*x[1]->vector + x[0]->matrix*d[1]->vector);
+	case VectorMatrixTransposedVector: //A^T x, written x A: x dA + dx A
+		if (IsZero(1, d)) { return IsZero(0, d) ? result : DerivativeOfVector(x[1]->vector*d[0]->matrix); }
+		if (IsZero(0, d)) { return DerivativeOfVector(d[1]->vector*x[0]->matrix); }
+		return DerivativeOfVector(x[1]->vector*d[0]->matrix + d[1]->vector*x[0]->matrix);
+	case MatrixMatrix: //A B: dA B + A dB
+		if (IsZero(1, d)) { return IsZero(0, d) ? result : DerivativeOfMatrix(d[0]->matrix*x[1]->matrix); }
+		if (IsZero(0, d)) { return DerivativeOfMatrix(x[0]->matrix*d[1]->matrix); }
+		return DerivativeOfMatrix(d[0]->matrix*x[1]->matrix + x[0]->matrix*d[1]->matrix);
+	case MatrixTransposed: return IsZero(0, d) ? result : DerivativeOfMatrix(d[0]->matrix.Transposed());
+	default:
+		CHECKandTHROW(false, STDstring("exudyn.symbolic.Jacobian: the operation '") + OperationName(node)
+			+ "' has no derivative as an expression", ExudynValueError);
+		return result;
+	}
+}
+
+static bool AnyNonzero(const Real* values, Index count)
+{
+	for (Index i = 0; i < count; i++) { if (values[i] != 0.) { return true; } }
+	return false;
+}
+
+//! the derivative of a leaf by component j: the unit vector of the variable, else the constant Diff of the leaf
+static SymbolicDerivativeValue SymbolicDerivativeOfLeaf(const FlatNode& node, const FlatValue& value, const void* variable,
+	Index j, Index n, bool scalarVariable)
+{
+	SymbolicDerivativeValue result;
+	DiffSeed seed(variable, scalarVariable ? -1 : j);
+	switch (node.kind)
+	{
+	case FlatKind::Real:
+	{
+		Real derivative = (node.node == variable) ? 1. : ((const ExpressionBase*)node.node)->Diff(seed);
+		if (derivative != 0.) { result = DerivativeOfReal(SReal(derivative)); }
+		return result;
+	}
+	case FlatKind::Vector:
+	{
+		Vector derivative(value.vector->NumberOfItems(), 0.);
+		if (node.node == variable) { derivative[j] = 1.; }
+		else { derivative.CopyFrom(((const VectorExpressionBase*)node.node)->DiffRef(seed)); }
+		if (AnyNonzero(derivative.GetDataPointer(), derivative.NumberOfItems())) { result = DerivativeOfVector(SymbolicRealVector(derivative)); }
+		return result;
+	}
+	default:
+	{
+		Matrix derivative(value.matrix->NumberOfRows(), value.matrix->NumberOfColumns(), 0.);
+		if (node.node == variable) { derivative.GetDataPointer()[j] = 1.; }
+		else { derivative.CopyFrom(((const MatrixExpressionBase*)node.node)->DiffRef(seed)); }
+		if (AnyNonzero(derivative.GetDataPointer(), derivative.NumberOfRows()*derivative.NumberOfColumns())) { result = DerivativeOfMatrix(SymbolicRealMatrix(derivative)); }
+		return result;
+	}
+	}
+}
+
+//! esym.Jacobian (#3163)
+py::object SymbolicJacobian(const py::object& expression, const py::object& variable)
+{
+	FlatNode root, variableNode;
+	if (py::isinstance<SReal>(expression)) { root = FlatNode(py::cast<const SReal&>(expression).GetExpression()); }
+	else if (py::isinstance<SymbolicRealVector>(expression)) { root = FlatNode(py::cast<const SymbolicRealVector&>(expression).GetExpression()); }
+	else { CHECKandTHROW(false, "exudyn.symbolic.Jacobian: the expression must be an exudyn.symbolic.Real or Vector", ExudynValueError); }
+	bool scalarVariable = py::isinstance<SReal>(variable);
+	Index n = 1;
+	if (scalarVariable)
+	{
+		const SReal& x = py::cast<const SReal&>(variable);
+		CHECKandTHROW(x.IsExpressionNamedReal(), "exudyn.symbolic.Jacobian: the variable must be a named exudyn.symbolic.Real or Vector", ExudynValueError);
+		variableNode = FlatNode(x.GetExpression());
+	}
+	else
+	{
+		CHECKandTHROW(py::isinstance<SymbolicRealVector>(variable) && py::cast<const SymbolicRealVector&>(variable).IsExpressionNamedReal(),
+			"exudyn.symbolic.Jacobian: the variable must be a named exudyn.symbolic.Real or Vector", ExudynValueError);
+		const SymbolicRealVector& x = py::cast<const SymbolicRealVector&>(variable);
+		variableNode = FlatNode(x.GetExpression());
+		n = x.NumberOfItems();
+	}
+	bool vectorResult = (root.kind == FlatKind::Vector);
+	if (root.node == nullptr) //a number: the derivative is zero
+	{
+		Index m = vectorResult ? py::cast<const SymbolicRealVector&>(expression).GetVector().NumberOfItems() : 1;
+		if (!vectorResult) { return scalarVariable ? py::cast(SReal(0.)) : py::cast(SymbolicRealVector(Vector(n, 0.))); }
+		return scalarVariable ? py::cast(SymbolicRealVector(Vector(m, 0.))) : py::cast(SymbolicRealMatrix(Matrix(m, n, 0.)));
+	}
+
+	bool recording = SReal::recordExpressions;
+	SReal::recordExpressions = true; //the operations below build nodes
+	py::object resultObject;
+	try
+	{
+		FlatProgram program;
+		program.Build({ root });
+		program.Evaluate(); //the sizes of the vectors and matrices
+		const Index numberOfOperations = program.NumberOfOperations();
+		std::vector<SymbolicOperand> values;
+		values.reserve(numberOfOperations);
+		std::vector<std::vector<SymbolicDerivativeValue>> derivatives(numberOfOperations, std::vector<SymbolicDerivativeValue>(n));
+		std::vector<FlatKind> kinds;
+		std::vector<const SymbolicOperand*> x;
+		std::vector<const SymbolicDerivativeValue*> d;
+		for (Index k = 0; k < numberOfOperations; k++)
+		{
+			const FlatNode& node = program.OperationNode(k);
+			values.emplace_back(node);
+			Index numberOfOperands = program.NumberOfOperationOperands(k);
+			if (numberOfOperands == 0)
+			{
+				for (Index j = 0; j < n; j++) { derivatives[k][j] = SymbolicDerivativeOfLeaf(node, program.SlotValue(k), variableNode.node, j, n, scalarVariable); }
+				continue;
+			}
+			kinds.resize(numberOfOperands);
+			x.resize(numberOfOperands);
+			d.resize(numberOfOperands);
+			for (Index i = 0; i < numberOfOperands; i++)
+			{
+				Index slot = program.OperandSlot(k, i);
+				kinds[i] = program.OperationNode(slot).kind;
+				x[i] = &values[slot];
+			}
+			int rule = (node.node == variableNode.node) ? (int)Variable : FindDerivativeRule(node, kinds);
+			for (Index j = 0; j < n; j++)
+			{
+				for (Index i = 0; i < numberOfOperands; i++) { d[i] = &derivatives[program.OperandSlot(k, i)][j]; }
+				derivatives[k][j] = SymbolicDerivativeOfOperation(rule, node, program.SlotValue(k), values[k], x, d);
+			}
+		}
+		//the result: of a Real, its derivative or the vector of the n derivatives; of a vector of m components, the
+		//vector of the derivatives or the m x n matrix of their components
+		const std::vector<SymbolicDerivativeValue>& result = derivatives[program.ResultSlot(0)];
+		if (!vectorResult)
+		{
+			std::vector<SReal> components;
+			for (const SymbolicDerivativeValue& value : result) { components.push_back(value.zero ? SReal(0.) : value.real); }
+			resultObject = scalarVariable ? py::cast(components[0]) : py::cast(VectorOfComponents(components));
+		}
+		else
+		{
+			Index m = program.SlotValue(program.ResultSlot(0)).vector->NumberOfItems();
+			if (scalarVariable) { resultObject = result[0].zero ? py::cast(SymbolicRealVector(Vector(m, 0.))) : py::cast(result[0].vector); }
+			else
+			{
+				std::vector<std::vector<SReal>> components(m, std::vector<SReal>(n));
+				for (Index j = 0; j < n; j++)
+				{
+					for (Index c = 0; c < m; c++) { components[c][j] = result[j].zero ? SReal(0.) : SReal(result[j].vector[(Real)c]); }
+				}
+				resultObject = py::cast(MatrixOfComponents(components));
+			}
+		}
+	}
+	catch (...)
+	{
+		SReal::recordExpressions = recording;
+		throw;
+	}
+	SReal::recordExpressions = recording;
+	return resultObject;
 }
 
 } //namespace Symbolic

@@ -2318,9 +2318,13 @@ table, tableOperations counted; results unchanged. [log](exudynRevisionLog2026c.
 
 #3153.
 
-#### **OPEN_RG12.65.6** The derivative as new nodes: a column of the table, the Jacobian as a program of its own
+#### **CLOSED_RG12.65.6** The derivative as new nodes: a column of the table, the Jacobian as a program of its own
 
-#3163 (superseding #3108 of RG12.54.2; maintainer 2026-10-29: check whether it is still needed). For the export of the Newton matrix, the uniform evaluation on the GPU (RG14) and second derivatives; its cost and size against the one-pass derivative. Built on the program of the table; independent of stage 3 since option A (RG12.65.4).
+CLOSED 2026-10-29 (#3163; maintainer 2026-10-29: do it): esym.Jacobian(expression, variable), the derivative as new expressions, each operation by the rule of the table, vector and matrix operations kept, then Optimize; equal to the one-pass derivative to 1.5e-16, the Hessian as the Jacobian of a gradient; 280 operations for a function of 69, 2.7 us against 4.4 us of EvaluateJacobian. [log](exudynRevisionLog2026c.md#rg12-65-6)
+
+#### **OPEN_RG12.65.7** Sparse matrices in the table of operations: a kind of slot with a fixed pattern
+
+#3168 (maintainer 2026-10-29: needed for objects working with sparse matrices; not for now). A matrix of mostly zeros recorded densely, the zeros removed by Optimize; in the table a sparse kind of slot with its pattern fixed at recording, the products and their derivative rules on the pattern, the export as triplets.
 
 ### **OPEN_RG12.66** Data coordinates in the symbolic system: recordings, postNewton steps, solvers
 

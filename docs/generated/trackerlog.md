@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.265.dev1
+- Exudyn version = 1.13.266.dev1
 - last change = 2026-10-29
-- Number of issues = 3168
-- Number of resolved issues = 3042 (265 in current version)
+- Number of issues = 3169
+- Number of resolved issues = 3043 (266 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,11 +9039,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` exudyn.symbolic: sparse matrices in the table of operations (#3168)
+  - description: Maintainer 2026-10-29: some objects work internally with sparse matrices - a 20x20 matrix mostly of zeros, recorded as a dense matrix of components, whose zeros Optimize could remove. Find how the table of operations represents and evaluates such matrices: a sparse matrix as a kind of slot (its pattern fixed at recording, the nonzero components as operands), the matrix-vector and matrix-matrix products and their derivative rules on the pattern, and the export (triplets). Not for now.
+  - date raised: 2026-10-29
 - `CHANGE` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: S. Weyrer` CreateFFRFObject function refinements (#3164)
   - description: make rigid-body node-type selectable through the create function (when the cms object is made) and use localHTList instead of offsets for rigid-body markers to include rotations (proposed 2026-10-29 by S. Weyrer)
-  - date raised: 2026-10-29
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` exudyn.symbolic: the derivative as new nodes, a column of the table of operations (#3163)
-  - description: Superseding \#3108 (maintainer 2026-10-29: check whether RG12.54.2 is still needed with the table). The numbers of a Jacobian are given by the one-pass forward derivative (\#3116), the table and SymbolicProgram (\#3157). Still needed is the Jacobian as an expression - a flat program of its own - for the export of the Newton matrix (G1, numpy, sympy), the uniform evaluation on the GPU (RG14) and second derivatives: per operation code its derivative as new nodes from the derivatives of the operands, a column of the table instead of a function per node class, then Optimize; its cost and size against the one-pass derivative. After stage 3 of \#3153.
   - date raised: 2026-10-29
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic parameters for every item of the symbolic system: a general way beyond the scalar parameters of the user items (#3159)
   - description: Maintainer 2026-10-29: symbolic parameters are required in the long term; named parameters for the inertia of a rigid body and for the joints need a general solution (\#3152 took the scalar parameters of the mass point and the spring-dampers). To design: parameters of any structure (an inertia from mass, inertia tensor and center of mass, the frames and axes of joints, the matrices of ObjectGenericODE2, the values of loads) given as named esym.Real or expressions of them, mapped to the numbers of the items; a parameter set per system (a VariableSet) instead of per item lists; the derivatives by them (sensitivities) through Equations and the composed system; later the C++ items with numerical and symbolic parameters (symbolicUserItems.md section 6).

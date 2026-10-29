@@ -4590,3 +4590,26 @@ per node. If 'always nodes' is easier to implement, that is also ok ... ltg-maps
 - The default stays 'chainRule' until the maintainer decides; with 'onePass' as the default, `_ConnectorJacobian`
   and `_JointJacobian` (about 120 lines) could go.
 - docs/dev/design/symbolicSystem.md section 12.7, revisions.md.
+
+<a id="rg12-65-6"></a>
+### RG12.65.6 — the derivative as new expressions: esym.Jacobian (2026-10-29, #3163)
+*(Maintainer 2026-10-29: "Then do your suggested 1., 2. and 3. steps"; RG12.65.6 independent of stage 3 since option A.)*
+- src/Linalg/SymbolicTable.cpp: `SymbolicJacobian(expression, variable)` - the flat program of the expression, evaluated
+  once for the sizes; per operation and per component j of the variable its derivative as a new expression,
+  `SymbolicDerivativeOfOperation(rule, ...)`, by the rule `FindDerivativeRule` gives - the rules of `ForwardDerivative`,
+  which computes their numbers: the scalar functions, IfThenElse, pow (the term of the exponent only if it depends on
+  the variable), atan2, dot, norm, components, the vector and matrix sums, scalings, products, the products of
+  components and the transpose, as operations of the same kind on the derivatives. A zero derivative is kept as zero,
+  not as a node, so the cost follows the dependencies. A leaf: the unit vector of the variable, else its constant Diff.
+  An operation without a rule - abs, min, max, mod, which the one-pass derivative takes by its Fallback - raises. The result: a
+  Real; a Vector of the derivatives by the components; for a Vector a Vector (by a Real) or the Jacobian Matrix of
+  the components. `FlatProgram::SlotValue(k)` in Symbolic.h.
+- Symbolic.cpp, definitions/pybindSymbolic.py: `esym.Jacobian(expression, variable, optimize=True)`, Optimize level 1.
+- python/TestModels/symbolicJacobianExpressionsTest.py: all rules, against EvaluateJacobian 1.5e-16 (by the vector) and
+  0 (by a Real); the Jacobian of the Jacobian of a scalar equal to its exact Hessian (1.4e-17); abs raises; a number
+  has the zero Jacobian. Sizes and times: the function 69 flat operations, its Jacobian 280; one evaluation of the
+  Jacobian program 2.7 us against 4.4 us of EvaluateJacobian (3 components).
+- The Jacobian of a recorded user function as its own program, for the export of the Newton matrix and the GPU, uses
+  this on the recording's expressions; it is not wired into the items yet (RG14, RG12.51.5).
+- New sub-step RG12.65.7 (#3168): sparse matrices in the table (maintainer 2026-10-29).
+- docs/dev/design/symbolicSystem.md sections 2 and 12.7, the module description, revisions.md.

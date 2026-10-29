@@ -177,6 +177,11 @@ public:
 //! the evaluation of the user functions: True (default), by SymbolicProgram; False, by FlatProgram, the fallback (#3153)
 extern bool symbolicProgramEvaluation;
 
+//! esym.Jacobian(expression, variable) (#3163): the derivative of an exudyn.symbolic Real or Vector by a named Real or
+//! Vector as new expressions - a Real, a Vector of the derivatives by the components, or the Jacobian matrix -, built
+//! in the order of the flat program, each operation by the rule of its row of the table; not optimized
+py::object SymbolicJacobian(const py::object& expression, const py::object& variable);
+
 } //namespace Symbolic
 
 #endif //SYMBOLICTABLE__H

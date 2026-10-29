@@ -132,9 +132,13 @@ next to `NewWithOperands`; differentiating a program with respect to its n input
 n derivative slots per node, most of them zero - kept sparse, so the cost follows the real dependencies. C is the
 runtime form inside C++ for the item Jacobians of RG7.17. D is the subject of RG12.54 (#3108), C of RG12.59 (#3116);
 B, which both need for their check, of RG12.58 (#3115).
-With the table of operations (section 12.7, R1), D is no function per node class but a column of the table, the
-derivative of each operation code as new nodes: step RG12.65.6 (#3163, superseding #3108); C is done (#3116, and by
-`SymbolicProgram`, #3157).
+With the table of operations (section 12.7, R1), D is no function per node class but the rule of the table:
+`esym.Jacobian(expression, variable)` (#3163) differentiates each operation of the flat program by its rule - the
+rules of the one-pass derivative - into new expressions, vector and matrix operations into vector and matrix
+operations of the derivatives, then Optimize; C is done (#3116, and by `SymbolicProgram`, #3157). Measured
+(symbolicJacobianExpressionsTest.py): a function of 6 components of a 3-vector, 69 operations, has a Jacobian
+program of 280 operations, evaluated in 2.7 us against 4.4 us of EvaluateJacobian; equal to it to 1.5e-16, and its
+Jacobian of a gradient is the Hessian.
 
 The marker Jacobians of the joints and connectors (section 3) are derivatives of the marker position and rotation
 programs by D - the reason the earlier plan needed sympy.
@@ -695,5 +699,7 @@ shared by several items is one variable. Checked (2026-10-28):
   of a merged operation is its code; the export (`GetFlatProgramData`) and the count (`GetStatistics`) take the names
   of the table, and the count gives `tableOperations`. The rules of the vector and matrix operations stay with their
   classes until they get codes. All results unchanged.
-- **The decisions that remain**: handles instead of node objects in stage 3, merging equal nodes at recording, and
-  whether the export is written from the table in C++ or stays in Python reading the names of the table.
+- **Stage 3, decided** (maintainer 2026-10-29, RG12.65.4): the expression classes stay and the program is built from
+  the graph after the recording; no handles; equal nodes are not merged while recording, only by Optimize.
+- **Open**: whether the export is written from the table in C++ or stays in Python reading the names of the table;
+  sparse matrices in the table (RG12.65.7).

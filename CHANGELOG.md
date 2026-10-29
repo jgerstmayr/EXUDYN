@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 260 | 1.13.265 |
+| 1.13 | Newborn | 261 | 1.13.266 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.266** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: the derivative as new nodes, a column of the table of operations (#3163)
+  - description: Superseding \#3108 (maintainer 2026-10-29: check whether RG12.54.2 is still needed with the table). The numbers of a Jacobian are given by the one-pass forward derivative (\#3116), the table and SymbolicProgram (\#3157). Still needed is the Jacobian as an expression - a flat program of its own - for the export of the Newton matrix (G1, numpy, sympy), the uniform evaluation on the GPU (RG14) and second derivatives: per operation code its derivative as new nodes from the derivatives of the operands, a column of the table instead of a function per node class, then Optimize; its cost and size against the one-pass derivative. After stage 3 of \#3153.
+  - **notes:** esym.Jacobian(expression, variable, optimize=True): the derivative of an exudyn.symbolic Real or Vector by a named Real or Vector as new expressions, each operation by the rule of the table of operations, vector and matrix operations kept as such; it can be evaluated, recorded, exported and differentiated again (Hessians)
+  - date resolved: **2026-10-29 23:30**, date raised: 2026-10-29
 - **1.13.265** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem: connector and joint Jacobians by the one-pass derivative of one expression per item in the variables of its nodes (#3166)
   - description: Maintainer 2026-10-29: build the generalized forces of a connector, and the constraint equations and reaction forces of a joint, as one expression in the variables of its nodes (q, q\_t of each node), and take their Jacobian by one EvaluateJacobian pass, instead of the chain rule composed by hand in \_ConnectorJacobian and \_JointJacobian (the derivative by the marker states times the marker Jacobians, plus the terms of marker Jacobians depending on q). The variables per node, so the cost grows with the item, not with the system; the columns scattered by ltg. Also the other coordinates an item can depend on: ODE1 coordinates (ObjectConnectorHydraulicActuatorSimple: forces by the pressures y, its ODE1 RHS by q and q\_t), the algebraic coordinates z of a joint (c\_i = z\_i on free axes and for an inactive joint, C\_q^T z and its derivative by q), and data coordinates (\#3158). Small numerical differences to the composed Jacobian and to the C++ items are accepted; the present code kept as the comparison, accuracy and time measured, then decided which stays.
   - **notes:** SymbolicSystem(mbs, itemJacobians='onePass'): the Jacobians of the connectors and joints by one exudyn.symbolic.Function per item in the coordinates of its bodies and nodes, differentiated in one pass per body or node; equal to the chain rule of 'chainRule' (the default) to rounding, faster

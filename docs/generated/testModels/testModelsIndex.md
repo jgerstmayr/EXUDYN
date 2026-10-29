@@ -198,6 +198,7 @@ symbolicExportTest
 symbolicFunctionTest
 symbolicGeneralizedAlphaTest
 symbolicItemOutputTest
+symbolicJacobianExpressionsTest
 symbolicModuleTest
 symbolicNumpyCompatibilityTest
 symbolicOnePassJacobianTest

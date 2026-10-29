@@ -2277,6 +2277,8 @@ public:
 	Index OperandSlot(Index k, Index i) const { return operandSlots[operations[k].firstOperand + i]; }
 	//! the operation that computes result i
 	Index ResultSlot(Index i) const { return results[i]; }
+	//! the value of operation k of the last evaluation
+	const FlatValue& SlotValue(Index k) const { return slots[k]; }
 	//! the number of operations that have operands, the arithmetic of one evaluation
 	Index NumberOfComputations() const
 	{

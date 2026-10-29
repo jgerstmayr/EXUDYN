@@ -2147,6 +2147,13 @@ void Init_Pybind_Symbolic(py::module& m) {
 		py::arg("flag"));
 	m.def("GetTableEvaluation", []() { return Symbolic::symbolicProgramEvaluation; },
 		"True, if the user functions are evaluated by the table of operations (#3157)");
+	m.def("Jacobian", [](const py::object& expression, const py::object& variable, bool optimize)
+		{
+			py::object result = Symbolic::SymbolicJacobian(expression, variable);
+			return optimize ? Symbolic::OptimizeExpressions(result, 1, true) : result;
+		},
+		"the derivative of an esym.Real or Vector by a named esym.Real or Vector as new expressions: a Real, a Vector of the derivatives by the components, or the Jacobian matrix; optimize: Optimize(level=1) (#3163)",
+		py::arg("expression"), py::arg("variable"), py::arg("optimize") = true);
 
 
 
