@@ -6,7 +6,8 @@
 #           with systemMatrix and rhsVector driven by a LoadCoordinate with a recorded loadUserFunction, and a mass on a
 #           spring as ObjectGenericODE2 with a recorded forceUserFunction. ODE1RHS against the solver of
 #           Exudyn, ODE1Jacobian against central differences, SolveGeneralizedAlpha and SolveExplicit (RK44, explicit
-#           Euler) against SolveDynamic, the ODE1 coordinates written back into mbs, a Python rhsUserFunction refused.
+#           Euler) against SolveDynamic, the ODE1 coordinates written back into mbs, a Python rhsUserFunction refused;
+#           the ODE1 equations of Equations() and of the numpy code of GetFlatProgram against ODE1RHS (#3162).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-28
@@ -94,6 +95,17 @@ differences = np.array([(system.ODE1RHS(None, None, y + epsilon*e, t) - system.O
 difference = np.max(np.abs(system.ODE1Jacobian(y, t) - differences))
 exu.Print('ODE1Jacobian against central differences:', difference)
 failed += int(not difference < 1e-8)
+
+#the ODE1 equations as expressions, and as numpy code (#3162)
+equations = system.Equations(ODE1RHS=True)
+ODE1 = exu.symbolic.Function(equations['ODE1RHS'], [equations['y'], equations['t']], 'ODE1RHS')
+differenceEquations = np.max(np.abs(np.array(ODE1.Evaluate(y, t)) - rightHandSide))
+space = {}
+exec(system.GetFlatProgram('numpy', results=['ODE1RHS']), space) #Equations(q, q_t, t, y)
+(q, q_t) = system.InitialState()
+differenceNumpy = np.max(np.abs(np.array(space['Equations'](q, q_t, t, y)).flatten() - rightHandSide))
+exu.Print('ODE1 equations of Equations() and of the numpy code against ODE1RHS:', differenceEquations, differenceNumpy)
+failed += int(not (differenceEquations < 1e-13 and differenceNumpy < 1e-13))
 
 def Final(mbs):
     data = mbs.systemData

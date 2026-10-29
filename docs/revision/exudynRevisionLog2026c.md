@@ -4489,3 +4489,14 @@ objects (when they exist); so a simplified graphics representation of joints and
   connectors.show = False, the line of the torsional spring-damper moves with its body.
 - python/TestModels/parameterConversionTestReference.txt rewritten (recordReference): the new parameter
   VgraphicsDataUserFunction of ObjectJointUser in two rows, as for ObjectConnectorUser.
+
+<a id="rg12-51-21"></a>
+### RG12.51.21 — the ODE1 equations in Equations() and GetFlatProgram() (2026-10-29, #3162)
+*(Maintainer 2026-10-29: "add the ODE1 equations in Equations()".)*
+- python/exudyn/misc/symbolicSystem.py: `_ODE1Equations(backend, y, t)`, the right-hand side g of the ODE1 equations as
+  expressions, as ODE1RHS computes it: per ObjectGenericODE1 A y + f and its recorded rhsUserFunction, the
+  LoadCoordinate on ODE1 coordinates with or without its recorded loadUserFunction. `Equations(..., ODE1RHS=True)`:
+  the result 'ODE1RHS' and the variable 'y' (the initial ODE1 state; or the fifth of `variables`);
+  `GetFlatProgram(results=[..., 'ODE1RHS'])` writes Equations(q, q_t, t[, z], y, ...); `SystemVariables.Equations`
+  passes y.
+- python/TestModels/symbolicSystemODE1Test.py: the expressions and the numpy code equal ODE1RHS (0.0).

@@ -1397,7 +1397,7 @@ class SymbolicSystem(SymbolicSystemBase):
         return local
 
     def Equations(self, format='symbolic', optimize=True, variables=None, massMatrix=True, ODE2RHS=True,
-                  massMatrixBlocks=False, algebraicEquations=False, ODE2ReactionForcesLHS=False):
+                  massMatrixBlocks=False, algebraicEquations=False, ODE2ReactionForcesLHS=False, ODE1RHS=False):
         """the equations of motion M(q, t) q_tt = f(q, q_t, t) of the system as expressions in its variables (#3130,
         #3132), composed of the recordings of the kinds, the marker kinematics of the connectors and the loads; each
         recording is called with symbolic arguments through its code of exudyn.misc.symbolicExport, the parameters of
@@ -1413,7 +1413,8 @@ class SymbolicSystem(SymbolicSystemBase):
             optimize: for 'symbolic', simplify the expressions by exudyn.symbolic.Optimize, level 2 (1*x, x+0, 0*x,
                 the combination of numbers, ...)
             variables: None, or (q, q_t, t) of the format given by the caller - e.g. the arguments of a function being
-                recorded -, used instead of new variables; (q, q_t, t, z) with the algebraic coordinates
+                recorded -, used instead of new variables; (q, q_t, t, z) with the algebraic coordinates, (q, q_t, t, z,
+                y) with the ODE1 coordinates
             massMatrix: True: the global mass matrix, 'massMatrix' (nODE2 x nODE2)
             ODE2RHS: True: the forces of the right-hand side, 'ODE2RHS' (nODE2)
             massMatrixBlocks: True: the mass matrices of the bodies, 'massMatrixBlocks', as MassMatrixBlocks() gives
@@ -1423,9 +1424,11 @@ class SymbolicSystem(SymbolicSystemBase):
                 AlgebraicEquations (#3146)
             ODE2ReactionForcesLHS: True: the reaction forces C_q^T z of the joints, 'ODE2ReactionForcesLHS' (nODE2), as
                 ODE2ReactionForcesLHS, of the algebraic coordinates, the variable 'z' (#3146)
+            ODE1RHS: True: the right-hand side g(y, t) of the ODE1 equations y_t = g, 'ODE1RHS' (nODE1), as ODE1RHS, of
+                the ODE1 coordinates, the variable 'y' with the initial ODE1 state (#3162)
 
         Returns:
-            dict with 'q', 'q_t', 't' (the variables), 'z' if ODE2ReactionForcesLHS, 'parameters' - the named parameters
+            dict with 'q', 'q_t', 't' (the variables), 'z' if ODE2ReactionForcesLHS, 'y' if ODE1RHS, 'parameters' - the named parameters
             of parameterVariables, as exudyn.symbolic.Real or sympy symbols - if there are any (#3152), and the results
             asked for, exudyn.symbolic.Matrix and Vector or sympy.Matrix
         """
@@ -1442,12 +1445,16 @@ class SymbolicSystem(SymbolicSystemBase):
                 z = variables[3]
         if ODE2ReactionForcesLHS and z is None:
             z = backend.Variable('z', self.nAE, np.zeros(self.nAE))
+        y = variables[4] if variables is not None and len(variables) > 4 else None
+        if ODE1RHS and y is None:
+            y = backend.Variable('y', self.nODE1, self.InitialStateODE1())
         (M, f, blocks, c, r) = self._EquationLists(backend, q, q_t, t, z if ODE2ReactionForcesLHS else None,
                                                    algebraicEquations or ODE2ReactionForcesLHS)
         (names, results) = ([], [])
         for (name, wanted, Result) in [('massMatrix', massMatrix, lambda: backend.Matrix(M)), ('ODE2RHS', ODE2RHS, lambda: backend.Vector(f)),
                                        ('algebraicEquations', algebraicEquations, lambda: backend.Vector(c)),
-                                       ('ODE2ReactionForcesLHS', ODE2ReactionForcesLHS, lambda: backend.Vector(r))]:
+                                       ('ODE2ReactionForcesLHS', ODE2ReactionForcesLHS, lambda: backend.Vector(r)),
+                                       ('ODE1RHS', ODE1RHS, lambda: backend.Vector(self._ODE1Equations(backend, y, t)))]:
             if wanted:
                 names.append(name)
                 results.append(Result())
@@ -1460,6 +1467,8 @@ class SymbolicSystem(SymbolicSystemBase):
         equations = {'q': q, 'q_t': q_t, 't': t}
         if ODE2ReactionForcesLHS:
             equations['z'] = z
+        if ODE1RHS:
+            equations['y'] = y
         if self._parameterNames:
             equations['parameters'] = [backend.Parameter(value) for value in self._parameterNames.values()]
         for (name, result) in zip(names, results):
@@ -1560,6 +1569,34 @@ class SymbolicSystem(SymbolicSystemBase):
                     self._JointEquations(kind, index, backend, Call, t, qs, q_ts, zComponents, c, r)
         return (M, f, blocks, c, r)
 
+    def _ODE1Equations(self, backend, y, t):
+        """the right-hand side of the ODE1 equations as list of expressions of the ODE1 coordinates y, as ODE1RHS: per
+        ObjectGenericODE1 A y + f and its recorded rhsUserFunction, and the LoadCoordinate on ODE1 coordinates (#3162)"""
+        Call = _Caller(backend.format)
+        ys = [y[i] for i in range(self.nODE1)]
+        g = [0]*self.nODE1
+        for kind in self.ode1Kinds:
+            for (index, objectNumber) in enumerate(kind.objects):
+                (ltg, matrices) = (kind.ltg[index], kind.parameters[index])
+                local = [0]*len(ltg)
+                if matrices['A'].size:
+                    local = [_Sum(local[i], sum(float(matrices['A'][i, j])*ys[ltg[j]] for j in range(len(ltg)) if matrices['A'][i, j] != 0))
+                             for i in range(len(ltg))]
+                if len(matrices['f']):
+                    local = [_Sum(local[i], float(matrices['f'][i])) for i in range(len(ltg))]
+                if 'rhsUserFunction' in kind.recordings:
+                    value = Call(kind.recordings['rhsUserFunction'], t, objectNumber, backend.Vector([ys[i] for i in ltg]))
+                    local = [_Sum(local[i], value[i]) for i in range(len(ltg))]
+                for (i, value) in zip(ltg, local):
+                    g[i] = _Sum(g[i], value)
+        for load in self.ode1Loads:
+            if load.recording is None:
+                value = float(np.atleast_1d(load.value)[0])
+            else:
+                value = Call(load.recording, t, float(load.value))
+            g[load.ltg[0]] = _Sum(g[load.ltg[0]], value)
+        return g
+
     def _MarkerStateExpressions(self, connector, ltg, backend, Call, t, qs, q_ts):
         """the states of the markers of a connector or joint as expressions, as _ConnectorStates: per marker its
         position, velocity, rotation matrix and angular velocity in the list of states, and (kind, J_pos, J_rot) or
@@ -1649,18 +1686,21 @@ class SymbolicSystem(SymbolicSystemBase):
         Args:
             format: 'Python' (the text), or the executable 'symbolic', 'numpy' or 'sympy' of exudyn.misc.symbolicExport
             flatten: True: one line per operation; False: each result as one expression
-            results: the names of the results: 'ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS'
+            results: the names of the results: 'ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS',
+                'ODE1RHS'
 
         Returns:
             the program as str, for the executable formats a function Equations(q, q_t, t) - Equations(q, q_t, t,
-            z) with 'ODE2ReactionForcesLHS', followed by the named parameters (#3152) - returning the results
+            z) with 'ODE2ReactionForcesLHS', y after them with 'ODE1RHS', followed by the named parameters (#3152) -
+            returning the results
         """
-        names = ['ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS']
+        names = ['ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS', 'ODE1RHS']
         unknown = [name for name in results if name not in names]
         if unknown:
             raise ValueError('SymbolicSystem.GetFlatProgram: unknown results ' + str(unknown) + '; possible: ' + str(names))
         equations = self.Equations('symbolic', **{name: name in results for name in names})
-        variables = ['q', 'q_t', 't'] + (['z'] if 'ODE2ReactionForcesLHS' in results else [])
+        variables = (['q', 'q_t', 't'] + (['z'] if 'ODE2ReactionForcesLHS' in results else [])
+                     + (['y'] if 'ODE1RHS' in results else []))
         return exudyn.symbolic.GetFlatProgram([equations[name] for name in results],
                                               arguments=[equations[name] for name in variables] + equations.get('parameters', []),
                                               resultNames=list(results), format=format, flatten=flatten, name='Equations')
@@ -1748,8 +1788,8 @@ class SystemVariables:
         return exudyn.symbolic.Function(result, self.variables, name)
 
     def Equations(self, **options):
-        """Equations() of the system in these variables: q, q_t, t and z; options as in SymbolicSystem.Equations"""
-        return self.system.Equations(variables=(self.q, self.q_t, self.t, self.z), **options)
+        """Equations() of the system in these variables: q, q_t, t, z and y; options as in SymbolicSystem.Equations"""
+        return self.system.Equations(variables=(self.q, self.q_t, self.t, self.z, self.y), **options)
 
 
 def _Sum(a, b):

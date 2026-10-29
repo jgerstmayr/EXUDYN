@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 256 | 1.13.260 |
+| 1.13 | Newborn | 257 | 1.13.261 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.261** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem.Equations and GetFlatProgram: the ODE1 equations (#3162)
+  - description: Maintainer 2026-10-29: add the ODE1 equations in Equations(). The right-hand side g(y, t) of ObjectGenericODE1 - A y + f and the recorded rhsUserFunction - and of LoadCoordinate on ODE1 coordinates as expressions of the variable y, Equations(ODE1RHS=True) with the result 'ODE1RHS', GetFlatProgram(results=\['ODE1RHS'\]), SystemVariables.Equations with y.
+  - **notes:** exudyn.misc.symbolicSystem: SymbolicSystem.Equations(ODE1RHS=True) gives the right-hand side of the ODE1 equations - ObjectGenericODE1 and LoadCoordinate on ODE1 coordinates - as expressions of the ODE1 coordinates y, and GetFlatProgram writes them
+  - date resolved: **2026-10-29 11:33**, date raised: 2026-10-29
 - **1.13.260** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The graphicsDataUserFunction of ObjectConnectorUser is never called: the redraw calls the user functions of bodies only (#3161)
   - description: Found in revision2026c step RG12.55.7 (\#3147): PostProcessData::ProcessUserFunctionDrawing calls CallUserFunction only for items that are no connectors, so the graphicsDataUserFunction of ObjectConnectorUser (\#3119) - the springs of UserItemCreator - draws nothing; SC.renderer.GetGraphicsData() of a UserItemCreator spring-damper has no lines of the connector. Call it for connectors too, with connectors.show.
   - **notes:** the graphicsDataUserFunction of ObjectConnectorUser is called by the redraw, which called the graphics user functions of bodies only; the spring-dampers of UserItemCreator are drawn, with connectors.show

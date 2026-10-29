@@ -220,7 +220,7 @@ CSolverExplicit and CSolverImplicitSecondOrder:
 - `SymbolicSystem` takes ObjectGenericODE1 with a symbolic rhsUserFunction and LoadCoordinate on its coordinates
   (#3144). `Equations(algebraicEquations=True, ODE2ReactionForcesLHS=True)` gives the constraint equations of the joints and
   their reaction forces as expressions of q, t and the variable `z`, `GetFlatProgram(results=[...])` writes them
-  (#3146); the ODE1 equations are not in `Equations()` yet. The coupling of all kinds in one
+  (#3146), and the ODE1 equations, `ODE1RHS=True` (#3162). The coupling of all kinds in one
   item, ObjectGenericDAE (#3143), also needs Exudyn's internal solvers extended.
 
 ## 7. Sub-steps of RG12.51 (as planned after the decisions)
@@ -451,7 +451,7 @@ drawing of the joints (RG12.55.7, #3147), the node count (RG12.61, #3142) and Ob
 | part | done | open |
 |---|---|---|
 | user items (`UserItemCreator`) | ground, mass point, rigid body, spring-damper, torsional spring-damper, force, revolute, prismatic, spherical and distance joint - equal to the built-in items to the Newton tolerance | the sphere-sphere contact (RG12.55.5); the joints are not drawn (#3147); free axes of the spherical joint and nodes in the distance constraint are refused |
-| `SymbolicSystem` | ObjectUserBody, ObjectGenericODE2, ObjectConnectorUser on point, body and ground markers, ObjectJointUser, ObjectGenericODE1 (#3144), the four loads; two composed recordings (forces, mass matrix); the constraints and reaction forces in `Equations()` (#3146) | data coordinates, the ODE1 equations in `Equations()` |
+| `SymbolicSystem` | ObjectUserBody, ObjectGenericODE2, ObjectConnectorUser on point, body and ground markers, ObjectJointUser, ObjectGenericODE1 (#3144), the four loads; two composed recordings (forces, mass matrix); the constraints and reaction forces in `Equations()` (#3146) | data coordinates (RG12.66, #3158) |
 | solvers in Python | explicit Euler, RK44, velocity Verlet (with the inverse per body), generalized-alpha with ODE1 coordinates and index-3 constraints, all equal to `SolveDynamic` | with joints 7 times slower than `SolveDynamic` with the exact Jacobian (#3145); index 2 refused |
 | derivatives | `Diff` of vectors and matrices (#3115), the one pass over a flat program (#3116), pow without the log term (#3135) | the derivative as a new program (RG12.54.2, #3108) |
 | export | a recording as Python, numpy, symbolic, sympy and C++ text; `Equations()` and `GetFlatProgram()` of the system | the whole system with its sparsity and scatter (RG12.51.5) |

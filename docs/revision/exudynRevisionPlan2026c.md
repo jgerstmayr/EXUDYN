@@ -2097,6 +2097,10 @@ CLOSED 2026-10-29 (#3155; maintainer 2026-10-28: RHS and LHS forces kept apart a
 
 CLOSED 2026-10-29 (#3156; maintainer 2026-10-29: ODE2Residual and ODE2ResidualJacobian shall say RHS or LHS, otherwise the sign is unclear): the residual M q_tt - f has all terms on the LHS. [log](exudynRevisionLog2026c.md#rg12-51-20)
 
+#### **CLOSED_RG12.51.21** The ODE1 equations in Equations() and GetFlatProgram()
+
+CLOSED 2026-10-29 (#3162; maintainer 2026-10-29: add the ODE1 equations in Equations()): Equations(ODE1RHS=True), the result 'ODE1RHS' of the variable y, GetFlatProgram with y, SystemVariables.Equations with y; checked in symbolicSystemODE1Test.py. [log](exudynRevisionLog2026c.md#rg12-51-21)
+
 ### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
 
 CLOSED 2026-10-25 (#3094; maintainer 2026-10-25: the introduction section to Python-C++ interface/Symbolic has to be
