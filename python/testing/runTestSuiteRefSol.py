@@ -139,7 +139,7 @@ def TestExamplesReferenceSolution():
         'constraintDriftTest.py':9.796449624399628e-06, #new 2026-10-15: the drift of TrapezoidalIndex2 checked, the drift in the current state four ways (#565)
         'systemUtilitiesTest.py':1.670836871616957, #new 2026-10-16: SystemEnergy, SystemConstraintDrift and ComputeSystemGraph of exudyn.systemUtilities (#2997)
         'pythonUserFunctionArgumentsTest.py':0.5418115020412166, #new 2026-10-16: numpy arrays as vector arguments of Python user functions, userFunctionListArguments (#3008)
-        'symbolicUserFunctionSignaturesTest.py':51.302161797439574, #2026-10-26: with the forceUserFunction of the marker states of ObjectConnectorUser (#3119), before 50.302161797439574; 2026-10-24: with the 2 signatures of ObjectJointUser and the 4 of MarkerUser (#2976, #3065), before 44.302161797439574; 2026-10-23: with the massIntegralUserFunction of ObjectUserBody (#3063), before 43.302161797439574; 2026-10-17: with the 9 signatures of matrix results and ObjectGenericODE2 with mass matrix and Jacobian (#3020), before 30.255735007657506; new 2026-10-16: the 30 symbolic user function signatures and seven items against their Python versions (#2985); 2026-10-18: 43 with the 4 of NodeUser (#2974)
+        'symbolicUserFunctionSignaturesTest.py':53.302161797439574, #2026-10-30: with the 2 signatures of ObjectGenericDAE (#3170), before 51.302161797439574; 2026-10-26: with the forceUserFunction of the marker states of ObjectConnectorUser (#3119), before 50.302161797439574; 2026-10-24: with the 2 signatures of ObjectJointUser and the 4 of MarkerUser (#2976, #3065), before 44.302161797439574; 2026-10-23: with the massIntegralUserFunction of ObjectUserBody (#3063), before 43.302161797439574; 2026-10-17: with the 9 signatures of matrix results and ObjectGenericODE2 with mass matrix and Jacobian (#3020), before 30.255735007657506; new 2026-10-16: the 30 symbolic user function signatures and seven items against their Python versions (#2985); 2026-10-18: 43 with the 4 of NodeUser (#2974)
         'symbolicNumpyCompatibilityTest.py':306.26230077004766, #2026-10-17: with A.T, rows, slices, scalars and np.sin of vectors (#3018), before 242.87935007040414; new 2026-10-17: numpy and symbolic agree where symbolic has the operation and refuse what numpy defines differently (#3015)
         'symbolicSparseMatrixTest.py':0.19711034463698704, #new 2026-10-17: sparse matrix results of symbolic user functions with the pattern fixed when recorded, Python and symbolic, sparse and dense solver (#3022)
         'orientTrianglesTest.py':475.0, #new 2026-10-18: graphics.OrientTriangles and CheckTriangleOrientation, the STL import with orientTriangles (#2281)
@@ -211,6 +211,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamMassTest.py':2.9942070791403967, #consistent mass matrix of the 3D beam: rigid motion exact (#1273)
         'geometricallyExactBeam2DquadraticTest.py':0.7426300926718995, #the 3-node planar geometrically exact beam (#2208)
         'genericODE1duplicateNodeTest.py':3.1091750014354522, #2026-10-29: by a rhsUserFunction, so still numerical (#3143); #numerical ODE1 Jacobian with a coordinate addressed twice (#1424)
+        'genericDAETest.py':4.961903224846149, #new 2026-10-30: ObjectGenericDAE against ObjectGenericODE2, ObjectGenericODE1, a CoordinateConstraint and SolveGeneralizedAlpha (#3170)
         'genericODE1JacobianTest.py':5.4903220576244625, #new 2026-10-29: the analytic ODE1 Jacobian of ObjectGenericODE1, the system matrix, against the numerical one of a rhsUserFunction (#3143)
         'contactSphereTorusMomentumTest.py':4.227231105376637, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.227231105610667; #momentum conservation of the sphere-torus contact (#2127)
         'explicitSolversPostNewtonTest.py':4.563482002223684, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 4.563482002223224;2026-10-01: Jacobian of the torsional spring-damper by AD (#2745); before 4.563482002223096;  #2026-09-30: DOPRI5 with large steps added, and the step size recommended where a contact ends (#2109); before 4.097033066855782; #PostNewton states with every explicit integrator (#2754)
@@ -506,6 +507,7 @@ def MiniExamplesReferenceSolution():
         'ObjectConnectorCoordinate.py':0.04999999999999982,
         'ObjectGenericODE2.py':1.0039999999354785,
         'ObjectGenericODE1.py':-0.8206847097689384,
+        'ObjectGenericDAE.py':0.04815547453526271,
         'ObjectUserBody.py':-4.904999999999998, #new 2026-10-12 (#2986)
         'ObjectJointRevoluteZ.py':0.49999999999999795,
         'ObjectKinematicTree.py':-3.134018551808591,

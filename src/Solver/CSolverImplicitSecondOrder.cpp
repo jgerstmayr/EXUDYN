@@ -204,11 +204,12 @@ Index CSolverImplicitSecondOrderTimeInt::FactorizeInitialSystemJacobian(CSystem&
 	data.systemJacobian->SetAllZero(); //entries are not set to zero inside jacobian computation!
 	Real factorAE_ODE2 = 1.;			//for position level constraints: depends, if index reduction is used
 	Real factorAE_ODE2_t = 1.;			//for velocity constraints ==> C_qt*q_tt term from velocity level, if C=C(q_t)
-	Real factorAE_ODE1 = 1.;			//
+	Real factorAE_ODE1 = 0.;			//the ODE1 rows of the initial system are a unit matrix, not coupled to the algebraic equations (#3143)
 	bool velocityLevel = false;
 
 	//Jacobian of algebraic equations
-	computationalSystem.JacobianAE(data.tempCompDataArray, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel);
+	computationalSystem.JacobianAE(data.tempCompDataArray, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel,
+		1., 0.);
 
 	//Mass matrix - may also be directly filled into data.systemJacobian?
 	if (!hasConstantMassMatrix) //not yet set at this point, done in PostInitializeSolverSpecific; default=false

@@ -55,3 +55,6 @@ if other objects provide the equations.
 ### Action on the equations of motion
 
 The coordinates are algebraic variables: they add algebraic equations, which the objects provide.
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM)

@@ -136,6 +136,7 @@ python/exudyn/itemInterface.py
     DOC108: Method `VObjectGenericODE2.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectGenericODE2.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectGenericODE1.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectGenericDAE.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `VObjectUserBody.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectUserBody.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectKinematicTree.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature

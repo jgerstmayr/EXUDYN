@@ -8,4 +8,5 @@ A Object provides equations, using coordinates from Nodes. General objects lead 
 
 objectObjectGeneral
 ObjectGenericODE1
+ObjectGenericDAE
 ```

@@ -85,6 +85,7 @@
         "src/ImplObjects/CObjectContactSphereTriangle.cpp",
         "src/ImplObjects/CObjectFFRF.cpp",
         "src/ImplObjects/CObjectFFRFreducedOrder.cpp",
+        "src/ImplObjects/CObjectGenericDAE.cpp",
         "src/ImplObjects/CObjectGenericODE1.cpp",
         "src/ImplObjects/CObjectGenericODE2.cpp",
         "src/ImplObjects/CObjectGround.cpp",

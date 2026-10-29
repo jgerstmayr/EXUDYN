@@ -23,6 +23,7 @@ __all__ = [
     'ObjectRigidBody2DGraphicsDataUserFunction', 'ObjectGenericODE2ForceUserFunction',
     'ObjectGenericODE2MassMatrixUserFunction', 'ObjectGenericODE2JacobianUserFunction',
     'ObjectGenericODE2GraphicsDataUserFunction', 'ObjectGenericODE1RhsUserFunction',
+    'ObjectGenericDAEForceUserFunction', 'ObjectGenericDAERhsUserFunction',
     'ObjectUserBodyMassMatrixUserFunction', 'ObjectUserBodyMassIntegralUserFunction',
     'ObjectUserBodyForceUserFunction', 'ObjectUserBodyPositionUserFunction',
     'ObjectUserBodyPositionJacobianUserFunction', 'ObjectUserBodyRotationMatrixUserFunction',
@@ -66,24 +67,24 @@ __all__ = [
     'VMass1D', 'VObjectRotationalMass1D', 'ObjectRotationalMass1D', 'Rotor1D', 'VRotor1D',
     'VObjectRigidBody', 'ObjectRigidBody', 'RigidBody', 'VRigidBody', 'VObjectRigidBody2D',
     'ObjectRigidBody2D', 'RigidBody2D', 'VRigidBody2D', 'VObjectGenericODE2', 'ObjectGenericODE2',
-    'VObjectGenericODE1', 'ObjectGenericODE1', 'VObjectUserBody', 'ObjectUserBody',
-    'VObjectKinematicTree', 'ObjectKinematicTree', 'KinematicTree', 'VKinematicTree', 'VObjectFFRF',
-    'ObjectFFRF', 'VObjectFFRFreducedOrder', 'ObjectFFRFreducedOrder', 'CMSobject', 'VCMSobject',
-    'VObjectANCFCable', 'ObjectANCFCable', 'Cable', 'VCable', 'VObjectANCFCable2D',
-    'ObjectANCFCable2D', 'Cable2D', 'VCable2D', 'VObjectALEANCFCable2D', 'ObjectALEANCFCable2D',
-    'ALECable2D', 'VALECable2D', 'VObjectANCFBeam', 'ObjectANCFBeam', 'ANCFBeam', 'VANCFBeam',
-    'VObjectBeamGeometricallyExact2D', 'ObjectBeamGeometricallyExact2D', 'Beam2D', 'VBeam2D',
-    'VObjectBeamGeometricallyExact', 'ObjectBeamGeometricallyExact', 'Beam3D', 'VBeam3D',
-    'VObjectANCFThinPlate', 'ObjectANCFThinPlate', 'VObjectConnectorSpringDamper',
-    'ObjectConnectorSpringDamper', 'SpringDamper', 'VSpringDamper',
-    'VObjectConnectorCartesianSpringDamper', 'ObjectConnectorCartesianSpringDamper',
-    'CartesianSpringDamper', 'VCartesianSpringDamper', 'VObjectConnectorRigidBodySpringDamper',
-    'ObjectConnectorRigidBodySpringDamper', 'RigidBodySpringDamper', 'VRigidBodySpringDamper',
-    'VObjectConnectorLinearSpringDamper', 'ObjectConnectorLinearSpringDamper', 'LinearSpringDamper',
-    'VLinearSpringDamper', 'VObjectConnectorTorsionalSpringDamper',
-    'ObjectConnectorTorsionalSpringDamper', 'TorsionalSpringDamper', 'VTorsionalSpringDamper',
-    'VObjectConnectorCoordinateSpringDamper', 'ObjectConnectorCoordinateSpringDamper',
-    'CoordinateSpringDamper', 'VCoordinateSpringDamper',
+    'VObjectGenericODE1', 'ObjectGenericODE1', 'VObjectGenericDAE', 'ObjectGenericDAE',
+    'VObjectUserBody', 'ObjectUserBody', 'VObjectKinematicTree', 'ObjectKinematicTree',
+    'KinematicTree', 'VKinematicTree', 'VObjectFFRF', 'ObjectFFRF', 'VObjectFFRFreducedOrder',
+    'ObjectFFRFreducedOrder', 'CMSobject', 'VCMSobject', 'VObjectANCFCable', 'ObjectANCFCable',
+    'Cable', 'VCable', 'VObjectANCFCable2D', 'ObjectANCFCable2D', 'Cable2D', 'VCable2D',
+    'VObjectALEANCFCable2D', 'ObjectALEANCFCable2D', 'ALECable2D', 'VALECable2D', 'VObjectANCFBeam',
+    'ObjectANCFBeam', 'ANCFBeam', 'VANCFBeam', 'VObjectBeamGeometricallyExact2D',
+    'ObjectBeamGeometricallyExact2D', 'Beam2D', 'VBeam2D', 'VObjectBeamGeometricallyExact',
+    'ObjectBeamGeometricallyExact', 'Beam3D', 'VBeam3D', 'VObjectANCFThinPlate',
+    'ObjectANCFThinPlate', 'VObjectConnectorSpringDamper', 'ObjectConnectorSpringDamper',
+    'SpringDamper', 'VSpringDamper', 'VObjectConnectorCartesianSpringDamper',
+    'ObjectConnectorCartesianSpringDamper', 'CartesianSpringDamper', 'VCartesianSpringDamper',
+    'VObjectConnectorRigidBodySpringDamper', 'ObjectConnectorRigidBodySpringDamper',
+    'RigidBodySpringDamper', 'VRigidBodySpringDamper', 'VObjectConnectorLinearSpringDamper',
+    'ObjectConnectorLinearSpringDamper', 'LinearSpringDamper', 'VLinearSpringDamper',
+    'VObjectConnectorTorsionalSpringDamper', 'ObjectConnectorTorsionalSpringDamper',
+    'TorsionalSpringDamper', 'VTorsionalSpringDamper', 'VObjectConnectorCoordinateSpringDamper',
+    'ObjectConnectorCoordinateSpringDamper', 'CoordinateSpringDamper', 'VCoordinateSpringDamper',
     'VObjectConnectorCoordinateSpringDamperExt', 'ObjectConnectorCoordinateSpringDamperExt',
     'CoordinateSpringDamperExt', 'VCoordinateSpringDamperExt', 'VObjectConnectorGravity',
     'ObjectConnectorGravity', 'ConnectorGravity', 'VConnectorGravity',
@@ -216,6 +217,8 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectGenericODE2,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'fODE2', 'fODE2_t'], ['py::object'], ['ObjectGenericODE2JacobianUserFunction']],
         'ObjectGenericODE2,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectGenericODE2GraphicsDataUserFunction']],
         'ObjectGenericODE1,rhsUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['StdVector'], ['ObjectGenericODE1RhsUserFunction']],
+        'ObjectGenericDAE,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'y', 'parameters'], ['StdVector'], ['ObjectGenericDAEForceUserFunction']],
+        'ObjectGenericDAE,rhsUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'y', 'parameters'], ['StdVector'], ['ObjectGenericDAERhsUserFunction']],
         'ObjectUserBody,massMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyMassMatrixUserFunction']],
         'ObjectUserBody,massIntegralUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyMassIntegralUserFunction']],
         'ObjectUserBody,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['StdVector'], ['ObjectUserBodyForceUserFunction']],
@@ -521,6 +524,52 @@ class ObjectGenericODE1RhsUserFunction(Protocol):
         np.ndarray: returns force vector for object
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray) -> np.ndarray: ...
+
+class ObjectGenericDAEForceUserFunction(Protocol):
+    r"""A user function, which computes the generalized forces :math:`\fv_u` on the right-hand side of the ODE2 equations from the coordinates of the object.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the object belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs
+
+        q (np.ndarray): :math:`\qv \in \Rcal^{n_2}` the ODE2 coordinates of the object, without reference values
+
+        q_t (np.ndarray): :math:`\dot \qv \in \Rcal^{n_2}` the ODE2 velocities of the object
+
+        y (np.ndarray): :math:`\yv \in \Rcal^{n_1}` the ODE1 coordinates of the object, without reference values
+
+        parameters (np.ndarray): :math:`\mathbf{p}_{par}` the parameters of the object; empty if not given
+
+    Returns:
+        np.ndarray: :math:`\fv_u \in \Rcal^{n_2}`, as list or numpy array
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray, y: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
+
+class ObjectGenericDAERhsUserFunction(Protocol):
+    r"""A user function, which computes the term :math:`\gv_u` of the right-hand side of the ODE1 equations from the coordinates of the object.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the object belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs
+
+        q (np.ndarray): :math:`\qv \in \Rcal^{n_2}` the ODE2 coordinates of the object, without reference values
+
+        q_t (np.ndarray): :math:`\dot \qv \in \Rcal^{n_2}` the ODE2 velocities of the object
+
+        y (np.ndarray): :math:`\yv \in \Rcal^{n_1}` the ODE1 coordinates of the object, without reference values
+
+        parameters (np.ndarray): :math:`\mathbf{p}_{par}` the parameters of the object; empty if not given
+
+    Returns:
+        np.ndarray: :math:`\gv_u \in \Rcal^{n_1}`, as list or numpy array
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray, y: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
 
 class ObjectUserBodyMassMatrixUserFunction(Protocol):
     """A user function, which computes the mass matrix of the body.
@@ -3408,6 +3457,120 @@ class ObjectGenericODE1:
         yield 'systemMatrix', self.systemMatrix
         yield 'rhsVector', self.rhsVector
         yield 'rhsUserFunction', self.rhsUserFunction
+
+    def __repr__(self):
+        return str(dict(self))
+
+class VObjectGenericDAE:
+    """Visualization data for ObjectGenericDAE.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
+
+    """
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectGenericDAE:
+    r"""A system of ODE2, ODE1 and algebraic equations on the coordinates of its nodes: ODE2 nodes, NodeGenericODE1 and NodeGenericAE, whose coordinates are the Lagrange multipliers :math:`\tlambda` of its algebraic equations.
+    
+    The linear terms are given by matrices, the nonlinear ones by user functions. NOTE that every matrix or vector must have the dimensions of the coordinates it multiplies, or be empty, using [] in Python.
+    
+    Args:
+        name: objects's unique name; type: str
+
+        nodeNumbersODE2: the nodes of the ODE2 coordinates :math:`\qv`, any nodes with ODE2 coordinates; type: ArrayNodeIndex
+
+        nodeNumbersODE1: the NodeGenericODE1 of the ODE1 coordinates :math:`\yv`; type: ArrayNodeIndex
+
+        nodeNumbersAE: the NodeGenericAE of the algebraic coordinates :math:`\tlambda`; their number of coordinates is the number of algebraic equations; type: ArrayNodeIndex
+
+        massMatrix: the mass matrix; needed if there are ODE2 coordinates; type: array_like
+
+        dampingMatrix: the damping matrix; type: array_like
+
+        stiffnessMatrix: the stiffness matrix; type: array_like
+
+        forceVector: the constant generalized forces; type: array_like
+
+        couplingMatrixODE1: the term of the ODE1 coordinates in the ODE2 equations; type: array_like
+
+        systemMatrix: the system matrix of the ODE1 equations; type: array_like
+
+        rhsVector: the constant right-hand side of the ODE1 equations; type: array_like
+
+        couplingMatrixODE2: the term of the ODE2 coordinates in the ODE1 equations; type: array_like
+
+        couplingMatrixODE2_t: the term of the ODE2 velocities in the ODE1 equations; type: array_like
+
+        constraintMatrixODE2: the ODE2 coordinates in the algebraic equations; type: array_like
+
+        constraintMatrixODE1: the ODE1 coordinates in the algebraic equations; type: array_like
+
+        constraintVector: the constant term of the algebraic equations; type: array_like
+
+        parameters: the parameters of the object, passed to every user function; see exudyn.advancedUtilities.ParameterLayout; empty by default; type: array_like
+
+        forceUserFunction: A Python user function which computes the nonlinear generalized forces of the ODE2 equations; type: ObjectGenericDAEForceUserFunction
+
+        rhsUserFunction: A Python user function which computes the nonlinear term of the right-hand side of the ODE1 equations; type: ObjectGenericDAERhsUserFunction
+
+        visualization: visualization data, see VObjectGenericDAE
+
+    Notes:
+        Object has/provides the following types: ``Body``, ``MultiNoded``
+
+    """
+    def __init__(self, name = '', nodeNumbersODE2 = [], nodeNumbersODE1 = [], nodeNumbersAE = [], massMatrix = [], dampingMatrix = [], stiffnessMatrix = [], forceVector = [], couplingMatrixODE1 = [], systemMatrix = [], rhsVector = [], couplingMatrixODE2 = [], couplingMatrixODE2_t = [], constraintMatrixODE2 = [], constraintMatrixODE1 = [], constraintVector = [], parameters = [], forceUserFunction: Union[ObjectGenericDAEForceUserFunction, int] = 0, rhsUserFunction: Union[ObjectGenericDAERhsUserFunction, int] = 0, visualization = {'show': True}):
+        self.name = name
+        self.nodeNumbersODE2 = copy.copy(nodeNumbersODE2)
+        self.nodeNumbersODE1 = copy.copy(nodeNumbersODE1)
+        self.nodeNumbersAE = copy.copy(nodeNumbersAE)
+        self.massMatrix = CheckForValidNumpyArray(massMatrix)
+        self.dampingMatrix = CheckForValidNumpyArray(dampingMatrix)
+        self.stiffnessMatrix = CheckForValidNumpyArray(stiffnessMatrix)
+        self.forceVector = CheckForValidNumpyArray(forceVector)
+        self.couplingMatrixODE1 = CheckForValidNumpyArray(couplingMatrixODE1)
+        self.systemMatrix = CheckForValidNumpyArray(systemMatrix)
+        self.rhsVector = CheckForValidNumpyArray(rhsVector)
+        self.couplingMatrixODE2 = CheckForValidNumpyArray(couplingMatrixODE2)
+        self.couplingMatrixODE2_t = CheckForValidNumpyArray(couplingMatrixODE2_t)
+        self.constraintMatrixODE2 = CheckForValidNumpyArray(constraintMatrixODE2)
+        self.constraintMatrixODE1 = CheckForValidNumpyArray(constraintMatrixODE1)
+        self.constraintVector = CheckForValidNumpyArray(constraintVector)
+        self.parameters = CheckForValidNumpyArray(parameters)
+        self.forceUserFunction = forceUserFunction
+        self.rhsUserFunction = rhsUserFunction
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'GenericDAE'
+        yield 'name', self.name
+        yield 'nodeNumbersODE2', self.nodeNumbersODE2
+        yield 'nodeNumbersODE1', self.nodeNumbersODE1
+        yield 'nodeNumbersAE', self.nodeNumbersAE
+        yield 'massMatrix', self.massMatrix
+        yield 'dampingMatrix', self.dampingMatrix
+        yield 'stiffnessMatrix', self.stiffnessMatrix
+        yield 'forceVector', self.forceVector
+        yield 'couplingMatrixODE1', self.couplingMatrixODE1
+        yield 'systemMatrix', self.systemMatrix
+        yield 'rhsVector', self.rhsVector
+        yield 'couplingMatrixODE2', self.couplingMatrixODE2
+        yield 'couplingMatrixODE2_t', self.couplingMatrixODE2_t
+        yield 'constraintMatrixODE2', self.constraintMatrixODE2
+        yield 'constraintMatrixODE1', self.constraintMatrixODE1
+        yield 'constraintVector', self.constraintVector
+        yield 'parameters', self.parameters
+        yield 'forceUserFunction', self.forceUserFunction
+        yield 'rhsUserFunction', self.rhsUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))

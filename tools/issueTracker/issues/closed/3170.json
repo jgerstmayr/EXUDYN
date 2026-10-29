@@ -1,0 +1,15 @@
+{
+  "number": 3170,
+  "title": "ObjectGenericDAE: ODE2, ODE1 and algebraic equations on the coordinates of its nodes, linear terms and Python user functions",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "Revision2026c step RG9.10.3 of #3143 (maintainer 2026-10-29: do RG9.10.3). The item on nodeNumbersODE2, nodeNumbersODE1 and nodeNumbersAE (NodeGenericAE for the multipliers, as the assembly gives bodies algebraic coordinates through their nodes only); the matrices M, D, K, E, A, B, B_t, C_q, C_y and the vectors f, g, c0; forceUserFunction and rhsUserFunction with (mbs, t, itemNumber, q, q_t, y, parameters); analytic Jacobians of the matrices, numerical for a block with a user function. The initial accelerations keep the ODE1 rows uncoupled. Checked against ObjectGenericODE2, ObjectGenericODE1, CoordinateConstraint and SolveGeneralizedAlpha.",
+  "dateRaised": "2026-10-30",
+  "deadline": "2027-04-28",
+  "dateResolved": "2026-10-30 00:19",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectGenericDAE: ODE2, ODE1 and algebraic equations on the coordinates of its nodes (ODE2 nodes, NodeGenericODE1, NodeGenericAE for the multipliers), linear terms by matrices, forceUserFunction and rhsUserFunction; the initial accelerations of the implicit solver keep the ODE1 rows uncoupled from the algebraic equations",
+  "resolvedInVersion": "1.13.268"
+}

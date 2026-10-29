@@ -32,7 +32,7 @@ Exudyn's convention (`notation.md`): the object computes its LHS terms, the syst
 |---|---|---|
 | `nodeNumbersODE2` | the nodes of $\qv$, any nodes with ODE2 coordinates | ObjectGenericODE2 `nodeNumbers` |
 | `nodeNumbersODE1` | the NodeGenericODE1 of $\yv$ | ObjectGenericODE1 `nodeNumbers` |
-| `numberOfAlgebraicEquations` | the size of $\tlambda$, coordinates of the object | ObjectJointUser `numberOfConstraints` |
+| `nodeNumbersAE` | the NodeGenericAE of $\tlambda$: the assembly gives a body algebraic coordinates through its nodes only | Euler parameter nodes |
 | `massMatrix`, `dampingMatrix`, `stiffnessMatrix`, `forceVector` | $\Mm$, $\Dm$, $\Km$, $\fv$ | ObjectGenericODE2 |
 | `systemMatrix`, `rhsVector` | $\Am$, $\gv$ | ObjectGenericODE1 |
 | `couplingMatrixODE1`, `couplingMatrixODE2`, `couplingMatrixODE2_t` | $\Em$, $\Bm$, $\Bm_t$ | new |
@@ -40,7 +40,10 @@ Exudyn's convention (`notation.md`): the object computes its LHS terms, the syst
 | `parameters` | a vector of the item, named by a ParameterLayout | ObjectUserBody |
 
 User functions, all with `(mbs, t, itemNumber, q, q_t, y, ..., parameters)` - q the ODE2 coordinates relative to
-the reference as in ObjectGenericODE2 (total coordinates wait for RG13.2):
+the reference as in ObjectGenericODE2 (total coordinates wait for RG13.2). `forceUserFunction` and `rhsUserFunction`
+exist (RG9.10.3, #3170): a block with one of them is differentiated numerically, the others by the matrices; the
+others, whose Jacobian must not be numerical (#3101), come with their symbolic versions and the one-pass derivative
+(RG9.10.4):
 
 | user function | returns |
 |---|---|
@@ -51,10 +54,12 @@ the reference as in ObjectGenericODE2 (total coordinates wait for RG13.2):
 | `jacobianUserFunction(mbs, t, itemNumber, q, q_t, y, z, factorODE2, factorODE2_t, factorODE1, parameters)` | the local Jacobian of all rows of the object by all its coordinates, with the factors of the solver |
 | `graphicsDataUserFunction(mbs, itemNumber)` | the graphics, as ObjectConnectorUser and ObjectJointUser (#3147) |
 
-The C++ class is a body with several nodes, as ObjectGenericODE2 (`CObjectBody`, `ComputeMassMatrix`,
-`ComputeODE2LHS`, `ComputeJacobianODE2_ODE2`), with ODE1 coordinates (`GetODE1Size`, `ComputeODE1RHS`) and algebraic
-equations of its own (`GetAlgebraicEquationsSize`, `ComputeAlgebraicEquations`, `ComputeJacobianAE` with its four
-blocks). Each user function gets a symbolic version (PySymbolicUserFunctionSet), so that a recording is evaluated
+The C++ class `CObjectGenericDAE` (src/ImplObjects/CObjectGenericDAE.cpp) is a body with several nodes - the ODE2,
+ODE1 and AE nodes in this order -, as ObjectGenericODE2 (`CObjectBody`, `ComputeMassMatrix`, `ComputeODE2LHS`,
+`ComputeJacobianODE2_ODE2`, dense), with ODE1 coordinates (`GetODE1Size`, `ComputeODE1RHS`, `ComputeJacobianODE1RHS`,
+`ComputeJacobianODE2_ODE1`) and algebraic equations (`GetAlgebraicEquationsSize`, `ComputeAlgebraicEquations`,
+`ComputeJacobianAE` with its four blocks). The initial accelerations of the implicit solver keep the ODE1 rows a unit
+matrix, without $\Cm_{\yv}$, as SolveGeneralizedAlpha (#3170). Each user function gets a symbolic version (PySymbolicUserFunctionSet), so that a recording is evaluated
 in C++, in the threads too (#2978), and SymbolicSystem takes the object.
 
 ## 3. What the solvers have (checked in the C++ 2026-10-29, completed by #3167)

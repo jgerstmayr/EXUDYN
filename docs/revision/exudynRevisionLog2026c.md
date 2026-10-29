@@ -4625,3 +4625,36 @@ per node. If 'always nodes' is easier to implement, that is also ok ... ltg-maps
   SymbolicSystemBase (1.0e-13), SolveGeneralizedAlpha against SolveDynamic (5.1e-12); symbolicSystemJointsTest.py
   (1.2e-13, 1.1e-11) and symbolicUserRigidBodiesTest.py (9.1e-11) unchanged in their results.
 - docs/dev/design/symbolicSystem.md, revisions.md.
+
+<a id="rg9-10-3"></a>
+### RG9.10.3 — ObjectGenericDAE, the item with its matrices and the Python user functions (2026-10-30, #3170)
+*(Maintainer 2026-10-29: "Then also do RG9.10.3 and RG12.65.5".)*
+- definitions/itemDefsObjects.py: ObjectGenericDAE, a CObjectBody (Body + MultiNoded) on `nodeNumbersODE2`,
+  `nodeNumbersODE1` and `nodeNumbersAE` - the NodeGenericAE carry the multipliers, as CSystem gives a body algebraic
+  coordinates only through its nodes (the design had numberOfAlgebraicEquations, coordinates of the object; that
+  would need a change of the assembly) -; the dense matrices massMatrix, dampingMatrix, stiffnessMatrix,
+  couplingMatrixODE1 (E), systemMatrix (A), couplingMatrixODE2 (B), couplingMatrixODE2_t (B_t), constraintMatrixODE2
+  (C_q), constraintMatrixODE1 (C_y), the vectors forceVector, rhsVector, constraintVector, `parameters`;
+  forceUserFunction and rhsUserFunction (mbs, t, itemNumber, q, q_t, y, parameters). definitions/itemFunctions.py:
+  ComputeJacobianODE1RHS for every object.
+- src/ImplObjects/CObjectGenericDAE.cpp (new; msvc project, filters, sources.json): the node lists, the sizes, the
+  coordinates, the mass matrix, the ODE2 LHS K q + D q_t + E y - f - f_u, the ODE1 RHS A y + B q + B_t q_t + g + g_u,
+  the algebraic equations C_q q + C_y y - c0 (index 2: C_q q_t + C_y y_t), the Jacobians of the matrices
+  (ComputeJacobianODE2_ODE2, ComputeJacobianODE2_ODE1, ComputeJacobianODE1RHS, ComputeJacobianAE); GetAvailableJacobians:
+  a block with a user function without its _function flag, so numerical; the output variables Coordinates and
+  Coordinates_t by GetObjectOutputBody, as for every body. evaluateUserFunctions.cpp: EvaluateUserFunction;
+  checkPreAssembleConsistenciesObjects.cpp: the node groups of the lists and the sizes of all matrices and vectors.
+- Found while checking against SolveGeneralizedAlpha: the initial accelerations of CSolverImplicitSecondOrder took
+  the block AE_ODE1 into the ODE1 rows of the initial system (since #3167 at its place), which made the start differ
+  from SolveGeneralizedAlpha and the solution by O(h) (7e-3 at 100 steps, 4.7e-4 at 1600); the initial system keeps the
+  ODE1 rows a unit matrix (factors 0 for the ODE1 blocks in FactorizeInitialSystemJacobian). The warning of
+  NumericalConstraintJacobianTimesVector for AE_ODE1 removed: that block does not enter C_q v.
+- python/TestModels/genericDAETest.py: the ODE2 part against ObjectGenericODE2 1.4e-16, the ODE1 part against
+  ObjectGenericODE1 0, the constraint against a CoordinateConstraint 4.2e-17, the coupled system with all matrices
+  against NumpySystem with C_y^T z by SolveGeneralizedAlpha 2.3e-13, with the user functions 2.1e-13 - the first
+  check of the term C_y^T lambda of #3167.
+- The constraintUserFunction, massMatrixUserFunction and jacobianUserFunction of the design wait for RG9.10.4, as
+  their Jacobians must come from the one-pass derivative, not from differences (#3101).
+- Reference values: symbolicUserFunctionSignaturesTest.py +2 (the two signatures), parameterConversionTestReference.txt
+  rewritten by recordReference (9 rows of the new item); the graphics reference of the mini example written.
+- docs/dev/design/genericDAE.md section 2, revisions.md.

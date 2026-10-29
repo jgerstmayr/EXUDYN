@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.10 ObjectGenericDAE: an object on ODE2, ODE1 and algebraic coordinates, linear by matrices, nonlinear by user functions (3 open sub-steps)
+  - RG9.10 ObjectGenericDAE: an object on ODE2, ODE1 and algebraic coordinates, linear by matrices, nonlinear by user functions (2 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -133,7 +133,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 9 | Structural core improvements |
+| RG9 | OPEN | 8 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 15 | Misc |
 | RG12 | OPEN | 13 | Symbolic |
@@ -1139,13 +1139,13 @@ CLOSED 2026-10-29 (#3143 stays open; maintainer 2026-10-29: RG9.10 good to go): 
 
 CLOSED 2026-10-29 (#3167, #3143 stays open; maintainer 2026-10-29: analytic Jacobians by new C++ functions, only for objects with ODE1 coordinates; one jacobianUserFunction of all blocks): CObject::ComputeJacobianODE1RHS and ComputeJacobianODE2_ODE1 by their flags, else numerical, the coupling also for analytic ODE2 objects; CSystem::JacobianODE1RHS; ObjectGenericODE1 analytic without user function; C_y^T lambda in the ODE1 residual and the AE_ODE1 block at its place; genericODE1JacobianTest.py. [log](exudynRevisionLog2026c.md#rg9-10-2)
 
-#### **OPEN_RG9.10.3** The item with its linear terms and the Python user functions, checked against ObjectGenericODE2, ObjectGenericODE1 and a CoordinateConstraint
+#### **CLOSED_RG9.10.3** The item with its linear terms and the Python user functions, checked against ObjectGenericODE2, ObjectGenericODE1 and a CoordinateConstraint
 
-#3143. Design docs/dev/design/genericDAE.md.
+CLOSED 2026-10-30 (#3170, #3143 stays open; maintainer 2026-10-29: do it): ObjectGenericDAE on nodeNumbersODE2, nodeNumbersODE1 and nodeNumbersAE (NodeGenericAE for the multipliers), all matrices of the design, forceUserFunction and rhsUserFunction; genericDAETest.py: equal to ObjectGenericODE2, ObjectGenericODE1 and a CoordinateConstraint to 1e-16, the coupled system to SolveGeneralizedAlpha 2.3e-13. [log](exudynRevisionLog2026c.md#rg9-10-3)
 
 #### **OPEN_RG9.10.4** The symbolic versions of the user functions, the Jacobian by the one-pass derivative
 
-#3143. Design docs/dev/design/genericDAE.md.
+#3143. Design docs/dev/design/genericDAE.md. The symbolic versions of forceUserFunction and rhsUserFunction with their Jacobians by the one-pass derivative; the user functions whose Jacobian must not be numerical (#3101) come here with it: constraintUserFunction, massMatrixUserFunction and the jacobianUserFunction of all blocks.
 
 #### **OPEN_RG9.10.5** SymbolicSystem takes ObjectGenericDAE: its kind, Equations(), the export
 

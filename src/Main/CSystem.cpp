@@ -3832,12 +3832,7 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 				}
 			}
 
-			if (filledJacobians & JacobianType::AE_ODE1) //(flagAE_ODE1filled) //could be just ignored ==> check as soon as first ODE1 constraint jacobian exists
-			{
-				STDstring str = "CSystem::NumericalConstraintJacobianTimesVector(...) : not implemented for ODE1 coordinates, objectNr = ";
-				str += EXUstd::ToString(objectIndex);
-				PyWarning(str);
-			}
+			//the block by ODE1 coordinates does not enter C_q v, v the ODE2 velocities (#3143)
 		}
 	}
 
@@ -3980,12 +3975,7 @@ void CSystem::NumericalConstraintJacobianTimesVector(TemporaryComputationData& t
 				}
 			}
 
-			if (filledJacobians & JacobianType::AE_ODE1) //(flagAE_ODE1filled) //could be just ignored ==> check as soon as first ODE1 constraint jacobian exists
-			{
-				STDstring str = "CSystem::NumericalConstraintJacobianTimesVector(...) : not implemented for ODE1 coordinates, objectNr = ";
-				str += EXUstd::ToString(j);
-				PyWarning(str);
-			} 
+			//the block by ODE1 coordinates does not enter C_q v, v the ODE2 velocities (#3143) 
 		}
 	}
 

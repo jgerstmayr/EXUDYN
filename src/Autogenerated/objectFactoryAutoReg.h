@@ -363,6 +363,17 @@ bool MainObjectGenericODE1IsRegistered = ClassFactoryItemsSystemData<MainObject>
 		return object;
 	});
 
+bool MainObjectGenericDAEIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("GenericDAE", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectGenericDAE();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectGenericDAE(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectGenericDAE* vObject = new VisualizationObjectGenericDAE();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectUserBodyIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("UserBody", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectUserBody();

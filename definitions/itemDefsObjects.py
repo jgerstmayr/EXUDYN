@@ -2020,6 +2020,255 @@ oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
     ))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   ObjectGenericDAE   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectGenericDAE_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector, q_t: Vector, y: Vector,
+                                       parameters: Vector) -> Vector:
+    r"""A user function, which computes the generalized forces $\fv_u$ on the right-hand side of the ABRV:ODE2 equations from the coordinates of the object.
+
+    Args:
+        mbs: provides MainSystem mbs to which the object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs
+        q: $\qv \in \Rcal^{n_2}$ the ABRV:ODE2 coordinates of the object, without reference values
+        q_t: $\dot \qv \in \Rcal^{n_2}$ the ABRV:ODE2 velocities of the object
+        y: $\yv \in \Rcal^{n_1}$ the ABRV:ODE1 coordinates of the object, without reference values
+        parameters: $\pv_{par}$ the parameters of the object; empty if not given
+    Returns:
+        $\fv_u \in \Rcal^{n_2}$, as list or numpy array
+    """
+
+def ObjectGenericDAE_rhsUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector, q_t: Vector, y: Vector,
+                                     parameters: Vector) -> Vector:
+    r"""A user function, which computes the term $\gv_u$ of the right-hand side of the ABRV:ODE1 equations from the coordinates of the object.
+
+    Args:
+        mbs: provides MainSystem mbs to which the object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs
+        q: $\qv \in \Rcal^{n_2}$ the ABRV:ODE2 coordinates of the object, without reference values
+        q_t: $\dot \qv \in \Rcal^{n_2}$ the ABRV:ODE2 velocities of the object
+        y: $\yv \in \Rcal^{n_1}$ the ABRV:ODE1 coordinates of the object, without reference values
+        parameters: $\pv_{par}$ the parameters of the object; empty if not given
+    Returns:
+        $\gv_u \in \Rcal^{n_1}$, as list or numpy array
+    """
+
+definitions.append(ItemDefinition(
+    className='ObjectGenericDAE',
+    drawing=r'The item draws nothing.',
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+""",
+    cParentClass=ParentClassCObjectBody,
+    overallDescription=r"""A system of ABRV:ODE2, ABRV:ODE1 and algebraic equations on the coordinates of its nodes: ABRV:ODE2 nodes, NodeGenericODE1 and NodeGenericAE, whose coordinates are the Lagrange multipliers $\tlambda$ of its algebraic equations. The linear terms are given by matrices, the nonlinear ones by user functions. NOTE that every matrix or vector must have the dimensions of the coordinates it multiplies, or be empty, using [] in Python.""",
+    classType=ClassTypeObject,
+    detailedDescription=r"""    #### Coordinates
+
+    The ABRV:ODE2 coordinates $\qv \in \Rcal^{n_2}$ are those of the nodes `nodeNumbersODE2`, the ABRV:ODE1 coordinates $\yv \in \Rcal^{n_1}$ those of the nodes `nodeNumbersODE1`, and the algebraic coordinates $\tlambda \in \Rcal^{n_a}$ - the Lagrange multipliers - those of the NodeGenericAE `nodeNumbersAE`, each in the order of the nodes; $\qv$ and $\yv$ are without the reference values. The number of algebraic equations is $n_a$.
+    <!-- -->
+
+    #### Equations
+
+    $$
+    \Mm \ddot\qv + \Dm\dot\qv + \Km\qv + \Em\yv + \Cm_{\qv}\tp\tlambda = \fv + \fv_u(mbs, t, i_N, \qv, \dot\qv, \yv, \pv_{par})
+    $$ (eq-objectgenericdae-ode2)
+
+    $$
+    \dot\yv + \Cm_{\yv}\tp\tlambda = \Am\yv + \Bm\qv + \Bm_t\dot\qv + \gv + \gv_u(mbs, t, i_N, \qv, \dot\qv, \yv, \pv_{par})
+    $$ (eq-objectgenericdae-ode1)
+
+    $$
+    \Cm_{\qv}\qv + \Cm_{\yv}\yv - \cv_0 = \Null
+    $$ (eq-objectgenericdae-ae)
+
+    With index 2 constraints of the solver, the algebraic equations are $\Cm_{\qv}\dot\qv + \Cm_{\yv}\dot\yv = \Null$.
+    The terms $\Cm_{\qv}\tp\tlambda$ and $\Cm_{\yv}\tp\tlambda$ are added by the solver from the Jacobian of the algebraic
+    equations, as for every constraint. CoordinateLoads are added on the right-hand side of the respective coordinate.
+
+    #### Jacobians
+
+    Without user functions, every Jacobian is given by the object from its matrices. With a forceUserFunction, the
+    Jacobian of the ABRV:ODE2 equations is computed by numerical differentiation, with a rhsUserFunction the one of the
+    ABRV:ODE1 equations; the Jacobian of the algebraic equations is always the constant matrices $\Cm_{\qv}$ and $\Cm_{\yv}$ (#3143).
+
+    #### Marker interfaces
+
+    The object is no body for markers: markers act on its nodes, e.g. `MarkerNodeCoordinate`, `MarkerNodePosition` or
+    `MarkerNodeODE1Coordinate`, for loads, connectors or constraints on its coordinates.
+""",
+    mainParentClass=MainParentClassMainObjectBody,
+    miniExample=r"""    #an oscillator x_tt + 4 x on a NodeGenericODE2 and a first order filter y_t = -y + x on a NodeGenericODE1, coupled by
+    #the algebraic equation x + y = 1, whose multiplier is the coordinate of a NodeGenericAE
+    nODE2 = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0], initialCoordinates=[0.5], initialCoordinates_t=[0],
+                                        numberOfODE2Coordinates=1))
+    nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0], initialCoordinates=[0.5], numberOfODE1Coordinates=1))
+    nAE = mbs.AddNode(NodeGenericAE(referenceCoordinates=[0], initialCoordinates=[0], numberOfAECoordinates=1))
+    mbs.AddObject(ObjectGenericDAE(nodeNumbersODE2=[nODE2], nodeNumbersODE1=[nODE1], nodeNumbersAE=[nAE],
+                                   massMatrix=[[1]], stiffnessMatrix=[[4]],
+                                   systemMatrix=[[-1]], couplingMatrixODE2=[[1]],
+                                   constraintMatrixODE2=[[1]], constraintMatrixODE1=[[1]], constraintVector=[1]))
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #check result at default integration time
+    exu.sys['testResult'] = mbs.systemData.GetODE2Coordinates()[0]
+""",
+    objectType=ObjectTypeObject,
+    outputVariables=[
+        ItemOutputVariable(OVCoordinates, r'the ABRV:ODE2 coordinates $\qv$'),
+        ItemOutputVariable(OVCoordinates_t, r'the ABRV:ODE2 velocities $\dot\qv$'),
+        ],
+    visuParentClass=VisuParentClassVisualizationObject,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"objects's unique name"),
+        ItemParameter(type=TArrayIndex(ItemNode), destination=DestComp+DestParam,
+            pythonName='nodeNumbersODE2',
+            defaultValue='ArrayIndex()',
+            description=r"""the nodes of the ABRV:ODE2 coordinates $\qv$, any nodes with ABRV:ODE2 coordinates"""),
+        ItemParameter(type=TArrayIndex(ItemNode), destination=DestComp+DestParam,
+            pythonName='nodeNumbersODE1',
+            defaultValue='ArrayIndex()',
+            description=r"""the NodeGenericODE1 of the ABRV:ODE1 coordinates $\yv$"""),
+        ItemParameter(type=TArrayIndex(ItemNode), destination=DestComp+DestParam,
+            pythonName='nodeNumbersAE',
+            defaultValue='ArrayIndex()',
+            description=r"""the NodeGenericAE of the algebraic coordinates $\tlambda$; their number of coordinates is the number of algebraic equations"""),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
+            pythonName='massMatrix',
+            defaultValue='Matrix()',
+            description=r"""$\Mm \in \Rcal^{n_2 \times n_2}$the mass matrix; needed if there are ABRV:ODE2 coordinates"""),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
+            pythonName='dampingMatrix',
+            defaultValue='Matrix()',
+            description=r"""$\Dm \in \Rcal^{n_2 \times n_2}$the damping matrix"""),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
+            pythonName='stiffnessMatrix',
+            defaultValue='Matrix()',
+            description=r"""$\Km \in \Rcal^{n_2 \times n_2}$the stiffness matrix"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
+            pythonName='forceVector',
+            defaultValue='Vector()',
+            description=r"""$\fv \in \Rcal^{n_2}$the constant generalized forces"""),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
+            pythonName='couplingMatrixODE1',
+            defaultValue='Matrix()',
+            description=r"""$\Em \in \Rcal^{n_2 \times n_1}$the term of the ABRV:ODE1 coordinates in the ABRV:ODE2 equations"""),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
+            pythonName='systemMatrix',
+            defaultValue='Matrix()',
+            description=r"""$\Am \in \Rcal^{n_1 \times n_1}$the system matrix of the ABRV:ODE1 equations"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
+            pythonName='rhsVector',
+            defaultValue='Vector()',
+            description=r"""$\gv \in \Rcal^{n_1}$the constant right-hand side of the ABRV:ODE1 equations"""),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
+            pythonName='couplingMatrixODE2',
+            defaultValue='Matrix()',
+            description=r"""$\Bm \in \Rcal^{n_1 \times n_2}$the term of the ABRV:ODE2 coordinates in the ABRV:ODE1 equations"""),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
+            pythonName='couplingMatrixODE2_t',
+            defaultValue='Matrix()',
+            description=r"""$\Bm_t \in \Rcal^{n_1 \times n_2}$the term of the ABRV:ODE2 velocities in the ABRV:ODE1 equations"""),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
+            pythonName='constraintMatrixODE2',
+            defaultValue='Matrix()',
+            description=r"""$\Cm_{\qv} \in \Rcal^{n_a \times n_2}$the ABRV:ODE2 coordinates in the algebraic equations"""),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
+            pythonName='constraintMatrixODE1',
+            defaultValue='Matrix()',
+            description=r"""$\Cm_{\yv} \in \Rcal^{n_a \times n_1}$the ABRV:ODE1 coordinates in the algebraic equations"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
+            pythonName='constraintVector',
+            defaultValue='Vector()',
+            description=r"""$\cv_0 \in \Rcal^{n_a}$the constant term of the algebraic equations"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
+            pythonName='parameters',
+            defaultValue='Vector()',
+            description=r"""$\pv_{par} \in \Rcal^{n_p}$the parameters of the object, passed to every user function; see exudyn.advancedUtilities.ParameterLayout; empty by default"""),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='forceUserFunction',
+            defaultValue=0,
+            description=r"""$\fv_u \in \Rcal^{n_2}$A Python user function which computes the nonlinear generalized forces of the ABRV:ODE2 equations""",
+            userFunction=ObjectGenericDAE_forceUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='rhsUserFunction',
+            defaultValue=0,
+            description=r"""$\gv_u \in \Rcal^{n_1}$A Python user function which computes the nonlinear term of the right-hand side of the ABRV:ODE1 equations""",
+            userFunction=ObjectGenericDAE_rhsUserFunction),
+        ItemParameter(type=TNumpyVector, destination=DestComp, cFlags=CFMutable+CFReadOnly,
+            pythonName='tempCoordinates',
+            defaultValue='Vector()',
+            description=r"""$\qv_{temp}$the ABRV:ODE2 coordinates, kept between the calls"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp, cFlags=CFMutable+CFReadOnly,
+            pythonName='tempCoordinates_t',
+            defaultValue='Vector()',
+            description=r"""$\dot\qv_{temp}$the ABRV:ODE2 velocities, kept between the calls"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp, cFlags=CFMutable+CFReadOnly,
+            pythonName='tempCoordinatesODE1',
+            defaultValue='Vector()',
+            description=r"""$\yv_{temp}$the ABRV:ODE1 coordinates, kept between the calls"""),
+        ItemParameter(type=TResizableVector, destination=DestComp, cFlags=CFMutable+CFReadOnly+CFNoInterface,
+            pythonName='tempUserFunctionResult',
+            defaultValue='ResizableVector()',
+            description=r"""the result of a user function, kept between the calls"""),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
+            pythonName='HasUserFunction', implementation='return (parameters.forceUserFunction!=0) || (parameters.rhsUserFunction!=0);',
+            description=r'true if a Python user function is given; the object is then computed in the main thread'),
+        ItemFunctionDef('ComputeMassMatrix'),
+        ItemFunctionDef('ComputeODE2LHS'),
+        ItemFunctionDef('ComputeJacobianODE2_ODE2'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeJacobianODE2_ODE1', args='ResizableMatrix& jacobian',
+            description=r'the Jacobian of the ABRV:ODE2 ABRV:LHS by the ABRV:ODE1 coordinates, the coupling matrix (#3143)'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeODE1RHS', args='Vector& ode1Rhs',
+            description=r'the right-hand side of the ABRV:ODE1 equations'),
+        ItemFunctionDef('ComputeJacobianODE1RHS'),
+        ItemFunctionDef('ComputeAlgebraicEquations'),
+        ItemFunctionDef('ComputeJacobianAE'),
+        ItemFunctionDef('GetAvailableJacobians'),
+        ItemAccessFunctionTypes(),
+        ItemFunctionDef('GetAccessFunction'),
+        ItemFunctionDef('GetOutputVariableBody'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
+            pythonName='GetTypeName',
+            implementation='return "GenericDAE";',
+            description=r'Get type name of object; could also be realized via a string -> type conversion?'),
+        ItemFunctionDef('GetNodeNumber'),
+        ItemFunctionDef('SetNodeNumber'),
+        ItemFunctionDef('GetNumberOfNodes',
+            implementation='return parameters.nodeNumbersODE2.NumberOfItems() + parameters.nodeNumbersODE1.NumberOfItems() + parameters.nodeNumbersAE.NumberOfItems();'),
+        ItemFunctionDef('GetODE2Size'),
+        ItemFunctionDef('GetODE1Size'),
+        ItemFunctionDef('GetAlgebraicEquationsSize'),
+        ItemRequestedTypes('Node', []),
+        ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
+            pythonName='GetType',
+            implementation='return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);',
+            description=r'a body of several nodes, so that its mass matrix, its ABRV:ODE2 equations and its algebraic equations are assembled'),
+        ItemFunctionDef('HasConstantMassMatrix',
+            implementation='return true;'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ComputeObjectCoordinates',
+            args='Vector& q, Vector& q_t, Vector& y, ConfigurationType configuration = ConfigurationType::Current',
+            description=r'the ABRV:ODE2 coordinates and velocities and the ABRV:ODE1 coordinates of the nodes, without reference values'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunction',
+            args='const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction, const char* name, Index size, Vector& result',
+            description=r'call of the force or the rhs user function with the coordinates of tempCoordinates, the size checked; implemented in evaluateUserFunctions.cpp'),
+        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
+            pythonName='show',
+            defaultValue=True,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ],
+    ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectUserBody   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
