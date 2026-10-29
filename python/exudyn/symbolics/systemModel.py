@@ -455,6 +455,10 @@ class SymbolicSystem(SymbolicSystemBase):
             ObjectJointUser - by item number, each a list of numbers and named exudyn.symbolic.Real, the values those of
             the item: UserItemCreator.parameterVariables; Equations() keeps the variables, a variable of several items is
             one variable (#3152)
+        itemJacobians: how the Jacobians of the connectors and joints are computed (#3166): 'chainRule', the derivatives
+            of their recordings by the marker states composed with the marker Jacobians; 'onePass', the generalized
+            forces of a connector - the constraint equations and reaction forces of a joint - as one expression of the
+            coordinates of its bodies and nodes, differentiated in one pass per body or node
 
     Note:
         Its members: mbs; kinds, the list of SymbolicKind; jointKinds, the list of SymbolicKind of the ObjectJointUser
@@ -467,10 +471,14 @@ class SymbolicSystem(SymbolicSystemBase):
         VariableSet 'inputs' (#3149) - and the 'rows' and 'columns' of the entries of the mass matrix; parameterVariables,
         the dict of parameters, checked
     """
-    def __init__(self, mbs, composeSystem=True, parameters=None):
+    def __init__(self, mbs, composeSystem=True, parameters=None, itemJacobians='chainRule'):
         if not mbs.systemIsConsistent:
             raise ValueError('SymbolicSystem: mbs must be assembled first')
+        if itemJacobians not in ['chainRule', 'onePass']:
+            raise ValueError("SymbolicSystem: itemJacobians must be 'chainRule' or 'onePass', not " + str(itemJacobians))
         self.mbs = mbs
+        self.itemJacobians = itemJacobians
+        self._itemFunctions = {} #the functions of 'onePass' by (kind, index), built at their first use
         self.nODE2 = mbs.systemData.ODE2Size()
         self.qRef = np.array(mbs.systemData.GetODE2Coordinates(configuration=exudyn.ConfigurationType.Reference))
         refused = []
@@ -598,7 +606,7 @@ class SymbolicSystem(SymbolicSystemBase):
         for (objectNumber, parameters) in self.parameterVariables.items():
             self.mbs.SetObjectParameter(objectNumber, 'parameters', [float(value.Evaluate()) if isinstance(value, exudyn.symbolic.Real)
                                                                      else value for value in parameters])
-        self.__init__(self.mbs, self.composed is not None, self.parameterVariables)
+        self.__init__(self.mbs, self.composed is not None, self.parameterVariables, self.itemJacobians)
 
     def _ParameterVector(self, backend, objectNumber, numbers):
         """the parameters of an item for Equations: its numbers, or with named parameters its list of variables and
@@ -1061,7 +1069,10 @@ class SymbolicSystem(SymbolicSystemBase):
             for kind in self.jointKinds:
                 for i in range(len(kind.objects)):
                     (ltg, ltgAE) = (kind.ltg[i], kind.parameters[i]['ltgAE'] + offset)
-                    (C_q, dReaction) = self._JointJacobian(kind, i, q, z, t)
+                    if self.itemJacobians == 'onePass':
+                        (C_q, dReaction) = self._JointJacobianOnePass(kind, i, q, z, t)
+                    else:
+                        (C_q, dReaction) = self._JointJacobian(kind, i, q, z, t)
                     J[np.ix_(ltg, ltg)] += factor_q*dReaction
                     J[np.ix_(ltg, ltgAE)] += C_q.T
                     J[np.ix_(ltgAE, ltg)] += factor_q*C_q
@@ -1296,7 +1307,10 @@ class SymbolicSystem(SymbolicSystemBase):
                 ltg = kind.ltg[i]
                 local = np.zeros((len(ltg), len(ltg)))
                 if kind.objectType == 'ConnectorUser':
-                    local = self._ConnectorJacobian(kind, i, q, q_t, t, factor_q, factor_q_t)
+                    if self.itemJacobians == 'onePass':
+                        local = self._ConnectorJacobianOnePass(kind, i, q, q_t, t, factor_q, factor_q_t)
+                    else:
+                        local = self._ConnectorJacobian(kind, i, q, q_t, t, factor_q, factor_q_t)
                     (r, c) = np.nonzero(local)
                     rows.append(ltg[r])
                     columns.append(ltg[c])
@@ -1391,6 +1405,92 @@ class SymbolicSystem(SymbolicSystemBase):
                 if dJrot is not None:
                     local[np.ix_(indices, indices)] -= factor_q*np.einsum('ijk,i->jk', dJrot, forces[torque])
         return local
+
+    def _ItemFunction(self, kind, i, joint):
+        """connector i of kind as one exudyn.symbolic.Function (#3166): its generalized forces, J_pos^T f + J_rot^T m of
+        its markers - for a joint its constraint equations c and its reaction forces C_q^T z, one vector -, of the
+        variables q<g> and q_t<g>, the local coordinates of each body or node g of its markers, then z (of a joint) and t;
+        the same expressions as Equations(); returned with the local indices of each g, built once"""
+        key = (id(kind), i)
+        if key in self._itemFunctions:
+            return self._itemFunctions[key]
+        (item, objectNumber) = (kind.parameters[i], kind.objects[i])
+        n = kind.ltg.shape[1]
+        groups = [] #the local indices of the coordinates of each body or node
+        for marker in item['markers']:
+            group = tuple(int(j) for j in marker['indices']) if marker['type'] != 'fixed' else None
+            if group is not None and group not in groups:
+                groups.append(group)
+        if len(set(j for group in groups for j in group)) != sum(len(group) for group in groups):
+            groups = [tuple(range(n))] #a node marker on a node of a body marker: one variable of all coordinates
+        variables = exudyn.symbolic.VariableSet()
+        (qs, q_ts) = ([0.]*n, [0.]*n)
+        for (g, group) in enumerate(groups):
+            (qg, q_tg) = (variables.Add('q' + str(g), np.zeros(len(group))), variables.Add('q_t' + str(g), np.zeros(len(group))))
+            for (a, j) in enumerate(group):
+                (qs[j], q_ts[j]) = (qg[a], q_tg[a])
+        nConstraints = len(item['ltgAE']) if joint else 0
+        z = variables.Add('z', np.zeros(nConstraints)) if joint else None
+        t = variables.Add('t', 0.)
+        (backend, Call, local) = (_Backend('symbolic', parameterVariables=False), _Caller('symbolic'), np.arange(n))
+        (states, jacobians) = self._MarkerStateExpressions(item, local, backend, Call, t, qs, q_ts)
+        parameters = self._ParameterVector(backend, objectNumber, item['parameters'])
+        f = [0]*n
+        if joint:
+            arguments = (t, objectNumber, states[0], states[2], states[4], states[6], parameters)
+            c = Call(kind.recordings['constraintUserFunction'], *arguments)
+            C = Call(kind.recordings['jacobianUserFunction'], *arguments)
+            self._AddMarkerForces(item, local, backend, C.T @ backend.Vector([z[k] for k in range(nConstraints)]), 6, jacobians, f)
+            result = backend.Vector([c[k] for k in range(nConstraints)] + f)
+        else:
+            forces = Call(kind.recordings['forceUserFunction'], t, objectNumber, *states, backend.Vector([]), parameters)
+            self._AddMarkerForces(item, local, backend, forces, 6 if item['orientation'] else 3, jacobians, f)
+            result = backend.Vector(f)
+        self._itemFunctions[key] = (exudyn.symbolic.Function(result, variables, 'Item' + str(int(objectNumber))), groups)
+        return self._itemFunctions[key]
+
+    def _ItemJacobians(self, kind, i, q, q_t, z, t, joint, velocities):
+        """the derivatives of the Function of connector i of kind (_ItemFunction) by the coordinates of each of its bodies
+        and nodes - and with velocities by their velocities -, each with the local indices of its columns"""
+        (function, groups) = self._ItemFunction(kind, i, joint)
+        ltg = kind.ltg[i]
+        values = []
+        for group in groups:
+            values += [q[ltg[list(group)]], q_t[ltg[list(group)]]]
+        if joint:
+            values.append(z[kind.parameters[i]['ltgAE']])
+        values.append(float(t))
+        derivatives = []
+        for (g, group) in enumerate(groups):
+            d_q = np.array(function.EvaluateJacobian('q' + str(g), *values), dtype=float).reshape(-1, len(group))
+            d_q_t = None
+            if velocities:
+                d_q_t = np.array(function.EvaluateJacobian('q_t' + str(g), *values), dtype=float).reshape(-1, len(group))
+            derivatives.append((list(group), d_q, d_q_t))
+        return derivatives
+
+    def _ConnectorJacobianOnePass(self, kind, i, q, q_t, t, factor_q, factor_q_t):
+        """the local Jacobian of the residual -f of a connector, as _ConnectorJacobian, by the one-pass derivative of its
+        generalized forces (#3166)"""
+        n = kind.ltg.shape[1]
+        local = np.zeros((n, n))
+        for (columns, d_q, d_q_t) in self._ItemJacobians(kind, i, q, q_t, None, t, False, factor_q_t != 0.):
+            if factor_q != 0.:
+                local[:, columns] -= factor_q*d_q
+            if factor_q_t != 0.:
+                local[:, columns] -= factor_q_t*d_q_t
+        return local
+
+    def _JointJacobianOnePass(self, kind, i, q, z, t):
+        """C_q and the derivative of the reaction forces C_q^T z by the coordinates of joint i of kind, as _JointJacobian,
+        by the one-pass derivative of its constraint equations and reaction forces (#3166)"""
+        n = kind.ltg.shape[1]
+        nConstraints = len(kind.parameters[i]['ltgAE'])
+        (C_q, dReaction) = (np.zeros((nConstraints, n)), np.zeros((n, n)))
+        for (columns, d_q, d_q_t) in self._ItemJacobians(kind, i, q, np.zeros(self.nODE2), z, t, True, False):
+            C_q[:, columns] += d_q[:nConstraints]
+            dReaction[:, columns] += d_q[nConstraints:]
+        return (C_q, dReaction)
 
     def Equations(self, format='symbolic', optimize=True, variables=None, massMatrix=True, ODE2RHS=True,
                   massMatrixBlocks=False, algebraicEquations=False, ODE2ReactionForcesLHS=False, ODE1RHS=False):

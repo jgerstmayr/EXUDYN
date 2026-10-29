@@ -205,6 +205,7 @@ symbolicOptimizeTest
 symbolicSparseMatrixTest
 symbolicStatisticsTest
 symbolicSystemEquationsTest
+symbolicSystemItemJacobiansTest
 symbolicSystemJointsTest
 symbolicSystemLoadsTest
 symbolicSystemODE1AETest

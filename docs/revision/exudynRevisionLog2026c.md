@@ -4564,3 +4564,29 @@ little overhead)"; "jacobianUserFunction for all blocks: ... one for all".)*
 - taskmanagerTest.py: its ObjectGenericODE1 now with the analytic Jacobian, the result -0.23406814273662005 (before
   -0.23406814272950313, 7e-12). The description of ObjectGenericODE1 says which Jacobian the solvers take.
 - docs/dev/design/genericDAE.md sections 3 and 4.
+
+<a id="rg12-51-4-3"></a>
+### RG12.51.4.3 — the Jacobians of connectors and joints by the one-pass derivative (2026-10-29, #3166)
+*(Maintainer 2026-10-29: "yes, but they could also be *nodes* with local q and q_t ... no problem if some of these
+expressions are not bit-identical"; "for body markers, probably better per body and for node markers, probably better
+per node. If 'always nodes' is easier to implement, that is also ok ... ltg-maps should exist for both cases".)*
+- python/exudyn/symbolics/systemModel.py: `SymbolicSystem(mbs, ..., itemJacobians='chainRule'|'onePass')`, kept by
+  SetParameterValues. `_ItemFunction(kind, i, joint)`: per connector one `esym.Function` of its generalized forces
+  (J_pos^T f + J_rot^T m of its markers), per joint of [c, C_q^T z]; the variables `q<g>`, `q_t<g>` per body or node g
+  of its markers - their local indices into the item's ltg, so the columns go to the system by kind.ltg -, one variable
+  of all coordinates if the groups overlap (a node marker on a node of a body marker), `z` (joint) and `t`; the
+  expressions by `_MarkerStateExpressions` and `_AddMarkerForces`, as Equations(); built at the first use, cached
+  per item. `_ItemJacobians`: one EvaluateJacobian per variable q<g> (and q_t<g> for the damping);
+  `_ConnectorJacobianOnePass`, `_JointJacobianOnePass` return what `_ConnectorJacobian`, `_JointJacobian` return.
+- Dependencies checked: ObjectConnectorHydraulicActuatorSimple depends on ODE1 coordinates (its forces on the
+  pressures, its ODE1 RHS on q and q_t); joints on z (c_i = z_i on free axes and for inactive joints in the C++
+  joints; C_q^T z); connectors may get data coordinates. SymbolicSystem takes ObjectConnectorUser and ObjectJointUser
+  only, which have none of the first and the reaction forces as z; ODE1 and data coordinates would be further
+  variables of the same Function.
+- python/TestModels/symbolicSystemItemJacobiansTest.py: rigid bodies on revolute, prismatic and spherical joints, a
+  distance constraint, spring-dampers between bodies, mass points and the ground, a torsional spring-damper. Jacobian
+  of the system onePass against chainRule 1.2e-19 relative; per evaluation 0.49 ms against 2.8 ms (the first, which
+  builds the functions, 14.5 ms); SolveGeneralizedAlpha 0.15 s against 0.24 s, the solutions equal to 7e-15.
+- The default stays 'chainRule' until the maintainer decides; with 'onePass' as the default, `_ConnectorJacobian`
+  and `_JointJacobian` (about 120 lines) could go.
+- docs/dev/design/symbolicSystem.md section 12.7, revisions.md.

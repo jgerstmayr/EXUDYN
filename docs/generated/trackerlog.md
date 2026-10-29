@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.264.dev1
+- Exudyn version = 1.13.265.dev1
 - last change = 2026-10-29
 - Number of issues = 3168
-- Number of resolved issues = 3041 (264 in current version)
+- Number of resolved issues = 3042 (265 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` SymbolicSystem: connector and joint Jacobians by the one-pass derivative of one expression per item in the variables of its nodes (#3166)
-  - description: Maintainer 2026-10-29: build the generalized forces of a connector, and the constraint equations and reaction forces of a joint, as one expression in the variables of its nodes (q, q\_t of each node), and take their Jacobian by one EvaluateJacobian pass, instead of the chain rule composed by hand in \_ConnectorJacobian and \_JointJacobian (the derivative by the marker states times the marker Jacobians, plus the terms of marker Jacobians depending on q). The variables per node, so the cost grows with the item, not with the system; the columns scattered by ltg. Also the other coordinates an item can depend on: ODE1 coordinates (ObjectConnectorHydraulicActuatorSimple: forces by the pressures y, its ODE1 RHS by q and q\_t), the algebraic coordinates z of a joint (c\_i = z\_i on free axes and for an inactive joint, C\_q^T z and its derivative by q), and data coordinates (\#3158). Small numerical differences to the composed Jacobian and to the C++ items are accepted; the present code kept as the comparison, accuracy and time measured, then decided which stays.
-  - date raised: 2026-10-29
 - `CHANGE` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: S. Weyrer` CreateFFRFObject function refinements (#3164)
   - description: make rigid-body node-type selectable through the create function (when the cms object is made) and use localHTList instead of offsets for rigid-body markers to include rotations (proposed 2026-10-29 by S. Weyrer)
   - date raised: 2026-10-29
