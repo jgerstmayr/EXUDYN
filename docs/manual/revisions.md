@@ -98,7 +98,7 @@ recording count its nodes, operations, leaves, shared nodes, depth, the size of 
 program, with `detailed=True` per operation and per kind (#3142). `exudyn.symbolic.Function(result, inputs, name)` records an
 expression in declared inputs - a list of named variables or an `esym.VariableSet`, which now holds named Vectors and
 Matrices as well and keeps the order in which they were added - as a UserFunction without item and without `mbs`;
-`SymbolicSystem` composes its system by it (#3149).
+`SymbolicSystem` composes its system by it (#3149). A recording is evaluated and differentiated by a table of its operations, which computes the scalar operations without calling their nodes - a simulation with a recorded force of many scalar operations runs in less than half the time, with the same results bit for bit; `esym.SetTableEvaluation(False)` evaluates by the nodes (#3157).
 **ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
 two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
 also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a

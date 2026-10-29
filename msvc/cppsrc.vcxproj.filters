@@ -423,6 +423,9 @@
     <ClCompile Include="..\src\Linalg\Symbolic.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Linalg\SymbolicTable.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Solver\CSolver.cpp">
       <Filter>CPPsystemAndSolver</Filter>
     </ClCompile>
@@ -1635,6 +1638,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Linalg\SymbolicMatrix.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Linalg\SymbolicTable.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Linalg\SymbolicUtilities.h">

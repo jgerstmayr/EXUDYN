@@ -34,7 +34,7 @@ pb.AddDocu(r"""The sub-module `exudyn.symbolic` (abbreviated `esym`) records mat
 
 **Symbolic user functions.** `CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex)`, [](#sec-advancedutilities-createsymbolicuserfunction), calls the Python function once with symbolic arguments named after its parameters and keeps the result as an `esym.UserFunction`, which is given to the item instead of the Python function; the object must be kept alive in a variable as long as the item uses it. Vectors and matrices as arguments and as the result, a sparse matrix result and the parameters of the user items are supported; most user functions of the items have a symbolic version, and the user bodies and nodes, `ObjectUserBody` and `NodeUser`, are written with them, see [](#sec-useritems).
 
-**How a recording is evaluated.** After the recording, the graph is sorted into a list of operations, the flat program, which computes every node once per call, in this order; nothing is kept from one call to the next. Before that, `CreateSymbolicUserFunction` applies `esym.Optimize`: an expression written twice - `esym.cos(q[2])` in two places - becomes one node, and `1*x`, `x+0` and operations of numbers are removed, with the same results bit for bit (#3085). `UserFunction.GetFlatProgram()` shows the list, `flatEvaluation = False` evaluates the graph as a tree instead, and `UserFunction.Evaluate(...)` calls the function from Python, to compare it with the Python function. `Diff` gives the derivative of an expression with respect to a named variable at the present values, a number, not an expression.
+**How a recording is evaluated.** After the recording, the graph is sorted into a list of operations, the flat program, which computes every node once per call, in this order; nothing is kept from one call to the next. Before that, `CreateSymbolicUserFunction` applies `esym.Optimize`: an expression written twice - `esym.cos(q[2])` in two places - becomes one node, and `1*x`, `x+0` and operations of numbers are removed, with the same results bit for bit (#3085). The list is evaluated by the table of operations: a scalar operation of numbers - `+`, `*`, `sin`, `pow`, a comparison, `IfThenElse` - is computed by its row of the table, without a call of its node, and a vector or matrix operation by its node; `esym.SetTableEvaluation(False)` evaluates every operation by its node instead, with the same results bit for bit (#3157). `UserFunction.GetFlatProgram()` shows the list, `flatEvaluation = False` evaluates the graph as a tree instead, and `UserFunction.Evaluate(...)` calls the function from Python, to compare it with the Python function. `Diff` gives the derivative of an expression with respect to a named variable at the present values, a number, not an expression.
 
 **A recording as code.** `GetFlatProgram(format=...)` of a user function or of expressions and `ToString(format=...)` of an expression write it as Python of numpy, of `exudyn.symbolic` or of sympy, which computes what Exudyn computes; sympy writes C, C++, Fortran, Matlab or LaTeX from it and computes derivatives as expressions (#3087, #3088), see [](#sec-module-misc.symbolicexport).
 
@@ -302,6 +302,19 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Function', cName='',
                         defaultArgs=['', '', "'Function'"],
                         argTypes=['Any', 'Any', 'str'],
                         returnType='Any',
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetTableEvaluation', cName='',
+                        description="True (default): every symbolic user function is evaluated and differentiated by the table of operations, SymbolicProgram, which computes the scalar operations of the flat program without calling their nodes; False: by the flat program of the nodes, the fallback. Both give the same results to the bit (#3157)",
+                        example = r"""esym.SetTableEvaluation(False)""",
+                        argList=['flag'],
+                        argTypes=['bool'],
+                        returnType='None',
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetTableEvaluation', cName='',
+                        description="True, if the symbolic user functions are evaluated by the table of operations, see SetTableEvaluation (#3157)",
+                        returnType='bool',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetStatistics', cName='',

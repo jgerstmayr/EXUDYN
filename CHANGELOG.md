@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 250 | 1.13.254 |
+| 1.13 | Newborn | 251 | 1.13.255 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.255** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: SymbolicProgram, the evaluation and the one-pass derivative of the user functions by the table of operations (#3157)
+  - description: Stage 1 of \#3153 (maintainer 2026-10-28: R1 important, go with the first transition step; 2026-10-29: slightly different results would be acceptable, but check the full equivalence for now). New files src/Linalg/SymbolicTable.h/.cpp: the operation codes and the table (name, number of operands, rule of the forward derivative), SymbolicProgram built from the flat program, the scalar operations of scalar operands computed by the table, the rest by the nodes; the rules of the forward derivative moved there and shared with FlatProgram; esym.SetTableEvaluation(flag) selects the path, FlatProgram the fallback; every symbolic test model equal to the bit on both paths.
+  - **notes:** exudyn.symbolic: the user functions are evaluated and differentiated by a table of their operations, SymbolicProgram, which computes the scalar operations without calling their nodes - the same results bit for bit, less than half the time for a force of many scalar operations; esym.SetTableEvaluation(False) selects the evaluation by the nodes
+  - date resolved: **2026-10-29 09:45**, date raised: 2026-10-29
 - **1.13.254** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` symbolicSystem: ODE2ResidualLHS and ODE2ResidualLHSJacobian, the side of the residual in the name (#3156)
   - description: Maintainer 2026-10-29: ODE2Residual and ODE2ResidualJacobian (\#3155) shall say whether they are RHS or LHS, otherwise the sign is unclear. The residual is M q\_tt - f, all terms on the left-hand side: ODE2Residual -\> ODE2ResidualLHS, ODE2ResidualJacobian -\> ODE2ResidualLHSJacobian; SystemResidual keeps the name of the Exudyn solver function.
   - **notes:** exudyn.misc.symbolicSystem: ODE2ResidualLHS and ODE2ResidualLHSJacobian (were ODE2Residual, ODE2ResidualJacobian): the residual M q\_tt - f with all terms on the left-hand side, the side in the name for the sign

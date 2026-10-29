@@ -122,6 +122,7 @@
     <ClCompile Include="..\src\Linalg\LinearSolver.cpp" />
     <ClCompile Include="..\src\Linalg\Matrix.cpp" />
     <ClCompile Include="..\src\Linalg\Symbolic.cpp" />
+    <ClCompile Include="..\src\Linalg\SymbolicTable.cpp" />
     <ClCompile Include="..\src\Linalg\Vector.cpp" />
     <ClCompile Include="..\src\Main\CSystem.cpp" />
     <ClCompile Include="..\src\Main\MainObjectFactory.cpp" />
@@ -596,6 +597,7 @@
     <ClInclude Include="..\src\Linalg\SlimVector.h" />
     <ClInclude Include="..\src\Linalg\Symbolic.h" />
     <ClInclude Include="..\src\Linalg\SymbolicMatrix.h" />
+    <ClInclude Include="..\src\Linalg\SymbolicTable.h" />
     <ClInclude Include="..\src\Linalg\SymbolicUtilities.h" />
     <ClInclude Include="..\src\Linalg\SymbolicVector.h" />
     <ClInclude Include="..\src\Linalg\symbolicCppDemo.h" />

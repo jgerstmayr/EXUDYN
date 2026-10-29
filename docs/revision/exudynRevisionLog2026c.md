@@ -4372,3 +4372,35 @@ ODE2ResidualRHS. Otherwise, the sign is unclear.")*
   SolveGeneralizedAlpha, which is SystemResidual for a system with ODE1 or algebraic coordinates, is `NewtonResidual`.
   SystemResidual keeps the name of the solver function of Exudyn (its ODE1 rows are RHS minus LHS, as there).
 - The test models of the symbolic system, the design note section 12.5, docs/manual/revisions.md; results unchanged.
+
+<a id="rg12-65-2"></a>
+### RG12.65.2 — stage 1 of the table of operations: SymbolicProgram (2026-10-29, #3157)
+*(Maintainer 2026-10-28: "it is good to go with the first transition step"; 2026-10-29: "Do the next 3 steps you
+mentioned, with the new source files. Regarding the symbolic table: if for efficiency or implementation reasons, it
+would give slightly different results (so not bit for bit), it would also be ok ... for now this is a good idea to
+check the full equivalence.")*
+- New src/Linalg/SymbolicTable.h and SymbolicTable.cpp, in msvc/cppsrc.vcxproj (and .filters) and sources.json - the
+  'all' list by gen_sources.py, the 'minimal' list by hand, as Symbolic.cpp needs it: `OperationCode` (Leaf, Node and
+  the 40 scalar operations), the table `operationTable` - per code the name of its node (FlatName), the number of scalar
+  operands and the rule of its forward derivative -, `OperationCodeOf` (a node of kind Real whose operands are all
+  Real and whose name and number of operands are a row of the table; a leaf; else Node), and `SymbolicProgram`: built
+  from a FlatProgram, its operations in the same order and slots, evaluated by one switch on the codes - the scalar
+  operations read the slots of their operands and compute as the EvaluateFromOperands of their nodes, with the same
+  functions (EM::Sin, std::fmod, ...) -, the leaves and the operations of vectors and matrices by their nodes; its
+  Differentiate as FlatProgram::Differentiate, the rules of the scalar codes from the table.
+- Moved from Symbolic.cpp to SymbolicTable.cpp: `DerivativeRule`, `FindDerivativeRule`, `SlotComponents` and the body
+  of the rules as `ForwardDerivative(rule, node, value, ...)`, which FlatProgram::Differentiate now calls per
+  operation; the code of the rules unchanged.
+- SymbolicUtilities.h: SymbolicFunction and its thread copies keep a SymbolicProgram beside the FlatProgram, built with
+  it; the evaluation of the result (number, vector, matrix, the sparse matrix result) and PyEvaluateJacobian use it when
+  `symbolicProgramEvaluation` is set. `esym.SetTableEvaluation(flag)` and `esym.GetTableEvaluation()`; default True,
+  as both paths gave the same bits on everything measured; False is the fallback.
+- Checked: python/testing/test_symbolicTableEvaluation.py - every scalar operation of the table, its value and its
+  derivative by both arguments, at three points (mod, min and max, which have no derivative, by value); vector and
+  matrix operations with scalar operands; and the 35 test models that record symbolic user functions or use the
+  symbolic system, each run with False and with True, their output (without the lines of times) and their result
+  equal. The same bits everywhere, so no tolerance was needed.
+- Measured (scratchpad timeTable.py): ObjectGenericODE2 with 20 coordinates and a recorded forceUserFunction of 8
+  terms of sin, cos and exp per coordinate, 20000 steps: RK44 0.80 s -> 0.33 s, generalized-alpha 0.49 s -> 0.21 s.
+- docs: the evaluation paragraph of the symbolic module (definitions/pybindSymbolic.py), revisions.md, the design note
+  section 12.7.

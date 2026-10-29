@@ -356,6 +356,20 @@ def Function(result: Any, inputs: Any, name: str='Function') -> Any:
     """
     ...
 @overload
+def SetTableEvaluation(flag: bool) -> None: 
+    """True (default): every symbolic user function is evaluated and differentiated by the table of operations, SymbolicProgram, which computes the scalar operations of the flat program without calling their nodes; False: by the flat program of the nodes, the fallback.
+    
+    Both give the same results to the bit (#3157)
+    
+    Examples:
+        esym.SetTableEvaluation(False)
+    """
+    ...
+@overload
+def GetTableEvaluation() -> bool: 
+    """True, if the symbolic user functions are evaluated by the table of operations, see SetTableEvaluation (#3157)."""
+    ...
+@overload
 def GetStatistics(expressions: Any, detailed: bool=False) -> dict: 
     """The counts of the nodes of one esym.Real, Vector or Matrix, or of a list of them together, by one traversal of the graph, a dict: nodes (the distinct nodes of the graph), operations, leaves (numbers, variables, item outputs), shared (the nodes used by more than one operation), depth (as GetDepth), treeSize (the nodes counted once per path, as str() of a tree and the tree Diff walk them; a float), flatOperations (the operations the flat program writes, as GetFlatProgram() counts them); detailed=True also byOperation (the count per operation of the flat program, '+', 'sin', 'number', 'variable', 'itemOutput', ...) and byKind (per Real, Vector and Matrix) (#3142).
     

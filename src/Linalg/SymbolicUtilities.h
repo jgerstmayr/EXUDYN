@@ -17,6 +17,7 @@
 #include <initializer_list> //for initializer_list in constructor
 #include "Linalg/MatrixContainer.h" //matrix results of symbolic user functions (#3020)
 #include "Utilities/Threading.h" //the thread of an evaluation in the parallel loops (#2978)
+#include "Linalg/SymbolicTable.h" //SymbolicProgram, the evaluation by the table of operations (#3153)
 
 extern bool linalgPrintUsePythonFormat; 
 
@@ -127,6 +128,8 @@ protected:
 	//recording; the tree evaluation stays for comparison (flatEvaluation = false)
 	FlatProgram flatProgram;
 	bool flatEvaluation = true;
+	//the same operations by the table of operations, used if symbolicProgramEvaluation is set (#3153)
+	SymbolicProgram symbolicProgram;
 
 	//the evaluation in the threads of the parallel loops (#2978): the thread t > 0 evaluates its own copy of the
 	//recording - its operations, which keep the values of their vectors and matrices, its arguments and its flat
@@ -136,6 +139,7 @@ protected:
 		FlatNode root;					//!< the result of the copy, referenced by it
 		std::vector<FlatNode> arguments; //!< the leaf of argument i in the copy, referenced by it; empty if the recording does not use it
 		FlatProgram flatProgram;
+		SymbolicProgram symbolicProgram;
 	};
 	std::vector<ThreadCopy*> threadCopies; //!< the copy of thread t is threadCopies[t-1]
 	bool copyable = false;				 //!< the recording can be evaluated in the threads, see ThreadCopiesPossible()
@@ -208,6 +212,8 @@ protected:
 			}
 			if (flatProgram.NumberOfComputations() == 0) { flatProgram.Clear(); } //a leaf: nothing to sort
 		}
+		symbolicProgram.Clear();
+		if (flatProgram.IsBuilt()) { symbolicProgram.Build(flatProgram); }
 		copyable = ThreadCopiesPossible();
 	}
 	//! true, if the result is evaluated by the flat program
@@ -316,6 +322,7 @@ public:
 		returnValue.Delete();
 		argRealList.SetMaxNumberOfItems(0);
 		flatProgram.Clear(); //it points to the nodes of the recording
+		symbolicProgram.Clear();
 	}
 
 	virtual STDstring ToString() const
@@ -330,11 +337,21 @@ public:
 		if (copy) { return copy->flatProgram.IsBuilt() ? &copy->flatProgram : nullptr; }
 		return UseFlatProgram() ? &flatProgram : nullptr;
 	}
+	//! the program of the table for the flat program that evaluates, if symbolicProgramEvaluation is set (#3153)
+	const SymbolicProgram* TableProgram(const ThreadCopy* copy) const
+	{
+		if (!symbolicProgramEvaluation) { return nullptr; }
+		return copy ? &copy->symbolicProgram : &symbolicProgram;
+	}
 
 	//! the result; copy: the copy of the recording of the thread that evaluates, nullptr in the main thread (#2978)
 	virtual Real EvaluateReturnValue(const ThreadCopy* copy = nullptr) const
 	{
-		if (const FlatProgram* program = EvaluatingProgram(copy)) { program->Evaluate(); return program->Result(0); }
+		if (const FlatProgram* program = EvaluatingProgram(copy))
+		{
+			if (const SymbolicProgram* table = TableProgram(copy)) { table->Evaluate(); return table->Result(0); }
+			program->Evaluate(); return program->Result(0);
+		}
 		return returnValue.GetReal()->Evaluate();
 	}
 
@@ -347,7 +364,11 @@ public:
 	//! the returned vector without a copy, valid until the function is evaluated again (#3006)
 	const ResizableConstVector& EvaluateReturnVectorRef(const ThreadCopy* copy = nullptr) const
 	{
-		if (const FlatProgram* program = EvaluatingProgram(copy)) { program->Evaluate(); return program->VectorResult(0); }
+		if (const FlatProgram* program = EvaluatingProgram(copy))
+		{
+			if (const SymbolicProgram* table = TableProgram(copy)) { table->Evaluate(); return table->VectorResult(0); }
+			program->Evaluate(); return program->VectorResult(0);
+		}
 		return returnValue.GetVector()->EvaluateRef();
 	}
 
@@ -360,7 +381,11 @@ public:
 	//! the returned matrix without a copy, valid until the function is evaluated again (#3021)
 	const ResizableConstMatrix& EvaluateReturnMatrixRef(const ThreadCopy* copy = nullptr) const
 	{
-		if (const FlatProgram* program = EvaluatingProgram(copy)) { program->Evaluate(); return program->MatrixResult(0); }
+		if (const FlatProgram* program = EvaluatingProgram(copy))
+		{
+			if (const SymbolicProgram* table = TableProgram(copy)) { table->Evaluate(); return table->MatrixResult(0); }
+			program->Evaluate(); return program->MatrixResult(0);
+		}
 		return returnValue.GetMatrix()->EvaluateRef();
 	}
 	////evaluate all expression trees, storing results in Real*, which are linked to destination of function 
@@ -682,10 +707,9 @@ public:
 				"symbolic user function: the matrix result is larger than the coordinates of the item");
 			result.SetUseDenseMatrix(false);
 			ResizableArray<EXUmath::Triplet>& triplets = result.GetInternalSparseTripletMatrix().GetTriplets();
-			if (const FlatProgram* program = EvaluatingProgram(copy)) //all components in one pass (#3053), in a thread by its copy (#2978)
+			if (EvaluatingProgram(copy)) //all components in one pass (#3053), in a thread by its copy (#2978)
 			{
-				program->Evaluate();
-				const ResizableMatrix& matrix = program->MatrixResult(0);
+				const ResizableMatrix& matrix = EvaluateReturnMatrixRef(copy);
 				for (const std::pair<Index, Index>& item : resultPattern)
 				{
 					triplets.AppendPure(EXUmath::Triplet(ltg[item.first], ltg[item.second], matrix(item.first, item.second)));
@@ -796,7 +820,13 @@ public:
 		Index columns = (size < 0) ? 1 : size;
 		FlatNode root = ResultNode();
 		const Real* onePass = nullptr; //the derivatives of the result, component c by component j at [c*columns + j]
-		if (UseFlatProgram())
+		if (UseFlatProgram() && symbolicProgramEvaluation) //by the table (#3153)
+		{
+			symbolicProgram.Evaluate();
+			symbolicProgram.Differentiate(variable, columns, size < 0);
+			onePass = symbolicProgram.ResultDerivative(0);
+		}
+		else if (UseFlatProgram())
 		{
 			flatProgram.Evaluate();
 			flatProgram.Differentiate(variable, columns, size < 0);
