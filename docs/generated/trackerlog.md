@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.261.dev1
+- Exudyn version = 1.13.262.dev1
 - last change = 2026-10-29
-- Number of issues = 3163
-- Number of resolved issues = 3038 (261 in current version)
+- Number of issues = 3164
+- Number of resolved issues = 3039 (262 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` exudyn.symbolic: the derivative as new nodes, a column of the table of operations (#3163)
+  - description: Superseding \#3108 (maintainer 2026-10-29: check whether RG12.54.2 is still needed with the table). The numbers of a Jacobian are given by the one-pass forward derivative (\#3116), the table and SymbolicProgram (\#3157). Still needed is the Jacobian as an expression - a flat program of its own - for the export of the Newton matrix (G1, numpy, sympy), the uniform evaluation on the GPU (RG14) and second derivatives: per operation code its derivative as new nodes from the derivatives of the operands, a column of the table instead of a function per node class, then Optimize; its cost and size against the one-pass derivative. After stage 3 of \#3153.
+  - date raised: 2026-10-29
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic parameters for every item of the symbolic system: a general way beyond the scalar parameters of the user items (#3159)
   - description: Maintainer 2026-10-29: symbolic parameters are required in the long term; named parameters for the inertia of a rigid body and for the joints need a general solution (\#3152 took the scalar parameters of the mass point and the spring-dampers). To design: parameters of any structure (an inertia from mass, inertia tensor and center of mass, the frames and axes of joints, the matrices of ObjectGenericODE2, the values of loads) given as named esym.Real or expressions of them, mapped to the numbers of the items; a parameter set per system (a VariableSet) instead of per item lists; the derivatives by them (sensitivities) through Equations and the composed system; later the C++ items with numerical and symbolic parameters (symbolicUserItems.md section 6).
   - date raised: 2026-10-29
@@ -9065,9 +9068,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-26
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` exudyn/misc/symbolicUserItems.py: user items with the interfaces of the built-in items (#3111)
   - description: revision2026c step RG12.55 (maintainer 2026-10-26): a collection of user items with symbolic user functions whose creation has the same interface as the built-in items of itemInterface (a user rigid body as ObjectRigidBody, parameters the user item lacks refused or ignored with a note), so that the same systems are built with the same calls: at least mass point 3D, rigid body 3D, revolute, prismatic, spherical and distance joint, spring-damper, torsional spring-damper, sphere-sphere contact; first the list of what a good representation of multibody systems needs. Before the symbolic system model goes deeper.
-  - date raised: 2026-10-26
-- `IDEA` `HIGH EFF` `raised by: Claude-JG` The Jacobians of symbolic user functions by the automatic differentiation of exudyn.symbolic (#3108)
-  - description: revision2026c step RG12.54 (maintainer 2026-10-26): instead of central differences, the Jacobian of a symbolic user function (position, rotation, constraint, residual) could be derived by esym.Diff - per coordinate q\[i\] and q\_t\[i\] it works now, but slowly; to be analyzed: a derivative as one more flat program, and whether n derivatives of a function of n arguments need a local stack of their own.
   - date raised: 2026-10-26
 - `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` The position and rotation Jacobians of NodeUser, ObjectUserBody and MarkerBodyUser by central differences (#3107)
   - description: revision2026c step RG7.17 (maintainer 2026-10-26): when their Jacobian functions are missing, the three user items compute the position and rotation Jacobians by central differences, so a joint on them gets a partly numerical constraint Jacobian - nowhere else in Exudyn. To be decided (tbd): require the Jacobian functions, at least when a joint uses the item, and keep central differences only behind an exudyn.special flag with its dangers documented. Kept as it is for now.

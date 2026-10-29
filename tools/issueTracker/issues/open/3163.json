@@ -1,0 +1,11 @@
+{
+  "number": 3163,
+  "title": "exudyn.symbolic: the derivative as new nodes, a column of the table of operations",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Superseding #3108 (maintainer 2026-10-29: check whether RG12.54.2 is still needed with the table). The numbers of a Jacobian are given by the one-pass forward derivative (#3116), the table and SymbolicProgram (#3157). Still needed is the Jacobian as an expression - a flat program of its own - for the export of the Newton matrix (G1, numpy, sympy), the uniform evaluation on the GPU (RG14) and second derivatives: per operation code its derivative as new nodes from the derivatives of the operands, a column of the table instead of a function per node class, then Optimize; its cost and size against the one-pass derivative. After stage 3 of #3153.",
+  "dateRaised": "2026-10-29",
+  "deadline": "2027-04-27"
+}

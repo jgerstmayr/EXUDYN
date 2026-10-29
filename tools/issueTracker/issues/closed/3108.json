@@ -2,10 +2,14 @@
   "number": 3108,
   "title": "The Jacobians of symbolic user functions by the automatic differentiation of exudyn.symbolic",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "IDEA",
   "effort": "HIGH",
   "description": "revision2026c step RG12.54 (maintainer 2026-10-26): instead of central differences, the Jacobian of a symbolic user function (position, rotation, constraint, residual) could be derived by esym.Diff - per coordinate q[i] and q_t[i] it works now, but slowly; to be analyzed: a derivative as one more flat program, and whether n derivatives of a function of n arguments need a local stack of their own.",
   "dateRaised": "2026-10-26",
-  "deadline": "2027-04-24"
+  "deadline": "2027-04-24",
+  "dateResolved": "2026-10-29 11:37",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded by #3163: the numbers of the Jacobians are given by the one-pass derivative (#3116) and the table (#3157); the derivative as new nodes is a column of the table of operations, #3163",
+  "resolvedInVersion": "1.13.262"
 }

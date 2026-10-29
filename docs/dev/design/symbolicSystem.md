@@ -132,6 +132,9 @@ next to `NewWithOperands`; differentiating a program with respect to its n input
 n derivative slots per node, most of them zero - kept sparse, so the cost follows the real dependencies. C is the
 runtime form inside C++ for the item Jacobians of RG7.17. D is the subject of RG12.54 (#3108), C of RG12.59 (#3116);
 B, which both need for their check, of RG12.58 (#3115).
+With the table of operations (section 12.7, R1), D is no function per node class but a column of the table, the
+derivative of each operation code as new nodes: step RG12.65.6 (#3163, superseding #3108); C is done (#3116, and by
+`SymbolicProgram`, #3157).
 
 The marker Jacobians of the joints and connectors (section 3) are derivatives of the marker position and rotation
 programs by D - the reason the earlier plan needed sympy.
