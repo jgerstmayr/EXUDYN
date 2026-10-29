@@ -1,0 +1,15 @@
+{
+  "number": 3160,
+  "title": "exudyn.symbolic: Optimize, the export and the count on the table of operations",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Stage 2 of #3153 (maintainer 2026-10-29: do RG12.65.3 now): the rules of Optimize for the scalar operations by their codes, the constant folding by the evaluation of the table, the keys of merged operations by the codes and the commutative column of the table; the names of the export and of GetStatistics by the table; GetStatistics counts the operations of the table (tableOperations). Results unchanged.",
+  "dateRaised": "2026-10-29",
+  "deadline": "2027-04-27",
+  "dateResolved": "2026-10-29 11:08",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.symbolic: esym.Optimize folds constants and applies its rules to the scalar operations by the table of operations, the export and GetStatistics take the names of the table, and GetStatistics counts the operations computed by the table as tableOperations; results unchanged",
+  "resolvedInVersion": "1.13.258"
+}

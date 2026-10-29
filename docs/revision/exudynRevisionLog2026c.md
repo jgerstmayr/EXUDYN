@@ -4453,3 +4453,19 @@ w.r.t. these quantities"; 2026-10-29: "Do the next 3 steps you mentioned".)*
   EvaluateJacobian against central differences by SetParameterValues (1.6e-10), the numpy code with m1 and k as
   arguments (0.0), a value that is not that of the item refused.
 - docs: revisions.md, the design note section 12.7, the Details of both modules.
+
+<a id="rg12-65-3"></a>
+### RG12.65.3 — stage 2 of the table: Optimize, the export and the count (2026-10-29, #3160)
+*(Maintainer 2026-10-29: "do RG12.65.3 now".)*
+- src/Linalg/SymbolicTable.h: the column `commutative` of the table (+, *, ==, !=); `ScalarOperation(code, x)`, the
+  value of a scalar operation from its operands x(i), a template inlined into its users - the switch of
+  SymbolicProgram::Evaluate moved there; `OperationCodeOfNode(node)` (the kinds of the operands read from the node),
+  `IsTableCode`, `OperationName(node)`.
+- src/Linalg/Symbolic.cpp, Optimizer: a constant scalar operation is folded by ScalarOperation (an operation of its
+  node, as the component of a vector of numbers, by its node as before); the rules of *, +, -, /, pow, pos, neg and
+  IfThenElse select by the code instead of the C++ class (`Is<ExpressionOperatorMul>`); the key of an operation is
+  its code for the table and its class otherwise, and the commutative operations are those of the column. The rules of
+  the vector and matrix operations and of the components stay with their classes, which have no codes yet.
+- FlatProgramData (the export) and StatisticsName (the count) take the name of the table; GetStatistics gives
+  `tableOperations`, the operations of the flat program computed by the table; symbolicStatisticsTest.py checks it.
+- All test models unchanged, among them symbolicOptimizeTest.py and symbolicExportTest.py to the bit.

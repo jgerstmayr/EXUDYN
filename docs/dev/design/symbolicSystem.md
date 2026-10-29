@@ -675,5 +675,12 @@ shared by several items is one variable. Checked (2026-10-28):
   count on the table; 3. recording builds the program directly; 4. the old flat evaluation, the rules of
   `FlatProgram::Differentiate` and the tree derivative removed.
 - **Stage 1 is done** (RG12.65.2, #3157): `src/Linalg/SymbolicTable.h/.cpp` hold the operation codes, the table - name, number of scalar operands, rule of the forward derivative - and `SymbolicProgram`, built from the flat program of a recording in its order. A scalar operation of scalar operands is one case of a switch on its code, which reads the slots of its operands directly; a leaf and a vector or matrix operation are computed by their node, as by `FlatProgram`. The rules of the forward derivative (`FindDerivativeRule`, `ForwardDerivative`) moved to the new file and serve both programs. `esym.SetTableEvaluation(flag)`, default True, selects the path; `FlatProgram` stays as the fallback. Measured: all 35 test models with symbolic user functions give the same output and results to the bit on both paths (python/testing/test_symbolicTableEvaluation.py); a 20-coordinate ObjectGenericODE2 with a recorded force of 8 terms of sin, cos and exp per coordinate takes 0.33 s instead of 0.80 s for 20000 steps of RK44 and 0.21 s instead of 0.49 s for generalized-alpha - the virtual call per scalar operation was more than half of the time.
+- **Stage 2 is done** (RG12.65.3, #3160): the table has the column `commutative`, and the evaluation of a scalar
+  operation is one function, `ScalarOperation(code, operands)`, used by `SymbolicProgram` and by `Optimize`, which
+  folds constants with it. The rules of `Optimize` for the scalar operations (x*1, x+0, -(-x), pow(x, 0), the
+  combination of numbers, IfThenElse of a number) select by the code of the node instead of its C++ class, and the key
+  of a merged operation is its code; the export (`GetFlatProgramData`) and the count (`GetStatistics`) take the names
+  of the table, and the count gives `tableOperations`. The rules of the vector and matrix operations stay with their
+  classes until they get codes. All results unchanged.
 - **The decisions that remain**: handles instead of node objects in stage 3, merging equal nodes at recording, and
   whether the export is written from the table in C++ or stays in Python reading the names of the table.

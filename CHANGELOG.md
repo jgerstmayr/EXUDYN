@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 253 | 1.13.257 |
+| 1.13 | Newborn | 254 | 1.13.258 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.258** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: Optimize, the export and the count on the table of operations (#3160)
+  - description: Stage 2 of \#3153 (maintainer 2026-10-29: do RG12.65.3 now): the rules of Optimize for the scalar operations by their codes, the constant folding by the evaluation of the table, the keys of merged operations by the codes and the commutative column of the table; the names of the export and of GetStatistics by the table; GetStatistics counts the operations of the table (tableOperations). Results unchanged.
+  - **notes:** exudyn.symbolic: esym.Optimize folds constants and applies its rules to the scalar operations by the table of operations, the export and GetStatistics take the names of the table, and GetStatistics counts the operations computed by the table as tableOperations; results unchanged
+  - date resolved: **2026-10-29 11:08**, date raised: 2026-10-29
 - **1.13.257** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Named esym.Real in the parameters of the user items, kept beside the numbers of the items and used by the symbolic system (#3152)
   - description: Maintainer 2026-10-28: the parameters of a user item given as numbers and named esym.Real (a mass m1 = esym.Real('m1', 5.)), so that the expressions keep the names and a variable shared by several items is one variable, and parts of the equations can be differentiated by them. Checked: the C++ item stores numbers and refuses esym.Real, so the item gets the values and UserItemCreator (and a helper for items made directly) keeps the variables; the recording of a kind keeps parameters as its argument; SymbolicSystem.Equations passes the variables as the parameters of each item, the flat program lists them as arguments, Diff by them works; changed values reach the items by an explicit call. Design symbolicSystem.md section 12.7.
   - **notes:** the parameters of user items as named exudyn.symbolic.Real: UserItemCreator.CreateMassPoint(mass=m1) and the spring-dampers give the item the value and keep the variable in parameterVariables; SymbolicSystem(mbs, parameters=...) keeps the variables in Equations(), its export takes them as arguments, so the derivatives by them follow; SetParameterValues sets the variables and the items

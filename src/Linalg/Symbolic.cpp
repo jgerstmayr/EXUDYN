@@ -587,7 +587,7 @@ public:
 			}
 			else
 			{
-				const char* name = FlatName(node);
+				const char* name = OperationName(node); //of the table, or of the node (#3153)
 				CHECKandTHROW(name[0] != 0, STDstring("GetFlatProgramData: the operation has no name: ") + ToString(node));
 				entry["op"] = name;
 				entry["kind"] = KindName(node.kind);
@@ -994,7 +994,7 @@ static const char* StatisticsName(const FlatNode& node)
 {
 	if (FlatProgramData::NumberOfOperands(node) != 0)
 	{
-		const char* name = FlatProgramData::FlatName(node);
+		const char* name = OperationName(node); //of the table, or of the node (#3153)
 		return name[0] ? name : "unnamed";
 	}
 	switch (node.kind)
@@ -1069,6 +1069,9 @@ py::dict StatisticsOfNodes(const std::vector<FlatNode>& roots, Index numbers, bo
 	statistics["depth"] = maximumDepth;
 	statistics["treeSize"] = totalTreeSize;
 	statistics["flatOperations"] = roots.size() ? program.NumberOfComputations() : 0;
+	SymbolicProgram tableProgram; //the operations computed by the table (#3153)
+	if (roots.size() && program.NumberOfOperations()) { tableProgram.Build(program); }
+	statistics["tableOperations"] = tableProgram.NumberOfTableSteps();
 	if (detailed)
 	{
 		if (numbers) { byOperation["number"] += numbers; byKind["Real"] += numbers; }
@@ -1378,15 +1381,16 @@ class Optimizer
 		}
 		return "leaf#" + Bytes(&node.node, sizeof(void*));
 	}
-	//! the key of an operation: its class and its operands; the two operands of +, *, == and != sorted, which is exact
+	//! the key of an operation: its code of the table (#3153) - or its class, for an operation of its node - and its
+	//! operands; the two operands of a commutative operation of the table (+, *, ==, !=) sorted, which is exact
 	static std::string OperationKey(const FlatNode& node, std::vector<FlatNode> operands)
 	{
-		if (operands.size() == 2 && (Is<ExpressionOperatorPlus>(node, FlatKind::Real) || Is<ExpressionOperatorMul>(node, FlatKind::Real)
-			|| Is<ExpressionOperatorEQ>(node, FlatKind::Real) || Is<ExpressionOperatorNEQ>(node, FlatKind::Real)))
+		OperationCode code = OperationCodeOfNode(node);
+		if (operands.size() == 2 && OperationOfCode(code).commutative)
 		{
 			if (std::less<const void*>()(operands[1].node, operands[0].node)) { std::swap(operands[0], operands[1]); }
 		}
-		std::string key = TypeOf(node).name();
+		std::string key = IsTableCode(code) ? "code#" + std::to_string((int)code) : STDstring(TypeOf(node).name());
 		for (const FlatNode& operand : operands) { key += "#" + Bytes(&operand.node, sizeof(void*)); }
 		return key;
 	}
@@ -1443,8 +1447,16 @@ class Optimizer
 		bool isNumber1 = operands.size() > 1 && IsNumber(operands[1], b);
 		if (node.kind == FlatKind::Real)
 		{
+			const OperationCode code = OperationCodeOfNode(node); //the rules of the scalar operations by their code (#3153)
 			bool allConstant = true;
 			for (const FlatNode& operand : operands) { allConstant = allConstant && IsConstant(operand); }
+			if (allConstant && IsTableCode(code)) //computed by the table, as the evaluation computes it
+			{
+				std::vector<Real> numbers(operands.size());
+				for (Index i = 0; i < (Index)operands.size(); i++) { numbers[i] = ((const ExpressionReal*)operands[i].node)->GetValue(); }
+				result = Number(ScalarOperation(code, [&numbers](Index i) { return numbers[i]; }));
+				return true;
+			}
 			if (allConstant) //computed by the function of the node, as the evaluation computes it
 			{
 				std::vector<FlatValue> values(operands.size());
@@ -1457,7 +1469,7 @@ class Optimizer
 				result = Number(((const ExpressionBase*)node.node)->EvaluateFromOperands(values.data()));
 				return true;
 			}
-			if (Is<ExpressionOperatorMul>(node, FlatKind::Real))
+			if (code == OperationCode::Multiply)
 			{
 				if (isNumber0 && a == 1) { result = operands[1]; return true; }
 				if (isNumber1 && b == 1) { result = operands[0]; return true; }
@@ -1466,7 +1478,7 @@ class Optimizer
 				{
 					const FlatNode& other = operands[isNumber0 ? 1 : 0];
 					Real c;
-					if (Is<ExpressionOperatorMul>(other, FlatKind::Real))
+					if (OperationCodeOfNode(other) == OperationCode::Multiply)
 					{
 						for (Index i = 0; i < 2; i++)
 						{
@@ -1479,7 +1491,7 @@ class Optimizer
 					}
 				}
 			}
-			else if (Is<ExpressionOperatorPlus>(node, FlatKind::Real))
+			else if (code == OperationCode::Plus)
 			{
 				if (isNumber0 && a == 0) { result = operands[1]; return true; }
 				if (isNumber1 && b == 0) { result = operands[0]; return true; }
@@ -1487,7 +1499,7 @@ class Optimizer
 				{
 					const FlatNode& other = operands[isNumber0 ? 1 : 0];
 					Real c;
-					if (Is<ExpressionOperatorPlus>(other, FlatKind::Real))
+					if (OperationCodeOfNode(other) == OperationCode::Plus)
 					{
 						for (Index i = 0; i < 2; i++)
 						{
@@ -1500,28 +1512,28 @@ class Optimizer
 					}
 				}
 			}
-			else if (Is<ExpressionOperatorMinus>(node, FlatKind::Real))
+			else if (code == OperationCode::Minus)
 			{
 				if (isNumber1 && b == 0) { result = operands[0]; return true; }
 				if (level >= 2 && operands[0].node == operands[1].node) { result = Number(0.); return true; }
 			}
-			else if (Is<ExpressionOperatorDiv>(node, FlatKind::Real))
+			else if (code == OperationCode::Divide)
 			{
 				if (isNumber1 && b == 1) { result = operands[0]; return true; }
 				if (level >= 2 && isNumber0 && a == 0) { result = Number(0.); return true; }
 				if (level >= 2 && operands[0].node == operands[1].node) { result = Number(1.); return true; }
 			}
-			else if (Is<ExpressionPower>(node, FlatKind::Real))
+			else if (code == OperationCode::Pow)
 			{
 				if (isNumber1 && b == 1) { result = operands[0]; return true; }
 				if (isNumber1 && b == 0) { result = Number(1.); return true; } //pow(x, 0) is 1, also for nan
 			}
-			else if (Is<ExpressionUnaryPlus>(node, FlatKind::Real)) { result = operands[0]; return true; }
-			else if (Is<ExpressionUnaryMinus>(node, FlatKind::Real) && Is<ExpressionUnaryMinus>(operands[0], FlatKind::Real))
+			else if (code == OperationCode::Positive) { result = operands[0]; return true; }
+			else if (code == OperationCode::Negative && OperationCodeOfNode(operands[0]) == OperationCode::Negative)
 			{
 				result = FlatProgramData::GetOperand(operands[0], 0); return true;
 			}
-			else if (Is<ExpressionIfThenElse>(node, FlatKind::Real) && isNumber0) { result = a ? operands[1] : operands[2]; return true; }
+			else if (code == OperationCode::IfThenElse && isNumber0) { result = a ? operands[1] : operands[2]; return true; }
 			else if (Is<VectorExpressionOperatorBracket>(node, FlatKind::Real) && isNumber1 && Is<VectorExpressionSReal>(operands[0], FlatKind::Vector))
 			{
 				Index i = (Index)b;

@@ -31,48 +31,48 @@ bool symbolicProgramEvaluation = true;
 //! the table: one row per code, in the order of OperationCode
 static const OperationInfo operationTable[] =
 {
-	{ OperationCode::Leaf, "", -1, Fallback },
-	{ OperationCode::Node, "", -1, Fallback },
-	{ OperationCode::Plus, "+", 2, RealPlus },
-	{ OperationCode::Minus, "-", 2, RealMinus },
-	{ OperationCode::Multiply, "*", 2, RealMul },
-	{ OperationCode::Divide, "/", 2, RealDiv },
-	{ OperationCode::Equal, "==", 2, Zero }, //piecewise constant: zero where the derivative exists
-	{ OperationCode::NotEqual, "!=", 2, Zero },
-	{ OperationCode::Greater, ">", 2, Zero },
-	{ OperationCode::GreaterEqual, ">=", 2, Zero },
-	{ OperationCode::LessEqual, "<=", 2, Zero },
-	{ OperationCode::Less, "<", 2, Zero },
-	{ OperationCode::Positive, "pos", 1, RealPos },
-	{ OperationCode::Negative, "neg", 1, RealNeg },
-	{ OperationCode::IsFinite, "isfinite", 1, Zero },
-	{ OperationCode::Abs, "abs", 1, Fallback },
-	{ OperationCode::Sign, "sign", 1, Zero },
-	{ OperationCode::Not, "Not", 1, Zero },
-	{ OperationCode::Round, "round", 1, Zero },
-	{ OperationCode::Ceil, "ceil", 1, Zero },
-	{ OperationCode::Floor, "floor", 1, Zero },
-	{ OperationCode::Sqrt, "sqrt", 1, RealSqrt },
-	{ OperationCode::Exp, "exp", 1, RealExp },
-	{ OperationCode::Log, "log", 1, RealLog },
-	{ OperationCode::Sin, "sin", 1, RealSin },
-	{ OperationCode::Cos, "cos", 1, RealCos },
-	{ OperationCode::Tan, "tan", 1, RealTan },
-	{ OperationCode::ASin, "asin", 1, RealASin },
-	{ OperationCode::ACos, "acos", 1, RealACos },
-	{ OperationCode::ATan, "atan", 1, RealATan },
-	{ OperationCode::Sinh, "sinh", 1, RealSinh },
-	{ OperationCode::Cosh, "cosh", 1, RealCosh },
-	{ OperationCode::Tanh, "tanh", 1, RealTanh },
-	{ OperationCode::ASinh, "asinh", 1, RealASinh },
-	{ OperationCode::ACosh, "acosh", 1, RealACosh },
-	{ OperationCode::ATanh, "atanh", 1, RealATanh },
-	{ OperationCode::Pow, "pow", 2, RealPow },
-	{ OperationCode::Atan2, "atan2", 2, RealAtan2 },
-	{ OperationCode::Mod, "mod", 2, Fallback },
-	{ OperationCode::Min, "min", 2, Fallback },
-	{ OperationCode::Max, "max", 2, Fallback },
-	{ OperationCode::IfThenElse, "IfThenElse", 3, RealIfThenElse },
+	{ OperationCode::Leaf, "", -1, Fallback, false },
+	{ OperationCode::Node, "", -1, Fallback, false },
+	{ OperationCode::Plus, "+", 2, RealPlus, true },
+	{ OperationCode::Minus, "-", 2, RealMinus, false },
+	{ OperationCode::Multiply, "*", 2, RealMul, true },
+	{ OperationCode::Divide, "/", 2, RealDiv, false },
+	{ OperationCode::Equal, "==", 2, Zero, true }, //piecewise constant: zero where the derivative exists
+	{ OperationCode::NotEqual, "!=", 2, Zero, true },
+	{ OperationCode::Greater, ">", 2, Zero, false },
+	{ OperationCode::GreaterEqual, ">=", 2, Zero, false },
+	{ OperationCode::LessEqual, "<=", 2, Zero, false },
+	{ OperationCode::Less, "<", 2, Zero, false },
+	{ OperationCode::Positive, "pos", 1, RealPos, false },
+	{ OperationCode::Negative, "neg", 1, RealNeg, false },
+	{ OperationCode::IsFinite, "isfinite", 1, Zero, false },
+	{ OperationCode::Abs, "abs", 1, Fallback, false },
+	{ OperationCode::Sign, "sign", 1, Zero, false },
+	{ OperationCode::Not, "Not", 1, Zero, false },
+	{ OperationCode::Round, "round", 1, Zero, false },
+	{ OperationCode::Ceil, "ceil", 1, Zero, false },
+	{ OperationCode::Floor, "floor", 1, Zero, false },
+	{ OperationCode::Sqrt, "sqrt", 1, RealSqrt, false },
+	{ OperationCode::Exp, "exp", 1, RealExp, false },
+	{ OperationCode::Log, "log", 1, RealLog, false },
+	{ OperationCode::Sin, "sin", 1, RealSin, false },
+	{ OperationCode::Cos, "cos", 1, RealCos, false },
+	{ OperationCode::Tan, "tan", 1, RealTan, false },
+	{ OperationCode::ASin, "asin", 1, RealASin, false },
+	{ OperationCode::ACos, "acos", 1, RealACos, false },
+	{ OperationCode::ATan, "atan", 1, RealATan, false },
+	{ OperationCode::Sinh, "sinh", 1, RealSinh, false },
+	{ OperationCode::Cosh, "cosh", 1, RealCosh, false },
+	{ OperationCode::Tanh, "tanh", 1, RealTanh, false },
+	{ OperationCode::ASinh, "asinh", 1, RealASinh, false },
+	{ OperationCode::ACosh, "acosh", 1, RealACosh, false },
+	{ OperationCode::ATanh, "atanh", 1, RealATanh, false },
+	{ OperationCode::Pow, "pow", 2, RealPow, false },
+	{ OperationCode::Atan2, "atan2", 2, RealAtan2, false },
+	{ OperationCode::Mod, "mod", 2, Fallback, false },
+	{ OperationCode::Min, "min", 2, Fallback, false },
+	{ OperationCode::Max, "max", 2, Fallback, false },
+	{ OperationCode::IfThenElse, "IfThenElse", 3, RealIfThenElse, false },
 };
 static_assert(sizeof(operationTable)/sizeof(operationTable[0]) == (size_t)OperationCode::NumberOfCodes, "a row per operation code");
 
@@ -92,6 +92,38 @@ OperationCode OperationCodeOf(const FlatNode& node, const std::vector<FlatKind>&
 	auto found = codeOfName.find(((const ExpressionBase*)node.node)->FlatName());
 	if (found == codeOfName.end() || OperationOfCode(found->second).numberOfOperands != (Index)operandKinds.size()) { return OperationCode::Node; }
 	return found->second;
+}
+
+//! the operand i of a node of any kind
+static FlatNode OperandOfNode(const FlatNode& node, Index i)
+{
+	switch (node.kind)
+	{
+	case FlatKind::Real: return ((const ExpressionBase*)node.node)->GetOperand(i);
+	case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->GetOperand(i);
+	default: return ((const MatrixExpressionBase*)node.node)->GetOperand(i);
+	}
+}
+
+OperationCode OperationCodeOfNode(const FlatNode& node)
+{
+	Index n = 0;
+	switch (node.kind)
+	{
+	case FlatKind::Real: n = ((const ExpressionBase*)node.node)->NumberOfOperands(); break;
+	case FlatKind::Vector: n = ((const VectorExpressionBase*)node.node)->NumberOfOperands(); break;
+	default: n = ((const MatrixExpressionBase*)node.node)->NumberOfOperands(); break;
+	}
+	std::vector<FlatKind> kinds(n);
+	for (Index i = 0; i < n; i++) { kinds[i] = OperandOfNode(node, i).kind; }
+	return OperationCodeOf(node, kinds);
+}
+
+static const char* FlatNameOf(const FlatNode& node);
+const char* OperationName(const FlatNode& node)
+{
+	OperationCode code = OperationCodeOfNode(node);
+	return IsTableCode(code) ? OperationOfCode(code).name : FlatNameOf(node);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -428,67 +460,19 @@ void SymbolicProgram::Evaluate() const
 	{
 		const Step& step = steps[k];
 		const Index* o = operandSlot + step.firstOperand;
-		//the operands of a scalar operation: the values of the slots, as the nodes compute them in EvaluateFromOperands
-		#define EXU_A slot[o[0]].real
-		#define EXU_B slot[o[1]].real
-		Real& out = slot[k].real;
-		switch (step.code)
+		if (IsTableCode(step.code)) //a scalar operation, from the values of the slots of its operands
 		{
-		case OperationCode::Plus: out = EXU_A + EXU_B; break;
-		case OperationCode::Minus: out = EXU_A - EXU_B; break;
-		case OperationCode::Multiply: out = EXU_A * EXU_B; break;
-		case OperationCode::Divide: out = EXU_A / EXU_B; break;
-		case OperationCode::Equal: out = Real(EXU_A == EXU_B); break;
-		case OperationCode::NotEqual: out = Real(EXU_A != EXU_B); break;
-		case OperationCode::Greater: out = Real(EXU_A > EXU_B); break;
-		case OperationCode::GreaterEqual: out = Real(EXU_A >= EXU_B); break;
-		case OperationCode::LessEqual: out = Real(EXU_A <= EXU_B); break;
-		case OperationCode::Less: out = Real(EXU_A < EXU_B); break;
-		case OperationCode::Positive: out = EXU_A; break;
-		case OperationCode::Negative: out = -EXU_A; break;
-		case OperationCode::IsFinite: out = std::isfinite(EXU_A); break;
-		case OperationCode::Abs: out = std::fabs(EXU_A); break;
-		case OperationCode::Sign: out = EXUstd::SignReal(EXU_A); break;
-		case OperationCode::Not: out = !(EXU_A); break;
-		case OperationCode::Round: out = std::round(EXU_A); break;
-		case OperationCode::Ceil: out = std::ceil(EXU_A); break;
-		case OperationCode::Floor: out = std::floor(EXU_A); break;
-		case OperationCode::Sqrt: out = std::sqrt(EXU_A); break;
-		case OperationCode::Exp: out = EM::Exp(EXU_A); break;
-		case OperationCode::Log: out = EM::Log(EXU_A); break;
-		case OperationCode::Sin: out = EM::Sin(EXU_A); break;
-		case OperationCode::Cos: out = EM::Cos(EXU_A); break;
-		case OperationCode::Tan: out = EM::Tan(EXU_A); break;
-		case OperationCode::ASin: out = EM::Asin(EXU_A); break;
-		case OperationCode::ACos: out = EM::Acos(EXU_A); break;
-		case OperationCode::ATan: out = EM::Atan(EXU_A); break;
-		case OperationCode::Sinh: out = EM::Sinh(EXU_A); break;
-		case OperationCode::Cosh: out = EM::Cosh(EXU_A); break;
-		case OperationCode::Tanh: out = EM::Tanh(EXU_A); break;
-		case OperationCode::ASinh: out = std::asinh(EXU_A); break;
-		case OperationCode::ACosh: out = std::acosh(EXU_A); break;
-		case OperationCode::ATanh: out = std::atanh(EXU_A); break;
-		case OperationCode::Pow: out = EM::Pow(EXU_A, EXU_B); break;
-		case OperationCode::Atan2: out = EM::Atan2(EXU_A, EXU_B); break;
-		case OperationCode::Mod: out = std::fmod(EXU_A, EXU_B); break;
-		case OperationCode::Min: out = std::min(EXU_A, EXU_B); break;
-		case OperationCode::Max: out = std::max(EXU_A, EXU_B); break;
-		case OperationCode::IfThenElse: out = EXU_A ? EXU_B : slot[o[2]].real; break;
-		default: //a leaf or an operation of its node, as FlatProgram::Evaluate
+			slot[k].real = ScalarOperation(step.code, [slot, o](Index i) { return slot[o[i]].real; });
+			continue;
+		}
+		FlatValue* values = operandValues.data(); //a leaf or an operation of its node, as FlatProgram::Evaluate
+		for (Index i = 0; i < step.numberOfOperands; i++) { values[i] = slot[o[i]]; }
+		switch (step.node.kind)
 		{
-			FlatValue* values = operandValues.data();
-			for (Index i = 0; i < step.numberOfOperands; i++) { values[i] = slot[o[i]]; }
-			switch (step.node.kind)
-			{
-			case FlatKind::Real: out = ((const ExpressionBase*)step.node.node)->EvaluateFromOperands(values); break;
-			case FlatKind::Vector: slot[k].vector = &((const VectorExpressionBase*)step.node.node)->EvaluateFromOperands(values); break;
-			default: slot[k].matrix = &((const MatrixExpressionBase*)step.node.node)->EvaluateFromOperands(values); break;
-			}
-			break;
+		case FlatKind::Real: slot[k].real = ((const ExpressionBase*)step.node.node)->EvaluateFromOperands(values); break;
+		case FlatKind::Vector: slot[k].vector = &((const VectorExpressionBase*)step.node.node)->EvaluateFromOperands(values); break;
+		default: slot[k].matrix = &((const MatrixExpressionBase*)step.node.node)->EvaluateFromOperands(values); break;
 		}
-		}
-		#undef EXU_A
-		#undef EXU_B
 	}
 }
 

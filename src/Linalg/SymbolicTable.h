@@ -21,6 +21,8 @@
 
 #include "Linalg/Symbolic.h" //FlatNode, FlatValue, FlatProgram
 #include <vector>
+#include <cmath>
+#include <algorithm>
 
 namespace Symbolic
 {
@@ -55,12 +57,70 @@ struct OperationInfo
 	const char* name;		 //!< the name of the node, FlatName(); empty for Leaf and Node
 	Index numberOfOperands;  //!< scalar operands; -1 for Leaf and Node
 	int derivativeRule;		 //!< its DerivativeRule; for Node found by FindDerivativeRule
+	bool commutative;		 //!< the two operands may be swapped exactly, for merging equal operations in Optimize
 };
 
 //! the row of a code
 const OperationInfo& OperationOfCode(OperationCode code);
 //! the code of a node of a flat program by its kind, its name and the kinds of its operands
 OperationCode OperationCodeOf(const FlatNode& node, const std::vector<FlatKind>& operandKinds);
+//! the code of a node, the kinds of its operands read from the node
+OperationCode OperationCodeOfNode(const FlatNode& node);
+//! true for a code computed by the table, a scalar operation of scalar operands
+inline bool IsTableCode(OperationCode code) { return code != OperationCode::Leaf && code != OperationCode::Node; }
+//! the name of an operation: of its row of the table, else FlatName() of its node (#3153, the export and the count)
+const char* OperationName(const FlatNode& node);
+
+//! the value of a scalar operation of the table from its operands x(0), x(1), x(2), as the EvaluateFromOperands of its
+//! node computes it, with the same functions; the one evaluation of the table, for SymbolicProgram and Optimize
+template<class TOperand>
+inline Real ScalarOperation(OperationCode code, const TOperand& x)
+{
+	switch (code)
+	{
+	case OperationCode::Plus: return x(0) + x(1);
+	case OperationCode::Minus: return x(0) - x(1);
+	case OperationCode::Multiply: return x(0) * x(1);
+	case OperationCode::Divide: return x(0) / x(1);
+	case OperationCode::Equal: return Real(x(0) == x(1));
+	case OperationCode::NotEqual: return Real(x(0) != x(1));
+	case OperationCode::Greater: return Real(x(0) > x(1));
+	case OperationCode::GreaterEqual: return Real(x(0) >= x(1));
+	case OperationCode::LessEqual: return Real(x(0) <= x(1));
+	case OperationCode::Less: return Real(x(0) < x(1));
+	case OperationCode::Positive: return x(0);
+	case OperationCode::Negative: return -x(0);
+	case OperationCode::IsFinite: return std::isfinite(x(0));
+	case OperationCode::Abs: return std::fabs(x(0));
+	case OperationCode::Sign: return EXUstd::SignReal(x(0));
+	case OperationCode::Not: return !(x(0));
+	case OperationCode::Round: return std::round(x(0));
+	case OperationCode::Ceil: return std::ceil(x(0));
+	case OperationCode::Floor: return std::floor(x(0));
+	case OperationCode::Sqrt: return std::sqrt(x(0));
+	case OperationCode::Exp: return EM::Exp(x(0));
+	case OperationCode::Log: return EM::Log(x(0));
+	case OperationCode::Sin: return EM::Sin(x(0));
+	case OperationCode::Cos: return EM::Cos(x(0));
+	case OperationCode::Tan: return EM::Tan(x(0));
+	case OperationCode::ASin: return EM::Asin(x(0));
+	case OperationCode::ACos: return EM::Acos(x(0));
+	case OperationCode::ATan: return EM::Atan(x(0));
+	case OperationCode::Sinh: return EM::Sinh(x(0));
+	case OperationCode::Cosh: return EM::Cosh(x(0));
+	case OperationCode::Tanh: return EM::Tanh(x(0));
+	case OperationCode::ASinh: return std::asinh(x(0));
+	case OperationCode::ACosh: return std::acosh(x(0));
+	case OperationCode::ATanh: return std::atanh(x(0));
+	case OperationCode::Pow: return EM::Pow(x(0), x(1));
+	case OperationCode::Atan2: return EM::Atan2(x(0), x(1));
+	case OperationCode::Mod: return std::fmod(x(0), x(1));
+	case OperationCode::Min: return std::min(x(0), x(1));
+	case OperationCode::Max: return std::max(x(0), x(1));
+	case OperationCode::IfThenElse: return x(0) ? x(1) : x(2);
+	default: CHECKandTHROWstring("ScalarOperation: the code is no scalar operation of the table"); return 0.;
+	}
+}
 
 //! the rule of the derivative of a node by its kind, its name and the kinds of its operands
 int FindDerivativeRule(const FlatNode& node, const std::vector<FlatKind>& operandKinds);

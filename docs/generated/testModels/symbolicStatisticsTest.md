@@ -14,7 +14,8 @@ You can view and download this file on Github: [symbolicStatisticsTest.py](https
 #           esym.Real, Vector, Matrix and UserFunction (#3142): a small graph counted by hand - its distinct nodes,
 #           operations, leaves, shared nodes, depth and the size of its tree -, a chain x = x*x whose tree has 2^61-1
 #           nodes on 61 distinct ones, vectors and matrices, what esym.Optimize saves, and a symbolic spring force whose
-#           flatOperations is the number of operations GetFlatProgram() writes.
+#           flatOperations is the number of operations GetFlatProgram() writes; tableOperations those computed by the
+#           table of operations (#3160).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-28
@@ -43,6 +44,7 @@ z = y + x
 statistics = esym.GetStatistics([y, z], detailed=True)
 exu.Print('statistics of [y, z]:', statistics)
 expected = {'nodes': 4, 'operations': 3, 'leaves': 1, 'shared': 1, 'depth': 3, 'treeSize': 10., 'flatOperations': 3,
+            'tableOperations': 3,
             'byOperation': {'+': 1, '*': 1, 'sin': 1, 'variable': 1}, 'byKind': {'Real': 4}}
 failed += int(statistics != expected)
 failed += int(z.GetStatistics() != esym.GetStatistics(z))
@@ -65,6 +67,7 @@ statistics = v.GetStatistics(detailed=True)
 exu.Print('statistics of A @ q + sin(q[0])*q:', statistics)
 failed += int(not Consistent(statistics) or statistics['byKind'].get('Matrix') != 1
               or statistics['byOperation'].get('component') != 1 or statistics['shared'] != 1)
+failed += int(statistics['tableOperations'] != 1) #sin; @, the component and the vector operations by their nodes
 failed += int(not Consistent(A.GetStatistics(detailed=True)))
 
 #what Optimize saves: x*1 + 0 and a subexpression written twice
