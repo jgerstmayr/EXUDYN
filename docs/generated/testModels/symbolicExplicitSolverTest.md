@@ -198,8 +198,8 @@ random = np.random.default_rng(1)
 (q, q_t, q_tt) = [0.02*random.standard_normal(system.nODE2) for i in range(3)]
 differenceJacobian = 0.
 for factors in [(1., 0., 0.), (0., 1., 0.), (1., 0.5, 0.25)]:
-    differenceJacobian = max(differenceJacobian, np.max(np.abs(system.ODE2ResidualJacobian(q, q_t, q_tt, 0.1, *factors)
-                                                               - SymbolicSystemBase.ODE2ResidualJacobian(system, q, q_t, q_tt, 0.1, *factors))))
+    differenceJacobian = max(differenceJacobian, np.max(np.abs(system.ODE2ResidualLHSJacobian(q, q_t, q_tt, 0.1, *factors)
+                                                               - SymbolicSystemBase.ODE2ResidualLHSJacobian(system, q, q_t, q_tt, 0.1, *factors))))
 exu.Print('Jacobian by Diff against central differences:', differenceJacobian, ', relative to the stiffness', differenceJacobian/stiffness)
 
 #what SolveExplicit refuses: a solver type it does not implement

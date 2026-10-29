@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 249 | 1.13.253 |
+| 1.13 | Newborn | 250 | 1.13.254 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.254** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` symbolicSystem: ODE2ResidualLHS and ODE2ResidualLHSJacobian, the side of the residual in the name (#3156)
+  - description: Maintainer 2026-10-29: ODE2Residual and ODE2ResidualJacobian (\#3155) shall say whether they are RHS or LHS, otherwise the sign is unclear. The residual is M q\_tt - f, all terms on the left-hand side: ODE2Residual -\> ODE2ResidualLHS, ODE2ResidualJacobian -\> ODE2ResidualLHSJacobian; SystemResidual keeps the name of the Exudyn solver function.
+  - **notes:** exudyn.misc.symbolicSystem: ODE2ResidualLHS and ODE2ResidualLHSJacobian (were ODE2Residual, ODE2ResidualJacobian): the residual M q\_tt - f with all terms on the left-hand side, the side in the name for the sign
+  - date resolved: **2026-10-29 09:22**, date raised: 2026-10-29
 - **1.13.253** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The names of exudyn.misc.symbolicSystem as Exudyn names them: ODE2RHS, ODE1RHS, ODE2ReactionForcesLHS, ODE1ReactionTermsLHS, ODE2Residual (#3155)
   - description: Maintainer 2026-10-28: keep the distinction of RHS and LHS forces of Exudyn, M a + LHS force = RHS force, to avoid sign issues; say ODE2 in the name of what is only for ODE2. As docs/dev/design/symbolicSystem.md section 12.5: Forces -\> ODE2RHS, ODE1RightHandSide -\> ODE1RHS, ReactionForces -\> ODE2ReactionForcesLHS, the missing C\_y^T z as ODE1ReactionTermsLHS, Residual -\> ODE2Residual, ResidualJacobian -\> ODE2ResidualJacobian, the results and arguments of Equations and GetFlatProgram, the arguments of NumpySystem.
   - **notes:** exudyn.misc.symbolicSystem names its equations as Exudyn does: ODE2RHS, ODE1RHS, ODE2ReactionForcesLHS, the new ODE1ReactionTermsLHS, ODE2Residual and ODE2ResidualJacobian; Equations and GetFlatProgram give 'ODE2RHS' and 'ODE2ReactionForcesLHS'; NumpySystem takes ode2RHS and ode1RHS.

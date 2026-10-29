@@ -15,7 +15,7 @@
 #           method, as Exudyn's implicit solver does (#3126).
 #           Equations() gives the equations of the system as expressions in the system variables q, q_t and t -
 #           exudyn.symbolic, whose flat program GetFlatProgram() writes, or sympy - composed of the recordings (#3130);
-#           the forces and the mass matrix of these expressions, recorded once, are what ODE2RHS, MassMatrix and ODE2Residual
+#           the forces and the mass matrix of these expressions, recorded once, are what ODE2RHS, MassMatrix and ODE2ResidualLHS
 #           evaluate: one call each for the whole system (#3131).
 #           Special: not for the broad use, a basis for the export of the equations of motion and their evaluation
 #           outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
@@ -146,8 +146,9 @@ class SymbolicSystemBase:
         (#3112). The base class gives one block of all coordinates"""
         return [(np.arange(self.nODE2)[np.newaxis, :], self.MassMatrix(q, q_t, t)[np.newaxis, :, :])]
 
-    def ODE2Residual(self, q=None, q_t=None, q_tt=None, t=0., y=None):
-        """the residual r = M(q, t) q_tt - f(q, q_t, t, y) of the ODE2 equations, of size nODE2, without reaction forces"""
+    def ODE2ResidualLHS(self, q=None, q_t=None, q_tt=None, t=0., y=None):
+        """the residual r = M(q, t) q_tt - f(q, q_t, t, y) of the ODE2 equations, all terms on the left-hand side (LHS
+        minus RHS), of size nODE2, without reaction forces"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
         forces = self.ODE2RHS(q, q_t, t) if y is None else self.ODE2RHS(q, q_t, t, y=y)
         return self.MassMatrix(q, q_t, t, sparse=True) @ q_tt - forces
@@ -156,7 +157,7 @@ class SymbolicSystemBase:
         """the residual of all equations as the implicit solver of Exudyn has it (#3134): [M q_tt - f + C_q^T z,
         g - y_t - C_y^T z, c], of size nODE2 + nODE1 + nAE"""
         yArgument = y if self.nODE1 else None
-        parts = [self.ODE2Residual(q, q_t, q_tt, t, y=yArgument)]
+        parts = [self.ODE2ResidualLHS(q, q_t, q_tt, t, y=yArgument)]
         if self.nAE:
             parts[0] = parts[0] + self.ODE2ReactionForcesLHS(q, q_t, y, z, t)
         if self.nODE1: #the ODE1 rows RHS minus LHS, as CSolverImplicitSecondOrder
@@ -169,7 +170,7 @@ class SymbolicSystemBase:
                        factor_y_t=0., velocityLevel=False, epsilon=1e-6):
         """the Jacobian of SystemResidual (#3134), column by column: ODE2 columns factor_q d/dq + factor_q_t d/dq_t +
         factor_q_tt d/dq_tt, ODE1 columns factor_y d/dy + factor_y_t d/dy_t, AE columns d/dz; the ODE2 block by
-        ODE2ResidualJacobian (exact for a SymbolicSystem), the others by central differences of SystemResidual
+        ODE2ResidualLHSJacobian (exact for a SymbolicSystem), the others by central differences of SystemResidual
 
         Args:
             q: the ODE2 coordinates
@@ -195,9 +196,9 @@ class SymbolicSystemBase:
         state = [np.array(x, dtype=float) for x in [q, q_t, q_tt, y, y_t, z]]
         J = np.zeros((nSystem, nSystem))
         if nODE1:
-            J[:nODE2, :nODE2] = self.ODE2ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, y=y)
+            J[:nODE2, :nODE2] = self.ODE2ResidualLHSJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, y=y)
         else:
-            J[:nODE2, :nODE2] = self.ODE2ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
+            J[:nODE2, :nODE2] = self.ODE2ResidualLHSJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
 
         def Difference(direction, rows): #the derivative of the residual rows along a direction of the state
             residuals = []
@@ -226,10 +227,10 @@ class SymbolicSystemBase:
                 J[:, j] = Difference(direction, slice(0, nSystem))
         return J
 
-    def ODE2ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
+    def ODE2ResidualLHSJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
                          sparse=False, epsilon=1e-6, y=None):
         """the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, by central
-        differences of ODE2Residual - for a system without derivatives of its own; factor_q_tt=1 alone gives the mass
+        differences of ODE2ResidualLHS - for a system without derivatives of its own; factor_q_tt=1 alone gives the mass
         matrix, a Newton step of an implicit integrator combines the three
 
         Args:
@@ -257,7 +258,7 @@ class SymbolicSystemBase:
                 for sign in [1., -1.]:
                     perturbed = [x.copy() for x in state]
                     perturbed[k][j] += sign*epsilon
-                    residuals.append(self.ODE2Residual(*perturbed, t, y=y))
+                    residuals.append(self.ODE2ResidualLHS(*perturbed, t, y=y))
                 J[:, j] += factor*(residuals[0] - residuals[1])/(2*epsilon)
         (rows, columns) = np.nonzero(J)
         return self._Matrix(rows, columns, J[rows, columns], sparse)
@@ -448,7 +449,7 @@ class SymbolicSystem(SymbolicSystemBase):
 
     Args:
         mbs: the assembled MainSystem
-        composeSystem: True: ODE2RHS, MassMatrix and ODE2Residual evaluate two recordings of the composed system - the
+        composeSystem: True: ODE2RHS, MassMatrix and ODE2ResidualLHS evaluate two recordings of the composed system - the
             forces and the nonzero entries of the mass matrix of Equations(), each one flat program (#3131) -; False:
             each object and load by its own recordings, one call each
 
@@ -962,7 +963,7 @@ class SymbolicSystem(SymbolicSystemBase):
 
     def SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
                        factor_y_t=0., velocityLevel=False, epsilon=1e-6):
-        """the Jacobian of SystemResidual, exact (#3145): the ODE2 block by ODE2ResidualJacobian plus the derivative of the
+        """the Jacobian of SystemResidual, exact (#3145): the ODE2 block by ODE2ResidualLHSJacobian plus the derivative of the
         reaction forces, the blocks C_q^T and C_q of the joints by _JointJacobian, the ODE1 block by ODE1Jacobian; the
         arguments as SymbolicSystemBase.SystemJacobian, epsilon not used
 
@@ -991,7 +992,7 @@ class SymbolicSystem(SymbolicSystemBase):
         nSystem = nODE2 + nODE1 + nAE
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
         J = np.zeros((nSystem, nSystem))
-        J[:nODE2, :nODE2] = self.ODE2ResidualJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
+        J[:nODE2, :nODE2] = self.ODE2ResidualLHSJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
         if nAE:
             z = np.asarray(z, dtype=float)
             offset = nODE2 + nODE1 #the first algebraic coordinate
@@ -1172,8 +1173,8 @@ class SymbolicSystem(SymbolicSystemBase):
         return [(kind.ltg, np.array([self._LocalMassMatrix(kind, i, q, q_t, t) for i in range(len(kind.objects))]))
                 for kind in kinds]
 
-    def ODE2Residual(self, q=None, q_t=None, q_tt=None, t=0., y=None):
-        """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations without forming M: by the recordings of the
+    def ODE2ResidualLHS(self, q=None, q_t=None, q_tt=None, t=0., y=None):
+        """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations, LHS minus RHS, without forming M: by the recordings of the
         composed system, else object by object; y is not used, as no item taken couples the ODE1 coordinates into the
         ODE2 equations"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
@@ -1190,7 +1191,7 @@ class SymbolicSystem(SymbolicSystemBase):
             np.add.at(r, load.ltg, -self._LoadForces(load, q, q_t, t))
         return r
 
-    def ODE2ResidualJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
+    def ODE2ResidualLHSJacobian(self, q=None, q_t=None, q_tt=None, t=0., factor_q=1., factor_q_t=0., factor_q_tt=0.,
                          sparse=False, y=None):
         """the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, exact by the
         derivatives of the recordings (UserFunction.EvaluateJacobian, #3115, in one pass over the flat program #3116):
@@ -1929,10 +1930,10 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     output = _Output(system, simulationSettings, tStart, tEnd, h)
     output.Step(0, tStart, q, q_t, q_tt, y=y, y_t=y_t, z=z)
 
-    def ODE2Residual():
+    def NewtonResidual():
         if general:
             return system.SystemResidual(q, q_t, q_tt, y, y_t, z, t)
-        return system.ODE2Residual(q, q_t, q_tt, t)
+        return system.ODE2ResidualLHS(q, q_t, q_tt, t)
 
     (newtonIterations, jacobianEvaluations) = (0, 0)
     for step in range(1, n + 1):
@@ -1952,7 +1953,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
         y_t = np.zeros(nODE1)
 
         #Newton's method, as CSolverBase::Newton: converged by the residual relative to the initial one or absolute
-        initialResidual = cMath.norm(ODE2Residual())/errorFactor
+        initialResidual = cMath.norm(NewtonResidual())/errorFactor
         if initialResidual <= newton.absoluteTolerance:
             initialResidual = 2*newton.absoluteTolerance #at least one Newton step
         factorization = None
@@ -1966,11 +1967,11 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
                     J[:, nODE2 + nODE1:] /= scaling
                     factorization = scipy.linalg.lu_factor(J)
                 else:
-                    factorization = scipy.sparse.linalg.splu(system.ODE2ResidualJacobian(q, q_t, q_tt, t, factor_q=1., factor_q_t=gammaPrime,
+                    factorization = scipy.sparse.linalg.splu(system.ODE2ResidualLHSJacobian(q, q_t, q_tt, t, factor_q=1., factor_q_t=gammaPrime,
                                                                                      factor_q_tt=betaPrime, sparse=True).tocsc())
                 jacobianEvaluations += 1
             if general:
-                r = ODE2Residual()
+                r = NewtonResidual()
                 r[:nODE2] *= scaling
                 increment = scipy.linalg.lu_solve(factorization, r)
                 y = y - increment[nODE2:nODE2 + nODE1]
@@ -1978,12 +1979,12 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
                 z = z - increment[nODE2 + nODE1:]/scaling
                 increment = increment[:nODE2]
             else:
-                increment = factorization.solve(ODE2Residual())
+                increment = factorization.solve(NewtonResidual())
             q = q - increment
             q_t = q_t - gammaPrime*increment
             q_tt = q_tt - betaPrime*increment
             newtonIterations += 1
-            residual = cMath.norm(ODE2Residual())/errorFactor
+            residual = cMath.norm(NewtonResidual())/errorFactor
             if residual/initialResidual <= newton.relativeTolerance or residual <= newton.absoluteTolerance:
                 converged = True
                 break

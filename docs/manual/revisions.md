@@ -92,7 +92,7 @@ and the mass matrix by two recordings of the composed system, one call each (`co
 interface `SymbolicSystemBase` and its solvers have ODE1 and algebraic coordinates, as Exudyn's: `SolveExplicit`
 integrates ODE1 coordinates, `SolveGeneralizedAlpha` also index-3 constraints, and `NumpySystem` takes both (#3134).
 `UserFunction.EvaluateJacobian` differentiates a recording by all components of an argument in one pass over its flat
-program, in a memory block of the program kept between the calls (#3116); `SymbolicSystem.ODE2ResidualJacobian` uses it on
+program, in a memory block of the program kept between the calls (#3116); `SymbolicSystem.ODE2ResidualLHSJacobian` uses it on
 the composed system. `exudyn.symbolic.GetStatistics(expressions, detailed)` and `GetStatistics()` of an expression or a
 recording count its nodes, operations, leaves, shared nodes, depth, the size of its tree and the operations of its flat
 program, with `detailed=True` per operation and per kind (#3142). `exudyn.symbolic.Function(result, inputs, name)` records an

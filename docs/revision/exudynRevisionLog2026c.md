@@ -4361,3 +4361,14 @@ ODE2ReactionForcesLHS, ...)".)*
 - The test models of the symbolic system, the examples symbolicSystemSpringDamper.py and
   symbolicSystemRigidBodyPendulum.py, docs/dev/design/uniformEvaluationExperiment.py, the design notes (section 12.5
   now the table of the names), docs/manual/revisions.md; all results unchanged.
+
+<a id="rg12-51-20"></a>
+### RG12.51.20 — the side of the residual in its name (2026-10-29, #3156)
+*(Maintainer 2026-10-29: "ODE2Residual and ODE2ResidualJacobian should contain RHS or LHS (whatever they are) - so like
+ODE2ResidualRHS. Otherwise, the sign is unclear.")*
+- python/exudyn/misc/symbolicSystem.py: `ODE2Residual` -> `ODE2ResidualLHS`, `ODE2ResidualJacobian` ->
+  `ODE2ResidualLHSJacobian`, in SymbolicSystemBase, SymbolicSystem and the solvers: the residual is M q_tt - f, all terms
+  on the left-hand side, LHS minus RHS, as the docstrings say. The local function of the Newton loop of
+  SolveGeneralizedAlpha, which is SystemResidual for a system with ODE1 or algebraic coordinates, is `NewtonResidual`.
+  SystemResidual keeps the name of the solver function of Exudyn (its ODE1 rows are RHS minus LHS, as there).
+- The test models of the symbolic system, the design note section 12.5, docs/manual/revisions.md; results unchanged.

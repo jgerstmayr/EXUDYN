@@ -2093,6 +2093,10 @@ CLOSED 2026-10-28 (#3150; maintainer 2026-10-28: lambda_ is not readable, z is t
 
 CLOSED 2026-10-29 (#3155; maintainer 2026-10-28: RHS and LHS forces kept apart as in Exudyn, ODE2 in the name of what is only for ODE2; do the renames of design section 12.5): the methods, the results and arguments of Equations and GetFlatProgram, NumpySystem(massMatrix, ode2RHS, ..., ode1RHS); ODE1ReactionTermsLHS new, zero in the base class. [log](exudynRevisionLog2026c.md#rg12-51-19)
 
+#### **CLOSED_RG12.51.20** The side of the residual in its name: ODE2ResidualLHS, ODE2ResidualLHSJacobian
+
+CLOSED 2026-10-29 (#3156; maintainer 2026-10-29: ODE2Residual and ODE2ResidualJacobian shall say RHS or LHS, otherwise the sign is unclear): the residual M q_tt - f has all terms on the LHS. [log](exudynRevisionLog2026c.md#rg12-51-20)
+
 ### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
 
 CLOSED 2026-10-25 (#3094; maintainer 2026-10-25: the introduction section to Python-C++ interface/Symbolic has to be
