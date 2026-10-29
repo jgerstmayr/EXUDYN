@@ -27,8 +27,9 @@ import collections
 import numpy as np
 import exudyn as exu
 from exudyn.rigidBodyUtilities import InertiaCuboid
-from exudyn.misc.symbolicUserItems import UserItemCreator
-from exudyn.misc.symbolicSystem import SymbolicSystem, SolveExplicit
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem
+from exudyn.symbolics.solvers import SolveExplicit
 import exudyn.cMath as cMath
 
 nBars = int(sys.argv[1]) if len(sys.argv) > 1 else 1

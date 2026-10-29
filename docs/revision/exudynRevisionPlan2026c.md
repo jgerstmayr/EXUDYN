@@ -2306,6 +2306,15 @@ table, tableOperations counted; results unchanged. [log](exudynRevisionLog2026c.
 
 #3159 (maintainer 2026-10-29: symbolic parameters are required in the long term; the inertia of a rigid body and the joints need a general solution). Design first: parameters of any structure as named esym.Real or expressions of them, a parameter set per system, the sensitivities; after RG12.64 (#3152).
 
+### **CLOSED_RG12.68** exudyn.symbolics: a package for the Python parts of the symbolic system and the symbolic utilities
+
+CLOSED 2026-10-29 (#3165; maintainer 2026-10-29: the symbolic Python parts get more space, a directory exudyn.symbolics;
+the names approved; no deprecation, none of the modules was released): kinematics (was symbolicUtilities.py),
+codeExport, userItems, systemModel and solvers (both from misc/symbolicSystem.py); every reference, setup.py, the
+utility documentation. [log](exudynRevisionLog2026c.md#rg12-68)
+
+#3165 (maintainer 2026-10-29: the symbolic Python parts get more space, a directory exudyn.symbolics; the names approved; no deprecation, none of the modules was released).
+
 ## **OPEN_RG13** Total coordinates
 
 Total coordinates - reference plus current - beside the Current and Reference configurations, in the system data, the

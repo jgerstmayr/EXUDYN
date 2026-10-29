@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  ObjectGenericODE1 in exudyn.misc.symbolicSystem.SymbolicSystem (#3144): two Van der Pol oscillators as
+# Details:  ObjectGenericODE1 in exudyn.symbolics.systemModel.SymbolicSystem (#3144): two Van der Pol oscillators as
 #           ObjectGenericODE1 with one recorded rhsUserFunction - one kind of two objects -, a linear first order system
 #           with systemMatrix and rhsVector driven by a LoadCoordinate with a recorded loadUserFunction, and a mass on a
 #           spring as ObjectGenericODE2 with a recorded forceUserFunction. ODE1RHS against the solver of
@@ -19,7 +19,8 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
-from exudyn.misc.symbolicSystem import SymbolicSystem, SolveGeneralizedAlpha, SolveExplicit
+from exudyn.symbolics.systemModel import SymbolicSystem
+from exudyn.symbolics.solvers import SolveGeneralizedAlpha, SolveExplicit
 import exudyn.cMath as cMath
 import numpy as np
 

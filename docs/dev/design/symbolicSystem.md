@@ -21,7 +21,7 @@ it is the objects' programs plus the scatter of their results, which is what Exu
 
 - **Flat programs.** A recorded user function has a flat program (`UserFunction.GetFlatProgramData()`, entry k =
   node k, operands by number, the arguments, variables and results); `esym.GetFlatProgram(expressions, ...)` gives one
-  for expressions (#3087). `exudyn/misc/symbolicExport.py` writes it as Python, `symbolic`, `numpy` or `sympy` code and
+  for expressions (#3087). `exudyn/symbolics/codeExport.py` writes it as Python, `symbolic`, `numpy` or `sympy` code and
   as C++ text (`Write`, `ToFunction`, `ToSympy`, #3088); 0.7 M entries per second in Python, 4 M for the C++ text.
 - **Optimize** merges equal subexpressions and applies the exact simplification rules (#3091).
 - **One recording for many objects.** `CreateSymbolicUserFunction` with `parameters` (`ParameterLayout`) records the
@@ -40,11 +40,11 @@ it is the objects' programs plus the scatter of their results, which is what Exu
   ("operator[]::Diff not implemented"), and a recording cannot be differentiated by a component of its vector
   arguments - section 11.
 - **Sparse matrices** inside Exudyn: `MatrixContainer` with triplets, faster than dense from about n > 50. scipy is an
-  optional dependency of Exudyn (rule 6), and needed by `exudyn.misc.symbolicSystem`.
+  optional dependency of Exudyn (rule 6), and needed by `exudyn.symbolics.systemModel`.
 
 ## 3. The system model
 
-`SymbolicSystem(mbs)`, after `mbs.Assemble()`, in `exudyn/misc/symbolicSystem.py` (#3110, #3113):
+`SymbolicSystem(mbs)`, after `mbs.Assemble()`, in `exudyn/symbolics/systemModel.py` (#3110, #3113):
 
 - **Extracted from mbs**, and only if every item is compatible with the symbolic system: an item that is not - a
   built-in body, a Python user function, a recording that reads mbs (an item output), ODE1 coordinates or algebraic
@@ -179,7 +179,7 @@ RG12.51.4.
 **Where it goes.** The maintainer suggested `systemUtilities.py`. That module holds the functions that describe a
 system; the functions that need a solver - `ComputeLinearizedSystem`, `ComputeODE2Eigenvalues` - are in `solver.py`
 (docs/dev/internals/systemUtilities.md §1). The solver works on a `SymbolicSystemBase`, not on `mbs`, so the model and
-its solver are together in `exudyn/misc/symbolicSystem.py` (decision 3).
+its solver are together in `exudyn/symbolics/systemModel.py` (decision 3).
 
 ### ODE1 and algebraic coordinates (#3134)
 
@@ -238,7 +238,7 @@ CSolverExplicit and CSolverImplicitSecondOrder:
   and of the ground.
 - RG12.51.3 (done, #3126): `SolveGeneralizedAlpha`, the generalized-alpha and Newmark methods in Python; the
   time-integration check against `SolveDynamic`.
-- RG12.55 first: user items with the interfaces of the built-in items (`exudyn/misc/symbolicUserItems.py`).
+- RG12.55 first: user items with the interfaces of the built-in items (`exudyn/symbolics/userItems.py`).
 - RG12.51.8 (done, #3118): the built-in loads, constant or with a symbolic user function.
 - RG12.51.4: those user items in the system - rigid bodies, joints, connectors, the constraints; RG12.51.4.1 (done,
   #3129) the connectors on markers of user bodies and of the ground, with the rotations, so that the rigid bodies and
@@ -258,7 +258,7 @@ symbolic arguments (#3117). The evaluation of a whole step on the GPU by levels:
 1. Both available: the residual for the implicit integrators, which need only it, and the (sparse) mass matrix, needed
    e.g. to invert it.
 2. exudyn.symbolic first; numpy and other formats by the export of the whole system; Numba for the GPU.
-3. `exudyn/misc/symbolicSystem.py` for model and solver, for now: special, not for the broad use, of large potential.
+3. `exudyn/symbolics/systemModel.py` for model and solver, for now: special, not for the broad use, of large potential.
 4. Option D is the target of RG12.54; before it a Jacobian without a new program, column by column by `Diff`, which
    stays as an option and as the comparison.
 5. The system is extracted from mbs and reuses its data; a computed state goes back into mbs for the visualization,
@@ -272,7 +272,7 @@ The solvers of RG12.56 and RG12.51.3 work on the **equations**, not on `mbs` and
 same solver runs a SymbolicSystem, later an exported one (G1), or a system written by hand - the simplest check of a
 solver, independent of Exudyn.
 
-The interface is the base class `SymbolicSystemBase` in `exudyn/misc/symbolicSystem.py` (#3113):
+The interface is the base class `SymbolicSystemBase` in `exudyn/symbolics/systemModel.py` (#3113):
 
 | member | what | in the base class |
 |---|---|---|
@@ -306,7 +306,7 @@ mass points and spring-dampers (RG12.55.2; the spring-damper as ObjectConnectorU
 #3119), and before them an ObjectGenericODE2 or user bodies with symbolic forces. Constant step size
 $h = (t_{end} - t_{start})/n$ from `timeIntegration.startTime`, `endTime`, `numberOfSteps`; the method from
 `timeIntegration.solverType` (or an argument, as `SolveDynamic(solverType=...)`). `SolveExplicit(system,
-simulationSettings, solverType)` in `exudyn/misc/symbolicSystem.py` (#3112):
+simulationSettings, solverType)` in `exudyn/symbolics/systemModel.py` (#3112):
 
 - **ExplicitEuler**: $\qv_{n+1} = \qv_n + h\,\dot\qv_n$, $\dot\qv_{n+1} = \dot\qv_n + h\,\av_n$, with
   $\av_n = \Mm^{-1}\fv(\qv_n, \dot\qv_n, t_n)$ - the first-order system $[\qv, \dot\qv]$ with the Butcher tableau of one
@@ -414,7 +414,7 @@ the given expressions - the copy that `Optimize` makes by `NewWithOperands`, wit
 one expression per kind ($\Mm(\qv)\,\ddot\qv - \fv(\qv, \dot\qv, t)$ of the two recordings), for the forces of a
 connector composed with the marker kinematics of its bodies, and for the export of one program per kind (RG12.51.5).
 As numbers, the system needs no S3: it evaluates each recording and composes the results; S3 is for the programs.
-**In Python** (#3130): the code of a recording in the format 'symbolic' of exudyn.misc.symbolicExport (`ToFunction`),
+**In Python** (#3130): the code of a recording in the format 'symbolic' of exudyn.symbolics.codeExport (`ToFunction`),
 called with exudyn.symbolic arguments, records the same graph with the arguments replaced - S3 without C++, at the cost
 of recording the graph again; in the format 'sympy' the same with sympy symbols. `SymbolicSystem.Equations(format)`
 composes the system of it: the mass matrix, the forces of $\Mm\ddot\qv = \fv$ and, with `massMatrixBlocks`, the
@@ -473,12 +473,12 @@ Jacobian of its item does not see.
 | B system coordinates as nodes that read mbs | `esym.SystemCoordinate('ODE2', i)`, read at evaluation as the item outputs | any coupling in one line | the dependency is hidden from the LTG map, the sparsity and the Jacobian - the lag of the item outputs, now for every coordinate; the global indices change when the model changes |
 | C system variables for the recordings of a system | the named vectors `q`, `q_t`, `y`, `lambda`, `t` (and `p`, 12.4) of a system, and helpers that give the part of a node or item, e.g. `variables.ODE2(node)` | equations written directly in system coordinates - what `Equations()` does internally (`_Backend.Variable`); a controller or a coupling written by hand | for the system only, not inside an item of mbs |
 
-**Recommendation**: C, in `exudyn.misc.symbolicSystem`, as the public form of what `Equations()` does already. Inside
+**Recommendation**: C, in `exudyn.symbolics.systemModel`, as the public form of what `Equations()` does already. Inside
 mbs, an item that couples the coordinates of several nodes is ObjectGenericDAE (RG9.10): its node lists give the LTG
 map, so the Jacobian sees the coupling. Not B. Data coordinates stay refused: they change in the post-Newton step
 (contact, friction), which an equation of the system does not express.
 
-### 12.3 q, qRef and qTotal in symbolicSystem.py
+### 12.3 q, qRef and qTotal in systemModel.py
 
 **What it is.** In `SymbolicSystemBase`, its solvers, `Equations()` and the composed recordings, `q` are the ODE2
 coordinates of Exudyn's solvers: relative to the reference configuration, what `systemData.GetODE2Coordinates()`
@@ -516,7 +516,7 @@ ObjectGenericODE2, `(mbs, t, itemNumber, q, q_t)`, which has no parameters. The 
 vectors, the load values and the matrices of ObjectGenericODE2; not the reference coordinates (12.3), which are an
 option of their own.
 
-### 12.5 The names of symbolicSystem.py
+### 12.5 The names of systemModel.py
 
 `q` stays (12.3). The others follow Exudyn's names (maintainer 2026-10-28, #3155) - Exudyn keeps the right-hand side
 and the left-hand side apart for the sign (`notation.md`, *LHS-RHS naming conventions*): an object computes its LHS
@@ -554,7 +554,7 @@ items, the composed system - this is complete.
 - **Every operation is written up to eight times**: the tree `Evaluate`/`EvaluateRef`, the tree `Diff`/`DiffRef`,
   `EvaluateFromOperands` of the flat program, its derivative rule (a switch by `FlatName` in
   `FlatProgram::Differentiate`), `ToString` and `ToStringFromOperands`, `NewWithOperands`, the rules of `Optimize`,
-  and the writers of `symbolicExport.py`; about 80 expression classes in 9200 lines of C++. The fix of pow (#3135) was
+  and the writers of `codeExport.py`; about 80 expression classes in 9200 lines of C++. The fix of pow (#3135) was
   made twice, in the tree and in the one pass.
 - **Values live in the graph**: a named variable holds its value, a vector or matrix node its evaluation and derivative
   buffers; so the graph is state, and the threads need values of their own (#2978).
@@ -616,7 +616,7 @@ and a fixed marker depend on q. C makes that a part of exudyn.symbolic:
 - What `SymbolicSystem` does with this by hand becomes the use of the set, so `Equations()`, the Jacobians and the
   export share one composition. Built-in bodies need their own recordings for it (#3048), as before.
 - **Done** (RG12.63, #3151), in Python, as the marker kinematics are there: `SystemVariables(system)` of
-  symbolicSystem.py, a `VariableSet` of `q`, `q_t`, `y`, `y_t`, `z` and `t` (no `data`: SymbolicSystem refuses data
+  systemModel.py, a `VariableSet` of `q`, `q_t`, `y`, `y_t`, `z` and `t` (no `data`: SymbolicSystem refuses data
   coordinates until step RG12.66, #3158), and `MarkerPosition`, `MarkerVelocity`, `MarkerRotationMatrix`, `MarkerAngularVelocity` of a marker,
   `Function(result)` - an `esym.Function` of the set - and `Equations()` in these variables. One marker is composed by
   `_MarkerData` and `_MarkerState`, which the connectors, the joints and the set share. Open: `_ConnectorJacobian` and

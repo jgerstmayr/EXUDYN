@@ -53,14 +53,14 @@ The new page {ref}`sec-useritems` explains how the user items are set up (#2979)
 joint (#2976). **MarkerBodyUser** is a marker on several bodies whose position and rotation are Python functions of their
 coordinates, with `providedMarkerType` Position or Position | Orientation; the built-in connectors, joints, loads and
 sensors act on it (#3065, #3103). ObjectUserBody needs no mass matrix for a static problem (#3104).
-**`exudyn.symbolicUtilities`** has the rotation matrices, G matrices and their conversions of `exudyn.cUtilities` with
+**`exudyn.symbolics.kinematics`** has the rotation matrices, G matrices and their conversions of `exudyn.cUtilities` with
 the same names and arguments and a last argument `functions`: with `exudyn.symbolic` they return symbolic matrices and
 vectors for symbolic user functions, with `numpy`, `math` or `exudyn.cMath` numpy arrays (#3069).
 **A symbolic recording as code**: `GetFlatProgram(format='numpy' | 'symbolic' | 'sympy', flatten=...)` of a symbolic
 user function, `exudyn.symbolic.GetFlatProgram(expressions, ...)` and `ToString(format=...)` of an expression write it
 as Python of numpy, exudyn.symbolic or sympy, which compute what Exudyn computes; `GetFlatProgramData()` gives the
-operations as a Python structure, and `exudyn.misc.symbolicExport` writes the formats from it (#3087, #3088).
-`exudyn.misc.symbolicSystem.SymbolicSystem(mbs)` evaluates the mass matrix (also sparse), the forces and the residual
+operations as a Python structure, and `exudyn.symbolics.codeExport` writes the formats from it (#3087, #3088).
+`exudyn.symbolics.systemModel.SymbolicSystem(mbs)` evaluates the mass matrix (also sparse), the forces and the residual
 `M q_tt - f` of a system of user bodies and generic ODE2 objects with symbolic user functions, by exudyn.symbolic, and
 writes a computed state back into mbs for the renderer and the sensors; its base class `SymbolicSystemBase` is the
 interface of the solvers (#3110, #3113), its Jacobian of the residual by `Diff` of the recordings (#3115).
@@ -70,7 +70,7 @@ with the mass matrix inverted per body if `timeIntegration.explicit.computeMassM
 solution file and the sensors of mbs (#3112); it takes ObjectConnectorUser with a symbolic forceUserFunction on
 markers of point nodes and of the ground (#3121) and on markers of user bodies, with the rotations (#3129), and LoadForceVector, LoadTorqueVector, LoadMassProportional and
 LoadCoordinate, constant or with a symbolic user function, on markers of point nodes, node coordinates and user bodies
-(#3118). `exudyn.misc.symbolicUserItems.UserItemCreator(mbs)` has `CreateGround`, `CreateMassPoint`,
+(#3118). `exudyn.symbolics.userItems.UserItemCreator(mbs)` has `CreateGround`, `CreateMassPoint`,
 `CreateSpringDamper` and `CreateForce` with the arguments of those of mbs and creates ObjectUserBody and
 ObjectConnectorUser instead of the built-in objects, so that one script builds a system of either; `Record()` makes
 their user functions symbolic, one recording per kind of item (#3125); `CreateRigidBody` (on NodeRigidBodyRxyz, with
@@ -82,7 +82,7 @@ LoadCoordinate on ODE1 coordinates (`ODE1RHS`, `ODE1Jacobian`, #3144); its `Syst
 the constraint blocks of the joints and the derivative of their reaction forces (#3145);
 `Equations(algebraicEquations=True, ODE2ReactionForcesLHS=True)` and `GetFlatProgram(results=[...])` give the constraint
 equations of the joints and their reaction forces, of q, t and the algebraic coordinates `z` (#3146). `SolveGeneralizedAlpha(system,
-simulationSettings)` integrates a system of `exudyn.misc.symbolicSystem` by the generalized-alpha or Newmark method with
+simulationSettings)` integrates a system of `exudyn.symbolics.systemModel` by the generalized-alpha or Newmark method with
 constant step size, as `SolveDynamic` does, with the Jacobian of the residual by `Diff` of the recordings (#3126).
 `SymbolicSystem.Equations(format)` gives the mass matrix, the forces of `M q_tt = f` and the mass matrices of the
 bodies of such a system as expressions in the variables `q`, `q_t` and `t` - exudyn.symbolic or sympy -, and
@@ -98,7 +98,7 @@ recording count its nodes, operations, leaves, shared nodes, depth, the size of 
 program, with `detailed=True` per operation and per kind (#3142). `exudyn.symbolic.Function(result, inputs, name)` records an
 expression in declared inputs - a list of named variables or an `esym.VariableSet`, which now holds named Vectors and
 Matrices as well and keeps the order in which they were added - as a UserFunction without item and without `mbs`;
-`SymbolicSystem` composes its system by it (#3149). A recording is evaluated and differentiated by a table of its operations, which computes the scalar operations without calling their nodes - a simulation with a recorded force of many scalar operations runs in less than half the time, with the same results bit for bit; `esym.SetTableEvaluation(False)` evaluates by the nodes (#3157); `esym.Optimize` folds constants by the same table, and `GetStatistics` counts the operations of the table as `tableOperations` (#3160). `SystemVariables(system)` of `exudyn.misc.symbolicSystem` gives the system variables `q`, `q_t`, `y`, `y_t`, `z` and `t` as one `esym.VariableSet` and the positions, velocities, rotation matrices and angular velocities of markers as expressions of them, so that an expression of marker states is a function of the system coordinates with its Jacobian in one pass (#3151). A parameter of a user item may be a named `esym.Real`, `UserItemCreator.CreateMassPoint(mass=m1)`: the item gets its value, `SymbolicSystem(mbs, parameters=creator.parameterVariables)` keeps the variable in `Equations()` - so its derivatives by `m1` follow -, and `SetParameterValues({'m1': 3.})` sets the variable and the items (#3152). **ObjectJointUser** has a `graphicsDataUserFunction`, as ObjectConnectorUser, and the joints of `UserItemCreator` are drawn by it - a cylinder along the axis, a sphere, a line (#3147); the `graphicsDataUserFunction` of ObjectConnectorUser is now called, which the redraw did for bodies only, so the spring-dampers of `UserItemCreator` are drawn (#3161). `SymbolicSystem.Equations(ODE1RHS=True)` gives the right-hand side of the ODE1 equations as expressions of the ODE1 coordinates `y`, which `GetFlatProgram` also writes (#3162).
+`SymbolicSystem` composes its system by it (#3149). A recording is evaluated and differentiated by a table of its operations, which computes the scalar operations without calling their nodes - a simulation with a recorded force of many scalar operations runs in less than half the time, with the same results bit for bit; `esym.SetTableEvaluation(False)` evaluates by the nodes (#3157); `esym.Optimize` folds constants by the same table, and `GetStatistics` counts the operations of the table as `tableOperations` (#3160). `SystemVariables(system)` of `exudyn.symbolics.systemModel` gives the system variables `q`, `q_t`, `y`, `y_t`, `z` and `t` as one `esym.VariableSet` and the positions, velocities, rotation matrices and angular velocities of markers as expressions of them, so that an expression of marker states is a function of the system coordinates with its Jacobian in one pass (#3151). A parameter of a user item may be a named `esym.Real`, `UserItemCreator.CreateMassPoint(mass=m1)`: the item gets its value, `SymbolicSystem(mbs, parameters=creator.parameterVariables)` keeps the variable in `Equations()` - so its derivatives by `m1` follow -, and `SetParameterValues({'m1': 3.})` sets the variable and the items (#3152). **ObjectJointUser** has a `graphicsDataUserFunction`, as ObjectConnectorUser, and the joints of `UserItemCreator` are drawn by it - a cylinder along the axis, a sphere, a line (#3147); the `graphicsDataUserFunction` of ObjectConnectorUser is now called, which the redraw did for bodies only, so the spring-dampers of `UserItemCreator` are drawn (#3161). `SymbolicSystem.Equations(ODE1RHS=True)` gives the right-hand side of the ODE1 equations as expressions of the ODE1 coordinates `y`, which `GetFlatProgram` also writes (#3162). The Python parts built on `exudyn.symbolic` are the package **`exudyn.symbolics`**: `kinematics` (the rotation and kinematics functions), `codeExport`, `userItems` (UserItemCreator), `systemModel` (SymbolicSystem, NumpySystem, SystemVariables) and `solvers` (#3165).
 **ObjectConnectorUser**: its `forceUserFunction` gets the positions, velocities, rotations and angular velocities of its
 two markers and returns the forces (and torques) on them, which the connector applies through the marker Jacobians,
 also as symbolic user function; the access to the markers as `exudyn.ConnectorMarker` objects, for forces at points a

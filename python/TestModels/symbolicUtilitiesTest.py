@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  exudyn.symbolicUtilities (#3069): every function, with functions=numpy, math and exudyn.cMath at numbers
+# Details:  exudyn.symbolics.kinematics (#3069): every function, with functions=numpy, math and exudyn.cMath at numbers
 #           and with functions=exudyn.symbolic recorded once of named symbolic variables and evaluated at the same
 #           numbers after SetValue, against exudyn.cUtilities and exudyn.rigidBodyUtilities. The rotation vector also
 #           at length 0 and 1e-13, where its factors are their limits, and the results are symbolic matrices and
@@ -17,13 +17,13 @@
 import exudyn as exu
 import exudyn.cUtilities as cu
 import exudyn.rigidBodyUtilities as rbu
-import exudyn.symbolicUtilities as su
+import exudyn.symbolics.kinematics as su
 import exudyn.cMath as cMath
 import numpy as np
 import math
 esym = exu.symbolic
 
-#(function of symbolicUtilities, reference function, the kinds of its arguments): 'angle' a number, 'v3' a 3D
+#(function of exudyn.symbolics.kinematics, reference function, the kinds of its arguments): 'angle' a number, 'v3' a 3D
 #vector, 'ep' 4 unit Euler parameters, 'j6' the 6 components of an inertia tensor
 cases = [(su.Skew, cu.Skew, ['v3']),
          (su.Cross, np.cross, ['v3', 'v3']),

@@ -4500,3 +4500,21 @@ objects (when they exist); so a simplified graphics representation of joints and
   `GetFlatProgram(results=[..., 'ODE1RHS'])` writes Equations(q, q_t, t[, z], y, ...); `SystemVariables.Equations`
   passes y.
 - python/TestModels/symbolicSystemODE1Test.py: the expressions and the numpy code equal ODE1RHS (0.0).
+
+<a id="rg12-68"></a>
+### RG12.68 — the package exudyn.symbolics (2026-10-29, #3165)
+*(Maintainer 2026-10-29: "give the symbolic Python parts more space ... create a symbolic directory"; on the names:
+exudyn.symbolics "shorter and clear that it would take everything (including the utilities)"; system.py and export.py
+replaced by specific names; "symbolicUtilities.py was not part of 1.13.6 ... still ok to move".)*
+- python/exudyn/symbolics/ (git mv, the history kept): `kinematics.py` (was exudyn/symbolicUtilities.py),
+  `codeExport.py` (misc/symbolicExport.py), `userItems.py` (misc/symbolicUserItems.py), `systemModel.py` and
+  `solvers.py` - misc/symbolicSystem.py split: SymbolicSystemBase, NumpySystem, SymbolicKind, SymbolicLoad,
+  SymbolicSystem, SystemVariables and `_denseMassMatrixSize` in systemModel, explicitSolverTypes, SolveExplicit,
+  SolveGeneralizedAlpha and their helpers in solvers, which imports systemModel. `__init__.py` imports nothing - the
+  modules are imported one by one, as systemModel and solvers need scipy - and lists them.
+- No deprecation: none of the modules was in a release (1.13.6).
+- References: setup.py (the package), Symbolic.cpp (the import of codeExport by GetFlatProgram, comments),
+  definitions/pybindSymbolic.py, tools/generators/utilityDocsModel.py (the pages symbolics.*; the four old generated
+  pages removed), pyproject.toml, the test models, the examples, docs/dev (README, internals/symbolic.md, the design
+  notes) and docs/manual; the imports of misc.symbolicSystem split into systemModel and solvers. The closed plan steps
+  and log entries keep the old names, as they were then.

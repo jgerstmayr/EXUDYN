@@ -5,7 +5,7 @@
 #           velocity terms, position, rotation matrix and Jacobians are Python user functions, written with
 #           exudyn.cUtilities; it moves under gravity, a Cartesian spring-damper at a point off the center of
 #           mass and a torque, side by side with an ObjectRigidBody under the same loads, and both must agree.
-#           A second user body has only symbolic user functions, written with exudyn.symbolicUtilities (#3069) as
+#           A second user body has only symbolic user functions, written with exudyn.symbolics.kinematics (#3069) as
 #           symbolic matrices and vectors with @ and .T (#3020, #3018); the force and the position are written once
 #           for functions=exudyn.symbolic and exudyn.cMath, so that the same function records and computes numbers.
 #           The mass and the inertia tensor are the parameters of the user bodies, named by a ParameterLayout and read
@@ -26,7 +26,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.cUtilities as cu
 import exudyn.cMath as cMath
-import exudyn.symbolicUtilities as su
+import exudyn.symbolics.kinematics as su
 from exudyn.advancedUtilities import CreateSymbolicUserFunction, ParameterLayout
 import exudyn.graphics as graphics
 import numpy as np
@@ -82,7 +82,7 @@ def UFrotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, par
     Jrot[:, 3:6] = cu.RotXYZ2RotationMatrix(qTotal[3:6]) @ cu.RotXYZ2GLocal(qTotal[3:6])
     return Jrot
 
-#the symbolic user functions with exudyn.symbolicUtilities (#3069): the same calls as above, with functions=esym;
+#the symbolic user functions with exudyn.symbolics.kinematics (#3069): the same calls as above, with functions=esym;
 #the force and the position also compute numbers with functions=cMath
 def ForceTorques(qTotal, q_t, inertia6D, functions):
     rot, rot_t = qTotal[3:6], q_t[3:6]

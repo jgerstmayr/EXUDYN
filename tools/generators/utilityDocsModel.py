@@ -104,9 +104,10 @@ filesParsed=[
              'graphicsDataUtilities.py',
              'misc/GUI.py', 
              'misc/settingsUtilities.py',
-             'misc/symbolicExport.py',
-             'misc/symbolicSystem.py',
-             'misc/symbolicUserItems.py',
+             'symbolics/codeExport.py',
+             'symbolics/systemModel.py',
+             'symbolics/solvers.py',
+             'symbolics/userItems.py',
              'interactive.py',
              'kinematicTree.py',
              'lieGroupBasics.py', #Stefan Holzinger
@@ -127,7 +128,7 @@ filesParsed=[
              'shells.py',
              'signalProcessing.py',
              'solver.py',
-             'symbolicUtilities.py',
+             'symbolics/kinematics.py',
              'systemUtilities.py',
              'utilities.py',
              #'lieGroupIntegration.py', #Stefan Holzinger

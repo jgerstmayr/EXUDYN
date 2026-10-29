@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  The parameters of user items as named exudyn.symbolic.Real in exudyn.misc.symbolicSystem (#3152): two mass
+# Details:  The parameters of user items as named exudyn.symbolic.Real in exudyn.symbolics.systemModel (#3152): two mass
 #           points of one mass m1 and a spring-damper of stiffness k, created by UserItemCreator, which gives the items
 #           the values and keeps the variables; SymbolicSystem(mbs, parameters=creator.parameterVariables). Equations()
 #           keeps m1 and k, its forces and mass matrix equal those of the system, their derivatives by m1 and k - one
@@ -18,8 +18,8 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.misc.symbolicUserItems import UserItemCreator
-from exudyn.misc.symbolicSystem import SymbolicSystem
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem
 import numpy as np
 esym = exu.symbolic
 

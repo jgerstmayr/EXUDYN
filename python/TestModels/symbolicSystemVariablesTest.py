@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  SystemVariables of exudyn.misc.symbolicSystem (#3151): the system variables of a SymbolicSystem as one
+# Details:  SystemVariables of exudyn.symbolics.systemModel (#3151): the system variables of a SymbolicSystem as one
 #           exudyn.symbolic.VariableSet, and the states of its markers as expressions of them - a marker on the node of
 #           a user mass point, rigid markers on user rigid bodies and on the ground. At a state off the initial one,
 #           the positions, velocities, rotation matrices and angular velocities equal the marker outputs of mbs, and the
@@ -18,8 +18,8 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.misc.symbolicUserItems import UserItemCreator
-from exudyn.misc.symbolicSystem import SymbolicSystem, SystemVariables
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem, SystemVariables
 import exudyn.cMath as cMath
 import numpy as np
 

@@ -10,7 +10,7 @@ You can view and download this file on Github: [symbolicUserJointsTest.py](https
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  The joints of exudyn.misc.symbolicUserItems.UserItemCreator (#3140) against the built-in joints: a chain of
+# Details:  The joints of exudyn.symbolics.userItems.UserItemCreator (#3140) against the built-in joints: a chain of
 #           two rigid bars on revolute joints with tilted axes, a body on a prismatic joint pulled by a spring-damper, a
 #           bar on a spherical joint and a mass point on a distance constraint to the end of a bar, under gravity. The
 #           same script builds the system with the built-in items (creator = mbs) and with ObjectJointUser and
@@ -26,7 +26,7 @@ You can view and download this file on Github: [symbolicUserJointsTest.py](https
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.misc.symbolicUserItems import UserItemCreator
+from exudyn.symbolics.userItems import UserItemCreator
 import numpy as np
 
 def Bar(creator, position, angularVelocity=[0, 0, 0], velocity=[0, 0, 0]):

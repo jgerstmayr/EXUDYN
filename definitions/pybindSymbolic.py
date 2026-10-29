@@ -30,13 +30,13 @@ pb.CreateNewRSTfile('Symbolic')
 
 pb.AddDocu(r"""The sub-module `exudyn.symbolic` (abbreviated `esym`) records mathematical expressions that are written in Python as expression graphs, which C++ evaluates. Its main use are **symbolic user functions**: a Python user function is recorded once, and from then on each call is computed in C++ without calling Python - for the representative user functions of the items 5 to 44 times faster than the Python function, at about the cost of the built-in force laws (#2982). A symbolic user function needs no Python interpreter at the time it is called, so it is drawn by the render thread as well, and it can be written out as code.
 
-**What is recorded.** The types are `esym.Real`, `esym.Vector` and `esym.Matrix`. Each is a number (or a vector or matrix of numbers), a named variable - `esym.Real('x', 1.)`, whose value may be changed later with `SetValue` - or an expression of them. While recording is on (the default, `esym.SetRecording`), every operator and function of a symbolic value creates a node that points to its operands, so that a value used several times is one node; an operation of numbers only is computed at once. The operators and numpy's functions mean what they mean for numpy arrays, `@` for the products of vectors and matrices, `np.multiply` for the product of the components, so that one Python function computes with numbers and records with symbolic values; what numpy defines differently, and `math.sin` or `float()` of a symbolic value, raise a `TypeError` instead of recording a wrong expression (#3015, #3017). The mathematical functions are those of Python's math module, computed as in `exudyn.cMath` with the same bits on every platform (#3074). `exudyn.symbolicUtilities` has the rotation matrices and their conversions for symbolic values, [](#sec-module-symbolicutilities).
+**What is recorded.** The types are `esym.Real`, `esym.Vector` and `esym.Matrix`. Each is a number (or a vector or matrix of numbers), a named variable - `esym.Real('x', 1.)`, whose value may be changed later with `SetValue` - or an expression of them. While recording is on (the default, `esym.SetRecording`), every operator and function of a symbolic value creates a node that points to its operands, so that a value used several times is one node; an operation of numbers only is computed at once. The operators and numpy's functions mean what they mean for numpy arrays, `@` for the products of vectors and matrices, `np.multiply` for the product of the components, so that one Python function computes with numbers and records with symbolic values; what numpy defines differently, and `math.sin` or `float()` of a symbolic value, raise a `TypeError` instead of recording a wrong expression (#3015, #3017). The mathematical functions are those of Python's math module, computed as in `exudyn.cMath` with the same bits on every platform (#3074). `exudyn.symbolics.kinematics` has the rotation matrices and their conversions for symbolic values, [](#sec-module-symbolics.kinematics).
 
 **Symbolic user functions.** `CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex)`, [](#sec-advancedutilities-createsymbolicuserfunction), calls the Python function once with symbolic arguments named after its parameters and keeps the result as an `esym.UserFunction`, which is given to the item instead of the Python function; the object must be kept alive in a variable as long as the item uses it. Vectors and matrices as arguments and as the result, a sparse matrix result and the parameters of the user items are supported; most user functions of the items have a symbolic version, and the user bodies and nodes, `ObjectUserBody` and `NodeUser`, are written with them, see [](#sec-useritems).
 
 **How a recording is evaluated.** After the recording, the graph is sorted into a list of operations, the flat program, which computes every node once per call, in this order; nothing is kept from one call to the next. Before that, `CreateSymbolicUserFunction` applies `esym.Optimize`: an expression written twice - `esym.cos(q[2])` in two places - becomes one node, and `1*x`, `x+0` and operations of numbers are removed, with the same results bit for bit (#3085). The list is evaluated by the table of operations: a scalar operation of numbers - `+`, `*`, `sin`, `pow`, a comparison, `IfThenElse` - is computed by its row of the table, without a call of its node, and a vector or matrix operation by its node; `esym.SetTableEvaluation(False)` evaluates every operation by its node instead, with the same results bit for bit (#3157). `UserFunction.GetFlatProgram()` shows the list, `flatEvaluation = False` evaluates the graph as a tree instead, and `UserFunction.Evaluate(...)` calls the function from Python, to compare it with the Python function. `Diff` gives the derivative of an expression with respect to a named variable at the present values, a number, not an expression.
 
-**A recording as code.** `GetFlatProgram(format=...)` of a user function or of expressions and `ToString(format=...)` of an expression write it as Python of numpy, of `exudyn.symbolic` or of sympy, which computes what Exudyn computes; sympy writes C, C++, Fortran, Matlab or LaTeX from it and computes derivatives as expressions (#3087, #3088), see [](#sec-module-misc.symbolicexport).
+**A recording as code.** `GetFlatProgram(format=...)` of a user function or of expressions and `ToString(format=...)` of an expression write it as Python of numpy, of `exudyn.symbolic` or of sympy, which computes what Exudyn computes; sympy writes C, C++, Fortran, Matlab or LaTeX from it and computes derivatives as expressions (#3087, #3088), see [](#sec-module-symbolics.codeexport).
 
 **What to know.**
 
@@ -90,7 +90,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetValue', cName='',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='ToString', cName='',
-                        description="the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088)",
+                        description="the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.symbolics.codeExport (#3088)",
                         example = r"""x=esym.Real('x',2)\\f=esym.cos(x)*x\\f.ToString(format='numpy') #'(np.cos(x) * x)'""",
                         argList=['format'],
                         defaultArgs=["'Python'"],
@@ -279,7 +279,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgramData',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgram', cName='',
-                        description="the flat program of one expression or of a list of them as text; format 'Python': one line tK = ... per operation, each node computed once, then the results, as UserFunction.GetFlatProgram(); 'symbolic', 'numpy', 'sympy': a Python function name(arguments) of that module, written by exudyn.misc.symbolicExport, which computes what Exudyn computes (#3088); flatten=False: each result as one expression; arguments and resultNames as in GetFlatProgramData (#3087)",
+                        description="the flat program of one expression or of a list of them as text; format 'Python': one line tK = ... per operation, each node computed once, then the results, as UserFunction.GetFlatProgram(); 'symbolic', 'numpy', 'sympy': a Python function name(arguments) of that module, written by exudyn.symbolics.codeExport, which computes what Exudyn computes (#3088); flatten=False: each result as one expression; arguments and resultNames as in GetFlatProgramData (#3087)",
                         example = r"""x=esym.Real('x',2)\\y=esym.Real('y',3)\\print(esym.GetFlatProgram([x**2+y, esym.cos(x)*y], format='numpy', name='F'))""",
                         argList=['expressions', 'arguments', 'resultNames', 'format', 'flatten', 'name'],
                         defaultArgs=['', 'None', 'None', "'Python'", 'True', "'F'"],
@@ -366,7 +366,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='ToString', cName='',
-                        description="the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088)",
+                        description="the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.symbolics.codeExport (#3088)",
                         example = r"""x=esym.Real('x',2)\\f=esym.cos(x)*x\\f.ToString(format='numpy') #'(np.cos(x) * x)'""",
                         argList=['format'],
                         defaultArgs=["'Python'"],
@@ -541,7 +541,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='ToString', cName='',
-                        description="the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088)",
+                        description="the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.symbolics.codeExport (#3088)",
                         example = r"""x=esym.Real('x',2)\\f=esym.cos(x)*x\\f.ToString(format='numpy') #'(np.cos(x) * x)'""",
                         argList=['format'],
                         defaultArgs=["'Python'"],
@@ -798,7 +798,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetUserFunctionFromD
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgram', cName='',
-                        description="the list of operations by which the result is evaluated, as text: one operation tK = ... per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function, written by exudyn.misc.symbolicExport, the variables of exudyn.symbolic.variables read from there (symbolic) or as keyword arguments (#3088); flatten=False: the result as one expression (#3087)",
+                        description="the list of operations by which the result is evaluated, as text: one operation tK = ... per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function, written by exudyn.symbolics.codeExport, the variables of exudyn.symbolic.variables read from there (symbolic) or as keyword arguments (#3088); flatten=False: the result as one expression (#3087)",
                         argList=['format', 'flatten'],
                         defaultArgs=["'Python'", 'True'],
                         argTypes=['str', 'bool'],
@@ -806,7 +806,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgram', cNa
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgramData', cName='',
-                        description="the flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.symbolic.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.misc.symbolicExport writes it as code (#3087)",
+                        description="the flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.symbolic.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.symbolics.codeExport writes it as code (#3087)",
                         returnType='dict',
                         )
 

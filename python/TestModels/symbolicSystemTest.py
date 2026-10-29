@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  exudyn.misc.symbolicSystem.SymbolicSystem (#3110): the equations of motion of a system of objects with
+# Details:  exudyn.symbolics.systemModel.SymbolicSystem (#3110): the equations of motion of a system of objects with
 #           symbolic user functions, collected in kinds, against what the solver computes. Three ObjectUserBody on
 #           NodePoint - two of one kind (a mass on a nonlinear spring with damping, its own parameters each), one of a
 #           second kind with a mass matrix depending on the coordinates - and an ObjectGenericODE2 with constant
@@ -22,7 +22,7 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
-from exudyn.misc.symbolicSystem import SymbolicSystem, SymbolicSystemBase
+from exudyn.symbolics.systemModel import SymbolicSystem, SymbolicSystemBase
 import numpy as np
 esym = exu.symbolic
 

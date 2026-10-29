@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  exudyn.misc.symbolicUserItems.UserItemCreator with rigid bodies (#3128): one script builds a chain of three
+# Details:  exudyn.symbolics.userItems.UserItemCreator with rigid bodies (#3128): one script builds a chain of three
 #           bars, NodeRigidBodyRxyz with the center of mass off the node, under gravity, hanging from the ground by
 #           three spring-dampers at each end and torsional spring-dampers about two global axes and a local one, a
 #           force of a user function of the time at the end of the last bar - once with creator = mbs (ObjectRigidBody,
@@ -23,8 +23,9 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.misc.symbolicUserItems import UserItemCreator
-from exudyn.misc.symbolicSystem import SymbolicSystem, SymbolicSystemBase, SolveExplicit, SolveGeneralizedAlpha
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem, SymbolicSystemBase
+from exudyn.symbolics.solvers import SolveExplicit, SolveGeneralizedAlpha
 import exudyn.cMath as cMath
 import numpy as np
 import inspect

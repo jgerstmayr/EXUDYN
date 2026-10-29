@@ -19,8 +19,9 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.misc.symbolicUserItems import UserItemCreator
-from exudyn.misc.symbolicSystem import SymbolicSystem, SymbolicSystemBase, SolveGeneralizedAlpha
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem, SymbolicSystemBase
+from exudyn.symbolics.solvers import SolveGeneralizedAlpha
 import numpy as np
 import time
 try:

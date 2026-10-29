@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 257 | 1.13.261 |
+| 1.13 | Newborn | 258 | 1.13.263 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.263** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolics: a package for the Python parts of the symbolic system and the symbolic utilities (#3165)
+  - description: Maintainer 2026-10-29: give the symbolic Python parts more space in a directory of their own, exudyn.symbolics (exudyn.symbolic is the C++ module). misc/symbolicSystem.py split into symbolics/systemModel.py (SymbolicSystemBase, NumpySystem, SymbolicSystem, SystemVariables) and symbolics/solvers.py (SolveExplicit, SolveGeneralizedAlpha), misc/symbolicUserItems.py -\> symbolics/userItems.py, misc/symbolicExport.py -\> symbolics/codeExport.py, symbolicUtilities.py -\> symbolics/kinematics.py; no deprecation, as none of them was in a release (1.13.6). Specific module names instead of system.py and export.py: a variable system and the existing exudyn.solver, exudyn.utilities.
+  - **notes:** the Python parts built on exudyn.symbolic are the package exudyn.symbolics: kinematics (the rotation and kinematics functions for symbolic user functions), codeExport, userItems (UserItemCreator), systemModel (SymbolicSystem, NumpySystem, SystemVariables) and solvers (SolveExplicit, SolveGeneralizedAlpha)
+  - date resolved: **2026-10-29 21:00**, date raised: 2026-10-29
 - **1.13.261** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem.Equations and GetFlatProgram: the ODE1 equations (#3162)
   - description: Maintainer 2026-10-29: add the ODE1 equations in Equations(). The right-hand side g(y, t) of ObjectGenericODE1 - A y + f and the recorded rhsUserFunction - and of LoadCoordinate on ODE1 coordinates as expressions of the variable y, Equations(ODE1RHS=True) with the result 'ODE1RHS', GetFlatProgram(results=\['ODE1RHS'\]), SystemVariables.Equations with y.
   - **notes:** exudyn.misc.symbolicSystem: SymbolicSystem.Equations(ODE1RHS=True) gives the right-hand side of the ODE1 equations - ObjectGenericODE1 and LoadCoordinate on ODE1 coordinates - as expressions of the ODE1 coordinates y, and GetFlatProgram writes them

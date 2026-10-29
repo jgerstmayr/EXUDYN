@@ -1,6 +1,6 @@
 # Symbolic user items with the interfaces of the built-in items: design (revision2026c step RG12.55.1, #3111)
 
-`exudyn/misc/symbolicUserItems.py`: user items with symbolic user functions that are created **with the same calls as
+`exudyn/symbolics/userItems.py`: user items with symbolic user functions that are created **with the same calls as
 the built-in items**, so that a system is built once and runs either with the built-in items or with the user items -
 in Exudyn (to compare) and in the symbolic system model (RG12.51.4, the export and the GPU). It comes before the system
 model goes deeper. This note lists what is needed, the interface, the extension of ObjectConnectorUser it needs, and
@@ -15,7 +15,7 @@ the decisions. It lives while RG12.55 is open (WORKFLOW.md §8.4).
 | a constraint of two rigid markers | ObjectJointUser (#2976), constraint and Jacobian by the marker positions and rotations | both |
 | a constraint of node coordinates | ObjectConnectorCoordinateVector, constraintUserFunction(mbs, t, itemNumber, q, q_t, velocityLevel) and its Jacobian | both; **no parameters argument** |
 | a force between markers | ObjectConnectorUser (#2975) | **no**: its markers are Python objects - section 2 |
-| the rotation matrices, G matrices of the node types | exudyn.symbolicUtilities | with exudyn.symbolic |
+| the rotation matrices, G matrices of the node types | exudyn.symbolics.kinematics | with exudyn.symbolic |
 | one recording for many items of a kind | CreateSymbolicUserFunction with `parameters` (ParameterLayout) | - |
 
 **A connector or joint needs mbs at creation**: the built-in interface names markers or bodies, the user item adds its
@@ -81,7 +81,7 @@ models use. **A creator object with the same methods and the same arguments** (d
 point, spring-damper and force, #3125):
 
 ```python
-import exudyn.misc.symbolicUserItems as sui
+import exudyn.symbolics.userItems as sui
 creator = sui.UserItemCreator(mbs)        #or creator = mbs: the same script with the built-in items
 b0 = creator.CreateMassPoint(referencePosition=[1,0,0], mass=2, gravity=[0,-9.81,0])
 creator.CreateSpringDamper(itemNumbers=[creator.CreateGround(), b0], stiffness=100, damping=1)
@@ -109,7 +109,7 @@ mbs.Assemble()
   items to 7e-16, SolveExplicit on the recorded system to 1.3e-15.
 - **Done** (#3128): `CreateRigidBody`, ObjectUserBody on NodeRigidBodyRxyz with the parameters [mass, inertia about
   the node (6), center of mass (3)] - the mass matrix with the coupling of a center of mass off the node and the
-  quadratic velocity terms of CObjectRigidBody, written once with exudyn.symbolicUtilities for numbers (cMath) and for
+  quadratic velocity terms of CObjectRigidBody, written once with exudyn.symbolics.kinematics for numbers (cMath) and for
   the recording (exudyn.symbolic) -, and `CreateTorsionalSpringDamper`, ObjectConnectorUser on the MarkerBodyRigid of
   the built-in function, requesting the orientation: the torque about the z-axis of marker 0 of the z Tait-Bryan
   angle of $\LU{0,m0}{\Rot}\tp \LU{0,m1}{\Rot}$ and the relative angular velocity, on marker 0 and back on marker 1, as
@@ -123,7 +123,7 @@ mbs.Assemble()
 |---|---|---|---|
 | CreateGround | the built-in ObjectGround (no coordinates) | all | - |
 | CreateMassPoint | ObjectUserBody on NodePoint: $\Mm = m\Im$, $\fv = 0$, position $\qv + \pLoc$, Jacobian $\Im$, mass integral $m\Im$ | referencePosition, initialDisplacement, initialVelocity, mass, gravity, graphicsDataList, drawSize, color, show | create2D (later: NodePoint2D), physicsMass (deprecated) |
-| CreateRigidBody | ObjectUserBody on NodeRigidBodyRxyz: mass matrix and quadratic velocity vector of CObjectRigidBody, by symbolicUtilities; position and rotation of a local point, their Jacobians, the mass integral | referencePosition, referenceRotationMatrix, initialVelocity, initialAngularVelocity, initialDisplacement, initialRotationMatrix, inertia (with center of mass), gravity, nodeType RotationRxyz, graphicsDataList, drawSize, color, show, returnDict, referenceHT, initialHT | nodeType EulerParameters - the default - (the algebraic equation of the node is needed in the system model - later), RotationRotationVector (a Lie group node, which the solvers of the symbolic system do not integrate), graphicsDataUserFunction (other arguments in ObjectUserBody), create2D (later: NodeRigidBody2D) |
+| CreateRigidBody | ObjectUserBody on NodeRigidBodyRxyz: mass matrix and quadratic velocity vector of CObjectRigidBody, by exudyn.symbolics.kinematics; position and rotation of a local point, their Jacobians, the mass integral | referencePosition, referenceRotationMatrix, initialVelocity, initialAngularVelocity, initialDisplacement, initialRotationMatrix, inertia (with center of mass), gravity, nodeType RotationRxyz, graphicsDataList, drawSize, color, show, returnDict, referenceHT, initialHT | nodeType EulerParameters - the default - (the algebraic equation of the node is needed in the system model - later), RotationRotationVector (a Lie group node, which the solvers of the symbolic system do not integrate), graphicsDataUserFunction (other arguments in ObjectUserBody), create2D (later: NodeRigidBody2D) |
 | CreateSpringDamper | ObjectConnectorUser on two position markers with the forceUserFunction of the marker states (section 2): $\fv_1 = -\fv_0 = -(k(L - L_0) + d\dot L + f_0)\,\nv$ | itemNumbers, localPosition0/1, referenceLength, stiffness, damping, force, velocityOffset, show, drawSize, color | springForceUserFunction (later: a symbolic one inside the recording), the deprecated bodyNumbers and bodyOrNodeList |
 | CreateTorsionalSpringDamper | ObjectConnectorUser on two rigid markers: the torque of the relative rotation about the axis | itemNumbers (bodies or the ground), position, axis, stiffness, damping, offset, velocityOffset, torque, useGlobalFrame, show, drawSize, color | unlimitedRotations, whose default True is refused (needs the data of the turns: pass False), springTorqueUserFunction, markers in itemNumbers, the deprecated bodyNumbers and bodyOrNodeList |
 | CreateRevoluteJoint, CreatePrismaticJoint | ObjectJointUser on the MarkerBodyRigid of the built-in joint (its frame the joint frame), the equations of ObjectJointRevoluteZ and ObjectJointPrismaticX and their derivative by the marker translations and global rotation increments (#3140) | itemNumbers (bodies or the ground), position, axis, useGlobalFrame, show; axisRadius, axisLength, color for a cylinder along the axis, by the graphicsDataUserFunction of ObjectJointUser (#3147) | markers in itemNumbers, the deprecated bodyNumbers and bodyOrNodeList |

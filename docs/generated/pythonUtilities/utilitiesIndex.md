@@ -31,9 +31,10 @@ graphics
 graphicsDataUtilities
 misc.GUI
 misc.settingsUtilities
-misc.symbolicExport
-misc.symbolicSystem
-misc.symbolicUserItems
+symbolics.codeExport
+symbolics.systemModel
+symbolics.solvers
+symbolics.userItems
 interactive
 kinematicTree
 lieGroupBasics
@@ -54,7 +55,7 @@ robotics.utilities
 shells
 signalProcessing
 solver
-symbolicUtilities
+symbolics.kinematics
 systemUtilities
 utilities
 ```

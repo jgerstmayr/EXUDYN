@@ -3,7 +3,7 @@
 #
 # Details:  The flat program of symbolic user functions and expressions as a Python structure and as code (#3087,
 #           #3088): GetFlatProgramData(), GetFlatProgram(format=..., flatten=...) and ToString(format=...), written by
-#           exudyn.misc.symbolicExport. Three recorded user functions - a scalar one with every function and operator
+#           exudyn.symbolics.codeExport. Three recorded user functions - a scalar one with every function and operator
 #           of exudyn.symbolic, a vector and a matrix one with their operations - and two expressions: the format
 #           'Python' of the writer equals the text of C++; the format 'numpy' computes what the recording computes, at
 #           random arguments; the format 'symbolic' records the same flat program again; the format 'sympy' gives the
@@ -19,7 +19,7 @@
 import exudyn as exu
 from exudyn.utilities import NodeGenericODE2, ObjectGenericODE2
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
-import exudyn.misc.symbolicExport as symbolicExport
+import exudyn.symbolics.codeExport as symbolicExport
 import numpy as np
 esym = exu.symbolic
 

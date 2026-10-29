@@ -16,7 +16,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.misc.symbolicUserItems import UserItemCreator
+from exudyn.symbolics.userItems import UserItemCreator
 import numpy as np
 
 SC = exu.SystemContainer()

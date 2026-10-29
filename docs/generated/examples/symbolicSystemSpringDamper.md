@@ -28,7 +28,8 @@ You can view and download this file on Github: [symbolicSystemSpringDamper.py](h
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
-from exudyn.misc.symbolicSystem import SymbolicSystem, SolveExplicit
+from exudyn.symbolics.systemModel import SymbolicSystem
+from exudyn.symbolics.solvers import SolveExplicit
 import numpy as np
 esym = exu.symbolic
 

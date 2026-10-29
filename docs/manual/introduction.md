@@ -55,7 +55,7 @@ Python parts, see {numref}`fig-exudyn-candpython`.
   - `exudyn.robotics`: submodule containing several helper modules related to manipulators (`robotics`, `robotics.models`), mobile robots (`robotics.mobile`), trajectory generation (`robotics.motion`), etc.
   - `exudyn.signalProcessing`: filters, FFT, etc.; interfaces to scipy and numpy methods
   - `exudyn.solver`: functions imported when loading `exudyn`, containing main solvers
-  - `exudyn.symbolicUtilities`: rotation matrices, G matrices and their conversions for symbolic user functions, the same functions as `exudyn.cUtilities` with an argument `functions` (`exudyn.symbolic`, `numpy`, `math` or `exudyn.cMath`)
+  - `exudyn.symbolics.kinematics`: rotation matrices, G matrices and their conversions for symbolic user functions, the same functions as `exudyn.cUtilities` with an argument `functions` (`exudyn.symbolic`, `numpy`, `math` or `exudyn.cMath`)
   - `exudyn.utilities`: constains helper classes in Python and includes Exudyn main modules `basicUtilities`, `rigidBodyUtilities`, `graphics`, and `itemInterface`, which is recommended to be loaded at beginning of your model file in order to have most necessary functionality at hand
 
 (fig-exudyn-cpp)=

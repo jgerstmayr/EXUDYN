@@ -15,7 +15,7 @@ You can view and download this file on Github: [userMarkerTest.py](https://githu
 #           Cartesian spring to the ground and loaded by a force: with equal initial conditions, each mass point carries
 #           half of it, as two mass points with half the spring and half the force each; the SensorMarker of the marker.
 #           (2) A pendulum: a rigid marker on a rigid body, its position and rotation written with
-#           exudyn.symbolicUtilities and numpy, in a revolute joint, against MarkerBodyRigid; the Jacobians by central
+#           exudyn.symbolics.kinematics and numpy, in a revolute joint, against MarkerBodyRigid; the Jacobians by central
 #           differences and given by user functions; providedMarkerType Position | Orientation. (3) What the marker
 #           refuses, and the type it reports.
 #           Run alone, it draws the pendulum and opens the SolutionViewer.
@@ -29,7 +29,7 @@ You can view and download this file on Github: [userMarkerTest.py](https://githu
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.symbolicUtilities as su
+import exudyn.symbolics.kinematics as su
 import exudyn.graphics as graphics
 import numpy as np
 testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer

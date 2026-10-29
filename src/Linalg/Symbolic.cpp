@@ -436,7 +436,7 @@ void UserFunctionBase::PrepareThreads(Index numberOfThreads) const
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //the flat program as a Python structure (#3087): entry k is node k, the tK of GetFlatProgram(), with its operands by
-//number - always earlier entries; exudyn/misc/symbolicExport.py writes the formats from it
+//number - always earlier entries; exudyn/symbolics/codeExport.py writes the formats from it
 namespace Symbolic {
 
 class FlatProgramData
@@ -1237,10 +1237,10 @@ py::dict FlatProgramDataOfUserFunction(const PySymbolicUserFunction& function)
 	return dict;
 }
 
-//! a format other than 'Python', written by exudyn/misc/symbolicExport.py from the structure (#3088)
+//! a format other than 'Python', written by exudyn/symbolics/codeExport.py from the structure (#3088)
 STDstring WriteFlatProgramFormat(const py::dict& data, const STDstring& format, bool flatten, const STDstring& name, bool expressionOnly)
 {
-	py::object write = py::module_::import("exudyn.misc.symbolicExport").attr("Write");
+	py::object write = py::module_::import("exudyn.symbolics.codeExport").attr("Write");
 	return py::cast<STDstring>(write(data, format, flatten, name, expressionOnly));
 }
 
@@ -2007,7 +2007,7 @@ void Init_Pybind_Symbolic(py::module& m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//representation:
 		.def("ToString", [](const Symbolic::SReal& item, const STDstring& format) { return Symbolic::SymbolicToString(item, format); },
-			"the expression as text: format='Python' (default) the text of str(); 'symbolic', 'numpy' or 'sympy' executable Python of that module, written by exudyn.misc.symbolicExport (#3088)",
+			"the expression as text: format='Python' (default) the text of str(); 'symbolic', 'numpy' or 'sympy' executable Python of that module, written by exudyn.symbolics.codeExport (#3088)",
 			py::arg("format") = "Python")
 		.def("__str__", [](const Symbolic::SReal& item) {
 		return item.ToString();
@@ -2207,7 +2207,7 @@ void Init_Pybind_Symbolic(py::module& m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//representation:
 		.def("ToString", [](const Symbolic::SymbolicRealVector& item, const STDstring& format) { return Symbolic::SymbolicToString(item, format); },
-			"the expression as text: format='Python' (default) the text of str(); 'symbolic', 'numpy' or 'sympy' executable Python of that module, written by exudyn.misc.symbolicExport (#3088)",
+			"the expression as text: format='Python' (default) the text of str(); 'symbolic', 'numpy' or 'sympy' executable Python of that module, written by exudyn.symbolics.codeExport (#3088)",
 			py::arg("format") = "Python")
 		.def("__str__", [](const Symbolic::SymbolicRealVector& item) {
 		return item.ToString();
@@ -2351,7 +2351,7 @@ void Init_Pybind_Symbolic(py::module& m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//representation:
 		.def("ToString", [](const Symbolic::SymbolicRealMatrix& item, const STDstring& format) { return Symbolic::SymbolicToString(item, format); },
-			"the expression as text: format='Python' (default) the text of str(); 'symbolic', 'numpy' or 'sympy' executable Python of that module, written by exudyn.misc.symbolicExport (#3088)",
+			"the expression as text: format='Python' (default) the text of str(); 'symbolic', 'numpy' or 'sympy' executable Python of that module, written by exudyn.symbolics.codeExport (#3088)",
 			py::arg("format") = "Python")
 		.def("__str__", [](const Symbolic::SymbolicRealMatrix& item) {
 		return item.ToString();

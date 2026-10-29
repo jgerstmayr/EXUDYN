@@ -10,8 +10,8 @@ You can view and download this file on Github: [symbolicSystemLoadsTest.py](http
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  The built-in loads in exudyn.misc.symbolicSystem.SymbolicSystem (#3118): a rigid body as ObjectUserBody on
-#           a NodeRigidBodyRxyz, all its user functions symbolic, written with exudyn.symbolicUtilities, under
+# Details:  The built-in loads in exudyn.symbolics.systemModel.SymbolicSystem (#3118): a rigid body as ObjectUserBody on
+#           a NodeRigidBodyRxyz, all its user functions symbolic, written with exudyn.symbolics.kinematics, under
 #           gravity as LoadMassProportional on MarkerBodyMass (by its massIntegralUserFunction), a force of a symbolic
 #           loadVectorUserFunction of the time at a point off the center of mass (MarkerBodyPosition), a body-fixed force
 #           and a body-fixed torque on MarkerBodyRigid and a constant torque; a mass point as ObjectUserBody on a
@@ -30,10 +30,11 @@ You can view and download this file on Github: [symbolicSystemLoadsTest.py](http
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.symbolicUtilities as su
+import exudyn.symbolics.kinematics as su
 import exudyn.cMath as cMath
 from exudyn.advancedUtilities import CreateSymbolicUserFunction, ParameterLayout
-from exudyn.misc.symbolicSystem import SymbolicSystem, SymbolicSystemBase, SolveExplicit
+from exudyn.symbolics.systemModel import SymbolicSystem, SymbolicSystemBase
+from exudyn.symbolics.solvers import SolveExplicit
 import numpy as np
 esym = exu.symbolic
 

@@ -1,9 +1,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  exudyn.misc.symbolicSystem.SolveGeneralizedAlpha (#3126) against mbs.SolveDynamic with the same settings:
+# Details:  exudyn.symbolics.systemModel.SolveGeneralizedAlpha (#3126) against mbs.SolveDynamic with the same settings:
 #           a chain of five mass points on stiff spring-dampers, hanging from the ground under gravity and a force of
-#           the time on the last point, built with exudyn.misc.symbolicUserItems.UserItemCreator and recorded, as
+#           the time on the last point, built with exudyn.symbolics.userItems.UserItemCreator and recorded, as
 #           SymbolicSystem. The generalized-alpha method with spectral radius 1 and 0.6, Newmark's method, with and
 #           without initial accelerations, with full and modified Newton; the coordinates, velocities and accelerations
 #           at the end and a sensor written through mbs. A stiff system: the step is at the stability limit of the
@@ -18,8 +18,9 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.misc.symbolicUserItems import UserItemCreator
-from exudyn.misc.symbolicSystem import SymbolicSystem, SolveGeneralizedAlpha
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem
+from exudyn.symbolics.solvers import SolveGeneralizedAlpha
 import exudyn.cMath as cMath
 import numpy as np
 

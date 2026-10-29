@@ -14,7 +14,7 @@ You can view and download this file on Github: [symbolicSystemRigidBodyPendulum.
 #           Tait-Bryan angles, the center of mass off the node) hangs from the ground by three spring-dampers and a
 #           torsional spring-damper, a mass point (3 coordinates) hangs from the end of the bar by a spring-damper,
 #           under gravity, the point pulled by a force of the time - 9 equations, coupled through the rotations. The
-#           system is built with exudyn.misc.symbolicUserItems.UserItemCreator - the same calls as with mbs - and
+#           system is built with exudyn.symbolics.userItems.UserItemCreator - the same calls as with mbs - and
 #           recorded. SymbolicSystem(mbs).Equations() gives the mass matrix and the forces of M q_tt = f in the
 #           variables q, q_t, t, as exudyn.symbolic expressions with their flat program, or as sympy expressions, and
 #           the mass matrices of the bodies; they are checked against SymbolicSystem, and the system is integrated by
@@ -29,8 +29,9 @@ You can view and download this file on Github: [symbolicSystemRigidBodyPendulum.
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.misc.symbolicUserItems import UserItemCreator
-from exudyn.misc.symbolicSystem import SymbolicSystem, SolveGeneralizedAlpha
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem
+from exudyn.symbolics.solvers import SolveGeneralizedAlpha
 import exudyn.cMath as cMath
 import numpy as np
 

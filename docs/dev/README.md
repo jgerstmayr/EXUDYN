@@ -14,7 +14,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 | [GUI_MANUAL_CHECK.md](GUI_MANUAL_CHECK.md) | the manual check of the render window and the dialogs before a release, per platform |
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
 | [../../tools/generators/README.md](../../tools/generators/README.md) | the new generator code and how to re-emit the definitions |
-| [internals/symbolic.md](internals/symbolic.md) | exudyn.symbolic inside: the recording, symbolic user functions, the flat program, the copies for the threads, Optimize, the export, symbolicUtilities |
+| [internals/symbolic.md](internals/symbolic.md) | exudyn.symbolic inside: the recording, symbolic user functions, the flat program, the copies for the threads, Optimize, the export, exudyn.symbolics.kinematics |
 | [internals/userFunctions.md](internals/userFunctions.md) | the C++/Python boundary of the user functions: the stored function, the path of a call, the threads, the cost |
 | [internals/userItems.md](internals/userItems.md) | what each kind of item gives the solver, and how the user items are built |
 | [internals/systemUtilities.md](internals/systemUtilities.md) | exudyn.systemUtilities: SystemQuantity, the energy, the constraint drift, the system graph |

@@ -55,7 +55,7 @@ without calling Python. With the parameters as arguments, **one recording serves
 own parameters, and a changed parameter acts without recording again. A value that changes the structure of the
 computation - a number of integration points, the size of a matrix, a Python `if` - has no value while the function
 is recorded: it stays a constant of the Python code, and a structural variant is a recording of its own.
-`exudyn.symbolicUtilities` has the rotation matrices and G matrices of `exudyn.cUtilities` with a last argument
+`exudyn.symbolics.kinematics` has the rotation matrices and G matrices of `exudyn.cUtilities` with a last argument
 `functions`: `su.RotXYZ2GLocal(rot, functions=exudyn.symbolic)` gives a symbolic matrix, with `numpy`, `math` or
 `exudyn.cMath` a numpy array of numbers, so that a function is written once for both.
 Measured on a chain of mass points, a Python force function of ObjectUserBody costs about 1 µs per call more than a

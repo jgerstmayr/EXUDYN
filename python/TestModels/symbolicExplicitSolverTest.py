@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  exudyn.misc.symbolicSystem.SolveExplicit (#3112) on a net of mass points: 4 x 4 points in a vertical plane,
+# Details:  exudyn.symbolics.systemModel.SolveExplicit (#3112) on a net of mass points: 4 x 4 points in a vertical plane,
 #           the two upper corners fixed, neighbours connected by spring-dampers, under gravity and with an initial
 #           velocity out of the plane. The mass points are ObjectUserBody, the spring-dampers ObjectConnectorUser with
 #           the forceUserFunction of the marker states (#3119), both recorded as symbolic user functions, one kind
@@ -22,7 +22,8 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
-from exudyn.misc.symbolicSystem import SymbolicSystem, SymbolicSystemBase, NumpySystem, SolveExplicit
+from exudyn.symbolics.systemModel import SymbolicSystem, SymbolicSystemBase, NumpySystem
+from exudyn.symbolics.solvers import SolveExplicit
 import exudyn.cMath as cMath
 import numpy as np
 import time

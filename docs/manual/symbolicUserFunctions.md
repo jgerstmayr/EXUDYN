@@ -85,8 +85,8 @@ decides is decided then.
 - **Constants and parameters**: a Python variable is a constant of the recording. A value that changes during the
   simulation is a named variable, `esym.variables.Add('k', 100.)` before the recording and `esym.variables.Set('k',
   200.)` later, read in the function with `esym.variables.Get('k')`.
-- **One function for both**: the rotation matrices, G matrices and conversions of `exudyn.symbolicUtilities` take a
-  last argument `functions`, so that with `import exudyn.symbolicUtilities as su`,
+- **One function for both**: the rotation matrices, G matrices and conversions of `exudyn.symbolics.kinematics` take a
+  last argument `functions`, so that with `import exudyn.symbolics.kinematics as su`,
   `su.RotXYZ2RotationMatrix(rot, functions=esym)` records and `functions=exudyn.cMath` computes numbers with the same
   bits as C++ (#3069).
 
@@ -182,4 +182,4 @@ F.EvaluateJacobian('q', [1., 1.], 0.5) #sin(0.5) times the unit matrix
 expressions, from which sympy writes C, C++, Fortran, Matlab or LaTeX and computes derivatives; `flatten=False`
 writes the result as one expression. Every format computes what Exudyn computes: `mod` is the C `fmod`, `round` rounds
 halves away from zero, a comparison is the number 0 or 1 (#3087, #3088). `exudyn.symbolic.GetFlatProgram(expressions,
-...)` does the same for expressions of named variables, see `exudyn.misc.symbolicExport`.
+...)` does the same for expressions of named variables, see `exudyn.symbolics.codeExport`.

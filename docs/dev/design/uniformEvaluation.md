@@ -8,7 +8,7 @@ an experiment and the steps. It lives while RG14 is open (WORKFLOW.md §8.4).
 
 ## 1. Two ways to the GPU
 
-**One kernel per kind.** The `numpy` writer of `exudyn.misc.symbolicExport` gives scalar Python code per program;
+**One kernel per kind.** The `numpy` writer of `exudyn.symbolics.codeExport` gives scalar Python code per program;
 `numba.njit` compiles it, and a loop over the objects of a kind (`prange`) evaluates the kind for all objects, reading
 the coordinates through the LTG table and the parameters from the parameter table - one compiled function per kind.
 Numba is optional (rule 6): imported at the point of use, with a clear failure. The same structure maps to

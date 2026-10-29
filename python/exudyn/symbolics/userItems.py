@@ -28,7 +28,7 @@ import exudyn.itemInterface as eii
 import exudyn.cMath as cMath
 import exudyn.graphics as graphics
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
-import exudyn.symbolicUtilities as su
+import exudyn.symbolics.kinematics as su
 from exudyn.rigidBodyUtilities import RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, ComputeOrthonormalBasis
 from exudyn.misc.mainSystemExtensions import GetMarkersPosRot, JointPreCheckCalcBodyMarkers, _FrameFromHT
 
@@ -56,7 +56,7 @@ def _UFmassPointRotationMatrix(mbs, t, itemNumber, localPosition, qRef, qTotal, 
 def _UFmassPointRotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return np.zeros((3, 3))
 
-#the functions of exudyn.symbolicUtilities for an argument: exudyn.symbolic while a function is recorded, else cMath,
+#the functions of exudyn.symbolics.kinematics for an argument: exudyn.symbolic while a function is recorded, else cMath,
 #so that the rigid body computes numbers in Exudyn and is recorded by Record
 def _Functions(argument):
     return exudyn.symbolic if isinstance(argument, (exudyn.symbolic.Vector, exudyn.symbolic.Matrix)) else cMath

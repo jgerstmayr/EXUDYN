@@ -22,9 +22,9 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
-from exudyn.misc.symbolicUserItems import UserItemCreator
-from exudyn.misc.symbolicSystem import SymbolicSystem
-from exudyn.misc.symbolicExport import ToFunction
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem
+from exudyn.symbolics.codeExport import ToFunction
 import exudyn.cMath as cMath
 import numpy as np
 esym = exu.symbolic

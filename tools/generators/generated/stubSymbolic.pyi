@@ -23,7 +23,7 @@ class Real:
         ...
     @overload
     def ToString(self, format: str='Python') -> str: 
-        """The expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088).
+        """The expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.symbolics.codeExport (#3088).
         
         Examples:
             x=esym.Real('x',2)
@@ -236,7 +236,7 @@ def GetFlatProgramData(expressions: Any, arguments: Any=None, resultNames: Any=N
 def GetFlatProgram(expressions: Any, arguments: Any=None, resultNames: Any=None, format: str='Python', flatten: bool=True, name: str='F') -> str: 
     """The flat program of one expression or of a list of them as text; format 'Python': one line tK = ...
     
-    per operation, each node computed once, then the results, as UserFunction.GetFlatProgram(); 'symbolic', 'numpy', 'sympy': a Python function name(arguments) of that module, written by exudyn.misc.symbolicExport, which computes what Exudyn computes (#3088); flatten=False: each result as one expression; arguments and resultNames as in GetFlatProgramData (#3087)
+    per operation, each node computed once, then the results, as UserFunction.GetFlatProgram(); 'symbolic', 'numpy', 'sympy': a Python function name(arguments) of that module, written by exudyn.symbolics.codeExport, which computes what Exudyn computes (#3088); flatten=False: each result as one expression; arguments and resultNames as in GetFlatProgramData (#3087)
     
     Examples:
         x=esym.Real('x',2)
@@ -311,7 +311,7 @@ class Vector:
         ...
     @overload
     def ToString(self, format: str='Python') -> str: 
-        """The expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088).
+        """The expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.symbolics.codeExport (#3088).
         
         Examples:
             x=esym.Real('x',2)
@@ -417,7 +417,7 @@ class Matrix:
         ...
     @overload
     def ToString(self, format: str='Python') -> str: 
-        """The expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.misc.symbolicExport (#3088).
+        """The expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.symbolics.codeExport (#3088).
         
         Examples:
             x=esym.Real('x',2)
@@ -551,12 +551,12 @@ class UserFunction:
     def GetFlatProgram(self, format: str='Python', flatten: bool=True) -> str: 
         """The list of operations by which the result is evaluated, as text: one operation tK = ...
         
-        per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function, written by exudyn.misc.symbolicExport, the variables of exudyn.variables read from there (symbolic) or as keyword arguments (#3088); flatten=False: the result as one expression (#3087)
+        per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054); format 'symbolic', 'numpy' or 'sympy': a Python function with the arguments of the user function, written by exudyn.symbolics.codeExport, the variables of exudyn.variables read from there (symbolic) or as keyword arguments (#3088); flatten=False: the result as one expression (#3087)
         """
         ...
     @overload
     def GetFlatProgramData(self) -> dict: 
-        """The flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.misc.symbolicExport writes it as code (#3087)."""
+        """The flat program as a Python structure, a dict: name, arguments (of the Python signature, with type and size), variables (of exudyn.variables that the recording reads), operations (entry k is node k, its operands by number) and results; exudyn.symbolics.codeExport writes it as code (#3087)."""
         ...
     @overload
     def GetStatistics(self, detailed: bool=False) -> dict: 

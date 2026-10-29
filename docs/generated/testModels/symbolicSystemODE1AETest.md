@@ -10,7 +10,7 @@ You can view and download this file on Github: [symbolicSystemODE1AETest.py](htt
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  The interface of exudyn.misc.symbolicSystem for ODE1 and algebraic coordinates (#3134): a NumpySystem of
+# Details:  The interface of exudyn.symbolics.systemModel for ODE1 and algebraic coordinates (#3134): a NumpySystem of
 #           three masses (ODE2) on springs and dampers, coupled both ways with one ODE1 coordinate - a first order
 #           lag driven by mass 0, whose state acts as a force on mass 0 -, and a constraint q2 - q1 = 0 with its
 #           Lagrange multiplier, against the same system in Exudyn: ObjectGenericODE2 and ObjectGenericODE1 with
@@ -28,7 +28,8 @@ You can view and download this file on Github: [symbolicSystemODE1AETest.py](htt
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.misc.symbolicSystem import NumpySystem, SolveGeneralizedAlpha, SolveExplicit
+from exudyn.symbolics.systemModel import NumpySystem
+from exudyn.symbolics.solvers import SolveGeneralizedAlpha, SolveExplicit
 import exudyn.cMath as cMath
 import numpy as np
 

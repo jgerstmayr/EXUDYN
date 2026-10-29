@@ -10,7 +10,7 @@ You can view and download this file on Github: [symbolicUserItemsTest.py](https:
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  exudyn.misc.symbolicUserItems.UserItemCreator (#3125): one script builds a chain of three mass points hanging
+# Details:  exudyn.symbolics.userItems.UserItemCreator (#3125): one script builds a chain of three mass points hanging
 #           from the ground by spring-dampers, under gravity, a force of a user function of the time on the last
 #           point, once with creator = mbs (MassPoint, ObjectConnectorSpringDamper) and once with
 #           creator = UserItemCreator(mbs) (ObjectUserBody, ObjectConnectorUser). The user items with their Python
@@ -28,8 +28,9 @@ You can view and download this file on Github: [symbolicUserItemsTest.py](https:
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.misc.symbolicUserItems import UserItemCreator
-from exudyn.misc.symbolicSystem import SymbolicSystem, SolveExplicit
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem
+from exudyn.symbolics.solvers import SolveExplicit
 import exudyn.cMath as cMath
 import exudyn.graphics as graphics
 import numpy as np
