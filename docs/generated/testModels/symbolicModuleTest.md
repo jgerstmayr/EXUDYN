@@ -495,14 +495,17 @@ def ExtendedSymbolicChecks():
         x.SetValue(0.4)
         wrong += Check(abs(f_x - (fPlus - fMinus)/(2*h)) < 1e-8, 'Diff of ' + str(f))
 
-    #the functions without a derivative refuse it
-    for f in [esym.round(x), esym.ceil(x), esym.floor(x), esym.mod(x, y), esym.min(x, y), esym.max(x, y),
-              esym.isfinite(x), esym.Not(x), x < y, x <= y, x > y, x >= y, x == y, x != y]:
+    #the piecewise constant functions have the derivative zero, where it exists, as in EvaluateJacobian; mod, min and
+    #max have none and refuse it (#3171)
+    for f in [esym.round(x), esym.ceil(x), esym.floor(x), esym.isfinite(x), esym.Not(x), x < y, x <= y, x > y, x >= y,
+              x == y, x != y]:
+        wrong += Check(f.Diff(x) == 0., 'Diff of ' + str(f) + ' is zero')
+    for f in [esym.mod(x, y), esym.min(x, y), esym.max(x, y)]:
         try:
             f.Diff(x)
             wrong += Check(False, 'Diff of ' + str(f) + ' must raise')
         except Exception as e:
-            wrong += Check('not possible' in str(e), 'Diff of ' + str(f) + ' raises: ' + str(e))
+            wrong += Check('has no derivative' in str(e), 'Diff of ' + str(f) + ' raises: ' + str(e))
 
     #--- the cross product (#3070), pi (#3071) and IfThenElse with numbers (#3072)
     a = esym.Vector('a', [1., 2., 3.])

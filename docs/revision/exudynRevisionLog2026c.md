@@ -4658,3 +4658,27 @@ per node. If 'always nodes' is easier to implement, that is also ok ... ltg-maps
 - Reference values: symbolicUserFunctionSignaturesTest.py +2 (the two signatures), parameterConversionTestReference.txt
   rewritten by recordReference (9 rows of the new item); the graphics reference of the mini example written.
 - docs/dev/design/genericDAE.md section 2, revisions.md.
+
+<a id="rg12-65-5"></a>
+### RG12.65.5 — stage 4 of the table: the old flat evaluation and the tree derivative removed (2026-10-30, #3171)
+*(Maintainer 2026-10-29: "Then also do RG9.10.3 and RG12.65.5"; earlier: "the old code stays during the transition as
+fallback".)*
+- src/Linalg/Symbolic.h: FlatProgram keeps the operations, their operands and the results - its `slots`, `Evaluate`,
+  `Differentiate`, `Result*` and the members of the derivative removed; the tree derivative removed: `Diff(const
+  DiffSeed&)` and `DiffRef(const DiffSeed&)` of 71 node classes in Symbolic.h, SymbolicVector.h and SymbolicMatrix.h
+  (by a script that removes each function with its body and checked by the diff), their `diffBuffer`s and `DiffSeed`;
+  `SReal::DiffSReal` is now the one-pass derivative. About 650 lines less.
+- src/Linalg/SymbolicTable.h/.cpp: the global `symbolicProgramEvaluation` removed; the rules: `Fallback` is now
+  `NoDerivative` - zero if no operand depends on the variable, else it raises "the operation 'mod' has no derivative"
+  (before, the Diff of mod, min and max raised always) -, a leaf `Zero` (the variable `Variable`), `abs` the new rule
+  `RealAbs` (nan at 0, as its Diff), also in esym.Jacobian; `ForwardDerivative` and `SymbolicProgram::Differentiate`
+  without the arguments of the fallback; `OnePassDerivative(root, variable, n, derivatives)`, `SlotValue`,
+  `ResultComponents`. esym.Jacobian takes its sizes from SymbolicProgram.
+- src/Linalg/SymbolicUtilities.h: evaluation by SymbolicProgram only; EvaluateJacobian always by the table (also with
+  flatEvaluation = False), a result without operations by the unit matrix or zero. Symbolic.cpp: SetTableEvaluation and
+  GetTableEvaluation removed (#3157, not released); Diff of Real, Vector and Matrix by `OnePassDerivative`.
+- python/testing/test_symbolicTableEvaluation.py: the table against the tree evaluation (the same bits), the one-pass
+  derivative against central differences, esym.Jacobian and Diff, mod/min/max raising only where needed.
+- src/Linalg/symbolicCppDemo.h and src/Tests/SymbolicUnitTests.h keep DiffSReal.
+- The tree evaluation (Evaluate(), flatEvaluation = False) stays, as the design has it.
+- docs: the module description (definitions/pybindSymbolic.py), revisions.md, internals/symbolic.md, design note 12.7.

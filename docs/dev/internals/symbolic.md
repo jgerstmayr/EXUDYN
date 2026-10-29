@@ -48,7 +48,7 @@ or, without a node, a value.
   recorded before has the value 2, while `b.Evaluate()` gives 12. `NumberOfItems()`, `NumberOfRows()` and
   `NumberOfColumns()` read the recorded value. `str()` is the flat program written with `flatten = False`, without
   recursion, in a time quadratic in the depth, as each operation copies the text of its operands.
-- **The tree evaluation**: `Evaluate()` and `Diff()` from Python, and `flatEvaluation = False`, check `recordedDepth`
+- **The tree evaluation**: `Evaluate()` from Python and `flatEvaluation = False` check `recordedDepth`
   against `maximumTreeDepth` = 10000 and raise a `ValueError` above (about 60 and 70 bytes of stack per level;
   700 kB, below the 1 MB of a thread on Windows); `esym.GetDepth` gives it.
 - **While a user function is recorded** (`esym._SetRecordingFunction`, set by CreateSymbolicUserFunction), `SetValue`,
@@ -206,7 +206,7 @@ For numbers alone, cUtilities stays the fast way (0.63 us against 1.2 to 2.4 us 
 
 | | | |
 |---|---|---|
-| the tree evaluation deeper than 10000 operations | `Evaluate()`, `Diff()` and `flatEvaluation = False` raise a `ValueError`; recording, deleting, `str()`, the flat program and Optimize work at any depth | #3090 |
+| the tree evaluation deeper than 10000 operations | `Evaluate()` and `flatEvaluation = False` raise a `ValueError`; `Diff()` is the one-pass derivative (#3171); recording, deleting, `str()`, the flat program and Optimize work at any depth | #3090 |
 | the MainSystem in an expression | read only: the outputs of items; parameters of items are constants of the recording, writing to the MainSystem is refused | #2984 |
 | derivatives | `Diff` gives numbers, the forward derivative at the current values by the tree; for scalars, vectors and matrices, by a named scalar or a component of a named vector, and `UserFunction.EvaluateJacobian`; no derivative as a new program (RG12.54.2) | #3115 |
 | matrix functions | no inverse, no product of the components of matrices; vectors have `esym.cross` (#3070) | - |

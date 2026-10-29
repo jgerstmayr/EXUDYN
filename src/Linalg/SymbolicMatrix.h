@@ -51,18 +51,6 @@ public:
 		CHECKandTHROW(row < matrix.NumberOfRows() && column < matrix.NumberOfColumns(), "MatrixExpressionReal: invalid row/column");
 		return matrix(row, column); 
 	};
-	//! the derivative (#3115): one at the component of the seed of this matrix, row*columns+column, zero otherwise
-	virtual const ResizableMatrix& DiffRef(const DiffSeed& var) const override
-	{
-		diffBuffer.SetNumberOfRowsAndColumns(matrix.NumberOfRows(), matrix.NumberOfColumns());
-		diffBuffer.SetAll(0.);
-		if (var.variable == (const void*)this)
-		{
-			CHECKandTHROW(var.component >= 0 && var.component < matrix.NumberOfRows()*matrix.NumberOfColumns(), "symbolic Diff: the component of the matrix variable is out of range");
-			diffBuffer.GetDataPointer()[var.component] = 1.;
-		}
-		return diffBuffer;
-	}
 	virtual STDstring ToString() const override
 	{
 		return matrix.ToString();
@@ -139,15 +127,6 @@ public:
 		exprMatrix.assign(rows, std::vector <Symbolic::ExpressionBase*>(columns, nullptr));
 	}
 
-	virtual const ResizableMatrix& DiffRef(const DiffSeed& var) const override
-	{
-		diffBuffer.SetNumberOfRowsAndColumns(NumberOfRows(), NumberOfColumns());
-		for (Index row = 0; row < NumberOfRows(); row++)
-		{
-			for (Index column = 0; column < NumberOfColumns(); column++) { diffBuffer(row, column) = exprMatrix[row][column]->Diff(var); }
-		}
-		return diffBuffer;
-	}
 	//the flat evaluation (#3054): the components, row by row, are the operands
 	virtual Index NumberOfOperands() const override { return NumberOfRows()*NumberOfColumns(); }
 	virtual FlatNode GetOperand(Index i) const override { return FlatNode(exprMatrix[i/NumberOfColumns()][i % NumberOfColumns()]); }
@@ -311,17 +290,6 @@ public:
 		return left->EvaluateComponent(row,column) + right->EvaluateComponent(row, column);
 	};
 
-	virtual const ResizableMatrix& DiffRef(const DiffSeed& var) const override
-	{
-		const ResizableMatrix& leftDiff = left->DiffRef(var);
-		const ResizableMatrix& rightDiff = right->DiffRef(var);
-		diffBuffer.SetNumberOfRowsAndColumns(leftDiff.NumberOfRows(), leftDiff.NumberOfColumns());
-		for (Index i = 0; i < leftDiff.NumberOfRows()*leftDiff.NumberOfColumns(); i++)
-		{
-			diffBuffer.GetDataPointer()[i] = leftDiff.GetDataPointer()[i] + rightDiff.GetDataPointer()[i];
-		}
-		return diffBuffer;
-	}
 	virtual STDstring ToString() const override
 	{
 		return "(" + left->ToString() + " + " + right->ToString() + ")";
@@ -383,17 +351,6 @@ public:
 		return left->EvaluateComponent(row, column) - right->EvaluateComponent(row, column);
 	};
 
-	virtual const ResizableMatrix& DiffRef(const DiffSeed& var) const override
-	{
-		const ResizableMatrix& leftDiff = left->DiffRef(var);
-		const ResizableMatrix& rightDiff = right->DiffRef(var);
-		diffBuffer.SetNumberOfRowsAndColumns(leftDiff.NumberOfRows(), leftDiff.NumberOfColumns());
-		for (Index i = 0; i < leftDiff.NumberOfRows()*leftDiff.NumberOfColumns(); i++)
-		{
-			diffBuffer.GetDataPointer()[i] = leftDiff.GetDataPointer()[i] - rightDiff.GetDataPointer()[i];
-		}
-		return diffBuffer;
-	}
 	virtual STDstring ToString() const override
 	{
 		return "(" + left->ToString() + " - " + right->ToString() + ")";
@@ -450,19 +407,6 @@ public:
 	};
 
 	//! d(s A) = ds A + s dA
-	virtual const ResizableMatrix& DiffRef(const DiffSeed& var) const override
-	{
-		Real factor = left->Evaluate();
-		Real factorDiff = left->Diff(var);
-		const ResizableMatrix& matrix = right->EvaluateRef();
-		const ResizableMatrix& matrixDiff = right->DiffRef(var);
-		diffBuffer.SetNumberOfRowsAndColumns(matrix.NumberOfRows(), matrix.NumberOfColumns());
-		for (Index i = 0; i < matrix.NumberOfRows()*matrix.NumberOfColumns(); i++)
-		{
-			diffBuffer.GetDataPointer()[i] = factorDiff * matrix.GetDataPointer()[i] + factor * matrixDiff.GetDataPointer()[i];
-		}
-		return diffBuffer;
-	}
 	virtual STDstring ToString() const override
 	{
 		return "(" + left->ToString() + " * " + right->ToString() + ")";
@@ -510,7 +454,6 @@ public:
 		return operand->EvaluateComponent(row, column);
 	};
 
-	virtual const ResizableMatrix& DiffRef(const DiffSeed& var) const override { return operand->DiffRef(var); }
 	virtual STDstring ToString() const override {
 		return operand->ToString();
 	}
@@ -559,13 +502,6 @@ public:
 			"symbolic.Matrix::UnaryMinus: invalid row/column");
 		return -operand->EvaluateComponent(row, column);
 	};
-	virtual const ResizableMatrix& DiffRef(const DiffSeed& var) const override
-	{
-		const ResizableMatrix& matrixDiff = operand->DiffRef(var);
-		diffBuffer.SetNumberOfRowsAndColumns(matrixDiff.NumberOfRows(), matrixDiff.NumberOfColumns());
-		for (Index i = 0; i < matrixDiff.NumberOfRows()*matrixDiff.NumberOfColumns(); i++) { diffBuffer.GetDataPointer()[i] = -matrixDiff.GetDataPointer()[i]; }
-		return diffBuffer;
-	}
 	virtual STDstring ToString() const override {
 		return "(-" + operand->ToString() + ")";
 	}
@@ -674,25 +610,6 @@ public:
 	};
 
 	//! d(A B) = dA B + A dB (#3115)
-	virtual const ResizableMatrix& DiffRef(const DiffSeed& var) const override
-	{
-		const ResizableMatrix& a = left->EvaluateRef();
-		const ResizableMatrix& aDiff = left->DiffRef(var);
-		const ResizableMatrix& b = right->EvaluateRef();
-		const ResizableMatrix& bDiff = right->DiffRef(var);
-		CHECKandTHROW(a.NumberOfColumns() == b.NumberOfRows(), "symbolic Diff of matrix @ matrix: inconsistent sizes");
-		diffBuffer.SetNumberOfRowsAndColumns(a.NumberOfRows(), b.NumberOfColumns());
-		for (Index i = 0; i < a.NumberOfRows(); i++)
-		{
-			for (Index j = 0; j < b.NumberOfColumns(); j++)
-			{
-				Real value = 0.;
-				for (Index k = 0; k < a.NumberOfColumns(); k++) { value += aDiff(i, k) * b(k, j) + a(i, k) * bDiff(k, j); }
-				diffBuffer(i, j) = value;
-			}
-		}
-		return diffBuffer;
-	}
 	virtual STDstring ToString() const override
 	{
 		return "(" + left->ToString() + " @ " + right->ToString() + ")";
@@ -733,16 +650,6 @@ public:
 		return buffer;
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override { return operand->EvaluateComponent(column, row); }
-	virtual const ResizableMatrix& DiffRef(const DiffSeed& var) const override
-	{
-		const ResizableMatrix& matrixDiff = operand->DiffRef(var);
-		diffBuffer.SetNumberOfRowsAndColumns(matrixDiff.NumberOfColumns(), matrixDiff.NumberOfRows());
-		for (Index i = 0; i < matrixDiff.NumberOfRows(); i++)
-		{
-			for (Index j = 0; j < matrixDiff.NumberOfColumns(); j++) { diffBuffer(j, i) = matrixDiff(i, j); }
-		}
-		return diffBuffer;
-	}
 	virtual STDstring ToString() const override { return operand->ToString() + ".T"; }
 
 	//the flat evaluation (#3054)
@@ -766,7 +673,6 @@ public:
 //	{
 //		return operand->Evaluate().GetL2Norm();
 //	}
-//	virtual Real Diff(const DiffSeed& var) const { CHECKandTHROWstring("Symbolic::Matrix::NormL2(matrix): not implemented"); return 0.; }
 //	virtual STDstring ToString() const override { return "NormL2(" + operand->ToString() + ")"; }
 //};
 //
@@ -810,18 +716,6 @@ public:
 		//	(column >= 0) && (column < m.NumberOfColumns()), "MatrixExpressionBase::operator[] index out of range");
 		//return m(row,column);
 		return operand->EvaluateComponent(row, column);
-	}
-	//! the component of the derivative of the matrix (#3115)
-	virtual Real Diff(const DiffSeed& var) const override
-	{
-		Real rowReal = indexRow->Evaluate();
-		Index row = (Index)rowReal;
-		Real columnReal = indexColumn->Evaluate();
-		Index column = (Index)columnReal;
-		CHECKandTHROW(((Real)row == rowReal) && ((Real)column == columnReal), "MatrixExpressionBase::operator[] index must contain integer indices");
-		const ResizableMatrix& matrixDiff = operand->DiffRef(var);
-		CHECKandTHROW(row >= 0 && row < matrixDiff.NumberOfRows() && column >= 0 && column < matrixDiff.NumberOfColumns(), "MatrixExpressionBase::operator[] index out of range");
-		return matrixDiff(row, column);
 	}
 	virtual STDstring ToString() const override
 	{

@@ -125,10 +125,10 @@ protected:
 	std::vector<std::pair<Index, Index>> resultPattern;
 
 	//the flat evaluation (#3053, #3054): the result is evaluated by a list of operations built once after the
-	//recording; the tree evaluation stays for comparison (flatEvaluation = false)
+	//recording, computed by the table of operations (#3153, #3171); the tree evaluation stays for comparison
+	//(flatEvaluation = false)
 	FlatProgram flatProgram;
 	bool flatEvaluation = true;
-	//the same operations by the table of operations, used if symbolicProgramEvaluation is set (#3153)
 	SymbolicProgram symbolicProgram;
 
 	//the evaluation in the threads of the parallel loops (#2978): the thread t > 0 evaluates its own copy of the
@@ -337,21 +337,13 @@ public:
 		if (copy) { return copy->flatProgram.IsBuilt() ? &copy->flatProgram : nullptr; }
 		return UseFlatProgram() ? &flatProgram : nullptr;
 	}
-	//! the program of the table for the flat program that evaluates, if symbolicProgramEvaluation is set (#3153)
-	const SymbolicProgram* TableProgram(const ThreadCopy* copy) const
-	{
-		if (!symbolicProgramEvaluation) { return nullptr; }
-		return copy ? &copy->symbolicProgram : &symbolicProgram;
-	}
+	//! the program of the table for the flat program that evaluates (#3153)
+	const SymbolicProgram& TableProgram(const ThreadCopy* copy) const { return copy ? copy->symbolicProgram : symbolicProgram; }
 
 	//! the result; copy: the copy of the recording of the thread that evaluates, nullptr in the main thread (#2978)
 	virtual Real EvaluateReturnValue(const ThreadCopy* copy = nullptr) const
 	{
-		if (const FlatProgram* program = EvaluatingProgram(copy))
-		{
-			if (const SymbolicProgram* table = TableProgram(copy)) { table->Evaluate(); return table->Result(0); }
-			program->Evaluate(); return program->Result(0);
-		}
+		if (EvaluatingProgram(copy)) { TableProgram(copy).Evaluate(); return TableProgram(copy).Result(0); }
 		return returnValue.GetReal()->Evaluate();
 	}
 
@@ -364,11 +356,7 @@ public:
 	//! the returned vector without a copy, valid until the function is evaluated again (#3006)
 	const ResizableConstVector& EvaluateReturnVectorRef(const ThreadCopy* copy = nullptr) const
 	{
-		if (const FlatProgram* program = EvaluatingProgram(copy))
-		{
-			if (const SymbolicProgram* table = TableProgram(copy)) { table->Evaluate(); return table->VectorResult(0); }
-			program->Evaluate(); return program->VectorResult(0);
-		}
+		if (EvaluatingProgram(copy)) { TableProgram(copy).Evaluate(); return TableProgram(copy).VectorResult(0); }
 		return returnValue.GetVector()->EvaluateRef();
 	}
 
@@ -381,11 +369,7 @@ public:
 	//! the returned matrix without a copy, valid until the function is evaluated again (#3021)
 	const ResizableConstMatrix& EvaluateReturnMatrixRef(const ThreadCopy* copy = nullptr) const
 	{
-		if (const FlatProgram* program = EvaluatingProgram(copy))
-		{
-			if (const SymbolicProgram* table = TableProgram(copy)) { table->Evaluate(); return table->MatrixResult(0); }
-			program->Evaluate(); return program->MatrixResult(0);
-		}
+		if (EvaluatingProgram(copy)) { TableProgram(copy).Evaluate(); return TableProgram(copy).MatrixResult(0); }
 		return returnValue.GetMatrix()->EvaluateRef();
 	}
 	////evaluate all expression trees, storing results in Real*, which are linked to destination of function 
@@ -790,10 +774,10 @@ public:
 		//}
 	}
 
-	//! the Jacobian of the result by the argument of this name, at the arguments of the call (as for Evaluate): with the
-	//! flat evaluation in one pass over the flat program, all components of the argument at once (#3116), else by Diff
-	//! of the tree, one column per component of the argument (#3115): a Real result gives a vector, a vector result a
-	//! matrix (size of result x size of argument), a matrix result an array (rows x columns x size of argument)
+	//! the Jacobian of the result by the argument of this name, at the arguments of the call (as for Evaluate): in one
+	//! pass over the program of the table, all components of the argument at once (#3116, #3171): a Real result gives a
+	//! vector, a vector result a matrix (size of result x size of argument), a matrix result an array (rows x columns x
+	//! size of argument)
 	py::object PyEvaluateJacobian(const STDstring& argumentName, const py::args& args)
 	{
 		py::object value = PyEvaluateUF(args); //sets the arguments: the values at which the derivative is taken
@@ -819,41 +803,33 @@ public:
 		CHECKandTHROW(itemOutputs.empty(), "symbolic user function " + functionName + ": EvaluateJacobian: the function reads outputs of items, which have no derivative");
 		Index columns = (size < 0) ? 1 : size;
 		FlatNode root = ResultNode();
+		std::vector<Real> leafDerivative; //of a result without operations: the unit matrix if it is the variable, else zero
 		const Real* onePass = nullptr; //the derivatives of the result, component c by component j at [c*columns + j]
-		if (UseFlatProgram() && symbolicProgramEvaluation) //by the table (#3153)
+		if (flatProgram.IsBuilt()) //by the table, also with flatEvaluation = False (#3153, #3171)
 		{
 			symbolicProgram.Evaluate();
-			symbolicProgram.Differentiate(variable, columns, size < 0);
+			symbolicProgram.Differentiate(variable, columns);
 			onePass = symbolicProgram.ResultDerivative(0);
 		}
-		else if (UseFlatProgram())
+		else
 		{
-			flatProgram.Evaluate();
-			flatProgram.Differentiate(variable, columns, size < 0);
-			onePass = flatProgram.ResultDerivative(0);
+			Index components = returnValue.IsReal() ? 1 : (returnValue.IsVector() ? (Index)py::len(value)
+				: (Index)(py::array_t<Real>::ensure(value).shape(0)*py::array_t<Real>::ensure(value).shape(1)));
+			leafDerivative.assign(components*columns, 0.);
+			if (root.node == variable) { for (Index c = 0; c < components; c++) { leafDerivative[c*columns + c] = 1.; } }
+			onePass = leafDerivative.data();
 		}
-		else { CheckTreeDepth(root, "EvaluateJacobian()"); }
-		auto Seed = [&](Index j) { return DiffSeed(variable, size < 0 ? -1 : j); };
 		if (returnValue.IsReal())
 		{
 			py::array_t<Real> jacobian(columns);
-			for (Index j = 0; j < columns; j++) { jacobian.mutable_at(j) = onePass ? onePass[j] : (root.node ? ((const ExpressionBase*)root.node)->Diff(Seed(j)) : 0.); }
+			for (Index j = 0; j < columns; j++) { jacobian.mutable_at(j) = onePass[j]; }
 			return std::move(jacobian);
 		}
 		else if (returnValue.IsVector())
 		{
 			Index rows = (Index)py::len(value);
 			py::array_t<Real> jacobian(std::vector<ptrdiff_t>{ rows, columns });
-			if (onePass)
-			{
-				for (Index i = 0; i < rows; i++) { for (Index j = 0; j < columns; j++) { jacobian.mutable_at(i, j) = onePass[i*columns + j]; } }
-				return std::move(jacobian);
-			}
-			for (Index j = 0; j < columns; j++)
-			{
-				const ResizableConstVector* column = root.node ? &((const VectorExpressionBase*)root.node)->DiffRef(Seed(j)) : nullptr;
-				for (Index i = 0; i < rows; i++) { jacobian.mutable_at(i, j) = column ? (*column)[i] : 0.; }
-			}
+			for (Index i = 0; i < rows; i++) { for (Index j = 0; j < columns; j++) { jacobian.mutable_at(i, j) = onePass[i*columns + j]; } }
 			return std::move(jacobian);
 		}
 		else
@@ -862,23 +838,11 @@ public:
 			Index rows = (Index)valueArray.shape(0);
 			Index matrixColumns = (Index)valueArray.shape(1);
 			py::array_t<Real> jacobian(std::vector<ptrdiff_t>{ rows, matrixColumns, columns });
-			if (onePass)
+			for (Index i = 0; i < rows; i++)
 			{
-				for (Index i = 0; i < rows; i++)
+				for (Index k = 0; k < matrixColumns; k++)
 				{
-					for (Index k = 0; k < matrixColumns; k++)
-					{
-						for (Index j = 0; j < columns; j++) { jacobian.mutable_at(i, k, j) = onePass[(i*matrixColumns + k)*columns + j]; }
-					}
-				}
-				return std::move(jacobian);
-			}
-			for (Index j = 0; j < columns; j++)
-			{
-				const ResizableMatrix* column = root.node ? &((const MatrixExpressionBase*)root.node)->DiffRef(Seed(j)) : nullptr;
-				for (Index i = 0; i < rows; i++)
-				{
-					for (Index k = 0; k < matrixColumns; k++) { jacobian.mutable_at(i, k, j) = column ? (*column)(i, k) : 0.; }
+					for (Index j = 0; j < columns; j++) { jacobian.mutable_at(i, k, j) = onePass[(i*matrixColumns + k)*columns + j]; }
 				}
 			}
 			return std::move(jacobian);

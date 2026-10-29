@@ -1803,77 +1803,54 @@ STDstring SymbolicToString(const TSymbolic& x, const STDstring& format)
 	return WriteFlatProgramFormat(FlatProgramDataOfExpressions(object, py::none(), py::none()), format, false, "", true);
 }
 
-//! the seed of the component of a named vector variable, for Diff (#3115)
-DiffSeed DiffSeedOfVector(const SymbolicRealVector& variable, Index component)
+//! the node of a named vector variable and the checked component, for Diff (#3115)
+static const void* NamedVectorOfDiff(const SymbolicRealVector& variable, Index component, Index& size)
 {
 	CHECKandTHROW(variable.IsExpressionNamedReal(), "symbolic Diff: the variable must be a named symbolic.Vector");
 	const VectorExpressionNamedReal& named = variable.GetExpressionNamedReal();
-	CHECKandTHROW(component >= 0 && component < named.NumberOfItems(), "symbolic Diff: the component " + EXUstd::ToString(component)
-		+ " is out of range of the vector variable of size " + EXUstd::ToString(named.NumberOfItems()));
-	return DiffSeed(&named, component);
+	size = named.NumberOfItems();
+	CHECKandTHROW(component >= 0 && component < size, "symbolic Diff: the component " + EXUstd::ToString(component)
+		+ " is out of range of the vector variable of size " + EXUstd::ToString(size));
+	return &named;
 }
 
-//! Vector.Diff: the derivative by a seed at the current values, as numpy array; a vector without expression gives zeros (#3115)
-py::array_t<Real> PyVectorDiff(const SymbolicRealVector& item, const DiffSeed& seed)
+//! Diff of an expression: its derivatives by component of a variable with n components, at the current values, by the
+//! one-pass derivative of the table (#3171); an expression without node - a number - gives zeros of its size
+static std::vector<Real> DiffOfExpression(const FlatNode& root, Index size, const void* variable, Index n, Index component)
 {
-	if (!item.GetExpression()) { return EPyUtils::ToPython(ResizableConstVector(item.PyEvaluate().size(), 0.)); }
-	CheckTreeDepth(FlatNode(item.GetExpression()), "Diff()");
-	return EPyUtils::ToPython(item.GetExpression()->DiffRef(seed));
+	std::vector<Real> result(size, 0.);
+	if (root.node == nullptr) { return result; }
+	std::vector<Real> derivatives;
+	OnePassDerivative(root, variable, n, derivatives);
+	for (Index c = 0; c < size; c++) { result[c] = derivatives[c*n + component]; }
+	return result;
+}
+
+//! SReal.Diff, by a named Real or the component of a named vector
+Real PyRealDiff(const SReal& item, const void* variable, Index n, Index component)
+{
+	return DiffOfExpression(FlatNode(item.GetExpression()), 1, variable, n, component)[0];
+}
+
+//! Vector.Diff: the derivative at the current values, as numpy array; a vector without expression gives zeros (#3115)
+py::array_t<Real> PyVectorDiff(const SymbolicRealVector& item, const void* variable, Index n, Index component)
+{
+	Index size = item.GetExpression() ? item.NumberOfItems() : (Index)item.PyEvaluate().size();
+	return EPyUtils::ToPython(ResizableConstVector(DiffOfExpression(FlatNode(item.GetExpression()), size, variable, n, component)));
 }
 
 //! Matrix.Diff, as PyVectorDiff (#3115)
-py::array_t<Real> PyMatrixDiff(const SymbolicRealMatrix& item, const DiffSeed& seed)
+py::array_t<Real> PyMatrixDiff(const SymbolicRealMatrix& item, const void* variable, Index n, Index component)
 {
-	if (!item.GetExpression())
-	{
-		py::array_t<Real> value = item.PyEvaluate();
-		return EPyUtils::ToPython(ResizableMatrix((Index)value.shape(0), (Index)value.shape(1), 0.));
-	}
-	CheckTreeDepth(FlatNode(item.GetExpression()), "Diff()");
-	return EPyUtils::ToPython(item.GetExpression()->DiffRef(seed));
+	py::array_t<Real> value = item.PyEvaluate();
+	Index rows = (Index)value.shape(0), columns = (Index)value.shape(1);
+	std::vector<Real> derivative = DiffOfExpression(FlatNode(item.GetExpression()), rows*columns, variable, n, component);
+	ResizableMatrix result(rows, columns, 0.);
+	for (Index c = 0; c < rows*columns; c++) { result.GetDataPointer()[c] = derivative[c]; }
+	return EPyUtils::ToPython(result);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//the forward derivative of a flat program in one pass (#3116, design docs/dev/design/symbolicSystem.md section 11 S2);
-//the rules of the operations are in SymbolicTable.cpp (#3153)
-
-void FlatProgram::Differentiate(const void* variable, Index n, bool scalarVariable) const
-{
-	const Index numberOfOperations = (Index)operations.size();
-	if ((Index)derivativeRules.size() != numberOfOperations) //the rules, once per program
-	{
-		derivativeRules.resize(numberOfOperations);
-		std::vector<FlatKind> kinds;
-		for (Index k = 0; k < numberOfOperations; k++)
-		{
-			const Operation& operation = operations[k];
-			kinds.resize(operation.numberOfOperands);
-			for (Index i = 0; i < operation.numberOfOperands; i++) { kinds[i] = operations[operandSlots[operation.firstOperand + i]].node.kind; }
-			derivativeRules[k] = FindDerivativeRule(operation.node, kinds);
-		}
-		operandDerivatives.resize(operandValues.size());
-	}
-	//the offsets of the slots in the block; the sizes of vectors and matrices are those of this evaluation
-	derivativeOffsets.resize(numberOfOperations + 1);
-	derivativeOffsets[0] = 0;
-	for (Index k = 0; k < numberOfOperations; k++) { derivativeOffsets[k + 1] = derivativeOffsets[k] + SlotComponents(operations[k].node, slots[k])*n; }
-	derivatives.resize(derivativeOffsets[numberOfOperations]); //allocates only when the block grows
-
-	for (Index k = 0; k < numberOfOperations; k++)
-	{
-		const Operation& operation = operations[k];
-		for (Index i = 0; i < operation.numberOfOperands; i++)
-		{
-			Index slot = operandSlots[operation.firstOperand + i];
-			operandValues[i] = slots[slot];
-			operandDerivatives[i] = derivatives.data() + derivativeOffsets[slot];
-		}
-		int rule = (operation.node.node == variable) ? (int)Variable : derivativeRules[k];
-		ForwardDerivative(rule, operation.node, slots[k], operandValues.data(), operandDerivatives.data(),
-			SlotComponents(operation.node, slots[k]), n, derivatives.data() + derivativeOffsets[k], variable, scalarVariable);
-	}
-}
-
 } //namespace Symbolic
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1908,12 +1885,13 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def("GetStatistics", [](const Symbolic::SReal& item, bool detailed) { return Symbolic::StatisticsOfExpressions(py::cast(item), detailed); },
 			"the counts of the nodes of the expression, a dict; detailed: also per operation and per kind (#3142)", py::arg("detailed") = false)
 		.def("Diff", [](const Symbolic::SReal& item, const Symbolic::SReal& var) {
-				Symbolic::CheckTreeDepth(Symbolic::FlatNode(item.GetExpression()), "Diff()");
-				return item.DiffSReal(var);
-			}, "return derivative of stored expression w.r.t. given variable; raises for an expression deeper than 10000 operations (#3090)")
+				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Real.Diff: the variable must be a named symbolic.Real");
+				return Symbolic::PyRealDiff(item, var.GetExpression(), 1, 0);
+			}, "the derivative by a named scalar variable at the current values, by the one-pass derivative of the table (#3171)")
 		.def("Diff", [](const Symbolic::SReal& item, const Symbolic::SymbolicRealVector& var, Index component) {
-				Symbolic::CheckTreeDepth(Symbolic::FlatNode(item.GetExpression()), "Diff()");
-				return item.GetExpression() ? item.GetExpression()->Diff(Symbolic::DiffSeedOfVector(var, component)) : 0.;
+				Index n = 0;
+				const void* variable = Symbolic::NamedVectorOfDiff(var, component, n);
+				return Symbolic::PyRealDiff(item, variable, n, component);
 			}, "the derivative by the component of a named vector variable, at the current values (#3115)",
 			py::arg("variable"), py::arg("component"))
 
@@ -2142,11 +2120,6 @@ void Init_Pybind_Symbolic(py::module& m) {
 	m.def("GetStatistics", &Symbolic::StatisticsOfExpressions,
 		"the counts of the nodes of one or a list of esym.Real, Vector and Matrix, a dict; detailed: also per operation and per kind (#3142)",
 		py::arg("expressions"), py::arg("detailed") = false);
-	m.def("SetTableEvaluation", [](bool flag) { Symbolic::symbolicProgramEvaluation = flag; },
-		"True (default): the user functions are evaluated and differentiated by the table of operations, SymbolicProgram; False: by FlatProgram, the fallback (#3157)",
-		py::arg("flag"));
-	m.def("GetTableEvaluation", []() { return Symbolic::symbolicProgramEvaluation; },
-		"True, if the user functions are evaluated by the table of operations (#3157)");
 	m.def("Jacobian", [](const py::object& expression, const py::object& variable, bool optimize)
 		{
 			py::object result = Symbolic::SymbolicJacobian(expression, variable);
@@ -2179,10 +2152,12 @@ void Init_Pybind_Symbolic(py::module& m) {
 			"the counts of the nodes of the expression, a dict; detailed: also per operation and per kind (#3142)", py::arg("detailed") = false)
 		.def("Diff", [](const Symbolic::SymbolicRealVector& item, const Symbolic::SReal& var) {
 				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Vector.Diff: the variable must be a named symbolic.Real");
-				return Symbolic::PyVectorDiff(item, Symbolic::DiffSeed(var.GetExpression()));
+				return Symbolic::PyVectorDiff(item, var.GetExpression(), 1, 0);
 			}, "the derivative by a named scalar variable at the current values, as numpy array (#3115)", py::arg("variable"))
 		.def("Diff", [](const Symbolic::SymbolicRealVector& item, const Symbolic::SymbolicRealVector& var, Index component) {
-				return Symbolic::PyVectorDiff(item, Symbolic::DiffSeedOfVector(var, component));
+				Index n = 0;
+				const void* variable = Symbolic::NamedVectorOfDiff(var, component, n);
+				return Symbolic::PyVectorDiff(item, variable, n, component);
 			}, "the derivative by the component of a named vector variable at the current values, as numpy array (#3115)",
 			py::arg("variable"), py::arg("component"))
 		.def("Evaluate", [](const Symbolic::SymbolicRealVector& item) {
@@ -2333,10 +2308,12 @@ void Init_Pybind_Symbolic(py::module& m) {
 			"the counts of the nodes of the expression, a dict; detailed: also per operation and per kind (#3142)", py::arg("detailed") = false)
 		.def("Diff", [](const Symbolic::SymbolicRealMatrix& item, const Symbolic::SReal& var) {
 				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Matrix.Diff: the variable must be a named symbolic.Real");
-				return Symbolic::PyMatrixDiff(item, Symbolic::DiffSeed(var.GetExpression()));
+				return Symbolic::PyMatrixDiff(item, var.GetExpression(), 1, 0);
 			}, "the derivative by a named scalar variable at the current values, as numpy array (#3115)", py::arg("variable"))
 		.def("Diff", [](const Symbolic::SymbolicRealMatrix& item, const Symbolic::SymbolicRealVector& var, Index component) {
-				return Symbolic::PyMatrixDiff(item, Symbolic::DiffSeedOfVector(var, component));
+				Index n = 0;
+				const void* variable = Symbolic::NamedVectorOfDiff(var, component, n);
+				return Symbolic::PyMatrixDiff(item, variable, n, component);
 			}, "the derivative by the component of a named vector variable at the current values, as numpy array (#3115)",
 			py::arg("variable"), py::arg("component"))
 		.def("Evaluate", [](const Symbolic::SymbolicRealMatrix& item) {

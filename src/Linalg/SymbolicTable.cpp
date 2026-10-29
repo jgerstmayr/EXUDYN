@@ -28,13 +28,11 @@ namespace py = pybind11;
 namespace Symbolic
 {
 
-bool symbolicProgramEvaluation = true;
-
 //! the table: one row per code, in the order of OperationCode
 static const OperationInfo operationTable[] =
 {
-	{ OperationCode::Leaf, "", -1, Fallback, false },
-	{ OperationCode::Node, "", -1, Fallback, false },
+	{ OperationCode::Leaf, "", -1, Zero, false }, //the variable itself: Variable, at the derivative
+	{ OperationCode::Node, "", -1, NoDerivative, false },
 	{ OperationCode::Plus, "+", 2, RealPlus, true },
 	{ OperationCode::Minus, "-", 2, RealMinus, false },
 	{ OperationCode::Multiply, "*", 2, RealMul, true },
@@ -48,7 +46,7 @@ static const OperationInfo operationTable[] =
 	{ OperationCode::Positive, "pos", 1, RealPos, false },
 	{ OperationCode::Negative, "neg", 1, RealNeg, false },
 	{ OperationCode::IsFinite, "isfinite", 1, Zero, false },
-	{ OperationCode::Abs, "abs", 1, Fallback, false },
+	{ OperationCode::Abs, "abs", 1, RealAbs, false },
 	{ OperationCode::Sign, "sign", 1, Zero, false },
 	{ OperationCode::Not, "Not", 1, Zero, false },
 	{ OperationCode::Round, "round", 1, Zero, false },
@@ -71,9 +69,9 @@ static const OperationInfo operationTable[] =
 	{ OperationCode::ATanh, "atanh", 1, RealATanh, false },
 	{ OperationCode::Pow, "pow", 2, RealPow, false },
 	{ OperationCode::Atan2, "atan2", 2, RealAtan2, false },
-	{ OperationCode::Mod, "mod", 2, Fallback, false },
-	{ OperationCode::Min, "min", 2, Fallback, false },
-	{ OperationCode::Max, "max", 2, Fallback, false },
+	{ OperationCode::Mod, "mod", 2, NoDerivative, false },
+	{ OperationCode::Min, "min", 2, NoDerivative, false },
+	{ OperationCode::Max, "max", 2, NoDerivative, false },
 	{ OperationCode::IfThenElse, "IfThenElse", 3, RealIfThenElse, false },
 };
 static_assert(sizeof(operationTable)/sizeof(operationTable[0]) == (size_t)OperationCode::NumberOfCodes, "a row per operation code");
@@ -107,15 +105,20 @@ static FlatNode OperandOfNode(const FlatNode& node, Index i)
 	}
 }
 
-OperationCode OperationCodeOfNode(const FlatNode& node)
+//! the number of operands of a node of any kind
+static Index NumberOfOperandsOfNode(const FlatNode& node)
 {
-	Index n = 0;
 	switch (node.kind)
 	{
-	case FlatKind::Real: n = ((const ExpressionBase*)node.node)->NumberOfOperands(); break;
-	case FlatKind::Vector: n = ((const VectorExpressionBase*)node.node)->NumberOfOperands(); break;
-	default: n = ((const MatrixExpressionBase*)node.node)->NumberOfOperands(); break;
+	case FlatKind::Real: return ((const ExpressionBase*)node.node)->NumberOfOperands();
+	case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->NumberOfOperands();
+	default: return ((const MatrixExpressionBase*)node.node)->NumberOfOperands();
 	}
+}
+
+OperationCode OperationCodeOfNode(const FlatNode& node)
+{
+	Index n = NumberOfOperandsOfNode(node);
 	std::vector<FlatKind> kinds(n);
 	for (Index i = 0; i < n; i++) { kinds[i] = OperandOfNode(node, i).kind; }
 	return OperationCodeOf(node, kinds);
@@ -146,7 +149,7 @@ int FindDerivativeRule(const FlatNode& node, const std::vector<FlatKind>& operan
 	const STDstring name = FlatNameOf(node);
 	Index n = (Index)operandKinds.size();
 	auto Kinds = [&](FlatKind a, FlatKind b) { return n == 2 && operandKinds[0] == a && operandKinds[1] == b; };
-	if (n == 0) { return Fallback; }
+	if (n == 0) { return Zero; } //a leaf; the variable itself is Variable
 	if (node.kind == FlatKind::Real)
 	{
 		//piecewise constant: the conditions of IfThenElse; their derivative is zero where it exists
@@ -156,26 +159,26 @@ int FindDerivativeRule(const FlatNode& node, const std::vector<FlatKind>& operan
 		if (constant.find(name) != constant.end()) { return Zero; }
 		if (n == 1 && operandKinds[0] == FlatKind::Real)
 		{
-			static const std::unordered_map<STDstring, int> unary = { {"pos", RealPos}, {"neg", RealNeg}, {"sin", RealSin},
+			static const std::unordered_map<STDstring, int> unary = { {"pos", RealPos}, {"neg", RealNeg}, {"abs", RealAbs}, {"sin", RealSin},
 				{"cos", RealCos}, {"tan", RealTan}, {"exp", RealExp}, {"log", RealLog}, {"sqrt", RealSqrt}, {"asin", RealASin},
 				{"acos", RealACos}, {"atan", RealATan}, {"sinh", RealSinh}, {"cosh", RealCosh}, {"tanh", RealTanh},
 				{"asinh", RealASinh}, {"acosh", RealACosh}, {"atanh", RealATanh} };
 			auto found = unary.find(name);
-			return found == unary.end() ? Fallback : found->second;
+			return found == unary.end() ? NoDerivative : found->second;
 		}
 		if (Kinds(FlatKind::Real, FlatKind::Real))
 		{
 			static const std::unordered_map<STDstring, int> binary = { {"+", RealPlus}, {"-", RealMinus}, {"*", RealMul},
 				{"/", RealDiv}, {"pow", RealPow}, {"atan2", RealAtan2} };
 			auto found = binary.find(name);
-			return found == binary.end() ? Fallback : found->second;
+			return found == binary.end() ? NoDerivative : found->second;
 		}
 		if (name == "IfThenElse" && n == 3) { return RealIfThenElse; }
 		if (name == "@" && Kinds(FlatKind::Vector, FlatKind::Vector)) { return RealDot; }
 		if (name == "NormL2" && n == 1 && operandKinds[0] == FlatKind::Vector) { return RealNorm; }
 		if (name == "component" && n == 2 && operandKinds[0] == FlatKind::Vector) { return RealVectorComponent; }
 		if (name == "component" && n == 3 && operandKinds[0] == FlatKind::Matrix) { return RealMatrixComponent; }
-		return Fallback;
+		return NoDerivative;
 	}
 	if (node.kind == FlatKind::Vector)
 	{
@@ -188,7 +191,7 @@ int FindDerivativeRule(const FlatNode& node, const std::vector<FlatKind>& operan
 		if (name == "pos" && n == 1) { return VectorPos; }
 		if (name == "neg" && n == 1) { return VectorNeg; }
 		if (name == "multiply" && Kinds(FlatKind::Vector, FlatKind::Vector)) { return VectorMultiply; }
-		return Fallback;
+		return NoDerivative;
 	}
 	if (name == "matrix") { return MatrixComponents; }
 	if (name == "+" && Kinds(FlatKind::Matrix, FlatKind::Matrix)) { return MatrixPlus; }
@@ -198,7 +201,7 @@ int FindDerivativeRule(const FlatNode& node, const std::vector<FlatKind>& operan
 	if (name == "neg" && n == 1) { return MatrixNeg; }
 	if (name == "@" && Kinds(FlatKind::Matrix, FlatKind::Matrix)) { return MatrixMatrix; }
 	if (name == "T" && n == 1) { return MatrixTransposed; }
-	return Fallback;
+	return NoDerivative;
 }
 
 Index SlotComponents(const FlatNode& node, const FlatValue& value)
@@ -212,7 +215,7 @@ Index SlotComponents(const FlatNode& node, const FlatValue& value)
 }
 
 void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, const FlatValue* v, const Real* const* d,
-	Index m, Index n, Real* out, const void* variable, bool scalarVariable)
+	Index m, Index n, Real* out)
 {
 	const Real nan = std::numeric_limits<Real>::quiet_NaN();
 	switch (rule)
@@ -233,6 +236,12 @@ void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, c
 	}
 	case RealPos: for (Index j = 0; j < n; j++) { out[j] = d[0][j]; } break;
 	case RealNeg: for (Index j = 0; j < n; j++) { out[j] = -d[0][j]; } break;
+	case RealAbs: //no derivative at 0
+	{
+		Real x = v[0].real;
+		for (Index j = 0; j < n; j++) { out[j] = (x == 0) ? nan : (x > 0 ? d[0][j] : -d[0][j]); }
+		break;
+	}
 	case RealPow: //as ExpressionPower::Diff: an exponent constant in a column also for a base <= 0 (#3135)
 	{
 		Real a = v[0].real, b = v[1].real;
@@ -385,28 +394,18 @@ void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, c
 		}
 		break;
 	}
-	default: //Fallback: the derivative of the node per component of the variable, as Diff and DiffRef compute it
+	default: //NoDerivative: zero, if no operand depends on the variable, else it raises
 	{
-		for (Index j = 0; j < n; j++)
+		Index numberOfOperands = NumberOfOperandsOfNode(node);
+		for (Index i = 0; i < numberOfOperands; i++)
 		{
-			DiffSeed seed(variable, scalarVariable ? -1 : j);
-			switch (node.kind)
+			Index components = SlotComponents(OperandOfNode(node, i), v[i]);
+			for (Index c = 0; c < components*n; c++)
 			{
-			case FlatKind::Real: out[j] = ((const ExpressionBase*)node.node)->Diff(seed); break;
-			case FlatKind::Vector:
-			{
-				const ResizableConstVector& column = ((const VectorExpressionBase*)node.node)->DiffRef(seed);
-				for (Index c = 0; c < m; c++) { out[c*n + j] = column[c]; }
-				break;
-			}
-			default:
-			{
-				const ResizableMatrix& column = ((const MatrixExpressionBase*)node.node)->DiffRef(seed);
-				for (Index c = 0; c < m; c++) { out[c*n + j] = column.GetDataPointer()[c]; }
-				break;
-			}
+				CHECKandTHROW(d[i][c] == 0., STDstring("exudyn.symbolic: the operation '") + OperationName(node) + "' has no derivative", ExudynValueError);
 			}
 		}
+		for (Index i = 0; i < m*n; i++) { out[i] = 0.; }
 		break;
 	}
 	}
@@ -478,7 +477,7 @@ void SymbolicProgram::Evaluate() const
 	}
 }
 
-void SymbolicProgram::Differentiate(const void* variable, Index n, bool scalarVariable) const
+void SymbolicProgram::Differentiate(const void* variable, Index n) const
 {
 	const Index numberOfSteps = (Index)steps.size();
 	//the offsets of the slots in the block; the sizes of vectors and matrices are those of this evaluation
@@ -498,8 +497,20 @@ void SymbolicProgram::Differentiate(const void* variable, Index n, bool scalarVa
 		}
 		int rule = (step.node.node == variable) ? (int)Variable : step.derivativeRule;
 		ForwardDerivative(rule, step.node, slots[k], operandValues.data(), operandDerivatives.data(),
-			SlotComponents(step.node, slots[k]), n, derivatives.data() + derivativeOffsets[k], variable, scalarVariable);
+			SlotComponents(step.node, slots[k]), n, derivatives.data() + derivativeOffsets[k]);
 	}
+}
+
+void OnePassDerivative(const FlatNode& root, const void* variable, Index n, std::vector<Real>& derivatives)
+{
+	FlatProgram program;
+	program.Build({ root });
+	SymbolicProgram table;
+	table.Build(program);
+	table.Evaluate();
+	table.Differentiate(variable, n);
+	const Real* result = table.ResultDerivative(0);
+	derivatives.assign(result, result + table.ResultComponents(0)*n);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -560,6 +571,9 @@ static SymbolicDerivativeValue SymbolicDerivativeOfOperation(int rule, const Fla
 {
 	auto IsZero = [](Index i, const std::vector<const SymbolicDerivativeValue*>& d) { return d[i]->zero; };
 	SymbolicDerivativeValue result;
+	bool allZero = true;
+	for (const SymbolicDerivativeValue* operand : d) { allZero &= operand->zero; }
+	if (allZero) { return result; } //no operand depends on the variable
 	switch (rule)
 	{
 	case Zero: return result;
@@ -572,6 +586,7 @@ static SymbolicDerivativeValue SymbolicDerivativeOfOperation(int rule, const Fla
 		return DerivativeOfReal(rule == RealPlus ? d[0]->real + d[1]->real : d[0]->real - d[1]->real);
 	case RealPos: return *d[0];
 	case RealNeg: return IsZero(0, d) ? result : DerivativeOfReal(-d[0]->real);
+	case RealAbs: return IsZero(0, d) ? result : DerivativeOfReal((x[0]->real/f.real)*d[0]->real); //nan at 0, as the one-pass derivative
 	case RealMul:
 		if (IsZero(1, d)) { return IsZero(0, d) ? result : DerivativeOfReal(d[0]->real*x[1]->real); }
 		if (IsZero(0, d)) { return DerivativeOfReal(x[0]->real*d[1]->real); }
@@ -690,41 +705,25 @@ static SymbolicDerivativeValue SymbolicDerivativeOfOperation(int rule, const Fla
 	}
 }
 
-static bool AnyNonzero(const Real* values, Index count)
-{
-	for (Index i = 0; i < count; i++) { if (values[i] != 0.) { return true; } }
-	return false;
-}
-
-//! the derivative of a leaf by component j: the unit vector of the variable, else the constant Diff of the leaf
-static SymbolicDerivativeValue SymbolicDerivativeOfLeaf(const FlatNode& node, const FlatValue& value, const void* variable,
-	Index j, Index n, bool scalarVariable)
+//! the derivative of a leaf by component j: the unit vector of the variable, else zero
+static SymbolicDerivativeValue SymbolicDerivativeOfLeaf(const FlatNode& node, const FlatValue& value, const void* variable, Index j)
 {
 	SymbolicDerivativeValue result;
-	DiffSeed seed(variable, scalarVariable ? -1 : j);
+	if (node.node != variable) { return result; }
 	switch (node.kind)
 	{
-	case FlatKind::Real:
-	{
-		Real derivative = (node.node == variable) ? 1. : ((const ExpressionBase*)node.node)->Diff(seed);
-		if (derivative != 0.) { result = DerivativeOfReal(SReal(derivative)); }
-		return result;
-	}
+	case FlatKind::Real: return DerivativeOfReal(SReal(1.));
 	case FlatKind::Vector:
 	{
 		Vector derivative(value.vector->NumberOfItems(), 0.);
-		if (node.node == variable) { derivative[j] = 1.; }
-		else { derivative.CopyFrom(((const VectorExpressionBase*)node.node)->DiffRef(seed)); }
-		if (AnyNonzero(derivative.GetDataPointer(), derivative.NumberOfItems())) { result = DerivativeOfVector(SymbolicRealVector(derivative)); }
-		return result;
+		derivative[j] = 1.;
+		return DerivativeOfVector(SymbolicRealVector(derivative));
 	}
 	default:
 	{
 		Matrix derivative(value.matrix->NumberOfRows(), value.matrix->NumberOfColumns(), 0.);
-		if (node.node == variable) { derivative.GetDataPointer()[j] = 1.; }
-		else { derivative.CopyFrom(((const MatrixExpressionBase*)node.node)->DiffRef(seed)); }
-		if (AnyNonzero(derivative.GetDataPointer(), derivative.NumberOfRows()*derivative.NumberOfColumns())) { result = DerivativeOfMatrix(SymbolicRealMatrix(derivative)); }
-		return result;
+		derivative.GetDataPointer()[j] = 1.;
+		return DerivativeOfMatrix(SymbolicRealMatrix(derivative));
 	}
 	}
 }
@@ -767,7 +766,9 @@ py::object SymbolicJacobian(const py::object& expression, const py::object& vari
 	{
 		FlatProgram program;
 		program.Build({ root });
-		program.Evaluate(); //the sizes of the vectors and matrices
+		SymbolicProgram table; //the values, for the sizes of the vectors and matrices
+		table.Build(program);
+		table.Evaluate();
 		const Index numberOfOperations = program.NumberOfOperations();
 		std::vector<SymbolicOperand> values;
 		values.reserve(numberOfOperations);
@@ -782,7 +783,7 @@ py::object SymbolicJacobian(const py::object& expression, const py::object& vari
 			Index numberOfOperands = program.NumberOfOperationOperands(k);
 			if (numberOfOperands == 0)
 			{
-				for (Index j = 0; j < n; j++) { derivatives[k][j] = SymbolicDerivativeOfLeaf(node, program.SlotValue(k), variableNode.node, j, n, scalarVariable); }
+				for (Index j = 0; j < n; j++) { derivatives[k][j] = SymbolicDerivativeOfLeaf(node, table.SlotValue(k), variableNode.node, j); }
 				continue;
 			}
 			kinds.resize(numberOfOperands);
@@ -798,7 +799,7 @@ py::object SymbolicJacobian(const py::object& expression, const py::object& vari
 			for (Index j = 0; j < n; j++)
 			{
 				for (Index i = 0; i < numberOfOperands; i++) { d[i] = &derivatives[program.OperandSlot(k, i)][j]; }
-				derivatives[k][j] = SymbolicDerivativeOfOperation(rule, node, program.SlotValue(k), values[k], x, d);
+				derivatives[k][j] = SymbolicDerivativeOfOperation(rule, node, table.SlotValue(k), values[k], x, d);
 			}
 		}
 		//the result: of a Real, its derivative or the vector of the n derivatives; of a vector of m components, the
@@ -812,7 +813,7 @@ py::object SymbolicJacobian(const py::object& expression, const py::object& vari
 		}
 		else
 		{
-			Index m = program.SlotValue(program.ResultSlot(0)).vector->NumberOfItems();
+			Index m = table.ResultComponents(0);
 			if (scalarVariable) { resultObject = result[0].zero ? py::cast(SymbolicRealVector(Vector(m, 0.))) : py::cast(result[0].vector); }
 			else
 			{

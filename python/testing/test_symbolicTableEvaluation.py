@@ -1,10 +1,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test infrastructure file
 #
-# Details:  The evaluation by the table of operations, SymbolicProgram (#3153), against the flat program of the nodes,
-#           FlatProgram: esym.SetTableEvaluation(True) and (False) give the same bits - for every scalar operation of
-#           the table, its value and its derivative, for the operations of vectors and matrices computed by their
-#           nodes, and for the output and the result of every test model with symbolic user functions.
+# Details:  The evaluation by the table of operations, SymbolicProgram (#3153, #3171): against the tree evaluation of the
+#           nodes (flatEvaluation = False) the same bits for every scalar operation of the table and for operations
+#           of vectors and matrices; its one-pass derivative against central differences and against the derivative
+#           as expressions, esym.Jacobian; the operations without derivative raise only where they depend on the
+#           variable; Diff of an expression is the one-pass derivative.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-29 (created)
@@ -13,12 +14,6 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import glob
-import os
-import re
-import subprocess
-import sys
-
 import numpy as np
 import pytest
 
@@ -26,12 +21,9 @@ import exudyn as exu
 
 esym = exu.symbolic
 
-testModelsDirectory = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'TestModels')
-
 
 def EveryScalarOperation(x, y):
-    """each scalar operation of the table once, on values where it and its derivative are defined; mod, min and max,
-    which have no derivative, in withoutDerivative"""
+    """each scalar operation of the table once, on values where it and its derivative are defined"""
     terms = [x + y, x - y, x*y, x/y, x == y, x != y, x > y, x >= y, x <= y, x < y, +x, -x, esym.isfinite(x), esym.abs(x),
              esym.sign(x), esym.Not(x > y), esym.round(3*x), esym.ceil(3*x), esym.floor(3*x), esym.sqrt(y), esym.exp(x),
              esym.log(y), esym.sin(x), esym.cos(x), esym.tan(x), esym.asin(x), esym.acos(x), esym.atan(x), esym.sinh(x),
@@ -40,77 +32,67 @@ def EveryScalarOperation(x, y):
     return esym.Vector(terms)
 
 
-def Both(function, *arguments, names=['x', 'y']):
-    """the values and the Jacobians by the arguments of these names, by the flat program and by the table"""
-    results = []
-    for flag in [False, True]:
-        esym.SetTableEvaluation(flag)
-        results.append([np.asarray(function.Evaluate(*arguments))] +
-                       [np.asarray(function.EvaluateJacobian(name, *arguments)) for name in names])
-    esym.SetTableEvaluation(True)
-    return results
+def TableAndTree(function, *arguments):
+    """the values by the table and by the tree of the nodes"""
+    values = []
+    for flat in [True, False]:
+        function.flatEvaluation = flat
+        values.append(np.asarray(function.Evaluate(*arguments)))
+    function.flatEvaluation = True
+    return values
+
+
+def CentralDifferences(function, index, arguments, epsilon=1e-6):
+    """the Jacobian by the scalar argument at index, by central differences"""
+    (plus, minus) = (list(arguments), list(arguments))
+    plus[index] += epsilon
+    minus[index] -= epsilon
+    return (np.asarray(function.Evaluate(*plus)) - np.asarray(function.Evaluate(*minus)))/(2*epsilon)
 
 
 def test_everyScalarOperation():
     x = esym.Real('x', 0.3)
     y = esym.Real('y', 0.7)
-    function = esym.Function(EveryScalarOperation(x, y), [x, y], 'Scalars')
+    expression = EveryScalarOperation(x, y)
+    function = esym.Function(expression, [x, y], 'Scalars')
     withoutDerivative = esym.Function(esym.Vector([esym.mod(y, x)*x, esym.min(x, y), esym.max(x, y)]), [x, y], 'WithoutDerivative')
-    assert esym.GetTableEvaluation()
     for (a, b) in [(0.3, 0.7), (-0.45, 1.3), (0.6, 0.2)]:
-        (flat, table) = Both(function, a, b)
-        (flatValues, tableValues) = Both(withoutDerivative, a, b, names=[])
-        for (u, v) in zip(flat + flatValues, table + tableValues):
-            assert np.array_equal(u, v, equal_nan=True)
-            assert u.tobytes() == v.tobytes() #the same bits, signed zeros included
+        for f in [function, withoutDerivative]:
+            (table, tree) = TableAndTree(f, a, b)
+            assert table.tobytes() == tree.tobytes() #the same bits, signed zeros included
+        for (index, name, variable) in [(0, 'x', x), (1, 'y', y)]:
+            onePass = np.asarray(function.EvaluateJacobian(name, a, b)).reshape(-1)
+            assert np.allclose(onePass, CentralDifferences(function, index, [a, b]), rtol=1e-6, atol=1e-6)
+            x.SetValue(a)
+            y.SetValue(b)
+            expressions = np.asarray(esym.Jacobian(expression, variable).Evaluate()).reshape(-1)
+            assert np.allclose(onePass, expressions, rtol=1e-14, atol=1e-14)
+            assert np.allclose(onePass, expression.Diff(variable), rtol=1e-14, atol=1e-14)
+
+
+def test_withoutDerivative():
+    """mod, min and max have no derivative: they raise where they depend on the variable, else they are zero"""
+    x = esym.Real('x', 0.3)
+    y = esym.Real('y', 0.7)
+    for expression in [esym.mod(y, x), esym.min(x, y), esym.max(x, y)]:
+        with pytest.raises(Exception, match='has no derivative'):
+            expression.Diff(x)
+    assert (esym.min(y, 2.)*x).Diff(x) == 0.7
+    assert np.asarray(esym.Function(esym.Vector([esym.max(y, 0.)*x]), [x, y], 'F').EvaluateJacobian('x', 0.3, 0.7))[0] == 0.7
 
 
 def test_vectorAndMatrixOperations():
-    """vector and matrix operations are computed by their nodes; their scalar operands by the table"""
+    """vector and matrix operations: values as the tree, the one-pass derivative as the expressions of esym.Jacobian"""
     scope = esym.VariableSet()
     x = scope.Add('x', [0.3, -0.2, 0.5])
     y = scope.Add('y', 0.7)
     A = esym.Matrix([[esym.cos(x[0]), y, 0], [y*x[1], 2, esym.sin(x[2])], [1, x[0]*x[1], 3]])
     v = A @ x + y*x - esym.Vector([x[0]*x[1], esym.sqrt(x @ x + y), esym.exp(-y)])
-    function = esym.Function(A.T @ v + (v @ v)*x, scope, 'Vectors')
-    (flat, table) = Both(function, [0.3, -0.2, 0.5], 0.7)
-    for (u, v) in zip(flat, table):
-        assert u.tobytes() == v.tobytes()
-
-
-def SymbolicTestModels():
-    """the test models that record symbolic user functions or use the symbolic system"""
-    models = []
-    for path in sorted(glob.glob(os.path.join(testModelsDirectory, '*.py'))):
-        text = open(path, encoding='utf8').read()
-        if 'CreateSymbolicUserFunction' in text or 'exudyn.symbolic' in text or 'exu.symbolic' in text or 'symbolicSystem' in text:
-            models.append(os.path.basename(path))
-    return models
-
-
-#runs a test model with the flag of the table, then prints its result; argv: model, flag
-runner = r'''
-import sys
-import exudyn as exu
-exu.symbolic.SetTableEvaluation(sys.argv[2] == '1')
-exu.sys['testIsActive'] = True
-exu.config.printToConsole = True
-exec(compile(open(sys.argv[1], encoding='utf8').read(), sys.argv[1], 'exec'), {'__name__': '__main__', '__file__': sys.argv[1]})
-print('testResult =', repr(exu.sys['testResult']))
-'''
-
-#lines with times and with the shares of the solver's timers differ between runs
-timing = re.compile(r'time|seconds|[0-9] ?s\b|[0-9] ?ms\b|[0-9] ?us\b|per call|%', re.IGNORECASE)
-
-
-@pytest.mark.parametrize('model', SymbolicTestModels())
-def test_testModelSameBits(model, tmp_path):
-    environment = dict(os.environ, EXUDYN_SUPPRESS_UI_WINDOW_OPEN='1', EXUDYN_OUTPUTDIRECTORY=str(tmp_path))
-    outputs = []
-    for flag in ['0', '1']:
-        run = subprocess.run([sys.executable, '-c', runner, model, flag], capture_output=True, text=True,
-                             cwd=testModelsDirectory, env=environment, stdin=subprocess.DEVNULL, timeout=600)
-        assert run.returncode == 0, run.stderr[-2000:]
-        outputs.append([line for line in run.stdout.splitlines() if not timing.search(line)])
-    assert outputs[0][-1].startswith('testResult =')
-    assert outputs[0] == outputs[1]
+    expression = A.T @ v + (v @ v)*x
+    function = esym.Function(expression, scope, 'Vectors')
+    (table, tree) = TableAndTree(function, [0.3, -0.2, 0.5], 0.7)
+    assert table.tobytes() == tree.tobytes()
+    onePass = np.asarray(function.EvaluateJacobian('x', [0.3, -0.2, 0.5], 0.7))
+    assert np.allclose(onePass, np.asarray(esym.Jacobian(expression, x).Evaluate()), rtol=1e-14, atol=1e-14)
+    for j in range(3):
+        assert np.allclose(onePass[:, j], expression.Diff(x, j), rtol=1e-14, atol=1e-14)

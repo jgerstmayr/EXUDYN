@@ -66,9 +66,9 @@ exu.Print('Hessian against the exact one:', differenceHessian)
 #an operation without a rule, and a number
 refused = 0
 try:
-    esym.Jacobian(esym.abs(x[0]), x)
+    esym.Jacobian(esym.mod(x[0], 2.), x)
 except Exception as e:
-    exu.Print('abs:', e)
+    exu.Print('mod:', e)
     refused = 1
 zero = np.array(esym.Jacobian(esym.Vector([1., 2.]), x).Evaluate())
 exu.Print('the Jacobian of a number vector:', zero.shape, np.max(np.abs(zero)))

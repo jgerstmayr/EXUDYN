@@ -336,7 +336,7 @@ def GetFlatProgram(expressions: Any, arguments: Any=None, resultNames: Any=None,
     ...
 @overload
 def GetDepth(expressions: Any) -> Any: 
-    """The depth of one esym.Real, Vector or Matrix, or of each of a list of them: the number of operations on the longest path to a leaf, 0 for a number or a named variable; Evaluate() and Diff() of an expression deeper than 10000 raise, as they recurse (#3090).
+    """The depth of one esym.Real, Vector or Matrix, or of each of a list of them: the number of operations on the longest path to a leaf, 0 for a number or a named variable; Evaluate() of an expression deeper than 10000 raises, as it recurses (#3090).
     
     Examples:
         x=esym.Real('x',2)
@@ -354,20 +354,6 @@ def Function(result: Any, inputs: Any, name: str='Function') -> Any:
         F = esym.Function(esym.sin(t)*q, scope, 'F')
         F.Evaluate([1., 1.], 0.5)
     """
-    ...
-@overload
-def SetTableEvaluation(flag: bool) -> None: 
-    """True (default): every symbolic user function is evaluated and differentiated by the table of operations, SymbolicProgram, which computes the scalar operations of the flat program without calling their nodes; False: by the flat program of the nodes, the fallback.
-    
-    Both give the same results to the bit (#3157)
-    
-    Examples:
-        esym.SetTableEvaluation(False)
-    """
-    ...
-@overload
-def GetTableEvaluation() -> bool: 
-    """True, if the symbolic user functions are evaluated by the table of operations, see SetTableEvaluation (#3157)."""
     ...
 @overload
 def Jacobian(expression: Any, variable: Any, optimize: bool=True) -> Any: 

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 263 | 1.13.268 |
+| 1.13 | Newborn | 264 | 1.13.269 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.269** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: stage 4 of the table - the old flat evaluation, its derivative and the tree derivative removed (#3171)
+  - description: Revision2026c step RG12.65.5 of \#3153 (maintainer 2026-10-29: do RG12.65.5). FlatProgram keeps the order of the operations only; every recording is evaluated and differentiated by SymbolicProgram, esym.SetTableEvaluation (introduced by \#3157, not released) removed; FlatProgram::Evaluate and Differentiate removed; the tree derivative (Diff and DiffRef of the node classes, DiffSeed) removed, Diff of Python by the one-pass derivative of the table; the rules: Zero for leaves, RealAbs, NoDerivative for mod, min, max, raising only where the variable enters.
+  - **notes:** exudyn.symbolic: every recording is evaluated and differentiated by the table of operations; esym.SetTableEvaluation, the flat evaluation of the nodes and the tree derivative removed; Diff of Real, Vector and Matrix by the one-pass derivative of the table: piecewise constant functions have the derivative zero as in EvaluateJacobian, mod, min and max raise only where the variable enters them
+  - date resolved: **2026-10-30 00:54**, date raised: 2026-10-30
 - **1.13.268** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectGenericDAE: ODE2, ODE1 and algebraic equations on the coordinates of its nodes, linear terms and Python user functions (#3170)
   - description: Revision2026c step RG9.10.3 of \#3143 (maintainer 2026-10-29: do RG9.10.3). The item on nodeNumbersODE2, nodeNumbersODE1 and nodeNumbersAE (NodeGenericAE for the multipliers, as the assembly gives bodies algebraic coordinates through their nodes only); the matrices M, D, K, E, A, B, B\_t, C\_q, C\_y and the vectors f, g, c0; forceUserFunction and rhsUserFunction with (mbs, t, itemNumber, q, q\_t, y, parameters); analytic Jacobians of the matrices, numerical for a block with a user function. The initial accelerations keep the ODE1 rows uncoupled. Checked against ObjectGenericODE2, ObjectGenericODE1, CoordinateConstraint and SolveGeneralizedAlpha.
   - **notes:** ObjectGenericDAE: ODE2, ODE1 and algebraic equations on the coordinates of its nodes (ODE2 nodes, NodeGenericODE1, NodeGenericAE for the multipliers), linear terms by matrices, forceUserFunction and rhsUserFunction; the initial accelerations of the implicit solver keep the ODE1 rows uncoupled from the algebraic equations

@@ -75,7 +75,7 @@ for (name, expression) in expressions.items():
         difference = max(difference, np.max(np.abs(derivative - (valuesPerturbed[0] - valuesPerturbed[1])/(2*epsilon))))
 exu.Print('Diff of', len(expressions), 'vector and matrix expressions: difference to central differences', difference)
 
-#what has no derivative: the norm of a zero vector, a comparison of vectors, a component out of range
+#what has no derivative: mod of a component, a comparison of vectors (not defined), a component out of range
 def Raises(function):
     try:
         function()
@@ -83,8 +83,7 @@ def Raises(function):
         return 1
     return 0
 
-zero = esym.Vector('zero', [0., 0., 0.])
-refused = (Raises(lambda: zero.NormL2().Diff(zero, 0)) + Raises(lambda: (q == A @ q).Diff(x))
+refused = (Raises(lambda: esym.mod(q[0], 2.).Diff(q, 0)) + Raises(lambda: (q == A @ q).Diff(x))
            + Raises(lambda: (A @ q).Diff(q, 3)))
 exu.Print('refused, of 3:', refused)
 

@@ -3,8 +3,9 @@
 #
 # Details:  Deep recordings of exudyn.symbolic (#3090): a chain x = sin(x*z + c)*z of 50000 steps, 200000 operations
 #           deep, is recorded, measured by esym.GetDepth and deleted without a stack overflow, one of 12000 operations
-#           printed (the text takes a time quadratic in the depth, as each operation copies its operands); Evaluate() and
-#           Diff() of it, which recurse, raise a ValueError; a symbolic user function 20000 operations deep is evaluated
+#           printed (the text takes a time quadratic in the depth, as each operation copies its operands); Evaluate() of
+#           it, which recurses, raises a ValueError, Diff() - the one-pass derivative - works; a symbolic user function
+#           20000 operations deep is evaluated
 #           by its flat program with the bits of the same loop in Python, and flatEvaluation = False raises. The value of
 #           a new expression is computed from the recorded values of its operands, a size error is raised where it is
 #           recorded, and SetValue of a named variable raises while a user function is recorded.
@@ -57,12 +58,12 @@ failed += int(esym.GetDepth([x, x + 1, esym.sin(x*z + 1)]) != [0, 1, 3])
 failed += int(str(Chain(x, z, 0.1, 2)) != '(sin((((sin(((x * z) + 0.1)) * z) * z) + 0.1)) * z)')
 failed += int(len(str(Chain(x, z, 0.1, 3000))) != 25*3000 + 1) #deeper than the recursion of str() reached
 failed += 1 - Raises(lambda: y.Evaluate(), ValueError)
-failed += 1 - Raises(lambda: y.Diff(x), ValueError)
+failed += Raises(lambda: y.Diff(x), Exception) #the one-pass derivative does not recurse (#3171)
 del y
 gc.collect()
 failed += int(LiveNodes() != live)
 
-#below the limit, Evaluate() and Diff() of the tree work
+#below the limit, Evaluate() of the tree works
 y = Chain(x, z, 0.1, 2000)
 yNumber = Chain(0.5, 0.9, 0.1, 2000, cMath)
 failed += int(y.Evaluate() != yNumber)

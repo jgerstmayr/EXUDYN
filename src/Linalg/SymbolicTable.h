@@ -38,10 +38,11 @@ enum class OperationCode : int
 	NumberOfCodes
 };
 
-//! the rules of the forward derivative; Fallback: Diff or DiffRef of the node per component of the variable (#3116)
+//! the rules of the forward derivative (#3116); NoDerivative: an operation without derivative, min, max, mod, which
+//! raises when it is differentiated (#3171)
 enum DerivativeRule
 {
-	Fallback = 0, Variable, Zero, RealIfThenElse,
+	NoDerivative = 0, Variable, Zero, RealIfThenElse, RealAbs,
 	RealPlus, RealMinus, RealMul, RealDiv, RealPos, RealNeg, RealSin, RealCos, RealTan, RealExp, RealLog, RealSqrt,
 	RealASin, RealACos, RealATan, RealSinh, RealCosh, RealTanh, RealASinh, RealACosh, RealATanh, RealPow, RealAtan2,
 	RealDot, RealNorm, RealVectorComponent, RealMatrixComponent,
@@ -129,7 +130,7 @@ Index SlotComponents(const FlatNode& node, const FlatValue& value);
 //! the forward derivative of one operation by its rule: its m components by the n components of the variable into out,
 //! component c by component j at [c*n + j], from its value, the values v and the derivatives d of its operands
 void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, const FlatValue* v, const Real* const* d,
-	Index m, Index n, Real* out, const void* variable, bool scalarVariable);
+	Index m, Index n, Real* out);
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! THE PROGRAM OF THE TABLE (#3153): the operations of a flat program - the same order and slots - by their codes; a
@@ -162,20 +163,27 @@ public:
 
 	//! compute all steps in their order
 	void Evaluate() const;
-	//! after Evaluate(): the derivatives of all slots by the n components of the variable, as FlatProgram::Differentiate
-	void Differentiate(const void* variable, Index n, bool scalarVariable) const;
+	//! after Evaluate(): the derivatives of all slots by the n components of variable - a named Real (n = 1), vector or
+	//! matrix (n = rows*columns) node of the recording - in one pass in the order of the program, each operation by the
+	//! rule of the table from the values and derivatives of its operands (#3116, #3171)
+	void Differentiate(const void* variable, Index n) const;
 	const Real* ResultDerivative(Index i) const { return derivatives.data() + derivativeOffsets[results[i]]; }
 
 	Real Result(Index i) const { return slots[results[i]].real; }
 	const ResizableConstVector& VectorResult(Index i) const { return *slots[results[i]].vector; }
 	const ResizableMatrix& MatrixResult(Index i) const { return *slots[results[i]].matrix; }
 	Index NumberOfSteps() const { return (Index)steps.size(); }
+	//! the value of step k of the last evaluation
+	const FlatValue& SlotValue(Index k) const { return slots[k]; }
+	//! the number of components of result i of the last evaluation
+	Index ResultComponents(Index i) const { return SlotComponents(steps[results[i]].node, slots[results[i]]); }
 	//! the number of steps computed by the table, without a call of their node
 	Index NumberOfTableSteps() const;
 };
 
-//! the evaluation of the user functions: True (default), by SymbolicProgram; False, by FlatProgram, the fallback (#3153)
-extern bool symbolicProgramEvaluation;
+//! the derivatives of the components of an expression by the n components of a named variable, at the current values,
+//! by the one-pass derivative of its program (#3171): component c by component j at [c*n + j]; the Diff of exudyn.symbolic
+void OnePassDerivative(const FlatNode& root, const void* variable, Index n, std::vector<Real>& derivatives);
 
 //! esym.Jacobian(expression, variable) (#3163): the derivative of an exudyn.symbolic Real or Vector by a named Real or
 //! Vector as new expressions - a Real, a Vector of the derivatives by the components, or the Jacobian matrix -, built

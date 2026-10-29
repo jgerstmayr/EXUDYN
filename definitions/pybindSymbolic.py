@@ -34,7 +34,7 @@ pb.AddDocu(r"""The sub-module `exudyn.symbolic` (abbreviated `esym`) records mat
 
 **Symbolic user functions.** `CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex)`, [](#sec-advancedutilities-createsymbolicuserfunction), calls the Python function once with symbolic arguments named after its parameters and keeps the result as an `esym.UserFunction`, which is given to the item instead of the Python function; the object must be kept alive in a variable as long as the item uses it. Vectors and matrices as arguments and as the result, a sparse matrix result and the parameters of the user items are supported; most user functions of the items have a symbolic version, and the user bodies and nodes, `ObjectUserBody` and `NodeUser`, are written with them, see [](#sec-useritems).
 
-**How a recording is evaluated.** After the recording, the graph is sorted into a list of operations, the flat program, which computes every node once per call, in this order; nothing is kept from one call to the next. Before that, `CreateSymbolicUserFunction` applies `esym.Optimize`: an expression written twice - `esym.cos(q[2])` in two places - becomes one node, and `1*x`, `x+0` and operations of numbers are removed, with the same results bit for bit (#3085). The list is evaluated by the table of operations: a scalar operation of numbers - `+`, `*`, `sin`, `pow`, a comparison, `IfThenElse` - is computed by its row of the table, without a call of its node, and a vector or matrix operation by its node; `esym.SetTableEvaluation(False)` evaluates every operation by its node instead, with the same results bit for bit (#3157). `UserFunction.GetFlatProgram()` shows the list, `flatEvaluation = False` evaluates the graph as a tree instead, and `UserFunction.Evaluate(...)` calls the function from Python, to compare it with the Python function. `Diff` gives the derivative of an expression with respect to a named variable at the present values, a number, not an expression; `esym.Jacobian` gives the derivative as expressions (#3163).
+**How a recording is evaluated.** After the recording, the graph is sorted into a list of operations, the flat program, which computes every node once per call, in this order; nothing is kept from one call to the next. Before that, `CreateSymbolicUserFunction` applies `esym.Optimize`: an expression written twice - `esym.cos(q[2])` in two places - becomes one node, and `1*x`, `x+0` and operations of numbers are removed, with the same results bit for bit (#3085). The list is evaluated by the table of operations: a scalar operation of numbers - `+`, `*`, `sin`, `pow`, a comparison, `IfThenElse` - is computed by its row of the table, without a call of its node, and a vector or matrix operation by its node (#3157). `UserFunction.GetFlatProgram()` shows the list, `flatEvaluation = False` evaluates the graph as a tree instead, and `UserFunction.Evaluate(...)` calls the function from Python, to compare it with the Python function. `Diff` gives the derivative of an expression with respect to a named variable at the present values, a number, not an expression, by the one-pass derivative of the table, as `EvaluateJacobian` (#3171); `esym.Jacobian` gives the derivative as expressions (#3163); `mod`, `min` and `max` have no derivative and raise where the variable enters them.
 
 **A recording as code.** `GetFlatProgram(format=...)` of a user function or of expressions and `ToString(format=...)` of an expression write it as Python of numpy, of `exudyn.symbolic` or of sympy, which computes what Exudyn computes; sympy writes C, C++, Fortran, Matlab or LaTeX from it and computes derivatives as expressions (#3087, #3088), see [](#sec-module-symbolics.codeexport).
 
@@ -43,7 +43,7 @@ pb.AddDocu(r"""The sub-module `exudyn.symbolic` (abbreviated `esym`) records mat
 - A Python `if`, `and`, `or` or `not` on a symbolic value raises a `TypeError` while recording, as it would take one branch for every call (#3096): a decision of each call is written with `esym.IfThenElse(condition, a, b)`, which computes both branches, a decision at recording with `x.Evaluate()`. An `if` on a Python value - a setting of the script - is decided at recording, as any Python code of the function. A loop is recorded as often as it runs, so its count cannot depend on a symbolic value.
 - Only `exudyn.symbolic`, its types and numpy's functions of them are recorded: a call into another library is a constant of the recording. The outputs of items - `mbs.GetNodeOutput`, `GetObjectOutput`, `GetObjectOutputBody`, `GetMarkerOutput`, `GetSensorValues` - are read by C++ at every call; every other attribute of the `mbs` raises while recording (#2984), [](#sec-symbolicuserfunctions).
 - With `simulationSettings.parallel.numberOfThreads` > 1, an item whose user functions are all symbolic is computed in the threads of the parallel loops, as the items without user functions: each thread evaluates its own copy of the recording, with the same results. An item with a Python user function, and an item that reads it - a connector on its marker, a body on its node -, is computed in the main thread (#2978).
-- A recording is linear in its size at any depth - a sum of many terms in a loop, a chain of 200000 operations -: the value of a new expression is computed from the values its operands had when they were recorded, and recording, deleting, `str()`, the flat program and Optimize do not recurse (#3090). `Evaluate()` and `Diff()` of an expression evaluate the tree, which recurses: deeper than 10000 operations (`esym.GetDepth`) they raise a `ValueError`, and so does `flatEvaluation = False`; a symbolic user function of any depth is evaluated by its flat program. The recordings of the test models are at most 44 deep.
+- A recording is linear in its size at any depth - a sum of many terms in a loop, a chain of 200000 operations -: the value of a new expression is computed from the values its operands had when they were recorded, and recording, deleting, `str()`, the flat program and Optimize do not recurse (#3090). `Evaluate()` of an expression evaluates the tree, which recurses: deeper than 10000 operations (`esym.GetDepth`) it raises a `ValueError`, and so does `flatEvaluation = False`; `Diff()` works at any depth; a symbolic user function of any depth is evaluated by its flat program. The recordings of the test models are at most 44 deep.
 - **Always verify a symbolic user function** against its Python function, with `UserFunction.Evaluate` or a short simulation of both.
 """,
             section='Symbolic', sectionLevel=1,sectionLabel='sec:cinterface:symbolic')
@@ -288,7 +288,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgram', cNa
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetDepth', cName='',
-                        description="the depth of one esym.Real, Vector or Matrix, or of each of a list of them: the number of operations on the longest path to a leaf, 0 for a number or a named variable; Evaluate() and Diff() of an expression deeper than 10000 raise, as they recurse (#3090)",
+                        description="the depth of one esym.Real, Vector or Matrix, or of each of a list of them: the number of operations on the longest path to a leaf, 0 for a number or a named variable; Evaluate() of an expression deeper than 10000 raises, as it recurses (#3090)",
                         example = r"""x=esym.Real('x',2)\\esym.GetDepth([x, esym.sin(x*x + 1)]) #[0, 3]""",
                         argList=['expressions'],
                         argTypes=['Any'],
@@ -302,19 +302,6 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Function', cName='',
                         defaultArgs=['', '', "'Function'"],
                         argTypes=['Any', 'Any', 'str'],
                         returnType='Any',
-                        )
-
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetTableEvaluation', cName='',
-                        description="True (default): every symbolic user function is evaluated and differentiated by the table of operations, SymbolicProgram, which computes the scalar operations of the flat program without calling their nodes; False: by the flat program of the nodes, the fallback. Both give the same results to the bit (#3157)",
-                        example = r"""esym.SetTableEvaluation(False)""",
-                        argList=['flag'],
-                        argTypes=['bool'],
-                        returnType='None',
-                        )
-
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetTableEvaluation', cName='',
-                        description="True, if the symbolic user functions are evaluated by the table of operations, see SetTableEvaluation (#3157)",
-                        returnType='bool',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Jacobian', cName='',
