@@ -1,0 +1,11 @@
+{
+  "title": "CreateFFRFObject function refinements",
+  "description": "make rigid-body node-type selectable through the create function (when the cms object is made) and use localHTList instead of offsets for rigid-body markers to include rotations",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "priority": "LOW",
+  "file": "mainSystemExtensions.py",
+  "line": "",
+  "author": "S. Weyrer",
+  "dateProposed": "2026-10-29"
+}
