@@ -4469,3 +4469,23 @@ w.r.t. these quantities"; 2026-10-29: "Do the next 3 steps you mentioned".)*
 - FlatProgramData (the export) and StatisticsName (the count) take the name of the table; GetStatistics gives
   `tableOperations`, the operations of the flat program computed by the table; symbolicStatisticsTest.py checks it.
 - All test models unchanged, among them symbolicOptimizeTest.py and symbolicExportTest.py to the bit.
+
+<a id="rg12-55-7"></a>
+### RG12.55.7 — the drawing of ObjectJointUser and of the joints of UserItemCreator (2026-10-29, #3147, #3161)
+*(Maintainer 2026-10-29: "do RG12.55.7: as mentioned, drawing could be realized in postprocessing with the native C++
+objects (when they exist); so a simplified graphics representation of joints and connectors is sufficient".)*
+- definitions/itemDefsObjects.py, ObjectJointUser: the visualization parameter `graphicsDataUserFunction(mbs,
+  itemNumber)`, returning graphics data in global coordinates, with HasUserFunction and CallUserFunction as
+  ObjectConnectorUser (#3119); src/Graphics/VisualizationUserFunctions.cpp, VisualizationObjectJointUser::CallUserFunction.
+- #3161, found here: PostProcessData::ProcessUserFunctionDrawing called the graphics user functions of the bodies only
+  (`!item->IsConnector()`, and only with bodies.show), so the graphicsDataUserFunction of ObjectConnectorUser was never
+  called and the spring-dampers of UserItemCreator were not drawn - GetGraphicsData had no element of them. Now each
+  item with a graphics user function is drawn with bodies.show or, for a connector, with connectors.show.
+- python/exudyn/misc/symbolicUserItems.py, `_JointGraphics`: the revolute joint a cylinder along the z-axis of marker 0
+  (axisRadius, axisLength), the prismatic joint along its x-axis, the spherical joint a sphere (jointRadius), the
+  distance constraint a line or, with drawSize > 0, a cylinder between the markers; color, grey by default; the markers
+  read in the visualization configuration. The arguments were accepted and not used.
+- python/TestModels/symbolicUserItemsDrawingTest.py: the six connectors and joints in GetGraphicsData, none with
+  connectors.show = False, the line of the torsional spring-damper moves with its body.
+- python/TestModels/parameterConversionTestReference.txt rewritten (recordReference): the new parameter
+  VgraphicsDataUserFunction of ObjectJointUser in two rows, as for ObjectConnectorUser.

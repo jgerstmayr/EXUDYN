@@ -1,0 +1,15 @@
+{
+  "number": 3161,
+  "title": "The graphicsDataUserFunction of ObjectConnectorUser is never called: the redraw calls the user functions of bodies only",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "Found in revision2026c step RG12.55.7 (#3147): PostProcessData::ProcessUserFunctionDrawing calls CallUserFunction only for items that are no connectors, so the graphicsDataUserFunction of ObjectConnectorUser (#3119) - the springs of UserItemCreator - draws nothing; SC.renderer.GetGraphicsData() of a UserItemCreator spring-damper has no lines of the connector. Call it for connectors too, with connectors.show.",
+  "dateRaised": "2026-10-29",
+  "deadline": "2027-04-27",
+  "dateResolved": "2026-10-29 11:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the graphicsDataUserFunction of ObjectConnectorUser is called by the redraw, which called the graphics user functions of bodies only; the spring-dampers of UserItemCreator are drawn, with connectors.show",
+  "resolvedInVersion": "1.13.260"
+}

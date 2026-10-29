@@ -1030,6 +1030,7 @@ items = {
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
+      'graphicsDataUserFunction': {'type': 'ObjectJointUserGraphicsDataUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python function which returns a list of graphics data in global coordinates, drawn for the joint, e.g. a cylinder along the axis of a revolute joint (#3147); it is called in the main thread and may slow down the visualization'},
     },
   },
   'ObjectConnectorReevingSystemSprings': {

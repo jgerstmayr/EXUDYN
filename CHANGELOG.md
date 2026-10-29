@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 254 | 1.13.258 |
+| 1.13 | Newborn | 256 | 1.13.260 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.260** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The graphicsDataUserFunction of ObjectConnectorUser is never called: the redraw calls the user functions of bodies only (#3161)
+  - description: Found in revision2026c step RG12.55.7 (\#3147): PostProcessData::ProcessUserFunctionDrawing calls CallUserFunction only for items that are no connectors, so the graphicsDataUserFunction of ObjectConnectorUser (\#3119) - the springs of UserItemCreator - draws nothing; SC.renderer.GetGraphicsData() of a UserItemCreator spring-damper has no lines of the connector. Call it for connectors too, with connectors.show.
+  - **notes:** the graphicsDataUserFunction of ObjectConnectorUser is called by the redraw, which called the graphics user functions of bodies only; the spring-dampers of UserItemCreator are drawn, with connectors.show
+  - date resolved: **2026-10-29 11:24**, date raised: 2026-10-29
+- **1.13.259** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Draw ObjectJointUser by a graphicsDataUserFunction, and the joints of UserItemCreator as the built-in joints (#3147)
+  - description: ObjectJointUser draws nothing, so the revolute, prismatic, spherical and distance joints of UserItemCreator (\#3140) are invisible and their drawing arguments are accepted and not used. A graphicsDataUserFunction as ObjectConnectorUser has (\#3119), and the drawings of the built-in joints from the drawing arguments.
+  - **notes:** ObjectJointUser has a graphicsDataUserFunction, as ObjectConnectorUser; the revolute, prismatic, spherical and distance joints of UserItemCreator are drawn by it - a cylinder along the axis, a sphere, a line - with their drawing arguments
+  - date resolved: **2026-10-29 11:24**, date raised: 2026-10-28
 - **1.13.258** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: Optimize, the export and the count on the table of operations (#3160)
   - description: Stage 2 of \#3153 (maintainer 2026-10-29: do RG12.65.3 now): the rules of Optimize for the scalar operations by their codes, the constant folding by the evaluation of the table, the keys of merged operations by the codes and the commutative column of the table; the names of the export and of GetStatistics by the table; GetStatistics counts the operations of the table (tableOperations). Results unchanged.
   - **notes:** exudyn.symbolic: esym.Optimize folds constants and applies its rules to the scalar operations by the table of operations, the export and GetStatistics take the names of the table, and GetStatistics counts the operations computed by the table as tableOperations; results unchanged

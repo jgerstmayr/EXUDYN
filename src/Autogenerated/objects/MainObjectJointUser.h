@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  23:42:47 (last modified)
+* @date         2026-10-29  11:13:44 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -117,6 +117,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "jacobianUserFunction")) { cObjectJointUser->GetParameters().jacobianUserFunction = d["jacobianUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointUser->GetShow(), "ObjectJointUser.Vshow"); }
+        if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { visualizationObjectJointUser->GetGraphicsDataUserFunction() = d["VgraphicsDataUserFunction"]; }
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -133,6 +134,7 @@ public: // AUTO:
         d["jacobianUserFunction"] = (py::object)cObjectJointUser->GetParameters().jacobianUserFunction;
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationObjectJointUser->GetShow();
+        d["VgraphicsDataUserFunction"] = (py::object)visualizationObjectJointUser->GetGraphicsDataUserFunction();
         return d;
     }
 
@@ -147,6 +149,7 @@ public: // AUTO:
         else if (parameterName.compare("constraintUserFunction") == 0) { return cObjectJointUser->GetParameters().constraintUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("jacobianUserFunction") == 0) { return cObjectJointUser->GetParameters().jacobianUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointUser->GetShow()); } //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return visualizationObjectJointUser->GetGraphicsDataUserFunction().GetPythonDictionary(); } //! AUTO: get parameter
         else {PyError(STDstring("ObjectJointUser::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -163,6 +166,7 @@ public: // AUTO:
         else if (parameterName.compare("constraintUserFunction") == 0) { cObjectJointUser->GetParameters().constraintUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("jacobianUserFunction") == 0) { cObjectJointUser->GetParameters().jacobianUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectJointUser->GetShow(), "ObjectJointUser.Vshow"); } //! AUTO: set parameter
+        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectJointUser->GetGraphicsDataUserFunction() = value; } //! AUTO: set parameter
         else {PyError(STDstring("ObjectJointUser::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

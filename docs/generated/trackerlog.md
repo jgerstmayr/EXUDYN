@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.258.dev1
+- Exudyn version = 1.13.260.dev1
 - last change = 2026-10-29
-- Number of issues = 3161
-- Number of resolved issues = 3035 (258 in current version)
+- Number of issues = 3162
+- Number of resolved issues = 3037 (260 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9047,9 +9047,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-29
 - `IMPROVEMENT` `HUGE EFF` `raised by: Claude-JG` One table of the symbolic operations: SymbolicProgram and the operation table in SymbolicTable.h/.cpp beside the expression classes (#3153)
   - description: Maintainer 2026-10-28: R1 of docs/dev/design/symbolicSystem.md, important to go that way. The expression tree stays for the recording and the simple evaluation; the flat evaluation, the derivatives, Optimize, the export, the count and the uniform evaluation work on a program built from the tree and a table per operation code (name, arity, kinds, size, evaluation, forward derivative, later derivative as new nodes, simplification, text per format). New files src/Linalg/SymbolicTable.h and .cpp; the old code stays as fallback, selected by a switch, until the new path gives the same results bit for bit; item outputs as an operation code with the data of the item and a link to the MainSystem. Four stages, design section 12.7.
-  - date raised: 2026-10-28
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` Draw ObjectJointUser by a graphicsDataUserFunction, and the joints of UserItemCreator as the built-in joints (#3147)
-  - description: ObjectJointUser draws nothing, so the revolute, prismatic, spherical and distance joints of UserItemCreator (\#3140) are invisible and their drawing arguments are accepted and not used. A graphicsDataUserFunction as ObjectConnectorUser has (\#3119), and the drawings of the built-in joints from the drawing arguments.
   - date raised: 2026-10-28
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` ObjectGenericDAE: an object coupling ODE2, ODE1 and algebraic coordinates, linear by matrices and nonlinear by user functions (#3143)
   - description: Maintainer 2026-10-28: good as suggested. An object on ODE2 nodes, ODE1 nodes and algebraic coordinates of its own, with the linear equations M q\_tt + D q\_t + K q + E y + C\_q^T lambda = f, y\_t + C\_y^T lambda = A y + B q + B\_t q\_t + g, C\_q q + C\_y y = c0, and user functions for the mass matrix, the ODE2 forces, the ODE1 right-hand side and the constraints, each with the arguments (mbs, t, itemNumber, q, q\_t, y, ..., parameters) of the existing user items, parameters a vector of the item as in ObjectUserBody; the Jacobians by a jacobianUserFunction or the one-pass derivative of a symbolic recording, never by numerical differences (\#3101). Exudyn's implicit solver needs the coupling blocks between ODE2 and ODE1, the explicit solver both kinds in every stage and algebraic equations only where they can be eliminated. The general form of SymbolicSystemBase; the generic object of \#1104.

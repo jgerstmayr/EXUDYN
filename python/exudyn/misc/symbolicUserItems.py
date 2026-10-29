@@ -267,6 +267,32 @@ def _Refuse(where, name, value, default, reason=''):
                          + (' (' + reason + ')' if reason else ''))
 
 
+def _JointGraphics(markers, shape, size, length, color):
+    """the graphicsDataUserFunction of a joint of UserItemCreator (#3147), a simplified drawing at its markers in the
+    visualization configuration: 'revolute' a cylinder along the z-axis of marker 0, 'prismatic' along its x-axis,
+    'spherical' a sphere at marker 0, 'distance' a line - or a cylinder of diameter size > 0 - between the markers"""
+    drawColor = list(color) if color[0] >= 0 else graphics.color.grey
+
+    def Frame(mbs, marker):
+        visualization = exudyn.ConfigurationType.Visualization
+        return (np.array(mbs.GetMarkerOutput(marker, exudyn.OutputVariableType.Position, configuration=visualization)),
+                np.array(mbs.GetMarkerOutput(marker, exudyn.OutputVariableType.RotationMatrix,
+                                             configuration=visualization)).reshape(3, 3))
+
+    def UFgraphics(mbs, itemNumber):
+        (p, A) = Frame(mbs, markers[0])
+        if shape == 'spherical':
+            return [graphics.Sphere(point=p, radius=size, color=drawColor, nTiles=8)]
+        if shape == 'distance':
+            p1 = Frame(mbs, markers[1])[0]
+            if size > 0:
+                return [graphics.Cylinder(pAxis=p, vAxis=p1 - p, radius=0.5*size, color=drawColor, nTiles=8)]
+            return [graphics.Lines([p, p1], color=drawColor)]
+        axis = A[:, 2] if shape == 'revolute' else A[:, 0]
+        return [graphics.Cylinder(pAxis=p - 0.5*length*axis, vAxis=length*axis, radius=size, color=drawColor, nTiles=12)]
+    return UFgraphics
+
+
 class UserItemCreator:
     """creates user items with the Create functions of mbs and their arguments (#3125): ObjectUserBody and
     ObjectConnectorUser with Python user functions instead of the built-in objects, recorded as symbolic user functions
@@ -603,12 +629,12 @@ class UserItemCreator:
                                                                     translation=A.T @ (np.array(pJoint) - p))))
                 for (k, (p, A)) in enumerate([(p0, A0), (p1, A1)])]
 
-    def _Joint(self, kind, name, markers, parameters, show):
-        """an ObjectJointUser of a kind of joint on two rigid markers"""
+    def _Joint(self, kind, name, markers, parameters, show, drawing):
+        """an ObjectJointUser of a kind of joint on two rigid markers, drawn by the graphicsDataUserFunction drawing"""
         joint = self.mbs.AddObject(eii.ObjectJointUser(name=name, markerNumbers=markers, numberOfConstraints=_jointConstraints[kind],
                                                        parameters=parameters,
                                                        **{functionName: function for (functionName, function) in _kindFunctions[kind]},
-                                                       visualization=eii.VObjectJointUser(show=show)))
+                                                       visualization=eii.VObjectJointUser(show=show, graphicsDataUserFunction=drawing)))
         self.items[kind].append(joint)
         return joint
 
@@ -616,7 +642,7 @@ class UserItemCreator:
                             axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default, bodyNumbers=None,
                             bodyOrNodeList=None):
         """a revolute joint as ObjectJointUser on the rigid markers of mbs.CreateRevoluteJoint, with its arguments and
-        the equations of ObjectJointRevoluteZ; not drawn, as ObjectJointUser draws nothing
+        the equations of ObjectJointRevoluteZ; drawn as a cylinder along the axis (#3147)
 
         Args:
             name: as in mbs.CreateRevoluteJoint
@@ -625,9 +651,9 @@ class UserItemCreator:
             axis: as in mbs.CreateRevoluteJoint
             useGlobalFrame: as in mbs.CreateRevoluteJoint
             show: as in mbs.CreateRevoluteJoint
-            axisRadius: not used, the joint is not drawn
-            axisLength: not used, the joint is not drawn
-            color: not used, the joint is not drawn
+            axisRadius: the radius of the cylinder of the drawing
+            axisLength: the length of the cylinder of the drawing
+            color: the color of the drawing; the default: grey
             bodyNumbers: refused if given: use itemNumbers
             bodyOrNodeList: refused if given: use itemNumbers
 
@@ -637,13 +663,13 @@ class UserItemCreator:
         _Refuse('CreateRevoluteJoint', 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
         _Refuse('CreateRevoluteJoint', 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
         markers = self._JointMarkers('CreateRevoluteJoint', name, itemNumbers, position, axis, useGlobalFrame, show, 'z')
-        return self._Joint('revoluteJoint', name, markers, [], show)
+        return self._Joint('revoluteJoint', name, markers, [], show, _JointGraphics(markers, 'revolute', axisRadius, axisLength, color))
 
     def CreatePrismaticJoint(self, name='', itemNumbers=[None, None], position=[], axis=[], useGlobalFrame=True, show=True,
                              axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default, bodyNumbers=None,
                              bodyOrNodeList=None):
         """a prismatic joint as ObjectJointUser on the rigid markers of mbs.CreatePrismaticJoint, with its arguments and
-        the equations of ObjectJointPrismaticX; not drawn, as ObjectJointUser draws nothing
+        the equations of ObjectJointPrismaticX; drawn as a cylinder along the axis (#3147)
 
         Args:
             name: as in mbs.CreatePrismaticJoint
@@ -652,9 +678,9 @@ class UserItemCreator:
             axis: as in mbs.CreatePrismaticJoint
             useGlobalFrame: as in mbs.CreatePrismaticJoint
             show: as in mbs.CreatePrismaticJoint
-            axisRadius: not used, the joint is not drawn
-            axisLength: not used, the joint is not drawn
-            color: not used, the joint is not drawn
+            axisRadius: the radius of the cylinder of the drawing
+            axisLength: the length of the cylinder of the drawing
+            color: the color of the drawing; the default: grey
             bodyNumbers: refused if given: use itemNumbers
             bodyOrNodeList: refused if given: use itemNumbers
 
@@ -664,13 +690,13 @@ class UserItemCreator:
         _Refuse('CreatePrismaticJoint', 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
         _Refuse('CreatePrismaticJoint', 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
         markers = self._JointMarkers('CreatePrismaticJoint', name, itemNumbers, position, axis, useGlobalFrame, show, 'x')
-        return self._Joint('prismaticJoint', name, markers, [], show)
+        return self._Joint('prismaticJoint', name, markers, [], show, _JointGraphics(markers, 'prismatic', axisRadius, axisLength, color))
 
     def CreateSphericalJoint(self, name='', itemNumbers=[None, None], position=[], constrainedAxes=[1, 1, 1],
                              useGlobalFrame=True, show=True, jointRadius=0.1, color=exudyn.graphics.color.default,
                              bodyNumbers=None, bodyOrNodeList=None):
         """a spherical joint as ObjectJointUser on rigid markers at the points of mbs.CreateSphericalJoint, with its
-        arguments and the equations of ObjectJointSpherical; not drawn, as ObjectJointUser draws nothing
+        arguments and the equations of ObjectJointSpherical; drawn as a sphere (#3147)
 
         Args:
             name: as in mbs.CreateSphericalJoint
@@ -680,8 +706,8 @@ class UserItemCreator:
                 does not give
             useGlobalFrame: as in mbs.CreateSphericalJoint
             show: as in mbs.CreateSphericalJoint
-            jointRadius: not used, the joint is not drawn
-            color: not used, the joint is not drawn
+            jointRadius: the radius of the sphere of the drawing
+            color: the color of the drawing; the default: grey
             bodyNumbers: refused if given: use itemNumbers
             bodyOrNodeList: refused if given: use itemNumbers
 
@@ -693,14 +719,14 @@ class UserItemCreator:
         _Refuse('CreateSphericalJoint', 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
         _Refuse('CreateSphericalJoint', 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
         markers = self._JointMarkers('CreateSphericalJoint', name, itemNumbers, position, None, useGlobalFrame, show, None)
-        return self._Joint('sphericalJoint', name, markers, [], show)
+        return self._Joint('sphericalJoint', name, markers, [], show, _JointGraphics(markers, 'spherical', jointRadius, 0., color))
 
     def CreateDistanceConstraint(self, name='', itemNumbers=[None, None], localPosition0=[0., 0., 0.],
                                  localPosition1=[0., 0., 0.], distance=None, show=True, drawSize=-1.,
                                  color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None):
         """a distance constraint as ObjectJointUser on rigid markers of the two bodies, with the arguments of
         mbs.CreateDistanceConstraint and the equation of ObjectConnectorDistance; on a user mass point the marker is on
-        the body; not drawn, as ObjectJointUser draws nothing
+        the body; drawn as a line between the markers (#3147)
 
         Args:
             name: as in mbs.CreateDistanceConstraint
@@ -710,8 +736,8 @@ class UserItemCreator:
             distance: as in mbs.CreateDistanceConstraint; None: the distance in the reference configuration; 0 is
                 refused (mbs.CreateDistanceConstraint creates a spherical joint then)
             show: as in mbs.CreateDistanceConstraint
-            drawSize: not used, the constraint is not drawn
-            color: not used, the constraint is not drawn
+            drawSize: a line if not positive, else a cylinder of diameter drawSize
+            color: the color of the drawing; the default: grey
             bodyNumbers: refused if given: use itemNumbers
             bodyOrNodeList: refused if given: use itemNumbers
 
@@ -730,7 +756,8 @@ class UserItemCreator:
         if distance == 0:
             raise ValueError('UserItemCreator.CreateDistanceConstraint: the distance 0 is not supported by the user item '
                              '(use CreateSphericalJoint)')
-        return self._Joint('distanceConstraint', name, [marker0, marker1], [distance], show)
+        return self._Joint('distanceConstraint', name, [marker0, marker1], [distance], show,
+                           _JointGraphics([marker0, marker1], 'distance', drawSize, 0., color))
 
     def CreateForce(self, name='', itemNumber=None, loadVector=[0., 0., 0.], localPosition=[0., 0., 0.], bodyFixed=False,
                     loadVectorUserFunction=0, show=True, bodyNumber=None):

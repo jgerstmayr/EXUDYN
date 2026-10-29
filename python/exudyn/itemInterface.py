@@ -42,7 +42,8 @@ __all__ = [
     'ObjectConnectorUserForceUserFunction', 'ObjectConnectorUserMarkerAccessUserFunction',
     'ObjectConnectorUserPostNewtonStepUserFunction', 'ObjectConnectorUserGraphicsDataUserFunction',
     'ObjectJointUserConstraintUserFunction', 'ObjectJointUserJacobianUserFunction',
-    'ObjectConnectorCoordinateOffsetUserFunction', 'ObjectConnectorCoordinateOffsetUserFunction_t',
+    'ObjectJointUserGraphicsDataUserFunction', 'ObjectConnectorCoordinateOffsetUserFunction',
+    'ObjectConnectorCoordinateOffsetUserFunction_t',
     'ObjectConnectorCoordinateVectorConstraintUserFunction',
     'ObjectConnectorCoordinateVectorJacobianUserFunction', 'ObjectJointGenericOffsetUserFunction',
     'ObjectJointGenericOffsetUserFunction_t', 'MarkerBodyUserPositionUserFunction',
@@ -245,6 +246,7 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectConnectorUser,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectConnectorUserGraphicsDataUserFunction']],
         'ObjectJointUser,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdMatrix3D', 'StdVector3D', 'StdMatrix3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'position0', 'rotationMatrix0', 'position1', 'rotationMatrix1', 'parameters'], ['StdVector'], ['ObjectJointUserConstraintUserFunction']],
         'ObjectJointUser,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdMatrix3D', 'StdVector3D', 'StdMatrix3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'position0', 'rotationMatrix0', 'position1', 'rotationMatrix1', 'parameters'], ['py::object'], ['ObjectJointUserJacobianUserFunction']],
+        'ObjectJointUser,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectJointUserGraphicsDataUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction_t']],
         'ObjectConnectorCoordinateVector,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'velocityLevel'], ['StdVector'], ['ObjectConnectorCoordinateVectorConstraintUserFunction']],
@@ -1345,6 +1347,19 @@ class ObjectJointUserJacobianUserFunction(Protocol):
         exudyn.MatrixContainer: :math:`\partial \cv / \partial [\mathbf{p}_{m0},\, \ttheta_{m0},\, \mathbf{p}_{m1},\, \ttheta_{m1}] \in \Rcal^{n_c \times 12}` as numpy array or list of lists
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, position0: np.ndarray, rotationMatrix0: np.ndarray, position1: np.ndarray, rotationMatrix1: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
+
+class ObjectJointUserGraphicsDataUserFunction(Protocol):
+    """A user function, which returns the graphics of the joint in global coordinates.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the joint belongs
+
+        itemNumber (int): integer number of the joint in mbs
+
+    Returns:
+        list: a list of graphics data, e.g. of exudyn.graphics, in global coordinates
+    """
+    def __call__(self, mbs: exudyn.MainSystem, itemNumber: int) -> list: ...
 
 class ObjectConnectorCoordinateOffsetUserFunction(Protocol):
     r"""A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
@@ -5852,12 +5867,16 @@ class VObjectJointUser:
     Args:
         show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
+        graphicsDataUserFunction: A Python function which returns a list of graphics data in global coordinates, drawn for the joint, e.g. a cylinder along the axis of a revolute joint (#3147); it is called in the main thread and may slow down the visualization; type: ObjectJointUserGraphicsDataUserFunction
+
     """
-    def __init__(self, show = True):
+    def __init__(self, show = True, graphicsDataUserFunction: Union[ObjectJointUserGraphicsDataUserFunction, int] = 0):
         self.show = show
+        self.graphicsDataUserFunction = graphicsDataUserFunction
 
     def __iter__(self):
         yield 'show', self.show
+        yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
 
     def __repr__(self):
         return str(dict(self))
@@ -5890,7 +5909,7 @@ class ObjectJointUser:
         Requested Marker type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], numberOfConstraints = 1, parameters = [], activeConnector = True, constraintUserFunction: Union[ObjectJointUserConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectJointUserJacobianUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], numberOfConstraints = 1, parameters = [], activeConnector = True, constraintUserFunction: Union[ObjectJointUserConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectJointUserJacobianUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.numberOfConstraints = numberOfConstraints
@@ -5910,6 +5929,7 @@ class ObjectJointUser:
         yield 'constraintUserFunction', self.constraintUserFunction
         yield 'jacobianUserFunction', self.jacobianUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
 
     def __repr__(self):
         return str(dict(self))

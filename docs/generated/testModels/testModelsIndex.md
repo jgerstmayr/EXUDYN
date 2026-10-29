@@ -215,6 +215,7 @@ symbolicUserFunctionCopyTest
 symbolicUserFunctionSignaturesTest
 symbolicUserFunctionTest
 symbolicUserFunctionThreadsTest
+symbolicUserItemsDrawingTest
 symbolicUserItemsTest
 symbolicUserJointsTest
 symbolicUserRigidBodiesTest

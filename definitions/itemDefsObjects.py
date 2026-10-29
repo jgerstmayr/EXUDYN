@@ -9674,9 +9674,19 @@ def ObjectJointUser_jacobianUserFunction(mbs: MainSystem, t: Real, itemNumber: I
         $\partial \cv / \partial [\pv_{m0},\, \ttheta_{m0},\, \pv_{m1},\, \ttheta_{m1}] \in \Rcal^{n_c \times 12}$ as numpy array or list of lists
     """
 
+def ObjectJointUser_graphicsDataUserFunction(mbs: MainSystem, itemNumber: Index) -> BodyGraphicsData:
+    r"""A user function, which returns the graphics of the joint in global coordinates.
+
+    Args:
+        mbs: provides MainSystem mbs to which the joint belongs
+        itemNumber: integer number of the joint in mbs
+    Returns:
+        a list of graphics data, e.g. of exudyn.graphics, in global coordinates
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectJointUser',
-    drawing=r'Nothing; the number with `connectors.showNumbers`, at marker 0.',
+    drawing=r'The graphics of the graphicsDataUserFunction, in global coordinates; the number with `connectors.showNumbers`, at marker 0.',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConstraint,
@@ -9832,6 +9842,16 @@ definitions.append(ItemDefinition(
             pythonName='show',
             defaultValue=True,
             description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunctionDef('CallUserFunction'),
+        ItemFunction(type=TBool, destination=DestVisu, cFlags=CFConst,
+            pythonName='HasUserFunction',
+            implementation='return graphicsDataUserFunction!=0;',
+            description=r'true, if the joint has a graphicsDataUserFunction to be called during redraw (#3147)'),
+        ItemParameter(destination=DestVisu,
+            pythonName='graphicsDataUserFunction',
+            defaultValue=0,
+            description=r'A Python function which returns a list of graphics data in global coordinates, drawn for the joint, e.g. a cylinder along the axis of a revolute joint (#3147); it is called in the main thread and may slow down the visualization',
+            userFunction=ObjectJointUser_graphicsDataUserFunction),
         ],
     ))
 

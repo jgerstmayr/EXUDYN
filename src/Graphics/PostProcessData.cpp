@@ -155,12 +155,12 @@ void PostProcessData::ProcessUserFunctionDrawing()
 	{
 		const VisualizationSettings& visSettings = visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainerConst().PyGetVisualizationSettings();
 		//std::cout << "requestUserFunctionDrawing ...\n";
-		if (visSettings.bodies.show)
+		//the bodies with bodies.show, the connectors - ObjectConnectorUser, ObjectJointUser - with connectors.show (#3161)
 		{
 			Index cnt = 0;
 			for (auto item : visualizationSystem->vSystemData.GetVisualizationObjects())
 			{
-				if (item->GetShow() && !(item->IsConnector()) && item->HasUserFunction())
+				if (item->GetShow() && item->HasUserFunction() && (item->IsConnector() ? visSettings.connectors.show : visSettings.bodies.show))
 				{
 					item->CallUserFunction(visSettings,
 						visualizationSystem,

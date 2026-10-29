@@ -1,0 +1,84 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The drawing of the connectors and joints of UserItemCreator (#3147, #3161): the spring-dampers by the
+#           graphicsDataUserFunction of ObjectConnectorUser, the revolute, prismatic, spherical and distance joints by
+#           that of ObjectJointUser - a cylinder along the axis, a sphere, a line. Each of them is in the graphics data of
+#           SC.renderer.GetGraphicsData(), without a window, none with connectors.show = False, and the drawings follow
+#           the bodies.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-29
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.misc.symbolicUserItems import UserItemCreator
+import numpy as np
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+creator = UserItemCreator(mbs)
+ground = creator.CreateGround()
+
+def Bar(position):
+    return creator.CreateRigidBody(inertia=InertiaCuboid(density=1000, sideLengths=[0.4, 0.05, 0.03]), referencePosition=position,
+                                   gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationRxyz)
+
+b0 = Bar([0.2, 0, 0])
+b1 = Bar([0, -0.5, 0.3])
+b2 = Bar([0.2, 0, 0.8])
+point = creator.CreateMassPoint(referencePosition=[0.5, -0.3, 0.8], mass=0.2)
+items = [creator.CreateRevoluteJoint(itemNumbers=[ground, b0], position=[0, 0, 0], axis=[0, 0, 1], axisRadius=0.02, axisLength=0.1),
+         creator.CreatePrismaticJoint(itemNumbers=[ground, b1], position=[0, -0.5, 0.3], axis=[1, 0, 0]),
+         creator.CreateSphericalJoint(itemNumbers=[ground, b2], position=[0, 0, 0.8], jointRadius=0.03),
+         creator.CreateDistanceConstraint(itemNumbers=[b2, point], localPosition0=[0.2, 0, 0]),
+         creator.CreateSpringDamper(itemNumbers=[ground, b1], localPosition0=[-0.2, -0.5, 0.3], stiffness=200, drawSize=0.02),
+         creator.CreateTorsionalSpringDamper(itemNumbers=[b0, ground], position=[0, 0, 0], axis=[0, 0, 1], stiffness=1,
+                                             unlimitedRotations=False)]
+creator.Record()
+mbs.Assemble()
+
+def DrawnObjects():
+    """the object numbers in the graphics data, by kind of graphics"""
+    data = SC.renderer.GetGraphicsData()
+    drawn = {}
+    for (kind, value) in data.items():
+        if isinstance(value, dict) and 'items' in value:
+            for item in value['items']:
+                if int(item[1]) == int(exu.ItemType.Object):
+                    drawn.setdefault(int(item[2]), set()).add(kind)
+    return drawn
+
+drawn = DrawnObjects()
+exu.Print('drawn:', {int(item): sorted(drawn.get(int(item), [])) for item in items})
+failed = sum(int(int(item) not in drawn) for item in items)
+
+#with connectors.show = False none of them
+SC.visualizationSettings.connectors.show = False
+hidden = DrawnObjects()
+failed += sum(int(int(item) in hidden) for item in items)
+SC.visualizationSettings.connectors.show = True
+
+#the drawings follow the markers: the line of the torsional spring-damper at its marker on b0, with b0 shifted
+def Points(kind, objectNumber):
+    data = SC.renderer.GetGraphicsData()[kind]
+    return np.array([points for (item, points) in zip(data['items'], data['points'])
+                     if int(item[1]) == int(exu.ItemType.Object) and int(item[2]) == objectNumber])
+
+before = Points('lines', int(items[5]))
+q = np.array(mbs.systemData.GetODE2Coordinates())
+q[0:3] += [0.1, 0.2, 0.] #the node of b0
+for configuration in [exu.ConfigurationType.Current, exu.ConfigurationType.Visualization]: #GetGraphicsData shows the current state
+    mbs.systemData.SetODE2Coordinates(q, configuration=configuration)
+shift = np.mean(Points('lines', int(items[5])) - before, axis=(0, 1))
+exu.Print('the drawing of the torsional spring-damper moves by', shift)
+failed += int(not np.allclose(shift, [0.1, 0.2, 0.]))
+
+u = failed
+exu.Print('solution of symbolicUserItemsDrawingTest=', u)
+
+exu.sys['testResult'] = u

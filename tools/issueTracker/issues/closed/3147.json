@@ -2,10 +2,14 @@
   "number": 3147,
   "title": "Draw ObjectJointUser by a graphicsDataUserFunction, and the joints of UserItemCreator as the built-in joints",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "LOW",
   "description": "ObjectJointUser draws nothing, so the revolute, prismatic, spherical and distance joints of UserItemCreator (#3140) are invisible and their drawing arguments are accepted and not used. A graphicsDataUserFunction as ObjectConnectorUser has (#3119), and the drawings of the built-in joints from the drawing arguments.",
   "dateRaised": "2026-10-28",
-  "deadline": "2027-04-26"
+  "deadline": "2027-04-26",
+  "dateResolved": "2026-10-29 11:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectJointUser has a graphicsDataUserFunction, as ObjectConnectorUser; the revolute, prismatic, spherical and distance joints of UserItemCreator are drawn by it - a cylinder along the axis, a sphere, a line - with their drawing arguments",
+  "resolvedInVersion": "1.13.259"
 }

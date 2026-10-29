@@ -34,10 +34,11 @@ The parameters of `VObjectJointUser`, given as `visualization`:
 | name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
+| **graphicsDataUserFunction** | ObjectJointUserGraphicsDataUserFunction |  | 0 | A Python function which returns a list of graphics data in global coordinates, drawn for the joint, e.g. a cylinder along the axis of a revolute joint (#3147); it is called in the main thread and may slow down the visualization |
 
 ## Drawing
 
-Drawn as [all joints](#sec-drawing-objectsjoint); nothing; the number with `connectors.showNumbers`, at marker 0.
+Drawn as [all joints](#sec-drawing-objectsjoint); the graphics of the graphicsDataUserFunction, in global coordinates; the number with `connectors.showNumbers`, at marker 0.
 
 ## Output variables
 
@@ -120,6 +121,15 @@ A user function, which computes the derivative of the constraint equations by th
 | **return value** | MatrixContainer | $\partial \cv / \partial [\pv_{m0},\, \ttheta_{m0},\, \pv_{m1},\, \ttheta_{m1}] \in \Rcal^{n_c \times 12}$ as numpy array or list of lists |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
+**Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
+A user function, which returns the graphics of the joint in global coordinates.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which the joint belongs |
+| `itemNumber` | Index | integer number of the joint in mbs |
+| **return value** | BodyGraphicsData | a list of graphics data, e.g. of exudyn.graphics, in global coordinates |
 
 (miniexample-objectjointuser)=
 ## Mini example
