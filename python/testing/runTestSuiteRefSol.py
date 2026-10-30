@@ -72,6 +72,7 @@ def TestExamplesReferenceSolution():
         'coordinateVectorConstraint.py':-1.0825265797698307,
         'coordinateVectorConstraintGenericODE2.py':-1.0825265797698307,
         'createKinematicTreeTest.py':3.340830142730577,            #2026-10-04: the tree on the placements of its links (#2829), -1.2e-13; before 3.3408301427307276; new 2025-06-14
+        'createFFRFReducedOrderObjectTest.py':1.2839677095544506,  #new 2026-10-30: flexible pendulum, rigidBodyNodeType and localHTs of the markers (#3164)
         'createFunctionsTest.py':0.04228833966560139,              #new 2025-05-11
         'createRollingDiscPenaltyTest.py':2.1129927199922123,       #new 2025-02-27
         'createRollingDiscTest.py':4.009716209090303,               #new 2025-03-05

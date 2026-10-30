@@ -31,7 +31,7 @@ from exudyn.rigidBodyUtilities import _MarkerWithRotation, _RotationMarkerArgs
 import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasis, \
     RotationMatrix2EulerParameters, AngularVelocity2EulerParameters_t, RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, \
-    RotationMatrix2RotationVector
+    RotationMatrix2RotationVector, StrNodeType2NodeType
 
 import exudyn.itemInterface as eii
 from exudyn.itemInterface import ObjectGround, VObjectGround, SensorUserFunction
@@ -2920,7 +2920,9 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
                                            stiffnessProportionalDamping=0.,
                                            gravity=[0., 0., 0.],
                                            color=exudyn.graphics.color.defaultFFRF,
+                                           rigidBodyNodeType=exu.NodeType.RotationEulerParameters,
                                            superElementRigidMarkersOffsets=None,
+                                           superElementRigidMarkersLocalHTs=None,
                                            showMarkers=True,
                                            verbose=False) -> dict:
     """Create an FFRF reduced order object; the function adds SuperElementRigid markers if boundaries are defined in the given femInterface and thus enables straightforward integration of flexible bodies into a multibody system
@@ -2937,7 +2939,9 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
         stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping (multiplied with reduced stiffness matrix), added to floating frame/modal coordinates only
         gravity: gravity applied to the FFRF reduced order object (always a 3D vector)
         color: color with which the FFRF reduced order object is drawn (if no contour is set in the visualization settings)
-        superElementRigidMarkersOffsets: if not None, adds local offsets to the created SuperElementRigid markers; if N boundaries are defined in the femInterface, a N x 3 list or np.array sets an offset for each added marker; the order of the offsets follows the order in [boundaryName0, boundaryName1, ...] used when setting up the femInterface
+        rigidBodyNodeType: node type of the rigid body node of the floating frame: exu.NodeType.RotationEulerParameters, exu.NodeType.RotationRxyz or exu.NodeType.RotationRotationVector, or one of them as string, e.g., 'NodeType.RotationRxyz'
+        superElementRigidMarkersOffsets: if not None, adds local offsets to the created SuperElementRigid markers; if N boundaries are defined in the femInterface, a N x 3 list or N x 3 np.array sets an offset for each added marker, for N=1 also a vector with 3 entries; the order of the offsets follows the order in [boundaryName0, boundaryName1, ...] used when setting up the femInterface
+        superElementRigidMarkersLocalHTs: if not None, sets the local homogeneous transformations of the created SuperElementRigid markers: the frame of a marker against the frame the marker computes from the mesh nodes; if N boundaries are defined in the femInterface, a list of N transformations, each an exu.HT or a 4x4 matrix given as list of lists or np.array, sets one transformation for each added marker; the order of the transformations follows the order in [boundaryName0, boundaryName1, ...] used when setting up the femInterface; the translation of a transformation is the offset of the marker, so if superElementRigidMarkersOffsets is also given, both must agree
         showMarkers: if True, SuperElementRigid markers are drawn
         verbose: if True, additional information will be printed in the console upon calling the function
 
@@ -2995,6 +2999,10 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
             raise ValueError(errStr + 'Name must be a non-empty string or "None".')
         if not isinstance(femInterface, FEMinterface):
             RaiseTypeError(where=where, argumentName='femInterface', received=femInterface, expectedType='FEMinterface')
+        # cms object parameters
+        nodeType = StrNodeType2NodeType(rigidBodyNodeType) if isinstance(rigidBodyNodeType, str) else rigidBodyNodeType # gives error if not convertible
+        if nodeType not in [exu.NodeType.RotationEulerParameters, exu.NodeType.RotationRxyz, exu.NodeType.RotationRotationVector]:
+            RaiseTypeError(where=where, argumentName='rigidBodyNodeType', received=rigidBodyNodeType, expectedType='exu.NodeType.RotationEulerParameters, RotationRxyz or RotationRotationVector, or one of them as string')
         # FFRF object parameters
         if not IsVector(referencePosition, 3):
             RaiseTypeError(where=where, argumentName='referencePosition', received=referencePosition, expectedType=ExpectedType.Vector, dim=3)
@@ -3015,6 +3023,12 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
         # marker parameters
         if IsNotNone(superElementRigidMarkersOffsets) and not isinstance(superElementRigidMarkersOffsets, list) and not isinstance(superElementRigidMarkersOffsets, np.ndarray):
             raise ValueError(errStr + 'superElementRigidMarkersOffsets must be "None", a list or a np.array.')
+        if IsNotNone(superElementRigidMarkersLocalHTs):
+            if not isinstance(superElementRigidMarkersLocalHTs, list):
+                RaiseTypeError(where=where, argumentName='superElementRigidMarkersLocalHTs', received=superElementRigidMarkersLocalHTs, expectedType='None or a list of exu.HT or 4x4 matrices')
+            for i, localHT in enumerate(superElementRigidMarkersLocalHTs):
+                if not isinstance(localHT, exu.HT) and not IsSquareMatrix(localHT, 4):
+                    RaiseTypeError(where=where, argumentName='superElementRigidMarkersLocalHTs[' + str(i) + ']', received=localHT, expectedType='exu.HT or 4x4 matrix (as list of lists or numpy array)')
         if not IsValidBool(showMarkers):
             RaiseTypeError(where=where, argumentName='showMarkers', received=showMarkers, expectedType=ExpectedType.Bool)
         # verbose
@@ -3045,28 +3059,35 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
                     raise ValueError(errStr + 'The marker ' + markerName + ' already exists.')
             markerNamesList += [markerName]
     nMarkers = len(markerNamesList) # if free eigenmodes: nMarkers = 0
-    # define the offsets of the markers if there are any markers
+    # define the offsets and local HTs of the markers if there are any markers
+    # check if the given offsets and localHTs are valid and refuse them if they are not
     if nMarkers != 0:
         if IsNotNone(superElementRigidMarkersOffsets):
+            # always make a np.array that has two dimensions: nMarkers x 3
+            superElementRigidMarkersOffsets = np.array(superElementRigidMarkersOffsets)
+            if superElementRigidMarkersOffsets.ndim == 1: # only has one dimension, so add the first
+                superElementRigidMarkersOffsets = superElementRigidMarkersOffsets[np.newaxis, :]
             if not exudyn.__useExudynFast:
-                # when offsets are given, we must make several checks
-                # always make a np.array that has two dimensions: nMarkers x 3
-                if isinstance(superElementRigidMarkersOffsets, np.ndarray):
-                    if superElementRigidMarkersOffsets.ndim == 1: # only has one dimension, so add the first
-                        superElementRigidMarkersOffsets = superElementRigidMarkersOffsets[np.newaxis, :]
-                else:
-                    if not any(isinstance(el, list) for el in superElementRigidMarkersOffsets): # no elements in the list is a list
-                        superElementRigidMarkersOffsets = np.array([superElementRigidMarkersOffsets]) # make a np.array with two dimensions
-                    else: # we already have a list of lists
-                        superElementRigidMarkersOffsets = np.array(superElementRigidMarkersOffsets)
-                    if superElementRigidMarkersOffsets.shape[0] != nMarkers:
-                        raise ValueError(errStr + 'Number of rows in np.array "superElementRigidMarkersOffsets" must be number of interfaces.')
-                    if superElementRigidMarkersOffsets.shape[1] != 3:
-                        raise ValueError(errStr + 'Number of columns in np.array "superElementRigidMarkersOffsets" must be 3: local reference position offset(s).')
-        else: # if no offsets are given, just set them zero
-            superElementRigidMarkersOffsets = np.zeros([nMarkers, 3])
+                if superElementRigidMarkersOffsets.shape[0] != nMarkers:
+                    raise ValueError(errStr + 'Number of rows in "superElementRigidMarkersOffsets" must be number of interfaces.')
+                for i, offset in enumerate(superElementRigidMarkersOffsets):
+                    if not IsVector(offset, 3):
+                        RaiseTypeError(where=where, argumentName='superElementRigidMarkersOffsets[' + str(i) + ']', received=offset, expectedType=ExpectedType.Vector, dim=3)
+        if IsNotNone(superElementRigidMarkersLocalHTs) and not exudyn.__useExudynFast:
+            if len(superElementRigidMarkersLocalHTs) != nMarkers:
+                raise ValueError(errStr + 'Number of entries in "superElementRigidMarkersLocalHTs" must be number of interfaces.')
+            if IsNotNone(superElementRigidMarkersOffsets): # the marker refuses disagreeing values too, but only after the costly computations
+                for i, localHT in enumerate(superElementRigidMarkersLocalHTs):
+                    translation = exu.HT(localHT).translation
+                    if cMath.norm(superElementRigidMarkersOffsets[i] - translation) > 1e-12*(1. + cMath.norm(translation)): # done as in C++
+                        raise ValueError(errStr + 'superElementRigidMarkersOffsets[' + str(i) + '] and the translation of superElementRigidMarkersLocalHTs[' + str(i) + '] must agree.')
+        # the marker takes None for what is not given
+        if IsNone(superElementRigidMarkersOffsets):
+            superElementRigidMarkersOffsets = [None]*nMarkers
+        if IsNone(superElementRigidMarkersLocalHTs):
+            superElementRigidMarkersLocalHTs = [None]*nMarkers
     # use the eigenmodes for component mode synthessis
-    cms = ObjectFFRFreducedOrderInterface(femInterface)
+    cms = ObjectFFRFreducedOrderInterface(femInterface, rigidBodyNodeType=rigidBodyNodeType)
     # here, name can be empty string since this is the default option in AddObjectFFRFreducedOrder
     if IsNone(name):
         name = ''
@@ -3095,7 +3116,8 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
                                                                bodyNumber=objFFRF['oFFRFreducedOrder'],
                                                                meshNodeNumbers=boundaryNodesList[i],
                                                                weightingFactors=boundaryWeightsList[i],
-                                                               offset=superElementRigidMarkersOffsets[i]))
+                                                               offset=superElementRigidMarkersOffsets[i],
+                                                               localHT=superElementRigidMarkersLocalHTs[i]))
             returnDict[markerName] = marker # add the marker number to the dict under the key of the marker name
             if verbose:
                 exu.Print('Added super element rigid body marker "' + markerName + '" that is marker number ' + str(marker) + ' in the MainSystem.')

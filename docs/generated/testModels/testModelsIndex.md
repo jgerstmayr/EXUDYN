@@ -55,6 +55,7 @@ CoordinateSpringDamperTest
 coordinateVectorConstraint
 coordinateVectorConstraintGenericODE2
 coSimulationTest
+createFFRFReducedOrderObjectTest
 createFunctionsTest
 createItemNumbersTest
 createKinematicTreeTest
