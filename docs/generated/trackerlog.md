@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.276.dev1
 - last change = 2026-10-31
-- Number of issues = 3178
+- Number of issues = 3181
 - Number of resolved issues = 3053 (276 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,8 +9039,17 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Functions of time for user functions: a discrete time, sampled data signals with interpolation and derivative, repeatable noise (#3175)
-  - description: Revision2026c step RG12.70. For control, thermal and electro-mechanical problems on ODE1 coordinates: the discrete time of a sampling period (zero-order hold of a function of time), a data signal given at sampling times with fast access to its value at any time by closest, linear or quadratic interpolation and its derivative, and a noise of time that gives the same value for the same time and seed in every run and evaluation order; as functions of exudyn.symbolic, recorded and differentiated, and of exudyn.cMath for numbers, with the same names.
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` A sensor that samples another sensor at a period and holds its value in a data node, updated at FinishStep (#3180)
+  - description: For time-discrete control: a SampleSensor with a data node takes the value of another sensor at the sampling instants and holds it between them, so that a user function reads the held value as data coordinates (zero-order hold of a measured state). Sensors do not update data variables now; this sensor is treated specially at FinishStep of the integrator. Decided: a later step; it is not part of exudyn.symbolic.
+  - date raised: 2026-10-31
+- `DOCU` `LOW EFF` `raised by: Claude-JG` Document localPosition of the rigid body markers and rotationMarker0/1 of the joints and connectors as deprecated, to be removed in favour of localHT (#3179)
+  - description: The rigid body markers have localHT, the frame of the marker in the body, so that the joints and connectors need no rotationMarker0/1. The descriptions of localPosition of the rigid body markers and of rotationMarker0/1 of the joints and connectors say that they are deprecated and will be removed, and point to localHT. Decided: no deprecation warning yet, as rotationMarker0/1 are used frequently; the documentation only.
+  - date raised: 2026-10-31
+- `CHECK` `LOW EFF` `raised by: Claude-JG` Check which functions of HT and twist the user connectors and joints really use, once several are written on HT and twist (#3178)
+  - description: The functions of symbolics.kinematics and exudyn.cUtilities for HT and twist (PointVelocity, LocalTwist, RelativeTwist, and the methods of the symbolic HT) were chosen for the joints and connectors of the Create functions (docs/dev/design/symbolicHT.md). Once several user items of exudyn.symbolics.userItems and new ones are written on HT0, twist0, HT1, twist1, count which functions they use, and decide which stay, which become methods of the HT, and which are missing. Decided: no plan step; the check is done when the user items are there.
+  - date raised: 2026-10-31
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` A lookup table in exudyn.symbolic: data given at equal steps of time, a coordinate or a parameter, interpolated, repeated or zero outside; the discrete time and a repeatable noise in Python on it (#3175)
+  - description: Revision2026c step RG12.70. For control, thermal and electro-mechanical problems, and for characteristic curves such as a bending moment over the curvature: a table of values given at equal steps of an argument - the time, a coordinate or a parameter of an item -, from which a symbolic user function takes the value at any argument, recorded and differentiated, and computed the same for numbers. Required: one channel, equal steps, linear interpolation, zero outside the table by default, the end values or a periodic repetition as options; the derivative of the interpolant is what the one-pass derivative gives. Options to be kept possible in the interface, implemented when needed: several channels, given arguments of unequal steps, closest and quadratic interpolation. Nothing in it may prevent the evaluation on the GPU (RG14). The discrete time of a sampling period and a repeatable noise are Python functions of a new module of exudyn.symbolics for what is neither kinematics nor user items nor system models, the noise as a table of random values of a seed. A sampled and held state needs data coordinates and is a later sensor (\#3180).
   - date raised: 2026-10-31
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Homogeneous transformations in exudyn.symbolic, and the user connectors and joints with HT0, HT1 and 6D velocities (#3174)
   - description: Revision2026c step RG12.69. The functions of exudyn.HT - composition, a point transformed, inverse, relative frame, rotation and translation, the rotation parameters, the logarithm and exponential maps - for symbolic arguments, so that one user function written with exudyn.HT runs on numbers and is recorded, as exudyn.cMath does for the math functions (\#3114). Decided first (analysis in docs/dev/design/symbolicHT.md): whether a symbolic HT maps at once to the matrix and vector operations of exudyn.symbolic or becomes a kind of its own in the table of operations, and which functions it offers. Then the user functions of ObjectConnectorUser and ObjectJointUser take the frames of their markers as HT0, HT1 instead of position0, rotationMatrix0, ..., with the velocities as 6D vectors, and exudyn.symbolics.userItems uses them.

@@ -1,0 +1,11 @@
+{
+  "number": 3180,
+  "title": "A sensor that samples another sensor at a period and holds its value in a data node, updated at FinishStep",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IDEA",
+  "effort": "MEDIUM",
+  "description": "For time-discrete control: a SampleSensor with a data node takes the value of another sensor at the sampling instants and holds it between them, so that a user function reads the held value as data coordinates (zero-order hold of a measured state). Sensors do not update data variables now; this sensor is treated specially at FinishStep of the integrator. Decided: a later step; it is not part of exudyn.symbolic.",
+  "dateRaised": "2026-10-31",
+  "deadline": "2027-04-29"
+}

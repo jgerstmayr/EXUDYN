@@ -1,0 +1,11 @@
+{
+  "number": 3179,
+  "title": "Document localPosition of the rigid body markers and rotationMarker0/1 of the joints and connectors as deprecated, to be removed in favour of localHT",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The rigid body markers have localHT, the frame of the marker in the body, so that the joints and connectors need no rotationMarker0/1. The descriptions of localPosition of the rigid body markers and of rotationMarker0/1 of the joints and connectors say that they are deprecated and will be removed, and point to localHT. Decided: no deprecation warning yet, as rotationMarker0/1 are used frequently; the documentation only.",
+  "dateRaised": "2026-10-31",
+  "deadline": "2027-04-29"
+}

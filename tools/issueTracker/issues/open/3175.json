@@ -1,11 +1,11 @@
 {
   "number": 3175,
-  "title": "Functions of time for user functions: a discrete time, sampled data signals with interpolation and derivative, repeatable noise",
+  "title": "A lookup table in exudyn.symbolic: data given at equal steps of time, a coordinate or a parameter, interpolated, repeated or zero outside; the discrete time and a repeatable noise in Python on it",
   "author": "Claude-JG",
   "status": "RAISED",
   "type": "IDEA",
   "effort": "MEDIUM",
-  "description": "Revision2026c step RG12.70. For control, thermal and electro-mechanical problems on ODE1 coordinates: the discrete time of a sampling period (zero-order hold of a function of time), a data signal given at sampling times with fast access to its value at any time by closest, linear or quadratic interpolation and its derivative, and a noise of time that gives the same value for the same time and seed in every run and evaluation order; as functions of exudyn.symbolic, recorded and differentiated, and of exudyn.cMath for numbers, with the same names.",
+  "description": "Revision2026c step RG12.70. For control, thermal and electro-mechanical problems, and for characteristic curves such as a bending moment over the curvature: a table of values given at equal steps of an argument - the time, a coordinate or a parameter of an item -, from which a symbolic user function takes the value at any argument, recorded and differentiated, and computed the same for numbers. Required: one channel, equal steps, linear interpolation, zero outside the table by default, the end values or a periodic repetition as options; the derivative of the interpolant is what the one-pass derivative gives. Options to be kept possible in the interface, implemented when needed: several channels, given arguments of unequal steps, closest and quadratic interpolation. Nothing in it may prevent the evaluation on the GPU (RG14). The discrete time of a sampling period and a repeatable noise are Python functions of a new module of exudyn.symbolics for what is neither kinematics nor user items nor system models, the noise as a table of random values of a seed. A sampled and held state needs data coordinates and is a later sensor (#3180).",
   "dateRaised": "2026-10-31",
   "deadline": "2027-04-29"
 }
