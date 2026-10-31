@@ -202,9 +202,9 @@
    "fingerprint": "8e5fd4b59ff7"
   },
   "ObjectANCFBeam": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-31",
    "by": "Claude-JG",
-   "fingerprint": "049fe962f901"
+   "fingerprint": "17794d5b40d3"
   },
   "ObjectANCFCable": {
    "checked": "2026-10-17",
@@ -222,9 +222,9 @@
    "fingerprint": "5118f0c618a0"
   },
   "ObjectBeamGeometricallyExact": {
-   "checked": "2026-10-17",
+   "checked": "2026-10-31",
    "by": "Claude-JG",
-   "fingerprint": "56003195078f"
+   "fingerprint": "02497e579883"
   },
   "ObjectBeamGeometricallyExact2D": {
    "checked": "2026-10-17",
@@ -282,9 +282,9 @@
    "fingerprint": "0f9edfa82900"
   },
   "ObjectConnectorRigidBodySpringDamper": {
-   "checked": "2026-10-25",
+   "checked": "2026-10-31",
    "by": "Claude-JG",
-   "fingerprint": "c4824ed9564a"
+   "fingerprint": "184053b0c6ef"
   },
   "ObjectConnectorRollingDiscPenalty": {
    "checked": "2026-10-17",
@@ -422,9 +422,9 @@
    "fingerprint": "0e219eb55535"
   },
   "ObjectKinematicTree": {
-   "checked": "2026-10-25",
+   "checked": "2026-10-31",
    "by": "Claude-JG",
-   "fingerprint": "3dc64ba5cc62"
+   "fingerprint": "60b7be500c33"
   },
   "ObjectMass1D": {
    "checked": "2026-10-17",
