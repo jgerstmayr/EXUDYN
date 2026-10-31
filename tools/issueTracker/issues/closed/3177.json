@@ -1,0 +1,16 @@
+{
+  "number": 3177,
+  "title": "The issue store of the tracker tests starts without the proposals of the real store",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "The template of the tracker tests copied tools/issueTracker/issues/proposed/ with the real store; a proposal waiting there for exudev issue apply-proposed (as the one of #3164) was applied by testProposedResolutionsAreAppliedAfterTheMerge, which then failed. The copy keeps the directories of proposed/ without their files.",
+  "dateRaised": "2026-10-31",
+  "deadline": "2027-04-29",
+  "dateResolved": "2026-10-31 22:08",
+  "resolvedAuthor": "Claude-JG",
+  "file": "test_issueTracker.py",
+  "releaseNotes": "test_issueTracker.py: the issue store of the tests copies the directories of proposed/ without their files, so that a proposal waiting in the real store is not applied by the tests.",
+  "resolvedInVersion": "1.13.275"
+}

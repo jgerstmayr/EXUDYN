@@ -96,9 +96,15 @@ def storeTemplate(tmp_path_factory):
     realDirectory = os.path.join(trackerDirectory, 'issues')
     closedNames = sorted(os.listdir(os.path.join(realDirectory, 'closed')), key=lambda name: int(name.split('.')[0]))
     keep = set(closedNames[-50:])
-    shutil.copytree(realDirectory, template,
-                    ignore=lambda directory, names: [name for name in names if name not in keep]
-                    if os.path.basename(directory) == 'closed' else [])
+    proposedDirectory = os.path.join(realDirectory, 'proposed')
+    def Ignore(directory, names):
+        if os.path.basename(directory) == 'closed':
+            return [name for name in names if name not in keep]
+        #the proposals waiting in the real store are not the tests' own: the copy starts without them (#3177)
+        if os.path.normpath(directory).startswith(os.path.normpath(proposedDirectory)):
+            return [name for name in names if os.path.isfile(os.path.join(directory, name))]
+        return []
+    shutil.copytree(realDirectory, template, ignore=Ignore)
     patchedDirectory = store.storeDirectory
     closedByYear = {}
     for name in closedNames[:-50]:

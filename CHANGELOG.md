@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 268 | 1.13.274 |
+| 1.13 | Newborn | 269 | 1.13.275 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.275** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The issue store of the tracker tests starts without the proposals of the real store (#3177)
+  - description: The template of the tracker tests copied tools/issueTracker/issues/proposed/ with the real store; a proposal waiting there for exudev issue apply-proposed (as the one of \#3164) was applied by testProposedResolutionsAreAppliedAfterTheMerge, which then failed. The copy keeps the directories of proposed/ without their files.
+  - **notes:** test\_issueTracker.py: the issue store of the tests copies the directories of proposed/ without their files, so that a proposal waiting in the real store is not applied by the tests.
+  - date resolved: **2026-10-31 22:08**, date raised: 2026-10-31
 - **1.13.274** `CHANGE` `LOW` `LOW EFF` `raised by: S. Weyrer` `resolved by: Claude-SW` CreateFFRFObject function refinements (#3164)
   - description: make rigid-body node-type selectable through the create function (when the cms object is made) and use localHTList instead of offsets for rigid-body markers to include rotations (proposed 2026-10-29 by S. Weyrer)
   - **notes:** MainSystem.CreateFFRFReducedOrderObject: rigidBodyNodeType selects the rigid body node of the floating frame (Euler parameters, Rxyz or rotation vector); superElementRigidMarkersLocalHTs sets a local homogeneous transformation per SuperElementRigid marker, which also rotates the marker frame against the frame computed from the mesh nodes; superElementRigidMarkersOffsets is checked the same way as list or np.array, and disagreeing offsets and transformations are refused before the object is created; createFFRFReducedOrderObjectTest.py: a flexible pendulum on the rotated marker and the refused arguments.

@@ -101,7 +101,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG11.6 Write the joints and their Jacobians on homogeneous transformations
   - RG11.7 Let objects compute from the coordinates passed in instead of reading their nodes
   - RG11.8 Resolve the quick old issues (3 open sub-steps)
-  - RG11.10 Provide the math and kinematics functions of the C++ code to Python as exudyn.cMath and exudyn.cUtilities
 - **RG12** Symbolic
   - RG12.51 Symbolic system models (1 open sub-step)
   - RG12.53 Algorithmic symbolic functions: assignments by Assign, loops recorded as loops
@@ -137,7 +136,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 8 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 13 | Misc |
+| RG11 | OPEN | 12 | Misc |
 | RG12 | OPEN | 14 | Symbolic |
 | RG13 | OPEN | 2 | Total coordinates |
 | RG14 | OPEN | 4 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -1533,7 +1532,7 @@ CLOSED 2026-10-28 (#3133): test_guiValues.py calls confirm[0][1](), the function
 
 CLOSED 2026-10-12 (#829, #1631; #1189 closed, maintainer: not for ObjectContactFrictionCircleCable2D): `velocityOffset` of the coordinate, Cartesian and rigid-body spring-dampers; test model springDamperVelocityOffsetTest.py. [log](exudynRevisionLog2026c.md#rg11-9)
 
-### **OPEN_RG11.10** Provide the math and kinematics functions of the C++ code to Python as exudyn.cMath and exudyn.cUtilities
+### **CLOSED_RG11.10** Provide the math and kinematics functions of the C++ code to Python as exudyn.cMath and exudyn.cUtilities
 
 What Python computes with `math.sin` or numpy differs per platform and reaches the simulation through initial values
 and geometry (#2956). The same functions in C++, through the portable math functions (#2954), give the same bits
@@ -1610,6 +1609,10 @@ merge, apply-proposed deliberate with a note at every resolve): propose-resoluti
 
 CLOSED 2026-10-25 (#3084, maintainer 2026-10-25): `.github/workflows/contribution.yml` runs `checkIssues.py
 --contribution` against the base branch. [log](exudynRevisionLog2026c.md#rg11-11-3)
+
+#### **CLOSED_RG11.11.4** The tests of the tracker start without the proposals of the real store
+
+CLOSED 2026-10-31 (#3177): the template of test_issueTracker.py copies the directories of proposed/ without their files; a proposal waiting for apply-proposed (the one of #3164) no longer reaches testProposedResolutionsAreAppliedAfterTheMerge.
 
 ### **CLOSED_RG11.12** Distribute the design notes of the closed steps into the documentation
 
