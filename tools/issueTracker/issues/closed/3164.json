@@ -1,0 +1,17 @@
+{
+  "number": 3164,
+  "title": "CreateFFRFObject function refinements",
+  "author": "S. Weyrer",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "make rigid-body node-type selectable through the create function (when the cms object is made) and use localHTList instead of offsets for rigid-body markers to include rotations (proposed 2026-10-29 by S. Weyrer)",
+  "dateRaised": "2026-10-29",
+  "deadline": "2027-04-27",
+  "dateResolved": "2026-10-31 21:03",
+  "resolvedAuthor": "Claude-SW",
+  "file": "mainSystemExtensions.py",
+  "releaseNotes": "MainSystem.CreateFFRFReducedOrderObject: rigidBodyNodeType selects the rigid body node of the floating frame (Euler parameters, Rxyz or rotation vector); superElementRigidMarkersLocalHTs sets a local homogeneous transformation per SuperElementRigid marker, which also rotates the marker frame against the frame computed from the mesh nodes; superElementRigidMarkersOffsets is checked the same way as list or np.array, and disagreeing offsets and transformations are refused before the object is created; createFFRFReducedOrderObjectTest.py: a flexible pendulum on the rotated marker and the refused arguments.",
+  "resolvedInVersion": "1.13.274"
+}

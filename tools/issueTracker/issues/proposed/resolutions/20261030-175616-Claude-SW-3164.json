@@ -1,6 +1,0 @@
-{
-  "issue": "3164",
-  "notes": "MainSystem.CreateFFRFReducedOrderObject: rigidBodyNodeType selects the rigid body node of the floating frame (Euler parameters, Rxyz or rotation vector); superElementRigidMarkersLocalHTs sets a local homogeneous transformation per SuperElementRigid marker, which also rotates the marker frame against the frame computed from the mesh nodes; superElementRigidMarkersOffsets is checked the same way as list or np.array, and disagreeing offsets and transformations are refused before the object is created; createFFRFReducedOrderObjectTest.py: a flexible pendulum on the rotated marker and the refused arguments.",
-  "author": "Claude-SW",
-  "dateProposed": "2026-10-30"
-}

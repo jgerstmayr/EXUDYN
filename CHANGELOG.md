@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 267 | 1.13.273 |
+| 1.13 | Newborn | 268 | 1.13.274 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.274** `CHANGE` `LOW` `LOW EFF` `raised by: S. Weyrer` `resolved by: Claude-SW` CreateFFRFObject function refinements (#3164)
+  - description: make rigid-body node-type selectable through the create function (when the cms object is made) and use localHTList instead of offsets for rigid-body markers to include rotations (proposed 2026-10-29 by S. Weyrer)
+  - **notes:** MainSystem.CreateFFRFReducedOrderObject: rigidBodyNodeType selects the rigid body node of the floating frame (Euler parameters, Rxyz or rotation vector); superElementRigidMarkersLocalHTs sets a local homogeneous transformation per SuperElementRigid marker, which also rotates the marker frame against the frame computed from the mesh nodes; superElementRigidMarkersOffsets is checked the same way as list or np.array, and disagreeing offsets and transformations are refused before the object is created; createFFRFReducedOrderObjectTest.py: a flexible pendulum on the rotated marker and the refused arguments.
+  - date resolved: **2026-10-31 21:03**, date raised: 2026-10-29
 - **1.13.273** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolveExplicit and SolveGeneralizedAlpha write the state into mbs by references of GetSystemStateDict instead of SetODE2Coordinates (#3173)
   - description: Revision2026c step RG12.51.22. The output of the solvers of exudyn.symbolics.solvers writes the state of every step into mbs for FinishStep (solution file, sensors, renderer) by SetODE2Coordinates, \_t, \_tt, SetODE1Coordinates and SetAECoordinates, which convert through a std::vector: 18 us per step for 300 ODE2 coordinates, 170 us for 3000. The vectors of mbs.systemData.GetSystemStateDict(reference=True), taken after InitializeSolver, are written in place instead (0.8 us and 1.6 us); writing only at the steps where something is due is not needed then. The section Copying and referencing C++ objects of the documentation names GetSystemStateDict(reference=True) and GetODE2Coordinates(copy=False), and what makes such a reference invalid.
   - **notes:** SolveExplicit and SolveGeneralizedAlpha of exudyn.symbolics.solvers write the state of each step into mbs through the arrays of GetSystemStateDict(reference=True), in place: below a microsecond per step instead of 18 microseconds for 300 coordinates; the documentation section Copying and referencing C++ objects names these references and when they become invalid.

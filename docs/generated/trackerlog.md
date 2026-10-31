@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.273.dev1
+- Exudyn version = 1.13.274.dev1
 - last change = 2026-10-31
 - Number of issues = 3177
-- Number of resolved issues = 3050 (273 in current version)
+- Number of resolved issues = 3051 (274 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9050,9 +9050,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-31
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` exudyn.symbolic: sparse matrices in the table of operations (#3168)
   - description: Some objects work internally with sparse matrices - a 20x20 matrix mostly of zeros, recorded as a dense matrix of components, whose zeros Optimize could remove. Find how the table of operations represents and evaluates such matrices: a sparse matrix as a kind of slot (its pattern fixed at recording, the nonzero components as operands), the matrix-vector and matrix-matrix products and their derivative rules on the pattern, and the export (triplets). Not for now. \[2026-10-31, Claude-JG\]: Proposal in docs/dev/design/symbolicSystem.md section 12.7: a sparse matrix declared by esym.SparseMatrix(rows, columns, triplets) or esym.Matrix(...).Sparse(), its pattern fixed at recording; in the table a slot kind with compressed rows and codes for A v, A^T v, s A, A + B, A\[i,j\] and the dense matrix; the derivative nnz x n on the pattern; results equal to the dense product to the bit; triplets in the export; after \#3176.
-  - date raised: 2026-10-29
-- `CHANGE` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: S. Weyrer` CreateFFRFObject function refinements (#3164)
-  - description: make rigid-body node-type selectable through the create function (when the cms object is made) and use localHTList instead of offsets for rigid-body markers to include rotations (proposed 2026-10-29 by S. Weyrer)
   - date raised: 2026-10-29
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic parameters for every item of the symbolic system: a general way beyond the scalar parameters of the user items (#3159)
   - description: Symbolic parameters are required in the long term; named parameters for the inertia of a rigid body and for the joints need a general solution (\#3152 took the scalar parameters of the mass point and the spring-dampers). To design: parameters of any structure (an inertia from mass, inertia tensor and center of mass, the frames and axes of joints, the matrices of ObjectGenericODE2, the values of loads) given as named esym.Real or expressions of them, mapped to the numbers of the items; a parameter set per system (a VariableSet) instead of per item lists; the derivatives by them (sensitivities) through Equations and the composed system; later the C++ items with numerical and symbolic parameters (symbolicUserItems.md section 6).
