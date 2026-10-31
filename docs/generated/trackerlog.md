@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.273.dev1
 - last change = 2026-10-31
-- Number of issues = 3174
+- Number of issues = 3177
 - Number of resolved issues = 3050 (273 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,8 +9039,17 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` exudyn.symbolic: the vector and matrix operations as codes of the table of operations, evaluated in the memory of the program instead of by the nodes of the expression graph (#3176)
+  - description: Revision2026c step RG12.65.8 of \#3153. SymbolicProgram computes the scalar operations by their codes, but every vector and matrix operation (sums, products with scalars, matrix-vector and matrix-matrix products, transposes, components, dot product, norm, vectors and matrices of components) by a virtual call of its node class of the expression graph (Symbolic.h, SymbolicVector.h, SymbolicMatrix.h), whose result lies in a buffer of that node. These operations get codes and cases of the table that read and write the memory of the program - one contiguous array of the values of all slots, with an offset and a size per slot -, so that the nodes only record and the program alone evaluates: a recording can then be evaluated by several threads at once, copied to the GPU and exported without the nodes; leaves and item outputs stay nodes. The rules of their derivatives are in the table already. Results equal to the bit.
+  - date raised: 2026-10-31
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Functions of time for user functions: a discrete time, sampled data signals with interpolation and derivative, repeatable noise (#3175)
+  - description: Revision2026c step RG12.70. For control, thermal and electro-mechanical problems on ODE1 coordinates: the discrete time of a sampling period (zero-order hold of a function of time), a data signal given at sampling times with fast access to its value at any time by closest, linear or quadratic interpolation and its derivative, and a noise of time that gives the same value for the same time and seed in every run and evaluation order; as functions of exudyn.symbolic, recorded and differentiated, and of exudyn.cMath for numbers, with the same names.
+  - date raised: 2026-10-31
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Homogeneous transformations in exudyn.symbolic, and the user connectors and joints with HT0, HT1 and 6D velocities (#3174)
+  - description: Revision2026c step RG12.69. The functions of exudyn.HT - composition, a point transformed, inverse, relative frame, rotation and translation, the rotation parameters, the logarithm and exponential maps - for symbolic arguments, so that one user function written with exudyn.HT runs on numbers and is recorded, as exudyn.cMath does for the math functions (\#3114). Decided first (analysis in docs/dev/design/symbolicHT.md): whether a symbolic HT maps at once to the matrix and vector operations of exudyn.symbolic or becomes a kind of its own in the table of operations, and which functions it offers. Then the user functions of ObjectConnectorUser and ObjectJointUser take the frames of their markers as HT0, HT1 instead of position0, rotationMatrix0, ..., with the velocities as 6D vectors, and exudyn.symbolics.userItems uses them.
+  - date raised: 2026-10-31
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` exudyn.symbolic: sparse matrices in the table of operations (#3168)
-  - description: Some objects work internally with sparse matrices - a 20x20 matrix mostly of zeros, recorded as a dense matrix of components, whose zeros Optimize could remove. Find how the table of operations represents and evaluates such matrices: a sparse matrix as a kind of slot (its pattern fixed at recording, the nonzero components as operands), the matrix-vector and matrix-matrix products and their derivative rules on the pattern, and the export (triplets). Not for now.
+  - description: Some objects work internally with sparse matrices - a 20x20 matrix mostly of zeros, recorded as a dense matrix of components, whose zeros Optimize could remove. Find how the table of operations represents and evaluates such matrices: a sparse matrix as a kind of slot (its pattern fixed at recording, the nonzero components as operands), the matrix-vector and matrix-matrix products and their derivative rules on the pattern, and the export (triplets). Not for now. \[2026-10-31, Claude-JG\]: Proposal in docs/dev/design/symbolicSystem.md section 12.7: a sparse matrix declared by esym.SparseMatrix(rows, columns, triplets) or esym.Matrix(...).Sparse(), its pattern fixed at recording; in the table a slot kind with compressed rows and codes for A v, A^T v, s A, A + B, A\[i,j\] and the dense matrix; the derivative nnz x n on the pattern; results equal to the dense product to the bit; triplets in the export; after \#3176.
   - date raised: 2026-10-29
 - `CHANGE` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: S. Weyrer` CreateFFRFObject function refinements (#3164)
   - description: make rigid-body node-type selectable through the create function (when the cms object is made) and use localHTList instead of offsets for rigid-body markers to include rotations (proposed 2026-10-29 by S. Weyrer)

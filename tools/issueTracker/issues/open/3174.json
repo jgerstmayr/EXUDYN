@@ -1,0 +1,11 @@
+{
+  "number": 3174,
+  "title": "Homogeneous transformations in exudyn.symbolic, and the user connectors and joints with HT0, HT1 and 6D velocities",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "Revision2026c step RG12.69. The functions of exudyn.HT - composition, a point transformed, inverse, relative frame, rotation and translation, the rotation parameters, the logarithm and exponential maps - for symbolic arguments, so that one user function written with exudyn.HT runs on numbers and is recorded, as exudyn.cMath does for the math functions (#3114). Decided first (analysis in docs/dev/design/symbolicHT.md): whether a symbolic HT maps at once to the matrix and vector operations of exudyn.symbolic or becomes a kind of its own in the table of operations, and which functions it offers. Then the user functions of ObjectConnectorUser and ObjectJointUser take the frames of their markers as HT0, HT1 instead of position0, rotationMatrix0, ..., with the velocities as 6D vectors, and exudyn.symbolics.userItems uses them.",
+  "dateRaised": "2026-10-31",
+  "deadline": "2027-04-29"
+}

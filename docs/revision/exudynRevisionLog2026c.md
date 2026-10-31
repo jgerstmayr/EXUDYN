@@ -4740,3 +4740,25 @@ some states in the internal solver functions, which needs to be checked".)*
 - Seen: the setters of the state (SetODE2Coordinates and the others, MainSystemData.h) convert through std::vector;
   taking a numpy array directly would make them about as fast - not changed here.
 
+<a id="rg12-69-1"></a>
+### RG12.69.1 — exudyn.HT for symbolic arguments: the analysis (2026-10-31, #3174); RG12.65.7 proposal, RG12.65.8, RG12.70
+*(Maintainer 2026-10-31: "it would be good to have that features directly available in symbolic ... similar for
+exudyn.HT? ... A clear design decision would be whether HT transformations are immediately mapped to the underlying
+linear algebra transformations, or there could be native HT operations and functions ... I ask for a new step and a
+first substep with an analysis, done right now." - "RG12.65.7: make a proposal first." - "codes for vector and matrix
+operations ... add a RG step and describe there a little bit more clearly". - The functions of time: "Make a suitable
+suggestion.")*
+- docs/dev/design/symbolicHT.md: what exists (exudyn.HT, the 4x4 and T66 functions of rigidBodyUtilities,
+  cUtilities, symbolics.kinematics, the cMath dispatch), the interfaces of ObjectConnectorUser and ObjectJointUser
+  now, the two ways - A mapped at once to esym.Matrix and esym.Vector, B a native kind with codes - with their cost
+  in the table, the derivatives, Optimize, the export and RG14; recommended A as a class with the method names of
+  exudyn.HT (A1 Python, A2 exudyn.HT dispatching); the twist [v, omega], global at the marker origin, and its
+  operations with HT; the functions in groups; the new signatures (both items unreleased, #2975, #2976); five
+  decisions.
+- RG12.65.7: the proposal for sparse matrices in docs/dev/design/symbolicSystem.md section 12.7 (declared, compressed
+  rows, six codes, the derivative on the pattern, equal to the bit, triplets, after RG12.65.8); #3168 extended.
+- RG12.65.8 (#3176): the 23 classes of vector and matrix operations, their buffers, why the codes - threads, GPU,
+  export -, in the same section; "node classes" are the classes of the nodes of the expression graph.
+- RG12.70 (#3175): the suggestion for SampleTime, Signal and Noise in the step itself.
+- RG12.51.4 closed: all its sub-steps are closed; what is left of it has steps of its own.
+

@@ -1,0 +1,11 @@
+{
+  "number": 3175,
+  "title": "Functions of time for user functions: a discrete time, sampled data signals with interpolation and derivative, repeatable noise",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IDEA",
+  "effort": "MEDIUM",
+  "description": "Revision2026c step RG12.70. For control, thermal and electro-mechanical problems on ODE1 coordinates: the discrete time of a sampling period (zero-order hold of a function of time), a data signal given at sampling times with fast access to its value at any time by closest, linear or quadratic interpolation and its derivative, and a noise of time that gives the same value for the same time and seed in every run and evaluation order; as functions of exudyn.symbolic, recorded and differentiated, and of exudyn.cMath for numbers, with the same names.",
+  "dateRaised": "2026-10-31",
+  "deadline": "2027-04-29"
+}

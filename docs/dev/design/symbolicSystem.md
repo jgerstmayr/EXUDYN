@@ -709,4 +709,40 @@ shared by several items is one variable. Checked (2026-10-28):
 - **Stage 3, decided** (maintainer 2026-10-29, RG12.65.4): the expression classes stay and the program is built from
   the graph after the recording; no handles; equal nodes are not merged while recording, only by Optimize.
 - **Open**: whether the export is written from the table in C++ or stays in Python reading the names of the table;
-  sparse matrices in the table (RG12.65.7).
+  sparse matrices in the table (RG12.65.7, proposal below).
+- **The vector and matrix operations as codes** (RG12.65.8, #3176): today a vector or matrix operation is computed by
+  a virtual call of its node class - `VectorExpressionOperatorPlus`, `VectorExpressionOperatorMultMatrix`,
+  `MatrixExpressionOperatorMultMatrixMatrix`, `MatrixExpressionTransposed`, the vectors and matrices of components
+  (`VectorExpressionSReal`, `MatrixExpressionSReal`), dot, norm, the components, the comparisons: 23 classes -, and its result is
+  the `buffer` of that node; the slots of `SymbolicProgram` (`FlatValue`) point into these buffers. As codes, they are
+  cases of the table that read and write one contiguous array of the program, an offset and a size per slot (sizes
+  known after the first evaluation, as the derivative offsets are now). Then the nodes only record: two threads can
+  evaluate one recording (now they share the buffers of its nodes), the program can be copied to the GPU as it is,
+  and the export needs no node. Leaves (named variables, constants) and item outputs stay nodes. The rules of the
+  derivatives are already rows of the table (`VectorPlus`, `VectorMatrixVector`, `MatrixMatrix`, ...). Done when every
+  symbolic test model gives the same bits and the tree evaluation is the only user of `EvaluateFromOperands`.
+- **Proposal for sparse matrices** (RG12.65.7, #3168; maintainer 2026-10-29: needed for objects working with sparse
+  matrices, a 20x20 matrix mostly of zeros; not for now). Today such a matrix is an `esym.Matrix` of components whose
+  zeros are constants; `A@v` is a dense product of 400 multiplications, and `Optimize` cannot remove the zeros, as
+  the product is one node, not scalar operations.
+  1. **Recording**: a sparse matrix is declared, not detected - `esym.SparseMatrix(rows, columns, triplets)` with
+     `triplets` a list of (row, column, expression), and `esym.Matrix(...).Sparse()`, which keeps the components that
+     are not the constant 0. The pattern is fixed at the recording; a component that becomes 0 at run time stays in
+     it. A detection in `esym.Matrix` (more than half constant zeros) would change the results of existing recordings
+     by the order of the sums - not by default.
+  2. **Table** (after RG12.65.8, as codes of the same kind): a slot kind `SparseMatrix` - the pattern (compressed rows:
+     the start of each row, the column of each entry) kept once in the step, the values of the nnz entries in the
+     memory of the program. Codes: `SparseMatrixVector` (A v), `SparseTransposedVector` (A^T v), `SparseScalar` (s A),
+     `SparsePlus` (the union of the patterns, fixed when the program is built), `SparseComponent` (A[i,j], a constant 0
+     outside the pattern), `SparseToDense`. A dense matrix times a sparse one stays out until a model needs it.
+  3. **Derivatives**: the derivative of A by n variables is nnz x n (only the pattern); d(A v) = (dA) v + A dv
+     summed over the pattern; `esym.Jacobian` builds the same as new nodes, the derivative of a sparse matrix being
+     sparse with the same pattern.
+  4. **Results**: a sum over the pattern leaves out only exact zeros, so A v equals the dense product to the bit
+     where no entry outside the pattern is inf or nan - the test compares both.
+  5. **Export and system**: triplets (row, column, program of the entry) - what `SymbolicSystem` builds for the mass
+     matrices already (`MassMatrix(..., sparse=True)`); numpy format with `scipy.sparse` optional, sympy as
+     `SparseMatrix`. A recorded mass matrix or stiffness of an object (FFRF reduced order, shells) then reaches the
+     sparse system matrices without passing a dense block.
+  6. **Order and size**: after RG12.65.8 (the codes and the memory of the program), about the size of that step;
+     the test: a 20x20 band matrix of components, dense against sparse, values and Jacobians to the bit, and the time.
