@@ -126,6 +126,13 @@ There are only a few very important cases where data is referenced in Exudyn , t
 `MainSystem`,
 `VisualizationSettings`, and
 `SimulationSettings` which are always references to internal C++ classes.
+The state vectors of a system are copied by default, and referenced on request:
+`mbs.systemData.GetSystemStateDict(reference=True)` gives numpy arrays that are the vectors `ODE2Coords`,
+`ODE2Coords_t`, `ODE2Coords_tt`, `ODE1Coords`, `ODE1Coords_t`, `AECoords` and `dataCoords` of the system, read and
+written in place (`d['ODE2Coords'][:] = q`), and `mbs.systemData.GetODE2Coordinates(copy=False)` the ODE2 coordinates;
+such an array is valid only until the system is assembled again, which may allocate the vectors anew, a write into it
+is not checked, and the time is not among them (`SetTime`). A loop that writes a state in every step this way saves the conversion of `SetODE2Coordinates`, which
+costs about 18 microseconds for 300 coordinates against below one microsecond (#3173).
 The following code snippets and comments should explain this behavior:
 
 ```python

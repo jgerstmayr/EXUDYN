@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 266 | 1.13.272 |
+| 1.13 | Newborn | 267 | 1.13.273 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.273** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolveExplicit and SolveGeneralizedAlpha write the state into mbs by references of GetSystemStateDict instead of SetODE2Coordinates (#3173)
+  - description: Revision2026c step RG12.51.22. The output of the solvers of exudyn.symbolics.solvers writes the state of every step into mbs for FinishStep (solution file, sensors, renderer) by SetODE2Coordinates, \_t, \_tt, SetODE1Coordinates and SetAECoordinates, which convert through a std::vector: 18 us per step for 300 ODE2 coordinates, 170 us for 3000. The vectors of mbs.systemData.GetSystemStateDict(reference=True), taken after InitializeSolver, are written in place instead (0.8 us and 1.6 us); writing only at the steps where something is due is not needed then. The section Copying and referencing C++ objects of the documentation names GetSystemStateDict(reference=True) and GetODE2Coordinates(copy=False), and what makes such a reference invalid.
+  - **notes:** SolveExplicit and SolveGeneralizedAlpha of exudyn.symbolics.solvers write the state of each step into mbs through the arrays of GetSystemStateDict(reference=True), in place: below a microsecond per step instead of 18 microseconds for 300 coordinates; the documentation section Copying and referencing C++ objects names these references and when they become invalid.
+  - date resolved: **2026-10-31 20:37**, date raised: 2026-10-31
 - **1.13.272** `CHANGE` `LOW EFF` `resolved by: Claude-JG` camera (#2247)
   - description: add documentation for model-centric and camera-centric views
   - **notes:** The manual explains the model-centric and the camera-centric view (GUI, The model view): what moves, what is visible, the perspective, ZoomAll and trackMarker in both, with an example of a camera following a vehicle; the setting modelCentricView links the section.

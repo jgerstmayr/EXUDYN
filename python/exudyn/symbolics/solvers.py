@@ -107,6 +107,9 @@ class _Output:
                 self.simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = False
                 self.solver = exudyn.MainSolverExplicit()
             self.solver.InitializeSolver(system.mbs, self.simulationSettings)
+            #the state vectors of mbs, written in place, without the conversion of SetODE2Coordinates (#3173); valid
+            #as long as mbs is not assembled again
+            self.state = system.mbs.systemData.GetSystemStateDict(reference=True)
 
     def Step(self, stepIndex, t, q, q_t, q_tt, last=False, y=None, y_t=None, z=None):
         """the state after step stepIndex at t; stepIndex 0 is the initial state, as SolveDynamic writes it"""
@@ -118,13 +121,11 @@ class _Output:
                 if name in self.result:
                     self.result[name].append(np.copy(value))
         if self.solver is not None:
-            self.system.SetSystemState(q, q_t, q_tt, t)
-            if y is not None and len(y):
-                self.system.mbs.systemData.SetODE1Coordinates(np.asarray(y, dtype=float))
-                if y_t is not None:
-                    self.system.mbs.systemData.SetODE1Coordinates_t(np.asarray(y_t, dtype=float))
-            if z is not None and len(z):
-                self.system.mbs.systemData.SetAECoordinates(np.asarray(z, dtype=float))
+            for (name, value) in [('ODE2Coords', q), ('ODE2Coords_t', q_t), ('ODE2Coords_tt', q_tt), ('ODE1Coords', y),
+                                  ('ODE1Coords_t', y_t), ('AECoords', z)]:
+                if value is not None and len(value):
+                    self.state[name][:] = value
+            self.system.mbs.systemData.SetTime(t)
             self.solver.it.currentStepIndex = stepIndex
             self.solver.it.currentTime = t
             self.solver.it.currentStepSize = self.h

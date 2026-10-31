@@ -1,0 +1,16 @@
+{
+  "number": 3173,
+  "title": "SolveExplicit and SolveGeneralizedAlpha write the state into mbs by references of GetSystemStateDict instead of SetODE2Coordinates",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "Revision2026c step RG12.51.22. The output of the solvers of exudyn.symbolics.solvers writes the state of every step into mbs for FinishStep (solution file, sensors, renderer) by SetODE2Coordinates, _t, _tt, SetODE1Coordinates and SetAECoordinates, which convert through a std::vector: 18 us per step for 300 ODE2 coordinates, 170 us for 3000. The vectors of mbs.systemData.GetSystemStateDict(reference=True), taken after InitializeSolver, are written in place instead (0.8 us and 1.6 us); writing only at the steps where something is due is not needed then. The section Copying and referencing C++ objects of the documentation names GetSystemStateDict(reference=True) and GetODE2Coordinates(copy=False), and what makes such a reference invalid.",
+  "dateRaised": "2026-10-31",
+  "deadline": "2027-04-29",
+  "dateResolved": "2026-10-31 20:37",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/symbolics/solvers.py",
+  "releaseNotes": "SolveExplicit and SolveGeneralizedAlpha of exudyn.symbolics.solvers write the state of each step into mbs through the arrays of GetSystemStateDict(reference=True), in place: below a microsecond per step instead of 18 microseconds for 300 coordinates; the documentation section Copying and referencing C++ objects names these references and when they become invalid.",
+  "resolvedInVersion": "1.13.273"
+}

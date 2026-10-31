@@ -2132,6 +2132,10 @@ CLOSED 2026-10-29 (#3156; maintainer 2026-10-29: ODE2Residual and ODE2ResidualJa
 
 CLOSED 2026-10-29 (#3162; maintainer 2026-10-29: add the ODE1 equations in Equations()): Equations(ODE1RHS=True), the result 'ODE1RHS' of the variable y, GetFlatProgram with y, SystemVariables.Equations with y; checked in symbolicSystemODE1Test.py. [log](exudynRevisionLog2026c.md#rg12-51-21)
 
+#### **CLOSED_RG12.51.22** Write the state of each step into mbs by the references of GetSystemStateDict in the Python solvers
+
+CLOSED 2026-10-31 (#3173; maintainer 2026-10-31: can the copying in Step() be avoided, or the state written by the write period only; the reference of GetSystemStateDict is missing in the docs): _Output of exudyn.symbolics.solvers writes into the vectors of GetSystemStateDict(reference=True), 0.8 us per step for 300 ODE2 coordinates instead of 18 us; writing only when due not needed then; the section Copying and referencing C++ objects names the references. [log](exudynRevisionLog2026c.md#rg12-51-22)
+
 ### **CLOSED_RG12.52** Introduce exudyn.symbolic in its reference page
 
 CLOSED 2026-10-25 (#3094; maintainer 2026-10-25: the introduction section to Python-C++ interface/Symbolic has to be

@@ -4716,3 +4716,27 @@ KinematicsBasics.h shall be removed. ... Transformation66 is also used in defini
   paragraph of the section Tiny and huge models on the perspective of both views moved into it.
 - definitions/structureDefsVisualizationSettings.py: the description of modelCentricView links the section.
 
+<a id="rg12-51-22"></a>
+### RG12.51.22 — the Python solvers write the state into mbs by references (2026-10-31, #3173)
+*(Maintainer 2026-10-31: "The Step(...) function copies the current states into the system states in every time step.
+There is mbs.systemData.GetSystemStateDict(...,reference=True) ... I wonder if copying in Step() can be avoided; or we
+could update only regarding the solution write period and regarding a given updating scheme. Certainly, one could miss
+some states in the internal solver functions, which needs to be checked".)*
+- Measured (scratchpad, mass points, 20000 calls): SetODE2Coordinates, _t, _tt and SetTime 3.2 us for 30, 18 us for
+  300 and 168 us for 3000 ODE2 coordinates - the setters take a std::vector, converted element by element -; writing
+  the arrays of `GetSystemStateDict(reference=True)` in place 0.8, 0.8 and 1.6 us; FinishStep of MainSolverExplicit
+  with nothing to write 0.45 to 0.65 us.
+- Which states FinishStep reads: the current state and time, for the solution file (writePeriod), the sensors
+  (sensorsWritePeriod, also storeInternal), the renderer (copied into the visualization state at its update), the
+  image recording, and the state after the solve. The recordings of SymbolicSystem do not read mbs (refused by
+  `_Recording`), so nothing else needs the state during the steps. Writing only at the due steps would have to repeat
+  the rules of FinishStep in Python (two periods, the renderer, the last step) for at most the 0.8 us that remain:
+  not done.
+- python/exudyn/symbolics/solvers.py: `_Output` takes the references after InitializeSolver and writes q, q_t, q_tt,
+  y, y_t and z into them, the time by SetTime; results of the 10 test models with SolveExplicit or
+  SolveGeneralizedAlpha unchanged (test suite).
+- definitions/pybindGeneralInformation.py, section Copying and referencing C++ objects: GetSystemStateDict(reference=True)
+  and GetODE2Coordinates(copy=False), valid until the next Assemble, unchecked writes, the time not among them.
+- Seen: the setters of the state (SetODE2Coordinates and the others, MainSystemData.h) convert through std::vector;
+  taking a numpy array directly would make them about as fast - not changed here.
+
