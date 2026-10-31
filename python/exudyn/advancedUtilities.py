@@ -884,8 +884,9 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
     fnDict = {}
     argList = []
     argTypeList = []
-    
-    functionArgs = userFunctionArgsDict[itemTypeNameCopy+','+userFunctionName]
+    argNameList = [] #the names of the leaves: an HT and a Twist are two each (#3183)
+
+    functionArgs =userFunctionArgsDict[itemTypeNameCopy+','+userFunctionName]
     returnType = functionArgs[2][0]
     nArgs = len(functionArgs[0])
     if nArgs != function.__code__.co_argcount:
@@ -939,11 +940,28 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
             var = exudyn.symbolic.Matrix(arg,np.zeros((rowsColumns,rowsColumns)).tolist())
         elif varType == 'MainSystem': #its outputs read at every call, its other attributes refused (#2984)
             var = _SymbolicMainSystem(mbs)
+        elif varType in ['HomogeneousTransformation', 'Twist']:
+            #a frame and a twist of a marker: two named leaves each, in one kinematics.HT or kinematics.Twist (#3183)
+            from exudyn.symbolics import kinematics
+            if varType == 'HomogeneousTransformation':
+                leaves = [(arg + '_rotation', 'StdMatrix3D', exudyn.symbolic.Matrix(arg + '_rotation', np.eye(3).tolist())),
+                          (arg + '_translation', 'StdVector3D', exudyn.symbolic.Vector(arg + '_translation', [0.]*3))]
+                var = kinematics.HT(leaves[0][2], leaves[1][2])
+            else:
+                leaves = [(arg + '_velocity', 'StdVector3D', exudyn.symbolic.Vector(arg + '_velocity', [0.]*3)),
+                          (arg + '_angularVelocity', 'StdVector3D', exudyn.symbolic.Vector(arg + '_angularVelocity', [0.]*3))]
+                var = kinematics.Twist(leaves[0][2], leaves[1][2])
+            argList += [leaf for (name, leafType, leaf) in leaves]
+            argTypeList += [leafType for (name, leafType, leaf) in leaves]
+            argNameList += [name for (name, leafType, leaf) in leaves]
+            fnDict[arg] = var
+            continue
         else:
             raise ValueError("ConvertFunctionToSymbolic: unrecognized type in user function; type probably implemented")
     
         argList += [var] #float, int, MainSystem, Vector3D, etc.
         argTypeList += [varType] #float, int, MainSystem, Vector3D, etc.
+        argNameList += [arg]
         fnDict[arg] = var
         
     if verbose > 1:
@@ -984,7 +1002,7 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
     return {'functionName': fnName, 
             'argList': argList, 
             'argTypeList': argTypeList,
-            'argNameList': list(fnArgs[:nArgs]), #the names of the Python signature, for GetFlatProgramData (#3087)
+            'argNameList': argNameList, #the names of the leaves, for GetFlatProgramData (#3087)
             'returnValue': returnValue,
             'returnType': returnType}
 

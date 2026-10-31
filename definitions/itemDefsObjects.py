@@ -9597,24 +9597,18 @@ definitions.append(ItemDefinition(
 #++++++++++++++++   ObjectConnectorUser   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-def ObjectConnectorUser_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, position0: Vector3D,
-                                          velocity0: Vector3D, rotationMatrix0: Matrix3D, angularVelocity0: Vector3D,
-                                          position1: Vector3D, velocity1: Vector3D, rotationMatrix1: Matrix3D,
-                                          angularVelocity1: Vector3D, dataCoordinates: Vector, parameters: Vector) -> Vector:
-    r"""A user function, which computes the forces of the connector on its two markers from their positions, velocities, rotations and angular velocities.
+def ObjectConnectorUser_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, HT0: HT, twist0: Twist,
+                                          HT1: HT, twist1: Twist, dataCoordinates: Vector, parameters: Vector) -> Vector:
+    r"""A user function, which computes the forces of the connector on its two markers from their frames and twists.
 
     Args:
         mbs: provides MainSystem mbs to which the connector belongs
         t: current time in mbs
         itemNumber: integer number of the connector in mbs
-        position0: $\LU{0}{\pv}_{m0}$ global position of marker 0
-        velocity0: $\LU{0}{\vv}_{m0}$ global velocity of marker 0
-        rotationMatrix0: $\LU{0,m0}{\Rot}$ rotation matrix of marker 0, local to global; the unit matrix if requestedMarkerType has no Orientation
-        angularVelocity0: $\LU{0}{\tomega}_{m0}$ global angular velocity of marker 0; zero if requestedMarkerType has no Orientation
-        position1: $\LU{0}{\pv}_{m1}$ global position of marker 1
-        velocity1: $\LU{0}{\vv}_{m1}$ global velocity of marker 1
-        rotationMatrix1: $\LU{0,m1}{\Rot}$ rotation matrix of marker 1, as for marker 0
-        angularVelocity1: $\LU{0}{\tomega}_{m1}$ global angular velocity of marker 1, as for marker 0
+        HT0: $\LU{0}{\Hm}_{m0}$ the frame of marker 0, an exudyn.HT: its translation the global position $\LU{0}{\pv}_{m0}$, its rotation the rotation matrix $\LU{0,m0}{\Rot}$, local to global; the unit rotation if requestedMarkerType has no Orientation
+        twist0: the twist of marker 0, an exudyn.Twist: its velocity the global velocity $\LU{0}{\vv}_{m0}$, its angularVelocity the global angular velocity $\LU{0}{\tomega}_{m0}$, zero if requestedMarkerType has no Orientation
+        HT1: $\LU{0}{\Hm}_{m1}$ the frame of marker 1, as for marker 0
+        twist1: the twist of marker 1, as for marker 0
         dataCoordinates: $\dv \in \Rcal^{n_d}$ the data coordinates of the NodeGenericData nodeNumber, as the postNewtonStepUserFunction last set them; empty without a data node
         parameters: $\in \Rcal^{n_p}$ the parameters of the connector, see parameters; empty if not given
     Returns:
@@ -9669,24 +9663,28 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    overallDescription=r"""A connector of two markers whose forces are a user function of the positions, velocities, rotations and angular velocities of the markers: it returns the forces and torques on the markers, which the connector applies through the marker Jacobians - a spring-damper, a bushing, a contact of two points -, also as symbolic user function. For forces at points of a body that the function computes itself, as a contact searching the closest point on a flexible body, a second user function reads any number of markers of any type and applies forces through them. A NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.""",
+    overallDescription=r"""A connector of two markers whose forces are a user function of the frames and twists of the markers - their positions, rotations, velocities and angular velocities -: it returns the forces and torques on the markers, which the connector applies through the marker Jacobians - a spring-damper, a bushing, a contact of two points -, also as symbolic user function. For forces at points of a body that the function computes itself, as a contact searching the closest point on a flexible body, a second user function reads any number of markers of any type and applies forces through them. A NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.""",
     classType=ClassTypeObject,
     detailedDescription=r"""    #### The forces of the two markers
 
-    `forceUserFunction(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0, position1, velocity1,
-    rotationMatrix1, angularVelocity1, dataCoordinates, parameters)` gets the states of the two markers of
-    `markerNumbers` and returns the global forces $\fv_i$ acting on them, $[\fv_0,\, \fv_1]$; with
-    `exu.MarkerType.Orientation` in `requestedMarkerType`, it gets their rotation matrices and global angular velocities
-    and returns also the torques $\mv_i$, $[\fv_0,\, \mv_0,\, \fv_1,\, \mv_1]$; without, the rotation matrices are unit
-    matrices and the angular velocities zero (#3119). The connector applies them through the Jacobians of the markers,
+    `forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters)` gets the frame
+    `HTi`, an `exudyn.HT` of the global position and the rotation matrix, and the twist `twisti`, an `exudyn.Twist` of
+    the global velocity and angular velocity, of each marker of `markerNumbers` (#3183), and returns the global forces
+    $\fv_i$ acting on them, $[\fv_0,\, \fv_1]$; with `exu.MarkerType.Orientation` in `requestedMarkerType`, the frames
+    have the rotations of the markers and the twists their angular velocities, and it returns also the torques $\mv_i$,
+    $[\fv_0,\, \mv_0,\, \fv_1,\, \mv_1]$; without, the rotations are unit matrices and the angular velocities zero
+    (#3119). `HT1.translation - HT0.translation` is the distance of the markers, `HT0.Relative(HT1)` the frame of marker
+    1 seen from marker 0, `exudyn.symbolics.kinematics.RelativeTwist` its velocity. The connector applies them through the Jacobians of the markers,
 
     $$
     \fv_{gen} = -\sum_{i=0}^{1} \left( \Jm_{pos,i}\tp \fv_i + \Jm_{rot,i}\tp \mv_i \right) ,
     $$
 
     added to the left-hand side, as loads act on the markers. The markers must provide Position, which the connector
-    requests for this function. As its arguments and result are vectors and matrices of fixed sizes, the function can be
-    recorded by `CreateSymbolicUserFunction`, one recording for all connectors of a kind with their own `parameters`.
+    requests for this function. The function can be recorded by `CreateSymbolicUserFunction`, which passes a
+    `kinematics.HT` and a `kinematics.Twist` of named symbolic leaves - `HT0_rotation`, `HT0_translation`,
+    `twist0_velocity`, `twist0_angularVelocity`, ... - with the same methods and properties; one recording serves all
+    connectors of a kind with their own `parameters`.
     `Assemble` refuses a forceUserFunction with other than two markers, and both user functions together.
 
     #### Access to the markers
@@ -9747,9 +9745,8 @@ definitions.append(ItemDefinition(
     k = 100
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialCoordinates=[0.1,0,0]))
     mass = mbs.AddObject(MassPoint(nodeNumber=node, mass=2))
-    def UFforce(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
-                position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
-        force = k*(position1 - position0 - np.array([1,0,0]))
+    def UFforce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+        force = k*(HT1.translation - HT0.translation - np.array([1,0,0]))
         return np.hstack([force, -force]) #the forces on marker 0 and marker 1
     groundMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber=mbs.AddObject(ObjectGround())))
     mbs.AddObject(ObjectConnectorUser(markerNumbers=[groundMarker, mbs.AddMarker(MarkerNodePosition(nodeNumber=node))],
@@ -9891,8 +9888,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++   ObjectJointUser   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-def ObjectJointUser_constraintUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, position0: Vector3D,
-                                           rotationMatrix0: Matrix3D, position1: Vector3D, rotationMatrix1: Matrix3D,
+def ObjectJointUser_constraintUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, HT0: HT, HT1: HT,
                                            parameters: Vector) -> Vector:
     r"""A user function, which computes the constraint equations of the joint at position level from the frames of its two markers.
 
@@ -9900,17 +9896,14 @@ def ObjectJointUser_constraintUserFunction(mbs: MainSystem, t: Real, itemNumber:
         mbs: provides MainSystem mbs to which the joint belongs
         t: current time in mbs
         itemNumber: integer number of the joint in mbs
-        position0: $\LU{0}{\pv}_{m0}$ global position of marker 0
-        rotationMatrix0: $\LU{0,m0}{\Rot}$ rotation matrix of marker 0, local to global
-        position1: $\LU{0}{\pv}_{m1}$ global position of marker 1
-        rotationMatrix1: $\LU{0,m1}{\Rot}$ rotation matrix of marker 1, local to global
+        HT0: $\LU{0}{\Hm}_{m0}$ the frame of marker 0, an exudyn.HT: its translation the global position $\LU{0}{\pv}_{m0}$, its rotation the rotation matrix $\LU{0,m0}{\Rot}$, local to global
+        HT1: $\LU{0}{\Hm}_{m1}$ the frame of marker 1, as for marker 0
         parameters: $\in \Rcal^{n_p}$ the parameters of the joint, see parameters; empty if not given
     Returns:
         $\cv \in \Rcal^{n_c}$ the constraint equations, numberOfConstraints values, as list or numpy array
     """
 
-def ObjectJointUser_jacobianUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, position0: Vector3D,
-                                         rotationMatrix0: Matrix3D, position1: Vector3D, rotationMatrix1: Matrix3D,
+def ObjectJointUser_jacobianUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, HT0: HT, HT1: HT,
                                          parameters: Vector) -> MatrixContainer:
     r"""A user function, which computes the derivative of the constraint equations by the translations and global rotation increments of the two markers.
 
@@ -9918,10 +9911,8 @@ def ObjectJointUser_jacobianUserFunction(mbs: MainSystem, t: Real, itemNumber: I
         mbs: provides MainSystem mbs to which the joint belongs
         t: current time in mbs
         itemNumber: integer number of the joint in mbs
-        position0: $\LU{0}{\pv}_{m0}$ global position of marker 0
-        rotationMatrix0: $\LU{0,m0}{\Rot}$ rotation matrix of marker 0, local to global
-        position1: $\LU{0}{\pv}_{m1}$ global position of marker 1
-        rotationMatrix1: $\LU{0,m1}{\Rot}$ rotation matrix of marker 1, local to global
+        HT0: $\LU{0}{\Hm}_{m0}$ the frame of marker 0, an exudyn.HT: its translation the global position $\LU{0}{\pv}_{m0}$, its rotation the rotation matrix $\LU{0,m0}{\Rot}$, local to global
+        HT1: $\LU{0}{\Hm}_{m1}$ the frame of marker 1, as for marker 0
         parameters: $\in \Rcal^{n_p}$ the parameters of the joint, see parameters; empty if not given
     Returns:
         $\partial \cv / \partial [\pv_{m0},\, \ttheta_{m0},\, \pv_{m1},\, \ttheta_{m1}] \in \Rcal^{n_c \times 12}$ as numpy array or list of lists
@@ -9943,12 +9934,13 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the derivative of the equations is a second user function.""",
+    overallDescription=r"""A joint on two rigid markers whose constraint equations are a Python user function of the frames of the markers, their positions and rotation matrices. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the derivative of the equations is a second user function.""",
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Constraint equations
 
-    The `constraintUserFunction(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters)`
-    returns the $n_c$ = `numberOfConstraints` equations at position level (#2976),
+    The `constraintUserFunction(mbs, t, itemNumber, HT0, HT1, parameters)` gets the frames of the two markers as
+    `exudyn.HT` - the global position $\LU{0}{\pv}_{mi}$ its translation, the rotation matrix $\LU{0,mi}{\Rot}$ its
+    rotation (#3183) - and returns the $n_c$ = `numberOfConstraints` equations at position level (#2976),
 
     $$
     \cv(\LU{0}{\pv}_{m0},\, \LU{0,m0}{\Rot},\, \LU{0}{\pv}_{m1},\, \LU{0,m1}{\Rot},\, t) = \Null .
@@ -9979,11 +9971,11 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a body that slides along a circle of radius 1 around the ground, as user joint on two rigid markers
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[1,0,0,0,0,0], initialVelocities=[0,1,0,0,0,0]))
     body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=1, inertia=[0.01,0.01,0.01,0,0,0]))
-    def UFconstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-        d = position1 - position0
+    def UFconstraint(mbs, t, itemNumber, HT0, HT1, parameters):
+        d = HT1.translation - HT0.translation
         return [d[0]**2 + d[1]**2 - 1., d[2]]
-    def UFjacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-        d = position1 - position0 #columns: position 0, rotation 0, position 1, rotation 1
+    def UFjacobian(mbs, t, itemNumber, HT0, HT1, parameters):
+        d = HT1.translation - HT0.translation #columns: position 0, rotation 0, position 1, rotation 1
         jacobian = np.zeros((2, 12))
         jacobian[0, 0:3] = [-2*d[0], -2*d[1], 0]
         jacobian[0, 6:9] = [2*d[0], 2*d[1], 0]

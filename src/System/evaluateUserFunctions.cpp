@@ -562,40 +562,35 @@ Real CObjectConnectorUser::EvaluateUserFunctionPostNewtonStep(const MarkerDataSt
 	return error;
 }
 
-//ObjectJointUser (#2976): the constraint equations and their Jacobian of the frames of the two markers
-static StdMatrix3D ToStdMatrix3D(const Matrix3D& A)
-{
-	StdMatrix3D result;
-	for (Index i = 0; i < 3; i++)
-	{
-		for (Index j = 0; j < 3; j++) { result[i][j] = A(i, j); }
-	}
-	return result;
-}
-
-//ObjectConnectorUser (#3119): the forceUserFunction gets the states of the two markers and returns the global forces
-//(and torques) on them, applied as ApplyForce and ApplyTorque do: -J^T f into the block of each marker
+//ObjectConnectorUser (#3119): the forceUserFunction gets the frame and the twist of each of the two markers (#3183) and
+//returns the global forces (and torques) on them, applied as ApplyForce and ApplyTorque do: -J^T f into the block of
+//each marker
 void CObjectConnectorUser::EvaluateUserFunctionForce(Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes) const
 {
 	bool orientation = EXUstd::IsOfType(parameters.requestedMarkerType, Marker::Orientation);
-	StdMatrix3D rotation[2];
-	Vector3D angularVelocity[2];
+	HomogeneousTransformation frame[2];
+	Twist twist[2];
 	for (Index i = 0; i < 2; i++)
 	{
 		const MarkerData& marker = markerData.GetMarkerData(i);
-		rotation[i] = ToStdMatrix3D(orientation ? marker.orientation : EXUmath::unitMatrix3D);
-		angularVelocity[i] = orientation ? marker.orientation*marker.angularVelocityLocal : Vector3D(0.);
+		if (orientation)
+		{
+			frame[i] = HomogeneousTransformation(marker.orientation, marker.position);
+			twist[i] = Twist(marker.velocity, marker.orientation*marker.angularVelocityLocal);
+		}
+		else
+		{
+			frame[i].SetTranslation(marker.position); //the unit rotation, which the products skip
+			twist[i] = Twist(marker.velocity, Vector3D(0.));
+		}
 	}
 	StdVector data;
 	GetDataCoordinates(ConfigurationType::Current, data);
 	Vector forces;
-	const MarkerData& marker0 = markerData.GetMarkerData(0);
-	const MarkerData& marker1 = markerData.GetMarkerData(1);
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, forces, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
-			markerData.GetTime(), GetObjectNumber(), marker0.position, marker0.velocity, rotation[0], angularVelocity[0],
-			marker1.position, marker1.velocity, rotation[1], angularVelocity[1], data, parameters.parameters);
+			markerData.GetTime(), GetObjectNumber(), frame[0], twist[0], frame[1], twist[1], data, parameters.parameters);
 	}, "ObjectConnectorUser::forceUserFunction");
 	Index perMarker = orientation ? 6 : 3;
 	if (forces.NumberOfItems() != 2*perMarker)
@@ -625,13 +620,15 @@ void CObjectConnectorUser::EvaluateUserFunctionForce(Vector& ode2Lhs, const Mark
 	}
 }
 
+//ObjectJointUser (#2976): the constraint equations and their Jacobian of the frames of the two markers
 void CObjectJointUser::EvaluateUserFunctionConstraint(Vector& equations, Real t, const Vector3D& position0, const Matrix3D& rotation0,
 	const Vector3D& position1, const Matrix3D& rotation1) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		EvaluateUserFunctionIntoVector(parameters.constraintUserFunction, equations, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
-			t, GetObjectNumber(), position0, ToStdMatrix3D(rotation0), position1, ToStdMatrix3D(rotation1), parameters.parameters);
+			t, GetObjectNumber(), HomogeneousTransformation(rotation0, position0), HomogeneousTransformation(rotation1, position1),
+			parameters.parameters); //the frames of the markers (#3183)
 	}, "ObjectJointUser::constraintUserFunction");
 	if (equations.NumberOfItems() != parameters.numberOfConstraints)
 	{
@@ -646,7 +643,8 @@ void CObjectJointUser::EvaluateUserFunctionJacobian(Matrix& jacobian, Real t, co
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		EvaluateUserFunctionIntoMatrix(parameters.jacobianUserFunction, jacobian, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
-			t, GetObjectNumber(), position0, ToStdMatrix3D(rotation0), position1, ToStdMatrix3D(rotation1), parameters.parameters);
+			t, GetObjectNumber(), HomogeneousTransformation(rotation0, position0), HomogeneousTransformation(rotation1, position1),
+			parameters.parameters);
 	}, "ObjectJointUser::jacobianUserFunction");
 	if (jacobian.NumberOfRows() != parameters.numberOfConstraints || jacobian.NumberOfColumns() != 12)
 	{

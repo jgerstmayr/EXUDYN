@@ -13,8 +13,8 @@ You can view and download this file on Github: [symbolicUserFunctionSignaturesTe
 # Details:  Every user function that can be symbolic, against its Python version (#2985):
 #           (1) for each signature of userFunctionArgsDict that a symbolic user function supports, also those with
 #           a matrix result (#3020), a function that uses every argument - numbers, vectors of run-time and fixed size,
-#           matrices - is generated, once computing with exudyn.cMath and once recorded with exudyn.symbolic; both are
-#           evaluated with the same arguments and must agree;
+#           matrices, the frames and twists of markers (#3183) - is generated, once computing with exudyn.cMath and once
+#           recorded with exudyn.symbolic; both are evaluated with the same arguments and must agree;
 #           (2) items whose symbolic user function no other test model solves, each simulated with the Python and with
 #           the symbolic version of the same function: CartesianSpringDamper, CoordinateSpringDamper,
 #           TorsionalSpringDamper, ObjectGenericODE1, LoadTorqueVector, LoadMassProportional, the offset of a
@@ -42,7 +42,7 @@ mbs = SC.AddSystem()
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #(1) every signature, evaluated
 argumentTypes = ['MainSystem', 'Real', 'Index', 'bool', 'OutputVariableType', 'StdVector', 'StdVector2D', 'StdVector3D',
-                 'StdVector6D', 'StdMatrix3D', 'StdMatrix6D']
+                 'StdVector6D', 'StdMatrix3D', 'StdMatrix6D', 'HomogeneousTransformation', 'Twist']
 returnTypes = ['Real', 'bool', 'StdVector', 'StdVector2D', 'StdVector3D', 'StdVector6D', 'py::object', 'NumpyMatrix']
 n = 5 #the size of the run-time sized vectors
 
@@ -58,7 +58,17 @@ def Value(argumentType, k):
     if argumentType == 'StdVector6D': return [0.2 + 0.01*k, -0.4, 0.7, 0.1, 0.5, -0.3]
     if argumentType == 'StdMatrix3D': return [[0.1*(i+j) + 0.01*k for j in range(3)] for i in range(3)]
     if argumentType == 'StdMatrix6D': return [[0.05*(i-j) + 0.01*k for j in range(6)] for i in range(6)]
+    if argumentType == 'HomogeneousTransformation': return exu.HT(Rxyz=[0.1, -0.2, 0.3 + 0.01*k], translation=[0.2 + 0.01*k, -0.4, 0.7])
+    if argumentType == 'Twist': return exu.Twist([0.2 + 0.01*k, -0.4, 0.7], [0.1, 0.5, -0.3])
     return mbs
+
+def Leaves(value):
+    """the values of the leaves of a recording for an argument: two for a frame and a twist (#3183)"""
+    if isinstance(value, exu.HT):
+        return [value.rotation.tolist(), value.translation.tolist()]
+    if isinstance(value, exu.Twist):
+        return [value.velocity.tolist(), value.angularVelocity.tolist()]
+    return [value]
 
 def MakeFunction(types, names, returnType, functions):
     """a user function of the signature that uses every number, vector and matrix argument; functions is exudyn.cMath
@@ -75,6 +85,11 @@ def MakeFunction(types, names, returnType, functions):
         elif argumentType in ['StdMatrix3D', 'StdMatrix6D']:
             m = int(argumentType[9])
             lines.append('    s = s + ' + c + '*(' + name + '[0,' + str(m-1) + '] - ' + name + '[' + str(m-1) + ',0])')
+        elif argumentType == 'HomogeneousTransformation':
+            lines.append('    s = s + ' + c + '*(' + name + '.rotation[0,2] - ' + name + '.rotation[2,0] + ' + name
+                         + '.translation[0] - 2*' + name + '.translation[2])')
+        elif argumentType == 'Twist':
+            lines.append('    s = s + ' + c + '*(' + name + '.velocity[1] - 2*' + name + '.angularVelocity[2])')
         elif argumentType == 'StdVector':
             lines.append('    s = s + ' + c + '*(' + name + '[0] - 2*' + name + '[1])')
             if firstVector is None:
@@ -107,7 +122,7 @@ for key, entry in userFunctionArgsDict.items():
     else:
         symbolic = CreateSymbolicUserFunction(mbs, MakeFunction(types, names, returnType, esym), userFunctionName,
                                               itemTypeName=itemTypeName)
-    result = symbolic.Evaluate(*values)
+    result = symbolic.Evaluate(*[leaf for value in values for leaf in Leaves(value)])
     if returnType == 'bool':
         difference = float(bool(result) != bool(reference))
     else:

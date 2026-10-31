@@ -38,7 +38,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel--recording)=
 ## Function: _Recording
 
-[`_Recording(value, itemNumber, name, itemKind = 'object')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L373)
+[`_Recording(value, itemNumber, name, itemKind = 'object')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L388)
 
 - **function description**: the recorded symbolic user function of a parameter, None if there is none; a Python function, or a recording that reads mbs, raises
 
@@ -46,7 +46,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel--dense)=
 ## Function: _Dense
 
-[`_Dense(matrix)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L388)
+[`_Dense(matrix)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L403)
 
 - **function description**: a MatrixContainer or array as dense numpy array; empty if not given
 
@@ -54,7 +54,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel--sum)=
 ## Function: _Sum
 
-[`_Sum(a, b)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1775)
+[`_Sum(a, b)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1790)
 
 - **function description**: a + b, without the sum when a is the number 0 that a sum starts with
 
@@ -62,7 +62,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel--caller)=
 ## Function: _Caller
 
-[`_Caller(format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1780)
+[`_Caller(format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1795)
 
 - **function description**: the function that calls a recording with arguments of the format, by its code of exudyn.symbolics.codeExport, written once per recording
 
@@ -77,7 +77,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-initialstate)=
 ### Class function: InitialState
 
-[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L94)
+[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L109)
 
 - **class function description**: the initial coordinates and velocities (q0, q_t0); zero unless the derived class gives them
 
@@ -85,7 +85,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-initialstateode1)=
 ### Class function: InitialStateODE1
 
-[`InitialStateODE1(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L98)
+[`InitialStateODE1(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L113)
 
 - **class function description**: the initial ODE1 coordinates y0; zero unless the derived class gives them
 
@@ -93,7 +93,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-ismassmatrixconstant)=
 ### Class function: IsMassMatrixConstant
 
-[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L102)
+[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L117)
 
 - **class function description**: True if the mass matrix depends neither on q nor on t, so that a solver factorizes it once
 
@@ -101,7 +101,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-ode2rhs)=
 ### Class function: ODE2RHS
 
-[`ODE2RHS(self, q = None, q_t = None, t = 0., y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L106)
+[`ODE2RHS(self, q = None, q_t = None, t = 0., y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L121)
 
 - **class function description**: the forces f(q, q_t, t, y) of the right-hand side, of size nODE2, without the reaction forces; y, the ODE1 coordinates, is given only if nODE1 > 0
 
@@ -109,7 +109,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-ode1rhs)=
 ### Class function: ODE1RHS
 
-[`ODE1RHS(self, q, q_t, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L111)
+[`ODE1RHS(self, q, q_t, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L126)
 
 - **class function description**: the right-hand side g(q, q_t, y, t) = y_t of the ODE1 coordinates, of size nODE1
 
@@ -117,7 +117,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-algebraicequations)=
 ### Class function: AlgebraicEquations
 
-[`AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L117)
+[`AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L132)
 
 - **class function description**: the algebraic equations c(q, q_t, y, z, t), of size nAE; velocityLevel: their time derivative (index 2)
 
@@ -125,7 +125,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-ode2reactionforceslhs)=
 ### Class function: ODE2ReactionForcesLHS
 
-[`ODE2ReactionForcesLHS(self, q, q_t, y, z, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L123)
+[`ODE2ReactionForcesLHS(self, q, q_t, y, z, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L138)
 
 - **class function description**: the reaction forces C_q^T z of the algebraic coordinates, of size nODE2, which the ODE2 residual adds
 
@@ -133,7 +133,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-ode1reactiontermslhs)=
 ### Class function: ODE1ReactionTermsLHS
 
-[`ODE1ReactionTermsLHS(self, q, q_t, y, z, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L129)
+[`ODE1ReactionTermsLHS(self, q, q_t, y, z, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L144)
 
 - **class function description**: the reaction terms C_y^T z of the algebraic coordinates in the ODE1 equations, on their left-hand side, of size nODE1 (#3155); zero, unless a derived class has algebraic equations of ODE1 coordinates
 
@@ -141,7 +141,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-massmatrixtriplets)=
 ### Class function: MassMatrixTriplets
 
-[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L134)
+[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L149)
 
 - **class function description**: the mass matrix as triplets (rows, columns, values); equal rows and columns are added
 
@@ -149,7 +149,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-massmatrix)=
 ### Class function: MassMatrix
 
-[`MassMatrix(self, q = None, q_t = None, t = 0., sparse = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L138)
+[`MassMatrix(self, q = None, q_t = None, t = 0., sparse = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L153)
 
 - **class function description**: the mass matrix M(q, t); sparse=True: a scipy.sparse.csr_matrix, else a dense array
 
@@ -157,7 +157,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-massmatrixblocks)=
 ### Class function: MassMatrixBlocks
 
-[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L142)
+[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L157)
 
 - **class function description**: the mass matrix in blocks of bodies: a list of (ltg, blocks), ltg the global indices (n_b x n) of n_b bodies of n coordinates and blocks their mass matrices (n_b x n x n); for the inverse per body of the explicit solvers (#3112). The base class gives one block of all coordinates
 
@@ -165,7 +165,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-ode2residuallhs)=
 ### Class function: ODE2ResidualLHS
 
-[`ODE2ResidualLHS(self, q = None, q_t = None, q_tt = None, t = 0., y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L148)
+[`ODE2ResidualLHS(self, q = None, q_t = None, q_tt = None, t = 0., y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L163)
 
 - **class function description**: the residual r = M(q, t) q_tt - f(q, q_t, t, y) of the ODE2 equations, all terms on the left-hand side (LHS minus RHS), of size nODE2, without reaction forces
 
@@ -173,7 +173,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-systemresidual)=
 ### Class function: SystemResidual
 
-[`SystemResidual(self, q, q_t, q_tt, y, y_t, z, t, velocityLevel = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L155)
+[`SystemResidual(self, q, q_t, q_tt, y, y_t, z, t, velocityLevel = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L170)
 
 - **class function description**: the residual of all equations as the implicit solver of Exudyn has it (#3134): [M q_tt - f + C_q^T z, g - y_t - C_y^T z, c], of size nODE2 + nODE1 + nAE
 
@@ -181,7 +181,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-systemjacobian)=
 ### Class function: SystemJacobian
 
-[`SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q = 1., factor_q_t = 0., factor_q_tt = 0., factor_y = 1., factor_y_t = 0., velocityLevel = False, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L168)
+[`SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q = 1., factor_q_t = 0., factor_q_tt = 0., factor_y = 1., factor_y_t = 0., velocityLevel = False, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L183)
 
 - **class function description**: the Jacobian of SystemResidual (#3134), column by column: ODE2 columns factor_q d/dq + factor_q_t d/dq_t + factor_q_tt d/dq_tt, ODE1 columns factor_y d/dy + factor_y_t d/dy_t, AE columns d/dz; the ODE2 block by ODE2ResidualLHSJacobian (exact for a SymbolicSystem), the others by central differences of SystemResidual
 - **input**:
@@ -205,7 +205,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase-ode2residuallhsjacobian)=
 ### Class function: ODE2ResidualLHSJacobian
 
-[`ODE2ResidualLHSJacobian(self, q = None, q_t = None, q_tt = None, t = 0., factor_q = 1., factor_q_t = 0., factor_q_tt = 0., sparse = False, epsilon = 1e-6, y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L229)
+[`ODE2ResidualLHSJacobian(self, q = None, q_t = None, q_tt = None, t = 0., factor_q = 1., factor_q_t = 0., factor_q_tt = 0., sparse = False, epsilon = 1e-6, y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L244)
 
 - **class function description**: the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, by central differences of ODE2ResidualLHS - for a system without derivatives of its own; factor_q_tt=1 alone gives the mass matrix, a Newton step of an implicit integrator combines the three
 - **input**:
@@ -225,7 +225,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase--state)=
 ### Class function: _State
 
-[`_State(self, q, q_t, q_tt = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L265)
+[`_State(self, q, q_t, q_tt = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L280)
 
 - **class function description**: the state as float arrays; None: zero
 
@@ -233,7 +233,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-symbolicsystembase--matrix)=
 ### Class function: _Matrix
 
-[`_Matrix(self, rows, columns, values, sparse)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L269)
+[`_Matrix(self, rows, columns, values, sparse)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L284)
 
 - **class function description**: the matrix (nODE2 x nODE2) of triplets, dense or as scipy.sparse.csr_matrix
 
@@ -257,7 +257,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-numpysystem(symbolicsystembase)-initialstateode1)=
 ### Class function: InitialStateODE1
 
-[`InitialStateODE1(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L309)
+[`InitialStateODE1(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L324)
 
 - **class function description**: y0 as given
 
@@ -265,7 +265,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-numpysystem(symbolicsystembase)-ode1rhs)=
 ### Class function: ODE1RHS
 
-[`ODE1RHS(self, q, q_t, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L313)
+[`ODE1RHS(self, q, q_t, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L328)
 
 - **class function description**: g(q, q_t, y, t) of the function given
 
@@ -273,7 +273,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-numpysystem(symbolicsystembase)-algebraicequations)=
 ### Class function: AlgebraicEquations
 
-[`AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L319)
+[`AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L334)
 
 - **class function description**: c of the function given; velocity level not supported
 
@@ -281,7 +281,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-numpysystem(symbolicsystembase)-ode2reactionforceslhs)=
 ### Class function: ODE2ReactionForcesLHS
 
-[`ODE2ReactionForcesLHS(self, q, q_t, y, z, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L327)
+[`ODE2ReactionForcesLHS(self, q, q_t, y, z, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L342)
 
 - **class function description**: C_q^T z of the constraint Jacobian given
 
@@ -289,7 +289,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-numpysystem(symbolicsystembase)-initialstate)=
 ### Class function: InitialState
 
-[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L333)
+[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L348)
 
 - **class function description**: (q0, q_t0) as given, zero otherwise
 
@@ -297,7 +297,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-numpysystem(symbolicsystembase)-ismassmatrixconstant)=
 ### Class function: IsMassMatrixConstant
 
-[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L339)
+[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L354)
 
 - **class function description**: True for a mass matrix given as matrix
 
@@ -305,7 +305,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-numpysystem(symbolicsystembase)-ode2rhs)=
 ### Class function: ODE2RHS
 
-[`ODE2RHS(self, q = None, q_t = None, t = 0., y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L343)
+[`ODE2RHS(self, q = None, q_t = None, t = 0., y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L358)
 
 - **class function description**: f(q, q_t, t) of the function given, or f(q, q_t, t, y) with ODE1 coordinates
 
@@ -313,7 +313,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-numpysystem(symbolicsystembase)-massmatrix)=
 ### Class function: MassMatrix
 
-[`MassMatrix(self, q = None, q_t = None, t = 0., sparse = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L350)
+[`MassMatrix(self, q = None, q_t = None, t = 0., sparse = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L365)
 
 - **class function description**: the mass matrix given, or of the function given; sparse=True: a scipy.sparse.csr_matrix
 
@@ -321,7 +321,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-numpysystem(symbolicsystembase)-massmatrixtriplets)=
 ### Class function: MassMatrixTriplets
 
-[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L361)
+[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L376)
 
 - **class function description**: the triplets of MassMatrix
 
@@ -329,7 +329,7 @@ SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (
 (sec-systemmodel-numpysystem(symbolicsystembase)-massmatrixblocks)=
 ### Class function: MassMatrixBlocks
 
-[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L366)
+[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L381)
 
 - **class function description**: the blocks given, else one block of all coordinates
 
@@ -365,7 +365,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--parametervariables)=
 ### Class function: _ParameterVariables
 
-[`_ParameterVariables(self, parameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L563)
+[`_ParameterVariables(self, parameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L578)
 
 - **class function description**: the parameters of the items given as numbers and named exudyn.symbolic.Real, checked: the number of the parameters of the item, the values those of the item, one variable per name (#3152)
 
@@ -373,7 +373,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-setparametervalues)=
 ### Class function: SetParameterValues
 
-[`SetParameterValues(self, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L586)
+[`SetParameterValues(self, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L601)
 
 - **class function description**: set named parameters (#3152): the values of the variables, the numbers of the items in mbs, then the system again from mbs
 - **input**:
@@ -383,7 +383,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--parametervector)=
 ### Class function: _ParameterVector
 
-[`_ParameterVector(self, backend, objectNumber, numbers)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L604)
+[`_ParameterVector(self, backend, objectNumber, numbers)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L619)
 
 - **class function description**: the parameters of an item for Equations: its numbers, or with named parameters its list of variables and numbers, if the backend takes them (#3152)
 
@@ -391,7 +391,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--compose)=
 ### Class function: _Compose
 
-[`_Compose(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L612)
+[`_Compose(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L627)
 
 - **class function description**: the recordings of the composed system (#3131): the forces f(q, q_t, t) and the entries of the mass matrix at the rows and columns of the local mass matrices, as esym.Function of the inputs q, q_t and t (#3149) of the expressions of Equations, optimized as CreateSymbolicUserFunction does; one call of each evaluates the system
 
@@ -399,7 +399,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--addode1object)=
 ### Class function: _AddODE1Object
 
-[`_AddODE1Object(self, ode1Kinds, objectNumber, item)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L639)
+[`_AddODE1Object(self, ode1Kinds, objectNumber, item)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L654)
 
 - **class function description**: an ObjectGenericODE1 into its kind (#3144): the objects with the same recorded rhsUserFunction, or without one; a Python rhsUserFunction raises
 
@@ -407,7 +407,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--addjoint)=
 ### Class function: _AddJoint
 
-[`_AddJoint(self, jointKinds, objectNumber, item)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L652)
+[`_AddJoint(self, jointKinds, objectNumber, item)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L667)
 
 - **class function description**: an ObjectJointUser into its kind, grouped as the connectors; the reason it is refused, empty if it is taken
 
@@ -415,7 +415,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--connectormarkers)=
 ### Class function: _ConnectorMarkers
 
-[`_ConnectorMarkers(self, objectNumber, item, orientation = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L675)
+[`_ConnectorMarkers(self, objectNumber, item, orientation = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L690)
 
 - **class function description**: the markers of an ObjectConnectorUser - or of an ObjectJointUser, orientation=True - as the dicts of SymbolicKind, the global indices of the coordinates of the connector, and the reason it is refused, empty if it is taken
 
@@ -423,7 +423,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--markerdata)=
 ### Class function: _MarkerData
 
-[`_MarkerData(self, markerNumber, orientation)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L693)
+[`_MarkerData(self, markerNumber, orientation)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L708)
 
 - **class function description**: the dict of a marker as in SymbolicKind, the global indices of its coordinates and the reason it is refused, empty if it is taken; orientation: its rotation is needed
 
@@ -431,7 +431,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--load)=
 ### Class function: _Load
 
-[`_Load(self, loadNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L734)
+[`_Load(self, loadNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L749)
 
 - **class function description**: the SymbolicLoad of a load and the reason it is refused, empty if it is taken; None for a load on the ground, which acts on no coordinate
 
@@ -439,7 +439,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-initialstate)=
 ### Class function: InitialState
 
-[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L790)
+[`InitialState(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L805)
 
 - **class function description**: the initial coordinates and velocities (q0, q_t0) of the ODE2 coordinates of mbs
 
@@ -447,7 +447,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-initialstateode1)=
 ### Class function: InitialStateODE1
 
-[`InitialStateODE1(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L796)
+[`InitialStateODE1(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L811)
 
 - **class function description**: the initial ODE1 coordinates y0 of mbs
 
@@ -455,7 +455,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-ismassmatrixconstant)=
 ### Class function: IsMassMatrixConstant
 
-[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L800)
+[`IsMassMatrixConstant(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L815)
 
 - **class function description**: True if every user body has constantMassMatrix and no ObjectGenericODE2 has a massMatrixUserFunction
 
@@ -463,7 +463,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-ode1rhs)=
 ### Class function: ODE1RHS
 
-[`ODE1RHS(self, q, q_t, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L804)
+[`ODE1RHS(self, q, q_t, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L819)
 
 - **class function description**: the right-hand side g(y, t) of the ODE1 equations y_t = g (#3144): per ObjectGenericODE1 A y + f and its recorded rhsUserFunction of its coordinates, as CObjectGenericODE1 computes it, and the LoadCoordinate on ODE1 coordinates
 - **input**:
@@ -477,7 +477,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--localode1rhs)=
 ### Class function: _LocalODE1RHS
 
-[`_LocalODE1RHS(self, kind, i, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L827)
+[`_LocalODE1RHS(self, kind, i, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L842)
 
 - **class function description**: the right-hand side of ObjectGenericODE1 i of kind, A y + f + f_user(mbs, t, itemNumber, y)
 
@@ -485,7 +485,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-ode1jacobian)=
 ### Class function: ODE1Jacobian
 
-[`ODE1Jacobian(self, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L839)
+[`ODE1Jacobian(self, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L854)
 
 - **class function description**: the derivative of ODE1RHS by y (nODE1 x nODE1), exact: A and the derivative of the recorded rhsUserFunction (#3144, #3116)
 
@@ -493,7 +493,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-setsystemstate)=
 ### Class function: SetSystemState
 
-[`SetSystemState(self, q, q_t = None, q_tt = None, t = None, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L855)
+[`SetSystemState(self, q, q_t = None, q_tt = None, t = None, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L870)
 
 - **class function description**: write a state into mbs: the ODE2 coordinates, velocities and accelerations and the time - None leaves one unchanged -, so that the sensors, the output functions (Current) and the renderer (Visualization) show it
 - **input**:
@@ -507,7 +507,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--arguments)=
 ### Class function: _Arguments
 
-[`_Arguments(self, kind, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L874)
+[`_Arguments(self, kind, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L889)
 
 - **class function description**: the arguments of the user functions of object i of kind, after mbs
 
@@ -515,23 +515,23 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--connectorstates)=
 ### Class function: _ConnectorStates
 
-[`_ConnectorStates(self, kind, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L884)
+[`_ConnectorStates(self, kind, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L899)
 
-- **class function description**: the arguments after mbs of the forceUserFunction of connector i of kind - the position, velocity, rotation matrix and angular velocity of each marker, unit rotations and no angular velocities if it requests no orientation -, and per marker its position and rotation Jacobians (None for a fixed marker) and the arguments of the user functions of its body (None for a point node or a fixed marker)
+- **class function description**: the arguments after mbs of the recorded forceUserFunction of connector i of kind - the leaves of the frame and the twist of each marker, unit rotations and no angular velocities if it requests no orientation -, and per marker its position and rotation Jacobians (None for a fixed marker) and the arguments of the user functions of its body (None for a point node or a fixed marker)
 
 
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--jointarguments)=
 ### Class function: _JointArguments
 
-[`_JointArguments(self, kind, i, q, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L916)
+[`_JointArguments(self, kind, i, q, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L931)
 
-- **class function description**: the arguments after mbs of the user functions of joint i of kind - the position and rotation matrix of each marker -, and per marker its Jacobians and the arguments of its body, as _ConnectorStates
+- **class function description**: the arguments after mbs of the recorded user functions of joint i of kind - the leaves of the frame of each marker -, and per marker its Jacobians and the arguments of its body, as _ConnectorStates
 
 
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-algebraicequations)=
 ### Class function: AlgebraicEquations
 
-[`AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L923)
+[`AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L938)
 
 - **class function description**: the constraint equations c(q, t) of the joints at position level (#3141), by their recorded constraintUserFunction; the velocity level is not given
 - **input**:
@@ -547,7 +547,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-ode2reactionforceslhs)=
 ### Class function: ODE2ReactionForcesLHS
 
-[`ODE2ReactionForcesLHS(self, q, q_t, y, z, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L948)
+[`ODE2ReactionForcesLHS(self, q, q_t, y, z, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L963)
 
 - **class function description**: the reaction forces C_q^T z of the joints (#3141): the recorded jacobianUserFunction C by the marker translations and global rotation increments, C^T z the forces and torques on the markers, projected into the coordinates by the position and rotation Jacobians of the markers, as the forces of a connector
 - **input**:
@@ -562,7 +562,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-systemjacobian)=
 ### Class function: SystemJacobian
 
-[`SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q = 1., factor_q_t = 0., factor_q_tt = 0., factor_y = 1., factor_y_t = 0., velocityLevel = False, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L980)
+[`SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q = 1., factor_q_t = 0., factor_q_tt = 0., factor_y = 1., factor_y_t = 0., velocityLevel = False, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L995)
 
 - **class function description**: the Jacobian of SystemResidual, exact (#3145): the ODE2 block by ODE2ResidualLHSJacobian plus the derivative of the reaction forces, the blocks C_q^T and C_q of the joints by _JointJacobian, the ODE1 block by ODE1Jacobian; the arguments as SymbolicSystemBase.SystemJacobian, epsilon not used
 - **input**:
@@ -586,7 +586,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--call)=
 ### Class function: _Call
 
-[`_Call(self, kind, name, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1026)
+[`_Call(self, kind, name, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1041)
 
 - **class function description**: the result of the user function name of object i of kind, by its recording, as numpy array
 
@@ -594,7 +594,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--jacobian)=
 ### Class function: _Jacobian
 
-[`_Jacobian(self, kind, name, i, position, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1030)
+[`_Jacobian(self, kind, name, i, position, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1045)
 
 - **class function description**: the Jacobian of the user function name of object i of kind by its argument at position, by Diff of the recording (#3115)
 
@@ -602,7 +602,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--recordingjacobian)=
 ### Class function: _RecordingJacobian
 
-[`_RecordingJacobian(self, recording, position, arguments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1035)
+[`_RecordingJacobian(self, recording, position, arguments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1050)
 
 - **class function description**: the Jacobian of a recording by its argument at position (mbs at 0), for the arguments after mbs: the dimensions of the result, then the one of the argument
 
@@ -610,7 +610,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--bodyjacobian)=
 ### Class function: _BodyJacobian
 
-[`_BodyJacobian(self, marker, name, bodyArguments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1041)
+[`_BodyJacobian(self, marker, name, bodyArguments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1056)
 
 - **class function description**: the derivative by qTotal of the user function name of the user body of a connector marker
 
@@ -618,7 +618,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--bodyarguments)=
 ### Class function: _BodyArguments
 
-[`_BodyArguments(self, load, name, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1045)
+[`_BodyArguments(self, load, name, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1060)
 
 - **class function description**: the arguments after mbs of the user function name of the user body of a load
 
@@ -626,7 +626,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--loadvalue)=
 ### Class function: _LoadValue
 
-[`_LoadValue(self, load, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1053)
+[`_LoadValue(self, load, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1068)
 
 - **class function description**: the value of a load at t: its loadVector or load, or what its recorded user function returns
 
@@ -634,7 +634,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--loadforces)=
 ### Class function: _LoadForces
 
-[`_LoadForces(self, load, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1059)
+[`_LoadForces(self, load, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1074)
 
 - **class function description**: the generalized forces of a load on its coordinates: the value itself on a point node or a coordinate, else J^T v by the projection J of the user body - J_pos, J_rot or the mass integral -, v rotated by the rotation matrix of the marker for bodyFixed, as CSystem applies loads
 
@@ -642,7 +642,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--loadjacobian)=
 ### Class function: _LoadJacobian
 
-[`_LoadJacobian(self, load, q, q_t, t, factor_q, factor_q_t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1073)
+[`_LoadJacobian(self, load, q, q_t, t, factor_q, factor_q_t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1088)
 
 - **class function description**: the local Jacobian of the residual -f of a load on a user body, by Diff of the recordings of the body; a load on a node or a coordinate depends on the time only
 
@@ -650,7 +650,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--localforces)=
 ### Class function: _LocalForces
 
-[`_LocalForces(self, kind, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1107)
+[`_LocalForces(self, kind, i, q, q_t, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1122)
 
 - **class function description**: the forces on the right-hand side; for ObjectGenericODE2 f + f_user - K q - D q_t
 
@@ -658,7 +658,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-ode2rhs)=
 ### Class function: ODE2RHS
 
-[`ODE2RHS(self, q = None, q_t = None, t = 0., y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1133)
+[`ODE2RHS(self, q = None, q_t = None, t = 0., y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1148)
 
 - **class function description**: the global forces f(q, q_t, t) of the right-hand side, as the ODE2 part of the solver's right-hand side; y is not used, as no item taken couples the ODE1 coordinates into the ODE2 equations
 - **input**:
@@ -672,7 +672,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-massmatrixtriplets)=
 ### Class function: MassMatrixTriplets
 
-[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1157)
+[`MassMatrixTriplets(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1172)
 
 - **class function description**: the global mass matrix as triplets (rows, columns, values), a value per nonzero local entry; equal rows and columns are added when the matrix is formed
 
@@ -680,7 +680,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-massmatrixblocks)=
 ### Class function: MassMatrixBlocks
 
-[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1176)
+[`MassMatrixBlocks(self, q = None, q_t = None, t = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1191)
 
 - **class function description**: the local mass matrices of the objects, per kind: a list of (ltg, blocks), the LTG table of the kind and its mass matrices (objects x n x n)
 
@@ -688,7 +688,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-ode2residuallhs)=
 ### Class function: ODE2ResidualLHS
 
-[`ODE2ResidualLHS(self, q = None, q_t = None, q_tt = None, t = 0., y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1192)
+[`ODE2ResidualLHS(self, q = None, q_t = None, q_tt = None, t = 0., y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1207)
 
 - **class function description**: the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations, LHS minus RHS, without forming M: by the recordings of the composed system, else object by object; y is not used, as no item taken couples the ODE1 coordinates into the ODE2 equations
 
@@ -696,7 +696,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-ode2residuallhsjacobian)=
 ### Class function: ODE2ResidualLHSJacobian
 
-[`ODE2ResidualLHSJacobian(self, q = None, q_t = None, q_tt = None, t = 0., factor_q = 1., factor_q_t = 0., factor_q_tt = 0., sparse = False, y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1210)
+[`ODE2ResidualLHSJacobian(self, q = None, q_t = None, q_tt = None, t = 0., factor_q = 1., factor_q_t = 0., factor_q_tt = 0., sparse = False, y = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1225)
 
 - **class function description**: the Jacobian of the residual, factor_q dr/dq + factor_q_t dr/dq_t + factor_q_tt dr/dq_tt, exact by the derivatives of the recordings (UserFunction.EvaluateJacobian, #3115, in one pass over the flat program #3116): of the composed system up to _denseMassMatrixSize coordinates - two calls, a dense Jacobian -, else object by object, sparse; factor_q_tt=1 alone gives the mass matrix, a Newton step of an implicit integrator combines the three
 - **input**:
@@ -715,7 +715,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--itemfunction)=
 ### Class function: _ItemFunction
 
-[`_ItemFunction(self, kind, i, joint)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1292)
+[`_ItemFunction(self, kind, i, joint)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1307)
 
 - **class function description**: connector i of kind as one exudyn.symbolic.Function (#3166): its generalized forces, J_pos^T f + J_rot^T m of its markers - for a joint its constraint equations c and its reaction forces C_q^T z, one vector -, of the variables q<g> and q_t<g>, the local coordinates of each body or node g of its markers, then z (of a joint) and t; the same expressions as Equations(); returned with the local indices of each g, built once
 
@@ -723,7 +723,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--itemjacobians)=
 ### Class function: _ItemJacobians
 
-[`_ItemJacobians(self, kind, i, q, q_t, z, t, joint, velocities)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1335)
+[`_ItemJacobians(self, kind, i, q, q_t, z, t, joint, velocities)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1350)
 
 - **class function description**: the derivatives of the Function of connector i of kind (_ItemFunction) by the coordinates of each of its bodies and nodes - and with velocities by their velocities -, each with the local indices of its columns
 
@@ -731,7 +731,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--connectorjacobian)=
 ### Class function: _ConnectorJacobian
 
-[`_ConnectorJacobian(self, kind, i, q, q_t, t, factor_q, factor_q_t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1355)
+[`_ConnectorJacobian(self, kind, i, q, q_t, t, factor_q, factor_q_t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1370)
 
 - **class function description**: the local Jacobian of the residual -f of a connector, -(factor_q df/dq + factor_q_t df/dq_t) of its generalized forces f, by the one-pass derivative of their expression (_ItemFunction, #3166)
 
@@ -739,7 +739,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--jointjacobian)=
 ### Class function: _JointJacobian
 
-[`_JointJacobian(self, kind, i, q, z, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1367)
+[`_JointJacobian(self, kind, i, q, z, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1382)
 
 - **class function description**: the derivatives of joint i of kind in its local coordinates: C_q, the derivative of its constraint equations, and the derivative of its reaction forces C_q^T z by the coordinates, by the one-pass derivative of their expression (_ItemFunction, #3166)
 
@@ -747,7 +747,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-equations)=
 ### Class function: Equations
 
-[`Equations(self, format = 'symbolic', optimize = True, variables = None, massMatrix = True, ODE2RHS = True, massMatrixBlocks = False, algebraicEquations = False, ODE2ReactionForcesLHS = False, ODE1RHS = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1379)
+[`Equations(self, format = 'symbolic', optimize = True, variables = None, massMatrix = True, ODE2RHS = True, massMatrixBlocks = False, algebraicEquations = False, ODE2ReactionForcesLHS = False, ODE1RHS = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1394)
 
 - **class function description**: the equations of motion M(q, t) q_tt = f(q, q_t, t) of the system as expressions in its variables (#3130, #3132), composed of the recordings of the kinds, the marker kinematics of the connectors and the loads; each recording is called with symbolic arguments through its code of exudyn.symbolics.codeExport, the parameters of the items and the reference coordinates are numbers. The forces f are the whole right-hand side - the forces of the bodies (their quadratic velocity terms), of the connectors and of the loads -, the same whether the accelerations are solved with the global mass matrix or with the inverse of the mass matrix of each body (explicit.computeMassMatrixInversePerBody), for which massMatrixBlocks gives the matrices of the bodies
 - **input**:
@@ -767,7 +767,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--equationlists)=
 ### Class function: _EquationLists
 
-[`_EquationLists(self, backend, q, q_t, t, z = None, constraints = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1464)
+[`_EquationLists(self, backend, q, q_t, t, z = None, constraints = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1479)
 
 - **class function description**: the mass matrix as list of rows, the forces as list of the expressions of Equations, of the variables q, q_t and t of backend, the local mass matrices of the bodies, per kind (ltg, list of their lists of rows), and with constraints the constraint equations of the joints and - for the algebraic coordinates z - their reaction forces as lists (#3146)
 
@@ -775,7 +775,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--ode1equations)=
 ### Class function: _ODE1Equations
 
-[`_ODE1Equations(self, backend, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1552)
+[`_ODE1Equations(self, backend, y, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1567)
 
 - **class function description**: the right-hand side of the ODE1 equations as list of expressions of the ODE1 coordinates y, as ODE1RHS: per ObjectGenericODE1 A y + f and its recorded rhsUserFunction, and the LoadCoordinate on ODE1 coordinates (#3162)
 
@@ -783,7 +783,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--markerstateexpressions)=
 ### Class function: _MarkerStateExpressions
 
-[`_MarkerStateExpressions(self, connector, ltg, backend, Call, t, qs, q_ts)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1580)
+[`_MarkerStateExpressions(self, connector, ltg, backend, Call, t, qs, q_ts)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1595)
 
 - **class function description**: the states of the markers of a connector or joint as expressions, as _ConnectorStates: per marker its position, velocity, rotation matrix and angular velocity in the list of states, and (kind, J_pos, J_rot) or None for a fixed marker in the list of Jacobians
 
@@ -791,7 +791,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--markerstate)=
 ### Class function: _MarkerState
 
-[`_MarkerState(self, marker, indices, backend, Call, t, qs, q_ts, orientation)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1591)
+[`_MarkerState(self, marker, indices, backend, Call, t, qs, q_ts, orientation)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1606)
 
 - **class function description**: the state of one marker as expressions of the components qs, q_ts of the system coordinates: the list of its position, velocity, rotation matrix and angular velocity, and (kind, J_pos, J_rot), None for a fixed marker; indices: the global indices of its coordinates; orientation: with the rotation of a body marker (#3151)
 
@@ -799,7 +799,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--addmarkerforces)=
 ### Class function: _AddMarkerForces
 
-[`_AddMarkerForces(self, connector, ltg, backend, forces, stride, jacobians, f)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1615)
+[`_AddMarkerForces(self, connector, ltg, backend, forces, stride, jacobians, f)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1630)
 
 - **class function description**: add J_pos^T f + J_rot^T m of each marker of a connector or joint to the list f, the forces and torques of marker k at stride*k of forces
 
@@ -807,7 +807,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--jointequations)=
 ### Class function: _JointEquations
 
-[`_JointEquations(self, kind, index, backend, Call, t, qs, q_ts, zComponents, c, r)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1633)
+[`_JointEquations(self, kind, index, backend, Call, t, qs, q_ts, zComponents, c, r)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1648)
 
 - **class function description**: put the constraint equations of joint index of kind into the list c and, for zComponents, add its reaction forces C_q^T z to the list r, as expressions: the marker states as in _JointArguments, the recorded constraintUserFunction and the forces and torques C^T z of the recorded jacobianUserFunction, as AlgebraicEquations and ODE2ReactionForcesLHS (#3146)
 
@@ -815,7 +815,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)--connectorequations)=
 ### Class function: _ConnectorEquations
 
-[`_ConnectorEquations(self, kind, index, backend, Call, t, qs, q_ts, f)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1652)
+[`_ConnectorEquations(self, kind, index, backend, Call, t, qs, q_ts, f)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1667)
 
 - **class function description**: add the generalized forces of connector index of kind to the list f, as expressions: the marker states as in _ConnectorStates, the forces of the recording, J_pos^T f + J_rot^T m of each marker
 
@@ -823,7 +823,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-systemmodel-symbolicsystem(symbolicsystembase)-getflatprogram)=
 ### Class function: GetFlatProgram
 
-[`GetFlatProgram(self, format = 'Python', flatten = True, results = ['ODE2RHS', 'massMatrix'])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1662)
+[`GetFlatProgram(self, format = 'Python', flatten = True, results = ['ODE2RHS', 'massMatrix'])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1677)
 
 - **class function description**: the flat program of results of Equations(), a function of q, q_t and t - and z with 'ODE2ReactionForcesLHS' (#3130, #3132, #3146)
 - **input**:
@@ -848,7 +848,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-systemmodel-systemvariables-markerposition)=
 ### Class function: MarkerPosition
 
-[`MarkerPosition(self, markerNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1748)
+[`MarkerPosition(self, markerNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1763)
 
 - **class function description**: the global position of a marker, an exudyn.symbolic.Vector of the system variables
 
@@ -856,7 +856,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-systemmodel-systemvariables-markervelocity)=
 ### Class function: MarkerVelocity
 
-[`MarkerVelocity(self, markerNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1752)
+[`MarkerVelocity(self, markerNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1767)
 
 - **class function description**: the global velocity of a marker, an exudyn.symbolic.Vector of the system variables
 
@@ -864,7 +864,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-systemmodel-systemvariables-markerrotationmatrix)=
 ### Class function: MarkerRotationMatrix
 
-[`MarkerRotationMatrix(self, markerNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1756)
+[`MarkerRotationMatrix(self, markerNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1771)
 
 - **class function description**: the rotation matrix of a marker - of a rigid marker, its local frame included -, an exudyn.symbolic.Matrix of the system variables; the unit matrix for a marker on a point node
 
@@ -872,7 +872,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-systemmodel-systemvariables-markerangularvelocity)=
 ### Class function: MarkerAngularVelocity
 
-[`MarkerAngularVelocity(self, markerNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1761)
+[`MarkerAngularVelocity(self, markerNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1776)
 
 - **class function description**: the global angular velocity of a marker, an exudyn.symbolic.Vector of the system variables
 
@@ -880,7 +880,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-systemmodel-systemvariables-function)=
 ### Class function: Function
 
-[`Function(self, result, name = 'Function')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1765)
+[`Function(self, result, name = 'Function')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1780)
 
 - **class function description**: an expression of the system variables as exudyn.symbolic.Function of variables (#3149): Evaluate(q, q_t, y, y_t, z, t) and EvaluateJacobian(name, q, q_t, y, y_t, z, t) of name 'q', 'q_t', 'y', 'y_t', 'z' or 't'
 
@@ -888,7 +888,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-systemmodel-systemvariables-equations)=
 ### Class function: Equations
 
-[`Equations(self, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1770)
+[`Equations(self, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1785)
 
 - **class function description**: Equations() of the system in these variables: q, q_t, t, z and y; options as in SymbolicSystem.Equations
 
@@ -905,6 +905,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-systemmodel--backend-parameter)=
 ### Class function: Parameter
 
-[`Parameter(self, value)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1815)
+[`Parameter(self, value)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/systemModel.py#L1830)
 
 - **class function description**: a parameter of an item: a number, or a named exudyn.symbolic.Real - for sympy the symbol of its name

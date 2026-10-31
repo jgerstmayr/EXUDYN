@@ -85,12 +85,15 @@ items and what depends on them in the main thread.
 
 ## A user connector and its markers
 
-The forceUserFunction of ObjectConnectorUser gets the states of its two markers, `(mbs, t, itemNumber, position0,
-velocity0, rotationMatrix0, angularVelocity0, position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates,
-parameters)`, and returns the global forces on them, `[f0, f1]`, or with `exu.MarkerType.Orientation` in
-`requestedMarkerType` also the torques, `[f0, m0, f1, m1]`; the connector applies them through the marker Jacobians.
-It is the form for spring-dampers, bushings and contacts of two points, and it can be recorded as symbolic user
-function (#3119).
+The forceUserFunction of ObjectConnectorUser gets the frame and the twist of each of its two markers, `(mbs, t,
+itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters)`: `HT0.translation` is the global position of marker
+0, `HT0.rotation` its rotation matrix, `twist0.velocity` and `twist0.angularVelocity` its global velocities, an
+{ref}`exudyn.HT <sec-ht>` and an {ref}`exudyn.Twist <sec-twist>` (#3183). It returns the global forces on them,
+`[f0, f1]`, or with `exu.MarkerType.Orientation` in `requestedMarkerType` also the torques, `[f0, m0, f1, m1]`; the
+connector applies them through the marker Jacobians. It is the form for spring-dampers, bushings and contacts of two
+points, and it can be recorded as symbolic user function (#3119): the recording passes a `kinematics.HT` and a
+`kinematics.Twist` with the same methods, `HT0.Relative(HT1)` the frame of marker 1 seen from marker 0,
+`kinematics.RelativeTwist(HT0, twist0, HT1, twist1)` its velocity.
 
 For forces at points that the function computes itself, the markerAccessUserFunction of ObjectConnectorUser gets
 `markers`, one {ref}`ConnectorMarker <sec-connectormarker>` per marker of `markerNumbers`, of any number and type. It
@@ -111,8 +114,8 @@ userConnectorContactTest.py writes the contact of ObjectContactSphereSphere this
 
 ## A user joint and a user marker
 
-ObjectJointUser constrains two rigid markers by `constraintUserFunction(mbs, t, itemNumber, position0, rotationMatrix0,
-position1, rotationMatrix1, parameters)`, which returns `numberOfConstraints` equations; their derivative by the
+ObjectJointUser constrains two rigid markers by `constraintUserFunction(mbs, t, itemNumber, HT0, HT1, parameters)`, the
+frames of the markers as `exudyn.HT` (#3183), which returns `numberOfConstraints` equations; their derivative by the
 translations and rotation increments of the markers is given by `jacobianUserFunction`, which an active joint needs -
 a constraint Jacobian approximated numerically gives artifacts (#3101) -, and the Lagrange multipliers are the reaction
 forces (#2976). userJointTest.py writes a screw joint over several turns: the coupling of angle and translation is

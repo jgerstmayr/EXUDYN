@@ -514,6 +514,14 @@ NumpyMatrix = np.ndarray
 Array = np.ndarray
 
 
+class HT:
+    """exudyn.HT, the frame of a marker in the user functions of ObjectConnectorUser and ObjectJointUser (#3183)"""
+
+
+class Twist:
+    """exudyn.Twist, the velocities of a marker in the forceUserFunction of ObjectConnectorUser (#3183)"""
+
+
 class ConfigurationType:
     """exudyn.ConfigurationType"""
 
@@ -696,9 +704,10 @@ annotationToCpp = {'MainSystem': 'const MainSystem&', 'Real': 'Real', 'Index': '
                    'Matrix3D': 'StdMatrix3D', 'Matrix6D': 'StdMatrix6D', 'NumpyMatrix': 'NumpyMatrix',
                    'Array': 'StdArrayIndex', 'ConfigurationType': 'ConfigurationType', 'OutputVariableType': 'OutputVariableType',
                    'BodyGraphicsData': 'py::object', 'MatrixContainer': 'py::object',
-                   'ConnectorMarkerList': 'py::object', 'PostNewtonResult': 'py::object', 'None': 'void'}
+                   'ConnectorMarkerList': 'py::object', 'PostNewtonResult': 'py::object', 'None': 'void',
+                   'HT': 'HomogeneousTransformation', 'Twist': 'Twist'}
 #an argument of a size known only at run time is passed by const reference, not copied (#2996)
-annotationToCppArgument = {'Vector': 'const StdVector&'}
+annotationToCppArgument = {'Vector': 'const StdVector&', 'HT': 'const HomogeneousTransformation&', 'Twist': 'const Twist&'}
 
 
 #the user functions whose result is a matrix, by type name: a symbolic user function returns an esym.Matrix for them

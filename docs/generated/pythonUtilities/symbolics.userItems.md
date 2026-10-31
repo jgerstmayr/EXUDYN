@@ -23,7 +23,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems--numbers)=
 ## Function: _Numbers
 
-[`_Numbers(values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L254)
+[`_Numbers(values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L260)
 
 - **function description**: the values of parameters given as numbers or named exudyn.symbolic.Real, for the item (#3152)
 
@@ -31,7 +31,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems--refuse)=
 ## Function: _Refuse
 
-[`_Refuse(where, name, value, default, reason = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L259)
+[`_Refuse(where, name, value, default, reason = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L265)
 
 - **function description**: raise naming an argument the user item does not support, if it differs from its default
 
@@ -39,7 +39,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems--jointgraphics)=
 ## Function: _JointGraphics
 
-[`_JointGraphics(markers, shape, size, length, color)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L270)
+[`_JointGraphics(markers, shape, size, length, color)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L276)
 
 - **function description**: the graphicsDataUserFunction of a joint of UserItemCreator (#3147), a simplified drawing at its markers in the visualization configuration: 'revolute' a cylinder along the z-axis of marker 0, 'prismatic' along its x-axis, 'spherical' a sphere at marker 0, 'distance' a line - or a cylinder of diameter size > 0 - between the markers
 
@@ -56,7 +56,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator--keepparameters)=
 ### Class function: _KeepParameters
 
-[`_KeepParameters(self, itemNumber, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L326)
+[`_KeepParameters(self, itemNumber, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L332)
 
 - **class function description**: keep the parameters of an item if a named exudyn.symbolic.Real is among them (#3152)
 
@@ -64,7 +64,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-createground)=
 ### Class function: CreateGround
 
-[`CreateGround(self, name = '', referencePosition = None, referenceRotationMatrix = None, graphicsDataList = [], graphicsDataUserFunction = 0, show = True, referenceHT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L331)
+[`CreateGround(self, name = '', referencePosition = None, referenceRotationMatrix = None, graphicsDataList = [], graphicsDataUserFunction = 0, show = True, referenceHT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L337)
 
 - **class function description**: the built-in ObjectGround, as mbs.CreateGround: it has no coordinates
 - **input**:
@@ -81,7 +81,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-createmasspoint)=
 ### Class function: CreateMassPoint
 
-[`CreateMassPoint(self, name = '', referencePosition = [0., 0., 0.], initialDisplacement = [0., 0., 0.], initialVelocity = [0., 0., 0.], mass = 0, gravity = [0., 0., 0.], graphicsDataList = [], drawSize = -1, color = [-1., -1., -1., -1.], show = True, create2D = False, returnDict = False, physicsMass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L351)
+[`CreateMassPoint(self, name = '', referencePosition = [0., 0., 0.], initialDisplacement = [0., 0., 0.], initialVelocity = [0., 0., 0.], mass = 0, gravity = [0., 0., 0.], graphicsDataList = [], drawSize = -1, color = [-1., -1., -1., -1.], show = True, create2D = False, returnDict = False, physicsMass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L357)
 
 - **class function description**: a mass point as ObjectUserBody on a NodePoint, with the nodes, markers and loads of mbs.CreateMassPoint and its arguments
 - **input**:
@@ -104,7 +104,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-createrigidbody)=
 ### Class function: CreateRigidBody
 
-[`CreateRigidBody(self, name = '', referencePosition = None, referenceRotationMatrix = None, initialVelocity = [0., 0., 0.], initialAngularVelocity = [0., 0., 0.], initialDisplacement = None, initialRotationMatrix = None, inertia = None, gravity = [0., 0., 0.], nodeType = exudyn.NodeType.RotationEulerParameters, graphicsDataList = [], graphicsDataUserFunction = 0, drawSize = -1, color = [-1., -1., -1., -1.], show = True, create2D = False, returnDict = False, referenceHT = None, initialHT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L397)
+[`CreateRigidBody(self, name = '', referencePosition = None, referenceRotationMatrix = None, initialVelocity = [0., 0., 0.], initialAngularVelocity = [0., 0., 0.], initialDisplacement = None, initialRotationMatrix = None, inertia = None, gravity = [0., 0., 0.], nodeType = exudyn.NodeType.RotationEulerParameters, graphicsDataList = [], graphicsDataUserFunction = 0, drawSize = -1, color = [-1., -1., -1., -1.], show = True, create2D = False, returnDict = False, referenceHT = None, initialHT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L403)
 
 - **class function description**: a rigid body as ObjectUserBody on a NodeRigidBodyRxyz, with the node, markers and loads of mbs.CreateRigidBody and its arguments; nodeType must be exu.NodeType.RotationRxyz
 - **input**:
@@ -133,7 +133,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-createspringdamper)=
 ### Class function: CreateSpringDamper
 
-[`CreateSpringDamper(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], referenceLength = None, stiffness = 0., damping = 0., force = 0., velocityOffset = 0., springForceUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L479)
+[`CreateSpringDamper(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], referenceLength = None, stiffness = 0., damping = 0., force = 0., velocityOffset = 0., springForceUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L485)
 
 - **class function description**: a spring-damper as ObjectConnectorUser on the markers of mbs.CreateSpringDamper, with its arguments and its force; at the center of a user mass point the marker is on its node, which has the same position; drawn by a graphicsDataUserFunction
 - **input**:
@@ -158,7 +158,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-createtorsionalspringdamper)=
 ### Class function: CreateTorsionalSpringDamper
 
-[`CreateTorsionalSpringDamper(self, name = '', itemNumbers = [None, None], position = [0., 0., 0.], axis = [0., 0., 0.], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., torque = 0., useGlobalFrame = True, springTorqueUserFunction = 0, unlimitedRotations = True, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L541)
+[`CreateTorsionalSpringDamper(self, name = '', itemNumbers = [None, None], position = [0., 0., 0.], axis = [0., 0., 0.], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., torque = 0., useGlobalFrame = True, springTorqueUserFunction = 0, unlimitedRotations = True, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L547)
 
 - **class function description**: a torsional spring-damper as ObjectConnectorUser on the rigid markers of mbs.CreateTorsionalSpringDamper, with its arguments and its torque about the axis; the angle is that of the relative rotation in (-pi, pi], so unlimitedRotations must be False; drawn by a graphicsDataUserFunction
 - **input**:
@@ -185,7 +185,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator--jointmarkers)=
 ### Class function: _JointMarkers
 
-[`_JointMarkers(self, where, name, itemNumbers, position, axis, useGlobalFrame, show, frame)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L614)
+[`_JointMarkers(self, where, name, itemNumbers, position, axis, useGlobalFrame, show, frame)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L620)
 
 - **class function description**: the two rigid markers of a joint at position, as mbs.Create...Joint computes them: their rotation the joint frame - frame 'z' its z-axis the axis (revolute), 'x' its x-axis the axis (prismatic), None the body frame
 
@@ -193,7 +193,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator--joint)=
 ### Class function: _Joint
 
-[`_Joint(self, kind, name, markers, parameters, show, drawing)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L632)
+[`_Joint(self, kind, name, markers, parameters, show, drawing)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L638)
 
 - **class function description**: an ObjectJointUser of a kind of joint on two rigid markers, drawn by the graphicsDataUserFunction drawing
 
@@ -201,7 +201,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-createrevolutejoint)=
 ### Class function: CreateRevoluteJoint
 
-[`CreateRevoluteJoint(self, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L641)
+[`CreateRevoluteJoint(self, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L647)
 
 - **class function description**: a revolute joint as ObjectJointUser on the rigid markers of mbs.CreateRevoluteJoint, with its arguments and the equations of ObjectJointRevoluteZ; drawn as a cylinder along the axis (#3147)
 - **input**:
@@ -222,7 +222,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-createprismaticjoint)=
 ### Class function: CreatePrismaticJoint
 
-[`CreatePrismaticJoint(self, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L668)
+[`CreatePrismaticJoint(self, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L674)
 
 - **class function description**: a prismatic joint as ObjectJointUser on the rigid markers of mbs.CreatePrismaticJoint, with its arguments and the equations of ObjectJointPrismaticX; drawn as a cylinder along the axis (#3147)
 - **input**:
@@ -243,7 +243,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-createsphericaljoint)=
 ### Class function: CreateSphericalJoint
 
-[`CreateSphericalJoint(self, name = '', itemNumbers = [None, None], position = [], constrainedAxes = [1, 1, 1], useGlobalFrame = True, show = True, jointRadius = 0.1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L695)
+[`CreateSphericalJoint(self, name = '', itemNumbers = [None, None], position = [], constrainedAxes = [1, 1, 1], useGlobalFrame = True, show = True, jointRadius = 0.1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L701)
 
 - **class function description**: a spherical joint as ObjectJointUser on rigid markers at the points of mbs.CreateSphericalJoint, with its arguments and the equations of ObjectJointSpherical; drawn as a sphere (#3147)
 - **input**:
@@ -263,7 +263,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-createdistanceconstraint)=
 ### Class function: CreateDistanceConstraint
 
-[`CreateDistanceConstraint(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], distance = None, show = True, drawSize = -1., color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L724)
+[`CreateDistanceConstraint(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], distance = None, show = True, drawSize = -1., color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L730)
 
 - **class function description**: a distance constraint as ObjectJointUser on rigid markers of the two bodies, with the arguments of mbs.CreateDistanceConstraint and the equation of ObjectConnectorDistance; on a user mass point the marker is on the body; drawn as a line between the markers (#3147)
 - **input**:
@@ -283,7 +283,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-createforce)=
 ### Class function: CreateForce
 
-[`CreateForce(self, name = '', itemNumber = None, loadVector = [0., 0., 0.], localPosition = [0., 0., 0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L762)
+[`CreateForce(self, name = '', itemNumber = None, loadVector = [0., 0., 0.], localPosition = [0., 0., 0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L768)
 
 - **class function description**: the built-in LoadForceVector of mbs.CreateForce, with its arguments: on a user mass point, its marker acts by the Jacobian of the user body
 - **input**:
@@ -301,7 +301,7 @@ SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 (sec-useritems-useritemcreator-record)=
 ### Class function: Record
 
-[`Record(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L787)
+[`Record(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L793)
 
 - **class function description**: replace the Python user functions of the items by symbolic ones: each user function of a kind recorded once, with the first item of the kind, and set in every item of the kind - one recording per kind, as SymbolicSystem groups them -; the loadVectorUserFunction of each force of CreateForce recorded on its own. The recordings are kept in recordings, as long as this object lives
 

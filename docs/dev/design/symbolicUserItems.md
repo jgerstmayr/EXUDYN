@@ -35,19 +35,19 @@ function once with symbolic arguments and keeps the expressions of its **return 
 - the number and the types of the markers are free, and `ApplyBodyForce` at a local position computed in the function
   needs the Jacobian of the body at that point during the call.
 
-**The forceUserFunction of the marker states.** As ObjectJointUser gets the positions and rotation matrices of its
-markers and returns the constraint equations, the connector gets the states of its two markers and returns the forces
-on them, and applies them through the marker Jacobians, as `ApplyForce` and `ApplyTorque` do,
+**The forceUserFunction of the marker states.** As ObjectJointUser gets the frames of its markers and returns the
+constraint equations, the connector gets the frame and the twist of each of its two markers (#3183) and returns the
+forces on them, and applies them through the marker Jacobians, as `ApplyForce` and `ApplyTorque` do,
 $\fv_{gen} = -\sum_i (\Jm_{pos,i}\tp \fv_i + \Jm_{rot,i}\tp \mv_i)$ (decision 6):
 
 ```python
-def UFspringDamper(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
-                   position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
+def UFspringDamper(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
     ...
     return np.hstack([force0, force1])     #with Orientation requested: [force0, torque0, force1, torque1]
 ```
 
-- Its arguments and result are vectors and matrices of fixed sizes, so it is recorded by `CreateSymbolicUserFunction`.
+- It is recorded by `CreateSymbolicUserFunction`, which passes a `kinematics.HT` and a `kinematics.Twist` of named
+  leaves (docs/dev/design/symbolicHT.md).
 - The connector requests Position for it; with `exu.MarkerType.Orientation` in `requestedMarkerType` it gets the
   rotations and angular velocities and returns the torques too, otherwise unit matrices and zeros.
 - Assemble refuses it with other than two markers, and together with the markerAccessUserFunction.

@@ -6,7 +6,7 @@
 (sec-item-objectjointuser)=
 # ObjectJointUser
 
-A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the derivative of the equations is a second user function.
+A joint on two rigid markers whose constraint equations are a Python user function of the frames of the markers, their positions and rotation matrices. It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the derivative of the equations is a second user function.
 
 ## Interface
 
@@ -59,8 +59,9 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 ### Constraint equations
 
-The `constraintUserFunction(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters)`
-returns the $n_c$ = `numberOfConstraints` equations at position level (#2976),
+The `constraintUserFunction(mbs, t, itemNumber, HT0, HT1, parameters)` gets the frames of the two markers as
+`exudyn.HT` - the global position $\LU{0}{\pv}_{mi}$ its translation, the rotation matrix $\LU{0,mi}{\Rot}$ its
+rotation (#3183) - and returns the $n_c$ = `numberOfConstraints` equations at position level (#2976),
 
 $$
 \cv(\LU{0}{\pv}_{m0},\, \LU{0,m0}{\Rot},\, \LU{0}{\pv}_{m1},\, \LU{0,m1}{\Rot},\, t) = \Null .
@@ -88,7 +89,7 @@ the time derivative by central differences.
 With `activeConnector = False`, the equations are $\tlambda = \Null$. A Python user function is called in the main
 thread; with symbolic user functions only, the joint is computed in the threads of the parallel loops (#2978).
 
-**Userfunction**: `constraintUserFunction(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters)`
+**Userfunction**: `constraintUserFunction(mbs, t, itemNumber, HT0, HT1, parameters)`
 A user function, which computes the constraint equations of the joint at position level from the frames of its two markers.
 
 | arguments / return | type or size | description |
@@ -96,16 +97,14 @@ A user function, which computes the constraint equations of the joint at positio
 | `mbs` | MainSystem | provides MainSystem mbs to which the joint belongs |
 | `t` | Real | current time in mbs |
 | `itemNumber` | Index | integer number of the joint in mbs |
-| `position0` | Vector3D | $\LU{0}{\pv}_{m0}$ global position of marker 0 |
-| `rotationMatrix0` | Matrix3D | $\LU{0,m0}{\Rot}$ rotation matrix of marker 0, local to global |
-| `position1` | Vector3D | $\LU{0}{\pv}_{m1}$ global position of marker 1 |
-| `rotationMatrix1` | Matrix3D | $\LU{0,m1}{\Rot}$ rotation matrix of marker 1, local to global |
+| `HT0` | HT | $\LU{0}{\Hm}_{m0}$ the frame of marker 0, an exudyn.HT: its translation the global position $\LU{0}{\pv}_{m0}$, its rotation the rotation matrix $\LU{0,m0}{\Rot}$, local to global |
+| `HT1` | HT | $\LU{0}{\Hm}_{m1}$ the frame of marker 1, as for marker 0 |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the joint, see parameters; empty if not given |
 | **return value** | Vector | $\cv \in \Rcal^{n_c}$ the constraint equations, numberOfConstraints values, as list or numpy array |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters)`
+**Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, HT0, HT1, parameters)`
 A user function, which computes the derivative of the constraint equations by the translations and global rotation increments of the two markers.
 
 | arguments / return | type or size | description |
@@ -113,10 +112,8 @@ A user function, which computes the derivative of the constraint equations by th
 | `mbs` | MainSystem | provides MainSystem mbs to which the joint belongs |
 | `t` | Real | current time in mbs |
 | `itemNumber` | Index | integer number of the joint in mbs |
-| `position0` | Vector3D | $\LU{0}{\pv}_{m0}$ global position of marker 0 |
-| `rotationMatrix0` | Matrix3D | $\LU{0,m0}{\Rot}$ rotation matrix of marker 0, local to global |
-| `position1` | Vector3D | $\LU{0}{\pv}_{m1}$ global position of marker 1 |
-| `rotationMatrix1` | Matrix3D | $\LU{0,m1}{\Rot}$ rotation matrix of marker 1, local to global |
+| `HT0` | HT | $\LU{0}{\Hm}_{m0}$ the frame of marker 0, an exudyn.HT: its translation the global position $\LU{0}{\pv}_{m0}$, its rotation the rotation matrix $\LU{0,m0}{\Rot}$, local to global |
+| `HT1` | HT | $\LU{0}{\Hm}_{m1}$ the frame of marker 1, as for marker 0 |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the joint, see parameters; empty if not given |
 | **return value** | MatrixContainer | $\partial \cv / \partial [\pv_{m0},\, \ttheta_{m0},\, \pv_{m1},\, \ttheta_{m1}] \in \Rcal^{n_c \times 12}$ as numpy array or list of lists |
 
@@ -139,11 +136,11 @@ A user function, which returns the graphics of the joint in global coordinates.
 #a body that slides along a circle of radius 1 around the ground, as user joint on two rigid markers
 node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[1,0,0,0,0,0], initialVelocities=[0,1,0,0,0,0]))
 body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=1, inertia=[0.01,0.01,0.01,0,0,0]))
-def UFconstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    d = position1 - position0
+def UFconstraint(mbs, t, itemNumber, HT0, HT1, parameters):
+    d = HT1.translation - HT0.translation
     return [d[0]**2 + d[1]**2 - 1., d[2]]
-def UFjacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    d = position1 - position0 #columns: position 0, rotation 0, position 1, rotation 1
+def UFjacobian(mbs, t, itemNumber, HT0, HT1, parameters):
+    d = HT1.translation - HT0.translation #columns: position 0, rotation 0, position 1, rotation 1
     jacobian = np.zeros((2, 12))
     jacobian[0, 0:3] = [-2*d[0], -2*d[1], 0]
     jacobian[0, 6:9] = [2*d[0], 2*d[1], 0]

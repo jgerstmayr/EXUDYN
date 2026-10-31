@@ -121,15 +121,17 @@ def _UFrigidBodyRotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal
     rot = qTotal[3:6]
     return _Blocks3x6(None, su.RotXYZ2RotationMatrix(rot, F) @ su.RotXYZ2GLocal(rot, F), F)
 
+#the connectors and joints get the frame of each marker, an exudyn.HT, and the connectors also its twist, an
+#exudyn.Twist; while recorded, a kinematics.HT and a kinematics.Twist of symbolic parts with the same methods (#3183)
+
 #the spring-damper, ObjectConnectorUser on two position markers, parameters [stiffness, damping, referenceLength, force,
 #velocityOffset]: as ObjectConnectorSpringDamper, the force k (L - L0) + d (dL/dt - v0) + f along the axis, pulling
 #marker 0 towards marker 1 if positive; with cMath, it computes numbers and is recorded
-def _UFspringDamperForce(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
-                        position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
-    delta = position1 - position0
+def _UFspringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    delta = HT1.translation - HT0.translation
     length = cMath.sqrt(delta @ delta)
     axis = (1/length)*delta
-    force = (parameters[0]*(length - parameters[2]) + parameters[1]*(axis @ (velocity1 - velocity0) - parameters[4])
+    force = (parameters[0]*(length - parameters[2]) + parameters[1]*(axis @ (twist1.velocity - twist0.velocity) - parameters[4])
              + parameters[3])
     return np.hstack([force*axis, -force*axis])
 
@@ -138,20 +140,20 @@ def _UFspringDamperForce(mbs, t, itemNumber, position0, velocity0, rotationMatri
 #about the z-axis of marker 0, phi the z-angle of the relative rotation A0^T A1 as Tait-Bryan angle, omega the z-component
 #of the relative angular velocity in the frame of marker 0; no forces. As the forces of the spring-damper, the torques act
 #on the markers: a positive torque turns marker 0 about the axis and marker 1 back
-def _UFtorsionalSpringDamperForce(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
-                                  position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
-    F = _Functions(rotationMatrix0)
-    A0 = rotationMatrix0
-    relative = A0.T @ rotationMatrix1
+def _UFtorsionalSpringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    A0 = HT0.rotation
+    F = _Functions(A0)
+    relative = HT0.Relative(HT1).rotation
     angle = F.atan2(-relative[0, 1], relative[0, 0])
-    omega = (A0.T @ (angularVelocity1 - angularVelocity0))[2]
+    omega = su.RelativeTwist(HT0, twist0, HT1, twist1).angularVelocity[2]
     torque = parameters[0]*(angle - parameters[2]) + parameters[1]*(omega - parameters[3]) + parameters[4]
     torque0 = [torque*A0[i, 2] for i in range(3)]
     return _Vector([0, 0, 0] + torque0 + [0, 0, 0] + [-x for x in torque0], F)
 
 #the joints, ObjectJointUser on two rigid markers whose frames are the joint frame: the equations of the built-in joint
-#at position level, and their derivative by the translations and global rotation increments [p0, theta0, p1, theta1] of
-#the markers, R(theta) = (I + skew(theta)) R. For the scalar product u.v of an axis u of marker 0 and an axis v of
+#at position level - the global difference of the positions, as the Lagrange multipliers of the built-in joints are
+#global -, and their derivative by the translations and global rotation increments [p0, theta0, p1, theta1] of the
+#markers, R(theta) = (I + skew(theta)) R. For the scalar product u.v of an axis u of marker 0 and an axis v of
 #marker 1 the rotation columns are u x v and v x u
 def _Column(R, j):
     return [R[i, j] for i in range(3)]
@@ -169,57 +171,61 @@ def _JacobianRows(rows, functions):
 def _Unit(k, sign=1):
     return [sign if i == k else 0 for i in range(3)]
 
+def _Distance(HT0, HT1):
+    #the components of the global difference of the positions of the markers
+    (p0, p1) = (HT0.translation, HT1.translation)
+    return [p1[i] - p0[i] for i in range(3)]
+
 #the revolute joint, as ObjectJointRevoluteZ: the relative position, and the z-axis of marker 0 perpendicular to the
 #x- and y-axes of marker 1; no parameters
-def _UFrevoluteJointConstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    F = _Functions(rotationMatrix0)
-    z0 = _Column(rotationMatrix0, 2)
-    return _Vector([position1[i] - position0[i] for i in range(3)]
-                   + [_Dot(z0, _Column(rotationMatrix1, 0)), _Dot(z0, _Column(rotationMatrix1, 1))], F)
+def _UFrevoluteJointConstraint(mbs, t, itemNumber, HT0, HT1, parameters):
+    (A0, A1) = (HT0.rotation, HT1.rotation)
+    z0 = _Column(A0, 2)
+    return _Vector(_Distance(HT0, HT1) + [_Dot(z0, _Column(A1, 0)), _Dot(z0, _Column(A1, 1))], _Functions(A0))
 
-def _UFrevoluteJointJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    F = _Functions(rotationMatrix0)
-    z0 = _Column(rotationMatrix0, 2)
+def _UFrevoluteJointJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
+    (A0, A1) = (HT0.rotation, HT1.rotation)
+    z0 = _Column(A0, 2)
     rows = [[_Unit(k, -1), None, _Unit(k), None] for k in range(3)]
     for j in [0, 1]:
-        v = _Column(rotationMatrix1, j)
+        v = _Column(A1, j)
         rows.append([None, _Cross(z0, v), None, _Cross(v, z0)])
-    return _JacobianRows(rows, F)
+    return _JacobianRows(rows, _Functions(A0))
 
 #the prismatic joint, as ObjectJointPrismaticX: the relative position along the y- and z-axes of marker 0, and the
 #axes z0.y1, z0.x1, x0.y1; no parameters
-def _UFprismaticJointConstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    F = _Functions(rotationMatrix0)
-    d = [position1[i] - position0[i] for i in range(3)]
-    (x0, y0, z0) = (_Column(rotationMatrix0, 0), _Column(rotationMatrix0, 1), _Column(rotationMatrix0, 2))
-    (x1, y1) = (_Column(rotationMatrix1, 0), _Column(rotationMatrix1, 1))
-    return _Vector([_Dot(y0, d), _Dot(z0, d), _Dot(z0, y1), _Dot(z0, x1), _Dot(x0, y1)], F)
+def _UFprismaticJointConstraint(mbs, t, itemNumber, HT0, HT1, parameters):
+    (A0, A1) = (HT0.rotation, HT1.rotation)
+    d = _Distance(HT0, HT1)
+    (x0, y0, z0) = (_Column(A0, 0), _Column(A0, 1), _Column(A0, 2))
+    (x1, y1) = (_Column(A1, 0), _Column(A1, 1))
+    return _Vector([_Dot(y0, d), _Dot(z0, d), _Dot(z0, y1), _Dot(z0, x1), _Dot(x0, y1)], _Functions(A0))
 
-def _UFprismaticJointJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    F = _Functions(rotationMatrix0)
-    d = [position1[i] - position0[i] for i in range(3)]
-    (x0, y0, z0) = (_Column(rotationMatrix0, 0), _Column(rotationMatrix0, 1), _Column(rotationMatrix0, 2))
-    (x1, y1) = (_Column(rotationMatrix1, 0), _Column(rotationMatrix1, 1))
+def _UFprismaticJointJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
+    (A0, A1) = (HT0.rotation, HT1.rotation)
+    d = _Distance(HT0, HT1)
+    (x0, y0, z0) = (_Column(A0, 0), _Column(A0, 1), _Column(A0, 2))
+    (x1, y1) = (_Column(A1, 0), _Column(A1, 1))
     rows = [[[-x for x in u], _Cross(u, d), u, None] for u in [y0, z0]]
     rows += [[None, _Cross(u, v), None, _Cross(v, u)] for (u, v) in [(z0, y1), (z0, x1), (x0, y1)]]
-    return _JacobianRows(rows, F)
+    return _JacobianRows(rows, _Functions(A0))
 
 #the spherical joint, as ObjectJointSpherical with all axes constrained: the relative position; no parameters
-def _UFsphericalJointConstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    return _Vector([position1[i] - position0[i] for i in range(3)], _Functions(rotationMatrix0))
+def _UFsphericalJointConstraint(mbs, t, itemNumber, HT0, HT1, parameters):
+    return _Vector(_Distance(HT0, HT1), _Functions(HT0.translation))
 
-def _UFsphericalJointJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    return _JacobianRows([[_Unit(k, -1), None, _Unit(k), None] for k in range(3)], _Functions(rotationMatrix0))
+def _UFsphericalJointJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
+    return _JacobianRows([[_Unit(k, -1), None, _Unit(k), None] for k in range(3)], _Functions(HT0.translation))
 
 #the distance constraint, as ObjectConnectorDistance: |p1 - p0| - distance; parameters [distance]
-def _UFdistanceConstraint(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    F = _Functions(rotationMatrix0)
-    d = [position1[i] - position0[i] for i in range(3)]
+def _UFdistanceConstraint(mbs, t, itemNumber, HT0, HT1, parameters):
+    F = _Functions(HT0.translation)
+    d = _Distance(HT0, HT1)
     return _Vector([F.sqrt(_Dot(d, d)) - parameters[0]], F)
 
-def _UFdistanceConstraintJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    F = _Functions(rotationMatrix0)
-    d = [position1[i] - position0[i] for i in range(3)]
+def _UFdistanceConstraintJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
+    F = _Functions(HT0.translation)
+    d = _Distance(HT0, HT1)
     axis = [x*(1/F.sqrt(_Dot(d, d))) for x in d]
     return _JacobianRows([[[-x for x in axis], None, axis, None]], F)
 

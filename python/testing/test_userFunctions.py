@@ -147,6 +147,7 @@ def test_theTypesAreOnesTheInterfaceKnows(key):
     known = set(['MainSystem', 'Real', 'Index', 'bool', 'StdVector', 'StdVector2D', 'StdVector3D',
                  'StdVector6D', 'StdMatrix3D', 'StdMatrix6D', 'NumpyMatrix', 'StdArrayIndex',
                  'ConfigurationType', 'OutputVariableType', 'py::object',
+                 'HomogeneousTransformation', 'Twist', #the frame and the twist of a marker of the user connectors (#3183)
                  'void']) #the result of a function that applies what it computes, ObjectConnectorUser (#2975)
     entry = userFunctionArgsDict[key]
     unknown = [name for name in entry[0] + entry[2] if name not in known]

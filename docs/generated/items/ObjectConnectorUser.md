@@ -6,7 +6,7 @@
 (sec-item-objectconnectoruser)=
 # ObjectConnectorUser
 
-A connector of two markers whose forces are a user function of the positions, velocities, rotations and angular velocities of the markers: it returns the forces and torques on the markers, which the connector applies through the marker Jacobians - a spring-damper, a bushing, a contact of two points -, also as symbolic user function. For forces at points of a body that the function computes itself, as a contact searching the closest point on a flexible body, a second user function reads any number of markers of any type and applies forces through them. A NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
+A connector of two markers whose forces are a user function of the frames and twists of the markers - their positions, rotations, velocities and angular velocities -: it returns the forces and torques on the markers, which the connector applies through the marker Jacobians - a spring-damper, a bushing, a contact of two points -, also as symbolic user function. For forces at points of a body that the function computes itself, as a contact searching the closest point on a flexible body, a second user function reads any number of markers of any type and applies forces through them. A NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
 
 ## Interface
 
@@ -46,20 +46,24 @@ Drawn as [all connectors](#sec-drawing-objectsconnector); the graphics of the gr
 
 ### The forces of the two markers
 
-`forceUserFunction(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0, position1, velocity1,
-rotationMatrix1, angularVelocity1, dataCoordinates, parameters)` gets the states of the two markers of
-`markerNumbers` and returns the global forces $\fv_i$ acting on them, $[\fv_0,\, \fv_1]$; with
-`exu.MarkerType.Orientation` in `requestedMarkerType`, it gets their rotation matrices and global angular velocities
-and returns also the torques $\mv_i$, $[\fv_0,\, \mv_0,\, \fv_1,\, \mv_1]$; without, the rotation matrices are unit
-matrices and the angular velocities zero (#3119). The connector applies them through the Jacobians of the markers,
+`forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters)` gets the frame
+`HTi`, an `exudyn.HT` of the global position and the rotation matrix, and the twist `twisti`, an `exudyn.Twist` of
+the global velocity and angular velocity, of each marker of `markerNumbers` (#3183), and returns the global forces
+$\fv_i$ acting on them, $[\fv_0,\, \fv_1]$; with `exu.MarkerType.Orientation` in `requestedMarkerType`, the frames
+have the rotations of the markers and the twists their angular velocities, and it returns also the torques $\mv_i$,
+$[\fv_0,\, \mv_0,\, \fv_1,\, \mv_1]$; without, the rotations are unit matrices and the angular velocities zero
+(#3119). `HT1.translation - HT0.translation` is the distance of the markers, `HT0.Relative(HT1)` the frame of marker
+1 seen from marker 0, `exudyn.symbolics.kinematics.RelativeTwist` its velocity. The connector applies them through the Jacobians of the markers,
 
 $$
 \fv_{gen} = -\sum_{i=0}^{1} \left( \Jm_{pos,i}\tp \fv_i + \Jm_{rot,i}\tp \mv_i \right) ,
 $$
 
 added to the left-hand side, as loads act on the markers. The markers must provide Position, which the connector
-requests for this function. As its arguments and result are vectors and matrices of fixed sizes, the function can be
-recorded by `CreateSymbolicUserFunction`, one recording for all connectors of a kind with their own `parameters`.
+requests for this function. The function can be recorded by `CreateSymbolicUserFunction`, which passes a
+`kinematics.HT` and a `kinematics.Twist` of named symbolic leaves - `HT0_rotation`, `HT0_translation`,
+`twist0_velocity`, `twist0_angularVelocity`, ... - with the same methods and properties; one recording serves all
+connectors of a kind with their own `parameters`.
 `Assemble` refuses a forceUserFunction with other than two markers, and both user functions together.
 
 ### Access to the markers
@@ -116,22 +120,18 @@ function for each perturbed coordinate. The user function is called serially, in
 The `graphicsDataUserFunction(mbs, itemNumber)` returns a list of graphics data in global coordinates - a spring as a
 line, a contact as two spheres -, a Python function, drawn as the graphics of ObjectGenericODE2 are.
 
-**Userfunction**: `forceUserFunction(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0, position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters)`
-A user function, which computes the forces of the connector on its two markers from their positions, velocities, rotations and angular velocities.
+**Userfunction**: `forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters)`
+A user function, which computes the forces of the connector on its two markers from their frames and twists.
 
 | arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which the connector belongs |
 | `t` | Real | current time in mbs |
 | `itemNumber` | Index | integer number of the connector in mbs |
-| `position0` | Vector3D | $\LU{0}{\pv}_{m0}$ global position of marker 0 |
-| `velocity0` | Vector3D | $\LU{0}{\vv}_{m0}$ global velocity of marker 0 |
-| `rotationMatrix0` | Matrix3D | $\LU{0,m0}{\Rot}$ rotation matrix of marker 0, local to global; the unit matrix if requestedMarkerType has no Orientation |
-| `angularVelocity0` | Vector3D | $\LU{0}{\tomega}_{m0}$ global angular velocity of marker 0; zero if requestedMarkerType has no Orientation |
-| `position1` | Vector3D | $\LU{0}{\pv}_{m1}$ global position of marker 1 |
-| `velocity1` | Vector3D | $\LU{0}{\vv}_{m1}$ global velocity of marker 1 |
-| `rotationMatrix1` | Matrix3D | $\LU{0,m1}{\Rot}$ rotation matrix of marker 1, as for marker 0 |
-| `angularVelocity1` | Vector3D | $\LU{0}{\tomega}_{m1}$ global angular velocity of marker 1, as for marker 0 |
+| `HT0` | HT | $\LU{0}{\Hm}_{m0}$ the frame of marker 0, an exudyn.HT: its translation the global position $\LU{0}{\pv}_{m0}$, its rotation the rotation matrix $\LU{0,m0}{\Rot}$, local to global; the unit rotation if requestedMarkerType has no Orientation |
+| `twist0` | Twist | the twist of marker 0, an exudyn.Twist: its velocity the global velocity $\LU{0}{\vv}_{m0}$, its angularVelocity the global angular velocity $\LU{0}{\tomega}_{m0}$, zero if requestedMarkerType has no Orientation |
+| `HT1` | HT | $\LU{0}{\Hm}_{m1}$ the frame of marker 1, as for marker 0 |
+| `twist1` | Twist | the twist of marker 1, as for marker 0 |
 | `dataCoordinates` | Vector | $\dv \in \Rcal^{n_d}$ the data coordinates of the NodeGenericData nodeNumber, as the postNewtonStepUserFunction last set them; empty without a data node |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the connector, see parameters; empty if not given |
 | **return value** | Vector | the global forces acting on the markers, $[\fv_0,\, \fv_1]$ (6 values), or with exu.MarkerType.Orientation in requestedMarkerType also the torques, $[\fv_0,\, \mv_0,\, \fv_1,\, \mv_1]$ (12 values), as list or numpy array |
@@ -187,9 +187,8 @@ A user function, which returns the graphics of the connector in global coordinat
 k = 100
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialCoordinates=[0.1,0,0]))
 mass = mbs.AddObject(MassPoint(nodeNumber=node, mass=2))
-def UFforce(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
-            position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
-    force = k*(position1 - position0 - np.array([1,0,0]))
+def UFforce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    force = k*(HT1.translation - HT0.translation - np.array([1,0,0]))
     return np.hstack([force, -force]) #the forces on marker 0 and marker 1
 groundMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber=mbs.AddObject(ObjectGround())))
 mbs.AddObject(ObjectConnectorUser(markerNumbers=[groundMarker, mbs.AddMarker(MarkerNodePosition(nodeNumber=node))],

@@ -18,6 +18,7 @@
 #include "Linalg/MatrixContainer.h" //matrix results of symbolic user functions (#3020)
 #include "Utilities/Threading.h" //the thread of an evaluation in the parallel loops (#2978)
 #include "Linalg/SymbolicTable.h" //SymbolicProgram, the evaluation by the table of operations (#3153)
+#include "Pymodules/PyHomogeneousTransformation.h" //exudyn.HT and exudyn.Twist, arguments of the user connectors (#3183)
 
 extern bool linalgPrintUsePythonFormat; 
 
@@ -974,6 +975,30 @@ protected:
 		std::copy(arg.begin(), arg.end(), vector.begin());
 	}
 
+	//! a frame: its rotation into the named matrix, its translation into the named vector of the argument, the two
+	//! leaves of a kinematics.HT in the recording (#3183)
+	void processArgument(const HomogeneousTransformation& arg, ThreadCopy* copy, Index& argIndex)
+	{
+		MatrixExpressionNamedReal* leaf = ArgumentMatrix(copy, argIndex++);
+		if (leaf)
+		{
+			ResizableConstMatrix& matrix = leaf->GetMatrix();
+			if (matrix.NumberOfRows() != 3 || matrix.NumberOfColumns() != 3) { matrix.SetNumberOfRowsAndColumns(3, 3); }
+			Real* data = matrix.GetDataPointer();
+			for (Index i = 0; i < 3; i++)
+			{
+				for (Index j = 0; j < 3; j++) { data[3*i + j] = arg.Rotation(i, j); }
+			}
+		}
+		processArgument(arg.GetTranslation(), copy, argIndex);
+	}
+	//! a twist: its velocity and angular velocity into the two named vectors of a kinematics.Twist (#3183)
+	void processArgument(const Twist& arg, ThreadCopy* copy, Index& argIndex)
+	{
+		processArgument(arg.velocity, copy, argIndex);
+		processArgument(arg.angularVelocity, copy, argIndex);
+	}
+
 	void processArgument(const ResizableConstMatrix& arg, ThreadCopy* copy, Index& argIndex)
 	{
 		MatrixExpressionNamedReal* leaf = ArgumentMatrix(copy, argIndex++);
@@ -1073,6 +1098,8 @@ inline decltype(auto) PythonUserFunctionArgument(const T& argument)
 		if (UserFunctionListArguments()) { return py::object(py::cast((StdVector)argument)); }
 		return EPyUtils::ToNumpyView(argument.GetDataPointer(), argument.NumberOfItems());
 	}
+	else if constexpr (std::is_same_v<T, HomogeneousTransformation>) { return py::cast(PyHT(argument)); } //exudyn.HT (#3183)
+	else if constexpr (std::is_same_v<T, Twist>) { return py::cast(PyTwist(argument)); } //exudyn.Twist
 	else if constexpr (std::is_same_v<T, MainSystem>)
 	{
 		//by reference: a const reference would be copied - MainSystem cannot - when its Python object no longer exists,

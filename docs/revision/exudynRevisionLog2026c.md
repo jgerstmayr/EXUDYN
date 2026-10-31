@@ -4826,3 +4826,32 @@ correct name"; "Then do the suggested RG12.69.2-.4 steps".)*
   the same bits (largest difference 0.0); RelativeTwist against central differences of HT0.Relative(HT1) moved by the
   twists (1.7e-10, 2.3e-11), esym.Jacobian of the relative translation by a rotation vector (5.2e-11).
 - Checked: the suite passes, pytest 1455 passed.
+
+<a id="rg12-69-4"></a>
+### RG12.69.4 — the user connectors and joints on HT and twist (2026-11-01, #3183)
+- definitions: `ObjectConnectorUser_forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates,
+  parameters)`, `ObjectJointUser_constraintUserFunction` and `_jacobianUserFunction(mbs, t, itemNumber, HT0, HT1,
+  parameters)`, their argument texts, descriptions and examples; the annotations `HT` and `Twist` (definitionTypes.py:
+  classes for the definition files, `HomogeneousTransformation`/`Twist` in C++, passed by const reference;
+  userFunctionModel.annotationToPython).
+- C++: the connector builds a `HomogeneousTransformation` and a `Twist` per marker (without Orientation the rotation by
+  SetTranslation, flagged as none); the joint the HT of its markers; `ToStdMatrix3D` removed. SymbolicUtilities.h:
+  `processArgument` of an HT writes its two leaves, of a Twist its two; `PythonUserFunctionArgument` passes a PyHT and
+  a PyTwist.
+- The recording (ConvertFunctionToSymbolic): an argument of type HomogeneousTransformation becomes the leaves
+  `<name>_rotation` (3x3) and `<name>_translation` in a kinematics.HT, a Twist the leaves `<name>_velocity` and
+  `<name>_angularVelocity` in a kinematics.Twist; argList, argTypeList and argNameList hold the leaves, so that the
+  C++ setup, the threads and GetFlatProgramData need no change.
+- userItems: the spring-damper by `HT1.translation - HT0.translation` and the twist velocities, the torsional
+  spring-damper by `HT0.Relative(HT1).rotation` and `RelativeTwist`, the joints by the axes of the rotations and the
+  global difference of the positions (the multipliers stay global, as for the built-in joints); `_Functions` and
+  `_Column` stay. SymbolicSystem: the marker states reordered into the leaves (`_ConnectorLeaves`, `_JointLeaves`).
+- Test models: userConnectorTest, userJointTest (the screw by `HT0.Relative(HT1)`), userConnectorContactTest,
+  symbolicExplicitSolverTest on the new arguments, all with their reference values; symbolicUserFunctionSignaturesTest
+  generates the HT and Twist arguments and evaluates the recording with their leaves (53 signatures, as before);
+  test_userFunctions.py knows the two C++ types.
+- Measured, numeric path (a Python spring of two mass points, explicit Euler, one call per step): 13.4 instead of
+  8.7 us per step with the build before; creating an exu.HT or exu.Twist costs about 0.4 us, reading a property 0.5 us
+  (a copy into a new numpy array). Views in the properties would save a part; not done.
+- Checked: the suite passes, pytest 1455 passed, the documentation builds; the export of a recorded connector names
+  the leaves HT0_rotation, HT0_translation, twist0_velocity, twist0_angularVelocity.

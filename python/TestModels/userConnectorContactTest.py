@@ -44,13 +44,12 @@ def Contact(position0, velocity0, position1, velocity1):
     normal = deltaP/distance
     return distance - 2*radius, normal, normal @ (velocity1 - velocity0)
 
-def UFforce(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
-            position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
+def UFforce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
     """the contact forces on the two spheres while the gap of the data is negative, linear with the damping of the
     impact model"""
     if dataCoordinates[0] >= 0:
         return np.zeros(6)
-    (gap, normal, vNormal) = Contact(position0, velocity0, position1, velocity1)
+    (gap, normal, vNormal) = Contact(HT0.translation, twist0.velocity, HT1.translation, twist1.velocity)
     force = contactStiffness*(-gap)
     if dataCoordinates[1] > 0:
         force += contactStiffness/dataCoordinates[1]*impactFactor*(-gap)*vNormal

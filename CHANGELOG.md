@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 272 | 1.13.278 |
+| 1.13 | Newborn | 273 | 1.13.279 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.279** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The user functions of ObjectConnectorUser and ObjectJointUser take the frame and twist of each marker, HT0, twist0, HT1, twist1, recorded as kinematics.HT and kinematics.Twist (#3183)
+  - description: Revision2026c step RG12.69.4. forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters) and constraintUserFunction and jacobianUserFunction(mbs, t, itemNumber, HT0, HT1, parameters) instead of position, velocity, rotation matrix and angular velocity of each marker; the item passes exudyn.HT and exudyn.Twist, CreateSymbolicUserFunction a kinematics.HT and kinematics.Twist of the named leaves HT0\_rotation, HT0\_translation, twist0\_velocity, twist0\_angularVelocity; exudyn.symbolics.userItems and SymbolicSystem on them. Decided: without deprecation, both items were added after 1.13.0.
+  - **notes:** The user functions of ObjectConnectorUser and ObjectJointUser take the frame and twist of each marker: forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters) and constraintUserFunction and jacobianUserFunction(mbs, t, itemNumber, HT0, HT1, parameters); HT0.translation is the former position0, HT0.rotation rotationMatrix0, twist0.velocity and twist0.angularVelocity the former velocities. A recorded user function gets a kinematics.HT and a kinematics.Twist with the same methods, whose leaves are named HT0\_rotation, HT0\_translation, twist0\_velocity and twist0\_angularVelocity.
+  - date resolved: **2026-11-01 00:32**, date raised: 2026-11-01
 - **1.13.278** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The symbolic HT and Twist in exudyn.symbolics.kinematics, exudyn.Twist, and PointVelocity, LocalTwist and RelativeTwist in exudyn.cUtilities and kinematics (#3182)
   - description: Revision2026c step RG12.69.3. kinematics.HT holds a symbolic rotation matrix and translation with the products, Inverse and Relative of exudyn.HT, mapped at once to matrix and vector expressions, an exudyn.HT taken as constant on either side; kinematics.Twist and the new C++ class exudyn.Twist hold the velocity of the origin and the angular velocity of a frame, global; PointVelocity, LocalTwist and RelativeTwist compute with them, in C++ for exudyn.HT and exudyn.Twist. exudyn.HT returns NotImplemented for an operand that is no HT, list, tuple or numpy array, so that exu.HT(...) \* symbolic HT reaches the symbolic class. Decided: the twist an object with velocity and angularVelocity; the twist functions in C++ and kinematics, not methods of the HT.
   - **notes:** exudyn.Twist is the velocity of a frame, velocity and angularVelocity in global components; PointVelocity, LocalTwist and RelativeTwist of exudyn.cUtilities compute with an HT and a Twist. exudyn.symbolics.kinematics has HT and Twist for symbolic parts, with the methods and properties of exudyn.HT and exudyn.Twist mapped at once to matrix and vector expressions, and the three functions for both. exudyn.HT returns NotImplemented for an operand it does not compute with, so that exu.HT(...) \* a symbolic HT is the composition.

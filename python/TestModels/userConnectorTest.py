@@ -44,9 +44,8 @@ def UFspringDamper(mbs, t, itemNumber, markers, dataCoordinates, parameters):
     m1.ApplyForce(-force)
 
 #the same as forceUserFunction of the marker states, returning the forces on marker 0 and marker 1
-def UFspringDamperForces(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
-                         position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
-    force = np.array(k)*(position1 - position0 - offset) + np.array(d)*(velocity1 - velocity0)
+def UFspringDamperForces(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    force = np.array(k)*(HT1.translation - HT0.translation - offset) + np.array(d)*(twist1.velocity - twist0.velocity)
     return np.hstack([force, -force])
 
 def SpringModel(isUser):
@@ -74,10 +73,9 @@ exu.Print('(1) spring-damper: largest difference to CartesianSpringDamper', diff
 
 #the rotational damper and a spring of the body origin to the ground as forceUserFunction: the angular velocities and
 #a torque of the markers, with Orientation requested
-def UFrigidForces(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
-                  position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
-    torque = -dRot*(angularVelocity1 - angularVelocity0)
-    force = -kPoint*(position1 - position0) - 0.1*(velocity1 - velocity0)
+def UFrigidForces(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    torque = -dRot*(twist1.angularVelocity - twist0.angularVelocity)
+    force = -kPoint*(HT1.translation - HT0.translation) - 0.1*(twist1.velocity - twist0.velocity)
     return np.hstack([-force, -torque, force, torque])
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

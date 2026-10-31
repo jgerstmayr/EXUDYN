@@ -161,8 +161,10 @@ A constant frame of a joint - a marker frame given by an axis and an angle - is 
   `HT0.rotation` and `HT1.rotation` and the global difference of the translations - the equations of the built-in
   joints, whose Lagrange multipliers are global; `HT0.Relative(HT1)` would give them in the frame of marker 0 -, the
   torsional spring-damper by the relative rotation `HT0.Relative(HT1).rotation`.
-- Cost of the numeric path: two `exudyn.HT` and two `exudyn.Twist` objects per call instead of numpy matrices and
-  vectors - measured in RG12.69.4, as the user connectors are called per Newton iteration.
+- Cost of the numeric path: two `exudyn.HT` and two `exudyn.Twist` objects per call instead of numpy views of the
+  marker states. Measured (RG12.69.4, a Python spring of two mass points, explicit Euler, one call per step): 13.4
+  instead of 8.7 us per step; an object costs about 0.4 us to create, a property about 0.5 us to read, as it copies into
+  a new numpy array. Views of the parts would save a part of it; a symbolic user function does not pay it.
 
 ## 8. Decisions and the steps
 

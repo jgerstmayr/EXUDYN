@@ -1,0 +1,15 @@
+{
+  "number": 3183,
+  "title": "The user functions of ObjectConnectorUser and ObjectJointUser take the frame and twist of each marker, HT0, twist0, HT1, twist1, recorded as kinematics.HT and kinematics.Twist",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "HIGH",
+  "description": "Revision2026c step RG12.69.4. forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters) and constraintUserFunction and jacobianUserFunction(mbs, t, itemNumber, HT0, HT1, parameters) instead of position, velocity, rotation matrix and angular velocity of each marker; the item passes exudyn.HT and exudyn.Twist, CreateSymbolicUserFunction a kinematics.HT and kinematics.Twist of the named leaves HT0_rotation, HT0_translation, twist0_velocity, twist0_angularVelocity; exudyn.symbolics.userItems and SymbolicSystem on them. Decided: without deprecation, both items were added after 1.13.0.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 00:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The user functions of ObjectConnectorUser and ObjectJointUser take the frame and twist of each marker: forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters) and constraintUserFunction and jacobianUserFunction(mbs, t, itemNumber, HT0, HT1, parameters); HT0.translation is the former position0, HT0.rotation rotationMatrix0, twist0.velocity and twist0.angularVelocity the former velocities. A recorded user function gets a kinematics.HT and a kinematics.Twist with the same methods, whose leaves are named HT0_rotation, HT0_translation, twist0_velocity and twist0_angularVelocity.",
+  "resolvedInVersion": "1.13.279"
+}

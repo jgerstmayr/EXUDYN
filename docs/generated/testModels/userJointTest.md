@@ -54,18 +54,18 @@ pitch = 0.05
 torque = 0.25 #about 15.4 rad at t=1, two and a half turns
 axialForce = 0.1
 
-def UFscrew(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    Arel = rotationMatrix0.T @ rotationMatrix1  #the frame of marker 1 in the frame of marker 0
-    d = rotationMatrix0.T @ (position1 - position0)
+def UFscrew(mbs, t, itemNumber, HT0, HT1, parameters):
+    relative = HT0.Relative(HT1) #the frame of marker 1 in the frame of marker 0
+    (Arel, d) = (relative.rotation, relative.translation)
     phi = d[0]/parameters[0] #the angle the translation requires, of any number of turns
     #sin(angle - phi) with cos(angle) = Arel[1,1], sin(angle) = Arel[2,1]: zero for the rotation phi, times the pitch
     return [Arel[0, 1], Arel[0, 2], d[1], d[2], parameters[0]*(Arel[2, 1]*cMath.cos(phi) - Arel[1, 1]*cMath.sin(phi))]
 
-def UFscrewJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+def UFscrewJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
     """d c / d [p0, theta0, p1, theta1], theta the global rotation increments: Arel[i,j] = a0_i . a1_j changes by
     (a1_j x a0_i) . (theta1 - theta0), d = A0^T (p1 - p0) by A0^T (dp1 - dp0) + A0^T skew(p1 - p0) theta0"""
-    A0, A1 = rotationMatrix0, rotationMatrix1
-    r = position1 - position0
+    A0, A1 = HT0.rotation, HT1.rotation
+    r = HT1.translation - HT0.translation
     Arel = A0.T @ A1
     h = parameters[0]
     phi = (A0.T @ r)[0]/h
@@ -129,10 +129,10 @@ exu.Print('screw joint: drift of the constraints at index 3:', results[0][2], ',
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #(2) a pendulum on a spherical joint: built-in, user joint with numerical and with given Jacobian
-def UFspherical(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
-    return position1 - position0
+def UFspherical(mbs, t, itemNumber, HT0, HT1, parameters):
+    return HT1.translation - HT0.translation
 
-def UFsphericalJacobian(mbs, t, itemNumber, position0, rotationMatrix0, position1, rotationMatrix1, parameters):
+def UFsphericalJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
     jacobian = np.zeros((3, 12))
     jacobian[:, 0:3] = -np.eye(3)
     jacobian[:, 6:9] = np.eye(3)

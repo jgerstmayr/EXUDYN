@@ -4,7 +4,7 @@
 # Details:  exudyn.symbolics.systemModel.SolveExplicit (#3112) on a net of mass points: 4 x 4 points in a vertical plane,
 #           the two upper corners fixed, neighbours connected by spring-dampers, under gravity and with an initial
 #           velocity out of the plane. The mass points are ObjectUserBody, the spring-dampers ObjectConnectorUser with
-#           the forceUserFunction of the marker states (#3119), both recorded as symbolic user functions, one kind
+#           the forceUserFunction of the frames and twists of the markers (#3119, #3183), both recorded as symbolic user functions, one kind
 #           each; the same net of MassPoint and ObjectConnectorSpringDamper as reference. Explicit Euler, RK44 and
 #           velocity Verlet with constant step size on the SymbolicSystem (#3121) against mbs.SolveDynamic with the
 #           same solver type and steps, with the mass matrix solved as a whole and inverted per body (#3120); a
@@ -46,12 +46,11 @@ def UFgravity(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
 
 #the spring-damper of ObjectConnectorSpringDamper: the force k (L - L0) + d dL/dt along the axis, parameters [k, d, L0];
 #written with cMath, so that the function runs on numbers and is recorded (#3114)
-def UFspringDamper(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
-                   position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
-    delta = position1 - position0
+def UFspringDamper(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    delta = HT1.translation - HT0.translation
     length = cMath.sqrt(delta @ delta)
     axis = (1/length)*delta
-    force = parameters[0]*(length - parameters[2]) + parameters[1]*(axis @ (velocity1 - velocity0))
+    force = parameters[0]*(length - parameters[2]) + parameters[1]*(axis @ (twist1.velocity - twist0.velocity))
     return np.hstack([force*axis, -force*axis]) #pulls marker 0 towards marker 1 if stretched
 
 def Net(builtIn):

@@ -64,6 +64,21 @@ _loadProjections = {'ForceVector': 'positionJacobianUserFunction', 'TorqueVector
                     'MassProportional': 'massIntegralUserFunction'}
 _bodyArgumentPositions = {'positionJacobianUserFunction': (5, 6), 'rotationJacobianUserFunction': (5, 6),
                           'rotationMatrixUserFunction': (5, 6), 'massIntegralUserFunction': (4, 5)}
+#the states of the markers of a connector, [position, velocity, rotation, angular velocity] each, as the leaves of the
+#frame and the twist of each marker in a recorded forceUserFunction: rotation, translation, velocity, angular velocity
+#(#3183)
+def _ConnectorLeaves(states):
+    leaves = []
+    for k in range(0, len(states), 4):
+        (position, velocity, rotation, angularVelocity) = states[k:k + 4]
+        leaves += [rotation, position, velocity, angularVelocity]
+    return leaves
+
+#the states of the markers of a joint as the leaves of the frame of each marker in its recorded user functions: the
+#rotation and the translation
+def _JointLeaves(states):
+    return [states[2], states[0], states[6], states[4]]
+
 #the user functions of ObjectUserBody a connector marker on it needs, without and with the rotations (#3129)
 _markerFunctions = {False: ['positionUserFunction', 'positionJacobianUserFunction'],
                     True: ['positionUserFunction', 'positionJacobianUserFunction', 'rotationMatrixUserFunction',
@@ -882,10 +897,10 @@ class SymbolicSystem(SymbolicSystemBase):
         return (t, kind.objects[i], q[ltg], q_t[ltg])
 
     def _ConnectorStates(self, kind, i, q, q_t, t):
-        """the arguments after mbs of the forceUserFunction of connector i of kind - the position, velocity, rotation
-        matrix and angular velocity of each marker, unit rotations and no angular velocities if it requests no
-        orientation -, and per marker its position and rotation Jacobians (None for a fixed marker) and the arguments
-        of the user functions of its body (None for a point node or a fixed marker)"""
+        """the arguments after mbs of the recorded forceUserFunction of connector i of kind - the leaves of the frame
+        and the twist of each marker, unit rotations and no angular velocities if it requests no orientation -, and per
+        marker its position and rotation Jacobians (None for a fixed marker) and the arguments of the user functions of
+        its body (None for a point node or a fixed marker)"""
         (ltg, connector) = (kind.ltg[i], kind.parameters[i])
         (states, markerData) = ([], [])
         for marker in connector['markers']:
@@ -911,14 +926,14 @@ class SymbolicSystem(SymbolicSystemBase):
                     angularVelocity = Jrot @ q_t[indices]
                 states += [values['positionUserFunction'], Jpos @ q_t[indices], rotation, angularVelocity]
             markerData.append((Jpos, Jrot, bodyArguments))
-        return ((t, kind.objects[i], *states, [], connector['parameters']), markerData)
+        return ((t, kind.objects[i], *_ConnectorLeaves(states), [], connector['parameters']), markerData)
 
     def _JointArguments(self, kind, i, q, t):
-        """the arguments after mbs of the user functions of joint i of kind - the position and rotation matrix of each
+        """the arguments after mbs of the recorded user functions of joint i of kind - the leaves of the frame of each
         marker -, and per marker its Jacobians and the arguments of its body, as _ConnectorStates"""
         (arguments, markerData) = self._ConnectorStates(kind, i, q, np.zeros(self.nODE2), t)
-        (t, objectNumber, p0, v0, R0, w0, p1, v1, R1, w1, data, parameters) = arguments
-        return ((t, objectNumber, p0, R0, p1, R1, parameters), markerData)
+        (t, objectNumber, R0, p0, v0, w0, R1, p1, v1, w1, data, parameters) = arguments
+        return ((t, objectNumber, R0, p0, R1, p1, parameters), markerData)
 
     def AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel=False):
         """the constraint equations c(q, t) of the joints at position level (#3141), by their recorded
@@ -1320,13 +1335,13 @@ class SymbolicSystem(SymbolicSystemBase):
         parameters = self._ParameterVector(backend, objectNumber, item['parameters'])
         f = [0]*n
         if joint:
-            arguments = (t, objectNumber, states[0], states[2], states[4], states[6], parameters)
+            arguments = (t, objectNumber, *_JointLeaves(states), parameters)
             c = Call(kind.recordings['constraintUserFunction'], *arguments)
             C = Call(kind.recordings['jacobianUserFunction'], *arguments)
             self._AddMarkerForces(item, local, backend, C.T @ backend.Vector([z[k] for k in range(nConstraints)]), 6, jacobians, f)
             result = backend.Vector([c[k] for k in range(nConstraints)] + f)
         else:
-            forces = Call(kind.recordings['forceUserFunction'], t, objectNumber, *states, backend.Vector([]), parameters)
+            forces = Call(kind.recordings['forceUserFunction'], t, objectNumber, *_ConnectorLeaves(states), backend.Vector([]), parameters)
             self._AddMarkerForces(item, local, backend, forces, 6 if item['orientation'] else 3, jacobians, f)
             result = backend.Vector(f)
         self._itemFunctions[key] = (exudyn.symbolic.Function(result, variables, 'Item' + str(int(objectNumber))), groups)
@@ -1637,7 +1652,7 @@ class SymbolicSystem(SymbolicSystemBase):
         AlgebraicEquations and ODE2ReactionForcesLHS (#3146)"""
         (ltg, joint) = (kind.ltg[index], kind.parameters[index])
         (states, jacobians) = self._MarkerStateExpressions(joint, ltg, backend, Call, t, qs, q_ts)
-        arguments = (t, kind.objects[index], states[0], states[2], states[4], states[6],
+        arguments = (t, kind.objects[index], *_JointLeaves(states),
                      self._ParameterVector(backend, kind.objects[index], joint['parameters']))
         ltgAE = joint['ltgAE']
         equations = Call(kind.recordings['constraintUserFunction'], *arguments)
@@ -1655,7 +1670,7 @@ class SymbolicSystem(SymbolicSystemBase):
         (ltg, connector) = (kind.ltg[index], kind.parameters[index])
         stride = 6 if connector['orientation'] else 3
         (states, jacobians) = self._MarkerStateExpressions(connector, ltg, backend, Call, t, qs, q_ts)
-        forces = Call(kind.recordings['forceUserFunction'], t, kind.objects[index], *states, backend.Vector([]),
+        forces = Call(kind.recordings['forceUserFunction'], t, kind.objects[index], *_ConnectorLeaves(states), backend.Vector([]),
                       self._ParameterVector(backend, kind.objects[index], connector['parameters']))
         self._AddMarkerForces(connector, ltg, backend, forces, stride, jacobians, f)
 

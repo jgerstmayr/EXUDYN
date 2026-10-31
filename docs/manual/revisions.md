@@ -35,6 +35,11 @@ before), and a wrong size or a singular input raises a `ValueError` (#2960, #296
 **`exudyn.Twist`** is the velocity of a frame, `velocity` and `angularVelocity` in global components; `PointVelocity`,
 `LocalTwist` and `RelativeTwist` of `exudyn.cUtilities` compute with an HT and a Twist. `exudyn.symbolics.kinematics`
 has `HT` and `Twist` for symbolic parts, with the same methods, and the three functions for both (#3182).
+**The user functions of ObjectConnectorUser and ObjectJointUser take the frame and twist of each marker**:
+`forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters)` and
+`constraintUserFunction(mbs, t, itemNumber, HT0, HT1, parameters)`, the `jacobianUserFunction` likewise; `HT0.translation`
+is the former `position0`, `HT0.rotation` `rotationMatrix0`, `twist0.velocity` and `twist0.angularVelocity` the former
+velocities. A recorded user function gets a `kinematics.HT` and a `kinematics.Twist` with the same methods (#3183).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

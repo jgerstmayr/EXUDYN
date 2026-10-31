@@ -24,9 +24,8 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 k = 100
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialCoordinates=[0.1,0,0]))
 mass = mbs.AddObject(MassPoint(nodeNumber=node, mass=2))
-def UFforce(mbs, t, itemNumber, position0, velocity0, rotationMatrix0, angularVelocity0,
-            position1, velocity1, rotationMatrix1, angularVelocity1, dataCoordinates, parameters):
-    force = k*(position1 - position0 - np.array([1,0,0]))
+def UFforce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    force = k*(HT1.translation - HT0.translation - np.array([1,0,0]))
     return np.hstack([force, -force]) #the forces on marker 0 and marker 1
 groundMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber=mbs.AddObject(ObjectGround())))
 mbs.AddObject(ObjectConnectorUser(markerNumbers=[groundMarker, mbs.AddMarker(MarkerNodePosition(nodeNumber=node))],

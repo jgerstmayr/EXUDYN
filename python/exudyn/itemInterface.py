@@ -243,12 +243,12 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectConnectorTorsionalSpringDamper,springTorqueUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'rotation', 'angularVelocity', 'stiffness', 'damping', 'offset'], ['Real'], ['ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction']],
         'ObjectConnectorCoordinateSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset'], ['Real'], ['ObjectConnectorCoordinateSpringDamperSpringForceUserFunction']],
         'ObjectConnectorCoordinateSpringDamperExt,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset', 'velocityOffset', 'dynamicFrictionForce', 'staticFrictionOffsetForce', 'exponentialDecayStatic', 'viscousFrictionFactor', 'frictionProportionalZone'], ['Real'], ['ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction']],
-        'ObjectConnectorUser,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector3D', 'StdMatrix3D', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdMatrix3D', 'StdVector3D', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'position0', 'velocity0', 'rotationMatrix0', 'angularVelocity0', 'position1', 'velocity1', 'rotationMatrix1', 'angularVelocity1', 'dataCoordinates', 'parameters'], ['StdVector'], ['ObjectConnectorUserForceUserFunction']],
+        'ObjectConnectorUser,forceUserFunction': [['MainSystem', 'Real', 'Index', 'HomogeneousTransformation', 'Twist', 'HomogeneousTransformation', 'Twist', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'HT0', 'twist0', 'HT1', 'twist1', 'dataCoordinates', 'parameters'], ['StdVector'], ['ObjectConnectorUserForceUserFunction']],
         'ObjectConnectorUser,markerAccessUserFunction': [['MainSystem', 'Real', 'Index', 'py::object', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'markers', 'dataCoordinates', 'parameters'], ['void'], ['ObjectConnectorUserMarkerAccessUserFunction']],
         'ObjectConnectorUser,postNewtonStepUserFunction': [['MainSystem', 'Real', 'Index', 'py::object', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'markers', 'dataCoordinates', 'dataCoordinatesStartOfStep', 'parameters'], ['py::object'], ['ObjectConnectorUserPostNewtonStepUserFunction']],
         'ObjectConnectorUser,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectConnectorUserGraphicsDataUserFunction']],
-        'ObjectJointUser,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdMatrix3D', 'StdVector3D', 'StdMatrix3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'position0', 'rotationMatrix0', 'position1', 'rotationMatrix1', 'parameters'], ['StdVector'], ['ObjectJointUserConstraintUserFunction']],
-        'ObjectJointUser,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdMatrix3D', 'StdVector3D', 'StdMatrix3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'position0', 'rotationMatrix0', 'position1', 'rotationMatrix1', 'parameters'], ['py::object'], ['ObjectJointUserJacobianUserFunction']],
+        'ObjectJointUser,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'HomogeneousTransformation', 'HomogeneousTransformation', 'StdVector'], ['mbs', 't', 'itemNumber', 'HT0', 'HT1', 'parameters'], ['StdVector'], ['ObjectJointUserConstraintUserFunction']],
+        'ObjectJointUser,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'HomogeneousTransformation', 'HomogeneousTransformation', 'StdVector'], ['mbs', 't', 'itemNumber', 'HT0', 'HT1', 'parameters'], ['py::object'], ['ObjectJointUserJacobianUserFunction']],
         'ObjectJointUser,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectJointUserGraphicsDataUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction_t']],
@@ -1256,7 +1256,7 @@ class ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction(Protocol):
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, displacement: float, velocity: float, stiffness: float, damping: float, offset: float, velocityOffset: float, dynamicFrictionForce: float, staticFrictionOffsetForce: float, exponentialDecayStatic: float, viscousFrictionFactor: float, frictionProportionalZone: float) -> float: ...
 
 class ObjectConnectorUserForceUserFunction(Protocol):
-    r"""A user function, which computes the forces of the connector on its two markers from their positions, velocities, rotations and angular velocities.
+    r"""A user function, which computes the forces of the connector on its two markers from their frames and twists.
     
     Args:
         mbs (exudyn.MainSystem): provides MainSystem mbs to which the connector belongs
@@ -1265,21 +1265,13 @@ class ObjectConnectorUserForceUserFunction(Protocol):
 
         itemNumber (int): integer number of the connector in mbs
 
-        position0 (np.ndarray): :math:`{}^{0}{\mathbf{p}}_{m0}` global position of marker 0
+        HT0 (exudyn.HT): :math:`{}^{0}{\Hm}_{m0}` the frame of marker 0, an exudyn.HT: its translation the global position :math:`{}^{0}{\mathbf{p}}_{m0}`, its rotation the rotation matrix :math:`{}^{0,m0}{\Rot}`, local to global; the unit rotation if requestedMarkerType has no Orientation
 
-        velocity0 (np.ndarray): :math:`{}^{0}{\vv}_{m0}` global velocity of marker 0
+        twist0 (exudyn.Twist): the twist of marker 0, an exudyn.Twist: its velocity the global velocity :math:`{}^{0}{\vv}_{m0}`, its angularVelocity the global angular velocity :math:`{}^{0}{\tomega}_{m0}`, zero if requestedMarkerType has no Orientation
 
-        rotationMatrix0 (np.ndarray): :math:`{}^{0,m0}{\Rot}` rotation matrix of marker 0, local to global; the unit matrix if requestedMarkerType has no Orientation
+        HT1 (exudyn.HT): :math:`{}^{0}{\Hm}_{m1}` the frame of marker 1, as for marker 0
 
-        angularVelocity0 (np.ndarray): :math:`{}^{0}{\tomega}_{m0}` global angular velocity of marker 0; zero if requestedMarkerType has no Orientation
-
-        position1 (np.ndarray): :math:`{}^{0}{\mathbf{p}}_{m1}` global position of marker 1
-
-        velocity1 (np.ndarray): :math:`{}^{0}{\vv}_{m1}` global velocity of marker 1
-
-        rotationMatrix1 (np.ndarray): :math:`{}^{0,m1}{\Rot}` rotation matrix of marker 1, as for marker 0
-
-        angularVelocity1 (np.ndarray): :math:`{}^{0}{\tomega}_{m1}` global angular velocity of marker 1, as for marker 0
+        twist1 (exudyn.Twist): the twist of marker 1, as for marker 0
 
         dataCoordinates (np.ndarray): :math:`\dv \in \Rcal^{n_d}` the data coordinates of the NodeGenericData nodeNumber, as the postNewtonStepUserFunction last set them; empty without a data node
 
@@ -1288,7 +1280,7 @@ class ObjectConnectorUserForceUserFunction(Protocol):
     Returns:
         np.ndarray: the global forces acting on the markers, :math:`[\fv_0,\, \fv_1]` (6 values), or with exu.MarkerType.Orientation in requestedMarkerType also the torques, :math:`[\fv_0,\, \mv_0,\, \fv_1,\, \mv_1]` (12 values), as list or numpy array
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, position0: np.ndarray, velocity0: np.ndarray, rotationMatrix0: np.ndarray, angularVelocity0: np.ndarray, position1: np.ndarray, velocity1: np.ndarray, rotationMatrix1: np.ndarray, angularVelocity1: np.ndarray, dataCoordinates: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, HT0: exudyn.HT, twist0: exudyn.Twist, HT1: exudyn.HT, twist1: exudyn.Twist, dataCoordinates: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
 
 class ObjectConnectorUserMarkerAccessUserFunction(Protocol):
     r"""A user function, which reads the markers of the connector and applies forces through them, also at points of their bodies that it computes itself; it cannot be recorded as symbolic user function.
@@ -1357,20 +1349,16 @@ class ObjectJointUserConstraintUserFunction(Protocol):
 
         itemNumber (int): integer number of the joint in mbs
 
-        position0 (np.ndarray): :math:`{}^{0}{\mathbf{p}}_{m0}` global position of marker 0
+        HT0 (exudyn.HT): :math:`{}^{0}{\Hm}_{m0}` the frame of marker 0, an exudyn.HT: its translation the global position :math:`{}^{0}{\mathbf{p}}_{m0}`, its rotation the rotation matrix :math:`{}^{0,m0}{\Rot}`, local to global
 
-        rotationMatrix0 (np.ndarray): :math:`{}^{0,m0}{\Rot}` rotation matrix of marker 0, local to global
-
-        position1 (np.ndarray): :math:`{}^{0}{\mathbf{p}}_{m1}` global position of marker 1
-
-        rotationMatrix1 (np.ndarray): :math:`{}^{0,m1}{\Rot}` rotation matrix of marker 1, local to global
+        HT1 (exudyn.HT): :math:`{}^{0}{\Hm}_{m1}` the frame of marker 1, as for marker 0
 
         parameters (np.ndarray): the parameters of the joint, see parameters; empty if not given
 
     Returns:
         np.ndarray: :math:`\cv \in \Rcal^{n_c}` the constraint equations, numberOfConstraints values, as list or numpy array
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, position0: np.ndarray, rotationMatrix0: np.ndarray, position1: np.ndarray, rotationMatrix1: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, HT0: exudyn.HT, HT1: exudyn.HT, parameters: np.ndarray) -> np.ndarray: ...
 
 class ObjectJointUserJacobianUserFunction(Protocol):
     r"""A user function, which computes the derivative of the constraint equations by the translations and global rotation increments of the two markers.
@@ -1382,20 +1370,16 @@ class ObjectJointUserJacobianUserFunction(Protocol):
 
         itemNumber (int): integer number of the joint in mbs
 
-        position0 (np.ndarray): :math:`{}^{0}{\mathbf{p}}_{m0}` global position of marker 0
+        HT0 (exudyn.HT): :math:`{}^{0}{\Hm}_{m0}` the frame of marker 0, an exudyn.HT: its translation the global position :math:`{}^{0}{\mathbf{p}}_{m0}`, its rotation the rotation matrix :math:`{}^{0,m0}{\Rot}`, local to global
 
-        rotationMatrix0 (np.ndarray): :math:`{}^{0,m0}{\Rot}` rotation matrix of marker 0, local to global
-
-        position1 (np.ndarray): :math:`{}^{0}{\mathbf{p}}_{m1}` global position of marker 1
-
-        rotationMatrix1 (np.ndarray): :math:`{}^{0,m1}{\Rot}` rotation matrix of marker 1, local to global
+        HT1 (exudyn.HT): :math:`{}^{0}{\Hm}_{m1}` the frame of marker 1, as for marker 0
 
         parameters (np.ndarray): the parameters of the joint, see parameters; empty if not given
 
     Returns:
         exudyn.MatrixContainer: :math:`\partial \cv / \partial [\mathbf{p}_{m0},\, \ttheta_{m0},\, \mathbf{p}_{m1},\, \ttheta_{m1}] \in \Rcal^{n_c \times 12}` as numpy array or list of lists
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, position0: np.ndarray, rotationMatrix0: np.ndarray, position1: np.ndarray, rotationMatrix1: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, HT0: exudyn.HT, HT1: exudyn.HT, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class ObjectJointUserGraphicsDataUserFunction(Protocol):
     """A user function, which returns the graphics of the joint in global coordinates.
@@ -5962,7 +5946,7 @@ class VObjectConnectorUser:
         return str(dict(self))
 
 class ObjectConnectorUser:
-    """A connector of two markers whose forces are a user function of the positions, velocities, rotations and angular velocities of the markers: it returns the forces and torques on the markers, which the connector applies through the marker Jacobians - a spring-damper, a bushing, a contact of two points -, also as symbolic user function.
+    """A connector of two markers whose forces are a user function of the frames and twists of the markers - their positions, rotations, velocities and angular velocities -: it returns the forces and torques on the markers, which the connector applies through the marker Jacobians - a spring-damper, a bushing, a contact of two points -, also as symbolic user function.
     
     For forces at points of a body that the function computes itself, as a contact searching the closest point on a flexible body, a second user function reads any number of markers of any type and applies forces through them. A NodeGenericData keeps a state, which a postNewtonStepUserFunction updates, as for contact or friction; its Jacobian is computed numerically.
     
@@ -6045,7 +6029,7 @@ class VObjectJointUser:
         return str(dict(self))
 
 class ObjectJointUser:
-    """A joint on two rigid markers whose constraint equations are a Python user function of the positions and rotation matrices of the markers.
+    """A joint on two rigid markers whose constraint equations are a Python user function of the frames of the markers, their positions and rotation matrices.
     
     It has 1 to 6 equations, e.g. for a screw joint, a coupling of rotation and translation or a joint whose axes depend on the motion; the reaction forces and torques follow from the Lagrange multipliers, and the derivative of the equations is a second user function.
     
