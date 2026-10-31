@@ -333,4 +333,50 @@ typedef HomogeneousTransformationBase<float> HomogeneousTransformationF;
 //! a list of transformations, as the placements of the links of a kinematic tree
 typedef ResizableArray<HomogeneousTransformation> HomogeneousTransformationList;
 
+//! the twist of a frame: the velocity of its origin and its angular velocity, both in global components; exudyn.Twist,
+//! the argument of the user connectors with the HT of each marker (#3174)
+class Twist
+{
+public:
+	Vector3D velocity;			//!< the velocity of the origin of the frame, global components
+	Vector3D angularVelocity;	//!< the angular velocity of the frame, global components
+
+	Twist() : velocity(0.), angularVelocity(0.) {}
+	Twist(const Vector3D& velocityInit, const Vector3D& angularVelocityInit) : velocity(velocityInit), angularVelocity(angularVelocityInit) {}
+
+	bool operator==(const Twist& other) const { return velocity == other.velocity && angularVelocity == other.angularVelocity; }
+
+	friend std::ostream& operator<<(std::ostream& os, const Twist& twist)
+	{
+		os << "[" << twist.velocity << ", " << twist.angularVelocity << "]";
+		return os;
+	}
+};
+
+//! the functions of a frame H and its twist (#3174)
+namespace RigidBodyMath
+{
+	//! the velocity of a point fixed in the frame, given by its position in the frame: v + omega x (A localPoint)
+	inline Vector3D PointVelocity(const HomogeneousTransformation& H, const Twist& twist, const Vector3D& localPoint)
+	{
+		return twist.velocity + twist.angularVelocity.CrossProduct(H.RotateVector(localPoint));
+	}
+
+	//! the twist in the components of the frame: [A^T v, A^T omega]
+	inline Twist LocalTwist(const HomogeneousTransformation& H, const Twist& twist)
+	{
+		return Twist(H.RotateVectorTransposed(twist.velocity), H.RotateVectorTransposed(twist.angularVelocity));
+	}
+
+	//! the velocity of frame 1 relative to frame 0 in the components of frame 0, the time derivative of the translation
+	//! and the angular velocity of H0.Relative(H1): [A0^T (v1 - v0 - omega0 x (p1 - p0)), A0^T (omega1 - omega0)]
+	inline Twist RelativeTwist(const HomogeneousTransformation& H0, const Twist& twist0, const HomogeneousTransformation& H1,
+		const Twist& twist1)
+	{
+		Vector3D velocity = twist1.velocity - twist0.velocity - twist0.angularVelocity.CrossProduct(H1.GetTranslation() - H0.GetTranslation());
+		return Twist(H0.RotateVectorTransposed(velocity), H0.RotateVectorTransposed(twist1.angularVelocity - twist0.angularVelocity));
+	}
+}
+
+
 #endif

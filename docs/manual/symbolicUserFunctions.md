@@ -89,6 +89,12 @@ decides is decided then.
   last argument `functions`, so that with `import exudyn.symbolics.kinematics as su`,
   `su.RotXYZ2RotationMatrix(rot, functions=esym)` records and `functions=exudyn.cMath` computes numbers with the same
   bits as C++ (#3069).
+- **Frames and twists**: `kinematics.HT(rotation, translation)` and `kinematics.Twist(velocity, angularVelocity)` hold
+  symbolic parts with the methods and properties of `exudyn.HT` and `exudyn.Twist` - `*`, `@`, `Inverse()`,
+  `Relative(other)`, `rotation`, `translation`, `velocity`, `angularVelocity` -, mapped at once to matrix and vector
+  expressions; an `exudyn.HT` is a constant in their products, on either side. `PointVelocity`, `LocalTwist` and
+  `RelativeTwist` of `exudyn.symbolics.kinematics` take either and call `exudyn.cUtilities` for numbers, so that a
+  function written with them computes with `exudyn.HT` and is recorded with the symbolic classes (#3182).
 
 ## Vectors, matrices and the user items
 

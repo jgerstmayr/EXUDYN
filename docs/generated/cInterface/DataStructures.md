@@ -239,6 +239,25 @@ The class **HT** has the following **functions and structures**:
 
 
 
+(sec-twist)=
+## Twist
+
+The Twist is the velocity of a frame: the velocity of its origin and its angular velocity, both in global components, the 6D velocity at the origin of the frame. With the HT of the frame it gives the velocity of a point fixed in the frame, the twist in the components of the frame and the twist of one frame relative to another: PointVelocity, LocalTwist and RelativeTwist of exudyn.cUtilities and exudyn.symbolics.kinematics. The forceUserFunction of ObjectConnectorUser gets the HT and the Twist of each marker.
+
+
+The class **Twist** has the following **functions and structures**:
+
+- Twist(velocity=None, angularVelocity=None): the velocity of the origin and the angular velocity of the frame, global components, each None for zero; or Twist(twist), a copy
+
+- **`velocity`**: the velocity of the origin of the frame, global components, as numpy array
+- **`angularVelocity`**: the angular velocity of the frame, global components, as numpy array
+- **`__eq__(other)`**: True if velocity and angular velocity are equal, component by component
+- **`__copy__()`**: a copy, for copy.copy(twist)
+- **`__deepcopy__(memo)`**: a copy, for copy.deepcopy(twist)
+- **`__repr__()`**: the string representation of the Twist
+
+
+
 (sec-connectormarker)=
 ## ConnectorMarker
 

@@ -2,8 +2,9 @@
 
 from typing import Union
 from numpy.typing import ArrayLike, NDArray
+from exudyn import HT, Twist
 
-__all__ = ['ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt', 'SymmetricBasis', 'SymmetricBasisRotationJacobian', 'Skew', 'Skew2Vec', 'EulerParameters2G', 'EulerParameters2GLocal', 'EulerParameters2RotationMatrix', 'RotationMatrix2EulerParameters', 'AngularVelocity2EulerParameters_t', 'RotationVector2RotationMatrix', 'RotationMatrix2RotationVector', 'ComputeRotationAxisFromRotationVector', 'ExpSO3', 'LogSO3', 'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G', 'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t', 'AngularVelocity2RotXYZ_t', 'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX', 'RotationMatrixY', 'RotationMatrixZ', 'RotationMatrix2D']
+__all__ = ['ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt', 'SymmetricBasis', 'SymmetricBasisRotationJacobian', 'Skew', 'Skew2Vec', 'EulerParameters2G', 'EulerParameters2GLocal', 'EulerParameters2RotationMatrix', 'RotationMatrix2EulerParameters', 'AngularVelocity2EulerParameters_t', 'RotationVector2RotationMatrix', 'RotationMatrix2RotationVector', 'ComputeRotationAxisFromRotationVector', 'ExpSO3', 'LogSO3', 'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G', 'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t', 'AngularVelocity2RotXYZ_t', 'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX', 'RotationMatrixY', 'RotationMatrixZ', 'RotationMatrix2D', 'PointVelocity', 'LocalTwist', 'RelativeTwist']
 
 def ComputeOrthonormalBasisVectors(vector0: ArrayLike) -> NDArray: 
     """The normalized vector0 and two normals to it, as the rows of a 3x3 array (unpacked as [v0, n1, n2] = ...); the normals are not unique; for vector0 = [0,0,0] the rows are vector0 and the x and y axes; computed by EXUmath::ComputeOrthogonalBasisVectors of the C++ code."""
@@ -97,4 +98,13 @@ def RotationMatrixZ(angleRad: float) -> NDArray:
     ...
 def RotationMatrix2D(angleRad: float) -> NDArray: 
     """The 2x2 rotation matrix of a rotation by angleRad (in radians) in the plane; computed by RotationMatrix2D of PyCUtilities.h of the C++ code."""
+    ...
+def PointVelocity(HT: HT, twist: Twist, localPoint: ArrayLike) -> NDArray: 
+    r"""The velocity of a point fixed in the frame HT, given by its position localPoint in the frame, for the twist of the frame: $\vv + \tomega \times (\Rot\, \pv_{loc})$; computed by RigidBodyMath::PointVelocity of the C++ code."""
+    ...
+def LocalTwist(HT: HT, twist: Twist) -> Twist: 
+    r"""The twist in the components of the frame HT: $[\Rot\tp \vv,\; \Rot\tp \tomega]$; computed by RigidBodyMath::LocalTwist of the C++ code."""
+    ...
+def RelativeTwist(HT0: HT, twist0: Twist, HT1: HT, twist1: Twist) -> Twist: 
+    r"""The velocity of frame 1 relative to frame 0 in the components of frame 0, the time derivative of HT0.Relative(HT1): $[\Rot_0\tp (\vv_1 - \vv_0 - \tomega_0 \times (\pv_1 - \pv_0)),\; \Rot_0\tp (\tomega_1 - \tomega_0)]$; computed by RigidBodyMath::RelativeTwist of the C++ code."""
     ...

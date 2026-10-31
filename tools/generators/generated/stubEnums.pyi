@@ -691,6 +691,34 @@ class HT:
         """The string representation of the HT."""
         ...
 
+#stub information for class Twist functions
+class Twist:
+    """The Twist is the velocity of a frame: the velocity of its origin and its angular velocity, both in global components, the 6D velocity at the origin of the frame.
+
+    With the HT of the frame it gives the velocity of a point fixed in the frame, the twist in the components of the frame and the twist of one frame relative to another: PointVelocity, LocalTwist and RelativeTwist of exudyn.cUtilities and exudyn.symbolics.kinematics
+    The forceUserFunction of ObjectConnectorUser gets the HT and the Twist of each marker.
+    """
+    velocity:ArrayLike
+    """the velocity of the origin of the frame, global components, as numpy array."""
+    angularVelocity:ArrayLike
+    """the angular velocity of the frame, global components, as numpy array."""
+    @overload
+    def __eq__(self, other: Twist) -> bool: 
+        """True if velocity and angular velocity are equal, component by component."""
+        ...
+    @overload
+    def __copy__(self) -> Twist: 
+        """A copy, for copy.copy(twist)."""
+        ...
+    @overload
+    def __deepcopy__(self, memo: Any) -> Twist: 
+        """A copy, for copy.deepcopy(twist)."""
+        ...
+    @overload
+    def __repr__(self) -> str: 
+        """The string representation of the Twist."""
+        ...
+
 #stub information for class ConnectorMarker functions
 class ConnectorMarker:
     """A ConnectorMarker is one marker of ObjectConnectorUser in its markerAccessUserFunction and postNewtonStepUserFunction, which get one per marker: it reads the marker in the configuration of the call - its position, velocity, rotation and coordinates, and for a body marker positions and velocities anywhere on its body - and applies forces and torques through the Jacobians of the marker.

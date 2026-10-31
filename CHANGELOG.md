@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 271 | 1.13.277 |
+| 1.13 | Newborn | 272 | 1.13.278 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.278** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The symbolic HT and Twist in exudyn.symbolics.kinematics, exudyn.Twist, and PointVelocity, LocalTwist and RelativeTwist in exudyn.cUtilities and kinematics (#3182)
+  - description: Revision2026c step RG12.69.3. kinematics.HT holds a symbolic rotation matrix and translation with the products, Inverse and Relative of exudyn.HT, mapped at once to matrix and vector expressions, an exudyn.HT taken as constant on either side; kinematics.Twist and the new C++ class exudyn.Twist hold the velocity of the origin and the angular velocity of a frame, global; PointVelocity, LocalTwist and RelativeTwist compute with them, in C++ for exudyn.HT and exudyn.Twist. exudyn.HT returns NotImplemented for an operand that is no HT, list, tuple or numpy array, so that exu.HT(...) \* symbolic HT reaches the symbolic class. Decided: the twist an object with velocity and angularVelocity; the twist functions in C++ and kinematics, not methods of the HT.
+  - **notes:** exudyn.Twist is the velocity of a frame, velocity and angularVelocity in global components; PointVelocity, LocalTwist and RelativeTwist of exudyn.cUtilities compute with an HT and a Twist. exudyn.symbolics.kinematics has HT and Twist for symbolic parts, with the methods and properties of exudyn.HT and exudyn.Twist mapped at once to matrix and vector expressions, and the three functions for both. exudyn.HT returns NotImplemented for an operand it does not compute with, so that exu.HT(...) \* a symbolic HT is the composition.
+  - date resolved: **2026-11-01 00:14**, date raised: 2026-11-01
 - **1.13.277** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.HT without SetTranslation, RotateVector, RotateVectorTransposed, SetIdentity, Get and Invert, which the constructor, the properties and Inverse write as well (#3181)
   - description: Revision2026c step RG12.69.2. The six functions are written as H.translation = p or exu.HT(translation=p), H.rotation @ v, H.rotation.T @ v, exu.HT(), (H.rotation, H.translation) and H = H.Inverse(); the symbolic HT (\#3174) has one way for each. Decided: removed without deprecation (exudyn.HT was released in 1.13.6 and is little used).
   - **notes:** exudyn.HT has one way for each operation: SetTranslation, RotateVector, RotateVectorTransposed, SetIdentity, Get and Invert are removed; write H.translation = p or exu.HT(translation=p), H.rotation @ v, H.rotation.T @ v, exu.HT(), (H.rotation, H.translation) and H = H.Inverse().

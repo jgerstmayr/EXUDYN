@@ -4809,3 +4809,20 @@ correct name"; "Then do the suggested RG12.69.2-.4 steps".)*
   pybindDataStructures.py and their Py helpers out of PyHomogeneousTransformation.h (the C++ methods stay, MarkerData.h
   uses them); homogeneousTransformationTest.py checks `Relative` instead of the rotation of a vector (the same result
   value), the notebook HT.ipynb reads both parts by the properties; revisions.md.
+
+<a id="rg12-69-3"></a>
+### RG12.69.3 — the symbolic HT and Twist, exudyn.Twist and the twist functions (2026-11-01, #3182)
+- C++: `Twist` (velocity, angularVelocity, global) and `RigidBodyMath::PointVelocity`, `LocalTwist`, `RelativeTwist`
+  in HomogeneousTransformation.h; `PyTwist` (exudyn.Twist: constructor, the two properties, ==, copies, repr) in
+  PyHomogeneousTransformation.h, bound in pybindDataStructures.py; the three functions in exudyn.cUtilities
+  (pybindCUtilities.py, PyCUtilities.h). `PyHT::Multiply` and `MatMul` return NotImplemented for an operand that is no
+  HT, list, tuple or numpy array: `exu.HT(...) * X()` reaches `X.__rmul__`, `H*'x'` still raises a TypeError.
+- Python: `kinematics.HT` (rotation, translation; `*`, `@`, `__rmul__`/`__rmatmul__` with an exudyn.HT as constant,
+  `Inverse`, `Relative`), `kinematics.Twist`, and the three functions, which call exudyn.cUtilities when all arguments
+  are exudyn.HT and exudyn.Twist. A constant operand is made symbolic when the other one is (`_MatMul`, `_Plus`), as
+  `esym.Matrix @ numpy` is not bound.
+- The cUtilities stub imports HT and Twist from exudyn when its annotations name them (createStubFiles.py).
+- symbolicHTTest.py: 10 random frames and twists, every operation and function against exudyn.HT and cUtilities -
+  the same bits (largest difference 0.0); RelativeTwist against central differences of HT0.Relative(HT1) moved by the
+  twists (1.7e-10, 2.3e-11), esym.Jacobian of the relative translation by a rotation vector (5.2e-11).
+- Checked: the suite passes, pytest 1455 passed.

@@ -2,9 +2,10 @@
 # This is an EXUDYN python utility library
 #
 # Details:  exudyn.cUtilities: the kinematics functions of the C++ code of Exudyn (rotation matrices, Euler parameters,
-#           Tait-Bryan angles, rotation vectors, skew matrices, basis vectors), the same bits on every platform. The
-#           functions are compiled (the submodule exudyn._cUtilities, src/Pymodules/PyCUtilities.h, declared in
-#           definitions/pybindCUtilities.py, which also writes their documentation and cUtilities.pyi); this module takes
+#           Tait-Bryan angles, rotation vectors, skew matrices, basis vectors, the twist of a frame), the same bits on every
+#           platform. The functions are compiled (the submodule exudyn._cUtilities, src/Pymodules/PyCUtilities.h,
+#           declared in definitions/pybindCUtilities.py, which also writes their documentation and cUtilities.pyi); this
+#           module takes
 #           them. exudyn.rigidBodyUtilities calls them under the same names. Documented in the Python-C++
 #           interface, page Exudyn module functions.
 #
@@ -26,7 +27,7 @@ __all__ = [
     'RotationMatrix2RotationVector', 'ComputeRotationAxisFromRotationVector', 'ExpSO3', 'LogSO3',
     'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G', 'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t',
     'AngularVelocity2RotXYZ_t', 'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX',
-    'RotationMatrixY', 'RotationMatrixZ', 'RotationMatrix2D',
+    'RotationMatrixY', 'RotationMatrixZ', 'RotationMatrix2D', 'PointVelocity', 'LocalTwist', 'RelativeTwist',
     ]
 
 _cUtilities = _compiledModule._cUtilities
@@ -61,3 +62,6 @@ RotationMatrixX = _cUtilities.RotationMatrixX
 RotationMatrixY = _cUtilities.RotationMatrixY
 RotationMatrixZ = _cUtilities.RotationMatrixZ
 RotationMatrix2D = _cUtilities.RotationMatrix2D
+PointVelocity = _cUtilities.PointVelocity
+LocalTwist = _cUtilities.LocalTwist
+RelativeTwist = _cUtilities.RelativeTwist

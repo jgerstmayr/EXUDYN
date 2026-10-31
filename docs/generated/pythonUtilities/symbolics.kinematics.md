@@ -11,6 +11,8 @@ user function records; with functions=numpy, math or exudyn.cMath they are numbe
 numpy array, equal to the one of cUtilities. So a user function is written once for both; for numbers
 alone, exudyn.cUtilities is faster.
 Arguments are sequences indexed by component: lists, numpy arrays, symbolic vectors or their slices.
+The classes HT and Twist hold a frame and its velocities with symbolic parts, with the methods of
+exudyn.HT and exudyn.Twist; PointVelocity, LocalTwist and RelativeTwist take either (#3182).
 
 - **Author**: Johannes Gerstmayr
 - **Date**: 2026-10-23 (created)
@@ -18,7 +20,7 @@ Arguments are sequences indexed by component: lists, numpy arrays, symbolic vect
 (sec-kinematics--matrix)=
 ## Function: _Matrix
 
-[`_Matrix(rows, functions)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L35)
+[`_Matrix(rows, functions)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L38)
 
 - **function description**: the result matrix: a symbolic matrix for exudyn.symbolic, a numpy array otherwise
 
@@ -26,7 +28,7 @@ Arguments are sequences indexed by component: lists, numpy arrays, symbolic vect
 (sec-kinematics--vector)=
 ## Function: _Vector
 
-[`_Vector(components, functions)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L41)
+[`_Vector(components, functions)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L44)
 
 - **function description**: the result vector: a symbolic vector for exudyn.symbolic, a numpy array otherwise
 
@@ -34,7 +36,7 @@ Arguments are sequences indexed by component: lists, numpy arrays, symbolic vect
 (sec-kinematics-skew)=
 ## Function: Skew
 
-[`Skew(vector, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L50)
+[`Skew(vector, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L53)
 
 - **function description**: skew symmetric 3 x 3 matrix of a 3D vector, Skew(a) @ b = a x b; equals exudyn.cUtilities.Skew for a 3D vector
 - **input**:
@@ -49,7 +51,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot
 (sec-kinematics-cross)=
 ## Function: Cross
 
-[`Cross(vector0, vector1, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L65)
+[`Cross(vector0, vector1, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L68)
 
 - **function description**: cross product of two 3D vectors, as numpy.cross
 - **input**:
@@ -65,7 +67,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-kinematics-inertia6d2inertiatensor)=
 ## Function: Inertia6D2InertiaTensor
 
-[`Inertia6D2InertiaTensor(inertia6D, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L79)
+[`Inertia6D2InertiaTensor(inertia6D, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L82)
 
 - **function description**: 3 x 3 inertia tensor of its 6 components [J00, J11, J22, J12, J02, J01]; equals exudyn.rigidBodyUtilities.Inertia6D2InertiaTensor
 - **input**:
@@ -80,7 +82,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 (sec-kinematics-rotationmatrixx)=
 ## Function: RotationMatrixX
 
-[`RotationMatrixX(angleRad, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L98)
+[`RotationMatrixX(angleRad, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L101)
 
 - **function description**: rotation matrix about the x-axis; equals exudyn.cUtilities.RotationMatrixX
 - **input**:
@@ -95,7 +97,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-kinematics-rotationmatrixy)=
 ## Function: RotationMatrixY
 
-[`RotationMatrixY(angleRad, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L113)
+[`RotationMatrixY(angleRad, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L116)
 
 - **function description**: rotation matrix about the y-axis; equals exudyn.cUtilities.RotationMatrixY
 - **input**:
@@ -110,7 +112,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-kinematics-rotationmatrixz)=
 ## Function: RotationMatrixZ
 
-[`RotationMatrixZ(angleRad, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L128)
+[`RotationMatrixZ(angleRad, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L131)
 
 - **function description**: rotation matrix about the z-axis; equals exudyn.cUtilities.RotationMatrixZ
 - **input**:
@@ -125,7 +127,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-kinematics-rotationmatrix2d)=
 ## Function: RotationMatrix2D
 
-[`RotationMatrix2D(angleRad, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L143)
+[`RotationMatrix2D(angleRad, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L146)
 
 - **function description**: 2D rotation matrix; equals exudyn.cUtilities.RotationMatrix2D
 - **input**:
@@ -140,7 +142,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 (sec-kinematics-rotxyz2rotationmatrix)=
 ## Function: RotXYZ2RotationMatrix
 
-[`RotXYZ2RotationMatrix(rot, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L160)
+[`RotXYZ2RotationMatrix(rot, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L163)
 
 - **function description**: rotation matrix Rx(rot[0]) Ry(rot[1]) Rz(rot[2]) of the Tait-Bryan angles; equals exudyn.cUtilities.RotXYZ2RotationMatrix
 - **input**:
@@ -155,7 +157,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-kinematics-rotxyz2g)=
 ## Function: RotXYZ2G
 
-[`RotXYZ2G(rot, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L178)
+[`RotXYZ2G(rot, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L181)
 
 - **function description**: G matrix of the Tait-Bryan angles, omega = G @ rot_t with the global angular velocity omega; equals exudyn.cUtilities.RotXYZ2G
 - **input**:
@@ -170,7 +172,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 (sec-kinematics-rotxyz2g-t)=
 ## Function: RotXYZ2G_t
 
-[`RotXYZ2G_t(rot, rot_t, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L195)
+[`RotXYZ2G_t(rot, rot_t, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L198)
 
 - **function description**: time derivative of the G matrix of the Tait-Bryan angles; equals exudyn.cUtilities.RotXYZ2G_t
 - **input**:
@@ -186,7 +188,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 (sec-kinematics-rotxyz2glocal)=
 ## Function: RotXYZ2GLocal
 
-[`RotXYZ2GLocal(rot, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L212)
+[`RotXYZ2GLocal(rot, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L215)
 
 - **function description**: local G matrix of the Tait-Bryan angles, omegaLocal = GLocal @ rot_t with the angular velocity in body coordinates; equals exudyn.cUtilities.RotXYZ2GLocal
 - **input**:
@@ -201,7 +203,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 (sec-kinematics-rotxyz2glocal-t)=
 ## Function: RotXYZ2GLocal_t
 
-[`RotXYZ2GLocal_t(rot, rot_t, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L229)
+[`RotXYZ2GLocal_t(rot, rot_t, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L232)
 
 - **function description**: time derivative of the local G matrix of the Tait-Bryan angles; equals exudyn.cUtilities.RotXYZ2GLocal_t
 - **input**:
@@ -217,7 +219,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 (sec-kinematics-angularvelocity2rotxyz-t)=
 ## Function: AngularVelocity2RotXYZ_t
 
-[`AngularVelocity2RotXYZ_t(angularVelocity, rotation, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L246)
+[`AngularVelocity2RotXYZ_t(angularVelocity, rotation, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L249)
 
 - **function description**: time derivatives of the Tait-Bryan angles of the global angular velocity, G^-1 @ angularVelocity; equals exudyn.cUtilities.AngularVelocity2RotXYZ_t; singular at cos(rotation[1]) = 0, where it divides by zero
 - **input**:
@@ -233,7 +235,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 (sec-kinematics-rotxyz2eulerparameters)=
 ## Function: RotXYZ2EulerParameters
 
-[`RotXYZ2EulerParameters(alpha, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L265)
+[`RotXYZ2EulerParameters(alpha, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L268)
 
 - **function description**: the 4 Euler parameters of the Tait-Bryan angles, see [Henderson1977], entry 0 the scalar part; equals exudyn.cUtilities.RotXYZ2EulerParameters
 - **input**:
@@ -248,7 +250,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 (sec-kinematics-eulerparameters2rotationmatrix)=
 ## Function: EulerParameters2RotationMatrix
 
-[`EulerParameters2RotationMatrix(eulerParameters, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L287)
+[`EulerParameters2RotationMatrix(eulerParameters, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L290)
 
 - **function description**: rotation matrix of the 4 Euler parameters; equals exudyn.cUtilities.EulerParameters2RotationMatrix
 - **input**:
@@ -263,7 +265,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-kinematics-eulerparameters2g)=
 ## Function: EulerParameters2G
 
-[`EulerParameters2G(eulerParameters, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L302)
+[`EulerParameters2G(eulerParameters, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L305)
 
 - **function description**: G matrix of the Euler parameters, omega = G @ ep_t with the global angular velocity omega; equals exudyn.cUtilities.EulerParameters2G
 - **input**:
@@ -278,7 +280,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 (sec-kinematics-eulerparameters2glocal)=
 ## Function: EulerParameters2GLocal
 
-[`EulerParameters2GLocal(eulerParameters, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L318)
+[`EulerParameters2GLocal(eulerParameters, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L321)
 
 - **function description**: local G matrix of the Euler parameters, omegaLocal = GLocal @ ep_t with the angular velocity in body coordinates; equals exudyn.cUtilities.EulerParameters2GLocal
 - **input**:
@@ -293,7 +295,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 (sec-kinematics-angularvelocity2eulerparameters-t)=
 ## Function: AngularVelocity2EulerParameters_t
 
-[`AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L334)
+[`AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L337)
 
 - **function description**: time derivatives of the Euler parameters of the global angular velocity, 0.25 G^T @ angularVelocity for unit Euler parameters; equals exudyn.cUtilities.AngularVelocity2EulerParameters_t
 - **input**:
@@ -309,7 +311,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`flexibleRot
 (sec-kinematics-rotationvector2rotationmatrix)=
 ## Function: RotationVector2RotationMatrix
 
-[`RotationVector2RotationMatrix(rotationVector, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L356)
+[`RotationVector2RotationMatrix(rotationVector, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L359)
 
 - **function description**: rotation matrix of the rotation vector v with the angle a = |v|, I + sin(a)/a Skew(v) + 2 sin(a/2)^2/a^2 Skew(v)^2, see appendix B in [Simo1988]; below a = 1e-12 the factors are their limits 1 and 1/2, for symbolic arguments chosen by exudyn.symbolic.IfThenElse; equals exudyn.cUtilities.RotationVector2RotationMatrix
 - **input**:
@@ -324,7 +326,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chatGPTupda
 (sec-kinematics-rotationvector2g)=
 ## Function: RotationVector2G
 
-[`RotationVector2G(rotationVector, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L386)
+[`RotationVector2G(rotationVector, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L389)
 
 - **function description**: G matrix of the rotation vector as the Lie group node NodeRigidBodyRotVecLG uses it, whose velocity coordinates are the local angular velocity: the rotation matrix; equals exudyn.rigidBodyUtilities.RotationVector2G
 - **input**:
@@ -336,10 +338,162 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chatGPTupda
 (sec-kinematics-rotationvector2glocal)=
 ## Function: RotationVector2GLocal
 
-[`RotationVector2GLocal(rotationVector, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L399)
+[`RotationVector2GLocal(rotationVector, functions = exu.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L402)
 
 - **function description**: local G matrix of the rotation vector as the Lie group node NodeRigidBodyRotVecLG uses it, whose velocity coordinates are the local angular velocity: the unit matrix; equals exudyn.rigidBodyUtilities.RotationVector2GLocal
 - **input**:
   - `rotationVector`: 3D rotation vector
   - `functions`: exudyn.symbolic (symbolic or numbers), numpy, math or exudyn.cMath (numbers)
 - **output**: 3 x 3 unit matrix, symbolic for exudyn.symbolic, else as np.array
+
+
+(sec-kinematics--assymbolic)=
+## Function: _AsSymbolic
+
+[`_AsSymbolic(value)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L421)
+
+- **function description**: a constant matrix or vector of numbers as symbolic one, a symbolic one as it is
+
+
+(sec-kinematics--matmul)=
+## Function: _MatMul
+
+[`_MatMul(matrix, operand)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L428)
+
+- **function description**: matrix @ operand; a constant is made symbolic if the other one is symbolic
+
+
+(sec-kinematics--plus)=
+## Function: _Plus
+
+[`_Plus(vector0, vector1, sign = 1.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L434)
+
+- **function description**: vector0 + sign*vector1; a constant is made symbolic if the other one is symbolic
+
+
+(sec-kinematics--numeric)=
+## Function: _Numeric
+
+[`_Numeric(*values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L517)
+
+- **function description**: true if the frames and twists are those of exudyn, which exudyn.cUtilities computes
+
+
+(sec-kinematics-pointvelocity)=
+## Function: PointVelocity
+
+[`PointVelocity(HT, twist, localPoint)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L525)
+
+- **function description**: the velocity of a point fixed in the frame HT, given by its position in the frame, v + omega x (A localPoint); for an exudyn.HT and an exudyn.Twist computed by exudyn.cUtilities.PointVelocity
+- **input**:
+  - `HT`: the frame, an exudyn.HT or kinematics.HT
+  - `twist`: the twist of the frame, an exudyn.Twist or kinematics.Twist
+  - `localPoint`: 3D position of the point in the frame
+- **output**: 3D velocity of the point, global components; symbolic for symbolic parts, else as np.array
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicHTTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicHTTest.py) (TM)
+
+
+(sec-kinematics-localtwist)=
+## Function: LocalTwist
+
+[`LocalTwist(HT, twist)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L541)
+
+- **function description**: the twist in the components of the frame HT, [A^T v, A^T omega]; for an exudyn.HT and an exudyn.Twist computed by exudyn.cUtilities.LocalTwist
+- **input**:
+  - `HT`: the frame, an exudyn.HT or kinematics.HT
+  - `twist`: the twist of the frame, an exudyn.Twist or kinematics.Twist
+- **output**: the twist in local components, an exudyn.Twist for exudyn.HT and exudyn.Twist, else a kinematics.Twist
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicHTTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicHTTest.py) (TM)
+
+
+(sec-kinematics-relativetwist)=
+## Function: RelativeTwist
+
+[`RelativeTwist(HT0, twist0, HT1, twist1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L557)
+
+- **function description**: the velocity of frame 1 relative to frame 0 in the components of frame 0, the time derivative of HT0.Relative(HT1): [A0^T (v1 - v0 - omega0 x (p1 - p0)), A0^T (omega1 - omega0)]; for exudyn.HT and exudyn.Twist computed by exudyn.cUtilities.RelativeTwist
+- **input**:
+  - `HT0`: frame 0, an exudyn.HT or kinematics.HT
+  - `twist0`: the twist of frame 0, an exudyn.Twist or kinematics.Twist
+  - `HT1`: frame 1
+  - `twist1`: the twist of frame 1
+- **output**: the relative twist, an exudyn.Twist for exudyn.HT and exudyn.Twist, else a kinematics.Twist
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicHTTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicHTTest.py) (TM)
+
+
+(sec-module-symbolics.kinematics-class-ht)=
+## CLASS HT (in module symbolics.kinematics)
+
+**class description**: the homogeneous transformation of exudyn.HT for symbolic parts (#3174): a rotation matrix and a translation, each an exudyn.symbolic.Matrix or Vector, or numbers; its methods give the matrix and vector expressions at once, so that a recording holds matrix products. A symbolic user function of ObjectConnectorUser and ObjectJointUser gets one per marker while it is recorded, an exudyn.HT when it computes with numbers; both have the same methods. An exudyn.HT is taken as constant in the products, in either order.
+
+- **input**:
+  - `rotation`: 3 x 3 rotation matrix, None for the unit matrix; or an exudyn.HT or HT, copied
+  - `translation`: 3D translation, None for zero
+
+(sec-kinematics-ht---mul--)=
+### Class function: __mul__
+
+[`__mul__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L460)
+
+- **class function description**: H1*H2, the composition, an HT; H*v, the transformed point A v + p of a 3D vector
+
+
+(sec-kinematics-ht---rmul--)=
+### Class function: __rmul__
+
+[`__rmul__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L467)
+
+- **class function description**: exudyn.HT * HT, the composition with the exudyn.HT as constant
+
+
+(sec-kinematics-ht---matmul--)=
+### Class function: __matmul__
+
+[`__matmul__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L473)
+
+- **class function description**: H1@H2, the composition as H1*H2
+
+
+(sec-kinematics-ht---rmatmul--)=
+### Class function: __rmatmul__
+
+[`__rmatmul__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L479)
+
+- **class function description**: exudyn.HT @ HT, the composition as exudyn.HT * HT
+
+
+(sec-kinematics-ht-inverse)=
+### Class function: Inverse
+
+[`Inverse(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L483)
+
+- **class function description**: the inverse transformation [A^T, -A^T p], an HT
+
+
+(sec-kinematics-ht-relative)=
+### Class function: Relative
+
+[`Relative(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L488)
+
+- **class function description**: the frame of other seen from this one, H.Inverse()*other = [A^T A2, A^T (p2 - p)], without the inverse
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`homogeneousTransformationInterpolation.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/homogeneousTransformationInterpolation.py) (Ex), [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`kinematicTreePendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py) (Ex), [`carRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py) (TM), [`createFFRFReducedOrderObjectTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFFRFReducedOrderObjectTest.py) (TM), [`createKinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py) (TM), ...
+
+
+(sec-module-symbolics.kinematics-class-twist)=
+## CLASS Twist (in module symbolics.kinematics)
+
+**class description**: the twist of exudyn.Twist for symbolic parts (#3174): the velocity of the origin of a frame and its angular velocity, both in global components, each an exudyn.symbolic.Vector or numbers. A symbolic forceUserFunction of ObjectConnectorUser gets one per marker while it is recorded, an exudyn.Twist when it computes with numbers.
+
+- **input**:
+  - `velocity`: 3D velocity of the origin, None for zero; or an exudyn.Twist or Twist, copied
+  - `angularVelocity`: 3D angular velocity, None for zero
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMassPoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMassPoint.py) (Ex), [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`ROSTurtle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSTurtle.py) (Ex)

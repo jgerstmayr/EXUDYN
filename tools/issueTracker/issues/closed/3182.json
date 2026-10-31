@@ -1,0 +1,15 @@
+{
+  "number": 3182,
+  "title": "The symbolic HT and Twist in exudyn.symbolics.kinematics, exudyn.Twist, and PointVelocity, LocalTwist and RelativeTwist in exudyn.cUtilities and kinematics",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Revision2026c step RG12.69.3. kinematics.HT holds a symbolic rotation matrix and translation with the products, Inverse and Relative of exudyn.HT, mapped at once to matrix and vector expressions, an exudyn.HT taken as constant on either side; kinematics.Twist and the new C++ class exudyn.Twist hold the velocity of the origin and the angular velocity of a frame, global; PointVelocity, LocalTwist and RelativeTwist compute with them, in C++ for exudyn.HT and exudyn.Twist. exudyn.HT returns NotImplemented for an operand that is no HT, list, tuple or numpy array, so that exu.HT(...) * symbolic HT reaches the symbolic class. Decided: the twist an object with velocity and angularVelocity; the twist functions in C++ and kinematics, not methods of the HT.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 00:14",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.Twist is the velocity of a frame, velocity and angularVelocity in global components; PointVelocity, LocalTwist and RelativeTwist of exudyn.cUtilities compute with an HT and a Twist. exudyn.symbolics.kinematics has HT and Twist for symbolic parts, with the methods and properties of exudyn.HT and exudyn.Twist mapped at once to matrix and vector expressions, and the three functions for both. exudyn.HT returns NotImplemented for an operand it does not compute with, so that exu.HT(...) * a symbolic HT is the composition.",
+  "resolvedInVersion": "1.13.278"
+}

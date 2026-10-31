@@ -19,6 +19,7 @@
 
 #include "Linalg/RigidBodyMath.h"
 #include "Pymodules/PybindUtilities.h"
+#include "Pymodules/PyHomogeneousTransformation.h"
 
 namespace PyCUtilities {
 
@@ -344,6 +345,19 @@ namespace PyCUtilities {
 		Real c = EM::Cos(angleRad);
 		Real s = EM::Sin(angleRad);
 		return ToNumPy(ConstSizeMatrix<4>(2, 2, { c, -s, s, c }));
+	}
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//the twist of a frame with its HT (#3174)
+
+	inline py::array_t<Real> PointVelocity(const PyHT& HT, const PyTwist& twist, const py::object& localPoint)
+	{
+		return ToNumPy(RigidBodyMath::PointVelocity(HT, twist, GetVector<3>(localPoint, "PointVelocity", "localPoint")));
+	}
+	inline PyTwist LocalTwist(const PyHT& HT, const PyTwist& twist) { return PyTwist(RigidBodyMath::LocalTwist(HT, twist)); }
+	inline PyTwist RelativeTwist(const PyHT& HT0, const PyTwist& twist0, const PyHT& HT1, const PyTwist& twist1)
+	{
+		return PyTwist(RigidBodyMath::RelativeTwist(HT0, twist0, HT1, twist1));
 	}
 
 } //namespace PyCUtilities

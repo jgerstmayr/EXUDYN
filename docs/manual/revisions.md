@@ -32,6 +32,9 @@ before), and a wrong size or a singular input raises a `ValueError` (#2960, #296
 **`exudyn.HT` has one way for each operation.** `SetTranslation(p)`, `RotateVector(v)`, `RotateVectorTransposed(v)`,
 `SetIdentity()`, `Get()` and `Invert()` are removed; write `H.translation = p` or `exu.HT(translation=p)`,
 `H.rotation @ v`, `H.rotation.T @ v`, `exu.HT()`, `(H.rotation, H.translation)` and `H = H.Inverse()` (#3181).
+**`exudyn.Twist`** is the velocity of a frame, `velocity` and `angularVelocity` in global components; `PointVelocity`,
+`LocalTwist` and `RelativeTwist` of `exudyn.cUtilities` compute with an HT and a Twist. `exudyn.symbolics.kinematics`
+has `HT` and `Twist` for symbolic parts, with the same methods, and the three functions for both (#3182).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

@@ -110,5 +110,23 @@ for (name, argList, defaultArgs, argTypes, cFunction, description) in functions:
                                returnType=returnType,
                                )
 
+#the twist functions on exudyn.HT and exudyn.Twist (#3174); exudyn.symbolics.kinematics calls them for numbers
+twistFunctions = [
+    ('PointVelocity', ['HT', 'twist', 'localPoint'], ['HT', 'Twist', vector], 'NDArray', 'RigidBodyMath::PointVelocity',
+     r'the velocity of a point fixed in the frame HT, given by its position localPoint in the frame, for the twist of the frame: $\vv + \tomega \times (\Rot\, \pv_{loc})$'),
+    ('LocalTwist', ['HT', 'twist'], ['HT', 'Twist'], 'Twist', 'RigidBodyMath::LocalTwist',
+     r'the twist in the components of the frame HT: $[\Rot\tp \vv,\; \Rot\tp \tomega]$'),
+    ('RelativeTwist', ['HT0', 'twist0', 'HT1', 'twist1'], ['HT', 'Twist', 'HT', 'Twist'], 'Twist', 'RigidBodyMath::RelativeTwist',
+     r'the velocity of frame 1 relative to frame 0 in the components of frame 0, the time derivative of HT0.Relative(HT1): $[\Rot_0\tp (\vv_1 - \vv_0 - \tomega_0 \times (\pv_1 - \pv_0)),\; \Rot_0\tp (\tomega_1 - \tomega_0)]$'),
+    ]
+
+for (name, argList, argTypes, twistReturnType, cFunction, description) in twistFunctions:
+    module.DefPyFunctionAccess(cClass='', pyName=name, cName='PyCUtilities::' + name,
+                               description=description + '; computed by ' + cFunction + ' of the C++ code',
+                               argList=argList,
+                               argTypes=argTypes,
+                               returnType=twistReturnType,
+                               )
+
 module.CppCode('        }\n        }\n')
 module.DefFinishTable()

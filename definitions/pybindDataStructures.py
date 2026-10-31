@@ -341,6 +341,59 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='__repr__',
 pb.DefPyFinishClass('HT')
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#documentation and pybindings for Twist, the velocities of a frame (#3174)
+classStr = 'PyTwist'
+pyClassStr = 'Twist'
+
+pb.DefPyStartClass(classStr, pyClassStr, 'The Twist is the velocity of a frame: the velocity of its origin and its angular velocity, both in global components, the 6D velocity at the origin of the frame. With the HT of the frame it gives the velocity of a point fixed in the frame, the twist in the components of the frame and the twist of one frame relative to another: PointVelocity, LocalTwist and RelativeTwist of exudyn.cUtilities and exudyn.symbolics.kinematics. The forceUserFunction of ObjectConnectorUser gets the HT and the Twist of each marker.',
+                    subSection=True, labelName='sec:Twist')
+
+pb.DefStartTable(pyClassStr)
+
+pb.CppCode('        .def(py::init<const py::object&, const py::object&>(), py::arg("velocity") = py::none(), py::arg("angularVelocity") = py::none())\n')
+pb.AddDocuList(['Twist(velocity=None, angularVelocity=None): the velocity of the origin and the angular velocity of the frame, global components, each None for zero; or Twist(twist), a copy'])
+
+pb.CppCode('        .def_property("velocity", &PyTwist::GetVelocityPy, &PyTwist::SetVelocityPy)\n')
+pb.DefDataAccess('velocity', 'the velocity of the origin of the frame, global components, as numpy array', dataType='ArrayLike')
+pb.CppCode('        .def_property("angularVelocity", &PyTwist::GetAngularVelocityPy, &PyTwist::SetAngularVelocityPy)\n')
+pb.DefDataAccess('angularVelocity', 'the angular velocity of the frame, global components, as numpy array', dataType='ArrayLike')
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__eq__',
+                       cName='[](const PyTwist &item, const PyTwist &other) {\n            return (const Twist&)item == (const Twist&)other; }',
+                       description="True if velocity and angular velocity are equal, component by component",
+                       argList=['other'], argTypes=['Twist'],
+                       returnType='bool',
+                       isLambdaFunction = True,
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__copy__',
+                       cName='[](const PyTwist &item) {\n            return PyTwist(item); }',
+                       description="a copy, for copy.copy(twist)",
+                       returnType='Twist',
+                       isLambdaFunction = True,
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__deepcopy__',
+                       cName='[](const PyTwist &item, const py::object& memo) {\n            return PyTwist(item); }',
+                       description="a copy, for copy.deepcopy(twist)",
+                       argList=['memo'], argTypes=['Any'],
+                       returnType='Twist',
+                       isLambdaFunction = True,
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__repr__',
+                       cName='[](const PyTwist &item) {\n            return item.ToString(); }',
+                       description="the string representation of the Twist",
+                       returnType='str',
+                       isLambdaFunction = True,
+                       )
+
+#++++++++++++++++
+pb.DefPyFinishClass('Twist')
+
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

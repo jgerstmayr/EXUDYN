@@ -199,6 +199,7 @@ symbolicExplicitSolverTest
 symbolicExportTest
 symbolicFunctionTest
 symbolicGeneralizedAlphaTest
+symbolicHTTest
 symbolicItemOutputTest
 symbolicJacobianExpressionsTest
 symbolicModuleTest

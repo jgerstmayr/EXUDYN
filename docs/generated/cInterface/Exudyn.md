@@ -230,6 +230,9 @@ Usage: `import exudyn.cUtilities as cu` and `cu.RotationMatrixZ(0.1)`. The funct
 - **`RotationMatrixY(angleRad)`**: the rotation matrix of a rotation by angleRad (in radians) about the y-axis; computed by RigidBodyMath::RotationMatrixY of the C++ code
 - **`RotationMatrixZ(angleRad)`**: the rotation matrix of a rotation by angleRad (in radians) about the z-axis; computed by RigidBodyMath::RotationMatrixZ of the C++ code
 - **`RotationMatrix2D(angleRad)`**: the 2x2 rotation matrix of a rotation by angleRad (in radians) in the plane; computed by RotationMatrix2D of PyCUtilities.h of the C++ code
+- **`PointVelocity(HT, twist, localPoint)`**: the velocity of a point fixed in the frame HT, given by its position localPoint in the frame, for the twist of the frame: $\vv + \tomega \times (\Rot\, \pv_{loc})$; computed by RigidBodyMath::PointVelocity of the C++ code
+- **`LocalTwist(HT, twist)`**: the twist in the components of the frame HT: $[\Rot\tp \vv,\; \Rot\tp \tomega]$; computed by RigidBodyMath::LocalTwist of the C++ code
+- **`RelativeTwist(HT0, twist0, HT1, twist1)`**: the velocity of frame 1 relative to frame 0 in the components of frame 0, the time derivative of HT0.Relative(HT1): $[\Rot_0\tp (\vv_1 - \vv_0 - \tomega_0 \times (\pv_1 - \pv_0)),\; \Rot_0\tp (\tomega_1 - \tomega_0)]$; computed by RigidBodyMath::RelativeTwist of the C++ code
 
 (sec-exudyn-experimental)=
 ## exudyn.experimental

@@ -149,10 +149,18 @@ public:
 	//! H1*H2
 	PyHT MultiplyHT(const PyHT& other) const { return PyHT(*this * other); }
 
+	//! true for a list, a tuple or a numpy array; for any other operand H*other and H@other return NotImplemented, so
+	//! that Python asks the other operand, e.g. the symbolic HT of exudyn.symbolics.kinematics (#3174)
+	static bool IsNumberSequence(const py::object& other)
+	{
+		return py::isinstance<py::list>(other) || py::isinstance<py::tuple>(other) || py::isinstance<py::array>(other);
+	}
+
 	//! H*other: an HT for an HT, a numpy array for a 3D vector
 	py::object Multiply(const py::object& other) const
 	{
 		if (py::isinstance<PyHT>(other)) { return py::cast(MultiplyHT(py::cast<const PyHT&>(other))); }
+		if (!IsNumberSequence(other)) { return py::reinterpret_borrow<py::object>(Py_NotImplemented); }
 		return MultiplyVector(other);
 	}
 
@@ -161,6 +169,7 @@ public:
 	py::object MatMul(const py::object& other) const
 	{
 		if (py::isinstance<PyHT>(other)) { return py::cast(MultiplyHT(py::cast<const PyHT&>(other))); }
+		if (!IsNumberSequence(other)) { return py::reinterpret_borrow<py::object>(Py_NotImplemented); }
 		return GetHT44Py().attr("__matmul__")(other);
 	}
 
@@ -326,6 +335,37 @@ public:
 	STDstring ToString() const
 	{
 		return "HT(rotation=" + EXUstd::ToString(GetRotation()) + ", translation=" + EXUstd::ToString(GetTranslation()) + ")";
+	}
+};
+
+//! the twist of a frame for Python, exudyn.Twist: the velocity of its origin and its angular velocity, global (#3174)
+class PyTwist : public Twist
+{
+public:
+	PyTwist() : Twist() {}
+	PyTwist(const Twist& other) : Twist(other) {}
+
+	//! from the velocity and the angular velocity, None for zero; or a copy of an exu.Twist given as velocity
+	PyTwist(const py::object& velocityInit, const py::object& angularVelocityInit) : Twist()
+	{
+		if (py::isinstance<PyTwist>(velocityInit))
+		{
+			CHECKandTHROW(angularVelocityInit.is_none(), "Twist: with a Twist, angularVelocity must be None");
+			*this = py::cast<const PyTwist&>(velocityInit);
+			return;
+		}
+		if (!velocityInit.is_none()) { SetVelocityPy(velocityInit); }
+		if (!angularVelocityInit.is_none()) { SetAngularVelocityPy(angularVelocityInit); }
+	}
+
+	py::array_t<Real> GetVelocityPy() const { return EPyUtils::ToPython(velocity); }
+	void SetVelocityPy(const py::object& value) { EPyUtils::FromPython(value, velocity); }
+	py::array_t<Real> GetAngularVelocityPy() const { return EPyUtils::ToPython(angularVelocity); }
+	void SetAngularVelocityPy(const py::object& value) { EPyUtils::FromPython(value, angularVelocity); }
+
+	STDstring ToString() const
+	{
+		return "Twist(velocity=" + EXUstd::ToString(velocity) + ", angularVelocity=" + EXUstd::ToString(angularVelocity) + ")";
 	}
 };
 
