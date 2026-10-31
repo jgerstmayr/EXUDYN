@@ -583,7 +583,6 @@
     <ClInclude Include="..\src\Linalg\ConstSizeMatrix.h" />
     <ClInclude Include="..\src\Linalg\ConstSizeVector.h" />
     <ClInclude Include="..\src\Linalg\Geometry.h" />
-    <ClInclude Include="..\src\Linalg\KinematicsBasics.h" />
     <ClInclude Include="..\src\Linalg\EigenPluginNoMadd.h" />
     <ClInclude Include="..\src\Linalg\LinearSolver.h" />
     <ClInclude Include="..\src\Linalg\LinkedDataMatrix.h" />

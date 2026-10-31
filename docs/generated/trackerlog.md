@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.269.dev1
+- Exudyn version = 1.13.271.dev1
 - last change = 2026-10-31
-- Number of issues = 3172
-- Number of resolved issues = 3046 (269 in current version)
+- Number of issues = 3173
+- Number of resolved issues = 3048 (271 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9093,9 +9093,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: revision2026c step RG9.7 (docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
   - **remarks:** 2026-10-25 (\#3097): docs/dev/design/pythonUserItems.md is merged into docs/dev/internals/userItems.md; its section 5.3 is there in section 5 (cable markers, a general shape marker).
   - date raised: 2026-10-12
-- `EXTENSION` `raised by: Claude-JG` exudyn.cUtilities: the time derivatives of the Euler parameter functions (#2965)
-  - description: Decision D7 of revision2026c step RG11.10.1 (tmp/compareRBU.md; decided: not now, an issue): RigidBodyMath has EP2RotationMatrix\_t, EP\_t2G\_t and EP\_t2Glocal\_t, which neither rigidBodyUtilities nor exudyn.cUtilities offers; when wanted, add them to definitions/pybindCUtilities.py and PyCUtilities.h, with a check in cUtilitiesTest.py.
-  - date raised: 2026-10-10
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the cable run of perfAccessFunctionsAD is ill-conditioned: its result moves by 20% with the Newton settings (#2914)
   - description: perfAccessFunctionsAD:cable-n200-implicit (200 ANCF cable elements, axialStiffness 1000, massPerLength 1, on spring-dampers) gives 0.004663 with the default modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10 and 0.005266 with both (15 s instead of 0.6 s); the fast module differs by 8.4e-7. A performance run should judge a converged result: choose parameters (stiffness, mass, step size) for which the Newton settings do not move it, then re-record its reference and timing
   - date raised: 2026-10-09

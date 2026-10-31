@@ -1445,9 +1445,6 @@
     <ClInclude Include="..\src\Utilities\AutomaticDifferentiation.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Linalg\KinematicsBasics.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Linalg\RigidBodyMath.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-10-31  20:22:52 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,7 +25,7 @@
 #include <functional> //! AUTO: needed for std::function
 #include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
 namespace py = pybind11;            //! AUTO: "py" used throughout in code
-#include "Linalg/KinematicsBasics.h"//for transformations
+#include "Linalg/RigidBodyMath.h"//for transformations
 #include "Pymodules/PyMatrixVector.h"//for some matrix and vector lists
 #include "Main/OutputVariable.h"
 #include <pybind11/numpy.h>//for NumpyMatrix
@@ -111,10 +111,10 @@ protected: // AUTO:
     mutable ResizableVector tempUserFunctionForce;//!< AUTO: the force of the user function, kept between the calls (#3006)
     mutable ResizableMatrix tempMatrix;           //!< AUTO: temporary matrix during computation of inverse of mass matrix
     mutable ArrayIndex tempArrayIndex;            //!< AUTO: temporary array during computation of inverse of mass matrix
-    mutable Transformation66List jointTransformationsTemp;//!< AUTO: temporary list of the placements of the links, as homogeneous transformations
+    mutable HomogeneousTransformationList jointTransformationsTemp;//!< AUTO: temporary list of the placements of the links, as homogeneous transformations
     mutable Vector6DList jointVelocitiesTemp;     //!< AUTO: temporary list containing 6D velocities per joint
     mutable Vector6DList jointAccelerationsTemp;  //!< AUTO: temporary list containing 6D accelerations per joint
-    mutable Transformation66List jointTransformationsTempVis;//!< AUTO: temporary list of the placements of the links, as homogeneous transformations; for visualization
+    mutable HomogeneousTransformationList jointTransformationsTempVis;//!< AUTO: temporary list of the placements of the links, as homogeneous transformations; for visualization
     mutable Vector6DList jointVelocitiesTempVis;  //!< AUTO: temporary list containing 6D velocities per joint; for visualization!
     mutable Vector6DList jointAccelerationsTempVis;//!< AUTO: temporary list containing 6D accelerations per joint; for visualization!
 
@@ -128,10 +128,10 @@ public: // AUTO:
         tempUserFunctionForce = ResizableVector();
         tempMatrix = ResizableMatrix();
         tempArrayIndex = ArrayIndex();
-        jointTransformationsTemp = Transformation66List();
+        jointTransformationsTemp = HomogeneousTransformationList();
         jointVelocitiesTemp = Vector6DList();
         jointAccelerationsTemp = Vector6DList();
-        jointTransformationsTempVis = Transformation66List();
+        jointTransformationsTempVis = HomogeneousTransformationList();
         jointVelocitiesTempVis = Vector6DList();
         jointAccelerationsTempVis = Vector6DList();
     };
@@ -184,11 +184,11 @@ public: // AUTO:
     ArrayIndex& GetTempArrayIndex() { return tempArrayIndex; }
 
     //! AUTO:  Write (Reference) access to:temporary list of the placements of the links, as homogeneous transformations
-    void SetJointTransformationsTemp(const Transformation66List& value) { jointTransformationsTemp = value; }
+    void SetJointTransformationsTemp(const HomogeneousTransformationList& value) { jointTransformationsTemp = value; }
     //! AUTO:  Read (Reference) access to:temporary list of the placements of the links, as homogeneous transformations
-    const Transformation66List& GetJointTransformationsTemp() const { return jointTransformationsTemp; }
+    const HomogeneousTransformationList& GetJointTransformationsTemp() const { return jointTransformationsTemp; }
     //! AUTO:  Read (Reference) access to:temporary list of the placements of the links, as homogeneous transformations
-    Transformation66List& GetJointTransformationsTemp() { return jointTransformationsTemp; }
+    HomogeneousTransformationList& GetJointTransformationsTemp() { return jointTransformationsTemp; }
 
     //! AUTO:  Write (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
     void SetJointVelocitiesTemp(const Vector6DList& value) { jointVelocitiesTemp = value; }
@@ -205,11 +205,11 @@ public: // AUTO:
     Vector6DList& GetJointAccelerationsTemp() { return jointAccelerationsTemp; }
 
     //! AUTO:  Write (Reference) access to:temporary list of the placements of the links, as homogeneous transformations; for visualization
-    void SetJointTransformationsTempVis(const Transformation66List& value) { jointTransformationsTempVis = value; }
+    void SetJointTransformationsTempVis(const HomogeneousTransformationList& value) { jointTransformationsTempVis = value; }
     //! AUTO:  Read (Reference) access to:temporary list of the placements of the links, as homogeneous transformations; for visualization
-    const Transformation66List& GetJointTransformationsTempVis() const { return jointTransformationsTempVis; }
+    const HomogeneousTransformationList& GetJointTransformationsTempVis() const { return jointTransformationsTempVis; }
     //! AUTO:  Read (Reference) access to:temporary list of the placements of the links, as homogeneous transformations; for visualization
-    Transformation66List& GetJointTransformationsTempVis() { return jointTransformationsTempVis; }
+    HomogeneousTransformationList& GetJointTransformationsTempVis() { return jointTransformationsTempVis; }
 
     //! AUTO:  Write (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint; for visualization!
     void SetJointVelocitiesTempVis(const Vector6DList& value) { jointVelocitiesTempVis = value; }
@@ -344,7 +344,7 @@ public: // AUTO:
     void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  the placements of the links (in the base, or in their parents), and their velocities and accelerations as (omega, v) in link coordinates (#2829)
-    void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformation66List& frames, Vector6DList& V, Vector6DList& A) const;
+    void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, HomogeneousTransformationList& frames, Vector6DList& V, Vector6DList& A) const;
 
     //! AUTO:  compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false
     void ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, Vector* ode2Lhs, bool computeMass) const;
@@ -383,7 +383,7 @@ public: // AUTO:
     void ComputeRigidBodyMarkerDataKT(const Vector3D& localPosition, Index linkNumber, bool computeJacobian, MarkerData& markerData) const;
 
     //! AUTO:  compute rot+pos jacobian of (global) position at linkNumber, using pre-computed joint transformations
-    void ComputeJacobian(Index linkNumber, const Vector3D& position, const Transformation66List& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian) const;
+    void ComputeJacobian(Index linkNumber, const Vector3D& position, const HomogeneousTransformationList& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

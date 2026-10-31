@@ -288,7 +288,6 @@ public:
 
 typedef  PyMatrixList<3> PyMatrix3DList;
 typedef  PyMatrixList<6> PyMatrix6DList; 
-typedef  PyMatrixList<6> PyTransformation66List; //needs to be bound by pybind
 
 //! add to EPyUtils here as otherwise cyclic inclusion between PyMatrixVector.h and PybindUtilities (makes problems with gcc)
 namespace EPyUtils

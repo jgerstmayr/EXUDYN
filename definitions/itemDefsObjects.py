@@ -2737,7 +2737,7 @@ definitions.append(ItemDefinition(
     drawing=r'Per link its `graphicsDataList` in the link frame; a link without graphics data as a cylinder from the previous joint with `showLinks`, and its revolute axis as a cylinder with `showJoints`; the frames of the joints and of the centers of mass with `bodies.kinematicTree.showJointFrames` and `showCOMframes`, of size `frameSize`.',
     drawingSettings=['bodies.kinematicTree.frameSize', 'bodies.kinematicTree.showCOMframes', 'bodies.kinematicTree.showFramesNumbers', 'bodies.kinematicTree.showJointFrames', 'general.cylinderTiling'],
     image='itemImages/ObjectKinematicTree.png', #the representative image of the page (#2830)
-    addIncludesC=r"""#include "Linalg/KinematicsBasics.h"//for transformations
+    addIncludesC=r"""#include "Linalg/RigidBodyMath.h"//for transformations
 #include "Pymodules/PyMatrixVector.h"//for some matrix and vector lists
 #include "Main/OutputVariable.h"
 #include <pybind11/numpy.h>//for NumpyMatrix
@@ -3113,9 +3113,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             pythonName='tempArrayIndex',
             defaultValue='ArrayIndex()',
             description=r'temporary array during computation of inverse of mass matrix'),
-        ItemParameter(type=TTransformation66List, destination=DestComp, cFlags=CFMutable+CFNoInterface,
+        ItemParameter(type=THomogeneousTransformationList, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='jointTransformationsTemp',
-            defaultValue='Transformation66List()',
+            defaultValue='HomogeneousTransformationList()',
             description=r'temporary list of the placements of the links, as homogeneous transformations'),
         ItemParameter(type=TVector6DList, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='jointVelocitiesTemp',
@@ -3125,9 +3125,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             pythonName='jointAccelerationsTemp',
             defaultValue='Vector6DList()',
             description=r"""$\Am_j \in \Rcal^{n \times 6}$temporary list containing 6D accelerations per joint"""),
-        ItemParameter(type=TTransformation66List, destination=DestComp, cFlags=CFMutable+CFNoInterface,
+        ItemParameter(type=THomogeneousTransformationList, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='jointTransformationsTempVis',
-            defaultValue='Transformation66List()',
+            defaultValue='HomogeneousTransformationList()',
             description=r'temporary list of the placements of the links, as homogeneous transformations; for visualization'),
         ItemParameter(type=TVector6DList, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='jointVelocitiesTempVis',
@@ -3221,7 +3221,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             description=r'call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeTreeTransformations',
-            args='ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformation66List& frames, Vector6DList& V, Vector6DList& A',
+            args='ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, HomogeneousTransformationList& frames, Vector6DList& V, Vector6DList& A',
             description=r'the placements of the links (in the base, or in their parents), and their velocities and accelerations as (omega, v) in link coordinates (#2829)'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeMassMatrixAndODE2LHS',
@@ -3251,7 +3251,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             description=r'accelerator function for faster computation of MarkerData for rigid bodies/joints'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeJacobian',
-            args='Index linkNumber, const Vector3D& position, const Transformation66List& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian',
+            args='Index linkNumber, const Vector3D& position, const HomogeneousTransformationList& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian',
             description=r'compute rot+pos jacobian of (global) position at linkNumber, using pre-computed joint transformations'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',

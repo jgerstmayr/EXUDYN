@@ -2,9 +2,13 @@
   "number": 2965,
   "title": "exudyn.cUtilities: the time derivatives of the Euler parameter functions",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "EXTENSION",
   "description": "Decision D7 of revision2026c step RG11.10.1 (tmp/compareRBU.md; decided: not now, an issue): RigidBodyMath has EP2RotationMatrix_t, EP_t2G_t and EP_t2Glocal_t, which neither rigidBodyUtilities nor exudyn.cUtilities offers; when wanted, add them to definitions/pybindCUtilities.py and PyCUtilities.h, with a check in cUtilitiesTest.py.",
   "dateRaised": "2026-10-10",
-  "deadline": "2027-04-08"
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-31 20:26",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "won't fix, not needed: EP_t2G_t and EP_t2Glocal_t are EP2G and EP2Glocal of ep_t, as G is linear in the Euler parameters, so cUtilities does not need them; they stay in C++ for CNodeRigidBodyEP. EP2RotationMatrix_t had no caller and is removed from RigidBodyMath.h.",
+  "resolvedInVersion": "1.13.270"
 }

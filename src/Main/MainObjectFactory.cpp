@@ -18,7 +18,7 @@
 ************************************************************************************************ */
 
 #include "Main/MainSystem.h"
-#include "Linalg/KinematicsBasics.h"
+#include "Linalg/RigidBodyMath.h"
 
 #include "Pymodules/PybindUtilities.h"
 #include "Pymodules/PyMatrixVector.h"

@@ -8,7 +8,7 @@
 #           WHY THESE TESTS EXIST: the renderings used to be reconstructed from the C++ literal by
 #           twenty str.replace() calls and three substring searches. The last of them stripped the
 #           letter "f" unconditionally, to remove the suffix of 0.05f, and so
-#           Transformation66List() became Transormation66List() and images/frame became
+#           HomogeneousTransformationList() became HomogeneousTransormationList() and images/frame became
 #           images/rame. Nothing in the tree said so, and an emitter carried the workaround
 #           "don't do this for file names, because 'f' is erased!". The rules below are the ones
 #           that replaced it, and each test names the defect it forbids.
@@ -51,12 +51,12 @@ def testAFloatSuffixIsRemovedAndNothingElseIs(value, expected):
 
 
 def testTheLetterFInsideANameSurvives():
-    """Transformation66List() must not become Transormation66List()
+    """HomogeneousTransformationList() must not become HomogeneousTransormationList()
 
     Three members of ObjectKinematicTree had exactly this, and only the CFNoInterface flag kept the
     broken name out of itemInterface.py."""
-    assert dt.DocumentLiteral('Transformation66List()') == '[]'
-    assert dt.PythonLiteral('Transformation66List()') == 'None'
+    assert dt.DocumentLiteral('HomogeneousTransformationList()') == '[]'
+    assert dt.PythonLiteral('HomogeneousTransformationList()') == 'None'
 
 
 def testAFileNameKeepsItsF():

@@ -174,23 +174,6 @@ namespace RigidBodyMath {
 							-2.0*ep[2]*ep[0] + 2.0*ep[3]*ep[1], 2.0*ep[3]*ep[2] + 2.0*ep[1]*ep[0], -2.0*ep[2]*ep[2] - 2.0*ep[1]*ep[1] + 1.0 });
 	}
 
-	//! compute time derivative of rotation matrix from 4-components vector of Euler parameters ep and 
-	//! 4-components vector of time derivative of Euler parameters ep_t
-	template<class TVector>
-	inline Matrix3D EP2RotationMatrix_tTemplate(const TVector& ep, const TVector& ep_t)
-	{
-		//shall be copy of function from linalg3d
-		return Matrix3D(3, 3, { -4.0*ep[3] * ep_t[3] - 4.0*ep[2] * ep_t[2],
-								-2.0*ep_t[3] * ep[0] - 2.0*ep[3] * ep_t[0] + 2.0*ep_t[2] * ep[1] + 2.0*ep[2] * ep_t[1],
-								2.0*ep_t[3] * ep[1] + 2.0*ep[3] * ep_t[1] + 2.0*ep_t[2] * ep[0] + 2.0*ep[2] * ep_t[0],
-								2.0*ep_t[3] * ep[0] + 2.0*ep[3] * ep_t[0] + 2.0*ep_t[2] * ep[1] + 2.0*ep[2] * ep_t[1],
-								-4.0*ep[3] * ep_t[3] - 4.0*ep[1] * ep_t[1],
-								2.0*ep_t[3] * ep[2] + 2.0*ep[3] * ep_t[2] - 2.0*ep_t[1] * ep[0] - 2.0*ep[1] * ep_t[0],
-								-2.0*ep_t[2] * ep[0] - 2.0*ep[2] * ep_t[0] + 2.0*ep_t[3] * ep[1] + 2.0*ep[3] * ep_t[1],
-								2.0*ep_t[3] * ep[2] + 2.0*ep[3] * ep_t[2] + 2.0*ep_t[1] * ep[0] + 2.0*ep[1] * ep_t[0],
-								-4.0*ep[2] * ep_t[2] - 4.0*ep[1] * ep_t[1] });
-	}
-
 	inline void EP2Glocal(ConstSizeMatrix<3 * maxRotCoordinates>& Glocal, Real ep0, Real ep1, Real ep2, Real ep3)
 	{
 		Glocal.SetNumberOfRowsAndColumns(3, 4);
@@ -565,11 +548,6 @@ namespace RigidBodyMath {
 	//! compute rotation matrix from 4-components vector of Euler parameters ep
 	inline Matrix3D EP2RotationMatrix(const Vector4D& ep) { return EP2RotationMatrixTemplate(ep); }
 	inline Matrix3D EP2RotationMatrix(const CSVector4D& ep) { return EP2RotationMatrixTemplate(ep); }
-
-	//! compute time derivative of rotation matrix from 4-components vector of Euler parameters ep and 
-	//! 4-components vector of time derivative of Euler parameters ep_t
-	inline Matrix3D EP2RotationMatrix_t(const Vector4D& ep, const Vector4D& ep_t) { return EP2RotationMatrix_tTemplate<Vector4D>(ep, ep_t); }
-	inline Matrix3D EP2RotationMatrix_t(const CSVector4D& ep, const CSVector4D& ep_t) { return EP2RotationMatrix_tTemplate<CSVector4D>(ep, ep_t); }
 
 
 	//********************************************************************************

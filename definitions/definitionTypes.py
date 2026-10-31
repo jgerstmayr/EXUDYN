@@ -128,7 +128,7 @@ def CppLiteral(value, typeName=''):
 #
 #Nothing is guessed from a substring of the text. That was DefaultValue2Python and the
 #isDefaultValue half of Str2Latex - two converters that disagreed - whose unconditional strip of
-#the letter "f" turned Transformation66List() into Transormation66List() and whose blind
+#the letter "f" turned HomogeneousTransformationList() into HomogeneousTransormationList() and whose blind
 #"(" -> "[" put `Matrix[]`, `PyMatrixContainer[]` and `[ invalid [-1], ... ]` on the reference
 #pages. A spelling that no rule covers raises UnknownDefaultValue instead of reaching a generated
 #file wrong, and the message says which table to extend.
@@ -153,7 +153,7 @@ emptyContainerValues = {
     'Vector3DList':         ('None', '[]'),
     'Vector6DList':         ('None', '[]'),
     'Matrix3DList':         ('None', '[]'),
-    'Transformation66List': ('None', '[]'),
+    'HomogeneousTransformationList': ('None', '[]'),
     'InertiaList':          ('None', '[]'),
     'BeamSection':          ('exudyn.BeamSection()', 'BeamSection()'),
     'BeamSectionGeometry':  ('exudyn.BeamSectionGeometry()', 'BeamSectionGeometry()'),
@@ -191,8 +191,8 @@ def _IsIdentifier(text):
 def _WithoutFloatSuffixes(text):
     """0.05f -> 0.05, {1.f,0.f} -> {1.,0.}: the f of a float literal belongs to the C++ TYPE and
     never to the value. A letter that belongs to a word is left alone, which is the whole
-    difference to the str.replace('f', '') this replaces - it turned Transformation66List() into
-    Transormation66List() and images/frame into images/rame."""
+    difference to the str.replace('f', '') this replaces - it turned HomogeneousTransformationList() into
+    HomogeneousTransormationList() and images/frame into images/rame."""
     characters = list(text)
     kept = []
     for (index, character) in enumerate(characters):
@@ -640,7 +640,7 @@ TLinkedDataVector                  = TypeSpec('LinkedDataVector')
 TLoadType                          = TypeSpec('LoadType')
 TMatrix3DList                      = TypeSpec('Matrix3DList')
 TNumpyMatrixI                      = TypeSpec('NumpyMatrixI')
-TTransformation66List              = TypeSpec('Transformation66List')
+THomogeneousTransformationList              = TypeSpec('HomogeneousTransformationList')
 TBeamSection                       = TypeSpec('BeamSection')
 THomogeneousTransformation         = TypeSpec('HomogeneousTransformation')
 THomogeneousTransformationList     = TypeSpec('HomogeneousTransformationList')

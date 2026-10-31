@@ -1,0 +1,16 @@
+{
+  "number": 3172,
+  "title": "C++: HomogeneousTransformation and HomogeneousTransformationList instead of the typedefs Transformation66 and Transformation66List; KinematicsBasics.h removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Revision2026c step RG11.10.13. Linalg/KinematicsBasics.h holds only the typedefs Transformation66 (= HomogeneousTransformation) and Transformation66List, names left from the spatial transformations of the kinematic tree (#2828). HomogeneousTransformationList is declared in HomogeneousTransformation.h, every use in src/ and definitions/ (the parameter type of ObjectKinematicTree, the include of its header, definitionTypes.py) takes the HomogeneousTransformation names, the unused PyTransformation66List is removed, and the file goes out of the source tree and the Visual Studio project.",
+  "dateRaised": "2026-10-31",
+  "deadline": "2027-04-29",
+  "dateResolved": "2026-10-31 20:26",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/KinematicsBasics.h",
+  "releaseNotes": "C++: the placements of the links of ObjectKinematicTree are a HomogeneousTransformationList, declared in HomogeneousTransformation.h; the typedefs Transformation66 and Transformation66List and the file Linalg/KinematicsBasics.h are removed, the definitions use the new names, and the unused PyTransformation66List is gone.",
+  "resolvedInVersion": "1.13.271"
+}

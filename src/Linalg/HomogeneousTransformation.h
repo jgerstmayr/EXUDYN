@@ -330,5 +330,7 @@ public:
 
 typedef HomogeneousTransformationBase<Real> HomogeneousTransformation;
 typedef HomogeneousTransformationBase<float> HomogeneousTransformationF;
+//! a list of transformations, as the placements of the links of a kinematic tree
+typedef ResizableArray<HomogeneousTransformation> HomogeneousTransformationList;
 
 #endif

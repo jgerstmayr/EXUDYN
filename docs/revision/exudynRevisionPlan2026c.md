@@ -101,7 +101,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG11.6 Write the joints and their Jacobians on homogeneous transformations
   - RG11.7 Let objects compute from the coordinates passed in instead of reading their nodes
   - RG11.8 Resolve the quick old issues (4 open sub-steps)
-  - RG11.10 Provide the math and kinematics functions of the C++ code to Python as exudyn.cMath and exudyn.cUtilities (1 open sub-step)
+  - RG11.10 Provide the math and kinematics functions of the C++ code to Python as exudyn.cMath and exudyn.cUtilities
 - **RG12** Symbolic
   - RG12.51 Symbolic system models (2 open sub-steps)
   - RG12.53 Algorithmic symbolic functions: assignments by Assign, loops recorded as loops
@@ -135,7 +135,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 8 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 15 | Misc |
+| RG11 | OPEN | 14 | Misc |
 | RG12 | OPEN | 12 | Symbolic |
 | RG13 | OPEN | 2 | Total coordinates |
 | RG14 | OPEN | 4 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -1570,9 +1570,9 @@ CLOSED 2026-10-11 (#2963): 88 test models; 24 references and 7 of the fast modul
 
 CLOSED 2026-10-11 (#2964): `tools/checkPythonMath.py` in `--all-checks`, also single-argument `np.linalg.norm`; 310 whole exponents reported. [log](exudynRevisionLog2026c.md#rg11-10-4)
 
-#### **OPEN_RG11.10.9** Add the time derivatives of the Euler parameter functions to cUtilities, when wanted
+#### **CLOSED_RG11.10.9** Add the time derivatives of the Euler parameter functions to cUtilities, when wanted
 
-#2965. Decision D7: `EP2RotationMatrix_t`, `EP_t2G_t`, `EP_t2Glocal_t` exist in C++ only; not now.
+CLOSED 2026-10-31 (#2965 closed, not needed; maintainer 2026-10-31: EP2RotationMatrix_t is not used, remove it; EP_t2G_t and EP_t2Glocal_t are the maps EP2G and EP2Glocal of ep_t, not needed in cUtilities): EP2RotationMatrix_t removed from RigidBodyMath.h; EP_t2G_t and EP_t2Glocal_t stay in C++ for CNodeRigidBodyEP. [log](exudynRevisionLog2026c.md#rg11-10-9)
 
 #### **CLOSED_RG11.10.10** Say in the revisions chapter and on the landing page why Exudyn has its own math functions
 
@@ -1584,6 +1584,10 @@ CLOSED 2026-10-11 (#2968): the page is "Module functions", at the level of Syste
 #### **CLOSED_RG11.10.12** Title Exudyn module functions, chapter Python-C++ interface, short examples on the page
 
 CLOSED 2026-10-11 (#2970): the titles in pybindEmitter and autoGenerateHelper; the notebook part `module` shows config, two settings of special, cMath and cUtilities in a few lines. [log](exudynRevisionLog2026c.md#rg11-8-6)
+
+#### **CLOSED_RG11.10.13** Replace Transformation66 by HomogeneousTransformation and HomogeneousTransformationList, KinematicsBasics.h removed
+
+CLOSED 2026-10-31 (#3172; maintainer 2026-10-31: the typedef out, the file removed, the definitions clean): HomogeneousTransformationList in HomogeneousTransformation.h; ObjectKinematicTree, its definition and definitionTypes.py on the new names; PyTransformation66List (unused) removed; KinematicsBasics.h out of src/ and the Visual Studio project. [log](exudynRevisionLog2026c.md#rg11-10-9)
 
 ### **CLOSED_RG11.11** Let contributors propose issues and resolutions without a conflict in the version
 

@@ -4682,3 +4682,23 @@ fallback".)*
 - src/Linalg/symbolicCppDemo.h and src/Tests/SymbolicUnitTests.h keep DiffSReal.
 - The tree evaluation (Evaluate(), flatEvaluation = False) stays, as the design has it.
 - docs: the module description (definitions/pybindSymbolic.py), revisions.md, internals/symbolic.md, design note 12.7.
+
+<a id="rg11-10-9"></a>
+### RG11.10.9 and RG11.10.13 — EP2RotationMatrix_t removed; Transformation66 replaced, KinematicsBasics.h removed (2026-10-31, #2965, #3172)
+*(Maintainer 2026-10-31: "EP2RotationMatrix_t: I think it is not used, so remove it from C++; EP_t2Glocal_t and EP_t2G_t
+are identical maps for EP, so they are not required in cUtilities. Then close the issue." - "First, the typedef shall be
+removed and directly replaced by the HomogeneousTransformation and a HomogeneousTransformationList ... Then the file
+KinematicsBasics.h shall be removed. ... Transformation66 is also used in definition files".)*
+- RG11.10.9: `RigidBodyMath::EP2RotationMatrix_t` and its template had no caller; removed. `EP_t2G_t` and
+  `EP_t2Glocal_t` are `EP2G` and `EP2Glocal` evaluated at ep_t (G is linear in the Euler parameters), so cUtilities does
+  not get them; in C++ they stay, CNodeRigidBodyEP uses them. #2965 closed as not needed.
+- RG11.10.13: `typedef ResizableArray<HomogeneousTransformation> HomogeneousTransformationList` in
+  src/Linalg/HomogeneousTransformation.h; CObjectKinematicTree.cpp (12 uses), definitions/itemDefsObjects.py (the two
+  temporary lists of ObjectKinematicTree, the arguments of two functions, the include of the header now
+  RigidBodyMath.h), definitions/definitionTypes.py (`THomogeneousTransformationList`, its default rendering) and
+  test_defaultValueRenderings.py on the new names; the includes of KinematicsBasics.h in VisualizationItemHelpers.h,
+  CObjectANCFBeam.cpp, CObjectBeamGeometricallyExact.cpp, MainObjectFactory.cpp became RigidBodyMath.h (the one file it
+  included), in CObjectConnectorRigidBodySpringDamper.cpp it was redundant; `PyTransformation66List` of PyMatrixVector.h
+  was never bound and is removed; KinematicsBasics.h removed with its entries of msvc/cppsrc.vcxproj and .filters. The
+  generated CObjectKinematicTree.h follows by regeneration. The closed plans and logs keep the old name.
+
