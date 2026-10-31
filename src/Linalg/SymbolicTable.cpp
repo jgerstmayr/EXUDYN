@@ -29,69 +29,110 @@ namespace Symbolic
 {
 
 //! the table: one row per code, in the order of OperationCode
+static const FlatKind R = FlatKind::Real;
+static const FlatKind V = FlatKind::Vector;
+static const FlatKind M = FlatKind::Matrix;
 static const OperationInfo operationTable[] =
 {
-	{ OperationCode::Leaf, "", -1, Zero, false }, //the variable itself: Variable, at the derivative
-	{ OperationCode::Node, "", -1, NoDerivative, false },
-	{ OperationCode::Plus, "+", 2, RealPlus, true },
-	{ OperationCode::Minus, "-", 2, RealMinus, false },
-	{ OperationCode::Multiply, "*", 2, RealMul, true },
-	{ OperationCode::Divide, "/", 2, RealDiv, false },
-	{ OperationCode::Equal, "==", 2, Zero, true }, //piecewise constant: zero where the derivative exists
-	{ OperationCode::NotEqual, "!=", 2, Zero, true },
-	{ OperationCode::Greater, ">", 2, Zero, false },
-	{ OperationCode::GreaterEqual, ">=", 2, Zero, false },
-	{ OperationCode::LessEqual, "<=", 2, Zero, false },
-	{ OperationCode::Less, "<", 2, Zero, false },
-	{ OperationCode::Positive, "pos", 1, RealPos, false },
-	{ OperationCode::Negative, "neg", 1, RealNeg, false },
-	{ OperationCode::IsFinite, "isfinite", 1, Zero, false },
-	{ OperationCode::Abs, "abs", 1, RealAbs, false },
-	{ OperationCode::Sign, "sign", 1, Zero, false },
-	{ OperationCode::Not, "Not", 1, Zero, false },
-	{ OperationCode::Round, "round", 1, Zero, false },
-	{ OperationCode::Ceil, "ceil", 1, Zero, false },
-	{ OperationCode::Floor, "floor", 1, Zero, false },
-	{ OperationCode::Sqrt, "sqrt", 1, RealSqrt, false },
-	{ OperationCode::Exp, "exp", 1, RealExp, false },
-	{ OperationCode::Log, "log", 1, RealLog, false },
-	{ OperationCode::Sin, "sin", 1, RealSin, false },
-	{ OperationCode::Cos, "cos", 1, RealCos, false },
-	{ OperationCode::Tan, "tan", 1, RealTan, false },
-	{ OperationCode::ASin, "asin", 1, RealASin, false },
-	{ OperationCode::ACos, "acos", 1, RealACos, false },
-	{ OperationCode::ATan, "atan", 1, RealATan, false },
-	{ OperationCode::Sinh, "sinh", 1, RealSinh, false },
-	{ OperationCode::Cosh, "cosh", 1, RealCosh, false },
-	{ OperationCode::Tanh, "tanh", 1, RealTanh, false },
-	{ OperationCode::ASinh, "asinh", 1, RealASinh, false },
-	{ OperationCode::ACosh, "acosh", 1, RealACosh, false },
-	{ OperationCode::ATanh, "atanh", 1, RealATanh, false },
-	{ OperationCode::Pow, "pow", 2, RealPow, false },
-	{ OperationCode::Atan2, "atan2", 2, RealAtan2, false },
-	{ OperationCode::Mod, "mod", 2, NoDerivative, false },
-	{ OperationCode::Min, "min", 2, NoDerivative, false },
-	{ OperationCode::Max, "max", 2, NoDerivative, false },
-	{ OperationCode::IfThenElse, "IfThenElse", 3, RealIfThenElse, false },
+	{ OperationCode::Leaf, "", R, "", Zero, false }, //the variable itself: Variable, at the derivative
+	{ OperationCode::Node, "", R, "", NoDerivative, false },
+	{ OperationCode::Plus, "+", R, "RR", RealPlus, true },
+	{ OperationCode::Minus, "-", R, "RR", RealMinus, false },
+	{ OperationCode::Multiply, "*", R, "RR", RealMul, true },
+	{ OperationCode::Divide, "/", R, "RR", RealDiv, false },
+	{ OperationCode::Equal, "==", R, "RR", Zero, true }, //piecewise constant: zero where the derivative exists
+	{ OperationCode::NotEqual, "!=", R, "RR", Zero, true },
+	{ OperationCode::Greater, ">", R, "RR", Zero, false },
+	{ OperationCode::GreaterEqual, ">=", R, "RR", Zero, false },
+	{ OperationCode::LessEqual, "<=", R, "RR", Zero, false },
+	{ OperationCode::Less, "<", R, "RR", Zero, false },
+	{ OperationCode::Positive, "pos", R, "R", RealPos, false },
+	{ OperationCode::Negative, "neg", R, "R", RealNeg, false },
+	{ OperationCode::IsFinite, "isfinite", R, "R", Zero, false },
+	{ OperationCode::Abs, "abs", R, "R", RealAbs, false },
+	{ OperationCode::Sign, "sign", R, "R", Zero, false },
+	{ OperationCode::Not, "Not", R, "R", Zero, false },
+	{ OperationCode::Round, "round", R, "R", Zero, false },
+	{ OperationCode::Ceil, "ceil", R, "R", Zero, false },
+	{ OperationCode::Floor, "floor", R, "R", Zero, false },
+	{ OperationCode::Sqrt, "sqrt", R, "R", RealSqrt, false },
+	{ OperationCode::Exp, "exp", R, "R", RealExp, false },
+	{ OperationCode::Log, "log", R, "R", RealLog, false },
+	{ OperationCode::Sin, "sin", R, "R", RealSin, false },
+	{ OperationCode::Cos, "cos", R, "R", RealCos, false },
+	{ OperationCode::Tan, "tan", R, "R", RealTan, false },
+	{ OperationCode::ASin, "asin", R, "R", RealASin, false },
+	{ OperationCode::ACos, "acos", R, "R", RealACos, false },
+	{ OperationCode::ATan, "atan", R, "R", RealATan, false },
+	{ OperationCode::Sinh, "sinh", R, "R", RealSinh, false },
+	{ OperationCode::Cosh, "cosh", R, "R", RealCosh, false },
+	{ OperationCode::Tanh, "tanh", R, "R", RealTanh, false },
+	{ OperationCode::ASinh, "asinh", R, "R", RealASinh, false },
+	{ OperationCode::ACosh, "acosh", R, "R", RealACosh, false },
+	{ OperationCode::ATanh, "atanh", R, "R", RealATanh, false },
+	{ OperationCode::Pow, "pow", R, "RR", RealPow, false },
+	{ OperationCode::Atan2, "atan2", R, "RR", RealAtan2, false },
+	{ OperationCode::Mod, "mod", R, "RR", NoDerivative, false },
+	{ OperationCode::Min, "min", R, "RR", NoDerivative, false },
+	{ OperationCode::Max, "max", R, "RR", NoDerivative, false },
+	{ OperationCode::IfThenElse, "IfThenElse", R, "RRR", RealIfThenElse, false },
+	//the operations of vectors and matrices (#3176); not commutative for Optimize, which merges them as before by their class
+	{ OperationCode::Dot, "@", R, "VV", RealDot, false },
+	{ OperationCode::Norm, "NormL2", R, "V", RealNorm, false },
+	{ OperationCode::VectorComponent, "component", R, "VR", RealVectorComponent, false },
+	{ OperationCode::VectorEqual, "==", R, "VV", Zero, false },
+	{ OperationCode::VectorNotEqual, "!=", R, "VV", Zero, false },
+	{ OperationCode::MatrixComponent, "component", R, "MRR", RealMatrixComponent, false },
+	{ OperationCode::VectorOfComponents, "vector", V, "*", VectorComponents, false },
+	{ OperationCode::VectorPlus, "+", V, "VV", VectorPlus, false },
+	{ OperationCode::VectorMinus, "-", V, "VV", VectorMinus, false },
+	{ OperationCode::VectorScalar, "*", V, "RV", VectorScalar, false },
+	{ OperationCode::MatrixVector, "@", V, "MV", VectorMatrixVector, false },
+	{ OperationCode::MatrixTransposedVector, "vector@matrix", V, "MV", VectorMatrixTransposedVector, false },
+	{ OperationCode::VectorPositive, "pos", V, "V", VectorPos, false },
+	{ OperationCode::VectorNegative, "neg", V, "V", VectorNeg, false },
+	{ OperationCode::VectorMultiply, "multiply", V, "VV", VectorMultiply, false },
+	{ OperationCode::MatrixOfComponents, "matrix", M, "*", MatrixComponents, false },
+	{ OperationCode::MatrixPlus, "+", M, "MM", MatrixPlus, false },
+	{ OperationCode::MatrixMinus, "-", M, "MM", MatrixMinus, false },
+	{ OperationCode::MatrixScalar, "*", M, "RM", MatrixScalar, false },
+	{ OperationCode::MatrixPositive, "pos", M, "M", MatrixPos, false },
+	{ OperationCode::MatrixNegative, "neg", M, "M", MatrixNeg, false },
+	{ OperationCode::MatrixMatrix, "@", M, "MM", MatrixMatrix, false },
+	{ OperationCode::MatrixTransposed, "T", M, "M", MatrixTransposed, false },
 };
 static_assert(sizeof(operationTable)/sizeof(operationTable[0]) == (size_t)OperationCode::NumberOfCodes, "a row per operation code");
 
 const OperationInfo& OperationOfCode(OperationCode code) { return operationTable[(int)code]; }
 
+//! the letter of a kind in the column operands of the table
+static char KindLetter(FlatKind kind) { return kind == FlatKind::Real ? 'R' : (kind == FlatKind::Vector ? 'V' : 'M'); }
+
+//! the name of a node of any kind
+static const char* FlatNameOf(const FlatNode& node);
+
 OperationCode OperationCodeOf(const FlatNode& node, const std::vector<FlatKind>& operandKinds)
 {
 	if (operandKinds.size() == 0) { return OperationCode::Leaf; }
-	if (node.kind != FlatKind::Real) { return OperationCode::Node; }
-	for (FlatKind kind : operandKinds) { if (kind != FlatKind::Real) { return OperationCode::Node; } }
-	static const std::unordered_map<STDstring, OperationCode> codeOfName = []()
+	//the key of a row: the kind of the result, the name, the kinds of the operands
+	static const std::unordered_map<STDstring, OperationCode> codeOfKey = []()
 	{
 		std::unordered_map<STDstring, OperationCode> codes;
-		for (const OperationInfo& row : operationTable) { if (row.numberOfOperands > 0) { codes[row.name] = row.code; } }
+		for (const OperationInfo& row : operationTable)
+		{
+			if (row.name[0]) { codes[STDstring(1, KindLetter(row.kind)) + row.name + ":" + row.operands] = row.code; }
+		}
 		return codes;
 	}();
-	auto found = codeOfName.find(((const ExpressionBase*)node.node)->FlatName());
-	if (found == codeOfName.end() || OperationOfCode(found->second).numberOfOperands != (Index)operandKinds.size()) { return OperationCode::Node; }
-	return found->second;
+	STDstring key = STDstring(1, KindLetter(node.kind)) + FlatNameOf(node) + ":";
+	bool allReal = true;
+	for (FlatKind kind : operandKinds) { key += KindLetter(kind); allReal = allReal && kind == FlatKind::Real; }
+	auto found = codeOfKey.find(key);
+	if (found == codeOfKey.end() && allReal) //the components of a vector or a matrix, any number of them
+	{
+		found = codeOfKey.find(STDstring(1, KindLetter(node.kind)) + FlatNameOf(node) + ":*");
+	}
+	return found == codeOfKey.end() ? OperationCode::Node : found->second;
 }
 
 //! the operand i of a node of any kind
@@ -144,78 +185,200 @@ static const char* FlatNameOf(const FlatNode& node)
 	}
 }
 
-int FindDerivativeRule(const FlatNode& node, const std::vector<FlatKind>& operandKinds)
-{
-	const STDstring name = FlatNameOf(node);
-	Index n = (Index)operandKinds.size();
-	auto Kinds = [&](FlatKind a, FlatKind b) { return n == 2 && operandKinds[0] == a && operandKinds[1] == b; };
-	if (n == 0) { return Zero; } //a leaf; the variable itself is Variable
-	if (node.kind == FlatKind::Real)
-	{
-		//piecewise constant: the conditions of IfThenElse; their derivative is zero where it exists
-		static const std::unordered_map<STDstring, int> constant = { {"==", Zero}, {"!=", Zero}, {">", Zero}, {">=", Zero},
-			{"<=", Zero}, {"<", Zero}, {"Not", Zero}, {"isfinite", Zero}, {"sign", Zero}, {"round", Zero}, {"ceil", Zero},
-			{"floor", Zero} };
-		if (constant.find(name) != constant.end()) { return Zero; }
-		if (n == 1 && operandKinds[0] == FlatKind::Real)
-		{
-			static const std::unordered_map<STDstring, int> unary = { {"pos", RealPos}, {"neg", RealNeg}, {"abs", RealAbs}, {"sin", RealSin},
-				{"cos", RealCos}, {"tan", RealTan}, {"exp", RealExp}, {"log", RealLog}, {"sqrt", RealSqrt}, {"asin", RealASin},
-				{"acos", RealACos}, {"atan", RealATan}, {"sinh", RealSinh}, {"cosh", RealCosh}, {"tanh", RealTanh},
-				{"asinh", RealASinh}, {"acosh", RealACosh}, {"atanh", RealATanh} };
-			auto found = unary.find(name);
-			return found == unary.end() ? NoDerivative : found->second;
-		}
-		if (Kinds(FlatKind::Real, FlatKind::Real))
-		{
-			static const std::unordered_map<STDstring, int> binary = { {"+", RealPlus}, {"-", RealMinus}, {"*", RealMul},
-				{"/", RealDiv}, {"pow", RealPow}, {"atan2", RealAtan2} };
-			auto found = binary.find(name);
-			return found == binary.end() ? NoDerivative : found->second;
-		}
-		if (name == "IfThenElse" && n == 3) { return RealIfThenElse; }
-		if (name == "@" && Kinds(FlatKind::Vector, FlatKind::Vector)) { return RealDot; }
-		if (name == "NormL2" && n == 1 && operandKinds[0] == FlatKind::Vector) { return RealNorm; }
-		if (name == "component" && n == 2 && operandKinds[0] == FlatKind::Vector) { return RealVectorComponent; }
-		if (name == "component" && n == 3 && operandKinds[0] == FlatKind::Matrix) { return RealMatrixComponent; }
-		return NoDerivative;
-	}
-	if (node.kind == FlatKind::Vector)
-	{
-		if (name == "vector") { return VectorComponents; }
-		if (name == "+" && Kinds(FlatKind::Vector, FlatKind::Vector)) { return VectorPlus; }
-		if (name == "-" && Kinds(FlatKind::Vector, FlatKind::Vector)) { return VectorMinus; }
-		if (name == "*" && Kinds(FlatKind::Real, FlatKind::Vector)) { return VectorScalar; }
-		if (name == "@" && Kinds(FlatKind::Matrix, FlatKind::Vector)) { return VectorMatrixVector; }
-		if (name == "vector@matrix" && Kinds(FlatKind::Matrix, FlatKind::Vector)) { return VectorMatrixTransposedVector; }
-		if (name == "pos" && n == 1) { return VectorPos; }
-		if (name == "neg" && n == 1) { return VectorNeg; }
-		if (name == "multiply" && Kinds(FlatKind::Vector, FlatKind::Vector)) { return VectorMultiply; }
-		return NoDerivative;
-	}
-	if (name == "matrix") { return MatrixComponents; }
-	if (name == "+" && Kinds(FlatKind::Matrix, FlatKind::Matrix)) { return MatrixPlus; }
-	if (name == "-" && Kinds(FlatKind::Matrix, FlatKind::Matrix)) { return MatrixMinus; }
-	if (name == "*" && Kinds(FlatKind::Real, FlatKind::Matrix)) { return MatrixScalar; }
-	if (name == "pos" && n == 1) { return MatrixPos; }
-	if (name == "neg" && n == 1) { return MatrixNeg; }
-	if (name == "@" && Kinds(FlatKind::Matrix, FlatKind::Matrix)) { return MatrixMatrix; }
-	if (name == "T" && n == 1) { return MatrixTransposed; }
-	return NoDerivative;
-}
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the operations of vectors and matrices (#3176), with the arithmetic and the messages of the EvaluateFromOperands
+//of their nodes, so that the results are the same to the bit
 
-Index SlotComponents(const FlatNode& node, const FlatValue& value)
+//! the size of the result of an operation of vectors and matrices from its operands; node: for the shape of a
+//! matrix of components
+static void ArrayResultSize(OperationCode code, const FlatNode& node, const SlotValue* x, Index numberOfOperands,
+	Index& rows, Index& columns)
 {
-	switch (node.kind)
+	rows = 1;
+	columns = 1;
+	switch (code)
 	{
-	case FlatKind::Real: return 1;
-	case FlatKind::Vector: return value.vector->NumberOfItems();
-	default: return value.matrix->NumberOfRows()*value.matrix->NumberOfColumns();
+	case OperationCode::Dot:
+		CHECKandTHROW(x[0].rows == x[1].rows, "symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes");
+		break;
+	case OperationCode::VectorEqual: case OperationCode::VectorNotEqual:
+		CHECKandTHROW(x[0].rows == x[1].rows, "VectorBase::operator==: incompatible size of vectors");
+		break;
+	case OperationCode::Norm: case OperationCode::VectorComponent: case OperationCode::MatrixComponent: break;
+	case OperationCode::VectorOfComponents: rows = numberOfOperands; break;
+	case OperationCode::VectorPlus:
+		CHECKandTHROW(x[0].rows == x[1].rows, "symbolic.Vector::operator+ : inconsistent vector sizes");
+		rows = x[0].rows;
+		break;
+	case OperationCode::VectorMinus:
+		CHECKandTHROW(x[0].rows == x[1].rows, "symbolic.Vector::operator- : inconsistent vector sizes");
+		rows = x[0].rows;
+		break;
+	case OperationCode::VectorScalar: rows = x[1].rows; break;
+	case OperationCode::MatrixVector:
+		CHECKandTHROW(x[0].columns == x[1].rows, "EXUmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
+		rows = x[0].rows;
+		break;
+	case OperationCode::MatrixTransposedVector:
+		CHECKandTHROW(x[0].rows == x[1].rows, "EXUmath::MultMatrixTransposedVectorTemplate(matrix,vector,result): Size mismatch");
+		rows = x[0].columns;
+		break;
+	case OperationCode::VectorPositive: case OperationCode::VectorNegative: rows = x[0].rows; break;
+	case OperationCode::VectorMultiply:
+		CHECKandTHROW(x[0].rows == x[1].rows, "symbolic.MultComponents(...): inconsistent vector sizes");
+		rows = x[0].rows;
+		break;
+	case OperationCode::MatrixOfComponents:
+		rows = ((const MatrixExpressionBase*)node.node)->NumberOfRows();
+		columns = ((const MatrixExpressionBase*)node.node)->NumberOfColumns();
+		break;
+	case OperationCode::MatrixPlus:
+		CHECKandTHROW(x[0].rows == x[1].rows && x[0].columns == x[1].columns, "symbolic.Matrix::operator+ : inconsistent matrix sizes");
+		rows = x[0].rows; columns = x[0].columns;
+		break;
+	case OperationCode::MatrixMinus:
+		CHECKandTHROW(x[0].rows == x[1].rows && x[0].columns == x[1].columns, "symbolic.Matrix::operator- : inconsistent matrix sizes");
+		rows = x[0].rows; columns = x[0].columns;
+		break;
+	case OperationCode::MatrixScalar: rows = x[1].rows; columns = x[1].columns; break;
+	case OperationCode::MatrixPositive: case OperationCode::MatrixNegative: rows = x[0].rows; columns = x[0].columns; break;
+	case OperationCode::MatrixMatrix:
+		CHECKandTHROW(x[0].columns == x[1].rows, "symbolic.Matrix::operator@ (matrix matrix multiplication) : inconsistent matrix sizes");
+		rows = x[0].rows; columns = x[1].columns;
+		break;
+	case OperationCode::MatrixTransposed: rows = x[0].columns; columns = x[0].rows; break;
+	default: CHECKandTHROWstring("ArrayResultSize: the code is no operation of vectors and matrices");
 	}
 }
 
-void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, const FlatValue* v, const Real* const* d,
-	Index m, Index n, Real* out)
+Real ArrayOperation(OperationCode code, const SlotValue* x, Index numberOfOperands, Real* out)
+{
+	switch (code)
+	{
+	case OperationCode::Dot:
+	{
+		Real result = 0;
+		for (Index c = 0; c < x[0].rows; c++) { result += x[0].data[c] * x[1].data[c]; }
+		return result;
+	}
+	case OperationCode::Norm:
+	{
+		Real result = 0.;
+		for (Index c = 0; c < x[0].rows; c++) { result += x[0].data[c] * x[0].data[c]; }
+		return std::sqrt(result);
+	}
+	case OperationCode::VectorComponent:
+	{
+		Real iReal = x[1].real;
+		Index i = (Index)iReal;
+		CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer");
+		//while a user function is recorded, its vector arguments have no size yet: the component has no value then (#3007)
+		if (SReal::recordExpressions && x[0].rows == 0 && i >= 0) { return 0.; }
+		CHECKandTHROW((i >= 0) && (i < x[0].rows), "VectorExpressionBase::operator[] index out of range");
+		return x[0].data[i];
+	}
+	case OperationCode::VectorEqual: case OperationCode::VectorNotEqual:
+	{
+		bool equal = true;
+		for (Index c = 0; c < x[0].rows; c++) { if (x[1].data[c] != x[0].data[c]) { equal = false; break; } }
+		return Real(code == OperationCode::VectorEqual ? equal : !equal);
+	}
+	case OperationCode::MatrixComponent:
+	{
+		Real rowReal = x[1].real;
+		Index row = (Index)rowReal;
+		Real columnReal = x[2].real;
+		Index column = (Index)columnReal;
+		CHECKandTHROW(((Real)row == rowReal) && ((Real)column == columnReal), "MatrixExpressionBase::operator[] index must contain integer indices");
+		CHECKandTHROW((row >= 0) && (row < x[0].rows), "Matrix::operator()(Index, Index) const: request of invalid row");
+		CHECKandTHROW((column >= 0) && (column < x[0].columns), "Matrix::operator()(Index, Index) const: request of invalid column");
+		return x[0].data[row*x[0].columns + column];
+	}
+	case OperationCode::VectorOfComponents: case OperationCode::MatrixOfComponents:
+		for (Index i = 0; i < numberOfOperands; i++) { out[i] = x[i].real; }
+		return 0.;
+	case OperationCode::VectorPlus: case OperationCode::MatrixPlus:
+		for (Index i = 0; i < x[0].Components(); i++) { out[i] = x[0].data[i] + x[1].data[i]; }
+		return 0.;
+	case OperationCode::VectorMinus: case OperationCode::MatrixMinus:
+		for (Index i = 0; i < x[0].Components(); i++) { out[i] = x[0].data[i] - x[1].data[i]; }
+		return 0.;
+	case OperationCode::VectorScalar: case OperationCode::MatrixScalar:
+	{
+		Real factor = x[0].real;
+		for (Index i = 0; i < x[1].Components(); i++) { out[i] = factor * x[1].data[i]; }
+		return 0.;
+	}
+	case OperationCode::MatrixVector: //as EXUmath::MultMatrixVectorTemplate
+	{
+		const Real* mm = x[0].data;
+		const Real* vv = x[1].data;
+		for (Index i = 0; i < x[0].rows; i++)
+		{
+			out[i] = 0;
+			const Real* mr = &mm[i*x[0].columns];
+			for (Index j = 0; j < x[1].rows; j++) { out[i] += mr[j] * vv[j]; }
+		}
+		return 0.;
+	}
+	case OperationCode::MatrixTransposedVector: //as EXUmath::MultMatrixTransposedVectorTemplate
+	{
+		const Real* mm = x[0].data;
+		const Real* vv = x[1].data;
+		Index resultLength = x[0].columns;
+		for (Index i = 0; i < resultLength; i++)
+		{
+			Real val = 0;
+			const Real* mr = &mm[i];
+			for (Index j = 0; j < x[1].rows; j++)
+			{
+				val += *mr * vv[j];
+				mr += resultLength;
+			}
+			out[i] = val;
+		}
+		return 0.;
+	}
+	case OperationCode::VectorPositive: case OperationCode::MatrixPositive:
+		for (Index i = 0; i < x[0].Components(); i++) { out[i] = x[0].data[i]; }
+		return 0.;
+	case OperationCode::VectorNegative: case OperationCode::MatrixNegative:
+		for (Index i = 0; i < x[0].Components(); i++) { out[i] = -x[0].data[i]; }
+		return 0.;
+	case OperationCode::VectorMultiply:
+		for (Index i = 0; i < x[0].rows; i++) { out[i] = x[0].data[i] * x[1].data[i]; }
+		return 0.;
+	case OperationCode::MatrixMatrix:
+	{
+		const Real* a = x[0].data;
+		const Real* b = x[1].data;
+		Index inner = x[0].columns, columns = x[1].columns;
+		for (Index i = 0; i < x[0].rows; i++)
+		{
+			for (Index j = 0; j < columns; j++)
+			{
+				Real value = 0.;
+				for (Index k = 0; k < inner; k++) { value += a[i*inner + k]*b[k*columns + j]; }
+				out[i*columns + j] = value;
+			}
+		}
+		return 0.;
+	}
+	case OperationCode::MatrixTransposed:
+	{
+		Index rows = x[0].rows, columns = x[0].columns;
+		for (Index i = 0; i < rows; i++)
+		{
+			for (Index j = 0; j < columns; j++) { out[j*rows + i] = x[0].data[i*columns + j]; }
+		}
+		return 0.;
+	}
+	default: CHECKandTHROWstring("ArrayOperation: the code is no operation of vectors and matrices"); return 0.;
+	}
+}
+
+void ForwardDerivative(int rule, const FlatNode& node, const SlotValue& value, const SlotValue* v, Index numberOfOperands,
+	const Real* const* d, Index m, Index n, Real* out)
 {
 	const Real nan = std::numeric_limits<Real>::quiet_NaN();
 	switch (rule)
@@ -285,23 +448,23 @@ void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, c
 	}
 	case RealDot:
 	{
-		const ResizableConstVector& a = *v[0].vector, & b = *v[1].vector;
+		const Real* a = v[0].data, * b = v[1].data;
 		for (Index j = 0; j < n; j++)
 		{
 			Real sum = 0.;
-			for (Index c = 0; c < a.NumberOfItems(); c++) { sum += d[0][c*n + j]*b[c] + a[c]*d[1][c*n + j]; }
+			for (Index c = 0; c < v[0].rows; c++) { sum += d[0][c*n + j]*b[c] + a[c]*d[1][c*n + j]; }
 			out[j] = sum;
 		}
 		break;
 	}
 	case RealNorm:
 	{
-		const ResizableConstVector& a = *v[0].vector;
+		const Real* a = v[0].data;
 		Real norm = value.real;
 		for (Index j = 0; j < n; j++)
 		{
 			Real sum = 0.;
-			for (Index c = 0; c < a.NumberOfItems(); c++) { sum += a[c]*d[0][c*n + j]; }
+			for (Index c = 0; c < v[0].rows; c++) { sum += a[c]*d[0][c*n + j]; }
 			out[j] = (norm == 0) ? nan : sum/norm;
 		}
 		break;
@@ -314,7 +477,7 @@ void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, c
 	}
 	case RealMatrixComponent:
 	{
-		Index c = (Index)v[1].real*v[0].matrix->NumberOfColumns() + (Index)v[2].real;
+		Index c = (Index)v[1].real*v[0].columns + (Index)v[2].real;
 		for (Index j = 0; j < n; j++) { out[j] = d[0][c*n + j]; }
 		break;
 	}
@@ -328,23 +491,23 @@ void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, c
 	case VectorScalar: case MatrixScalar: //s x: ds x + s dx
 	{
 		Real factor = v[0].real;
-		const Real* x = (rule == VectorScalar) ? v[1].vector->GetDataPointer() : v[1].matrix->GetDataPointer();
+		const Real* x = v[1].data;
 		for (Index c = 0; c < m; c++) { for (Index j = 0; j < n; j++) { out[c*n + j] = d[0][j]*x[c] + factor*d[1][c*n + j]; } }
 		break;
 	}
 	case VectorMultiply:
 	{
-		const ResizableConstVector& a = *v[0].vector, & b = *v[1].vector;
+		const Real* a = v[0].data, * b = v[1].data;
 		for (Index c = 0; c < m; c++) { for (Index j = 0; j < n; j++) { out[c*n + j] = d[0][c*n + j]*b[c] + a[c]*d[1][c*n + j]; } }
 		break;
 	}
 	case VectorMatrixVector: case VectorMatrixTransposedVector: //A x or A^T x: dA x + A dx
 	{
-		const ResizableMatrix& A = *v[0].matrix;
-		const ResizableConstVector& x = *v[1].vector;
-		Index columns = A.NumberOfColumns();
+		const Real* A = v[0].data;
+		const Real* x = v[1].data;
+		Index columns = v[0].columns;
 		bool transposed = (rule == VectorMatrixTransposedVector);
-		Index inner = transposed ? A.NumberOfRows() : columns;
+		Index inner = transposed ? v[0].rows : columns;
 		for (Index c = 0; c < m; c++)
 		{
 			for (Index j = 0; j < n; j++)
@@ -353,7 +516,7 @@ void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, c
 				for (Index l = 0; l < inner; l++)
 				{
 					Index a = transposed ? l*columns + c : c*columns + l; //component of A
-					sum += d[0][a*n + j]*x[l] + A.GetDataPointer()[a]*d[1][l*n + j];
+					sum += d[0][a*n + j]*x[l] + A[a]*d[1][l*n + j];
 				}
 				out[c*n + j] = sum;
 			}
@@ -362,8 +525,8 @@ void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, c
 	}
 	case MatrixMatrix: //A B: dA B + A dB
 	{
-		const ResizableMatrix& A = *v[0].matrix, & B = *v[1].matrix;
-		Index rows = A.NumberOfRows(), inner = A.NumberOfColumns(), columns = B.NumberOfColumns();
+		const Real* A = v[0].data, * B = v[1].data;
+		Index rows = v[0].rows, inner = v[0].columns, columns = v[1].columns;
 		for (Index r = 0; r < rows; r++)
 		{
 			for (Index c = 0; c < columns; c++)
@@ -372,7 +535,7 @@ void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, c
 				for (Index j = 0; j < n; j++) { target[j] = 0.; }
 				for (Index l = 0; l < inner; l++)
 				{
-					Real a = A(r, l), b = B(l, c);
+					Real a = A[r*inner + l], b = B[l*columns + c];
 					const Real* dA = d[0] + (r*inner + l)*n;
 					const Real* dB = d[1] + (l*columns + c)*n;
 					for (Index j = 0; j < n; j++) { target[j] += dA[j]*b + a*dB[j]; }
@@ -383,8 +546,7 @@ void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, c
 	}
 	case MatrixTransposed:
 	{
-		const ResizableMatrix& A = *v[0].matrix;
-		Index rows = A.NumberOfRows(), columns = A.NumberOfColumns(); //of A; the result is columns x rows
+		Index rows = v[0].rows, columns = v[0].columns; //of A; the result is columns x rows
 		for (Index r = 0; r < rows; r++)
 		{
 			for (Index c = 0; c < columns; c++)
@@ -396,11 +558,9 @@ void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, c
 	}
 	default: //NoDerivative: zero, if no operand depends on the variable, else it raises
 	{
-		Index numberOfOperands = NumberOfOperandsOfNode(node);
 		for (Index i = 0; i < numberOfOperands; i++)
 		{
-			Index components = SlotComponents(OperandOfNode(node, i), v[i]);
-			for (Index c = 0; c < components*n; c++)
+			for (Index c = 0; c < v[i].Components()*n; c++)
 			{
 				CHECKandTHROW(d[i][c] == 0., STDstring("exudyn.symbolic: the operation '") + OperationName(node) + "' has no derivative", ExudynValueError);
 			}
@@ -436,45 +596,120 @@ void SymbolicProgram::Build(const FlatProgram& program)
 		}
 		maxOperands = EXUstd::Maximum(maxOperands, step.numberOfOperands);
 		step.code = OperationCodeOf(step.node, kinds);
-		step.derivativeRule = (step.code == OperationCode::Node || step.code == OperationCode::Leaf) ?
-			FindDerivativeRule(step.node, kinds) : OperationOfCode(step.code).derivativeRule;
+		CHECKandTHROW(step.code != OperationCode::Node, STDstring("SymbolicProgram: the operation '") + FlatNameOf(step.node)
+			+ "' has no code of the table of operations");
+		step.derivativeRule = OperationOfCode(step.code).derivativeRule;
+		if (step.code == OperationCode::Leaf) { leaves.push_back(k); }
 	}
 	for (Index i = 0; i < program.NumberOfResults(); i++) { results.push_back(program.ResultSlot(i)); }
 	slots.resize(n);
 	operandValues.resize(maxOperands);
 	operandDerivatives.resize(maxOperands);
+	resultVectors.resize(results.size()); //not resized later: the references to the results stay valid
+	resultMatrices.resize(results.size());
 }
 
 Index SymbolicProgram::NumberOfTableSteps() const
 {
 	Index count = 0;
-	for (const Step& step : steps) { count += (step.code != OperationCode::Leaf && step.code != OperationCode::Node); }
+	for (const Step& step : steps) { count += IsTableCode(step.code); }
 	return count;
+}
+
+//! the value of a leaf, read from its node: a number, or the vector or matrix that the node keeps
+static void LeafValue(const FlatNode& node, SlotValue& value)
+{
+	switch (node.kind)
+	{
+	case FlatKind::Real: value.real = ((const ExpressionBase*)node.node)->Evaluate(); break;
+	case FlatKind::Vector:
+	{
+		const ResizableConstVector& vector = ((const VectorExpressionBase*)node.node)->EvaluateRef();
+		value.data = vector.GetDataPointer();
+		value.rows = vector.NumberOfItems();
+		value.columns = 1;
+		break;
+	}
+	default:
+	{
+		const ResizableMatrix& matrix = ((const MatrixExpressionBase*)node.node)->EvaluateRef();
+		value.data = matrix.GetDataPointer();
+		value.rows = matrix.NumberOfRows();
+		value.columns = matrix.NumberOfColumns();
+		break;
+	}
+	}
+}
+
+void SymbolicProgram::Layout() const
+{
+	const Index n = (Index)steps.size();
+	laidOut = false;
+	offsets.assign(n, -1);
+	Index size = 0;
+	for (Index k = 0; k < n; k++)
+	{
+		const Step& step = steps[k];
+		if (step.code == OperationCode::Leaf || IsScalarCode(step.code)) { continue; }
+		for (Index i = 0; i < step.numberOfOperands; i++) { operandValues[i] = slots[operandSlots[step.firstOperand + i]]; }
+		ArrayResultSize(step.code, step.node, operandValues.data(), step.numberOfOperands, slots[k].rows, slots[k].columns);
+		if (step.node.kind != FlatKind::Real)
+		{
+			offsets[k] = size;
+			size += slots[k].Components();
+		}
+	}
+	memory.resize(size);
+	for (Index k = 0; k < n; k++) { if (offsets[k] >= 0) { slots[k].data = memory.data() + offsets[k]; } }
+	laidOut = true;
 }
 
 void SymbolicProgram::Evaluate() const
 {
-	FlatValue* slot = slots.data();
+	SlotValue* slot = slots.data();
+	bool sizesChanged = !laidOut;
+	for (Index k : leaves)
+	{
+		Index rows = slot[k].rows, columns = slot[k].columns;
+		LeafValue(steps[k].node, slot[k]);
+		sizesChanged = sizesChanged || rows != slot[k].rows || columns != slot[k].columns;
+	}
+	if (sizesChanged) { Layout(); }
+
 	const Index* operandSlot = operandSlots.data();
 	const Index n = (Index)steps.size();
 	for (Index k = 0; k < n; k++)
 	{
 		const Step& step = steps[k];
+		if (step.code == OperationCode::Leaf) { continue; }
 		const Index* o = operandSlot + step.firstOperand;
-		if (IsTableCode(step.code)) //a scalar operation, from the values of the slots of its operands
+		if (IsScalarCode(step.code)) //a scalar operation, from the values of the slots of its operands
 		{
 			slot[k].real = ScalarOperation(step.code, [slot, o](Index i) { return slot[o[i]].real; });
 			continue;
 		}
-		FlatValue* values = operandValues.data(); //a leaf or an operation of its node, as FlatProgram::Evaluate
-		for (Index i = 0; i < step.numberOfOperands; i++) { values[i] = slot[o[i]]; }
-		switch (step.node.kind)
-		{
-		case FlatKind::Real: slot[k].real = ((const ExpressionBase*)step.node.node)->EvaluateFromOperands(values); break;
-		case FlatKind::Vector: slot[k].vector = &((const VectorExpressionBase*)step.node.node)->EvaluateFromOperands(values); break;
-		default: slot[k].matrix = &((const MatrixExpressionBase*)step.node.node)->EvaluateFromOperands(values); break;
-		}
+		SlotValue* x = operandValues.data(); //an operation of vectors and matrices, into the memory of the program
+		for (Index i = 0; i < step.numberOfOperands; i++) { x[i] = slot[o[i]]; }
+		slot[k].real = ArrayOperation(step.code, x, step.numberOfOperands, offsets[k] >= 0 ? memory.data() + offsets[k] : nullptr);
 	}
+}
+
+const ResizableConstVector& SymbolicProgram::VectorResult(Index i) const
+{
+	const SlotValue& value = slots[results[i]];
+	ResizableConstVector& result = resultVectors[i];
+	result.SetNumberOfItems(value.rows);
+	std::copy(value.data, value.data + value.rows, result.GetDataPointer());
+	return result;
+}
+
+const ResizableMatrix& SymbolicProgram::MatrixResult(Index i) const
+{
+	const SlotValue& value = slots[results[i]];
+	ResizableMatrix& result = resultMatrices[i];
+	result.SetNumberOfRowsAndColumns(value.rows, value.columns);
+	std::copy(value.data, value.data + value.Components(), result.GetDataPointer());
+	return result;
 }
 
 void SymbolicProgram::Differentiate(const void* variable, Index n) const
@@ -483,7 +718,7 @@ void SymbolicProgram::Differentiate(const void* variable, Index n) const
 	//the offsets of the slots in the block; the sizes of vectors and matrices are those of this evaluation
 	derivativeOffsets.resize(numberOfSteps + 1);
 	derivativeOffsets[0] = 0;
-	for (Index k = 0; k < numberOfSteps; k++) { derivativeOffsets[k + 1] = derivativeOffsets[k] + SlotComponents(steps[k].node, slots[k])*n; }
+	for (Index k = 0; k < numberOfSteps; k++) { derivativeOffsets[k + 1] = derivativeOffsets[k] + slots[k].Components()*n; }
 	derivatives.resize(derivativeOffsets[numberOfSteps]); //allocates only when the block grows
 
 	for (Index k = 0; k < numberOfSteps; k++)
@@ -496,8 +731,8 @@ void SymbolicProgram::Differentiate(const void* variable, Index n) const
 			operandDerivatives[i] = derivatives.data() + derivativeOffsets[o[i]];
 		}
 		int rule = (step.node.node == variable) ? (int)Variable : step.derivativeRule;
-		ForwardDerivative(rule, step.node, slots[k], operandValues.data(), operandDerivatives.data(),
-			SlotComponents(step.node, slots[k]), n, derivatives.data() + derivativeOffsets[k]);
+		ForwardDerivative(rule, step.node, slots[k], operandValues.data(), step.numberOfOperands, operandDerivatives.data(),
+			slots[k].Components(), n, derivatives.data() + derivativeOffsets[k]);
 	}
 }
 
@@ -566,7 +801,7 @@ static SymbolicRealMatrix MatrixOfComponents(const std::vector<std::vector<SReal
 }
 
 //! the derivative of operation k by one component j of the variable, by its rule; d: the derivatives of its operands
-static SymbolicDerivativeValue SymbolicDerivativeOfOperation(int rule, const FlatNode& node, const FlatValue& value,
+static SymbolicDerivativeValue SymbolicDerivativeOfOperation(int rule, const FlatNode& node, const SlotValue& value,
 	const SymbolicOperand& f, const std::vector<const SymbolicOperand*>& x, const std::vector<const SymbolicDerivativeValue*>& d)
 {
 	auto IsZero = [](Index i, const std::vector<const SymbolicDerivativeValue*>& d) { return d[i]->zero; };
@@ -654,7 +889,7 @@ static SymbolicDerivativeValue SymbolicDerivativeOfOperation(int rule, const Fla
 			for (const SymbolicDerivativeValue* operand : d) { components.push_back(operand->zero ? SReal(0.) : operand->real); }
 			return DerivativeOfVector(VectorOfComponents(components));
 		}
-		Index rows = value.matrix->NumberOfRows(), columns = value.matrix->NumberOfColumns();
+		Index rows = value.rows, columns = value.columns;
 		std::vector<std::vector<SReal>> components(rows, std::vector<SReal>(columns));
 		for (Index c = 0; c < rows*columns; c++) { components[c/columns][c%columns] = d[c]->zero ? SReal(0.) : d[c]->real; }
 		return DerivativeOfMatrix(MatrixOfComponents(components));
@@ -706,7 +941,7 @@ static SymbolicDerivativeValue SymbolicDerivativeOfOperation(int rule, const Fla
 }
 
 //! the derivative of a leaf by component j: the unit vector of the variable, else zero
-static SymbolicDerivativeValue SymbolicDerivativeOfLeaf(const FlatNode& node, const FlatValue& value, const void* variable, Index j)
+static SymbolicDerivativeValue SymbolicDerivativeOfLeaf(const FlatNode& node, const SlotValue& value, const void* variable, Index j)
 {
 	SymbolicDerivativeValue result;
 	if (node.node != variable) { return result; }
@@ -715,13 +950,13 @@ static SymbolicDerivativeValue SymbolicDerivativeOfLeaf(const FlatNode& node, co
 	case FlatKind::Real: return DerivativeOfReal(SReal(1.));
 	case FlatKind::Vector:
 	{
-		Vector derivative(value.vector->NumberOfItems(), 0.);
+		Vector derivative(value.rows, 0.);
 		derivative[j] = 1.;
 		return DerivativeOfVector(SymbolicRealVector(derivative));
 	}
 	default:
 	{
-		Matrix derivative(value.matrix->NumberOfRows(), value.matrix->NumberOfColumns(), 0.);
+		Matrix derivative(value.rows, value.columns, 0.);
 		derivative.GetDataPointer()[j] = 1.;
 		return DerivativeOfMatrix(SymbolicRealMatrix(derivative));
 	}
@@ -783,7 +1018,7 @@ py::object SymbolicJacobian(const py::object& expression, const py::object& vari
 			Index numberOfOperands = program.NumberOfOperationOperands(k);
 			if (numberOfOperands == 0)
 			{
-				for (Index j = 0; j < n; j++) { derivatives[k][j] = SymbolicDerivativeOfLeaf(node, table.SlotValue(k), variableNode.node, j); }
+				for (Index j = 0; j < n; j++) { derivatives[k][j] = SymbolicDerivativeOfLeaf(node, table.Value(k), variableNode.node, j); }
 				continue;
 			}
 			kinds.resize(numberOfOperands);
@@ -795,11 +1030,11 @@ py::object SymbolicJacobian(const py::object& expression, const py::object& vari
 				kinds[i] = program.OperationNode(slot).kind;
 				x[i] = &values[slot];
 			}
-			int rule = (node.node == variableNode.node) ? (int)Variable : FindDerivativeRule(node, kinds);
+			int rule = (node.node == variableNode.node) ? (int)Variable : OperationOfCode(OperationCodeOf(node, kinds)).derivativeRule;
 			for (Index j = 0; j < n; j++)
 			{
 				for (Index i = 0; i < numberOfOperands; i++) { d[i] = &derivatives[program.OperandSlot(k, i)][j]; }
-				derivatives[k][j] = SymbolicDerivativeOfOperation(rule, node, table.SlotValue(k), values[k], x, d);
+				derivatives[k][j] = SymbolicDerivativeOfOperation(rule, node, table.Value(k), values[k], x, d);
 			}
 		}
 		//the result: of a Real, its derivative or the vector of the n derivatives; of a vector of m components, the

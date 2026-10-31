@@ -710,17 +710,23 @@ shared by several items is one variable. Checked (2026-10-28):
   the graph after the recording; no handles; equal nodes are not merged while recording, only by Optimize.
 - **Open**: whether the export is written from the table in C++ or stays in Python reading the names of the table;
   sparse matrices in the table (RG12.65.7, proposal below).
-- **The vector and matrix operations as codes** (RG12.65.8, #3176): today a vector or matrix operation is computed by
-  a virtual call of its node class - `VectorExpressionOperatorPlus`, `VectorExpressionOperatorMultMatrix`,
-  `MatrixExpressionOperatorMultMatrixMatrix`, `MatrixExpressionTransposed`, the vectors and matrices of components
-  (`VectorExpressionSReal`, `MatrixExpressionSReal`), dot, norm, the components, the comparisons: 23 classes -, and its result is
-  the `buffer` of that node; the slots of `SymbolicProgram` (`FlatValue`) point into these buffers. As codes, they are
-  cases of the table that read and write one contiguous array of the program, an offset and a size per slot (sizes
-  known after the first evaluation, as the derivative offsets are now). Then the nodes only record: two threads can
-  evaluate one recording (now they share the buffers of its nodes), the program can be copied to the GPU as it is,
-  and the export needs no node. Leaves (named variables, constants) and item outputs stay nodes. The rules of the
-  derivatives are already rows of the table (`VectorPlus`, `VectorMatrixVector`, `MatrixMatrix`, ...). Done when every
-  symbolic test model gives the same bits and the tree evaluation is the only user of `EvaluateFromOperands`.
+- **The vector and matrix operations are codes** (RG12.65.8, #3176, done): the 23 classes of vector and matrix
+  operations - `+`, `-`, `*`, `@`, `vector@matrix`, `pos`, `neg`, `multiply`, `T`, the vectors and matrices of
+  components, dot, `NormL2`, the components, `==` and `!=` of vectors - are rows of the table, found by the kind of
+  the result, the name and the kinds of the operands; every operation of a recording has a code, and `Build` raises
+  for one without. `ArrayOperation(code, operands, out)` computes them with the arithmetic of their nodes, for
+  `SymbolicProgram` and for the constants that `Optimize` folds. The slots are `SlotValue`s - a number, or a pointer,
+  rows and columns -; the vectors and matrices of the operations lie in one array of the program, laid out at the
+  first evaluation and again when a leaf changes its size (the sizes are checked then, with the messages of the
+  nodes); a leaf points into its node. A vector or matrix result is copied out of the array when it is read. The
+  rules of the derivatives are the column of the table (`FindDerivativeRule` is gone, `esym.Jacobian` reads the
+  table too). The recording (`RecordNode`) is now the only caller of `EvaluateFromOperands`. Measured: the values of
+  the recordings of symbolicOnePassJacobianTest.py equal the tree evaluation to the bit in 20 states; a recorded 5x5
+  mass matrix of products takes 2.40 us instead of 2.61 us per evaluation, a force of vectors and matrices 2.26 us
+  instead of 2.35 us; `tableOperations` of `GetStatistics` counts every operation. What it opens: a thread can
+  evaluate the program of another, as no value is kept in a node - the thread copies of the recording (#2978) are
+  still made, as the arguments are leaves; the array of the program is what the GPU (RG14) and an export from C++
+  read.
 - **Proposal for sparse matrices** (RG12.65.7, #3168; maintainer 2026-10-29: needed for objects working with sparse
   matrices, a 20x20 matrix mostly of zeros; not for now). Today such a matrix is an `esym.Matrix` of components whose
   zeros are constants; `A@v` is a dense product of 400 multiplications, and `Optimize` cannot remove the zeros, as

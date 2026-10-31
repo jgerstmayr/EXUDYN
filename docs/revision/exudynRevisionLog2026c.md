@@ -4762,3 +4762,30 @@ suggestion.")*
 - RG12.70 (#3175): the suggestion for SampleTime, Signal and Noise in the step itself.
 - RG12.51.4 closed: all its sub-steps are closed; what is left of it has steps of its own.
 
+<a id="rg12-65-8"></a>
+### RG12.65.8 — the vector and matrix operations as codes of the table (2026-10-31, #3176); RG11.11.4 (#3177); RG12.69 revised
+*(Maintainer 2026-10-31: "raise an issue for the apply-proposed and resolve it. Then do RG11.10.13, RG12.65.8"; on
+exudyn.HT: "we are still in the evaluation stage ... make a final revision of symbolicHT.md with some decisions left to
+the open questions".)*
+- RG11.11.4 (#3177): the issue store of test_issueTracker.py copies proposed/ without its files; the waiting proposal
+  of #3164 had made testProposedResolutionsAreAppliedAfterTheMerge fail. #3164 itself applied by the maintainer, committed.
+- RG11.10.13 was already closed (#3172, commit 75551cc3); RG11.10 closed, all its sub-steps are.
+- RG12.65.8: OperationCode has 23 codes more (Dot, Norm, VectorComponent, VectorEqual, VectorNotEqual, MatrixComponent;
+  VectorOfComponents ... VectorMultiply; MatrixOfComponents ... MatrixTransposed); the row has the kind of the result
+  and the kinds of the operands, the code is found by the key kind-name-operands ("*" for the components).
+  ArrayOperation mirrors the EvaluateFromOperands of each node (the loops of MultMatrixVectorTemplate,
+  MultMatrixTransposedVectorTemplate, the dot product of VectorBase); ArrayResultSize checks the sizes at the layout
+  with the messages of the nodes. SymbolicProgram: SlotValue instead of FlatValue, one array `memory`, `Layout()` when
+  a leaf changes its size, the leaves read by Evaluate()/EvaluateRef(), the results copied into a vector or matrix on
+  reading. ForwardDerivative and esym.Jacobian on SlotValue; FindDerivativeRule and SlotComponents removed; Optimize
+  folds a Real of constant vectors by ArrayOperation. Build raises for an operation without code.
+- Checked: the suite (244 + 99) passes, symbolicStatisticsTest.py with tableOperations 5 instead of 1; pytest 1452
+  passed; the values of the three recordings of symbolicOnePassJacobianTest.py equal the tree to the bit in 20 random
+  states; measured against the previous build: 2.40 instead of 2.61 us (5x5 mass matrix), 2.26 instead of 2.35 us
+  (force of vectors and matrices) per evaluation.
+- RG12.69: symbolicHT.md revised after the decisions (mapped, the class first, the twist global at the marker origin,
+  the signatures): the carrier of HT0 and twist0 (section 4: two leaves per HT made by the recording, one 6-vector per
+  twist; no C++ class), the reduced interface of exudyn.HT (six functions), the minimal group for the joints and
+  connectors of the Create functions, four open questions; RG12.69.2-.5 added. Found: exudyn.HT.__mul__ converts any
+  other operand into a vector, so that exu.HT * symbolic HT raises instead of reaching __rmul__ - part of RG12.69.3.
+

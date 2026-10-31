@@ -15,7 +15,7 @@ You can view and download this file on Github: [symbolicStatisticsTest.py](https
 #           operations, leaves, shared nodes, depth and the size of its tree -, a chain x = x*x whose tree has 2^61-1
 #           nodes on 61 distinct ones, vectors and matrices, what esym.Optimize saves, and a symbolic spring force whose
 #           flatOperations is the number of operations GetFlatProgram() writes; tableOperations those computed by the
-#           table of operations (#3160).
+#           table of operations (#3160), the scalar ones and those of vectors and matrices (#3176).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-28
@@ -67,7 +67,7 @@ statistics = v.GetStatistics(detailed=True)
 exu.Print('statistics of A @ q + sin(q[0])*q:', statistics)
 failed += int(not Consistent(statistics) or statistics['byKind'].get('Matrix') != 1
               or statistics['byOperation'].get('component') != 1 or statistics['shared'] != 1)
-failed += int(statistics['tableOperations'] != 1) #sin; @, the component and the vector operations by their nodes
+failed += int(statistics['tableOperations'] != 5) #every operation: @, the component, sin, * and + (#3176)
 failed += int(not Consistent(A.GetStatistics(detailed=True)))
 
 #what Optimize saves: x*1 + 0 and a subexpression written twice

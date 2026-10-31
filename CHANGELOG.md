@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 269 | 1.13.275 |
+| 1.13 | Newborn | 270 | 1.13.276 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.276** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: the vector and matrix operations as codes of the table of operations, evaluated in the memory of the program instead of by the nodes of the expression graph (#3176)
+  - description: Revision2026c step RG12.65.8 of \#3153. SymbolicProgram computes the scalar operations by their codes, but every vector and matrix operation (sums, products with scalars, matrix-vector and matrix-matrix products, transposes, components, dot product, norm, vectors and matrices of components) by a virtual call of its node class of the expression graph (Symbolic.h, SymbolicVector.h, SymbolicMatrix.h), whose result lies in a buffer of that node. These operations get codes and cases of the table that read and write the memory of the program - one contiguous array of the values of all slots, with an offset and a size per slot -, so that the nodes only record and the program alone evaluates: a recording can then be evaluated by several threads at once, copied to the GPU and exported without the nodes; leaves and item outputs stay nodes. The rules of their derivatives are in the table already. Results equal to the bit.
+  - **notes:** exudyn.symbolic: the operations of vectors and matrices (+, -, \*, @, the transposed product, multiply, T, the vectors and matrices of components, the dot product, NormL2, the components, == and != of vectors) are computed by the table of operations in one array of the program, as the scalar operations, with the same results to the bit; a recording keeps no values in its nodes; GetStatistics counts them as tableOperations.
+  - date resolved: **2026-10-31 22:34**, date raised: 2026-10-31
 - **1.13.275** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The issue store of the tracker tests starts without the proposals of the real store (#3177)
   - description: The template of the tracker tests copied tools/issueTracker/issues/proposed/ with the real store; a proposal waiting there for exudev issue apply-proposed (as the one of \#3164) was applied by testProposedResolutionsAreAppliedAfterTheMerge, which then failed. The copy keeps the directories of proposed/ without their files.
   - **notes:** test\_issueTracker.py: the issue store of the tests copies the directories of proposed/ without their files, so that a proposal waiting in the real store is not applied by the tests.

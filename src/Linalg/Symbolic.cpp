@@ -1450,23 +1450,34 @@ class Optimizer
 			const OperationCode code = OperationCodeOfNode(node); //the rules of the scalar operations by their code (#3153)
 			bool allConstant = true;
 			for (const FlatNode& operand : operands) { allConstant = allConstant && IsConstant(operand); }
-			if (allConstant && IsTableCode(code)) //computed by the table, as the evaluation computes it
+			if (allConstant && IsScalarCode(code)) //computed by the table, as the evaluation computes it
 			{
 				std::vector<Real> numbers(operands.size());
 				for (Index i = 0; i < (Index)operands.size(); i++) { numbers[i] = ((const ExpressionReal*)operands[i].node)->GetValue(); }
 				result = Number(ScalarOperation(code, [&numbers](Index i) { return numbers[i]; }));
 				return true;
 			}
-			if (allConstant) //computed by the function of the node, as the evaluation computes it
+			if (allConstant && IsTableCode(code)) //a Real of constant vectors or matrices, by the table (#3176)
 			{
-				std::vector<FlatValue> values(operands.size());
+				std::vector<SlotValue> values(operands.size());
 				for (Index i = 0; i < (Index)operands.size(); i++)
 				{
 					if (operands[i].kind == FlatKind::Real) { values[i].real = ((const ExpressionReal*)operands[i].node)->GetValue(); }
-					else if (operands[i].kind == FlatKind::Vector) { values[i].vector = &((const VectorExpressionBase*)operands[i].node)->EvaluateRef(); }
-					else { values[i].matrix = &((const MatrixExpressionBase*)operands[i].node)->EvaluateRef(); }
+					else if (operands[i].kind == FlatKind::Vector)
+					{
+						const ResizableConstVector& vector = ((const VectorExpressionBase*)operands[i].node)->EvaluateRef();
+						values[i].data = vector.GetDataPointer();
+						values[i].rows = vector.NumberOfItems();
+					}
+					else
+					{
+						const ResizableMatrix& matrix = ((const MatrixExpressionBase*)operands[i].node)->EvaluateRef();
+						values[i].data = matrix.GetDataPointer();
+						values[i].rows = matrix.NumberOfRows();
+						values[i].columns = matrix.NumberOfColumns();
+					}
 				}
-				result = Number(((const ExpressionBase*)node.node)->EvaluateFromOperands(values.data()));
+				result = Number(ArrayOperation(code, values.data(), (Index)values.size(), nullptr));
 				return true;
 			}
 			if (code == OperationCode::Multiply)

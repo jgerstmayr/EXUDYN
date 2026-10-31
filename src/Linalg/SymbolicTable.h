@@ -3,8 +3,9 @@
 * @details		Details:
 				- one row per operation code: its name, the number and kind of its operands, the rule of its forward
 				  derivative; the evaluation of a code is its case in SymbolicProgram::Evaluate
-				- SymbolicProgram: the operations of a flat program by their codes; the scalar operations computed by the
-				  table, the operations of vectors and matrices and the leaves by their nodes, as in FlatProgram
+				- SymbolicProgram: the operations of a flat program by their codes, all computed by the table - the scalar
+				  operations and those of vectors and matrices (#3176) - in the memory of the program; the leaves are
+				  read from their nodes
 				- the forward derivative of one operation, shared by FlatProgram and SymbolicProgram
 				- design: docs/dev/design/symbolicSystem.md section 12.7, R1; the expression tree stays for the recording
 *
@@ -27,14 +28,21 @@
 namespace Symbolic
 {
 
-//! the operation codes of the table: a leaf and an operation computed by its node - of vectors and matrices, or with
-//! operands of other kinds -, then the scalar operations of scalar operands, computed by the table
+//! the operation codes of the table: a leaf, an operation without a code (Node), the scalar operations of scalar
+//! operands, then the operations of vectors and matrices (#3176)
 enum class OperationCode : int
 {
 	Leaf = 0, Node,
 	Plus, Minus, Multiply, Divide, Equal, NotEqual, Greater, GreaterEqual, LessEqual, Less,
 	Positive, Negative, IsFinite, Abs, Sign, Not, Round, Ceil, Floor, Sqrt, Exp, Log, Sin, Cos, Tan, ASin, ACos, ATan,
 	Sinh, Cosh, Tanh, ASinh, ACosh, ATanh, Pow, Atan2, Mod, Min, Max, IfThenElse,
+	//a Real of vectors and matrices
+	Dot, Norm, VectorComponent, VectorEqual, VectorNotEqual, MatrixComponent,
+	//a vector
+	VectorOfComponents, VectorPlus, VectorMinus, VectorScalar, MatrixVector, MatrixTransposedVector,
+	VectorPositive, VectorNegative, VectorMultiply,
+	//a matrix
+	MatrixOfComponents, MatrixPlus, MatrixMinus, MatrixScalar, MatrixPositive, MatrixNegative, MatrixMatrix, MatrixTransposed,
 	NumberOfCodes
 };
 
@@ -56,8 +64,9 @@ struct OperationInfo
 {
 	OperationCode code;
 	const char* name;		 //!< the name of the node, FlatName(); empty for Leaf and Node
-	Index numberOfOperands;  //!< scalar operands; -1 for Leaf and Node
-	int derivativeRule;		 //!< its DerivativeRule; for Node found by FindDerivativeRule
+	FlatKind kind;			 //!< the kind of its result
+	const char* operands;	 //!< the kinds of its operands, a letter R, V or M each; "*" any number of Reals, the components
+	int derivativeRule;		 //!< its DerivativeRule
 	bool commutative;		 //!< the two operands may be swapped exactly, for merging equal operations in Optimize
 };
 
@@ -67,8 +76,10 @@ const OperationInfo& OperationOfCode(OperationCode code);
 OperationCode OperationCodeOf(const FlatNode& node, const std::vector<FlatKind>& operandKinds);
 //! the code of a node, the kinds of its operands read from the node
 OperationCode OperationCodeOfNode(const FlatNode& node);
-//! true for a code computed by the table, a scalar operation of scalar operands
+//! true for a code computed by the table: an operation with a row of its own
 inline bool IsTableCode(OperationCode code) { return code != OperationCode::Leaf && code != OperationCode::Node; }
+//! true for a scalar operation of scalar operands, computed by ScalarOperation
+inline bool IsScalarCode(OperationCode code) { return code >= OperationCode::Plus && code <= OperationCode::IfThenElse; }
 //! the name of an operation: of its row of the table, else FlatName() of its node (#3153, the export and the count)
 const char* OperationName(const FlatNode& node);
 
@@ -123,19 +134,35 @@ inline Real ScalarOperation(OperationCode code, const TOperand& x)
 	}
 }
 
-//! the rule of the derivative of a node by its kind, its name and the kinds of its operands
-int FindDerivativeRule(const FlatNode& node, const std::vector<FlatKind>& operandKinds);
-//! the number of components of a value: 1, the size of a vector or rows*columns of a matrix
-Index SlotComponents(const FlatNode& node, const FlatValue& value);
+//! the value of a slot of SymbolicProgram: a number, or the components of a vector or matrix, row by row, in the memory
+//! of the program or, of a leaf, in its node (#3176); a Real and a vector have one column
+struct SlotValue
+{
+	Real real = 0.;
+	const Real* data = nullptr;
+	Index rows = 1;
+	Index columns = 1;
+	//! the number of components: 1, the size of a vector or rows*columns of a matrix
+	Index Components() const { return rows*columns; }
+};
+
+//! the value of an operation of vectors and matrices from its operands x[0 ...], with the arithmetic of the
+//! EvaluateFromOperands of its node: a Real is returned, a vector or matrix written into out, of the size the program
+//! lays out, which also checks the sizes of the operands (#3176); the one evaluation of these codes, for
+//! SymbolicProgram and Optimize
+Real ArrayOperation(OperationCode code, const SlotValue* x, Index numberOfOperands, Real* out);
+
 //! the forward derivative of one operation by its rule: its m components by the n components of the variable into out,
 //! component c by component j at [c*n + j], from its value, the values v and the derivatives d of its operands
-void ForwardDerivative(int rule, const FlatNode& node, const FlatValue& value, const FlatValue* v, const Real* const* d,
-	Index m, Index n, Real* out);
+void ForwardDerivative(int rule, const FlatNode& node, const SlotValue& value, const SlotValue* v, Index numberOfOperands,
+	const Real* const* d, Index m, Index n, Real* out);
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//! THE PROGRAM OF THE TABLE (#3153): the operations of a flat program - the same order and slots - by their codes; a
-//! scalar operation of scalar operands is computed by its case of the table, without a call of its node; a leaf and
-//! the other operations by their nodes, as FlatProgram computes them. The results are those of FlatProgram to the bit.
+//! THE PROGRAM OF THE TABLE (#3153): the operations of a flat program - the same order and slots - by their codes,
+//! each computed by its case of the table without a call of its node (#3176); the vectors and matrices in one array of
+//! the program, an offset and a size per slot, laid out at the first evaluation and again when a leaf changes its
+//! size; the leaves are read from their nodes. The nodes only record: the program keeps no value in them, and the
+//! results are those of the evaluation of the nodes to the bit.
 class SymbolicProgram
 {
 	struct Step
@@ -149,8 +176,14 @@ class SymbolicProgram
 	std::vector<Step> steps;			//!< step k writes slot k
 	std::vector<Index> operandSlots;
 	std::vector<Index> results;
-	mutable std::vector<FlatValue> slots;
-	mutable std::vector<FlatValue> operandValues;
+	std::vector<Index> leaves;			//!< the steps without operands
+	mutable std::vector<SlotValue> slots;
+	mutable std::vector<Index> offsets; //!< of the vectors and matrices of the operations in memory; -1 for a Real or a leaf
+	mutable std::vector<Real> memory;	//!< the values of the vectors and matrices of the operations
+	mutable bool laidOut = false;
+	mutable std::vector<SlotValue> operandValues;
+	mutable std::vector<ResizableConstVector> resultVectors; //!< the copies of the results returned by reference
+	mutable std::vector<ResizableMatrix> resultMatrices;
 	//the forward derivative in one pass, as FlatProgram
 	mutable std::vector<Real> derivatives;
 	mutable std::vector<Index> derivativeOffsets;
@@ -159,7 +192,11 @@ public:
 	//! the steps of a built flat program, in its order
 	void Build(const FlatProgram& program);
 	bool IsBuilt() const { return results.size() != 0; }
-	void Clear() { steps.clear(); operandSlots.clear(); results.clear(); slots.clear(); operandValues.clear(); }
+	void Clear()
+	{
+		steps.clear(); operandSlots.clear(); results.clear(); leaves.clear(); slots.clear(); offsets.clear(); memory.clear();
+		laidOut = false; operandValues.clear(); resultVectors.clear(); resultMatrices.clear();
+	}
 
 	//! compute all steps in their order
 	void Evaluate() const;
@@ -170,15 +207,19 @@ public:
 	const Real* ResultDerivative(Index i) const { return derivatives.data() + derivativeOffsets[results[i]]; }
 
 	Real Result(Index i) const { return slots[results[i]].real; }
-	const ResizableConstVector& VectorResult(Index i) const { return *slots[results[i]].vector; }
-	const ResizableMatrix& MatrixResult(Index i) const { return *slots[results[i]].matrix; }
+	//! result i, copied from the memory of the program; valid until the next evaluation
+	const ResizableConstVector& VectorResult(Index i) const;
+	const ResizableMatrix& MatrixResult(Index i) const;
 	Index NumberOfSteps() const { return (Index)steps.size(); }
 	//! the value of step k of the last evaluation
-	const FlatValue& SlotValue(Index k) const { return slots[k]; }
+	const SlotValue& Value(Index k) const { return slots[k]; }
 	//! the number of components of result i of the last evaluation
-	Index ResultComponents(Index i) const { return SlotComponents(steps[results[i]].node, slots[results[i]]); }
+	Index ResultComponents(Index i) const { return slots[results[i]].Components(); }
 	//! the number of steps computed by the table, without a call of their node
 	Index NumberOfTableSteps() const;
+private:
+	//! the sizes of the slots from the sizes of the leaves, their offsets in memory; raises for inconsistent sizes
+	void Layout() const;
 };
 
 //! the derivatives of the components of an expression by the n components of a named variable, at the current values,

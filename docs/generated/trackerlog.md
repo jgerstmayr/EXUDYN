@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.275.dev1
+- Exudyn version = 1.13.276.dev1
 - last change = 2026-10-31
 - Number of issues = 3178
-- Number of resolved issues = 3052 (275 in current version)
+- Number of resolved issues = 3053 (276 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` exudyn.symbolic: the vector and matrix operations as codes of the table of operations, evaluated in the memory of the program instead of by the nodes of the expression graph (#3176)
-  - description: Revision2026c step RG12.65.8 of \#3153. SymbolicProgram computes the scalar operations by their codes, but every vector and matrix operation (sums, products with scalars, matrix-vector and matrix-matrix products, transposes, components, dot product, norm, vectors and matrices of components) by a virtual call of its node class of the expression graph (Symbolic.h, SymbolicVector.h, SymbolicMatrix.h), whose result lies in a buffer of that node. These operations get codes and cases of the table that read and write the memory of the program - one contiguous array of the values of all slots, with an offset and a size per slot -, so that the nodes only record and the program alone evaluates: a recording can then be evaluated by several threads at once, copied to the GPU and exported without the nodes; leaves and item outputs stay nodes. The rules of their derivatives are in the table already. Results equal to the bit.
-  - date raised: 2026-10-31
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Functions of time for user functions: a discrete time, sampled data signals with interpolation and derivative, repeatable noise (#3175)
   - description: Revision2026c step RG12.70. For control, thermal and electro-mechanical problems on ODE1 coordinates: the discrete time of a sampling period (zero-order hold of a function of time), a data signal given at sampling times with fast access to its value at any time by closest, linear or quadratic interpolation and its derivative, and a noise of time that gives the same value for the same time and seed in every run and evaluation order; as functions of exudyn.symbolic, recorded and differentiated, and of exudyn.cMath for numbers, with the same names.
   - date raised: 2026-10-31
