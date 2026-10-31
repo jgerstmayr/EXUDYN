@@ -113,6 +113,7 @@ exudyn.TimeIntegrationSettings.explicitIntegration
 exudyn.TimeIntegrationSettings.realtimeFactor
 exudyn.TimeIntegrationSettings.realtimeWaitMicroseconds
 exudyn.TimeIntegrationSettings.simulateInRealtime
+exudyn.Twist
 exudyn.VSettingsBeams
 exudyn.VSettingsBodies
 exudyn.VSettingsCamera
