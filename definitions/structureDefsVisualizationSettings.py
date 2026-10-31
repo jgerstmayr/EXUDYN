@@ -970,7 +970,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tbool, 
             pythonName='modelCentricView',
             defaultValue=True,
-            description=r'True: rotations and translations are applied to model, while camera stays far enough away from the model and always captures the whole model (everything is in front of camera plane); False: camera moves and rotates while model stays in physical space; only geometry in front of camera is visible; note that the behavior of trackMarker changes with modelCentricView and some features are not available in case of modelCentricView=False.'),
+            description=r'True: rotations and translations are applied to model, while camera stays far enough away from the model and always captures the whole model (everything is in front of camera plane); False: camera moves and rotates while model stays in physical space; only geometry in front of camera is visible; note that the behavior of trackMarker changes with modelCentricView and some features are not available in case of modelCentricView=False; see [](#sec-renderer-modelcameracentric).'),
         StructureParameter(type=TFloat3, 
             pythonName='clippingPlaneNormal',
             defaultValue='Float3({0.f,0.f,0.f})',

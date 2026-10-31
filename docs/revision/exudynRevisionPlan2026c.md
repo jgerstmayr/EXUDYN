@@ -100,7 +100,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG11.5 Document single items that the general pages did not reach
   - RG11.6 Write the joints and their Jacobians on homogeneous transformations
   - RG11.7 Let objects compute from the coordinates passed in instead of reading their nodes
-  - RG11.8 Resolve the quick old issues (4 open sub-steps)
+  - RG11.8 Resolve the quick old issues (3 open sub-steps)
   - RG11.10 Provide the math and kinematics functions of the C++ code to Python as exudyn.cMath and exudyn.cUtilities
 - **RG12** Symbolic
   - RG12.51 Symbolic system models (2 open sub-steps)
@@ -135,7 +135,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 8 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 14 | Misc |
+| RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 12 | Symbolic |
 | RG13 | OPEN | 2 | Total coordinates |
 | RG14 | OPEN | 4 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -1434,9 +1434,9 @@ and listed per model by runTestSuite.py: 15 of 192 test models and 1 mini exampl
 joints have no velocity level. Test model initialConstraintsCheckTest.py. The drift during the run, #565, can reuse
 the evaluation. [log](exudynRevisionLog2026c.md#rg11-8-9)
 
-#### **OPEN_RG11.8.10** Explain model-centric and camera-centric views in the manual
+#### **CLOSED_RG11.8.10** Explain model-centric and camera-centric views in the manual
 
-#2247.
+CLOSED 2026-10-31 (#2247; maintainer 2026-10-31: complete it): docs/manual/GUI.md section "Model-centric and camera-centric view" - what moves, what is visible, perspective, ZoomAll and trackMarker in both, from the C++ (VisualizationSystemContainerBase.h), an example; modelCentricView links it. [log](exudynRevisionLog2026c.md#rg11-8-10)
 
 #### **OPEN_RG11.8.11** Describe the dict of GetURDFrobotData key by key
 

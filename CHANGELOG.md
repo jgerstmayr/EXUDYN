@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 265 | 1.13.271 |
+| 1.13 | Newborn | 266 | 1.13.272 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.272** `CHANGE` `LOW EFF` `resolved by: Claude-JG` camera (#2247)
+  - description: add documentation for model-centric and camera-centric views
+  - **notes:** The manual explains the model-centric and the camera-centric view (GUI, The model view): what moves, what is visible, the perspective, ZoomAll and trackMarker in both, with an example of a camera following a vehicle; the setting modelCentricView links the section.
+  - date resolved: **2026-10-31 20:30**, date raised: 2026-01-31
 - **1.13.271** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` C++: HomogeneousTransformation and HomogeneousTransformationList instead of the typedefs Transformation66 and Transformation66List; KinematicsBasics.h removed (#3172)
   - description: Revision2026c step RG11.10.13. Linalg/KinematicsBasics.h holds only the typedefs Transformation66 (= HomogeneousTransformation) and Transformation66List, names left from the spatial transformations of the kinematic tree (\#2828). HomogeneousTransformationList is declared in HomogeneousTransformation.h, every use in src/ and definitions/ (the parameter type of ObjectKinematicTree, the include of its header, definitionTypes.py) takes the HomogeneousTransformation names, the unused PyTransformation66List is removed, and the file goes out of the source tree and the Visual Studio project.
   - **notes:** C++: the placements of the links of ObjectKinematicTree are a HomogeneousTransformationList, declared in HomogeneousTransformation.h; the typedefs Transformation66 and Transformation66List and the file Linalg/KinematicsBasics.h are removed, the definitions use the new names, and the unused PyTransformation66List is gone.

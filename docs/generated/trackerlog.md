@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.271.dev1
+- Exudyn version = 1.13.272.dev1
 - last change = 2026-10-31
 - Number of issues = 3173
-- Number of resolved issues = 3048 (271 in current version)
+- Number of resolved issues = 3049 (272 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9136,10 +9136,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add detailed description to function, in particular to returned dict
   - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-02-04
-- `CHANGE` `LOW EFF` camera (#2247)
-  - description: add documentation for model-centric and camera-centric views
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2026-01-31
 - `EXTENSION` `MEDIUM EFF` explicit solver (#2238)
   - description: add adaptive step refinement for case of divergence - define limit for velocities/solution increment to decide step refinement (+ nan/inf)
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

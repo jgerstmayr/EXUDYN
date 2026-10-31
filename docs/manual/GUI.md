@@ -291,9 +291,37 @@ shown as one of a few meters. Two settings are lengths, against scenes without s
 For huge models nothing needs to be set; for very large or very small node or connector sizes, see
 `visualizationSettings.nodes.defaultSize` and `connectors.defaultSize`.
 
-In a perspective view (`view0.camera.perspective` > 0), the model-centric view (`modelCentricView = True`, default)
-moves the model in front of the camera; in the camera-centric view the camera moves, `ZoomAll` puts it in front of the
-scene (`camera.cameraPosition`), and the zoom acts as the zoom of a lens.
+(sec-renderer-modelcameracentric)=
+### Model-centric and camera-centric view
+
+`visualizationSettings.view0.camera.modelCentricView` (per view: `view1`, ...) chooses what moves when the view
+changes - the model in front of a fixed camera, or a camera inside the model:
+
+| | model-centric view (`modelCentricView = True`, default) | camera-centric view (`modelCentricView = False`) |
+|---|---|---|
+| what moves | the model: `modelRotation` and `centerPoint` of the render state, changed by the mouse, the keys and `SetModelView`, rotate and shift the model in front of the camera | the camera: it sits at `camera.cameraPosition` (model coordinates) and is turned by `modelRotation`; the model stays where it is |
+| what is visible | the whole scene: the camera stays far enough away, the near and far planes lie `2 * maxSceneSize * zMaxSceneFactor` in front of and behind the focal plane | what lies in front of the camera: the near plane is at the smallest distance to the eye, 0.1 or `0.001*maxSceneSize` if that is smaller |
+| `perspective` > 0 | the eye is `zoom/perspective` in front of the focal plane; the zoom moves the eye, the angle of view stays (`tan` of half the angle = `perspective`) | the eye is the camera; the zoom acts as the zoom of a lens (`tan` of half the angle = `perspective*zoom/(0.5*maxSceneSize)`) |
+| `ZoomAll` | centers the scene and sets the zoom | also puts the camera, in a perspective view, in front of the center of the scene, at the distance at which it shows the whole scene |
+| `trackMarker` | the scene follows the marker | the camera follows the marker: `cameraPosition` is relative to its tracked position, in model coordinates |
+
+The camera-centric view is the view of a driver or of a camera inside a model - a vehicle, a robot cell, a building -,
+mostly with perspective; for everything else the model-centric view is the simpler one. `nearFarPlaneOffset` overrides
+the computed near and far planes in both views, its third value 1 switching them on. With `trackMarkerOrientation`
+set, the view also turns with the marker, in both views. The raytracer uses the same projection as OpenGL (#3000), and
+the shadows stay correct where the camera-centric view clips them at the near or far plane (#2308).
+
+A camera that moves with a vehicle (marker `mVehicle`), 2 behind and 0.5 above it; where it looks is turned by the
+mouse or set by `SC.renderer.SetModelView(rotationVector=...)`:
+
+```python
+camera = SC.visualizationSettings.view0.camera
+camera.modelCentricView = False
+camera.perspective = 0.5
+camera.trackMarker = mVehicle
+camera.cameraPosition = [-2, 0, 0.5]   #relative to the marker, in model coordinates
+SC.visualizationSettings.general.autoFitScene = False #ZoomAll at the start would set cameraPosition
+```
 
 (sec-overview-basics-storingmodelview)=
 ### Storing the model view

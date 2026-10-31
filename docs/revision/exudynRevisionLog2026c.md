@@ -4702,3 +4702,17 @@ KinematicsBasics.h shall be removed. ... Transformation66 is also used in defini
   was never bound and is removed; KinematicsBasics.h removed with its entries of msvc/cppsrc.vcxproj and .filters. The
   generated CObjectKinematicTree.h follows by regeneration. The closed plans and logs keep the old name.
 
+<a id="rg11-8-10"></a>
+### RG11.8.10 — model-centric and camera-centric views in the manual (2026-10-31, #2247)
+*(Maintainer 2026-10-31: "Complete the OPEN_RG11.8.10.")*
+- docs/manual/GUI.md, chapter The model view: a section `sec-renderer-modelcameracentric` with a table of the two views -
+  what moves (modelRotation and centerPoint move the model; cameraPosition and modelRotation the camera), what is visible
+  (near and far plane at 2 maxSceneSize zMaxSceneFactor around the focal plane; at min(0.1, 0.001 maxSceneSize) from
+  the eye), the perspective (the eye at zoom/perspective; the zoom of a lens), ZoomAll (sets cameraPosition in a
+  camera-centric perspective view) and trackMarker (cameraPosition relative to the tracked position, in model
+  coordinates: `translationMV += rotationMV*cameraPosition` before the marker orientation is applied) - read from
+  ComputePerspectiveFrustum, ComputeZoomAll and GetRotationTranslationFWithMarker in VisualizationSystemContainerBase.h;
+  nearFarPlaneOffset, the raytracer (#3000) and the shadows (#2308); an example of a camera following a vehicle. The
+  paragraph of the section Tiny and huge models on the perspective of both views moved into it.
+- definitions/structureDefsVisualizationSettings.py: the description of modelCentricView links the section.
+
