@@ -3,8 +3,8 @@
 #
 # Details:  exudyn.HT, the homogeneous transformation of Exudyn's C++ core (#2780), against the 4x4 numpy matrices
 #           of exudyn.rigidBodyUtilities: for random rotations and translations, the composition H1*H2, the
-#           transformed point H*v, the inverse, the 4x4 matrix in both directions, and the transformations set
-#           without rotation (identity, SetTranslation), whose products skip the rotation. The output variable
+#           transformed point H*v, the inverse, the relative frame, the 4x4 matrix in both directions, and the transformations set
+#           without rotation (identity, a translation only), whose products skip the rotation. The output variable
 #           HomogeneousTransformation of a node, a body point, a marker and a sensor: an exu.HT of the rotation matrix
 #           and the position; a sensor stores its 16 values row by row, exu.HT(values).
 #
@@ -38,7 +38,7 @@ for i in range(20):
                np.abs(H1*v - (T1 @ np.append(v, 1))[0:3]).max(),            #transformed point
                np.abs(H1.Inverse().HT44() - InverseHT(T1)).max(),             #inverse
                np.abs(exu.HT(T1).HT44() - T1).max(),                          #from and to 4x4
-               np.abs(H1.RotateVectorTransposed(H1.RotateVector(v)) - v).max()]
+               np.abs(H1.Relative(H2).HT44() - InverseHT(T1) @ T2).max()]
     total += np.abs((H1*H2).HT44()).sum()
 
 #transformations without rotation: the flag, and the same results as with a unit matrix

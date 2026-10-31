@@ -102,7 +102,7 @@ The class **MatrixContainer** has the following **functions and structures**:
 (sec-ht)=
 ## HT
 
-The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint, and the place for transformations of rigid bodies: it converts from and to the coordinates of the rigid body nodes (Euler parameters, Tait-Bryan angles Rxyz, rotation vector), composes, inverts and interpolates. It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation without rotation (identity, SetTranslation, a unit matrix) skips the rotation in its products. The Set functions return the HT itself, so that they chain. Examples:
+The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint, and the place for transformations of rigid bodies: it converts from and to the coordinates of the rigid body nodes (Euler parameters, Tait-Bryan angles Rxyz, rotation vector), composes, inverts and interpolates. It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation without rotation (identity, a translation only, a unit matrix) skips the rotation in its products. The Set functions return the HT itself, so that they chain. Examples:
 
 
 Example notebook `python/Notebooks/reference/HT.ipynb`:
@@ -121,6 +121,7 @@ print(H3 == H1)
 ```
 
 ```text
+NOTE: 2 visualizationSettings read from ~/.exudyn/config.json
 True
 ```
 
@@ -133,7 +134,7 @@ A = H1.rotation                                            #3x3 numpy array
 p = H1.translation                                         #numpy array [1,0,0]
 H1.translation = [0,0,1]                                   #writing a part keeps the other
 H1.rotation = np.eye(3)                                    #a unit matrix: H1.HasNoRotation() is True
-A, p = H3.Get()                                            #both parts
+A, p = H3.rotation, H3.translation                         #both parts
 H3.Set(rotationVector=[0,0,0.5])                           #only the rotation; the translation stays
 print(H1.HasNoRotation(), H3.translation)
 ```
@@ -200,10 +201,7 @@ The class **HT** has the following **functions and structures**:
 
 - **`rotation`**: the 3x3 rotation matrix as numpy array; setting it keeps the translation
 - **`translation`**: the translation as numpy array; setting it keeps the rotation
-- **`Get()`**: [rotation, translation] as numpy arrays
 - **`Set(rotation = None, translation = None, eulerParameters = None, Rxyz = None, rotationVector = None)`**: set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT (`returns a reference`)
-- **`SetIdentity()`**: set the identity: unit rotation, zero translation; returns the HT (`returns a reference`)
-- **`SetTranslation(translation)`**: set a translation and the unit rotation; returns the HT (`returns a reference`)
 - **`SetRotationX(angle)`**: set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)
 - **`SetRotationY(angle)`**: set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)
 - **`SetRotationZ(angle)`**: set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)
@@ -228,10 +226,7 @@ The class **HT** has the following **functions and structures**:
 - **`SetExpR3xSO3(vector)`**: set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT (`returns a reference`)
 - **`HT44()`**: the 4x4 matrix [A p; 0 1] as numpy array
 - **`Inverse()`**: the inverse transformation [A^T, -A^T p], an HT
-- **`Invert()`**: invert the transformation in place
-- **`RotateVector(vector)`**: the rotated vector A*v, without the translation
-- **`RotateVectorTransposed(vector)`**: the vector rotated back, A^T*v
-- **`HasNoRotation()`**: True if the rotation is the unit matrix - set without rotation (identity, SetTranslation, a product of such) or given as the exact unit matrix from Python -, which its products then skip; a unit matrix computed in C++ is not checked
+- **`HasNoRotation()`**: True if the rotation is the unit matrix - set without rotation (identity, a translation only, a product of such) or given as the exact unit matrix from Python -, which its products then skip; a unit matrix computed in C++ is not checked
 - **`__mul__(other)`**: H1*H2, the composition of two transformations, an HT; H*v, the transformed point A*v+p of a 3D vector, a numpy array
 - **`__eq__(other)`**: True if rotation and translation are equal, component by component
 - **`__matmul__(other)`**: H1@H2, the composition of two transformations as H1*H2, an HT; H@x for any other x as numpy computes it with the 4x4 matrix, e.g. H@[x,y,z,1]

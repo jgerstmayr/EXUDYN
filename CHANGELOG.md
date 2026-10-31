@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 270 | 1.13.276 |
+| 1.13 | Newborn | 271 | 1.13.277 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.277** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.HT without SetTranslation, RotateVector, RotateVectorTransposed, SetIdentity, Get and Invert, which the constructor, the properties and Inverse write as well (#3181)
+  - description: Revision2026c step RG12.69.2. The six functions are written as H.translation = p or exu.HT(translation=p), H.rotation @ v, H.rotation.T @ v, exu.HT(), (H.rotation, H.translation) and H = H.Inverse(); the symbolic HT (\#3174) has one way for each. Decided: removed without deprecation (exudyn.HT was released in 1.13.6 and is little used).
+  - **notes:** exudyn.HT has one way for each operation: SetTranslation, RotateVector, RotateVectorTransposed, SetIdentity, Get and Invert are removed; write H.translation = p or exu.HT(translation=p), H.rotation @ v, H.rotation.T @ v, exu.HT(), (H.rotation, H.translation) and H = H.Inverse().
+  - date resolved: **2026-10-31 23:59**, date raised: 2026-10-31
 - **1.13.276** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: the vector and matrix operations as codes of the table of operations, evaluated in the memory of the program instead of by the nodes of the expression graph (#3176)
   - description: Revision2026c step RG12.65.8 of \#3153. SymbolicProgram computes the scalar operations by their codes, but every vector and matrix operation (sums, products with scalars, matrix-vector and matrix-matrix products, transposes, components, dot product, norm, vectors and matrices of components) by a virtual call of its node class of the expression graph (Symbolic.h, SymbolicVector.h, SymbolicMatrix.h), whose result lies in a buffer of that node. These operations get codes and cases of the table that read and write the memory of the program - one contiguous array of the values of all slots, with an offset and a size per slot -, so that the nodes only record and the program alone evaluates: a recording can then be evaluated by several threads at once, copied to the GPU and exported without the nodes; leaves and item outputs stay nodes. The rules of their derivatives are in the table already. Results equal to the bit.
   - **notes:** exudyn.symbolic: the operations of vectors and matrices (+, -, \*, @, the transposed product, multiply, T, the vectors and matrices of components, the dot product, NormL2, the components, == and != of vectors) are computed by the table of operations in one array of the program, as the scalar operations, with the same results to the bit; a recording keeps no values in its nodes; GetStatistics counts them as tableOperations.

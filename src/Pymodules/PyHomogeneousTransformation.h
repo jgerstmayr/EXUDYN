@@ -117,29 +117,12 @@ public:
 		GetTranslation() = p;
 	}
 
-	//! [rotation, translation]
-	py::list GetPy() const
-	{
-		py::list list;
-		list.append(GetRotationPy());
-		list.append(GetTranslationPy());
-		return list;
-	}
-
 	//! the parts given; a part that is None stays as it is
 	void SetPy(const py::object& rotation, const py::object& translation, const py::object& eulerParameters,
 		const py::object& Rxyz, const py::object& rotationVector)
 	{
 		SetRotationParametersPy(rotation, eulerParameters, Rxyz, rotationVector);
 		if (!translation.is_none()) { SetTranslationPy(translation); }
-	}
-
-	//! a translation and the unit rotation
-	void SetTranslationOnlyPy(const py::object& translation)
-	{
-		Vector3D p;
-		EPyUtils::FromPython(translation, p);
-		SetTranslation(p);
 	}
 
 	py::array_t<Real> GetHT44Py() const { return EPyUtils::ToPython(GetHT44()); }
@@ -187,20 +170,6 @@ public:
 		Vector3D v;
 		EPyUtils::FromPython(vector, v);
 		return EPyUtils::ToPython((const HomogeneousTransformation&)*this * v);
-	}
-
-	py::array_t<Real> RotateVectorPy(const py::object& vector) const
-	{
-		Vector3D v;
-		EPyUtils::FromPython(vector, v);
-		return EPyUtils::ToPython(RotateVector(v));
-	}
-
-	py::array_t<Real> RotateVectorTransposedPy(const py::object& vector) const
-	{
-		Vector3D v;
-		EPyUtils::FromPython(vector, v);
-		return EPyUtils::ToPython(RotateVectorTransposed(v));
 	}
 
 	//! the rotation parameters of the rigid body nodes: Euler parameters (NodeRigidBodyEP), Tait-Bryan angles

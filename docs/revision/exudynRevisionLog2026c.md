@@ -4789,3 +4789,23 @@ the open questions".)*
   connectors of the Create functions, four open questions; RG12.69.2-.5 added. Found: exudyn.HT.__mul__ converts any
   other operand into a vector, so that exu.HT * symbolic HT raises instead of reaching __rmul__ - part of RG12.69.3.
 
+
+<a id="rg12-69-2"></a>
+### RG12.69.2 — exudyn.HT without the six functions (2026-10-31, #3181); the decisions on HT, RG12.70 revised
+*(Maintainer 2026-10-31: on symbolicHT.md section 8 "all six"; the leaf names yes, "for the twist, it would be highly
+valuable to have a clear interface (ideally twist.translation and twist.rotation) ... suggest something appropriate";
+A2 "add this to the steps and do it as planned after A1"; the twist functions "in C++ and in symbolics.kinematics for
+now", an issue without step to check which are needed; on RG12.70 "currently, we only need Signal", "Signal is not the
+correct name"; "Then do the suggested RG12.69.2-.4 steps".)*
+- The decisions in symbolicHT.md sections 5, 7 and 8: the twist an object with `velocity` and `angularVelocity`
+  (`exudyn.Twist` in C++, `kinematics.Twist`), recorded as two leaves `twist0_velocity`, `twist0_angularVelocity`;
+  the names of the output variables rather than translation and rotation, which are the parts of a frame.
+  RG12.69.6 (A2) added; #3178 raised without step.
+- RG12.70 rewritten (#3175 retitled and its description replaced): `esym.LookupTable(values, step, start, outside,
+  interpolation)` called as `table(x)`, required and optional features separated; SampleTime and Noise in a new
+  module of exudyn.symbolics; RG12.70.1 (#3180) the SampleSensor, later.
+- RG11.6.1 (#3179): localPosition of the rigid body markers and rotationMarker0/1 documented as deprecated, later.
+- RG12.69.2: `Get`, `SetIdentity`, `SetTranslation`, `Invert`, `RotateVector`, `RotateVectorTransposed` out of
+  pybindDataStructures.py and their Py helpers out of PyHomogeneousTransformation.h (the C++ methods stay, MarkerData.h
+  uses them); homogeneousTransformationTest.py checks `Relative` instead of the rotation of a vector (the same result
+  value), the notebook HT.ipynb reads both parts by the properties; revisions.md.

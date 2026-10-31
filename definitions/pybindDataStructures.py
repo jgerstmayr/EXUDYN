@@ -126,7 +126,7 @@ pb.DefPyFinishClass('MatrixContainer')
 classStr = 'PyHT'
 pyClassStr = 'HT'
 
-pb.DefPyStartClass(classStr, pyClassStr, 'The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint, and the place for transformations of rigid bodies: it converts from and to the coordinates of the rigid body nodes (Euler parameters, Tait-Bryan angles Rxyz, rotation vector), composes, inverts and interpolates. It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation without rotation (identity, SetTranslation, a unit matrix) skips the rotation in its products. The Set functions return the HT itself, so that they chain. Examples:',
+pb.DefPyStartClass(classStr, pyClassStr, 'The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint, and the place for transformations of rigid bodies: it converts from and to the coordinates of the rigid body nodes (Euler parameters, Tait-Bryan angles Rxyz, rotation vector), composes, inverts and interpolates. It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation without rotation (identity, a translation only, a unit matrix) skips the rotation in its products. The Set functions return the HT itself, so that they chain. Examples:',
                     subSection=True, labelName='sec:HT')
 
 #the examples are a notebook: they ran, and the page shows what they printed (#2831)
@@ -142,31 +142,12 @@ pb.DefDataAccess('rotation', 'the 3x3 rotation matrix as numpy array; setting it
 pb.CppCode('        .def_property("translation", &PyHT::GetTranslationPy, &PyHT::SetTranslationPy)\n')
 pb.DefDataAccess('translation', 'the translation as numpy array; setting it keeps the rotation', dataType='ArrayLike')
 
-pb.DefPyFunctionAccess(cClass=classStr, pyName='Get', cName='GetPy',
-                       description="[rotation, translation] as numpy arrays",
-                       returnType='List[ArrayLike]',
-                       )
-
 pb.DefPyFunctionAccess(cClass=classStr, pyName='Set',
                        cName='[](PyHT& item, const py::object& rotation, const py::object& translation, const py::object& eulerParameters, const py::object& Rxyz, const py::object& rotationVector) -> PyHT& {\n            item.SetPy(rotation, translation, eulerParameters, Rxyz, rotationVector); return item; }',
                        argList=['rotation', 'translation', 'eulerParameters', 'Rxyz', 'rotationVector'],
                        defaultArgs=['py::none()']*5,
                        description="set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT",
                        argTypes=['ArrayLike']*5,
-                       returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
-                       )
-
-pb.DefPyFunctionAccess(cClass=classStr, pyName='SetIdentity',
-                       cName='[](PyHT& item) -> PyHT& {\n            item.SetIdentity(); return item; }',
-                       description="set the identity: unit rotation, zero translation; returns the HT",
-                       returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
-                       )
-
-pb.DefPyFunctionAccess(cClass=classStr, pyName='SetTranslation',
-                       cName='[](PyHT& item, const py::object& translation) -> PyHT& {\n            item.SetTranslationOnlyPy(translation); return item; }',
-                       argList=['translation'],
-                       description="set a translation and the unit rotation; returns the HT",
-                       argTypes=['ArrayLike'],
                        returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
                        )
 
@@ -278,27 +259,8 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='Inverse', cName='GetInversePy',
                        returnType='HT',
                        )
 
-pb.DefPyFunctionAccess(cClass=classStr, pyName='Invert', cName='Invert',
-                       description="invert the transformation in place",
-                       returnType='None',
-                       )
-
-pb.DefPyFunctionAccess(cClass=classStr, pyName='RotateVector', cName='RotateVectorPy',
-                       argList=['vector'],
-                       description="the rotated vector A*v, without the translation",
-                       argTypes=['ArrayLike'],
-                       returnType='ArrayLike',
-                       )
-
-pb.DefPyFunctionAccess(cClass=classStr, pyName='RotateVectorTransposed', cName='RotateVectorTransposedPy',
-                       argList=['vector'],
-                       description="the vector rotated back, A^T*v",
-                       argTypes=['ArrayLike'],
-                       returnType='ArrayLike',
-                       )
-
 pb.DefPyFunctionAccess(cClass=classStr, pyName='HasNoRotation', cName='HasNoRotation',
-                       description="True if the rotation is the unit matrix - set without rotation (identity, SetTranslation, a product of such) or given as the exact unit matrix from Python -, which its products then skip; a unit matrix computed in C++ is not checked",
+                       description="True if the rotation is the unit matrix - set without rotation (identity, a translation only, a product of such) or given as the exact unit matrix from Python -, which its products then skip; a unit matrix computed in C++ is not checked",
                        returnType='bool',
                        )
 

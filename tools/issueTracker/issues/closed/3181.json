@@ -1,0 +1,15 @@
+{
+  "number": 3181,
+  "title": "exudyn.HT without SetTranslation, RotateVector, RotateVectorTransposed, SetIdentity, Get and Invert, which the constructor, the properties and Inverse write as well",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Revision2026c step RG12.69.2. The six functions are written as H.translation = p or exu.HT(translation=p), H.rotation @ v, H.rotation.T @ v, exu.HT(), (H.rotation, H.translation) and H = H.Inverse(); the symbolic HT (#3174) has one way for each. Decided: removed without deprecation (exudyn.HT was released in 1.13.6 and is little used).",
+  "dateRaised": "2026-10-31",
+  "deadline": "2027-04-29",
+  "dateResolved": "2026-10-31 23:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.HT has one way for each operation: SetTranslation, RotateVector, RotateVectorTransposed, SetIdentity, Get and Invert are removed; write H.translation = p or exu.HT(translation=p), H.rotation @ v, H.rotation.T @ v, exu.HT(), (H.rotation, H.translation) and H = H.Inverse().",
+  "resolvedInVersion": "1.13.277"
+}

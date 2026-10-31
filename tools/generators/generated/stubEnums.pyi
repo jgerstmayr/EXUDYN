@@ -533,7 +533,7 @@ class MatrixContainer:
 class HT:
     """The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint, and the place for transformations of rigid bodies: it converts from and to the coordinates of the rigid body nodes (Euler parameters, Tait-Bryan angles Rxyz, rotation vector), composes, inverts and interpolates.
 
-    It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation without rotation (identity, SetTranslation, a unit matrix) skips the rotation in its products
+    It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation without rotation (identity, a translation only, a unit matrix) skips the rotation in its products
     The Set functions return the HT itself, so that they chain
     Examples:
     """
@@ -542,20 +542,8 @@ class HT:
     translation:ArrayLike
     """the translation as numpy array; setting it keeps the rotation."""
     @overload
-    def Get(self) -> List[ArrayLike]: 
-        """[rotation, translation] as numpy arrays."""
-        ...
-    @overload
     def Set(self, rotation: ArrayLike=None, translation: ArrayLike=None, eulerParameters: ArrayLike=None, Rxyz: ArrayLike=None, rotationVector: ArrayLike=None) -> HT: 
         """Set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT (`returns a reference`)."""
-        ...
-    @overload
-    def SetIdentity(self) -> HT: 
-        """Set the identity: unit rotation, zero translation; returns the HT (`returns a reference`)."""
-        ...
-    @overload
-    def SetTranslation(self, translation: ArrayLike) -> HT: 
-        """Set a translation and the unit rotation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetRotationX(self, angle: float) -> HT: 
@@ -663,20 +651,8 @@ class HT:
         """The inverse transformation [A^T, -A^T p], an HT."""
         ...
     @overload
-    def Invert(self) -> None: 
-        """Invert the transformation in place."""
-        ...
-    @overload
-    def RotateVector(self, vector: ArrayLike) -> ArrayLike: 
-        """The rotated vector A*v, without the translation."""
-        ...
-    @overload
-    def RotateVectorTransposed(self, vector: ArrayLike) -> ArrayLike: 
-        """The vector rotated back, A^T*v."""
-        ...
-    @overload
     def HasNoRotation(self) -> bool: 
-        """True if the rotation is the unit matrix - set without rotation (identity, SetTranslation, a product of such) or given as the exact unit matrix from Python -, which its products then skip; a unit matrix computed in C++ is not checked."""
+        """True if the rotation is the unit matrix - set without rotation (identity, a translation only, a product of such) or given as the exact unit matrix from Python -, which its products then skip; a unit matrix computed in C++ is not checked."""
         ...
     @overload
     def __mul__(self, other: Union[HT, ArrayLike]) -> Union[HT, ArrayLike]: 
