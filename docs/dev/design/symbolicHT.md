@@ -1,27 +1,26 @@
-# Homogeneous transformations in exudyn.symbolic: analysis (revision2026c step RG12.69.1, #3174)
+# Homogeneous transformations in exudyn.symbolic (revision2026c step RG12.69, #3174)
 
 `exudyn.HT` is the transformation of the rigid bodies of Exudyn - frames of bodies, markers and joints, the coordinates
 of the rigid body nodes, the Lie group maps. A user function written with it runs on numbers only: an `exudyn.HT`
-holds 12 doubles and cannot hold an `exudyn.symbolic` expression, so the function cannot be recorded. Maintainer
-2026-10-31: HT features directly available in symbolic, similar to `exu.cMath`, which maps a symbolic argument to the
-function of `exudyn.symbolic` (#3114); the user functions of connectors and joints with HT0 instead of position0,
-rotationMatrix0 (`symbolics.userItems` gets simpler); 6D velocities, with a way to operate with HT; the design decision
-whether HT maps at once to linear algebra or gets native operations, and which of the many functions go into
-symbolic. This note is the analysis; the decisions are in section 6.
+holds 12 doubles and cannot hold an `exudyn.symbolic` expression, so the function cannot be recorded. The goal: HT in
+symbolic as `exu.cMath` is in symbolic (#3114); the user functions of connectors and joints take one HT and one twist
+per marker instead of position, rotation matrix, velocity and angular velocity, so that `symbolics.userItems` gets
+simpler. This note is the analysis (RG12.69.1) and the design after the decisions; what is still open is in section 8.
 
 ## 1. What exists
 
 | where | what | numbers or symbolic |
 |---|---|---|
-| `exudyn.HT` (C++, `src/Linalg/HomogeneousTransformation.h`, `PyHomogeneousTransformation.h`, #2780) | rotation A (3x3) and translation p; `H1*H2`, `H*v` (= A v + p), `H@...`, `Inverse`, `Invert`, `Relative` (H^-1 H2 without the inverse), `RotateVector`, `RotateVectorTransposed`; `Set(rotation, translation, eulerParameters, Rxyz, rotationVector)`, `SetRotationX/Y/Z/Axis`, `SetTranslation`, `SetIdentity`; `GetEP`, `GetRxyz`, `GetRotationVector`, `GetCoordinatesEP/Rxyz/RotationVector` and their `Set...`; `RotationAngle`, `RotationAxis`; `LogSE3`, `SetExpSE3`, `LogR3xSO3`, `SetExpR3xSO3`; `InterpolateSO3`, `InterpolateSE3`; `HT44`, `[]`, `HasNoRotation`, copy | numbers |
-| `exudyn.rigidBodyUtilities` | the 4x4 numpy forms: `HT0`, `HTtranslate(X/Y/Z)`, `HTrotateX/Y/Z`, `HT2rotationMatrix`, `HT2translation`, `InverseHT`; the 6x6 Plücker transformations `T66...` of the former kinematic tree | numbers |
+| `exudyn.HT` (C++, `src/Linalg/HomogeneousTransformation.h`, `PyHomogeneousTransformation.h`, #2780) | rotation A (3x3) and translation p, the properties `rotation`, `translation`; `H1*H2`, `H*v` (= A v + p), `H@...`, `Inverse`, `Invert`, `Relative` (H^-1 H2 without the inverse), `RotateVector`, `RotateVectorTransposed`; `Get`, `Set(rotation, translation, eulerParameters, Rxyz, rotationVector)`, `SetRotationX/Y/Z/Axis`, `SetTranslation`, `SetIdentity`; `GetEP`, `GetRxyz`, `GetRotationVector`, `GetCoordinatesEP/Rxyz/RotationVector` and their `Set...`; `RotationAngle`, `RotationAxis`; `LogSE3`, `SetExpSE3`, `LogR3xSO3`, `SetExpR3xSO3`; `InterpolateSO3`, `InterpolateSE3`; `HT44`, `[]`, `HasNoRotation`, copy | numbers |
+| `exudyn.rigidBodyUtilities` | the 4x4 numpy forms: `HT0`, `HTtranslate(X/Y/Z)`, `HTrotateX/Y/Z`, `HT2rotationMatrix`, `HT2translation`, `InverseHT`; the 6x6 Plücker transformations `T66...` | numbers |
 | `exudyn.cUtilities` | the rotation parameters in C++ (#2968) | numbers |
 | `exudyn.symbolics.kinematics` (#3069) | `Skew`, `Cross`, `RotationMatrixX/Y/Z`, `RotXYZ2RotationMatrix`, `EulerParameters2RotationMatrix`, `RotationVector2RotationMatrix` (with the small-angle limits), the G matrices and their time derivatives; a last argument `functions` (exudyn.symbolic, numpy, math, cMath) | both, the same code |
 | `exudyn.cMath` (#3114) | `sin`, `cos`, ...: an overload for `exudyn.symbolic.Real` returns the symbolic function | both, by the type of the argument |
 
-The recording of a user function (`CreateSymbolicUserFunction`, advancedUtilities.py) makes a named
-`esym.Vector` or `esym.Matrix` per argument from its C++ type (`Vector3D`, `Matrix3D`, ...); the C++ evaluation sets
-their values per call. An HT argument would be two of them - a 3x3 matrix and a 3-vector - or one 12-vector.
+The recording of a user function (`CreateSymbolicUserFunction`, advancedUtilities.py) makes a named `esym.Vector`
+or `esym.Matrix` per argument from its C++ type (`Vector3D`, `Matrix3D`, ...); the C++ evaluation sets their values
+per call. Since #3176 every operation of a recording is a code of the table of operations, the vector and matrix
+operations included, evaluated in one array of the program.
 
 ## 2. The interfaces of the user connectors and joints now
 
@@ -39,10 +38,10 @@ their values per call. An HT argument would be two of them - a 3x3 matrix and a 
 The same frames as HT: `HT0 = [rotationMatrix0, position0]`; the relative frame of a joint is
 `HT0.Relative(HT1) = [A0^T A1, A0^T (p1 - p0)]`, from which the built-in joints take their constraints.
 
-## 3. The two ways
+## 3. Mapped or native - decided: mapped
 
-**A - mapped.** A symbolic HT is a pair (rotation `esym.Matrix` 3x3, translation `esym.Vector` 3); each function
-produces the existing matrix and vector expressions at once: `H1*H2` gives `(A1@A2, A1@p2 + p1)`, `H*v` gives
+**A - mapped (decided).** A symbolic HT is a pair (rotation `esym.Matrix` 3x3, translation `esym.Vector` 3); each
+method produces the existing matrix and vector expressions at once: `H1*H2` gives `(A1@A2, A1@p2 + p1)`, `H*v` gives
 `A@v + p`, `Inverse` gives `(A.T, -(A.T@p))`, `Relative` gives `(A1.T@A2, A1.T@(p2 - p1))`, the rotation parameters
 come from `symbolics.kinematics`.
 
@@ -51,90 +50,129 @@ come from `symbolics.kinematics`.
   kind.
 - Small: one class, mostly formulas that exist in `exudyn.HT` and `symbolics.kinematics`.
 - The structure is lost in the recording: the export shows matrix products, not HT products. `A1@A2` is a general
-  3x3 product (27 multiplications); the orthogonality of A is not used. What `HasNoRotation` saves in C++ - a frame
-  without rotation - becomes a unit matrix of constants, which `Optimize` folds component by component only once the
-  products are scalar operations (RG12.65.8 makes them codes, not components).
+  3x3 product (27 multiplications); the orthogonality of A is not used. A constant frame without rotation is a unit
+  matrix of constants, which `Optimize` folds once the products are scalar.
 - The maps with branches - `GetRotationVector`, `LogSE3`, `GetEP` (four cases of the largest component),
   `RotationAxis` - become `IfThenElse` of the cases, with the small-angle limits as in
   `RotationVector2RotationMatrix`; the derivative is the one of the branch taken, as for every `IfThenElse`.
 
-**B - native.** A fourth kind of slot, HT (12 values), with codes of its own: compose, transform a point, inverse,
-relative, rotate, rotation, translation, from rotation and translation, Exp and Log; each with its rule of the
-forward derivative (12 x n components) and of the derivative as nodes, rules in `Optimize` (the identity, an
-inverse of an inverse), and its text in each export format.
+**B - native, kept as the later option.** A kind of slot HT (12 values) with codes of its own - compose, transform,
+inverse, relative, Exp and Log -, each with its derivative rule, its rules in `Optimize` and its text in each export
+format. Compact recordings, fixed-size kernels for the GPU, the Lie group derivatives directly from the codes; but the
+kind goes through every part of the table and every export.
 
-- Compact recordings and a readable export; fixed-size kernels per code, which suit the GPU; the derivatives of the
-  Lie group (by the rotation increments of the tangent space) could later come directly from the codes, as the
-  `jacobianUserFunction` of the joints needs them.
-- Large: the kind goes through every part of the table - evaluation, both derivatives, `esym.Jacobian`, `Optimize`,
-  `GetFlatProgramData`, the numpy and sympy formats (which need an HT of their own), `GetStatistics`, and the scalar
-  graph of RG14, which would expand it again into components. The present vector and matrix operations are not yet
-  codes of the table (RG12.65.8); B before them would be a native kind beside non-native ones.
+**A can still become B**: the user function sees only the class and its methods. If the methods later emit native
+codes instead of matrix products, no user function, no signature and no C++ evaluation of the arguments changes; only
+what the class records. The condition is that user code uses the methods and the two properties, not a layout of 12
+numbers. B is done only if a measurement shows the HT products dominating a recording.
 
-**Recommendation: A**, as a class with the method names of `exudyn.HT`, so that a user function written for
-`exudyn.HT` takes the symbolic one unchanged (the same names are the interface, as `functions` is for
-`symbolics.kinematics`). B, or a few native codes for the products, only if a measurement after RG12.65.8 shows the
-HT operations dominating a recording.
+## 4. The carrier: how HT0 and twist0 reach a recorded function as single objects
 
-**Where the class lives** (to decide):
+The question: the arguments of the user functions must be one HT and one twist per marker; is a symbolic HT object in
+C++ needed to carry them? No - the carrier is needed only while recording, which is Python:
 
-- A1: a Python class `exudyn.symbolics.kinematics.HT(rotation, translation)`, holding `esym` or numpy values, with
-  the methods of section 5; transparent, quick to write, no C++.
-- A2: as A1, and `exudyn.HT(...)` returns it when it is given symbolic arguments - an overload of the constructor
-  and of `Set`, as `exudyn.cMath` dispatches on `exudyn.symbolic.Real` -, so that user code names `exudyn.HT` only.
-  Recommended once A1 works: it is what makes HT "like cMath".
+1. **While recording.** `CreateSymbolicUserFunction` reads the argument types of the signature. For an argument of
+   type HT it makes two named leaves, an `esym.Matrix` (3x3) and an `esym.Vector` (3) - named after the argument, for
+   example `HT0_rotation` and `HT0_translation` -, and passes the user function one object
+   `kinematics.HT(rotation=..., translation=...)` holding them. For a twist it makes one named `esym.Vector` of 6
+   components, `twist0`, which is already a single object (`twist0[0:3]` is v, `twist0[3:6]` is ω). The user function
+   computes with `HT0.Relative(HT1)`, `HT0.translation`, ...; what it returns is an ordinary esym expression of the
+   leaves.
+2. **The recording.** It is the expression graph of the result, whose leaves are the named matrices and vectors. No HT
+   is in it: the methods of the class have already been mapped (section 3).
+3. **In C++, per call.** The item has the frame of each marker as `HomogeneousTransformation` and its twist; the symbolic
+   function copies the 9 + 3 numbers of the frame into the two leaves of the argument and the 6 numbers of the twist
+   into its leaf, as it copies a `Matrix3D` and a `Vector3D` now, and evaluates the program. Nothing in C++ needs to know
+   that the two leaves were one HT.
+4. **On the numeric path** (a Python user function, not recorded) the item passes an `exudyn.HT` and a numpy
+   6-vector; the user function calls the same methods on them. One user function serves both, as `functions` does for
+   `symbolics.kinematics`.
 
-## 4. 6D velocities
+A C++ class for a symbolic HT would only be needed to record in C++, or for B. A mixed product works without one: the
+symbolic class takes an `exudyn.HT` in its products as constants (`HT0 * exu.HT(...)`); for the order
+`exu.HT(...) * HT0`, `exudyn.HT.__mul__` and `__matmul__` return `NotImplemented` for an operand that is no HT and no
+vector of numbers - now they try to convert it into a vector and raise -, so that Python calls the `__rmul__` of the
+symbolic class (a small change in `PyHomogeneousTransformation.h`, in RG12.69.3).
+
+## 5. 6D velocities: the twist (decided)
 
 A marker has the velocity v of its origin and the angular velocity ω, both global - what `velocity0` and
-`angularVelocity0` give now. As one 6D vector, the twist `V = [v, ω]`:
+`angularVelocity0` give now. As one 6D vector, the **twist** `twist0 = [v, ω]`, **global components, at the marker
+origin** (not the spatial velocity at the global origin of Featherstone, which the `T66` functions transform).
 
-- **The convention**: global components, at the marker origin (not the spatial velocity at the global origin of
-  Featherstone, which the `T66` functions of rigidBodyUtilities transform). It regroups what the connectors have now and
-  needs no transformation to compare with a sensor.
-- **The operations with HT**: the twist of a point fixed in a frame, `v_P = v + ω × (A r)`; the twist seen in the
-  frame (`A^T v`, `A^T ω`); the relative twist of two markers `[A0^T (v1 - v0 - ω0 × (p1 - p0)), A0^T (ω1 - ω0)]`,
-  which a joint or a bushing in the frame of marker 0 needs; the time derivative of `Relative`. These are functions of
-  (HT, twist), written out with `Cross` - the 6x6 adjoint matrix is not formed.
-- Naming: `twist0`, or `velocity6D0`; the docstrings say global, at the marker origin.
+The functions with HT, written out with `Cross`, without the 6x6 adjoint matrix:
 
-## 5. Which functions
+- `PointVelocity(HT, twist, localPoint)`: `v + ω × (A r)`, the velocity of a point fixed in the frame;
+- `LocalTwist(HT, twist)`: `[A^T v, A^T ω]`, the twist in the components of the frame;
+- `RelativeTwist(HT0, twist0, HT1, twist1)`: `[A0^T (v1 - v0 - ω0 × (p1 - p0)), A0^T (ω1 - ω0)]`, the velocity of
+  frame 1 relative to frame 0 in the components of frame 0 - what a bushing or a joint in the frame of marker 0 needs;
+  the time derivative of `HT0.Relative(HT1)` follows from it.
 
-| group | functions | symbolic |
+They are functions of `symbolics.kinematics`, for numbers and esym alike.
+
+## 6. Which functions
+
+**The interface of `exudyn.HT` gets smaller** (proposed: HT was released in 1.13.6 and is little used; removed
+without deprecation). These functions are written as well with what stays:
+
+| removed | written as |
+|---|---|
+| `SetTranslation(p)` | `H.translation = p`, or `exu.HT(translation=p)` |
+| `RotateVector(v)` | `H.rotation @ v` |
+| `RotateVectorTransposed(v)` | `H.rotation.T @ v` |
+| `SetIdentity()` | `exu.HT()` |
+| `Get()` | `(H.rotation, H.translation)` |
+| `Invert()` (in place) | `H = H.Inverse()` |
+
+Uses in the repository: `RotateVector` and `RotateVectorTransposed` in one file each, the others in none. A frame
+without rotation keeps its fast products, as `HT(translation=p)` sets the flag as `SetTranslation` did. `SetRotationX/Y/Z`
+stay in `exudyn.HT` (used in seven files), but are not in the symbolic class.
+
+**The symbolic class `symbolics.kinematics.HT`**, in two groups:
+
+| group | functions | for |
 |---|---|---|
-| core | the constructor from rotation and translation, `rotation`, `translation`, `*` (HT, point), `@`, `Inverse`, `Relative`, `RotateVector`, `RotateVectorTransposed`, `SetIdentity`, `SetTranslation`, `SetRotationX/Y/Z`, `SetRotationAxis` (axis and angle symbolic) | yes |
-| parameters | `Set(eulerParameters=, Rxyz=, rotationVector=)`, `SetCoordinatesEP/Rxyz/RotationVector`, by `symbolics.kinematics` | yes |
-| parameters back | `GetRxyz` (atan2, asin), `GetRotationVector`, `GetEP` (branches), `RotationAngle` (acos of the trace: its derivative is singular at 0 and pi - better from the rotation vector), `RotationAxis` | yes, with the branches of section 3 |
-| Lie group | `SetExpSE3`, `LogSE3`, `SetExpR3xSO3`, `LogR3xSO3` | yes, with the small-angle limits |
-| 6D | the twist of a point, of the frame, relative (section 4) | yes, new functions on both classes |
-| interpolation | `InterpolateSO3`, `InterpolateSE3` | not now: no user function needs them |
-| numpy access | `HT44` (an `esym.Matrix` 4x4 is cheap), `[]`, `HasNoRotation`, `Invert` in place, copy | `HT44` yes; the others no |
-| 4x4 and 6x6 functions | `HT0`, `HTtranslate`, `HTrotateX`, ... of rigidBodyUtilities; the `T66` functions | no: numpy forms of what the class does; T66 is the former kinematic tree (#3172) |
+| minimal (first) | the constructor `HT(rotation, translation)`, `rotation`, `translation`, `*` (HT, point; with an `exudyn.HT` as constant), `@`, `Inverse`, `Relative`; the twist functions of section 5 | the joints and connectors of the Create functions: `CreateSpringDamper`, `CreateCartesianSpringDamper`, `CreateRevoluteJoint`, `CreatePrismaticJoint`, `CreateSphericalJoint`, `CreateGenericJoint`, `CreateDistanceConstraint`, and with the rotation group `CreateTorsionalSpringDamper`, `CreateRigidBodySpringDamper` |
+| rotation and Lie group (second) | `GetRotationVector` (the relative rotation of a torsional spring), `GetRxyz` (atan2, asin; the angles of `CreateRigidBodySpringDamper`), `LogSE3`, `SetExpSE3`, `LogR3xSO3`, `SetExpR3xSO3` (with the small-angle limits; Lie group nodes and the intrinsic RigidBodySpringDamper) | the rotational springs; later user nodes |
+| not in the class | `SetRotationX/Y/Z`, `SetRotationAxis`, `SetIdentity`, `SetTranslation`, `RotateVector...` (written with the constructor and `rotation`); `InterpolateSO3/SE3` (no user function needs them); `HT44`, `[]`, `HasNoRotation`, `Invert`, copy | - |
+| in `symbolics.kinematics` only | the rotation parameters and back: `RotXYZ2RotationMatrix`, `EulerParameters2RotationMatrix`, `RotationVector2RotationMatrix` exist; `GetEP` and `RotationAxis` (branches) and `RotationAngle` (acos of the trace, singular derivative at 0 and pi) only when needed | user nodes with Euler parameters, Rxyz, rotation vectors |
 
-The duplication with `symbolics.kinematics` stays one-way: the rotation parameters stay there, the HT class calls
-them.
+A constant frame of a joint - a marker frame given by an axis and an angle - is an `exudyn.HT` of numbers, built with
+`SetRotationAxis` outside the recording and used in the products as constant. The duplication with
+`symbolics.kinematics` stays one-way: the rotation parameters stay there, the HT class calls them.
 
-## 6. The interfaces with HT
+## 7. The interfaces with HT (decided)
 
 - `ObjectConnectorUser.forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, parameters)` and
   `ObjectJointUser.constraintUserFunction(mbs, t, itemNumber, HT0, HT1, parameters)`, the `jacobianUserFunction`
-  likewise; the C++ passes `exudyn.HT` and numpy 6-vectors, the recording the symbolic HT built from the named
-  variables it has now (rotation and translation per marker) - the evaluation of a recording does not change. Both
-  items were added after 1.13.0 (#2975, #2976) and are not released: changed without deprecation.
-- A marker without orientation gives the unit rotation, as now.
+  likewise; the C++ passes `exudyn.HT` and numpy 6-vectors, the recording the symbolic HT of section 4. Both items were
+  added after 1.13.0 (#2975, #2976) and are not released: changed without deprecation.
+- A marker without orientation gives the unit rotation and zero ω, as now.
 - `exudyn.symbolics.userItems`: the joints by `HT0.Relative(HT1)`, the torsional spring-damper by the relative
   rotation vector, the spring-damper by `HT1.translation - HT0.translation`; `_Functions` and `_Column` go.
-- Cost of the numeric path: two `exudyn.HT` objects per call instead of two numpy matrices and vectors - measure,
-  as the user connectors are called per Newton iteration.
+- Cost of the numeric path: two `exudyn.HT` objects per call instead of two numpy matrices and vectors - measured in
+  the step, as the user connectors are called per Newton iteration.
 
-## 7. Decisions, and the steps
+## 8. Decisions, open questions and the steps
 
-1. A (mapped) or B (native) - recommended A.
-2. A1 (a Python class) first, A2 (exudyn.HT dispatching) afterwards - recommended.
-3. The convention of the 6D velocity: global, at the marker origin - recommended; and its name.
-4. The functions of section 5.
-5. The new signatures of section 6.
+Decided (maintainer 2026-10-31): mapped (A), with B as a later internal option; the Python class first; the twist,
+global, at the marker origin, named `twist0`, `twist1`; the signatures of section 7; the minimal group first.
 
-Steps after the decisions: RG12.69.2 the class with its tests against `exudyn.HT` (numbers to 1e-15) and its
-derivatives against central differences; RG12.69.3 the 6D functions; RG12.69.4 the interfaces of ObjectConnectorUser
-and ObjectJointUser, the recording and `symbolics.userItems`; RG12.69.5 the dispatch of `exudyn.HT` (A2).
+Open:
+
+1. The list of section 6 removed from `exudyn.HT` - all six, or which.
+2. The names of the leaves of an HT argument in a recording (`HT0_rotation`, `HT0_translation`), which the export
+   shows.
+3. A2, `exudyn.HT(...)` returning the symbolic class for symbolic arguments: not needed for the user functions
+   (section 4); proposed to leave it out unless a model needs `exu.HT(rotation=symbolicMatrix)`.
+4. The names of the twist functions (`PointVelocity`, `LocalTwist`, `RelativeTwist`) and whether they are methods of
+   the class as well.
+
+Steps:
+
+- RG12.69.2: `exudyn.HT` without the functions of section 6 (after open question 1).
+- RG12.69.3: the class `symbolics.kinematics.HT`, minimal group, with its tests against `exudyn.HT` (numbers to
+  1e-15) and its derivatives against central differences; the twist functions.
+- RG12.69.4: the interfaces of ObjectConnectorUser and ObjectJointUser, the argument type HT and twist in the
+  recording, `symbolics.userItems` on them.
+- RG12.69.5: the rotation and Lie group group of section 6.
