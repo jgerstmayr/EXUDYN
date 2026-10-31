@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "LOW",
-  "description": "revision2026c step RG12.57 (maintainer 2026-10-26): cMath.sin and the other functions of exudyn.cMath take numbers and numpy arrays only; with an exudyn.symbolic Real (or Vector, where the symbolic function exists) they call the function of exudyn.symbolic, so that one function written with cMath runs on numbers and is recorded as a symbolic user function, also mixed between symbolic and numeric arguments.",
+  "description": "revision2026c step RG12.57: cMath.sin and the other functions of exudyn.cMath take numbers and numpy arrays only; with an exudyn.symbolic Real (or Vector, where the symbolic function exists) they call the function of exudyn.symbolic, so that one function written with cMath runs on numbers and is recorded as a symbolic user function, also mixed between symbolic and numeric arguments.",
   "dateRaised": "2026-10-26",
   "deadline": "2027-04-24",
   "dateResolved": "2026-10-26 23:57",

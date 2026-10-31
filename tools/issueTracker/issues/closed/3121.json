@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG12.51.9 (maintainer 2026-10-26: the explicit solver with a relevant system): SymbolicSystem takes ObjectConnectorUser with a symbolic forceUserFunction of the marker states (#3119) on position markers of point nodes (NodePoint) and of the ground (NodePointGround, ObjectGround), the forces scattered to the coordinates of the markers, the Jacobian by EvaluateJacobian of the recording by the positions and velocities; markers on bodies and the rotations of the markers later (RG12.51.4).",
+  "description": "revision2026c step RG12.51.9 (decided: the explicit solver with a relevant system): SymbolicSystem takes ObjectConnectorUser with a symbolic forceUserFunction of the marker states (#3119) on position markers of point nodes (NodePoint) and of the ground (NodePointGround, ObjectGround), the forces scattered to the coordinates of the markers, the Jacobian by EvaluateJacobian of the recording by the positions and velocities; markers on bodies and the rotations of the markers later (RG12.51.4).",
   "dateRaised": "2026-10-27",
   "deadline": "2027-04-25",
   "dateResolved": "2026-10-27 07:21",

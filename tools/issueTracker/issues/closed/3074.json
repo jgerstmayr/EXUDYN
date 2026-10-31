@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "DOCU",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-24: the section of exudyn.symbolic lists every function with 'according to specification of C++ std::...', copy-paste text. Write it shorter, and say what computes them: sin, cos, ..., exp, log, pow, atan2 are the portable musl implementation of exudyn.cMath, not std::; sqrt, abs, round, ceil, floor, mod, min, max, isfinite are exact as in C++; asinh, acosh, atanh are the C++ library of the platform. atan2 is missing from the documentation.",
+  "description": "The section of exudyn.symbolic lists every function with 'according to specification of C++ std::...', copy-paste text. Write it shorter, and say what computes them: sin, cos, ..., exp, log, pow, atan2 are the portable musl implementation of exudyn.cMath, not std::; sqrt, abs, round, ceil, floor, mod, min, max, isfinite are exact as in C++; asinh, acosh, atanh are the C++ library of the platform. atan2 is missing from the documentation.",
   "dateRaised": "2026-10-24",
   "deadline": "2027-04-22",
   "dateResolved": "2026-10-24 20:55",

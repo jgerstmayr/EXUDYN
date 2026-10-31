@@ -4,7 +4,7 @@
   "author": "Claude-JG",
   "status": "RESOLVED",
   "type": "DOCU",
-  "description": "Maintainer 2026-10-11: cMath and cUtilities go into the module page, in the order exudyn.config, exudyn.variables and exudyn.sys, exudyn.special, exudyn.cMath, exudyn.cUtilities, exudyn.experimental; 'Module functions' at the level of SystemContainer, not parallel to exudyn.config.",
+  "description": "CMath and cUtilities go into the module page, in the order exudyn.config, exudyn.variables and exudyn.sys, exudyn.special, exudyn.cMath, exudyn.cUtilities, exudyn.experimental; 'Module functions' at the level of SystemContainer, not parallel to exudyn.config.",
   "dateRaised": "2026-10-11",
   "deadline": "2027-04-09",
   "dateResolved": "2026-10-11 14:03",

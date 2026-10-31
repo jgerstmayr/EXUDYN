@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "LOW",
-  "description": "revision2026c step RG4.25.3 (maintainer 2026-10-15, with the drift of #565): SensorUFSystemKineticEnergy, SensorUFSystemPotentialEnergy, SensorUFSystemTotalEnergy for SensorUserFunction, like SensorUFSystemConstraintDrift; SystemEnergy(mbs).AddSensor() exists and records all four values, built once per model - the functions would build what they need per call or keep it per mbs",
+  "description": "revision2026c step RG4.25.3: SensorUFSystemKineticEnergy, SensorUFSystemPotentialEnergy, SensorUFSystemTotalEnergy for SensorUserFunction, like SensorUFSystemConstraintDrift; SystemEnergy(mbs).AddSensor() exists and records all four values, built once per model - the functions would build what they need per call or keep it per mbs",
   "dateRaised": "2026-10-15",
   "deadline": "2027-04-13",
   "dateResolved": "2026-10-16 13:08",

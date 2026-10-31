@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint and CreateDistanceConstraint of UserItemCreator with the arguments of mbs: ObjectJointUser on the rigid markers of the built-in joint, the constraint equations of ObjectJointRevoluteZ, ObjectJointPrismaticX, ObjectJointSpherical and ObjectConnectorDistance and their derivative by the marker translations and global rotation increments, recordable; checked against the built-in joints with SolveDynamic. Maintainer 2026-10-28 (make SymbolicSystem take joints, which needs them).",
+  "description": "CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint and CreateDistanceConstraint of UserItemCreator with the arguments of mbs: ObjectJointUser on the rigid markers of the built-in joint, the constraint equations of ObjectJointRevoluteZ, ObjectJointPrismaticX, ObjectJointSpherical and ObjectConnectorDistance and their derivative by the marker translations and global rotation increments, recordable; checked against the built-in joints with SolveDynamic. Needed by SymbolicSystem for the joints.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-28 13:59",

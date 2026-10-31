@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "TESTING",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-23: the user objects have parameters, but the test models do not use them. userRigidBodyTest.py: mass and inertia tensor (6 components) in a ParameterLayout, read by the Python and the symbolic user functions; userANCFCable2DTest.py: length, mass per length, axial and bending stiffness per element, the mass matrix computed once with constantMassMatrix. Results unchanged.",
+  "description": "The user objects have parameters, but the test models do not use them. userRigidBodyTest.py: mass and inertia tensor (6 components) in a ParameterLayout, read by the Python and the symbolic user functions; userANCFCable2DTest.py: length, mass per length, axial and bending stiffness per element, the mass matrix computed once with constantMassMatrix. Results unchanged.",
   "dateRaised": "2026-10-23",
   "deadline": "2027-04-21",
   "dateResolved": "2026-10-23 15:13",

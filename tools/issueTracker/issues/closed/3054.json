@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-20 (decision on RG12.2.5), after the scalar expressions (RG12.2.6): the vector and matrix operation nodes (sums, products, transposes, components of a computed vector or matrix) become operations of the flat list as well, so that a shared vector or matrix node is computed once per evaluation; same tests and text export.",
+  "description": "After the scalar expressions: the vector and matrix operation nodes (sums, products, transposes, components of a computed vector or matrix) become operations of the flat list as well, so that a shared vector or matrix node is computed once per evaluation; same tests and text export.",
   "dateRaised": "2026-10-20",
   "deadline": "2027-04-18",
   "dateResolved": "2026-10-20 23:14",

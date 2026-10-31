@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-23 (pythonUserItems.md 5.11 C): VObjectUserBody gets graphicsData in local (reference) coordinates and a show flag for it; the C++ maps every point with the positionUserFunction in the visualization configuration and computes the normals from the mapped triangles, so that a symbolic positionUserFunction draws a deformed body without a Python graphics function; with a test of the graphics data.",
+  "description": "pythonUserItems.md 5.11 C: VObjectUserBody gets graphicsData in local (reference) coordinates and a show flag for it; the C++ maps every point with the positionUserFunction in the visualization configuration and computes the normals from the mapped triangles, so that a symbolic positionUserFunction draws a deformed body without a Python graphics function; with a test of the graphics data.",
   "dateRaised": "2026-10-23",
   "deadline": "2027-04-21",
   "dateResolved": "2026-10-23 07:42",

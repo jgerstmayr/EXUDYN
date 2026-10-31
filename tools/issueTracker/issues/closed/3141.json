@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
-  "description": "SymbolicSystem with ObjectJointUser on rigid markers of user bodies and the ground: nAE, AlgebraicEquations from the recorded constraintUserFunction with the marker states, ReactionForces C_q^T lambda from the recorded jacobianUserFunction projected by the marker Jacobians as the connector forces; SolveGeneralizedAlpha against SolveDynamic. Maintainer 2026-10-28.",
+  "description": "SymbolicSystem with ObjectJointUser on rigid markers of user bodies and the ground: nAE, AlgebraicEquations from the recorded constraintUserFunction with the marker states, ReactionForces C_q^T lambda from the recorded jacobianUserFunction projected by the marker Jacobians as the connector forces; SolveGeneralizedAlpha against SolveDynamic.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-28 14:06",

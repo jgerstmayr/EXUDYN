@@ -5,7 +5,7 @@
   "status": "RAISED",
   "type": "EXTENSION",
   "effort": "HIGH",
-  "description": "revision2026c step RG7.16 (maintainer 2026-10-26): markerType Coordinates with a coordinatesUserFunction returning the values and their Jacobian, for CoordinateSpringDamper, CoordinateConstraint and LoadCoordinate; then shapes defined by the user, such as a polynomial curve and a polynomial shell surface, for contact and flexible interfaces.",
+  "description": "revision2026c step RG7.16: markerType Coordinates with a coordinatesUserFunction returning the values and their Jacobian, for CoordinateSpringDamper, CoordinateConstraint and LoadCoordinate; then shapes defined by the user, such as a polynomial curve and a polynomial shell surface, for contact and flexible interfaces.",
   "dateRaised": "2026-10-26",
   "deadline": "2027-04-24"
 }

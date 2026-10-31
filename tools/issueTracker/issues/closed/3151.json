@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
-  "description": "Maintainer 2026-10-28: option C of docs/dev/design/symbolicSystem.md section 12.7 is good to go. The signatures of the user functions stay; a body keeps q, q_t as arguments. Marker-based items - connectors, joints, loads - get marker states, and their dependence on the system coordinates is in the background. esym.SystemVariables(mbs), a VariableSet of q, q_t, y, y_t, z, data and t, gives the marker states as expressions of them (node markers by the node coordinates, body markers through the recorded functions of the user body, the ground as constants), so that a connector recording composed with them is a function of the system coordinates, its Jacobian by the one-pass derivative; SymbolicSystem uses it instead of its own composition. After #3149.",
+  "description": "Decided: option C of docs/dev/design/symbolicSystem.md section 12.7. The signatures of the user functions stay; a body keeps q, q_t as arguments. Marker-based items - connectors, joints, loads - get marker states, and their dependence on the system coordinates is in the background. esym.SystemVariables(mbs), a VariableSet of q, q_t, y, y_t, z, data and t, gives the marker states as expressions of them (node markers by the node coordinates, body markers through the recorded functions of the user body, the ground as constants), so that a connector recording composed with them is a function of the system coordinates, its Jacobian by the one-pass derivative; SymbolicSystem uses it instead of its own composition. After #3149.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-29 09:59",

@@ -6,7 +6,7 @@
   "type": "IMPROVEMENT",
   "priority": "HIGH",
   "effort": "MEDIUM",
-  "description": "maintainer 2026-10-10: the scripts checker reports but does not fix problems yet, as far as possible. --fix rewrites renamed settings, item parameters and Create arguments (#2813, #2814, #2863); the missing imports of a star import, the names that moved to another module, the removed vector helpers and GraphicsData aliases, the deprecated module functions and SystemContainer methods, the submodules not loaded and the old default solution file names are only reported",
+  "description": "The scripts checker reports but does not fix problems yet, as far as possible. --fix rewrites renamed settings, item parameters and Create arguments (#2813, #2814, #2863); the missing imports of a star import, the names that moved to another module, the removed vector helpers and GraphicsData aliases, the deprecated module functions and SystemContainer methods, the submodules not loaded and the old default solution file names are only reported",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 00:28",

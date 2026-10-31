@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHECK",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-19: userRigidBodyTest.py with 10000 steps reports 613350 memory allocations for the body with symbolic user functions (ODE2RHS 83 %, user functions 91 %); find the cause, improve if possible, or plan the step.",
+  "description": "UserRigidBodyTest.py with 10000 steps reports 613350 memory allocations for the body with symbolic user functions (ODE2RHS 83 %, user functions 91 %); find the cause, improve if possible, or plan the step.",
   "dateRaised": "2026-10-19",
   "deadline": "2027-04-17",
   "dateResolved": "2026-10-19 23:24",

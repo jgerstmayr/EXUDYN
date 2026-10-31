@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "revision2026c step RG4.25.3.1 (maintainer 2026-10-16): ItemODE2Coordinates duplicates mbs.systemData.GetObjectLTGODE2 and GetNodeLTGODE2 (C++) and is removed; NumericalJacobian gets systemCoordinates (the indices of system ODE2 coordinates) and velocityLevel instead of coordinates and velocities, epsilon 1e-8 as in the numerical differentiation of the solvers, and a docstring with Args, Returns and Example; kept public, as the counterpart of mbs.ComputeItem for testing user items",
+  "description": "revision2026c step RG4.25.3.1: ItemODE2Coordinates duplicates mbs.systemData.GetObjectLTGODE2 and GetNodeLTGODE2 (C++) and is removed; NumericalJacobian gets systemCoordinates (the indices of system ODE2 coordinates) and velocityLevel instead of coordinates and velocities, epsilon 1e-8 as in the numerical differentiation of the solvers, and a docstring with Args, Returns and Example; kept public, as the counterpart of mbs.ComputeItem for testing user items",
   "dateRaised": "2026-10-16",
   "deadline": "2027-04-14",
   "dateResolved": "2026-10-16 12:06",

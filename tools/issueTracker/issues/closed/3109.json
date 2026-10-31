@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "DOCU",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG12.51.1 (maintainer 2026-10-26): docs/dev/design/symbolicSystem.md - the assembly by the local-to-global maps of systemData, sparse matrices, the export of the equations of motion and their evaluation by Numba or on the GPU with explicit integration (residuals per object), an implicit generalized-alpha solver in Python with the settings of SimulationSettings, compared against the internal solvers, and the Jacobians by esym.Diff.",
+  "description": "revision2026c step RG12.51.1: docs/dev/design/symbolicSystem.md - the assembly by the local-to-global maps of systemData, sparse matrices, the export of the equations of motion and their evaluation by Numba or on the GPU with explicit integration (residuals per object), an implicit generalized-alpha solver in Python with the settings of SimulationSettings, compared against the internal solvers, and the Jacobians by esym.Diff.",
   "dateRaised": "2026-10-26",
   "deadline": "2027-04-24",
   "dateResolved": "2026-10-26 10:04",

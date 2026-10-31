@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-24: as the data is recorded now, remove performanceCompatibility.py again (#3080); --tolerant stays for versions with the names of today.",
+  "description": "As the data is recorded now, remove performanceCompatibility.py again (#3080); --tolerant stays for versions with the names of today.",
   "dateRaised": "2026-10-24",
   "deadline": "2027-04-22",
   "dateResolved": "2026-10-24 21:56",

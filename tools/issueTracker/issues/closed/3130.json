@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG12.51.10 (maintainer 2026-10-28: retrieve the symbolic equations and the flat program of a system; two examples): the mass matrix, forces and residual M q_tt - f in the system variables q, q_t, q_tt, t, composed of the recordings of the kinds, connectors with their marker kinematics and loads, each recording called with symbolic arguments by its code of exudyn.misc.symbolicExport - as exudyn.symbolic expressions (flat program, numpy code) or sympy expressions; two examples, a test model.",
+  "description": "revision2026c step RG12.51.10: the mass matrix, forces and residual M q_tt - f in the system variables q, q_t, q_tt, t, composed of the recordings of the kinds, connectors with their marker kinematics and loads, each recording called with symbolic arguments by its code of exudyn.misc.symbolicExport - as exudyn.symbolic expressions (flat program, numpy code) or sympy expressions; two examples, a test model.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-28 09:02",

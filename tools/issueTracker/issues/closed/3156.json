@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-29: ODE2Residual and ODE2ResidualJacobian (#3155) shall say whether they are RHS or LHS, otherwise the sign is unclear. The residual is M q_tt - f, all terms on the left-hand side: ODE2Residual -> ODE2ResidualLHS, ODE2ResidualJacobian -> ODE2ResidualLHSJacobian; SystemResidual keeps the name of the Exudyn solver function.",
+  "description": "ODE2Residual and ODE2ResidualJacobian (#3155) shall say whether they are RHS or LHS, otherwise the sign is unclear. The residual is M q_tt - f, all terms on the left-hand side: ODE2Residual -> ODE2ResidualLHS, ODE2ResidualJacobian -> ODE2ResidualLHSJacobian; SystemResidual keeps the name of the Exudyn solver function.",
   "dateRaised": "2026-10-29",
   "deadline": "2027-04-27",
   "dateResolved": "2026-10-29 09:22",

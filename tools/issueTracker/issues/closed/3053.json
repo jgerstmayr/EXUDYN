@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-20 (decision on RG12.2.5): the recorded graph of a symbolic user function is sorted once into a list of operations, evaluated into slots that belong to one evaluation; tree evaluation stays as reference and fallback, a test shows both bit-identical; the compiled list can be exported as text; userRigidBodyTest.py with 10000 steps measured before and after. Scalar results and vector and matrix results built from scalar components first.",
+  "description": "The recorded graph of a symbolic user function is sorted once into a list of operations, evaluated into slots that belong to one evaluation; tree evaluation stays as reference and fallback, a test shows both bit-identical; the compiled list can be exported as text; userRigidBodyTest.py with 10000 steps measured before and after. Scalar results and vector and matrix results built from scalar components first.",
   "dateRaised": "2026-10-20",
   "deadline": "2027-04-18",
   "dateResolved": "2026-10-20 22:50",

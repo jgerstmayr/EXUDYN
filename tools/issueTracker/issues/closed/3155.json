@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-28: keep the distinction of RHS and LHS forces of Exudyn, M a + LHS force = RHS force, to avoid sign issues; say ODE2 in the name of what is only for ODE2. As docs/dev/design/symbolicSystem.md section 12.5: Forces -> ODE2RHS, ODE1RightHandSide -> ODE1RHS, ReactionForces -> ODE2ReactionForcesLHS, the missing C_y^T z as ODE1ReactionTermsLHS, Residual -> ODE2Residual, ResidualJacobian -> ODE2ResidualJacobian, the results and arguments of Equations and GetFlatProgram, the arguments of NumpySystem.",
+  "description": "Keep the distinction of RHS and LHS forces of Exudyn, M a + LHS force = RHS force, to avoid sign issues; say ODE2 in the name of what is only for ODE2. As docs/dev/design/symbolicSystem.md section 12.5: Forces -> ODE2RHS, ODE1RightHandSide -> ODE1RHS, ReactionForces -> ODE2ReactionForcesLHS, the missing C_y^T z as ODE1ReactionTermsLHS, Residual -> ODE2Residual, ResidualJacobian -> ODE2ResidualJacobian, the results and arguments of Equations and GetFlatProgram, the arguments of NumpySystem.",
   "dateRaised": "2026-10-29",
   "deadline": "2027-04-27",
   "dateResolved": "2026-10-29 00:33",

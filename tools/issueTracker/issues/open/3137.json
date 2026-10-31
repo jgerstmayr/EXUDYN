@@ -5,7 +5,7 @@
   "status": "RAISED",
   "type": "EXTENSION",
   "effort": "HIGH",
-  "description": "The forces and the mass matrices of the bodies of a SymbolicSystem as a graph of scalar operations, scheduled in levels and evaluated per level and kind of operation by numpy ufuncs on arrays of nodes x states; first as an experiment in docs/dev/design on an example system, then in exudyn.misc once the form is chosen, with ensembles of states in the explicit solver. Design docs/dev/design/uniformEvaluation.md. Maintainer 2026-10-28.",
+  "description": "The forces and the mass matrices of the bodies of a SymbolicSystem as a graph of scalar operations, scheduled in levels and evaluated per level and kind of operation by numpy ufuncs on arrays of nodes x states; first as an experiment in docs/dev/design on an example system, then in exudyn.misc once the form is chosen, with ensembles of states in the explicit solver. Design docs/dev/design/uniformEvaluation.md.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26"
 }

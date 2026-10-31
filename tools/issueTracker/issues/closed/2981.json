@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "DOCU",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG12.1 (maintainer 2026-10-12): what exists - expression types, vectors, matrices, the user functions per item, what is missing (dense linear algebra), how they are created (CreateSymbolicUserFunction) and where the interface is awkward.",
+  "description": "revision2026c step RG12.1: what exists - expression types, vectors, matrices, the user functions per item, what is missing (dense linear algebra), how they are created (CreateSymbolicUserFunction) and where the interface is awkward.",
   "dateRaised": "2026-10-12",
   "deadline": "2027-04-10",
   "dateResolved": "2026-10-16 23:30",

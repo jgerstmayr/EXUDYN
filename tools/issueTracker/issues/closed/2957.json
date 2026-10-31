@@ -4,11 +4,11 @@
   "author": "Claude-JG",
   "status": "RESOLVED",
   "type": "DOCU",
-  "description": "revision2026c step RG11.10.1: one table, one row per kinematics function of rigidBodyUtilities (basis vectors, GramSchmidt, Skew, Euler parameters, rotation vector, RotXYZ, RotZYZ, RotationMatrixX/Y/Z/2D; not HT, T66, RigidBodyInertia): arguments and return now, the C++ function (RigidBodyMath.h, BasicLinalg.h), the interface wanted (numpy in and out); for the maintainer's decision, in tmp/compareRBU.md.",
+  "description": "revision2026c step RG11.10.1: one table, one row per kinematics function of rigidBodyUtilities (basis vectors, GramSchmidt, Skew, Euler parameters, rotation vector, RotXYZ, RotZYZ, RotationMatrixX/Y/Z/2D; not HT, T66, RigidBodyInertia): arguments and return now, the C++ function (RigidBodyMath.h, BasicLinalg.h), the interface wanted (numpy in and out); for a decision, in tmp/compareRBU.md.",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 22:33",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "The kinematics functions of rigidBodyUtilities compared with the C++ functions and the interface wanted, for the maintainer's decision (revision2026c step RG11.10.1)",
+  "releaseNotes": "The kinematics functions of rigidBodyUtilities compared with the C++ functions and the interface wanted, for a decision (revision2026c step RG11.10.1)",
   "resolvedInVersion": "1.13.45"
 }

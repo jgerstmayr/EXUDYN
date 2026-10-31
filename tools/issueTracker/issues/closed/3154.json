@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "DOCU",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-28: the list of DONE and open plans of 2023/2024 at the start of the flat program section of src/Linalg/Symbolic.cpp is obsolete; what is open of it has steps (assignments and loops RG12.53, the access to mbs #2984 done).",
+  "description": "The list of DONE and open plans of 2023/2024 at the start of the flat program section of src/Linalg/Symbolic.cpp is obsolete; what is open of it has steps (assignments and loops RG12.53, the access to mbs #2984 done).",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-29 00:02",

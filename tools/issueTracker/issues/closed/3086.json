@@ -4,7 +4,7 @@
   "author": "Claude-JG",
   "status": "RESOLVED",
   "type": "DOCU",
-  "description": "revision2026c step RG12.50.1 (maintainer 2026-10-25): GetFlatProgram for expressions, the export of the evaluation graph as text or another format, an export to sympy, a symbolic assembly of a system of symbolic user items in symbolicUtilities.py for control; evaluation and proposal.",
+  "description": "revision2026c step RG12.50.1: GetFlatProgram for expressions, the export of the evaluation graph as text or another format, an export to sympy, a symbolic assembly of a system of symbolic user items in symbolicUtilities.py for control; evaluation and proposal.",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
   "dateResolved": "2026-10-25 08:59",

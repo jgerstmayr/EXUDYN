@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Since #3003 ObjectUserBody has no visualization cache; the header src/System/VisualizationAccessCache.h is included nowhere. Maintainer 2026-10-17: delete it.",
+  "description": "Since #3003 ObjectUserBody has no visualization cache; the header src/System/VisualizationAccessCache.h is included nowhere. Delete it.",
   "dateRaised": "2026-10-17",
   "deadline": "2027-04-15",
   "dateResolved": "2026-10-17 13:57",

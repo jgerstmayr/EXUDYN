@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-28: lambda_ is not readable; z is the quantity of the nomenclature for algebraic coordinates; the formulas of the documentation keep lambda, the symbolic system and the user items use z, and the docstring of each argument says what it represents; the nomenclature says that z is used in Python code where lambda is not possible.",
+  "description": "Lambda_ is not readable; z is the quantity of the nomenclature for algebraic coordinates; the formulas of the documentation keep lambda, the symbolic system and the user items use z, and the docstring of each argument says what it represents; the nomenclature says that z is used in Python code where lambda is not possible.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-28 23:53",

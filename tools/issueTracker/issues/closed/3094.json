@@ -4,7 +4,7 @@
   "author": "Claude-JG",
   "status": "RESOLVED",
   "type": "DOCU",
-  "description": "revision2026c step RG12.52 (maintainer 2026-10-25: the introduction section of Python-C++ interface/Symbolic has to be improved significantly, giving an overview and the background of the capabilities): what is recorded, symbolic user functions, how a recording is evaluated and optimized, a recording as code, what to know (Python if, what is recorded, threads, depth, verify).",
+  "description": "revision2026c step RG12.52 (the introduction section of Python-C++ interface/Symbolic has to be improved significantly, giving an overview and the background of the capabilities): what is recorded, symbolic user functions, how a recording is evaluated and optimized, a recording as code, what to know (Python if, what is recorded, threads, depth, verify).",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
   "dateResolved": "2026-10-25 13:58",

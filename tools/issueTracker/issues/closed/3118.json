@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG12.51.8 (maintainer 2026-10-26: a full user system needs forces): SymbolicSystem takes the built-in loads with a constant load vector or a symbolic loadVectorUserFunction of the time; first on markers whose Jacobian is constant - node markers of point nodes and coordinates, MarkerBodyMass of a mass point - as a constant or time-dependent generalized force at the LTG indices of the marker, then on body markers of user bodies with the Jacobians of RG12.58.",
+  "description": "revision2026c step RG12.51.8: SymbolicSystem takes the built-in loads with a constant load vector or a symbolic loadVectorUserFunction of the time; first on markers whose Jacobian is constant - node markers of point nodes and coordinates, MarkerBodyMass of a mass point - as a constant or time-dependent generalized force at the LTG indices of the marker, then on body markers of user bodies with the Jacobians of RG12.58.",
   "dateRaised": "2026-10-26",
   "deadline": "2027-04-24",
   "dateResolved": "2026-10-27 21:30",

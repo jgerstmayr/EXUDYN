@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "DOCU",
   "effort": "MEDIUM",
-  "description": "A design note docs/dev/design/uniformEvaluation.md: the composed recordings of a symbolic system as a graph of scalar operations evaluated level by level as uniform array operations (numpy on the CPU, CuPy or kernels on the GPU), the schedules (sorted by operation, a fixed cycle of operation layers, one array of all values), the step of an explicit integrator, ensembles of states, the limits (results not bitwise equal on the GPU, double precision, branches); the GPU parts of symbolicSystem.md moved there. Maintainer 2026-10-28.",
+  "description": "A design note docs/dev/design/uniformEvaluation.md: the composed recordings of a symbolic system as a graph of scalar operations evaluated level by level as uniform array operations (numpy on the CPU, CuPy or kernels on the GPU), the schedules (sorted by operation, a fixed cycle of operation layers, one array of all values), the step of an explicit integrator, ensembles of states, the limits (results not bitwise equal on the GPU, double precision, branches); the GPU parts of symbolicSystem.md moved there.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-28 13:40",

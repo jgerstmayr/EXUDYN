@@ -4,7 +4,7 @@
   "author": "Claude-JG",
   "status": "RESOLVED",
   "type": "EXTENSION",
-  "description": "revision2026c step RG11.11.3 (maintainer 2026-10-25): a workflow .github/workflows/contribution.yml runs tools/checkIssues.py --contribution against the base branch for pull requests from forks, so a contribution that numbers or versions is refused before the review.",
+  "description": "revision2026c step RG11.11.3: a workflow .github/workflows/contribution.yml runs tools/checkIssues.py --contribution against the base branch for pull requests from forks, so a contribution that numbers or versions is refused before the review.",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
   "dateResolved": "2026-10-25 08:59",

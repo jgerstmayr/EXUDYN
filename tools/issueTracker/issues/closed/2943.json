@@ -6,7 +6,7 @@
   "type": "BUG",
   "priority": "HIGH",
   "effort": "LOW",
-  "description": "maintainer 2026-10-10, after #2942: the output still shows 'ERROR conda.cli.main_run ... failed'. Found while fixing it: the verdict 'FAILED: scripts need changes' of #2942 is not equal to 'FAILED', so exudev ended with exit code 0 although a step failed",
+  "description": "After #2942: the output still shows 'ERROR conda.cli.main_run ... failed'. Found while fixing it: the verdict 'FAILED: scripts need changes' of #2942 is not equal to 'FAILED', so exudev ended with exit code 0 although a step failed",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 11:18",

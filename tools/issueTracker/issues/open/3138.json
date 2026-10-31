@@ -5,7 +5,7 @@
   "status": "RAISED",
   "type": "EXTENSION",
   "effort": "HIGH",
-  "description": "The arrays and index arrays of the numpy evaluation (uniform evaluation by levels) run by CuPy on the GPU, optional at the point of use; checked against numpy by a tolerance, as the GPU's sin, cos, sqrt and fused multiply-adds do not give the bits of the CPU, and sums by atomic adds differ between runs; double and single precision measured. Design docs/dev/design/uniformEvaluation.md. Maintainer 2026-10-28.",
+  "description": "The arrays and index arrays of the numpy evaluation (uniform evaluation by levels) run by CuPy on the GPU, optional at the point of use; checked against numpy by a tolerance, as the GPU's sin, cos, sqrt and fused multiply-adds do not give the bits of the CPU, and sums by atomic adds differ between runs; double and single precision measured. Design docs/dev/design/uniformEvaluation.md.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26"
 }

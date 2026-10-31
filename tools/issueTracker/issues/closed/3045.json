@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-19: a configuration stores the visualization settings and the model view, each as a dictionary that is empty by default and then changes nothing; CTRL and the icon store both; the store settings window stores the settings into CFGx, the store model view window the model view; the GUI storing function has flags for the settings and the model view; so a configuration can be a view, settings, or both.",
+  "description": "A configuration stores the visualization settings and the model view, each as a dictionary that is empty by default and then changes nothing; CTRL and the icon store both; the store settings window stores the settings into CFGx, the store model view window the model view; the GUI storing function has flags for the settings and the model view; so a configuration can be a view, settings, or both.",
   "dateRaised": "2026-10-19",
   "deadline": "2027-04-17",
   "dateResolved": "2026-10-19 23:24",

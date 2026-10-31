@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-29: implement the recommendation of #3166 - onePass the method, the chain-rule code removed. The argument itemJacobians, introduced by #3166 and not released, goes; _ConnectorJacobian and _JointJacobian are the one-pass derivatives of _ItemFunction; symbolicSystemItemJacobiansTest.py against the central differences of SymbolicSystemBase and SolveDynamic.",
+  "description": "Implement the recommendation of #3166 - onePass the method, the chain-rule code removed. The argument itemJacobians, introduced by #3166 and not released, goes; _ConnectorJacobian and _JointJacobian are the one-pass derivatives of _ItemFunction; symbolicSystemItemJacobiansTest.py against the central differences of SymbolicSystemBase and SolveDynamic.",
   "dateRaised": "2026-10-29",
   "deadline": "2027-04-27",
   "dateResolved": "2026-10-29 23:46",

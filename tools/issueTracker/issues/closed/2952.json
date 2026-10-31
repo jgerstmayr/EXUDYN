@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "TESTING",
   "effort": "LOW",
-  "description": "revision2026c step RG4.1.3.5 (maintainer 2026-10-10: measure the performance of the native and the musl variant directly within the experimental function): implementation 'exudyn' of exudyn.experimental.EvaluateMathFunction evaluates EXUmath::Sin, ..., i.e. the library or, with EXUDYN_PORTABLE_MATH, the portable functions; mathFunctionsPlatform.py --timing shows std, portable and exudyn",
+  "description": "revision2026c step RG4.1.3.5 (decided: measure the performance of the native and the musl variant directly within the experimental function): implementation 'exudyn' of exudyn.experimental.EvaluateMathFunction evaluates EXUmath::Sin, ..., i.e. the library or, with EXUDYN_PORTABLE_MATH, the portable functions; mathFunctionsPlatform.py --timing shows std, portable and exudyn",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 17:42",

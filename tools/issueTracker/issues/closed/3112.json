@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG12.56 (maintainer 2026-10-26): before the generalized-alpha solver, constant step size explicit Euler, velocity Verlet and RK44 in exudyn/misc/symbolicSystem.py, with the settings of SimulationSettings.timeIntegration and checked against SolveDynamic with the same DynamicSolverType; for simple user items (mass points, spring-dampers); the solvers take any system with the interface of SymbolicSystem, also one written with numpy. The concept first, in docs/dev/design/symbolicSystem.md.",
+  "description": "revision2026c step RG12.56: before the generalized-alpha solver, constant step size explicit Euler, velocity Verlet and RK44 in exudyn/misc/symbolicSystem.py, with the settings of SimulationSettings.timeIntegration and checked against SolveDynamic with the same DynamicSolverType; for simple user items (mass points, spring-dampers); the solvers take any system with the interface of SymbolicSystem, also one written with numpy. The concept first, in docs/dev/design/symbolicSystem.md.",
   "dateRaised": "2026-10-26",
   "deadline": "2027-04-24",
   "dateResolved": "2026-10-26 23:57",

@@ -6,7 +6,7 @@
   "type": "DOCU",
   "priority": "LOW",
   "effort": "LOW",
-  "description": "maintainer 2026-10-10: remove the Twitter link from README.rst and the documentation",
+  "description": "Remove the Twitter link from README.rst and the documentation",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 00:04",

@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-22: q of the user functions of ObjectUserBody and NodeUser is the displacement coordinates, as inside the C++ items, so that the results are comparable; a finite element computes with the displacements and its reference geometry from qRef, a rigid body with qRef + q. The C++ gathers q without the reference values (also for the graphicsDataUserFunction), CNodeUser::Displacements replaces TotalCoordinates; the descriptions, the mini examples and the test models with user items are changed accordingly, their results unchanged.",
+  "description": "Q of the user functions of ObjectUserBody and NodeUser is the displacement coordinates, as inside the C++ items, so that the results are comparable; a finite element computes with the displacements and its reference geometry from qRef, a rigid body with qRef + q. The C++ gathers q without the reference values (also for the graphicsDataUserFunction), CNodeUser::Displacements replaces TotalCoordinates; the descriptions, the mini examples and the test models with user items are changed accordingly, their results unchanged.",
   "dateRaised": "2026-10-22",
   "deadline": "2027-04-20",
   "dateResolved": "2026-10-22 21:12",

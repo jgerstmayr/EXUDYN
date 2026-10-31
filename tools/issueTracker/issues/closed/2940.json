@@ -6,7 +6,7 @@
   "type": "BUG",
   "priority": "NORMAL",
   "effort": "LOW",
-  "description": "maintainer 2026-10-10, after #2931: the SolutionViewer starts running in Static mode (runOnStart=True, runMode=2); the first space key then stopped it (and set Static); it should switch to Continuous run and keep running; after a few presses it worked",
+  "description": "After #2931: the SolutionViewer starts running in Static mode (runOnStart=True, runMode=2); the first space key then stopped it (and set Static); it should switch to Continuous run and keep running; after a few presses it worked",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 00:51",

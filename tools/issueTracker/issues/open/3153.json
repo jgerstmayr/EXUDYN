@@ -5,8 +5,8 @@
   "status": "RAISED",
   "type": "IMPROVEMENT",
   "effort": "HUGE",
-  "description": "Maintainer 2026-10-28: R1 of docs/dev/design/symbolicSystem.md, important to go that way. The expression tree stays for the recording and the simple evaluation; the flat evaluation, the derivatives, Optimize, the export, the count and the uniform evaluation work on a program built from the tree and a table per operation code (name, arity, kinds, size, evaluation, forward derivative, later derivative as new nodes, simplification, text per format). New files src/Linalg/SymbolicTable.h and .cpp; the old code stays as fallback, selected by a switch, until the new path gives the same results bit for bit; item outputs as an operation code with the data of the item and a link to the MainSystem. Four stages, design section 12.7.",
+  "description": "R1 of docs/dev/design/symbolicSystem.md. The expression tree stays for the recording and the simple evaluation; the flat evaluation, the derivatives, Optimize, the export, the count and the uniform evaluation work on a program built from the tree and a table per operation code (name, arity, kinds, size, evaluation, forward derivative, later derivative as new nodes, simplification, text per format). New files src/Linalg/SymbolicTable.h and .cpp; the old code stays as fallback, selected by a switch, until the new path gives the same results bit for bit; item outputs as an operation code with the data of the item and a link to the MainSystem. Four stages, design section 12.7.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
-  "workingRemarks": "Maintainer 2026-10-29, stage 3 (RG12.65.4): option A - the expression classes stay and the program is built from the graph after the recording, as now; no merging of equal nodes while recording (no hash tables; many copies of a mechanism go to a vectorized representation later)."
+  "workingRemarks": "Stage 3: option A - the expression classes stay and the program is built from the graph after the recording, as now; no merging of equal nodes while recording (no hash tables; many copies of a mechanism go to a vectorized representation later)."
 }

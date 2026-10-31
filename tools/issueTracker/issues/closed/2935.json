@@ -6,7 +6,7 @@
   "type": "EXAMPLE",
   "priority": "LOW",
   "effort": "LOW",
-  "description": "maintainer 2026-10-10: points=[[2,0,0],[2.6,0,0],[2,0.6,0],[2.1,0.2,0.6]] for gTetrahedron, and SC.visualizationSettings.openGL.light0.shadow = 0.3 for visibility",
+  "description": "Points=[[2,0,0],[2.6,0,0],[2,0.6,0],[2.1,0.2,0.6]] for gTetrahedron, and SC.visualizationSettings.openGL.light0.shadow = 0.3 for visibility",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 00:04",

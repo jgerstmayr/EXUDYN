@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-28: do not use lam for a name of arguments, variables or in the docs - use lambda, and avoid abbreviations; check the symbolicSystem files in particular. lambda is a keyword of Python, so the arguments and variables are lambda_ (PEP 8 for a name that collides with a keyword), the text says lambda; the local n1, n2, nSys of the solvers become nODE1, nODE2, nSystem.",
+  "description": "Do not use lam for a name of arguments, variables or in the docs - use lambda, and avoid abbreviations; check the symbolicSystem files in particular. lambda is a keyword of Python, so the arguments and variables are lambda_ (PEP 8 for a name that collides with a keyword), the text says lambda; the local n1, n2, nSys of the solvers become nODE1, nODE2, nSystem.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-28 16:32",

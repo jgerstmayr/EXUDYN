@@ -5,7 +5,7 @@
   "status": "RAISED",
   "type": "IDEA",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-29: some objects work internally with sparse matrices - a 20x20 matrix mostly of zeros, recorded as a dense matrix of components, whose zeros Optimize could remove. Find how the table of operations represents and evaluates such matrices: a sparse matrix as a kind of slot (its pattern fixed at recording, the nonzero components as operands), the matrix-vector and matrix-matrix products and their derivative rules on the pattern, and the export (triplets). Not for now.",
+  "description": "Some objects work internally with sparse matrices - a 20x20 matrix mostly of zeros, recorded as a dense matrix of components, whose zeros Optimize could remove. Find how the table of operations represents and evaluates such matrices: a sparse matrix as a kind of slot (its pattern fixed at recording, the nonzero components as operands), the matrix-vector and matrix-matrix products and their derivative rules on the pattern, and the export (triplets). Not for now.",
   "dateRaised": "2026-10-29",
   "deadline": "2027-04-27"
 }

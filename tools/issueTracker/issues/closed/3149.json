@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-28: R2 of docs/dev/design/symbolicSystem.md section 12.6 is accepted. A recording is bound to the signature of an item user function today; the composed system borrows the signature of ObjectGenericODE2 and cannot add y, lambda or parameters. A VariableSet becomes the scope of named variables - scalars, vectors and matrices, a name unique in its set -, a recording declares its inputs as a set, esym.Function(expressions, inputs), evaluated, differentiated and exported as a UserFunction; CreateSymbolicUserFunction builds the set of the item signature. Needed by the parameters as variables and the system variables (section 12.7).",
+  "description": "Decided: R2 of docs/dev/design/symbolicSystem.md section 12.6. A recording is bound to the signature of an item user function today; the composed system borrows the signature of ObjectGenericODE2 and cannot add y, lambda or parameters. A VariableSet becomes the scope of named variables - scalars, vectors and matrices, a name unique in its set -, a recording declares its inputs as a set, esym.Function(expressions, inputs), evaluated, differentiated and exported as a UserFunction; CreateSymbolicUserFunction builds the set of the item signature. Needed by the parameters as variables and the system variables (section 12.7).",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-29 00:24",

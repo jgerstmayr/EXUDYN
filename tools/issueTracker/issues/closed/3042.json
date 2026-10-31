@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-19: the window of 'store settings' has a button 'store'; it becomes 'store in config.json' with a hint, because the positions are stored in the same local file; the descriptions of the 'store settings' and 'store positions' windows are one long line and get line breaks.",
+  "description": "The window of 'store settings' has a button 'store'; it becomes 'store in config.json' with a hint, because the positions are stored in the same local file; the descriptions of the 'store settings' and 'store positions' windows are one long line and get line breaks.",
   "dateRaised": "2026-10-19",
   "deadline": "2027-04-17",
   "dateResolved": "2026-10-19 17:02",

@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-22: a flag for a constant mass matrix, with a local storage of the matrix as in the ANCF elements: computed once, reused, recomputed after a change of a parameter or Assemble; useful for finite elements.",
+  "description": "A flag for a constant mass matrix, with a local storage of the matrix as in the ANCF elements: computed once, reused, recomputed after a change of a parameter or Assemble; useful for finite elements.",
   "dateRaised": "2026-10-22",
   "deadline": "2027-04-20",
   "dateResolved": "2026-10-22 15:58",

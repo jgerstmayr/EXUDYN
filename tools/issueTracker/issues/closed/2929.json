@@ -6,7 +6,7 @@
   "type": "CHANGE",
   "priority": "HIGH",
   "effort": "MEDIUM",
-  "description": "maintainer 2026-10-10: plan 2026b got messy - keep the short information in the plan and move the rest to the log; a new plan 2026c whose steps start with **OPEN_RGx.y** or **CLOSED_RGx.y** and a title saying what is done, four fixed sections (how to, next steps, open steps, groups), the open steps and the groups written by a tool docs/revision/planManager.py that also checks the plan (order, duplicates, headings, references, next steps) and adds and changes steps; the open steps of 2026b moved, groups 12 to 18 into misc",
+  "description": "Plan 2026b got messy - keep the short information in the plan and move the rest to the log; a new plan 2026c whose steps start with **OPEN_RGx.y** or **CLOSED_RGx.y** and a title saying what is done, four fixed sections (how to, next steps, open steps, groups), the open steps and the groups written by a tool docs/revision/planManager.py that also checks the plan (order, duplicates, headings, references, next steps) and adds and changes steps; the open steps of 2026b moved, groups 12 to 18 into misc",
   "dateRaised": "2026-10-09",
   "deadline": "2027-04-07",
   "dateResolved": "2026-10-09 22:50",

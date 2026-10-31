@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "DOCU",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-24: the documents of docs/dev/design went into the documentation, which was not intended - they contain planning, not the current state of the implementation. Mention them once in the development section; they are used for development like the plans and logs of docs/revision and do not belong to the docs.",
+  "description": "The documents of docs/dev/design went into the documentation, which was not intended - they contain planning, not the current state of the implementation. Mention them once in the development section; they are used for development like the plans and logs of docs/revision and do not belong to the docs.",
   "dateRaised": "2026-10-24",
   "deadline": "2027-04-22",
   "dateResolved": "2026-10-24 23:18",

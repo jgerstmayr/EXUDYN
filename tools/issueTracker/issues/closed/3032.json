@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-18: a flag in the OpenGL settings; without textures the triangles are drawn with their colors.",
+  "description": "A flag in the OpenGL settings; without textures the triangles are drawn with their colors.",
   "dateRaised": "2026-10-18",
   "deadline": "2027-04-16",
   "dateResolved": "2026-10-18 14:41",

@@ -4,7 +4,7 @@
   "author": "Claude-JG",
   "status": "RESOLVED",
   "type": "DOCU",
-  "description": "Maintainer 2026-10-11: the chapter is 'Python-C++ interface', the page 'Exudyn module functions'; the notebook part at the start of the page shows in a few lines exudyn.config, two uses of exudyn.special, of exudyn.cMath and one or two of exudyn.cUtilities.",
+  "description": "The chapter is 'Python-C++ interface', the page 'Exudyn module functions'; the notebook part at the start of the page shows in a few lines exudyn.config, two uses of exudyn.special, of exudyn.cMath and one or two of exudyn.cUtilities.",
   "dateRaised": "2026-10-11",
   "deadline": "2027-04-09",
   "dateResolved": "2026-10-11 16:49",

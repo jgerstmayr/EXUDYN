@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-20 with a screenshot: CFG0 ... is written lower, the underlay rectangle is slightly larger and has no border; with the raytracer the bar also fades in, but a raytraced frame is slow, so the bar shall show completely without delay in that case.",
+  "description": "CFG0 ... is written lower, the underlay rectangle is slightly larger and has no border; with the raytracer the bar also fades in, but a raytraced frame is slow, so the bar shall show completely without delay in that case.",
   "dateRaised": "2026-10-20",
   "deadline": "2027-04-18",
   "dateResolved": "2026-10-20 00:31",

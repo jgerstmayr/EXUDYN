@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "BUG",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG7.15 (maintainer 2026-10-25): the screw joint drafted in userJointTest.py does not work beyond a rotation of 180 degrees; find whether the constraint (the angle by atan2) or the numerical Jacobian causes it, and fix it.",
+  "description": "revision2026c step RG7.15: the screw joint drafted in userJointTest.py does not work beyond a rotation of 180 degrees; find whether the constraint (the angle by atan2) or the numerical Jacobian causes it, and fix it.",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
   "dateResolved": "2026-10-25 23:48",

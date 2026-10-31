@@ -6,7 +6,7 @@
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "LOW",
-  "description": "maintainer 2026-10-10: many old scripts use AddRigidBody, to be replaced by CreateRigidBody; the return values differ ([nodeNumber, bodyNumber] against the body) - the node read with mbs.GetObject(body)['nodeNumber'] - and the arguments are named differently",
+  "description": "Many old scripts use AddRigidBody, to be replaced by CreateRigidBody; the return values differ ([nodeNumber, bodyNumber] against the body) - the node read with mbs.GetObject(body)['nodeNumber'] - and the arguments are named differently",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 12:54",

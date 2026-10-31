@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-18: graphics.CheckerBoard uses by default (useTexture=True) a 2x2 texture of its two colors, generated when it is called, on one quad of two triangles instead of 2 nTiles^2 triangles; useTexture=False keeps the triangles",
+  "description": "Graphics.CheckerBoard uses by default (useTexture=True) a 2x2 texture of its two colors, generated when it is called, on one quad of two triangles instead of 2 nTiles^2 triangles; useTexture=False keeps the triangles",
   "dateRaised": "2026-10-18",
   "deadline": "2027-04-16",
   "dateResolved": "2026-10-18 17:00",

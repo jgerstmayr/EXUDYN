@@ -4,7 +4,7 @@
   "author": "Claude-JG",
   "status": "RESOLVED",
   "type": "EXTENSION",
-  "description": "revision2026c step RG12.50.2 (maintainer 2026-10-25): GetFlatProgramData() of a UserFunction and esym.GetFlatProgramData(expressions, arguments, resultNames): the operations of the flat program as a list, entry k = node k, operands by number; esym.GetFlatProgram(expressions, ...) and flatten=True/False; an operation name per expression class; the writer of the format 'Python' in exudyn/misc/symbolicExport.py, equal to the text of C++.",
+  "description": "revision2026c step RG12.50.2: GetFlatProgramData() of a UserFunction and esym.GetFlatProgramData(expressions, arguments, resultNames): the operations of the flat program as a list, entry k = node k, operands by number; esym.GetFlatProgram(expressions, ...) and flatten=True/False; an operation name per expression class; the writer of the format 'Python' in exudyn/misc/symbolicExport.py, equal to the text of C++.",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
   "dateResolved": "2026-10-25 11:44",

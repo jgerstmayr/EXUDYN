@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-17: no problem if the access to single items is slower - with numpy, most problems are solved in vectorized form; switch the 3D and 6D vectors to numpy and adapt the scripts that can take the vector form. Symbolic should allow a vectorized form as well: exudyn.symbolic.Vector and Matrix get dot() and the @ operator with numpy's meaning, and numpy defers to them (__array_ufunc__ = None), so that one script computes with numpy arrays and symbolic vectors; * of two symbolic vectors stays the scalar product for now.",
+  "description": "No problem if the access to single items is slower - with numpy, most problems are solved in vectorized form; switch the 3D and 6D vectors to numpy and adapt the scripts that can take the vector form. Symbolic should allow a vectorized form as well: exudyn.symbolic.Vector and Matrix get dot() and the @ operator with numpy's meaning, and numpy defers to them (__array_ufunc__ = None), so that one script computes with numpy arrays and symbolic vectors; * of two symbolic vectors stays the scalar product for now.",
   "dateRaised": "2026-10-17",
   "deadline": "2027-04-15",
   "dateResolved": "2026-10-17 09:19",

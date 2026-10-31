@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "MEDIUM",
-  "description": "Revision2026c step RG12.65.5 of #3153 (maintainer 2026-10-29: do RG12.65.5). FlatProgram keeps the order of the operations only; every recording is evaluated and differentiated by SymbolicProgram, esym.SetTableEvaluation (introduced by #3157, not released) removed; FlatProgram::Evaluate and Differentiate removed; the tree derivative (Diff and DiffRef of the node classes, DiffSeed) removed, Diff of Python by the one-pass derivative of the table; the rules: Zero for leaves, RealAbs, NoDerivative for mod, min, max, raising only where the variable enters.",
+  "description": "Revision2026c step RG12.65.5 of #3153. FlatProgram keeps the order of the operations only; every recording is evaluated and differentiated by SymbolicProgram, esym.SetTableEvaluation (introduced by #3157, not released) removed; FlatProgram::Evaluate and Differentiate removed; the tree derivative (Diff and DiffRef of the node classes, DiffSeed) removed, Diff of Python by the one-pass derivative of the table; the rules: Zero for leaves, RealAbs, NoDerivative for mod, min, max, raising only where the variable enters.",
   "dateRaised": "2026-10-30",
   "deadline": "2027-04-28",
   "dateResolved": "2026-10-30 00:54",

@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-19 (a user request): four stored configurations CFG0 to CFG3 of the visualizationSettings, in ~/.exudyn/config.json as a list 'storedSettings' of four dictionaries with the difference to the defaults (created as four empty dictionaries, which equal a reset); an icon per configuration switches the whole settings to it (defaults plus the stored difference), CTRL+icon stores the current settings into it; the store settings window of the dialog gets buttons '-> CFG0' to '-> CFG3' with hints; exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=None|0..3) stores from a script, None being the regular visualizationSettings section.",
+  "description": "A user request: four stored configurations CFG0 to CFG3 of the visualizationSettings, in ~/.exudyn/config.json as a list 'storedSettings' of four dictionaries with the difference to the defaults (created as four empty dictionaries, which equal a reset); an icon per configuration switches the whole settings to it (defaults plus the stored difference), CTRL+icon stores the current settings into it; the store settings window of the dialog gets buttons '-> CFG0' to '-> CFG3' with hints; exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=None|0..3) stores from a script, None being the regular visualizationSettings section.",
   "dateRaised": "2026-10-19",
   "deadline": "2027-04-17",
   "dateResolved": "2026-10-19 17:02",

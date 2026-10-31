@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-20 (decision D18): values are recomputed and not stored between evaluations in the items and the core; the result caches of #3028 (UserFunctionResultCache, the last two results of the access-function user functions) are removed.",
+  "description": "Decision D18: values are recomputed and not stored between evaluations in the items and the core; the result caches of #3028 (UserFunctionResultCache, the last two results of the access-function user functions) are removed.",
   "dateRaised": "2026-10-20",
   "deadline": "2027-04-18",
   "dateResolved": "2026-10-20 00:17",

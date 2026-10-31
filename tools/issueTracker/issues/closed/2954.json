@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG4.1.3.4 (maintainer 2026-10-10: good to go, as it resolves the Linux differences): EXUDYN_PORTABLE_MATH is defined in BasicDefinitions.h unless EXUDYN_LIBRARY_MATH is set; the reference values of the test models, mini examples, fast module and performance tests that move are recorded again; UnresolvedOnLinux() loses the models that agree now; UnresolvedOnMacOS() stays until the measurement on macOS ARM",
+  "description": "revision2026c step RG4.1.3.4: EXUDYN_PORTABLE_MATH is defined in BasicDefinitions.h unless EXUDYN_LIBRARY_MATH is set; the reference values of the test models, mini examples, fast module and performance tests that move are recorded again; UnresolvedOnLinux() loses the models that agree now; UnresolvedOnMacOS() stays until the measurement on macOS ARM",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 19:34",

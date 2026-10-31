@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "DOCU",
   "effort": "LOW",
-  "description": "The maintainer, checking the PDF before 1.13 (2026-10-09): 'In the docs/theory section I found a couple of Gr”ubler-Kutzbach typos to be fixed. Please check and fix all such \"o, \"a and \"u in the document.' Leftovers of the LaTeX conversion in theoryMultibody.md, solver.md, introduction.md and the module headers of FEM.py and kinematicTree.py (generated pages). revision2026b step RG3.42",
+  "description": "Found in the PDF before 1.13: Gr”ubler-Kutzbach typos in the docs/theory section, and every such \"o, \"a and \"u of the document to be fixed. Leftovers of the LaTeX conversion in theoryMultibody.md, solver.md, introduction.md and the module headers of FEM.py and kinematicTree.py (generated pages). revision2026b step RG3.42",
   "dateRaised": "2026-10-09",
   "deadline": "2027-04-07",
   "dateResolved": "2026-10-09 10:21",

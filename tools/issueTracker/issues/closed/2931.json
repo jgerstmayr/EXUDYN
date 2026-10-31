@@ -6,7 +6,7 @@
   "type": "BUG",
   "priority": "NORMAL",
   "effort": "LOW",
-  "description": "maintainer 2026-10-10: on macOS the space key does not start/stop as promised, it stops again at once; on Windows it works. Wanted: space switches between (Continuous run and start) and (stop and Static)",
+  "description": "On macOS the space key does not start/stop as promised, it stops again at once; on Windows it works. Wanted: space switches between (Continuous run and start) and (stop and Static)",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 00:04",

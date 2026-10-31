@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-19: the tooltips of the icon bar scale with the display, but are large; they shall have the size of the version string (globalFontSize times the small font factor), still scaled with the monitor scaling and displayScaleFactor.",
+  "description": "The tooltips of the icon bar scale with the display, but are large; they shall have the size of the version string (globalFontSize times the small font factor), still scaled with the monitor scaling and displayScaleFactor.",
   "dateRaised": "2026-10-19",
   "deadline": "2027-04-17",
   "dateResolved": "2026-10-19 17:02",

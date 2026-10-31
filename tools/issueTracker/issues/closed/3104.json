@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "revision2026c step RG7.15.7 (maintainer 2026-10-26): a user finite element may be used for a static problem only, so Assemble no longer requires the massMatrixUserFunction; the mass matrix raises when a solver or an output needs it.",
+  "description": "revision2026c step RG7.15.7: a user finite element may be used for a static problem only, so Assemble no longer requires the massMatrixUserFunction; the mass matrix raises when a solver or an output needs it.",
   "dateRaised": "2026-10-26",
   "deadline": "2027-04-24",
   "dateResolved": "2026-10-26 10:04",

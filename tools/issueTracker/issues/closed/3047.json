@@ -10,6 +10,6 @@
   "deadline": "2027-04-17",
   "dateResolved": "2026-10-19 23:56",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "won't fix - design decision of the maintainer (2026-10-19): no storing or hashing of intermediate values in the evaluation; values are recomputed, which suits parallel computation and keeps the approach transparent; the symbolic rigid body is a demo and test case only (decision D18)",
+  "releaseNotes": "won't fix - design decision: no storing or hashing of intermediate values in the evaluation; values are recomputed, which suits parallel computation and keeps the approach transparent; the symbolic rigid body is a demo and test case only (decision D18)",
   "resolvedInVersion": "1.13.154"
 }

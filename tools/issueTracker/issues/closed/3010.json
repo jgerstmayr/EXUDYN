@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-16 (after RG12.3.6): that the vectors of size 3 and 6 stayed lists was a misunderstanding; if there are no major boundaries, they become numpy arrays too. The std::array arguments (StdVector2D, StdVector3D, StdVector6D) and the matrices (StdMatrix3D, StdMatrix6D) are read-only numpy views, valid during the call; a fixed-size result from numpy in one pass; userFunctionListArguments gives lists for them as well; two examples that wrote into their load argument return a new vector.",
+  "description": "That the vectors of size 3 and 6 stayed lists was a misunderstanding; if there are no major boundaries, they become numpy arrays too. The std::array arguments (StdVector2D, StdVector3D, StdVector6D) and the matrices (StdMatrix3D, StdMatrix6D) are read-only numpy views, valid during the call; a fixed-size result from numpy in one pass; userFunctionListArguments gives lists for them as well; two examples that wrote into their load argument return a new vector.",
   "dateRaised": "2026-10-16",
   "deadline": "2027-04-14",
   "dateResolved": "2026-10-16 23:30",

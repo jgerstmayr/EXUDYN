@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-29: add the ODE1 equations in Equations(). The right-hand side g(y, t) of ObjectGenericODE1 - A y + f and the recorded rhsUserFunction - and of LoadCoordinate on ODE1 coordinates as expressions of the variable y, Equations(ODE1RHS=True) with the result 'ODE1RHS', GetFlatProgram(results=['ODE1RHS']), SystemVariables.Equations with y.",
+  "description": "Add the ODE1 equations in Equations(). The right-hand side g(y, t) of ObjectGenericODE1 - A y + f and the recorded rhsUserFunction - and of LoadCoordinate on ODE1 coordinates as expressions of the variable y, Equations(ODE1RHS=True) with the result 'ODE1RHS', GetFlatProgram(results=['ODE1RHS']), SystemVariables.Equations with y.",
   "dateRaised": "2026-10-29",
   "deadline": "2027-04-27",
   "dateResolved": "2026-10-29 11:33",

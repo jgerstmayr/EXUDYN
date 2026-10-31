@@ -5,7 +5,7 @@
   "status": "RAISED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-29: symbolic parameters are required in the long term; named parameters for the inertia of a rigid body and for the joints need a general solution (#3152 took the scalar parameters of the mass point and the spring-dampers). To design: parameters of any structure (an inertia from mass, inertia tensor and center of mass, the frames and axes of joints, the matrices of ObjectGenericODE2, the values of loads) given as named esym.Real or expressions of them, mapped to the numbers of the items; a parameter set per system (a VariableSet) instead of per item lists; the derivatives by them (sensitivities) through Equations and the composed system; later the C++ items with numerical and symbolic parameters (symbolicUserItems.md section 6).",
+  "description": "Symbolic parameters are required in the long term; named parameters for the inertia of a rigid body and for the joints need a general solution (#3152 took the scalar parameters of the mass point and the spring-dampers). To design: parameters of any structure (an inertia from mass, inertia tensor and center of mass, the frames and axes of joints, the matrices of ObjectGenericODE2, the values of loads) given as named esym.Real or expressions of them, mapped to the numbers of the items; a parameter set per system (a VariableSet) instead of per item lists; the derivatives by them (sensitivities) through Equations and the composed system; later the C++ items with numerical and symbolic parameters (symbolicUserItems.md section 6).",
   "dateRaised": "2026-10-29",
   "deadline": "2027-04-27"
 }

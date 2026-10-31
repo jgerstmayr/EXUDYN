@@ -4,7 +4,7 @@
   "author": "Claude-JG",
   "status": "RESOLVED",
   "type": "EXTENSION",
-  "description": "revision2026c step RG12.49.2 (maintainer 2026-10-25: as recommended in symbolicFlatProgramOptimization.md): esym.Optimize(expressions, level=1, mergeDuplicates=True) builds a new graph in one pass from the leaves up; duplicates merged by class and new operands, leaves included; level 1 exact rules, level 2 the rules that lose a nan or change the rounding; CreateSymbolicUserFunction(..., optimize=True) with these defaults.",
+  "description": "revision2026c step RG12.49.2 (as recommended in symbolicFlatProgramOptimization.md): esym.Optimize(expressions, level=1, mergeDuplicates=True) builds a new graph in one pass from the leaves up; duplicates merged by class and new operands, leaves included; level 1 exact rules, level 2 the rules that lose a nan or change the rounding; CreateSymbolicUserFunction(..., optimize=True) with these defaults.",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
   "dateResolved": "2026-10-25 13:13",

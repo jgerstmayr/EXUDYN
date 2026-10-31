@@ -4,7 +4,7 @@
   "author": "Claude-JG",
   "status": "RESOLVED",
   "type": "DOCU",
-  "description": "Maintainer 2026-10-11: exudyn.cMath is mostly for tests and for people who want reproducible results on all platforms; a remark in the revisions chapter and a very short note on the landing page, both pointing to a short section of the cMath page that says why Exudyn has its own math functions. The examples stay as they are.",
+  "description": "Exudyn.cMath is mostly for tests and for people who want reproducible results on all platforms; a remark in the revisions chapter and a very short note on the landing page, both pointing to a short section of the cMath page that says why Exudyn has its own math functions. The examples stay as they are.",
   "dateRaised": "2026-10-11",
   "deadline": "2027-04-09",
   "dateResolved": "2026-10-11 11:09",

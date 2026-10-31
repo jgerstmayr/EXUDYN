@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-23 (pythonUserItems.md 5.11 E): the user body gets an optional user function for the mass integral of the position Jacobian, int rho J_pos dV (3 x n), together with what MarkerBodyMass needs (mass, center of mass), so that MarkerBodyMass, LoadMassProportional (gravity) and a load on MarkerBodyMass act on it; with a test model against ObjectRigidBody and an ANCF element.",
+  "description": "pythonUserItems.md 5.11 E: the user body gets an optional user function for the mass integral of the position Jacobian, int rho J_pos dV (3 x n), together with what MarkerBodyMass needs (mass, center of mass), so that MarkerBodyMass, LoadMassProportional (gravity) and a load on MarkerBodyMass act on it; with a test model against ObjectRigidBody and an ANCF element.",
   "dateRaised": "2026-10-23",
   "deadline": "2027-04-21",
   "dateResolved": "2026-10-23 07:21",

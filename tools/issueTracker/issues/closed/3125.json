@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG12.55.2 (maintainer 2026-10-26: UserItemCreator(mbs) with the Create signatures, a small set of items first): exudyn/misc/symbolicUserItems.py, UserItemCreator with CreateGround, CreateMassPoint, CreateSpringDamper and CreateForce with the arguments of those of mbs, creating ObjectUserBody and ObjectConnectorUser with Python user functions, and Record() replacing them by one symbolic recording per kind.",
+  "description": "revision2026c step RG12.55.2 (decided: UserItemCreator(mbs) with the Create signatures, a small set of items first): exudyn/misc/symbolicUserItems.py, UserItemCreator with CreateGround, CreateMassPoint, CreateSpringDamper and CreateForce with the arguments of those of mbs, creating ObjectUserBody and ObjectConnectorUser with Python user functions, and Record() replacing them by one symbolic recording per kind.",
   "dateRaised": "2026-10-27",
   "deadline": "2027-04-25",
   "dateResolved": "2026-10-27 21:42",

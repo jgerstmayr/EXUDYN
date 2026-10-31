@@ -6,7 +6,7 @@
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "LOW",
-  "description": "maintainer 2026-10-10: in the PDF of the documentation, Getting started shows several raw \\url{ references",
+  "description": "In the PDF of the documentation, Getting started shows several raw \\url{ references",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 00:04",

@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "TESTING",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-24: the documentation of Diff says (UNTESTED!). symbolicModuleTest.py checks Diff for a few expressions only (#2479); a test of every operator and function against a central difference, and of the ones refused, lets the remark go.",
+  "description": "The documentation of Diff says (UNTESTED!). symbolicModuleTest.py checks Diff for a few expressions only (#2479); a test of every operator and function against a central difference, and of the ones refused, lets the remark go.",
   "dateRaised": "2026-10-24",
   "deadline": "2027-04-22",
   "dateResolved": "2026-10-24 20:55",

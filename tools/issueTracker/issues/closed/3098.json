@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
-  "description": "revision2026c step RG7.15 (maintainer 2026-10-25): userANCFBeam3DTest, userANCFCable2DTest, userJointTest, userMarkerTest, userMassIntegralTest, userOutputVariablesTest, userParametersTest, userRigidBodyTest, userTetrahedronTest set simulationSettings.solution.file.write = False before mbs.SolutionViewer() when run alone, so the viewer raises that no solution file exists; symbolicItemOutputTest.py reads the deprecated physicsMass.",
+  "description": "revision2026c step RG7.15: userANCFBeam3DTest, userANCFCable2DTest, userJointTest, userMarkerTest, userMassIntegralTest, userOutputVariablesTest, userParametersTest, userRigidBodyTest, userTetrahedronTest set simulationSettings.solution.file.write = False before mbs.SolutionViewer() when run alone, so the viewer raises that no solution file exists; symbolicItemOutputTest.py reads the deprecated physicsMass.",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
   "dateResolved": "2026-10-25 23:39",

@@ -5,7 +5,7 @@
   "status": "CLOSED",
   "type": "IDEA",
   "effort": "HIGH",
-  "description": "revision2026c step RG12.54 (maintainer 2026-10-26): instead of central differences, the Jacobian of a symbolic user function (position, rotation, constraint, residual) could be derived by esym.Diff - per coordinate q[i] and q_t[i] it works now, but slowly; to be analyzed: a derivative as one more flat program, and whether n derivatives of a function of n arguments need a local stack of their own.",
+  "description": "revision2026c step RG12.54: instead of central differences, the Jacobian of a symbolic user function (position, rotation, constraint, residual) could be derived by esym.Diff - per coordinate q[i] and q_t[i] it works now, but slowly; to be analyzed: a derivative as one more flat program, and whether n derivatives of a function of n arguments need a local stack of their own.",
   "dateRaised": "2026-10-26",
   "deadline": "2027-04-24",
   "dateResolved": "2026-10-29 11:37",

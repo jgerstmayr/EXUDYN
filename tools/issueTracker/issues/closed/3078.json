@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-24: the performance logs are readable by humans only. A JSON section at the end of the log (as the MiniExample performance log has, #2745): the version and module, the machine and its load before and after, every test file with its time and result, every single run with its solver time and, in the regular module, the solver sub-timers; all performance models with the timers active in the regular module.",
+  "description": "The performance logs are readable by humans only. A JSON section at the end of the log (as the MiniExample performance log has, #2745): the version and module, the machine and its load before and after, every test file with its time and result, every single run with its solver time and, in the regular module, the solver sub-timers; all performance models with the timers active in the regular module.",
   "dateRaised": "2026-10-24",
   "deadline": "2027-04-22",
   "dateResolved": "2026-10-24 21:28",

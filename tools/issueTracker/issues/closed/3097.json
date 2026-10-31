@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "DOCU",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG11.12 (maintainer 2026-10-25: the design notes grew in number and size; what is implemented goes into the docs, merged notes contain only the implemented status and the decisions; docs/dev/internals/; closed notes moved to tmp/delete/; symbolic gets a place of its own in the manual): the eleven notes of docs/dev/design for closed steps merged into docs/dev/internals/symbolic.md, userFunctions.md, userItems.md, systemUtilities.md, symmetricBasis.md, contributions into WORKFLOW.md; a chapter docs/manual/symbolicUserFunctions.md; the measurement scripts to tools/benchmarks; the rule for design notes in WORKFLOW.md.",
+  "description": "revision2026c step RG11.12 (decided: the design notes grew in number and size; what is implemented goes into the docs, merged notes contain only the implemented status and the decisions; docs/dev/internals/; closed notes moved to tmp/delete/; symbolic gets a place of its own in the manual): the eleven notes of docs/dev/design for closed steps merged into docs/dev/internals/symbolic.md, userFunctions.md, userItems.md, systemUtilities.md, symmetricBasis.md, contributions into WORKFLOW.md; a chapter docs/manual/symbolicUserFunctions.md; the measurement scripts to tools/benchmarks; the rule for design notes in WORKFLOW.md.",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
   "dateResolved": "2026-10-25 15:37",

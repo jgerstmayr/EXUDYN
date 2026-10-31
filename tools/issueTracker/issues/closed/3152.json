@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-28: the parameters of a user item given as numbers and named esym.Real (a mass m1 = esym.Real('m1', 5.)), so that the expressions keep the names and a variable shared by several items is one variable, and parts of the equations can be differentiated by them. Checked: the C++ item stores numbers and refuses esym.Real, so the item gets the values and UserItemCreator (and a helper for items made directly) keeps the variables; the recording of a kind keeps parameters as its argument; SymbolicSystem.Equations passes the variables as the parameters of each item, the flat program lists them as arguments, Diff by them works; changed values reach the items by an explicit call. Design symbolicSystem.md section 12.7.",
+  "description": "The parameters of a user item given as numbers and named esym.Real (a mass m1 = esym.Real('m1', 5.)), so that the expressions keep the names and a variable shared by several items is one variable, and parts of the equations can be differentiated by them. Checked: the C++ item stores numbers and refuses esym.Real, so the item gets the values and UserItemCreator (and a helper for items made directly) keeps the variables; the recording of a kind keeps parameters as its argument; SymbolicSystem.Equations passes the variables as the parameters of each item, the flat program lists them as arguments, Diff by them works; changed values reach the items by an explicit call. Design symbolicSystem.md section 12.7.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-29 09:59",

@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
-  "description": "revision2026c step RG12.51.12 (maintainer 2026-10-28: flags for the terms of Equations, what forces means with and without the inverse per body, remove the residual): Equations(massMatrix, forces, massMatrixBlocks) returns what is asked for; massMatrixBlocks the mass matrices of the bodies as MassMatrixBlocks, also recorded for the composed system so that the inverse per body is one call; the residual removed from Equations and GetFlatProgram, which writes the results asked for as a function of q, q_t, t; the docstring says what f is.",
+  "description": "revision2026c step RG12.51.12 (decided: flags for the terms of Equations, what forces means with and without the inverse per body, remove the residual): Equations(massMatrix, forces, massMatrixBlocks) returns what is asked for; massMatrixBlocks the mass matrices of the bodies as MassMatrixBlocks, also recorded for the composed system so that the inverse per body is one call; the residual removed from Equations and GetFlatProgram, which writes the results asked for as a function of q, q_t, t; the docstring says what f is.",
   "dateRaised": "2026-10-28",
   "deadline": "2027-04-26",
   "dateResolved": "2026-10-28 09:54",

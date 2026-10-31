@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG12.49.6 (maintainer 2026-10-25: first a way to still use the if): a Python if on a symbolic comparison is decided once while recording, with the values of the arguments then (zero in CreateSymbolicUserFunction), and records only that branch, silently. bool() shall raise a TypeError while recording, with a message that names both ways that exist: exudyn.symbolic.IfThenElse(condition, a, b), decided at every evaluation, and x.Evaluate() or x.value, decided once at recording, explicitly; before that, the recordings of the test models and examples are checked for an if or a library function that reads bool() of a symbolic value.",
+  "description": "revision2026c step RG12.49.6 (decided: first a way to still use the if): a Python if on a symbolic comparison is decided once while recording, with the values of the arguments then (zero in CreateSymbolicUserFunction), and records only that branch, silently. bool() shall raise a TypeError while recording, with a message that names both ways that exist: exudyn.symbolic.IfThenElse(condition, a, b), decided at every evaluation, and x.Evaluate() or x.value, decided once at recording, explicitly; before that, the recordings of the test models and examples are checked for an if or a library function that reads bool() of a symbolic value.",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
   "dateResolved": "2026-10-25 17:13",

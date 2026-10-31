@@ -6,7 +6,7 @@
   "type": "EXTENSION",
   "priority": "NORMAL",
   "effort": "LOW",
-  "description": "maintainer 2026-10-10: often helpful if the SolutionViewer called mbs.PreStepUserFunction before rendering a step - graphical animation, prescribed control values updated in the frames; a flag callPreStepUserFunction=True/False, False by default, called after SetSolutionState with the time of the row; an example: a ground brick with its frame moving along a screw, its referenceHT set as exu.HT in a PreStepUserFunction",
+  "description": "Often helpful if the SolutionViewer called mbs.PreStepUserFunction before rendering a step - graphical animation, prescribed control values updated in the frames; a flag callPreStepUserFunction=True/False, False by default, called after SetSolutionState with the time of the row; an example: a ground brick with its frame moving along a screw, its referenceHT set as exu.HT in a PreStepUserFunction",
   "dateRaised": "2026-10-10",
   "deadline": "2027-04-08",
   "dateResolved": "2026-10-10 00:04",

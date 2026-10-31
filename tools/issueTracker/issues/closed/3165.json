@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-29: give the symbolic Python parts more space in a directory of their own, exudyn.symbolics (exudyn.symbolic is the C++ module). misc/symbolicSystem.py split into symbolics/systemModel.py (SymbolicSystemBase, NumpySystem, SymbolicSystem, SystemVariables) and symbolics/solvers.py (SolveExplicit, SolveGeneralizedAlpha), misc/symbolicUserItems.py -> symbolics/userItems.py, misc/symbolicExport.py -> symbolics/codeExport.py, symbolicUtilities.py -> symbolics/kinematics.py; no deprecation, as none of them was in a release (1.13.6). Specific module names instead of system.py and export.py: a variable system and the existing exudyn.solver, exudyn.utilities.",
+  "description": "Give the symbolic Python parts more space in a directory of their own, exudyn.symbolics (exudyn.symbolic is the C++ module). misc/symbolicSystem.py split into symbolics/systemModel.py (SymbolicSystemBase, NumpySystem, SymbolicSystem, SystemVariables) and symbolics/solvers.py (SolveExplicit, SolveGeneralizedAlpha), misc/symbolicUserItems.py -> symbolics/userItems.py, misc/symbolicExport.py -> symbolics/codeExport.py, symbolicUtilities.py -> symbolics/kinematics.py; no deprecation, as none of them was in a release (1.13.6). Specific module names instead of system.py and export.py: a variable system and the existing exudyn.solver, exudyn.utilities.",
   "dateRaised": "2026-10-29",
   "deadline": "2027-04-27",
   "dateResolved": "2026-10-29 21:00",

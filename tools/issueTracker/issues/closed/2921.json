@@ -6,7 +6,7 @@
   "type": "DOCU",
   "priority": "HIGH",
   "effort": "LOW",
-  "description": "maintainer 2026-10-09, after the 1.13 release: write the commands for release / push / tag step by step, summarize the problems, suggest how to test on GitHub earlier, and integrate it into the developer documentation. WORKFLOW.md §4 and §6, GIT.md, GETTING_STARTED.md and the pre-push hook still describe master as frozen at 1.11.0 until the 1.13 release",
+  "description": "After the 1.13 release: write the commands for release / push / tag step by step, summarize the problems, suggest how to test on GitHub earlier, and integrate it into the developer documentation. WORKFLOW.md §4 and §6, GIT.md, GETTING_STARTED.md and the pre-push hook still describe master as frozen at 1.11.0 until the 1.13 release",
   "dateRaised": "2026-10-09",
   "deadline": "2027-04-07",
   "dateResolved": "2026-10-09 21:39",

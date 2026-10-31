@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "FIX",
   "effort": "LOW",
-  "description": "The test-command of [tool.cibuildwheel] (Linux, macOS, Windows) runs runTestSuite.py -quiet -local without --exit-code, so a failing test suite leaves the wheel job of .github/workflows/wheels.yml green; the GitLab job passes it. Maintainer 2026-10-09: 'yes, add the --exit-code'. revision2026b step RG10.24",
+  "description": "The test-command of [tool.cibuildwheel] (Linux, macOS, Windows) runs runTestSuite.py -quiet -local without --exit-code, so a failing test suite leaves the wheel job of .github/workflows/wheels.yml green; the GitLab job passes it. Decided: add the --exit-code. revision2026b step RG10.24",
   "dateRaised": "2026-10-09",
   "deadline": "2027-04-07",
   "dateResolved": "2026-10-09 08:14",

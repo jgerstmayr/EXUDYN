@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "Maintainer 2026-10-24: a data summary of many Exudyn versions in the repository (JSON), to which a performance run is added when a change is expected - before and after an optimization -, not for every micro version; tests may appear and disappear between versions. exudev creates a table and a plot of the main timings from it. Older logs without the JSON section (1.9.0, 1.10.0, 1.11.0, 1.13.x) are read from their text: the time of each test file.",
+  "description": "A data summary of many Exudyn versions in the repository (JSON), to which a performance run is added when a change is expected - before and after an optimization -, not for every micro version; tests may appear and disappear between versions. exudev creates a table and a plot of the main timings from it. Older logs without the JSON section (1.9.0, 1.10.0, 1.11.0, 1.13.x) are read from their text: the time of each test file.",
   "dateRaised": "2026-10-24",
   "deadline": "2027-04-22",
   "dateResolved": "2026-10-24 21:28",

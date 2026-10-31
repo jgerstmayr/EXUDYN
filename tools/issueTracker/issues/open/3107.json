@@ -5,7 +5,7 @@
   "status": "RAISED",
   "type": "CHANGE",
   "effort": "MEDIUM",
-  "description": "revision2026c step RG7.17 (maintainer 2026-10-26): when their Jacobian functions are missing, the three user items compute the position and rotation Jacobians by central differences, so a joint on them gets a partly numerical constraint Jacobian - nowhere else in Exudyn. To be decided (tbd): require the Jacobian functions, at least when a joint uses the item, and keep central differences only behind an exudyn.special flag with its dangers documented. Kept as it is for now.",
+  "description": "revision2026c step RG7.17: when their Jacobian functions are missing, the three user items compute the position and rotation Jacobians by central differences, so a joint on them gets a partly numerical constraint Jacobian - nowhere else in Exudyn. To be decided (tbd): require the Jacobian functions, at least when a joint uses the item, and keep central differences only behind an exudyn.special flag with its dangers documented. Kept as it is for now.",
   "dateRaised": "2026-10-26",
   "deadline": "2027-04-24"
 }

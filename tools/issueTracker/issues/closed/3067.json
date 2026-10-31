@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "TESTING",
   "effort": "LOW",
-  "description": "Maintainer 2026-10-23 (with #3064): the existing user body test models get graphics drawn by the positionUserFunction - a brick with its frame for the rigid body, bricks of the cross section for the 3D ANCF beam, the faces of the tetrahedra, the axis of the 2D cables, spheres for the mass points; run alone (not exu.sys['testIsActive']) they start the renderer, write the solution file and open the SolutionViewer to check the graphics; in a test run nothing changes.",
+  "description": "With #3064: the existing user body test models get graphics drawn by the positionUserFunction - a brick with its frame for the rigid body, bricks of the cross section for the 3D ANCF beam, the faces of the tetrahedra, the axis of the 2D cables, spheres for the mass points; run alone (not exu.sys['testIsActive']) they start the renderer, write the solution file and open the SolutionViewer to check the graphics; in a test run nothing changes.",
   "dateRaised": "2026-10-23",
   "deadline": "2027-04-21",
   "dateResolved": "2026-10-23 08:30",

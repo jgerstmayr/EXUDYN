@@ -4,7 +4,7 @@
   "author": "Claude-JG",
   "status": "RESOLVED",
   "type": "DOCU",
-  "description": "revision2026c step RG12.49.1 (maintainer 2026-10-25): x*0, x*1, x+0 and numbers; equal subexpressions recorded twice, e.g. cos(q[2]) written two times, are two nodes and computed twice; measure the recorded models, propose how and where, the impact on the implementation and on D18.",
+  "description": "revision2026c step RG12.49.1: x*0, x*1, x+0 and numbers; equal subexpressions recorded twice, e.g. cos(q[2]) written two times, are two nodes and computed twice; measure the recorded models, propose how and where, the impact on the implementation and on D18.",
   "dateRaised": "2026-10-25",
   "deadline": "2027-04-23",
   "dateResolved": "2026-10-25 08:59",

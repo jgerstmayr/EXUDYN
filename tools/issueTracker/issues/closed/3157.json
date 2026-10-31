@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
-  "description": "Stage 1 of #3153 (maintainer 2026-10-28: R1 important, go with the first transition step; 2026-10-29: slightly different results would be acceptable, but check the full equivalence for now). New files src/Linalg/SymbolicTable.h/.cpp: the operation codes and the table (name, number of operands, rule of the forward derivative), SymbolicProgram built from the flat program, the scalar operations of scalar operands computed by the table, the rest by the nodes; the rules of the forward derivative moved there and shared with FlatProgram; esym.SetTableEvaluation(flag) selects the path, FlatProgram the fallback; every symbolic test model equal to the bit on both paths.",
+  "description": "Stage 1 of #3153 (decided: slightly different results would be acceptable; the full equivalence checked for now). New files src/Linalg/SymbolicTable.h/.cpp: the operation codes and the table (name, number of operands, rule of the forward derivative), SymbolicProgram built from the flat program, the scalar operations of scalar operands computed by the table, the rest by the nodes; the rules of the forward derivative moved there and shared with FlatProgram; esym.SetTableEvaluation(flag) selects the path, FlatProgram the fallback; every symbolic test model equal to the bit on both paths.",
   "dateRaised": "2026-10-29",
   "deadline": "2027-04-27",
   "dateResolved": "2026-10-29 09:45",
