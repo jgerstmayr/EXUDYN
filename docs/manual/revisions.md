@@ -54,7 +54,10 @@ ODE2 forces and the new result `ODE1ReactionTermsLHS` (#3190). ObjectGenericDAE 
 pass, a Python one needs the jacobianUserFunction; `SymbolicSystem` takes the recorded ones (#3191).
 **`esym.LookupTable(values, step, start, outside)`** interpolates values at equal steps linearly, `table(x)` for a time,
 a coordinate or a parameter, with its derivative in the Jacobians and in the export; `exudyn.symbolics.utilities` has
-`SampleTime(t, period)` and `Noise(t, step, length, seed)` (#3192).
+`SampleTime(t, period)` and `Noise(t, step, length, seed)` (#3192). `UserItemCreator` has
+`CreateCartesianSpringDamper`, `CreateRigidBodySpringDamper` (both formulations), `CreateCoordinateConstraint` - an
+ObjectGenericDAE, whose massMatrix may be empty for an object that only constrains coordinates - and `CreateTorque`,
+equal to the built-in items to 1e-12 (#3193).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

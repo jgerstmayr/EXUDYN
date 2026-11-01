@@ -2237,6 +2237,13 @@ ObjectConnectorUser draws too (it never did); symbolicUserItemsDrawingTest.py. [
 contact and the built-in one, switched at the end of a step by its data node, have different solutions; the switch by
 data coordinates of RG12.66 as the remedy is to be checked.
 
+#### **CLOSED_RG12.55.9** The Cartesian and the rigid-body spring-damper, the coordinate constraint and the torque
+
+CLOSED 2026-11-01 (#3193): CreateCartesianSpringDamper, CreateRigidBodySpringDamper (both formulations),
+CreateCoordinateConstraint as ObjectGenericDAE - whose massMatrix may now be empty -, CreateTorque;
+symbolicUserConnectorsTest.py against the built-in items (2.4e-12) and SymbolicSystem (5.7e-12). Left: the planar
+items, the generic joint, the Lie group rigid body. [log](exudynRevisionLog2026c.md#rg12-55-9)
+
 ### **CLOSED_RG12.56** Explicit solvers in Python on the system equations: explicit Euler, velocity Verlet, RK44
 
 CLOSED 2026-10-26 (#3112, #3120; maintainer 2026-10-26: before generalized-alpha, constant step size, compatible with SimulationSettings, the inverse of the mass matrix per body; every solver also for a system written with numpy): SolveExplicit and NumpySystem in exudyn/misc/symbolicSystem.py, checked on a net of mass points against SolveDynamic. [log](exudynRevisionLog2026c.md#rg12-56-2)

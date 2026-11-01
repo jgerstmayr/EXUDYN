@@ -5003,3 +5003,26 @@ the extra 4.7 us per Python call - add views.)*
   esym.Jacobian against the slopes 0.0; two tables at one argument after Optimize; the numpy export 0.0; a spring of
   ObjectGenericODE2 by its tabulated characteristic curve with a load of SampleTime and Noise, recorded against Python
   0.0; SampleTime at the instants of 1 ms, the noise table cached and bounded.
+
+<a id="rg12-55-9"></a>
+### RG12.55.9 — the Cartesian and rigid-body spring-dampers, the coordinate constraint and the torque of UserItemCreator (2026-11-01, #3193)
+- `CreateCartesianSpringDamper`: ObjectConnectorUser on the position markers of mbs, f = k (p1 - p0 - offset) + d (v1 -
+  v0) per global component, +f on marker 0; a node of a user mass point instead of a body marker, as the spring-damper.
+- `CreateRigidBodySpringDamper`: ObjectConnectorUser on the rigid markers of GetMarkersPosRot, the joint rotations MR0,
+  MR1 of mbs as 18 of the 96 parameters (K and D row by row, offset, MR0, MR1), a kind per formulation. Tait-Bryan: the
+  frame of marker 0 times MR0, u the relative translation and GetRxyz of the relative rotation; intrinsic: u = LogSE3
+  of the relative frame, the joint frame the rotation of H0 * SetExpSE3(u/2), the torque of the offset of the force
+  (Aj (-u/2)) x f on both markers, as CObjectConnectorRigidBodySpringDamper. Written once with kinematics.HT for
+  numbers and expressions; the user functions of the contact refused (springForceTorqueUserFunction,
+  postNewtonStepUserFunction), markers in itemNumbers too.
+- `CreateCoordinateConstraint`: ObjectGenericDAE on the nodes of the two coordinates with a NodeGenericAE,
+  constraintMatrixODE2 [-1, factor1] at the coordinates, constraintVector offset (minus the reference values for
+  includeReferenceCoordinates); the coordinate of a body counted over its nodes as mbs does. For it, the massMatrix of
+  ObjectGenericDAE may be empty, a zero mass: the check before the assembly is removed, and SymbolicSystem keeps such
+  an object out of MassMatrixBlocks and adds no mass entries (its kind key holds whether M is empty).
+- `CreateTorque` as CreateForce; Record records the loadVectorUserFunction of each by its load type.
+- symbolicUserConnectorsTest.py: two user rigid bodies with two rigid-body spring-dampers (full K with a coupling,
+  offsets, turned joint frames, useGlobalFrame False), two Cartesian spring-dampers, a coordinate constraint to a mass
+  point and a body-fixed torque of a user function: Python and recorded user items against the built-in ones 5.5e-13
+  (intrinsic) and 2.4e-12 (Tait-Bryan); SymbolicSystem by SolveGeneralizedAlpha against SolveDynamic 5.7e-12; 100
+  steps, 4.9 s.

@@ -1,0 +1,15 @@
+{
+  "number": 3193,
+  "title": "UserItemCreator: Cartesian and rigid-body spring-damper, coordinate constraint, torque",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.55.9 (docs/dev/design/symbolicUserItems.md section 4): CreateCartesianSpringDamper and CreateRigidBodySpringDamper (both formulations, the intrinsic one by LogSE3 and SetExpSE3 of kinematics.HT) as ObjectConnectorUser, CreateCoordinateConstraint as ObjectGenericDAE with its constraintMatrixODE2 - the massMatrix of ObjectGenericDAE may be empty then -, CreateTorque as CreateForce; against the built-in items and SymbolicSystem. Decided: the planar items, the generic joint and the Lie group body later, see the step.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 10:39",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "UserItemCreator has CreateCartesianSpringDamper, CreateRigidBodySpringDamper in both formulations, CreateCoordinateConstraint, an ObjectGenericDAE without mass, and CreateTorque, equal to the built-in items; the massMatrix of ObjectGenericDAE may be empty, a zero mass, for an object that only constrains the coordinates of other items.",
+  "resolvedInVersion": "1.13.290"
+}

@@ -3561,7 +3561,7 @@ class ObjectGenericDAE:
 
         nodeNumbersAE: the NodeGenericAE of the algebraic coordinates :math:`\tlambda`; their number of coordinates is the number of algebraic equations; type: ArrayNodeIndex
 
-        massMatrix: the mass matrix; needed if there are ODE2 coordinates; type: array_like
+        massMatrix: the mass matrix; empty: zero, for an object that constrains the coordinates of other items (#3193); type: array_like
 
         dampingMatrix: the damping matrix; type: array_like
 

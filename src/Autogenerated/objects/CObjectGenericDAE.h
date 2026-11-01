@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-01  09:43:06 (last modified)
+* @date         2026-11-01  10:32:52 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,7 +34,7 @@ public: // AUTO:
     ArrayIndex nodeNumbersODE2;                   //!< AUTO: the nodes of the ABRV:ODE2 coordinates \f$\qv\f$, any nodes with ABRV:ODE2 coordinates
     ArrayIndex nodeNumbersODE1;                   //!< AUTO: the NodeGenericODE1 of the ABRV:ODE1 coordinates \f$\yv\f$
     ArrayIndex nodeNumbersAE;                     //!< AUTO: the NodeGenericAE of the algebraic coordinates \f$\tlambda\f$; their number of coordinates is the number of algebraic equations
-    Matrix massMatrix;                            //!< AUTO: the mass matrix; needed if there are ABRV:ODE2 coordinates
+    Matrix massMatrix;                            //!< AUTO: the mass matrix; empty: zero, for an object that constrains the coordinates of other items (#3193)
     Matrix dampingMatrix;                         //!< AUTO: the damping matrix
     Matrix stiffnessMatrix;                       //!< AUTO: the stiffness matrix
     Vector forceVector;                           //!< AUTO: the constant generalized forces

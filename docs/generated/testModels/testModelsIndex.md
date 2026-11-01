@@ -221,6 +221,7 @@ symbolicSystemODE1Test
 symbolicSystemParametersTest
 symbolicSystemTest
 symbolicSystemVariablesTest
+symbolicUserConnectorsTest
 symbolicUserContactTest
 symbolicUserFunctionCopyTest
 symbolicUserFunctionSignaturesTest

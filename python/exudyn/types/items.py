@@ -457,7 +457,7 @@ items = {
       'nodeNumbersODE2': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the nodes of the ODE2 coordinates :math:`\\qv`, any nodes with ODE2 coordinates'},
       'nodeNumbersODE1': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the NodeGenericODE1 of the ODE1 coordinates :math:`\\yv`'},
       'nodeNumbersAE': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the NodeGenericAE of the algebraic coordinates :math:`\\tlambda`; their number of coordinates is the number of algebraic equations'},
-      'massMatrix': {'type': 'NumpyMatrix', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the mass matrix; needed if there are ODE2 coordinates'},
+      'massMatrix': {'type': 'NumpyMatrix', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the mass matrix; empty: zero, for an object that constrains the coordinates of other items (#3193)'},
       'dampingMatrix': {'type': 'NumpyMatrix', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the damping matrix'},
       'stiffnessMatrix': {'type': 'NumpyMatrix', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the stiffness matrix'},
       'forceVector': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the constant generalized forces'},

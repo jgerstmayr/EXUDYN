@@ -1432,11 +1432,6 @@ bool MainObjectGenericDAE::CheckPreAssembleConsistency(const MainSystem& mainSys
 			+ EXUstd::ToString(size) + " or empty";
 		return false;
 	};
-	if (n2 != 0 && p.massMatrix.NumberOfRows() == 0 && !p.massMatrixUserFunction)
-	{
-		errorString = "ObjectGenericDAE: the massMatrix or the massMatrixUserFunction is needed for the ODE2 coordinates";
-		return false;
-	}
 	if (p.constraintUserFunction && !p.constraintUserFunction.GetSymbolicFunction() && !p.jacobianUserFunction)
 	{
 		errorString = "ObjectGenericDAE: a Python constraintUserFunction needs the jacobianUserFunction, as the Jacobian of the algebraic equations is not computed numerically (#3191)";

@@ -22,7 +22,7 @@ The parameters of the item; in a dictionary, its type is 'GenericDAE':
 | **nodeNumbersODE2** | ArrayNodeIndex |  | [] | the nodes of the {ref}`ODE2 <ODE2>` coordinates $\qv$, any nodes with {ref}`ODE2 <ODE2>` coordinates |
 | **nodeNumbersODE1** | ArrayNodeIndex |  | [] | the NodeGenericODE1 of the {ref}`ODE1 <ODE1>` coordinates $\yv$ |
 | **nodeNumbersAE** | ArrayNodeIndex |  | [] | the NodeGenericAE of the algebraic coordinates $\tlambda$; their number of coordinates is the number of algebraic equations |
-| **massMatrix** | NumpyMatrix |  | [] | (symbol: $\Mm \in \Rcal^{n_2 \times n_2}$) the mass matrix; needed if there are {ref}`ODE2 <ODE2>` coordinates |
+| **massMatrix** | NumpyMatrix |  | [] | (symbol: $\Mm \in \Rcal^{n_2 \times n_2}$) the mass matrix; empty: zero, for an object that constrains the coordinates of other items (#3193) |
 | **dampingMatrix** | NumpyMatrix |  | [] | (symbol: $\Dm \in \Rcal^{n_2 \times n_2}$) the damping matrix |
 | **stiffnessMatrix** | NumpyMatrix |  | [] | (symbol: $\Km \in \Rcal^{n_2 \times n_2}$) the stiffness matrix |
 | **forceVector** | NumpyVector |  | [] | (symbol: $\fv \in \Rcal^{n_2}$) the constant generalized forces |

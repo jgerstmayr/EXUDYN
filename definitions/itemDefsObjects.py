@@ -2210,7 +2210,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
             pythonName='massMatrix',
             defaultValue='Matrix()',
-            description=r"""$\Mm \in \Rcal^{n_2 \times n_2}$the mass matrix; needed if there are ABRV:ODE2 coordinates"""),
+            description=r"""$\Mm \in \Rcal^{n_2 \times n_2}$the mass matrix; empty: zero, for an object that constrains the coordinates of other items (#3193)"""),
         ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
             pythonName='dampingMatrix',
             defaultValue='Matrix()',

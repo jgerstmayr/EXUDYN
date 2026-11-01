@@ -707,7 +707,7 @@ class SymbolicSystem(SymbolicSystemBase):
                                  'ODE1 coordinates; the mass matrix of SymbolicSystem does not depend on y')
             self._constantMassMatrix = False
         ltg = list(systemData.GetObjectLTGODE2(objectNumber))
-        key = ((len(ltg), len(dae['ltgODE1']), len(dae['ltgAE']))
+        key = ((len(ltg), len(dae['ltgODE1']), len(dae['ltgAE']), dae['M'].size == 0) #without M: no mass, only constraints
                + tuple((name, recordings[name].GetFlatProgram()) for name in sorted(recordings)))
         if key not in daeKinds:
             daeKinds[key] = SymbolicKind('GenericDAE', recordings)
@@ -1365,7 +1365,7 @@ class SymbolicSystem(SymbolicSystemBase):
         if kind.objectType == 'GenericDAE': #a massMatrixUserFunction only without ODE1 coordinates, so y is empty
             if 'massMatrixUserFunction' in kind.recordings:
                 return self._DAECall(kind, 'massMatrixUserFunction', i, q, q_t, np.zeros(self.nODE1), t)
-            return kind.parameters[i]['M']
+            return kind.parameters[i]['M'] if kind.parameters[i]['M'].size else np.zeros((kind.ltg.shape[1], kind.ltg.shape[1]))
         if 'massMatrixUserFunction' in kind.recordings:
             return self._Call(kind, 'massMatrixUserFunction', i, q, q_t, t)
         return kind.parameters[i]['M']
@@ -1430,8 +1430,10 @@ class SymbolicSystem(SymbolicSystemBase):
 
     def _BodyKinds(self):
         """the kinds with a mass matrix, in the order of MassMatrixBlocks: the kinds of the bodies, then those of the
-        ObjectGenericDAE with ODE2 coordinates"""
-        return [kind for kind in self.kinds if kind.objectType != 'ConnectorUser'] + self._DAEKindsODE2()
+        ObjectGenericDAE with ODE2 coordinates and a mass matrix - one without acts on the coordinates of other items, by
+        its constraints, as of CreateCoordinateConstraint of UserItemCreator (#3193)"""
+        return ([kind for kind in self.kinds if kind.objectType != 'ConnectorUser']
+                + [kind for kind in self._DAEKindsODE2() if 'massMatrixUserFunction' in kind.recordings or kind.parameters[0]['M'].size])
 
     def _ComposedInputs(self, q, q_t, t, y=None):
         """the arguments of the recordings of the composed system: q, q_t, t, and y if the ODE2 equations depend on it;
@@ -1902,10 +1904,13 @@ class SymbolicSystem(SymbolicSystemBase):
                 value = Call(kind.recordings['massMatrixUserFunction'], *self._DAESymbolicArguments(backend, kind, index, t, qLocal,
                                                                                                     q_tLocal, yLocal))
                 Mlocal = [[value[i, j] for j in range(len(ltg))] for i in range(len(ltg))]
-            else:
+            elif dae['M'].size:
                 Mlocal = [[float(dae['M'][i, j]) for j in range(len(ltg))] for i in range(len(ltg))]
-            blocks.append(Mlocal)
-            for (i, row) in zip(ltg, Mlocal):
+            else: #no mass, not a body of MassMatrixBlocks
+                Mlocal = None
+            if blocks is not None:
+                blocks.append(Mlocal)
+            for (i, row) in zip(ltg, Mlocal if Mlocal is not None else []):
                 for (j, value) in zip(ltg, row):
                     M[i][j] = _Sum(M[i][j], value)
             Add(f, ltg, [float(x) for x in dae['f']] if len(dae['f']) else None)

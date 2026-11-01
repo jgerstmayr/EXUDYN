@@ -9,8 +9,10 @@
 #           export take. A script that builds a system with creator = mbs builds the same system of user items with
 #           creator = UserItemCreator(mbs).
 #           The items: CreateGround, CreateMassPoint, CreateRigidBody (on NodeRigidBodyRxyz), CreateSpringDamper,
-#           CreateTorsionalSpringDamper, CreateSphereSphereContact (#3187), CreateRevoluteJoint, CreatePrismaticJoint,
-#           CreateSphericalJoint, CreateDistanceConstraint (ObjectJointUser, #3140), CreateForce. An argument a user item
+#           CreateTorsionalSpringDamper, CreateSphereSphereContact (#3187), CreateCartesianSpringDamper,
+#           CreateRigidBodySpringDamper (#3193), CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint,
+#           CreateDistanceConstraint (ObjectJointUser, #3140), CreateCoordinateConstraint (ObjectGenericDAE, #3193),
+#           CreateForce, CreateTorque. An argument a user item
 #           does not support raises, naming it. A parameter of a mass point or a spring-damper may be a named
 #           exudyn.symbolic.Real (mass=m1): the item gets its value, the creator keeps the variable in
 #           parameterVariables, for SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
@@ -167,6 +169,49 @@ def _UFsphereSphereContactForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, da
         force = 0.
     return np.hstack([-force*normal, force*normal])
 
+#the Cartesian spring-damper, ObjectConnectorUser on two position markers, parameters [stiffness (3), damping (3),
+#offset (3)]: as ObjectConnectorCartesianSpringDamper, f = k (p1 - p0 - offset) + d (v1 - v0) per global component,
+#pulling marker 0 towards marker 1 for a positive component (#3193)
+def _UFcartesianSpringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    (delta, velocity) = (HT1.translation - HT0.translation, twist1.velocity - twist0.velocity)
+    force = [parameters[i]*(delta[i] - parameters[6 + i]) + parameters[3 + i]*velocity[i] for i in range(3)]
+    return _Vector(force + [-x for x in force], _Functions(delta))
+
+#the rigid-body spring-damper, ObjectConnectorUser on two rigid markers, parameters [stiffness (36, row by row),
+#damping (36), offset (6), rotationMarker0 (9), rotationMarker1 (9)]: as ObjectConnectorRigidBodySpringDamper, the
+#joint frame Aj - of marker 0 times rotationMarker0, or the mid-frame of the intrinsic formulation -, in it the relative
+#displacement and rotation u - the Tait-Bryan angles of the relative rotation, or the logarithm on SE(3) of the
+#relative frame - and the relative velocity and angular velocity v, f = K (u - offset) + D v, and the force Aj f[0:3]
+#and torque Aj f[3:6] towards marker 1 on marker 0, the opposite on marker 1; intrinsic, the torque of the offset of
+#the force adds to both (#3193)
+def _RigidBodySpringDamperForce(HT0, twist0, HT1, twist1, parameters, intrinsic):
+    F = _Functions(HT0.rotation)
+    (R0, R1) = (_Matrix([[parameters[78 + k + 3*i + j] for j in range(3)] for i in range(3)], F) for k in [0, 9])
+    (H0, H1) = (su.HT(HT0.rotation @ R0, HT0.translation), su.HT(HT1.rotation @ R1, HT1.translation))
+    relative = H0.Relative(H1)
+    if intrinsic:
+        motion = relative.LogSE3()
+        u = [motion[i] for i in range(6)]
+        Aj = (H0*su.HT().SetExpSE3([0.5*x for x in u])).rotation
+    else:
+        (rotation, Aj) = (relative.GetRxyz(), H0.rotation)
+        u = [relative.translation[i] for i in range(3)] + [rotation[i] for i in range(3)]
+    (velocity, angularVelocity) = (Aj.T @ (twist1.velocity - twist0.velocity), Aj.T @ (twist1.angularVelocity - twist0.angularVelocity))
+    v = [velocity[i] for i in range(3)] + [angularVelocity[i] for i in range(3)]
+    f = [sum(parameters[6*i + j]*(u[j] - parameters[72 + j]) + parameters[36 + 6*i + j]*v[j] for j in range(6)) for i in range(6)]
+    (force, torque) = (Aj @ _Vector(f[0:3], F), Aj @ _Vector(f[3:6], F))
+    offsetTorque = [0, 0, 0]
+    if intrinsic:
+        offsetTorque = su.Cross(Aj @ _Vector([-0.5*x for x in u[0:3]], F), force, F)
+    return _Vector([force[i] for i in range(3)] + [torque[i] - offsetTorque[i] for i in range(3)]
+                   + [-force[i] for i in range(3)] + [-torque[i] - offsetTorque[i] for i in range(3)], F)
+
+def _UFrigidBodySpringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    return _RigidBodySpringDamperForce(HT0, twist0, HT1, twist1, parameters, False)
+
+def _UFrigidBodySpringDamperIntrinsicForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    return _RigidBodySpringDamperForce(HT0, twist0, HT1, twist1, parameters, True)
+
 #the joints, ObjectJointUser on two rigid markers whose frames are the joint frame: the equations of the built-in joint
 #at position level - the global difference of the positions, as the Lagrange multipliers of the built-in joints are
 #global -, and their derivative by the translations and global rotation increments [p0, theta0, p1, theta1] of the
@@ -263,6 +308,10 @@ _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                   'springDamper': [('forceUserFunction', _UFspringDamperForce)],
                   'torsionalSpringDamper': [('forceUserFunction', _UFtorsionalSpringDamperForce)],
                   'sphereSphereContact': [('forceUserFunction', _UFsphereSphereContactForce)],
+                  'cartesianSpringDamper': [('forceUserFunction', _UFcartesianSpringDamperForce)],
+                  'rigidBodySpringDamper': [('forceUserFunction', _UFrigidBodySpringDamperForce)],
+                  'rigidBodySpringDamperIntrinsic': [('forceUserFunction', _UFrigidBodySpringDamperIntrinsicForce)],
+                  'coordinateConstraint': [],
                   'revoluteJoint': [('constraintUserFunction', _UFrevoluteJointConstraint),
                                     ('jacobianUserFunction', _UFrevoluteJointJacobian)],
                   'prismaticJoint': [('constraintUserFunction', _UFprismaticJointConstraint),
@@ -745,6 +794,190 @@ class UserItemCreator:
         self.items[kind].append(joint)
         return joint
 
+    def CreateCartesianSpringDamper(self, name='', itemNumbers=[None, None], localPosition0=[0., 0., 0.],
+                                    localPosition1=[0., 0., 0.], stiffness=[0., 0., 0.], damping=[0., 0., 0.],
+                                    offset=[0., 0., 0.], springForceUserFunction=0, show=True, drawSize=-1,
+                                    color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None):
+        """a Cartesian spring-damper as ObjectConnectorUser on the position markers of mbs.CreateCartesianSpringDamper,
+        with its arguments and the force of ObjectConnectorCartesianSpringDamper; drawn as a line (#3193)
+
+        Args:
+            name: as in mbs.CreateCartesianSpringDamper
+            itemNumbers: as in mbs.CreateCartesianSpringDamper
+            localPosition0: as in mbs.CreateCartesianSpringDamper
+            localPosition1: as in mbs.CreateCartesianSpringDamper
+            stiffness: as in mbs.CreateCartesianSpringDamper; numbers or named exudyn.symbolic.Real
+            damping: as in mbs.CreateCartesianSpringDamper; numbers or named exudyn.symbolic.Real
+            offset: as in mbs.CreateCartesianSpringDamper; numbers or named exudyn.symbolic.Real
+            springForceUserFunction: refused if given: the force is the forceUserFunction of the connector
+            show: as in mbs.CreateCartesianSpringDamper
+            drawSize: not used: a line between the markers
+            color: the color of the line; the default: grey
+            bodyNumbers: refused if given: use itemNumbers
+            bodyOrNodeList: refused if given: use itemNumbers
+
+        Returns:
+            the ObjectIndex of the connector
+        """
+        where = 'CreateCartesianSpringDamper'
+        _Refuse(where, 'springForceUserFunction', springForceUserFunction, 0, 'the force is the forceUserFunction of the connector')
+        _Refuse(where, 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
+        _Refuse(where, 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
+        mbs = self.mbs
+        itemNumbers = [self._massPointNodes[int(item)] if (isinstance(item, exudyn.ObjectIndex) and int(item) in self._massPointNodes
+                                                           and not np.any(localPosition)) else item
+                       for (item, localPosition) in zip(itemNumbers, [localPosition0, localPosition1])]
+        [marker0, marker1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1,
+                                                              getPosition=False, getRotationMatrix=False, useRigidMarker=False)
+        parameters = list(stiffness) + list(damping) + list(offset)
+        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], parameters=_Numbers(parameters),
+                                                          forceUserFunction=_UFcartesianSpringDamperForce,
+                                                          visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=
+                                                              _JointGraphics([marker0, marker1], 'distance', 0, 0, color))))
+        self.items['cartesianSpringDamper'].append(connector)
+        self._KeepParameters(connector, parameters)
+        return connector
+
+    def CreateRigidBodySpringDamper(self, name='', itemNumbers=[None, None], localPosition0=[0., 0., 0.],
+                                    localPosition1=[0., 0., 0.], stiffness=np.zeros((6, 6)), damping=np.zeros((6, 6)),
+                                    offset=[0., 0., 0., 0., 0., 0.], rotationMatrixJoint=np.eye(3), useGlobalFrame=True,
+                                    useIntrinsicFormulation=True, springForceTorqueUserFunction=0,
+                                    postNewtonStepUserFunction=0, show=True, drawSize=-1, color=exudyn.graphics.color.default,
+                                    intrinsicFormulation=None, bodyNumbers=None, bodyOrNodeList=None):
+        """a rigid-body spring-damper as ObjectConnectorUser on the rigid markers of mbs.CreateRigidBodySpringDamper, with
+        its arguments and the forces and torques of ObjectConnectorRigidBodySpringDamper in both formulations - the
+        intrinsic one by the logarithm on SE(3) of the relative frame, the other by the Tait-Bryan angles of the relative
+        rotation -; the joint rotations are parameters of the connector; drawn as a line (#3193)
+
+        Args:
+            name: as in mbs.CreateRigidBodySpringDamper
+            itemNumbers: as in mbs.CreateRigidBodySpringDamper, two bodies, rigid nodes or the ground
+            localPosition0: as in mbs.CreateRigidBodySpringDamper
+            localPosition1: as in mbs.CreateRigidBodySpringDamper
+            stiffness: as in mbs.CreateRigidBodySpringDamper, 6 x 6; numbers or named exudyn.symbolic.Real
+            damping: as in mbs.CreateRigidBodySpringDamper, 6 x 6; numbers or named exudyn.symbolic.Real
+            offset: as in mbs.CreateRigidBodySpringDamper; numbers or named exudyn.symbolic.Real
+            rotationMatrixJoint: as in mbs.CreateRigidBodySpringDamper
+            useGlobalFrame: as in mbs.CreateRigidBodySpringDamper
+            useIntrinsicFormulation: as in mbs.CreateRigidBodySpringDamper; each formulation is a kind of its own
+            springForceTorqueUserFunction: refused if given: the forces are the forceUserFunction of the connector
+            postNewtonStepUserFunction: refused if given: a post-Newton step needs data coordinates
+            show: as in mbs.CreateRigidBodySpringDamper
+            drawSize: not used: a line between the markers
+            color: the color of the line; the default: grey
+            intrinsicFormulation: refused if given: use useIntrinsicFormulation
+            bodyNumbers: refused if given: use itemNumbers
+            bodyOrNodeList: refused if given: use itemNumbers
+
+        Returns:
+            the ObjectIndex of the connector
+        """
+        where = 'CreateRigidBodySpringDamper'
+        for (argument, value, default, reason) in [
+                ('springForceTorqueUserFunction', springForceTorqueUserFunction, 0, 'the forces are the forceUserFunction of the connector'),
+                ('postNewtonStepUserFunction', postNewtonStepUserFunction, 0, 'a post-Newton step needs data coordinates'),
+                ('intrinsicFormulation', intrinsicFormulation, None, 'use useIntrinsicFormulation'),
+                ('bodyNumbers', bodyNumbers, None, 'use itemNumbers'),
+                ('bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')]:
+            _Refuse(where, argument, value, default, reason)
+        if any(isinstance(item, exudyn.MarkerIndex) for item in itemNumbers):
+            raise ValueError('UserItemCreator.CreateRigidBodySpringDamper: the argument itemNumbers with a marker is not '
+                             'supported by the user item (give the bodies or nodes)')
+        mbs = self.mbs
+        [marker0, marker1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1,
+                                                              getPosition=False, getRotationMatrix=True, useRigidMarker=True)
+        rotationMatrixJoint = np.array(rotationMatrixJoint, dtype=float)
+        if useGlobalFrame: #as mbs.CreateRigidBodySpringDamper
+            (MR0, MR1) = (A0.T @ rotationMatrixJoint, A1.T @ rotationMatrixJoint)
+        else:
+            (MR0, MR1) = (rotationMatrixJoint, A1.T @ A0 @ rotationMatrixJoint)
+        parameters = ([x for row in stiffness for x in row] + [x for row in damping for x in row] + list(offset)
+                      + list(MR0.flatten()) + list(MR1.flatten()))
+        kind = 'rigidBodySpringDamperIntrinsic' if useIntrinsicFormulation else 'rigidBodySpringDamper'
+        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], parameters=_Numbers(parameters),
+                                                          requestedMarkerType=exudyn.MarkerType.Position | exudyn.MarkerType.Orientation,
+                                                          forceUserFunction=_kindFunctions[kind][0][1],
+                                                          visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=
+                                                              _JointGraphics([marker0, marker1], 'distance', 0, 0, color))))
+        self.items[kind].append(connector)
+        self._KeepParameters(connector, parameters)
+        return connector
+
+    def CreateCoordinateConstraint(self, name='', itemNumbers=[None, None], coordinates=[None, None], offset=0.,
+                                   factor1=1., velocityLevel=False, offsetUserFunction=0, offsetUserFunction_t=0, show=True,
+                                   drawSize=-1., color=exudyn.graphics.color.default, includeReferenceCoordinates=[False, False],
+                                   factorValue1=None, bodyNumbers=None, bodyOrNodeList=None):
+        """a coordinate constraint as ObjectGenericDAE with the equation of ObjectConnectorCoordinate, factor1 q1 - q0 -
+        offset = 0, on the coordinates of mbs.CreateCoordinateConstraint: the nodes of the coordinates are its ODE2 nodes,
+        a NodeGenericAE its multiplier, the equation its constraintMatrixODE2 and constraintVector (#3193)
+
+        Args:
+            name: as in mbs.CreateCoordinateConstraint
+            itemNumbers: as in mbs.CreateCoordinateConstraint: a body, a node, or None or a ground object for the ground
+            coordinates: as in mbs.CreateCoordinateConstraint
+            offset: as in mbs.CreateCoordinateConstraint
+            factor1: as in mbs.CreateCoordinateConstraint
+            velocityLevel: refused if True: the equation is at position level
+            offsetUserFunction: refused if given: the offset is constant
+            offsetUserFunction_t: refused if given: the offset is constant
+            show: not used: the object draws nothing
+            drawSize: not used
+            color: not used
+            includeReferenceCoordinates: as in mbs.CreateCoordinateConstraint
+            factorValue1: refused if given: use factor1
+            bodyNumbers: refused if given: use itemNumbers
+            bodyOrNodeList: refused if given: use itemNumbers
+
+        Returns:
+            the ObjectIndex of the ObjectGenericDAE
+        """
+        where = 'CreateCoordinateConstraint'
+        for (argument, value, default, reason) in [('velocityLevel', velocityLevel, False, 'the equation is at position level'),
+                                                   ('offsetUserFunction', offsetUserFunction, 0, 'the offset is constant'),
+                                                   ('offsetUserFunction_t', offsetUserFunction_t, 0, 'the offset is constant'),
+                                                   ('factorValue1', factorValue1, None, 'use factor1'),
+                                                   ('bodyNumbers', bodyNumbers, None, 'use itemNumbers'),
+                                                   ('bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')]:
+            _Refuse(where, argument, value, default, reason)
+        mbs = self.mbs
+        (nodes, columns, factors) = ([], [], [-1., float(factor1)])
+        c0 = float(offset)
+        for (item, coordinate, factor, includeReference) in zip(itemNumbers, coordinates, factors, includeReferenceCoordinates):
+            if item is None or (isinstance(item, exudyn.ObjectIndex) and mbs.GetObject(item)['objectType'] == 'Ground'):
+                continue #the ground: the coordinate is 0
+            if isinstance(item, exudyn.NodeIndex):
+                (node, nodeCoordinate) = (item, int(coordinate))
+            else: #the coordinate of a body counts over its nodes, as mbs.CreateCoordinateConstraint
+                objectDict = mbs.GetObject(item)
+                (node, nodeCoordinate) = (None, int(coordinate))
+                for bodyNode in ([objectDict['nodeNumber']] if 'nodeNumber' in objectDict else objectDict['nodeNumbers']):
+                    numberOfCoordinates = len(mbs.systemData.GetNodeLTGODE2(bodyNode))
+                    if nodeCoordinate < numberOfCoordinates:
+                        node = bodyNode
+                        break
+                    nodeCoordinate -= numberOfCoordinates
+                if node is None:
+                    raise ValueError('UserItemCreator.CreateCoordinateConstraint: the body ' + str(item) + ' has no coordinate '
+                                     + str(coordinate))
+            if node not in nodes:
+                nodes.append(node)
+            offsetOfNode = sum(len(mbs.systemData.GetNodeLTGODE2(n)) for n in nodes[:nodes.index(node)])
+            columns.append((offsetOfNode + nodeCoordinate, factor))
+            if includeReference: #the equation in the total coordinates: the reference values into the constant
+                c0 -= factor*float(mbs.GetNode(node)['referenceCoordinates'][nodeCoordinate])
+        if not nodes:
+            raise ValueError('UserItemCreator.CreateCoordinateConstraint: one of the two items must be a body or a node, but '
+                             'received: ' + str(itemNumbers))
+        n = sum(len(mbs.systemData.GetNodeLTGODE2(node)) for node in nodes)
+        constraintMatrix = np.zeros((1, n))
+        for (column, factor) in columns:
+            constraintMatrix[0, column] += factor
+        multiplier = mbs.AddNode(eii.NodeGenericAE(referenceCoordinates=[0], initialCoordinates=[0], numberOfAECoordinates=1))
+        constraint = mbs.AddObject(eii.ObjectGenericDAE(name=name, nodeNumbersODE2=nodes, nodeNumbersAE=[multiplier],
+                                                        constraintMatrixODE2=constraintMatrix, constraintVector=[c0]))
+        self.items['coordinateConstraint'].append(constraint)
+        return constraint
+
     def CreateRevoluteJoint(self, name='', itemNumbers=[None, None], position=[], axis=[], useGlobalFrame=True, show=True,
                             axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default, bodyNumbers=None,
                             bodyOrNodeList=None):
@@ -888,7 +1121,32 @@ class UserItemCreator:
         load = self.mbs.CreateForce(name=name, itemNumber=itemNumber, loadVector=loadVector, localPosition=localPosition,
                                     bodyFixed=bodyFixed, loadVectorUserFunction=loadVectorUserFunction, show=show)
         if callable(loadVectorUserFunction):
-            self.loads.append((load, loadVectorUserFunction))
+            self.loads.append((load, loadVectorUserFunction, 'LoadForceVector'))
+        return load
+
+    def CreateTorque(self, name='', itemNumber=None, loadVector=[0., 0., 0.], localPosition=[0., 0., 0.], bodyFixed=False,
+                     loadVectorUserFunction=0, show=True, bodyNumber=None):
+        """the built-in LoadTorqueVector of mbs.CreateTorque, with its arguments: on a user rigid body, its marker acts by
+        the rotation Jacobian of the user body (#3193)
+
+        Args:
+            name: as in mbs.CreateTorque
+            itemNumber: as in mbs.CreateTorque
+            loadVector: as in mbs.CreateTorque
+            localPosition: as in mbs.CreateTorque
+            bodyFixed: as in mbs.CreateTorque
+            loadVectorUserFunction: as in mbs.CreateTorque; a Python function is recorded by Record
+            show: as in mbs.CreateTorque
+            bodyNumber: refused if given: use itemNumber
+
+        Returns:
+            the LoadIndex of the torque
+        """
+        _Refuse('CreateTorque', 'bodyNumber', bodyNumber, None, 'use itemNumber')
+        load = self.mbs.CreateTorque(name=name, itemNumber=itemNumber, loadVector=loadVector, localPosition=localPosition,
+                                     bodyFixed=bodyFixed, loadVectorUserFunction=loadVectorUserFunction, show=show)
+        if callable(loadVectorUserFunction):
+            self.loads.append((load, loadVectorUserFunction, 'LoadTorqueVector'))
         return load
 
     def Record(self):
@@ -905,8 +1163,8 @@ class UserItemCreator:
                 self.recordings.append(recording)
                 for item in self.items[kind]:
                     mbs.SetObjectParameter(item, functionName, recording)
-        for (load, function) in self.loads:
-            recording = CreateSymbolicUserFunction(mbs, function, 'loadVectorUserFunction', itemTypeName='LoadForceVector')
+        for (load, function, loadType) in self.loads:
+            recording = CreateSymbolicUserFunction(mbs, function, 'loadVectorUserFunction', itemTypeName=loadType)
             self.recordings.append(recording)
             mbs.SetLoadParameter(load, 'loadVectorUserFunction', recording)
         self.loads = []
