@@ -5212,3 +5212,18 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   one spring-damper of each formulation in one system (6.340335689918898, two checks more). symbolicLookupTableTest.py
   checks IfThenElse: numbers, a symbolic condition decided at evaluation, fewer operations for a constant condition
   (11.007450360798327).
+
+<a id="rg12-67-1"></a>
+### RG12.67.1 — Design the symbolic parameters of every item (2026-11-01, #3159)
+- Maintainer 2026-11-01: continue with RG12.67, whose plan text asks for a design first.
+- What #3152 covers: named variables for the scalar arguments of three Create functions, kept per object beside the
+  numbers of its `parameters` vector, used by `Equations()`; the composed system takes the numbers and is built again
+  by `SetParameterValues`. Not covered: the inertia of the rigid body (computed by the numeric `RigidBodyInertia`),
+  the marker positions and frames of joints and connectors, load vectors, the matrices of ObjectGenericODE2 and
+  ObjectGenericDAE, expressions of parameters.
+- docs/dev/design/symbolicParameters.md: one parameter set of named esym.Real per system; bindings of slots (item
+  type, number, field, component) to expressions of the parameters, the items keeping the numbers and checked as in
+  #3152; structure stays a Python constant (#3203); where the bindings come from (UserItemCreator, by hand, symbolic
+  inertia functions); Equations() with every bound slot; the parameters as an input of the composed system, so that
+  new values need no rebuild and dr/dp comes with dr/dq; forward sensitivities of the solution in the Python solvers.
+  Sub-steps RG12.67.2 to RG12.67.5 and the decisions P1 to P5.
