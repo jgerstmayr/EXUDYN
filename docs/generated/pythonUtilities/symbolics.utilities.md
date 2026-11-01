@@ -9,6 +9,9 @@ exudyn.symbolic.LookupTable of random values. Both compute with numbers and with
 expressions, so that a user function that uses them computes numbers and is recorded.
 A function of the time held between the samples is f(SampleTime(t, period)); holding a state - read at
 the sampling instants, kept in between - needs data coordinates and is not done here.
+SparseMatrix, a matrix of few nonzero entries declared by its triplets: its products are the scalar
+operations of the entries, so that a recording does not multiply the zeros, with the results and the
+one-pass derivatives of the dense product to the bit (#3199).
 
 - **Author**: Johannes Gerstmayr
 - **Date**: 2026-11-01 (created)
@@ -16,7 +19,7 @@ the sampling instants, kept in between - needs data coordinates and is not done 
 (sec-utilities-sampletime)=
 ## Function: SampleTime
 
-[`SampleTime(t, period, offset = 0., functions = exudyn.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L28)
+[`SampleTime(t, period, offset = 0., functions = exudyn.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L31)
 
 - **function description**: the discrete time of the samples at offset + k*period: the last sampling instant at or before t, offset + period*floor((t - offset)/period), with a tolerance of 1e-12 period, so that a time computed as k*h with a step size h that divides the period counts as its sampling instant
 - **input**:
@@ -41,7 +44,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAED
 (sec-utilities--noisetable)=
 ## Function: _NoiseTable
 
-[`_NoiseTable(step, length, seed, amplitude, distribution, outside)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L55)
+[`_NoiseTable(step, length, seed, amplitude, distribution, outside)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L58)
 
 - **function description**: the table of NoiseTable, created
 
@@ -49,7 +52,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAED
 (sec-utilities-noisetable)=
 ## Function: NoiseTable
 
-[`NoiseTable(step, length, seed = 0, amplitude = 1., distribution = 'uniform', outside = 'periodic')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L70)
+[`NoiseTable(step, length, seed = 0, amplitude = 1., distribution = 'uniform', outside = 'periodic')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L73)
 
 - **function description**: the exudyn.symbolic.LookupTable of Noise: round(length/step) random values of numpy.random.default_rng(seed) at the times i*step, linearly interpolated; the same values for the same arguments, in every run, step size, Newton iteration and order of evaluation; created once for each set of arguments
 - **input**:
@@ -68,7 +71,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-noise)=
 ## Function: Noise
 
-[`Noise(t, step, length, seed = 0, amplitude = 1., distribution = 'uniform', outside = 'periodic')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L92)
+[`Noise(t, step, length, seed = 0, amplitude = 1., distribution = 'uniform', outside = 'periodic')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L95)
 
 - **function description**: a random signal of the time t, the value of NoiseTable(step, length, seed, amplitude, distribution, outside) at t: repeatable for each time, continuous and piecewise linear between the random values; held between samples by Noise(SampleTime(t, period), ...)
 - **input**:
@@ -91,3 +94,99 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLookupTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicLookupTableTest.py) (TM)
+
+
+(sec-module-symbolics.utilities-class-sparsematrix)=
+## CLASS SparseMatrix (in module symbolics.utilities)
+
+**class description**: a matrix of few nonzero entries, numbers or exudyn.symbolic.Real, declared by its triplets (#3199): its pattern is fixed when it is made, and its products are the scalar operations of the entries, each row summed in the order of the columns as the dense product does - so that a recording does not multiply the zeros, and the results and the one-pass derivatives are those of the dense product to the bit wherever no left-out entry would meet an inf or a nan; esym.Jacobian, which builds other sums, to their rounding. The one-pass derivative, esym.Jacobian, Optimize and the export take them as any expression. For numbers, the results are numpy arrays
+
+- **input**:
+  - `rows`: the number of rows
+  - `columns`: the number of columns
+  - `triplets`: list of (row, column, value); values of the same row and column are added
+
+*example*:
+
+```python
+  A = SparseMatrix(3, 3, [(i, i, 2*k) for i in range(3)] + [(0, 1, -k), (1, 0, -k)])
+  f = A @ q  #3 sums of the products of the nonzero entries
+```
+
+
+(sec-utilities-sparsematrix-frommatrix)=
+### Class function: FromMatrix
+
+[`FromMatrix(matrix)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L153)
+
+- **class function description**: the sparse matrix of the entries of a dense one that are not the number 0: a list of rows of numbers and exudyn.symbolic.Real, or a numpy array
+- **input**:
+  - `matrix`: the dense matrix, a list of rows or a numpy array
+- **output**: SparseMatrix
+
+
+(sec-utilities-sparsematrix-shape)=
+### Class function: shape
+
+[`shape(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L169)
+
+- **class function description**: (rows, columns)
+
+
+(sec-utilities-sparsematrix-nnz)=
+### Class function: nnz
+
+[`nnz(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L174)
+
+- **class function description**: the number of entries of the pattern
+
+
+(sec-utilities-sparsematrix-triplets)=
+### Class function: Triplets
+
+[`Triplets(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L178)
+
+- **class function description**: the entries as list of (row, column, value), by rows and columns
+
+
+(sec-utilities-sparsematrix---matmul--)=
+### Class function: __matmul__
+
+[`__matmul__(self, vector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L191)
+
+- **class function description**: A v, a vector: per row the sum of the products of its entries in the order of the columns; an empty row is 0
+
+
+(sec-utilities-sparsematrix-t)=
+### Class function: T
+
+[`T(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L204)
+
+- **class function description**: the transposed matrix, a SparseMatrix of the same entries
+
+
+(sec-utilities-sparsematrix---mul--)=
+### Class function: __mul__
+
+[`__mul__(self, factor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L208)
+
+- **class function description**: s A, the factor times each entry
+
+
+(sec-utilities-sparsematrix---add--)=
+### Class function: __add__
+
+[`__add__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L214)
+
+- **class function description**: A + B, on the union of the patterns
+
+
+(sec-utilities-sparsematrix-todense)=
+### Class function: ToDense
+
+[`ToDense(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L220)
+
+- **class function description**: the dense matrix, an exudyn.symbolic.Matrix if an entry is symbolic, else a numpy array
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSparseMatrixProductTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSparseMatrixProductTest.py) (TM)

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 290 | 1.13.296 |
+| 1.13 | Newborn | 292 | 1.13.298 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.298** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic: sparse matrices declared by their triplets, their products on the scalar operations of the entries (#3199)
+  - description: revision2026c step RG12.65.7 (\#3168): exudyn.symbolics.utilities.SparseMatrix(rows, columns, triplets) and FromMatrix, A @ v, A.T, s A, A + B, A\[i, j\], ToDense, Triplets: the products are the scalar operations of the nonzero entries, each row summed in the order of the columns as the dense product, so that the results and derivatives equal the dense ones to the bit; measured against the dense esym.Matrix product for band matrices of 20 and 100 rows. Decided: first in Python on the table as it is; the slot kind of the table of the proposal only if a model needs more.
+  - **notes:** exudyn.symbolics.utilities.SparseMatrix declares a matrix of few nonzero entries by its triplets; its products are the scalar operations of the entries, equal to the dense product, at 100 rows 3 times faster to evaluate and 5 times faster to differentiate.
+  - date resolved: **2026-11-01 14:46**, date raised: 2026-11-01
+- **1.13.297** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem: data coordinates - the data of the items, their postNewton steps and the solvers (#3158)
+  - description: Data coordinates are needed in the future (SymbolicSystem refuses them now; SystemVariables leaves them out). The data coordinates of NodeGenericData in the recordings (ObjectConnectorUser has them, \#3102), their postNewtonStepUserFunction recorded, the PostNewton step of the explicit and generalized-alpha solvers of symbolicSystem.py as Exudyn does it (discontinuous iteration, recommended step size), data in SystemVariables and in Equations (as fixed values per step), checked against SolveDynamic on a contact or friction model.
+  - **notes:** SymbolicSystem takes data coordinates: the recordable post-Newton functions of ObjectConnectorUser and ObjectGenericDAE update them, and the Python solvers repeat a step while the error of a switch is above the tolerance, as Exudyn's solvers.
+  - date resolved: **2026-11-01 14:41**, date raised: 2026-10-29
 - **1.13.296** `IMPROVEMENT` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic: the program of a recording built without the export structure; the code in the node measured (#3198)
   - description: revision2026c step RG12.65.4 (\#3153): measured on a recording of 150000 operations - recording 157 ms, esym.Function 351 ms, of which 287 ms the py::dict entries of GetFlatProgramData that it built only to find the named variables, the program itself about 60 ms; esym.Function finds them by a traversal of the nodes. The operation code stored in the node at its construction instead of the lookup by name in Build would save a part of the 60 ms of a one-off build. Decided: as revision2026c step RG12.65.4, option A, the code in the node at most.
   - **notes:** esym.Function is up to 5.6 times faster to create: it finds the named variables of the result by a traversal of the nodes, without the entries of GetFlatProgramData; measured, the program of a recording is built in less time than the recording.

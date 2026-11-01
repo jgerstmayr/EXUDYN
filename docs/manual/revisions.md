@@ -71,7 +71,9 @@ above `discontinuous.iterationTolerance`, as Exudyn's solvers (#3196). `UserItem
 switches by a data node in its post-Newton step, as the built-in contact, and has the impact models 1 and 2 with the
 restitution coefficient: equal to `mbs.CreateSphereSphereContact` to 1e-13, also with damping and the implicit solver,
 whose solution now converges with the step size (#3197). `esym.Function` is up to 5.6 times faster to create, as it
-finds the named variables without the export structure (#3198).
+finds the named variables without the export structure (#3198). `exudyn.symbolics.utilities.SparseMatrix` declares a
+matrix of few nonzero entries by its triplets; its products are the scalar operations of the entries, equal to the dense
+product, at 100 rows 3 times faster to evaluate and 5 times faster to differentiate (#3199).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

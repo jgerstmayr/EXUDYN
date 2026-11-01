@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.296.dev1
+- Exudyn version = 1.13.298.dev1
 - last change = 2026-11-01
-- Number of issues = 3199
-- Number of resolved issues = 3073 (296 in current version)
+- Number of issues = 3200
+- Number of resolved issues = 3075 (298 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9056,9 +9056,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-29
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic parameters for every item of the symbolic system: a general way beyond the scalar parameters of the user items (#3159)
   - description: Symbolic parameters are required in the long term; named parameters for the inertia of a rigid body and for the joints need a general solution (\#3152 took the scalar parameters of the mass point and the spring-dampers). To design: parameters of any structure (an inertia from mass, inertia tensor and center of mass, the frames and axes of joints, the matrices of ObjectGenericODE2, the values of loads) given as named esym.Real or expressions of them, mapped to the numbers of the items; a parameter set per system (a VariableSet) instead of per item lists; the derivatives by them (sensitivities) through Equations and the composed system; later the C++ items with numerical and symbolic parameters (symbolicUserItems.md section 6).
-  - date raised: 2026-10-29
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` SymbolicSystem: data coordinates - the data of the items, their postNewton steps and the solvers (#3158)
-  - description: Data coordinates are needed in the future (SymbolicSystem refuses them now; SystemVariables leaves them out). The data coordinates of NodeGenericData in the recordings (ObjectConnectorUser has them, \#3102), their postNewtonStepUserFunction recorded, the PostNewton step of the explicit and generalized-alpha solvers of symbolicSystem.py as Exudyn does it (discontinuous iteration, recommended step size), data in SystemVariables and in Equations (as fixed values per step), checked against SolveDynamic on a contact or friction model.
   - date raised: 2026-10-29
 - `IMPROVEMENT` `HUGE EFF` `raised by: Claude-JG` One table of the symbolic operations: SymbolicProgram and the operation table in SymbolicTable.h/.cpp beside the expression classes (#3153)
   - description: R1 of docs/dev/design/symbolicSystem.md. The expression tree stays for the recording and the simple evaluation; the flat evaluation, the derivatives, Optimize, the export, the count and the uniform evaluation work on a program built from the tree and a table per operation code (name, arity, kinds, size, evaluation, forward derivative, later derivative as new nodes, simplification, text per format). New files src/Linalg/SymbolicTable.h and .cpp; the old code stays as fallback, selected by a switch, until the new path gives the same results bit for bit; item outputs as an operation code with the data of the item and a link to the MainSystem. Four stages, design section 12.7.

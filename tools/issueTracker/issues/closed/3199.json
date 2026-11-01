@@ -1,0 +1,15 @@
+{
+  "number": 3199,
+  "title": "Symbolic: sparse matrices declared by their triplets, their products on the scalar operations of the entries",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.65.7 (#3168): exudyn.symbolics.utilities.SparseMatrix(rows, columns, triplets) and FromMatrix, A @ v, A.T, s A, A + B, A[i, j], ToDense, Triplets: the products are the scalar operations of the nonzero entries, each row summed in the order of the columns as the dense product, so that the results and derivatives equal the dense ones to the bit; measured against the dense esym.Matrix product for band matrices of 20 and 100 rows. Decided: first in Python on the table as it is; the slot kind of the table of the proposal only if a model needs more.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 14:46",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.symbolics.utilities.SparseMatrix declares a matrix of few nonzero entries by its triplets; its products are the scalar operations of the entries, equal to the dense product, at 100 rows 3 times faster to evaluate and 5 times faster to differentiate.",
+  "resolvedInVersion": "1.13.298"
+}

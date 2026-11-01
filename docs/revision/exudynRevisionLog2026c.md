@@ -5111,3 +5111,25 @@ the extra 4.7 us per Python call - add views.)*
   the named variables. `NamedVariablesOf` finds them by a traversal of the nodes. The build of the program, the rest,
   is less than the recording and done once; the code in the node is not worth a change of every expression class.
 - esym.Function is what SymbolicSystem builds per item and for the composed system, which is faster by the same.
+
+<a id="rg12-65-7-1"></a>
+### RG12.65.7.1 — SparseMatrix in Python on the scalar operations of the entries (2026-11-01, #3199)
+- The proposal (symbolicSystem.md section 12.7) waits for a decision on a slot kind of the table. First measured
+  whether it is needed: a product written as the scalar operations of the nonzero entries, each row summed in the
+  order of the columns, against the dense esym.Matrix product of a band matrix whose entries depend on the variables:
+
+  | rows | entries | table operations sparse / dense | evaluation sparse / dense | Jacobian (one pass) sparse / dense |
+  |---|---|---|---|---|
+  | 20 | 58 | 561 / 408 | 3.0 / 3.3 us | 15 / 21 us |
+  | 100 | 298 | 2881 / 2088 | 12.7 / 39.3 us | 162 / 816 us |
+
+  The values and the one-pass derivatives equal the dense ones to the bit (the dense sum adds exact zeros);
+  esym.Jacobian builds other sums, 4.4e-16. The dense product is one operation in the count but n^2 multiplications.
+- `SparseMatrix(rows, columns, triplets)` in exudyn.symbolics.utilities - numbers or esym.Real, equal entries added,
+  the pattern fixed -, `FromMatrix` of rows or a numpy array (the entries that are not the number 0), `@` a vector,
+  `T`, `s*A`, `A + B` on the union, `A[i, j]`, `ToDense`, `Triplets`, `shape`, `nnz`; for numbers numpy arrays.
+- symbolicSparseMatrixProductTest.py: the band matrices, the operations on numbers, FromMatrix, the numpy export, and a chain
+  of 10 springs of ObjectGenericODE2 with a stiffness of the coordinates as SparseMatrix, recorded against Python 0.0.
+- Not done: the slot kind of the table (compressed rows in the memory of the program, one code per product) and the
+  sparse results of recordings for the system matrices; recommended only when a model - FFRF reduced order, shells -
+  needs more than the scalar operations give.

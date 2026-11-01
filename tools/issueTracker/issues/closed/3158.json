@@ -2,10 +2,14 @@
   "number": 3158,
   "title": "SymbolicSystem: data coordinates - the data of the items, their postNewton steps and the solvers",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "Data coordinates are needed in the future (SymbolicSystem refuses them now; SystemVariables leaves them out). The data coordinates of NodeGenericData in the recordings (ObjectConnectorUser has them, #3102), their postNewtonStepUserFunction recorded, the PostNewton step of the explicit and generalized-alpha solvers of symbolicSystem.py as Exudyn does it (discontinuous iteration, recommended step size), data in SystemVariables and in Equations (as fixed values per step), checked against SolveDynamic on a contact or friction model.",
   "dateRaised": "2026-10-29",
-  "deadline": "2027-04-27"
+  "deadline": "2027-04-27",
+  "dateResolved": "2026-11-01 14:41",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SymbolicSystem takes data coordinates: the recordable post-Newton functions of ObjectConnectorUser and ObjectGenericDAE update them, and the Python solvers repeat a step while the error of a switch is above the tolerance, as Exudyn's solvers.",
+  "resolvedInVersion": "1.13.297"
 }

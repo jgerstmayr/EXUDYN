@@ -132,7 +132,9 @@ def UFforce(mbs, t, itemNumber, q, q_t):
 sampling instant at or before `t`, so that `f(SampleTime(t, period))` is a function held between the samples, and
 `Noise(t, step, length, seed=0, amplitude=1.)`, a random signal: the table of `length/step` random values of
 `numpy.random.default_rng(seed)`, the same in every run, step size and Newton iteration. A state held between the
-samples - a value read at the instants - needs data coordinates and is not available in a recording yet.
+samples - a value read at the instants - is a data coordinate of ObjectGenericDAE or ObjectConnectorUser, set by
+their post-Newton function (#3195). `SparseMatrix(rows, columns, triplets)` of the same module is a matrix of few
+nonzero entries: `A @ v` records only the products of its entries, with the results of the dense product (#3199).
 
 ## Reading other items
 

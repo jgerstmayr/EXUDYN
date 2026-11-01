@@ -210,6 +210,7 @@ symbolicModuleTest
 symbolicNumpyCompatibilityTest
 symbolicOnePassJacobianTest
 symbolicOptimizeTest
+symbolicSparseMatrixProductTest
 symbolicSparseMatrixTest
 symbolicStatisticsTest
 symbolicSystemDataTest
