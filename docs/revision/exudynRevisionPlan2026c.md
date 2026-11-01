@@ -2365,6 +2365,28 @@ CLOSED 2026-10-31 (#3176): the 23 classes of vector and matrix operations are ro
 
 #3158 (maintainer 2026-10-29: data coordinates are needed in the future; SymbolicSystem refuses them and SystemVariables of #3151 leaves them out until then).
 
+Proposed 2026-11-01 (decisions open; maintainer 2026-11-01: the PostNewton step is needed in the symbolic system,
+possibly with new item interfaces, following C++ or a better way found in Python):
+
+- **The semantics of C++** (CSolverBase::DiscontinuousIteration): the data coordinates x are constant during Newton;
+  after it, the post-Newton step gives the new x, an error and a recommended step size, and the step is repeated
+  while the error is above `discontinuous.iterationTolerance`. #3188 (RG12.55.8) shows why: the user contact switched
+  within the step loses the convergence of Newton, the built-in one, switched by its data, keeps it.
+- **A recordable interface**: the post-Newton function of ObjectConnectorUser on the frames and twists, as its
+  forceUserFunction, `(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep,
+  parameters)` returning the vector [error, recommendedStepSize, new data] - the present one gets the markers as
+  Python objects, which cannot be recorded; decision: replace it or add a second one. ObjectGenericDAE gets data nodes
+  and the same function of (q, q_t, y, z, x, x0) for discrete controllers, hysteresis and states of generic systems.
+- **SymbolicSystemBase**: nData, InitialStateData(), PostNewton(q, q_t, y, z, x, x0, t) -> (x, error, step size); the
+  equations take x, Equations() and the export a result 'postNewton'; the Jacobians are not taken by x.
+- **The solvers in Python first**, with the discontinuous iteration of C++; then the user contact with a data
+  coordinate against the built-in one (RG12.55.8), which should agree to the step size and converge with it.
+- **Experiments in Python**, against C++ before anything is changed there: the switch by the sign of the contact force
+  instead of the gap (the damping pull of #3188); the switching instant located within the step by the recorded
+  switching function and its one-pass derivative, the step split there.
+- **The first users**: the sample-and-hold sensor (RG12.70.1), the turns of the torsional spring-damper
+  (unlimitedRotations), then friction and the impact models of the sphere contact.
+
 ### **OPEN_RG12.67** Symbolic parameters for every item: a general solution beyond the scalar parameters of the user items
 
 #3159 (maintainer 2026-10-29: symbolic parameters are required in the long term; the inertia of a rigid body and the joints need a general solution). Design first: parameters of any structure as named esym.Real or expressions of them, a parameter set per system, the sensitivities; after RG12.64 (#3152).
