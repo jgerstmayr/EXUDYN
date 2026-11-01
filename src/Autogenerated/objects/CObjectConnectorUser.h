@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-01  00:21:53 (last modified)
+* @date         2026-11-01  11:32:15 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector
     PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const HomogeneousTransformation&,const Twist&,const HomogeneousTransformation&,const Twist&,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python or symbolic user function which returns the forces (and torques) on the two markers from their states (#3119); without it and without markerAccessUserFunction, the connector applies no forces
     PythonUserFunctionBase< std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)> > markerAccessUserFunction;//!< AUTO: A Python user function which reads the markers and applies forces through them, also at points of their bodies it computes, e.g. for a contact on a flexible body; instead of forceUserFunction, not recordable (#2975)
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)> > postNewtonStepUserFunction;//!< AUTO: A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102)
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const HomogeneousTransformation&,const Twist&,const HomogeneousTransformation&,const Twist&,const StdVector&,const StdVector&,const StdVector&)> > postNewtonStepUserFunction;//!< AUTO: A Python user function of the frames and twists of the markers which returns the error of the switch, a recommended step size and the new data coordinates of the data node after each Newton iteration, for contact, friction and other discontinuous states; needs nodeNumber (#3102, #3194)
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorUserParameters()
     {
@@ -199,8 +199,11 @@ public: // AUTO:
     //! AUTO:  call of markerAccessUserFunction with the ConnectorMarkers of the markers, each writing into its block of ode2Lhs (#2975); implemented in evaluateUserFunctions.cpp
     void EvaluateUserFunctionMarkerAccess(Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes) const;
 
-    //! AUTO:  call of postNewtonStepUserFunction with ConnectorMarkers that only read; writes the new data coordinates and returns the error (#3102); implemented in evaluateUserFunctions.cpp
+    //! AUTO:  call of postNewtonStepUserFunction with the frames and twists of the markers; writes the new data coordinates and returns the error (#3102, #3194); implemented in evaluateUserFunctions.cpp
     Real EvaluateUserFunctionPostNewtonStep(const MarkerDataStructure& markerData, Vector& dataCoordinates, Real& recommendedStepSize) const;
+
+    //! AUTO:  the frames and twists of the two markers for the user functions, without the rotations if requestedMarkerType has no Orientation (#3119, #3194); implemented in evaluateUserFunctions.cpp
+    void ComputeFramesAndTwists(const MarkerDataStructure& markerData, HomogeneousTransformation* frames, Twist* twists) const;
 
     //! AUTO:  the data coordinates of the data node, empty without one (#3102); implemented in evaluateUserFunctions.cpp
     void GetDataCoordinates(ConfigurationType configuration, StdVector& data) const;

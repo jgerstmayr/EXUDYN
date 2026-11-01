@@ -28,7 +28,7 @@ template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,
 template class PythonUserFunctionBase<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const HomogeneousTransformation&,const Twist&,const HomogeneousTransformation&,const Twist&,const StdVector&,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)>>;
-template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)>>;
+template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const HomogeneousTransformation&,const Twist&,const HomogeneousTransformation&,const Twist&,const StdVector&,const StdVector&,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const HomogeneousTransformation&,const HomogeneousTransformation&,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,const HomogeneousTransformation&,const HomogeneousTransformation&,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<Real(const MainSystem&,Real,Index,Real)>>;

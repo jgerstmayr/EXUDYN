@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 284 | 1.13.290 |
+| 1.13 | Newborn | 285 | 1.13.291 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.291** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorUser: a postNewtonStepUserFunction of the frames and twists, recordable (#3194)
+  - description: revision2026c step RG12.66.1 (\#3158): postNewtonStepUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep, parameters) returns the vector \[discontinuousError, recommendedStepSize, new data coordinates\], as the forceUserFunction gets the markers, so that it can be recorded and SymbolicSystem takes it. Decided: replaces the signature with the ConnectorMarker objects, without deprecation, as ObjectConnectorUser came after 1.13.6.
+  - **notes:** The postNewtonStepUserFunction of ObjectConnectorUser gets the frames and twists of the markers as its forceUserFunction and returns the vector \[discontinuousError, recommendedStepSize, \*data\], so that it can be recorded; it got the markers as objects and returned a tuple before.
+  - date resolved: **2026-11-01 11:39**, date raised: 2026-11-01
 - **1.13.290** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UserItemCreator: Cartesian and rigid-body spring-damper, coordinate constraint, torque (#3193)
   - description: revision2026c step RG12.55.9 (docs/dev/design/symbolicUserItems.md section 4): CreateCartesianSpringDamper and CreateRigidBodySpringDamper (both formulations, the intrinsic one by LogSE3 and SetExpSE3 of kinematics.HT) as ObjectConnectorUser, CreateCoordinateConstraint as ObjectGenericDAE with its constraintMatrixODE2 - the massMatrix of ObjectGenericDAE may be empty then -, CreateTorque as CreateForce; against the built-in items and SymbolicSystem. Decided: the planar items, the generic joint and the Lie group body later, see the step.
   - **notes:** UserItemCreator has CreateCartesianSpringDamper, CreateRigidBodySpringDamper in both formulations, CreateCoordinateConstraint, an ObjectGenericDAE without mass, and CreateTorque, equal to the built-in items; the massMatrix of ObjectGenericDAE may be empty, a zero mass, for an object that only constrains the coordinates of other items.

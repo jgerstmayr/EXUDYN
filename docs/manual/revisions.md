@@ -57,7 +57,10 @@ a coordinate or a parameter, with its derivative in the Jacobians and in the exp
 `SampleTime(t, period)` and `Noise(t, step, length, seed)` (#3192). `UserItemCreator` has
 `CreateCartesianSpringDamper`, `CreateRigidBodySpringDamper` (both formulations), `CreateCoordinateConstraint` - an
 ObjectGenericDAE, whose massMatrix may be empty for an object that only constrains coordinates - and `CreateTorque`,
-equal to the built-in items to 1e-12 (#3193).
+equal to the built-in items to 1e-12 (#3193). The `postNewtonStepUserFunction` of ObjectConnectorUser gets the frames
+and twists of the markers as its forceUserFunction, `(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates,
+dataCoordinatesStartOfStep, parameters)`, and returns the vector `[discontinuousError, recommendedStepSize, *data]`,
+so that it can be recorded; it got the markers as objects and returned a tuple before (#3194).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

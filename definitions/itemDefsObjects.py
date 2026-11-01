@@ -9756,21 +9756,24 @@ def ObjectConnectorUser_graphicsDataUserFunction(mbs: MainSystem, itemNumber: In
         a list of graphics data, e.g. of exudyn.graphics, in global coordinates
     """
 
-def ObjectConnectorUser_postNewtonStepUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, markers: ConnectorMarkerList,
-                                                   dataCoordinates: Vector, dataCoordinatesStartOfStep: Vector,
-                                                   parameters: Vector) -> PostNewtonResult:
-    r"""A user function, which updates the data coordinates of the connector after each Newton iteration of a step and measures the error of the switch, for contact, friction and other discontinuous states.
+def ObjectConnectorUser_postNewtonStepUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, HT0: HT, twist0: Twist,
+                                                   HT1: HT, twist1: Twist, dataCoordinates: Vector,
+                                                   dataCoordinatesStartOfStep: Vector, parameters: Vector) -> Vector:
+    r"""A user function, which updates the data coordinates of the connector after each Newton iteration of a step and measures the error of the switch, for contact, friction and other discontinuous states, from the frames and twists of the markers as the forceUserFunction; also as symbolic user function.
 
     Args:
         mbs: provides MainSystem mbs to which the connector belongs
         t: current time in mbs
         itemNumber: integer number of the connector in mbs
-        markers: one exudyn.ConnectorMarker per marker of markerNumbers, as in markerAccessUserFunction, for reading only: applying a force raises
+        HT0: the frame of marker 0, an exudyn.HT, as in the forceUserFunction
+        twist0: the twist of marker 0, an exudyn.Twist, as in the forceUserFunction
+        HT1: the frame of marker 1, as for marker 0
+        twist1: the twist of marker 1, as for marker 0
         dataCoordinates: $\dv^{k-1}$ the data coordinates of the previous iteration of the step
         dataCoordinatesStartOfStep: $\dv^{0}$ the data coordinates at the start of the step, to which a state is set back that may not change during the iterations
         parameters: $\in \Rcal^{n_p}$ the parameters of the connector, see parameters; empty if not given
     Returns:
-        the tuple (dataCoordinates, discontinuousError) or (dataCoordinates, discontinuousError, recommendedStepSize): $\dv^{k}$ the new data coordinates, of the size of the data node; $\varepsilon_{PN}$, an error of the switch in units of a force, 0 if nothing switched; $\Delta t_{recom}$, a step size the solver should reduce to, or a value < 0 for none
+        $[\varepsilon_{PN},\, \Delta t_{recom},\, \dv^{k}]$, as list or numpy array of $2 + n_d$ values: $\varepsilon_{PN}$ an error of the switch in units of a force, 0 if nothing switched; $\Delta t_{recom}$ a step size the solver should reduce to, or a value < 0 for none; $\dv^{k}$ the new data coordinates
     """
 
 definitions.append(ItemDefinition(
@@ -9839,11 +9842,12 @@ definitions.append(ItemDefinition(
     With `nodeNumber`, a NodeGenericData, the user functions get its data coordinates $\dv$ - the state of a contact,
     of friction or of any switch (#3102); without it, `dataCoordinates` is empty. During the Newton iterations of a step,
     $\dv$ is constant. After each iteration, the solver calls
-    `postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters)`,
-    with the markers for reading; it returns the tuple `(dataCoordinates, discontinuousError)` or
-    `(dataCoordinates, discontinuousError, recommendedStepSize)`. The new $\dv$ is stored, and the step is iterated
-    again while the error is above `discontinuous.iterationTolerance`; a recommended step size $\geq 0$ makes the
-    solver reduce the step to it, as for the built-in contacts. A state that may not change during the iterations, such
+    `postNewtonStepUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates,
+    dataCoordinatesStartOfStep, parameters)`, with the frames and twists of the markers as the forceUserFunction; it
+    returns the vector $[\varepsilon_{PN},\, \Delta t_{recom},\, \dv^{k}]$ of the error of the switch, the recommended
+    step size and the new data coordinates, so that it can be recorded as symbolic user function (#3194). The new
+    $\dv$ is stored, and the step is iterated again while the error is above `discontinuous.iterationTolerance`; a
+    recommended step size $\geq 0$ makes the solver reduce the step to it, as for the built-in contacts. A state that may not change during the iterations, such
     as the velocity at impact, is set back to `dataCoordinatesStartOfStep`.
 
     #### Jacobian and evaluation
@@ -9917,7 +9921,7 @@ definitions.append(ItemDefinition(
         ItemParameter(destination=DestComp+DestParam,
             pythonName='postNewtonStepUserFunction',
             defaultValue=0,
-            description=r"""A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102)""",
+            description=r"""A Python user function of the frames and twists of the markers which returns the error of the switch, a recommended step size and the new data coordinates of the data node after each Newton iteration, for contact, friction and other discontinuous states; needs nodeNumber (#3102, #3194)""",
             userFunction=ObjectConnectorUser_postNewtonStepUserFunction),
         ItemFunctionDef('GetMarkerNumbers',
             cFlags=CFConst,
@@ -9975,7 +9979,11 @@ definitions.append(ItemDefinition(
         ItemFunction(type=TReal, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateUserFunctionPostNewtonStep',
             args='const MarkerDataStructure& markerData, Vector& dataCoordinates, Real& recommendedStepSize',
-            description=r'call of postNewtonStepUserFunction with ConnectorMarkers that only read; writes the new data coordinates and returns the error (#3102); implemented in evaluateUserFunctions.cpp'),
+            description=r'call of postNewtonStepUserFunction with the frames and twists of the markers; writes the new data coordinates and returns the error (#3102, #3194); implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ComputeFramesAndTwists',
+            args='const MarkerDataStructure& markerData, HomogeneousTransformation* frames, Twist* twists',
+            description=r'the frames and twists of the two markers for the user functions, without the rotations if requestedMarkerType has no Orientation (#3119, #3194); implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='GetDataCoordinates',
             args='ConfigurationType configuration, StdVector& data',

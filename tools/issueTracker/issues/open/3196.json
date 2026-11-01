@@ -1,0 +1,10 @@
+{
+  "number": 3196,
+  "title": "SymbolicSystem: data coordinates and the post-Newton step, the discontinuous iteration of the Python solvers",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "revision2026c step RG12.66.3 (#3158): SymbolicSystemBase gets nData, InitialStateData and PostNewton; the equations take the data coordinates x, constant during Newton; SymbolicSystem takes the data nodes of ObjectConnectorUser and ObjectGenericDAE and their recorded post-Newton functions, Equations() and the export a result postNewton; SolveGeneralizedAlpha and SolveExplicit repeat a step while the error is above discontinuous.iterationTolerance, as CSolverBase::DiscontinuousIteration; the recommended step size is not used by the constant step size.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30"
+}

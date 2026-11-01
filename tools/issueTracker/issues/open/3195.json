@@ -1,0 +1,11 @@
+{
+  "number": 3195,
+  "title": "ObjectGenericDAE: data nodes and a postNewtonStepUserFunction",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.66.2 (#3158, #3143): nodeNumbersData of NodeGenericData; every user function gets the data coordinates x after y (after z for the constraint and Jacobian functions); postNewtonStepUserFunction(mbs, t, itemNumber, q, q_t, y, z, x, x0, parameters) returns [discontinuousError, recommendedStepSize, new x]; the system calls the post-Newton step of bodies, which it did for connectors only. Decided: yes, for discrete controllers, hysteresis and switching states of generic systems.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30"
+}

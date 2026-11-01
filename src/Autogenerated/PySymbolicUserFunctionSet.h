@@ -28,7 +28,7 @@ public:
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)> objectConnectorCoordinateSpringDamperExtSpringForceUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,const HomogeneousTransformation&,const Twist&,const HomogeneousTransformation&,const Twist&,const StdVector&,const StdVector&)> objectConnectorUserForceUserFunction;
     std::function<void(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&)> objectConnectorUserMarkerAccessUserFunction;
-    std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)> objectConnectorUserPostNewtonStepUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,const HomogeneousTransformation&,const Twist&,const HomogeneousTransformation&,const Twist&,const StdVector&,const StdVector&,const StdVector&)> objectConnectorUserPostNewtonStepUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,const HomogeneousTransformation&,const HomogeneousTransformation&,const StdVector&)> objectJointUserConstraintUserFunction;
     std::function<py::object(const MainSystem&,Real,Index,const HomogeneousTransformation&,const HomogeneousTransformation&,const StdVector&)> objectJointUserJacobianUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real)> objectConnectorCoordinateOffsetUserFunction;
@@ -336,6 +336,13 @@ public:
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
                 };
         }
+        else if (itemTypeName == "ObjectConnectorUser" && userFunctionName == "postNewtonStepUserFunction")
+        {            //define the user function as lambda function of this
+            objectConnectorUserPostNewtonStepUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const HomogeneousTransformation& arg2, const Twist& arg3, const HomogeneousTransformation& arg4, const Twist& arg5, const StdVector& arg6, const StdVector& arg7, const StdVector& arg8)
+                {
+                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+                };
+        }
         else if (itemTypeName == "ObjectJointUser" && userFunctionName == "constraintUserFunction")
         {            //define the user function as lambda function of this
             objectJointUserConstraintUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const HomogeneousTransformation& arg2, const HomogeneousTransformation& arg3, const StdVector& arg4)
@@ -558,7 +565,7 @@ public:
 		{
 			return objectConnectorUserMarkerAccessUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,py::object,const StdVector&,const StdVector&,const StdVector&)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const HomogeneousTransformation&,const Twist&,const HomogeneousTransformation&,const Twist&,const StdVector&,const StdVector&,const StdVector&)>>)
 		{
 			return objectConnectorUserPostNewtonStepUserFunction;
 		}

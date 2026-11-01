@@ -599,58 +599,46 @@ void CObjectConnectorUser::GetDataCoordinates(ConfigurationType configuration, S
 	data.assign(values.begin(), values.end());
 }
 
-//! the postNewtonStepUserFunction with ConnectorMarkers that read only, and the tuple it returns (#3102)
+//! the postNewtonStepUserFunction of the frames and twists of the markers, and the vector [error, recommended step size,
+//! new data coordinates] it returns (#3102, #3194)
 Real CObjectConnectorUser::EvaluateUserFunctionPostNewtonStep(const MarkerDataStructure& markerData, Vector& dataCoordinates,
 	Real& recommendedStepSize) const
 {
-	py::gil_scoped_acquire gil;
-	py::list markers;
-	for (Index i = 0; i < parameters.markerNumbers.NumberOfItems(); i++)
+	if (parameters.markerNumbers.NumberOfItems() != 2)
 	{
-		markers.append(py::cast(PyConnectorMarker(cSystemData, parameters.markerNumbers[i], &markerData.GetMarkerData(i), nullptr, 0, 0)));
+		PyError("ObjectConnectorUser::postNewtonStepUserFunction: needs two markers, as it gets their frames and twists, but has "
+			+ EXUstd::ToString(parameters.markerNumbers.NumberOfItems()), PyErrorType::valueError);
 	}
-	struct Invalidator
-	{
-		py::list& markers;
-		~Invalidator() { for (auto marker : markers) { marker.cast<PyConnectorMarker&>().Invalidate(); } }
-	} invalidator{ markers };
-
-	Real error = 0.;
-	recommendedStepSize = -1.;
+	HomogeneousTransformation frame[2];
+	Twist twist[2];
+	ComputeFramesAndTwists(markerData, frame, twist);
 	StdVector data, dataStartOfStep;
 	GetDataCoordinates(ConfigurationType::Current, data);
 	GetDataCoordinates(ConfigurationType::StartOfStep, dataStartOfStep);
+	Vector result;
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		py::object result = EvaluateUserFunction(parameters.postNewtonStepUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
-			markerData.GetTime(), GetObjectNumber(), (py::object)markers, data, dataStartOfStep, parameters.parameters);
-		if (!py::isinstance<py::tuple>(result) || (py::len(result) != 2 && py::len(result) != 3))
-		{
-			PyError("ObjectConnectorUser::postNewtonStepUserFunction: returns the tuple (dataCoordinates, discontinuousError) or "
-				"(dataCoordinates, discontinuousError, recommendedStepSize), but returned " + py::cast<STDstring>(py::str(result)), PyErrorType::typeError);
-		}
-		py::tuple values = py::cast<py::tuple>(result);
-		EPyUtils::CopyFromPython(values[0], dataCoordinates);
-		if (dataCoordinates.NumberOfItems() != ((const CNodeData*)GetCNode(0))->GetNumberOfDataCoordinates())
-		{
-			PyError("ObjectConnectorUser::postNewtonStepUserFunction: returned " + EXUstd::ToString(dataCoordinates.NumberOfItems())
-				+ " data coordinates, but the data node has " + EXUstd::ToString(((const CNodeData*)GetCNode(0))->GetNumberOfDataCoordinates()),
-				PyErrorType::valueError);
-		}
-		error = py::cast<Real>(values[1]);
-		if (py::len(values) == 3) { recommendedStepSize = py::cast<Real>(values[2]); }
+		EvaluateUserFunctionIntoVector(parameters.postNewtonStepUserFunction, result, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
+			markerData.GetTime(), GetObjectNumber(), frame[0], twist[0], frame[1], twist[1], data, dataStartOfStep, parameters.parameters);
 	}, "ObjectConnectorUser::postNewtonStepUserFunction");
-	return error;
+	Index nData = ((const CNodeData*)GetCNode(0))->GetNumberOfDataCoordinates();
+	if (result.NumberOfItems() != 2 + nData)
+	{
+		PyError("ObjectConnectorUser::postNewtonStepUserFunction: returned " + EXUstd::ToString(result.NumberOfItems())
+			+ " values, but [discontinuousError, recommendedStepSize] and the " + EXUstd::ToString(nData)
+			+ " data coordinates of the data node, " + EXUstd::ToString(2 + nData) + " values, are needed", PyErrorType::valueError);
+	}
+	recommendedStepSize = result[1];
+	dataCoordinates.SetNumberOfItems(nData);
+	for (Index i = 0; i < nData; i++) { dataCoordinates[i] = result[2 + i]; }
+	return result[0];
 }
 
-//ObjectConnectorUser (#3119): the forceUserFunction gets the frame and the twist of each of the two markers (#3183) and
-//returns the global forces (and torques) on them, applied as ApplyForce and ApplyTorque do: -J^T f into the block of
-//each marker
-void CObjectConnectorUser::EvaluateUserFunctionForce(Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes) const
+//! the frame and the twist of each of the two markers: with Orientation in requestedMarkerType the rotation and the
+//! global angular velocity, else the unit rotation, which the products skip, and no angular velocity (#3183, #3194)
+void CObjectConnectorUser::ComputeFramesAndTwists(const MarkerDataStructure& markerData, HomogeneousTransformation* frame, Twist* twist) const
 {
 	bool orientation = EXUstd::IsOfType(parameters.requestedMarkerType, Marker::Orientation);
-	HomogeneousTransformation frame[2];
-	Twist twist[2];
 	for (Index i = 0; i < 2; i++)
 	{
 		const MarkerData& marker = markerData.GetMarkerData(i);
@@ -665,6 +653,17 @@ void CObjectConnectorUser::EvaluateUserFunctionForce(Vector& ode2Lhs, const Mark
 			twist[i] = Twist(marker.velocity, Vector3D(0.));
 		}
 	}
+}
+
+//ObjectConnectorUser (#3119): the forceUserFunction gets the frame and the twist of each of the two markers (#3183) and
+//returns the global forces (and torques) on them, applied as ApplyForce and ApplyTorque do: -J^T f into the block of
+//each marker
+void CObjectConnectorUser::EvaluateUserFunctionForce(Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes) const
+{
+	bool orientation = EXUstd::IsOfType(parameters.requestedMarkerType, Marker::Orientation);
+	HomogeneousTransformation frame[2];
+	Twist twist[2];
+	ComputeFramesAndTwists(markerData, frame, twist);
 	StdVector data;
 	GetDataCoordinates(ConfigurationType::Current, data);
 	Vector forces;

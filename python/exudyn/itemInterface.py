@@ -250,7 +250,7 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectConnectorCoordinateSpringDamperExt,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset', 'velocityOffset', 'dynamicFrictionForce', 'staticFrictionOffsetForce', 'exponentialDecayStatic', 'viscousFrictionFactor', 'frictionProportionalZone'], ['Real'], ['ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction']],
         'ObjectConnectorUser,forceUserFunction': [['MainSystem', 'Real', 'Index', 'HomogeneousTransformation', 'Twist', 'HomogeneousTransformation', 'Twist', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'HT0', 'twist0', 'HT1', 'twist1', 'dataCoordinates', 'parameters'], ['StdVector'], ['ObjectConnectorUserForceUserFunction']],
         'ObjectConnectorUser,markerAccessUserFunction': [['MainSystem', 'Real', 'Index', 'py::object', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'markers', 'dataCoordinates', 'parameters'], ['void'], ['ObjectConnectorUserMarkerAccessUserFunction']],
-        'ObjectConnectorUser,postNewtonStepUserFunction': [['MainSystem', 'Real', 'Index', 'py::object', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'markers', 'dataCoordinates', 'dataCoordinatesStartOfStep', 'parameters'], ['py::object'], ['ObjectConnectorUserPostNewtonStepUserFunction']],
+        'ObjectConnectorUser,postNewtonStepUserFunction': [['MainSystem', 'Real', 'Index', 'HomogeneousTransformation', 'Twist', 'HomogeneousTransformation', 'Twist', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'HT0', 'twist0', 'HT1', 'twist1', 'dataCoordinates', 'dataCoordinatesStartOfStep', 'parameters'], ['StdVector'], ['ObjectConnectorUserPostNewtonStepUserFunction']],
         'ObjectConnectorUser,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectConnectorUserGraphicsDataUserFunction']],
         'ObjectJointUser,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'HomogeneousTransformation', 'HomogeneousTransformation', 'StdVector'], ['mbs', 't', 'itemNumber', 'HT0', 'HT1', 'parameters'], ['StdVector'], ['ObjectJointUserConstraintUserFunction']],
         'ObjectJointUser,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'HomogeneousTransformation', 'HomogeneousTransformation', 'StdVector'], ['mbs', 't', 'itemNumber', 'HT0', 'HT1', 'parameters'], ['py::object'], ['ObjectJointUserJacobianUserFunction']],
@@ -1390,7 +1390,7 @@ class ObjectConnectorUserMarkerAccessUserFunction(Protocol):
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, markers: list, dataCoordinates: np.ndarray, parameters: np.ndarray) -> None: ...
 
 class ObjectConnectorUserPostNewtonStepUserFunction(Protocol):
-    r"""A user function, which updates the data coordinates of the connector after each Newton iteration of a step and measures the error of the switch, for contact, friction and other discontinuous states.
+    r"""A user function, which updates the data coordinates of the connector after each Newton iteration of a step and measures the error of the switch, for contact, friction and other discontinuous states, from the frames and twists of the markers as the forceUserFunction; also as symbolic user function.
     
     Args:
         mbs (exudyn.MainSystem): provides MainSystem mbs to which the connector belongs
@@ -1399,7 +1399,13 @@ class ObjectConnectorUserPostNewtonStepUserFunction(Protocol):
 
         itemNumber (int): integer number of the connector in mbs
 
-        markers (list): one exudyn.ConnectorMarker per marker of markerNumbers, as in markerAccessUserFunction, for reading only: applying a force raises
+        HT0 (exudyn.HT): the frame of marker 0, an exudyn.HT, as in the forceUserFunction
+
+        twist0 (exudyn.Twist): the twist of marker 0, an exudyn.Twist, as in the forceUserFunction
+
+        HT1 (exudyn.HT): the frame of marker 1, as for marker 0
+
+        twist1 (exudyn.Twist): the twist of marker 1, as for marker 0
 
         dataCoordinates (np.ndarray): :math:`\dv^{k-1}` the data coordinates of the previous iteration of the step
 
@@ -1408,9 +1414,9 @@ class ObjectConnectorUserPostNewtonStepUserFunction(Protocol):
         parameters (np.ndarray): the parameters of the connector, see parameters; empty if not given
 
     Returns:
-        tuple: the tuple (dataCoordinates, discontinuousError) or (dataCoordinates, discontinuousError, recommendedStepSize): :math:`\dv^{k}` the new data coordinates, of the size of the data node; :math:`\varepsilon_{PN}`, an error of the switch in units of a force, 0 if nothing switched; :math:`\Delta t_{recom}`, a step size the solver should reduce to, or a value < 0 for none
+        np.ndarray: :math:`[\varepsilon_{PN},\, \Delta t_{recom},\, \dv^{k}]`, as list or numpy array of :math:`2 + n_d` values: :math:`\varepsilon_{PN}` an error of the switch in units of a force, 0 if nothing switched; :math:`\Delta t_{recom}` a step size the solver should reduce to, or a value < 0 for none; :math:`\dv^{k}` the new data coordinates
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, markers: list, dataCoordinates: np.ndarray, dataCoordinatesStartOfStep: np.ndarray, parameters: np.ndarray) -> tuple: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, HT0: exudyn.HT, twist0: exudyn.Twist, HT1: exudyn.HT, twist1: exudyn.Twist, dataCoordinates: np.ndarray, dataCoordinatesStartOfStep: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
 
 class ObjectConnectorUserGraphicsDataUserFunction(Protocol):
     """A user function, which returns the graphics of the connector in global coordinates.
@@ -6065,7 +6071,7 @@ class ObjectConnectorUser:
 
         markerAccessUserFunction: A Python user function which reads the markers and applies forces through them, also at points of their bodies it computes, e.g. for a contact on a flexible body; instead of forceUserFunction, not recordable (#2975); type: ObjectConnectorUserMarkerAccessUserFunction
 
-        postNewtonStepUserFunction: A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102); type: ObjectConnectorUserPostNewtonStepUserFunction
+        postNewtonStepUserFunction: A Python user function of the frames and twists of the markers which returns the error of the switch, a recommended step size and the new data coordinates of the data node after each Newton iteration, for contact, friction and other discontinuous states; needs nodeNumber (#3102, #3194); type: ObjectConnectorUserPostNewtonStepUserFunction
 
         visualization: visualization data, see VObjectConnectorUser
 

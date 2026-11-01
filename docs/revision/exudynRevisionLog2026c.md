@@ -5026,3 +5026,14 @@ the extra 4.7 us per Python call - add views.)*
   point and a body-fixed torque of a user function: Python and recorded user items against the built-in ones 5.5e-13
   (intrinsic) and 2.4e-12 (Tait-Bryan); SymbolicSystem by SolveGeneralizedAlpha against SolveDynamic 5.7e-12; 100
   steps, 4.9 s.
+
+<a id="rg12-66-1"></a>
+### RG12.66.1 — the post-Newton function of ObjectConnectorUser on the frames and twists (2026-11-01, #3194)
+- The signature of the forceUserFunction plus dataCoordinatesStartOfStep; the result the vector [discontinuousError,
+  recommendedStepSize, new data coordinates], checked for its size 2 + n_d. Replaced without deprecation (maintainer:
+  ObjectConnectorUser came after 1.13.6). `ComputeFramesAndTwists` builds the frames and twists for both functions.
+  It needs two markers; one marker is refused with its message.
+- Recorded: CreateSymbolicUserFunction of a switch by IfThenElse gives the same solution as the Python function (a
+  mass point on a unilateral spring, 200 steps).
+- userConnectorContactTest.py on the new signature: the result unchanged (26.270810078732666); the refusal of a force
+  applied in the function is gone with the markers.

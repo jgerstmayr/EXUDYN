@@ -1,0 +1,15 @@
+{
+  "number": 3194,
+  "title": "ObjectConnectorUser: a postNewtonStepUserFunction of the frames and twists, recordable",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.66.1 (#3158): postNewtonStepUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep, parameters) returns the vector [discontinuousError, recommendedStepSize, new data coordinates], as the forceUserFunction gets the markers, so that it can be recorded and SymbolicSystem takes it. Decided: replaces the signature with the ConnectorMarker objects, without deprecation, as ObjectConnectorUser came after 1.13.6.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 11:39",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The postNewtonStepUserFunction of ObjectConnectorUser gets the frames and twists of the markers as its forceUserFunction and returns the vector [discontinuousError, recommendedStepSize, *data], so that it can be recorded; it got the markers as objects and returned a tuple before.",
+  "resolvedInVersion": "1.13.291"
+}

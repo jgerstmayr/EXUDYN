@@ -6,9 +6,9 @@
 #           the impact model of Gonthier et al. and Carvalho and Martins with restitution coefficient 0.7, without
 #           gravity. The data coordinates are the gap of the last iteration and the velocity at impact; the
 #           forceUserFunction of the marker states (#3119) returns the force while the gap of the data is negative, the
-#           postNewtonStepUserFunction, which reads the markers as ConnectorMarker objects, switches the
-#           contact, measures the error of the switch, recommends the step size to the switch and keeps the impact
-#           velocity from the start of the step. The velocities after the impacts, against the built-in contact and
+#           postNewtonStepUserFunction of the frames and twists of the markers (#3194) switches the contact,
+#           measures the error of the switch, recommends the step size to the switch and keeps the impact velocity
+#           from the start of the step. The velocities after the impacts, against the built-in contact and
 #           against the restitution coefficient; what the connector refuses.
 #
 # Author:   Johannes Gerstmayr
@@ -55,10 +55,9 @@ def UFforce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, param
         force += contactStiffness/dataCoordinates[1]*impactFactor*(-gap)*vNormal
     return np.hstack([-force*normal, force*normal])
 
-def UFpostNewton(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters):
-    """the gap of this iteration, the error and the step size of a switch, the impact velocity"""
-    (m0, m1) = markers
-    (gap, normal, vNormal) = Contact(m0.GetPosition(), m0.GetVelocity(), m1.GetPosition(), m1.GetVelocity())
+def UFpostNewton(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep, parameters):
+    """the error and the step size of a switch, the gap of this iteration and the impact velocity"""
+    (gap, normal, vNormal) = Contact(HT0.translation, twist0.velocity, HT1.translation, twist1.velocity)
     lastGap = dataCoordinates[0]
     gapStartOfStep = dataCoordinatesStartOfStep[0]
     error = 0.
@@ -68,7 +67,7 @@ def UFpostNewton(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesSt
         if vNormal != 0 and gapStartOfStep != 0:
             recommendedStepSize = abs(gapStartOfStep/vNormal)
     impactVelocity = -vNormal if (gapStartOfStep > 0 and gap <= 0) else dataCoordinatesStartOfStep[1]
-    return ([gap, impactVelocity], error, recommendedStepSize)
+    return [error, recommendedStepSize, gap, impactVelocity]
 
 def Model(isUser):
     SC = exu.SystemContainer()
@@ -126,7 +125,7 @@ exu.Print('their ratios, user:', np.round(ratios, 5), '; position at the end, bu
 differenceRebounds = np.max(np.abs(np.array(reboundsUser[:n]) - np.array(reboundsBuiltIn[:n])))
 differenceRestitution = max(abs(r - restitution) for r in ratios)
 
-#what the connector refuses: a postNewtonStepUserFunction without data node, a force applied in it, a wrong result
+#what the connector refuses: a postNewtonStepUserFunction without data node, a result of the wrong size
 def Refused(kind):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
@@ -134,13 +133,10 @@ def Refused(kind):
     mbs.AddObject(MassPoint(nodeNumber=node, mass=1))
     marker = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
     data = mbs.AddNode(NodeGenericData(initialCoordinates=[0, 0], numberOfDataCoordinates=2))
-    def PostNewtonForce(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters):
-        markers[0].ApplyForce([1, 0, 0])
-        return (dataCoordinates, 0.)
-    def PostNewtonSize(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters):
-        return ([0.], 0.)
-    function = {'noNode': UFpostNewton, 'force': PostNewtonForce, 'size': PostNewtonSize}[kind]
-    mbs.AddObject(ObjectConnectorUser(markerNumbers=[marker], nodeNumber=-1 if kind == 'noNode' else data,
+    def PostNewtonSize(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep, parameters):
+        return [0., -1., 0.]
+    function = {'noNode': UFpostNewton, 'size': PostNewtonSize}[kind]
+    mbs.AddObject(ObjectConnectorUser(markerNumbers=[mbs.AddMarker(MarkerBodyPosition(bodyNumber=mbs.AddObject(ObjectGround()))), marker], nodeNumber=-1 if kind == 'noNode' else data,
                                       postNewtonStepUserFunction=function))
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = 2
@@ -154,13 +150,12 @@ def Refused(kind):
         return str(e)
     return ''
 
-messages = [Refused(kind) for kind in ['noNode', 'force', 'size']]
-refused = (int('no nodeNumber of a NodeGenericData' in messages[0]) + int('the markers are for reading' in messages[1])
-           + int('returned 1 data coordinates, but the data node has 2' in messages[2]))
-exu.Print('refused, of 3:', refused)
+messages = [Refused(kind) for kind in ['noNode', 'size']]
+refused = int('no nodeNumber of a NodeGenericData' in messages[0]) + int('returned 3 values' in messages[1])
+exu.Print('refused, of 2:', refused)
 
 u = yUser + sum(reboundsUser)
-u += int(n < 3) + int(differenceRebounds > 1e-3*vyInit) + int(differenceRestitution > 0.02) + (3 - refused)
+u += int(n < 3) + int(differenceRebounds > 1e-3*vyInit) + int(differenceRestitution > 0.02) + (2 - refused)
 exu.Print('largest difference of the rebound speeds to the built-in contact:', differenceRebounds,
           ', of their ratios to the restitution coefficient:', differenceRestitution)
 exu.Print('solution of userConnectorContactTest=', u)

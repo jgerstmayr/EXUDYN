@@ -26,7 +26,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorUser':
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector |
 | **forceUserFunction** | ObjectConnectorUserForceUserFunction |  | 0 | A Python or symbolic user function which returns the forces (and torques) on the two markers from their states (#3119); without it and without markerAccessUserFunction, the connector applies no forces |
 | **markerAccessUserFunction** | ObjectConnectorUserMarkerAccessUserFunction |  | 0 | A Python user function which reads the markers and applies forces through them, also at points of their bodies it computes, e.g. for a contact on a flexible body; instead of forceUserFunction, not recordable (#2975) |
-| **postNewtonStepUserFunction** | ObjectConnectorUserPostNewtonStepUserFunction |  | 0 | A Python user function which updates the data coordinates of the data node after each Newton iteration and returns them with the error of the switch, for contact, friction and other discontinuous states; needs nodeNumber (#3102) |
+| **postNewtonStepUserFunction** | ObjectConnectorUserPostNewtonStepUserFunction |  | 0 | A Python user function of the frames and twists of the markers which returns the error of the switch, a recommended step size and the new data coordinates of the data node after each Newton iteration, for contact, friction and other discontinuous states; needs nodeNumber (#3102, #3194) |
 | **visualization** | VObjectConnectorUser |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -102,11 +102,12 @@ Assemble refuses a marker that does not provide all of these types, so that the 
 With `nodeNumber`, a NodeGenericData, the user functions get its data coordinates $\dv$ - the state of a contact,
 of friction or of any switch (#3102); without it, `dataCoordinates` is empty. During the Newton iterations of a step,
 $\dv$ is constant. After each iteration, the solver calls
-`postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters)`,
-with the markers for reading; it returns the tuple `(dataCoordinates, discontinuousError)` or
-`(dataCoordinates, discontinuousError, recommendedStepSize)`. The new $\dv$ is stored, and the step is iterated
-again while the error is above `discontinuous.iterationTolerance`; a recommended step size $\geq 0$ makes the
-solver reduce the step to it, as for the built-in contacts. A state that may not change during the iterations, such
+`postNewtonStepUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates,
+dataCoordinatesStartOfStep, parameters)`, with the frames and twists of the markers as the forceUserFunction; it
+returns the vector $[\varepsilon_{PN},\, \Delta t_{recom},\, \dv^{k}]$ of the error of the switch, the recommended
+step size and the new data coordinates, so that it can be recorded as symbolic user function (#3194). The new
+$\dv$ is stored, and the step is iterated again while the error is above `discontinuous.iterationTolerance`; a
+recommended step size $\geq 0$ makes the solver reduce the step to it, as for the built-in contacts. A state that may not change during the iterations, such
 as the velocity at impact, is set back to `dataCoordinatesStartOfStep`.
 
 ### Jacobian and evaluation
@@ -153,19 +154,22 @@ A user function, which reads the markers of the connector and applies forces thr
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `postNewtonStepUserFunction(mbs, t, itemNumber, markers, dataCoordinates, dataCoordinatesStartOfStep, parameters)`
-A user function, which updates the data coordinates of the connector after each Newton iteration of a step and measures the error of the switch, for contact, friction and other discontinuous states.
+**Userfunction**: `postNewtonStepUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep, parameters)`
+A user function, which updates the data coordinates of the connector after each Newton iteration of a step and measures the error of the switch, for contact, friction and other discontinuous states, from the frames and twists of the markers as the forceUserFunction; also as symbolic user function.
 
 | arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which the connector belongs |
 | `t` | Real | current time in mbs |
 | `itemNumber` | Index | integer number of the connector in mbs |
-| `markers` | ConnectorMarkerList | one exudyn.ConnectorMarker per marker of markerNumbers, as in markerAccessUserFunction, for reading only: applying a force raises |
+| `HT0` | HT | the frame of marker 0, an exudyn.HT, as in the forceUserFunction |
+| `twist0` | Twist | the twist of marker 0, an exudyn.Twist, as in the forceUserFunction |
+| `HT1` | HT | the frame of marker 1, as for marker 0 |
+| `twist1` | Twist | the twist of marker 1, as for marker 0 |
 | `dataCoordinates` | Vector | $\dv^{k-1}$ the data coordinates of the previous iteration of the step |
 | `dataCoordinatesStartOfStep` | Vector | $\dv^{0}$ the data coordinates at the start of the step, to which a state is set back that may not change during the iterations |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the connector, see parameters; empty if not given |
-| **return value** | PostNewtonResult | the tuple (dataCoordinates, discontinuousError) or (dataCoordinates, discontinuousError, recommendedStepSize): $\dv^{k}$ the new data coordinates, of the size of the data node; $\varepsilon_{PN}$, an error of the switch in units of a force, 0 if nothing switched; $\Delta t_{recom}$, a step size the solver should reduce to, or a value < 0 for none |
+| **return value** | Vector | $[\varepsilon_{PN},\, \Delta t_{recom},\, \dv^{k}]$, as list or numpy array of $2 + n_d$ values: $\varepsilon_{PN}$ an error of the switch in units of a force, 0 if nothing switched; $\Delta t_{recom}$ a step size the solver should reduce to, or a value < 0 for none; $\dv^{k}$ the new data coordinates |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
