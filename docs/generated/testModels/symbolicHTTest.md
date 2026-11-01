@@ -18,6 +18,7 @@ You can view and download this file on Github: [symbolicHTTest.py](https://githu
 #           translation by the rotation vector of frame 0 against central differences. The rotation and Lie group
 #           functions - GetRotationVector, GetRxyz, LogSE3, SetExpSE3, LogR3xSO3, SetExpR3xSO3 - against exudyn.HT for
 #           angles from 3 down to 0, where their limits are taken, and the derivative of the rotation vector (#3185).
+#           exudyn.HT and exudyn.Twist of symbolic arguments, and exudyn.HT times a symbolic point (#3186).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-01
@@ -42,7 +43,8 @@ def SymbolicTwist(twist, name):
                      esym.Vector(name + '_angularVelocity', twist.angularVelocity.tolist()))
 
 def Value(x):
-    return np.array(x.Evaluate())
+    """the value of a symbolic part, or the part of numbers itself"""
+    return np.array(x.Evaluate() if hasattr(x, 'Evaluate') else x, dtype=float)
 
 def DifferenceHT(symbolicHT, H):
     return np.abs(Value(symbolicHT.rotation) - H.rotation).max() + np.abs(Value(symbolicHT.translation) - H.translation).max()
@@ -122,6 +124,20 @@ for v0 in [np.array([0.3, 0.1, -0.2]), np.zeros(3)]:
     lieJacobianError = max(lieJacobianError, np.abs(jacobian - np.eye(3)).max())
 exu.Print('esym.Jacobian of the rotation vector of its rotation, against the unit matrix:', lieJacobianError)
 
+#exudyn.HT and exudyn.Twist of symbolic parts give kinematics.HT and kinematics.Twist, and exudyn.HT * a symbolic point
+#the transformed point (#3186); of numbers they are the classes of numbers
+angleZ = esym.Real('angleZ', 0.3)
+fromAngles = exu.HT(Rxyz=[0, 0, angleZ], translation=[1, 2, 3])
+fromMatrix = exu.HT(rotation=esym.Matrix('A', H0.rotation.tolist()), translation=esym.Vector('p', H0.translation.tolist()))
+symbolicTwist = exu.Twist([angleZ, 0, 0])
+symbolicPoint = esym.Vector('point', [0.1, 0.2, 0.3])
+symbolicArguments = (isinstance(fromAngles, kin.HT) and isinstance(fromMatrix, kin.HT) and isinstance(symbolicTwist, kin.Twist)
+                     and isinstance(exu.HT(translation=[1, 2, 3]), exu.HT) and isinstance(exu.Twist([1, 0, 0]), exu.Twist))
+symbolicArgumentsError = max(DifferenceHT(fromAngles, exu.HT(Rxyz=[0, 0, 0.3], translation=[1, 2, 3])),
+                             DifferenceHT(fromMatrix, H0),
+                             np.abs(Value(H0*symbolicPoint) - H0*[0.1, 0.2, 0.3]).max())
+exu.Print('exudyn.HT of symbolic arguments:', symbolicArguments, ', largest difference', symbolicArgumentsError)
+
 #the classes copy each other's parts; an exudyn.HT refuses an operand it cannot compute with
 copies = (np.abs(kin.HT(H0).rotation - H0.rotation).max() == 0 and np.abs(kin.Twist(twist0).velocity - twist0.velocity).max() == 0
           and exu.Twist(twist0) == twist0 and kin.HT().translation.tolist() == [0, 0, 0])
@@ -133,6 +149,7 @@ except TypeError:
 
 u = int(largest > 1e-14) + int(velocityError > 1e-8) + int(angularVelocityError > 1e-8) + int(jacobianError > 1e-8)
 u += int(not copies) + int(not refused) + int(lieGroupLargest > 1e-13) + int(lieJacobianError > 1e-12)
+u += int(not symbolicArguments) + int(symbolicArgumentsError > 1e-14)
 exu.Print('solution of symbolicHTTest=', u)
 exu.sys['testResult'] = u
 ```

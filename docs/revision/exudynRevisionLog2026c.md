@@ -4885,3 +4885,17 @@ the extra 4.7 us per Python call - add views.)*
 - symbolicHTTest.py: against exudyn.HT for 4 random directions at angles 1, 1e-3, 1e-9, 0 and 3: 1.1e-14; esym.Jacobian
   of GetRotationVector(RotationVector2RotationMatrix(v)) the unit matrix at v = [0.3, 0.1, -0.2] and at v = 0, where the
   limit is taken (2.2e-16).
+
+<a id="rg12-69-6"></a>
+### RG12.69.6 — exudyn.HT and exudyn.Twist of symbolic arguments (2026-11-01, #3186)
+- A pybind class cannot return another type from its constructor; `python/exudyn/__init__.py` sets `HT.__new__` and
+  `Twist.__new__`: if an argument has a symbolic part - an esym Real, Vector, Matrix, a list holding one, or a class of
+  symbolics.kinematics - `kinematics.HT.FromSymbolicArguments` / `Twist.FromSymbolicArguments` (the rotation by
+  EulerParameters2RotationMatrix, RotXYZ2RotationMatrix, RotationVector2RotationMatrix), else the old `__new__`. Python
+  skips `__init__` for an object of another class. The C++ creates its HT and Twist by pybind's cast, which calls no
+  `__new__`: the user functions do not pay it.
+- `PyHT::MultiplyOther`: `exu.HT * esym.Vector` gives the point transformed by the symbolic HT of the exu.HT.
+- Measured: exu.HT(translation=[1,2,3]) from Python 1.87 instead of 1.17 us (exu.HT() 0.70); the scan was written with
+  loops, not any() of generators, which cost 2.8 us.
+- symbolicHTTest.py: exu.HT of symbolic Rxyz, of a symbolic matrix and vector, exu.Twist of a symbolic component, the
+  types and the values (0.0 against exudyn.HT); exu.HT and exu.Twist of numbers stay the classes of numbers.

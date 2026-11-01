@@ -440,6 +440,13 @@ def _Plus(vector0, vector1, sign=1.):
         return vector0 + vector1 if sign > 0 else vector0 - vector1
     return np.asarray(vector0) + sign*np.asarray(vector1)
 
+def _VectorPart(value):
+    """a vector part given to exudyn.HT or exudyn.Twist: None, an exudyn.symbolic.Vector, or a list of numbers and
+    symbolic Reals, as symbolic vector if it holds one"""
+    if value is None or isinstance(value, exu.symbolic.Vector):
+        return value
+    return exu.symbolic.Vector(list(value)) if _IsSymbolic(*value) else np.asarray(value, dtype=float)
+
 class HT:
     """the homogeneous transformation of exudyn.HT for symbolic parts (#3174): a rotation matrix and a translation,
     each an exudyn.symbolic.Matrix or Vector, or numbers; its methods give the matrix and vector expressions at once,
@@ -458,6 +465,32 @@ class HT:
             (rotation, translation) = (rotation.rotation, rotation.translation)
         self.rotation = np.eye(3) if rotation is None else rotation
         self.translation = np.zeros(3) if translation is None else translation
+
+    @staticmethod
+    def FromSymbolicArguments(rotation=None, translation=None, eulerParameters=None, Rxyz=None, rotationVector=None):
+        """the HT of the arguments of exudyn.HT, some of them symbolic: exudyn.HT(...) gives it for symbolic arguments
+        (#3186); the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation
+        vector, by the conversions of this module, or a copy of a kinematics.HT given as rotation
+
+        Returns:
+            kinematics.HT
+        """
+        if isinstance(rotation, HT):
+            if translation is not None or eulerParameters is not None or Rxyz is not None or rotationVector is not None:
+                raise ValueError('HT: with an HT, the other arguments must be None')
+            return HT(rotation)
+        given = [value is not None for value in [rotation, eulerParameters, Rxyz, rotationVector]]
+        if sum(given) > 1:
+            raise ValueError('HT: give at most one of rotation, eulerParameters, Rxyz and rotationVector')
+        if rotation is not None:
+            rotation = rotation if isinstance(rotation, exu.symbolic.Matrix) else exu.symbolic.Matrix([list(row) for row in rotation])
+        elif eulerParameters is not None:
+            rotation = EulerParameters2RotationMatrix(eulerParameters, exu.symbolic)
+        elif Rxyz is not None:
+            rotation = RotXYZ2RotationMatrix(Rxyz, exu.symbolic)
+        elif rotationVector is not None:
+            rotation = RotationVector2RotationMatrix(rotationVector, exu.symbolic)
+        return HT(rotation, _VectorPart(translation))
 
     def __mul__(self, other):
         """H1*H2, the composition, an HT; H*v, the transformed point A v + p of a 3D vector"""
@@ -628,6 +661,20 @@ class Twist:
             (velocity, angularVelocity) = (velocity.velocity, velocity.angularVelocity)
         self.velocity = np.zeros(3) if velocity is None else velocity
         self.angularVelocity = np.zeros(3) if angularVelocity is None else angularVelocity
+
+    @staticmethod
+    def FromSymbolicArguments(velocity=None, angularVelocity=None):
+        """the Twist of the arguments of exudyn.Twist, some of them symbolic: exudyn.Twist(...) gives it for symbolic
+        arguments (#3186)
+
+        Returns:
+            kinematics.Twist
+        """
+        if isinstance(velocity, Twist):
+            if angularVelocity is not None:
+                raise ValueError('Twist: with a Twist, angularVelocity must be None')
+            return Twist(velocity)
+        return Twist(_VectorPart(velocity), _VectorPart(angularVelocity))
 
     def __repr__(self):
         return 'kinematics.Twist(velocity=' + str(self.velocity) + ', angularVelocity=' + str(self.angularVelocity) + ')'

@@ -173,8 +173,20 @@ public:
 	py::object Multiply(const py::object& other) const
 	{
 		if (py::isinstance<PyHT>(other)) { return py::cast(MultiplyHT(py::cast<const PyHT&>(other))); }
-		if (!IsNumberSequence(other)) { return py::reinterpret_borrow<py::object>(Py_NotImplemented); }
+		if (!IsNumberSequence(other)) { return MultiplyOther(other); }
 		return MultiplyVector(other);
+	}
+
+	//! H*v for a point v of exudyn.symbolic: the point transformed by the symbolic HT of this one (#3186); NotImplemented
+	//! for any other operand
+	py::object MultiplyOther(const py::object& other) const
+	{
+		if (py::isinstance(other, py::module::import("exudyn").attr("symbolic").attr("Vector")))
+		{
+			py::object symbolicHT = py::module::import("exudyn.symbolics.kinematics").attr("HT")(py::cast(PyHT(*this)));
+			return symbolicHT.attr("__mul__")(other);
+		}
+		return py::reinterpret_borrow<py::object>(Py_NotImplemented);
 	}
 
 	//! H1@H2, an HT as H1*H2; H@x for anything else as numpy computes it with the 4x4 matrix, so that scripts written

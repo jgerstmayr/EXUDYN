@@ -97,7 +97,10 @@ decides is decided then.
   function written with them computes with `exudyn.HT` and is recorded with the symbolic classes (#3182). The rotation
   parameters and motion vectors - `GetRotationVector`, `GetRxyz`, `LogSE3`, `SetExpSE3`, `LogR3xSO3`, `SetExpR3xSO3` -
   are methods of `kinematics.HT` as well, with the limits of small angles of `exudyn.HT`; a rotation vector needs an
-  angle below pi, where it is not unique (#3185).
+  angle below pi, where it is not unique (#3185). `exudyn.HT` and `exudyn.Twist` of a symbolic part - e.g.
+  `exu.HT(Rxyz=[0, 0, angle], translation=p)` with a symbolic `angle` - give the symbolic classes, and
+  `H * point` of an `exudyn.HT` and a symbolic point the transformed point, so that a recorded function writes its frames
+  as a Python one (#3186).
 
 ## Vectors, matrices and the user items
 

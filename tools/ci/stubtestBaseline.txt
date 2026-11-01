@@ -24,6 +24,7 @@ exudyn.GeneralContact
 exudyn.GeneralizedAlphaSettings
 exudyn.GraphicsMaterialList
 exudyn.HT
+exudyn.HT.__new__
 exudyn.LinearSolverSettings
 exudyn.LinearSolverSettingsDeprecated
 exudyn.LinearSolverSettingsDeprecated.ignoreSingularJacobian
@@ -114,6 +115,7 @@ exudyn.TimeIntegrationSettings.realtimeFactor
 exudyn.TimeIntegrationSettings.realtimeWaitMicroseconds
 exudyn.TimeIntegrationSettings.simulateInRealtime
 exudyn.Twist
+exudyn.Twist.__new__
 exudyn.VSettingsBeams
 exudyn.VSettingsBodies
 exudyn.VSettingsCamera

@@ -185,6 +185,41 @@ except ImportError:
     import cMath #noqa: F401
     import cUtilities #noqa: F401
 
+#exudyn.HT and exudyn.Twist of symbolic parts give the classes of exudyn.symbolics.kinematics, which hold them, as
+#exudyn.cMath gives symbolic functions for symbolic arguments (#3186); a value of numbers is not looked into further
+#than its components, and the classes of numbers are created as before
+_numericTypes = (float, int, type(None))
+_symbolicTypes = (_compiledModule.symbolic.Real, _compiledModule.symbolic.Vector, _compiledModule.symbolic.Matrix)
+
+def _HasSymbolicPart(value):
+    if isinstance(value, _numericTypes):
+        return False
+    if isinstance(value, _symbolicTypes):
+        return True
+    if isinstance(value, (list, tuple)):
+        for item in value:
+            if _HasSymbolicPart(item):
+                return True
+        return False
+    return type(value).__module__ == 'exudyn.symbolics.kinematics'
+
+def _InstallSymbolicConstructor(cls, kinematicsName):
+    numericNew = cls.__new__
+    def __new__(cls, *args, **kwargs):
+        for values in (args, kwargs.values()):
+            for value in values:
+                if _HasSymbolicPart(value):
+                    from .symbolics import kinematics
+                    return getattr(kinematics, kinematicsName).FromSymbolicArguments(*args, **kwargs)
+        return numericNew(cls)
+    cls.__new__ = staticmethod(__new__)
+
+try:
+    _InstallSymbolicConstructor(_compiledModule.HT, 'HT')
+    _InstallSymbolicConstructor(_compiledModule.Twist, 'Twist')
+except Exception as e: #a failed patch must never stop 'import exudyn'
+    print('WARNING: exudyn.HT and exudyn.Twist take no symbolic arguments:', e)
+
 #use exudyn.demos.Demo1() from 1.9.137 onwards!
 try:
     from . import demos #noqa: F401 - re-export, available as exudyn.demos

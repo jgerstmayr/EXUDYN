@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 275 | 1.13.281 |
+| 1.13 | Newborn | 277 | 1.13.283 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.283** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.HT and exudyn.Twist of symbolic arguments give the symbolic classes of exudyn.symbolics.kinematics (#3186)
+  - description: Revision2026c step RG12.69.6. exu.HT(rotation=..., translation=..., eulerParameters=..., Rxyz=..., rotationVector=...) with a symbolic part gives a kinematics.HT, the rotation by the conversions of symbolics.kinematics; exu.Twist(velocity, angularVelocity) a kinematics.Twist; exu.HT \* a symbolic point the transformed point; as exudyn.cMath forwards symbolic arguments (\#3114). Decided: after A1, so that the code of the user connectors and joints is closer in C++ and Python.
+  - **notes:** exudyn.HT and exudyn.Twist of a symbolic part, e.g. exu.HT(Rxyz=\[0, 0, angle\]) with a symbolic angle, give the symbolic classes kinematics.HT and kinematics.Twist; exu.HT \* a symbolic point is the transformed point.
+  - date resolved: **2026-11-01 01:20**, date raised: 2026-11-01
+- **1.13.282** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Homogeneous transformations in exudyn.symbolic, and the user connectors and joints with HT0, HT1 and 6D velocities (#3174)
+  - description: Revision2026c step RG12.69. The functions of exudyn.HT - composition, a point transformed, inverse, relative frame, rotation and translation, the rotation parameters, the logarithm and exponential maps - for symbolic arguments, so that one user function written with exudyn.HT runs on numbers and is recorded, as exudyn.cMath does for the math functions (\#3114). Decided first (analysis in docs/dev/design/symbolicHT.md): whether a symbolic HT maps at once to the matrix and vector operations of exudyn.symbolic or becomes a kind of its own in the table of operations, and which functions it offers. Then the user functions of ObjectConnectorUser and ObjectJointUser take the frames of their markers as HT0, HT1 instead of position0, rotationMatrix0, ..., with the velocities as 6D vectors, and exudyn.symbolics.userItems uses them.
+  - **notes:** exudyn.HT in symbolic user functions: kinematics.HT and kinematics.Twist hold a frame and its velocities with symbolic parts, with the methods of exudyn.HT mapped at once to matrix and vector expressions; the user connectors and joints take the frame and twist of each marker (\#3181 to \#3186).
+  - date resolved: **2026-11-01 01:20**, date raised: 2026-10-31
 - **1.13.281** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The rotation and Lie group functions of the symbolic HT: GetRotationVector, GetRxyz, LogSE3, SetExpSE3, LogR3xSO3, SetExpR3xSO3 (#3185)
   - description: Revision2026c step RG12.69.5. The methods of exudyn.HT that give and take rotation parameters and motion vectors, for kinematics.HT with symbolic parts: mapped at once to scalar, vector and matrix expressions, the limits of small angles by exudyn.symbolic.IfThenElse as in exudyn.HT; for numeric parts exudyn.HT computes them. For the torsional and rigid body spring-dampers and Lie group nodes as user items.
   - **notes:** kinematics.HT has GetRotationVector, GetRxyz, LogSE3, SetExpSE3, LogR3xSO3 and SetExpR3xSO3 for symbolic parts, with the limits of small angles of exudyn.HT; a symbolic rotation vector needs an angle below pi.

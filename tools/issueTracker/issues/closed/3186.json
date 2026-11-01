@@ -1,0 +1,15 @@
+{
+  "number": 3186,
+  "title": "exudyn.HT and exudyn.Twist of symbolic arguments give the symbolic classes of exudyn.symbolics.kinematics",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Revision2026c step RG12.69.6. exu.HT(rotation=..., translation=..., eulerParameters=..., Rxyz=..., rotationVector=...) with a symbolic part gives a kinematics.HT, the rotation by the conversions of symbolics.kinematics; exu.Twist(velocity, angularVelocity) a kinematics.Twist; exu.HT * a symbolic point the transformed point; as exudyn.cMath forwards symbolic arguments (#3114). Decided: after A1, so that the code of the user connectors and joints is closer in C++ and Python.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 01:20",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.HT and exudyn.Twist of a symbolic part, e.g. exu.HT(Rxyz=[0, 0, angle]) with a symbolic angle, give the symbolic classes kinematics.HT and kinematics.Twist; exu.HT * a symbolic point is the transformed point.",
+  "resolvedInVersion": "1.13.283"
+}

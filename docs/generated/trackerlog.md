@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.281.dev1
+- Exudyn version = 1.13.283.dev1
 - last change = 2026-11-01
-- Number of issues = 3186
-- Number of resolved issues = 3058 (281 in current version)
+- Number of issues = 3187
+- Number of resolved issues = 3060 (283 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9050,9 +9050,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-31
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` A lookup table in exudyn.symbolic: data given at equal steps of time, a coordinate or a parameter, interpolated, repeated or zero outside; the discrete time and a repeatable noise in Python on it (#3175)
   - description: Revision2026c step RG12.70. For control, thermal and electro-mechanical problems, and for characteristic curves such as a bending moment over the curvature: a table of values given at equal steps of an argument - the time, a coordinate or a parameter of an item -, from which a symbolic user function takes the value at any argument, recorded and differentiated, and computed the same for numbers. Required: one channel, equal steps, linear interpolation, zero outside the table by default, the end values or a periodic repetition as options; the derivative of the interpolant is what the one-pass derivative gives. Options to be kept possible in the interface, implemented when needed: several channels, given arguments of unequal steps, closest and quadratic interpolation. Nothing in it may prevent the evaluation on the GPU (RG14). The discrete time of a sampling period and a repeatable noise are Python functions of a new module of exudyn.symbolics for what is neither kinematics nor user items nor system models, the noise as a table of random values of a seed. A sampled and held state needs data coordinates and is a later sensor (\#3180). \[2026-11-01, Claude-JG\]: Decided 2026-11-01: the name esym.LookupTable; the Python functions SampleTime and Noise in exudyn.symbolics.utilities.
-  - date raised: 2026-10-31
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Homogeneous transformations in exudyn.symbolic, and the user connectors and joints with HT0, HT1 and 6D velocities (#3174)
-  - description: Revision2026c step RG12.69. The functions of exudyn.HT - composition, a point transformed, inverse, relative frame, rotation and translation, the rotation parameters, the logarithm and exponential maps - for symbolic arguments, so that one user function written with exudyn.HT runs on numbers and is recorded, as exudyn.cMath does for the math functions (\#3114). Decided first (analysis in docs/dev/design/symbolicHT.md): whether a symbolic HT maps at once to the matrix and vector operations of exudyn.symbolic or becomes a kind of its own in the table of operations, and which functions it offers. Then the user functions of ObjectConnectorUser and ObjectJointUser take the frames of their markers as HT0, HT1 instead of position0, rotationMatrix0, ..., with the velocities as 6D vectors, and exudyn.symbolics.userItems uses them.
   - date raised: 2026-10-31
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` exudyn.symbolic: sparse matrices in the table of operations (#3168)
   - description: Some objects work internally with sparse matrices - a 20x20 matrix mostly of zeros, recorded as a dense matrix of components, whose zeros Optimize could remove. Find how the table of operations represents and evaluates such matrices: a sparse matrix as a kind of slot (its pattern fixed at recording, the nonzero components as operands), the matrix-vector and matrix-matrix products and their derivative rules on the pattern, and the export (triplets). Not for now. \[2026-10-31, Claude-JG\]: Proposal in docs/dev/design/symbolicSystem.md section 12.7: a sparse matrix declared by esym.SparseMatrix(rows, columns, triplets) or esym.Matrix(...).Sparse(), its pattern fixed at recording; in the table a slot kind with compressed rows and codes for A v, A^T v, s A, A + B, A\[i,j\] and the dense matrix; the derivative nnz x n on the pattern; results equal to the dense product to the bit; triplets in the export; after \#3176.
