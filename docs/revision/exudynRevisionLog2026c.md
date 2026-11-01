@@ -5095,3 +5095,19 @@ the extra 4.7 us per Python call - add views.)*
   model 0 1.2e-2, 5.7e-3, 1.4e-3, 2.2e-4; model 2 4.3e-3, 1.1e-4, 1.2e-4, 3.4e-5; with the recommended step size
   1.4e-3, 1.5e-3, 7.2e-4, 3.3e-5 (model 0). The in-step switch had stayed at 7e-4.
 - symbolicUserContactTest.py rewritten on it: both models, both solvers, Python, recorded and SymbolicSystem; 5 s.
+
+<a id="rg12-65-4"></a>
+### RG12.65.4 — the program of a recording: measured; esym.Function without the export structure (2026-11-01, #3198)
+- Decided 2026-10-29 (option A): what remained was at most the operation code stored in the node instead of its lookup
+  by name in SymbolicProgram::Build. Measured first, an expression e = 0.999 e + sin(q[i]) of n terms:
+
+  | operations | recording | esym.Function before | after | first evaluation | evaluation |
+  |---|---|---|---|---|---|
+  | 3000 | 3.3 ms | 7.4 ms | 1.3 ms | 0.07 ms | 0.017 ms |
+  | 30000 | 33 ms | 57 ms | 16 ms | 0.33 ms | 0.17 ms |
+  | 150000 | 157 ms | 351 ms | 128 ms | 2.2 ms | 1.1 ms |
+
+  GetFlatProgramData of the same expression alone took 287 ms: esym.Function built its py::dict per node only to find
+  the named variables. `NamedVariablesOf` finds them by a traversal of the nodes. The build of the program, the rest,
+  is less than the recording and done once; the code in the node is not worth a change of every expression class.
+- esym.Function is what SymbolicSystem builds per item and for the composed system, which is faster by the same.

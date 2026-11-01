@@ -70,7 +70,8 @@ post-Newton functions, and `SolveGeneralizedAlpha` and `SolveExplicit` repeat a 
 above `discontinuous.iterationTolerance`, as Exudyn's solvers (#3196). `UserItemCreator.CreateSphereSphereContact`
 switches by a data node in its post-Newton step, as the built-in contact, and has the impact models 1 and 2 with the
 restitution coefficient: equal to `mbs.CreateSphereSphereContact` to 1e-13, also with damping and the implicit solver,
-whose solution now converges with the step size (#3197).
+whose solution now converges with the step size (#3197). `esym.Function` is up to 5.6 times faster to create, as it
+finds the named variables without the export structure (#3198).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

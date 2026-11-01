@@ -1,0 +1,14 @@
+{
+  "number": 3198,
+  "title": "Symbolic: the program of a recording built without the export structure; the code in the node measured",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "revision2026c step RG12.65.4 (#3153): measured on a recording of 150000 operations - recording 157 ms, esym.Function 351 ms, of which 287 ms the py::dict entries of GetFlatProgramData that it built only to find the named variables, the program itself about 60 ms; esym.Function finds them by a traversal of the nodes. The operation code stored in the node at its construction instead of the lookup by name in Build would save a part of the 60 ms of a one-off build. Decided: as revision2026c step RG12.65.4, option A, the code in the node at most.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 14:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "esym.Function is up to 5.6 times faster to create: it finds the named variables of the result by a traversal of the nodes, without the entries of GetFlatProgramData; measured, the program of a recording is built in less time than the recording.",
+  "resolvedInVersion": "1.13.296"
+}

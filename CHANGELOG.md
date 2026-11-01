@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 289 | 1.13.295 |
+| 1.13 | Newborn | 290 | 1.13.296 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.296** `IMPROVEMENT` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic: the program of a recording built without the export structure; the code in the node measured (#3198)
+  - description: revision2026c step RG12.65.4 (\#3153): measured on a recording of 150000 operations - recording 157 ms, esym.Function 351 ms, of which 287 ms the py::dict entries of GetFlatProgramData that it built only to find the named variables, the program itself about 60 ms; esym.Function finds them by a traversal of the nodes. The operation code stored in the node at its construction instead of the lookup by name in Build would save a part of the 60 ms of a one-off build. Decided: as revision2026c step RG12.65.4, option A, the code in the node at most.
+  - **notes:** esym.Function is up to 5.6 times faster to create: it finds the named variables of the result by a traversal of the nodes, without the entries of GetFlatProgramData; measured, the program of a recording is built in less time than the recording.
+  - date resolved: **2026-11-01 14:34**, date raised: 2026-11-01
 - **1.13.295** `FIX` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UserItemCreator.CreateSphereSphereContact switched by a data coordinate, with the restitution model (#3197)
   - description: revision2026c step RG12.55.8 (\#3188): the contact switched by the gap of the data coordinates in the post-Newton step as the built-in contact, so that the implicit solver converges with the step size; impactModel 2 (restitution coefficient) with the impact velocity in the data, the recommended model in the examples, not the default. Decided: the switching instant is not located within the step.
   - **notes:** UserItemCreator.CreateSphereSphereContact switches by a data node in its recorded post-Newton step, as the built-in contact, and has the impact models 1 and 2 with the restitution coefficient: equal to mbs.CreateSphereSphereContact to 1e-13, also with damping and the implicit solver, whose solution converges with the step size.

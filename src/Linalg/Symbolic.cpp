@@ -23,6 +23,7 @@
 #include <thread>
 #include <atomic>
 #include <map>
+#include <unordered_set>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
@@ -937,6 +938,45 @@ void SetSetVariable(VariableSet& set, const STDstring& name, const py::object& v
 
 //! esym.Function(result, inputs, name) (#3149): a recording of an expression in declared inputs, without an item;
 //! a UserFunction whose arguments are the inputs, in their order, and which needs no MainSystem
+//! the named variables of an esym.Real, Vector or Matrix, each node with its name, by a traversal without recursion (#3198)
+static void NamedVariablesOf(const py::object& x, std::vector<std::pair<const void*, STDstring>>& named)
+{
+	FlatNode root;
+	if (py::isinstance<SReal>(x)) { root = FlatNode(py::cast<const SReal&>(x).GetExpression()); }
+	else if (py::isinstance<SymbolicRealVector>(x)) { root = FlatNode(py::cast<const SymbolicRealVector&>(x).GetExpression()); }
+	else if (py::isinstance<SymbolicRealMatrix>(x)) { root = FlatNode(py::cast<const SymbolicRealMatrix&>(x).GetExpression()); }
+	if (root.node == nullptr) { return; }
+	std::unordered_set<const void*> visited{ root.node };
+	std::vector<FlatNode> stack{ root };
+	while (stack.size())
+	{
+		FlatNode node = stack.back();
+		stack.pop_back();
+		Index n = FlatProgramData::NumberOfOperands(node);
+		for (Index i = 0; i < n; i++)
+		{
+			FlatNode operand = FlatProgramData::GetOperand(node, i);
+			if (visited.insert(operand.node).second) { stack.push_back(operand); }
+		}
+		if (n != 0) { continue; }
+		if (node.kind == FlatKind::Real)
+		{
+			const ExpressionNamedReal* variable = dynamic_cast<const ExpressionNamedReal*>((const ExpressionBase*)node.node);
+			if (variable) { named.push_back({ node.node, variable->GetName() }); }
+		}
+		else if (node.kind == FlatKind::Vector)
+		{
+			const VectorExpressionNamedReal* variable = dynamic_cast<const VectorExpressionNamedReal*>((const VectorExpressionBase*)node.node);
+			if (variable) { named.push_back({ node.node, variable->GetName() }); }
+		}
+		else
+		{
+			const MatrixExpressionNamedReal* variable = dynamic_cast<const MatrixExpressionNamedReal*>((const MatrixExpressionBase*)node.node);
+			if (variable) { named.push_back({ node.node, variable->GetName() }); }
+		}
+	}
+}
+
 py::object FunctionOfExpression(const py::object& result, const py::object& inputs, const STDstring& name)
 {
 	std::vector<py::object> inputList;
@@ -969,15 +1009,14 @@ py::object FunctionOfExpression(const py::object& result, const py::object& inpu
 	if (py::isinstance<py::float_>(result) || py::isinstance<py::int_>(result)) { returnValue = py::cast(SReal(py::cast<Real>(result))); }
 	CHECKandTHROW(py::isinstance<SReal>(returnValue) || py::isinstance<SymbolicRealVector>(returnValue) || py::isinstance<SymbolicRealMatrix>(returnValue),
 		"esym.Function: the result must be an esym.Real, Vector or Matrix, but received " + py::cast<STDstring>(py::str(result)), ExudynValueError);
-	//every named variable of the result is an input, or a variable of esym.variables, which the function reads at every call
-	FlatProgramData data;
-	data.Add(returnValue);
+	//every named variable of the result is an input, or a variable of esym.variables, which the function reads at every call;
+	//found by a traversal of the nodes, not by the entries of GetFlatProgramData, which cost 80 percent of the call (#3198)
+	std::vector<std::pair<const void*, STDstring>> namedVariables;
+	NamedVariablesOf(returnValue, namedVariables);
 	VariableSet& globalVariables = py::module_::import("exudyn").attr("symbolic").attr("variables").cast<VariableSet&>();
-	for (Index i = 0; i < (Index)data.NamedNodes().size(); i++)
+	for (const auto& [node, variableName] : namedVariables)
 	{
-		const void* node = data.NamedNodes()[i];
 		if (std::find(inputNodes.begin(), inputNodes.end(), node) != inputNodes.end()) { continue; }
-		STDstring variableName = py::cast<STDstring>(data.NamedEntry(i)["name"]);
 		bool global = globalVariables.HasVariable(variableName) && !globalVariables.IsArray(variableName)
 			&& (const void*)globalVariables.GetVariable(variableName).GetExpression() == node;
 		CHECKandTHROW(global, "esym.Function " + name + ": the result depends on the variable '" + variableName
