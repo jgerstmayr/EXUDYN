@@ -457,6 +457,7 @@ items = {
       'nodeNumbersODE2': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the nodes of the ODE2 coordinates :math:`\\qv`, any nodes with ODE2 coordinates'},
       'nodeNumbersODE1': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the NodeGenericODE1 of the ODE1 coordinates :math:`\\yv`'},
       'nodeNumbersAE': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the NodeGenericAE of the algebraic coordinates :math:`\\tlambda`; their number of coordinates is the number of algebraic equations'},
+      'nodeNumbersData': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the NodeGenericData of the data coordinates :math:`\\xv`, which the user functions get and the postNewtonStepUserFunction updates (#3195)'},
       'massMatrix': {'type': 'NumpyMatrix', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the mass matrix; empty: zero, for an object that constrains the coordinates of other items (#3193)'},
       'dampingMatrix': {'type': 'NumpyMatrix', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the damping matrix'},
       'stiffnessMatrix': {'type': 'NumpyMatrix', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the stiffness matrix'},
@@ -475,6 +476,7 @@ items = {
       'massMatrixUserFunction': {'type': 'ObjectGenericDAEMassMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the mass matrix instead of the constant massMatrix (#3191)'},
       'constraintUserFunction': {'type': 'ObjectGenericDAEConstraintUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the nonlinear term of the algebraic equations (#3191)'},
       'jacobianUserFunction': {'type': 'ObjectGenericDAEJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the local Jacobian of the terms of all user functions, see the Jacobians below (#3191)'},
+      'postNewtonStepUserFunction': {'type': 'ObjectGenericDAEPostNewtonStepUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which returns the error of the switch, a recommended step size and the new data coordinates after each Newton iteration; needs nodeNumbersData (#3195)'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},

@@ -5037,3 +5037,20 @@ the extra 4.7 us per Python call - add views.)*
   mass point on a unilateral spring, 200 steps).
 - userConnectorContactTest.py on the new signature: the result unchanged (26.270810078732666); the refusal of a force
   applied in the function is gone with the markers.
+
+<a id="rg12-66-2"></a>
+### RG12.66.2 — data nodes and a post-Newton function of ObjectGenericDAE (2026-11-01, #3195)
+- `nodeNumbersData`, the fourth list of nodes, NodeGenericData; every user function gets x after y - after z for the
+  constraint and the Jacobian functions - and the recorded ones keep the positions of q, q_t, y, z (2 to 5 after mbs).
+  `ComputeDataCoordinates`, called where the user functions are evaluated. Without deprecation: ObjectGenericDAE came
+  after 1.13.6.
+- `postNewtonStepUserFunction(mbs, t, itemNumber, q, q_t, y, z, x, x0, parameters)` -> [error, recommendedStepSize,
+  x]; it needs data nodes. The system had the post-Newton step for connectors only (listDiscontinuousIteration with
+  their markers): `CObject::HasPostNewtonStepBody` and `PostNewtonStepBody`, the list `listPostNewtonBodies` of
+  CSystemData, called serially in CSystem::PostNewtonStep after the connectors.
+- Found: the PreStepUserFunction gets the time at the end of the step it precedes, with the state at its start; the
+  reference of the test takes t - h as the sampling time.
+- genericDAEDataTest.py: a mass on a spring with a PD controller sampled at 0.01 s and held, its force and sample
+  time the two data coordinates; the post-Newton step samples at the end of a step that reaches the instant, with
+  error 0, so the force acts from the next step. Python 0.0 and recorded 1.3e-14 against ObjectGenericODE2 with the
+  controller in a PreStepUserFunction. SymbolicSystem still refuses data coordinates, until RG12.66.3.

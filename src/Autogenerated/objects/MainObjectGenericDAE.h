@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-01  09:40:33 (last modified)
+* @date         2026-11-01  11:47:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -118,6 +118,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "nodeNumbersODE2")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbersODE2"], cObjectGenericDAE->GetParameters().nodeNumbersODE2); }
         if (EPyUtils::DictItemExists(d, "nodeNumbersODE1")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbersODE1"], cObjectGenericDAE->GetParameters().nodeNumbersODE1); }
         if (EPyUtils::DictItemExists(d, "nodeNumbersAE")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbersAE"], cObjectGenericDAE->GetParameters().nodeNumbersAE); }
+        if (EPyUtils::DictItemExists(d, "nodeNumbersData")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbersData"], cObjectGenericDAE->GetParameters().nodeNumbersData); }
         if (EPyUtils::DictItemExists(d, "massMatrix")) { EPyUtils::FromPython(d["massMatrix"], cObjectGenericDAE->GetParameters().massMatrix); }
         if (EPyUtils::DictItemExists(d, "dampingMatrix")) { EPyUtils::FromPython(d["dampingMatrix"], cObjectGenericDAE->GetParameters().dampingMatrix); }
         if (EPyUtils::DictItemExists(d, "stiffnessMatrix")) { EPyUtils::FromPython(d["stiffnessMatrix"], cObjectGenericDAE->GetParameters().stiffnessMatrix); }
@@ -136,6 +137,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectGenericDAE->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "constraintUserFunction")) { cObjectGenericDAE->GetParameters().constraintUserFunction = d["constraintUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "jacobianUserFunction")) { cObjectGenericDAE->GetParameters().jacobianUserFunction = d["jacobianUserFunction"]; }
+        if (EPyUtils::DictItemExists(d, "postNewtonStepUserFunction")) { cObjectGenericDAE->GetParameters().postNewtonStepUserFunction = d["postNewtonStepUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectGenericDAE->GetShow(), "ObjectGenericDAE.Vshow"); }
         GetCObject()->ParametersHaveChanged();
@@ -149,6 +151,7 @@ public: // AUTO:
         d["nodeNumbersODE2"] = EPyUtils::ItemIndexToPython<NodeIndex>(cObjectGenericDAE->GetParameters().nodeNumbersODE2);
         d["nodeNumbersODE1"] = EPyUtils::ItemIndexToPython<NodeIndex>(cObjectGenericDAE->GetParameters().nodeNumbersODE1);
         d["nodeNumbersAE"] = EPyUtils::ItemIndexToPython<NodeIndex>(cObjectGenericDAE->GetParameters().nodeNumbersAE);
+        d["nodeNumbersData"] = EPyUtils::ItemIndexToPython<NodeIndex>(cObjectGenericDAE->GetParameters().nodeNumbersData);
         d["massMatrix"] = EPyUtils::ToPython(cObjectGenericDAE->GetParameters().massMatrix);
         d["dampingMatrix"] = EPyUtils::ToPython(cObjectGenericDAE->GetParameters().dampingMatrix);
         d["stiffnessMatrix"] = EPyUtils::ToPython(cObjectGenericDAE->GetParameters().stiffnessMatrix);
@@ -167,10 +170,12 @@ public: // AUTO:
         d["massMatrixUserFunction"] = (py::object)cObjectGenericDAE->GetParameters().massMatrixUserFunction;
         d["constraintUserFunction"] = (py::object)cObjectGenericDAE->GetParameters().constraintUserFunction;
         d["jacobianUserFunction"] = (py::object)cObjectGenericDAE->GetParameters().jacobianUserFunction;
+        d["postNewtonStepUserFunction"] = (py::object)cObjectGenericDAE->GetParameters().postNewtonStepUserFunction;
         d["tempCoordinates"] = EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinates());
         d["tempCoordinates_t"] = EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinates_t());
         d["tempCoordinatesODE1"] = EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinatesODE1());
         d["tempCoordinatesAE"] = EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinatesAE());
+        d["tempCoordinatesData"] = EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinatesData());
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationObjectGenericDAE->GetShow();
         return d;
@@ -183,6 +188,7 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumbersODE2") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>(cObjectGenericDAE->GetParameters().nodeNumbersODE2)); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbersODE1") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>(cObjectGenericDAE->GetParameters().nodeNumbersODE1)); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbersAE") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>(cObjectGenericDAE->GetParameters().nodeNumbersAE)); } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbersData") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>(cObjectGenericDAE->GetParameters().nodeNumbersData)); } //! AUTO: get parameter
         else if (parameterName.compare("massMatrix") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetParameters().massMatrix); } //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrix") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetParameters().dampingMatrix); } //! AUTO: get parameter
         else if (parameterName.compare("stiffnessMatrix") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetParameters().stiffnessMatrix); } //! AUTO: get parameter
@@ -201,10 +207,12 @@ public: // AUTO:
         else if (parameterName.compare("massMatrixUserFunction") == 0) { return cObjectGenericDAE->GetParameters().massMatrixUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("constraintUserFunction") == 0) { return cObjectGenericDAE->GetParameters().constraintUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("jacobianUserFunction") == 0) { return cObjectGenericDAE->GetParameters().jacobianUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
+        else if (parameterName.compare("postNewtonStepUserFunction") == 0) { return cObjectGenericDAE->GetParameters().postNewtonStepUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinates()); } //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates_t") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinates_t()); } //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinatesODE1") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinatesODE1()); } //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinatesAE") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinatesAE()); } //! AUTO: get parameter
+        else if (parameterName.compare("tempCoordinatesData") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinatesData()); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectGenericDAE->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("ObjectGenericDAE::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
@@ -218,6 +226,7 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumbersODE2") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectGenericDAE->GetParameters().nodeNumbersODE2); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumbersODE1") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectGenericDAE->GetParameters().nodeNumbersODE1); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumbersAE") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectGenericDAE->GetParameters().nodeNumbersAE); } //! AUTO: set parameter
+        else if (parameterName.compare("nodeNumbersData") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectGenericDAE->GetParameters().nodeNumbersData); } //! AUTO: set parameter
         else if (parameterName.compare("massMatrix") == 0) { EPyUtils::FromPython(value, cObjectGenericDAE->GetParameters().massMatrix); } //! AUTO: set parameter
         else if (parameterName.compare("dampingMatrix") == 0) { EPyUtils::FromPython(value, cObjectGenericDAE->GetParameters().dampingMatrix); } //! AUTO: set parameter
         else if (parameterName.compare("stiffnessMatrix") == 0) { EPyUtils::FromPython(value, cObjectGenericDAE->GetParameters().stiffnessMatrix); } //! AUTO: set parameter
@@ -236,6 +245,7 @@ public: // AUTO:
         else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectGenericDAE->GetParameters().massMatrixUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("constraintUserFunction") == 0) { cObjectGenericDAE->GetParameters().constraintUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("jacobianUserFunction") == 0) { cObjectGenericDAE->GetParameters().jacobianUserFunction = value; } //! AUTO: set parameter
+        else if (parameterName.compare("postNewtonStepUserFunction") == 0) { cObjectGenericDAE->GetParameters().postNewtonStepUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectGenericDAE->GetShow(), "ObjectGenericDAE.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("ObjectGenericDAE::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

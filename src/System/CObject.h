@@ -128,6 +128,12 @@ public:
 
 	//! function to be overwritten, if object has user function
 	virtual bool HasUserFunction() const { return false; }
+	//! a body with data coordinates that a post-Newton step updates, as ObjectGenericDAE (#3195); the connectors have
+	//! their PostNewtonStep of their markers
+	virtual bool HasPostNewtonStepBody() const { return false; }
+	//! the post-Newton step of such a body: updates its data coordinates, returns the discontinuous error and a
+	//! recommended step size (< 0: none)
+	virtual Real PostNewtonStepBody(Real& recommendedStepSize) { recommendedStepSize = -1.; return 0.; }
 	//! the user functions of the item, for the lists of the parallel loops (#2978); the generated items with user functions list them
 	virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const {}
 

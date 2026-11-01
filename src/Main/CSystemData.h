@@ -73,6 +73,7 @@ public:
 	ResizableArray<Index> listComputeObjectODE1Rhs;		//!< list of objects that need to evaluate ComputeObjectODE1Rhs
 	ResizableArray<Index> listDiscontinuousIteration;	//!< list of objects that need discontinuous iteration (PostNewtonStep, PostDiscontinuousIteration)
 	bool discontinuousIterationInMainThread = false;	//!< an object of listDiscontinuousIteration is computed in the main thread (#2978)
+	ResizableArray<Index> listPostNewtonBodies;			//!< list of bodies with a post-Newton step of their data coordinates, computed serially (#3195)
 
     ResizableArray<Index> listOfLoadsNoUF;				//!< list of loads without user functions (can be processes multithreaded)
 	ResizableArray<Index> listOfLoadsUF;				//!< list of loads WITH user functions (must be processed serially)
@@ -149,6 +150,7 @@ public: //
 		listComputeObjectODE2LhsUF.Flush();
 		listComputeObjectODE1Rhs.Flush();
 		listDiscontinuousIteration.Flush();
+		listPostNewtonBodies.Flush();
 
 		objectsBodyWithAE.Flush();
 		nodesODE2WithAE.Flush();

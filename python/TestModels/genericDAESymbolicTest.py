@@ -23,10 +23,10 @@ import numpy as np
 (k, c, e, a) = (40., 0.8, 2., 3.)
 
 #written with cMath and components, so that the functions compute numbers and are recorded
-def UFforce(mbs, t, itemNumber, q, q_t, y, parameters):
+def UFforce(mbs, t, itemNumber, q, q_t, y, x, parameters):
     return [-k*q[0]**3 - k*q[0] + e*y[0], -c*q_t[1]*(1 + q[0]**2) - k*q[1]]
 
-def UFrhs(mbs, t, itemNumber, q, q_t, y, parameters):
+def UFrhs(mbs, t, itemNumber, q, q_t, y, x, parameters):
     return [cMath.sin(q[0]) - a*y[0] - y[0]**3 + 0.5*q_t[1]]
 
 def Model(record):

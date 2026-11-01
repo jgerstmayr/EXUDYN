@@ -48,10 +48,10 @@ c0 = C_q @ q0 + C_y @ y0
 parameters = [3., 0.4]
 
 #written with cMath and components, so that the functions compute numbers and are recorded
-def UFforce(mbs, t, itemNumber, q, q_t, y, parameters):
+def UFforce(mbs, t, itemNumber, q, q_t, y, x, parameters):
     return [-parameters[0]*q[0]**3, parameters[1]*cMath.sin(y[0])]
 
-def UFrhs(mbs, t, itemNumber, q, q_t, y, parameters):
+def UFrhs(mbs, t, itemNumber, q, q_t, y, x, parameters):
     return [-parameters[1]*y[0]*y[1], q[1]*q_t[0]]
 
 simulationSettings = exu.SimulationSettings()

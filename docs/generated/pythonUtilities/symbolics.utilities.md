@@ -35,7 +35,7 @@ the sampling instants, kept in between - needs data coordinates and is not done 
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLookupTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicLookupTableTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAEDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEDataTest.py) (TM), [`symbolicLookupTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicLookupTableTest.py) (TM)
 
 
 (sec-utilities--noisetable)=

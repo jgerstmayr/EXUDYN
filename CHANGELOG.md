@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 285 | 1.13.291 |
+| 1.13 | Newborn | 286 | 1.13.292 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.292** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectGenericDAE: data nodes and a postNewtonStepUserFunction (#3195)
+  - description: revision2026c step RG12.66.2 (\#3158, \#3143): nodeNumbersData of NodeGenericData; every user function gets the data coordinates x after y (after z for the constraint and Jacobian functions); postNewtonStepUserFunction(mbs, t, itemNumber, q, q\_t, y, z, x, x0, parameters) returns \[discontinuousError, recommendedStepSize, new x\]; the system calls the post-Newton step of bodies, which it did for connectors only. Decided: yes, for discrete controllers, hysteresis and switching states of generic systems.
+  - **notes:** ObjectGenericDAE has data nodes, nodeNumbersData: every user function gets the data coordinates x, and a postNewtonStepUserFunction updates them after each Newton iteration and returns the error of a switch and a recommended step size, e.g. for a discrete controller.
+  - date resolved: **2026-11-01 11:56**, date raised: 2026-11-01
 - **1.13.291** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorUser: a postNewtonStepUserFunction of the frames and twists, recordable (#3194)
   - description: revision2026c step RG12.66.1 (\#3158): postNewtonStepUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep, parameters) returns the vector \[discontinuousError, recommendedStepSize, new data coordinates\], as the forceUserFunction gets the markers, so that it can be recorded and SymbolicSystem takes it. Decided: replaces the signature with the ConnectorMarker objects, without deprecation, as ObjectConnectorUser came after 1.13.6.
   - **notes:** The postNewtonStepUserFunction of ObjectConnectorUser gets the frames and twists of the markers as its forceUserFunction and returns the vector \[discontinuousError, recommendedStepSize, \*data\], so that it can be recorded; it got the markers as objects and returned a tuple before.

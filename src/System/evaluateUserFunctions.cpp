@@ -347,27 +347,29 @@ void CObjectGenericODE1::EvaluateUserFunctionRHS(Vector& force, const MainSystem
 
 //! the force or the rhs user function of ObjectGenericDAE with the coordinates of tempCoordinates, the size checked (#3143)
 //! the derivative of a recorded force or rhs user function by an argument, in one pass over its recording (#3189)
-void CObjectGenericDAE::AddUserFunctionJacobian(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction,
+void CObjectGenericDAE::AddUserFunctionJacobian(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction,
 	const char* name, Index argument, Real factor, ResizableMatrix& jacobian) const
 {
 	Symbolic::PySymbolicUserFunction* symbolicFunction = userFunction.GetSymbolicFunction();
 	CHECKandTHROW(symbolicFunction != nullptr, STDstring("ObjectGenericDAE: the Jacobian of the ") + name + " is numerical for a Python function");
+	ComputeDataCoordinates(tempCoordinatesData);
 	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
 	UserFunctionExceptionHandling([&]
 	{
 		symbolicFunction->EvaluateJacobianAdd(jacobian, argument, factor, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t,
-			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, parameters.parameters);
+			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesData, parameters.parameters);
 	}, (STDstring("ObjectGenericDAE::") + name + " (Jacobian)").c_str());
 }
 
-void CObjectGenericDAE::EvaluateUserFunction(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction,
+void CObjectGenericDAE::EvaluateUserFunction(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction,
 	const char* name, Index size, Vector& result) const
 {
+	ComputeDataCoordinates(tempCoordinatesData);
 	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
 	UserFunctionExceptionHandling([&]
 	{
 		EvaluateUserFunctionIntoVector(userFunction, result, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(),
-			tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, parameters.parameters);
+			tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesData, parameters.parameters);
 	}, (STDstring("ObjectGenericDAE::") + name).c_str());
 	if (result.NumberOfItems() != size)
 	{
@@ -379,11 +381,12 @@ void CObjectGenericDAE::EvaluateUserFunction(const PythonUserFunctionBase< std::
 //! the mass matrix of the massMatrixUserFunction at tempCoordinates; a dense matrix is checked for its size (#3191)
 void CObjectGenericDAE::EvaluateMassMatrixUserFunction(EXUmath::MatrixContainer& massMatrix, const ArrayIndex& ltg) const
 {
+	ComputeDataCoordinates(tempCoordinatesData);
 	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
 	UserFunctionExceptionHandling([&]
 	{
 		EvaluateUserFunctionIntoMatrixContainer(parameters.massMatrixUserFunction, massMatrix, ltg, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
-			t, GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, parameters.parameters);
+			t, GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesData, parameters.parameters);
 	}, "ObjectGenericDAE::massMatrixUserFunction");
 	Index n = tempCoordinates.NumberOfItems();
 	if (massMatrix.UseDenseMatrix() && (massMatrix.NumberOfRows() != n || massMatrix.NumberOfColumns() != n))
@@ -401,7 +404,7 @@ void CObjectGenericDAE::EvaluateConstraintUserFunction(bool velocityLevel, Vecto
 	UserFunctionExceptionHandling([&]
 	{
 		EvaluateUserFunctionIntoVector(parameters.constraintUserFunction, result, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t,
-			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE, velocityLevel, parameters.parameters);
+			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE, tempCoordinatesData, velocityLevel, parameters.parameters);
 	}, "ObjectGenericDAE::constraintUserFunction");
 	if (result.NumberOfItems() != GetAlgebraicEquationsSize())
 	{
@@ -420,7 +423,7 @@ void CObjectGenericDAE::AddConstraintUserFunctionJacobian(Index argument, Resiza
 	UserFunctionExceptionHandling([&]
 	{
 		symbolicFunction->EvaluateJacobianAdd(jacobian, argument, 1., (const MainSystem&)cSystemData->GetMainSystemBacklink(), t,
-			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE, velocityLevel, parameters.parameters);
+			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE, tempCoordinatesData, velocityLevel, parameters.parameters);
 	}, "ObjectGenericDAE::constraintUserFunction (Jacobian)");
 }
 
@@ -431,7 +434,7 @@ void CObjectGenericDAE::EvaluateJacobianUserFunction(Real factorODE2, Real facto
 	UserFunctionExceptionHandling([&]
 	{
 		EvaluateUserFunctionIntoMatrix(parameters.jacobianUserFunction, tempJacobian, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t,
-			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE, factorODE2, factorODE2_t, factorODE1,
+			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE, tempCoordinatesData, factorODE2, factorODE2_t, factorODE1,
 			parameters.parameters);
 	}, "ObjectGenericDAE::jacobianUserFunction");
 	Index n = GetODE2Size() + GetODE1Size() + GetAlgebraicEquationsSize();
@@ -441,6 +444,40 @@ void CObjectGenericDAE::EvaluateJacobianUserFunction(Real factorODE2, Real facto
 			+ EXUstd::ToString(tempJacobian.NumberOfColumns()) + "), but (" + EXUstd::ToString(n) + " x " + EXUstd::ToString(n) + ") is needed",
 			PyErrorType::valueError);
 	}
+}
+
+//! the postNewtonStepUserFunction of ObjectGenericDAE: the new data coordinates stored, the error and the recommended step
+//! size returned (#3195)
+Real CObjectGenericDAE::PostNewtonStepBody(Real& recommendedStepSize)
+{
+	recommendedStepSize = -1.;
+	if (!parameters.postNewtonStepUserFunction) { return 0.; }
+	ComputeUserFunctionCoordinates();
+	Vector x0;
+	ComputeDataCoordinates(x0, ConfigurationType::StartOfStep);
+	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
+	Vector result;
+	UserFunctionExceptionHandling([&]
+	{
+		EvaluateUserFunctionIntoVector(parameters.postNewtonStepUserFunction, result, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t,
+			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE, tempCoordinatesData, x0, parameters.parameters);
+	}, "ObjectGenericDAE::postNewtonStepUserFunction");
+	Index nData = tempCoordinatesData.NumberOfItems();
+	if (result.NumberOfItems() != 2 + nData)
+	{
+		PyError("ObjectGenericDAE::postNewtonStepUserFunction: returned " + EXUstd::ToString(result.NumberOfItems())
+			+ " values, but [discontinuousError, recommendedStepSize] and the " + EXUstd::ToString(nData)
+			+ " data coordinates, " + EXUstd::ToString(2 + nData) + " values, are needed", PyErrorType::valueError);
+	}
+	Index offset = parameters.nodeNumbersODE2.NumberOfItems() + parameters.nodeNumbersODE1.NumberOfItems() + parameters.nodeNumbersAE.NumberOfItems();
+	Index k = 2;
+	for (Index i = 0; i < parameters.nodeNumbersData.NumberOfItems(); i++)
+	{
+		LinkedDataVector data = ((CNodeData*)GetCNode(offset + i))->GetCoordinateVector(ConfigurationType::Current);
+		for (Index j = 0; j < data.NumberOfItems(); j++) { data[j] = result[k++]; }
+	}
+	recommendedStepSize = result[1];
+	return result[0];
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

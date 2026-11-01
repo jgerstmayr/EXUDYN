@@ -22,6 +22,7 @@ The parameters of the item; in a dictionary, its type is 'GenericDAE':
 | **nodeNumbersODE2** | ArrayNodeIndex |  | [] | the nodes of the {ref}`ODE2 <ODE2>` coordinates $\qv$, any nodes with {ref}`ODE2 <ODE2>` coordinates |
 | **nodeNumbersODE1** | ArrayNodeIndex |  | [] | the NodeGenericODE1 of the {ref}`ODE1 <ODE1>` coordinates $\yv$ |
 | **nodeNumbersAE** | ArrayNodeIndex |  | [] | the NodeGenericAE of the algebraic coordinates $\tlambda$; their number of coordinates is the number of algebraic equations |
+| **nodeNumbersData** | ArrayNodeIndex |  | [] | the NodeGenericData of the data coordinates $\xv$, which the user functions get and the postNewtonStepUserFunction updates (#3195) |
 | **massMatrix** | NumpyMatrix |  | [] | (symbol: $\Mm \in \Rcal^{n_2 \times n_2}$) the mass matrix; empty: zero, for an object that constrains the coordinates of other items (#3193) |
 | **dampingMatrix** | NumpyMatrix |  | [] | (symbol: $\Dm \in \Rcal^{n_2 \times n_2}$) the damping matrix |
 | **stiffnessMatrix** | NumpyMatrix |  | [] | (symbol: $\Km \in \Rcal^{n_2 \times n_2}$) the stiffness matrix |
@@ -40,10 +41,12 @@ The parameters of the item; in a dictionary, its type is 'GenericDAE':
 | **massMatrixUserFunction** | ObjectGenericDAEMassMatrixUserFunction |  | 0 | (symbol: $\Mm \in \Rcal^{n_2 \times n_2}$) A Python user function which computes the mass matrix instead of the constant massMatrix (#3191) |
 | **constraintUserFunction** | ObjectGenericDAEConstraintUserFunction |  | 0 | (symbol: $\cv_u \in \Rcal^{n_a}$) A Python user function which computes the nonlinear term of the algebraic equations (#3191) |
 | **jacobianUserFunction** | ObjectGenericDAEJacobianUserFunction |  | 0 | (symbol: $\Jm_u \in \Rcal^{n \times n}$) A Python user function which computes the local Jacobian of the terms of all user functions, see the Jacobians below (#3191) |
+| **postNewtonStepUserFunction** | ObjectGenericDAEPostNewtonStepUserFunction |  | 0 | (symbol: $\xv^{k}$) A Python user function which returns the error of the switch, a recommended step size and the new data coordinates after each Newton iteration; needs nodeNumbersData (#3195) |
 | **tempCoordinates** | NumpyVector |  | [] | (symbol: $\qv_{temp}$) the {ref}`ODE2 <ODE2>` coordinates, kept between the calls |
 | **tempCoordinates_t** | NumpyVector |  | [] | (symbol: $\dot\qv_{temp}$) the {ref}`ODE2 <ODE2>` velocities, kept between the calls |
 | **tempCoordinatesODE1** | NumpyVector |  | [] | (symbol: $\yv_{temp}$) the {ref}`ODE1 <ODE1>` coordinates, kept between the calls |
 | **tempCoordinatesAE** | NumpyVector |  | [] | (symbol: $\tlambda_{temp}$) the algebraic coordinates, kept between the calls |
+| **tempCoordinatesData** | NumpyVector |  | [] | (symbol: $\xv_{temp}$) the data coordinates, kept between the calls |
 | **visualization** | VObjectGenericDAE |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -97,6 +100,16 @@ equations are $\Cm_{\qv}\dot\qv + \Cm_{\yv}\dot\yv + \cv_u = \Null$, $\cv_u$ of 
 The terms $\Cm_{\qv}\tp\tlambda$ and $\Cm_{\yv}\tp\tlambda$ are added by the solver from the Jacobian of the algebraic
 equations, as for every constraint. CoordinateLoads are added on the right-hand side of the respective coordinate.
 
+### Data coordinates and the post-Newton step
+
+With `nodeNumbersData`, NodeGenericData, every user function gets the data coordinates $\xv$, which are constant
+during the Newton iterations of a step. After each iteration, the solver calls the
+`postNewtonStepUserFunction(mbs, t, itemNumber, q, q_t, y, z, x, x0, parameters)`, $\xv^0$ the data coordinates at
+the start of the step; it returns $[\varepsilon_{PN},\, \Delta t_{recom},\, \xv^{k}]$, the new data coordinates are
+stored and the step is iterated again while the error is above `discontinuous.iterationTolerance`, as for the
+contacts (#3195). A held control value - computed at the sampling instants, constant in between - returns the
+error 0, so that it acts from the next step.
+
 ### Jacobians
 
 Without user functions, every Jacobian is given by the object from its matrices. The jacobianUserFunction gives the
@@ -121,7 +134,7 @@ derivative of $\Mm$ is not part of the Jacobian, as for the other bodies.
 The object is no body for markers: markers act on its nodes, e.g. `MarkerNodeCoordinate`, `MarkerNodePosition` or
 `MarkerNodeODE1Coordinate`, for loads, connectors or constraints on its coordinates.
 
-**Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t, y, parameters)`
+**Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t, y, x, parameters)`
 A user function, which computes the generalized forces $\fv_u$ on the right-hand side of the {ref}`ODE2 <ODE2>` equations from the coordinates of the object.
 
 | arguments / return | type or size | description |
@@ -132,12 +145,13 @@ A user function, which computes the generalized forces $\fv_u$ on the right-hand
 | `q` | Vector | $\qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` coordinates of the object, without reference values |
 | `q_t` | Vector | $\dot \qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` velocities of the object |
 | `y` | Vector | $\yv \in \Rcal^{n_1}$ the {ref}`ODE1 <ODE1>` coordinates of the object, without reference values |
+| `x` | Vector | $\xv \in \Rcal^{n_d}$ the data coordinates of the object, constant during the Newton iterations of a step; empty without nodeNumbersData |
 | `parameters` | Vector | $\pv_{par}$ the parameters of the object; empty if not given |
 | **return value** | Vector | $\fv_u \in \Rcal^{n_2}$, as list or numpy array |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `rhsUserFunction(mbs, t, itemNumber, q, q_t, y, parameters)`
+**Userfunction**: `rhsUserFunction(mbs, t, itemNumber, q, q_t, y, x, parameters)`
 A user function, which computes the term $\gv_u$ of the right-hand side of the {ref}`ODE1 <ODE1>` equations from the coordinates of the object.
 
 | arguments / return | type or size | description |
@@ -148,12 +162,13 @@ A user function, which computes the term $\gv_u$ of the right-hand side of the {
 | `q` | Vector | $\qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` coordinates of the object, without reference values |
 | `q_t` | Vector | $\dot \qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` velocities of the object |
 | `y` | Vector | $\yv \in \Rcal^{n_1}$ the {ref}`ODE1 <ODE1>` coordinates of the object, without reference values |
+| `x` | Vector | $\xv \in \Rcal^{n_d}$ the data coordinates of the object, constant during the Newton iterations of a step; empty without nodeNumbersData |
 | `parameters` | Vector | $\pv_{par}$ the parameters of the object; empty if not given |
 | **return value** | Vector | $\gv_u \in \Rcal^{n_1}$, as list or numpy array |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t, y, parameters)`
+**Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t, y, x, parameters)`
 A user function, which computes the mass matrix $\Mm$ of the {ref}`ODE2 <ODE2>` equations instead of the constant massMatrix.
 
 | arguments / return | type or size | description |
@@ -164,12 +179,13 @@ A user function, which computes the mass matrix $\Mm$ of the {ref}`ODE2 <ODE2>` 
 | `q` | Vector | $\qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` coordinates of the object, without reference values |
 | `q_t` | Vector | $\dot \qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` velocities of the object |
 | `y` | Vector | $\yv \in \Rcal^{n_1}$ the {ref}`ODE1 <ODE1>` coordinates of the object, without reference values |
+| `x` | Vector | $\xv \in \Rcal^{n_d}$ the data coordinates of the object, constant during the Newton iterations of a step; empty without nodeNumbersData |
 | `parameters` | Vector | $\pv_{par}$ the parameters of the object; empty if not given |
 | **return value** | MatrixContainer | $\Mm \in \Rcal^{n_2 \times n_2}$, as numpy array, list of lists or exu.MatrixContainer |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `constraintUserFunction(mbs, t, itemNumber, q, q_t, y, z, velocityLevel, parameters)`
+**Userfunction**: `constraintUserFunction(mbs, t, itemNumber, q, q_t, y, z, x, velocityLevel, parameters)`
 A user function, which computes the term $\cv_u$ added to the algebraic equations.
 
 | arguments / return | type or size | description |
@@ -181,13 +197,14 @@ A user function, which computes the term $\cv_u$ added to the algebraic equation
 | `q_t` | Vector | $\dot \qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` velocities of the object |
 | `y` | Vector | $\yv \in \Rcal^{n_1}$ the {ref}`ODE1 <ODE1>` coordinates of the object, without reference values |
 | `z` | Vector | $\tlambda \in \Rcal^{n_a}$ the algebraic coordinates of the object, the Lagrange multipliers |
+| `x` | Vector | $\xv \in \Rcal^{n_d}$ the data coordinates of the object, constant during the Newton iterations of a step; empty without nodeNumbersData |
 | `velocityLevel` | Bool | True if the solver asks for the algebraic equations at velocity level, the time derivative of $\cv_u$ |
 | `parameters` | Vector | $\pv_{par}$ the parameters of the object; empty if not given |
 | **return value** | Vector | $\cv_u \in \Rcal^{n_a}$, as list or numpy array |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, y, z, factorODE2, factorODE2_t, factorODE1, parameters)`
+**Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, y, z, x, factorODE2, factorODE2_t, factorODE1, parameters)`
 A user function, which computes the local Jacobian $\Jm_u$ of the terms of the user functions, see {eq}`eq-objectgenericdae-jac`.
 
 | arguments / return | type or size | description |
@@ -199,11 +216,31 @@ A user function, which computes the local Jacobian $\Jm_u$ of the terms of the u
 | `q_t` | Vector | $\dot \qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` velocities of the object |
 | `y` | Vector | $\yv \in \Rcal^{n_1}$ the {ref}`ODE1 <ODE1>` coordinates of the object, without reference values |
 | `z` | Vector | $\tlambda \in \Rcal^{n_a}$ the algebraic coordinates of the object, the Lagrange multipliers |
+| `x` | Vector | $\xv \in \Rcal^{n_d}$ the data coordinates of the object, constant during the Newton iterations of a step; empty without nodeNumbersData |
 | `factorODE2` | Real | $f_{ODE2}$, the factor of the derivatives by $\qv$ |
 | `factorODE2_t` | Real | $f_{ODE2_t}$, the factor of the derivatives by $\dot \qv$ |
 | `factorODE1` | Real | $f_{ODE1}$, the factor of the derivatives by $\yv$ |
 | `parameters` | Vector | $\pv_{par}$ the parameters of the object; empty if not given |
 | **return value** | MatrixContainer | $\Jm_u \in \Rcal^{n \times n}$, $n = n_2 + n_1 + n_a$, as numpy array or list of lists |
+
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
+**Userfunction**: `postNewtonStepUserFunction(mbs, t, itemNumber, q, q_t, y, z, x, x0, parameters)`
+A user function, which updates the data coordinates of the object after each Newton iteration of a step and measures the error of the switch, for discrete controllers, hysteresis and other switching states; also as symbolic user function.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which the object belongs |
+| `t` | Real | current time in mbs |
+| `itemNumber` | Index | integer number $i_N$ of the object in mbs |
+| `q` | Vector | $\qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` coordinates of the object, without reference values |
+| `q_t` | Vector | $\dot \qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` velocities of the object |
+| `y` | Vector | $\yv \in \Rcal^{n_1}$ the {ref}`ODE1 <ODE1>` coordinates of the object, without reference values |
+| `z` | Vector | $\tlambda \in \Rcal^{n_a}$ the algebraic coordinates of the object, the Lagrange multipliers |
+| `x` | Vector | $\xv^{k-1} \in \Rcal^{n_d}$ the data coordinates of the previous iteration of the step |
+| `x0` | Vector | $\xv^{0} \in \Rcal^{n_d}$ the data coordinates at the start of the step |
+| `parameters` | Vector | $\pv_{par}$ the parameters of the object; empty if not given |
+| **return value** | Vector | $[\varepsilon_{PN},\, \Delta t_{recom},\, \xv^{k}]$, as list or numpy array of $2 + n_d$ values: the error of the switch, 0 if nothing switched; a step size the solver should reduce to, or a value < 0 for none; the new data coordinates |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
@@ -230,4 +267,4 @@ exu.sys['testResult'] = mbs.systemData.GetODE2Coordinates()[0]
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAESymbolicTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAESymbolicTest.py) (TM), [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM), [`genericDAEUserFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEUserFunctionsTest.py) (TM), [`symbolicSystemGenericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemGenericDAETest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAEDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEDataTest.py) (TM), [`genericDAESymbolicTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAESymbolicTest.py) (TM), [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM), [`genericDAEUserFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEUserFunctionsTest.py) (TM), [`symbolicSystemGenericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemGenericDAETest.py) (TM)

@@ -1400,6 +1400,7 @@ bool MainObjectGenericDAE::CheckPreAssembleConsistency(const MainSystem& mainSys
 	const CObjectGenericDAEParameters& p = cObject->GetParameters();
 	Index n2Nodes = p.nodeNumbersODE2.NumberOfItems();
 	Index n1Nodes = p.nodeNumbersODE1.NumberOfItems();
+	Index nAENodes = p.nodeNumbersAE.NumberOfItems();
 	if (cObject->GetNumberOfNodes() == 0)
 	{
 		errorString = "ObjectGenericDAE: has no nodes";
@@ -1407,8 +1408,10 @@ bool MainObjectGenericDAE::CheckPreAssembleConsistency(const MainSystem& mainSys
 	}
 	for (Index nn = 0; nn < cObject->GetNumberOfNodes(); nn++)
 	{
-		CNodeGroup group = (nn < n2Nodes) ? CNodeGroup::ODE2variables : ((nn < n2Nodes + n1Nodes) ? CNodeGroup::ODE1variables : CNodeGroup::AEvariables);
-		const char* list = (nn < n2Nodes) ? "nodeNumbersODE2" : ((nn < n2Nodes + n1Nodes) ? "nodeNumbersODE1" : "nodeNumbersAE");
+		CNodeGroup group = (nn < n2Nodes) ? CNodeGroup::ODE2variables : ((nn < n2Nodes + n1Nodes) ? CNodeGroup::ODE1variables
+			: ((nn < n2Nodes + n1Nodes + nAENodes) ? CNodeGroup::AEvariables : CNodeGroup::DataVariables));
+		const char* list = (nn < n2Nodes) ? "nodeNumbersODE2" : ((nn < n2Nodes + n1Nodes) ? "nodeNumbersODE1"
+			: ((nn < n2Nodes + n1Nodes + nAENodes) ? "nodeNumbersAE" : "nodeNumbersData"));
 		if (!EXUstd::IsOfType(cObject->GetCNode(nn)->GetNodeGroup(), group))
 		{
 			errorString = STDstring("ObjectGenericDAE: node ") + EXUstd::ToString(cObject->GetNodeNumber(nn)) + " of " + list + " is a "
@@ -1435,6 +1438,11 @@ bool MainObjectGenericDAE::CheckPreAssembleConsistency(const MainSystem& mainSys
 	if (p.constraintUserFunction && !p.constraintUserFunction.GetSymbolicFunction() && !p.jacobianUserFunction)
 	{
 		errorString = "ObjectGenericDAE: a Python constraintUserFunction needs the jacobianUserFunction, as the Jacobian of the algebraic equations is not computed numerically (#3191)";
+		return false;
+	}
+	if (p.postNewtonStepUserFunction && p.nodeNumbersData.NumberOfItems() == 0)
+	{
+		errorString = "ObjectGenericDAE: the postNewtonStepUserFunction needs data nodes, nodeNumbersData (#3195)";
 		return false;
 	}
 	if (p.constraintUserFunction && nAE == 0)

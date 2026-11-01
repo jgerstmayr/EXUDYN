@@ -13,9 +13,12 @@ public:
     std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> objectGenericODE2MassMatrixUserFunction;
     std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,Real,Real)> objectGenericODE2JacobianUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,const StdVector&)> objectGenericODE1RhsUserFunction;
-    std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> objectGenericDAEForceUserFunction;
-    std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,bool,const StdVector&)> objectGenericDAEConstraintUserFunction;
-    std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,Real,Real,Real,const StdVector&)> objectGenericDAEJacobianUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> objectGenericDAEForceUserFunction;
+    std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> objectGenericDAEMassMatrixUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,bool,const StdVector&)> objectGenericDAEConstraintUserFunction;
+    std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,Real,Real,Real,const StdVector&)> objectGenericDAEJacobianUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> objectGenericDAEPostNewtonStepUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> objectUserBodyForceUserFunction;
     std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> objectUserBodyPositionUserFunction;
     std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> objectUserBodyPositionJacobianUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> objectUserBodyOutputVariableUserFunction;
@@ -135,37 +138,44 @@ public:
         }
         else if (itemTypeName == "ObjectGenericDAE" && userFunctionName == "forceUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericDAEForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
+            objectGenericDAEForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5, const StdVector& arg6)
                 {
-                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
+                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
                 };
         }
         else if (itemTypeName == "ObjectGenericDAE" && userFunctionName == "rhsUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericDAEForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
+            objectGenericDAEForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5, const StdVector& arg6)
                 {
-                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
+                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
                 };
         }
         else if (itemTypeName == "ObjectGenericDAE" && userFunctionName == "massMatrixUserFunction")
         {            //define the user function as lambda function of this
-            nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
+            objectGenericDAEMassMatrixUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5, const StdVector& arg6)
                 {
-                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
                 };
         }
         else if (itemTypeName == "ObjectGenericDAE" && userFunctionName == "constraintUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericDAEConstraintUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5, bool arg6, const StdVector& arg7)
+            objectGenericDAEConstraintUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5, const StdVector& arg6, bool arg7, const StdVector& arg8)
                 {
-                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
                 };
         }
         else if (itemTypeName == "ObjectGenericDAE" && userFunctionName == "jacobianUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericDAEJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5, Real arg6, Real arg7, Real arg8, const StdVector& arg9)
+            objectGenericDAEJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5, const StdVector& arg6, Real arg7, Real arg8, Real arg9, const StdVector& arg10)
                 {
-                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+                };
+        }
+        else if (itemTypeName == "ObjectGenericDAE" && userFunctionName == "postNewtonStepUserFunction")
+        {            //define the user function as lambda function of this
+            objectGenericDAEPostNewtonStepUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5, const StdVector& arg6, const StdVector& arg7, const StdVector& arg8)
+                {
+                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
                 };
         }
         else if (itemTypeName == "ObjectUserBody" && userFunctionName == "massMatrixUserFunction")
@@ -184,7 +194,7 @@ public:
         }
         else if (itemTypeName == "ObjectUserBody" && userFunctionName == "forceUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericDAEForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
+            objectUserBodyForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, const StdVector& arg4, const StdVector& arg5)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
                 };
@@ -505,17 +515,29 @@ public:
 		{
 			return objectGenericODE1RhsUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>)
 		{
 			return objectGenericDAEForceUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,bool,const StdVector&)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>)
+		{
+			return objectGenericDAEMassMatrixUserFunction;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,bool,const StdVector&)>>)
 		{
 			return objectGenericDAEConstraintUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,Real,Real,Real,const StdVector&)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,Real,Real,Real,const StdVector&)>>)
 		{
 			return objectGenericDAEJacobianUserFunction;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>)
+		{
+			return objectGenericDAEPostNewtonStepUserFunction;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>)
+		{
+			return objectUserBodyForceUserFunction;
 		}
         else if constexpr (std::is_same_v<UFT, std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>)
 		{

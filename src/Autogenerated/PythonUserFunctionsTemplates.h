@@ -13,9 +13,12 @@ template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,
 template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,Real,Real)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const StdVector&)>>;
+template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>;
+template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>;
+template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,bool,const StdVector&)>>;
+template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,Real,Real,Real,const StdVector&)>>;
+template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>;
-template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,bool,const StdVector&)>>;
-template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,Real,Real,Real,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)>>;

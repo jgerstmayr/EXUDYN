@@ -909,7 +909,7 @@ class SymbolicSystem(SymbolicSystemBase):
         """the arguments after mbs of the user functions of ObjectGenericDAE i of kind: t, itemNumber, its q, q_t, y and
         its parameters"""
         (ltg, dae) = (kind.ltg[i], kind.parameters[i])
-        return (t, kind.objects[i], q[ltg], q_t[ltg], y[dae['ltgODE1']], dae['parameters'])
+        return (t, kind.objects[i], q[ltg], q_t[ltg], y[dae['ltgODE1']], np.zeros(0), dae['parameters']) #no data coordinates yet
 
     def _DAECall(self, kind, name, i, q, q_t, y, t):
         """the result of the recorded user function name of ObjectGenericDAE i of kind, as numpy array"""
@@ -964,7 +964,7 @@ class SymbolicSystem(SymbolicSystemBase):
                                                                               ('y', len(dae['ltgODE1'])), ('z', len(dae['ltgAE']))])
             t = variables.Add('t', 0.)
             backend = _Backend('symbolic', parameterVariables=False)
-            c = _Caller('symbolic')(kind.recordings['constraintUserFunction'], t, objectNumber, q, q_t, y, z, 0.,
+            c = _Caller('symbolic')(kind.recordings['constraintUserFunction'], t, objectNumber, q, q_t, y, z, exudyn.symbolic.Vector([]), 0.,
                                     self._ParameterVector(backend, objectNumber, dae['parameters']))
             c = backend.Vector([c[k] for k in range(len(dae['ltgAE']))])
             result = [c[k] for k in range(len(dae['ltgAE']))]
@@ -1940,14 +1940,14 @@ class SymbolicSystem(SymbolicSystemBase):
             raise ValueError('SymbolicSystem: object ' + str(objectNumber) + ' (GenericDAE) has a constraintUserFunction, so its '
                              'equations need the variable z')
         value = Call(kind.recordings['constraintUserFunction'], t, objectNumber, backend.Vector(qLocal), backend.Vector(q_tLocal),
-                     backend.Vector(yLocal), backend.Vector([zAll[i] for i in dae['ltgAE']]), 0.,
+                     backend.Vector(yLocal), backend.Vector([zAll[i] for i in dae['ltgAE']]), backend.Vector([]), 0.,
                      self._ParameterVector(backend, objectNumber, dae['parameters']))
         return [value[k] for k in range(len(dae['ltgAE']))]
 
     def _DAESymbolicArguments(self, backend, kind, index, t, qLocal, q_tLocal, yLocal):
         """the arguments after mbs of the recorded user functions of ObjectGenericDAE index of kind as expressions"""
         objectNumber = kind.objects[index]
-        return (t, objectNumber, backend.Vector(qLocal), backend.Vector(q_tLocal), backend.Vector(yLocal),
+        return (t, objectNumber, backend.Vector(qLocal), backend.Vector(q_tLocal), backend.Vector(yLocal), backend.Vector([]),
                 self._ParameterVector(backend, objectNumber, kind.parameters[index]['parameters']))
 
     def _ODE1ReactionTerms(self, backend, z, q, q_t, y, t):

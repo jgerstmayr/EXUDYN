@@ -102,10 +102,10 @@ C_y = np.array([[0.3, 1.]])
 c0 = C_q @ q0 + C_y @ y0
 parameters = [3., 0.4]
 
-def UFforce(mbs, t, itemNumber, q, q_t, y, parameters):
+def UFforce(mbs, t, itemNumber, q, q_t, y, x, parameters):
     return [-parameters[0]*q[0]**3, parameters[1]*cMath.sin(y[0])]
 
-def UFrhs(mbs, t, itemNumber, q, q_t, y, parameters):
+def UFrhs(mbs, t, itemNumber, q, q_t, y, x, parameters):
     return [-parameters[1]*y[0]*y[1], q[1]*q_t[0]]
 
 class Reference(NumpySystem):
@@ -131,10 +131,10 @@ for userFunctions in [False, True]:
 
     def Forces(q, q_t, t, y):
         value = f - K @ q - D @ q_t - E @ y
-        return value + (np.array(UFforce(None, t, 0, q, q_t, y, parameters)) if userFunctions else 0.)
+        return value + (np.array(UFforce(None, t, 0, q, q_t, y, [], parameters)) if userFunctions else 0.)
     def RHS(q, q_t, y, t):
         value = A @ y + B @ q + B_t @ q_t + g
-        return value + (np.array(UFrhs(None, t, 0, q, q_t, y, parameters)) if userFunctions else 0.)
+        return value + (np.array(UFrhs(None, t, 0, q, q_t, y, [], parameters)) if userFunctions else 0.)
     system = Reference(M, Forces, initialState=(q0, q_t0), ode1RHS=RHS, initialStateODE1=y0,
                        constraints=lambda q, q_t, y, z, t: C_q @ q + C_y @ y - c0,
                        constraintJacobian=lambda q, q_t, y, t: C_q, numberOfConstraints=1)

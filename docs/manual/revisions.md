@@ -60,7 +60,10 @@ ObjectGenericDAE, whose massMatrix may be empty for an object that only constrai
 equal to the built-in items to 1e-12 (#3193). The `postNewtonStepUserFunction` of ObjectConnectorUser gets the frames
 and twists of the markers as its forceUserFunction, `(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates,
 dataCoordinatesStartOfStep, parameters)`, and returns the vector `[discontinuousError, recommendedStepSize, *data]`,
-so that it can be recorded; it got the markers as objects and returned a tuple before (#3194).
+so that it can be recorded; it got the markers as objects and returned a tuple before (#3194). ObjectGenericDAE has
+data nodes, `nodeNumbersData`: every user function gets the data coordinates `x` after `y` (after `z` in the
+constraint and Jacobian functions), and a `postNewtonStepUserFunction(mbs, t, itemNumber, q, q_t, y, z, x, x0,
+parameters)` updates them after each Newton iteration, e.g. for a discrete controller (#3195).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

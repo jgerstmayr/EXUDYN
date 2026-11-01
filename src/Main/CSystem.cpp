@@ -1001,6 +1001,7 @@ cSystemData.objectsBodyWithODE2Coords.Flush();
 	cSystemData.listComputeObjectODE2LhsNoUF.Flush();
 	cSystemData.listComputeObjectODE1Rhs.Flush();
 	cSystemData.listDiscontinuousIteration.Flush();
+	cSystemData.listPostNewtonBodies.Flush();
 	cSystemData.listOfLoadsNoUF.Flush();
 	cSystemData.listOfLoadsUF.Flush();
 	cSystemData.listOfMarkersPostNewton.Flush();
@@ -1124,6 +1125,8 @@ cSystemData.objectsBodyWithODE2Coords.Flush();
 			}
 
 		}
+
+		if (object->HasPostNewtonStepBody()) { cSystemData.listPostNewtonBodies.Append(i); } //(#3195)
 
 		//PostNewtonStep, PostDiscontinuousIteration:
 		//for constraint, algebraic equations depend on Markers
@@ -2611,6 +2614,17 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 			}
 		}
 
+	}
+
+	//the bodies with a post-Newton step of their data coordinates, serially (#3195)
+	for (Index i : cSystemData.listPostNewtonBodies)
+	{
+		Real objectRecomStepSize = -1;
+		PNerror = EXUstd::Maximum(cSystemData.GetCObjects()[i]->PostNewtonStepBody(objectRecomStepSize), PNerror);
+		if (objectRecomStepSize >= 0 && (objectRecomStepSize < recommendedStepSize || recommendedStepSize == -1))
+		{
+			recommendedStepSize = objectRecomStepSize;
+		}
 	}
 
 	//only for markers with HasPostNewton

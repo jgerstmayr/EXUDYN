@@ -40,24 +40,24 @@ import numpy as np
 parameters = [m, L, d, tau]
 
 #written with components, so that the functions compute numbers and are recorded; q is relative to the reference
-def UFmass(mbs, t, itemNumber, q, q_t, y, parameters):
+def UFmass(mbs, t, itemNumber, q, q_t, y, x, parameters):
     return [[parameters[0], 0.], [0., parameters[0]]]
 
-def UFforce(mbs, t, itemNumber, q, q_t, y, parameters):
+def UFforce(mbs, t, itemNumber, q, q_t, y, x, parameters):
     return [-parameters[2]*q_t[0], -parameters[2]*q_t[1]]
 
-def UFconstraint(mbs, t, itemNumber, q, q_t, y, z, velocityLevel, parameters):
+def UFconstraint(mbs, t, itemNumber, q, q_t, y, z, x, velocityLevel, parameters):
     (x, yy) = (x0 + q[0], y0 + q[1])
     return [x*x + yy*yy - parameters[1]**2]
 
-def UFconstraintCoupled(mbs, t, itemNumber, q, q_t, y, z, velocityLevel, parameters): #of q, y and z: a compliance
+def UFconstraintCoupled(mbs, t, itemNumber, q, q_t, y, z, x, velocityLevel, parameters): #of q, y and z: a compliance
     (x, yy) = (x0 + q[0], y0 + q[1])                                                    #-1e-4 z, a stiffness 1e4
     return [x*x + yy*yy - parameters[1]**2 + 0.05*y[0]**2 - 1e-4*z[0]]
 
-def UFrhs(mbs, t, itemNumber, q, q_t, y, parameters): #the lag phi_t = (x/L - phi)/tau
+def UFrhs(mbs, t, itemNumber, q, q_t, y, x, parameters): #the lag phi_t = (x/L - phi)/tau
     return [((x0 + q[0])/parameters[1] - y[0])/parameters[3]]
 
-def UFjacobian(mbs, t, itemNumber, q, q_t, y, z, factorODE2, factorODE2_t, factorODE1, parameters):
+def UFjacobian(mbs, t, itemNumber, q, q_t, y, z, x, factorODE2, factorODE2_t, factorODE1, parameters):
     (x, yy) = (x0 + q[0], y0 + q[1])
     J = np.zeros((4, 4)) #rows and columns q (2), y, z
     J[0, 0] = J[1, 1] = factorODE2_t*parameters[2] #-df_u/dq_t

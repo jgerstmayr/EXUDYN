@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-01  10:32:52 (last modified)
+* @date         2026-11-01  11:47:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,6 +34,7 @@ public: // AUTO:
     ArrayIndex nodeNumbersODE2;                   //!< AUTO: the nodes of the ABRV:ODE2 coordinates \f$\qv\f$, any nodes with ABRV:ODE2 coordinates
     ArrayIndex nodeNumbersODE1;                   //!< AUTO: the NodeGenericODE1 of the ABRV:ODE1 coordinates \f$\yv\f$
     ArrayIndex nodeNumbersAE;                     //!< AUTO: the NodeGenericAE of the algebraic coordinates \f$\tlambda\f$; their number of coordinates is the number of algebraic equations
+    ArrayIndex nodeNumbersData;                   //!< AUTO: the NodeGenericData of the data coordinates \f$\xv\f$, which the user functions get and the postNewtonStepUserFunction updates (#3195)
     Matrix massMatrix;                            //!< AUTO: the mass matrix; empty: zero, for an object that constrains the coordinates of other items (#3193)
     Matrix dampingMatrix;                         //!< AUTO: the damping matrix
     Matrix stiffnessMatrix;                       //!< AUTO: the stiffness matrix
@@ -47,17 +48,19 @@ public: // AUTO:
     Matrix constraintMatrixODE1;                  //!< AUTO: the ABRV:ODE1 coordinates in the algebraic equations
     Vector constraintVector;                      //!< AUTO: the constant term of the algebraic equations
     Vector parameters;                            //!< AUTO: the parameters of the object, passed to every user function; see exudyn.advancedUtilities.ParameterLayout; empty by default
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the nonlinear generalized forces of the ABRV:ODE2 equations
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rhsUserFunction;//!< AUTO: A Python user function which computes the nonlinear term of the right-hand side of the ABRV:ODE1 equations
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix instead of the constant massMatrix (#3191)
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,bool,const StdVector&)> > constraintUserFunction;//!< AUTO: A Python user function which computes the nonlinear term of the algebraic equations (#3191)
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,Real,Real,Real,const StdVector&)> > jacobianUserFunction;//!< AUTO: A Python user function which computes the local Jacobian of the terms of all user functions, see the Jacobians below (#3191)
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the nonlinear generalized forces of the ABRV:ODE2 equations
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rhsUserFunction;//!< AUTO: A Python user function which computes the nonlinear term of the right-hand side of the ABRV:ODE1 equations
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix instead of the constant massMatrix (#3191)
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,bool,const StdVector&)> > constraintUserFunction;//!< AUTO: A Python user function which computes the nonlinear term of the algebraic equations (#3191)
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,Real,Real,Real,const StdVector&)> > jacobianUserFunction;//!< AUTO: A Python user function which computes the local Jacobian of the terms of all user functions, see the Jacobians below (#3191)
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > postNewtonStepUserFunction;//!< AUTO: A Python user function which returns the error of the switch, a recommended step size and the new data coordinates after each Newton iteration; needs nodeNumbersData (#3195)
     //! AUTO: default constructor with parameter initialization
     CObjectGenericDAEParameters()
     {
         nodeNumbersODE2 = ArrayIndex();
         nodeNumbersODE1 = ArrayIndex();
         nodeNumbersAE = ArrayIndex();
+        nodeNumbersData = ArrayIndex();
         massMatrix = Matrix();
         dampingMatrix = Matrix();
         stiffnessMatrix = Matrix();
@@ -76,6 +79,7 @@ public: // AUTO:
         massMatrixUserFunction = 0;
         constraintUserFunction = 0;
         jacobianUserFunction = 0;
+        postNewtonStepUserFunction = 0;
     };
 };
 
@@ -109,6 +113,7 @@ protected: // AUTO:
     mutable Vector tempCoordinates_t;             //!< AUTO: the ABRV:ODE2 velocities, kept between the calls
     mutable Vector tempCoordinatesODE1;           //!< AUTO: the ABRV:ODE1 coordinates, kept between the calls
     mutable Vector tempCoordinatesAE;             //!< AUTO: the algebraic coordinates, kept between the calls
+    mutable Vector tempCoordinatesData;           //!< AUTO: the data coordinates, kept between the calls
     mutable Matrix tempJacobian;                  //!< AUTO: the local Jacobian of the jacobianUserFunction, kept between the calls
     mutable ResizableVector tempUserFunctionResult;//!< AUTO: the result of a user function, kept between the calls
 
@@ -120,6 +125,7 @@ public: // AUTO:
         tempCoordinates_t = Vector();
         tempCoordinatesODE1 = Vector();
         tempCoordinatesAE = Vector();
+        tempCoordinatesData = Vector();
         tempJacobian = Matrix();
         tempUserFunctionResult = ResizableVector();
     };
@@ -138,6 +144,7 @@ public: // AUTO:
         list.Append(&parameters.massMatrixUserFunction);
         list.Append(&parameters.constraintUserFunction);
         list.Append(&parameters.jacobianUserFunction);
+        list.Append(&parameters.postNewtonStepUserFunction);
     }
 
     //! AUTO:  Write (Reference) access to:\f$\qv_{temp}\f$the ABRV:ODE2 coordinates, kept between the calls
@@ -168,6 +175,13 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:\f$\tlambda_{temp}\f$the algebraic coordinates, kept between the calls
     Vector& GetTempCoordinatesAE() { return tempCoordinatesAE; }
 
+    //! AUTO:  Write (Reference) access to:\f$\xv_{temp}\f$the data coordinates, kept between the calls
+    void SetTempCoordinatesData(const Vector& value) { tempCoordinatesData = value; }
+    //! AUTO:  Read (Reference) access to:\f$\xv_{temp}\f$the data coordinates, kept between the calls
+    const Vector& GetTempCoordinatesData() const { return tempCoordinatesData; }
+    //! AUTO:  Read (Reference) access to:\f$\xv_{temp}\f$the data coordinates, kept between the calls
+    Vector& GetTempCoordinatesData() { return tempCoordinatesData; }
+
     //! AUTO:  Write (Reference) access to:the local Jacobian of the jacobianUserFunction, kept between the calls
     void SetTempJacobian(const Matrix& value) { tempJacobian = value; }
     //! AUTO:  Read (Reference) access to:the local Jacobian of the jacobianUserFunction, kept between the calls
@@ -185,7 +199,7 @@ public: // AUTO:
     //! AUTO:  true if a Python user function is given; the object is then computed in the main thread
     virtual bool HasUserFunction() const override
     {
-        return (parameters.forceUserFunction!=0) || (parameters.rhsUserFunction!=0) || (parameters.massMatrixUserFunction!=0) || (parameters.constraintUserFunction!=0) || (parameters.jacobianUserFunction!=0);
+        return (parameters.forceUserFunction!=0) || (parameters.rhsUserFunction!=0) || (parameters.massMatrixUserFunction!=0) || (parameters.constraintUserFunction!=0) || (parameters.jacobianUserFunction!=0) || (parameters.postNewtonStepUserFunction!=0);
     }
 
     //! AUTO:  Computational function: compute mass matrix
@@ -236,7 +250,7 @@ public: // AUTO:
     //! AUTO:  number of nodes; needed for every object; can depend on the configuration
     virtual Index GetNumberOfNodes() const override
     {
-        return parameters.nodeNumbersODE2.NumberOfItems() + parameters.nodeNumbersODE1.NumberOfItems() + parameters.nodeNumbersAE.NumberOfItems();
+        return parameters.nodeNumbersODE2.NumberOfItems() + parameters.nodeNumbersODE1.NumberOfItems() + parameters.nodeNumbersAE.NumberOfItems() + parameters.nodeNumbersData.NumberOfItems();
     }
 
     //! AUTO:  number of ABRV:ODE2 coordinates; needed for object?
@@ -264,13 +278,25 @@ public: // AUTO:
     void ComputeObjectCoordinates(Vector& q, Vector& q_t, Vector& y, ConfigurationType configuration = ConfigurationType::Current) const;
 
     //! AUTO:  call of the force or the rhs user function with the coordinates of tempCoordinates, the size checked; implemented in evaluateUserFunctions.cpp
-    void EvaluateUserFunction(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction, const char* name, Index size, Vector& result) const;
+    void EvaluateUserFunction(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction, const char* name, Index size, Vector& result) const;
 
     //! AUTO:  factor times the derivative of the recorded force or rhs user function by its argument of index argument (2: q, 3: q_t, 4: y) at tempCoordinates, added to jacobian, by the one-pass derivative (#3189); implemented in evaluateUserFunctions.cpp
-    void AddUserFunctionJacobian(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction, const char* name, Index argument, Real factor, ResizableMatrix& jacobian) const;
+    void AddUserFunctionJacobian(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction, const char* name, Index argument, Real factor, ResizableMatrix& jacobian) const;
 
-    //! AUTO:  the coordinates of the user functions in tempCoordinates, tempCoordinates_t, tempCoordinatesODE1 and tempCoordinatesAE (#3191)
+    //! AUTO:  the coordinates of the user functions in tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE and tempCoordinatesData (#3191, #3195)
     void ComputeUserFunctionCoordinates() const;
+
+    //! AUTO:  the data coordinates of the data nodes (#3195)
+    void ComputeDataCoordinates(Vector& x, ConfigurationType configuration = ConfigurationType::Current) const;
+
+    //! AUTO:  true with a postNewtonStepUserFunction, which the system calls after each Newton iteration (#3195)
+    virtual bool HasPostNewtonStepBody() const override
+    {
+        return (parameters.postNewtonStepUserFunction!=0);
+    }
+
+    //! AUTO:  the postNewtonStepUserFunction: stores the new data coordinates, returns the error and the recommended step size (#3195); implemented in evaluateUserFunctions.cpp
+    virtual Real PostNewtonStepBody(Real& recommendedStepSize) override;
 
     //! AUTO:  the massMatrixUserFunction at tempCoordinates into massMatrix (#3191); implemented in evaluateUserFunctions.cpp
     void EvaluateMassMatrixUserFunction(EXUmath::MatrixContainer& massMatrix, const ArrayIndex& ltg) const;
