@@ -57,25 +57,54 @@ A **binding** ties one number of the model - a *slot* - to an expression of the 
 - `ParameterBindings` (a small class in `exudyn.symbolics.systemModel`): `Add(slot, expression)`, the set of the
   parameters found in the expressions, `Check(mbs)`, `Apply(mbs)` (the numbers into the items by
   `SetObjectParameter`, `SetMarkerParameter`, `SetLoadParameter`), and the expression of a slot for `Equations()`.
-  `creator.parameterVariables` of #3152 is the special case of the field `'parameters'` of objects and is converted.
+  `creator.parameterVariables` of #3152 is the special case of the field `'parameters'` of objects; it is replaced by
+  the bindings written into the items (2.3).
 - **Structure stays Python.** A slot whose value changes the structure of the computation - a number of points, a
   formulation, a flag - cannot be bound; it is a Python constant of the recording (#3203). A binding is only for
   values that enter the equations as numbers.
 
-### 2.3 Where bindings come from
+### 2.3 Where bindings come from: written into the items (revised 2026-11-01)
 
-1. **UserItemCreator**: every argument that becomes numbers of an item may be an `esym.Real` or contain them - the
-   mass, the inertia, the positions and axes of joints and connectors, stiffness and damping matrices, load vectors.
-   The creator evaluates them for the item and adds the bindings of the slots it writes; it knows which argument
-   goes into which slot. `creator.parameters` replaces `parameterVariables`.
-2. **By hand**, for an item built with mbs directly: `bindings.Add(('marker', m, 'localPosition', 2), h)`.
-3. **The inertia** is computed from parameters: a symbolic counterpart of `InertiaCuboid`, `InertiaCylinder`, ... -
-   the mass, the inertia tensor about the center of mass and the center of mass as expressions -, or the three given
-   by the user as expressions (decision P3). `RigidBodyInertia` itself computes with numpy and stays numeric.
+The maintainer asked whether a parameter such as `m1 = esym.Real('m1', 13.5)` can simply be written into an item,
+for example into the `parameters` vector of a user item, and be recognized as a binding. It can, and this is now the
+proposed way (decision P1, section 2.7):
+
+```python
+m1 = esym.Real('m1', 13.5); L = esym.Real('L', 0.8)
+oBody = mbs.AddObject(ObjectConnectorUser(markerNumbers=[m0, m1], parameters=[m1, 2., m1*L], ...))
+mMid = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[L/2, 0, 0]))
+system = SymbolicSystem(mbs)            #finds the bindings of mbs; parameters=... no longer needed
+```
+
+1. **Automatic, at the Python boundary.** `mbs.AddNode/AddObject/AddMarker/AddLoad/AddSensor`, the `Modify...`
+   functions and `SetObjectParameter` (and the like) take any `esym.Real` - a named variable or an expression of
+   them - wherever the item has a number, also as a component of a vector or matrix. The Python layer replaces it by
+   its value before the dict reaches C++, and adds the binding of that slot. The slot is (item type, item number,
+   field, component); the item number is known once the Add returns.
+   - Today such a dict fails: `float()` of an `esym.Real` raises, so no model relies on the conversion and none
+     changes.
+   - A number written later into a bound slot removes its binding; a new `esym.Real` replaces it; `mbs.Reset()`
+     clears all bindings.
+   - The C++ items stay numeric and unchanged: the validated dicts carry numbers as before.
+2. **The bindings live with the system**, `mbs.parameterBindings` (a `ParameterBindings` in `mbs.sys`). They are
+   readable: `mbs.GetObject(o, symbolic=True)['parameters']` gives `[m1, 2., m1*L]`, the expression where a slot is
+   bound and the number otherwise, and `mbs.parameterBindings.Parameters()` lists the named variables found.
+3. **UserItemCreator** gets the bindings for free: its Create functions write their arguments into the items, which
+   records the slots; `creator.parameterVariables` of #3152 becomes unnecessary and is removed.
+4. **By hand** remains possible for a slot written without a symbolic value: `mbs.parameterBindings.Add(slot, expr)`.
+5. **The inertia** (decision P3): `RigidBodyInertia` and its shapes (`InertiaCuboid`, `InertiaCylinder`, ...) work
+   with numbers and with symbolic values. Numbers give numpy arrays as now; symbolic values give `esym.Real`,
+   `esym.Vector` and `esym.Matrix` members. Probed on 2026-11-01, they fail today in a few places:
+   - the shape checks (`np.array(...).shape` of an `esym.Matrix`);
+   - conditions on values (`if` in `InertiaCylinder`, `InertiaSphere`), which become decisions by type, as in
+     `exudyn.symbolics.utilities.IfThenElse`.
+
+   `CreateRigidBody(inertia=...)` then writes the symbolic mass, inertia and center of mass into the body, and
+   the bindings follow from 1.
 
 ### 2.4 SymbolicSystem with bindings
 
-- `SymbolicSystem(mbs, parameters=bindings)`: `Equations()` reads every bound slot as its expression - the
+- `SymbolicSystem(mbs)` takes `mbs.parameterBindings`: `Equations()` reads every bound slot as its expression - the
   `parameters` of the objects as now, and the local positions and rotations of the markers in the marker kinematics,
   the load vectors, the matrices and vectors of ObjectGenericODE2 and ObjectGenericDAE -, each where `_EquationLists`
   takes the number now (the `_ParameterVector` of #3152, generalized to a slot).
@@ -98,31 +127,54 @@ A **binding** ties one number of the model - a *slot* - to an expression of the 
 
 ### 2.6 What is not proposed
 
-- Symbolic parameters inside C++ items - an item parameter linked to a variable: the binding table lives in Python,
-  the C++ items hold numbers, and `Apply` writes them. When the GPU evaluation (RG14) needs p, it takes p as an input
-  of the composed program, not from the items.
+- Symbolic values stored inside the C++ items (option C of section 2.7).
 - The reference coordinates of the nodes as parameters: symbolicSystem.md section 12.3, an option of its own.
+
+### 2.7 Options for the source of the bindings (evaluated 2026-11-01)
+
+| | how a binding comes about | readable from the items | effort | remark |
+|---|---|---|---|---|
+| **A** explicit (first proposal) | `bindings.Add(slot, expr)`, or the Create functions of UserItemCreator | no | small | systematic, but every place that writes a number must also write the binding |
+| **B** written into the items (proposed) | an `esym.Real` in any field at Add/Modify/Set: the value goes to C++, the binding to `mbs.parameterBindings` | yes, `symbolic=True` | small to medium: one hook in the Python layer of the Add/Modify/Set functions, a walk over the dict | A is its storage; every item, every field, every Create function at once |
+| **C** symbolic values stored in C++ | the C++ items hold `symbolic.Real`/`Vector` for their parameters, e.g. a symbolic `parameters` of the user items | yes | large | every parameter type of the definitions twice, or a symbolic shadow of each item; the C++ evaluation needs the numbers anyway; the expressions are needed only by SymbolicSystem in Python |
+
+- **B** answers both questions of the maintainer:
+  - an `esym.Real` written into a user item's `parameters` is recognized as a binding;
+  - the item shows it again with `symbolic=True`.
+- A `parameters` vector of `esym.Real` stored in C++ (C) would give the same readability at much higher cost, and only
+  for the user items.
+- **Limits of B**:
+  - The bindings are Python state of the system: they are not in a dict of the system that is written to a file, and a
+    copy of mbs by its dicts loses them, unless the dict functions take `symbolic=True` as well.
+  - A value that changes the structure of the computation stays a Python constant (2.2): a flag, a number of points or
+    an index given as an `esym.Real` raises at the Add.
 
 ## 3. Sub-steps proposed
 
 1. This design (RG12.67.1).
-2. `ParameterBindings`, its checks and `Apply`; #3152's `parameterVariables` converted to it; SymbolicSystem with the
-   bound slots of objects, markers and loads in `Equations()`; a test model with a joint frame, a marker position and
-   a load as expressions, against SetParameterValues and central differences.
-3. UserItemCreator with symbolic arguments in all Create functions: the rigid body (mass, inertia, center of mass -
-   decision P3), the joints and connectors (positions, axes, frames), the matrices of the spring-dampers, the loads.
+2. `ParameterBindings` in `mbs.parameterBindings`, filled by the Add/Modify/Set functions from the `esym.Real` written
+   into an item (2.3), readable by `symbolic=True`; #3152's `parameterVariables` removed; SymbolicSystem with the
+   bound slots of objects, markers and loads in `Equations()`; a test model with a user item's parameters, a joint
+   frame, a marker position and a load as expressions, against SetParameterValues and central differences.
+3. `RigidBodyInertia` and its shapes for numbers and symbolic values (P3); the Create functions of UserItemCreator
+   and of mainSystemExtensions with symbolic arguments where they compute from them (the rigid body, the frames of
+   joints and connectors, the matrices of the spring-dampers, the loads) - most need nothing beyond B.
 4. The parameters as an input of the composed system: `SetParameterValues` without a rebuild,
    `ResidualParameterJacobian` (dr/dp) and dM/dp in one pass with the derivatives by the coordinates.
 5. Forward sensitivities of the solution in `SolveGeneralizedAlpha` and `SolveExplicit`.
 
 ## 4. To be decided
 
-- **P1** Bindings by slot (item type, number, field, component) for every value of the model, with #3152's
-  per-object lists as their special case. Proposed.
+- **P1** (revised 2026-11-01) Bindings by slot (item type, number, field, component) for every value of the model,
+  stored with the system (`mbs.parameterBindings`), and **made by writing an `esym.Real` into the item** at
+  Add/Modify/Set (option B of 2.7); explicit `Add` for the rest; #3152's `parameterVariables` removed. Proposed: B;
+  C (symbolic values in the C++ items) not.
 - **P2** An expression of parameters, not only a named variable, for a slot. Proposed.
-- **P3** The inertia: symbolic counterparts of the inertia functions of rigidBodyUtilities for the usual shapes
-  (cuboid, cylinder, sphere, and the translation and rotation of an inertia) in `exudyn.symbolics.kinematics`, and the
-  mass, inertia and center of mass as given expressions besides. Proposed: both, a small set of shapes first.
+- **P3** (revised 2026-11-01) The inertia: `RigidBodyInertia` and its shapes for both numbers and symbolic values,
+  instead of symbolic counterparts. Proposed.
+- **P6** (new) Reading the expressions back: `symbolic=True` for `GetNode/GetObject/GetMarker/GetLoad/GetSensor` and
+  the dict functions of the system, so that a copy of a system by its dicts keeps its bindings. Proposed for `Get...`;
+  the dicts later if needed.
 - **P4** The parameters as an input of the composed system, so that new values need no rebuild and the derivatives
   by p come with those by q. Proposed.
 - **P5** Forward sensitivities of the solution as the last sub-step; adjoints not. Proposed.

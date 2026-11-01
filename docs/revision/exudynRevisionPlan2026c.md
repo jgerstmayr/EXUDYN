@@ -2533,11 +2533,11 @@ CLOSED 2026-11-01 (#3159 stays open): docs/dev/design/symbolicParameters.md - a 
 
 #### **OPEN_RG12.67.2** ParameterBindings of the slots of objects, markers and loads, the parameterVariables of the user items converted; SymbolicSystem with them in Equations
 
-Design sections 2.2 and 2.4; after the decisions P1 and P2.
+Design sections 2.2 and 2.4; after the decisions P1 and P2. Revised 2026-11-01 (design 2.3, 2.7): the bindings are made by writing an esym.Real into an item at Add/Modify/Set and live in mbs.parameterBindings, readable by symbolic=True (P6); parameterVariables removed.
 
 #### **OPEN_RG12.67.3** UserItemCreator with symbolic arguments in all Create functions: the inertia of the rigid body, the frames of joints and connectors, the matrices, the loads
 
-Design section 2.3; decision P3.
+Design section 2.3; decision P3. Revised 2026-11-01: RigidBodyInertia and its shapes for numbers and symbolic values (maintainer 2026-11-01), instead of symbolic counterparts.
 
 #### **OPEN_RG12.67.4** The parameters as an input of the composed system: new values without a rebuild, the derivatives of the equations by the parameters in one pass
 

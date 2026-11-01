@@ -5464,3 +5464,18 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   until the fast-module logs are rerecorded.
 - jacobianConnectorDerivative measured in RG9.11.8.1: it stays.
 - Test suite passed, pytest passed, `exudev generate --all-checks` and `exudev docs` ok.
+
+<a id="rg12-67-1-revised"></a>
+### RG12.67 — the design of the symbolic parameters revised (2026-11-01, #3159)
+- Maintainer 2026-11-01 on symbolicParameters.md: "what you propose: the binding of item parameters to expressions;
+  this seems to be systematic (not human readable, but ok)." - "Can I define a parameter as esym.Real('m1', 13.5) and
+  write it into the user item parameter vector, so the user function recording would recognize that automatically?
+  that a parameter binding / slot is added? This would be a suitable way." - "the 'parameters' vector in the user
+  items: would it help to store it as vector of esym.Real [...] it would be readable from the items?" - "'RigidBodyInertia'
+  could be adapted to also take symbolic values (working with both types)."
+- Probed: `float()` of an `esym.Real` raises (the recording guard), so an `esym.Real` in an item dict fails today and
+  no model depends on a conversion; `InertiaCuboid(rho, [a, b, c])` with esym.Real fails on the shape check of an
+  esym.Matrix, `InertiaCylinder` and `InertiaSphere` on an `if` of a symbolic condition.
+- Design revised: section 2.3 (bindings written into the items at Add/Modify/Set, stored in mbs.parameterBindings,
+  read back by symbolic=True; RigidBodyInertia for both types), section 2.7 (options A explicit, B written into the
+  items, C symbolic values in C++; B proposed), sub-steps 2 and 3, decisions P1 and P3 revised, P6 new.
