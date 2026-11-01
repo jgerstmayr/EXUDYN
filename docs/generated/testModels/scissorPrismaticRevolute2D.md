@@ -69,8 +69,6 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True
 
-#added JacobianODE2, but example computed with numDiff forODE2Connectors, 2022-01-18: 27.202556489044145 :
-simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2Connectors=True 
 
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = simulationSettings.timeIntegration.generalizedAlpha.useNewmark

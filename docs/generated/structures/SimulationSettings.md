@@ -151,10 +151,7 @@ NumericalDifferentiationSettings has the following items:
 | name | type | default | description |
 |---|---|---|---|
 | `addReferenceCoordinatesToEpsilon` | bool | False | True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to {ref}`ODE2 <ODE2>` coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter |
-| `doSystemWideDifferentiation` | bool | False | True: system wide differentiation (e.g. all {ref}`ODE2 <ODE2>` equations w.r.t. all {ref}`ODE2 <ODE2>` coordinates); False: only local (object) differentiation |
-| `forAE` | bool | False | flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification |
-| `forODE2` | bool | False | flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms |
-| `forODE2Connectors` | bool | False | flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE |
+| `doSystemWideDifferentiation` | bool | False | True: the whole Jacobian by numerical differentiation - the {ref}`ODE2 <ODE2>`, {ref}`ODE1 <ODE1>` and algebraic equations by all coordinates -, for comparison and for dependencies outside the coordinates of the items, such as a user function reading a sensor; slow for larger systems; False: the Jacobian of each object, analytic, by automatic differentiation or numerical by its own coordinates (#3205) |
 | `jacobianConnectorDerivative` | bool | True | True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence |
 | `minimumCoordinateSize` | UReal | 0.01 | minimum size of coordinates in relative differentiation parameter |
 | `relativeEpsilon` | UReal | 1e-7 | relative differentiation parameter epsilon; the numerical differentiation parameter $\varepsilon$ follows from the formula ($\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, \vert q_i + [q^{Ref}_i]\vert )$, with $\varepsilon_\mathrm{relative}$=relativeEpsilon, $q_{min} = $minimumCoordinateSize, $q_i$ is the current coordinate which is differentiated, and $qRef_i$ is the reference coordinate of the current coordinate |
@@ -514,8 +511,14 @@ The following parameter changes have been made:
 - `simulationSettings.solutionSettings.writeInitialValues` → `simulationSettings.solution.file.writeInitialValues` (changed in version 1.12.256, expires: 2031)
 - `simulationSettings.solutionSettings.writeRestartFile` → `simulationSettings.solution.restart.write` (changed in version 1.12.256, expires: 2031)
 - `simulationSettings.solutionSettings.writeSolutionToFile` → `simulationSettings.solution.file.write` (changed in version 1.12.256, expires: 2031)
-- `simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2connectors` → `simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2Connectors` (changed in version 1.12.256, expires: 2031)
-- `simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2connectors` → `simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2Connectors` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.newton.numericalDifferentiation.forAE` has no effect (deprecated in version 1.13.304, expires: 2031)
+- `simulationSettings.staticSolver.newton.numericalDifferentiation.forAE` has no effect (deprecated in version 1.13.304, expires: 2031)
+- `simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2` has no effect (deprecated in version 1.13.304, expires: 2031)
+- `simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2` has no effect (deprecated in version 1.13.304, expires: 2031)
+- `simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2Connectors` has no effect (deprecated in version 1.13.304, expires: 2031)
+- `simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2Connectors` has no effect (deprecated in version 1.13.304, expires: 2031)
+- `simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2connectors` has no effect (deprecated in version 1.12.256, expires: 2031)
+- `simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2connectors` has no effect (deprecated in version 1.12.256, expires: 2031)
 - `simulationSettings.timeIntegration.newton.newtonResidualMode` → `simulationSettings.timeIntegration.newton.residualMode` (changed in version 1.12.256, expires: 2031)
 - `simulationSettings.staticSolver.newton.newtonResidualMode` → `simulationSettings.staticSolver.newton.residualMode` (changed in version 1.12.256, expires: 2031)
 - `simulationSettings.timeIntegration.newton.useNewtonSolver` → `simulationSettings.timeIntegration.newton.active` (changed in version 1.12.256, expires: 2031)

@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -82,7 +82,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -164,7 +164,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -229,7 +229,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -291,7 +291,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -362,7 +362,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -545,7 +545,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -557,13 +557,11 @@ class NumericalDifferentiationSettings // AUTO:
 {
 public: // AUTO: 
   bool addReferenceCoordinatesToEpsilon;          //!< AUTO: True: for the size estimation of the differentiation parameter, the reference coordinate \f$q^{Ref}_i\f$ is added to ABRV:ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter
-  bool doSystemWideDifferentiation;               //!< AUTO: True: system wide differentiation (e.g. all ABRV:ODE2 equations w.r.t. all ABRV:ODE2 coordinates); False: only local (object) differentiation
-  bool forAE;                                     //!< AUTO: flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification
-  bool forODE2;                                   //!< AUTO: flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms
-  bool forODE2Connectors;                         //!< AUTO: flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE
+  bool doSystemWideDifferentiation;               //!< AUTO: True: the whole Jacobian by numerical differentiation - the ABRV:ODE2, ABRV:ODE1 and algebraic equations by all coordinates -, for comparison and for dependencies outside the coordinates of the items, such as a user function reading a sensor; slow for larger systems; False: the Jacobian of each object, analytic, by automatic differentiation or numerical by its own coordinates (#3205)
   bool jacobianConnectorDerivative;               //!< AUTO: True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence
   Real minimumCoordinateSize;                     //!< AUTO: must be >= 0; minimum size of coordinates in relative differentiation parameter
   Real relativeEpsilon;                           //!< AUTO: must be >= 0; relative differentiation parameter epsilon; the numerical differentiation parameter \f$\varepsilon\f$ follows from the formula (\f$\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)\f$, with \f$\varepsilon_\mathrm{relative}\f$=relativeEpsilon, \f$q_{min} = \f$minimumCoordinateSize, \f$q_i\f$ is the current coordinate which is differentiated, and \f$qRef_i\f$ is the reference coordinate of the current coordinate
+  bool dummyBool;                                 //!< AUTO: unused dummy variable, used to redirect deprecated bool values
 
 private: // AUTO: 
   SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -576,9 +574,7 @@ public: // AUTO:
     backlink=nullptr;
     addReferenceCoordinatesToEpsilon = false;
     doSystemWideDifferentiation = false;
-    forAE = false;
-    forODE2 = false;
-    forODE2Connectors = false;
+    dummyBool = false;
     jacobianConnectorDerivative = true;
     minimumCoordinateSize = 0.01;
     relativeEpsilon = 1e-7;
@@ -589,9 +585,24 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use forODE2Connectors
-  void PySetForODE2connectors(const bool& forODE2ConnectorsInit) ;
-  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use forODE2Connectors
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use dummyBool
+  void PySetForAE(const bool& dummyBoolInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use dummyBool
+  bool PyGetForAE() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use dummyBool
+  void PySetForODE2(const bool& dummyBoolInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use dummyBool
+  bool PyGetForODE2() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use dummyBool
+  void PySetForODE2Connectors(const bool& dummyBoolInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use dummyBool
+  bool PyGetForODE2Connectors() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use dummyBool
+  void PySetForODE2connectors(const bool& dummyBoolInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use dummyBool
   bool PyGetForODE2connectors() const ;
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -600,9 +611,7 @@ public: // AUTO:
     os << "NumericalDifferentiationSettings" << ":\n";
     os << "  addReferenceCoordinatesToEpsilon = " << addReferenceCoordinatesToEpsilon << "\n";
     os << "  doSystemWideDifferentiation = " << doSystemWideDifferentiation << "\n";
-    os << "  forAE = " << forAE << "\n";
-    os << "  forODE2 = " << forODE2 << "\n";
-    os << "  forODE2Connectors = " << forODE2Connectors << "\n";
+    os << "  dummyBool = " << dummyBool << "\n";
     os << "  jacobianConnectorDerivative = " << jacobianConnectorDerivative << "\n";
     os << "  minimumCoordinateSize = " << minimumCoordinateSize << "\n";
     os << "  relativeEpsilon = " << relativeEpsilon << "\n";
@@ -624,7 +633,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -686,7 +695,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -788,7 +797,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -886,7 +895,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -948,7 +957,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1021,7 +1030,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1080,7 +1089,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1226,7 +1235,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1341,7 +1350,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1406,7 +1415,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1474,7 +1483,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1568,7 +1577,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1627,7 +1636,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-15 (last modfied)
+* @date         AUTO: 2026-11-01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2060,13 +2069,40 @@ inline bool SolutionSettingsDeprecated::PyGetWriteSolutionToFile() const {
     return bool(backlink->solution.file.write); 
     }
 
-inline void NumericalDifferentiationSettings::PySetForODE2connectors(const bool& forODE2ConnectorsInit) { 
-    PyDeprecated("simulationSettings", "numericalDifferentiation.forODE2connectors", "SimulationSettings parameter numericalDifferentiation.forODE2connectors is deprecated! use numericalDifferentiation.forODE2Connectors instead!");
-    forODE2Connectors= (const bool&)forODE2ConnectorsInit; 
+inline void NumericalDifferentiationSettings::PySetForAE(const bool& dummyBoolInit) { 
+    PyDeprecated("simulationSettings", "numericalDifferentiation.forAE", "SimulationSettings parameter numericalDifferentiation.forAE is deprecated and has no effect!");
+    dummyBool= (const bool&)dummyBoolInit; 
+    }
+inline bool NumericalDifferentiationSettings::PyGetForAE() const { 
+    PyDeprecated("simulationSettings", "numericalDifferentiation.forAE", "SimulationSettings parameter numericalDifferentiation.forAE is deprecated and has no effect!");
+    return bool(dummyBool); 
+    }
+
+inline void NumericalDifferentiationSettings::PySetForODE2(const bool& dummyBoolInit) { 
+    PyDeprecated("simulationSettings", "numericalDifferentiation.forODE2", "SimulationSettings parameter numericalDifferentiation.forODE2 is deprecated and has no effect!");
+    dummyBool= (const bool&)dummyBoolInit; 
+    }
+inline bool NumericalDifferentiationSettings::PyGetForODE2() const { 
+    PyDeprecated("simulationSettings", "numericalDifferentiation.forODE2", "SimulationSettings parameter numericalDifferentiation.forODE2 is deprecated and has no effect!");
+    return bool(dummyBool); 
+    }
+
+inline void NumericalDifferentiationSettings::PySetForODE2Connectors(const bool& dummyBoolInit) { 
+    PyDeprecated("simulationSettings", "numericalDifferentiation.forODE2Connectors", "SimulationSettings parameter numericalDifferentiation.forODE2Connectors is deprecated and has no effect!");
+    dummyBool= (const bool&)dummyBoolInit; 
+    }
+inline bool NumericalDifferentiationSettings::PyGetForODE2Connectors() const { 
+    PyDeprecated("simulationSettings", "numericalDifferentiation.forODE2Connectors", "SimulationSettings parameter numericalDifferentiation.forODE2Connectors is deprecated and has no effect!");
+    return bool(dummyBool); 
+    }
+
+inline void NumericalDifferentiationSettings::PySetForODE2connectors(const bool& dummyBoolInit) { 
+    PyDeprecated("simulationSettings", "numericalDifferentiation.forODE2connectors", "SimulationSettings parameter numericalDifferentiation.forODE2connectors is deprecated and has no effect!");
+    dummyBool= (const bool&)dummyBoolInit; 
     }
 inline bool NumericalDifferentiationSettings::PyGetForODE2connectors() const { 
-    PyDeprecated("simulationSettings", "numericalDifferentiation.forODE2connectors", "SimulationSettings parameter numericalDifferentiation.forODE2connectors is deprecated! use numericalDifferentiation.forODE2Connectors instead!");
-    return bool(forODE2Connectors); 
+    PyDeprecated("simulationSettings", "numericalDifferentiation.forODE2connectors", "SimulationSettings parameter numericalDifferentiation.forODE2connectors is deprecated and has no effect!");
+    return bool(dummyBool); 
     }
 
 inline void NewtonSettings::PySetNewtonResidualMode(const Index& residualModeInit) { 

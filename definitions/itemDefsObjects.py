@@ -7507,8 +7507,8 @@ definitions.append(ItemDefinition(
     The ABRV:LHS equation parts are added accordingly using the ABRV:LTG mapping.
     Note that the different signs result from the signs in {eq}`eq-objectcartesianspringdamper-deltapos`.
 
-    The connector also provides an analytic jacobian, which is used if `newton.numericalDifferentiation.forODE2 = False` 
-    and if there is no springForceUserFunction (otherwise numerical differentiation is used).
+    The connector also provides an analytic jacobian, which is used if there is no springForceUserFunction (otherwise
+    numerical differentiation is used).
     
     The anayltic jacobian for the coupled equation parts $\fv_{LHS,m0}$ and $\fv_{LHS,m1}$ is based on the local jacobians
 

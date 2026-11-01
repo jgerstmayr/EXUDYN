@@ -4,7 +4,7 @@
 # Details:  The columns of the Newton Jacobian that belong to the Lagrange multipliers of a velocity-level
 #           constraint - the rolling disc - against the change of the Newton residual when a multiplier is
 #           changed (#692). The residual has the reaction forces (dC/dq_t)^T lambda of such a constraint;
-#           the analytic Jacobian has the same block, and the numerical one (numericalDifferentiation.forAE)
+#           the analytic Jacobian has the same block, and the numerical one (doSystemWideDifferentiation)
 #           added dC/dq^T as well, which the residual does not have. The residual of the solver is scaled by
 #           a factor of the integration method, which is the same for every entry and is taken out.
 #
@@ -41,7 +41,7 @@ def MultiplierColumns(numericalAE):
     settings.timeIntegration.verboseMode = 0
     settings.solution.file.write = False
     settings.linearSolver.solverType = exu.LinearSolverType.EXUdense
-    settings.timeIntegration.newton.numericalDifferentiation.forAE = numericalAE
+    settings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation = numericalAE
     mbs.SolveDynamic(settings) #a state with velocities and multipliers
 
     solver = exu.MainSolverImplicitSecondOrder()

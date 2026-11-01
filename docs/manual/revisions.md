@@ -82,6 +82,10 @@ With several threads (`parallel.numberOfThreads`), the implicit and static solve
 Jacobians of the ODE2 equations of the objects without Python user functions in parallel, once the system has
 `parallel.multithreadedLowerLimitJacobians` of them; an ANCF cable of 2000 elements takes 4.6 instead of 20.9 ms per
 Jacobian with 8 threads (#1203).
+`newton.numericalDifferentiation.doSystemWideDifferentiation` computes the whole Jacobian numerically, the algebraic
+equations included, for dense and sparse matrices; `forAE`, `forODE2` and `forODE2Connectors` are deprecated and have no
+effect - each object provides its Jacobian, analytic, automatic or numerical by its own coordinates. A model that set
+one of them gets the object's own Jacobian and may need a few Newton iterations more or fewer (#3205).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

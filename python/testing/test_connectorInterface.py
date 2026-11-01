@@ -222,7 +222,7 @@ def Jacobian(connector, numerical, factorODE2, factorODE2_t):
     mbs = (BuildModel(connector, eulerParameters=False, zeroLength=False) if builder == BuildModel else
            builder(connector, eulerParameters=False))
     s = exu.SimulationSettings()
-    s.timeIntegration.newton.numericalDifferentiation.forODE2Connectors = numerical
+    s.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation = numerical
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
     mbs.systemData.SetODE2Coordinates_t(0*mbs.systemData.GetODE2Coordinates_t())

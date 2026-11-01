@@ -5434,3 +5434,33 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   parameter node. RigidBody with Euler parameters or Tait-Bryan angles, RigidBody2D, ANCFCable2D, ANCFBeam,
   ANCFThinPlate and the slope nodes form their Jacobian derivative by the nested AD of AccessFunctionsAD
   (`JacobianTransposedTimesVectorDerivative`), whose inner derivatives are the second derivatives dv/dq needs.
+
+<a id="rg9-11-9"></a>
+### RG9.11.9 — forAE, forODE2 and forODE2Connectors deprecated (2026-11-01, #3205)
+- Maintainer 2026-11-01: "You could also do RG9.11.9 now, which then simplifies some paths in the further
+  implementation and the full numerical fallback is still there." Design J4: deprecated, no effect.
+- definitions/structureDefsSimulationSettings.py: NumericalDifferentiationSettings has `dummyBool` (SFNoPybind), and
+  forAE, forODE2, forODE2Connectors are SFDeprecated members redirected to it (Deprecated('1.13.304', 2031)); the old
+  rename forODE2connectors as well. The warning says "is deprecated and has no effect!" - structureHeaderEmitter.py
+  recognized only openGL.dummy/dummyBool, now any `dummy`/`dummyBool`; structureModel.py writes "has no effect" in the
+  list of changes of the structure page, deprecationsEmitter.py "(no effect)" (also for the five visualization
+  settings with a dummy), checkUserScripts.py removes the assignment (it recognized `.dummy` only, not `dummyBool`).
+- C++: ComputeObjectJacobianODE2 without forODE2, CObjectConnector::ComputeLocalJacobianODE2 without
+  forODE2Connectors; JacobianAE differentiates numerically under doSystemWideDifferentiation. NumericalJacobianAE wrote
+  into the dense matrix and refused a sparse one; it collects the nonzero entries as triplets and adds them by
+  AddSparseTriplets, the same values for the dense matrix (the AE rows and columns are zero before), and works for
+  EigenSparse.
+- Models and tests: the `forODE2 = False` lines of four examples, a performance model and four general contact test
+  models removed (the default), forAE=True of ANCFmovingRigidbody.py removed; geometricallyExactBeamJacobianTest.py,
+  test_accessFunctionsAD.py, test_connectorInterface.py, test_jacobianAEvelocityLevel.py and test_systemJacobians.py
+  compare with doSystemWideDifferentiation (test_systemJacobians: the constraint Jacobian dense and sparse);
+  simulationSettingsRenamesTest.py without forODE2connectors (49 renames), test_checkDeprecations.py leaves out the
+  redirects without effect; parameterConversionTestReference.txt rerecorded (the three names gone from the lists of
+  numericalDifferentiation); tools/ci/stubtestBaseline.txt lists the three deprecated properties.
+- Two test models set forODE2Connectors=True "to be compatible with old solutions" and now use the analytic connector
+  Jacobians: scissorPrismaticRevolute2D.py 27.202556489044277 -> 26.722556541316987 (its result adds 1e-2 times the
+  Newton iterations: 48 fewer), SpringDamperMesh.py its static reference -0.44056224799446486 -> -0.44056224908289804
+  (Newton tolerance 1e-6). The AVX2 reference of scissorPrismaticRevolute2D (AVX2ReferenceSolutionUpdate) is stale
+  until the fast-module logs are rerecorded.
+- jacobianConnectorDerivative measured in RG9.11.8.1: it stays.
+- Test suite passed, pytest passed, `exudev generate --all-checks` and `exudev docs` ok.

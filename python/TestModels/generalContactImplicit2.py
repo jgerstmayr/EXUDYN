@@ -162,7 +162,6 @@ simulationSettings.solution.precision = 8 #make files smaller
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.parallel.numberOfThreads = 1
 
-simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = False
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 SC.visualizationSettings.general.graphicsUpdateInterval=0.05

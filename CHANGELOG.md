@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 295 | 1.13.303 |
+| 1.13 | Newborn | 296 | 1.13.304 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.304** `CHANGE` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` numericalDifferentiation: forAE, forODE2 and forODE2Connectors deprecated; doSystemWideDifferentiation is the numerical Jacobian, the algebraic equations included (#3205)
+  - description: The numerical differentiation settings had three flags that forced a numerical Jacobian for some items: forAE (the algebraic equations, by all coordinates, dense matrices only), forODE2 (every object) and forODE2Connectors (the connectors, described as a development flag), besides doSystemWideDifferentiation (the ODE2 and ODE1 equations by all coordinates). Each object provides its own Jacobian - analytic, automatic, or numerical by its own coordinates where it has neither - so the flags are left with no purpose but comparison, for which one numerical Jacobian suffices. Decided: forAE, forODE2 and forODE2Connectors are deprecated and have no effect; doSystemWideDifferentiation computes the whole Jacobian numerically, the algebraic equations included, for dense and sparse matrices (revision2026c step RG9.11.9).
+  - **notes:** numericalDifferentiation.doSystemWideDifferentiation computes the whole Jacobian numerically, the algebraic equations included, for dense and sparse matrices; forAE, forODE2 and forODE2Connectors are deprecated and have no effect, as each object provides its Jacobian - analytic, automatic or numerical by its own coordinates.
+  - date resolved: **2026-11-01 23:03**, date raised: 2026-11-01
 - **1.13.303** `EXTENSION` `HIGH` `MEDIUM EFF` `resolved by: Claude-JG` parallel / multithreaded (#1203)
   - description: C++: add multithreading for JacobianODE2 (analytic jacobians)
   - **notes:** The analytic and automatic Jacobians of the ODE2 equations of objects without Python user functions are computed in parallel when the solver runs with several threads (parallel.numberOfThreads) and the system has at least parallel.multithreadedLowerLimitJacobians such objects; the numerically differentiated objects and those with Python functions follow serially. An ANCF cable of 2000 elements: 20.9 ms per Jacobian serially, 4.6 ms with 8 threads.

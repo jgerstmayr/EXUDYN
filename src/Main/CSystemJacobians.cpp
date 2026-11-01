@@ -137,7 +137,7 @@ void CSystem::JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const 
 
 //! the analytic ODE2 Jacobian of object j, factorODE2 d(LHS)/dq + factorODE2_t d(LHS)/dq_t, into temp.jacobianODE2Container:
 //! its own (ComputeJacobianODE2_ODE2), or for a connector the one on the interface or on the path of the marker data; false
-//! if it has none - or the settings ask for the numerical one -, then the caller differentiates numerically; used by
+//! if it has none, then the caller differentiates numerically; used by
 //! JacobianODE2RHS and mbs.ComputeItem (#2782)
 bool CSystem::ComputeObjectJacobianODE2(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Index j,
 	Real factorODE2, Real factorODE2_t)
@@ -146,7 +146,7 @@ bool CSystem::ComputeObjectJacobianODE2(TemporaryComputationData& temp, const Nu
 	ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
 	JacobianType::Type jacType = object->GetAvailableJacobians();
 	if (!(jacType & (JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE1))) { return false; } //no ODE2 dependency
-	if (numDiff.forODE2 || (jacType & (JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function)) == 0) { return false; }
+	if ((jacType & (JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function)) == 0) { return false; }
 
 	return object->ComputeLocalJacobianODE2(cSystemData, temp, numDiff, factorODE2, factorODE2_t, ltgODE2); //the object's own (#3201)
 }
@@ -698,11 +698,15 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 	//++++++++++++++++++++++++++++++++++++++++++++++++
 	//compute total jacobian ==> very time consuming ==> change this to local jacobian (use flag in numDiffParameters?)
 
-	if (!EXUstd::IsOfType(LinearSolverType::Dense, jacobianGM.GetSystemMatrixType())) { CHECKandTHROWstring("CSystem::NumericalJacobianAE: only works for LinearSolverType.EXUdense; illegal LinearSolverType!", ExudynValueError); }
-	ResizableMatrix& jacobian = ((GeneralMatrixEXUdense&)jacobianGM).GetMatrixEXUdense();
-
 	f0.SetNumberOfItems(nAE);
 	f1.SetNumberOfItems(nAE);
+
+	//the entries of the AE rows and columns as triplets, for dense and sparse matrices (#3205); the blocks are zero before
+	SparseTripletVector triplets;
+	auto Add = [&triplets](Index row, Index column, Real value)
+	{
+		if (value != 0.) { triplets.AppendPure(SparseTriplet(row, column, value)); }
+	};
 
 	ComputeAlgebraicEquations(tempArray, f0, velocityLevel); //compute nominal value for jacobian
 
@@ -735,8 +739,8 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 		for (Index j = 0; j < nAE; j++)
 		{
 			Real x = epsInv * (f1[j] - f0[j]);
-			jacobian(offsetAE + j, i) = factorAE_ODE2 * x; //add Cq ==> factor only used for Position constraints ...
-			jacobian(i, offsetAE + j) = velocityLevelRow[j] ? 0. : factorODE2_AE * x; //add CqT of a position-level row
+			Add(offsetAE + j, i, factorAE_ODE2 * x); //add Cq ==> factor only used for Position constraints ...
+			if (!velocityLevelRow[j]) { Add(i, offsetAE + j, factorODE2_AE * x); } //add CqT of a position-level row
 		}
 	}
 
@@ -756,8 +760,8 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 		for (Index j = 0; j < nAE; j++)
 		{
 			Real x = epsInv * (f1[j] - f0[j]);
-			jacobian(offsetAE + j, i) += factorAE_ODE2_t * x; //add Cq ==> factor only used for Position constraints ...
-			if (velocityLevelRow[j]) { jacobian(i, offsetAE + j) += factorODE2_AE * x; } //add Cq_t^T of a velocity-level row (e.g. velocity coordinate constraint, rolling joint, ...)
+			Add(offsetAE + j, i, factorAE_ODE2_t * x); //add Cq ==> factor only used for Position constraints ...
+			if (velocityLevelRow[j]) { Add(i, offsetAE + j, factorODE2_AE * x); } //add Cq_t^T of a velocity-level row (e.g. velocity coordinate constraint, rolling joint, ...)
 		}
 	}
 
@@ -778,8 +782,8 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 		{
 			Real y = epsInv * (f1[j] - f0[j]);
 
-			jacobian(offsetAE + j, i+nODE2) = factorAE_ODE1 * y; //add Cq1
-			jacobian(i+nODE2, offsetAE + j) = factorODE1_AE * y; //add Cq1T
+			Add(offsetAE + j, i + nODE2, factorAE_ODE1 * y); //add Cq1
+			Add(i + nODE2, offsetAE + j, factorODE1_AE * y); //add Cq1T
 		}
 	}
 
@@ -796,9 +800,10 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 
 		for (Index j = 0; j < nAE; j++)
 		{
-			jacobian(offsetAE + j, offsetAE + i) = (factorAE_AE * epsInv) * (f1[j] - f0[j]);
+			Add(offsetAE + j, offsetAE + i, (factorAE_AE * epsInv) * (f1[j] - f0[j]));
 		}
 	}
+	jacobianGM.AddSparseTriplets(triplets);
 }
 
 //the NumericalJacobianAE ... _t  is never used
@@ -923,7 +928,7 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 	JacobianType::Type filledJacobians;
 	TemporaryComputationData& temp = tempArray[0];
 
-	if (newton.numericalDifferentiation.forAE)
+	if (newton.numericalDifferentiation.doSystemWideDifferentiation) //the whole Jacobian numerically, the AE rows included (#3205)
 	{
 		NumericalJacobianAE(tempArray, newton.numericalDifferentiation, temp.numericalJacobianf0, temp.numericalJacobianf1, jacobianGM,
 			factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel);// , fillIntoSystemMatrix);

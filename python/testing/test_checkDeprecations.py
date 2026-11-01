@@ -69,5 +69,6 @@ def testTheRenamedSettingsAreAllInTheTestModel(entries):
             renames = ast.literal_eval(node.value)
     tested = set(old.split('.')[-1] for old in renames)
     declared = set(entry['name'].split('.')[-1] for entry in entries
-                   if entry['source'] == 'settings' and entry['since'] == '1.12.256' and not entry['use'].startswith('deprecated'))
+                   if entry['source'] == 'settings' and entry['since'] == '1.12.256' and not entry['use'].startswith('deprecated')
+                   and entry['use'].split('.')[-1] not in ('dummy', 'dummyBool')) #no effect, nothing to forward (#3205)
     assert declared - tested == set()

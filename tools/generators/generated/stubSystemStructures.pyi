@@ -137,13 +137,7 @@ class NumericalDifferentiationSettings:
     addReferenceCoordinatesToEpsilon: bool
     """True: for the size estimation of the differentiation parameter, the reference coordinate :math:`q^{Ref}_i` is added to ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter."""
     doSystemWideDifferentiation: bool
-    """True: system wide differentiation (e.g. all ODE2 equations w.r.t. all ODE2 coordinates); False: only local (object) differentiation."""
-    forAE: bool
-    """flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification."""
-    forODE2: bool
-    """flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms."""
-    forODE2Connectors: bool
-    """flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE."""
+    """True: the whole Jacobian by numerical differentiation - the ODE2, ODE1 and algebraic equations by all coordinates -, for comparison and for dependencies outside the coordinates of the items, such as a user function reading a sensor; slow for larger systems; False: the Jacobian of each object, analytic, by automatic differentiation or numerical by its own coordinates (#3205)."""
     jacobianConnectorDerivative: bool
     """True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence."""
     minimumCoordinateSize: float

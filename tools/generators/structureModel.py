@@ -287,6 +287,10 @@ def ParameterChanges2Markdown(parameterChangesList):
         return ''
     text = '\nThe following parameter changes have been made:\n\n'
     for parameter in parameterChangesList:
+        if parameter[1].split('.')[-1] in ('dummy', 'dummyBool'): #a setting without a successor (#3205)
+            text += ('- `' + parameter[0] + '` has no effect (deprecated in version ' + parameter[2] + ', expires: '
+                     + parameter[3] + ')\n')
+            continue
         text += ('- `' + parameter[0] + '` ' + chr(8594) + ' `' + parameter[1] + '` (changed in '
                  'version ' + parameter[2] + ', expires: ' + parameter[3] + ')\n')
     return text + '\n'

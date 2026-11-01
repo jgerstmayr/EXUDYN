@@ -431,7 +431,7 @@ def StructureCppHeader(parseInfo):
                 newName = Description(parameter) #a rename in the same structure is named with its structure (#2588)
                 if DeprecatedForwardsInStructure(parameter):
                     newName = ConvertClassName2member(Header(parseInfo, 'class')) + '.' + newName
-                if Description(parameter) in ['openGL.dummy', 'openGL.dummyBool']: #a setting without a successor (#2897)
+                if Description(parameter).split('.')[-1] in ['dummy', 'dummyBool']: #a setting without a successor (#2897, #3205)
                     deprecationWarning += ' is deprecated and has no effect!");'+lineBreakIDP
                 else:
                     deprecationWarning += ' is deprecated! use '+newName+' instead!");'+lineBreakIDP

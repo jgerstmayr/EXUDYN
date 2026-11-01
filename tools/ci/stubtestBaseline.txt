@@ -42,6 +42,9 @@ exudyn.NewtonSettings
 exudyn.NewtonSettings.newtonResidualMode
 exudyn.NewtonSettings.useNewtonSolver
 exudyn.NumericalDifferentiationSettings
+exudyn.NumericalDifferentiationSettings.forAE
+exudyn.NumericalDifferentiationSettings.forODE2
+exudyn.NumericalDifferentiationSettings.forODE2Connectors
 exudyn.NumericalDifferentiationSettings.forODE2connectors
 exudyn.Parallel
 exudyn.Parallel.multithreadedLLimitJacobians

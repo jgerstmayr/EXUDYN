@@ -124,14 +124,13 @@ else:
 simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-5
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-6
 simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1
-simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2Connectors = True #be compatible with old solution
 #simulationSettings.staticSolver.verboseMode = 1
 
 mbs.SolveStatic(simulationSettings)
 
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
 exu.Print('static tip displacement (y)=', u[1])
-staticError = u[1]-(-0.44056224799446486)
+staticError = u[1]-(-0.44056224908289804) #2026-11-01, the analytic connector Jacobians (#3205): -0.44056224799446486
 
 totalError = abs(staticError) + abs(dynamicError)
 

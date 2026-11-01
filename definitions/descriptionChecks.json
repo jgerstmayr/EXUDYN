@@ -52,19 +52,19 @@
    "fingerprint": "a92cc559a7eb"
   },
   "MarkerBodyPosition": {
-   "checked": "2026-10-06",
+   "checked": "2026-11-01",
    "by": "Claude-JG",
-   "fingerprint": "b73289fd21a1"
+   "fingerprint": "9aadde616821"
   },
   "MarkerBodyRigid": {
-   "checked": "2026-10-06",
+   "checked": "2026-11-01",
    "by": "Claude-JG",
-   "fingerprint": "85357614f743"
+   "fingerprint": "1865b566a0e8"
   },
   "MarkerKinematicTreeRigid": {
-   "checked": "2026-10-06",
+   "checked": "2026-11-01",
    "by": "Claude-JG",
-   "fingerprint": "17694195a726"
+   "fingerprint": "d5f940806be9"
   },
   "MarkerNodeCoordinate": {
    "checked": "2026-10-11",

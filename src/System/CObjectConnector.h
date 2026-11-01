@@ -72,8 +72,7 @@ public:
 		Real factorODE2_t, bool jacobianDerivativeNonZero) const { return false; }
 
 	//! the connector's local Jacobian (#3201): on the connector interface (ComputeJacobianODE2Connector), else by the
-	//! marker data and their Jacobian derivatives; false if a marker has no Jacobian derivative or the settings ask for
-	//! numerical differentiation of connectors
+	//! marker data and their Jacobian derivatives; false if a marker has no Jacobian derivative
 	virtual bool ComputeLocalJacobianODE2(const CSystemData& systemData, TemporaryComputationData& temp,
 		const NumericalDifferentiationSettings& numDiff, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltgODE2) const override;
 

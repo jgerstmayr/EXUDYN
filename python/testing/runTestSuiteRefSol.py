@@ -120,7 +120,7 @@ def TestExamplesReferenceSolution():
         'emptySystemTest.py':124.09765181769477, #new 2026-10-02: a system without coordinates through every solver, dense and sparse (#2790)
         'homogeneousTransformationParameterTest.py':8.981932745662196, #new 2026-10-03: the HT parameters of the items, ObjectGround, Create functions, rigid markers, kinematic tree, robotics (#2793, #2794, #2795, #2798, #2799)
         'simulationSettingsDeprecationTest.py':126, #new 2026-10-03: a renamed simulation setting forwards under its old name with a DeprecationWarning (#2588)
-        'simulationSettingsRenamesTest.py':50, #new 2026-10-04: every renamed simulation setting forwards both ways to its new place (#2813)
+        'simulationSettingsRenamesTest.py':49, #2026-11-01: forODE2connectors has no effect (#3205); new 2026-10-04: every renamed simulation setting forwards both ways to its new place (#2813)
         'itemParameterRenamesTest.py':66, #new 2026-10-04: every renamed item parameter forwards in the dictionary, Get and SetObjectParameter (#2814)
         'binarySolutionFileTest.py':0.1888874815147666, #new 2026-10-04: the binary solution file as float or double by solution.precision (#2816)
         'solutionFileWithoutCoordinatesTest.py':53, #new 2026-10-10: a model without coordinates writes and reads a solution file with the time only (#2950)
@@ -270,7 +270,7 @@ def TestExamplesReferenceSolution():
         'rollingDiscTangentialForces.py':1.034201740283854, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 1.034201740253807; #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 1.0342017404650015;        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
         'rollingCoinPenaltyTest.py':0.03489603106786701,
         'rotatingTableTest.py':7.838280044952864, #2026-10-15: step size 0.0025 instead of 0.005, the drift of TrapezoidalIndex2 below constraintDriftTolerance (#565); before 7.838680414273868; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 7.838680414273867;2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 7.838680375029852; until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
-        'scissorPrismaticRevolute2D.py':27.202556489044277,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2Connectors, 2022-01-18: 27.202556489044145,
+        'scissorPrismaticRevolute2D.py':26.722556541316987,          #2026-11-01: the analytic connector Jacobians, 48 Newton iterations fewer, as forODE2Connectors has no effect (#3205); 2022-07-11 (CState Parallel): 27.202556489044277
         'sensorUserFunctionTest.py':45.0,            
         'serialRobotTest.py':0.7681856909831933,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation
         #value changed 2026-09-18 (#2502): the joint helpers now

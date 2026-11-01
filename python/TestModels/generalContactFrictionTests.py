@@ -359,7 +359,6 @@ simulationSettings.solution.sensors.writePeriod = h*10
 simulationSettings.solution.precision = 8 #make files smaller
 simulationSettings.timeIntegration.verboseMode = 1
 
-simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = False
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 
 SC.visualizationSettings.general.graphicsUpdateInterval=0.05

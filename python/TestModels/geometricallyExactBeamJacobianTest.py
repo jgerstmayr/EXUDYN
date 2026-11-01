@@ -55,7 +55,7 @@ def Jacobian(nodeType, numerical, velocity, inertiaFactor):
     mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0, n1], length=L, sectionData=Section(inertiaFactor)))
     mbs.Assemble()
     s = exu.SimulationSettings()
-    s.timeIntegration.newton.numericalDifferentiation.forODE2 = numerical
+    s.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation = numerical
     s.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-6 if velocity else 1e-7
     s.linearSolver.solverType = exu.LinearSolverType.EXUdense
     solver = exu.MainSolverImplicitSecondOrder()

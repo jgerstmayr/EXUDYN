@@ -6,7 +6,7 @@
 #           spring-dampers, mass points with the contact and the coordinate connectors, an ANCF cable, ObjectGenericDAE
 #           with its ODE1 couplings, the joints - and the blocks of JacobianODE2RHS and JacobianODE1RHS by the local
 #           Jacobians (analytic, automatic or numerical per object) against doSystemWideDifferentiation, and the
-#           constraint Jacobian of JacobianAE against forAE; the parallel assembly of the ODE2 rows against the serial one,
+#           constraint Jacobian of JacobianAE against doSystemWideDifferentiation, dense and sparse; the parallel assembly of the ODE2 rows against the serial one,
 #           dense and sparse (#1203). At zero velocities, where the analytic connector
 #           Jacobians neglect nothing (dv/dq), on Tait-Bryan angles. The comparison for each sub-step of RG9.11; the
 #           test suite is the test of the Jacobians in the solvers.
@@ -112,16 +112,15 @@ def Build(model):
     return (SC, mbs)
 
 
-def Jacobian(model, compute, systemWide=False, forAE=False, threads=1, sparse=False):
+def Jacobian(model, compute, systemWide=False, threads=1, sparse=False):
     """the system Jacobian of the solver after compute(solver, mbs), at the initial coordinates turned a little and at
     zero velocities"""
     (SC, mbs) = Build(model)
     s = exu.SimulationSettings()
-    s.linearSolver.solverType = exu.LinearSolverType.EigenSparse if sparse else exu.LinearSolverType.EXUdense #forAE is dense only
+    s.linearSolver.solverType = exu.LinearSolverType.EigenSparse if sparse else exu.LinearSolverType.EXUdense
     s.parallel.numberOfThreads = threads
     s.parallel.multithreadedLowerLimitJacobians = 1
     s.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation = systemWide
-    s.timeIntegration.newton.numericalDifferentiation.forAE = forAE
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
     q = np.array(mbs.systemData.GetODE2Coordinates())
@@ -178,10 +177,12 @@ def test_theLocalODE1JacobianIsTheSystemWideOne(factors):
     assert Difference(local, numerical) < tolerance, (factors, Difference(local, numerical))
 
 
-def test_theConstraintJacobianIsTheNumericalOne():
-    analytic = Jacobian('Joints', AE)
-    numerical = Jacobian('Joints', AE, forAE=True)
-    assert Difference(analytic, numerical) < tolerance, Difference(analytic, numerical)
+@pytest.mark.parametrize('sparse', [False, True])
+def test_theConstraintJacobianIsTheSystemWideOne(sparse):
+    analytic = Jacobian('Joints', AE, sparse=sparse)
+    numerical = Jacobian('Joints', AE, systemWide=True, sparse=sparse)
+    assert np.max(np.abs(analytic)) > 0
+    assert Difference(analytic, numerical) < tolerance, (sparse, Difference(analytic, numerical))
 
 
 @pytest.mark.parametrize('model', list(models))

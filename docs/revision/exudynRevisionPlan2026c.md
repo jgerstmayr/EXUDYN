@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (10 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (9 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -131,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 16 | Structural core improvements |
+| RG9 | OPEN | 15 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 17 | Symbolic |
@@ -1219,9 +1219,11 @@ Design section 8.4; checked against the numerical derivative of the marker veloc
 
 Low priority; ConvexRoll may stay numerical by CSystem.
 
-#### **OPEN_RG9.11.9** Deprecate forAE, forODE2 and forODE2Connectors, and measure whether jacobianConnectorDerivative is worth its code
+#### **CLOSED_RG9.11.9** Deprecate forAE, forODE2 and forODE2Connectors, and measure whether jacobianConnectorDerivative is worth its code
 
 Design section 7, J4; once the revision has replaced their code paths.
+
+CLOSED 2026-11-01 (#3205): forAE, forODE2, forODE2Connectors (and the old forODE2connectors) deprecated without effect, redirected to a dummy as in the visualization settings, their code paths removed; doSystemWideDifferentiation includes the algebraic equations (NumericalJacobianAE, now by triplets, also sparse); the generators, the deprecations page and checkUserScripts say "no effect" for every dummy redirect; jacobianConnectorDerivative stays (RG9.11.8.1: the FFRF models up to 28 % more iterations without it, and the base of dv/dq); scissorPrismaticRevolute2D and SpringDamperMesh with the analytic connector Jacobians (new references). [log](exudynRevisionLog2026c.md#rg9-11-9)
 
 #### **OPEN_RG9.11.10** Evaluate finding the dependencies outside the local-to-global lists, from the markers, loads and sensors and from the recordings, for the local Jacobians
 

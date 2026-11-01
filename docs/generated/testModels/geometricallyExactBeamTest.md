@@ -279,7 +279,6 @@ for case in caseList:
     #simulationSettings.staticSolver.stabilizerODE2term = 100
 
     if useGeometricallyExact:
-        # simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2 = True
         # simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-5
         if case == 0:
             simulationSettings.staticSolver.newton.relativeTolerance = 1e-4

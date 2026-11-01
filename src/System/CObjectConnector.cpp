@@ -129,8 +129,6 @@ void CObjectConnector::ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac
 bool CObjectConnector::ComputeLocalJacobianODE2(const CSystemData& systemData, TemporaryComputationData& temp,
 	const NumericalDifferentiationSettings& numDiff, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltgODE2) const
 {
-	if (numDiff.forODE2Connectors) { return false; }
-
 	const ArrayIndex& markerNumbers = GetMarkerNumbers();
 	bool jacobianComputed = true;
 	bool jacDerivNonZero = false;

@@ -161,7 +161,7 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `ObjectRigidBody2D.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectRigidBody2D) |
 | `ObjectRotationalMass1D.physicsInertia` | 1.12.258 | 2031 | inertia | definitions (ObjectRotationalMass1D) |
 
-## Settings (151)
+## Settings (154)
 
 | name | since | removed in | instead | declared in |
 |---|---|---|---|---|
@@ -204,14 +204,14 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `VSettingsOpenGL.initialMaxSceneSize` | 1.10.80 | 2030 | openGL.advanced.initialMaxSceneSize | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.initialModelRotation` | 1.10.80 | 2030 | openGL.advanced.initialModelRotation | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.initialZoom` | 1.10.80 | 2030 | openGL.advanced.initialZoom | definitions (VSettingsOpenGL) |
-| `VSettingsOpenGL.light0ambient` | 1.10.80 | 2030 | openGL.dummy | definitions (VSettingsOpenGL) |
+| `VSettingsOpenGL.light0ambient` | 1.10.80 | 2030 | (no effect) | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.light0constantAttenuation` | 1.10.80 | 2030 | openGL.light0.constantAttenuation | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.light0diffuse` | 1.10.80 | 2030 | openGL.light0.diffuse | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.light0linearAttenuation` | 1.10.80 | 2030 | openGL.light0.linearAttenuation | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.light0position` | 1.10.80 | 2030 | openGL.light0.position | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.light0quadraticAttenuation` | 1.10.80 | 2030 | openGL.light0.quadraticAttenuation | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.light0specular` | 1.10.80 | 2030 | openGL.light0.specular | definitions (VSettingsOpenGL) |
-| `VSettingsOpenGL.light1ambient` | 1.10.80 | 2030 | openGL.dummy | definitions (VSettingsOpenGL) |
+| `VSettingsOpenGL.light1ambient` | 1.10.80 | 2030 | (no effect) | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.light1constantAttenuation` | 1.10.80 | 2030 | openGL.light1.constantAttenuation | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.light1diffuse` | 1.10.80 | 2030 | openGL.light1.diffuse | definitions (VSettingsOpenGL) |
 | `VSettingsOpenGL.light1linearAttenuation` | 1.10.80 | 2030 | openGL.light1.linearAttenuation | definitions (VSettingsOpenGL) |
@@ -245,7 +245,7 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `VSettingsRaytracer.showText` | 1.10.80 | 2030 | raytracer.advanced.showText | definitions (VSettingsRaytracer) |
 | `VSettingsRaytracer.tilesPerThread` | 1.10.80 | 2030 | raytracer.advanced.tilesPerThread | definitions (VSettingsRaytracer) |
 | `VSettingsRaytracer.zBiasLines` | 1.10.80 | 2030 | raytracer.advanced.zBiasLines | definitions (VSettingsRaytracer) |
-| `VSettingsRaytracer.zOffsetCamera` | 1.10.80 | 2030 | openGL.dummy | definitions (VSettingsRaytracer) |
+| `VSettingsRaytracer.zOffsetCamera` | 1.10.80 | 2030 | (no effect) | definitions (VSettingsRaytracer) |
 | `VSettingsWindowDeprecated.alwaysOnTop` | 1.10.80 | 2030 | view0.window.alwaysOnTop | definitions (VSettingsWindowDeprecated) |
 | `VSettingsWindowDeprecated.ignoreKeys` | 1.10.80 | 2030 | interactive.ignoreKeys | definitions (VSettingsWindowDeprecated) |
 | `VSettingsWindowDeprecated.keyPressUserFunction` | 1.10.80 | 2030 | interactive.keyPressUserFunction | definitions (VSettingsWindowDeprecated) |
@@ -269,7 +269,10 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `LinearSolverSettingsDeprecated.showCausingItems` | 1.12.256 | 2031 | linearSolver.showCausingItems | definitions (LinearSolverSettingsDeprecated) |
 | `NewtonSettings.newtonResidualMode` | 1.12.256 | 2031 | residualMode | definitions (NewtonSettings) |
 | `NewtonSettings.useNewtonSolver` | 1.12.256 | 2031 | active | definitions (NewtonSettings) |
-| `NumericalDifferentiationSettings.forODE2connectors` | 1.12.256 | 2031 | forODE2Connectors | definitions (NumericalDifferentiationSettings) |
+| `NumericalDifferentiationSettings.forAE` | 1.13.304 | 2031 | (no effect) | definitions (NumericalDifferentiationSettings) |
+| `NumericalDifferentiationSettings.forODE2` | 1.13.304 | 2031 | (no effect) | definitions (NumericalDifferentiationSettings) |
+| `NumericalDifferentiationSettings.forODE2Connectors` | 1.13.304 | 2031 | (no effect) | definitions (NumericalDifferentiationSettings) |
+| `NumericalDifferentiationSettings.forODE2connectors` | 1.12.256 | 2031 | (no effect) | definitions (NumericalDifferentiationSettings) |
 | `Parallel.multithreadedLLimitJacobians` | 1.12.244 | 2031 | multithreadedLowerLimitJacobians | definitions (Parallel) |
 | `Parallel.multithreadedLLimitLoads` | 1.12.244 | 2031 | multithreadedLowerLimitLoads | definitions (Parallel) |
 | `Parallel.multithreadedLLimitMassMatrices` | 1.12.244 | 2031 | multithreadedLowerLimitMassMatrices | definitions (Parallel) |
@@ -314,5 +317,5 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `TimeIntegrationSettings.realtimeWaitMicroseconds` | 1.12.256 | 2031 | timeIntegration.realtime.waitMicroseconds | definitions (TimeIntegrationSettings) |
 | `TimeIntegrationSettings.simulateInRealtime` | 1.12.256 | 2031 | timeIntegration.realtime.active | definitions (TimeIntegrationSettings) |
 | `VSettingsGeneral.linuxDisplayScaleFactor` | 1.12.445 | 2031 | displayScaleFactor | definitions (VSettingsGeneral) |
-| `VSettingsGeneral.useWindowsDisplayScaleFactor` | 1.12.445 | 2031 | openGL.dummyBool | definitions (VSettingsGeneral) |
+| `VSettingsGeneral.useWindowsDisplayScaleFactor` | 1.12.445 | 2031 | (no effect) | definitions (VSettingsGeneral) |
 | `VSettingsDialogs.fontScalingMacOS` | 1.12.15 | 2032 | dialogs.fontScaling | definitions (VSettingsDialogs) |

@@ -906,12 +906,13 @@ def CheckTree(tree, tables, fixes=None, source=None):
                     if '.' in use and (parentMember is not None and above != parentMember) or                             (parentMember is None and (above in DeprecatedSettings.structureMembers
                                                        or above.startswith('view'))):
                         continue                          #the same pair in another structure
-                    advice = ('it has no effect; remove it' if use.endswith('.dummy') else 'use ' + use)
+                    noEffect = use.split('.')[-1] in ('dummy', 'dummyBool') #a setting without a successor (#3205)
+                    advice = ('it has no effect; remove it' if noEffect else 'use ' + use)
                     Report(node.lineno, ('setting',) + pair, "'" + '.'.join(pair) + "' is deprecated"
                            + (' since ' + version if version else '') + '; ' + advice)
-                    if use.endswith('.dummy') and isinstance(parents.get(id(node)), ast.Assign):
+                    if noEffect and isinstance(parents.get(id(node)), ast.Assign):
                         DeleteStatement(node)
-                    if fixes is not None and not use.endswith('.dummy'):
+                    if fixes is not None and not noEffect:
                         if '.' not in use:                  #a rename in its own structure
                             fixes.append((node, 1, [use]))
                         else:                               #a path from the top structure

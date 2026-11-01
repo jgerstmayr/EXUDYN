@@ -44,7 +44,7 @@ def main():
         for entry in sorted(selected, key=lambda entry: (entry['expires'] if isinstance(entry['expires'], int) else 0,
                                                          entry['name'])):
             text += ('| `' + Cell(entry['name']) + '` | ' + Cell(entry['since']) + ' | ' + Cell(entry['expires']) + ' | '
-                     + Cell(entry['use']) + ' | ' + Cell(entry['where'].split(':')[0]) + ' |\n')
+                     + ('(no effect)' if entry['use'].split('.')[-1] in ('dummy', 'dummyBool') else Cell(entry['use'])) + ' | ' + Cell(entry['where'].split(':')[0]) + ' |\n')
     fileName = os.path.join(deprecationModel.repositoryRoot, 'docs', 'generated', 'deprecations.md')
     with io.open(fileName, 'w', encoding='utf-8', newline='\n') as file:
         file.write(text)

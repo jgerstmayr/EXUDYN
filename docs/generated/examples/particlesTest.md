@@ -135,7 +135,6 @@ simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.parallel.numberOfThreads = 8
 
-simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = False
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 
 SC.visualizationSettings.general.graphicsUpdateInterval=0.1

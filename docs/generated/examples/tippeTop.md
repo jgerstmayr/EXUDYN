@@ -148,7 +148,6 @@ simulationSettings.solution.precision = 6
 simulationSettings.solution.file.export.velocities = False
 simulationSettings.solution.file.export.accelerations = False
 
-simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = False
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.discontinuous.iterationTolerance = 0.1
 

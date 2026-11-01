@@ -1,0 +1,17 @@
+{
+  "number": 3205,
+  "title": "numericalDifferentiation: forAE, forODE2 and forODE2Connectors deprecated; doSystemWideDifferentiation is the numerical Jacobian, the algebraic equations included",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The numerical differentiation settings had three flags that forced a numerical Jacobian for some items: forAE (the algebraic equations, by all coordinates, dense matrices only), forODE2 (every object) and forODE2Connectors (the connectors, described as a development flag), besides doSystemWideDifferentiation (the ODE2 and ODE1 equations by all coordinates). Each object provides its own Jacobian - analytic, automatic, or numerical by its own coordinates where it has neither - so the flags are left with no purpose but comparison, for which one numerical Jacobian suffices. Decided: forAE, forODE2 and forODE2Connectors are deprecated and have no effect; doSystemWideDifferentiation computes the whole Jacobian numerically, the algebraic equations included, for dense and sparse matrices (revision2026c step RG9.11.9).",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 23:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/structureDefsSimulationSettings.py",
+  "releaseNotes": "numericalDifferentiation.doSystemWideDifferentiation computes the whole Jacobian numerically, the algebraic equations included, for dense and sparse matrices; forAE, forODE2 and forODE2Connectors are deprecated and have no effect, as each object provides its Jacobian - analytic, automatic or numerical by its own coordinates.",
+  "resolvedInVersion": "1.13.304"
+}

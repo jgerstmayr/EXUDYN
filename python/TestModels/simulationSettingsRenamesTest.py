@@ -70,7 +70,6 @@ renames = {
     'timeIntegration.newton.useNewtonSolver': 'timeIntegration.newton.active',
     'staticSolver.newton.newtonResidualMode': 'staticSolver.newton.residualMode',
     'staticSolver.newton.useNewtonSolver': 'staticSolver.newton.active',
-    'timeIntegration.newton.numericalDifferentiation.forODE2connectors': 'timeIntegration.newton.numericalDifferentiation.forODE2Connectors',
     'staticSolver.constrainODE1coordinates': 'staticSolver.constrainODE1Coordinates',
     }
 
