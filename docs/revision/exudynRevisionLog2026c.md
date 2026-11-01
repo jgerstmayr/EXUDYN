@@ -4978,3 +4978,28 @@ the extra 4.7 us per Python call - add views.)*
   SystemJacobian against differences 1.8e-11; the numpy export 0.0.
 - Found: a compliance +1e-4 z (a negative stiffness) and a term 0.01 x q_t at position level diverge in both solvers,
   in C++ and in Python at the same time; the test uses -1e-4 z and no q_t.
+
+<a id="rg12-70-2"></a>
+### RG12.70.2 — esym.LookupTable and exudyn.symbolics.utilities (2026-11-01, #3192)
+- C++ (Symbolic.h): `LookupTableData` - values, step, start, outside zero, hold or periodic (the length
+  len(values)*step, the last interval to the first value) -, `Value(x, derivative)`, the slope for the derivative;
+  `ExpressionLookupTable`, one operand and a shared_ptr to the data, FlatName LookupTable or LookupTableDerivative;
+  `SReal::LookupTable`; `PyLookupTable`, bound as esym.LookupTable with `__call__`, `Derivative`, values, step, start,
+  outside, len. interpolation other than 'linear' is refused, as the options of the decision are not done.
+- The table of operations (SymbolicTable): the codes LookupTable (rule RealLookupTable, the slope times the derivative of
+  the operand) and LookupTableDerivative (rule Zero, piecewise constant), computed by `LookupTableOperation` from the
+  data of the node, which the program keeps as the node of its step - the constant operand of the decision -;
+  esym.Jacobian gives the derivative as LookupTableDerivative of the same data.
+- Optimize: the key of a lookup includes its data, so that two tables at the same argument are not merged; a lookup at
+  a number is folded. GetFlatProgramData writes the data as 'table' of the operation; codeExport writes it as
+  esym.LookupTable(...)(x) (symbolic) and by a function _LookupTable in the program (numpy: the same bits; sympy: a
+  Piecewise, to 2e-14).
+- `exudyn.symbolics.utilities`: `SampleTime(t, period, offset=0., functions=exudyn.symbolic)` = offset +
+  period*floor((t - offset)/period + 1e-12); `NoiseTable(step, length, seed, amplitude, distribution, outside)`, a
+  LookupTable of round(length/step) values of numpy.random.default_rng(seed), uniform in [-amplitude, amplitude] or
+  normal, cached per arguments in a dict, so that a Python user function does not create it in every call;
+  `Noise(t, ...)` its value at t. The decided signature Noise(t, ...) kept, the table available by NoiseTable.
+- symbolicLookupTableTest.py: the three modes against numpy.interp 3.6e-15; the derivative in one pass and by
+  esym.Jacobian against the slopes 0.0; two tables at one argument after Optimize; the numpy export 0.0; a spring of
+  ObjectGenericODE2 by its tabulated characteristic curve with a load of SampleTime and Noise, recorded against Python
+  0.0; SampleTime at the instants of 1 ms, the noise table cached and bounded.

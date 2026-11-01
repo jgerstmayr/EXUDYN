@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 281 | 1.13.287 |
+| 1.13 | Newborn | 283 | 1.13.289 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.289** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic.LookupTable and exudyn.symbolics.utilities with SampleTime and Noise (#3192)
+  - description: revision2026c step RG12.70.2 (\#3175): esym.LookupTable(values, step, start=0., outside='zero', interpolation='linear'), table(x) and table.Derivative(x), the data shared by every lookup; the codes LookupTable and LookupTableDerivative of the table of operations computed from the data of their node, the forward derivative and esym.Jacobian by the slope; Optimize keeps two tables apart; the export to symbolic, numpy and sympy. exudyn.symbolics.utilities: SampleTime(t, period, offset), Noise(t, step, length, seed, amplitude, distribution, outside) and NoiseTable. Decided: as revision2026c step RG12.70, the options several channels, unequal steps, closest and quadratic later.
+  - **notes:** esym.LookupTable(values, step, start, outside) interpolates values at equal steps linearly: table(x) for a time, a coordinate or a parameter, its derivative in the Jacobians and esym.Jacobian, the export to symbolic, numpy and sympy; exudyn.symbolics.utilities has SampleTime(t, period) and Noise(t, step, length, seed).
+  - date resolved: **2026-11-01 10:18**, date raised: 2026-11-01
+- **1.13.288** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectGenericDAE: an object coupling ODE2, ODE1 and algebraic coordinates, linear by matrices and nonlinear by user functions (#3143)
+  - description: An object on ODE2 nodes, ODE1 nodes and algebraic coordinates of its own, with the linear equations M q\_tt + D q\_t + K q + E y + C\_q^T lambda = f, y\_t + C\_y^T lambda = A y + B q + B\_t q\_t + g, C\_q q + C\_y y = c0, and user functions for the mass matrix, the ODE2 forces, the ODE1 right-hand side and the constraints, each with the arguments (mbs, t, itemNumber, q, q\_t, y, ..., parameters) of the existing user items, parameters a vector of the item as in ObjectUserBody; the Jacobians by a jacobianUserFunction or the one-pass derivative of a symbolic recording, never by numerical differences (\#3101). Exudyn's implicit solver needs the coupling blocks between ODE2 and ODE1, the explicit solver both kinds in every stage and algebraic equations only where they can be eliminated. The general form of SymbolicSystemBase; the generic object of \#1104.
+  - **notes:** ObjectGenericDAE couples ODE2, ODE1 and algebraic coordinates on the coordinates of its nodes: the linear terms by matrices, the nonlinear ones by forceUserFunction, rhsUserFunction, massMatrixUserFunction, constraintUserFunction and jacobianUserFunction; recorded user functions give their Jacobians in one pass; SymbolicSystem takes the object.
+  - date resolved: **2026-11-01 10:15**, date raised: 2026-10-28
 - **1.13.287** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectGenericDAE: massMatrixUserFunction, constraintUserFunction and jacobianUserFunction (#3191)
   - description: revision2026c step RG9.10.6 (\#3143, docs/dev/design/genericDAE.md section 2): massMatrixUserFunction(mbs, t, itemNumber, q, q\_t, y, parameters) instead of the constant mass matrix; constraintUserFunction(mbs, t, itemNumber, q, q\_t, y, z, velocityLevel, parameters), added to the algebraic equations; jacobianUserFunction(mbs, t, itemNumber, q, q\_t, y, z, factorODE2, factorODE2\_t, factorODE1, parameters), the local Jacobian of the terms of all user functions. A recorded constraintUserFunction gives its Jacobian blocks by the one-pass derivative, a Python one needs the jacobianUserFunction (no numerical Jacobian, \#3101); SymbolicSystem takes the recorded mass matrix and constraint functions.
   - **notes:** ObjectGenericDAE has a massMatrixUserFunction, a constraintUserFunction of q, q\_t, y and the multipliers z, added to its algebraic equations, and a jacobianUserFunction of the derivatives of all its user functions; a recorded constraintUserFunction gives its Jacobian in one pass, a Python one needs the jacobianUserFunction; SymbolicSystem takes the recorded mass matrix and constraint functions.

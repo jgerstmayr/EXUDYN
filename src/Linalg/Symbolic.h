@@ -25,6 +25,7 @@
 #include "Linalg/BasicLinalg.h"
 #include <unordered_map>    //VariableSet
 #include <typeinfo>         //typeid, in SetExpressionNamedReal and IsExpressionNamedReal
+#include <memory>           //shared_ptr, the data of a lookup table
 
 namespace Symbolic
 {
@@ -1219,6 +1220,97 @@ public:
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "IfThenElse(" + operands[0] + "," + operands[1] + "," + operands[2] + ")"; }
 };
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//! the data of esym.LookupTable (#3175): values at equal steps from start, linearly interpolated; outside the
+//! table zero, the end values (hold) or the table repeated with its length, the number of values times step
+struct LookupTableData
+{
+	enum Outside { Zero = 0, Hold = 1, Periodic = 2 };
+	std::vector<Real> values;
+	Real step = 1.;
+	Real start = 0.;
+	Outside outside = Zero;
+
+	//! the value at x, or with derivative its derivative, the slope of the interval of x
+	Real Value(Real x, bool derivative) const
+	{
+		const Index n = (Index)values.size();
+		if (n == 0) { return 0.; }
+		Real u = (x - start)/step;
+		if (outside == Periodic)
+		{
+			Real floorU = std::floor(u);
+			Real fraction = u - floorU;
+			Index i = (Index)(floorU - (Real)n*std::floor(floorU/(Real)n)); //floorU modulo n, also for negative u
+			if (i >= n) { i = 0; } //rounding of the modulo
+			Real a = values[i], b = values[(i + 1) % n];
+			return derivative ? (b - a)/step : a + (b - a)*fraction;
+		}
+		if (u < 0. || u > (Real)(n - 1))
+		{
+			if (derivative || outside == Zero) { return 0.; }
+			return u < 0. ? values[0] : values[n - 1];
+		}
+		if (n == 1) { return derivative ? 0. : values[0]; }
+		Index i = EXUstd::Minimum((Index)std::floor(u), n - 2);
+		Real a = values[i], b = values[i + 1];
+		return derivative ? (b - a)/step : a + (b - a)*(u - (Real)i);
+	}
+	//! the name of the mode outside the table
+	const char* OutsideName() const { return outside == Zero ? "zero" : (outside == Hold ? "hold" : "periodic"); }
+};
+
+//! esym.LookupTable (#3175): the data, stored once and shared by every lookup of the table
+struct PyLookupTable
+{
+	std::shared_ptr<const LookupTableData> data;
+	PyLookupTable(const std::vector<Real>& values, Real step, Real start, const STDstring& outside, const STDstring& interpolation)
+	{
+		CHECKandTHROW(values.size() != 0, "esym.LookupTable: values must have at least one value");
+		CHECKandTHROW(step > 0., "esym.LookupTable: step must be positive, not " + EXUstd::ToString(step));
+		CHECKandTHROW(interpolation == "linear", "esym.LookupTable: interpolation must be 'linear', not '" + interpolation
+			+ "'; 'closest' and 'quadratic' are not available yet");
+		LookupTableData* table = new LookupTableData();
+		table->values = values;
+		table->step = step;
+		table->start = start;
+		if (outside == "zero") { table->outside = LookupTableData::Zero; }
+		else if (outside == "hold") { table->outside = LookupTableData::Hold; }
+		else if (outside == "periodic") { table->outside = LookupTableData::Periodic; }
+		else
+		{
+			delete table;
+			CHECKandTHROWstring("esym.LookupTable: outside must be 'zero', 'hold' or 'periodic', not '" + outside + "'");
+		}
+		data.reset(table);
+	}
+};
+
+//! the value of a lookup table at its operand, or its derivative (#3175); the table is kept by every node that uses it
+class ExpressionLookupTable: public ExpressionBase
+{
+	ExpressionBase* operand;
+	std::shared_ptr<const LookupTableData> table;
+	bool derivative;
+public:
+	ExpressionLookupTable(ExpressionBase* op, const std::shared_ptr<const LookupTableData>& tableInit, bool derivativeInit) :
+		ExpressionBase(), operand(op), table(tableInit), derivative(derivativeInit) {}
+
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { DeleteNode(operand); } } }
+
+	virtual Real Evaluate() const override { return table->Value(operand->Evaluate(), derivative); }
+	virtual STDstring ToString() const override { return STDstring(FlatName()) + "(" + operand->ToString() + ")"; }
+
+	virtual Index NumberOfOperands() const override { return 1; }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return table->Value(values[0].real, derivative); }
+	virtual const char* FlatName() const override { return derivative ? "LookupTableDerivative" : "LookupTable"; }
+	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new ExpressionLookupTable((ExpressionBase*)operands[0].node, table, derivative)); }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return STDstring(FlatName()) + "(" + operands[0] + ")"; }
+	const std::shared_ptr<const LookupTableData>& GetTable() const { return table; }
+	bool IsDerivative() const { return derivative; }
+};
+
 
 //! expression carrying a lightweight real number finally
 class ExpressionReal: public ExpressionBase
@@ -1965,6 +2057,14 @@ public:
 		if (!RecordExpressions(condition, ifTrue, ifFalse)) {return Number2Real(condition) ? Number2Real(ifTrue) : Number2Real(ifFalse); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionIfThenElse(GetFunctionExpression(condition), GetFunctionExpression(ifTrue), GetFunctionExpression(ifFalse));
+	}
+
+	//! the value of a lookup table at x, or its derivative; a number for a number (#3175)
+	template<typename RealType>
+	static SReal LookupTable(const std::shared_ptr<const LookupTableData>& table, const RealType& x, bool derivative) {
+		if (!RecordExpressions(x)) { return table->Value(Number2Real(x), derivative); }
+		ExpressionBase::NewCount()++;
+		return new ExpressionLookupTable(GetFunctionExpression(x), table, derivative);
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

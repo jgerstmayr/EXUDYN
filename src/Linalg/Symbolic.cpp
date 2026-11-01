@@ -604,6 +604,13 @@ public:
 				entry["inline"] = node.kind == FlatKind::Real && ((const ExpressionBase*)node.node)->InlineInFlatText() && operandsInline;
 				const MatrixExpressionSReal* components = node.kind == FlatKind::Matrix ? dynamic_cast<const MatrixExpressionSReal*>((const MatrixExpressionBase*)node.node) : nullptr;
 				if (components) { entry["rows"] = components->NumberOfRows(); entry["columns"] = components->NumberOfColumns(); }
+				const ExpressionLookupTable* lookup = node.kind == FlatKind::Real ? dynamic_cast<const ExpressionLookupTable*>((const ExpressionBase*)node.node) : nullptr;
+				if (lookup) //the data of a lookup table, for the export (#3175)
+				{
+					const LookupTableData& table = *lookup->GetTable();
+					entry["table"] = py::dict(py::arg("values") = table.values, py::arg("step") = table.step, py::arg("start") = table.start,
+						py::arg("outside") = table.OutsideName());
+				}
 			}
 			Append(entry, node.node);
 			stack.pop_back();
@@ -1392,6 +1399,11 @@ class Optimizer
 		}
 		std::string key = IsTableCode(code) ? "code#" + std::to_string((int)code) : STDstring(TypeOf(node).name());
 		for (const FlatNode& operand : operands) { key += "#" + Bytes(&operand.node, sizeof(void*)); }
+		if (IsLookupTableCode(code)) //equal only with the same data (#3175)
+		{
+			const void* data = ((const ExpressionLookupTable*)node.node)->GetTable().get();
+			key += "#table" + Bytes(&data, sizeof(void*));
+		}
 		return key;
 	}
 
@@ -1455,6 +1467,11 @@ class Optimizer
 				std::vector<Real> numbers(operands.size());
 				for (Index i = 0; i < (Index)operands.size(); i++) { numbers[i] = ((const ExpressionReal*)operands[i].node)->GetValue(); }
 				result = Number(ScalarOperation(code, [&numbers](Index i) { return numbers[i]; }));
+				return true;
+			}
+			if (allConstant && IsLookupTableCode(code)) //a lookup table at a number (#3175)
+			{
+				result = Number(LookupTableOperation(node, ((const ExpressionReal*)operands[0].node)->GetValue()));
 				return true;
 			}
 			if (allConstant && IsTableCode(code)) //a Real of constant vectors or matrices, by the table (#3176)
@@ -2092,6 +2109,34 @@ void Init_Pybind_Symbolic(py::module& m) {
 	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Real, Real, Symbolic::SReal>);
 	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Real, Symbolic::SReal, Real>);
 	m.def("IfThenElse", &Symbolic::SReal::IfThenElse<Real, Real, Real>);
+
+	//++++++++++ the lookup table (#3175): the data once, a lookup per call
+	py::class_<Symbolic::PyLookupTable>(m, "LookupTable",
+		"esym.LookupTable(values, step, start=0., outside='zero', interpolation='linear'): values at the equal steps start + i*step, "
+		"linearly interpolated; table(x) is the value at x - a time, a coordinate or a parameter -, an esym.Real for an expression, "
+		"a float for a number; outside the table 'zero', 'hold' (the end values) or 'periodic' (repeated with the length "
+		"len(values)*step); its derivative is the slope of the interval, piecewise constant (#3175)")
+		.def(py::init<const std::vector<Real>&, Real, Real, const STDstring&, const STDstring&>(),
+			py::arg("values"), py::arg("step"), py::arg("start") = 0., py::arg("outside") = "zero", py::arg("interpolation") = "linear")
+		.def("__call__", [](const Symbolic::PyLookupTable& table, Real x) { return table.data->Value(x, false); },
+			"the value at x", py::arg("x"))
+		.def("__call__", [](const Symbolic::PyLookupTable& table, const Symbolic::SReal& x) { return Symbolic::SReal::LookupTable(table.data, x, false); },
+			"the value at x", py::arg("x"))
+		.def("Derivative", [](const Symbolic::PyLookupTable& table, Real x) { return table.data->Value(x, true); },
+			"the derivative by x at x, the slope of its interval", py::arg("x"))
+		.def("Derivative", [](const Symbolic::PyLookupTable& table, const Symbolic::SReal& x) { return Symbolic::SReal::LookupTable(table.data, x, true); },
+			"the derivative by x at x, the slope of its interval", py::arg("x"))
+		.def_property_readonly("values", [](const Symbolic::PyLookupTable& table) { return table.data->values; }, "the values, a copy")
+		.def_property_readonly("step", [](const Symbolic::PyLookupTable& table) { return table.data->step; }, "the step of the arguments")
+		.def_property_readonly("start", [](const Symbolic::PyLookupTable& table) { return table.data->start; }, "the argument of the first value")
+		.def_property_readonly("outside", [](const Symbolic::PyLookupTable& table) { return STDstring(table.data->OutsideName()); },
+			"'zero', 'hold' or 'periodic'")
+		.def("__len__", [](const Symbolic::PyLookupTable& table) { return table.data->values.size(); })
+		.def("__repr__", [](const Symbolic::PyLookupTable& table)
+			{
+				return "esym.LookupTable(" + EXUstd::ToString((Index)table.data->values.size()) + " values, step=" + EXUstd::ToString(table.data->step)
+					+ ", start=" + EXUstd::ToString(table.data->start) + ", outside='" + table.data->OutsideName() + "')";
+			});
 
 	//++++++++++ vectors
 	m.def("cross", [](const Symbolic::SymbolicRealVector& a, const Symbolic::SymbolicRealVector& b) { return SymbolicVectorCross(a, b); });

@@ -76,6 +76,8 @@ static const OperationInfo operationTable[] =
 	{ OperationCode::Min, "min", R, "RR", NoDerivative, false },
 	{ OperationCode::Max, "max", R, "RR", NoDerivative, false },
 	{ OperationCode::IfThenElse, "IfThenElse", R, "RRR", RealIfThenElse, false },
+	{ OperationCode::LookupTable, "LookupTable", R, "R", RealLookupTable, false }, //by the data of its node (#3175)
+	{ OperationCode::LookupTableDerivative, "LookupTableDerivative", R, "R", Zero, false }, //piecewise constant
 	//the operations of vectors and matrices (#3176); not commutative for Optimize, which merges them as before by their class
 	{ OperationCode::Dot, "@", R, "VV", RealDot, false },
 	{ OperationCode::Norm, "NormL2", R, "V", RealNorm, false },
@@ -388,6 +390,12 @@ void ForwardDerivative(int rule, const FlatNode& node, const SlotValue& value, c
 		break;
 	case Zero: for (Index i = 0; i < m*n; i++) { out[i] = 0.; } break;
 	case RealIfThenElse: { const Real* chosen = v[0].real ? d[1] : d[2]; for (Index j = 0; j < n; j++) { out[j] = chosen[j]; } break; }
+	case RealLookupTable: //the slope of the interval, from the data of the node (#3175)
+	{
+		Real slope = ((const ExpressionLookupTable*)node.node)->GetTable()->Value(v[0].real, true);
+		for (Index j = 0; j < n; j++) { out[j] = slope*d[0][j]; }
+		break;
+	}
 	case RealPlus: for (Index j = 0; j < n; j++) { out[j] = d[0][j] + d[1][j]; } break;
 	case RealMinus: for (Index j = 0; j < n; j++) { out[j] = d[0][j] - d[1][j]; } break;
 	case RealMul: for (Index j = 0; j < n; j++) { out[j] = d[0][j]*v[1].real + v[0].real*d[1][j]; } break;
@@ -650,7 +658,7 @@ void SymbolicProgram::Layout() const
 	for (Index k = 0; k < n; k++)
 	{
 		const Step& step = steps[k];
-		if (step.code == OperationCode::Leaf || IsScalarCode(step.code)) { continue; }
+		if (step.code == OperationCode::Leaf || IsScalarCode(step.code) || IsLookupTableCode(step.code)) { continue; }
 		for (Index i = 0; i < step.numberOfOperands; i++) { operandValues[i] = slots[operandSlots[step.firstOperand + i]]; }
 		ArrayResultSize(step.code, step.node, operandValues.data(), step.numberOfOperands, slots[k].rows, slots[k].columns);
 		if (step.node.kind != FlatKind::Real)
@@ -688,6 +696,7 @@ void SymbolicProgram::Evaluate() const
 			slot[k].real = ScalarOperation(step.code, [slot, o](Index i) { return slot[o[i]].real; });
 			continue;
 		}
+		if (IsLookupTableCode(step.code)) { slot[k].real = LookupTableOperation(step.node, slot[o[0]].real); continue; }
 		SlotValue* x = operandValues.data(); //an operation of vectors and matrices, into the memory of the program
 		for (Index i = 0; i < step.numberOfOperands; i++) { x[i] = slot[o[i]]; }
 		slot[k].real = ArrayOperation(step.code, x, step.numberOfOperands, offsets[k] >= 0 ? memory.data() + offsets[k] : nullptr);
@@ -815,6 +824,8 @@ static SymbolicDerivativeValue SymbolicDerivativeOfOperation(int rule, const Fla
 	case RealIfThenElse:
 		if (IsZero(1, d) && IsZero(2, d)) { return result; }
 		return DerivativeOfReal(SReal::IfThenElse(x[0]->real, IsZero(1, d) ? SReal(0.) : d[1]->real, IsZero(2, d) ? SReal(0.) : d[2]->real));
+	case RealLookupTable: //the slope of the table at the operand, a lookup of the same table (#3175)
+		return DerivativeOfReal(SReal::LookupTable(((const ExpressionLookupTable*)node.node)->GetTable(), x[0]->real, true)*d[0]->real);
 	case RealPlus: case RealMinus:
 		if (IsZero(1, d)) { return *d[0]; }
 		if (IsZero(0, d)) { return DerivativeOfReal(rule == RealPlus ? d[1]->real : -d[1]->real); }

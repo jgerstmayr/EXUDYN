@@ -11,7 +11,8 @@
 #             'numpy'    Python with numpy, runs without Exudyn;
 #             'sympy'    Python that builds sympy expressions; sympy writes C, C++, Fortran, Julia, Matlab, LaTeX, ...
 #           Every format computes what Exudyn computes: mod is C fmod, round rounds halves away from zero, a comparison
-#           is the number 0 or 1, IfThenElse is true for a condition other than 0.
+#           is the number 0 or 1, IfThenElse is true for a condition other than 0; an exudyn.symbolic.LookupTable is
+#           written with its values, by a function of the program in numpy and sympy (#3175).
 #           exudyn.symbolic.GetFlatProgram(..., format=...), UserFunction.GetFlatProgram(format=...) and
 #           ToString(format=...) of exudyn.symbolic.Real, Vector and Matrix call Write(); the format 'Python' of
 #           GetFlatProgram() and ToString() is written by C++, and Write() gives the same text.
@@ -52,6 +53,44 @@ _sympyFunctions = {'abs': 'sympy.Abs', 'ceil': 'sympy.ceiling', 'min': 'sympy.Mi
                    'Not': 'sympy.Piecewise((1, sympy.Eq({0}, 0)), (0, True))',
                    'round': '(sympy.sign({0})*sympy.floor(sympy.Abs({0}) + sympy.Rational(1, 2)))'}
 _modulePrefix = {'symbolic': 'esym.', 'numpy': 'np.', 'sympy': 'sympy.'}
+
+#the lookup table of exudyn.symbolic (#3175) in the formats numpy and sympy, written into a program that uses one: the
+#value at x - with derivative the slope of its interval - of values at start + i*step, linearly interpolated, as
+#LookupTableData::Value of the C++ code
+_lookupTableHelpers = {'numpy': """def _LookupTable(values, step, start, outside, derivative, x):
+    n = len(values)
+    u = (x - start)/step
+    if outside == 'periodic':
+        i = int(np.floor(u))
+        fraction = u - i
+        i = i % n
+        (a, b) = (values[i], values[(i + 1) % n])
+        return (b - a)/step if derivative else a + (b - a)*fraction
+    if u < 0 or u > n - 1:
+        if derivative or outside == 'zero':
+            return 0.
+        return values[0] if u < 0 else values[n - 1]
+    if n == 1:
+        return 0. if derivative else values[0]
+    i = min(int(np.floor(u)), n - 2)
+    (a, b) = (values[i], values[i + 1])
+    return (b - a)/step if derivative else a + (b - a)*(u - i)
+""", 'sympy': """def _LookupTable(values, step, start, outside, derivative, x):
+    n = len(values)
+    u = (x - start)/step
+    def Segment(i, b):
+        return (b - values[i])/step if derivative else values[i] + (b - values[i])*(u - i)
+    if outside == 'periodic':
+        u = u - n*sympy.floor(u/n)
+        pieces = [(Segment(i, values[(i + 1) % n]), u < i + 1) for i in range(n - 1)]
+        return sympy.Piecewise(*(pieces + [(Segment(n - 1, values[0]), True)]))
+    (low, high) = (0, 0) if (derivative or outside == 'zero') else (values[0], values[n - 1])
+    if n == 1:
+        return sympy.Piecewise((0 if derivative else values[0], sympy.Eq(u, 0)), (low, u < 0), (high, True))
+    pieces = [(low, u < 0)] + [(Segment(i, values[i + 1]), u <= i + 1) for i in range(n - 1)]
+    return sympy.Piecewise(*(pieces + [(high, True)]))
+"""}
+_lookupTableOperations = ['LookupTable', 'LookupTableDerivative']
 
 
 def _Number(value, format):
@@ -125,6 +164,16 @@ def _Operation(entry, operands, operandEntries, format):
         return {'Python': 'IfThenElse({0},{1},{2})', 'symbolic': 'esym.IfThenElse({0}, {1}, {2})',
                 'numpy': '({1} if {0} else {2})',
                 'sympy': 'sympy.Piecewise(({1}, sympy.Ne({0}, 0)), ({2}, True))'}[format].format(*operands)
+    if op in _lookupTableOperations:
+        if format == 'Python':
+            return op + '(' + operands[0] + ')'
+        table = entry['table']
+        data = (_Number(table['values'], 'Python') + ', ' + _Number(table['step'], format) + ', '
+                + _Number(table['start'], format) + ", '" + table['outside'] + "'")
+        if format == 'symbolic':
+            return ('esym.LookupTable(' + data + ')' + ('.Derivative(' if op == 'LookupTableDerivative' else '(')
+                    + operands[0] + ')')
+        return '_LookupTable(' + data + ', ' + str(op == 'LookupTableDerivative') + ', ' + operands[0] + ')'
     if op == 'vector':
         text = '[' + ', '.join(operands) + ']'
         return text if format == 'Python' else {'symbolic': 'esym.Vector(', 'numpy': 'np.array(', 'sympy': 'sympy.Matrix('}[format] + text + ')'
@@ -226,7 +275,10 @@ def Write(data, format='Python', flatten=True, name='', expressionOnly=False):
     functionName = name if name else data.get('name', 'F')
     body = variableLines + (lines if flatten else [])
     returns = ', '.join(t for (n, t) in results)
-    return (_imports[format] + 'def ' + functionName + '(' + ', '.join(parameters) + '):\n'
+    helper = ''
+    if format in _lookupTableHelpers and any(entry.get('op') in _lookupTableOperations for entry in operations):
+        helper = _lookupTableHelpers[format] + '\n'
+    return (_imports[format] + helper + 'def ' + functionName + '(' + ', '.join(parameters) + '):\n'
             + ''.join('    ' + line + '\n' for line in body) + '    return ' + returns + '\n')
 
 

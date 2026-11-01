@@ -1,0 +1,15 @@
+{
+  "number": 3192,
+  "title": "exudyn.symbolic.LookupTable and exudyn.symbolics.utilities with SampleTime and Noise",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.70.2 (#3175): esym.LookupTable(values, step, start=0., outside='zero', interpolation='linear'), table(x) and table.Derivative(x), the data shared by every lookup; the codes LookupTable and LookupTableDerivative of the table of operations computed from the data of their node, the forward derivative and esym.Jacobian by the slope; Optimize keeps two tables apart; the export to symbolic, numpy and sympy. exudyn.symbolics.utilities: SampleTime(t, period, offset), Noise(t, step, length, seed, amplitude, distribution, outside) and NoiseTable. Decided: as revision2026c step RG12.70, the options several channels, unequal steps, closest and quadratic later.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 10:18",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "esym.LookupTable(values, step, start, outside) interpolates values at equal steps linearly: table(x) for a time, a coordinate or a parameter, its derivative in the Jacobians and esym.Jacobian, the export to symbolic, numpy and sympy; exudyn.symbolics.utilities has SampleTime(t, period) and Noise(t, step, length, seed).",
+  "resolvedInVersion": "1.13.289"
+}

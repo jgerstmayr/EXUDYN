@@ -113,6 +113,27 @@ decides is decided then.
   argument of the recording, named by a `ParameterLayout`, so a user beam records its functions once for all its
   elements, see {ref}`sec-useritems`.
 
+## Tables, sampled time and noise
+
+`esym.LookupTable(values, step, start=0., outside='zero')` holds values at the equal steps `start + i*step`, and
+`table(x)` is their linear interpolation at `x` - a time, a coordinate or a parameter -, an `esym.Real` while recording
+and a number for a number (#3175). Outside the table it is zero, the end values with `outside='hold'`, or the table
+repeated after `len(values)*step` with `outside='periodic'`. The data is stored once, however often the table is called;
+the derivative is the slope of the interval, which the Jacobian of an item uses. A spring by its measured
+characteristic curve:
+
+```python
+curve = esym.LookupTable(forces, step=0.01, start=-0.2, outside='hold') #forces at the deflections -0.2, -0.19, ...
+def UFforce(mbs, t, itemNumber, q, q_t):
+    return [-curve(q[0]) - d*q_t[0]]
+```
+
+`exudyn.symbolics.utilities` has functions of the time for such user functions: `SampleTime(t, period)`, the last
+sampling instant at or before `t`, so that `f(SampleTime(t, period))` is a function held between the samples, and
+`Noise(t, step, length, seed=0, amplitude=1.)`, a random signal: the table of `length/step` random values of
+`numpy.random.default_rng(seed)`, the same in every run, step size and Newton iteration. A state held between the
+samples - a value read at the instants - needs data coordinates and is not available in a recording yet.
+
 ## Reading other items
 
 Inside a recorded function, `mbs.GetNodeOutput`, `mbs.GetObjectOutput` (of connectors and the other objects that have

@@ -204,6 +204,7 @@ symbolicGeneralizedAlphaTest
 symbolicHTTest
 symbolicItemOutputTest
 symbolicJacobianExpressionsTest
+symbolicLookupTableTest
 symbolicModuleTest
 symbolicNumpyCompatibilityTest
 symbolicOnePassJacobianTest

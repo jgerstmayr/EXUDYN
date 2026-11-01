@@ -36,6 +36,8 @@ enum class OperationCode : int
 	Plus, Minus, Multiply, Divide, Equal, NotEqual, Greater, GreaterEqual, LessEqual, Less,
 	Positive, Negative, IsFinite, Abs, Sign, Not, Round, Ceil, Floor, Sqrt, Exp, Log, Sin, Cos, Tan, ASin, ACos, ATan,
 	Sinh, Cosh, Tanh, ASinh, ACosh, ATanh, Pow, Atan2, Mod, Min, Max, IfThenElse,
+	//a Real of a Real and the constant data of its node, the values of a lookup table (#3175)
+	LookupTable, LookupTableDerivative,
 	//a Real of vectors and matrices
 	Dot, Norm, VectorComponent, VectorEqual, VectorNotEqual, MatrixComponent,
 	//a vector
@@ -50,7 +52,7 @@ enum class OperationCode : int
 //! raises when it is differentiated (#3171)
 enum DerivativeRule
 {
-	NoDerivative = 0, Variable, Zero, RealIfThenElse, RealAbs,
+	NoDerivative = 0, Variable, Zero, RealIfThenElse, RealAbs, RealLookupTable,
 	RealPlus, RealMinus, RealMul, RealDiv, RealPos, RealNeg, RealSin, RealCos, RealTan, RealExp, RealLog, RealSqrt,
 	RealASin, RealACos, RealATan, RealSinh, RealCosh, RealTanh, RealASinh, RealACosh, RealATanh, RealPow, RealAtan2,
 	RealDot, RealNorm, RealVectorComponent, RealMatrixComponent,
@@ -80,6 +82,14 @@ OperationCode OperationCodeOfNode(const FlatNode& node);
 inline bool IsTableCode(OperationCode code) { return code != OperationCode::Leaf && code != OperationCode::Node; }
 //! true for a scalar operation of scalar operands, computed by ScalarOperation
 inline bool IsScalarCode(OperationCode code) { return code >= OperationCode::Plus && code <= OperationCode::IfThenElse; }
+//! true for a lookup table, a Real of a Real computed by the data of its node, LookupTableOperation (#3175)
+inline bool IsLookupTableCode(OperationCode code) { return code == OperationCode::LookupTable || code == OperationCode::LookupTableDerivative; }
+//! the value of a lookup table operation at x, by the data of its node (#3175)
+inline Real LookupTableOperation(const FlatNode& node, Real x)
+{
+	const ExpressionLookupTable* table = (const ExpressionLookupTable*)node.node;
+	return table->GetTable()->Value(x, table->IsDerivative());
+}
 //! the name of an operation: of its row of the table, else FlatName() of its node (#3153, the export and the count)
 const char* OperationName(const FlatNode& node);
 

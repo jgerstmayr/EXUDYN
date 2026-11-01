@@ -35,6 +35,7 @@ symbolics.codeExport
 symbolics.systemModel
 symbolics.solvers
 symbolics.userItems
+symbolics.utilities
 interactive
 kinematicTree
 lieGroupBasics

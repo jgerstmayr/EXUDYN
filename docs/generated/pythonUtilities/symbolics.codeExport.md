@@ -13,7 +13,8 @@ The formats:
 'numpy'    Python with numpy, runs without Exudyn;
 'sympy'    Python that builds sympy expressions; sympy writes C, C++, Fortran, Julia, Matlab, LaTeX, ...
 Every format computes what Exudyn computes: mod is C fmod, round rounds halves away from zero, a comparison
-is the number 0 or 1, IfThenElse is true for a condition other than 0.
+is the number 0 or 1, IfThenElse is true for a condition other than 0; an exudyn.symbolic.LookupTable is
+written with its values, by a function of the program in numpy and sympy (#3175).
 exudyn.symbolic.GetFlatProgram(..., format=...), UserFunction.GetFlatProgram(format=...) and
 ToString(format=...) of exudyn.symbolic.Real, Vector and Matrix call Write(); the format 'Python' of
 GetFlatProgram() and ToString() is written by C++, and Write() gives the same text.
@@ -24,7 +25,7 @@ GetFlatProgram() and ToString() is written by C++, and Write() gives the same te
 (sec-codeexport--number)=
 ## Function: _Number
 
-[`_Number(value, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L57)
+[`_Number(value, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L96)
 
 - **function description**: a number, a vector or a matrix of numbers in an executable format
 
@@ -32,7 +33,7 @@ GetFlatProgram() and ToString() is written by C++, and Write() gives the same te
 (sec-codeexport--index)=
 ## Function: _Index
 
-[`_Index(entry, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L78)
+[`_Index(entry, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L117)
 
 - **function description**: the text of an index operand: an integer, if it is a number
 
@@ -40,7 +41,7 @@ GetFlatProgram() and ToString() is written by C++, and Write() gives the same te
 (sec-codeexport--function)=
 ## Function: _Function
 
-[`_Function(function, operands, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L85)
+[`_Function(function, operands, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L124)
 
 - **function description**: a function of exudyn.symbolic in a format
 
@@ -48,7 +49,7 @@ GetFlatProgram() and ToString() is written by C++, and Write() gives the same te
 (sec-codeexport--operation)=
 ## Function: _Operation
 
-[`_Operation(entry, operands, operandEntries, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L98)
+[`_Operation(entry, operands, operandEntries, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L137)
 
 - **function description**: the text of one operation, its operands given as text
 
@@ -56,7 +57,7 @@ GetFlatProgram() and ToString() is written by C++, and Write() gives the same te
 (sec-codeexport--leaf)=
 ## Function: _Leaf
 
-[`_Leaf(entry, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L159)
+[`_Leaf(entry, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L208)
 
 - **function description**: the text of a number or a named variable
 
@@ -64,7 +65,7 @@ GetFlatProgram() and ToString() is written by C++, and Write() gives the same te
 (sec-codeexport-write)=
 ## Function: Write
 
-[`Write(data, format = 'Python', flatten = True, name = '', expressionOnly = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L171)
+[`Write(data, format = 'Python', flatten = True, name = '', expressionOnly = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L220)
 
 - **function description**: write the flat program of symbolic expressions or of a recorded user function as code; for exudyn.symbolic.Real, Vector and Matrix, ToString(format) calls it, for user functions and expressions GetFlatProgram(format=...)
 - **input**:
@@ -82,7 +83,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-codeexport-tofunction)=
 ## Function: ToFunction
 
-[`ToFunction(data, format = 'numpy', flatten = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L233)
+[`ToFunction(data, format = 'numpy', flatten = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L285)
 
 - **function description**: the Python function of an executable format, as Write() gives it as text
 - **input**:
@@ -92,13 +93,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 - **output**: the function, with the arguments of the user function or of the named variables
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM), [`symbolicSystemEquationsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemEquationsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM), [`symbolicLookupTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicLookupTableTest.py) (TM), [`symbolicSystemEquationsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemEquationsTest.py) (TM)
 
 
 (sec-codeexport-tosympy)=
 ## Function: ToSympy
 
-[`ToSympy(data)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L251)
+[`ToSympy(data)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L303)
 
 - **function description**: the results as sympy expressions, with a sympy symbol per argument: x for a number, the components q[0], q[1], ... of a vector q as a column sympy.Matrix, M[0][0], ... of a matrix M; sympy must be installed
 - **input**:

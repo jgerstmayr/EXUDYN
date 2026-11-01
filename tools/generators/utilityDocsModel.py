@@ -108,6 +108,7 @@ filesParsed=[
              'symbolics/systemModel.py',
              'symbolics/solvers.py',
              'symbolics/userItems.py',
+             'symbolics/utilities.py',
              'interactive.py',
              'kinematicTree.py',
              'lieGroupBasics.py', #Stefan Holzinger
