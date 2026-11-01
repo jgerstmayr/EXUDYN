@@ -5360,3 +5360,31 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - test_systemJacobians.py compares the parallel with the serial assembly for the five models, dense and sparse, to
   1e-14 (10 cases more, 29 in all); the test suite passes, pytest 1495 passed.
 - Open (RG9.11.5.2): the AE rows (#1202) and the split of the tasks by a cost per item (#858).
+
+<a id="rg9-11-8"></a>
+### RG9.11.8 — The local numerical Jacobian by the marker kinematics, tried and rejected (2026-11-01, #3201)
+- Implemented on the local branch `rg9-11-8-kinematicsJacobian` (one commit, not merged): `ItemConnectorInterface(...,
+  jacobian='numerical')` generates ComputeJacobianODE2Connector with `ConnectorJacobianODE2RigidMarkersNumerical` or
+  `...CoordinateMarkersNumerical` - the connector's force of L1 differentiated by forward differences of the marker
+  kinematics (position, global rotation increment by ExpSO3, velocity, global angular velocity; markers without
+  orientation by position and velocity), the derivatives as DValues of the AutoDiff forces, chained by the code of
+  the automatic Jacobian (moved into `ChainConnectorJacobianRigid`). It does not touch the system state, so a thread
+  could compute it. Declared for RollingDiscPenalty, ContactConvexRoll, ContactCoordinate, ContactSphereSphere,
+  ContactSphereTorus and ContactSphereTriangle.
+- test_systemJacobians.py and test_connectorInterface.py passed (77), but 13 test models and one mini example changed,
+  and the Newton convergence degraded where velocities depend on rotating frames and friction acts:
+
+  | test model | Newton iterations before / after | Jacobians before / after |
+  |---|---|---|
+  | rotatingTableTest.py | 26785 / 1083889 | 71 / 678647 |
+  | ballBearingTest.py | 3057 / 3669 | 531 / 907 |
+  | createSphereQuadContact.py | 50384 / 50488 | 834 / 882 |
+  | createSphereQuadContact2.py, createSphereTriangleContact.py, sphereTriangleTest2.py | equal within 6 | equal |
+
+- The cause: the chain J^T K J with K by the marker kinematics lacks the derivative of the marker velocities by the
+  coordinates (v = J(q) q_t, omega of a rotating frame), which the numerical differentiation by the system coordinates
+  contains; the automatic Jacobians of the connector interface neglect it as well (test_connectorInterface.py compares
+  them at zero velocities), which is harmless for spring-dampers and not for friction.
+- Reverted on v2-dev. Options for the decision: (a) the markers provide dv/dq (the derivative of J q_t), so that the
+  local Jacobians - automatic and numerical - are complete; (b) the contacts and the rolling disc stay numerical by
+  CSystem, serially, and only connectors without velocity-dependent friction move.

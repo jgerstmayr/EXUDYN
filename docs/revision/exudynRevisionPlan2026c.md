@@ -1199,6 +1199,8 @@ With RG4.23 (#1548); design section 3.3.
 
 Design section 7, J1: ObjectConnectorUser, the contacts, ReevingSystemSprings, RollingDiscPenalty, HydraulicActuatorSimple, CoordinateSpringDamperExt, the intrinsic RigidBodySpringDamper and the spring-dampers with Python user functions.
 
+Tried 2026-11-01 (local branch rg9-11-8-kinematicsJacobian, not on v2-dev): the local numerical differentiation of the force by the marker kinematics, chained with the marker Jacobians, for RollingDiscPenalty, ConvexRoll, ContactCoordinate, SphereSphere, SphereTorus and SphereTriangle; rejected - it neglects the derivative of the marker velocities by the coordinates (dv/dq, as the automatic Jacobians do), and the Newton convergence of contacts with friction degrades: rotatingTableTest 1083889 instead of 26785 Newton iterations, ballBearingTest 907 instead of 531 Jacobians; 13 test models change. Waits for a decision: the velocity terms in the marker interface (dv/dq of each marker kinematics), or these connectors stay numerical by CSystem (serial). [log](exudynRevisionLog2026c.md#rg9-11-8)
+
 #### **OPEN_RG9.11.9** Deprecate forAE, forODE2 and forODE2Connectors, and measure whether jacobianConnectorDerivative is worth its code
 
 Design section 7, J4; once the revision has replaced their code paths.
