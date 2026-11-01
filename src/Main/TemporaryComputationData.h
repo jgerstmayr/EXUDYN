@@ -35,6 +35,7 @@ public:
 
 	ResizableMatrix localJacobian;      //!< local (object)-jacobian during numerical/automatic differentiation
 	ResizableMatrix localJacobianODE1;  //!< the block of the local Jacobian of the ODE2 rows by the ODE1 coordinates (#3201)
+	ResizableMatrix localJacobianODE2;  //!< the numerical block of the local Jacobian of the ODE1 rows by the ODE2 coordinates and velocities (#3201)
 
 	JacobianTemp jacobianTemp;          //!< additional temporary data needed for jacobian computation
 	//ResizableVector jacobianForce;      //!< for computation of jacobian derivative
@@ -60,6 +61,7 @@ public:
 
 	//these sparsetriplets are either filled directly or as a buffer, if the regular section in the global sparse matrix is full
 	SparseTripletVector sparseTriplets;		//!< used for temporary assembly of jacobian, mass matrix, etc.
+	ArrayIndex deferredObjects;				//!< the objects a thread leaves to the serial part, e.g. of the Jacobians (#3201)
 
 	MarkerDataStructure markerDataStructure;
 	MarkerTemp markerTemp[2];				//!< the two markers of a connector on the new path (#2745)

@@ -5311,3 +5311,15 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   JacobianODE2RHS calls the two; the system-wide branch, the loads and the general contact are unchanged.
 - The test suite passes, pytest 1485 passed (test_systemJacobians.py included). Computing and adding are separate,
   which is the unit of the parallel assembly (RG9.11.5): compute per thread, add serially.
+
+<a id="rg9-11-4-2"></a>
+### RG9.11.4.2 — The ODE1 rows on the pattern of the ODE2 rows (2026-11-01, #3201)
+- `ComputeLocalJacobianODE1` computes the blocks of the ODE1 rows of an object - by y and the coupling by q and q_t,
+  the object's own (ComputeJacobianODE1RHS, not for connectors) or numerical - and `AddLocalJacobianODE1` adds them in
+  the order of before; JacobianODE1RHS is a loop over the two. The numerical coupling block has its own matrix
+  `temp.localJacobianODE2`, as `localJacobian` still holds the ODE1 block when it is computed.
+- `LocalJacobian` (CSystem.h, was `LocalJacobianODE2`) describes the blocks of both kinds of rows and where they are,
+  and has `deferred` for the parallel assembly: `ComputeLocalJacobianODE2(..., analyticOnly=true)` returns false with
+  `deferred` before it would differentiate numerically. `temp.deferredObjects` for the objects a thread leaves to the
+  serial part.
+- The test suite passes; test_systemJacobians.py and test_connectorInterface.py 67 passed.
