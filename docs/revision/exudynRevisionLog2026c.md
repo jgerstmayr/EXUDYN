@@ -5054,3 +5054,23 @@ the extra 4.7 us per Python call - add views.)*
   time the two data coordinates; the post-Newton step samples at the end of a step that reaches the instant, with
   error 0, so the force acts from the next step. Python 0.0 and recorded 1.3e-14 against ObjectGenericODE2 with the
   controller in a PreStepUserFunction. SymbolicSystem still refuses data coordinates, until RG12.66.3.
+
+<a id="rg12-66-3"></a>
+### RG12.66.3 — SymbolicSystem with data coordinates and the post-Newton step (2026-11-01, #3196)
+- SymbolicSystemBase: nData, data (the data coordinates, constant in a step, which every equation reads - a member
+  instead of an argument of every function, as the solvers set it once per iteration), InitialStateData(),
+  PostNewton(q, q_t, y, z, x, x0, t) -> (x, error, recommendedStepSize).
+- SymbolicSystem: the data indices ltgData of each ObjectConnectorUser and ObjectGenericDAE (GetObjectLTGData), the
+  data refused only if other items have some; the recorded postNewtonStepUserFunction a recording of the kind (in its
+  key with the number of data coordinates); PostNewton evaluates them as CSystem::PostNewtonStep - the largest error,
+  the smallest recommended step size >= 0 -, the connectors with the marker states at the data of the iteration.
+  The data in the numerical arguments, the item functions of the connectors and the constraint functions of the DAE
+  (a variable x, not differentiated), the composed system (an input x after t and y) and Equations() (a variable x,
+  variables[5]); postNewton=True gives the results [error, recommendedStepSize, data] item after item, of x and x0.
+- The solvers, as CSolverBase::DiscontinuousIteration: the start of the step kept (and aAlgorithmic), after the step
+  the post-Newton step; above discontinuous.iterationTolerance the step again from its start with the new data, up to
+  maxIterations, then an error unless ignoreMaxIterations; the recommended step size not used (constant step size).
+  The data written into mbs with the state.
+- symbolicSystemDataTest.py: a ball on a unilateral spring switched by its recorded post-Newton function with error,
+  and a DAE with a held controller, error 0: generalized-alpha 7.7e-14 and RK44 3.3e-16 against SolveDynamic, 1004
+  discontinuous iterations as Exudyn's solvers; the exported post-Newton functions against PostNewton 0.0.

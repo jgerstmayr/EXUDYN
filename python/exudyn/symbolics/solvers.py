@@ -6,7 +6,9 @@
 #           Exudyn's explicit solver does, SolveGeneralizedAlpha by the generalized-alpha method, as Exudyn's implicit
 #           solver does, with ODE1 coordinates and index-3 constraints (#3134); both take the SimulationSettings of
 #           Exudyn, write the solution file and the sensors as SolveDynamic does, and write the state into mbs for a
-#           SymbolicSystem.
+#           SymbolicSystem. With data coordinates, both compute a step again from its start while the post-Newton step
+#           of the system gives an error above discontinuous.iterationTolerance, as CSolverBase::DiscontinuousIteration
+#           (#3196); the statistics count the discontinuousIterations.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-26 (created)
@@ -122,7 +124,7 @@ class _Output:
                     self.result[name].append(np.copy(value))
         if self.solver is not None:
             for (name, value) in [('ODE2Coords', q), ('ODE2Coords_t', q_t), ('ODE2Coords_tt', q_tt), ('ODE1Coords', y),
-                                  ('ODE1Coords_t', y_t), ('AECoords', z)]:
+                                  ('ODE1Coords_t', y_t), ('AECoords', z), ('dataCoords', self.system.data)]:
                 if value is not None and len(value):
                     self.state[name][:] = value
             self.system.mbs.systemData.SetTime(t)
@@ -196,6 +198,9 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     massSolver = _MassMatrixSolver(system, timeIntegration.explicit.computeMassMatrixInversePerBody,
                                    timeIntegration.reuseConstantMassMatrix)
     forceEvaluations = [0]
+    discontinuous = timeIntegration.discontinuous
+    statistics = {'discontinuousIterations': 0}
+    system.data = system.InitialStateData()
     def Accelerations(q, q_t, t, y=None):
         forceEvaluations[0] += 1
         forces = system.ODE2RHS(q, q_t, t, y=y) if system.nODE1 else system.ODE2RHS(q, q_t, t)
@@ -212,39 +217,45 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     for step in range(1, n + 1):
         t0 = tStart + (step - 1)*h
         t = tStart + step*h
-        if solverType == exudyn.DynamicSolverType.VelocityVerlet:
-            q_t = q_t + (0.5*h)*q_tt
-            q = q + h*q_t
-            q_tt = Accelerations(q, q_t, t)
-            q_t = q_t + (0.5*h)*q_tt
-        else:
-            (A, weights, times) = _butcherTableaus[solverType]
-            K, K_t, K_y = [], [], []
-            for i in range(len(weights)):
-                (g, g_t, g_y) = (q.copy(), q_t.copy(), y.copy())
-                for j in range(i):
-                    if A[i][j] != 0.:
-                        g += (A[i][j]*h)*K[j]
-                        g_t += (A[i][j]*h)*K_t[j]
-                        g_y += (A[i][j]*h)*K_y[j]
-                K.append(g_t)
-                K_t.append(Accelerations(g, g_t, t0 + h*times[i], g_y))
-                K_y.append(system.ODE1RHS(g, g_t, g_y, t0 + h*times[i]) if system.nODE1 else g_y)
-            for i in range(len(weights)):
-                if weights[i] != 0.:
-                    q = q + (weights[i]*h)*K[i]
-                    q_t = q_t + (weights[i]*h)*K_t[i]
-                    y = y + (weights[i]*h)*K_y[i]
-            if system.nODE1:
-                y_t = system.ODE1RHS(q, q_t, y, t)
-            if timeIntegration.explicit.computeEndOfStepAccelerations:
-                q_tt = Accelerations(q, q_t, t, y)
+        start = (q, q_t, q_tt, y, y_t)
+        dataStart = system.data.copy()
+        for iteration in range(discontinuous.maxIterations):
+            (q, q_t, q_tt, y, y_t) = (x.copy() for x in start) #the step again from its start, with the new data
+            if solverType == exudyn.DynamicSolverType.VelocityVerlet:
+                q_t = q_t + (0.5*h)*q_tt
+                q = q + h*q_t
+                q_tt = Accelerations(q, q_t, t)
+                q_t = q_t + (0.5*h)*q_tt
             else:
-                q_tt = K_t[-1]
+                (A, weights, times) = _butcherTableaus[solverType]
+                K, K_t, K_y = [], [], []
+                for i in range(len(weights)):
+                    (g, g_t, g_y) = (q.copy(), q_t.copy(), y.copy())
+                    for j in range(i):
+                        if A[i][j] != 0.:
+                            g += (A[i][j]*h)*K[j]
+                            g_t += (A[i][j]*h)*K_t[j]
+                            g_y += (A[i][j]*h)*K_y[j]
+                    K.append(g_t)
+                    K_t.append(Accelerations(g, g_t, t0 + h*times[i], g_y))
+                    K_y.append(system.ODE1RHS(g, g_t, g_y, t0 + h*times[i]) if system.nODE1 else g_y)
+                for i in range(len(weights)):
+                    if weights[i] != 0.:
+                        q = q + (weights[i]*h)*K[i]
+                        q_t = q_t + (weights[i]*h)*K_t[i]
+                        y = y + (weights[i]*h)*K_y[i]
+                if system.nODE1:
+                    y_t = system.ODE1RHS(q, q_t, y, t)
+                if timeIntegration.explicit.computeEndOfStepAccelerations:
+                    q_tt = Accelerations(q, q_t, t, y)
+                else:
+                    q_tt = K_t[-1]
+            if _PostNewton(system, discontinuous, q, q_t, y, None, dataStart, t, iteration, statistics):
+                break
         output.Step(step, t, q, q_t, q_tt, last=(step == n), y=y, y_t=y_t)
 
     return output.Finalize({'steps': n, 'forceEvaluations': forceEvaluations[0],
-                            'massMatrixEvaluations': massSolver.evaluations})
+                            'massMatrixEvaluations': massSolver.evaluations, **statistics})
 
 
 def SolveGeneralizedAlpha(system, simulationSettings=None):
@@ -300,6 +311,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     (q, q_t) = system.InitialState()
     q_tt = np.zeros(nODE2)
     (y, y_t, z) = (system.InitialStateODE1(), np.zeros(nODE1), np.zeros(nAE))
+    system.data = system.InitialStateData()
     if generalizedAlpha.computeInitialAccelerations:
         if not general:
             q_tt = scipy.sparse.linalg.spsolve(system.MassMatrix(q, q_t, tStart, sparse=True).tocsc(), system.ODE2RHS(q, q_t, tStart))
@@ -317,66 +329,96 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
         return system.ODE2ResidualLHS(q, q_t, q_tt, t)
 
     (newtonIterations, jacobianEvaluations) = (0, 0)
+    discontinuous = timeIntegration.discontinuous
+    statistics = {'discontinuousIterations': 0}
     for step in range(1, n + 1):
         t = tStart + step*h
-        #the predictor, ComputeNewtonUpdate(initial=True)
-        if generalizedAlpha.useNewmark:
-            q = q + h*q_t + (h**2*(0.5 - beta))*q_tt
-            q_t = q_t + (h*(1 - gamma))*q_tt
-        else:
-            q = q + h*q_t + (h**2*(0.5 - beta))*aAlgorithmic
-            q_t = q_t + (h*(1 - gamma))*aAlgorithmic
-            aAlgorithmic = (alphaF*q_tt - alphaM*aAlgorithmic)/(1 - alphaM)
-            q = q + (h**2*beta)*aAlgorithmic
-            q_t = q_t + (h*gamma)*aAlgorithmic
-        q_tt = np.zeros(nODE2)
-        y = y + (0.5*h)*y_t #the trapezoidal rule y = y0 + h/2 (y_t0 + y_t)
-        y_t = np.zeros(nODE1)
-
-        #Newton's method, as CSolverBase::Newton: converged by the residual relative to the initial one or absolute
-        initialResidual = cMath.norm(NewtonResidual())/errorFactor
-        if initialResidual <= newton.absoluteTolerance:
-            initialResidual = 2*newton.absoluteTolerance #at least one Newton step
-        factorization = None
-        converged = False
-        for iteration in range(int(newton.maxIterations)):
-            if factorization is None or not newton.useModifiedNewton:
-                if general:
-                    J = system.SystemJacobian(q, q_t, q_tt, y, y_t, z, t, factor_q=1., factor_q_t=gammaPrime, factor_q_tt=betaPrime,
-                                              factor_y=1., factor_y_t=2./h)
-                    J[:nODE2, :] *= scaling
-                    J[:, nODE2 + nODE1:] /= scaling
-                    factorization = scipy.linalg.lu_factor(J)
-                else:
-                    factorization = scipy.sparse.linalg.splu(system.ODE2ResidualLHSJacobian(q, q_t, q_tt, t, factor_q=1., factor_q_t=gammaPrime,
-                                                                                     factor_q_tt=betaPrime, sparse=True).tocsc())
-                jacobianEvaluations += 1
-            if general:
-                r = NewtonResidual()
-                r[:nODE2] *= scaling
-                increment = scipy.linalg.lu_solve(factorization, r)
-                y = y - increment[nODE2:nODE2 + nODE1]
-                y_t = y_t - (2./h)*increment[nODE2:nODE2 + nODE1]
-                z = z - increment[nODE2 + nODE1:]/scaling
-                increment = increment[:nODE2]
+        start = (q, q_t, q_tt, aAlgorithmic, y, y_t, z)
+        dataStart = system.data.copy()
+        for iteration in range(discontinuous.maxIterations):
+            (q, q_t, q_tt, aAlgorithmic, y, y_t, z) = (x.copy() for x in start) #the step again from its start, with the new data
+            #the predictor, ComputeNewtonUpdate(initial=True)
+            if generalizedAlpha.useNewmark:
+                q = q + h*q_t + (h**2*(0.5 - beta))*q_tt
+                q_t = q_t + (h*(1 - gamma))*q_tt
             else:
-                increment = factorization.solve(NewtonResidual())
-            q = q - increment
-            q_t = q_t - gammaPrime*increment
-            q_tt = q_tt - betaPrime*increment
-            newtonIterations += 1
-            residual = cMath.norm(NewtonResidual())/errorFactor
-            if residual/initialResidual <= newton.relativeTolerance or residual <= newton.absoluteTolerance:
-                converged = True
+                q = q + h*q_t + (h**2*(0.5 - beta))*aAlgorithmic
+                q_t = q_t + (h*(1 - gamma))*aAlgorithmic
+                aAlgorithmic = (alphaF*q_tt - alphaM*aAlgorithmic)/(1 - alphaM)
+                q = q + (h**2*beta)*aAlgorithmic
+                q_t = q_t + (h*gamma)*aAlgorithmic
+            q_tt = np.zeros(nODE2)
+            y = y + (0.5*h)*y_t #the trapezoidal rule y = y0 + h/2 (y_t0 + y_t)
+            y_t = np.zeros(nODE1)
+
+            #Newton's method, as CSolverBase::Newton: converged by the residual relative to the initial one or absolute
+            initialResidual = cMath.norm(NewtonResidual())/errorFactor
+            if initialResidual <= newton.absoluteTolerance:
+                initialResidual = 2*newton.absoluteTolerance #at least one Newton step
+            factorization = None
+            converged = False
+            for iteration in range(int(newton.maxIterations)):
+                if factorization is None or not newton.useModifiedNewton:
+                    if general:
+                        J = system.SystemJacobian(q, q_t, q_tt, y, y_t, z, t, factor_q=1., factor_q_t=gammaPrime, factor_q_tt=betaPrime,
+                                                  factor_y=1., factor_y_t=2./h)
+                        J[:nODE2, :] *= scaling
+                        J[:, nODE2 + nODE1:] /= scaling
+                        factorization = scipy.linalg.lu_factor(J)
+                    else:
+                        factorization = scipy.sparse.linalg.splu(system.ODE2ResidualLHSJacobian(q, q_t, q_tt, t, factor_q=1., factor_q_t=gammaPrime,
+                                                                                         factor_q_tt=betaPrime, sparse=True).tocsc())
+                    jacobianEvaluations += 1
+                if general:
+                    r = NewtonResidual()
+                    r[:nODE2] *= scaling
+                    increment = scipy.linalg.lu_solve(factorization, r)
+                    y = y - increment[nODE2:nODE2 + nODE1]
+                    y_t = y_t - (2./h)*increment[nODE2:nODE2 + nODE1]
+                    z = z - increment[nODE2 + nODE1:]/scaling
+                    increment = increment[:nODE2]
+                else:
+                    increment = factorization.solve(NewtonResidual())
+                q = q - increment
+                q_t = q_t - gammaPrime*increment
+                q_tt = q_tt - betaPrime*increment
+                newtonIterations += 1
+                residual = cMath.norm(NewtonResidual())/errorFactor
+                if residual/initialResidual <= newton.relativeTolerance or residual <= newton.absoluteTolerance:
+                    converged = True
+                    break
+            if not converged:
+                raise ValueError('SolveGeneralizedAlpha: Newton did not converge in step ' + str(step) + ' at t=' + str(t)
+                                 + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
+            if not generalizedAlpha.useNewmark:
+                aAlgorithmic = aAlgorithmic + ((1 - alphaF)/(1 - alphaM))*q_tt #FinalizeNewton
+            if _PostNewton(system, discontinuous, q, q_t, y, z, dataStart, t, iteration, statistics):
                 break
-        if not converged:
-            raise ValueError('SolveGeneralizedAlpha: Newton did not converge in step ' + str(step) + ' at t=' + str(t)
-                             + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
-        if not generalizedAlpha.useNewmark:
-            aAlgorithmic = aAlgorithmic + ((1 - alphaF)/(1 - alphaM))*q_tt #FinalizeNewton
         output.Step(step, t, q, q_t, q_tt, last=(step == n), y=y, y_t=y_t, z=z)
 
-    return output.Finalize({'steps': n, 'newtonIterations': newtonIterations, 'jacobianEvaluations': jacobianEvaluations})
+    return output.Finalize({'steps': n, 'newtonIterations': newtonIterations, 'jacobianEvaluations': jacobianEvaluations,
+                            **statistics})
+
+
+def _PostNewton(system, discontinuous, q, q_t, y, z, dataStart, t, iteration, statistics):
+    """the post-Newton step after a step of a solver, as CSolverBase::DiscontinuousIteration (#3196): the new data
+    coordinates into system.data; True if the step is done - the error is at most discontinuous.iterationTolerance,
+    or the system has no data coordinates -, False if it is computed again from its start with the new data. After
+    discontinuous.maxIterations it raises, unless discontinuous.ignoreMaxIterations; the recommended step size is not
+    used by the constant step size"""
+    if not system.nData:
+        return True
+    (system.data, error, recommendedStepSize) = system.PostNewton(q, q_t, y, z, system.data, dataStart, t)
+    statistics['discontinuousIterations'] += 1
+    if error <= discontinuous.iterationTolerance:
+        return True
+    if iteration + 1 >= discontinuous.maxIterations:
+        if not discontinuous.ignoreMaxIterations:
+            raise ValueError('the discontinuous iteration did not converge in ' + str(int(discontinuous.maxIterations))
+                             + ' iterations at t=' + str(t) + ', error ' + str(error) + '; discontinuous.ignoreMaxIterations '
+                             'continues anyway')
+        return True
+    return False
 
 
 def _InitialAccelerations(system, q, q_t, y, t, epsilon=1e-6):

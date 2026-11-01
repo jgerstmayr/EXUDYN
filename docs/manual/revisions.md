@@ -63,7 +63,11 @@ dataCoordinatesStartOfStep, parameters)`, and returns the vector `[discontinuous
 so that it can be recorded; it got the markers as objects and returned a tuple before (#3194). ObjectGenericDAE has
 data nodes, `nodeNumbersData`: every user function gets the data coordinates `x` after `y` (after `z` in the
 constraint and Jacobian functions), and a `postNewtonStepUserFunction(mbs, t, itemNumber, q, q_t, y, z, x, x0,
-parameters)` updates them after each Newton iteration, e.g. for a discrete controller (#3195).
+parameters)` updates them after each Newton iteration, e.g. for a discrete controller (#3195). `SymbolicSystem`
+takes the data coordinates of ObjectConnectorUser and ObjectGenericDAE with their recorded post-Newton functions:
+`system.data` holds them, `PostNewton` updates them, `Equations(postNewton=True)` and `GetFlatProgram` give the
+post-Newton functions, and `SolveGeneralizedAlpha` and `SolveExplicit` repeat a step while the error of a switch is
+above `discontinuous.iterationTolerance`, as Exudyn's solvers (#3196).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

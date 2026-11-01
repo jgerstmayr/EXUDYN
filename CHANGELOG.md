@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 286 | 1.13.292 |
+| 1.13 | Newborn | 287 | 1.13.293 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.293** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem: data coordinates and the post-Newton step, the discontinuous iteration of the Python solvers (#3196)
+  - description: revision2026c step RG12.66.3 (\#3158): SymbolicSystemBase gets nData, InitialStateData and PostNewton; the equations take the data coordinates x, constant during Newton; SymbolicSystem takes the data nodes of ObjectConnectorUser and ObjectGenericDAE and their recorded post-Newton functions, Equations() and the export a result postNewton; SolveGeneralizedAlpha and SolveExplicit repeat a step while the error is above discontinuous.iterationTolerance, as CSolverBase::DiscontinuousIteration; the recommended step size is not used by the constant step size.
+  - **notes:** SymbolicSystem takes the data coordinates of ObjectConnectorUser and ObjectGenericDAE with their recorded post-Newton functions: system.data holds them, PostNewton updates them, Equations(postNewton=True) and GetFlatProgram give the post-Newton functions, and SolveGeneralizedAlpha and SolveExplicit repeat a step while the error of a switch is above discontinuous.iterationTolerance, as Exudyn's solvers.
+  - date resolved: **2026-11-01 12:12**, date raised: 2026-11-01
 - **1.13.292** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectGenericDAE: data nodes and a postNewtonStepUserFunction (#3195)
   - description: revision2026c step RG12.66.2 (\#3158, \#3143): nodeNumbersData of NodeGenericData; every user function gets the data coordinates x after y (after z for the constraint and Jacobian functions); postNewtonStepUserFunction(mbs, t, itemNumber, q, q\_t, y, z, x, x0, parameters) returns \[discontinuousError, recommendedStepSize, new x\]; the system calls the post-Newton step of bodies, which it did for connectors only. Decided: yes, for discrete controllers, hysteresis and switching states of generic systems.
   - **notes:** ObjectGenericDAE has data nodes, nodeNumbersData: every user function gets the data coordinates x, and a postNewtonStepUserFunction updates them after each Newton iteration and returns the error of a switch and a recommended step size, e.g. for a discrete controller.

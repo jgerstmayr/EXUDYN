@@ -206,4 +206,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacem
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`userConnectorContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorContactTest.py) (TM), [`userConnectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSystemDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemDataTest.py) (TM), [`userConnectorContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorContactTest.py) (TM), [`userConnectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userConnectorTest.py) (TM)

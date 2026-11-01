@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.292.dev1
+- Exudyn version = 1.13.293.dev1
 - last change = 2026-11-01
 - Number of issues = 3198
-- Number of resolved issues = 3069 (292 in current version)
+- Number of resolved issues = 3070 (293 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9041,9 +9041,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `FIX` `MEDIUM EFF` `raised by: Claude-JG` UserItemCreator.CreateSphereSphereContact switched by a data coordinate, with the restitution model (#3197)
   - description: revision2026c step RG12.55.8 (\#3188): the contact switched by the gap of the data coordinates in the post-Newton step as the built-in contact, so that the implicit solver converges with the step size; impactModel 2 (restitution coefficient) with the impact velocity in the data, the recommended model in the examples, not the default. Decided: the switching instant is not located within the step.
-  - date raised: 2026-11-01
-- `EXTENSION` `raised by: Claude-JG` SymbolicSystem: data coordinates and the post-Newton step, the discontinuous iteration of the Python solvers (#3196)
-  - description: revision2026c step RG12.66.3 (\#3158): SymbolicSystemBase gets nData, InitialStateData and PostNewton; the equations take the data coordinates x, constant during Newton; SymbolicSystem takes the data nodes of ObjectConnectorUser and ObjectGenericDAE and their recorded post-Newton functions, Equations() and the export a result postNewton; SolveGeneralizedAlpha and SolveExplicit repeat a step while the error is above discontinuous.iterationTolerance, as CSolverBase::DiscontinuousIteration; the recommended step size is not used by the constant step size.
   - date raised: 2026-11-01
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` The user sphere contact switched by the gap within a step: its solution does not converge with the step size in the implicit solver, and differs from the built-in contact with damping (#3188)
   - description: Found in revision2026c step RG12.55.5 (symbolicUserContactTest.py): with generalized-alpha the position of the ball changes by about 7e-4 between 4000 and 32000 steps for the user contact with damping (2.4e-5 without), where the built-in contact, switched by its data node at the end of a step, converges; with RK44 both converge, but with damping to solutions 2.5e-4 apart, as the damping pulls the separating spheres together. To be clarified: the Newton iteration with a force that jumps within a step, and whether the user contact needs the switch by data coordinates of RG12.66.

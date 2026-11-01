@@ -24,9 +24,13 @@
 #           LoadMassProportional and LoadCoordinate, constant or with a symbolic user function of the time, on markers
 #           of point nodes, node coordinates and user bodies (#3118); ObjectJointUser with symbolic constraint and
 #           Jacobian functions (#3141); ObjectGenericODE1 with its matrix, vector and a symbolic rhsUserFunction, and
-#           LoadCoordinate on its coordinates (#3144); ObjectGenericDAE with its matrices and symbolic forceUserFunction
-#           and rhsUserFunction, its ODE1 and algebraic coordinates (#3190); every other object and load, data
-#           coordinates and recordings that read mbs are refused.
+#           LoadCoordinate on its coordinates (#3144); ObjectGenericDAE with its matrices and symbolic user functions,
+#           its ODE1 and algebraic coordinates (#3190, #3191); the data coordinates of ObjectConnectorUser and
+#           ObjectGenericDAE and their recorded postNewtonStepUserFunction (#3196); every other object and load and
+#           recordings that read mbs are refused.
+#           The data coordinates x are system.data, constant in the Newton iterations of a step: every equation reads
+#           them, PostNewton gives the new ones after a step and the error of a switch, and the solvers compute the
+#           step again while the error is above discontinuous.iterationTolerance, as Exudyn's solvers.
 #           SystemVariables(system) gives the system variables as one exudyn.symbolic.VariableSet and the states of the
 #           markers as expressions of them (#3151). The parameters of the user items may be named exudyn.symbolic.Real,
 #           SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (#3152).
@@ -54,12 +58,13 @@ __all__ = ['SymbolicSystemBase', 'NumpySystem', 'SymbolicKind', 'SymbolicLoad', 
 #the user functions of a kind, by object type
 _userFunctionNames = {'UserBody': ['massMatrixUserFunction', 'forceUserFunction'],
                       'GenericODE2': ['massMatrixUserFunction', 'forceUserFunction'],
-                      'ConnectorUser': ['forceUserFunction']}
+                      'ConnectorUser': ['forceUserFunction', 'postNewtonStepUserFunction']}
 #the user functions of a joint, ObjectJointUser on two rigid markers (#3141)
 _jointFunctionNames = ['constraintUserFunction', 'jacobianUserFunction']
 #the user functions of ObjectGenericDAE, (mbs, t, itemNumber, q, q_t, y, parameters) - the constraintUserFunction with
 #z and velocityLevel before parameters -, and the positions of q, q_t and y in them, mbs at 0 (#3190, #3191)
-_daeFunctionNames = ['forceUserFunction', 'rhsUserFunction', 'massMatrixUserFunction', 'constraintUserFunction']
+_daeFunctionNames = ['forceUserFunction', 'rhsUserFunction', 'massMatrixUserFunction', 'constraintUserFunction',
+                     'postNewtonStepUserFunction']
 (_daeQ, _daeQ_t, _daeY) = (3, 4, 5)
 #the matrices and vectors of ObjectGenericDAE by their symbols in the design, docs/dev/design/genericDAE.md
 _daeMatrices = {'M': 'massMatrix', 'D': 'dampingMatrix', 'K': 'stiffnessMatrix', 'E': 'couplingMatrixODE1',
@@ -110,11 +115,38 @@ class SymbolicSystemBase:
     the coordinates of every kind, so that an item coupling all of them fits
 
     Note:
-        Its members: nODE2, nODE1, nAE, the numbers of coordinates
+        Its members: nODE2, nODE1, nAE, nData, the numbers of coordinates; data, the data coordinates x, which every
+        equation reads and which are constant during the Newton iterations of a step: the solvers set them, after
+        the post-Newton step of PostNewton (#3196)
     """
     nODE2 = 0
     nODE1 = 0
     nAE = 0
+    nData = 0
+    data = np.zeros(0)
+
+    def InitialStateData(self):
+        """the initial data coordinates x0; empty unless the derived class has data coordinates"""
+        return np.zeros(self.nData)
+
+    def PostNewton(self, q, q_t, y, z, x, x0, t):
+        """the post-Newton step after the Newton iterations of a step (#3196): the new data coordinates, the
+        discontinuous error and a recommended step size (< 0: none); the data coordinates x are constant during the
+        Newton iterations, x0 those at the start of the step. The base class has no data coordinates
+
+        Args:
+            q: the ODE2 coordinates
+            q_t: the ODE2 velocities
+            y: the ODE1 coordinates
+            z: the algebraic coordinates
+            x: the data coordinates of the last iteration
+            x0: the data coordinates at the start of the step
+            t: the time
+
+        Returns:
+            (x, error, recommendedStepSize)
+        """
+        return (np.array(x, dtype=float), 0., -1.)
 
     def InitialState(self):
         """the initial coordinates and velocities (q0, q_t0); zero unless the derived class gives them"""
@@ -511,8 +543,7 @@ class SymbolicSystem(SymbolicSystemBase):
                 refused += ['load ' + str(loadNumber) + ' (' + mbs.GetLoad(loadNumber)['loadType'] + ': ' + reason + ')']
             elif load is not None:
                 (self.ode1Loads if load.ode1 else self.loads).append(load)
-        if mbs.systemData.DataSize() > 0:
-            refused += ['data coordinates']
+        self.nData = mbs.systemData.DataSize()
         self.nODE1 = mbs.systemData.ODE1Size()
         self.nAE = mbs.systemData.AEsize()
         kinds = {}
@@ -562,6 +593,7 @@ class SymbolicSystem(SymbolicSystemBase):
                 continue #a connector without forces
             key = (objectType,) + tuple((name, recordings[name].GetFlatProgram()) for name in sorted(recordings))
             if markers is not None: #the connectors of a kind have the same pattern of markers and of their bodies
+                key += (len(mbs.systemData.GetObjectLTGData(objectNumber)),)
                 key += tuple((marker['type'], len(marker['indices']))
                              + tuple(recording.GetFlatProgram() for recording in marker.get('recordings', {}).values())
                              for marker in markers)
@@ -574,7 +606,8 @@ class SymbolicSystem(SymbolicSystemBase):
                 kind.parameters.append(np.array(item['parameters'], dtype=float))
             elif objectType == 'ConnectorUser':
                 kind.parameters.append({'parameters': np.array(item['parameters'], dtype=float), 'markers': markers,
-                                        'orientation': bool(int(item['requestedMarkerType']) & int(exudyn.MarkerType.Orientation))})
+                                        'orientation': bool(int(item['requestedMarkerType']) & int(exudyn.MarkerType.Orientation)),
+                                        'ltgData': np.array(mbs.systemData.GetObjectLTGData(objectNumber), dtype=int)})
             else:
                 kind.parameters.append({'M': _Dense(item['massMatrix']), 'K': _Dense(item['stiffnessMatrix']),
                                         'D': _Dense(item['dampingMatrix']), 'f': np.array(item['forceVector'], dtype=float)})
@@ -585,6 +618,9 @@ class SymbolicSystem(SymbolicSystemBase):
         if not refused and (sum(len(joint['ltgAE']) for kind in self.jointKinds for joint in kind.parameters)
                             + sum(len(dae['ltgAE']) for dae in daeObjects)) != self.nAE:
             refused += ['algebraic equations of other items than ObjectJointUser and ObjectGenericDAE']
+        connectorData = [connector['ltgData'] for kind in kinds.values() if kind.objectType == 'ConnectorUser' for connector in kind.parameters]
+        if not refused and (sum(len(ltgData) for ltgData in connectorData) + sum(len(dae['ltgData']) for dae in daeObjects)) != self.nData:
+            refused += ['data coordinates of other items than ObjectConnectorUser and ObjectGenericDAE']
         if not refused and (sum(len(ltg) for kind in self.ode1Kinds for ltg in kind.ltg)
                             + sum(len(dae['ltgODE1']) for dae in daeObjects)) != self.nODE1:
             refused += ['ODE1 coordinates of other items than ObjectGenericODE1 and ObjectGenericDAE']
@@ -597,6 +633,7 @@ class SymbolicSystem(SymbolicSystemBase):
         #composed system and Equations() then take y (#3190)
         self._ode2UsesY = any(kind.ltg.shape[1] > 0 and len(dae['ltgODE1']) > 0 for kind in self.daeKinds for dae in kind.parameters)
         self.parameterVariables = self._ParameterVariables(parameters)
+        self.data = self.InitialStateData()
         self.composed = self._Compose() if composeSystem else None
 
     def _ParameterVariables(self, parameters):
@@ -664,7 +701,8 @@ class SymbolicSystem(SymbolicSystemBase):
         inputs = exudyn.symbolic.VariableSet() #the scope of the inputs, in the order of the arguments of Evaluate
         (q, q_t, t) = (inputs.Add('q', q0), inputs.Add('q_t', q_t0), inputs.Add('t', 0.))
         y = inputs.Add('y', self.InitialStateODE1()) if self._ode2UsesY else None #(#3190)
-        (M, f, blocks) = self._EquationLists(backend, q, q_t, t, y=y)[:3]
+        x = inputs.Add('x', self.data) if self.nData else None #the data coordinates, constant in a step (#3196)
+        (M, f, blocks) = self._EquationLists(backend, q, q_t, t, y=y, x=x)[:3]
         massMatrix = [M[i][j] for (i, j) in entries] if entries else [0.]
         blockEntries = [x for (ltg, kindBlocks) in blocks for block in kindBlocks for row in block for x in row]
 
@@ -701,13 +739,14 @@ class SymbolicSystem(SymbolicSystemBase):
         dae.update({symbol: np.array(item[name], dtype=float) for (symbol, name) in _daeVectors.items()})
         dae['ltgODE1'] = np.array(systemData.GetObjectLTGODE1(objectNumber), dtype=int)
         dae['ltgAE'] = np.array(systemData.GetObjectLTGAE(objectNumber), dtype=int)
+        dae['ltgData'] = np.array(systemData.GetObjectLTGData(objectNumber), dtype=int)
         if 'massMatrixUserFunction' in recordings:
             if len(dae['ltgODE1']):
                 raise ValueError('SymbolicSystem: object ' + str(objectNumber) + ' (GenericDAE) has a massMatrixUserFunction and '
                                  'ODE1 coordinates; the mass matrix of SymbolicSystem does not depend on y')
             self._constantMassMatrix = False
         ltg = list(systemData.GetObjectLTGODE2(objectNumber))
-        key = ((len(ltg), len(dae['ltgODE1']), len(dae['ltgAE']), dae['M'].size == 0) #without M: no mass, only constraints
+        key = ((len(ltg), len(dae['ltgODE1']), len(dae['ltgAE']), len(dae['ltgData']), dae['M'].size == 0) #without M: no mass, only constraints
                + tuple((name, recordings[name].GetFlatProgram()) for name in sorted(recordings)))
         if key not in daeKinds:
             daeKinds[key] = SymbolicKind('GenericDAE', recordings)
@@ -736,7 +775,8 @@ class SymbolicSystem(SymbolicSystemBase):
         kind.objects.append(objectNumber)
         kind.ltg.append(ltg)
         kind.parameters.append({'parameters': np.array(item['parameters'], dtype=float), 'markers': markers, 'orientation': True,
-                                'ltgAE': np.array(self.mbs.systemData.GetObjectLTGAE(objectNumber), dtype=int)})
+                                'ltgAE': np.array(self.mbs.systemData.GetObjectLTGAE(objectNumber), dtype=int),
+                                'ltgData': np.zeros(0, dtype=int)})
         return ''
 
     def _ConnectorMarkers(self, objectNumber, item, orientation=None):
@@ -744,8 +784,8 @@ class SymbolicSystem(SymbolicSystemBase):
         SymbolicKind, the global indices of the coordinates of the connector, and the reason it is refused, empty if it
         is taken"""
         if orientation is None:
-            if item['markerAccessUserFunction'] != 0 or item['postNewtonStepUserFunction'] != 0:
-                return (None, None, 'a markerAccessUserFunction or postNewtonStepUserFunction')
+            if item['markerAccessUserFunction'] != 0:
+                return (None, None, 'a markerAccessUserFunction')
             orientation = bool(int(item['requestedMarkerType']) & int(exudyn.MarkerType.Orientation))
         (markers, ltg) = ([], [])
         for markerNumber in item['markerNumbers']:
@@ -860,6 +900,66 @@ class SymbolicSystem(SymbolicSystemBase):
         return (np.array(systemData.GetODE2Coordinates(configuration=exudyn.ConfigurationType.Initial)),
                 np.array(systemData.GetODE2Coordinates_t(configuration=exudyn.ConfigurationType.Initial)))
 
+    def InitialStateData(self):
+        """the initial data coordinates of mbs (#3196)"""
+        return np.array(self.mbs.systemData.GetDataCoordinates(configuration=exudyn.ConfigurationType.Initial), dtype=float)
+
+    def PostNewton(self, q, q_t, y, z, x, x0, t):
+        """the post-Newton step (#3196): the recorded postNewtonStepUserFunction of each ObjectConnectorUser and
+        ObjectGenericDAE that has one, as CSystem::PostNewtonStep calls them - its new data coordinates, the largest of
+        the errors and the smallest recommended step size of 0 or more
+
+        Args:
+            q: the ODE2 coordinates
+            q_t: the ODE2 velocities
+            y: the ODE1 coordinates
+            z: the algebraic coordinates
+            x: the data coordinates of the last iteration, which the equations read
+            x0: the data coordinates at the start of the step
+            t: the time
+
+        Returns:
+            (x, error, recommendedStepSize), recommendedStepSize < 0 for none
+        """
+        (q, q_t, _) = self._State(q, q_t)
+        (y, z) = (np.zeros(self.nODE1) if y is None else np.asarray(y, dtype=float), np.zeros(self.nAE) if z is None else np.asarray(z, dtype=float))
+        (x, x0) = (np.asarray(x, dtype=float), np.asarray(x0, dtype=float))
+        (xNew, error, stepSize) = (x.copy(), 0., -1.)
+        data = self.data
+        self.data = x #the data of the iteration for the states of the markers
+        try:
+            for (kind, i, ltgData, values) in self._PostNewtonResults(q, q_t, y, z, x, x0, t):
+                xNew[ltgData] = values[2:]
+                error = max(error, values[0])
+                if values[1] >= 0 and (stepSize < 0 or values[1] < stepSize):
+                    stepSize = values[1]
+        finally:
+            self.data = data
+        return (xNew, error, stepSize)
+
+    def _PostNewtonResults(self, q, q_t, y, z, x, x0, t):
+        """the results [error, recommendedStepSize, data] of the recorded post-Newton functions, per item with its
+        kind, index and global data indices"""
+        for kind in self.kinds:
+            if kind.objectType != 'ConnectorUser' or 'postNewtonStepUserFunction' not in kind.recordings:
+                continue
+            for i in range(len(kind.objects)):
+                connector = kind.parameters[i]
+                arguments = self._ConnectorStates(kind, i, q, q_t, t)[0]
+                (leaves, parameters) = (arguments[:-2], arguments[-1])
+                values = np.array(kind.recordings['postNewtonStepUserFunction'].Evaluate(
+                    self.mbs, *leaves, x[connector['ltgData']], x0[connector['ltgData']], parameters), dtype=float)
+                yield (kind, i, connector['ltgData'], values)
+        for kind in self.daeKinds:
+            if 'postNewtonStepUserFunction' not in kind.recordings:
+                continue
+            for i in range(len(kind.objects)):
+                (ltg, dae) = (kind.ltg[i], kind.parameters[i])
+                values = np.array(kind.recordings['postNewtonStepUserFunction'].Evaluate(
+                    self.mbs, t, kind.objects[i], q[ltg], q_t[ltg], y[dae['ltgODE1']], z[dae['ltgAE']], x[dae['ltgData']],
+                    x0[dae['ltgData']], dae['parameters']), dtype=float)
+                yield (kind, i, dae['ltgData'], values)
+
     def InitialStateODE1(self):
         """the initial ODE1 coordinates y0 of mbs"""
         return np.array(self.mbs.systemData.GetODE1Coordinates(configuration=exudyn.ConfigurationType.Initial))
@@ -909,7 +1009,7 @@ class SymbolicSystem(SymbolicSystemBase):
         """the arguments after mbs of the user functions of ObjectGenericDAE i of kind: t, itemNumber, its q, q_t, y and
         its parameters"""
         (ltg, dae) = (kind.ltg[i], kind.parameters[i])
-        return (t, kind.objects[i], q[ltg], q_t[ltg], y[dae['ltgODE1']], np.zeros(0), dae['parameters']) #no data coordinates yet
+        return (t, kind.objects[i], q[ltg], q_t[ltg], y[dae['ltgODE1']], self.data[dae['ltgData']], dae['parameters'])
 
     def _DAECall(self, kind, name, i, q, q_t, y, t):
         """the result of the recorded user function name of ObjectGenericDAE i of kind, as numpy array"""
@@ -955,16 +1055,17 @@ class SymbolicSystem(SymbolicSystemBase):
     def _DAEConstraintFunction(self, kind, i):
         """the recorded constraintUserFunction of ObjectGenericDAE i of kind as one exudyn.symbolic.Function (#3191): its
         term c_u of the algebraic equations, then the reaction terms (dc_u/dq)^T z and (dc_u/dy)^T z, of the variables q,
-        q_t, y, z and t of the object, at position level; built once, as _ItemFunction"""
+        q_t, y, z, x and t of the object, at position level; built once, as _ItemFunction"""
         key = ('GenericDAE', id(kind), i)
         if key not in self._itemFunctions:
             (ltg, dae, objectNumber) = (kind.ltg[i], kind.parameters[i], kind.objects[i])
             variables = exudyn.symbolic.VariableSet()
             (q, q_t, y, z) = (variables.Add(name, np.zeros(n)) for (name, n) in [('q', len(ltg)), ('q_t', len(ltg)),
                                                                               ('y', len(dae['ltgODE1'])), ('z', len(dae['ltgAE']))])
+            x = variables.Add('x', np.zeros(len(dae['ltgData']))) #the data coordinates, constant in a step (#3196)
             t = variables.Add('t', 0.)
             backend = _Backend('symbolic', parameterVariables=False)
-            c = _Caller('symbolic')(kind.recordings['constraintUserFunction'], t, objectNumber, q, q_t, y, z, exudyn.symbolic.Vector([]), 0.,
+            c = _Caller('symbolic')(kind.recordings['constraintUserFunction'], t, objectNumber, q, q_t, y, z, x, 0.,
                                     self._ParameterVector(backend, objectNumber, dae['parameters']))
             c = backend.Vector([c[k] for k in range(len(dae['ltgAE']))])
             result = [c[k] for k in range(len(dae['ltgAE']))]
@@ -981,7 +1082,7 @@ class SymbolicSystem(SymbolicSystemBase):
         (ltg, dae) = (kind.ltg[i], kind.parameters[i])
         function = self._DAEConstraintFunction(kind, i)
         z = np.zeros(self.nAE) if z is None else np.asarray(z, dtype=float)
-        arguments = (q[ltg], q_t[ltg], y[dae['ltgODE1']], z[dae['ltgAE']], float(t))
+        arguments = (q[ltg], q_t[ltg], y[dae['ltgODE1']], z[dae['ltgAE']], self.data[dae['ltgData']], float(t))
         values = np.array(function.Evaluate(*arguments), dtype=float)
         if not derivatives:
             return values
@@ -1103,7 +1204,7 @@ class SymbolicSystem(SymbolicSystemBase):
                     angularVelocity = Jrot @ q_t[indices]
                 states += [values['positionUserFunction'], Jpos @ q_t[indices], rotation, angularVelocity]
             markerData.append((Jpos, Jrot, bodyArguments))
-        return ((t, kind.objects[i], *_ConnectorLeaves(states), [], connector['parameters']), markerData)
+        return ((t, kind.objects[i], *_ConnectorLeaves(states), self.data[connector['ltgData']], connector['parameters']), markerData)
 
     def _JointArguments(self, kind, i, q, t):
         """the arguments after mbs of the recorded user functions of joint i of kind - the leaves of the frame of each
@@ -1438,9 +1539,8 @@ class SymbolicSystem(SymbolicSystemBase):
     def _ComposedInputs(self, q, q_t, t, y=None):
         """the arguments of the recordings of the composed system: q, q_t, t, and y if the ODE2 equations depend on it;
         None: zero, for the constant mass matrix of ObjectGenericDAE"""
-        if not self._ode2UsesY:
-            return (q, q_t, t)
-        return (q, q_t, t, np.zeros(self.nODE1) if y is None else y)
+        inputs = (q, q_t, t) if not self._ode2UsesY else (q, q_t, t, np.zeros(self.nODE1) if y is None else y)
+        return inputs + ((self.data,) if self.nData else ())
 
     def MassMatrixTriplets(self, q=None, q_t=None, t=0.):
         """the global mass matrix as triplets (rows, columns, values), a value per nonzero local entry; equal rows
@@ -1626,6 +1726,7 @@ class SymbolicSystem(SymbolicSystemBase):
                 (qs[j], q_ts[j]) = (qg[a], q_tg[a])
         nConstraints = len(item['ltgAE']) if joint else 0
         z = variables.Add('z', np.zeros(nConstraints)) if joint else None
+        x = variables.Add('x', np.zeros(len(item['ltgData']))) if not joint else None #the data coordinates (#3196)
         t = variables.Add('t', 0.)
         (backend, Call, local) = (_Backend('symbolic', parameterVariables=False), _Caller('symbolic'), np.arange(n))
         (states, jacobians) = self._MarkerStateExpressions(item, local, backend, Call, t, qs, q_ts)
@@ -1638,7 +1739,7 @@ class SymbolicSystem(SymbolicSystemBase):
             self._AddMarkerForces(item, local, backend, C.T @ backend.Vector([z[k] for k in range(nConstraints)]), 6, jacobians, f)
             result = backend.Vector([c[k] for k in range(nConstraints)] + f)
         else:
-            forces = Call(kind.recordings['forceUserFunction'], t, objectNumber, *_ConnectorLeaves(states), backend.Vector([]), parameters)
+            forces = Call(kind.recordings['forceUserFunction'], t, objectNumber, *_ConnectorLeaves(states), x, parameters)
             self._AddMarkerForces(item, local, backend, forces, 6 if item['orientation'] else 3, jacobians, f)
             result = backend.Vector(f)
         self._itemFunctions[key] = (exudyn.symbolic.Function(result, variables, 'Item' + str(int(objectNumber))), groups)
@@ -1654,6 +1755,8 @@ class SymbolicSystem(SymbolicSystemBase):
             values += [q[ltg[list(group)]], q_t[ltg[list(group)]]]
         if joint:
             values.append(z[kind.parameters[i]['ltgAE']])
+        else:
+            values.append(self.data[kind.parameters[i]['ltgData']])
         values.append(float(t))
         derivatives = []
         for (g, group) in enumerate(groups):
@@ -1690,7 +1793,7 @@ class SymbolicSystem(SymbolicSystemBase):
 
     def Equations(self, format='symbolic', optimize=True, variables=None, massMatrix=True, ODE2RHS=True,
                   massMatrixBlocks=False, algebraicEquations=False, ODE2ReactionForcesLHS=False, ODE1RHS=False,
-                  ODE1ReactionTermsLHS=False):
+                  ODE1ReactionTermsLHS=False, postNewton=False):
         """the equations of motion M(q, t) q_tt = f(q, q_t, t) of the system as expressions in its variables (#3130,
         #3132), composed of the recordings of the kinds, the marker kinematics of the connectors and the loads; each
         recording is called with symbolic arguments through its code of exudyn.symbolics.codeExport, the parameters of
@@ -1721,11 +1824,15 @@ class SymbolicSystem(SymbolicSystemBase):
                 ODE1RHS, of the ODE1 coordinates, the variable 'y' with the initial ODE1 state (#3162)
             ODE1ReactionTermsLHS: True: the reaction terms C_y^T z of the ObjectGenericDAE in the ODE1 equations,
                 'ODE1ReactionTermsLHS' (nODE1), as ODE1ReactionTermsLHS, of the variable 'z' (#3190)
+            postNewton: True: 'postNewton', the results [error, recommendedStepSize, data] of the recorded post-Newton
+                functions, item after item as PostNewton takes them, of the variables and 'x0', the data coordinates at
+                the start of the step (#3196)
 
         Returns:
             dict with 'q', 'q_t', 't' (the variables), 'z' if ODE2ReactionForcesLHS, ODE1ReactionTermsLHS or a
             constraintUserFunction in algebraicEquations (#3191), 'y' if ODE1RHS or the system has an ObjectGenericDAE
-            with ODE1 coordinates (#3190), 'parameters' - the named parameters
+            with ODE1 coordinates (#3190), 'x' - the data coordinates, which the equations read as constant in a step -
+            if the system has data coordinates, 'x0' if postNewton (#3196), 'parameters' - the named parameters
             of parameterVariables, as exudyn.symbolic.Real or sympy symbols - if there are any (#3152), and the results
             asked for, exudyn.symbolic.Matrix and Vector or sympy.Matrix
         """
@@ -1740,22 +1847,27 @@ class SymbolicSystem(SymbolicSystemBase):
             (q, q_t, t) = variables[:3]
             if len(variables) > 3:
                 z = variables[3]
-        withZ = (ODE2ReactionForcesLHS or ODE1ReactionTermsLHS
+        withZ = (ODE2ReactionForcesLHS or ODE1ReactionTermsLHS or postNewton
                  or (algebraicEquations and any('constraintUserFunction' in kind.recordings for kind in self.daeKinds)))
         if withZ and z is None:
             z = backend.Variable('z', self.nAE, np.zeros(self.nAE))
         y = variables[4] if variables is not None and len(variables) > 4 else None
-        withY = ODE1RHS or (bool(self.daeKinds) and self.nODE1 > 0)
+        withY = ODE1RHS or postNewton or (bool(self.daeKinds) and self.nODE1 > 0)
         if withY and y is None:
             y = backend.Variable('y', self.nODE1, self.InitialStateODE1())
+        x = variables[5] if variables is not None and len(variables) > 5 else None
+        if self.nData and x is None:
+            x = backend.Variable('x', self.nData, self.data)
+        x0 = backend.Variable('x0', self.nData, self.data) if postNewton else None
         (M, f, blocks, c, r) = self._EquationLists(backend, q, q_t, t, z if withZ else None,
-                                                   algebraicEquations or ODE2ReactionForcesLHS, y=y, reactions=ODE2ReactionForcesLHS)
+                                                   algebraicEquations or ODE2ReactionForcesLHS, y=y, reactions=ODE2ReactionForcesLHS, x=x)
         (names, results) = ([], [])
         for (name, wanted, Result) in [('massMatrix', massMatrix, lambda: backend.Matrix(M)), ('ODE2RHS', ODE2RHS, lambda: backend.Vector(f)),
                                        ('algebraicEquations', algebraicEquations, lambda: backend.Vector(c)),
                                        ('ODE2ReactionForcesLHS', ODE2ReactionForcesLHS, lambda: backend.Vector(r)),
-                                       ('ODE1RHS', ODE1RHS, lambda: backend.Vector(self._ODE1Equations(backend, y, t, q, q_t))),
-                                       ('ODE1ReactionTermsLHS', ODE1ReactionTermsLHS, lambda: backend.Vector(self._ODE1ReactionTerms(backend, z, q, q_t, y, t)))]:
+                                       ('ODE1RHS', ODE1RHS, lambda: backend.Vector(self._ODE1Equations(backend, y, t, q, q_t, x))),
+                                       ('ODE1ReactionTermsLHS', ODE1ReactionTermsLHS, lambda: backend.Vector(self._ODE1ReactionTerms(backend, z, q, q_t, y, t, x))),
+                                       ('postNewton', postNewton, lambda: backend.Vector(self._PostNewtonEquations(backend, q, q_t, y, z, x, x0, t)))]:
             if wanted:
                 names.append(name)
                 results.append(Result())
@@ -1770,6 +1882,10 @@ class SymbolicSystem(SymbolicSystemBase):
             equations['z'] = z
         if withY:
             equations['y'] = y
+        if self.nData:
+            equations['x'] = x
+        if postNewton:
+            equations['x0'] = x0
         if self._parameterNames:
             equations['parameters'] = [backend.Parameter(value) for value in self._parameterNames.values()]
         for (name, result) in zip(names, results):
@@ -1782,12 +1898,13 @@ class SymbolicSystem(SymbolicSystemBase):
                 matrices = matrices[len(kindBlocks):]
         return equations
 
-    def _EquationLists(self, backend, q, q_t, t, z=None, constraints=False, y=None, reactions=True):
+    def _EquationLists(self, backend, q, q_t, t, z=None, constraints=False, y=None, reactions=True, x=None):
         """the mass matrix as list of rows, the forces as list of the expressions of Equations, of the variables q, q_t
         and t of backend - and y, the ODE1 coordinates, for an ObjectGenericDAE (#3190) -, the local mass matrices of the
         bodies, per kind (ltg, list of their lists of rows), and with constraints the constraint equations of the joints
         and the ObjectGenericDAE and - for the algebraic coordinates z and reactions - their reaction forces as lists
-        (#3146)"""
+        (#3146); x the data coordinates, constant in a step, numbers of data if None (#3196)"""
+        xs = _DataComponents(x, self)
         n = self.nODE2
         format = backend.format
         (qs, q_ts) = ([x[i] for i in range(n)] for x in [q, q_t]) #the components, to be gathered per item
@@ -1845,7 +1962,7 @@ class SymbolicSystem(SymbolicSystemBase):
                             Add(f, ltg, [-sum(float(matrices[name][i, j])*x[ltg[j]] for j in range(nLocal) if matrices[name][i, j] != 0)
                                          for i in range(nLocal)])
                 else:
-                    self._ConnectorEquations(kind, index, backend, Call, t, qs, q_ts, f)
+                    self._ConnectorEquations(kind, index, backend, Call, t, qs, q_ts, f, xs)
         for load in self.loads:
             if load.recording is None:
                 value = backend.Vector(np.atleast_1d(load.value))
@@ -1875,16 +1992,17 @@ class SymbolicSystem(SymbolicSystemBase):
         for kind in self.daeKinds:
             for index in range(len(kind.objects)):
                 self._DAEEquations(kind, index, backend, Call, t, qs, q_ts, ys, zComponents, constraints, M, f,
-                                   blocksOfKind.get(id(kind)), c, r, q, zAll)
+                                   blocksOfKind.get(id(kind)), c, r, q, zAll, xs)
         return (M, f, blocks, c, r)
 
-    def _DAEEquations(self, kind, index, backend, Call, t, qs, q_ts, ys, zComponents, constraints, M, f, blocks, c, r, q, zAll):
+    def _DAEEquations(self, kind, index, backend, Call, t, qs, q_ts, ys, zComponents, constraints, M, f, blocks, c, r, q, zAll, xs):
         """add the equations of ObjectGenericDAE index of kind to the lists of _EquationLists (#3190): its mass matrix to
         M and blocks, f + f_u - K q - D q_t - E y to f, with constraints C_q q + C_y y - c_0 + c_u into c, and for
         zComponents (C_q + dc_u/dq)^T z to r, dc_u/dq by backend.Jacobian of the variable q (#3191); ys the components of
         the ODE1 coordinates, needed if it has some; zAll those of z, needed for a constraintUserFunction"""
         (ltg, dae, objectNumber) = (kind.ltg[index], kind.parameters[index], kind.objects[index])
         (qLocal, q_tLocal) = ([qs[i] for i in ltg], [q_ts[i] for i in ltg])
+        xLocal = [xs[i] for i in dae['ltgData']]
         ltgAE = dae['ltgAE']
         if not len(dae['ltgODE1']):
             yLocal = []
@@ -1902,7 +2020,7 @@ class SymbolicSystem(SymbolicSystemBase):
         if len(ltg):
             if 'massMatrixUserFunction' in kind.recordings: #(#3191)
                 value = Call(kind.recordings['massMatrixUserFunction'], *self._DAESymbolicArguments(backend, kind, index, t, qLocal,
-                                                                                                    q_tLocal, yLocal))
+                                                                                                    q_tLocal, yLocal, xLocal))
                 Mlocal = [[value[i, j] for j in range(len(ltg))] for i in range(len(ltg))]
             elif dae['M'].size:
                 Mlocal = [[float(dae['M'][i, j]) for j in range(len(ltg))] for i in range(len(ltg))]
@@ -1918,7 +2036,7 @@ class SymbolicSystem(SymbolicSystemBase):
                 Add(f, ltg, _MatrixTimes(dae[name], x, -1.))
             if 'forceUserFunction' in kind.recordings:
                 value = Call(kind.recordings['forceUserFunction'], *self._DAESymbolicArguments(backend, kind, index, t, qLocal,
-                                                                                               q_tLocal, yLocal))
+                                                                                               q_tLocal, yLocal, xLocal))
                 Add(f, ltg, [value[i] for i in range(len(ltg))])
         if constraints and len(ltgAE):
             for (name, x) in [('C_q', qLocal), ('C_y', yLocal)]:
@@ -1927,12 +2045,12 @@ class SymbolicSystem(SymbolicSystemBase):
             if zComponents is not None and dae['C_q'].size:
                 Add(r, ltg, _MatrixTimes(dae['C_q'].T, [zComponents[i] for i in ltgAE]))
             if 'constraintUserFunction' in kind.recordings:
-                cUser = self._DAEConstraintExpression(backend, Call, kind, index, t, qLocal, q_tLocal, yLocal, zAll)
+                cUser = self._DAEConstraintExpression(backend, Call, kind, index, t, qLocal, q_tLocal, yLocal, zAll, xLocal)
                 Add(c, ltgAE, cUser)
                 if zComponents is not None and len(ltg): #(dc_u/dq)^T z, dense in the system coordinates
                     Add(r, range(self.nODE2), backend.TransposedJacobianTimes(cUser, q, [zComponents[i] for i in ltgAE], self.nODE2))
 
-    def _DAEConstraintExpression(self, backend, Call, kind, index, t, qLocal, q_tLocal, yLocal, zAll):
+    def _DAEConstraintExpression(self, backend, Call, kind, index, t, qLocal, q_tLocal, yLocal, zAll, xLocal):
         """the term c_u of the recorded constraintUserFunction of ObjectGenericDAE index of kind at position level, as list
         of expressions (#3191)"""
         (dae, objectNumber) = (kind.parameters[index], kind.objects[index])
@@ -1940,22 +2058,23 @@ class SymbolicSystem(SymbolicSystemBase):
             raise ValueError('SymbolicSystem: object ' + str(objectNumber) + ' (GenericDAE) has a constraintUserFunction, so its '
                              'equations need the variable z')
         value = Call(kind.recordings['constraintUserFunction'], t, objectNumber, backend.Vector(qLocal), backend.Vector(q_tLocal),
-                     backend.Vector(yLocal), backend.Vector([zAll[i] for i in dae['ltgAE']]), backend.Vector([]), 0.,
+                     backend.Vector(yLocal), backend.Vector([zAll[i] for i in dae['ltgAE']]), backend.Vector(xLocal), 0.,
                      self._ParameterVector(backend, objectNumber, dae['parameters']))
         return [value[k] for k in range(len(dae['ltgAE']))]
 
-    def _DAESymbolicArguments(self, backend, kind, index, t, qLocal, q_tLocal, yLocal):
+    def _DAESymbolicArguments(self, backend, kind, index, t, qLocal, q_tLocal, yLocal, xLocal):
         """the arguments after mbs of the recorded user functions of ObjectGenericDAE index of kind as expressions"""
         objectNumber = kind.objects[index]
-        return (t, objectNumber, backend.Vector(qLocal), backend.Vector(q_tLocal), backend.Vector(yLocal), backend.Vector([]),
+        return (t, objectNumber, backend.Vector(qLocal), backend.Vector(q_tLocal), backend.Vector(yLocal), backend.Vector(xLocal),
                 self._ParameterVector(backend, objectNumber, kind.parameters[index]['parameters']))
 
-    def _ODE1ReactionTerms(self, backend, z, q, q_t, y, t):
+    def _ODE1ReactionTerms(self, backend, z, q, q_t, y, t, x=None):
         """the reaction terms (C_y + dc_u/dy)^T z of the ObjectGenericDAE in the ODE1 equations as list of expressions of
         z - and of q, q_t, y for a constraintUserFunction, dc_u/dy by backend of the variable y (#3190, #3191)"""
         g = [0]*self.nODE1
         (qs, q_ts, zs) = ([q[i] for i in range(self.nODE2)], [q_t[i] for i in range(self.nODE2)], [z[i] for i in range(self.nAE)])
         ys = None if y is None else [y[i] for i in range(self.nODE1)]
+        xs = _DataComponents(x, self)
         Call = _Caller(backend.format)
         for kind in self.daeKinds:
             for (index, dae) in enumerate(kind.parameters):
@@ -1966,19 +2085,20 @@ class SymbolicSystem(SymbolicSystemBase):
                 if 'constraintUserFunction' in kind.recordings and len(dae['ltgODE1']):
                     ltg = kind.ltg[index]
                     cUser = self._DAEConstraintExpression(backend, Call, kind, index, t, [qs[i] for i in ltg], [q_ts[i] for i in ltg],
-                                                          [ys[i] for i in dae['ltgODE1']], zs)
+                                                          [ys[i] for i in dae['ltgODE1']], zs, [xs[i] for i in dae['ltgData']])
                     terms.append((range(self.nODE1), backend.TransposedJacobianTimes(cUser, y, zLocal, self.nODE1)))
                 for (indices, values) in terms:
                     for (i, value) in zip(indices, values):
                         g[i] = _Sum(g[i], value)
         return g
 
-    def _ODE1Equations(self, backend, y, t, q, q_t):
+    def _ODE1Equations(self, backend, y, t, q, q_t, x=None):
         """the right-hand side of the ODE1 equations as list of expressions of the ODE1 coordinates y - and q, q_t for an
         ObjectGenericDAE -, as ODE1RHS: per ObjectGenericODE1 A y + f and its recorded rhsUserFunction, per
         ObjectGenericDAE A y + B q + B_t q_t + g + g_u (#3190), and the LoadCoordinate on ODE1 coordinates (#3162)"""
         Call = _Caller(backend.format)
         ys = [y[i] for i in range(self.nODE1)]
+        xs = _DataComponents(x, self)
         g = [0]*self.nODE1
         for kind in self.daeKinds:
             for (index, dae) in enumerate(kind.parameters):
@@ -1991,7 +2111,7 @@ class SymbolicSystem(SymbolicSystemBase):
                 terms += [_MatrixTimes(dae[name], x) for (name, x) in [('A', yLocal), ('B', qLocal), ('B_t', q_tLocal)]]
                 if 'rhsUserFunction' in kind.recordings:
                     value = Call(kind.recordings['rhsUserFunction'], *self._DAESymbolicArguments(backend, kind, index, t, qLocal,
-                                                                                                 q_tLocal, yLocal))
+                                                                                                 q_tLocal, yLocal, [xs[i] for i in dae['ltgData']]))
                     terms.append([value[i] for i in range(len(ltgODE1))])
                 for term in terms:
                     if term is not None:
@@ -2091,15 +2211,49 @@ class SymbolicSystem(SymbolicSystemBase):
         forces = C.T @ backend.Vector([zComponents[i] for i in ltgAE])
         self._AddMarkerForces(joint, ltg, backend, forces, 6, jacobians, r)
 
-    def _ConnectorEquations(self, kind, index, backend, Call, t, qs, q_ts, f):
+    def _ConnectorEquations(self, kind, index, backend, Call, t, qs, q_ts, f, xs):
         """add the generalized forces of connector index of kind to the list f, as expressions: the marker states as in
         _ConnectorStates, the forces of the recording, J_pos^T f + J_rot^T m of each marker"""
         (ltg, connector) = (kind.ltg[index], kind.parameters[index])
         stride = 6 if connector['orientation'] else 3
         (states, jacobians) = self._MarkerStateExpressions(connector, ltg, backend, Call, t, qs, q_ts)
-        forces = Call(kind.recordings['forceUserFunction'], t, kind.objects[index], *_ConnectorLeaves(states), backend.Vector([]),
+        forces = Call(kind.recordings['forceUserFunction'], t, kind.objects[index], *_ConnectorLeaves(states),
+                      backend.Vector([xs[i] for i in connector['ltgData']]),
                       self._ParameterVector(backend, kind.objects[index], connector['parameters']))
         self._AddMarkerForces(connector, ltg, backend, forces, stride, jacobians, f)
+
+    def _PostNewtonEquations(self, backend, q, q_t, y, z, x, x0, t):
+        """the results [error, recommendedStepSize, data] of the recorded post-Newton functions as expressions, item after
+        item in the order of PostNewton (#3196)"""
+        Call = _Caller(backend.format)
+        n = self.nODE2
+        (qs, q_ts) = ([q[i] for i in range(n)], [q_t[i] for i in range(n)])
+        (ys, zs, xs, x0s) = ([y[i] for i in range(self.nODE1)], [z[i] for i in range(self.nAE)], _DataComponents(x, self),
+                             _DataComponents(x0, self))
+        results = []
+        for kind in self.kinds:
+            if kind.objectType != 'ConnectorUser' or 'postNewtonStepUserFunction' not in kind.recordings:
+                continue
+            for index in range(len(kind.objects)):
+                (ltg, connector) = (kind.ltg[index], kind.parameters[index])
+                states = self._MarkerStateExpressions(connector, ltg, backend, Call, t, qs, q_ts)[0]
+                ltgData = connector['ltgData']
+                value = Call(kind.recordings['postNewtonStepUserFunction'], t, kind.objects[index], *_ConnectorLeaves(states),
+                             backend.Vector([xs[i] for i in ltgData]), backend.Vector([x0s[i] for i in ltgData]),
+                             self._ParameterVector(backend, kind.objects[index], connector['parameters']))
+                results += [value[k] for k in range(2 + len(ltgData))]
+        for kind in self.daeKinds:
+            if 'postNewtonStepUserFunction' not in kind.recordings:
+                continue
+            for (index, dae) in enumerate(kind.parameters):
+                ltg = kind.ltg[index]
+                value = Call(kind.recordings['postNewtonStepUserFunction'], t, kind.objects[index],
+                             backend.Vector([qs[i] for i in ltg]), backend.Vector([q_ts[i] for i in ltg]),
+                             backend.Vector([ys[i] for i in dae['ltgODE1']]), backend.Vector([zs[i] for i in dae['ltgAE']]),
+                             backend.Vector([xs[i] for i in dae['ltgData']]), backend.Vector([x0s[i] for i in dae['ltgData']]),
+                             self._ParameterVector(backend, kind.objects[index], dae['parameters']))
+                results += [value[k] for k in range(2 + len(dae['ltgData']))]
+        return results
 
     def GetFlatProgram(self, format='Python', flatten=True, results=['ODE2RHS', 'massMatrix']):
         """the flat program of results of Equations(), a function of q, q_t and t - and z with 'ODE2ReactionForcesLHS'
@@ -2110,18 +2264,19 @@ class SymbolicSystem(SymbolicSystemBase):
             format: 'Python' (the text), or the executable 'symbolic', 'numpy' or 'sympy' of exudyn.symbolics.codeExport
             flatten: True: one line per operation; False: each result as one expression
             results: the names of the results: 'ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS',
-                'ODE1RHS', 'ODE1ReactionTermsLHS'
+                'ODE1RHS', 'ODE1ReactionTermsLHS', 'postNewton'
 
         Returns:
             the program as str, for the executable formats a function Equations(q, q_t, t) - Equations(q, q_t, t,
-            z) with z, y after them, followed by the named parameters (#3152) - returning the results
+            z) with z, then y, x and x0 if the equations have them (#3196), followed by the named parameters (#3152) -
+            returning the results
         """
-        names = ['ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS', 'ODE1RHS', 'ODE1ReactionTermsLHS']
+        names = ['ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS', 'ODE1RHS', 'ODE1ReactionTermsLHS', 'postNewton']
         unknown = [name for name in results if name not in names]
         if unknown:
             raise ValueError('SymbolicSystem.GetFlatProgram: unknown results ' + str(unknown) + '; possible: ' + str(names))
         equations = self.Equations('symbolic', **{name: name in results for name in names})
-        variables = ['q', 'q_t', 't'] + [name for name in ['z', 'y'] if name in equations]
+        variables = ['q', 'q_t', 't'] + [name for name in ['z', 'y', 'x', 'x0'] if name in equations]
         return exudyn.symbolic.GetFlatProgram([equations[name] for name in results],
                                               arguments=[equations[name] for name in variables] + equations.get('parameters', []),
                                               resultNames=list(results), format=format, flatten=flatten, name='Equations')
@@ -2221,6 +2376,13 @@ class SystemVariables:
 def _Sum(a, b):
     """a + b, without the sum when a is the number 0 that a sum starts with"""
     return b if isinstance(a, int) and a == 0 else a + b
+
+
+def _DataComponents(x, system):
+    """the components of the data coordinates x, a variable, or the numbers of system.data if None (#3196)"""
+    if x is None:
+        return [float(value) for value in system.data]
+    return [x[i] for i in range(system.nData)]
 
 
 def _MatVec(matrix, x):

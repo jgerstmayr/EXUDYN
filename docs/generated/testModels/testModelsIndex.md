@@ -212,6 +212,7 @@ symbolicOnePassJacobianTest
 symbolicOptimizeTest
 symbolicSparseMatrixTest
 symbolicStatisticsTest
+symbolicSystemDataTest
 symbolicSystemEquationsTest
 symbolicSystemGenericDAETest
 symbolicSystemItemJacobiansTest
