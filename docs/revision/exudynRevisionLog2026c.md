@@ -5074,3 +5074,24 @@ the extra 4.7 us per Python call - add views.)*
 - symbolicSystemDataTest.py: a ball on a unilateral spring switched by its recorded post-Newton function with error,
   and a DAE with a held controller, error 0: generalized-alpha 7.7e-14 and RK44 3.3e-16 against SolveDynamic, 1004
   discontinuous iterations as Exudyn's solvers; the exported post-Newton functions against PostNewton 0.0.
+
+<a id="rg12-55-8"></a>
+### RG12.55.8 — the user sphere contact switched by a data node; the restitution model (2026-11-01, #3188, #3197)
+- `CreateSphereSphereContact`: a NodeGenericData [gap, impact velocity] from dataInitialCoordinates[0] and [2] (the
+  tangent velocity and the plastic deformation must be 0); the force while the gap of the data is negative, with
+  impactModel 1 (Hunt-Crossley) or 2 (Gonthier, Carvalho-Martins) the term lambda delta dg/dt, lambda = impactFactor
+  k / max(minimumImpactVelocity, impact velocity), impactFactor of the restitution coefficient as in
+  CObjectContactSphereSphere; the post-Newton step as CObjectContactSphereSphere::PostNewtonStep - the gap into the
+  data, the error |k g| and the recommended step size |g0/(dg/dt)| of a switch, the impact velocity when the step
+  begins open and ends in contact, else that of the start of the step. Two kinds, impactModel 0 and 1/2. The
+  conditions by `_If`, esym.IfThenElse while recorded and a Python if for numbers, as a symbolic number in a numpy
+  product would not convert.
+- The cause of #3188 confirmed: switched within the Newton iterations by the gap of the state, the user contact had
+  another solution with damping and did not converge with generalized-alpha; switched by the data, it equals the
+  built-in contact: generalized-alpha 2.2e-14 (impactModel 0 with d = 20) and 2.3e-14 (model 2, e = 0.7), RK44 2.2e-14
+  and 6.3e-14; SymbolicSystem by SolveGeneralizedAlpha 1.7e-13, by SolveExplicit 0.0 against SolveDynamic
+  (useRecommendedStepSize False, as the Python solvers keep the step size).
+- Convergence with the step size, generalized-alpha, the position after 0.8 s between 2000, 4000, ... 32000 steps:
+  model 0 1.2e-2, 5.7e-3, 1.4e-3, 2.2e-4; model 2 4.3e-3, 1.1e-4, 1.2e-4, 3.4e-5; with the recommended step size
+  1.4e-3, 1.5e-3, 7.2e-4, 3.3e-5 (model 0). The in-step switch had stayed at 7e-4.
+- symbolicUserContactTest.py rewritten on it: both models, both solvers, Python, recorded and SymbolicSystem; 5 s.

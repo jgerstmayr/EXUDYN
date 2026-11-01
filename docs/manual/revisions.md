@@ -67,7 +67,10 @@ parameters)` updates them after each Newton iteration, e.g. for a discrete contr
 takes the data coordinates of ObjectConnectorUser and ObjectGenericDAE with their recorded post-Newton functions:
 `system.data` holds them, `PostNewton` updates them, `Equations(postNewton=True)` and `GetFlatProgram` give the
 post-Newton functions, and `SolveGeneralizedAlpha` and `SolveExplicit` repeat a step while the error of a switch is
-above `discontinuous.iterationTolerance`, as Exudyn's solvers (#3196).
+above `discontinuous.iterationTolerance`, as Exudyn's solvers (#3196). `UserItemCreator.CreateSphereSphereContact`
+switches by a data node in its post-Newton step, as the built-in contact, and has the impact models 1 and 2 with the
+restitution coefficient: equal to `mbs.CreateSphereSphereContact` to 1e-13, also with damping and the implicit solver,
+whose solution now converges with the step size (#3197).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

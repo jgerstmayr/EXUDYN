@@ -2,10 +2,14 @@
   "number": 3197,
   "title": "UserItemCreator.CreateSphereSphereContact switched by a data coordinate, with the restitution model",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "FIX",
   "effort": "MEDIUM",
   "description": "revision2026c step RG12.55.8 (#3188): the contact switched by the gap of the data coordinates in the post-Newton step as the built-in contact, so that the implicit solver converges with the step size; impactModel 2 (restitution coefficient) with the impact velocity in the data, the recommended model in the examples, not the default. Decided: the switching instant is not located within the step.",
   "dateRaised": "2026-11-01",
-  "deadline": "2027-04-30"
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 14:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "UserItemCreator.CreateSphereSphereContact switches by a data node in its recorded post-Newton step, as the built-in contact, and has the impact models 1 and 2 with the restitution coefficient: equal to mbs.CreateSphereSphereContact to 1e-13, also with damping and the implicit solver, whose solution converges with the step size.",
+  "resolvedInVersion": "1.13.295"
 }
