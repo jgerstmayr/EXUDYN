@@ -5,7 +5,7 @@
   "status": "RAISED",
   "type": "CHECK",
   "effort": "LOW",
-  "description": "The functions of symbolics.kinematics and exudyn.cUtilities for HT and twist (PointVelocity, LocalTwist, RelativeTwist, and the methods of the symbolic HT) were chosen for the joints and connectors of the Create functions (docs/dev/design/symbolicHT.md). Once several user items of exudyn.symbolics.userItems and new ones are written on HT0, twist0, HT1, twist1, count which functions they use, and decide which stay, which become methods of the HT, and which are missing. Decided: no plan step; the check is done when the user items are there.",
+  "description": "The functions of symbolics.kinematics and exudyn.cUtilities for HT and twist (PointVelocity, LocalTwist, RelativeTwist, and the methods of the symbolic HT) were chosen for the joints and connectors of the Create functions (docs/dev/design/symbolicHT.md). Once several user items of exudyn.symbolics.userItems and new ones are written on HT0, twist0, HT1, twist1, count which functions they use, and decide which stay, which become methods of the HT, and which are missing. Decided: a plan step of its own; the check is done once more user items are written on HT and twist.",
   "dateRaised": "2026-10-31",
   "deadline": "2027-04-29"
 }

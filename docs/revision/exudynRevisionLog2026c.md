@@ -5133,3 +5133,37 @@ the extra 4.7 us per Python call - add views.)*
 - Not done: the slot kind of the table (compressed rows in the memory of the program, one code per product) and the
   sparse results of recordings for the system matrices; recommended only when a model - FFRF reduced order, shells -
   needs more than the scalar operations give.
+
+<a id="rg12-70"></a>
+### RG12.70 — the decisions of the step, moved from the plan when it closed (2026-11-01, #3175)
+The text of the step as it stood in the plan; the step is implemented by RG12.70.2 (#3192), and the held sensor of
+RG12.70.1 is the idea #3180.
+
+#3175 (maintainer 2026-10-31: with ODE1, control, thermal and electro-mechanical problems can be reproduced, time-discrete problems not fully; a function giving the discrete time from the time; data signals at a sampling time with fast access to the interpolated value - closest, linear, quadratic - and numerical differentiation; a time-dependent randomizer, repeatable for each time; make a suitable suggestion. Revised 2026-10-31: only the signal is needed in exudyn.symbolic; the discrete time a Python function of a new module of exudyn.symbolics, as there will be more that fits neither kinematics, userItems nor systemModel; a hold needs data coordinates, so it is done by hand now and later by a sensor (RG12.70.1); the noise made with the signal from a random signal, at the cost of some memory; the signal repeated after a period as an option, zero outside by default; the three features proposed because they are structurally different and needed at some point, so better included early - but the definition chosen with care, what is required separated from what is an option, nothing that blocks CUDA, some features left out for now; "Signal" is not the name, as it may also interpolate a bending moment over the curvature: find a name, for an argument that is the time, a system coordinate or an item parameter).
+
+Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolics.utilities):
+
+- **`esym.LookupTable(values, step, start=0., outside='zero', interpolation='linear')`**, an object holding the data, and
+  `table(x)` its value at the argument x - a time, a coordinate or a parameter, any `esym.Real`. The table and its call
+  are two things: the data is stored once, copied once to the GPU, and called at several arguments (the derivative of
+  a characteristic curve, two channels at the same time). The name says what it is, for time as for a curve; numpy
+  calls the operation `interp`, Simulink and Modelica a lookup table (`1-D Lookup Table`, `CombiTable1D`).
+- **Required now:** one channel; equal steps, the index `floor((x - start)/step)` in O(1); linear interpolation; outside
+  the table `'zero'` (default), `'hold'` (the end values) or `'periodic'` (repeated with the length of the table); the
+  derivative is that of the interpolant, piecewise constant for linear, which the one-pass derivative and the Jacobian
+  give without a rule of their own. One code of the table of operations with a constant array as operand - a kind the
+  table of RG12.65 gets for this -, a fixed kernel for RG14.
+- **Options, kept possible by the interface and done when needed:** several channels (`values` a matrix, the result a
+  vector); given arguments of unequal steps (`arguments=[...]`, bisection in O(log n), divergent on the GPU, therefore
+  not the default); `'closest'` (piecewise constant, derivative 0) and `'quadratic'` (through the three nearest values,
+  a continuous derivative).
+- **In a new module of exudyn.symbolics** for what is neither kinematics, user items nor system models - proposed
+  `exudyn.symbolics.utilities` (decided):
+  - `SampleTime(t, period, offset=0., functions=exu.symbolic)` = offset + period*floor((t - offset)/period), with a
+    tolerance of about 1e-12 period against rounding at the sampling instants; a function of time held between the
+    samples is f(SampleTime(t)). Holding a state - read at the instants, kept in between - needs data coordinates:
+    by hand now, by the sensor of RG12.70.1 later.
+  - `Noise(t, step, length, seed=0, amplitude=1., distribution='uniform', outside='periodic')`: a `LookupTable` of
+    `length/step` random values of `numpy.random.default_rng(seed)` - the same for the same seed in every run, step size,
+    Newton iteration and order of evaluation; normal distribution by `distribution='normal'`; the memory of the table is
+    the cost.

@@ -4,8 +4,10 @@
   "author": "Claude-JG",
   "status": "RAISED",
   "type": "IDEA",
+  "priority": "LOW",
   "effort": "MEDIUM",
-  "description": "For time-discrete control: a SampleSensor with a data node takes the value of another sensor at the sampling instants and holds it between them, so that a user function reads the held value as data coordinates (zero-order hold of a measured state). Sensors do not update data variables now; this sensor is treated specially at FinishStep of the integrator. Decided: a later step; it is not part of exudyn.symbolic.",
+  "description": "A zero-order hold for Exudyn in general, mainly on the C++ side: a SampleSensor with a data node takes the value of another sensor at the sampling instants and holds it between them, so that a user function or an item reads the held value as data coordinates; sensors do not update data variables now, so this sensor is treated specially at FinishStep of the integrator. Decided: an idea of low priority, without a plan step, done only when needed or when the continuous and discrete control of Exudyn is improved; not for exudyn.symbolic, where a recording has other ways to hold a value (data coordinates and the post-Newton step, #3195).",
   "dateRaised": "2026-10-31",
-  "deadline": "2027-04-29"
+  "deadline": "2027-04-29",
+  "workingRemarks": "kept open as an idea, no plan step (2026-11-01; revision2026c step RG12.70.1 closed)"
 }

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.298.dev1
+- Exudyn version = 1.13.299.dev1
 - last change = 2026-11-01
-- Number of issues = 3200
-- Number of resolved issues = 3075 (298 in current version)
+- Number of issues = 3201
+- Number of resolved issues = 3076 (299 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,17 +9039,18 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` A sensor that samples another sensor at a period and holds its value in a data node, updated at FinishStep (#3180)
-  - description: For time-discrete control: a SampleSensor with a data node takes the value of another sensor at the sampling instants and holds it between them, so that a user function reads the held value as data coordinates (zero-order hold of a measured state). Sensors do not update data variables now; this sensor is treated specially at FinishStep of the integrator. Decided: a later step; it is not part of exudyn.symbolic.
+- `EXTENSION` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` User items of GenericJoint, HydraulicActuatorSimple, ReevingSystemSprings and ObjectFFRFreducedOrder for the advanced GPU tests (#3200)
+  - description: For the advanced tests of the uniform evaluation on the GPU (revision2026c group RG14): user items of exudyn.symbolics.userItems that reproduce ObjectJointGeneric (free axes, so equations lambda = 0), ObjectConnectorHydraulicActuatorSimple (ODE1 pressures coupled with the ODE2 coordinates), ObjectConnectorReevingSystemSprings (a rope over several sheaves of rigid markers) and ObjectFFRFreducedOrder (modal coordinates, a large constant mass matrix and the quadratic velocity vector), each checked against the built-in item. Decided: low priority, after the symbolic core features; not a next step.
+  - date raised: 2026-11-01
+- `IDEA` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` A sensor that samples another sensor at a period and holds its value in a data node, updated at FinishStep (#3180)
+  - description: A zero-order hold for Exudyn in general, mainly on the C++ side: a SampleSensor with a data node takes the value of another sensor at the sampling instants and holds it between them, so that a user function or an item reads the held value as data coordinates; sensors do not update data variables now, so this sensor is treated specially at FinishStep of the integrator. Decided: an idea of low priority, without a plan step, done only when needed or when the continuous and discrete control of Exudyn is improved; not for exudyn.symbolic, where a recording has other ways to hold a value (data coordinates and the post-Newton step, \#3195).
+  - **remarks:** kept open as an idea, no plan step (2026-11-01; revision2026c step RG12.70.1 closed)
   - date raised: 2026-10-31
 - `DOCU` `LOW EFF` `raised by: Claude-JG` Document localPosition of the rigid body markers and rotationMarker0/1 of the joints and connectors as deprecated, to be removed in favour of localHT (#3179)
   - description: The rigid body markers have localHT, the frame of the marker in the body, so that the joints and connectors need no rotationMarker0/1. The descriptions of localPosition of the rigid body markers and of rotationMarker0/1 of the joints and connectors say that they are deprecated and will be removed, and point to localHT. Decided: no deprecation warning yet, as rotationMarker0/1 are used frequently; the documentation only.
   - date raised: 2026-10-31
 - `CHECK` `LOW EFF` `raised by: Claude-JG` Check which functions of HT and twist the user connectors and joints really use, once several are written on HT and twist (#3178)
-  - description: The functions of symbolics.kinematics and exudyn.cUtilities for HT and twist (PointVelocity, LocalTwist, RelativeTwist, and the methods of the symbolic HT) were chosen for the joints and connectors of the Create functions (docs/dev/design/symbolicHT.md). Once several user items of exudyn.symbolics.userItems and new ones are written on HT0, twist0, HT1, twist1, count which functions they use, and decide which stay, which become methods of the HT, and which are missing. Decided: no plan step; the check is done when the user items are there.
-  - date raised: 2026-10-31
-- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` A lookup table in exudyn.symbolic: data given at equal steps of time, a coordinate or a parameter, interpolated, repeated or zero outside; the discrete time and a repeatable noise in Python on it (#3175)
-  - description: Revision2026c step RG12.70. For control, thermal and electro-mechanical problems, and for characteristic curves such as a bending moment over the curvature: a table of values given at equal steps of an argument - the time, a coordinate or a parameter of an item -, from which a symbolic user function takes the value at any argument, recorded and differentiated, and computed the same for numbers. Required: one channel, equal steps, linear interpolation, zero outside the table by default, the end values or a periodic repetition as options; the derivative of the interpolant is what the one-pass derivative gives. Options to be kept possible in the interface, implemented when needed: several channels, given arguments of unequal steps, closest and quadratic interpolation. Nothing in it may prevent the evaluation on the GPU (RG14). The discrete time of a sampling period and a repeatable noise are Python functions of a new module of exudyn.symbolics for what is neither kinematics nor user items nor system models, the noise as a table of random values of a seed. A sampled and held state needs data coordinates and is a later sensor (\#3180). \[2026-11-01, Claude-JG\]: Decided 2026-11-01: the name esym.LookupTable; the Python functions SampleTime and Noise in exudyn.symbolics.utilities.
+  - description: The functions of symbolics.kinematics and exudyn.cUtilities for HT and twist (PointVelocity, LocalTwist, RelativeTwist, and the methods of the symbolic HT) were chosen for the joints and connectors of the Create functions (docs/dev/design/symbolicHT.md). Once several user items of exudyn.symbolics.userItems and new ones are written on HT0, twist0, HT1, twist1, count which functions they use, and decide which stay, which become methods of the HT, and which are missing. Decided: a plan step of its own; the check is done once more user items are written on HT and twist.
   - date raised: 2026-10-31
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` exudyn.symbolic: sparse matrices in the table of operations (#3168)
   - description: Some objects work internally with sparse matrices - a 20x20 matrix mostly of zeros, recorded as a dense matrix of components, whose zeros Optimize could remove. Find how the table of operations represents and evaluates such matrices: a sparse matrix as a kind of slot (its pattern fixed at recording, the nonzero components as operands), the matrix-vector and matrix-matrix products and their derivative rules on the pattern, and the export (triplets). Not for now. \[2026-10-31, Claude-JG\]: Proposal in docs/dev/design/symbolicSystem.md section 12.7: a sparse matrix declared by esym.SparseMatrix(rows, columns, triplets) or esym.Matrix(...).Sparse(), its pattern fixed at recording; in the table a slot kind with compressed rows and codes for A v, A^T v, s A, A + B, A\[i,j\] and the dense matrix; the derivative nnz x n on the pattern; results equal to the dense product to the bit; triplets in the export; after \#3176.

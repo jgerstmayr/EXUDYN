@@ -60,7 +60,7 @@ it is the objects' programs plus the scatter of their results, which is what Exu
   `simulationSettings.solution` - the SolutionViewer, `PlotSensor` and the stored sensor values then work as after
   `SolveDynamic`.
 - **Evaluated by exudyn.symbolic only**: each recording by its `Evaluate`. A conversion of the whole system to numpy, C
-  or other formats is an export (G1, RG12.51.5): the flat programs of the kinds written by `symbolicExport`, with the
+  or other formats is an export (G1, RG14.5): the flat programs of the kinds written by `symbolicExport`, with the
   LTG tables and parameters as data - another class derived from `SymbolicSystemBase` (section 9), not an option of
   `SymbolicSystem`.
 
@@ -250,7 +250,7 @@ CSolverExplicit and CSolverImplicitSecondOrder:
   torsional spring-dampers of UserItemCreator are taken; RG12.51.4.2 (done, #3141) the joints.
 - RG12.51.14 ObjectGenericODE1 (#3144), RG12.51.15 the exact constraint blocks (#3145), RG12.51.16 the constraints in
   `Equations()` (#3146) - section 12.
-- RG12.51.5: the export (G1): the programs, the sparsity pattern and the scatter as C++ and as Python, and a system
+- RG14.5: the export (G1): the programs, the sparsity pattern and the scatter as C++ and as Python, and a system
   class of the exported numpy code.
 - RG12.51.6: the evaluation by Numba for the GPU - moved to group RG14, [uniformEvaluation.md](uniformEvaluation.md).
 
@@ -294,7 +294,7 @@ The interface is the base class `SymbolicSystemBase` in `exudyn/symbolics/system
 `SymbolicSystem` derives from it: `InitialState()` from the initial configuration of mbs, `IsMassMatrixConstant()`
 from `constantMassMatrix` of the user bodies and the constant matrix of ObjectGenericODE2, `ODE2ResidualLHS` object by object,
 and `SetSystemState` for the output (section 3). The kind of evaluation is decided once, by the class of the system:
-`SymbolicSystem` by exudyn.symbolic, the exported system (RG12.51.5) by its generated code, a system written by hand
+`SymbolicSystem` by exudyn.symbolic, the exported system (RG14.5) by its generated code, a system written by hand
 (`NumpySystem(massMatrix, forces, initialState, massMatrixBlocks)`, a constant matrix or a function, and a function) by
 its own functions. The solvers use only this interface; the explicit ones only `InitialState`, `ODE2RHS`, `MassMatrix`,
 `MassMatrixBlocks` and `IsMassMatrixConstant`; `SymbolicSystem` gives one block per object, the kinds as stacks
@@ -417,7 +417,7 @@ SolveDynamic with the same recordings 0.039 s.
 with exudyn.symbolic arguments, it returns a copy of its expressions in which its argument variables are replaced by
 the given expressions - the copy that `Optimize` makes by `NewWithOperands`, with the argument nodes mapped. Needed for
 one expression per kind ($\Mm(\qv)\,\ddot\qv - \fv(\qv, \dot\qv, t)$ of the two recordings), for the forces of a
-connector composed with the marker kinematics of its bodies, and for the export of one program per kind (RG12.51.5).
+connector composed with the marker kinematics of its bodies, and for the export of one program per kind (RG14.5).
 As numbers, the system needs no S3: it evaluates each recording and composes the results; S3 is for the programs.
 **In Python** (#3130): the code of a recording in the format 'symbolic' of exudyn.symbolics.codeExport (`ToFunction`),
 called with exudyn.symbolic arguments, records the same graph with the arguments replaced - S3 without C++, at the cost
@@ -462,7 +462,7 @@ drawing of the joints (RG12.55.7, #3147), the node count (RG12.61, #3142) and Ob
 | `SymbolicSystem` | ObjectUserBody, ObjectGenericODE2, ObjectConnectorUser on point, body and ground markers, ObjectJointUser, ObjectGenericODE1 (#3144), ObjectGenericDAE (#3190), data coordinates and post-Newton steps of ObjectConnectorUser and ObjectGenericDAE (#3196), the four loads; two composed recordings (forces, mass matrix); the constraints and reaction forces in `Equations()` (#3146) | data coordinates (RG12.66, #3158) |
 | solvers in Python | explicit Euler, RK44, velocity Verlet (with the inverse per body), generalized-alpha with ODE1 coordinates and index-3 constraints, all equal to `SolveDynamic` | with joints 4 to 5 times slower than `SolveDynamic`, the Jacobians of the connectors and joints in one pass (#3145, #3166); index 2 refused |
 | derivatives | `Diff` of vectors and matrices (#3115), the one pass over a flat program (#3116), pow without the log term (#3135) | the derivative as a new program (RG12.54.2, #3108) |
-| export | a recording as Python, numpy, symbolic, sympy and C++ text; `Equations()` and `GetFlatProgram()` of the system | the whole system with its sparsity and scatter (RG12.51.5) |
+| export | a recording as Python, numpy, symbolic, sympy and C++ text; `Equations()` and `GetFlatProgram()` of the system | the whole system with its sparsity and scatter (RG14.5) |
 | GPU | the experiment of RG14.2.1 | RG14.2.2 to RG14.4 |
 
 ### 12.2 The system coordinates in exudyn.symbolic
