@@ -5227,3 +5227,29 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   inertia functions); Equations() with every bound slot; the parameters as an input of the composed system, so that
   new values need no rebuild and dr/dp comes with dr/dq; forward sensitivities of the solution in the Python solvers.
   Sub-steps RG12.67.2 to RG12.67.5 and the decisions P1 to P5.
+
+<a id="rg12-60-1"></a>
+### RG12.60.1 — The composition in Python measured on chains of rigid bodies (2026-11-01, #3117)
+- Maintainer 2026-10-28: keep RG12.60 open - first check whether the Python code performs well enough for real-life
+  problems, and whether other cases need the C++. 2026-11-01: continue with RG12.60.
+- The Python path: `SymbolicSystem` and `Equations()` call each recording with symbolic arguments through its code of
+  exudyn.symbolics.codeExport (`_Caller`: `ToFunction(recording.GetFlatProgramData(), 'symbolic')`, written once per
+  recording, then one call per item); a C++ copy of the nodes with the arguments substituted would replace these calls.
+- A chain of n rigid bodies of UserItemCreator (NodeRigidBodyRxyz), linked by a revolute joint or by three
+  spring-dampers and a torsional spring-damper each, recorded; the time in the generated functions (`_F`) by cProfile,
+  the wall times without it:
+
+  | system | coordinates | SymbolicSystem | of it (profiled): calls of the recordings / Optimize / esym.Function | Equations() | SolveGeneralizedAlpha, 100 steps | SolveDynamic, 100 steps |
+  |---|---|---|---|---|---|---|
+  | 10 bodies, joints | 60 | 0.015 s | 0.001 s / - / - | 0.011 s | 0.62 s | 0.08 s |
+  | 50 bodies, springs | 300 | 0.21 s | 0.013 s / - / - | 0.23 s | 3.9 s | 0.50 s |
+  | 200 bodies, joints | 1200 | 0.26 s | 0.017 / 0.089 / 0.015 s of 0.165 s | 1.46 s | 59.5 s | 15.7 s |
+  | 200 bodies, springs | 1200 | 0.86 s | 0.053 / 0.320 / 0.046 s of 0.618 s | 2.06 s | 15.5 s | 3.6 s |
+
+- The substitution in Python is about 10 % of building the system, Optimize in C++ about half; the build is below 2 %
+  of 100 steps of the Python solver and below a third of 100 steps of SolveDynamic. No case was found that needs the
+  C++: every recording has its flat program, which codeExport writes, LookupTable included (#3192); a recording
+  called inside another one being recorded works the same way.
+- Proposed: close #3117 - the C++ copy is not needed -, and raise it again if a model shows otherwise. Seen on the way:
+  `Equations()` with the default `massMatrix=True` builds the dense global mass matrix as esym.Matrix, 1.4 million
+  entries at 1200 coordinates, which is most of its 2 s; `massMatrixBlocks` is the form for large systems.

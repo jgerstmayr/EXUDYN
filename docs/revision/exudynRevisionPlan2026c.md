@@ -2334,6 +2334,10 @@ symbolicOnePassJacobianTest.py. [log](exudynRevisionLog2026c.md#rg12-59)
 
 #3117: for one program per kind of the symbolic system, connector forces composed with the marker kinematics, and the export (RG12.51.5). Design docs/dev/design/symbolicSystem.md §11 S3. Done in Python for the system by RG12.51.10 (#3130), through the code of exudyn.misc.symbolicExport; open: whether the C++ copy is still needed. Maintainer 2026-10-28: keep it open - first check whether the Python code performs well enough for real-life problems, and whether other cases need the C++.
 
+#### **CLOSED_RG12.60.1** Measure the composition in Python on chains of 10 to 200 rigid bodies: the substitution against the build and the simulation
+
+CLOSED 2026-11-01 (#3117 stays open for the decision): at 200 rigid bodies (1200 coordinates) the calls of the recordings with symbolic arguments take 0.02 s of 0.26 s (revolute joints) and 0.05 s of 0.86 s (spring-dampers) of SymbolicSystem, Optimize the most; the build is below 2 percent of 100 steps of SolveGeneralizedAlpha. Proposed: close #3117, the C++ copy not needed. [log](exudynRevisionLog2026c.md#rg12-60-1)
+
 ### **CLOSED_RG12.61** Count the nodes of expressions and flat programs, in total and per kind of operation, by one traversal in C++
 
 CLOSED 2026-10-28 (#3142; maintainer 2026-10-28: a method that counts the nodes, in detail per kind, for the expressions
