@@ -124,6 +124,29 @@ void CObjectConnector::ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac
 
 
 
+//! the constraint's local Jacobian (#3201): C_q on the connector interface, and the block by the algebraic coordinates if
+//! it has one; else by the marker data and ComputeJacobianAE; moved from CSystem::ComputeObjectJacobianAE
+void CObjectConstraint::ComputeLocalJacobianAE(const CSystemData& systemData, TemporaryComputationData& temp, bool& usesVelocityLevel,
+	JacobianType::Type& filledJacobians) const
+{
+	usesVelocityLevel = false;
+	filledJacobians = GetAvailableJacobians();
+	if (ComputeJacobianAEConnector(systemData, temp, temp.localJacobianAE_ODE2)) //C_q by automatic differentiation (#2745)
+	{
+		if (filledJacobians & JacobianType::AE_AE) { ComputeJacobianAE_AE(temp.localJacobianAE_AE); }
+		return;
+	}
+
+	const bool computeJacobian = true; //the marker Jacobians form the constraint Jacobian
+	systemData.ComputeMarkerDataStructure(this, computeJacobian, temp.markerDataStructure);
+	if (filledJacobians & JacobianType::ALL_AE_DERIV)
+	{
+		ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1,
+			temp.localJacobianAE_AE, temp.markerDataStructure, systemData.GetCData().currentState.time);
+		usesVelocityLevel = UsesVelocityLevel();
+	}
+}
+
 //! the connector's local Jacobian (#3201): on the connector interface, else by the marker data, with the Jacobian
 //! derivative of the markers if numDiff.jacobianConnectorDerivative; moved from CSystem::ComputeObjectJacobianODE2
 bool CObjectConnector::ComputeLocalJacobianODE2(const CSystemData& systemData, TemporaryComputationData& temp,

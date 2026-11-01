@@ -6,7 +6,8 @@
 #           spring-dampers, mass points with the contact and the coordinate connectors, an ANCF cable, ObjectGenericDAE
 #           with its ODE1 couplings, the joints - and the blocks of JacobianODE2RHS and JacobianODE1RHS by the local
 #           Jacobians (analytic, automatic or numerical per object) against doSystemWideDifferentiation, and the
-#           constraint Jacobian of JacobianAE against doSystemWideDifferentiation, dense and sparse; the parallel assembly of the ODE2 rows against the serial one,
+#           constraint Jacobian of JacobianAE - the joints, and the Euler parameter constraint of the nodes - against
+#           doSystemWideDifferentiation, dense and sparse; the parallel assembly of the ODE2 rows against the serial one,
 #           dense and sparse (#1203). At zero velocities, where the automatic connector
 #           Jacobians neglect nothing (dv/dq), on Tait-Bryan angles; the contacts with friction and the rolling disc,
 #           whose Jacobians contain dv/dq, also at velocities, on Tait-Bryan angles. The
@@ -118,8 +119,17 @@ def Contacts(mbs):
                                   dynamicFriction=0.3, frictionProportionalZone=1e-2)
 
 
+def EulerParameters(mbs):
+    """two rigid bodies on Euler parameters, the constraint of their nodes; without joints and connectors, whose rotation
+    Jacobians have no direction along the Euler parameters, while the numerical one has (design section 8.5)"""
+    for i in range(2):
+        mbs.CreateRigidBody(inertia=inertia, referencePosition=[0.3*(i + 1), 0.01*i, 0],
+                            referenceRotationMatrix=RotationMatrixZ(0.2*i) @ RotationMatrixX(0.1),
+                            gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationEulerParameters)
+
+
 models = {'RigidBodies': RigidBodies, 'PointsAndContact': PointsAndContact, 'Cable': Cable, 'GenericDAE': GenericDAE,
-          'Joints': Joints, 'Contacts': Contacts}
+          'Joints': Joints, 'Contacts': Contacts, 'EulerParameters': EulerParameters}
 
 
 def Build(model):
@@ -202,12 +212,13 @@ def test_theLocalODE1JacobianIsTheSystemWideOne(factors):
     assert Difference(local, numerical) < tolerance, (factors, Difference(local, numerical))
 
 
+@pytest.mark.parametrize('model', ['Joints', 'EulerParameters'])
 @pytest.mark.parametrize('sparse', [False, True])
-def test_theConstraintJacobianIsTheSystemWideOne(sparse):
-    analytic = Jacobian('Joints', AE, sparse=sparse)
-    numerical = Jacobian('Joints', AE, systemWide=True, sparse=sparse)
+def test_theConstraintJacobianIsTheSystemWideOne(model, sparse):
+    analytic = Jacobian(model, AE, sparse=sparse)
+    numerical = Jacobian(model, AE, systemWide=True, sparse=sparse)
     assert np.max(np.abs(analytic)) > 0
-    assert Difference(analytic, numerical) < tolerance, (sparse, Difference(analytic, numerical))
+    assert Difference(analytic, numerical) < tolerance, (model, sparse, Difference(analytic, numerical))
 
 
 @pytest.mark.parametrize('model', list(models))

@@ -5518,3 +5518,20 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   angles, compared with the system-wide Jacobian also at velocities, and parallel against serial (37 cases).
 - Test suite passed, pytest passed, `exudev generate --all-checks` ok (17 descriptions checked again: none states how
   the Jacobian is computed).
+
+<a id="rg9-11-6"></a>
+### RG9.11.6 — The algebraic blocks on the interface of the local Jacobians (2026-11-02, #3201)
+- `CObject::ComputeLocalJacobianAE(systemData, temp, usesVelocityLevel, filledJacobians)`: the default (CObjectBody.cpp)
+  is ComputeJacobianAE of a body with algebraic equations - it throws for an object that is neither body nor
+  constraint, as CSystem did -, `CObjectConstraint::ComputeLocalJacobianAE` (CObjectConnector.cpp) C_q on the connector
+  interface plus ComputeJacobianAE_AE, else the marker data and ComputeJacobianAE. CSystem::ComputeObjectJacobianAE,
+  used by JacobianAE, the reaction forces, the constraint Jacobian derivative and mbs.ComputeItem, calls it.
+- `CSystem::AddLocalJacobianAE(temp, ltgAE, ltgODE2, ltgODE1, usesVelocityLevel, filledJacobians, factors, jacobianGM)`
+  with `JacobianAEFactors`: the code of the loop of JacobianAE, unchanged. The nodes with algebraic equations (the Euler
+  parameter constraint) are added by the same function with local-to-global lists of their coordinates instead of
+  AddSubmatrixWithFactor at offsets; a node block by ODE2_t is accepted now, ODE1 and AE blocks still raise.
+- The units of the parallel AE rows (RG9.11.5.2) are these compute and add functions, as for the ODE2 rows.
+- The same results: the test suite passes at its tolerance, pytest passed. test_systemJacobians.py: a model of two
+  rigid bodies on Euler parameters for the node constraint, dense and sparse (44 cases); the joints stay on Tait-Bryan
+  angles, as their rotation Jacobians, like those of the connectors, have no direction along the Euler parameters (the
+  first try with joints on Euler parameters differed by 10 %, RG9.11.8.5).

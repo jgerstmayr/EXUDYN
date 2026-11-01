@@ -278,6 +278,10 @@ public:
 	virtual bool ComputeJacobianAEConnector(const CSystemData& systemData, TemporaryComputationData& temp,
 		ResizableMatrix& jacobianAE_ODE2) const { return false; }
 
+	//! the constraint's local Jacobian (#3201): on the connector interface, else by the marker data and ComputeJacobianAE
+	virtual void ComputeLocalJacobianAE(const CSystemData& systemData, TemporaryComputationData& temp, bool& usesVelocityLevel,
+		JacobianType::Type& filledJacobians) const override;
+
 	//! C_q^T lambda on the connector interface, without forming C_q (#2745); false: the path of the marker data
 	virtual bool ComputeReactionForcesConnector(const CSystemData& systemData, TemporaryComputationData& temp,
 		const Vector& reactionForces, Vector& localODE2) const { return false; }

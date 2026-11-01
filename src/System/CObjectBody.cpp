@@ -89,6 +89,22 @@ bool RigidBodyNodeVelocity_q(const CNodeODE2& node, const Vector3D& localPositio
 	return true;
 }
 
+//! the object's own local Jacobian of its algebraic equations (#3201): a body with algebraic equations (ObjectGenericDAE,
+//! the Euler parameter constraint attached to a body); moved from CSystem::ComputeObjectJacobianAE
+void CObject::ComputeLocalJacobianAE(const CSystemData& systemData, TemporaryComputationData& temp, bool& usesVelocityLevel,
+	JacobianType::Type& filledJacobians) const
+{
+	usesVelocityLevel = false;
+	filledJacobians = JacobianType::_None;
+	CHECKandTHROW((Index)GetType() & (Index)CObjectType::Body, "CObject::ComputeLocalJacobianAE: object type not implemented",
+		ExudynNotImplementedError);
+	if (GetAlgebraicEquationsSize())
+	{
+		filledJacobians = GetAvailableJacobians();
+		ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE); //all blocks are set
+	}
+}
+
 //! the object's own local Jacobian of its ODE2 rows (#3201): ComputeJacobianODE2_ODE2, for every object that is not a
 //! connector
 bool CObject::ComputeLocalJacobianODE2(const CSystemData& systemData, TemporaryComputationData& temp,

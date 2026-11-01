@@ -224,6 +224,14 @@ public:
 	virtual bool ComputeLocalJacobianODE2(const CSystemData& systemData, TemporaryComputationData& temp,
 		const NumericalDifferentiationSettings& numDiff, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltgODE2) const;
 
+	//! the object's own local Jacobian of its algebraic equations (#3201): the blocks by the ODE2 coordinates and
+	//! velocities, the ODE1 and the AE coordinates into temp.localJacobianAE_ODE2, ..._ODE2_t, ..._ODE1, ..._AE, the
+	//! blocks filled in filledJacobians; usesVelocityLevel: the equations are at velocity level, so that the reaction
+	//! forces are dC/dq_t^T lambda. Default: ComputeJacobianAE of a body with algebraic equations; a constraint computes
+	//! it on the connector interface or by its marker data
+	virtual void ComputeLocalJacobianAE(const CSystemData& systemData, TemporaryComputationData& temp, bool& usesVelocityLevel,
+		JacobianType::Type& filledJacobians) const;
+
 	//! the analytic Jacobian of the ODE1 right-hand side by the local ODE1 coordinates (GetODE1Size() x GetODE1Size()), called if
 	//! the flag ODE1_ODE1_function is set; by the local ODE2 coordinates and velocities (GetODE1Size() x GetODE2Size()) if
 	//! ODE1_ODE2_function and ODE1_ODE2_t_function are set, else these two are not touched (#3143)

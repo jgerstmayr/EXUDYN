@@ -50,6 +50,14 @@ public:
 	bool deferred = false;	//!< analyticOnly: the object needs a numerical block, left to the serial part
 };
 
+//! the factors of the blocks of the Jacobian of the algebraic equations (#3201): the rows of the equations by the ODE2,
+//! ODE2_t, ODE1 and AE coordinates, and the transposed blocks of the reaction forces in the ODE2 and ODE1 rows
+class JacobianAEFactors
+{
+public:
+	Real AE_ODE2, AE_ODE2_t, AE_ODE1, AE_AE, ODE2_AE, ODE1_AE;
+};
+
 
 
 //! @brief data which is updated during different computation tasks, e.g. load factor, load steps, time steps, solver accuracy, ...
@@ -382,11 +390,14 @@ public:
 	//! its local ODE2 coordinates (mbs.ComputeItem, #2779)
 	void ComputeObjectReactionForces(TemporaryComputationData& temp, Index objectNumber, Vector& localODE2);
 
-	//!compute per-object jacobians for object j, providing TemporaryComputationData;
-	//! the jacobian computed in according temp structure
+	//! the local Jacobian of the algebraic equations of object j into temp: the object's own (#3201)
 	void ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
-		bool& objectUsesVelocityLevel, JacobianType::Type& filledJacobians
-		/*, bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_ODE1filled, bool& flagAE_AEfilled*/);
+		bool& objectUsesVelocityLevel, JacobianType::Type& filledJacobians);
+
+	//! add the local AE Jacobian in temp to the system Jacobian by the local-to-global lists, with the factors (#3201)
+	void AddLocalJacobianAE(TemporaryComputationData& temp, const ArrayIndex& ltgAE, const ArrayIndex& ltgODE2,
+		const ArrayIndex& ltgODE1, bool usesVelocityLevel, JacobianType::Type filledJacobians, const JacobianAEFactors& factors,
+		GeneralMatrix& jacobianGM);
 
 	//implemented direcly in JacobianAE
 	////!compute per-node jacobians for node j, providing TemporaryComputationData;

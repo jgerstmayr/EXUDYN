@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (8 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (7 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -131,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 14 | Structural core improvements |
+| RG9 | OPEN | 13 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 17 | Symbolic |
@@ -1185,11 +1185,13 @@ CLOSED 2026-11-01 (#1203): JacobianODE2RHS with ParallelFor over listComputeObje
 
 ##### **OPEN_RG9.11.5.2** The AE rows in parallel, and the split of the tasks by a cost per item
 
-#1202, #858; after RG9.11.6 (the algebraic blocks on the interface of the local Jacobians).
+#1202, #858; RG9.11.6 (the algebraic blocks on the interface of the local Jacobians) is done.
 
-#### **OPEN_RG9.11.6** The algebraic blocks on the same interface, the nodes with algebraic equations included, forAE for sparse matrices
+#### **CLOSED_RG9.11.6** The algebraic blocks on the same interface, the nodes with algebraic equations included, forAE for sparse matrices
 
 Design section 3.3.
+
+CLOSED 2026-11-02 (#3201 stays open): the virtual CObject::ComputeLocalJacobianAE - ComputeJacobianAE of a body with algebraic equations by default, the connector interface or the marker data in CObjectConstraint, moved from CSystem::ComputeObjectJacobianAE, which calls it -, CSystem::AddLocalJacobianAE with the factors in JacobianAEFactors, JacobianAE a loop of compute and add over the objects and the nodes with algebraic equations (the node blocks by local-to-global lists, AE_ODE2_t accepted); the numerical AE Jacobian for sparse matrices came with RG9.11.9 (#3205); the same results; test_systemJacobians.py with the Euler parameter constraint, dense and sparse. [log](exudynRevisionLog2026c.md#rg9-11-6)
 
 #### **OPEN_RG9.11.7** Complete the remaining couplings serially: the ODE1 loads, the derivative terms as options, the solver chapter of the manual
 
