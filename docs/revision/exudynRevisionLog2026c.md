@@ -5284,3 +5284,16 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - Changed: `ComputeObjectODE1RHS` is no longer `inline` (JacobianODE1RHS in the other file calls it);
   CSystemJacobians.cpp declares `extern Index TScomputeGeneralContact`, the timer registered in CSystem.cpp. The two
   files are in msvc/cppsrc.vcxproj and its filters, and in both lists of sources.json (gen_sources.py --check OK).
+
+<a id="rg9-11-3"></a>
+### RG9.11.3 — The local Jacobians against the system-wide numerical one (2026-11-01, #3201)
+- python/testing/test_systemJacobians.py, a pytest as it compares code paths: models RigidBodies (two bodies on
+  Tait-Bryan angles, spring-damper, Cartesian, both rigid-body spring-dampers, torsional), PointsAndContact (mass
+  points, ContactSphereSphere in contact, ConnectorCoordinateSpringDamper, spring-damper), Cable (four
+  ObjectANCFCable2D with mass-proportional loads, a Cartesian spring-damper on a node), GenericDAE (ODE2 and ODE1
+  coupled by matrices) and Joints (revolute, spherical, prismatic, generic, distance, coordinate constraint).
+- At the initial coordinates turned by 0.01 cos(i) and zero velocities, with the dense solver: JacobianODE2RHS with the
+  factors (1, 0, 0), (0, 1, 0), (0, 0, 1) - the loads included (computeLoadsJacobian=2) - against
+  doSystemWideDifferentiation; JacobianODE1RHS of the DAE against the same; JacobianAE of the joints against forAE.
+  All 19 agree within 1e-4 of the largest entry; the largest difference, 1.06e-5, is the velocity derivative of the
+  cable's stiff spring, whose numerical step is that of the coordinates.

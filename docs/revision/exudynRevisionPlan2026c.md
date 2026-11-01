@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (8 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (7 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -131,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 14 | Structural core improvements |
+| RG9 | OPEN | 13 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 17 | Symbolic |
@@ -1155,9 +1155,9 @@ CLOSED 2026-11-01 (#3201 stays open): docs/dev/design/systemJacobians.md - the b
 
 CLOSED 2026-11-01 (#3202): CSystemAssemble.cpp (1390 lines: Assemble, the checks, the coordinates, the local-to-global and item lists, the Lie group lists), CSystem.cpp (1572: mass matrix, residuals, loads, algebraic equations, post-Newton, reaction forces), CSystemJacobians.cpp (1247: the Jacobians and the constraint Jacobian derivatives); functions moved unchanged, ComputeObjectODE1RHS no longer inline. [log](exudynRevisionLog2026c.md#rg9-11-2)
 
-#### **OPEN_RG9.11.3** A test model comparing the local Jacobian of every item type with the system-wide numerical one, block by block
+#### **CLOSED_RG9.11.3** A test model comparing the local Jacobian of every item type with the system-wide numerical one, block by block
 
-Design section 3.4, on the code as it is, so that each later sub-step is compared with it.
+CLOSED 2026-11-01 (#3201 stays open; maintainer 2026-11-01: not broad, the test suite is the real test): python/testing/test_systemJacobians.py - five small models (rigid bodies with the spring-dampers, mass points with the contact and coordinate connectors, an ANCF cable, ObjectGenericDAE with its ODE1 couplings, the joints), the ODE2 and ODE1 blocks of the local Jacobians against doSystemWideDifferentiation and the constraint Jacobian against forAE, 19 cases within 1e-4. [log](exudynRevisionLog2026c.md#rg9-11-3)
 
 #### **OPEN_RG9.11.4** ComputeLocalJacobian with the numerical default in CObject; JacobianODE2RHS and JacobianODE1RHS as one loop over the request
 
