@@ -108,3 +108,15 @@ void CMarkerNodeCoordinate::ComputeMarkerDataJacobianDerivative(const CSystemDat
 {
 	markerData.jacobianDerivative.SetNumberOfRowsAndColumns(0, 0); //signals that there is no dependency!
 }
+
+//! d(value_t)/dq, 1 x n (#3201): zero, value_t is a velocity coordinate of an ODE2 node
+bool CMarkerNodeCoordinate::GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const
+{
+	const CNode* node = cSystemData.GetCNodes()[parameters.nodeNumber];
+	const Index n = node->GetNumberOfODE2Coordinates();
+	if (n != 0 && !((Index)node->GetNodeGroup() & (Index)CNodeGroup::ODE2variables)) { return false; }
+	velocity_q.SetNumberOfRowsAndColumns(1, n);
+	velocity_q.SetAll(0.);
+	angularVelocity_q.SetNumberOfRowsAndColumns(0, 0);
+	return true;
+}

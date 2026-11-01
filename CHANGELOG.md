@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 296 | 1.13.304 |
+| 1.13 | Newborn | 297 | 1.13.305 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.305** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorCoordinateSpringDamperExt: the analytic Jacobian ignores factor0 and factor1 (#3204)
+  - description: Without friction, limit stops and user function, ObjectConnectorCoordinateSpringDamperExt declares its analytic Jacobian, stiffness\*factorODE2 + damping\*factorODE2\_t chained with the marker Jacobians; its force acts with factor1 and -factor0 on the markers and depends on factor1\*q1 - factor0\*q0, so the Jacobian lacks factor\_i\*factor\_k. Found in coordinateSpringDamperExt.py (the gear pair, factor1 = -rad0/rad1): the Jacobian differs from the numerical one by 1.3e5, and with forODE2Connectors the model needs 1409 instead of 4780 Newton iterations (the result differs by 2 percent, the friction of the other connectors follows another path). Decided: the Jacobian follows the factors - on the connector interface, where ComputeConnectorForcesCoordinate already has them (revision2026c step RG9.11.8), or by the factors in ComputeJacobianODE2\_ODE2.
+  - **notes:** ObjectConnectorCoordinateSpringDamperExt computes its Jacobian by local numerical differentiation of its forces on both markers, with factor0 and factor1; the analytic Jacobian, which ignored the factors, is removed.
+  - date resolved: **2026-11-02 00:12**, date raised: 2026-11-01
 - **1.13.304** `CHANGE` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` numericalDifferentiation: forAE, forODE2 and forODE2Connectors deprecated; doSystemWideDifferentiation is the numerical Jacobian, the algebraic equations included (#3205)
   - description: The numerical differentiation settings had three flags that forced a numerical Jacobian for some items: forAE (the algebraic equations, by all coordinates, dense matrices only), forODE2 (every object) and forODE2Connectors (the connectors, described as a development flag), besides doSystemWideDifferentiation (the ODE2 and ODE1 equations by all coordinates). Each object provides its own Jacobian - analytic, automatic, or numerical by its own coordinates where it has neither - so the flags are left with no purpose but comparison, for which one numerical Jacobian suffices. Decided: forAE, forODE2 and forODE2Connectors are deprecated and have no effect; doSystemWideDifferentiation computes the whole Jacobian numerically, the algebraic equations included, for dense and sparse matrices (revision2026c step RG9.11.9).
   - **notes:** numericalDifferentiation.doSystemWideDifferentiation computes the whole Jacobian numerically, the algebraic equations included, for dense and sparse matrices; forAE, forODE2 and forODE2Connectors are deprecated and have no effect, as each object provides its Jacobian - analytic, automatic or numerical by its own coordinates.

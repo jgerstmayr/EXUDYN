@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.304.dev1
-- last change = 2026-11-01
+- Exudyn version = 1.13.305.dev1
+- last change = 2026-11-02
 - Number of issues = 3206
-- Number of resolved issues = 3081 (304 in current version)
+- Number of resolved issues = 3082 (305 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9493,9 +9493,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` ObjectConnectorCoordinateSpringDamperExt: the analytic Jacobian ignores factor0 and factor1 (#3204)
-  - description: Without friction, limit stops and user function, ObjectConnectorCoordinateSpringDamperExt declares its analytic Jacobian, stiffness\*factorODE2 + damping\*factorODE2\_t chained with the marker Jacobians; its force acts with factor1 and -factor0 on the markers and depends on factor1\*q1 - factor0\*q0, so the Jacobian lacks factor\_i\*factor\_k. Found in coordinateSpringDamperExt.py (the gear pair, factor1 = -rad0/rad1): the Jacobian differs from the numerical one by 1.3e5, and with forODE2Connectors the model needs 1409 instead of 4780 Newton iterations (the result differs by 2 percent, the friction of the other connectors follows another path). Decided: the Jacobian follows the factors - on the connector interface, where ComputeConnectorForcesCoordinate already has them (revision2026c step RG9.11.8), or by the factors in ComputeJacobianODE2\_ODE2.
-  - date raised: 2026-11-01
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
   - date raised: 2026-10-23

@@ -243,6 +243,11 @@ public: //
 		CHECKandTHROWstring("Invalid call to CMarker::ComputeMarkerDataJacobianDerivative");
 	}
 
+	//! dv/dq and domega/dq (#3201): the derivatives of the marker's velocity and of its global angular velocity by its
+	//! ODE2 coordinates at fixed velocities, 3 x n each, in the columns of its Jacobians; for a coordinate marker the
+	//! 1 x n derivative of value_t and angularVelocity_q 0 x 0; false if the marker does not provide them
+	virtual bool GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const { return false; }
+
 	//! GetOutputVariable with type; writes values into value and returns true, if successful
 	virtual bool GetOutputVariable(const CSystemData& cSystemData, OutputVariableType variableType, ConfigurationType configuration, Vector& value) const;
 

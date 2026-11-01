@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-11  13:58:58 (last modified)
+* @date         2026-11-01  23:46:14 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,6 +112,9 @@ public: // AUTO:
 
     //! AUTO:  fill in according data for derivative of jacobian times vector v6D, e.g.: d(Jpos.T @ v6D[0:3])/dq; v6D represents 3 force components and 3 torque components in global coordinates!
     virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const override;
+
+    //! AUTO:  dv/dq and domega/dq of the marker at fixed velocities (#3201); false if not provided
+    virtual bool GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const override;
 
     //! AUTO:  the coordinate and its velocity, read from the node, without the marker data (#2745)
     virtual Index GetKinematicsCoordinate(const CSystemData& cSystemData, MarkerCoordinate<Real>& kinematics, MarkerTemp& temp) const override;

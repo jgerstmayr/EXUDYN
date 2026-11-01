@@ -52,14 +52,14 @@
    "fingerprint": "a92cc559a7eb"
   },
   "MarkerBodyPosition": {
-   "checked": "2026-11-01",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "9aadde616821"
+   "fingerprint": "ac7978844dea"
   },
   "MarkerBodyRigid": {
-   "checked": "2026-11-01",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "1865b566a0e8"
+   "fingerprint": "11c403d4eb4f"
   },
   "MarkerKinematicTreeRigid": {
    "checked": "2026-11-01",
@@ -67,9 +67,9 @@
    "fingerprint": "d5f940806be9"
   },
   "MarkerNodeCoordinate": {
-   "checked": "2026-10-11",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "1399f79aa9a3"
+   "fingerprint": "efbf091da530"
   },
   "MarkerNodeCoordinates": {
    "checked": "2026-10-11",
@@ -82,14 +82,14 @@
    "fingerprint": "35b5cfea51d6"
   },
   "MarkerNodePosition": {
-   "checked": "2026-10-06",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "ea9ffeb9d490"
+   "fingerprint": "1e9b5ab8fcab"
   },
   "MarkerNodeRigid": {
-   "checked": "2026-10-06",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "1bbde8e3d376"
+   "fingerprint": "f6cce79e5f5b"
   },
   "MarkerNodeRotationCoordinate": {
    "checked": "2026-10-06",
@@ -247,9 +247,9 @@
    "fingerprint": "d4284722fd84"
   },
   "ObjectConnectorCoordinateSpringDamperExt": {
-   "checked": "2026-10-25",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "2a11c64d1dec"
+   "fingerprint": "770e6eee61f0"
   },
   "ObjectConnectorCoordinateVector": {
    "checked": "2026-10-25",
@@ -287,9 +287,9 @@
    "fingerprint": "184053b0c6ef"
   },
   "ObjectConnectorRollingDiscPenalty": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "5b8e7a1c5471"
+   "fingerprint": "535c6fb86a88"
   },
   "ObjectConnectorSpringDamper": {
    "checked": "2026-10-25",
@@ -312,14 +312,14 @@
    "fingerprint": "718627597bfb"
   },
   "ObjectContactConvexRoll": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "e2f0871167d2"
+   "fingerprint": "59796370b0b5"
   },
   "ObjectContactCoordinate": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "d98f09d7640c"
+   "fingerprint": "706128339fb4"
   },
   "ObjectContactCurveCircles": {
    "checked": "2026-10-17",
@@ -332,19 +332,19 @@
    "fingerprint": "3f8898cf229f"
   },
   "ObjectContactSphereSphere": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "55b163dd84fd"
+   "fingerprint": "e6df070a3823"
   },
   "ObjectContactSphereTorus": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "05362ec851df"
+   "fingerprint": "70e23282f82b"
   },
   "ObjectContactSphereTriangle": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "a936ab222cda"
+   "fingerprint": "2e3e207e99e9"
   },
   "ObjectFFRF": {
    "checked": "2026-10-25",
@@ -367,9 +367,9 @@
    "fingerprint": "2402d96107b1"
   },
   "ObjectGround": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "eaad9d33bd1a"
+   "fingerprint": "1fd834d1cdd0"
   },
   "ObjectJointALEMoving2D": {
    "checked": "2026-10-17",
@@ -432,24 +432,24 @@
    "fingerprint": "ddf0569c1bfb"
   },
   "ObjectMassPoint": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "252595b5abf9"
+   "fingerprint": "e5c27fca945e"
   },
   "ObjectMassPoint2D": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "4894c2a02264"
+   "fingerprint": "c873397075e1"
   },
   "ObjectRigidBody": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "9b4a659b2116"
+   "fingerprint": "621a1bfbeb3c"
   },
   "ObjectRigidBody2D": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "a0ff60e0c961"
+   "fingerprint": "2e8097b476e0"
   },
   "ObjectRotationalMass1D": {
    "checked": "2026-10-17",

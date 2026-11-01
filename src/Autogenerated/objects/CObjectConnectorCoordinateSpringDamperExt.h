@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-11-01  23:46:14 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -172,7 +172,10 @@ public: // AUTO:
     }
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override;
+    virtual JacobianType::Type GetAvailableJacobians() const override
+    {
+        return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
+    }
 
     //! AUTO:  the right-hand side on the connector interface of coordinate markers (#2745)
     virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const override
@@ -180,14 +183,23 @@ public: // AUTO:
         ConnectorODE2LHSCoordinateMarkers(systemData, temp, *this, localODE2Lhs); return true;
     }
 
+    //! AUTO:  the Jacobian by local numerical differentiation of the force by the marker kinematics (#3201)
+    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero) const override
+    {
+        ConnectorJacobianODE2CoordinateMarkersNumerical(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); return true;
+    }
+
+    //! AUTO:  its Jacobian contains dv/dq and domega/dq of the markers (#3201)
+    virtual bool RequestsVelocityDerivative() const override
+    {
+        return true;
+    }
+
     //! AUTO:  the generalized forces on the two coordinates, with factor0 and factor1 (#2745)
     virtual void ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real* forces) const override;
 
     //! AUTO:  the force of the connector from relative position and velocity (#2745)
     void ComputeSpringForceRelative(Real relPos, Real relVel, Real t, Real& force) const;
-
-    //! AUTO:  Computational function: compute Jacobian of ABRV:ODE2 ABRV:LHS equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer
-    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const override;
 
     //! AUTO:  flag to be set for connectors, which use DiscontinuousIteration
     virtual bool HasDiscontinuousIteration() const override
@@ -200,9 +212,6 @@ public: // AUTO:
 
     //! AUTO:  function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
     virtual void PostDiscontinuousIterationStep() override;
-
-    //! AUTO:  compute global 6D force and torque which is used for computation of derivative of jacobian; used only in combination with ComputeJacobianODE2_ODE2
-    virtual void ComputeJacobianForce6D(const MarkerDataStructure& markerData, Vector6D& force6D) const override;
 
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;

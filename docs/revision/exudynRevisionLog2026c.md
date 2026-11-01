@@ -5479,3 +5479,42 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - Design revised: section 2.3 (bindings written into the items at Add/Modify/Set, stored in mbs.parameterBindings,
   read back by symbolic=True; RigidBodyInertia for both types), section 2.7 (options A explicit, B written into the
   items, C symbolic values in C++; B proposed), sub-steps 2 and 3, decisions P1 and P3 revised, P6 new.
+
+<a id="rg9-11-8-2"></a>
+<a id="rg9-11-8-3"></a>
+### RG9.11.8.2 and RG9.11.8.3 — dv/dq of the markers; the contacts and the rolling disc on the connector interface (2026-11-02, #3201, #3204)
+- What the code does: design section 8.5. The two sub-steps are one commit, as the markers' function is tested only
+  through the connectors that request it.
+- Not by AccessFunctionsAD: its functors are switched off by default (`accessFunctionsByAD`) and normalize the Euler
+  parameters, while the markers and the system use them unnormalized; the pure functions of RigidBodyMath with forward
+  differences match the forms the markers give.
+- Debugging (scratch scripts on rollingCoinPenaltyTest.py after 0.3 s, local against doSystemWideDifferentiation):
+  - Tait-Bryan angles matched at once, 1e-8 in both blocks, dv/dq included.
+  - Euler parameters: first 450 % in the q block and 9 % in the q_t block. The q_t block was rank 1: a directional
+    derivative of the residual (mbs ComputeODE2RHS) confirmed the system-wide one, and the cause was the perturbed
+    local angular velocity `A^T omega` (A^T A - I of 1e-5 against a step of 1e-7 relative); fixed by adding only the
+    increment. Then dv/dq in the forms of the markers (Glocal) instead of `G theta_t`. Left: 1 % in the q block,
+    0.5 % at zero velocities - the direction along e (RG9.11.8.5).
+- Newton iterations / Jacobians of all test models, before (these connectors numerical by CSystem) and after:
+
+  | model | Newton | Jacobians |
+  |---|---|---|
+  | rotatingTableTest.py | 26785 / 26740 | 71 / 73 |
+  | ballBearingTest.py, carRollingDiscTest.py, createSphereQuadContact2.py, createSphereTriangleContact.py | equal | equal |
+  | createSphereQuadContact.py, sphereTriangleTest2.py, restartFileTest.py | within 6 | equal |
+  | ConvexContactTest.py | 4330 / 4361 | 4330 / 4361 |
+  | contactComparisonTest.py | 220466 / 218603 | 220466 / 218603 |
+  | rollingCoinPenaltyTest.py (Euler parameters) | 9568 / 11351 | 9568 / 11351 |
+  | contactSphereTorusMomentumTest.py (Euler parameters) | 12297 / 14487 | 12297 / 14487 |
+  | coordinateSpringDamperExt.py (#3204) | 4780 / 1411 | 4780 / 1411 |
+
+- New references (runTestSuiteRefSol.py, with the old values in the comments): ballBearingTest, carRollingDiscTest,
+  ConvexContactTest, coordinateSpringDamperExt (2 %: friction with stick-slip follows another path with the correct
+  Jacobian), createSphereQuadContact, createSphereQuadContact2, createSphereTriangleContact, symbolicUserContactTest,
+  restartFileTest (rounded to 6 digits, -2.93176 -> -2.931759), contactSphereTorusMomentumTest, rollingCoinPenaltyTest,
+  rotatingTableTest, sphereTriangleTest2, and the mini example ObjectConnectorRollingDiscPenalty. The AVX2 references
+  of these models are stale until the fast-module logs are rerecorded.
+- test_systemJacobians.py: a model of a rolling disc and two rigid spheres in contact, both with friction, on Tait-Bryan
+  angles, compared with the system-wide Jacobian also at velocities, and parallel against serial (37 cases).
+- Test suite passed, pytest passed, `exudev generate --all-checks` ok (17 descriptions checked again: none states how
+  the Jacobian is computed).

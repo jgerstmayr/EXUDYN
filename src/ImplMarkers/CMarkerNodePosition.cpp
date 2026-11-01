@@ -66,6 +66,21 @@ void CMarkerNodePosition::ComputeMarkerDataJacobianDerivative(const CSystemData&
 	markerData.jacobianDerivative.SetNumberOfRowsAndColumns(0, 0); //signals that there is no dependency!
 }
 
+//! dv/dq and domega/dq (#3201): zero for the nodes whose position is given by their coordinates - all but those with an
+//! orientation that are no rigid body nodes (NodeUser)
+bool CMarkerNodePosition::GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const
+{
+	const CNode* node = cSystemData.GetCNodes()[parameters.nodeNumber];
+	const Node::Type type = node->GetType();
+	if ((type & Node::Orientation) && !(type & Node::RigidBody)) { return false; }
+	const Index n = node->GetNumberOfODE2Coordinates();
+	velocity_q.SetNumberOfRowsAndColumns(3, n);
+	velocity_q.SetAll(0.);
+	angularVelocity_q.SetNumberOfRowsAndColumns(3, n);
+	angularVelocity_q.SetAll(0.);
+	return true;
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //VISUALIZATION
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

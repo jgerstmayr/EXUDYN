@@ -336,6 +336,12 @@ objectFunctions = [
         args='Matrix& value',
         description='the mass-weighted position Jacobian int(rho J_pos dV), 3 x n'),
 
+    ItemFunctionLib(classType='Object', pythonName='GetVelocity_q',
+        type=TBool, destination=DestComp,
+        cFlags=CFConst,
+        args='const Vector3D& localPosition, Matrix& velocity_q, Matrix& angularVelocity_q',
+        description='dv/dq at localPosition and domega/dq (global) at fixed velocities, 3 x n each (#3201); false if not provided'),
+
     ItemFunctionLib(classType='Object', pythonName='GetJacobianTransposedTimesVectorDerivative',
         type=TBool, destination=DestComp,
         cFlags=CFConst,
@@ -778,6 +784,12 @@ markerFunctions = [
         cFlags=CFConst,
         args='const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData',
         description='fill in according data for derivative of jacobian times vector v6D, e.g.: d(Jpos.T @ v6D[0:3])/dq; v6D represents 3 force components and 3 torque components in global coordinates!'),
+
+    ItemFunctionLib(classType='Marker', pythonName='GetVelocity_q',
+        type=TBool, destination=DestComp,
+        cFlags=CFConst,
+        args='const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q',
+        description='dv/dq and domega/dq of the marker at fixed velocities (#3201); false if not provided'),
 
     ItemFunctionLib(classType='Marker', pythonName='GetAngularVelocity',
         type=Tvoid, destination=DestComp,

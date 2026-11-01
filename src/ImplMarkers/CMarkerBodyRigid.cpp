@@ -85,6 +85,14 @@ void CMarkerBodyRigid::ComputeMarkerDataJacobianDerivative(const CSystemData& cS
 	}
 }
 
+//! dv/dq and domega/dq at the position of the marker frame, through the body; the rotation of the frame does not change
+//! the global angular velocity (#3201)
+bool CMarkerBodyRigid::GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const
+{
+	return ((const CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetVelocity_q(parameters.localHT.GetTranslation(),
+		velocity_q, angularVelocity_q);
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //VISUALIZATION
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

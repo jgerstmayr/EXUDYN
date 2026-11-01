@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  13:28:01 (last modified)
+* @date         2026-11-01  23:46:14 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,6 +106,12 @@ public: // AUTO:
 
     //! AUTO:  d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero
     virtual bool GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const override;
+
+    //! AUTO:  dv/dq at localPosition and domega/dq (global) at fixed velocities, 3 x n each (#3201); false if not provided
+    virtual bool GetVelocity_q(const Vector3D& localPosition, Matrix& velocity_q, Matrix& angularVelocity_q) const override
+    {
+        return RigidBodyNodeVelocity_q(*(const CNodeODE2*)GetCNode(0), localPosition, velocity_q, angularVelocity_q);
+    }
 
     //! AUTO:  the mass-weighted position Jacobian int(rho J_pos dV), 3 x n
     virtual void GetMassWeightedPositionJacobian(Matrix& value) const override;

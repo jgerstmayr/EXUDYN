@@ -123,6 +123,9 @@ public:
 	{
 		AccessFunctionNotProvided("derivative of the transposed Jacobian times a vector"); return false;
 	}
+	//! dv/dq at localPosition and domega/dq, omega global, at fixed velocities, 3 x n each (#3201): for the connectors
+	//! that request them; false if the body does not provide them
+	virtual bool GetVelocity_q(const Vector3D& localPosition, Matrix& velocity_q, Matrix& angularVelocity_q) const { return false; }
 	//! false if the access functions are not defined at localPosition, with the reason; checked at Assemble()
 	virtual bool IsValidLocalPosition(const Vector3D& localPosition, STDstring& reason) const { return true; }
 
@@ -376,5 +379,11 @@ public:
 	// - 
 	// - 
 };
+
+//! dv/dq of the point at localPosition of a rigid body node and domega/dq, omega global, by the node's coordinates at
+//! fixed velocities, 3 x n each (#3201): the 2D node in closed form; Euler parameters and Tait-Bryan angles by forward
+//! differences of the rotation parameters, from the rotation matrix and Glocal of RigidBodyMath, which the node's velocities
+//! use; no system state is touched; false for the other nodes (the Lie group nodes)
+bool RigidBodyNodeVelocity_q(const CNodeODE2& node, const Vector3D& localPosition, Matrix& velocity_q, Matrix& angularVelocity_q);
 
 #endif

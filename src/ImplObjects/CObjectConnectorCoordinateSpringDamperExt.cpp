@@ -242,52 +242,6 @@ void CObjectConnectorCoordinateSpringDamperExt::ComputeConnectorForcesCoordinate
 	forces[0] = -parameters.factor0 * force;
 }
 
-//FUTURE: needed if MarkerNodeRotationCoordinate has jacDerivative: 
-void CObjectConnectorCoordinateSpringDamperExt::ComputeJacobianForce6D(const MarkerDataStructure& markerData, Vector6D& force6D) const
-{
-	if (parameters.activeConnector)
-	{
-		Real relPos, relVel, force;
-		ComputeSpringForce(markerData, relPos, relVel, force);
-		force6D.SetVector({ force, 0., 0., 0., 0., 0. }); //for coordinate connectors, use only first coordinate
-	}
-	else { force6D.SetAll(0.); }
-}
-
-void CObjectConnectorCoordinateSpringDamperExt::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
-	Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const
-{
-	if (parameters.activeConnector)
-	{
-		temp.localJacobian.SetNumberOfRowsAndColumns(1, 1);
-		//compute inner jacobian: factorODE2 * d(F)/(dq) + factorODE2_t * d(F)/(dq_t)
-		Real localJac = parameters.stiffness * factorODE2 + parameters.damping * factorODE2_t;
-
-		temp.localJacobian(0, 0) = localJac;
-		//pout << "inside, localJac=" << localJac << "\n";
-	}
-	//compute jacobianODE2 in dense mode; temp.localJacobian is modified!
-	ComputeJacobianODE2_ODE2generic(temp.localJacobian, jacobianODE2, temp, factorODE2, factorODE2_t, markerData, 
-		parameters.activeConnector, true, false);
-}
-
-
-JacobianType::Type CObjectConnectorCoordinateSpringDamperExt::GetAvailableJacobians() const
-{
-    bool hasNonlinearity = parameters.useLimitStops ||
-        parameters.dynamicFrictionForce != 0 || parameters.staticFrictionOffsetForce != 0 ||
-        parameters.viscousFrictionFactor != 0;
-
-    if (!parameters.springForceUserFunction && !hasNonlinearity)
-	{   //only in very simple case we can use analytical Jacobian
-		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
-	}
-	else 
-	{   //numerical Jacobian
-		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
-	}
-}
-
 //! provide according output variable in "value"
 void CObjectConnectorCoordinateSpringDamperExt::GetOutputVariableConnector(OutputVariableType variableType, 
     const MarkerDataStructure& markerData, Vector& value) const

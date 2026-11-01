@@ -317,3 +317,36 @@ Euler parameter node, so the AD and the rigid nodes cover them.
 - **ConvexRoll** and the contacts on cables may stay numerical by CSystem, serially, for now.
 - **Verification**: the Newton counts of the contact models equal those of the numerical Jacobian by CSystem within a
   few iterations, and rotatingTableTest is the sensitive case.
+
+### 8.5 What the code does (RG9.11.8.2, RG9.11.8.3)
+
+- `CMarker::GetVelocity_q(systemData, velocity_q, angularVelocity_q)`: dv/dq and domega/dq, omega global, at fixed
+  velocities, in the columns of the marker's Jacobians; false where not provided. MarkerNodeCoordinate and
+  MarkerNodePosition give zero (not for NodeUser); MarkerBodyPosition and MarkerBodyRigid ask the body
+  (`CObjectBody::GetVelocity_q`: zero for ObjectGround, ObjectMassPoint, ObjectMassPoint2D); ObjectRigidBody,
+  ObjectRigidBody2D and MarkerNodeRigid use `RigidBodyNodeVelocity_q` - the 2D node in closed form, Euler parameters
+  and Tait-Bryan angles by forward differences of the rotation parameters through the pure functions of RigidBodyMath,
+  in the forms the markers give: omega_local = Glocal theta_t, omega = A omega_local, v = A (omega_local x p). The Lie
+  group nodes return false.
+- `ItemConnectorInterface(markers, jacobian='numerical', velocityDerivative=True)`: the connector's Jacobian is the
+  local numerical differentiation of its force by the marker kinematics (`ConnectorJacobianODE2RigidMarkersNumerical`,
+  `...CoordinateMarkersNumerical`, the latter by the forces on both markers, so with the factors of a connector), and
+  `RequestsVelocityDerivative()` adds J_i^T d(f_i)/d(v_k) [v_q; omega_q]_k. `CObjectConnector::ComputeLocalJacobianODE2`
+  collects dv/dq of the markers first; a marker without it leaves the connector to CSystem, serially.
+- Declared for ConnectorRollingDiscPenalty, ContactConvexRoll, ContactCoordinate, ContactSphereSphere,
+  ContactSphereTorus, ContactSphereTriangle and ConnectorCoordinateSpringDamperExt (#3204: its analytic Jacobian
+  without factor0/factor1 is removed). They are no longer deferred in the parallel assembly.
+- Found on the way, for Euler parameters slightly off the unit sphere (|e|^2 - 1 of about 1e-5 after some steps):
+  - dv/dq of `G theta_t` differs from the derivative of the forms the markers give; the forms are used.
+  - The numerical differentiation perturbed the local angular velocity as `A^T omega` with the perturbed global one;
+    `A^T A` differs from the unit matrix by 1e-5, far more than a step, so the derivative by omega was wrong by up to
+    5 times the stiffness. Only the increment is added now.
+  - The derivative along e itself remains: the system differentiates the unnormalized rotation matrix, which changes
+    along e, while the chain of the rotation Jacobian has no such direction (`G e = 0`). In the rolling disc this is
+    0.5-1 % of the Jacobian. It costs the Euler parameter models with contacts some Newton iterations (below) and is
+    open as RG9.11.8.5; the automatic Jacobians of the spring-dampers have it as well.
+- Newton iterations against the numerical Jacobian by CSystem (all test models, the counts of every solve):
+  rotatingTableTest 26785 / 26740, ballBearingTest 3057 / 3057, carRollingDiscTest 584 / 584,
+  createSphereQuadContact 50384 / 50386, sphereTriangleTest2 9474 / 9475, ConvexContactTest 4330 / 4361,
+  rollingCoinPenaltyTest 9568 / 11351 and contactSphereTorusMomentumTest 12297 / 14487 (both Euler parameters),
+  coordinateSpringDamperExt.py 4780 / 1411 (#3204). Without dv/dq the first was 1083889 (RG9.11.8).

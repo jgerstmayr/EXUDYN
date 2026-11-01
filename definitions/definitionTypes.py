@@ -842,12 +842,16 @@ def ItemRequestedTypes(kind, types, conditional=(), description=None):
     return member
 
 
-def ItemConnectorInterface(markers, constraint=False, jacobian=True, markerDataPath=False):
+def ItemConnectorInterface(markers, constraint=False, jacobian=True, markerDataPath=False, velocityDerivative=False):
     """Use site: the connector computes on the connector interface (#2745) with the L2 chain of its kind of markers -
     markers is 'Position', 'Rigid' or 'Coordinate'. Declares the overrides of CObjectConnector that call the chain
     (ComputeODE2LHSConnector, ComputeJacobianODE2Connector), or for a constraint those of CObjectConstraint
     (equations, C_q, reaction forces), as a list to unpack into the members: *ItemConnectorInterface('Position').
-    jacobian=False: the connector keeps the Jacobian of the path of the marker data. A constraint computes on the
+    jacobian=False: the connector keeps the Jacobian of the path of the marker data; jacobian='numerical': its Jacobian is
+    the local numerical differentiation of its force by the kinematics of the markers, chained as the automatic one
+    (#3201), for a connector whose force is not written for automatic differentiation ('Rigid' and 'Coordinate');
+    velocityDerivative=True: the connector requests dv/dq and domega/dq of its markers in that Jacobian - friction,
+    rolling -, and is differentiated by the system where a marker does not provide them. A constraint computes on the
     interface while it is active and at position level; for the inactive one - lambda = 0 - its functions of the path of
     the marker data are declared here, unless markerDataPath=True: the constraint has its own, because it also works at
     velocity level (ObjectConnectorCoordinate)."""
@@ -888,12 +892,21 @@ def ItemConnectorInterface(markers, constraint=False, jacobian=True, markerDataP
             implementation='ConnectorODE2LHS' + markers + 'Markers(systemData, temp, *this, localODE2Lhs); return true;',
             description='the right-hand side on the connector interface of ' + markers.lower() + ' markers (#2745)'),
         ]
+    if jacobian == 'numerical' and markers == 'Position':
+        raise ValueError("ItemConnectorInterface: jacobian='numerical' is implemented for Rigid and Coordinate markers")
+    if velocityDerivative and jacobian != 'numerical':
+        raise ValueError("ItemConnectorInterface: velocityDerivative needs jacobian='numerical'")
     if jacobian:
         members.append(ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeJacobianODE2Connector',
             args=system + 'Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero',
-            implementation='ConnectorJacobianODE2' + markers
-                + 'Markers(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); return true;',
-            description='the Jacobian by automatic differentiation of the force (#2745)'))
+            implementation='ConnectorJacobianODE2' + markers + ('MarkersNumerical' if jacobian == 'numerical' else 'Markers')
+                + '(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); return true;',
+            description=('the Jacobian by local numerical differentiation of the force by the marker kinematics (#3201)'
+                         if jacobian == 'numerical' else 'the Jacobian by automatic differentiation of the force (#2745)')))
+    if velocityDerivative:
+        members.append(ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='RequestsVelocityDerivative',
+            implementation='return true;',
+            description='its Jacobian contains dv/dq and domega/dq of the markers (#3201)'))
     return members
 
 

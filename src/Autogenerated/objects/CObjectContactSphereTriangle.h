@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  13:37:10 (last modified)
+* @date         2026-11-01  23:46:14 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -159,13 +159,25 @@ public: // AUTO:
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
     {
-        return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
+        return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
     }
 
     //! AUTO:  the right-hand side on the connector interface of rigid markers (#2745)
     virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const override
     {
         ConnectorODE2LHSRigidMarkers(systemData, temp, *this, localODE2Lhs); return true;
+    }
+
+    //! AUTO:  the Jacobian by local numerical differentiation of the force by the marker kinematics (#3201)
+    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero) const override
+    {
+        ConnectorJacobianODE2RigidMarkersNumerical(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); return true;
+    }
+
+    //! AUTO:  its Jacobian contains dv/dq and domega/dq of the markers (#3201)
+    virtual bool RequestsVelocityDerivative() const override
+    {
+        return true;
     }
 
     //! AUTO:  the force and torque on each marker from the kinematics of the two markers (#2745)

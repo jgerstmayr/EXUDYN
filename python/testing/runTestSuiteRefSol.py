@@ -52,9 +52,9 @@ def TestExamplesReferenceSolution():
         'ANCFgeneralContactCircle.py':-0.5816542531639006, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before -0.581654253165756;new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
         'ANCFmovingRigidBodyTest.py':-0.1289309693499045,          #new 2022-12-25; old solution differs for 1e-10 since several updates -0.12893096921737698,
         'ANCFslidingAndALEjointTest.py':-4.426408394755268,         #before 2023-05-01 (loads jacobian): -4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
-        'ballBearingTest.py':0.03785241403274696,                 #2026-10-01: the cage's CartesianSpringDamper on the connector interface (#2745), round-off of the projection; before 0.03785241402944885
+        'ballBearingTest.py':0.037852414003386826, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 0.03785241403274696; 2026-10-01: the cage's CartesianSpringDamper on the connector interface (#2745), round-off of the projection; before 0.03785241402944885
         'bricardMechanism.py': 4.172189651042737, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 4.172189649306256; #2026-10-02: rigid joints on the connector interface, reaction forces summed in another order (#2745), before 4.172189649306508;
-        'carRollingDiscTest.py':-0.2394004871711386,
+        'carRollingDiscTest.py':-0.23940048692143728, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before -0.2394004871711386
         'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228394,
         'compareFullModifiedNewton.py':0.00020079676000188396,
         'complexEigenvaluesTest.py':0.4281639207875235, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.42816392078752485;new 2024-05-04 testing ComputeODE2Eigenvalues2 for complex case
@@ -67,8 +67,8 @@ def TestExamplesReferenceSolution():
         'contactCurveExample.py':0.30961432796813537,                #new 2025-05-11
         'contactSphereSphereTest.py':0.4416615668422053, #2026-09-30: step size recommended also where a contact ends (#2109); before 0.5348463502652304;           #new 2025-02-03
         'contactSphereSphereTestEAPM.py': 0.20000219249662216,      #new 2025-02-03
-        'ConvexContactTest.py':0.011770267410491468,                #new 2022-07-11 (CState Parallel); #before 2022-01-25?: 0.05737886603111926, 
-        'coordinateSpringDamperExt.py':17.084935539349033,          #new 2023-01-23
+        'ConvexContactTest.py':0.011770267735619335, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 0.011770267410491468; new 2022-07-11 (CState Parallel); #before 2022-01-25?: 0.05737886603111926, 
+        'coordinateSpringDamperExt.py':17.432698710805155, #2026-11-02: #3204: the Jacobian with factor0/factor1, the contacts on the connector interface with dv/dq (#3201); before 17.084935539349033; new 2023-01-23
         'coordinateVectorConstraint.py':-1.0825265797698307,
         'coordinateVectorConstraintGenericODE2.py':-1.0825265797698307,
         'createKinematicTreeTest.py':3.340830142730577,            #2026-10-04: the tree on the placements of its links (#2829), -1.2e-13; before 3.3408301427307276; new 2025-06-14
@@ -76,9 +76,9 @@ def TestExamplesReferenceSolution():
         'createFunctionsTest.py':0.04228833966560139,              #new 2025-05-11
         'createRollingDiscPenaltyTest.py':2.1129927199922123,       #new 2025-02-27
         'createRollingDiscTest.py':4.009716209090303,               #new 2025-03-05
-        'createSphereQuadContact.py':1.124394416977545, #2026-09-30: step size recommended also where a contact ends (#2109); before 1.1243776621604573;             #new 2025-06-29
-        'createSphereQuadContact2.py':0.1561658243294339, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.15616582432943388;new 2025-07-05
-        'createSphereTriangleContact.py':4.840244058316264, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.840960219289836;        #new 2026-09-11; tEnd shortened 0.65->0.25 on adding
+        'createSphereQuadContact.py':1.124394415274499, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 1.124394416977545; 2026-09-30: step size recommended also where a contact ends (#2109); before 1.1243776621604573;             #new 2025-06-29
+        'createSphereQuadContact2.py':0.15616582432918033, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 0.1561658243294339; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.15616582432943388;new 2025-07-05
+        'createSphereTriangleContact.py':4.840244058569561, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 4.840244058316264; 2026-09-30: step size recommended also where a contact ends (#2109); before 4.840960219289836;        #new 2026-09-11; tEnd shortened 0.65->0.25 on adding
         'deleteItemsTest.py':-0.9860528006518324,                   #new 2025-05-10
         'distanceSensor.py':1.86776431077868,
         'driveTrainTest.py':-9.269855494320467e-08,                 #new 2023-05-20 (mainSystemExtensions); before:-9.269311940229841e-08,
@@ -185,7 +185,7 @@ def TestExamplesReferenceSolution():
         'symbolicJacobianExpressionsTest.py':1, #new 2026-10-29: esym.Jacobian, the derivative as new expressions, against EvaluateJacobian, the Hessian (#3163)
         'symbolicSystemItemJacobiansTest.py':1, #2026-10-29: against central differences and SolveDynamic, the chain rule removed (#3169); new 2026-10-29: the one-pass Jacobians of the connectors and joints of SymbolicSystem (#3166)
         'symbolicUserItemsDrawingTest.py':0, #new 2026-10-29: the connectors and joints of UserItemCreator drawn by the graphicsDataUserFunction of ObjectConnectorUser and ObjectJointUser, in GetGraphicsData, hidden with connectors.show = False, following the bodies (#3147, #3161)
-        'symbolicUserContactTest.py':8.784501778454816, #2026-11-01: switched by a data node, both impact models, against built-in and SymbolicSystem (#3197), before 0.8675607974381709; new 2026-11-01: CreateSphereSphereContact of UserItemCreator against mbs.CreateSphereSphereContact, recorded, SymbolicSystem (#3187)
+        'symbolicUserContactTest.py':8.784501778567048, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 8.784501778454816; 2026-11-01: switched by a data node, both impact models, against built-in and SymbolicSystem (#3197), before 0.8675607974381709; new 2026-11-01: CreateSphereSphereContact of UserItemCreator against mbs.CreateSphereSphereContact, recorded, SymbolicSystem (#3187)
         'symbolicUserItemsTest.py':1, #new 2026-10-27: UserItemCreator, a chain of user mass points and spring-dampers by the Create functions of mbs, equal to the built-in items, recorded, SolveExplicit (#3125)
         'symbolicVectorDiffTest.py':1, #new 2026-10-26: Diff of symbolic vectors and matrices, EvaluateJacobian, cMath with symbolic arguments (#3115, #3114)
         'symbolicHTTest.py':0, #new 2026-11-01: kinematics.HT and Twist against exudyn.HT and exudyn.cUtilities, RelativeTwist and esym.Jacobian against central differences (#3174)
@@ -209,7 +209,7 @@ def TestExamplesReferenceSolution():
         'createLinearSpringDamperTest.py':2.9930635558130834, #new 2026-10-05: mbs.CreateLinearSpringDamper, static deflection in three ways and a dynamic run (#1953, #1954)
         'initialAccelerationsTest.py':-2.587, #new 2026-10-05: the initial accelerations of the generalized-alpha method with a constraint and initial velocity (#2235)
         'genericODE2matrixFormatsTest.py':2.0892372406725492, #new 2026-10-05: ObjectGenericODE2 with dense and sparse matrices and solvers (#777)
-        'restartFileTest.py':-2.93176, #2026-10-06: the final state rounded to 6 digits, it differs on Linux in the 10th (#2874), before -2.9317602918648324; new 2026-10-05: a simulation continued from its restart file computes what the uninterrupted one computes, generalized-alpha and RK44 (#2850)
+        'restartFileTest.py':-2.931759, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before -2.93176; 2026-10-06: the final state rounded to 6 digits, it differs on Linux in the 10th (#2874), before -2.9317602918648324; new 2026-10-05: a simulation continued from its restart file computes what the uninterrupted one computes, generalized-alpha and RK44 (#2850)
         'createItemNumbersTest.py':10.51570788484358, #new 2026-10-05: the Create functions take bodies, nodes or markers in itemNumbers, bodyNumbers deprecated (#2863)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)
         'homogeneousTransformationInterfaceTest.py':9.245684006275722, #new 2026-10-03: exu.HT with the node coordinates, Relative, the interpolations, angle and axis (#2810)
@@ -224,7 +224,7 @@ def TestExamplesReferenceSolution():
         'genericDAESymbolicTest.py':3.372634031542532, #new 2026-11-01: ObjectGenericDAE with recorded force and rhs user functions, their Jacobians in one pass against the numerical ones (#3189)
         'genericDAETest.py':4.961903224846149, #new 2026-10-30: ObjectGenericDAE against ObjectGenericODE2, ObjectGenericODE1, a CoordinateConstraint and SolveGeneralizedAlpha (#3170)
         'genericODE1JacobianTest.py':5.4903220576244625, #new 2026-10-29: the analytic ODE1 Jacobian of ObjectGenericODE1, the system matrix, against the numerical one of a rhsUserFunction (#3143)
-        'contactSphereTorusMomentumTest.py':4.227231105376637, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.227231105610667; #momentum conservation of the sphere-torus contact (#2127)
+        'contactSphereTorusMomentumTest.py':4.2272311053853535, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 4.227231105376637; 2026-09-30: step size recommended also where a contact ends (#2109); before 4.227231105610667; #momentum conservation of the sphere-torus contact (#2127)
         'explicitSolversPostNewtonTest.py':4.563482002223684, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 4.563482002223224;2026-10-01: Jacobian of the torsional spring-damper by AD (#2745); before 4.563482002223096;  #2026-09-30: DOPRI5 with large steps added, and the step size recommended where a contact ends (#2109); before 4.097033066855782; #PostNewton states with every explicit integrator (#2754)
         'contactComparisonTest.py':4.773734739232028, #2026-10-05: GeneralContact with keepContactWhilePenetrating as a fifth case (#2848); before 4.561317500364976; #2026-10-04: GeneralContact as a fourth case and the sliding ball (#1848, #1947); before 1.200116276111891; #2026-09-30: step size recommended also where a contact ends (#2109); before 1.200040705928356; #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'generalContactTriangleMomentumTest.py':4.035299999516676, #new 2026-10-05: momentum conservation of the GeneralContact sphere-triangle contact (#2849)
@@ -268,8 +268,8 @@ def TestExamplesReferenceSolution():
         'rigidBodySpringDamperIntrinsic.py':0.5472368463287056,     #2026-10-01: on the connector interface (#2745), round-off of the projection; before 0.5472368462985283; new 2023-11-30 (intrinsic formulation for rigid body spring damper)
         'rollingCoinTest.py':1.0634381189361193,                     #until 2024-04-29 (without force): 0.0020040999273379673
         'rollingDiscTangentialForces.py':1.034201740283854, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 1.034201740253807; #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 1.0342017404650015;        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
-        'rollingCoinPenaltyTest.py':0.03489603106786701,
-        'rotatingTableTest.py':7.838280044952864, #2026-10-15: step size 0.0025 instead of 0.005, the drift of TrapezoidalIndex2 below constraintDriftTolerance (#565); before 7.838680414273868; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 7.838680414273867;2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 7.838680375029852; until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
+        'rollingCoinPenaltyTest.py':0.03489603106322919, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 0.03489603106786701
+        'rotatingTableTest.py':7.838280045161607, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 7.838280044952864; 2026-10-15: step size 0.0025 instead of 0.005, the drift of TrapezoidalIndex2 below constraintDriftTolerance (#565); before 7.838680414273868; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 7.838680414273867;2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 7.838680375029852; until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
         'scissorPrismaticRevolute2D.py':26.722556541316987,          #2026-11-01: the analytic connector Jacobians, 48 Newton iterations fewer, as forODE2Connectors has no effect (#3205); 2022-07-11 (CState Parallel): 27.202556489044277
         'sensorUserFunctionTest.py':45.0,            
         'serialRobotTest.py':0.7681856909831933,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation
@@ -283,7 +283,7 @@ def TestExamplesReferenceSolution():
         'sliderCrankFloatingTest.py':0.5916491633788337,
         'solverExplicitODE1ODE2test.py':3.3767933275918964,         #new 2022-07-11 (CState Parallel); 
         'sparseMatrixSpringDamperTest.py':-0.06779862812271391,     #changed to analytic Spring-Damper jacobian (missing d(vel)/dpos term): -0.06779862983767654,
-        'sphereTriangleTest2.py':4.356293935400209, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.35608275479331;                 #changed: 2026-01-23 (sparse acc(vel) initialization); new 2025-06-22
+        'sphereTriangleTest2.py':4.356293936760721, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 4.356293935400209; 2026-09-30: step size recommended also where a contact ends (#2109); before 4.35608275479331;                 #changed: 2026-01-23 (sparse acc(vel) initialization); new 2025-06-22
         'sphericalJointTest.py':4.409080446574851, #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 4.409080446575154;                  #new 2022-07-11 (CState Parallel); 
         'springDamperUserFunctionTest.py':0.5062872273010876, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.5062872273010924;
         'stiffFlyballGovernor.py':0.8962488779114737,
@@ -545,7 +545,7 @@ def MiniExamplesReferenceSolution():
         'ObjectContactSphereTriangle.py':0.09990189999999996,
         'ObjectContactSphereTorus.py':0.10101,
         'ObjectContactCurveCircles.py':0.09949999999999998,
-        'ObjectConnectorRollingDiscPenalty.py':-1.999997689449951,
+        'ObjectConnectorRollingDiscPenalty.py':-1.9999976933948558, #2026-11-02: the contacts on the connector interface with dv/dq (#3201); before -1.999997689449951
         'ObjectJointRollingDisc.py':-1.9999976540123938,
         'ObjectJointGeneric.py':-3.134020196852591,
         'ObjectJointPrismaticX.py':0.999999999999996,

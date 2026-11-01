@@ -69,6 +69,13 @@ void CMarkerBodyPosition::ComputeMarkerDataJacobianDerivative(const CSystemData&
 	}
 }
 
+//! dv/dq and domega/dq at the local position, through the body (#3201)
+bool CMarkerBodyPosition::GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const
+{
+	return ((const CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetVelocity_q(parameters.localPosition,
+		velocity_q, angularVelocity_q);
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //VISUALIZATION
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -116,6 +116,14 @@ void CMarkerNodeRigid::ComputeMarkerDataJacobianDerivative(const CSystemData& cS
 	((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetRotationJacobianTTimesVector_q(v3D, markerData.jacobianDerivative);
 }
 
+//! dv/dq and domega/dq of the node (#3201): its velocity is a velocity coordinate, its angular velocity depends on
+//! the rotation parameters
+bool CMarkerNodeRigid::GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const
+{
+	return RigidBodyNodeVelocity_q(*(const CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]), Vector3D(0.),
+		velocity_q, angularVelocity_q);
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //VISUALIZATION
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

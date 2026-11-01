@@ -21,6 +21,74 @@
 #include "Linalg/RigidBodyMath.h"
 #include "Main/TemporaryComputationData.h"
 
+//! dv/dq of a point of a rigid body node and domega/dq (#3201)
+bool RigidBodyNodeVelocity_q(const CNodeODE2& node, const Vector3D& localPosition, Matrix& velocity_q, Matrix& angularVelocity_q)
+{
+	const Node::Type type = node.GetType();
+	if (!(type & Node::RigidBody)) { return false; }
+	const bool eulerParameters = (type & Node::RotationEulerParameters) != 0;
+	const bool taitBryan = (type & Node::RotationRxyz) != 0;
+	const bool planar = (type & Node::Orientation2D) != 0;
+	if (!eulerParameters && !taitBryan && !planar) { return false; }
+
+	const Index n = node.GetNumberOfODE2Coordinates();
+	velocity_q.SetNumberOfRowsAndColumns(3, n);
+	velocity_q.SetAll(0.);
+	angularVelocity_q.SetNumberOfRowsAndColumns(3, n);
+	angularVelocity_q.SetAll(0.);
+	if (planar) //omega = theta_t e_z does not depend on theta; d(A p)/dtheta = e_z x (A p)
+	{
+		const Real theta_t = node.GetCurrentCoordinateVector_t()[2];
+		const Vector3D point = node.GetRotationMatrix() * localPosition;
+		velocity_q(0, 2) = -theta_t * point[0]; //theta_t e_z x (e_z x A p)
+		velocity_q(1, 2) = -theta_t * point[1];
+		return true;
+	}
+
+	const CNodeRigidBody& rigidNode = (const CNodeRigidBody&)node;
+	const Index nDisplacement = rigidNode.GetNumberOfDisplacementCoordinates();
+	const Index nRotation = rigidNode.GetNumberOfRotationCoordinates();
+	CSVector4D theta = rigidNode.GetRotationParameters();
+	LinkedDataVector theta_t = rigidNode.GetRotationParameters_t();
+	//as the markers give them: the local angular velocity Glocal theta_t, the global one A Glocal theta_t, the velocity of
+	//the point A (omega_local x localPosition) - for Euler parameters off the unit sphere these differ from G theta_t,
+	//and the numerical differentiation of the system sees the forms of the markers
+	auto Velocities = [&](const CSVector4D& rotation, Vector3D& velocity, Vector3D& angularVelocity)
+	{
+		Matrix3D A;
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3> Glocal;
+		if (eulerParameters)
+		{
+			A = RigidBodyMath::EP2RotationMatrix(rotation);
+			Glocal = RigidBodyMath::EP2GlocalTemplate<CSVector4D>(rotation);
+		}
+		else
+		{
+			A = RigidBodyMath::RotXYZ2RotationMatrix(rotation);
+			Glocal = RigidBodyMath::RotXYZ2GlocalTemplate<CSVector4D>(rotation);
+		}
+		Vector3D angularVelocityLocal;
+		EXUmath::MultMatrixVector(Glocal, theta_t, angularVelocityLocal);
+		angularVelocity = A * angularVelocityLocal;
+		velocity = A * angularVelocityLocal.CrossProduct(localPosition); //without the velocity of the node, which is constant
+	};
+	Vector3D velocity0, angularVelocity0, velocity1, angularVelocity1;
+	Velocities(theta, velocity0, angularVelocity0);
+	for (Index k = 0; k < nRotation; k++)
+	{
+		const Real eps = 1e-7 * EXUstd::Maximum(0.01, std::fabs(theta[k])); //the defaults of NumericalDifferentiationSettings
+		CSVector4D theta1 = theta;
+		theta1[k] += eps;
+		Velocities(theta1, velocity1, angularVelocity1);
+		for (Index r = 0; r < 3; r++)
+		{
+			velocity_q(r, nDisplacement + k) = (velocity1[r] - velocity0[r]) / eps;
+			angularVelocity_q(r, nDisplacement + k) = (angularVelocity1[r] - angularVelocity0[r]) / eps;
+		}
+	}
+	return true;
+}
+
 //! the object's own local Jacobian of its ODE2 rows (#3201): ComputeJacobianODE2_ODE2, for every object that is not a
 //! connector
 bool CObject::ComputeLocalJacobianODE2(const CSystemData& systemData, TemporaryComputationData& temp,

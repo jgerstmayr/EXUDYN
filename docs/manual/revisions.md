@@ -86,6 +86,10 @@ Jacobian with 8 threads (#1203).
 equations included, for dense and sparse matrices; `forAE`, `forODE2` and `forODE2Connectors` are deprecated and have no
 effect - each object provides its Jacobian, analytic, automatic or numerical by its own coordinates. A model that set
 one of them gets the object's own Jacobian and may need a few Newton iterations more or fewer (#3205).
+The contacts SphereSphere, SphereTorus, SphereTriangle, ConvexRoll and Coordinate, ConnectorRollingDiscPenalty and
+ConnectorCoordinateSpringDamperExt compute their Jacobians from the kinematics of their markers, including how the
+velocities of the markers change with the coordinates, also in parallel; the analytic Jacobian of
+ConnectorCoordinateSpringDamperExt ignored factor0 and factor1 (#3204).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

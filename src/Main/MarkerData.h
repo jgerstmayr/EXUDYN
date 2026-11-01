@@ -385,6 +385,9 @@ public:
 	ResizableMatrix positionJacobian;
 	ResizableMatrix rotationJacobian;
 	ResizableMatrix coordinateJacobian;
+	//! dv/dq and domega/dq of the marker (CMarker::GetVelocity_q), for the connectors that request them (#3201)
+	ResizableMatrix velocity_q;
+	ResizableMatrix angularVelocity_q;
 };
 
 //! the marker data structure from the kinematics of the connector interface (#2745): position, orientation and

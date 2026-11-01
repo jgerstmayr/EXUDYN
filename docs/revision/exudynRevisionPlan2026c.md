@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (9 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (8 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -131,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 15 | Structural core improvements |
+| RG9 | OPEN | 14 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 17 | Symbolic |
@@ -1207,17 +1207,25 @@ Decided 2026-11-01 (maintainer): (a) in the long term - the markers provide dv/d
 
 CLOSED 2026-11-01 (#3201 stays open; #3204 raised): design section 8 - the term J^T df/dv dv/dq, built from the second derivatives the Jacobian derivative already has; all connectors numerical by CSystem (forODE2Connectors) change the Newton counts of 13 of 136 implicit models with connectors, none by dv/dq (the large one, coordinateSpringDamperExt.py 4780 / 1409, is #3204); jacobianConnectorDerivative=False costs the FFRF models up to 28 % more iterations, so it stays; the Jacobian is 16-69 % of the time of the contact models with full Newton; of the 19 markers 9 have dv/dq zero, MarkerBodyPosition, MarkerBodyRigid and MarkerNodeRigid get it by the nested AD of AccessFunctionsAD or in closed form, the others (super elements, kinematic tree, relative coordinates, user body, rotation coordinate) none for now and fall back to CSystem. [log](exudynRevisionLog2026c.md#rg9-11-8-1)
 
-##### **OPEN_RG9.11.8.2** dv/dq and domega/dq of the markers: one function of AccessFunctionsAD, the closed forms of the rigid nodes, zero where the Jacobian is constant, false elsewhere
+##### **CLOSED_RG9.11.8.2** dv/dq and domega/dq of the markers: one function of AccessFunctionsAD, the closed forms of the rigid nodes, zero where the Jacobian is constant, false elsewhere
 
 Design section 8.4; checked against the numerical derivative of the marker velocity.
 
-##### **OPEN_RG9.11.8.3** The contacts, the rolling disc and ConnectorCoordinateSpringDamperExt on the connector interface, with dv/dq where the connector requests it
+CLOSED 2026-11-02 (#3201 stays open): CMarker::GetVelocity_q and CObjectBody::GetVelocity_q - zero for MarkerNodeCoordinate, MarkerNodePosition, ground and mass points, RigidBodyNodeVelocity_q for ObjectRigidBody, ObjectRigidBody2D and MarkerNodeRigid (2D closed form, Euler parameters and Tait-Bryan angles by forward differences of the pure functions of RigidBodyMath, in the forms of the markers), false for the Lie group nodes and the other markers; not by AccessFunctionsAD, whose functors are off by default and normalize the Euler parameters; checked through the connector Jacobians against the system-wide numerical one at velocities (test_systemJacobians.py). [log](exudynRevisionLog2026c.md#rg9-11-8-2)
+
+##### **CLOSED_RG9.11.8.3** The contacts, the rolling disc and ConnectorCoordinateSpringDamperExt on the connector interface, with dv/dq where the connector requests it
 
 #3204; the code of the local branch rg9-11-8-kinematicsJacobian plus the dv/dq term; the Newton counts as with the numerical Jacobian by CSystem (rotatingTableTest the sensitive case).
 
+CLOSED 2026-11-02 (#3204 resolved, #3201 stays open): ItemConnectorInterface(jacobian='numerical', velocityDerivative=True) for RollingDiscPenalty, ConvexRoll, ContactCoordinate, SphereSphere, SphereTorus, SphereTriangle and CoordinateSpringDamperExt (its analytic Jacobian without the factors removed); rotatingTableTest 26740 instead of 26785 Newton iterations (1083889 without dv/dq), the contact models within a few iterations, the two Euler parameter models with contacts 18-19 % more (the direction along e, RG9.11.8.5); 13 test models and one mini example with new references (1e-12 to 1e-7, coordinateSpringDamperExt 2 %, #3204). [log](exudynRevisionLog2026c.md#rg9-11-8-3)
+
 ##### **OPEN_RG9.11.8.4** The other connectors numerical by CSystem: ReevingSystemSprings, HydraulicActuatorSimple, the intrinsic RigidBodySpringDamper, the Python user functions, ConvexRoll and the cable contacts, and markers for dv/dq as they need them
 
-Low priority; ConvexRoll may stay numerical by CSystem.
+Low priority; ConvexRoll may stay numerical by CSystem. ConvexRoll is on the interface since RG9.11.8.3.
+
+##### **OPEN_RG9.11.8.5** The direction along the Euler parameters in the local Jacobians of the connectors
+
+Design section 8.5: the system differentiates the unnormalized rotation matrix along e, the chain of the rotation Jacobian has no such direction; 0.5-1 % of the rolling disc's Jacobian, 18-19 % more Newton iterations in rollingCoinPenaltyTest and contactSphereTorusMomentumTest; the automatic Jacobians of the spring-dampers likewise. Evaluate a derivative of the marker kinematics along e, or normalized Euler parameters in the markers.
 
 #### **CLOSED_RG9.11.9** Deprecate forAE, forODE2 and forODE2Connectors, and measure whether jacobianConnectorDerivative is worth its code
 
