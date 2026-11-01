@@ -472,6 +472,9 @@ items = {
       'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the object, passed to every user function; see exudyn.advancedUtilities.ParameterLayout; empty by default'},
       'forceUserFunction': {'type': 'ObjectGenericDAEForceUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the nonlinear generalized forces of the ODE2 equations'},
       'rhsUserFunction': {'type': 'ObjectGenericDAERhsUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the nonlinear term of the right-hand side of the ODE1 equations'},
+      'massMatrixUserFunction': {'type': 'ObjectGenericDAEMassMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the mass matrix instead of the constant massMatrix (#3191)'},
+      'constraintUserFunction': {'type': 'ObjectGenericDAEConstraintUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the nonlinear term of the algebraic equations (#3191)'},
+      'jacobianUserFunction': {'type': 'ObjectGenericDAEJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the local Jacobian of the terms of all user functions, see the Jacobians below (#3191)'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},

@@ -37,9 +37,13 @@ The parameters of the item; in a dictionary, its type is 'GenericDAE':
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the object, passed to every user function; see exudyn.advancedUtilities.ParameterLayout; empty by default |
 | **forceUserFunction** | ObjectGenericDAEForceUserFunction |  | 0 | (symbol: $\fv_u \in \Rcal^{n_2}$) A Python user function which computes the nonlinear generalized forces of the {ref}`ODE2 <ODE2>` equations |
 | **rhsUserFunction** | ObjectGenericDAERhsUserFunction |  | 0 | (symbol: $\gv_u \in \Rcal^{n_1}$) A Python user function which computes the nonlinear term of the right-hand side of the {ref}`ODE1 <ODE1>` equations |
+| **massMatrixUserFunction** | ObjectGenericDAEMassMatrixUserFunction |  | 0 | (symbol: $\Mm \in \Rcal^{n_2 \times n_2}$) A Python user function which computes the mass matrix instead of the constant massMatrix (#3191) |
+| **constraintUserFunction** | ObjectGenericDAEConstraintUserFunction |  | 0 | (symbol: $\cv_u \in \Rcal^{n_a}$) A Python user function which computes the nonlinear term of the algebraic equations (#3191) |
+| **jacobianUserFunction** | ObjectGenericDAEJacobianUserFunction |  | 0 | (symbol: $\Jm_u \in \Rcal^{n \times n}$) A Python user function which computes the local Jacobian of the terms of all user functions, see the Jacobians below (#3191) |
 | **tempCoordinates** | NumpyVector |  | [] | (symbol: $\qv_{temp}$) the {ref}`ODE2 <ODE2>` coordinates, kept between the calls |
 | **tempCoordinates_t** | NumpyVector |  | [] | (symbol: $\dot\qv_{temp}$) the {ref}`ODE2 <ODE2>` velocities, kept between the calls |
 | **tempCoordinatesODE1** | NumpyVector |  | [] | (symbol: $\yv_{temp}$) the {ref}`ODE1 <ODE1>` coordinates, kept between the calls |
+| **tempCoordinatesAE** | NumpyVector |  | [] | (symbol: $\tlambda_{temp}$) the algebraic coordinates, kept between the calls |
 | **visualization** | VObjectGenericDAE |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -84,20 +88,33 @@ $$
 $$ (eq-objectgenericdae-ode1)
 
 $$
-\Cm_{\qv}\qv + \Cm_{\yv}\yv - \cv_0 = \Null
+\Cm_{\qv}\qv + \Cm_{\yv}\yv - \cv_0 + \cv_u(mbs, t, i_N, \qv, \dot\qv, \yv, \tlambda, \pv_{par}) = \Null
 $$ (eq-objectgenericdae-ae)
 
-With index 2 constraints of the solver, the algebraic equations are $\Cm_{\qv}\dot\qv + \Cm_{\yv}\dot\yv = \Null$.
+With a massMatrixUserFunction, $\Mm$ is the matrix it returns. With index 2 constraints of the solver, the algebraic
+equations are $\Cm_{\qv}\dot\qv + \Cm_{\yv}\dot\yv + \cv_u = \Null$, $\cv_u$ of the constraintUserFunction with
+`velocityLevel=True`.
 The terms $\Cm_{\qv}\tp\tlambda$ and $\Cm_{\yv}\tp\tlambda$ are added by the solver from the Jacobian of the algebraic
 equations, as for every constraint. CoordinateLoads are added on the right-hand side of the respective coordinate.
 
 ### Jacobians
 
-Without user functions, every Jacobian is given by the object from its matrices. A symbolic forceUserFunction or
-rhsUserFunction adds the derivatives of its recording by $\qv$, $\dot\qv$ and $\yv$, computed in one pass over the
-recording (#3189); with a Python one, the Jacobian of the {ref}`ODE2 <ODE2>` equations is computed by numerical
-differentiation, with a rhsUserFunction the one of the {ref}`ODE1 <ODE1>` equations. The Jacobian of the algebraic equations
-is always the constant matrices $\Cm_{\qv}$ and $\Cm_{\yv}$ (#3143).
+Without user functions, every Jacobian is given by the object from its matrices. The jacobianUserFunction gives the
+derivatives of the terms of all user functions, ordered as the coordinates $\qv$, $\yv$, $\tlambda$,
+
+$$
+\Jm_u = \mr{-\frac{\partial\fv_u}{\partial\qv'}}{-f_{ODE1}\frac{\partial\fv_u}{\partial\yv}}{\Null}
+{\frac{\partial\gv_u}{\partial\qv'}}{f_{ODE1}\frac{\partial\gv_u}{\partial\yv}}{\Null}
+{\frac{\partial\cv_u}{\partial\qv'}}{f_{ODE1}\frac{\partial\cv_u}{\partial\yv}}{\frac{\partial\cv_u}{\partial\tlambda}} , \quad
+\frac{\partial}{\partial\qv'} = f_{ODE2}\frac{\partial}{\partial\qv} + f_{ODE2_t}\frac{\partial}{\partial\dot\qv} ,
+$$ (eq-objectgenericdae-jac)
+
+with $-\fv_u$ as the term of the left-hand side of the {ref}`ODE2 <ODE2>` equations,
+$\gv_u$ of the right-hand side of the {ref}`ODE1 <ODE1>` equations; the object calls it with the factors of each block it
+needs. Without it, a symbolic user function gives its derivatives in one pass over the recording (#3189); a Python
+forceUserFunction or rhsUserFunction is differentiated numerically, a Python constraintUserFunction needs the
+jacobianUserFunction, as the Jacobian of the algebraic equations is not computed numerically (#3191). The
+derivative of $\Mm$ is not part of the Jacobian, as for the other bodies.
 
 ### Marker interfaces
 
@@ -136,6 +153,60 @@ A user function, which computes the term $\gv_u$ of the right-hand side of the {
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
+**Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t, y, parameters)`
+A user function, which computes the mass matrix $\Mm$ of the {ref}`ODE2 <ODE2>` equations instead of the constant massMatrix.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which the object belongs |
+| `t` | Real | current time in mbs |
+| `itemNumber` | Index | integer number $i_N$ of the object in mbs |
+| `q` | Vector | $\qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` coordinates of the object, without reference values |
+| `q_t` | Vector | $\dot \qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` velocities of the object |
+| `y` | Vector | $\yv \in \Rcal^{n_1}$ the {ref}`ODE1 <ODE1>` coordinates of the object, without reference values |
+| `parameters` | Vector | $\pv_{par}$ the parameters of the object; empty if not given |
+| **return value** | MatrixContainer | $\Mm \in \Rcal^{n_2 \times n_2}$, as numpy array, list of lists or exu.MatrixContainer |
+
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
+**Userfunction**: `constraintUserFunction(mbs, t, itemNumber, q, q_t, y, z, velocityLevel, parameters)`
+A user function, which computes the term $\cv_u$ added to the algebraic equations.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which the object belongs |
+| `t` | Real | current time in mbs |
+| `itemNumber` | Index | integer number $i_N$ of the object in mbs |
+| `q` | Vector | $\qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` coordinates of the object, without reference values |
+| `q_t` | Vector | $\dot \qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` velocities of the object |
+| `y` | Vector | $\yv \in \Rcal^{n_1}$ the {ref}`ODE1 <ODE1>` coordinates of the object, without reference values |
+| `z` | Vector | $\tlambda \in \Rcal^{n_a}$ the algebraic coordinates of the object, the Lagrange multipliers |
+| `velocityLevel` | Bool | True if the solver asks for the algebraic equations at velocity level, the time derivative of $\cv_u$ |
+| `parameters` | Vector | $\pv_{par}$ the parameters of the object; empty if not given |
+| **return value** | Vector | $\cv_u \in \Rcal^{n_a}$, as list or numpy array |
+
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
+**Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, y, z, factorODE2, factorODE2_t, factorODE1, parameters)`
+A user function, which computes the local Jacobian $\Jm_u$ of the terms of the user functions, see {eq}`eq-objectgenericdae-jac`.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which the object belongs |
+| `t` | Real | current time in mbs |
+| `itemNumber` | Index | integer number $i_N$ of the object in mbs |
+| `q` | Vector | $\qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` coordinates of the object, without reference values |
+| `q_t` | Vector | $\dot \qv \in \Rcal^{n_2}$ the {ref}`ODE2 <ODE2>` velocities of the object |
+| `y` | Vector | $\yv \in \Rcal^{n_1}$ the {ref}`ODE1 <ODE1>` coordinates of the object, without reference values |
+| `z` | Vector | $\tlambda \in \Rcal^{n_a}$ the algebraic coordinates of the object, the Lagrange multipliers |
+| `factorODE2` | Real | $f_{ODE2}$, the factor of the derivatives by $\qv$ |
+| `factorODE2_t` | Real | $f_{ODE2_t}$, the factor of the derivatives by $\dot \qv$ |
+| `factorODE1` | Real | $f_{ODE1}$, the factor of the derivatives by $\yv$ |
+| `parameters` | Vector | $\pv_{par}$ the parameters of the object; empty if not given |
+| **return value** | MatrixContainer | $\Jm_u \in \Rcal^{n \times n}$, $n = n_2 + n_1 + n_a$, as numpy array or list of lists |
+
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
 (miniexample-objectgenericdae)=
 ## Mini example
 
@@ -159,4 +230,4 @@ exu.sys['testResult'] = mbs.systemData.GetODE2Coordinates()[0]
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAESymbolicTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAESymbolicTest.py) (TM), [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM), [`symbolicSystemGenericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemGenericDAETest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAESymbolicTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAESymbolicTest.py) (TM), [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM), [`genericDAEUserFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEUserFunctionsTest.py) (TM), [`symbolicSystemGenericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemGenericDAETest.py) (TM)

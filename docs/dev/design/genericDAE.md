@@ -103,4 +103,11 @@ in C++, in the threads too (#2978), and SymbolicSystem takes the object.
 3. The item with its linear terms and the Python user functions; test models against ObjectGenericODE2,
    ObjectGenericODE1 and a CoordinateConstraint of the same equations.
 4. The symbolic versions of the user functions; the Jacobian by the one-pass derivative.
-5. SymbolicSystem takes ObjectGenericDAE - its kind, Equations(), the export.
+5. SymbolicSystem takes ObjectGenericDAE - its kind, Equations(), the export (#3190).
+6. The massMatrixUserFunction, constraintUserFunction and jacobianUserFunction (#3191): the jacobianUserFunction gives
+   the derivatives of the terms of all user functions - the ODE2 rows as $-\fv_u$ of the left-hand side, the ODE1 rows
+   as $\gv_u$ of the right-hand side -, and the object calls it with the factors of each block it needs; the derivative
+   of the mass matrix is not in the Jacobian, as for the other bodies. A constraint that depends on $\dot\qv$ at position
+   level does not converge with generalized-alpha, a compliance $-\epsilon\tlambda$ does (the sign matters).
+   SymbolicSystem refuses a massMatrixUserFunction on an object with ODE1 coordinates, as its mass matrix does not
+   depend on $\yv$.

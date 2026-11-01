@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-30  00:14:36 (last modified)
+* @date         2026-11-01  09:40:33 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -133,6 +133,9 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "parameters")) { EPyUtils::FromPython(d["parameters"], cObjectGenericDAE->GetParameters().parameters); }
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectGenericDAE->GetParameters().forceUserFunction = d["forceUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "rhsUserFunction")) { cObjectGenericDAE->GetParameters().rhsUserFunction = d["rhsUserFunction"]; }
+        if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectGenericDAE->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; }
+        if (EPyUtils::DictItemExists(d, "constraintUserFunction")) { cObjectGenericDAE->GetParameters().constraintUserFunction = d["constraintUserFunction"]; }
+        if (EPyUtils::DictItemExists(d, "jacobianUserFunction")) { cObjectGenericDAE->GetParameters().jacobianUserFunction = d["jacobianUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectGenericDAE->GetShow(), "ObjectGenericDAE.Vshow"); }
         GetCObject()->ParametersHaveChanged();
@@ -161,9 +164,13 @@ public: // AUTO:
         d["parameters"] = EPyUtils::ToPython(cObjectGenericDAE->GetParameters().parameters);
         d["forceUserFunction"] = (py::object)cObjectGenericDAE->GetParameters().forceUserFunction;
         d["rhsUserFunction"] = (py::object)cObjectGenericDAE->GetParameters().rhsUserFunction;
+        d["massMatrixUserFunction"] = (py::object)cObjectGenericDAE->GetParameters().massMatrixUserFunction;
+        d["constraintUserFunction"] = (py::object)cObjectGenericDAE->GetParameters().constraintUserFunction;
+        d["jacobianUserFunction"] = (py::object)cObjectGenericDAE->GetParameters().jacobianUserFunction;
         d["tempCoordinates"] = EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinates());
         d["tempCoordinates_t"] = EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinates_t());
         d["tempCoordinatesODE1"] = EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinatesODE1());
+        d["tempCoordinatesAE"] = EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinatesAE());
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationObjectGenericDAE->GetShow();
         return d;
@@ -191,9 +198,13 @@ public: // AUTO:
         else if (parameterName.compare("parameters") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetParameters().parameters); } //! AUTO: get parameter
         else if (parameterName.compare("forceUserFunction") == 0) { return cObjectGenericDAE->GetParameters().forceUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("rhsUserFunction") == 0) { return cObjectGenericDAE->GetParameters().rhsUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
+        else if (parameterName.compare("massMatrixUserFunction") == 0) { return cObjectGenericDAE->GetParameters().massMatrixUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
+        else if (parameterName.compare("constraintUserFunction") == 0) { return cObjectGenericDAE->GetParameters().constraintUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
+        else if (parameterName.compare("jacobianUserFunction") == 0) { return cObjectGenericDAE->GetParameters().jacobianUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinates()); } //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates_t") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinates_t()); } //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinatesODE1") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinatesODE1()); } //! AUTO: get parameter
+        else if (parameterName.compare("tempCoordinatesAE") == 0) { return EPyUtils::ToPython(cObjectGenericDAE->GetTempCoordinatesAE()); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectGenericDAE->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("ObjectGenericDAE::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
@@ -222,6 +233,9 @@ public: // AUTO:
         else if (parameterName.compare("parameters") == 0) { EPyUtils::FromPython(value, cObjectGenericDAE->GetParameters().parameters); } //! AUTO: set parameter
         else if (parameterName.compare("forceUserFunction") == 0) { cObjectGenericDAE->GetParameters().forceUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("rhsUserFunction") == 0) { cObjectGenericDAE->GetParameters().rhsUserFunction = value; } //! AUTO: set parameter
+        else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectGenericDAE->GetParameters().massMatrixUserFunction = value; } //! AUTO: set parameter
+        else if (parameterName.compare("constraintUserFunction") == 0) { cObjectGenericDAE->GetParameters().constraintUserFunction = value; } //! AUTO: set parameter
+        else if (parameterName.compare("jacobianUserFunction") == 0) { cObjectGenericDAE->GetParameters().jacobianUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectGenericDAE->GetShow(), "ObjectGenericDAE.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("ObjectGenericDAE::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

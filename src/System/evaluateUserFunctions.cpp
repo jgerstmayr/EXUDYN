@@ -376,6 +376,73 @@ void CObjectGenericDAE::EvaluateUserFunction(const PythonUserFunctionBase< std::
 	}
 }
 
+//! the mass matrix of the massMatrixUserFunction at tempCoordinates; a dense matrix is checked for its size (#3191)
+void CObjectGenericDAE::EvaluateMassMatrixUserFunction(EXUmath::MatrixContainer& massMatrix, const ArrayIndex& ltg) const
+{
+	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
+	UserFunctionExceptionHandling([&]
+	{
+		EvaluateUserFunctionIntoMatrixContainer(parameters.massMatrixUserFunction, massMatrix, ltg, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
+			t, GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, parameters.parameters);
+	}, "ObjectGenericDAE::massMatrixUserFunction");
+	Index n = tempCoordinates.NumberOfItems();
+	if (massMatrix.UseDenseMatrix() && (massMatrix.NumberOfRows() != n || massMatrix.NumberOfColumns() != n))
+	{
+		PyError("ObjectGenericDAE: massMatrixUserFunction returned a matrix of size (" + EXUstd::ToString(massMatrix.NumberOfRows()) + " x "
+			+ EXUstd::ToString(massMatrix.NumberOfColumns()) + "), but (" + EXUstd::ToString(n) + " x " + EXUstd::ToString(n) + ") is needed",
+			PyErrorType::valueError);
+	}
+}
+
+//! the term of the constraintUserFunction at tempCoordinates and tempCoordinatesAE (#3191)
+void CObjectGenericDAE::EvaluateConstraintUserFunction(bool velocityLevel, Vector& result) const
+{
+	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
+	UserFunctionExceptionHandling([&]
+	{
+		EvaluateUserFunctionIntoVector(parameters.constraintUserFunction, result, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t,
+			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE, velocityLevel, parameters.parameters);
+	}, "ObjectGenericDAE::constraintUserFunction");
+	if (result.NumberOfItems() != GetAlgebraicEquationsSize())
+	{
+		PyError("ObjectGenericDAE: constraintUserFunction returned a vector of size " + EXUstd::ToString(result.NumberOfItems()) + ", but "
+			+ EXUstd::ToString(GetAlgebraicEquationsSize()) + " is needed", PyErrorType::valueError);
+	}
+}
+
+//! the derivative of the recorded constraintUserFunction by an argument at position level, in one pass (#3191)
+void CObjectGenericDAE::AddConstraintUserFunctionJacobian(Index argument, ResizableMatrix& jacobian) const
+{
+	Symbolic::PySymbolicUserFunction* symbolicFunction = parameters.constraintUserFunction.GetSymbolicFunction();
+	CHECKandTHROW(symbolicFunction != nullptr, "ObjectGenericDAE: a Python constraintUserFunction needs the jacobianUserFunction");
+	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
+	const bool velocityLevel = false;
+	UserFunctionExceptionHandling([&]
+	{
+		symbolicFunction->EvaluateJacobianAdd(jacobian, argument, 1., (const MainSystem&)cSystemData->GetMainSystemBacklink(), t,
+			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE, velocityLevel, parameters.parameters);
+	}, "ObjectGenericDAE::constraintUserFunction (Jacobian)");
+}
+
+//! the local Jacobian of the jacobianUserFunction into tempJacobian, of size n2 + n1 + nAE (#3191)
+void CObjectGenericDAE::EvaluateJacobianUserFunction(Real factorODE2, Real factorODE2_t, Real factorODE1) const
+{
+	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
+	UserFunctionExceptionHandling([&]
+	{
+		EvaluateUserFunctionIntoMatrix(parameters.jacobianUserFunction, tempJacobian, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t,
+			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, tempCoordinatesAE, factorODE2, factorODE2_t, factorODE1,
+			parameters.parameters);
+	}, "ObjectGenericDAE::jacobianUserFunction");
+	Index n = GetODE2Size() + GetODE1Size() + GetAlgebraicEquationsSize();
+	if (tempJacobian.NumberOfRows() != n || tempJacobian.NumberOfColumns() != n)
+	{
+		PyError("ObjectGenericDAE: jacobianUserFunction returned a matrix of size (" + EXUstd::ToString(tempJacobian.NumberOfRows()) + " x "
+			+ EXUstd::ToString(tempJacobian.NumberOfColumns()) + "), but (" + EXUstd::ToString(n) + " x " + EXUstd::ToString(n) + ") is needed",
+			PyErrorType::valueError);
+	}
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //ObjectUserBody (#2986)
 //! false in a thread that does not hold the GIL, the renderer thread, which may not call Python

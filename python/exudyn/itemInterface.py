@@ -24,14 +24,16 @@ __all__ = [
     'ObjectGenericODE2MassMatrixUserFunction', 'ObjectGenericODE2JacobianUserFunction',
     'ObjectGenericODE2GraphicsDataUserFunction', 'ObjectGenericODE1RhsUserFunction',
     'ObjectGenericDAEForceUserFunction', 'ObjectGenericDAERhsUserFunction',
-    'ObjectUserBodyMassMatrixUserFunction', 'ObjectUserBodyMassIntegralUserFunction',
-    'ObjectUserBodyForceUserFunction', 'ObjectUserBodyPositionUserFunction',
-    'ObjectUserBodyPositionJacobianUserFunction', 'ObjectUserBodyRotationMatrixUserFunction',
-    'ObjectUserBodyRotationJacobianUserFunction', 'ObjectUserBodyOutputVariableUserFunction',
-    'ObjectUserBodyGraphicsDataUserFunction', 'ObjectKinematicTreeForceUserFunction',
-    'ObjectFFRFForceUserFunction', 'ObjectFFRFMassMatrixUserFunction',
-    'ObjectFFRFreducedOrderForceUserFunction', 'ObjectFFRFreducedOrderMassMatrixUserFunction',
-    'ObjectANCFCable2DAxialForceUserFunction', 'ObjectANCFCable2DBendingMomentUserFunction',
+    'ObjectGenericDAEMassMatrixUserFunction', 'ObjectGenericDAEConstraintUserFunction',
+    'ObjectGenericDAEJacobianUserFunction', 'ObjectUserBodyMassMatrixUserFunction',
+    'ObjectUserBodyMassIntegralUserFunction', 'ObjectUserBodyForceUserFunction',
+    'ObjectUserBodyPositionUserFunction', 'ObjectUserBodyPositionJacobianUserFunction',
+    'ObjectUserBodyRotationMatrixUserFunction', 'ObjectUserBodyRotationJacobianUserFunction',
+    'ObjectUserBodyOutputVariableUserFunction', 'ObjectUserBodyGraphicsDataUserFunction',
+    'ObjectKinematicTreeForceUserFunction', 'ObjectFFRFForceUserFunction',
+    'ObjectFFRFMassMatrixUserFunction', 'ObjectFFRFreducedOrderForceUserFunction',
+    'ObjectFFRFreducedOrderMassMatrixUserFunction', 'ObjectANCFCable2DAxialForceUserFunction',
+    'ObjectANCFCable2DBendingMomentUserFunction',
     'ObjectConnectorSpringDamperSpringForceUserFunction',
     'ObjectConnectorCartesianSpringDamperSpringForceUserFunction',
     'ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction',
@@ -219,6 +221,9 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectGenericODE1,rhsUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['StdVector'], ['ObjectGenericODE1RhsUserFunction']],
         'ObjectGenericDAE,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'y', 'parameters'], ['StdVector'], ['ObjectGenericDAEForceUserFunction']],
         'ObjectGenericDAE,rhsUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'y', 'parameters'], ['StdVector'], ['ObjectGenericDAERhsUserFunction']],
+        'ObjectGenericDAE,massMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'y', 'parameters'], ['py::object'], ['ObjectGenericDAEMassMatrixUserFunction']],
+        'ObjectGenericDAE,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector', 'bool', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'y', 'z', 'velocityLevel', 'parameters'], ['StdVector'], ['ObjectGenericDAEConstraintUserFunction']],
+        'ObjectGenericDAE,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector', 'Real', 'Real', 'Real', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'y', 'z', 'factorODE2', 'factorODE2_t', 'factorODE1', 'parameters'], ['py::object'], ['ObjectGenericDAEJacobianUserFunction']],
         'ObjectUserBody,massMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyMassMatrixUserFunction']],
         'ObjectUserBody,massIntegralUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyMassIntegralUserFunction']],
         'ObjectUserBody,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['StdVector'], ['ObjectUserBodyForceUserFunction']],
@@ -570,6 +575,87 @@ class ObjectGenericDAERhsUserFunction(Protocol):
         np.ndarray: :math:`\gv_u \in \Rcal^{n_1}`, as list or numpy array
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray, y: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
+
+class ObjectGenericDAEMassMatrixUserFunction(Protocol):
+    r"""A user function, which computes the mass matrix :math:`\Mm` of the ODE2 equations instead of the constant massMatrix.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the object belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs
+
+        q (np.ndarray): :math:`\qv \in \Rcal^{n_2}` the ODE2 coordinates of the object, without reference values
+
+        q_t (np.ndarray): :math:`\dot \qv \in \Rcal^{n_2}` the ODE2 velocities of the object
+
+        y (np.ndarray): :math:`\yv \in \Rcal^{n_1}` the ODE1 coordinates of the object, without reference values
+
+        parameters (np.ndarray): :math:`\mathbf{p}_{par}` the parameters of the object; empty if not given
+
+    Returns:
+        exudyn.MatrixContainer: :math:`\Mm \in \Rcal^{n_2 \times n_2}`, as numpy array, list of lists or exu.MatrixContainer
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray, y: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
+
+class ObjectGenericDAEConstraintUserFunction(Protocol):
+    r"""A user function, which computes the term :math:`\cv_u` added to the algebraic equations.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the object belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs
+
+        q (np.ndarray): :math:`\qv \in \Rcal^{n_2}` the ODE2 coordinates of the object, without reference values
+
+        q_t (np.ndarray): :math:`\dot \qv \in \Rcal^{n_2}` the ODE2 velocities of the object
+
+        y (np.ndarray): :math:`\yv \in \Rcal^{n_1}` the ODE1 coordinates of the object, without reference values
+
+        z (np.ndarray): :math:`\tlambda \in \Rcal^{n_a}` the algebraic coordinates of the object, the Lagrange multipliers
+
+        velocityLevel (bool): True if the solver asks for the algebraic equations at velocity level, the time derivative of :math:`\cv_u`
+
+        parameters (np.ndarray): :math:`\mathbf{p}_{par}` the parameters of the object; empty if not given
+
+    Returns:
+        np.ndarray: :math:`\cv_u \in \Rcal^{n_a}`, as list or numpy array
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray, y: np.ndarray, z: np.ndarray, velocityLevel: bool, parameters: np.ndarray) -> np.ndarray: ...
+
+class ObjectGenericDAEJacobianUserFunction(Protocol):
+    r"""A user function, which computes the local Jacobian :math:`\Jm_u` of the terms of the user functions, see {eq}``eq-objectgenericdae-jac``.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the object belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs
+
+        q (np.ndarray): :math:`\qv \in \Rcal^{n_2}` the ODE2 coordinates of the object, without reference values
+
+        q_t (np.ndarray): :math:`\dot \qv \in \Rcal^{n_2}` the ODE2 velocities of the object
+
+        y (np.ndarray): :math:`\yv \in \Rcal^{n_1}` the ODE1 coordinates of the object, without reference values
+
+        z (np.ndarray): :math:`\tlambda \in \Rcal^{n_a}` the algebraic coordinates of the object, the Lagrange multipliers
+
+        factorODE2 (float): :math:`f_{ODE2}`, the factor of the derivatives by :math:`\qv`
+
+        factorODE2_t (float): :math:`f_{ODE2_t}`, the factor of the derivatives by :math:`\dot \qv`
+
+        factorODE1 (float): :math:`f_{ODE1}`, the factor of the derivatives by :math:`\yv`
+
+        parameters (np.ndarray): :math:`\mathbf{p}_{par}` the parameters of the object; empty if not given
+
+    Returns:
+        exudyn.MatrixContainer: :math:`\Jm_u \in \Rcal^{n \times n}`, :math:`n = n_2 + n_1 + n_a`, as numpy array or list of lists
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray, y: np.ndarray, z: np.ndarray, factorODE2: float, factorODE2_t: float, factorODE1: float, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class ObjectUserBodyMassMatrixUserFunction(Protocol):
     """A user function, which computes the mass matrix of the body.
@@ -3505,13 +3591,19 @@ class ObjectGenericDAE:
 
         rhsUserFunction: A Python user function which computes the nonlinear term of the right-hand side of the ODE1 equations; type: ObjectGenericDAERhsUserFunction
 
+        massMatrixUserFunction: A Python user function which computes the mass matrix instead of the constant massMatrix (#3191); type: ObjectGenericDAEMassMatrixUserFunction
+
+        constraintUserFunction: A Python user function which computes the nonlinear term of the algebraic equations (#3191); type: ObjectGenericDAEConstraintUserFunction
+
+        jacobianUserFunction: A Python user function which computes the local Jacobian of the terms of all user functions, see the Jacobians below (#3191); type: ObjectGenericDAEJacobianUserFunction
+
         visualization: visualization data, see VObjectGenericDAE
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``
 
     """
-    def __init__(self, name = '', nodeNumbersODE2 = [], nodeNumbersODE1 = [], nodeNumbersAE = [], massMatrix = [], dampingMatrix = [], stiffnessMatrix = [], forceVector = [], couplingMatrixODE1 = [], systemMatrix = [], rhsVector = [], couplingMatrixODE2 = [], couplingMatrixODE2_t = [], constraintMatrixODE2 = [], constraintMatrixODE1 = [], constraintVector = [], parameters = [], forceUserFunction: Union[ObjectGenericDAEForceUserFunction, int] = 0, rhsUserFunction: Union[ObjectGenericDAERhsUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumbersODE2 = [], nodeNumbersODE1 = [], nodeNumbersAE = [], massMatrix = [], dampingMatrix = [], stiffnessMatrix = [], forceVector = [], couplingMatrixODE1 = [], systemMatrix = [], rhsVector = [], couplingMatrixODE2 = [], couplingMatrixODE2_t = [], constraintMatrixODE2 = [], constraintMatrixODE1 = [], constraintVector = [], parameters = [], forceUserFunction: Union[ObjectGenericDAEForceUserFunction, int] = 0, rhsUserFunction: Union[ObjectGenericDAERhsUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectGenericDAEMassMatrixUserFunction, int] = 0, constraintUserFunction: Union[ObjectGenericDAEConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectGenericDAEJacobianUserFunction, int] = 0, visualization = {'show': True}):
         self.name = name
         self.nodeNumbersODE2 = copy.copy(nodeNumbersODE2)
         self.nodeNumbersODE1 = copy.copy(nodeNumbersODE1)
@@ -3531,6 +3623,9 @@ class ObjectGenericDAE:
         self.parameters = CheckForValidNumpyArray(parameters)
         self.forceUserFunction = forceUserFunction
         self.rhsUserFunction = rhsUserFunction
+        self.massMatrixUserFunction = massMatrixUserFunction
+        self.constraintUserFunction = constraintUserFunction
+        self.jacobianUserFunction = jacobianUserFunction
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -3554,6 +3649,9 @@ class ObjectGenericDAE:
         yield 'parameters', self.parameters
         yield 'forceUserFunction', self.forceUserFunction
         yield 'rhsUserFunction', self.rhsUserFunction
+        yield 'massMatrixUserFunction', self.massMatrixUserFunction
+        yield 'constraintUserFunction', self.constraintUserFunction
+        yield 'jacobianUserFunction', self.jacobianUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):

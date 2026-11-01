@@ -2055,6 +2055,61 @@ def ObjectGenericDAE_rhsUserFunction(mbs: MainSystem, t: Real, itemNumber: Index
         $\gv_u \in \Rcal^{n_1}$, as list or numpy array
     """
 
+def ObjectGenericDAE_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector, q_t: Vector, y: Vector,
+                                            parameters: Vector) -> MatrixContainer:
+    r"""A user function, which computes the mass matrix $\Mm$ of the ABRV:ODE2 equations instead of the constant massMatrix.
+
+    Args:
+        mbs: provides MainSystem mbs to which the object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs
+        q: $\qv \in \Rcal^{n_2}$ the ABRV:ODE2 coordinates of the object, without reference values
+        q_t: $\dot \qv \in \Rcal^{n_2}$ the ABRV:ODE2 velocities of the object
+        y: $\yv \in \Rcal^{n_1}$ the ABRV:ODE1 coordinates of the object, without reference values
+        parameters: $\pv_{par}$ the parameters of the object; empty if not given
+    Returns:
+        $\Mm \in \Rcal^{n_2 \times n_2}$, as numpy array, list of lists or exu.MatrixContainer
+    """
+
+def ObjectGenericDAE_constraintUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector, q_t: Vector, y: Vector,
+                                            z: Vector, velocityLevel: Bool, parameters: Vector) -> Vector:
+    r"""A user function, which computes the term $\cv_u$ added to the algebraic equations.
+
+    Args:
+        mbs: provides MainSystem mbs to which the object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs
+        q: $\qv \in \Rcal^{n_2}$ the ABRV:ODE2 coordinates of the object, without reference values
+        q_t: $\dot \qv \in \Rcal^{n_2}$ the ABRV:ODE2 velocities of the object
+        y: $\yv \in \Rcal^{n_1}$ the ABRV:ODE1 coordinates of the object, without reference values
+        z: $\tlambda \in \Rcal^{n_a}$ the algebraic coordinates of the object, the Lagrange multipliers
+        velocityLevel: True if the solver asks for the algebraic equations at velocity level, the time derivative of $\cv_u$
+        parameters: $\pv_{par}$ the parameters of the object; empty if not given
+    Returns:
+        $\cv_u \in \Rcal^{n_a}$, as list or numpy array
+    """
+
+def ObjectGenericDAE_jacobianUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector, q_t: Vector, y: Vector,
+                                          z: Vector, factorODE2: Real, factorODE2_t: Real, factorODE1: Real,
+                                          parameters: Vector) -> MatrixContainer:
+    r"""A user function, which computes the local Jacobian $\Jm_u$ of the terms of the user functions, see {eq}`eq-objectgenericdae-jac`.
+
+    Args:
+        mbs: provides MainSystem mbs to which the object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs
+        q: $\qv \in \Rcal^{n_2}$ the ABRV:ODE2 coordinates of the object, without reference values
+        q_t: $\dot \qv \in \Rcal^{n_2}$ the ABRV:ODE2 velocities of the object
+        y: $\yv \in \Rcal^{n_1}$ the ABRV:ODE1 coordinates of the object, without reference values
+        z: $\tlambda \in \Rcal^{n_a}$ the algebraic coordinates of the object, the Lagrange multipliers
+        factorODE2: $f_{ODE2}$, the factor of the derivatives by $\qv$
+        factorODE2_t: $f_{ODE2_t}$, the factor of the derivatives by $\dot \qv$
+        factorODE1: $f_{ODE1}$, the factor of the derivatives by $\yv$
+        parameters: $\pv_{par}$ the parameters of the object; empty if not given
+    Returns:
+        $\Jm_u \in \Rcal^{n \times n}$, $n = n_2 + n_1 + n_a$, as numpy array or list of lists
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectGenericDAE',
     drawing=r'The item draws nothing.',
@@ -2079,20 +2134,33 @@ definitions.append(ItemDefinition(
     $$ (eq-objectgenericdae-ode1)
 
     $$
-    \Cm_{\qv}\qv + \Cm_{\yv}\yv - \cv_0 = \Null
+    \Cm_{\qv}\qv + \Cm_{\yv}\yv - \cv_0 + \cv_u(mbs, t, i_N, \qv, \dot\qv, \yv, \tlambda, \pv_{par}) = \Null
     $$ (eq-objectgenericdae-ae)
 
-    With index 2 constraints of the solver, the algebraic equations are $\Cm_{\qv}\dot\qv + \Cm_{\yv}\dot\yv = \Null$.
+    With a massMatrixUserFunction, $\Mm$ is the matrix it returns. With index 2 constraints of the solver, the algebraic
+    equations are $\Cm_{\qv}\dot\qv + \Cm_{\yv}\dot\yv + \cv_u = \Null$, $\cv_u$ of the constraintUserFunction with
+    `velocityLevel=True`.
     The terms $\Cm_{\qv}\tp\tlambda$ and $\Cm_{\yv}\tp\tlambda$ are added by the solver from the Jacobian of the algebraic
     equations, as for every constraint. CoordinateLoads are added on the right-hand side of the respective coordinate.
 
     #### Jacobians
 
-    Without user functions, every Jacobian is given by the object from its matrices. A symbolic forceUserFunction or
-    rhsUserFunction adds the derivatives of its recording by $\qv$, $\dot\qv$ and $\yv$, computed in one pass over the
-    recording (#3189); with a Python one, the Jacobian of the ABRV:ODE2 equations is computed by numerical
-    differentiation, with a rhsUserFunction the one of the ABRV:ODE1 equations. The Jacobian of the algebraic equations
-    is always the constant matrices $\Cm_{\qv}$ and $\Cm_{\yv}$ (#3143).
+    Without user functions, every Jacobian is given by the object from its matrices. The jacobianUserFunction gives the
+    derivatives of the terms of all user functions, ordered as the coordinates $\qv$, $\yv$, $\tlambda$,
+
+    $$
+    \Jm_u = \mr{-\frac{\partial\fv_u}{\partial\qv'}}{-f_{ODE1}\frac{\partial\fv_u}{\partial\yv}}{\Null}
+               {\frac{\partial\gv_u}{\partial\qv'}}{f_{ODE1}\frac{\partial\gv_u}{\partial\yv}}{\Null}
+               {\frac{\partial\cv_u}{\partial\qv'}}{f_{ODE1}\frac{\partial\cv_u}{\partial\yv}}{\frac{\partial\cv_u}{\partial\tlambda}} , \quad
+    \frac{\partial}{\partial\qv'} = f_{ODE2}\frac{\partial}{\partial\qv} + f_{ODE2_t}\frac{\partial}{\partial\dot\qv} ,
+    $$ (eq-objectgenericdae-jac)
+
+    with $-\fv_u$ as the term of the left-hand side of the ABRV:ODE2 equations,
+    $\gv_u$ of the right-hand side of the ABRV:ODE1 equations; the object calls it with the factors of each block it
+    needs. Without it, a symbolic user function gives its derivatives in one pass over the recording (#3189); a Python
+    forceUserFunction or rhsUserFunction is differentiated numerically, a Python constraintUserFunction needs the
+    jacobianUserFunction, as the Jacobian of the algebraic equations is not computed numerically (#3191). The
+    derivative of $\Mm$ is not part of the Jacobian, as for the other bodies.
 
     #### Marker interfaces
 
@@ -2201,6 +2269,21 @@ definitions.append(ItemDefinition(
             defaultValue=0,
             description=r"""$\gv_u \in \Rcal^{n_1}$A Python user function which computes the nonlinear term of the right-hand side of the ABRV:ODE1 equations""",
             userFunction=ObjectGenericDAE_rhsUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='massMatrixUserFunction',
+            defaultValue=0,
+            description=r"""$\Mm \in \Rcal^{n_2 \times n_2}$A Python user function which computes the mass matrix instead of the constant massMatrix (#3191)""",
+            userFunction=ObjectGenericDAE_massMatrixUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='constraintUserFunction',
+            defaultValue=0,
+            description=r"""$\cv_u \in \Rcal^{n_a}$A Python user function which computes the nonlinear term of the algebraic equations (#3191)""",
+            userFunction=ObjectGenericDAE_constraintUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='jacobianUserFunction',
+            defaultValue=0,
+            description=r"""$\Jm_u \in \Rcal^{n \times n}$A Python user function which computes the local Jacobian of the terms of all user functions, see the Jacobians below (#3191)""",
+            userFunction=ObjectGenericDAE_jacobianUserFunction),
         ItemParameter(type=TNumpyVector, destination=DestComp, cFlags=CFMutable+CFReadOnly,
             pythonName='tempCoordinates',
             defaultValue='Vector()',
@@ -2213,12 +2296,20 @@ definitions.append(ItemDefinition(
             pythonName='tempCoordinatesODE1',
             defaultValue='Vector()',
             description=r"""$\yv_{temp}$the ABRV:ODE1 coordinates, kept between the calls"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp, cFlags=CFMutable+CFReadOnly,
+            pythonName='tempCoordinatesAE',
+            defaultValue='Vector()',
+            description=r"""$\tlambda_{temp}$the algebraic coordinates, kept between the calls"""),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp, cFlags=CFMutable+CFReadOnly+CFNoInterface,
+            pythonName='tempJacobian',
+            defaultValue='Matrix()',
+            description=r"""the local Jacobian of the jacobianUserFunction, kept between the calls"""),
         ItemParameter(type=TResizableVector, destination=DestComp, cFlags=CFMutable+CFReadOnly+CFNoInterface,
             pythonName='tempUserFunctionResult',
             defaultValue='ResizableVector()',
             description=r"""the result of a user function, kept between the calls"""),
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
-            pythonName='HasUserFunction', implementation='return (parameters.forceUserFunction!=0) || (parameters.rhsUserFunction!=0);',
+            pythonName='HasUserFunction', implementation='return (parameters.forceUserFunction!=0) || (parameters.rhsUserFunction!=0) || (parameters.massMatrixUserFunction!=0) || (parameters.constraintUserFunction!=0) || (parameters.jacobianUserFunction!=0);',
             description=r'true if a Python user function is given; the object is then computed in the main thread'),
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
@@ -2253,7 +2344,7 @@ definitions.append(ItemDefinition(
             implementation='return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);',
             description=r'a body of several nodes, so that its mass matrix, its ABRV:ODE2 equations and its algebraic equations are assembled'),
         ItemFunctionDef('HasConstantMassMatrix',
-            implementation='return true;'),
+            implementation='return !parameters.massMatrixUserFunction;'),
         ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeObjectCoordinates',
@@ -2267,6 +2358,25 @@ definitions.append(ItemDefinition(
             pythonName='AddUserFunctionJacobian',
             args='const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction, const char* name, Index argument, Real factor, ResizableMatrix& jacobian',
             description=r'factor times the derivative of the recorded force or rhs user function by its argument of index argument (2: q, 3: q_t, 4: y) at tempCoordinates, added to jacobian, by the one-pass derivative (#3189); implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ComputeUserFunctionCoordinates',
+            description=r'the coordinates of the user functions in tempCoordinates, tempCoordinates_t, tempCoordinatesODE1 and tempCoordinatesAE (#3191)'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateMassMatrixUserFunction',
+            args='EXUmath::MatrixContainer& massMatrix, const ArrayIndex& ltg',
+            description=r'the massMatrixUserFunction at tempCoordinates into massMatrix (#3191); implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateConstraintUserFunction',
+            args='bool velocityLevel, Vector& result',
+            description=r'the constraintUserFunction at tempCoordinates and tempCoordinatesAE, the size checked (#3191); implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='AddConstraintUserFunctionJacobian',
+            args='Index argument, ResizableMatrix& jacobian',
+            description=r'the derivative of the recorded constraintUserFunction by its argument of index argument (2: q, 3: q_t, 4: y, 5: z) at tempCoordinates and tempCoordinatesAE, added to jacobian, by the one-pass derivative (#3191); implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateJacobianUserFunction',
+            args='Real factorODE2, Real factorODE2_t, Real factorODE1',
+            description=r'the jacobianUserFunction at tempCoordinates and tempCoordinatesAE into tempJacobian, the size checked (#3191); implemented in evaluateUserFunctions.cpp'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',
             defaultValue=True,

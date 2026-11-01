@@ -48,7 +48,10 @@ the linear contact of two spheres as ObjectConnectorUser, which is recorded (#31
 rhsUserFunction of ObjectGenericDAE gives its Jacobian by the one-pass derivative, a Python one numerically (#3189).
 `SymbolicSystem` takes ObjectGenericDAE with recorded user functions: its ODE2, ODE1 and algebraic equations, their
 couplings in the exact `SystemJacobian`, and `Equations()` and `GetFlatProgram` with the ODE1 coordinates `y` in the
-ODE2 forces and the new result `ODE1ReactionTermsLHS` (#3190).
+ODE2 forces and the new result `ODE1ReactionTermsLHS` (#3190). ObjectGenericDAE has a `massMatrixUserFunction`, a
+`constraintUserFunction` of q, q_t, y and the multipliers z, added to its algebraic equations, and a
+`jacobianUserFunction` of the derivatives of all its user functions; a recorded constraint gives its Jacobian in one
+pass, a Python one needs the jacobianUserFunction; `SymbolicSystem` takes the recorded ones (#3191).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

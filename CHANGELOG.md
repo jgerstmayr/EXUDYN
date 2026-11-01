@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 280 | 1.13.286 |
+| 1.13 | Newborn | 281 | 1.13.287 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.287** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectGenericDAE: massMatrixUserFunction, constraintUserFunction and jacobianUserFunction (#3191)
+  - description: revision2026c step RG9.10.6 (\#3143, docs/dev/design/genericDAE.md section 2): massMatrixUserFunction(mbs, t, itemNumber, q, q\_t, y, parameters) instead of the constant mass matrix; constraintUserFunction(mbs, t, itemNumber, q, q\_t, y, z, velocityLevel, parameters), added to the algebraic equations; jacobianUserFunction(mbs, t, itemNumber, q, q\_t, y, z, factorODE2, factorODE2\_t, factorODE1, parameters), the local Jacobian of the terms of all user functions. A recorded constraintUserFunction gives its Jacobian blocks by the one-pass derivative, a Python one needs the jacobianUserFunction (no numerical Jacobian, \#3101); SymbolicSystem takes the recorded mass matrix and constraint functions.
+  - **notes:** ObjectGenericDAE has a massMatrixUserFunction, a constraintUserFunction of q, q\_t, y and the multipliers z, added to its algebraic equations, and a jacobianUserFunction of the derivatives of all its user functions; a recorded constraintUserFunction gives its Jacobian in one pass, a Python one needs the jacobianUserFunction; SymbolicSystem takes the recorded mass matrix and constraint functions.
+  - date resolved: **2026-11-01 10:01**, date raised: 2026-11-01
 - **1.13.286** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem takes ObjectGenericDAE (#3190)
   - description: revision2026c step RG9.10.5 (\#3143, docs/dev/design/genericDAE.md): SymbolicSystem collects ObjectGenericDAE in kinds of the same recordings - its matrices, its recorded forceUserFunction and rhsUserFunction, its ODE1 and algebraic coordinates -; the ODE2 forces depend on y, the ODE1 equations on q and q\_t, the algebraic equations C\_q q + C\_y y - c\_0 with the reaction terms C\_q^T z and C\_y^T z; the exact SystemJacobian with the coupling blocks; Equations(), the composed system and GetFlatProgram with y. Decided: the item is taken as C++ computes it, velocity-level constraints refused as for the joints.
   - **notes:** SymbolicSystem takes ObjectGenericDAE with recorded forceUserFunction and rhsUserFunction: its ODE2, ODE1 and algebraic equations and their couplings, the exact SystemJacobian, Equations() and GetFlatProgram with the ODE1 coordinates y and the new result ODE1ReactionTermsLHS.

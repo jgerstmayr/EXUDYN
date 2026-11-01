@@ -1,0 +1,15 @@
+{
+  "number": 3191,
+  "title": "ObjectGenericDAE: massMatrixUserFunction, constraintUserFunction and jacobianUserFunction",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG9.10.6 (#3143, docs/dev/design/genericDAE.md section 2): massMatrixUserFunction(mbs, t, itemNumber, q, q_t, y, parameters) instead of the constant mass matrix; constraintUserFunction(mbs, t, itemNumber, q, q_t, y, z, velocityLevel, parameters), added to the algebraic equations; jacobianUserFunction(mbs, t, itemNumber, q, q_t, y, z, factorODE2, factorODE2_t, factorODE1, parameters), the local Jacobian of the terms of all user functions. A recorded constraintUserFunction gives its Jacobian blocks by the one-pass derivative, a Python one needs the jacobianUserFunction (no numerical Jacobian, #3101); SymbolicSystem takes the recorded mass matrix and constraint functions.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 10:01",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectGenericDAE has a massMatrixUserFunction, a constraintUserFunction of q, q_t, y and the multipliers z, added to its algebraic equations, and a jacobianUserFunction of the derivatives of all its user functions; a recorded constraintUserFunction gives its Jacobian in one pass, a Python one needs the jacobianUserFunction; SymbolicSystem takes the recorded mass matrix and constraint functions.",
+  "resolvedInVersion": "1.13.287"
+}

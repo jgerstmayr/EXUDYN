@@ -4950,3 +4950,31 @@ the extra 4.7 us per Python call - add views.)*
 - symbolicSystemGenericDAETest.py, the coupled model of genericDAETest.py with recorded user functions plus an object on
   ODE1 coordinates only: SolveGeneralizedAlpha against SolveDynamic 4.3e-14 (relative), SystemJacobian against central
   differences 6.2e-12, composed against object by object 0.0, the numpy export against the functions 0.0.
+
+<a id="rg9-10-6"></a>
+### RG9.10.6 — the massMatrixUserFunction, constraintUserFunction and jacobianUserFunction of ObjectGenericDAE (2026-11-01, #3191)
+- `massMatrixUserFunction(mbs, t, itemNumber, q, q_t, y, parameters)` instead of the massMatrix, dense or sparse; the
+  object then has no constant mass matrix, and the massMatrix is not required.
+- `constraintUserFunction(mbs, t, itemNumber, q, q_t, y, z, velocityLevel, parameters)` added to the algebraic
+  equations; its Jacobian blocks AE_ODE2, AE_ODE2_t, AE_ODE1 and AE_AE by EvaluateJacobianAdd of the recording
+  (arguments q 2, q_t 3, y 4, z 5), or by the jacobianUserFunction; a Python one without it is refused before the
+  assembly, as the Jacobian of the algebraic equations is not numerical (#3101). The reaction terms follow from the
+  Jacobian as for every body with algebraic equations.
+- `jacobianUserFunction(mbs, t, itemNumber, q, q_t, y, z, factorODE2, factorODE2_t, factorODE1, parameters)`: the local
+  Jacobian (n2 + n1 + nAE) of the terms of all user functions, -f_u in the ODE2 rows, g_u in the ODE1 rows, c_u in the
+  algebraic rows; the object calls it with the factors of each block it needs (1, 0, 1 and 0, 1, 0 for the ODE1 and the
+  algebraic rows), and it replaces the numerical Jacobian of a Python force or rhs user function.
+- SymbolicSystem: the recorded mass matrix in the forces, the composed system and Equations(), d(M q_tt)/dq in the
+  Jacobian; refused with ODE1 coordinates, as its MassMatrix does not take y. The recorded constraint as one
+  esym.Function per object of c_u and its reaction terms (dc_u/dq)^T z and (dc_u/dy)^T z by esym.Jacobian, so that
+  SystemJacobian is exact, also in the ODE2 and ODE1 blocks; in Equations() the reaction terms by the Jacobian of the
+  variables q and y (TransposedJacobianTimes of the backend, symbolic and sympy). `_InitialAccelerations` of the
+  solvers has the block dc/dz in the algebraic rows, as CSolverImplicitSecondOrder (default factorAE_AE 1): without it
+  the solutions with a compliance differed by 6e-9.
+- genericDAEUserFunctionsTest.py: a Cartesian pendulum with damper and a lag on an ODE1 coordinate; Python with the
+  jacobianUserFunction and recorded, both against MassPoint2D, DistanceConstraint, CartesianSpringDamper and
+  ObjectGenericODE1 1.4e-13, 600 Newton steps each. SymbolicSystem, the constraint of q, y and z (a compliance
+  -1e-4 z): SolveGeneralizedAlpha against SolveDynamic 6.7e-13; the mass matrix function without ODE1: 1.5e-13;
+  SystemJacobian against differences 1.8e-11; the numpy export 0.0.
+- Found: a compliance +1e-4 z (a negative stiffness) and a term 0.01 x q_t at position level diverge in both solvers,
+  in C++ and in Python at the same time; the test uses -1e-4 z and no q_t.

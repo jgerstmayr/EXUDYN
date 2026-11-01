@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.10 ObjectGenericDAE: an object on ODE2, ODE1 and algebraic coordinates, linear by matrices, nonlinear by user functions (1 open sub-step)
+  - RG9.10 ObjectGenericDAE: an object on ODE2, ODE1 and algebraic coordinates, linear by matrices, nonlinear by user functions
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -133,7 +133,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 7 | Structural core improvements |
+| RG9 | OPEN | 6 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 13 | Symbolic |
@@ -1155,11 +1155,12 @@ CLOSED 2026-11-01 (#3190, #3143 stays open): daeKinds; the ODE2 forces with y, t
 constraints and both reaction terms, the exact coupling blocks of SystemJacobian, Equations() and GetFlatProgram with
 y and ODE1ReactionTermsLHS; symbolicSystemGenericDAETest.py against SolveDynamic (4e-14). [log](exudynRevisionLog2026c.md#rg9-10-5)
 
-#### **OPEN_RG9.10.6** Add the massMatrixUserFunction, constraintUserFunction and jacobianUserFunction of ObjectGenericDAE, recorded with one-pass Jacobians
+#### **CLOSED_RG9.10.6** Add the massMatrixUserFunction, constraintUserFunction and jacobianUserFunction of ObjectGenericDAE, recorded with one-pass Jacobians
 
-#3143; genericDAE.md section 2: the user functions whose Jacobian must not be numerical (#3101) - the mass matrix of
-the coordinates, the constraints c_u(q, q_t, y, z, t) at position and velocity level, and the local Jacobian of all
-blocks with the factors of the solver -, each with its symbolic version and the Jacobian by EvaluateJacobianAdd (#3189).
+CLOSED 2026-11-01 (#3191, #3143 stays open): the three user functions in C++, the recorded constraint by the one-pass
+derivative, a Python one only with the jacobianUserFunction; SymbolicSystem takes the recorded mass matrix and
+constraint with exact reaction terms; genericDAEUserFunctionsTest.py against a MassPoint2D on a DistanceConstraint
+(1.4e-13) and SolveDynamic (7e-13). [log](exudynRevisionLog2026c.md#rg9-10-6)
 
 ## **CLOSED_RG10** Tooling and process
 

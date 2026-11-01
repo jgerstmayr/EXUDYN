@@ -90,6 +90,7 @@ generalContactSpheresTest
 generalContactTriangleMomentumTest
 genericDAESymbolicTest
 genericDAETest
+genericDAEUserFunctionsTest
 genericJointUserFunctionTest
 genericODE1duplicateNodeTest
 genericODE1JacobianTest

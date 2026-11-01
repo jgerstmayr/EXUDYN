@@ -92,6 +92,28 @@ static void ComputeODE1Velocities(const CObjectGenericDAE& object, Vector& y_t)
 	}
 }
 
+//! the algebraic coordinates of the AE nodes in the current configuration, for the constraint and Jacobian user functions (#3191)
+static void ComputeAECoordinates(const CObjectGenericDAE& object, Vector& z)
+{
+	z.SetNumberOfItems(object.GetAlgebraicEquationsSize());
+	Index k = 0;
+	Index offset = object.GetParameters().nodeNumbersODE2.NumberOfItems() + object.GetParameters().nodeNumbersODE1.NumberOfItems();
+	for (Index i = 0; i < object.GetParameters().nodeNumbersAE.NumberOfItems(); i++)
+	{
+		LinkedDataVector v(object.GetCNode(offset + i)->GetCurrentCoordinateVector());
+		for (Index j = 0; j < v.NumberOfItems(); j++) { z[k++] = v[j]; }
+	}
+}
+
+//! add the block (rowOffset, columnOffset) of tempJacobian of the jacobianUserFunction with the factor to jacobian (#3191)
+static void AddJacobianBlock(const Matrix& local, Index rowOffset, Index columnOffset, Real factor, ResizableMatrix& jacobian)
+{
+	for (Index i = 0; i < jacobian.NumberOfRows(); i++)
+	{
+		for (Index j = 0; j < jacobian.NumberOfColumns(); j++) { jacobian(i, j) += factor*local(rowOffset + i, columnOffset + j); }
+	}
+}
+
 //! a matrix of the given size: the matrix of the parameters, or zeros if it is empty
 static void MatrixOrZero(const Matrix& matrix, Index rows, Index columns, ResizableMatrix& result)
 {
@@ -106,6 +128,12 @@ static void MatrixOrZero(const Matrix& matrix, Index rows, Index columns, Resiza
 void CObjectGenericDAE::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "ObjectGenericDAE: computeMassMatrixInversePerBody=True is not available", ExudynNotImplementedError);
+	if (parameters.massMatrixUserFunction) //the user function chooses a dense or a sparse matrix (#3191)
+	{
+		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, tempCoordinatesODE1);
+		EvaluateMassMatrixUserFunction(massMatrixC, ltg);
+		return;
+	}
 	massMatrixC.SetUseDenseMatrix(true);
 	Index n = GetODE2Size();
 	MatrixOrZero(parameters.massMatrix, n, n, massMatrixC.GetInternalDenseMatrix());
@@ -133,6 +161,7 @@ void CObjectGenericDAE::ComputeODE2LHS(Vector& ode2Lhs) const
 static constexpr Index argumentQ = 2;
 static constexpr Index argumentQ_t = 3;
 static constexpr Index argumentY = 4;
+static constexpr Index argumentZ = 5; //of the constraintUserFunction (#3191)
 
 //! factorODE2 (K - df_u/dq) + factorODE2_t (D - df_u/dq_t), dense; the derivatives of a recorded forceUserFunction in one
 //! pass (#3189); not called for a Python forceUserFunction, see GetAvailableJacobians
@@ -146,7 +175,13 @@ void CObjectGenericDAE::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacob
 	jacobian.SetAll(0.);
 	if (parameters.stiffnessMatrix.NumberOfRows() != 0) { EXUmath::FactorTimesMatrixAddTemplate<Matrix, ResizableMatrix>(factorODE2, parameters.stiffnessMatrix, jacobian); }
 	if (parameters.dampingMatrix.NumberOfRows() != 0) { EXUmath::FactorTimesMatrixAddTemplate<Matrix, ResizableMatrix>(factorODE2_t, parameters.dampingMatrix, jacobian); }
-	if (parameters.forceUserFunction)
+	if (parameters.jacobianUserFunction) //the derivatives of the user functions by the jacobianUserFunction (#3191)
+	{
+		ComputeUserFunctionCoordinates();
+		EvaluateJacobianUserFunction(factorODE2, factorODE2_t, 0.);
+		AddJacobianBlock(tempJacobian, 0, 0, 1., jacobian);
+	}
+	else if (parameters.forceUserFunction)
 	{
 		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, tempCoordinatesODE1);
 		if (factorODE2 != 0.) { AddUserFunctionJacobian(parameters.forceUserFunction, "forceUserFunction", argumentQ, -factorODE2, jacobian); }
@@ -154,11 +189,24 @@ void CObjectGenericDAE::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacob
 	}
 }
 
+//! the coordinates of the user functions: tempCoordinates, tempCoordinates_t, tempCoordinatesODE1 and tempCoordinatesAE (#3191)
+void CObjectGenericDAE::ComputeUserFunctionCoordinates() const
+{
+	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, tempCoordinatesODE1);
+	ComputeAECoordinates(*this, tempCoordinatesAE);
+}
+
 //! E - df_u/dy
 void CObjectGenericDAE::ComputeJacobianODE2_ODE1(ResizableMatrix& jacobian) const
 {
 	MatrixOrZero(parameters.couplingMatrixODE1, GetODE2Size(), GetODE1Size(), jacobian);
-	if (parameters.forceUserFunction)
+	if (parameters.jacobianUserFunction)
+	{
+		ComputeUserFunctionCoordinates();
+		EvaluateJacobianUserFunction(0., 0., 1.);
+		AddJacobianBlock(tempJacobian, 0, GetODE2Size(), 1., jacobian);
+	}
+	else if (parameters.forceUserFunction)
 	{
 		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, tempCoordinatesODE1);
 		AddUserFunctionJacobian(parameters.forceUserFunction, "forceUserFunction", argumentY, -1., jacobian);
@@ -192,7 +240,19 @@ void CObjectGenericDAE::ComputeJacobianODE1RHS(ResizableMatrix& jacobianODE1, Re
 	MatrixOrZero(parameters.systemMatrix, n1, n1, jacobianODE1);
 	MatrixOrZero(parameters.couplingMatrixODE2, n1, n2, jacobianODE2);
 	MatrixOrZero(parameters.couplingMatrixODE2_t, n1, n2, jacobianODE2_t);
-	if (parameters.rhsUserFunction)
+	if (parameters.jacobianUserFunction)
+	{
+		ComputeUserFunctionCoordinates();
+		EvaluateJacobianUserFunction(1., 0., 1.); //the columns of q and y
+		AddJacobianBlock(tempJacobian, n2, n2, 1., jacobianODE1);
+		if (n2 != 0)
+		{
+			AddJacobianBlock(tempJacobian, n2, 0, 1., jacobianODE2);
+			EvaluateJacobianUserFunction(0., 1., 0.);
+			AddJacobianBlock(tempJacobian, n2, 0, 1., jacobianODE2_t);
+		}
+	}
+	else if (parameters.rhsUserFunction)
 	{
 		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, tempCoordinatesODE1);
 		AddUserFunctionJacobian(parameters.rhsUserFunction, "rhsUserFunction", argumentY, 1., jacobianODE1);
@@ -225,31 +285,64 @@ void CObjectGenericDAE::ComputeAlgebraicEquations(Vector& algebraicEquations, bo
 		else { EXUmath::MultMatrixVectorAdd(parameters.constraintMatrixODE1, tempCoordinatesODE1, algebraicEquations); }
 	}
 	if (!useIndex2 && parameters.constraintVector.NumberOfItems() != 0) { algebraicEquations -= parameters.constraintVector; }
+	if (parameters.constraintUserFunction) //+ c_u, at velocity level its time derivative (#3191)
+	{
+		ComputeAECoordinates(*this, tempCoordinatesAE);
+		EvaluateConstraintUserFunction(useIndex2, tempUserFunctionResult);
+		algebraicEquations += tempUserFunctionResult;
+	}
 }
 
-//! C_q and C_y; the algebraic equations do not depend on lambda
+//! C_q + dc_u/dq, dc_u/dq_t, C_y + dc_u/dy and dc_u/dlambda; by the jacobianUserFunction, or by the one-pass derivative of a
+//! recorded constraintUserFunction (#3191)
 void CObjectGenericDAE::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1,
 	ResizableMatrix& jacobian_AE) const
 {
 	Index nAE = GetAlgebraicEquationsSize();
 	Index n2 = GetODE2Size();
+	Index n1 = GetODE1Size();
 	MatrixOrZero(parameters.constraintMatrixODE2, nAE, n2, jacobian_ODE2);
 	jacobian_ODE2_t.SetNumberOfRowsAndColumns(nAE, n2);
 	jacobian_ODE2_t.SetAll(0.);
-	MatrixOrZero(parameters.constraintMatrixODE1, nAE, GetODE1Size(), jacobian_ODE1);
+	MatrixOrZero(parameters.constraintMatrixODE1, nAE, n1, jacobian_ODE1);
 	jacobian_AE.SetNumberOfRowsAndColumns(nAE, nAE);
 	jacobian_AE.SetAll(0.);
+	if (!parameters.constraintUserFunction) { return; }
+	ComputeUserFunctionCoordinates();
+	if (parameters.jacobianUserFunction)
+	{
+		Index row = n2 + n1;
+		EvaluateJacobianUserFunction(1., 0., 1.); //the columns of q, y and lambda
+		AddJacobianBlock(tempJacobian, row, 0, 1., jacobian_ODE2);
+		AddJacobianBlock(tempJacobian, row, n2, 1., jacobian_ODE1);
+		AddJacobianBlock(tempJacobian, row, n2 + n1, 1., jacobian_AE);
+		if (n2 != 0)
+		{
+			EvaluateJacobianUserFunction(0., 1., 0.);
+			AddJacobianBlock(tempJacobian, row, 0, 1., jacobian_ODE2_t);
+		}
+		return;
+	}
+	if (n2 != 0)
+	{
+		AddConstraintUserFunctionJacobian(argumentQ, jacobian_ODE2);
+		AddConstraintUserFunctionJacobian(argumentQ_t, jacobian_ODE2_t);
+	}
+	if (n1 != 0) { AddConstraintUserFunctionJacobian(argumentY, jacobian_ODE1); }
+	AddConstraintUserFunctionJacobian(argumentZ, jacobian_AE);
 }
 
-//! the blocks by the coordinates the object has; the ones of the matrices are functions, a block with a user function
-//! is differentiated numerically - a recorded one in one pass (#3189) -, the algebraic equations always by the matrices (#3143)
+//! the blocks by the coordinates the object has; the ones of the matrices and of the jacobianUserFunction are functions, a block with a user function
+//! is differentiated numerically - a recorded one in one pass (#3189) -, the algebraic equations by the matrices and the constraintUserFunction (#3191)
 JacobianType::Type CObjectGenericDAE::GetAvailableJacobians() const
 {
 	Index jacobians = 0;
 	bool hasODE1 = GetODE1Size() != 0;
-	//a Python user function is differentiated numerically, a recorded one in one pass (#3189)
-	bool numericalForce = parameters.forceUserFunction != 0 && !parameters.forceUserFunction.GetSymbolicFunction();
-	bool numericalRhs = parameters.rhsUserFunction != 0 && !parameters.rhsUserFunction.GetSymbolicFunction();
+	//a Python user function is differentiated numerically, a recorded one in one pass (#3189), unless the
+	//jacobianUserFunction gives the derivatives (#3191)
+	bool userJacobian = parameters.jacobianUserFunction != 0;
+	bool numericalForce = parameters.forceUserFunction != 0 && !parameters.forceUserFunction.GetSymbolicFunction() && !userJacobian;
+	bool numericalRhs = parameters.rhsUserFunction != 0 && !parameters.rhsUserFunction.GetSymbolicFunction() && !userJacobian;
 	if (GetODE2Size() != 0)
 	{
 		jacobians += JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t;
@@ -273,6 +366,10 @@ JacobianType::Type CObjectGenericDAE::GetAvailableJacobians() const
 	{
 		jacobians += JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function;
 		if (hasODE1) { jacobians += JacobianType::AE_ODE1 + JacobianType::AE_ODE1_function; }
+		if (parameters.constraintUserFunction) //c_u may depend on q_t and lambda (#3191)
+		{
+			jacobians += JacobianType::AE_ODE2_t + JacobianType::AE_ODE2_t_function + JacobianType::AE_AE + JacobianType::AE_AE_function;
+		}
 	}
 	return (JacobianType::Type)jacobians;
 }

@@ -380,9 +380,10 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
 
 
 def _InitialAccelerations(system, q, q_t, y, t, epsilon=1e-6):
-    """the initial accelerations and algebraic coordinates of CSolverImplicitSecondOrder: [M C_q^T; C_q 0] [q_tt; z]
-    = [f; -(C_q q_t)_q q_t], the ODE1 rows a unit matrix with zero right-hand side; C_q by central differences of the
-    algebraic equations, (C_q q_t)_q q_t as their second derivative along q_t"""
+    """the initial accelerations and algebraic coordinates of CSolverImplicitSecondOrder: [M C_q^T; C_q C_z] [q_tt; z]
+    = [f; -(C_q q_t)_q q_t], the ODE1 rows a unit matrix with zero right-hand side; C_q and C_z - the derivative by z
+    of an equation that depends on it, as of ObjectGenericDAE (#3191) - by central differences of the algebraic
+    equations, (C_q q_t)_q q_t as their second derivative along q_t"""
     (nODE2, nODE1, nAE) = (system.nODE2, system.nODE1, system.nAE)
     nSystem = nODE2 + nODE1 + nAE
     z = np.zeros(nAE)
@@ -397,6 +398,9 @@ def _InitialAccelerations(system, q, q_t, y, t, epsilon=1e-6):
         Cq = np.array([(Equations(q + epsilon*e) - Equations(q - epsilon*e))/(2*epsilon) for e in np.eye(nODE2)]).T
         A[nODE2 + nODE1:, :nODE2] = Cq
         A[:nODE2, nODE2 + nODE1:] = Cq.T
+        A[nODE2 + nODE1:, nODE2 + nODE1:] = np.array([(system.AlgebraicEquations(q, q_t, y, z + epsilon*e, t)
+                                                      - system.AlgebraicEquations(q, q_t, y, z - epsilon*e, t))/(2*epsilon)
+                                                     for e in np.eye(nAE)]).T
         if cMath.norm(q_t) > 1e-10:
             delta = 1e-4
             rhs[nODE2 + nODE1:] = -(Equations(q + delta*q_t) - 2*Equations(q) + Equations(q - delta*q_t))/delta**2
