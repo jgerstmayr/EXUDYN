@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (8 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (7 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -131,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 14 | Structural core improvements |
+| RG9 | OPEN | 13 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 17 | Symbolic |
@@ -1171,9 +1171,9 @@ CLOSED 2026-11-01 (#3201 stays open): CSystem::ComputeLocalJacobianODE2 - the ob
 
 CLOSED 2026-11-01 (#3201 stays open): ComputeLocalJacobianODE1 and AddLocalJacobianODE1, JacobianODE1RHS a loop over them; LocalJacobian (was LocalJacobianODE2) describes the blocks of both kinds of rows; temp.localJacobianODE2 for the numerical coupling block; the same results. [log](exudynRevisionLog2026c.md#rg9-11-4-2)
 
-##### **OPEN_RG9.11.4.3** The virtual ComputeLocalJacobian of CObject with the numerical default for the objects that are not connectors; connectors and joints by the connector interface
+##### **CLOSED_RG9.11.4.3** The virtual ComputeLocalJacobianODE2 of CObject: ComputeJacobianODE2_ODE2 by default, the connector interface or the marker data in CObjectConnector; the numerical differentiation stays in CSystem
 
-Design section 7, J1 and J2; after RG9.11.4.2.
+CLOSED 2026-11-01 (#3201 stays open): the decision between connectors and the other objects moved from CSystem::ComputeObjectJacobianODE2 into the objects; the numerical default is not in CObject, as it perturbs the system state and needs the Lie group composition of CSystem - it is what an object returning false gets, serially; the same results. [log](exudynRevisionLog2026c.md#rg9-11-4-3)
 
 #### **OPEN_RG9.11.5** Assemble the analytic and automatic local Jacobians in parallel, with triplets per thread and a cost per item
 

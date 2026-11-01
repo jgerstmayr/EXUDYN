@@ -5323,3 +5323,17 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   `deferred` before it would differentiate numerically. `temp.deferredObjects` for the objects a thread leaves to the
   serial part.
 - The test suite passes; test_systemJacobians.py and test_connectorInterface.py 67 passed.
+
+<a id="rg9-11-4-3"></a>
+### RG9.11.4.3 — The virtual ComputeLocalJacobianODE2 of CObject (2026-11-01, #3201)
+- `CObject::ComputeLocalJacobianODE2(systemData, temp, numDiff, factorODE2, factorODE2_t, ltgODE2)`: the object's own
+  local Jacobian of its ODE2 rows into temp.jacobianODE2Container, false if it has none for these settings. The default
+  (CObjectBody.cpp, for every object that is not a connector) calls ComputeJacobianODE2_ODE2;
+  `CObjectConnector::ComputeLocalJacobianODE2` (CObjectConnector.cpp) is the branch that was in CSystem, moved
+  unchanged: forODE2Connectors, the Jacobian derivatives of the markers, the connector interface, else the marker
+  data. CSystem::ComputeObjectJacobianODE2 checks only the settings and the declared Jacobian functions and calls it.
+- Different from decision J2 as written (the numerical default in CObject): the numerical differentiation stays a
+  function of CSystem. It perturbs the system coordinates and needs the Lie group composition of CSystem
+  (ComputeLieGroupNodeCompositionEps); in CObject it would need the same access. It is what an object returning
+  false gets, and it is serial (RG9.11.5). Moving it is possible later through a small interface of CSystem, if wanted.
+- The test suite passes; test_systemJacobians.py, test_connectorInterface.py, test_accessFunctionsAD.py 73 passed.

@@ -32,6 +32,10 @@
 
 #include "System/CNode.h" 
 
+class CSystemData;
+class TemporaryComputationData;
+class NumericalDifferentiationSettings;
+
 
 //! Connectors link two bodies (e.g. by means of spring), constraints are Lagrange-multiplier based, FiniteElement additionally has shape functions, etc.
 //! Body: contains its own node(s); finiteElement: connects several nodes; connectors: based on markers
@@ -212,6 +216,13 @@ public:
 	//! in sparse mode, the jacobianODE2 MUST include the ltg transformation for (row/column) indices!
 	//! this is the local tangent stiffness matrix;
 	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const {CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianODE2_ODE2");}
+
+	//! the object's own local Jacobian of its ODE2 rows, factorODE2 d(LHS)/dq + factorODE2_t d(LHS)/dq_t, into
+	//! temp.jacobianODE2Container (#3201); called if GetAvailableJacobians() names the ODE2 Jacobian functions; false:
+	//! none for these settings, and the system differentiates the object numerically. Default: ComputeJacobianODE2_ODE2;
+	//! a connector computes it on the connector interface or by its marker data
+	virtual bool ComputeLocalJacobianODE2(const CSystemData& systemData, TemporaryComputationData& temp,
+		const NumericalDifferentiationSettings& numDiff, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltgODE2) const;
 
 	//! the analytic Jacobian of the ODE1 right-hand side by the local ODE1 coordinates (GetODE1Size() x GetODE1Size()), called if
 	//! the flag ODE1_ODE1_function is set; by the local ODE2 coordinates and velocities (GetODE1Size() x GetODE2Size()) if

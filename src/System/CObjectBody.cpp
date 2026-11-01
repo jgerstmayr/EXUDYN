@@ -19,6 +19,16 @@
 
 #include "Main/CSystemData.h"
 #include "Linalg/RigidBodyMath.h"
+#include "Main/TemporaryComputationData.h"
+
+//! the object's own local Jacobian of its ODE2 rows (#3201): ComputeJacobianODE2_ODE2, for every object that is not a
+//! connector
+bool CObject::ComputeLocalJacobianODE2(const CSystemData& systemData, TemporaryComputationData& temp,
+	const NumericalDifferentiationSettings& numDiff, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltgODE2) const
+{
+	ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp, factorODE2, factorODE2_t, ltgODE2);
+	return true;
+}
 
 
 CNode*& CObject::GetCNode(Index localIndex)
