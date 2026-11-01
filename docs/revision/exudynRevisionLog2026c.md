@@ -4932,3 +4932,21 @@ the extra 4.7 us per Python call - add views.)*
   3.1e-6 (largest entry 70); 500 steps generalized-alpha with full Newton: the solutions agree to 9.6e-13, 862 Newton
   steps each.
 - Not in this step: massMatrixUserFunction, constraintUserFunction, jacobianUserFunction of the design - RG9.10.6.
+
+<a id="rg9-10-5"></a>
+### RG9.10.5 — SymbolicSystem takes ObjectGenericDAE (2026-11-01, #3190)
+- `SymbolicSystem.daeKinds`: the ObjectGenericDAE of the same recordings and numbers of coordinates, per object its
+  matrices by the symbols of genericDAE.md (empty if not given), its parameters and the global indices of its ODE1
+  and algebraic coordinates; a Python user function raises, as for the other items.
+- The ODE2 forces f + f_u - K q - D q_t - E y and the mass matrix go into ODE2RHS, MassMatrix, MassMatrixBlocks (after
+  the bodies), ODE2ResidualLHS and its Jacobian; an object with ODE2 and ODE1 coordinates makes the ODE2 equations
+  depend on y, so these functions then need y and the composed system has the input y after t. ODE1RHS adds A y + B q
+  + B_t q_t + g + g_u, ODE1Jacobian (now with q, q_t) A + dg_u/dy; AlgebraicEquations C_q q + C_y y - c_0;
+  ODE2ReactionForcesLHS C_q^T z; ODE1ReactionTermsLHS, which SymbolicSystem did not have, C_y^T z. SystemJacobian adds
+  the coupling blocks (`_DAECouplings`) by the matrices and EvaluateJacobian of the recordings at the arguments q, q_t,
+  y (3, 4, 5 with mbs). The velocity level is refused, as for the joints.
+- Equations(): the same terms as expressions, y whenever the system has an ObjectGenericDAE with ODE1 coordinates, the
+  new result ODE1ReactionTermsLHS; GetFlatProgram takes it and adds z and y to the arguments when used.
+- symbolicSystemGenericDAETest.py, the coupled model of genericDAETest.py with recorded user functions plus an object on
+  ODE1 coordinates only: SolveGeneralizedAlpha against SolveDynamic 4.3e-14 (relative), SystemJacobian against central
+  differences 6.2e-12, composed against object by object 0.0, the numpy export against the functions 0.0.

@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.10 ObjectGenericDAE: an object on ODE2, ODE1 and algebraic coordinates, linear by matrices, nonlinear by user functions (2 open sub-steps)
+  - RG9.10 ObjectGenericDAE: an object on ODE2, ODE1 and algebraic coordinates, linear by matrices, nonlinear by user functions (1 open sub-step)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -133,7 +133,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 8 | Structural core improvements |
+| RG9 | OPEN | 7 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 13 | Symbolic |
@@ -1149,9 +1149,11 @@ CLOSED 2026-11-01 (#3189, #3143 stays open): the recorded forceUserFunction and 
 Jacobian blocks by EvaluateJacobianAdd, in one pass; genericDAESymbolicTest.py against the numerical Jacobians (3e-6 of
 70) and the solution (1e-12). The new user functions moved to RG9.10.6. [log](exudynRevisionLog2026c.md#rg9-10-4)
 
-#### **OPEN_RG9.10.5** SymbolicSystem takes ObjectGenericDAE: its kind, Equations(), the export
+#### **CLOSED_RG9.10.5** SymbolicSystem takes ObjectGenericDAE: its kind, Equations(), the export
 
-#3143. Design docs/dev/design/genericDAE.md.
+CLOSED 2026-11-01 (#3190, #3143 stays open): daeKinds; the ODE2 forces with y, the ODE1 equations with q and q_t, the
+constraints and both reaction terms, the exact coupling blocks of SystemJacobian, Equations() and GetFlatProgram with
+y and ODE1ReactionTermsLHS; symbolicSystemGenericDAETest.py against SolveDynamic (4e-14). [log](exudynRevisionLog2026c.md#rg9-10-5)
 
 #### **OPEN_RG9.10.6** Add the massMatrixUserFunction, constraintUserFunction and jacobianUserFunction of ObjectGenericDAE, recorded with one-pass Jacobians
 

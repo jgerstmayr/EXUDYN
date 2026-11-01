@@ -24,8 +24,9 @@
 #           LoadMassProportional and LoadCoordinate, constant or with a symbolic user function of the time, on markers
 #           of point nodes, node coordinates and user bodies (#3118); ObjectJointUser with symbolic constraint and
 #           Jacobian functions (#3141); ObjectGenericODE1 with its matrix, vector and a symbolic rhsUserFunction, and
-#           LoadCoordinate on its coordinates (#3144); every other object and load, data coordinates and recordings
-#           that read mbs are refused.
+#           LoadCoordinate on its coordinates (#3144); ObjectGenericDAE with its matrices and symbolic forceUserFunction
+#           and rhsUserFunction, its ODE1 and algebraic coordinates (#3190); every other object and load, data
+#           coordinates and recordings that read mbs are refused.
 #           SystemVariables(system) gives the system variables as one exudyn.symbolic.VariableSet and the states of the
 #           markers as expressions of them (#3151). The parameters of the user items may be named exudyn.symbolic.Real,
 #           SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (#3152).
@@ -56,6 +57,15 @@ _userFunctionNames = {'UserBody': ['massMatrixUserFunction', 'forceUserFunction'
                       'ConnectorUser': ['forceUserFunction']}
 #the user functions of a joint, ObjectJointUser on two rigid markers (#3141)
 _jointFunctionNames = ['constraintUserFunction', 'jacobianUserFunction']
+#the user functions of ObjectGenericDAE, all (mbs, t, itemNumber, q, q_t, y, parameters), and the positions of q, q_t
+#and y in them, mbs at 0 (#3190)
+_daeFunctionNames = ['forceUserFunction', 'rhsUserFunction']
+(_daeQ, _daeQ_t, _daeY) = (3, 4, 5)
+#the matrices and vectors of ObjectGenericDAE by their symbols in the design, docs/dev/design/genericDAE.md
+_daeMatrices = {'M': 'massMatrix', 'D': 'dampingMatrix', 'K': 'stiffnessMatrix', 'E': 'couplingMatrixODE1',
+                'A': 'systemMatrix', 'B': 'couplingMatrixODE2', 'B_t': 'couplingMatrixODE2_t',
+                'C_q': 'constraintMatrixODE2', 'C_y': 'constraintMatrixODE1'}
+_daeVectors = {'f': 'forceVector', 'g': 'rhsVector', 'c0': 'constraintVector', 'parameters': 'parameters'}
 #the positions of the arguments q (the total coordinates for UserBody) and q_t in the user functions, mbs at 0
 _argumentPositions = {'UserBody': (4, 5), 'GenericODE2': (3, 4)}
 #the user function of ObjectUserBody that projects a load on a body marker into its coordinates (#3118), and the
@@ -412,8 +422,8 @@ class SymbolicKind:
     the table of the objects, their parameters and the global indices of their ODE2 coordinates
 
     Note:
-        Its members: objectType, the type name 'UserBody', 'GenericODE2', 'ConnectorUser', 'JointUser' or
-        'GenericODE1'; recordings, the dict of the recorded user functions by name (a name without recording is
+        Its members: objectType, the type name 'UserBody', 'GenericODE2', 'ConnectorUser', 'JointUser', 'GenericODE1'
+        or 'GenericDAE'; recordings, the dict of the recorded user functions by name (a name without recording is
         missing); objects, the list of the object numbers; ltg, the array (number of objects x local coordinates) of the
         global ODE2 indices - of the global ODE1 indices for GenericODE1 -; parameters, the list of the
         parameter vectors of the objects (UserBody), of the dicts of the constant matrices and the force vector
@@ -422,8 +432,10 @@ class SymbolicKind:
         'body' -, its local coordinate indices 'indices', its reference 'position' and 'rotation' - for a marker on a
         user body its local position and rotation, 'objectNumber', 'qRef', 'parameters' and the 'recordings' of the
         body that give its kinematics), of the dicts of 'parameters', 'markers', 'orientation' and the global indices
-        'ltgAE' of its algebraic coordinates (JointUser), or of the dicts of the system matrix 'A' and the vector 'f'
-        (GenericODE1)
+        'ltgAE' of its algebraic coordinates (JointUser), of the dicts of the system matrix 'A' and the vector 'f'
+        (GenericODE1), or of the dicts of the matrices and vectors by their symbols - 'M', 'D', 'K', 'E', 'A', 'B',
+        'B_t', 'C_q', 'C_y', 'f', 'g', 'c0', empty if not given -, the 'parameters' and the global indices 'ltgODE1' and
+        'ltgAE' of its ODE1 and algebraic coordinates (GenericDAE, ltg those of its ODE2 coordinates)
     """
     def __init__(self, objectType, recordings):
         self.objectType = objectType
@@ -475,7 +487,8 @@ class SymbolicSystem(SymbolicSystemBase):
         Its members: mbs; kinds, the list of SymbolicKind; jointKinds, the list of SymbolicKind of the ObjectJointUser
         (#3141), whose constraint equations are AlgebraicEquations and whose reaction forces are ODE2ReactionForcesLHS - in Equations() on request
         (#3146) -; ode1Kinds, the list of SymbolicKind of the ObjectGenericODE1 (#3144), whose right-hand
-        side is ODE1RHS; loads, the list of SymbolicLoad on ODE2 coordinates, ode1Loads those on ODE1
+        side is ODE1RHS; daeKinds, the list of SymbolicKind of the ObjectGenericDAE (#3190), which add to the ODE2,
+        the ODE1 and the algebraic equations; loads, the list of SymbolicLoad on ODE2 coordinates, ode1Loads those on ODE1
         coordinates; nODE2, nODE1, the numbers of ODE2 and ODE1 coordinates of the system; nAE, the number of the
         algebraic equations; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
         the recordings 'ODE2RHS', 'massMatrix' and 'massMatrixBlocks' - esym.Function of the inputs q, q_t and t, the
@@ -505,6 +518,7 @@ class SymbolicSystem(SymbolicSystemBase):
         kinds = {}
         ode1Kinds = {}
         jointKinds = {}
+        daeKinds = {}
         self._constantMassMatrix = True
         for objectNumber in range(mbs.systemData.NumberOfObjects()):
             item = mbs.GetObject(objectNumber)
@@ -517,6 +531,9 @@ class SymbolicSystem(SymbolicSystemBase):
                 continue
             if objectType == 'GenericODE1':
                 self._AddODE1Object(ode1Kinds, objectNumber, item)
+                continue
+            if objectType == 'GenericDAE':
+                self._AddDAEObject(daeKinds, objectNumber, item)
                 continue
             if objectType not in _userFunctionNames:
                 if len(ltg):
@@ -563,15 +580,22 @@ class SymbolicSystem(SymbolicSystemBase):
                                         'D': _Dense(item['dampingMatrix']), 'f': np.array(item['forceVector'], dtype=float)})
         self.jointKinds = list(jointKinds.values())
         self.ode1Kinds = list(ode1Kinds.values())
-        if not refused and sum(len(joint['ltgAE']) for kind in self.jointKinds for joint in kind.parameters) != self.nAE:
-            refused += ['algebraic equations of other items than ObjectJointUser']
-        if not refused and sum(len(ltg) for kind in self.ode1Kinds for ltg in kind.ltg) != self.nODE1:
-            refused += ['ODE1 coordinates of other items than ObjectGenericODE1']
+        self.daeKinds = list(daeKinds.values())
+        daeObjects = [dae for kind in self.daeKinds for dae in kind.parameters]
+        if not refused and (sum(len(joint['ltgAE']) for kind in self.jointKinds for joint in kind.parameters)
+                            + sum(len(dae['ltgAE']) for dae in daeObjects)) != self.nAE:
+            refused += ['algebraic equations of other items than ObjectJointUser and ObjectGenericDAE']
+        if not refused and (sum(len(ltg) for kind in self.ode1Kinds for ltg in kind.ltg)
+                            + sum(len(dae['ltgODE1']) for dae in daeObjects)) != self.nODE1:
+            refused += ['ODE1 coordinates of other items than ObjectGenericODE1 and ObjectGenericDAE']
         if refused:
             raise ValueError('SymbolicSystem: these items cannot be assembled (yet): ' + ', '.join(refused))
         self.kinds = list(kinds.values())
-        for kind in self.kinds + self.jointKinds + self.ode1Kinds:
+        for kind in self.kinds + self.jointKinds + self.ode1Kinds + self.daeKinds:
             kind.ltg = np.array(kind.ltg, dtype=int)
+        #the ODE2 equations depend on the ODE1 coordinates through an ObjectGenericDAE with both: the forces, the
+        #composed system and Equations() then take y (#3190)
+        self._ode2UsesY = any(kind.ltg.shape[1] > 0 and len(dae['ltgODE1']) > 0 for kind in self.daeKinds for dae in kind.parameters)
         self.parameterVariables = self._ParameterVariables(parameters)
         self.composed = self._Compose() if composeSystem else None
 
@@ -629,10 +653,9 @@ class SymbolicSystem(SymbolicSystemBase):
         the rows and columns of the local mass matrices, as esym.Function of the inputs q, q_t and t (#3149) of the
         expressions of Equations, optimized as CreateSymbolicUserFunction does; one call of each evaluates the system"""
         entries = set()
-        for kind in self.kinds:
-            if kind.objectType != 'ConnectorUser':
-                for ltg in kind.ltg:
-                    entries.update((int(i), int(j)) for i in ltg for j in ltg)
+        for kind in self._BodyKinds():
+            for ltg in kind.ltg:
+                entries.update((int(i), int(j)) for i in ltg for j in ltg)
         entries = sorted(entries)
         rows = np.array([i for (i, j) in entries], dtype=int)
         columns = np.array([j for (i, j) in entries], dtype=int)
@@ -640,7 +663,8 @@ class SymbolicSystem(SymbolicSystemBase):
         (q0, q_t0) = self.InitialState()
         inputs = exudyn.symbolic.VariableSet() #the scope of the inputs, in the order of the arguments of Evaluate
         (q, q_t, t) = (inputs.Add('q', q0), inputs.Add('q_t', q_t0), inputs.Add('t', 0.))
-        (M, f, blocks) = self._EquationLists(backend, q, q_t, t)[:3]
+        y = inputs.Add('y', self.InitialStateODE1()) if self._ode2UsesY else None #(#3190)
+        (M, f, blocks) = self._EquationLists(backend, q, q_t, t, y=y)[:3]
         massMatrix = [M[i][j] for (i, j) in entries] if entries else [0.]
         blockEntries = [x for (ltg, kindBlocks) in blocks for block in kindBlocks for row in block for x in row]
 
@@ -663,6 +687,29 @@ class SymbolicSystem(SymbolicSystemBase):
         kind.objects.append(objectNumber)
         kind.ltg.append(list(self.mbs.systemData.GetObjectLTGODE1(objectNumber)))
         kind.parameters.append({'A': _Dense(item['systemMatrix']), 'f': np.array(item['rhsVector'], dtype=float)})
+
+    def _AddDAEObject(self, daeKinds, objectNumber, item):
+        """an ObjectGenericDAE into its kind (#3190): the objects with the same recorded user functions and the same
+        numbers of coordinates; a Python user function raises"""
+        systemData = self.mbs.systemData
+        recordings = {}
+        for name in _daeFunctionNames:
+            recording = _Recording(item[name], objectNumber, name)
+            if recording is not None:
+                recordings[name] = recording
+        dae = {symbol: _Dense(item[name]) for (symbol, name) in _daeMatrices.items()}
+        dae.update({symbol: np.array(item[name], dtype=float) for (symbol, name) in _daeVectors.items()})
+        dae['ltgODE1'] = np.array(systemData.GetObjectLTGODE1(objectNumber), dtype=int)
+        dae['ltgAE'] = np.array(systemData.GetObjectLTGAE(objectNumber), dtype=int)
+        ltg = list(systemData.GetObjectLTGODE2(objectNumber))
+        key = ((len(ltg), len(dae['ltgODE1']), len(dae['ltgAE']))
+               + tuple((name, recordings[name].GetFlatProgram()) for name in sorted(recordings)))
+        if key not in daeKinds:
+            daeKinds[key] = SymbolicKind('GenericDAE', recordings)
+        kind = daeKinds[key]
+        kind.objects.append(objectNumber)
+        kind.ltg.append(ltg)
+        kind.parameters.append(dae)
 
     def _AddJoint(self, jointKinds, objectNumber, item):
         """an ObjectJointUser into its kind, grouped as the connectors; the reason it is refused, empty if it is taken"""
@@ -817,13 +864,13 @@ class SymbolicSystem(SymbolicSystemBase):
         return self._constantMassMatrix
 
     def ODE1RHS(self, q, q_t, y, t):
-        """the right-hand side g(y, t) of the ODE1 equations y_t = g (#3144): per ObjectGenericODE1 A y + f and its
-        recorded rhsUserFunction of its coordinates, as CObjectGenericODE1 computes it, and the LoadCoordinate on ODE1
-        coordinates
+        """the right-hand side g(q, q_t, y, t) of the ODE1 equations y_t = g (#3144): per ObjectGenericODE1 A y + f and
+        its recorded rhsUserFunction of its coordinates, as CObjectGenericODE1 computes it, per ObjectGenericDAE A y + B q
+        + B_t q_t + g + g_u (#3190), and the LoadCoordinate on ODE1 coordinates
 
         Args:
-            q: the ODE2 coordinates, not used
-            q_t: the ODE2 velocities, not used
+            q: the ODE2 coordinates, used by ObjectGenericDAE only
+            q_t: the ODE2 velocities, used by ObjectGenericDAE only
             y: the ODE1 coordinates, of size nODE1
             t: the time
 
@@ -835,9 +882,81 @@ class SymbolicSystem(SymbolicSystemBase):
         for kind in self.ode1Kinds:
             for i in range(len(kind.objects)):
                 np.add.at(g, kind.ltg[i], self._LocalODE1RHS(kind, i, y, t))
+        if self.daeKinds:
+            (q, q_t, _) = self._State(q, q_t)
+            for kind in self.daeKinds:
+                for i in range(len(kind.objects)):
+                    np.add.at(g, kind.parameters[i]['ltgODE1'], self._DAERHS(kind, i, q, q_t, y, t))
         for load in self.ode1Loads:
             np.add.at(g, load.ltg, np.atleast_1d(self._LoadValue(load, t)))
         return g
+
+    def _ODE1State(self, y, where):
+        """the ODE1 coordinates y as float array; None: zero, unless the ODE2 equations depend on them"""
+        if y is None:
+            if self._ode2UsesY:
+                raise ValueError('SymbolicSystem.' + where + ': the ODE2 equations depend on the ODE1 coordinates '
+                                 '(ObjectGenericDAE), so y must be given')
+            return np.zeros(self.nODE1)
+        return np.asarray(y, dtype=float)
+
+    def _DAEArguments(self, kind, i, q, q_t, y, t):
+        """the arguments after mbs of the user functions of ObjectGenericDAE i of kind: t, itemNumber, its q, q_t, y and
+        its parameters"""
+        (ltg, dae) = (kind.ltg[i], kind.parameters[i])
+        return (t, kind.objects[i], q[ltg], q_t[ltg], y[dae['ltgODE1']], dae['parameters'])
+
+    def _DAECall(self, kind, name, i, q, q_t, y, t):
+        """the result of the recorded user function name of ObjectGenericDAE i of kind, as numpy array"""
+        return np.array(kind.recordings[name].Evaluate(self.mbs, *self._DAEArguments(kind, i, q, q_t, y, t)), dtype=float)
+
+    def _DAEJacobian(self, kind, name, i, position, q, q_t, y, t):
+        """the derivative of the recorded user function name of ObjectGenericDAE i of kind by its argument at position -
+        _daeQ, _daeQ_t or _daeY -, by Diff of the recording"""
+        return self._RecordingJacobian(kind.recordings[name], position, self._DAEArguments(kind, i, q, q_t, y, t))
+
+    def _DAEForces(self, kind, i, q, q_t, y, t):
+        """the ODE2 forces of ObjectGenericDAE i of kind on the right-hand side, f + f_u - K q - D q_t - E y, the negative
+        of what CObjectGenericDAE::ComputeODE2LHS computes"""
+        (ltg, dae) = (kind.ltg[i], kind.parameters[i])
+        f = np.zeros(len(ltg))
+        if len(dae['f']):
+            f += dae['f']
+        f -= _MatVec(dae['K'], q[ltg]) + _MatVec(dae['D'], q_t[ltg]) + _MatVec(dae['E'], y[dae['ltgODE1']])
+        if 'forceUserFunction' in kind.recordings:
+            f += self._DAECall(kind, 'forceUserFunction', i, q, q_t, y, t)
+        return f
+
+    def _DAERHS(self, kind, i, q, q_t, y, t):
+        """the ODE1 right-hand side of ObjectGenericDAE i of kind, A y + B q + B_t q_t + g + g_u"""
+        (ltg, dae) = (kind.ltg[i], kind.parameters[i])
+        g = np.zeros(len(dae['ltgODE1']))
+        if len(dae['g']):
+            g += dae['g']
+        g += _MatVec(dae['A'], y[dae['ltgODE1']]) + _MatVec(dae['B'], q[ltg]) + _MatVec(dae['B_t'], q_t[ltg])
+        if 'rhsUserFunction' in kind.recordings:
+            g += self._DAECall(kind, 'rhsUserFunction', i, q, q_t, y, t)
+        return g
+
+    def _DAEConstraints(self, kind, i, q, y):
+        """the algebraic equations of ObjectGenericDAE i of kind at position level, C_q q + C_y y - c_0"""
+        (ltg, dae) = (kind.ltg[i], kind.parameters[i])
+        c = np.zeros(len(dae['ltgAE']))
+        c += _MatVec(dae['C_q'], q[ltg]) + _MatVec(dae['C_y'], y[dae['ltgODE1']])
+        if len(dae['c0']):
+            c -= dae['c0']
+        return c
+
+    def ODE1ReactionTermsLHS(self, q, q_t, y, z, t):
+        """the reaction terms C_y^T z of the algebraic coordinates of the ObjectGenericDAE in the ODE1 equations, on
+        their left-hand side (#3155, #3190), of size nODE1"""
+        z = np.asarray(z, dtype=float)
+        r = np.zeros(self.nODE1)
+        for kind in self.daeKinds:
+            for dae in kind.parameters:
+                if dae['C_y'].size:
+                    np.add.at(r, dae['ltgODE1'], dae['C_y'].T @ z[dae['ltgAE']])
+        return r
 
     def _LocalODE1RHS(self, kind, i, y, t):
         """the right-hand side of ObjectGenericODE1 i of kind, A y + f + f_user(mbs, t, itemNumber, y)"""
@@ -851,9 +970,9 @@ class SymbolicSystem(SymbolicSystemBase):
             g += np.array(kind.recordings['rhsUserFunction'].Evaluate(self.mbs, t, kind.objects[i], y[ltg]), dtype=float)
         return g
 
-    def ODE1Jacobian(self, y, t):
+    def ODE1Jacobian(self, y, t, q=None, q_t=None):
         """the derivative of ODE1RHS by y (nODE1 x nODE1), exact: A and the derivative of the recorded
-        rhsUserFunction (#3144, #3116)"""
+        rhsUserFunction (#3144, #3116); q and q_t, zero if None, for an ObjectGenericDAE (#3190)"""
         y = np.asarray(y, dtype=float)
         J = np.zeros((self.nODE1, self.nODE1))
         for kind in self.ode1Kinds:
@@ -865,6 +984,18 @@ class SymbolicSystem(SymbolicSystemBase):
                 if 'rhsUserFunction' in kind.recordings:
                     local += self._RecordingJacobian(kind.recordings['rhsUserFunction'], 3, (t, kind.objects[i], y[ltg]))
                 J[np.ix_(ltg, ltg)] += local
+        (q, q_t, _) = self._State(q, q_t)
+        for kind in self.daeKinds:
+            for i in range(len(kind.objects)):
+                (ltg, dae) = (kind.ltg[i], kind.parameters[i])
+                if not len(dae['ltgODE1']):
+                    continue
+                local = np.zeros((len(dae['ltgODE1']), len(dae['ltgODE1'])))
+                if dae['A'].size:
+                    local += dae['A']
+                if 'rhsUserFunction' in kind.recordings:
+                    local += self._DAEJacobian(kind, 'rhsUserFunction', i, _daeY, q, q_t, y, t)
+                J[np.ix_(dae['ltgODE1'], dae['ltgODE1'])] += local
         return J
 
     def SetSystemState(self, q, q_t=None, q_tt=None, t=None, configuration=exudyn.ConfigurationType.Current):
@@ -936,13 +1067,14 @@ class SymbolicSystem(SymbolicSystemBase):
         return ((t, objectNumber, R0, p0, R1, p1, parameters), markerData)
 
     def AlgebraicEquations(self, q, q_t, y, z, t, velocityLevel=False):
-        """the constraint equations c(q, t) of the joints at position level (#3141), by their recorded
-        constraintUserFunction; the velocity level is not given
+        """the constraint equations c(q, y, t) at position level: of the joints by their recorded
+        constraintUserFunction (#3141), of the ObjectGenericDAE C_q q + C_y y - c_0 (#3190); the velocity level is not
+        given
 
         Args:
             q: the ODE2 coordinates
             q_t: the ODE2 velocities, not used
-            y: the ODE1 coordinates, not used
+            y: the ODE1 coordinates, used by ObjectGenericDAE only
             z: the algebraic coordinates, the Lagrange multipliers lambda of the documentation, not used
             t: the time
             velocityLevel: must be False
@@ -951,19 +1083,26 @@ class SymbolicSystem(SymbolicSystemBase):
             the vector c of size nAE
         """
         if velocityLevel:
-            raise ValueError('SymbolicSystem.AlgebraicEquations: the joints give their equations at position level only')
+            raise ValueError('SymbolicSystem.AlgebraicEquations: the joints and ObjectGenericDAE give their equations at position level only')
+        q = np.asarray(q, dtype=float)
         c = np.zeros(self.nAE)
         for kind in self.jointKinds:
             for i in range(len(kind.objects)):
-                arguments = self._JointArguments(kind, i, np.asarray(q, dtype=float), t)[0]
+                arguments = self._JointArguments(kind, i, q, t)[0]
                 c[kind.parameters[i]['ltgAE']] = np.array(kind.recordings['constraintUserFunction'].Evaluate(self.mbs, *arguments),
                                                           dtype=float)
+        if self.daeKinds:
+            y = np.zeros(self.nODE1) if y is None else np.asarray(y, dtype=float)
+            for kind in self.daeKinds:
+                for i in range(len(kind.objects)):
+                    c[kind.parameters[i]['ltgAE']] = self._DAEConstraints(kind, i, q, y)
         return c
 
     def ODE2ReactionForcesLHS(self, q, q_t, y, z, t):
         """the reaction forces C_q^T z of the joints (#3141): the recorded jacobianUserFunction C by the marker
         translations and global rotation increments, C^T z the forces and torques on the markers, projected into the
-        coordinates by the position and rotation Jacobians of the markers, as the forces of a connector
+        coordinates by the position and rotation Jacobians of the markers, as the forces of a connector; of the
+        ObjectGenericDAE C_q^T z by its matrix (#3190)
 
         Args:
             q: the ODE2 coordinates
@@ -990,6 +1129,10 @@ class SymbolicSystem(SymbolicSystemBase):
                     if Jrot is not None:
                         local[marker['indices']] += Jrot.T @ forces[6*k + 3:6*k + 6]
                 np.add.at(f, kind.ltg[i], local)
+        for kind in self.daeKinds:
+            for (ltg, dae) in zip(kind.ltg, kind.parameters):
+                if dae['C_q'].size:
+                    np.add.at(f, ltg, dae['C_q'].T @ z[dae['ltgAE']])
         return f
 
     def SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
@@ -1022,11 +1165,12 @@ class SymbolicSystem(SymbolicSystemBase):
         (nODE2, nODE1, nAE) = (self.nODE2, self.nODE1, self.nAE)
         nSystem = nODE2 + nODE1 + nAE
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
+        y = np.zeros(nODE1) if y is None else np.asarray(y, dtype=float)
         J = np.zeros((nSystem, nSystem))
-        J[:nODE2, :nODE2] = self.ODE2ResidualLHSJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt)
+        J[:nODE2, :nODE2] = self.ODE2ResidualLHSJacobian(q, q_t, q_tt, t, factor_q, factor_q_t, factor_q_tt, y=y)
+        offset = nODE2 + nODE1 #the first algebraic coordinate
         if nAE:
             z = np.asarray(z, dtype=float)
-            offset = nODE2 + nODE1 #the first algebraic coordinate
             for kind in self.jointKinds:
                 for i in range(len(kind.objects)):
                     (ltg, ltgAE) = (kind.ltg[i], kind.parameters[i]['ltgAE'] + offset)
@@ -1035,8 +1179,42 @@ class SymbolicSystem(SymbolicSystemBase):
                     J[np.ix_(ltg, ltgAE)] += C_q.T
                     J[np.ix_(ltgAE, ltg)] += factor_q*C_q
         if nODE1: #the rows g - y_t
-            J[nODE2:nODE2 + nODE1, nODE2:nODE2 + nODE1] = factor_y*self.ODE1Jacobian(y, t) - factor_y_t*np.eye(nODE1)
+            J[nODE2:offset, nODE2:offset] = factor_y*self.ODE1Jacobian(y, t, q, q_t) - factor_y_t*np.eye(nODE1)
+        for kind in self.daeKinds: #the coupling blocks of ObjectGenericDAE (#3190), the ODE2 block by ODE2ResidualLHSJacobian
+            for i in range(len(kind.objects)):
+                for (rows, columns, block) in self._DAECouplings(kind, i, q, q_t, y, t, factor_q, factor_q_t, factor_y):
+                    J[np.ix_(rows, columns)] += block
         return J
+
+    def _DAECouplings(self, kind, i, q, q_t, y, t, factor_q, factor_q_t, factor_y):
+        """the blocks of SystemJacobian of ObjectGenericDAE i of kind outside the ODE2 block and the ODE1 block, as
+        (global rows, global columns, block) of the residual [M q_tt - f + C_q^T z, g - y_t - C_y^T z, c]: the ODE2 rows
+        by y, factor_y (E - df_u/dy), and by z, C_q^T; the ODE1 rows by q and q_t, factor_q (B + dg_u/dq) + factor_q_t
+        (B_t + dg_u/dq_t), and by z, -C_y^T; the algebraic rows factor_q C_q and factor_y C_y"""
+        (ltg, dae) = (kind.ltg[i], kind.parameters[i])
+        (nODE2, nODE1) = (self.nODE2, self.nODE1)
+        (ltgODE1, ltgAE) = (dae['ltgODE1'] + nODE2, dae['ltgAE'] + nODE2 + nODE1)
+        (n2, n1, nAE) = (len(ltg), len(ltgODE1), len(ltgAE))
+        blocks = []
+        if n2 and n1:
+            block = factor_y*(dae['E'] if dae['E'].size else np.zeros((n2, n1)))
+            if 'forceUserFunction' in kind.recordings:
+                block = block - factor_y*self._DAEJacobian(kind, 'forceUserFunction', i, _daeY, q, q_t, y, t)
+            blocks.append((ltg, ltgODE1, block))
+            block = np.zeros((n1, n2))
+            for (name, position, factor) in [('B', _daeQ, factor_q), ('B_t', _daeQ_t, factor_q_t)]:
+                if factor == 0.:
+                    continue
+                if dae[name].size:
+                    block += factor*dae[name]
+                if 'rhsUserFunction' in kind.recordings:
+                    block += factor*self._DAEJacobian(kind, 'rhsUserFunction', i, position, q, q_t, y, t)
+            blocks.append((ltgODE1, ltg, block))
+        if nAE and n2 and dae['C_q'].size:
+            blocks += [(ltg, ltgAE, dae['C_q'].T), (ltgAE, ltg, factor_q*dae['C_q'])]
+        if nAE and n1 and dae['C_y'].size:
+            blocks += [(ltgODE1, ltgAE, -dae['C_y'].T), (ltgAE, ltgODE1, factor_y*dae['C_y'])]
+        return blocks
 
     def _Call(self, kind, name, i, q, q_t, t):
         """the result of the user function name of object i of kind, by its recording, as numpy array"""
@@ -1115,6 +1293,8 @@ class SymbolicSystem(SymbolicSystemBase):
     def _LocalMassMatrix(self, kind, i, q, q_t, t):
         if kind.objectType == 'ConnectorUser':
             return np.zeros((kind.ltg.shape[1], kind.ltg.shape[1]))
+        if kind.objectType == 'GenericDAE':
+            return kind.parameters[i]['M']
         if 'massMatrixUserFunction' in kind.recordings:
             return self._Call(kind, 'massMatrixUserFunction', i, q, q_t, t)
         return kind.parameters[i]['M']
@@ -1146,38 +1326,58 @@ class SymbolicSystem(SymbolicSystemBase):
         return f
 
     def ODE2RHS(self, q=None, q_t=None, t=0., y=None):
-        """the global forces f(q, q_t, t) of the right-hand side, as the ODE2 part of the solver's right-hand side; y is
-        not used, as no item taken couples the ODE1 coordinates into the ODE2 equations
+        """the global forces f(q, q_t, t, y) of the right-hand side, as the ODE2 part of the solver's right-hand side
 
         Args:
             q: the ODE2 coordinates (displacements), of size nODE2; None: zero
             q_t: the ODE2 velocities; None: zero
             t: the time
-            y: the ODE1 coordinates, not used
+            y: the ODE1 coordinates, of size nODE1, used by an ObjectGenericDAE with ODE2 and ODE1 coordinates only -
+                which needs them (#3190) -; None: zero
 
         Returns:
             the vector f of size nODE2
         """
         (q, q_t, _) = self._State(q, q_t)
+        y = self._ODE1State(y, 'ODE2RHS')
         if self.composed is not None:
-            return np.array(self.composed['ODE2RHS'].Evaluate(q, q_t, t), dtype=float)
+            return np.array(self.composed['ODE2RHS'].Evaluate(*self._ComposedInputs(q, q_t, t, y)), dtype=float)
         f = np.zeros(self.nODE2)
         for kind in self.kinds:
             for i in range(len(kind.objects)):
                 np.add.at(f, kind.ltg[i], self._LocalForces(kind, i, q, q_t, t))
+        for kind in self._DAEKindsODE2():
+            for i in range(len(kind.objects)):
+                np.add.at(f, kind.ltg[i], self._DAEForces(kind, i, q, q_t, y, t))
         for load in self.loads:
             np.add.at(f, load.ltg, self._LoadForces(load, q, q_t, t))
         return f
+
+    def _DAEKindsODE2(self):
+        """the kinds of the ObjectGenericDAE with ODE2 coordinates"""
+        return [kind for kind in self.daeKinds if kind.ltg.shape[1]]
+
+    def _BodyKinds(self):
+        """the kinds with a mass matrix, in the order of MassMatrixBlocks: the kinds of the bodies, then those of the
+        ObjectGenericDAE with ODE2 coordinates"""
+        return [kind for kind in self.kinds if kind.objectType != 'ConnectorUser'] + self._DAEKindsODE2()
+
+    def _ComposedInputs(self, q, q_t, t, y=None):
+        """the arguments of the recordings of the composed system: q, q_t, t, and y if the ODE2 equations depend on it;
+        None: zero, for the constant mass matrix of ObjectGenericDAE"""
+        if not self._ode2UsesY:
+            return (q, q_t, t)
+        return (q, q_t, t, np.zeros(self.nODE1) if y is None else y)
 
     def MassMatrixTriplets(self, q=None, q_t=None, t=0.):
         """the global mass matrix as triplets (rows, columns, values), a value per nonzero local entry; equal rows
         and columns are added when the matrix is formed"""
         (q, q_t, _) = self._State(q, q_t)
         if self.composed is not None:
-            values = np.array(self.composed['massMatrix'].Evaluate(q, q_t, t), dtype=float)
+            values = np.array(self.composed['massMatrix'].Evaluate(*self._ComposedInputs(q, q_t, t)), dtype=float)
             return self.composed['rows'], self.composed['columns'], values[:len(self.composed['rows'])]
         rows, columns, values = [], [], []
-        for kind in self.kinds:
+        for kind in self.kinds + self._DAEKindsODE2():
             for i in range(len(kind.objects)):
                 local = self._LocalMassMatrix(kind, i, q, q_t, t)
                 (r, c) = np.nonzero(local)
@@ -1192,9 +1392,9 @@ class SymbolicSystem(SymbolicSystemBase):
         """the local mass matrices of the objects, per kind: a list of (ltg, blocks), the LTG table of the kind and its
         mass matrices (objects x n x n)"""
         (q, q_t, _) = self._State(q, q_t)
-        kinds = [kind for kind in self.kinds if kind.objectType != 'ConnectorUser']
+        kinds = self._BodyKinds()
         if self.composed is not None: #one call: the entries of all blocks, kind after kind
-            values = np.array(self.composed['massMatrixBlocks'].Evaluate(q, q_t, t), dtype=float)
+            values = np.array(self.composed['massMatrixBlocks'].Evaluate(*self._ComposedInputs(q, q_t, t)), dtype=float)
             (result, start) = ([], 0)
             for kind in kinds:
                 (m, nLocal) = kind.ltg.shape
@@ -1205,19 +1405,23 @@ class SymbolicSystem(SymbolicSystemBase):
                 for kind in kinds]
 
     def ODE2ResidualLHS(self, q=None, q_t=None, q_tt=None, t=0., y=None):
-        """the residual r = M(q) q_tt - f(q, q_t, t) of the ODE2 equations, LHS minus RHS, without forming M: by the recordings of the
-        composed system, else object by object; y is not used, as no item taken couples the ODE1 coordinates into the
-        ODE2 equations"""
+        """the residual r = M(q) q_tt - f(q, q_t, t, y) of the ODE2 equations, LHS minus RHS, without forming M: by the
+        recordings of the composed system, else object by object; y as in ODE2RHS"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
+        y = self._ODE1State(y, 'ODE2ResidualLHS')
         if self.composed is not None:
             (rows, columns, values) = self.MassMatrixTriplets(q, q_t, t)
-            return np.bincount(rows, values*q_tt[columns], minlength=self.nODE2) - self.ODE2RHS(q, q_t, t)
+            return np.bincount(rows, values*q_tt[columns], minlength=self.nODE2) - self.ODE2RHS(q, q_t, t, y=y)
         r = np.zeros(self.nODE2)
         for kind in self.kinds:
             for i in range(len(kind.objects)):
                 ltg = kind.ltg[i]
                 local = self._LocalMassMatrix(kind, i, q, q_t, t) @ q_tt[ltg] - self._LocalForces(kind, i, q, q_t, t)
                 np.add.at(r, ltg, local)
+        for kind in self._DAEKindsODE2():
+            for i in range(len(kind.objects)):
+                ltg = kind.ltg[i]
+                np.add.at(r, ltg, kind.parameters[i]['M'] @ q_tt[ltg] - self._DAEForces(kind, i, q, q_t, y, t))
         for load in self.loads:
             np.add.at(r, load.ltg, -self._LoadForces(load, q, q_t, t))
         return r
@@ -1239,21 +1443,23 @@ class SymbolicSystem(SymbolicSystemBase):
             factor_q_t: the factor of dr/dq_t
             factor_q_tt: the factor of dr/dq_tt
             sparse: True: a scipy.sparse.csr_matrix, else a dense array
-            y: the ODE1 coordinates, not used
+            y: the ODE1 coordinates, as in ODE2RHS
 
         Returns:
             the matrix (nODE2 x nODE2)
         """
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
+        y = self._ODE1State(y, 'ODE2ResidualLHSJacobian')
         if self.composed is not None and self.nODE2 <= _denseMassMatrixSize: #r = M q_tt - f of the two recordings
             composed = self.composed
+            inputs = self._ComposedInputs(q, q_t, t, y)
             J = np.zeros((self.nODE2, self.nODE2))
             for (name, factor) in [('q', factor_q), ('q_t', factor_q_t)]:
                 if factor != 0.:
-                    J -= factor*np.array(composed['ODE2RHS'].EvaluateJacobian(name, q, q_t, t), dtype=float)
+                    J -= factor*np.array(composed['ODE2RHS'].EvaluateJacobian(name, *inputs), dtype=float)
             (rows, columns) = (composed['rows'], composed['columns'])
             if factor_q != 0. and len(rows) and not self._constantMassMatrix: #d(M q_tt)/dq
-                dM = np.array(composed['massMatrix'].EvaluateJacobian('q', q, q_t, t), dtype=float)[:len(rows)]
+                dM = np.array(composed['massMatrix'].EvaluateJacobian('q', *inputs), dtype=float)[:len(rows)]
                 np.add.at(J, rows, factor_q*dM*q_tt[columns][:, np.newaxis])
             if factor_q_tt != 0. and len(rows):
                 np.add.at(J, (rows, columns), factor_q_tt*self.MassMatrixTriplets(q, q_t, t)[2])
@@ -1290,6 +1496,21 @@ class SymbolicSystem(SymbolicSystemBase):
                             continue #the user function computes the mass matrix instead
                         if matrices[name].size and factor != 0.:
                             local += factor*matrices[name]
+                (r, c) = np.nonzero(local)
+                rows.append(ltg[r])
+                columns.append(ltg[c])
+                values.append(local[r, c])
+        for kind in self._DAEKindsODE2(): #factor_q (K - df_u/dq) + factor_q_t (D - df_u/dq_t) + factor_q_tt M (#3190)
+            for i in range(len(kind.objects)):
+                (ltg, dae) = (kind.ltg[i], kind.parameters[i])
+                local = factor_q_tt*dae['M']
+                for (name, position, factor) in [('K', _daeQ, factor_q), ('D', _daeQ_t, factor_q_t)]:
+                    if factor == 0.:
+                        continue
+                    if dae[name].size:
+                        local = local + factor*dae[name]
+                    if 'forceUserFunction' in kind.recordings:
+                        local = local - factor*self._DAEJacobian(kind, 'forceUserFunction', i, position, q, q_t, y, t)
                 (r, c) = np.nonzero(local)
                 rows.append(ltg[r])
                 columns.append(ltg[c])
@@ -1392,7 +1613,8 @@ class SymbolicSystem(SymbolicSystemBase):
         return (C_q, dReaction)
 
     def Equations(self, format='symbolic', optimize=True, variables=None, massMatrix=True, ODE2RHS=True,
-                  massMatrixBlocks=False, algebraicEquations=False, ODE2ReactionForcesLHS=False, ODE1RHS=False):
+                  massMatrixBlocks=False, algebraicEquations=False, ODE2ReactionForcesLHS=False, ODE1RHS=False,
+                  ODE1ReactionTermsLHS=False):
         """the equations of motion M(q, t) q_tt = f(q, q_t, t) of the system as expressions in its variables (#3130,
         #3132), composed of the recordings of the kinds, the marker kinematics of the connectors and the loads; each
         recording is called with symbolic arguments through its code of exudyn.symbolics.codeExport, the parameters of
@@ -1419,11 +1641,14 @@ class SymbolicSystem(SymbolicSystemBase):
                 AlgebraicEquations (#3146)
             ODE2ReactionForcesLHS: True: the reaction forces C_q^T z of the joints, 'ODE2ReactionForcesLHS' (nODE2), as
                 ODE2ReactionForcesLHS, of the algebraic coordinates, the variable 'z' (#3146)
-            ODE1RHS: True: the right-hand side g(y, t) of the ODE1 equations y_t = g, 'ODE1RHS' (nODE1), as ODE1RHS, of
-                the ODE1 coordinates, the variable 'y' with the initial ODE1 state (#3162)
+            ODE1RHS: True: the right-hand side g(q, q_t, y, t) of the ODE1 equations y_t = g, 'ODE1RHS' (nODE1), as
+                ODE1RHS, of the ODE1 coordinates, the variable 'y' with the initial ODE1 state (#3162)
+            ODE1ReactionTermsLHS: True: the reaction terms C_y^T z of the ObjectGenericDAE in the ODE1 equations,
+                'ODE1ReactionTermsLHS' (nODE1), as ODE1ReactionTermsLHS, of the variable 'z' (#3190)
 
         Returns:
-            dict with 'q', 'q_t', 't' (the variables), 'z' if ODE2ReactionForcesLHS, 'y' if ODE1RHS, 'parameters' - the named parameters
+            dict with 'q', 'q_t', 't' (the variables), 'z' if ODE2ReactionForcesLHS or ODE1ReactionTermsLHS, 'y' if
+            ODE1RHS or the system has an ObjectGenericDAE with ODE1 coordinates (#3190), 'parameters' - the named parameters
             of parameterVariables, as exudyn.symbolic.Real or sympy symbols - if there are any (#3152), and the results
             asked for, exudyn.symbolic.Matrix and Vector or sympy.Matrix
         """
@@ -1438,18 +1663,21 @@ class SymbolicSystem(SymbolicSystemBase):
             (q, q_t, t) = variables[:3]
             if len(variables) > 3:
                 z = variables[3]
-        if ODE2ReactionForcesLHS and z is None:
+        withZ = ODE2ReactionForcesLHS or ODE1ReactionTermsLHS
+        if withZ and z is None:
             z = backend.Variable('z', self.nAE, np.zeros(self.nAE))
         y = variables[4] if variables is not None and len(variables) > 4 else None
-        if ODE1RHS and y is None:
+        withY = ODE1RHS or (bool(self.daeKinds) and self.nODE1 > 0)
+        if withY and y is None:
             y = backend.Variable('y', self.nODE1, self.InitialStateODE1())
         (M, f, blocks, c, r) = self._EquationLists(backend, q, q_t, t, z if ODE2ReactionForcesLHS else None,
-                                                   algebraicEquations or ODE2ReactionForcesLHS)
+                                                   algebraicEquations or ODE2ReactionForcesLHS, y=y)
         (names, results) = ([], [])
         for (name, wanted, Result) in [('massMatrix', massMatrix, lambda: backend.Matrix(M)), ('ODE2RHS', ODE2RHS, lambda: backend.Vector(f)),
                                        ('algebraicEquations', algebraicEquations, lambda: backend.Vector(c)),
                                        ('ODE2ReactionForcesLHS', ODE2ReactionForcesLHS, lambda: backend.Vector(r)),
-                                       ('ODE1RHS', ODE1RHS, lambda: backend.Vector(self._ODE1Equations(backend, y, t)))]:
+                                       ('ODE1RHS', ODE1RHS, lambda: backend.Vector(self._ODE1Equations(backend, y, t, q, q_t))),
+                                       ('ODE1ReactionTermsLHS', ODE1ReactionTermsLHS, lambda: backend.Vector(self._ODE1ReactionTerms(z)))]:
             if wanted:
                 names.append(name)
                 results.append(Result())
@@ -1460,9 +1688,9 @@ class SymbolicSystem(SymbolicSystemBase):
             results = [exudyn.symbolic.Optimize(result, level=2) if name != 'massMatrixBlocks' or result else result
                        for (name, result) in zip(names, results)]
         equations = {'q': q, 'q_t': q_t, 't': t}
-        if ODE2ReactionForcesLHS:
+        if withZ:
             equations['z'] = z
-        if ODE1RHS:
+        if withY:
             equations['y'] = y
         if self._parameterNames:
             equations['parameters'] = [backend.Parameter(value) for value in self._parameterNames.values()]
@@ -1476,18 +1704,19 @@ class SymbolicSystem(SymbolicSystemBase):
                 matrices = matrices[len(kindBlocks):]
         return equations
 
-    def _EquationLists(self, backend, q, q_t, t, z=None, constraints=False):
+    def _EquationLists(self, backend, q, q_t, t, z=None, constraints=False, y=None):
         """the mass matrix as list of rows, the forces as list of the expressions of Equations, of the variables q, q_t
-        and t of backend, the local mass matrices of the bodies, per kind (ltg, list of their lists of rows), and with
-        constraints the constraint equations of the joints and - for the algebraic coordinates z - their reaction
-        forces as lists (#3146)"""
+        and t of backend - and y, the ODE1 coordinates, for an ObjectGenericDAE (#3190) -, the local mass matrices of the
+        bodies, per kind (ltg, list of their lists of rows), and with constraints the constraint equations of the joints
+        and the ObjectGenericDAE and - for the algebraic coordinates z - their reaction forces as lists (#3146)"""
         n = self.nODE2
         format = backend.format
         (qs, q_ts) = ([x[i] for i in range(n)] for x in [q, q_t]) #the components, to be gathered per item
         M = [[0]*n for i in range(n)]
         f = [0]*n
-        blocks = [(kind.ltg, []) for kind in self.kinds if kind.objectType != 'ConnectorUser']
-        blocksOfKind = {id(kind): blocks[k][1] for (k, kind) in enumerate(kind for kind in self.kinds if kind.objectType != 'ConnectorUser')}
+        bodyKinds = self._BodyKinds()
+        blocks = [(kind.ltg, []) for kind in bodyKinds]
+        blocksOfKind = {id(kind): blocks[k][1] for (k, kind) in enumerate(bodyKinds)}
         Call = _Caller(format)
 
         def Add(target, ltg, values):
@@ -1557,19 +1786,98 @@ class SymbolicSystem(SymbolicSystemBase):
                 value = Call(body['rotation'], *withPosition) @ value
             Add(f, load.ltg, Components(J.T @ value, len(load.ltg)))
         (c, r) = ([0]*self.nAE, [0]*n)
+        zComponents = None if (z is None or not constraints) else [z[i] for i in range(self.nAE)]
         if constraints:
-            zComponents = None if z is None else [z[i] for i in range(self.nAE)]
             for kind in self.jointKinds:
                 for index in range(len(kind.objects)):
                     self._JointEquations(kind, index, backend, Call, t, qs, q_ts, zComponents, c, r)
+        ys = None if y is None else [y[i] for i in range(self.nODE1)]
+        for kind in self.daeKinds:
+            for index in range(len(kind.objects)):
+                self._DAEEquations(kind, index, backend, Call, t, qs, q_ts, ys, zComponents, constraints, M, f,
+                                   blocksOfKind.get(id(kind)), c, r)
         return (M, f, blocks, c, r)
 
-    def _ODE1Equations(self, backend, y, t):
-        """the right-hand side of the ODE1 equations as list of expressions of the ODE1 coordinates y, as ODE1RHS: per
-        ObjectGenericODE1 A y + f and its recorded rhsUserFunction, and the LoadCoordinate on ODE1 coordinates (#3162)"""
+    def _DAEEquations(self, kind, index, backend, Call, t, qs, q_ts, ys, zComponents, constraints, M, f, blocks, c, r):
+        """add the equations of ObjectGenericDAE index of kind to the lists of _EquationLists (#3190): its mass matrix to
+        M and blocks, f + f_u - K q - D q_t - E y to f, with constraints C_q q + C_y y - c_0 into c, and for zComponents
+        C_q^T z to r; ys the components of the ODE1 coordinates, needed if it has some"""
+        (ltg, dae, objectNumber) = (kind.ltg[index], kind.parameters[index], kind.objects[index])
+        (qLocal, q_tLocal) = ([qs[i] for i in ltg], [q_ts[i] for i in ltg])
+        ltgAE = dae['ltgAE']
+        if not len(dae['ltgODE1']):
+            yLocal = []
+        elif ys is not None:
+            yLocal = [ys[i] for i in dae['ltgODE1']]
+        elif len(ltg) or (constraints and len(ltgAE)):
+            raise ValueError('SymbolicSystem: object ' + str(objectNumber) + ' (GenericDAE) has ODE1 coordinates, so its '
+                             'equations need the variable y')
+
+        def Add(target, indices, values):
+            if values is not None:
+                for (i, value) in zip(indices, values):
+                    target[i] = _Sum(target[i], value)
+
+        if len(ltg):
+            Mlocal = [[float(dae['M'][i, j]) for j in range(len(ltg))] for i in range(len(ltg))]
+            blocks.append(Mlocal)
+            for (i, row) in zip(ltg, Mlocal):
+                for (j, value) in zip(ltg, row):
+                    M[i][j] = _Sum(M[i][j], value)
+            Add(f, ltg, [float(x) for x in dae['f']] if len(dae['f']) else None)
+            for (name, x) in [('K', qLocal), ('D', q_tLocal), ('E', yLocal)]:
+                Add(f, ltg, _MatrixTimes(dae[name], x, -1.))
+            if 'forceUserFunction' in kind.recordings:
+                value = Call(kind.recordings['forceUserFunction'], *self._DAESymbolicArguments(backend, kind, index, t, qLocal,
+                                                                                               q_tLocal, yLocal))
+                Add(f, ltg, [value[i] for i in range(len(ltg))])
+        if constraints and len(ltgAE):
+            for (name, x) in [('C_q', qLocal), ('C_y', yLocal)]:
+                Add(c, ltgAE, _MatrixTimes(dae[name], x))
+            Add(c, ltgAE, [-float(x) for x in dae['c0']] if len(dae['c0']) else None)
+            if zComponents is not None and dae['C_q'].size:
+                Add(r, ltg, _MatrixTimes(dae['C_q'].T, [zComponents[i] for i in ltgAE]))
+
+    def _DAESymbolicArguments(self, backend, kind, index, t, qLocal, q_tLocal, yLocal):
+        """the arguments after mbs of the recorded user functions of ObjectGenericDAE index of kind as expressions"""
+        objectNumber = kind.objects[index]
+        return (t, objectNumber, backend.Vector(qLocal), backend.Vector(q_tLocal), backend.Vector(yLocal),
+                self._ParameterVector(backend, objectNumber, kind.parameters[index]['parameters']))
+
+    def _ODE1ReactionTerms(self, z):
+        """the reaction terms C_y^T z of the ObjectGenericDAE in the ODE1 equations as list of expressions of z (#3190)"""
+        g = [0]*self.nODE1
+        for kind in self.daeKinds:
+            for dae in kind.parameters:
+                if dae['C_y'].size:
+                    for (i, value) in zip(dae['ltgODE1'], _MatrixTimes(dae['C_y'].T, [z[k] for k in dae['ltgAE']])):
+                        g[i] = _Sum(g[i], value)
+        return g
+
+    def _ODE1Equations(self, backend, y, t, q, q_t):
+        """the right-hand side of the ODE1 equations as list of expressions of the ODE1 coordinates y - and q, q_t for an
+        ObjectGenericDAE -, as ODE1RHS: per ObjectGenericODE1 A y + f and its recorded rhsUserFunction, per
+        ObjectGenericDAE A y + B q + B_t q_t + g + g_u (#3190), and the LoadCoordinate on ODE1 coordinates (#3162)"""
         Call = _Caller(backend.format)
         ys = [y[i] for i in range(self.nODE1)]
         g = [0]*self.nODE1
+        for kind in self.daeKinds:
+            for (index, dae) in enumerate(kind.parameters):
+                ltgODE1 = dae['ltgODE1']
+                if not len(ltgODE1):
+                    continue
+                ltg = kind.ltg[index]
+                (qLocal, q_tLocal, yLocal) = ([q[i] for i in ltg], [q_t[i] for i in ltg], [ys[i] for i in ltgODE1])
+                terms = [[float(x) for x in dae['g']] if len(dae['g']) else None]
+                terms += [_MatrixTimes(dae[name], x) for (name, x) in [('A', yLocal), ('B', qLocal), ('B_t', q_tLocal)]]
+                if 'rhsUserFunction' in kind.recordings:
+                    value = Call(kind.recordings['rhsUserFunction'], *self._DAESymbolicArguments(backend, kind, index, t, qLocal,
+                                                                                                 q_tLocal, yLocal))
+                    terms.append([value[i] for i in range(len(ltgODE1))])
+                for term in terms:
+                    if term is not None:
+                        for (i, value) in zip(ltgODE1, term):
+                            g[i] = _Sum(g[i], value)
         for kind in self.ode1Kinds:
             for (index, objectNumber) in enumerate(kind.objects):
                 (ltg, matrices) = (kind.ltg[index], kind.parameters[index])
@@ -1676,26 +1984,25 @@ class SymbolicSystem(SymbolicSystemBase):
 
     def GetFlatProgram(self, format='Python', flatten=True, results=['ODE2RHS', 'massMatrix']):
         """the flat program of results of Equations(), a function of q, q_t and t - and z with 'ODE2ReactionForcesLHS'
-        (#3130, #3132, #3146)
+        or 'ODE1ReactionTermsLHS', y with 'ODE1RHS' or an ObjectGenericDAE with ODE1 coordinates (#3130, #3132, #3146,
+        #3190)
 
         Args:
             format: 'Python' (the text), or the executable 'symbolic', 'numpy' or 'sympy' of exudyn.symbolics.codeExport
             flatten: True: one line per operation; False: each result as one expression
             results: the names of the results: 'ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS',
-                'ODE1RHS'
+                'ODE1RHS', 'ODE1ReactionTermsLHS'
 
         Returns:
             the program as str, for the executable formats a function Equations(q, q_t, t) - Equations(q, q_t, t,
-            z) with 'ODE2ReactionForcesLHS', y after them with 'ODE1RHS', followed by the named parameters (#3152) -
-            returning the results
+            z) with z, y after them, followed by the named parameters (#3152) - returning the results
         """
-        names = ['ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS', 'ODE1RHS']
+        names = ['ODE2RHS', 'massMatrix', 'algebraicEquations', 'ODE2ReactionForcesLHS', 'ODE1RHS', 'ODE1ReactionTermsLHS']
         unknown = [name for name in results if name not in names]
         if unknown:
             raise ValueError('SymbolicSystem.GetFlatProgram: unknown results ' + str(unknown) + '; possible: ' + str(names))
         equations = self.Equations('symbolic', **{name: name in results for name in names})
-        variables = (['q', 'q_t', 't'] + (['z'] if 'ODE2ReactionForcesLHS' in results else [])
-                     + (['y'] if 'ODE1RHS' in results else []))
+        variables = ['q', 'q_t', 't'] + [name for name in ['z', 'y'] if name in equations]
         return exudyn.symbolic.GetFlatProgram([equations[name] for name in results],
                                               arguments=[equations[name] for name in variables] + equations.get('parameters', []),
                                               resultNames=list(results), format=format, flatten=flatten, name='Equations')
@@ -1711,6 +2018,11 @@ class SymbolicSystem(SymbolicSystemBase):
         for kind in self.ode1Kinds:
             lines.append('  GenericODE1: ' + str(len(kind.objects)) + ' objects of ' + str(kind.ltg.shape[1])
                          + ' ODE1 coordinates, user functions ' + str(sorted(kind.recordings)))
+        for kind in self.daeKinds:
+            dae = kind.parameters[0]
+            lines.append('  GenericDAE: ' + str(len(kind.objects)) + ' objects of ' + str(kind.ltg.shape[1]) + ' ODE2, '
+                         + str(len(dae['ltgODE1'])) + ' ODE1 and ' + str(len(dae['ltgAE'])) + ' algebraic coordinates, '
+                         + 'user functions ' + str(sorted(kind.recordings)))
         if self.loads or self.ode1Loads:
             lines.append('  loads: ' + ', '.join(load.loadType + (' (ODE1)' if load.ode1 else '')
                                                 + (' (user function)' if load.recording is not None else '')
@@ -1790,6 +2102,20 @@ class SystemVariables:
 def _Sum(a, b):
     """a + b, without the sum when a is the number 0 that a sum starts with"""
     return b if isinstance(a, int) and a == 0 else a + b
+
+
+def _MatVec(matrix, x):
+    """matrix @ x of numpy arrays, 0 for a matrix not given"""
+    return matrix @ x if matrix.size else 0.
+
+
+def _MatrixTimes(matrix, components, factor=1.):
+    """factor*matrix times the list of components, as list of expressions without the zero entries of the matrix; None
+    for a matrix not given"""
+    if not matrix.size:
+        return None
+    return [sum(factor*float(matrix[i, j])*components[j] for j in range(matrix.shape[1]) if matrix[i, j] != 0)
+            for i in range(matrix.shape[0])]
 
 
 def _Caller(format):

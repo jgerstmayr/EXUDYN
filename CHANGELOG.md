@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 279 | 1.13.285 |
+| 1.13 | Newborn | 280 | 1.13.286 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.286** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SymbolicSystem takes ObjectGenericDAE (#3190)
+  - description: revision2026c step RG9.10.5 (\#3143, docs/dev/design/genericDAE.md): SymbolicSystem collects ObjectGenericDAE in kinds of the same recordings - its matrices, its recorded forceUserFunction and rhsUserFunction, its ODE1 and algebraic coordinates -; the ODE2 forces depend on y, the ODE1 equations on q and q\_t, the algebraic equations C\_q q + C\_y y - c\_0 with the reaction terms C\_q^T z and C\_y^T z; the exact SystemJacobian with the coupling blocks; Equations(), the composed system and GetFlatProgram with y. Decided: the item is taken as C++ computes it, velocity-level constraints refused as for the joints.
+  - **notes:** SymbolicSystem takes ObjectGenericDAE with recorded forceUserFunction and rhsUserFunction: its ODE2, ODE1 and algebraic equations and their couplings, the exact SystemJacobian, Equations() and GetFlatProgram with the ODE1 coordinates y and the new result ODE1ReactionTermsLHS.
+  - date resolved: **2026-11-01 09:31**, date raised: 2026-11-01
 - **1.13.285** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectGenericDAE: the Jacobians of a recorded forceUserFunction and rhsUserFunction by the one-pass derivative (#3189)
   - description: Revision2026c step RG9.10.4. A symbolic forceUserFunction or rhsUserFunction of ObjectGenericDAE adds the derivatives of its recording by q, q\_t and y to the analytic Jacobians of the object - ODE2\_ODE2, ODE2\_ODE1, ODE1\_ODE1, ODE1\_ODE2, ODE1\_ODE2\_t -, computed in one pass over the recording, also in the threads (PySymbolicUserFunction::EvaluateJacobianAdd); a Python one stays numerical.
   - **notes:** A recorded forceUserFunction or rhsUserFunction of ObjectGenericDAE gives the Jacobian of the object by the one-pass derivative of the recording instead of numerical differences.

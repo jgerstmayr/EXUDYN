@@ -210,6 +210,7 @@ symbolicOptimizeTest
 symbolicSparseMatrixTest
 symbolicStatisticsTest
 symbolicSystemEquationsTest
+symbolicSystemGenericDAETest
 symbolicSystemItemJacobiansTest
 symbolicSystemJointsTest
 symbolicSystemLoadsTest

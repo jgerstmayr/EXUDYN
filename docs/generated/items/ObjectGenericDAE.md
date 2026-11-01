@@ -159,4 +159,4 @@ exu.sys['testResult'] = mbs.systemData.GetODE2Coordinates()[0]
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAESymbolicTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAESymbolicTest.py) (TM), [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAESymbolicTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAESymbolicTest.py) (TM), [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM), [`symbolicSystemGenericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemGenericDAETest.py) (TM)

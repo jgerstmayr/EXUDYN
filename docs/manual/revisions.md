@@ -46,6 +46,9 @@ has `GetRotationVector`, `GetRxyz`, `LogSE3`, `SetExpSE3`, `LogR3xSO3` and `SetE
 `exudyn.Twist` of symbolic arguments give these classes (#3186). `UserItemCreator.CreateSphereSphereContact` creates
 the linear contact of two spheres as ObjectConnectorUser, which is recorded (#3187). A recorded forceUserFunction or
 rhsUserFunction of ObjectGenericDAE gives its Jacobian by the one-pass derivative, a Python one numerically (#3189).
+`SymbolicSystem` takes ObjectGenericDAE with recorded user functions: its ODE2, ODE1 and algebraic equations, their
+couplings in the exact `SystemJacobian`, and `Equations()` and `GetFlatProgram` with the ODE1 coordinates `y` in the
+ODE2 forces and the new result `ODE1ReactionTermsLHS` (#3190).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

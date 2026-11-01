@@ -1,0 +1,15 @@
+{
+  "number": 3190,
+  "title": "SymbolicSystem takes ObjectGenericDAE",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG9.10.5 (#3143, docs/dev/design/genericDAE.md): SymbolicSystem collects ObjectGenericDAE in kinds of the same recordings - its matrices, its recorded forceUserFunction and rhsUserFunction, its ODE1 and algebraic coordinates -; the ODE2 forces depend on y, the ODE1 equations on q and q_t, the algebraic equations C_q q + C_y y - c_0 with the reaction terms C_q^T z and C_y^T z; the exact SystemJacobian with the coupling blocks; Equations(), the composed system and GetFlatProgram with y. Decided: the item is taken as C++ computes it, velocity-level constraints refused as for the joints.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 09:31",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SymbolicSystem takes ObjectGenericDAE with recorded forceUserFunction and rhsUserFunction: its ODE2, ODE1 and algebraic equations and their couplings, the exact SystemJacobian, Equations() and GetFlatProgram with the ODE1 coordinates y and the new result ODE1ReactionTermsLHS.",
+  "resolvedInVersion": "1.13.286"
+}
