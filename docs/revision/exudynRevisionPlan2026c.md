@@ -2288,6 +2288,10 @@ items, the generic joint, the Lie group rigid body. [log](exudynRevisionLog2026c
 
 #3178; once more user items are written on HT0, twist0, HT1 and twist1.
 
+#### **CLOSED_RG12.55.11** One kind per Create function of UserItemCreator, the variants fixed at recording; IfThenElse of the utilities by the type of the condition
+
+CLOSED 2026-11-01 (#3203; maintainer 2026-11-01: why separate paths for the two contact models and the two formulations - one user function, the switch by the fixed settings at recording; and an IfThenElse that records only the active branch of a number, checked first): the kinds sphereSphereContact and rigidBodySpringDamper, one force function each with the impact model or the formulation as a Python constant, Record once per kind and variant; exudyn.symbolics.utilities.IfThenElse; the same results to the bit. [log](exudynRevisionLog2026c.md#rg12-55-11)
+
 ### **CLOSED_RG12.56** Explicit solvers in Python on the system equations: explicit Euler, velocity Verlet, RK44
 
 CLOSED 2026-10-26 (#3112, #3120; maintainer 2026-10-26: before generalized-alpha, constant step size, compatible with SimulationSettings, the inverse of the mass matrix per body; every solver also for a system written with numpy): SolveExplicit and NumpySystem in exudyn/misc/symbolicSystem.py, checked on a net of mass points against SolveDynamic. [log](exudynRevisionLog2026c.md#rg12-56-2)

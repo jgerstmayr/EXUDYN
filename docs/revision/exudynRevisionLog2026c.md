@@ -5190,3 +5190,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   `ComputeLocalJacobian` with a request and a numerical default in CObject (serial, as it perturbs the global
   state), the parallel and the serial list, the fast and the serial blocks, a verification test against the
   system-wide numerical Jacobian, the split; sub-steps RG9.11.2 to RG9.11.7 and the decisions J1 to J4.
+
+<a id="rg12-55-11"></a>
+### RG12.55.11 — One kind per Create function of UserItemCreator; IfThenElse of the utilities (2026-11-01, #3203)
+- Maintainer 2026-11-01: why separate paths for rigidBodySpringDamper/Intrinsic and sphereSphereContact/Restitution -
+  one user function, the switch done by the "fixed" settings at recording; and the idea of an IfThenElse that records
+  only the active branch when its condition is a number, to be checked before an issue.
+- Checked: the parameters of a recording are always symbolic (one recording per kind, read at each call), so a
+  switch on a parameter records both branches, and the program computes both (the code RealIfThenElse picks one of two
+  computed slots; Optimize folds only a constant condition). A condition is a number at recording only when it is a
+  Python constant - a setting of the Create function bound in the function. So the type of the condition is the right
+  criterion, and it is what the private `_If(condition, a, b, functions)` of the user items did by the module of the
+  functions: `exudyn.symbolics.utilities.IfThenElse(condition, ifTrue, ifFalse)` replaces it.
+- The contact as one function with the restitution term always - exact for impactModel 0, as its impact factor is 0 -
+  costs 42 instead of 30 operations of the table for impactModel 0. Therefore both variants are fixed at recording:
+  `_SphereSphereContactFunctions(restitution)` and `_RigidBodySpringDamperFunctions(intrinsic)` make the functions of
+  a variant (one implementation, the variant a Python constant of a closure), `UserItemCreator._variants` keeps the
+  functions of each item of these kinds, and Record records once per kind and variant, grouped by the identity of the
+  functions. `creator.items` has the kinds `sphereSphereContact` and `rigidBodySpringDamper` only.
+- symbolicUserContactTest.py and symbolicUserConnectorsTest.py give the same results to the bit; the latter also has
+  one spring-damper of each formulation in one system (6.340335689918898, two checks more). symbolicLookupTableTest.py
+  checks IfThenElse: numbers, a symbolic condition decided at evaluation, fewer operations for a constant condition
+  (11.007450360798327).

@@ -79,7 +79,10 @@ decides is decided then.
 - **Branches**: `esym.IfThenElse(deltaL > 0, a, b)` decides at every call. A Python `if`, `and`, `or` or `not` on a
   symbolic value raises a `TypeError` while recording, because it would take one branch for every call (#3096).
   `x.Evaluate()` gives the value at the recording, for a decision that is meant to be made once; an `if` on a Python
-  value, such as a setting of the script, is decided at the recording as well.
+  value, such as a setting of the script, is decided at the recording as well. `IfThenElse(condition, a, b)` of
+  `exudyn.symbolics.utilities` decides by the type of the condition: `esym.IfThenElse` for a symbolic one, a Python
+  `if` for a number, so that a function written once for numbers and recordings records only the branch of a condition
+  known at the recording (#3203).
 - **Loops** are recorded as often as they run: a loop over the components of a vector is fine, a loop whose count
   depends on a symbolic value is not possible.
 - **Constants and parameters**: a Python variable is a constant of the recording. A value that changes during the

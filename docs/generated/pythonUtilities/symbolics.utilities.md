@@ -12,6 +12,8 @@ the sampling instants, kept in between - needs data coordinates and is not done 
 SparseMatrix, a matrix of few nonzero entries declared by its triplets: its products are the scalar
 operations of the entries, so that a recording does not multiply the zeros, with the results and the
 one-pass derivatives of the dense product to the bit (#3199).
+IfThenElse, a branch decided by the type of its condition: exudyn.symbolic.IfThenElse for a symbolic one,
+a Python if for a number, so that a condition known at the recording records only its branch (#3203).
 
 - **Author**: Johannes Gerstmayr
 - **Date**: 2026-11-01 (created)
@@ -19,7 +21,7 @@ one-pass derivatives of the dense product to the bit (#3199).
 (sec-utilities-sampletime)=
 ## Function: SampleTime
 
-[`SampleTime(t, period, offset = 0., functions = exudyn.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L31)
+[`SampleTime(t, period, offset = 0., functions = exudyn.symbolic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L33)
 
 - **function description**: the discrete time of the samples at offset + k*period: the last sampling instant at or before t, offset + period*floor((t - offset)/period), with a tolerance of 1e-12 period, so that a time computed as k*h with a step size h that divides the period counts as its sampling instant
 - **input**:
@@ -44,7 +46,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAED
 (sec-utilities--noisetable)=
 ## Function: _NoiseTable
 
-[`_NoiseTable(step, length, seed, amplitude, distribution, outside)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L58)
+[`_NoiseTable(step, length, seed, amplitude, distribution, outside)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L60)
 
 - **function description**: the table of NoiseTable, created
 
@@ -52,7 +54,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAED
 (sec-utilities-noisetable)=
 ## Function: NoiseTable
 
-[`NoiseTable(step, length, seed = 0, amplitude = 1., distribution = 'uniform', outside = 'periodic')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L73)
+[`NoiseTable(step, length, seed = 0, amplitude = 1., distribution = 'uniform', outside = 'periodic')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L75)
 
 - **function description**: the exudyn.symbolic.LookupTable of Noise: round(length/step) random values of numpy.random.default_rng(seed) at the times i*step, linearly interpolated; the same values for the same arguments, in every run, step size, Newton iteration and order of evaluation; created once for each set of arguments
 - **input**:
@@ -71,7 +73,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-noise)=
 ## Function: Noise
 
-[`Noise(t, step, length, seed = 0, amplitude = 1., distribution = 'uniform', outside = 'periodic')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L95)
+[`Noise(t, step, length, seed = 0, amplitude = 1., distribution = 'uniform', outside = 'periodic')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L97)
 
 - **function description**: a random signal of the time t, the value of NoiseTable(step, length, seed, amplitude, distribution, outside) at t: repeatable for each time, continuous and piecewise linear between the random values; held between samples by Noise(SampleTime(t, period), ...)
 - **input**:
@@ -96,6 +98,29 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLookupTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicLookupTableTest.py) (TM)
 
 
+(sec-utilities-ifthenelse)=
+## Function: IfThenElse
+
+[`IfThenElse(condition, ifTrue, ifFalse)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L121)
+
+- **function description**: ifTrue if the condition is true, else ifFalse, decided by the type of the condition (#3203): for an exudyn.symbolic.Real - an expression of the variables of a recording - exudyn.symbolic.IfThenElse, which records both branches and decides at every evaluation; for a number or a bool a Python if, so that a recording takes only the branch of a condition known when it is recorded, such as a setting of the script. The parameters of a recorded user function are symbolic, so a condition on them records both branches
+- **input**:
+  - `condition`: an exudyn.symbolic.Real, a number or a bool
+  - `ifTrue`: the value if the condition is true; for a symbolic condition a number or an exudyn.symbolic.Real
+  - `ifFalse`: the value otherwise; for a symbolic condition a number or an exudyn.symbolic.Real
+- **output**: ifTrue or ifFalse, or an exudyn.symbolic.Real for a symbolic condition
+
+*example*:
+
+```python
+  force = IfThenElse(gap < 0, -k*gap, 0.) #numbers in Python, recorded with both branches for a symbolic gap
+```
+
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicUserFunctionMasses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicUserFunctionMasses.py) (Ex), [`genericDAEDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEDataTest.py) (TM), [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM), [`symbolicJacobianExpressionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicJacobianExpressionsTest.py) (TM), [`symbolicLookupTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicLookupTableTest.py) (TM), [`symbolicModuleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicModuleTest.py) (TM), [`symbolicOnePassJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicOnePassJacobianTest.py) (TM), [`symbolicOptimizeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicOptimizeTest.py) (TM), ...
+
+
 (sec-module-symbolics.utilities-class-sparsematrix)=
 ## CLASS SparseMatrix (in module symbolics.utilities)
 
@@ -117,7 +142,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-sparsematrix-frommatrix)=
 ### Class function: FromMatrix
 
-[`FromMatrix(matrix)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L153)
+[`FromMatrix(matrix)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L178)
 
 - **class function description**: the sparse matrix of the entries of a dense one that are not the number 0: a list of rows of numbers and exudyn.symbolic.Real, or a numpy array
 - **input**:
@@ -128,7 +153,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-sparsematrix-shape)=
 ### Class function: shape
 
-[`shape(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L169)
+[`shape(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L194)
 
 - **class function description**: (rows, columns)
 
@@ -136,7 +161,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-sparsematrix-nnz)=
 ### Class function: nnz
 
-[`nnz(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L174)
+[`nnz(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L199)
 
 - **class function description**: the number of entries of the pattern
 
@@ -144,7 +169,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-sparsematrix-triplets)=
 ### Class function: Triplets
 
-[`Triplets(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L178)
+[`Triplets(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L203)
 
 - **class function description**: the entries as list of (row, column, value), by rows and columns
 
@@ -152,7 +177,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-sparsematrix---matmul--)=
 ### Class function: __matmul__
 
-[`__matmul__(self, vector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L191)
+[`__matmul__(self, vector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L216)
 
 - **class function description**: A v, a vector: per row the sum of the products of its entries in the order of the columns; an empty row is 0
 
@@ -160,7 +185,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-sparsematrix-t)=
 ### Class function: T
 
-[`T(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L204)
+[`T(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L229)
 
 - **class function description**: the transposed matrix, a SparseMatrix of the same entries
 
@@ -168,7 +193,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-sparsematrix---mul--)=
 ### Class function: __mul__
 
-[`__mul__(self, factor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L208)
+[`__mul__(self, factor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L233)
 
 - **class function description**: s A, the factor times each entry
 
@@ -176,7 +201,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-sparsematrix---add--)=
 ### Class function: __add__
 
-[`__add__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L214)
+[`__add__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L239)
 
 - **class function description**: A + B, on the union of the patterns
 
@@ -184,7 +209,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicLoo
 (sec-utilities-sparsematrix-todense)=
 ### Class function: ToDense
 
-[`ToDense(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L220)
+[`ToDense(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L245)
 
 - **class function description**: the dense matrix, an exudyn.symbolic.Matrix if an entry is symbolic, else a numpy array
 

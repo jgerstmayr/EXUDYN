@@ -10,6 +10,8 @@
 #           SparseMatrix, a matrix of few nonzero entries declared by its triplets: its products are the scalar
 #           operations of the entries, so that a recording does not multiply the zeros, with the results and the
 #           one-pass derivatives of the dense product to the bit (#3199).
+#           IfThenElse, a branch decided by the type of its condition: exudyn.symbolic.IfThenElse for a symbolic one,
+#           a Python if for a number, so that a condition known at the recording records only its branch (#3203).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-01 (created)
@@ -22,7 +24,7 @@ import numpy as np
 import exudyn
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
-__all__ = ['SampleTime', 'NoiseTable', 'Noise', 'SparseMatrix']
+__all__ = ['SampleTime', 'NoiseTable', 'Noise', 'IfThenElse', 'SparseMatrix']
 
 #the fraction of the period by which a time just below a sampling instant, by rounding, still counts as the instant
 _sampleTolerance = 1e-12
@@ -114,6 +116,29 @@ def Noise(t, step, length, seed=0, amplitude=1., distribution='uniform', outside
             return load + Noise(t, 0.01, 10., seed=1, amplitude=0.5)
     """
     return NoiseTable(step, length, seed, amplitude, distribution, outside)(t)
+
+
+def IfThenElse(condition, ifTrue, ifFalse):
+    """ifTrue if the condition is true, else ifFalse, decided by the type of the condition (#3203): for an
+    exudyn.symbolic.Real - an expression of the variables of a recording - exudyn.symbolic.IfThenElse, which records
+    both branches and decides at every evaluation; for a number or a bool a Python if, so that a recording takes only
+    the branch of a condition known when it is recorded, such as a setting of the script. The parameters of a recorded
+    user function are symbolic, so a condition on them records both branches
+
+    Args:
+        condition: an exudyn.symbolic.Real, a number or a bool
+        ifTrue: the value if the condition is true; for a symbolic condition a number or an exudyn.symbolic.Real
+        ifFalse: the value otherwise; for a symbolic condition a number or an exudyn.symbolic.Real
+
+    Returns:
+        ifTrue or ifFalse, or an exudyn.symbolic.Real for a symbolic condition
+
+    Example:
+        force = IfThenElse(gap < 0, -k*gap, 0.) #numbers in Python, recorded with both branches for a symbolic gap
+    """
+    if isinstance(condition, exudyn.symbolic.Real):
+        return exudyn.symbolic.IfThenElse(condition, ifTrue, ifFalse)
+    return ifTrue if condition else ifFalse
 
 
 def _IsSymbolic(value):

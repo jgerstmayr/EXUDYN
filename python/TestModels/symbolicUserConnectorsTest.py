@@ -6,8 +6,9 @@
 #           rigid bodies on NodeRigidBodyRxyz, the first held to the ground by a rigid-body spring-damper with a full
 #           stiffness and damping matrix in a turned joint frame, the second on the first by a Cartesian spring-damper and
 #           a rigid-body spring-damper, its z-coordinate constrained to that of a mass point and a torque on it; the
-#           Python user items, the recorded ones, and SymbolicSystem by SolveGeneralizedAlpha. The result is the final
-#           position of the second body plus the number of checks that pass.
+#           Python user items, the recorded ones, and SymbolicSystem by SolveGeneralizedAlpha; both rigid-body
+#           spring-dampers in each formulation, and one of each in one system, which Record records once per formulation
+#           (#3203). The result is the final position of the second body plus the number of checks that pass.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-01
@@ -32,7 +33,7 @@ K[0, 4] = K[4, 0] = 20.
 D = 0.02*K
 offset = [0.01, 0, -0.02, 0.02, 0, 0.01]
 
-def Build(userItems, record=False, intrinsic=True):
+def Build(userItems, record=False, intrinsic=(True, True)):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     creator = UserItemCreator(mbs) if userItems else mbs
@@ -44,10 +45,10 @@ def Build(userItems, record=False, intrinsic=True):
     point = creator.CreateMassPoint(referencePosition=[0.6, -0.2, 0], mass=0.5, gravity=[0, -9.81, 0])
     creator.CreateRigidBodySpringDamper(itemNumbers=[ground, bodies[0]], localPosition0=[0.15, 0, 0], localPosition1=[-0.15, 0, 0],
                                         stiffness=K, damping=D, offset=offset, rotationMatrixJoint=RotationMatrixX(0.3),
-                                        useIntrinsicFormulation=intrinsic)
+                                        useIntrinsicFormulation=intrinsic[0])
     creator.CreateRigidBodySpringDamper(itemNumbers=[bodies[0], bodies[1]], localPosition0=[0.15, 0, 0], localPosition1=[-0.15, 0, 0],
                                         stiffness=K, damping=D, rotationMatrixJoint=RotationMatrixY(0.2), useGlobalFrame=False,
-                                        useIntrinsicFormulation=intrinsic)
+                                        useIntrinsicFormulation=intrinsic[1])
     creator.CreateCartesianSpringDamper(itemNumbers=[bodies[0], bodies[1]], localPosition0=[0, 0.05, 0], localPosition1=[0, 0.05, 0],
                                         stiffness=[1e3, 2e3, 500.], damping=[5., 10., 2.], offset=[0.3, 0, 0])
     creator.CreateCartesianSpringDamper(itemNumbers=[point, bodies[1]], stiffness=[200., 200., 0.], damping=[1., 1., 0.],
@@ -74,14 +75,14 @@ def State(mbs, bodies):
                      + list(mbs.GetObjectOutputBody(body, exu.OutputVariableType.AngularVelocity, [0, 0, 0]))])
 
 passed = 0
-for intrinsic in [True, False]:
+for intrinsic in [(True, True), (True, False), (False, False)]:
     results = []
     for (userItems, record) in [(False, False), (True, False), (True, True)]:
         (mbs, bodies) = Build(userItems, record, intrinsic)
         mbs.SolveDynamic(simulationSettings)
         results.append(State(mbs, bodies))
     differences = [np.max(np.abs(result - results[0])) for result in results[1:]]
-    exu.Print('intrinsic' if intrinsic else 'Tait-Bryan', ': Python, recorded user items against built-in:', differences)
+    exu.Print(['Tait-Bryan', 'intrinsic'][intrinsic[0]], 'and', ['Tait-Bryan', 'intrinsic'][intrinsic[1]], ': Python, recorded user items against built-in:', differences)
     passed += int(max(differences) < 1e-9)
 
     (mbs, bodies) = Build(True, True, intrinsic)

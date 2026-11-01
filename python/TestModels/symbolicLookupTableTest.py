@@ -6,8 +6,9 @@
 #           against the slopes, two tables at the same argument kept apart by Optimize, the export to numpy; a
 #           nonlinear spring of ObjectGenericODE2 by the table of its force over the deflection, recorded - Jacobian
 #           by the one-pass derivative - against the Python function - numerical Jacobian -, and a load of the time by
-#           a recorded LoadCoordinate with Noise and SampleTime against the Python one. The result is the final
-#           coordinate of the spring plus the number of checks that pass.
+#           a recorded LoadCoordinate with Noise and SampleTime against the Python one; IfThenElse of the utilities
+#           (#3203), a Python if for a number - one branch recorded - and exudyn.symbolic.IfThenElse for a symbolic
+#           condition. The result is the final coordinate of the spring plus the number of checks that pass.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-01
@@ -18,8 +19,9 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.symbolics.utilities import SampleTime, Noise, NoiseTable
+from exudyn.symbolics.utilities import SampleTime, Noise, NoiseTable, IfThenElse
 from exudyn.symbolics.codeExport import ToFunction
+import exudyn.cMath as cMath
 import numpy as np
 
 esym = exu.symbolic
@@ -113,6 +115,17 @@ passed += int(all(SampleTime(t, 0.02) == 0.02*np.floor(t/0.02 + 1e-12) for t in 
 passed += int(NoiseTable(0.01, 2., seed=3, amplitude=2.) is NoiseTable(0.01, 2., seed=3, amplitude=2.))
 noise = np.array([Noise(t, 0.01, 2., seed=3, amplitude=2.) for t in times])
 passed += int(np.max(np.abs(noise)) <= 2.)
+
+#IfThenElse: for numbers a Python if; for a symbolic condition both branches recorded, decided at each evaluation; a
+#condition of numbers while recorded - a setting - records its branch only
+passed += int(IfThenElse(2 > 1, 'a', 'b') == 'a' and IfThenElse(0., 1., 2.) == 2.)
+x = esym.Real('x', 0.5)
+branches = IfThenElse(x < 1, x*x, esym.sin(x))
+x.SetValue(2.)
+passed += int(abs(branches.Evaluate() - cMath.sin(2.)) < 1e-15)
+setting = True
+oneBranch = IfThenElse(setting, x*x, esym.sin(x))
+passed += int(oneBranch.GetStatistics()['operations'] < branches.GetStatistics()['operations'])
 
 u = results[1] + passed
 exu.Print('solution of symbolicLookupTableTest=', u)

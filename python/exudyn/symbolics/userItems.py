@@ -31,6 +31,7 @@ import exudyn.cMath as cMath
 import exudyn.graphics as graphics
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
 import exudyn.symbolics.kinematics as su
+from exudyn.symbolics.utilities import IfThenElse
 from exudyn.rigidBodyUtilities import RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, ComputeOrthonormalBasis
 from exudyn.misc.mainSystemExtensions import GetMarkersPosRot, JointPreCheckCalcBodyMarkers, _FrameFromHT
 
@@ -157,16 +158,12 @@ def _UFtorsionalSpringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, 
 #impactFactor]: as ObjectContactSphereSphere without friction, plasticity and adhesion, the normal force k delta - d
 #dg/dt on sphere 1 along the normal n from sphere 0 to sphere 1, delta = -g, g = |p1 - p0| - r0 - r1, while the gap of
 #the data is negative; with an impact model the damping lambda delta dg/dt of the restitution coefficient, lambda =
-#impactFactor k/v, v the impact velocity of the data or minimumImpactVelocity. The post-Newton step switches as
+#impactFactor k/v, v the impact velocity of the data or minimumImpactVelocity. Whether the item has an impact model is
+#a Python constant of the recording, as it changes the computation: one force function for both, of one kind, and the
+#term not recorded for impactModel 0 (#3203). The post-Newton step switches as
 #CObjectContactSphereSphere::PostNewtonStep: the gap into the data, the error |k g| and the recommended step size
 #|g0/(dg/dt)| of a switch, the impact velocity -dg/dt when the step begins open and ends in contact (#3197). Written
-#with exudyn.symbolic.IfThenElse, which computes numbers and is recorded
-def _If(condition, ifTrue, ifFalse, functions):
-    #exudyn.symbolic.IfThenElse while recorded, a Python if for numbers
-    if functions is exudyn.symbolic:
-        return exudyn.symbolic.IfThenElse(condition, ifTrue, ifFalse)
-    return ifTrue if condition else ifFalse
-
+#with IfThenElse of exudyn.symbolics.utilities, which computes numbers and is recorded
 def _SphereSphereContact(HT0, twist0, HT1, twist1):
     #the functions, the normal, the distance and the normal velocity of the two spheres
     delta = HT1.translation - HT0.translation
@@ -175,23 +172,20 @@ def _SphereSphereContact(HT0, twist0, HT1, twist1):
     normal = (1/distance)*delta
     return (F, normal, distance, normal @ (twist1.velocity - twist0.velocity))
 
-def _SphereSphereContactForce(HT0, twist0, HT1, twist1, dataCoordinates, parameters, restitution):
-    (F, normal, distance, vNormal) = _SphereSphereContact(HT0, twist0, HT1, twist1)
-    gap = distance - parameters[0] - parameters[1]
-    force = -parameters[2]*gap - parameters[3]*vNormal
-    if restitution:
-        vImpact = F.max(parameters[4], dataCoordinates[1]) if F is exudyn.symbolic else max(parameters[4], dataCoordinates[1])
-        impact = vImpact > 0
-        lambdaImpact = _If(impact, parameters[5]*parameters[2]/_If(impact, vImpact, 1., F), 0., F)
-        force = force - lambdaImpact*gap*vNormal
-    force = _If(dataCoordinates[0] < 0, force, 0., F)
-    return np.hstack([-force*normal, force*normal])
-
-def _UFsphereSphereContactForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
-    return _SphereSphereContactForce(HT0, twist0, HT1, twist1, dataCoordinates, parameters, False)
-
-def _UFsphereSphereContactRestitutionForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
-    return _SphereSphereContactForce(HT0, twist0, HT1, twist1, dataCoordinates, parameters, True)
+def _SphereSphereContactFunctions(restitution):
+    #the user functions of the contact without or with an impact model, restitution a constant of the recording
+    def UFforce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+        (F, normal, distance, vNormal) = _SphereSphereContact(HT0, twist0, HT1, twist1)
+        gap = distance - parameters[0] - parameters[1]
+        force = -parameters[2]*gap - parameters[3]*vNormal
+        if restitution:
+            vImpact = F.max(parameters[4], dataCoordinates[1]) if F is exudyn.symbolic else max(parameters[4], dataCoordinates[1])
+            impact = vImpact > 0
+            lambdaImpact = IfThenElse(impact, parameters[5]*parameters[2]/IfThenElse(impact, vImpact, 1.), 0.)
+            force = force - lambdaImpact*gap*vNormal
+        force = IfThenElse(dataCoordinates[0] < 0, force, 0.)
+        return np.hstack([-force*normal, force*normal])
+    return [('forceUserFunction', UFforce), ('postNewtonStepUserFunction', _UFsphereSphereContactPostNewton)]
 
 def _UFsphereSphereContactPostNewton(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep,
                                      parameters):
@@ -199,12 +193,14 @@ def _UFsphereSphereContactPostNewton(mbs, t, itemNumber, HT0, twist0, HT1, twist
     gap = distance - parameters[0] - parameters[1]
     (lastGap, gapStartOfStep) = (dataCoordinates[0], dataCoordinatesStartOfStep[0])
     switched = (gap > 0) != (lastGap > 0)
-    error = _If(switched, F.abs(gap*parameters[2]) if F is exudyn.symbolic else abs(gap*parameters[2]), 0., F)
+    error = IfThenElse(switched, F.abs(gap*parameters[2]) if F is exudyn.symbolic else abs(gap*parameters[2]), 0.)
     stepKnown = (vNormal != 0)*(gapStartOfStep != 0) #a product of conditions, 0 or 1
-    stepSize = _If(switched*stepKnown, abs(gapStartOfStep/_If(stepKnown, vNormal, 1., F)) if F is not exudyn.symbolic
-                   else F.abs(gapStartOfStep/_If(stepKnown, vNormal, 1., F)), -1., F)
-    impactVelocity = _If((gapStartOfStep > 0)*(gap <= 0), -vNormal, dataCoordinatesStartOfStep[1], F)
+    stepSize = IfThenElse(switched*stepKnown, abs(gapStartOfStep/IfThenElse(stepKnown, vNormal, 1.)) if F is not exudyn.symbolic
+                          else F.abs(gapStartOfStep/IfThenElse(stepKnown, vNormal, 1.)), -1.)
+    impactVelocity = IfThenElse((gapStartOfStep > 0)*(gap <= 0), -vNormal, dataCoordinatesStartOfStep[1])
     return [error, stepSize, gap, impactVelocity]
+
+_sphereSphereContactFunctions = {restitution: _SphereSphereContactFunctions(restitution) for restitution in [False, True]}
 
 #the Cartesian spring-damper, ObjectConnectorUser on two position markers, parameters [stiffness (3), damping (3),
 #offset (3)]: as ObjectConnectorCartesianSpringDamper, f = k (p1 - p0 - offset) + d (v1 - v0) per global component,
@@ -220,7 +216,8 @@ def _UFcartesianSpringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, 
 #displacement and rotation u - the Tait-Bryan angles of the relative rotation, or the logarithm on SE(3) of the
 #relative frame - and the relative velocity and angular velocity v, f = K (u - offset) + D v, and the force Aj f[0:3]
 #and torque Aj f[3:6] towards marker 1 on marker 0, the opposite on marker 1; intrinsic, the torque of the offset of
-#the force adds to both (#3193)
+#the force adds to both (#3193). The formulation changes the structure of the computation, so it is a Python constant
+#of the recording, not a parameter: one force function of each, both of one kind (#3203)
 def _RigidBodySpringDamperForce(HT0, twist0, HT1, twist1, parameters, intrinsic):
     F = _Functions(HT0.rotation)
     (R0, R1) = (_Matrix([[parameters[78 + k + 3*i + j] for j in range(3)] for i in range(3)], F) for k in [0, 9])
@@ -243,11 +240,13 @@ def _RigidBodySpringDamperForce(HT0, twist0, HT1, twist1, parameters, intrinsic)
     return _Vector([force[i] for i in range(3)] + [torque[i] - offsetTorque[i] for i in range(3)]
                    + [-force[i] for i in range(3)] + [-torque[i] - offsetTorque[i] for i in range(3)], F)
 
-def _UFrigidBodySpringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
-    return _RigidBodySpringDamperForce(HT0, twist0, HT1, twist1, parameters, False)
+def _RigidBodySpringDamperFunctions(intrinsic):
+    #the user functions of a formulation, intrinsic a constant of the recording
+    def UFforce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+        return _RigidBodySpringDamperForce(HT0, twist0, HT1, twist1, parameters, intrinsic)
+    return [('forceUserFunction', UFforce)]
 
-def _UFrigidBodySpringDamperIntrinsicForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
-    return _RigidBodySpringDamperForce(HT0, twist0, HT1, twist1, parameters, True)
+_rigidBodySpringDamperFunctions = {intrinsic: _RigidBodySpringDamperFunctions(intrinsic) for intrinsic in [False, True]}
 
 #the joints, ObjectJointUser on two rigid markers whose frames are the joint frame: the equations of the built-in joint
 #at position level - the global difference of the positions, as the Lagrange multipliers of the built-in joints are
@@ -328,7 +327,9 @@ def _UFdistanceConstraintJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
     axis = [x*(1/F.sqrt(_Dot(d, d))) for x in d]
     return _JacobianRows([[[-x for x in axis], None, axis, None]], F)
 
-#the user functions of each kind of item, which Record records once per kind
+#the user functions of each kind of item, which Record records once per kind; a kind of variants - a Python constant
+#of the Create function that changes the structure of the computation - has the functions of each variant in the item
+#(UserItemCreator._variants), recorded once per variant
 _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                                 ('massIntegralUserFunction', _UFmassPointMassIntegral),
                                 ('positionUserFunction', _UFmassPointPosition),
@@ -344,13 +345,9 @@ _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                                 ('rotationJacobianUserFunction', _UFrigidBodyRotationJacobian)],
                   'springDamper': [('forceUserFunction', _UFspringDamperForce)],
                   'torsionalSpringDamper': [('forceUserFunction', _UFtorsionalSpringDamperForce)],
-                  'sphereSphereContact': [('forceUserFunction', _UFsphereSphereContactForce),
-                                          ('postNewtonStepUserFunction', _UFsphereSphereContactPostNewton)],
-                  'sphereSphereContactRestitution': [('forceUserFunction', _UFsphereSphereContactRestitutionForce),
-                                                     ('postNewtonStepUserFunction', _UFsphereSphereContactPostNewton)],
+                  'sphereSphereContact': _sphereSphereContactFunctions[False],
                   'cartesianSpringDamper': [('forceUserFunction', _UFcartesianSpringDamperForce)],
-                  'rigidBodySpringDamper': [('forceUserFunction', _UFrigidBodySpringDamperForce)],
-                  'rigidBodySpringDamperIntrinsic': [('forceUserFunction', _UFrigidBodySpringDamperIntrinsicForce)],
+                  'rigidBodySpringDamper': _rigidBodySpringDamperFunctions[True],
                   'coordinateConstraint': [],
                   'revoluteJoint': [('constraintUserFunction', _UFrevoluteJointConstraint),
                                     ('jacobianUserFunction', _UFrevoluteJointJacobian)],
@@ -434,6 +431,7 @@ class UserItemCreator:
         self.loads = []
         self.recordings = []
         self._massPointNodes = {} #the node of each user mass point, by the int of its body number
+        self._variants = {} #the user functions of an item of a kind of variants, by the int of its number (#3203)
         self.parameterVariables = {}
 
     def _KeepParameters(self, itemNumber, values):
@@ -684,7 +682,7 @@ class UserItemCreator:
             restitutionCoefficient: as in mbs.CreateSphereSphereContact, with impactModel 1 or 2
             minimumImpactVelocity: as in mbs.CreateSphereSphereContact, with impactModel 1 or 2
             impactModel: 0 (the default), 1 (Hunt-Crossley) or 2 (Gonthier and Carvalho-Martins, recommended), as in
-                mbs.CreateSphereSphereContact; each is a kind of its own
+                mbs.CreateSphereSphereContact; the items without and with an impact model share a recording each
             dataInitialCoordinates: as in mbs.CreateSphereSphereContact; the gap and the impact velocity (the components
                 0 and 2) go into the data node of the connector, the others must be 0, as there is no friction and
                 plasticity
@@ -742,14 +740,14 @@ class UserItemCreator:
                                     radius=radius, color=drawColor, nTiles=12)
                     for (marker, radius) in zip([marker0, marker1], radii)]
 
-        kind = 'sphereSphereContact' if impactModel == 0 else 'sphereSphereContactRestitution'
+        functions = _sphereSphereContactFunctions[impactModel != 0]
         data = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[dataInitialCoordinates[0], dataInitialCoordinates[2]],
                                                numberOfDataCoordinates=2))
         connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], nodeNumber=data,
-                                                          parameters=_Numbers(parameters),
-                                                          **{functionName: function for (functionName, function) in _kindFunctions[kind]},
+                                                          parameters=_Numbers(parameters), **dict(functions),
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
-        self.items[kind].append(connector)
+        self.items['sphereSphereContact'].append(connector)
+        self._variants[int(connector)] = functions
         self._KeepParameters(connector, parameters)
         return connector
 
@@ -918,7 +916,8 @@ class UserItemCreator:
             offset: as in mbs.CreateRigidBodySpringDamper; numbers or named exudyn.symbolic.Real
             rotationMatrixJoint: as in mbs.CreateRigidBodySpringDamper
             useGlobalFrame: as in mbs.CreateRigidBodySpringDamper
-            useIntrinsicFormulation: as in mbs.CreateRigidBodySpringDamper; each formulation is a kind of its own
+            useIntrinsicFormulation: as in mbs.CreateRigidBodySpringDamper; the items of each formulation share a
+                recording
             springForceTorqueUserFunction: refused if given: the forces are the forceUserFunction of the connector
             postNewtonStepUserFunction: refused if given: a post-Newton step needs data coordinates
             show: as in mbs.CreateRigidBodySpringDamper
@@ -952,13 +951,14 @@ class UserItemCreator:
             (MR0, MR1) = (rotationMatrixJoint, A1.T @ A0 @ rotationMatrixJoint)
         parameters = ([x for row in stiffness for x in row] + [x for row in damping for x in row] + list(offset)
                       + list(MR0.flatten()) + list(MR1.flatten()))
-        kind = 'rigidBodySpringDamperIntrinsic' if useIntrinsicFormulation else 'rigidBodySpringDamper'
+        functions = _rigidBodySpringDamperFunctions[bool(useIntrinsicFormulation)]
         connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], parameters=_Numbers(parameters),
                                                           requestedMarkerType=exudyn.MarkerType.Position | exudyn.MarkerType.Orientation,
-                                                          forceUserFunction=_kindFunctions[kind][0][1],
+                                                          **dict(functions),
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=
                                                               _JointGraphics([marker0, marker1], 'distance', 0, 0, color))))
-        self.items[kind].append(connector)
+        self.items['rigidBodySpringDamper'].append(connector)
+        self._variants[int(connector)] = functions
         self._KeepParameters(connector, parameters)
         return connector
 
@@ -1210,18 +1210,21 @@ class UserItemCreator:
 
     def Record(self):
         """replace the Python user functions of the items by symbolic ones: each user function of a kind recorded once,
-        with the first item of the kind, and set in every item of the kind - one recording per kind, as SymbolicSystem
-        groups them -; the loadVectorUserFunction of each force of CreateForce recorded on its own. The recordings are
-        kept in recordings, as long as this object lives"""
+        with the first item of the kind, and set in every item of the kind - one recording per kind and variant, as
+        SymbolicSystem groups them -; the loadVectorUserFunction of each force of CreateForce recorded on its own. The
+        recordings are kept in recordings, as long as this object lives"""
         mbs = self.mbs
-        for (kind, functions) in _kindFunctions.items():
-            if not self.items[kind]:
-                continue
-            for (functionName, function) in functions:
-                recording = CreateSymbolicUserFunction(mbs, function, functionName, self.items[kind][0])
-                self.recordings.append(recording)
-                for item in self.items[kind]:
-                    mbs.SetObjectParameter(item, functionName, recording)
+        for (kind, items) in self.items.items():
+            variants = {} #the items of each variant, by the identity of its functions (#3203)
+            for item in items:
+                functions = self._variants.get(int(item), _kindFunctions[kind])
+                variants.setdefault(id(functions), (functions, []))[1].append(item)
+            for (functions, variantItems) in variants.values():
+                for (functionName, function) in functions:
+                    recording = CreateSymbolicUserFunction(mbs, function, functionName, variantItems[0])
+                    self.recordings.append(recording)
+                    for item in variantItems:
+                        mbs.SetObjectParameter(item, functionName, recording)
         for (load, function, loadType) in self.loads:
             recording = CreateSymbolicUserFunction(mbs, function, 'loadVectorUserFunction', itemTypeName=loadType)
             self.recordings.append(recording)

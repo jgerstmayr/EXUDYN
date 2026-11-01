@@ -74,6 +74,10 @@ whose solution now converges with the step size (#3197). `esym.Function` is up t
 finds the named variables without the export structure (#3198). `exudyn.symbolics.utilities.SparseMatrix` declares a
 matrix of few nonzero entries by its triplets; its products are the scalar operations of the entries, equal to the dense
 product, at 100 rows 3 times faster to evaluate and 5 times faster to differentiate (#3199).
+`exudyn.symbolics.utilities.IfThenElse` is `esym.IfThenElse` for a symbolic condition and a Python `if` for a number.
+`UserItemCreator` has one kind per Create function: the contacts with and without an impact model are the kind
+`sphereSphereContact`, both formulations of the rigid-body spring-damper the kind `rigidBodySpringDamper`, each
+formulation recorded once (#3203).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

@@ -8,7 +8,8 @@
 #             systemModel  the equations of motion of a system as symbolic programs: SymbolicSystem, NumpySystem,
 #                          SystemVariables;
 #             solvers      the explicit and the generalized-alpha solver on these systems;
-#             utilities    functions of the time for symbolic user functions: SampleTime, Noise (#3175).
+#             utilities    functions of the time for symbolic user functions: SampleTime, Noise (#3175); SparseMatrix
+#                          (#3199), IfThenElse (#3203).
 #           The modules are imported one by one, e.g. from exudyn.symbolics.systemModel import SymbolicSystem;
 #           systemModel and solvers need scipy.
 #
