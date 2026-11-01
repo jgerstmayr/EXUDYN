@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 273 | 1.13.279 |
+| 1.13 | Newborn | 274 | 1.13.280 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.280** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The parts of exudyn.HT and exudyn.Twist as read-only numpy views instead of copies (#3184)
+  - description: Revision2026c step RG12.69.7. rotation and translation of exudyn.HT, velocity and angularVelocity of exudyn.Twist are read-only numpy views of the memory of the object, which they keep alive, instead of new arrays: a Python forceUserFunction of ObjectConnectorUser reads four of them per call (\#3183). A view follows later changes of the object; np.array(...) copies. Decided: views.
+  - **notes:** rotation and translation of exudyn.HT, velocity and angularVelocity of exudyn.Twist are read-only numpy views of the object instead of copies: they follow its later changes, writing into them raises, np.array(...) copies; a Python user function of ObjectConnectorUser reads them faster.
+  - date resolved: **2026-11-01 01:03**, date raised: 2026-11-01
 - **1.13.279** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The user functions of ObjectConnectorUser and ObjectJointUser take the frame and twist of each marker, HT0, twist0, HT1, twist1, recorded as kinematics.HT and kinematics.Twist (#3183)
   - description: Revision2026c step RG12.69.4. forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters) and constraintUserFunction and jacobianUserFunction(mbs, t, itemNumber, HT0, HT1, parameters) instead of position, velocity, rotation matrix and angular velocity of each marker; the item passes exudyn.HT and exudyn.Twist, CreateSymbolicUserFunction a kinematics.HT and kinematics.Twist of the named leaves HT0\_rotation, HT0\_translation, twist0\_velocity, twist0\_angularVelocity; exudyn.symbolics.userItems and SymbolicSystem on them. Decided: without deprecation, both items were added after 1.13.0.
   - **notes:** The user functions of ObjectConnectorUser and ObjectJointUser take the frame and twist of each marker: forceUserFunction(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters) and constraintUserFunction and jacobianUserFunction(mbs, t, itemNumber, HT0, HT1, parameters); HT0.translation is the former position0, HT0.rotation rotationMatrix0, twist0.velocity and twist0.angularVelocity the former velocities. A recorded user function gets a kinematics.HT and a kinematics.Twist with the same methods, whose leaves are named HT0\_rotation, HT0\_translation, twist0\_velocity and twist0\_angularVelocity.

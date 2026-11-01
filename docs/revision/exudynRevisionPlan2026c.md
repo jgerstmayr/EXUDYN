@@ -2408,11 +2408,17 @@ call. [log](exudynRevisionLog2026c.md#rg12-69-4)
 the code of the connectors and joints is closer in C++ and Python): `exu.HT(rotation=esym.Matrix(...))` and the
 symbolic operands of the products give a `kinematics.HT`, as `exu.cMath` forwards symbolic arguments (#3114).
 
+#### **CLOSED_RG12.69.7** The parts of exudyn.HT and exudyn.Twist as read-only numpy views
+
+CLOSED 2026-11-01 (#3184; maintainer 2026-11-01: add views): rotation, translation, velocity, angularVelocity view the
+memory of the object and keep it alive; the Python connector of RG12.69.4 11.7 instead of 13.4 us per call (8.7 with
+the former arguments). [log](exudynRevisionLog2026c.md#rg12-69-7)
+
 ### **OPEN_RG12.70** A lookup table in exudyn.symbolic over time, a coordinate or a parameter; the discrete time and a noise in Python on it
 
 #3175 (maintainer 2026-10-31: with ODE1, control, thermal and electro-mechanical problems can be reproduced, time-discrete problems not fully; a function giving the discrete time from the time; data signals at a sampling time with fast access to the interpolated value - closest, linear, quadratic - and numerical differentiation; a time-dependent randomizer, repeatable for each time; make a suitable suggestion. Revised 2026-10-31: only the signal is needed in exudyn.symbolic; the discrete time a Python function of a new module of exudyn.symbolics, as there will be more that fits neither kinematics, userItems nor systemModel; a hold needs data coordinates, so it is done by hand now and later by a sensor (RG12.70.1); the noise made with the signal from a random signal, at the cost of some memory; the signal repeated after a period as an option, zero outside by default; the three features proposed because they are structurally different and needed at some point, so better included early - but the definition chosen with care, what is required separated from what is an option, nothing that blocks CUDA, some features left out for now; "Signal" is not the name, as it may also interpolate a bending moment over the curvature: find a name, for an argument that is the time, a system coordinate or an item parameter).
 
-Suggestion (waits for the decision on the names and on what is required):
+Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolics.utilities):
 
 - **`esym.LookupTable(values, step, start=0., outside='zero', interpolation='linear')`**, an object holding the data, and
   `table(x)` its value at the argument x - a time, a coordinate or a parameter, any `esym.Real`. The table and its call
@@ -2429,7 +2435,7 @@ Suggestion (waits for the decision on the names and on what is required):
   not the default); `'closest'` (piecewise constant, derivative 0) and `'quadratic'` (through the three nearest values,
   a continuous derivative).
 - **In a new module of exudyn.symbolics** for what is neither kinematics, user items nor system models - proposed
-  `exudyn.symbolics.utilities`:
+  `exudyn.symbolics.utilities` (decided):
   - `SampleTime(t, period, offset=0., functions=exu.symbolic)` = offset + period*floor((t - offset)/period), with a
     tolerance of about 1e-12 period against rounding at the sampling instants; a function of time held between the
     samples is f(SampleTime(t)). Holding a state - read at the instants, kept in between - needs data coordinates:

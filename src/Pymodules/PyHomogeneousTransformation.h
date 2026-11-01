@@ -61,6 +61,19 @@ public:
 
 	py::array_t<Real> GetRotationPy() const { return EPyUtils::ToPython(GetRotation()); }
 
+	//! the rotation and the translation of the HT self as read-only numpy views of its memory, which keep it alive: no
+	//! copy, as the user connectors read them in every call (#3184)
+	static py::object RotationView(const py::object& self)
+	{
+		Py_intptr_t dimensions[2] = { 3, 3 };
+		return EPyUtils::NumpyViewOf(py::cast<const PyHT&>(self).GetRotationDataPointer(), 2, dimensions, self);
+	}
+	static py::object TranslationView(const py::object& self)
+	{
+		Py_intptr_t dimensions[1] = { 3 };
+		return EPyUtils::NumpyViewOf(py::cast<const PyHT&>(self).GetTranslation().GetDataPointer(), 1, dimensions, self);
+	}
+
 	//! the rotation, a 3x3 matrix as list of lists or numpy array; the translation is kept; a unit matrix sets the flag of
 	//! no rotation, which the C++ side sets only by construction (#2810)
 	void SetRotationPy(const py::object& rotation)
@@ -358,6 +371,13 @@ public:
 		if (!angularVelocityInit.is_none()) { SetAngularVelocityPy(angularVelocityInit); }
 	}
 
+	//! the velocity and the angular velocity of the Twist self as read-only numpy views of its memory (#3184)
+	static py::object VectorView(const py::object& self, bool angular)
+	{
+		const PyTwist& twist = py::cast<const PyTwist&>(self);
+		Py_intptr_t dimensions[1] = { 3 };
+		return EPyUtils::NumpyViewOf((angular ? twist.angularVelocity : twist.velocity).GetDataPointer(), 1, dimensions, self);
+	}
 	py::array_t<Real> GetVelocityPy() const { return EPyUtils::ToPython(velocity); }
 	void SetVelocityPy(const py::object& value) { EPyUtils::FromPython(value, velocity); }
 	py::array_t<Real> GetAngularVelocityPy() const { return EPyUtils::ToPython(angularVelocity); }

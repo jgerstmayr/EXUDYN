@@ -199,8 +199,8 @@ The class **HT** has the following **functions and structures**:
 
 - HT(rotation=None, translation=None, eulerParameters=None, Rxyz=None, rotationVector=None): the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, the translation, each None for the unit rotation or zero; or HT(H44) from a 4x4 matrix or its 16 values row by row
 
-- **`rotation`**: the 3x3 rotation matrix as numpy array; setting it keeps the translation
-- **`translation`**: the translation as numpy array; setting it keeps the rotation
+- **`rotation`**: the 3x3 rotation matrix as read-only numpy view of the HT, without a copy: it follows later changes of the HT, np.array(H.rotation) copies it (#3184); setting it keeps the translation
+- **`translation`**: the translation as read-only numpy view of the HT, as rotation; setting it keeps the rotation
 - **`Set(rotation = None, translation = None, eulerParameters = None, Rxyz = None, rotationVector = None)`**: set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT (`returns a reference`)
 - **`SetRotationX(angle)`**: set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)
 - **`SetRotationY(angle)`**: set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)
@@ -249,8 +249,8 @@ The class **Twist** has the following **functions and structures**:
 
 - Twist(velocity=None, angularVelocity=None): the velocity of the origin and the angular velocity of the frame, global components, each None for zero; or Twist(twist), a copy
 
-- **`velocity`**: the velocity of the origin of the frame, global components, as numpy array
-- **`angularVelocity`**: the angular velocity of the frame, global components, as numpy array
+- **`velocity`**: the velocity of the origin of the frame, global components, as read-only numpy view of the Twist, without a copy: it follows later changes of the Twist, np.array(twist.velocity) copies it (#3184)
+- **`angularVelocity`**: the angular velocity of the frame, global components, as read-only numpy view of the Twist, as velocity
 - **`__eq__(other)`**: True if velocity and angular velocity are equal, component by component
 - **`__copy__()`**: a copy, for copy.copy(twist)
 - **`__deepcopy__(memo)`**: a copy, for copy.deepcopy(twist)

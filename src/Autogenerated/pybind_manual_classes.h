@@ -646,8 +646,8 @@
     py::class_<PyHT>(m, "HT")
         .def(py::init<>())
         .def(py::init<const py::object&, const py::object&, const py::object&, const py::object&, const py::object&>(), py::arg("rotation") = py::none(), py::arg("translation") = py::none(), py::arg("eulerParameters") = py::none(), py::arg("Rxyz") = py::none(), py::arg("rotationVector") = py::none())
-        .def_property("rotation", &PyHT::GetRotationPy, &PyHT::SetRotationPy)
-        .def_property("translation", &PyHT::GetTranslationPy, &PyHT::SetTranslationPy)
+        .def_property("rotation", [](const py::object& self) { return PyHT::RotationView(self); }, &PyHT::SetRotationPy)
+        .def_property("translation", [](const py::object& self) { return PyHT::TranslationView(self); }, &PyHT::SetTranslationPy)
         .def("Set", [](PyHT& item, const py::object& rotation, const py::object& translation, const py::object& eulerParameters, const py::object& Rxyz, const py::object& rotationVector) -> PyHT& {
             item.SetPy(rotation, translation, eulerParameters, Rxyz, rotationVector); return item; }, "set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("rotation") = py::none(), py::arg("translation") = py::none(), py::arg("eulerParameters") = py::none(), py::arg("Rxyz") = py::none(), py::arg("rotationVector") = py::none())
         .def("SetRotationX", [](PyHT& item, Real angle) -> PyHT& {
@@ -708,8 +708,8 @@
     py::class_<PyTwist>(m, "Twist")
         .def(py::init<>())
         .def(py::init<const py::object&, const py::object&>(), py::arg("velocity") = py::none(), py::arg("angularVelocity") = py::none())
-        .def_property("velocity", &PyTwist::GetVelocityPy, &PyTwist::SetVelocityPy)
-        .def_property("angularVelocity", &PyTwist::GetAngularVelocityPy, &PyTwist::SetAngularVelocityPy)
+        .def_property("velocity", [](const py::object& self) { return PyTwist::VectorView(self, false); }, &PyTwist::SetVelocityPy)
+        .def_property("angularVelocity", [](const py::object& self) { return PyTwist::VectorView(self, true); }, &PyTwist::SetAngularVelocityPy)
         .def("__eq__", [](const PyTwist &item, const PyTwist &other) {
             return (const Twist&)item == (const Twist&)other; }, "True if velocity and angular velocity are equal, component by component", py::arg("other"))
         .def("__copy__", [](const PyTwist &item) {

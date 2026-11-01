@@ -52,6 +52,15 @@ namespace EPyUtils {
 		return py::reinterpret_steal<py::object>(array);
 	}
 
+	//! a read-only numpy array of the dimensions that views data of the Python object owner, which it keeps alive: the
+	//! parts of exu.HT and exu.Twist (#3184)
+	inline py::object NumpyViewOf(const Real* data, Index numberOfDimensions, const Py_intptr_t* dimensions, const py::handle& owner)
+	{
+		py::object array = NumpyView(data, numberOfDimensions, dimensions);
+		if (py::detail::npy_api::get().PyArray_SetBaseObject_(array.ptr(), owner.inc_ref().ptr()) != 0) { throw py::error_already_set(); }
+		return array;
+	}
+
 	//! a read-only 1D numpy array that views data (#3008)
 	inline py::object ToNumpyView(const Real* data, Index numberOfItems)
 	{

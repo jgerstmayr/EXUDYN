@@ -40,6 +40,8 @@ has `HT` and `Twist` for symbolic parts, with the same methods, and the three fu
 `constraintUserFunction(mbs, t, itemNumber, HT0, HT1, parameters)`, the `jacobianUserFunction` likewise; `HT0.translation`
 is the former `position0`, `HT0.rotation` `rotationMatrix0`, `twist0.velocity` and `twist0.angularVelocity` the former
 velocities. A recorded user function gets a `kinematics.HT` and a `kinematics.Twist` with the same methods (#3183).
+`H.rotation`, `H.translation`, `twist.velocity` and `twist.angularVelocity` are read-only numpy views of the object: they
+follow its later changes, and writing into them raises; `np.array(H.translation)` copies (#3184).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

@@ -150,6 +150,9 @@ public:
 	//! one entry of the rotation matrix
 	T Rotation(Index row, Index column) const { return R[3 * row + column]; }
 
+	//! the 9 numbers of the rotation matrix, row by row, for a view of them (#3184)
+	const T* GetRotationDataPointer() const { return R; }
+
 	//! true if the transformation was set without rotation (the flag; a given unit matrix does not set it)
 	bool HasNoRotation() const { return SkipRotation(); }
 

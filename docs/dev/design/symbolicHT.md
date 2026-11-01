@@ -164,7 +164,8 @@ A constant frame of a joint - a marker frame given by an axis and an angle - is 
 - Cost of the numeric path: two `exudyn.HT` and two `exudyn.Twist` objects per call instead of numpy views of the
   marker states. Measured (RG12.69.4, a Python spring of two mass points, explicit Euler, one call per step): 13.4
   instead of 8.7 us per step; an object costs about 0.4 us to create, a property about 0.5 us to read, as it copies into
-  a new numpy array. Views of the parts would save a part of it; a symbolic user function does not pay it.
+  a new numpy array. The parts are read-only views since #3184 (decided 2026-11-01): 11.7 us per step, a property
+  0.3 us; the rest is the four objects. A symbolic user function does not pay it.
 
 ## 8. Decisions and the steps
 
@@ -172,7 +173,7 @@ Decided (maintainer 2026-10-31):
 
 - mapped (A), with B as a later internal option; the Python class first; the minimal group first;
 - the twist, global, at the marker origin, named `twist0`, `twist1`, an object with `velocity` and `angularVelocity`
-  (section 5; the names proposed in place of `translation` and `rotation`);
+  (section 5; maintainer 2026-11-01: yes, in place of `translation` and `rotation`);
 - the signatures of section 7;
 - all six functions of section 6 removed from `exudyn.HT`;
 - the leaves of an argument named `HT0_rotation`, `HT0_translation`, `twist0_velocity`, `twist0_angularVelocity`;

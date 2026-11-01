@@ -765,9 +765,9 @@ class HT:
     Examples:
     """
     rotation:ArrayLike
-    """the 3x3 rotation matrix as numpy array; setting it keeps the translation."""
+    """the 3x3 rotation matrix as read-only numpy view of the HT, without a copy: it follows later changes of the HT, np.array(H.rotation) copies it (#3184); setting it keeps the translation."""
     translation:ArrayLike
-    """the translation as numpy array; setting it keeps the rotation."""
+    """the translation as read-only numpy view of the HT, as rotation; setting it keeps the rotation."""
     @overload
     def Set(self, rotation: ArrayLike=None, translation: ArrayLike=None, eulerParameters: ArrayLike=None, Rxyz: ArrayLike=None, rotationVector: ArrayLike=None) -> HT: 
         """Set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT (`returns a reference`)."""
@@ -926,9 +926,9 @@ class Twist:
     The forceUserFunction of ObjectConnectorUser gets the HT and the Twist of each marker.
     """
     velocity:ArrayLike
-    """the velocity of the origin of the frame, global components, as numpy array."""
+    """the velocity of the origin of the frame, global components, as read-only numpy view of the Twist, without a copy: it follows later changes of the Twist, np.array(twist.velocity) copies it (#3184)."""
     angularVelocity:ArrayLike
-    """the angular velocity of the frame, global components, as numpy array."""
+    """the angular velocity of the frame, global components, as read-only numpy view of the Twist, as velocity."""
     @overload
     def __eq__(self, other: Twist) -> bool: 
         """True if velocity and angular velocity are equal, component by component."""

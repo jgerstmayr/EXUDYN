@@ -137,10 +137,10 @@ pb.DefStartTable(pyClassStr)
 pb.CppCode('        .def(py::init<const py::object&, const py::object&, const py::object&, const py::object&, const py::object&>(), py::arg("rotation") = py::none(), py::arg("translation") = py::none(), py::arg("eulerParameters") = py::none(), py::arg("Rxyz") = py::none(), py::arg("rotationVector") = py::none())\n')
 pb.AddDocuList(['HT(rotation=None, translation=None, eulerParameters=None, Rxyz=None, rotationVector=None): the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, the translation, each None for the unit rotation or zero; or HT(H44) from a 4x4 matrix or its 16 values row by row'])
 
-pb.CppCode('        .def_property("rotation", &PyHT::GetRotationPy, &PyHT::SetRotationPy)\n')
-pb.DefDataAccess('rotation', 'the 3x3 rotation matrix as numpy array; setting it keeps the translation', dataType='ArrayLike')
-pb.CppCode('        .def_property("translation", &PyHT::GetTranslationPy, &PyHT::SetTranslationPy)\n')
-pb.DefDataAccess('translation', 'the translation as numpy array; setting it keeps the rotation', dataType='ArrayLike')
+pb.CppCode('        .def_property("rotation", [](const py::object& self) { return PyHT::RotationView(self); }, &PyHT::SetRotationPy)\n')
+pb.DefDataAccess('rotation', 'the 3x3 rotation matrix as read-only numpy view of the HT, without a copy: it follows later changes of the HT, np.array(H.rotation) copies it (#3184); setting it keeps the translation', dataType='ArrayLike')
+pb.CppCode('        .def_property("translation", [](const py::object& self) { return PyHT::TranslationView(self); }, &PyHT::SetTranslationPy)\n')
+pb.DefDataAccess('translation', 'the translation as read-only numpy view of the HT, as rotation; setting it keeps the rotation', dataType='ArrayLike')
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='Set',
                        cName='[](PyHT& item, const py::object& rotation, const py::object& translation, const py::object& eulerParameters, const py::object& Rxyz, const py::object& rotationVector) -> PyHT& {\n            item.SetPy(rotation, translation, eulerParameters, Rxyz, rotationVector); return item; }',
@@ -355,10 +355,10 @@ pb.DefStartTable(pyClassStr)
 pb.CppCode('        .def(py::init<const py::object&, const py::object&>(), py::arg("velocity") = py::none(), py::arg("angularVelocity") = py::none())\n')
 pb.AddDocuList(['Twist(velocity=None, angularVelocity=None): the velocity of the origin and the angular velocity of the frame, global components, each None for zero; or Twist(twist), a copy'])
 
-pb.CppCode('        .def_property("velocity", &PyTwist::GetVelocityPy, &PyTwist::SetVelocityPy)\n')
-pb.DefDataAccess('velocity', 'the velocity of the origin of the frame, global components, as numpy array', dataType='ArrayLike')
-pb.CppCode('        .def_property("angularVelocity", &PyTwist::GetAngularVelocityPy, &PyTwist::SetAngularVelocityPy)\n')
-pb.DefDataAccess('angularVelocity', 'the angular velocity of the frame, global components, as numpy array', dataType='ArrayLike')
+pb.CppCode('        .def_property("velocity", [](const py::object& self) { return PyTwist::VectorView(self, false); }, &PyTwist::SetVelocityPy)\n')
+pb.DefDataAccess('velocity', 'the velocity of the origin of the frame, global components, as read-only numpy view of the Twist, without a copy: it follows later changes of the Twist, np.array(twist.velocity) copies it (#3184)', dataType='ArrayLike')
+pb.CppCode('        .def_property("angularVelocity", [](const py::object& self) { return PyTwist::VectorView(self, true); }, &PyTwist::SetAngularVelocityPy)\n')
+pb.DefDataAccess('angularVelocity', 'the angular velocity of the frame, global components, as read-only numpy view of the Twist, as velocity', dataType='ArrayLike')
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='__eq__',
                        cName='[](const PyTwist &item, const PyTwist &other) {\n            return (const Twist&)item == (const Twist&)other; }',

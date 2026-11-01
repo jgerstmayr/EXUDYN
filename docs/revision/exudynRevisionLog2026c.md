@@ -4855,3 +4855,17 @@ correct name"; "Then do the suggested RG12.69.2-.4 steps".)*
   (a copy into a new numpy array). Views in the properties would save a part; not done.
 - Checked: the suite passes, pytest 1455 passed, the documentation builds; the export of a recorded connector names
   the leaves HT0_rotation, HT0_translation, twist0_velocity, twist0_angularVelocity.
+
+<a id="rg12-69-7"></a>
+### RG12.69.7 — the parts of exudyn.HT and exudyn.Twist as views (2026-11-01, #3184); the decisions on RG12.69 and RG12.70
+*(Maintainer 2026-11-01: the twist keeps velocity/angularVelocity - yes; LookupTable - yes; symbolics.utilities - yes;
+the extra 4.7 us per Python call - add views.)*
+- The decisions written into symbolicHT.md and RG12.70; #3175 extended.
+- `EPyUtils::NumpyViewOf` (PybindUtilities.h): the read-only view of NumpyView with the Python object as its base;
+  `HomogeneousTransformation::GetRotationDataPointer`; `PyHT::RotationView`, `TranslationView`, `PyTwist::VectorView`,
+  bound as the getters of the four properties.
+- Measured as in RG12.69.4: 11.7 instead of 13.4 us per step (8.7 with the former arguments); a property 0.3 instead of
+  0.5 us; what is left is creating the two HT and two Twist objects per call.
+- A view follows a later change of its object (`H.translation = ...`) and refuses writing (`H.rotation[0,0] = 1`
+  raises), so that a script cannot change an HT through a copy it believes it has. No use in the repository wrote into a
+  part; suite and pytest pass.
