@@ -4899,3 +4899,20 @@ the extra 4.7 us per Python call - add views.)*
   loops, not any() of generators, which cost 2.8 us.
 - symbolicHTTest.py: exu.HT of symbolic Rxyz, of a symbolic matrix and vector, exu.Twist of a symbolic component, the
   types and the values (0.0 against exudyn.HT); exu.HT and exu.Twist of numbers stay the classes of numbers.
+
+<a id="rg12-55-5"></a>
+### RG12.55.5 — the sphere-sphere contact of UserItemCreator (2026-11-01, #3187); #3188 raised (RG12.55.8)
+- `_UFsphereSphereContactForce` on HT0, twist0, HT1, twist1: gap |p1 - p0| - r0 - r1, normal from 0 to 1, force
+  -k g - d n.(v1 - v0) on sphere 1 while g < 0, by `IfThenElse` when recorded, a Python if for numbers; parameters
+  [r0, r1, k, d], numbers or named Reals. `CreateSphereSphereContact` with every argument of mbs.CreateSphereSphereContact;
+  refused: isHollowSphere1, friction, the exponent, plasticity, adhesion, restitution, impact models, a data node,
+  activeConnector=False. Drawn as two spheres. A kind of its own in Record, which SymbolicSystem takes as a connector.
+- The force at one state equals the built-in one to the bit (ball penetrating with a relative velocity, one explicit
+  step of 1e-7, the built-in with a negative gap in its data).
+- A ball under gravity on two fixed spheres, 0.8 s: RK44 converges for both; without damping user and built-in agree to
+  4e-6 at 16000 steps, the recorded equals the Python one to 1e-14, SymbolicSystem by SolveExplicit equals SolveDynamic.
+  With d = 20 the two converge to positions 2.5e-4 apart: the damping force -d dg/dt pulls the spheres together as they
+  separate at small overlap, and a switch at the end of a step by the data node and a switch within the step by the
+  gap give different motions there. With generalized-alpha the user contact does not converge with the step size
+  (7e-4 between 4000 and 32000 steps with damping, 2.4e-5 without; the built-in: 2e-5), also with full Newton and a
+  tolerance of 1e-12. Raised as #3188 (RG12.55.8); the test model compares by RK44 and documents it.

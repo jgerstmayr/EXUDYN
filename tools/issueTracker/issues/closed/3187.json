@@ -1,0 +1,15 @@
+{
+  "number": 3187,
+  "title": "UserItemCreator.CreateSphereSphereContact: the linear contact of ObjectContactSphereSphere as ObjectConnectorUser, recorded",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Revision2026c step RG12.55.5. The arguments of mbs.CreateSphereSphereContact; the normal force k delta - d dg/dt of impactModel 0 while the spheres overlap, switched by the gap of the state (exudyn.symbolic.IfThenElse when recorded), as the symbolic connector has no data node and post-Newton step; friction, the impact models, plasticity, adhesion and the hollow sphere refused; drawn as two spheres.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 01:31",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "UserItemCreator.CreateSphereSphereContact creates the linear contact of two spheres of mbs.CreateSphereSphereContact as ObjectConnectorUser, switched by the gap and recorded; friction, the impact models, plasticity and adhesion are refused.",
+  "resolvedInVersion": "1.13.284"
+}

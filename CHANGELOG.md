@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 277 | 1.13.283 |
+| 1.13 | Newborn | 278 | 1.13.284 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.284** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UserItemCreator.CreateSphereSphereContact: the linear contact of ObjectContactSphereSphere as ObjectConnectorUser, recorded (#3187)
+  - description: Revision2026c step RG12.55.5. The arguments of mbs.CreateSphereSphereContact; the normal force k delta - d dg/dt of impactModel 0 while the spheres overlap, switched by the gap of the state (exudyn.symbolic.IfThenElse when recorded), as the symbolic connector has no data node and post-Newton step; friction, the impact models, plasticity, adhesion and the hollow sphere refused; drawn as two spheres.
+  - **notes:** UserItemCreator.CreateSphereSphereContact creates the linear contact of two spheres of mbs.CreateSphereSphereContact as ObjectConnectorUser, switched by the gap and recorded; friction, the impact models, plasticity and adhesion are refused.
+  - date resolved: **2026-11-01 01:31**, date raised: 2026-11-01
 - **1.13.283** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.HT and exudyn.Twist of symbolic arguments give the symbolic classes of exudyn.symbolics.kinematics (#3186)
   - description: Revision2026c step RG12.69.6. exu.HT(rotation=..., translation=..., eulerParameters=..., Rxyz=..., rotationVector=...) with a symbolic part gives a kinematics.HT, the rotation by the conversions of symbolics.kinematics; exu.Twist(velocity, angularVelocity) a kinematics.Twist; exu.HT \* a symbolic point the transformed point; as exudyn.cMath forwards symbolic arguments (\#3114). Decided: after A1, so that the code of the user connectors and joints is closer in C++ and Python.
   - **notes:** exudyn.HT and exudyn.Twist of a symbolic part, e.g. exu.HT(Rxyz=\[0, 0, angle\]) with a symbolic angle, give the symbolic classes kinematics.HT and kinematics.Twist; exu.HT \* a symbolic point is the transformed point.

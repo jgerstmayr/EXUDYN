@@ -1,0 +1,85 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  CreateSphereSphereContact of UserItemCreator (#3187), ObjectConnectorUser with the linear normal contact
+#           force of ObjectContactSphereSphere (impactModel 0, no friction), switched by the gap of the state, against
+#           mbs.CreateSphereSphereContact, which switches by its data node in the post-Newton step: a ball - a user
+#           mass point under gravity - falls onto a fixed sphere off its axis, bounces off and falls onto a second
+#           sphere; by RK44, the Python and the recorded user items against the built-in ones without damping, and
+#           SymbolicSystem with SolveExplicit against SolveDynamic with damping. The built-in contact switches at the end
+#           of a step by its data node, the user contact within it by the gap, so they agree to the step size, not to
+#           the bit; with damping not even that, as the damping pulls the separating spheres together, and the implicit
+#           solver does not converge with the step size for the user contact (#3188).
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-01
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem
+from exudyn.symbolics.solvers import SolveExplicit
+import numpy as np
+
+radius = 0.1
+k = 1e5
+
+def Build(userItems, record=False, d=0.):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    creator = UserItemCreator(mbs) if userItems else mbs
+    ground = creator.CreateGround()
+    ball = creator.CreateMassPoint(referencePosition=[0.05, 0.4, 0], mass=0.5, gravity=[0, -9.81, 0], drawSize=2*radius)
+    for (position, sphereRadius) in [([0, 0, 0], 0.2), ([0.6, -0.4, 0], 0.15)]:
+        creator.CreateSphereSphereContact(itemNumbers=[ground, ball], localPosition0=position,
+                                          spheresRadii=[sphereRadius, radius], contactStiffness=k, contactDamping=d)
+    if record:
+        creator.Record()
+    mbs.variables['creator'] = creator #the recordings live as long as the system
+    mbs.Assemble()
+    return (SC, mbs, ball)
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 16000
+simulationSettings.timeIntegration.endTime = 0.8
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.solution.file.write = False
+
+def Position(mbs, ball):
+    return np.array(mbs.GetObjectOutputBody(ball, exu.OutputVariableType.Position, localPosition=[0, 0, 0]))
+
+def Positions(d):
+    """the positions at the end of the built-in, the Python and the recorded user items"""
+    results = []
+    for (userItems, record) in [(False, False), (True, False), (True, True)]:
+        (SC, mbs, ball) = Build(userItems, record, d)
+        mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
+        results.append(Position(mbs, ball))
+    return results
+
+#without damping, the user contact and the built-in one have the same solution, to the step size
+results = Positions(0.)
+differenceBuiltIn = max(np.max(np.abs(results[1] - results[0])), np.max(np.abs(results[2] - results[0])))
+exu.Print('without damping: ball at t=0.8', results[0], ', user items against built-in', differenceBuiltIn)
+
+#with damping, the damping force pulls the spheres together when they separate at a small overlap: switched at the end
+#of a step by the data node (built-in) or within the step by the gap (user item), the solutions differ by more than the
+#step size; the recorded user item equals the Python one
+resultsDamped = Positions(20.)
+differenceRecorded = np.max(np.abs(resultsDamped[2] - resultsDamped[1]))
+exu.Print('with damping: user items against built-in', np.max(np.abs(resultsDamped[1] - resultsDamped[0])),
+          ', recorded against Python', differenceRecorded)
+
+#the recorded user items as SymbolicSystem, by SolveExplicit, against SolveDynamic of the same items
+(SC, mbs, ball) = Build(True, True, 20.)
+SolveExplicit(SymbolicSystem(mbs), simulationSettings, solverType=exu.DynamicSolverType.RK44)
+differenceSystem = np.max(np.abs(Position(mbs, ball) - resultsDamped[2]))
+exu.Print('SymbolicSystem by SolveExplicit against SolveDynamic:', differenceSystem)
+
+u = np.sum(results[0]) + int(differenceBuiltIn > 1e-5) + int(differenceRecorded > 1e-12) + int(differenceSystem > 1e-10)
+exu.Print('solution of symbolicUserContactTest=', u)
+exu.sys['testResult'] = u

@@ -9,11 +9,11 @@
 #           export take. A script that builds a system with creator = mbs builds the same system of user items with
 #           creator = UserItemCreator(mbs).
 #           The items: CreateGround, CreateMassPoint, CreateRigidBody (on NodeRigidBodyRxyz), CreateSpringDamper,
-#           CreateTorsionalSpringDamper, CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint,
-#           CreateDistanceConstraint (ObjectJointUser, #3140), CreateForce. An argument a user item does not support
-#           raises, naming it. A parameter of a mass point or a spring-damper may be a named exudyn.symbolic.Real
-#           (mass=m1): the item gets its value, the creator keeps the variable in parameterVariables, for
-#           SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
+#           CreateTorsionalSpringDamper, CreateSphereSphereContact (#3187), CreateRevoluteJoint, CreatePrismaticJoint,
+#           CreateSphericalJoint, CreateDistanceConstraint (ObjectJointUser, #3140), CreateForce. An argument a user item
+#           does not support raises, naming it. A parameter of a mass point or a spring-damper may be a named
+#           exudyn.symbolic.Real (mass=m1): the item gets its value, the creator keeps the variable in
+#           parameterVariables, for SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-27 (created)
@@ -150,6 +150,23 @@ def _UFtorsionalSpringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, 
     torque0 = [torque*A0[i, 2] for i in range(3)]
     return _Vector([0, 0, 0] + torque0 + [0, 0, 0] + [-x for x in torque0], F)
 
+#the sphere-sphere contact, ObjectConnectorUser on two position markers, parameters [radius0, radius1, stiffness,
+#damping]: as ObjectContactSphereSphere with impactModel 0 and without friction, plasticity and adhesion, the normal
+#force k delta - d dg/dt on sphere 1 along the normal n from sphere 0 to sphere 1 while the gap g = |p1 - p0| - r0 - r1 is
+#negative, delta = -g; switched by the gap of the state, exudyn.symbolic.IfThenElse when recorded (#3187)
+def _UFsphereSphereContactForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    delta = HT1.translation - HT0.translation
+    F = _Functions(delta)
+    distance = F.sqrt(delta @ delta)
+    normal = (1/distance)*delta
+    gap = distance - parameters[0] - parameters[1]
+    force = -parameters[2]*gap - parameters[3]*(normal @ (twist1.velocity - twist0.velocity))
+    if F is exudyn.symbolic:
+        force = exudyn.symbolic.IfThenElse(gap < 0., force, exudyn.symbolic.Real(0.))
+    elif gap >= 0.:
+        force = 0.
+    return np.hstack([-force*normal, force*normal])
+
 #the joints, ObjectJointUser on two rigid markers whose frames are the joint frame: the equations of the built-in joint
 #at position level - the global difference of the positions, as the Lagrange multipliers of the built-in joints are
 #global -, and their derivative by the translations and global rotation increments [p0, theta0, p1, theta1] of the
@@ -245,6 +262,7 @@ _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                                 ('rotationJacobianUserFunction', _UFrigidBodyRotationJacobian)],
                   'springDamper': [('forceUserFunction', _UFspringDamperForce)],
                   'torsionalSpringDamper': [('forceUserFunction', _UFtorsionalSpringDamperForce)],
+                  'sphereSphereContact': [('forceUserFunction', _UFsphereSphereContactForce)],
                   'revoluteJoint': [('constraintUserFunction', _UFrevoluteJointConstraint),
                                     ('jacobianUserFunction', _UFrevoluteJointJacobian)],
                   'prismaticJoint': [('constraintUserFunction', _UFprismaticJointConstraint),
@@ -541,6 +559,89 @@ class UserItemCreator:
                                                           forceUserFunction=_UFspringDamperForce,
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
         self.items['springDamper'].append(connector)
+        self._KeepParameters(connector, parameters)
+        return connector
+
+    def CreateSphereSphereContact(self, name='', itemNumbers=[None, None], localPosition0=[0., 0., 0.],
+                                  localPosition1=[0., 0., 0.], spheresRadii=[-1, -1], isHollowSphere1=False,
+                                  dynamicFriction=0., frictionProportionalZone=1e-3, contactStiffness=0., contactDamping=0.,
+                                  contactStiffnessExponent=1, constantPullOffForce=0, contactPlasticityRatio=0,
+                                  adhesionCoefficient=0, adhesionExponent=1, restitutionCoefficient=1,
+                                  minimumImpactVelocity=0, impactModel=0, dataInitialCoordinates=[0, 0, 0, 0],
+                                  activeConnector=True, show=False, color=exudyn.graphics.color.default, bodyNumbers=None,
+                                  bodyOrNodeList=None):
+        """a sphere-sphere contact as ObjectConnectorUser on the position markers of mbs.CreateSphereSphereContact, with
+        the linear normal force of ObjectContactSphereSphere with impactModel 0, k delta - d dg/dt while the spheres
+        overlap; switched by the gap of the state, not by a data node and a post-Newton step, so that it is recorded;
+        drawn as two spheres by a graphicsDataUserFunction (#3187)
+
+        Args:
+            name: as in mbs.CreateSphereSphereContact
+            itemNumbers: as in mbs.CreateSphereSphereContact
+            localPosition0: as in mbs.CreateSphereSphereContact
+            localPosition1: as in mbs.CreateSphereSphereContact
+            spheresRadii: as in mbs.CreateSphereSphereContact; numbers or named exudyn.symbolic.Real
+            isHollowSphere1: refused if True
+            dynamicFriction: refused if not 0: friction needs the data node and the post-Newton step
+            frictionProportionalZone: not used, as there is no friction
+            contactStiffness: as in mbs.CreateSphereSphereContact; a number or a named exudyn.symbolic.Real
+            contactDamping: as in mbs.CreateSphereSphereContact; a number or a named exudyn.symbolic.Real
+            contactStiffnessExponent: refused if not 1: the linear contact law
+            constantPullOffForce: refused if not 0: no adhesion
+            contactPlasticityRatio: refused if not 0: no plasticity
+            adhesionCoefficient: refused if not 0: no adhesion
+            adhesionExponent: refused if not 1: no adhesion
+            restitutionCoefficient: refused if not 1: the impact models need the impact velocity of a data node
+            minimumImpactVelocity: refused if not 0, as restitutionCoefficient
+            impactModel: refused if not 0
+            dataInitialCoordinates: refused if not [0, 0, 0, 0]: there is no data node
+            activeConnector: refused if False
+            show: draw the two spheres
+            color: the color of the drawing; the default: grey
+            bodyNumbers: refused if given: use itemNumbers
+            bodyOrNodeList: refused if given: use itemNumbers
+
+        Returns:
+            the ObjectIndex of the connector
+        """
+        where = 'CreateSphereSphereContact'
+        for (argument, value, default, reason) in [
+                ('isHollowSphere1', isHollowSphere1, False, ''),
+                ('dynamicFriction', dynamicFriction, 0., 'friction needs the data node and the post-Newton step'),
+                ('contactStiffnessExponent', contactStiffnessExponent, 1, 'the contact law is linear'),
+                ('constantPullOffForce', constantPullOffForce, 0, 'no adhesion'),
+                ('contactPlasticityRatio', contactPlasticityRatio, 0, 'no plasticity'),
+                ('adhesionCoefficient', adhesionCoefficient, 0, 'no adhesion'),
+                ('adhesionExponent', adhesionExponent, 1, 'no adhesion'),
+                ('restitutionCoefficient', restitutionCoefficient, 1, 'the impact models need the impact velocity of a data node'),
+                ('minimumImpactVelocity', minimumImpactVelocity, 0, 'the impact models need the impact velocity of a data node'),
+                ('impactModel', impactModel, 0, 'the impact models need the impact velocity of a data node'),
+                ('activeConnector', activeConnector, True, ''),
+                ('bodyNumbers', bodyNumbers, None, 'use itemNumbers'),
+                ('bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')]:
+            _Refuse(where, argument, value, default, reason)
+        _Refuse(where, 'dataInitialCoordinates', list(dataInitialCoordinates), [0, 0, 0, 0], 'there is no data node')
+        mbs = self.mbs
+        itemNumbers = [self._massPointNodes[int(item)] if (isinstance(item, exudyn.ObjectIndex) and int(item) in self._massPointNodes
+                                                           and not np.any(localPosition)) else item
+                       for (item, localPosition) in zip(itemNumbers, [localPosition0, localPosition1])]
+        [marker0, marker1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1,
+                                                              getPosition=True, getRotationMatrix=False, useRigidMarker=False)
+        parameters = [spheresRadii[0], spheresRadii[1], contactStiffness, contactDamping]
+        radii = _Numbers(spheresRadii)
+        drawColor = list(color) if color[0] >= 0 else graphics.color.grey
+
+        def UFgraphics(mbs, itemNumber):
+            return [graphics.Sphere(point=mbs.GetMarkerOutput(marker, exudyn.OutputVariableType.Position,
+                                                              configuration=exudyn.ConfigurationType.Visualization),
+                                    radius=radius, color=drawColor, nTiles=12)
+                    for (marker, radius) in zip([marker0, marker1], radii)]
+
+        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1],
+                                                          parameters=_Numbers(parameters),
+                                                          forceUserFunction=_UFsphereSphereContactForce,
+                                                          visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
+        self.items['sphereSphereContact'].append(connector)
         self._KeepParameters(connector, parameters)
         return connector
 

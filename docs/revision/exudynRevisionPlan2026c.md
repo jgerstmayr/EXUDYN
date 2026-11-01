@@ -2222,7 +2222,11 @@ CLOSED 2026-10-28 (#3140; maintainer 2026-10-28: make SymbolicSystem take the jo
 with the equations of the built-in joints and their derivative; symbolicUserJointsTest.py equal to the built-in joints to
 2.1e-12 (Newton tolerance). [log](exudynRevisionLog2026c.md#rg12-55-4)
 
-#### **OPEN_RG12.55.5** The sphere-sphere contact
+#### **CLOSED_RG12.55.5** The sphere-sphere contact
+
+CLOSED 2026-11-01 (#3187): CreateSphereSphereContact, the linear contact of impactModel 0 on the frames and twists,
+switched by the gap; symbolicUserContactTest.py equal to the built-in contact to 4e-6 without damping (RK44); with damping
+and with the implicit solver the open questions of RG12.55.8. [log](exudynRevisionLog2026c.md#rg12-55-5)
 
 #### **CLOSED_RG12.55.6** Give ObjectConnectorUser a recordable force function of the marker states and a graphicsDataUserFunction
 
@@ -2236,6 +2240,12 @@ joints of UserItemCreator drawn as cylinder, sphere and line; the redraw calls t
 ObjectConnectorUser draws too (it never did); symbolicUserItemsDrawingTest.py. [log](exudynRevisionLog2026c.md#rg12-55-7)
 
 #3147. The joints of #3140 are not drawn.
+
+#### **OPEN_RG12.55.8** Clarify the user contact switched within a step: the implicit solver and the damping
+
+#3188: the implicit solver does not converge with the step size for the user contact, and with damping the user
+contact and the built-in one, switched at the end of a step by its data node, have different solutions; the switch by
+data coordinates of RG12.66 as the remedy is to be checked.
 
 ### **CLOSED_RG12.56** Explicit solvers in Python on the system equations: explicit Euler, velocity Verlet, RK44
 

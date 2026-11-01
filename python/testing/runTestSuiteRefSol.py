@@ -178,6 +178,7 @@ def TestExamplesReferenceSolution():
         'symbolicJacobianExpressionsTest.py':1, #new 2026-10-29: esym.Jacobian, the derivative as new expressions, against EvaluateJacobian, the Hessian (#3163)
         'symbolicSystemItemJacobiansTest.py':1, #2026-10-29: against central differences and SolveDynamic, the chain rule removed (#3169); new 2026-10-29: the one-pass Jacobians of the connectors and joints of SymbolicSystem (#3166)
         'symbolicUserItemsDrawingTest.py':0, #new 2026-10-29: the connectors and joints of UserItemCreator drawn by the graphicsDataUserFunction of ObjectConnectorUser and ObjectJointUser, in GetGraphicsData, hidden with connectors.show = False, following the bodies (#3147, #3161)
+        'symbolicUserContactTest.py':0.8675607974381709, #new 2026-11-01: CreateSphereSphereContact of UserItemCreator against mbs.CreateSphereSphereContact, recorded, SymbolicSystem (#3187)
         'symbolicUserItemsTest.py':1, #new 2026-10-27: UserItemCreator, a chain of user mass points and spring-dampers by the Create functions of mbs, equal to the built-in items, recorded, SolveExplicit (#3125)
         'symbolicVectorDiffTest.py':1, #new 2026-10-26: Diff of symbolic vectors and matrices, EvaluateJacobian, cMath with symbolic arguments (#3115, #3114)
         'symbolicHTTest.py':0, #new 2026-11-01: kinematics.HT and Twist against exudyn.HT and exudyn.cUtilities, RelativeTwist and esym.Jacobian against central differences (#3174)

@@ -1,0 +1,11 @@
+{
+  "number": 3188,
+  "title": "The user sphere contact switched by the gap within a step: its solution does not converge with the step size in the implicit solver, and differs from the built-in contact with damping",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "Found in revision2026c step RG12.55.5 (symbolicUserContactTest.py): with generalized-alpha the position of the ball changes by about 7e-4 between 4000 and 32000 steps for the user contact with damping (2.4e-5 without), where the built-in contact, switched by its data node at the end of a step, converges; with RK44 both converge, but with damping to solutions 2.5e-4 apart, as the damping pulls the separating spheres together. To be clarified: the Newton iteration with a force that jumps within a step, and whether the user contact needs the switch by data coordinates of RG12.66.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30"
+}
