@@ -125,6 +125,8 @@
     <ClCompile Include="..\src\Linalg\SymbolicTable.cpp" />
     <ClCompile Include="..\src\Linalg\Vector.cpp" />
     <ClCompile Include="..\src\Main\CSystem.cpp" />
+    <ClCompile Include="..\src\Main\CSystemAssemble.cpp" />
+    <ClCompile Include="..\src\Main\CSystemJacobians.cpp" />
     <ClCompile Include="..\src\Main\MainObjectFactory.cpp" />
     <ClCompile Include="..\src\Main\MainSystem.cpp" />
     <ClCompile Include="..\src\Main\MainSystemContainer.cpp" />

@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (9 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (8 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -131,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 15 | Structural core improvements |
+| RG9 | OPEN | 14 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 17 | Symbolic |
@@ -1151,9 +1151,9 @@ Decided 2026-11-01 (design section 7): J1 yes - connectors and joints always by 
 
 CLOSED 2026-11-01 (#3201 stays open): docs/dev/design/systemJacobians.md - the blocks and how each is computed now, what is wrong, ComputeLocalJacobian with a numerical default in CObject, the parallel and the serial list, the verification by the system-wide numerical Jacobian; seven sub-steps and four decisions J1-J4 proposed. [log](exudynRevisionLog2026c.md#rg9-11-1)
 
-#### **OPEN_RG9.11.2** Split CSystem.cpp into CSystemAssemble.cpp, CSystem.cpp and CSystemJacobians.cpp
+#### **CLOSED_RG9.11.2** Split CSystem.cpp into CSystemAssemble.cpp, CSystem.cpp and CSystemJacobians.cpp
 
-#3202; functions moved unchanged; design section 4.
+CLOSED 2026-11-01 (#3202): CSystemAssemble.cpp (1390 lines: Assemble, the checks, the coordinates, the local-to-global and item lists, the Lie group lists), CSystem.cpp (1572: mass matrix, residuals, loads, algebraic equations, post-Newton, reaction forces), CSystemJacobians.cpp (1247: the Jacobians and the constraint Jacobian derivatives); functions moved unchanged, ComputeObjectODE1RHS no longer inline. [log](exudynRevisionLog2026c.md#rg9-11-2)
 
 #### **OPEN_RG9.11.3** A test model comparing the local Jacobian of every item type with the system-wide numerical one, block by block
 

@@ -258,6 +258,12 @@
     <ClCompile Include="..\src\Main\CSystem.cpp">
       <Filter>CPPsystemAndSolver</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Main\CSystemAssemble.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Main\CSystemJacobians.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Solver\CSolverStatic.cpp">
       <Filter>CPPsystemAndSolver</Filter>
     </ClCompile>

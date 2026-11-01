@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 293 | 1.13.300 |
+| 1.13 | Newborn | 294 | 1.13.302 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.302** `CHANGE` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Split CSystem.cpp into CSystemAssemble.cpp, CSystem.cpp and CSystemJacobians.cpp (#3202)
+  - description: CSystem.cpp has about 4100 lines: the assembly and its checks (Assemble, CheckSystemIntegrity, the coordinates, the local-to-global lists, the item lists, the Lie group lists), the mass matrix, the residuals, loads, algebraic equations, reaction forces and the post-Newton step, and the Jacobians. Split it by moving functions unchanged: CSystemAssemble.cpp for the assembly and the pre-checks, CSystem.cpp for the mass matrix, the residuals and what belongs to them, CSystemJacobians.cpp for the Jacobians and their derivative terms; the vcxproj and sources.json updated. Decided: before the revision of the Jacobians (\#3201), so that it works on a file of its own.
+  - **notes:** CSystem.cpp is split into CSystemAssemble.cpp (the assembly and its checks), CSystem.cpp (mass matrix, residuals, loads, algebraic equations, reaction forces) and CSystemJacobians.cpp (the Jacobians), the functions moved unchanged.
+  - date resolved: **2026-11-01 18:04**, date raised: 2026-11-01
 - **1.13.300** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` One kind per Create function of UserItemCreator, the variants fixed at recording; exudyn.symbolics.utilities.IfThenElse decided by the type of the condition (#3203)
   - description: UserItemCreator has two kinds and two user functions for CreateSphereSphereContact (without and with an impact model) and for CreateRigidBodySpringDamper (the Tait-Bryan and the intrinsic formulation). The contact needs one user function for all impact models: with the impact factor 0 of model 0 its restitution term vanishes exactly. The formulation of the rigid-body spring-damper changes the structure of the computation, so it stays a Python constant of the recording: one kind with one user function per formulation, and Record makes one recording per kind and variant. exudyn.symbolics.utilities.IfThenElse(condition, ifTrue, ifFalse) replaces the private helper of the user items: exudyn.symbolic.IfThenElse for a symbolic condition, a Python if for a number or a bool, so that code written once for numbers and recordings records only the active branch of a condition known at recording.
   - **notes:** UserItemCreator has one kind per Create function: the contacts with and without an impact model are the kind sphereSphereContact, both formulations of CreateRigidBodySpringDamper the kind rigidBodySpringDamper; the impact model and the formulation are Python constants of the recording, and Record records once per kind and variant. exudyn.symbolics.utilities.IfThenElse(condition, ifTrue, ifFalse) is exudyn.symbolic.IfThenElse for a symbolic condition and a Python if for a number, so that a condition known at the recording records only its branch.

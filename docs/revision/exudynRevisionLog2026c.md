@@ -5270,3 +5270,17 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   HydraulicActuatorSimple, CoordinateSpringDamperExt with stops or friction, the intrinsic RigidBodySpringDamper and
   every spring-damper with a Python user function: sub-step RG9.11.8. Design section 7; sub-steps RG9.11.9 (J4) and
   RG9.11.10 (J3) added.
+
+<a id="rg9-11-2"></a>
+### RG9.11.2 — CSystem.cpp split into three files (2026-11-01, #3202)
+- A script split src/Main/CSystem.cpp (4113 lines) at its top-level definitions, each with the comment lines before
+  it, by name: CSystemAssemble.cpp gets Assemble, CheckSystemIntegrity, AssembleCoordinates, AssembleLTGLists,
+  AssembleObjectLTGLists, the three static helpers of the user functions in threads, UpdateUserFunctionsForThreads,
+  PreComputeItemLists, the Lie group lists and AssembleInitializeSystemCoordinates/AssembleSystemInitialize;
+  CSystemJacobians.cpp gets JacobianODE2Loads, ComputeObjectJacobianODE2, JacobianODE2RHS, JacobianODE1RHS,
+  NumericalJacobianAE, ComputeObjectJacobianAE, JacobianAE and the four constraint Jacobian derivative and times
+  vector functions; the rest stays in CSystem.cpp, in its order. The sorted lines of the three files equal those of
+  the old file plus the two copied headers.
+- Changed: `ComputeObjectODE1RHS` is no longer `inline` (JacobianODE1RHS in the other file calls it);
+  CSystemJacobians.cpp declares `extern Index TScomputeGeneralContact`, the timer registered in CSystem.cpp. The two
+  files are in msvc/cppsrc.vcxproj and its filters, and in both lists of sources.json (gen_sources.py --check OK).

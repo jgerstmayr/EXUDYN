@@ -2,11 +2,15 @@
   "number": 3202,
   "title": "Split CSystem.cpp into CSystemAssemble.cpp, CSystem.cpp and CSystemJacobians.cpp",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "CSystem.cpp has about 4100 lines: the assembly and its checks (Assemble, CheckSystemIntegrity, the coordinates, the local-to-global lists, the item lists, the Lie group lists), the mass matrix, the residuals, loads, algebraic equations, reaction forces and the post-Newton step, and the Jacobians. Split it by moving functions unchanged: CSystemAssemble.cpp for the assembly and the pre-checks, CSystem.cpp for the mass matrix, the residuals and what belongs to them, CSystemJacobians.cpp for the Jacobians and their derivative terms; the vcxproj and sources.json updated. Decided: before the revision of the Jacobians (#3201), so that it works on a file of its own.",
   "dateRaised": "2026-11-01",
-  "deadline": "2027-04-30"
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 18:04",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "CSystem.cpp is split into CSystemAssemble.cpp (the assembly and its checks), CSystem.cpp (mass matrix, residuals, loads, algebraic equations, reaction forces) and CSystemJacobians.cpp (the Jacobians), the functions moved unchanged.",
+  "resolvedInVersion": "1.13.302"
 }
