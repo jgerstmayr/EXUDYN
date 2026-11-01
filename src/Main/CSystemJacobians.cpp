@@ -198,6 +198,126 @@ bool CSystem::ComputeObjectJacobianODE2(TemporaryComputationData& temp, const Nu
 }
 
 
+//! the local Jacobian of the ODE2 rows of object j (#3201): by the ODE2 coordinates and velocities the object's own -
+//! analytic, automatic, on the connector interface (ComputeObjectJacobianODE2) - or else by numerical differentiation of
+//! its LHS, with the Lie group nodes apart; by the ODE1 coordinates the object's own (ComputeJacobianODE2_ODE1) or else
+//! numerical (#3143); the blocks in temp as local says
+bool CSystem::ComputeLocalJacobianODE2(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Index j,
+	Real factorODE2, Real factorODE2_t, Real factorODE1, LocalJacobianODE2& local)
+{
+	local = LocalJacobianODE2();
+	CObject* object = cSystemData.GetCObjects()[j];
+	JacobianType::Type jacType = object->GetAvailableJacobians();
+	if (!object->IsActive() || !(jacType & (JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE1))) { return false; }
+
+	Vector& x = cSystemData.GetCData().currentState.ODE2Coords;			//current coordinates ==> this is what is differentiated for
+	Vector& xRef = cSystemData.GetCData().referenceState.ODE2Coords;	//reference coordinates; might be important for numerical differentiation
+	Vector& x_t = cSystemData.GetCData().currentState.ODE2Coords_t;		//for diff w.r.t. velocities
+	Vector& xODE1 = cSystemData.GetCData().currentState.ODE1Coords;
+	Vector& xRefODE1 = cSystemData.GetCData().referenceState.ODE1Coords;
+	Vector emptyXRef; //for NumDiff template
+
+	ResizableVector& f0 = temp.numericalJacobianf0;
+	ResizableVector& f1 = temp.numericalJacobianf1;
+	Index nLocalODE2 = cSystemData.GetLocalToGlobalODE2()[j].NumberOfItems();
+	bool diffODE1 = (factorODE1 != 0.) && (jacType & JacobianType::ODE2_ODE1);
+
+	//the block by the ODE1 coordinates, numerical: f0 is the LHS of the object at the current state
+	auto NumericalODE1 = [&]()
+	{
+		ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1NumDiff()[j]; //columns without duplicates (#1424)
+		temp.localJacobianODE1.SetNumberOfRowsAndColumns(nLocalODE2, ltgODE1.NumberOfItems()); //fully computed, needs no initialization
+		AddNumDiffObject(numDiff, factorODE1, xODE1, xRefODE1, temp.localJacobianODE1, f0, f1, ltgODE1,
+			[this, &temp, &object, &f1]
+		{
+			ComputeObjectODE2LHS(temp, object, f1);
+		}, true); //true=set values
+		local.ode1 = LocalJacobianODE2::numerical;
+	};
+
+	//the object's own Jacobian, if it has one
+	if (ComputeObjectJacobianODE2(temp, numDiff, j, -factorODE2, -factorODE2_t)) //minus (-): RHS = -LHS
+	{
+		local.ode2 = LocalJacobianODE2::analytic;
+		if (diffODE1 && (jacType & JacobianType::ODE2_ODE1_function))
+		{
+			object->ComputeJacobianODE2_ODE1(temp.localJacobianODE1);
+			local.ode1 = LocalJacobianODE2::analytic;
+		}
+		else if (diffODE1)
+		{
+			f0.SetNumberOfItems(nLocalODE2);
+			f1.SetNumberOfItems(nLocalODE2);
+			if (ComputeObjectODE2LHS(temp, object, f0)) { NumericalODE1(); }
+		}
+		return true;
+	}
+
+	//else numerical differentiation
+	ArrayIndex& ltgODE2numDiff = cSystemData.GetLocalToGlobalODE2NumDiff()[j]; //a possibly shorter list without duplicates
+	f0.SetNumberOfItems(nLocalODE2); //size also correct for ODE1 derivatives
+	f1.SetNumberOfItems(nLocalODE2);
+	if (!ComputeObjectODE2LHS(temp, object, f0)) { return false; }
+
+	ResizableMatrix& localJacobian = temp.localJacobian;
+	localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, ltgODE2numDiff.NumberOfItems()); //fully computed, needs no initialization
+	if (factorODE2 != 0.)
+	{
+		SetNumDiffObjectLieGroup(numDiff, factorODE2, x, xRef, localJacobian, f0, f1, ltgODE2numDiff, cSystemData,
+			[this, &temp, &object, &f1]
+		{
+			ComputeObjectODE2LHS(temp, object, f1);
+		});
+	}
+	else { localJacobian.SetAll(0.); }
+
+	if (factorODE2_t != 0. && EXUstd::IsOfType(jacType, JacobianType::ODE2_ODE2_t))
+	{
+		AddNumDiffObject(numDiff, factorODE2_t, x_t, emptyXRef, localJacobian, f0, f1, ltgODE2numDiff,
+			[this, &temp, &object, &f1]
+		{
+			ComputeObjectODE2LHS(temp, object, f1);
+		});
+	}
+	local.ode2 = LocalJacobianODE2::numerical;
+
+	if (diffODE1) { NumericalODE1(); }
+	return true;
+}
+
+//! add the blocks of ComputeLocalJacobianODE2 of object j to the system Jacobian (#3201)
+void CSystem::AddLocalJacobianODE2(TemporaryComputationData& temp, Index j, Real factorODE1, const LocalJacobianODE2& local,
+	GeneralMatrix& jacobianGM)
+{
+	ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
+	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
+	if (local.ode2 == LocalJacobianODE2::analytic)
+	{
+		if (temp.jacobianODE2Container.UseDenseMatrix())
+		{
+			jacobianGM.AddSubmatrix(temp.jacobianODE2Container.GetInternalDenseMatrix(), 1., ltgODE2, ltgODE2);
+		}
+		else
+		{
+			jacobianGM.AddSparseTriplets(temp.jacobianODE2Container.GetInternalSparseTripletMatrix().GetTriplets());
+			temp.jacobianODE2Container.GetInternalSparseTripletMatrix().SetAllZero();
+		}
+	}
+	else if (local.ode2 == LocalJacobianODE2::numerical)
+	{
+		jacobianGM.AddSubmatrix(temp.localJacobian, 1., ltgODE2, cSystemData.GetLocalToGlobalODE2NumDiff()[j]);
+	}
+
+	if (local.ode1 == LocalJacobianODE2::analytic) //fill into ODE2 rows, ODE1 columns
+	{
+		jacobianGM.AddSubmatrix(temp.localJacobianODE1, -factorODE1, ltgODE2, cSystemData.GetLocalToGlobalODE1()[j], 0, nODE2); //minus (-): RHS = -LHS
+	}
+	else if (local.ode1 == LocalJacobianODE2::numerical)
+	{
+		jacobianGM.AddSubmatrix(temp.localJacobianODE1, 1., ltgODE2, cSystemData.GetLocalToGlobalODE1NumDiff()[j], 0, nODE2);
+	}
+}
+
 //! compute numerical differentiation of ODE2RHS w.r.t. ODE2 and ODE2_t quantities; 
 //! multiply (before added to jacobianGM) ODE2 with factorODE2 and ODE2_t with factorODE2_t
 //! the jacobian is ADDed to jacobianGM, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
@@ -233,122 +353,15 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 
 	if (!numDiff.doSystemWideDifferentiation)
 	{
-		ResizableMatrix& localJacobian = temp.localJacobian;
-
-		//++++++++++++++++++++++++++++++++++++++++++++++++
-		//for parallelized version add list to distinguish between parallelizable jacs and serial
+		//the local Jacobian of each object, added to the system Jacobian (#3201)
+		LocalJacobianODE2 local;
 		for (Index j : cSystemData.listComputeObjectODE2Lhs)
 		{
-			CObject* object = cSystemData.GetCObjects()[j];
-			if (object->IsActive())
+			if (ComputeLocalJacobianODE2(temp, numDiff, j, factorODE2, factorODE2_t, factorODE1, local))
 			{
-				ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
-				Index nLocalODE2 = ltgODE2.NumberOfItems();
-
-				JacobianType::Type jacType = object->GetAvailableJacobians();
-
-				if (jacType & (JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE1)) //any ODE2 dependency
-				{
-					//the analytic Jacobian of the object, if it has one; else the numerical one below
-					bool jacobianComputed = ComputeObjectJacobianODE2(temp, numDiff, j, -factorODE2, -factorODE2_t); //minus (-): RHS = -LHS
-					if (jacobianComputed)
-					{
-						if (temp.jacobianODE2Container.UseDenseMatrix())
-						{
-							jacobianGM.AddSubmatrix(temp.jacobianODE2Container.GetInternalDenseMatrix(), 1., ltgODE2, ltgODE2);
-						}
-						else
-						{
-							jacobianGM.AddSparseTriplets(temp.jacobianODE2Container.GetInternalSparseTripletMatrix().GetTriplets());
-							temp.jacobianODE2Container.GetInternalSparseTripletMatrix().SetAllZero();
-						}
-						//the coupling by the ODE1 coordinates: the object's own, else numerical (#3143)
-						if (diffODE1 && (jacType & JacobianType::ODE2_ODE1))
-						{
-							if (jacType & JacobianType::ODE2_ODE1_function)
-							{
-								object->ComputeJacobianODE2_ODE1(localJacobian);
-								jacobianGM.AddSubmatrix(localJacobian, -factorODE1, ltgODE2, cSystemData.GetLocalToGlobalODE1()[j], 0, nODE2); //minus (-): RHS = -LHS
-							}
-							else
-							{
-								ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1NumDiff()[j]; //columns without duplicates (#1424)
-								f0.SetNumberOfItems(nLocalODE2);
-								f1.SetNumberOfItems(nLocalODE2);
-								if (ComputeObjectODE2LHS(temp, object, f0))
-								{
-									localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, ltgODE1.NumberOfItems());
-									AddNumDiffObject(numDiff, factorODE1, xODE1, xRefODE1, localJacobian, f0, f1, ltgODE1,
-										[this, &temp, &object, &f1]
-									{
-										ComputeObjectODE2LHS(temp, object, f1);
-									}, true); //true=set values
-									jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE1, 0, nODE2); //fill into ODE2 rows, ODE1 columns
-								}
-							}
-						}
-					}
-
-
-					//++++++++++++++++++++++++++++++++++++++++++++++++++++
-					//no analytic jacobians so far? => do numerical differentiation!
-					if (!jacobianComputed)
-					{
-						ArrayIndex& ltgODE2numDiff = cSystemData.GetLocalToGlobalODE2NumDiff()[j];
-						//pout << "ltgODE2numDiff = " << ltgODE2numDiff << "\n";
-						//ArrayIndex& ltgODE2numDiff = cSystemData.GetLocalToGlobalODE2()[j];
-						Index nLocalODE2numDiff = ltgODE2numDiff.NumberOfItems(); //this is a possibly shorter list with no duplicates!
-						nLocalODE2 = ltgODE2.NumberOfItems();
-
-						f0.SetNumberOfItems(nLocalODE2); //size also correct for ODE1 derivatives
-						f1.SetNumberOfItems(nLocalODE2);
-						if (ComputeObjectODE2LHS(temp, object, f0)) //check if it is active; constraints not included any more in listComputeObjectODE2Lhs
-						{
-							//pout << "f0 = " << f0 << "\n";
-							localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2numDiff); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
-							if (diffODE2)
-							{
-								SetNumDiffObjectLieGroup(numDiff, factorODE2, x, xRef, localJacobian, f0, f1, ltgODE2numDiff, cSystemData,
-									[this, &temp, &object, &f1, &j]
-								{
-									ComputeObjectODE2LHS(temp, object, f1);
-								});
-
-							}
-							else { localJacobian.SetAll(0.); }
-
-							if (diffODE2_t && EXUstd::IsOfType(jacType, JacobianType::ODE2_ODE2_t))
-							{
-								AddNumDiffObject(numDiff, factorODE2_t, x_t, emptyXRef, localJacobian, f0, f1, ltgODE2numDiff, 
-									[this, &temp, &object, &f1, &j]
-								{
-									ComputeObjectODE2LHS(temp, object, f1);
-								});
-							}
-
-							jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE2numDiff);
-							//pout << "jacN" << j << "=np.array(" << localJacobian << ")\n";
-
-							if (diffODE1 && (jacType & JacobianType::ODE2_ODE1))
-							{
-								ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1NumDiff()[j]; //columns without duplicates (#1424)
-								Index nLocalODE1 = ltgODE1.NumberOfItems();
-
-								localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE1); //needs not to be initialized, beause the matrix is fully computed and then added to jacobianGM
-
-								AddNumDiffObject(numDiff, factorODE1, xODE1, xRefODE1, localJacobian, f0, f1, ltgODE1,
-									[this, &temp, &object, &f1, &j]
-								{
-									ComputeObjectODE2LHS(temp, object, f1);
-								}, true); //true=set values
-
-								jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE1, 0, nODE2); //fill into ODE2 rows, ODE1 columns
-							}
-						}
-					}
-				}
-			}//isActive
-		}//loop over objects
+				AddLocalJacobianODE2(temp, j, factorODE1, local, jacobianGM);
+			}
+		}
 	}
 	else
 	{

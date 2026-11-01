@@ -34,6 +34,7 @@ public:
 	ResizableVector localAE;			//!< object (local) algebraic equations evaluation
 
 	ResizableMatrix localJacobian;      //!< local (object)-jacobian during numerical/automatic differentiation
+	ResizableMatrix localJacobianODE1;  //!< the block of the local Jacobian of the ODE2 rows by the ODE1 coordinates (#3201)
 
 	JacobianTemp jacobianTemp;          //!< additional temporary data needed for jacobian computation
 	//ResizableVector jacobianForce;      //!< for computation of jacobian derivative

@@ -35,6 +35,18 @@
 
 class System;
 
+//! which blocks of the local Jacobian of the ODE2 rows of an object CSystem::ComputeLocalJacobianODE2 computed, and
+//! where they are (#3201): by the ODE2 coordinates and velocities analytic in temp.jacobianODE2Container (dense local
+//! or sparse global) or numerical in temp.localJacobian; by the ODE1 coordinates in temp.localJacobianODE1, the analytic
+//! one without its factor
+class LocalJacobianODE2
+{
+public:
+	enum Kind { none = 0, analytic, numerical };
+	Kind ode2 = none;	//!< the block by the ODE2 coordinates and velocities
+	Kind ode1 = none;	//!< the block by the ODE1 coordinates
+};
+
 
 
 //! @brief data which is updated during different computation tasks, e.g. load factor, load steps, time steps, solver accuracy, ...
@@ -328,6 +340,16 @@ public:
 	//void NumericalJacobianAE_ODE2_t(const NumericalDifferentiation& numDiff,
 	//	TemporaryComputationData& temp, Vector& f0, Vector& f1, ResizableMatrix& jacobian, Real factor, bool velocityLevel = false);
 
+
+	//! the local Jacobian of the ODE2 rows of object j, factorODE2 d(RHS)/dq + factorODE2_t d(RHS)/dq_t and factorODE1
+	//! d(RHS)/dy, the object's own or numerical, into temp as local says; false if the object is inactive or has no ODE2
+	//! dependency (#3201)
+	bool ComputeLocalJacobianODE2(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Index j,
+		Real factorODE2, Real factorODE2_t, Real factorODE1, LocalJacobianODE2& local);
+
+	//! add the blocks of ComputeLocalJacobianODE2 of object j to the system Jacobian (#3201)
+	void AddLocalJacobianODE2(TemporaryComputationData& temp, Index j, Real factorODE1, const LocalJacobianODE2& local,
+		GeneralMatrix& jacobianGM);
 
 	//! the analytic ODE2 Jacobian of one object, factorODE2 d(LHS)/dq + factorODE2_t d(LHS)/dq_t, into
 	//! temp.jacobianODE2Container; false if it has none for these settings (#2782)

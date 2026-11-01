@@ -5297,3 +5297,17 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   doSystemWideDifferentiation; JacobianODE1RHS of the DAE against the same; JacobianAE of the joints against forAE.
   All 19 agree within 1e-4 of the largest entry; the largest difference, 1.06e-5, is the velocity derivative of the
   cable's stiff spring, whose numerical step is that of the coordinates.
+
+<a id="rg9-11-4-1"></a>
+### RG9.11.4.1 — One function for the local Jacobian of the ODE2 rows (2026-11-01, #3201)
+- JacobianODE2RHS decided per object in its loop between the object's own Jacobian and a numerical one, and computed
+  the ODE1 block of the ODE2 rows in both branches, once after the analytic block and once after the numerical one.
+- Now `CSystem::ComputeLocalJacobianODE2(temp, numDiff, j, factorODE2, factorODE2_t, factorODE1, local)` computes the
+  blocks of object j into the temporary data - by q and q_t the object's own (ComputeObjectJacobianODE2, in
+  temp.jacobianODE2Container) or numerical (Lie group nodes apart, in temp.localJacobian); by y the object's own
+  (ComputeJacobianODE2_ODE1) or numerical, one lambda for both cases, in the new temp.localJacobianODE1 (tempMatrix
+  cannot hold it, the markers use it while the LHS is evaluated) - and `LocalJacobianODE2` (CSystem.h) says which
+  blocks it computed; `AddLocalJacobianODE2` adds them to the system Jacobian in the order of before. The loop of
+  JacobianODE2RHS calls the two; the system-wide branch, the loads and the general contact are unchanged.
+- The test suite passes, pytest 1485 passed (test_systemJacobians.py included). Computing and adding are separate,
+  which is the unit of the parallel assembly (RG9.11.5): compute per thread, add serially.
