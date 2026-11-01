@@ -94,7 +94,10 @@ decides is decided then.
   `Relative(other)`, `rotation`, `translation`, `velocity`, `angularVelocity` -, mapped at once to matrix and vector
   expressions; an `exudyn.HT` is a constant in their products, on either side. `PointVelocity`, `LocalTwist` and
   `RelativeTwist` of `exudyn.symbolics.kinematics` take either and call `exudyn.cUtilities` for numbers, so that a
-  function written with them computes with `exudyn.HT` and is recorded with the symbolic classes (#3182).
+  function written with them computes with `exudyn.HT` and is recorded with the symbolic classes (#3182). The rotation
+  parameters and motion vectors - `GetRotationVector`, `GetRxyz`, `LogSE3`, `SetExpSE3`, `LogR3xSO3`, `SetExpR3xSO3` -
+  are methods of `kinematics.HT` as well, with the limits of small angles of `exudyn.HT`; a rotation vector needs an
+  angle below pi, where it is not unique (#3185).
 
 ## Vectors, matrices and the user items
 

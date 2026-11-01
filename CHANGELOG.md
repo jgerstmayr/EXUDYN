@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 274 | 1.13.280 |
+| 1.13 | Newborn | 275 | 1.13.281 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.281** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The rotation and Lie group functions of the symbolic HT: GetRotationVector, GetRxyz, LogSE3, SetExpSE3, LogR3xSO3, SetExpR3xSO3 (#3185)
+  - description: Revision2026c step RG12.69.5. The methods of exudyn.HT that give and take rotation parameters and motion vectors, for kinematics.HT with symbolic parts: mapped at once to scalar, vector and matrix expressions, the limits of small angles by exudyn.symbolic.IfThenElse as in exudyn.HT; for numeric parts exudyn.HT computes them. For the torsional and rigid body spring-dampers and Lie group nodes as user items.
+  - **notes:** kinematics.HT has GetRotationVector, GetRxyz, LogSE3, SetExpSE3, LogR3xSO3 and SetExpR3xSO3 for symbolic parts, with the limits of small angles of exudyn.HT; a symbolic rotation vector needs an angle below pi.
+  - date resolved: **2026-11-01 01:10**, date raised: 2026-11-01
 - **1.13.280** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The parts of exudyn.HT and exudyn.Twist as read-only numpy views instead of copies (#3184)
   - description: Revision2026c step RG12.69.7. rotation and translation of exudyn.HT, velocity and angularVelocity of exudyn.Twist are read-only numpy views of the memory of the object, which they keep alive, instead of new arrays: a Python forceUserFunction of ObjectConnectorUser reads four of them per call (\#3183). A view follows later changes of the object; np.array(...) copies. Decided: views.
   - **notes:** rotation and translation of exudyn.HT, velocity and angularVelocity of exudyn.Twist are read-only numpy views of the object instead of copies: they follow its later changes, writing into them raises, np.array(...) copies; a Python user function of ObjectConnectorUser reads them faster.

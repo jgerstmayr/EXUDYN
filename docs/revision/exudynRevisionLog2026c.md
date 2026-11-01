@@ -4869,3 +4869,19 @@ the extra 4.7 us per Python call - add views.)*
 - A view follows a later change of its object (`H.translation = ...`) and refuses writing (`H.rotation[0,0] = 1`
   raises), so that a script cannot change an HT through a copy it believes it has. No use in the repository wrote into a
   part; suite and pytest pass.
+
+<a id="rg12-69-5"></a>
+### RG12.69.5 — the rotation and Lie group functions of kinematics.HT (2026-11-01, #3185)
+*(Maintainer 2026-11-01: "do the next steps as suggested", RG12.69.5 first.)*
+- Methods of kinematics.HT; for numeric parts they call exudyn.HT (the same bits), for symbolic parts:
+  - GetRotationVector: s the skew part of A, angle = atan2(|s|, (trace - 1)/2), the vector angle/|s| s, the factor
+    by 1 + |s|^2/6 below |s| = 1e-6 when cos > 0. Not the Euler-parameter route of LogSO3Vector (four branches of the
+    largest component); the price: near pi the factor grows as 1/|s| - an error of about 1e-16/(pi - angle), and at pi
+    the vector is not unique. Documented in the method and the manual.
+  - GetRxyz: the formula of RotationMatrix2RotXYZTemplate with IfThenElse at |cos(rotY)| < 1e-14.
+  - LogSE3: U = beta p - Omega x p / 2 + gamma Omega (Omega . p), the transposed TExpSO3Inv written out, its series
+    below phi = 0.02; SetExpSE3: U - t1 Omega x U + t2 Omega x (Omega x U), the transposed TExpSO3, its series below 0.01;
+    LogR3xSO3, SetExpR3xSO3: the translation and the rotation vector each on its own.
+- symbolicHTTest.py: against exudyn.HT for 4 random directions at angles 1, 1e-3, 1e-9, 0 and 3: 1.1e-14; esym.Jacobian
+  of GetRotationVector(RotationVector2RotationMatrix(v)) the unit matrix at v = [0.3, 0.1, -0.2] and at v = 0, where the
+  limit is taken (2.2e-16).

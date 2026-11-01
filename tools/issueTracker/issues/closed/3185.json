@@ -1,0 +1,15 @@
+{
+  "number": 3185,
+  "title": "The rotation and Lie group functions of the symbolic HT: GetRotationVector, GetRxyz, LogSE3, SetExpSE3, LogR3xSO3, SetExpR3xSO3",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Revision2026c step RG12.69.5. The methods of exudyn.HT that give and take rotation parameters and motion vectors, for kinematics.HT with symbolic parts: mapped at once to scalar, vector and matrix expressions, the limits of small angles by exudyn.symbolic.IfThenElse as in exudyn.HT; for numeric parts exudyn.HT computes them. For the torsional and rigid body spring-dampers and Lie group nodes as user items.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "dateResolved": "2026-11-01 01:10",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "kinematics.HT has GetRotationVector, GetRxyz, LogSE3, SetExpSE3, LogR3xSO3 and SetExpR3xSO3 for symbolic parts, with the limits of small angles of exudyn.HT; a symbolic rotation vector needs an angle below pi.",
+  "resolvedInVersion": "1.13.281"
+}

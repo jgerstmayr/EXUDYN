@@ -34,6 +34,8 @@ __all__ = [
 
 #below this length, RotationVector2RotationMatrix takes the limits of its factors sin(a)/a and 2 sin(a/2)^2/a^2
 _smallAngle = 1e-12
+#below this sine of the angle, HT.GetRotationVector takes the limit of angle/sin(angle) (#3185)
+_smallSine = 1e-6
 
 def _Matrix(rows, functions):
     """the result matrix: a symbolic matrix for exudyn.symbolic, a numpy array otherwise"""
@@ -490,6 +492,122 @@ class HT:
         rotationT = self.rotation.T
         return HT(_MatMul(rotationT, other.rotation),
                   _MatMul(rotationT, _Plus(other.translation, self.translation, -1.)))
+
+    #the rotation and Lie group functions (#3185): for symbolic parts the formulas below, mapped at once, with the limits
+    #of small angles chosen by exudyn.symbolic.IfThenElse; for numbers those of exudyn.HT, the same bits
+    def _Numbers(self):
+        """the exudyn.HT of numeric parts, None for symbolic parts"""
+        if _IsSymbolic(self.rotation, self.translation):
+            return None
+        return exu.HT(rotation=np.asarray(self.rotation, dtype=float), translation=np.asarray(self.translation, dtype=float))
+
+    def GetRotationVector(self):
+        """the rotation as rotation vector (axis times angle), the rotation parameters of NodeRigidBodyRotVecLG; for
+        symbolic parts from the skew part s and the trace of the rotation, angle = atan2(|s|, (trace - 1)/2), the factor
+        angle/|s| by its limit 1 + |s|^2/6 below |s| = 1e-6; the angle must stay below pi, where the vector is not unique
+
+        Returns:
+            3D rotation vector, symbolic for symbolic parts, else as np.array
+        """
+        H = self._Numbers()
+        if H is not None:
+            return H.GetRotationVector()
+        A = self.rotation
+        s = [0.5*(A[2, 1] - A[1, 2]), 0.5*(A[0, 2] - A[2, 0]), 0.5*(A[1, 0] - A[0, 1])]
+        ss = s[0]*s[0] + s[1]*s[1] + s[2]*s[2]
+        c = 0.5*(A[0, 0] + A[1, 1] + A[2, 2] - 1.)
+        sinus = exu.symbolic.sqrt(ss)
+        regular = exu.symbolic.atan2(sinus, c)/sinus
+        factor = exu.symbolic.IfThenElse(ss < _smallSine**2, exu.symbolic.IfThenElse(c > 0., 1. + ss*(1./6.), regular), regular)
+        return exu.symbolic.Vector([factor*x for x in s])
+
+    def GetRxyz(self):
+        """the rotation as the 3 Tait-Bryan angles [rotX, rotY, rotZ], the rotation parameters of NodeRigidBodyRxyz, as
+        exudyn.HT computes them: at the singularity |cos(rotY)| < 1e-14 rotX is 0
+
+        Returns:
+            3D vector of the angles, symbolic for symbolic parts, else as np.array
+        """
+        H = self._Numbers()
+        if H is not None:
+            return H.GetRxyz()
+        A = self.rotation
+        F = exu.symbolic
+        absC1 = F.sqrt(A[1, 2]*A[1, 2] + A[2, 2]*A[2, 2])
+        regular = absC1 > 1e-14
+        return F.Vector([F.IfThenElse(regular, F.atan2(-A[1, 2], A[2, 2]), F.Real(0.)),
+                         F.atan2(A[0, 2], absC1),
+                         F.IfThenElse(regular, F.atan2(-A[0, 1], A[0, 0]), F.atan2(A[1, 0], A[1, 1]))])
+
+    def LogR3xSO3(self):
+        """the logarithm on R3xSO(3): [translation, rotation vector], 6 components, as GetCoordinatesRotationVector
+
+        Returns:
+            6D vector, symbolic for symbolic parts, else as np.array
+        """
+        H = self._Numbers()
+        if H is not None:
+            return H.LogR3xSO3()
+        (p, rotationVector) = (self.translation, self.GetRotationVector())
+        return exu.symbolic.Vector([p[i] for i in range(3)] + [rotationVector[i] for i in range(3)])
+
+    def SetExpR3xSO3(self, vector):
+        """set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of
+        the rotation vector Omega, each on its own; returns the HT"""
+        (U, Omega) = ([vector[i] for i in range(3)], [vector[i] for i in range(3, 6)])
+        if not _IsSymbolic(*U, *Omega):
+            H = exu.HT().SetExpR3xSO3([float(x) for x in U + Omega])
+            (self.rotation, self.translation) = (H.rotation.copy(), H.translation.copy())
+            return self
+        self.rotation = RotationVector2RotationMatrix(Omega, exu.symbolic)
+        self.translation = exu.symbolic.Vector(U)
+        return self
+
+    def LogSE3(self):
+        """the logarithm on SE(3): the motion vector [U, Omega], 6 components, from which SetExpSE3 gives this HT back;
+        Omega is the rotation vector, U = TExpSO3Inv(Omega)^T p = beta p - Omega x p / 2 + gamma Omega (Omega . p) with
+        beta = (phi/2) cot(phi/2), gamma = (1 - beta)/phi^2, by their series below phi = 0.02 as in exudyn.HT
+
+        Returns:
+            6D vector, symbolic for symbolic parts, else as np.array
+        """
+        H = self._Numbers()
+        if H is not None:
+            return H.LogSE3()
+        F = exu.symbolic
+        (p, Omega) = (self.translation, self.GetRotationVector())
+        phi2 = Omega[0]*Omega[0] + Omega[1]*Omega[1] + Omega[2]*Omega[2]
+        epsilon = 0.5*F.sqrt(phi2)
+        betaRegular = epsilon*F.cos(epsilon)/F.sin(epsilon)
+        cSeries = 1./12. + phi2*(1./720.) + phi2*phi2*(1./30240.)
+        small = phi2 <= 0.02**2
+        beta = F.IfThenElse(small, 1. - cSeries*phi2, betaRegular)
+        gamma = F.IfThenElse(small, cSeries, (1. - betaRegular)/phi2)
+        OmegaP = Omega[0]*p[0] + Omega[1]*p[1] + Omega[2]*p[2]
+        cross = Cross(Omega, p, F)
+        return F.Vector([beta*p[i] - 0.5*cross[i] + gamma*OmegaP*Omega[i] for i in range(3)] + [Omega[i] for i in range(3)])
+
+    def SetExpSE3(self, vector):
+        """set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the rotation of the
+        rotation vector Omega and the translation TExpSO3(Omega)^T U = U - t1 Omega x U + t2 Omega x (Omega x U) with
+        t1 = -(1 - cos(phi))/phi^2, t2 = (1 - sin(phi)/phi)/phi^2, by their series below phi = 0.01 as in exudyn.HT;
+        returns the HT"""
+        (U, Omega) = ([vector[i] for i in range(3)], [vector[i] for i in range(3, 6)])
+        if not _IsSymbolic(*U, *Omega):
+            H = exu.HT().SetExpSE3([float(x) for x in U + Omega])
+            (self.rotation, self.translation) = (H.rotation.copy(), H.translation.copy())
+            return self
+        F = exu.symbolic
+        phi2 = Omega[0]*Omega[0] + Omega[1]*Omega[1] + Omega[2]*Omega[2]
+        phi = F.sqrt(phi2)
+        small = phi2 < 0.01**2
+        t1 = F.IfThenElse(small, -(0.5 - phi2*(1./24.) + phi2*phi2*(1./720.)), -(1. - F.cos(phi))/phi2)
+        t2 = F.IfThenElse(small, 1./6. - phi2*(1./120.) + phi2*phi2*(1./5040.), (1. - F.sin(phi)/phi)/phi2)
+        OmegaU = Cross(Omega, U, F)
+        OmegaOmegaU = Cross(Omega, [OmegaU[i] for i in range(3)], F)
+        self.rotation = RotationVector2RotationMatrix(Omega, F)
+        self.translation = F.Vector([U[i] - t1*OmegaU[i] + t2*OmegaOmegaU[i] for i in range(3)])
+        return self
 
     def __repr__(self):
         return 'kinematics.HT(rotation=' + str(self.rotation) + ', translation=' + str(self.translation) + ')'

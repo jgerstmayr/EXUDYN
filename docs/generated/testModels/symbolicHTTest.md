@@ -15,7 +15,9 @@ You can view and download this file on Github: [symbolicHTTest.py](https://githu
 #           vectors against exudyn.HT, also with an exudyn.HT as constant on either side; PointVelocity, LocalTwist
 #           and RelativeTwist against exudyn.cUtilities, which they call for exudyn.HT and exudyn.Twist; RelativeTwist
 #           against central differences of HT0.Relative(HT1) moved by the twists, and esym.Jacobian of the relative
-#           translation by the rotation vector of frame 0 against central differences.
+#           translation by the rotation vector of frame 0 against central differences. The rotation and Lie group
+#           functions - GetRotationVector, GetRxyz, LogSE3, SetExpSE3, LogR3xSO3, SetExpR3xSO3 - against exudyn.HT for
+#           angles from 3 down to 0, where their limits are taken, and the derivative of the rotation vector (#3185).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-01
@@ -94,6 +96,32 @@ differences = np.array([(RelativeTranslation(v0 + h*e) - RelativeTranslation(v0 
 jacobianError = np.abs(jacobian - differences).max()
 exu.Print('esym.Jacobian of the relative translation against central differences:', jacobianError)
 
+#the rotation and Lie group functions (#3185) against exudyn.HT, for angles of 1, 1e-3, 1e-9, 0 and 3 (near pi)
+lieGroupLargest = 0.
+for angle in [1., 1e-3, 1e-9, 0., 3.]:
+    for i in range(4):
+        direction = rng.standard_normal(3)
+        rotationVector = angle*direction/exu.cMath.norm(direction)
+        H = exu.HT(rotationVector=rotationVector, translation=rng.standard_normal(3))
+        S = SymbolicHT(H, 'HT')
+        for name in ['GetRotationVector', 'GetRxyz', 'LogSE3', 'LogR3xSO3']:
+            lieGroupLargest = max(lieGroupLargest, np.abs(Value(getattr(S, name)()) - getattr(H, name)()).max())
+        motion = list(rng.standard_normal(3)) + list(rotationVector)
+        for name in ['SetExpSE3', 'SetExpR3xSO3']:
+            symbolicMotion = getattr(kin.HT(), name)(esym.Vector('motion', motion))
+            lieGroupLargest = max(lieGroupLargest, DifferenceHT(symbolicMotion, getattr(exu.HT(), name)(motion)))
+exu.Print('largest difference of the rotation and Lie group functions to exudyn.HT:', lieGroupLargest)
+
+#the derivative of the rotation vector of a rotation by esym.Jacobian, at a rotation and at the unit rotation, where the
+#limit of the small angles is taken: the unit matrix, as a rotation vector below pi is its own
+lieJacobianError = 0.
+for v0 in [np.array([0.3, 0.1, -0.2]), np.zeros(3)]:
+    rotationVector = esym.Vector('rotationVector', v0.tolist())
+    frame = kin.HT(kin.RotationVector2RotationMatrix(rotationVector))
+    jacobian = Value(esym.Jacobian(frame.GetRotationVector(), rotationVector))
+    lieJacobianError = max(lieJacobianError, np.abs(jacobian - np.eye(3)).max())
+exu.Print('esym.Jacobian of the rotation vector of its rotation, against the unit matrix:', lieJacobianError)
+
 #the classes copy each other's parts; an exudyn.HT refuses an operand it cannot compute with
 copies = (np.abs(kin.HT(H0).rotation - H0.rotation).max() == 0 and np.abs(kin.Twist(twist0).velocity - twist0.velocity).max() == 0
           and exu.Twist(twist0) == twist0 and kin.HT().translation.tolist() == [0, 0, 0])
@@ -104,7 +132,7 @@ except TypeError:
     refused = True
 
 u = int(largest > 1e-14) + int(velocityError > 1e-8) + int(angularVelocityError > 1e-8) + int(jacobianError > 1e-8)
-u += int(not copies) + int(not refused)
+u += int(not copies) + int(not refused) + int(lieGroupLargest > 1e-13) + int(lieJacobianError > 1e-12)
 exu.Print('solution of symbolicHTTest=', u)
 exu.sys['testResult'] = u
 ```
