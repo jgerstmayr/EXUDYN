@@ -78,6 +78,10 @@ product, at 100 rows 3 times faster to evaluate and 5 times faster to differenti
 `UserItemCreator` has one kind per Create function: the contacts with and without an impact model are the kind
 `sphereSphereContact`, both formulations of the rigid-body spring-damper the kind `rigidBodySpringDamper`, each
 formulation recorded once (#3203).
+With several threads (`parallel.numberOfThreads`), the implicit and static solvers compute the analytic and automatic
+Jacobians of the ODE2 equations of the objects without Python user functions in parallel, once the system has
+`parallel.multithreadedLowerLimitJacobians` of them; an ANCF cable of 2000 elements takes 4.6 instead of 20.9 ms per
+Jacobian with 8 threads (#1203).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It

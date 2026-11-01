@@ -5337,3 +5337,26 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   (ComputeLieGroupNodeCompositionEps); in CObject it would need the same access. It is what an object returning
   false gets, and it is serial (RG9.11.5). Moving it is possible later through a small interface of CSystem, if wanted.
 - The test suite passes; test_systemJacobians.py, test_connectorInterface.py, test_accessFunctionsAD.py 73 passed.
+
+<a id="rg9-11-5-1"></a>
+### RG9.11.5.1 — The ODE2 rows of the Jacobian in parallel (2026-11-01, #1203, #3201)
+- JacobianODE2RHS: with more than one thread and at least `parallel.multithreadedLowerLimitJacobians` objects without
+  Python functions (listComputeObjectODE2LhsNoUF, the list of the parallel residual), a ParallelFor computes each
+  object's local Jacobian into the TemporaryComputationData of its thread with `analyticOnly=true` and appends it as
+  triplets of the system Jacobian (`AppendLocalJacobianODE2`: the nonzero entries of the dense blocks, or the triplets
+  of the sparse container); an object that needs a numerical block - which perturbs the system state - returns
+  `deferred` and goes to the thread's `deferredObjects`. Then serially: the triplets of all threads into the system
+  matrix, the deferred objects and the objects with Python functions by ComputeLocalJacobianODE2/AddLocalJacobianODE2.
+  With one thread or below the limit the serial loop of before runs, so the results of the serial runs are unchanged.
+- Measured (Windows, EigenSparse, ComputeJacobianODE2RHS): an ANCF cable (ObjectANCFCable, analytic) of n elements with
+  a Cartesian spring-damper (connector interface) over every second node:
+
+  | n | 1 thread | 2 | 4 | 8 |
+  |---|---|---|---|---|
+  | 200 | 2.07 ms | 1.05 ms | 0.53 ms | 0.50 ms |
+  | 2000 | 20.9 ms | 10.9 ms | 9.1 ms | 4.6 ms |
+
+  The difference to the serial Jacobian is the rounding of another order of the sums, 3e-12 of the largest entry.
+- test_systemJacobians.py compares the parallel with the serial assembly for the five models, dense and sparse, to
+  1e-14 (10 cases more, 29 in all); the test suite passes, pytest 1495 passed.
+- Open (RG9.11.5.2): the AE rows (#1202) and the split of the tasks by a cost per item (#858).

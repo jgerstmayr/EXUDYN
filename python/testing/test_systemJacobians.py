@@ -6,7 +6,8 @@
 #           spring-dampers, mass points with the contact and the coordinate connectors, an ANCF cable, ObjectGenericDAE
 #           with its ODE1 couplings, the joints - and the blocks of JacobianODE2RHS and JacobianODE1RHS by the local
 #           Jacobians (analytic, automatic or numerical per object) against doSystemWideDifferentiation, and the
-#           constraint Jacobian of JacobianAE against forAE. At zero velocities, where the analytic connector
+#           constraint Jacobian of JacobianAE against forAE; the parallel assembly of the ODE2 rows against the serial one,
+#           dense and sparse (#1203). At zero velocities, where the analytic connector
 #           Jacobians neglect nothing (dv/dq), on Tait-Bryan angles. The comparison for each sub-step of RG9.11; the
 #           test suite is the test of the Jacobians in the solvers.
 #
@@ -111,12 +112,14 @@ def Build(model):
     return (SC, mbs)
 
 
-def Jacobian(model, compute, systemWide=False, forAE=False):
+def Jacobian(model, compute, systemWide=False, forAE=False, threads=1, sparse=False):
     """the system Jacobian of the solver after compute(solver, mbs), at the initial coordinates turned a little and at
     zero velocities"""
     (SC, mbs) = Build(model)
     s = exu.SimulationSettings()
-    s.linearSolver.solverType = exu.LinearSolverType.EXUdense #forAE is dense only
+    s.linearSolver.solverType = exu.LinearSolverType.EigenSparse if sparse else exu.LinearSolverType.EXUdense #forAE is dense only
+    s.parallel.numberOfThreads = threads
+    s.parallel.multithreadedLowerLimitJacobians = 1
     s.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation = systemWide
     s.timeIntegration.newton.numericalDifferentiation.forAE = forAE
     solver = exu.MainSolverImplicitSecondOrder()
@@ -125,7 +128,8 @@ def Jacobian(model, compute, systemWide=False, forAE=False):
     mbs.systemData.SetODE2Coordinates(q + 0.01*np.cos(np.arange(len(q))))
     mbs.systemData.SetODE2Coordinates_t(0*q)
     compute(solver, mbs)
-    jacobian = np.array(solver.GetSystemJacobian())
+    jacobian = solver.GetSystemJacobian()
+    jacobian = np.array(jacobian.todense() if hasattr(jacobian, "todense") else jacobian) #a scipy matrix for a sparse solver, if scipy is there
     solver.FinalizeSolver(mbs, s)
     return jacobian
 
@@ -178,3 +182,13 @@ def test_theConstraintJacobianIsTheNumericalOne():
     analytic = Jacobian('Joints', AE)
     numerical = Jacobian('Joints', AE, forAE=True)
     assert Difference(analytic, numerical) < tolerance, Difference(analytic, numerical)
+
+
+@pytest.mark.parametrize('model', list(models))
+@pytest.mark.parametrize('sparse', [False, True])
+def test_theParallelODE2JacobianIsTheSerialOne(model, sparse):
+    factors = (0.7, 0.3, 0.5)
+    serial = Jacobian(model, ODE2(factors), sparse=sparse)
+    parallel = Jacobian(model, ODE2(factors), threads=4, sparse=sparse)
+    assert np.max(np.abs(serial)) > 0
+    assert Difference(parallel, serial) < 1e-14, (model, sparse, Difference(parallel, serial))

@@ -275,6 +275,45 @@ void CSystem::AddLocalJacobianODE2(TemporaryComputationData& temp, Index j, Real
 	}
 }
 
+//! append the blocks of ComputeLocalJacobianODE2 of object j as triplets of the system Jacobian, for the parallel
+//! assembly (#3201): the dense blocks by their nonzero entries, the sparse container by its triplets
+void CSystem::AppendLocalJacobianODE2(TemporaryComputationData& temp, Index j, Real factorODE1, const LocalJacobian& local,
+	SparseTripletVector& triplets)
+{
+	const ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
+	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
+	auto AppendDense = [&triplets](const ResizableMatrix& block, Real factor, const ArrayIndex& rows, const ArrayIndex& columns, Index columnOffset)
+	{
+		for (Index r = 0; r < block.NumberOfRows(); r++)
+		{
+			for (Index k = 0; k < block.NumberOfColumns(); k++)
+			{
+				Real value = block(r, k);
+				if (value != 0.) { triplets.AppendPure(SparseTriplet(rows[r], columns[k] + columnOffset, factor*value)); }
+			}
+		}
+	};
+
+	if (local.ode2 == LocalJacobian::analytic)
+	{
+		if (temp.jacobianODE2Container.UseDenseMatrix())
+		{
+			AppendDense(temp.jacobianODE2Container.GetInternalDenseMatrix(), 1., ltgODE2, ltgODE2, 0);
+		}
+		else
+		{
+			triplets.AppendArray(temp.jacobianODE2Container.GetInternalSparseTripletMatrix().GetTriplets());
+			temp.jacobianODE2Container.GetInternalSparseTripletMatrix().SetAllZero();
+		}
+	}
+	CHECKandTHROW(local.ode2 != LocalJacobian::numerical && local.ode1 != LocalJacobian::numerical,
+		"CSystem::AppendLocalJacobianODE2: a numerical block is assembled serially", ExudynInternalError);
+	if (local.ode1 == LocalJacobian::analytic)
+	{
+		AppendDense(temp.localJacobianODE1, -factorODE1, ltgODE2, cSystemData.GetLocalToGlobalODE1()[j], nODE2); //minus (-): RHS = -LHS
+	}
+}
+
 //! compute numerical differentiation of ODE2RHS w.r.t. ODE2 and ODE2_t quantities; 
 //! multiply (before added to jacobianGM) ODE2 with factorODE2 and ODE2_t with factorODE2_t
 //! the jacobian is ADDed to jacobianGM, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
@@ -312,12 +351,52 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 	{
 		//the local Jacobian of each object, added to the system Jacobian (#3201)
 		LocalJacobian local;
-		for (Index j : cSystemData.listComputeObjectODE2Lhs)
+		auto ComputeAndAdd = [&](Index j)
 		{
 			if (ComputeLocalJacobianODE2(temp, numDiff, j, factorODE2, factorODE2_t, factorODE1, local))
 			{
 				AddLocalJacobianODE2(temp, j, factorODE1, local, jacobianGM);
 			}
+		};
+
+		Index nItems = cSystemData.listComputeObjectODE2LhsNoUF.NumberOfItems();
+		Index nThreads = ExuThreading::TaskManager::GetNumThreads();
+		if (nThreads > 1 && nItems >= solverData.multithreadedLowerLimitJacobians)
+		{
+			//the analytic and automatic local Jacobians of the objects without Python functions in parallel, as triplets
+			//per thread; the objects that need a numerical block and those with Python functions serially (#3201, #1203)
+			outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
+			tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
+			for (Index i = 0; i < nThreads; i++)
+			{
+				tempArray[i].sparseTriplets.SetNumberOfItems(0);
+				tempArray[i].deferredObjects.SetNumberOfItems(0);
+				tempArray[i].jacobianODE2Container.ClearAllMatrices();
+			}
+			Index taskSplit = GetTaskSplit(nItems, nThreads);
+			ExuThreading::ParallelFor(nItems, [this, &tempArray, &numDiff, factorODE2, factorODE2_t, factorODE1](ParallelSizeType i)
+			{
+				Index j = cSystemData.listComputeObjectODE2LhsNoUF[(Index)i];
+				TemporaryComputationData& threadTemp = tempArray[ExuThreading::TaskManager::GetThreadId()];
+				LocalJacobian threadLocal;
+				if (ComputeLocalJacobianODE2(threadTemp, numDiff, j, factorODE2, factorODE2_t, factorODE1, threadLocal, true))
+				{
+					AppendLocalJacobianODE2(threadTemp, j, factorODE1, threadLocal, threadTemp.sparseTriplets);
+				}
+				else if (threadLocal.deferred) { threadTemp.deferredObjects.Append(j); }
+			}, taskSplit);
+			outputBuffer.SetSuspendWriting(false);
+
+			for (Index i = 0; i < nThreads; i++) { jacobianGM.AddSparseTriplets(tempArray[i].sparseTriplets); }
+			for (Index i = 0; i < nThreads; i++)
+			{
+				for (Index j : tempArray[i].deferredObjects) { ComputeAndAdd(j); }
+			}
+			for (Index j : cSystemData.listComputeObjectODE2LhsUF) { ComputeAndAdd(j); }
+		}
+		else
+		{
+			for (Index j : cSystemData.listComputeObjectODE2Lhs) { ComputeAndAdd(j); }
 		}
 	}
 	else

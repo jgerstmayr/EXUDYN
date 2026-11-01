@@ -1159,9 +1159,9 @@ CLOSED 2026-11-01 (#3202): CSystemAssemble.cpp (1390 lines: Assemble, the checks
 
 CLOSED 2026-11-01 (#3201 stays open; maintainer 2026-11-01: not broad, the test suite is the real test): python/testing/test_systemJacobians.py - five small models (rigid bodies with the spring-dampers, mass points with the contact and coordinate connectors, an ANCF cable, ObjectGenericDAE with its ODE1 couplings, the joints), the ODE2 and ODE1 blocks of the local Jacobians against doSystemWideDifferentiation and the constraint Jacobian against forAE, 19 cases within 1e-4. [log](exudynRevisionLog2026c.md#rg9-11-3)
 
-#### **OPEN_RG9.11.4** ComputeLocalJacobian with the numerical default in CObject; JacobianODE2RHS and JacobianODE1RHS as one loop over the request
+#### **CLOSED_RG9.11.4** ComputeLocalJacobian with the numerical default in CObject; JacobianODE2RHS and JacobianODE1RHS as one loop over the request
 
-Design sections 3.1 and 3.3; the same results; after the decisions J1 and J2.
+CLOSED 2026-11-01 (#3201 stays open; all sub-steps closed): the local Jacobians of the ODE2 and ODE1 rows by one function each, the object own Jacobian by a virtual of CObject.
 
 ##### **CLOSED_RG9.11.4.1** One function for the local Jacobian of the ODE2 rows of an object and one that adds it; JacobianODE2RHS a loop over them
 
@@ -1178,6 +1178,14 @@ CLOSED 2026-11-01 (#3201 stays open): the decision between connectors and the ot
 #### **OPEN_RG9.11.5** Assemble the analytic and automatic local Jacobians in parallel, with triplets per thread and a cost per item
 
 #1203, #1202, #858 (was RG5.3); measured on the performance models.
+
+##### **CLOSED_RG9.11.5.1** The ODE2 rows in parallel: the analytic and automatic local Jacobians of the objects without Python functions as triplets per thread, the others serially
+
+CLOSED 2026-11-01 (#1203): JacobianODE2RHS with ParallelFor over listComputeObjectODE2LhsNoUF above multithreadedLowerLimitJacobians, ComputeLocalJacobianODE2(analyticOnly) and AppendLocalJacobianODE2 per thread, the deferred objects (a numerical block) and those with Python functions serially; an ANCF cable of 2000 elements with Cartesian spring-dampers 20.9 ms serial, 10.9 / 9.1 / 4.6 ms with 2 / 4 / 8 threads; the serial path unchanged. [log](exudynRevisionLog2026c.md#rg9-11-5-1)
+
+##### **OPEN_RG9.11.5.2** The AE rows in parallel, and the split of the tasks by a cost per item
+
+#1202, #858; after RG9.11.6 (the algebraic blocks on the interface of the local Jacobians).
 
 #### **OPEN_RG9.11.6** The algebraic blocks on the same interface, the nodes with algebraic equations included, forAE for sparse matrices
 

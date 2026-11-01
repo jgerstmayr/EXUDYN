@@ -1,0 +1,16 @@
+{
+  "number": 1203,
+  "title": "parallel / multithreaded",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "C++: add multithreading for JacobianODE2 (analytic jacobians)",
+  "dateRaised": "2022-07-12",
+  "deadline": "2022-09-10",
+  "dateResolved": "2026-11-01 20:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The analytic and automatic Jacobians of the ODE2 equations of objects without Python user functions are computed in parallel when the solver runs with several threads (parallel.numberOfThreads) and the system has at least parallel.multithreadedLowerLimitJacobians such objects; the numerically differentiated objects and those with Python functions follow serially. An ANCF cable of 2000 elements: 20.9 ms per Jacobian serially, 4.6 ms with 8 threads.",
+  "resolvedInVersion": "1.13.303"
+}

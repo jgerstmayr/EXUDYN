@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 294 | 1.13.302 |
+| 1.13 | Newborn | 295 | 1.13.303 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.303** `EXTENSION` `HIGH` `MEDIUM EFF` `resolved by: Claude-JG` parallel / multithreaded (#1203)
+  - description: C++: add multithreading for JacobianODE2 (analytic jacobians)
+  - **notes:** The analytic and automatic Jacobians of the ODE2 equations of objects without Python user functions are computed in parallel when the solver runs with several threads (parallel.numberOfThreads) and the system has at least parallel.multithreadedLowerLimitJacobians such objects; the numerically differentiated objects and those with Python functions follow serially. An ANCF cable of 2000 elements: 20.9 ms per Jacobian serially, 4.6 ms with 8 threads.
+  - date resolved: **2026-11-01 20:09**, date raised: 2022-07-12
 - **1.13.302** `CHANGE` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Split CSystem.cpp into CSystemAssemble.cpp, CSystem.cpp and CSystemJacobians.cpp (#3202)
   - description: CSystem.cpp has about 4100 lines: the assembly and its checks (Assemble, CheckSystemIntegrity, the coordinates, the local-to-global lists, the item lists, the Lie group lists), the mass matrix, the residuals, loads, algebraic equations, reaction forces and the post-Newton step, and the Jacobians. Split it by moving functions unchanged: CSystemAssemble.cpp for the assembly and the pre-checks, CSystem.cpp for the mass matrix, the residuals and what belongs to them, CSystemJacobians.cpp for the Jacobians and their derivative terms; the vcxproj and sources.json updated. Decided: before the revision of the Jacobians (\#3201), so that it works on a file of its own.
   - **notes:** CSystem.cpp is split into CSystemAssemble.cpp (the assembly and its checks), CSystem.cpp (mass matrix, residuals, loads, algebraic equations, reaction forces) and CSystemJacobians.cpp (the Jacobians), the functions moved unchanged.

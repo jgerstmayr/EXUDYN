@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.302.dev1
+- Exudyn version = 1.13.303.dev1
 - last change = 2026-11-01
 - Number of issues = 3204
-- Number of resolved issues = 3079 (302 in current version)
+- Number of resolved issues = 3080 (303 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9309,10 +9309,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: consider mechanism to self-register items: objects, nodes, ...; same a swith TimerStructure registration; this allows to add user-defined objects without touching the overall code
   - **remarks:** planned as revision2026b step RG8.1 (triage 2026-10-07)
   - date raised: 2022-08-24
-- `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` parallel / multithreaded (#1203)
-  - description: C++: add multithreading for JacobianODE2 (analytic jacobians)
-  - **remarks:** planned as revision2026c step RG9.11.5 (2026-11-01), part of the revision of the Jacobians \#3201; was RG5.3
-  - date raised: 2022-07-12
 - `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` parallel / multithreaded (#1202)
   - description: C++: add multithreading for JacobianAE
   - **remarks:** planned as revision2026c step RG9.11.5 (2026-11-01), part of the revision of the Jacobians \#3201; was RG5.3
