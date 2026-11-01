@@ -5167,3 +5167,26 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
     `length/step` random values of `numpy.random.default_rng(seed)` - the same for the same seed in every run, step size,
     Newton iteration and order of evaluation; normal distribution by `distribution='normal'`; the memory of the table is
     the cost.
+
+<a id="rg9-11-1"></a>
+### RG9.11.1 — Design the revision of the Jacobians (2026-11-01, #3201, #3202)
+- Maintainer 2026-11-01: the Jacobian computation of CSystem has many switches, because some objects are numerical
+  and some analytic; every object should provide a Jacobian, analytically or locally by automatic or numerical
+  differentiation, the markers having the interfaces for it; the assembly then distinguishes only the system-wide
+  numerical Jacobian (all couplings, serial, for comparison) and the local Jacobians, in parallel for the objects
+  without Python functions; connectors whose user functions read further coordinates (sensors) stay out of the fast
+  path. Only ODE2-ODE2, AE-AE and ODE2-AE for speed; the other blocks rare, serial, readable, complete; in line with
+  the ODE1-ODE2 couplings of #3143. CSystem.cpp split into CSystemAssemble.cpp, CSystem.cpp and CSystemJacobians.cpp.
+- Existing issues checked: #1203 and #1202 (parallel ODE2 and AE Jacobians) and #858 (cost per item) were RG5.3 and
+  are now RG9.11.5; #1548 (ODE1 loads, RG4.23) is part of RG9.11.7; #988 (sparse constraint Jacobian derivative),
+  #3107 (central differences of the user items) and #2884 (the joints on the relative transformation) are related and
+  stay where they are. None covered the revision as a whole: #3201 raised, and #3202 for the split.
+- Found in the code: four functions decide per object between five ways (analytic, connector interface, marker data,
+  numerical by CSystem with a Lie group variant, system-wide); the ODE1 coupling of the ODE2 rows in two code paths;
+  no parallel Jacobian, `multithreadedLowerLimitJacobians` unused; of the 34 connectors and constraints, 12 connectors
+  are on the ODE2 connector interface and 9 joints on the AE one. The solver chapter still says that the ODE1-ODE2
+  blocks vanish.
+- docs/dev/design/systemJacobians.md: the blocks and their current computation, the problems, one virtual
+  `ComputeLocalJacobian` with a request and a numerical default in CObject (serial, as it perturbs the global
+  state), the parallel and the serial list, the fast and the serial blocks, a verification test against the
+  system-wide numerical Jacobian, the split; sub-steps RG9.11.2 to RG9.11.7 and the decisions J1 to J4.

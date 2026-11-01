@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.299.dev1
 - last change = 2026-11-01
-- Number of issues = 3201
+- Number of issues = 3203
 - Number of resolved issues = 3076 (299 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` Split CSystem.cpp into CSystemAssemble.cpp, CSystem.cpp and CSystemJacobians.cpp (#3202)
+  - description: CSystem.cpp has about 4100 lines: the assembly and its checks (Assemble, CheckSystemIntegrity, the coordinates, the local-to-global lists, the item lists, the Lie group lists), the mass matrix, the residuals, loads, algebraic equations, reaction forces and the post-Newton step, and the Jacobians. Split it by moving functions unchanged: CSystemAssemble.cpp for the assembly and the pre-checks, CSystem.cpp for the mass matrix, the residuals and what belongs to them, CSystemJacobians.cpp for the Jacobians and their derivative terms; the vcxproj and sources.json updated. Decided: before the revision of the Jacobians (\#3201), so that it works on a file of its own.
+  - date raised: 2026-11-01
+- `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` Revise the system Jacobians: every object provides its local Jacobian, assembled in parallel for ODE2-ODE2, AE-ODE2 and ODE2-AE, the other couplings complete and serial (#3201)
+  - description: CSystem::JacobianODE2RHS, JacobianODE1RHS, JacobianAE and JacobianODE2Loads decide per object between an analytic Jacobian, the connector interface, the path of the marker data and a numerical differentiation by CSystem, with flags of the object, the markers and the settings in each place. To do: every object provides the Jacobian of its equations through one interface - analytic, by automatic differentiation or by a numerical differentiation of its own -, so that the assembly distinguishes only the system-wide numerical Jacobian (all couplings, serial, for comparison) and the assembly of the local Jacobians, in parallel for the objects without Python functions and serial for the others and for the objects whose equations depend on coordinates outside their local-to-global lists (sensors and other items read in user functions). Only the ODE2-ODE2, AE-ODE2 and ODE2-AE blocks are optimized for speed; the other blocks (ODE1, loads, the AE-AE and the derivative terms) are completed for all couplings, serial and readable, in line with the ODE1-ODE2 couplings of \#3143. Design: docs/dev/design/systemJacobians.md.
+  - date raised: 2026-11-01
 - `EXTENSION` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` User items of GenericJoint, HydraulicActuatorSimple, ReevingSystemSprings and ObjectFFRFreducedOrder for the advanced GPU tests (#3200)
   - description: For the advanced tests of the uniform evaluation on the GPU (revision2026c group RG14): user items of exudyn.symbolics.userItems that reproduce ObjectJointGeneric (free axes, so equations lambda = 0), ObjectConnectorHydraulicActuatorSimple (ODE1 pressures coupled with the ODE2 coordinates), ObjectConnectorReevingSystemSprings (a rope over several sheaves of rigid markers) and ObjectFFRFreducedOrder (modal coordinates, a large constant mass matrix and the quadratic velocity vector), each checked against the built-in item. Decided: low priority, after the symbolic core features; not a next step.
   - date raised: 2026-11-01
@@ -9311,11 +9317,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-08-24
 - `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` parallel / multithreaded (#1203)
   - description: C++: add multithreading for JacobianODE2 (analytic jacobians)
-  - **remarks:** planned as revision2026b step RG5.3 (triage 2026-10-07)
+  - **remarks:** planned as revision2026c step RG9.11.5 (2026-11-01), part of the revision of the Jacobians \#3201; was RG5.3
   - date raised: 2022-07-12
 - `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` parallel / multithreaded (#1202)
   - description: C++: add multithreading for JacobianAE
-  - **remarks:** planned as revision2026b step RG5.3 (triage 2026-10-07)
+  - **remarks:** planned as revision2026c step RG9.11.5 (2026-11-01), part of the revision of the Jacobians \#3201; was RG5.3
   - date raised: 2022-07-12
 - `EXTENSION` `MEDIUM EFF` generalizedAlpha scaling (#1194)
   - description: turn on/off scaling in interface to test symmetric solver speedup
@@ -9393,7 +9399,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-01-13
 - `EXTENSION` `MEDIUM EFF` ParallelFor (#858)
   - description: use ParallelFor with costs argument in GeneralContact and CSystem, to optimize usage
-  - **remarks:** planned as revision2026b step RG5.3 (triage 2026-10-07)
+  - **remarks:** part of revision2026c step RG9.11.5 (2026-11-01), the cost per item of the parallel Jacobians of \#3201
   - date raised: 2022-01-13
 - `DOCU` `HIGH EFF` Jacobian documentation (#845)
   - description: add documentation to object and connector jacobians

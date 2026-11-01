@@ -9,5 +9,5 @@
   "description": "C++: add multithreading for JacobianAE",
   "dateRaised": "2022-07-12",
   "deadline": "2022-09-10",
-  "workingRemarks": "planned as revision2026b step RG5.3 (triage 2026-10-07)"
+  "workingRemarks": "planned as revision2026c step RG9.11.5 (2026-11-01), part of the revision of the Jacobians #3201; was RG5.3"
 }

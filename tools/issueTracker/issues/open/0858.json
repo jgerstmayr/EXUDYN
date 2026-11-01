@@ -8,5 +8,5 @@
   "description": "use ParallelFor with costs argument in GeneralContact and CSystem, to optimize usage",
   "dateRaised": "2022-01-13",
   "deadline": "2022-03-14",
-  "workingRemarks": "planned as revision2026b step RG5.3 (triage 2026-10-07)"
+  "workingRemarks": "part of revision2026c step RG9.11.5 (2026-11-01), the cost per item of the parallel Jacobians of #3201"
 }

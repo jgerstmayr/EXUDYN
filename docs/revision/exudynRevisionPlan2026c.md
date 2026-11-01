@@ -70,7 +70,6 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG5** Performance
   - RG5.1 Write a linear algebra micro-benchmark that every build carries (4 open sub-steps)
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
-  - RG5.3 Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 - **RG6** Graphics and rendering
@@ -94,6 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (6 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -128,11 +128,11 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
-| RG5 | OPEN | 9 | Performance |
+| RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 5 | Structural core improvements |
+| RG9 | OPEN | 12 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 13 | Symbolic |
@@ -415,9 +415,9 @@ The solver time of long-vector models sits in `ODE2RHS` - per-object 3x3 and sho
 `ConstSizeMatrix` carries its size at run time, so it cannot be unrolled. Candidates: compile-time sizes, homogeneous
 transformations in the rigid-body kinematics, the object loop of `ODE2RHS`; steered by RG5.1.
 
-### **OPEN_RG5.3** Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
+### **CLOSED_RG5.3** Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
 
-#1203 (`JacobianODE2`), #1202 (`JacobianAE`), #858 (the cost per item); `GeneralContact` left out.
+CLOSED 2026-11-01 (maintainer 2026-11-01: the Jacobians revised as a whole): moved to RG9.11.5.
 
 ### **OPEN_RG5.4** Store the superelement matrices as sparse triplets for larger meshes
 
@@ -1141,6 +1141,38 @@ CLOSED 2026-11-01 (#3191, #3143 stays open): the three user functions in C++, th
 derivative, a Python one only with the jacobianUserFunction; SymbolicSystem takes the recorded mass matrix and
 constraint with exact reaction terms; genericDAEUserFunctionsTest.py against a MassPoint2D on a DistanceConstraint
 (1.4e-13) and SolveDynamic (7e-13). [log](exudynRevisionLog2026c.md#rg9-10-6)
+
+### **OPEN_RG9.11** Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial
+
+#3201 (maintainer 2026-11-01: every object provides its Jacobian, analytic or locally by automatic or numerical differentiation; the assembly distinguishes only the system-wide numerical Jacobian, for comparison, and the local Jacobians, in parallel without Python functions; only ODE2-ODE2, AE-AE and ODE2-AE for speed, the rest rare, serial and readable; in line with the ODE1-ODE2 couplings of #3143; CSystem.cpp split first). Design docs/dev/design/systemJacobians.md.
+
+#### **CLOSED_RG9.11.1** Design the revision of the Jacobians in its own design file
+
+CLOSED 2026-11-01 (#3201 stays open): docs/dev/design/systemJacobians.md - the blocks and how each is computed now, what is wrong, ComputeLocalJacobian with a numerical default in CObject, the parallel and the serial list, the verification by the system-wide numerical Jacobian; seven sub-steps and four decisions J1-J4 proposed. [log](exudynRevisionLog2026c.md#rg9-11-1)
+
+#### **OPEN_RG9.11.2** Split CSystem.cpp into CSystemAssemble.cpp, CSystem.cpp and CSystemJacobians.cpp
+
+#3202; functions moved unchanged; design section 4.
+
+#### **OPEN_RG9.11.3** A test model comparing the local Jacobian of every item type with the system-wide numerical one, block by block
+
+Design section 3.4, on the code as it is, so that each later sub-step is compared with it.
+
+#### **OPEN_RG9.11.4** ComputeLocalJacobian with the numerical default in CObject; JacobianODE2RHS and JacobianODE1RHS as one loop over the request
+
+Design sections 3.1 and 3.3; the same results; after the decisions J1 and J2.
+
+#### **OPEN_RG9.11.5** Assemble the analytic and automatic local Jacobians in parallel, with triplets per thread and a cost per item
+
+#1203, #1202, #858 (was RG5.3); measured on the performance models.
+
+#### **OPEN_RG9.11.6** The algebraic blocks on the same interface, the nodes with algebraic equations included, forAE for sparse matrices
+
+Design section 3.3.
+
+#### **OPEN_RG9.11.7** Complete the remaining couplings serially: the ODE1 loads, the derivative terms as options, the solver chapter of the manual
+
+With RG4.23 (#1548); design section 3.3.
 
 ## **CLOSED_RG10** Tooling and process
 
