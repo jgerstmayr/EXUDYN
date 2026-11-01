@@ -206,3 +206,114 @@ file move with their functions.
   the interface.
 - **Parallel and serial**: if one architecture for all blocks gives simpler code, the ODE1 blocks go into the
   parallel line as well; §3.3 is a default, not a rule.
+
+## 8. The derivative of the marker velocities by the coordinates (evaluation, RG9.11.8.1)
+
+The local numerical Jacobian by the marker kinematics, tried for six connectors, degraded the Newton convergence of
+the contacts with friction (log of RG9.11.8). This section evaluates the missing term before RG9.11.8 continues.
+
+### 8.1 The term
+
+A connector's ODE2 rows are $J\tp f$, with the force $f(p, v)$ of the marker kinematics: $p$ the positions and
+rotations, $v = J(q)\,\dot q$ the velocities and angular velocities. Its Jacobian is
+
+$$
+\frac{\partial (J\tp f)}{\partial \dot q} = J\tp \frac{\partial f}{\partial v} J, \qquad
+\frac{\partial (J\tp f)}{\partial q} = J\tp \frac{\partial f}{\partial p} J
+  + \left.\frac{\partial (J\tp f)}{\partial q}\right|_{f}
+  + J\tp \frac{\partial f}{\partial v} \frac{\partial v}{\partial q} .
+$$
+
+- The second term is the Jacobian derivative of the markers, `jacobianConnectorDerivative`.
+- The third term, dv/dq, is in neither the automatic Jacobians of the connector interface (#2745) nor the rejected
+  local numerical one.
+- The numerical differentiation by the system coordinates contains all three.
+
+$\partial v/\partial q = \sum_j \dot q_j\, \partial J_{\cdot j}/\partial q$ is built from the same second derivatives
+of the kinematics as the Jacobian derivative: that one contracts them with $f$, this one with $\dot q$. For a position,
+$\partial v/\partial q = \dot J$. It is zero where $J$ is constant.
+
+Its size is $\partial f/\partial v$ times a velocity of the moving frame, such as $\omega \times r$:
+- a damper $d$ gives $d\,|\omega|\,r$, small against the stiffness;
+- regularized friction gives $\mu f_N / v_\mathrm{reg}\,|\omega|\,r$, large against the contact stiffness when
+  $v_\mathrm{reg}$ is small - the case of the contacts and of the rolling disc.
+
+### 8.2 Measured on the test suite
+
+All 254 test models were run with the Newton iterations and Jacobians of every static and implicit solve counted; 136
+of them are implicit models with connectors.
+
+- **`forODE2Connectors = True`**: every connector is differentiated by the system coordinates, dv/dq included.
+  - The counts differ in 13 of the 136. Ten are within 0.1-4 % in both directions (rotatingTableTest 26785 / 26377
+    Newton iterations, userConnectorTest 6961 / 7161). mainSystemUserFunctionsTest gets worse, 8000 / 9727, and
+    solverFailureMessageTest fails as it is meant to.
+  - The one large change is coordinateSpringDamperExt.py, 4780 / 1409. It is a bug of the analytic Jacobian, which
+    ignores factor0 and factor1 (#3204), not dv/dq.
+  - So the dv/dq that today's automatic and analytic connector Jacobians neglect does not show in the Newton
+    convergence of any test model. Those Jacobians cover the spring-dampers, the RigidBodySpringDamper and the
+    torsional, Cartesian and linear spring-dampers.
+- **`jacobianConnectorDerivative = False`**: the counts differ in 20 models, most by a few iterations.
+  - The FFRF models need more iterations: objectFFRFTest 54 / 69, objectFFRFreducedOrderTest 799 / 840,
+    objectFFRFTest2 183 / 190, objectFFRFreducedOrderAccelerations 74 / 80. symbolicUserConnectorsTest needs 2309 /
+    2372.
+  - The Jacobian derivative is therefore worth its code, and its second derivatives are the base of dv/dq (§8.4). It
+    stays (J4).
+- **The share of the Jacobian in the computation time** of the models with contacts and rolling discs, serial, by the
+  timers of the solver. All of these connectors are differentiated numerically by CSystem today:
+
+  | model | Jacobians | share |
+  |---|---|---|
+  | ConvexContactTest, contactSphereTorusMomentumTest, rollingCoinPenaltyTest | one per iteration | 68-69 % |
+  | contactComparisonTest | one per iteration | 50 % |
+  | ballBearingTest, symbolicUserContactTest | 531, one per iteration | 41-42 % |
+  | carRollingDiscTest | one per iteration | 24 % |
+  | createSphereTriangleContact, createSphereQuadContact, sphereTriangleTest2 | 456-834 | 16-19 % |
+  | rotatingTableTest, mecanumWheelRollingDiscTest | 71, 39 | 0-1 % |
+
+  The parallel assembly pays where full Newton is used. Modified Newton hides the Jacobian's cost but not its
+  quality: without dv/dq, rotatingTableTest needed 678647 instead of 71 Jacobians.
+
+### 8.3 The markers
+
+| marker | dv/dq and dω/dq | how |
+|---|---|---|
+| MarkerNodeCoordinate, MarkerNodeCoordinates, MarkerObjectODE2Coordinates, MarkerNodeODE1Coordinate | zero | - |
+| MarkerNodePosition | zero: the velocity is a velocity coordinate | - |
+| MarkerBodyCable2DCoordinates, MarkerBodyCable2DShape, MarkerBodyBeamShape | zero: linear in the coordinates (not for the ALE cable, whose axial velocity moves the point along the slope) | - |
+| MarkerBodyMass | no velocity | - |
+| MarkerBodyPosition | zero on mass points and on the ANCF elements; nonzero on the rigid bodies and the geometrically exact beams | AD |
+| MarkerBodyRigid | nonzero: RigidBody (Euler parameters, Tait-Bryan), RigidBody2D, the ANCF elements with a rotation by their slopes; also the geometrically exact beams and RigidBody on the Lie group node | AD; closed form for the Lie group node; none for the beams |
+| MarkerNodeRigid | the rigid nodes (Euler parameters, Tait-Bryan; the Lie group node, whose velocity coordinates are the local angular velocity; 2D: zero) and the slope nodes | closed form per node, AD for the slopes |
+| MarkerNodeRotationCoordinate | one component of a node's angular velocity | a row of the node's dω/dq |
+| MarkerSuperElementPosition, MarkerSuperElementRigid | the reference frame and the modes of FFRF and ObjectGenericODE2, weighted over mesh nodes | none for now |
+| MarkerKinematicTreeRigid | the recursion over the links | none for now; it has no Jacobian derivative either |
+| MarkerBodiesRelativeTranslationCoordinate, MarkerBodiesRelativeRotationCoordinate | two bodies | none for now; no Jacobian derivative either |
+| MarkerBodyUser | the weighted points of a user body | none for now |
+
+"AD" means the existing nested automatic differentiation of AccessFunctionsAD.
+- `JacobianTransposedTimesVectorDerivative` already forms $J$ as nested AD numbers for RigidBody, RigidBody2D, the
+  ANCF elements and the slope nodes.
+- Contracting the same pass with $\dot q$ instead of $f$ gives $\partial v/\partial q$ and $\partial\omega/\partial q$.
+  That is one new function, for every body and node that has the AD access functions.
+
+Every contact and rolling disc of the test suite acts on MarkerBodyRigid of a RigidBody, or on MarkerNodeRigid of an
+Euler parameter node, so the AD and the rigid nodes cover them.
+
+### 8.4 The way for RG9.11.8
+
+- **The marker provides dv/dq and dω/dq** in the interface of the connector kinematics:
+  - by the AD where the body has the AD access functions;
+  - in closed form for the rigid nodes;
+  - as zero where the Jacobian is constant.
+  - A marker without it returns false. The connector is then differentiated numerically by CSystem, serially, as
+    today, so nothing gets worse and the coverage grows marker by marker.
+- **The connector requests the term.** It is computed only when requested:
+  - The contacts with friction, the rolling disc and the connectors with user functions request it. A user function
+    may depend on the velocities in any way: a RigidBodySpringDamper with a user function is numerical by CSystem
+    today, so it has the term now and keeps it on the interface.
+  - The spring-dampers do not request it (§8.2).
+- **The chain** adds $J\tp\,\partial f/\partial v\,\partial v/\partial q$ to the automatic or local numerical Jacobian,
+  with $\partial f/\partial v$ from the same evaluation of the force.
+- **ConvexRoll** and the contacts on cables may stay numerical by CSystem, serially, for now.
+- **Verification**: the Newton counts of the contact models equal those of the numerical Jacobian by CSystem within a
+  few iterations, and rotatingTableTest is the sensitive case.

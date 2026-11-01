@@ -1,0 +1,13 @@
+{
+  "number": 3204,
+  "title": "ObjectConnectorCoordinateSpringDamperExt: the analytic Jacobian ignores factor0 and factor1",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Without friction, limit stops and user function, ObjectConnectorCoordinateSpringDamperExt declares its analytic Jacobian, stiffness*factorODE2 + damping*factorODE2_t chained with the marker Jacobians; its force acts with factor1 and -factor0 on the markers and depends on factor1*q1 - factor0*q0, so the Jacobian lacks factor_i*factor_k. Found in coordinateSpringDamperExt.py (the gear pair, factor1 = -rad0/rad1): the Jacobian differs from the numerical one by 1.3e5, and with forODE2Connectors the model needs 1409 instead of 4780 Newton iterations (the result differs by 2 percent, the friction of the other connectors follows another path). Decided: the Jacobian follows the factors - on the connector interface, where ComputeConnectorForcesCoordinate already has them (revision2026c step RG9.11.8), or by the factors in ComputeJacobianODE2_ODE2.",
+  "dateRaised": "2026-11-01",
+  "deadline": "2027-04-30",
+  "file": "src/ImplObjects/CObjectConnectorCoordinateSpringDamperExt.cpp"
+}

@@ -5388,3 +5388,49 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - Reverted on v2-dev. Options for the decision: (a) the markers provide dv/dq (the derivative of J q_t), so that the
   local Jacobians - automatic and numerical - are complete; (b) the contacts and the rolling disc stay numerical by
   CSystem, serially, and only connectors without velocity-dependent friction move.
+
+<a id="rg9-11-8-1"></a>
+### RG9.11.8.1 — dv/dq evaluated: the markers, the connectors, the effect on the test suite (2026-11-01, #3201, #3204)
+- Maintainer 2026-11-01 on RG9.11.8: "I would prefer (a) in the long term; if I understand correctly, dv/dq is only
+  computed when requested. For ConnectorSpringDamper or for normal (frictionless) contact, it wouldn't be needed.
+  [...] I think this has to be decided by the connector, which marker jacobians are requested." - "prior to
+  RG9.11.8, there should be an evaluation step [...] For the convex roll, a numerical jacobian in serial mode would
+  not hurt a lot. [...] I believe this issue explains some convergence issues in the past."
+- The evaluation is design section 8. How it was measured: a scratch runner executed every model of
+  runTestSuiteRefSol.TestExamplesReferenceSolution in its own interpreter (8 at a time, the UI suppressed), wrapped
+  exudyn.solver.SolveDynamic/SolveStatic (also as MainSystem methods) to sum `it.newtonStepsCount` and
+  `it.newtonJacobiCount` of every solve, and set one flag of `numericalDifferentiation` in the settings passed in:
+  as is, `forODE2Connectors=True`, `jacobianConnectorDerivative=False`; a fourth run took the timers of the solver
+  (`displayComputationTime`). The runs are deterministic (two runs each of three models, equal counts).
+- forODE2Connectors=True against as is, the 13 of 136 implicit models with connectors whose counts differ (Newton
+  iterations / Jacobians, as is -> numerical; the relative change of the test result):
+
+  | model | Newton | Jacobians | result |
+  |---|---|---|---|
+  | coordinateSpringDamperExt.py | 4780 -> 1409 | 4780 -> 1409 | 2e-2 |
+  | mainSystemUserFunctionsTest.py | 8000 -> 9727 | 4 -> 4 | 1e-7 |
+  | rotatingTableTest.py | 26785 -> 26377 | 71 -> 73 | 8e-10 |
+  | userConnectorTest.py | 6961 -> 7161 | 45 -> 45 | 8e-15 |
+  | symbolicUserConnectorsTest.py | 2309 -> 2187 | 2309 -> 2187 | 2e-15 |
+  | mecanumWheelRollingDiscTest.py | 22601 -> 22617 | 39 -> 39 | 3e-11 |
+  | userNodeTest.py | 5045 -> 5050 | 24 -> 24 | 8e-14 |
+  | ANCFgeneralContactCircle.py, ANCFbeltDrive.py, symbolicUserRigidBodiesTest.py, springDamperVelocityOffsetTest.py, markerNodeCoordinateReferenceTest.py | within 1 | within 1 | <5e-11 |
+  | solverFailureMessageTest.py | 19 -> 5 | | fails by design |
+
+- coordinateSpringDamperExt.py: the Jacobians at the initial state differ by 1.3e5 in the rows of the gear pair
+  (RotationalMass1D, ConnectorCoordinateSpringDamperExt with factor1 = -rad0/rad1, no friction): its analytic
+  Jacobian is stiffness*factorODE2 + damping*factorODE2_t chained with the marker Jacobians, without factor0 and
+  factor1, while ComputeConnectorForcesCoordinate has them. Raised as #3204 (BUG), to RG9.11.8.3.
+- jacobianConnectorDerivative=False, 20 models differ: objectFFRFTest 54 -> 69, objectFFRFreducedOrderTest 799 -> 840,
+  objectFFRFTest2 183 -> 190, objectFFRFreducedOrderAccelerations 74 -> 80, symbolicUserConnectorsTest 2309 -> 2372,
+  userMarkerTest 11378 -> 10878, userNodeTest 5045 -> 4974, computeItemTest 265 -> 268, the others equal or within 4.
+- The share of totalJacobian in the timer total of the contact models: ConvexContactTest 69 %,
+  contactSphereTorusMomentumTest 68 %, rollingCoinPenaltyTest 68 %, contactComparisonTest 50 %, ballBearingTest 42 %,
+  symbolicUserContactTest 41 %, carRollingDiscTest 24 %, restartFileTest 19 %, createSphereTriangleContact 19 %,
+  createSphereQuadContact 17 %, sphereTriangleTest2 16 %, createSphereQuadContact2 11 %, rotatingTableTest 1 %,
+  mecanumWheelRollingDiscTest 0 %.
+- The markers, from src/ImplMarkers and the access functions of the bodies: every contact and rolling disc of the test
+  suite uses MarkerBodyRigid on a RigidBody (CreateRigidBody, Euler parameters) or MarkerNodeRigid on an Euler
+  parameter node. RigidBody with Euler parameters or Tait-Bryan angles, RigidBody2D, ANCFCable2D, ANCFBeam,
+  ANCFThinPlate and the slope nodes form their Jacobian derivative by the nested AD of AccessFunctionsAD
+  (`JacobianTransposedTimesVectorDerivative`), whose inner derivatives are the second derivatives dv/dq needs.
