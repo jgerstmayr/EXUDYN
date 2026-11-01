@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (6 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (9 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -102,8 +102,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG11.8 Resolve the quick old issues (3 open sub-steps)
 - **RG12** Symbolic
   - RG12.53 Algorithmic symbolic functions: assignments by Assign, loops recorded as loops
-  - RG12.55 Collect user items with the interfaces of the built-in items in exudyn/misc/symbolicUserItems.py (1 open sub-step)
-  - RG12.60 Call a recording with symbolic arguments, returning its expressions with the arguments substituted
+  - RG12.55 Collect user items with the interfaces of the built-in items in exudyn/misc/symbolicUserItems.py (2 open sub-steps)
   - RG12.65 One table of the symbolic operations: SymbolicProgram and the operation table beside the expression classes, in four stages (2 open sub-steps)
   - RG12.67 Symbolic parameters for every item: a general solution beyond the scalar parameters of the user items (4 open sub-steps)
   - RG12.71 Evaluate one source for the C++ items, the symbolic user items and their documentation (3 open sub-steps)
@@ -132,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 12 | Structural core improvements |
+| RG9 | OPEN | 15 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 17 | Symbolic |
@@ -1146,6 +1145,8 @@ constraint with exact reaction terms; genericDAEUserFunctionsTest.py against a M
 
 #3201 (maintainer 2026-11-01: every object provides its Jacobian, analytic or locally by automatic or numerical differentiation; the assembly distinguishes only the system-wide numerical Jacobian, for comparison, and the local Jacobians, in parallel without Python functions; only ODE2-ODE2, AE-AE and ODE2-AE for speed, the rest rare, serial and readable; in line with the ODE1-ODE2 couplings of #3143; CSystem.cpp split first). Design docs/dev/design/systemJacobians.md.
 
+Decided 2026-11-01 (design section 7): J1 yes - connectors and joints always by the connector interface (automatic or local numerical differentiation of the marker kinematics, parallel), the numerical default of CObject only for the other objects; J2 yes; J3 the system-wide Jacobian, the detection of dependencies an evaluation of low priority; J4 forAE, forODE2, forODE2Connectors deprecated, jacobianConnectorDerivative removed if it costs more code than time; the ODE1 blocks parallel too if that is simpler.
+
 #### **CLOSED_RG9.11.1** Design the revision of the Jacobians in its own design file
 
 CLOSED 2026-11-01 (#3201 stays open): docs/dev/design/systemJacobians.md - the blocks and how each is computed now, what is wrong, ComputeLocalJacobian with a numerical default in CObject, the parallel and the serial list, the verification by the system-wide numerical Jacobian; seven sub-steps and four decisions J1-J4 proposed. [log](exudynRevisionLog2026c.md#rg9-11-1)
@@ -1173,6 +1174,18 @@ Design section 3.3.
 #### **OPEN_RG9.11.7** Complete the remaining couplings serially: the ODE1 loads, the derivative terms as options, the solver chapter of the manual
 
 With RG4.23 (#1548); design section 3.3.
+
+#### **OPEN_RG9.11.8** Put the connectors that are differentiated numerically by CSystem onto the connector interface, automatic or by a local numerical differentiation of the marker kinematics
+
+Design section 7, J1: ObjectConnectorUser, the contacts, ReevingSystemSprings, RollingDiscPenalty, HydraulicActuatorSimple, CoordinateSpringDamperExt, the intrinsic RigidBodySpringDamper and the spring-dampers with Python user functions.
+
+#### **OPEN_RG9.11.9** Deprecate forAE, forODE2 and forODE2Connectors, and measure whether jacobianConnectorDerivative is worth its code
+
+Design section 7, J4; once the revision has replaced their code paths.
+
+#### **OPEN_RG9.11.10** Evaluate finding the dependencies outside the local-to-global lists, from the markers, loads and sensors and from the recordings, for the local Jacobians
+
+Design section 7, J3; low priority: it would keep the Newton convergence of models whose user functions read sensors.
 
 ## **CLOSED_RG10** Tooling and process
 
@@ -2292,6 +2305,10 @@ items, the generic joint, the Lie group rigid body. [log](exudynRevisionLog2026c
 
 CLOSED 2026-11-01 (#3203; maintainer 2026-11-01: why separate paths for the two contact models and the two formulations - one user function, the switch by the fixed settings at recording; and an IfThenElse that records only the active branch of a number, checked first): the kinds sphereSphereContact and rigidBodySpringDamper, one force function each with the impact model or the formulation as a Python constant, Record once per kind and variant; exudyn.symbolics.utilities.IfThenElse; the same results to the bit. [log](exudynRevisionLog2026c.md#rg12-55-11)
 
+#### **OPEN_RG12.55.12** List which HT and twist functions the C++ items use or could use: the Jacobians of the rigid-body coordinates and of compositions of HT
+
+#3178 (maintainer 2026-11-01: a second sub-step, though not directly symbolic; it shows which kinds of functions are needed - common HT Jacobians of the rigid-body coordinates and the Jacobians of HT compositions are expected to show up several times). The connectors, joints, markers and rigid nodes of src/, by the operations they compute on frames and velocities.
+
 ### **CLOSED_RG12.56** Explicit solvers in Python on the system equations: explicit Euler, velocity Verlet, RK44
 
 CLOSED 2026-10-26 (#3112, #3120; maintainer 2026-10-26: before generalized-alpha, constant step size, compatible with SimulationSettings, the inverse of the mass matrix per body; every solver also for a system written with numpy): SolveExplicit and NumpySystem in exudyn/misc/symbolicSystem.py, checked on a net of mass points against SolveDynamic. [log](exudynRevisionLog2026c.md#rg12-56-2)
@@ -2330,9 +2347,11 @@ a rule per operation, the block of the program kept; UserFunction.EvaluateJacobi
 rigid body force); SymbolicSystem.ResidualJacobian on the composed system, SolveGeneralizedAlpha 0.96 s -> 0.027 s;
 symbolicOnePassJacobianTest.py. [log](exudynRevisionLog2026c.md#rg12-59)
 
-### **OPEN_RG12.60** Call a recording with symbolic arguments, returning its expressions with the arguments substituted
+### **CLOSED_RG12.60** Call a recording with symbolic arguments, returning its expressions with the arguments substituted
 
-#3117: for one program per kind of the symbolic system, connector forces composed with the marker kinematics, and the export (RG12.51.5). Design docs/dev/design/symbolicSystem.md §11 S3. Done in Python for the system by RG12.51.10 (#3130), through the code of exudyn.misc.symbolicExport; open: whether the C++ copy is still needed. Maintainer 2026-10-28: keep it open - first check whether the Python code performs well enough for real-life problems, and whether other cases need the C++.
+CLOSED 2026-11-01 (#3117 closed, maintainer 2026-11-01: ok): the composition in Python is fast enough (RG12.60.1); the C++ copy is not needed.
+
+#3117: for one program per kind of the symbolic system, connector forces composed with the marker kinematics, and the export. Done in Python for the system by RG12.51.10 (#3130), through the code of exudyn.symbolics.codeExport. Maintainer 2026-10-28: keep it open - first check whether the Python code performs well enough for real-life problems, and whether other cases need the C++.
 
 #### **CLOSED_RG12.60.1** Measure the composition in Python on chains of 10 to 200 rigid bodies: the substitution against the build and the simulation
 

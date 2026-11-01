@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.300.dev1
+- Exudyn version = 1.13.301.dev1
 - last change = 2026-11-01
 - Number of issues = 3204
-- Number of resolved issues = 3077 (300 in current version)
+- Number of resolved issues = 3078 (301 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9077,9 +9077,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Evaluate a symbolic system by uniform array operations with numpy on the CPU, for one state and for ensembles (#3137)
   - description: The forces and the mass matrices of the bodies of a SymbolicSystem as a graph of scalar operations, scheduled in levels and evaluated per level and kind of operation by numpy ufuncs on arrays of nodes x states; first as an experiment in docs/dev/design on an example system, then in exudyn.misc once the form is chosen, with ensembles of states in the explicit solver. Design docs/dev/design/uniformEvaluation.md.
   - date raised: 2026-10-28
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Call a symbolic recording with symbolic arguments: its expressions with the arguments substituted (#3117)
-  - description: revision2026c step RG12.60: a recording evaluated with exudyn.symbolic arguments returns a copy of its expressions in which its argument variables are replaced by the given expressions, as Optimize copies nodes; for one expression per kind of the symbolic system (the residual M q\_tt - f), for the forces of connectors composed with the marker kinematics of the bodies, and for the export of one program per kind (RG12.51.5).
-  - date raised: 2026-10-26
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` exudyn/misc/symbolicUserItems.py: user items with the interfaces of the built-in items (#3111)
   - description: revision2026c step RG12.55: a collection of user items with symbolic user functions whose creation has the same interface as the built-in items of itemInterface (a user rigid body as ObjectRigidBody, parameters the user item lacks refused or ignored with a note), so that the same systems are built with the same calls: at least mass point 3D, rigid body 3D, revolute, prismatic, spherical and distance joint, spring-damper, torsional spring-damper, sphere-sphere contact; first the list of what a good representation of multibody systems needs. Before the symbolic system model goes deeper.
   - date raised: 2026-10-26

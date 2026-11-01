@@ -5253,3 +5253,20 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - Proposed: close #3117 - the C++ copy is not needed -, and raise it again if a model shows otherwise. Seen on the way:
   `Equations()` with the default `massMatrix=True` builds the dense global mass matrix as esym.Matrix, 1.4 million
   entries at 1200 coordinates, which is most of its 2 s; `massMatrixBlocks` is the form for large systems.
+
+<a id="rg9-11-decisions"></a>
+### RG9.11 — the decisions on the design of the Jacobians (2026-11-01, #3201)
+- Maintainer 2026-11-01: J1 yes, but for connectors and joints automatic differentiation should always be possible,
+  so their parallel computation is no issue, and a local numerical Jacobian differentiates the marker quantities, not
+  the system coordinates; the numerical backup is only for the CObjects that are not connectors. J2 yes. J3 as
+  recommended; sensor couplings would need the dependencies (node, object -> node) -> marker -> (load, sensor) and
+  those of the user functions (straightforward for symbolic ones) - a possible step of low priority, interesting as it
+  keeps the Newton convergence. J4: forAE, forODE2 and forODE2Connectors deprecated, doing nothing; only the system-wide
+  differentiation stays; jacobianConnectorDerivative removed too if it costs more code than it saves time. The ODE1
+  blocks may go into the parallel line if that unifies the code. Continue with #3202, the comparison of the Jacobians
+  (not broad - the test suite is the real test) and the first implementations of RG9.11.4.
+- Checked for J1: all joints have analytic constraint Jacobians. Numerical by CSystem are ObjectConnectorUser, the
+  eight contacts, ReevingSystemSprings, RollingDiscPenalty (an interface Jacobian exists, not declared),
+  HydraulicActuatorSimple, CoordinateSpringDamperExt with stops or friction, the intrinsic RigidBodySpringDamper and
+  every spring-damper with a Python user function: sub-step RG9.11.8. Design section 7; sub-steps RG9.11.9 (J4) and
+  RG9.11.10 (J3) added.

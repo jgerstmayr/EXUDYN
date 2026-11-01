@@ -329,7 +329,9 @@ def _UFdistanceConstraintJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
 
 #the user functions of each kind of item, which Record records once per kind; a kind of variants - a Python constant
 #of the Create function that changes the structure of the computation - has the functions of each variant in the item
-#(UserItemCreator._variants), recorded once per variant
+#(UserItemCreator._variants), recorded once per variant; its entry here is the variant of the default arguments of the
+#Create function (impactModel=0, useIntrinsicFormulation=True), which only names the kind, as every item of it keeps
+#its own variant
 _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                                 ('massIntegralUserFunction', _UFmassPointMassIntegral),
                                 ('positionUserFunction', _UFmassPointPosition),

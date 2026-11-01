@@ -177,3 +177,32 @@ file move with their functions.
   the documentation of the user functions saying so; a flag only when a model needs it.
 - **J4** `forODE2Connectors`, described as a flag for development to be removed: removed with deprecation when the
   connectors are on the interface.
+
+## 7. Decisions (maintainer 2026-11-01)
+
+- **J1 yes**, with the connectors and joints apart from the other objects:
+  - A **connector or joint** always has its Jacobian through the connector interface: the derivative of its force or
+    equations (L1) by the kinematics of its markers - by automatic differentiation, or by a *local* numerical
+    differentiation of the marker kinematics, not of the system coordinates -, chained with the marker Jacobians
+    (L2). Neither touches the system state, so both are computed in parallel; a Python user function in L1 makes the
+    connector serial because of Python, not because of the Jacobian.
+  - The numerical default of `CObject` - differentiating the object's residual by the system coordinates - is only for
+    the objects that are not connectors: bodies, finite elements, ObjectGenericODE2 and the like.
+  - **Today**: every joint has its constraint Jacobian analytically (`JacobianAE` has no numerical way except `forAE`).
+    The connectors that are still differentiated numerically by CSystem: ObjectConnectorUser, the eight contacts
+    (CircleCable2D, ConvexRoll, Coordinate, CurveCircles, FrictionCircleCable2D, SphereSphere, SphereTorus,
+    SphereTriangle), ConnectorReevingSystemSprings, ConnectorRollingDiscPenalty (its interface Jacobian exists but is
+    not declared), ConnectorHydraulicActuatorSimple, ConnectorCoordinateSpringDamperExt with limit stops or friction,
+    ConnectorRigidBodySpringDamper in the intrinsic formulation, and every spring-damper with a Python user function.
+    These go onto the interface (automatic, or local numerical of the marker kinematics) in a sub-step of their own.
+- **J2 yes**: the numerical default serial, the analytic and automatic Jacobians in parallel.
+- **J3 as recommended**: the system-wide numerical Jacobian for dependencies outside the local-to-global lists. To
+  keep the Newton convergence for such models, the dependencies would have to be found: through the chain
+  (node, object -> node) -> marker -> (load, sensor), and from the user functions - straightforward for a recording,
+  which lists what it reads, harder for Python. An evaluation of its own, of low priority.
+- **J4**: `forAE`, `forODE2` and `forODE2Connectors` are deprecated and do nothing once the revision has replaced
+  their code paths; `doSystemWideDifferentiation` stays, the one numerical comparison. `jacobianConnectorDerivative`
+  (on by default) is removed as well if it costs more code than it saves time - measured when the connectors are on
+  the interface.
+- **Parallel and serial**: if one architecture for all blocks gives simpler code, the ODE1 blocks go into the
+  parallel line as well; §3.3 is a default, not a rule.
