@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 278 | 1.13.284 |
+| 1.13 | Newborn | 279 | 1.13.285 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.285** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectGenericDAE: the Jacobians of a recorded forceUserFunction and rhsUserFunction by the one-pass derivative (#3189)
+  - description: Revision2026c step RG9.10.4. A symbolic forceUserFunction or rhsUserFunction of ObjectGenericDAE adds the derivatives of its recording by q, q\_t and y to the analytic Jacobians of the object - ODE2\_ODE2, ODE2\_ODE1, ODE1\_ODE1, ODE1\_ODE2, ODE1\_ODE2\_t -, computed in one pass over the recording, also in the threads (PySymbolicUserFunction::EvaluateJacobianAdd); a Python one stays numerical.
+  - **notes:** A recorded forceUserFunction or rhsUserFunction of ObjectGenericDAE gives the Jacobian of the object by the one-pass derivative of the recording instead of numerical differences.
+  - date resolved: **2026-11-01 01:44**, date raised: 2026-11-01
 - **1.13.284** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UserItemCreator.CreateSphereSphereContact: the linear contact of ObjectContactSphereSphere as ObjectConnectorUser, recorded (#3187)
   - description: Revision2026c step RG12.55.5. The arguments of mbs.CreateSphereSphereContact; the normal force k delta - d dg/dt of impactModel 0 while the spheres overlap, switched by the gap of the state (exudyn.symbolic.IfThenElse when recorded), as the symbolic connector has no data node and post-Newton step; friction, the impact models, plasticity, adhesion and the hollow sphere refused; drawn as two spheres.
   - **notes:** UserItemCreator.CreateSphereSphereContact creates the linear contact of two spheres of mbs.CreateSphereSphereContact as ObjectConnectorUser, switched by the gap and recorded; friction, the impact models, plasticity and adhesion are refused.

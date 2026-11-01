@@ -620,6 +620,40 @@ public:
 		result.CopyFrom(EvaluateReturnVectorRef(copy));
 	}
 
+	//! factor times the derivative of the vector result by the vector argument of index argument (after mbs: t is 0), at
+	//! the arguments args, added to jacobian (rows: the result, columns: the argument); in one pass over the program of
+	//! the table, also in the threads, for the analytic Jacobian of an item (#3189). The result must be a vector of
+	//! jacobian.NumberOfRows() components and the argument a vector of jacobian.NumberOfColumns()
+	template<typename... Args>
+	void EvaluateJacobianAdd(ResizableMatrix& jacobian, Index argument, Real factor, const MainSystem& mainSystem, const Args&... args)
+	{
+		ThreadCopy* copy = CurrentThreadCopy();
+		CHECKandTHROW(itemOutputs.empty(), "symbolic user function " + functionName + ": its Jacobian: the function reads outputs of items, which have no derivative");
+		Index argIndex = 0;
+		(..., processArgument(args, copy, argIndex));
+		const void* variable = copy ? copy->arguments[argument].node : (const void*)&argRealList[argument].GetVector()->GetExpressionNamedReal();
+		const FlatNode root = copy ? copy->root : ResultNode();
+		Index rows = jacobian.NumberOfRows();
+		Index columns = jacobian.NumberOfColumns();
+		if (variable == nullptr || root.node == nullptr) { return; } //the argument is not used, or the result is constant
+		const FlatProgram& program = copy ? copy->flatProgram : flatProgram;
+		if (!program.IsBuilt()) //the result is a leaf: the unit matrix if it is the argument
+		{
+			if (root.node == variable) { for (Index i = 0; i < EXUstd::Minimum(rows, columns); i++) { jacobian(i, i) += factor; } }
+			return;
+		}
+		SymbolicProgram& table = copy ? copy->symbolicProgram : symbolicProgram;
+		table.Evaluate();
+		table.Differentiate(variable, columns);
+		CHECKandTHROW(table.ResultComponents(0) == rows, "symbolic user function " + functionName + ": its Jacobian: the result has "
+			+ EXUstd::ToString(table.ResultComponents(0)) + " components, but " + EXUstd::ToString(rows) + " are needed");
+		const Real* derivative = table.ResultDerivative(0);
+		for (Index i = 0; i < rows; i++)
+		{
+			for (Index j = 0; j < columns; j++) { jacobian(i, j) += factor*derivative[i*columns + j]; }
+		}
+	}
+
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
 	StdMatrix3D EvaluateStdMatrix3D(const MainSystem& mainSystem, const Args&... args)

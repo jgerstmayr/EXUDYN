@@ -2088,9 +2088,11 @@ definitions.append(ItemDefinition(
 
     #### Jacobians
 
-    Without user functions, every Jacobian is given by the object from its matrices. With a forceUserFunction, the
-    Jacobian of the ABRV:ODE2 equations is computed by numerical differentiation, with a rhsUserFunction the one of the
-    ABRV:ODE1 equations; the Jacobian of the algebraic equations is always the constant matrices $\Cm_{\qv}$ and $\Cm_{\yv}$ (#3143).
+    Without user functions, every Jacobian is given by the object from its matrices. A symbolic forceUserFunction or
+    rhsUserFunction adds the derivatives of its recording by $\qv$, $\dot\qv$ and $\yv$, computed in one pass over the
+    recording (#3189); with a Python one, the Jacobian of the ABRV:ODE2 equations is computed by numerical
+    differentiation, with a rhsUserFunction the one of the ABRV:ODE1 equations. The Jacobian of the algebraic equations
+    is always the constant matrices $\Cm_{\qv}$ and $\Cm_{\yv}$ (#3143).
 
     #### Marker interfaces
 
@@ -2261,6 +2263,10 @@ definitions.append(ItemDefinition(
             pythonName='EvaluateUserFunction',
             args='const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction, const char* name, Index size, Vector& result',
             description=r'call of the force or the rhs user function with the coordinates of tempCoordinates, the size checked; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='AddUserFunctionJacobian',
+            args='const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction, const char* name, Index argument, Real factor, ResizableMatrix& jacobian',
+            description=r'factor times the derivative of the recorded force or rhs user function by its argument of index argument (2: q, 3: q_t, 4: y) at tempCoordinates, added to jacobian, by the one-pass derivative (#3189); implemented in evaluateUserFunctions.cpp'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',
             defaultValue=True,

@@ -4916,3 +4916,19 @@ the extra 4.7 us per Python call - add views.)*
   gap give different motions there. With generalized-alpha the user contact does not converge with the step size
   (7e-4 between 4000 and 32000 steps with damping, 2.4e-5 without; the built-in: 2e-5), also with full Newton and a
   tolerance of 1e-12. Raised as #3188 (RG12.55.8); the test model compares by RK44 and documents it.
+
+<a id="rg9-10-4"></a>
+### RG9.10.4 — the one-pass Jacobians of the recorded user functions of ObjectGenericDAE (2026-11-01, #3189)
+- `PySymbolicUserFunction::EvaluateJacobianAdd(jacobian, argument, factor, mbs, args...)` (SymbolicUtilities.h): the
+  arguments set as for an evaluation, the program of the recording or of the copy of the thread evaluated and
+  differentiated by the leaf of the argument (Differentiate of the table, #3171), factor times the derivative added; a
+  constant result adds nothing, a result that is the leaf the unit matrix. The first use of the one-pass derivative by a
+  C++ item.
+- CObjectGenericDAE: `AddUserFunctionJacobian` (declared in itemDefsObjects.py, in evaluateUserFunctions.cpp); the
+  Jacobian functions add -factor df_u/dq, -factor df_u/dq_t, -df_u/dy, +dg_u/dy, +dg_u/dq, +dg_u/dq_t; GetAvailableJacobians
+  sets the analytic flags unless the user function is a Python one. The arguments q, q_t, y are 2, 3, 4 after mbs.
+- genericDAESymbolicTest.py: two ODE2 and one ODE1 coordinate, a cubic spring, damping by q, couplings both ways; the
+  Jacobian of ComputeJacobianODE2RHS and ComputeJacobianODE1RHS with factors 1, 0.5, 1: recorded against numerical
+  3.1e-6 (largest entry 70); 500 steps generalized-alpha with full Newton: the solutions agree to 9.6e-13, 862 Newton
+  steps each.
+- Not in this step: massMatrixUserFunction, constraintUserFunction, jacobianUserFunction of the design - RG9.10.6.

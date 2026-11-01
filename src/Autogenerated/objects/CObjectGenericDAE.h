@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-30  00:14:36 (last modified)
+* @date         2026-11-01  01:34:54 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -238,6 +238,9 @@ public: // AUTO:
 
     //! AUTO:  call of the force or the rhs user function with the coordinates of tempCoordinates, the size checked; implemented in evaluateUserFunctions.cpp
     void EvaluateUserFunction(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction, const char* name, Index size, Vector& result) const;
+
+    //! AUTO:  factor times the derivative of the recorded force or rhs user function by its argument of index argument (2: q, 3: q_t, 4: y) at tempCoordinates, added to jacobian, by the one-pass derivative (#3189); implemented in evaluateUserFunctions.cpp
+    void AddUserFunctionJacobian(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction, const char* name, Index argument, Real factor, ResizableMatrix& jacobian) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

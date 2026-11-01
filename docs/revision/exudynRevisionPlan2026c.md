@@ -1143,13 +1143,21 @@ CLOSED 2026-10-29 (#3167, #3143 stays open; maintainer 2026-10-29: analytic Jaco
 
 CLOSED 2026-10-30 (#3170, #3143 stays open; maintainer 2026-10-29: do it): ObjectGenericDAE on nodeNumbersODE2, nodeNumbersODE1 and nodeNumbersAE (NodeGenericAE for the multipliers), all matrices of the design, forceUserFunction and rhsUserFunction; genericDAETest.py: equal to ObjectGenericODE2, ObjectGenericODE1 and a CoordinateConstraint to 1e-16, the coupled system to SolveGeneralizedAlpha 2.3e-13. [log](exudynRevisionLog2026c.md#rg9-10-3)
 
-#### **OPEN_RG9.10.4** The symbolic versions of the user functions, the Jacobian by the one-pass derivative
+#### **CLOSED_RG9.10.4** The symbolic versions of the user functions, the Jacobian by the one-pass derivative
 
-#3143. Design docs/dev/design/genericDAE.md. The symbolic versions of forceUserFunction and rhsUserFunction with their Jacobians by the one-pass derivative; the user functions whose Jacobian must not be numerical (#3101) come here with it: constraintUserFunction, massMatrixUserFunction and the jacobianUserFunction of all blocks.
+CLOSED 2026-11-01 (#3189, #3143 stays open): the recorded forceUserFunction and rhsUserFunction give the analytic
+Jacobian blocks by EvaluateJacobianAdd, in one pass; genericDAESymbolicTest.py against the numerical Jacobians (3e-6 of
+70) and the solution (1e-12). The new user functions moved to RG9.10.6. [log](exudynRevisionLog2026c.md#rg9-10-4)
 
 #### **OPEN_RG9.10.5** SymbolicSystem takes ObjectGenericDAE: its kind, Equations(), the export
 
 #3143. Design docs/dev/design/genericDAE.md.
+
+#### **OPEN_RG9.10.6** Add the massMatrixUserFunction, constraintUserFunction and jacobianUserFunction of ObjectGenericDAE, recorded with one-pass Jacobians
+
+#3143; genericDAE.md section 2: the user functions whose Jacobian must not be numerical (#3101) - the mass matrix of
+the coordinates, the constraints c_u(q, q_t, y, z, t) at position and velocity level, and the local Jacobian of all
+blocks with the factors of the solver -, each with its symbolic version and the Jacobian by EvaluateJacobianAdd (#3189).
 
 ## **CLOSED_RG10** Tooling and process
 

@@ -93,9 +93,11 @@ equations, as for every constraint. CoordinateLoads are added on the right-hand 
 
 ### Jacobians
 
-Without user functions, every Jacobian is given by the object from its matrices. With a forceUserFunction, the
-Jacobian of the {ref}`ODE2 <ODE2>` equations is computed by numerical differentiation, with a rhsUserFunction the one of the
-{ref}`ODE1 <ODE1>` equations; the Jacobian of the algebraic equations is always the constant matrices $\Cm_{\qv}$ and $\Cm_{\yv}$ (#3143).
+Without user functions, every Jacobian is given by the object from its matrices. A symbolic forceUserFunction or
+rhsUserFunction adds the derivatives of its recording by $\qv$, $\dot\qv$ and $\yv$, computed in one pass over the
+recording (#3189); with a Python one, the Jacobian of the {ref}`ODE2 <ODE2>` equations is computed by numerical
+differentiation, with a rhsUserFunction the one of the {ref}`ODE1 <ODE1>` equations. The Jacobian of the algebraic equations
+is always the constant matrices $\Cm_{\qv}$ and $\Cm_{\yv}$ (#3143).
 
 ### Marker interfaces
 
@@ -157,4 +159,4 @@ exu.sys['testResult'] = mbs.systemData.GetODE2Coordinates()[0]
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAESymbolicTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAESymbolicTest.py) (TM), [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM)

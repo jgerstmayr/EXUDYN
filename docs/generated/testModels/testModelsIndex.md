@@ -88,6 +88,7 @@ generalContactImplicit1
 generalContactImplicit2
 generalContactSpheresTest
 generalContactTriangleMomentumTest
+genericDAESymbolicTest
 genericDAETest
 genericJointUserFunctionTest
 genericODE1duplicateNodeTest

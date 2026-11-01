@@ -214,6 +214,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamMassTest.py':2.9942070791403967, #consistent mass matrix of the 3D beam: rigid motion exact (#1273)
         'geometricallyExactBeam2DquadraticTest.py':0.7426300926718995, #the 3-node planar geometrically exact beam (#2208)
         'genericODE1duplicateNodeTest.py':3.1091750014354522, #2026-10-29: by a rhsUserFunction, so still numerical (#3143); #numerical ODE1 Jacobian with a coordinate addressed twice (#1424)
+        'genericDAESymbolicTest.py':3.372634031542532, #new 2026-11-01: ObjectGenericDAE with recorded force and rhs user functions, their Jacobians in one pass against the numerical ones (#3189)
         'genericDAETest.py':4.961903224846149, #new 2026-10-30: ObjectGenericDAE against ObjectGenericODE2, ObjectGenericODE1, a CoordinateConstraint and SolveGeneralizedAlpha (#3170)
         'genericODE1JacobianTest.py':5.4903220576244625, #new 2026-10-29: the analytic ODE1 Jacobian of ObjectGenericODE1, the system matrix, against the numerical one of a rhsUserFunction (#3143)
         'contactSphereTorusMomentumTest.py':4.227231105376637, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.227231105610667; #momentum conservation of the sphere-torus contact (#2127)

@@ -346,6 +346,20 @@ void CObjectGenericODE1::EvaluateUserFunctionRHS(Vector& force, const MainSystem
 }
 
 //! the force or the rhs user function of ObjectGenericDAE with the coordinates of tempCoordinates, the size checked (#3143)
+//! the derivative of a recorded force or rhs user function by an argument, in one pass over its recording (#3189)
+void CObjectGenericDAE::AddUserFunctionJacobian(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction,
+	const char* name, Index argument, Real factor, ResizableMatrix& jacobian) const
+{
+	Symbolic::PySymbolicUserFunction* symbolicFunction = userFunction.GetSymbolicFunction();
+	CHECKandTHROW(symbolicFunction != nullptr, STDstring("ObjectGenericDAE: the Jacobian of the ") + name + " is numerical for a Python function");
+	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
+	UserFunctionExceptionHandling([&]
+	{
+		symbolicFunction->EvaluateJacobianAdd(jacobian, argument, factor, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t,
+			GetObjectNumber(), tempCoordinates, tempCoordinates_t, tempCoordinatesODE1, parameters.parameters);
+	}, (STDstring("ObjectGenericDAE::") + name + " (Jacobian)").c_str());
+}
+
 void CObjectGenericDAE::EvaluateUserFunction(const PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& userFunction,
 	const char* name, Index size, Vector& result) const
 {

@@ -472,6 +472,13 @@ class HT:
         (#3186); the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation
         vector, by the conversions of this module, or a copy of a kinematics.HT given as rotation
 
+        Args:
+            rotation: 3 x 3 rotation matrix, or a kinematics.HT to copy; None for the unit rotation
+            translation: 3D translation, None for zero
+            eulerParameters: the 4 Euler parameters of the rotation
+            Rxyz: the 3 Tait-Bryan angles of the rotation
+            rotationVector: the rotation vector of the rotation
+
         Returns:
             kinematics.HT
         """
@@ -666,6 +673,10 @@ class Twist:
     def FromSymbolicArguments(velocity=None, angularVelocity=None):
         """the Twist of the arguments of exudyn.Twist, some of them symbolic: exudyn.Twist(...) gives it for symbolic
         arguments (#3186)
+
+        Args:
+            velocity: 3D velocity of the origin, or a kinematics.Twist to copy; None for zero
+            angularVelocity: 3D angular velocity, None for zero
 
         Returns:
             kinematics.Twist

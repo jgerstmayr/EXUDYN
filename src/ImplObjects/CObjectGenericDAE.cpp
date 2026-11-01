@@ -129,7 +129,13 @@ void CObjectGenericDAE::ComputeODE2LHS(Vector& ode2Lhs) const
 	}
 }
 
-//! factorODE2 K + factorODE2_t D, dense; only without forceUserFunction, see GetAvailableJacobians
+//the indices of q, q_t and y in the arguments of the force and rhs user functions after mbs, for their Jacobians (#3189)
+static constexpr Index argumentQ = 2;
+static constexpr Index argumentQ_t = 3;
+static constexpr Index argumentY = 4;
+
+//! factorODE2 (K - df_u/dq) + factorODE2_t (D - df_u/dq_t), dense; the derivatives of a recorded forceUserFunction in one
+//! pass (#3189); not called for a Python forceUserFunction, see GetAvailableJacobians
 void CObjectGenericDAE::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2,
 	Real factorODE2_t, const ArrayIndex& ltg) const
 {
@@ -140,11 +146,23 @@ void CObjectGenericDAE::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacob
 	jacobian.SetAll(0.);
 	if (parameters.stiffnessMatrix.NumberOfRows() != 0) { EXUmath::FactorTimesMatrixAddTemplate<Matrix, ResizableMatrix>(factorODE2, parameters.stiffnessMatrix, jacobian); }
 	if (parameters.dampingMatrix.NumberOfRows() != 0) { EXUmath::FactorTimesMatrixAddTemplate<Matrix, ResizableMatrix>(factorODE2_t, parameters.dampingMatrix, jacobian); }
+	if (parameters.forceUserFunction)
+	{
+		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, tempCoordinatesODE1);
+		if (factorODE2 != 0.) { AddUserFunctionJacobian(parameters.forceUserFunction, "forceUserFunction", argumentQ, -factorODE2, jacobian); }
+		if (factorODE2_t != 0.) { AddUserFunctionJacobian(parameters.forceUserFunction, "forceUserFunction", argumentQ_t, -factorODE2_t, jacobian); }
+	}
 }
 
+//! E - df_u/dy
 void CObjectGenericDAE::ComputeJacobianODE2_ODE1(ResizableMatrix& jacobian) const
 {
 	MatrixOrZero(parameters.couplingMatrixODE1, GetODE2Size(), GetODE1Size(), jacobian);
+	if (parameters.forceUserFunction)
+	{
+		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, tempCoordinatesODE1);
+		AddUserFunctionJacobian(parameters.forceUserFunction, "forceUserFunction", argumentY, -1., jacobian);
+	}
 }
 
 //! the right-hand side A y + B q + B_t q_t + g + g_u
@@ -165,7 +183,8 @@ void CObjectGenericDAE::ComputeODE1RHS(Vector& ode1Rhs) const
 	}
 }
 
-//! A, B and B_t; only without rhsUserFunction, see GetAvailableJacobians
+//! A + dg_u/dy, B + dg_u/dq and B_t + dg_u/dq_t; the derivatives of a recorded rhsUserFunction in one pass (#3189); not
+//! called for a Python rhsUserFunction, see GetAvailableJacobians
 void CObjectGenericDAE::ComputeJacobianODE1RHS(ResizableMatrix& jacobianODE1, ResizableMatrix& jacobianODE2, ResizableMatrix& jacobianODE2_t) const
 {
 	Index n1 = GetODE1Size();
@@ -173,6 +192,16 @@ void CObjectGenericDAE::ComputeJacobianODE1RHS(ResizableMatrix& jacobianODE1, Re
 	MatrixOrZero(parameters.systemMatrix, n1, n1, jacobianODE1);
 	MatrixOrZero(parameters.couplingMatrixODE2, n1, n2, jacobianODE2);
 	MatrixOrZero(parameters.couplingMatrixODE2_t, n1, n2, jacobianODE2_t);
+	if (parameters.rhsUserFunction)
+	{
+		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, tempCoordinatesODE1);
+		AddUserFunctionJacobian(parameters.rhsUserFunction, "rhsUserFunction", argumentY, 1., jacobianODE1);
+		if (n2 != 0)
+		{
+			AddUserFunctionJacobian(parameters.rhsUserFunction, "rhsUserFunction", argumentQ, 1., jacobianODE2);
+			AddUserFunctionJacobian(parameters.rhsUserFunction, "rhsUserFunction", argumentQ_t, 1., jacobianODE2_t);
+		}
+	}
 }
 
 //! C_q q + C_y y - c_0; with useIndex2 C_q q_t + C_y y_t
@@ -213,26 +242,29 @@ void CObjectGenericDAE::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Resiza
 }
 
 //! the blocks by the coordinates the object has; the ones of the matrices are functions, a block with a user function
-//! is differentiated numerically, the algebraic equations always by the matrices (#3143)
+//! is differentiated numerically - a recorded one in one pass (#3189) -, the algebraic equations always by the matrices (#3143)
 JacobianType::Type CObjectGenericDAE::GetAvailableJacobians() const
 {
 	Index jacobians = 0;
 	bool hasODE1 = GetODE1Size() != 0;
+	//a Python user function is differentiated numerically, a recorded one in one pass (#3189)
+	bool numericalForce = parameters.forceUserFunction != 0 && !parameters.forceUserFunction.GetSymbolicFunction();
+	bool numericalRhs = parameters.rhsUserFunction != 0 && !parameters.rhsUserFunction.GetSymbolicFunction();
 	if (GetODE2Size() != 0)
 	{
 		jacobians += JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t;
-		if (!parameters.forceUserFunction) { jacobians += JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function; }
+		if (!numericalForce) { jacobians += JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function; }
 		if (hasODE1)
 		{
 			jacobians += JacobianType::ODE2_ODE1;
-			if (!parameters.forceUserFunction) { jacobians += JacobianType::ODE2_ODE1_function; }
+			if (!numericalForce) { jacobians += JacobianType::ODE2_ODE1_function; }
 		}
 	}
 	if (hasODE1)
 	{
 		jacobians += JacobianType::ODE1_ODE1;
 		if (GetODE2Size() != 0) { jacobians += JacobianType::ODE1_ODE2 + JacobianType::ODE1_ODE2_t; }
-		if (!parameters.rhsUserFunction)
+		if (!numericalRhs)
 		{
 			jacobians += JacobianType::ODE1_ODE1_function + JacobianType::ODE1_ODE2_function + JacobianType::ODE1_ODE2_t_function;
 		}
