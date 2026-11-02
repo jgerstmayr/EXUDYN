@@ -5628,3 +5628,18 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   (`_Backend.Real`, `Variable`), `exudyn.shells` creates `x`, `y`, `z` per call.
 - docs/dev/design/symbolicVariableNames.md: options A, B, B', C; recommendation A with the missing check and C for the
   parameters of a system, B not as the default; decisions N1-N3. RG12.73.2 implements what is decided.
+
+<a id="rg9-11-11"></a>
+### RG9.11.11 — The rigid body's own ODE2 Jacobian (2026-11-02, #3209, #858)
+- #858 closed as superseded (maintainer), RG9.11.5.3 and RG9.11.5 closed.
+- CObjectRigidBody.cpp: `RigidBodyODE2LHSTemplate` (the terms of ComputeODE2LHS for Real and AutoDiff, the Glocal and
+  Glocal_t formulas of RigidBodyMath written out for the number type, A unnormalized for Euler parameters, of
+  RigidBodyRotationMatrixAD for Tait-Bryan angles), `ComputeJacobianODE2_ODE2` with `AutoDiff<8, Real>`,
+  GetAvailableJacobians moved from the definitions into the cpp, with the function flags on Euler parameters and
+  Tait-Bryan angles.
+- test_systemJacobians.py: FreeBodies (Euler parameters and Tait-Bryan angles, with and without a center of mass) at
+  velocities against the system-wide Jacobian; the parallel ODE2 comparison at velocities, as at zero velocity the
+  ODE2 Jacobian of the joint models is now exactly zero (it was numerical noise); 84 cases.
+- benchAE.py: the ODE2 Jacobian of 2000 bodies 1.57 ms before, 0.39 / 0.20 / 0.11 / 0.06 ms for 1 / 2 / 4 / 8 threads.
+- Newton statistics: the same counts except sliderCrank3Dbenchmark 33733 / 33734 and userJointTest 17455 / 17448;
+  22 test models with new references, 6e-14 to 7e-9.

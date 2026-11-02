@@ -421,7 +421,22 @@ Euler parameter node, so the AD and the rigid nodes cover them.
   (4000 items with the nodes) 2.44 / 1.26 / 0.65 / 0.34 ms for 1 / 2 / 4 / 8 threads, 90 % of the ideal at 8 threads;
   20 joints 0.03 / 0.01 ms for 1 / 8 threads, no loss at the default limit. The test suite with 4 threads and the limit
   1 passes.
-- A split by a cost per item (#858) is not implemented: at 16 tasks per thread taken as threads become free, items of
-  different cost even out unless a single task exceeds the share of a thread; `ParallelFor`'s own cost argument only
-  switches small loops to serial, which the lower limits do. The ODE2 rows of the rigid bodies on Euler parameters
-  are numerical and serial (1.6 ms for the 2000 bodies, against 0.34 ms for their constraints at 8 threads).
+- No split by a cost per item (#858, closed as superseded): at 16 tasks per thread taken as threads become free,
+  items of different cost even out unless a single task exceeds the share of a thread; `ParallelFor`'s own cost
+  argument only switches small loops to serial, which the lower limits do.
+
+## 10. The rigid body's own Jacobian (RG9.11.11, #3209)
+
+- `CObjectRigidBody::ComputeJacobianODE2_ODE2`: the left-hand side of ComputeODE2LHS as a template of the number type
+  (`RigidBodyODE2LHSTemplate`: Glocal, the gyroscopic forces `Glocal^T (omegaBar x J omegaBar)`, for Tait-Bryan
+  angles `Glocal^T J Glocal_t theta_t`, with a center of mass the force `A [omegaBar x (U x omegaBar) + U x Glocal_t
+  theta_t]`), differentiated automatically by the rotation parameters and their velocities (8 directions); the Euler
+  parameters unnormalized, as the node computes Glocal and A. GetAvailableJacobians gives the function flags on
+  Euler parameters and Tait-Bryan angles; on the Lie group nodes the body stays numerical by CSystem, which composes
+  their rotations.
+- The mass matrix times the accelerations is not part of the left-hand side, so d(M(q) q_tt)/dq is in neither the
+  numerical nor this Jacobian.
+- 2000 bodies on Euler parameters: 1.57 ms numerical and serial, 0.39 / 0.20 / 0.11 / 0.06 ms for 1 / 2 / 4 / 8 threads.
+  The Newton iterations of the test models are the same within one in 33733 (sliderCrank3Dbenchmark) and 7 in 17455
+  (userJointTest); 22 test models with new references (6e-14 to 7e-9).
+

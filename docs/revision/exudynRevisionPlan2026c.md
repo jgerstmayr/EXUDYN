@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (5 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (3 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -132,7 +132,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 11 | Structural core improvements |
+| RG9 | OPEN | 9 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 19 | Symbolic |
@@ -1176,7 +1176,7 @@ CLOSED 2026-11-01 (#3201 stays open): ComputeLocalJacobianODE1 and AddLocalJacob
 
 CLOSED 2026-11-01 (#3201 stays open): the decision between connectors and the other objects moved from CSystem::ComputeObjectJacobianODE2 into the objects; the numerical default is not in CObject, as it perturbs the system state and needs the Lie group composition of CSystem - it is what an object returning false gets, serially; the same results. [log](exudynRevisionLog2026c.md#rg9-11-4-3)
 
-#### **OPEN_RG9.11.5** Assemble the analytic and automatic local Jacobians in parallel, with triplets per thread and a cost per item
+#### **CLOSED_RG9.11.5** Assemble the analytic and automatic local Jacobians in parallel, with triplets per thread and a cost per item
 
 #1203, #1202, #858 (was RG5.3); measured on the performance models.
 
@@ -1190,9 +1190,11 @@ CLOSED 2026-11-01 (#1203): JacobianODE2RHS with ParallelFor over listComputeObje
 
 CLOSED 2026-11-02 (#1202 resolved, #858 stays open): design section 9 - JacobianAE with ParallelFor over the constraints without Python functions and the nodes with algebraic equations, ComputeNodeJacobianAE and AppendLocalJacobianAE (the blocks of AddLocalJacobianAE by LocalJacobianAEBlocks) per thread, the bodies with algebraic equations and the constraints with Python functions serially; 2000 joints 2.44 / 0.34 ms for 1 / 8 threads; the test suite with 4 threads from one item on passes; test_systemJacobians.py parallel against serial for the constraints (dense, sparse); the cost per item evaluated, not implemented (RG9.11.5.3). [log](exudynRevisionLog2026c.md#rg9-11-5-2)
 
-##### **OPEN_RG9.11.5.3** Decide on #858, the split of the parallel tasks by a cost per item
+##### **CLOSED_RG9.11.5.3** Decide on #858, the split of the parallel tasks by a cost per item
 
 Design section 9: the tasks are 16 per thread of equal numbers of items, taken as threads become free; 90 % of the ideal at 8 threads for 2000 joints; ParallelFor's cost argument only switches small loops to serial, which the lower limits do. Proposed: close #858 as superseded.
+
+CLOSED 2026-11-02 (#858 closed as superseded, maintainer 2026-11-02).
 
 #### **CLOSED_RG9.11.6** The algebraic blocks on the same interface, the nodes with algebraic equations included, forAE for sparse matrices
 
@@ -1253,6 +1255,12 @@ CLOSED 2026-11-01 (#3205): forAE, forODE2, forODE2Connectors (and the old forODE
 #### **OPEN_RG9.11.10** Evaluate finding the dependencies outside the local-to-global lists, from the markers, loads and sensors and from the recordings, for the local Jacobians
 
 Design section 7, J3; low priority: it would keep the Newton convergence of models whose user functions read sensors.
+
+#### **CLOSED_RG9.11.11** The ODE2 Jacobian of ObjectRigidBody by automatic differentiation on Euler parameters and Tait-Bryan angles, in parallel
+
+#3209 (maintainer 2026-11-02: next step 4). The rigid bodies were numerical and serial: 1.6 ms for 2000 bodies against 0.34 ms for their joints at 8 threads.
+
+CLOSED 2026-11-02 (#3209 resolved, #3201 stays open): design section 10 - RigidBodyODE2LHSTemplate, ComputeJacobianODE2_ODE2 with 8 automatic directions, GetAvailableJacobians with the function flags on Euler parameters and Tait-Bryan angles, the Lie group nodes numerical by CSystem; 2000 bodies 1.57 / 0.39 / 0.06 ms numerical / 1 / 8 threads; the same Newton iterations; 22 test models with new references (to 7e-9); test_systemJacobians.py with free bodies on both parameters, with and without a center of mass, at velocities, and the parallel ODE2 comparison at velocities. [log](exudynRevisionLog2026c.md#rg9-11-11)
 
 ## **CLOSED_RG10** Tooling and process
 

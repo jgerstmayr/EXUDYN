@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 299 | 1.13.307 |
+| 1.13 | Newborn | 300 | 1.13.309 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.309** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectRigidBody: its own ODE2 Jacobian by automatic differentiation on Euler parameters and Tait-Bryan angles, assembled in parallel (#3209)
+  - description: The ODE2 rows of ObjectRigidBody - the gyroscopic forces and, with a center of mass off the reference point, the centrifugal force - had no Jacobian of their own: the system differentiated them numerically and serially, 1.6 ms for 2000 bodies, against 0.34 ms for their joints in parallel. Decided: the left-hand side as a template of the number type, differentiated automatically by the rotation parameters and their velocities on Euler parameters and Tait-Bryan angles; the Lie group nodes stay numerical (revision2026c step RG9.11.11).
+  - **notes:** ObjectRigidBody on Euler parameters and Tait-Bryan angles differentiates its gyroscopic and centrifugal forces itself, by automatic differentiation, also in parallel; 2000 bodies take 0.39 instead of 1.57 ms per Jacobian, 0.06 ms with 8 threads.
+  - date resolved: **2026-11-02 08:13**, date raised: 2026-11-02
 - **1.13.307** `EXTENSION` `HIGH` `MEDIUM EFF` `resolved by: Claude-JG` parallel / multithreaded (#1202)
   - description: C++: add multithreading for JacobianAE
   - **notes:** With several threads (parallel.numberOfThreads), the Jacobian of the algebraic equations of the constraints without Python user functions and of the Euler parameter nodes is computed in parallel, once the system has parallel.multithreadedLowerLimitJacobians of them; 2000 joints take 0.34 instead of 2.44 ms per Jacobian with 8 threads.

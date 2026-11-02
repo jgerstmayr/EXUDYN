@@ -1,0 +1,15 @@
+{
+  "number": 858,
+  "title": "ParallelFor",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "use ParallelFor with costs argument in GeneralContact and CSystem, to optimize usage",
+  "dateRaised": "2022-01-13",
+  "deadline": "2022-03-14",
+  "dateResolved": "2026-11-02 08:10",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded by the parallel assembly of the Jacobians of #1203 and #1202 (revision2026c steps RG9.11.5.2, RG9.11.5.3): 16 tasks per thread of equal numbers of items, taken as threads become free, reach 90 % of the ideal at 8 threads; the cost argument of ParallelFor only switches small loops to serial, which the multithreadedLowerLimit settings do (maintainer 2026-11-02)",
+  "resolvedInVersion": "1.13.308"
+}

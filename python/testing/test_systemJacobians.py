@@ -136,6 +136,16 @@ def Hydraulic(mbs):
                   nominalFlow=1e-5, systemPressure=1e7, tankPressure=1e5, useChamberVolumeChange=True))
 
 
+def FreeBodies(mbs):
+    """free rigid bodies on Euler parameters and on Tait-Bryan angles, with and without a center of mass off the
+    reference point: the gyroscopic and centrifugal terms of the bodies' own Jacobian (#3209)"""
+    shifted = inertia.Translated([0.05, -0.02, 0.01])
+    for (i, nodeType) in enumerate([exu.NodeType.RotationEulerParameters, exu.NodeType.RotationRxyz]*2):
+        mbs.CreateRigidBody(inertia=shifted if i >= 2 else inertia, referencePosition=[0.3*i, 0.1*i, 0],
+                            referenceRotationMatrix=RotationMatrixZ(0.3*i) @ RotationMatrixX(0.2),
+                            gravity=[0, -9.81, 0], nodeType=nodeType)
+
+
 def EulerParameters(mbs):
     """two rigid bodies on Euler parameters, the constraint of their nodes alone"""
     for i in range(2):
@@ -148,7 +158,7 @@ eulerParameters = exu.NodeType.RotationEulerParameters
 models = {'RigidBodies': RigidBodies, 'PointsAndContact': PointsAndContact, 'Cable': Cable, 'GenericDAE': GenericDAE,
           'Joints': Joints, 'Contacts': Contacts, 'EulerParameters': EulerParameters,
           'RigidBodiesEP': lambda mbs: RigidBodies(mbs, eulerParameters), 'JointsEP': lambda mbs: Joints(mbs, eulerParameters),
-          'ContactsEP': lambda mbs: Contacts(mbs, eulerParameters), 'Hydraulic': Hydraulic}
+          'ContactsEP': lambda mbs: Contacts(mbs, eulerParameters), 'Hydraulic': Hydraulic, 'FreeBodies': FreeBodies}
 
 
 def Build(model):
@@ -224,7 +234,7 @@ def test_theLocalODE2JacobianIsTheSystemWideOne(model, factors):
     assert Difference(local, numerical) < tolerance, (model, factors, Difference(local, numerical))
 
 
-@pytest.mark.parametrize('model', ['Contacts', 'ContactsEP'])
+@pytest.mark.parametrize('model', ['Contacts', 'ContactsEP', 'FreeBodies'])
 @pytest.mark.parametrize('factors', [(1., 0., 0.), (0., 1., 0.)])
 def test_theContactJacobiansAreTheSystemWideOneAlsoAtVelocities(model, factors):
     local = Jacobian(model, ODE2(factors), velocities=True)
@@ -254,8 +264,8 @@ def test_theConstraintJacobianIsTheSystemWideOne(model, sparse):
 @pytest.mark.parametrize('sparse', [False, True])
 def test_theParallelODE2JacobianIsTheSerialOne(model, sparse):
     factors = (0.7, 0.3, 0.5)
-    serial = Jacobian(model, ODE2(factors), sparse=sparse)
-    parallel = Jacobian(model, ODE2(factors), threads=4, sparse=sparse)
+    serial = Jacobian(model, ODE2(factors), sparse=sparse, velocities=True) #at velocities: the gyroscopic terms of the bodies
+    parallel = Jacobian(model, ODE2(factors), threads=4, sparse=sparse, velocities=True)
     assert np.max(np.abs(serial)) > 0
     assert Difference(parallel, serial) < 1e-14, (model, sparse, Difference(parallel, serial))
 

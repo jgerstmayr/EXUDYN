@@ -22,6 +22,9 @@ using namespace EM; //Sin, Cos, ...: the math functions of Exudyn (#2953)
 //! rigid-body connectors is 25-35 % slower with them (4 differentiated rotation parameters); kept for comparison
 static const bool accessFunctionsByAD = false;
 
+//! the displacement coordinates of the rigid body nodes, for the templates of this file
+static constexpr Index nDisplacementCoordinatesRigidBody = 3;
+
 //! the rotation matrix of a rigid body as a template of the number type, for the access functions by automatic
 //! differentiation (#2744): theta are the rotation parameters (reference + current); Euler parameters normalized - the
 //! matrix then does not change along them, as Glocal theta = 0 says -, or Tait-Bryan angles as RotXYZ2RotationMatrix
@@ -308,6 +311,138 @@ void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs) const
 
 	//STOPGLOBALTIMER(TSrigidPart2);
 	//pout << "ode2Lhs=" << ode2Lhs << "\n";
+}
+
+//! the left-hand side of ComputeODE2LHS as a template of the number type, for its Jacobian by automatic
+//! differentiation (#3209): theta and theta_t the rotation parameters (reference + current) and their velocities, Euler
+//! parameters unnormalized as the node takes them or Tait-Bryan angles; Glocal, omegaBar = Glocal theta_t, the
+//! gyroscopic forces Glocal^T (omegaBar x J omegaBar), for Tait-Bryan angles Glocal^T J Glocal_t theta_t, and for a
+//! center of mass the force A [omegaBar x (U x omegaBar) + U x Glocal_t theta_t], U = -m centerOfMass
+template<class TReal>
+static void RigidBodyODE2LHSTemplate(bool eulerParameters, const CObjectRigidBodyParameters& parameters, const TReal* theta,
+	const TReal* theta_t, TReal* ode2Lhs)
+{
+	const Index nRotation = eulerParameters ? 4 : 3;
+	TReal Glocal[3][4];
+	TReal Glocal_tTheta_t[3] = { 0., 0., 0. };
+	if (eulerParameters) //EP2GlocalTemplate
+	{
+		const TReal* e = theta;
+		TReal G[3][4] = { { -2.*e[1], 2.*e[0], 2.*e[3], -2.*e[2] }, { -2.*e[2], -2.*e[3], 2.*e[0], 2.*e[1] },
+			{ -2.*e[3], 2.*e[2], -2.*e[1], 2.*e[0] } };
+		for (Index i = 0; i < 3; i++) { for (Index j = 0; j < 4; j++) { Glocal[i][j] = G[i][j]; } }
+	}
+	else //RotXYZ2GlocalTemplate, RotXYZ2Glocal_tTemplate
+	{
+		TReal c1 = Cos(theta[1]), s1 = Sin(theta[1]), c2 = Cos(theta[2]), s2 = Sin(theta[2]);
+		TReal G[3][4] = { { c1*c2, s2, 0., 0. }, { -c1*s2, c2, 0., 0. }, { s1, 0., 1., 0. } };
+		TReal G_t[3][3] = { { -theta_t[2]*c1*s2 - theta_t[1]*c2*s1, theta_t[2]*c2, 0. },
+			{ theta_t[1]*s2*s1 - theta_t[2]*c2*c1, -theta_t[2]*s2, 0. }, { theta_t[1]*c1, 0., 0. } };
+		for (Index i = 0; i < 3; i++)
+		{
+			for (Index j = 0; j < 4; j++) { Glocal[i][j] = G[i][j]; }
+			for (Index j = 0; j < 3; j++) { Glocal_tTheta_t[i] += G_t[i][j] * theta_t[j]; }
+		}
+	}
+	TReal omegaBar[3];
+	for (Index i = 0; i < 3; i++)
+	{
+		omegaBar[i] = 0.;
+		for (Index j = 0; j < nRotation; j++) { omegaBar[i] += Glocal[i][j] * theta_t[j]; }
+	}
+	const Real* J6D = parameters.inertia.GetDataPointer();
+	auto Inertia = [J6D](const TReal* v, TReal* Jv)
+	{
+		Jv[0] = J6D[0] * v[0] + J6D[5] * v[1] + J6D[4] * v[2];
+		Jv[1] = J6D[5] * v[0] + J6D[1] * v[1] + J6D[3] * v[2];
+		Jv[2] = J6D[4] * v[0] + J6D[3] * v[1] + J6D[2] * v[2];
+	};
+	auto Cross = [](const TReal* a, const TReal* b, TReal* aXb)
+	{
+		aXb[0] = a[1] * b[2] - a[2] * b[1];
+		aXb[1] = a[2] * b[0] - a[0] * b[2];
+		aXb[2] = a[0] * b[1] - a[1] * b[0];
+	};
+	TReal JomegaBar[3], torque[3], JGtheta_t[3];
+	Inertia(omegaBar, JomegaBar);
+	Cross(omegaBar, JomegaBar, torque);
+	Inertia(Glocal_tTheta_t, JGtheta_t); //zero for Euler parameters
+	for (Index i = 0; i < 3; i++) { torque[i] += JGtheta_t[i]; }
+	for (Index j = 0; j < nRotation; j++)
+	{
+		ode2Lhs[nDisplacementCoordinatesRigidBody + j] = Glocal[0][j] * torque[0] + Glocal[1][j] * torque[1] + Glocal[2][j] * torque[2];
+	}
+	for (Index i = 0; i < nDisplacementCoordinatesRigidBody; i++) { ode2Lhs[i] = 0.; }
+
+	if (!(parameters.centerOfMass == 0.))
+	{
+		TReal U[3], UxOmega[3], force[3], UxG[3];
+		for (Index i = 0; i < 3; i++) { U[i] = -parameters.mass * parameters.centerOfMass[i]; }
+		Cross(U, omegaBar, UxOmega);
+		Cross(omegaBar, UxOmega, force);
+		Cross(U, Glocal_tTheta_t, UxG);
+		for (Index i = 0; i < 3; i++) { force[i] += UxG[i]; }
+		ConstSizeMatrixBase<TReal, 9> A(3, 3);
+		if (eulerParameters) //EP2RotationMatrix, unnormalized as the node computes it
+		{
+			const TReal* e = theta;
+			A(0, 0) = -2. * e[3] * e[3] - 2. * e[2] * e[2] + 1.; A(0, 1) = -2. * e[3] * e[0] + 2. * e[2] * e[1]; A(0, 2) = 2. * e[3] * e[1] + 2. * e[2] * e[0];
+			A(1, 0) = 2. * e[3] * e[0] + 2. * e[2] * e[1]; A(1, 1) = -2. * e[3] * e[3] - 2. * e[1] * e[1] + 1.; A(1, 2) = 2. * e[3] * e[2] - 2. * e[1] * e[0];
+			A(2, 0) = -2. * e[2] * e[0] + 2. * e[3] * e[1]; A(2, 1) = 2. * e[3] * e[2] + 2. * e[1] * e[0]; A(2, 2) = -2. * e[2] * e[2] - 2. * e[1] * e[1] + 1.;
+		}
+		else { RigidBodyRotationMatrixAD(false, theta, A); }
+		for (Index i = 0; i < 3; i++) { ode2Lhs[i] = A(i, 0) * force[0] + A(i, 1) * force[1] + A(i, 2) * force[2]; }
+	}
+}
+
+//! the Jacobian of the ODE2 rows by automatic differentiation of RigidBodyODE2LHSTemplate on Euler parameters and
+//! Tait-Bryan angles (#3209), factorODE2 d(LHS)/dq + factorODE2_t d(LHS)/dq_t, dense; the left-hand side does not depend
+//! on the displacements and their velocities
+void CObjectRigidBody::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
+	Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
+{
+	typedef EXUmath::AutoDiff<2 * CNodeRigidBody::maxRotationCoordinates, Real> DReal8;
+	const CNodeRigidBody& node = *(const CNodeRigidBody*)GetCNode(0);
+	const bool eulerParameters = (node.GetType() & Node::RotationEulerParameters) != 0;
+	const Index n = GetODE2Size();
+	const Index nRotation = node.GetNumberOfRotationCoordinates();
+	LinkedDataVector reference = node.GetCoordinateVector(ConfigurationType::Reference);
+	DReal8 theta[CNodeRigidBody::maxRotationCoordinates], theta_t[CNodeRigidBody::maxRotationCoordinates];
+	for (Index k = 0; k < nRotation; k++)
+	{
+		theta[k] = reference[nDisplacementCoordinates + k] + node.GetCurrentCoordinate(nDisplacementCoordinates + k);
+		theta[k].DValue((int)k) = 1.;
+		theta_t[k] = node.GetCurrentCoordinate_t(nDisplacementCoordinates + k);
+		theta_t[k].DValue((int)(CNodeRigidBody::maxRotationCoordinates + k)) = 1.;
+	}
+	DReal8 ode2Lhs[nDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates];
+	RigidBodyODE2LHSTemplate(eulerParameters, parameters, theta, theta_t, ode2Lhs);
+
+	jacobianODE2.SetUseDenseMatrix(true);
+	ResizableMatrix& jacobian = jacobianODE2.GetInternalDenseMatrix();
+	jacobian.SetNumberOfRowsAndColumns(n, n);
+	jacobian.SetAll(0.);
+	for (Index r = 0; r < n; r++)
+	{
+		for (Index k = 0; k < nRotation; k++)
+		{
+			jacobian(r, nDisplacementCoordinates + k) = factorODE2 * ode2Lhs[r].DValue((int)k)
+				+ factorODE2_t * ode2Lhs[r].DValue((int)(CNodeRigidBody::maxRotationCoordinates + k));
+		}
+	}
+}
+
+//! the ODE2 Jacobian by automatic differentiation on Euler parameters and Tait-Bryan angles (#3209), numerical by the
+//! system on the other nodes (the Lie group nodes); the constraint of the Euler parameters attached to the body analytic
+JacobianType::Type CObjectRigidBody::GetAvailableJacobians() const
+{
+	JacobianType::Type jacobians = (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function +
+		JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
+	if (GetCNode(0)->GetType() & (Node::RotationEulerParameters + Node::RotationRxyz))
+	{
+		jacobians = (JacobianType::Type)(jacobians + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
+	}
+	return jacobians;
 }
 
 //! Compute algebraic equations part of rigid body
