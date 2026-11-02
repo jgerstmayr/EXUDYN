@@ -528,7 +528,68 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
             STOPGLOBALTIMER(TScomputeGeneralContact);
         }
     }
+    //the reaction forces are not part of the right-hand side, so also not of its system-wide differentiation
+    if (numDiff.constraintReactionDerivative && cSystemData.GetNumberOfCoordinatesAE() != 0)
+    {
+        JacobianODE2ReactionForces(tempArray[0], numDiff, jacobianGM, factorODE2, factorODE2_t);
+    }
+}
 
+//! the derivative of the reaction forces C_q^T lambda by the ODE2 coordinates and velocities (#3201): for each object and
+//! node with algebraic equations its reaction forces at the current Lagrange multipliers (ComputeObjectReactionForces,
+//! the node's Jacobian), differentiated numerically by its own coordinates - the Lie group nodes by the composition -
+//! and its velocities, serially; they are on the left-hand side, so they are added with -factorODE2 and -factorODE2_t
+void CSystem::JacobianODE2ReactionForces(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
+	GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t)
+{
+	Vector& x = cSystemData.GetCData().currentState.ODE2Coords;
+	Vector& x_t = cSystemData.GetCData().currentState.ODE2Coords_t;
+	Vector& xRef = cSystemData.GetCData().referenceState.ODE2Coords;
+	const Vector& lambda = cSystemData.GetCData().currentState.AECoords;
+	Vector f0, f1;
+	ResizableMatrix localJacobian;
+	auto Differentiate = [&](const ArrayIndex& ltgRows, ArrayIndex& ltgColumns, const std::function<void(Vector&)>& reactionForces)
+	{
+		reactionForces(f0);
+		f1.SetNumberOfItems(f0.NumberOfItems());
+		auto ComputeF1 = [&]() { reactionForces(f1); };
+		localJacobian.SetNumberOfRowsAndColumns(f0.NumberOfItems(), ltgColumns.NumberOfItems());
+		if (factorODE2 != 0.)
+		{
+			SetNumDiffObjectLieGroup(numDiff, factorODE2, x, xRef, localJacobian, f0, f1, ltgColumns, cSystemData, ComputeF1); //(f0-f1)/eps: -d/dq
+			jacobianGM.AddSubmatrix(localJacobian, 1., ltgRows, ltgColumns);
+		}
+		if (factorODE2_t != 0.)
+		{
+			AddNumDiffObject(numDiff, factorODE2_t, x_t, Vector(), localJacobian, f0, f1, ltgColumns, ComputeF1, true);
+			jacobianGM.AddSubmatrix(localJacobian, 1., ltgRows, ltgColumns);
+		}
+	};
+
+	for (Index j : cSystemData.listObjectProjectedReactionForcesODE2)
+	{
+		if (!cSystemData.GetCObjects()[j]->IsActive()) { continue; }
+		Differentiate(cSystemData.GetLocalToGlobalODE2()[j], cSystemData.GetLocalToGlobalODE2NumDiff()[j],
+			[this, &temp, j](Vector& reactionForces) { ComputeObjectReactionForces(temp, j, reactionForces); });
+	}
+	JacobianType::Type filledJacobians;
+	for (Index j : cSystemData.nodesODE2WithAE)
+	{
+		if (!ComputeNodeJacobianAE(j, temp, filledJacobians) || !(filledJacobians & JacobianType::AE_ODE2)) { continue; }
+		ArrayIndex ltgAE = temp.nodeLtgAE, ltgODE2 = temp.nodeLtgODE2;
+		Differentiate(ltgODE2, ltgODE2, [this, &temp, j, &ltgAE, &lambda](Vector& reactionForces)
+		{
+			JacobianType::Type nodeFilled;
+			ComputeNodeJacobianAE(j, temp, nodeFilled);
+			const ResizableMatrix& jacobian = temp.localJacobianAE_ODE2;
+			reactionForces.SetNumberOfItems(jacobian.NumberOfColumns());
+			reactionForces.SetAll(0.);
+			for (Index c = 0; c < jacobian.NumberOfColumns(); c++)
+			{
+				for (Index r = 0; r < jacobian.NumberOfRows(); r++) { reactionForces[c] += lambda[ltgAE[r]] * jacobian(r, c); }
+			}
+		});
+	}
 }
 
 

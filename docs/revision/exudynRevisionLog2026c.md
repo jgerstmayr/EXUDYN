@@ -5729,6 +5729,27 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg9-11-18"></a>
+### RG9.11.18 — The derivative of the reaction forces as an option of the Newton Jacobian (2026-11-02, #3230)
+- d(M q_tt)/dq: not in the Jacobians (the solver adds M, the system-wide numerical Jacobian differentiates the right-hand
+  side only); zero for the bodies with a constant mass matrix; its effect is measured by #3228 (maintainer: low
+  priority, no step).
+- newton.numericalDifferentiation.constraintReactionDerivative (False): CSystem::JacobianODE2ReactionForces at the end
+  of JacobianODE2RHS, the reaction forces of each object with algebraic equations (ComputeObjectReactionForces) and of
+  the nodes with algebraic equations at the current Lagrange multipliers, differentiated by their own coordinates
+  (SetNumDiffObjectLieGroup) and velocities, serially, with -factorODE2 and -factorODE2_t; so also in the static solver
+  and with doSystemWideDifferentiation.
+- test_systemJacobians: test_theReactionDerivativeIsTheDerivativeOfTheReactionForces (Joints, JointsEP,
+  EulerParameters, Lagrange multipliers 100 sin(1 + i)) against central differences of C_q^T lambda from the ODE2-AE
+  block; the harness sets the Lagrange multipliers.
+- Measured, full / modified Newton, off / on (Newton iterations, solver time): fourBarMechanismIftomm 1058 / 802 it,
+  0.023 / 0.031 s (full), 2739 / 2719 (modified); bricardMechanism 1301 / 1302, 0.11 / 0.23 s; sliderCrank3Dbenchmark
+  8190 / 8186, 0.22 / 0.57 s; serialRobotTest, rigidBodyCOMtest, sphericalJointTest, kinematicTreeAndMBStest,
+  superElementRigidJointTest, revoluteJointPrismaticJointTest within 3 iterations, 1.4 to 2.6 times the time with full
+  Newton, unchanged with modified Newton; the results within the Newton tolerance. Off by default, as decided.
+- The parallel, analytic alternative (the marker Jacobian derivative for joints whose reaction forces are a marker
+  Jacobian times a constant direction) is not done; with these measurements it is not worth its code now.
+
 <a id="rg9-11-14"></a>
 ### RG9.11.14 — The ODE2 Jacobian of ObjectFFRFreducedOrder (2026-11-02, #3212, #3229)
 - CObjectFFRFreducedOrder::ComputeQuadraticVelocityVector(A, Glocal, omega, zeta, zeta_t), moved out of ComputeODE2LHS

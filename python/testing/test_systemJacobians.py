@@ -263,7 +263,8 @@ def Build(model):
     return (SC, mbs)
 
 
-def Jacobian(model, compute, systemWide=False, threads=1, sparse=False, velocities=False):
+def Jacobian(model, compute, systemWide=False, threads=1, sparse=False, velocities=False, reactionDerivative=False,
+             coordinates=None):
     """the system Jacobian of the solver after compute(solver, mbs), at the initial coordinates turned a little - the
     Euler parameters kept on the unit sphere, where the rotation Jacobians are exact - and at zero velocities, or
     velocities of up to 0.5"""
@@ -273,6 +274,7 @@ def Jacobian(model, compute, systemWide=False, threads=1, sparse=False, velociti
     s.parallel.numberOfThreads = threads
     s.parallel.multithreadedLowerLimitJacobians = 1
     s.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation = systemWide
+    s.timeIntegration.newton.numericalDifferentiation.constraintReactionDerivative = reactionDerivative
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
     q = np.array(mbs.systemData.GetODE2Coordinates())
@@ -283,8 +285,12 @@ def Jacobian(model, compute, systemWide=False, threads=1, sparse=False, velociti
             rotation = np.array(mbs.systemData.GetNodeLTGODE2(i))[3:7]
             e = reference[rotation] + q[rotation]
             q[rotation] = e/np.linalg.norm(e) - reference[rotation]
+    if coordinates is not None: #q changed by the caller, for differences
+        q = coordinates(q)
     mbs.systemData.SetODE2Coordinates(q)
     mbs.systemData.SetODE2Coordinates_t(0.5*np.sin(np.arange(len(q))) if velocities else 0*q)
+    nAE = len(mbs.systemData.GetAECoordinates())
+    mbs.systemData.SetAECoordinates(100*np.sin(1. + np.arange(nAE))) #Lagrange multipliers for the reaction forces
     compute(solver, mbs)
     jacobian = solver.GetSystemJacobian()
     jacobian = np.array(jacobian.todense() if hasattr(jacobian, "todense") else jacobian) #a scipy matrix for a sparse solver, if scipy is there
@@ -346,6 +352,32 @@ def test_theLocalODE1JacobianIsTheSystemWideOne(model, factors, velocities):
     numerical = Jacobian(model, ODE1(factors), systemWide=True, velocities=velocities)
     assert np.max(np.abs(local)) > 0
     assert Difference(local, numerical) < tolerance, (model, factors, Difference(local, numerical))
+
+
+@pytest.mark.parametrize('model', ['Joints', 'JointsEP', 'EulerParameters'])
+def test_theReactionDerivativeIsTheDerivativeOfTheReactionForces(model):
+    """constraintReactionDerivative adds -d(C_q^T lambda)/dq to the ODE2 rows of the right-hand side (#3201); compared
+    with central differences of C_q^T lambda, C_q^T the ODE2-AE block of the constraint Jacobian"""
+    withDerivative = Jacobian(model, ODE2((1., 0., 0.)), reactionDerivative=True)
+    without = Jacobian(model, ODE2((1., 0., 0.)))
+    def ReactionForces(change):
+        jacobian = Jacobian(model, AE, coordinates=change)
+        (SC, mbs) = Build(model)
+        nODE2 = len(mbs.systemData.GetODE2Coordinates())
+        nAE = len(mbs.systemData.GetAECoordinates())
+        return (jacobian[:nODE2, -nAE:] @ (100*np.sin(1. + np.arange(nAE))), nODE2)
+    (r0, nODE2) = ReactionForces(None)
+    expected = np.zeros((nODE2, nODE2))
+    epsilon = 1e-6
+    for i in range(nODE2):
+        def Shift(sign):
+            def Change(q):
+                q = q.copy(); q[i] += sign*epsilon; return q
+            return Change
+        expected[:, i] = -(ReactionForces(Shift(1))[0] - ReactionForces(Shift(-1))[0])/(2*epsilon)
+    difference = (withDerivative - without)[:nODE2, :nODE2]
+    assert np.max(np.abs(expected)) > 0
+    assert np.max(np.abs(difference - expected))/np.max(np.abs(expected)) < tolerance
 
 
 @pytest.mark.parametrize('model', ['Joints', 'JointsEP', 'EulerParameters'])

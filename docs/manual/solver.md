@@ -141,8 +141,12 @@ derivatives by the coordinates, 2 also by the ODE2 velocities. A load is differe
 of its marker and by those declared with `mbs.systemData.AddODE2LoadDependencies` and `AddODE1LoadDependencies`, as
 for a load whose user function reads other coordinates, e.g. a controller.
 
-**Not in the Jacobian**: the derivatives of $\Mm(\qv)\ddot\qv$ and of $\Cm_{\qv}\tp\tlambda$ by $\qv$, also not in the
-system-wide numerical one; they change the Newton iterations, not the solution.
+**Not in the Jacobian**: the derivative of $\Mm(\qv)\ddot\qv$ by $\qv$, also not in the system-wide numerical one;
+it is zero for bodies with a constant mass matrix and changes the Newton iterations, not the solution. The derivative
+of the reaction forces $\Cm_{\qv}\tp\tlambda$ by $\qv$ and $\dot\qv$ is added with
+`newton.numericalDifferentiation.constraintReactionDerivative = True`, by a numerical differentiation of the reaction
+forces of each constraint by its own coordinates, serially; it is off by default, as it seldom saves iterations and
+costs one evaluation of the constraint Jacobian per coordinate (#3230).
 
 For rigid bodies on Euler parameters, the Jacobians of the connectors and joints contain the derivative along the
 Euler parameters on which the unnormalized rotation matrix depends, as the predictor of a time step leaves the unit
@@ -491,7 +495,7 @@ $$
                = \frac{\partial \gv}{\partial \tlambda}
 \end{aligned}
 $$
-Note that some parts of the Jacobian are **neglected**, such as the derivatives of the mass matrix and of the constraint Jacobian terms in $\Jm_{\SO\SO}$, which are usually of minor influence. Jacobians of state-dependent loads are included with `computeLoadsJacobian` in static or time integration solvers, see {ref}`sec-systemjacobian`.
+Note that the derivative of the mass matrix term in $\Jm_{\SO\SO}$ is **neglected**, and the derivative of the constraint Jacobian term unless `constraintReactionDerivative` is set; both are usually of minor influence. Jacobians of state-dependent loads are included with `computeLoadsJacobian` in static or time integration solvers, see {ref}`sec-systemjacobian`.
 
 Once an update $\qv^\mathrm{Newton}_{k+1}$ has been computed, the interpolation formulas {eq}`eq-newmark-interpolation` need to be evaluated before the next residual and Jacobian can be computed.
 

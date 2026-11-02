@@ -1,0 +1,16 @@
+{
+  "number": 3230,
+  "title": "The derivative of the reaction forces C_q^T lambda as an option of the Newton Jacobian",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The Newton Jacobians of the implicit and static solvers contain C_q^T, but not the derivative of the reaction forces C_q^T lambda by the coordinates, neither the local nor the system-wide Jacobian; jacobianConnectorDerivative covers the derivative of J^T f of the connectors, not the constraints. Decided: newton.numericalDifferentiation.constraintReactionDerivative, False by default, adds it by a numerical differentiation of the reaction forces of each constraint, body and node with algebraic equations by its own coordinates, serially; measured on the constrained test models.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 15:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "newton.numericalDifferentiation.constraintReactionDerivative = True adds the derivative of the reaction forces C_q^T lambda to the Newton Jacobian of the implicit and static solvers, by a numerical differentiation per constraint; off by default, as it seldom saves iterations.",
+  "resolvedInVersion": "1.13.324"
+}

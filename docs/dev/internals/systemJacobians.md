@@ -98,5 +98,13 @@ is computed by `ComputeJacobianODE2Connector` in parallel, as it does not touch 
 - `doSystemWideDifferentiation` is the reference: python/testing/test_systemJacobians.py compares every block of the
   local Jacobians with it for small models of the item types, at zero and nonzero velocities, and the parallel
   assembly with the serial one.
-- What none of the Jacobians contains: d(M q_tt)/dq and d(C_q^T lambda)/dq; dependencies outside the coordinates of an
+- d(C_q^T lambda)/dq and /dq_t with `constraintReactionDerivative` (#3230): `CSystem::JacobianODE2ReactionForces`,
+  called at the end of `JacobianODE2RHS` (also with doSystemWideDifferentiation), differentiates
+  `ComputeObjectReactionForces` of each object of `listObjectProjectedReactionForcesODE2` and the reaction forces of
+  the nodes with algebraic equations by their own coordinates (`SetNumDiffObjectLieGroup`, the Lie group nodes by the
+  composition) and velocities, serially. Measured with full / modified Newton, off / on: fourBarMechanismIftomm 1058 /
+  802 and 2739 / 2719 iterations, 0.023 / 0.031 s; bricardMechanism, sliderCrank3Dbenchmark, serialRobotTest,
+  rigidBodyCOMtest, sphericalJointTest, kinematicTreeAndMBStest, superElementRigidJointTest and
+  revoluteJointPrismaticJointTest within 3 iterations, with full Newton 1.4 to 2.6 times the time; so off by default.
+- What none of the Jacobians contains: d(M q_tt)/dq (#3228 measures it); dependencies outside the coordinates of an
   item (a user function reading a sensor) only the system-wide one.

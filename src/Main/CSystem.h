@@ -292,6 +292,11 @@ public:
     void JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
         GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1);
 
+    //! the derivative of the reaction forces C_q^T lambda by the ODE2 coordinates and velocities, numerical per item
+    //! with algebraic equations, added with the factors of the right-hand side (constraintReactionDerivative, #3201)
+    void JacobianODE2ReactionForces(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
+        GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t);
+
     //! the Jacobian of the loads on ODE1 equations, numerical (#1548)
     void JacobianODE1Loads(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
         GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1);

@@ -1311,6 +1311,8 @@ class NumericalDifferentiationSettings:
     """Settings for numerical differentiation of a function (needed for computation of numerical jacobian e.g. in implizit integration)."""
     addReferenceCoordinatesToEpsilon: bool
     """True: for the size estimation of the differentiation parameter, the reference coordinate :math:`q^{Ref}_i` is added to ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter."""
+    constraintReactionDerivative: bool
+    r"""True: the derivative of the reaction forces :math:`\Cm_{\qv}\tp \tlambda` of the constraints, the bodies and the nodes with algebraic equations by the ODE2 coordinates and velocities is added to the Jacobian, by a numerical differentiation of the reaction forces of each item by its own coordinates at the current Lagrange multipliers, serially; False: it is neglected, in the local and in the system-wide Jacobian; it may improve the convergence of stiff constraints with large reaction forces and large rotations, at the cost of evaluating the constraint Jacobians once per coordinate of each constraint (#3201)."""
     doSystemWideDifferentiation: bool
     """True: the whole Jacobian by numerical differentiation - the ODE2, ODE1 and algebraic equations by all coordinates -, for comparison and for dependencies outside the coordinates of the items, such as a user function reading a sensor; slow for larger systems; False: the Jacobian of each object, analytic, by automatic differentiation or numerical by its own coordinates (#3205)."""
     jacobianConnectorDerivative: bool
