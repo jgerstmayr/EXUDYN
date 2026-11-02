@@ -5535,3 +5535,35 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   rigid bodies on Euler parameters for the node constraint, dense and sparse (44 cases); the joints stay on Tait-Bryan
   angles, as their rotation Jacobians, like those of the connectors, have no direction along the Euler parameters (the
   first try with joints on Euler parameters differed by 10 %, RG9.11.8.5).
+
+<a id="rg9-11-8-5"></a>
+### RG9.11.8.5 — The direction along the Euler parameters (2026-11-02, #3201, #3206)
+- The question of the maintainer, whether the Euler parameter constraint of the nodes is considered: it is, in the
+  blocks of the nodes with algebraic equations. The direction along e matters for another reason: the predictor of the
+  time integration leaves the unit sphere, so the first Newton increment of every step has a part along e, and the
+  residual depends on e there (`A - I` quadratic in e). Measured on rollingCoinPenaltyTest: at index 3 no drift and
+  still 12036 / 9654 iterations local / system-wide, the first contraction 3e-3 / 4e-5; at index 2 (as the model runs)
+  |e|^2 - 1 = 7e-7 after 5000 steps. The difference was the radial column, `(J_loc - J_sys)[:, e] ~ e^T`.
+- `CMarker::GetRadialKinematics`, `CObjectBody::GetRadialKinematics`, `RigidBodyNodeRadialKinematics` (CObjectBody.cpp),
+  `MarkerTemp::radial_q`; MarkerBodyPosition, MarkerBodyRigid, MarkerNodeRigid and ObjectRigidBody declare it
+  (definitions, itemFunctions.py).
+- CObjectConnector.cpp: AddRadialDerivativePosition and AddRadialDerivativeRigid after the chains of the automatic and
+  numerical connector Jacobians; ConstraintJacobianRigidMarkers and ConstraintJacobianPositionMarkers write the part
+  along e into `temp.localJacobianAE_ODE2radial` (RadialJacobianAE), which CSystem::ComputeObjectJacobianAE clears and
+  AddLocalJacobianAE adds to the rows of the equations only.
+- CObjectRigidBody::GetJacobianTransposedTimesVectorDerivative: `Glocal^T (p x 2 (A - I)^T f) e^T/(e^T e)`; without it
+  the spring-dampers on position markers of Euler parameter bodies differed by 1e-3 of the largest entry in the rows of
+  the rotation parameters.
+- First try: the part along e in C_q for both blocks; 37 test models changed and restartFileTest and userJointTest did
+  not converge - also with doSystemWideDifferentiation, which showed #3206: NumericalJacobianAE got the factor 1 for
+  the block of the reaction forces (JacobianAE did not pass factorODE2_AE, factorODE1_AE, factorAE_AE) and used dC/dq^T,
+  which has the part along e that the reaction forces of the residual do not. Fixed: the factors are passed, the block
+  is the reaction forces of the unit multipliers, the velocity-level rows need no list any more.
+- test_systemJacobians.py: the coordinates of the Euler parameter nodes back on the unit sphere; RigidBodiesEP, JointsEP
+  and ContactsEP (the ODE2 blocks, the constraint Jacobian, the contacts at velocities), 63 cases.
+  test_connectorInterface.py: C_q of JacobianAE against finite differences without the projection on the tangent
+  space, and the reaction forces against the block of the reaction forces.
+- Newton statistics (scratchpad newtonStats.py, all test models): 1167234 / 1154574 iterations against RG9.11.8.3, 25
+  models fewer, 11 more; each of the latter with the same count as with doSystemWideDifferentiation (sliderCrank3Dtest
+  2000 / 3172, carRollingDiscTest 584 / 696, userJointTest Jacobians 868 / 1285). 38 test models and 3 mini examples
+  with new references, the old values in the comments.

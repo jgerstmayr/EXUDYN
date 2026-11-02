@@ -126,6 +126,9 @@ public:
 	//! dv/dq at localPosition and domega/dq, omega global, at fixed velocities, 3 x n each (#3201): for the connectors
 	//! that request them; false if the body does not provide them
 	virtual bool GetVelocity_q(const Vector3D& localPosition, Matrix& velocity_q, Matrix& angularVelocity_q) const { return false; }
+	//! the derivative of the position at localPosition and of the rotation matrix along the Euler parameters, and the row
+	//! radial_q of that direction (#3201, CMarker::GetRadialKinematics); false if the body has no such direction
+	virtual bool GetRadialKinematics(const Vector3D& localPosition, Vector3D& position_r, Matrix3D& rotation_r, Vector& radial_q) const { return false; }
 	//! false if the access functions are not defined at localPosition, with the reason; checked at Assemble()
 	virtual bool IsValidLocalPosition(const Vector3D& localPosition, STDstring& reason) const { return true; }
 
@@ -385,5 +388,12 @@ public:
 //! differences of the rotation parameters, from the rotation matrix and Glocal of RigidBodyMath, which the node's velocities
 //! use; no system state is touched; false for the other nodes (the Lie group nodes)
 bool RigidBodyNodeVelocity_q(const CNodeODE2& node, const Vector3D& localPosition, Matrix& velocity_q, Matrix& angularVelocity_q);
+
+//! the derivative of the point at localPosition of an Euler parameter node and of its rotation matrix along the Euler
+//! parameters e (#3201): A - I is quadratic in e, so dA/de e = 2 (A - I) and d(A p)/de e = 2 (A - I) p; radial_q = e^T/(e^T e)
+//! at the rotation parameters gives the part of a change of the coordinates along e. The rotation Jacobian A Glocal has
+//! no such direction (Glocal e = 0), while the system differentiates A(e) off the unit sphere too, where the predictor of
+//! the time integration puts e; false for the other nodes, whose rotation matrix stays orthogonal
+bool RigidBodyNodeRadialKinematics(const CNodeODE2& node, const Vector3D& localPosition, Vector3D& position_r, Matrix3D& rotation_r, Vector& radial_q);
 
 #endif

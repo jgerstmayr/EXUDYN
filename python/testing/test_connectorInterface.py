@@ -364,10 +364,10 @@ def PerturbedCoordinates(mbs):
 
 
 def ConstraintJacobians(kind):
-    """at perturbed coordinates and Lagrange multipliers: C_q by automatic differentiation, C_q by finite differences
-    of the algebraic equations, and the projection of the columns on the tangent space of the Euler parameters, along
-    which the two differ by the normalization (a direction the Euler parameter constraint keeps out of every Newton
-    increment)"""
+    """at perturbed coordinates and Lagrange multipliers: C_q of JacobianAE - by automatic differentiation, and along the
+    Euler parameters from the equations at the frame moved along them (#3201) -, C_q by finite differences of the
+    algebraic equations, and the block of the reaction forces in the ODE2 rows of JacobianAE, which has no part along
+    the Euler parameters"""
     mbs = BuildConstraintModel(kind)
     s = exu.SimulationSettings()
     solver = exu.MainSolverImplicitSecondOrder()
@@ -381,6 +381,7 @@ def ConstraintJacobians(kind):
     jacobian0 = np.array(solver.GetSystemJacobian())  #ComputeJacobianAE adds to what the solver holds
     solver.ComputeJacobianAE(mbs, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False)
     jacobianAD = (np.array(solver.GetSystemJacobian()) - jacobian0)[-nAE:, :n]
+    reactionJacobian = (np.array(solver.GetSystemJacobian()) - jacobian0)[:n, -nAE:]
 
     def Equations(qq):
         mbs.systemData.SetODE2Coordinates(qq)
@@ -389,13 +390,8 @@ def ConstraintJacobians(kind):
     h = 1e-6
     jacobianFD = np.array([(Equations(q + h*np.eye(n)[j]) - Equations(q - h*np.eye(n)[j]))/(2*h) for j in range(n)]).T
     mbs.systemData.SetODE2Coordinates(q)
-
-    tangent = np.eye(n)
-    for (k, reference) in eulerParameterBlocks:
-        ep = q[k:k+4] + reference
-        tangent[k:k+4, k:k+4] -= np.outer(ep, ep)
     solver.FinalizeSolver(mbs, s)
-    return jacobianAD, jacobianFD, tangent
+    return jacobianAD, jacobianFD, reactionJacobian
 
 
 def ConstraintNewtonResidual(kind, multipliers):
@@ -417,23 +413,25 @@ def ConstraintNewtonResidual(kind, multipliers):
 
 @pytest.mark.parametrize('kind', constraintKinds)
 def test_theReactionForcesWithoutCqAreCqTimesLambda(kind):
-    """the reaction forces, projected per marker without C_q, are C_q^T lambda with C_q by automatic differentiation"""
+    """the reaction forces, projected per marker without C_q, are the block of the reaction forces of JacobianAE times
+    lambda - C_q^T without its part along the Euler parameters, which the marker Jacobians do not have (#3201)"""
     rng = np.random.default_rng(2)
     (residual0, zero) = ConstraintNewtonResidual(kind, lambda n: np.zeros(n))
     (residual, lam) = ConstraintNewtonResidual(kind, lambda n: rng.standard_normal(n))
-    (jacobianAD, jacobianFD, tangent) = ConstraintJacobians(kind)
+    (jacobianAD, jacobianFD, reactionJacobian) = ConstraintJacobians(kind)
     reaction = residual - residual0
     assert np.abs(reaction).max() > 0.1
-    assert min(np.abs(reaction - jacobianAD.T @ lam).max(), np.abs(reaction + jacobianAD.T @ lam).max()) < 1e-12 * np.abs(reaction).max()
+    reactionCq = reactionJacobian @ lam
+    assert min(np.abs(reaction - reactionCq).max(), np.abs(reaction + reactionCq).max()) < 1e-12 * np.abs(reaction).max()
 
 
 @pytest.mark.parametrize('kind', constraintKinds + ['GenericAlternative'])
 def test_theConstraintJacobianByADIsTheNumericalOne(kind):
-    """C_q by automatic differentiation against finite differences of the equations, on the tangent space of the
-    Euler parameters; GenericAlternative: the alternative constraints of JointGeneric on Rxyz nodes (#2772)"""
-    (jacobianAD, jacobianFD, tangent) = ConstraintJacobians(kind)
+    """C_q of JacobianAE against finite differences of the equations, along the Euler parameters too (#3201);
+    GenericAlternative: the alternative constraints of JointGeneric on Rxyz nodes (#2772)"""
+    (jacobianAD, jacobianFD, reactionJacobian) = ConstraintJacobians(kind)
     assert np.abs(jacobianFD).max() > 0.1
-    assert np.abs((jacobianAD - jacobianFD) @ tangent).max() < 1e-6 * np.abs(jacobianFD).max()
+    assert np.abs(jacobianAD - jacobianFD).max() < 1e-6 * np.abs(jacobianFD).max()
 
 
 def DropOnContact(kind, ballRigid, groundRigid):

@@ -509,6 +509,25 @@ bool CObjectRigidBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D
 		}
 	}
 
+	//Euler parameters: d(A^T f)/dq along e is 2 (A - I)^T f, which A^T fTilde G lacks (G e = 0), while the system
+	//differentiates it (#3201): Glocal^T (	ilde uLocal) 2 (A - I)^T f e^T/(e^T e)
+	Vector3D radial;
+	Matrix3D radialRotation;
+	ResizableVector radial_q;
+	if (RigidBodyNodeRadialKinematics(*(const CNodeODE2*)GetCNode(0), localPosition, radial, radialRotation, radial_q))
+	{
+		const Vector3D w = localPosition.CrossProduct(radialRotation.GetTransposed() * force);
+		for (Index i = 0; i < nRot; i++)
+		{
+			Real value_i = 0.;
+			for (Index r = 0; r < 3; r++) { value_i += Glocal(r, i) * w[r]; }
+			for (Index j = 0; j < nRot; j++)
+			{
+				value(nDisplacementCoordinates + i, nDisplacementCoordinates + j) += value_i * radial_q[nDisplacementCoordinates + j];
+			}
+		}
+	}
+
 	return true;
 }
 

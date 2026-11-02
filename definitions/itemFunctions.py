@@ -342,6 +342,12 @@ objectFunctions = [
         args='const Vector3D& localPosition, Matrix& velocity_q, Matrix& angularVelocity_q',
         description='dv/dq at localPosition and domega/dq (global) at fixed velocities, 3 x n each (#3201); false if not provided'),
 
+    ItemFunctionLib(classType='Object', pythonName='GetRadialKinematics',
+        type=TBool, destination=DestComp,
+        cFlags=CFConst,
+        args='const Vector3D& localPosition, Vector3D& position_r, Matrix3D& rotation_r, Vector& radial_q',
+        description='the derivative of the position at localPosition and of the rotation matrix along the Euler parameters, and the row of that direction (#3201); false if there is none'),
+
     ItemFunctionLib(classType='Object', pythonName='GetJacobianTransposedTimesVectorDerivative',
         type=TBool, destination=DestComp,
         cFlags=CFConst,
@@ -790,6 +796,12 @@ markerFunctions = [
         cFlags=CFConst,
         args='const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q',
         description='dv/dq and domega/dq of the marker at fixed velocities (#3201); false if not provided'),
+
+    ItemFunctionLib(classType='Marker', pythonName='GetRadialKinematics',
+        type=TBool, destination=DestComp,
+        cFlags=CFConst,
+        args='const CSystemData& cSystemData, Vector3D& position_r, Matrix3D& rotation_r, Vector& radial_q',
+        description='the derivative of the position and rotation matrix of the marker along the Euler parameters, and the row of that direction (#3201); false if there is none'),
 
     ItemFunctionLib(classType='Marker', pythonName='GetAngularVelocity',
         type=Tvoid, destination=DestComp,

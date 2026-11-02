@@ -89,6 +89,22 @@ bool RigidBodyNodeVelocity_q(const CNodeODE2& node, const Vector3D& localPositio
 	return true;
 }
 
+//! the derivative along the Euler parameters of a point of a rigid body node and of its rotation matrix (#3201)
+bool RigidBodyNodeRadialKinematics(const CNodeODE2& node, const Vector3D& localPosition, Vector3D& position_r, Matrix3D& rotation_r, Vector& radial_q)
+{
+	if (!(node.GetType() & Node::RotationEulerParameters)) { return false; }
+	const CNodeRigidBody& rigidNode = (const CNodeRigidBody&)node;
+	rotation_r = 2. * (rigidNode.GetRotationMatrix() - EXUmath::unitMatrix3D);
+	position_r = rotation_r * localPosition;
+	const CSVector4D e = rigidNode.GetRotationParameters();
+	const Index nDisplacement = rigidNode.GetNumberOfDisplacementCoordinates();
+	radial_q.SetNumberOfItems(rigidNode.GetNumberOfODE2Coordinates());
+	radial_q.SetAll(0.);
+	const Real ee = e * e;
+	for (Index k = 0; k < e.NumberOfItems(); k++) { radial_q[nDisplacement + k] = e[k] / ee; }
+	return true;
+}
+
 //! the object's own local Jacobian of its algebraic equations (#3201): a body with algebraic equations (ObjectGenericDAE,
 //! the Euler parameter constraint attached to a body); moved from CSystem::ComputeObjectJacobianAE
 void CObject::ComputeLocalJacobianAE(const CSystemData& systemData, TemporaryComputationData& temp, bool& usesVelocityLevel,

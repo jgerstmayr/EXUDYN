@@ -710,17 +710,19 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 
 	ComputeAlgebraicEquations(tempArray, f0, velocityLevel); //compute nominal value for jacobian
 
-	//THE REACTION FORCES of a row are the transposed derivative its object puts into the residual (#692): dC/dq for a
-	//position-level constraint, dC/dq_t for a velocity-level one, as JacobianAE and the residual have it; adding both
-	//gave the rolling disc reaction terms the residual does not have
-	std::vector<bool> velocityLevelRow(nAE, false);
-	for (Index j : cSystemData.objectsWithAlgebraicEquations)
+	//THE REACTION FORCES in the ODE2 rows are those of the residual, linear in lambda: column j is the reaction forces of
+	//the unit lambda_j (#3201) - the derivative the residual has, dC/dq^T at position level and dC/dq_t^T at velocity
+	//level (#692), without the direction along the Euler parameters which dC/dq has and the reaction forces do not
+	Vector lambda(nAE);
+	Vector reactionForces(nODE2);
+	lambda.SetAll(0.);
+	for (Index j = 0; j < nAE; j++)
 	{
-		CObject& object = *(cSystemData.GetCObjects()[j]);
-		if (((Index)object.GetType() & (Index)CObjectType::Constraint) && ((CObjectConstraint&)object).UsesVelocityLevel())
-		{
-			for (Index row : cSystemData.GetLocalToGlobalAE()[j]) { velocityLevelRow[row] = true; }
-		}
+		lambda[j] = 1.;
+		reactionForces.SetAll(0.);
+		ComputeODE2ProjectedReactionForces(tempArray, lambda, reactionForces);
+		lambda[j] = 0.;
+		for (Index i = 0; i < nODE2; i++) { Add(i, offsetAE + j, factorODE2_AE * reactionForces[i]); }
 	}
 
 	//differentiation w.r.t. ODE2 coordinates
@@ -740,7 +742,6 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 		{
 			Real x = epsInv * (f1[j] - f0[j]);
 			Add(offsetAE + j, i, factorAE_ODE2 * x); //add Cq ==> factor only used for Position constraints ...
-			if (!velocityLevelRow[j]) { Add(i, offsetAE + j, factorODE2_AE * x); } //add CqT of a position-level row
 		}
 	}
 
@@ -761,7 +762,6 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 		{
 			Real x = epsInv * (f1[j] - f0[j]);
 			Add(offsetAE + j, i, factorAE_ODE2_t * x); //add Cq ==> factor only used for Position constraints ...
-			if (velocityLevelRow[j]) { Add(i, offsetAE + j, factorODE2_AE * x); } //add Cq_t^T of a velocity-level row (e.g. velocity coordinate constraint, rolling joint, ...)
 		}
 	}
 
@@ -864,12 +864,14 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 	bool& objectUsesVelocityLevel, JacobianType::Type& filledJacobians)
 {
+	temp.localJacobianAE_ODE2radial.SetNumberOfRowsAndColumns(0, 0); //the constraints on the connector interface may fill it
 	cSystemData.GetCObjects()[j]->ComputeLocalJacobianAE(cSystemData, temp, objectUsesVelocityLevel, filledJacobians);
 }
 
 //! add the blocks of the local AE Jacobian in temp to the system Jacobian (#3201): the rows of the equations ltgAE by the
 //! ODE2 coordinates and velocities (ltgODE2) and the ODE1 (ltgODE1) and AE coordinates, the transposed blocks of the
-//! reaction forces in the ODE2 and ODE1 rows - dC/dq^T, or dC/dq_t^T at velocity level -, each with its factor
+//! reaction forces in the ODE2 and ODE1 rows - dC/dq^T, or dC/dq_t^T at velocity level -, each with its factor; the part
+//! of dC/dq along the Euler parameters (temp.localJacobianAE_ODE2radial) in the rows of the equations only
 void CSystem::AddLocalJacobianAE(TemporaryComputationData& temp, const ArrayIndex& ltgAE, const ArrayIndex& ltgODE2,
 	const ArrayIndex& ltgODE1, bool usesVelocityLevel, JacobianType::Type filledJacobians, const JacobianAEFactors& factors,
 	GeneralMatrix& jacobianGM)
@@ -879,6 +881,10 @@ void CSystem::AddLocalJacobianAE(TemporaryComputationData& temp, const ArrayInde
 	if (filledJacobians & JacobianType::AE_ODE2)
 	{
 		jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE2, factors.AE_ODE2, ltgAE, ltgODE2, offsetAE);
+		if (temp.localJacobianAE_ODE2radial.NumberOfRows() != 0)
+		{
+			jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE2radial, factors.AE_ODE2, ltgAE, ltgODE2, offsetAE);
+		}
 	}
 	if (filledJacobians & JacobianType::AE_ODE2_t) //velocity or mixed pos/vel constraints
 	{
@@ -918,7 +924,7 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 	if (newton.numericalDifferentiation.doSystemWideDifferentiation) //the whole Jacobian numerically, the AE rows included (#3205)
 	{
 		NumericalJacobianAE(tempArray, newton.numericalDifferentiation, temp.numericalJacobianf0, temp.numericalJacobianf1, jacobianGM,
-			factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel);
+			factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel, factorODE2_AE, factorODE1_AE, factorAE_AE);
 		return;
 	}
 	if (velocityLevel) { CHECKandTHROWstring("CSystem::JacobianAE_ODE2: velocityLevel=true not implemented", ExudynNotImplementedError); }
@@ -946,6 +952,7 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 		for (Index i = 0; i < ltgAE.NumberOfItems(); i++) { ltgAE[i] = node.GetGlobalAECoordinateIndex() + i; }
 		ltgODE2.SetNumberOfItems(node.GetNumberOfODE2Coordinates());
 		for (Index i = 0; i < ltgODE2.NumberOfItems(); i++) { ltgODE2[i] = node.GetGlobalODE2CoordinateIndex() + i; }
+		temp.localJacobianAE_ODE2radial.SetNumberOfRowsAndColumns(0, 0);
 		AddLocalJacobianAE(temp, ltgAE, ltgODE2, noODE1, false, filledJacobians, factors, jacobianGM);
 	}
 }

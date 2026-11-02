@@ -1,0 +1,17 @@
+{
+  "number": 3206,
+  "title": "doSystemWideDifferentiation: the reaction-force block of the algebraic equations without the factors of the solver and with dC/dq^T along the Euler parameters",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "With doSystemWideDifferentiation, NumericalJacobianAE added the block of the reaction forces in the ODE2 rows as dC/dq^T with the factor 1: JacobianAE did not pass factorODE2_AE, factorODE1_AE and factorAE_AE of the solver, and dC/dq contains a part along the Euler parameters that the reaction forces of the residual - projected by the marker Jacobians - do not have. restartFileTest and userJointTest failed with it. Decided: the factors are passed; the block is the reaction forces of the unit Lagrange multipliers, the derivative the residual has (revision2026c step RG9.11.8.5).",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 01:53",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/CSystemJacobians.cpp",
+  "releaseNotes": "numericalDifferentiation.doSystemWideDifferentiation: the block of the reaction forces of the algebraic equations is differentiated by the Lagrange multipliers and takes the factors of the solver; with joints on rigid bodies with Euler parameters its Newton iterations could fail.",
+  "resolvedInVersion": "1.13.306"
+}

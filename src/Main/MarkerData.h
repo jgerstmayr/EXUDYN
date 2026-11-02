@@ -388,6 +388,8 @@ public:
 	//! dv/dq and domega/dq of the marker (CMarker::GetVelocity_q), for the connectors that request them (#3201)
 	ResizableMatrix velocity_q;
 	ResizableMatrix angularVelocity_q;
+	//! the row that gives the part of a change of the coordinates along the Euler parameters (CMarker::GetRadialKinematics)
+	ResizableVector radial_q;
 };
 
 //! the marker data structure from the kinematics of the connector interface (#2745): position, orientation and

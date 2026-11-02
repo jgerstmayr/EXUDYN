@@ -54,12 +54,12 @@
   "MarkerBodyPosition": {
    "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "ac7978844dea"
+   "fingerprint": "8c5aedba5bdd"
   },
   "MarkerBodyRigid": {
    "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "11c403d4eb4f"
+   "fingerprint": "5943e7653ddc"
   },
   "MarkerKinematicTreeRigid": {
    "checked": "2026-11-01",
@@ -89,7 +89,7 @@
   "MarkerNodeRigid": {
    "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "f6cce79e5f5b"
+   "fingerprint": "c7dc3b34248b"
   },
   "MarkerNodeRotationCoordinate": {
    "checked": "2026-10-06",
@@ -444,7 +444,7 @@
   "ObjectRigidBody": {
    "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "621a1bfbeb3c"
+   "fingerprint": "71f2e0968cdf"
   },
   "ObjectRigidBody2D": {
    "checked": "2026-11-02",

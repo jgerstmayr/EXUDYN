@@ -93,6 +93,16 @@ bool CMarkerBodyRigid::GetVelocity_q(const CSystemData& cSystemData, Matrix& vel
 		velocity_q, angularVelocity_q);
 }
 
+//! the derivative along the Euler parameters at the position of the marker frame, through the body, the rotation by the
+//! local rotation of the frame (#3201)
+bool CMarkerBodyRigid::GetRadialKinematics(const CSystemData& cSystemData, Vector3D& position_r, Matrix3D& rotation_r, Vector& radial_q) const
+{
+	if (!((const CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetRadialKinematics(parameters.localHT.GetTranslation(),
+		position_r, rotation_r, radial_q)) { return false; }
+	ApplyMarkerLocalRotation(parameters.localHT, rotation_r);
+	return true;
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //VISUALIZATION
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

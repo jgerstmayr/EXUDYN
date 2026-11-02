@@ -1106,6 +1106,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
         ItemFunctionDef('GetVelocity_q', implementation='return RigidBodyNodeVelocity_q(*(const CNodeODE2*)GetCNode(0), localPosition, velocity_q, angularVelocity_q);'),
+        ItemFunctionDef('GetRadialKinematics', implementation='return RigidBodyNodeRadialKinematics(*(const CNodeODE2*)GetCNode(0), localPosition, position_r, rotation_r, radial_q);'),
         ItemFunctionDef('GetMassWeightedPositionJacobian'),
         ItemFunctionDef('GetOutputVariableBody'),
         ItemFunctionDef('GetPosition'),

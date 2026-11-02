@@ -336,17 +336,56 @@ Euler parameter node, so the AD and the rigid nodes cover them.
 - Declared for ConnectorRollingDiscPenalty, ContactConvexRoll, ContactCoordinate, ContactSphereSphere,
   ContactSphereTorus, ContactSphereTriangle and ConnectorCoordinateSpringDamperExt (#3204: its analytic Jacobian
   without factor0/factor1 is removed). They are no longer deferred in the parallel assembly.
-- Found on the way, for Euler parameters slightly off the unit sphere (|e|^2 - 1 of about 1e-5 after some steps):
+- Found on the way, for Euler parameters off the unit sphere - where the constraint of the Euler parameters is at
+  velocity level (`useIndex2Constraints`, rollingCoinPenaltyTest: |e|^2 - 1 of 7e-7 after 5000 steps), and in every
+  predictor of the time integration:
   - dv/dq of `G theta_t` differs from the derivative of the forms the markers give; the forms are used.
   - The numerical differentiation perturbed the local angular velocity as `A^T omega` with the perturbed global one;
-    `A^T A` differs from the unit matrix by 1e-5, far more than a step, so the derivative by omega was wrong by up to
-    5 times the stiffness. Only the increment is added now.
-  - The derivative along e itself remains: the system differentiates the unnormalized rotation matrix, which changes
-    along e, while the chain of the rotation Jacobian has no such direction (`G e = 0`). In the rolling disc this is
-    0.5-1 % of the Jacobian. It costs the Euler parameter models with contacts some Newton iterations (below) and is
-    open as RG9.11.8.5; the automatic Jacobians of the spring-dampers have it as well.
+    `A^T A` differs from the unit matrix by more than a step, so the derivative by omega was wrong by up to 5 times the
+    stiffness. Only the increment is added now.
+  - The derivative along e itself: section 8.6.
 - Newton iterations against the numerical Jacobian by CSystem (all test models, the counts of every solve):
   rotatingTableTest 26785 / 26740, ballBearingTest 3057 / 3057, carRollingDiscTest 584 / 584,
   createSphereQuadContact 50384 / 50386, sphereTriangleTest2 9474 / 9475, ConvexContactTest 4330 / 4361,
   rollingCoinPenaltyTest 9568 / 11351 and contactSphereTorusMomentumTest 12297 / 14487 (both Euler parameters),
   coordinateSpringDamperExt.py 4780 / 1411 (#3204). Without dv/dq the first was 1083889 (RG9.11.8).
+
+### 8.6 The direction along the Euler parameters (RG9.11.8.5)
+
+- The rotation matrix of the Euler parameters is not normalized: `A - I` is quadratic in e, so `dA/de e = 2 (A - I)`
+  and `d(A p)/de e = 2 (A - I) p`, also on the unit sphere. The chain of the marker Jacobians has no such direction
+  (`G e = 0`, `Glocal e = 0`). The constraint of the Euler parameters (its node's algebraic equation `e^T e - 1`, in the
+  blocks of the nodes with algebraic equations) does not remove it from the Newton increments: the predictor of the
+  time integration leaves the sphere, so the first increment of every step has a part along e. rollingCoinPenaltyTest
+  at index 3 (no drift): the first Newton contraction 3e-3 with the local Jacobian, 4e-5 with the system-wide one,
+  12036 against 9654 iterations.
+- `CMarker::GetRadialKinematics(systemData, position_r, rotation_r, radial_q)`: the derivatives of the marker's
+  position and rotation matrix along e, and the row `radial_q = e^T/(e^T e)` at the Euler parameters that gives the
+  part of a change of the coordinates along e; false if the marker has no such direction. MarkerBodyPosition (rotation
+  zero), MarkerBodyRigid (by the local rotation of the frame) and MarkerNodeRigid, through
+  `CObjectBody::GetRadialKinematics` of ObjectRigidBody and `RigidBodyNodeRadialKinematics`, true for NodeRigidBodyEP.
+- The chains of the connector interface add `J_i^T d(f_i, tau_i)/d(eps) radial_q,k`, one more evaluation of the force
+  per such marker at the kinematics moved by eps = 1e-7 along e (the global velocity and angular velocity kept): the
+  automatic Jacobians on position and rigid markers and the numerical ones on rigid markers.
+  `CObjectRigidBody::GetJacobianTransposedTimesVectorDerivative` adds `Glocal^T (p x 2 (A - I)^T f) radial_q`, the part
+  of `d(A^T f)/dq` that `A^T fTilde G` lacks.
+- The constraints on the connector interface (position level): `dg/d(eps) radial_q,k` - rigid markers from the equations
+  at the moved frame, position markers from the automatic derivatives by the positions - into
+  `temp.localJacobianAE_ODE2radial`, which AddLocalJacobianAE adds to the rows of the equations only. The reaction forces
+  of the residual, `J^T (dg/dp)^T lambda` per marker, have no part along e, so the transposed block keeps C_q without
+  it; with it, restartFileTest and userJointTest did not converge.
+- The system-wide AE Jacobian (#3206) had both faults: it added `dC/dq^T` as the block of the reaction forces, and with
+  the factor 1, as JacobianAE did not pass the factors of the solver. The block is now the reaction forces of the unit
+  Lagrange multipliers (`ComputeODE2ProjectedReactionForces`), with the factors of the solver.
+- The local Jacobians equal the system-wide one: rollingCoinPenaltyTest 2e-8 of the largest entry (1e-2 before);
+  test_systemJacobians.py on Euler parameters for the spring-dampers, the joints and the contacts.
+- Newton iterations of all test models, the counts of every solve, against RG9.11.8.3: 1167234 / 1154574 (Jacobians
+  468746 / 458690), 25 models fewer and 11 more. Fewer: rollingCoinPenaltyTest 11351 / 9568 (= system-wide),
+  contactSphereTorusMomentumTest 14487 / 12283, restartFileTest 6294 / 4374, mainSystemExtensionsTests 18861 / 15446,
+  bricardMechanism 6308 / 5969 (Jacobians 18 / 6), sliderCrank3Dbenchmark Jacobians 322 / 39. More, each the same as
+  with the system-wide Jacobian: sliderCrank3Dtest 2000 / 3172, carRollingDiscTest 584 / 696, userJointTest Jacobians
+  868 / 1285, systemUtilitiesTest Jacobians 27 / 94. The results change by 1e-13 to 3e-6 in 38 test models and 3 mini
+  examples (restartFileTest 3e-5, whose step size adapts at the contact).
+- Without the direction: markers without GetRadialKinematics on Euler parameter nodes (MarkerSuperElementRigid with
+  an Euler parameter reference node, the user markers), connectors and constraints on the path of the marker data,
+  and the access functions of the rigid body by automatic differentiation (off by default).

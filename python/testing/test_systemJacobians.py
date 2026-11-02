@@ -9,8 +9,9 @@
 #           constraint Jacobian of JacobianAE - the joints, and the Euler parameter constraint of the nodes - against
 #           doSystemWideDifferentiation, dense and sparse; the parallel assembly of the ODE2 rows against the serial one,
 #           dense and sparse (#1203). At zero velocities, where the automatic connector
-#           Jacobians neglect nothing (dv/dq), on Tait-Bryan angles; the contacts with friction and the rolling disc,
-#           whose Jacobians contain dv/dq, also at velocities, on Tait-Bryan angles. The
+#           Jacobians neglect nothing (dv/dq), on Tait-Bryan angles and on Euler parameters, whose rotation matrix the
+#           local Jacobians differentiate also along e (CMarker::GetRadialKinematics); the contacts with friction and the
+#           rolling disc, whose Jacobians contain dv/dq, also at velocities. The
 #           comparison for each sub-step of RG9.11; the test suite is the test of the Jacobians in the solvers.
 #
 # Author:   Johannes Gerstmayr
@@ -29,12 +30,12 @@ from exudyn.utilities import *  #includes itemInterface and rigidBodyUtilities
 inertia = InertiaCuboid(density=1000, sideLengths=[0.3, 0.1, 0.08])
 
 
-def RigidBodies(mbs):
-    """two rigid bodies on Tait-Bryan angles linked by the spring-dampers on rigid and position markers"""
+def RigidBodies(mbs, nodeType=exu.NodeType.RotationRxyz):
+    """two rigid bodies, on Tait-Bryan angles by default, linked by the spring-dampers on rigid and position markers"""
     ground = mbs.CreateGround()
     bodies = [mbs.CreateRigidBody(inertia=inertia, referencePosition=[0.3*(i + 1), 0.01*i, 0],
                                   referenceRotationMatrix=RotationMatrixZ(0.2*i) @ RotationMatrixX(0.1),
-                                  gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationRxyz) for i in range(2)]
+                                  gravity=[0, -9.81, 0], nodeType=nodeType) for i in range(2)]
     mbs.CreateSpringDamper(itemNumbers=[ground, bodies[0]], localPosition0=[0.1, 0.02, 0], localPosition1=[-0.15, 0, 0.01],
                            stiffness=1e3, damping=2)
     mbs.CreateCartesianSpringDamper(itemNumbers=[bodies[0], bodies[1]], localPosition0=[0.15, 0, 0], localPosition1=[-0.15, 0, 0],
@@ -87,13 +88,13 @@ def GenericDAE(mbs):
                                    couplingMatrixODE2=[[4, 0], [1, 1]], couplingMatrixODE2_t=[[0.5, 0], [0, 0.2]]))
 
 
-def Joints(mbs):
-    """three rigid bodies on the joints: revolute, spherical, prismatic, generic, and a distance and a coordinate
-    constraint"""
+def Joints(mbs, nodeType=exu.NodeType.RotationRxyz):
+    """three rigid bodies, on Tait-Bryan angles by default, on the joints: revolute, spherical, prismatic, generic, and a
+    distance and a coordinate constraint"""
     ground = mbs.CreateGround()
     bodies = [mbs.CreateRigidBody(inertia=inertia, referencePosition=[0.3*(i + 1), 0.02*i, 0.01],
                                   referenceRotationMatrix=RotationMatrixZ(0.1*i) @ RotationMatrixY(0.05),
-                                  gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationRxyz) for i in range(3)]
+                                  gravity=[0, -9.81, 0], nodeType=nodeType) for i in range(3)]
     mbs.CreateRevoluteJoint(itemNumbers=[ground, bodies[0]], position=[0.15, 0, 0], axis=[0, 0.1, 1])
     mbs.CreateSphericalJoint(itemNumbers=[bodies[0], bodies[1]], position=[0.45, 0.01, 0.01])
     mbs.CreatePrismaticJoint(itemNumbers=[bodies[1], bodies[2]], position=[0.75, 0.03, 0.01], axis=[1, 0.1, 0])
@@ -102,34 +103,36 @@ def Joints(mbs):
     mbs.CreateCoordinateConstraint(itemNumbers=[ground, bodies[0]], coordinates=[None, 5], offset=0.)
 
 
-def Contacts(mbs):
-    """a rolling disc with friction and two rigid spheres in contact with friction, on Tait-Bryan angles: connectors
-    whose Jacobians contain dv/dq of their markers (#3201)"""
+def Contacts(mbs, nodeType=exu.NodeType.RotationRxyz):
+    """a rolling disc with friction and two rigid spheres in contact with friction, on Tait-Bryan angles by default:
+    connectors whose Jacobians contain dv/dq of their markers (#3201)"""
     ground = mbs.CreateGround()
     radius = 0.1
     disc = mbs.CreateRigidBody(inertia=InertiaCylinder(density=1000, length=0.02, outerRadius=radius, axis=0),
                                referencePosition=[0, 0, radius - 1e-4], referenceRotationMatrix=RotationMatrixY(0.1),
-                               gravity=[0, 0, -9.81], nodeType=exu.NodeType.RotationRxyz)
+                               gravity=[0, 0, -9.81], nodeType=nodeType)
     mbs.CreateRollingDiscPenalty(bodyNumbers=[ground, disc], axisPosition=[0, 0, radius - 1e-4], axisVector=[1, 0, 0],
                                  discRadius=radius, contactStiffness=1e5, contactDamping=1e2, dryFriction=[0.5, 0.4],
                                  dryFrictionProportionalZone=1e-2, rollingViscousFriction=0.1)
     spheres = [mbs.CreateRigidBody(inertia=InertiaSphere(mass=1, radius=0.1), referencePosition=[0.5 + 0.19*i, 0.01*i, 0.02*i],
-                                   gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationRxyz) for i in range(2)]
+                                   gravity=[0, -9.81, 0], nodeType=nodeType) for i in range(2)]
     mbs.CreateSphereSphereContact(itemNumbers=spheres, spheresRadii=[0.1, 0.1], contactStiffness=1e4, contactDamping=10,
                                   dynamicFriction=0.3, frictionProportionalZone=1e-2)
 
 
 def EulerParameters(mbs):
-    """two rigid bodies on Euler parameters, the constraint of their nodes; without joints and connectors, whose rotation
-    Jacobians have no direction along the Euler parameters, while the numerical one has (design section 8.5)"""
+    """two rigid bodies on Euler parameters, the constraint of their nodes alone"""
     for i in range(2):
         mbs.CreateRigidBody(inertia=inertia, referencePosition=[0.3*(i + 1), 0.01*i, 0],
                             referenceRotationMatrix=RotationMatrixZ(0.2*i) @ RotationMatrixX(0.1),
                             gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationEulerParameters)
 
 
+eulerParameters = exu.NodeType.RotationEulerParameters
 models = {'RigidBodies': RigidBodies, 'PointsAndContact': PointsAndContact, 'Cable': Cable, 'GenericDAE': GenericDAE,
-          'Joints': Joints, 'Contacts': Contacts, 'EulerParameters': EulerParameters}
+          'Joints': Joints, 'Contacts': Contacts, 'EulerParameters': EulerParameters,
+          'RigidBodiesEP': lambda mbs: RigidBodies(mbs, eulerParameters), 'JointsEP': lambda mbs: Joints(mbs, eulerParameters),
+          'ContactsEP': lambda mbs: Contacts(mbs, eulerParameters)}
 
 
 def Build(model):
@@ -141,8 +144,9 @@ def Build(model):
 
 
 def Jacobian(model, compute, systemWide=False, threads=1, sparse=False, velocities=False):
-    """the system Jacobian of the solver after compute(solver, mbs), at the initial coordinates turned a little and at
-    zero velocities, or velocities of up to 0.5"""
+    """the system Jacobian of the solver after compute(solver, mbs), at the initial coordinates turned a little - the
+    Euler parameters kept on the unit sphere, where the rotation Jacobians are exact - and at zero velocities, or
+    velocities of up to 0.5"""
     (SC, mbs) = Build(model)
     s = exu.SimulationSettings()
     s.linearSolver.solverType = exu.LinearSolverType.EigenSparse if sparse else exu.LinearSolverType.EXUdense
@@ -152,7 +156,14 @@ def Jacobian(model, compute, systemWide=False, threads=1, sparse=False, velociti
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
     q = np.array(mbs.systemData.GetODE2Coordinates())
-    mbs.systemData.SetODE2Coordinates(q + 0.01*np.cos(np.arange(len(q))))
+    q = q + 0.01*np.cos(np.arange(len(q)))
+    reference = np.array(mbs.systemData.GetODE2Coordinates(exu.ConfigurationType.Reference))
+    for i in range(mbs.systemData.NumberOfNodes()):
+        if mbs.GetNode(i)['nodeType'] == 'RigidBodyEP':
+            rotation = np.array(mbs.systemData.GetNodeLTGODE2(i))[3:7]
+            e = reference[rotation] + q[rotation]
+            q[rotation] = e/np.linalg.norm(e) - reference[rotation]
+    mbs.systemData.SetODE2Coordinates(q)
     mbs.systemData.SetODE2Coordinates_t(0.5*np.sin(np.arange(len(q))) if velocities else 0*q)
     compute(solver, mbs)
     jacobian = solver.GetSystemJacobian()
@@ -197,11 +208,12 @@ def test_theLocalODE2JacobianIsTheSystemWideOne(model, factors):
     assert Difference(local, numerical) < tolerance, (model, factors, Difference(local, numerical))
 
 
+@pytest.mark.parametrize('model', ['Contacts', 'ContactsEP'])
 @pytest.mark.parametrize('factors', [(1., 0., 0.), (0., 1., 0.)])
-def test_theContactJacobiansAreTheSystemWideOneAlsoAtVelocities(factors):
-    local = Jacobian('Contacts', ODE2(factors), velocities=True)
-    numerical = Jacobian('Contacts', ODE2(factors), systemWide=True, velocities=True)
-    assert Difference(local, numerical) < tolerance, (factors, Difference(local, numerical))
+def test_theContactJacobiansAreTheSystemWideOneAlsoAtVelocities(model, factors):
+    local = Jacobian(model, ODE2(factors), velocities=True)
+    numerical = Jacobian(model, ODE2(factors), systemWide=True, velocities=True)
+    assert Difference(local, numerical) < tolerance, (model, factors, Difference(local, numerical))
 
 
 @pytest.mark.parametrize('factors', [(1., 0., 0.), (0., 1., 0.), (0., 0., 1.)])
@@ -212,7 +224,7 @@ def test_theLocalODE1JacobianIsTheSystemWideOne(factors):
     assert Difference(local, numerical) < tolerance, (factors, Difference(local, numerical))
 
 
-@pytest.mark.parametrize('model', ['Joints', 'EulerParameters'])
+@pytest.mark.parametrize('model', ['Joints', 'JointsEP', 'EulerParameters'])
 @pytest.mark.parametrize('sparse', [False, True])
 def test_theConstraintJacobianIsTheSystemWideOne(model, sparse):
     analytic = Jacobian(model, AE, sparse=sparse)

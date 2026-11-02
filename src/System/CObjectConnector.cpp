@@ -284,22 +284,63 @@ static void ChainConnectorJacobian(const CSystemData& cSystemData, const ArrayIn
 	}
 }
 
+//the step along the Euler parameters for the derivative of the marker kinematics along them (#3201); |e| is about 1
+static const Real radialEpsilon = 1e-7;
+
+//! the derivative along the Euler parameters of the markers which have one (CMarker::GetRadialKinematics, #3201), for a
+//! connector on position markers: the force at the position moved by eps along it, J_pos,i^T s_i df radial_q,k added with
+//! factorODE2 into temp.jacobianODE2Container - the system differentiates this direction, the chain of the marker
+//! Jacobians lacks it
+static void AddRadialDerivativePosition(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
+	const MarkerPosition<Real>* kinematics, const Vector3D& force0, Real factorODE2)
+{
+	if (factorODE2 == 0.) { return; }
+	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();
+	const Index n[2] = { temp.markerTemp[0].positionJacobian.NumberOfColumns(), temp.markerTemp[1].positionJacobian.NumberOfColumns() };
+	const Index offset[2] = { 0, n[0] };
+	const Real sign[2] = { -1., 1. };
+	ResizableMatrix& jacobian = temp.jacobianODE2Container.GetInternalDenseMatrix();
+	for (Index k = 0; k < 2; k++)
+	{
+		Vector3D position_r;
+		Matrix3D rotation_r;
+		ResizableVector& radial_q = temp.markerTemp[k].radial_q;
+		if (n[k] == 0 || !cSystemData.GetCMarkers()[markerNumbers[k]]->GetRadialKinematics(cSystemData, position_r, rotation_r, radial_q)) { continue; }
+		MarkerPosition<Real> perturbed[2] = { kinematics[0], kinematics[1] };
+		perturbed[k].position += radialEpsilon * position_r;
+		Vector3D force1;
+		connector.ComputeConnectorForcePosition(perturbed, cSystemData.GetCData().currentState.time, force1);
+		const Vector3D dForce = (factorODE2 / radialEpsilon) * (force1 - force0);
+		for (Index i = 0; i < 2; i++)
+		{
+			const ResizableMatrix& markerJacobian = temp.markerTemp[i].positionJacobian;
+			for (Index a = 0; a < n[i]; a++)
+			{
+				Real value = 0.;
+				for (Index r = 0; r < 3; r++) { value += markerJacobian(r, a) * dForce[r]; }
+				for (Index b = 0; b < n[k]; b++) { jacobian(offset[i] + a, offset[k] + b) += sign[i] * value * radial_q[b]; }
+			}
+		}
+	}
+}
+
 //! the Jacobian of L2 for connectors on position markers (#2745): the connector's force once with automatic
 //! differentiation, the directions [marker 0, marker 1] x 3 seeded with factorODE2 at the positions and factorODE2_t at the
 //! velocities, which gives K_k = factorODE2*dF/dp_k + factorODE2_t*dF/dv_k; chained with the position Jacobians as
 //! J_i^T s_i K_k J_k (s_0 = -1, s_1 = 1), plus the derivative of J_i^T f for markers whose Jacobian depends on the
-//! coordinates; dense, into temp.jacobianODE2Container; dv/dq is neglected
+//! coordinates, and the derivative along the Euler parameters (#3201); dense, into temp.jacobianODE2Container; dv/dq is
+//! neglected
 void ConnectorJacobianODE2PositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
 	Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero)
 {
 	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();
 	MarkerPosition<DRealPositionMarkers> kinematics[2];
+	MarkerPosition<Real> markerKinematics[2];
 	for (Index k = 0; k < 2; k++)
 	{
-		MarkerPosition<Real> markerKinematics;
-		cSystemData.GetCMarkers()[markerNumbers[k]]->GetKinematicsJacobianPosition(cSystemData, markerKinematics, temp.markerTemp[k]);
-		EXUmath::SeedAutoDiff(kinematics[k].position, markerKinematics.position, 3 * (int)k, factorODE2);
-		EXUmath::SeedAutoDiff(kinematics[k].velocity, markerKinematics.velocity, 3 * (int)k, factorODE2_t);
+		cSystemData.GetCMarkers()[markerNumbers[k]]->GetKinematicsJacobianPosition(cSystemData, markerKinematics[k], temp.markerTemp[k]);
+		EXUmath::SeedAutoDiff(kinematics[k].position, markerKinematics[k].position, 3 * (int)k, factorODE2);
+		EXUmath::SeedAutoDiff(kinematics[k].velocity, markerKinematics[k].velocity, 3 * (int)k, factorODE2_t);
 	}
 
 	SlimVectorBase<DRealPositionMarkers, 3> force;
@@ -307,6 +348,8 @@ void ConnectorJacobianODE2PositionMarkers(const CSystemData& cSystemData, Tempor
 
 	ChainConnectorJacobian<3>(cSystemData, markerNumbers, force, temp.markerTemp[0].positionJacobian,
 		temp.markerTemp[1].positionJacobian, factorODE2, jacobianDerivativeNonZero, temp);
+	const Vector3D force0({ force[0].Value(), force[1].Value(), force[2].Value() });
+	AddRadialDerivativePosition(cSystemData, temp, connector, markerKinematics, force0, factorODE2);
 }
 
 //! L0 for the chain of rigid markers: a marker without orientation - the contact connectors take one where they need no
@@ -406,6 +449,51 @@ static void ChainConnectorJacobianRigid(const CSystemData& cSystemData, Temporar
 	}
 }
 
+//! the derivative along the Euler parameters of the markers which have one (CMarker::GetRadialKinematics, #3201), for a
+//! connector on rigid markers: the forces and torques at the frame moved by eps along it - the position and the rotation
+//! matrix by their derivatives, the global velocity and angular velocity kept, as for the rotation increments -,
+//! [J_pos; J_rot]_i^T d(f_i, tau_i) radial_q,k added with factorODE2; [J_pos; J_rot]_i is in markerTemp[i].tempMatrix
+static void AddRadialDerivativeRigid(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
+	const MarkerRigid<Real>* kinematics, const Vector3D* forces0, const Vector3D* torques0, Real factorODE2)
+{
+	if (factorODE2 == 0.) { return; }
+	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();
+	const Index n[2] = { temp.markerTemp[0].positionJacobian.NumberOfColumns(), temp.markerTemp[1].positionJacobian.NumberOfColumns() };
+	const Index offset[2] = { 0, n[0] };
+	ResizableMatrix& jacobian = temp.jacobianODE2Container.GetInternalDenseMatrix();
+	for (Index k = 0; k < 2; k++)
+	{
+		Vector3D position_r;
+		Matrix3D rotation_r;
+		ResizableVector& radial_q = temp.markerTemp[k].radial_q;
+		if (n[k] == 0 || !cSystemData.GetCMarkers()[markerNumbers[k]]->GetRadialKinematics(cSystemData, position_r, rotation_r, radial_q)) { continue; }
+		MarkerRigid<Real> perturbed[2] = { kinematics[0], kinematics[1] };
+		const Matrix3D A = kinematics[k].frame.GetRotation();
+		const Matrix3D A1 = A + radialEpsilon * rotation_r;
+		perturbed[k].angularVelocityLocal += (A1.GetInverse() - A.GetInverse()) * (A * kinematics[k].angularVelocityLocal);
+		perturbed[k].frame = HomogeneousTransformation(A1, kinematics[k].frame.GetTranslation() + radialEpsilon * position_r);
+		Vector3D forces1[2], torques1[2];
+		connector.ComputeConnectorForceRigid(perturbed, cSystemData.GetCData().currentState.time, forces1, torques1);
+		for (Index i = 0; i < 2; i++)
+		{
+			if (n[i] == 0) { continue; }
+			Vector6D derivative;
+			for (Index r = 0; r < 3; r++)
+			{
+				derivative[r] = (factorODE2 / radialEpsilon) * (forces1[i][r] - forces0[i][r]);
+				derivative[r + 3] = (factorODE2 / radialEpsilon) * (torques1[i][r] - torques0[i][r]);
+			}
+			const ResizableMatrix& stacked = temp.markerTemp[i].tempMatrix;
+			for (Index a = 0; a < n[i]; a++)
+			{
+				Real value = 0.;
+				for (Index r = 0; r < 6; r++) { value += stacked(r, a) * derivative[r]; }
+				for (Index b = 0; b < n[k]; b++) { jacobian(offset[i] + a, offset[k] + b) += value * radial_q[b]; }
+			}
+		}
+	}
+}
+
 //! the Jacobian of L2 for connectors on rigid markers (#2745): the connector's forces and torques once with automatic
 //! differentiation in 12 directions - per marker 3 translations and 3 rotation increments, global, A(dtheta) = (I + skew(dtheta)) A,
 //! so that they chain with the marker's rotation Jacobian (omega = J_rot q_t, global); the position and rotation seeded with
@@ -413,15 +501,17 @@ static void ChainConnectorJacobianRigid(const CSystemData& cSystemData, Temporar
 //! angular velocity formed from them as A(dtheta)^T (A omega_local + domega). The connector gives the force and torque per
 //! marker, so the inner Jacobian is four 6x6 blocks K_ik = d(f_i, tau_i)/d(p_k, theta_k), chained as
 //! [J_pos,i; J_rot,i]^T K_ik [J_pos,k; J_rot,k]; then the derivative of J_i^T (f_i, tau_i) for markers whose Jacobian depends
-//! on the coordinates, each with its own force and torque; dv/dq and domega/dq are neglected, as for position markers
+//! on the coordinates, each with its own force and torque, and the derivative along the Euler parameters (#3201); dv/dq
+//! and domega/dq are neglected, as for position markers
 void ConnectorJacobianODE2RigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
 	Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero)
 {
 	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();
 	MarkerRigid<DRealRigidMarkers> kinematics[2];
+	MarkerRigid<Real> realKinematics[2];
 	for (Index k = 0; k < 2; k++)
 	{
-		MarkerRigid<Real> markerKinematics;
+		MarkerRigid<Real>& markerKinematics = realKinematics[k];
 		cSystemData.GetCMarkers()[markerNumbers[k]]->GetKinematicsJacobianRigid(cSystemData, markerKinematics, temp.markerTemp[k]);
 		const int offset = 6 * (int)k;
 		SlimVectorBase<DRealRigidMarkers, 3> position, velocity, angularVelocity;
@@ -457,6 +547,12 @@ void ConnectorJacobianODE2RigidMarkers(const CSystemData& cSystemData, Temporary
 	SlimVectorBase<DRealRigidMarkers, 3> forces[2], torques[2];
 	connector.ComputeConnectorForceRigidDiff(kinematics, cSystemData.GetCData().currentState.time, forces, torques);
 	ChainConnectorJacobianRigid(cSystemData, temp, markerNumbers, forces, torques, factorODE2, jacobianDerivativeNonZero);
+	Vector3D forces0[2], torques0[2];
+	for (Index i = 0; i < 2; i++)
+	{
+		for (Index r = 0; r < 3; r++) { forces0[i][r] = forces[i][r].Value(); torques0[i][r] = torques[i][r].Value(); }
+	}
+	AddRadialDerivativeRigid(cSystemData, temp, connector, realKinematics, forces0, torques0, factorODE2);
 }
 
 //the step of the local numerical differentiation of a connector force by the marker kinematics (#3201): the defaults of
@@ -473,8 +569,8 @@ static const Real connectorMinimumValue = 0.01;
 //! into the directions of DRealRigidMarkers and chained as the automatic ones; a marker without orientation has no
 //! rotation directions. If the connector requests it, the derivative by the velocities is chained with dv/dq and
 //! domega/dq of the markers as well, J_i^T d(f_i, tau_i)/d(v_k, omega_k) [v_q; omega_q]_k, which the numerical
-//! differentiation by the system coordinates contains and which friction needs. The system state is not touched, so
-//! that a thread may compute it
+//! differentiation by the system coordinates contains and which friction needs; and the derivative along the Euler
+//! parameters (#3201). The system state is not touched, so that a thread may compute it
 void ConnectorJacobianODE2RigidMarkersNumerical(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
 	Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero)
 {
@@ -581,6 +677,7 @@ void ConnectorJacobianODE2RigidMarkersNumerical(const CSystemData& cSystemData, 
 		}
 	}
 	ChainConnectorJacobianRigid(cSystemData, temp, markerNumbers, forces, torques, factorODE2, jacobianDerivativeNonZero);
+	AddRadialDerivativeRigid(cSystemData, temp, connector, kinematics, forces0, torques0, factorODE2);
 	if (!velocityDerivative) { return; }
 
 	//factorODE2 J_i^T d(f_i, tau_i)/d(v_k, omega_k) [v_q; omega_q]_k; ChainConnectorJacobianRigid left [J_pos; J_rot]_i in tempMatrix
@@ -625,10 +722,10 @@ void ConstraintEquationsRigidMarkers(const CSystemData& cSystemData, TemporaryCo
 
 //! the equations of a constraint on rigid markers with automatic differentiation in the 12 directions of RG14.2.8.1 -
 //! per marker 3 translations and 3 global rotation increments, A(dtheta) = (I + skew(dtheta)) A; with Jacobians, the
-//! marker data is in temp.markerTemp, else the frames come from GetKinematicsRigid
+//! marker data is in temp.markerTemp, else the frames come from GetKinematicsRigid; the frames into realKinematics if given
 static void SeedConstraintEquationsRigid(const CSystemData& cSystemData, TemporaryComputationData& temp,
 	const CObjectConstraint& constraint, bool withJacobians, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations,
-	Index* numberOfCoordinates = nullptr)
+	Index* numberOfCoordinates = nullptr, MarkerRigid<Real>* realKinematics = nullptr)
 {
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
 	MarkerRigid<DRealRigidMarkers> kinematics[2];
@@ -643,6 +740,7 @@ static void SeedConstraintEquationsRigid(const CSystemData& cSystemData, Tempora
 			marker->GetKinematicsJacobianRigid(cSystemData, markerKinematics, temp.markerTemp[k]);
 			position = markerKinematics.frame.GetTranslation();
 			A = markerKinematics.frame.GetRotation();
+			if (realKinematics) { realKinematics[k] = markerKinematics; }
 		}
 		else
 		{
@@ -756,8 +854,22 @@ static void SeedConstraintEquationsPosition(const CSystemData& cSystemData, Temp
 	constraint.ComputeConstraintEquationsPositionDiff(kinematics, lambda, cSystemData.GetCData().currentState.time, equations);
 }
 
+//! the part of C_q along the Euler parameters (#3201): temp.localJacobianAE_ODE2radial, zero in the size of C_q when it is
+//! first needed; the rows of the equations get it, the reaction forces J^T (dg/dp)^T lambda do not have it
+static ResizableMatrix& RadialJacobianAE(TemporaryComputationData& temp, const ResizableMatrix& jacobian)
+{
+	ResizableMatrix& radialJacobian = temp.localJacobianAE_ODE2radial;
+	if (radialJacobian.NumberOfRows() == 0)
+	{
+		radialJacobian.SetNumberOfRowsAndColumns(jacobian.NumberOfRows(), jacobian.NumberOfColumns());
+		radialJacobian.SetAll(0.);
+	}
+	return radialJacobian;
+}
+
 //! C_q = [dg/dp_0 J_pos,0, dg/dp_1 J_pos,1] of a constraint on position markers, the derivatives by automatic
-//! differentiation of the constraint's own equations (#2745) - no hand-written Jacobian
+//! differentiation of the constraint's own equations (#2745) - no hand-written Jacobian; the derivative along the Euler
+//! parameters of the markers which have one, dg/dp_k dp_k radial_q,k, into temp.localJacobianAE_ODE2radial (#3201)
 void ConstraintJacobianPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	ResizableMatrix& jacobian)
 {
@@ -781,15 +893,35 @@ void ConstraintJacobianPositionMarkers(const CSystemData& cSystemData, Temporary
 			}
 		}
 	}
+
+	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
+	for (Index k = 0; k < 2; k++)
+	{
+		Vector3D position_r;
+		Matrix3D rotation_r;
+		ResizableVector& radial_q = temp.markerTemp[k].radial_q;
+		const Index n = markerJacobian[k]->NumberOfColumns();
+		if (n == 0 || !cSystemData.GetCMarkers()[markerNumbers[k]]->GetRadialKinematics(cSystemData, position_r, rotation_r, radial_q)) { continue; }
+		ResizableMatrix& radialJacobian = RadialJacobianAE(temp, jacobian);
+		for (Index r = 0; r < nEquations; r++)
+		{
+			Real derivative = 0.;
+			for (Index c = 0; c < 3; c++) { derivative += equations[r].DValue((int)(3 * k + c)) * position_r[c]; }
+			for (Index j = 0; j < n; j++) { radialJacobian(r, (k == 0 ? 0 : n0) + j) += derivative * radial_q[j]; }
+		}
+	}
 }
 
 //! C_q = [dg/d(p,theta)_k [J_pos,k; J_rot,k]] of a constraint on rigid markers, the derivatives by automatic
-//! differentiation of the constraint's own equations (#2745)
+//! differentiation of the constraint's own equations (#2745); the derivative along the Euler parameters of the markers
+//! which have one, dg radial_q,k from the equations at the frame moved by eps along it, into
+//! temp.localJacobianAE_ODE2radial (#3201)
 void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	ResizableMatrix& jacobian)
 {
 	ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations> equations;
-	SeedConstraintEquationsRigid(cSystemData, temp, constraint, true, equations);
+	MarkerRigid<Real> kinematics[2];
+	SeedConstraintEquationsRigid(cSystemData, temp, constraint, true, equations, nullptr, kinematics);
 	const Index n0 = temp.markerTemp[0].positionJacobian.NumberOfColumns();
 	const Index n1 = temp.markerTemp[1].positionJacobian.NumberOfColumns();
 	jacobian.SetNumberOfRowsAndColumns(equations.NumberOfItems(), n0 + n1);
@@ -808,6 +940,28 @@ void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryCom
 				}
 				jacobian(r, (k == 0 ? 0 : n0) + j) = value;
 			}
+		}
+	}
+
+	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
+	for (Index k = 0; k < 2; k++)
+	{
+		Vector3D position_r;
+		Matrix3D rotation_r;
+		ResizableVector& radial_q = temp.markerTemp[k].radial_q;
+		const Index n = (k == 0) ? n0 : n1;
+		if (n == 0 || !cSystemData.GetCMarkers()[markerNumbers[k]]->GetRadialKinematics(cSystemData, position_r, rotation_r, radial_q)) { continue; }
+		ResizableMatrix& radialJacobian = RadialJacobianAE(temp, jacobian);
+		MarkerRigid<Real> perturbed[2] = { kinematics[0], kinematics[1] };
+		perturbed[k].frame = HomogeneousTransformation(kinematics[k].frame.GetRotation() + radialEpsilon * rotation_r,
+			kinematics[k].frame.GetTranslation() + radialEpsilon * position_r);
+		LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
+		ConstSizeVector<maxConstraintEquations> equations1;
+		constraint.ComputeConstraintEquationsRigid(perturbed, lambda, cSystemData.GetCData().currentState.time, false, equations1);
+		for (Index r = 0; r < equations.NumberOfItems(); r++)
+		{
+			const Real derivative = (equations1[r] - equations[r].Value()) / radialEpsilon;
+			for (Index j = 0; j < n; j++) { radialJacobian(r, (k == 0 ? 0 : n0) + j) += derivative * radial_q[j]; }
 		}
 	}
 }

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-01  23:46:14 (last modified)
+* @date         2026-11-02  01:23:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -125,6 +125,9 @@ public: // AUTO:
 
     //! AUTO:  dv/dq and domega/dq of the marker at fixed velocities (#3201); false if not provided
     virtual bool GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const override;
+
+    //! AUTO:  the derivative of the position and rotation matrix of the marker along the Euler parameters, and the row of that direction (#3201); false if there is none
+    virtual bool GetRadialKinematics(const CSystemData& cSystemData, Vector3D& position_r, Matrix3D& rotation_r, Vector& radial_q) const override;
 
     //! AUTO:  frame and velocities through the body, without the Jacobians; the body keeps in temp what it needs for AddGeneralizedForceTorque (#2745)
     virtual Index GetKinematicsRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const override;

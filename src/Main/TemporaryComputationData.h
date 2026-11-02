@@ -47,6 +47,7 @@ public:
 	ResizableMatrix localJacobianAE_ODE1;//!< local constraint Jacobian (w.r.t. ODE2 part) during constraint jacobian computation
 	ResizableMatrix localJacobianAE_ODE2;    //!< local constraint Jacobian (w.r.t. ODE2 part) during constraint jacobian computation
 	ResizableMatrix localJacobianAE_ODE2_t;  //!< local constraint Jacobian (w.r.t. ODE2_t part) during constraint jacobian computation
+	ResizableMatrix localJacobianAE_ODE2radial; //!< the part of C_q along the Euler parameters (#3201), for the rows of the equations only - the reaction forces have no such part; 0 x 0 if none
 	ResizableMatrix localJacobianAE_AE; //!< local constraint Jacobian w.r.t. algebraic variables; during constraint jacobian computation
 	//ResizableMatrix localJacobianODE2;  //!< local (object) Jacobian during jacobian computation
 

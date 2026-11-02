@@ -124,6 +124,13 @@ bool CMarkerNodeRigid::GetVelocity_q(const CSystemData& cSystemData, Matrix& vel
 		velocity_q, angularVelocity_q);
 }
 
+//! the derivative of the node's rotation matrix along its Euler parameters (#3201); its position does not depend on them
+bool CMarkerNodeRigid::GetRadialKinematics(const CSystemData& cSystemData, Vector3D& position_r, Matrix3D& rotation_r, Vector& radial_q) const
+{
+	return RigidBodyNodeRadialKinematics(*(const CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]), Vector3D(0.),
+		position_r, rotation_r, radial_q);
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //VISUALIZATION
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

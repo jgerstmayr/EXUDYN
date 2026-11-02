@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 297 | 1.13.305 |
+| 1.13 | Newborn | 298 | 1.13.306 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.306** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` doSystemWideDifferentiation: the reaction-force block of the algebraic equations without the factors of the solver and with dC/dq^T along the Euler parameters (#3206)
+  - description: With doSystemWideDifferentiation, NumericalJacobianAE added the block of the reaction forces in the ODE2 rows as dC/dq^T with the factor 1: JacobianAE did not pass factorODE2\_AE, factorODE1\_AE and factorAE\_AE of the solver, and dC/dq contains a part along the Euler parameters that the reaction forces of the residual - projected by the marker Jacobians - do not have. restartFileTest and userJointTest failed with it. Decided: the factors are passed; the block is the reaction forces of the unit Lagrange multipliers, the derivative the residual has (revision2026c step RG9.11.8.5).
+  - **notes:** numericalDifferentiation.doSystemWideDifferentiation: the block of the reaction forces of the algebraic equations is differentiated by the Lagrange multipliers and takes the factors of the solver; with joints on rigid bodies with Euler parameters its Newton iterations could fail.
+  - date resolved: **2026-11-02 01:53**, date raised: 2026-11-02
 - **1.13.305** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorCoordinateSpringDamperExt: the analytic Jacobian ignores factor0 and factor1 (#3204)
   - description: Without friction, limit stops and user function, ObjectConnectorCoordinateSpringDamperExt declares its analytic Jacobian, stiffness\*factorODE2 + damping\*factorODE2\_t chained with the marker Jacobians; its force acts with factor1 and -factor0 on the markers and depends on factor1\*q1 - factor0\*q0, so the Jacobian lacks factor\_i\*factor\_k. Found in coordinateSpringDamperExt.py (the gear pair, factor1 = -rad0/rad1): the Jacobian differs from the numerical one by 1.3e5, and with forODE2Connectors the model needs 1409 instead of 4780 Newton iterations (the result differs by 2 percent, the friction of the other connectors follows another path). Decided: the Jacobian follows the factors - on the connector interface, where ComputeConnectorForcesCoordinate already has them (revision2026c step RG9.11.8), or by the factors in ComputeJacobianODE2\_ODE2.
   - **notes:** ObjectConnectorCoordinateSpringDamperExt computes its Jacobian by local numerical differentiation of its forces on both markers, with factor0 and factor1; the analytic Jacobian, which ignored the factors, is removed.

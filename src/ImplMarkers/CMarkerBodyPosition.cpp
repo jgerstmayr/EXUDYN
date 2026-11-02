@@ -76,6 +76,16 @@ bool CMarkerBodyPosition::GetVelocity_q(const CSystemData& cSystemData, Matrix& 
 		velocity_q, angularVelocity_q);
 }
 
+//! the derivative along the Euler parameters at the local position, through the body (#3201); the marker has no
+//! orientation, the connectors on rigid markers take the unit matrix for it
+bool CMarkerBodyPosition::GetRadialKinematics(const CSystemData& cSystemData, Vector3D& position_r, Matrix3D& rotation_r, Vector& radial_q) const
+{
+	if (!((const CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetRadialKinematics(parameters.localPosition,
+		position_r, rotation_r, radial_q)) { return false; }
+	rotation_r.SetAll(0.);
+	return true;
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //VISUALIZATION
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

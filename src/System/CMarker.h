@@ -248,6 +248,12 @@ public: //
 	//! 1 x n derivative of value_t and angularVelocity_q 0 x 0; false if the marker does not provide them
 	virtual bool GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const { return false; }
 
+	//! the derivative of the marker's position and rotation matrix along the Euler parameters of its node (#3201), the
+	//! direction which its rotation Jacobian lacks (G e = 0) and which the system differentiates, and the row radial_q
+	//! (n entries, in the columns of its Jacobians) that gives the part of a change of the coordinates along it; false if
+	//! the marker has no such direction
+	virtual bool GetRadialKinematics(const CSystemData& cSystemData, Vector3D& position_r, Matrix3D& rotation_r, Vector& radial_q) const { return false; }
+
 	//! GetOutputVariable with type; writes values into value and returns true, if successful
 	virtual bool GetOutputVariable(const CSystemData& cSystemData, OutputVariableType variableType, ConfigurationType configuration, Vector& value) const;
 

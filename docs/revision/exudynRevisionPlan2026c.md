@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (7 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (6 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -131,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 13 | Structural core improvements |
+| RG9 | OPEN | 12 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 17 | Symbolic |
@@ -1225,9 +1225,13 @@ CLOSED 2026-11-02 (#3204 resolved, #3201 stays open): ItemConnectorInterface(jac
 
 Low priority; ConvexRoll may stay numerical by CSystem. ConvexRoll is on the interface since RG9.11.8.3.
 
-##### **OPEN_RG9.11.8.5** The direction along the Euler parameters in the local Jacobians of the connectors
+##### **CLOSED_RG9.11.8.5** The direction along the Euler parameters in the local Jacobians of the connectors
 
 Design section 8.5: the system differentiates the unnormalized rotation matrix along e, the chain of the rotation Jacobian has no such direction; 0.5-1 % of the rolling disc's Jacobian, 18-19 % more Newton iterations in rollingCoinPenaltyTest and contactSphereTorusMomentumTest; the automatic Jacobians of the spring-dampers likewise. Evaluate a derivative of the marker kinematics along e, or normalized Euler parameters in the markers.
+
+Maintainer 2026-11-02: is the Euler parameter constraint of the nodes considered correctly? The more accurate Jacobian is preferred, even where it needs more iterations.
+
+CLOSED 2026-11-02 (#3206 resolved, #3201 stays open): design section 8.6 - the node constraint is in the blocks of the nodes; the direction matters because the predictor leaves the unit sphere (rollingCoinPenaltyTest at index 3: 12036 / 9654 iterations local / system-wide); CMarker::GetRadialKinematics (MarkerBodyPosition, MarkerBodyRigid, MarkerNodeRigid; RigidBodyNodeRadialKinematics: 2 (A - I) p, 2 (A - I), e^T/(e^T e)), one more force evaluation per Euler parameter marker in the chains of the connector interface, the constraint part into the rows of the equations only (temp.localJacobianAE_ODE2radial), d(A^T f)/dq along e in CObjectRigidBody::GetJacobianTransposedTimesVectorDerivative; the system-wide AE Jacobian with the factors of the solver and the reaction forces by lambda (#3206: restartFileTest and userJointTest did not converge with it); the local Jacobians equal the system-wide one (test_systemJacobians.py on Euler parameters); all test models 1167234 / 1154574 Newton iterations, 25 fewer and 11 more, the latter as with the system-wide Jacobian (sliderCrank3Dtest 2000 / 3172); 38 test models and 3 mini examples with new references (1e-13 to 3e-6, restartFileTest 3e-5). [log](exudynRevisionLog2026c.md#rg9-11-8-5)
 
 #### **CLOSED_RG9.11.9** Deprecate forAE, forODE2 and forODE2Connectors, and measure whether jacobianConnectorDerivative is worth its code
 
