@@ -119,7 +119,7 @@ the item:
   Lie group nodes, the connectors with Python user functions (ObjectConnectorUser and the spring-dampers with a user
   function), ConnectorReevingSystemSprings, the contacts on cables and curves, and connectors on markers that lack
   the derivatives the connector needs
-  (MarkerSuperElementRigid, MarkerKinematicTreeRigid, user markers, the Lie group nodes).
+  (MarkerSuperElementRigid, user markers, the Lie group nodes).
 
 **Parallel and serial**: with `parallel.numberOfThreads` > 1 and at least `parallel.multithreadedLowerLimitJacobians`
 items, the analytic and automatic Jacobians of the ODE2 rows and of the constraints of the items without Python user

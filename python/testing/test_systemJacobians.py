@@ -1,10 +1,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test
 #
-# Details:  The local Jacobians of the items against the system-wide numerical one (#3201, design
+# Details:  The local Jacobians of the items against the system-wide numerical one (#3201; see
 #           the manual, section The system Jacobian): small models of the item types - rigid bodies with the
 #           spring-dampers, mass points with the contact and the coordinate connectors, an ANCF cable, ObjectGenericDAE
-#           with its ODE1 couplings, the joints, a hydraulic actuator with its pressures - and the blocks of
+#           with its ODE1 couplings, the joints, a hydraulic actuator with its pressures, a kinematic tree with
+#           connectors on its markers (#3216) - and the blocks of
 #           JacobianODE2RHS and JacobianODE1RHS by the local Jacobians (analytic, automatic or numerical per object)
 #           against doSystemWideDifferentiation, and the
 #           constraint Jacobian of JacobianAE - the joints, and the Euler parameter constraint of the nodes - against
@@ -136,6 +137,32 @@ def Hydraulic(mbs):
                   nominalFlow=1e-5, systemPressure=1e7, tankPressure=1e5, useChamberVolumeChange=True))
 
 
+def KinematicTree(mbs):
+    """a kinematic tree of a revolute, a prismatic and a revolute joint with a branch, its links connected to the ground by
+    a Cartesian and a rigid-body spring-damper and by a sphere contact with friction on MarkerKinematicTreeRigid: the
+    Jacobian derivative and dv/dq of the marker (#3216); the tree itself numerical"""
+    ground = mbs.CreateGround()
+    node = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0]*4, initialCoordinates=[0.3, 0.1, -0.4, 0.2],
+                                       initialCoordinates_t=[0]*4, numberOfODE2Coordinates=4))
+    tree = mbs.AddObject(ObjectKinematicTree(nodeNumber=node, jointTypes=[exu.JointType.RevoluteZ, exu.JointType.PrismaticX,
+                         exu.JointType.RevoluteY, exu.JointType.RevoluteX], linkParents=[-1, 0, 1, 0],
+                         jointTransformations=exu.Matrix3DList([np.eye(3), RotationMatrixY(0.2), RotationMatrixX(0.3), np.eye(3)]),
+                         jointOffsets=exu.Vector3DList([[0, 0, 0], [0.4, 0, 0], [0.2, 0.05, 0], [0, 0.3, 0]]),
+                         linkInertiasCOM=exu.Matrix3DList([np.eye(3)*0.01]*4), linkCOMs=exu.Vector3DList([[0.1, 0, 0]]*4),
+                         linkMasses=[1, 1, 1, 1], gravity=[0, -9.81, 0]))
+    markers = [mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=tree, linkNumber=i, localPosition=[0.1, 0.02*i, 0.03]))
+               for i in [2, 3]]
+    mGround = [mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground, localPosition=p)) for p in [[0.7, 0.2, 0.1], [0.1, 0.5, -0.2]]]
+    mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround[0], markers[0]], stiffness=[1e3, 2e3, 3e3]))
+    mbs.AddObject(RigidBodySpringDamper(markerNumbers=[mGround[1], markers[1]], stiffness=np.diag([1e3, 2e3, 3e3, 10, 20, 30]),
+                                        damping=np.zeros((6, 6)))) #without damping, whose dv/dq the spring-dampers leave out
+    mSphere = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground, localPosition=[0.6, 0.0, -1.]))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0, 0, 0, 0]))
+    mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mSphere, markers[0]], nodeNumber=nData, spheresRadii=[1.1, 0.1],
+                                            contactStiffness=1e4, contactDamping=10, dynamicFriction=0.3,
+                                            frictionProportionalZone=1e-2))
+
+
 def FreeBodies(mbs):
     """free rigid bodies on Euler parameters and on Tait-Bryan angles, with and without a center of mass off the
     reference point, and 2D rigid bodies with a center of mass: the gyroscopic and centrifugal terms of the bodies' own
@@ -194,7 +221,7 @@ models = {'RigidBodies': RigidBodies, 'PointsAndContact': PointsAndContact, 'Cab
           'Joints': Joints, 'Contacts': Contacts, 'EulerParameters': EulerParameters,
           'RigidBodiesEP': lambda mbs: RigidBodies(mbs, eulerParameters), 'JointsEP': lambda mbs: Joints(mbs, eulerParameters),
           'ContactsEP': lambda mbs: Contacts(mbs, eulerParameters), 'Hydraulic': Hydraulic, 'FreeBodies': FreeBodies,
-          'ODE1Loads': ODE1Loads}
+          'ODE1Loads': ODE1Loads, 'KinematicTree': KinematicTree}
 
 
 def Build(model):
@@ -273,7 +300,7 @@ def test_theLocalODE2JacobianIsTheSystemWideOne(model, factors):
     assert Difference(local, numerical) < tolerance, (model, factors, Difference(local, numerical))
 
 
-@pytest.mark.parametrize('model', ['Contacts', 'ContactsEP', 'FreeBodies'])
+@pytest.mark.parametrize('model', ['Contacts', 'ContactsEP', 'FreeBodies', 'KinematicTree'])
 @pytest.mark.parametrize('factors', [(1., 0., 0.), (0., 1., 0.)])
 def test_theContactJacobiansAreTheSystemWideOneAlsoAtVelocities(model, factors):
     local = Jacobian(model, ODE2(factors), velocities=True)

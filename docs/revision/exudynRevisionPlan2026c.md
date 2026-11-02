@@ -1349,6 +1349,10 @@ CLOSED 2026-11-02 (#3210 resolved): the left-hand side -m omega^2 A c by phi and
 
 #3211 (maintainer 2026-11-02: the part of the floating base may stay numerical if its analytic Jacobian gets too complicated).
 
+##### **OPEN_RG9.11.13.3** The marker functions of ObjectKinematicTree without the mutable temporaries of the tree, for the parallel threads
+
+#3229.
+
 #### **OPEN_RG9.11.14** The ODE2 Jacobian of ObjectFFRFreducedOrder, analytic or automatic, measured on perfObjectFFRFreducedOrder first
 
 #3212.
@@ -1367,9 +1371,11 @@ CLOSED 2026-11-02 (#3214 resolved, #3201 stays open): ComputeJacobianODE1RHSConn
 
 Connectors on these markers fall back to CSystem, serially, or miss the direction along the Euler parameters.
 
-##### **OPEN_RG9.11.17.1** MarkerKinematicTreeRigid: dv/dq and the Jacobian derivative by the recursion over the links
+##### **CLOSED_RG9.11.17.1** MarkerKinematicTreeRigid: dv/dq and the Jacobian derivative by the recursion over the links
 
 #3216 (maintainer 2026-11-02: could be done earlier, as it might improve convergence and performance).
+
+CLOSED 2026-11-02 (#3216 resolved, #3201 stays open): JacobianColumnDerivative of the tree, the Jacobian derivative and dv/dq of the marker; within 2e-8 of the system-wide Jacobian; six links with spring-dampers and contacts 0.38 instead of 1.08 s with full Newton; #3229 raised (thread safety, RG9.11.13.3). [log](exudynRevisionLog2026c.md#rg9-11-17-1)
 
 ##### **OPEN_RG9.11.17.2** The Lie group nodes: dv/dq of their markers and the ODE2 Jacobian of ObjectRigidBody on them, in closed form
 

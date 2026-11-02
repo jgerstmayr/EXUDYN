@@ -1790,7 +1790,7 @@ items = {
   },
   'MarkerKinematicTreeRigid': {
     'kind': 'Marker',
-    'types': ['Body', 'Object', 'Position', 'Orientation', 'KinematicTree'],
+    'types': ['Body', 'Object', 'Position', 'Orientation', 'KinematicTree', 'JacobianDerivativeAvailable', 'JacobianDerivativeNonZero'],
     'outputVariables': [],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},

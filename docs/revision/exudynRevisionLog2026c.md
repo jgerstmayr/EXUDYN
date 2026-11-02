@@ -5729,7 +5729,26 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
-<a id="rg9-11-16"></a>
+<a id="rg9-11-17-1"></a>
+### RG9.11.17.1 — MarkerKinematicTreeRigid with dv/dq and the Jacobian derivative (2026-11-02, #3216)
+- CObjectKinematicTree: GetLinkChain, JacobianColumnDerivative (column i of the position and rotation Jacobians by the
+  coordinate of joint j of the chain: a revolute joint j above i turns the columns about a_j, a prismatic one leaves
+  them, a joint at or below i moves the point, which changes a_i x (p - p_i) of a revolute i), and from it
+  GetVelocity_qKinematicTree (3 x n, times q_t) and GetJacobianTransposedTimesVectorDerivativeKinematicTree (n x n).
+- MarkerKinematicTreeRigid: ComputeMarkerDataJacobianDerivative instead of the error, GetVelocity_q, the types
+  JacobianDerivativeAvailable and JacobianDerivativeNonZero; the description of its Jacobians without "not
+  implemented".
+- test_systemJacobians: model KinematicTree (revolute, prismatic, revolute and a branch; a Cartesian and a rigid-body
+  spring-damper and a sphere contact with friction on the markers, the spring-dampers without damping, whose dv/dq the
+  connector interface leaves out); within 2e-8 of the system-wide Jacobian, also at velocities; with
+  jacobianConnectorDerivative = False 0.14.
+- Measured in one environment (a chain of six revolute links, a Cartesian spring-damper on each, 2000 steps), old /
+  new: without contacts 13351 / 13352 Newton iterations and 0.24 / 0.22 s (modified Newton), 4000 / 4000 and 0.71 /
+  0.18 s (full); with a sphere contact with friction on each link 15298 / 15588 and 0.39 / 0.36 s, 4269 / 4271 and
+  1.08 / 0.38 s; the test suite unchanged.
+- Found: the marker functions of the tree write its mutable temporaries (jointTransformationsTemp, links,
+  tempArrayIndex), so connectors on its markers race in parallel threads, as in the residual before; #3229 raised.
+
 ### RG9.11.16 — The Jacobian of the pressure equations of ConnectorHydraulicActuatorSimple, analytic (2026-11-02, #3214)
 - CObjectConnector::ComputeJacobianODE1RHSConnector (false by default), called by CSystem::ComputeLocalJacobianODE1
   for connectors with ODE1_ODE1_function; the hydraulic actuator gives p_i,t = k_i(s) (a_i s_t + Q_i(p_i)) by the

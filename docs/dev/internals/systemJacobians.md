@@ -53,6 +53,12 @@ is computed by `ComputeJacobianODE2Connector` in parallel, as it does not touch 
   along e and the row `e^T/(e^T e)`; the chains add one force evaluation per Euler parameter marker. For constraints the
   part goes into the rows of the equations only (`temp.localJacobianAE_ODE2radial`): the reaction forces have none,
   and with it restartFileTest and userJointTest did not converge.
+- MarkerKinematicTreeRigid (#3216): `CObjectKinematicTree::JacobianColumnDerivative` gives the derivative of a
+  Jacobian column of a link's chain by a joint coordinate - a revolute joint above turns the column about its axis, a
+  prismatic one leaves it, a joint at or below moves the point -, from which the marker has the Jacobian derivative
+  (`JacobianDerivativeAvailable`) and `GetVelocity_q`, so that connectors on it are on the connector interface and in
+  the parallel assembly; within 2e-8 of the system-wide Jacobian, also at velocities with a contact (dv/dq). The marker
+  functions use the mutable temporaries of the tree, which is not thread-safe (#3229).
 - ConnectorHydraulicActuatorSimple: the force by automatic differentiation, the block by the pressures analytic
   (`CObject::ComputeJacobianODE2_ODE1` with the system and temporary data, which finds the marker Jacobians in
   temp.markerTemp); the pressure equations analytic by `CObjectConnector::ComputeJacobianODE1RHSConnector` (#3214),

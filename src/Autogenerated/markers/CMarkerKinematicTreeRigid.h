@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  00:32:23 (last modified)
+* @date         2026-11-02  12:05:41 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -95,7 +95,7 @@ public: // AUTO:
     //! AUTO:  return marker type (for node treatment in computation)
     virtual Marker::Type GetType() const override
     {
-        return (Marker::Type)((Index)Marker::Body + (Index)Marker::Object + (Index)Marker::Position + (Index)Marker::Orientation + (Index)Marker::KinematicTree);
+        return (Marker::Type)((Index)Marker::Body + (Index)Marker::Object + (Index)Marker::Position + (Index)Marker::Orientation + (Index)Marker::KinematicTree + (Index)Marker::JacobianDerivativeAvailable + (Index)Marker::JacobianDerivativeNonZero);
     }
 
     //! AUTO:  return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker
@@ -124,6 +124,9 @@ public: // AUTO:
 
     //! AUTO:  fill in according data for derivative of jacobian times vector v6D, e.g.: d(Jpos.T @ v6D[0:3])/dq; v6D represents 3 force components and 3 torque components in global coordinates!
     virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const override;
+
+    //! AUTO:  dv/dq and domega/dq of the marker at fixed velocities (#3201); false if not provided
+    virtual bool GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const override;
 
 };
 

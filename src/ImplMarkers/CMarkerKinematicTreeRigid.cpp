@@ -75,12 +75,21 @@ void CMarkerKinematicTreeRigid::ComputeMarkerData(const CSystemData& cSystemData
 	ApplyMarkerLocalRotation(parameters.localHT, markerData);
 }
 
-//! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(J.T @ v)/dq
+//! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(J.T @ v)/dq; by the
+//! chain of the link (#3216)
 void CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
 {
-	//the kinematic tree declares no derivative of its transposed Jacobian (JacobianTtimesVector_q); a connector that
-	//needs it neglects it (newton.numericalDifferentiation.jacobianConnectorDerivative = False) or is solved explicitly
-	CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: the derivative of the Jacobian of a kinematic tree is not implemented; set newton.numericalDifferentiation.jacobianConnectorDerivative = False or use an explicit solver", ExudynNotImplementedError);
+	((const CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetJacobianTransposedTimesVectorDerivativeKinematicTree(
+		parameters.localHT.GetTranslation(), parameters.linkNumber, v6D, markerData.jacobianDerivative);
+}
+
+//! dv/dq and domega/dq at the position of the marker frame, by the chain of the link; the rotation of the frame does not
+//! change the global angular velocity (#3216)
+bool CMarkerKinematicTreeRigid::GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const
+{
+	((const CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetVelocity_qKinematicTree(
+		parameters.localHT.GetTranslation(), parameters.linkNumber, velocity_q, angularVelocity_q);
+	return true;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

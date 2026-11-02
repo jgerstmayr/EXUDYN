@@ -62,9 +62,9 @@
    "fingerprint": "5943e7653ddc"
   },
   "MarkerKinematicTreeRigid": {
-   "checked": "2026-11-01",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "d5f940806be9"
+   "fingerprint": "f1c86dfbe4db"
   },
   "MarkerNodeCoordinate": {
    "checked": "2026-11-02",
@@ -422,9 +422,9 @@
    "fingerprint": "0e219eb55535"
   },
   "ObjectKinematicTree": {
-   "checked": "2026-10-31",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "60b7be500c33"
+   "fingerprint": "eb11acf8aa38"
   },
   "ObjectMass1D": {
    "checked": "2026-10-17",

@@ -1,0 +1,12 @@
+{
+  "number": 3229,
+  "title": "ObjectKinematicTree: the marker functions write the mutable temporaries of the tree, so connectors on its markers race in parallel",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "ComputeRigidBodyMarkerDataKT, GetPositionKinematicTree and the derivatives of the marker Jacobians compute the joint transformations into the mutable members jointTransformationsTemp, links and tempArrayIndex of ObjectKinematicTree; with parallel.numberOfThreads > 1 the residual and the Jacobian compute connectors on MarkerKinematicTreeRigid and the tree itself in different threads at the same time. Decided: the transformations computed once per evaluation of the system state, or the marker functions on temporaries of the thread (MarkerTemp), measured on a tree with many markers.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01"
+}

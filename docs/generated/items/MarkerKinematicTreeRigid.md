@@ -69,9 +69,12 @@ $$
 A force and a torque on the marker act on the joint coordinates as
 $\Qm = \Jm_{pos}\tp \LU{0}{\fv} + \Jm_{rot}\tp \LU{0}{\ttau}$.
 
-The derivative of the Jacobians is not implemented: a connector that needs it raises an error with this
-marker; `newton.numericalDifferentiation.jacobianConnectorDerivative = False` neglects the derivative, and
-`newton.numericalDifferentiation.doSystemWideDifferentiation = True` computes the Jacobian numerically.
+The derivatives of the Jacobians by the joint coordinates, for the Jacobian of a connector, follow from
+the chain: a revolute joint $k$ above $j$ turns the columns of $j$ about $\av_k$, a prismatic one leaves
+them; a joint $k$ at or below $j$ moves the marker position by its column, which changes $\Jm_{pos,j}$ of a
+revolute joint $j$. They give $\partial(\Jm_{pos}\tp \LU{0}{\fv} + \Jm_{rot}\tp \LU{0}{\ttau})/\partial\qv$
+and the derivatives of the marker velocity and angular velocity by $\qv$, so that connectors on the marker
+have their local Jacobian (#3216).
 
 (miniexample-markerkinematictreerigid)=
 ## Mini example

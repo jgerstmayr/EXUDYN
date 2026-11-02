@@ -89,7 +89,10 @@ threads (#3209); ObjectRigidBody2D with a center of mass likewise (#3210).
 With `computeLoadsJacobian`, the implicit and static solvers include the loads on ODE1 coordinates in the Jacobian,
 and the dependencies of loads on ODE1 coordinates, declared by the new `mbs.systemData.AddODE1LoadDependencies` as
 `AddODE2LoadDependencies` declares those on ODE2 coordinates; a load on ODE2 coordinates with ODE1 dependencies raised
-an error before (#1548).
+an error before (#1548). The pressure equations of ConnectorHydraulicActuatorSimple have an analytic Jacobian (#3214),
+and connectors on MarkerKinematicTreeRigid their local Jacobian, with the derivatives of the marker Jacobians and
+velocities by the joint coordinates; a tree of six links with a spring-damper and a contact on each link takes 0.38
+instead of 1.08 s with full Newton (#3216).
 `UserItemCreator.CreateTorsionalSpringDamper` takes `unlimitedRotations`, its default True: the angle continues over
 the turns by a data node of the connector, as the built-in item (#3218). `UserItemCreator.CreateSphereSphereContact`
 takes `dynamicFriction` and `frictionProportionalZone`: the friction of the built-in contact at the contact point,

@@ -807,6 +807,114 @@ void CObjectKinematicTree::ComputeJacobian(Index linkNumber, const Vector3D& pos
 	CHECKandTHROW(cnt <= n, "CObjectKinematicTree::ComputeJacobian: too many iterations when computing jacobian; check parent indices");
 }
 
+//! the global axis of the joint of link i in its joint frame
+static Vector3D GlobalJointAxis(Index axisNumber, const HomogeneousTransformation& jointTransformation)
+{
+	Vector3D localAxis(0.);
+	localAxis[axisNumber] = 1.;
+	return jointTransformation.GetRotation() * localAxis;
+}
+
+//! the links from linkNumber to the base, the link first (#3216)
+void CObjectKinematicTree::GetLinkChain(Index linkNumber, ArrayIndex& chain) const
+{
+	chain.SetNumberOfItems(0);
+	Index i = linkNumber;
+	while (i != noParent && chain.NumberOfItems() < NumberOfLinks())
+	{
+		chain.Append(i);
+		i = parameters.linkParents[i];
+	}
+	CHECKandTHROW(i == noParent, "CObjectKinematicTree::GetLinkChain: too many iterations; check parent indices");
+}
+
+//! the derivative of column i of the position and rotation Jacobians of the global point position on a link by the
+//! coordinate of joint j, both in the chain of the link (#3216): a revolute joint j above i turns the columns about its
+//! axis a_j, a prismatic one leaves them; a joint j at or below i moves the point by its position column, which changes
+//! the position column a_i x (p - p_i) of a revolute joint i
+void CObjectKinematicTree::JacobianColumnDerivative(Index i, Index j, bool jAboveI, const Vector3D& position,
+	const HomogeneousTransformationList& jointTransformations, Vector3D& positionColumn_q, Vector3D& rotationColumn_q) const
+{
+	positionColumn_q.SetAll(0.);
+	rotationColumn_q.SetAll(0.);
+	const bool revoluteI = Joint::IsRevolute(parameters.jointTypes[i]);
+	const bool revoluteJ = Joint::IsRevolute(parameters.jointTypes[j]);
+	const Vector3D axisI = GlobalJointAxis(Joint::AxisNumber(parameters.jointTypes[i]), jointTransformations[i]);
+	const Vector3D axisJ = GlobalJointAxis(Joint::AxisNumber(parameters.jointTypes[j]), jointTransformations[j]);
+	if (jAboveI)
+	{
+		if (!revoluteJ) { return; }
+		if (revoluteI)
+		{
+			positionColumn_q = axisJ.CrossProduct(axisI.CrossProduct(position - jointTransformations[i].GetTranslation()));
+			rotationColumn_q = axisJ.CrossProduct(axisI);
+		}
+		else { positionColumn_q = axisJ.CrossProduct(axisI); }
+	}
+	else if (revoluteI)
+	{
+		const Vector3D position_q = revoluteJ ? axisJ.CrossProduct(position - jointTransformations[j].GetTranslation()) : axisJ;
+		positionColumn_q = axisI.CrossProduct(position_q);
+	}
+}
+
+//! dv/dq and domega/dq (#3216), 3 x n: the derivatives of the Jacobian columns of the chain of the link by the joint
+//! coordinates, times the joint velocities
+void CObjectKinematicTree::GetVelocity_qKinematicTree(const Vector3D& localPosition, Index linkNumber, Matrix& velocity_q,
+	Matrix& angularVelocity_q) const
+{
+	ComputeTreeTransformations(ConfigurationType::Current, false, true, jointTransformationsTemp, jointVelocitiesTemp, jointAccelerationsTemp);
+	const Vector3D position = jointTransformationsTemp[linkNumber].GetTranslation() + jointTransformationsTemp[linkNumber].GetRotation() * localPosition;
+	const Index n = NumberOfLinks();
+	velocity_q.SetNumberOfRowsAndColumns(3, n);
+	angularVelocity_q.SetNumberOfRowsAndColumns(3, n);
+	velocity_q.SetAll(0.);
+	angularVelocity_q.SetAll(0.);
+	LinkedDataVector q_t(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t());
+	GetLinkChain(linkNumber, tempArrayIndex);
+	Vector3D positionColumn_q, rotationColumn_q;
+	for (Index ki = 0; ki < tempArrayIndex.NumberOfItems(); ki++)
+	{
+		const Index i = tempArrayIndex[ki];
+		for (Index kj = 0; kj < tempArrayIndex.NumberOfItems(); kj++)
+		{
+			const Index j = tempArrayIndex[kj];
+			JacobianColumnDerivative(i, j, kj > ki, position, jointTransformationsTemp, positionColumn_q, rotationColumn_q);
+			for (Index r = 0; r < 3; r++)
+			{
+				velocity_q(r, j) += positionColumn_q[r] * q_t[i];
+				angularVelocity_q(r, j) += rotationColumn_q[r] * q_t[i];
+			}
+		}
+	}
+}
+
+//! d(J^T [f; tau])/dq (#3216), n x n, f and tau global: row i, column j the derivative of column i of the Jacobians by
+//! the coordinate of joint j
+void CObjectKinematicTree::GetJacobianTransposedTimesVectorDerivativeKinematicTree(const Vector3D& localPosition, Index linkNumber,
+	const Vector6D& forceTorque, Matrix& value) const
+{
+	ComputeTreeTransformations(ConfigurationType::Current, false, true, jointTransformationsTemp, jointVelocitiesTemp, jointAccelerationsTemp);
+	const Vector3D position = jointTransformationsTemp[linkNumber].GetTranslation() + jointTransformationsTemp[linkNumber].GetRotation() * localPosition;
+	const Index n = NumberOfLinks();
+	value.SetNumberOfRowsAndColumns(n, n);
+	value.SetAll(0.);
+	GetLinkChain(linkNumber, tempArrayIndex);
+	Vector3D positionColumn_q, rotationColumn_q;
+	for (Index ki = 0; ki < tempArrayIndex.NumberOfItems(); ki++)
+	{
+		const Index i = tempArrayIndex[ki];
+		for (Index kj = 0; kj < tempArrayIndex.NumberOfItems(); kj++)
+		{
+			const Index j = tempArrayIndex[kj];
+			JacobianColumnDerivative(i, j, kj > ki, position, jointTransformationsTemp, positionColumn_q, rotationColumn_q);
+			Real entry = 0.;
+			for (Index r = 0; r < 3; r++) { entry += positionColumn_q[r] * forceTorque[r] + rotationColumn_q[r] * forceTorque[r + 3]; }
+			value(i, j) = entry;
+		}
+	}
+}
+
 
 
 

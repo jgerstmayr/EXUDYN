@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-31  20:22:52 (last modified)
+* @date         2026-11-02  12:05:40 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -384,6 +384,18 @@ public: // AUTO:
 
     //! AUTO:  compute rot+pos jacobian of (global) position at linkNumber, using pre-computed joint transformations
     void ComputeJacobian(Index linkNumber, const Vector3D& position, const HomogeneousTransformationList& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian) const;
+
+    //! AUTO:  the links from linkNumber to the base, the link first (#3216)
+    void GetLinkChain(Index linkNumber, ArrayIndex& chain) const;
+
+    //! AUTO:  the derivative of column i of the position and rotation Jacobians of a global point on a link by the coordinate of joint j of its chain (#3216)
+    void JacobianColumnDerivative(Index i, Index j, bool jAboveI, const Vector3D& position, const HomogeneousTransformationList& jointTransformations, Vector3D& positionColumn_q, Vector3D& rotationColumn_q) const;
+
+    //! AUTO:  the derivatives of the global velocity and angular velocity of a point on a link by the joint coordinates, 3 x n each (#3216)
+    void GetVelocity_qKinematicTree(const Vector3D& localPosition, Index linkNumber, Matrix& velocity_q, Matrix& angularVelocity_q) const;
+
+    //! AUTO:  the derivative of the Jacobians of a point on a link, transposed times a global force and torque, by the joint coordinates, n x n (#3216)
+    void GetJacobianTransposedTimesVectorDerivativeKinematicTree(const Vector3D& localPosition, Index linkNumber, const Vector6D& forceTorque, Matrix& value) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
