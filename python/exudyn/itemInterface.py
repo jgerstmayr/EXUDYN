@@ -4098,6 +4098,8 @@ class ObjectFFRFreducedOrder:
 
         computeFFRFterms: flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector; type: bool
 
+        numericalJacobian: False: the object computes its ODE2 Jacobian, in parallel with the other objects; True: the system differentiates the object numerically, serially, as with a forceUserFunction or a node other than Euler parameters and Tait-Bryan angles (#3212); type: bool
+
         modeBasis: mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector :math:`[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp`; type: array_like
 
         outputVariableModeBasis: mode basis, which transforms reduced coordinates to output variables per mode and per node; :math:`s_{OV}` is the size of the output variable, e.g., 6 for stress modes (:math:`S_{xx},...,S_{xy}`); type: array_like
@@ -4142,7 +4144,7 @@ class ObjectFFRFreducedOrder:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = None, stiffnessMatrixReduced = None, dampingMatrixReduced = None, forceUserFunction: Union[ObjectFFRFreducedOrderForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFreducedOrderMassMatrixUserFunction, int] = 0, computeFFRFterms = True, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], objectIsInitialized = False, mass = 0., inertia = IIDiagMatrix(rowsColumns=3,value=1), centerOfMass = [0.,0.,0.], mPsiTildePsi = [], mPsiTildePsiTilde = [], mPhitTPsi = [], mPhitTPsiTilde = [], mXRefTildePsi = [], mXRefTildePsiTilde = [], centerOfMassTilde = IIDiagMatrix(rowsColumns=3,value=0), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, physicsCenterOfMassTilde = None, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = None, stiffnessMatrixReduced = None, dampingMatrixReduced = None, forceUserFunction: Union[ObjectFFRFreducedOrderForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFreducedOrderMassMatrixUserFunction, int] = 0, computeFFRFterms = True, numericalJacobian = False, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], objectIsInitialized = False, mass = 0., inertia = IIDiagMatrix(rowsColumns=3,value=1), centerOfMass = [0.,0.,0.], mPsiTildePsi = [], mPsiTildePsiTilde = [], mPhitTPsi = [], mPhitTPsiTilde = [], mXRefTildePsi = [], mXRefTildePsiTilde = [], centerOfMassTilde = IIDiagMatrix(rowsColumns=3,value=0), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, physicsCenterOfMassTilde = None, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.massMatrixReduced = massMatrixReduced
@@ -4151,6 +4153,7 @@ class ObjectFFRFreducedOrder:
         self.forceUserFunction = forceUserFunction
         self.massMatrixUserFunction = massMatrixUserFunction
         self.computeFFRFterms = computeFFRFterms
+        self.numericalJacobian = numericalJacobian
         self.modeBasis = CheckForValidNumpyArray(modeBasis)
         self.outputVariableModeBasis = CheckForValidNumpyArray(outputVariableModeBasis)
         self.outputVariableTypeModeBasis = outputVariableTypeModeBasis
@@ -4182,6 +4185,7 @@ class ObjectFFRFreducedOrder:
         yield 'forceUserFunction', self.forceUserFunction
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
         yield 'computeFFRFterms', self.computeFFRFterms
+        yield 'numericalJacobian', self.numericalJacobian
         yield 'modeBasis', self.modeBasis
         yield 'outputVariableModeBasis', self.outputVariableModeBasis
         yield 'outputVariableTypeModeBasis', self.outputVariableTypeModeBasis

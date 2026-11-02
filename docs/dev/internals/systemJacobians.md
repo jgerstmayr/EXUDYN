@@ -53,12 +53,22 @@ is computed by `ComputeJacobianODE2Connector` in parallel, as it does not touch 
   along e and the row `e^T/(e^T e)`; the chains add one force evaluation per Euler parameter marker. For constraints the
   part goes into the rows of the equations only (`temp.localJacobianAE_ODE2radial`): the reaction forces have none,
   and with it restartFileTest and userJointTest did not converge.
+- ObjectFFRFreducedOrder (#3212): `ComputeJacobianODE2_ODE2` with the reduced stiffness and damping matrices, the
+  derivatives of the quadratic velocity vector by the modal coordinates and their velocities analytic (the formulas in
+  the comment of the function; W = S (I x omega) once, O(9 m^2) for m modes), by the rotation parameters and their
+  velocities by forward differences of `ComputeQuadraticVelocityVector`, which `ComputeODE2LHS` uses too, at the
+  rotation and G of the node's parametrization; the Euler angle terms with G_t, which the left-hand side does not
+  have, are not in it either. Within 1e-8 of the system-wide Jacobian on Euler parameters and Tait-Bryan angles.
+  perfObjectFFRFreducedOrder (2000 steps), numerical / own: 8 modes 0.35 / 0.32 s (modified Newton), 1.13 / 0.92 s
+  (full); 24 modes 2.40 / 1.63 s, 13.4 / 6.85 s; the same Newton iterations. The rest of the time is the mass matrix
+  and the markers, so the quadratic velocity terms are not simplified; `numericalJacobian` is the switch back.
 - MarkerKinematicTreeRigid (#3216): `CObjectKinematicTree::JacobianColumnDerivative` gives the derivative of a
   Jacobian column of a link's chain by a joint coordinate - a revolute joint above turns the column about its axis, a
   prismatic one leaves it, a joint at or below moves the point -, from which the marker has the Jacobian derivative
   (`JacobianDerivativeAvailable`) and `GetVelocity_q`, so that connectors on it are on the connector interface and in
   the parallel assembly; within 2e-8 of the system-wide Jacobian, also at velocities with a contact (dv/dq). The marker
-  functions use the mutable temporaries of the tree, which is not thread-safe (#3229).
+  functions use the mutable temporaries of the tree, which is not thread-safe (#3229): the parallel assembly of the
+  ODE2 rows defers connectors on its markers to the serial part; the AE rows and the residual do not yet.
 - ConnectorHydraulicActuatorSimple: the force by automatic differentiation, the block by the pressures analytic
   (`CObject::ComputeJacobianODE2_ODE1` with the system and temporary data, which finds the marker Jacobians in
   temp.markerTemp); the pressure equations analytic by `CObjectConnector::ComputeJacobianODE1RHSConnector` (#3214),

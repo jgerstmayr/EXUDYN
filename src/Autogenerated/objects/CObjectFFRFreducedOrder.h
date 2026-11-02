@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-11-02  12:22:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -43,6 +43,7 @@ public: // AUTO:
     PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; see description below
     PythonUserFunctionBase< std::function<NumpyMatrix(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below
     bool computeFFRFterms;                        //!< AUTO: flag decides whether the standard ABRV:FFRF/ABRV:CMS terms are computed; use this flag for user-defined definition of ABRV:FFRF terms in mass matrix and quadratic velocity vector
+    bool numericalJacobian;                       //!< AUTO: False: the object computes its ABRV:ODE2 Jacobian, in parallel with the other objects; True: the system differentiates the object numerically, serially, as with a forceUserFunction or a node other than Euler parameters and Tait-Bryan angles (#3212)
     Matrix modeBasis;                             //!< AUTO: mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector \f$[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp\f$
     Matrix outputVariableModeBasis;               //!< AUTO: mode basis, which transforms reduced coordinates to output variables per mode and per node; \f$s_{OV}\f$ is the size of the output variable, e.g., 6 for stress modes (\f$S_{xx},...,S_{xy}\f$)
     OutputVariableType outputVariableTypeModeBasis;//!< AUTO: this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress
@@ -63,6 +64,7 @@ public: // AUTO:
         forceUserFunction = 0;
         massMatrixUserFunction = 0;
         computeFFRFterms = true;
+        numericalJacobian = false;
         modeBasis = Matrix();
         outputVariableModeBasis = Matrix();
         outputVariableTypeModeBasis = OutputVariableType::_None;
@@ -279,10 +281,13 @@ public: // AUTO:
     virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override
-    {
-        return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
-    }
+    virtual JacobianType::Type GetAvailableJacobians() const override;
+
+    //! AUTO:  Computational function: compute jacobian (dense or sparse mode, see parent CObject function)
+    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const override;
+
+    //! AUTO:  the quadratic velocity vector of the FFRF terms at a given rotation and angular velocity of the reference frame, added to the left-hand side, for the left-hand side and its Jacobian (#3212)
+    void ComputeQuadraticVelocityVector(const Matrix3D& A, const ConstSizeMatrix<12>& Glocal, const Vector3D& omega3D, const LinkedDataVector& coordinatesFF, const LinkedDataVector& coordinatesFF_t, Vector& ode2Lhs) const;
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override

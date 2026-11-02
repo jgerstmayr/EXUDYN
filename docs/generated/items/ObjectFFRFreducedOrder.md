@@ -33,6 +33,7 @@ The parameters of the item; in a dictionary, its type is 'FFRFreducedOrder':
 | **forceUserFunction** | ObjectFFRFreducedOrderForceUserFunction |  | 0 | (symbol: $\fv\induser \in \Rcal^{n_{ODE2}}$) A Python user function which computes the generalized user force vector for the {ref}`ODE2 <ODE2>` equations; see description below |
 | **massMatrixUserFunction** | ObjectFFRFreducedOrderMassMatrixUserFunction |  | 0 | (symbol: $\Mm\induser \in \Rcal^{n_{ODE2}\times n_{ODE2}}$) A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below |
 | **computeFFRFterms** | Bool |  | True | flag decides whether the standard {ref}`FFRF <FFRF>`/{ref}`CMS <CMS>` terms are computed; use this flag for user-defined definition of {ref}`FFRF <FFRF>` terms in mass matrix and quadratic velocity vector |
+| **numericalJacobian** | Bool |  | False | False: the object computes its {ref}`ODE2 <ODE2>` Jacobian, in parallel with the other objects; True: the system differentiates the object numerically, serially, as with a forceUserFunction or a node other than Euler parameters and Tait-Bryan angles (#3212) |
 | **modeBasis** | NumpyMatrix |  | [] | (symbol: $\LU{b}{\tPsi} \in \Rcal^{n\indf \times n_{m}}$) mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector $[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp$ |
 | **outputVariableModeBasis** | NumpyMatrix |  | [] | (symbol: $\LU{b}{\tPsi}_{OV} \in \Rcal^{n_n \times (n_{m}\cdot s_{OV})}$) mode basis, which transforms reduced coordinates to output variables per mode and per node; $s_{OV}$ is the size of the output variable, e.g., 6 for stress modes ($S_{xx},...,S_{xy}$) |
 | **outputVariableTypeModeBasis** | OutputVariableType |  | OutputVariableType::_None | this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress |
@@ -332,6 +333,16 @@ $$
 $$
 
 which is used in `MarkerSuperElementRigid`.
+
+### Jacobian
+
+On Euler parameters and Tait-Bryan angles and without a forceUserFunction, the object computes its {ref}`ODE2 <ODE2>`
+Jacobian, in parallel with the other objects: $\Km\indred$ and $\Dm\indred$, and the derivatives of the
+quadratic velocity vector, analytic by the modal coordinates and their velocities and by differences of the vector
+by the rotation parameters and their velocities, which includes the direction along the Euler parameters. The
+derivative of the mass matrix is not part of the Jacobian, as for the other bodies. With
+`numericalJacobian = True`, as on other nodes and with a forceUserFunction, the system differentiates the object
+numerically, serially (#3212).
 
 ### Marker interfaces
 

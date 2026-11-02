@@ -5,7 +5,8 @@
 #           the manual, section The system Jacobian): small models of the item types - rigid bodies with the
 #           spring-dampers, mass points with the contact and the coordinate connectors, an ANCF cable, ObjectGenericDAE
 #           with its ODE1 couplings, the joints, a hydraulic actuator with its pressures, a kinematic tree with
-#           connectors on its markers (#3216) - and the blocks of
+#           connectors on its markers (#3216), ObjectFFRFreducedOrder on both rotation parametrizations (#3212) - and
+#           the blocks of
 #           JacobianODE2RHS and JacobianODE1RHS by the local Jacobians (analytic, automatic or numerical per object)
 #           against doSystemWideDifferentiation, and the
 #           constraint Jacobian of JacobianAE - the joints, and the Euler parameter constraint of the nodes - against
@@ -23,6 +24,7 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import numpy as np
 import pytest
 
@@ -163,6 +165,32 @@ def KinematicTree(mbs):
                                             frictionProportionalZone=1e-2))
 
 
+femCache = {}
+
+def FFRFreducedOrder(mbs, nodeType=exu.NodeType.RotationEulerParameters):
+    """ObjectFFRFreducedOrder of the netgen test mesh with four Hurty-Craig-Bampton modes, turning, hung at its left
+    face by a spring-damper: the stiffness, damping and quadratic velocity terms of the object's own Jacobian (#3212)"""
+    from exudyn.FEM import FEMinterface, ObjectFFRFreducedOrderInterface
+    if 'fem' not in femCache:
+        fem = FEMinterface()
+        fem.LoadFromFile(os.path.join(os.path.dirname(__file__), '../TestModels/testData/netgenTestMesh'), mode='NPZ')
+        nodesLeft = fem.GetNodesInPlane([0, 0, 0], [-1, 0, 0])
+        weightsLeft = fem.GetNodeWeightsFromSurfaceAreas(nodesLeft)
+        fem.ComputeHurtyCraigBamptonModes(boundaryNodesList=[nodesLeft], nEigenModes=4, useSparseSolver=False,
+                                          boundaryNodesWeights=[weightsLeft])
+        femCache['fem'] = (fem, nodesLeft, weightsLeft)
+    (fem, nodesLeft, weightsLeft) = femCache['fem']
+    cms = ObjectFFRFreducedOrderInterface(fem, rigidBodyNodeType=nodeType)
+    ffrf = cms.AddObjectFFRFreducedOrder(mbs, positionRef=[0.1, 0.2, 0], rotationMatrixRef=RotationMatrixZ(0.3) @ RotationMatrixX(0.2),
+                                         initialAngularVelocity=[1, 2, 5], gravity=[0, -9.81, 0],
+                                         stiffnessProportionalDamping=1e-3)
+    ground = mbs.CreateGround()
+    mLeft = mbs.AddMarker(MarkerSuperElementPosition(bodyNumber=ffrf['oFFRFreducedOrder'], meshNodeNumbers=np.array(nodesLeft),
+                                                     weightingFactors=weightsLeft))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=ground, localPosition=[0.1, 0.2, 0]))
+    mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround, mLeft], stiffness=[1e4]*3))
+
+
 def FreeBodies(mbs):
     """free rigid bodies on Euler parameters and on Tait-Bryan angles, with and without a center of mass off the
     reference point, and 2D rigid bodies with a center of mass: the gyroscopic and centrifugal terms of the bodies' own
@@ -221,7 +249,8 @@ models = {'RigidBodies': RigidBodies, 'PointsAndContact': PointsAndContact, 'Cab
           'Joints': Joints, 'Contacts': Contacts, 'EulerParameters': EulerParameters,
           'RigidBodiesEP': lambda mbs: RigidBodies(mbs, eulerParameters), 'JointsEP': lambda mbs: Joints(mbs, eulerParameters),
           'ContactsEP': lambda mbs: Contacts(mbs, eulerParameters), 'Hydraulic': Hydraulic, 'FreeBodies': FreeBodies,
-          'ODE1Loads': ODE1Loads, 'KinematicTree': KinematicTree}
+          'ODE1Loads': ODE1Loads, 'KinematicTree': KinematicTree, 'FFRFreducedOrder': FFRFreducedOrder,
+          'FFRFreducedOrderRxyz': lambda mbs: FFRFreducedOrder(mbs, exu.NodeType.RotationRxyz)}
 
 
 def Build(model):
@@ -300,7 +329,8 @@ def test_theLocalODE2JacobianIsTheSystemWideOne(model, factors):
     assert Difference(local, numerical) < tolerance, (model, factors, Difference(local, numerical))
 
 
-@pytest.mark.parametrize('model', ['Contacts', 'ContactsEP', 'FreeBodies', 'KinematicTree'])
+@pytest.mark.parametrize('model', ['Contacts', 'ContactsEP', 'FreeBodies', 'KinematicTree', 'FFRFreducedOrder',
+                                   'FFRFreducedOrderRxyz'])
 @pytest.mark.parametrize('factors', [(1., 0., 0.), (0., 1., 0.)])
 def test_theContactJacobiansAreTheSystemWideOneAlsoAtVelocities(model, factors):
     local = Jacobian(model, ODE2(factors), velocities=True)

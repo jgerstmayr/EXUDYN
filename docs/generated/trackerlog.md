@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.322.dev1
+- Exudyn version = 1.13.323.dev1
 - last change = 2026-11-02
 - Number of issues = 3230
-- Number of resolved issues = 3099 (322 in current version)
+- Number of resolved issues = 3100 (323 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9054,9 +9054,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `IMPROVEMENT` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` ObjectANCFBeam: its own ODE2 Jacobian (#3213)
   - description: ObjectANCFBeam declares ODE2\_ODE2 without a function and is differentiated numerically by CSystem, serially; the elastic forces would be differentiated automatically per element. Involved; low priority.
   - date raised: 2026-11-02
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectFFRFreducedOrder: an efficient ODE2 Jacobian (#3212)
-  - description: ObjectFFRFreducedOrder declares ODE2\_ODE2 and ODE2\_ODE2\_t without a function, so CSystem differentiates it numerically and serially, although the reduced stiffness and damping matrices are constant and the quadratic velocity terms are closed forms. Decided: an analytic or automatic Jacobian, measured on perfObjectFFRFreducedOrder first.
-  - date raised: 2026-11-02
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectKinematicTree: an efficient ODE2 Jacobian (#3211)
   - description: ObjectKinematicTree declares ODE2\_ODE2 and ODE2\_ODE2\_t without a function, so CSystem differentiates the whole tree numerically and serially, one evaluation of ComputeMassMatrixAndODE2LHS per coordinate. Decided: an analytic or automatic Jacobian of the forces of the joints (springs, dampers, the PD control, the gyroscopic terms), measured on the kinematic tree performance model first.
   - date raised: 2026-11-02
@@ -9509,7 +9506,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
 ## Known bugs
 
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectKinematicTree: the marker functions write the mutable temporaries of the tree, so connectors on its markers race in parallel (#3229)
-  - description: ComputeRigidBodyMarkerDataKT, GetPositionKinematicTree and the derivatives of the marker Jacobians compute the joint transformations into the mutable members jointTransformationsTemp, links and tempArrayIndex of ObjectKinematicTree; with parallel.numberOfThreads \> 1 the residual and the Jacobian compute connectors on MarkerKinematicTreeRigid and the tree itself in different threads at the same time. Decided: the transformations computed once per evaluation of the system state, or the marker functions on temporaries of the thread (MarkerTemp), measured on a tree with many markers.
+  - description: ComputeRigidBodyMarkerDataKT, GetPositionKinematicTree and the derivatives of the marker Jacobians compute the joint transformations into the mutable members jointTransformationsTemp, links and tempArrayIndex of ObjectKinematicTree; with parallel.numberOfThreads \> 1 the residual and the Jacobian compute connectors on MarkerKinematicTreeRigid and the tree itself in different threads at the same time. Decided: the transformations computed once per evaluation of the system state, or the marker functions on temporaries of the thread (MarkerTemp), measured on a tree with many markers. \[2026-11-02, Claude-JG\]: The parallel assembly of the ODE2 rows defers connectors on MarkerKinematicTreeRigid to the serial part (revision2026c step RG9.11.14); a full pytest run had failed once in test\_theParallelODE2JacobianIsTheSerialOne\[KinematicTree\]. The AE rows of constraints on the markers and the residual still compute them in parallel.
   - date raised: 2026-11-02
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.

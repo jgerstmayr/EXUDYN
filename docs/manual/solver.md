@@ -115,7 +115,7 @@ the item:
 - **constraints** have their Jacobians analytically, as have the pressure equations of ConnectorHydraulicActuatorSimple
   (#3214);
 - the other items are **differentiated numerically by the system**, by their own coordinates: ObjectFFRF,
-  ObjectFFRFreducedOrder, ObjectKinematicTree, ObjectANCFBeam, ObjectALEANCFCable2D, ObjectUserBody, rigid bodies on
+  ObjectFFRFreducedOrder with a forceUserFunction, on Lie group nodes or with `numericalJacobian`, ObjectKinematicTree, ObjectANCFBeam, ObjectALEANCFCable2D, ObjectUserBody, rigid bodies on
   Lie group nodes, the connectors with Python user functions (ObjectConnectorUser and the spring-dampers with a user
   function), ConnectorReevingSystemSprings, the contacts on cables and curves, and connectors on markers that lack
   the derivatives the connector needs

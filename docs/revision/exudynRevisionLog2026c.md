@@ -5729,6 +5729,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg9-11-14"></a>
+### RG9.11.14 — The ODE2 Jacobian of ObjectFFRFreducedOrder (2026-11-02, #3212, #3229)
+- CObjectFFRFreducedOrder::ComputeQuadraticVelocityVector(A, Glocal, omega, zeta, zeta_t), moved out of ComputeODE2LHS
+  unchanged (the unused G_t terms of the rotation parameter velocities removed); ComputeJacobianODE2_ODE2 with K and D,
+  the quadratic velocity terms by zeta and zeta_t analytic, by the rotation parameters and their velocities by forward
+  differences of the vector at the rotation and G of EP2RotationMatrix/EP2Glocal or RotXYZ2RotationMatrix/
+  RotXYZ2GlocalTemplate; GetAvailableJacobians with the functions on Euler parameters and Tait-Bryan angles without a
+  forceUserFunction; the parameter numericalJacobian (False), the switch back to the numerical Jacobian of the system.
+- test_systemJacobians: FFRFreducedOrder and FFRFreducedOrderRxyz (the netgen test mesh, four Hurty-Craig-Bampton
+  modes, turning, on a spring at its left face), also at velocities; the object's block within 1e-8.
+- Measured with numericalJacobian True / False on perfObjectFFRFreducedOrder (0.2 s, 2000 steps): 8 modes 0.35 / 0.32 s
+  (modified Newton), 1.13 / 0.92 s (full); 24 modes 2.40 / 1.63 s, 13.40 / 6.85 s; the same Newton iterations (4039 /
+  4049, 5771 / 5767 with full Newton). The maintainer's simplification of the quadratic velocity terms is not needed.
+- parameterConversionTestReference.txt rewritten for numericalJacobian.
+- #3229: a full pytest run failed once in test_theParallelODE2JacobianIsTheSerialOne[KinematicTree], the race of the
+  connectors on the tree's markers since RG9.11.17.1; CSystem::ComputeLocalJacobianODE2 defers connectors on
+  MarkerKinematicTreeRigid in the parallel assembly to the serial part (five runs pass). The AE rows and the residual
+  still compute them in parallel; #3229 stays open.
+
 <a id="rg9-11-17-1"></a>
 ### RG9.11.17.1 — MarkerKinematicTreeRigid with dv/dq and the Jacobian derivative (2026-11-02, #3216)
 - CObjectKinematicTree: GetLinkChain, JacobianColumnDerivative (column i of the position and rotation Jacobians by the

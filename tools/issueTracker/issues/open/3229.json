@@ -6,7 +6,7 @@
   "type": "BUG",
   "priority": "NORMAL",
   "effort": "MEDIUM",
-  "description": "ComputeRigidBodyMarkerDataKT, GetPositionKinematicTree and the derivatives of the marker Jacobians compute the joint transformations into the mutable members jointTransformationsTemp, links and tempArrayIndex of ObjectKinematicTree; with parallel.numberOfThreads > 1 the residual and the Jacobian compute connectors on MarkerKinematicTreeRigid and the tree itself in different threads at the same time. Decided: the transformations computed once per evaluation of the system state, or the marker functions on temporaries of the thread (MarkerTemp), measured on a tree with many markers.",
+  "description": "ComputeRigidBodyMarkerDataKT, GetPositionKinematicTree and the derivatives of the marker Jacobians compute the joint transformations into the mutable members jointTransformationsTemp, links and tempArrayIndex of ObjectKinematicTree; with parallel.numberOfThreads > 1 the residual and the Jacobian compute connectors on MarkerKinematicTreeRigid and the tree itself in different threads at the same time. Decided: the transformations computed once per evaluation of the system state, or the marker functions on temporaries of the thread (MarkerTemp), measured on a tree with many markers. [2026-11-02, Claude-JG]: The parallel assembly of the ODE2 rows defers connectors on MarkerKinematicTreeRigid to the serial part (revision2026c step RG9.11.14); a full pytest run had failed once in test_theParallelODE2JacobianIsTheSerialOne[KinematicTree]. The AE rows of constraints on the markers and the residual still compute them in parallel.",
   "dateRaised": "2026-11-02",
   "deadline": "2027-05-01"
 }

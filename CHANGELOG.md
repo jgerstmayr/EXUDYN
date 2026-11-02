@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 313 | 1.13.322 |
+| 1.13 | Newborn | 314 | 1.13.323 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.323** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectFFRFreducedOrder: an efficient ODE2 Jacobian (#3212)
+  - description: ObjectFFRFreducedOrder declares ODE2\_ODE2 and ODE2\_ODE2\_t without a function, so CSystem differentiates it numerically and serially, although the reduced stiffness and damping matrices are constant and the quadratic velocity terms are closed forms. Decided: an analytic or automatic Jacobian, measured on perfObjectFFRFreducedOrder first.
+  - **notes:** ObjectFFRFreducedOrder computes its ODE2 Jacobian - the reduced stiffness and damping matrices and the derivatives of the quadratic velocity terms - in parallel; 24 modes with full Newton take 6.9 instead of 13.4 s; numericalJacobian=True gives the numerical Jacobian of the system.
+  - date resolved: **2026-11-02 13:24**, date raised: 2026-11-02
 - **1.13.322** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` MarkerKinematicTreeRigid: dv/dq and the Jacobian derivative (#3216)
   - description: MarkerKinematicTreeRigid has no Jacobian derivative and no GetVelocity\_q, so connectors on it are differentiated numerically by CSystem, serially. Decided: both by the recursion over the links, before the other markers, as it may improve convergence and performance.
   - **notes:** MarkerKinematicTreeRigid gives the derivative of its Jacobians and of its velocities by the joint coordinates, so that connectors on it have their own Jacobian, in parallel; a tree of six links with a spring-damper and a contact on each takes 0.38 instead of 1.08 s with full Newton.

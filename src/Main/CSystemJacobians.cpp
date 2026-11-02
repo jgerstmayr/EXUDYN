@@ -217,6 +217,14 @@ bool CSystem::ComputeLocalJacobianODE2(TemporaryComputationData& temp, const Num
 	CObject* object = cSystemData.GetCObjects()[j];
 	JacobianType::Type jacType = object->GetAvailableJacobians();
 	if (!object->IsActive() || !(jacType & (JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE1))) { return false; }
+	//a connector on the markers of a kinematic tree computes in the temporaries of the tree, so it is computed serially (#3229)
+	if (analyticOnly && EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+	{
+		for (Index marker : ((const CObjectConnector*)object)->GetMarkerNumbers())
+		{
+			if (cSystemData.GetCMarkers()[marker]->GetType() & Marker::KinematicTree) { local.deferred = true; return false; }
+		}
+	}
 
 	Vector& x = cSystemData.GetCData().currentState.ODE2Coords;			//current coordinates ==> this is what is differentiated for
 	Vector& xRef = cSystemData.GetCData().referenceState.ODE2Coords;	//reference coordinates; might be important for numerical differentiation

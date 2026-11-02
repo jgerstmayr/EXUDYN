@@ -2,11 +2,15 @@
   "number": 3212,
   "title": "ObjectFFRFreducedOrder: an efficient ODE2 Jacobian",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "ObjectFFRFreducedOrder declares ODE2_ODE2 and ODE2_ODE2_t without a function, so CSystem differentiates it numerically and serially, although the reduced stiffness and damping matrices are constant and the quadratic velocity terms are closed forms. Decided: an analytic or automatic Jacobian, measured on perfObjectFFRFreducedOrder first.",
   "dateRaised": "2026-11-02",
-  "deadline": "2027-05-01"
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 13:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectFFRFreducedOrder computes its ODE2 Jacobian - the reduced stiffness and damping matrices and the derivatives of the quadratic velocity terms - in parallel; 24 modes with full Newton take 6.9 instead of 13.4 s; numericalJacobian=True gives the numerical Jacobian of the system.",
+  "resolvedInVersion": "1.13.323"
 }

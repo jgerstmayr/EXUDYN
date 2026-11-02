@@ -4367,6 +4367,16 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     +++++++++++++++++++++++++
     -->
 
+    #### Jacobian
+
+    On Euler parameters and Tait-Bryan angles and without a forceUserFunction, the object computes its ABRV:ODE2
+    Jacobian, in parallel with the other objects: $\Km\indred$ and $\Dm\indred$, and the derivatives of the
+    quadratic velocity vector, analytic by the modal coordinates and their velocities and by differences of the vector
+    by the rotation parameters and their velocities, which includes the direction along the Euler parameters. The
+    derivative of the mass matrix is not part of the Jacobian, as for the other bodies. With
+    `numericalJacobian = True`, as on other nodes and with a forceUserFunction, the system differentiates the object
+    numerically, serially (#3212).
+
     #### Marker interfaces
 
     Use special `MarkerSuperElementPosition` to apply forces, SpringDampers or spherical joints. This marker can be attached to a single node of the underlying
@@ -4434,6 +4444,10 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             pythonName='computeFFRFterms',
             defaultValue=True,
             description=r"""flag decides whether the standard ABRV:FFRF/ABRV:CMS terms are computed; use this flag for user-defined definition of ABRV:FFRF terms in mass matrix and quadratic velocity vector"""),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='numericalJacobian',
+            defaultValue=False,
+            description=r"""False: the object computes its ABRV:ODE2 Jacobian, in parallel with the other objects; True: the system differentiates the object numerically, serially, as with a forceUserFunction or a node other than Euler parameters and Tait-Bryan angles (#3212)"""),
         ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
             pythonName='modeBasis',
             defaultValue='Matrix()',
@@ -4562,8 +4576,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             implementation='return (parameters.forceUserFunction!=0) || (parameters.massMatrixUserFunction!=0);'),
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
-        ItemFunctionDef('GetAvailableJacobians',
-            implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
+        ItemFunctionDef('GetAvailableJacobians'),
+        ItemFunctionDef('ComputeJacobianODE2_ODE2'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ComputeQuadraticVelocityVector',
+            args='const Matrix3D& A, const ConstSizeMatrix<12>& Glocal, const Vector3D& omega3D, const LinkedDataVector& coordinatesFF, const LinkedDataVector& coordinatesFF_t, Vector& ode2Lhs',
+            description=r'the quadratic velocity vector of the FFRF terms at a given rotation and angular velocity of the reference frame, added to the left-hand side, for the left-hand side and its Jacobian (#3212)'),
         ItemAccessFunctionTypes(ownMarkers='SuperElement', ownMarkerTypes=['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q']),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),

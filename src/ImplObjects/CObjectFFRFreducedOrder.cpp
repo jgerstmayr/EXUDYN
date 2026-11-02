@@ -246,10 +246,6 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs) const
 		ComputeObjectCoordinates_t(tempCoordinates_t);
 		LinkedDataVector coordinatesFF(tempCoordinates, nODE2Rigid, nODE2FF);
 		LinkedDataVector coordinatesFF_t(tempCoordinates_t, nODE2Rigid, nODE2FF);
-		LinkedDataVector rp_t = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters_t();
-
-		LinkedDataVector ode2LhsTT(ode2Lhs, 0, ffrfNodeDim);
-		LinkedDataVector ode2LhsRR(ode2Lhs, ffrfNodeDim, nODE2Rigid-ffrfNodeDim);
 		LinkedDataVector ode2LhsFF(ode2Lhs, nODE2Rigid, nODE2FF);
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -271,158 +267,181 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs) const
 		}
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		const Index GMaxSize = CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D; //12
-
-		//compute G-matrices:
-		ConstSizeMatrix<GMaxSize> Glocal;
+		//the quadratic velocity terms, at the rotation and angular velocity of the node (#3212)
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
 		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(Glocal);
-		ConstSizeMatrix<GMaxSize> GlocalT;
-		GlocalT = Glocal.GetTransposed();
-
-		ConstSizeMatrix<GMaxSize> Glocal_t;
-		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal_t(Glocal_t);
-
 		Matrix3D A = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix();
-
 		Vector3D omega3D = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetAngularVelocityLocal(); //omega3D == local!
-		Matrix3D omega3Dtilde = RigidBodyMath::Vector2SkewMatrix(omega3D);
+		ComputeQuadraticVelocityVector(A, Glocal, omega3D, coordinatesFF, coordinatesFF_t, ode2Lhs);
+	}
+	if (parameters.forceUserFunction)
+	{
+		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 
-		//precompute some matrices:
-		RigidBodyMath::VectorKroneckerUnitMatrix3D(coordinatesFF, tempKronZetaI);
-		RigidBodyMath::VectorKroneckerUnitMatrix3D(coordinatesFF_t, tempKronZetaI_t);
+		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, tempCoordinates, tempCoordinates_t);
+		//UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+		//{
+		//	//user function args:(t, coordinates, coordinates_t)
+		//	tempUserFunctionForce = (Vector)(parameters.forceUserFunction(t, tempCoordinates, tempCoordinates_t));
+		//}, "ObjectFFRFreducedOrder::forceUserFunction");
 
-		Vector3D G_tRp_t;
-		EXUmath::MultMatrixVectorTemplate< ConstSizeMatrix<GMaxSize>, LinkedDataVector, Vector3D>(Glocal_t, rp_t, G_tRp_t);
+		ode2Lhs -= tempUserFunctionForce;
+	}
 
-		//this matrix, containing mostly zeros, could be replaced by operator (speedup!):
-		//is already transposed matrix!
-		tempKronIZetaOmegaT.SetNumberOfRowsAndColumns(nODE2FF, 3 * nODE2FF);
-		tempKronIZetaOmegaT.SetAll(0.);
-		for (Index i = 0; i < nODE2FF; i++)
-		{
-			tempKronIZetaOmegaT(i, i * 3 + 0) = omega3D[0];
-			tempKronIZetaOmegaT(i, i * 3 + 1) = omega3D[1];
-			tempKronIZetaOmegaT(i, i * 3 + 2) = omega3D[2];
-		}
-
-		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//note that in FEM.py and in the paper (Zwölfer, Gerstmayr, 2021, Acta Mechanica), terms are added to RHS (+), here they are added to LHS (-=)
-		//Q_tt
-		//force[0:self.dim3D] -= (A @ omega3Dtilde @ (self.totalMass*self.chiUtilde + self.mPhitTPsiTilde @ zetaI) @ omega3D +
-		//			2 * A @ self.mPhitTPsiTilde @ zeta_tI @ omega3D) #identical to FFRF up to 1e-16
-
-		Matrix3D temp;
-		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mPhitTPsiTilde, tempKronZetaI, temp);
-		temp += mass * centerOfMassTilde;
-
-		Vector3D fTempTT = A * (omega3Dtilde * (temp * omega3D));
-		EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, omega3D, tempVector); //3*nODE2FF length
-		Vector3D fTemp2; //2 * (A * (parameters.mPhitTPsiTilde * (tempKronZetaI_t * omega3D)));
-		EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, Vector3D>(parameters.mPhitTPsiTilde, tempVector, fTemp2); //3*nODE2FF length
-		fTempTT += 2 * (A*fTemp2);
-
-		ode2LhsTT -= fTempTT;
-
-
-		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//Q_rr
-		//force[self.dim3D:self.nODE2rigid] -= (-G.T @ omega3Dtilde @ (self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI +
-		//			zetaI.T @ self.mXRefTildePsiTilde.T + #transposed!
-		//			zetaI.T @ self.mPsiTildePsiTilde @ zetaI) @ omega3D -
-		//			2 * G.T @ (self.mXRefTildePsiTilde @ zeta_tI + zetaI.T @ self.mPsiTildePsiTilde @ zeta_tI) @ omega3D)  #identical to FFRF up to 1e-16
-
-		//(self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI + (self.mXRefTildePsiTilde @ zetaI).T + zetaI.T @ self.mPsiTildePsiTilde @ zetaI)*omega3D:
-		Vector3D temp3D = inertia * omega3D;
-		EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI, omega3D, tempVector2); //tempVector2=zetaI*omega3D
-		EXUmath::MultMatrixVectorAddTemplate<Matrix, ResizableVector, Vector3D>(parameters.mXRefTildePsiTilde, tempVector2, temp3D);
-
-		EXUmath::MultMatrixTransposedVectorTemplate<Matrix, Vector3D, ResizableVector>(parameters.mXRefTildePsiTilde, omega3D, tempVector);
-		EXUmath::MultMatrixTransposedVectorAddTemplate<ResizableMatrix, ResizableVector, Vector3D>(tempKronZetaI, tempVector, temp3D);
-
-		EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, ResizableVector>(parameters.mPsiTildePsiTilde, tempVector2, tempVector);
-		EXUmath::MultMatrixTransposedVectorAddTemplate<ResizableMatrix, ResizableVector, Vector3D>(tempKronZetaI, tempVector, temp3D);
-
-		//G.T * omega3Dtilde * (...)
-		Vector3D QrrTerm1 = omega3Dtilde * temp3D;
-		ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> fTempRR(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates());
-		EXUmath::MultMatrixVectorTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm1, fTempRR);
-
-		//(self.mXRefTildePsiTilde @ zeta_tI + zetaI.T @ self.mPsiTildePsiTilde @ zeta_tI)*omega3D
-		EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, omega3D, tempVector2); //tempVector2=zetaI_t*omega3D
-
-		EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, Vector3D>(parameters.mXRefTildePsiTilde, tempVector2, temp3D);
-
-		EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, ResizableVector>(parameters.mPsiTildePsiTilde, tempVector2, tempVector);
-		EXUmath::MultMatrixTransposedVectorAddTemplate<ResizableMatrix, ResizableVector, Vector3D>(tempKronZetaI, tempVector, temp3D);
-
-		//2 * G.T @ (...)
-		Vector3D QrrTerm2 = 2 * temp3D;
-		EXUmath::MultMatrixVectorAddTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm2, fTempRR);
-
-		ode2LhsRR += fTempRR; //-= [-G.T*(...) - G.T*(...) ] ==> +=
-
-		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//Q_rr SLOW
-		////(self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI + (self.mXRefTildePsiTilde @ zetaI).T + zetaI.T @ self.mPsiTildePsiTilde @ zetaI):
-		//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mXRefTildePsiTilde, tempKronZetaI, temp);
-		//Matrix3D temp2 = temp;
-		//temp2.TransposeYourself();
-		//temp += temp2;
-		//temp += inertia;
-		//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
-		//EXUmath::MultMatrixTransposedMatrixAddTemplate<Matrix, Matrix, Matrix3D>(tempKronZetaI, tempMatrix, temp);
-
-		////G.T * omega3Dtilde * (...) *omega3D
-		//Vector3D QrrTerm1 = omega3Dtilde * (temp * omega3D);
-		//ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> fTempRR(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates());
-		//EXUmath::MultMatrixVectorTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm1, fTempRR);
-
-		//(self.mXRefTildePsiTilde @ zeta_tI + zetaI.T @ self.mPsiTildePsiTilde @ zeta_tI)
-		//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mXRefTildePsiTilde, tempKronZetaI_t, temp);
-		//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI_t, tempMatrix);
-		//EXUmath::MultMatrixTransposedMatrixAddTemplate<Matrix, Matrix, Matrix3D>(tempKronZetaI, tempMatrix, temp);
-
-		////2 * G.T @ (...)*omega3D
-		//Vector3D QrrTerm2 = 2 * (temp * omega3D);
-		//EXUmath::MultMatrixVectorAddTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm2, fTempRR);
-
-		//ode2LhsRR += fTempRR; //-= [-G.T*(...) - G.T*(...) ] ==> +=
+}
 
 
 
+//! the quadratic velocity vector of the FFRF terms, added to the left-hand side ode2Lhs of the object, at the rotation A,
+//! the matrix Glocal and the local angular velocity omega3D of the reference frame and at the modal coordinates and their
+//! velocities (#3212); without the stiffness and damping terms
+void CObjectFFRFreducedOrder::ComputeQuadraticVelocityVector(const Matrix3D& A, const ConstSizeMatrix<12>& Glocal, const Vector3D& omega3D,
+	const LinkedDataVector& coordinatesFF, const LinkedDataVector& coordinatesFF_t, Vector& ode2Lhs) const
+{
+	const Index GMaxSize = CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D; //12
+	Index nODE2Rigid = GetCNode(rigidBodyNodeNumber)->GetNumberOfODE2Coordinates(); //number of rigid body coordinates
+	Index nODE2FF = GetCNode(genericNodeNumber)->GetNumberOfODE2Coordinates();
+	LinkedDataVector ode2LhsTT(ode2Lhs, 0, ffrfNodeDim);
+	LinkedDataVector ode2LhsRR(ode2Lhs, ffrfNodeDim, nODE2Rigid-ffrfNodeDim);
+	LinkedDataVector ode2LhsFF(ode2Lhs, nODE2Rigid, nODE2FF);
 
-		
-		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//Q_ff
-		//		force[self.nODE2rigid:] -= (IZetadiadicOmega.T @ (self.mXRefTildePsiTilde.T + self.mPsiTildePsiTilde @ zetaI) @ omega3D +
-		//			2 * self.mPsiTildePsi.T @ zeta_tI @ omega3D )#identical to FFRF up to 1e-16
+	ConstSizeMatrix<GMaxSize> GlocalT;
+	GlocalT = Glocal.GetTransposed();
+	Matrix3D omega3Dtilde = RigidBodyMath::Vector2SkewMatrix(omega3D);
+
+	//precompute some matrices:
+	RigidBodyMath::VectorKroneckerUnitMatrix3D(coordinatesFF, tempKronZetaI);
+	RigidBodyMath::VectorKroneckerUnitMatrix3D(coordinatesFF_t, tempKronZetaI_t);
+
+	//this matrix, containing mostly zeros, could be replaced by operator (speedup!):
+	//is already transposed matrix!
+	tempKronIZetaOmegaT.SetNumberOfRowsAndColumns(nODE2FF, 3 * nODE2FF);
+	tempKronIZetaOmegaT.SetAll(0.);
+	for (Index i = 0; i < nODE2FF; i++)
+	{
+		tempKronIZetaOmegaT(i, i * 3 + 0) = omega3D[0];
+		tempKronIZetaOmegaT(i, i * 3 + 1) = omega3D[1];
+		tempKronIZetaOmegaT(i, i * 3 + 2) = omega3D[2];
+	}
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//note that in FEM.py and in the paper (Zwölfer, Gerstmayr, 2021, Acta Mechanica), terms are added to RHS (+), here they are added to LHS (-=)
+	//Q_tt
+	//force[0:self.dim3D] -= (A @ omega3Dtilde @ (self.totalMass*self.chiUtilde + self.mPhitTPsiTilde @ zetaI) @ omega3D +
+	//			2 * A @ self.mPhitTPsiTilde @ zeta_tI @ omega3D) #identical to FFRF up to 1e-16
+
+	Matrix3D temp;
+	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mPhitTPsiTilde, tempKronZetaI, temp);
+	temp += mass * centerOfMassTilde;
+
+	Vector3D fTempTT = A * (omega3Dtilde * (temp * omega3D));
+	EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, omega3D, tempVector); //3*nODE2FF length
+	Vector3D fTemp2; //2 * (A * (parameters.mPhitTPsiTilde * (tempKronZetaI_t * omega3D)));
+	EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, Vector3D>(parameters.mPhitTPsiTilde, tempVector, fTemp2); //3*nODE2FF length
+	fTempTT += 2 * (A*fTemp2);
+
+	ode2LhsTT -= fTempTT;
 
 
-		EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI, omega3D, tempVector); 
-		EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, ResizableVector>(parameters.mPsiTildePsiTilde, tempVector, tempVector2);
-		EXUmath::MultMatrixTransposedVectorAddTemplate<Matrix, Vector3D, ResizableVector>(parameters.mXRefTildePsiTilde, omega3D, tempVector2);
-		tempVector2 *= -1.; //(-): add to LHS ...
-		EXUmath::MultMatrixVectorAddTemplate<ResizableMatrix, ResizableVector, LinkedDataVector>(tempKronIZetaOmegaT, tempVector2, ode2LhsFF);
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//Q_rr
+	//force[self.dim3D:self.nODE2rigid] -= (-G.T @ omega3Dtilde @ (self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI +
+	//			zetaI.T @ self.mXRefTildePsiTilde.T + #transposed!
+	//			zetaI.T @ self.mPsiTildePsiTilde @ zetaI) @ omega3D -
+	//			2 * G.T @ (self.mXRefTildePsiTilde @ zeta_tI + zetaI.T @ self.mPsiTildePsiTilde @ zeta_tI) @ omega3D)  #identical to FFRF up to 1e-16
 
-		//"-2"*omega3D: add to LHS, factor 2:
-		EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, (-2.)*omega3D, tempVector);
-		EXUmath::MultMatrixTransposedVectorAddTemplate<Matrix, ResizableVector, LinkedDataVector>(parameters.mPsiTildePsi, tempVector, ode2LhsFF);		
+	//(self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI + (self.mXRefTildePsiTilde @ zetaI).T + zetaI.T @ self.mPsiTildePsiTilde @ zetaI)*omega3D:
+	Vector3D temp3D = inertia * omega3D;
+	EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI, omega3D, tempVector2); //tempVector2=zetaI*omega3D
+	EXUmath::MultMatrixVectorAddTemplate<Matrix, ResizableVector, Vector3D>(parameters.mXRefTildePsiTilde, tempVector2, temp3D);
 
-		////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		////Q_ff SLOW:
-		////		force[self.nODE2rigid:] -= (IZetadiadicOmega.T @ (self.mXRefTildePsiTilde.T + self.mPsiTildePsiTilde @ zetaI) @ omega3D +
-		////			2 * self.mPsiTildePsi.T @ zeta_tI @ omega3D )#identical to FFRF up to 1e-16
-		//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
-		//EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempMatrix, omega3D, tempVector);
-		//EXUmath::MultMatrixTransposedVectorAddTemplate< Matrix, Vector3D, ResizableVector>(parameters.mXRefTildePsiTilde, omega3D, tempVector);
-		//tempVector *= -1.; //(-): add to LHS ...
-		//EXUmath::MultMatrixVectorAddTemplate< ResizableMatrix, ResizableVector, LinkedDataVector>(tempKronIZetaOmegaT, tempVector, ode2LhsFF);
+	EXUmath::MultMatrixTransposedVectorTemplate<Matrix, Vector3D, ResizableVector>(parameters.mXRefTildePsiTilde, omega3D, tempVector);
+	EXUmath::MultMatrixTransposedVectorAddTemplate<ResizableMatrix, ResizableVector, Vector3D>(tempKronZetaI, tempVector, temp3D);
 
-		////"-2"*omega3D: add to LHS, factor 2
-		//EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, -2 * omega3D, tempVector);
-		//EXUmath::MultMatrixTransposedVectorAddTemplate<Matrix, ResizableVector, LinkedDataVector>(parameters.mPsiTildePsi, tempVector, ode2LhsFF);
+	EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, ResizableVector>(parameters.mPsiTildePsiTilde, tempVector2, tempVector);
+	EXUmath::MultMatrixTransposedVectorAddTemplate<ResizableMatrix, ResizableVector, Vector3D>(tempKronZetaI, tempVector, temp3D);
 
-		
+	//G.T * omega3Dtilde * (...)
+	Vector3D QrrTerm1 = omega3Dtilde * temp3D;
+	ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> fTempRR(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates());
+	EXUmath::MultMatrixVectorTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm1, fTempRR);
+
+	//(self.mXRefTildePsiTilde @ zeta_tI + zetaI.T @ self.mPsiTildePsiTilde @ zeta_tI)*omega3D
+	EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, omega3D, tempVector2); //tempVector2=zetaI_t*omega3D
+
+	EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, Vector3D>(parameters.mXRefTildePsiTilde, tempVector2, temp3D);
+
+	EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, ResizableVector>(parameters.mPsiTildePsiTilde, tempVector2, tempVector);
+	EXUmath::MultMatrixTransposedVectorAddTemplate<ResizableMatrix, ResizableVector, Vector3D>(tempKronZetaI, tempVector, temp3D);
+
+	//2 * G.T @ (...)
+	Vector3D QrrTerm2 = 2 * temp3D;
+	EXUmath::MultMatrixVectorAddTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm2, fTempRR);
+
+	ode2LhsRR += fTempRR; //-= [-G.T*(...) - G.T*(...) ] ==> +=
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//Q_rr SLOW
+	////(self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI + (self.mXRefTildePsiTilde @ zetaI).T + zetaI.T @ self.mPsiTildePsiTilde @ zetaI):
+	//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mXRefTildePsiTilde, tempKronZetaI, temp);
+	//Matrix3D temp2 = temp;
+	//temp2.TransposeYourself();
+	//temp += temp2;
+	//temp += inertia;
+	//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
+	//EXUmath::MultMatrixTransposedMatrixAddTemplate<Matrix, Matrix, Matrix3D>(tempKronZetaI, tempMatrix, temp);
+
+	////G.T * omega3Dtilde * (...) *omega3D
+	//Vector3D QrrTerm1 = omega3Dtilde * (temp * omega3D);
+	//ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> fTempRR(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates());
+	//EXUmath::MultMatrixVectorTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm1, fTempRR);
+
+	//(self.mXRefTildePsiTilde @ zeta_tI + zetaI.T @ self.mPsiTildePsiTilde @ zeta_tI)
+	//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mXRefTildePsiTilde, tempKronZetaI_t, temp);
+	//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI_t, tempMatrix);
+	//EXUmath::MultMatrixTransposedMatrixAddTemplate<Matrix, Matrix, Matrix3D>(tempKronZetaI, tempMatrix, temp);
+
+	////2 * G.T @ (...)*omega3D
+	//Vector3D QrrTerm2 = 2 * (temp * omega3D);
+	//EXUmath::MultMatrixVectorAddTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm2, fTempRR);
+
+	//ode2LhsRR += fTempRR; //-= [-G.T*(...) - G.T*(...) ] ==> +=
+
+
+
+
+	
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//Q_ff
+	//		force[self.nODE2rigid:] -= (IZetadiadicOmega.T @ (self.mXRefTildePsiTilde.T + self.mPsiTildePsiTilde @ zetaI) @ omega3D +
+	//			2 * self.mPsiTildePsi.T @ zeta_tI @ omega3D )#identical to FFRF up to 1e-16
+
+
+	EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI, omega3D, tempVector); 
+	EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, ResizableVector>(parameters.mPsiTildePsiTilde, tempVector, tempVector2);
+	EXUmath::MultMatrixTransposedVectorAddTemplate<Matrix, Vector3D, ResizableVector>(parameters.mXRefTildePsiTilde, omega3D, tempVector2);
+	tempVector2 *= -1.; //(-): add to LHS ...
+	EXUmath::MultMatrixVectorAddTemplate<ResizableMatrix, ResizableVector, LinkedDataVector>(tempKronIZetaOmegaT, tempVector2, ode2LhsFF);
+
+	//"-2"*omega3D: add to LHS, factor 2:
+	EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, (-2.)*omega3D, tempVector);
+	EXUmath::MultMatrixTransposedVectorAddTemplate<Matrix, ResizableVector, LinkedDataVector>(parameters.mPsiTildePsi, tempVector, ode2LhsFF);		
+
+	////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	////Q_ff SLOW:
+	////		force[self.nODE2rigid:] -= (IZetadiadicOmega.T @ (self.mXRefTildePsiTilde.T + self.mPsiTildePsiTilde @ zetaI) @ omega3D +
+	////			2 * self.mPsiTildePsi.T @ zeta_tI @ omega3D )#identical to FFRF up to 1e-16
+	//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
+	//EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempMatrix, omega3D, tempVector);
+	//EXUmath::MultMatrixTransposedVectorAddTemplate< Matrix, Vector3D, ResizableVector>(parameters.mXRefTildePsiTilde, omega3D, tempVector);
+	//tempVector *= -1.; //(-): add to LHS ...
+	//EXUmath::MultMatrixVectorAddTemplate< ResizableMatrix, ResizableVector, LinkedDataVector>(tempKronIZetaOmegaT, tempVector, ode2LhsFF);
+
+	////"-2"*omega3D: add to LHS, factor 2
+	//EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, -2 * omega3D, tempVector);
+	//EXUmath::MultMatrixTransposedVectorAddTemplate<Matrix, ResizableVector, LinkedDataVector>(parameters.mPsiTildePsi, tempVector, ode2LhsFF);
+
+	
 //#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //			#additional terms for Euler angles :
 //		if self.rigidBodyNodeType == exu.NodeType.RotationRxyz :
@@ -444,30 +463,170 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs) const
 //				force[self.dim3D:self.nODE2rigid] -= G.T @ (Skew(self.chiU) @ (self.totalMass*A.T @ np.array(self.gravity)))
 //				force[self.nODE2rigid:] -= self.mPhitTPsi.T @ (A.T @ np.array(self.gravity))
 //
-
-		//pout << "ode2RhsTT=" << -1*ode2LhsTT << "\n";
-		//pout << "ode2RhsRR=" << -1*ode2LhsRR << "\n";
-		//pout << "ode2RhsFF=" << -1*ode2LhsFF << "\n";
-
-
-	}
-	if (parameters.forceUserFunction)
-	{
-		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-
-		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, tempCoordinates, tempCoordinates_t);
-		//UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
-		//{
-		//	//user function args:(t, coordinates, coordinates_t)
-		//	tempUserFunctionForce = (Vector)(parameters.forceUserFunction(t, tempCoordinates, tempCoordinates_t));
-		//}, "ObjectFFRFreducedOrder::forceUserFunction");
-
-		ode2Lhs -= tempUserFunctionForce;
-	}
-
 }
 
+//! the ODE2 Jacobian (#3212), factorODE2 d(LHS)/dq + factorODE2_t d(LHS)/dq_t, dense: the reduced stiffness and damping
+//! matrices; the quadratic velocity terms by the modal coordinates zeta and their velocities analytic,
+//! f_T = -A (omega~ (P (zeta x omega) + m chi~ omega) + 2 P (zeta_t x omega)),
+//! f_R = G^T (omega~ (J omega + X (zeta x omega) + Z^T X^T omega + Z^T S (zeta x omega)) + 2 (X + Z^T S) (zeta_t x omega)),
+//! f_F = -(I x omega)^T (S (zeta x omega) + X^T omega) - 2 R^T (zeta_t x omega), Z = zeta x I, with P = mPhitTPsiTilde,
+//! X = mXRefTildePsiTilde, S = mPsiTildePsiTilde, R = mPsiTildePsi; by the rotation parameters and their velocities by
+//! local differences of ComputeQuadraticVelocityVector, with the rotation and G of the node's parametrization at the
+//! changed parameters, which gives also the direction along the Euler parameters; the terms do not depend on the
+//! translation
+void CObjectFFRFreducedOrder::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
+	Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
+{
+	const CNodeRigidBody& node = *(const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber);
+	const bool eulerParameters = (node.GetType() & Node::RotationEulerParameters) != 0;
+	const Index nODE2Rigid = node.GetNumberOfODE2Coordinates();
+	const Index nRotation = node.GetNumberOfRotationCoordinates();
+	const Index nODE2FF = GetCNode(genericNodeNumber)->GetNumberOfODE2Coordinates();
+	const Index n = nODE2Rigid + nODE2FF;
+	jacobianODE2.SetUseDenseMatrix(true);
+	ResizableMatrix& jacobian = jacobianODE2.GetInternalDenseMatrix();
+	jacobian.SetNumberOfRowsAndColumns(n, n);
+	jacobian.SetAll(0.);
+	if (!parameters.computeFFRFterms) { return; }
 
+	//the reduced stiffness and damping matrices
+	auto AddMatrix = [&](const PyMatrixContainer& matrix, Real factor)
+	{
+		if (matrix.NumberOfRows() == 0 || factor == 0.) { return; }
+		if (matrix.UseDenseMatrix()) { jacobian.AddSubmatrixWithFactor(matrix.GetInternalDenseMatrix(), factor, nODE2Rigid, nODE2Rigid); }
+		else { matrix.GetInternalSparseTripletMatrix().AddToDenseMatrix(jacobian, nODE2Rigid, nODE2Rigid, factor); }
+	};
+	AddMatrix(parameters.stiffnessMatrixReduced, factorODE2);
+	AddMatrix(parameters.dampingMatrixReduced, factorODE2_t);
+
+	tempCoordinates.SetNumberOfItems(n);
+	tempCoordinates_t.SetNumberOfItems(n);
+	ComputeObjectCoordinates(tempCoordinates);
+	ComputeObjectCoordinates_t(tempCoordinates_t);
+	LinkedDataVector zeta(tempCoordinates, nODE2Rigid, nODE2FF);
+	LinkedDataVector zeta_t(tempCoordinates_t, nODE2Rigid, nODE2FF);
+
+	//the rotation, G and omega of the node's parametrization
+	LinkedDataVector reference = node.GetCoordinateVector(ConfigurationType::Reference);
+	CSVector4D theta, theta_t;
+	theta.SetNumberOfItems(nRotation);
+	theta_t.SetNumberOfItems(nRotation);
+	for (Index k = 0; k < nRotation; k++)
+	{
+		theta[k] = reference[ffrfNodeDim + k] + node.GetCurrentCoordinate(ffrfNodeDim + k);
+		theta_t[k] = node.GetCurrentCoordinate_t(ffrfNodeDim + k);
+	}
+	Matrix3D A;
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
+	Vector3D omega;
+	auto Frame = [&](const CSVector4D& rotation, const CSVector4D& rotation_t)
+	{
+		if (eulerParameters) { A = RigidBodyMath::EP2RotationMatrix(rotation); Glocal = RigidBodyMath::EP2Glocal(rotation); }
+		else { A = RigidBodyMath::RotXYZ2RotationMatrix(rotation); Glocal = RigidBodyMath::RotXYZ2GlocalTemplate<CSVector4D>(rotation); }
+		EXUmath::MultMatrixVectorTemplate<ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D>, CSVector4D, Vector3D>(Glocal, rotation_t, omega);
+	};
+
+	//by the rotation parameters and their velocities
+	ResizableVector f0(n), f1(n);
+	Frame(theta, theta_t);
+	f0.SetAll(0.);
+	ComputeQuadraticVelocityVector(A, Glocal, omega, zeta, zeta_t, f0);
+	const Real relativeEpsilon = 1e-7;
+	const Real minimumValue = 0.01;
+	for (Index level = 0; level < 2; level++)
+	{
+		const Real factor = (level == 0) ? factorODE2 : factorODE2_t;
+		if (factor == 0.) { continue; }
+		for (Index k = 0; k < nRotation; k++)
+		{
+			CSVector4D rotation = theta, rotation_t = theta_t;
+			Real& value = (level == 0) ? rotation[k] : rotation_t[k];
+			const Real eps = relativeEpsilon * EXUstd::Maximum(minimumValue, std::fabs(value));
+			value += eps;
+			Frame(rotation, rotation_t);
+			f1.SetAll(0.);
+			ComputeQuadraticVelocityVector(A, Glocal, omega, zeta, zeta_t, f1);
+			for (Index r = 0; r < n; r++) { jacobian(r, ffrfNodeDim + k) += (factor / eps) * (f1[r] - f0[r]); }
+		}
+	}
+
+	//by the modal coordinates and their velocities, at the current frame
+	Frame(theta, theta_t);
+	const Matrix& P = parameters.mPhitTPsiTilde;
+	const Matrix& X = parameters.mXRefTildePsiTilde;
+	const Matrix& S = parameters.mPsiTildePsiTilde;
+	const Matrix& R = parameters.mPsiTildePsi;
+	const Matrix3D omegaTilde = RigidBodyMath::Vector2SkewMatrix(omega);
+	const Index m = nODE2FF;
+	//W = S (I x omega), 3m x m, and the vectors of the terms
+	ResizableMatrix& W = temp.matrix0;
+	W.SetNumberOfRowsAndColumns(3 * m, m);
+	for (Index i = 0; i < 3 * m; i++)
+	{
+		for (Index k = 0; k < m; k++)
+		{
+			W(i, k) = S(i, 3 * k) * omega[0] + S(i, 3 * k + 1) * omega[1] + S(i, 3 * k + 2) * omega[2];
+		}
+	}
+	tempVector.SetNumberOfItems(3 * m); //X^T omega + S (zeta x omega)
+	tempVector2.SetNumberOfItems(3 * m); //S (zeta_t x omega)
+	for (Index i = 0; i < 3 * m; i++)
+	{
+		Real value = X(0, i) * omega[0] + X(1, i) * omega[1] + X(2, i) * omega[2];
+		Real value_t = 0.;
+		for (Index k = 0; k < m; k++) { value += W(i, k) * zeta[k]; value_t += W(i, k) * zeta_t[k]; }
+		tempVector[i] = value;
+		tempVector2[i] = value_t;
+	}
+	for (Index k = 0; k < m; k++)
+	{
+		Vector3D Pk, Xk, ZTW; //P_k omega, X_k omega, Z^T S_k omega
+		for (Index r = 0; r < 3; r++)
+		{
+			Pk[r] = P(r, 3 * k) * omega[0] + P(r, 3 * k + 1) * omega[1] + P(r, 3 * k + 2) * omega[2];
+			Xk[r] = X(r, 3 * k) * omega[0] + X(r, 3 * k + 1) * omega[1] + X(r, 3 * k + 2) * omega[2];
+			Real value = 0.;
+			for (Index i = 0; i < m; i++) { value += zeta[i] * W(3 * i + r, k); }
+			ZTW[r] = value;
+		}
+		const Vector3D vk({ tempVector[3 * k], tempVector[3 * k + 1], tempVector[3 * k + 2] });
+		const Vector3D vk_t({ tempVector2[3 * k], tempVector2[3 * k + 1], tempVector2[3 * k + 2] });
+		const Vector3D translation_q = -1. * (A * (omegaTilde * Pk));
+		const Vector3D translation_qt = -2. * (A * Pk);
+		const Vector3D rotation_q = omegaTilde * (Xk + vk + ZTW) + 2. * vk_t;
+		const Vector3D rotation_qt = 2. * (Xk + ZTW);
+		const Index column = nODE2Rigid + k;
+		for (Index r = 0; r < ffrfNodeDim; r++)
+		{
+			jacobian(r, column) += factorODE2 * translation_q[r] + factorODE2_t * translation_qt[r];
+		}
+		for (Index j = 0; j < nRotation; j++)
+		{
+			Real value = 0., value_t = 0.;
+			for (Index r = 0; r < 3; r++) { value += Glocal(r, j) * rotation_q[r]; value_t += Glocal(r, j) * rotation_qt[r]; }
+			jacobian(ffrfNodeDim + j, column) += factorODE2 * value + factorODE2_t * value_t;
+		}
+		for (Index i = 0; i < m; i++)
+		{
+			const Real flexible_q = -(omega[0] * W(3 * i, k) + omega[1] * W(3 * i + 1, k) + omega[2] * W(3 * i + 2, k));
+			const Real flexible_qt = -2. * (R(3 * k, i) * omega[0] + R(3 * k + 1, i) * omega[1] + R(3 * k + 2, i) * omega[2]);
+			jacobian(nODE2Rigid + i, column) += factorODE2 * flexible_q + factorODE2_t * flexible_qt;
+		}
+	}
+}
+
+//! the ODE2 Jacobian of the object (#3212) on Euler parameters and Tait-Bryan angles without a forceUserFunction, else
+//! and with numericalJacobian numerical by the system
+JacobianType::Type CObjectFFRFreducedOrder::GetAvailableJacobians() const
+{
+	JacobianType::Type jacobians = (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
+	if (!parameters.numericalJacobian && !parameters.forceUserFunction &&
+		(GetCNode(rigidBodyNodeNumber)->GetType() & (Node::RotationEulerParameters + Node::RotationRxyz)))
+	{
+		jacobians = (JacobianType::Type)(jacobians + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
+	}
+	return jacobians;
+}
 
 //! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
 void CObjectFFRFreducedOrder::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
