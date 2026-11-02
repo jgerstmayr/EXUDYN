@@ -26,10 +26,10 @@ The parameters of the item; in a dictionary, its type is 'GenericDAE':
 | **massMatrix** | NumpyMatrix |  | [] | (symbol: $\Mm \in \Rcal^{n_2 \times n_2}$) the mass matrix; empty: zero, for an object that constrains the coordinates of other items (#3193) |
 | **dampingMatrix** | NumpyMatrix |  | [] | (symbol: $\Dm \in \Rcal^{n_2 \times n_2}$) the damping matrix |
 | **stiffnessMatrix** | NumpyMatrix |  | [] | (symbol: $\Km \in \Rcal^{n_2 \times n_2}$) the stiffness matrix |
-| **forceVector** | NumpyVector |  | [] | (symbol: $\fv \in \Rcal^{n_2}$) the constant generalized forces |
+| **forceVector** | NumpyVector |  | [] | (symbol: $\fv_0 \in \Rcal^{n_2}$) the constant generalized forces |
 | **couplingMatrixODE1** | NumpyMatrix |  | [] | (symbol: $\Em \in \Rcal^{n_2 \times n_1}$) the term of the {ref}`ODE1 <ODE1>` coordinates in the {ref}`ODE2 <ODE2>` equations |
 | **systemMatrix** | NumpyMatrix |  | [] | (symbol: $\Am \in \Rcal^{n_1 \times n_1}$) the system matrix of the {ref}`ODE1 <ODE1>` equations |
-| **rhsVector** | NumpyVector |  | [] | (symbol: $\gv \in \Rcal^{n_1}$) the constant right-hand side of the {ref}`ODE1 <ODE1>` equations |
+| **rhsVector** | NumpyVector |  | [] | (symbol: $\gv_0 \in \Rcal^{n_1}$) the constant right-hand side of the {ref}`ODE1 <ODE1>` equations |
 | **couplingMatrixODE2** | NumpyMatrix |  | [] | (symbol: $\Bm \in \Rcal^{n_1 \times n_2}$) the term of the {ref}`ODE2 <ODE2>` coordinates in the {ref}`ODE1 <ODE1>` equations |
 | **couplingMatrixODE2_t** | NumpyMatrix |  | [] | (symbol: $\Bm_t \in \Rcal^{n_1 \times n_2}$) the term of the {ref}`ODE2 <ODE2>` velocities in the {ref}`ODE1 <ODE1>` equations |
 | **constraintMatrixODE2** | NumpyMatrix |  | [] | (symbol: $\Cm_{\qv} \in \Rcal^{n_a \times n_2}$) the {ref}`ODE2 <ODE2>` coordinates in the algebraic equations |
@@ -83,11 +83,11 @@ The {ref}`ODE2 <ODE2>` coordinates $\qv \in \Rcal^{n_2}$ are those of the nodes 
 ### Equations
 
 $$
-\Mm \ddot\qv + \Dm\dot\qv + \Km\qv + \Em\yv + \Cm_{\qv}\tp\tlambda = \fv + \fv_u(mbs, t, i_N, \qv, \dot\qv, \yv, \pv_{par})
+\Mm \ddot\qv + \Dm\dot\qv + \Km\qv + \Em\yv + \Cm^{*}_{\qv}\tp\tlambda = \fv_0 + \fv_u(mbs, t, i_N, \qv, \dot\qv, \yv, \pv_{par})
 $$ (eq-objectgenericdae-ode2)
 
 $$
-\dot\yv + \Cm_{\yv}\tp\tlambda = \Am\yv + \Bm\qv + \Bm_t\dot\qv + \gv + \gv_u(mbs, t, i_N, \qv, \dot\qv, \yv, \pv_{par})
+\dot\yv + \Cm^{*}_{\yv}\tp\tlambda = \Am\yv + \Bm\qv + \Bm_t\dot\qv + \gv_0 + \gv_u(mbs, t, i_N, \qv, \dot\qv, \yv, \pv_{par})
 $$ (eq-objectgenericdae-ode1)
 
 $$
@@ -97,8 +97,10 @@ $$ (eq-objectgenericdae-ae)
 With a massMatrixUserFunction, $\Mm$ is the matrix it returns. With index 2 constraints of the solver, the algebraic
 equations are $\Cm_{\qv}\dot\qv + \Cm_{\yv}\dot\yv + \cv_u = \Null$, $\cv_u$ of the constraintUserFunction with
 `velocityLevel=True`.
-The terms $\Cm_{\qv}\tp\tlambda$ and $\Cm_{\yv}\tp\tlambda$ are added by the solver from the Jacobian of the algebraic
-equations, as for every constraint. CoordinateLoads are added on the right-hand side of the respective coordinate.
+$\Cm^{*}_{\qv} = \Cm_{\qv} + \partial\cv_u/\partial\qv$ and $\Cm^{*}_{\yv} = \Cm_{\yv} + \partial\cv_u/\partial\yv$ are
+the Jacobians of the algebraic equations, equal to $\Cm_{\qv}$ and $\Cm_{\yv}$ without a constraintUserFunction; the
+solver adds the terms $\Cm^{*}_{\qv}\tp\tlambda$ and $\Cm^{*}_{\yv}\tp\tlambda$ from them, as for every constraint
+(#3227). CoordinateLoads are added on the right-hand side of the respective coordinate.
 
 ### Data coordinates and the post-Newton step
 

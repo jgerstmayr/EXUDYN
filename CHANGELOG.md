@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 310 | 1.13.319 |
+| 1.13 | Newborn | 311 | 1.13.320 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.320** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectGenericDAE: the Jacobians of the algebraic equations and the constant terms in its equations (#3227)
+  - description: The equations of ObjectGenericDAE write C\_q^T lambda and C\_y^T lambda with the matrices C\_q and C\_y of the linear term of the algebraic equations, while the solver adds the reaction terms from the Jacobian of the algebraic equations, which includes the derivatives of the constraintUserFunction; the constant terms are f and g beside c\_0. Decided: the Jacobians C\_q^\* = C\_q + dc\_u/dq and C\_y^\* = C\_y + dc\_u/dy in the reaction terms, the matrices without a constraintUserFunction; the constant terms f\_0, g\_0 and c\_0.
+  - **notes:** The equations of ObjectGenericDAE write the reaction terms with the Jacobians of the algebraic equations, C\_q^\* = C\_q + dc\_u/dq and C\_y^\* = C\_y + dc\_u/dy, and the constant terms f\_0, g\_0 and c\_0.
+  - date resolved: **2026-11-02 11:36**, date raised: 2026-11-02
 - **1.13.319** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` runNotebooks.py: the stored outputs without the user's settings (#3226)
   - description: tools/runNotebooks.py runs the notebooks with the settings of ~/.exudyn/config.json of the machine, so the stored outputs carry its note, as in python/Notebooks/reference/HT.ipynb, and may depend on its settings. Decided: the runner sets EXUDYN\_NO\_USER\_SETTINGS for every notebook.
   - **notes:** tools/runNotebooks.py runs the notebooks without the settings of the user, EXUDYN\_NO\_USER\_SETTINGS.

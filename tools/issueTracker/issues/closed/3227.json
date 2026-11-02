@@ -1,0 +1,16 @@
+{
+  "number": 3227,
+  "title": "ObjectGenericDAE: the Jacobians of the algebraic equations and the constant terms in its equations",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The equations of ObjectGenericDAE write C_q^T lambda and C_y^T lambda with the matrices C_q and C_y of the linear term of the algebraic equations, while the solver adds the reaction terms from the Jacobian of the algebraic equations, which includes the derivatives of the constraintUserFunction; the constant terms are f and g beside c_0. Decided: the Jacobians C_q^* = C_q + dc_u/dq and C_y^* = C_y + dc_u/dy in the reaction terms, the matrices without a constraintUserFunction; the constant terms f_0, g_0 and c_0.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 11:36",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The equations of ObjectGenericDAE write the reaction terms with the Jacobians of the algebraic equations, C_q^* = C_q + dc_u/dq and C_y^* = C_y + dc_u/dy, and the constant terms f_0, g_0 and c_0.",
+  "resolvedInVersion": "1.13.320"
+}

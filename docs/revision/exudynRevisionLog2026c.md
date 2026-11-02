@@ -5720,6 +5720,15 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   checkHeadings.py takes Jacobian as a name.
 - The three design files removed; git keeps them (their last version is in d1b3e6dd).
 
+<a id="rg3-46-4"></a>
+### RG3.46.4, RG3.46.5 — ObjectGenericDAE with the Jacobians of its algebraic equations; no design files cited (2026-11-02, #3227, #3221)
+- The equations of ObjectGenericDAE with C_q^* = C_q + dc_u/dq and C_y^* = C_y + dc_u/dy in the reaction terms - what
+  CObjectGenericDAE::ComputeJacobianAE gives the solver -, and the constant terms f_0, g_0 beside c_0 (forceVector,
+  rhsVector).
+- The docstrings of SolveExplicit, SolveGeneralizedAlpha and the header of userItems.py without the citations of
+  docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
+  is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
+
 <a id="rg3-47"></a>
 ### RG3.47 — The chapter Symbolic system and user functions (2026-11-02, #3222, #3225, #3226)
 - docs/manual/symbolic.md, the chapter at the place of symbolicUserFunctions and userItems in index.md and

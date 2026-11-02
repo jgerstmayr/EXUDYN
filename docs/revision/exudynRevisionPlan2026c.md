@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (10 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (12 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -133,7 +133,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 16 | Structural core improvements |
+| RG9 | OPEN | 18 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 21 | Symbolic |
@@ -234,6 +234,18 @@ CLOSED 2026-11-02 (#3221 stays open): already in the HT and Twist pages and symb
 #### **OPEN_RG3.46.3** symbolicSystem.md and symbolicUserItems.md into the chapter Symbolic system and user functions and into the internals
 
 #3221; with RG3.47. uniformEvaluation.md (not touched, maintainer 2026-11-02) and symbolicParameters.md cite symbolicSystem.md, whose cited sections stay until they are done.
+
+#### **CLOSED_RG3.46.4** ObjectGenericDAE: the Jacobians of the algebraic equations in the reaction terms and the constant terms f_0, g_0, c_0
+
+#3227 (maintainer 2026-11-02).
+
+CLOSED 2026-11-02 (#3227 resolved): C_q^* and C_y^* in the equations, f_0 and g_0. [log](exudynRevisionLog2026c.md#rg3-46-4)
+
+#### **CLOSED_RG3.46.5** The docstrings and the manual without citations of the design files
+
+#3221 (maintainer 2026-11-02: the design files are temporary and are not cited from the documentation; docs/dev/internals rarely, with a note that it is on GitHub).
+
+CLOSED 2026-11-02 (#3221 stays open): solvers.py and userItems.py; nothing else cites them. [log](exudynRevisionLog2026c.md#rg3-46-4)
 
 ### **CLOSED_RG3.47** One chapter "Symbolic system and user functions": symbolic system, symbolic user functions, user items, symbolic solvers
 
@@ -1327,7 +1339,15 @@ CLOSED 2026-11-02 (#3210 resolved): the left-hand side -m omega^2 A c by phi and
 
 #### **OPEN_RG9.11.13** The ODE2 Jacobian of ObjectKinematicTree, analytic or automatic, measured on the kinematic tree performance model first
 
-#3211.
+#3211, #1549 (maintainer 2026-11-02: the floating base first).
+
+##### **OPEN_RG9.11.13.1** ObjectKinematicTree with a floating base on a rigid body node, a Lie group node by default, none with -1
+
+#1549 (maintainer 2026-11-02: the base a rigid body node - by default a Lie group node, so that the explicit solvers still take the tree -; no floating base with the invalid index -1, as now).
+
+##### **OPEN_RG9.11.13.2** The ODE2 Jacobian of ObjectKinematicTree with the floating base, analytic or automatic, measured on the kinematic tree performance model first
+
+#3211 (maintainer 2026-11-02: the part of the floating base may stay numerical if its analytic Jacobian gets too complicated).
 
 #### **OPEN_RG9.11.14** The ODE2 Jacobian of ObjectFFRFreducedOrder, analytic or automatic, measured on perfObjectFFRFreducedOrder first
 
@@ -1359,7 +1379,7 @@ Connectors on these markers fall back to CSystem, serially, or miss the directio
 
 #### **OPEN_RG9.11.18** Evaluate the derivatives of M(q) q_tt and of C_q^T lambda by q as options of the Newton Jacobian
 
-From RG9.11.7: neither is in any Jacobian, also not in the system-wide one; measured on the models with large rotations and with stiff constraints first.
+From RG9.11.7: neither is in the Newton Jacobians, also not in the system-wide numerical one, which differentiates the forces. d(M(q) q_tt)/dq is zero for the bodies with a constant mass matrix, e.g. ObjectRigidBody on Lie group nodes, and may matter for ObjectKinematicTree and larger objects (maintainer 2026-11-02); its effect is measured by #3228 (low priority, no step), with the exact Jacobian of SymbolicSystem. d(C_q^T lambda)/dq can matter more; jacobianConnectorDerivative covers d(J^T f)/dq of the connectors, not the constraints. Proposed: an option of newton.numericalDifferentiation, False by default, that adds d(C_q^T lambda)/dq by a local numerical differentiation of the reaction forces of each constraint by its own coordinates, serially; later, for the joints whose reaction forces are the marker Jacobian times a constant direction, by ComputeMarkerDataJacobianDerivative, as for the connectors, in parallel.
 
 ## **CLOSED_RG10** Tooling and process
 

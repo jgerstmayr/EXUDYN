@@ -1,8 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details:  User items with the interfaces of the built-in items (#3111, #3125, design:
-#           docs/dev/design/symbolicUserItems.md): UserItemCreator(mbs) has the Create functions of mbs with the same
+# Details:  User items with the interfaces of the built-in items (#3111, #3125):
+#           UserItemCreator(mbs) has the Create functions of mbs with the same
 #           arguments, and creates ObjectUserBody and ObjectConnectorUser instead of the built-in objects, with the same
 #           nodes, markers and loads. The user functions are Python functions, so that the system runs in Exudyn as
 #           built; Record() replaces them by one symbolic recording per kind of item, which SymbolicSystem and the

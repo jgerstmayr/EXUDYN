@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.319.dev1
+- Exudyn version = 1.13.320.dev1
 - last change = 2026-11-02
-- Number of issues = 3227
-- Number of resolved issues = 3096 (319 in current version)
+- Number of issues = 3229
+- Number of resolved issues = 3097 (320 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `TESTING` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` A test model measuring the effect of d(M(q) q\_tt)/dq on the Newton iterations, by the exact Jacobian of SymbolicSystem (#3228)
+  - description: The Newton Jacobians of Exudyn contain the mass matrix but not the derivative of M(q) q\_tt by q; it is zero for the bodies with a constant mass matrix, e.g. ObjectRigidBody on Lie group nodes, and may matter for larger objects with a configuration dependent mass matrix, e.g. ObjectKinematicTree. SymbolicSystem.SystemJacobian is exact and contains it. Decided: a test model with rigid bodies on Tait-Bryan angles by UserItemCreator that compares the Newton iterations of SolveGeneralizedAlpha with the exact Jacobian and with the Jacobian without the term; no plan step.
+  - date raised: 2026-11-02
 - `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The settled designs into the user documentation (#3221)
   - description: docs/dev/design/genericDAE.md, symbolicHT.md, symbolicSystem.md, symbolicUserItems.md and systemJacobians.md describe what is decided and implemented. Decided: what a user needs goes into the manual and the item descriptions, the design files are removed when nothing is left in them.
   - date raised: 2026-11-02
@@ -9320,7 +9323,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2023-10-29
 - `EXTENSION` `HIGH EFF` KinematicTree (#1549)
-  - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?
+  - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body? \[2026-11-02, Claude-JG\]: Decided (maintainer 2026-11-02): the floating base is a rigid body node, by default a Lie group node, so that the explicit solvers still take the tree; the invalid index -1 means no floating base; before the Jacobian of \#3211, which may keep the part of the floating base numerical (revision2026c step RG9.11.13.1).
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2023-05-02
 - `EXTENSION` `MEDIUM EFF` CoordinateSpringDamperExt (#1415)

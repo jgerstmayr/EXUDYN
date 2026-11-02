@@ -223,7 +223,7 @@ def _RefuseLieGroupNodes(system, useLieGroupIntegration, where):
 
 def SolveExplicit(system, simulationSettings=None, solverType=None):
     """the explicit time integration of a SymbolicSystemBase by explicit Euler, RK44 or velocity Verlet, as Exudyn's
-    explicit solver computes them (#3112, design docs/dev/design/symbolicSystem.md §10): the steps from
+    explicit solver computes them (#3112): the steps from
     timeIntegration.startTime, endTime and numberOfSteps, smaller with adaptiveStep where the post-Newton step of data
     coordinates rejects a step (#3220); the accelerations by the inverse per body with
     timeIntegration.explicit.computeMassMatrixInversePerBody, else by the sparse LU decomposition of the mass
@@ -329,8 +329,8 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
 
 def SolveGeneralizedAlpha(system, simulationSettings=None):
     """the implicit time integration of a SymbolicSystemBase by the generalized-alpha method in the form of Arnold
-    and Bruls, as Exudyn's MainSolverImplicitSecondOrder computes it (#3126, #3134, design
-    docs/dev/design/symbolicSystem.md §6): per step the predictor of the displacements, velocities and algorithmic
+    and Bruls, as Exudyn's MainSolverImplicitSecondOrder computes it (#3126, #3134):
+    per step the predictor of the displacements, velocities and algorithmic
     accelerations, the ODE1 coordinates by the trapezoidal rule, then Newton's method for the accelerations, the ODE1
     coordinates and the algebraic coordinates with the residual of SystemResidual - r = M q_tt - f + C_q^T z,
     g - y_t, c - and its Jacobian, the ODE2 rows scaled by beta h^2 and the algebraic columns by 1/(beta h^2), as
