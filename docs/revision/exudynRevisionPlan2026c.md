@@ -2859,6 +2859,8 @@ CLOSED 2026-11-02 (#3208 stays open): design sections 1-4 - esym.Function, Varia
 
 After the decisions N1-N3 of symbolicVariableNames.md; N2 with RG12.67.2.
 
+2026-11-02: symbolicVariableNames.md revised with the maintainer's second input (a scope of the model, a scope for each named esym.Real, a flag for the old behaviour, interning; a complete change rather than compromises): three packages instead of N1-N3, package 1 proposed - a scope per model, mbs.symbolicVariables, the only named variables of the symbolic user functions and the symbolic parameters, interning in each scope, the old behaviour by a deprecated flag; decision N4. symbolicParameters.md follows it in 2.1, 2.2 and P1.
+
 #### **OPEN_RG12.73.3** Move what is implemented of symbolicVariableNames.md into the chapter Symbolic system and user functions, and remove the design file
 
 Maintainer 2026-11-02: when the steps of RG12.73 are complete.

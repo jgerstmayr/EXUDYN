@@ -34,10 +34,16 @@ What is not covered:
 
 ### 2.1 The parameter set
 
-The parameters of a system are **named `esym.Real`** - `rho`, `a`, `L`, `k` - collected in one `esym.VariableSet` of
-the system (`system.parameters`): the set gives the names, the values, and the order of a parameter vector p for
-the Jacobians, the export and the ensembles of RG14. A name is one variable (as now). Vectors and matrices of
-parameters are their components; a named `esym.Vector` of the set (#3149) may be used for a vector-valued one.
+The parameters of a system are **named `esym.Real`** - `rho`, `a`, `L`, `k` - collected in one `esym.VariableSet`:
+the set gives the names, the values, and the order of a parameter vector p for the Jacobians, the export and the
+ensembles of RG14. A name is one variable (as now). Vectors and matrices of parameters are their components; a named
+`esym.Vector` of the set (#3149) may be used for a vector-valued one.
+
+With package 1 of symbolicVariableNames.md (maintainer 2026-11-02, second round; to be decided there as N4) the set is
+the **scope of the model**, `mbs.symbolicVariables`: held by MainSystem, emptied by `mbs.Reset()`, the only named
+variables the symbolic user functions of the model may read. `esym.Real('m1', 13.5, scope=mbs)` creates a parameter
+there; SymbolicSystem takes the parameters from it, without a `parameters` argument for the set. MainSystem then holds
+the variables, not the bindings: the bindings stay in the symbolic layer (2.2, 2.3).
 
 ### 2.2 Bindings
 
@@ -57,8 +63,9 @@ entries of the `parameters` vectors of the user items (2.3):
   as `rho*a*b*c` (P2). The variables of an expression are found by a walk over it, as `esym.Function` finds them
   (`NamedVariablesOf`, #3198), which Python then needs as a function.
 - `ParameterBindings` (a small class in `exudyn.symbolics`): the symbolic list of the `parameters` of each item, the
-  named variables found in them - one variable per name, the scope of names of the system (symbolicVariableNames.md,
-  N2) -, `Check(mbs)`, `Apply(mbs)` (the numbers into the items) and the expression of a slot for `Equations()`.
+  named variables found in them - each one a variable of the model's scope, `mbs.symbolicVariables`, which `Check`
+  verifies (symbolicVariableNames.md, package 1) -, `Check(mbs)`, `Apply(mbs)` (the numbers into the items) and the
+  expression of a slot for `Equations()`.
   `creator.parameterVariables` of #3152, not released, becomes `creator.parameterBindings`.
 - **Structure stays Python.** A value that changes the structure of the computation - a number of points, a
   formulation, a flag - cannot be bound; it is a Python constant of the recording (#3203). A binding is only for
@@ -76,7 +83,9 @@ The maintainer's arguments of 2026-11-02:
    well.
 3. The bookkeeping belongs to the symbolic layer, where it is now. MainSystem, its Add/Modify/Set functions and the
    C++ do not know SymbolicSystem, so `mbs.parameterBindings` (option B of the first revision) is the wrong place.
-   The slot binding is kept, as a part of the symbolic layer, with classes of its own if needed.
+   The slot binding is kept, as a part of the symbolic layer, with classes of its own if needed. The *variables*,
+   unlike the bindings, may belong to MainSystem (second round of 2026-11-02, symbolicVariableNames.md package 1),
+   as the symbolic user functions read them too.
 4. The bookkeeping of UserItemCreator becomes simpler with one function that adds a user item: it does what each
    Create function does now by hand -
 
@@ -96,13 +105,13 @@ Not all dependencies are needed now: no workaround for the loads.
 The model that follows (option D of 2.7, decision P1):
 
 ```python
-m1 = esym.Real('m1', 13.5); L = esym.Real('L', 0.8)
+m1 = esym.Real('m1', 13.5, scope=mbs); L = esym.Real('L', 0.8, scope=mbs)   #the model's scope (package 1)
 creator = UserItemCreator(mbs)
 b0 = creator.CreateMassPoint(referencePosition=[1, 0, 0], mass=m1)
 b1 = creator.CreateRigidBody(inertia=InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1]), ...)
 creator.CreateSpringDamper(itemNumbers=[b0, b1], stiffness=k, damping=2.)
 creator.Record()
-system = SymbolicSystem(mbs, parameters=creator.parameterBindings)
+system = SymbolicSystem(mbs, parameters=creator.parameterBindings)   #the variables from mbs.symbolicVariables
 ```
 
 - **`UserItemCreator._AddUserItem(kind, item, parameters)`**: `mbs.AddObject` of the item with the numbers of
@@ -192,6 +201,8 @@ ObjectGenericDAE.
 - **P1** (revised 2026-11-02) The slots are the entries of the `parameters` of the user items; the bindings are
   kept in the symbolic layer, `ParameterBindings` of UserItemCreator, filled by one function that adds a user item
   (option D of 2.7); MainSystem and the C++ items stay numeric and know nothing of them. Proposed: D; B and C not.
+  The variables of the bindings are those of the model's scope if package 1 of symbolicVariableNames.md is chosen
+  (N4); P1 does not change with it.
 - **P2** An expression of named parameters, not only a named variable, for a slot. Proposed.
 - **P3** The inertia: `RigidBodyInertia` and its shapes for both numbers and symbolic values, instead of symbolic
   counterparts. Proposed.
