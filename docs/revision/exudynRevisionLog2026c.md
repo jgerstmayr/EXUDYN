@@ -5729,6 +5729,23 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg3-46-3"></a>
+### RG3.46.3 — symbolicSystem.md and symbolicUserItems.md into the manual and the internals; itemPrecomputation.md (2026-11-02, #3221)
+- New docs/dev/internals/symbolicSystem.md: the representation (a flat program per kind, the LTG tables), what is
+  extracted from mbs and how a state goes back, the table of the items assembled, the composed system and its
+  measurement, the parameters, the Jacobians, the interface SymbolicSystemBase, the solvers and their measurements,
+  the decisions; in the toctree of docs/dev/README.md. The chapter Symbolic system of the manual got a paragraph on the
+  representation (with a note that the internals are on GitHub) and the parameters as expressions.
+- symbolicUserItems.md into docs/dev/internals/userItems.md section 7 (UserItemCreator, the table of the items, the
+  forceUserFunction of the marker states and why not the ConnectorMarker form) and its decisions into section 8, the
+  section 6 of the design (a C++ item with symbolic parameters, not planned) among them; the design file removed.
+- symbolicSystem.md reduced to the sections cited by uniformEvaluation.md, cudaRoadmap.md (both of a colleague, not
+  touched) and symbolicParameters.md: 5, 10, 12.3, 12.4 and the codes of the vector and matrix operations of 12.7
+  with the proposal for sparse matrices (#3168); 179 of 758 lines.
+- itemPrecomputation.md (RG9.11.13.3): the options not chosen and the measurement into
+  docs/dev/internals/userFunctions.md, the design file removed (maintainer 2026-11-02).
+- git keeps the removed files; their last version is in 459fd578.
+
 <a id="rg12-73-2"></a>
 ### RG12.73.2, RG12.67.2 — The scope of the model for the named symbolic variables; the bindings of the parameters of the user items (2026-11-02, #3208, #3159, #3207)
 - Decided (maintainer 2026-11-02): package 1 of symbolicVariableNames.md with `mbs.symbolicVariables`.

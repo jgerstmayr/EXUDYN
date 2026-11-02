@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 321 | 1.13.330 |
+| 1.13 | Newborn | 322 | 1.13.331 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.331** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The settled designs into the user documentation (#3221)
+  - description: docs/dev/design/genericDAE.md, symbolicHT.md, symbolicSystem.md, symbolicUserItems.md and systemJacobians.md describe what is decided and implemented. Decided: what a user needs goes into the manual and the item descriptions, the design files are removed when nothing is left in them.
+  - **notes:** The settled designs are in the manual, the item descriptions and the developer internals: ObjectGenericDAE, the homogeneous transformations, the system Jacobians, the symbolic system (docs/dev/internals/symbolicSystem.md, new) and the user items with the interfaces of the built-in items; the design files genericDAE.md, symbolicHT.md, systemJacobians.md, symbolicUserItems.md and itemPrecomputation.md are removed, symbolicSystem.md keeps the sections that other open designs cite; the docstrings cite no design file.
+  - date resolved: **2026-11-02 19:19**, date raised: 2026-11-02
 - **1.13.330** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.symbolic: two named variables of one name - where names identify variables, and a scope of names (#3208)
   - description: esym.Real('a', 12.) and esym.Real('a', 13.) are two variables of one name: an expression of both reads as one quantity while the computation, which takes the variables, distinguishes them. esym.Function, VariableSet and SymbolicSystem refuse two variables of one name, but esym.Function accepts an input named as a variable of esym.variables it also reads. A global scope of names, each name once, with an exemption, a reset and a switch, would refuse a second variable at its creation. Decided: evaluated first, with options and recommendations in docs/dev/design/symbolicVariableNames.md (revision2026c step RG12.73).
   - **notes:** A named symbolic variable is a variable of a scope: esym.Real(name, value, scope=mbs), esym.Vector and esym.Matrix give the variable of that name in mbs.symbolicVariables, the new scope of the model - a new one, or the one there with the value set; one of another kind or size is replaced -; without scope the one of esym.variables. A symbolic user function reads only its arguments and the variables of mbs.symbolicVariables, at every call; another named variable and a named variable created while recording are refused. mbs.Reset() empties the scope, GetDictionary and SetDictionary keep it. exudyn.special.deprecations.symbolicVariablesWithoutScope restores the variables of no scope for the transition. Test model symbolicVariableScopeTest.py.

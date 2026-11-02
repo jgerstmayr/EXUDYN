@@ -61,8 +61,6 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG2** Testing and verification
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
   - RG2.9 Add three old test models (3 open sub-steps)
-- **RG3** Docs
-  - RG3.46 Move the settled designs into the manual and the item descriptions, and remove the design files (1 open sub-step)
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
@@ -126,7 +124,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 |---|---|---|---|
 | RG1 | OPEN | 1 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
-| RG3 | OPEN | 2 | Docs |
+| RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 5 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
@@ -182,7 +180,7 @@ CLOSED 2026-10-17 (#3019; maintainer: add a step, the local machine might not be
 processes get OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS and NGS_NUM_THREADS = cores / processes;
 NGsolveOCCboundaries2.py reserves 6.3 GB instead of 17 GB. [log](exudynRevisionLog2026c.md#rg2-10)
 
-## **OPEN_RG3** Docs
+## **CLOSED_RG3** Docs
 
 What the documentation still gets wrong or does not say.
 
@@ -214,9 +212,11 @@ CLOSED 2026-10-10 (#2936).
 
 CLOSED 2026-10-10 (#2937); the maintainer adjusts the widths.
 
-### **OPEN_RG3.46** Move the settled designs into the manual and the item descriptions, and remove the design files
+### **CLOSED_RG3.46** Move the settled designs into the manual and the item descriptions, and remove the design files
 
 #3221 (maintainer 2026-11-02: the documentation says what the code is now - not the ways it went, when and by whom it was decided -, with a short note on why where it keeps a decision from going back and forth; genericDAE.md and symbolicHT.md probably leave nothing for the internals; symbolicVariableNames.md and symbolicParameters.md stay until their steps are complete (RG12.67, RG12.73); the uniformEvaluation files are work in progress of a colleague and are not touched).
+
+CLOSED 2026-11-02 (#3221 resolved): the settled designs in the manual and the internals; symbolicVariableNames.md and symbolicParameters.md leave with RG12.73.3 and RG12.67.6, symbolicSystem.md (reduced) and the files of RG14 with their steps.
 
 #### **CLOSED_RG3.46.1** genericDAE.md into the descriptions of ObjectGenericDAE and the solver chapter
 
@@ -230,9 +230,11 @@ CLOSED 2026-11-02 (#3221 stays open): the section Solvers of ObjectGenericDAE; t
 
 CLOSED 2026-11-02 (#3221 stays open): already in the HT and Twist pages and symbolicUserFunctions.md; the reason of the mapped symbolic HT added; symbolicHT.md removed. [log](exudynRevisionLog2026c.md#rg3-46-1)
 
-#### **OPEN_RG3.46.3** symbolicSystem.md and symbolicUserItems.md into the chapter Symbolic system and user functions and into the internals
+#### **CLOSED_RG3.46.3** symbolicSystem.md and symbolicUserItems.md into the chapter Symbolic system and user functions and into the internals
 
 #3221; with RG3.47. uniformEvaluation.md (not touched, maintainer 2026-11-02) and symbolicParameters.md cite symbolicSystem.md, whose cited sections stay until they are done.
+
+CLOSED 2026-11-02 (#3221): docs/dev/internals/symbolicSystem.md (new), the user items into internals/userItems.md, the chapter Symbolic system; symbolicUserItems.md and itemPrecomputation.md removed, symbolicSystem.md reduced to the cited sections. [log](exudynRevisionLog2026c.md#rg3-46-3)
 
 #### **CLOSED_RG3.46.4** ObjectGenericDAE: the Jacobians of the algebraic equations in the reaction terms and the constant terms f_0, g_0, c_0
 

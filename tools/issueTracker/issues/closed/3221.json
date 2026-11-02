@@ -1,0 +1,16 @@
+{
+  "number": 3221,
+  "title": "The settled designs into the user documentation",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "docs/dev/design/genericDAE.md, symbolicHT.md, symbolicSystem.md, symbolicUserItems.md and systemJacobians.md describe what is decided and implemented. Decided: what a user needs goes into the manual and the item descriptions, the design files are removed when nothing is left in them.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 19:19",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The settled designs are in the manual, the item descriptions and the developer internals: ObjectGenericDAE, the homogeneous transformations, the system Jacobians, the symbolic system (docs/dev/internals/symbolicSystem.md, new) and the user items with the interfaces of the built-in items; the design files genericDAE.md, symbolicHT.md, systemJacobians.md, symbolicUserItems.md and itemPrecomputation.md are removed, symbolicSystem.md keeps the sections that other open designs cite; the docstrings cite no design file.",
+  "resolvedInVersion": "1.13.331"
+}

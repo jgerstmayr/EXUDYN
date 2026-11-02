@@ -77,7 +77,12 @@ computed from, and computes them again only if one of these differs or its param
 and the numerical differentiation needs no notice, as a perturbed coordinate fails the comparison. Inside a parallel
 loop (`TaskManager::JobIsRunning()`) a failed comparison throws: only a Python user function can change coordinates
 while the system is computed, and such a model is solved with one thread. `TaskManager::CreateJob` waits for all
-threads before it throws an exception of the job. An item computed in the
+threads before it throws an exception of the job. Not chosen: thread-local temporaries of the tree (safe, but every
+marker computes the whole tree again), a counter of the state in CData (every writer of a coordinate - solvers,
+numerical differentiation, the Lie group update, the setters - would have to increment it) and a precomputation alone
+(a caller that changes a coordinate outside a system function would read a stale state) (maintainer 2026-11-02).
+Measured, RK44 with a spring-damper from every link to the ground: 20 links 0.27 s instead of 1.22 s, 60 links 2.1 s
+instead of 11.0 s; the tree alone 0.15 s and 1.4 s. An item computed in the
 threads keeps no buffer that two threads could share: ObjectUserBody and NodeUser keep theirs as `static
 thread_local` in the functions that use them.
 

@@ -138,7 +138,42 @@ evaluateUserFunctions.cpp and the call in the item; the std::function, its templ
 transfer are generated. ObjectUserBody with its user functions is about 520 hand-written lines of C++ and 300 lines of
 definition; the user ANCF cable, beam and tetrahedron needed no C++ at all.
 
-## 7. Decisions
+## 7. UserItemCreator: user items with the interfaces of the built-in items
+
+`exudyn/symbolics/userItems.py` (#3111, #3125): a creator object with the Create functions of mbs and their arguments,
+so that a script built with `creator = mbs` builds the same system of user items with `creator =
+UserItemCreator(mbs)` - in Exudyn, to compare with the built-in items, and in the symbolic system (symbolicSystem.md).
+The Create functions add the nodes, markers and loads of the built-in functions and an ObjectUserBody,
+ObjectConnectorUser, ObjectJointUser or ObjectGenericDAE instead of the built-in object, all through `_AddUserItem(kind,
+item, parameters, variant)`, which keeps the item in `items[kind]`, its symbolic parameters in `parameterBindings`
+(#3159) and the user functions of its variant. Their user functions are Python first, so that the system runs in Exudyn
+as built; `Record()` replaces them by one recording per kind (or per variant of a kind, #3203), each item with its
+parameters. An argument the user item does not support raises, naming it. A connector at any local position, also the
+center of a user mass point, is on a marker of the body (#3207).
+
+| built-in (Create) | user item |
+|---|---|
+| CreateGround | the built-in ObjectGround |
+| CreateMassPoint | ObjectUserBody on NodePoint: $\Mm = m\Im$, position $\qv + \pLoc$, Jacobian $\Im$, mass integral |
+| CreateRigidBody | ObjectUserBody on NodeRigidBodyRxyz: the mass matrix with the coupling of a center of mass and the quadratic velocity terms of CObjectRigidBody, written once with exudyn.symbolics.kinematics for numbers and recordings (#3128); Euler parameters and Lie group nodes refused |
+| CreateSpringDamper, CreateCartesianSpringDamper | ObjectConnectorUser on two position markers with the forceUserFunction of the marker states (#3119, #3193) |
+| CreateTorsionalSpringDamper | ObjectConnectorUser on two rigid markers, the turns in a data node with `unlimitedRotations` (#3218) |
+| CreateRigidBodySpringDamper | ObjectConnectorUser on two rigid markers, the joint rotations among the parameters, Tait-Bryan or intrinsic (#3193) |
+| CreateSphereSphereContact | ObjectConnectorUser with a data node of the gap and the impact velocity, the post-Newton step of ObjectContactSphereSphere, friction on rigid markers (#3197, #3219) |
+| CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint, CreateDistanceConstraint | ObjectJointUser on the rigid markers of the built-in joints, drawn by a graphicsDataUserFunction (#3140, #3147) |
+| CreateCoordinateConstraint | ObjectGenericDAE with a NodeGenericAE (#3193) |
+| CreateForce, CreateTorque | the built-in loads on a marker of the user body |
+
+**The forceUserFunction of the marker states** (#3119, #3183): a connector gets the frame and the twist of each of its
+two markers and returns the forces on them, applied through the marker Jacobians, $\fv_{gen} = -\sum_i
+(\Jm_{pos,i}\tp\fv_i + \Jm_{rot,i}\tp\mv_i)$, as ObjectJointUser gets the frames and returns its equations. The
+earlier form, a function of `exudyn.ConnectorMarker` objects that applies forces by methods, cannot be recorded: its
+methods return the numbers of the call, and the forces are side effects, not a result; it is kept as the
+`markerAccessUserFunction`, for forces at points that the function computes on a body of many coordinates (a ball on an
+ANCF cable). A user body without mass on the nodes of both bodies, the alternative, would bypass the markers and leave
+the connector outside the list of connectors.
+
+## 8. Decisions
 
 | decision | why |
 |---|---|
@@ -149,3 +184,6 @@ definition; the user ANCF cable, beam and tetrahedron needed no C++ at all.
 | `parameters` a vector, its names in a ParameterLayout of the kind (#3056) | one recording serves every item of a kind |
 | no visualization argument; graphics data mapped by the positionUserFunction (2026-10-22, #3064) | the graphics function reaches its item through `mbs`; a symbolic body is drawn without Python |
 | algebraic equations, data coordinates, ODE1 not now (2026-10-22) | later through MainSystem functions |
+| the Create functions on a creator object with the signatures of mbs, no classes per item (2026-10-26) | one script for the built-in and the user items |
+| connectors by the forceUserFunction of ObjectConnectorUser, drawn by a Python graphicsDataUserFunction (2026-10-26) | the connector stays a connector; returning the forces is the form of the symbolic user items |
+| a C++ item with numerical and symbolic parameters, a symbolic item without user functions, not planned (2026-10-28) | the user items are symbolic by their recordings; the parameters as variables (#3152) and the system variables (#3151) would allow it later |

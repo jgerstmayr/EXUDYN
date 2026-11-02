@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.330.dev1
+- Exudyn version = 1.13.331.dev1
 - last change = 2026-11-02
 - Number of issues = 3232
-- Number of resolved issues = 3107 (330 in current version)
+- Number of resolved issues = 3108 (331 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9041,9 +9041,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `CHANGE` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` Remove special.deprecations.symbolicVariablesWithoutScope, the named symbolic variables of no scope (#3231)
   - description: Since \#3208 a named esym.Real, Vector or Matrix is a variable of a scope, esym.variables or mbs.symbolicVariables, and a symbolic user function reads only its arguments and the variables of mbs.symbolicVariables; exudyn.special.deprecations.symbolicVariablesWithoutScope restores the variables of no scope for the transition. Decided: the flag and the branches of NamedRealInScope, NamedArrayInScope and CheckVariablesOfRecording that it takes are removed when scripts have changed, as \#3016 for symbolicStarProduct; a delayed issue without a plan step.
-  - date raised: 2026-11-02
-- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The settled designs into the user documentation (#3221)
-  - description: docs/dev/design/genericDAE.md, symbolicHT.md, symbolicSystem.md, symbolicUserItems.md and systemJacobians.md describe what is decided and implemented. Decided: what a user needs goes into the manual and the item descriptions, the design files are removed when nothing is left in them.
   - date raised: 2026-11-02
 - `IMPROVEMENT` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` MarkerSuperElementRigid: dv/dq and the direction along the Euler parameters (#3215)
   - description: MarkerSuperElementRigid provides neither GetVelocity\_q nor GetRadialKinematics, so connectors on it fall back to CSystem or miss the direction along the Euler parameters of the reference node. Decided: deferred until the super element markers are revised.

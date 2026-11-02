@@ -40,8 +40,16 @@ system = SymbolicSystem(mbs)
 - `GetFlatProgram`: the equations as a flat program of scalar and vector operations in Python or C++, for an
   evaluation outside Exudyn;
 - `SetSystemState`: a state written into `mbs`;
-- named `exudyn.symbolic.Real` among the parameters of the user items stay variables of the equations,
-  `SymbolicSystem(mbs, parameters=...)`, for derivatives by them.
+- the parameters of the user items given as expressions of named variables of the model,
+  `esym.Real(name, value, scope=mbs)`, stay expressions of these variables in the equations,
+  `SymbolicSystem(mbs, parameters=creator.parameterBindings)`, for derivatives by them; `SetParameterValues` sets new
+  values (#3159, #3208).
+
+The system is kept as one flat program per kind of item - the items whose user functions are the same recording -,
+with the tables of their parameters and of their local-to-global indices, as Exudyn assembles its items; the global
+matrices are sparse, their pattern known before any evaluation. For the evaluation, the forces and the mass matrix of
+the whole system are composed into two recordings, which is several times faster than calling the recordings item by
+item. How it is built is described in `docs/dev/internals/symbolicSystem.md` (on GitHub).
 
 The solvers of {ref}`sec-symbolicsolvers` integrate the system. `NumpySystem` takes equations written by hand with the
 same interface. The functions are described in {ref}`sec-module-symbolics.systemmodel`.
