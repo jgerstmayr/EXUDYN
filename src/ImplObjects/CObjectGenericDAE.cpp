@@ -217,7 +217,7 @@ void CObjectGenericDAE::ComputeUserFunctionCoordinates() const
 }
 
 //! E - df_u/dy
-void CObjectGenericDAE::ComputeJacobianODE2_ODE1(ResizableMatrix& jacobian) const
+void CObjectGenericDAE::ComputeJacobianODE2_ODE1(const CSystemData& systemData, TemporaryComputationData& temp, ResizableMatrix& jacobian) const
 {
 	MatrixOrZero(parameters.couplingMatrixODE1, GetODE2Size(), GetODE1Size(), jacobian);
 	if (parameters.jacobianUserFunction)

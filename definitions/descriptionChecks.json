@@ -267,9 +267,9 @@
    "fingerprint": "8a919c73015e"
   },
   "ObjectConnectorHydraulicActuatorSimple": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "e9c5f7e8972e"
+   "fingerprint": "a2fad5708831"
   },
   "ObjectConnectorLinearSpringDamper": {
    "checked": "2026-10-25",
@@ -282,9 +282,9 @@
    "fingerprint": "0f9edfa82900"
   },
   "ObjectConnectorRigidBodySpringDamper": {
-   "checked": "2026-10-31",
+   "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "184053b0c6ef"
+   "fingerprint": "5121e5530f09"
   },
   "ObjectConnectorRollingDiscPenalty": {
    "checked": "2026-11-02",

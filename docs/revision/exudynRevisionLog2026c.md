@@ -5567,3 +5567,19 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   models fewer, 11 more; each of the latter with the same count as with doSystemWideDifferentiation (sliderCrank3Dtest
   2000 / 3172, carRollingDiscTest 584 / 696, userJointTest Jacobians 868 / 1285). 38 test models and 3 mini examples
   with new references, the old values in the comments.
+
+<a id="rg9-11-8-4"></a>
+### RG9.11.8.4 — The hydraulic actuator and the intrinsic rigid-body spring-damper (2026-11-02, #3201)
+- Decided by the maintainer: HydraulicActuatorSimple and the intrinsic RigidBodySpringDamper get a local Jacobian;
+  ReevingSystemSprings, the cable contacts and the Python user functions stay numerical by CSystem, serially.
+- CObjectConnectorHydraulicActuatorSimple: ComputeActuatorForce a template (the length by the square root of a
+  nonzero square, as in the spring-damper), ComputeConnectorForcePositionDiff, ComputeJacobianODE2_ODE1 analytic;
+  GetAvailableJacobians with ODE2_ODE2_function, ODE2_ODE2_t_function and ODE2_ODE1_function.
+  `CObject::ComputeJacobianODE2_ODE1` gets the system data and the temporary data (ObjectGenericDAE ignores them).
+- CObjectConnectorRigidBodySpringDamper: its own ComputeJacobianODE2Connector (`ItemConnectorInterface('Rigid',
+  jacobian=False)` plus the function), numerical by the marker kinematics for the intrinsic formulation, automatic
+  otherwise; GetAvailableJacobians with the function flags unless a user function defines the force. The automatic
+  derivatives of ExpSE3 and LogSE3 are not defined at zero (the norm of the rotation vector).
+- test_systemJacobians.py: a model of a hydraulic actuator lifting an Euler parameter body, valves open, chamber volume
+  change on, in the ODE2 and ODE1 comparisons; RigidBodies has had an intrinsic one, now on the local Jacobian (71
+  cases). Newton statistics: the same for both test models, symbolicUserConnectorsTest 2309 / 2368.

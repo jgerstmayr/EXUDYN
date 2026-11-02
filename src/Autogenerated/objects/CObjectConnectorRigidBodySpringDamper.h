@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-11-02  02:01:19 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -200,10 +200,10 @@ public: // AUTO:
         ConnectorODE2LHSRigidMarkers(systemData, temp, *this, localODE2Lhs); return true;
     }
 
-    //! AUTO:  the Jacobian by automatic differentiation of the force (#2745)
+    //! AUTO:  the Jacobian by automatic differentiation of the force (#2745), for the intrinsic formulation by local numerical differentiation of the force by the marker kinematics, as its logarithm of SE(3) has no automatic derivative at zero (#3201)
     virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero) const override
     {
-        ConnectorJacobianODE2RigidMarkers(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); return true;
+        if (parameters.useIntrinsicFormulation) { ConnectorJacobianODE2RigidMarkersNumerical(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); } else { ConnectorJacobianODE2RigidMarkers(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); } return true;
     }
 
     //! AUTO:  the force and torque on each marker from the kinematics of the two markers (#2745)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  13:37:10 (last modified)
+* @date         2026-11-02  02:01:19 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -131,6 +131,9 @@ public: // AUTO:
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
 
+    //! AUTO:  the Jacobian of the ABRV:ODE2 ABRV:LHS by the two pressures, analytic, with the marker Jacobians of the connector interface (#3201)
+    virtual void ComputeJacobianODE2_ODE1(const CSystemData& systemData, TemporaryComputationData& temp, ResizableMatrix& jacobian) const override;
+
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
@@ -191,8 +194,11 @@ public: // AUTO:
     //! AUTO:  the force on marker 1 from the kinematics of the two markers (#2745)
     virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const override;
 
+    //! AUTO:  the same force with automatic differentiation, for the Jacobian (#3201)
+    virtual void ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, SlimVectorBase<DRealPositionMarkers, 3>& force) const override;
+
     //! AUTO:  the force of the actuator from the kinematics of its markers and the pressures of its node, shared by the connector interface and the output variables (#2745)
-    void ComputeActuatorForce(const Vector3D& position0, const Vector3D& position1, const Vector3D& velocity0, const Vector3D& velocity1, Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force, Vector3D& forceDirection) const;
+    template<class TReal> void ComputeActuatorForce(const SlimVectorBase<TReal, 3>& position0, const SlimVectorBase<TReal, 3>& position1, const SlimVectorBase<TReal, 3>& velocity0, const SlimVectorBase<TReal, 3>& velocity1, SlimVectorBase<TReal, 3>& relPos, SlimVectorBase<TReal, 3>& relVel, TReal& linearVelocity, TReal& force, SlimVectorBase<TReal, 3>& forceDirection) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

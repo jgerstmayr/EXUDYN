@@ -93,6 +93,8 @@ ConnectorCoordinateSpringDamperExt ignored factor0 and factor1 (#3204).
 The local Jacobians of the connectors and joints on rigid bodies with Euler parameters contain the derivative along
 the Euler parameters, on which the unnormalized rotation matrix depends; they are the exact derivatives of the
 residual, and models with Euler parameters need fewer or, in some, more Newton iterations (#3201).
+ConnectorHydraulicActuatorSimple and ConnectorRigidBodySpringDamper with `useIntrinsicFormulation` compute the
+Jacobians of their forces locally, also in parallel; the pressure equations of the actuator stay numerical (#3201).
 `doSystemWideDifferentiation` takes the factors of the solver for the reaction forces of the algebraic equations and
 differentiates them by the Lagrange multipliers; with joints on Euler parameters, its Newton iterations could fail before (#3206).
 

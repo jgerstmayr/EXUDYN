@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-01  11:47:36 (last modified)
+* @date         2026-11-02  02:01:19 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -212,7 +212,7 @@ public: // AUTO:
     virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const override;
 
     //! AUTO:  the Jacobian of the ABRV:ODE2 ABRV:LHS by the ABRV:ODE1 coordinates, the coupling matrix (#3143)
-    virtual void ComputeJacobianODE2_ODE1(ResizableMatrix& jacobian) const override;
+    virtual void ComputeJacobianODE2_ODE1(const CSystemData& systemData, TemporaryComputationData& temp, ResizableMatrix& jacobian) const override;
 
     //! AUTO:  the right-hand side of the ABRV:ODE1 equations
     virtual void ComputeODE1RHS(Vector& ode1Rhs) const override;

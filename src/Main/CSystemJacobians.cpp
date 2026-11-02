@@ -197,7 +197,7 @@ bool CSystem::ComputeLocalJacobianODE2(TemporaryComputationData& temp, const Num
 		local.ode2 = LocalJacobian::analytic;
 		if (diffODE1 && (jacType & JacobianType::ODE2_ODE1_function))
 		{
-			object->ComputeJacobianODE2_ODE1(temp.localJacobianODE1);
+			object->ComputeJacobianODE2_ODE1(cSystemData, temp, temp.localJacobianODE1);
 			local.ode1 = LocalJacobian::analytic;
 		}
 		else if (diffODE1)

@@ -4,8 +4,9 @@
 # Details:  The local Jacobians of the items against the system-wide numerical one (#3201, design
 #           docs/dev/design/systemJacobians.md section 3.4): small models of the item types - rigid bodies with the
 #           spring-dampers, mass points with the contact and the coordinate connectors, an ANCF cable, ObjectGenericDAE
-#           with its ODE1 couplings, the joints - and the blocks of JacobianODE2RHS and JacobianODE1RHS by the local
-#           Jacobians (analytic, automatic or numerical per object) against doSystemWideDifferentiation, and the
+#           with its ODE1 couplings, the joints, a hydraulic actuator with its pressures - and the blocks of
+#           JacobianODE2RHS and JacobianODE1RHS by the local Jacobians (analytic, automatic or numerical per object)
+#           against doSystemWideDifferentiation, and the
 #           constraint Jacobian of JacobianAE - the joints, and the Euler parameter constraint of the nodes - against
 #           doSystemWideDifferentiation, dense and sparse; the parallel assembly of the ODE2 rows against the serial one,
 #           dense and sparse (#1203). At zero velocities, where the automatic connector
@@ -120,6 +121,21 @@ def Contacts(mbs, nodeType=exu.NodeType.RotationRxyz):
                                   dynamicFriction=0.3, frictionProportionalZone=1e-2)
 
 
+def Hydraulic(mbs):
+    """a rigid body on Euler parameters lifted by a hydraulic actuator, its pressures in a NodeGenericODE1, the valves
+    open: the ODE2 rows by the coordinates and the pressures, the ODE1 rows of the pressures"""
+    ground = mbs.CreateGround()
+    body = mbs.CreateRigidBody(inertia=inertia, referencePosition=[0.3, 0.6, 0], referenceRotationMatrix=RotationMatrixZ(0.2),
+                               gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationEulerParameters)
+    pressures = mbs.AddNode(NodeGenericODE1(numberOfODE1Coordinates=2, referenceCoordinates=[0, 0],
+                                            initialCoordinates=[2e6, 5e5]))
+    mbs.AddObject(ObjectConnectorHydraulicActuatorSimple(markerNumbers=[mbs.AddMarker(MarkerBodyPosition(bodyNumber=ground, localPosition=[0, 0, 0])),
+                  mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[-0.1, -0.02, 0.01]))], nodeNumbers=[pressures],
+                  offsetLength=0.4, strokeLength=0.6, chamberCrossSection0=1e-3, chamberCrossSection1=8e-4, hoseVolume0=1e-3,
+                  hoseVolume1=1e-3, valveOpening0=0.5, valveOpening1=-0.3, actuatorDamping=1e3, oilBulkModulus=1e9,
+                  nominalFlow=1e-5, systemPressure=1e7, tankPressure=1e5, useChamberVolumeChange=True))
+
+
 def EulerParameters(mbs):
     """two rigid bodies on Euler parameters, the constraint of their nodes alone"""
     for i in range(2):
@@ -132,7 +148,7 @@ eulerParameters = exu.NodeType.RotationEulerParameters
 models = {'RigidBodies': RigidBodies, 'PointsAndContact': PointsAndContact, 'Cable': Cable, 'GenericDAE': GenericDAE,
           'Joints': Joints, 'Contacts': Contacts, 'EulerParameters': EulerParameters,
           'RigidBodiesEP': lambda mbs: RigidBodies(mbs, eulerParameters), 'JointsEP': lambda mbs: Joints(mbs, eulerParameters),
-          'ContactsEP': lambda mbs: Contacts(mbs, eulerParameters)}
+          'ContactsEP': lambda mbs: Contacts(mbs, eulerParameters), 'Hydraulic': Hydraulic}
 
 
 def Build(model):
@@ -216,12 +232,13 @@ def test_theContactJacobiansAreTheSystemWideOneAlsoAtVelocities(model, factors):
     assert Difference(local, numerical) < tolerance, (model, factors, Difference(local, numerical))
 
 
+@pytest.mark.parametrize('model', ['GenericDAE', 'Hydraulic'])
 @pytest.mark.parametrize('factors', [(1., 0., 0.), (0., 1., 0.), (0., 0., 1.)])
-def test_theLocalODE1JacobianIsTheSystemWideOne(factors):
-    local = Jacobian('GenericDAE', ODE1(factors))
-    numerical = Jacobian('GenericDAE', ODE1(factors), systemWide=True)
+def test_theLocalODE1JacobianIsTheSystemWideOne(model, factors):
+    local = Jacobian(model, ODE1(factors))
+    numerical = Jacobian(model, ODE1(factors), systemWide=True)
     assert np.max(np.abs(local)) > 0
-    assert Difference(local, numerical) < tolerance, (factors, Difference(local, numerical))
+    assert Difference(local, numerical) < tolerance, (model, factors, Difference(local, numerical))
 
 
 @pytest.mark.parametrize('model', ['Joints', 'JointsEP', 'EulerParameters'])

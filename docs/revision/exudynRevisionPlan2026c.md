@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (6 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (5 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -131,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 12 | Structural core improvements |
+| RG9 | OPEN | 11 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 17 | Symbolic |
@@ -1221,9 +1221,13 @@ CLOSED 2026-11-02 (#3201 stays open): CMarker::GetVelocity_q and CObjectBody::Ge
 
 CLOSED 2026-11-02 (#3204 resolved, #3201 stays open): ItemConnectorInterface(jacobian='numerical', velocityDerivative=True) for RollingDiscPenalty, ConvexRoll, ContactCoordinate, SphereSphere, SphereTorus, SphereTriangle and CoordinateSpringDamperExt (its analytic Jacobian without the factors removed); rotatingTableTest 26740 instead of 26785 Newton iterations (1083889 without dv/dq), the contact models within a few iterations, the two Euler parameter models with contacts 18-19 % more (the direction along e, RG9.11.8.5); 13 test models and one mini example with new references (1e-12 to 1e-7, coordinateSpringDamperExt 2 %, #3204). [log](exudynRevisionLog2026c.md#rg9-11-8-3)
 
-##### **OPEN_RG9.11.8.4** The other connectors numerical by CSystem: ReevingSystemSprings, HydraulicActuatorSimple, the intrinsic RigidBodySpringDamper, the Python user functions, ConvexRoll and the cable contacts, and markers for dv/dq as they need them
+##### **CLOSED_RG9.11.8.4** The other connectors numerical by CSystem: ReevingSystemSprings, HydraulicActuatorSimple, the intrinsic RigidBodySpringDamper, the Python user functions, ConvexRoll and the cable contacts, and markers for dv/dq as they need them
 
 Low priority; ConvexRoll may stay numerical by CSystem. ConvexRoll is on the interface since RG9.11.8.3.
+
+Decided 2026-11-02 (maintainer): HydraulicActuatorSimple and the intrinsic RigidBodySpringDamper get a local Jacobian, the others stay numerical by CSystem, serially.
+
+CLOSED 2026-11-02 (#3201 stays open): design section 8.7 - HydraulicActuatorSimple by automatic differentiation on the position interface, its block by the pressures analytic (CObject::ComputeJacobianODE2_ODE1 with the system and temporary data, for the marker Jacobians), its pressure equations numerical; the intrinsic RigidBodySpringDamper by local numerical differentiation of the force by the marker kinematics; the same Newton iterations, hydraulicActuatorSimpleTest and rigidBodySpringDamperIntrinsic with new references (3e-11); test_systemJacobians.py with a hydraulic actuator on an Euler parameter body. [log](exudynRevisionLog2026c.md#rg9-11-8-4)
 
 ##### **CLOSED_RG9.11.8.5** The direction along the Euler parameters in the local Jacobians of the connectors
 

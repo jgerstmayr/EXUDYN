@@ -150,10 +150,11 @@ void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidTemplate(c
 	torques[0] = -fRot + torque;
 }
 
-//! the Jacobian by automatic differentiation (ComputeConnectorForceRigidDiff), unless a user function defines the force (#2745)
+//! the Jacobian on the connector interface - by automatic differentiation (ComputeConnectorForceRigidDiff), for the
+//! intrinsic formulation by local numerical differentiation (#3201) -, unless a user function defines the force (#2745)
 JacobianType::Type CObjectConnectorRigidBodySpringDamper::GetAvailableJacobians() const
 {
-	if (!parameters.springForceTorqueUserFunction && !parameters.useIntrinsicFormulation)
+	if (!parameters.springForceTorqueUserFunction)
 	{
 		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
 	}

@@ -389,3 +389,18 @@ Euler parameter node, so the AD and the rigid nodes cover them.
 - Without the direction: markers without GetRadialKinematics on Euler parameter nodes (MarkerSuperElementRigid with
   an Euler parameter reference node, the user markers), connectors and constraints on the path of the marker data,
   and the access functions of the rigid body by automatic differentiation (off by default).
+
+### 8.7 The other connectors (RG9.11.8.4)
+
+- ConnectorHydraulicActuatorSimple: the ODE2 rows on the connector interface of position markers, the force by
+  automatic differentiation (ComputeActuatorForce a template, the pressures constants); the block by the pressures
+  analytic, `e [-A0, A1]` projected by the marker Jacobians, which `CObject::ComputeJacobianODE2_ODE1(systemData, temp,
+  jacobian)` finds in temp.markerTemp after the object's ODE2 Jacobian; the ODE1 rows, the two pressure equations,
+  numerical by CSystem as for every connector. The ODE2 rows are assembled in parallel.
+- ConnectorRigidBodySpringDamper with useIntrinsicFormulation: the local numerical differentiation of the force by the
+  marker kinematics (`ConnectorJacobianODE2RigidMarkersNumerical`), as the logarithm of SE(3) has no automatic
+  derivative at the zero relative motion; the other formulation keeps the automatic one.
+- Numerical by CSystem, serially (maintainer 2026-11-02): ConnectorReevingSystemSprings, the cable contacts and the
+  connectors with Python user functions.
+- Newton iterations as before (hydraulicActuatorSimpleTest 962, rigidBodySpringDamperIntrinsic 4115), the results
+  within 3e-11.
