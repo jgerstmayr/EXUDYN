@@ -129,6 +129,24 @@ default, or `exu.MarkerType.Position | exu.MarkerType.Orientation` with a `rotat
 marker; Assemble refuses a rotation function without Orientation and Orientation without it (#3103). The Jacobians are
 computed by central differences if they are not given - then a Newton tolerance below about 1e-10 is not reached.
 
+(sec-useritemcreator)=
+## User items with the interfaces of the built-in items
+
+`UserItemCreator(mbs)` of `exudyn.symbolics.userItems` has Create functions with the names and arguments of those of
+`mbs` - CreateGround, CreateMassPoint, CreateRigidBody, CreateSpringDamper, CreateTorsionalSpringDamper,
+CreateCartesianSpringDamper, CreateRigidBodySpringDamper, CreateSphereSphereContact, CreateRevoluteJoint,
+CreatePrismaticJoint, CreateSphericalJoint, CreateDistanceConstraint, CreateCoordinateConstraint, CreateForce and
+CreateTorque - and creates user items instead of the built-in objects, with the same nodes, markers and loads. A script
+written with `creator = mbs` builds the same system of user items with `creator = UserItemCreator(mbs)`:
+
+- the user functions are Python functions, so that the system runs in Exudyn as built, with the results of the
+  built-in items;
+- `creator.Record()` replaces them by symbolic user functions, one recording per kind of item, which run at C++ speed
+  and which the {ref}`symbolic system <sec-symbolicsystem>` takes;
+- an argument a user item does not support raises, naming it; a parameter may be a named `exudyn.symbolic.Real`.
+
+The functions are described in {ref}`sec-module-symbolics.useritems`.
+
 ## Example
 
 Two mass points on springs as user bodies of one kind - each with its own mass and stiffness, gravity through the mass

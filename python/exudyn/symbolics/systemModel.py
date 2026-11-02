@@ -1,39 +1,16 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details:  The equations of motion of a system as symbolic programs (#3110, #3113, design:
-#           docs/dev/design/symbolicSystem.md): SymbolicSystemBase is the interface of the equations on which the
-#           solvers work, in Exudyn's form M(q, t) q_tt = f(q, q_t, t, y) - C_q^T z, y_t = g(q, q_t, y, t),
-#           c(q, q_t, y, z, t) = 0 with ODE2, ODE1 and algebraic coordinates (#3134). SymbolicSystem(mbs) extracts them, after
-#           mbs.Assemble(), from the objects with symbolic user functions, collected in kinds - the objects whose user
-#           functions are the same recordings -, each with the table of its objects, their parameters and the global
-#           indices of their ODE2 coordinates (the local-to-global maps of systemData). It evaluates the residual
-#           r = M q_tt - f, the sparse mass matrix, the forces and the Jacobian of r by exudyn.symbolic, and writes a
-#           computed state back into mbs, where the renderer, the sensors and the output functions read it.
-#           NumpySystem takes equations written by hand. The solvers of exudyn.symbolics.solvers integrate any of them.
-#           Equations() gives the equations of the system as expressions in the system variables q, q_t and t -
-#           exudyn.symbolic, whose flat program GetFlatProgram() writes, or sympy - composed of the recordings (#3130);
-#           the forces and the mass matrix of these expressions, recorded once, are what ODE2RHS, MassMatrix and ODE2ResidualLHS
-#           evaluate: one call each for the whole system (#3131).
-#           Special: not for the broad use, a basis for the export of the equations of motion and their evaluation
-#           outside Exudyn. The items it takes: ObjectUserBody with symbolic massMatrixUserFunction and
-#           forceUserFunction, ObjectGenericODE2 with constant matrices and symbolic user functions,
-#           ObjectConnectorUser with a symbolic forceUserFunction on position markers of point nodes, on position and
-#           rigid markers of the ground and of user bodies, with the rotations if it requests them (#3121, #3129), items
-#           without coordinates (ground), and the loads LoadForceVector, LoadTorqueVector,
-#           LoadMassProportional and LoadCoordinate, constant or with a symbolic user function of the time, on markers
-#           of point nodes, node coordinates and user bodies (#3118); ObjectJointUser with symbolic constraint and
-#           Jacobian functions (#3141); ObjectGenericODE1 with its matrix, vector and a symbolic rhsUserFunction, and
-#           LoadCoordinate on its coordinates (#3144); ObjectGenericDAE with its matrices and symbolic user functions,
-#           its ODE1 and algebraic coordinates (#3190, #3191); the data coordinates of ObjectConnectorUser and
-#           ObjectGenericDAE and their recorded postNewtonStepUserFunction (#3196); every other object and load and
-#           recordings that read mbs are refused.
-#           The data coordinates x are system.data, constant in the Newton iterations of a step: every equation reads
-#           them, PostNewton gives the new ones after a step and the error of a switch, and the solvers compute the
-#           step again while the error is above discontinuous.iterationTolerance, as Exudyn's solvers.
-#           SystemVariables(system) gives the system variables as one exudyn.symbolic.VariableSet and the states of the
-#           markers as expressions of them (#3151). The parameters of the user items may be named exudyn.symbolic.Real,
-#           SymbolicSystem(mbs, parameters=...), which the expressions of Equations() keep (#3152).
+# Details:  The equations of motion of a system of user items as symbolic programs; see the chapter "Symbolic system
+#           and user functions" of the user manual. SymbolicSystem(mbs) collects them, after mbs.Assemble(), from the
+#           user items with symbolic user functions, as UserItemCreator of exudyn.symbolics.userItems creates and
+#           records them: M(q, t) q_tt = f(q, q_t, y, t) - C_q^T z, y_t = g(q, q_t, y, t), c(q, q_t, y, z, t) = 0, with
+#           the data coordinates of the post-Newton steps. It evaluates them - ODE2RHS, MassMatrix, SystemResidual, the
+#           exact SystemJacobian -, gives them as expressions (Equations, also as sympy) or as a flat program
+#           (GetFlatProgram), and writes a state into mbs (SetSystemState). SymbolicSystemBase is the interface on
+#           which the solvers of exudyn.symbolics.solvers work; NumpySystem takes equations written by hand;
+#           SystemVariables gives the variables of the system and the states of the markers as expressions. What
+#           each class and function takes and refuses is in its docstring.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-26 (created)

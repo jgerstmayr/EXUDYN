@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 307 | 1.13.316 |
+| 1.13 | Newborn | 310 | 1.13.319 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.319** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` runNotebooks.py: the stored outputs without the user's settings (#3226)
+  - description: tools/runNotebooks.py runs the notebooks with the settings of ~/.exudyn/config.json of the machine, so the stored outputs carry its note, as in python/Notebooks/reference/HT.ipynb, and may depend on its settings. Decided: the runner sets EXUDYN\_NO\_USER\_SETTINGS for every notebook.
+  - **notes:** tools/runNotebooks.py runs the notebooks without the settings of the user, EXUDYN\_NO\_USER\_SETTINGS.
+  - date resolved: **2026-11-02 10:38**, date raised: 2026-11-02
+- **1.13.318** `EXAMPLE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A symbolic system solved and its solution mapped onto mbs (#3225)
+  - description: The Python solvers write their states through the mbs of a SymbolicSystem - solution file, sensors, renderer - but every example switches the solution file off. Decided: an example that solves a SymbolicSystem built as a replicate of an mbs with the Python solvers and shows the solution in the renderer and the solution viewer.
+  - **notes:** The notebook tutorialSymbolicSystem solves a symbolic replicate of a system with SolveGeneralizedAlpha and shows its solution in mbs, the solution viewer and a sensor plot.
+  - date resolved: **2026-11-02 10:38**, date raised: 2026-11-02
+- **1.13.317** `DOCU` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A chapter "Symbolic system and user functions" (#3222)
+  - description: The manual has "Symbolic user functions" and "User items" as separate sections, and the docstring of exudyn.symbolics.systemModel is long and lists issues. Decided: one top-level chapter with the sections symbolic system (with a notebook demo), symbolic user functions, user items and symbolic solvers; the module docstring shortened to the use of the class.
+  - **notes:** The user manual has the chapter Symbolic system and user functions: symbolic system, symbolic user functions, user items with UserItemCreator, symbolic solvers.
+  - date resolved: **2026-11-02 10:38**, date raised: 2026-11-02
 - **1.13.316** `DOCU` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A chapter "Solvers and system equations" (#3223)
   - description: The system equations of motion are a hidden subsection of "Solvers in Exudyn", and the system Jacobians are not described there. Decided: the chapter renamed, with a section on the system equations, the solvers and the Jacobians.
   - **notes:** The chapter Solvers and system equations describes the system equations and the system Jacobian: the local Jacobians of the items, the parallel assembly, the options and what the Jacobian leaves out.

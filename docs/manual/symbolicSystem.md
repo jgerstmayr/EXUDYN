@@ -1,0 +1,56 @@
+(sec-symbolicsystem)=
+# Symbolic system
+
+`SymbolicSystem(mbs)` of `exudyn.symbolics.systemModel` collects the equations of motion of a system whose items are
+user items with symbolic user functions,
+
+$$
+  \Mm(\qv, t)\,\ddot\qv = \fv(\qv, \dot\qv, \yv, t) - \Cm_{\qv}\tp\zv , \qquad
+  \dot\yv = \gv(\qv, \dot\qv, \yv, t) , \qquad
+  \cv(\qv, \dot\qv, \yv, \zv, t) = \Null ,
+$$
+with ODE2, ODE1 and algebraic coordinates and the data coordinates of the post-Newton steps. The symbolic system is a
+replicate of `mbs`: it evaluates the same equations, and a state it computes is written back into `mbs`, where the
+renderer, the sensors, the solution file and the output functions read it.
+
+**What works**: mass points and rigid bodies (on Tait-Bryan angles) as user bodies; spring-dampers, torsional,
+Cartesian and rigid-body spring-dampers and the sphere-sphere contact with friction as user connectors; revolute,
+prismatic and spherical joints and distance constraints as user joints; coordinate constraints, ObjectGenericODE2,
+ObjectGenericODE1 and ObjectGenericDAE; the force, torque, mass-proportional and coordinate loads. This is a small part
+of the features of the C++ items. It is extended continuously and meant for experimentation, teaching and the export of
+simpler models; a missing feature is easily added or patched in the Python implementation, also with an AI agent. What
+a function takes and refuses is in its docstring.
+
+**How**: the system is built with `UserItemCreator(mbs)` of `exudyn.symbolics.userItems`, whose Create functions take
+the arguments of those of `mbs` (see {ref}`sec-useritemcreator`), recorded and assembled:
+
+```python
+creator = UserItemCreator(mbs)  #creator = mbs builds the same system of built-in items
+...                             #creator.CreateMassPoint(...), creator.CreateSpringDamper(...), ...
+creator.Record()
+mbs.Assemble()
+system = SymbolicSystem(mbs)
+```
+
+**What it gives**:
+
+- `Equations()`: the mass matrix, the forces, the algebraic equations and the ODE1 equations as `exudyn.symbolic`
+  expressions in the variables $\qv$, $\dot\qv$, $t$, or as sympy expressions;
+- `MassMatrix`, `ODE2RHS`, `SystemResidual` and the exact `SystemJacobian`, evaluated at any state;
+- `GetFlatProgram`: the equations as a flat program of scalar and vector operations in Python or C++, for an
+  evaluation outside Exudyn;
+- `SetSystemState`: a state written into `mbs`;
+- named `exudyn.symbolic.Real` among the parameters of the user items stay variables of the equations,
+  `SymbolicSystem(mbs, parameters=...)`, for derivatives by them.
+
+The solvers of {ref}`sec-symbolicsolvers` integrate the system. `NumpySystem` takes equations written by hand with the
+same interface. The functions are described in {ref}`sec-module-symbolics.systemmodel`.
+
+The following notebook builds two mass points on spring-dampers, shows their equations, integrates them with
+`SolveGeneralizedAlpha` and shows the solution in `mbs`:
+
+```{toctree}
+:maxdepth: 1
+
+/docs/generated/notebooks/tutorialSymbolicSystem
+```

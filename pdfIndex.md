@@ -69,8 +69,7 @@ docs/manual/tutorial
 docs/manual/GUI
 docs/manual/performanceErrors
 docs/manual/introductionAdvanced
-docs/manual/symbolicUserFunctions
-docs/manual/userItems
+docs/manual/symbolic
 docs/manual/notation
 docs/manual/theory
 docs/manual/solver

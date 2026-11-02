@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.316.dev1
+- Exudyn version = 1.13.319.dev1
 - last change = 2026-11-02
-- Number of issues = 3226
-- Number of resolved issues = 3093 (316 in current version)
+- Number of issues = 3227
+- Number of resolved issues = 3096 (319 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,12 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXAMPLE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` A symbolic system solved and its solution mapped onto mbs (#3225)
-  - description: The Python solvers write their states through the mbs of a SymbolicSystem - solution file, sensors, renderer - but every example switches the solution file off. Decided: an example that solves a SymbolicSystem built as a replicate of an mbs with the Python solvers and shows the solution in the renderer and the solution viewer.
-  - date raised: 2026-11-02
-- `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` A chapter "Symbolic system and user functions" (#3222)
-  - description: The manual has "Symbolic user functions" and "User items" as separate sections, and the docstring of exudyn.symbolics.systemModel is long and lists issues. Decided: one top-level chapter with the sections symbolic system (with a notebook demo), symbolic user functions, user items and symbolic solvers; the module docstring shortened to the use of the class.
-  - date raised: 2026-11-02
 - `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The settled designs into the user documentation (#3221)
   - description: docs/dev/design/genericDAE.md, symbolicHT.md, symbolicSystem.md, symbolicUserItems.md and systemJacobians.md describe what is decided and implemented. Decided: what a user needs goes into the manual and the item descriptions, the design files are removed when nothing is left in them.
   - date raised: 2026-11-02

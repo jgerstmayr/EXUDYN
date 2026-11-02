@@ -3,7 +3,7 @@
 
 A symbolic user function is a Python user function that Exudyn records once and then computes in C++, without
 calling Python - 5 to 44 times faster than the Python function, at about the cost of the built-in force laws, and in
-the threads of the parallel loops. This chapter shows how to write, check and use one. The module, its types, what is
+the threads of the parallel loops. This section shows how to write, check and use one. The module, its types, what is
 recorded and what to know are on the reference page {ref}`sec-cinterface-symbolic`; the user functions in general are
 {ref}`sec-userfunctions`.
 

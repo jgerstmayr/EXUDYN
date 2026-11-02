@@ -121,7 +121,6 @@ print(H3 == H1)
 ```
 
 ```text
-NOTE: 2 visualizationSettings read from ~/.exudyn/config.json
 True
 ```
 

@@ -2,11 +2,15 @@
   "number": 3222,
   "title": "A chapter \"Symbolic system and user functions\"",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "HIGH",
   "description": "The manual has \"Symbolic user functions\" and \"User items\" as separate sections, and the docstring of exudyn.symbolics.systemModel is long and lists issues. Decided: one top-level chapter with the sections symbolic system (with a notebook demo), symbolic user functions, user items and symbolic solvers; the module docstring shortened to the use of the class.",
   "dateRaised": "2026-11-02",
-  "deadline": "2027-05-01"
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 10:38",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The user manual has the chapter Symbolic system and user functions: symbolic system, symbolic user functions, user items with UserItemCreator, symbolic solvers.",
+  "resolvedInVersion": "1.13.317"
 }

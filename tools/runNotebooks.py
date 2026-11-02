@@ -8,8 +8,9 @@
 #           they change only when a notebook is run again here - not with every build (#2831).
 #
 #           Each notebook runs in an interpreter of its own, in python/Notebooks/, with no window
-#           (EXUDYN_SUPPRESS_UI_WINDOW_OPEN) and its files written to a temporary directory
-#           (EXUDYN_OUTPUTDIRECTORY). No Jupyter package is needed: the cells are executed one after
+#           (EXUDYN_SUPPRESS_UI_WINDOW_OPEN), its files written to a temporary directory
+#           (EXUDYN_OUTPUTDIRECTORY) and without the settings of the user (EXUDYN_NO_USER_SETTINGS, #3226), so
+#           that the outputs do not depend on the machine. No Jupyter package is needed: the cells are executed one after
 #           the other in one namespace, as a kernel would.
 #
 #           A run stores a hash of the code cells in the metadata of the notebook; --check compares
@@ -159,7 +160,8 @@ def main():
         return 1 if stale else 0
     failures = 0
     with tempfile.TemporaryDirectory() as outputDirectory:
-        environment = dict(os.environ, EXUDYN_SUPPRESS_UI_WINDOW_OPEN='1', EXUDYN_OUTPUTDIRECTORY=outputDirectory)
+        environment = dict(os.environ, EXUDYN_SUPPRESS_UI_WINDOW_OPEN='1', EXUDYN_OUTPUTDIRECTORY=outputDirectory,
+                           EXUDYN_NO_USER_SETTINGS='1')
         environment.pop('PYTHONPATH', None)
         for path in paths:
             result = subprocess.run([sys.executable, os.path.abspath(__file__), '--worker-test' if test else '--worker', path],

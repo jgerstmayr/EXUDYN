@@ -101,6 +101,9 @@ underscore: they are internal and may change without notice (#3224).
 The chapter on the solvers is "Solvers and system equations", with a section on the system equations and on the
 system Jacobian: which item provides which Jacobian, what is computed in parallel, the options and what the Jacobian
 leaves out (#3223).
+The chapter "Symbolic system and user functions" has the sections Symbolic system - with the notebook
+tutorialSymbolicSystem, which solves a symbolic replicate of a system and shows its solution in mbs -, Symbolic user
+functions, User items - with UserItemCreator - and Symbolic solvers (#3222, #3225).
 `newton.numericalDifferentiation.doSystemWideDifferentiation` computes the whole Jacobian numerically, the algebraic
 equations included, for dense and sparse matrices; `forAE`, `forODE2` and `forODE2Connectors` are deprecated and have no
 effect - each object provides its Jacobian, analytic, automatic or numerical by its own coordinates. A model that set

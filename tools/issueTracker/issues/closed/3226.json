@@ -1,0 +1,16 @@
+{
+  "number": 3226,
+  "title": "runNotebooks.py: the stored outputs without the user's settings",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "tools/runNotebooks.py runs the notebooks with the settings of ~/.exudyn/config.json of the machine, so the stored outputs carry its note, as in python/Notebooks/reference/HT.ipynb, and may depend on its settings. Decided: the runner sets EXUDYN_NO_USER_SETTINGS for every notebook.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 10:38",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "tools/runNotebooks.py runs the notebooks without the settings of the user, EXUDYN_NO_USER_SETTINGS.",
+  "resolvedInVersion": "1.13.319"
+}

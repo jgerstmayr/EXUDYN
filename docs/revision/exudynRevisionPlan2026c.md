@@ -63,7 +63,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG2.9 Add three old test models (3 open sub-steps)
 - **RG3** Docs
   - RG3.46 Move the settled designs into the manual and the item descriptions, and remove the design files (1 open sub-step)
-  - RG3.47 One chapter "Symbolic system and user functions": symbolic system, symbolic user functions, user items, symbolic solvers (1 open sub-step)
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
@@ -128,7 +127,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 |---|---|---|---|
 | RG1 | OPEN | 1 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
-| RG3 | OPEN | 4 | Docs |
+| RG3 | OPEN | 2 | Docs |
 | RG4 | OPEN | 5 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
@@ -236,13 +235,23 @@ CLOSED 2026-11-02 (#3221 stays open): already in the HT and Twist pages and symb
 
 #3221; with RG3.47. uniformEvaluation.md (not touched, maintainer 2026-11-02) and symbolicParameters.md cite symbolicSystem.md, whose cited sections stay until they are done.
 
-### **OPEN_RG3.47** One chapter "Symbolic system and user functions": symbolic system, symbolic user functions, user items, symbolic solvers
+### **CLOSED_RG3.47** One chapter "Symbolic system and user functions": symbolic system, symbolic user functions, user items, symbolic solvers
 
 #3222 (maintainer 2026-11-02: at the place of "Symbolic user functions"; the symbolic system section with a notebook demo and a brief statement of what works - a small part of the C++ features, extended continuously, for experimentation, teaching and the export of simpler models, easily patched in Python -, the limitations in the docstrings; no exact comparison with the C++ part; the docstring of exudyn.symbolics.systemModel shortened to the use of the class; symbolicSystem.md and symbolicUserItems.md go into it; the chapter checked for consistency as a whole).
 
-#### **OPEN_RG3.47.1** An example that solves a symbolic replicate of an mbs by the Python solvers and shows the solution in the renderer and the solution viewer
+CLOSED 2026-11-02 (#3222 resolved): docs/manual/symbolic.md with four sections, the notebook, UserItemCreator in userItems.md, the header of systemModel.py shortened; the design files remain with RG3.46.3. [log](exudynRevisionLog2026c.md#rg3-47)
+
+#### **CLOSED_RG3.47.1** An example that solves a symbolic replicate of an mbs by the Python solvers and shows the solution in the renderer and the solution viewer
 
 #3225.
+
+CLOSED 2026-11-02 (#3225 resolved): the notebook tutorialSymbolicSystem is the example. [log](exudynRevisionLog2026c.md#rg3-47)
+
+#### **CLOSED_RG3.47.2** runNotebooks.py runs the notebooks without the settings of the user
+
+#3226.
+
+CLOSED 2026-11-02 (#3226 resolved): EXUDYN_NO_USER_SETTINGS in the environment of each notebook. [log](exudynRevisionLog2026c.md#rg3-47)
 
 ### **CLOSED_RG3.48** The chapter "Solvers and system equations": a section on the system equations, the solvers and the system Jacobians
 
