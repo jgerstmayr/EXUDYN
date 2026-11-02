@@ -1,0 +1,13 @@
+{
+  "number": 3207,
+  "title": "UserItemCreator: the connectors on user mass points through markers of their bodies, also at the center; _massPointNodes removed",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "UserItemCreator keeps the node of each user mass point (_massPointNodes) and puts a spring-damper or connector at its center on a marker of the node instead of the body, an optimization that SymbolicSystem does not need: it takes position markers of user bodies. Decided: the markers are those of the bodies at every local position, _massPointNodes is removed, the kinds and parameters of the items are kept by one function that adds a user item (revision2026c step RG12.67.2).",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01",
+  "file": "python/exudyn/symbolics/userItems.py"
+}

@@ -5600,3 +5600,31 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   353 test models and mini examples ok. test_systemJacobians.py: the constraint Jacobian in parallel against the
   serial one for Joints, JointsEP and EulerParameters, dense and sparse (77 cases).
 - The cost per item (#858): not implemented, see design section 9; RG9.11.5.3 asks for the decision.
+
+<a id="rg12-67-design-2"></a>
+### RG12.67 — The design of the symbolic parameters revised again (2026-11-02, #3159, #3207)
+- The maintainer's arguments of 2026-11-02, not yet a decision: items to be symbolic become user items, whose
+  parameters carry the values (user loads and Python objects for markers and the generic objects when needed); named
+  variables, expressions possible; the bookkeeping in the symbolic layer, not in mbs, as MainSystem and the C++ do not
+  know SymbolicSystem; one systematic function of UserItemCreator that adds a user item; _massPointNodes not needed; no
+  workaround for the loads now.
+- symbolicParameters.md: 2.2 the slots are the parameters of the user items, `ParameterBindings` in exudyn.symbolics
+  with one variable per name; 2.3 rewritten (option D, `UserItemCreator._AddUserItem`, `creator.parameterBindings`,
+  the inertia, the frames of the user joints, `Keep` by hand); 2.4 SymbolicSystem with `creator.parameterBindings`;
+  2.6 and 2.7 with D proposed and B dropped; section 3 and the decisions P1, P6 revised, P7 new.
+- #3207 raised: the connectors on user mass points through body markers, `_massPointNodes` removed; SymbolicSystem
+  takes position markers of user bodies (SymbolicSystem._MarkerData), so nothing else is needed. In RG12.67.2.
+- Plan: RG12.67.2 and RG12.67.3 revised.
+
+<a id="rg12-73-1"></a>
+### RG12.73.1 — The names of symbolic variables evaluated (2026-11-02, #3208)
+- New step RG12.73, as the maintainer asked for a new step for the evaluation.
+- Probed: two `Real('a', ...)` are two variables, `((a * a) + a)` evaluates to 168, Diff by each differs;
+  `esym.Function` refuses two inputs named `a` and a named variable of the result that is neither an input nor the one
+  of `esym.variables`; `VariableSet.Add` refuses a second name; `SymbolicSystem` refuses two parameters of one name.
+  Accepted: `Function(a0*esym.variables.Get('a'), [a0])` with `a0` named `a`. `esym.variables` is read by the
+  recordings at every call; `VariableSet.Add` returns the variable.
+- The library's own named variables: recordings name their arguments, SymbolicSystem its coordinates at every build
+  (`_Backend.Real`, `Variable`), `exudyn.shells` creates `x`, `y`, `z` per call.
+- docs/dev/design/symbolicVariableNames.md: options A, B, B', C; recommendation A with the missing check and C for the
+  parameters of a system, B not as the default; decisions N1-N3. RG12.73.2 implements what is decided.

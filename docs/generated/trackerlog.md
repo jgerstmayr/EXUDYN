@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.307.dev1
 - last change = 2026-11-02
-- Number of issues = 3207
+- Number of issues = 3209
 - Number of resolved issues = 3084 (307 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` exudyn.symbolic: two named variables of one name - where names identify variables, and a scope of names (#3208)
+  - description: esym.Real('a', 12.) and esym.Real('a', 13.) are two variables of one name: an expression of both reads as one quantity while the computation, which takes the variables, distinguishes them. esym.Function, VariableSet and SymbolicSystem refuse two variables of one name, but esym.Function accepts an input named as a variable of esym.variables it also reads. A global scope of names, each name once, with an exemption, a reset and a switch, would refuse a second variable at its creation. Decided: evaluated first, with options and recommendations in docs/dev/design/symbolicVariableNames.md (revision2026c step RG12.73).
+  - date raised: 2026-11-02
+- `CHANGE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` UserItemCreator: the connectors on user mass points through markers of their bodies, also at the center; \_massPointNodes removed (#3207)
+  - description: UserItemCreator keeps the node of each user mass point (\_massPointNodes) and puts a spring-damper or connector at its center on a marker of the node instead of the body, an optimization that SymbolicSystem does not need: it takes position markers of user bodies. Decided: the markers are those of the bodies at every local position, \_massPointNodes is removed, the kinds and parameters of the items are kept by one function that adds a user item (revision2026c step RG12.67.2).
+  - date raised: 2026-11-02
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` Revise the system Jacobians: every object provides its local Jacobian, assembled in parallel for ODE2-ODE2, AE-ODE2 and ODE2-AE, the other couplings complete and serial (#3201)
   - description: CSystem::JacobianODE2RHS, JacobianODE1RHS, JacobianAE and JacobianODE2Loads decide per object between an analytic Jacobian, the connector interface, the path of the marker data and a numerical differentiation by CSystem, with flags of the object, the markers and the settings in each place. To do: every object provides the Jacobian of its equations through one interface - analytic, by automatic differentiation or by a numerical differentiation of its own -, so that the assembly distinguishes only the system-wide numerical Jacobian (all couplings, serial, for comparison) and the assembly of the local Jacobians, in parallel for the objects without Python functions and serial for the others and for the objects whose equations depend on coordinates outside their local-to-global lists (sensors and other items read in user functions). Only the ODE2-ODE2, AE-ODE2 and ODE2-AE blocks are optimized for speed; the other blocks (ODE1, loads, the AE-AE and the derivative terms) are completed for all couplings, serial and readable, in line with the ODE1-ODE2 couplings of \#3143. Design: docs/dev/design/systemJacobians.md.
   - date raised: 2026-11-01
