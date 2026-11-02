@@ -648,7 +648,7 @@ def PerformanceTestsReferenceSolution():
         'perfLargeMassSpringChain:rigid-n5000-implicit' : 0.01663000270673365,
         'perfLargeMassSpringChain:rigid-n20000-explicit': 0.01426191722384829,
         #the connector interface (#2745) - measured 2026-10-01 on Windows cp313
-        'perfConnectorInterface:spring-n200-implicit':             8.222900067049855, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 8.222900073211406
+        'perfConnectorInterface:spring-n200-implicit':             8.222900066918616, #2026-11-02: the local Jacobians along the Euler parameters (#3201), before 8.222900067049855; 2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 8.222900073211406
         'perfConnectorInterface:spring-n200-explicit':             6.071378919533291,
         'perfConnectorInterface:gravity-n200-implicit':            17.452516360952007,
         'perfConnectorInterface:coordinate-n1000-explicit':        0.9526968492542502,
