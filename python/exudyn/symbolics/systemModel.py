@@ -487,10 +487,10 @@ class SymbolicSystem(SymbolicSystemBase):
         composeSystem: True: ODE2RHS, MassMatrix and ODE2ResidualLHS evaluate two recordings of the composed system - the
             forces and the nonzero entries of the mass matrix of Equations(), each one flat program (#3131) -; False:
             each object and load by its own recordings, one call each
-        parameters: None, or the dict of the parameters of user items - ObjectUserBody, ObjectConnectorUser,
-            ObjectJointUser - by item number, each a list of numbers and named exudyn.symbolic.Real, the values those of
-            the item: UserItemCreator.parameterVariables; Equations() keeps the variables, a variable of several items is
-            one variable (#3152)
+        parameters: None, or the ParameterBindings of the parameters of user items - ObjectUserBody,
+            ObjectConnectorUser, ObjectJointUser -, each a number or an expression of named variables of
+            mbs.symbolicVariables, the values those of the item: UserItemCreator.parameterBindings; Equations() keeps
+            the expressions, the parameters are the named variables in them (#3152, #3159, #3208)
 
     Note:
         Its members: mbs; kinds, the list of SymbolicKind; jointKinds, the list of SymbolicKind of the ObjectJointUser
@@ -501,8 +501,8 @@ class SymbolicSystem(SymbolicSystemBase):
         coordinates; nODE2, nODE1, the numbers of ODE2 and ODE1 coordinates of the system; nAE, the number of the
         algebraic equations; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
         the recordings 'ODE2RHS', 'massMatrix' and 'massMatrixBlocks' - esym.Function of the inputs q, q_t and t, the
-        VariableSet 'inputs' (#3149) - and the 'rows' and 'columns' of the entries of the mass matrix; parameterVariables,
-        the dict of parameters, checked
+        VariableSet 'inputs' (#3149) - and the 'rows' and 'columns' of the entries of the mass matrix; parameterBindings,
+        the ParameterBindings, checked
     """
     def __init__(self, mbs, composeSystem=True, parameters=None):
         if not mbs.systemIsConsistent:
@@ -609,39 +609,29 @@ class SymbolicSystem(SymbolicSystemBase):
         #the ODE2 equations depend on the ODE1 coordinates through an ObjectGenericDAE with both: the forces, the
         #composed system and Equations() then take y (#3190)
         self._ode2UsesY = any(kind.ltg.shape[1] > 0 and len(dae['ltgODE1']) > 0 for kind in self.daeKinds for dae in kind.parameters)
-        self.parameterVariables = self._ParameterVariables(parameters)
+        self.parameterBindings = self._ParameterBindings(parameters)
         self.data = self.InitialStateData()
         self.composed = self._Compose() if composeSystem else None
 
-    def _ParameterVariables(self, parameters):
-        """the parameters of the items given as numbers and named exudyn.symbolic.Real, checked: the number of the
-        parameters of the item, the values those of the item, one variable per name (#3152)"""
-        (variables, self._parameterNames) = ({}, {})
-        for (objectNumber, values) in (parameters or {}).items():
-            numbers = list(self.mbs.GetObject(int(objectNumber))['parameters'])
-            where = 'SymbolicSystem: the parameters of object ' + str(int(objectNumber))
-            if len(values) != len(numbers):
-                raise ValueError(where + ' are ' + str(len(numbers)) + ' numbers, not ' + str(len(values)))
-            for (value, number) in zip(values, numbers):
-                if isinstance(value, exudyn.symbolic.Real):
-                    name = str(value)
-                    if not name.isidentifier():
-                        raise ValueError(where + ': ' + name + ' is no named exudyn.symbolic.Real')
-                    if self._parameterNames.setdefault(name, value) is not value:
-                        raise ValueError(where + ': two different variables are named ' + name)
-                    value = value.Evaluate()
-                if float(value) != float(number):
-                    raise ValueError(where + ': the value ' + str(value) + ' differs from the number ' + str(number)
-                                     + ' of the item; SetParameterValues sets both')
-            variables[int(objectNumber)] = list(values)
-        return variables
+    def _ParameterBindings(self, parameters):
+        """the ParameterBindings of the items, checked - the number of the parameters of each item, the values those of
+        the item, the variables of mbs.symbolicVariables -, and the named variables in them by name (#3152, #3159)"""
+        self._parameterNames = {}
+        if parameters is None:
+            return None
+        if not (hasattr(parameters, 'Parameters') and hasattr(parameters, 'Check')):
+            raise TypeError('SymbolicSystem: parameters must be a ParameterBindings, UserItemCreator.parameterBindings, '
+                            'not ' + type(parameters).__name__)
+        parameters.Check()
+        self._parameterNames = {str(variable): variable for variable in parameters.Parameters()}
+        return parameters
 
     def SetParameterValues(self, values):
-        """set named parameters (#3152): the values of the variables, the numbers of the items in mbs, then the system
-        again from mbs
+        """set named parameters (#3152): the values of the variables of mbs.symbolicVariables, the numbers of the
+        items in mbs, then the system again from mbs
 
         Args:
-            values: dict of the names of variables of parameterVariables and their new values
+            values: dict of the names of the parameters of parameterBindings and their new values
         """
         unknown = [name for name in values if name not in self._parameterNames]
         if unknown:
@@ -649,15 +639,14 @@ class SymbolicSystem(SymbolicSystemBase):
                              + str(list(self._parameterNames)))
         for (name, value) in values.items():
             self._parameterNames[name].SetValue(float(value))
-        for (objectNumber, parameters) in self.parameterVariables.items():
-            self.mbs.SetObjectParameter(objectNumber, 'parameters', [float(value.Evaluate()) if isinstance(value, exudyn.symbolic.Real)
-                                                                     else value for value in parameters])
-        self.__init__(self.mbs, self.composed is not None, self.parameterVariables)
+        self.parameterBindings.Apply()
+        self.__init__(self.mbs, self.composed is not None, self.parameterBindings)
 
     def _ParameterVector(self, backend, objectNumber, numbers):
-        """the parameters of an item for Equations: its numbers, or with named parameters its list of variables and
-        numbers, if the backend takes them (#3152)"""
-        variables = self.parameterVariables.get(int(objectNumber)) if backend.parameterVariables else None
+        """the parameters of an item for Equations: its numbers, or with symbolic parameters its list of expressions and
+        numbers, if the backend takes them (#3152, #3159)"""
+        bindings = self.parameterBindings
+        variables = bindings[objectNumber] if (backend.parameterVariables and bindings is not None and objectNumber in bindings) else None
         if variables is None:
             return backend.Vector(numbers)
         return backend.Vector([backend.Parameter(value) for value in variables])
@@ -1810,7 +1799,7 @@ class SymbolicSystem(SymbolicSystemBase):
             constraintUserFunction in algebraicEquations (#3191), 'y' if ODE1RHS or the system has an ObjectGenericDAE
             with ODE1 coordinates (#3190), 'x' - the data coordinates, which the equations read as constant in a step -
             if the system has data coordinates, 'x0' if postNewton (#3196), 'parameters' - the named parameters
-            of parameterVariables, as exudyn.symbolic.Real or sympy symbols - if there are any (#3152), and the results
+            of parameterBindings, as exudyn.symbolic.Real or sympy symbols - if there are any (#3152, #3159), and the results
             asked for, exudyn.symbolic.Matrix and Vector or sympy.Matrix
         """
         backend = _Backend(format)
@@ -2405,16 +2394,18 @@ class _Backend:
 
     def Variable(self, name, size, value):
         if self.format == 'symbolic':
-            return exudyn.symbolic.Vector(name, [float(x) for x in value])
+            return exudyn.symbolic.Vector(name, [float(x) for x in value], scope=exudyn.symbolic.VariableSet()) #of no model (#3208)
         return self.sympy.Matrix([self.sympy.Symbol(name + str(i)) for i in range(size)])
 
     def Real(self, name):
-        return exudyn.symbolic.Real(name, 0.) if self.format == 'symbolic' else self.sympy.Symbol(name)
+        return exudyn.symbolic.Real(name, 0., scope=exudyn.symbolic.VariableSet()) if self.format == 'symbolic' else self.sympy.Symbol(name)
 
     def Parameter(self, value):
-        """a parameter of an item: a number, or a named exudyn.symbolic.Real - for sympy the symbol of its name"""
+        """a parameter of an item: a number, or an exudyn.symbolic.Real expression of named variables - for sympy the
+        expression of the symbols of their names (#3159)"""
         if isinstance(value, exudyn.symbolic.Real) and self.format == 'sympy':
-            return self.sympy.Symbol(str(value))
+            from exudyn.symbolics.codeExport import ToSympy
+            return ToSympy(exudyn.symbolic.GetFlatProgramData([value]))[1][0]
         return value
 
     def TransposedJacobianTimes(self, expressions, variable, z, size):

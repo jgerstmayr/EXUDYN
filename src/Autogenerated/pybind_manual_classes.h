@@ -454,6 +454,7 @@
         .def_property("systemIsConsistent", &MainSystem::GetFlagSystemIsConsistent, &MainSystem::SetFlagSystemIsConsistent)
         .def_property("interactiveMode", &MainSystem::GetInteractiveMode, &MainSystem::SetInteractiveMode)
         .def_readwrite("variables", &MainSystem::variables, py::return_value_policy::reference)
+        .def_property_readonly("symbolicVariables", &MainSystem::GetSymbolicVariables)
         .def_readwrite("sys", &MainSystem::systemVariables, py::return_value_policy::reference)
         .def_property("solverSignalJacobianUpdate", &MainSystem::GetFlagSolverSignalJacobianUpdate, &MainSystem::SetFlagSolverSignalJacobianUpdate)
         .def_readwrite("systemData", &MainSystem::mainSystemData, py::return_value_policy::reference)

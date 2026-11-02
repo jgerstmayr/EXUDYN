@@ -749,7 +749,8 @@ def LoadDictFromHDF5(fileName, callerGlobals=None):
 class _SymbolicMainSystem:
     """the mbs of a function recorded by CreateSymbolicUserFunction (#2984): GetNodeOutput, GetObjectOutput,
     GetObjectOutputBody, GetMarkerOutput and GetSensorValues give symbolic expressions, which read the item at every call
-    of the user function in C++; mbs.variables are Python values, constants of the recording; every other attribute
+    of the user function in C++; mbs.variables are Python values, constants of the recording; the named variables of
+    mbs.symbolicVariables are read at every call (#3208); every other attribute
     raises, as its value would be a constant of the recording"""
 
     def __init__(self, mbs):
@@ -759,6 +760,11 @@ class _SymbolicMainSystem:
     def variables(self):
         """mbs.variables, read while recording"""
         return self._mbs.variables
+
+    @property
+    def symbolicVariables(self):
+        """mbs.symbolicVariables, the scope of the named variables of the model, which the recording reads at every call (#3208)"""
+        return self._mbs.symbolicVariables
 
     def _Output(self, kind, function, itemNumber, variableType, configuration, localPosition=None):
         """the symbolic output: a Real for a scalar output, a Vector else; the value at recording gives its size"""
@@ -809,8 +815,8 @@ class _SymbolicMainSystem:
 
     def __getattr__(self, name):
         raise AttributeError('mbs.' + name + ' is not available in a symbolic user function, as it would be a constant '
-                             'of the recording: read it before and pass it as parameter or as symbolic variable '
-                             '(exudyn.symbolic.variables); mbs.GetNodeOutput, GetObjectOutput, GetObjectOutputBody, '
+                             'of the recording: read it before and pass it as parameter or as named symbolic variable of the model '
+                             '(esym.Real(name, value, scope=mbs)); mbs.GetNodeOutput, GetObjectOutput, GetObjectOutputBody, '
                              'GetMarkerOutput and GetSensorValues are read at every call (#2984)')
 
     def __setattr__(self, name, value):
@@ -909,13 +915,14 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
         raise ValueError('ConvertFunctionToSymbolic: function "'+fnName+'" does not meet correct number of arguments; '+
                          'user function should read:\n'+sFunctionInterface+sReturn+sProtocol)
     
+    arguments = exudyn.symbolic.VariableSet() #the scope of the arguments of this recording, not of the model (#3208)
     for i in range(nArgs):
         varType = functionArgs[0][i]
         arg = fnArgs[i] #functionArgs[1][i] 
         if varType == 'Real':
-            var = exudyn.symbolic.Real(arg, 0.)
+            var = exudyn.symbolic.Real(arg, 0., scope=arguments)
         elif varType in ['Index', 'bool', 'OutputVariableType']: #a flag and an enum are Reals in the expression (#2985)
-            var = exudyn.symbolic.Real(arg, 0)
+            var = exudyn.symbolic.Real(arg, 0, scope=arguments)
         elif (varType == 'StdVector2D'
               or varType == 'StdVector3D'
               or varType == 'StdVector6D'
@@ -929,7 +936,7 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
                 size = _ObjectCoordinatesSize(mbs, itemIndex)
             if varType == 'StdVector' and functionArgs[1][i] == 'parameters': #of a user item (#3056)
                 size = _ObjectParametersSize(mbs, itemIndex)
-            var = exudyn.symbolic.Vector(arg,[0.]*size)
+            var = exudyn.symbolic.Vector(arg, [0.]*size, scope=arguments)
         elif (varType == 'NumpyMatrix'
               or varType == 'StdMatrix3D'
               or varType == 'StdMatrix6D'
@@ -937,19 +944,19 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
             rowsColumns=1 #zero list would not work for matrix ...
             if '3D' in varType: rowsColumns = 3
             if '6D' in varType: rowsColumns = 6
-            var = exudyn.symbolic.Matrix(arg,np.zeros((rowsColumns,rowsColumns)).tolist())
+            var = exudyn.symbolic.Matrix(arg, np.zeros((rowsColumns,rowsColumns)).tolist(), scope=arguments)
         elif varType == 'MainSystem': #its outputs read at every call, its other attributes refused (#2984)
             var = _SymbolicMainSystem(mbs)
         elif varType in ['HomogeneousTransformation', 'Twist']:
             #a frame and a twist of a marker: two named leaves each, in one kinematics.HT or kinematics.Twist (#3183)
             from exudyn.symbolics import kinematics
             if varType == 'HomogeneousTransformation':
-                leaves = [(arg + '_rotation', 'StdMatrix3D', exudyn.symbolic.Matrix(arg + '_rotation', np.eye(3).tolist())),
-                          (arg + '_translation', 'StdVector3D', exudyn.symbolic.Vector(arg + '_translation', [0.]*3))]
+                leaves = [(arg + '_rotation', 'StdMatrix3D', exudyn.symbolic.Matrix(arg + '_rotation', np.eye(3).tolist(), scope=arguments)),
+                          (arg + '_translation', 'StdVector3D', exudyn.symbolic.Vector(arg + '_translation', [0.]*3, scope=arguments))]
                 var = kinematics.HT(leaves[0][2], leaves[1][2])
             else:
-                leaves = [(arg + '_velocity', 'StdVector3D', exudyn.symbolic.Vector(arg + '_velocity', [0.]*3)),
-                          (arg + '_angularVelocity', 'StdVector3D', exudyn.symbolic.Vector(arg + '_angularVelocity', [0.]*3))]
+                leaves = [(arg + '_velocity', 'StdVector3D', exudyn.symbolic.Vector(arg + '_velocity', [0.]*3, scope=arguments)),
+                          (arg + '_angularVelocity', 'StdVector3D', exudyn.symbolic.Vector(arg + '_angularVelocity', [0.]*3, scope=arguments))]
                 var = kinematics.Twist(leaves[0][2], leaves[1][2])
             argList += [leaf for (name, leafType, leaf) in leaves]
             argTypeList += [leafType for (name, leafType, leaf) in leaves]
@@ -992,6 +999,9 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
     elif isinstance(returnValue, (bool, int, float, np.bool_, np.integer, np.floating)):
         #a constant, e.g. True of a preStepUserFunction (#3038)
         returnValue = exudyn.symbolic.Real(float(returnValue))
+
+    #the named variables it reads are its arguments or those of the scope of the model, mbs.symbolicVariables (#3208)
+    exudyn.symbolic._CheckVariablesOfRecording(returnValue, argList, mbs, fnName)
 
     if optimize: #equal subexpressions computed once, 1*x and x+0 removed, without changing the result (#3085)
         returnValue = exudyn.symbolic.Optimize(returnValue, **(optimize if isinstance(optimize, dict) else {}))

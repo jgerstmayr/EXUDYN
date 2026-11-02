@@ -10,10 +10,11 @@ You can view and download this file on Github: [symbolicSystemParametersTest.py]
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  The parameters of user items as named exudyn.symbolic.Real in exudyn.symbolics.systemModel (#3152): two mass
-#           points of one mass m1 and a spring-damper of stiffness k, created by UserItemCreator, which gives the items
-#           the values and keeps the variables; SymbolicSystem(mbs, parameters=creator.parameterVariables). Equations()
-#           keeps m1 and k, its forces and mass matrix equal those of the system, their derivatives by m1 and k - one
+# Details:  The parameters of user items as expressions of named variables of the model in exudyn.symbolics.systemModel
+#           (#3152, #3159): m1 and k in mbs.symbolicVariables (#3208); two mass points of one mass m1, a spring-damper of
+#           stiffness k and one of stiffness k/2 + 0.1*m1, created by UserItemCreator, which gives the items the values
+#           and keeps the expressions in its ParameterBindings; SymbolicSystem(mbs, parameters=creator.parameterBindings).
+#           Equations() keeps m1 and k, its forces and mass matrix equal those of the system, their derivatives by m1 and k - one
 #           pass of EvaluateJacobian of an esym.Function of q, q_t, t, m1, k - equal central differences of the system
 #           by SetParameterValues, which writes the values into the items; the numpy code of GetFlatProgram takes m1
 #           and k as arguments; a value that is not that of the item is refused.
@@ -32,23 +33,23 @@ from exudyn.symbolics.systemModel import SymbolicSystem
 import numpy as np
 esym = exu.symbolic
 
-m1 = esym.Real('m1', 2.)
-k = esym.Real('k', 100.)
-
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
+m1 = esym.Real('m1', 2., scope=mbs) #the parameters are variables of the model (#3208)
+k = esym.Real('k', 100., scope=mbs)
 creator = UserItemCreator(mbs)
 ground = creator.CreateGround()
 p0 = creator.CreateMassPoint(referencePosition=[0.5, 0, 0], mass=m1, gravity=[0, -9.81, 0], initialVelocity=[0, 0.4, 0])
 p1 = creator.CreateMassPoint(referencePosition=[1.2, 0.1, 0], mass=m1, initialVelocity=[0.2, 0, -0.3])
 creator.CreateSpringDamper(itemNumbers=[ground, p0], stiffness=k, damping=0.5)
-creator.CreateSpringDamper(itemNumbers=[p0, p1], stiffness=50, damping=0.2)
+spring1 = creator.CreateSpringDamper(itemNumbers=[p0, p1], stiffness=k/2 + 0.1*m1, damping=0.2) #an expression (#3159)
 creator.Record()
 mbs.Assemble()
-exu.Print('items with named parameters:', {key: [str(x) for x in value] for (key, value) in creator.parameterVariables.items()})
-failed = int(mbs.GetObject(p0)['parameters'][0] != 2.)
+exu.Print('items with symbolic parameters:', {key: [str(x) for x in value] for (key, value) in creator.parameterBindings.items()})
+failed = int(mbs.GetObject(p0)['parameters'][0] != 2. or mbs.GetObject(spring1)['parameters'][0] != 50.2)
+failed += int([str(x) for x in creator.parameterBindings.Parameters()] != ['m1', 'k'])
 
-system = SymbolicSystem(mbs, parameters=creator.parameterVariables)
+system = SymbolicSystem(mbs, parameters=creator.parameterBindings)
 equations = system.Equations()
 failed += int([str(x) for x in equations['parameters']] != ['m1', 'k'])
 inputs = [equations[name] for name in ['q', 'q_t', 't']] + [m1, k]
@@ -95,7 +96,7 @@ failed += int(not differenceNumpy < 1e-12)
 refused = 0
 m1.SetValue(5.)
 try:
-    SymbolicSystem(mbs, parameters=creator.parameterVariables)
+    SymbolicSystem(mbs, parameters=creator.parameterBindings)
 except ValueError as e:
     refused = int('SetParameterValues' in str(e))
 m1.SetValue(2.)

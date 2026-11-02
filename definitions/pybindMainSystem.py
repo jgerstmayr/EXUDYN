@@ -298,6 +298,11 @@ pb.DefDataAccess('variables','this dictionary may be used by the user to store m
                        dataType='dict',
                        )
 
+pb.CppCode('        .def_property_readonly("symbolicVariables", &MainSystem::GetSymbolicVariables)\n')
+pb.DefDataAccess('symbolicVariables','the scope of the named symbolic variables of the model, an exudyn.symbolic.VariableSet: esym.Real(name, value, scope=mbs) creates one there, or takes the one of that name and sets its value; the symbolic user functions of the model read only these named variables and their arguments, and SymbolicSystem takes its parameters from them; mbs.Reset() empties it, and it is part of the dictionary and the pickle of the system (#3208)',
+                       dataType='exudyn.symbolic.VariableSet', readOnly=True,
+                       )
+
 pb.CppCode('        .def_readwrite("sys", &MainSystem::systemVariables, py::return_value_policy::reference)\n') 
 pb.DefDataAccess('sys','this dictionary is used by exudyn Python libraries, e.g., solvers, to avoid global Python variables ',
                        dataType='dict',

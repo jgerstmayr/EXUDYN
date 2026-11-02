@@ -2309,6 +2309,14 @@ public:
 		variables[name].SetExpressionNamedReal(value);
 	}
 
+	//! remove the variable of that name, which esym.Real(name, value, scope) replaces by one of another kind (#3208)
+	void RemoveVariable(const STDstring& name)
+	{
+		variables.erase(name);
+		arrays.erase(name);
+		order.erase(std::remove(order.begin(), order.end(), name), order.end());
+	}
+
 	//! number of variables in container
 	Index NumberOfItems() const { return (Index)order.size(); }
 

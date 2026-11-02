@@ -3747,6 +3747,10 @@ class MainSystem:
     """set this flag to True in order to invoke a Assemble() command in every system modification, e.g., AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode."""
     variables:dict
     """this dictionary may be used by the user to store model-specific data, in order to avoid global Python variables in complex models; mbs.variables['myvar'] = 42  (``returns a reference``)."""
+    @property
+    def symbolicVariables(self) -> exudyn.symbolic.VariableSet:
+        """the scope of the named symbolic variables of the model, an exudyn.symbolic.VariableSet: esym.Real(name, value, scope=mbs) creates one there, or takes the one of that name and sets its value; the symbolic user functions of the model read only these named variables and their arguments, and SymbolicSystem takes its parameters from them; mbs.Reset() empties it, and it is part of the dictionary and the pickle of the system (#3208)."""
+        ...
     sys:dict
     """this dictionary is used by exudyn Python libraries, e.g., solvers, to avoid global Python variables  (``returns a reference``)."""
     solverSignalJacobianUpdate:bool
@@ -4572,6 +4576,8 @@ class SpecialDeprecations:
     """if True, Python user functions get their vector arguments (q, q_t, ...) as lists, as before version 1.13.104, instead of read-only numpy arrays; False (=default); for the transition of scripts that change their arguments or add lists to them; deprecated, removed in 2031 (#3008)."""
     symbolicStarProduct:bool
     """if True, * of two exudyn.symbolic vectors is their scalar product and * with a symbolic matrix the matrix product, as before version 1.13.115; False (=default): it raises a TypeError, because numpy multiplies the components - dot() or @ give the products and multiply() the product of the components, alike for numpy arrays and symbolic vectors; deprecated, removed when * becomes the product of the components, as in numpy (#3015, #3016)."""
+    symbolicVariablesWithoutScope:bool
+    """if True, a named exudyn.symbolic.Real, Vector or Matrix is a variable of no scope, so that two of one name are two variables, and a symbolic user function reads any named variable, as before version 1.13.330; False (=default): esym.Real(name, value, scope) gives the variable of that name in its scope - esym.variables, or mbs.symbolicVariables with scope=mbs -, and a symbolic user function reads only its arguments and the variables of mbs.symbolicVariables; deprecated, removed in a later version (#3208)."""
     @overload
     def Reset(self) -> None: 
         """Forget which names were warned about in this session, so that each one warns once more."""

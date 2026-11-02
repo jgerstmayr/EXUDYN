@@ -59,9 +59,10 @@ def Sample(kind):
 
 def SymbolicArgument(kind, name, value):
     """a named symbolic variable of an argument kind"""
+    scope = esym.VariableSet() #a scope per argument: one name serves several kinds of arguments (#3208)
     if kind == 'angle':
-        return esym.Real(name, value)
-    return esym.Vector(name, list(value))
+        return esym.Real(name, value, scope=scope)
+    return esym.Vector(name, list(value), scope=scope)
 
 def SetSymbolicArgument(argument, value):
     """a new value of a named symbolic variable; the recorded expressions use it"""

@@ -213,9 +213,10 @@ class ShellMesh:
             # wrap the three parametric coordinates as named symbolic variables;
             # the name ("x","y","z") and the current float value are both stored
             # so that Evaluate() returns the numeric value and Diff() returns the derivative.
-            x = SymReal("x", pos[0])   #use Exudyn symbolic for exact slope computation
-            y = SymReal("y", pos[1])
-            z = SymReal("z", pos[2])
+            local = exu.symbolic.VariableSet() #the names of this mapping, in a scope of their own (#3208)
+            x = SymReal("x", pos[0], scope=local)   #use Exudyn symbolic for exact slope computation
+            y = SymReal("y", pos[1], scope=local)
+            z = SymReal("z", pos[2], scope=local)
 
             # evaluate the user mapping — returns a list of three symbolic (or plain) values; a numeric mapping, which
             # converts its arguments with float(), gets numbers and its slopes by differences (#3017)
@@ -297,8 +298,9 @@ class ShellMesh:
         for i, pos in enumerate(self.nodeReferencePositions):
             # wrap the node's x and y coordinates as named symbolic variables
             # so that Diff() returns exact partial derivatives of the thickness function
-            xSymbolic = SymReal("x", float(pos[0]))
-            ySymbolic = SymReal("y", float(pos[1]))
+            local = exu.symbolic.VariableSet() #the names of this function, in a scope of their own (#3208)
+            xSymbolic = SymReal("x", float(pos[0]), scope=local)
+            ySymbolic = SymReal("y", float(pos[1]), scope=local)
 
             # evaluate the thickness function symbolically at this node position
             hSymbolic = self.thicknessFunction(xSymbolic, ySymbolic)

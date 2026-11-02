@@ -97,11 +97,12 @@ The missing check of `esym.Function` (N1) and the parameters of a system as its 
 unchanged, no model scope. Smallest; two variables of one name remain possible and print alike, which is what the
 maintainer wants to avoid.
 
-## 5. To be decided
+## 5. Decided and implemented
 
-- **N4** Which package. Proposed: package 1. Within it, the name and place of the scope (`mbs.symbolicVariables`, or
-  `mbs.special.symbolicVariables` as the maintainer wrote) and the name of the flag are open; they do not change the
-  package.
+- **N4** Package 1, the scope `mbs.symbolicVariables` (maintainer 2026-11-02). Implemented in RG12.73.2 (#3208):
+  `esym.Real/Vector/Matrix(name, value, scope=None)`; a name of another kind or size replaces the variable (the tests
+  in one process and the reference notebook reused names of different kinds); without recording a named Real is a
+  number as before; the flag is `exudyn.special.deprecations.symbolicVariablesWithoutScope`, its removal #3231.
 
 N1-N3 of the first round are answered by the package: package 1 makes N1 unnecessary (one name is one variable in a
 scope), replaces N2 by the model's scope and answers N3 with scopes instead of one global one.

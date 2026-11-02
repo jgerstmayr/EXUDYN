@@ -78,9 +78,14 @@ take vectors or matrices of run-time size call `EvaluateUserFunctionIntoVector`,
 symbolic function into the item's own memory without the `std::function`. A matrix result built from components with
 constant zeros is sparse: its pattern is fixed when it is recorded and it is evaluated into triplets (#3022).
 
-**Two scopes of variables**: the arguments are local to the function and written by C++ before each call; the
-variables of a `VariableSet` (`esym.variables`, `mbs.symbolic.variables`) are global, written by Python between calls
-and read by every recording that uses them. A recording writes nothing.
+**Two scopes of variables**: the arguments are local to the function and written by C++ before each call - they are
+created in a `VariableSet` of their own per recording -; the variables of the model's scope `mbs.symbolicVariables`
+(and of `esym.variables` for `esym.Function`) are written by Python between calls and read by every recording that
+uses them. A recording writes nothing. `esym.Real(name, value, scope)` (`NamedRealInScope` in Symbolic.cpp) gives the
+variable of the name in its scope, and `_CheckVariablesOfRecording`, called by `ConvertFunctionToSymbolic`, refuses a
+named variable of a recording that is neither an argument nor the variable of its name in `mbs.symbolicVariables` -
+the same node, found by the walk of `NamedVariablesOf` (#3208). `MainSystem::symbolicVariables` is a Python object,
+created when first used, set to None by `Reset`, so that MainSystem needs no header of the symbolic module.
 
 ## 3. The evaluation: the flat program
 
@@ -179,7 +184,8 @@ Python and C++ without a change of its result. What a format computes differentl
 | `Not(x)`, `isfinite(x)` | `1.0*(x == 0)`, `1.0*np.isfinite(x)` | `Piecewise`; isfinite refused |
 | `@` of two vectors, `v @ M`, `multiply`, `NormL2` | as written | `a.dot(b)`, `M.T @ v`, `multiply_elementwise`, `norm()` |
 
-The format `'symbolic'` reads the variables of `esym.variables` from there, so that the written function keeps the
+The format `'symbolic'` reads the named variables that are no arguments from their scope - `mbs.symbolicVariables` for
+a user function, which has `mbs`, `esym.variables` else (#3208) -, so that the written function keeps the
 signature of the user function and records them again; `'numpy'` and `'sympy'` take them as keyword arguments with
 their present value. The unary `+` of a vector or matrix and `==`/`!=` of two vectors exist in C++ and in the writer
 but cannot be reached from Python. Speed: the C++ text about 4 M entries per second, the structure and the writer

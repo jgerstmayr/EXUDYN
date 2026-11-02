@@ -241,6 +241,7 @@ symbolicUserJointsTest
 symbolicUserRigidBodiesTest
 symbolicUserTorsionalTurnsTest
 symbolicUtilitiesTest
+symbolicVariableScopeTest
 symbolicVectorDiffTest
 symbolicVectorUserFunctionTest
 systemContainerComputeOnlyTest

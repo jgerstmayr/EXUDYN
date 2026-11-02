@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.328.dev1
+- Exudyn version = 1.13.330.dev1
 - last change = 2026-11-02
-- Number of issues = 3231
-- Number of resolved issues = 3105 (328 in current version)
+- Number of issues = 3232
+- Number of resolved issues = 3107 (330 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` Remove special.deprecations.symbolicVariablesWithoutScope, the named symbolic variables of no scope (#3231)
+  - description: Since \#3208 a named esym.Real, Vector or Matrix is a variable of a scope, esym.variables or mbs.symbolicVariables, and a symbolic user function reads only its arguments and the variables of mbs.symbolicVariables; exudyn.special.deprecations.symbolicVariablesWithoutScope restores the variables of no scope for the transition. Decided: the flag and the branches of NamedRealInScope, NamedArrayInScope and CheckVariablesOfRecording that it takes are removed when scripts have changed, as \#3016 for symbolicStarProduct; a delayed issue without a plan step.
+  - date raised: 2026-11-02
 - `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The settled designs into the user documentation (#3221)
   - description: docs/dev/design/genericDAE.md, symbolicHT.md, symbolicSystem.md, symbolicUserItems.md and systemJacobians.md describe what is decided and implemented. Decided: what a user needs goes into the manual and the item descriptions, the design files are removed when nothing is left in them.
   - date raised: 2026-11-02
@@ -9050,12 +9053,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-02
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectKinematicTree: an efficient ODE2 Jacobian (#3211)
   - description: ObjectKinematicTree declares ODE2\_ODE2 and ODE2\_ODE2\_t without a function, so CSystem differentiates the whole tree numerically and serially, one evaluation of ComputeMassMatrixAndODE2LHS per coordinate. Decided: an analytic or automatic Jacobian of the forces of the joints (springs, dampers, the PD control, the gyroscopic terms), measured on the kinematic tree performance model first.
-  - date raised: 2026-11-02
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` exudyn.symbolic: two named variables of one name - where names identify variables, and a scope of names (#3208)
-  - description: esym.Real('a', 12.) and esym.Real('a', 13.) are two variables of one name: an expression of both reads as one quantity while the computation, which takes the variables, distinguishes them. esym.Function, VariableSet and SymbolicSystem refuse two variables of one name, but esym.Function accepts an input named as a variable of esym.variables it also reads. A global scope of names, each name once, with an exemption, a reset and a switch, would refuse a second variable at its creation. Decided: evaluated first, with options and recommendations in docs/dev/design/symbolicVariableNames.md (revision2026c step RG12.73).
-  - date raised: 2026-11-02
-- `CHANGE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` UserItemCreator: the connectors on user mass points through markers of their bodies, also at the center; \_massPointNodes removed (#3207)
-  - description: UserItemCreator keeps the node of each user mass point (\_massPointNodes) and puts a spring-damper or connector at its center on a marker of the node instead of the body, an optimization that SymbolicSystem does not need: it takes position markers of user bodies. Decided: the markers are those of the bodies at every local position, \_massPointNodes is removed, the kinds and parameters of the items are kept by one function that adds a user item (revision2026c step RG12.67.2).
   - date raised: 2026-11-02
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` Revise the system Jacobians: every object provides its local Jacobian, assembled in parallel for ODE2-ODE2, AE-ODE2 and ODE2-AE, the other couplings complete and serial (#3201)
   - description: CSystem::JacobianODE2RHS, JacobianODE1RHS, JacobianAE and JacobianODE2Loads decide per object between an analytic Jacobian, the connector interface, the path of the marker data and a numerical differentiation by CSystem, with flags of the object, the markers and the settings in each place. To do: every object provides the Jacobian of its equations through one interface - analytic, by automatic differentiation or by a numerical differentiation of its own -, so that the assembly distinguishes only the system-wide numerical Jacobian (all couplings, serial, for comparison) and the assembly of the local Jacobians, in parallel for the objects without Python functions and serial for the others and for the objects whose equations depend on coordinates outside their local-to-global lists (sensors and other items read in user functions). Only the ODE2-ODE2, AE-ODE2 and ODE2-AE blocks are optimized for speed; the other blocks (ODE1, loads, the AE-AE and the derivative terms) are completed for all couplings, serial and readable, in line with the ODE1-ODE2 couplings of \#3143. Design: docs/dev/design/systemJacobians.md.
@@ -9075,6 +9072,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-29
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic parameters for every item of the symbolic system: a general way beyond the scalar parameters of the user items (#3159)
   - description: Symbolic parameters are required in the long term; named parameters for the inertia of a rigid body and for the joints need a general solution (\#3152 took the scalar parameters of the mass point and the spring-dampers). To design: parameters of any structure (an inertia from mass, inertia tensor and center of mass, the frames and axes of joints, the matrices of ObjectGenericODE2, the values of loads) given as named esym.Real or expressions of them, mapped to the numbers of the items; a parameter set per system (a VariableSet) instead of per item lists; the derivatives by them (sensitivities) through Equations and the composed system; later the C++ items with numerical and symbolic parameters (symbolicUserItems.md section 6).
+  - **remarks:** 2026-11-02: the bindings of the parameters of the user items are done (ParameterBindings, expressions of variables of mbs.symbolicVariables, revision2026c step RG12.67.2, \#3207, \#3208); open: the symbolic inertia and frames (RG12.67.3), the parameters as an input of the composed system (RG12.67.4), the sensitivities (RG12.67.5). Section 6 of symbolicUserItems.md, cited above, is now a decision in docs/dev/internals/userItems.md.
   - date raised: 2026-10-29
 - `IMPROVEMENT` `HUGE EFF` `raised by: Claude-JG` One table of the symbolic operations: SymbolicProgram and the operation table in SymbolicTable.h/.cpp beside the expression classes (#3153)
   - description: R1 of docs/dev/design/symbolicSystem.md. The expression tree stays for the recording and the simple evaluation; the flat evaluation, the derivatives, Optimize, the export, the count and the uniform evaluation work on a program built from the tree and a table per operation code (name, arity, kinds, size, evaluation, forward derivative, later derivative as new nodes, simplification, text per format). New files src/Linalg/SymbolicTable.h and .cpp; the old code stays as fallback, selected by a switch, until the new path gives the same results bit for bit; item outputs as an operation code with the data of the item and a link to the MainSystem. Four stages, design section 12.7.

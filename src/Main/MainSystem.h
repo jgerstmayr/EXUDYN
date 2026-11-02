@@ -52,6 +52,7 @@ public: //! objects made public, because Python functions are anyway mostly Auto
 	MainObjectFactory mainObjectFactory;
 	py::dict variables;			//!< dictionary which is used to store local variables for models
 	py::dict systemVariables;	//!< dictionary which is used to store system variables (e.g. for solvers, etc.)
+	py::object symbolicVariables; //!< the scope of the named symbolic variables of the model, an exudyn.symbolic.VariableSet, created when first used (#3208)
 
 private:
 	bool interactiveMode;		//!< if this is true, every AddItem(...), ModifyItem(...), etc. causes Assemble() to be called; this guarantees that the system is always consistent to be drawn
@@ -78,6 +79,8 @@ public:
 	
 	//! function for getting all data and state; for pickling
 	py::dict GetDictionary() const;
+	//! the scope of the named symbolic variables of the model, mbs.symbolicVariables (#3208)
+	py::object GetSymbolicVariables();
 	//! function for setting all data from dict; for pickling
 	void SetDictionary(const py::dict& d);
 

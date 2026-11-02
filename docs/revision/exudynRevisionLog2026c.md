@@ -5729,6 +5729,34 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg12-73-2"></a>
+### RG12.73.2, RG12.67.2 — The scope of the model for the named symbolic variables; the bindings of the parameters of the user items (2026-11-02, #3208, #3159, #3207)
+- Decided (maintainer 2026-11-02): package 1 of symbolicVariableNames.md with `mbs.symbolicVariables`.
+- `MainSystem::symbolicVariables`, a Python object (an `esym.VariableSet`) created when first used, so that MainSystem
+  needs no header of the symbolic module; `Reset` sets it to None, `GetDictionary`/`SetDictionary` keep the names and
+  values; `mbs.symbolicVariables` a read-only property.
+- `esym.Real(name, value, scope=None)`, `esym.Vector` and `esym.Matrix` likewise: the variable of the name in the
+  scope (None: `esym.variables`, a MainSystem, a VariableSet), a new one or the one there with the value set. Found by
+  the test suite: a name of another kind or size is replaced, not refused - symbolicUtilitiesTest, symbolicModuleTest
+  and the reference notebook symbolic.ipynb use one name for a Real and a Vector -; with recording off a named Real is
+  a number, as before (symbolicModuleTest). Creating a named variable while a user function is recorded raises.
+- `_CheckVariablesOfRecording` in ConvertFunctionToSymbolic: every named variable of a recording is an argument or the
+  variable of its name in `mbs.symbolicVariables`, the same node (`NamedVariablesOf`). The arguments of a recording
+  are created in a VariableSet of their own; so are the library's names in shells.py and the backend of
+  SymbolicSystem.Equations. `_SymbolicMainSystem.symbolicVariables` for the recording; codeExport's format symbolic
+  reads `mbs.symbolicVariables` in a user function.
+- `exudyn.special.deprecations.symbolicVariablesWithoutScope` restores the old variables; #3231 removes it later.
+- The named variables of `esym.variables` now live as long as the set: symbolicOptimizeTest (live nodes) uses a scope of
+  its own, symbolicModuleTest resets `esym.variables` before its counters; symbolicExportTest and symbolicFunctionTest
+  adapted.
+- `ParameterBindings` (userItems.py): per item the list of numbers and expressions, `Keep`, `Parameters` (the
+  variables of `mbs.symbolicVariables` in them, each once, `_VariablesNotInScope`), `Check`, `Values`, `Apply`;
+  `UserItemCreator._AddUserItem(kind, item, parameters, variant)` in every Create function; `parameterBindings`
+  instead of `parameterVariables`; `_massPointNodes` removed (#3207) - no test result changed. SymbolicSystem takes the
+  bindings (`parameterBindings`), expressions as parameters, sympy by codeExport.ToSympy.
+- Test models: symbolicVariableScopeTest.py (new), symbolicSystemParametersTest.py with `stiffness=k/2 + 0.1*m1`: the
+  derivatives by m1 and k within 7e-11 of central differences by SetParameterValues.
+
 <a id="rg9-11-13-3"></a>
 ### RG9.11.13.3 — The frames of ObjectKinematicTree in a cache validated by its coordinates, with CSystem::PreComputeItems (2026-11-02, #3229)
 - As decided (maintainer 2026-11-02, design docs/dev/design/itemPrecomputation.md section 3): options C and D together,

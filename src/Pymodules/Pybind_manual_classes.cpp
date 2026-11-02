@@ -703,6 +703,8 @@ void Init_Pybind_manual_classes(py::module& m) {
 			"if True, Python user functions get their vector arguments (q, q_t, ...) as lists, as before version 1.13.104, instead of read-only numpy arrays; deprecated, removed in 2031 (#3008)")
 		.def_readwrite("symbolicStarProduct", &PySpecialDeprecations::symbolicStarProduct,
 			"if True, * of two exudyn.symbolic vectors is their scalar product and * with a symbolic matrix the matrix product, as before version 1.13.115; False (=default): it raises a TypeError, as numpy multiplies the components - use dot() or @ for the products and multiply() for the product of the components; deprecated, removed when * becomes the product of the components (#3015, #3016)")
+		.def_readwrite("symbolicVariablesWithoutScope", &PySpecialDeprecations::symbolicVariablesWithoutScope,
+			"if True, a named exudyn.symbolic.Real, Vector or Matrix is a variable of no scope, so that two of one name are two variables, and a symbolic user function reads any named variable, as before version 1.13.330; False (=default): esym.Real(name, value, scope) gives the variable of that name in its scope, esym.variables or mbs.symbolicVariables, and a symbolic user function reads only those of mbs.symbolicVariables; deprecated, removed in a later version (#3208)")
 		.def("Reset", &PySpecialDeprecations::Reset, "forget which names were warned about in this session, so that each one warns once more")
 		.def("Warn", [](const PySpecialDeprecations&, const STDstring& source, const STDstring& name, const STDstring& message, int stackLevel) {
 			PyDeprecated(source, name, message, stackLevel);

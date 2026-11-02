@@ -71,6 +71,17 @@ void MainSystem::Reset()
 	visualizationSystem.Reset();
 
 	interactiveMode = false;
+	symbolicVariables = py::none(); //a new, empty scope when used next (#3208)
+}
+
+//! the scope of the named symbolic variables of the model (#3208): an exudyn.symbolic.VariableSet, created when first used
+py::object MainSystem::GetSymbolicVariables()
+{
+	if (!symbolicVariables || symbolicVariables.is_none())
+	{
+		symbolicVariables = py::module_::import("exudyn").attr("symbolic").attr("VariableSet")();
+	}
+	return symbolicVariables;
 }
 
 void MainSystem::SystemHasChanged()
@@ -140,6 +151,16 @@ py::dict MainSystem::GetDictionary() const
 
 	d["variables"] = variables;
 	d["systemVariables"] = systemVariables;
+	//the names and values of the scope of the symbolic variables (#3208)
+	auto symbolic = py::list();
+	if (symbolicVariables && !symbolicVariables.is_none())
+	{
+		for (const auto& name : symbolicVariables.attr("GetNames")())
+		{
+			symbolic.append(py::make_tuple(name, symbolicVariables.attr("Get")(name).attr("Evaluate")()));
+		}
+	}
+	d["symbolicVariables"] = symbolic;
 
 	//missing:
 	//d["cSystemData"]
@@ -183,6 +204,14 @@ void MainSystem::SetDictionary(const py::dict& d)
 
 	variables = d["variables"];
 	systemVariables = d["systemVariables"];
+	if (d.contains("symbolicVariables"))
+	{
+		for (const auto& entry : py::cast<py::list>(d["symbolicVariables"]))
+		{
+			py::tuple nameValue = py::cast<py::tuple>(entry);
+			GetSymbolicVariables().attr("Add")(nameValue[0], nameValue[1]);
+		}
+	}
 }
 
 MainSystemContainer& MainSystem::GetMainSystemContainer() 

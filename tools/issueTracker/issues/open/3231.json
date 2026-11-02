@@ -1,0 +1,12 @@
+{
+  "number": 3231,
+  "title": "Remove special.deprecations.symbolicVariablesWithoutScope, the named symbolic variables of no scope",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "Since #3208 a named esym.Real, Vector or Matrix is a variable of a scope, esym.variables or mbs.symbolicVariables, and a symbolic user function reads only its arguments and the variables of mbs.symbolicVariables; exudyn.special.deprecations.symbolicVariablesWithoutScope restores the variables of no scope for the transition. Decided: the flag and the branches of NamedRealInScope, NamedArrayInScope and CheckVariablesOfRecording that it takes are removed when scripts have changed, as #3016 for symbolicStarProduct; a delayed issue without a plan step.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01"
+}

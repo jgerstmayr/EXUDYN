@@ -13,9 +13,10 @@
 #           CreateRigidBodySpringDamper (#3193), CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint,
 #           CreateDistanceConstraint (ObjectJointUser, #3140), CreateCoordinateConstraint (ObjectGenericDAE, #3193),
 #           CreateForce, CreateTorque. An argument a user item
-#           does not support raises, naming it. A parameter of a mass point or a spring-damper may be a named
-#           exudyn.symbolic.Real (mass=m1): the item gets its value, the creator keeps the variable in
-#           parameterVariables, for SymbolicSystem(mbs, parameters=creator.parameterVariables) (#3152).
+#           does not support raises, naming it. A parameter of a mass point or a connector may be an expression of
+#           named variables of the model, esym.Real(name, value, scope=mbs) (mass=m1, stiffness=k/2): the item gets its
+#           value, the creator keeps the expression in parameterBindings, a ParameterBindings, for
+#           SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-27 (created)
@@ -36,7 +37,7 @@ from exudyn.rigidBodyUtilities import RotationMatrix2RotXYZ, AngularVelocity2Rot
 from exudyn.misc.mainSystemExtensions import GetMarkersPosRot, JointPreCheckCalcBodyMarkers, _FrameFromHT
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
-__all__ = ['UserItemCreator']
+__all__ = ['ParameterBindings', 'UserItemCreator']
 
 
 #the mass point, ObjectUserBody on a NodePoint, parameters [mass]: as ObjectMassPoint, M = m I, the position of a local
@@ -430,7 +431,7 @@ _jointConstraints = {'revoluteJoint': 5, 'prismaticJoint': 5, 'sphericalJoint': 
 
 
 def _Numbers(values):
-    """the values of parameters given as numbers or named exudyn.symbolic.Real, for the item (#3152)"""
+    """the values of parameters given as numbers or expressions, exudyn.symbolic.Real, for the item (#3152, #3159)"""
     return [float(value.Evaluate()) if isinstance(value, exudyn.symbolic.Real) else value for value in values]
 
 
@@ -471,6 +472,103 @@ def _JointGraphics(markers, shape, size, length, color):
     return UFgraphics
 
 
+class ParameterBindings:
+    """the symbolic parameters of the user items of a system (#3159): for each item with one, the list of its
+    parameters - a number, or an exudyn.symbolic.Real expression of named variables of the scope of the model,
+    mbs.symbolicVariables (#3208) -, whose values are the numbers of the item. UserItemCreator keeps them for every user
+    item it creates, as parameterBindings; SymbolicSystem(mbs, parameters=creator.parameterBindings) reads them
+
+    Args:
+        mbs: the MainSystem of the items
+
+    Example:
+        m1 = esym.Real('m1', 2., scope=mbs)
+        creator = UserItemCreator(mbs)
+        b0 = creator.CreateMassPoint(referencePosition=[1,0,0], mass=m1)
+        creator.parameterBindings[b0]             #[m1]
+        creator.parameterBindings.Parameters()    #[m1]
+    """
+    def __init__(self, mbs):
+        self.mbs = mbs
+        self._items = {}
+
+    def Keep(self, itemNumber, parameters):
+        """keep the parameters of an item if an exudyn.symbolic.Real is among them, e.g. of a user item added without
+        UserItemCreator
+
+        Args:
+            itemNumber: the ObjectIndex or int of the item
+            parameters: the list of the parameters of the item, numbers and exudyn.symbolic.Real
+        """
+        if any(isinstance(value, exudyn.symbolic.Real) for value in parameters):
+            self._items[int(itemNumber)] = list(parameters)
+
+    def __getitem__(self, itemNumber):
+        return self._items[int(itemNumber)]
+
+    def __contains__(self, itemNumber):
+        return int(itemNumber) in self._items
+
+    def __len__(self):
+        return len(self._items)
+
+    def items(self):
+        """the item numbers and their parameter lists
+
+        Returns:
+            the items of the dict, (int, list)
+        """
+        return self._items.items()
+
+    def _Expressions(self):
+        return [value for values in self._items.values() for value in values if isinstance(value, exudyn.symbolic.Real)]
+
+    def Parameters(self):
+        """the named variables of the expressions, each once, in the order found; they are variables of
+        mbs.symbolicVariables, else it raises
+
+        Returns:
+            the list of the named exudyn.symbolic.Real
+        """
+        expressions = self._Expressions()
+        foreign = exudyn.symbolic._VariablesNotInScope(expressions, self.mbs.symbolicVariables)
+        if foreign:
+            raise ValueError('ParameterBindings: the parameters depend on ' + ', '.join(foreign) + ', which are not '
+                             'variables of mbs.symbolicVariables; create them by esym.Real(name, value, scope=mbs) (#3208)')
+        names = exudyn.symbolic._VariablesNotInScope(expressions, exudyn.symbolic.VariableSet()) #all of them, in order
+        return [self.mbs.symbolicVariables.Get(name) for name in names]
+
+    def Values(self, itemNumber):
+        """the numbers of the parameters of an item, the expressions evaluated
+
+        Args:
+            itemNumber: the ObjectIndex or int of the item
+
+        Returns:
+            the list of numbers
+        """
+        return _Numbers(self[itemNumber])
+
+    def Check(self):
+        """check every item: the number of its parameters, the values of the expressions equal to its numbers, the
+        variables of the model's scope; raises ValueError"""
+        self.Parameters()
+        for (objectNumber, values) in self._items.items():
+            numbers = list(self.mbs.GetObject(objectNumber)['parameters'])
+            where = 'ParameterBindings: the parameters of object ' + str(objectNumber)
+            if len(values) != len(numbers):
+                raise ValueError(where + ' are ' + str(len(numbers)) + ' numbers, not ' + str(len(values)))
+            for (value, number) in zip(_Numbers(values), numbers):
+                if float(value) != float(number):
+                    raise ValueError(where + ': the value ' + str(value) + ' differs from the number ' + str(number)
+                                     + ' of the item; SetParameterValues of SymbolicSystem sets both, Apply the numbers')
+
+    def Apply(self):
+        """write the values of the expressions into the parameters of the items"""
+        for objectNumber in self._items:
+            self.mbs.SetObjectParameter(objectNumber, 'parameters', self.Values(objectNumber))
+
+
 class UserItemCreator:
     """creates user items with the Create functions of mbs and their arguments (#3125): ObjectUserBody and
     ObjectConnectorUser with Python user functions instead of the built-in objects, recorded as symbolic user functions
@@ -483,9 +581,9 @@ class UserItemCreator:
         Its members: mbs; items, the dict of the item numbers of each kind ('massPoint', 'rigidBody', 'springDamper',
         'torsionalSpringDamper', 'revoluteJoint', 'prismaticJoint', 'sphericalJoint', 'distanceConstraint'); loads, the
         list of the loads with a user function created by CreateForce; recordings, the symbolic user functions of
-        Record, which must live as long as the system; parameterVariables, the dict of the parameters of the items
-        with a named exudyn.symbolic.Real among them - CreateMassPoint(mass=m1) -, by the int of the item number, as
-        SymbolicSystem(mbs, parameters=...) takes it (#3152). Example:
+        Record, which must live as long as the system; parameterBindings, the ParameterBindings of the parameters of the
+        items with an exudyn.symbolic.Real among them - CreateMassPoint(mass=m1) -, as SymbolicSystem(mbs,
+        parameters=...) takes them (#3152, #3159). Example:
 
         creator = UserItemCreator(mbs) #or creator = mbs: the same script with the built-in items
         b0 = creator.CreateMassPoint(referencePosition=[1,0,0], mass=2, gravity=[0,-9.81,0])
@@ -498,14 +596,20 @@ class UserItemCreator:
         self.items = {kind: [] for kind in _kindFunctions}
         self.loads = []
         self.recordings = []
-        self._massPointNodes = {} #the node of each user mass point, by the int of its body number
         self._variants = {} #the user functions of an item of a kind of variants, by the int of its number (#3203)
-        self.parameterVariables = {}
+        self.parameterBindings = ParameterBindings(mbs)
 
-    def _KeepParameters(self, itemNumber, values):
-        """keep the parameters of an item if a named exudyn.symbolic.Real is among them (#3152)"""
-        if any(isinstance(value, exudyn.symbolic.Real) for value in values):
-            self.parameterVariables[int(itemNumber)] = list(values)
+    def _AddUserItem(self, kind, item, parameters=None, variant=None):
+        """add a user item of a kind (#3159): the item, which has the numbers of its parameters, into mbs, its number
+        into items[kind], its parameters - numbers and exudyn.symbolic.Real - into parameterBindings, the user functions
+        of its variant"""
+        itemNumber = self.mbs.AddObject(item)
+        self.items[kind].append(itemNumber)
+        if parameters is not None:
+            self.parameterBindings.Keep(itemNumber, parameters)
+        if variant is not None:
+            self._variants[int(itemNumber)] = variant
+        return itemNumber
 
     def CreateGround(self, name='', referencePosition=None, referenceRotationMatrix=None, graphicsDataList=[],
                      graphicsDataUserFunction=0, show=True, referenceHT=None):
@@ -559,14 +663,11 @@ class UserItemCreator:
         nodeNumber = mbs.AddNode(eii.NodePoint(name='Node:' + name if name != '' else '', referenceCoordinates=referencePosition,
                                                initialCoordinates=initialDisplacement, initialVelocities=initialVelocity,
                                                visualization=eii.VNodePoint(show=show, drawSize=drawSize, color=color)))
-        bodyNumber = mbs.AddObject(eii.ObjectUserBody(name=name, nodeNumbers=[nodeNumber], parameters=_Numbers([mass]),
+        bodyNumber = self._AddUserItem('massPoint', eii.ObjectUserBody(name=name, nodeNumbers=[nodeNumber], parameters=_Numbers([mass]),
                                                       constantMassMatrix=True,
                                                       **{functionName: function for (functionName, function) in _kindFunctions['massPoint']},
                                                       visualization=eii.VObjectUserBody(show=graphicsDataList != [],
-                                                                                        graphicsData=graphicsDataList)))
-        self.items['massPoint'].append(bodyNumber)
-        self._KeepParameters(bodyNumber, [mass])
-        self._massPointNodes[int(bodyNumber)] = nodeNumber
+                                                                                        graphicsData=graphicsDataList)), [mass])
         result = {'nodeNumber': nodeNumber, 'bodyNumber': bodyNumber}
         if list(gravity) != [0., 0., 0.]:
             result['markerBodyMass'] = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=bodyNumber))
@@ -643,12 +744,11 @@ class UserItemCreator:
                                                        initialCoordinates=initialCoordinates,
                                                        initialVelocities=list(initialVelocity) + list(AngularVelocity2RotXYZ_t(initialAngularVelocity, referenceRotation)),
                                                        visualization=eii.VNodeRigidBodyRxyz(show=show, drawSize=drawSize, color=color)))
-        bodyNumber = mbs.AddObject(eii.ObjectUserBody(name=name, nodeNumbers=[nodeNumber],
-                                                      parameters=[inertia.mass] + list(inertia.GetInertia6D()) + list(inertia.com),
+        parameters = [inertia.mass] + list(inertia.GetInertia6D()) + list(inertia.com)
+        bodyNumber = self._AddUserItem('rigidBody', eii.ObjectUserBody(name=name, nodeNumbers=[nodeNumber], parameters=_Numbers(parameters),
                                                       centerOfMass=list(inertia.com),
                                                       **{functionName: function for (functionName, function) in _kindFunctions['rigidBody']},
-                                                      visualization=eii.VObjectUserBody(show=show, graphicsData=graphicsDataList0)))
-        self.items['rigidBody'].append(bodyNumber)
+                                                      visualization=eii.VObjectUserBody(show=show, graphicsData=graphicsDataList0)), parameters)
         result = {'nodeNumber': nodeNumber, 'bodyNumber': bodyNumber}
         if cMath.norm(gravity) != 0.:
             result['markerBodyMass'] = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=bodyNumber))
@@ -688,11 +788,6 @@ class UserItemCreator:
         _Refuse('CreateSpringDamper', 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
         _Refuse('CreateSpringDamper', 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
         mbs = self.mbs
-        #at the center of a user mass point, the marker is on its node, which SymbolicSystem takes (#3121); the position
-        #is the same as on the body
-        itemNumbers = [self._massPointNodes[int(item)] if (isinstance(item, exudyn.ObjectIndex) and int(item) in self._massPointNodes
-                                                           and not np.any(localPosition)) else item
-                       for (item, localPosition) in zip(itemNumbers, [localPosition0, localPosition1])]
         [marker0, marker1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1,
                                                               getPosition=True, getRotationMatrix=False, useRigidMarker=False)
         if referenceLength is None:
@@ -709,12 +804,10 @@ class UserItemCreator:
                                           color=drawColor, nTiles=8)]
             return [graphics.Lines(positions, color=drawColor)]
 
-        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1],
+        connector = self._AddUserItem('springDamper', eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1],
                                                           parameters=_Numbers(parameters),
                                                           forceUserFunction=_UFspringDamperForce,
-                                                          visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
-        self.items['springDamper'].append(connector)
-        self._KeepParameters(connector, parameters)
+                                                          visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)), parameters)
         return connector
 
     def CreateSphereSphereContact(self, name='', itemNumbers=[None, None], localPosition0=[0., 0., 0.],
@@ -799,9 +892,6 @@ class UserItemCreator:
         elif impactModel == 2:
             impactFactor = 1.5*(e - 1.)*(11. - e)/(1. + 9.*e) if e > 1./3. else (e*e - 1.)/e
         mbs = self.mbs
-        itemNumbers = [self._massPointNodes[int(item)] if (isinstance(item, exudyn.ObjectIndex) and int(item) in self._massPointNodes
-                                                           and not np.any(localPosition) and not friction) else item
-                       for (item, localPosition) in zip(itemNumbers, [localPosition0, localPosition1])]
         [marker0, marker1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1,
                                                               getPosition=True, getRotationMatrix=False, useRigidMarker=friction)
         parameters = [spheresRadii[0], spheresRadii[1], contactStiffness, contactDamping, minimumImpactVelocity, impactFactor]
@@ -820,13 +910,11 @@ class UserItemCreator:
         dataInitial = [dataInitialCoordinates[0], dataInitialCoordinates[2]] + ([dataInitialCoordinates[1]] if friction else [])
         data = mbs.AddNode(eii.NodeGenericData(initialCoordinates=dataInitial, numberOfDataCoordinates=len(dataInitial)))
         markerType = exudyn.MarkerType.Position | exudyn.MarkerType.Orientation if friction else exudyn.MarkerType._None
-        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], nodeNumber=data,
+        connector = self._AddUserItem('sphereSphereContact', eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], nodeNumber=data,
                                                           requestedMarkerType=markerType,
                                                           parameters=_Numbers(parameters), **dict(functions),
-                                                          visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
-        self.items['sphereSphereContact'].append(connector)
-        self._variants[int(connector)] = functions
-        self._KeepParameters(connector, parameters)
+                                                          visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)),
+                                      parameters, functions)
         return connector
 
     def CreateTorsionalSpringDamper(self, name='', itemNumbers=[None, None], position=[0., 0., 0.], axis=[0., 0., 0.],
@@ -895,14 +983,13 @@ class UserItemCreator:
         functions = _torsionalSpringDamperFunctions[bool(unlimitedRotations)]
         data = (mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0], numberOfDataCoordinates=1)) if unlimitedRotations
                 else exudyn.InvalidIndex())
-        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=markers, nodeNumber=data,
-                                                          parameters=_Numbers([stiffness, damping, offset, velocityOffset, torque]),
+        parameters = [stiffness, damping, offset, velocityOffset, torque]
+        connector = self._AddUserItem('torsionalSpringDamper', eii.ObjectConnectorUser(name=name, markerNumbers=markers, nodeNumber=data,
+                                                          parameters=_Numbers(parameters),
                                                           requestedMarkerType=exudyn.MarkerType.Position | exudyn.MarkerType.Orientation,
                                                           **dict(functions),
-                                                          visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
-        self.items['torsionalSpringDamper'].append(connector)
-        self._variants[int(connector)] = functions
-        self._KeepParameters(connector, [stiffness, damping, offset, velocityOffset, torque])
+                                                          visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)),
+                                      parameters, functions)
         return connector
 
     def _JointMarkers(self, where, name, itemNumbers, position, axis, useGlobalFrame, show, frame):
@@ -925,12 +1012,10 @@ class UserItemCreator:
 
     def _Joint(self, kind, name, markers, parameters, show, drawing):
         """an ObjectJointUser of a kind of joint on two rigid markers, drawn by the graphicsDataUserFunction drawing"""
-        joint = self.mbs.AddObject(eii.ObjectJointUser(name=name, markerNumbers=markers, numberOfConstraints=_jointConstraints[kind],
-                                                       parameters=parameters,
+        return self._AddUserItem(kind, eii.ObjectJointUser(name=name, markerNumbers=markers, numberOfConstraints=_jointConstraints[kind],
+                                                       parameters=_Numbers(parameters),
                                                        **{functionName: function for (functionName, function) in _kindFunctions[kind]},
-                                                       visualization=eii.VObjectJointUser(show=show, graphicsDataUserFunction=drawing)))
-        self.items[kind].append(joint)
-        return joint
+                                                       visualization=eii.VObjectJointUser(show=show, graphicsDataUserFunction=drawing)), parameters)
 
     def CreateCartesianSpringDamper(self, name='', itemNumbers=[None, None], localPosition0=[0., 0., 0.],
                                     localPosition1=[0., 0., 0.], stiffness=[0., 0., 0.], damping=[0., 0., 0.],
@@ -962,18 +1047,13 @@ class UserItemCreator:
         _Refuse(where, 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
         _Refuse(where, 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
         mbs = self.mbs
-        itemNumbers = [self._massPointNodes[int(item)] if (isinstance(item, exudyn.ObjectIndex) and int(item) in self._massPointNodes
-                                                           and not np.any(localPosition)) else item
-                       for (item, localPosition) in zip(itemNumbers, [localPosition0, localPosition1])]
         [marker0, marker1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1,
                                                               getPosition=False, getRotationMatrix=False, useRigidMarker=False)
         parameters = list(stiffness) + list(damping) + list(offset)
-        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], parameters=_Numbers(parameters),
+        connector = self._AddUserItem('cartesianSpringDamper', eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], parameters=_Numbers(parameters),
                                                           forceUserFunction=_UFcartesianSpringDamperForce,
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=
-                                                              _JointGraphics([marker0, marker1], 'distance', 0, 0, color))))
-        self.items['cartesianSpringDamper'].append(connector)
-        self._KeepParameters(connector, parameters)
+                                                              _JointGraphics([marker0, marker1], 'distance', 0, 0, color))), parameters)
         return connector
 
     def CreateRigidBodySpringDamper(self, name='', itemNumbers=[None, None], localPosition0=[0., 0., 0.],
@@ -1033,14 +1113,12 @@ class UserItemCreator:
         parameters = ([x for row in stiffness for x in row] + [x for row in damping for x in row] + list(offset)
                       + list(MR0.flatten()) + list(MR1.flatten()))
         functions = _rigidBodySpringDamperFunctions[bool(useIntrinsicFormulation)]
-        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], parameters=_Numbers(parameters),
+        connector = self._AddUserItem('rigidBodySpringDamper', eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], parameters=_Numbers(parameters),
                                                           requestedMarkerType=exudyn.MarkerType.Position | exudyn.MarkerType.Orientation,
                                                           **dict(functions),
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=
-                                                              _JointGraphics([marker0, marker1], 'distance', 0, 0, color))))
-        self.items['rigidBodySpringDamper'].append(connector)
-        self._variants[int(connector)] = functions
-        self._KeepParameters(connector, parameters)
+                                                              _JointGraphics([marker0, marker1], 'distance', 0, 0, color))),
+                                      parameters, functions)
         return connector
 
     def CreateCoordinateConstraint(self, name='', itemNumbers=[None, None], coordinates=[None, None], offset=0.,
@@ -1113,10 +1191,8 @@ class UserItemCreator:
         for (column, factor) in columns:
             constraintMatrix[0, column] += factor
         multiplier = mbs.AddNode(eii.NodeGenericAE(referenceCoordinates=[0], initialCoordinates=[0], numberOfAECoordinates=1))
-        constraint = mbs.AddObject(eii.ObjectGenericDAE(name=name, nodeNumbersODE2=nodes, nodeNumbersAE=[multiplier],
+        return self._AddUserItem('coordinateConstraint', eii.ObjectGenericDAE(name=name, nodeNumbersODE2=nodes, nodeNumbersAE=[multiplier],
                                                         constraintMatrixODE2=constraintMatrix, constraintVector=[c0]))
-        self.items['coordinateConstraint'].append(constraint)
-        return constraint
 
     def CreateRevoluteJoint(self, name='', itemNumbers=[None, None], position=[], axis=[], useGlobalFrame=True, show=True,
                             axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default, bodyNumbers=None,

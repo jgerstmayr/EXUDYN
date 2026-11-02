@@ -30,6 +30,8 @@ import numpy as np
 import math
 
 #reset counters:
+esym.variables.Reset() #the named variables of scripts run before in this process, which would be deleted below (#3208)
+import gc; gc.collect()
 esym.Real.__newCount = 0
 esym.Real.__deleteCount = 0
 esym.Vector.__newCount = 0
@@ -601,6 +603,7 @@ if True:
     del a,b,c,d,f
     del u,v,w,x
     del M,N,P
+    esym.variables.Reset() #the named variables are kept in their scope, esym.variables (#3208)
 
     #check sum of new/delete
     newDelSum = 0

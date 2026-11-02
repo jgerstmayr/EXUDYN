@@ -81,7 +81,14 @@ To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object
 The class **symbolic.Real** has the following **functions and structures**:
 
 - **`__init__(value)`**: Construct symbolic.Real from float.
-- **`__init__(name, value)`**: Construct named symbolic.Real from name and float.
+- **`__init__(name, value, scope = None)`**: Construct a named symbolic.Real, a variable of a scope: the variable of that name in the scope - a new one, or the one there, with its value set; one of another kind of that name is replaced. scope None is exudyn.symbolic.variables, a MainSystem its scope mbs.symbolicVariables, the only named variables its symbolic user functions read, or an esym.VariableSet. While a user function is recorded, a named variable cannot be created. Without recording (SetRecording(False)) it is a number, as before (#3208)
+
+  *Example*:
+
+  ```python
+  k=esym.Real('k',100.,scope=mbs) #a variable of the model, read by its symbolic user functions
+  ```
+
 - **`SetValue(valueInit)`**: Set either internal float value or value of named expression; cannot change symbolic expressions. Raises while CreateSymbolicUserFunction records a function, as the recording would not follow the new value (#3090); SetVector, SetMatrix and a component of a named vector or matrix do the same.
 
   *Example*:
@@ -318,9 +325,9 @@ print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
 ```text
 v1:  [1,3,2]
 v2 initial:  [1,3,2]
-v2 now:  [a,42,(a - 39)] = [42. 42.  3.]
-v1+v2:  ([1,3,2] + [a,42,(a - 39)]) = [43. 45.  5.]
-v1@v2:  ([1,3,2] @ [a,42,(a - 39)]) = 174.0
+v2 now:  [a, 42, (a - 39)] = [42. 42.  3.]
+v1+v2:  ([1,3,2] + [a, 42, (a - 39)]) = [43. 45.  5.]
+v1@v2:  ([1,3,2] @ [a, 42, (a - 39)]) = 174.0
 v1[2]:  [1,3,2][2] = 2.0
 ```
 
@@ -329,7 +336,7 @@ To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Pytho
 The class **symbolic.Vector** has the following **functions and structures**:
 
 - **`__init__(vector)`**: Construct symbolic.Vector from vector represented as numpy array or list (which may contain symbolic expressions).
-- **`__init__(name, vector)`**: Construct named symbolic.Vector from name and vector represented as numpy array or list (which may contain symbolic expressions).
+- **`__init__(name, vector, scope = None)`**: Construct a named symbolic.Vector from name and a list or 1D numpy array of numbers, a variable of a scope as a named symbolic.Real: scope None is exudyn.symbolic.variables, a MainSystem its mbs.symbolicVariables, or an esym.VariableSet; one of that name of another kind or size is replaced (#3208)
 - **`ToString(format = 'Python')`**: the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.symbolics.codeExport (#3088)
 
   *Example*:
@@ -455,9 +462,7 @@ print('m2: ',m2)
 ```
 
 ```text
-m1:  ((3 * ([[1,3,2],[4,5,6]] + [[a,39,2],
-[4,5,6]])) - (3 * [[a,39,2],
-[4,5,6]]))
+m1:  ((3 * ([[1,3,2],[4,5,6]] + [[a, 39, 2], [4, 5, 6]])) - (3 * [[a, 39, 2], [4, 5, 6]]))
 m2:  [[0,1,1],[1,0,1],[1,1,0]]
 ```
 
@@ -466,7 +471,7 @@ To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to bui
 The class **symbolic.Matrix** has the following **functions and structures**:
 
 - **`__init__(matrix)`**: Construct symbolic.Matrix from vector represented as numpy array or list of lists (which may contain symbolic expressions).
-- **`__init__(name, matrix)`**: Construct named symbolic.Matrix from name and vector represented as numpy array or list of lists (which may contain symbolic expressions).
+- **`__init__(name, matrix, scope = None)`**: Construct a named symbolic.Matrix from name and a list of lists or 2D numpy array of numbers, a variable of a scope as a named symbolic.Real: scope None is exudyn.symbolic.variables, a MainSystem its mbs.symbolicVariables, or an esym.VariableSet; one of that name of another kind or size is replaced (#3208)
 - **`ToString(format = 'Python')`**: the expression as text: format='Python' (default) the text of str(), with the functions by their bare names; 'symbolic', 'numpy' or 'sympy' an expression of that module, which Python can compute, written by exudyn.symbolics.codeExport (#3088)
 
   *Example*:
@@ -538,7 +543,7 @@ m1 *= 3.14
 
 
 
-A container for symbolic variables, in particular for exchange between user functions and the model, and the scope of the names of its variables: named Reals, Vectors and Matrices, a name unique in its set, in the order they were added - the inputs of esym.Function (#3149). exudyn.symbolic.variables is the set that the recordings read at every call. For details, see the following example:
+A container for symbolic variables, in particular for exchange between user functions and the model, and the scope of the names of its variables: named Reals, Vectors and Matrices, a name unique in its set, in the order they were added - the inputs of esym.Function (#3149). A named variable is created in a set by esym.Real(name, value, scope) or VariableSet.Add: exudyn.symbolic.variables is the global set, the scope of named variables created without a scope, which esym.Function reads; mbs.symbolicVariables is the set of a model, whose variables its symbolic user functions read at every call (#3208). For details, see the following example:
 
 ```python
 import exudyn as exu
@@ -546,17 +551,19 @@ import math
 esym = exu.symbolic
 SymReal = esym.Real
 
-#use global variable set:
+#the global scope of the named variables:
 variables = esym.variables
 
-#create a named Real
+#a named Real is a variable of a scope, esym.variables if no scope is given (#3208)
 a = SymReal('a',42.)
+print('a in esym.variables:', variables.Exists('a')) #True
 
-#regular way to add variable:
+#the same name gives the same variable, with the new value
+a2 = SymReal('a',43.)
+print('a=', a.Evaluate()) #43, as a2 is the variable a
+
+#add a variable by name and value:
 variables.Add('pi', math.pi)
-
-#add named variable (doesn't need a name):
-variables.Add(a)
 
 #print current variable set
 print(variables)
@@ -565,7 +572,7 @@ print('pi=',variables.Get('pi').Evaluate()) #3.14
 print('a=',variables.Get('a')) #prints 'a'
 
 x=variables.Get('a')
-print('x=',x.Evaluate()) #x=42
+print('x=',x.Evaluate()) #x=43
 
 #override a
 variables.Set('a',3.33)
@@ -573,15 +580,17 @@ variables.Set('a',3.33)
 #x is depending on a:
 print('x:',x,"=",x.Evaluate()) #3.33
 
-#create your own variable set
+#create your own variable set, a scope of its own
 mySet = esym.VariableSet()
 ```
 
 ```text
-{'pi': 3.14159, 'a': 42}
+a in esym.variables: True
+a= 43.0
+{'a': 43, 'x': 0.5, 'pi': 3.14159}
 pi= 3.141592653589793
 a= a
-x= 42.0
+x= 43.0
 x: a = 3.33
 ```
 

@@ -166,6 +166,7 @@ def TestExamplesReferenceSolution():
         'symbolicExplicitSolverTest.py':1, #new 2026-10-26: SolveExplicit, explicit Euler, RK44 and velocity Verlet on a SymbolicSystem equal to SolveDynamic, NumpySystem (#3112)
         'symbolicGeneralizedAlphaTest.py':1, #new 2026-10-27: SolveGeneralizedAlpha on a stiff chain of recorded user items against SolveDynamic, generalized-alpha, Newmark, modified Newton (#3126)
         'symbolicMassMatrixDerivativeTest.py':1, #new 2026-11-02: Newton with and without d(M q_tt)/dq on rigid bodies on Tait-Bryan angles, 417 / 614 iterations (#3228)
+        'symbolicVariableScopeTest.py':0, #new 2026-11-02: the scopes of the named symbolic variables, mbs.symbolicVariables and esym.variables, the refusals, Reset, the dictionary, the deprecation flag (#3208)
         'symbolicSystemEquationsTest.py':1, #new 2026-10-28: SymbolicSystem.Equations and GetFlatProgram, the equations of a generic ODE2 system and of a user rigid body with a mass point, connectors and loads as exudyn.symbolic and sympy expressions equal to the system (#3130)
         'symbolicOnePassJacobianTest.py':1, #new 2026-10-28: EvaluateJacobian in one pass over the flat program, every operation with a rule, against the tree and central differences (#3116)
         'symbolicSystemJointsTest.py':1, #new 2026-10-28: SymbolicSystem with the ObjectJointUser of UserItemCreator: constraint equations, reaction forces against central differences, SolveGeneralizedAlpha equal to SolveDynamic (#3141)

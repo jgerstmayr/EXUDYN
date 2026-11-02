@@ -230,7 +230,8 @@ def Write(data, format='Python', flatten=True, name='', expressionOnly=False):
 
     Returns:
         the code as str; for an executable format a function with the arguments of the user function, or of the
-        named variables of the expressions, and the variables of exudyn.symbolic.variables as keyword arguments
+        named variables of the expressions, and the other named variables it reads - of mbs.symbolicVariables for a
+        user function, of exudyn.symbolic.variables else - as keyword arguments
     """
     if format not in formats:
         raise ValueError('symbolicExport.Write: format must be one of ' + str(formats) + ', but received ' + str(format))
@@ -263,13 +264,15 @@ def Write(data, format='Python', flatten=True, name='', expressionOnly=False):
             header = '#' + data['name'] + ': ' + str(numberOfComputations) + ' operations\n'
         return header + ''.join(line + '\n' for line in lines) + ''.join(n + ' = ' + t + '\n' for (n, t) in results)
 
-    #the variables of exudyn.symbolic.variables: read from there by the format symbolic, which keeps the signature of the
-    #user function and records them again; keyword arguments with their present value otherwise
+    #the named variables that are no arguments - of mbs.symbolicVariables for a user function, which has mbs, else of
+    #exudyn.symbolic.variables (#3208): read from there by the format symbolic, which keeps the signature of the user
+    #function and records them again; keyword arguments with their present value otherwise
     parameters = [argument['name'] for argument in data['arguments']]
+    scope = 'mbs.symbolicVariables' if 'mbs' in parameters else 'esym.variables'
     variableLines = []
     for variable in data.get('variables', []):
         if format == 'symbolic':
-            variableLines.append(variable['name'] + " = esym.variables.Get('" + variable['name'] + "')")
+            variableLines.append(variable['name'] + ' = ' + scope + ".Get('" + variable['name'] + "')")
         else:
             parameters.append(variable['name'] + '=' + _Number(variable['value'], format))
     functionName = name if name else data.get('name', 'F')
@@ -309,7 +312,7 @@ def ToSympy(data):
 
     Returns:
         (arguments, results): a dict of the argument names to their symbols (None for the MainSystem) and the list of
-        the results; a variable of exudyn.symbolic.variables is a symbol as well
+        the results; a named variable that is no argument is a symbol as well
     """
     import sympy #optional: needed only here and in the code of the format sympy
     arguments = {}

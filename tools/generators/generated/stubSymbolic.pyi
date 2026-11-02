@@ -6,8 +6,14 @@ class Real:
         """Construct Real from float."""
         ...
     @overload
-    def __init__(self, name: str, value: float) -> None: 
-        """Construct named Real from name and float."""
+    def __init__(self, name: str, value: float, scope: Any=None) -> None: 
+        """Construct a named Real, a variable of a scope: the variable of that name in the scope - a new one, or the one there, with its value set; one of another kind of that name is replaced.
+        
+        scope None is exudyn.variables, a MainSystem its scope mbs.symbolicVariables, the only named variables its symbolic user functions read, or an esym.VariableSet. While a user function is recorded, a named variable cannot be created. Without recording (SetRecording(False)) it is a number, as before (#3208)
+        
+        Examples:
+            k=esym.Real('k',100.,scope=mbs) #a variable of the model, read by its symbolic user functions
+        """
         ...
     @overload
     def SetValue(self, valueInit: float) -> None: 
@@ -305,8 +311,8 @@ class Vector:
         """Construct Vector from vector represented as numpy array or list (which may contain symbolic expressions)."""
         ...
     @overload
-    def __init__(self, name: str, vector: List[float]) -> None: 
-        """Construct named Vector from name and vector represented as numpy array or list (which may contain symbolic expressions)."""
+    def __init__(self, name: str, vector: List[float], scope: Any=None) -> None: 
+        """Construct a named Vector from name and a list or 1D numpy array of numbers, a variable of a scope as a named Real: scope None is exudyn.variables, a MainSystem its mbs.symbolicVariables, or an esym.VariableSet; one of that name of another kind or size is replaced (#3208)."""
         ...
     @overload
     def ToString(self, format: str='Python') -> str: 
@@ -411,8 +417,8 @@ class Matrix:
         """Construct Matrix from vector represented as numpy array or list of lists (which may contain symbolic expressions)."""
         ...
     @overload
-    def __init__(self, name: str, matrix: List[List[float]]) -> None: 
-        """Construct named Matrix from name and vector represented as numpy array or list of lists (which may contain symbolic expressions)."""
+    def __init__(self, name: str, matrix: List[List[float]], scope: Any=None) -> None: 
+        """Construct a named Matrix from name and a list of lists or 2D numpy array of numbers, a variable of a scope as a named Real: scope None is exudyn.variables, a MainSystem its mbs.symbolicVariables, or an esym.VariableSet; one of that name of another kind or size is replaced (#3208)."""
         ...
     @overload
     def ToString(self, format: str='Python') -> str: 

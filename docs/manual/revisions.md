@@ -102,6 +102,14 @@ contacts with friction on it have their local Jacobian; a chain of 200 bodies wi
 of 1.96 s with full Newton (#3217). The markers of ObjectKinematicTree share the frames of its links, which the tree
 computes once per state instead of once per marker, also with several threads; a tree of 20 links with a spring-damper
 on each link takes 0.27 instead of 1.22 s with RK44 (#3229).
+A named symbolic variable is a variable of a scope: `esym.Real(name, value, scope=mbs)` gives the variable of that name
+in `mbs.symbolicVariables`, the new scope of the model - a new one, or the one there with the value set -, and without
+`scope` the one of `esym.variables`; a symbolic user function reads only its arguments and the variables of
+`mbs.symbolicVariables`, which `mbs.Reset()` empties and `GetDictionary` keeps. Scripts whose user functions read
+`esym.variables` create these variables with `scope=mbs`; `exudyn.special.deprecations.symbolicVariablesWithoutScope`
+restores the old behaviour for the transition (#3208). The parameters of the user items of `UserItemCreator` may be
+expressions of such variables (`stiffness=k/2 + 0.1*m1`), kept in `creator.parameterBindings`, which `SymbolicSystem`
+takes as `parameters`; a connector at the center of a user mass point is on a marker of its body (#3159, #3207).
 `localPosition` of MarkerBodyRigid and MarkerKinematicTreeRigid and `rotationMarker0/1` of the joints and connectors
 are documented as deprecated, to be removed in favour of `localHT` of the rigid body markers; they work as before and
 give no warning yet (#3179).

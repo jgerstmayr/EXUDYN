@@ -394,6 +394,8 @@ pb.DefDataAccess('special.deprecations.userFunctionListArguments','if True, Pyth
                         dataType='bool', isTopLevel = True)
 pb.DefDataAccess('special.deprecations.symbolicStarProduct','if True, * of two exudyn.symbolic vectors is their scalar product and * with a symbolic matrix the matrix product, as before version 1.13.115; False (=default): it raises a TypeError, because numpy multiplies the components - dot() or @ give the products and multiply() the product of the components, alike for numpy arrays and symbolic vectors; deprecated, removed when * becomes the product of the components, as in numpy (#3015, #3016)',
                         dataType='bool', isTopLevel = True)
+pb.DefDataAccess('special.deprecations.symbolicVariablesWithoutScope','if True, a named exudyn.symbolic.Real, Vector or Matrix is a variable of no scope, so that two of one name are two variables, and a symbolic user function reads any named variable, as before version 1.13.330; False (=default): esym.Real(name, value, scope) gives the variable of that name in its scope - esym.variables, or mbs.symbolicVariables with scope=mbs -, and a symbolic user function reads only its arguments and the variables of mbs.symbolicVariables; deprecated, removed in a later version (#3208)',
+                        dataType='bool', isTopLevel = True)
 
 pb.BeginCppWrittenByHand() #bound in Pybind_manual_classes.cpp
 pb.DefPyFunctionAccess(cClass='', pyName='special.deprecations.Reset', cName='unused',

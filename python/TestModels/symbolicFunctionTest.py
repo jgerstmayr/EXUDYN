@@ -77,9 +77,9 @@ esym.variables.Set('symbolicFunctionTestGain', 4.)
 failed += int(G.Evaluate(3., [0., 5.]) != 60.)
 
 #what is refused
-x = esym.Real('x', 1.)
+x = esym.Real('x', 1., scope=esym.VariableSet()) #a variable of another scope, not of esym.variables (#3208)
 failed += 1 - Raises(lambda: esym.Function(x*t, [t], 'H'), ValueError) #x is no input
-failed += 1 - Raises(lambda: esym.Function(t, [t, esym.Real('t', 1.)], 'H'), ValueError) #two inputs of one name
+failed += 1 - Raises(lambda: esym.Function(t, [t, esym.Real('t', 1., scope=esym.VariableSet())], 'H'), ValueError) #two inputs of one name
 failed += 1 - Raises(lambda: esym.Function(t, [t + 1], 'H'), ValueError) #an input that is no named variable
 
 u = failed

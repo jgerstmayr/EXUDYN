@@ -37,14 +37,12 @@ try:
 except ImportError:
     sympy = None
 
-esym.variables.Add('kExport', 7.)
-
 def SpringForce(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
     """every function and operator of exudyn.symbolic but IfThenElse and isfinite; round and mod where numpy and sympy
     differ from C: round(2.5) and mod of a negative number"""
     x = 0.5*deltaL + 0.1
     v = deltaL_t
-    k = esym.variables.Get('kExport')
+    k = mbs.symbolicVariables.Get('kExport') #a named variable of the model, read at every call (#3208)
     terms = [x + v, x - v, x*v, x/(1 + v*v), x == v, x != v, x > v, x >= v, x <= v, x < v, -x, esym.abs(v),
              esym.sign(v), esym.Not(v), esym.round(10*x), esym.ceil(10*x), esym.floor(10*x), esym.sqrt(x), esym.exp(x),
              esym.log(x), esym.sin(x), esym.cos(x), esym.tan(x), esym.asin(x), esym.acos(x), esym.atan(x), esym.sinh(x),
@@ -76,6 +74,7 @@ def MassMatrix(mbs, t, itemNumber, q, q_t):
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
+esym.Real('kExport', 7., scope=mbs)
 node = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0]*3, initialCoordinates=[0]*3, initialCoordinates_t=[0]*3,
                                    numberOfODE2Coordinates=3))
 body = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node]))

@@ -39,7 +39,7 @@ the set gives the names, the values, and the order of a parameter vector p for t
 ensembles of RG14. A name is one variable (as now). Vectors and matrices of parameters are their components; a named
 `esym.Vector` of the set (#3149) may be used for a vector-valued one.
 
-With package 1 of symbolicVariableNames.md (maintainer 2026-11-02, second round; to be decided there as N4) the set is
+With package 1 of symbolicVariableNames.md (maintainer 2026-11-02, second round, decided as N4) the set is
 the **scope of the model**, `mbs.symbolicVariables`: held by MainSystem, emptied by `mbs.Reset()`, the only named
 variables the symbolic user functions of the model may read. `esym.Real('m1', 13.5, scope=mbs)` creates a parameter
 there; SymbolicSystem takes the parameters from it, without a `parameters` argument for the set. MainSystem then holds
@@ -182,8 +182,8 @@ system = SymbolicSystem(mbs, parameters=creator.parameterBindings)   #the variab
 ## 3. Sub-steps proposed
 
 1. This design (RG12.67.1).
-2. `ParameterBindings` in `exudyn.symbolics` with the symbolic `parameters` of the user items and one variable per
-   name; `UserItemCreator._AddUserItem` for every Create function, `creator.parameterBindings` instead of
+2. Done (#3159, #3207): `ParameterBindings` in `exudyn.symbolics.userItems` with the symbolic `parameters` of the user
+   items, the variables of `mbs.symbolicVariables`; `UserItemCreator._AddUserItem` for every Create function, `creator.parameterBindings` instead of
    `parameterVariables`; the connectors on user mass points through body markers, `_massPointNodes` removed (#3207);
    expressions as parameters (P2); SymbolicSystem with them in `Equations()`; a test model with expressions of
    parameters in a mass point, a spring-damper and a rigid body, against SetParameterValues and central differences.

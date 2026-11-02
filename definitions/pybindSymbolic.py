@@ -75,9 +75,11 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
-                        description="Construct named symbolic.Real from name and float.",
-                        argList=['name', 'value'],
-                        argTypes=['str', 'float'],
+                        description="Construct a named symbolic.Real, a variable of a scope: the variable of that name in the scope - a new one, or the one there, with its value set; one of another kind of that name is replaced. scope None is exudyn.symbolic.variables, a MainSystem its scope mbs.symbolicVariables, the only named variables its symbolic user functions read, or an esym.VariableSet. While a user function is recorded, a named variable cannot be created. Without recording (SetRecording(False)) it is a number, as before (#3208)",
+                        argList=['name', 'value', 'scope'],
+                        argTypes=['str', 'float', 'Any'],
+                        defaultArgs=['', '', 'None'],
+                        example = r"""k=esym.Real('k',100.,scope=mbs) #a variable of the model, read by its symbolic user functions""",
                         returnType='None',
                         )
 
@@ -355,9 +357,10 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
-                        description="Construct named symbolic.Vector from name and vector represented as numpy array or list (which may contain symbolic expressions).",
-                        argList=['name', 'vector'],
-                        argTypes=['str', 'List[float]'],
+                        description="Construct a named symbolic.Vector from name and a list or 1D numpy array of numbers, a variable of a scope as a named symbolic.Real: scope None is exudyn.symbolic.variables, a MainSystem its mbs.symbolicVariables, or an esym.VariableSet; one of that name of another kind or size is replaced (#3208)",
+                        argList=['name', 'vector', 'scope'],
+                        argTypes=['str', 'List[float]', 'Any'],
+                        defaultArgs=['', '', 'None'],
                         returnType='None',
                         )
 
@@ -530,9 +533,10 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
-                        description="Construct named symbolic.Matrix from name and vector represented as numpy array or list of lists (which may contain symbolic expressions).",
-                        argList=['name', 'matrix'],
-                        argTypes=['str', 'List[List[float]]'],
+                        description="Construct a named symbolic.Matrix from name and a list of lists or 2D numpy array of numbers, a variable of a scope as a named symbolic.Real: scope None is exudyn.symbolic.variables, a MainSystem its mbs.symbolicVariables, or an esym.VariableSet; one of that name of another kind or size is replaced (#3208)",
+                        argList=['name', 'matrix', 'scope'],
+                        argTypes=['str', 'List[List[float]]', 'Any'],
+                        defaultArgs=['', '', 'None'],
                         returnType='None',
                         )
 
@@ -666,7 +670,9 @@ symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 symbolicModule.AddDocu("A container for symbolic variables, in particular for exchange between "+
             "user functions and the model, and the scope of the names of its variables: named Reals, Vectors and Matrices, "+
             "a name unique in its set, in the order they were added - the inputs of esym.Function (#3149). "+
-            "exudyn.symbolic.variables is the set that the recordings read at every call. "+
+            "A named variable is created in a set by esym.Real(name, value, scope) or VariableSet.Add: "+
+            "exudyn.symbolic.variables is the global set, the scope of named variables created without a scope, which esym.Function reads; "+
+            "mbs.symbolicVariables is the set of a model, whose variables its symbolic user functions read at every call (#3208). "+
             "For details, see the following example:"
             )
 

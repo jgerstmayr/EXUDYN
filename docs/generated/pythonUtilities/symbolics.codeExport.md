@@ -34,7 +34,7 @@ GetFlatProgram() and ToString() is written by C++, and Write() gives the same te
   - `flatten`: True: one line per operation, each node computed once; False: each result as one expression
   - `name`: the name of the function of an executable format; default: the name of the user function, or F
   - `expressionOnly`: True: only the expression of the first result, as ToString() gives it
-- **output**: the code as str; for an executable format a function with the arguments of the user function, or of the named variables of the expressions, and the variables of exudyn.symbolic.variables as keyword arguments
+- **output**: the code as str; for an executable format a function with the arguments of the user function, or of the named variables of the expressions, and the other named variables it reads - of mbs.symbolicVariables for a user function, of exudyn.symbolic.variables else - as keyword arguments
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM)
@@ -43,7 +43,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-codeexport-tofunction)=
 ## Function: ToFunction
 
-[`ToFunction(data, format = 'numpy', flatten = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L285)
+[`ToFunction(data, format = 'numpy', flatten = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L288)
 
 - **function description**: the Python function of an executable format, as Write() gives it as text
 - **input**:
@@ -59,12 +59,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExp
 (sec-codeexport-tosympy)=
 ## Function: ToSympy
 
-[`ToSympy(data)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L303)
+[`ToSympy(data)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L306)
 
 - **function description**: the results as sympy expressions, with a sympy symbol per argument: x for a number, the components q[0], q[1], ... of a vector q as a column sympy.Matrix, M[0][0], ... of a matrix M; sympy must be installed
 - **input**:
   - `data`: the structure of exudyn.symbolic.GetFlatProgramData(...) or UserFunction.GetFlatProgramData()
-- **output**: (arguments, results): a dict of the argument names to their symbols (None for the MainSystem) and the list of the results; a variable of exudyn.symbolic.variables is a symbol as well
+- **output**: (arguments, results): a dict of the argument names to their symbols (None for the MainSystem) and the list of the results; a named variable that is no argument is a symbol as well
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExportTest.py) (TM)

@@ -244,6 +244,8 @@ public:
     bool userFunctionListArgumentsReported; //!< its use was reported in this session; not exposed to Python
     bool symbolicStarProduct; //!< true: * of two symbolic vectors or with a symbolic matrix is the scalar or matrix product, as before #3015
     bool symbolicStarProductReported; //!< its use was reported in this session; not exposed to Python
+    bool symbolicVariablesWithoutScope; //!< true: a named esym.Real, Vector or Matrix is a variable of no scope, and the symbolic user functions read any named variable, as before #3208
+    bool symbolicVariablesWithoutScopeReported; //!< its use was reported in this session; not exposed to Python
 
     std::set<std::string> warned; //!< the names warned about in this session, as "source:name"; not exposed to Python
 
@@ -260,6 +262,8 @@ public:
         userFunctionListArgumentsReported = false;
         symbolicStarProduct = false;
         symbolicStarProductReported = false;
+        symbolicVariablesWithoutScope = false;
+        symbolicVariablesWithoutScopeReported = false;
         warned.clear();
     }
 
@@ -273,6 +277,7 @@ public:
         os << "  recordUse = " << recordUse << "\n";
         os << "  userFunctionListArguments = " << userFunctionListArguments << "\n";
         os << "  symbolicStarProduct = " << symbolicStarProduct << "\n";
+        os << "  symbolicVariablesWithoutScope = " << symbolicVariablesWithoutScope << "\n";
         os << "  names warned about = " << warned.size() << "\n";
         os << "\n";
     }

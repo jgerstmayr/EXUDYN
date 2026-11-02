@@ -86,8 +86,16 @@ decides is decided then.
 - **Loops** are recorded as often as they run: a loop over the components of a vector is fine, a loop whose count
   depends on a symbolic value is not possible.
 - **Constants and parameters**: a Python variable is a constant of the recording. A value that changes during the
-  simulation is a named variable, `esym.variables.Add('k', 100.)` before the recording and `esym.variables.Set('k',
-  200.)` later, read in the function with `esym.variables.Get('k')`.
+  simulation is a named variable of the model, `k = esym.Real('k', 100., scope=mbs)` before the recording and
+  `k.SetValue(200.)` or `mbs.symbolicVariables.Set('k', 200.)` later, read in the function as `k` or with
+  `mbs.symbolicVariables.Get('k')`. A recording reads only its arguments and the named variables of
+  `mbs.symbolicVariables`, the scope of the model; another named variable, one of `esym.variables` among them, is
+  refused at the recording, and so is a named variable created during it. A name is one variable in its scope:
+  `esym.Real('k', 300., scope=mbs)` again gives the variable `k` with the value 300, so that a script runs a second
+  time; `mbs.Reset()` empties the scope, a new `mbs` has a new one, and `mbs.GetDictionary()` keeps it. Without
+  `scope`, a named variable is one of `esym.variables`, the global scope, which `esym.Function` reads.
+  `exudyn.special.deprecations.symbolicVariablesWithoutScope = True` restores the variables of no scope for the
+  transition (#3208).
 - **One function for both**: the rotation matrices, G matrices and conversions of `exudyn.symbolics.kinematics` take a
   last argument `functions`, so that with `import exudyn.symbolics.kinematics as su`,
   `su.RotXYZ2RotationMatrix(rot, functions=esym)` records and `functions=exudyn.cMath` computes numbers with the same
@@ -166,7 +174,7 @@ mbs.Assemble()
   assembled before the recording.
 - Every other attribute of `mbs` raises an `AttributeError` while recording - its value would be a constant of the
   recording. `mbs.variables` are Python values, constants of the recording; a value that changes is a variable of
-  `esym.variables`.
+  `mbs.symbolicVariables`.
 - A function that reads items is evaluated in the main thread, also with several threads. The Jacobian of an item does
   not see what it reads from other items: a coupling through such a read lags in Newton, which is fine for loads,
   controllers and outputs, and not for stiff coupling, which belongs in a connector. An item cannot read its own output

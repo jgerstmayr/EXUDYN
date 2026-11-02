@@ -1,0 +1,17 @@
+{
+  "number": 3208,
+  "title": "exudyn.symbolic: two named variables of one name - where names identify variables, and a scope of names",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "esym.Real('a', 12.) and esym.Real('a', 13.) are two variables of one name: an expression of both reads as one quantity while the computation, which takes the variables, distinguishes them. esym.Function, VariableSet and SymbolicSystem refuse two variables of one name, but esym.Function accepts an input named as a variable of esym.variables it also reads. A global scope of names, each name once, with an exemption, a reset and a switch, would refuse a second variable at its creation. Decided: evaluated first, with options and recommendations in docs/dev/design/symbolicVariableNames.md (revision2026c step RG12.73).",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 19:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/design/symbolicVariableNames.md",
+  "releaseNotes": "A named symbolic variable is a variable of a scope: esym.Real(name, value, scope=mbs), esym.Vector and esym.Matrix give the variable of that name in mbs.symbolicVariables, the new scope of the model - a new one, or the one there with the value set; one of another kind or size is replaced -; without scope the one of esym.variables. A symbolic user function reads only its arguments and the variables of mbs.symbolicVariables, at every call; another named variable and a named variable created while recording are refused. mbs.Reset() empties the scope, GetDictionary and SetDictionary keep it. exudyn.special.deprecations.symbolicVariablesWithoutScope restores the variables of no scope for the transition. Test model symbolicVariableScopeTest.py.",
+  "resolvedInVersion": "1.13.330"
+}

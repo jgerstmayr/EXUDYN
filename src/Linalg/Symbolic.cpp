@@ -936,6 +936,122 @@ void SetSetVariable(VariableSet& set, const STDstring& name, const py::object& v
 	else { py::cast<SymbolicRealMatrix&>(variable).SetSymbolicMatrix(py::array_t<Real>::ensure(value)); }
 }
 
+//! exudyn.special.deprecations.symbolicVariablesWithoutScope: a named variable of no scope, as before #3208
+static bool VariablesWithoutScope()
+{
+	if (!pySpecial.deprecations.symbolicVariablesWithoutScope) { return false; }
+	if (!pySpecial.deprecations.symbolicVariablesWithoutScopeReported)
+	{
+		pySpecial.deprecations.symbolicVariablesWithoutScopeReported = true;
+		PyDeprecated("settings", "special.deprecations.symbolicVariablesWithoutScope", "exudyn.special.deprecations.symbolicVariablesWithoutScope: "
+			"a named symbolic variable belongs to a scope, esym.variables or mbs.symbolicVariables; create those of a symbolic user function with esym.Real(name, value, scope=mbs)");
+	}
+	return true;
+}
+
+//! the scope of a named variable created in Python (#3208): esym.variables for None, the scope of a MainSystem, or a VariableSet
+static VariableSet& ScopeOfNamedVariable(const py::object& scope, const STDstring& name)
+{
+	CHECKandTHROW(!SReal::recordingFunction, "exudyn.symbolic: the named variable '" + name + "' is created while a user function is "
+		"recorded; a named variable belongs to the model: create it before the recording, esym.Real(name, value, scope=mbs)", ExudynValueError);
+	if (scope.is_none()) { return py::module_::import("exudyn").attr("symbolic").attr("variables").cast<VariableSet&>(); }
+	if (py::isinstance<VariableSet>(scope)) { return py::cast<VariableSet&>(scope); }
+	if (py::isinstance<MainSystem>(scope)) { return py::cast<MainSystem&>(scope).GetSymbolicVariables().cast<VariableSet&>(); }
+	throw py::type_error("exudyn.symbolic: the scope of the named variable '" + name + "' must be None (esym.variables), a MainSystem "
+		"(its symbolicVariables) or an esym.VariableSet, but received " + py::cast<STDstring>(py::str(scope)));
+}
+
+//! esym.Real(name, value, scope) (#3208): the variable of that name in its scope - a new one, or the one there, with the value set;
+//! one of another kind of that name is replaced
+SReal NamedRealInScope(const STDstring& name, Real value, const py::object& scope)
+{
+	if (!SReal::GetRecording() || VariablesWithoutScope()) { return SReal(name, value); } //without recording a number, as before
+	VariableSet& set = ScopeOfNamedVariable(scope, name);
+	if (set.HasVariable(name) && set.IsArray(name)) { set.RemoveVariable(name); }
+	if (!set.HasVariable(name)) { set.AddVariable(name, value); }
+	else { set.SetVariable(name, value); }
+	return set.GetVariable(name);
+}
+
+//! esym.Vector(name, values, scope) and esym.Matrix(name, values, scope) (#3208), as NamedRealInScope
+py::object NamedArrayInScope(const STDstring& name, const py::object& value, const py::object& scope, bool isMatrix)
+{
+	if (!SReal::GetRecording() || VariablesWithoutScope()) //without recording numbers, as before
+	{
+		return isMatrix ? py::cast(SymbolicRealMatrix(name, py::array_t<Real>::ensure(value))) : py::cast(SymbolicRealVector(name, Vector(py::cast<std::vector<Real>>(value))));
+	}
+	VariableSet& set = ScopeOfNamedVariable(scope, name);
+	py::array_t<Real> array = py::array_t<Real>::ensure(value);
+	CHECKandTHROW(array && array.ndim() == (isMatrix ? 2 : 1), STDstring("esym.") + (isMatrix ? "Matrix" : "Vector") + ": the value of '"
+		+ name + "' must be a " + (isMatrix ? "2D" : "1D") + " list or array", ExudynValueError);
+	bool sameKind = set.IsArray(name) && (isMatrix ? py::isinstance<SymbolicRealMatrix>(set.GetArray(name)) : py::isinstance<SymbolicRealVector>(set.GetArray(name)));
+	if (sameKind) //and of the same size
+	{
+		py::array_t<Real> present = py::array_t<Real>::ensure(set.GetArray(name).attr("Evaluate")());
+		sameKind = py::cast<py::tuple>(present.attr("shape")).equal(py::cast<py::tuple>(array.attr("shape")));
+	}
+	if (set.HasVariable(name) && !sameKind) { set.RemoveVariable(name); } //one of another kind or size is replaced
+	if (!set.HasVariable(name)) { return AddArrayVariable(set, name, value); }
+	SetSetVariable(set, name, value);
+	return set.GetArray(name);
+}
+
+static void NamedVariablesOf(const py::object& x, std::vector<std::pair<const void*, STDstring>>& named);
+
+//! true, if the named variable of this node is the variable of its name in the scope (#3208)
+static bool IsVariableOfScope(VariableSet& scope, const void* node, const STDstring& name)
+{
+	return scope.HasVariable(name) && (scope.IsArray(name) ? FlatProgramData::NamedNode(scope.GetArray(name))
+		: (const void*)scope.GetVariable(name).GetExpression()) == node;
+}
+
+//! the named variables of one or a list of esym.Real, Vector and Matrix, each name once, in the order found (#3208)
+static void NamedVariablesOfList(const py::object& expressions, std::vector<std::pair<const void*, STDstring>>& namedVariables)
+{
+	if (py::isinstance<py::list>(expressions) || py::isinstance<py::tuple>(expressions))
+	{
+		for (const auto& item : expressions) { NamedVariablesOf(py::reinterpret_borrow<py::object>(item), namedVariables); }
+	}
+	else { NamedVariablesOf(expressions, namedVariables); }
+}
+
+//! esym._VariablesNotInScope (#3208): the names of the named variables of the expressions that are not those of the scope
+py::list VariablesNotInScope(const py::object& expressions, VariableSet& scope)
+{
+	std::vector<std::pair<const void*, STDstring>> namedVariables;
+	NamedVariablesOfList(expressions, namedVariables);
+	py::list names;
+	std::unordered_set<const void*> found; //each variable once, also if several expressions have it
+	for (const auto& [node, name] : namedVariables)
+	{
+		if (found.insert(node).second && !IsVariableOfScope(scope, node, name)) { names.append(name); }
+	}
+	return names;
+}
+
+//! the check of a recording of CreateSymbolicUserFunction (#3208): every named variable of the result is an argument or a
+//! variable of the scope of the MainSystem, the same node
+void CheckVariablesOfRecording(const py::object& returnValue, const py::list& arguments, MainSystem& mainSystem, const STDstring& name)
+{
+	if (VariablesWithoutScope()) { return; }
+	std::vector<const void*> argumentNodes;
+	for (const auto& argument : arguments)
+	{
+		const void* node = FlatProgramData::NamedNode(py::reinterpret_borrow<py::object>(argument));
+		if (node) { argumentNodes.push_back(node); }
+	}
+	std::vector<std::pair<const void*, STDstring>> namedVariables;
+	NamedVariablesOfList(returnValue, namedVariables);
+	VariableSet& scope = mainSystem.GetSymbolicVariables().cast<VariableSet&>();
+	for (const auto& [node, variableName] : namedVariables)
+	{
+		if (std::find(argumentNodes.begin(), argumentNodes.end(), node) != argumentNodes.end()) { continue; }
+		CHECKandTHROW(IsVariableOfScope(scope, node, variableName), "CreateSymbolicUserFunction " + name + ": the function reads the named variable '" + variableName
+			+ "', which is not in mbs.symbolicVariables, the scope of the model; create it with esym.Real('" + variableName
+			+ "', value, scope=mbs) - or esym.Vector, esym.Matrix - before the recording", ExudynValueError);
+	}
+}
+
 //! esym.Function(result, inputs, name) (#3149): a recording of an expression in declared inputs, without an item;
 //! a UserFunction whose arguments are the inputs, in their order, and which needs no MainSystem
 //! the named variables of an esym.Real, Vector or Matrix, each node with its name, by a traversal without recursion (#3198)
@@ -1929,7 +2045,8 @@ void Init_Pybind_Symbolic(py::module& m) {
 	py::class_<Symbolic::SReal>(m, "Real", "symbolic.Real: a hybrid Real-symbolic type used for recording of expression trees")
 		.def(py::init<>())
 		.def(py::init<Real>())
-		.def(py::init<STDstring, Real>()) //named real, gives separate expression ...
+		.def(py::init([](const STDstring& name, Real value, const py::object& scope) { return Symbolic::NamedRealInScope(name, value, scope); }),
+			py::arg("name"), py::arg("value"), py::arg("scope") = py::none()) //the variable of the name in its scope (#3208)
 		.def(py::init<int>())
 		
 		.def_readwrite_static("__newCount", &Symbolic::ExpressionBase::newCount)
@@ -2201,6 +2318,12 @@ void Init_Pybind_Symbolic(py::module& m) {
 		"get current (global / module-wide) status of recording");
 	m.def("SetRecording", &Symbolic::SReal::SetRecording,
 		"set current (global / module-wide) status of recording");
+	m.def("_VariablesNotInScope", &Symbolic::VariablesNotInScope,
+		"the names of the named variables of an expression or a list of them that are not the variables of the scope (#3208)",
+		py::arg("expressions"), py::arg("scope"));
+	m.def("_CheckVariablesOfRecording", &Symbolic::CheckVariablesOfRecording,
+		"for CreateSymbolicUserFunction: every named variable of the recording is an argument or in mbs.symbolicVariables (#3208)",
+		py::arg("returnValue"), py::arg("arguments"), py::arg("mbs"), py::arg("name"));
 	m.def("_SetRecordingFunction", [](bool flag) { Symbolic::SReal::recordingFunction = flag; },
 		"for CreateSymbolicUserFunction: a user function is recorded, SetValue of a named variable raises (#3090)");
 	m.def("_ItemOutput", &Symbolic::ItemOutputExpression,
@@ -2234,7 +2357,9 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def(py::init<>())
 		.def(py::init<py::list>()) //cast from mixed list of Real and SReal
 		.def(py::init<std::vector<Real> >()) //cast from list and numpy array
-		.def(py::init<STDstring, std::vector<Real> >())
+		.def(py::init([](const STDstring& name, const py::object& value, const py::object& scope) {
+				return py::cast<Symbolic::SymbolicRealVector>(Symbolic::NamedArrayInScope(name, value, scope, false)); }),
+			py::arg("name"), py::arg("value"), py::arg("scope") = py::none()) //the variable of the name in its scope (#3208)
 
 		.def_readwrite_static("__newCount", &Symbolic::VectorExpressionBase::newCount)
 		.def_readwrite_static("__deleteCount", &Symbolic::VectorExpressionBase::deleteCount)
@@ -2390,7 +2515,9 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def(py::init<>())
 		.def(py::init<py::list>()) //cast from mixed list of Real and SReal
 		.def(py::init<py::array_t<Real> >()) //cast from list and numpy array
-		.def(py::init<STDstring, py::array_t<Real> >())
+		.def(py::init([](const STDstring& name, const py::object& value, const py::object& scope) {
+				return py::cast<Symbolic::SymbolicRealMatrix>(Symbolic::NamedArrayInScope(name, value, scope, true)); }),
+			py::arg("name"), py::arg("value"), py::arg("scope") = py::none()) //the variable of the name in its scope (#3208)
 
 		//would work if initializer_list implemented in SymbolicRealMatrix, but is dangerous:
 		//.def(py::init<Symbolic::SReal, Symbolic::SReal, Symbolic::SReal >()) //cast from list of SReal
