@@ -5729,6 +5729,30 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg9-11-13-3"></a>
+### RG9.11.13.3 — The frames of ObjectKinematicTree in a cache validated by its coordinates, with CSystem::PreComputeItems (2026-11-02, #3229)
+- As decided (maintainer 2026-11-02, design docs/dev/design/itemPrecomputation.md section 3): options C and D together,
+  no thread buffers; a failed comparison inside a parallel loop raises; the comparison always with the velocities and
+  accelerations; only ObjectKinematicTree. Sub-step 1 (thread buffers) not done, 4 (the object's own LHS and mass
+  matrix on the cache) evaluated without a gain: they need the placements in the parents and the bias accelerations
+  with gravity, once per tree.
+- `CObjectKinematicTree::PreCompute` with `treeCacheCoordinates` (4n numbers) and `treeCacheValid`, reset by
+  `ParametersHaveChanged` and at Assemble; `GetTreeTransformations` for the Get...KinematicTree functions (the other
+  configurations in thread-local temporaries, the visualization in its members); the chain of a link thread-local.
+- `CObject::HasPreCompute`/`PreCompute`, `cSystemData.listPreComputeObjects` (with a marker on the object),
+  `CSystem::PreComputeItems` in the six system functions instead of UpdateUserFunctionsForThreads, and before the
+  parallel parts of JacobianODE2RHS and JacobianAE and the Jacobian of the general contacts. The deferral of
+  RG9.11.14 removed.
+- `ExuThreading::TaskManager::JobIsRunning`; `CreateJob` threw an exception of its own part before waiting for the
+  other threads, and an exception of a worker thread was lost if it came later - it now waits, then throws. The
+  constructors of `ExuThreading::Exception` were `inline` in Threading.cpp, so no other file could throw it.
+- Measured (RK44, 2000 steps, a CartesianSpringDamper per link), before / after: 6 links 0.131 / 0.052 s, 20 links 1.22
+  / 0.265 s, 60 links 11.0 / 2.13 s; the tree alone 0.026, 0.148, 1.38 s. Generalized-alpha, full Newton, 200 steps, 20
+  links: 664 iterations, 0.165 s with one thread, 0.126 s with four. 60 links take some 30 Newton iterations per step,
+  with the local as with the system-wide Jacobian (1591 / 1589 in 50 steps), so not a matter of the cache.
+- New test model kinematicTreeMarkerCacheTest.py: six links with a spring-damper each and a spherical joint, one and
+  four threads with the parallel limits at 1 the same within 1e-14; SetObjectParameter of baseOffset moves the markers.
+
 <a id="rg11-6-1"></a>
 ### RG11.6.1 — localPosition of the rigid body markers and rotationMarker0/1 documented as deprecated (2026-11-02, #3179)
 - The descriptions of rotationMarker0/1 of ObjectConnectorRigidBodySpringDamper, ObjectConnectorTorsionalSpringDamper,

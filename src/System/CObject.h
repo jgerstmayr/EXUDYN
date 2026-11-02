@@ -130,6 +130,12 @@ public:
 	//! function which is called, if parameters have changed; this should e.g. tell if precomputed values need to be re-computed; is called in MainObject::SetWithDictionary(...)
 	virtual void ParametersHaveChanged() {} //default: do nothing
 
+	//! an object that keeps a state shared by its markers, e.g. the frames of ObjectKinematicTree, which CSystem::PreComputeItems
+	//! validates serially before the parallel loops (#3229)
+	virtual bool HasPreCompute() const { return false; }
+	//! validate that state for the current configuration
+	virtual void PreCompute() const {}
+
 	//! function to be overwritten, if object has user function
 	virtual bool HasUserFunction() const { return false; }
 	//! a body with data coordinates that a post-Newton step updates, as ObjectGenericDAE (#3195); the connectors have

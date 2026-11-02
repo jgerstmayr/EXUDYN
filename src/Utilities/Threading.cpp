@@ -36,6 +36,7 @@ namespace ExuThreading {
 	int TaskManager::num_threads = 1;
 	int TaskManager::max_threads = std::thread::hardware_concurrency();
 	std::atomic<bool> TaskManager::isRunning{ false };
+	std::atomic<bool> TaskManager::jobIsRunning{ false };
 	//bool TaskManager::isRunning = false;
 	bool TaskManager::loadBalancing = false;
 
@@ -46,7 +47,7 @@ namespace ExuThreading {
 	static std::mutex copyex_mutex;
 	static std::mutex printexception_mutex;
 
-	inline Exception::Exception(const std::string& s)
+	Exception::Exception(const std::string& s)
 		: m_what(s)
 	{
 		{
@@ -54,7 +55,7 @@ namespace ExuThreading {
 		}
 	}
 
-	inline Exception::Exception(const char* s)
+	Exception::Exception(const char* s)
 		: m_what(s)
 	{
 		{
@@ -66,6 +67,7 @@ namespace ExuThreading {
 	{
 		func = &afunc;
 		ex = nullptr;
+		jobIsRunning.store(true, MEMORY_ORDER_SYNCSTORE);
 
 		TaskInfo ti;
 		ti.nthreads = GetNumThreads();
@@ -113,9 +115,7 @@ namespace ExuThreading {
 			ex = new Exception(e);
 		}
 
-		if (ex) throw Exception(*ex);
-
-		// Wait for other threads to finish
+		// Wait for other threads to finish, also after an exception, which the threads may raise as well (#3229)
 		for (Index i = 1; i < sync.NumberOfItems(); i++)
 		{
 			while (!sync[i]->value.load(MEMORY_ORDER_SYNCLOAD))
@@ -123,6 +123,9 @@ namespace ExuThreading {
 				std::this_thread::yield();
 			}
 		}
+		jobIsRunning.store(false, MEMORY_ORDER_SYNCSTORE);
+
+		if (ex) throw Exception(*ex);
 	}
 
 	void TaskManager::Loop(Index threadID)

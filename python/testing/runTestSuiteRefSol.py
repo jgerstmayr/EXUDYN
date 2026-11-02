@@ -165,6 +165,7 @@ def TestExamplesReferenceSolution():
         'symbolicSystemTest.py':3, #new 2026-10-26: SymbolicSystem, 3 kinds of user bodies and a generic ODE2, mass matrix, forces and residual equal to the solver (#3110)
         'symbolicExplicitSolverTest.py':1, #new 2026-10-26: SolveExplicit, explicit Euler, RK44 and velocity Verlet on a SymbolicSystem equal to SolveDynamic, NumpySystem (#3112)
         'symbolicGeneralizedAlphaTest.py':1, #new 2026-10-27: SolveGeneralizedAlpha on a stiff chain of recorded user items against SolveDynamic, generalized-alpha, Newmark, modified Newton (#3126)
+        'symbolicMassMatrixDerivativeTest.py':1, #new 2026-11-02: Newton with and without d(M q_tt)/dq on rigid bodies on Tait-Bryan angles, 417 / 614 iterations (#3228)
         'symbolicSystemEquationsTest.py':1, #new 2026-10-28: SymbolicSystem.Equations and GetFlatProgram, the equations of a generic ODE2 system and of a user rigid body with a mass point, connectors and loads as exudyn.symbolic and sympy expressions equal to the system (#3130)
         'symbolicOnePassJacobianTest.py':1, #new 2026-10-28: EvaluateJacobian in one pass over the flat program, every operation with a rule, against the tree and central differences (#3116)
         'symbolicSystemJointsTest.py':1, #new 2026-10-28: SymbolicSystem with the ObjectJointUser of UserItemCreator: constraint equations, reaction forces against central differences, SolveGeneralizedAlpha equal to SolveDynamic (#3141)
@@ -234,6 +235,7 @@ def TestExamplesReferenceSolution():
         'generalContactTriangleMomentumTest.py':4.035299999516741, #2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 4.035299999516676; new 2026-10-05: momentum conservation of the GeneralContact sphere-triangle contact (#2849)
         'inactiveConnectorForceTest.py':16204.677320386909, #new 2026-10-05: an inactive connector reports no force (#984)
         'ANCFThinPlateRevisionTest.py':20, #2026-10-05: ShellMesh instead of the builder, the thickness function, the visualization settings (#2859, #2864); before 18; #new 2026-10-05: the tests of the ANCF thin plate of the working copy 2026, the number of tests that passed (#2857, #2858)
+        'kinematicTreeMarkerCacheTest.py':2.5975523820602433, #new 2026-11-02: the markers on the cache of the frames, one and four threads (#3229)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164108, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before -1.309383960216409;
         'kinematicTreeUserFunctionTest.py': 0.14522556021139238,      #new 2026-10-04: the forceUserFunction of ObjectKinematicTree gets the velocities (#2845)

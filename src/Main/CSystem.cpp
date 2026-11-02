@@ -52,7 +52,7 @@
 //! compute system massmatrix; massmatrix must have according size; must be set to zero before calling!
 void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, GeneralMatrix& massMatrix, bool computeInverse)
 {
-	UpdateUserFunctionsForThreads();
+	PreComputeItems();
 //size needs to be set accordingly in the caller function; components are addd to massMatrix!
 	//only call bodies with ODE2
     if (EXUstd::IsOfType(LinearSolverType::Dense, massMatrix.GetSystemMatrixType()))
@@ -291,7 +291,7 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 {
 	//STARTGLOBALTIMER(TScomputeObjectODE2);
 	systemODE2Rhs.SetAll(0.);
-	UpdateUserFunctionsForThreads();
+	PreComputeItems();
 
 	int nItems = cSystemData.listComputeObjectODE2LhsNoUF.NumberOfItems();
 	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
@@ -493,7 +493,7 @@ void CSystem::ComputeODE2LoadsRHS(TemporaryComputationDataArray& tempArray, Vect
 	//Index nLoads = cSystemData.GetCLoads().NumberOfItems();
 	Real currentTime = cSystemData.GetCData().currentState.time;
 
-	UpdateUserFunctionsForThreads();
+	PreComputeItems();
 	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
 	Index nItems = cSystemData.listOfLoadsNoUF.NumberOfItems(); 
 
@@ -901,7 +901,7 @@ bool CSystem::ComputeODE1SingleLoad(Index loadIndex, TemporaryComputationData& t
 //! compute system right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
 void CSystem::ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray, Vector& algebraicEquations, bool velocityLevel)
 {
-	UpdateUserFunctionsForThreads();
+	PreComputeItems();
 //Still needed? algebraicEquations.SetNumberOfItems(cSystemData.GetNumberOfCoordinatesAE()); //needed for numerical differentiation
 	algebraicEquations.SetAll(0.);
 	TemporaryComputationData& temp = tempArray[0];
@@ -1069,7 +1069,7 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray
 //! recommendedStepSize must be initialized with -1 or previous recommendation: [< 0: no recommendation, 0: use minimum step size, >0: use specific step size, if no smaller size requested by other reason]
 Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& recommendedStepSize)
 {
-	UpdateUserFunctionsForThreads();
+	PreComputeItems();
 //recommendedStepSize (must be initialized with -1 or appropriately)
 	Real PNerror = 0;
 	int nItems = cSystemData.listDiscontinuousIteration.NumberOfItems();
@@ -1217,7 +1217,7 @@ TimerStructureRegistrator TSRreactionForces2("TSreactionForces2", TSreactionForc
 //! ode2ReactionForces += C_{q2}^T * \lambda
 void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& tempArray, const Vector& reactionForces, Vector& ode2ReactionForces)
 {
-	UpdateUserFunctionsForThreads();
+	PreComputeItems();
 //Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 	//Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 	//Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();

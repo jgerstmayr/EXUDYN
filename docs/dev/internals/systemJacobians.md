@@ -74,8 +74,8 @@ is computed by `ComputeJacobianODE2Connector` in parallel, as it does not touch 
   prismatic one leaves it, a joint at or below moves the point -, from which the marker has the Jacobian derivative
   (`JacobianDerivativeAvailable`) and `GetVelocity_q`, so that connectors on it are on the connector interface and in
   the parallel assembly; within 2e-8 of the system-wide Jacobian, also at velocities with a contact (dv/dq). The marker
-  functions use the mutable temporaries of the tree, which is not thread-safe (#3229): the parallel assembly of the
-  ODE2 rows defers connectors on its markers to the serial part; the AE rows and the residual do not yet.
+  functions read the frames of the links from the cache of the tree, which `CSystem::PreComputeItems` validates
+  serially before the parallel loops (#3229, userFunctions.md).
 - ConnectorHydraulicActuatorSimple: the force by automatic differentiation, the block by the pressures analytic
   (`CObject::ComputeJacobianODE2_ODE1` with the system and temporary data, which finds the marker Jacobians in
   temp.markerTemp); the pressure equations analytic by `CObjectConnector::ComputeJacobianODE1RHSConnector` (#3214),
@@ -113,5 +113,7 @@ is computed by `ComputeJacobianODE2Connector` in parallel, as it does not touch 
   802 and 2739 / 2719 iterations, 0.023 / 0.031 s; bricardMechanism, sliderCrank3Dbenchmark, serialRobotTest,
   rigidBodyCOMtest, sphericalJointTest, kinematicTreeAndMBStest, superElementRigidJointTest and
   revoluteJointPrismaticJointTest within 3 iterations, with full Newton 1.4 to 2.6 times the time; so off by default.
-- What none of the Jacobians contains: d(M q_tt)/dq (#3228 measures it); dependencies outside the coordinates of an
+- What none of the Jacobians contains: d(M q_tt)/dq - symbolicMassMatrixDerivativeTest.py: three rigid bodies on
+  Tait-Bryan angles spinning at some 30 rad/s, generalized-alpha, full Newton, 200 steps, 417 iterations with the exact
+  Jacobian of SymbolicSystem, 614 without the term, as SolveDynamic (#3228) -; dependencies outside the coordinates of an
   item (a user function reading a sensor) only the system-wide one.

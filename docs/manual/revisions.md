@@ -99,7 +99,9 @@ modes takes 6.9 instead of 13.4 s with full Newton; `numericalJacobian = True` g
 forces of the constraints to the Jacobian, off by default (#3230). ObjectRigidBody on NodeRigidBodyRotVecLG has its
 Jacobian in closed form, in parallel, and the markers on the node give the derivatives of their velocities, so that
 contacts with friction on it have their local Jacobian; a chain of 200 bodies with spherical joints takes 1.24 instead
-of 1.96 s with full Newton (#3217).
+of 1.96 s with full Newton (#3217). The markers of ObjectKinematicTree share the frames of its links, which the tree
+computes once per state instead of once per marker, also with several threads; a tree of 20 links with a spring-damper
+on each link takes 0.27 instead of 1.22 s with RK44 (#3229).
 `localPosition` of MarkerBodyRigid and MarkerKinematicTreeRigid and `rotationMarker0/1` of the joints and connectors
 are documented as deprecated, to be removed in favour of `localHT` of the rigid body markers; they work as before and
 give no warning yet (#3179).

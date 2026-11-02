@@ -2,11 +2,15 @@
   "number": 3228,
   "title": "A test model measuring the effect of d(M(q) q_tt)/dq on the Newton iterations, by the exact Jacobian of SymbolicSystem",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "TESTING",
   "priority": "LOW",
   "effort": "LOW",
   "description": "The Newton Jacobians of Exudyn contain the mass matrix but not the derivative of M(q) q_tt by q; it is zero for the bodies with a constant mass matrix, e.g. ObjectRigidBody on Lie group nodes, and may matter for larger objects with a configuration dependent mass matrix, e.g. ObjectKinematicTree. SymbolicSystem.SystemJacobian is exact and contains it. Decided: a test model with rigid bodies on Tait-Bryan angles by UserItemCreator that compares the Newton iterations of SolveGeneralizedAlpha with the exact Jacobian and with the Jacobian without the term; no plan step.",
   "dateRaised": "2026-11-02",
-  "deadline": "2027-05-01"
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 17:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "New test model symbolicMassMatrixDerivativeTest.py: three rigid bodies on Tait-Bryan angles spinning fast, by UserItemCreator, solved by exudyn.symbolics.solvers.SolveGeneralizedAlpha with full Newton with the exact Jacobian of SymbolicSystem and with the Jacobian without d(M(q) q_tt)/dq, and by SolveDynamic: the same solution, 417 Newton iterations with the term and 614 without it, as SolveDynamic; solver.md states the measurement.",
+  "resolvedInVersion": "1.13.327"
 }

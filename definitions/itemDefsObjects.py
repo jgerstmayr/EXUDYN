@@ -3157,7 +3157,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     coordinates. Loads and connectors act on the tree through it; forces and torques on the joints
     themselves are the object's own parameters. A joint coordinate can also be reached with
     `MarkerNodeCoordinate` on the `NodeGenericODE2` of the tree. The general body markers and the super
-    element markers do **not** work on this object: `Assemble()` refuses them.
+    element markers do **not** work on this object: `Assemble()` refuses them. The markers, sensors and output
+    variables of the current configuration share the frames of the links, which the tree computes once per state
+    of its coordinates, also with several threads (#3229).
 
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -3309,15 +3311,23 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=THomogeneousTransformationList, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='jointTransformationsTemp',
             defaultValue='HomogeneousTransformationList()',
-            description=r'temporary list of the placements of the links, as homogeneous transformations'),
+            description=r'the placements of the links in the current configuration, as homogeneous transformations; the cache of PreCompute (#3229)'),
         ItemParameter(type=TVector6DList, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='jointVelocitiesTemp',
             defaultValue='Vector6DList()',
-            description=r"""$\Vm_j \in \Rcal^{n \times 6}$temporary list containing 6D velocities per joint"""),
+            description=r"""$\Vm_j \in \Rcal^{n \times 6}$the 6D velocities of the links in the current configuration; the cache of PreCompute (#3229)"""),
         ItemParameter(type=TVector6DList, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='jointAccelerationsTemp',
             defaultValue='Vector6DList()',
-            description=r"""$\Am_j \in \Rcal^{n \times 6}$temporary list containing 6D accelerations per joint"""),
+            description=r"""$\Am_j \in \Rcal^{n \times 6}$the 6D accelerations of the links in the current configuration; the cache of PreCompute (#3229)"""),
+        ItemParameter(type=TResizableVector, destination=DestComp, cFlags=CFMutable+CFNoInterface,
+            pythonName='treeCacheCoordinates',
+            defaultValue='ResizableVector()',
+            description=r'the current coordinates, velocities and accelerations and the reference coordinates of the node from which the cache is computed (#3229)'),
+        ItemParameter(type=TBool, destination=DestComp, cFlags=CFMutable+CFNoInterface,
+            pythonName='treeCacheValid',
+            defaultValue=False,
+            description=r'false after a change of the parameters, until PreCompute computes the cache (#3229)'),
         ItemParameter(type=THomogeneousTransformationList, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='jointTransformationsTempVis',
             defaultValue='HomogeneousTransformationList()',
@@ -3401,8 +3411,18 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('HasConstantMassMatrix',
             implementation='return false;'),
         ItemFunctionDef('ParametersHaveChanged',
-            implementation=';',
-            description='This flag is reset upon change of parameters; says that the vector of coordinate indices has changed'),
+            implementation='treeCacheValid = false;',
+            description='the parameters have changed, so the cache of the frames is computed again (#3229)'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
+            pythonName='HasPreCompute', implementation='return true;',
+            description=r'the tree keeps the frames of its links in a cache, which PreCompute validates (#3229)'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
+            pythonName='PreCompute',
+            description=r'the cache of the placements, velocities and accelerations of the links in the current configuration, computed again only if the coordinates of the node differ from those it is computed from; inside a parallel loop it is only read (#3229)'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='GetTreeTransformations',
+            args='ConfigurationType configuration, bool computeVelocitiesAccelerations, const HomogeneousTransformationList*& frames, const Vector6DList*& V, const Vector6DList*& A',
+            description=r'the placements, velocities and accelerations of the links: of the current configuration from the cache, of the others computed (#3229)'),
         ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type=TIndex, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='NumberOfLinks',

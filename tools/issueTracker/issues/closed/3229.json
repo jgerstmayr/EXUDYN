@@ -2,11 +2,15 @@
   "number": 3229,
   "title": "ObjectKinematicTree: the marker functions write the mutable temporaries of the tree, so connectors on its markers race in parallel",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "ComputeRigidBodyMarkerDataKT, GetPositionKinematicTree and the derivatives of the marker Jacobians compute the joint transformations into the mutable members jointTransformationsTemp, links and tempArrayIndex of ObjectKinematicTree; with parallel.numberOfThreads > 1 the residual and the Jacobian compute connectors on MarkerKinematicTreeRigid and the tree itself in different threads at the same time. Decided: the transformations computed once per evaluation of the system state, or the marker functions on temporaries of the thread (MarkerTemp), measured on a tree with many markers. [2026-11-02, Claude-JG]: The parallel assembly of the ODE2 rows defers connectors on MarkerKinematicTreeRigid to the serial part (revision2026c step RG9.11.14); a full pytest run had failed once in test_theParallelODE2JacobianIsTheSerialOne[KinematicTree]. The AE rows of constraints on the markers and the residual still compute them in parallel.",
   "dateRaised": "2026-11-02",
-  "deadline": "2027-05-01"
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 18:00",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectKinematicTree keeps the frames, velocities and accelerations of its links in the current configuration in a cache, computed again only if the coordinates, velocities, accelerations or reference coordinates of its node differ from those it was computed from, or its parameters changed; its markers, sensors and output variables share it. CSystem::PreComputeItems, which contains UpdateUserFunctionsForThreads, validates it serially before the parallel loops, which only read it; a change of the coordinates inside a parallel loop raises an error, which says to solve with one thread. The connectors on its markers are computed in parallel again. A tree of 20 links with a spring-damper on each link takes 0.27 instead of 1.22 s with RK44.",
+  "resolvedInVersion": "1.13.328"
 }

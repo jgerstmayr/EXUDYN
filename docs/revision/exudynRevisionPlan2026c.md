@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (11 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (6 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -133,7 +133,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 17 | Structural core improvements |
+| RG9 | OPEN | 12 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 12 | Misc |
 | RG12 | OPEN | 21 | Symbolic |
@@ -1351,7 +1351,7 @@ CLOSED 2026-11-02 (#3210 resolved): the left-hand side -m omega^2 A c by phi and
 
 #3211 (maintainer 2026-11-02: the part of the floating base may stay numerical if its analytic Jacobian gets too complicated).
 
-##### **OPEN_RG9.11.13.3** The marker functions of ObjectKinematicTree without the mutable temporaries of the tree, for the parallel threads
+##### **CLOSED_RG9.11.13.3** The marker functions of ObjectKinematicTree without the mutable temporaries of the tree, for the parallel threads
 
 #3229.
 
@@ -1359,21 +1359,33 @@ CLOSED 2026-11-02 (#3210 resolved): the left-hand side -m omega^2 A c by phi and
 
 Design docs/dev/design/itemPrecomputation.md (maintainer 2026-11-02: a serial precomputation, as the markers always recompute the kinematics; no precomputation step in the solvers yet, a call only in ComputeSystemODE2RHS would be dangerous; an iteration counter, the numerical differentiation, UpdateUserFunctionsForThreads treated alike; thread-local data valuable anyway): the cache of the frames validated by the coordinates it was computed from, a serial PreComputeItems containing UpdateUserFunctionsForThreads, thread buffers as the fallback.
 
-###### **OPEN_RG9.11.13.3.1** Thread buffers of ObjectKinematicTree for the marker functions; the deferral of the connectors removed
+Maintainer 2026-11-02: C and D together, an exception instead of the fallback A, no thread-local cache; the comparison with the velocities; only ObjectKinematicTree (MarkerSuperElementRigid needs a better precomputation, no cache).
+
+CLOSED 2026-11-02 (#3229 resolved): the cache of the frames with CSystem::PreComputeItems; the deferral removed; 20 links with a spring-damper each 0.27 instead of 1.22 s (RK44). [log](exudynRevisionLog2026c.md#rg9-11-13-3)
+
+###### **CLOSED_RG9.11.13.3.1** Thread buffers of ObjectKinematicTree for the marker functions; the deferral of the connectors removed
 
 #3229; design section 5.
 
-###### **OPEN_RG9.11.13.3.2** The cache of the frames of ObjectKinematicTree, validated by the coordinates it was computed from, for the markers, sensors and output variables
+CLOSED 2026-11-02, not done (maintainer 2026-11-02: no thread-local cache; a failed comparison inside a parallel loop raises). [log](exudynRevisionLog2026c.md#rg9-11-13-3)
+
+###### **CLOSED_RG9.11.13.3.2** The cache of the frames of ObjectKinematicTree, validated by the coordinates it was computed from, for the markers, sensors and output variables
 
 #3229; design section 5.
 
-###### **OPEN_RG9.11.13.3.3** CSystem::PreComputeItems with CObject::PreCompute and its list, containing UpdateUserFunctionsForThreads
+CLOSED 2026-11-02 (#3229): CObjectKinematicTree::PreCompute, compared with the coordinates, velocities, accelerations and reference coordinates. [log](exudynRevisionLog2026c.md#rg9-11-13-3)
+
+###### **CLOSED_RG9.11.13.3.3** CSystem::PreComputeItems with CObject::PreCompute and its list, containing UpdateUserFunctionsForThreads
 
 #3229; design section 5.
 
-###### **OPEN_RG9.11.13.3.4** The object's own left-hand side and mass matrix of ObjectKinematicTree on the cache, if the measurements show a gain
+CLOSED 2026-11-02 (#3229): in the six system functions and before the parallel Jacobians. [log](exudynRevisionLog2026c.md#rg9-11-13-3)
+
+###### **CLOSED_RG9.11.13.3.4** The object's own left-hand side and mass matrix of ObjectKinematicTree on the cache, if the measurements show a gain
 
 #3229; design section 5.
+
+CLOSED 2026-11-02, evaluated: no gain, the own recursion needs the placements in the parents and the bias accelerations. [log](exudynRevisionLog2026c.md#rg9-11-13-3)
 
 #### **CLOSED_RG9.11.14** The ODE2 Jacobian of ObjectFFRFreducedOrder, analytic or automatic, measured on perfObjectFFRFreducedOrder first
 

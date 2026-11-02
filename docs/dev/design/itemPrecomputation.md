@@ -66,53 +66,49 @@ coordinate and then calls an item function directly, outside a system function -
 object or a connector by CSystem (`ComputeObjectODE2LHS` after `x[i] += eps`), the sensors, the output variables,
 Python - would read a stale cache.
 
-## 3. Proposed: C and D together, with A as the fallback
+## 3. Decided and implemented: C and D together, no thread buffers
 
-- **The cache (C)**: `ObjectKinematicTree` keeps the frames, velocities and accelerations of `Current` with the
-  coordinates, velocities and accelerations of its node that they belong to, and a flag which of them are valid. A
-  marker, sensor or output function compares and uses the cache.
-- **The precomputation (D)**: `CSystem::PreComputeItems()` replaces the calls of `UpdateUserFunctionsForThreads()`
-  and calls it; then `PreCompute()` of the items in `cSystemData.listPreComputeObjects` (the trees with markers), which
-  validates the cache - recomputes it only if the comparison fails. In the parallel loops that follow, the comparison
-  succeeds and the cache is only read.
-- **The fallback (A)**: if the comparison fails inside a parallel loop - which the precomputation should prevent, but
-  e.g. a user function may change a coordinate - the marker computes into a buffer of its thread instead of the cache,
-  correct and only slower. Serially, a failed comparison recomputes the cache, so the numerical differentiation of a
-  connector by CSystem gets the perturbed tree.
-- The precomputation runs at most once per system function, i.e. a few times per Newton iteration; with an unchanged
-  state it costs the comparisons. `UpdateUserFunctionsForThreads()` keeps its own check and is not needed more often.
-- No counter in CData and no switch for the numerical differentiation: the comparison makes both unnecessary. A
-  counter remains an optimization for later, if the comparisons are measurable (they are O(n) against O(n) frames
-  with 3x3 products).
-- The object's own `ComputeMassMatrixAndODE2LHS` can take the frames from the cache as well; it is called in the
-  serial or the parallel part, but once per tree, after the precomputation.
-- Then the deferral of RG9.11.14 is removed, and connectors and constraints on the markers of a tree are computed in
-  parallel again.
+Maintainer 2026-11-02: C and D together; if the cache fails inside a parallel loop, an exception, not a fallback. Only a
+Python user function can change a coordinate while the system is computed - a symbolic user function cannot, and the
+preStepUserFunction and the preNewtonResidualUserFunction run before the step or the residual -; changing a
+coordinate of the tree from another object computed earlier is not allowed; such a model is solved with one thread,
+which the exception says. So no thread-local cache: the members of the tree are the cache. The comparison takes the
+coordinates, the velocities and the accelerations always, as it is cheap and the markers ask for positions and
+velocities alike. Only ObjectKinematicTree gets the cache; MarkerSuperElementRigid on ObjectFFRFreducedOrder needs a
+better precomputation, not a cache (RG9.11.17.3).
 
-Expected: with markers on every link, the markers cost O(1) for the kinematics plus O(n) for their Jacobians instead of
-O(n) each; the 20-link model near the cost of the tree alone plus the connectors.
+- **The cache (C)**: `CObjectKinematicTree::PreCompute()` keeps the frames, velocities and accelerations of the current
+  configuration in `jointTransformationsTemp`, `jointVelocitiesTemp` and `jointAccelerationsTemp`, with the current
+  coordinates, velocities and accelerations and the reference coordinates of the node they are computed from in
+  `treeCacheCoordinates` (4n numbers); it computes them again only if these differ or `treeCacheValid` is false, which
+  `ParametersHaveChanged` (SetObjectParameter, ModifyObject) and Assemble set. The marker functions, the sensors and
+  the output variables of the current configuration call it (`GetTreeTransformations`); the other configurations are
+  computed into temporaries of the thread, the visualization into its own members as before. The chain of a link for
+  the derivatives of the marker Jacobians is a temporary of the thread, no longer `tempArrayIndex`.
+- **The precomputation (D)**: `CSystem::PreComputeItems()` replaces the six calls of `UpdateUserFunctionsForThreads()`,
+  calls it, and then `PreCompute()` of the objects in `cSystemData.listPreComputeObjects` - those with `HasPreCompute()`
+  and a marker on them, built in `PreComputeItemLists`. It is also called before the parallel loops of the ODE2 and AE
+  Jacobians and before the Jacobian of the general contacts, which follows the numerical differentiation.
+- **Inside a parallel loop** (`ExuThreading::TaskManager::JobIsRunning()`, true while `CreateJob` runs), a failed
+  comparison throws an `ExuThreading::Exception`, which the task manager carries to the main thread; `CreateJob` now
+  waits for all threads before it throws, so that an exception of a worker thread is not lost either.
+- The deferral of RG9.11.14 is removed: connectors on the markers of a tree are computed in parallel again.
+- No counter in CData and no switch for the numerical differentiation: a perturbed coordinate fails the comparison.
+- The object's own `ComputeMassMatrixAndODE2LHS` keeps its recursion: it needs the placements in the parents and the
+  bias accelerations with gravity, not the frames in the base and the accelerations of q_tt, and it runs once per tree
+  and evaluation, so the cache would save at most one of its passes.
 
-## 4. Other items
+## 4. Measured
 
-The same pattern fits other items whose markers recompute a shared state: ObjectFFRFreducedOrder and the
-super-element markers (the mode basis times the coordinates for averaged nodes), ObjectGenericODE2 with many mesh
-markers, the beams with markers on the same element. They are not changed in this step; the interface (`PreCompute()`
-and the list) is general.
+RK44, 2000 steps, a chain of revolute links with a CartesianSpringDamper from every link to the ground (section 1),
+before / after: 6 links 0.131 / 0.052 s, 20 links 1.22 / 0.265 s, 60 links 11.0 / 2.13 s; the tree alone 0.026, 0.148,
+1.38 s. The markers now cost about as much as the tree, not 5 to 8 times. Generalized-alpha with full Newton,
+200 steps, 20 links: 664 iterations, 0.165 s with one thread, 0.126 s with four, the connectors in parallel.
 
 ## 5. Sub-steps
 
-1. Thread buffers: `ObjectKinematicTree` computes the frames of a marker call into a buffer of the thread (A), the
-   members stay for the object's own functions; the deferral removed; the test suite with 4 threads. This alone fixes
-   #3229.
-2. The cache with its comparison (C) in the tree, used by the markers, sensors and output variables; measured on the
-   models of section 1, also with numerical differentiation by CSystem.
-3. `CSystem::PreComputeItems()` with `CObject::PreCompute()` and the list (D), containing
-   `UpdateUserFunctionsForThreads()`; the tree validates its cache there.
-4. The object's own LHS and mass matrix on the cache, if 2 and 3 show a gain.
-
-## 6. To be decided
-
-- Whether 1 (the fix of the race) is done first, alone, as proposed, or only together with 2 and 3.
-- Whether the comparison takes the coordinates only (frames) and the velocities only when a velocity is asked for, or
-  always both.
-- Whether the precomputation is in the scope of this step for other items (section 4), or later.
+1. Thread buffers: not done, decided against (section 3).
+2. The cache with its comparison (C), used by the markers, sensors and output variables - done.
+3. `CSystem::PreComputeItems()` with `CObject::HasPreCompute()`, `CObject::PreCompute()` and the list (D), containing
+   `UpdateUserFunctionsForThreads()` - done.
+4. The object's own LHS and mass matrix on the cache: evaluated, no gain (section 3).

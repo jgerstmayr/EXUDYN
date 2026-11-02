@@ -496,7 +496,7 @@ $$
                = \frac{\partial \gv}{\partial \tlambda}
 \end{aligned}
 $$
-Note that the derivative of the mass matrix term in $\Jm_{\SO\SO}$ is **neglected**, and the derivative of the constraint Jacobian term unless `constraintReactionDerivative` is set; both are usually of minor influence. Jacobians of state-dependent loads are included with `computeLoadsJacobian` in static or time integration solvers, see {ref}`sec-systemjacobian`.
+Note that the derivative of the mass matrix term in $\Jm_{\SO\SO}$ is **neglected**, and the derivative of the constraint Jacobian term unless `constraintReactionDerivative` is set; both are usually of minor influence. The first is zero for a constant mass matrix; three rigid bodies on Tait-Bryan angles spinning fast take 614 instead of 417 Newton iterations in 200 steps with full Newton, the same solution (test model `symbolicMassMatrixDerivativeTest.py`, #3228). Jacobians of state-dependent loads are included with `computeLoadsJacobian` in static or time integration solvers, see {ref}`sec-systemjacobian`.
 
 Once an update $\qv^\mathrm{Newton}_{k+1}$ has been computed, the interpolation formulas {eq}`eq-newmark-interpolation` need to be evaluated before the next residual and Jacobian can be computed.
 

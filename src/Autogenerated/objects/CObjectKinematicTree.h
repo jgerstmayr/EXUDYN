@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-02  12:05:40 (last modified)
+* @date         2026-11-02  17:44:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -111,9 +111,11 @@ protected: // AUTO:
     mutable ResizableVector tempUserFunctionForce;//!< AUTO: the force of the user function, kept between the calls (#3006)
     mutable ResizableMatrix tempMatrix;           //!< AUTO: temporary matrix during computation of inverse of mass matrix
     mutable ArrayIndex tempArrayIndex;            //!< AUTO: temporary array during computation of inverse of mass matrix
-    mutable HomogeneousTransformationList jointTransformationsTemp;//!< AUTO: temporary list of the placements of the links, as homogeneous transformations
-    mutable Vector6DList jointVelocitiesTemp;     //!< AUTO: temporary list containing 6D velocities per joint
-    mutable Vector6DList jointAccelerationsTemp;  //!< AUTO: temporary list containing 6D accelerations per joint
+    mutable HomogeneousTransformationList jointTransformationsTemp;//!< AUTO: the placements of the links in the current configuration, as homogeneous transformations; the cache of PreCompute (#3229)
+    mutable Vector6DList jointVelocitiesTemp;     //!< AUTO: the 6D velocities of the links in the current configuration; the cache of PreCompute (#3229)
+    mutable Vector6DList jointAccelerationsTemp;  //!< AUTO: the 6D accelerations of the links in the current configuration; the cache of PreCompute (#3229)
+    mutable ResizableVector treeCacheCoordinates; //!< AUTO: the current coordinates, velocities and accelerations and the reference coordinates of the node from which the cache is computed (#3229)
+    mutable bool treeCacheValid;                  //!< AUTO: false after a change of the parameters, until PreCompute computes the cache (#3229)
     mutable HomogeneousTransformationList jointTransformationsTempVis;//!< AUTO: temporary list of the placements of the links, as homogeneous transformations; for visualization
     mutable Vector6DList jointVelocitiesTempVis;  //!< AUTO: temporary list containing 6D velocities per joint; for visualization!
     mutable Vector6DList jointAccelerationsTempVis;//!< AUTO: temporary list containing 6D accelerations per joint; for visualization!
@@ -131,6 +133,8 @@ public: // AUTO:
         jointTransformationsTemp = HomogeneousTransformationList();
         jointVelocitiesTemp = Vector6DList();
         jointAccelerationsTemp = Vector6DList();
+        treeCacheCoordinates = ResizableVector();
+        treeCacheValid = false;
         jointTransformationsTempVis = HomogeneousTransformationList();
         jointVelocitiesTempVis = Vector6DList();
         jointAccelerationsTempVis = Vector6DList();
@@ -183,26 +187,40 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:temporary array during computation of inverse of mass matrix
     ArrayIndex& GetTempArrayIndex() { return tempArrayIndex; }
 
-    //! AUTO:  Write (Reference) access to:temporary list of the placements of the links, as homogeneous transformations
+    //! AUTO:  Write (Reference) access to:the placements of the links in the current configuration, as homogeneous transformations; the cache of PreCompute (#3229)
     void SetJointTransformationsTemp(const HomogeneousTransformationList& value) { jointTransformationsTemp = value; }
-    //! AUTO:  Read (Reference) access to:temporary list of the placements of the links, as homogeneous transformations
+    //! AUTO:  Read (Reference) access to:the placements of the links in the current configuration, as homogeneous transformations; the cache of PreCompute (#3229)
     const HomogeneousTransformationList& GetJointTransformationsTemp() const { return jointTransformationsTemp; }
-    //! AUTO:  Read (Reference) access to:temporary list of the placements of the links, as homogeneous transformations
+    //! AUTO:  Read (Reference) access to:the placements of the links in the current configuration, as homogeneous transformations; the cache of PreCompute (#3229)
     HomogeneousTransformationList& GetJointTransformationsTemp() { return jointTransformationsTemp; }
 
-    //! AUTO:  Write (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
+    //! AUTO:  Write (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$the 6D velocities of the links in the current configuration; the cache of PreCompute (#3229)
     void SetJointVelocitiesTemp(const Vector6DList& value) { jointVelocitiesTemp = value; }
-    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
+    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$the 6D velocities of the links in the current configuration; the cache of PreCompute (#3229)
     const Vector6DList& GetJointVelocitiesTemp() const { return jointVelocitiesTemp; }
-    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
+    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$the 6D velocities of the links in the current configuration; the cache of PreCompute (#3229)
     Vector6DList& GetJointVelocitiesTemp() { return jointVelocitiesTemp; }
 
-    //! AUTO:  Write (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
+    //! AUTO:  Write (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$the 6D accelerations of the links in the current configuration; the cache of PreCompute (#3229)
     void SetJointAccelerationsTemp(const Vector6DList& value) { jointAccelerationsTemp = value; }
-    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
+    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$the 6D accelerations of the links in the current configuration; the cache of PreCompute (#3229)
     const Vector6DList& GetJointAccelerationsTemp() const { return jointAccelerationsTemp; }
-    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
+    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$the 6D accelerations of the links in the current configuration; the cache of PreCompute (#3229)
     Vector6DList& GetJointAccelerationsTemp() { return jointAccelerationsTemp; }
+
+    //! AUTO:  Write (Reference) access to:the current coordinates, velocities and accelerations and the reference coordinates of the node from which the cache is computed (#3229)
+    void SetTreeCacheCoordinates(const ResizableVector& value) { treeCacheCoordinates = value; }
+    //! AUTO:  Read (Reference) access to:the current coordinates, velocities and accelerations and the reference coordinates of the node from which the cache is computed (#3229)
+    const ResizableVector& GetTreeCacheCoordinates() const { return treeCacheCoordinates; }
+    //! AUTO:  Read (Reference) access to:the current coordinates, velocities and accelerations and the reference coordinates of the node from which the cache is computed (#3229)
+    ResizableVector& GetTreeCacheCoordinates() { return treeCacheCoordinates; }
+
+    //! AUTO:  Write (Reference) access to:false after a change of the parameters, until PreCompute computes the cache (#3229)
+    void SetTreeCacheValid(const bool& value) { treeCacheValid = value; }
+    //! AUTO:  Read (Reference) access to:false after a change of the parameters, until PreCompute computes the cache (#3229)
+    const bool& GetTreeCacheValid() const { return treeCacheValid; }
+    //! AUTO:  Read (Reference) access to:false after a change of the parameters, until PreCompute computes the cache (#3229)
+    bool& GetTreeCacheValid() { return treeCacheValid; }
 
     //! AUTO:  Write (Reference) access to:temporary list of the placements of the links, as homogeneous transformations; for visualization
     void SetJointTransformationsTempVis(const HomogeneousTransformationList& value) { jointTransformationsTempVis = value; }
@@ -328,11 +346,23 @@ public: // AUTO:
         return false;
     }
 
-    //! AUTO:  This flag is reset upon change of parameters; says that the vector of coordinate indices has changed
+    //! AUTO:  the parameters have changed, so the cache of the frames is computed again (#3229)
     virtual void ParametersHaveChanged() override
     {
-        ;
+        treeCacheValid = false;
     }
+
+    //! AUTO:  the tree keeps the frames of its links in a cache, which PreCompute validates (#3229)
+    virtual bool HasPreCompute() const override
+    {
+        return true;
+    }
+
+    //! AUTO:  the cache of the placements, velocities and accelerations of the links in the current configuration, computed again only if the coordinates of the node differ from those it is computed from; inside a parallel loop it is only read (#3229)
+    virtual void PreCompute() const override;
+
+    //! AUTO:  the placements, velocities and accelerations of the links: of the current configuration from the cache, of the others computed (#3229)
+    void GetTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, const HomogeneousTransformationList*& frames, const Vector6DList*& V, const Vector6DList*& A) const;
 
     //! AUTO:  number of links used in computation functions for kinematic tree
     Index NumberOfLinks() const

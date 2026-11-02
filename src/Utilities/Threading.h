@@ -149,6 +149,7 @@ namespace ExuThreading {
 	class TaskManager
 	{
 		static std::atomic<bool> isRunning;
+		static std::atomic<bool> jobIsRunning; //!< true while CreateJob runs a job in the threads (#3229)
 		std::atomic<Index> active_workers;
 		std::atomic<Index> numberOfTasks;  // number of tasks in current job
 
@@ -192,6 +193,8 @@ namespace ExuThreading {
 		static void ResumeWorkers() {} //not implemented, for compatibility with NGsolve
 
 		static bool IsRunning() { return isRunning.load(std::memory_order_relaxed); }
+		//! true inside a parallel loop, in every thread taking part (#3229)
+		static bool JobIsRunning() { return jobIsRunning.load(std::memory_order_relaxed); }
 		static void SetNumThreads(Index numThreadsInit)
 		{
 			CHECKandTHROW(!isRunning.load(std::memory_order_relaxed), "SetNumThreads: may only be called if threads are not running");

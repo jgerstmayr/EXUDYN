@@ -968,6 +968,14 @@ static void PrepareUserFunctionsForThreads(const ResizableArray<const UserFuncti
 	for (const UserFunctionBase* function : functions) { function->PrepareThreads(numberOfThreads); }
 }
 
+//! before the computation of the items: the lists and the copies of the user functions for the threads, then the
+//! states that the objects share with their markers, so that the parallel loops only read them (#3229)
+void CSystem::PreComputeItems()
+{
+	UpdateUserFunctionsForThreads();
+	for (Index i : cSystemData.listPreComputeObjects) { cSystemData.GetCObjects()[i]->PreCompute(); }
+}
+
 void CSystem::UpdateUserFunctionsForThreads()
 {
 	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
@@ -1002,6 +1010,7 @@ cSystemData.objectsBodyWithODE2Coords.Flush();
 	cSystemData.listComputeObjectODE1Rhs.Flush();
 	cSystemData.listDiscontinuousIteration.Flush();
 	cSystemData.listPostNewtonBodies.Flush();
+	cSystemData.listPreComputeObjects.Flush();
 	cSystemData.listOfLoadsNoUF.Flush();
 	cSystemData.listOfLoadsUF.Flush();
 	cSystemData.listOfMarkersPostNewton.Flush();
@@ -1127,6 +1136,7 @@ cSystemData.objectsBodyWithODE2Coords.Flush();
 		}
 
 		if (object->HasPostNewtonStepBody()) { cSystemData.listPostNewtonBodies.Append(i); } //(#3195)
+		if (object->HasPreCompute()) { object->ParametersHaveChanged(); } //the cache computed again after Assemble (#3229)
 
 		//PostNewtonStep, PostDiscontinuousIteration:
 		//for constraint, algebraic equations depend on Markers
@@ -1139,6 +1149,18 @@ cSystemData.objectsBodyWithODE2Coords.Flush();
 				cSystemData.listDiscontinuousIteration.Append(i);
 				if (mainThreadObjects[i]) { cSystemData.discontinuousIterationInMainThread = true; }
 }
+		}
+	}
+
+	//the objects with a state shared by their markers, if markers are attached to them (#3229)
+	for (const CMarker* marker : cSystemData.GetCMarkers())
+	{
+		if (!(marker->GetType() & Marker::Object)) { continue; }
+		Index objectNumber = marker->GetObjectNumber();
+		if (EXUstd::IndexIsInRange(objectNumber, 0, cSystemData.GetCObjects().NumberOfItems()) &&
+			cSystemData.GetCObjects()[objectNumber]->HasPreCompute())
+		{
+			cSystemData.listPreComputeObjects.AppendIfItemNotFound(objectNumber);
 		}
 	}
 

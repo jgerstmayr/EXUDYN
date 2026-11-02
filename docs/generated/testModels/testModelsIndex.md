@@ -124,6 +124,7 @@ itemParameterRenamesTest
 jointArgsTest
 kinematicTreeAndMBStest
 kinematicTreeConstraintTest
+kinematicTreeMarkerCacheTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest
 kinematicTreeUserFunctionTest
@@ -207,6 +208,7 @@ symbolicHTTest
 symbolicItemOutputTest
 symbolicJacobianExpressionsTest
 symbolicLookupTableTest
+symbolicMassMatrixDerivativeTest
 symbolicModuleTest
 symbolicNumpyCompatibilityTest
 symbolicOnePassJacobianTest

@@ -184,6 +184,9 @@ mbs.Assemble()
   in the threads, with the same results as with one thread: a chain of 4000 spring-dampers with one symbolic
   springForceUserFunction takes 0.77 s instead of 1.30 s, 200 user rigid bodies 0.31 s instead of 0.77 s. One Python
   user function puts its item, and the items that read it, into the main thread (#2978).
+- A user function does not change coordinates of the system while it is computed. ObjectKinematicTree computes the
+  frames of its links once per state for all its markers, before the parallel loops; with several threads, a change of
+  its coordinates during these raises an error, and such a model is solved with `parallel.numberOfThreads = 1` (#3229).
 
 ## A recording as code
 

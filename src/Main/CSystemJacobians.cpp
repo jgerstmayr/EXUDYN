@@ -218,14 +218,6 @@ bool CSystem::ComputeLocalJacobianODE2(TemporaryComputationData& temp, const Num
 	CObject* object = cSystemData.GetCObjects()[j];
 	JacobianType::Type jacType = object->GetAvailableJacobians();
 	if (!object->IsActive() || !(jacType & (JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE1))) { return false; }
-	//a connector on the markers of a kinematic tree computes in the temporaries of the tree, so it is computed serially (#3229)
-	if (analyticOnly && EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
-	{
-		for (Index marker : ((const CObjectConnector*)object)->GetMarkerNumbers())
-		{
-			if (cSystemData.GetCMarkers()[marker]->GetType() & Marker::KinematicTree) { local.deferred = true; return false; }
-		}
-	}
 
 	Vector& x = cSystemData.GetCData().currentState.ODE2Coords;			//current coordinates ==> this is what is differentiated for
 	Vector& xRef = cSystemData.GetCData().referenceState.ODE2Coords;	//reference coordinates; might be important for numerical differentiation
@@ -426,6 +418,7 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 		Index nThreads = ExuThreading::TaskManager::GetNumThreads();
 		if (nThreads > 1 && nItems >= solverData.multithreadedLowerLimitJacobians)
 		{
+			PreComputeItems(); //the parallel part only reads the states shared with the markers (#3229)
 			//the analytic and automatic local Jacobians of the objects without Python functions in parallel, as triplets
 			//per thread; the objects that need a numerical block and those with Python functions serially (#3201, #1203)
 			outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
@@ -522,6 +515,7 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 
 
         //this part is anyway done in parallel:
+        if (generalContacts.NumberOfItems() != 0) { PreComputeItems(); } //after the numerical differentiation (#3229)
         for (GeneralContact* gc : generalContacts) //usually only 1
         {
             STARTGLOBALTIMER(TScomputeGeneralContact);
@@ -1148,6 +1142,7 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 	const Index nThreads = ExuThreading::TaskManager::GetNumThreads();
 	if (nThreads > 1 && nItems >= solverData.multithreadedLowerLimitJacobians)
 	{
+		PreComputeItems(); //the parallel part only reads the states shared with the markers (#3229)
 		outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
 		tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
 		for (Index i = 0; i < nThreads; i++) { tempArray[i].sparseTriplets.SetNumberOfItems(0); }

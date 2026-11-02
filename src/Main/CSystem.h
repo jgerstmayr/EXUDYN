@@ -230,6 +230,9 @@ public:
 	//! before a parallel loop: the item lists follow the user functions set since they were computed, e.g. in a
 	//! preStepUserFunction, and the symbolic user functions computed in the threads have their copies for them (#2978)
 	void UpdateUserFunctionsForThreads();
+	//! before the computation of the items in a system function: UpdateUserFunctionsForThreads and the PreCompute of the
+	//! objects of listPreComputeObjects (#3229)
+	void PreComputeItems();
 
 	//! reset lists for Lie groups when Assemble is called; this should require no memory (e.g. in expl. integrators)
 	void InitLieGroupLists();

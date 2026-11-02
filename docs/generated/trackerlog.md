@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.326.dev1
+- Exudyn version = 1.13.328.dev1
 - last change = 2026-11-02
 - Number of issues = 3231
-- Number of resolved issues = 3103 (326 in current version)
+- Number of resolved issues = 3105 (328 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `TESTING` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` A test model measuring the effect of d(M(q) q\_tt)/dq on the Newton iterations, by the exact Jacobian of SymbolicSystem (#3228)
-  - description: The Newton Jacobians of Exudyn contain the mass matrix but not the derivative of M(q) q\_tt by q; it is zero for the bodies with a constant mass matrix, e.g. ObjectRigidBody on Lie group nodes, and may matter for larger objects with a configuration dependent mass matrix, e.g. ObjectKinematicTree. SymbolicSystem.SystemJacobian is exact and contains it. Decided: a test model with rigid bodies on Tait-Bryan angles by UserItemCreator that compares the Newton iterations of SolveGeneralizedAlpha with the exact Jacobian and with the Jacobian without the term; no plan step.
-  - date raised: 2026-11-02
 - `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The settled designs into the user documentation (#3221)
   - description: docs/dev/design/genericDAE.md, symbolicHT.md, symbolicSystem.md, symbolicUserItems.md and systemJacobians.md describe what is decided and implemented. Decided: what a user needs goes into the manual and the item descriptions, the design files are removed when nothing is left in them.
   - date raised: 2026-11-02
@@ -9499,9 +9496,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectKinematicTree: the marker functions write the mutable temporaries of the tree, so connectors on its markers race in parallel (#3229)
-  - description: ComputeRigidBodyMarkerDataKT, GetPositionKinematicTree and the derivatives of the marker Jacobians compute the joint transformations into the mutable members jointTransformationsTemp, links and tempArrayIndex of ObjectKinematicTree; with parallel.numberOfThreads \> 1 the residual and the Jacobian compute connectors on MarkerKinematicTreeRigid and the tree itself in different threads at the same time. Decided: the transformations computed once per evaluation of the system state, or the marker functions on temporaries of the thread (MarkerTemp), measured on a tree with many markers. \[2026-11-02, Claude-JG\]: The parallel assembly of the ODE2 rows defers connectors on MarkerKinematicTreeRigid to the serial part (revision2026c step RG9.11.14); a full pytest run had failed once in test\_theParallelODE2JacobianIsTheSerialOne\[KinematicTree\]. The AE rows of constraints on the markers and the residual still compute them in parallel.
-  - date raised: 2026-11-02
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
   - date raised: 2026-10-23

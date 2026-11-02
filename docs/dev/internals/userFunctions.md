@@ -65,9 +65,19 @@ items computed in the threads and those computed in the main thread (#2978):
   or object, a connector and a load on such a marker - the same dependencies as for the drawing in the main thread;
 - the post-Newton step runs in the main thread if one of its connectors does (#3095).
 
-`CSystem::UpdateUserFunctionsForThreads()`, at the start of each function with a parallel loop, builds the lists again
-when a user function was set since they were made - in a preStepUserFunction, say - and prepares the copies of the
-symbolic functions of all nodes, objects, markers and loads for the number of threads, once. An item computed in the
+`CSystem::PreComputeItems()`, at the start of each function with a parallel loop and before the parallel parts of the
+Jacobians, calls `CSystem::UpdateUserFunctionsForThreads()`, which builds the lists again when a user function was set
+since they were made - in a preStepUserFunction, say - and prepares the copies of the symbolic functions of all nodes,
+objects, markers and loads for the number of threads, once. Then it calls `PreCompute()` of the objects of
+`listPreComputeObjects` - those with `HasPreCompute()` and a marker on them -, so that the parallel loops only read what
+they share with their markers (#3229). ObjectKinematicTree keeps the frames, velocities and accelerations of its links
+in the current configuration with the coordinates, velocities, accelerations and reference coordinates they are
+computed from, and computes them again only if one of these differs or its parameters changed
+(`ParametersHaveChanged`, Assemble); so its markers, sensors and output variables share one computation of the tree,
+and the numerical differentiation needs no notice, as a perturbed coordinate fails the comparison. Inside a parallel
+loop (`TaskManager::JobIsRunning()`) a failed comparison throws: only a Python user function can change coordinates
+while the system is computed, and such a model is solved with one thread. `TaskManager::CreateJob` waits for all
+threads before it throws an exception of the job. An item computed in the
 threads keeps no buffer that two threads could share: ObjectUserBody and NodeUser keep theirs as `static
 thread_local` in the functions that use them.
 
