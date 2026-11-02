@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.325.dev1
+- Exudyn version = 1.13.326.dev1
 - last change = 2026-11-02
 - Number of issues = 3231
-- Number of resolved issues = 3102 (325 in current version)
+- Number of resolved issues = 3103 (326 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9069,9 +9069,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `IDEA` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` A sensor that samples another sensor at a period and holds its value in a data node, updated at FinishStep (#3180)
   - description: A zero-order hold for Exudyn in general, mainly on the C++ side: a SampleSensor with a data node takes the value of another sensor at the sampling instants and holds it between them, so that a user function or an item reads the held value as data coordinates; sensors do not update data variables now, so this sensor is treated specially at FinishStep of the integrator. Decided: an idea of low priority, without a plan step, done only when needed or when the continuous and discrete control of Exudyn is improved; not for exudyn.symbolic, where a recording has other ways to hold a value (data coordinates and the post-Newton step, \#3195).
   - **remarks:** kept open as an idea, no plan step (2026-11-01; revision2026c step RG12.70.1 closed)
-  - date raised: 2026-10-31
-- `DOCU` `LOW EFF` `raised by: Claude-JG` Document localPosition of the rigid body markers and rotationMarker0/1 of the joints and connectors as deprecated, to be removed in favour of localHT (#3179)
-  - description: The rigid body markers have localHT, the frame of the marker in the body, so that the joints and connectors need no rotationMarker0/1. The descriptions of localPosition of the rigid body markers and of rotationMarker0/1 of the joints and connectors say that they are deprecated and will be removed, and point to localHT. Decided: no deprecation warning yet, as rotationMarker0/1 are used frequently; the documentation only.
   - date raised: 2026-10-31
 - `CHECK` `LOW EFF` `raised by: Claude-JG` Check which functions of HT and twist the user connectors and joints really use, once several are written on HT and twist (#3178)
   - description: The functions of symbolics.kinematics and exudyn.cUtilities for HT and twist (PointVelocity, LocalTwist, RelativeTwist, and the methods of the symbolic HT) were chosen for the joints and connectors of the Create functions (docs/dev/design/symbolicHT.md). Once several user items of exudyn.symbolics.userItems and new ones are written on HT0, twist0, HT1, twist1, count which functions they use, and decide which stay, which become methods of the HT, and which are missing. Decided: a plan step of its own; the check is done once more user items are written on HT and twist.

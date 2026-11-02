@@ -5310,9 +5310,9 @@ class ObjectConnectorRigidBodySpringDamper:
 
         damping: damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector; type: array_like
 
-        rotationMarker0: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
+        rotationMarker0: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179); type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
 
-        rotationMarker1: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
+        rotationMarker1: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179); type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
 
         offset: translational and rotational offset considered in the spring force calculation; type: array_like
 
@@ -5522,9 +5522,9 @@ class ObjectConnectorTorsionalSpringDamper:
 
         damping: torsional damping [SI:Nm/(rad/s)]; type: float
 
-        rotationMarker0: local rotation matrix for marker 0; transforms joint into marker coordinates; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
+        rotationMarker0: local rotation matrix for marker 0; transforms joint into marker coordinates; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179); type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
 
-        rotationMarker1: local rotation matrix for marker 1; transforms joint into marker coordinates; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
+        rotationMarker1: local rotation matrix for marker 1; transforms joint into marker coordinates; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179); type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
 
         offset: rotational offset considered in the spring torque calculation (this can be used as rotation control input!); type: float
 
@@ -7578,9 +7578,9 @@ class ObjectJointGeneric:
 
         constrainedAxes: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis; type: array_like
 
-        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179); type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
 
-        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179); type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -7675,9 +7675,9 @@ class ObjectJointRevoluteZ:
 
         markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179); type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
 
-        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179); type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -7754,9 +7754,9 @@ class ObjectJointPrismaticX:
 
         markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179); type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
 
-        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179); type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -8480,7 +8480,7 @@ class MarkerBodyRigid:
 
         bodyNumber: body number to which marker is attached to; type: ObjectIndex
 
-        localPosition: local body position of marker; e.g. local (body-fixed) position where force is applied to; the translation of localHT; type: [float,float,float]
+        localPosition: local body position of marker; e.g. local (body-fixed) position where force is applied to; the translation of localHT; deprecated and to be removed in favour of localHT, which gives the position and the rotation of the marker frame (#3179); type: [float,float,float]
 
         localHT: the frame of the marker in the body frame, as homogeneous transformation: its translation is localPosition, its rotation :math:`{}^{bm}{\Rot}` turns the marker frame against the body; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree; type: array_like (4x4) or exudyn.HT
 
@@ -9072,7 +9072,7 @@ class MarkerKinematicTreeRigid:
 
         linkNumber: number of link in KinematicTree to which marker is attached to; type: int
 
-        localPosition: local (link-fixed) position of marker at link :math:`n_l`, using the link (:math:`n_l`) coordinate system; the translation of localHT; type: [float,float,float]
+        localPosition: local (link-fixed) position of marker at link :math:`n_l`, using the link (:math:`n_l`) coordinate system; the translation of localHT; deprecated and to be removed in favour of localHT, which gives the position and the rotation of the marker frame (#3179); type: [float,float,float]
 
         localHT: the frame of the marker in the link frame, as homogeneous transformation: its translation is localPosition, its rotation turns the marker frame against the link; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree; type: array_like (4x4) or exudyn.HT
 

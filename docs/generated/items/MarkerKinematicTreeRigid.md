@@ -23,7 +23,7 @@ The parameters of the item; in a dictionary, its type is 'KinematicTreeRigid':
 | **name** | String |  | '' | marker's unique name |
 | **objectNumber** | ObjectIndex |  | invalid (-1) | (symbol: $n_b$) body number to which marker is attached to |
 | **linkNumber** | UInt |  | invalid (-1) | (symbol: $n_l$) number of link in KinematicTree to which marker is attached to; **must be given**: the default is only a placeholder |
-| **localPosition** | Vector3D | 3 | None (zero) | (symbol: $\LU{l}{\bv}$) local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system; the translation of localHT |
+| **localPosition** | Vector3D | 3 | None (zero) | (symbol: $\LU{l}{\bv}$) local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system; the translation of localHT; deprecated and to be removed in favour of localHT, which gives the position and the rotation of the marker frame (#3179) |
 | **localHT** | HomogeneousTransformation |  | None (identity) | (symbol: $\LU{l}{\Hm}_{m}$) the frame of the marker in the link frame, as homogeneous transformation: its translation is localPosition, its rotation turns the marker frame against the link; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree |
 | **visualization** | VMarkerKinematicTreeRigid |  |  | parameters for visualization of item |
 

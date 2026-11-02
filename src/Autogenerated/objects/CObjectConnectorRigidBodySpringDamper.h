@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-02  02:01:19 (last modified)
+* @date         2026-11-02  15:29:23 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,8 +35,8 @@ public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function)
     Matrix6D stiffness;                           //!< AUTO: stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis
     Matrix6D damping;                             //!< AUTO: damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector
-    Matrix3D rotationMarker0;                     //!< AUTO: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0
-    Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1
+    Matrix3D rotationMarker0;                     //!< AUTO: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179)
+    Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179)
     Vector6D offset;                              //!< AUTO: translational and rotational offset considered in the spring force calculation
     Vector6D velocityOffset;                      //!< AUTO: translational and angular velocity offset in joint 0 coordinates, subtracted from the relative velocities in the damper force; e.g. to drive a damper with a velocity instead of a user function (#1631)
     bool useIntrinsicFormulation;                 //!< AUTO: if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations

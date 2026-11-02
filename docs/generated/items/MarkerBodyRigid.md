@@ -25,7 +25,7 @@ The parameters of the item; in a dictionary, its type is 'BodyRigid':
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **bodyNumber** | ObjectIndex |  | invalid (-1) | body number to which marker is attached to |
-| **localPosition** | Vector3D | 3 | None (zero) | (symbol: $\pLocB$) local body position of marker; e.g. local (body-fixed) position where force is applied to; the translation of localHT |
+| **localPosition** | Vector3D | 3 | None (zero) | (symbol: $\pLocB$) local body position of marker; e.g. local (body-fixed) position where force is applied to; the translation of localHT; deprecated and to be removed in favour of localHT, which gives the position and the rotation of the marker frame (#3179) |
 | **localHT** | HomogeneousTransformation |  | None (identity) | (symbol: $\LU{b}{\Hm}_{m}$) the frame of the marker in the body frame, as homogeneous transformation: its translation is localPosition, its rotation $\LU{bm}{\Rot}$ turns the marker frame against the body; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree |
 | **visualization** | VMarkerBodyRigid |  |  | parameters for visualization of item |
 

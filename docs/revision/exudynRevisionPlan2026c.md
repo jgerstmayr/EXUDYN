@@ -98,7 +98,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
-  - RG11.6 Write the joints and their Jacobians on homogeneous transformations (1 open sub-step)
+  - RG11.6 Write the joints and their Jacobians on homogeneous transformations
   - RG11.7 Let objects compute from the coordinates passed in instead of reading their nodes
   - RG11.8 Resolve the quick old issues (3 open sub-steps)
 - **RG12** Symbolic
@@ -135,7 +135,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 17 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 13 | Misc |
+| RG11 | OPEN | 12 | Misc |
 | RG12 | OPEN | 21 | Symbolic |
 | RG13 | OPEN | 2 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -1597,11 +1597,13 @@ others in the HDF5 load and save).
 #2884, with the documentation of the Jacobians (#845): the constraints as functions of $\Hm_0^{-1}\Hm_1$, one
 implementation for the joints instead of one each. From revision2026b group RG14.
 
-#### **OPEN_RG11.6.1** Document localPosition of the rigid body markers and rotationMarker0/1 of the joints and connectors as deprecated
+#### **CLOSED_RG11.6.1** Document localPosition of the rigid body markers and rotationMarker0/1 of the joints and connectors as deprecated
 
 #3179 (maintainer 2026-10-31: localHT of the rigid body markers is there to remove rotationMarker0/1 from the joints
 and connectors; as rotationMarker0/1 are used frequently, no warning yet, but the documentation says that they and
 localPosition of the rigid body markers are deprecated and will be removed).
+
+CLOSED 2026-11-02 (#3179 resolved): the descriptions of rotationMarker0/1 of the five joints and connectors and of localPosition of MarkerBodyRigid and MarkerKinematicTreeRigid; no warning; revisions.md. [log](exudynRevisionLog2026c.md#rg11-6-1)
 
 ### **OPEN_RG11.7** Let objects compute from the coordinates passed in instead of reading their nodes
 

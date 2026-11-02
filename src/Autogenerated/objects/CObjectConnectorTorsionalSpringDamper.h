@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-11-02  15:29:23 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,8 +35,8 @@ public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used
     Real stiffness;                               //!< AUTO: torsional stiffness [SI:Nm/rad] against relative rotation
     Real damping;                                 //!< AUTO: torsional damping [SI:Nm/(rad/s)]
-    Matrix3D rotationMarker0;                     //!< AUTO: local rotation matrix for marker 0; transforms joint into marker coordinates
-    Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker 1; transforms joint into marker coordinates
+    Matrix3D rotationMarker0;                     //!< AUTO: local rotation matrix for marker 0; transforms joint into marker coordinates; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179)
+    Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker 1; transforms joint into marker coordinates; deprecated and to be removed: give the rotation of the marker frame by localHT of the rigid body marker (MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid), which joints and connectors take as their frame (#3179)
     Real offset;                                  //!< AUTO: rotational offset considered in the spring torque calculation (this can be used as rotation control input!)
     Real velocityOffset;                          //!< AUTO: angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!)
     Real torque;                                  //!< AUTO: additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control)

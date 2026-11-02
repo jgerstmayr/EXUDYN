@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 316 | 1.13.325 |
+| 1.13 | Newborn | 317 | 1.13.326 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.326** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Document localPosition of the rigid body markers and rotationMarker0/1 of the joints and connectors as deprecated, to be removed in favour of localHT (#3179)
+  - description: The rigid body markers have localHT, the frame of the marker in the body, so that the joints and connectors need no rotationMarker0/1. The descriptions of localPosition of the rigid body markers and of rotationMarker0/1 of the joints and connectors say that they are deprecated and will be removed, and point to localHT. Decided: no deprecation warning yet, as rotationMarker0/1 are used frequently; the documentation only.
+  - **notes:** The descriptions of localPosition of MarkerBodyRigid and MarkerKinematicTreeRigid and of rotationMarker0/1 of the joints and connectors say that they are deprecated and will be removed in favour of localHT of the rigid body markers; no warning yet.
+  - date resolved: **2026-11-02 15:29**, date raised: 2026-10-31
 - **1.13.325** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Lie group nodes in the local Jacobians: dv/dq and the rigid body ODE2 Jacobian (#3217)
   - description: On NodeRigidBodyRotVecLG and NodeRigidBodyRotVecDataLG the markers return no GetVelocity\_q and ObjectRigidBody is differentiated numerically by CSystem, which composes the rotations. Decided: closed forms on the local angular velocity coordinates of these nodes.
   - **notes:** ObjectRigidBody on NodeRigidBodyRotVecLG has its ODE2 Jacobian in closed form, in parallel, and the markers on the node give the derivatives of their velocities; the loads Jacobian differentiates the Lie group nodes by the composition, as the system-wide Jacobian; 200 bodies with full Newton 1.24 instead of 1.96 s.

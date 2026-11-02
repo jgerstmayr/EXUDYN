@@ -5729,6 +5729,14 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg11-6-1"></a>
+### RG11.6.1 — localPosition of the rigid body markers and rotationMarker0/1 documented as deprecated (2026-11-02, #3179)
+- The descriptions of rotationMarker0/1 of ObjectConnectorRigidBodySpringDamper, ObjectConnectorTorsionalSpringDamper,
+  ObjectJointGeneric, ObjectJointRevoluteZ and ObjectJointPrismaticX and of localPosition of MarkerBodyRigid and
+  MarkerKinematicTreeRigid say that they are deprecated and will be removed, pointing to localHT; no Deprecated(...)
+  in the definitions, so no warning (maintainer 2026-10-31). The offset of MarkerSuperElementRigid, also a part of its
+  localHT, is not touched (MarkerSuperElementRigid will be revised, RG9.11.17.3).
+
 <a id="rg9-11-17-2"></a>
 ### RG9.11.17.2 — The Lie group node in the local Jacobians (2026-11-02, #3217)
 - The only Lie group node is NodeRigidBodyRotVecLG; NodeRigidBodyRotVecDataLG, named in #3217, does not exist.

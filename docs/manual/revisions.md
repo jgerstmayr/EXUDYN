@@ -100,6 +100,9 @@ forces of the constraints to the Jacobian, off by default (#3230). ObjectRigidBo
 Jacobian in closed form, in parallel, and the markers on the node give the derivatives of their velocities, so that
 contacts with friction on it have their local Jacobian; a chain of 200 bodies with spherical joints takes 1.24 instead
 of 1.96 s with full Newton (#3217).
+`localPosition` of MarkerBodyRigid and MarkerKinematicTreeRigid and `rotationMarker0/1` of the joints and connectors
+are documented as deprecated, to be removed in favour of `localHT` of the rigid body markers; they work as before and
+give no warning yet (#3179).
 `UserItemCreator.CreateTorsionalSpringDamper` takes `unlimitedRotations`, its default True: the angle continues over
 the turns by a data node of the connector, as the built-in item (#3218). `UserItemCreator.CreateSphereSphereContact`
 takes `dynamicFriction` and `frictionProportionalZone`: the friction of the built-in contact at the contact point,
