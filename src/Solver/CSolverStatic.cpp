@@ -261,7 +261,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
     {
         //unclear if this works:
         computationalSystem.JacobianODE1RHS(data.tempCompDataArray, newton.numericalDifferentiation,
-            *(data.systemJacobian), 1., 0., 1.);
+            *(data.systemJacobian), 1., 0., 1., simulationSettings.staticSolver.computeLoadsJacobian);
     }
     //in time integration, but not needed for static computation: data.systemJacobian->AddDiagonalMatrix(-2. / it.currentStepSize, data.nODE1, data.nODE2, data.nODE2); //for qODE1_t part
     STOPTIMER(timer.jacobianODE1);

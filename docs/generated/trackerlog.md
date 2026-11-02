@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.309.dev1
+- Exudyn version = 1.13.311.dev1
 - last change = 2026-11-02
-- Number of issues = 3210
-- Number of resolved issues = 3086 (309 in current version)
+- Number of issues = 3226
+- Number of resolved issues = 3088 (311 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,51 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXAMPLE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` A symbolic system solved and its solution mapped onto mbs (#3225)
+  - description: The Python solvers write their states through the mbs of a SymbolicSystem - solution file, sensors, renderer - but every example switches the solution file off. Decided: an example that solves a SymbolicSystem built as a replicate of an mbs with the Python solvers and shows the solution in the renderer and the solution viewer.
+  - date raised: 2026-11-02
+- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Functions starting with an underscore excluded from the reference manual (#3224)
+  - description: The utility pages document functions such as SymbolicSystem.\_MarkerData, which are internal and may change without notice. Decided: names starting with an underscore are left out of the generated pages.
+  - date raised: 2026-11-02
+- `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` A chapter "Solvers and system equations" (#3223)
+  - description: The system equations of motion are a hidden subsection of "Solvers in Exudyn", and the system Jacobians are not described there. Decided: the chapter renamed, with a section on the system equations, the solvers and the Jacobians.
+  - date raised: 2026-11-02
+- `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` A chapter "Symbolic system and user functions" (#3222)
+  - description: The manual has "Symbolic user functions" and "User items" as separate sections, and the docstring of exudyn.symbolics.systemModel is long and lists issues. Decided: one top-level chapter with the sections symbolic system (with a notebook demo), symbolic user functions, user items and symbolic solvers; the module docstring shortened to the use of the class.
+  - date raised: 2026-11-02
+- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The settled designs into the user documentation (#3221)
+  - description: docs/dev/design/genericDAE.md, symbolicHT.md, symbolicSystem.md, symbolicUserItems.md and systemJacobians.md describe what is decided and implemented. Decided: what a user needs goes into the manual and the item descriptions, the design files are removed when nothing is left in them.
+  - date raised: 2026-11-02
+- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The Python solvers with an adaptive step size from the recommended step size (#3220)
+  - description: SolveGeneralizedAlpha and SolveExplicit of exudyn.symbolics.solvers keep the step size fixed and ignore the recommended step size the post-Newton functions return. Decided: the step reduced to the recommended size and grown again, as the discontinuous iteration of the C++ solvers does.
+  - date raised: 2026-11-02
+- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` User sphere-sphere contact with friction: stick and slip by data coordinates (#3219)
+  - description: UserItemCreator.CreateSphereSphereContact refuses dynamicFriction other than 0, as friction needs the tangential state in data coordinates. Decided: the stick-slip state and the tangential displacement in the data node, updated by the post-Newton function, as ObjectContactSphereSphere does.
+  - date raised: 2026-11-02
+- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` User torsional spring-damper with unlimitedRotations: the turns as a data coordinate (#3218)
+  - description: UserItemCreator.CreateTorsionalSpringDamper refuses unlimitedRotations=True, its default, as the turns need a data coordinate. Decided: a NodeGenericData with the number of turns, updated by the post-Newton function of ObjectConnectorUser, as CObjectConnectorTorsionalSpringDamper does.
+  - date raised: 2026-11-02
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The Lie group nodes in the local Jacobians: dv/dq and the rigid body ODE2 Jacobian (#3217)
+  - description: On NodeRigidBodyRotVecLG and NodeRigidBodyRotVecDataLG the markers return no GetVelocity\_q and ObjectRigidBody is differentiated numerically by CSystem, which composes the rotations. Decided: closed forms on the local angular velocity coordinates of these nodes.
+  - date raised: 2026-11-02
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` MarkerKinematicTreeRigid: dv/dq and the Jacobian derivative (#3216)
+  - description: MarkerKinematicTreeRigid has no Jacobian derivative and no GetVelocity\_q, so connectors on it are differentiated numerically by CSystem, serially. Decided: both by the recursion over the links, before the other markers, as it may improve convergence and performance.
+  - date raised: 2026-11-02
+- `IMPROVEMENT` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` MarkerSuperElementRigid: dv/dq and the direction along the Euler parameters (#3215)
+  - description: MarkerSuperElementRigid provides neither GetVelocity\_q nor GetRadialKinematics, so connectors on it fall back to CSystem or miss the direction along the Euler parameters of the reference node. Decided: deferred until the super element markers are revised.
+  - date raised: 2026-11-02
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ConnectorHydraulicActuatorSimple: the Jacobian of the pressure equations analytic (#3214)
+  - description: The two ODE1 pressure equations of ConnectorHydraulicActuatorSimple are differentiated numerically by CSystem; their derivatives by the pressures, the stroke and its velocity are closed forms. Decided: analytic.
+  - date raised: 2026-11-02
+- `IMPROVEMENT` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` ObjectANCFBeam: its own ODE2 Jacobian (#3213)
+  - description: ObjectANCFBeam declares ODE2\_ODE2 without a function and is differentiated numerically by CSystem, serially; the elastic forces would be differentiated automatically per element. Involved; low priority.
+  - date raised: 2026-11-02
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectFFRFreducedOrder: an efficient ODE2 Jacobian (#3212)
+  - description: ObjectFFRFreducedOrder declares ODE2\_ODE2 and ODE2\_ODE2\_t without a function, so CSystem differentiates it numerically and serially, although the reduced stiffness and damping matrices are constant and the quadratic velocity terms are closed forms. Decided: an analytic or automatic Jacobian, measured on perfObjectFFRFreducedOrder first.
+  - date raised: 2026-11-02
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectKinematicTree: an efficient ODE2 Jacobian (#3211)
+  - description: ObjectKinematicTree declares ODE2\_ODE2 and ODE2\_ODE2\_t without a function, so CSystem differentiates the whole tree numerically and serially, one evaluation of ComputeMassMatrixAndODE2LHS per coordinate. Decided: an analytic or automatic Jacobian of the forces of the joints (springs, dampers, the PD control, the gyroscopic terms), measured on the kinematic tree performance model first.
+  - date raised: 2026-11-02
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` exudyn.symbolic: two named variables of one name - where names identify variables, and a scope of names (#3208)
   - description: esym.Real('a', 12.) and esym.Real('a', 13.) are two variables of one name: an expression of both reads as one quantity while the computation, which takes the variables, distinguishes them. esym.Function, VariableSet and SymbolicSystem refuse two variables of one name, but esym.Function accepts an input named as a variable of esym.variables it also reads. A global scope of names, each name once, with an exemption, a reset and a switch, would refuse a second variable at its creation. Decided: evaluated first, with options and recommendations in docs/dev/design/symbolicVariableNames.md (revision2026c step RG12.73).
   - date raised: 2026-11-02
@@ -9299,10 +9344,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2023-05-02
-- `EXTENSION` `MEDIUM EFF` ODE1 loads (#1548)
-  - description: fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one
-  - **remarks:** planned as revision2026b step RG4.23 (triage 2026-10-07)
-  - date raised: 2023-05-01
 - `EXTENSION` `MEDIUM EFF` CoordinateSpringDamperExt (#1415)
   - description: add flag for stepSizeRecommendation, where 0 is no recommendation, -1 is automatic and \>0 is a directly recommended step size
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

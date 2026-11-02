@@ -357,7 +357,8 @@ public: //
 	//virtual void ComputeJacobianODE2RHS_t(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor = 1.);
 
 	//! add jacobian (multiplied with factor) of ODE1RHS to systemJacobian in cSolver
-	virtual void ComputeJacobianODE1RHS(MainSystem& mainSystem, Real scalarFactor_ODE2 = 1., Real scalarFactor_ODE2_t = 0., Real scalarFactor_ODE1 = 1.);
+	virtual void ComputeJacobianODE1RHS(MainSystem& mainSystem, Real scalarFactor_ODE2 = 1., Real scalarFactor_ODE2_t = 0., Real scalarFactor_ODE1 = 1.,
+		Index computeLoadsJacobian = 0);
 
 	//! add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates and w.r.t. ODE2_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level
 	virtual void ComputeJacobianAE(MainSystem& mainSystem,

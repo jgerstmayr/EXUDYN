@@ -1,0 +1,12 @@
+{
+  "number": 3211,
+  "title": "ObjectKinematicTree: an efficient ODE2 Jacobian",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "ObjectKinematicTree declares ODE2_ODE2 and ODE2_ODE2_t without a function, so CSystem differentiates the whole tree numerically and serially, one evaluation of ComputeMassMatrixAndODE2LHS per coordinate. Decided: an analytic or automatic Jacobian of the forces of the joints (springs, dampers, the PD control, the gyroscopic terms), measured on the kinematic tree performance model first.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01"
+}

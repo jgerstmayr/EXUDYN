@@ -58,6 +58,7 @@ public:
     ArrayIndex tempIndex2;					//!< for JacobianODE2Loads
 	ArrayIndex tempIndex3;					//!< for JacobianODE2Loads
 	ArrayIndex tempIndex4;					//!< for ComputeODE2SingleLoad, multi-object markers
+	ArrayIndex tempIndex5;					//!< for JacobianODE1Loads: the ODE1 rows of a load
 	EXUmath::SparseVector sparseVector;		//!< used for temporary assembly of ode2RHS, contact, etc.
 
 	//these sparsetriplets are either filled directly or as a buffer, if the regular section in the global sparse matrix is full

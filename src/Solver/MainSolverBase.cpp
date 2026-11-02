@@ -243,14 +243,15 @@ void MainSolverBase::ComputeJacobianODE2RHS(MainSystem& mainSystem, Real scalarF
 }
 
 //! add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver
-void MainSolverBase::ComputeJacobianODE1RHS(MainSystem& mainSystem, Real scalarFactor_ODE2, Real scalarFactor_ODE2_t, Real scalarFactor_ODE1)
+void MainSolverBase::ComputeJacobianODE1RHS(MainSystem& mainSystem, Real scalarFactor_ODE2, Real scalarFactor_ODE2_t, Real scalarFactor_ODE1,
+	Index computeLoadsJacobian)
 {
 	CheckInitialized(mainSystem);
 
 	//Index nSys = initializedSystemSizes[0] + initializedSystemSizes[1] + initializedSystemSizes[2]; //nODE2+nODE1+nAE; check initialized guarantees that this is same as in mainSystem
 
 	mainSystem.cSystem.JacobianODE1RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
-		*(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1); 
+		*(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1, computeLoadsJacobian);
 }
 
 //not needed any more:

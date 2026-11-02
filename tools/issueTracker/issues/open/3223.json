@@ -1,0 +1,12 @@
+{
+  "number": 3223,
+  "title": "A chapter \"Solvers and system equations\"",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "HIGH",
+  "description": "The system equations of motion are a hidden subsection of \"Solvers in Exudyn\", and the system Jacobians are not described there. Decided: the chapter renamed, with a section on the system equations, the solvers and the Jacobians.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01"
+}

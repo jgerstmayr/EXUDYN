@@ -147,6 +147,7 @@ objectFFRFreducedOrderTest
 objectFFRFTest
 objectFFRFTest2
 objectGenericODE2Test
+ode1LoadsJacobianTest
 orientTrianglesTest
 parameterConversionTest
 PARTS_ATEs_moving

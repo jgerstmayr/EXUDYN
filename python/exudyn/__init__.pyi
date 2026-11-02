@@ -2712,7 +2712,7 @@ class MainSolverStatic:
     @overload
     def ComputeJacobianAE(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False) -> None: ...
     @overload
-    def ComputeJacobianODE1RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.) -> None: ...
+    def ComputeJacobianODE1RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0) -> None: ...
     @overload
     def ComputeJacobianODE2RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0) -> None: ...
     @overload
@@ -2828,7 +2828,7 @@ class MainSolverImplicitSecondOrder:
     @overload
     def ComputeJacobianAE(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False) -> None: ...
     @overload
-    def ComputeJacobianODE1RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.) -> None: ...
+    def ComputeJacobianODE1RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0) -> None: ...
     @overload
     def ComputeJacobianODE2RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0) -> None: ...
     @overload
@@ -3322,6 +3322,15 @@ class SystemData:
             #add dependency of load 5 onto node 2 coordinates:
             nodeLTG2 = mbs.systemData.GetNodeLTGODE2(2)
             mbs.systemData.AddODE2LoadDependencies(5,nodeLTG2)
+        """
+        ...
+    @overload
+    def AddODE1LoadDependencies(self, loadNumber: float, globalODE1coordinates: List[int]) -> None: 
+        """Advanced function for adding special dependencies of loads onto ODE1 coordinates, taking a list / numpy array of global ODE1 coordinates, as AddODE2LoadDependencies does for ODE2 coordinates; it needs to be called after Assemble(); only affects implicit or static solvers if timeIntegration.computeLoadsJacobian or staticSolver.computeLoadsJacobian is set to 1 or 2; the Jacobian of a load on ODE1 coordinates includes the ODE1 coordinates of its node without it (#1548).
+        
+        Examples:
+            nodeLTG1 = mbs.systemData.GetNodeLTGODE1(2)
+            mbs.systemData.AddODE1LoadDependencies(5,nodeLTG1)
         """
         ...
     @overload

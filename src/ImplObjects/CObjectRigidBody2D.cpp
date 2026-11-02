@@ -142,6 +142,30 @@ void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs) const
 }
 
 
+//! the Jacobian of the ODE2 rows, analytic (#3210): the LHS -m omega^2 A c of a center of mass c by phi and omega,
+//! factorODE2 d(LHS)/dq + factorODE2_t d(LHS)/dq_t, dense
+void CObjectRigidBody2D::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
+	Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
+{
+	jacobianODE2.SetUseDenseMatrix(true);
+	ResizableMatrix& jacobian = jacobianODE2.GetInternalDenseMatrix();
+	jacobian.SetNumberOfRowsAndColumns(nODE2coordinates, nODE2coordinates);
+	jacobian.SetAll(0.);
+
+	const Vector2D& com = parameters.centerOfMass;
+	Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
+	Real sinPhi = Sin(phi);
+	Real cosPhi = Cos(phi);
+	Real omega = ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinate_t(2);
+	Vector2D Ac({ cosPhi * com[0] - sinPhi * com[1], sinPhi * com[0] + cosPhi * com[1] });
+	Vector2D Ac_phi({ -sinPhi * com[0] - cosPhi * com[1], cosPhi * com[0] - sinPhi * com[1] }); //dA/dphi c
+
+	for (Index i = 0; i < 2; i++)
+	{
+		jacobian(i, 2) = -parameters.mass * (factorODE2 * omega * omega * Ac_phi[i] + factorODE2_t * 2. * omega * Ac[i]);
+	}
+}
+
 //! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
 void CObjectRigidBody2D::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {

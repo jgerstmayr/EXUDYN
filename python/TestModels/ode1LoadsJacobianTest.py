@@ -1,0 +1,71 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The Jacobian of loads that depend on ODE1 coordinates (#1548): a first-order lag y' = (u - y)/T driven by a
+#           LoadCoordinate on its ODE1 coordinate, u a nonlinear feedback of the position x of a mass on a spring, and
+#           a LoadCoordinate on the mass by a nonlinear function of y; both loads by Python user functions, which read
+#           the coordinates through mbs, declared by AddODE1LoadDependencies and AddODE2LoadDependencies. With
+#           computeLoadsJacobian=1 the generalized-alpha solver gets the loads in its Jacobian and needs fewer Newton
+#           iterations, the result the same as without. The result is the final position plus the number of checks
+#           that pass.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-02
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.cMath as cMath
+import numpy as np
+
+(m, k, T, gain, coupling) = (1., 400., 0.02, 2000., 300.)
+
+def Model(computeLoadsJacobian):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    nodeQ = mbs.AddNode(NodePoint(referenceCoordinates=[0, 0, 0], initialCoordinates=[0.1, 0, 0]))
+    mbs.AddObject(MassPoint(nodeNumber=nodeQ, mass=m))
+    markerQ = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodeQ, coordinate=0))
+    mbs.AddObject(CoordinateSpringDamper(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()),
+                                                                                          coordinate=0)), markerQ],
+                                         stiffness=k, damping=0.5))
+    nodeY = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0], initialCoordinates=[0], numberOfODE1Coordinates=1))
+    mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nodeY], systemMatrix=[[-1/T]], rhsVector=[0]))
+    markerY = mbs.AddMarker(MarkerNodeODE1Coordinate(nodeNumber=nodeY, coordinate=0))
+
+    def UFlag(mbs, t, load): #the input of the lag, u/T
+        x = mbs.GetNodeOutput(nodeQ, exu.OutputVariableType.Coordinates)[0]
+        return -gain*cMath.tanh(5*x)/T
+    def UFforce(mbs, t, load): #the force of the lag on the mass
+        y = mbs.GetNodeOutput(nodeY, exu.OutputVariableType.Coordinates) #one coordinate: a number
+        return coupling*cMath.tanh(y/coupling)
+    loadY = mbs.AddLoad(LoadCoordinate(markerNumber=markerY, loadUserFunction=UFlag))
+    loadQ = mbs.AddLoad(LoadCoordinate(markerNumber=markerQ, loadUserFunction=UFforce))
+    sensor = mbs.AddSensor(SensorNode(nodeNumber=nodeQ, storeInternal=True, outputVariableType=exu.OutputVariableType.Coordinates))
+    mbs.Assemble()
+    mbs.systemData.AddODE2LoadDependencies(loadY, mbs.systemData.GetNodeLTGODE2(nodeQ))
+    mbs.systemData.AddODE1LoadDependencies(loadQ, mbs.systemData.GetNodeLTGODE1(nodeY))
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 200
+    simulationSettings.timeIntegration.endTime = 0.4
+    simulationSettings.timeIntegration.computeLoadsJacobian = computeLoadsJacobian
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.file.write = False
+    solver = exu.MainSolverImplicitSecondOrder()
+    solver.SolveSystem(mbs, simulationSettings)
+    return (mbs.GetSensorStoredData(sensor)[:, 1], solver.it.newtonStepsCount)
+
+(withoutLoads, iterationsWithout) = Model(0)
+(withLoads, iterationsWith) = Model(1)
+difference = np.max(np.abs(withLoads - withoutLoads))
+exu.Print('Newton iterations without / with the load Jacobian:', iterationsWithout, iterationsWith, ', difference', difference)
+passed = int(difference < 1e-6) + int(iterationsWith < iterationsWithout) #the difference within the Newton tolerance
+
+u = withLoads[-1] + passed
+exu.Print('solution of ode1LoadsJacobianTest=', u)
+exu.sys['testResult'] = u

@@ -1,0 +1,12 @@
+{
+  "number": 3219,
+  "title": "User sphere-sphere contact with friction: stick and slip by data coordinates",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "UserItemCreator.CreateSphereSphereContact refuses dynamicFriction other than 0, as friction needs the tangential state in data coordinates. Decided: the stick-slip state and the tangential displacement in the data node, updated by the post-Newton function, as ObjectContactSphereSphere does.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01"
+}

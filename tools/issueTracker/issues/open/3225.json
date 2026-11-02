@@ -1,0 +1,12 @@
+{
+  "number": 3225,
+  "title": "A symbolic system solved and its solution mapped onto mbs",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXAMPLE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The Python solvers write their states through the mbs of a SymbolicSystem - solution file, sensors, renderer - but every example switches the solution file off. Decided: an example that solves a SymbolicSystem built as a replicate of an mbs with the Python solvers and shows the solution in the renderer and the solution viewer.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01"
+}

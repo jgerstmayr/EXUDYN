@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 300 | 1.13.309 |
+| 1.13 | Newborn | 302 | 1.13.311 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.311** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectRigidBody2D with a center of mass: its own ODE2 Jacobian (#3210)
+  - description: The left-hand side -m omega^2 A c of a center of mass off the node is differentiated numerically by CSystem, serially. Decided: an analytic Jacobian by phi and omega, assembled in parallel.
+  - **notes:** ObjectRigidBody2D with a center of mass computes its ODE2 Jacobian analytically, in parallel with several threads.
+  - date resolved: **2026-11-02 09:35**, date raised: 2026-11-02
+- **1.13.310** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` ODE1 loads (#1548)
+  - description: fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one
+  - **notes:** With computeLoadsJacobian, the implicit and static solvers include the loads on ODE1 coordinates in the Jacobian, and the dependencies of loads on ODE1 coordinates, declared by mbs.systemData.AddODE1LoadDependencies; test model ode1LoadsJacobianTest.
+  - date resolved: **2026-11-02 09:35**, date raised: 2023-05-01
 - **1.13.309** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectRigidBody: its own ODE2 Jacobian by automatic differentiation on Euler parameters and Tait-Bryan angles, assembled in parallel (#3209)
   - description: The ODE2 rows of ObjectRigidBody - the gyroscopic forces and, with a center of mass off the reference point, the centrifugal force - had no Jacobian of their own: the system differentiated them numerically and serially, 1.6 ms for 2000 bodies, against 0.34 ms for their joints in parallel. Decided: the left-hand side as a template of the number type, differentiated automatically by the rotation parameters and their velocities on Euler parameters and Tait-Bryan angles; the Lie group nodes stay numerical (revision2026c step RG9.11.11).
   - **notes:** ObjectRigidBody on Euler parameters and Tait-Bryan angles differentiates its gyroscopic and centrifugal forces itself, by automatic differentiation, also in parallel; 2000 bodies take 0.39 instead of 1.57 ms per Jacobian, 0.06 ms with 8 threads.

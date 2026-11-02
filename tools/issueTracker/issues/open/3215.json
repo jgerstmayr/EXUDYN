@@ -1,0 +1,12 @@
+{
+  "number": 3215,
+  "title": "MarkerSuperElementRigid: dv/dq and the direction along the Euler parameters",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "LOW",
+  "effort": "MEDIUM",
+  "description": "MarkerSuperElementRigid provides neither GetVelocity_q nor GetRadialKinematics, so connectors on it fall back to CSystem or miss the direction along the Euler parameters of the reference node. Decided: deferred until the super element markers are revised.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01"
+}

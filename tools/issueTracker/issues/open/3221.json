@@ -1,0 +1,12 @@
+{
+  "number": 3221,
+  "title": "The settled designs into the user documentation",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "docs/dev/design/genericDAE.md, symbolicHT.md, symbolicSystem.md, symbolicUserItems.md and systemJacobians.md describe what is decided and implemented. Decided: what a user needs goes into the manual and the item descriptions, the design files are removed when nothing is left in them.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01"
+}

@@ -1,0 +1,15 @@
+{
+  "number": 1548,
+  "title": "ODE1 loads",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one",
+  "dateRaised": "2023-05-01",
+  "deadline": "2023-10-28",
+  "dateResolved": "2026-11-02 09:35",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "With computeLoadsJacobian, the implicit and static solvers include the loads on ODE1 coordinates in the Jacobian, and the dependencies of loads on ODE1 coordinates, declared by mbs.systemData.AddODE1LoadDependencies; test model ode1LoadsJacobianTest.",
+  "resolvedInVersion": "1.13.310"
+}

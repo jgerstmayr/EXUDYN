@@ -1,0 +1,12 @@
+{
+  "number": 3213,
+  "title": "ObjectANCFBeam: its own ODE2 Jacobian",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "LOW",
+  "effort": "HIGH",
+  "description": "ObjectANCFBeam declares ODE2_ODE2 without a function and is differentiated numerically by CSystem, serially; the elastic forces would be differentiated automatically per element. Involved; low priority.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01"
+}

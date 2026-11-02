@@ -274,6 +274,15 @@ class SystemData:
         """
         ...
     @overload
+    def AddODE1LoadDependencies(self, loadNumber: float, globalODE1coordinates: List[int]) -> None: 
+        """Advanced function for adding special dependencies of loads onto ODE1 coordinates, taking a list / numpy array of global ODE1 coordinates, as AddODE2LoadDependencies does for ODE2 coordinates; it needs to be called after Assemble(); only affects implicit or static solvers if timeIntegration.computeLoadsJacobian or staticSolver.computeLoadsJacobian is set to 1 or 2; the Jacobian of a load on ODE1 coordinates includes the ODE1 coordinates of its node without it (#1548).
+        
+        Examples:
+            nodeLTG1 = mbs.systemData.GetNodeLTGODE1(2)
+            mbs.systemData.AddODE1LoadDependencies(5,nodeLTG1)
+        """
+        ...
+    @overload
     def Info(self) -> None: 
         """Print detailed information on every item; for short information use print(mbs).
         

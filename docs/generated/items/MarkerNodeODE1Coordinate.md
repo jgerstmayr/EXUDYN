@@ -69,4 +69,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinat
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSystemODE1Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemODE1Test.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ode1LoadsJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ode1LoadsJacobianTest.py) (TM), [`symbolicSystemODE1Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemODE1Test.py) (TM)

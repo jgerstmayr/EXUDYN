@@ -852,84 +852,50 @@ void CSystem::ComputeODE2SingleLoadLTG(Index loadIndex, ArrayIndex& ltgODE2equat
 //! compute system right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1rhs' for ODE1 part
 void CSystem::ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE1Rhs)
 {
-	//STARTGLOBALTIMER(TScomputeLoads);
-
 	Index nLoads = cSystemData.GetCLoads().NumberOfItems();
-	//Vector3D loadVector3D(0); //initialization in order to avoid gcc warnings
-	Vector1D loadVector1D(0); //scalar loads...//initialization in order to avoid gcc warnings
-	bool loadVector1Ddefined = false; //add checks such that wrong formats would fail
-	//bool loadVector3Ddefined = false; //add checks such that wrong formats would fail
-    __UNUSED(loadVector1Ddefined); //avoid unused variable warnings
-
-	Real currentTime = cSystemData.GetCData().currentState.time;
+	Index nodeCoordinate = 0;
 	for (Index j = 0; j < nLoads; j++)
 	{
-		CLoad* cLoad = cSystemData.GetCLoads()[j];
-		Index markerNumber = cLoad->GetMarkerNumber();
-		CMarker* marker = cSystemData.GetCMarkers()[markerNumber];
-
-		Index nodeCoordinate = 99999;//avoid warning with gcc; will be overwritten
-		bool applyLoad = false;		//loads are not applied to ground objects/nodes
-
-		if (EXUstd::IsOfType(marker->GetType(), Marker::Node) && !EXUstd::IsOfType(marker->GetType(), Marker::Body)) //only for pure node markers!
+		if (ComputeODE1SingleLoad(j, temp, temp.generalizedLoad, nodeCoordinate))
 		{
-			Index markerNodeNumber = marker->GetNodeNumber();
-			if (!cSystemData.GetCNodes()[markerNodeNumber]->IsGroundNode()) //if node has zero coordinates ==> ground node; no action on ground nodes!
-			{
-				if (EXUstd::IsOfType((Index)marker->GetType(), Marker::Coordinate + Marker::ODE1))
-				{
-					nodeCoordinate = cSystemData.GetCNodes()[markerNodeNumber]->GetGlobalODE1CoordinateIndex();
-					applyLoad = true;
-				}
-			}
-		}
-
-		if (applyLoad)
-		{
-			if (cLoad->IsVector())
-			{
-				//loadVector3D = cLoad->GetLoadVector(cSystemData.GetMainSystemBacklink(), currentTime);
-				//loadVector3Ddefined = true;
-				CHECKandTHROW(true, "ComputeODE1Loads(...): illegal 3D force vector ", ExudynValueError);
-			}
-			else
-			{
-				loadVector1D = Vector1D(cLoad->GetLoadValue(cSystemData.GetMainSystemBacklink(), currentTime));
-				loadVector1Ddefined = true;
-			}
-
-			//AccessFunctionType aft = GetAccessFunctionType(loadType, marker->GetType());
-			//==> lateron: depending on AccessFunctionType compute jacobians, put into markerDataStructure as in connectors
-			//    and call according jacobian function
-			//    marker->GetAccessFunctionJacobian(AccessFunctionType, ...) ==> handles automatically the jacobian
-			Real loadFactor = solverData.loadFactor; //copy
-			if (cLoad->HasUserFunction())
-			{
-				loadFactor = 1.; //loadFactor not used for case of user functions, see issue #603
-			}
-
-			LoadType loadType = cLoad->GetType();
-			if (loadType == LoadType::Coordinate)
-			{
-				const bool computeJacobian = true;
-				CHECKandTHROW(loadVector1Ddefined, "ComputeODE1Loads(...): illegal force vector format (expected 1D load)", ExudynValueError);
-				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
-				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).jacobian, loadVector1D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
-			}
-			else { CHECKandTHROWstring("ERROR: CSystem::ComputeSystemODE1RHS, LoadType not implemented!", ExudynNotImplementedError); }
-
-			//ResizableArray<CObject*>& objectList = cSystemData.GetCObjects();
-			//pout << "genLoad=" << temp.generalizedLoad << "\n";
-
-			//pout << "  nodeCoordinate=" << nodeCoordinate << "\n";
 			for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
 			{
-				systemODE1Rhs[nodeCoordinate + k] += loadFactor * temp.generalizedLoad[k];
+				systemODE1Rhs[nodeCoordinate + k] += temp.generalizedLoad[k];
 			}
 		}
-
 	}
-	//STOPGLOBALTIMER(TScomputeLoads);
+}
+
+//! the load j on the ODE1 coordinates of its node, times the load factor, into load; the first global ODE1 index of the
+//! node into nodeCoordinate; false if load j does not act on ODE1 coordinates (#1548)
+bool CSystem::ComputeODE1SingleLoad(Index loadIndex, TemporaryComputationData& temp, ResizableVector& load, Index& nodeCoordinate)
+{
+	CLoad* cLoad = cSystemData.GetCLoads()[loadIndex];
+	CMarker* marker = cSystemData.GetCMarkers()[cLoad->GetMarkerNumber()];
+
+	//only pure node markers on ODE1 coordinates; no action on ground nodes
+	if (!EXUstd::IsOfType(marker->GetType(), Marker::Node) || EXUstd::IsOfType(marker->GetType(), Marker::Body)) { return false; }
+	Index markerNodeNumber = marker->GetNodeNumber();
+	if (cSystemData.GetCNodes()[markerNodeNumber]->IsGroundNode()) { return false; }
+	if (!EXUstd::IsOfType((Index)marker->GetType(), Marker::Coordinate + Marker::ODE1)) { return false; }
+	nodeCoordinate = cSystemData.GetCNodes()[markerNodeNumber]->GetGlobalODE1CoordinateIndex();
+
+	CHECKandTHROW(!cLoad->IsVector(), "ComputeODE1Loads(...): illegal 3D force vector ", ExudynValueError);
+	CHECKandTHROW(cLoad->GetType() == LoadType::Coordinate, "ERROR: CSystem::ComputeSystemODE1RHS, LoadType not implemented!", ExudynNotImplementedError);
+	Real currentTime = cSystemData.GetCData().currentState.time;
+	Vector1D loadVector1D(cLoad->GetLoadValue(cSystemData.GetMainSystemBacklink(), currentTime));
+
+	Real loadFactor = solverData.loadFactor; //copy
+	if (cLoad->HasUserFunction())
+	{
+		loadFactor = 1.; //loadFactor not used for case of user functions, see issue #603
+	}
+
+	const bool computeJacobian = true;
+	marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
+	EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).jacobian, loadVector1D, load); //generalized load: Q = (dRot/dq)^T * Torque
+	load *= loadFactor;
+	return true;
 }
 
 //! compute system right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'

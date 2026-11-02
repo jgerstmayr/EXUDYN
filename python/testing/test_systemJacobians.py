@@ -138,12 +138,47 @@ def Hydraulic(mbs):
 
 def FreeBodies(mbs):
     """free rigid bodies on Euler parameters and on Tait-Bryan angles, with and without a center of mass off the
-    reference point: the gyroscopic and centrifugal terms of the bodies' own Jacobian (#3209)"""
+    reference point, and 2D rigid bodies with a center of mass: the gyroscopic and centrifugal terms of the bodies' own
+    Jacobian (#3209, #3210)"""
     shifted = inertia.Translated([0.05, -0.02, 0.01])
     for (i, nodeType) in enumerate([exu.NodeType.RotationEulerParameters, exu.NodeType.RotationRxyz]*2):
         mbs.CreateRigidBody(inertia=shifted if i >= 2 else inertia, referencePosition=[0.3*i, 0.1*i, 0],
                             referenceRotationMatrix=RotationMatrixZ(0.3*i) @ RotationMatrixX(0.2),
                             gravity=[0, -9.81, 0], nodeType=nodeType)
+    for i in range(2): #2D bodies with a center of mass off the node (#3210)
+        node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.2*i, 1, 0.3 + 0.4*i]))
+        mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=2., inertia=0.1,
+                                        centerOfMass=[0.05, -0.03*(i + 1)]))
+
+
+def ODE1Loads(mbs):
+    """a load on an ODE1 coordinate and one on an ODE2 coordinate, both by user functions that read ODE1 coordinates,
+    ODE2 coordinates and velocities, declared by AddODE1LoadDependencies and AddODE2LoadDependencies: the load
+    Jacobians by all three (#1548); returns the declaration, made after Assemble"""
+    nodeY = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0, 0], initialCoordinates=[0.3, -0.2],
+                                        numberOfODE1Coordinates=2))
+    mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nodeY], systemMatrix=[[-1, 0.5], [-0.5, -2]], rhsVector=[0, 0]))
+    nodeQ = mbs.AddNode(NodePoint(referenceCoordinates=[0, 0, 0], initialCoordinates=[0.1, 0.2, 0]))
+    mbs.AddObject(MassPoint(nodeNumber=nodeQ, mass=2))
+    def States(mbs):
+        return (mbs.GetNodeOutput(nodeY, exu.OutputVariableType.Coordinates),
+                mbs.GetNodeOutput(nodeQ, exu.OutputVariableType.Coordinates),
+                mbs.GetNodeOutput(nodeQ, exu.OutputVariableType.Velocity))
+    def UFloadODE1(mbs, t, load):
+        (y, x, v) = States(mbs)
+        return y[1]**2 + 3*x[0]*y[0] + 0.5*v[1]
+    def UFloadODE2(mbs, t, load):
+        (y, x, v) = States(mbs)
+        return 5*y[0]*y[1] + x[1]**2 - 2*v[0]*y[1]
+    markerY = mbs.AddMarker(MarkerNodeODE1Coordinate(nodeNumber=nodeY, coordinate=0))
+    markerQ = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodeQ, coordinate=0))
+    loads = [mbs.AddLoad(LoadCoordinate(markerNumber=markerY, loadUserFunction=UFloadODE1)),
+             mbs.AddLoad(LoadCoordinate(markerNumber=markerQ, loadUserFunction=UFloadODE2))]
+    def Declare():
+        for load in loads:
+            mbs.systemData.AddODE1LoadDependencies(load, mbs.systemData.GetNodeLTGODE1(nodeY))
+            mbs.systemData.AddODE2LoadDependencies(load, mbs.systemData.GetNodeLTGODE2(nodeQ))
+    return Declare
 
 
 def EulerParameters(mbs):
@@ -158,14 +193,17 @@ eulerParameters = exu.NodeType.RotationEulerParameters
 models = {'RigidBodies': RigidBodies, 'PointsAndContact': PointsAndContact, 'Cable': Cable, 'GenericDAE': GenericDAE,
           'Joints': Joints, 'Contacts': Contacts, 'EulerParameters': EulerParameters,
           'RigidBodiesEP': lambda mbs: RigidBodies(mbs, eulerParameters), 'JointsEP': lambda mbs: Joints(mbs, eulerParameters),
-          'ContactsEP': lambda mbs: Contacts(mbs, eulerParameters), 'Hydraulic': Hydraulic, 'FreeBodies': FreeBodies}
+          'ContactsEP': lambda mbs: Contacts(mbs, eulerParameters), 'Hydraulic': Hydraulic, 'FreeBodies': FreeBodies,
+          'ODE1Loads': ODE1Loads}
 
 
 def Build(model):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
-    models[model](mbs)
+    declare = models[model](mbs)
     mbs.Assemble()
+    if declare is not None: #what a model declares after Assemble
+        declare()
     return (SC, mbs)
 
 
@@ -208,7 +246,8 @@ def ODE2(factors):
 def ODE1(factors):
     def Compute(solver, mbs):
         solver.ComputeJacobianODE2RHS(mbs, scalarFactor_ODE2=0., scalarFactor_ODE2_t=0., scalarFactor_ODE1=0.) #sets the size, zero
-        solver.ComputeJacobianODE1RHS(mbs, scalarFactor_ODE2=factors[0], scalarFactor_ODE2_t=factors[1], scalarFactor_ODE1=factors[2])
+        solver.ComputeJacobianODE1RHS(mbs, scalarFactor_ODE2=factors[0], scalarFactor_ODE2_t=factors[1], scalarFactor_ODE1=factors[2],
+                                      computeLoadsJacobian=2)
     return Compute
 
 
@@ -242,7 +281,7 @@ def test_theContactJacobiansAreTheSystemWideOneAlsoAtVelocities(model, factors):
     assert Difference(local, numerical) < tolerance, (model, factors, Difference(local, numerical))
 
 
-@pytest.mark.parametrize('model', ['GenericDAE', 'Hydraulic'])
+@pytest.mark.parametrize('model', ['GenericDAE', 'Hydraulic', 'ODE1Loads'])
 @pytest.mark.parametrize('factors', [(1., 0., 0.), (0., 1., 0.), (0., 0., 1.)])
 def test_theLocalODE1JacobianIsTheSystemWideOne(model, factors):
     local = Jacobian(model, ODE1(factors))

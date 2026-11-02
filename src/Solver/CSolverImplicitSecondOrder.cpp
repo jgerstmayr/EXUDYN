@@ -1135,7 +1135,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 		//Tangent stiffness: for ODE1 part, the jacobian is de facto computed for RHS while the ODE2 jacobian is put to LHS by multiplying with (-1)
 		//ODE1 K-Matrix; has no factor
 		computationalSystem.JacobianODE1RHS(data.tempCompDataArray, newton.numericalDifferentiation,
-			*(data.systemJacobian), scalODE1, gammaPrime * scalODE1, scalODE1); //RHS ==> K_ODE1; no scaling for now; time derivative additionally has factor gammaPrime
+			*(data.systemJacobian), scalODE1, gammaPrime * scalODE1, scalODE1, simulationSettings.timeIntegration.computeLoadsJacobian); //RHS ==> K_ODE1; no scaling for now; time derivative additionally has factor gammaPrime
 		data.systemJacobian->AddDiagonalMatrix(-2. / it.currentStepSize, data.nODE1, data.nODE2, data.nODE2); //for qODE1_t part
 		STOPTIMER(timer.jacobianODE1);
 
@@ -1174,7 +1174,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 		//Tangent stiffness: for ODE1 part, the jacobian is de facto computed for RHS while the ODE2 jacobian is put to LHS by multiplying with (-1)
 		//ODE1 K-Matrix; has no factor
 		computationalSystem.JacobianODE1RHS(data.tempCompDataArray, newton.numericalDifferentiation,
-			*(data.systemJacobian), scalODE1, gammaPrime * scalODE1, scalODE1); //RHS ==> K_ODE1; no scaling for now; time derivative additionally has factor gammaPrime
+			*(data.systemJacobian), scalODE1, gammaPrime * scalODE1, scalODE1, simulationSettings.timeIntegration.computeLoadsJacobian); //RHS ==> K_ODE1; no scaling for now; time derivative additionally has factor gammaPrime
 		data.systemJacobian->AddDiagonalMatrix(-2. / it.currentStepSize, data.nODE1, data.nODE2, data.nODE2); //for qODE1_t part
 		STOPTIMER(timer.jacobianODE1);
 	}

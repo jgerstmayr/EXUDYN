@@ -281,11 +281,19 @@ public:
     //! compute LTG for ODE2 loads; separate between ltg for equations (action) and dependent coordinates
     void ComputeODE2SingleLoadLTG(Index loadIndex, ArrayIndex& ltgODE2equations, ArrayIndex& ltgODE2coords, ArrayIndex& ltgODE1coords);
 
-	//! compute system right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
+	//! compute system right-hand-side (RHS) due to loads and add them to 'ode1rhs' for ODE1 part
 	void ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE1Rhs);
+
+	//! the load j on the ODE1 coordinates of its node, times the load factor, into load; the first global ODE1 index of the
+	//! node into nodeCoordinate; false if load j does not act on ODE1 coordinates (#1548)
+	bool ComputeODE1SingleLoad(Index loadIndex, TemporaryComputationData& temp, ResizableVector& load, Index& nodeCoordinate);
 
     //! compute jacobian for loads on ODE2 equations
     void JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+        GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1);
+
+    //! the Jacobian of the loads on ODE1 equations, numerical (#1548)
+    void JacobianODE1Loads(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
         GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1);
 
     //! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
@@ -333,8 +341,9 @@ public:
 
 	//! the Jacobian of ODE1RHS, the analytic one of an object that has it (#3143), else by numerical differentiation; multiplied with the factors
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
+	//! computeLoadsJacobian as in JacobianODE2RHS, for the loads on ODE1 coordinates (#1548)
 	void JacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
-		GeneralMatrix& jacobianGM, Real factorODE2 = 1., Real factorODE2_t = 0., Real factorODE1 = 1.);
+		GeneralMatrix& jacobianGM, Real factorODE2 = 1., Real factorODE2_t = 0., Real factorODE1 = 1., Index computeLoadsJacobian = 0);
 
 	//! numerical computation of constraint jacobian with respect to ODE2 and ODE1 (fillIntoSystemMatrix=true: also w.r.t. AE) coordinates
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian

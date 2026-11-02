@@ -1,0 +1,16 @@
+{
+  "number": 3210,
+  "title": "ObjectRigidBody2D with a center of mass: its own ODE2 Jacobian",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The left-hand side -m omega^2 A c of a center of mass off the node is differentiated numerically by CSystem, serially. Decided: an analytic Jacobian by phi and omega, assembled in parallel.",
+  "dateRaised": "2026-11-02",
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 09:35",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectRigidBody2D with a center of mass computes its ODE2 Jacobian analytically, in parallel with several threads.",
+  "resolvedInVersion": "1.13.311"
+}

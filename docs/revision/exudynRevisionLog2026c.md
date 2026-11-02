@@ -5643,3 +5643,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - benchAE.py: the ODE2 Jacobian of 2000 bodies 1.57 ms before, 0.39 / 0.20 / 0.11 / 0.06 ms for 1 / 2 / 4 / 8 threads.
 - Newton statistics: the same counts except sliderCrank3Dbenchmark 33733 / 33734 and userJointTest 17455 / 17448;
   22 test models with new references, 6e-14 to 7e-9.
+
+<a id="rg9-11-7"></a>
+### RG9.11.7, RG9.11.12, RG9.11.8 — The loads on ODE1 coordinates, the 2D rigid body, the plan of the Jacobians (2026-11-02, #1548, #3210)
+- Maintainer 2026-11-02: RG9.11.8 closed; ObjectFFRFreducedOrder, ObjectKinematicTree and ObjectRigidBody2D should have
+  an efficient Jacobian (none of them had one: all three declared ODE2_ODE2 without a function), ObjectANCFBeam may be
+  involved, ObjectFFRF and ObjectALEANCFCable2D are for research only; the pressure equations of the hydraulic actuator
+  analytic; one issue each for MarkerSuperElementRigid (not touched now, to be revised), MarkerKinematicTreeRigid
+  (earlier, for convergence and performance) and the Lie group nodes; RG9.11.7 now. Issues #3210-#3217, steps
+  RG9.11.12-RG9.11.17.
+- CObjectRigidBody2D.cpp `ComputeJacobianODE2_ODE2` in closed form, GetAvailableJacobians with the function flags when
+  the center of mass is off the node; test_systemJacobians.py FreeBodies with two such bodies.
+- CSystem: `ComputeODE1SingleLoad` (ComputeODE1Loads a loop over it), `JacobianODE1Loads` in JacobianODE1RHS with
+  `computeLoadsJacobian` (a new argument, also of MainSolverBase.ComputeJacobianODE1RHS, passed by the implicit and
+  static solvers), the ODE1 columns of JacobianODE2Loads; `MainSystemData::PyAddODE1LoadDependencies`,
+  `mbs.systemData.AddODE1LoadDependencies`; temp.tempIndex5.
+- test_systemJacobians.py ODE1Loads (a load on an ODE1 and one on an ODE2 coordinate, both reading ODE1 and ODE2
+  coordinates and a velocity): the blocks differ by 50-90 % without the load Jacobian, 3e-8 with it; models may
+  declare dependencies after Assemble. python/TestModels/ode1LoadsJacobianTest.py: 566 / 387 Newton iterations
+  without / with, the results within 2e-7.
+- The derivative terms d(M q_tt)/dq and d(C_q^T lambda)/dq are in no Jacobian, also not the system-wide one; an
+  evaluation of their own (RG9.11.18). The solver chapter of the manual is RG3.48 (#3223).
+- Test suite 255 + 99 passed; 86 cases of test_systemJacobians.py.

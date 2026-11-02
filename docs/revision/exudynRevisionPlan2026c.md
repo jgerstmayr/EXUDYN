@@ -61,11 +61,15 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG2** Testing and verification
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
   - RG2.9 Add three old test models (3 open sub-steps)
+- **RG3** Docs
+  - RG3.46 Move the settled designs into the manual and the item descriptions, and remove the design files (2 open sub-steps)
+  - RG3.47 One chapter "Symbolic system and user functions": symbolic system, symbolic user functions, user items, symbolic solvers (1 open sub-step)
+  - RG3.48 The chapter "Solvers and system equations": a section on the system equations, the solvers and the system Jacobians
+  - RG3.49 Leave the functions whose names start with an underscore out of the generated reference pages
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
-  - RG4.23 Compute the Jacobian of ODE1 loads, with a test model
   - RG4.24 Extend the viscous rolling friction of ObjectRollingDiscPenalty to any axis
 - **RG5** Performance
   - RG5.1 Write a linear algebra micro-benchmark that every build carries (4 open sub-steps)
@@ -93,7 +97,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (3 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (10 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -104,10 +108,11 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG12.53 Algorithmic symbolic functions: assignments by Assign, loops recorded as loops
   - RG12.55 Collect user items with the interfaces of the built-in items in exudyn/misc/symbolicUserItems.py (2 open sub-steps)
   - RG12.65 One table of the symbolic operations: SymbolicProgram and the operation table beside the expression classes, in four stages (2 open sub-steps)
-  - RG12.67 Symbolic parameters for every item: a general solution beyond the scalar parameters of the user items (4 open sub-steps)
+  - RG12.67 Symbolic parameters for every item: a general solution beyond the scalar parameters of the user items (5 open sub-steps)
   - RG12.71 Evaluate one source for the C++ items, the symbolic user items and their documentation (3 open sub-steps)
   - RG12.72 Test the user items by the mini examples built with the Create functions, recorded, against the built-in items: results and CPU times
-  - RG12.73 Names of symbolic variables: two variables of one name, where names identify them, and a scope of names (1 open sub-step)
+  - RG12.73 Names of symbolic variables: two variables of one name, where names identify them, and a scope of names (2 open sub-steps)
+  - RG12.74 The users of the data coordinates: the turns of the user torsional spring-damper, the friction of the user sphere contact, the adaptive step size of the Python solvers (3 open sub-steps)
 - **RG13** Total coordinates
   - RG13.1 Measure the solvers on more models, solvers and configurations, as the baseline
   - RG13.2 Evaluate how the total coordinates are provided efficiently
@@ -126,16 +131,16 @@ The title of each says what it does; the sentence after it, why it comes now.
 |---|---|---|---|
 | RG1 | OPEN | 1 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
-| RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 6 | Implementation problems and bugs |
+| RG3 | OPEN | 7 | Docs |
+| RG4 | OPEN | 5 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 9 | Structural core improvements |
+| RG9 | OPEN | 16 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
-| RG12 | OPEN | 19 | Symbolic |
+| RG12 | OPEN | 25 | Symbolic |
 | RG13 | OPEN | 2 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
 <!-- planManager: end groups table - generated by docs/revision/planManager.py update, do not edit -->
@@ -182,7 +187,7 @@ CLOSED 2026-10-17 (#3019; maintainer: add a step, the local machine might not be
 processes get OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS and NGS_NUM_THREADS = cores / processes;
 NGsolveOCCboundaries2.py reserves 6.3 GB instead of 17 GB. [log](exudynRevisionLog2026c.md#rg2-10)
 
-## **CLOSED_RG3** Docs
+## **OPEN_RG3** Docs
 
 What the documentation still gets wrong or does not say.
 
@@ -213,6 +218,34 @@ CLOSED 2026-10-10 (#2936).
 #### **CLOSED_RG3.45.6** Place the six images of README.rst in two rows with smaller widths
 
 CLOSED 2026-10-10 (#2937); the maintainer adjusts the widths.
+
+### **OPEN_RG3.46** Move the settled designs into the manual and the item descriptions, and remove the design files
+
+#3221 (maintainer 2026-11-02: the documentation says what the code is now - not the ways it went, when and by whom it was decided -, with a short note on why where it keeps a decision from going back and forth; genericDAE.md and symbolicHT.md probably leave nothing for the internals; symbolicVariableNames.md and symbolicParameters.md stay until their steps are complete (RG12.67, RG12.73); the uniformEvaluation files are work in progress of a colleague and are not touched).
+
+#### **OPEN_RG3.46.1** genericDAE.md into the descriptions of ObjectGenericDAE and the solver chapter
+
+#3221.
+
+#### **OPEN_RG3.46.2** symbolicHT.md into the section on homogeneous transformations, the connectors and the user connector
+
+#3221.
+
+### **OPEN_RG3.47** One chapter "Symbolic system and user functions": symbolic system, symbolic user functions, user items, symbolic solvers
+
+#3222 (maintainer 2026-11-02: at the place of "Symbolic user functions"; the symbolic system section with a notebook demo and a brief statement of what works - a small part of the C++ features, extended continuously, for experimentation, teaching and the export of simpler models, easily patched in Python -, the limitations in the docstrings; no exact comparison with the C++ part; the docstring of exudyn.symbolics.systemModel shortened to the use of the class; symbolicSystem.md and symbolicUserItems.md go into it; the chapter checked for consistency as a whole).
+
+#### **OPEN_RG3.47.1** An example that solves a symbolic replicate of an mbs by the Python solvers and shows the solution in the renderer and the solution viewer
+
+#3225.
+
+### **OPEN_RG3.48** The chapter "Solvers and system equations": a section on the system equations, the solvers and the system Jacobians
+
+#3223 (maintainer 2026-11-02: "System equations of motion" is almost hidden in "Solvers in Exudyn" and the system Jacobians are not there; the section reflects the C++ part, the symbolic system referenced sparsely; systemJacobians.md goes into it).
+
+### **OPEN_RG3.49** Leave the functions whose names start with an underscore out of the generated reference pages
+
+#3224 (maintainer 2026-11-02: they are internals without the usual docstrings and may change without notice).
 
 ## **OPEN_RG4** Implementation problems and bugs
 
@@ -323,9 +356,11 @@ GetRotationJacobianTTimesVector_q came with #2228 (RG11.8.8). [log](exudynRevisi
 
 #2315, #2316, #2317.
 
-### **OPEN_RG4.23** Compute the Jacobian of ODE1 loads, with a test model
+### **CLOSED_RG4.23** Compute the Jacobian of ODE1 loads, with a test model
 
 #1548.
+
+CLOSED 2026-11-02 (#1548 resolved) with RG9.11.7.
 
 ### **OPEN_RG4.24** Extend the viscous rolling friction of ObjectRollingDiscPenalty to any axis
 
@@ -1202,17 +1237,21 @@ Design section 3.3.
 
 CLOSED 2026-11-02 (#3201 stays open): the virtual CObject::ComputeLocalJacobianAE - ComputeJacobianAE of a body with algebraic equations by default, the connector interface or the marker data in CObjectConstraint, moved from CSystem::ComputeObjectJacobianAE, which calls it -, CSystem::AddLocalJacobianAE with the factors in JacobianAEFactors, JacobianAE a loop of compute and add over the objects and the nodes with algebraic equations (the node blocks by local-to-global lists, AE_ODE2_t accepted); the numerical AE Jacobian for sparse matrices came with RG9.11.9 (#3205); the same results; test_systemJacobians.py with the Euler parameter constraint, dense and sparse. [log](exudynRevisionLog2026c.md#rg9-11-6)
 
-#### **OPEN_RG9.11.7** Complete the remaining couplings serially: the ODE1 loads, the derivative terms as options, the solver chapter of the manual
+#### **CLOSED_RG9.11.7** Complete the remaining couplings serially: the ODE1 loads, the derivative terms as options, the solver chapter of the manual
 
 With RG4.23 (#1548); design section 3.3.
 
-#### **OPEN_RG9.11.8** Put the connectors that are differentiated numerically by CSystem onto the connector interface, automatic or by a local numerical differentiation of the marker kinematics
+CLOSED 2026-11-02 (#1548 resolved, #3201 stays open): design section 11 - JacobianODE1Loads and the ODE1 columns of JacobianODE2Loads, AddODE1LoadDependencies; ode1LoadsJacobianTest 566 / 387 Newton iterations without / with; the derivative terms to RG9.11.18, the solver chapter to RG3.48 (#3223). [log](exudynRevisionLog2026c.md#rg9-11-7)
+
+#### **CLOSED_RG9.11.8** Put the connectors that are differentiated numerically by CSystem onto the connector interface, automatic or by a local numerical differentiation of the marker kinematics
 
 Design section 7, J1: ObjectConnectorUser, the contacts, ReevingSystemSprings, RollingDiscPenalty, HydraulicActuatorSimple, CoordinateSpringDamperExt, the intrinsic RigidBodySpringDamper and the spring-dampers with Python user functions.
 
 Tried 2026-11-01 (local branch rg9-11-8-kinematicsJacobian, not on v2-dev): the local numerical differentiation of the force by the marker kinematics, chained with the marker Jacobians, for RollingDiscPenalty, ConvexRoll, ContactCoordinate, SphereSphere, SphereTorus and SphereTriangle; rejected - it neglects the derivative of the marker velocities by the coordinates (dv/dq, as the automatic Jacobians do), and the Newton convergence of contacts with friction degrades: rotatingTableTest 1083889 instead of 26785 Newton iterations, ballBearingTest 907 instead of 531 Jacobians; 13 test models change. Waits for a decision: the velocity terms in the marker interface (dv/dq of each marker kinematics), or these connectors stay numerical by CSystem (serial). [log](exudynRevisionLog2026c.md#rg9-11-8)
 
 Decided 2026-11-01 (maintainer): (a) in the long term - the markers provide dv/dq, requested by the connector where it matters (friction, rolling, user functions), not for spring-dampers; an evaluation first; ConvexRoll may stay numerical by CSystem.
+
+CLOSED 2026-11-02 (#3201 stays open; all sub-steps closed, maintainer 2026-11-02): the connectors with Python user functions, ReevingSystemSprings and the cable contacts stay numerical by CSystem, serially.
 
 ##### **CLOSED_RG9.11.8.1** Evaluate the derivative of the marker velocities by the coordinates: the markers, the connectors, the effect on the test suite
 
@@ -1261,6 +1300,48 @@ Design section 7, J3; low priority: it would keep the Newton convergence of mode
 #3209 (maintainer 2026-11-02: next step 4). The rigid bodies were numerical and serial: 1.6 ms for 2000 bodies against 0.34 ms for their joints at 8 threads.
 
 CLOSED 2026-11-02 (#3209 resolved, #3201 stays open): design section 10 - RigidBodyODE2LHSTemplate, ComputeJacobianODE2_ODE2 with 8 automatic directions, GetAvailableJacobians with the function flags on Euler parameters and Tait-Bryan angles, the Lie group nodes numerical by CSystem; 2000 bodies 1.57 / 0.39 / 0.06 ms numerical / 1 / 8 threads; the same Newton iterations; 22 test models with new references (to 7e-9); test_systemJacobians.py with free bodies on both parameters, with and without a center of mass, at velocities, and the parallel ODE2 comparison at velocities. [log](exudynRevisionLog2026c.md#rg9-11-11)
+
+#### **CLOSED_RG9.11.12** The ODE2 Jacobian of ObjectRigidBody2D with a center of mass, analytic, in parallel
+
+#3210 (maintainer 2026-11-02: ObjectFFRFreducedOrder, ObjectKinematicTree and ObjectRigidBody2D should have an efficient Jacobian; ObjectFFRF and ObjectALEANCFCable2D are for research only and need none).
+
+CLOSED 2026-11-02 (#3210 resolved): the left-hand side -m omega^2 A c by phi and omega in closed form; the same results. [log](exudynRevisionLog2026c.md#rg9-11-7)
+
+#### **OPEN_RG9.11.13** The ODE2 Jacobian of ObjectKinematicTree, analytic or automatic, measured on the kinematic tree performance model first
+
+#3211.
+
+#### **OPEN_RG9.11.14** The ODE2 Jacobian of ObjectFFRFreducedOrder, analytic or automatic, measured on perfObjectFFRFreducedOrder first
+
+#3212.
+
+#### **OPEN_RG9.11.15** The ODE2 Jacobian of ObjectANCFBeam by automatic differentiation of its elastic forces
+
+#3213 (maintainer 2026-11-02: may be rather involved); low priority.
+
+#### **OPEN_RG9.11.16** The Jacobian of the pressure equations of ConnectorHydraulicActuatorSimple, analytic
+
+#3214 (maintainer 2026-11-02: would be nice; the other connectors numerical by CSystem stay so).
+
+#### **OPEN_RG9.11.17** dv/dq and the direction along the Euler parameters for the markers and nodes that lack them
+
+Connectors on these markers fall back to CSystem, serially, or miss the direction along the Euler parameters.
+
+##### **OPEN_RG9.11.17.1** MarkerKinematicTreeRigid: dv/dq and the Jacobian derivative by the recursion over the links
+
+#3216 (maintainer 2026-11-02: could be done earlier, as it might improve convergence and performance).
+
+##### **OPEN_RG9.11.17.2** The Lie group nodes: dv/dq of their markers and the ODE2 Jacobian of ObjectRigidBody on them, in closed form
+
+#3217.
+
+##### **OPEN_RG9.11.17.3** MarkerSuperElementRigid: dv/dq and the direction along the Euler parameters of the reference node
+
+#3215 (maintainer 2026-11-02: MarkerSuperElementRigid will be revised in future, not touched now).
+
+#### **OPEN_RG9.11.18** Evaluate the derivatives of M(q) q_tt and of C_q^T lambda by q as options of the Newton Jacobian
+
+From RG9.11.7: neither is in any Jacobian, also not in the system-wide one; measured on the models with large rotations and with stiff constraints first.
 
 ## **CLOSED_RG10** Tooling and process
 
@@ -2584,6 +2665,10 @@ Design section 2.4; decision P4.
 
 Design section 2.5; decision P5.
 
+#### **OPEN_RG12.67.6** Move what is implemented of symbolicParameters.md into the chapter Symbolic system and user functions, and remove the design file
+
+Maintainer 2026-11-02: when the steps of RG12.67 are complete.
+
 ### **CLOSED_RG12.68** exudyn.symbolics: a package for the Python parts of the symbolic system and the symbolic utilities
 
 CLOSED 2026-10-29 (#3165; maintainer 2026-10-29: the symbolic Python parts get more space, a directory exudyn.symbolics;
@@ -2684,6 +2769,26 @@ CLOSED 2026-11-02 (#3208 stays open): design sections 1-4 - esym.Function, Varia
 #### **OPEN_RG12.73.2** Names of symbolic variables as decided: the missing check of esym.Function, the parameters of a system as a scope of names
 
 After the decisions N1-N3 of symbolicVariableNames.md; N2 with RG12.67.2.
+
+#### **OPEN_RG12.73.3** Move what is implemented of symbolicVariableNames.md into the chapter Symbolic system and user functions, and remove the design file
+
+Maintainer 2026-11-02: when the steps of RG12.73 are complete.
+
+### **OPEN_RG12.74** The users of the data coordinates: the turns of the user torsional spring-damper, the friction of the user sphere contact, the adaptive step size of the Python solvers
+
+Maintainer 2026-11-02: add as a step and resolve it now; the first users of the data coordinates of RG12.66.
+
+#### **OPEN_RG12.74.1** The turns of CreateTorsionalSpringDamper with unlimitedRotations in a data node, updated by the post-Newton function
+
+#3218.
+
+#### **OPEN_RG12.74.2** Stick and slip of CreateSphereSphereContact with friction in the data node, updated by the post-Newton function
+
+#3219.
+
+#### **OPEN_RG12.74.3** SolveGeneralizedAlpha and SolveExplicit reduce the step to the recommended step size and grow it again
+
+#3220.
 
 ## **OPEN_RG13** Total coordinates
 

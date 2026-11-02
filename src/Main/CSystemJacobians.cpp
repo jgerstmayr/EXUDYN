@@ -76,9 +76,9 @@ void CSystem::JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const 
 
     //Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
     //Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
-    //Vector& xODE1 = cSystemData.GetCData().currentState.ODE1Coords;			//current coordinates ==> this is what is differentiated for
+    Vector& xODE1 = cSystemData.GetCData().currentState.ODE1Coords;			//for the ODE1 dependencies
     Vector& xODE2 = cSystemData.GetCData().currentState.ODE2Coords;			//current coordinates ==> this is what is differentiated for
-    //Vector& xRefODE1 = cSystemData.GetCData().referenceState.ODE1Coords;	//reference coordinates; might be important for numerical differentiation
+    Vector& xRefODE1 = cSystemData.GetCData().referenceState.ODE1Coords;
     Vector& xRefODE2 = cSystemData.GetCData().referenceState.ODE2Coords;	//reference coordinates; might be important for numerical differentiation
     Vector& xODE2_t = cSystemData.GetCData().currentState.ODE2Coords_t;		//for diff w.r.t. velocities
 
@@ -121,12 +121,66 @@ void CSystem::JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const 
             }
             jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2eq, ltgODE2coords, 0, 0);
         }
-        if (ltgODE1coords.NumberOfItems() != 0)
+        //the ODE2 rows by the ODE1 dependencies of the load (AddODE1LoadDependencies, #1548)
+        if (nLocalODE2eq != 0 && ltgODE1coords.NumberOfItems() != 0 && factorODE1 != 0.)
         {
-            CHECKandTHROWstring("JacobianODE2Loads: dependency on ODE1 coordinates not implemented; set computeLoadsJacobian=False in solver settings", ExudynNotImplementedError);
+            localJacobian.SetNumberOfRowsAndColumns(nLocalODE2eq, ltgODE1coords.NumberOfItems());
+            AddNumDiffObject(numDiff, -factorODE1, xODE1, xRefODE1, localJacobian, f0, f1, ltgODE1coords,
+                [this, &temp, &currentTime, &f1, &j, &fillSparseVector, &fillInLocally]
+            {
+                ComputeODE2SingleLoad(j, temp, currentTime, f1, fillSparseVector, fillInLocally);
+            }, true); //set values
+            jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2eq, ltgODE1coords, 0, cSystemData.GetNumberOfCoordinatesODE2());
         }
+    }
+}
 
+//! the Jacobian of the loads on ODE1 coordinates by numerical differentiation (#1548): the rows of the ODE1 coordinates of
+//! the load's node, by the ODE1 coordinates of the node and of AddODE1LoadDependencies, by the ODE2 coordinates of
+//! AddODE2LoadDependencies and, for factorODE2_t != 0, their velocities; ADDed to jacobianGM
+void CSystem::JacobianODE1Loads(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+    GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1)
+{
+    TemporaryComputationData& temp = tempArray[0]; //always exists
+    ResizableVector& f0 = temp.numericalJacobianf0;
+    ResizableVector& f1 = temp.numericalJacobianf1;
+    ResizableMatrix& localJacobian = temp.localJacobian;
+    ArrayIndex& ltgODE2eq = temp.tempIndex; //empty for a load on ODE1 coordinates
+    ArrayIndex& ltgODE2coords = temp.tempIndex2;
+    ArrayIndex& ltgODE1coords = temp.tempIndex3;
+    ArrayIndex& ltgODE1eq = temp.tempIndex5;
 
+    Vector& xODE1 = cSystemData.GetCData().currentState.ODE1Coords;
+    Vector& xRefODE1 = cSystemData.GetCData().referenceState.ODE1Coords;
+    Vector& xODE2 = cSystemData.GetCData().currentState.ODE2Coords;
+    Vector& xRefODE2 = cSystemData.GetCData().referenceState.ODE2Coords;
+    Vector& xODE2_t = cSystemData.GetCData().currentState.ODE2Coords_t;
+    const Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
+    Index nodeCoordinate = 0;
+
+    for (Index j = 0; j < cSystemData.GetCLoads().NumberOfItems(); j++)
+    {
+        if (!ComputeODE1SingleLoad(j, temp, f0, nodeCoordinate)) { continue; }
+        Index nRows = f0.NumberOfItems();
+        ltgODE1eq.SetNumberOfItems0();
+        for (Index k = 0; k < nRows; k++) { ltgODE1eq.Append(nodeCoordinate + k); }
+        ComputeODE2SingleLoadLTG(j, ltgODE2eq, ltgODE2coords, ltgODE1coords); //the node's ODE1 coordinates and the dependencies
+        auto ComputeF1 = [this, &temp, &f1, &j, &nodeCoordinate]() { ComputeODE1SingleLoad(j, temp, f1, nodeCoordinate); };
+
+        if (factorODE1 != 0. && ltgODE1coords.NumberOfItems() != 0)
+        {
+            localJacobian.SetNumberOfRowsAndColumns(nRows, ltgODE1coords.NumberOfItems());
+            AddNumDiffObject(numDiff, -factorODE1, xODE1, xRefODE1, localJacobian, f0, f1, ltgODE1coords, ComputeF1, true);
+            jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE1eq, ltgODE1coords, nODE2, nODE2);
+        }
+        if ((factorODE2 != 0. || factorODE2_t != 0.) && ltgODE2coords.NumberOfItems() != 0)
+        {
+            localJacobian.SetNumberOfRowsAndColumns(nRows, ltgODE2coords.NumberOfItems());
+            localJacobian.SetAll(0.);
+            if (factorODE2 != 0.) { AddNumDiffObject(numDiff, -factorODE2, xODE2, xRefODE2, localJacobian, f0, f1, ltgODE2coords, ComputeF1); }
+            if (factorODE2_t != 0.) { AddNumDiffObject(numDiff, -factorODE2_t, xODE2_t, Vector(), localJacobian, f0, f1, ltgODE2coords, ComputeF1); }
+            jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE1eq, ltgODE2coords, nODE2, 0);
+        }
     }
 }
 
@@ -567,7 +621,7 @@ void CSystem::AddLocalJacobianODE1(TemporaryComputationData& temp, Index j, Real
 //! analytic one of an object that has it (ComputeJacobianODE1RHS, #3143), else by numerical differentiation;
 //! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
 void CSystem::JacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
-	GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1)
+	GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1, Index computeLoadsJacobian)
 {
 	//size needs to be set accordingly in the caller function; components are added to jacobian!
 	TemporaryComputationData& temp = tempArray[0]; //first array does always exist!
@@ -604,6 +658,10 @@ void CSystem::JacobianODE1RHS(TemporaryComputationDataArray& tempArray, const Nu
 			{
 				AddLocalJacobianODE1(temp, j, factorODE2, factorODE2_t, factorODE1, local, jacobianGM);
 			}
+		}
+		if (computeLoadsJacobian) //the system-wide differentiation includes the loads
+		{
+			JacobianODE1Loads(tempArray, numDiff, jacobianGM, factorODE2, (computeLoadsJacobian > 1) ? factorODE2_t : 0., factorODE1);
 		}
 	}
 	else

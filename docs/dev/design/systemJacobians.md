@@ -439,4 +439,19 @@ Euler parameter node, so the AD and the rigid nodes cover them.
 - 2000 bodies on Euler parameters: 1.57 ms numerical and serial, 0.39 / 0.20 / 0.11 / 0.06 ms for 1 / 2 / 4 / 8 threads.
   The Newton iterations of the test models are the same within one in 33733 (sliderCrank3Dbenchmark) and 7 in 17455
   (userJointTest); 22 test models with new references (6e-14 to 7e-9).
+- `CObjectRigidBody2D::ComputeJacobianODE2_ODE2` (#3210): the left-hand side `-m omega^2 A c` of a center of mass c
+  off the node, by phi and omega in closed form; the same results in the test suite.
+
+## 11. The loads on ODE1 coordinates (RG9.11.7, #1548)
+
+- With `computeLoadsJacobian` 1 or 2, `JacobianODE2Loads` differentiates the loads on ODE2 coordinates numerically by
+  the ODE2 coordinates of their markers and of `AddODE2LoadDependencies`, now also by the ODE1 coordinates of
+  `AddODE1LoadDependencies` (it threw before).
+- `JacobianODE1Loads`, called by `JacobianODE1RHS` with the same setting, gives the rows of a load on ODE1 coordinates
+  (`ComputeODE1SingleLoad`, a LoadCoordinate on MarkerNodeODE1Coordinate) by the ODE1 coordinates of its node and of
+  `AddODE1LoadDependencies`, the ODE2 coordinates of `AddODE2LoadDependencies` and, for 2, their velocities; serial.
+- The system-wide numerical Jacobian contains all of them already.
+- ode1LoadsJacobianTest: a lag driven by the position of a mass and acting back on it, 387 instead of 566 Newton
+  iterations; test_systemJacobians.py against the system-wide Jacobian (50-90 % of the blocks without it).
+- Not in any Jacobian: d(M(q) q_tt)/dq and d(C_q^T lambda)/dq; whether they are worth options is RG9.11.18.
 

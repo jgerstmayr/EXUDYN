@@ -570,6 +570,40 @@ public: //
         }
     }
 
+    //! the dependencies of a load on global ODE1 coordinates, for the load Jacobian (#1548)
+    void PyAddODE1LoadDependencies(Index loadNumber, const std::vector<Index>& globalODE1coordinates)
+    {
+        Index nLoads = cSystemData->GetCLoads().NumberOfItems();
+        if (loadNumber >= nLoads)
+        {
+            PyError("AddODE1LoadDependencies: invalid load number", PyErrorType::indexError);
+        }
+
+        //check if load dependencies are initialized:
+        if (cSystemData->GetLoadsODE1dependencies().NumberOfItems() == 0)
+        {
+            ArrayIndex emptyArray;
+            for (Index i=0; i < nLoads; i++)
+            {
+                cSystemData->GetLoadsODE1dependencies().Append(emptyArray);
+            }
+        }
+        else if (cSystemData->GetLoadsODE1dependencies().NumberOfItems() != nLoads)
+        {
+            PyError("AddODE1LoadDependencies: inconsistent size of systemData.loadsODE1dependencies; call Assemble() first", PyErrorType::modelError);
+        }
+        Index nODE1 = cSystemData->GetNumberOfCoordinatesODE1();
+        for (Index k = 0; k < (Index)globalODE1coordinates.size(); k++)
+        {
+            Index c = globalODE1coordinates[k];
+            if (!EXUstd::IndexIsInRange(c, 0, nODE1))
+            {
+                PyError(STDstring("AddODE1LoadDependencies: coordinate index ")+EXUstd::ToString(k)+" is "+ EXUstd::ToString(c)+" which is not in valid range [0,"+ EXUstd::ToString(nODE1)+"]", PyErrorType::indexError);
+            }
+            cSystemData->GetLoadsODE1dependencies()[loadNumber].Append(c);
+        }
+    }
+
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! get current (computation) time

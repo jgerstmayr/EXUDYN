@@ -85,7 +85,11 @@ Jacobian with 8 threads (#1203). The Jacobian of the algebraic equations of the 
 functions and of the Euler parameter nodes is computed in parallel too; 2000 joints take 0.34 instead of 2.44 ms with
 8 threads (#1202). ObjectRigidBody on Euler parameters and Tait-Bryan angles differentiates its gyroscopic and
 centrifugal forces itself, also in parallel; 2000 bodies take 0.39 instead of 1.57 ms per Jacobian, 0.06 ms with 8
-threads (#3209).
+threads (#3209); ObjectRigidBody2D with a center of mass likewise (#3210).
+With `computeLoadsJacobian`, the implicit and static solvers include the loads on ODE1 coordinates in the Jacobian,
+and the dependencies of loads on ODE1 coordinates, declared by the new `mbs.systemData.AddODE1LoadDependencies` as
+`AddODE2LoadDependencies` declares those on ODE2 coordinates; a load on ODE2 coordinates with ODE1 dependencies raised
+an error before (#1548).
 `newton.numericalDifferentiation.doSystemWideDifferentiation` computes the whole Jacobian numerically, the algebraic
 equations included, for dense and sparse matrices; `forAE`, `forODE2` and `forODE2Connectors` are deprecated and have no
 effect - each object provides its Jacobian, analytic, automatic or numerical by its own coordinates. A model that set
