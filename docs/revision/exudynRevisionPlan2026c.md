@@ -1183,9 +1183,15 @@ CLOSED 2026-11-01 (#3201 stays open): the decision between connectors and the ot
 
 CLOSED 2026-11-01 (#1203): JacobianODE2RHS with ParallelFor over listComputeObjectODE2LhsNoUF above multithreadedLowerLimitJacobians, ComputeLocalJacobianODE2(analyticOnly) and AppendLocalJacobianODE2 per thread, the deferred objects (a numerical block) and those with Python functions serially; an ANCF cable of 2000 elements with Cartesian spring-dampers 20.9 ms serial, 10.9 / 9.1 / 4.6 ms with 2 / 4 / 8 threads; the serial path unchanged. [log](exudynRevisionLog2026c.md#rg9-11-5-1)
 
-##### **OPEN_RG9.11.5.2** The AE rows in parallel, and the split of the tasks by a cost per item
+##### **CLOSED_RG9.11.5.2** The AE rows in parallel, and the split of the tasks by a cost per item
 
 #1202, #858; RG9.11.6 (the algebraic blocks on the interface of the local Jacobians) is done.
+
+CLOSED 2026-11-02 (#1202 resolved, #858 stays open): design section 9 - JacobianAE with ParallelFor over the constraints without Python functions and the nodes with algebraic equations, ComputeNodeJacobianAE and AppendLocalJacobianAE (the blocks of AddLocalJacobianAE by LocalJacobianAEBlocks) per thread, the bodies with algebraic equations and the constraints with Python functions serially; 2000 joints 2.44 / 0.34 ms for 1 / 8 threads; the test suite with 4 threads from one item on passes; test_systemJacobians.py parallel against serial for the constraints (dense, sparse); the cost per item evaluated, not implemented (RG9.11.5.3). [log](exudynRevisionLog2026c.md#rg9-11-5-2)
+
+##### **OPEN_RG9.11.5.3** Decide on #858, the split of the parallel tasks by a cost per item
+
+Design section 9: the tasks are 16 per thread of equal numbers of items, taken as threads become free; 90 % of the ideal at 8 threads for 2000 joints; ParallelFor's cost argument only switches small loops to serial, which the lower limits do. Proposed: close #858 as superseded.
 
 #### **CLOSED_RG9.11.6** The algebraic blocks on the same interface, the nodes with algebraic equations included, forAE for sparse matrices
 

@@ -63,6 +63,8 @@ public:
 	//these sparsetriplets are either filled directly or as a buffer, if the regular section in the global sparse matrix is full
 	SparseTripletVector sparseTriplets;		//!< used for temporary assembly of jacobian, mass matrix, etc.
 	ArrayIndex deferredObjects;				//!< the objects a thread leaves to the serial part, e.g. of the Jacobians (#3201)
+	ArrayIndex nodeLtgAE;					//!< the AE coordinates of a node with algebraic equations, as a local-to-global list (#3201)
+	ArrayIndex nodeLtgODE2;					//!< the ODE2 coordinates of that node (#3201)
 
 	MarkerDataStructure markerDataStructure;
 	MarkerTemp markerTemp[2];				//!< the two markers of a connector on the new path (#2745)

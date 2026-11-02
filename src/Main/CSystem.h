@@ -399,6 +399,15 @@ public:
 		const ArrayIndex& ltgODE1, bool usesVelocityLevel, JacobianType::Type filledJacobians, const JacobianAEFactors& factors,
 		GeneralMatrix& jacobianGM);
 
+	//! the same blocks appended as triplets, for the parallel assembly (#3201)
+	void AppendLocalJacobianAE(TemporaryComputationData& temp, const ArrayIndex& ltgAE, const ArrayIndex& ltgODE2,
+		const ArrayIndex& ltgODE1, bool usesVelocityLevel, JacobianType::Type filledJacobians, const JacobianAEFactors& factors,
+		SparseTripletVector& triplets);
+
+	//! the local AE Jacobian of node j into temp, its coordinates in temp.nodeLtgAE and temp.nodeLtgODE2; false if the
+	//! node has no algebraic equations (#3201)
+	bool ComputeNodeJacobianAE(Index j, TemporaryComputationData& temp, JacobianType::Type& filledJacobians);
+
 	//implemented direcly in JacobianAE
 	////!compute per-node jacobians for node j, providing TemporaryComputationData;
 	////! the jacobian computed in according temp structure

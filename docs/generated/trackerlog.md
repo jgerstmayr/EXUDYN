@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.306.dev1
+- Exudyn version = 1.13.307.dev1
 - last change = 2026-11-02
 - Number of issues = 3207
-- Number of resolved issues = 3083 (306 in current version)
+- Number of resolved issues = 3084 (307 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9309,10 +9309,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: consider mechanism to self-register items: objects, nodes, ...; same a swith TimerStructure registration; this allows to add user-defined objects without touching the overall code
   - **remarks:** planned as revision2026b step RG8.1 (triage 2026-10-07)
   - date raised: 2022-08-24
-- `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` parallel / multithreaded (#1202)
-  - description: C++: add multithreading for JacobianAE
-  - **remarks:** planned as revision2026c step RG9.11.5 (2026-11-01), part of the revision of the Jacobians \#3201; was RG5.3
-  - date raised: 2022-07-12
 - `EXTENSION` `MEDIUM EFF` generalizedAlpha scaling (#1194)
   - description: turn on/off scaling in interface to test symmetric solver speedup
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9389,7 +9385,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-01-13
 - `EXTENSION` `MEDIUM EFF` ParallelFor (#858)
   - description: use ParallelFor with costs argument in GeneralContact and CSystem, to optimize usage
-  - **remarks:** part of revision2026c step RG9.11.5 (2026-11-01), the cost per item of the parallel Jacobians of \#3201
+  - **remarks:** part of revision2026c step RG9.11.5 (2026-11-01), the cost per item of the parallel Jacobians of \#3201; Evaluated in revision2026c step RG9.11.5.2 (design docs/dev/design/systemJacobians.md section 9): the parallel Jacobians split into 16 tasks per thread of equal numbers of items, taken as threads become free, reach 90 % of the ideal at 8 threads for 2000 joints; ParallelFor's cost argument only switches small loops to serial, which the multithreadedLowerLimit settings do. Proposed: close as superseded (RG9.11.5.3).
   - date raised: 2022-01-13
 - `DOCU` `HIGH EFF` Jacobian documentation (#845)
   - description: add documentation to object and connector jacobians

@@ -868,55 +868,117 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 	cSystemData.GetCObjects()[j]->ComputeLocalJacobianAE(cSystemData, temp, objectUsesVelocityLevel, filledJacobians);
 }
 
-//! add the blocks of the local AE Jacobian in temp to the system Jacobian (#3201): the rows of the equations ltgAE by the
-//! ODE2 coordinates and velocities (ltgODE2) and the ODE1 (ltgODE1) and AE coordinates, the transposed blocks of the
-//! reaction forces in the ODE2 and ODE1 rows - dC/dq^T, or dC/dq_t^T at velocity level -, each with its factor; the part
-//! of dC/dq along the Euler parameters (temp.localJacobianAE_ODE2radial) in the rows of the equations only
+//! the blocks of the local AE Jacobian in temp (#3201), each given to Block(matrix, factor, rows, columns, rowOffset,
+//! columnOffset, transposed): the rows of the equations ltgAE by the ODE2 coordinates and velocities (ltgODE2) and the
+//! ODE1 (ltgODE1) and AE coordinates, the transposed blocks of the reaction forces in the ODE2 and ODE1 rows - dC/dq^T,
+//! or dC/dq_t^T at velocity level -, each with its factor; the part of dC/dq along the Euler parameters
+//! (temp.localJacobianAE_ODE2radial) in the rows of the equations only
+template<class TBlock>
+static void LocalJacobianAEBlocks(const TemporaryComputationData& temp, const ArrayIndex& ltgAE, const ArrayIndex& ltgODE2,
+	const ArrayIndex& ltgODE1, bool usesVelocityLevel, JacobianType::Type filledJacobians, const JacobianAEFactors& factors,
+	Index nODE2, Index offsetAE, TBlock Block)
+{
+	if (filledJacobians & JacobianType::AE_ODE2)
+	{
+		Block(temp.localJacobianAE_ODE2, factors.AE_ODE2, ltgAE, ltgODE2, offsetAE, 0, false);
+		if (temp.localJacobianAE_ODE2radial.NumberOfRows() != 0)
+		{
+			Block(temp.localJacobianAE_ODE2radial, factors.AE_ODE2, ltgAE, ltgODE2, offsetAE, 0, false);
+		}
+	}
+	if (filledJacobians & JacobianType::AE_ODE2_t) //velocity or mixed pos/vel constraints
+	{
+		Block(temp.localJacobianAE_ODE2_t, factors.AE_ODE2_t, ltgAE, ltgODE2, offsetAE, 0, false);
+	}
+
+	//the reaction forces: dC/dq^T, or dC_t/dq_t^T for a velocity-level constraint (e.g. a rolling wheel), only once
+	if ((filledJacobians & JacobianType::AE_ODE2) && !usesVelocityLevel)
+	{
+		Block(temp.localJacobianAE_ODE2, factors.ODE2_AE, ltgODE2, ltgAE, 0, offsetAE, true);
+	}
+	else if (filledJacobians & JacobianType::AE_ODE2_t)
+	{
+		Block(temp.localJacobianAE_ODE2_t, factors.ODE2_AE, ltgODE2, ltgAE, 0, offsetAE, true);
+	}
+	//nothing for pure algebraic constraints (e.g. a deactivated joint)
+
+	if (filledJacobians & JacobianType::AE_ODE1)
+	{
+		Block(temp.localJacobianAE_ODE1, factors.AE_ODE1, ltgAE, ltgODE1, offsetAE, nODE2, false);
+		Block(temp.localJacobianAE_ODE1, factors.ODE1_AE, ltgODE1, ltgAE, nODE2, offsetAE, true); //C_y^T in the ODE1 rows (#3143)
+	}
+	if (filledJacobians & JacobianType::AE_AE) //pure algebraic equations: only depend on their algebraic part
+	{
+		Block(temp.localJacobianAE_AE, factors.AE_AE, ltgAE, ltgAE, offsetAE, offsetAE, false);
+	}
+}
+
+//! add the blocks of the local AE Jacobian in temp to the system Jacobian (#3201, LocalJacobianAEBlocks)
 void CSystem::AddLocalJacobianAE(TemporaryComputationData& temp, const ArrayIndex& ltgAE, const ArrayIndex& ltgODE2,
 	const ArrayIndex& ltgODE1, bool usesVelocityLevel, JacobianType::Type filledJacobians, const JacobianAEFactors& factors,
 	GeneralMatrix& jacobianGM)
 {
 	const Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 	const Index offsetAE = nODE2 + cSystemData.GetNumberOfCoordinatesODE1(); //offset for algebraic equations in system jacobian
-	if (filledJacobians & JacobianType::AE_ODE2)
+	LocalJacobianAEBlocks(temp, ltgAE, ltgODE2, ltgODE1, usesVelocityLevel, filledJacobians, factors, nODE2, offsetAE,
+		[&jacobianGM](const ResizableMatrix& block, Real factor, const ArrayIndex& rows, const ArrayIndex& columns,
+			Index rowOffset, Index columnOffset, bool transposed)
 	{
-		jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE2, factors.AE_ODE2, ltgAE, ltgODE2, offsetAE);
-		if (temp.localJacobianAE_ODE2radial.NumberOfRows() != 0)
+		if (transposed) { jacobianGM.AddSubmatrixTransposed(block, factor, rows, columns, rowOffset, columnOffset); }
+		else { jacobianGM.AddSubmatrix(block, factor, rows, columns, rowOffset, columnOffset); }
+	});
+}
+
+//! append the blocks of the local AE Jacobian in temp as triplets of the system Jacobian, for the parallel assembly
+//! (#3201, LocalJacobianAEBlocks); a transposed block by its row r and column k as the entry (columns[k], rows[r])
+void CSystem::AppendLocalJacobianAE(TemporaryComputationData& temp, const ArrayIndex& ltgAE, const ArrayIndex& ltgODE2,
+	const ArrayIndex& ltgODE1, bool usesVelocityLevel, JacobianType::Type filledJacobians, const JacobianAEFactors& factors,
+	SparseTripletVector& triplets)
+{
+	const Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
+	const Index offsetAE = nODE2 + cSystemData.GetNumberOfCoordinatesODE1(); //offset for algebraic equations in system jacobian
+	LocalJacobianAEBlocks(temp, ltgAE, ltgODE2, ltgODE1, usesVelocityLevel, filledJacobians, factors, nODE2, offsetAE,
+		[&triplets](const ResizableMatrix& block, Real factor, const ArrayIndex& rows, const ArrayIndex& columns,
+			Index rowOffset, Index columnOffset, bool transposed)
+	{
+		for (Index r = 0; r < block.NumberOfRows(); r++)
 		{
-			jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE2radial, factors.AE_ODE2, ltgAE, ltgODE2, offsetAE);
+			for (Index k = 0; k < block.NumberOfColumns(); k++)
+			{
+				const Real value = block(r, k);
+				if (value == 0.) { continue; }
+				if (transposed) { triplets.AppendPure(SparseTriplet(rows[k] + rowOffset, columns[r] + columnOffset, factor * value)); }
+				else { triplets.AppendPure(SparseTriplet(rows[r] + rowOffset, columns[k] + columnOffset, factor * value)); }
+			}
 		}
-	}
-	if (filledJacobians & JacobianType::AE_ODE2_t) //velocity or mixed pos/vel constraints
-	{
-		jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE2_t, factors.AE_ODE2_t, ltgAE, ltgODE2, offsetAE);
-	}
+	});
+}
 
-	//the reaction forces: dC/dq^T, or dC_t/dq_t^T for a velocity-level constraint (e.g. a rolling wheel), only once
-	if ((filledJacobians & JacobianType::AE_ODE2) && !usesVelocityLevel)
-	{
-		jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2, factors.ODE2_AE, ltgODE2, ltgAE, 0, offsetAE);
-	}
-	else if (filledJacobians & JacobianType::AE_ODE2_t)
-	{
-		jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2_t, factors.ODE2_AE, ltgODE2, ltgAE, 0, offsetAE);
-	}
-	//nothing for pure algebraic constraints (e.g. a deactivated joint)
-
-	if (filledJacobians & JacobianType::AE_ODE1)
-	{
-		jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE1, factors.AE_ODE1, ltgAE, ltgODE1, offsetAE, nODE2);
-		jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE1, factors.ODE1_AE, ltgODE1, ltgAE, nODE2, offsetAE); //C_y^T in the ODE1 rows (#3143)
-	}
-	if (filledJacobians & JacobianType::AE_AE) //pure algebraic equations: only depend on their algebraic part
-	{
-		jacobianGM.AddSubmatrix(temp.localJacobianAE_AE, factors.AE_AE, ltgAE, ltgAE, offsetAE, offsetAE);
-	}
+//! the local AE Jacobian of node j into temp, its coordinates as local-to-global lists in temp.nodeLtgAE and
+//! temp.nodeLtgODE2 (#3201): the Euler parameter constraint; false if the node has no algebraic equations
+bool CSystem::ComputeNodeJacobianAE(Index j, TemporaryComputationData& temp, JacobianType::Type& filledJacobians)
+{
+	CNodeODE2& node = (CNodeODE2&)*(cSystemData.GetCNodes()[j]);
+	if (!node.GetAlgebraicEquationsSize()) { return false; }
+	node.ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE,
+		filledJacobians);
+	CHECKandTHROW(!(filledJacobians & (JacobianType::AE_ODE1 + JacobianType::AE_AE)),
+		"CSystem: JacobianAE(...): mode not implemented for node algebraic equations", ExudynNotImplementedError);
+	temp.nodeLtgAE.SetNumberOfItems(node.GetAlgebraicEquationsSize());
+	for (Index i = 0; i < temp.nodeLtgAE.NumberOfItems(); i++) { temp.nodeLtgAE[i] = node.GetGlobalAECoordinateIndex() + i; }
+	temp.nodeLtgODE2.SetNumberOfItems(node.GetNumberOfODE2Coordinates());
+	for (Index i = 0; i < temp.nodeLtgODE2.NumberOfItems(); i++) { temp.nodeLtgODE2[i] = node.GetGlobalODE2CoordinateIndex() + i; }
+	temp.localJacobianAE_ODE2radial.SetNumberOfRowsAndColumns(0, 0);
+	return true;
 }
 
 //! the Jacobian of the algebraic equations (#3201): with doSystemWideDifferentiation numerically, else the local
 //! Jacobians of the objects with algebraic equations and of the nodes with them (the Euler parameter constraint), each
-//! computed into temp and added (AddLocalJacobianAE); the factors scale the blocks of the equations by the ODE2, ODE2_t,
-//! ODE1 and AE coordinates and the transposed blocks of the reaction forces; velocityLevel is not implemented
+//! computed into temp and added (AddLocalJacobianAE); with several threads and multithreadedLowerLimitJacobians of them,
+//! those of the constraints without Python functions and of the nodes in parallel as triplets per thread, the bodies
+//! with algebraic equations and the constraints with Python functions serially (#1202); the factors scale the blocks of
+//! the equations by the ODE2, ODE2_t, ODE1 and AE coordinates and the transposed blocks of the reaction forces;
+//! velocityLevel is not implemented
 void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonSettings& newton, GeneralMatrix& jacobianGM,
 	Real factorAE_ODE2, Real factorAE_ODE2_t, Real factorAE_ODE1, bool velocityLevel, Real factorODE2_AE, Real factorODE1_AE, Real factorAE_AE)
 {
@@ -930,30 +992,58 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 	if (velocityLevel) { CHECKandTHROWstring("CSystem::JacobianAE_ODE2: velocityLevel=true not implemented", ExudynNotImplementedError); }
 
 	const JacobianAEFactors factors = { factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, factorAE_AE, factorODE2_AE, factorODE1_AE };
+	const ArrayIndex noODE1; //nodes have no ODE1 coordinates
 	bool usesVelocityLevel;
 	JacobianType::Type filledJacobians;
-	for (Index j : cSystemData.objectsWithAlgebraicEquations) //bodies with algebraic equations and constraints
+	auto ComputeAndAddObject = [&](Index j)
 	{
 		ComputeObjectJacobianAE(j, temp, usesVelocityLevel, filledJacobians);
 		AddLocalJacobianAE(temp, cSystemData.GetLocalToGlobalAE()[j], cSystemData.GetLocalToGlobalODE2()[j], //with duplicates, as no numerical differentiation
 			cSystemData.GetLocalToGlobalODE1()[j], usesVelocityLevel, filledJacobians, factors, jacobianGM);
+	};
+
+	const ArrayIndex& constraints = cSystemData.objectsConstraintWithAENoUF;
+	const Index nConstraints = constraints.NumberOfItems();
+	const Index nItems = nConstraints + cSystemData.nodesODE2WithAE.NumberOfItems();
+	const Index nThreads = ExuThreading::TaskManager::GetNumThreads();
+	if (nThreads > 1 && nItems >= solverData.multithreadedLowerLimitJacobians)
+	{
+		outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
+		tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
+		for (Index i = 0; i < nThreads; i++) { tempArray[i].sparseTriplets.SetNumberOfItems(0); }
+		ExuThreading::ParallelFor(nItems, [this, &tempArray, &constraints, nConstraints, &factors, &noODE1](ParallelSizeType i)
+		{
+			TemporaryComputationData& threadTemp = tempArray[ExuThreading::TaskManager::GetThreadId()];
+			bool threadUsesVelocityLevel;
+			JacobianType::Type threadFilledJacobians;
+			if ((Index)i < nConstraints)
+			{
+				const Index j = constraints[(Index)i];
+				ComputeObjectJacobianAE(j, threadTemp, threadUsesVelocityLevel, threadFilledJacobians);
+				AppendLocalJacobianAE(threadTemp, cSystemData.GetLocalToGlobalAE()[j], cSystemData.GetLocalToGlobalODE2()[j],
+					cSystemData.GetLocalToGlobalODE1()[j], threadUsesVelocityLevel, threadFilledJacobians, factors, threadTemp.sparseTriplets);
+			}
+			else if (ComputeNodeJacobianAE(cSystemData.nodesODE2WithAE[(Index)i - nConstraints], threadTemp, threadFilledJacobians))
+			{
+				AppendLocalJacobianAE(threadTemp, threadTemp.nodeLtgAE, threadTemp.nodeLtgODE2, noODE1, false, threadFilledJacobians,
+					factors, threadTemp.sparseTriplets);
+			}
+		}, GetTaskSplit(nItems, nThreads));
+		outputBuffer.SetSuspendWriting(false);
+
+		for (Index i = 0; i < nThreads; i++) { jacobianGM.AddSparseTriplets(tempArray[i].sparseTriplets); }
+		for (Index j : cSystemData.objectsBodyWithAE) { ComputeAndAddObject(j); }
+		for (Index j : cSystemData.objectsConstraintWithAEUF) { ComputeAndAddObject(j); }
+		return;
 	}
 
-	ArrayIndex ltgAE, ltgODE2, noODE1; //the coordinates of a node with algebraic equations, as local-to-global lists
+	for (Index j : cSystemData.objectsWithAlgebraicEquations) { ComputeAndAddObject(j); } //bodies with algebraic equations and constraints
 	for (Index j : cSystemData.nodesODE2WithAE) //the Euler parameter constraint
 	{
-		CNodeODE2& node = (CNodeODE2&)*(cSystemData.GetCNodes()[j]);
-		if (!node.GetAlgebraicEquationsSize()) { continue; }
-		node.ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE,
-			filledJacobians);
-		CHECKandTHROW(!(filledJacobians & (JacobianType::AE_ODE1 + JacobianType::AE_AE)),
-			"CSystem: JacobianAE(...): mode not implemented for node algebraic equations", ExudynNotImplementedError);
-		ltgAE.SetNumberOfItems(node.GetAlgebraicEquationsSize());
-		for (Index i = 0; i < ltgAE.NumberOfItems(); i++) { ltgAE[i] = node.GetGlobalAECoordinateIndex() + i; }
-		ltgODE2.SetNumberOfItems(node.GetNumberOfODE2Coordinates());
-		for (Index i = 0; i < ltgODE2.NumberOfItems(); i++) { ltgODE2[i] = node.GetGlobalODE2CoordinateIndex() + i; }
-		temp.localJacobianAE_ODE2radial.SetNumberOfRowsAndColumns(0, 0);
-		AddLocalJacobianAE(temp, ltgAE, ltgODE2, noODE1, false, filledJacobians, factors, jacobianGM);
+		if (ComputeNodeJacobianAE(j, temp, filledJacobians))
+		{
+			AddLocalJacobianAE(temp, temp.nodeLtgAE, temp.nodeLtgODE2, noODE1, false, filledJacobians, factors, jacobianGM);
+		}
 	}
 }
 

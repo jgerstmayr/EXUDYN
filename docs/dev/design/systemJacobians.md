@@ -112,7 +112,7 @@ instead of its nodes; not proposed.
 2. **The assembly of the local Jacobians**:
    - `listJacobianParallel`: analytic or automatic, no Python function - computed in `ParallelFor` with one
      `TemporaryComputationData` and one triplet list per thread, appended serially as for the mass matrix (#1203,
-     #1202; the split of the tasks by a cost per object, #858);
+     #1202; the tasks by equal numbers of items, section 9);
    - `listJacobianSerial`: a Python function, the numerical default, and the objects declaring dependencies outside
      their lists - computed serially after the parallel part, as the residuals do.
 
@@ -404,3 +404,24 @@ Euler parameter node, so the AD and the rigid nodes cover them.
   connectors with Python user functions.
 - Newton iterations as before (hydraulicActuatorSimpleTest 962, rigidBodySpringDamperIntrinsic 4115), the results
   within 3e-11.
+
+## 9. The parallel assembly (RG9.11.5)
+
+- The ODE2 rows (RG9.11.5.1, #1203): `listComputeObjectODE2LhsNoUF` in `ParallelFor`, ComputeLocalJacobianODE2 with
+  `analyticOnly` and AppendLocalJacobianODE2 per thread; the objects that need a numerical block (deferred) and those
+  with Python functions serially.
+- The AE rows (RG9.11.5.2, #1202): `objectsConstraintWithAENoUF` and `nodesODE2WithAE` in one `ParallelFor`,
+  ComputeObjectJacobianAE or ComputeNodeJacobianAE and AppendLocalJacobianAE per thread (the blocks of
+  AddLocalJacobianAE, `LocalJacobianAEBlocks`, as triplets); the bodies with algebraic equations (ObjectGenericDAE,
+  which may have Python functions) and the constraints with Python functions serially.
+- Both above `parallel.multithreadedLowerLimitJacobians` items (default 20), split by `GetTaskSplit` into
+  `taskSplitTasksPerThread` (16) tasks per thread of equal numbers of items, which the task manager hands to the
+  threads as they become free.
+- A chain of rigid bodies on Euler parameters with alternating revolute and spherical joints, sparse: 2000 joints
+  (4000 items with the nodes) 2.44 / 1.26 / 0.65 / 0.34 ms for 1 / 2 / 4 / 8 threads, 90 % of the ideal at 8 threads;
+  20 joints 0.03 / 0.01 ms for 1 / 8 threads, no loss at the default limit. The test suite with 4 threads and the limit
+  1 passes.
+- A split by a cost per item (#858) is not implemented: at 16 tasks per thread taken as threads become free, items of
+  different cost even out unless a single task exceeds the share of a thread; `ParallelFor`'s own cost argument only
+  switches small loops to serial, which the lower limits do. The ODE2 rows of the rigid bodies on Euler parameters
+  are numerical and serial (1.6 ms for the 2000 bodies, against 0.34 ms for their constraints at 8 threads).

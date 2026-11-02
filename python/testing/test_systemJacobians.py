@@ -8,8 +8,8 @@
 #           JacobianODE2RHS and JacobianODE1RHS by the local Jacobians (analytic, automatic or numerical per object)
 #           against doSystemWideDifferentiation, and the
 #           constraint Jacobian of JacobianAE - the joints, and the Euler parameter constraint of the nodes - against
-#           doSystemWideDifferentiation, dense and sparse; the parallel assembly of the ODE2 rows against the serial one,
-#           dense and sparse (#1203). At zero velocities, where the automatic connector
+#           doSystemWideDifferentiation, dense and sparse; the parallel assembly of the ODE2 rows and of the constraint
+#           Jacobian against the serial one, dense and sparse (#1203, #1202). At zero velocities, where the automatic connector
 #           Jacobians neglect nothing (dv/dq), on Tait-Bryan angles and on Euler parameters, whose rotation matrix the
 #           local Jacobians differentiate also along e (CMarker::GetRadialKinematics); the contacts with friction and the
 #           rolling disc, whose Jacobians contain dv/dq, also at velocities. The
@@ -256,5 +256,14 @@ def test_theParallelODE2JacobianIsTheSerialOne(model, sparse):
     factors = (0.7, 0.3, 0.5)
     serial = Jacobian(model, ODE2(factors), sparse=sparse)
     parallel = Jacobian(model, ODE2(factors), threads=4, sparse=sparse)
+    assert np.max(np.abs(serial)) > 0
+    assert Difference(parallel, serial) < 1e-14, (model, sparse, Difference(parallel, serial))
+
+
+@pytest.mark.parametrize('model', ['Joints', 'JointsEP', 'EulerParameters'])
+@pytest.mark.parametrize('sparse', [False, True])
+def test_theParallelConstraintJacobianIsTheSerialOne(model, sparse):
+    serial = Jacobian(model, AE, sparse=sparse)
+    parallel = Jacobian(model, AE, threads=4, sparse=sparse)
     assert np.max(np.abs(serial)) > 0
     assert Difference(parallel, serial) < 1e-14, (model, sparse, Difference(parallel, serial))

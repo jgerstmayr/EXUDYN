@@ -5583,3 +5583,20 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - test_systemJacobians.py: a model of a hydraulic actuator lifting an Euler parameter body, valves open, chamber volume
   change on, in the ODE2 and ODE1 comparisons; RigidBodies has had an intrinsic one, now on the local Jacobian (71
   cases). Newton statistics: the same for both test models, symbolicUserConnectorsTest 2309 / 2368.
+
+<a id="rg9-11-5-2"></a>
+### RG9.11.5.2 — The AE rows in parallel (2026-11-02, #1202, #858)
+- CSystemJacobians.cpp: `LocalJacobianAEBlocks` (a template over the blocks of the local AE Jacobian, given to a
+  functor), AddLocalJacobianAE and the new AppendLocalJacobianAE on it; `ComputeNodeJacobianAE` (the node block and
+  its local-to-global lists in `temp.nodeLtgAE`, `temp.nodeLtgODE2`); JacobianAE in parallel above
+  multithreadedLowerLimitJacobians over objectsConstraintWithAENoUF and nodesODE2WithAE, then objectsBodyWithAE and
+  objectsConstraintWithAEUF serially; the serial path as before.
+- The reaction forces are computed in parallel through ComputeObjectJacobianAE, so the constraints'
+  local Jacobians are thread-safe.
+- Measured (scratchpad benchAE.py, a chain of rigid bodies with alternating revolute and spherical joints, sparse):
+  2000 joints 2.44 / 1.26 / 0.65 / 0.34 ms for 1 / 2 / 4 / 8 threads; 200: 0.24 / 0.04; 20: 0.03 / 0.01. The ODE2 rows
+  of the same model, 1.6 ms, stay serial: the rigid bodies on Euler parameters differentiate numerically.
+- threadsSuite.py (the test suite with 4 threads and every lower limit 1, multithreadedLowerLimitJacobians added): all
+  353 test models and mini examples ok. test_systemJacobians.py: the constraint Jacobian in parallel against the
+  serial one for Joints, JointsEP and EulerParameters, dense and sparse (77 cases).
+- The cost per item (#858): not implemented, see design section 9; RG9.11.5.3 asks for the decision.

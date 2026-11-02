@@ -1,0 +1,16 @@
+{
+  "number": 1202,
+  "title": "parallel / multithreaded",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "C++: add multithreading for JacobianAE",
+  "dateRaised": "2022-07-12",
+  "deadline": "2022-09-10",
+  "dateResolved": "2026-11-02 02:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "With several threads (parallel.numberOfThreads), the Jacobian of the algebraic equations of the constraints without Python user functions and of the Euler parameter nodes is computed in parallel, once the system has parallel.multithreadedLowerLimitJacobians of them; 2000 joints take 0.34 instead of 2.44 ms per Jacobian with 8 threads.",
+  "resolvedInVersion": "1.13.307"
+}

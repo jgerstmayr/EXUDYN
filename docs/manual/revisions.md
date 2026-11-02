@@ -81,7 +81,9 @@ formulation recorded once (#3203).
 With several threads (`parallel.numberOfThreads`), the implicit and static solvers compute the analytic and automatic
 Jacobians of the ODE2 equations of the objects without Python user functions in parallel, once the system has
 `parallel.multithreadedLowerLimitJacobians` of them; an ANCF cable of 2000 elements takes 4.6 instead of 20.9 ms per
-Jacobian with 8 threads (#1203).
+Jacobian with 8 threads (#1203). The Jacobian of the algebraic equations of the constraints without Python user
+functions and of the Euler parameter nodes is computed in parallel too; 2000 joints take 0.34 instead of 2.44 ms with
+8 threads (#1202).
 `newton.numericalDifferentiation.doSystemWideDifferentiation` computes the whole Jacobian numerically, the algebraic
 equations included, for dense and sparse matrices; `forAE`, `forODE2` and `forODE2Connectors` are deprecated and have no
 effect - each object provides its Jacobian, analytic, automatic or numerical by its own coordinates. A model that set

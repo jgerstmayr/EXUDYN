@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 298 | 1.13.306 |
+| 1.13 | Newborn | 299 | 1.13.307 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.307** `EXTENSION` `HIGH` `MEDIUM EFF` `resolved by: Claude-JG` parallel / multithreaded (#1202)
+  - description: C++: add multithreading for JacobianAE
+  - **notes:** With several threads (parallel.numberOfThreads), the Jacobian of the algebraic equations of the constraints without Python user functions and of the Euler parameter nodes is computed in parallel, once the system has parallel.multithreadedLowerLimitJacobians of them; 2000 joints take 0.34 instead of 2.44 ms per Jacobian with 8 threads.
+  - date resolved: **2026-11-02 02:25**, date raised: 2022-07-12
 - **1.13.306** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` doSystemWideDifferentiation: the reaction-force block of the algebraic equations without the factors of the solver and with dC/dq^T along the Euler parameters (#3206)
   - description: With doSystemWideDifferentiation, NumericalJacobianAE added the block of the reaction forces in the ODE2 rows as dC/dq^T with the factor 1: JacobianAE did not pass factorODE2\_AE, factorODE1\_AE and factorAE\_AE of the solver, and dC/dq contains a part along the Euler parameters that the reaction forces of the residual - projected by the marker Jacobians - do not have. restartFileTest and userJointTest failed with it. Decided: the factors are passed; the block is the reaction forces of the unit Lagrange multipliers, the derivative the residual has (revision2026c step RG9.11.8.5).
   - **notes:** numericalDifferentiation.doSystemWideDifferentiation: the block of the reaction forces of the algebraic equations is differentiated by the Lagrange multipliers and takes the factors of the solver; with joints on rigid bodies with Euler parameters its Newton iterations could fail.
