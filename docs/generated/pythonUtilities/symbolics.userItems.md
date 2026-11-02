@@ -161,7 +161,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
   - `initialAngularVelocity`: as in mbs.CreateRigidBody
   - `initialDisplacement`: as in mbs.CreateRigidBody
   - `initialRotationMatrix`: as in mbs.CreateRigidBody
-  - `inertia`: as in mbs.CreateRigidBody; its mass, inertia about the node and center of mass are the parameters of the user body
+  - `inertia`: as in mbs.CreateRigidBody; its mass, inertia about the node and center of mass are the parameters of the user body, also as expressions of named variables of the model, e.g. InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1]) with rho and L of mbs.symbolicVariables, kept in parameterBindings (#3159)
   - `gravity`: as in mbs.CreateRigidBody
   - `nodeType`: exu.NodeType.RotationRxyz; the default RotationEulerParameters is refused (the user body does not give the algebraic equation of the Euler parameters), RotationRotationVector too (a Lie group node)
   - `graphicsDataList`: as in mbs.CreateRigidBody, the graphicsData of the user body; empty: the graphics of inertia
@@ -179,7 +179,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createspringdamper)=
 ### Class function: CreateSpringDamper
 
-[`CreateSpringDamper(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], referenceLength = None, stiffness = 0., damping = 0., force = 0., velocityOffset = 0., springForceUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L758)
+[`CreateSpringDamper(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], referenceLength = None, stiffness = 0., damping = 0., force = 0., velocityOffset = 0., springForceUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L760)
 
 - **class function description**: a spring-damper as ObjectConnectorUser on the markers of mbs.CreateSpringDamper, with its arguments and its force; at the center of a user mass point the marker is on its node, which has the same position; drawn by a graphicsDataUserFunction
 - **input**:
@@ -204,7 +204,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createspherespherecontact)=
 ### Class function: CreateSphereSphereContact
 
-[`CreateSphereSphereContact(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], spheresRadii = [-1, -1], isHollowSphere1 = False, dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1, constantPullOffForce = 0, contactPlasticityRatio = 0, adhesionCoefficient = 0, adhesionExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = 0, dataInitialCoordinates = [0, 0, 0, 0], activeConnector = True, show = False, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L813)
+[`CreateSphereSphereContact(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], spheresRadii = [-1, -1], isHollowSphere1 = False, dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1, constantPullOffForce = 0, contactPlasticityRatio = 0, adhesionCoefficient = 0, adhesionExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = 0, dataInitialCoordinates = [0, 0, 0, 0], activeConnector = True, show = False, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L815)
 
 - **class function description**: a sphere-sphere contact as ObjectConnectorUser on the markers of mbs.CreateSphereSphereContact, with the normal force of ObjectContactSphereSphere, k delta - d dg/dt, with impactModel 1 or 2 the damping of the restitution coefficient - the model 2 is the recommended one -, and with dynamicFriction the friction of the built-in contact, regularized below frictionProportionalZone (#3219); switched as the built-in contact by the data node in the post-Newton step - contact and no contact, stick and slip -, which is recorded as the force (#3187, #3197); drawn as two spheres by a graphicsDataUserFunction
 - **input**:
@@ -238,7 +238,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createtorsionalspringdamper)=
 ### Class function: CreateTorsionalSpringDamper
 
-[`CreateTorsionalSpringDamper(self, name = '', itemNumbers = [None, None], position = [0., 0., 0.], axis = [0., 0., 0.], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., torque = 0., useGlobalFrame = True, springTorqueUserFunction = 0, unlimitedRotations = True, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L920)
+[`CreateTorsionalSpringDamper(self, name = '', itemNumbers = [None, None], position = [0., 0., 0.], axis = [0., 0., 0.], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., torque = 0., useGlobalFrame = True, springTorqueUserFunction = 0, unlimitedRotations = True, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L922)
 
 - **class function description**: a torsional spring-damper as ObjectConnectorUser on the rigid markers of mbs.CreateTorsionalSpringDamper, with its arguments and its torque about the axis; with unlimitedRotations, the angle continues over the turns by a data node that the post-Newton step updates, as the built-in item (#3218); drawn by a graphicsDataUserFunction
 - **input**:
@@ -265,7 +265,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createcartesianspringdamper)=
 ### Class function: CreateCartesianSpringDamper
 
-[`CreateCartesianSpringDamper(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], stiffness = [0., 0., 0.], damping = [0., 0., 0.], offset = [0., 0., 0.], springForceUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1020)
+[`CreateCartesianSpringDamper(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], stiffness = [0., 0., 0.], damping = [0., 0., 0.], offset = [0., 0., 0.], springForceUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1022)
 
 - **class function description**: a Cartesian spring-damper as ObjectConnectorUser on the position markers of mbs.CreateCartesianSpringDamper, with its arguments and the force of ObjectConnectorCartesianSpringDamper; drawn as a line (#3193)
 - **input**:
@@ -288,7 +288,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createrigidbodyspringdamper)=
 ### Class function: CreateRigidBodySpringDamper
 
-[`CreateRigidBodySpringDamper(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], stiffness = np.zeros((6, 6)), damping = np.zeros((6, 6)), offset = [0., 0., 0., 0., 0., 0.], rotationMatrixJoint = np.eye(3), useGlobalFrame = True, useIntrinsicFormulation = True, springForceTorqueUserFunction = 0, postNewtonStepUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default, intrinsicFormulation = None, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1059)
+[`CreateRigidBodySpringDamper(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], stiffness = np.zeros((6, 6)), damping = np.zeros((6, 6)), offset = [0., 0., 0., 0., 0., 0.], rotationMatrixJoint = np.eye(3), useGlobalFrame = True, useIntrinsicFormulation = True, springForceTorqueUserFunction = 0, postNewtonStepUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default, intrinsicFormulation = None, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1061)
 
 - **class function description**: a rigid-body spring-damper as ObjectConnectorUser on the rigid markers of mbs.CreateRigidBodySpringDamper, with its arguments and the forces and torques of ObjectConnectorRigidBodySpringDamper in both formulations - the intrinsic one by the logarithm on SE(3) of the relative frame, the other by the Tait-Bryan angles of the relative rotation -; the joint rotations are parameters of the connector; drawn as a line (#3193)
 - **input**:
@@ -316,7 +316,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createcoordinateconstraint)=
 ### Class function: CreateCoordinateConstraint
 
-[`CreateCoordinateConstraint(self, name = '', itemNumbers = [None, None], coordinates = [None, None], offset = 0., factor1 = 1., velocityLevel = False, offsetUserFunction = 0, offsetUserFunction_t = 0, show = True, drawSize = -1., color = exudyn.graphics.color.default, includeReferenceCoordinates = [False, False], factorValue1 = None, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1124)
+[`CreateCoordinateConstraint(self, name = '', itemNumbers = [None, None], coordinates = [None, None], offset = 0., factor1 = 1., velocityLevel = False, offsetUserFunction = 0, offsetUserFunction_t = 0, show = True, drawSize = -1., color = exudyn.graphics.color.default, includeReferenceCoordinates = [False, False], factorValue1 = None, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1126)
 
 - **class function description**: a coordinate constraint as ObjectGenericDAE with the equation of ObjectConnectorCoordinate, factor1 q1 - q0 - offset = 0, on the coordinates of mbs.CreateCoordinateConstraint: the nodes of the coordinates are its ODE2 nodes, a NodeGenericAE its multiplier, the equation its constraintMatrixODE2 and constraintVector (#3193)
 - **input**:
@@ -341,7 +341,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createrevolutejoint)=
 ### Class function: CreateRevoluteJoint
 
-[`CreateRevoluteJoint(self, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1197)
+[`CreateRevoluteJoint(self, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1199)
 
 - **class function description**: a revolute joint as ObjectJointUser on the rigid markers of mbs.CreateRevoluteJoint, with its arguments and the equations of ObjectJointRevoluteZ; drawn as a cylinder along the axis (#3147)
 - **input**:
@@ -362,7 +362,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createprismaticjoint)=
 ### Class function: CreatePrismaticJoint
 
-[`CreatePrismaticJoint(self, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1224)
+[`CreatePrismaticJoint(self, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1226)
 
 - **class function description**: a prismatic joint as ObjectJointUser on the rigid markers of mbs.CreatePrismaticJoint, with its arguments and the equations of ObjectJointPrismaticX; drawn as a cylinder along the axis (#3147)
 - **input**:
@@ -383,7 +383,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createsphericaljoint)=
 ### Class function: CreateSphericalJoint
 
-[`CreateSphericalJoint(self, name = '', itemNumbers = [None, None], position = [], constrainedAxes = [1, 1, 1], useGlobalFrame = True, show = True, jointRadius = 0.1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1251)
+[`CreateSphericalJoint(self, name = '', itemNumbers = [None, None], position = [], constrainedAxes = [1, 1, 1], useGlobalFrame = True, show = True, jointRadius = 0.1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1253)
 
 - **class function description**: a spherical joint as ObjectJointUser on rigid markers at the points of mbs.CreateSphericalJoint, with its arguments and the equations of ObjectJointSpherical; drawn as a sphere (#3147)
 - **input**:
@@ -403,7 +403,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createdistanceconstraint)=
 ### Class function: CreateDistanceConstraint
 
-[`CreateDistanceConstraint(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], distance = None, show = True, drawSize = -1., color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1280)
+[`CreateDistanceConstraint(self, name = '', itemNumbers = [None, None], localPosition0 = [0., 0., 0.], localPosition1 = [0., 0., 0.], distance = None, show = True, drawSize = -1., color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1282)
 
 - **class function description**: a distance constraint as ObjectJointUser on rigid markers of the two bodies, with the arguments of mbs.CreateDistanceConstraint and the equation of ObjectConnectorDistance; on a user mass point the marker is on the body; drawn as a line between the markers (#3147)
 - **input**:
@@ -423,7 +423,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createforce)=
 ### Class function: CreateForce
 
-[`CreateForce(self, name = '', itemNumber = None, loadVector = [0., 0., 0.], localPosition = [0., 0., 0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1318)
+[`CreateForce(self, name = '', itemNumber = None, loadVector = [0., 0., 0.], localPosition = [0., 0., 0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1320)
 
 - **class function description**: the built-in LoadForceVector of mbs.CreateForce, with its arguments: on a user mass point, its marker acts by the Jacobian of the user body
 - **input**:
@@ -441,7 +441,7 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-createtorque)=
 ### Class function: CreateTorque
 
-[`CreateTorque(self, name = '', itemNumber = None, loadVector = [0., 0., 0.], localPosition = [0., 0., 0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1343)
+[`CreateTorque(self, name = '', itemNumber = None, loadVector = [0., 0., 0.], localPosition = [0., 0., 0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1345)
 
 - **class function description**: the built-in LoadTorqueVector of mbs.CreateTorque, with its arguments: on a user rigid body, its marker acts by the rotation Jacobian of the user body (#3193)
 - **input**:
@@ -459,9 +459,9 @@ SymbolicSystem(mbs, parameters=creator.parameterBindings) (#3152, #3159).
 (sec-useritems-useritemcreator-record)=
 ### Class function: Record
 
-[`Record(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1368)
+[`Record(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L1370)
 
 - **class function description**: replace the Python user functions of the items by symbolic ones: each user function of a kind recorded once, with the first item of the kind, and set in every item of the kind - one recording per kind and variant, as SymbolicSystem groups them -; the loadVectorUserFunction of each force of CreateForce recorded on its own. The recordings are kept in recordings, as long as this object lives
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSystemRigidBodyPendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicSystemRigidBodyPendulum.py) (Ex), [`symbolicGeneralizedAlphaTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicGeneralizedAlphaTest.py) (TM), [`symbolicMassMatrixDerivativeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicMassMatrixDerivativeTest.py) (TM), [`symbolicSolversAdaptiveStepTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSolversAdaptiveStepTest.py) (TM), [`symbolicSystemEquationsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemEquationsTest.py) (TM), [`symbolicSystemItemJacobiansTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemItemJacobiansTest.py) (TM), [`symbolicSystemJointsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemJointsTest.py) (TM), [`symbolicSystemParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemParametersTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSystemRigidBodyPendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicSystemRigidBodyPendulum.py) (Ex), [`symbolicGeneralizedAlphaTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicGeneralizedAlphaTest.py) (TM), [`symbolicMassMatrixDerivativeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicMassMatrixDerivativeTest.py) (TM), [`symbolicRigidBodyInertiaTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicRigidBodyInertiaTest.py) (TM), [`symbolicSolversAdaptiveStepTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSolversAdaptiveStepTest.py) (TM), [`symbolicSystemEquationsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemEquationsTest.py) (TM), [`symbolicSystemItemJacobiansTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemItemJacobiansTest.py) (TM), [`symbolicSystemJointsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemJointsTest.py) (TM), ...

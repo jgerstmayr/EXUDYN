@@ -824,6 +824,53 @@ class TreeLink:
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the inertia with numbers or with exudyn.symbolic values (#3159): symbolic values are kept as numpy arrays of
+#exudyn.symbolic.Real components, so that every component is an expression of the named variables, and the products are
+#formed component by component - an operation of a number array with a symbolic Real gives an esym.Matrix otherwise
+def _IsSymbolic(x):
+    """true, if x or one of its components is an exudyn.symbolic value"""
+    if isinstance(x, (exu.symbolic.Real, exu.symbolic.Vector, exu.symbolic.Matrix)):
+        return True
+    if isinstance(x, np.ndarray):
+        return x.dtype == object and any(isinstance(v, exu.symbolic.Real) for v in x.flat)
+    if isinstance(x, (list, tuple)):
+        return any(_IsSymbolic(v) for v in x)
+    return False
+
+def _InertiaArray(x):
+    """a float array of numbers, or an object array of the components of symbolic values"""
+    if isinstance(x, exu.symbolic.Matrix):
+        return np.array([[x.Get(i, j) for j in range(x.NumberOfColumns())] for i in range(x.NumberOfRows())], dtype=object)
+    if isinstance(x, exu.symbolic.Vector):
+        return np.array([x[i] for i in range(len(x))], dtype=object)
+    if _IsSymbolic(x):
+        return np.array([_InertiaArray(v) if isinstance(v, (list, tuple, np.ndarray)) else v for v in x], dtype=object)
+    return np.array(x, dtype=float)
+
+def _Scaled(factor, x):
+    """factor times the array x, component by component for symbolic values"""
+    x = _InertiaArray(x)
+    if not (_IsSymbolic(factor) or _IsSymbolic(x)):
+        return factor*x
+    return np.array([factor*v for v in x.flat], dtype=object).reshape(x.shape)
+
+def _Numbers(x):
+    """the values of numbers or symbolic values, for the checks and the drawing"""
+    if isinstance(x, exu.symbolic.Real):
+        return x.Evaluate()
+    if isinstance(x, (list, tuple, np.ndarray)):
+        return np.array([_Numbers(v) for v in x], dtype=float) if np.ndim(x) <= 1 else np.array([_Numbers(v) for v in x], dtype=float)
+    return x
+
+def _ParallelAxis(mass, com):
+    """mass Skew(com)^T Skew(com), the term of the parallel axis theorem"""
+    if not (_IsSymbolic(mass) or _IsSymbolic(com)):
+        return mass*np.dot(Skew(com).transpose(), Skew(com))
+    c = _InertiaArray(com)
+    S = np.array([[0, -c[2], c[1]], [c[2], 0, -c[0]], [-c[1], c[0], 0]], dtype=object)
+    return _Scaled(mass, np.dot(S.transpose(), S))
+
+
 class RigidBodyInertia:
     """helper class for rigid body inertia (see also derived classes Inertia...).
     Provides a structure to define mass, inertia and center of mass (COM) of a rigid body.
@@ -831,6 +878,7 @@ class RigidBodyInertia:
 
     Note:
         in the default mode, inertiaTensorAtCOM = False, the inertia tensor must be provided with respect to the reference point; otherwise, it is given at COM; internally, the inertia tensor is always with respect to the reference point, not w.r.t. to COM!
+        The mass, the inertia tensor and the center of mass may be exudyn.symbolic values - expressions of named variables, e.g. of mbs.symbolicVariables -, also through the shapes, InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1]); the inertia tensor and the center of mass are then numpy arrays of exudyn.symbolic.Real, their checks use the present values (#3159)
 
     Example:
         i0 = RigidBodyInertia(10,np.diag([1,2,3]))
@@ -849,10 +897,12 @@ class RigidBodyInertia:
         
         if not isinstance(inertiaTensorAtCOM, bool) and not isinstance(inertiaTensorAtCOM, int): 
             raise ValueError('RigidBodyInertia: inertiaTensorAtCOM must be bool or int (0/1), but received '+str(inertiaTensorAtCOM))
-        if np.array(inertiaTensor).shape != (3,3): #shape is a tuple
+        inertiaTensor = _InertiaArray(inertiaTensor) #numbers, or the components of symbolic values (#3159)
+        com = _InertiaArray(com)
+        if inertiaTensor.shape != (3,3): #shape is a tuple
             raise ValueError('RigidBodyInertia: inertiaTensor must have shape (3,3), but received '+str(inertiaTensor.shape))
-        if np.array(com).shape != (3,): #shape is a tuple
-            raise ValueError('RigidBodyInertia: com must have 3 components, but received '+str(np.array(inertiaTensor).shape))
+        if com.shape != (3,): #shape is a tuple
+            raise ValueError('RigidBodyInertia: com must have 3 components, but received '+str(com.shape))
 
         #default values for graphics
         self._nTilesGraphics = 16       #for spheres; for cylinders factor is multiplied by 2
@@ -860,25 +910,26 @@ class RigidBodyInertia:
 
         self.data = {'type':'RigidBodyInertia'} #special data, like radius, etc. (used for drawing)
         
-        #further checks if inertia tensor makes sense...
-        Ix = inertiaTensor[0,0]
-        Iy = inertiaTensor[1,1]
-        Iz = inertiaTensor[2,2]
+        #further checks if inertia tensor makes sense, with the present values of symbolic ones...
+        inertiaValues = _Numbers(inertiaTensor)
+        Ix = inertiaValues[0,0]
+        Iy = inertiaValues[1,1]
+        Iz = inertiaValues[2,2]
         if (Ix + Iy < Iz) or (Ix + Iz < Iy) or (Iy + Iz < Ix):
             exu.Print('WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!')
         if (Ix + Iy < Iz) or (Ix + Iz < Iy) or (Iy + Iz < Ix):
             exu.Print('WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!')
 
-        norm = cMath.norm(inertiaTensor)
+        norm = cMath.norm(inertiaValues)
         if norm != 0: #in case of mass point, this shall be possible
-            if cMath.norm(inertiaTensor - inertiaTensor.T)/norm > 1e-14:
+            if cMath.norm(inertiaValues - inertiaValues.T)/norm > 1e-14:
                 exu.Print('WARNING: RigidBodyInertia: inertiaTensor seems to be unsymmetric; This may lead to unphysical and numerically unstable results!')
             
         self.mass = mass
-        self.inertiaTensor = np.array(inertiaTensor)
-        self.com = np.array(com)
+        self.inertiaTensor = inertiaTensor
+        self.com = com
         if inertiaTensorAtCOM:
-            self.inertiaTensor = self.inertiaTensor + self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
+            self.inertiaTensor = self.inertiaTensor + _ParallelAxis(self.mass, self.com)
         
     def __add__(self, otherBodyInertia):
         """add (+) operator allows adding another inertia information with SAME local coordinate system and reference point!
@@ -890,7 +941,7 @@ class RigidBodyInertia:
         sumMass = self.mass + otherBodyInertia.mass
         return RigidBodyInertia(mass=sumMass,
                                 inertiaTensor = self.inertiaTensor + otherBodyInertia.inertiaTensor,
-                                com=1./sumMass*(self.mass*self.com + otherBodyInertia.mass*otherBodyInertia.com))
+                                com=_Scaled(1./sumMass, _Scaled(self.mass, self.com) + _Scaled(otherBodyInertia.mass, otherBodyInertia.com)))
 
     def __iadd__(self, otherBodyInertia):
         """+= operator allows adding another inertia information with SAME local coordinate system and reference point!
@@ -911,13 +962,15 @@ class RigidBodyInertia:
             inertiaTensorCOM: tensor given w.r.t. reference point, NOT w.r.t. center of mass!
             com: center of mass relative to reference point, in same coordinate system as inertiaTensor
         """
-        if np.array(inertiaTensorCOM).shape != (3,3): #shape is a tuple
-            raise ValueError('RigidBodyInertia: inertiaTensorCOMmust have shape (3,3), but received '+str(np.array(inertiaTensorCOM).shape))
-        if np.array(com).shape != (3,): #shape is a tuple
-            raise ValueError('RigidBodyInertia: com must have 3 components, but received '+str(np.array(inertiaTensorCOM).shape))
+        inertiaTensorCOM = _InertiaArray(inertiaTensorCOM)
+        com = _InertiaArray(com)
+        if inertiaTensorCOM.shape != (3,3): #shape is a tuple
+            raise ValueError('RigidBodyInertia: inertiaTensorCOMmust have shape (3,3), but received '+str(inertiaTensorCOM.shape))
+        if com.shape != (3,): #shape is a tuple
+            raise ValueError('RigidBodyInertia: com must have 3 components, but received '+str(com.shape))
         self.mass = mass
-        self.com = np.array(com)
-        self.inertiaTensor = np.array(inertiaTensorCOM) + self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
+        self.com = com
+        self.inertiaTensor = inertiaTensorCOM + _ParallelAxis(self.mass, self.com)
         
         
     def Inertia(self):
@@ -928,7 +981,7 @@ class RigidBodyInertia:
     def InertiaCOM(self):
         """returns 3x3 inertia tensor with respect to COM
         """
-        return self.inertiaTensor - self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
+        return self.inertiaTensor - _ParallelAxis(self.mass, self.com)
 
     def COM(self):
         """returns center of mass (COM) w.r.t. chosen reference point
@@ -944,20 +997,20 @@ class RigidBodyInertia:
         r"""returns a RigidBodyInertia with center of mass com shifted by vec; $\ra$ transforms the returned inertiaTensor to the new center of rotation
         """
         #transform inertia to com=[0,0,0]
-        inertiaCOM = self.inertiaTensor - self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
+        inertiaCOM = self.inertiaTensor - _ParallelAxis(self.mass, self.com)
         try:
-            newCOM = self.com + vec
+            newCOM = self.com + _InertiaArray(vec)
         except (ValueError, TypeError):
             raise ValueError("ERROR in RigidBodyInertia.Translated(vec): vec must be a vector with 3 components")
-        inertiaCOM += self.mass*np.dot(Skew(newCOM).transpose(),Skew(newCOM))
+        inertiaCOM = inertiaCOM + _ParallelAxis(self.mass, newCOM)
         rbi = RigidBodyInertia(mass=self.mass, 
                                inertiaTensor=inertiaCOM,
                                com=newCOM)
         rbi.data.update(self.data)
         if 'HT' in self.data:
-            rbi.data['HT'] = self.data['HT'] @ HTtranslate(vec)
+            rbi.data['HT'] = self.data['HT'] @ HTtranslate(_Numbers(vec))
         else:
-            rbi.data['HT'] = HTtranslate(vec)
+            rbi.data['HT'] = HTtranslate(_Numbers(vec))
         return rbi
 
     def Rotated(self, rot):
@@ -966,7 +1019,7 @@ class RigidBodyInertia:
         Note:
             only allowed if COM=0 !
         """
-        if cMath.norm(self.com) != 0:
+        if cMath.norm(_Numbers(self.com)) != 0:
             exu.Print("ERROR: RigidBodyInertia.Rotated only allowed in case of com=0")
             return 0
         try:
@@ -983,12 +1036,12 @@ class RigidBodyInertia:
         A = HT2rotationMatrix(HT)
         v = HT2translation(HT)
         
-        inertiaCOM = self.inertiaTensor - self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
+        inertiaCOM = self.inertiaTensor - _ParallelAxis(self.mass, self.com)
         inertiaCOM = A @ inertiaCOM @ A.T #tested with general rigid body and shifted reference point
 
         newCOM = A @ self.com + v
 
-        inertiaCOM += self.mass*np.dot(Skew(newCOM).transpose(),Skew(newCOM))
+        inertiaCOM = inertiaCOM + _ParallelAxis(self.mass, newCOM)
         rbi = RigidBodyInertia(mass=self.mass, 
                                 inertiaTensor=inertiaCOM,
                                 com=newCOM)
@@ -1028,13 +1081,13 @@ class RigidBodyInertia:
         nTiles = self._nTilesGraphics if nTiles is None else nTiles
         roundness = self._roundnessGraphics if roundness is None else roundness
 
-        com = self.COM()
+        com = _Numbers(self.COM()) #the present values of symbolic ones (#3159)
         typeName = self.data['type']
         #++++++++++++++++++++++++++++++++++++++++++++++
         if typeName == 'InertiaCylinder':
-            length=self.data['length']
-            outerRadius=self.data['outerRadius']
-            innerRadius=self.data['innerRadius']
+            length=_Numbers(self.data['length'])
+            outerRadius=_Numbers(self.data['outerRadius'])
+            innerRadius=_Numbers(self.data['innerRadius'])
             axis=self.data['axis']
             axisVector = np.array([0,0,0])
             axisVector[axis] = 1
@@ -1046,27 +1099,27 @@ class RigidBodyInertia:
                                       radiusInner=innerRadius if innerRadius>0 else None
                                       )
         elif typeName == 'InertiaCuboid':
-            sideLengths=self.data['sideLengths']
+            sideLengths=_Numbers(self.data['sideLengths'])
             gData = graphics.Brick(centerPoint=com, size=sideLengths, color=color0,
                                    roundness=roundness)
     
         elif typeName == 'InertiaRodX':
-            length=self.data['length']
+            length=_Numbers(self.data['length'])
             gData = graphics.Brick(centerPoint=com, size=[length, length*0.01, length*0.01], 
                                    color=color0, roundness=roundness)
     
         elif typeName == 'InertiaMassPoint':
-            mass=self.data['mass']
+            mass=_Numbers(self.data['mass'])
             #V=4./3.*np.pi*r**3 => m/rho = V => r
             r = cbrt(mass/2000*0.75/np.pi) #approximation for radius with rho=2000
             gData = graphics.Sphere(point=com, radius=r, nTiles=nTiles, color=color0) #size is not known
     
         elif typeName == 'InertiaSphere':
-            radius=self.data['radius']
+            radius=_Numbers(self.data['radius'])
             gData = graphics.Sphere(point=com, radius=radius, nTiles=nTiles, color=color0) #size is not known
     
         elif typeName == 'InertiaSphere' or typeName == 'InertiaHollowSphere':
-            radius=self.data['radius']
+            radius=_Numbers(self.data['radius'])
             gData = graphics.Sphere(point=com, radius=radius, nTiles=nTiles, color=color0) #size is not known
 
         else:
@@ -1098,7 +1151,7 @@ class InertiaCuboid(RigidBodyInertia):
         L3=sideLengths[2]
         newMass=density*L1*L2*L3
         RigidBodyInertia.__init__(self, mass=newMass,
-                                  inertiaTensor=newMass/12.*np.diag([(L2**2 + L3**2),(L1**2 + L3**2),(L1**2 + L2**2)]),
+                                  inertiaTensor=_Scaled(newMass/12., np.diag([(L2**2 + L3**2),(L1**2 + L3**2),(L1**2 + L2**2)])),
                                   com=np.zeros(3))
         self.data = {'type':'InertiaCuboid', 'density':density, 'sideLengths':sideLengths}
 
@@ -1109,7 +1162,7 @@ class InertiaRodX(RigidBodyInertia):
         """initialize inertia with mass and length of rod
         """
         RigidBodyInertia.__init__(self, mass=mass,
-                                  inertiaTensor=mass/12.*np.diag([0.,length**2,length**2]),
+                                  inertiaTensor=_Scaled(mass/12., np.diag([0.,length**2,length**2])),
                                   com=np.zeros(3))
         self.data = {'type':'InertiaRodX', 'mass':mass, 'length':length}
         
@@ -1132,7 +1185,7 @@ class InertiaSphere(RigidBodyInertia):
         """
         volume = 4./3. * np.pi * radius**3
         if density is None and mass is not None:
-            density = mass / volume if volume!=0 else 0 #to ignore cases where someone likes to use radius=0
+            density = mass / volume if _Numbers(volume)!=0 else 0 #to ignore cases where someone likes to use radius=0
         elif density is not None and mass is None:
             mass = density * volume
         else:
@@ -1140,7 +1193,7 @@ class InertiaSphere(RigidBodyInertia):
 
         J = 2.*mass/5.*radius**2
         RigidBodyInertia.__init__(self, mass=mass,
-                                  inertiaTensor=np.diag([J,J,J]),
+                                  inertiaTensor=_InertiaArray(np.diag([J,J,J])),
                                   com=np.zeros(3))
         self.data = {'type':'InertiaSphere', 'mass':mass, 'radius':radius, 'density':density, 'volume':volume}
         
@@ -1152,7 +1205,7 @@ class InertiaHollowSphere(RigidBodyInertia):
         """
         J = 2.*mass/3.*radius**2
         RigidBodyInertia.__init__(self, mass=mass,
-                                  inertiaTensor=np.diag([J,J,J]),
+                                  inertiaTensor=_InertiaArray(np.diag([J,J,J])),
                                   com=np.zeros(3))
         self.data = {'type':'InertiaHollowSphere', 'mass':mass, 'radius':radius}
 
@@ -1168,15 +1221,15 @@ class InertiaCylinder(RigidBodyInertia):
 
         if axis==0:
             RigidBodyInertia.__init__(self, mass=m,
-                                      inertiaTensor=np.diag([Jaxis,Jtt,Jtt]),
+                                      inertiaTensor=_InertiaArray(np.diag([Jaxis,Jtt,Jtt])),
                                       com=np.zeros(3))
         elif axis==1:
             RigidBodyInertia.__init__(self, mass=m,
-                                      inertiaTensor=np.diag([Jtt,Jaxis,Jtt]),
+                                      inertiaTensor=_InertiaArray(np.diag([Jtt,Jaxis,Jtt])),
                                       com=np.zeros(3))
         elif axis==2:
             RigidBodyInertia.__init__(self, mass=m,
-                                      inertiaTensor=np.diag([Jtt,Jtt,Jaxis]),
+                                      inertiaTensor=_InertiaArray(np.diag([Jtt,Jtt,Jaxis])),
                                       com=np.zeros(3))
         else:
             raise ValueError("InertiaCylinder: axis must be 0, 1 or 2!")

@@ -5729,6 +5729,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg12-67-3-1"></a>
+### RG12.67.3.1 — The symbolic inertia and the symbolic arguments of the Create functions (2026-11-02, #3159)
+- `RigidBodyInertia` and the shapes (InertiaCuboid, RodX, MassPoint, Sphere, HollowSphere, Cylinder), Translated,
+  Rotated, Transformed, +, InertiaCOM and SetWithCOMinertia with symbolic values (decision P3): numpy arrays of
+  esym.Real components, the products component by component - numpy's operations with an esym.Real operand give an
+  esym.Matrix (#3015), which has no shape -; the checks (triangle inequality, symmetry, com = 0 for Rotated, the
+  volume of a sphere) and GetGraphics on the present values. The numbers path is unchanged (float arrays), the test
+  suite unchanged.
+- UserItemCreator.CreateRigidBody puts the expressions into parameterBindings, centerOfMass of the user body the
+  numbers. The other Create functions take expressions where their arguments are parameters of the user item: probed
+  with the Cartesian, torsional and rigid-body spring-dampers (vectors and matrices of expressions), the sphere
+  contact (radii, stiffness), the spring-damper and the distance constraint (whose check of the distance 0 now takes
+  the value); the forces of Equations() equal the system's.
+- symbolicRigidBodyInertiaTest.py: the inertia of expressions equals the one of numbers (0.0); a rigid body with the
+  inertia of rho and L on a spring-damper, Equations() against the system 3.6e-15, the derivatives by rho and L
+  within 1.2e-11 (relative) of central differences by SetParameterValues.
+- Not done (sub-step RG12.67.3.2): the frames of the joints and connectors are the local frames of their markers,
+  numbers.
+
 <a id="rg9-11"></a>
 ### RG9.11.13.1, RG9.11.13.2, RG9.11 — The floating base and the Jacobian of ObjectKinematicTree; the revision of the system Jacobians closed (2026-11-02, #1549, #3211, #3201)
 - **Floating base** (#1549): `baseNodeNumber` (a 3D rigid body node, the invalid index without), node 1 of the tree,

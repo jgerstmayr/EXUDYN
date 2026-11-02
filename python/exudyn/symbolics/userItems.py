@@ -691,7 +691,9 @@ class UserItemCreator:
             initialDisplacement: as in mbs.CreateRigidBody
             initialRotationMatrix: as in mbs.CreateRigidBody
             inertia: as in mbs.CreateRigidBody; its mass, inertia about the node and center of mass are the parameters
-                of the user body
+                of the user body, also as expressions of named variables of the model, e.g.
+                InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1]) with rho and L of mbs.symbolicVariables, kept in
+                parameterBindings (#3159)
             gravity: as in mbs.CreateRigidBody
             nodeType: exu.NodeType.RotationRxyz; the default RotationEulerParameters is refused (the user body does not
                 give the algebraic equation of the Euler parameters), RotationRotationVector too (a Lie group node)
@@ -746,7 +748,7 @@ class UserItemCreator:
                                                        visualization=eii.VNodeRigidBodyRxyz(show=show, drawSize=drawSize, color=color)))
         parameters = [inertia.mass] + list(inertia.GetInertia6D()) + list(inertia.com)
         bodyNumber = self._AddUserItem('rigidBody', eii.ObjectUserBody(name=name, nodeNumbers=[nodeNumber], parameters=_Numbers(parameters),
-                                                      centerOfMass=list(inertia.com),
+                                                      centerOfMass=_Numbers(list(inertia.com)),
                                                       **{functionName: function for (functionName, function) in _kindFunctions['rigidBody']},
                                                       visualization=eii.VObjectUserBody(show=show, graphicsData=graphicsDataList0)), parameters)
         result = {'nodeNumber': nodeNumber, 'bodyNumber': bodyNumber}
@@ -1309,7 +1311,7 @@ class UserItemCreator:
                                                               getPosition=distance is None, useRigidMarker=True)
         if distance is None:
             distance = cMath.norm(np.array(p1) - p0)
-        if distance == 0:
+        if _Numbers([distance])[0] == 0: #the value of a symbolic distance (#3159)
             raise ValueError('UserItemCreator.CreateDistanceConstraint: the distance 0 is not supported by the user item '
                              '(use CreateSphericalJoint)')
         return self._Joint('distanceConstraint', name, [marker0, marker1], [distance], show,

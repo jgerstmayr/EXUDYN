@@ -43,7 +43,10 @@ system = SymbolicSystem(mbs)
 - the parameters of the user items given as expressions of named variables of the model,
   `esym.Real(name, value, scope=mbs)`, stay expressions of these variables in the equations,
   `SymbolicSystem(mbs, parameters=creator.parameterBindings)`, for derivatives by them; `SetParameterValues` sets new
-  values (#3159, #3208).
+  values (#3159, #3208). Every parameter of a user item may be such an expression - the stiffness of a spring-damper,
+  the radii of a contact, the matrices of a rigid-body spring-damper, a distance -, and the inertia of a rigid body:
+  `RigidBodyInertia` and its shapes take symbolic values, `InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1])`.
+  The frames of joints and connectors and the loads are numbers.
 
 The system is kept as one flat program per kind of item - the items whose user functions are the same recording -,
 with the tables of their parameters and of their local-to-global indices, as Exudyn assembles its items; the global

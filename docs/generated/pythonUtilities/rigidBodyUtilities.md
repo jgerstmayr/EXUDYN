@@ -705,7 +705,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 (sec-rigidbodyutilities-strnodetype2nodetype)=
 ## Function: StrNodeType2NodeType
 
-[`StrNodeType2NodeType(sNodeType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1189)
+[`StrNodeType2NodeType(sNodeType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1242)
 
 - **function description**: convert string into exudyn.NodeType; call e.g. with 'NodeType.RotationEulerParameters' or 'RotationEulerParameters'
 - **notes**: function is not very fast, so should be avoided in time-critical situations
@@ -714,7 +714,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 (sec-rigidbodyutilities-getrigidbodynode)=
 ## Function: GetRigidBodyNode
 
-[`GetRigidBodyNode(nodeType, position = [0,0,0], velocity = [0,0,0], rotationMatrix = [], rotationParameters = [], angularVelocity = [0,0,0])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1207)
+[`GetRigidBodyNode(nodeType, position = [0,0,0], velocity = [0,0,0], rotationMatrix = [], rotationParameters = [], angularVelocity = [0,0,0])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1260)
 
 - **function description**: get node item interface according to nodeType, using initialization with position, velocity, angularVelocity and rotationMatrix
 - **input**:
@@ -730,7 +730,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 (sec-rigidbodyutilities-addrigidbody)=
 ## Function: AddRigidBody
 
-[`AddRigidBody(mainSys, inertia, nodeType = exu.NodeType.RotationEulerParameters, position = [0,0,0], velocity = [0,0,0], rotationMatrix = [], rotationParameters = [], angularVelocity = [0,0,0], gravity = [0,0,0], graphicsDataList = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1301)
+[`AddRigidBody(mainSys, inertia, nodeType = exu.NodeType.RotationEulerParameters, position = [0,0,0], velocity = [0,0,0], rotationMatrix = [], rotationParameters = [], angularVelocity = [0,0,0], gravity = [0,0,0], graphicsDataList = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1354)
 
 - **function description**: DEPRECATED: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
 - **input**:
@@ -750,7 +750,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 (sec-rigidbodyutilities-addrevolutejoint)=
 ## Function: AddRevoluteJoint
 
-[`AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame = True, showJoint = True, axisRadius = 0.1, axisLength = 0.4)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1412)
+[`AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame = True, showJoint = True, axisRadius = 0.1, axisLength = 0.4)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1465)
 
 - **function description**: DEPRECATED (use MainSystem function instead): add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 - **input**:
@@ -767,7 +767,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 (sec-rigidbodyutilities-addprismaticjoint)=
 ## Function: AddPrismaticJoint
 
-[`AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame = True, showJoint = True, axisRadius = 0.1, axisLength = 0.4)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1500)
+[`AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame = True, showJoint = True, axisRadius = 0.1, axisLength = 0.4)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1553)
 
 - **function description**: DEPRECATED (use MainSystem function instead): add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 - **input**:
@@ -821,7 +821,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 
 **class description**: helper class for rigid body inertia (see also derived classes Inertia...). Provides a structure to define mass, inertia and center of mass (COM) of a rigid body. The inertia tensor and center of mass must correspond when initializing the body!
 
-- **notes**: in the default mode, inertiaTensorAtCOM = False, the inertia tensor must be provided with respect to the reference point; otherwise, it is given at COM; internally, the inertia tensor is always with respect to the reference point, not w.r.t. to COM!
+- **notes**: in the default mode, inertiaTensorAtCOM = False, the inertia tensor must be provided with respect to the reference point; otherwise, it is given at COM; internally, the inertia tensor is always with respect to the reference point, not w.r.t. to COM! The mass, the inertia tensor and the center of mass may be exudyn.symbolic values - expressions of named variables, e.g. of mbs.symbolicVariables -, also through the shapes, InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1]); the inertia tensor and the center of mass are then numpy arrays of exudyn.symbolic.Real, their checks use the present values (#3159)
 
 *example*:
 
@@ -835,7 +835,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia---init--)=
 ### Class function: __init__
 
-[`__init__(self, mass = 0, inertiaTensor = np.zeros([3,3]), com = np.zeros(3), inertiaTensorAtCOM = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L840)
+[`__init__(self, mass = 0, inertiaTensor = np.zeros([3,3]), com = np.zeros(3), inertiaTensorAtCOM = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L888)
 
 - **class function description**: initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
 - **input**:
@@ -848,7 +848,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia---add--)=
 ### Class function: __add__
 
-[`__add__(self, otherBodyInertia)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L883)
+[`__add__(self, otherBodyInertia)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L934)
 
 - **class function description**: add (+) operator allows adding another inertia information with SAME local coordinate system and reference point! only inertias with same center of rotation can be added!
 
@@ -863,7 +863,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia---iadd--)=
 ### Class function: __iadd__
 
-[`__iadd__(self, otherBodyInertia)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L895)
+[`__iadd__(self, otherBodyInertia)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L946)
 
 - **class function description**: += operator allows adding another inertia information with SAME local coordinate system and reference point! only inertias with same center of rotation can be added!
 
@@ -879,7 +879,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-setwithcominertia)=
 ### Class function: SetWithCOMinertia
 
-[`SetWithCOMinertia(self, mass, inertiaTensorCOM, com)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L906)
+[`SetWithCOMinertia(self, mass, inertiaTensorCOM, com)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L957)
 
 - **class function description**: set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. com) and center of mass com
 - **input**:
@@ -891,7 +891,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-inertia)=
 ### Class function: Inertia
 
-[`Inertia(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L923)
+[`Inertia(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L976)
 
 - **class function description**: returns 3x3 inertia tensor with respect to chosen reference point (not necessarily COM)
 
@@ -899,7 +899,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-inertiacom)=
 ### Class function: InertiaCOM
 
-[`InertiaCOM(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L928)
+[`InertiaCOM(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L981)
 
 - **class function description**: returns 3x3 inertia tensor with respect to COM
 
@@ -907,7 +907,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-com)=
 ### Class function: COM
 
-[`COM(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L933)
+[`COM(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L986)
 
 - **class function description**: returns center of mass (COM) w.r.t. chosen reference point
 
@@ -915,7 +915,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-mass)=
 ### Class function: Mass
 
-[`Mass(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L938)
+[`Mass(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L991)
 
 - **class function description**: returns mass
 
@@ -923,7 +923,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-translated)=
 ### Class function: Translated
 
-[`Translated(self, vec)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L943)
+[`Translated(self, vec)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L996)
 
 - **class function description**: returns a RigidBodyInertia with center of mass com shifted by vec; $\ra$ transforms the returned inertiaTensor to the new center of rotation
 
@@ -931,7 +931,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-rotated)=
 ### Class function: Rotated
 
-[`Rotated(self, rot)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L963)
+[`Rotated(self, rot)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1016)
 
 - **class function description**: returns a RigidBodyInertia rotated by 3x3 rotation matrix rot, such that for a given J, the new inertia tensor reads Jnew = rot*J*rot.T
 - **notes**: only allowed if COM=0 !
@@ -940,7 +940,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-transformed)=
 ### Class function: Transformed
 
-[`Transformed(self, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L980)
+[`Transformed(self, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1033)
 
 - **class function description**: return rigid body inertia transformed by homogeneous transformation HT
 
@@ -948,7 +948,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-getinertia6d)=
 ### Class function: GetInertia6D
 
-[`GetInertia6D(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1002)
+[`GetInertia6D(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1055)
 
 - **class function description**: get vector with 6 inertia components (Jxx, Jyy, Jzz, Jyz, Jxz, Jxy) w.r.t. to reference point (not necessarily the COM), as needed in ObjectRigidBody
 
@@ -956,7 +956,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-gettypename)=
 ### Class function: GetTypeName
 
-[`GetTypeName(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1009)
+[`GetTypeName(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1062)
 
 - **class function description**: which returns str of type ('InertiaCylinder', 'InertiaCuboid', ...)
 
@@ -964,7 +964,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-getspecialdata)=
 ### Class function: GetSpecialData
 
-[`GetSpecialData(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1014)
+[`GetSpecialData(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1067)
 
 - **class function description**: returns dictionary with further data of inertia, like cylinder radius, etc.
 
@@ -972,7 +972,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 (sec-rigidbodyutilities-rigidbodyinertia-getgraphics)=
 ### Class function: GetGraphics
 
-[`GetGraphics(self, color, nTiles = None, roundness = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1020)
+[`GetGraphics(self, color, nTiles = None, roundness = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1073)
 
 - **class function description**: get graphicsData object from inertia; this simplifies the rigid body creation process and allows to check for consistency; currently does not include HT-rotations!
 
@@ -996,7 +996,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bicycleIfto
 (sec-rigidbodyutilities-inertiacuboid(rigidbodyinertia)---init--)=
 ### Class function: __init__
 
-[`__init__(self, density, sideLengths)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1093)
+[`__init__(self, density, sideLengths)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1146)
 
 - **class function description**: initialize inertia
 
@@ -1013,7 +1013,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-rigidbodyutilities-inertiarodx(rigidbodyinertia)---init--)=
 ### Class function: __init__
 
-[`__init__(self, mass, length)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1108)
+[`__init__(self, mass, length)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1161)
 
 - **class function description**: initialize inertia with mass and length of rod
 
@@ -1030,7 +1030,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`fourBarMech
 (sec-rigidbodyutilities-inertiamasspoint(rigidbodyinertia)---init--)=
 ### Class function: __init__
 
-[`__init__(self, mass)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1119)
+[`__init__(self, mass)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1172)
 
 - **class function description**: initialize inertia with mass of point
 
@@ -1047,7 +1047,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`stiffFlybal
 (sec-rigidbodyutilities-inertiasphere(rigidbodyinertia)---init--)=
 ### Class function: __init__
 
-[`__init__(self, mass = None, radius = None, density = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1130)
+[`__init__(self, mass = None, radius = None, density = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1183)
 
 - **class function description**: initialize inertia with mass and radius of sphere
 
@@ -1064,7 +1064,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactCurv
 (sec-rigidbodyutilities-inertiahollowsphere(rigidbodyinertia)---init--)=
 ### Class function: __init__
 
-[`__init__(self, mass, radius)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1150)
+[`__init__(self, mass, radius)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1203)
 
 - **class function description**: initialize inertia with mass and (inner==outer) radius of hollow sphere
 
@@ -1078,7 +1078,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactCurv
 (sec-rigidbodyutilities-inertiacylinder(rigidbodyinertia)---init--)=
 ### Class function: __init__
 
-[`__init__(self, density, length, outerRadius, axis, innerRadius = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1162)
+[`__init__(self, density, length, outerRadius, axis, innerRadius = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1215)
 
 - **class function description**: initialize inertia with density, length, outer radius, axis (0=x-axis, 1=y-axis, 2=z-axis) and optional inner radius (for hollow cylinder)
 

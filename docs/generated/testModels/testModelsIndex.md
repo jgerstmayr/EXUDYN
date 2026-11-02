@@ -214,6 +214,7 @@ symbolicModuleTest
 symbolicNumpyCompatibilityTest
 symbolicOnePassJacobianTest
 symbolicOptimizeTest
+symbolicRigidBodyInertiaTest
 symbolicSolversAdaptiveStepTest
 symbolicSparseMatrixProductTest
 symbolicSparseMatrixTest

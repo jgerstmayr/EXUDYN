@@ -68,7 +68,9 @@ for each item its list of expressions and numbers as `parameters` instead of the
 the variables, and its `'parameters'` lists them; the composed system of the evaluation keeps the numbers.
 `SetParameterValues` sets the variables, writes the numbers into the items (`ParameterBindings.Apply`) and builds the
 system again. The recording of a kind stays one recording with `parameters` as its argument, so one serves all items
-of the kind in C++.
+of the kind in C++. `RigidBodyInertia` keeps symbolic values as numpy arrays of `esym.Real` components (`_InertiaArray`),
+and forms its products component by component (`_Scaled`, `_ParallelAxis`), as an operation of a number array with an
+`esym.Real` would give an `esym.Matrix`; its checks and its drawing use the present values (`_Numbers`).
 
 ## 4. The Jacobians
 
