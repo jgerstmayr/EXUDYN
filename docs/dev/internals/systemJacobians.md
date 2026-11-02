@@ -55,7 +55,12 @@ is computed by `ComputeJacobianODE2Connector` in parallel, as it does not touch 
   and with it restartFileTest and userJointTest did not converge.
 - ConnectorHydraulicActuatorSimple: the force by automatic differentiation, the block by the pressures analytic
   (`CObject::ComputeJacobianODE2_ODE1` with the system and temporary data, which finds the marker Jacobians in
-  temp.markerTemp), the pressure equations numerical by CSystem.
+  temp.markerTemp); the pressure equations analytic by `CObjectConnector::ComputeJacobianODE1RHSConnector` (#3214),
+  which `CSystem::ComputeLocalJacobianODE1` calls for a connector with ODE1_ODE1_function: by the pressures, by the
+  stroke and its velocity, chained with the marker Jacobians, the direction along the Euler parameters and dv/dq of the
+  markers - false, numerical, for a marker without dv/dq. The derivative of the valve flow, sqrt of the pressure
+  difference, is limited at a difference of 1e-8 times the system pressure. The Newton iterations are those of the
+  numerical Jacobian; HydraulicActuator2Arms with full Newton 1.00 instead of 1.23 s.
 
 ## 3. The parallel assembly
 

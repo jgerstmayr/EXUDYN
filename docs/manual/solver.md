@@ -112,12 +112,13 @@ the item:
   rolling disc do -, chained with the Jacobians of the markers. The contacts with friction and the rolling disc also
   take the derivative of the marker velocities by the coordinates. Differentiating by the marker kinematics instead
   of the system coordinates leaves the system state untouched, so that connectors are computed in parallel;
-- **constraints** have their Jacobians analytically;
+- **constraints** have their Jacobians analytically, as have the pressure equations of ConnectorHydraulicActuatorSimple
+  (#3214);
 - the other items are **differentiated numerically by the system**, by their own coordinates: ObjectFFRF,
   ObjectFFRFreducedOrder, ObjectKinematicTree, ObjectANCFBeam, ObjectALEANCFCable2D, ObjectUserBody, rigid bodies on
   Lie group nodes, the connectors with Python user functions (ObjectConnectorUser and the spring-dampers with a user
-  function), ConnectorReevingSystemSprings, the contacts on cables and curves, the ODE1 equations of
-  ConnectorHydraulicActuatorSimple, and connectors on markers that lack the derivatives the connector needs
+  function), ConnectorReevingSystemSprings, the contacts on cables and curves, and connectors on markers that lack
+  the derivatives the connector needs
   (MarkerSuperElementRigid, MarkerKinematicTreeRigid, user markers, the Lie group nodes).
 
 **Parallel and serial**: with `parallel.numberOfThreads` > 1 and at least `parallel.multithreadedLowerLimitJacobians`

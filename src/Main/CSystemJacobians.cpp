@@ -540,13 +540,25 @@ bool CSystem::ComputeLocalJacobianODE1(TemporaryComputationData& temp, const Num
 	ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2NumDiff()[j];
 	Index nLocalODE2 = ltgODE2.NumberOfItems();
 
-	if ((jacType & JacobianType::ODE1_ODE1_function) && !EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+	if (jacType & JacobianType::ODE1_ODE1_function)
 	{
 		if (!object->IsActive()) { return false; }
-		object->ComputeJacobianODE1RHS(temp.localJacobian, temp.tempMatrix, temp.tempMatrix2);
-		local.ode1 = LocalJacobian::analytic;
-		if (nLocalODE2 && (jacType & JacobianType::ODE1_ODE2_function)) { local.ode2 = LocalJacobian::analytic; }
-		return true;
+		bool analytic = true;
+		if (!EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+		{
+			object->ComputeJacobianODE1RHS(temp.localJacobian, temp.tempMatrix, temp.tempMatrix2);
+		}
+		else //by the marker kinematics, or numerical (#3214)
+		{
+			analytic = ((const CObjectConnector*)object)->ComputeJacobianODE1RHSConnector(cSystemData, temp, temp.localJacobian,
+				temp.tempMatrix, temp.tempMatrix2);
+		}
+		if (analytic)
+		{
+			local.ode1 = LocalJacobian::analytic;
+			if (nLocalODE2 && (jacType & JacobianType::ODE1_ODE2_function)) { local.ode2 = LocalJacobian::analytic; }
+			return true;
+		}
 	}
 
 	ResizableVector& f0 = temp.numericalJacobianf0;

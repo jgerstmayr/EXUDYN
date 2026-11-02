@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.320.dev1
+- Exudyn version = 1.13.321.dev1
 - last change = 2026-11-02
 - Number of issues = 3229
-- Number of resolved issues = 3097 (320 in current version)
+- Number of resolved issues = 3098 (321 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9053,9 +9053,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-02
 - `IMPROVEMENT` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` MarkerSuperElementRigid: dv/dq and the direction along the Euler parameters (#3215)
   - description: MarkerSuperElementRigid provides neither GetVelocity\_q nor GetRadialKinematics, so connectors on it fall back to CSystem or miss the direction along the Euler parameters of the reference node. Decided: deferred until the super element markers are revised.
-  - date raised: 2026-11-02
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ConnectorHydraulicActuatorSimple: the Jacobian of the pressure equations analytic (#3214)
-  - description: The two ODE1 pressure equations of ConnectorHydraulicActuatorSimple are differentiated numerically by CSystem; their derivatives by the pressures, the stroke and its velocity are closed forms. Decided: analytic.
   - date raised: 2026-11-02
 - `IMPROVEMENT` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` ObjectANCFBeam: its own ODE2 Jacobian (#3213)
   - description: ObjectANCFBeam declares ODE2\_ODE2 without a function and is differentiated numerically by CSystem, serially; the elastic forces would be differentiated automatically per element. Involved; low priority.

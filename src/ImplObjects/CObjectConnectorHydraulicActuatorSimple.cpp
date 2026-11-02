@@ -133,11 +133,67 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeActuatorForce(const SlimVec
 	}
 }
 
+//! the bulk modulus per chamber volume K_i/V_i of the two chambers at the stroke, with the change of the volumes if
+//! useChamberVolumeChange; TReal for its derivative by the stroke (#3214)
+template<class TReal>
+void CObjectConnectorHydraulicActuatorSimple::ComputeBulkModulusPerVolume(TReal stroke, TReal* modulusPerVolume) const
+{
+	TReal V0act = parameters.hoseVolume0;
+	TReal V1act = parameters.hoseVolume1;
+	TReal effectiveBulkModulus0 = parameters.oilBulkModulus;
+	TReal effectiveBulkModulus1 = parameters.oilBulkModulus;
+
+	if (parameters.useChamberVolumeChange)
+	{
+		V0act += parameters.chamberCrossSection0 * stroke;
+		V1act += parameters.chamberCrossSection1 * (parameters.strokeLength - stroke);
+
+		//if volume is zero, this could only be if hoseVolume is also zero and this will raise an exception below
+		if (V0act != 0. && V1act != 0.)
+		{
+			TReal valCylBulk0 = 0.;
+			TReal valCylBulk1 = 0.;
+			TReal valHoseBulk0 = 0.;
+			TReal valHoseBulk1 = 0.;
+
+			if (parameters.cylinderBulkModulus != 0)
+			{
+				valCylBulk0 = (V0act - parameters.hoseVolume0) / (V0act * parameters.cylinderBulkModulus);
+				valCylBulk1 = (V1act - parameters.hoseVolume1) / (V1act * parameters.cylinderBulkModulus);
+			}
+			if (parameters.hoseBulkModulus != 0)
+			{
+				valHoseBulk0 = (parameters.hoseVolume0) / (V0act * parameters.hoseBulkModulus);
+				valHoseBulk1 = (parameters.hoseVolume1) / (V1act * parameters.hoseBulkModulus);
+			}
+
+			effectiveBulkModulus0 = 1. / (1. / parameters.oilBulkModulus + valCylBulk0 + valHoseBulk0);
+			effectiveBulkModulus1 = 1. / (1. / parameters.oilBulkModulus + valCylBulk1 + valHoseBulk1);
+		}
+	}
+
+	CHECKandTHROW(V0act != 0. && V1act != 0., "CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS: chamber volume vanished; further computation not possible!", ExudynValueError);
+	modulusPerVolume[0] = effectiveBulkModulus0 / V0act;
+	modulusPerVolume[1] = effectiveBulkModulus1 / V1act;
+}
+
+//! the flow into chamber i through its valve at the pressure of the chamber, and its derivative by the pressure (#3214):
+//! from the pump at the system pressure for a valve opening >= 0, else into the tank; the derivative of the square root,
+//! infinite at the pressure difference 0, is limited at 1e-8 times the system pressure
+void CObjectConnectorHydraulicActuatorSimple::ComputeValveFlow(Index i, Real pressure, Real& flow, Real& flow_p) const
+{
+	const Real opening = (i == 0) ? parameters.valveOpening0 : parameters.valveOpening1;
+	const Real difference = (opening >= 0) ? parameters.systemPressure - pressure : pressure - parameters.tankPressure;
+	const Real difference_p = (opening >= 0) ? -1. : 1.;
+	flow = opening * parameters.nominalFlow*SignedSqrt(difference);
+	const Real minimumDifference = 1e-8 * EXUstd::Maximum(fabs(parameters.systemPressure), 1.);
+	flow_p = difference_p * opening * parameters.nominalFlow * 0.5 / sqrt(EXUstd::Maximum(fabs(difference), minimumDifference));
+}
+
 //! Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs'
 void CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS(Vector& ode1Rhs, const MarkerDataStructure& markerData) const
 {
 	ode1Rhs.SetNumberOfItems(GetODE1Size());
-	ode1Rhs.SetAll(0.);//not needed?
 
 	Vector3D relPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
 	Real actuatorLength = relPos.GetL2Norm();
@@ -146,90 +202,116 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS(Vector& ode1Rhs, co
 	if (actuatorLength != 0.) { actuatorLengthInv = 1. / actuatorLength; }
 	else { actuatorLengthInv = 1.; SysError("CObjectConnectorHydraulicActuatorSimple::ComputeODE2LHS: actuatorLength = 0"); }
 
-	//unit direction and relative velocity of actuator
-	//Vector3D forceDirection = actuatorLengthInv * relPos;
-
 	Vector3D relVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
 
 	Real stroke_t = actuatorLengthInv * (relPos * relVel); //stroke velocity; >0 means extension
 	Real stroke = actuatorLength - parameters.offsetLength;
 
-	Real V0act = parameters.hoseVolume0;
-	Real V1act = parameters.hoseVolume1;
-    Real effectiveBulkModulus0 = parameters.oilBulkModulus;
-    Real effectiveBulkModulus1 = parameters.oilBulkModulus;
-
-	if (parameters.useChamberVolumeChange)
-	{
-		V0act += parameters.chamberCrossSection0 * stroke;
-		V1act += parameters.chamberCrossSection1 * (parameters.strokeLength - stroke);
-
-        //if volume is zero, this could only be if hoseVolume is also zero and this will raise an exception appr. 20 lines below
-        if (V0act != 0 && V1act != 0) 
-        {
-            Real valCylBulk0 = 0;
-            Real valCylBulk1 = 0;
-            Real valHoseBulk0 = 0;
-            Real valHoseBulk1 = 0;
-
-            if (parameters.cylinderBulkModulus != 0)
-            {
-                valCylBulk0 = (V0act - parameters.hoseVolume0) / (V0act * parameters.cylinderBulkModulus);
-                valCylBulk1 = (V1act - parameters.hoseVolume1) / (V1act * parameters.cylinderBulkModulus);
-            }
-            if (parameters.hoseBulkModulus != 0)
-            {
-                valHoseBulk0 = (parameters.hoseVolume0) / (V0act * parameters.hoseBulkModulus);
-                valHoseBulk1 = (parameters.hoseVolume1) / (V1act * parameters.hoseBulkModulus);
-            }
-
-            effectiveBulkModulus0 = 1. / (1. / parameters.oilBulkModulus + valCylBulk0 + valHoseBulk0);
-            effectiveBulkModulus1 = 1. / (1. / parameters.oilBulkModulus + valCylBulk1 + valHoseBulk1);
-        }
-    }
-
-	CHECKandTHROW(V0act != 0 && V1act != 0, "CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS: chamber volume vanished; further computation not possible!", ExudynValueError);
+	Real modulusPerVolume[2];
+	ComputeBulkModulusPerVolume(stroke, modulusPerVolume);
 
 	LinkedDataVector p = GetCNode(0)->GetCurrentCoordinateVector(); //reference values are zero!
-	//pout << "ComputeODE1RHS: p=" << p << "\n";
-
-	//valve opening decides whether flow from pump (system pressure) or into tank
-	if (parameters.valveOpening0 >= 0) //pump, system pressure
-	{
-		ode1Rhs[0] = effectiveBulkModulus0 / V0act * (-parameters.chamberCrossSection0 * stroke_t +
-			parameters.valveOpening0 * parameters.nominalFlow*SignedSqrt(parameters.systemPressure-p[0]));
-	}
-	else //tank
-	{
-		ode1Rhs[0] = effectiveBulkModulus0 / V0act * (-parameters.chamberCrossSection0 * stroke_t +
-			parameters.valveOpening0 * parameters.nominalFlow*SignedSqrt(p[0] - parameters.tankPressure));
-	}
-    
-    //valve opening decides whether flow from pump (system pressure) or into tank
-	if (parameters.valveOpening1 >= 0) //pump, system pressure
-	{
-		ode1Rhs[1] = effectiveBulkModulus1 / V1act * ( parameters.chamberCrossSection1 * stroke_t +
-			parameters.valveOpening1 * parameters.nominalFlow*SignedSqrt(parameters.systemPressure - p[1]));
-	}
-	else //tank
-	{
-		ode1Rhs[1] = effectiveBulkModulus1 / V1act * ( parameters.chamberCrossSection1 * stroke_t +
-			parameters.valveOpening1 * parameters.nominalFlow*SignedSqrt(p[1] - parameters.tankPressure));
-	}
-
+	Real flow[2], flow_p;
+	ComputeValveFlow(0, p[0], flow[0], flow_p);
+	ComputeValveFlow(1, p[1], flow[1], flow_p);
+	ode1Rhs[0] = modulusPerVolume[0] * (-parameters.chamberCrossSection0 * stroke_t + flow[0]);
+	ode1Rhs[1] = modulusPerVolume[1] * ( parameters.chamberCrossSection1 * stroke_t + flow[1]);
 }
 
+//! the Jacobian of the two pressure equations (#3214), analytic: p_i,t = k_i(s) (a_i s_t + Q_i(p_i)), k_i = K_i/V_i,
+//! a = [-A_0, A_1], s the stroke; by the pressures k_i Q_i,p, by the coordinates and velocities of the markers through
+//! s_q = e^T [-J_0, J_1] (J the position Jacobians with the direction along the Euler parameters), s_t,q_t = s_q and
+//! s_t,q = (v - e s_t)^T/L [-J_0, J_1] + e^T [-v_0,q, v_1,q], e the unit direction, v the relative velocity, L the
+//! length, v_k,q of CMarker::GetVelocity_q; false, so that CSystem differentiates numerically, if a marker has no v_q
+bool CObjectConnectorHydraulicActuatorSimple::ComputeJacobianODE1RHSConnector(const CSystemData& systemData, TemporaryComputationData& temp,
+	ResizableMatrix& jacobianODE1, ResizableMatrix& jacobianODE2, ResizableMatrix& jacobianODE2_t) const
+{
+	MarkerPosition<Real> kinematics[2];
+	for (Index k = 0; k < 2; k++)
+	{
+		const CMarker& marker = systemData.GetCMarker(parameters.markerNumbers[k]);
+		if (!marker.GetVelocity_q(systemData, temp.markerTemp[k].velocity_q, temp.markerTemp[k].angularVelocity_q)) { return false; }
+		marker.GetKinematicsJacobianPosition(systemData, kinematics[k], temp.markerTemp[k]);
+	}
+	const Index n[2] = { temp.markerTemp[0].positionJacobian.NumberOfColumns(), temp.markerTemp[1].positionJacobian.NumberOfColumns() };
+	const Index offset[2] = { 0, n[0] };
+	const Real sign[2] = { -1., 1. };
 
+	const Vector3D relPos = kinematics[1].position - kinematics[0].position;
+	const Vector3D relVel = kinematics[1].velocity - kinematics[0].velocity;
+	const Real length = relPos.GetL2Norm();
+	CHECKandTHROW(length != 0., "CObjectConnectorHydraulicActuatorSimple::ComputeJacobianODE1RHSConnector: actuatorLength = 0", ExudynValueError);
+	const Vector3D direction = (1. / length) * relPos;
+	const Real stroke_t = direction * relVel;
+	const Vector3D strokeVelocity_e = (1. / length) * (relVel - stroke_t * direction); //d(s_t)/d(relPos)
 
+	//the pressure equations by the pressures, the stroke and its velocity
+	EXUmath::AutoDiff<1, Real> stroke(length - parameters.offsetLength, 0);
+	EXUmath::AutoDiff<1, Real> modulusPerVolume[2];
+	ComputeBulkModulusPerVolume(stroke, modulusPerVolume);
+	LinkedDataVector p = GetCNode(0)->GetCurrentCoordinateVector();
+	const Real crossSection[2] = { -parameters.chamberCrossSection0, parameters.chamberCrossSection1 };
+	Real rate_s[2], rate_st[2];
+	jacobianODE1.SetNumberOfRowsAndColumns(2, 2);
+	jacobianODE1.SetAll(0.);
+	for (Index i = 0; i < 2; i++)
+	{
+		Real flow, flow_p;
+		ComputeValveFlow(i, p[i], flow, flow_p);
+		jacobianODE1(i, i) = modulusPerVolume[i].Value() * flow_p;
+		rate_st[i] = modulusPerVolume[i].Value() * crossSection[i];
+		rate_s[i] = modulusPerVolume[i].DValue(0) * (crossSection[i] * stroke_t + flow);
+	}
+
+	//the stroke and its velocity by the coordinates and velocities of the markers
+	const Index nODE2 = n[0] + n[1];
+	jacobianODE2.SetNumberOfRowsAndColumns(2, nODE2);
+	jacobianODE2_t.SetNumberOfRowsAndColumns(2, nODE2);
+	for (Index k = 0; k < 2; k++)
+	{
+		const ResizableMatrix& positionJacobian = temp.markerTemp[k].positionJacobian;
+		const ResizableMatrix& velocity_q = temp.markerTemp[k].velocity_q;
+		Vector3D position_r;
+		Matrix3D rotation_r;
+		ResizableVector& radial_q = temp.markerTemp[k].radial_q;
+		const bool radial = n[k] != 0 && systemData.GetCMarker(parameters.markerNumbers[k]).GetRadialKinematics(systemData, position_r, rotation_r, radial_q);
+		const Real stroke_r = radial ? direction * position_r : 0.;
+		const Real strokeVelocity_r = radial ? strokeVelocity_e * position_r : 0.;
+		for (Index b = 0; b < n[k]; b++)
+		{
+			Real stroke_q = 0., strokeVelocity_q = 0., strokeVelocity_qt = 0.;
+			for (Index r = 0; r < 3; r++)
+			{
+				stroke_q += direction[r] * positionJacobian(r, b);
+				strokeVelocity_q += strokeVelocity_e[r] * positionJacobian(r, b) + direction[r] * velocity_q(r, b);
+			}
+			strokeVelocity_qt = sign[k] * stroke_q;
+			if (radial)
+			{
+				stroke_q += stroke_r * radial_q[b];
+				strokeVelocity_q += strokeVelocity_r * radial_q[b];
+			}
+			stroke_q *= sign[k];
+			strokeVelocity_q *= sign[k];
+			for (Index i = 0; i < 2; i++)
+			{
+				jacobianODE2(i, offset[k] + b) = rate_s[i] * stroke_q + rate_st[i] * strokeVelocity_q;
+				jacobianODE2_t(i, offset[k] + b) = rate_st[i] * strokeVelocity_qt;
+			}
+		}
+	}
+	return true;
+}
 
 //! return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
 //! the ODE2 rows on the connector interface by automatic differentiation and by the pressures analytic (#3201); the
-//! ODE1 rows, the two pressure equations, numerical
+//! ODE1 rows, the two pressure equations, analytic (#3214)
 JacobianType::Type CObjectConnectorHydraulicActuatorSimple::GetAvailableJacobians() const
 {
 	return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function +
 		JacobianType::ODE2_ODE2_t_function + JacobianType::ODE2_ODE1 + JacobianType::ODE2_ODE1_function +
-		JacobianType::ODE1_ODE1 + JacobianType::ODE1_ODE2 + JacobianType::ODE1_ODE2_t);
+		JacobianType::ODE1_ODE1 + JacobianType::ODE1_ODE2 + JacobianType::ODE1_ODE2_t +
+		JacobianType::ODE1_ODE1_function + JacobianType::ODE1_ODE2_function + JacobianType::ODE1_ODE2_t_function);
 }
 
 

@@ -2,11 +2,15 @@
   "number": 3214,
   "title": "ConnectorHydraulicActuatorSimple: the Jacobian of the pressure equations analytic",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The two ODE1 pressure equations of ConnectorHydraulicActuatorSimple are differentiated numerically by CSystem; their derivatives by the pressures, the stroke and its velocity are closed forms. Decided: analytic.",
   "dateRaised": "2026-11-02",
-  "deadline": "2027-05-01"
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 11:58",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The two pressure equations of ConnectorHydraulicActuatorSimple have an analytic Jacobian, by the pressures and by the coordinates and velocities of the markers; the Newton iterations are those of the numerical one, the Jacobian is cheaper.",
+  "resolvedInVersion": "1.13.321"
 }

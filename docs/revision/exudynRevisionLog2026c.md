@@ -5729,6 +5729,20 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg9-11-16"></a>
+### RG9.11.16 — The Jacobian of the pressure equations of ConnectorHydraulicActuatorSimple, analytic (2026-11-02, #3214)
+- CObjectConnector::ComputeJacobianODE1RHSConnector (false by default), called by CSystem::ComputeLocalJacobianODE1
+  for connectors with ODE1_ODE1_function; the hydraulic actuator gives p_i,t = k_i(s) (a_i s_t + Q_i(p_i)) by the
+  pressures, by the stroke s (k_i = K_i/V_i by AutoDiff<1> of ComputeBulkModulusPerVolume, which ComputeODE1RHS uses as
+  well) and by its velocity, chained with the position Jacobians, the direction along the Euler parameters and dv/dq of
+  the markers; ComputeValveFlow with the derivative of the square root limited at 1e-8 times the system pressure.
+- test_systemJacobians: the ODE1 rows also at velocities (dv/dq); Hydraulic within 4e-7 of the system-wide numerical
+  Jacobian, block by block.
+- Measured in one environment, old / new: hydraulicActuatorSimpleTest 962 / 962 Newton iterations (modified Newton),
+  445 / 445 (full); HydraulicActuator2Arms 177292 / 177200 (modified), 57290 / 57293 and 1.23 / 1.00 s (full);
+  HydraulicActuatorStaticInitialization 3743 / 3743, 1394 / 1394; the results within the Newton tolerance; the test
+  suite unchanged.
+
 <a id="rg3-47"></a>
 ### RG3.47 — The chapter Symbolic system and user functions (2026-11-02, #3222, #3225, #3226)
 - docs/manual/symbolic.md, the chapter at the place of symbolicUserFunctions and userItems in index.md and

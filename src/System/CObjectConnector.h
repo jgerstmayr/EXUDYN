@@ -76,6 +76,12 @@ public:
 	//! (CMarker::GetVelocity_q) leaves the connector to the numerical differentiation of the system
 	virtual bool RequestsVelocityDerivative() const { return false; }
 
+	//! the connector's own Jacobian of its ODE1 right-hand side (#3214), called if the flag ODE1_ODE1_function is set: by
+	//! its ODE1 coordinates and by the ODE2 coordinates and velocities of its markers, in the columns of the marker
+	//! Jacobians, as CObject::ComputeJacobianODE1RHS; false: CSystem differentiates the rows numerically
+	virtual bool ComputeJacobianODE1RHSConnector(const CSystemData& systemData, TemporaryComputationData& temp,
+		ResizableMatrix& jacobianODE1, ResizableMatrix& jacobianODE2, ResizableMatrix& jacobianODE2_t) const { return false; }
+
 	//! the connector's local Jacobian (#3201): on the connector interface (ComputeJacobianODE2Connector), else by the
 	//! marker data and their Jacobian derivatives; false if a marker has no Jacobian derivative, or no dv/dq that the
 	//! connector requests

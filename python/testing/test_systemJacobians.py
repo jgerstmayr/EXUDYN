@@ -123,7 +123,7 @@ def Contacts(mbs, nodeType=exu.NodeType.RotationRxyz):
 
 def Hydraulic(mbs):
     """a rigid body on Euler parameters lifted by a hydraulic actuator, its pressures in a NodeGenericODE1, the valves
-    open: the ODE2 rows by the coordinates and the pressures, the ODE1 rows of the pressures"""
+    open: the ODE2 rows by the coordinates and the pressures, the ODE1 rows of the pressures, analytic (#3214)"""
     ground = mbs.CreateGround()
     body = mbs.CreateRigidBody(inertia=inertia, referencePosition=[0.3, 0.6, 0], referenceRotationMatrix=RotationMatrixZ(0.2),
                                gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationEulerParameters)
@@ -283,9 +283,10 @@ def test_theContactJacobiansAreTheSystemWideOneAlsoAtVelocities(model, factors):
 
 @pytest.mark.parametrize('model', ['GenericDAE', 'Hydraulic', 'ODE1Loads'])
 @pytest.mark.parametrize('factors', [(1., 0., 0.), (0., 1., 0.), (0., 0., 1.)])
-def test_theLocalODE1JacobianIsTheSystemWideOne(model, factors):
-    local = Jacobian(model, ODE1(factors))
-    numerical = Jacobian(model, ODE1(factors), systemWide=True)
+@pytest.mark.parametrize('velocities', [False, True])
+def test_theLocalODE1JacobianIsTheSystemWideOne(model, factors, velocities):
+    local = Jacobian(model, ODE1(factors), velocities=velocities)
+    numerical = Jacobian(model, ODE1(factors), systemWide=True, velocities=velocities)
     assert np.max(np.abs(local)) > 0
     assert Difference(local, numerical) < tolerance, (model, factors, Difference(local, numerical))
 

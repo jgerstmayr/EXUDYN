@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (12 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (11 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -133,7 +133,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 18 | Structural core improvements |
+| RG9 | OPEN | 17 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 21 | Symbolic |
@@ -1357,9 +1357,11 @@ CLOSED 2026-11-02 (#3210 resolved): the left-hand side -m omega^2 A c by phi and
 
 #3213 (maintainer 2026-11-02: may be rather involved); low priority.
 
-#### **OPEN_RG9.11.16** The Jacobian of the pressure equations of ConnectorHydraulicActuatorSimple, analytic
+#### **CLOSED_RG9.11.16** The Jacobian of the pressure equations of ConnectorHydraulicActuatorSimple, analytic
 
 #3214 (maintainer 2026-11-02: would be nice; the other connectors numerical by CSystem stay so).
+
+CLOSED 2026-11-02 (#3214 resolved, #3201 stays open): ComputeJacobianODE1RHSConnector by the pressures, the stroke and its velocity with the marker Jacobians, the Euler parameter direction and dv/dq; within 4e-7 of the system-wide Jacobian; the same Newton iterations, HydraulicActuator2Arms with full Newton 1.00 instead of 1.23 s. [log](exudynRevisionLog2026c.md#rg9-11-16)
 
 #### **OPEN_RG9.11.17** dv/dq and the direction along the Euler parameters for the markers and nodes that lack them
 

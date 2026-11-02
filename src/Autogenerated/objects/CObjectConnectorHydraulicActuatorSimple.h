@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-02  02:01:19 (last modified)
+* @date         2026-11-02  11:41:23 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -133,6 +133,15 @@ public: // AUTO:
 
     //! AUTO:  the Jacobian of the ABRV:ODE2 ABRV:LHS by the two pressures, analytic, with the marker Jacobians of the connector interface (#3201)
     virtual void ComputeJacobianODE2_ODE1(const CSystemData& systemData, TemporaryComputationData& temp, ResizableMatrix& jacobian) const override;
+
+    //! AUTO:  the Jacobian of the two pressure equations by the pressures and by the coordinates and velocities of the markers, analytic (#3214)
+    virtual bool ComputeJacobianODE1RHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, ResizableMatrix& jacobianODE1, ResizableMatrix& jacobianODE2, ResizableMatrix& jacobianODE2_t) const override;
+
+    //! AUTO:  the bulk modulus per chamber volume of the two chambers at the stroke, for the pressure equations and their Jacobian (#3214)
+    template<class TReal> void ComputeBulkModulusPerVolume(TReal stroke, TReal* modulusPerVolume) const;
+
+    //! AUTO:  the flow into chamber i through its valve and its derivative by the pressure of the chamber (#3214)
+    void ComputeValveFlow(Index i, Real pressure, Real& flow, Real& flow_p) const;
 
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
