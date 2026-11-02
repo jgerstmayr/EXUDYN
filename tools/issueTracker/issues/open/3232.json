@@ -8,5 +8,6 @@
   "effort": "MEDIUM",
   "description": "The performance tests give generalContactSpheresPerf.py 7.46 s at 1.13.190 and 9.68 s at 1.13.309 (9.3 s at 1.13.331), the time of ComputeSystemODE2RHS with one thread 3.96 and 4.86 s, with four threads 1.36 and 2.20 s; the other performance files are within their scatter. Decided: find the change between the two versions by the timers of the contact and a bisection of the builds, and remove the cost if it is not needed.",
   "dateRaised": "2026-11-02",
-  "deadline": "2027-05-01"
+  "deadline": "2027-05-01",
+  "workingRemarks": "2026-11-02 analysis (revision2026c step RG5.7): +7.5 % on one thread in the same conditions, not 23 %; from d0ef1944 (#2978) by the loads, about 45 ns per load evaluation, without a change of the source of their serial path; proposed: the load loop on data precomputed at Assemble."
 }

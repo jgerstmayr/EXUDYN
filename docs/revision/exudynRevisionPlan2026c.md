@@ -71,6 +71,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
+  - RG5.7 Find the slowdown of generalContactSpheresPerf.py between 1.13.190 and 1.13.309 by its timers and a bisection of the builds; a simple fix right away
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
 - **RG7** Python user items
@@ -125,7 +126,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 5 | Implementation problems and bugs |
-| RG5 | OPEN | 8 | Performance |
+| RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -525,6 +526,12 @@ results; the history holds 24 entries. [log](exudynRevisionLog2026c.md#rg5-6-3)
 
 CLOSED 2026-10-24 (#3081; maintainer: the data is recorded now): removed with its use in the runner and its test;
 `--tolerant` stays for versions with the names of today. [log](exudynRevisionLog2026c.md#rg5-6-3)
+
+### **OPEN_RG5.7** Find the slowdown of generalContactSpheresPerf.py between 1.13.190 and 1.13.309 by its timers and a bisection of the builds; a simple fix right away
+
+#3232 (maintainer 2026-11-02: the analysis first, a simple fix right away).
+
+Analysis 2026-11-02 (same machine, builds side by side): the slowdown is smaller than the performance logs of different days suggest - generalContactSpheresPerf with one thread 4.27 s at 1.13.190 against 4.59 s now (+7.5 %), of which the contact +0.1 s (3.17 / 3.27 s, Contact:Overall) and the 50000 loads +0.2 s. A model of 50000 mass points with a LoadForceVector each, 300 steps of explicit Euler: ODE2RHS 2.29 s at 1.13.190, 2.82 s now; without the loads unchanged. The bisection gives d0ef1944 (#2978, the symbolic user functions in the threads): 2.18 s before, 2.88 s after, about 45 ns more per evaluated load (30 % of a load). Its source changes nothing in the serial path of the loads (ComputeODE2LoadsRHS, ComputeODE2SingleLoad, CLoad::GetLoadVector and the marker functions are the same): a virtual GetUserFunctions in CLoad, CMarker, CNode, CObject, UserFunctionBase as base class of the user functions, a bool in CSystemData, the include of PythonUserFunctions.h in CSystem.cpp. So it is the generated code (inlining, layout with whole-program optimization), not an added computation; no simple fix found. Proposed fix: the loop over the loads on data precomputed at Assemble per load (its marker type, the coordinate index or the ltg, the load type, bodyFixed, the user function), so that the common load on a node needs no virtual call of the marker; measured on the model above.
 
 ## **OPEN_RG6** Graphics and rendering
 
