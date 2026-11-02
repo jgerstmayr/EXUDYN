@@ -130,8 +130,9 @@ with ODE1 coordinates are computed serially. GeneralContact computes its own Jac
 
 - `doSystemWideDifferentiation`: the whole Jacobian by numerical differentiation of the system residual by every
   coordinate, serially. It includes all couplings, also those outside the coordinates of an item - a user function
-  that reads a sensor, another item or the state of the system -, which the local Jacobians miss; and it serves to
-  check the local Jacobians;
+  that reads a sensor, another item or the state of the system -, which the local Jacobians miss (a spring-damper
+  whose user function reads the position of another body needs two instead of one Newton iteration per step without
+  it); and it serves to check the local Jacobians;
 - `jacobianConnectorDerivative`: the derivative of the marker Jacobians in the Jacobians of the connectors, on by
   default; without it, models with flexible bodies may need more Newton iterations;
 - `relativeEpsilon` and `minimumCoordinateSize`: the step of the numerical differentiation.

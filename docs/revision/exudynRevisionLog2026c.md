@@ -5729,6 +5729,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg9-11-10"></a>
+### RG9.11.10 — Evaluated: the dependencies outside the local-to-global lists (2026-11-02, #3201)
+- Where they come from: the C++ items see their coordinates through their nodes and markers, which are in their
+  local-to-global lists - also the connectors, whose lists are those of their markers; the symbolic user functions get
+  only their arguments (a recording cannot read a sensor or another item), so their recordings have no hidden
+  dependency; loads declare theirs with AddODE2LoadDependencies and AddODE1LoadDependencies (#1548). What remains are
+  the Python user functions of objects that read mbs - GetSensorValues, Get...Output, the coordinates of other items.
+- Measured: a mass point on a spring-damper whose springForceUserFunction adds gain times the position of another mass
+  point, read by a sensor (full Newton, 1000 steps): 1999 to 2000 Newton iterations with the local Jacobians, 1000 to
+  1010 with doSystemWideDifferentiation, for gains 1e2 to 1e4; the same results, the same time for this small model.
+- Options: (a) declared, mbs.systemData.AddObjectODE2Dependencies(objectNumber, coordinates) as for the loads, the
+  columns added to the numerical differentiation of the object, which a Python user function has anyway - small and
+  exact, the user knows what the function reads; (b) the same declared by sensors, the coordinates of the sensor's
+  item looked up; (c) found automatically by evaluating the user functions once with the reads of mbs recorded - not
+  robust: reads depend on branches and on time, and the MainSystem functions are C++ methods; (d) from the recordings -
+  nothing to find, see above.
+- Decision proposed: (a), with (b) as a convenience, when a model needs it; doSystemWideDifferentiation is the remedy
+  now and the manual says so with the measurement. No step or issue opened (maintainer 2026-11-02).
+
 <a id="rg9-11-18"></a>
 ### RG9.11.18 — The derivative of the reaction forces as an option of the Newton Jacobian (2026-11-02, #3230)
 - d(M q_tt)/dq: not in the Jacobians (the solver adds M, the system-wide numerical Jacobian differentiates the right-hand
