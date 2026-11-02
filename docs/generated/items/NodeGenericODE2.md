@@ -11,7 +11,7 @@ A node containing a number of {ref}`ODE2 <ODE2>` variables. Use this node e.g. f
 ## Interface
 
 - Provides: `GenericODE2`
-- Objects that take this node: [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d), [](#sec-item-objectkinematictree)
+- Objects that take this node: [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d)
 
 ## Parameters
 

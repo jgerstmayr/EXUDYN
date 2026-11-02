@@ -11,7 +11,7 @@ A node with one {ref}`ODE2 <ODE2>` coordinate for one dimensional (1D) problems.
 ## Interface
 
 - Provides: `GenericODE2`
-- Objects that take this node: [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d), [](#sec-item-objectkinematictree)
+- Objects that take this node: [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d)
 
 ## Parameters
 

@@ -140,6 +140,8 @@ def Hydraulic(mbs):
                   nominalFlow=1e-5, systemPressure=1e7, tankPressure=1e5, useChamberVolumeChange=True))
 
 
+jacobianMassMatrixDerivative = False #the tree of the comparisons with the system-wide Jacobian
+
 def KinematicTree(mbs):
     """a kinematic tree of a revolute, a prismatic and a revolute joint with a branch, its links connected to the ground by
     a Cartesian and a rigid-body spring-damper and by a sphere contact with friction on MarkerKinematicTreeRigid: the
@@ -152,7 +154,8 @@ def KinematicTree(mbs):
                          jointTransformations=exu.Matrix3DList([np.eye(3), RotationMatrixY(0.2), RotationMatrixX(0.3), np.eye(3)]),
                          jointOffsets=exu.Vector3DList([[0, 0, 0], [0.4, 0, 0], [0.2, 0.05, 0], [0, 0.3, 0]]),
                          linkInertiasCOM=exu.Matrix3DList([np.eye(3)*0.01]*4), linkCOMs=exu.Vector3DList([[0.1, 0, 0]]*4),
-                         linkMasses=[1, 1, 1, 1], gravity=[0, -9.81, 0]))
+                         linkMasses=[1, 1, 1, 1], gravity=[0, -9.81, 0],
+                         jacobianMassMatrixDerivative=jacobianMassMatrixDerivative)) #the system-wide Jacobian has no d(M q_tt)/dq
     markers = [mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=tree, linkNumber=i, localPosition=[0.1, 0.02*i, 0.03]))
                for i in [2, 3]]
     mGround = [mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground, localPosition=p)) for p in [[0.7, 0.2, 0.1], [0.1, 0.5, -0.2]]]
@@ -417,3 +420,42 @@ def test_theParallelConstraintJacobianIsTheSerialOne(model, sparse):
     parallel = Jacobian(model, AE, threads=4, sparse=sparse)
     assert np.max(np.abs(serial)) > 0
     assert Difference(parallel, serial) < 1e-14, (model, sparse, Difference(parallel, serial))
+
+
+def test_theTreeJacobianHasTheDerivativeOfTheMassMatrixTimesTheAccelerations():
+    """the ODE2 Jacobian of ObjectKinematicTree with jacobianMassMatrixDerivative minus the one without it is
+    d(M q_tt)/dq, central differences of the mass matrix of the system times q_tt (#3211)"""
+    global jacobianMassMatrixDerivative
+    rng = np.random.default_rng(7)
+    q_tt = None
+    def WithAccelerations(solver, mbs):
+        mbs.systemData.SetODE2Coordinates_tt(q_tt)
+        ODE2((1., 0., 0.))(solver, mbs)
+    (SC, mbs) = Build('KinematicTree')
+    q_tt = rng.uniform(-2, 2, mbs.systemData.ODE2Size())
+    jacobians = []
+    for flag in [True, False]:
+        jacobianMassMatrixDerivative = flag
+        jacobians.append(Jacobian('KinematicTree', WithAccelerations))
+    jacobianMassMatrixDerivative = False
+    #central differences of M(q) q_tt, at the coordinates of Jacobian()
+    (SC, mbs) = Build('KinematicTree')
+    solver = exu.MainSolverImplicitSecondOrder()
+    solver.InitializeSolver(mbs, exu.SimulationSettings())
+    q = np.array(mbs.systemData.GetODE2Coordinates()) + 0.01*np.cos(np.arange(mbs.systemData.ODE2Size()))
+    n = len(q)
+    derivative = np.zeros((n, n))
+    nTree = 4 #the coordinates of the tree come first
+    for j in range(nTree):
+        products = []
+        for sign in [1, -1]:
+            x = q.copy()
+            x[j] += sign*1e-6
+            mbs.systemData.SetODE2Coordinates(x)
+            solver.ComputeMassMatrix(mbs)
+            products.append(np.array(solver.GetSystemMassMatrix()) @ q_tt)
+        derivative[:, j] = (products[0] - products[1])/2e-6
+    solver.FinalizeSolver(mbs, exu.SimulationSettings())
+    #the Jacobian of the right-hand side: minus that of the left-hand side
+    difference = np.max(np.abs((jacobians[1] - jacobians[0])[:nTree, :nTree] - derivative[:nTree, :nTree]))
+    assert difference < 1e-5*max(1., np.max(np.abs(derivative))), difference

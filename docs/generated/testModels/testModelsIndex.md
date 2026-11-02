@@ -124,6 +124,7 @@ itemParameterRenamesTest
 jointArgsTest
 kinematicTreeAndMBStest
 kinematicTreeConstraintTest
+kinematicTreeFloatingBaseTest
 kinematicTreeMarkerCacheTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest

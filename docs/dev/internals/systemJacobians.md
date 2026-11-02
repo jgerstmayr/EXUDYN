@@ -69,6 +69,30 @@ is computed by `ComputeJacobianODE2Connector` in parallel, as it does not touch 
   perfObjectFFRFreducedOrder (2000 steps), numerical / own: 8 modes 0.35 / 0.32 s (modified Newton), 1.13 / 0.92 s
   (full); 24 modes 2.40 / 1.63 s, 13.4 / 6.85 s; the same Newton iterations. The rest of the time is the mass matrix
   and the markers, so the quadratic velocity terms are not simplified; `numericalJacobian` is the switch back.
+- ObjectKinematicTree (#3211): `ComputeJacobianODE2_ODE2` by forward differences of the inverse dynamics
+  `ComputeMassMatrixAndODE2LHS(..., qTotal, q_t, q_tt)` - the recursive Newton-Euler forces with the accelerations of
+  the joints - in temporaries of the thread, so in the parallel assembly; with `jacobianMassMatrixDerivative` (the
+  default) at the current accelerations, so that it contains d(M q_tt)/dq, which the other Jacobians leave out. An
+  analytic derivative of the recursion (by the derivatives of the link motions) is not done: the differences cost
+  2n evaluations of O(n), as the mass matrix, and the measured gain is the term, not the arithmetic. Measured
+  (generalized-alpha, full Newton, a CartesianSpringDamper from every link to the ground), the system's numerical
+  Jacobian / the tree's: 20 links, 200 steps, 664 / 571 iterations, 0.170 / 0.149 s, 0.100 / 0.088 s with four
+  threads; 60 links, 50 steps, 1591 / 317 iterations, 6.07 / 1.18 s, 4.27 / 0.46 s with four threads - the mass
+  matrix of a long chain depends strongly on its coordinates, and without the term the Newton method needs some 30
+  iterations per step. With a floating base or a forceUserFunction the Jacobian stays that of the system.
+- The floating base of ObjectKinematicTree (#1549): `baseNodeNumber`, a 3D rigid body node; the coordinates of the
+  tree are the joint coordinates and those of the base node. `BaseMotion` gives the placement and the motion of the
+  base in its frame - $(\omega, A^T \dot p)$ and its time derivative -, the parent motion of the root links in the
+  kinematics; in the forces the bias acceleration of the base, $\dot G_{local}\dot\theta$ and $-\omega \times v$, with the
+  gravity, and the forces of the root links on the base by the transposed motion subspace, $A f$ and
+  $G_{local}^T n$; in the mass matrix the composite inertia of the whole tree in the base, its block $S^T I S$ and the
+  couplings with the joints, the force of the composite inertia of a joint carried into the base. The marker
+  Jacobians get the columns of the base; their derivatives by the base coordinates are not given
+  (`CMarker::HasJacobianDerivative`, false for MarkerKinematicTreeRigid then), so the connectors on them are
+  differentiated by the system. Checked (kinematicTreeFloatingBaseTest.py) against a redundant model of rigid bodies
+  and revolute joints on Lie group nodes, Euler parameters and Tait-Bryan angles, to the error of the time
+  integration, which falls by 16 for 4 times the steps; RK44 with the explicit Lie group integration on the Lie group
+  node.
 - MarkerKinematicTreeRigid (#3216): `CObjectKinematicTree::JacobianColumnDerivative` gives the derivative of a
   Jacobian column of a link's chain by a joint coordinate - a revolute joint above turns the column about its axis, a
   prismatic one leaves it, a joint at or below moves the point -, from which the marker has the Jacobian derivative

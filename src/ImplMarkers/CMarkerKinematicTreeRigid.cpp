@@ -87,9 +87,16 @@ void CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative(const CSyste
 //! change the global angular velocity (#3216)
 bool CMarkerKinematicTreeRigid::GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const
 {
+	if (!HasJacobianDerivative(cSystemData)) { return false; } //with a floating base the system's Jacobian (#1549)
 	((const CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetVelocity_qKinematicTree(
 		parameters.localHT.GetTranslation(), parameters.linkNumber, velocity_q, angularVelocity_q);
 	return true;
+}
+
+//! the derivatives of the Jacobian by the joint coordinates, not by those of a floating base (#1549)
+bool CMarkerKinematicTreeRigid::HasJacobianDerivative(const CSystemData& cSystemData) const
+{
+	return !((const CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->HasFloatingBase();
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

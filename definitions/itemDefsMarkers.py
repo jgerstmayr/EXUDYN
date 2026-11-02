@@ -1662,6 +1662,12 @@ definitions.append(ItemDefinition(
     revolute joint $j$. They give $\partial(\Jm_{pos}\tp \LU{0}{\fv} + \Jm_{rot}\tp \LU{0}{\ttau})/\partial\qv$
     and the derivatives of the marker velocity and angular velocity by $\qv$, so that connectors on the marker
     have their local Jacobian (#3216).
+
+    With a floating base (`baseNodeNumber` of the tree), the link frames are in the frame of the base node, and the
+    Jacobians have the columns of its coordinates after those of the joints: the translation $\Im$ and, for
+    rotation coordinate $k$ with $\av_k = \LU{0b}{\Rot}\,\LU{b}{\Gm}\,\ev_k$ of the base, $\Jm_{pos,k} = \av_k \times
+    (\LU{0}{\pv}_{m} - \LU{0}{\pv}_b)$ and $\Jm_{rot,k} = \av_k$. The derivatives of the Jacobians by the coordinates of the
+    base are not given, so that the connectors on the marker have the Jacobian of the system then (#1549).
     """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -1708,6 +1714,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeMarkerData'),
         ItemFunctionDef('ComputeMarkerDataJacobianDerivative'),
         ItemFunctionDef('GetVelocity_q'),
+        ItemFunctionDef('HasJacobianDerivative'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
             implementation='return "KinematicTreeRigid";',

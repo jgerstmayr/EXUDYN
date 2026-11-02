@@ -110,6 +110,11 @@ in `mbs.symbolicVariables`, the new scope of the model - a new one, or the one t
 restores the old behaviour for the transition (#3208). The parameters of the user items of `UserItemCreator` may be
 expressions of such variables (`stiffness=k/2 + 0.1*m1`), kept in `creator.parameterBindings`, which `SymbolicSystem`
 takes as `parameters`; a connector at the center of a user mass point is on a marker of its body (#3159, #3207).
+ObjectKinematicTree takes a floating base, `baseNodeNumber`, a rigid body node - NodeRigidBodyRotVecLG for the
+explicit solvers -, whose frame is the base of the tree (#1549). The tree has its own Jacobian, computed in parallel,
+which contains the derivative of the mass matrix term, `jacobianMassMatrixDerivative`: a chain of 60 links with a
+spring-damper on each link needs 317 instead of 1591 Newton iterations in 50 steps, 1.2 instead of 6.1 s, 0.46 s with
+four threads (#3211).
 `localPosition` of MarkerBodyRigid and MarkerKinematicTreeRigid and `rotationMarker0/1` of the joints and connectors
 are documented as deprecated, to be removed in favour of `localHT` of the rigid body markers; they work as before and
 give no warning yet (#3179).

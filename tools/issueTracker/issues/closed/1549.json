@@ -1,0 +1,15 @@
+{
+  "number": 1549,
+  "title": "KinematicTree",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body? [2026-11-02, Claude-JG]: Decided (maintainer 2026-11-02): the floating base is a rigid body node, by default a Lie group node, so that the explicit solvers still take the tree; the invalid index -1 means no floating base; before the Jacobian of #3211, which may keep the part of the floating base numerical (revision2026c step RG9.11.13.1).",
+  "dateRaised": "2023-05-02",
+  "deadline": "2023-10-29",
+  "dateResolved": "2026-11-02 19:50",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectKinematicTree takes a floating base: baseNodeNumber, a 3D rigid body node (NodeRigidBodyRotVecLG, NodeRigidBodyEP, NodeRigidBodyRxyz) whose frame is the base of the tree; the coordinates of the tree are the joint coordinates and those of the node; the kinematics, the forces and the mass matrix start at the motion of the base, the markers have the Jacobian columns of the base. NodeRigidBodyRotVecLG lets the explicit solvers integrate the tree by the Lie group methods. Test model kinematicTreeFloatingBaseTest.py against a redundant model of rigid bodies and joints.",
+  "resolvedInVersion": "1.13.332"
+}

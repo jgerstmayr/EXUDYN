@@ -512,14 +512,16 @@ items = {
   'ObjectKinematicTree': {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded', 'SuperElement', 'KinematicTree'],
-    'requestedNodeTypes': ['GenericODE2'],
+    'requestedNodeTypes': [],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'KinematicTree'],
     'outputVariables': ['Coordinates', 'Coordinates_t', 'Coordinates_tt', 'Force', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; :math:`n` being the number of minimal coordinates'},
       'gravity': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree'},
-      'baseOffset': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'offset vector for base, in global coordinates'},
+      'baseOffset': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'offset vector for base, in global coordinates; with a floating base in the coordinates of the base node'},
+      'jacobianMassMatrixDerivative': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'True: the ODE2 Jacobian of the tree contains the derivative of :math:`\\Mm(\\qv)\\,\\ddot\\qv` by the joint coordinates, at the current accelerations, which the Newton method of the implicit solvers then has; False: without it, as the Jacobians of the other items (#3211)'},
+      'baseNodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number (type NodeIndex) of a rigid body node, NodeRigidBodyRotVecLG, NodeRigidBodyEP or NodeRigidBodyRxyz, whose frame is the base of the tree, a floating base; the invalid index (default) is a base fixed in the global frame (#1549)'},
       'jointTypes': {'type': 'JointTypeList', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set'},
       'linkParents': {'type': 'ArrayIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'index of parent joint/link; if no parent exists, the value is :math:`-1`; by default, :math:`p_0=-1` because the :math:`i`th parent index must always fulfill :math:`p_i<i`; must be always set'},
       'jointTransformations': {'type': 'Matrix3DList', 'size': '', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'list of constant joint transformations from parent joint coordinates :math:`p_0` to this joint coordinates :math:`j_0`; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists (:math:`-1`), the base coordinate system :math:`0` is used; must be always set'},

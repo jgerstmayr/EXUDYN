@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-02  19:35:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -107,7 +107,7 @@ public: // AUTO:
     //! AUTO:  provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity(); where no exact type can be given, a generic type is used and the check is done in CheckPreAssembleConsistency(...)
     virtual Node::Type GetRequestedNodeType() const override
     {
-        return Node::GenericODE2;
+        return Node::_None;
     }
 
     //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
@@ -120,6 +120,8 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectKinematicTree->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "gravity")) { EPyUtils::FromPython(d["gravity"], cObjectKinematicTree->GetParameters().gravity); }
         if (EPyUtils::DictItemExists(d, "baseOffset")) { EPyUtils::FromPython(d["baseOffset"], cObjectKinematicTree->GetParameters().baseOffset); }
+        if (EPyUtils::DictItemExists(d, "jacobianMassMatrixDerivative")) { EPyUtils::FromPython(d["jacobianMassMatrixDerivative"], cObjectKinematicTree->GetParameters().jacobianMassMatrixDerivative, "ObjectKinematicTree.jacobianMassMatrixDerivative"); }
+        if (EPyUtils::DictItemExists(d, "baseNodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["baseNodeNumber"], cObjectKinematicTree->GetParameters().baseNodeNumber); }
         if (EPyUtils::DictItemExists(d, "jointTypes")) { cObjectKinematicTree->GetParameters().jointTypes = py::cast<std::vector<Joint::Type>>(d["jointTypes"]); }
         if (EPyUtils::DictItemExists(d, "linkParents")) { EPyUtils::FromPython(d["linkParents"], cObjectKinematicTree->GetParameters().linkParents, "ObjectKinematicTree.linkParents"); }
         if (EPyUtils::DictItemExists(d, "jointTransformations")) { EPyUtils::SetMatrix3DListSafely(d["jointTransformations"], cObjectKinematicTree->GetParameters().jointTransformations); }
@@ -153,6 +155,8 @@ public: // AUTO:
         d["nodeNumber"] = (NodeIndex)cObjectKinematicTree->GetParameters().nodeNumber;
         d["gravity"] = EPyUtils::ToPython(cObjectKinematicTree->GetParameters().gravity);
         d["baseOffset"] = EPyUtils::ToPython(cObjectKinematicTree->GetParameters().baseOffset);
+        d["jacobianMassMatrixDerivative"] = (bool)cObjectKinematicTree->GetParameters().jacobianMassMatrixDerivative;
+        d["baseNodeNumber"] = (NodeIndex)cObjectKinematicTree->GetParameters().baseNodeNumber;
         d["jointTypes"] = (std::vector<Joint::Type>)cObjectKinematicTree->GetParameters().jointTypes;
         d["linkParents"] = EPyUtils::ToPythonMember(cObjectKinematicTree->GetParameters().linkParents);
         d["jointTransformations"] = (PyMatrix3DList)cObjectKinematicTree->GetParameters().jointTransformations;
@@ -185,6 +189,8 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectKinematicTree->GetParameters().nodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("gravity") == 0) { return EPyUtils::ToPython(cObjectKinematicTree->GetParameters().gravity); } //! AUTO: get parameter
         else if (parameterName.compare("baseOffset") == 0) { return EPyUtils::ToPython(cObjectKinematicTree->GetParameters().baseOffset); } //! AUTO: get parameter
+        else if (parameterName.compare("jacobianMassMatrixDerivative") == 0) { return py::cast((bool)cObjectKinematicTree->GetParameters().jacobianMassMatrixDerivative); } //! AUTO: get parameter
+        else if (parameterName.compare("baseNodeNumber") == 0) { return py::cast((NodeIndex)cObjectKinematicTree->GetParameters().baseNodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("jointTypes") == 0) { return py::cast((std::vector<Joint::Type>)cObjectKinematicTree->GetParameters().jointTypes); } //! AUTO: get parameter
         else if (parameterName.compare("linkParents") == 0) { return py::cast(EPyUtils::ToPythonMember(cObjectKinematicTree->GetParameters().linkParents)); } //! AUTO: get parameter
         else if (parameterName.compare("jointTransformations") == 0) { return py::cast((PyMatrix3DList)cObjectKinematicTree->GetParameters().jointTransformations); } //! AUTO: get parameter
@@ -218,6 +224,8 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectKinematicTree->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("gravity") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().gravity); } //! AUTO: set parameter
         else if (parameterName.compare("baseOffset") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().baseOffset); } //! AUTO: set parameter
+        else if (parameterName.compare("jacobianMassMatrixDerivative") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().jacobianMassMatrixDerivative, "ObjectKinematicTree.jacobianMassMatrixDerivative"); } //! AUTO: set parameter
+        else if (parameterName.compare("baseNodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectKinematicTree->GetParameters().baseNodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("jointTypes") == 0) { cObjectKinematicTree->GetParameters().jointTypes = py::cast<std::vector<Joint::Type>>(value); } //! AUTO: set parameter
         else if (parameterName.compare("linkParents") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().linkParents, "ObjectKinematicTree.linkParents"); } //! AUTO: set parameter
         else if (parameterName.compare("jointTransformations") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectKinematicTree->GetParameters().jointTransformations); } //! AUTO: set parameter

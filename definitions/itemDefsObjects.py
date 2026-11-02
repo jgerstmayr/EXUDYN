@@ -3150,6 +3150,30 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     especially for describing the kinematic chain as well as the inertial parameters.
 
 
+    #### Jacobian
+
+    The tree has its own ODE2 Jacobian, computed in the parallel assembly of the implicit solvers: forward
+    differences of its inverse dynamics $\Mm(\qv)\,\ddot\qv + \fv_{LHS}(\qv, \dot\qv)$ by the joint coordinates and
+    velocities, at the current accelerations, so that it contains the derivative of $\Mm(\qv)\,\ddot\qv$ by $\qv$
+    (`jacobianMassMatrixDerivative`, True by default), which the Jacobians of the other items leave out. As the mass
+    matrix of a tree depends strongly on its coordinates, this saves Newton iterations: a chain of 60 links with a
+    spring-damper on each link needs 317 instead of 1591 iterations in 50 steps of generalized-alpha with full Newton,
+    20 links 571 instead of 664 in 200 steps (#3211). With a floating base or a `forceUserFunction` the Jacobian is that
+    of the system, by numerical differentiation.
+
+    #### Floating base
+
+    With `baseNodeNumber`, the base of the tree is the frame of a rigid body node, the root links placed in it by
+    `baseOffset` and their joint transformations; the coordinates of the tree are then the joint coordinates followed
+    by the coordinates of the base node. The base has no mass of its own - an `ObjectRigidBody` on the same node gives
+    it one -; the recursions of the forces and of the mass matrix start at the motion of the base, its velocity and
+    angular velocity in its frame, $\vv_b = \LU{b,0}{\Rot}\,\dot\pv_b$, $\tomega_b = \LU{b}{\Gm}\,\dot\ttheta_b$, and
+    the forces of the root links act on the base by $\LU{0,b}{\Rot}\,\fv_b$ on its translation and $\LU{b}{\Gm\tp}\nv_b$
+    on its rotation coordinates. NodeRigidBodyRotVecLG, the Lie group node, is the one for the explicit solvers;
+    there, the inverse of the mass matrix per body may not be used together with another body on the base node.
+    Connectors on markers of a tree with a floating base have the Jacobian of the system, as the markers do not give
+    the derivatives of their Jacobians by the coordinates of the base (#1549).
+
     #### Marker interfaces
 
     The tree has one marker of its own, `MarkerKinematicTreeRigid`: a link $n_l$ and a local position in
@@ -3221,7 +3245,15 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
             pythonName='baseOffset',
             defaultValue=DVZeroVector3D,
-            description=r"""$\LU{0}{\pv_b} \in \Rcal^{3}$offset vector for base, in global coordinates"""),
+            description=r"""$\LU{0}{\pv_b} \in \Rcal^{3}$offset vector for base, in global coordinates; with a floating base in the coordinates of the base node"""),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='jacobianMassMatrixDerivative',
+            defaultValue=True,
+            description=r"""True: the ODE2 Jacobian of the tree contains the derivative of $\Mm(\qv)\,\ddot\qv$ by the joint coordinates, at the current accelerations, which the Newton method of the implicit solvers then has; False: without it, as the Jacobians of the other items (#3211)"""),
+        ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
+            pythonName='baseNodeNumber',
+            defaultValue=DVInvalidIndex,
+            description=r"""$n_b$node number (type NodeIndex) of a rigid body node, NodeRigidBodyRotVecLG, NodeRigidBodyEP or NodeRigidBodyRxyz, whose frame is the base of the tree, a floating base; the invalid index (default) is a base fixed in the global frame (#1549)"""),
         ItemParameter(type=TJointTypeList, destination=DestComp+DestParam,
             pythonName='jointTypes',
             defaultValue='JointTypeList()',
@@ -3323,7 +3355,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TResizableVector, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='treeCacheCoordinates',
             defaultValue='ResizableVector()',
-            description=r'the current coordinates, velocities and accelerations and the reference coordinates of the node from which the cache is computed (#3229)'),
+            description=r'the current coordinates, velocities and accelerations and the reference coordinates of the nodes from which the cache is computed (#3229)'),
         ItemParameter(type=TBool, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='treeCacheValid',
             defaultValue=False,
@@ -3349,6 +3381,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians'),
+        ItemFunctionDef('ComputeJacobianODE2_ODE2'),
         #the types serve MarkerKinematicTreeRigid; it provides none of the access functions of a body, so the general
         #body markers are refused at Assemble() (#2734)
         ItemAccessFunctionTypes(ownMarkers='KinematicTree', ownMarkerTypes=['TranslationalVelocity_qt', 'AngularVelocity_qt']),
@@ -3394,16 +3427,26 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             implementation='return "KinematicTree";',
             description=r'Get type name of object; could also be realized via a string -> type conversion?'),
         ItemFunctionDef('GetNodeNumber',
-            implementation="""CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);
-        return parameters.nodeNumber;"""),
+            implementation="""CHECKandTHROW(localIndex == 0 || (localIndex == 1 && HasFloatingBase()), __EXUDYN_invalid_local_node);
+        return (localIndex == 0) ? parameters.nodeNumber : parameters.baseNodeNumber;"""),
         ItemFunctionDef('SetNodeNumber',
-            implementation='parameters.nodeNumber=nodeNumber;'),
+            implementation='if (localIndex == 0) { parameters.nodeNumber = nodeNumber; } else { parameters.baseNodeNumber = nodeNumber; }'),
         ItemFunctionDef('GetNumberOfNodes',
-            implementation='return 1;'),
+            implementation='return HasFloatingBase() ? 2 : 1;'),
         ItemFunctionDef('GetODE2Size',
-            implementation='return parameters.jointTransformations.NumberOfItems();',
-            description=r'number of ABRV:ODE2 coordinates'),
-        ItemRequestedTypes('Node', ['GenericODE2']),
+            implementation='return parameters.jointTransformations.NumberOfItems() + NumberOfBaseCoordinates();',
+            description=r'number of ABRV:ODE2 coordinates: the joint coordinates and those of a floating base (#1549)'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='HasFloatingBase', implementation='return parameters.baseNodeNumber != EXUstd::InvalidIndex;',
+            description=r'true with a floating base, baseNodeNumber (#1549)'),
+        ItemFunction(type=TIndex, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='NumberOfBaseCoordinates', implementation='return HasFloatingBase() ? GetCNode(1)->GetNumberOfODE2Coordinates() : 0;',
+            description=r'the number of ODE2 coordinates of the floating base, 0 without (#1549)'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='BaseMotion',
+            args='ConfigurationType configuration, bool computeVelocitiesAccelerations, Matrix3D& A, Vector3D& p, Vector3D& w, Vector3D& v, Vector3D& aw, Vector3D& av',
+            description=r'the placement (A, p) of the floating base in the global frame and its velocity (w, v) and acceleration (aw, av) in its frame; without a floating base the unit placement and no motion (#1549)'),
+        ItemRequestedTypes('Node', []), #node 0 a NodeGenericODE2, node 1 a rigid body node, checked by CheckPreAssembleConsistency (#1549)
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
             pythonName='GetType',
             implementation='return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement + (Index)CObjectType::KinematicTree);',
@@ -3438,8 +3481,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             description=r'the placements of the links (in the base, or in their parents), and their velocities and accelerations as (omega, v) in link coordinates (#2829)'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeMassMatrixAndODE2LHS',
-            args='ResizableMatrix* massMatrix, Vector* ode2Lhs, bool computeMass',
-            description=r'compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false'),
+            args='ResizableMatrix* massMatrix, Vector* ode2Lhs, bool computeMass, const Vector* qTotal = nullptr, const Vector* q_t = nullptr, const Vector* q_tt = nullptr',
+            description=r'compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false; of the current state, or of the joint coordinates qTotal (with the reference) and velocities q_t given, with the accelerations q_tt the inverse dynamics M q_tt + LHS (#3211)'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='AddJointForces',
             args='Vector& f, const LinkedDataVector& q, const LinkedDataVector& q_t',

@@ -76,6 +76,12 @@ revolute joint $j$. They give $\partial(\Jm_{pos}\tp \LU{0}{\fv} + \Jm_{rot}\tp 
 and the derivatives of the marker velocity and angular velocity by $\qv$, so that connectors on the marker
 have their local Jacobian (#3216).
 
+With a floating base (`baseNodeNumber` of the tree), the link frames are in the frame of the base node, and the
+Jacobians have the columns of its coordinates after those of the joints: the translation $\Im$ and, for
+rotation coordinate $k$ with $\av_k = \LU{0b}{\Rot}\,\LU{b}{\Gm}\,\ev_k$ of the base, $\Jm_{pos,k} = \av_k \times
+(\LU{0}{\pv}_{m} - \LU{0}{\pv}_b)$ and $\Jm_{rot,k} = \av_k$. The derivatives of the Jacobians by the coordinates of the
+base are not given, so that the connectors on the marker have the Jacobian of the system then (#1549).
+
 (miniexample-markerkinematictreerigid)=
 ## Mini example
 
@@ -100,4 +106,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(nTree, exu.OutputVariableType.Coordina
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM), [`kinematicTreeMarkerCacheTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeMarkerCacheTest.py) (TM), [`kinematicTreePrismaticJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreePrismaticJacobianTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM), [`kinematicTreeFloatingBaseTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeFloatingBaseTest.py) (TM), [`kinematicTreeMarkerCacheTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeMarkerCacheTest.py) (TM), [`kinematicTreePrismaticJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreePrismaticJacobianTest.py) (TM)

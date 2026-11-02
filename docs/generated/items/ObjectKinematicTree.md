@@ -17,8 +17,8 @@ A special object to represent open kinematic trees using minimal coordinate form
 ## Interface
 
 - Python names: `ObjectKinematicTree` or `KinematicTree`, and `VKinematicTree` for its visualization
-- Nodes it takes: [](#sec-item-node1d), [](#sec-item-nodegenericode2), [](#sec-item-nodepointground)
 - Body markers that can be placed on it: [](#sec-item-markerkinematictreerigid)
+- Nodes: see the detailed description
 
 ## Parameters
 
@@ -29,7 +29,9 @@ The parameters of the item; in a dictionary, its type is 'KinematicTree':
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_0 \in \Ncal^n$) node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; $n$ being the number of minimal coordinates |
 | **gravity** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{0}{\gv} \in \Rcal^{3}$) gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree |
-| **baseOffset** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{0}{\pv_b} \in \Rcal^{3}$) offset vector for base, in global coordinates |
+| **baseOffset** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{0}{\pv_b} \in \Rcal^{3}$) offset vector for base, in global coordinates; with a floating base in the coordinates of the base node |
+| **jacobianMassMatrixDerivative** | Bool |  | True | True: the ODE2 Jacobian of the tree contains the derivative of $\Mm(\qv)\,\ddot\qv$ by the joint coordinates, at the current accelerations, which the Newton method of the implicit solvers then has; False: without it, as the Jacobians of the other items (#3211) |
+| **baseNodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_b$) node number (type NodeIndex) of a rigid body node, NodeRigidBodyRotVecLG, NodeRigidBodyEP or NodeRigidBodyRxyz, whose frame is the base of the tree, a floating base; the invalid index (default) is a base fixed in the global frame (#1549) |
 | **jointTypes** | JointTypeList |  | [] | (symbol: $\jv_T \in \Ncal^{n}$) joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set |
 | **linkParents** | ArrayIndex |  | [] | (symbol: $\iv_p = [p_0,\, p_1,\, \ldots] \in \Ncal^{n}$) index of parent joint/link; if no parent exists, the value is $-1$; by default, $p_0=-1$ because the $i$th parent index must always fulfill $p_i<i$; must be always set |
 | **jointTransformations** | Matrix3DList |  | [] | (symbol: $\Tm = [\LU{p_0,j_0}{\Tm_0},\, \LU{p_1,j_1}{\Tm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$) list of constant joint transformations from parent joint coordinates $p_0$ to this joint coordinates $j_0$; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set |
@@ -277,6 +279,30 @@ differentiation.
 More detailed equations will be added later on. Follow exactly the description (and coordinate systems) of the object parameters,
 especially for describing the kinematic chain as well as the inertial parameters.
 
+### Jacobian
+
+The tree has its own ODE2 Jacobian, computed in the parallel assembly of the implicit solvers: forward
+differences of its inverse dynamics $\Mm(\qv)\,\ddot\qv + \fv_{LHS}(\qv, \dot\qv)$ by the joint coordinates and
+velocities, at the current accelerations, so that it contains the derivative of $\Mm(\qv)\,\ddot\qv$ by $\qv$
+(`jacobianMassMatrixDerivative`, True by default), which the Jacobians of the other items leave out. As the mass
+matrix of a tree depends strongly on its coordinates, this saves Newton iterations: a chain of 60 links with a
+spring-damper on each link needs 317 instead of 1591 iterations in 50 steps of generalized-alpha with full Newton,
+20 links 571 instead of 664 in 200 steps (#3211). With a floating base or a `forceUserFunction` the Jacobian is that
+of the system, by numerical differentiation.
+
+### Floating base
+
+With `baseNodeNumber`, the base of the tree is the frame of a rigid body node, the root links placed in it by
+`baseOffset` and their joint transformations; the coordinates of the tree are then the joint coordinates followed
+by the coordinates of the base node. The base has no mass of its own - an `ObjectRigidBody` on the same node gives
+it one -; the recursions of the forces and of the mass matrix start at the motion of the base, its velocity and
+angular velocity in its frame, $\vv_b = \LU{b,0}{\Rot}\,\dot\pv_b$, $\tomega_b = \LU{b}{\Gm}\,\dot\ttheta_b$, and
+the forces of the root links act on the base by $\LU{0,b}{\Rot}\,\fv_b$ on its translation and $\LU{b}{\Gm\tp}\nv_b$
+on its rotation coordinates. NodeRigidBodyRotVecLG, the Lie group node, is the one for the explicit solvers;
+there, the inverse of the mass matrix per body may not be used together with another body on the base node.
+Connectors on markers of a tree with a floating base have the Jacobian of the system, as the markers do not give
+the derivatives of their Jacobians by the coordinates of the base (#1549).
+
 ### Marker interfaces
 
 The tree has one marker of its own, `MarkerKinematicTreeRigid`: a link $n_l$ and a local position in
@@ -341,4 +367,4 @@ exu.sys['testResult'] = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps 
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM), [`kinematicTreeMarkerCacheTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeMarkerCacheTest.py) (TM), [`kinematicTreePrismaticJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreePrismaticJacobianTest.py) (TM), [`kinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeTest.py) (TM), [`kinematicTreeUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeUserFunctionTest.py) (TM), [`createKinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM), [`kinematicTreeFloatingBaseTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeFloatingBaseTest.py) (TM), [`kinematicTreeMarkerCacheTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeMarkerCacheTest.py) (TM), [`kinematicTreePrismaticJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreePrismaticJacobianTest.py) (TM), [`kinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeTest.py) (TM), [`kinematicTreeUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeUserFunctionTest.py) (TM), [`createKinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py) (TM)

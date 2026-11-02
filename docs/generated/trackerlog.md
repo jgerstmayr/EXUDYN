@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.331.dev1
+- Exudyn version = 1.13.334.dev1
 - last change = 2026-11-02
-- Number of issues = 3232
-- Number of resolved issues = 3108 (331 in current version)
+- Number of issues = 3233
+- Number of resolved issues = 3111 (334 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` generalContactSpheresPerf.py: the ODE2RHS of the general contact 23 percent slower since 1.13.190 (#3232)
+  - description: The performance tests give generalContactSpheresPerf.py 7.46 s at 1.13.190 and 9.68 s at 1.13.309 (9.3 s at 1.13.331), the time of ComputeSystemODE2RHS with one thread 3.96 and 4.86 s, with four threads 1.36 and 2.20 s; the other performance files are within their scatter. Decided: find the change between the two versions by the timers of the contact and a bisection of the builds, and remove the cost if it is not needed.
+  - date raised: 2026-11-02
 - `CHANGE` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` Remove special.deprecations.symbolicVariablesWithoutScope, the named symbolic variables of no scope (#3231)
   - description: Since \#3208 a named esym.Real, Vector or Matrix is a variable of a scope, esym.variables or mbs.symbolicVariables, and a symbolic user function reads only its arguments and the variables of mbs.symbolicVariables; exudyn.special.deprecations.symbolicVariablesWithoutScope restores the variables of no scope for the transition. Decided: the flag and the branches of NamedRealInScope, NamedArrayInScope and CheckVariablesOfRecording that it takes are removed when scripts have changed, as \#3016 for symbolicStarProduct; a delayed issue without a plan step.
   - date raised: 2026-11-02
@@ -9048,12 +9051,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `IMPROVEMENT` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` ObjectANCFBeam: its own ODE2 Jacobian (#3213)
   - description: ObjectANCFBeam declares ODE2\_ODE2 without a function and is differentiated numerically by CSystem, serially; the elastic forces would be differentiated automatically per element. Involved; low priority.
   - date raised: 2026-11-02
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectKinematicTree: an efficient ODE2 Jacobian (#3211)
-  - description: ObjectKinematicTree declares ODE2\_ODE2 and ODE2\_ODE2\_t without a function, so CSystem differentiates the whole tree numerically and serially, one evaluation of ComputeMassMatrixAndODE2LHS per coordinate. Decided: an analytic or automatic Jacobian of the forces of the joints (springs, dampers, the PD control, the gyroscopic terms), measured on the kinematic tree performance model first.
-  - date raised: 2026-11-02
-- `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` Revise the system Jacobians: every object provides its local Jacobian, assembled in parallel for ODE2-ODE2, AE-ODE2 and ODE2-AE, the other couplings complete and serial (#3201)
-  - description: CSystem::JacobianODE2RHS, JacobianODE1RHS, JacobianAE and JacobianODE2Loads decide per object between an analytic Jacobian, the connector interface, the path of the marker data and a numerical differentiation by CSystem, with flags of the object, the markers and the settings in each place. To do: every object provides the Jacobian of its equations through one interface - analytic, by automatic differentiation or by a numerical differentiation of its own -, so that the assembly distinguishes only the system-wide numerical Jacobian (all couplings, serial, for comparison) and the assembly of the local Jacobians, in parallel for the objects without Python functions and serial for the others and for the objects whose equations depend on coordinates outside their local-to-global lists (sensors and other items read in user functions). Only the ODE2-ODE2, AE-ODE2 and ODE2-AE blocks are optimized for speed; the other blocks (ODE1, loads, the AE-AE and the derivative terms) are completed for all couplings, serial and readable, in line with the ODE1-ODE2 couplings of \#3143. Design: docs/dev/design/systemJacobians.md.
-  - date raised: 2026-11-01
 - `EXTENSION` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` User items of GenericJoint, HydraulicActuatorSimple, ReevingSystemSprings and ObjectFFRFreducedOrder for the advanced GPU tests (#3200)
   - description: For the advanced tests of the uniform evaluation on the GPU (revision2026c group RG14): user items of exudyn.symbolics.userItems that reproduce ObjectJointGeneric (free axes, so equations lambda = 0), ObjectConnectorHydraulicActuatorSimple (ODE1 pressures coupled with the ODE2 coordinates), ObjectConnectorReevingSystemSprings (a rope over several sheaves of rigid markers) and ObjectFFRFreducedOrder (modal coordinates, a large constant mass matrix and the quadratic velocity vector), each checked against the built-in item. Decided: low priority, after the symbolic core features; not a next step.
   - date raised: 2026-11-01
@@ -9299,10 +9296,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: split into internal and external licenses
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2023-10-29
-- `EXTENSION` `HIGH EFF` KinematicTree (#1549)
-  - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body? \[2026-11-02, Claude-JG\]: Decided (maintainer 2026-11-02): the floating base is a rigid body node, by default a Lie group node, so that the explicit solvers still take the tree; the invalid index -1 means no floating base; before the Jacobian of \#3211, which may keep the part of the floating base numerical (revision2026c step RG9.11.13.1).
-  - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
-  - date raised: 2023-05-02
 - `EXTENSION` `MEDIUM EFF` CoordinateSpringDamperExt (#1415)
   - description: add flag for stepSizeRecommendation, where 0 is no recommendation, -1 is automatic and \>0 is a directly recommended step size
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

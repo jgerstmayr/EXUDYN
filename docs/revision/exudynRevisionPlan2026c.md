@@ -92,7 +92,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (6 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -130,7 +129,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 12 | Structural core improvements |
+| RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 12 | Misc |
 | RG12 | OPEN | 18 | Symbolic |
@@ -1208,11 +1207,13 @@ derivative, a Python one only with the jacobianUserFunction; SymbolicSystem take
 constraint with exact reaction terms; genericDAEUserFunctionsTest.py against a MassPoint2D on a DistanceConstraint
 (1.4e-13) and SolveDynamic (7e-13). [log](exudynRevisionLog2026c.md#rg9-10-6)
 
-### **OPEN_RG9.11** Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial
+### **CLOSED_RG9.11** Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial
 
 #3201 (maintainer 2026-11-01: every object provides its Jacobian, analytic or locally by automatic or numerical differentiation; the assembly distinguishes only the system-wide numerical Jacobian, for comparison, and the local Jacobians, in parallel without Python functions; only ODE2-ODE2, AE-AE and ODE2-AE for speed, the rest rare, serial and readable; in line with the ODE1-ODE2 couplings of #3143; CSystem.cpp split first). Design docs/dev/design/systemJacobians.md.
 
 Decided 2026-11-01 (design section 7): J1 yes - connectors and joints always by the connector interface (automatic or local numerical differentiation of the marker kinematics, parallel), the numerical default of CObject only for the other objects; J2 yes; J3 the system-wide Jacobian, the detection of dependencies an evaluation of low priority; J4 forAE, forODE2, forODE2Connectors deprecated, jacobianConnectorDerivative removed if it costs more code than time; the ODE1 blocks parallel too if that is simpler.
+
+CLOSED 2026-11-02 (#3201 resolved): the local Jacobians of every object, in parallel; the summary measurement in the [log](exudynRevisionLog2026c.md#rg9-11).
 
 #### **CLOSED_RG9.11.1** Design the revision of the Jacobians in its own design file
 
@@ -1340,17 +1341,23 @@ CLOSED 2026-11-02 (#3209 resolved, #3201 stays open): design section 10 - RigidB
 
 CLOSED 2026-11-02 (#3210 resolved): the left-hand side -m omega^2 A c by phi and omega in closed form; the same results. [log](exudynRevisionLog2026c.md#rg9-11-7)
 
-#### **OPEN_RG9.11.13** The ODE2 Jacobian of ObjectKinematicTree, analytic or automatic, measured on the kinematic tree performance model first
+#### **CLOSED_RG9.11.13** The ODE2 Jacobian of ObjectKinematicTree, analytic or automatic, measured on the kinematic tree performance model first
 
 #3211, #1549 (maintainer 2026-11-02: the floating base first).
 
-##### **OPEN_RG9.11.13.1** ObjectKinematicTree with a floating base on a rigid body node, a Lie group node by default, none with -1
+CLOSED 2026-11-02 (#1549, #3211, #3229). [log](exudynRevisionLog2026c.md#rg9-11)
+
+##### **CLOSED_RG9.11.13.1** ObjectKinematicTree with a floating base on a rigid body node, a Lie group node by default, none with -1
 
 #1549 (maintainer 2026-11-02: the base a rigid body node - by default a Lie group node, so that the explicit solvers still take the tree -; no floating base with the invalid index -1, as now).
 
-##### **OPEN_RG9.11.13.2** The ODE2 Jacobian of ObjectKinematicTree with the floating base, analytic or automatic, measured on the kinematic tree performance model first
+CLOSED 2026-11-02 (#1549 resolved): baseNodeNumber, the base in the kinematics, the forces and the mass matrix, the marker Jacobians; against a redundant model on three kinds of nodes, RK44 on the Lie group node. [log](exudynRevisionLog2026c.md#rg9-11)
+
+##### **CLOSED_RG9.11.13.2** The ODE2 Jacobian of ObjectKinematicTree with the floating base, analytic or automatic, measured on the kinematic tree performance model first
 
 #3211 (maintainer 2026-11-02: the part of the floating base may stay numerical if its analytic Jacobian gets too complicated).
+
+CLOSED 2026-11-02 (#3211 resolved): the tree's own Jacobian by differences of its inverse dynamics, in parallel, with d(M q_tt)/dq (jacobianMassMatrixDerivative); 60 links 317 instead of 1591 Newton iterations; the floating base by the system. [log](exudynRevisionLog2026c.md#rg9-11)
 
 ##### **CLOSED_RG9.11.13.3** The marker functions of ObjectKinematicTree without the mutable temporaries of the tree, for the parallel threads
 
@@ -1394,9 +1401,11 @@ CLOSED 2026-11-02, evaluated: no gain, the own recursion needs the placements in
 
 CLOSED 2026-11-02 (#3212 resolved, #3201 stays open): K, D and the quadratic velocity terms, analytic by the modes, by differences of ComputeQuadraticVelocityVector by the rotation parameters; numericalJacobian the switch back; 24 modes with full Newton 6.85 instead of 13.4 s; the simplification not needed. [log](exudynRevisionLog2026c.md#rg9-11-14)
 
-#### **OPEN_RG9.11.15** The ODE2 Jacobian of ObjectANCFBeam by automatic differentiation of its elastic forces
+#### **CLOSED_RG9.11.15** The ODE2 Jacobian of ObjectANCFBeam by automatic differentiation of its elastic forces
 
 #3213 (maintainer 2026-11-02: may be rather involved); low priority.
+
+CLOSED 2026-11-02 as a step, not done: #3213 stays open with low priority, for when the ANCF beam is revised.
 
 #### **CLOSED_RG9.11.16** The Jacobian of the pressure equations of ConnectorHydraulicActuatorSimple, analytic
 
@@ -1404,9 +1413,11 @@ CLOSED 2026-11-02 (#3212 resolved, #3201 stays open): K, D and the quadratic vel
 
 CLOSED 2026-11-02 (#3214 resolved, #3201 stays open): ComputeJacobianODE1RHSConnector by the pressures, the stroke and its velocity with the marker Jacobians, the Euler parameter direction and dv/dq; within 4e-7 of the system-wide Jacobian; the same Newton iterations, HydraulicActuator2Arms with full Newton 1.00 instead of 1.23 s. [log](exudynRevisionLog2026c.md#rg9-11-16)
 
-#### **OPEN_RG9.11.17** dv/dq and the direction along the Euler parameters for the markers and nodes that lack them
+#### **CLOSED_RG9.11.17** dv/dq and the direction along the Euler parameters for the markers and nodes that lack them
 
 Connectors on these markers fall back to CSystem, serially, or miss the direction along the Euler parameters.
+
+CLOSED 2026-11-02: .1 and .2 done, .3 with #3215.
 
 ##### **CLOSED_RG9.11.17.1** MarkerKinematicTreeRigid: dv/dq and the Jacobian derivative by the recursion over the links
 
@@ -1420,9 +1431,11 @@ CLOSED 2026-11-02 (#3216 resolved, #3201 stays open): JacobianColumnDerivative o
 
 CLOSED 2026-11-02 (#3217 resolved, #3201 stays open): dv/dq of the markers and the ODE2 Jacobian of ObjectRigidBody on NodeRigidBodyRotVecLG in closed form, the loads Jacobian by the composition; 200 bodies with full Newton 1.24 instead of 1.96 s. [log](exudynRevisionLog2026c.md#rg9-11-17-2)
 
-##### **OPEN_RG9.11.17.3** MarkerSuperElementRigid: dv/dq and the direction along the Euler parameters of the reference node
+##### **CLOSED_RG9.11.17.3** MarkerSuperElementRigid: dv/dq and the direction along the Euler parameters of the reference node
 
 #3215 (maintainer 2026-11-02: MarkerSuperElementRigid will be revised in future, not touched now).
+
+CLOSED 2026-11-02 as a step, not done: #3215 stays open for the revision of MarkerSuperElementRigid.
 
 #### **CLOSED_RG9.11.18** Evaluate the derivatives of M(q) q_tt and of C_q^T lambda by q as options of the Newton Jacobian
 

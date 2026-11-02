@@ -13,7 +13,7 @@ A 3D point node fixed to ground which is similar to NodePoint, but it does not g
 - Python names: `NodePointGround` or `PointGround`, and `VPointGround` for its visualization
 - Provides: `Position`, `Position2D`, `Orientation`, `GenericODE2`, `Ground`
 - Node markers that can be attached: [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markernoderotationcoordinate)
-- Objects that take this node: [](#sec-item-objectmasspoint), [](#sec-item-objectmasspoint2d), [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d), [](#sec-item-objectkinematictree), [](#sec-item-objectbeamgeometricallyexact)
+- Objects that take this node: [](#sec-item-objectmasspoint), [](#sec-item-objectmasspoint2d), [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d), [](#sec-item-objectbeamgeometricallyexact)
 
 ## Parameters
 

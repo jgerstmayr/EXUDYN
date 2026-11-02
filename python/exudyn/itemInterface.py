@@ -3855,7 +3855,11 @@ class ObjectKinematicTree:
 
         gravity: gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree; type: [float,float,float]
 
-        baseOffset: offset vector for base, in global coordinates; type: [float,float,float]
+        baseOffset: offset vector for base, in global coordinates; with a floating base in the coordinates of the base node; type: [float,float,float]
+
+        jacobianMassMatrixDerivative: True: the ODE2 Jacobian of the tree contains the derivative of :math:`\Mm(\qv)\,\ddot\qv` by the joint coordinates, at the current accelerations, which the Newton method of the implicit solvers then has; False: without it, as the Jacobians of the other items (#3211); type: bool
+
+        baseNodeNumber: node number (type NodeIndex) of a rigid body node, NodeRigidBodyRotVecLG, NodeRigidBodyEP or NodeRigidBodyRxyz, whose frame is the base of the tree, a floating base; the invalid index (default) is a base fixed in the global frame (#1549)
 
         jointTypes: joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set; type: JointTypeList
 
@@ -3894,14 +3898,14 @@ class ObjectKinematicTree:
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
 
-        Requested Node type: ``GenericODE2``
-
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], jointTypes = [], linkParents = [], jointTransformations = None, jointOffsets = None, jointHTs = None, linkInertiasCOM = None, linkCOMs = None, linkMasses = [], linkForces = None, linkTorques = None, jointForceVector = [], jointPositionOffsetVector = [], jointVelocityOffsetVector = [], jointPControlVector = [], jointDControlVector = [], forceUserFunction: Union[ObjectKinematicTreeForceUserFunction, int] = 0, visualization = {'show': True, 'showLinks': True, 'showJoints': True, 'color': [-1.,-1.,-1.,-1.], 'graphicsDataList': []}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], jacobianMassMatrixDerivative = True, baseNodeNumber = exudyn.InvalidIndex(), jointTypes = [], linkParents = [], jointTransformations = None, jointOffsets = None, jointHTs = None, linkInertiasCOM = None, linkCOMs = None, linkMasses = [], linkForces = None, linkTorques = None, jointForceVector = [], jointPositionOffsetVector = [], jointVelocityOffsetVector = [], jointPControlVector = [], jointDControlVector = [], forceUserFunction: Union[ObjectKinematicTreeForceUserFunction, int] = 0, visualization = {'show': True, 'showLinks': True, 'showJoints': True, 'color': [-1.,-1.,-1.,-1.], 'graphicsDataList': []}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.gravity = np.array(gravity)
         self.baseOffset = np.array(baseOffset)
+        self.jacobianMassMatrixDerivative = jacobianMassMatrixDerivative
+        self.baseNodeNumber = baseNodeNumber
         self.jointTypes = copy.copy(jointTypes)
         self.linkParents = copy.copy(linkParents)
         self.jointTransformations = jointTransformations
@@ -3926,6 +3930,8 @@ class ObjectKinematicTree:
         yield 'nodeNumber', self.nodeNumber
         yield 'gravity', self.gravity
         yield 'baseOffset', self.baseOffset
+        yield 'jacobianMassMatrixDerivative', self.jacobianMassMatrixDerivative
+        yield 'baseNodeNumber', self.baseNodeNumber
         yield 'jointTypes', self.jointTypes
         yield 'linkParents', self.linkParents
         yield 'jointTransformations', self.jointTransformations

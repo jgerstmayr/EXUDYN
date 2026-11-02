@@ -5729,6 +5729,46 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg9-11"></a>
+### RG9.11.13.1, RG9.11.13.2, RG9.11 — The floating base and the Jacobian of ObjectKinematicTree; the revision of the system Jacobians closed (2026-11-02, #1549, #3211, #3201)
+- **Floating base** (#1549): `baseNodeNumber` (a 3D rigid body node, the invalid index without), node 1 of the tree,
+  its coordinates after the joint coordinates; `BaseMotion`, the root links in the base by `baseOffset` (also in the
+  dynamics now, where it is needed with a moving base); the forces with the bias acceleration of the base and the
+  forces of the root links on its coordinates by the transposed motion subspace (A f, G_local^T n); the mass matrix
+  with the composite inertia of the tree in the base and the couplings; the marker Jacobians with the columns of the
+  base; `CMarker::HasJacobianDerivative` (virtual, the type by default) false for MarkerKinematicTreeRigid on a tree
+  with a floating base, so the connectors on it are differentiated by the system; the cache with the coordinates of
+  both nodes; the requested node types checked in CheckPreAssembleConsistency. kinematicTreeFloatingBaseTest.py: a
+  base body with two revolute links and a spring-damper on the tip against three rigid bodies with revolute joints,
+  on the Lie group node, Euler parameters and Tait-Bryan angles: 3e-6 at 1600 steps of generalized-alpha, 1.9e-7 at
+  6400 (the error of the integration, 16 times less for 4 times the steps); RK44 on the Lie group node 3.6e-10 from a
+  fine reference (without the spring-damper).
+- **The Jacobian** (#3211), measured first (the performance model is the chain of the measurements of RG9.11.13.3,
+  no PerformanceModels file): the system's numerical Jacobian cost 2n evaluations of the tree anyway, the gain is in
+  the d(M q_tt)/dq of a long chain. `ComputeJacobianODE2_ODE2` by forward differences of the inverse dynamics
+  (`ComputeMassMatrixAndODE2LHS` with given coordinates and accelerations) in thread-local temporaries, in the parallel
+  assembly; `jacobianMassMatrixDerivative` True by default (maintainer 2026-11-02: the derivatives of M(q) q_tt are
+  not to be neglected). Generalized-alpha, full Newton, a spring-damper per link, without / with the term: 20 links
+  664 / 571 iterations, 60 links 1591 / 317 iterations, 6.07 / 1.18 s, with four threads 4.27 / 0.46 s. The 60-link
+  chain is ill-conditioned: its end coordinate moves by 3 % with relativeTolerance 1e-8 or 1e-10, with and without
+  the term. With a floating base or a forceUserFunction the Jacobian of the system; an analytic derivative of the
+  recursion is not done (the measured gain is the term). test_systemJacobians.py: the tree of the comparisons
+  without the term, and a test that the difference of the two Jacobians is d(M q_tt)/dq of the mass matrix.
+- Five test models change below 2e-10 (the Newton iterates); parameterConversionTestReference.txt with the two new
+  parameters.
+- **RG9.11 closed** (#3201): every object provides its local Jacobian - analytic, automatic, on the connector
+  interface or differentiated by the system by its own coordinates -, assembled in parallel for the ODE2 and the
+  algebraic rows. Measured per step of the revision: an ANCF cable of 2000 elements 4.6 instead of 20.9 ms per
+  Jacobian with 8 threads; 2000 joints 0.34 instead of 2.44 ms; 2000 rigid bodies 0.39 instead of 1.57 ms, 0.06 ms with
+  8 threads; perfObjectFFRFreducedOrder with 24 modes 6.85 instead of 13.4 s; a tree of six links with spring-dampers
+  and contacts 0.38 instead of 1.08 s; HydraulicActuator2Arms 1.00 instead of 1.23 s; 200 bodies on Lie group nodes
+  1.24 instead of 1.96 s; 60 links of a tree 1.18 instead of 6.07 s. The performance tests (runPerformanceTests.py,
+  where the Jacobians are a small part): total 48.6 s at 1.13.331 against 46.3 s at 1.13.309 and 45.2 s at 1.13.190,
+  the files within their scatter except generalContactSpheresPerf, 7.46 s at 1.13.190 and 9.68 s at 1.13.309 (9.3 s
+  standalone now, the ODE2RHS of the contact 3.96 / 4.86 s with one thread) - a slowdown before this group's last
+  steps, raised as an issue. Left open with their issues, as steps closed: the ANCFBeam (#3213, low priority) and
+  MarkerSuperElementRigid (#3215, to be revised).
+
 <a id="rg3-46-3"></a>
 ### RG3.46.3 — symbolicSystem.md and symbolicUserItems.md into the manual and the internals; itemPrecomputation.md (2026-11-02, #3221)
 - New docs/dev/internals/symbolicSystem.md: the representation (a flat program per kind, the LTG tables), what is

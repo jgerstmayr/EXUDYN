@@ -797,6 +797,12 @@ markerFunctions = [
         args='const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q',
         description='dv/dq and domega/dq of the marker at fixed velocities (#3201); false if not provided'),
 
+    ItemFunctionLib(classType='Marker', pythonName='HasJacobianDerivative',
+        type=TBool, destination=DestComp,
+        cFlags=CFConst,
+        args='const CSystemData& cSystemData',
+        description='true if ComputeMarkerDataJacobianDerivative gives the derivative, as the type says unless the marker knows better from the system (#1549)'),
+
     ItemFunctionLib(classType='Marker', pythonName='GetRadialKinematics',
         type=TBool, destination=DestComp,
         cFlags=CFConst,

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-02  17:44:47 (last modified)
+* @date         2026-11-02  19:35:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -40,7 +40,9 @@ class CObjectKinematicTreeParameters // AUTO:
 public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; \f$n\f$ being the number of minimal coordinates
     Vector3D gravity;                             //!< AUTO: gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree
-    Vector3D baseOffset;                          //!< AUTO: offset vector for base, in global coordinates
+    Vector3D baseOffset;                          //!< AUTO: offset vector for base, in global coordinates; with a floating base in the coordinates of the base node
+    bool jacobianMassMatrixDerivative;            //!< AUTO: True: the ODE2 Jacobian of the tree contains the derivative of \f$\Mm(\qv)\,\ddot\qv\f$ by the joint coordinates, at the current accelerations, which the Newton method of the implicit solvers then has; False: without it, as the Jacobians of the other items (#3211)
+    Index baseNodeNumber;                         //!< AUTO: node number (type NodeIndex) of a rigid body node, NodeRigidBodyRotVecLG, NodeRigidBodyEP or NodeRigidBodyRxyz, whose frame is the base of the tree, a floating base; the invalid index (default) is a base fixed in the global frame (#1549)
     JointTypeList jointTypes;                     //!< AUTO: joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set
     ArrayIndex linkParents;                       //!< AUTO: index of parent joint/link; if no parent exists, the value is \f$-1\f$; by default, \f$p_0=-1\f$ because the \f$i\f$th parent index must always fulfill \f$p_i<i\f$; must be always set
     Matrix3DList jointTransformations;            //!< AUTO: list of constant joint transformations from parent joint coordinates \f$p_0\f$ to this joint coordinates \f$j_0\f$; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists (\f$-1\f$), the base coordinate system \f$0\f$ is used; must be always set
@@ -62,6 +64,8 @@ public: // AUTO:
         nodeNumber = EXUstd::InvalidIndex;
         gravity = Vector3D({0.,0.,0.});
         baseOffset = Vector3D({0.,0.,0.});
+        jacobianMassMatrixDerivative = true;
+        baseNodeNumber = EXUstd::InvalidIndex;
         jointTypes = JointTypeList();
         linkParents = ArrayIndex();
         jointTransformations = Matrix3DList();
@@ -114,7 +118,7 @@ protected: // AUTO:
     mutable HomogeneousTransformationList jointTransformationsTemp;//!< AUTO: the placements of the links in the current configuration, as homogeneous transformations; the cache of PreCompute (#3229)
     mutable Vector6DList jointVelocitiesTemp;     //!< AUTO: the 6D velocities of the links in the current configuration; the cache of PreCompute (#3229)
     mutable Vector6DList jointAccelerationsTemp;  //!< AUTO: the 6D accelerations of the links in the current configuration; the cache of PreCompute (#3229)
-    mutable ResizableVector treeCacheCoordinates; //!< AUTO: the current coordinates, velocities and accelerations and the reference coordinates of the node from which the cache is computed (#3229)
+    mutable ResizableVector treeCacheCoordinates; //!< AUTO: the current coordinates, velocities and accelerations and the reference coordinates of the nodes from which the cache is computed (#3229)
     mutable bool treeCacheValid;                  //!< AUTO: false after a change of the parameters, until PreCompute computes the cache (#3229)
     mutable HomogeneousTransformationList jointTransformationsTempVis;//!< AUTO: temporary list of the placements of the links, as homogeneous transformations; for visualization
     mutable Vector6DList jointVelocitiesTempVis;  //!< AUTO: temporary list containing 6D velocities per joint; for visualization!
@@ -208,11 +212,11 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$the 6D accelerations of the links in the current configuration; the cache of PreCompute (#3229)
     Vector6DList& GetJointAccelerationsTemp() { return jointAccelerationsTemp; }
 
-    //! AUTO:  Write (Reference) access to:the current coordinates, velocities and accelerations and the reference coordinates of the node from which the cache is computed (#3229)
+    //! AUTO:  Write (Reference) access to:the current coordinates, velocities and accelerations and the reference coordinates of the nodes from which the cache is computed (#3229)
     void SetTreeCacheCoordinates(const ResizableVector& value) { treeCacheCoordinates = value; }
-    //! AUTO:  Read (Reference) access to:the current coordinates, velocities and accelerations and the reference coordinates of the node from which the cache is computed (#3229)
+    //! AUTO:  Read (Reference) access to:the current coordinates, velocities and accelerations and the reference coordinates of the nodes from which the cache is computed (#3229)
     const ResizableVector& GetTreeCacheCoordinates() const { return treeCacheCoordinates; }
-    //! AUTO:  Read (Reference) access to:the current coordinates, velocities and accelerations and the reference coordinates of the node from which the cache is computed (#3229)
+    //! AUTO:  Read (Reference) access to:the current coordinates, velocities and accelerations and the reference coordinates of the nodes from which the cache is computed (#3229)
     ResizableVector& GetTreeCacheCoordinates() { return treeCacheCoordinates; }
 
     //! AUTO:  Write (Reference) access to:false after a change of the parameters, until PreCompute computes the cache (#3229)
@@ -264,6 +268,9 @@ public: // AUTO:
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
 
+    //! AUTO:  Computational function: compute jacobian (dense or sparse mode, see parent CObject function)
+    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const override;
+
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override
     {
@@ -312,27 +319,42 @@ public: // AUTO:
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
     {
-        CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);
-        return parameters.nodeNumber;
+        CHECKandTHROW(localIndex == 0 || (localIndex == 1 && HasFloatingBase()), __EXUDYN_invalid_local_node);
+        return (localIndex == 0) ? parameters.nodeNumber : parameters.baseNodeNumber;
     }
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual void SetNodeNumber(Index localIndex, Index nodeNumber) override
     {
-        parameters.nodeNumber=nodeNumber;
+        if (localIndex == 0) { parameters.nodeNumber = nodeNumber; } else { parameters.baseNodeNumber = nodeNumber; }
     }
 
     //! AUTO:  number of nodes; needed for every object; can depend on the configuration
     virtual Index GetNumberOfNodes() const override
     {
-        return 1;
+        return HasFloatingBase() ? 2 : 1;
     }
 
-    //! AUTO:  number of ABRV:ODE2 coordinates
+    //! AUTO:  number of ABRV:ODE2 coordinates: the joint coordinates and those of a floating base (#1549)
     virtual Index GetODE2Size() const override
     {
-        return parameters.jointTransformations.NumberOfItems();
+        return parameters.jointTransformations.NumberOfItems() + NumberOfBaseCoordinates();
     }
+
+    //! AUTO:  true with a floating base, baseNodeNumber (#1549)
+    bool HasFloatingBase() const
+    {
+        return parameters.baseNodeNumber != EXUstd::InvalidIndex;
+    }
+
+    //! AUTO:  the number of ODE2 coordinates of the floating base, 0 without (#1549)
+    Index NumberOfBaseCoordinates() const
+    {
+        return HasFloatingBase() ? GetCNode(1)->GetNumberOfODE2Coordinates() : 0;
+    }
+
+    //! AUTO:  the placement (A, p) of the floating base in the global frame and its velocity (w, v) and acceleration (aw, av) in its frame; without a floating base the unit placement and no motion (#1549)
+    void BaseMotion(ConfigurationType configuration, bool computeVelocitiesAccelerations, Matrix3D& A, Vector3D& p, Vector3D& w, Vector3D& v, Vector3D& aw, Vector3D& av) const;
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation
     virtual CObjectType GetType() const override
@@ -376,8 +398,8 @@ public: // AUTO:
     //! AUTO:  the placements of the links (in the base, or in their parents), and their velocities and accelerations as (omega, v) in link coordinates (#2829)
     void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, HomogeneousTransformationList& frames, Vector6DList& V, Vector6DList& A) const;
 
-    //! AUTO:  compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false
-    void ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, Vector* ode2Lhs, bool computeMass) const;
+    //! AUTO:  compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false; of the current state, or of the joint coordinates qTotal (with the reference) and velocities q_t given, with the accelerations q_tt the inverse dynamics M q_tt + LHS (#3211)
+    void ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, Vector* ode2Lhs, bool computeMass, const Vector* qTotal = nullptr, const Vector* q_t = nullptr, const Vector* q_tt = nullptr) const;
 
     //! AUTO:  subtract the forces given per joint from the joint forces f: jointForceVector, the P and D control and the forceUserFunction
     void AddJointForces(Vector& f, const LinkedDataVector& q, const LinkedDataVector& q_t) const;

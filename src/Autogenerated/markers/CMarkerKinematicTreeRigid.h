@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-02  12:05:41 (last modified)
+* @date         2026-11-02  19:26:27 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -127,6 +127,9 @@ public: // AUTO:
 
     //! AUTO:  dv/dq and domega/dq of the marker at fixed velocities (#3201); false if not provided
     virtual bool GetVelocity_q(const CSystemData& cSystemData, Matrix& velocity_q, Matrix& angularVelocity_q) const override;
+
+    //! AUTO:  true if ComputeMarkerDataJacobianDerivative gives the derivative, as the type says unless the marker knows better from the system (#1549)
+    virtual bool HasJacobianDerivative(const CSystemData& cSystemData) const override;
 
 };
 

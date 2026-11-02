@@ -107,6 +107,9 @@ public: //
 	//! true if the marker calls Python user functions itself (MarkerBodyUser, #3065): it and what depends on it are drawn in
 	//! the main thread (#3003)
 	virtual bool AccessFunctionsCallUserFunctions() const { return false; }
+	//! the derivative of the Jacobian is given, as the type says, unless the marker knows better from the system, e.g.
+	//! MarkerKinematicTreeRigid on a tree with a floating base (#1549)
+	virtual bool HasJacobianDerivative(const CSystemData& cSystemData) const { return (GetType() & Marker::JacobianDerivativeAvailable) != 0; }
 	//! the user functions of the item, for the lists of the parallel loops (#2978); the generated items with user functions list them
 	virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const {}
 

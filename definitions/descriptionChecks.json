@@ -64,7 +64,7 @@
   "MarkerKinematicTreeRigid": {
    "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "f1c86dfbe4db"
+   "fingerprint": "d43c5ba8710e"
   },
   "MarkerNodeCoordinate": {
    "checked": "2026-11-02",
@@ -424,7 +424,7 @@
   "ObjectKinematicTree": {
    "checked": "2026-11-02",
    "by": "Claude-JG",
-   "fingerprint": "b4201a93c6fe"
+   "fingerprint": "1205b1efd0df"
   },
   "ObjectMass1D": {
    "checked": "2026-10-17",

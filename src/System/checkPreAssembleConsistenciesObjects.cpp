@@ -1581,11 +1581,30 @@ bool MainObjectKinematicTree::CheckPreAssembleConsistency(const MainSystem& main
 {
 	CObjectKinematicTree* cObject = (CObjectKinematicTree*)GetCObject();
 
-	//check specific node types
-	//nodetype checked already in CSystem!
+	//the nodes: the joint coordinates in a NodeGenericODE2, a floating base on a 3D rigid body node (#1549)
+	Index nodeNumber = cObject->GetNodeNumber(0);
+	if (!(mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber).GetType() & Node::GenericODE2))
+	{
+		errorString = "ObjectKinematicTree: nodeNumber must be a NodeGenericODE2";
+		return false;
+	}
+	if (cObject->HasFloatingBase())
+	{
+		Index baseNode = cObject->GetParameters().baseNodeNumber;
+		if (!EXUstd::IndexIsInRange(baseNode, 0, mainSystem.GetCSystem().GetSystemData().GetCNodes().NumberOfItems()))
+		{
+			errorString = "ObjectKinematicTree: baseNodeNumber is no valid node number";
+			return false;
+		}
+		Node::Type baseType = mainSystem.GetCSystem().GetSystemData().GetCNode(baseNode).GetType();
+		if (!(baseType & Node::RigidBody) || !(baseType & Node::Position) || !(baseType & Node::Orientation))
+		{
+			errorString = "ObjectKinematicTree: baseNodeNumber must be a 3D rigid body node, NodeRigidBodyRotVecLG, NodeRigidBodyEP or NodeRigidBodyRxyz";
+			return false;
+		}
+	}
 
 	//now check size of vectors and matrices
-	Index nodeNumber = cObject->GetNodeNumber(0);
 	const CNodeODE2* node = &(const CNodeODE2&)(mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber));
 
 	//Index nODE2 = cObject->GetODE2Size();

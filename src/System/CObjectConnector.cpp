@@ -159,7 +159,7 @@ bool CObjectConnector::ComputeLocalJacobianODE2(const CSystemData& systemData, T
 	{
 		for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
 		{
-			jacobianComputed &= ((systemData.GetCMarker(markerNumbers[k]).GetType() & Marker::JacobianDerivativeAvailable) != 0);
+			jacobianComputed &= systemData.GetCMarker(markerNumbers[k]).HasJacobianDerivative(systemData);
 			jacDerivNonZero |= ((systemData.GetCMarker(markerNumbers[k]).GetType() & Marker::JacobianDerivativeNonZero) != 0);
 		}
 	}

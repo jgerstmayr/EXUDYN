@@ -104,7 +104,8 @@ $\Jm_{\AE\FO} = \Cm_{\yv}$.
 **Each item provides its own local Jacobian**, by its local coordinates, and the system adds it at the coordinates of
 the item:
 
-- most bodies and finite elements compute it analytically or by automatic differentiation; ObjectGenericODE2,
+- most bodies and finite elements compute it analytically or by automatic differentiation; ObjectKinematicTree by
+  differences of its inverse dynamics, with the derivative of $\Mm(\qv)\ddot\qv$ (#3211); ObjectGenericODE2,
   ObjectGenericODE1 and ObjectGenericDAE by their matrices, and by the jacobianUserFunction or the derivative of their
   symbolic user functions;
 - **connectors** differentiate their force by the kinematics of their markers - by automatic differentiation, or by a
@@ -116,10 +117,12 @@ the item:
   (#3214);
 - the other items are **differentiated numerically by the system**, by their own coordinates - the rotation
   coordinates of the Lie group nodes by the composition of the rotation -: ObjectFFRF, ObjectFFRFreducedOrder with a
-  forceUserFunction, on Lie group nodes or with `numericalJacobian`, ObjectKinematicTree, ObjectANCFBeam,
+  forceUserFunction, on Lie group nodes or with `numericalJacobian`, ObjectKinematicTree with a floating base or a
+  forceUserFunction, ObjectANCFBeam,
   ObjectALEANCFCable2D, ObjectUserBody, the connectors with Python user functions (ObjectConnectorUser and the
   spring-dampers with a user function), ConnectorReevingSystemSprings, the contacts on cables and curves, and
-  connectors on markers that lack the derivatives the connector needs (MarkerSuperElementRigid, user markers).
+  connectors on markers that lack the derivatives the connector needs (MarkerSuperElementRigid, user markers,
+  MarkerKinematicTreeRigid on a tree with a floating base).
 
 **Parallel and serial**: with `parallel.numberOfThreads` > 1 and at least `parallel.multithreadedLowerLimitJacobians`
 items, the analytic and automatic Jacobians of the ODE2 rows and of the constraints of the items without Python user
@@ -496,7 +499,8 @@ $$
                = \frac{\partial \gv}{\partial \tlambda}
 \end{aligned}
 $$
-Note that the derivative of the mass matrix term in $\Jm_{\SO\SO}$ is **neglected**, and the derivative of the constraint Jacobian term unless `constraintReactionDerivative` is set; both are usually of minor influence. The first is zero for a constant mass matrix; three rigid bodies on Tait-Bryan angles spinning fast take 614 instead of 417 Newton iterations in 200 steps with full Newton, the same solution (test model `symbolicMassMatrixDerivativeTest.py`, #3228). Jacobians of state-dependent loads are included with `computeLoadsJacobian` in static or time integration solvers, see {ref}`sec-systemjacobian`.
+Note that the derivative of the mass matrix term in $\Jm_{\SO\SO}$ is **neglected** - except in the Jacobian of
+ObjectKinematicTree (`jacobianMassMatrixDerivative`, #3211) -, and the derivative of the constraint Jacobian term unless `constraintReactionDerivative` is set; both are usually of minor influence. The first is zero for a constant mass matrix; three rigid bodies on Tait-Bryan angles spinning fast take 614 instead of 417 Newton iterations in 200 steps with full Newton, the same solution (test model `symbolicMassMatrixDerivativeTest.py`, #3228). Jacobians of state-dependent loads are included with `computeLoadsJacobian` in static or time integration solvers, see {ref}`sec-systemjacobian`.
 
 Once an update $\qv^\mathrm{Newton}_{k+1}$ has been computed, the interpolation formulas {eq}`eq-newmark-interpolation` need to be evaluated before the next residual and Jacobian can be computed.
 

@@ -69,10 +69,61 @@ void CObjectKinematicTree::ComputeODE2LHS(Vector& ode2Lhs) const
 
 }
 
-//! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
+//! the Jacobian of the tree is its own (#3211), unless a floating base or a forceUserFunction makes it the system's
 JacobianType::Type CObjectKinematicTree::GetAvailableJacobians() const
 {
-	return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
+	JacobianType::Type jacobians = (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
+	if (!HasFloatingBase() && !parameters.forceUserFunction)
+	{
+		jacobians = (JacobianType::Type)(jacobians + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
+	}
+	return jacobians;
+}
+
+namespace KinematicTreeHT
+{
+	thread_local Vector jacobianQ, jacobianQ_t, jacobianQ_tt, jacobianF0, jacobianF1; //!< the state and forces of ComputeJacobianODE2_ODE2
+}
+
+//! the ODE2 Jacobian of the tree (#3211): forward differences of the inverse dynamics M(q) q_tt + LHS(q, q_t) by the joint
+//! coordinates and velocities, at the current accelerations, so that it contains d(M q_tt)/dq; computed in temporaries of
+//! the thread, so that the trees are computed in the parallel assembly
+void CObjectKinematicTree::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
+	Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
+{
+	using namespace KinematicTreeHT;
+	const Index n = NumberOfLinks();
+	const CNodeODE2* node = (const CNodeODE2*)GetCNode(0);
+	Vector& q = jacobianQ;
+	Vector& q_t = jacobianQ_t;
+	Vector& q_tt = jacobianQ_tt;
+	q.CopyFrom(node->GetCurrentCoordinateVector());
+	q += node->GetReferenceCoordinateVector();
+	q_t.CopyFrom(node->GetCurrentCoordinateVector_t());
+	q_tt.CopyFrom(node->GetCurrentCoordinateVector_tt());
+	const Vector* accelerations = (parameters.jacobianMassMatrixDerivative ? &q_tt : nullptr);
+	ComputeMassMatrixAndODE2LHS(nullptr, &jacobianF0, false, &q, &q_t, accelerations);
+
+	jacobianODE2.SetUseDenseMatrix(true);
+	ResizableMatrix& jacobian = jacobianODE2.GetInternalDenseMatrix();
+	jacobian.SetNumberOfRowsAndColumns(n, n);
+	jacobian.SetAll(0.);
+	for (Index part = 0; part < 2; part++)
+	{
+		const Real factor = (part == 0) ? factorODE2 : factorODE2_t;
+		if (factor == 0.) { continue; }
+		Vector& x = (part == 0) ? q : q_t;
+		for (Index j = 0; j < n; j++)
+		{
+			const Real xStore = x[j];
+			const Real eps = 1e-7 * EXUstd::Maximum(1e-2, fabs(xStore)); //as the default numericalDifferentiation
+			x[j] += eps;
+			ComputeMassMatrixAndODE2LHS(nullptr, &jacobianF1, false, &q, &q_t, accelerations);
+			x[j] = xStore;
+			const Real scale = factor / eps;
+			for (Index i = 0; i < n; i++) { jacobian(i, j) += scale * (jacobianF1[i] - jacobianF0[i]); }
+		}
+	}
 }
 
 //! provide according output variable in "value"
@@ -148,7 +199,7 @@ void CObjectKinematicTree::AddJointForces(Vector& f, const LinkedDataVector& q, 
 	Index n = NumberOfLinks();
 	if (parameters.jointForceVector.NumberOfItems() != 0)
 	{
-		f -= parameters.jointForceVector; //constant forces per coordinate (RevoluteJoint: local torque in joint)
+		for (Index i = 0; i < n; i++) { f[i] -= parameters.jointForceVector[i]; } //constant forces per joint (RevoluteJoint: local torque in joint)
 	}
 
 	for (Index i = 0; i < n; i++)
@@ -170,7 +221,7 @@ void CObjectKinematicTree::AddJointForces(Vector& f, const LinkedDataVector& q, 
 
 		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, tempVector, tempVector2);
 		CHECKandTHROW(tempUserFunctionForce.NumberOfItems() == n, "CObjectKinematicTree: forceUserFunction return a vector with different size from ObjectKinematicTree system size", ExudynValueError);
-		f -= tempUserFunctionForce;
+		for (Index i = 0; i < n; i++) { f[i] -= tempUserFunctionForce[i]; } //the joints, not the floating base (#1549)
 	}
 }
 
@@ -284,8 +335,56 @@ namespace KinematicTreeHT
 	thread_local Vector6DList otherAccelerations;
 }
 
-//! the placements of the links - in the base if computeAbsoluteTransformations, else in their parents - and, if
-//! computeVelocitiesAccelerations, their velocities and accelerations as (omega, v) in link coordinates
+//! the motion of the floating base (#1549): its placement (A, p) in the global frame and, if computeVelocitiesAccelerations,
+//! its velocity (w, v) and spatial acceleration (aw, av) in its frame - (omega, A^T v_global) and their time derivatives -,
+//! the motion of the parent of the root links; without a floating base the unit placement and no motion
+void CObjectKinematicTree::BaseMotion(ConfigurationType configuration, bool computeVelocitiesAccelerations, Matrix3D& A, Vector3D& p,
+	Vector3D& w, Vector3D& v, Vector3D& aw, Vector3D& av) const
+{
+	w.SetAll(0.);
+	v.SetAll(0.);
+	aw.SetAll(0.);
+	av.SetAll(0.);
+	if (!HasFloatingBase())
+	{
+		A = EXUmath::unitMatrix3D;
+		p.SetAll(0.);
+		return;
+	}
+	const CNodeODE2& node = *(const CNodeODE2*)GetCNode(1);
+	A = node.GetRotationMatrix(configuration);
+	p = node.GetPosition(configuration);
+	if (!computeVelocitiesAccelerations) { return; }
+	w = node.GetAngularVelocityLocal(configuration);
+	EXUmath::MultMatrixTransposedVectorTemplate(A, node.GetVelocity(configuration), v);
+	EXUmath::MultMatrixTransposedVectorTemplate(A, node.GetAngularAcceleration(configuration), aw);
+	EXUmath::MultMatrixTransposedVectorTemplate(A, node.GetAcceleration(configuration), av);
+	av -= w.CrossProduct(v); //d/dt (A^T v_global)
+}
+
+//! the motion subspace of the floating base (#1549), column k of the base coordinates as a motion (w, v) in its frame:
+//! the translation coordinates (0, A^T e_k), the rotation coordinates (Glocal e_k, 0)
+static void BaseMotionColumn(Index k, const Matrix3D& A, const ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3>& Glocal,
+	Vector3D& w, Vector3D& v)
+{
+	w.SetAll(0.);
+	v.SetAll(0.);
+	if (k < 3) { for (Index r = 0; r < 3; r++) { v[r] = A(k, r); } }
+	else { for (Index r = 0; r < 3; r++) { w[r] = Glocal(r, k - 3); } }
+}
+
+//! the force (n, f) of the base frame on the base coordinates (#1549): the transposed motion subspace
+static Real BaseForce(Index k, const Matrix3D& A, const ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3>& Glocal,
+	const Vector3D& n, const Vector3D& f)
+{
+	Vector3D w, v;
+	BaseMotionColumn(k, A, Glocal, w, v);
+	return w * n + v * f;
+}
+
+//! the placements of the links - in the global frame if computeAbsoluteTransformations, else in their parents - and, if
+//! computeVelocitiesAccelerations, their velocities and accelerations as (omega, v) in link coordinates; the root links
+//! in the base, placed by baseOffset, and with a floating base the base in the frame of its node (#1549)
 void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations,
 	bool computeAbsoluteTransformations, HomogeneousTransformationList& frames, Vector6DList& V, Vector6DList& A) const
 {
@@ -306,6 +405,10 @@ void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configur
 		q_tt.LinkDataTo(((CNodeODE2*)GetCNode(0))->GetCoordinateVector_tt(configuration));
 	}
 	LinkedDataVector qRef(GetCNode(0)->GetReferenceCoordinateVector());
+	const bool floating = HasFloatingBase();
+	Matrix3D AB;
+	Vector3D pB, wB, vB, awB, avB;
+	BaseMotion(configuration, computeVelocitiesAccelerations, AB, pB, wB, vB, awB, avB);
 
 	Vector3D wJ, vJ, awJ, avJ;
 	for (Index i = 0; i < n; i++)
@@ -314,20 +417,23 @@ void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configur
 		if (configuration != ConfigurationType::Reference) { qTotal += qRef[i]; }
 		RelativePlacement(parameters, i, qTotal, L[i].R, L[i].p);
 		Index parent = parameters.linkParents[i];
+		if (parent == noParent) { L[i].p += parameters.baseOffset; } //the root links in the base
 
 		if (computeVelocitiesAccelerations)
 		{
 			JointMotion(parameters.jointTypes[i], q_t[i], wJ, vJ);
 			JointMotion(parameters.jointTypes[i], q_tt[i], awJ, avJ);
-			if (parent == noParent)
+			if (parent == noParent && !floating)
 			{
 				L[i].w = wJ; L[i].v = vJ;
 				L[i].aw = awJ; L[i].av = avJ;
 			}
 			else
 			{
-				MotionToLink(L[i].R, L[i].p, L[parent].w, L[parent].v, L[i].w, L[i].v);
-				MotionToLink(L[i].R, L[i].p, L[parent].aw, L[parent].av, L[i].aw, L[i].av);
+				const Vector3D& wP = (parent == noParent) ? wB : L[parent].w; //the floating base as the parent of the root links
+				const Vector3D& vP = (parent == noParent) ? vB : L[parent].v;
+				MotionToLink(L[i].R, L[i].p, wP, vP, L[i].w, L[i].v);
+				MotionToLink(L[i].R, L[i].p, (parent == noParent) ? awB : L[parent].aw, (parent == noParent) ? avB : L[parent].av, L[i].aw, L[i].av);
 				L[i].w += wJ;
 				L[i].v += vJ;
 				//the product of the motion vectors (v x vJ): (w x wJ, v x wJ + w x vJ)
@@ -342,12 +448,16 @@ void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configur
 		Vector3D p = L[i].p;
 		if (computeAbsoluteTransformations)
 		{
-			if (parent != noParent) //the placement in the base: that of the parent times this one
+			if (parent != noParent) //the placement in the global frame: that of the parent times this one
 			{
 				p = L[parent].R * p + L[parent].p;
 				R = L[parent].R * R;
 			}
-			else { p += parameters.baseOffset; }
+			else if (floating) //the base in the frame of its node (#1549)
+			{
+				p = AB * p + pB;
+				R = AB * R;
+			}
 			//the global placement is kept for the children; L[i].R, p are not needed afterwards in this function
 			L[i].R = R;
 			L[i].p = p;
@@ -364,17 +474,23 @@ void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configur
 //! then only read the cache; a change of the coordinates inside a parallel loop raises an error
 void CObjectKinematicTree::PreCompute() const
 {
-	const CNodeODE2* node = (const CNodeODE2*)GetCNode(0);
-	LinkedDataVector q(node->GetCurrentCoordinateVector());
-	LinkedDataVector q_t(node->GetCurrentCoordinateVector_t());
-	LinkedDataVector q_tt(node->GetCurrentCoordinateVector_tt());
-	LinkedDataVector qRef(node->GetReferenceCoordinateVector());
-	const Index n = NumberOfLinks();
+	//the coordinates of the joints and of a floating base (#1549), node after node
+	const Index numberOfNodes = GetNumberOfNodes();
+	Index size = 0;
+	for (Index k = 0; k < numberOfNodes; k++) { size += 4 * GetCNode(k)->GetNumberOfODE2Coordinates(); }
 	ResizableVector& c = treeCacheCoordinates;
-	bool valid = treeCacheValid && c.NumberOfItems() == 4 * n;
-	for (Index i = 0; valid && i < n; i++)
+	bool valid = treeCacheValid && c.NumberOfItems() == size;
+	Index offset = 0;
+	for (Index k = 0; valid && k < numberOfNodes; k++)
 	{
-		valid = (c[i] == q[i] && c[n + i] == q_t[i] && c[2 * n + i] == q_tt[i] && c[3 * n + i] == qRef[i]);
+		const CNodeODE2* node = (const CNodeODE2*)GetCNode(k);
+		const LinkedDataVector vectors[4] = { node->GetCurrentCoordinateVector(), node->GetCurrentCoordinateVector_t(),
+			node->GetCurrentCoordinateVector_tt(), node->GetReferenceCoordinateVector() };
+		for (const LinkedDataVector& vector : vectors)
+		{
+			for (Index i = 0; valid && i < vector.NumberOfItems(); i++) { valid = (c[offset + i] == vector[i]); }
+			offset += vector.NumberOfItems();
+		}
 	}
 	if (valid) { return; }
 
@@ -385,13 +501,18 @@ void CObjectKinematicTree::PreCompute() const
 			"coordinates while the system is computed; such a model must be solved with parallel.numberOfThreads = 1");
 	}
 	ComputeTreeTransformations(ConfigurationType::Current, true, true, jointTransformationsTemp, jointVelocitiesTemp, jointAccelerationsTemp);
-	c.SetNumberOfItems(4 * n);
-	for (Index i = 0; i < n; i++)
+	c.SetNumberOfItems(size);
+	offset = 0;
+	for (Index k = 0; k < numberOfNodes; k++)
 	{
-		c[i] = q[i];
-		c[n + i] = q_t[i];
-		c[2 * n + i] = q_tt[i];
-		c[3 * n + i] = qRef[i];
+		const CNodeODE2* node = (const CNodeODE2*)GetCNode(k);
+		const LinkedDataVector vectors[4] = { node->GetCurrentCoordinateVector(), node->GetCurrentCoordinateVector_t(),
+			node->GetCurrentCoordinateVector_tt(), node->GetReferenceCoordinateVector() };
+		for (const LinkedDataVector& vector : vectors)
+		{
+			for (Index i = 0; i < vector.NumberOfItems(); i++) { c[offset + i] = vector[i]; }
+			offset += vector.NumberOfItems();
+		}
 	}
 	treeCacheValid = true;
 }
@@ -426,18 +547,46 @@ void CObjectKinematicTree::GetTreeTransformations(ConfigurationType configuratio
 	}
 }
 
-//! the mass matrix if computeMass, otherwise the forces of the left-hand side
-void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, Vector* ode2Lhs, bool computeMass) const
+//! the mass matrix if computeMass, otherwise the forces of the left-hand side; of the current state, or of qTotal and q_t
+//! given, and with q_tt the inverse dynamics M q_tt + LHS (#3211)
+void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, Vector* ode2Lhs, bool computeMass,
+	const Vector* qTotal, const Vector* qGiven_t, const Vector* q_tt) const
 {
 	using namespace KinematicTreeHT;
 	Index n = NumberOfLinks();
 	ResizableArray<Link>& L = links;
 	L.SetNumberOfItems(n);
 
-	tempVector.CopyFrom(GetCNode(0)->GetCurrentCoordinateVector());
-	tempVector += GetCNode(0)->GetReferenceCoordinateVector();
-	LinkedDataVector q(tempVector);
-	LinkedDataVector q_t(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t());
+	if (!qTotal)
+	{
+		tempVector.CopyFrom(GetCNode(0)->GetCurrentCoordinateVector());
+		tempVector += GetCNode(0)->GetReferenceCoordinateVector();
+	}
+	LinkedDataVector q(qTotal ? *qTotal : tempVector);
+	LinkedDataVector q_t(qGiven_t ? LinkedDataVector(*qGiven_t) : ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t());
+
+	//the floating base (#1549): its motion (wB, vB) in its frame and its bias acceleration (aB, avB), with the gravity as an
+	//acceleration of the base; its motion subspace by A and Glocal
+	const bool floating = HasFloatingBase();
+	const Index nBase = NumberOfBaseCoordinates();
+	Matrix3D AB;
+	Vector3D pB, wB, vB, awB, avB;
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3> Glocal, Glocal_t;
+	if (floating)
+	{
+		const CNodeRigidBody& node = *(const CNodeRigidBody*)GetCNode(1);
+		AB = node.GetRotationMatrix();
+		pB = node.GetPosition();
+		node.GetGlocal(Glocal);
+		node.GetGlocal_t(Glocal_t);
+		wB = node.GetAngularVelocityLocal();
+		EXUmath::MultMatrixTransposedVectorTemplate(AB, node.GetVelocity(), vB);
+		LinkedDataVector rotation_t(node.GetRotationParameters_t());
+		awB.SetAll(0.);
+		for (Index r = 0; r < 3; r++) { for (Index k = 0; k < rotation_t.NumberOfItems(); k++) { awB[r] += Glocal_t(r, k) * rotation_t[k]; } }
+		EXUmath::MultMatrixTransposedVectorTemplate(AB, -parameters.gravity, avB);
+		avB -= wB.CrossProduct(vB);
+	}
 
 	//from the base to the leaves: placements, velocities, bias accelerations (gravity as an acceleration of the base), forces
 	Vector3D wJ, vJ;
@@ -448,7 +597,7 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatr
 		RelativePlacement(parameters, i, q[i], link.R, link.p);
 		JointMotion(parameters.jointTypes[i], q_t[i], wJ, vJ);
 		Index parent = parameters.linkParents[i];
-		if (parent == noParent)
+		if (parent == noParent && !floating)
 		{
 			link.w = wJ;
 			link.v = vJ;
@@ -456,12 +605,20 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatr
 		}
 		else
 		{
-			MotionToLink(link.R, link.p, L[parent].w, L[parent].v, link.w, link.v);
-			MotionToLink(link.R, link.p, L[parent].aw, L[parent].av, link.aw, link.av);
+			if (parent == noParent) { link.p += parameters.baseOffset; } //a root link in the floating base
+			MotionToLink(link.R, link.p, (parent == noParent) ? wB : L[parent].w, (parent == noParent) ? vB : L[parent].v, link.w, link.v);
+			MotionToLink(link.R, link.p, (parent == noParent) ? awB : L[parent].aw, (parent == noParent) ? avB : L[parent].av, link.aw, link.av);
 			link.w += wJ;
 			link.v += vJ;
 			link.aw += link.w.CrossProduct(wJ);
 			link.av += link.v.CrossProduct(wJ) + link.w.CrossProduct(vJ);
+		}
+		if (q_tt) //the accelerations of the joints, for the inverse dynamics (#3211)
+		{
+			Vector3D awJ, avJ;
+			JointMotion(parameters.jointTypes[i], (*q_tt)[i], awJ, avJ);
+			link.aw += awJ;
+			link.av += avJ;
 		}
 		link.inertia.Set(parameters.linkMasses[i], parameters.linkCOMs[i], parameters.linkInertiasCOM[i]);
 		if (!computeMass)
@@ -487,6 +644,7 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatr
 				Index parent = parameters.linkParents[i];
 				Ha[i] = HomogeneousTransformation(L[i].R, L[i].p);
 				if (parent != noParent) { Ha[i] = Ha[parent] * Ha[i]; }
+				else if (floating) { Ha[i] = HomogeneousTransformation(AB, pB) * Ha[i]; } //(#1549)
 				Vector3D torque = parameters.linkTorques.NumberOfItems() ? (Vector3D)parameters.linkTorques[i] : Vector3D(0.);
 				Vector3D force = parameters.linkForces.NumberOfItems() ? (Vector3D)parameters.linkForces[i] : Vector3D(0.);
 				//(n, f) = (Ra^T (torque - pa x force), Ra^T force)
@@ -498,27 +656,40 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatr
 			}
 		}
 
-		//from the leaves to the base: the joint forces
+		//from the leaves to the base: the joint forces, and the forces of the root links on a floating base (#1549)
 		Vector& f = *ode2Lhs;
-		f.SetNumberOfItems(n);
+		f.SetNumberOfItems(n + nBase);
+		Vector3D nB(0.), fB(0.);
 		for (Index i = n - 1; i >= 0; i--)
 		{
 			f[i] = JointForce(parameters.jointTypes[i], L[i].n, L[i].f);
 			Index parent = parameters.linkParents[i];
 			if (parent != noParent) { AddForceToParent(L[i].R, L[i].p, L[i].n, L[i].f, L[parent].n, L[parent].f); }
+			else if (floating) { AddForceToParent(L[i].R, L[i].p, L[i].n, L[i].f, nB, fB); }
 		}
+		for (Index k = 0; k < nBase; k++) { f[n + k] = BaseForce(k, AB, Glocal, nB, fB); }
 		AddJointForces(f, q, q_t);
 	}
 	else
 	{
-		//the composite inertias, from the leaves to the base
+		//the composite inertias, from the leaves to the base, and that of the whole tree in a floating base (#1549)
+		Inertia inertiaBase;
+		inertiaBase.Set(0., Vector3D(0.), Matrix3D(3, 3, 0.));
 		for (Index i = n - 1; i >= 0; i--)
 		{
 			Index parent = parameters.linkParents[i];
 			if (parent != noParent) { L[parent].inertia.AddChild(L[i].R, L[i].p, L[i].inertia); }
+			else if (floating) { inertiaBase.AddChild(L[i].R, L[i].p, L[i].inertia); }
 		}
 		ResizableMatrix& M = *massMatrix;
-		M.SetScalarMatrix(n, 0.);
+		M.SetScalarMatrix(n + nBase, 0.);
+		Vector3D wk, vk, nk, fk, wl, vl;
+		for (Index k = 0; k < nBase; k++) //the block of the base: S^T I S
+		{
+			BaseMotionColumn(k, AB, Glocal, wk, vk);
+			inertiaBase.Mult(wk, vk, nk, fk);
+			for (Index l = 0; l < nBase; l++) { M(n + l, n + k) = BaseForce(l, AB, Glocal, nk, fk); }
+		}
 		Vector3D nh, fh, w, v;
 		for (Index i = 0; i < n; i++)
 		{
@@ -535,6 +706,16 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatr
 				j = parameters.linkParents[j];
 				M(i, j) = JointForce(parameters.jointTypes[j], nh, fh);
 				M(j, i) = M(i, j);
+			}
+			if (floating) //the coupling of joint i and the base, the force of its composite inertia carried into the base
+			{
+				Vector3D nBase0(0.), fBase0(0.);
+				AddForceToParent(L[j].R, L[j].p, nh, fh, nBase0, fBase0);
+				for (Index k = 0; k < nBase; k++)
+				{
+					M(n + k, i) = BaseForce(k, AB, Glocal, nBase0, fBase0);
+					M(i, n + k) = M(n + k, i);
+				}
 			}
 		}
 	}
@@ -853,10 +1034,26 @@ void CObjectKinematicTree::ComputeJacobian(Index linkNumber, const Vector3D& pos
 {
 	//put this jacobian function into a separate member function in future (to be able to access jacobian)
 	Index n = NumberOfLinks();
-	positionJacobian.SetNumberOfRowsAndColumns(3, n);
-	rotationJacobian.SetNumberOfRowsAndColumns(3, n);
+	const Index nBase = NumberOfBaseCoordinates();
+	positionJacobian.SetNumberOfRowsAndColumns(3, n + nBase);
+	rotationJacobian.SetNumberOfRowsAndColumns(3, n + nBase);
 	positionJacobian.SetAll(0.); //not all entries will be filled!
 	rotationJacobian.SetAll(0.); //...
+	if (nBase) //the floating base (#1549): the translation e_k, the rotation A Glocal e_k and its moment about the point
+	{
+		const CNodeRigidBody& node = *(const CNodeRigidBody*)GetCNode(1);
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3> Glocal;
+		node.GetGlocal(Glocal);
+		const Matrix3D A = node.GetRotationMatrix();
+		const Vector3D r = position - node.GetPosition();
+		for (Index k = 0; k < 3; k++) { positionJacobian(k, n + k) = 1.; }
+		for (Index k = 0; k < nBase - 3; k++)
+		{
+			Vector3D axis = A * Vector3D({ Glocal(0, k), Glocal(1, k), Glocal(2, k) });
+			rotationJacobian.SetColumnVector(axis, n + 3 + k);
+			positionJacobian.SetColumnVector(axis.CrossProduct(r), n + 3 + k);
+		}
+	}
 
 	Index cnt = 0; //just for safety, if parents are having loop?
 	Index i = linkNumber;
