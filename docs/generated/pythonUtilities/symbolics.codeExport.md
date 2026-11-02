@@ -22,46 +22,6 @@ GetFlatProgram() and ToString() is written by C++, and Write() gives the same te
 - **Author**: Johannes Gerstmayr
 - **Date**: 2026-10-25 (created)
 
-(sec-codeexport--number)=
-## Function: _Number
-
-[`_Number(value, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L96)
-
-- **function description**: a number, a vector or a matrix of numbers in an executable format
-
-
-(sec-codeexport--index)=
-## Function: _Index
-
-[`_Index(entry, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L117)
-
-- **function description**: the text of an index operand: an integer, if it is a number
-
-
-(sec-codeexport--function)=
-## Function: _Function
-
-[`_Function(function, operands, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L124)
-
-- **function description**: a function of exudyn.symbolic in a format
-
-
-(sec-codeexport--operation)=
-## Function: _Operation
-
-[`_Operation(entry, operands, operandEntries, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L137)
-
-- **function description**: the text of one operation, its operands given as text
-
-
-(sec-codeexport--leaf)=
-## Function: _Leaf
-
-[`_Leaf(entry, format)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/codeExport.py#L208)
-
-- **function description**: the text of a number or a named variable
-
-
 (sec-codeexport-write)=
 ## Function: Write
 

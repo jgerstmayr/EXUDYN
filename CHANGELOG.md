@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 305 | 1.13.314 |
+| 1.13 | Newborn | 306 | 1.13.315 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.315** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Functions starting with an underscore excluded from the reference manual (#3224)
+  - description: The utility pages document functions such as SymbolicSystem.\_MarkerData, which are internal and may change without notice. Decided: names starting with an underscore are left out of the generated pages.
+  - **notes:** The reference pages of the Python utilities leave out the functions, classes and methods whose names start with an underscore, which are internal.
+  - date resolved: **2026-11-02 10:09**, date raised: 2026-11-02
 - **1.13.314** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Python solvers with an adaptive step size from the recommended step size (#3220)
   - description: SolveGeneralizedAlpha and SolveExplicit of exudyn.symbolics.solvers keep the step size fixed and ignore the recommended step size the post-Newton functions return. Decided: the step reduced to the recommended size and grown again, as the discontinuous iteration of the C++ solvers does.
   - **notes:** SolveGeneralizedAlpha and SolveExplicit repeat a step with the recommended step size of a post-Newton step and grow the step again, as Exudyn's solvers with timeIntegration.adaptiveStep; test model symbolicSolversAdaptiveStepTest.

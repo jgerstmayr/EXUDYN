@@ -9,14 +9,6 @@ Helper functions and classes for graphical interaction with Exudyn
 - **Date**: 2020-01-25
 - **Notes**: This is an internal library, which is only used inside Exudyn for modifying settings.
 
-(sec-gui--complainonce)=
-## Function: _ComplainOnce
-
-[`_ComplainOnce(reason)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L99)
-
-- **function description**: say once per process that the renderer's SystemContainer could not be used, and why
-
-
 (sec-gui-getrenderersystemcontainer)=
 ## Function: GetRendererSystemContainer
 
@@ -34,22 +26,6 @@ Helper functions and classes for graphical interaction with Exudyn
 
 - **function description**: tell Windows that this process draws at the real resolution of the display Without it, Windows renders the window at 96 dpi and stretches the bitmap, which is why a dialog opened from a shell looked soft while the same dialog opened from the render window was sharp: GLFW makes the process DPI aware when it creates the render window, and a dialog that comes after it inherits that. From "python -m exudyn dialogs" there is no GLFW (#2634). It must be called BEFORE the first window is created; afterwards Windows refuses, which is not an error here - something else has already set it, which is what we wanted.
 - **output**: True if this process is DPI aware afterwards
-
-
-(sec-gui--windowsclipboard)=
-## Function: _WindowsClipboard
-
-[`_WindowsClipboard(text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L170)
-
-- **function description**: put text into the Windows clipboard as CF_UNICODETEXT; the memory then belongs to the system
-
-
-(sec-gui--clipboardcommand)=
-## Function: _ClipboardCommand
-
-[`_ClipboardCommand(platform, Which)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L206)
-
-- **function description**: the command that writes stdin into the clipboard, or None: pbcopy on macOS, on Linux wl-copy, xclip or xsel, whichever is installed
 
 
 (sec-gui-copytoclipboard)=

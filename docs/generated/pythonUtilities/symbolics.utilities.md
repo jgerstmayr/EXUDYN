@@ -43,14 +43,6 @@ a Python if for a number, so that a condition known at the recording records onl
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAEDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEDataTest.py) (TM), [`symbolicLookupTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicLookupTableTest.py) (TM), [`symbolicSystemDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemDataTest.py) (TM)
 
 
-(sec-utilities--noisetable)=
-## Function: _NoiseTable
-
-[`_NoiseTable(step, length, seed, amplitude, distribution, outside)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/utilities.py#L60)
-
-- **function description**: the table of NoiseTable, created
-
-
 (sec-utilities-noisetable)=
 ## Function: NoiseTable
 

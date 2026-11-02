@@ -22,30 +22,6 @@ parameterVariables, for SymbolicSystem(mbs, parameters=creator.parameterVariable
 - **Author**: Johannes Gerstmayr
 - **Date**: 2026-10-27 (created)
 
-(sec-useritems--numbers)=
-## Function: _Numbers
-
-[`_Numbers(values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L432)
-
-- **function description**: the values of parameters given as numbers or named exudyn.symbolic.Real, for the item (#3152)
-
-
-(sec-useritems--refuse)=
-## Function: _Refuse
-
-[`_Refuse(where, name, value, default, reason = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L437)
-
-- **function description**: raise naming an argument the user item does not support, if it differs from its default
-
-
-(sec-useritems--jointgraphics)=
-## Function: _JointGraphics
-
-[`_JointGraphics(markers, shape, size, length, color)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L448)
-
-- **function description**: the graphicsDataUserFunction of a joint of UserItemCreator (#3147), a simplified drawing at its markers in the visualization configuration: 'revolute' a cylinder along the z-axis of marker 0, 'prismatic' along its x-axis, 'spherical' a sphere at marker 0, 'distance' a line - or a cylinder of diameter size > 0 - between the markers
-
-
 (sec-module-symbolics.useritems-class-useritemcreator)=
 ## CLASS UserItemCreator (in module symbolics.userItems)
 
@@ -54,14 +30,6 @@ parameterVariables, for SymbolicSystem(mbs, parameters=creator.parameterVariable
 - **input**:
   - `mbs`: the MainSystem where the items are created
 - **notes**: Its members: mbs; items, the dict of the item numbers of each kind ('massPoint', 'rigidBody', 'springDamper', 'torsionalSpringDamper', 'revoluteJoint', 'prismaticJoint', 'sphericalJoint', 'distanceConstraint'); loads, the list of the loads with a user function created by CreateForce; recordings, the symbolic user functions of Record, which must live as long as the system; parameterVariables, the dict of the parameters of the items with a named exudyn.symbolic.Real among them - CreateMassPoint(mass=m1) -, by the int of the item number, as SymbolicSystem(mbs, parameters=...) takes it (#3152). Example: creator = UserItemCreator(mbs) #or creator = mbs: the same script with the built-in items b0 = creator.CreateMassPoint(referencePosition=[1,0,0], mass=2, gravity=[0,-9.81,0]) creator.CreateSpringDamper(itemNumbers=[creator.CreateGround(), b0], stiffness=100, damping=1) creator.Record() mbs.Assemble()
-
-(sec-useritems-useritemcreator--keepparameters)=
-### Class function: _KeepParameters
-
-[`_KeepParameters(self, itemNumber, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L505)
-
-- **class function description**: keep the parameters of an item if a named exudyn.symbolic.Real is among them (#3152)
-
 
 (sec-useritems-useritemcreator-createground)=
 ### Class function: CreateGround
@@ -216,22 +184,6 @@ parameterVariables, for SymbolicSystem(mbs, parameters=creator.parameterVariable
   - `bodyNumbers`: refused if given: use itemNumbers
   - `bodyOrNodeList`: refused if given: use itemNumbers
 - **output**: the ObjectIndex of the connector
-
-
-(sec-useritems-useritemcreator--jointmarkers)=
-### Class function: _JointMarkers
-
-[`_JointMarkers(self, where, name, itemNumbers, position, axis, useGlobalFrame, show, frame)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L908)
-
-- **class function description**: the two rigid markers of a joint at position, as mbs.Create...Joint computes them: their rotation the joint frame - frame 'z' its z-axis the axis (revolute), 'x' its x-axis the axis (prismatic), None the body frame
-
-
-(sec-useritems-useritemcreator--joint)=
-### Class function: _Joint
-
-[`_Joint(self, kind, name, markers, parameters, show, drawing)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/userItems.py#L926)
-
-- **class function description**: an ObjectJointUser of a kind of joint on two rigid markers, drawn by the graphicsDataUserFunction drawing
 
 
 (sec-useritems-useritemcreator-createcartesianspringdamper)=

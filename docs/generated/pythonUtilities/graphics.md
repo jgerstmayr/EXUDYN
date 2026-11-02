@@ -80,30 +80,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCur
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`orientTrianglesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/orientTrianglesTest.py) (TM)
 
 
-(sec-graphics--spheretriangles6)=
-## Function: _SphereTriangles6
-
-[`_SphereTriangles6(point = [0,0,0], radius = 0.1, color = [0.,0.,0.,1.], nTiles = 8, addEdges = False, edgeColor = color.black, addFaces = True, majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L287)
-
-- **function description**: a sphere or a part of it between two latitudes, of 6-node triangles (#2709): nTiles quadratic elements around (the 2*nTiles flat segments of _SphereTriangleList) and ceil(nTiles/2) from majorAngleMin to majorAngleMax, the latitudes and meridians of addEdges as edges3; see Sphere
-
-
-(sec-graphics--spherehollowtriangles6)=
-## Function: _SphereHollowTriangles6
-
-[`_SphereHollowTriangles6(point = [0,0,0], radius = 0.1, color = [0.,0.,0.,1.], nTiles = 8, addEdges = False, edgeColor = color.black, majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi, innerRadius = 0.05)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L332)
-
-- **function description**: a hollow sphere between two latitudes, of 6-node triangles (#2709): the outer sphere as _SphereTriangles6, the inner one between the cut planes - or closed where a plane does not reach it -, and the flat faces at the cuts, a ring between the two spheres or a disc where the inner sphere is closed; with addEdges, the circles of the cuts as edges3; see Sphere
-
-
-(sec-graphics--spheretrianglelist)=
-## Function: _SphereTriangleList
-
-[`_SphereTriangleList(point = [0,0,0], radius = 0.1, color = [0.,0.,0.,1.], nTiles = 8, addEdges = False, edgeColor = color.black, addFaces = True, majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L394)
-
-- **function description**: the flat triangles of a sphere, also a part of a sphere, with edges - for SpheresToTriangleList and RigidLink; see Sphere
-
-
 (sec-graphics-lines)=
 ## Function: Lines
 
@@ -217,38 +193,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidRotor3
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`ballBearingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py) (TM), [`bricardMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py) (TM), [`carRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py) (TM), ...
-
-
-(sec-graphics--quadraticpatch)=
-## Function: _QuadraticPatch
-
-[`_QuadraticPatch(PointAndNormal, nu, nv, closedU, closedV, offset = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L830)
-
-- **function description**: 6-node triangles on a parametric patch (#2709): nu x nv quadratic elements, PointAndNormal(u, v) with u, v in [0,1] gives a point and its (outward) normal; the grid holds the corners and the mid nodes of the elements, (2nu (+1)) x (2nv (+1)) points; each element is two 6-node triangles, oriented so that their corners turn counterclockwise about the given normals. Returns (points, normals, triangles6, Index), Index(i, j) the number of the grid point i (along u) and j (along v), plus offset
-
-
-(sec-graphics--orienttriangle6)=
-## Function: _OrientTriangle6
-
-[`_OrientTriangle6(t, points, normal)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L876)
-
-- **function description**: the 6-node triangle t with its corners turned counterclockwise about normal
-
-
-(sec-graphics--orienttriangle)=
-## Function: _OrientTriangle
-
-[`_OrientTriangle(t, points, normal)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L884)
-
-- **function description**: the flat triangle t with its corners turned counterclockwise about normal
-
-
-(sec-graphics--numberofquadraticelements)=
-## Function: _NumberOfQuadraticElements
-
-[`_NumberOfQuadraticElements(nSegments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L892)
-
-- **function description**: the quadratic elements that replace nSegments flat segments: each covers two of them (#2709)
 
 
 (sec-graphics-cylinder)=
@@ -586,14 +530,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chainDriveE
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCurvedShapes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py) (Ex)
 
 
-(sec-graphics--linkedcylindersflat)=
-## Function: _LinkedCylindersFlat
-
-[`_LinkedCylindersFlat(c1, radius0, radius1, theta, radiusInner0, radiusInner1, nTiles, p0, rot, height, color, addEdges, edgeColor, addFaces, smoothNormals, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2041)
-
-- **function description**: LinkedCylinders as flat extrusion (SolidExtrusion), for the arguments that only SolidExtrusion takes
-
-
 (sec-graphics-ballbearingrings)=
 ## Function: BallBearingRings
 
@@ -806,22 +742,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`orientTrian
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDataExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py) (Ex)
-
-
-(sec-graphics--triangleorientation)=
-## Function: _TriangleOrientation
-
-[`_TriangleOrientation(graphicsData, tolerance)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2825)
-
-- **function description**: the topology of a TriangleList: the corners of 'triangles' and of the corners of 'triangles6', the points merged by position (an STL file gives each triangle its own points), the neighbours across edges with two triangles and whether they run the shared edge the same way (inconsistent); edges with one triangle are open, with more non-manifold
-
-
-(sec-graphics--orienttrianglesanalysis)=
-## Function: _OrientTrianglesAnalysis
-
-[`_OrientTrianglesAnalysis(graphicsData, outward, tolerance)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2875)
-
-- **function description**: the triangles to flip, and the report of OrientTriangles and CheckTriangleOrientation
 
 
 (sec-graphics-orienttriangles)=

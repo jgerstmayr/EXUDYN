@@ -9,38 +9,6 @@ Plot utility functions based on matplotlib, including plotting of sensors and FF
 - **Date**: 2020-09-16 (created)
 - **Notes**: For a list of plot colors useful for matplotlib, see also advancedUtilities.PlotLineCode(...)
 
-(sec-plot---plotwindowname)=
-## Function: __PlotWindowName
-
-[`__PlotWindowName(number)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L80)
-
-- **function description**: the name the geometry of the n-th plot window is stored under
-
-
-(sec-plot---plotwindowof)=
-## Function: __PlotWindowOf
-
-[`__PlotWindowOf(figure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L85)
-
-- **function description**: the backend window of a figure, or None if there is none or it is already gone
-
-
-(sec-plot---windowgeometry)=
-## Function: __WindowGeometry
-
-[`__WindowGeometry(window)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L93)
-
-- **function description**: 'WIDTHxHEIGHT+X+Y' of a backend window, or None if the backend does not say. tkinter is told by wm_geometry: a Qt window has a geometry() as well, which returns a QRect (#2722)
-
-
-(sec-plot---storeplotwindow)=
-## Function: __StorePlotWindow
-
-[`__StorePlotWindow(figure, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L107)
-
-- **function description**: store where one plot window is; True if it was stored
-
-
 (sec-plot-storeplotwindowgeometry)=
 ## Function: StorePlotWindowGeometry
 
@@ -67,14 +35,6 @@ Plot utility functions based on matplotlib, including plotting of sensors and FF
 
 - **function description**: The plot windows that are open, with where they are.
 - **output**: a list of (name, 'WIDTHxHEIGHT+X+Y'), one per open PlotSensor window, under the name its geometry is stored by - which is how the store positions button of the settings dialog lists and stores them together with the other windows (#2719)
-
-
-(sec-plot---placeplotwindow)=
-## Function: __PlacePlotWindow
-
-[`__PlacePlotWindow(fig)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L173)
-
-- **function description**: put a new plot window where the window of the same sequence number was left The SIZE always and the POSITION only if it would still be reachable - the rule and the ~/.exudyn/config.json section the dialogs use (#2608). The size is the window's own, in pixels, and leaves `sizeInches` as what a figure gets when nothing is stored. Backend-dependent, so anything it cannot do it leaves alone. Returns True if it gave the window a stored size, which the caller must then not overwrite with the default sizeInches (#2723)
 
 
 (sec-plot-parseoutputfileheader)=
@@ -244,14 +204,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscill
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex)
-
-
-(sec-plot---imagedatafromgraphicsdata)=
-## Function: __ImageDataFromGraphicsData
-
-[`__ImageDataFromGraphicsData(graphicsData, trianglesAsLines, circleSegments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1045)
-
-- **function description**: the polylines and triangles PlotImage draws, from the dictionary of SC.renderer.GetGraphicsData(): a circle becomes a closed polyline, and with trianglesAsLines a triangle becomes its closed outline
 
 
 (sec-plot-plotimage)=

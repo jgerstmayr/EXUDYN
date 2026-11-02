@@ -422,13 +422,19 @@ def _DocstringItem(node, summaryTag, fileLines, fileName):
         item['defaultArgumentsList'] = defaultArgumentsList
     return item
 
+def _IsInternal(name):
+    """a name starting with an underscore, not a special method such as __init__: internal, not documented (#3224)"""
+    return name.startswith('_') and not (name.startswith('__') and name.endswith('__'))
+
 def _ParseDocstrings(fileName):
-    """[functionList, classList] from the docstrings of a file"""
+    """[functionList, classList] from the docstrings of a file, without the internal functions, classes and methods"""
     source = io.open(fileName, 'r', encoding='utf8').read()
     fileLines = source.split('\n')
     functionList = []
     classList = []
     for node in ast.parse(source).body:
+        if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and _IsInternal(node.name):
+            continue
         if isinstance(node, ast.FunctionDef):
             item = _DocstringItem(node, 'function', fileLines, fileName)
             if item is not None:
@@ -437,7 +443,7 @@ def _ParseDocstrings(fileName):
             item = _DocstringItem(node, 'class', fileLines, fileName)
             if item is not None:
                 item['functionList'] = [f for f in (_DocstringItem(n, 'classFunction', fileLines, fileName)
-                                                    for n in node.body if isinstance(n, ast.FunctionDef))
+                                                    for n in node.body if isinstance(n, ast.FunctionDef) and not _IsInternal(n.name))
                                         if f is not None]
                 classList.append(item)
     return [functionList, classList]

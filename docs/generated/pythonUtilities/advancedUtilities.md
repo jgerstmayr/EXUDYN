@@ -407,30 +407,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **output**: return dictionary with 'functionName', 'argList', and 'returnList'
 
 
-(sec-advancedutilities--objectparameterssize)=
-## Function: _ObjectParametersSize
-
-[`_ObjectParametersSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1010)
-
-- **function description**: the length of the parameters of a user item, which its user functions get, or 0 where it is not known (#3056)
-- **input**:
-  - `mbs`: the MainSystem of the object
-  - `itemIndex`: the ObjectIndex, or anything else, which gives 0
-- **output**: int: the length of the parameters of the object, 0 if it has none
-
-
-(sec-advancedutilities--objectcoordinatessize)=
-## Function: _ObjectCoordinatesSize
-
-[`_ObjectCoordinatesSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1028)
-
-- **function description**: the number of coordinates q of the nodes of an object, which its user functions get, or 0 where it is not known; a vector argument recorded with its size can be combined with constant vectors and has len() (#3015)
-- **input**:
-  - `mbs`: the MainSystem of the object
-  - `itemIndex`: the ObjectIndex, or anything else, which gives 0
-- **output**: int: the number of coordinates of the nodes of ObjectGenericODE2, ObjectGenericODE1, ObjectUserBody, ObjectKinematicTree, ObjectFFRF or ObjectFFRFreducedOrder, else 0
-
-
 (sec-advancedutilities-createsymbolicuserfunction)=
 ## Function: CreateSymbolicUserFunction
 
@@ -565,68 +541,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 ## CLASS ExpectedType(Enum) (in module advancedUtilities)
 
 **class description**: internal type which is used for type checking in exudyn Python user functions; used to create unique error messages
-
-
-(sec-module-advancedutilities-class--symbolicmainsystem)=
-## CLASS _SymbolicMainSystem (in module advancedUtilities)
-
-**class description**: the mbs of a function recorded by CreateSymbolicUserFunction (#2984): GetNodeOutput, GetObjectOutput, GetObjectOutputBody, GetMarkerOutput and GetSensorValues give symbolic expressions, which read the item at every call of the user function in C++; mbs.variables are Python values, constants of the recording; every other attribute raises, as its value would be a constant of the recording
-
-
-(sec-advancedutilities--symbolicmainsystem-variables)=
-### Class function: variables
-
-[`variables(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L759)
-
-- **class function description**: mbs.variables, read while recording
-
-
-(sec-advancedutilities--symbolicmainsystem--output)=
-### Class function: _Output
-
-[`_Output(self, kind, function, itemNumber, variableType, configuration, localPosition = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L763)
-
-- **class function description**: the symbolic output: a Real for a scalar output, a Vector else; the value at recording gives its size
-
-
-(sec-advancedutilities--symbolicmainsystem-getnodeoutput)=
-### Class function: GetNodeOutput
-
-[`GetNodeOutput(self, nodeNumber, variableType, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L787)
-
-- **class function description**: as MainSystem.GetNodeOutput, read at every call
-
-
-(sec-advancedutilities--symbolicmainsystem-getobjectoutput)=
-### Class function: GetObjectOutput
-
-[`GetObjectOutput(self, objectNumber, variableType, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L791)
-
-- **class function description**: as MainSystem.GetObjectOutput, read at every call
-
-
-(sec-advancedutilities--symbolicmainsystem-getobjectoutputbody)=
-### Class function: GetObjectOutputBody
-
-[`GetObjectOutputBody(self, objectNumber, variableType, localPosition = [0, 0, 0], configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L795)
-
-- **class function description**: as MainSystem.GetObjectOutputBody, read at every call
-
-
-(sec-advancedutilities--symbolicmainsystem-getmarkeroutput)=
-### Class function: GetMarkerOutput
-
-[`GetMarkerOutput(self, markerNumber, variableType, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L801)
-
-- **class function description**: as MainSystem.GetMarkerOutput, read at every call
-
-
-(sec-advancedutilities--symbolicmainsystem-getsensorvalues)=
-### Class function: GetSensorValues
-
-[`GetSensorValues(self, sensorNumber, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L805)
-
-- **class function description**: as MainSystem.GetSensorValues, read at every call
 
 
 (sec-module-advancedutilities-class-parameterlayout)=

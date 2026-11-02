@@ -17,22 +17,6 @@ exudyn.HT and exudyn.Twist; PointVelocity, LocalTwist and RelativeTwist take eit
 - **Author**: Johannes Gerstmayr
 - **Date**: 2026-10-23 (created)
 
-(sec-kinematics--matrix)=
-## Function: _Matrix
-
-[`_Matrix(rows, functions)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L40)
-
-- **function description**: the result matrix: a symbolic matrix for exudyn.symbolic, a numpy array otherwise
-
-
-(sec-kinematics--vector)=
-## Function: _Vector
-
-[`_Vector(components, functions)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L46)
-
-- **function description**: the result vector: a symbolic vector for exudyn.symbolic, a numpy array otherwise
-
-
 (sec-kinematics-skew)=
 ## Function: Skew
 
@@ -347,46 +331,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chatGPTupda
 - **output**: 3 x 3 unit matrix, symbolic for exudyn.symbolic, else as np.array
 
 
-(sec-kinematics--assymbolic)=
-## Function: _AsSymbolic
-
-[`_AsSymbolic(value)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L423)
-
-- **function description**: a constant matrix or vector of numbers as symbolic one, a symbolic one as it is
-
-
-(sec-kinematics--matmul)=
-## Function: _MatMul
-
-[`_MatMul(matrix, operand)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L430)
-
-- **function description**: matrix @ operand; a constant is made symbolic if the other one is symbolic
-
-
-(sec-kinematics--plus)=
-## Function: _Plus
-
-[`_Plus(vector0, vector1, sign = 1.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L436)
-
-- **function description**: vector0 + sign*vector1; a constant is made symbolic if the other one is symbolic
-
-
-(sec-kinematics--vectorpart)=
-## Function: _VectorPart
-
-[`_VectorPart(value)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L443)
-
-- **function description**: a vector part given to exudyn.HT or exudyn.Twist: None, an exudyn.symbolic.Vector, or a list of numbers and symbolic Reals, as symbolic vector if it holds one
-
-
-(sec-kinematics--numeric)=
-## Function: _Numeric
-
-[`_Numeric(*values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L693)
-
-- **function description**: true if the frames and twists are those of exudyn, which exudyn.cUtilities computes
-
-
 (sec-kinematics-pointvelocity)=
 ## Function: PointVelocity
 
@@ -505,14 +449,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicHTT
 [`Relative(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L530)
 
 - **class function description**: the frame of other seen from this one, H.Inverse()*other = [A^T A2, A^T (p2 - p)], without the inverse
-
-
-(sec-kinematics-ht--numbers)=
-### Class function: _Numbers
-
-[`_Numbers(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L538)
-
-- **class function description**: the exudyn.HT of numeric parts, None for symbolic parts
 
 
 (sec-kinematics-ht-getrotationvector)=

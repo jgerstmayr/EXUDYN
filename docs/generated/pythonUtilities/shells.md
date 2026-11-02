@@ -11,22 +11,6 @@ derivatives of the map, computed with exu.symbolic; a component of the map may b
 - **Author**: Johannes Gerstmayr, Michael Pieber (symbolic and numeric mappings)
 - **Date**: 2026-01-11 (created)
 
-(sec-shells--number)=
-## Function: _Number
-
-[`_Number(value)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L550)
-
-- **function description**: the value of a number or of an exu.symbolic.Real, which float() refuses while recording (#3017)
-
-
-(sec-shells--unitvector)=
-## Function: _UnitVector
-
-[`_UnitVector(v)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L554)
-
-- **function description**: Return the unit vector of v; raises ValueError if v is near-zero.
-
-
 (sec-shells-addnodeconstraints)=
 ## Function: AddNodeConstraints
 
@@ -67,30 +51,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
   - `nodeNumber`: the NodePointSlope12 node
   - `fixedConstraints`: 9 values 0 or 1, one per coordinate in the order [x, y, z, sx_x, sx_y, sx_z, sy_x, sy_y, sy_z]: 1 fixes the coordinate, 0 leaves it free, as fixedConstraintsNode0 of GenerateStraightLineANCFCable2D; None fixes all 9. For a flat plate in the xy-plane clamped at its left edge, [1,1,1, 0,1,1, 1,0,1] fixes the positions and the transverse slope components and leaves the axial ones (sx_x, sy_y) free, so that the boundary can stretch
 - **output**: list of CoordinateConstraint object indices
-
-
-(sec-shells--thinplateshapefunctionderivatives)=
-## Function: _ThinPlateShapeFunctionDerivatives
-
-[`_ThinPlateShapeFunctionDerivatives(xi, eta, scaleX, scaleY)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L945)
-
-- **function description**: First derivatives (d/dxi, d/deta) of the 12 ANCFThinPlate shape functions. Transcribed from CObjectANCFThinPlate::ComputeShapeFunctions_xy (C++), including the per-node slope scaling (slopesScalingX/Y parameters of the element). Node order: n0=(-1,-1), n1=(+1,-1), n2=(+1,+1), n3=(-1,+1); per node the SF order is [position, slopeX, slopeY]. Returns (sf_xi, sf_eta): two numpy arrays of length 12.
-
-
-(sec-shells--creatempczeromarker)=
-## Function: _CreateMPCZeroMarker
-
-[`_CreateMPCZeroMarker(mbs, nCoords = 36)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L998)
-
-- **function description**: Return a marker whose coordinate vector is clamped to zero. Used as marker0 in ObjectConnectorCoordinateVector MPCs so Exudyn does not warn about two identical markers (self-constraint via markerNumbers=[m, m]). One ground node can be shared by many element constraints in the same mbs.
-
-
-(sec-shells--addslopedeviationconstraint)=
-## Function: _AddSlopeDeviationConstraint
-
-[`_AddSlopeDeviationConstraint(mbs, elem, rowFunc, groundMarker = None, nodalCoords = (-1.0, +1.0), components = (0, 1, 2))`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1017)
-
-- **function description**: Add a linear MPC forcing the slope functional rowFunc(s) to equal the linear interpolation of its values at the edge ends, at the 2 interior Gauss points. rowFunc(s) must return the 12 shape-function-derivative coefficients of the constrained (transverse) slope at edge coordinate s in [-1, +1]. Returns the constraint object index.
 
 
 (sec-shells-addslopeconformityconstraints)=

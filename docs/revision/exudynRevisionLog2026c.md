@@ -5694,3 +5694,9 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   useRecommendedStepSize, 511 / 516 steps with 4 rejected (generalized-alpha / RK44), against SolveDynamic 7e-12 / 0;
   with a constant step 6e-4 / 4e-3 off. Not: a step size reduction when Newton does not converge, which still raises.
 - The existing symbolic test models give the same results.
+
+<a id="rg3-49"></a>
+### RG3.49 — The internal functions out of the reference pages (2026-11-02, #3224)
+- tools/generators/utilityDocsModel.py `_IsInternal`: functions, classes and methods whose names start with an
+  underscore, not the special methods such as `__init__`, are not parsed, so neither the pages nor the keyword lists of
+  confHelperPyUtilities.py have them; 1120 lines fewer in 15 pages (symbolics.systemModel 37 functions).

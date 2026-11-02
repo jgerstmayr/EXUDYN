@@ -2,11 +2,15 @@
   "number": 3224,
   "title": "Functions starting with an underscore excluded from the reference manual",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "The utility pages document functions such as SymbolicSystem._MarkerData, which are internal and may change without notice. Decided: names starting with an underscore are left out of the generated pages.",
   "dateRaised": "2026-11-02",
-  "deadline": "2027-05-01"
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 10:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The reference pages of the Python utilities leave out the functions, classes and methods whose names start with an underscore, which are internal.",
+  "resolvedInVersion": "1.13.315"
 }

@@ -65,7 +65,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG3.46 Move the settled designs into the manual and the item descriptions, and remove the design files (2 open sub-steps)
   - RG3.47 One chapter "Symbolic system and user functions": symbolic system, symbolic user functions, user items, symbolic solvers (1 open sub-step)
   - RG3.48 The chapter "Solvers and system equations": a section on the system equations, the solvers and the system Jacobians
-  - RG3.49 Leave the functions whose names start with an underscore out of the generated reference pages
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
@@ -130,7 +129,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 |---|---|---|---|
 | RG1 | OPEN | 1 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
-| RG3 | OPEN | 7 | Docs |
+| RG3 | OPEN | 6 | Docs |
 | RG4 | OPEN | 5 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
@@ -242,9 +241,11 @@ CLOSED 2026-10-10 (#2937); the maintainer adjusts the widths.
 
 #3223 (maintainer 2026-11-02: "System equations of motion" is almost hidden in "Solvers in Exudyn" and the system Jacobians are not there; the section reflects the C++ part, the symbolic system referenced sparsely; systemJacobians.md goes into it).
 
-### **OPEN_RG3.49** Leave the functions whose names start with an underscore out of the generated reference pages
+### **CLOSED_RG3.49** Leave the functions whose names start with an underscore out of the generated reference pages
 
 #3224 (maintainer 2026-11-02: they are internals without the usual docstrings and may change without notice).
+
+CLOSED 2026-11-02 (#3224 resolved): utilityDocsModel._IsInternal; 1120 lines fewer in 15 pages. [log](exudynRevisionLog2026c.md#rg3-49)
 
 ## **OPEN_RG4** Implementation problems and bugs
 

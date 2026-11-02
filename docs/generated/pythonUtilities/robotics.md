@@ -12,14 +12,6 @@ import this library e.g. with import exudyn.robotics as robotics
 - **Date**: 2020-04-14
 - **Example**: New robot model uses the class Robot with class RobotLink; the old dictionary structure is defined in the example in ComputeJointHT for the definition of the 'robot' dictionary.
 
-(sec-roboticscore--toht)=
-## Function: _ToHT
-
-[`_ToHT(H)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L66)
-
-- **function description**: an exudyn.HT from an exudyn.HT (the same object), a 4x4 matrix or None (the identity); the robotics classes store and compute with exudyn.HT (#2821)
-
-
 (sec-roboticscore-stddh2ht)=
 ## Function: StdDH2HT
 

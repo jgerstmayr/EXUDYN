@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.314.dev1
+- Exudyn version = 1.13.315.dev1
 - last change = 2026-11-02
 - Number of issues = 3226
-- Number of resolved issues = 3091 (314 in current version)
+- Number of resolved issues = 3092 (315 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9041,9 +9041,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `EXAMPLE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` A symbolic system solved and its solution mapped onto mbs (#3225)
   - description: The Python solvers write their states through the mbs of a SymbolicSystem - solution file, sensors, renderer - but every example switches the solution file off. Decided: an example that solves a SymbolicSystem built as a replicate of an mbs with the Python solvers and shows the solution in the renderer and the solution viewer.
-  - date raised: 2026-11-02
-- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Functions starting with an underscore excluded from the reference manual (#3224)
-  - description: The utility pages document functions such as SymbolicSystem.\_MarkerData, which are internal and may change without notice. Decided: names starting with an underscore are left out of the generated pages.
   - date raised: 2026-11-02
 - `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` A chapter "Solvers and system equations" (#3223)
   - description: The system equations of motion are a hidden subsection of "Solvers in Exudyn", and the system Jacobians are not described there. Decided: the chapter renamed, with a section on the system equations, the solvers and the Jacobians.

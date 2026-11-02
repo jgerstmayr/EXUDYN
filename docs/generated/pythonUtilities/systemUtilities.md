@@ -11,14 +11,6 @@ constraints, the numerical Jacobian of a computation of the current state, and t
 - **Author**: Johannes Gerstmayr
 - **Date**: 2026-10-16 (created; the functions came from advancedUtilities, solver and mainSystemExtensions)
 
-(sec-systemutilities--itemkey)=
-## Function: _ItemKey
-
-[`_ItemKey(item)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/systemUtilities.py#L33)
-
-- **function description**: the kind and number of an item index, to compare item indices of different kinds
-
-
 (sec-systemutilities-loadpotentialenergy)=
 ## Function: LoadPotentialEnergy
 
@@ -164,46 +156,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`systemUtili
 - **class function description**: collect the contributing items again, after the system changed
 
 
-(sec-systemutilities-systemquantity--selected)=
-### Class function: _Selected
-
-[`_Selected(self, item)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/systemUtilities.py#L69)
-
-- **class function description**: True if the item is to be taken into account
-
-
-(sec-systemutilities-systemquantity--unavailable)=
-### Class function: _Unavailable
-
-[`_Unavailable(self, item, typeName, component, reason)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/systemUtilities.py#L73)
-
-- **class function description**: record an item that has the component but cannot compute it, or raise if skipUnavailable=False
-
-
-(sec-systemutilities-systemquantity--collectitems)=
-### Class function: _CollectItems
-
-[`_CollectItems(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/systemUtilities.py#L80)
-
-- **class function description**: fill .items and .unavailable; implemented by the derived class
-
-
-(sec-systemutilities-systemquantity--itemcontribution)=
-### Class function: _ItemContribution
-
-[`_ItemContribution(self, item, configuration)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/systemUtilities.py#L84)
-
-- **class function description**: the contribution of one item, one value per component; implemented by the derived class
-
-
-(sec-systemutilities-systemquantity--reduce)=
-### Class function: _Reduce
-
-[`_Reduce(self, contributions)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/systemUtilities.py#L88)
-
-- **class function description**: the values of the system from the contributions of the items: their sum
-
-
 (sec-systemutilities-systemquantity-computeitems)=
 ### Class function: ComputeItems
 
@@ -308,14 +260,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`energiesTes
   mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
   print('largest drift', max(mbs.GetSensorStoredData(sDrift)[:,1]))
 ```
-
-
-(sec-systemutilities-systemconstraintdrift(systemquantity)--reduce)=
-### Class function: _Reduce
-
-[`_Reduce(self, contributions)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/systemUtilities.py#L353)
-
-- **class function description**: the largest value of the items; NaN for velocityResidual if an item does not provide it
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`constraintDriftTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/constraintDriftTest.py) (TM), [`systemUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/systemUtilitiesTest.py) (TM)

@@ -18,14 +18,6 @@ Most of the solvers are implemented inside the C++ core.
 - **function description**: (internal) helper function for unique error and helper messages
 
 
-(sec-solver--solverfailed)=
-## Function: _SolverFailed
-
-[`_SolverFailed(solver, mbs, functionName, isStatic, showCausingItems, showHints, exception = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L137)
-
-- **function description**: (internal) a failed solve: without an exception, raise SolverError with what the solver reports and the reasons and remedies of SolverErrorMessage; with one, add them to it as a note, which the traceback shows, and let the caller raise it - so the exception carries the whole message and nothing is printed (#1977)
-
-
 (sec-solver-solvestatic)=
 ## Function: SolveStatic
 
@@ -117,14 +109,6 @@ Most of the solvers are implemented inside the C++ core.
 
 
 - **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolveDynamic(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-solvedynamic`
-
-
-(sec-solver--solvedynamic)=
-## Function: _SolveDynamic
-
-[`_SolveDynamic(mbs, simulationSettings, solverType, updateInitialValues, storeSolver, showHints, showCausingItems, autoAssemble, index2CheckConstraints)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L291)
-
-- **function description**: SolveDynamic with the solver type decided and set in the settings
 
 
 (sec-solver-solversuccess)=
