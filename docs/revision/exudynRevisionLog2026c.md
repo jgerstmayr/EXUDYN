@@ -5729,6 +5729,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg9-11-17-2"></a>
+### RG9.11.17.2 — The Lie group node in the local Jacobians (2026-11-02, #3217)
+- The only Lie group node is NodeRigidBodyRotVecLG; NodeRigidBodyRotVecDataLG, named in #3217, does not exist.
+- RigidBodyNodeVelocity_q on the node: the velocity coordinates of the rotation are omega (local), the composition is
+  local, A Exp(delta) (CompositionRotationVector), so the angular velocity and the velocity of a point have the
+  columns -A omega~ and -A (omega x p)~; MarkerNodeRigid, MarkerBodyRigid and MarkerBodyPosition on such bodies give
+  dv/dq, so the contacts with friction on them are on the connector interface.
+- CObjectRigidBody::ComputeJacobianODE2_ODE2LieGroup in closed form (the description of the function); the function
+  flags in GetAvailableJacobians, so the bodies are in the parallel assembly.
+- Found by the new test: JacobianODE2Loads differentiated by x + eps also on the Lie group nodes, the system-wide
+  Jacobian by the composition; the mass proportional load of a body with a center of mass differed by 0.34 (relative).
+  It now uses SetNumDiffObjectLieGroup, the same values elsewhere.
+- test_systemJacobians: FreeBodiesLieGroup (with and without a center of mass) and ContactsLieGroup, also at
+  velocities; within the tolerance.
+- Measured: the test models with Lie group nodes (createSphereQuadContact, createSphereTriangleContact,
+  generalContactImplicit2, sliderCrank3Dbenchmark) the same Newton iterations, up to 3 % faster; a chain of 200 bodies
+  with spherical joints, full Newton, 200 steps: 1.96 s / 1.24 s (1269 / 1262 iterations), 0.83 s with 4 threads; the
+  test suite unchanged.
+
 <a id="rg9-11-10"></a>
 ### RG9.11.10 — Evaluated: the dependencies outside the local-to-global lists (2026-11-02, #3201)
 - Where they come from: the C++ items see their coordinates through their nodes and markers, which are in their

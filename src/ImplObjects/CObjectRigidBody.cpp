@@ -405,6 +405,11 @@ void CObjectRigidBody::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobi
 	const CNodeRigidBody& node = *(const CNodeRigidBody*)GetCNode(0);
 	const bool eulerParameters = (node.GetType() & Node::RotationEulerParameters) != 0;
 	const Index n = GetODE2Size();
+	if (node.GetType() & Node::RotationRotationVector)
+	{
+		ComputeJacobianODE2_ODE2LieGroup(jacobianODE2, factorODE2, factorODE2_t);
+		return;
+	}
 	const Index nRotation = node.GetNumberOfRotationCoordinates();
 	LinkedDataVector reference = node.GetCoordinateVector(ConfigurationType::Reference);
 	DReal8 theta[CNodeRigidBody::maxRotationCoordinates], theta_t[CNodeRigidBody::maxRotationCoordinates];
@@ -432,13 +437,50 @@ void CObjectRigidBody::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobi
 	}
 }
 
-//! the ODE2 Jacobian by automatic differentiation on Euler parameters and Tait-Bryan angles (#3209), numerical by the
-//! system on the other nodes (the Lie group nodes); the constraint of the Euler parameters attached to the body analytic
+//! the ODE2 Jacobian on the Lie group node (#3217), in closed form: the velocity coordinates of the rotation are the local
+//! angular velocity omega, so the gyroscopic forces omega x J omega have d/d omega = omega~ J - (J omega)~ and do not
+//! depend on the rotation; for a center of mass the force A w, w = omega x (U x omega), U = -m centerOfMass, has
+//! d/d omega = A (omega~ U~ - (U x omega)~) and, as a change of the rotation coordinates composes the rotation locally,
+//! A Exp(delta), d/d delta = -A w~
+void CObjectRigidBody::ComputeJacobianODE2_ODE2LieGroup(EXUmath::MatrixContainer& jacobianODE2, Real factorODE2, Real factorODE2_t) const
+{
+	const CNodeRigidBody& node = *(const CNodeRigidBody*)GetCNode(0);
+	const Index n = GetODE2Size();
+	jacobianODE2.SetUseDenseMatrix(true);
+	ResizableMatrix& jacobian = jacobianODE2.GetInternalDenseMatrix();
+	jacobian.SetNumberOfRowsAndColumns(n, n);
+	jacobian.SetAll(0.);
+	const Vector3D omega = node.GetAngularVelocityLocal();
+	const Matrix3D omegaTilde = RigidBodyMath::Vector2SkewMatrix(omega);
+	Matrix3D inertia;
+	RigidBodyMath::ComputeInertiaMatrix(parameters.inertia, inertia);
+	const Matrix3D gyroscopic_omega = omegaTilde * inertia - RigidBodyMath::Vector2SkewMatrix(inertia * omega);
+	Matrix3D translation_q(3, 3, 0.), translation_omega(3, 3, 0.);
+	if (!(parameters.centerOfMass == 0.))
+	{
+		const Matrix3D A = node.GetRotationMatrix();
+		const Vector3D U = -parameters.mass * parameters.centerOfMass;
+		const Vector3D w = omega.CrossProduct(U.CrossProduct(omega));
+		translation_q = -1. * (A * RigidBodyMath::Vector2SkewMatrix(w));
+		translation_omega = A * (omegaTilde * RigidBodyMath::Vector2SkewMatrix(U) - RigidBodyMath::Vector2SkewMatrix(U.CrossProduct(omega)));
+	}
+	for (Index r = 0; r < 3; r++)
+	{
+		for (Index k = 0; k < 3; k++)
+		{
+			jacobian(r, nDisplacementCoordinates + k) = factorODE2 * translation_q(r, k) + factorODE2_t * translation_omega(r, k);
+			jacobian(nDisplacementCoordinates + r, nDisplacementCoordinates + k) = factorODE2_t * gyroscopic_omega(r, k);
+		}
+	}
+}
+
+//! the ODE2 Jacobian by automatic differentiation on Euler parameters and Tait-Bryan angles (#3209), in closed form on
+//! the Lie group node (#3217); the constraint of the Euler parameters attached to the body analytic
 JacobianType::Type CObjectRigidBody::GetAvailableJacobians() const
 {
 	JacobianType::Type jacobians = (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function +
 		JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
-	if (GetCNode(0)->GetType() & (Node::RotationEulerParameters + Node::RotationRxyz))
+	if (GetCNode(0)->GetType() & (Node::RotationEulerParameters + Node::RotationRxyz + Node::RotationRotationVector))
 	{
 		jacobians = (JacobianType::Type)(jacobians + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
 	}

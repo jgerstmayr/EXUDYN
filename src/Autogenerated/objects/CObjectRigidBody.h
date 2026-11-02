@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-02  08:03:08 (last modified)
+* @date         2026-11-02  15:12:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -98,6 +98,9 @@ public: // AUTO:
 
     //! AUTO:  Computational function: compute jacobian (dense or sparse mode, see parent CObject function)
     virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const override;
+
+    //! AUTO:  the ODE2 Jacobian on the Lie group node, in closed form (#3217)
+    void ComputeJacobianODE2_ODE2LieGroup(EXUmath::MatrixContainer& jacobianODE2, Real factorODE2, Real factorODE2_t) const;
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 315 | 1.13.324 |
+| 1.13 | Newborn | 316 | 1.13.325 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.325** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Lie group nodes in the local Jacobians: dv/dq and the rigid body ODE2 Jacobian (#3217)
+  - description: On NodeRigidBodyRotVecLG and NodeRigidBodyRotVecDataLG the markers return no GetVelocity\_q and ObjectRigidBody is differentiated numerically by CSystem, which composes the rotations. Decided: closed forms on the local angular velocity coordinates of these nodes.
+  - **notes:** ObjectRigidBody on NodeRigidBodyRotVecLG has its ODE2 Jacobian in closed form, in parallel, and the markers on the node give the derivatives of their velocities; the loads Jacobian differentiates the Lie group nodes by the composition, as the system-wide Jacobian; 200 bodies with full Newton 1.24 instead of 1.96 s.
+  - date resolved: **2026-11-02 15:25**, date raised: 2026-11-02
 - **1.13.324** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The derivative of the reaction forces C\_q^T lambda as an option of the Newton Jacobian (#3230)
   - description: The Newton Jacobians of the implicit and static solvers contain C\_q^T, but not the derivative of the reaction forces C\_q^T lambda by the coordinates, neither the local nor the system-wide Jacobian; jacobianConnectorDerivative covers the derivative of J^T f of the connectors, not the constraints. Decided: newton.numericalDifferentiation.constraintReactionDerivative, False by default, adds it by a numerical differentiation of the reaction forces of each constraint, body and node with algebraic equations by its own coordinates, serially; measured on the constrained test models.
   - **notes:** newton.numericalDifferentiation.constraintReactionDerivative = True adds the derivative of the reaction forces C\_q^T lambda to the Newton Jacobian of the implicit and static solvers, by a numerical differentiation per constraint; off by default, as it seldom saves iterations.

@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (12 open sub-steps)
+  - RG9.11 Revise the system Jacobians: one local Jacobian per object, assembled in parallel for the ODE2 and constraint blocks, the other couplings complete and serial (11 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -133,7 +133,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 18 | Structural core improvements |
+| RG9 | OPEN | 17 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 13 | Misc |
 | RG12 | OPEN | 21 | Symbolic |
@@ -1401,9 +1401,11 @@ Connectors on these markers fall back to CSystem, serially, or miss the directio
 
 CLOSED 2026-11-02 (#3216 resolved, #3201 stays open): JacobianColumnDerivative of the tree, the Jacobian derivative and dv/dq of the marker; within 2e-8 of the system-wide Jacobian; six links with spring-dampers and contacts 0.38 instead of 1.08 s with full Newton; #3229 raised (thread safety, RG9.11.13.3). [log](exudynRevisionLog2026c.md#rg9-11-17-1)
 
-##### **OPEN_RG9.11.17.2** The Lie group nodes: dv/dq of their markers and the ODE2 Jacobian of ObjectRigidBody on them, in closed form
+##### **CLOSED_RG9.11.17.2** The Lie group nodes: dv/dq of their markers and the ODE2 Jacobian of ObjectRigidBody on them, in closed form
 
 #3217.
+
+CLOSED 2026-11-02 (#3217 resolved, #3201 stays open): dv/dq of the markers and the ODE2 Jacobian of ObjectRigidBody on NodeRigidBodyRotVecLG in closed form, the loads Jacobian by the composition; 200 bodies with full Newton 1.24 instead of 1.96 s. [log](exudynRevisionLog2026c.md#rg9-11-17-2)
 
 ##### **OPEN_RG9.11.17.3** MarkerSuperElementRigid: dv/dq and the direction along the Euler parameters of the reference node
 

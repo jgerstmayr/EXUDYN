@@ -2,11 +2,15 @@
   "number": 3217,
   "title": "The Lie group nodes in the local Jacobians: dv/dq and the rigid body ODE2 Jacobian",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "On NodeRigidBodyRotVecLG and NodeRigidBodyRotVecDataLG the markers return no GetVelocity_q and ObjectRigidBody is differentiated numerically by CSystem, which composes the rotations. Decided: closed forms on the local angular velocity coordinates of these nodes.",
   "dateRaised": "2026-11-02",
-  "deadline": "2027-05-01"
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 15:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectRigidBody on NodeRigidBodyRotVecLG has its ODE2 Jacobian in closed form, in parallel, and the markers on the node give the derivatives of their velocities; the loads Jacobian differentiates the Lie group nodes by the composition, as the system-wide Jacobian; 200 bodies with full Newton 1.24 instead of 1.96 s.",
+  "resolvedInVersion": "1.13.325"
 }

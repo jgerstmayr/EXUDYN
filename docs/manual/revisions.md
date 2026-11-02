@@ -96,7 +96,10 @@ instead of 1.08 s with full Newton (#3216). ObjectFFRFreducedOrder computes its 
 damping matrices and the derivatives of the quadratic velocity terms -, in parallel; perfObjectFFRFreducedOrder with 24
 modes takes 6.9 instead of 13.4 s with full Newton; `numericalJacobian = True` gives the numerical Jacobian of the system
 (#3212). `newton.numericalDifferentiation.constraintReactionDerivative = True` adds the derivative of the reaction
-forces of the constraints to the Jacobian, off by default (#3230).
+forces of the constraints to the Jacobian, off by default (#3230). ObjectRigidBody on NodeRigidBodyRotVecLG has its
+Jacobian in closed form, in parallel, and the markers on the node give the derivatives of their velocities, so that
+contacts with friction on it have their local Jacobian; a chain of 200 bodies with spherical joints takes 1.24 instead
+of 1.96 s with full Newton (#3217).
 `UserItemCreator.CreateTorsionalSpringDamper` takes `unlimitedRotations`, its default True: the angle continues over
 the turns by a data node of the connector, as the built-in item (#3218). `UserItemCreator.CreateSphereSphereContact`
 takes `dynamicFriction` and `frictionProportionalZone`: the friction of the built-in contact at the contact point,

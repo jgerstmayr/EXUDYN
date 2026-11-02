@@ -104,11 +104,12 @@ void CSystem::JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const 
             ComputeODE2SingleLoad(j, temp, currentTime, f0, fillSparseVector, fillInLocally);
             localJacobian.SetNumberOfRowsAndColumns(nLocalODE2eq, nLocalODE2coords); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
 
-            AddNumDiffObject(numDiff, -factorODE2, xODE2, xRefODE2, localJacobian, f0, f1, ltgODE2coords, 
+            //the rotation coordinates of the Lie group nodes by the composition, as the system differentiates them (#3217)
+            SetNumDiffObjectLieGroup(numDiff, -factorODE2, xODE2, xRefODE2, localJacobian, f0, f1, ltgODE2coords, cSystemData,
                 [this, &temp, &currentTime, &f1, &j, &fillSparseVector, &fillInLocally]
             {
                 ComputeODE2SingleLoad(j, temp, currentTime, f1, fillSparseVector, fillInLocally);
-            }, true); //set values
+            }); //set values
 
             if (addODE2_t)
             {

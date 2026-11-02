@@ -29,13 +29,31 @@ bool RigidBodyNodeVelocity_q(const CNodeODE2& node, const Vector3D& localPositio
 	const bool eulerParameters = (type & Node::RotationEulerParameters) != 0;
 	const bool taitBryan = (type & Node::RotationRxyz) != 0;
 	const bool planar = (type & Node::Orientation2D) != 0;
-	if (!eulerParameters && !taitBryan && !planar) { return false; }
+	const bool lieGroup = (type & Node::RotationRotationVector) != 0;
+	if (!eulerParameters && !taitBryan && !planar && !lieGroup) { return false; }
 
 	const Index n = node.GetNumberOfODE2Coordinates();
 	velocity_q.SetNumberOfRowsAndColumns(3, n);
 	velocity_q.SetAll(0.);
 	angularVelocity_q.SetNumberOfRowsAndColumns(3, n);
 	angularVelocity_q.SetAll(0.);
+	if (lieGroup) //the Lie group node (#3217): the velocity coordinates are the local angular velocity omega, a change of
+	{             //the rotation coordinates composes the rotation locally, A Exp(delta), so d(A v)/d delta = -A v~
+		const Index nDisplacement = ((const CNodeRigidBody&)node).GetNumberOfDisplacementCoordinates();
+		const Matrix3D A = node.GetRotationMatrix();
+		const Vector3D omega = ((const CNodeRigidBody&)node).GetAngularVelocityLocal();
+		const Matrix3D angular = -1. * (A * RigidBodyMath::Vector2SkewMatrix(omega));
+		const Matrix3D linear = -1. * (A * RigidBodyMath::Vector2SkewMatrix(omega.CrossProduct(localPosition)));
+		for (Index r = 0; r < 3; r++)
+		{
+			for (Index k = 0; k < 3; k++)
+			{
+				angularVelocity_q(r, nDisplacement + k) = angular(r, k);
+				velocity_q(r, nDisplacement + k) = linear(r, k);
+			}
+		}
+		return true;
+	}
 	if (planar) //omega = theta_t e_z does not depend on theta; d(A p)/dtheta = e_z x (A p)
 	{
 		const Real theta_t = node.GetCurrentCoordinateVector_t()[2];

@@ -114,12 +114,12 @@ the item:
   of the system coordinates leaves the system state untouched, so that connectors are computed in parallel;
 - **constraints** have their Jacobians analytically, as have the pressure equations of ConnectorHydraulicActuatorSimple
   (#3214);
-- the other items are **differentiated numerically by the system**, by their own coordinates: ObjectFFRF,
-  ObjectFFRFreducedOrder with a forceUserFunction, on Lie group nodes or with `numericalJacobian`, ObjectKinematicTree, ObjectANCFBeam, ObjectALEANCFCable2D, ObjectUserBody, rigid bodies on
-  Lie group nodes, the connectors with Python user functions (ObjectConnectorUser and the spring-dampers with a user
-  function), ConnectorReevingSystemSprings, the contacts on cables and curves, and connectors on markers that lack
-  the derivatives the connector needs
-  (MarkerSuperElementRigid, user markers, the Lie group nodes).
+- the other items are **differentiated numerically by the system**, by their own coordinates - the rotation
+  coordinates of the Lie group nodes by the composition of the rotation -: ObjectFFRF, ObjectFFRFreducedOrder with a
+  forceUserFunction, on Lie group nodes or with `numericalJacobian`, ObjectKinematicTree, ObjectANCFBeam,
+  ObjectALEANCFCable2D, ObjectUserBody, the connectors with Python user functions (ObjectConnectorUser and the
+  spring-dampers with a user function), ConnectorReevingSystemSprings, the contacts on cables and curves, and
+  connectors on markers that lack the derivatives the connector needs (MarkerSuperElementRigid, user markers).
 
 **Parallel and serial**: with `parallel.numberOfThreads` > 1 and at least `parallel.multithreadedLowerLimitJacobians`
 items, the analytic and automatic Jacobians of the ODE2 rows and of the constraints of the items without Python user

@@ -53,6 +53,13 @@ is computed by `ComputeJacobianODE2Connector` in parallel, as it does not touch 
   along e and the row `e^T/(e^T e)`; the chains add one force evaluation per Euler parameter marker. For constraints the
   part goes into the rows of the equations only (`temp.localJacobianAE_ODE2radial`): the reaction forces have none,
   and with it restartFileTest and userJointTest did not converge.
+- The Lie group node NodeRigidBodyRotVecLG (#3217): its rotation velocity coordinates are the local angular velocity
+  omega, and the system differentiates its rotation coordinates by the local composition A Exp(delta). So
+  `RigidBodyNodeVelocity_q` gives d(A v)/d delta = -A v~ for the angular velocity and the velocity of a point, and
+  `CObjectRigidBody::ComputeJacobianODE2_ODE2LieGroup` the gyroscopic forces by omega (omega~ J - (J omega)~) and,
+  for a center of mass, the force A w by omega and by delta; JacobianODE2Loads differentiates the loads by the
+  composition too (`SetNumDiffObjectLieGroup`), as the mass proportional load of a body with a center of mass turns
+  with it. A chain of 200 bodies with spherical joints, 200 steps of full Newton: 1.96 / 1.24 s, 0.83 s with 4 threads.
 - ObjectFFRFreducedOrder (#3212): `ComputeJacobianODE2_ODE2` with the reduced stiffness and damping matrices, the
   derivatives of the quadratic velocity vector by the modal coordinates and their velocities analytic (the formulas in
   the comment of the function; W = S (I x omega) once, O(9 m^2) for m modes), by the rotation parameters and their

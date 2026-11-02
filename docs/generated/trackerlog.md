@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.324.dev1
+- Exudyn version = 1.13.325.dev1
 - last change = 2026-11-02
 - Number of issues = 3231
-- Number of resolved issues = 3101 (324 in current version)
+- Number of resolved issues = 3102 (325 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9044,9 +9044,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-02
 - `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The settled designs into the user documentation (#3221)
   - description: docs/dev/design/genericDAE.md, symbolicHT.md, symbolicSystem.md, symbolicUserItems.md and systemJacobians.md describe what is decided and implemented. Decided: what a user needs goes into the manual and the item descriptions, the design files are removed when nothing is left in them.
-  - date raised: 2026-11-02
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The Lie group nodes in the local Jacobians: dv/dq and the rigid body ODE2 Jacobian (#3217)
-  - description: On NodeRigidBodyRotVecLG and NodeRigidBodyRotVecDataLG the markers return no GetVelocity\_q and ObjectRigidBody is differentiated numerically by CSystem, which composes the rotations. Decided: closed forms on the local angular velocity coordinates of these nodes.
   - date raised: 2026-11-02
 - `IMPROVEMENT` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` MarkerSuperElementRigid: dv/dq and the direction along the Euler parameters (#3215)
   - description: MarkerSuperElementRigid provides neither GetVelocity\_q nor GetRadialKinematics, so connectors on it fall back to CSystem or miss the direction along the Euler parameters of the reference node. Decided: deferred until the super element markers are revised.

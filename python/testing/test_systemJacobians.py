@@ -5,7 +5,8 @@
 #           the manual, section The system Jacobian): small models of the item types - rigid bodies with the
 #           spring-dampers, mass points with the contact and the coordinate connectors, an ANCF cable, ObjectGenericDAE
 #           with its ODE1 couplings, the joints, a hydraulic actuator with its pressures, a kinematic tree with
-#           connectors on its markers (#3216), ObjectFFRFreducedOrder on both rotation parametrizations (#3212) - and
+#           connectors on its markers (#3216), ObjectFFRFreducedOrder on both rotation parametrizations (#3212), rigid
+#           bodies and contacts on the Lie group node (#3217) - and
 #           the blocks of
 #           JacobianODE2RHS and JacobianODE1RHS by the local Jacobians (analytic, automatic or numerical per object)
 #           against doSystemWideDifferentiation, and the
@@ -165,6 +166,15 @@ def KinematicTree(mbs):
                                             frictionProportionalZone=1e-2))
 
 
+def FreeBodiesLieGroup(mbs):
+    """free rigid bodies on the Lie group node, with and without a center of mass off the node: the bodies' own Jacobian
+    in closed form (#3217)"""
+    for (i, bodyInertia) in enumerate([inertia, inertia.Translated([0.05, -0.02, 0.01])]):
+        mbs.CreateRigidBody(inertia=bodyInertia, referencePosition=[0.3*i, 0.1*i, 0],
+                            referenceRotationMatrix=RotationMatrixZ(0.3 + 0.4*i) @ RotationMatrixX(0.2),
+                            initialAngularVelocity=[1, -2, 3], gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationRotationVector)
+
+
 femCache = {}
 
 def FFRFreducedOrder(mbs, nodeType=exu.NodeType.RotationEulerParameters):
@@ -250,7 +260,8 @@ models = {'RigidBodies': RigidBodies, 'PointsAndContact': PointsAndContact, 'Cab
           'RigidBodiesEP': lambda mbs: RigidBodies(mbs, eulerParameters), 'JointsEP': lambda mbs: Joints(mbs, eulerParameters),
           'ContactsEP': lambda mbs: Contacts(mbs, eulerParameters), 'Hydraulic': Hydraulic, 'FreeBodies': FreeBodies,
           'ODE1Loads': ODE1Loads, 'KinematicTree': KinematicTree, 'FFRFreducedOrder': FFRFreducedOrder,
-          'FFRFreducedOrderRxyz': lambda mbs: FFRFreducedOrder(mbs, exu.NodeType.RotationRxyz)}
+          'FFRFreducedOrderRxyz': lambda mbs: FFRFreducedOrder(mbs, exu.NodeType.RotationRxyz),
+          'FreeBodiesLieGroup': FreeBodiesLieGroup, 'ContactsLieGroup': lambda mbs: Contacts(mbs, exu.NodeType.RotationRotationVector)}
 
 
 def Build(model):
@@ -336,7 +347,7 @@ def test_theLocalODE2JacobianIsTheSystemWideOne(model, factors):
 
 
 @pytest.mark.parametrize('model', ['Contacts', 'ContactsEP', 'FreeBodies', 'KinematicTree', 'FFRFreducedOrder',
-                                   'FFRFreducedOrderRxyz'])
+                                   'FFRFreducedOrderRxyz', 'FreeBodiesLieGroup', 'ContactsLieGroup'])
 @pytest.mark.parametrize('factors', [(1., 0., 0.), (0., 1., 0.)])
 def test_theContactJacobiansAreTheSystemWideOneAlsoAtVelocities(model, factors):
     local = Jacobian(model, ODE2(factors), velocities=True)
