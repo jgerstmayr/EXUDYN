@@ -5700,3 +5700,22 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - tools/generators/utilityDocsModel.py `_IsInternal`: functions, classes and methods whose names start with an
   underscore, not the special methods such as `__init__`, are not parsed, so neither the pages nor the keyword lists of
   confHelperPyUtilities.py have them; 1120 lines fewer in 15 pages (symbolics.systemModel 37 functions).
+
+<a id="rg3-46-1"></a>
+### RG3.46.1, RG3.46.2, RG3.48 — genericDAE.md, symbolicHT.md and systemJacobians.md into the manual (2026-11-02, #3221, #3223)
+- genericDAE.md: its equations, items and Jacobians were in the description of ObjectGenericDAE already; added the
+  section Solvers (implicit and static solvers all equations, explicit solvers without algebraic coordinates, the
+  q_t-dependent constraint and the compliance, SymbolicSystem); the handling of C_y^T lambda by the solvers into the
+  system equations of solver.md; the design's symbols in systemModel.py now refer to the description.
+- symbolicHT.md: HT and Twist have their reference pages (pybindDataStructures.py, the HT notebook), the symbolic
+  classes and the twist functions are in symbolicUserFunctions.md and userItems.md; added the reason why a recording
+  holds matrix and vector operations, not HT products. Nothing for the internals.
+- systemJacobians.md: solver.md is "Solvers and system equations" with the section The system equations - the system
+  equations of motion moved there, how the items assemble them, the system Jacobian: the blocks, the local Jacobian of
+  each kind of item, the items differentiated numerically by the system, parallel and serial, the options of
+  numericalDifferentiation, the loads with AddODE2LoadDependencies and AddODE1LoadDependencies, what the Jacobian leaves
+  out, the Euler parameter direction -; the Newton section no longer says that J_SO_FO and J_FO_SO vanish. The inside
+  - the functions, the connector interface with dv/dq and the direction along e, the parallel assembly, the
+  measurements behind the decisions - in the new docs/dev/internals/systemJacobians.md (WORKFLOW.md §8.4).
+  checkHeadings.py takes Jacobian as a name.
+- The three design files removed; git keeps them (their last version is in d1b3e6dd).

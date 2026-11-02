@@ -2203,6 +2203,14 @@ definitions.append(ItemDefinition(
     jacobianUserFunction, as the Jacobian of the algebraic equations is not computed numerically (#3191). The
     derivative of $\Mm$ is not part of the Jacobian, as for the other bodies.
 
+    #### Solvers
+
+    The implicit dynamic solvers and the static solver take all equations of the object, the explicit solvers the
+    object without algebraic coordinates. A constraintUserFunction that depends on $\dot\qv$ at position level does not
+    converge with the generalized-alpha solver; a compliance, $\cv_u = -\varepsilon\tlambda$ with a small
+    $\varepsilon > 0$, does. SymbolicSystem of exudyn.symbolics takes the object with its matrices and symbolic user
+    functions, but not a massMatrixUserFunction on an object with ABRV:ODE1 coordinates (#3190, #3191).
+
     #### Marker interfaces
 
     The object is no body for markers: markers act on its nodes, e.g. `MarkerNodeCoordinate`, `MarkerNodePosition` or

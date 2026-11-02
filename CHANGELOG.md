@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 306 | 1.13.315 |
+| 1.13 | Newborn | 307 | 1.13.316 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.316** `DOCU` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A chapter "Solvers and system equations" (#3223)
+  - description: The system equations of motion are a hidden subsection of "Solvers in Exudyn", and the system Jacobians are not described there. Decided: the chapter renamed, with a section on the system equations, the solvers and the Jacobians.
+  - **notes:** The chapter Solvers and system equations describes the system equations and the system Jacobian: the local Jacobians of the items, the parallel assembly, the options and what the Jacobian leaves out.
+  - date resolved: **2026-11-02 10:23**, date raised: 2026-11-02
 - **1.13.315** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Functions starting with an underscore excluded from the reference manual (#3224)
   - description: The utility pages document functions such as SymbolicSystem.\_MarkerData, which are internal and may change without notice. Decided: names starting with an underscore are left out of the generated pages.
   - **notes:** The reference pages of the Python utilities leave out the functions, classes and methods whose names start with an underscore, which are internal.

@@ -2,7 +2,7 @@
 # This is an EXUDYN test
 #
 # Details:  The local Jacobians of the items against the system-wide numerical one (#3201, design
-#           docs/dev/design/systemJacobians.md section 3.4): small models of the item types - rigid bodies with the
+#           the manual, section The system Jacobian): small models of the item types - rigid bodies with the
 #           spring-dampers, mass points with the contact and the coordinate connectors, an ANCF cable, ObjectGenericDAE
 #           with its ODE1 couplings, the joints, a hydraulic actuator with its pressures - and the blocks of
 #           JacobianODE2RHS and JacobianODE1RHS by the local Jacobians (analytic, automatic or numerical per object)

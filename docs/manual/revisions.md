@@ -98,6 +98,9 @@ switched between stick and slip by the data node (#3219). `SolveGeneralizedAlpha
 as Exudyn's solvers with `timeIntegration.adaptiveStep`; the statistics give `rejectedSteps` (#3220).
 The reference pages of the Python utilities leave out the functions, classes and methods whose names start with an
 underscore: they are internal and may change without notice (#3224).
+The chapter on the solvers is "Solvers and system equations", with a section on the system equations and on the
+system Jacobian: which item provides which Jacobian, what is computed in parallel, the options and what the Jacobian
+leaves out (#3223).
 `newton.numericalDifferentiation.doSystemWideDifferentiation` computes the whole Jacobian numerically, the algebraic
 equations included, for dense and sparse matrices; `forAE`, `forODE2` and `forODE2Connectors` are deprecated and have no
 effect - each object provides its Jacobian, analytic, automatic or numerical by its own coordinates. A model that set

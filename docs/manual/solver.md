@@ -1,7 +1,8 @@
 (sec-solvers)=
-# Solvers
+# Solvers and system equations
 
-This section provides and overview on most important solvers. Explicit and implicit dynamic solvers, as well as optimizers are described in more detail.
+This chapter describes the equations of motion that the system assembles from its items, their Jacobian, and the
+solvers that integrate them: the explicit and implicit dynamic solvers, the static solver and the optimizers.
 
 ## Solvers in Exudyn
 
@@ -43,6 +44,10 @@ The function `mbs.SolveDynamic(...)` sets the according variables internally. Fo
 - `showHints`: This shows a lot of possible solutions in case of no convergence
 - `showCausingItems`: This shows a potential causing item if the linear solver failed; the item number is computed from the coordinate number that caused problems (e.g., a row that became zero during factorization); note that this item may not be the real cause in your problem
 
+(sec-systemequations)=
+## The system equations
+
+(sec-systemequationsofmotion)=
 ### System equations of motion
 
 The system equations of motion in Exudyn follow the notations of {ref}`sec-nomenclatureeom` and are represented as
@@ -51,8 +56,8 @@ $$
 \begin{aligned}
   \Mm \ddot \qv + \frac{\partial \gv}{\partial \qv^\mathrm{T}} \tlambda_q +
                   \frac{\partial \gv}{\partial \dot \qv^\mathrm{T}} \tlambda_{\dot q}
-                  & = &\fv_\SO(\qv, \dot \qv, t) \\
-  \dot \yv + \frac{\partial \gv}{\partial \yv^\mathrm{T}} \tlambda & = &\fv_\FO(\yv, t) \\
+                  & = &\fv_\SO(\qv, \dot \qv, \yv, t) \\
+  \dot \yv + \frac{\partial \gv}{\partial \yv^\mathrm{T}} \tlambda & = &\fv_\FO(\qv, \dot \qv, \yv, t) \\
   \gv(\qv, \dot \qv, \yv, \tlambda, t) &= 0 \, .
 \end{aligned}
 $$ (eq-system-eom)
@@ -65,6 +70,85 @@ $$
   \fv^{lin}_\SO = \fv_a - \Km \qv - \Dm \dot \qv
 $$
 in which $\fv^a$ represents applied forces and stiffness matrix $\Km$ and damping matrix $\Dm$ become part of the system Jacobian for time integration.
+
+The system assembles these equations from its items:
+
+- **bodies and finite elements** add their mass matrices to $\Mm$ and their forces to $\fv_\SO$; ObjectGenericODE1 and
+  ObjectGenericDAE add ODE1 equations to $\fv_\FO$;
+- **connectors** add their forces to $\fv_\SO$, through the Jacobians of their markers; a connector with ODE1
+  coordinates, such as ConnectorHydraulicActuatorSimple, adds its equations to $\fv_\FO$;
+- **constraints** (joints) and the Euler parameter nodes add their algebraic equations to $\gv$; the reaction forces
+  $\Cm_{\qv}\tp\tlambda$ and, for objects with ODE1 coordinates in their constraints such as ObjectGenericDAE,
+  $\Cm_{\yv}\tp\tlambda$ follow from the Jacobian of $\gv$;
+- **loads** act on $\fv_\SO$, a LoadCoordinate on a MarkerNodeODE1Coordinate on $\fv_\FO$.
+
+The residuals and the mass matrix are assembled in parallel with `parallel.numberOfThreads` threads; the items with
+Python user functions are computed serially after the others.
+
+(sec-systemjacobian)=
+### The system Jacobian
+
+The implicit solvers and the static solver need the Jacobian of the equations {eq}`eq-system-eom` by all coordinates,
+
+$$
+  \Jm = \mr{\Jm_{\SO\SO}}{\Jm_{\SO\FO}}{\Jm_{\SO\AE}}
+           {\Jm_{\FO\SO}}{\Jm_{\FO\FO}}{\Jm_{\FO\AE}}
+           {\Jm_{\AE\SO}}{\Jm_{\AE\FO}}{\Jm_{\AE\AE}} ,
+  \qquad
+  \Jm_{\SO\SO} = a\,\frac{\partial \fv_\SO}{\partial \qv} + b\,\frac{\partial \fv_\SO}{\partial \dot\qv} ,
+$$
+with the factors $a$, $b$ of the integrator. $\Jm_{\SO\AE} = \Cm_{\qv}\tp$ (or $\Cm_{\dot\qv}\tp$ of a constraint at
+velocity level), $\Jm_{\AE\SO}$ the derivative of $\gv$ by $\qv$ and $\dot\qv$, $\Jm_{\FO\AE} = -\Cm_{\yv}\tp$ and
+$\Jm_{\AE\FO} = \Cm_{\yv}$.
+
+**Each item provides its own local Jacobian**, by its local coordinates, and the system adds it at the coordinates of
+the item:
+
+- most bodies and finite elements compute it analytically or by automatic differentiation; ObjectGenericODE2,
+  ObjectGenericODE1 and ObjectGenericDAE by their matrices, and by the jacobianUserFunction or the derivative of their
+  symbolic user functions;
+- **connectors** differentiate their force by the kinematics of their markers - by automatic differentiation, or by a
+  numerical differentiation of the force by the marker positions, rotations and velocities, as the contacts and the
+  rolling disc do -, chained with the Jacobians of the markers. The contacts with friction and the rolling disc also
+  take the derivative of the marker velocities by the coordinates. Differentiating by the marker kinematics instead
+  of the system coordinates leaves the system state untouched, so that connectors are computed in parallel;
+- **constraints** have their Jacobians analytically;
+- the other items are **differentiated numerically by the system**, by their own coordinates: ObjectFFRF,
+  ObjectFFRFreducedOrder, ObjectKinematicTree, ObjectANCFBeam, ObjectALEANCFCable2D, ObjectUserBody, rigid bodies on
+  Lie group nodes, the connectors with Python user functions (ObjectConnectorUser and the spring-dampers with a user
+  function), ConnectorReevingSystemSprings, the contacts on cables and curves, the ODE1 equations of
+  ConnectorHydraulicActuatorSimple, and connectors on markers that lack the derivatives the connector needs
+  (MarkerSuperElementRigid, MarkerKinematicTreeRigid, user markers, the Lie group nodes).
+
+**Parallel and serial**: with `parallel.numberOfThreads` > 1 and at least `parallel.multithreadedLowerLimitJacobians`
+items, the analytic and automatic Jacobians of the ODE2 rows and of the constraints of the items without Python user
+functions are computed in parallel; the numerical ones, those of items with Python user functions and the couplings
+with ODE1 coordinates are computed serially. GeneralContact computes its own Jacobian in parallel.
+
+**Options** of `newton.numericalDifferentiation` (see {ref}`sec-numericaldifferentiationsettings`):
+
+- `doSystemWideDifferentiation`: the whole Jacobian by numerical differentiation of the system residual by every
+  coordinate, serially. It includes all couplings, also those outside the coordinates of an item - a user function
+  that reads a sensor, another item or the state of the system -, which the local Jacobians miss; and it serves to
+  check the local Jacobians;
+- `jacobianConnectorDerivative`: the derivative of the marker Jacobians in the Jacobians of the connectors, on by
+  default; without it, models with flexible bodies may need more Newton iterations;
+- `relativeEpsilon` and `minimumCoordinateSize`: the step of the numerical differentiation.
+
+**Loads** are in the Jacobian with `computeLoadsJacobian` of `timeIntegration` or `staticSolver`: 1 for the
+derivatives by the coordinates, 2 also by the ODE2 velocities. A load is differentiated numerically by the coordinates
+of its marker and by those declared with `mbs.systemData.AddODE2LoadDependencies` and `AddODE1LoadDependencies`, as
+for a load whose user function reads other coordinates, e.g. a controller.
+
+**Not in the Jacobian**: the derivatives of $\Mm(\qv)\ddot\qv$ and of $\Cm_{\qv}\tp\tlambda$ by $\qv$, also not in the
+system-wide numerical one; they change the Newton iterations, not the solution.
+
+For rigid bodies on Euler parameters, the Jacobians of the connectors and joints contain the derivative along the
+Euler parameters on which the unnormalized rotation matrix depends, as the predictor of a time step leaves the unit
+sphere of the parameters.
+
+The Python interface of the solvers gives the Jacobian and its parts, e.g. `ComputeJacobianODE2RHS`,
+`ComputeJacobianODE1RHS` and `ComputeJacobianAE` of a solver (see {ref}`sec-mainsolverimplicitsecondorder`).
 
 ## General solver structure
 
@@ -378,13 +462,11 @@ $$
   \Jm = \mr{\Jm_{\SO\SO}}{\Jm_{\SO\FO}}{\Jm_{\SO\AE}}
            {\Jm_{\FO\SO}}{\Jm_{\FO\FO}}{\Jm_{\FO\AE}}
            {\Jm_{\AE\SO}}{\Jm_{\AE\FO}}{\Jm_{\AE\AE}}
-      = \mr{\Jm_{\SO\SO}}{\Null}{\Jm_{\SO\AE}}
-           {\Null}{\Jm_{\FO\FO}}{\Jm_{\FO\AE}}
-           {\Jm_{\AE\SO}}{\Jm_{\AE\FO}}{\Jm_{\AE\AE}}
 $$
-in which we consider $\Jm_{\FO\SO}$ and $\Jm_{\SO\FO}$ to vanish in the current implementations, which means that coupling of {ref}`ODE1 <ODE1>` and {ref}`ODE2 <ODE2>` coordinates is only possible due to algebraic equations.
+whose blocks the items provide as described in {ref}`sec-systemjacobian`; the couplings $\Jm_{\SO\FO}$ and
+$\Jm_{\FO\SO}$ of {ref}`ODE2 <ODE2>` and {ref}`ODE1 <ODE1>` coordinates come from the objects and loads that couple them.
 
-The remaining terms in the Jacobian are currently (or by default settings) evaluated as:
+With respect to the unknowns of the Newton method, the terms read:
 
 $$
 \begin{aligned}
@@ -408,7 +490,7 @@ $$
                = \frac{\partial \gv}{\partial \tlambda}
 \end{aligned}
 $$
-Note that some parts of the Jacobian are **neglected**, such as mass matrix and constraint Jacobian terms in $\Jm_{\SO\SO}$, which are usually of minor influence. Furthermore, Jacobians for state-dependent loads are neglected except for system-wide numerical Jacobians or if `computeLoadsJacobian` in static or time integration solvers is set True.
+Note that some parts of the Jacobian are **neglected**, such as the derivatives of the mass matrix and of the constraint Jacobian terms in $\Jm_{\SO\SO}$, which are usually of minor influence. Jacobians of state-dependent loads are included with `computeLoadsJacobian` in static or time integration solvers, see {ref}`sec-systemjacobian`.
 
 Once an update $\qv^\mathrm{Newton}_{k+1}$ has been computed, the interpolation formulas {eq}`eq-newmark-interpolation` need to be evaluated before the next residual and Jacobian can be computed.
 

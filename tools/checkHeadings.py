@@ -32,7 +32,7 @@ NAMES = set("""
     Exudyn Python Windows Linux Ubuntu Debian Anaconda Spyder Jupyter Sphinx MyST MiKTeX
     NGsolve OpenGL GLFW Eigen Julia ROS Abaqus ANSYS NETGEN Blender Gym
     Newton Newmark Euler Lagrange Alembert Chasles Rodrigues Bryan Tait Kutta Runge Verlet
-    Craig Bampton Hurty Grubler Kutzbach Chebychev Lie Jacobi Coulomb Stribeck Hertz
+    Craig Bampton Hurty Grubler Kutzbach Chebychev Lie Jacobi Jacobian Coulomb Stribeck Hertz
     Visual Studio Code Git GitHub GitLab Microsoft
     C Main Generalized-alpha Nodes Objects Loads Markers Sensors
     """.split())

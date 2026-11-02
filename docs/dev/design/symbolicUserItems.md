@@ -47,7 +47,7 @@ def UFspringDamper(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates
 ```
 
 - It is recorded by `CreateSymbolicUserFunction`, which passes a `kinematics.HT` and a `kinematics.Twist` of named
-  leaves (docs/dev/design/symbolicHT.md).
+  leaves (the frames and twists of the manual's symbolic user functions, #3174).
 - The connector requests Position for it; with `exu.MarkerType.Orientation` in `requestedMarkerType` it gets the
   rotations and angular velocities and returns the torques too, otherwise unit matrices and zeros.
 - Assemble refuses it with other than two markers, and together with the markerAccessUserFunction.

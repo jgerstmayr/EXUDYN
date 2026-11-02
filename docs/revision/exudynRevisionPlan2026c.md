@@ -62,9 +62,8 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
   - RG2.9 Add three old test models (3 open sub-steps)
 - **RG3** Docs
-  - RG3.46 Move the settled designs into the manual and the item descriptions, and remove the design files (2 open sub-steps)
+  - RG3.46 Move the settled designs into the manual and the item descriptions, and remove the design files (1 open sub-step)
   - RG3.47 One chapter "Symbolic system and user functions": symbolic system, symbolic user functions, user items, symbolic solvers (1 open sub-step)
-  - RG3.48 The chapter "Solvers and system equations": a section on the system equations, the solvers and the system Jacobians
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
@@ -129,7 +128,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 |---|---|---|---|
 | RG1 | OPEN | 1 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
-| RG3 | OPEN | 6 | Docs |
+| RG3 | OPEN | 4 | Docs |
 | RG4 | OPEN | 5 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
@@ -221,13 +220,21 @@ CLOSED 2026-10-10 (#2937); the maintainer adjusts the widths.
 
 #3221 (maintainer 2026-11-02: the documentation says what the code is now - not the ways it went, when and by whom it was decided -, with a short note on why where it keeps a decision from going back and forth; genericDAE.md and symbolicHT.md probably leave nothing for the internals; symbolicVariableNames.md and symbolicParameters.md stay until their steps are complete (RG12.67, RG12.73); the uniformEvaluation files are work in progress of a colleague and are not touched).
 
-#### **OPEN_RG3.46.1** genericDAE.md into the descriptions of ObjectGenericDAE and the solver chapter
+#### **CLOSED_RG3.46.1** genericDAE.md into the descriptions of ObjectGenericDAE and the solver chapter
 
 #3221.
 
-#### **OPEN_RG3.46.2** symbolicHT.md into the section on homogeneous transformations, the connectors and the user connector
+CLOSED 2026-11-02 (#3221 stays open): the section Solvers of ObjectGenericDAE; the rest was in its description; genericDAE.md removed. [log](exudynRevisionLog2026c.md#rg3-46-1)
+
+#### **CLOSED_RG3.46.2** symbolicHT.md into the section on homogeneous transformations, the connectors and the user connector
 
 #3221.
+
+CLOSED 2026-11-02 (#3221 stays open): already in the HT and Twist pages and symbolicUserFunctions.md; the reason of the mapped symbolic HT added; symbolicHT.md removed. [log](exudynRevisionLog2026c.md#rg3-46-1)
+
+#### **OPEN_RG3.46.3** symbolicSystem.md and symbolicUserItems.md into the chapter Symbolic system and user functions and into the internals
+
+#3221; with RG3.47. uniformEvaluation.md (not touched, maintainer 2026-11-02) and symbolicParameters.md cite symbolicSystem.md, whose cited sections stay until they are done.
 
 ### **OPEN_RG3.47** One chapter "Symbolic system and user functions": symbolic system, symbolic user functions, user items, symbolic solvers
 
@@ -237,9 +244,11 @@ CLOSED 2026-10-10 (#2937); the maintainer adjusts the widths.
 
 #3225.
 
-### **OPEN_RG3.48** The chapter "Solvers and system equations": a section on the system equations, the solvers and the system Jacobians
+### **CLOSED_RG3.48** The chapter "Solvers and system equations": a section on the system equations, the solvers and the system Jacobians
 
 #3223 (maintainer 2026-11-02: "System equations of motion" is almost hidden in "Solvers in Exudyn" and the system Jacobians are not there; the section reflects the C++ part, the symbolic system referenced sparsely; systemJacobians.md goes into it).
+
+CLOSED 2026-11-02 (#3223 resolved): solver.md "Solvers and system equations" with the section The system equations; docs/dev/internals/systemJacobians.md; systemJacobians.md removed. [log](exudynRevisionLog2026c.md#rg3-46-1)
 
 ### **CLOSED_RG3.49** Leave the functions whose names start with an underscore out of the generated reference pages
 

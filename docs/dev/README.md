@@ -19,6 +19,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 | [internals/userItems.md](internals/userItems.md) | what each kind of item gives the solver, and how the user items are built |
 | [internals/systemUtilities.md](internals/systemUtilities.md) | exudyn.systemUtilities: SystemQuantity, the energy, the constraint drift, the system graph |
 | [internals/symmetricBasis.md](internals/symmetricBasis.md) | the frame of two slope vectors, its rotation Jacobian and the variants measured |
+| [internals/systemJacobians.md](internals/systemJacobians.md) | the system Jacobians: the local Jacobians of the items, the connector interface, the parallel assembly, the checks |
 | `docs/dev/design/` | the design notes of the steps that are open - analyses, options, decisions, measurements, written while planning a step; not published. When the step closes, what it built goes into the manual and into internals/, and the note leaves the repository (WORKFLOW.md §8.4) |
 | [exudynRevisionInfo2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md) | general information on the v1.11.0 → v2.0 restructuring: rules, facts, decisions |
 | [exudynRevisionPlan2026c.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026c.md) | **the plan that is open**, by group RG1 ... RG12; checked and partly written by `docs/revision/planManager.py` |
@@ -46,6 +47,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 /docs/dev/internals/userItems
 /docs/dev/internals/systemUtilities
 /docs/dev/internals/symmetricBasis
+/docs/dev/internals/systemJacobians
 /docs/generated/deprecations
 /definitions/README
 /tools/generators/README

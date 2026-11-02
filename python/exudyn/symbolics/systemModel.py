@@ -66,7 +66,7 @@ _jointFunctionNames = ['constraintUserFunction', 'jacobianUserFunction']
 _daeFunctionNames = ['forceUserFunction', 'rhsUserFunction', 'massMatrixUserFunction', 'constraintUserFunction',
                      'postNewtonStepUserFunction']
 (_daeQ, _daeQ_t, _daeY) = (3, 4, 5)
-#the matrices and vectors of ObjectGenericDAE by their symbols in the design, docs/dev/design/genericDAE.md
+#the matrices and vectors of ObjectGenericDAE by their symbols in the equations of its description
 _daeMatrices = {'M': 'massMatrix', 'D': 'dampingMatrix', 'K': 'stiffnessMatrix', 'E': 'couplingMatrixODE1',
                 'A': 'systemMatrix', 'B': 'couplingMatrixODE2', 'B_t': 'couplingMatrixODE2_t',
                 'C_q': 'constraintMatrixODE2', 'C_y': 'constraintMatrixODE1'}
