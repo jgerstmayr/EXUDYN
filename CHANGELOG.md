@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 302 | 1.13.311 |
+| 1.13 | Newborn | 305 | 1.13.314 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.314** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Python solvers with an adaptive step size from the recommended step size (#3220)
+  - description: SolveGeneralizedAlpha and SolveExplicit of exudyn.symbolics.solvers keep the step size fixed and ignore the recommended step size the post-Newton functions return. Decided: the step reduced to the recommended size and grown again, as the discontinuous iteration of the C++ solvers does.
+  - **notes:** SolveGeneralizedAlpha and SolveExplicit repeat a step with the recommended step size of a post-Newton step and grow the step again, as Exudyn's solvers with timeIntegration.adaptiveStep; test model symbolicSolversAdaptiveStepTest.
+  - date resolved: **2026-11-02 09:59**, date raised: 2026-11-02
+- **1.13.313** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User sphere-sphere contact with friction: stick and slip by data coordinates (#3219)
+  - description: UserItemCreator.CreateSphereSphereContact refuses dynamicFriction other than 0, as friction needs the tangential state in data coordinates. Decided: the stick-slip state and the tangential displacement in the data node, updated by the post-Newton function, as ObjectContactSphereSphere does.
+  - **notes:** UserItemCreator.CreateSphereSphereContact takes dynamicFriction and frictionProportionalZone: the friction of the built-in contact on rigid markers, stick and slip by the data node; test model symbolicUserContactFrictionTest.
+  - date resolved: **2026-11-02 09:59**, date raised: 2026-11-02
+- **1.13.312** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User torsional spring-damper with unlimitedRotations: the turns as a data coordinate (#3218)
+  - description: UserItemCreator.CreateTorsionalSpringDamper refuses unlimitedRotations=True, its default, as the turns need a data coordinate. Decided: a NodeGenericData with the number of turns, updated by the post-Newton function of ObjectConnectorUser, as CObjectConnectorTorsionalSpringDamper does.
+  - **notes:** UserItemCreator.CreateTorsionalSpringDamper takes unlimitedRotations: the turns in a data node of the connector, updated by its post-Newton function, as the built-in item; test model symbolicUserTorsionalTurnsTest.
+  - date resolved: **2026-11-02 09:59**, date raised: 2026-11-02
 - **1.13.311** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectRigidBody2D with a center of mass: its own ODE2 Jacobian (#3210)
   - description: The left-hand side -m omega^2 A c of a center of mass off the node is differentiated numerically by CSystem, serially. Decided: an analytic Jacobian by phi and omega, assembled in parallel.
   - **notes:** ObjectRigidBody2D with a center of mass computes its ODE2 Jacobian analytically, in parallel with several threads.

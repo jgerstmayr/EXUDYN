@@ -147,7 +147,8 @@ inertia = InertiaCuboid(density=1000, sideLengths=[L, 0.05, 0.04])
 for (function, arguments, text) in [(creator.CreateRigidBody, dict(inertia=inertia), 'nodeType'),
                                     (creator.CreateTorsionalSpringDamper, dict(itemNumbers=[creator.CreateGround(),
                                         creator.CreateRigidBody(inertia=inertia, nodeType=exu.NodeType.RotationRxyz)],
-                                        axis=[0, 0, 1]), 'unlimitedRotations')]:
+                                        axis=[0, 0, 1], springTorqueUserFunction=lambda mbs, t, itemNumber, angle, omega,
+                                        stiffness, damping, offset: 0), 'springTorqueUserFunction')]:
     try:
         function(**arguments)
     except ValueError as e:

@@ -1,0 +1,85 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  CreateSphereSphereContact of UserItemCreator with friction (#3219): ObjectConnectorUser on rigid markers
+#           with the friction force of ObjectContactSphereSphere at the contact point, regularized below
+#           frictionProportionalZone, the tangential speed in the data node, switched between stick and slip in the
+#           post-Newton step. A ball - a user rigid body - is set sliding at 1 m/s without spin onto a large fixed
+#           sphere; friction slows it and spins it up until it rolls at 5/7 of the speed. The Python and the recorded
+#           user items against mbs.CreateSphereSphereContact by generalized-alpha and RK44, SymbolicSystem by
+#           SolveGeneralizedAlpha and SolveExplicit against SolveDynamic. The result is the final speed of the ball
+#           by generalized-alpha plus the number of checks that pass.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-02
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.symbolics.userItems import UserItemCreator
+from exudyn.symbolics.systemModel import SymbolicSystem
+from exudyn.symbolics.solvers import SolveExplicit, SolveGeneralizedAlpha
+import numpy as np
+
+(radius, R, k, mu) = (0.1, 1000., 1e5, 0.3)
+inertia = InertiaSphere(mass=4., radius=radius)
+penetration = inertia.mass*9.81/k #at rest on the sphere
+
+def Build(userItems, record=False):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    creator = UserItemCreator(mbs) if userItems else mbs
+    ground = creator.CreateGround()
+    ball = creator.CreateRigidBody(inertia=inertia, referencePosition=[0, radius - penetration, 0], initialVelocity=[1, 0, 0],
+                                   gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationRxyz)
+    creator.CreateSphereSphereContact(itemNumbers=[ground, ball], localPosition0=[0, -R, 0], spheresRadii=[R, radius],
+                                      contactStiffness=k, contactDamping=200., dynamicFriction=mu, frictionProportionalZone=1e-3,
+                                      dataInitialCoordinates=[-penetration, 1., 0, 0])
+    if record:
+        creator.Record()
+    mbs.variables['creator'] = creator #the recordings live as long as the system
+    mbs.Assemble()
+    return (SC, mbs, ball)
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 2000
+simulationSettings.timeIntegration.endTime = 0.2
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.timeIntegration.newton.useModifiedNewton = False
+simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = False
+simulationSettings.solution.file.write = False
+
+def State(mbs, ball):
+    """the velocity of the ball in x and its angular velocity about z"""
+    return np.array([mbs.GetObjectOutputBody(ball, exu.OutputVariableType.Velocity, localPosition=[0, 0, 0])[0],
+                     mbs.GetObjectOutputBody(ball, exu.OutputVariableType.AngularVelocity, localPosition=[0, 0, 0])[2]])
+
+passed = 0
+for solverType in [exu.DynamicSolverType.GeneralizedAlpha, exu.DynamicSolverType.RK44]:
+    simulationSettings.timeIntegration.solverType = solverType
+    results = []
+    for (userItems, record) in [(False, False), (True, False), (True, True)]:
+        (SC, mbs, ball) = Build(userItems, record)
+        mbs.SolveDynamic(simulationSettings)
+        results.append(State(mbs, ball))
+    difference = max(np.max(np.abs(results[1] - results[0])), np.max(np.abs(results[2] - results[0])))
+    (SC, mbs, ball) = Build(True, True)
+    system = SymbolicSystem(mbs)
+    if solverType == exu.DynamicSolverType.GeneralizedAlpha:
+        SolveGeneralizedAlpha(system, simulationSettings)
+    else:
+        SolveExplicit(system, simulationSettings, solverType=solverType)
+    differenceSystem = np.max(np.abs(State(mbs, ball) - results[2]))
+    rolling = abs(results[0][0] + (radius - 0.5*penetration)*results[0][1]) #the slip at the contact point, half the penetration inside
+    exu.Print(str(solverType) + ': velocity and angular velocity at t=0.2', results[0], ', slip', rolling,
+              ', user items against built-in', difference, ', SymbolicSystem against SolveDynamic', differenceSystem)
+    passed += int(difference < 1e-8) + int(differenceSystem < 1e-8) + int(rolling < 1e-3) + int(abs(results[0][0] - 5/7) < 1e-2)
+    if solverType == exu.DynamicSolverType.GeneralizedAlpha:
+        u = results[0][0]
+
+u += passed
+exu.Print('solution of symbolicUserContactFrictionTest=', u)
+exu.sys['testResult'] = u

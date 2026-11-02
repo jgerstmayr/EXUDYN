@@ -2,11 +2,15 @@
   "number": 3220,
   "title": "The Python solvers with an adaptive step size from the recommended step size",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "SolveGeneralizedAlpha and SolveExplicit of exudyn.symbolics.solvers keep the step size fixed and ignore the recommended step size the post-Newton functions return. Decided: the step reduced to the recommended size and grown again, as the discontinuous iteration of the C++ solvers does.",
   "dateRaised": "2026-11-02",
-  "deadline": "2027-05-01"
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 09:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SolveGeneralizedAlpha and SolveExplicit repeat a step with the recommended step size of a post-Newton step and grow the step again, as Exudyn's solvers with timeIntegration.adaptiveStep; test model symbolicSolversAdaptiveStepTest.",
+  "resolvedInVersion": "1.13.314"
 }

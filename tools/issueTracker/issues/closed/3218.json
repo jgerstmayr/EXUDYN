@@ -2,11 +2,15 @@
   "number": 3218,
   "title": "User torsional spring-damper with unlimitedRotations: the turns as a data coordinate",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "UserItemCreator.CreateTorsionalSpringDamper refuses unlimitedRotations=True, its default, as the turns need a data coordinate. Decided: a NodeGenericData with the number of turns, updated by the post-Newton function of ObjectConnectorUser, as CObjectConnectorTorsionalSpringDamper does.",
   "dateRaised": "2026-11-02",
-  "deadline": "2027-05-01"
+  "deadline": "2027-05-01",
+  "dateResolved": "2026-11-02 09:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "UserItemCreator.CreateTorsionalSpringDamper takes unlimitedRotations: the turns in a data node of the connector, updated by its post-Newton function, as the built-in item; test model symbolicUserTorsionalTurnsTest.",
+  "resolvedInVersion": "1.13.312"
 }

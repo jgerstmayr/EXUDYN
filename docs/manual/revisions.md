@@ -90,6 +90,12 @@ With `computeLoadsJacobian`, the implicit and static solvers include the loads o
 and the dependencies of loads on ODE1 coordinates, declared by the new `mbs.systemData.AddODE1LoadDependencies` as
 `AddODE2LoadDependencies` declares those on ODE2 coordinates; a load on ODE2 coordinates with ODE1 dependencies raised
 an error before (#1548).
+`UserItemCreator.CreateTorsionalSpringDamper` takes `unlimitedRotations`, its default True: the angle continues over
+the turns by a data node of the connector, as the built-in item (#3218). `UserItemCreator.CreateSphereSphereContact`
+takes `dynamicFriction` and `frictionProportionalZone`: the friction of the built-in contact at the contact point,
+switched between stick and slip by the data node (#3219). `SolveGeneralizedAlpha` and `SolveExplicit` of
+`exudyn.symbolics.solvers` repeat a step with the recommended step size of a post-Newton step and grow the step again,
+as Exudyn's solvers with `timeIntegration.adaptiveStep`; the statistics give `rejectedSteps` (#3220).
 `newton.numericalDifferentiation.doSystemWideDifferentiation` computes the whole Jacobian numerically, the algebraic
 equations included, for dense and sparse matrices; `forAE`, `forODE2` and `forODE2Connectors` are deprecated and have no
 effect - each object provides its Jacobian, analytic, automatic or numerical by its own coordinates. A model that set

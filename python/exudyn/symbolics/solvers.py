@@ -8,7 +8,10 @@
 #           Exudyn, write the solution file and the sensors as SolveDynamic does, and write the state into mbs for a
 #           SymbolicSystem. With data coordinates, both compute a step again from its start while the post-Newton step
 #           of the system gives an error above discontinuous.iterationTolerance, as CSolverBase::DiscontinuousIteration
-#           (#3196); the statistics count the discontinuousIterations.
+#           (#3196); with timeIntegration.adaptiveStep, a step whose post-Newton step recommends a smaller step size, or
+#           whose discontinuous iteration does not converge, is repeated with a smaller step, which grows again after a
+#           few easy steps, as CSolverBase::SolveSteps (#3220); the statistics count the discontinuousIterations and the
+#           rejectedSteps.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-26 (created)
@@ -113,8 +116,11 @@ class _Output:
             #as long as mbs is not assembled again
             self.state = system.mbs.systemData.GetSystemStateDict(reference=True)
 
-    def Step(self, stepIndex, t, q, q_t, q_tt, last=False, y=None, y_t=None, z=None):
-        """the state after step stepIndex at t; stepIndex 0 is the initial state, as SolveDynamic writes it"""
+    def Step(self, stepIndex, t, q, q_t, q_tt, last=False, y=None, y_t=None, z=None, h=None):
+        """the state after step stepIndex at t, of the step size h (None: the constant one); stepIndex 0 is the initial
+        state, as SolveDynamic writes it"""
+        if h is not None:
+            self.h = h
         if last:
             self.lastWritten = self.tEnd - self.h
         if stepIndex == 0 or t - self.lastWritten >= -1e-10:
@@ -150,6 +156,61 @@ def _Steps(simulationSettings):
     return (n, tStart, tEnd, (tEnd - tStart)/n)
 
 
+class _StepSize:
+    """the step size of a solver of this module, as CSolverBase::SolveSteps and the step size functions of
+    CSolverImplicitSecondOrderTimeInt and CSolverExplicitTimeInt (#3220): with timeIntegration.adaptiveStep the time
+    advances by the step size, a rejected step is repeated from its start with min(0.75 h, h_recommended), or with
+    h adaptiveStepDecrease (explicit: h/2) without a recommendation, down to minimumStepSize, and after
+    adaptiveStepRecoverySteps steps of at most adaptiveStepRecoveryIterations Newton and discontinuous iterations the
+    step grows by adaptiveStepIncrease (explicit: 2) up to the nominal (endTime - startTime)/numberOfSteps; without
+    adaptiveStep the steps are of the nominal size"""
+    def __init__(self, simulationSettings, explicit):
+        timeIntegration = simulationSettings.timeIntegration
+        (self.n, self.tStart, self.tEnd, self.hMax) = _Steps(simulationSettings)
+        self.adaptive = timeIntegration.adaptiveStep
+        self.useRecommended = self.adaptive and timeIntegration.discontinuous.useRecommendedStepSize
+        self.explicit = explicit
+        self.hMin = timeIntegration.minimumStepSize
+        (self.decrease, self.increase) = (timeIntegration.adaptiveStepDecrease, timeIntegration.adaptiveStepIncrease)
+        (self.recoverySteps, self.recoveryIterations) = (timeIntegration.adaptiveStepRecoverySteps,
+                                                         timeIntegration.adaptiveStepRecoveryIterations)
+        (self.h, self.t, self.stepIndex, self.sinceReduction, self.rejected) = (self.hMax, self.tStart, 0, 0, 0)
+
+    def Done(self):
+        return self.t >= self.tEnd - 1e-10 if self.adaptive else self.stepIndex >= self.n
+
+    def Next(self):
+        """the start time, end time and size of the next step, as UpdateCurrentTime"""
+        if not self.adaptive:
+            return (self.tStart + self.stepIndex*self.h, self.tStart + (self.stepIndex + 1)*self.h, self.h)
+        if self.t + self.h > self.tEnd:
+            self.h = self.tEnd - self.t
+        return (self.t, self.t + self.h, self.h)
+
+    def Reduce(self, recommendedStepSize):
+        """a smaller step after a rejected one, as ReduceStepSize; False at the minimum step size"""
+        if not self.adaptive or self.h <= self.hMin:
+            return False
+        if recommendedStepSize != -1:
+            self.h = min(0.75*self.h, recommendedStepSize) #0.75: some reduction, which keeps the iteration from sticking
+        else:
+            self.h = 0.5*self.h if self.explicit else self.decrease*self.h
+        self.h = max(self.hMin, self.h)
+        (self.sinceReduction, self.rejected) = (0, self.rejected + 1)
+        return True
+
+    def Accept(self, t, iterations):
+        """the step to t done after iterations Newton and discontinuous iterations; the step grows again, as
+        IncreaseStepSize"""
+        (self.t, self.stepIndex) = (t, self.stepIndex + 1)
+        if not self.adaptive:
+            return
+        self.sinceReduction += 1
+        if self.sinceReduction >= self.recoverySteps and iterations <= self.recoveryIterations:
+            self.h = min(self.hMax, (2. if self.explicit else self.increase)*self.h)
+            self.sinceReduction = 0
+
+
 def _RefuseLieGroupNodes(system, useLieGroupIntegration, where):
     """Lie group nodes are integrated by Exudyn with the Lie group formulas, which are not implemented here"""
     mbs = getattr(system, 'mbs', None)
@@ -161,9 +222,10 @@ def _RefuseLieGroupNodes(system, useLieGroupIntegration, where):
 
 
 def SolveExplicit(system, simulationSettings=None, solverType=None):
-    """the explicit time integration of a SymbolicSystemBase with constant step size, by explicit Euler, RK44 or
-    velocity Verlet, as Exudyn's explicit solver computes them (#3112, design docs/dev/design/symbolicSystem.md §10):
-    the steps from timeIntegration.startTime, endTime and numberOfSteps; the accelerations by the inverse per body with
+    """the explicit time integration of a SymbolicSystemBase by explicit Euler, RK44 or velocity Verlet, as Exudyn's
+    explicit solver computes them (#3112, design docs/dev/design/symbolicSystem.md §10): the steps from
+    timeIntegration.startTime, endTime and numberOfSteps, smaller with adaptiveStep where the post-Newton step of data
+    coordinates rejects a step (#3220); the accelerations by the inverse per body with
     timeIntegration.explicit.computeMassMatrixInversePerBody, else by the sparse LU decomposition of the mass
     matrix, both once for a constant mass matrix (timeIntegration.reuseConstantMassMatrix); ODE1 coordinates in the
     stages of explicit Euler and RK44, with zero initial velocities, as Exudyn (#3134); algebraic equations are refused
@@ -178,7 +240,7 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     Returns:
         dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2) - with ODE1 coordinates 'y', 'y_t' (n_out x
         nODE1) - at the steps of solution.file.writePeriod and the last step, and the statistics 'steps',
-        'forceEvaluations', 'massMatrixEvaluations'
+        'forceEvaluations', 'massMatrixEvaluations', 'discontinuousIterations', 'rejectedSteps'
     """
     if simulationSettings is None:
         simulationSettings = exudyn.SimulationSettings()
@@ -214,12 +276,13 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     output = _Output(system, simulationSettings, tStart, tEnd, h)
     output.Step(0, tStart, q, q_t, q_tt, y=y, y_t=y_t)
 
-    for step in range(1, n + 1):
-        t0 = tStart + (step - 1)*h
-        t = tStart + step*h
+    stepSize = _StepSize(simulationSettings, explicit=True)
+    while not stepSize.Done():
         start = (q, q_t, q_tt, y, y_t)
         dataStart = system.data.copy()
-        for iteration in range(discontinuous.maxIterations):
+        (t0, t, h) = stepSize.Next()
+        iteration = 0
+        while True:
             (q, q_t, q_tt, y, y_t) = (x.copy() for x in start) #the step again from its start, with the new data
             if solverType == exudyn.DynamicSolverType.VelocityVerlet:
                 q_t = q_t + (0.5*h)*q_tt
@@ -250,17 +313,23 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
                     q_tt = Accelerations(q, q_t, t, y)
                 else:
                     q_tt = K_t[-1]
-            if _PostNewton(system, discontinuous, q, q_t, y, None, dataStart, t, iteration, statistics):
+            done = _PostNewton(system, discontinuous, q, q_t, y, None, dataStart, t, iteration, statistics, stepSize, h)
+            if done:
                 break
-        output.Step(step, t, q, q_t, q_tt, last=(step == n), y=y, y_t=y_t)
+            iteration += 1
+            if done is None: #rejected: the step with the smaller step size, from the start of the step and its data
+                (t0, t, h) = stepSize.Next()
+                iteration = 0
+        stepSize.Accept(t, iteration + 1)
+        output.Step(stepSize.stepIndex, t, q, q_t, q_tt, last=stepSize.Done(), y=y, y_t=y_t, h=h)
 
-    return output.Finalize({'steps': n, 'forceEvaluations': forceEvaluations[0],
-                            'massMatrixEvaluations': massSolver.evaluations, **statistics})
+    return output.Finalize({'steps': stepSize.stepIndex, 'forceEvaluations': forceEvaluations[0],
+                            'massMatrixEvaluations': massSolver.evaluations, 'rejectedSteps': stepSize.rejected, **statistics})
 
 
 def SolveGeneralizedAlpha(system, simulationSettings=None):
-    """the implicit time integration of a SymbolicSystemBase with constant step size by the generalized-alpha method
-    in the form of Arnold and Bruls, as Exudyn's MainSolverImplicitSecondOrder computes it (#3126, #3134, design
+    """the implicit time integration of a SymbolicSystemBase by the generalized-alpha method in the form of Arnold
+    and Bruls, as Exudyn's MainSolverImplicitSecondOrder computes it (#3126, #3134, design
     docs/dev/design/symbolicSystem.md §6): per step the predictor of the displacements, velocities and algorithmic
     accelerations, the ODE1 coordinates by the trapezoidal rule, then Newton's method for the accelerations, the ODE1
     coordinates and the algebraic coordinates with the residual of SystemResidual - r = M q_tt - f + C_q^T z,
@@ -269,8 +338,9 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     newmarkBeta and newmarkGamma, computeInitialAccelerations - with constraints of [M C_q^T; C_q 0] [q_tt; z] =
     [f; -(C_q q_t)_q q_t] -, storeInitialAlgebraicCoordinates, and newton.relativeTolerance, absoluteTolerance,
     maxIterations, useModifiedNewton (the Jacobian once per step) and weightTolerancePerCoordinate; for a
-    SymbolicSystem the solution file, the sensors and the renderer of its mbs, as SolveExplicit. A step whose Newton
-    iteration does not converge raises: the step size is constant. The ODE1 velocities start at zero, as in Exudyn
+    SymbolicSystem the solution file, the sensors and the renderer of its mbs, as SolveExplicit. With adaptiveStep, a
+    step rejected by the post-Newton step of data coordinates is repeated with a smaller step size, as in SolveExplicit
+    (#3220); a step whose Newton iteration does not converge raises. The ODE1 velocities start at zero, as in Exudyn
 
     Args:
         system: the system, a SymbolicSystemBase
@@ -279,7 +349,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     Returns:
         dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2), with ODE1 coordinates 'y', 'y_t', with algebraic
         equations 'z', at the steps of solution.file.writePeriod and the last step, and the statistics 'steps',
-        'newtonIterations', 'jacobianEvaluations'
+        'newtonIterations', 'jacobianEvaluations', 'discontinuousIterations', 'rejectedSteps'
     """
     if simulationSettings is None:
         simulationSettings = exudyn.SimulationSettings()
@@ -300,12 +370,9 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
         gamma = 0.5 + alphaF - alphaM
         beta = 0.25*(gamma + 0.5)**2
     (n, tStart, tEnd, h) = _Steps(simulationSettings)
-    betaPrime = (1 - alphaM)/(h**2*beta*(1 - alphaF))
-    gammaPrime = gamma/(h*beta)
     (nODE2, nODE1, nAE) = (system.nODE2, system.nODE1, system.nAE)
     nSystem = nODE2 + nODE1 + nAE
     general = (nODE1 + nAE) > 0 #with ODE1 or algebraic coordinates: the residual and Jacobian of all equations, dense
-    scaling = beta*h**2 #of the ODE2 rows and, inverse, the algebraic columns, as Exudyn's useScaling
     errorFactor = np.sqrt(nSystem) if (newton.weightTolerancePerCoordinate and nSystem) else 1.
 
     (q, q_t) = system.InitialState()
@@ -331,12 +398,17 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     (newtonIterations, jacobianEvaluations) = (0, 0)
     discontinuous = timeIntegration.discontinuous
     statistics = {'discontinuousIterations': 0}
-    for step in range(1, n + 1):
-        t = tStart + step*h
+    stepSize = _StepSize(simulationSettings, explicit=False)
+    while not stepSize.Done():
         start = (q, q_t, q_tt, aAlgorithmic, y, y_t, z)
         dataStart = system.data.copy()
-        for iteration in range(discontinuous.maxIterations):
+        (t0, t, h) = stepSize.Next()
+        discontinuousIteration = 0
+        while True:
             (q, q_t, q_tt, aAlgorithmic, y, y_t, z) = (x.copy() for x in start) #the step again from its start, with the new data
+            betaPrime = (1 - alphaM)/(h**2*beta*(1 - alphaF))
+            gammaPrime = gamma/(h*beta)
+            scaling = beta*h**2 #of the ODE2 rows and, inverse, the algebraic columns, as Exudyn's useScaling
             #the predictor, ComputeNewtonUpdate(initial=True)
             if generalizedAlpha.useNewmark:
                 q = q + h*q_t + (h**2*(0.5 - beta))*q_tt
@@ -357,6 +429,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
                 initialResidual = 2*newton.absoluteTolerance #at least one Newton step
             factorization = None
             converged = False
+            newtonSteps = 0
             for iteration in range(int(newton.maxIterations)):
                 if factorization is None or not newton.useModifiedNewton:
                     if general:
@@ -383,42 +456,56 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
                 q_t = q_t - gammaPrime*increment
                 q_tt = q_tt - betaPrime*increment
                 newtonIterations += 1
+                newtonSteps += 1
                 residual = cMath.norm(NewtonResidual())/errorFactor
                 if residual/initialResidual <= newton.relativeTolerance or residual <= newton.absoluteTolerance:
                     converged = True
                     break
             if not converged:
-                raise ValueError('SolveGeneralizedAlpha: Newton did not converge in step ' + str(step) + ' at t=' + str(t)
+                raise ValueError('SolveGeneralizedAlpha: Newton did not converge in step ' + str(stepSize.stepIndex + 1) + ' at t=' + str(t)
                                  + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
             if not generalizedAlpha.useNewmark:
                 aAlgorithmic = aAlgorithmic + ((1 - alphaF)/(1 - alphaM))*q_tt #FinalizeNewton
-            if _PostNewton(system, discontinuous, q, q_t, y, z, dataStart, t, iteration, statistics):
+            done = _PostNewton(system, discontinuous, q, q_t, y, z, dataStart, t, discontinuousIteration, statistics, stepSize, h)
+            if done:
                 break
-        output.Step(step, t, q, q_t, q_tt, last=(step == n), y=y, y_t=y_t, z=z)
+            discontinuousIteration += 1
+            if done is None: #rejected: the step with the smaller step size, from the start of the step and its data
+                (t0, t, h) = stepSize.Next()
+                discontinuousIteration = 0
+        stepSize.Accept(t, newtonSteps + discontinuousIteration + 1)
+        output.Step(stepSize.stepIndex, t, q, q_t, q_tt, last=stepSize.Done(), y=y, y_t=y_t, z=z, h=h)
 
-    return output.Finalize({'steps': n, 'newtonIterations': newtonIterations, 'jacobianEvaluations': jacobianEvaluations,
-                            **statistics})
+    return output.Finalize({'steps': stepSize.stepIndex, 'newtonIterations': newtonIterations,
+                            'jacobianEvaluations': jacobianEvaluations, 'rejectedSteps': stepSize.rejected, **statistics})
 
 
-def _PostNewton(system, discontinuous, q, q_t, y, z, dataStart, t, iteration, statistics):
+def _PostNewton(system, discontinuous, q, q_t, y, z, dataStart, t, iteration, statistics, stepSize, h):
     """the post-Newton step after a step of a solver, as CSolverBase::DiscontinuousIteration (#3196): the new data
     coordinates into system.data; True if the step is done - the error is at most discontinuous.iterationTolerance,
-    or the system has no data coordinates -, False if it is computed again from its start with the new data. After
-    discontinuous.maxIterations it raises, unless discontinuous.ignoreMaxIterations; the recommended step size is not
-    used by the constant step size"""
+    or the system has no data coordinates -, False if it is computed again from its start with the new data, None if
+    it is rejected and stepSize reduced, the data back at the start of the step (#3220): where the recommended step
+    size is below h, or after discontinuous.maxIterations. Without a smaller step it raises after maxIterations, unless
+    discontinuous.ignoreMaxIterations"""
     if not system.nData:
         return True
     (system.data, error, recommendedStepSize) = system.PostNewton(q, q_t, y, z, system.data, dataStart, t)
     statistics['discontinuousIterations'] += 1
     if error <= discontinuous.iterationTolerance:
         return True
-    if iteration + 1 >= discontinuous.maxIterations:
-        if not discontinuous.ignoreMaxIterations:
-            raise ValueError('the discontinuous iteration did not converge in ' + str(int(discontinuous.maxIterations))
-                             + ' iterations at t=' + str(t) + ', error ' + str(error) + '; discontinuous.ignoreMaxIterations '
-                             'continues anyway')
+    if not stepSize.useRecommended:
+        recommendedStepSize = -1
+    if iteration + 1 < discontinuous.maxIterations:
+        if recommendedStepSize == -1 or recommendedStepSize >= (1 + 1e-8)*h: #a tolerance against switching for linear problems
+            return False
+    elif discontinuous.ignoreMaxIterations:
         return True
-    return False
+    if stepSize.Reduce(recommendedStepSize):
+        system.data = dataStart.copy()
+        return None
+    raise ValueError('the discontinuous iteration did not converge in ' + str(int(discontinuous.maxIterations))
+                     + ' iterations at t=' + str(t) + ', error ' + str(error) + (', at the minimum step size' if stepSize.adaptive
+                     else '') + '; discontinuous.ignoreMaxIterations continues anyway')
 
 
 def _InitialAccelerations(system, q, q_t, y, t, epsilon=1e-6):

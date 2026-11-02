@@ -5665,3 +5665,32 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - The derivative terms d(M q_tt)/dq and d(C_q^T lambda)/dq are in no Jacobian, also not the system-wide one; an
   evaluation of their own (RG9.11.18). The solver chapter of the manual is RG3.48 (#3223).
 - Test suite 255 + 99 passed; 86 cases of test_systemJacobians.py.
+
+<a id="rg12-74"></a>
+### RG12.74 — The users of the data coordinates (2026-11-02, #3218, #3219, #3220)
+- Maintainer 2026-11-02: add the users of the data coordinates named after RG12.66 - the turns of the torsional
+  spring-damper, friction of the sphere contact, the adaptive step size of the Python solvers - as a step and resolve
+  it now.
+- userItems.py, the turns (RG12.74.1): `_TorsionalSpringDamperFunctions(unlimitedRotations)`, the angle of atan2 plus
+  2 pi round((d - angle)/2 pi), d the angle of the last step in a NodeGenericData, which the post-Newton function sets
+  (CObjectConnectorTorsionalSpringDamper::PostNewtonStep); esym.round while recorded, round() for numbers; a variant of
+  the kind, the default unlimitedRotations=True no longer refused. symbolicUserRigidBodiesTest refuses
+  springTorqueUserFunction instead. symbolicUserTorsionalTurnsTest: a free disc at 20 rad/s turns by 3.5 rad; Python
+  and recorded against built-in 1.2e-10 (generalized-alpha) and 0 (RK44), SymbolicSystem against SolveDynamic the
+  same, without the turns 26 rad/s off.
+- userItems.py, friction (RG12.74.2): `_SphereSphereContactFunctions(restitution, friction)`; with friction rigid
+  markers (as the built-in Create function), the parameters plus [dynamicFriction, frictionProportionalZone], the data
+  [gap, impact velocity, tangential speed], the force of CObjectContactSphereSphere::ComputeContactForces - the
+  velocities at the contact point with omega x (r + g/2) n, -mu N vT/zone while the speed of the data is below the zone,
+  else -mu N vT/|vT| - with the torques about the centers, and in the post-Newton step the speed (the rotations only in
+  contact) and the error |mu N/zone (|vT| - zone)| of a switch. symbolicUserContactFrictionTest: a ball sliding at 1 m/s
+  rolls at 5/7 of it after 0.1 s, slip 2e-7; against built-in 1.4e-12, SymbolicSystem against SolveDynamic 5e-13.
+- solvers.py, the step size (RG12.74.3): `_StepSize` with Next, Reduce and Accept as UpdateCurrentTime, ReduceStepSize
+  and IncreaseStepSize of the implicit and the explicit solver (min(0.75 h, h_rec), else adaptiveStepDecrease or 1/2,
+  minimumStepSize; adaptiveStepRecoverySteps steps of at most adaptiveStepRecoveryIterations Newton and discontinuous
+  iterations, then adaptiveStepIncrease or 2, up to the nominal step); `_PostNewton` returns None for a rejected step
+  and puts the data back to the start of the step; t accumulates as in CSolverBase with adaptiveStep; the statistics
+  give rejectedSteps; the output with the step size of the step. symbolicSolversAdaptiveStepTest: a bouncing ball with
+  useRecommendedStepSize, 511 / 516 steps with 4 rejected (generalized-alpha / RK44), against SolveDynamic 7e-12 / 0;
+  with a constant step 6e-4 / 4e-3 off. Not: a step size reduction when Newton does not converge, which still raises.
+- The existing symbolic test models give the same results.

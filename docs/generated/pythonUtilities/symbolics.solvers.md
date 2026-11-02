@@ -10,7 +10,10 @@ solver does, with ODE1 coordinates and index-3 constraints (#3134); both take th
 Exudyn, write the solution file and the sensors as SolveDynamic does, and write the state into mbs for a
 SymbolicSystem. With data coordinates, both compute a step again from its start while the post-Newton step
 of the system gives an error above discontinuous.iterationTolerance, as CSolverBase::DiscontinuousIteration
-(#3196); the statistics count the discontinuousIterations.
+(#3196); with timeIntegration.adaptiveStep, a step whose post-Newton step recommends a smaller step size, or
+whose discontinuous iteration does not converge, is repeated with a smaller step, which grows again after a
+few easy steps, as CSolverBase::SolveSteps (#3220); the statistics count the discontinuousIterations and the
+rejectedSteps.
 
 - **Author**: Johannes Gerstmayr
 - **Date**: 2026-10-26 (created)
@@ -18,7 +21,7 @@ of the system gives an error above discontinuous.iterationTolerance, as CSolverB
 (sec-solvers--steps)=
 ## Function: _Steps
 
-[`_Steps(simulationSettings)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L145)
+[`_Steps(simulationSettings)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L151)
 
 - **function description**: the number of steps, the start and end time and the step size of timeIntegration
 
@@ -26,7 +29,7 @@ of the system gives an error above discontinuous.iterationTolerance, as CSolverB
 (sec-solvers--refuseliegroupnodes)=
 ## Function: _RefuseLieGroupNodes
 
-[`_RefuseLieGroupNodes(system, useLieGroupIntegration, where)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L153)
+[`_RefuseLieGroupNodes(system, useLieGroupIntegration, where)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L214)
 
 - **function description**: Lie group nodes are integrated by Exudyn with the Lie group formulas, which are not implemented here
 
@@ -34,46 +37,46 @@ of the system gives an error above discontinuous.iterationTolerance, as CSolverB
 (sec-solvers-solveexplicit)=
 ## Function: SolveExplicit
 
-[`SolveExplicit(system, simulationSettings = None, solverType = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L163)
+[`SolveExplicit(system, simulationSettings = None, solverType = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L224)
 
-- **function description**: the explicit time integration of a SymbolicSystemBase with constant step size, by explicit Euler, RK44 or velocity Verlet, as Exudyn's explicit solver computes them (#3112, design docs/dev/design/symbolicSystem.md §10): the steps from timeIntegration.startTime, endTime and numberOfSteps; the accelerations by the inverse per body with timeIntegration.explicit.computeMassMatrixInversePerBody, else by the sparse LU decomposition of the mass matrix, both once for a constant mass matrix (timeIntegration.reuseConstantMassMatrix); ODE1 coordinates in the stages of explicit Euler and RK44, with zero initial velocities, as Exudyn (#3134); algebraic equations are refused (Exudyn's explicit solver eliminates only constraints of coordinates on the ground); for a SymbolicSystem the solution file, the sensors and the renderer of its mbs by simulationSettings.solution, as after SolveDynamic
+- **function description**: the explicit time integration of a SymbolicSystemBase by explicit Euler, RK44 or velocity Verlet, as Exudyn's explicit solver computes them (#3112, design docs/dev/design/symbolicSystem.md §10): the steps from timeIntegration.startTime, endTime and numberOfSteps, smaller with adaptiveStep where the post-Newton step of data coordinates rejects a step (#3220); the accelerations by the inverse per body with timeIntegration.explicit.computeMassMatrixInversePerBody, else by the sparse LU decomposition of the mass matrix, both once for a constant mass matrix (timeIntegration.reuseConstantMassMatrix); ODE1 coordinates in the stages of explicit Euler and RK44, with zero initial velocities, as Exudyn (#3134); algebraic equations are refused (Exudyn's explicit solver eliminates only constraints of coordinates on the ground); for a SymbolicSystem the solution file, the sensors and the renderer of its mbs by simulationSettings.solution, as after SolveDynamic
 - **input**:
   - `system`: the system, a SymbolicSystemBase
   - `simulationSettings`: exudyn.SimulationSettings; None: the defaults
   - `solverType`: an exudyn.DynamicSolverType of explicitSolverTypes; None: timeIntegration.solverType
-- **output**: dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2) - with ODE1 coordinates 'y', 'y_t' (n_out x nODE1) - at the steps of solution.file.writePeriod and the last step, and the statistics 'steps', 'forceEvaluations', 'massMatrixEvaluations'
+- **output**: dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2) - with ODE1 coordinates 'y', 'y_t' (n_out x nODE1) - at the steps of solution.file.writePeriod and the last step, and the statistics 'steps', 'forceEvaluations', 'massMatrixEvaluations', 'discontinuousIterations', 'rejectedSteps'
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSystemSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicSystemSpringDamper.py) (Ex), [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSystemDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemDataTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM), [`symbolicSystemODE1AETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemODE1AETest.py) (TM), [`symbolicSystemODE1Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemODE1Test.py) (TM), [`symbolicUserContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserContactTest.py) (TM), [`symbolicUserItemsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserItemsTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSystemSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicSystemSpringDamper.py) (Ex), [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSolversAdaptiveStepTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSolversAdaptiveStepTest.py) (TM), [`symbolicSystemDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemDataTest.py) (TM), [`symbolicSystemLoadsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemLoadsTest.py) (TM), [`symbolicSystemODE1AETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemODE1AETest.py) (TM), [`symbolicSystemODE1Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemODE1Test.py) (TM), [`symbolicUserContactFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserContactFrictionTest.py) (TM), ...
 
 
 (sec-solvers-solvegeneralizedalpha)=
 ## Function: SolveGeneralizedAlpha
 
-[`SolveGeneralizedAlpha(system, simulationSettings = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L261)
+[`SolveGeneralizedAlpha(system, simulationSettings = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L330)
 
-- **function description**: the implicit time integration of a SymbolicSystemBase with constant step size by the generalized-alpha method in the form of Arnold and Bruls, as Exudyn's MainSolverImplicitSecondOrder computes it (#3126, #3134, design docs/dev/design/symbolicSystem.md §6): per step the predictor of the displacements, velocities and algorithmic accelerations, the ODE1 coordinates by the trapezoidal rule, then Newton's method for the accelerations, the ODE1 coordinates and the algebraic coordinates with the residual of SystemResidual - r = M q_tt - f + C_q^T z, g - y_t, c - and its Jacobian, the ODE2 rows scaled by beta h^2 and the algebraic columns by 1/(beta h^2), as Exudyn; by timeIntegration: numberOfSteps, startTime, endTime, generalizedAlpha.spectralRadius, useNewmark with newmarkBeta and newmarkGamma, computeInitialAccelerations - with constraints of [M C_q^T; C_q 0] [q_tt; z] = [f; -(C_q q_t)_q q_t] -, storeInitialAlgebraicCoordinates, and newton.relativeTolerance, absoluteTolerance, maxIterations, useModifiedNewton (the Jacobian once per step) and weightTolerancePerCoordinate; for a SymbolicSystem the solution file, the sensors and the renderer of its mbs, as SolveExplicit. A step whose Newton iteration does not converge raises: the step size is constant. The ODE1 velocities start at zero, as in Exudyn
+- **function description**: the implicit time integration of a SymbolicSystemBase by the generalized-alpha method in the form of Arnold and Bruls, as Exudyn's MainSolverImplicitSecondOrder computes it (#3126, #3134, design docs/dev/design/symbolicSystem.md §6): per step the predictor of the displacements, velocities and algorithmic accelerations, the ODE1 coordinates by the trapezoidal rule, then Newton's method for the accelerations, the ODE1 coordinates and the algebraic coordinates with the residual of SystemResidual - r = M q_tt - f + C_q^T z, g - y_t, c - and its Jacobian, the ODE2 rows scaled by beta h^2 and the algebraic columns by 1/(beta h^2), as Exudyn; by timeIntegration: numberOfSteps, startTime, endTime, generalizedAlpha.spectralRadius, useNewmark with newmarkBeta and newmarkGamma, computeInitialAccelerations - with constraints of [M C_q^T; C_q 0] [q_tt; z] = [f; -(C_q q_t)_q q_t] -, storeInitialAlgebraicCoordinates, and newton.relativeTolerance, absoluteTolerance, maxIterations, useModifiedNewton (the Jacobian once per step) and weightTolerancePerCoordinate; for a SymbolicSystem the solution file, the sensors and the renderer of its mbs, as SolveExplicit. With adaptiveStep, a step rejected by the post-Newton step of data coordinates is repeated with a smaller step size, as in SolveExplicit (#3220); a step whose Newton iteration does not converge raises. The ODE1 velocities start at zero, as in Exudyn
 - **input**:
   - `system`: the system, a SymbolicSystemBase
   - `simulationSettings`: exudyn.SimulationSettings; None: the defaults
-- **output**: dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2), with ODE1 coordinates 'y', 'y_t', with algebraic equations 'z', at the steps of solution.file.writePeriod and the last step, and the statistics 'steps', 'newtonIterations', 'jacobianEvaluations'
+- **output**: dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2), with ODE1 coordinates 'y', 'y_t', with algebraic equations 'z', at the steps of solution.file.writePeriod and the last step, and the statistics 'steps', 'newtonIterations', 'jacobianEvaluations', 'discontinuousIterations', 'rejectedSteps'
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSystemRigidBodyPendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicSystemRigidBodyPendulum.py) (Ex), [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM), [`genericDAEUserFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEUserFunctionsTest.py) (TM), [`symbolicGeneralizedAlphaTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicGeneralizedAlphaTest.py) (TM), [`symbolicSystemDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemDataTest.py) (TM), [`symbolicSystemGenericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemGenericDAETest.py) (TM), [`symbolicSystemItemJacobiansTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemItemJacobiansTest.py) (TM), [`symbolicSystemJointsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemJointsTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSystemRigidBodyPendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicSystemRigidBodyPendulum.py) (Ex), [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM), [`genericDAEUserFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEUserFunctionsTest.py) (TM), [`symbolicGeneralizedAlphaTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicGeneralizedAlphaTest.py) (TM), [`symbolicSolversAdaptiveStepTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSolversAdaptiveStepTest.py) (TM), [`symbolicSystemDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemDataTest.py) (TM), [`symbolicSystemGenericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemGenericDAETest.py) (TM), [`symbolicSystemItemJacobiansTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemItemJacobiansTest.py) (TM), ...
 
 
 (sec-solvers--postnewton)=
 ## Function: _PostNewton
 
-[`_PostNewton(system, discontinuous, q, q_t, y, z, dataStart, t, iteration, statistics)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L403)
+[`_PostNewton(system, discontinuous, q, q_t, y, z, dataStart, t, iteration, statistics, stepSize, h)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L483)
 
-- **function description**: the post-Newton step after a step of a solver, as CSolverBase::DiscontinuousIteration (#3196): the new data coordinates into system.data; True if the step is done - the error is at most discontinuous.iterationTolerance, or the system has no data coordinates -, False if it is computed again from its start with the new data. After discontinuous.maxIterations it raises, unless discontinuous.ignoreMaxIterations; the recommended step size is not used by the constant step size
+- **function description**: the post-Newton step after a step of a solver, as CSolverBase::DiscontinuousIteration (#3196): the new data coordinates into system.data; True if the step is done - the error is at most discontinuous.iterationTolerance, or the system has no data coordinates -, False if it is computed again from its start with the new data, None if it is rejected and stepSize reduced, the data back at the start of the step (#3220): where the recommended step size is below h, or after discontinuous.maxIterations. Without a smaller step it raises after maxIterations, unless discontinuous.ignoreMaxIterations
 
 
 (sec-solvers--initialaccelerations)=
 ## Function: _InitialAccelerations
 
-[`_InitialAccelerations(system, q, q_t, y, t, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L424)
+[`_InitialAccelerations(system, q, q_t, y, t, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L511)
 
 - **function description**: the initial accelerations and algebraic coordinates of CSolverImplicitSecondOrder: [M C_q^T; C_q C_z] [q_tt; z] = [f; -(C_q q_t)_q q_t], the ODE1 rows a unit matrix with zero right-hand side; C_q and C_z - the derivative by z of an equation that depends on it, as of ObjectGenericDAE (#3191) - by central differences of the algebraic equations, (C_q q_t)_q q_t as their second derivative along q_t
 
@@ -93,14 +96,44 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-solvers--output-step)=
 ### Class function: Step
 
-[`Step(self, stepIndex, t, q, q_t, q_tt, last = False, y = None, y_t = None, z = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L116)
+[`Step(self, stepIndex, t, q, q_t, q_tt, last = False, y = None, y_t = None, z = None, h = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L119)
 
-- **class function description**: the state after step stepIndex at t; stepIndex 0 is the initial state, as SolveDynamic writes it
+- **class function description**: the state after step stepIndex at t, of the step size h (None: the constant one); stepIndex 0 is the initial state, as SolveDynamic writes it
 
 
 (sec-solvers--output-finalize)=
 ### Class function: Finalize
 
-[`Finalize(self, statistics)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L136)
+[`Finalize(self, statistics)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L142)
 
 - **class function description**: the result dict, with the statistics of the solver
+
+
+(sec-module-symbolics.solvers-class--stepsize)=
+## CLASS _StepSize (in module symbolics.solvers)
+
+**class description**: the step size of a solver of this module, as CSolverBase::SolveSteps and the step size functions of CSolverImplicitSecondOrderTimeInt and CSolverExplicitTimeInt (#3220): with timeIntegration.adaptiveStep the time advances by the step size, a rejected step is repeated from its start with min(0.75 h, h_recommended), or with h adaptiveStepDecrease (explicit: h/2) without a recommendation, down to minimumStepSize, and after adaptiveStepRecoverySteps steps of at most adaptiveStepRecoveryIterations Newton and discontinuous iterations the step grows by adaptiveStepIncrease (explicit: 2) up to the nominal (endTime - startTime)/numberOfSteps; without adaptiveStep the steps are of the nominal size
+
+
+(sec-solvers--stepsize-next)=
+### Class function: Next
+
+[`Next(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L182)
+
+- **class function description**: the start time, end time and size of the next step, as UpdateCurrentTime
+
+
+(sec-solvers--stepsize-reduce)=
+### Class function: Reduce
+
+[`Reduce(self, recommendedStepSize)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L190)
+
+- **class function description**: a smaller step after a rejected one, as ReduceStepSize; False at the minimum step size
+
+
+(sec-solvers--stepsize-accept)=
+### Class function: Accept
+
+[`Accept(self, t, iterations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/solvers.py#L202)
+
+- **class function description**: the step to t done after iterations Newton and discontinuous iterations; the step grows again, as IncreaseStepSize

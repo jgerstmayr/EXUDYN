@@ -142,28 +142,55 @@ def _UFspringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoord
 #velocityOffset, torque]: as ObjectConnectorTorsionalSpringDamper, the torque k (phi - phi0) + d (omega - omega0) + tau0
 #about the z-axis of marker 0, phi the z-angle of the relative rotation A0^T A1 as Tait-Bryan angle, omega the z-component
 #of the relative angular velocity in the frame of marker 0; no forces. As the forces of the spring-damper, the torques act
-#on the markers: a positive torque turns marker 0 about the axis and marker 1 back
-def _UFtorsionalSpringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
-    A0 = HT0.rotation
-    F = _Functions(A0)
+#on the markers: a positive torque turns marker 0 about the axis and marker 1 back. With unlimitedRotations, a Python
+#constant of the recording, the angle continues over the turns: the angle in (-pi, pi] plus the turns of 2 pi that bring
+#it nearest to the angle of the last step, the data coordinate of a NodeGenericData, which the post-Newton step sets, as
+#CObjectConnectorTorsionalSpringDamper does (#3218)
+def _TorsionalSpringDamperAngle(HT0, HT1, dataCoordinates, unlimitedRotations, F):
     relative = HT0.Relative(HT1).rotation
     angle = F.atan2(-relative[0, 1], relative[0, 0])
-    omega = su.RelativeTwist(HT0, twist0, HT1, twist1).angularVelocity[2]
-    torque = parameters[0]*(angle - parameters[2]) + parameters[1]*(omega - parameters[3]) + parameters[4]
-    torque0 = [torque*A0[i, 2] for i in range(3)]
-    return _Vector([0, 0, 0] + torque0 + [0, 0, 0] + [-x for x in torque0], F)
+    if unlimitedRotations:
+        turns = (dataCoordinates[0] - angle)*(1/(2*np.pi))
+        angle = angle + 2*np.pi*(F.round(turns) if F is exudyn.symbolic else round(turns))
+    return angle
+
+def _TorsionalSpringDamperFunctions(unlimitedRotations):
+    #the user functions of the spring-damper without or with the turns, unlimitedRotations a constant of the recording
+    def UFforce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+        A0 = HT0.rotation
+        F = _Functions(A0)
+        angle = _TorsionalSpringDamperAngle(HT0, HT1, dataCoordinates, unlimitedRotations, F)
+        omega = su.RelativeTwist(HT0, twist0, HT1, twist1).angularVelocity[2]
+        torque = parameters[0]*(angle - parameters[2]) + parameters[1]*(omega - parameters[3]) + parameters[4]
+        torque0 = [torque*A0[i, 2] for i in range(3)]
+        return _Vector([0, 0, 0] + torque0 + [0, 0, 0] + [-x for x in torque0], F)
+
+    def UFpostNewton(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep, parameters):
+        #the continuous angle into the data; no error and no recommended step size
+        return [0., -1., _TorsionalSpringDamperAngle(HT0, HT1, dataCoordinates, True, _Functions(HT0.rotation))]
+    if unlimitedRotations:
+        return [('forceUserFunction', UFforce), ('postNewtonStepUserFunction', UFpostNewton)]
+    return [('forceUserFunction', UFforce)]
+
+_torsionalSpringDamperFunctions = {unlimited: _TorsionalSpringDamperFunctions(unlimited) for unlimited in [False, True]}
 
 #the sphere-sphere contact, ObjectConnectorUser on two position markers with a NodeGenericData of the gap of the last
 #iteration and the impact velocity, parameters [radius0, radius1, stiffness, damping, minimumImpactVelocity,
-#impactFactor]: as ObjectContactSphereSphere without friction, plasticity and adhesion, the normal force k delta - d
-#dg/dt on sphere 1 along the normal n from sphere 0 to sphere 1, delta = -g, g = |p1 - p0| - r0 - r1, while the gap of
-#the data is negative; with an impact model the damping lambda delta dg/dt of the restitution coefficient, lambda =
+#impactFactor]: as ObjectContactSphereSphere without plasticity and adhesion, the normal force k delta - d dg/dt on
+#sphere 1 along the normal n from sphere 0 to sphere 1, delta = -g, g = |p1 - p0| - r0 - r1, while the gap of the data
+#is negative; with an impact model the damping lambda delta dg/dt of the restitution coefficient, lambda =
 #impactFactor k/v, v the impact velocity of the data or minimumImpactVelocity. Whether the item has an impact model is
 #a Python constant of the recording, as it changes the computation: one force function for both, of one kind, and the
 #term not recorded for impactModel 0 (#3203). The post-Newton step switches as
 #CObjectContactSphereSphere::PostNewtonStep: the gap into the data, the error |k g| and the recommended step size
 #|g0/(dg/dt)| of a switch, the impact velocity -dg/dt when the step begins open and ends in contact (#3197). Written
-#with IfThenElse of exudyn.symbolics.utilities, which computes numbers and is recorded
+#with IfThenElse of exudyn.symbolics.utilities, which computes numbers and is recorded.
+#With friction, also a constant of the recording, the markers are rigid, the parameters add [dynamicFriction,
+#frictionProportionalZone] and the data the tangential speed of the last iteration (#3219): the friction force
+#-mu N vT/|vT| at the contact point, vT the tangential relative velocity there with the rotations of the spheres, and
+#-mu N vT/zone while the speed of the data is below frictionProportionalZone (stick); the torques of the forces about
+#the centers; the post-Newton step sets the speed and adds the error |mu N/zone (|vT| - zone)| of a switch between stick
+#and slip, as the built-in contact
 def _SphereSphereContact(HT0, twist0, HT1, twist1):
     #the functions, the normal, the distance and the normal velocity of the two spheres
     delta = HT1.translation - HT0.translation
@@ -172,35 +199,74 @@ def _SphereSphereContact(HT0, twist0, HT1, twist1):
     normal = (1/distance)*delta
     return (F, normal, distance, normal @ (twist1.velocity - twist0.velocity))
 
-def _SphereSphereContactFunctions(restitution):
-    #the user functions of the contact without or with an impact model, restitution a constant of the recording
-    def UFforce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
-        (F, normal, distance, vNormal) = _SphereSphereContact(HT0, twist0, HT1, twist1)
-        gap = distance - parameters[0] - parameters[1]
+def _Abs(x, F):
+    return F.abs(x) if F is exudyn.symbolic else abs(x)
+
+def _TangentialVelocity(normal, gap, twist0, twist1, parameters, withRotations):
+    #the tangential relative velocity of sphere 1 at the contact point, with the rotations of the spheres or of the centers
+    n = [normal[i] for i in range(3)]
+    dv = [twist1.velocity[i] - twist0.velocity[i] for i in range(3)]
+    if withRotations:
+        c0 = _Cross([twist0.angularVelocity[i] for i in range(3)], [(parameters[0] + 0.5*gap)*x for x in n])
+        c1 = _Cross([twist1.angularVelocity[i] for i in range(3)], [(-parameters[1] - 0.5*gap)*x for x in n])
+        dv = [dv[i] + c1[i] - c0[i] for i in range(3)]
+    vn = _Dot(dv, n)
+    return [dv[i] - vn*n[i] for i in range(3)]
+
+def _SphereSphereContactFunctions(restitution, friction):
+    #the user functions of the contact without or with an impact model and friction, both constants of the recording
+    def NormalForce(F, gap, vNormal, dataCoordinates, parameters):
         force = -parameters[2]*gap - parameters[3]*vNormal
         if restitution:
             vImpact = F.max(parameters[4], dataCoordinates[1]) if F is exudyn.symbolic else max(parameters[4], dataCoordinates[1])
             impact = vImpact > 0
             lambdaImpact = IfThenElse(impact, parameters[5]*parameters[2]/IfThenElse(impact, vImpact, 1.), 0.)
             force = force - lambdaImpact*gap*vNormal
-        force = IfThenElse(dataCoordinates[0] < 0, force, 0.)
-        return np.hstack([-force*normal, force*normal])
-    return [('forceUserFunction', UFforce), ('postNewtonStepUserFunction', _UFsphereSphereContactPostNewton)]
+        return force
 
-def _UFsphereSphereContactPostNewton(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep,
-                                     parameters):
-    (F, normal, distance, vNormal) = _SphereSphereContact(HT0, twist0, HT1, twist1)
-    gap = distance - parameters[0] - parameters[1]
-    (lastGap, gapStartOfStep) = (dataCoordinates[0], dataCoordinatesStartOfStep[0])
-    switched = (gap > 0) != (lastGap > 0)
-    error = IfThenElse(switched, F.abs(gap*parameters[2]) if F is exudyn.symbolic else abs(gap*parameters[2]), 0.)
-    stepKnown = (vNormal != 0)*(gapStartOfStep != 0) #a product of conditions, 0 or 1
-    stepSize = IfThenElse(switched*stepKnown, abs(gapStartOfStep/IfThenElse(stepKnown, vNormal, 1.)) if F is not exudyn.symbolic
-                          else F.abs(gapStartOfStep/IfThenElse(stepKnown, vNormal, 1.)), -1.)
-    impactVelocity = IfThenElse((gapStartOfStep > 0)*(gap <= 0), -vNormal, dataCoordinatesStartOfStep[1])
-    return [error, stepSize, gap, impactVelocity]
+    def UFforce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+        (F, normal, distance, vNormal) = _SphereSphereContact(HT0, twist0, HT1, twist1)
+        gap = distance - parameters[0] - parameters[1]
+        force = NormalForce(F, gap, vNormal, dataCoordinates, parameters)
+        inContact = dataCoordinates[0] < 0
+        if not friction:
+            force = IfThenElse(inContact, force, 0.)
+            return np.hstack([-force*normal, force*normal])
+        (mu, zone) = (parameters[6], parameters[7])
+        vT = _TangentialVelocity(normal, gap, twist0, twist1, parameters, True)
+        speed = F.sqrt(_Dot(vT, vT))
+        stick = dataCoordinates[2] < zone
+        moving = speed > 0
+        factor = IfThenElse(stick, -mu*force/IfThenElse(stick, zone, 1.), IfThenElse(moving, -mu*force/IfThenElse(moving, speed, 1.), 0.))
+        f1 = [IfThenElse(inContact, force*normal[i] + factor*vT[i], 0.) for i in range(3)]
+        t0 = _Cross([(parameters[0] + 0.5*gap)*normal[i] for i in range(3)], [-x for x in f1])
+        t1 = _Cross([(-parameters[1] - 0.5*gap)*normal[i] for i in range(3)], f1)
+        return _Vector([-x for x in f1] + t0 + f1 + t1, F)
 
-_sphereSphereContactFunctions = {restitution: _SphereSphereContactFunctions(restitution) for restitution in [False, True]}
+    def UFpostNewton(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep, parameters):
+        (F, normal, distance, vNormal) = _SphereSphereContact(HT0, twist0, HT1, twist1)
+        gap = distance - parameters[0] - parameters[1]
+        (lastGap, gapStartOfStep) = (dataCoordinates[0], dataCoordinatesStartOfStep[0])
+        switched = (gap > 0) != (lastGap > 0)
+        error = IfThenElse(switched, _Abs(gap*parameters[2], F), 0.)
+        stepKnown = (vNormal != 0)*(gapStartOfStep != 0) #a product of conditions, 0 or 1
+        stepSize = IfThenElse(switched*stepKnown, _Abs(gapStartOfStep/IfThenElse(stepKnown, vNormal, 1.), F), -1.)
+        impactVelocity = IfThenElse((gapStartOfStep > 0)*(gap <= 0), -vNormal, dataCoordinatesStartOfStep[1])
+        if not friction:
+            return [error, stepSize, gap, impactVelocity]
+        (mu, zone) = (parameters[6], parameters[7])
+        vT = [IfThenElse(gap < 0, x, y) for (x, y) in zip(_TangentialVelocity(normal, gap, twist0, twist1, parameters, True),
+                                                        _TangentialVelocity(normal, gap, twist0, twist1, parameters, False))]
+        speed = F.sqrt(_Dot(vT, vT))
+        last = dataCoordinates[2]
+        switchedFriction = (gap < 0)*(zone != 0)*((speed < zone)*(last > zone) + (speed > zone)*(last < zone))
+        normalForce = NormalForce(F, gap, vNormal, dataCoordinates, parameters)
+        error = error + IfThenElse(switchedFriction, _Abs(mu*normalForce/IfThenElse(zone != 0, zone, 1.)*(speed - zone), F), 0.)
+        return [error, stepSize, gap, impactVelocity, speed]
+    return [('forceUserFunction', UFforce), ('postNewtonStepUserFunction', UFpostNewton)]
+
+_sphereSphereContactFunctions = {(restitution, friction): _SphereSphereContactFunctions(restitution, friction)
+                                 for restitution in [False, True] for friction in [False, True]}
 
 #the Cartesian spring-damper, ObjectConnectorUser on two position markers, parameters [stiffness (3), damping (3),
 #offset (3)]: as ObjectConnectorCartesianSpringDamper, f = k (p1 - p0 - offset) + d (v1 - v0) per global component,
@@ -330,7 +396,7 @@ def _UFdistanceConstraintJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
 #the user functions of each kind of item, which Record records once per kind; a kind of variants - a Python constant
 #of the Create function that changes the structure of the computation - has the functions of each variant in the item
 #(UserItemCreator._variants), recorded once per variant; its entry here is the variant of the default arguments of the
-#Create function (impactModel=0, useIntrinsicFormulation=True), which only names the kind, as every item of it keeps
+#Create function (impactModel=0, useIntrinsicFormulation=True, unlimitedRotations=True), which only names the kind, as every item of it keeps
 #its own variant
 _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                                 ('massIntegralUserFunction', _UFmassPointMassIntegral),
@@ -346,8 +412,8 @@ _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                                 ('rotationMatrixUserFunction', _UFrigidBodyRotationMatrix),
                                 ('rotationJacobianUserFunction', _UFrigidBodyRotationJacobian)],
                   'springDamper': [('forceUserFunction', _UFspringDamperForce)],
-                  'torsionalSpringDamper': [('forceUserFunction', _UFtorsionalSpringDamperForce)],
-                  'sphereSphereContact': _sphereSphereContactFunctions[False],
+                  'torsionalSpringDamper': _torsionalSpringDamperFunctions[True],
+                  'sphereSphereContact': _sphereSphereContactFunctions[(False, False)],
                   'cartesianSpringDamper': [('forceUserFunction', _UFcartesianSpringDamperForce)],
                   'rigidBodySpringDamper': _rigidBodySpringDamperFunctions[True],
                   'coordinateConstraint': [],
@@ -659,11 +725,12 @@ class UserItemCreator:
                                   minimumImpactVelocity=0, impactModel=0, dataInitialCoordinates=[0, 0, 0, 0],
                                   activeConnector=True, show=False, color=exudyn.graphics.color.default, bodyNumbers=None,
                                   bodyOrNodeList=None):
-        """a sphere-sphere contact as ObjectConnectorUser on the position markers of mbs.CreateSphereSphereContact, with
-        the normal force of ObjectContactSphereSphere, k delta - d dg/dt, and with impactModel 1 or 2 the damping of the
-        restitution coefficient - the model 2 is the recommended one -; switched as the built-in contact by the gap of
-        a data node in the post-Newton step, which is recorded as the force (#3187, #3197); drawn as two spheres by a
-        graphicsDataUserFunction
+        """a sphere-sphere contact as ObjectConnectorUser on the markers of mbs.CreateSphereSphereContact, with the
+        normal force of ObjectContactSphereSphere, k delta - d dg/dt, with impactModel 1 or 2 the damping of the
+        restitution coefficient - the model 2 is the recommended one -, and with dynamicFriction the friction of the
+        built-in contact, regularized below frictionProportionalZone (#3219); switched as the built-in contact by the
+        data node in the post-Newton step - contact and no contact, stick and slip -, which is recorded as the force
+        (#3187, #3197); drawn as two spheres by a graphicsDataUserFunction
 
         Args:
             name: as in mbs.CreateSphereSphereContact
@@ -672,8 +739,10 @@ class UserItemCreator:
             localPosition1: as in mbs.CreateSphereSphereContact
             spheresRadii: as in mbs.CreateSphereSphereContact; numbers or named exudyn.symbolic.Real
             isHollowSphere1: refused if True
-            dynamicFriction: refused if not 0: friction needs the data node and the post-Newton step
-            frictionProportionalZone: not used, as there is no friction
+            dynamicFriction: as in mbs.CreateSphereSphereContact; not 0: rigid markers on the bodies, the friction force
+                and its torques; a number or a named exudyn.symbolic.Real; the items with and without friction share a
+                recording each
+            frictionProportionalZone: as in mbs.CreateSphereSphereContact, with dynamicFriction
             contactStiffness: as in mbs.CreateSphereSphereContact; a number or a named exudyn.symbolic.Real
             contactDamping: as in mbs.CreateSphereSphereContact; a number or a named exudyn.symbolic.Real
             contactStiffnessExponent: refused if not 1: the linear contact law
@@ -686,8 +755,8 @@ class UserItemCreator:
             impactModel: 0 (the default), 1 (Hunt-Crossley) or 2 (Gonthier and Carvalho-Martins, recommended), as in
                 mbs.CreateSphereSphereContact; the items without and with an impact model share a recording each
             dataInitialCoordinates: as in mbs.CreateSphereSphereContact; the gap and the impact velocity (the components
-                0 and 2) go into the data node of the connector, the others must be 0, as there is no friction and
-                plasticity
+                0 and 2) go into the data node of the connector, with friction also the tangential speed (component 1);
+                the plastic deformation (component 3) must be 0, as there is no plasticity
             activeConnector: refused if False
             show: draw the two spheres
             color: the color of the drawing; the default: grey
@@ -700,7 +769,6 @@ class UserItemCreator:
         where = 'CreateSphereSphereContact'
         for (argument, value, default, reason) in [
                 ('isHollowSphere1', isHollowSphere1, False, ''),
-                ('dynamicFriction', dynamicFriction, 0., 'friction needs the data node and the post-Newton step'),
                 ('contactStiffnessExponent', contactStiffnessExponent, 1, 'the contact law is linear'),
                 ('constantPullOffForce', constantPullOffForce, 0, 'no adhesion'),
                 ('contactPlasticityRatio', contactPlasticityRatio, 0, 'no plasticity'),
@@ -715,8 +783,12 @@ class UserItemCreator:
         if impactModel == 0:
             _Refuse(where, 'restitutionCoefficient', restitutionCoefficient, 1, 'the restitution coefficient needs impactModel 1 or 2')
             _Refuse(where, 'minimumImpactVelocity', minimumImpactVelocity, 0, 'the impact velocity needs impactModel 1 or 2')
-        _Refuse(where, 'dataInitialCoordinates', [dataInitialCoordinates[1], dataInitialCoordinates[3]], [0, 0],
-                'the tangent velocity and the plastic deformation: there is no friction and plasticity')
+        friction = _Numbers([dynamicFriction])[0] != 0
+        if friction:
+            _Refuse(where, 'dataInitialCoordinates', [dataInitialCoordinates[3]], [0], 'the plastic deformation: there is no plasticity')
+        else:
+            _Refuse(where, 'dataInitialCoordinates', [dataInitialCoordinates[1], dataInitialCoordinates[3]], [0, 0],
+                    'the tangent velocity and the plastic deformation: there is no friction and plasticity')
         #the factor of lambda of CObjectContactSphereSphere for the restitution coefficient e
         e = float(restitutionCoefficient)
         if impactModel != 0 and e <= 0:
@@ -728,11 +800,13 @@ class UserItemCreator:
             impactFactor = 1.5*(e - 1.)*(11. - e)/(1. + 9.*e) if e > 1./3. else (e*e - 1.)/e
         mbs = self.mbs
         itemNumbers = [self._massPointNodes[int(item)] if (isinstance(item, exudyn.ObjectIndex) and int(item) in self._massPointNodes
-                                                           and not np.any(localPosition)) else item
+                                                           and not np.any(localPosition) and not friction) else item
                        for (item, localPosition) in zip(itemNumbers, [localPosition0, localPosition1])]
         [marker0, marker1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1,
-                                                              getPosition=True, getRotationMatrix=False, useRigidMarker=False)
+                                                              getPosition=True, getRotationMatrix=False, useRigidMarker=friction)
         parameters = [spheresRadii[0], spheresRadii[1], contactStiffness, contactDamping, minimumImpactVelocity, impactFactor]
+        if friction:
+            parameters += [dynamicFriction, frictionProportionalZone]
         radii = _Numbers(spheresRadii)
         drawColor = list(color) if color[0] >= 0 else graphics.color.grey
 
@@ -742,10 +816,12 @@ class UserItemCreator:
                                     radius=radius, color=drawColor, nTiles=12)
                     for (marker, radius) in zip([marker0, marker1], radii)]
 
-        functions = _sphereSphereContactFunctions[impactModel != 0]
-        data = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[dataInitialCoordinates[0], dataInitialCoordinates[2]],
-                                               numberOfDataCoordinates=2))
+        functions = _sphereSphereContactFunctions[(impactModel != 0, friction)]
+        dataInitial = [dataInitialCoordinates[0], dataInitialCoordinates[2]] + ([dataInitialCoordinates[1]] if friction else [])
+        data = mbs.AddNode(eii.NodeGenericData(initialCoordinates=dataInitial, numberOfDataCoordinates=len(dataInitial)))
+        markerType = exudyn.MarkerType.Position | exudyn.MarkerType.Orientation if friction else exudyn.MarkerType._None
         connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=[marker0, marker1], nodeNumber=data,
+                                                          requestedMarkerType=markerType,
                                                           parameters=_Numbers(parameters), **dict(functions),
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
         self.items['sphereSphereContact'].append(connector)
@@ -758,8 +834,8 @@ class UserItemCreator:
                                     springTorqueUserFunction=0, unlimitedRotations=True, show=True, drawSize=-1,
                                     color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None):
         """a torsional spring-damper as ObjectConnectorUser on the rigid markers of mbs.CreateTorsionalSpringDamper,
-        with its arguments and its torque about the axis; the angle is that of the relative rotation in (-pi, pi], so
-        unlimitedRotations must be False; drawn by a graphicsDataUserFunction
+        with its arguments and its torque about the axis; with unlimitedRotations, the angle continues over the turns by
+        a data node that the post-Newton step updates, as the built-in item (#3218); drawn by a graphicsDataUserFunction
 
         Args:
             name: as in mbs.CreateTorsionalSpringDamper
@@ -773,7 +849,8 @@ class UserItemCreator:
             torque: as in mbs.CreateTorsionalSpringDamper; a number or a named exudyn.symbolic.Real
             useGlobalFrame: as in mbs.CreateTorsionalSpringDamper
             springTorqueUserFunction: refused if given: the torque is the forceUserFunction of the connector
-            unlimitedRotations: must be False: the turns need a data coordinate, which the symbolic system does not take
+            unlimitedRotations: as in mbs.CreateTorsionalSpringDamper: True counts the turns in a NodeGenericData; False
+                gives the angle in (-pi, pi]; the items with and without share a recording each
             show: as in mbs.CreateTorsionalSpringDamper
             drawSize: the diameter of a cylinder along the axis; not positive: a line
             color: the color of the drawing; the default: grey
@@ -785,8 +862,6 @@ class UserItemCreator:
         """
         _Refuse('CreateTorsionalSpringDamper', 'springTorqueUserFunction', springTorqueUserFunction, 0,
                 'the torque is the forceUserFunction of the connector')
-        _Refuse('CreateTorsionalSpringDamper', 'unlimitedRotations', unlimitedRotations, False,
-                'the turns need a data coordinate; pass unlimitedRotations=False')
         _Refuse('CreateTorsionalSpringDamper', 'bodyNumbers', bodyNumbers, None, 'use itemNumbers')
         _Refuse('CreateTorsionalSpringDamper', 'bodyOrNodeList', bodyOrNodeList, None, 'use itemNumbers')
         if any(isinstance(item, exudyn.MarkerIndex) for item in itemNumbers):
@@ -817,12 +892,16 @@ class UserItemCreator:
                                           color=drawColor, nTiles=8)]
             return [graphics.Lines([p - 0.5*length*A[:, 2], p + 0.5*length*A[:, 2]], color=drawColor)]
 
-        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=markers,
+        functions = _torsionalSpringDamperFunctions[bool(unlimitedRotations)]
+        data = (mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0], numberOfDataCoordinates=1)) if unlimitedRotations
+                else exudyn.InvalidIndex())
+        connector = mbs.AddObject(eii.ObjectConnectorUser(name=name, markerNumbers=markers, nodeNumber=data,
                                                           parameters=_Numbers([stiffness, damping, offset, velocityOffset, torque]),
                                                           requestedMarkerType=exudyn.MarkerType.Position | exudyn.MarkerType.Orientation,
-                                                          forceUserFunction=_UFtorsionalSpringDamperForce,
+                                                          **dict(functions),
                                                           visualization=eii.VObjectConnectorUser(show=show, graphicsDataUserFunction=UFgraphics)))
         self.items['torsionalSpringDamper'].append(connector)
+        self._variants[int(connector)] = functions
         self._KeepParameters(connector, [stiffness, damping, offset, velocityOffset, torque])
         return connector
 

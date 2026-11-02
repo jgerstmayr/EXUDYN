@@ -168,8 +168,11 @@ linear algebra by scipy.sparse.
 the Newton iteration and the update of the algorithmic accelerations of `CSolverImplicitSecondOrder.cpp`, the
 Jacobian by `ODE2ResidualLHSJacobian(q, q_t, q_tt, t, 1, gamma', beta')` - exact for a SymbolicSystem, with the term
 d(M q_tt)/dq that Exudyn leaves out, which changes the iterates, not the solution -, sparse LU by scipy, the
-convergence as `CSolverBase::Newton` (relative to the initial residual or absolute, weighted per coordinate), a
-constant step size: a Newton iteration that does not converge raises. symbolicGeneralizedAlphaTest.py: equal to
+convergence as `CSolverBase::Newton` (relative to the initial residual or absolute, weighted per coordinate); a
+Newton iteration that does not converge raises. With `adaptiveStep`, the step size of `CSolverBase::SolveSteps`: a
+step rejected by the post-Newton step - a recommended step size below the current one, or no convergence of the
+discontinuous iteration - is repeated with the smaller step, which grows again after `adaptiveStepRecoverySteps` easy
+steps (#3220). symbolicGeneralizedAlphaTest.py: equal to
 `SolveDynamic` to 1e-10 relative with relativeTolerance 1e-10. The constraints and the index-2 form come with
 RG12.51.4.
 
@@ -308,8 +311,8 @@ a `SymbolicSystem` also the solution file and the sensors of mbs (section 3).
 
 The first solvers, before generalized-alpha: they need no Jacobian and no constraints, so simple user items suffice -
 mass points and spring-dampers (RG12.55.2; the spring-damper as ObjectConnectorUser with a symbolic force function,
-#3119), and before them an ObjectGenericODE2 or user bodies with symbolic forces. Constant step size
-$h = (t_{end} - t_{start})/n$ from `timeIntegration.startTime`, `endTime`, `numberOfSteps`; the method from
+#3119), and before them an ObjectGenericODE2 or user bodies with symbolic forces. The step size
+$h = (t_{end} - t_{start})/n$, smaller where a post-Newton step rejects a step (#3220), from `timeIntegration.startTime`, `endTime`, `numberOfSteps`; the method from
 `timeIntegration.solverType` (or an argument, as `SolveDynamic(solverType=...)`). `SolveExplicit(system,
 simulationSettings, solverType)` in `exudyn/symbolics/systemModel.py` (#3112):
 

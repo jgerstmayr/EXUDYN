@@ -211,6 +211,7 @@ symbolicModuleTest
 symbolicNumpyCompatibilityTest
 symbolicOnePassJacobianTest
 symbolicOptimizeTest
+symbolicSolversAdaptiveStepTest
 symbolicSparseMatrixProductTest
 symbolicSparseMatrixTest
 symbolicStatisticsTest
@@ -226,6 +227,7 @@ symbolicSystemParametersTest
 symbolicSystemTest
 symbolicSystemVariablesTest
 symbolicUserConnectorsTest
+symbolicUserContactFrictionTest
 symbolicUserContactTest
 symbolicUserFunctionCopyTest
 symbolicUserFunctionSignaturesTest
@@ -235,6 +237,7 @@ symbolicUserItemsDrawingTest
 symbolicUserItemsTest
 symbolicUserJointsTest
 symbolicUserRigidBodiesTest
+symbolicUserTorsionalTurnsTest
 symbolicUtilitiesTest
 symbolicVectorDiffTest
 symbolicVectorUserFunctionTest
