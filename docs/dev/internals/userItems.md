@@ -160,9 +160,19 @@ center of a user mass point, is on a marker of the body (#3207).
 | CreateTorsionalSpringDamper | ObjectConnectorUser on two rigid markers, the turns in a data node with `unlimitedRotations` (#3218) |
 | CreateRigidBodySpringDamper | ObjectConnectorUser on two rigid markers, the joint rotations among the parameters, Tait-Bryan or intrinsic (#3193) |
 | CreateSphereSphereContact | ObjectConnectorUser with a data node of the gap and the impact velocity, the post-Newton step of ObjectContactSphereSphere, friction on rigid markers (#3197, #3219) |
-| CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint, CreateDistanceConstraint | ObjectJointUser on the rigid markers of the built-in joints, drawn by a graphicsDataUserFunction (#3140, #3147) |
+| CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint, CreateDistanceConstraint | ObjectJointUser on the rigid markers of the built-in joints, drawn by a graphicsDataUserFunction (#3140, #3147); the constraint functions written, their Jacobians by `JointJacobianUserFunction` (#3235) |
 | CreateCoordinateConstraint | ObjectGenericDAE with a NodeGenericAE (#3193) |
 | CreateForce, CreateTorque | the built-in loads on a marker of the user body |
+
+**The Jacobian of a user joint** (#3235): `JointJacobianUserFunction` builds once per number of parameters, for
+numbers and for recordings, an `esym.Function` of the derivative of the constraints by the 12 variations of the two
+frames - the rotation `(I + skew(theta)) A` written by its components, so that the terms of the variations,
+zero, go -, written by codeExport as a Python function of the frames and the parameters ('numpy' for numbers,
+'symbolic' for a recording, then `Optimize(level=2)`). The symbolic counterpart of the automatic differentiation of the
+C++ joints on the connector interface (`ComputeConstraintEquationsRigidDiff`). The recorded Jacobians of the joints
+have 55 instead of 34 operations (revolute), 112 instead of 85 (prismatic), 32 instead of 23 (distance) of the
+hand-written ones they replace, with the same results. A recording for a kind has parameters of run-time size, so the
+number of parameters is an argument there.
 
 **Checked by the examples of the Create functions**: symbolicUserItemsCreateExamplesTest.py runs the Example of the
 docstring of each Create function of mbs that UserItemCreator has, once as it is and once with `UserItemCreator(mbs)`

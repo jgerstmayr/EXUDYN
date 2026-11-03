@@ -707,6 +707,14 @@ class Twist:
         """True if velocity and angular velocity are equal, component by component."""
         ...
     @overload
+    def __add__(self, other: Twist) -> Twist: 
+        """Twist0 + twist1, the sum of the velocities and of the angular velocities, a Twist (#3235)."""
+        ...
+    @overload
+    def __sub__(self, other: Twist) -> Twist: 
+        """Twist1 - twist0, the difference of the velocities and of the angular velocities, a Twist: LocalTwist(HT0, twist1 - twist0) gives [A0^T (v1 - v0), A0^T (omega1 - omega0)] (#3235)."""
+        ...
+    @overload
     def __copy__(self) -> Twist: 
         """A copy, for copy.copy(twist)."""
         ...

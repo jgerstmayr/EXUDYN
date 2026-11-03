@@ -2,10 +2,14 @@
   "number": 3111,
   "title": "exudyn/misc/symbolicUserItems.py: user items with the interfaces of the built-in items",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "revision2026c step RG12.55: a collection of user items with symbolic user functions whose creation has the same interface as the built-in items of itemInterface (a user rigid body as ObjectRigidBody, parameters the user item lacks refused or ignored with a note), so that the same systems are built with the same calls: at least mass point 3D, rigid body 3D, revolute, prismatic, spherical and distance joint, spring-damper, torsional spring-damper, sphere-sphere contact; first the list of what a good representation of multibody systems needs. Before the symbolic system model goes deeper.",
   "dateRaised": "2026-10-26",
-  "deadline": "2027-04-24"
+  "deadline": "2027-04-24",
+  "dateResolved": "2026-11-03 23:08",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.symbolics.userItems.UserItemCreator creates user items with the Create functions of mbs and their arguments: ground, mass point, rigid body, spring-damper, Cartesian, torsional and rigid-body spring-damper, sphere-sphere contact, revolute, prismatic and spherical joint, distance and coordinate constraint, force and torque; the same script builds the system of built-in or of user items, which are recorded per kind and checked against the built-in items by the examples of the Create functions.",
+  "resolvedInVersion": "1.13.340"
 }

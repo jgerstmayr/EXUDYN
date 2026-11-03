@@ -115,7 +115,9 @@ so that the inertia of a user rigid body is an expression of the parameters (#31
 of the parameters as an input of its recordings: `SetParameterValues` no longer builds the system again, and
 `ODE2RHSParameterJacobian` and `MassMatrixParameterJacobian` give the derivatives by the parameters (#3159).
 `CreateRigidBodySpringDamper`, `CreateTorsionalSpringDamper` and `CreateSphereSphereContact` have an example in their
-documentation, as the other Create functions.
+documentation, as the other Create functions. `exudyn.Twist` and `kinematics.Twist` add and subtract, `twist1 -
+twist0`; `JointJacobianUserFunction(constraintUserFunction)` of `exudyn.symbolics.userItems` gives the
+jacobianUserFunction of an ObjectJointUser from its constraint function (#3235).
 ObjectKinematicTree takes a floating base, `baseNodeNumber`, a rigid body node - NodeRigidBodyRotVecLG for the
 explicit solvers -, whose frame is the base of the tree (#1549). The tree has its own Jacobian, computed in parallel,
 which contains the derivative of the mass matrix term, `jacobianMassMatrixDerivative`: a chain of 60 links with a

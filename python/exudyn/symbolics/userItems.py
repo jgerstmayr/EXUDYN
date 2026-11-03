@@ -31,13 +31,14 @@ import exudyn.itemInterface as eii
 import exudyn.cMath as cMath
 import exudyn.graphics as graphics
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
+from exudyn.symbolics.codeExport import ToFunction
 import exudyn.symbolics.kinematics as su
 from exudyn.symbolics.utilities import IfThenElse
 from exudyn.rigidBodyUtilities import RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, ComputeOrthonormalBasis
 from exudyn.misc.mainSystemExtensions import GetMarkersPosRot, JointPreCheckCalcBodyMarkers, _FrameFromHT
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
-__all__ = ['ParameterBindings', 'UserItemCreator']
+__all__ = ['JointJacobianUserFunction', 'ParameterBindings', 'UserItemCreator']
 
 
 #the mass point, ObjectUserBody on a NodePoint, parameters [mass]: as ObjectMassPoint, M = m I, the position of a local
@@ -135,7 +136,7 @@ def _UFspringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoord
     delta = HT1.translation - HT0.translation
     length = cMath.sqrt(delta @ delta)
     axis = (1/length)*delta
-    force = (parameters[0]*(length - parameters[2]) + parameters[1]*(axis @ (twist1.velocity - twist0.velocity) - parameters[4])
+    force = (parameters[0]*(length - parameters[2]) + parameters[1]*(axis @ (twist1 - twist0).velocity - parameters[4])
              + parameters[3])
     return np.hstack([force*axis, -force*axis])
 
@@ -273,7 +274,7 @@ _sphereSphereContactFunctions = {(restitution, friction): _SphereSphereContactFu
 #offset (3)]: as ObjectConnectorCartesianSpringDamper, f = k (p1 - p0 - offset) + d (v1 - v0) per global component,
 #pulling marker 0 towards marker 1 for a positive component (#3193)
 def _UFcartesianSpringDamperForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
-    (delta, velocity) = (HT1.translation - HT0.translation, twist1.velocity - twist0.velocity)
+    (delta, velocity) = (HT1.translation - HT0.translation, (twist1 - twist0).velocity)
     force = [parameters[i]*(delta[i] - parameters[6 + i]) + parameters[3 + i]*velocity[i] for i in range(3)]
     return _Vector(force + [-x for x in force], _Functions(delta))
 
@@ -297,7 +298,8 @@ def _RigidBodySpringDamperForce(HT0, twist0, HT1, twist1, parameters, intrinsic)
     else:
         (rotation, Aj) = (relative.GetRxyz(), H0.rotation)
         u = [relative.translation[i] for i in range(3)] + [rotation[i] for i in range(3)]
-    (velocity, angularVelocity) = (Aj.T @ (twist1.velocity - twist0.velocity), Aj.T @ (twist1.angularVelocity - twist0.angularVelocity))
+    relative = su.LocalTwist(su.HT(Aj), twist1 - twist0) #[Aj^T (v1 - v0), Aj^T (omega1 - omega0)], as the built-in connector
+    (velocity, angularVelocity) = (relative.velocity, relative.angularVelocity)
     v = [velocity[i] for i in range(3)] + [angularVelocity[i] for i in range(3)]
     f = [sum(parameters[6*i + j]*(u[j] - parameters[72 + j]) + parameters[36 + 6*i + j]*v[j] for j in range(6)) for i in range(6)]
     (force, torque) = (Aj @ _Vector(f[0:3], F), Aj @ _Vector(f[3:6], F))
@@ -315,11 +317,70 @@ def _RigidBodySpringDamperFunctions(intrinsic):
 
 _rigidBodySpringDamperFunctions = {intrinsic: _RigidBodySpringDamperFunctions(intrinsic) for intrinsic in [False, True]}
 
+def _JointJacobianProgram(constraintUserFunction, nParameters, format):
+    #the derivative of the constraints of the varied frames by the variations, as Python function of format of
+    #(t, R0, p0, R1, p1, parameters, variations), written by exudyn.symbolics.codeExport from one esym.Function
+    esym = exudyn.symbolic
+    scope = esym.VariableSet() #the names of this function, in a scope of their own (#3208)
+    t = scope.Add('t', 0.)
+    (R0, p0, R1, p1) = (scope.Add('R0', np.eye(3)), scope.Add('p0', np.zeros(3)), scope.Add('R1', np.eye(3)), scope.Add('p1', np.zeros(3)))
+    parameters = scope.Add('parameters', np.zeros(nParameters))
+    variations = scope.Add('variations', np.zeros(12))
+
+    def Varied(R, p, k):
+        #(I + skew(theta)) R and p + dp by their components, so that the terms of the variations, zero, are removed
+        (dp, theta) = ([variations[6*k + i] for i in range(3)], [variations[6*k + 3 + i] for i in range(3)])
+        skew = [[None, (-1., 2), (1., 1)], [(1., 2), None, (-1., 0)], [(-1., 1), (1., 0), None]]
+        rotation = [[R[i, j] + sum(skew[i][n][0]*theta[skew[i][n][1]]*R[n, j] for n in range(3) if skew[i][n] is not None)
+                     for j in range(3)] for i in range(3)]
+        return su.HT(esym.Matrix(rotation), esym.Vector([p[i] + dp[i] for i in range(3)]))
+    c = constraintUserFunction(None, t, 0, Varied(R0, p0, 0), Varied(R1, p1, 1), parameters)
+    c = c if isinstance(c, esym.Vector) else esym.Vector([c[i] for i in range(len(c))])
+    jacobian = esym.Function(esym.Jacobian(c, variations), scope, 'jointJacobian')
+    return ToFunction(jacobian.GetFlatProgramData(), format)
+
+def JointJacobianUserFunction(constraintUserFunction, numberOfParameters=None):
+    """the jacobianUserFunction of an ObjectJointUser from its constraintUserFunction (#3235): the derivative of the
+    constraints by the variations [dp0, theta0, dp1, theta1] of the frames of the two markers - their translations and
+    global rotation increments, A -> (I + skew(theta)) A, p -> p + dp -, by esym.Jacobian of the constraints of the
+    varied frames, at zero variation; the counterpart of the automatic differentiation of the built-in joints. The
+    constraint function must compute with numbers and with symbolic values, as with exudyn.symbolics.kinematics, and it
+    is called once with mbs None and itemNumber 0 to build the derivative; the jacobianUserFunction computes numbers and
+    is recorded
+
+    Args:
+        constraintUserFunction: the Python function constraintUserFunction(mbs, t, itemNumber, HT0, HT1, parameters)
+        numberOfParameters: the length of the parameters of the joint; None: the length of the parameters of the call,
+            which a recording for a kind of items, of parameters of run-time size, does not have
+
+    Returns:
+        the Python function jacobianUserFunction(mbs, t, itemNumber, HT0, HT1, parameters), which returns the matrix
+        (number of constraints x 12)
+
+    Example:
+        def UFconstraint(mbs, t, itemNumber, HT0, HT1, parameters): #a spherical joint
+            return HT1.translation - HT0.translation
+        mbs.AddObject(ObjectJointUser(markerNumbers=[m0, m1], numberOfConstraints=3,
+                                      constraintUserFunction=UFconstraint,
+                                      jacobianUserFunction=JointJacobianUserFunction(UFconstraint)))
+    """
+    programs = {} #per number of parameters and format, built at the first call
+
+    def UFjacobian(mbs, t, itemNumber, HT0, HT1, parameters):
+        symbolic = isinstance(HT0.rotation, exudyn.symbolic.Matrix) #while it is recorded
+        key = (len(parameters) if numberOfParameters is None else numberOfParameters, symbolic)
+        if key not in programs:
+            programs[key] = _JointJacobianProgram(constraintUserFunction, key[0], 'symbolic' if symbolic else 'numpy')
+        jacobian = programs[key](t, HT0.rotation, HT0.translation, HT1.rotation, HT1.translation, parameters, np.zeros(12))
+        if symbolic: #the terms of the variations, zero, removed
+            return exudyn.symbolic.Optimize(jacobian, level=2)
+        return np.array(jacobian, dtype=float)
+    return UFjacobian
+
 #the joints, ObjectJointUser on two rigid markers whose frames are the joint frame: the equations of the built-in joint
 #at position level - the global difference of the positions, as the Lagrange multipliers of the built-in joints are
-#global -, and their derivative by the translations and global rotation increments [p0, theta0, p1, theta1] of the
-#markers, R(theta) = (I + skew(theta)) R. For the scalar product u.v of an axis u of marker 0 and an axis v of
-#marker 1 the rotation columns are u x v and v x u
+#global -; their derivative by the translations and global rotation increments of the markers by
+#JointJacobianUserFunction
 def _Column(R, j):
     return [R[i, j] for i in range(3)]
 
@@ -328,13 +389,6 @@ def _Dot(u, v):
 
 def _Cross(u, v):
     return [u[1]*v[2] - u[2]*v[1], u[2]*v[0] - u[0]*v[2], u[0]*v[1] - u[1]*v[0]]
-
-def _JacobianRows(rows, functions):
-    #the n x 12 matrix of rows of four blocks [p0, theta0, p1, theta1], None a zero block
-    return _Matrix([[x for block in row for x in (block if block is not None else [0, 0, 0])] for row in rows], functions)
-
-def _Unit(k, sign=1):
-    return [sign if i == k else 0 for i in range(3)]
 
 def _Distance(HT0, HT1):
     #the components of the global difference of the positions of the markers
@@ -348,15 +402,6 @@ def _UFrevoluteJointConstraint(mbs, t, itemNumber, HT0, HT1, parameters):
     z0 = _Column(A0, 2)
     return _Vector(_Distance(HT0, HT1) + [_Dot(z0, _Column(A1, 0)), _Dot(z0, _Column(A1, 1))], _Functions(A0))
 
-def _UFrevoluteJointJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
-    (A0, A1) = (HT0.rotation, HT1.rotation)
-    z0 = _Column(A0, 2)
-    rows = [[_Unit(k, -1), None, _Unit(k), None] for k in range(3)]
-    for j in [0, 1]:
-        v = _Column(A1, j)
-        rows.append([None, _Cross(z0, v), None, _Cross(v, z0)])
-    return _JacobianRows(rows, _Functions(A0))
-
 #the prismatic joint, as ObjectJointPrismaticX: the relative position along the y- and z-axes of marker 0, and the
 #axes z0.y1, z0.x1, x0.y1; no parameters
 def _UFprismaticJointConstraint(mbs, t, itemNumber, HT0, HT1, parameters):
@@ -366,33 +411,15 @@ def _UFprismaticJointConstraint(mbs, t, itemNumber, HT0, HT1, parameters):
     (x1, y1) = (_Column(A1, 0), _Column(A1, 1))
     return _Vector([_Dot(y0, d), _Dot(z0, d), _Dot(z0, y1), _Dot(z0, x1), _Dot(x0, y1)], _Functions(A0))
 
-def _UFprismaticJointJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
-    (A0, A1) = (HT0.rotation, HT1.rotation)
-    d = _Distance(HT0, HT1)
-    (x0, y0, z0) = (_Column(A0, 0), _Column(A0, 1), _Column(A0, 2))
-    (x1, y1) = (_Column(A1, 0), _Column(A1, 1))
-    rows = [[[-x for x in u], _Cross(u, d), u, None] for u in [y0, z0]]
-    rows += [[None, _Cross(u, v), None, _Cross(v, u)] for (u, v) in [(z0, y1), (z0, x1), (x0, y1)]]
-    return _JacobianRows(rows, _Functions(A0))
-
 #the spherical joint, as ObjectJointSpherical with all axes constrained: the relative position; no parameters
 def _UFsphericalJointConstraint(mbs, t, itemNumber, HT0, HT1, parameters):
     return _Vector(_Distance(HT0, HT1), _Functions(HT0.translation))
-
-def _UFsphericalJointJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
-    return _JacobianRows([[_Unit(k, -1), None, _Unit(k), None] for k in range(3)], _Functions(HT0.translation))
 
 #the distance constraint, as ObjectConnectorDistance: |p1 - p0| - distance; parameters [distance]
 def _UFdistanceConstraint(mbs, t, itemNumber, HT0, HT1, parameters):
     F = _Functions(HT0.translation)
     d = _Distance(HT0, HT1)
     return _Vector([F.sqrt(_Dot(d, d)) - parameters[0]], F)
-
-def _UFdistanceConstraintJacobian(mbs, t, itemNumber, HT0, HT1, parameters):
-    F = _Functions(HT0.translation)
-    d = _Distance(HT0, HT1)
-    axis = [x*(1/F.sqrt(_Dot(d, d))) for x in d]
-    return _JacobianRows([[[-x for x in axis], None, axis, None]], F)
 
 #the user functions of each kind of item, which Record records once per kind; a kind of variants - a Python constant
 #of the Create function that changes the structure of the computation - has the functions of each variant in the item
@@ -419,13 +446,13 @@ _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
                   'rigidBodySpringDamper': _rigidBodySpringDamperFunctions[True],
                   'coordinateConstraint': [],
                   'revoluteJoint': [('constraintUserFunction', _UFrevoluteJointConstraint),
-                                    ('jacobianUserFunction', _UFrevoluteJointJacobian)],
+                                    ('jacobianUserFunction', JointJacobianUserFunction(_UFrevoluteJointConstraint, 0))],
                   'prismaticJoint': [('constraintUserFunction', _UFprismaticJointConstraint),
-                                     ('jacobianUserFunction', _UFprismaticJointJacobian)],
+                                     ('jacobianUserFunction', JointJacobianUserFunction(_UFprismaticJointConstraint, 0))],
                   'sphericalJoint': [('constraintUserFunction', _UFsphericalJointConstraint),
-                                     ('jacobianUserFunction', _UFsphericalJointJacobian)],
+                                     ('jacobianUserFunction', JointJacobianUserFunction(_UFsphericalJointConstraint, 0))],
                   'distanceConstraint': [('constraintUserFunction', _UFdistanceConstraint),
-                                         ('jacobianUserFunction', _UFdistanceConstraintJacobian)]}
+                                         ('jacobianUserFunction', JointJacobianUserFunction(_UFdistanceConstraint, 1))]}
 #the number of equations of each kind of joint
 _jointConstraints = {'revoluteJoint': 5, 'prismaticJoint': 5, 'sphericalJoint': 3, 'distanceConstraint': 1}
 

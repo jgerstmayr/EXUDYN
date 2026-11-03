@@ -687,6 +687,24 @@ class Twist:
             return Twist(velocity)
         return Twist(_VectorPart(velocity), _VectorPart(angularVelocity))
 
+    def __add__(self, other):
+        """twist0 + twist1, the sum of the velocities and of the angular velocities; the other an exudyn.Twist or Twist
+        (#3235)"""
+        return Twist(_Plus(self.velocity, other.velocity), _Plus(self.angularVelocity, other.angularVelocity))
+
+    def __radd__(self, other):
+        """exudyn.Twist + Twist"""
+        return Twist(_Plus(other.velocity, self.velocity), _Plus(other.angularVelocity, self.angularVelocity))
+
+    def __sub__(self, other):
+        """twist1 - twist0, the difference of the velocities and of the angular velocities, so that LocalTwist(HT0,
+        twist1 - twist0) is [A0^T (v1 - v0), A0^T (omega1 - omega0)]; the other an exudyn.Twist or Twist (#3235)"""
+        return Twist(_Plus(self.velocity, other.velocity, -1.), _Plus(self.angularVelocity, other.angularVelocity, -1.))
+
+    def __rsub__(self, other):
+        """exudyn.Twist - Twist"""
+        return Twist(_Plus(other.velocity, self.velocity, -1.), _Plus(other.angularVelocity, self.angularVelocity, -1.))
+
     def __repr__(self):
         return 'kinematics.Twist(velocity=' + str(self.velocity) + ', angularVelocity=' + str(self.angularVelocity) + ')'
 

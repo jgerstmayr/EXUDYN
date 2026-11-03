@@ -1,0 +1,15 @@
+{
+  "number": 3235,
+  "title": "The difference of two twists, and the Jacobian of a user joint from its constraint function by esym.Jacobian",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The C++ connectors compute the relative velocity A0^T (v1 - v0) and A0^T (omega1 - omega0); the user items write it by hand. A user joint (ObjectJointUser) needs its jacobianUserFunction, the derivative of its constraints by the variations [dp0, theta0, dp1, theta1] of its marker frames, which the four joints of UserItemCreator write by hand; the C++ joints take it by automatic differentiation on the connector interface. Decided (maintainer 2026-11-03, proposals of revision2026c step RG12.55.13): twist1 - twist0 (and +) for exudyn.Twist and kinematics.Twist, so that A0^T (v1 - v0) is LocalTwist(HT0, twist1 - twist0); the Jacobian of a user joint from its constraint function by esym.Jacobian of the varied frames (A -> (I + skew(theta)) A, p -> p + dp) at zero, for numbers and recordings, replacing the four hand-written jacobianUserFunction.",
+  "dateRaised": "2026-11-03",
+  "deadline": "2027-05-02",
+  "dateResolved": "2026-11-03 23:08",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.Twist and exudyn.symbolics.kinematics.Twist add and subtract (twist1 - twist0); JointJacobianUserFunction(constraintUserFunction) of exudyn.symbolics.userItems gives the jacobianUserFunction of an ObjectJointUser from its constraint function, for numbers and recordings; the joints of UserItemCreator use it.",
+  "resolvedInVersion": "1.13.341"
+}

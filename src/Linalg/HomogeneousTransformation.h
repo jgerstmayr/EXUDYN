@@ -348,6 +348,9 @@ public:
 	Twist(const Vector3D& velocityInit, const Vector3D& angularVelocityInit) : velocity(velocityInit), angularVelocity(angularVelocityInit) {}
 
 	bool operator==(const Twist& other) const { return velocity == other.velocity && angularVelocity == other.angularVelocity; }
+	//! the sum and the difference of the velocities and of the angular velocities, e.g. twist1 - twist0 (#3235)
+	Twist operator+(const Twist& other) const { return Twist(velocity + other.velocity, angularVelocity + other.angularVelocity); }
+	Twist operator-(const Twist& other) const { return Twist(velocity - other.velocity, angularVelocity - other.angularVelocity); }
 
 	friend std::ostream& operator<<(std::ostream& os, const Twist& twist)
 	{

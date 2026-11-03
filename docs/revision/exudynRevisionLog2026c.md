@@ -5729,6 +5729,29 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg12-55-13"></a>
+### RG12.55.13, RG12.55 — The difference of twists; the Jacobian of a user joint from its constraints (2026-11-03, #3235)
+- Maintainer 2026-11-03: the proposals are good to go.
+- `Twist operator+/-` in C++, `__add__`/`__sub__` of exudyn.Twist (NotImplemented for another type, so that
+  `exudyn.Twist - kinematics.Twist` reaches `__rsub__`), and of kinematics.Twist; the spring-damper, the Cartesian and
+  the rigid-body spring-damper of UserItemCreator on them, the last by `LocalTwist(HT(Aj), twist1 - twist0)`.
+- `JointJacobianUserFunction(constraintUserFunction, numberOfParameters=None)` in exudyn.symbolics.userItems: the
+  constraint function called once with the varied frames of a VariableSet (R0, p0, R1, p1, parameters, variations),
+  `esym.Jacobian` by the 12 variations, one esym.Function, written by codeExport ('numpy' for numbers, 'symbolic' for
+  a recording, there `Optimize(level=2)` for the zero variations). First with `(I + skew(theta)) @ R` as matrix
+  product: 175 / 353 operations for the revolute / prismatic joint against 34 / 85 by hand; the rotation by its
+  nonzero components: 55 / 112, the distance constraint 32 / 23, the spherical joint 0 / 0. The numbers equal the
+  hand-written Jacobians to 6e-17; symbolicUserJointsTest.py unchanged (recorded 4.3385e-13, the same digits),
+  symbolicSystemItemJacobiansTest.py 5.0e-12 as before.
+- A recording for a kind (Record of UserItemCreator) has `parameters` of run-time size, without len(): the number of
+  parameters is an argument, 0 for the three joints, 1 for the distance constraint.
+- The four hand-written jacobianUserFunction, `_JacobianRows` and `_Unit` removed.
+- symbolicJointJacobianTest.py (new): the screw joint of userJointTest.py by its constraints alone, its Jacobian within
+  7.4e-11 of central differences of the varied frames; the angle 15.2990331116233 with the Python and the recorded
+  functions (9e-14 apart), the angle of the hand-written Jacobian in userJointTest.py to 3e-14; the difference of
+  twists, numbers and symbolic.
+- RG12.55 closed with all its sub-steps.
+
 <a id="rg12-67-6"></a>
 ### RG12.67.6, RG12.73.3, RG12.67, RG12.73 — The designs of the symbolic parameters and of the names of variables into the documentation (2026-11-03, #3159)
 - What is implemented of docs/dev/design/symbolicParameters.md and symbolicVariableNames.md is in the manual and the

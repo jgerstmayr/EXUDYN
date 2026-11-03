@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 329 | 1.13.339 |
+| 1.13 | Newborn | 331 | 1.13.341 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.341** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The difference of two twists, and the Jacobian of a user joint from its constraint function by esym.Jacobian (#3235)
+  - description: The C++ connectors compute the relative velocity A0^T (v1 - v0) and A0^T (omega1 - omega0); the user items write it by hand. A user joint (ObjectJointUser) needs its jacobianUserFunction, the derivative of its constraints by the variations \[dp0, theta0, dp1, theta1\] of its marker frames, which the four joints of UserItemCreator write by hand; the C++ joints take it by automatic differentiation on the connector interface. Decided (maintainer 2026-11-03, proposals of revision2026c step RG12.55.13): twist1 - twist0 (and +) for exudyn.Twist and kinematics.Twist, so that A0^T (v1 - v0) is LocalTwist(HT0, twist1 - twist0); the Jacobian of a user joint from its constraint function by esym.Jacobian of the varied frames (A -\> (I + skew(theta)) A, p -\> p + dp) at zero, for numbers and recordings, replacing the four hand-written jacobianUserFunction.
+  - **notes:** exudyn.Twist and exudyn.symbolics.kinematics.Twist add and subtract (twist1 - twist0); JointJacobianUserFunction(constraintUserFunction) of exudyn.symbolics.userItems gives the jacobianUserFunction of an ObjectJointUser from its constraint function, for numbers and recordings; the joints of UserItemCreator use it.
+  - date resolved: **2026-11-03 23:08**, date raised: 2026-11-03
+- **1.13.340** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn/misc/symbolicUserItems.py: user items with the interfaces of the built-in items (#3111)
+  - description: revision2026c step RG12.55: a collection of user items with symbolic user functions whose creation has the same interface as the built-in items of itemInterface (a user rigid body as ObjectRigidBody, parameters the user item lacks refused or ignored with a note), so that the same systems are built with the same calls: at least mass point 3D, rigid body 3D, revolute, prismatic, spherical and distance joint, spring-damper, torsional spring-damper, sphere-sphere contact; first the list of what a good representation of multibody systems needs. Before the symbolic system model goes deeper.
+  - **notes:** exudyn.symbolics.userItems.UserItemCreator creates user items with the Create functions of mbs and their arguments: ground, mass point, rigid body, spring-damper, Cartesian, torsional and rigid-body spring-damper, sphere-sphere contact, revolute, prismatic and spherical joint, distance and coordinate constraint, force and torque; the same script builds the system of built-in or of user items, which are recorded per kind and checked against the built-in items by the examples of the Create functions.
+  - date resolved: **2026-11-03 23:08**, date raised: 2026-10-26
 - **1.13.339** `FIX` `HIGH` `LOW EFF` `raised by: S. Weyrer` `resolved by: Claude-SW` Invert template missing (#3234)
   - description: Compilation problems on Linux due to missing invert template in Matrix.cpp (proposed 2026-11-02 by S. Weyrer)
   - **notes:** Add the template for invert to fix problems on Linux

@@ -160,4 +160,4 @@ exu.sys['testResult'] = (p[0]**2 + p[1]**2)**0.5
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userJointTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicJointJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicJointJacobianTest.py) (TM), [`userJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userJointTest.py) (TM)

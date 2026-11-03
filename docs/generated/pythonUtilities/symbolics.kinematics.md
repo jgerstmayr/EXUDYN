@@ -334,7 +334,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chatGPTupda
 (sec-kinematics-pointvelocity)=
 ## Function: PointVelocity
 
-[`PointVelocity(HT, twist, localPoint)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L701)
+[`PointVelocity(HT, twist, localPoint)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L719)
 
 - **function description**: the velocity of a point fixed in the frame HT, given by its position in the frame, v + omega x (A localPoint); for an exudyn.HT and an exudyn.Twist computed by exudyn.cUtilities.PointVelocity
 - **input**:
@@ -350,7 +350,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicHTT
 (sec-kinematics-localtwist)=
 ## Function: LocalTwist
 
-[`LocalTwist(HT, twist)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L717)
+[`LocalTwist(HT, twist)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L735)
 
 - **function description**: the twist in the components of the frame HT, [A^T v, A^T omega]; for an exudyn.HT and an exudyn.Twist computed by exudyn.cUtilities.LocalTwist
 - **input**:
@@ -359,13 +359,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicHTT
 - **output**: the twist in local components, an exudyn.Twist for exudyn.HT and exudyn.Twist, else a kinematics.Twist
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicHTTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicHTTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicHTTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicHTTest.py) (TM), [`symbolicJointJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicJointJacobianTest.py) (TM)
 
 
 (sec-kinematics-relativetwist)=
 ## Function: RelativeTwist
 
-[`RelativeTwist(HT0, twist0, HT1, twist1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L733)
+[`RelativeTwist(HT0, twist0, HT1, twist1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L751)
 
 - **function description**: the velocity of frame 1 relative to frame 0 in the components of frame 0, the time derivative of HT0.Relative(HT1): [A0^T (v1 - v0 - omega0 x (p1 - p0)), A0^T (omega1 - omega0)]; for exudyn.HT and exudyn.Twist computed by exudyn.cUtilities.RelativeTwist
 - **input**:
@@ -525,6 +525,38 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`homogeneous
   - `velocity`: 3D velocity of the origin, or a kinematics.Twist to copy; None for zero
   - `angularVelocity`: 3D angular velocity, None for zero
 - **output**: kinematics.Twist
+
+
+(sec-kinematics-twist---add--)=
+### Class function: __add__
+
+[`__add__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L690)
+
+- **class function description**: twist0 + twist1, the sum of the velocities and of the angular velocities; the other an exudyn.Twist or Twist (#3235)
+
+
+(sec-kinematics-twist---radd--)=
+### Class function: __radd__
+
+[`__radd__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L695)
+
+- **class function description**: exudyn.Twist + Twist
+
+
+(sec-kinematics-twist---sub--)=
+### Class function: __sub__
+
+[`__sub__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L699)
+
+- **class function description**: twist1 - twist0, the difference of the velocities and of the angular velocities, so that LocalTwist(HT0, twist1 - twist0) is [A0^T (v1 - v0), A0^T (omega1 - omega0)]; the other an exudyn.Twist or Twist (#3235)
+
+
+(sec-kinematics-twist---rsub--)=
+### Class function: __rsub__
+
+[`__rsub__(self, other)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/symbolics/kinematics.py#L704)
+
+- **class function description**: exudyn.Twist - Twist
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMassPoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMassPoint.py) (Ex), [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`ROSTurtle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSTurtle.py) (Ex), [`symbolicUserFunctionSignaturesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserFunctionSignaturesTest.py) (TM)

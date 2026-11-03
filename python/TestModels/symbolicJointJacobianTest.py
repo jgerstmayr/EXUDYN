@@ -1,0 +1,105 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The Jacobian of a user joint from its constraint function, JointJacobianUserFunction of
+#           exudyn.symbolics.userItems (#3235), and the difference of two twists: a screw joint of ObjectJointUser
+#           written by its constraints alone. Its Jacobian by the variations [dp0, theta0, dp1, theta1] of the marker
+#           frames equals central differences of the constraints of the varied frames; a body on the screw joint,
+#           driven by a torque and an axial force, turns by the analytic angle within the error of the integration,
+#           with the Python functions and with the recorded ones. LocalTwist(HT0, twist1 - twist0) is [A0^T (v1 - v0), A0^T (omega1 - omega0)], for
+#           exudyn.Twist and for the symbolic Twist of exudyn.symbolics.kinematics.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-03
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.advancedUtilities import CreateSymbolicUserFunction
+from exudyn.symbolics.userItems import JointJacobianUserFunction
+import exudyn.symbolics.kinematics as su
+import exudyn.cMath as cMath
+import numpy as np
+esym = exu.symbolic
+
+#the screw joint along the x-axis of marker 0, the pitch in the parameters; for numbers and recordings
+def UFscrew(mbs, t, itemNumber, HT0, HT1, parameters):
+    relative = HT0.Relative(HT1) #the frame of marker 1 in the frame of marker 0
+    (Arel, d) = (relative.rotation, relative.translation)
+    phi = d[0]/parameters[0] #the angle the translation requires
+    return [Arel[0, 1], Arel[0, 2], d[1], d[2], parameters[0]*(Arel[2, 1]*cMath.cos(phi) - Arel[1, 1]*cMath.sin(phi))]
+UFscrewJacobian = JointJacobianUserFunction(UFscrew, numberOfParameters=1)
+
+#the Jacobian against central differences of the constraints of the varied frames
+rng = np.random.default_rng(2)
+(R0, R1) = (RotationVector2RotationMatrix(rng.standard_normal(3)), RotationVector2RotationMatrix(rng.standard_normal(3)))
+(p0, p1) = (rng.standard_normal(3), rng.standard_normal(3))
+parameters = np.array([0.05])
+jacobian = UFscrewJacobian(None, 0., 0, exu.HT(R0, p0), exu.HT(R1, p1), parameters)
+epsilon = 1e-6
+central = np.zeros((5, 12))
+for k in range(12):
+    results = []
+    for sign in [1, -1]:
+        variation = sign*epsilon*np.eye(12)[k]
+        frames = [su.HT((np.eye(3) + Skew(variation[6*m + 3:6*m + 6])) @ R, p + variation[6*m:6*m + 3]) for (m, R, p) in [(0, R0, p0), (1, R1, p1)]]
+        results.append(np.array(UFscrew(None, 0., 0, frames[0], frames[1], parameters), dtype=float))
+    central[:, k] = (results[0] - results[1])/(2*epsilon)
+differenceJacobian = np.max(np.abs(jacobian - central))
+exu.Print('the Jacobian of the screw joint against central differences:', differenceJacobian)
+failed = int(not differenceJacobian < 1e-8)
+
+#a body on the screw joint: the angle of the torque and the axial force, analytic
+inertia = InertiaCuboid(density=1000, sideLengths=[0.2, 0.1, 0.1])
+(pitch, torque, axialForce, endTime) = (0.05, 0.25, 0.1, 1.)
+angleAnalytic = (torque + axialForce*pitch)*endTime**2/(2*(inertia.Inertia()[0, 0] + inertia.Mass()*pitch**2))
+
+def Solve(recorded):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 0, 0] + list(eulerParameters0)))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround())))
+    joint = mbs.AddObject(ObjectJointUser(markerNumbers=[mGround, mBody], numberOfConstraints=5, parameters=[pitch],
+                                          constraintUserFunction=UFscrew, jacobianUserFunction=UFscrewJacobian))
+    if recorded: #the recordings live as long as the system
+        mbs.variables['recordings'] = [CreateSymbolicUserFunction(mbs, function, name, joint) for (function, name) in
+                                       [(UFscrew, 'constraintUserFunction'), (UFscrewJacobian, 'jacobianUserFunction')]]
+        for (recording, name) in zip(mbs.variables['recordings'], ['constraintUserFunction', 'jacobianUserFunction']):
+            mbs.SetObjectParameter(joint, name, recording)
+    mbs.AddLoad(LoadTorqueVector(markerNumber=mBody, loadVector=[torque, 0, 0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[axialForce, 0, 0]))
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 500
+    simulationSettings.timeIntegration.endTime = endTime
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.timeIntegration.newton.relativeTolerance = 1e-12
+    simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-12
+    simulationSettings.solution.file.write = False
+    mbs.SolveDynamic(simulationSettings)
+    return mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]/pitch
+angles = [Solve(recorded) for recorded in [False, True]]
+exu.Print('the angle of the screw joint, Python and recorded:', angles, ', analytic:', angleAnalytic)
+failed += int(not (abs(angles[0] - angleAnalytic) < 3e-3 and abs(angles[1] - angles[0]) < 1e-10)) #the error of the integration, as in userJointTest.py
+
+#the difference of two twists, numbers and symbolic
+(v0, w0, v1, w1) = (rng.standard_normal(3) for i in range(4))
+(twist0, twist1) = (exu.Twist(v0, w0), exu.Twist(v1, w1))
+local = su.LocalTwist(exu.HT(R0, p0), twist1 - twist0)
+differenceTwist = max(np.max(np.abs(local.velocity - R0.T @ (v1 - v0))), np.max(np.abs(local.angularVelocity - R0.T @ (w1 - w0))))
+scope = esym.VariableSet()
+velocity1 = scope.Add('velocity1', v1)
+symbolicTwist = su.Twist(velocity1, esym.Vector(list(w1))) - twist0
+differenceTwist = max(differenceTwist, np.max(np.abs(np.array(symbolicTwist.velocity.Evaluate()) - (v1 - v0))),
+                      np.max(np.abs(np.array(symbolicTwist.angularVelocity.Evaluate()) - (w1 - w0))))
+exu.Print('the difference of two twists:', differenceTwist)
+failed += int(not differenceTwist < 1e-14)
+
+u = failed
+exu.Print('solution of symbolicJointJacobianTest=', u)
+exu.sys['testResult'] = u

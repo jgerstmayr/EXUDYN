@@ -208,6 +208,7 @@ symbolicGeneralizedAlphaTest
 symbolicHTTest
 symbolicItemOutputTest
 symbolicJacobianExpressionsTest
+symbolicJointJacobianTest
 symbolicLookupTableTest
 symbolicMassMatrixDerivativeTest
 symbolicModuleTest

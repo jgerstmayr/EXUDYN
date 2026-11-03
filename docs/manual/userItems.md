@@ -93,7 +93,9 @@ itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters)`: `HT0.transl
 connector applies them through the marker Jacobians. It is the form for spring-dampers, bushings and contacts of two
 points, and it can be recorded as symbolic user function (#3119): the recording passes a `kinematics.HT` and a
 `kinematics.Twist` with the same methods, `HT0.Relative(HT1)` the frame of marker 1 seen from marker 0,
-`kinematics.RelativeTwist(HT0, twist0, HT1, twist1)` its velocity.
+`kinematics.RelativeTwist(HT0, twist0, HT1, twist1)` its velocity; `twist1 - twist0` is the difference of the
+velocities and of the angular velocities, and `kinematics.LocalTwist(HT0, twist1 - twist0)` that difference in the
+frame of marker 0, as the built-in connectors take the relative velocity (#3235).
 
 For forces at points that the function computes itself, the markerAccessUserFunction of ObjectConnectorUser gets
 `markers`, one {ref}`ConnectorMarker <sec-connectormarker>` per marker of `markerNumbers`, of any number and type. It
@@ -120,7 +122,11 @@ translations and rotation increments of the markers is given by `jacobianUserFun
 a constraint Jacobian approximated numerically gives artifacts (#3101) -, and the Lagrange multipliers are the reaction
 forces (#2976). userJointTest.py writes a screw joint over several turns: the coupling of angle and translation is
 written periodic, as $\sin(\varphi - x/h) = 0$, because an angle computed by `atan2` jumps by $2\pi$ at half a turn and
-gives no continuous constraint beyond it (#3100).
+gives no continuous constraint beyond it (#3100). `JointJacobianUserFunction(constraintUserFunction)` of
+`exudyn.symbolics.userItems` gives the jacobianUserFunction from the constraint function, the derivative of the
+constraints of the varied frames, `A -> (I + skew(theta)) A` and `p -> p + dp`, at zero
+variation, by `esym.Jacobian`; it computes numbers and is recorded, if the constraint function computes with both, as
+with `exudyn.symbolics.kinematics` (#3235). symbolicJointJacobianTest.py writes the screw joint so.
 
 MarkerBodyUser is a marker on any number of bodies: its `positionUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t,
 parameters)` gets the coordinates of the nodes of these bodies, body by body, and every built-in connector, joint, load

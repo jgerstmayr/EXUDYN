@@ -368,6 +368,22 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='__eq__',
                        isLambdaFunction = True,
                        )
 
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__add__',
+                       cName='[](const PyTwist &item, const py::object &other) -> py::object {\n            if (!py::isinstance<PyTwist>(other)) { return py::reinterpret_borrow<py::object>(Py_NotImplemented); }\n            return py::cast(PyTwist((const Twist&)item + (const Twist&)py::cast<const PyTwist&>(other))); }',
+                       description="twist0 + twist1, the sum of the velocities and of the angular velocities, a Twist (#3235)",
+                       argList=['other'], argTypes=['Twist'],
+                       returnType='Twist',
+                       isLambdaFunction = True,
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__sub__',
+                       cName='[](const PyTwist &item, const py::object &other) -> py::object {\n            if (!py::isinstance<PyTwist>(other)) { return py::reinterpret_borrow<py::object>(Py_NotImplemented); }\n            return py::cast(PyTwist((const Twist&)item - (const Twist&)py::cast<const PyTwist&>(other))); }',
+                       description="twist1 - twist0, the difference of the velocities and of the angular velocities, a Twist: LocalTwist(HT0, twist1 - twist0) gives [A0^T (v1 - v0), A0^T (omega1 - omega0)] (#3235)",
+                       argList=['other'], argTypes=['Twist'],
+                       returnType='Twist',
+                       isLambdaFunction = True,
+                       )
+
 pb.DefPyFunctionAccess(cClass=classStr, pyName='__copy__',
                        cName='[](const PyTwist &item) {\n            return PyTwist(item); }',
                        description="a copy, for copy.copy(twist)",

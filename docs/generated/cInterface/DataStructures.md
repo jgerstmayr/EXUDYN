@@ -251,6 +251,8 @@ The class **Twist** has the following **functions and structures**:
 - **`velocity`**: the velocity of the origin of the frame, global components, as read-only numpy view of the Twist, without a copy: it follows later changes of the Twist, np.array(twist.velocity) copies it (#3184)
 - **`angularVelocity`**: the angular velocity of the frame, global components, as read-only numpy view of the Twist, as velocity
 - **`__eq__(other)`**: True if velocity and angular velocity are equal, component by component
+- **`__add__(other)`**: twist0 + twist1, the sum of the velocities and of the angular velocities, a Twist (#3235)
+- **`__sub__(other)`**: twist1 - twist0, the difference of the velocities and of the angular velocities, a Twist: LocalTwist(HT0, twist1 - twist0) gives [A0^T (v1 - v0), A0^T (omega1 - omega0)] (#3235)
 - **`__copy__()`**: a copy, for copy.copy(twist)
 - **`__deepcopy__(memo)`**: a copy, for copy.deepcopy(twist)
 - **`__repr__()`**: the string representation of the Twist
