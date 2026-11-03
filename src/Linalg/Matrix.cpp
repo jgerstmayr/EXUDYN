@@ -183,6 +183,9 @@ T MatrixBase<T>::MaxNorm() const
 	return value;
 }
 
+//! Invert is called from other files, such as CObjectUserBody.cpp
+template bool MatrixBase<Real>::Invert();
+
 //! perform general matrix inverse tests; put this into test suite lateron
 namespace EXUmath {
 	void MatrixTests()

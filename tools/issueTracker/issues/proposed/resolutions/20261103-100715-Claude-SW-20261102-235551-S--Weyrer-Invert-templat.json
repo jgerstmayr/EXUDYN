@@ -1,0 +1,6 @@
+{
+  "issue": "20261102-235551-S--Weyrer-Invert-template-missing.json",
+  "notes": "Add the template for invert to fix problems on Linux",
+  "author": "Claude-SW",
+  "dateProposed": "2026-11-03"
+}
