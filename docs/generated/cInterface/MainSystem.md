@@ -424,7 +424,30 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSp
 *example*:
 
 ```python
-  #coming later
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                   sideLengths=[1,0.1,0.1]),
+                           referencePosition = [8,0,0],
+                           initialAngularVelocity = [0,1,2],
+                           gravity = [0,-9.81,0],
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                    color=exu.graphics.color.green)])
+  oGround = mbs.AddObject(ObjectGround())
+  #a bushing at the left end of the bar
+  mbs.CreateRigidBodySpringDamper(itemNumbers=[oGround, b0],
+                                  localPosition0=[7.5,0,0],
+                                  localPosition1=[-0.5,0,0],
+                                  stiffness=np.diag([1e4,1e4,1e4,1e3,1e3,1e3]),
+                                  damping=np.diag([10,10,10,1,1,1]))
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
 ```
 
 
@@ -435,7 +458,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bricardMech
 (sec-mainsystemextensions-createtorsionalspringdamper)=
 ### Function: CreateTorsionalSpringDamper
 
-[`CreateTorsionalSpringDamper(mbs, name = '', itemNumbers = [None, None], position = [0.,0.,0.], axis = [0.,0.,0.], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., torque = 0., useGlobalFrame = True, springTorqueUserFunction = 0, unlimitedRotations = True, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1066)
+[`CreateTorsionalSpringDamper(mbs, name = '', itemNumbers = [None, None], position = [0.,0.,0.], axis = [0.,0.,0.], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., torque = 0., useGlobalFrame = True, springTorqueUserFunction = 0, unlimitedRotations = True, show = True, drawSize = -1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1089)
 
 - **function description**: helper function to create TorsionalSpringDamper connector, using arguments from ObjectConnectorTorsionalSpringDamper, see there for the full documentation - NOTE that this function is added to MainSystem via Python function MainSystemCreateTorsionalSpringDamper.
 - **input**:
@@ -462,7 +485,28 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bricardMech
 *example*:
 
 ```python
-  #coming later
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                   sideLengths=[1,0.1,0.1]),
+                           referencePosition = [9.5,0,0],
+                           initialAngularVelocity = [0,0,2],
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                    color=exu.graphics.color.steelblue)])
+  oGround = mbs.AddObject(ObjectGround())
+  mbs.CreateRevoluteJoint(itemNumbers=[oGround, b0], position=[9,0,0], axis=[0,0,1],
+                          useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
+  #a torsional spring-damper about the axis of the revolute joint
+  mbs.CreateTorsionalSpringDamper(itemNumbers=[oGround, b0], position=[9,0,0], axis=[0,0,1],
+                                  stiffness=100, damping=1)
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
 ```
 
 
@@ -473,7 +517,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-mainsystemextensions-createlinearspringdamper)=
 ### Function: CreateLinearSpringDamper
 
-[`CreateLinearSpringDamper(mbs, name = '', itemNumbers = [None, None], position = [0.,0.,0.], axis = [1.,0.,0.], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., force = 0., useGlobalFrame = True, springForceUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1216)
+[`CreateLinearSpringDamper(mbs, name = '', itemNumbers = [None, None], position = [0.,0.,0.], axis = [1.,0.,0.], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., force = 0., useGlobalFrame = True, springForceUserFunction = 0, show = True, drawSize = -1, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1260)
 
 - **function description**: helper function to create a LinearSpringDamper connector, acting along an axis between two rigid bodies, using arguments from ObjectConnectorLinearSpringDamper, see there for the full documentation; usually used together with a prismatic joint - NOTE that this function is added to MainSystem via Python function MainSystemCreateLinearSpringDamper.
 - **input**:
@@ -523,7 +567,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`connectorFr
 (sec-mainsystemextensions-createrevolutejoint)=
 ### Function: CreateRevoluteJoint
 
-[`CreateRevoluteJoint(mbs, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1325)
+[`CreateRevoluteJoint(mbs, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1369)
 
 - **function description**: Create revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed - NOTE that this function is added to MainSystem via Python function MainSystemCreateRevoluteJoint.
 - **input**:
@@ -573,7 +617,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addRevolute
 (sec-mainsystemextensions-createprismaticjoint)=
 ### Function: CreatePrismaticJoint
 
-[`CreatePrismaticJoint(mbs, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1435)
+[`CreatePrismaticJoint(mbs, name = '', itemNumbers = [None, None], position = [], axis = [], useGlobalFrame = True, show = True, axisRadius = 0.1, axisLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1479)
 
 - **function description**: Create prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed - NOTE that this function is added to MainSystem via Python function MainSystemCreatePrismaticJoint.
 - **input**:
@@ -624,7 +668,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-mainsystemextensions-createsphericaljoint)=
 ### Function: CreateSphericalJoint
 
-[`CreateSphericalJoint(mbs, name = '', itemNumbers = [None, None], position = [], constrainedAxes = [1,1,1], useGlobalFrame = True, show = True, jointRadius = 0.1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1539)
+[`CreateSphericalJoint(mbs, name = '', itemNumbers = [None, None], position = [], constrainedAxes = [1,1,1], useGlobalFrame = True, show = True, jointRadius = 0.1, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1583)
 
 - **function description**: Create spherical joint between two bodies; definition of joint position in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers are automatically computed - NOTE that this function is added to MainSystem via Python function MainSystemCreateSphericalJoint.
 - **input**:
@@ -674,7 +718,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`newtonsCrad
 (sec-mainsystemextensions-creategenericjoint)=
 ### Function: CreateGenericJoint
 
-[`CreateGenericJoint(mbs, name = '', itemNumbers = [None, None], position = [], rotationMatrixAxes = np.eye(3), constrainedAxes = [1,1,1, 1,1,1], useGlobalFrame = True, offsetUserFunction = 0, offsetUserFunction_t = 0, show = True, axesRadius = 0.1, axesLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1623)
+[`CreateGenericJoint(mbs, name = '', itemNumbers = [None, None], position = [], rotationMatrixAxes = np.eye(3), constrainedAxes = [1,1,1, 1,1,1], useGlobalFrame = True, offsetUserFunction = 0, offsetUserFunction_t = 0, show = True, axesRadius = 0.1, axesLength = 0.4, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1667)
 
 - **function description**: Create generic joint between two bodies; definition of joint position (position) and axes (rotationMatrixAxes) in global coordinates (useGlobalFrame=True) or in local coordinates of body0 (useGlobalFrame=False), where rotationMatrixAxes is an additional rotation to body0; all markers, markerRotation and other quantities are automatically computed - NOTE that this function is added to MainSystem via Python function MainSystemCreateGenericJoint.
 - **input**:
@@ -730,7 +774,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bungeeJump.
 (sec-mainsystemextensions-createdistanceconstraint)=
 ### Function: CreateDistanceConstraint
 
-[`CreateDistanceConstraint(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], distance = None, show = True, drawSize = -1., color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1738)
+[`CreateDistanceConstraint(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], distance = None, show = True, drawSize = -1., color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1782)
 
 - **function description**: Create distance joint between two bodies; definition of joint positions in local coordinates of bodies or nodes; if distance=None, it is computed automatically from reference length; all markers are automatically computed - NOTE that this function is added to MainSystem via Python function MainSystemCreateDistanceConstraint.
 - **input**:
@@ -790,7 +834,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chatGPTupda
 (sec-mainsystemextensions-createcoordinateconstraint)=
 ### Function: CreateCoordinateConstraint
 
-[`CreateCoordinateConstraint(mbs, name = '', itemNumbers = [None, None], coordinates = [None, None], offset = 0., factor1 = 1., velocityLevel = False, offsetUserFunction = 0, offsetUserFunction_t = 0, show = True, drawSize = -1., color = exudyn.graphics.color.default, includeReferenceCoordinates = [False, False], factorValue1 = None, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1846)
+[`CreateCoordinateConstraint(mbs, name = '', itemNumbers = [None, None], coordinates = [None, None], offset = 0., factor1 = 1., velocityLevel = False, offsetUserFunction = 0, offsetUserFunction_t = 0, show = True, drawSize = -1., color = exudyn.graphics.color.default, includeReferenceCoordinates = [False, False], factorValue1 = None, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1890)
 
 - **function description**: Create coordinate constraint between two bodies or nodes, or one of them and the ground; markers and NodePointGround are automatically created when needed - NOTE that this function is added to MainSystem via Python function MainSystemCreateCoordinateConstraint.
 - **input**:
@@ -848,7 +892,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 (sec-mainsystemextensions-createrollingdisc)=
 ### Function: CreateRollingDisc
 
-[`CreateRollingDisc(mbs, name = '', bodyNumbers = [None, None], axisPosition = [], axisVector = [1,0,0], discRadius = 0., planePosition = [0,0,0], planeNormal = [0,0,1], constrainedAxes = [1,1,1], activeConnector = True, show = True, discWidth = 0.1, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L1984)
+[`CreateRollingDisc(mbs, name = '', bodyNumbers = [None, None], axisPosition = [], axisVector = [1,0,0], discRadius = 0., planePosition = [0,0,0], planeNormal = [0,0,1], constrainedAxes = [1,1,1], activeConnector = True, show = True, discWidth = 0.1, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2028)
 
 - **function description**: Create an ideal rolling disc joint between wheel rigid body and ground; the disc is infinitely thin and the ground is a perfectly flat plane; the wheel may lift off; definition of joint position and axis in global coordinates (alternatively in wheel (body1) local coordinates) for reference configuration of bodies; all markers and other quantities are automatically computed; some constraint conditions may be deactivated, e.g. to resolve redundancy of constraints for multi-wheel vehicles - NOTE that this function is added to MainSystem via Python function MainSystemCreateRollingDisc.
 - **input**:
@@ -905,7 +949,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createFunct
 (sec-mainsystemextensions-createrollingdiscpenalty)=
 ### Function: CreateRollingDiscPenalty
 
-[`CreateRollingDiscPenalty(mbs, name = '', bodyNumbers = [None, None], axisPosition = [], axisVector = [1,0,0], discRadius = 0., planePosition = [0,0,0], planeNormal = [0,0,1], contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionAngle = 0., dryFrictionProportionalZone = 0., viscousFriction = [0,0], rollingViscousFriction = 0., useLinearProportionalZone = False, activeConnector = True, show = True, discWidth = 0.1, color = exudyn.graphics.color.default, rollingFrictionViscous = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2091)
+[`CreateRollingDiscPenalty(mbs, name = '', bodyNumbers = [None, None], axisPosition = [], axisVector = [1,0,0], discRadius = 0., planePosition = [0,0,0], planeNormal = [0,0,1], contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionAngle = 0., dryFrictionProportionalZone = 0., viscousFriction = [0,0], rollingViscousFriction = 0., useLinearProportionalZone = False, activeConnector = True, show = True, discWidth = 0.1, color = exudyn.graphics.color.default, rollingFrictionViscous = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2135)
 
 - **function description**: Create penalty-based rolling disc joint between wheel rigid body and ground; the disc is infinitely thin and the ground is a perfectly flat plane; the wheel may lift off; definition of joint position and axis in global coordinates (alternatively in wheel (body1) local coordinates) for reference configuration of bodies; all markers and other quantities are automatically computed - NOTE that this function is added to MainSystem via Python function MainSystemCreateRollingDiscPenalty.
 - **input**:
@@ -970,7 +1014,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createFunct
 (sec-mainsystemextensions-createspherespherecontact)=
 ### Function: CreateSphereSphereContact
 
-[`CreateSphereSphereContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], spheresRadii = [-1,-1], isHollowSphere1 = False, dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1, constantPullOffForce = 0, contactPlasticityRatio = 0, adhesionCoefficient = 0, adhesionExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = 0, dataInitialCoordinates = [0,0,0,0], activeConnector = True, show = False, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2227)
+[`CreateSphereSphereContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], spheresRadii = [-1,-1], isHollowSphere1 = False, dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1, constantPullOffForce = 0, contactPlasticityRatio = 0, adhesionCoefficient = 0, adhesionExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = 0, dataInitialCoordinates = [0,0,0,0], activeConnector = True, show = False, color = exudyn.graphics.color.default, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2271)
 
 - **function description**: Create penalty-based sphere-sphere contact between two rigid bodies, mass points (if friction coefficient is zero) or according nodes; the contact is based on ObjectContactSphereSphere; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems - NOTE that this function is added to MainSystem via Python function MainSystemCreateSphereSphereContact.
 - **input**:
@@ -1001,6 +1045,32 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createFunct
   - `bodyOrNodeList`: not accepted, a TypeError: the items are given in itemNumbers
 - **output**: (type: ObjectIndex) returns index of created joint
 
+*example*:
+
+```python
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  oGround = mbs.AddObject(ObjectGround())
+  b0 = mbs.CreateMassPoint(referencePosition = [11,1,0],
+                           initialVelocity = [0.5,0,0],
+                           mass = 1, gravity = [0,-9.81,0],
+                           drawSize = 0.4, color=exu.graphics.color.blue)
+  #a sphere of radius 0.2 falls onto a sphere of radius 0.5 fixed to the ground
+  mbs.CreateSphereSphereContact(itemNumbers=[oGround, b0],
+                                localPosition0=[11,0,0],
+                                spheresRadii=[0.5,0.2],
+                                contactStiffness=1e4, contactDamping=10)
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+```
+
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createContactSphereSphere.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createContactSphereSphere.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`createSphereQuadContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py) (TM), [`createSphereQuadContact2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact2.py) (TM), [`createSphereTriangleContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py) (TM), [`restartFileTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/restartFileTest.py) (TM), [`symbolicSolversAdaptiveStepTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSolversAdaptiveStepTest.py) (TM), [`symbolicUserContactFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserContactFrictionTest.py) (TM), ...
 
@@ -1008,7 +1078,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createConta
 (sec-mainsystemextensions-createspherequadcontact)=
 ### Function: CreateSphereQuadContact
 
-[`CreateSphereQuadContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], sphereRadius = 0, quadPoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[1,1,0],[0,1,0]]), includeEdges = 15, dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = 0, dataInitialCoordinates = [0,0,0,0], activeConnector = True, localPosition1 = [0.,0.,0.], show = False, color = exudyn.graphics.color.default, radiusSphere = None, bodyNumbers = None, bodyOrNodeList = None) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2358)
+[`CreateSphereQuadContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], sphereRadius = 0, quadPoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[1,1,0],[0,1,0]]), includeEdges = 15, dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = 0, dataInitialCoordinates = [0,0,0,0], activeConnector = True, localPosition1 = [0.,0.,0.], show = False, color = exudyn.graphics.color.default, radiusSphere = None, bodyNumbers = None, bodyOrNodeList = None) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2424)
 
 - **function description**: Create penalty-based sphere-quad contact between two rigid bodies, mass points or according nodes; the contact is based on two ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems - NOTE that this function is added to MainSystem via Python function MainSystemCreateSphereQuadContact.
 - **input**:
@@ -1044,7 +1114,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rendererNOG
 (sec-mainsystemextensions-createspheretrianglecontact)=
 ### Function: CreateSphereTriangleContact
 
-[`CreateSphereTriangleContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], sphereRadius = 0, trianglePoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]), includeEdges = 7, dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = 0, dataInitialCoordinates = [0,0,0,0], activeConnector = True, localPosition1 = [0.,0.,0.], show = False, color = exudyn.graphics.color.default, radiusSphere = None, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2488)
+[`CreateSphereTriangleContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], sphereRadius = 0, trianglePoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]), includeEdges = 7, dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = 0, dataInitialCoordinates = [0,0,0,0], activeConnector = True, localPosition1 = [0.,0.,0.], show = False, color = exudyn.graphics.color.default, radiusSphere = None, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2554)
 
 - **function description**: Create penalty-based sphere-triangle contact between two rigid bodies, mass points or according nodes; the contact is based on ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems - NOTE that this function is added to MainSystem via Python function MainSystemCreateSphereTriangleContact.
 - **input**:
@@ -1080,7 +1150,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createItemN
 (sec-mainsystemextensions-createkinematictree)=
 ### Function: CreateKinematicTree
 
-[`CreateKinematicTree(mbs, name = '', listOfTreeLinks = [], referenceCoordinates = None, initialCoordinates = None, initialCoordinates_t = None, gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], linkForces = None, linkTorques = None, jointForceVector = None, jointPositionOffsetVector = None, jointVelocityOffsetVector = None, forceUserFunction = 0, jointRadius = 0.05, jointWidth = 0.12, colors = exudyn.graphics.color.default, colorsJoints = exudyn.graphics.color.default, baseGraphicsDataList = None, linkRoundness = 0.2, show = True) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2612)
+[`CreateKinematicTree(mbs, name = '', listOfTreeLinks = [], referenceCoordinates = None, initialCoordinates = None, initialCoordinates_t = None, gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], linkForces = None, linkTorques = None, jointForceVector = None, jointPositionOffsetVector = None, jointVelocityOffsetVector = None, forceUserFunction = 0, jointRadius = 0.05, jointWidth = 0.12, colors = exudyn.graphics.color.default, colorsJoints = exudyn.graphics.color.default, baseGraphicsDataList = None, linkRoundness = 0.2, show = True) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2678)
 
 - **function description**: helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint; uses TreeLink as defined in exudyn.rigidBodyUtilities - NOTE that this function is added to MainSystem via Python function MainSystemCreateKinematicTree.
 - **input**:
@@ -1117,7 +1187,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-mainsystemextensions-createffrfreducedorderobject)=
 ### Function: CreateFFRFReducedOrderObject
 
-[`CreateFFRFReducedOrderObject(mbs, name, femInterface, referencePosition = [0., 0., 0.], initialVelocity = [0., 0., 0.], referenceRotationMatrix = np.eye(3), initialAngularVelocity = [0., 0., 0.], massProportionalDamping = 0., stiffnessProportionalDamping = 0., gravity = [0., 0., 0.], color = exudyn.graphics.color.defaultFFRF, rigidBodyNodeType = exu.NodeType.RotationEulerParameters, superElementRigidMarkersOffsets = None, superElementRigidMarkersLocalHTs = None, showMarkers = True, verbose = False) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2914)
+[`CreateFFRFReducedOrderObject(mbs, name, femInterface, referencePosition = [0., 0., 0.], initialVelocity = [0., 0., 0.], referenceRotationMatrix = np.eye(3), initialAngularVelocity = [0., 0., 0.], massProportionalDamping = 0., stiffnessProportionalDamping = 0., gravity = [0., 0., 0.], color = exudyn.graphics.color.defaultFFRF, rigidBodyNodeType = exu.NodeType.RotationEulerParameters, superElementRigidMarkersOffsets = None, superElementRigidMarkersLocalHTs = None, showMarkers = True, verbose = False) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2980)
 
 - **function description**: Create an FFRF reduced order object; the function adds SuperElementRigid markers if boundaries are defined in the given femInterface and thus enables straightforward integration of flexible bodies into a multibody system - NOTE that this function is added to MainSystem via Python function MainSystemCreateFFRFReducedOrderObject.
 - **input**:
@@ -1187,7 +1257,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveCrea
 (sec-mainsystemextensions-createforce)=
 ### Function: CreateForce
 
-[`CreateForce(mbs, name = '', itemNumber = None, loadVector = [0.,0.,0.], localPosition = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None) -> exudyn.LoadIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3129)
+[`CreateForce(mbs, name = '', itemNumber = None, loadVector = [0.,0.,0.], localPosition = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None) -> exudyn.LoadIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3195)
 
 - **function description**: helper function to create force applied to a body, a node or a marker - NOTE that this function is added to MainSystem via Python function MainSystemCreateForce.
 - **input**:
@@ -1231,7 +1301,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 (sec-mainsystemextensions-createtorque)=
 ### Function: CreateTorque
 
-[`CreateTorque(mbs, name = '', itemNumber = None, loadVector = [0.,0.,0.], localPosition = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None) -> exudyn.LoadIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3213)
+[`CreateTorque(mbs, name = '', itemNumber = None, loadVector = [0.,0.,0.], localPosition = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None) -> exudyn.LoadIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3279)
 
 - **function description**: helper function to create torque applied to a body, a node or a marker - NOTE that this function is added to MainSystem via Python function MainSystemCreateTorque.
 - **input**:
@@ -1276,7 +1346,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 (sec-mainsystemextensions-createdistancesensorgeometry)=
 ### Function: CreateDistanceSensorGeometry
 
-[`CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize = [8,8,8]) -> int`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3370)
+[`CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize = [8,8,8]) -> int`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3436)
 
 - **function description**: Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on; Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact - NOTE that this function is added to MainSystem via Python function CreateDistanceSensorGeometry.
 - **input**:
@@ -1295,7 +1365,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 (sec-mainsystemextensions-createdistancesensor)=
 ### Function: CreateDistanceSensor
 
-[`CreateDistanceSensor(mbs, generalContactIndex, positionOrMarker, dirSensor, minDistance = -1e7, maxDistance = 1e7, cylinderRadius = 0, selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList, storeInternal = False, fileName = '', measureVelocity = False, addGraphicsObject = False, drawDisplaced = True, color = exudyn.graphics.color.red) -> exudyn.SensorIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3402)
+[`CreateDistanceSensor(mbs, generalContactIndex, positionOrMarker, dirSensor, minDistance = -1e7, maxDistance = 1e7, cylinderRadius = 0, selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList, storeInternal = False, fileName = '', measureVelocity = False, addGraphicsObject = False, drawDisplaced = True, color = exudyn.graphics.color.red) -> exudyn.SensorIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3468)
 
 - **function description**: Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker - NOTE that this function is added to MainSystem via Python function CreateDistanceSensor.
 - **input**:

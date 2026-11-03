@@ -168,6 +168,7 @@ def TestExamplesReferenceSolution():
         'symbolicMassMatrixDerivativeTest.py':1, #new 2026-11-02: Newton with and without d(M q_tt)/dq on rigid bodies on Tait-Bryan angles, 417 / 614 iterations (#3228)
         'symbolicRigidBodyInertiaTest.py':0, #new 2026-11-02: RigidBodyInertia of expressions, the symbolic inertia of a user rigid body in SymbolicSystem, its derivatives by the parameters (#3159)
         'symbolicParameterJacobianTest.py':0, #new 2026-11-03: the parameters as an input of SymbolicSystem, SetParameterValues without a rebuild, the derivatives by the parameters (#3159)
+        'symbolicUserItemsCreateExamplesTest.py':0, #new 2026-11-03: the examples of the Create functions with the user items of UserItemCreator against the built-in items
         'symbolicVariableScopeTest.py':0, #new 2026-11-02: the scopes of the named symbolic variables, mbs.symbolicVariables and esym.variables, the refusals, Reset, the dictionary, the deprecation flag (#3208)
         'symbolicSystemEquationsTest.py':1, #new 2026-10-28: SymbolicSystem.Equations and GetFlatProgram, the equations of a generic ODE2 system and of a user rigid body with a mass point, connectors and loads as exudyn.symbolic and sympy expressions equal to the system (#3130)
         'symbolicOnePassJacobianTest.py':1, #new 2026-10-28: EvaluateJacobian in one pass over the flat program, every operation with a rule, against the tree and central differences (#3116)

@@ -114,6 +114,8 @@ takes as `parameters`; a connector at the center of a user mass point is on a ma
 so that the inertia of a user rigid body is an expression of the parameters (#3159). `SymbolicSystem` takes the values
 of the parameters as an input of its recordings: `SetParameterValues` no longer builds the system again, and
 `ODE2RHSParameterJacobian` and `MassMatrixParameterJacobian` give the derivatives by the parameters (#3159).
+`CreateRigidBodySpringDamper`, `CreateTorsionalSpringDamper` and `CreateSphereSphereContact` have an example in their
+documentation, as the other Create functions.
 ObjectKinematicTree takes a floating base, `baseNodeNumber`, a rigid body node - NodeRigidBodyRotVecLG for the
 explicit solvers -, whose frame is the base of the tree (#1549). The tree has its own Jacobian, computed in parallel,
 which contains the derivative of the mass matrix term, `jacobianMassMatrixDerivative`: a chain of 60 links with a

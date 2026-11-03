@@ -5729,6 +5729,28 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg12-72"></a>
+### RG12.72 — The user items tested by the examples of the Create functions (2026-11-03, no issue)
+- Maintainer 2026-11-03: do RG12.72. The "mini examples built with the Create functions" are the Examples of the
+  docstrings of the Create functions of mbs (exudyn/misc/mainSystemExtensions.py); the MiniExamples of the items are
+  generated per item from the definitions and use AddObject, one of 102 a Create function.
+- symbolicUserItemsCreateExamplesTest.py (new): for each Create function of UserItemCreator the Example is taken from
+  the docstring (inspect.getdoc), run as it is and with `creator = UserItemCreator(mbs)` for `mbs.Create...`,
+  `creator.Record()` before `mbs.Assemble()`; both with `nodeType=exu.NodeType.RotationRxyz` for CreateRigidBody (the
+  node of the user rigid body; the examples have the default Euler parameters), `['nodeNumber']` read as
+  `['nodeNumbers'][0]` for the user mass point. Compared: the positions and velocities of the point and rigid nodes
+  at the end (1000 steps, 2 s); printed: the time of SolveDynamic of both.
+- Results: CartesianSpringDamper 4.0e-10, the others 0 to 6.6e-12; the time of the user items / built-in items, in s:
+  MassPoint 0.002 / 0.002, Force 0.002 / 0.002, CartesianSpringDamper 0.004 / 0.003, SphereSphereContact 0.005 /
+  0.003, CoordinateConstraint 0.008 / 0.004, SpringDamper 0.011 / 0.004, Torque 0.011 / 0.003, PrismaticJoint 0.019 /
+  0.005, RigidBody 0.020 / 0.006, RigidBodySpringDamper 0.055 / 0.012, RevoluteJoint 0.064 / 0.013, SphericalJoint
+  0.072 / 0.011, TorsionalSpringDamper 0.073 / 0.013: the joints and the connectors on rigid markers cost the most.
+- CreateDistanceConstraint: its example constrains a node, which the user item refuses ("a node or a marker is not
+  supported"); the test expects exactly this refusal, so that a new one is seen. CreateGround has no simulation.
+- The examples of CreateRigidBodySpringDamper and CreateTorsionalSpringDamper ("coming later") and of
+  CreateSphereSphereContact (none) written, in the form of the others: a bar on a bushing, a bar on a revolute joint
+  with a torsional spring-damper, a mass point falling onto a sphere fixed to the ground.
+
 <a id="rg12-55-10"></a>
 ### RG12.55.10, RG12.55.12 — Which HT and twist functions the user items and the C++ items use (2026-11-03, #3178)
 - Counted by scripts over the force, constraint and post-Newton functions of exudyn/symbolics/userItems.py (spring-

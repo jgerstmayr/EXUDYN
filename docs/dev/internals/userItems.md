@@ -164,6 +164,13 @@ center of a user mass point, is on a marker of the body (#3207).
 | CreateCoordinateConstraint | ObjectGenericDAE with a NodeGenericAE (#3193) |
 | CreateForce, CreateTorque | the built-in loads on a marker of the user body |
 
+**Checked by the examples of the Create functions**: symbolicUserItemsCreateExamplesTest.py runs the Example of the
+docstring of each Create function of mbs that UserItemCreator has, once as it is and once with `UserItemCreator(mbs)`
+for the Create functions, recorded, the rigid bodies of both on NodeRigidBodyRxyz; the positions and velocities of the
+nodes at the end agree to 4e-10 (the Cartesian spring-damper) and below 1e-11 for the others, and the CPU times of
+both solvers are printed - the user items take 1 to 6 times as long, the joints the most. The example of
+CreateDistanceConstraint, on a node, is refused by the user item.
+
 **The forceUserFunction of the marker states** (#3119, #3183): a connector gets the frame and the twist of each of its
 two markers and returns the forces on them, applied through the marker Jacobians, $\fv_{gen} = -\sum_i
 (\Jm_{pos,i}\tp\fv_i + \Jm_{rot,i}\tp\mv_i)$, as ObjectJointUser gets the frames and returns its equations. The

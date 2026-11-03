@@ -982,7 +982,30 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
         :ObjectIndex: returns index of newly created object
 
     Example:
-        #coming later
+        import exudyn as exu
+        from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+        import numpy as np
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                         sideLengths=[1,0.1,0.1]),
+                                 referencePosition = [8,0,0],
+                                 initialAngularVelocity = [0,1,2],
+                                 gravity = [0,-9.81,0],
+                                 graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                          color=exu.graphics.color.green)])
+        oGround = mbs.AddObject(ObjectGround())
+        #a bushing at the left end of the bar
+        mbs.CreateRigidBodySpringDamper(itemNumbers=[oGround, b0],
+                                        localPosition0=[7.5,0,0],
+                                        localPosition1=[-0.5,0,0],
+                                        stiffness=np.diag([1e4,1e4,1e4,1e3,1e3,1e3]),
+                                        damping=np.diag([10,10,10,1,1,1]))
+        mbs.Assemble()
+        simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+        simulationSettings.timeIntegration.numberOfSteps = 1000
+        simulationSettings.timeIntegration.endTime = 2
+        mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
     if intrinsicFormulation is not None: #the old name of the argument (#2814)
         DeprecatedArgument('intrinsicFormulation', '1.12.258', 2031, use='useIntrinsicFormulation', function='MainSystem.CreateRigidBodySpringDamper')
@@ -1103,7 +1126,28 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
         :ObjectIndex: returns index of newly created object
 
     Example:
-        #coming later
+        import exudyn as exu
+        from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+        import numpy as np
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                         sideLengths=[1,0.1,0.1]),
+                                 referencePosition = [9.5,0,0],
+                                 initialAngularVelocity = [0,0,2],
+                                 graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                          color=exu.graphics.color.steelblue)])
+        oGround = mbs.AddObject(ObjectGround())
+        mbs.CreateRevoluteJoint(itemNumbers=[oGround, b0], position=[9,0,0], axis=[0,0,1],
+                                useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
+        #a torsional spring-damper about the axis of the revolute joint
+        mbs.CreateTorsionalSpringDamper(itemNumbers=[oGround, b0], position=[9,0,0], axis=[0,0,1],
+                                        stiffness=100, damping=1)
+        mbs.Assemble()
+        simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+        simulationSettings.timeIntegration.numberOfSteps = 1000
+        simulationSettings.timeIntegration.endTime = 2
+        mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
     where='MainSystem.CreateTorsionalSpringDamper(...)'
     if bodyNumbers is not None: #the old name of the argument (#2863)
@@ -2266,6 +2310,28 @@ def MainSystemCreateSphereSphereContact(mbs, name='', itemNumbers=[None, None],
 
     Returns:
         :ObjectIndex: returns index of created joint
+
+    Example:
+        import exudyn as exu
+        from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+        import numpy as np
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        oGround = mbs.AddObject(ObjectGround())
+        b0 = mbs.CreateMassPoint(referencePosition = [11,1,0],
+                                 initialVelocity = [0.5,0,0],
+                                 mass = 1, gravity = [0,-9.81,0],
+                                 drawSize = 0.4, color=exu.graphics.color.blue)
+        #a sphere of radius 0.2 falls onto a sphere of radius 0.5 fixed to the ground
+        mbs.CreateSphereSphereContact(itemNumbers=[oGround, b0],
+                                      localPosition0=[11,0,0],
+                                      spheresRadii=[0.5,0.2],
+                                      contactStiffness=1e4, contactDamping=10)
+        mbs.Assemble()
+        simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+        simulationSettings.timeIntegration.numberOfSteps = 1000
+        simulationSettings.timeIntegration.endTime = 2
+        mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
     where = 'MainSystem.CreateSphereSphereContact(...)'
     if bodyNumbers is not None: #the old name of the argument (#2863)
