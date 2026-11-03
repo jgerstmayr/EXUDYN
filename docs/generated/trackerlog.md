@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.334.dev1
-- last change = 2026-11-02
+- Exudyn version = 1.13.335.dev1
+- last change = 2026-11-03
 - Number of issues = 3233
-- Number of resolved issues = 3111 (334 in current version)
+- Number of resolved issues = 3112 (335 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,10 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` generalContactSpheresPerf.py: the ODE2RHS of the general contact 23 percent slower since 1.13.190 (#3232)
-  - description: The performance tests give generalContactSpheresPerf.py 7.46 s at 1.13.190 and 9.68 s at 1.13.309 (9.3 s at 1.13.331), the time of ComputeSystemODE2RHS with one thread 3.96 and 4.86 s, with four threads 1.36 and 2.20 s; the other performance files are within their scatter. Decided: find the change between the two versions by the timers of the contact and a bisection of the builds, and remove the cost if it is not needed.
-  - **remarks:** 2026-11-02 analysis (revision2026c step RG5.7): +7.5 % on one thread in the same conditions, not 23 %; from d0ef1944 (\#2978) by the loads, about 45 ns per load evaluation, without a change of the source of their serial path; proposed: the load loop on data precomputed at Assemble.
-  - date raised: 2026-11-02
 - `CHANGE` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` Remove special.deprecations.symbolicVariablesWithoutScope, the named symbolic variables of no scope (#3231)
   - description: Since \#3208 a named esym.Real, Vector or Matrix is a variable of a scope, esym.variables or mbs.symbolicVariables, and a symbolic user function reads only its arguments and the variables of mbs.symbolicVariables; exudyn.special.deprecations.symbolicVariablesWithoutScope restores the variables of no scope for the transition. Decided: the flag and the branches of NamedRealInScope, NamedArrayInScope and CheckVariablesOfRecording that it takes are removed when scripts have changed, as \#3016 for symbolicStarProduct; a delayed issue without a plan step.
   - date raised: 2026-11-02
@@ -9067,7 +9063,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-29
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic parameters for every item of the symbolic system: a general way beyond the scalar parameters of the user items (#3159)
   - description: Symbolic parameters are required in the long term; named parameters for the inertia of a rigid body and for the joints need a general solution (\#3152 took the scalar parameters of the mass point and the spring-dampers). To design: parameters of any structure (an inertia from mass, inertia tensor and center of mass, the frames and axes of joints, the matrices of ObjectGenericODE2, the values of loads) given as named esym.Real or expressions of them, mapped to the numbers of the items; a parameter set per system (a VariableSet) instead of per item lists; the derivatives by them (sensitivities) through Equations and the composed system; later the C++ items with numerical and symbolic parameters (symbolicUserItems.md section 6).
-  - **remarks:** 2026-11-02: the bindings of the parameters of the user items are done (ParameterBindings, expressions of variables of mbs.symbolicVariables, revision2026c step RG12.67.2, \#3207, \#3208); open: the symbolic inertia and frames (RG12.67.3), the parameters as an input of the composed system (RG12.67.4), the sensitivities (RG12.67.5). Section 6 of symbolicUserItems.md, cited above, is now a decision in docs/dev/internals/userItems.md.; 2026-11-02: RigidBodyInertia and its shapes for symbolic values, the symbolic inertia of CreateRigidBody, the parameters of every Create function as expressions (revision2026c step RG12.67.3.1); open: the frames of joints and connectors (RG12.67.3.2), the parameters as an input of the composed system (RG12.67.4), the sensitivities (RG12.67.5).
+  - **remarks:** 2026-11-02: the bindings of the parameters of the user items are done (ParameterBindings, expressions of variables of mbs.symbolicVariables, revision2026c step RG12.67.2, \#3207, \#3208); open: the symbolic inertia and frames (RG12.67.3), the parameters as an input of the composed system (RG12.67.4), the sensitivities (RG12.67.5). Section 6 of symbolicUserItems.md, cited above, is now a decision in docs/dev/internals/userItems.md.; 2026-11-02: RigidBodyInertia and its shapes for symbolic values, the symbolic inertia of CreateRigidBody, the parameters of every Create function as expressions (revision2026c step RG12.67.3.1); open: the frames of joints and connectors (RG12.67.3.2), the parameters as an input of the composed system (RG12.67.4), the sensitivities (RG12.67.5).; 2026-11-03: the symbolic frames of joints and connectors not done (revision2026c step RG12.67.3.2 closed; user markers should resolve them); the forward sensitivities of the Python solvers abandoned (RG12.67.5 closed; numerical sensitivities are simpler, adjoint methods may come with advanced solvers); open: the parameters as an input of the composed system (RG12.67.4).
   - date raised: 2026-10-29
 - `IMPROVEMENT` `HUGE EFF` `raised by: Claude-JG` One table of the symbolic operations: SymbolicProgram and the operation table in SymbolicTable.h/.cpp beside the expression classes (#3153)
   - description: R1 of docs/dev/design/symbolicSystem.md. The expression tree stays for the recording and the simple evaluation; the flat evaluation, the derivatives, Optimize, the export, the count and the uniform evaluation work on a program built from the tree and a table per operation code (name, arity, kinds, size, evaluation, forward derivative, later derivative as new nodes, simplification, text per format). New files src/Linalg/SymbolicTable.h and .cpp; the old code stays as fallback, selected by a switch, until the new path gives the same results bit for bit; item outputs as an operation code with the data of the item and a link to the MainSystem. Four stages, design section 12.7.
