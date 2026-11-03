@@ -490,7 +490,9 @@ class SymbolicSystem(SymbolicSystemBase):
         parameters: None, or the ParameterBindings of the parameters of user items - ObjectUserBody,
             ObjectConnectorUser, ObjectJointUser -, each a number or an expression of named variables of
             mbs.symbolicVariables, the values those of the item: UserItemCreator.parameterBindings; Equations() keeps
-            the expressions, the parameters are the named variables in them (#3152, #3159, #3208)
+            the expressions, the parameters are the named variables in them (#3152, #3159, #3208); the recordings of
+            the composed system and of the items take their values as the input p, so that SetParameterValues records
+            nothing again, and ODE2RHSParameterJacobian and MassMatrixParameterJacobian are the derivatives by them
 
     Note:
         Its members: mbs; kinds, the list of SymbolicKind; jointKinds, the list of SymbolicKind of the ObjectJointUser
@@ -501,8 +503,9 @@ class SymbolicSystem(SymbolicSystemBase):
         coordinates; nODE2, nODE1, the numbers of ODE2 and ODE1 coordinates of the system; nAE, the number of the
         algebraic equations; qRef, the reference values of the ODE2 coordinates; composed, None or the dict of
         the recordings 'ODE2RHS', 'massMatrix' and 'massMatrixBlocks' - esym.Function of the inputs q, q_t and t, the
-        VariableSet 'inputs' (#3149) - and the 'rows' and 'columns' of the entries of the mass matrix; parameterBindings,
-        the ParameterBindings, checked
+        VariableSet 'inputs' (#3149), with the parameters p after them - and the 'rows' and 'columns' of the entries
+        of the mass matrix; parameterBindings, the ParameterBindings, checked; parameterNames, the names of the
+        parameters in the order of p
     """
     def __init__(self, mbs, composeSystem=True, parameters=None):
         if not mbs.systemIsConsistent:
@@ -616,19 +619,24 @@ class SymbolicSystem(SymbolicSystemBase):
     def _ParameterBindings(self, parameters):
         """the ParameterBindings of the items, checked - the number of the parameters of each item, the values those of
         the item, the variables of mbs.symbolicVariables -, and the named variables in them by name (#3152, #3159)"""
-        self._parameterNames = {}
+        (self._parameters, self._parameterNames, self.parameterNames) = ([], {}, [])
+        self._substitution = None #the bound expressions as a function of the parameters, built at the first recording
         if parameters is None:
             return None
         if not (hasattr(parameters, 'Parameters') and hasattr(parameters, 'Check')):
             raise TypeError('SymbolicSystem: parameters must be a ParameterBindings, UserItemCreator.parameterBindings, '
                             'not ' + type(parameters).__name__)
         parameters.Check()
-        self._parameterNames = {str(variable): variable for variable in parameters.Parameters()}
+        self._parameters = parameters.Parameters()
+        self._parameterNames = {str(variable): variable for variable in self._parameters}
+        self.parameterNames = list(self._parameterNames)
+        self._parameterValues = np.array([variable.Evaluate() for variable in self._parameters], dtype=float)
         return parameters
 
     def SetParameterValues(self, values):
-        """set named parameters (#3152): the values of the variables of mbs.symbolicVariables, the numbers of the
-        items in mbs, then the system again from mbs
+        """set named parameters (#3152, #3159): the values of the variables of mbs.symbolicVariables, the numbers of the
+        items in mbs and those the system keeps; the recordings take the parameters as their input p, nothing is
+        recorded again
 
         Args:
             values: dict of the names of the parameters of parameterBindings and their new values
@@ -640,21 +648,67 @@ class SymbolicSystem(SymbolicSystemBase):
         for (name, value) in values.items():
             self._parameterNames[name].SetValue(float(value))
         self.parameterBindings.Apply()
-        self.__init__(self.mbs, self.composed is not None, self.parameterBindings)
+        self._parameterValues = np.array([variable.Evaluate() for variable in self._parameters], dtype=float)
+        bindings = self.parameterBindings
+
+        def Numbers(objectNumber):
+            return np.array(bindings.Values(objectNumber), dtype=float)
+        for kind in self.kinds + self.jointKinds + self.daeKinds: #the numbers of the evaluation item by item
+            for (i, objectNumber) in enumerate(kind.objects):
+                item = kind.parameters[i]
+                if not isinstance(item, dict):
+                    if objectNumber in bindings:
+                        kind.parameters[i] = Numbers(objectNumber)
+                    continue
+                if 'parameters' in item and objectNumber in bindings:
+                    item['parameters'] = Numbers(objectNumber)
+                for marker in item.get('markers', []):
+                    if marker['type'] == 'body' and marker['objectNumber'] in bindings:
+                        marker['parameters'] = Numbers(marker['objectNumber'])
+        for load in self.loads: #a load on a user body, through the mass of the body
+            if load.body is not None and load.body['objectNumber'] in bindings:
+                load.body['parameters'] = Numbers(load.body['objectNumber'])
 
     def _ParameterVector(self, backend, objectNumber, numbers):
         """the parameters of an item for Equations: its numbers, or with symbolic parameters its list of expressions and
         numbers, if the backend takes them (#3152, #3159)"""
         bindings = self.parameterBindings
-        variables = bindings[objectNumber] if (backend.parameterVariables and bindings is not None and objectNumber in bindings) else None
+        if backend.parameterLists is not None: #the expressions of the input p (#3159)
+            variables = backend.parameterLists.get(objectNumber)
+        else:
+            variables = bindings[objectNumber] if (backend.parameterVariables and bindings is not None and objectNumber in bindings) else None
         if variables is None:
             return backend.Vector(numbers)
         return backend.Vector([backend.Parameter(value) for value in variables])
 
+    def _ParameterBackend(self, variables):
+        """the backend of the recordings of the composed system and of the items: the numbers of the items, and with
+        parameters the input p of their values, added to the VariableSet variables, the bound parameters of each item
+        expressions of the components of p (#3159)"""
+        backend = _Backend('symbolic', parameterVariables=False)
+        if not self._parameters:
+            return backend
+        p = variables.Add('p', self._parameterValues)
+        bound = [(objectNumber, k, value) for (objectNumber, values) in self.parameterBindings.items()
+                 for (k, value) in enumerate(values) if isinstance(value, exudyn.symbolic.Real)]
+        if self._substitution is None:
+            function = exudyn.symbolic.Function(exudyn.symbolic.Vector([value for (_, _, value) in bound]), self._parameters, 'parameters')
+            self._substitution = ToFunction(function.GetFlatProgramData(), 'symbolic')
+        substituted = self._substitution(*[p[k] for k in range(len(self._parameters))])
+        backend.parameterLists = {objectNumber: list(values) for (objectNumber, values) in self.parameterBindings.items()}
+        for (j, (objectNumber, k, _)) in enumerate(bound):
+            backend.parameterLists[objectNumber][k] = substituted[j]
+        return backend
+
+    def _ParameterArguments(self):
+        """the values of the input p of the recordings, after the other inputs; none without parameters"""
+        return (self._parameterValues,) if self._parameters else ()
+
     def _Compose(self):
         """the recordings of the composed system (#3131): the forces f(q, q_t, t) and the entries of the mass matrix at
-        the rows and columns of the local mass matrices, as esym.Function of the inputs q, q_t and t (#3149) of the
-        expressions of Equations, optimized as CreateSymbolicUserFunction does; one call of each evaluates the system"""
+        the rows and columns of the local mass matrices, as esym.Function of the inputs q, q_t and t (#3149) - and the
+        parameters p (#3159) - of the expressions of Equations, optimized as CreateSymbolicUserFunction does; one call
+        of each evaluates the system"""
         entries = set()
         for kind in self._BodyKinds():
             for ltg in kind.ltg:
@@ -662,12 +716,12 @@ class SymbolicSystem(SymbolicSystemBase):
         entries = sorted(entries)
         rows = np.array([i for (i, j) in entries], dtype=int)
         columns = np.array([j for (i, j) in entries], dtype=int)
-        backend = _Backend('symbolic', parameterVariables=False) #the numbers of the items; SetParameterValues composes again
         (q0, q_t0) = self.InitialState()
         inputs = exudyn.symbolic.VariableSet() #the scope of the inputs, in the order of the arguments of Evaluate
         (q, q_t, t) = (inputs.Add('q', q0), inputs.Add('q_t', q_t0), inputs.Add('t', 0.))
         y = inputs.Add('y', self.InitialStateODE1()) if self._ode2UsesY else None #(#3190)
         x = inputs.Add('x', self.data) if self.nData else None #the data coordinates, constant in a step (#3196)
+        backend = self._ParameterBackend(inputs) #the numbers of the items, the parameters as the input p
         (M, f, blocks) = self._EquationLists(backend, q, q_t, t, y=y, x=x)[:3]
         massMatrix = [M[i][j] for (i, j) in entries] if entries else [0.]
         blockEntries = [x for (ltg, kindBlocks) in blocks for block in kindBlocks for row in block for x in row]
@@ -1030,7 +1084,7 @@ class SymbolicSystem(SymbolicSystemBase):
                                                                               ('y', len(dae['ltgODE1'])), ('z', len(dae['ltgAE']))])
             x = variables.Add('x', np.zeros(len(dae['ltgData']))) #the data coordinates, constant in a step (#3196)
             t = variables.Add('t', 0.)
-            backend = _Backend('symbolic', parameterVariables=False)
+            backend = self._ParameterBackend(variables)
             c = _Caller('symbolic')(kind.recordings['constraintUserFunction'], t, objectNumber, q, q_t, y, z, x, 0.,
                                     self._ParameterVector(backend, objectNumber, dae['parameters']))
             c = backend.Vector([c[k] for k in range(len(dae['ltgAE']))])
@@ -1048,7 +1102,7 @@ class SymbolicSystem(SymbolicSystemBase):
         (ltg, dae) = (kind.ltg[i], kind.parameters[i])
         function = self._DAEConstraintFunction(kind, i)
         z = np.zeros(self.nAE) if z is None else np.asarray(z, dtype=float)
-        arguments = (q[ltg], q_t[ltg], y[dae['ltgODE1']], z[dae['ltgAE']], self.data[dae['ltgData']], float(t))
+        arguments = (q[ltg], q_t[ltg], y[dae['ltgODE1']], z[dae['ltgAE']], self.data[dae['ltgData']], float(t)) + self._ParameterArguments()
         values = np.array(function.Evaluate(*arguments), dtype=float)
         if not derivatives:
             return values
@@ -1503,10 +1557,10 @@ class SymbolicSystem(SymbolicSystemBase):
                 + [kind for kind in self._DAEKindsODE2() if 'massMatrixUserFunction' in kind.recordings or kind.parameters[0]['M'].size])
 
     def _ComposedInputs(self, q, q_t, t, y=None):
-        """the arguments of the recordings of the composed system: q, q_t, t, and y if the ODE2 equations depend on it;
-        None: zero, for the constant mass matrix of ObjectGenericDAE"""
+        """the arguments of the recordings of the composed system: q, q_t, t, and y if the ODE2 equations depend on it -
+        None: zero, for the constant mass matrix of ObjectGenericDAE -, the data coordinates and the parameters"""
         inputs = (q, q_t, t) if not self._ode2UsesY else (q, q_t, t, np.zeros(self.nODE1) if y is None else y)
-        return inputs + ((self.data,) if self.nData else ())
+        return inputs + ((self.data,) if self.nData else ()) + self._ParameterArguments()
 
     def MassMatrixTriplets(self, q=None, q_t=None, t=0.):
         """the global mass matrix as triplets (rows, columns, values), a value per nonzero local entry; equal rows
@@ -1667,10 +1721,58 @@ class SymbolicSystem(SymbolicSystemBase):
             return self._Matrix(np.zeros(0, dtype=int), np.zeros(0, dtype=int), np.zeros(0), sparse)
         return self._Matrix(np.concatenate(rows), np.concatenate(columns), np.concatenate(values), sparse)
 
+    def ODE2RHSParameterJacobian(self, q=None, q_t=None, t=0., y=None):
+        """the derivative df/dp of the forces of ODE2RHS by the parameters, in the order of parameterNames: one call of
+        the one-pass derivative of the composed system by its input p, as dr/dq by q (#3159)
+
+        Args:
+            q: the ODE2 coordinates, of size nODE2; None: zero
+            q_t: the ODE2 velocities; None: zero
+            t: the time
+            y: the ODE1 coordinates, as in ODE2RHS
+
+        Returns:
+            the matrix (nODE2 x number of parameters)
+        """
+        self._CheckParameterJacobian('ODE2RHSParameterJacobian')
+        (q, q_t, _) = self._State(q, q_t)
+        inputs = self._ComposedInputs(q, q_t, t, self._ODE1State(y, 'ODE2RHSParameterJacobian'))
+        return np.array(self.composed['ODE2RHS'].EvaluateJacobian('p', *inputs), dtype=float).reshape(self.nODE2, len(self._parameters))
+
+    def MassMatrixParameterJacobian(self, q=None, q_t=None, t=0.):
+        """the derivatives dM/dp_k of the mass matrix by the parameters, in the order of parameterNames, by one call of
+        the one-pass derivative of the composed system by its input p (#3159)
+
+        Args:
+            q: the ODE2 coordinates, of size nODE2; None: zero
+            q_t: the ODE2 velocities; None: zero
+            t: the time
+
+        Returns:
+            the array (number of parameters x nODE2 x nODE2), dM/dp_k at index k
+        """
+        self._CheckParameterJacobian('MassMatrixParameterJacobian')
+        (q, q_t, _) = self._State(q, q_t)
+        (rows, columns) = (self.composed['rows'], self.composed['columns'])
+        nParameters = len(self._parameters)
+        result = np.zeros((nParameters, self.nODE2, self.nODE2))
+        if len(rows):
+            values = np.array(self.composed['massMatrix'].EvaluateJacobian('p', *self._ComposedInputs(q, q_t, t)),
+                              dtype=float).reshape(-1, nParameters)[:len(rows)]
+            for k in range(nParameters):
+                np.add.at(result[k], (rows, columns), values[:, k])
+        return result
+
+    def _CheckParameterJacobian(self, where):
+        if self.composed is None or not self._parameters:
+            raise ValueError('SymbolicSystem.' + where + ': needs parameters, SymbolicSystem(mbs, parameters='
+                             'creator.parameterBindings), and the composed system, composeSystem=True')
+
     def _ItemFunction(self, kind, i, joint):
         """connector i of kind as one exudyn.symbolic.Function (#3166): its generalized forces, J_pos^T f + J_rot^T m of
         its markers - for a joint its constraint equations c and its reaction forces C_q^T z, one vector -, of the
-        variables q<g> and q_t<g>, the local coordinates of each body or node g of its markers, then z (of a joint) and t;
+        variables q<g> and q_t<g>, the local coordinates of each body or node g of its markers, then z (of a joint) or
+        x, t and the parameters p;
         the same expressions as Equations(); returned with the local indices of each g, built once"""
         key = (id(kind), i)
         if key in self._itemFunctions:
@@ -1694,7 +1796,7 @@ class SymbolicSystem(SymbolicSystemBase):
         z = variables.Add('z', np.zeros(nConstraints)) if joint else None
         x = variables.Add('x', np.zeros(len(item['ltgData']))) if not joint else None #the data coordinates (#3196)
         t = variables.Add('t', 0.)
-        (backend, Call, local) = (_Backend('symbolic', parameterVariables=False), _Caller('symbolic'), np.arange(n))
+        (backend, Call, local) = (self._ParameterBackend(variables), _Caller('symbolic'), np.arange(n))
         (states, jacobians) = self._MarkerStateExpressions(item, local, backend, Call, t, qs, q_ts)
         parameters = self._ParameterVector(backend, objectNumber, item['parameters'])
         f = [0]*n
@@ -1723,7 +1825,7 @@ class SymbolicSystem(SymbolicSystemBase):
             values.append(z[kind.parameters[i]['ltgAE']])
         else:
             values.append(self.data[kind.parameters[i]['ltgData']])
-        values.append(float(t))
+        values += [float(t), *self._ParameterArguments()]
         derivatives = []
         for (g, group) in enumerate(groups):
             d_q = np.array(function.EvaluateJacobian('q' + str(g), *values), dtype=float).reshape(-1, len(group))
@@ -2385,6 +2487,7 @@ class _Backend:
             raise ValueError("SymbolicSystem.Equations: format must be 'symbolic' or 'sympy', not " + str(format))
         self.format = format
         self.parameterVariables = parameterVariables
+        self.parameterLists = None #per item, the expressions of its parameters in the input p of a recording (#3159)
         if format == 'sympy':
             try:
                 import sympy

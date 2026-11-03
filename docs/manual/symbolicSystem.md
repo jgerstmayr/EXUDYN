@@ -42,8 +42,10 @@ system = SymbolicSystem(mbs)
 - `SetSystemState`: a state written into `mbs`;
 - the parameters of the user items given as expressions of named variables of the model,
   `esym.Real(name, value, scope=mbs)`, stay expressions of these variables in the equations,
-  `SymbolicSystem(mbs, parameters=creator.parameterBindings)`, for derivatives by them; `SetParameterValues` sets new
-  values (#3159, #3208). Every parameter of a user item may be such an expression - the stiffness of a spring-damper,
+  `SymbolicSystem(mbs, parameters=creator.parameterBindings)`, for derivatives by them. The evaluation takes the values
+  of the parameters as an input: `SetParameterValues({'k': 650.})` sets new values without recording anything again,
+  and `ODE2RHSParameterJacobian` and `MassMatrixParameterJacobian` give the derivatives of the forces and of the mass
+  matrix by the parameters, in the order of `parameterNames` (#3159, #3208). Every parameter of a user item may be such an expression - the stiffness of a spring-damper,
   the radii of a contact, the matrices of a rigid-body spring-damper, a distance -, and the inertia of a rigid body:
   `RigidBodyInertia` and its shapes take symbolic values, `InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1])`.
   The frames of joints and connectors and the loads are numbers.

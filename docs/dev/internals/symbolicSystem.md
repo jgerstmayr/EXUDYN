@@ -65,9 +65,14 @@ decomposed dense, as forming the sparse matrix cost more than the evaluation.
 **The parameters** (#3152, #3159): the parameters of the user items may be expressions of named variables of
 `mbs.symbolicVariables` (#3208), kept per item in the `ParameterBindings` of `UserItemCreator`. `Equations()` passes
 for each item its list of expressions and numbers as `parameters` instead of the numbers, so that the equations carry
-the variables, and its `'parameters'` lists them; the composed system of the evaluation keeps the numbers.
-`SetParameterValues` sets the variables, writes the numbers into the items (`ParameterBindings.Apply`) and builds the
-system again. The recording of a kind stays one recording with `parameters` as its argument, so one serves all items
+the variables, and its `'parameters'` lists them. The recordings of the evaluation - the composed system and the
+functions of the connectors, joints and ObjectGenericDAE constraints for their Jacobians - take the values of the
+parameters as their last input `p` (`_ParameterBackend`): the bound expressions are written in the components of `p`
+by one `esym.Function` of the bindings in the named variables, called with `p[k]` as arguments. So `SetParameterValues`
+sets the variables, writes the numbers into the items (`ParameterBindings.Apply`) and into the tables the system keeps
+for the evaluation item by item, and records nothing - 0.04 ms against 6 ms of building the system for
+symbolicParameterJacobianTest.py -; `ODE2RHSParameterJacobian` and `MassMatrixParameterJacobian` are one
+`EvaluateJacobian('p', ...)` of the composed recordings. The algebraic equations have no derivative by `p`. The recording of a kind stays one recording with `parameters` as its argument, so one serves all items
 of the kind in C++. `RigidBodyInertia` keeps symbolic values as numpy arrays of `esym.Real` components (`_InertiaArray`),
 and forms its products component by component (`_Scaled`, `_ParallelAxis`), as an operation of a number array with an
 `esym.Real` would give an `esym.Matrix`; its checks and its drawing use the present values (`_Numbers`).

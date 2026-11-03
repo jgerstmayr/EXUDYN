@@ -5729,6 +5729,30 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg12-67-4"></a>
+### RG12.67.4 — The parameters as an input of the composed system; RG12.67 closed (2026-11-03, #3159)
+- Maintainer 2026-11-03: do RG12.67.4 now; RG12.67.3.2 (the symbolic frames) closed without workarounds - user
+  markers should resolve it -, RG12.67.5 (forward sensitivities) abandoned: beside adjoint methods, numerical
+  sensitivities are simpler and not much slower; sensitivities may come with advanced solvers.
+- `SymbolicSystem._ParameterBackend(variables)`: with parameter bindings the input `p` of the values of the parameters
+  (the order of `parameterNames`, those of `ParameterBindings.Parameters()`) is added to the inputs of the composed
+  system and of the item functions (`_ItemFunction` of the connectors and joints, `_DAEConstraintFunction`); the
+  bound expressions in the components of p by one `esym.Function` of all bound expressions in the named variables,
+  written as a Python function by codeExport and called with `p[k]` (the substitution of RG12.60). `_ParameterVector`
+  takes these lists from the backend.
+- `SetParameterValues`: the variables, `ParameterBindings.Apply`, the values of p, and the numbers of the tables of the
+  evaluation item by item - the user bodies, the connectors, joints and DAE objects, the markers on user bodies, the
+  loads on user bodies (a gravity load reads the mass of its body) -; no rebuild: 0.04 ms against 6.1 ms of building
+  the system of symbolicParameterJacobianTest.py.
+- `ODE2RHSParameterJacobian(q, q_t, t, y)` (nODE2 x np) and `MassMatrixParameterJacobian(q, q_t, t)` (np x nODE2 x
+  nODE2), each one `EvaluateJacobian('p', ...)` of a composed recording; they need the composed system and parameters.
+  The algebraic equations have no derivative by p (not needed now).
+- symbolicParameterJacobianTest.py (new): a user rigid body of the inertia of rho and L on a revolute joint, two
+  spring-dampers of k and k/2, a mass point of m; after SetParameterValues the forces, mass matrix, residual Jacobian,
+  constraints and reaction forces of the composed and the item-by-item system equal those of systems built anew to
+  the bit (0.0), the recordings the same objects; the derivatives by the four parameters within 1.5e-10 (relative) of
+  central differences. symbolicSystemParametersTest.py and symbolicRigidBodyInertiaTest.py unchanged.
+
 <a id="rg12-67-3-1"></a>
 ### RG12.67.3.1 — The symbolic inertia and the symbolic arguments of the Create functions (2026-11-02, #3159)
 - `RigidBodyInertia` and the shapes (InertiaCuboid, RodX, MassPoint, Sphere, HollowSphere, Cylinder), Translated,

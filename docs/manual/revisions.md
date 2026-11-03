@@ -111,7 +111,9 @@ restores the old behaviour for the transition (#3208). The parameters of the use
 expressions of such variables (`stiffness=k/2 + 0.1*m1`), kept in `creator.parameterBindings`, which `SymbolicSystem`
 takes as `parameters`; a connector at the center of a user mass point is on a marker of its body (#3159, #3207).
 `RigidBodyInertia` and its shapes take symbolic values, e.g. `InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1])`,
-so that the inertia of a user rigid body is an expression of the parameters (#3159).
+so that the inertia of a user rigid body is an expression of the parameters (#3159). `SymbolicSystem` takes the values
+of the parameters as an input of its recordings: `SetParameterValues` no longer builds the system again, and
+`ODE2RHSParameterJacobian` and `MassMatrixParameterJacobian` give the derivatives by the parameters (#3159).
 ObjectKinematicTree takes a floating base, `baseNodeNumber`, a rigid body node - NodeRigidBodyRotVecLG for the
 explicit solvers -, whose frame is the base of the tree (#1549). The tree has its own Jacobian, computed in parallel,
 which contains the derivative of the mass matrix term, `jacobianMassMatrixDerivative`: a chain of 60 links with a
