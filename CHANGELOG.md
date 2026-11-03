@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 325 | 1.13.334 |
+| 1.13 | Newborn | 326 | 1.13.336 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.336** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Check which functions of HT and twist the user connectors and joints really use, once several are written on HT and twist (#3178)
+  - description: The functions of symbolics.kinematics and exudyn.cUtilities for HT and twist (PointVelocity, LocalTwist, RelativeTwist, and the methods of the symbolic HT) were chosen for the joints and connectors of the Create functions (docs/dev/design/symbolicHT.md). Once several user items of exudyn.symbolics.userItems and new ones are written on HT0, twist0, HT1, twist1, count which functions they use, and decide which stay, which become methods of the HT, and which are missing. Decided: a plan step of its own; the check is done once more user items are written on HT and twist.
+  - **notes:** Counted which functions of HT and twist the user items of exudyn.symbolics.userItems and the C++ connectors, joints, markers and rigid nodes use: the user items use the parts of the frames and twists directly, HT.Relative, the composition, GetRxyz, LogSE3, SetExpSE3 and RelativeTwist; PointVelocity and LocalTwist are not used; the C++ items compute the same relative quantities in the frame of marker 0 and take their Jacobians by automatic differentiation of the marker variations. The proposals - the difference of two twists, the Jacobian of a user joint from its constraints - wait for a decision (revision2026c step RG12.55.13).
+  - date resolved: **2026-11-03 21:44**, date raised: 2026-10-31
 - **1.13.334** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectKinematicTree: an efficient ODE2 Jacobian (#3211)
   - description: ObjectKinematicTree declares ODE2\_ODE2 and ODE2\_ODE2\_t without a function, so CSystem differentiates the whole tree numerically and serially, one evaluation of ComputeMassMatrixAndODE2LHS per coordinate. Decided: an analytic or automatic Jacobian of the forces of the joints (springs, dampers, the PD control, the gyroscopic terms), measured on the kinematic tree performance model first.
   - **notes:** ObjectKinematicTree has its own ODE2 Jacobian, by differences of its inverse dynamics, computed in the parallel assembly; with jacobianMassMatrixDerivative (default True) it contains the derivative of M(q) q\_tt by the coordinates: a chain of 60 links with a spring-damper on each link needs 317 instead of 1591 Newton iterations in 50 steps of generalized-alpha, 1.2 instead of 6.1 s, 0.46 s with four threads. With a floating base or a forceUserFunction the Jacobian is that of the system.
