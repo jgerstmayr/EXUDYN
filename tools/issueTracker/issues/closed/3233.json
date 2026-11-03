@@ -1,0 +1,16 @@
+{
+  "number": 3233,
+  "title": "CreateFFRFFunction with exudyn fast module",
+  "author": "S. Weyrer",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "In exudynFast module, CreateFFRFFunction does not work if no boundary nodes are given, although it should just create the FFRF object without markers (proposed 2026-11-02 by S. Weyrer)",
+  "dateRaised": "2026-11-03",
+  "deadline": "2027-05-02",
+  "dateResolved": "2026-11-03 22:44",
+  "resolvedAuthor": "Claude-SW",
+  "releaseNotes": "Also check for boundaries in exudyn fast module to ensure correct handling if no boundaries are provided",
+  "resolvedInVersion": "1.13.338"
+}

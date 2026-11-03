@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 327 | 1.13.337 |
+| 1.13 | Newborn | 329 | 1.13.339 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.339** `FIX` `HIGH` `LOW EFF` `raised by: S. Weyrer` `resolved by: Claude-SW` Invert template missing (#3234)
+  - description: Compilation problems on Linux due to missing invert template in Matrix.cpp (proposed 2026-11-02 by S. Weyrer)
+  - **notes:** Add the template for invert to fix problems on Linux
+  - date resolved: **2026-11-03 22:44**, date raised: 2026-11-03
+- **1.13.338** `FIX` `LOW` `LOW EFF` `raised by: S. Weyrer` `resolved by: Claude-SW` CreateFFRFFunction with exudyn fast module (#3233)
+  - description: In exudynFast module, CreateFFRFFunction does not work if no boundary nodes are given, although it should just create the FFRF object without markers (proposed 2026-11-02 by S. Weyrer)
+  - **notes:** Also check for boundaries in exudyn fast module to ensure correct handling if no boundaries are provided
+  - date resolved: **2026-11-03 22:44**, date raised: 2026-11-03
 - **1.13.337** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic parameters for every item of the symbolic system: a general way beyond the scalar parameters of the user items (#3159)
   - description: Symbolic parameters are required in the long term; named parameters for the inertia of a rigid body and for the joints need a general solution (\#3152 took the scalar parameters of the mass point and the spring-dampers). To design: parameters of any structure (an inertia from mass, inertia tensor and center of mass, the frames and axes of joints, the matrices of ObjectGenericODE2, the values of loads) given as named esym.Real or expressions of them, mapped to the numbers of the items; a parameter set per system (a VariableSet) instead of per item lists; the derivatives by them (sensitivities) through Equations and the composed system; later the C++ items with numerical and symbolic parameters (symbolicUserItems.md section 6).
   - **notes:** Symbolic parameters of the user items: each parameter of a user item created by UserItemCreator may be an expression of named variables of mbs.symbolicVariables, kept in creator.parameterBindings; RigidBodyInertia and its shapes take symbolic values; SymbolicSystem(mbs, parameters=creator.parameterBindings) keeps the expressions in Equations() and takes the parameter values as an input of its recordings, so that SetParameterValues records nothing again, and ODE2RHSParameterJacobian and MassMatrixParameterJacobian give the derivatives by the parameters. Loads, markers, the frames of joints and connectors and the built-in items hold numbers.

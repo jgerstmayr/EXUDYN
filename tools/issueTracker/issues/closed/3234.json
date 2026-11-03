@@ -1,0 +1,16 @@
+{
+  "number": 3234,
+  "title": "Invert template missing",
+  "author": "S. Weyrer",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "Compilation problems on Linux due to missing invert template in Matrix.cpp (proposed 2026-11-02 by S. Weyrer)",
+  "dateRaised": "2026-11-03",
+  "deadline": "2027-05-02",
+  "dateResolved": "2026-11-03 22:44",
+  "resolvedAuthor": "Claude-SW",
+  "releaseNotes": "Add the template for invert to fix problems on Linux",
+  "resolvedInVersion": "1.13.339"
+}
