@@ -1,0 +1,6 @@
+{
+  "issue": "20261102-235430-S--Weyrer-CreateFFRFFunction-with-exudyn-fast-modu.json",
+  "notes": "Also check for boundaries in exudyn fast module to ensure correct handling if no boundaries are provided",
+  "author": "Claude-SW",
+  "dateProposed": "2026-11-03"
+}

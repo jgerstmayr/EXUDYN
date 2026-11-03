@@ -3037,13 +3037,11 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
         # check whether eigenmodes have been computed
         if femInterface.modeBasis == {}: # this would not be empty if free-free or HCB modes were computed
             raise ValueError(errStr + 'The given femInterface does not hold modes which are needed for component mode synthesis. Use e.g. "femInterface.ComputeHurtyCraigBamptonModes()" before creating an FFRF object.')
-        # check whether boundaries are present
-        freeEigenmodes = False
-        if femInterface.nodeSets == []:
-            freeEigenmodes = True
-            if verbose:
-                # make a print since no boundary conditions here is not very usual; warn the user
-                exu.Print('WARNING: The given femInterface does not hold nodeSets: Free eigenmodes are used and no markers will be created.')
+    # whether boundaries are present decides whether markers are created, so it is no check and is needed in the fast module as well
+    freeEigenmodes = (femInterface.nodeSets == [])
+    if freeEigenmodes and verbose:
+        # make a print since no boundary conditions here is not very usual; warn the user
+        exu.Print('WARNING: The given femInterface does not hold nodeSets: Free eigenmodes are used and no markers will be created.')
     # before doing costly computations, initialize markerNameslist and check whether the marker names and offsets are valid
     # the order of marker names in markerNamesList follows the order in boundaryNamesList upon creating the femInterface
     markerNamesList = []
