@@ -1,0 +1,11 @@
+{
+  "number": 3237,
+  "title": "A Scope in the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "Users build their own scopes with graphicsDataUserFunction on ground objects, which are not meant for that. An integrated viewer of sensors with storeInternal: a region of the view (default top right) with frame, background, automatic axes, ticks, grid, legend and labels, the lines of a list of [sensorY, componentY, sensorX, componentX] up to the visualization time (as the sensor traces with showPast), so that the SolutionViewer animates it and saved images contain it; its own settings per view, an icon and SHIFT+S; one drawing description for OpenGL and the raytracer. Decided (maintainer 2026-11-04): a step of RG6 with a design note (docs/dev/design/scope.md, the defaults of the settings given there); simple and robust, faster than matplotlib; lines, texts and points in plot coordinates later.",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03"
+}

@@ -2869,11 +2869,11 @@ class NodeUser:
 
         positionUserFunction: A Python user function which computes the global position of the node; it must be given; type: NodeUserPositionUserFunction
 
-        positionJacobianUserFunction: A Python user function which computes the position Jacobian; by central differences of the position if not given; type: NodeUserPositionJacobianUserFunction
+        positionJacobianUserFunction: A Python user function which computes the position Jacobian; required if a connector or joint is on the node, else when it is needed; type: NodeUserPositionJacobianUserFunction
 
         rotationMatrixUserFunction: A Python user function which computes the rotation matrix of the node; optional, for rigid markers; type: NodeUserRotationMatrixUserFunction
 
-        rotationJacobianUserFunction: A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given; type: NodeUserRotationJacobianUserFunction
+        rotationJacobianUserFunction: A Python user function which computes the rotation Jacobian (of the global angular velocity); required if a connector or joint on the node requests the orientation, else when it is needed; type: NodeUserRotationJacobianUserFunction
 
         visualization: visualization data, see VNodeUser
 
@@ -9307,7 +9307,7 @@ class VMarkerBodyUser:
 class MarkerBodyUser:
     """A marker on any number of bodies whose position, and with providedMarkerType Position | Orientation its rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh.
     
-    Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.
+    Loads, connectors, joints and sensors use it as a position or rigid marker; a connector or joint on it needs its Jacobian functions (#3107).
     
     Args:
         name: marker's unique name; type: str
@@ -9320,11 +9320,11 @@ class MarkerBodyUser:
 
         positionUserFunction: A Python user function which computes the global position of the marker; it must be given; type: MarkerBodyUserPositionUserFunction
 
-        positionJacobianUserFunction: A Python user function which computes the position Jacobian; by central differences of the position if not given; type: MarkerBodyUserPositionJacobianUserFunction
+        positionJacobianUserFunction: A Python user function which computes the position Jacobian; required if a connector or joint is on the marker, else when it is needed; type: MarkerBodyUserPositionJacobianUserFunction
 
         rotationMatrixUserFunction: A Python user function which computes the rotation matrix of the marker; given exactly for providedMarkerType Position | Orientation; type: MarkerBodyUserRotationMatrixUserFunction
 
-        rotationJacobianUserFunction: A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given; type: MarkerBodyUserRotationJacobianUserFunction
+        rotationJacobianUserFunction: A Python user function which computes the rotation Jacobian (of the global angular velocity); required if a connector or joint on the marker requests the orientation, else when it is needed; type: MarkerBodyUserRotationJacobianUserFunction
 
         visualization: visualization data, see VMarkerBodyUser
 

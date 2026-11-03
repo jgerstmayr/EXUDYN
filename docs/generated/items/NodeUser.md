@@ -27,9 +27,9 @@ The parameters of the item; in a dictionary, its type is 'User':
 | **initialVelocities** | Vector |  | [] | (symbol: $\dot\qv\cIni \in \Rcal^n$) initial velocity coordinates; must have numberOfODE2Coordinates components |
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the node, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default |
 | **positionUserFunction** | NodeUserPositionUserFunction |  | 0 | (symbol: $\LU{0}{\pv}(\qv)$) A Python user function which computes the global position of the node; it must be given |
-| **positionJacobianUserFunction** | NodeUserPositionJacobianUserFunction |  | 0 | (symbol: $\Jm_{pos}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the position Jacobian; by central differences of the position if not given |
+| **positionJacobianUserFunction** | NodeUserPositionJacobianUserFunction |  | 0 | (symbol: $\Jm_{pos}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the position Jacobian; required if a connector or joint is on the node, else when it is needed |
 | **rotationMatrixUserFunction** | NodeUserRotationMatrixUserFunction |  | 0 | (symbol: $\LU{0n}{\Rot}(\qv) \in \Rcal^{3\times 3}$) A Python user function which computes the rotation matrix of the node; optional, for rigid markers |
-| **rotationJacobianUserFunction** | NodeUserRotationJacobianUserFunction |  | 0 | (symbol: $\Jm_{rot}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given |
+| **rotationJacobianUserFunction** | NodeUserRotationJacobianUserFunction |  | 0 | (symbol: $\Jm_{rot}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the rotation Jacobian (of the global angular velocity); required if a connector or joint on the node requests the orientation, else when it is needed |
 | **visualization** | VNodeUser |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -84,15 +84,14 @@ coordinates $\qv_{tot} = \qv\cRef + \qv \in \Rcal^n$ (`qTotal`), the velocities 
 | function | gives | needed for |
 |---|---|---|
 | `positionUserFunction` | $\LU{0}{\pv}(\qv)$ | positions of markers, sensors and the drawing; must be given |
-| `positionJacobianUserFunction` | $\Jm_{pos}(\qv) = \partial \LU{0}{\pv} / \partial \qv$ | forces on MarkerNodePosition, MarkerNodeRigid; by central differences of the position if not given |
+| `positionJacobianUserFunction` | $\Jm_{pos}(\qv) = \partial \LU{0}{\pv} / \partial \qv$ | the velocity; forces on MarkerNodePosition, MarkerNodeRigid; required at Assemble if a connector or joint is on the node (#3107) |
 | `rotationMatrixUserFunction` | $\LU{0n}{\Rot}(\qv)$ | MarkerNodeRigid, optional |
-| `rotationJacobianUserFunction` | $\Jm_{rot}(\qv) = \partial \LU{0}{\tomega} / \partial \dot\qv$ | torques on MarkerNodeRigid; by central differences of the rotation matrix if not given |
+| `rotationJacobianUserFunction` | $\Jm_{rot}(\qv) = \partial \LU{0}{\tomega} / \partial \dot\qv$ | the angular velocity; torques on MarkerNodeRigid; required at Assemble if a connector or joint on the node requests the orientation |
 
 The velocity is $\LU{0}{\vv} = \Jm_{pos} \dot\qv$, the acceleration $\LU{0}{\av} = \Jm_{pos} \ddot\qv + \dot\Jm_{pos}
 \dot\qv$ with $\dot\Jm_{pos}\dot\qv$ by central differences along $\dot\qv$, the global angular velocity
-$\LU{0}{\tomega} = \Jm_{rot} \dot\qv$ and the local one $\LU{n}{\tomega} = \LU{n0}{\Rot}\LU{0}{\tomega}$. Without
-a rotation Jacobian, column $k$ of $\Jm_{rot}$ is the axial vector of $(\partial \Rot / \partial q_k) \Rot\tp$, the
-derivative by central differences. The derivative of $\Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobians
+$\LU{0}{\tomega} = \Jm_{rot} \dot\qv$ and the local one $\LU{n}{\tomega} = \LU{n0}{\Rot}\LU{0}{\tomega}$; what
+needs a Jacobian function that is not given raises, the Jacobians are not approximated (#3107). The derivative of $\Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobians
 of connectors on MarkerNodeRigid need, is computed by central differences; a MarkerNodePosition treats
 $\Jm_{pos}$ as constant in the Jacobians, so a position that is not linear in $\qv$ makes the Newton iteration
 converge slower, not wrong.
@@ -173,9 +172,12 @@ A Python user function gets its vector and matrix arguments as read-only numpy a
 def UFposition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     (r, phi, z) = qTotal
     return [r*np.cos(phi), r*np.sin(phi), z]
+def UFpositionJacobian(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    (r, phi, z) = qTotal
+    return [[np.cos(phi), -r*np.sin(phi), 0], [np.sin(phi), r*np.cos(phi), 0], [0, 0, 1]]
 node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=3, referenceCoordinates=[1,0,0],
                             initialCoordinates=[0,0,0], initialVelocities=[0,1,0],
-                            positionUserFunction=UFposition))
+                            positionUserFunction=UFposition, positionJacobianUserFunction=UFpositionJacobian))
 #free coordinates with unit mass: phi = t
 mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrix=np.eye(3)))
 

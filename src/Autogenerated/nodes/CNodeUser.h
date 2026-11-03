@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:57:13 (last modified)
+* @date         2026-11-03  23:57:24 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,9 +35,9 @@ public: // AUTO:
     Vector referenceCoordinates;                  //!< AUTO: reference coordinates of the node; must have numberOfODE2Coordinates components
     Vector parameters;                            //!< AUTO: the parameters of the node, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default
     PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the node; it must be given
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian; by central differences of the position if not given
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian; required if a connector or joint is on the node, else when it is needed
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix of the node; optional, for rigid markers
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity); required if a connector or joint on the node requests the orientation, else when it is needed
     //! AUTO: default constructor with parameter initialization
     CNodeUserParameters()
     {
@@ -171,13 +171,13 @@ public: // AUTO:
     //! AUTO:  call of positionUserFunction; implemented in evaluateUserFunctions.cpp
     void EvaluatePosition(Vector3D& position, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
-    //! AUTO:  call of positionJacobianUserFunction, or central differences of the position; implemented in evaluateUserFunctions.cpp
+    //! AUTO:  call of positionJacobianUserFunction, which raises if it is not given; implemented in evaluateUserFunctions.cpp
     void EvaluatePositionJacobian(Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of rotationMatrixUserFunction; implemented in evaluateUserFunctions.cpp
     void EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
-    //! AUTO:  call of rotationJacobianUserFunction, or central differences of the rotation matrix; implemented in evaluateUserFunctions.cpp
+    //! AUTO:  call of rotationJacobianUserFunction, which raises if it is not given; implemented in evaluateUserFunctions.cpp
     void EvaluateRotationJacobian(Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override

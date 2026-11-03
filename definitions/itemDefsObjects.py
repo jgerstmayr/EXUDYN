@@ -2662,8 +2662,10 @@ definitions.append(ItemDefinition(
     The velocity is $\LU{0}{\vv} = \Jm_{pos} \dot\qv$, the global angular velocity
     $\LU{0}{\tomega} = \Jm_{rot} \dot\qv$ and the local one $\LU{b}{\tomega} = \LU{b0}{\Rot}\LU{0}{\tomega}$; the derivative
     of $\Jm_{pos}\tp \fv + \Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobians of connectors need, is computed
-    by central differences of the Jacobian user functions. A marker that needs a function the body is not given
-    raises when it is evaluated.
+    by central differences of the Jacobian user functions. A connector or joint on a marker of the body needs the
+    position Jacobian function, and with the orientation the rotation Jacobian function, at Assemble (#3107); other
+    markers that need a function the body is not given raise when it is evaluated, so a body with markers only on its
+    nodes needs none.
 
     #### Drawing
 

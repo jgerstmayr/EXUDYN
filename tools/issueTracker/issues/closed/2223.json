@@ -1,0 +1,15 @@
+{
+  "number": 2223,
+  "title": "symbolic",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "add vector and matrix functionality for Diff()",
+  "dateRaised": "2026-01-16",
+  "deadline": "2026-07-15",
+  "dateResolved": "2026-11-03 23:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded: Diff of vectors and matrices by a seed of a variable and component (#3115), esym.Jacobian (#3163) and the one-pass derivative (#3116, #3171) (maintainer 2026-11-03)",
+  "resolvedInVersion": "1.13.344"
+}

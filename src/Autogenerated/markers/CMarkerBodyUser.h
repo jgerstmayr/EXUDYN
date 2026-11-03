@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-26  09:52:22 (last modified)
+* @date         2026-11-04  00:02:40 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,9 +35,9 @@ public: // AUTO:
     Marker::Type providedMarkerType;              //!< AUTO: what the marker provides besides Body and Object: exu.MarkerType.Position, or exu.MarkerType.Position | exu.MarkerType.Orientation with the rotationMatrixUserFunction
     Vector parameters;                            //!< AUTO: the parameters of the marker, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout
     PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the marker; it must be given
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian; by central differences of the position if not given
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian; required if a connector or joint is on the marker, else when it is needed
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix of the marker; given exactly for providedMarkerType Position | Orientation
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity); required if a connector or joint on the marker requests the orientation, else when it is needed
     //! AUTO: default constructor with parameter initialization
     CMarkerBodyUserParameters()
     {
@@ -54,7 +54,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CMarkerBodyUser
-* @brief        A marker on any number of bodies whose position, and with providedMarkerType Position | Orientation its rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.
+* @brief        A marker on any number of bodies whose position, and with providedMarkerType Position | Orientation its rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; a connector or joint on it needs its Jacobian functions (#3107).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -160,13 +160,13 @@ public: // AUTO:
     //! AUTO:  call of positionUserFunction; implemented in evaluateUserFunctions.cpp
     void EvaluatePosition(const CSystemData& cSystemData, Vector3D& position, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
-    //! AUTO:  call of positionJacobianUserFunction, or central differences of the position; implemented in evaluateUserFunctions.cpp
+    //! AUTO:  call of positionJacobianUserFunction, which raises if it is not given; implemented in evaluateUserFunctions.cpp
     void EvaluatePositionJacobian(const CSystemData& cSystemData, Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of rotationMatrixUserFunction; implemented in evaluateUserFunctions.cpp
     void EvaluateRotationMatrix(const CSystemData& cSystemData, Matrix3D& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
-    //! AUTO:  call of rotationJacobianUserFunction, or central differences of the rotation matrix; implemented in evaluateUserFunctions.cpp
+    //! AUTO:  call of rotationJacobianUserFunction, which raises if it is not given; implemented in evaluateUserFunctions.cpp
     void EvaluateRotationJacobian(const CSystemData& cSystemData, Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
 };

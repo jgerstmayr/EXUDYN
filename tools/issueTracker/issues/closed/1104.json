@@ -1,0 +1,15 @@
+{
+  "number": 1104,
+  "title": "GenericObject",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "HUGE",
+  "description": "add most general generic object containing ODE1, ODE2 and AE equations + unknowns; jacobianAE as user functions",
+  "dateRaised": "2022-05-23",
+  "deadline": "2022-07-22",
+  "dateResolved": "2026-11-03 23:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded by ObjectGenericDAE (#3170): ODE2, ODE1 and algebraic equations on the coordinates of its nodes, with user functions and their Jacobians (maintainer 2026-11-03)",
+  "resolvedInVersion": "1.13.342"
+}

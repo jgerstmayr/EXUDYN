@@ -1,0 +1,11 @@
+{
+  "number": 3236,
+  "title": "MarkerNodeUser: a marker on the coordinates of nodes by Python user functions",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "CreateCoordinateConstraint of UserItemCreator and the built-in coordinate constraint use MarkerNodeCoordinate; a user marker on nodes, whose value and Jacobian are Python (and recordable) user functions of the coordinates of its nodes, lets the coordinate constraint and coordinate connectors be user items. Decided (maintainer 2026-11-04): MarkerNodeUser first, as a step of its own (revision2026c RG7.18); MarkerBodyUser with coordinates and user shapes for contact and flexible interfaces are not planned yet (#3106 closed).",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03"
+}

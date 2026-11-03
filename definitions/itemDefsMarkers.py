@@ -2138,7 +2138,7 @@ definitions.append(ItemDefinition(
         Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 """,
     cParentClass=ParentClassCMarker,
-    overallDescription=r"""A marker on any number of bodies whose position, and with providedMarkerType Position | Orientation its rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.""",
+    overallDescription=r"""A marker on any number of bodies whose position, and with providedMarkerType Position | Orientation its rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; a connector or joint on it needs its Jacobian functions (#3107).""",
     classType=ClassTypeMarker,
     miniExample=r"""    #a marker at the midpoint of two mass points, held by a spring to the ground
     nA = mbs.AddNode(NodePoint(referenceCoordinates=[-0.5,0,0], initialCoordinates=[0,0.1,0]))
@@ -2147,7 +2147,10 @@ definitions.append(ItemDefinition(
     bB = mbs.AddObject(MassPoint(nodeNumber=nB, mass=1))
     def UFposition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
         return 0.5*(qTotal[0:3] + qTotal[3:6])
-    mMid = mbs.AddMarker(MarkerBodyUser(bodyNumbers=[bA, bB], positionUserFunction=UFposition))
+    def UFpositionJacobian(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+        return 0.5*np.hstack((np.eye(3), np.eye(3)))
+    mMid = mbs.AddMarker(MarkerBodyUser(bodyNumbers=[bA, bB], positionUserFunction=UFposition,
+                                        positionJacobianUserFunction=UFpositionJacobian))
     mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
     k = 100
     mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround, mMid], stiffness=[k,k,k]))
@@ -2169,9 +2172,9 @@ definitions.append(ItemDefinition(
     | user function | gives | needed for |
     |---|---|---|
     | `positionUserFunction` | $\LU{0}{\pv}(\qv)$ | always |
-    | `positionJacobianUserFunction` | $\Jm_{pos} = \partial \LU{0}{\pv} / \partial \qv \in \Rcal^{3 \times n}$ | optional, by central differences of the position |
+    | `positionJacobianUserFunction` | $\Jm_{pos} = \partial \LU{0}{\pv} / \partial \qv \in \Rcal^{3 \times n}$ | the velocity, forces; required at Assemble if a connector or joint is on the marker (#3107) |
     | `rotationMatrixUserFunction` | $\LU{0m}{\Rot}(\qv)$ | providedMarkerType Position \| Orientation: joints, torques |
-    | `rotationJacobianUserFunction` | $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv \in \Rcal^{3 \times n}$ | optional, by central differences of the rotation matrix |
+    | `rotationJacobianUserFunction` | $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv \in \Rcal^{3 \times n}$ | the angular velocity, torques; required at Assemble if a connector or joint on the marker requests the orientation |
 
     The velocity is $\Jm_{pos} \dot \qv$, the angular velocity $\Jm_{rot} \dot \qv$. A force $\fv$ on the marker gives
     the generalized forces $\Jm_{pos}\tp \fv$, a torque $\Jm_{rot}\tp \mv$.
@@ -2182,8 +2185,9 @@ definitions.append(ItemDefinition(
     default, or `exu.MarkerType.Position | exu.MarkerType.Orientation` for a rigid marker. Position | Orientation needs
     the rotationMatrixUserFunction, and a rotation function given with Position alone is refused at Assemble; a joint
     or a torque on a marker of type Position is refused as on any position marker. The user functions
-    are called serially, in the main thread; the marker and what depends on it are drawn in the main thread. Connectors
-    on the marker compute their Jacobian numerically.
+    are called serially, in the main thread; the marker and what depends on it are drawn in the main thread. What
+    needs a Jacobian function that is not given raises, the Jacobians are not approximated (#3107); the Jacobians of
+    connectors on the marker are computed numerically.
     """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -2212,7 +2216,7 @@ definitions.append(ItemDefinition(
         ItemParameter(destination=DestComp+DestParam,
             pythonName='positionJacobianUserFunction',
             defaultValue=0,
-            description=r"""$\Jm_{pos}(\qv) \in \Rcal^{3\times n}$A Python user function which computes the position Jacobian; by central differences of the position if not given""",
+            description=r"""$\Jm_{pos}(\qv) \in \Rcal^{3\times n}$A Python user function which computes the position Jacobian; required if a connector or joint is on the marker, else when it is needed""",
             userFunction=MarkerBodyUser_matrixUserFunction),
         ItemParameter(destination=DestComp+DestParam,
             pythonName='rotationMatrixUserFunction',
@@ -2222,7 +2226,7 @@ definitions.append(ItemDefinition(
         ItemParameter(destination=DestComp+DestParam,
             pythonName='rotationJacobianUserFunction',
             defaultValue=0,
-            description=r"""$\Jm_{rot}(\qv) \in \Rcal^{3\times n}$A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given""",
+            description=r"""$\Jm_{rot}(\qv) \in \Rcal^{3\times n}$A Python user function which computes the rotation Jacobian (of the global angular velocity); required if a connector or joint on the marker requests the orientation, else when it is needed""",
             userFunction=MarkerBodyUser_matrixUserFunction),
         ItemFunctionDef('GetObjectNumber',
             implementation='return parameters.bodyNumbers[localIndex];'),
@@ -2257,7 +2261,7 @@ definitions.append(ItemDefinition(
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluatePositionJacobian',
             args='const CSystemData& cSystemData, Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
-            description=r'call of positionJacobianUserFunction, or central differences of the position; implemented in evaluateUserFunctions.cpp'),
+            description=r'call of positionJacobianUserFunction, which raises if it is not given; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateRotationMatrix',
             args='const CSystemData& cSystemData, Matrix3D& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
@@ -2265,7 +2269,7 @@ definitions.append(ItemDefinition(
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateRotationJacobian',
             args='const CSystemData& cSystemData, Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
-            description=r'call of rotationJacobianUserFunction, or central differences of the rotation matrix; implemented in evaluateUserFunctions.cpp'),
+            description=r'call of rotationJacobianUserFunction, which raises if it is not given; implemented in evaluateUserFunctions.cpp'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',
             defaultValue=True,

@@ -1,0 +1,15 @@
+{
+  "number": 2267,
+  "title": "GetURDFrobotData",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "add detailed description to function, in particular to returned dict",
+  "dateRaised": "2026-02-04",
+  "deadline": "2026-08-03",
+  "dateResolved": "2026-11-03 23:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded by the revision of the URDF import as a whole in revision2026c group RG15 (maintainer 2026-11-03)",
+  "resolvedInVersion": "1.13.345"
+}

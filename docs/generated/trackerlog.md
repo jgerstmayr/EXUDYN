@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.341.dev1
-- last change = 2026-11-03
-- Number of issues = 3236
-- Number of resolved issues = 3118 (341 in current version)
+- Exudyn version = 1.13.348.dev1
+- last change = 2026-11-04
+- Number of issues = 3239
+- Number of resolved issues = 3125 (348 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,16 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Explicit solvers with constraints: coordinate constraints eliminated in the symbolic SolveExplicit, Euler parameters by projection after each step (#3238)
+  - description: The C++ explicit solver eliminates CoordinateConstraints to the ground (explicit.eliminateConstraints) and refuses other constraints; the symbolic SolveExplicit refuses every algebraic equation; nodes with Euler parameters are refused by explicit solvers, as their norm is an algebraic equation. Decided (maintainer 2026-11-04, revision2026c step RG16.5): the elimination of coordinate constraints also in the symbolic SolveExplicit, in line with C++; Euler parameters in explicit solvers by the projection onto the unit norm after each step, without raising for their constraint, with a possible drift of momentum and energy; the analysis first (docs/dev/design/advancedSolvers.md section 3.5).
+  - **remarks:** 2026-11-04: the step is revision2026c RG20.5 (requested as RG16, which revision2026b has taken).
+  - date raised: 2026-11-04
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` A Scope in the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer (#3237)
+  - description: Users build their own scopes with graphicsDataUserFunction on ground objects, which are not meant for that. An integrated viewer of sensors with storeInternal: a region of the view (default top right) with frame, background, automatic axes, ticks, grid, legend and labels, the lines of a list of \[sensorY, componentY, sensorX, componentX\] up to the visualization time (as the sensor traces with showPast), so that the SolutionViewer animates it and saved images contain it; its own settings per view, an icon and SHIFT+S; one drawing description for OpenGL and the raytracer. Decided (maintainer 2026-11-04): a step of RG6 with a design note (docs/dev/design/scope.md, the defaults of the settings given there); simple and robust, faster than matplotlib; lines, texts and points in plot coordinates later.
+  - date raised: 2026-11-04
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` MarkerNodeUser: a marker on the coordinates of nodes by Python user functions (#3236)
+  - description: CreateCoordinateConstraint of UserItemCreator and the built-in coordinate constraint use MarkerNodeCoordinate; a user marker on nodes, whose value and Jacobian are Python (and recordable) user functions of the coordinates of its nodes, lets the coordinate constraint and coordinate connectors be user items. Decided (maintainer 2026-11-04): MarkerNodeUser first, as a step of its own (revision2026c RG7.18); MarkerBodyUser with coordinates and user shapes for contact and flexible interfaces are not planned yet (\#3106 closed).
+  - date raised: 2026-11-04
 - `CHANGE` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` Remove special.deprecations.symbolicVariablesWithoutScope, the named symbolic variables of no scope (#3231)
   - description: Since \#3208 a named esym.Real, Vector or Matrix is a variable of a scope, esym.variables or mbs.symbolicVariables, and a symbolic user function reads only its arguments and the variables of mbs.symbolicVariables; exudyn.special.deprecations.symbolicVariablesWithoutScope restores the variables of no scope for the transition. Decided: the flag and the branches of NamedRealInScope, NamedArrayInScope and CheckVariablesOfRecording that it takes are removed when scripts have changed, as \#3016 for symbolicStarProduct; a delayed issue without a plan step.
   - date raised: 2026-11-02
@@ -9058,10 +9068,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` exudyn.symbolic: sparse matrices in the table of operations (#3168)
   - description: Some objects work internally with sparse matrices - a 20x20 matrix mostly of zeros, recorded as a dense matrix of components, whose zeros Optimize could remove. Find how the table of operations represents and evaluates such matrices: a sparse matrix as a kind of slot (its pattern fixed at recording, the nonzero components as operands), the matrix-vector and matrix-matrix products and their derivative rules on the pattern, and the export (triplets). Not for now. \[2026-10-31, Claude-JG\]: Proposal in docs/dev/design/symbolicSystem.md section 12.7: a sparse matrix declared by esym.SparseMatrix(rows, columns, triplets) or esym.Matrix(...).Sparse(), its pattern fixed at recording; in the table a slot kind with compressed rows and codes for A v, A^T v, s A, A + B, A\[i,j\] and the dense matrix; the derivative nnz x n on the pattern; results equal to the dense product to the bit; triplets in the export; after \#3176.
   - date raised: 2026-10-29
-- `IMPROVEMENT` `HUGE EFF` `raised by: Claude-JG` One table of the symbolic operations: SymbolicProgram and the operation table in SymbolicTable.h/.cpp beside the expression classes (#3153)
-  - description: R1 of docs/dev/design/symbolicSystem.md. The expression tree stays for the recording and the simple evaluation; the flat evaluation, the derivatives, Optimize, the export, the count and the uniform evaluation work on a program built from the tree and a table per operation code (name, arity, kinds, size, evaluation, forward derivative, later derivative as new nodes, simplification, text per format). New files src/Linalg/SymbolicTable.h and .cpp; the old code stays as fallback, selected by a switch, until the new path gives the same results bit for bit; item outputs as an operation code with the data of the item and a link to the MainSystem. Four stages, design section 12.7.
-  - **remarks:** Stage 3: option A - the expression classes stay and the program is built from the graph after the recording, as now; no merging of equal nodes while recording (no hash tables; many copies of a mechanism go to a vectorized representation later).
-  - date raised: 2026-10-28
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Evaluate the kinds of a symbolic system by one Numba-compiled function per kind, with explicit integration (#3139)
   - description: The numpy code of exudyn.misc.symbolicExport per kind compiled by numba.njit, a parallel loop over the objects of a kind through the LTG and parameter tables; explicit integration with a constant mass matrix factored once or the matrix-free product from the residuals; Numba optional at the point of use. Formerly revision2026c step RG12.51.6. Design docs/dev/design/uniformEvaluation.md section 1.
   - date raised: 2026-10-28
@@ -9071,12 +9077,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Evaluate a symbolic system by uniform array operations with numpy on the CPU, for one state and for ensembles (#3137)
   - description: The forces and the mass matrices of the bodies of a SymbolicSystem as a graph of scalar operations, scheduled in levels and evaluated per level and kind of operation by numpy ufuncs on arrays of nodes x states; first as an experiment in docs/dev/design on an example system, then in exudyn.misc once the form is chosen, with ensembles of states in the explicit solver. Design docs/dev/design/uniformEvaluation.md.
   - date raised: 2026-10-28
-- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` The position and rotation Jacobians of NodeUser, ObjectUserBody and MarkerBodyUser by central differences (#3107)
-  - description: revision2026c step RG7.17: when their Jacobian functions are missing, the three user items compute the position and rotation Jacobians by central differences, so a joint on them gets a partly numerical constraint Jacobian - nowhere else in Exudyn. To be decided (tbd): require the Jacobian functions, at least when a joint uses the item, and keep central differences only behind an exudyn.special flag with its dangers documented. Kept as it is for now.
-  - date raised: 2026-10-26
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` MarkerBodyUser of type Coordinates, and user shapes for contact and flexible interfaces (#3106)
-  - description: revision2026c step RG7.16: markerType Coordinates with a coordinatesUserFunction returning the values and their Jacobian, for CoordinateSpringDamper, CoordinateConstraint and LoadCoordinate; then shapes defined by the user, such as a polynomial curve and a polynomial shell surface, for contact and flexible interfaces.
-  - date raised: 2026-10-26
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: The C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.
   - date raised: 2026-10-21
@@ -9130,10 +9130,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Extend SlidingJoint for rotation case
   - **remarks:** planned as revision2026b step RG4.22 (triage 2026-10-07)
   - date raised: 2026-03-02
-- `DOCU` `LOW EFF` GetURDFrobotData (#2267)
-  - description: add detailed description to function, in particular to returned dict
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2026-02-04
 - `EXTENSION` `MEDIUM EFF` explicit solver (#2238)
   - description: add adaptive step refinement for case of divergence - define limit for velocities/solution increment to decide step refinement (+ nan/inf)
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9146,10 +9142,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add cylindrical test problem; compare to ANCFCable2D
   - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
   - date raised: 2026-01-18
-- `EXTENSION` `HIGH EFF` symbolic (#2223)
-  - description: add vector and matrix functionality for Diff()
-  - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
-  - date raised: 2026-01-16
 - `EXTENSION` `MEDIUM EFF` MarkerSuperElementRigid (#2184)
   - description: highly improve efficiency for larger number of nodes by adding according precomputed transformations
   - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)
@@ -9259,10 +9251,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: check injection of user functions with special item-function method, and separate cpp file holding prototypes of those functions, which may be injected accordingly; use mechanism to record user functions in exudyn.functions.userCpp.SpringDamper
   - **remarks:** planned as revision2026b step RG8.10 (triage 2026-10-07)
   - date raised: 2024-01-29
-- `EXTENSION` `HUGE EFF` Parameter type (#1722)
-  - description: add exudyn.Parameter for all parameters occuring in items, such as referencePosition, physicsMass, etc.; this helps to avoid strings in user functions to access parameter and may allow to use  more efficient case/switch in GetObjectParameter(...)
-  - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
-  - date raised: 2023-12-09
 - `EXAMPLE` `MEDIUM EFF` Mainsystem extensions (#1720)
   - description: change create2D functions into separate Create functions
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9307,10 +9295,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add description regarding which functions are needed to add C++ user elements
   - **remarks:** planned as revision2026b step RG8.9 (triage 2026-10-07)
   - date raised: 2022-06-12
-- `EXTENSION` `HUGE EFF` GenericObject (#1104)
-  - description: add most general generic object containing ODE1, ODE2 and AE equations + unknowns; jacobianAE as user functions
-  - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
-  - date raised: 2022-05-23
 - `EXTENSION` `HIGH EFF` ANCFBeam3D (#1087)
   - description: complete implementation of all functions (rigid marker, etc.)
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

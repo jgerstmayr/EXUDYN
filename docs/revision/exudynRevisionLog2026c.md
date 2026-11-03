@@ -5729,6 +5729,58 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg6-20-rg19-rg20"></a>
+### RG6.20, RG19, RG20 — The Scope, the robotics revision and the advanced solvers planned and evaluated; closings (2026-11-04, #3237, #3238)
+- **Closings** (maintainer 2026-11-04): #2223 (Diff of vectors and matrices, superseded by #3115, #3163), #1104 (a general
+  generic object, superseded by ObjectGenericDAE #3170), #1722 (exudyn.Parameter, to be done differently), #2267 and
+  RG11.8.11 (the URDF import is revised as a whole in RG19), #3106 and RG7.16 (contact and flexible interfaces in C++
+  first; MarkerNodeUser first, RG7.18 with #3236); RG12.65 closed with #3153 resolved, RG12.65.7 and .7.2 closed as
+  steps, #3168 stays open. RG7.15 stays open (to be extended later), #1904 stays.
+- **Numbers**: the maintainer asked for RG15 (robotics) and RG16 (advanced solvers); revision2026b has the groups RG15 to
+  RG18, and step numbers are permanent (planManager.py takes the next free number), so they are RG19 and RG20.
+- **RG6.20, the Scope** (#3237): docs/dev/design/scope.md with the request as given, what exists - the sensor traces
+  read the internal storage up to the visualization time, the icon bar is drawn after the image is saved, the
+  raytracer has lines and text in pixels but no filled triangles, S and CTRL+S are bound -, one list of 2D primitives
+  for both renderers, decimation by min/max per pixel column, nice-number ticks; eleven open questions (RG6.20.1),
+  among them the default of axesColors, equal to the background in the request.
+- **RG19, robotics** (no issue yet): docs/dev/design/robotics.md - 5170 lines in 9 files, about 140 lines of
+  commented code, what examples and test models use (ProfileConstantAcceleration 90 times, RobotLink 60, Robot 28,
+  CreateKinematicTree 19, ...), the serial robot scripts each with their own PreStepUserFunction, files and
+  matplotlib; the URDF import with its special cases (the UR offset, flipped joints not implemented, no inertia check,
+  no textures); the analytic IK of future.py unused. Recommended: urdfImport.py, exudyn.HT, q0, one control
+  description with friction and end stops for both models, SetControl and PreStepControl, AddSensors, the
+  compensation from the kinematic tree, trajectories of joint and Cartesian segments with one Evaluate, analytic IK
+  (Pieper) and Levenberg-Marquardt; eight open questions. The check against RTB 1.5 waits for the maintainer's
+  environment (RG19.1.2).
+- **RG20, advanced solvers** (#3238 for RG20.5 only, as requested): docs/dev/design/advancedSolvers.md - the Python
+  solvers have no error control (the step only reduced on a rejected post-Newton step), the C++ explicit solver
+  eliminates only coordinate constraints to the ground, the symbolic SolveExplicit refuses algebraic equations, the
+  output is written at the step times. Evaluated: TrapezoidalGGL (the name fits) with the error estimate h^2/12
+  |a_{n+1} - a_n|; Lobatto with 3 stages, where "directly stable for index 3" holds for the IIIA-IIIB pair rather than
+  IIIA alone, a name to decide; the adjoint on TrapezoidalGGL with constant steps, missing the derivatives of the
+  constraints by the parameters; cubic Hermite output; Euler parameters by projection; what else is missing; a first
+  look at the C++ solver structure. Six open questions.
+
+<a id="rg7-17"></a>
+### RG7.17 — The Jacobian functions of the user items required where a connector uses them, no central differences (2026-11-04, #3107)
+- Maintainer 2026-11-04: require the position and rotation Jacobian functions only when a joint or connector uses
+  the item through a marker, so that a new beam with markers only on its nodes works without them; no central
+  differences as backup.
+- CSystemAssemble.cpp, `MissingUserJacobianFunction`: for each marker of a connector (joints and contacts are
+  connectors), a MarkerBodyUser, a body marker with Position on an ObjectUserBody or a node marker on a NodeUser must
+  have its positionJacobianUserFunction, and with a connector that requests the orientation its
+  rotationJacobianUserFunction; else a ModelError at Assemble naming the item. MarkerBodyMass and loads are not
+  checked: a load or a sensor that needs a missing function raises when it is evaluated, as ObjectUserBody did before.
+- The central differences of the position and rotation Jacobians of NodeUser and MarkerBodyUser removed (the
+  derivatives of the given Jacobians, J_t q_t and d(J_rot^T v)/dq, stay central differences of the Jacobian
+  functions); the acceleration of a NodeUser by its Jacobian only. The velocity of a NodeUser without
+  positionJacobianUserFunction raises.
+- Test models: userNodeTest.py and userMarkerTest.py without the "numerical" variants, which are now refusals at
+  Assemble (the results unchanged to the bit); userANCFBeam3DTest.py computes the rotation Jacobian of its slope node
+  in the script by central differences (5.6e-10 relative, within its tolerance 1e-9); the mini examples of NodeUser
+  and MarkerBodyUser with their Jacobian functions (MarkerBodyUser 7e-12, the refsol updated); test_graphicsData.py
+  with the position Jacobian of its user body.
+
 <a id="rg12-55-13"></a>
 ### RG12.55.13, RG12.55 — The difference of twists; the Jacobian of a user joint from its constraints (2026-11-03, #3235)
 - Maintainer 2026-11-03: the proposals are good to go.

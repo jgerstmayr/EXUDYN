@@ -61,11 +61,25 @@ def NodeRotation(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     e2 = e2/cMath.norm(e2)
     return np.column_stack([np.cross(e2, e3), e2, e3])
 
+def NodeRotationJacobian(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    #column k the axial vector of (dR/dq_k) R^T, dR/dq_k by central differences of the rotation of the slopes, in
+    #this script: Exudyn does not approximate the Jacobians of a NodeUser (#3107)
+    R = NodeRotation(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)
+    jacobian = np.zeros((3, 12))
+    for k in range(12):
+        epsilon = 1e-7*max(1e-2, abs(qTotal[k]))
+        (plus, minus) = (np.array(qTotal, dtype=float), np.array(qTotal, dtype=float))
+        plus[k] += epsilon
+        minus[k] -= epsilon
+        skew = (NodeRotation(mbs, t, itemNumber, qRef, plus, q_t, parameters) - NodeRotation(mbs, t, itemNumber, qRef, minus, q_t, parameters)) @ R.T/(2*epsilon)
+        jacobian[:, k] = 0.5*np.array([skew[2, 1] - skew[1, 2], skew[0, 2] - skew[2, 0], skew[1, 0] - skew[0, 1]])
+    return jacobian
+
 def Node(x):
     return NodeUser(numberOfODE2Coordinates=12, referenceCoordinates=[x, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
                     initialCoordinates=[0]*12, initialVelocities=[0]*12,
                     positionUserFunction=NodePosition, positionJacobianUserFunction=NodePositionJacobian,
-                    rotationMatrixUserFunction=NodeRotation) #the rotation Jacobian by central differences
+                    rotationMatrixUserFunction=NodeRotation, rotationJacobianUserFunction=NodeRotationJacobian)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the element: r(x, y, z) = sum_a N_a(x, y, z) e_a with e_a = r0, r0_x, r0_y, r0_z, r1, r1_x, r1_y, r1_z

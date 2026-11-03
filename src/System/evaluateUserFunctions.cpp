@@ -806,31 +806,11 @@ void CNodeUser::EvaluateMatrixUserFunction(const TUserFunction& function, const 
 	}
 }
 
-//! the user function, or central differences of the position with the step of newton.numericalDifferentiation
+//! the user function; without it, a connector or joint on the node is refused at Assemble (#3107)
 void CNodeUser::EvaluatePositionJacobian(Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
 {
-	Index n = coordinates.NumberOfItems();
-	if (parameters.positionJacobianUserFunction)
-	{
-		EvaluateMatrixUserFunction(parameters.positionJacobianUserFunction, "positionJacobianUserFunction", 3, n, value, t, qRef, coordinates, coordinates_t);
-	}
-	else
-	{
-		value.SetNumberOfRowsAndColumns(3, n);
-		ResizableConstVector q(coordinates);
-		Vector3D plus, minus;
-		for (Index k = 0; k < n; k++)
-		{
-			Real qk = q[k];
-			Real eps = 1e-7*EXUstd::Maximum(1e-2, fabs(qk));
-			q[k] = qk + eps;
-			EvaluatePosition(plus, t, qRef, q, coordinates_t);
-			q[k] = qk - eps;
-			EvaluatePosition(minus, t, qRef, q, coordinates_t);
-			q[k] = qk;
-			for (Index i = 0; i < 3; i++) { value(i, k) = (plus[i] - minus[i])/(2.*eps); }
-		}
-	}
+	if (!(parameters.positionJacobianUserFunction)) { PyError("NodeUser: positionJacobianUserFunction is not given, but a marker, sensor or output needs it (the velocity, the forces on the node)", PyErrorType::valueError); }
+	EvaluateMatrixUserFunction(parameters.positionJacobianUserFunction, "positionJacobianUserFunction", 3, coordinates.NumberOfItems(), value, t, qRef, coordinates, coordinates_t);
 }
 
 void CNodeUser::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
@@ -841,36 +821,11 @@ void CNodeUser::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector& qR
 	value.CopyFrom(rotation);
 }
 
-//! the user function, or column k the axial vector of (dR/dq_k) R^T, dR/dq_k by central differences
+//! the user function; without it, a connector or joint on the node that requests the orientation is refused at Assemble (#3107)
 void CNodeUser::EvaluateRotationJacobian(Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
 {
-	Index n = coordinates.NumberOfItems();
-	if (parameters.rotationJacobianUserFunction)
-	{
-		EvaluateMatrixUserFunction(parameters.rotationJacobianUserFunction, "rotationJacobianUserFunction", 3, n, value, t, qRef, coordinates, coordinates_t);
-	}
-	else
-	{
-		value.SetNumberOfRowsAndColumns(3, n);
-		Matrix3D rotation, plus, minus;
-		EvaluateRotationMatrix(rotation, t, qRef, coordinates, coordinates_t);
-		Matrix3D rotationT = rotation.GetTransposed();
-		ResizableConstVector q(coordinates);
-		for (Index k = 0; k < n; k++)
-		{
-			Real qk = q[k];
-			Real eps = 1e-7*EXUstd::Maximum(1e-2, fabs(qk));
-			q[k] = qk + eps;
-			EvaluateRotationMatrix(plus, t, qRef, q, coordinates_t);
-			q[k] = qk - eps;
-			EvaluateRotationMatrix(minus, t, qRef, q, coordinates_t);
-			q[k] = qk;
-			Matrix3D skew = (1./(2.*eps))*(plus - minus)*rotationT; //the tilde matrix of the angular velocity per unit q_k
-			value(0, k) = 0.5*(skew(2, 1) - skew(1, 2));
-			value(1, k) = 0.5*(skew(0, 2) - skew(2, 0));
-			value(2, k) = 0.5*(skew(1, 0) - skew(0, 1));
-		}
-	}
+	if (!(parameters.rotationJacobianUserFunction)) { PyError("NodeUser: rotationJacobianUserFunction is not given, but a marker, sensor or output needs it (the angular velocity, the torques on the node)", PyErrorType::valueError); }
+	EvaluateMatrixUserFunction(parameters.rotationJacobianUserFunction, "rotationJacobianUserFunction", 3, coordinates.NumberOfItems(), value, t, qRef, coordinates, coordinates_t);
 }
 
 #undef NODEUSER_MAINSYSTEM
@@ -907,31 +862,13 @@ void CMarkerBodyUser::EvaluateMatrixUserFunction(const CSystemData& cSystemData,
 	}
 }
 
-//! the user function, or central differences of the position with the step of newton.numericalDifferentiation
+//! the user function; without it, a connector or joint on the marker is refused at Assemble (#3107)
 void CMarkerBodyUser::EvaluatePositionJacobian(const CSystemData& cSystemData, Matrix& value, Real t, const Vector& qRef, const Vector& coordinates,
 	const Vector& coordinates_t) const
 {
-	Index n = coordinates.NumberOfItems();
-	if (parameters.positionJacobianUserFunction)
-	{
-		EvaluateMatrixUserFunction(cSystemData, parameters.positionJacobianUserFunction, "positionJacobianUserFunction", 3, n, value, t, qRef,
-			coordinates, coordinates_t);
-		return;
-	}
-	value.SetNumberOfRowsAndColumns(3, n);
-	Vector q(coordinates);
-	Vector3D plus, minus;
-	for (Index k = 0; k < n; k++)
-	{
-		Real qk = q[k];
-		Real eps = 1e-7*EXUstd::Maximum(1e-2, fabs(qk));
-		q[k] = qk + eps;
-		EvaluatePosition(cSystemData, plus, t, qRef, q, coordinates_t);
-		q[k] = qk - eps;
-		EvaluatePosition(cSystemData, minus, t, qRef, q, coordinates_t);
-		q[k] = qk;
-		for (Index i = 0; i < 3; i++) { value(i, k) = (plus[i] - minus[i])/(2.*eps); }
-	}
+	if (!(parameters.positionJacobianUserFunction)) { PyError("MarkerBodyUser: positionJacobianUserFunction is not given, but a load, sensor or output needs it (the velocity, the forces on the marker)", PyErrorType::valueError); }
+	EvaluateMatrixUserFunction(cSystemData, parameters.positionJacobianUserFunction, "positionJacobianUserFunction", 3, coordinates.NumberOfItems(), value, t, qRef,
+		coordinates, coordinates_t);
 }
 
 void CMarkerBodyUser::EvaluateRotationMatrix(const CSystemData& cSystemData, Matrix3D& value, Real t, const Vector& qRef, const Vector& coordinates,
@@ -944,36 +881,13 @@ void CMarkerBodyUser::EvaluateRotationMatrix(const CSystemData& cSystemData, Mat
 	value.CopyFrom(rotation);
 }
 
-//! the user function, or column k the axial vector of (dR/dq_k) R^T, dR/dq_k by central differences
+//! the user function; without it, a connector or joint on the marker that requests the orientation is refused at Assemble (#3107)
 void CMarkerBodyUser::EvaluateRotationJacobian(const CSystemData& cSystemData, Matrix& value, Real t, const Vector& qRef, const Vector& coordinates,
 	const Vector& coordinates_t) const
 {
-	Index n = coordinates.NumberOfItems();
-	if (parameters.rotationJacobianUserFunction)
-	{
-		EvaluateMatrixUserFunction(cSystemData, parameters.rotationJacobianUserFunction, "rotationJacobianUserFunction", 3, n, value, t, qRef,
-			coordinates, coordinates_t);
-		return;
-	}
-	value.SetNumberOfRowsAndColumns(3, n);
-	Matrix3D rotation, plus, minus;
-	EvaluateRotationMatrix(cSystemData, rotation, t, qRef, coordinates, coordinates_t);
-	Matrix3D rotationT = rotation.GetTransposed();
-	Vector q(coordinates);
-	for (Index k = 0; k < n; k++)
-	{
-		Real qk = q[k];
-		Real eps = 1e-7*EXUstd::Maximum(1e-2, fabs(qk));
-		q[k] = qk + eps;
-		EvaluateRotationMatrix(cSystemData, plus, t, qRef, q, coordinates_t);
-		q[k] = qk - eps;
-		EvaluateRotationMatrix(cSystemData, minus, t, qRef, q, coordinates_t);
-		q[k] = qk;
-		Matrix3D skew = (1./(2.*eps))*(plus - minus)*rotationT; //the tilde matrix of the angular velocity per unit q_k
-		value(0, k) = 0.5*(skew(2, 1) - skew(1, 2));
-		value(1, k) = 0.5*(skew(0, 2) - skew(2, 0));
-		value(2, k) = 0.5*(skew(1, 0) - skew(0, 1));
-	}
+	if (!(parameters.rotationJacobianUserFunction)) { PyError("MarkerBodyUser: rotationJacobianUserFunction is not given, but a load, sensor or output needs it (the angular velocity, the torques on the marker)", PyErrorType::valueError); }
+	EvaluateMatrixUserFunction(cSystemData, parameters.rotationJacobianUserFunction, "rotationJacobianUserFunction", 3, coordinates.NumberOfItems(), value, t, qRef,
+		coordinates, coordinates_t);
 }
 
 #undef MARKERUSER_MAINSYSTEM

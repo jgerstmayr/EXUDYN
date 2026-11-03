@@ -27,7 +27,10 @@ bA = mbs.AddObject(MassPoint(nodeNumber=nA, mass=1))
 bB = mbs.AddObject(MassPoint(nodeNumber=nB, mass=1))
 def UFposition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return 0.5*(qTotal[0:3] + qTotal[3:6])
-mMid = mbs.AddMarker(MarkerBodyUser(bodyNumbers=[bA, bB], positionUserFunction=UFposition))
+def UFpositionJacobian(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return 0.5*np.hstack((np.eye(3), np.eye(3)))
+mMid = mbs.AddMarker(MarkerBodyUser(bodyNumbers=[bA, bB], positionUserFunction=UFposition,
+                                    positionJacobianUserFunction=UFpositionJacobian))
 mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
 k = 100
 mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround, mMid], stiffness=[k,k,k]))

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 331 | 1.13.341 |
+| 1.13 | Newborn | 333 | 1.13.348 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.348** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The position and rotation Jacobians of NodeUser, ObjectUserBody and MarkerBodyUser by central differences (#3107)
+  - description: revision2026c step RG7.17: when their Jacobian functions are missing, the three user items compute the position and rotation Jacobians by central differences, so a joint on them gets a partly numerical constraint Jacobian - nowhere else in Exudyn. To be decided (tbd): require the Jacobian functions, at least when a joint uses the item, and keep central differences only behind an exudyn.special flag with its dangers documented. Kept as it is for now.
+  - **notes:** NodeUser, ObjectUserBody and MarkerBodyUser need their position Jacobian function, and with the orientation their rotation Jacobian function, where a connector or joint uses them through a marker; Assemble refuses them without, naming the item. The Jacobians are no longer approximated by central differences; a user item without connectors, such as a user beam with markers only on its nodes, needs none.
+  - date resolved: **2026-11-04 00:14**, date raised: 2026-10-26
+- **1.13.347** `IMPROVEMENT` `HUGE EFF` `raised by: Claude-JG` `resolved by: Claude-JG` One table of the symbolic operations: SymbolicProgram and the operation table in SymbolicTable.h/.cpp beside the expression classes (#3153)
+  - description: R1 of docs/dev/design/symbolicSystem.md. The expression tree stays for the recording and the simple evaluation; the flat evaluation, the derivatives, Optimize, the export, the count and the uniform evaluation work on a program built from the tree and a table per operation code (name, arity, kinds, size, evaluation, forward derivative, later derivative as new nodes, simplification, text per format). New files src/Linalg/SymbolicTable.h and .cpp; the old code stays as fallback, selected by a switch, until the new path gives the same results bit for bit; item outputs as an operation code with the data of the item and a link to the MainSystem. Four stages, design section 12.7.
+  - **notes:** The symbolic operations are evaluated, differentiated, optimized, exported and counted by one table of operations (SymbolicProgram, src/Linalg/SymbolicTable.h/.cpp): scalar, vector and matrix operations as rows of the table with their derivative rules; the old flat evaluation and the tree derivative removed. Sparse matrices as a kind of slot of the table stay open (\#3168).
+  - date resolved: **2026-11-03 23:54**, date raised: 2026-10-28
 - **1.13.341** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The difference of two twists, and the Jacobian of a user joint from its constraint function by esym.Jacobian (#3235)
   - description: The C++ connectors compute the relative velocity A0^T (v1 - v0) and A0^T (omega1 - omega0); the user items write it by hand. A user joint (ObjectJointUser) needs its jacobianUserFunction, the derivative of its constraints by the variations \[dp0, theta0, dp1, theta1\] of its marker frames, which the four joints of UserItemCreator write by hand; the C++ joints take it by automatic differentiation on the connector interface. Decided (maintainer 2026-11-03, proposals of revision2026c step RG12.55.13): twist1 - twist0 (and +) for exudyn.Twist and kinematics.Twist, so that A0^T (v1 - v0) is LocalTwist(HT0, twist1 - twist0); the Jacobian of a user joint from its constraint function by esym.Jacobian of the varied frames (A -\> (I + skew(theta)) A, p -\> p + dp) at zero, for numbers and recordings, replacing the four hand-written jacobianUserFunction.
   - **notes:** exudyn.Twist and exudyn.symbolics.kinematics.Twist add and subtract (twist1 - twist0); JointJacobianUserFunction(constraintUserFunction) of exudyn.symbolics.userItems gives the jacobianUserFunction of an ObjectJointUser from its constraint function, for numbers and recordings; the joints of UserItemCreator use it.

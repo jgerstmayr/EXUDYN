@@ -11,12 +11,12 @@ You can view and download this file on Github: [userNodeTest.py](https://github.
 # This is an EXUDYN example
 #
 # Details:  NodeUser (#2974), a node whose position and orientation are Python user functions, against the nodes of
-#           Exudyn: (1) a point - position qTotal, without and with positionJacobianUserFunction - with a mass, a spring
-#           to the ground and gravity on MarkerNodePosition, against NodePoint; (2) a rigid body node with the
-#           coordinates of NodeRigidBodyRxyz - position and Tait-Bryan angles - with the mass matrix of a rigid body
-#           in ObjectGenericODE2, a RigidBodySpringDamper on MarkerNodeRigid and a torque, the rotation Jacobian
-#           given and by central differences of the rotation matrix, against NodeRigidBodyRxyz; the output
-#           variables of both; what NodeUser refuses; the node drawn in the graphics data.
+#           Exudyn: (1) a point - position qTotal and its positionJacobianUserFunction - with a mass, a spring to the
+#           ground and gravity on MarkerNodePosition, against NodePoint; (2) a rigid body node with the coordinates of
+#           NodeRigidBodyRxyz - position and Tait-Bryan angles - with the mass matrix of a rigid body in
+#           ObjectGenericODE2, a RigidBodySpringDamper on MarkerNodeRigid and a torque, against NodeRigidBodyRxyz; the
+#           output variables of both; what NodeUser refuses - a connector on it without the Jacobian functions at
+#           Assemble (#3107) -; the node drawn in the graphics data.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-18
@@ -75,7 +75,7 @@ def PointModel(kind):
     return SC, mbs, node, np.hstack(outputs)
 
 reference = PointModel('NodePoint')[3]
-for kind in ['numerical', 'jacobian']:
+for kind in ['jacobian']:
     (SC1, mbs1, node1, result) = PointModel(kind)
     Check(np.abs(result - reference).max() < 1e-6, 'point (' + kind + '): ' + str(np.abs(result - reference).max()))
 u = float(np.sum(np.abs(reference)))
@@ -141,7 +141,7 @@ def RigidModel(kind):
     return mbs, np.hstack(outputs)
 
 reference = RigidModel('NodeRigidBodyRxyz')[1]
-for kind in ['jacobian', 'numerical']:
+for kind in ['jacobian']:
     result = RigidModel(kind)[1]
     Check(np.abs(result - reference).max() < 1e-5, 'rigid (' + kind + '): ' + str(np.abs(result - reference).max()))
 u += float(np.sum(np.abs(reference)))
@@ -171,6 +171,10 @@ Check(Refused(lambda: mbsNoRotation.GetNodeOutput(0, exu.OutputVariableType.Rota
       'a rotation without rotationMatrixUserFunction not refused')
 mbsWrongJacobian = Assembled(positionUserFunction=PointPosition, positionJacobianUserFunction=lambda mbs, t, itemNumber, qRef, qTotal, q_t, parameters: np.eye(2))
 Check(Refused(lambda: mbsWrongJacobian.GetNodeOutput(0, exu.OutputVariableType.Velocity), ValueError), 'a wrong Jacobian size not refused')
+#the Jacobians are not approximated: the velocity needs the position Jacobian, a connector the Jacobian functions (#3107)
+Check(Refused(lambda: mbsNoRotation.GetNodeOutput(0, exu.OutputVariableType.Velocity), ValueError), 'a velocity without positionJacobianUserFunction not refused')
+Check(Refused(lambda: PointModel('numerical'), exu.ModelError), 'a connector on a node without positionJacobianUserFunction not refused')
+Check(Refused(lambda: RigidModel('numerical'), exu.ModelError), 'a rigid connector on a node without rotationJacobianUserFunction not refused')
 
 u += testError
 exu.Print('solution of userNodeTest=', u)

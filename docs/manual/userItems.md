@@ -132,8 +132,10 @@ MarkerBodyUser is a marker on any number of bodies: its `positionUserFunction(mb
 parameters)` gets the coordinates of the nodes of these bodies, body by body, and every built-in connector, joint, load
 and sensor acts at that point (#3065). `providedMarkerType` says what it provides: `exu.MarkerType.Position`, the
 default, or `exu.MarkerType.Position | exu.MarkerType.Orientation` with a `rotationMatrixUserFunction` for a rigid
-marker; Assemble refuses a rotation function without Orientation and Orientation without it (#3103). The Jacobians are
-computed by central differences if they are not given - then a Newton tolerance below about 1e-10 is not reached.
+marker; Assemble refuses a rotation function without Orientation and Orientation without it (#3103). The Jacobian
+functions of MarkerBodyUser, NodeUser and ObjectUserBody are required where a connector or joint is on the item, through
+a marker - the rotation Jacobian if it requests the orientation -, and Assemble refuses it without them; they are not
+approximated, and a user item without connectors, a user beam with markers on its nodes, needs none (#3107).
 
 (sec-useritemcreator)=
 ## User items with the interfaces of the built-in items

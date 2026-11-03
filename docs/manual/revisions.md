@@ -117,7 +117,9 @@ of the parameters as an input of its recordings: `SetParameterValues` no longer 
 `CreateRigidBodySpringDamper`, `CreateTorsionalSpringDamper` and `CreateSphereSphereContact` have an example in their
 documentation, as the other Create functions. `exudyn.Twist` and `kinematics.Twist` add and subtract, `twist1 -
 twist0`; `JointJacobianUserFunction(constraintUserFunction)` of `exudyn.symbolics.userItems` gives the
-jacobianUserFunction of an ObjectJointUser from its constraint function (#3235).
+jacobianUserFunction of an ObjectJointUser from its constraint function (#3235). The position and rotation Jacobians
+of NodeUser and MarkerBodyUser are no longer computed by central differences: a connector or joint on a user item needs
+its Jacobian functions, which Assemble checks (#3107).
 ObjectKinematicTree takes a floating base, `baseNodeNumber`, a rigid body node - NodeRigidBodyRotVecLG for the
 explicit solvers -, whose frame is the base of the tree (#1549). The tree has its own Jacobian, computed in parallel,
 which contains the derivative of the mass matrix term, `jacobianMassMatrixDerivative`: a chain of 60 links with a

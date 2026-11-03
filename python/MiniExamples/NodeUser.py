@@ -24,9 +24,12 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 def UFposition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     (r, phi, z) = qTotal
     return [r*np.cos(phi), r*np.sin(phi), z]
+def UFpositionJacobian(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    (r, phi, z) = qTotal
+    return [[np.cos(phi), -r*np.sin(phi), 0], [np.sin(phi), r*np.cos(phi), 0], [0, 0, 1]]
 node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=3, referenceCoordinates=[1,0,0],
                             initialCoordinates=[0,0,0], initialVelocities=[0,1,0],
-                            positionUserFunction=UFposition))
+                            positionUserFunction=UFposition, positionJacobianUserFunction=UFpositionJacobian))
 #free coordinates with unit mass: phi = t
 mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrix=np.eye(3)))
 

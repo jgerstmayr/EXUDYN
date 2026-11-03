@@ -6,7 +6,7 @@
 (sec-item-markerbodyuser)=
 # MarkerBodyUser
 
-A marker on any number of bodies whose position, and with providedMarkerType Position | Orientation its rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; the Jacobians are computed by central differences if they are not given.
+A marker on any number of bodies whose position, and with providedMarkerType Position | Orientation its rotation, are computed by Python user functions from the coordinates of the nodes of these bodies, e.g. a point between several bodies or nodes, or a point of a mesh. Loads, connectors, joints and sensors use it as a position or rigid marker; a connector or joint on it needs its Jacobian functions (#3107).
 
 ## Interface
 
@@ -25,9 +25,9 @@ The parameters of the item; in a dictionary, its type is 'BodyUser':
 | **providedMarkerType** | MarkerType |  | MarkerType.Position | what the marker provides besides Body and Object: exu.MarkerType.Position, or exu.MarkerType.Position \| exu.MarkerType.Orientation with the rotationMatrixUserFunction |
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the marker, of any length, passed to the user functions; see exudyn.advancedUtilities.ParameterLayout |
 | **positionUserFunction** | MarkerBodyUserPositionUserFunction |  | 0 | (symbol: $\LU{0}{\pv}(\qv)$) A Python user function which computes the global position of the marker; it must be given |
-| **positionJacobianUserFunction** | MarkerBodyUserPositionJacobianUserFunction |  | 0 | (symbol: $\Jm_{pos}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the position Jacobian; by central differences of the position if not given |
+| **positionJacobianUserFunction** | MarkerBodyUserPositionJacobianUserFunction |  | 0 | (symbol: $\Jm_{pos}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the position Jacobian; required if a connector or joint is on the marker, else when it is needed |
 | **rotationMatrixUserFunction** | MarkerBodyUserRotationMatrixUserFunction |  | 0 | (symbol: $\LU{0m}{\Rot}(\qv) \in \Rcal^{3\times 3}$) A Python user function which computes the rotation matrix of the marker; given exactly for providedMarkerType Position \| Orientation |
-| **rotationJacobianUserFunction** | MarkerBodyUserRotationJacobianUserFunction |  | 0 | (symbol: $\Jm_{rot}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given |
+| **rotationJacobianUserFunction** | MarkerBodyUserRotationJacobianUserFunction |  | 0 | (symbol: $\Jm_{rot}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the rotation Jacobian (of the global angular velocity); required if a connector or joint on the marker requests the orientation, else when it is needed |
 | **visualization** | VMarkerBodyUser |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -54,9 +54,9 @@ velocities `q_t` and the `parameters`, as those of NodeUser and ObjectUserBody d
 | user function | gives | needed for |
 |---|---|---|
 | `positionUserFunction` | $\LU{0}{\pv}(\qv)$ | always |
-| `positionJacobianUserFunction` | $\Jm_{pos} = \partial \LU{0}{\pv} / \partial \qv \in \Rcal^{3 \times n}$ | optional, by central differences of the position |
+| `positionJacobianUserFunction` | $\Jm_{pos} = \partial \LU{0}{\pv} / \partial \qv \in \Rcal^{3 \times n}$ | the velocity, forces; required at Assemble if a connector or joint is on the marker (#3107) |
 | `rotationMatrixUserFunction` | $\LU{0m}{\Rot}(\qv)$ | providedMarkerType Position \| Orientation: joints, torques |
-| `rotationJacobianUserFunction` | $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv \in \Rcal^{3 \times n}$ | optional, by central differences of the rotation matrix |
+| `rotationJacobianUserFunction` | $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv \in \Rcal^{3 \times n}$ | the angular velocity, torques; required at Assemble if a connector or joint on the marker requests the orientation |
 
 The velocity is $\Jm_{pos} \dot \qv$, the angular velocity $\Jm_{rot} \dot \qv$. A force $\fv$ on the marker gives
 the generalized forces $\Jm_{pos}\tp \fv$, a torque $\Jm_{rot}\tp \mv$.
@@ -67,8 +67,9 @@ the generalized forces $\Jm_{pos}\tp \fv$, a torque $\Jm_{rot}\tp \mv$.
 default, or `exu.MarkerType.Position | exu.MarkerType.Orientation` for a rigid marker. Position | Orientation needs
 the rotationMatrixUserFunction, and a rotation function given with Position alone is refused at Assemble; a joint
 or a torque on a marker of type Position is refused as on any position marker. The user functions
-are called serially, in the main thread; the marker and what depends on it are drawn in the main thread. Connectors
-on the marker compute their Jacobian numerically.
+are called serially, in the main thread; the marker and what depends on it are drawn in the main thread. What
+needs a Jacobian function that is not given raises, the Jacobians are not approximated (#3107); the Jacobians of
+connectors on the marker are computed numerically.
 
 **Userfunction**: `positionUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)`
 A user function, which computes the global position of the marker from the coordinates of its bodies.
@@ -146,7 +147,10 @@ bA = mbs.AddObject(MassPoint(nodeNumber=nA, mass=1))
 bB = mbs.AddObject(MassPoint(nodeNumber=nB, mass=1))
 def UFposition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return 0.5*(qTotal[0:3] + qTotal[3:6])
-mMid = mbs.AddMarker(MarkerBodyUser(bodyNumbers=[bA, bB], positionUserFunction=UFposition))
+def UFpositionJacobian(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return 0.5*np.hstack((np.eye(3), np.eye(3)))
+mMid = mbs.AddMarker(MarkerBodyUser(bodyNumbers=[bA, bB], positionUserFunction=UFposition,
+                                    positionJacobianUserFunction=UFpositionJacobian))
 mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
 k = 100
 mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround, mMid], stiffness=[k,k,k]))

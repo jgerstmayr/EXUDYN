@@ -569,7 +569,7 @@ def MiniExamplesReferenceSolution():
         'ObjectConnectorReevingSystemSprings.py':-0.9999999999998965,
         'ObjectConnectorUser.py':0.07074575611653322, #new 2026-10-23 (#2975)
         'ObjectJointUser.py':1.0, #new 2026-10-24 (#2976)
-        'MarkerBodyUser.py':0.0707457561058372, #new 2026-10-24 (#3065); renamed from MarkerUser.py 2026-10-26 (#3103)
+        'MarkerBodyUser.py':0.07074575611265864, #new 2026-10-24 (#3065); renamed from MarkerUser.py 2026-10-26 (#3103); 2026-11-04 with its positionJacobianUserFunction instead of central differences, 7e-12 (#3107)
         'ObjectConnectorHydraulicActuatorSimple.py':1.0,
         #the markers, loads and sensors (#2732)
         'MarkerBodyMass.py':-4.904999999999998,

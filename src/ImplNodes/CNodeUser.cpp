@@ -104,9 +104,7 @@ Vector3D CNodeUser::GetVelocity(ConfigurationType configuration) const
 	return NodeUserJacobianTimesVector(jacobian, GetCoordinateVector_t(configuration));
 }
 
-//! J q_tt + J_t q_t: with positionJacobianUserFunction, J_t q_t by central differences of J along q_t; without, as
-//! the second derivative of the position along q_t, (p(q + h q_t) - 2 p(q) + p(q - h q_t))/h^2, as the first
-//! differences of a numerical J would amplify its rounding
+//! J q_tt + J_t q_t, J_t q_t by central differences of the positionJacobianUserFunction along q_t
 Vector3D CNodeUser::GetAcceleration(ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
@@ -123,25 +121,14 @@ Vector3D CNodeUser::GetAcceleration(ConfigurationType configuration) const
 	Real velocityNorm = q_t.GetL2Norm();
 	if (velocityNorm == 0.) { return acceleration; }
 	ResizableConstVector qVaried(q);
-	if (parameters.positionJacobianUserFunction)
-	{
-		const Real eps = 1e-7*EXUstd::Maximum(1., q.GetL2Norm())/velocityNorm;
-		for (Index k = 0; k < q.NumberOfItems(); k++) { qVaried[k] = q[k] + eps*q_t[k]; }
-		EvaluatePositionJacobian(jacobian, t, qRef, qVaried, q_t);
-		Vector3D plus = NodeUserJacobianTimesVector(jacobian, q_t);
-		for (Index k = 0; k < q.NumberOfItems(); k++) { qVaried[k] = q[k] - eps*q_t[k]; }
-		EvaluatePositionJacobian(jacobian, t, qRef, qVaried, q_t);
-		Vector3D minus = NodeUserJacobianTimesVector(jacobian, q_t);
-		return acceleration + (1./(2.*eps))*(plus - minus);
-	}
-	const Real h = 1e-4*EXUstd::Maximum(1., q.GetL2Norm())/velocityNorm;
-	Vector3D position, plus, minus;
-	EvaluatePosition(position, t, qRef, q, q_t);
-	for (Index k = 0; k < q.NumberOfItems(); k++) { qVaried[k] = q[k] + h*q_t[k]; }
-	EvaluatePosition(plus, t, qRef, qVaried, q_t);
-	for (Index k = 0; k < q.NumberOfItems(); k++) { qVaried[k] = q[k] - h*q_t[k]; }
-	EvaluatePosition(minus, t, qRef, qVaried, q_t);
-	return acceleration + (1./(h*h))*(plus - 2.*position + minus);
+	const Real eps = 1e-7*EXUstd::Maximum(1., q.GetL2Norm())/velocityNorm;
+	for (Index k = 0; k < q.NumberOfItems(); k++) { qVaried[k] = q[k] + eps*q_t[k]; }
+	EvaluatePositionJacobian(jacobian, t, qRef, qVaried, q_t);
+	Vector3D plus = NodeUserJacobianTimesVector(jacobian, q_t);
+	for (Index k = 0; k < q.NumberOfItems(); k++) { qVaried[k] = q[k] - eps*q_t[k]; }
+	EvaluatePositionJacobian(jacobian, t, qRef, qVaried, q_t);
+	Vector3D minus = NodeUserJacobianTimesVector(jacobian, q_t);
+	return acceleration + (1./(2.*eps))*(plus - minus);
 }
 
 Matrix3D CNodeUser::GetRotationMatrix(ConfigurationType configuration) const

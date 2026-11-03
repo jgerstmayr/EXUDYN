@@ -257,8 +257,12 @@ def UserBodyScene(userBody):
             return qTotal[0:3] + cu.RotXYZ2RotationMatrix(qTotal[3:6]) @ localPosition
         def Rotation(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
             return cu.RotXYZ2RotationMatrix(qTotal[3:6])
+        def PositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters): #the connector needs it (#3107)
+            A = cu.RotXYZ2RotationMatrix(qTotal[3:6])
+            return np.hstack([np.eye(3), -A @ cu.Skew(localPosition) @ cu.RotXYZ2GLocal(qTotal[3:6])])
         body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=lambda mbs, t, i, qRef, qTotal, q_t, parameters: np.eye(6),
-                                            positionUserFunction=Position, rotationMatrixUserFunction=Rotation))
+                                            positionUserFunction=Position, rotationMatrixUserFunction=Rotation,
+                                            positionJacobianUserFunction=PositionJacobian))
     else:
         body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=1, inertia=[1, 1, 1, 0, 0, 0],
                                              visualization=VObjectRigidBody(graphicsData=[])))

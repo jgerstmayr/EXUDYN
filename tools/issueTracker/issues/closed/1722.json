@@ -2,11 +2,14 @@
   "number": 1722,
   "title": "Parameter type",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "EXTENSION",
   "effort": "HUGE",
   "description": "add exudyn.Parameter for all parameters occuring in items, such as referencePosition, physicsMass, etc.; this helps to avoid strings in user functions to access parameter and may allow to use  more efficient case/switch in GetObjectParameter(...)",
   "dateRaised": "2023-12-09",
   "deadline": "2024-06-06",
-  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
+  "dateResolved": "2026-11-03 23:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "closed for now (maintainer 2026-11-03): the access to the parameters of the items will be done in a different way, the maintainer provides further information later",
+  "resolvedInVersion": "1.13.343"
 }

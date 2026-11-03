@@ -6,9 +6,9 @@
 #           Cartesian spring to the ground and loaded by a force: with equal initial conditions, each mass point carries
 #           half of it, as two mass points with half the spring and half the force each; the SensorMarker of the marker.
 #           (2) A pendulum: a rigid marker on a rigid body, its position and rotation written with
-#           exudyn.symbolics.kinematics and numpy, in a revolute joint, against MarkerBodyRigid; the Jacobians by central
-#           differences and given by user functions; providedMarkerType Position | Orientation. (3) What the marker
-#           refuses, and the type it reports.
+#           exudyn.symbolics.kinematics and numpy, in a revolute joint, against MarkerBodyRigid; the Jacobians given by
+#           user functions; providedMarkerType Position | Orientation. (3) What the marker refuses - a connector or joint
+#           on it without the Jacobian functions at Assemble (#3107) -, and the type it reports.
 #           Run alone, it draws the pendulum and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
@@ -72,9 +72,8 @@ def SolveMidpoint(kind):
         sensorDifference = np.max(np.abs(mbs.GetSensorStoredData(sensor)[-1, 1:4] - midpoint))
     return result, sensorDifference
 
-midpoints = [SolveMidpoint(kind) for kind in ['builtIn', 'numerical', 'jacobian']]
-differenceMidpoint = max(np.max(np.abs(midpoints[1][0] - midpoints[0][0])), np.max(np.abs(midpoints[2][0] - midpoints[0][0])),
-                         midpoints[1][1], midpoints[2][1])
+midpoints = [SolveMidpoint(kind) for kind in ['builtIn', 'jacobian']]
+differenceMidpoint = max(np.max(np.abs(midpoints[1][0] - midpoints[0][0])), midpoints[1][1])
 u = np.sum(midpoints[0][0])
 exu.Print('midpoint marker: largest difference to two mass points with half the spring and force:', differenceMidpoint)
 
@@ -120,8 +119,8 @@ def SolvePendulum(kind, show=False):
         simulationSettings.solution.file.write = False
     return np.hstack((mbs.GetNodeOutput(node, exu.OutputVariableType.Position), mbs.GetNodeOutput(node, exu.OutputVariableType.AngularVelocity)))
 
-pendulums = [SolvePendulum(kind, show=(kind == 'jacobian')) for kind in ['builtIn', 'numerical', 'jacobian']]
-differencePendulum = max(np.max(np.abs(pendulums[1] - pendulums[0])), np.max(np.abs(pendulums[2] - pendulums[0])))
+pendulums = [SolvePendulum(kind, show=(kind == 'jacobian')) for kind in ['builtIn', 'jacobian']]
+differencePendulum = np.max(np.abs(pendulums[1] - pendulums[0]))
 u += np.sum(pendulums[0])
 exu.Print('pendulum on MarkerBodyUser: largest difference to MarkerBodyRigid:', differencePendulum)
 
@@ -152,9 +151,15 @@ nodeType = mbsType.AddNode(NodePoint())
 markerType = mbsType.AddMarker(MarkerBodyUser(bodyNumbers=[mbsType.AddObject(MassPoint(nodeNumber=nodeType, mass=1))],
                                               providedMarkerType=rigidType, positionUserFunction=UFmidpoint, rotationMatrixUserFunction=UFrotation))
 refused += int(int(mbsType.GetMarker(markerType)['providedMarkerType']) == int(rigidType)) + int(mbsType.GetMarker(markerType)['markerType'] == 'BodyUser')
-exu.Print('refused and types, of 7:', refused)
+#the Jacobians are not approximated: a connector or joint on the marker needs its Jacobian functions (#3107)
+for Solve in [SolveMidpoint, SolvePendulum]:
+    try:
+        Solve('numerical')
+    except exu.ModelError as e:
+        refused += int('JacobianUserFunction' in str(e))
+exu.Print('refused and types, of 9:', refused)
 
-u += int(differenceMidpoint > 1e-10) + int(differencePendulum > 1e-8) + (7 - refused)
+u += int(differenceMidpoint > 1e-10) + int(differencePendulum > 1e-8) + (9 - refused)
 exu.Print('solution of userMarkerTest=', u)
 
 exu.sys['testResult'] = u
