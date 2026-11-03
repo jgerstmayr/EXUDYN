@@ -2,10 +2,14 @@
   "number": 3178,
   "title": "Check which functions of HT and twist the user connectors and joints really use, once several are written on HT and twist",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHECK",
   "effort": "LOW",
   "description": "The functions of symbolics.kinematics and exudyn.cUtilities for HT and twist (PointVelocity, LocalTwist, RelativeTwist, and the methods of the symbolic HT) were chosen for the joints and connectors of the Create functions (docs/dev/design/symbolicHT.md). Once several user items of exudyn.symbolics.userItems and new ones are written on HT0, twist0, HT1, twist1, count which functions they use, and decide which stay, which become methods of the HT, and which are missing. Decided: a plan step of its own; the check is done once more user items are written on HT and twist.",
   "dateRaised": "2026-10-31",
-  "deadline": "2027-04-29"
+  "deadline": "2027-04-29",
+  "dateResolved": "2026-11-03 21:44",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Counted which functions of HT and twist the user items of exudyn.symbolics.userItems and the C++ connectors, joints, markers and rigid nodes use: the user items use the parts of the frames and twists directly, HT.Relative, the composition, GetRxyz, LogSE3, SetExpSE3 and RelativeTwist; PointVelocity and LocalTwist are not used; the C++ items compute the same relative quantities in the frame of marker 0 and take their Jacobians by automatic differentiation of the marker variations. The proposals - the difference of two twists, the Jacobian of a user joint from its constraints - wait for a decision (revision2026c step RG12.55.13).",
+  "resolvedInVersion": "1.13.336"
 }

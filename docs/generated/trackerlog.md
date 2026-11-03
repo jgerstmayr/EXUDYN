@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.335.dev1
+- Exudyn version = 1.13.336.dev1
 - last change = 2026-11-03
 - Number of issues = 3233
-- Number of resolved issues = 3112 (335 in current version)
+- Number of resolved issues = 3113 (336 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9054,9 +9054,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `IDEA` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` A sensor that samples another sensor at a period and holds its value in a data node, updated at FinishStep (#3180)
   - description: A zero-order hold for Exudyn in general, mainly on the C++ side: a SampleSensor with a data node takes the value of another sensor at the sampling instants and holds it between them, so that a user function or an item reads the held value as data coordinates; sensors do not update data variables now, so this sensor is treated specially at FinishStep of the integrator. Decided: an idea of low priority, without a plan step, done only when needed or when the continuous and discrete control of Exudyn is improved; not for exudyn.symbolic, where a recording has other ways to hold a value (data coordinates and the post-Newton step, \#3195).
   - **remarks:** kept open as an idea, no plan step (2026-11-01; revision2026c step RG12.70.1 closed)
-  - date raised: 2026-10-31
-- `CHECK` `LOW EFF` `raised by: Claude-JG` Check which functions of HT and twist the user connectors and joints really use, once several are written on HT and twist (#3178)
-  - description: The functions of symbolics.kinematics and exudyn.cUtilities for HT and twist (PointVelocity, LocalTwist, RelativeTwist, and the methods of the symbolic HT) were chosen for the joints and connectors of the Create functions (docs/dev/design/symbolicHT.md). Once several user items of exudyn.symbolics.userItems and new ones are written on HT0, twist0, HT1, twist1, count which functions they use, and decide which stay, which become methods of the HT, and which are missing. Decided: a plan step of its own; the check is done once more user items are written on HT and twist.
   - date raised: 2026-10-31
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` exudyn.symbolic: sparse matrices in the table of operations (#3168)
   - description: Some objects work internally with sparse matrices - a 20x20 matrix mostly of zeros, recorded as a dense matrix of components, whose zeros Optimize could remove. Find how the table of operations represents and evaluates such matrices: a sparse matrix as a kind of slot (its pattern fixed at recording, the nonzero components as operands), the matrix-vector and matrix-matrix products and their derivative rules on the pattern, and the export (triplets). Not for now. \[2026-10-31, Claude-JG\]: Proposal in docs/dev/design/symbolicSystem.md section 12.7: a sparse matrix declared by esym.SparseMatrix(rows, columns, triplets) or esym.Matrix(...).Sparse(), its pattern fixed at recording; in the table a slot kind with compressed rows and codes for A v, A^T v, s A, A + B, A\[i,j\] and the dense matrix; the derivative nnz x n on the pattern; results equal to the dense product to the bit; triplets in the export; after \#3176.

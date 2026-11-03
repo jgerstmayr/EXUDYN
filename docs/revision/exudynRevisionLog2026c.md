@@ -5729,6 +5729,47 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg12-55-10"></a>
+### RG12.55.10, RG12.55.12 — Which HT and twist functions the user items and the C++ items use (2026-11-03, #3178)
+- Counted by scripts over the force, constraint and post-Newton functions of exudyn/symbolics/userItems.py (spring-
+  damper, torsional, Cartesian and rigid-body spring-damper, sphere contact, revolute, prismatic, spherical joint,
+  distance constraint) and over src/ImplObjects/CObjectJoint*, CObjectConnector*, CObjectContact* (34 files),
+  src/System/CObjectConnector.cpp, src/ImplMarkers (19) and the rigid nodes (4), comments removed.
+- **The user items** use the parts of HT and Twist directly: translation 15, rotation 16, velocity 10, angular
+  velocity 5; the difference of the translations p1 - p0 10 times and of the velocities v1 - v0 5 times; a column of a
+  rotation (an axis) 17, cross products 11, scalar products 24 - the joints. Of the methods and functions:
+  `HT.Relative` 2 (torsional, rigid-body spring-damper), the composition `HT(A0 R0, p0)` 2, `GetRxyz`, `LogSE3`,
+  `SetExpSE3` once (rigid-body spring-damper), `RelativeTwist` once (torsional, its angular part); `PointVelocity` and
+  `LocalTwist` never - the sphere contact computes omega x r with a global offset by hand, the rigid-body spring-damper
+  A^T (v1 - v0) and A^T (omega1 - omega0) by hand. The four joints write their jacobianUserFunction by hand, by rows
+  of [p0, theta0, p1, theta1] (u x v, -u, d x u).
+- **The C++ connectors and joints** compute on the marker data in the same terms: the joint frame A0 rotationMarker0
+  10 times in 4 files (generic, revolute, prismatic, rigid-body spring-damper); A0^T (p1 - p0) 15 in 5; A0^T A1 6 in
+  6; A0^T (v1 - v0) 6 in 4; A0^T (A1 w1 - A0 w0) 5 in 5; A w_local 22 in 7; the Tait-Bryan angles of the relative
+  rotation 5 in 5; A skew(w) 4 in 2; ExpSE3 once; the HT class's PointVelocity, LocalTwist, RelativeTwist never. The
+  relative velocity of the C++ items is A0^T (v1 - v0), not RelativeTwist (which subtracts omega0 x (p1 - p0)); the
+  rigid-body spring-damper of the user items follows the C++. The Jacobians come from the connector interface:
+  `ComputeConstraintEquationsRigidDiff` and `ComputeConnectorForceRigidDiff`, the equations or forces of the
+  MarkerRigid frames and twists differentiated by AutoDiff by the 6 variations of each marker and chained with the
+  marker Jacobians in CObjectConnector.cpp (5 joints, 12 connectors and contacts) - the counterpart of what the user
+  joints write by hand.
+- **The rigid-body coordinates**: each rigid node has GetPositionJacobian, GetRotationJacobian (A G_local for Rxyz, EP,
+  RotVecLG) and GetRotationJacobianTTimesVector_q / GetGlocalTv_q, the derivative of J_rot^T v (3 each in the nodes
+  Rxyz, EP, RotVecLG, 2 in CObjectRigidBody); the markers compose them with their local position, J_pos - A r~ J_rot,
+  and 14 markers implement ComputeMarkerDataJacobianDerivative, each by itself; G, G_local and their time derivatives
+  18 times in 3 nodes. The user rigid body writes the same: [I, -A r~ G], [0, A G_local].
+- **Proposed** (sub-step RG12.55.13, for decision): stay - HT with rotation, translation, composition, Inverse,
+  Relative, GetRxyz, LogSE3, SetExpSE3; Twist with velocity and angular velocity; RelativeTwist and PointVelocity
+  (the public functions of cUtilities). New: the difference of two twists, `twist1 - twist0`, so that A0^T (v1 - v0)
+  is `LocalTwist(HT0, twist1 - twist0)`; the Jacobian of a user joint by the variations of its marker frames, from
+  its constraint function by esym.Jacobian (A -> (I + skew(theta)) A, p -> p + dp, at zero), the symbolic counterpart
+  of the connector interface, so that a user joint is written by its constraints alone and the four hand-written
+  jacobianUserFunction go. Not as HT methods: the axes of a rotation, scalar and cross products (matrix operations).
+  For C++, a candidate, not proposed now: one function of the point Jacobian of a frame composition and its
+  derivative for the 14 marker Jacobian derivatives.
+- No issue was raised for RG12.55.13: two proposed issues of a contributor wait in issues/proposed with their proposed
+  resolutions, and every raise would raise them before `exudev issue apply-proposed`.
+
 <a id="rg12-67-4"></a>
 ### RG12.67.4 — The parameters as an input of the composed system; RG12.67 closed (2026-11-03, #3159)
 - Maintainer 2026-11-03: do RG12.67.4 now; RG12.67.3.2 (the symbolic frames) closed without workarounds - user
