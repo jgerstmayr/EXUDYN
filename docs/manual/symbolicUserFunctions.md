@@ -92,7 +92,7 @@ decides is decided then.
   `mbs.symbolicVariables`, the scope of the model; another named variable, one of `esym.variables` among them, is
   refused at the recording, and so is a named variable created during it. A name is one variable in its scope:
   `esym.Real('k', 300., scope=mbs)` again gives the variable `k` with the value 300, so that a script runs a second
-  time; `mbs.Reset()` empties the scope, a new `mbs` has a new one, and `mbs.GetDictionary()` keeps it. Without
+  time, and a name given again as a Vector, a Matrix or with another size replaces the variable; `mbs.Reset()` empties the scope, a new `mbs` has a new one, and `mbs.GetDictionary()` keeps it. Without
   `scope`, a named variable is one of `esym.variables`, the global scope, which `esym.Function` reads.
   `exudyn.special.deprecations.symbolicVariablesWithoutScope = True` restores the variables of no scope for the
   transition (#3208).

@@ -5729,6 +5729,21 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg12-67-6"></a>
+### RG12.67.6, RG12.73.3, RG12.67, RG12.73 — The designs of the symbolic parameters and of the names of variables into the documentation (2026-11-03, #3159)
+- What is implemented of docs/dev/design/symbolicParameters.md and symbolicVariableNames.md is in the manual and the
+  internals; both notes removed. New in the documentation: in the manual (symbolicSystem.md) reading the bindings,
+  `ParameterBindings.Keep`, the numbers in the items, structure as a constant of the recording, what holds numbers;
+  (symbolicUserFunctions.md) a name given again with another kind or size replaces the variable. In the internals
+  (symbolic.md) the library's own variables in scopes of their own and why a scope per model; (symbolicSystem.md §7)
+  bindings neither in MainSystem nor in the C++ items, the rest symbolic as user items, no forward sensitivities;
+  (userItems.md §8) the parameters of the user items kept by `_AddUserItem`, RigidBodyInertia for both.
+- Not taken over, as not built: the options B, B', C and packages 2 and 3 of the names (only the reason against a global
+  scope), the options A-C of the source of the bindings (only the reasons against B and C), the forward sensitivities.
+- docs/dev/design/symbolicSystem.md: section 12.4 (the parameters as an input, P1) removed, implemented by RG12.67.4;
+  12.3 (q relative, the reference values as variables) stays as an open recommendation.
+- RG12.67 and RG12.73 closed with all their sub-steps; #3159 resolved (#3208 was resolved with RG12.73.2).
+
 <a id="rg12-72"></a>
 ### RG12.72 — The user items tested by the examples of the Create functions (2026-11-03, no issue)
 - Maintainer 2026-11-03: do RG12.72. The "mini examples built with the Create functions" are the Examples of the

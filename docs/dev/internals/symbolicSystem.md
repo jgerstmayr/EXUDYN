@@ -143,4 +143,12 @@ unknowns) 0.44 s against 0.059 s of SolveDynamic.
   map, so that the Jacobian sees the coupling; system coordinates read from mbs inside an item (hidden from the LTG
   map) are not offered.
 - The parameters are bound in the symbolic layer, where the user items are created; MainSystem and the C++ items stay
-  numeric, while the named variables belong to the model, `mbs.symbolicVariables` (#3159, #3208).
+  numeric, while the named variables belong to the model, `mbs.symbolicVariables` (#3159, #3208). Bindings stored by
+  the Add and Modify functions of MainSystem, or symbolic values held by the C++ items, are not done: MainSystem does
+  not know the symbolic layer, and the C++ evaluation needs the numbers anyway.
+- What else is to be symbolic - loads, markers, the matrices of the generic objects, the frames of joints and
+  connectors - becomes a user item when it is needed, its values its parameters; no other ways for them (maintainer
+  2026-11-02, 2026-11-03).
+- No forward sensitivities of the solution in the Python solvers: beside adjoint methods, central differences of whole
+  simulations are simpler and not much slower; the derivatives of the equations by the parameters are there for them
+  (maintainer 2026-11-03).

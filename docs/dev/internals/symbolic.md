@@ -86,6 +86,11 @@ variable of the name in its scope, and `_CheckVariablesOfRecording`, called by `
 named variable of a recording that is neither an argument nor the variable of its name in `mbs.symbolicVariables` -
 the same node, found by the walk of `NamedVariablesOf` (#3208). `MainSystem::symbolicVariables` is a Python object,
 created when first used, set to None by `Reset`, so that MainSystem needs no header of the symbolic module.
+The library's own named variables - the arguments of a recording, the coordinates of `SymbolicSystem`, `x`, `y`, `z`
+of `exudyn.shells` - are created in a `VariableSet` of their own per build. A scope per model rather than one global
+scope of names: a global one would be shared silently by two models in one process - a script run again, the test
+models, a parameter variation in threads - and would tie no variable to its model; within a scope, a name given
+again returns the variable, so that a script or a notebook cell runs a second time.
 
 ## 3. The evaluation: the flat program
 

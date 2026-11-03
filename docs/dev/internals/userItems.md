@@ -194,3 +194,5 @@ the connector outside the list of connectors.
 | the Create functions on a creator object with the signatures of mbs, no classes per item (2026-10-26) | one script for the built-in and the user items |
 | connectors by the forceUserFunction of ObjectConnectorUser, drawn by a Python graphicsDataUserFunction (2026-10-26) | the connector stays a connector; returning the forces is the form of the symbolic user items |
 | a C++ item with numerical and symbolic parameters, a symbolic item without user functions, not planned (2026-10-28) | the user items are symbolic by their recordings; the parameters as variables (#3152) and the system variables (#3151) would allow it later |
+| the symbolic parameters are the `parameters` of the user items, kept by `_AddUserItem` in the ParameterBindings of the creator (2026-11-02, #3159, #3207) | one place adds an item, its kind and its parameters; MainSystem and the C++ items stay numeric |
+| `RigidBodyInertia` and its shapes for numbers and symbolic values, no symbolic counterparts (2026-11-01, #3159) | one set of inertia functions; a script gives numbers or expressions |

@@ -45,10 +45,16 @@ system = SymbolicSystem(mbs)
   `SymbolicSystem(mbs, parameters=creator.parameterBindings)`, for derivatives by them. The evaluation takes the values
   of the parameters as an input: `SetParameterValues({'k': 650.})` sets new values without recording anything again,
   and `ODE2RHSParameterJacobian` and `MassMatrixParameterJacobian` give the derivatives of the forces and of the mass
-  matrix by the parameters, in the order of `parameterNames` (#3159, #3208). Every parameter of a user item may be such an expression - the stiffness of a spring-damper,
-  the radii of a contact, the matrices of a rigid-body spring-damper, a distance -, and the inertia of a rigid body:
-  `RigidBodyInertia` and its shapes take symbolic values, `InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1])`.
-  The frames of joints and connectors and the loads are numbers.
+  matrix by the parameters, in the order of `parameterNames` (#3159, #3208). Every parameter of a user item may be such
+  an expression - the stiffness of a spring-damper, the radii of a contact, the matrices of a rigid-body spring-damper,
+  a distance -, and the inertia of a rigid body: `RigidBodyInertia` and its shapes take symbolic values,
+  `InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1])`. `creator.parameterBindings[item]` gives the parameters of
+  an item - the expression where one is given, the number otherwise -, `creator.parameterBindings.Parameters()` the
+  named variables; a user item added without the creator keeps its parameters by
+  `creator.parameterBindings.Keep(item, parameters)`. The items keep the numbers, the values of the expressions. A
+  value that changes the structure of the computation - a formulation, a flag, a number of points - is a constant of
+  the recording, not a parameter. The frames of joints and connectors, the loads, the markers and the built-in items
+  hold numbers.
 
 The system is kept as one flat program per kind of item - the items whose user functions are the same recording -,
 with the tables of their parameters and of their local-to-global indices, as Exudyn assembles its items; the global

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 326 | 1.13.336 |
+| 1.13 | Newborn | 327 | 1.13.337 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.337** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic parameters for every item of the symbolic system: a general way beyond the scalar parameters of the user items (#3159)
+  - description: Symbolic parameters are required in the long term; named parameters for the inertia of a rigid body and for the joints need a general solution (\#3152 took the scalar parameters of the mass point and the spring-dampers). To design: parameters of any structure (an inertia from mass, inertia tensor and center of mass, the frames and axes of joints, the matrices of ObjectGenericODE2, the values of loads) given as named esym.Real or expressions of them, mapped to the numbers of the items; a parameter set per system (a VariableSet) instead of per item lists; the derivatives by them (sensitivities) through Equations and the composed system; later the C++ items with numerical and symbolic parameters (symbolicUserItems.md section 6).
+  - **notes:** Symbolic parameters of the user items: each parameter of a user item created by UserItemCreator may be an expression of named variables of mbs.symbolicVariables, kept in creator.parameterBindings; RigidBodyInertia and its shapes take symbolic values; SymbolicSystem(mbs, parameters=creator.parameterBindings) keeps the expressions in Equations() and takes the parameter values as an input of its recordings, so that SetParameterValues records nothing again, and ODE2RHSParameterJacobian and MassMatrixParameterJacobian give the derivatives by the parameters. Loads, markers, the frames of joints and connectors and the built-in items hold numbers.
+  - date resolved: **2026-11-03 22:14**, date raised: 2026-10-29
 - **1.13.336** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Check which functions of HT and twist the user connectors and joints really use, once several are written on HT and twist (#3178)
   - description: The functions of symbolics.kinematics and exudyn.cUtilities for HT and twist (PointVelocity, LocalTwist, RelativeTwist, and the methods of the symbolic HT) were chosen for the joints and connectors of the Create functions (docs/dev/design/symbolicHT.md). Once several user items of exudyn.symbolics.userItems and new ones are written on HT0, twist0, HT1, twist1, count which functions they use, and decide which stay, which become methods of the HT, and which are missing. Decided: a plan step of its own; the check is done once more user items are written on HT and twist.
   - **notes:** Counted which functions of HT and twist the user items of exudyn.symbolics.userItems and the C++ connectors, joints, markers and rigid nodes use: the user items use the parts of the frames and twists directly, HT.Relative, the composition, GetRxyz, LogSE3, SetExpSE3 and RelativeTwist; PointVelocity and LocalTwist are not used; the C++ items compute the same relative quantities in the frame of marker 0 and take their Jacobians by automatic differentiation of the marker variations. The proposals - the difference of two twists, the Jacobian of a user joint from its constraints - wait for a decision (revision2026c step RG12.55.13).

@@ -1,8 +1,8 @@
 # Symbolic system models: the sections cited by other design notes (#3109)
 
 What the symbolic system is and how it works is in docs/dev/internals/symbolicSystem.md and in the manual, *Symbolic
-system and user functions* (#3221). This note keeps only the sections that uniformEvaluation.md, cudaRoadmap.md and
-symbolicParameters.md cite, with their numbers, until the steps that cite them are done.
+system and user functions* (#3221). This note keeps only the sections that uniformEvaluation.md and the plan cite, and
+the open recommendation 12.3, with their numbers, until the steps that cite them are done.
 
 ## 5. Jacobians: by differentiating the programs
 
@@ -111,27 +111,8 @@ so a changed reference needs a new export.
 
 **Recommendation**: keep `q` - the name of the solvers - and say it once in the base class: "q: the ODE2 coordinates
 relative to the reference configuration, qTotal = qRef + q"; `qRef` a member of the base class (zero in
-`NumpySystem`); the reference values an optional variable of `Equations()`, with the parameters of 12.4. Whether user
+`NumpySystem`); the reference values an optional variable of `Equations()`, as the parameters. Whether user
 functions get total coordinates in general is RG13.2.
-
-### 12.4 Further dependencies: the parameters
-
-**Now.** The dependencies are q, q_t, y, lambda and t. The parameters of the items are an argument of the recordings
-of ObjectUserBody, ObjectConnectorUser and ObjectJointUser (`parameters`, named by a ParameterLayout), so one recording
-serves a kind; `SymbolicSystem` keeps them in the tables of the kinds, and `Equations()` writes them as numbers. The
-values of the loads and the matrices of ObjectGenericODE2 are numbers as well. `esym.variables` are global named
-variables, read by a recording at every call.
-
-| option | what | gives |
-|---|---|---|
-| P1 a parameter vector p of the system | every parameter of the items and loads in one vector, with a table (item, name, index) to its slot; p an input of the composed recordings and a variable of `Equations()`; `SetParameters(p)` | the derivative by p by the one-pass derivative (the recordings take `parameters` as an argument already): sensitivities, optimization, identification; a parameterized model evaluated for another p without recording again, also as an ensemble over p (RG14) |
-| P2 `esym.variables` | named variables, as now | a few global parameters (gravity, the stiffness of all springs); one global namespace, not per item |
-| P3 as now | numbers | nothing more |
-
-**Recommendation**: P1, after the free signature of 12.6 R2 - the composed recordings take the signature of
-ObjectGenericODE2, `(mbs, t, itemNumber, q, q_t)`, which has no parameters. The parameters are the `parameters`
-vectors, the load values and the matrices of ObjectGenericODE2; not the reference coordinates (12.3), which are an
-option of their own.
 
 ### 12.7 The table of operations
 

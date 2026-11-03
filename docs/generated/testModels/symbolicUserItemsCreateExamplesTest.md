@@ -67,6 +67,7 @@ def Run(code):
                 state += list(mbs.GetNodeOutput(node, variable))
     return (np.array(state), space['solverTime'])
 
+printToConsole = exu.config.printToConsole
 exu.config.printToConsole = False #the solvers of the examples
 failed = 0
 (results, refused, withoutExample) = ([], [], [])
@@ -86,7 +87,7 @@ for createFunction in sorted(name for name in dir(UserItemCreator) if name.start
     difference = np.max(np.abs(stateUserItems - stateBuiltIn)) if len(stateUserItems) == len(stateBuiltIn) else np.inf
     results.append((createFunction, difference, timeBuiltIn, timeUserItems))
     failed += int(not difference < 1e-8)
-exu.config.printToConsole = True
+exu.config.printToConsole = printToConsole
 
 exu.Print('example of                    difference   built-in   user items')
 for (createFunction, difference, timeBuiltIn, timeUserItems) in results:
