@@ -28,16 +28,17 @@ Exudyn's C++ solvers, written in Python with numpy and scipy:
   sensitive to small changes - a chain starting near its upright position - the global error grows far beyond
   them, as no local estimate sees the sensitivity; tighter tolerances help. The algebraic equations must depend on the
   coordinates and the time only (#3242).
-- `SolveLobatto4(system, simulationSettings, variant)`: the 3-stage Lobatto methods of order 4 (#3244, #3246).
-  `'IIIA-end'` (the default) and `'IIIC-end'` enforce the constraints and the velocity constraints at the end of the
-  step only, with a multiplier for each stage after the start; `'IIIA-GGL'` and `'IIIC-GGL'` enforce them at each
-  implicit stage, with a multiplier moving the positions onto the constraints. All are of order 4 in the coordinates
-  and velocities and of order 2 in the accelerations and multipliers. Lobatto IIIA has one implicit stage less and
-  keeps the energy; Lobatto IIIC damps fast modes, `'IIIC-GGL'` also where the step is 70 times longer than
-  1/omega of a fast mode. With `timeIntegration.automaticStepSize` (the default) the step size follows the difference to
-  the embedded trapezoidal solution of the first and the last stage, with the PI controller of `SolveTrapezoidalGGL`:
-  an estimate of order 2, which makes the error far smaller than the tolerances, with about the steps the trapezoidal
-  rule would need.
+- `SolveImplicitRungeKutta(system, simulationSettings, method)`: implicit Runge-Kutta methods with two implicit
+  stages (#3244, #3246, #3247). `'LobattoIIIA4'` (the default), Lobatto IIIA of order 4, enforces the constraints and
+  the velocity constraints at the end of the step only, with a multiplier for each stage after the start: the
+  simplest form that solves index-3 constraints directly; it has no numerical damping and keeps the energy.
+  `'LobattoIIIC4-GGL'`, Lobatto IIIC of order 4, enforces them at each stage, with a multiplier moving the positions
+  onto the constraints; it damps fast modes, also where the step is 70 times longer than 1/omega of the mode.
+  `'Radau3'`, Radau IIA of order 3, has the constraints as `'LobattoIIIA4'` and damps as well. All are of order 2 in
+  the accelerations and multipliers. With `timeIntegration.automaticStepSize` (the default) the step size follows the
+  difference to the embedded trapezoidal solution, with the PI controller of `SolveTrapezoidalGGL`: an estimate of
+  order 2, which makes the error far smaller than the tolerances, with about the steps the trapezoidal rule would
+  need.
 
 All of them take the `SimulationSettings` of `mbs.SolveDynamic`: the steps, the solver parameters, the Newton tolerances, the
 discontinuous iteration of the data coordinates and, with `timeIntegration.adaptiveStep`, the step size that a

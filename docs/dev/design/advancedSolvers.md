@@ -35,68 +35,108 @@ first sub-step does the analysis and a recommendation; the adaptive solvers are 
 the internal solvers; a further step evaluates the internal solver structure (files, classes, Python bindings), to be
 improved, revised, completed and made ready for the two new adaptive solvers in C++.
 
-## 2. What exists
+## 2. What exists (at the start of RG20, and what RG20 added)
 
-- **Python solvers on the symbolic system** (exudyn/symbolics/solvers.py, 537 lines): `SolveGeneralizedAlpha`
-  (generalized-alpha and Newmark as CSolverImplicitSecondOrder, index 3 with Exudyn's scaling, ODE1 by the trapezoidal
-  rule, initial accelerations from [M C_q^T; C_q 0]) and `SolveExplicit` (explicit Euler, RK44, velocity Verlet). Both
-  on `SymbolicSystemBase`: `SystemResidual`, `SystemJacobian`, `MassMatrix`, `ODE2RHS`, `AlgebraicEquations` - with
-  `velocityLevel` - and the exact Jacobians. Step size: constant, `_StepSize` reduces only on a rejection of the
-  post-Newton step (`adaptiveStep`, #3220); no error control. `SolveExplicit` refuses algebraic equations.
-- **C++ solvers** (src/Solver, 7200 lines): `CSolverBase` (2494 lines: initialization, the step loop, Newton,
-  discontinuous iteration, output, restart), `CSolverImplicitSecondOrderTimeInt` (generalized-alpha, Newmark,
-  TrapezoidalIndex2 as Newmark with index-2 reduction), `CSolverExplicitTimeInt` (Euler, midpoint, RK33, RK44, RK67,
-  ODE23 and DOPRI5 with automatic step size and absolute/relative tolerance, velocity Verlet; Lie group integration),
-  `CSolverStatic`; `MainSolverBase` and its Python binding; exudyn/solver.py `SolveDynamic` dispatches by
-  `DynamicSolverType`.
-- **Output**: `CSolverBase::FinishStep` writes the solution and the sensors when `output.lastSolutionWritten +=
-  writePeriod` is passed - at the step times, not at the write times; with an adaptive step the written times are
-  irregular. The Python solvers record at the steps of `solution.file.writePeriod` (as multiples of the step).
-- **Explicit with constraints**: `explicit.eliminateConstraints` (C++): CoordinateConstraint objects on the ground are
-  eliminated by setting the constrained coordinates and their derivatives to zero in each stage; any other constraint
-  (also a coordinate constraint between two nodes) raises, and nAE != 0 without elimination warns and ignores the
-  constraints. The symbolic `SolveExplicit` refuses every algebraic equation. Euler parameter nodes add an algebraic
-  equation (the norm) and are refused by the explicit solvers; the rotation vector Lie group node is the explicit
-  alternative.
+- **Python solvers on the symbolic system** (exudyn/symbolics/solvers.py): `SolveGeneralizedAlpha` (generalized-alpha
+  and Newmark as CSolverImplicitSecondOrder, index 3 with Exudyn's scaling) and `SolveExplicit` (explicit Euler,
+  RK44, velocity Verlet), on `SymbolicSystemBase` (`SystemResidual`, `SystemJacobian`, `MassMatrix`, `ODE2RHS`,
+  `AlgebraicEquations`, exact Jacobians for a SymbolicSystem). RG20 added: the output at the exact write times,
+  interpolated within the step (#3241); the elimination of fixed coordinates in `SolveExplicit` (#3238).
+- **exudyn/symbolics/advancedSolvers.py** (new in RG20): `SolveTrapezoidalGGL` (#3242, #3243) and
+  `SolveImplicitRungeKutta` with `LobattoIIIA4`, `LobattoIIIC4-GGL`, `Radau3` (#3244, #3246, #3247); one stage solver
+  `_SolveRungeKutta` for stiffly accurate tableaus with the constraints at the end of the step or with GGL at the
+  stages; the step size controller `_ErrorStepSize` (PI, RG20.8.1).
+- **C++ solvers** (src/Solver, 7200 lines): `CSolverBase` (initialization, the step loop, Newton, discontinuous
+  iteration, output, restart), `CSolverImplicitSecondOrderTimeInt` (generalized-alpha, Newmark, TrapezoidalIndex2),
+  `CSolverExplicitTimeInt` (Euler to RK67, ODE23 and DOPRI5 with automatic step size, velocity Verlet, Lie group
+  integration), `CSolverStatic`; unchanged by RG20 so far. Found: RK44 with eliminated constraints is of order 1
+  (#3240); the error norm of ODE23/DOPRI5 lacks absolute values (#3245).
 
 ## 3. Evaluation
 
-### 3.1 TrapezoidalGGL with an adaptive step (step 1)
+Notation: n coordinates q, velocities v = q_t, accelerations a = q_tt, m constraints c(q, t) = 0 with C_q = dc/dq,
+multipliers z (lambda); M a = f(q, v, t) - C_q^T z.
 
-- **The method**: the trapezoidal rule (= the 2-stage Lobatto IIIA method) for q, v = q_t and the Gear-Gupta-Leimkuhler
-  (GGL) stabilization: the position constraints g(q) = 0 and the velocity constraints G(q) v = 0 both enforced, with a
-  second multiplier mu in q_t = v - G^T mu. The pure trapezoidal rule on index-3 constraints is unstable (it is the
-  limit of generalized-alpha with rho_inf = 1, which Exudyn avoids), with GGL it is stable and of order 2 in q and v,
-  the multipliers of order 1 to 2. Exudyn's `TrapezoidalIndex2` (Newmark with index-2 reduction) is related but
-  drifts on position level, which GGL removes.
-- **Unknowns per step**: q, v, lambda, mu (2 n + 2 m), or by eliminating v with the trapezoidal relation n + 2 m; the
-  Newton matrix [M/h... ] reuses `SystemJacobian` and the constraint Jacobian C_q, both exact in the symbolic system.
-- **Error estimator**: the trapezoidal rule has the local error -h^3/12 q'''; with q''' ~ (a_{n+1} - a_n)/h the
-  estimate e ~ h^2/12 |a_{n+1} - a_n| per component, weighted by the absolute and relative tolerance; or the
-  difference to a second-order explicit predictor (Milne's device). Both cost no extra evaluation; the acceleration difference is the standard choice and robust for mechanical systems; step size
-  control h_new = h (tol/err)^(1/3) with a safety factor and limits, rejection when err > tol.
-- **The name**: `TrapezoidalGGL` is appropriate (Lobatto IIIA-2 with GGL is common in the literature; "TrapezoidalGGL"
-  is clearer for users). The adaptivity as `automaticStepSize`, as for ODE23/DOPRI5, with the tolerances of
-  `timeIntegration` (the existing absolute and relative tolerance of the explicit solvers, or new ones).
+### 3.1 TrapezoidalGGL (step 1, done)
 
-### 3.2 Lobatto (step 2)
+- **The method** (`SolveTrapezoidalGGL`):
 
-- **The method**: the 3-stage Lobatto IIIA method (stages at 0, h/2, h) is of order 4; for constrained mechanical
-  systems the partitioned Lobatto IIIA-IIIB pair (Jay) or Lobatto IIIA with the constraints enforced at the stages
-  (index-3 at the stages, GGL or the velocity constraints at the end) keeps order 4 for q and v. Lobatto IIIA alone
-  on index-3 systems is not stable without the projection of the velocities - the claim "directly stable for index 3,
-  no tricks" holds for the IIIA-IIIB pair (SPARK methods), not for IIIA alone; to be checked in the implementation,
-  starting from Jay's formulation.
-- **Cost**: the end of a step is the start of the next (FSAL), so the new stages are the midpoint and the end: 2
-  stages, twice the unknowns of the trapezoidal rule - as the request says.
-- **Error estimator**: the embedded trapezoidal solution from the same end values (order 2) gives an estimate of the
-  order-2 error, which over-estimates the order-4 error and makes the steps too small; better: the stage values give a
-  cubic (Hermite) solution with an error of order 4, and the difference of the order-4 solution to the Hermite
-  extrapolation of the previous step - or the classical estimate from the difference of the Lobatto IIIA and IIIC
-  solutions of the same stages. Recommended: start with the embedded trapezoidal estimate and a step size rule of
-  exponent 1/3 (safe), and compare with a reference.
-- **The name**: `Lobatto4` says the order but not the variant; recommended `LobattoIIIA3` (3 stages, order 4) or
-  `LobattoGGL` if GGL is used for the constraints. To be decided (Q2).
+      v1 = v0 + h/2 (a0 + a1),      q1 = q0 + h/2 (v0 + v1) - C_q(q1)^T mu
+      M(q1) a1 = f(q1, v1, t1) - C_q(q1)^T z1,      c(q1, t1) = 0,      C_q(q1) v1 + c_t = 0
+
+  Newton for (a1, z1, mu); order 2 in q, v, a, z; no damping; the constraints hold on both levels.
+- **Error estimate** (decision 1, #3243): the local errors of the trapezoidal rule, -h^3/12 q_ttt and -h^3/12 v_ttt,
+
+      e_q = h^2/12 (a1 - a0)                                      (q_ttt ~ (a1 - a0)/h)
+      e_v = h^3/12 a_tt,  a_tt = 2/(tau1 + tau2) ((m0 - m1)/tau1 - (m1 - m2)/tau2)
+
+  with the mean accelerations m = (v1 - v0)/h of the last three steps (tau the distances of their midpoints): the end
+  accelerations alternate from step to step with constraints (the trapezoidal rule does not damp that mode), their
+  means do not. The norm of the explicit solvers, error = rms(e/(atol + rtol max(|x0|, |x1|))) over q and v.
+- **Controller** (RG20.8.1): PI of Gustafsson, h_next = h safety (1/err)^(0.7/k) err_prev^(0.4/k), k = 3; a step of
+  err > 1 repeated with h safety (1/err)^(1/k), no growth right after a rejection.
+
+### 3.2 The 3-stage Lobatto methods and Radau3 (step 2)
+
+- **The stage equations** (`_SolveRungeKutta`, a stiffly accurate tableau (A, b = last row, c)):
+
+      V_i = v0 + h sum_j A_ij A_j,      Q_i = q0 + h c_i v0 + h^2 sum_j (A^2)_ij A_j
+      M(Q_i) A_i = f(Q_i, V_i, t0 + c_i h) - C_q(Q_i)^T Z_i          (each implicit stage)
+      q1 = Q_s,  v1 = V_s,  a1 = A_s,  z1 = Z_s
+
+  Lobatto IIIA (c = 0, 1/2, 1): A = [[0, 0, 0], [5/24, 1/3, -1/24], [1/6, 2/3, 1/6]], the first stage the start;
+  Lobatto IIIC: A = [[1/6, -1/3, 1/6], [1/6, 5/12, -1/12], [1/6, 2/3, 1/6]], all three stages implicit, L-stable;
+  Radau IIA (c = 1/3, 1): A = [[5/12, -1/12], [3/4, 1/4]], order 3, L-stable. b = (1/6, 2/3, 1/6) for both Lobatto
+  methods: Simpson's rule, q1 = q0 + h/6 (V_1 + 4 V_2 + V_3).
+- **The constraints, measured** (pendulum, slider crank; orders of q / v / a, z):
+
+  | where | method | q | v | a, z | velocity constraint |
+  |---|---|---|---|---|---|
+  | end: c(q1) = 0 and C_q v1 + c_t = 0, Z_i per stage after the start, Z_1 = z0 | IIIA (`LobattoIIIA4`) | 4 | 4 | 2 | 1e-15 |
+  | | IIIC, IIIA-IIIB | 4 | 4 | 2-3 | 1e-15 |
+  | | Radau IIA (`Radau3`) | 3 | 3 | 2 | 1e-15 |
+  | end: c(q1) = 0 only, one Z for the step | IIIA, IIIB, IIIC, IIIA-IIIB | 4 | 2 | 1-2 | drifts (O(h^2)) |
+  | GGL at each implicit stage: c(Q_i) = 0, C_q V_i = 0, Q_i - C_q^T mu_i | IIIA, IIIC (`LobattoIIIC4-GGL`) | 4 | 4 | 2 | 1e-15 |
+  | | Radau IIA | 3 | 3 | 2 | 1e-15 |
+  | c(Q_i) = 0 at all stages only (index 3) | IIIC | 4 | 2 | 1 | drifts |
+  | | IIIA | 2 | 2 | no convergence | drifts |
+
+  The unknowns per step: LobattoIIIA4 2 n + 2 m, Radau3 2 n + 2 m, LobattoIIIC4-GGL 3 n + 6 m. A fast mode with
+  h omega = 70 (a stiff spring): LobattoIIIC4-GGL and Radau3 damp it (Radau3 also damps the slow motion slightly),
+  LobattoIIIA4 does not converge there and keeps the energy to 1e-4 at h omega = 14; IIIC-end gained energy.
+- **Error estimates, the formulas.** The trapezoidal solutions from the stages of the same step:
+
+      one step:       T1 = q0 + h/2 (V_1 + V_3)
+      two substeps:   T2 = q0 + h/4 (V_1 + 2 V_2 + V_3)
+      Lobatto:        S  = q0 + h/6 (V_1 + 4 V_2 + V_3) = (4 T2 - T1)/3      (Simpson is the Richardson extrapolation)
+
+      S - T1 = -h/3 D,   S - T2 = -h/12 D,   D = V_1 - 2 V_2 + V_3 ~ h^2/4 q_ttt
+
+  (the same for v with the accelerations A_i). Both are the same second difference D, an estimate of the local
+  error -h^3/12 q_ttt of the trapezoidal rule, not of the error -h^5/2880 q^(5) of Simpson's rule. This is general:
+  an estimate must vanish where the method is exact, for V a polynomial of degree 2 - and the only combination of
+  three values V_1, V_2, V_3 that vanishes for all quadratics is zero. **No estimate of order 4 comes from the
+  stages of one step alone**; a fourth (and fifth) value is needed. Implemented (RG20.2.3): S - T1 for q and v, with
+  the exponent of h^3; it controls the step as the trapezoidal rule would - the error of Lobatto4 ends far below the
+  tolerance (slider crank at 1e-6: 68 steps, 4e-10, where 16 constant steps give 1e-8).
+- **Error estimates of order 4, the candidates** (RG20.2.5):
+  1. *Step doubling*: the step h and two steps h/2 from the same start, e = (y_{h/2,h/2} - y_h)/(2^4 - 1); reliable,
+     three solves per step (the two half steps can be kept, local extrapolation); the reference for the others.
+  2. *Lobatto IIIA against IIIC on the same step*: both of order 4 with different error constants, e ~ y_IIIA -
+     y_IIIC; a second solve (3 stages).
+  3. *The previous step* (a multistep device): the fourth divided difference of V over the five times t0 - h_p,
+     t0 - h_p/2, t0, t0 + h/2, t1, e_q ~ -h^5/2880 * 24 V[t_-2, ..., t_2], and of A for e_v; no extra solve, but the
+     stage values of IIIA are of stage order 3 (V) and 2 (A): their errors enter the fourth difference with h^-4 -
+     for e_v certainly too large, for e_q to be measured; the first step needs another estimate.
+  4. *A defect*: the quintic Hermite polynomial of (q, v, a) at both ends, its derivative at the midpoint against
+     V_2 - an estimate of the stage error, O(h^4), one order better than D, still not h^5.
+  Proposed order: measure 1 as the reference against the true local error on the pendulum and the ball, then 3 for
+  q with the trapezoidal v estimate, then 2.
+- **Radau3**: no stage at the start; the embedded trapezoidal solution of the start and the end,
+  q0 + h/2 (v0 + v1), v0 + h/2 (a0 + a1) - an estimate of order h^3 against the error h^4 of Radau3.
+- **The names** (decision 2026-11-04, third answers): `LobattoIIIA4` - the simplest form that solves index 3 without
+  tricks -, `LobattoIIIC4-GGL` and `Radau3`, the methods of `SolveImplicitRungeKutta`; HOTINT presumably had
+  LobattoIIIA4 or IIIC4 with the constraints at the end.
 
 ### 3.3 Adjoint sensitivities (step 3, not proposed to be done)
 
@@ -160,81 +200,51 @@ restart) out of CSolverBase into a class of its own, which also takes the interp
 controller class shared by all adaptive solvers; the Newton method as a class of its own on residual and Jacobian
 callbacks.
 
-## 4. Decisions (maintainer 2026-11-04)
+## 4. Decisions
+
+Maintainer 2026-11-04 (first answers):
 
 1. **TrapezoidalGGL**: the error estimate by the acceleration difference.
-2. **Lobatto**: named `Lobatto4`, by its order, as Radau5. The maintainer expects Lobatto IIIC with the constraints
-   enforced at all stages to be the variant for index 3; it is stiffly accurate and L-stable, but not FSAL - its first
-   stage is implicit as well, so three stages of unknowns instead of two for IIIA. RG20.2.2 compares IIIC with the
-   constraints at all stages against IIIA with GGL by order and stability and chooses. The error estimate: the
-   embedded trapezoidal solution and the classical estimate of the difference of the IIIA and IIIC solutions.
-   Radau IIA with two stages (`Radau3`, order 3, more damping) is another tableau of the same code: kept in mind in the
-   implementation, no step.
-3. **Tolerances**: `timeIntegration.absoluteTolerance` and `relativeTolerance` for the explicit and the implicit
-   adaptive solvers, as they were meant; they are per step and low, so a user usually adjusts them.
-4. **Output within the step**: the Python solvers first (RG20.4.3), to see what happens, then C++ (RG20.4.2).
-5. **Explicit elimination**: as in C++, coordinates fixed to the ground - done (RG20.5.2), see below.
-6. **Euler parameters**: the Python solvers first. Finding: `SymbolicSystem` refuses the norm constraint of
-   NodeRigidBodyEP (only ObjectJointUser and ObjectGenericDAE have algebraic equations there), so RG20.5.3 first takes
-   NodeRigidBodyEP into `SymbolicSystem`, which the implicit solvers gain from as well.
-7. **Python first everywhere**: the new solvers in a module of their own in `exudyn.symbolics`; C++ when settled.
-8. **A common step size controller**: step RG20.8.
+2. **Lobatto**: named by its order; IIIC with the constraints at all stages expected for index 3, compared with IIIA
+   and GGL (RG20.2.2); Radau3 kept in mind.
+3. **Tolerances**: `timeIntegration.absoluteTolerance` and `relativeTolerance` for all adaptive solvers.
+4. **Output within the step**: the Python solvers first (RG20.4.3), then C++ (RG20.4.2).
+5. **Explicit elimination**: as in C++, coordinates fixed to the ground (RG20.5.2).
+6. **Euler parameters**: the Python solvers first; NodeRigidBodyEP into `SymbolicSystem` first (RG20.5.3).
+7. **Python first everywhere**: the new solvers in a module of their own; C++ when settled.
+8. **A common step size controller**: RG20.8.
 
-**RG20.5.2, done**: `SolveExplicit` eliminates algebraic equations that fix one coordinate each - found numerically
-for any system: linear in one ODE2 coordinate and independent of everything else -, keeps the coordinate at the value
-of its equation (with offset and factor), its velocity and acceleration zero in every stage, and solves a mass matrix
-that couples it without its rows and columns. Found on the way: Exudyn's explicit solver zeroes the fixed
-coordinates only at the end of a step, not in the stages, so its RK44 is of order 1 with eliminated coordinates
-(#3240, RG20.5.4); it also ignores the offset.
+Second answers: models of changing time scales - a whipping chain of about 10 elements and a contact sphere; the
+velocity error and the PI controller; then: the chain from horizontal; the constraints at the end of the step, as
+in HOTINT, without GGL; the sensitivity of a motion near an unstable position is documented only; the embedded
+trapezoidal estimate first.
 
-**RG20.4.3, RG20.1.2, RG20.1.3, done** (#3241, #3242): the Python solvers write at the exact write times, interpolated
-by the cubic Hermite polynomial; `exudyn.symbolics.advancedSolvers.SolveTrapezoidalGGL` with constant steps (order 2
-in q, v, the accelerations and z, measured on a pendulum and a slider crank) and with the step size by the
-acceleration difference. Measured: the controlled step distributes the steps by the error of the positions, but at an
-equal number of steps its global error on the pendulum and the slider crank is 1 to 10 times that of constant steps -
-the velocities, whose local error h^3/12 a_tt the estimate does not see, dominate the global error; an estimate of
-a_tt by the second difference of the accelerations is spoiled by their undamped odd-even oscillation (the
-trapezoidal rule does not damp it), and one by the mean accelerations (v1 - v0)/h of three steps was not better. The
-I controller rejects 5 to 20 % of the steps where the error grows (RG20.8: a PI controller). Open for the evaluation:
-a problem of changing time scales (contact, impact) where the controlled step pays off, and an estimate of the
-velocity error.
+Third answers: `LobattoIIIA4` (constraints at the end), `LobattoIIIC4-GGL` and `Radau3` are the three methods,
+IIIC-end and IIIA-GGL dropped; the formulas of the error estimates in this file and a better estimate (section 3.2).
 
-**RG20.1.4, RG20.8.1, RG20.2.2-.4, done** (#3243, #3244, #3246):
+## 5. Results
 
-- TrapezoidalGGL, automatic step: on a bouncing ball (Hertz contact) a tenth of the steps of a constant step for a
-  tenth of the error; on a chain of 10 mass points falling from horizontal and whipping, as many steps as a constant
-  step for the same error (231 steps 2.1e-4, 200 constant steps 3.7e-4); started near upright (80 degrees) it is worse
-  than a constant step, as the errors of the unstable start grow and no local estimate sees that - documented
-  (maintainer: document only). The velocity error by the second difference of the mean accelerations (v1 - v0)/h,
-  free of the alternation of the accelerations; a PI controller (Gustafsson; 1 to 12 rejections instead of up to 65).
-- Lobatto4, the constraints at the end of the step (maintainer: from HOTINT, without GGL): with one multiplier
-  constant over the step and c = 0 at the end, IIIA, IIIB, IIIC and the pair IIIA-IIIB are of order 4 in q but 2 in v
-  and drift on velocity level; with a multiplier per stage after the start - the start takes that of the previous
-  end - and c = 0 and C_q v = 0 at the end, IIIA, IIIC and IIIA-IIIB are of order 4 in q and v and 2 in a and z. IIIA
-  with the constraints at its stages but no velocity constraint does not converge in a and z. Kept: 'IIIA-end'
-  (default: 2 implicit stages, the fewest unknowns, half the time of the GGL variants, keeps the energy), 'IIIC-end',
-  'IIIA-GGL', 'IIIC-GGL' (the most robust damping: at h omega = 70 it removes the fast mode, IIIC-end there gains
-  energy). Plain IIIC with the constraints at all stages dropped.
-- Lobatto4, automatic step by the embedded trapezoidal solution (maintainer: try it first): it works and rejects
-  little, but it is an estimate of the order-2 error - Lobatto4 then takes about the steps of the trapezoidal rule,
-  with errors 100 to 10000 times below the tolerance (slider crank at 1e-6: 68 steps, error 4e-10; 16 constant steps
-  give 1e-8).
+- **TrapezoidalGGL, automatic step** (#3243): a bouncing ball (Hertz contact) needs a tenth of the steps of a
+  constant step for a tenth of the error; a chain of 10 mass points falling from horizontal and whipping, as many as a
+  constant step (231 steps 2.1e-4, 200 constant steps 3.7e-4); from nearly upright (80 degrees) the errors of the
+  unstable start grow, the controlled step is worse than a constant one - documented. PI controller: 1 to 12
+  rejections instead of up to 65.
+- **Lobatto and Radau** (#3244, #3246, #3247): the table of section 3.2; the slider crank in 0.5 s with
+  LobattoIIIA4 against 1.4 s with LobattoIIIC4-GGL; Lobatto4 with 32 steps 1e-8 where TrapezoidalGGL with 64 steps
+  has 4e-5.
+- **Output within the step** (#3241): no result of the test suite changed; the interpolated output of RK44 converges
+  with order 4.
+- **SolveExplicit with fixed coordinates** (#3238), the C++ findings #3240 and #3245.
 
-## 5. Steps (group RG20)
+## 6. Steps (group RG20)
 
 | step | status | what |
 |---|---|---|
 | RG20.1 TrapezoidalGGL | done | constant and automatic steps, PI controller (#3242, #3243) |
-| RG20.2 Lobatto4 | .1-.4 done, .5 open | four variants, automatic step by the embedded solution (#3244, #3246); .5 an error estimate of order 4 |
+| RG20.2 Lobatto4 | .1-.4 done, .5 open | the three methods (#3244, #3246, #3247); .5 an error estimate of order 4 (section 3.2) |
 | RG20.3 Adjoint sensitivities | .1 done, .2 not proposed | |
 | RG20.4 Output within the step | .3 done (Python, #3241), .2 open (C++) | |
-| RG20.5 Explicit solvers with constraints | .1-.2 done, .3 open (Euler parameters), .4 open (#3240, C++) | |
+| RG20.5 Explicit solvers with constraints | .1-.2 done, .3 Euler parameters, .4 open (#3240, C++) | |
 | RG20.6 The structure of the C++ solvers | open | the analysis and a proposal |
-| RG20.7 TrapezoidalGGL and Lobatto4 in C++ | open | after RG20.6 |
+| RG20.7 TrapezoidalGGL and the Runge-Kutta methods in C++ | open | after RG20.6 |
 | RG20.8 Common step size controller | .1 done (Python), .2 open (C++, #3245) | |
-
-Next, without a decision: RG20.2.5 (an order-4 error estimate for Lobatto4: the difference of IIIA-end and
-IIIC-end on the same stages, or local extrapolation of the trapezoidal estimate), ODE1 and data coordinates in
-SolveLobatto4, RG20.5.3 (NodeRigidBodyEP in SymbolicSystem, then the projection), RG20.6 (the analysis only). With a
-decision: RG20.4.2 and RG20.5.4 (#3240) change results of the C++ solvers; RG20.8.2 (#3245) the step sizes of ODE23 and
-DOPRI5.

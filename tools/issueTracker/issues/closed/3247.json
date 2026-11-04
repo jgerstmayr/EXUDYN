@@ -1,0 +1,15 @@
+{
+  "number": 3247,
+  "title": "SolveImplicitRungeKutta with the methods LobattoIIIA4, LobattoIIIC4-GGL and Radau3, replacing SolveLobatto4 and its four variants",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "SolveLobatto4 of exudyn.symbolics.advancedSolvers has the variants IIIA-end, IIIC-end, IIIA-GGL and IIIC-GGL; Radau IIA is not there. Decided: three methods with two implicit stages each, named by the method and its order - LobattoIIIA4 (IIIA with the constraints at the end of the step, the simplest form that solves index 3 directly), LobattoIIIC4-GGL (IIIC with GGL at the stages, damping) and Radau3 (Radau IIA with 2 stages) -, IIIC-end and IIIA-GGL dropped; the formulas of the error estimates in the design file.",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03",
+  "dateResolved": "2026-11-04 20:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SolveImplicitRungeKutta(system, simulationSettings, method) of exudyn.symbolics.advancedSolvers replaces SolveLobatto4, with the methods LobattoIIIA4 (the default; the constraints and velocity constraints at the end of the step, without numerical damping), LobattoIIIC4-GGL (the GGL stabilization at the stages, damping fast modes) and Radau3 (Radau IIA of order 3, damping), listed in implicitRungeKuttaMethods.",
+  "resolvedInVersion": "1.13.354"
+}

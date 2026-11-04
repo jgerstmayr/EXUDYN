@@ -27,7 +27,7 @@ except ImportError:
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'SolveTrapezoidalGGL', 'lobatto4Variants', 'SolveLobatto4',
+    'SolveTrapezoidalGGL', 'implicitRungeKuttaMethods', 'SolveImplicitRungeKutta',
     ]
 
 
@@ -313,24 +313,27 @@ def SolveTrapezoidalGGL(system, simulationSettings=None):
 
 
 
-#the tableaus (A, c) of the Lobatto methods of the stages 0, 1/2, 1 (and of the trapezoidal rule, the 2-stage IIIA)
-_lobattoTableaus = {'IIIA': (np.array([[0., 0., 0.], [5./24., 1./3., -1./24.], [1./6., 2./3., 1./6.]]), np.array([0., 0.5, 1.])),
-                    'IIIC': (np.array([[1./6., -1./3., 1./6.], [1./6., 5./12., -1./12.], [1./6., 2./3., 1./6.]]), np.array([0., 0.5, 1.])),
-                    'IIIA2': (np.array([[0., 0.], [0.5, 0.5]]), np.array([0., 1.]))}
+#the tableaus (A, c): the Lobatto methods of the stages 0, 1/2, 1, the trapezoidal rule (the 2-stage Lobatto IIIA) and
+#Radau IIA with 2 stages at 1/3, 1
+_rungeKuttaTableaus = {'LobattoIIIA': (np.array([[0., 0., 0.], [5./24., 1./3., -1./24.], [1./6., 2./3., 1./6.]]), np.array([0., 0.5, 1.])),
+                       'LobattoIIIC': (np.array([[1./6., -1./3., 1./6.], [1./6., 5./12., -1./12.], [1./6., 2./3., 1./6.]]), np.array([0., 0.5, 1.])),
+                       'Trapezoidal': (np.array([[0., 0.], [0.5, 0.5]]), np.array([0., 1.])),
+                       'RadauIIA': (np.array([[5./12., -1./12.], [3./4., 1./4.]]), np.array([1./3., 1.]))}
 
-#the variants of SolveLobatto4: (tableau, where the constraints are)
-lobatto4Variants = {'IIIA-end': ('IIIA', 'end'), 'IIIC-end': ('IIIC', 'end'), 'IIIA-GGL': ('IIIA', 'GGL'),
-                    'IIIC-GGL': ('IIIC', 'GGL')}
+#the methods of SolveImplicitRungeKutta: (tableau, where the constraints are)
+implicitRungeKuttaMethods = {'LobattoIIIA4': ('LobattoIIIA', 'end'), 'LobattoIIIC4-GGL': ('LobattoIIIC', 'GGL'),
+                             'Radau3': ('RadauIIA', 'end')}
 
 
-def _SolveLobatto(system, simulationSettings, tableau, constraints, name):
+def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name):
     """the stage equations of a stiffly accurate implicit Runge-Kutta method of the tableau (A, c) for q_t = v, v_t = a,
     M a = f - C_q^T z (#3244, #3246); the stages of a first row of zeros are the start of the step (Lobatto IIIA). The
     constraints: 'GGL', c = 0 and C_q V_i + c_t = 0 at the implicit stages, with a multiplier z_i per implicit stage and
     the positions Q_i - C_q^T mu_i; 'end', c = 0 and C_q v + c_t = 0 at the end of the step only, with a multiplier z_i
-    per stage after the start, the one of the start the multiplier of the end of the previous step - an equation of
-    each kind for the two unknown multipliers of 3 stages. With timeIntegration.automaticStepSize the step by the
-    difference to the embedded trapezoidal solution of the first and the last stage, by _ErrorStepSize"""
+    per stage after the start, the one of a stage at the start the multiplier of the end of the previous step - an
+    equation of each kind for the two unknown multipliers. With timeIntegration.automaticStepSize the step by the
+    difference to the embedded trapezoidal solution of the first and the last stage (of the start and the last stage
+    if no stage is at the start), by _ErrorStepSize"""
     if simulationSettings is None:
         simulationSettings = exudyn.SimulationSettings()
     timeIntegration = simulationSettings.timeIntegration
@@ -480,8 +483,9 @@ def _SolveLobatto(system, simulationSettings, tableau, constraints, name):
             raise ValueError(name + ': Newton did not converge in step ' + str(stepSize.stepIndex + 1) + ' at t=' + str(t)
                              + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
         (Q, V) = Stages()
-        if stepSize.automatic: #against the trapezoidal rule of the first and the last stage
-            errors = np.concatenate([Q[-1] - (q0 + (0.5*h)*(V[0] + V[-1])), V[-1] - (v0 + (0.5*h)*(stageA[0] + stageA[-1]))])
+        if stepSize.automatic: #against the trapezoidal rule of the first (or the start) and the last stage
+            (vFirst, aFirst) = (V[0], stageA[0]) if c[0] == 0. else (v0, a0)
+            errors = np.concatenate([Q[-1] - (q0 + (0.5*h)*(vFirst + V[-1])), V[-1] - (v0 + (0.5*h)*(aFirst + stageA[-1]))])
             if not stepSize.Control(stepSize.Error(errors, np.concatenate([q0, v0]), np.concatenate([Q[-1], V[-1]]))):
                 continue
         (q, q_t, q_tt, z) = (Q[-1], V[-1], stageA[-1], stageZ[-1]) #stiffly accurate: the end is the last stage
@@ -493,40 +497,45 @@ def _SolveLobatto(system, simulationSettings, tableau, constraints, name):
                             'rejectedStepsError': stepSize.rejectedByError})
 
 
-def SolveLobatto4(system, simulationSettings=None, variant='IIIA-end'):
-    """the implicit time integration of a SymbolicSystemBase by a 3-stage Lobatto method of order 4, with the stages
-    at the start, the middle and the end of the step (#3244, #3246), in variants for index-3 constraints
-    (lobatto4Variants): 'IIIA-end' and 'IIIC-end', Lobatto IIIA - its first stage the start of the step, two
-    implicit stages, without damping - and Lobatto IIIC - three implicit stages, L-stable, damping fast modes -, with
-    the constraints and the velocity constraints at the end of the step only and the multipliers of the stages, that
-    of the start from the end of the previous step; 'IIIA-GGL' and 'IIIC-GGL', with the constraints and the velocity
-    constraints at each implicit stage and its positions moved onto the constraints by a multiplier mu, as
-    SolveTrapezoidalGGL does for the trapezoidal rule, the 2-stage Lobatto IIIA. All are of order 4 in q and v and of
-    order 2 in the accelerations and multipliers (measured on a pendulum and a slider crank); the end variants need
-    fewer unknowns and equations. With a fast mode of h omega = 70, the IIIC variants damp it and the IIIA variants do
-    not converge. Stiffly accurate: the end of the step is the last stage.
+def SolveImplicitRungeKutta(system, simulationSettings=None, method='LobattoIIIA4'):
+    """the implicit time integration of a SymbolicSystemBase by an implicit Runge-Kutta method for index-3 constraints
+    (#3244, #3246, #3247), of implicitRungeKuttaMethods, each with two implicit stages:
 
-    With timeIntegration.automaticStepSize (the default) the step size is controlled by the difference to the embedded
-    trapezoidal solution of the first and the last stage, q0 + h/2 (V_1 + V_3) and v0 + h/2 (A_1 + A_3), an error
-    of order h^3, which overestimates the error of order h^5 of Lobatto4: the tolerances are met with room. The PI
-    controller and the settings as SolveTrapezoidalGGL; without it the steps of timeIntegration.numberOfSteps.
-    Newton's method for the stage accelerations and multipliers (and mu) with the Jacobian of the system, the ODE2 rows
-    scaled by h^2, by timeIntegration.newton as SolveTrapezoidalGGL; a step whose Newton iteration does not converge
-    is repeated with a smaller step with automaticStepSize or adaptiveStep, else raises. Consistent initial
-    accelerations and algebraic coordinates; the output as the solvers of exudyn.symbolics.solvers. The algebraic
-    equations must depend on q and t only; ODE1 and data coordinates are not implemented
+    - 'LobattoIIIA4': Lobatto IIIA with the stages at the start, the middle and the end of the step, the constraints and
+      the velocity constraints at the end of the step only and a multiplier per stage after the start, the one of the
+      start that of the end of the previous step; of order 4 in q and v, without numerical damping, it keeps the
+      energy - the simplest form that solves index 3 directly;
+    - 'LobattoIIIC4-GGL': Lobatto IIIC, the stages at the same times, the first implicit as well, with the constraints
+      and the velocity constraints at each stage and its positions moved onto the constraints by a multiplier mu (the
+      GGL stabilization, as SolveTrapezoidalGGL); of order 4 in q and v, L-stable: it damps fast modes, also with steps
+      of 70/omega of the mode;
+    - 'Radau3': Radau IIA with the stages at 1/3 and the end of the step, the constraints as LobattoIIIA4; of order 3,
+      L-stable.
+
+    All of order 2 in the accelerations and multipliers (measured on a pendulum and a slider crank) and stiffly
+    accurate: the end of the step is the last stage. With timeIntegration.automaticStepSize (the default) the step
+    size is controlled by the difference to the embedded trapezoidal solution of the first (or the start) and the last
+    stage, q0 + h/2 (V_1 + V_3) and v0 + h/2 (A_1 + A_3), an error of order h^3, which overestimates the error of the
+    method: the tolerances are met with room. The PI controller and the settings as SolveTrapezoidalGGL; without it
+    the steps of timeIntegration.numberOfSteps. Newton's method for the stage accelerations and multipliers (and mu)
+    with the Jacobian of the system, the ODE2 rows scaled by h^2, by timeIntegration.newton as SolveTrapezoidalGGL; a
+    step whose Newton iteration does not converge is repeated with a smaller step with automaticStepSize or
+    adaptiveStep, else raises. Consistent initial accelerations and algebraic coordinates; the output as the solvers
+    of exudyn.symbolics.solvers. The algebraic equations must depend on q and t only; ODE1 and data coordinates are not
+    implemented
 
     Args:
         system: the system, a SymbolicSystemBase
         simulationSettings: exudyn.SimulationSettings; None: the defaults
-        variant: 'IIIA-end', 'IIIC-end', 'IIIA-GGL' or 'IIIC-GGL'
+        method: 'LobattoIIIA4', 'LobattoIIIC4-GGL' or 'Radau3'
 
     Returns:
         dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2), with algebraic equations 'z', at the times of
         solution.file.writePeriod and the end, and the statistics 'steps', 'newtonIterations', 'jacobianEvaluations',
         'rejectedSteps' (by Newton) and 'rejectedStepsError'
     """
-    if variant not in lobatto4Variants:
-        raise ValueError('SolveLobatto4: variant must be one of ' + str(list(lobatto4Variants)) + ', not ' + str(variant))
-    (tableau, constraints) = lobatto4Variants[variant]
-    return _SolveLobatto(system, simulationSettings, _lobattoTableaus[tableau], constraints, 'SolveLobatto4')
+    if method not in implicitRungeKuttaMethods:
+        raise ValueError('SolveImplicitRungeKutta: method must be one of ' + str(list(implicitRungeKuttaMethods))
+                         + ', not ' + str(method))
+    (tableau, constraints) = implicitRungeKuttaMethods[method]
+    return _SolveRungeKutta(system, simulationSettings, _rungeKuttaTableaus[tableau], constraints, 'SolveImplicitRungeKutta')

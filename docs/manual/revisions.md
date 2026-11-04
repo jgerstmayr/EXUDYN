@@ -428,9 +428,10 @@ write time. `MainSolverExplicit`, `MainSolverImplicitSecondOrder` and `MainSolve
 stabilization of index-3 constraints for symbolic systems, of order 2 and without numerical damping, with constant
 steps or a step size controlled by the local errors of the coordinates and velocities, with
 `timeIntegration.absoluteTolerance` and `relativeTolerance` and a PI controller (#3243), see
-{ref}`sec-symbolicsolvers`. **`SolveLobatto4`** (#3244, #3246): the 3-stage Lobatto methods of order 4 for symbolic
-systems with constraints, Lobatto IIIA or IIIC (damping), with the constraints at the end of the step or with the GGL
-stabilization at the stages, with constant steps or an automatic step size.
+{ref}`sec-symbolicsolvers`. **`SolveImplicitRungeKutta`** (#3244, #3246, #3247): implicit Runge-Kutta methods for
+symbolic systems with constraints - Lobatto IIIA of order 4 with the constraints at the end of the step, Lobatto IIIC
+of order 4 with the GGL stabilization (damping) and Radau IIA of order 3 -, with constant steps or an automatic step
+size.
 
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.

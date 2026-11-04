@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 338 | 1.13.353 |
+| 1.13 | Newborn | 339 | 1.13.354 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.354** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolveImplicitRungeKutta with the methods LobattoIIIA4, LobattoIIIC4-GGL and Radau3, replacing SolveLobatto4 and its four variants (#3247)
+  - description: SolveLobatto4 of exudyn.symbolics.advancedSolvers has the variants IIIA-end, IIIC-end, IIIA-GGL and IIIC-GGL; Radau IIA is not there. Decided: three methods with two implicit stages each, named by the method and its order - LobattoIIIA4 (IIIA with the constraints at the end of the step, the simplest form that solves index 3 directly), LobattoIIIC4-GGL (IIIC with GGL at the stages, damping) and Radau3 (Radau IIA with 2 stages) -, IIIC-end and IIIA-GGL dropped; the formulas of the error estimates in the design file.
+  - **notes:** SolveImplicitRungeKutta(system, simulationSettings, method) of exudyn.symbolics.advancedSolvers replaces SolveLobatto4, with the methods LobattoIIIA4 (the default; the constraints and velocity constraints at the end of the step, without numerical damping), LobattoIIIC4-GGL (the GGL stabilization at the stages, damping fast modes) and Radau3 (Radau IIA of order 3, damping), listed in implicitRungeKuttaMethods.
+  - date resolved: **2026-11-04 20:16**, date raised: 2026-11-04
 - **1.13.353** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Lobatto4: the index-3 constraints at the end of the step without GGL, and the automatic step size by the embedded trapezoidal solution (#3246)
   - description: SolveLobatto4 enforces the constraints with the GGL stabilization at every implicit stage and has constant steps only. Decided: the 3-stage Lobatto methods with the constraints only at the end of the step, as the maintainer remembers from HOTINT, tried for IIIA, IIIB and IIIC; the automatic step size by the embedded trapezoidal solution first (revision2026c step RG20.2.3).
   - **notes:** SolveLobatto4 of exudyn.symbolics.advancedSolvers has the variants 'IIIA-end' (the default) and 'IIIC-end', which enforce the constraints and the velocity constraints at the end of the step only, with a multiplier per stage after the start, of order 4 in the coordinates and velocities, beside 'IIIA-GGL' and 'IIIC-GGL'; the variant 'IIIC' with the constraints at all stages is removed. With timeIntegration.automaticStepSize the step size follows the difference to the embedded trapezoidal solution, with the PI controller of SolveTrapezoidalGGL; this estimate of order 2 keeps the error far below the tolerances.

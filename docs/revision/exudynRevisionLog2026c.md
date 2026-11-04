@@ -5729,6 +5729,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg20-2-6"></a>
+### RG20.2.6 — SolveImplicitRungeKutta: LobattoIIIA4, LobattoIIIC4-GGL, Radau3; the formulas of the error estimates (2026-11-04, #3247)
+- Maintainer (third answers): IIIA-end as `LobattoIIIA4`, IIIC-GGL as `LobattoIIIC4-GGL`, and Radau3 - three methods
+  with two implicit stages; IIIC-end not kept. `SolveImplicitRungeKutta(system, settings, method)` and
+  `implicitRungeKuttaMethods` replace `SolveLobatto4` and `lobatto4Variants` (introduced today, not released);
+  `_SolveLobatto` is `_SolveRungeKutta`, the tableaus `_rungeKuttaTableaus` with Radau IIA (c = 1/3, 1).
+- Radau3 measured on the pendulum (50/100/200 steps): with the constraints at the end of order 3.0 in q and v, 2.0 in
+  a and z; with GGL the same, 20 % smaller errors; kept with the constraints at the end (fewer unknowns, no mu). The
+  stiff spring at h omega = 70: Radau3 damps the fast mode and takes 0.09 of the energy of the pendulum in 2 s. Its
+  embedded estimate uses the start, q0 + h/2 (v0 + v1), v0 + h/2 (a0 + a1).
+- The error estimates (design section 3.2, maintainer: the formulas, one trapezoidal step or two substeps): both are
+  the same second difference D = V_1 - 2 V_2 + V_3 of the stage velocities (S - T1 = -h/3 D, S - T2 = -h/12 D,
+  Simpson S = (4 T2 - T1)/3); no combination of the three stage values vanishes for quadratics, so an order-4
+  estimate needs values beyond the step - the candidates of RG20.2.5 (step doubling as the reference, the fourth
+  divided difference over two steps, IIIA against IIIC, a defect). The design file revised to the current state:
+  what exists, the formulas, the measured table of all constraint forms, the decisions of the three answers, the
+  results and the status of the steps.
+- symbolicLobatto4Test.py on the new names, Radau3 included (the file keeps its name).
+
 <a id="rg20-2-3"></a>
 ### RG20.2.3, RG20.2.4 — Lobatto4 with the constraints at the end of the step, its automatic step size; the chain from horizontal (2026-11-04, #3246)
 - **The chain from horizontal** (maintainer: start at horizontal or at a right angle): the free end reaches 7.5 m/s
