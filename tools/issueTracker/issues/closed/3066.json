@@ -2,11 +2,15 @@
   "number": 3066,
   "title": "testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.",
   "dateRaised": "2026-10-23",
   "deadline": "2027-04-21",
-  "file": "python/testing/testRunnerTools.py"
+  "dateResolved": "2026-11-05 00:48",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/testRunnerTools.py",
+  "releaseNotes": "A test model that sets exudyn.config.printToConsole=True in a quiet test run no longer ends the run by a stack overflow: PrintToLog writes what exu.Print prints meanwhile to the console stream it replaced.",
+  "resolvedInVersion": "1.13.364"
 }

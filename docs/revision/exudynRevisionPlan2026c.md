@@ -96,7 +96,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG11.5 Document single items that the general pages did not reach
   - RG11.6 Write the joints and their Jacobians on homogeneous transformations
   - RG11.7 Let objects compute from the coordinates passed in instead of reading their nodes
-  - RG11.8 Resolve the quick old issues (2 open sub-steps)
+  - RG11.8 Resolve the quick old issues (1 open sub-step)
 - **RG12** Symbolic
   - RG12.71 Evaluate one source for the C++ items, the symbolic user items and their documentation (3 open sub-steps)
 - **RG13** Total coordinates
@@ -140,7 +140,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 11 | Misc |
+| RG11 | OPEN | 10 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
 | RG13 | OPEN | 2 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -1894,9 +1894,9 @@ per pytest process, the older closed issues in the archives; test_exudev reads t
 CLOSED 2026-10-22 (#3059; maintainer: exudev build fails after a Windows update, please fix): `exudev build` runs in the
 environment of vcvarsall.bat for the newest SDK that has every library setup.py links. [log](exudynRevisionLog2026c.md#rg11-8-23)
 
-#### **OPEN_RG11.8.24** Keep PrintToLog of the quiet test runs from recursing when a model switches printToConsole on
+#### **CLOSED_RG11.8.24** Keep PrintToLog of the quiet test runs from recursing when a model switches printToConsole on
 
-#3066: a model that sets exudyn.config.printToConsole=True in a quiet run overflows the stack through PrintToLog and exu.Print, and the suite process ends without a message.
+CLOSED 2026-11-05 (#3066): PrintToLog writes what arrives while it writes to the stream it replaced; test_runnerLogs.py. [log](exudynRevisionLog2026c.md#rg11-8-24)
 
 #### **CLOSED_RG11.8.25** List the TestModels of the documentation in alphabetical order
 

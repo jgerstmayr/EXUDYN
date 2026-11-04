@@ -19,6 +19,22 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import testRunnerTools                                                          # noqa: E402
 
 
+def testAQuietModelMaySwitchPrintToConsoleOn():
+    ##3066: exu.Print printed to sys.stdout, which was PrintToLog again - a stack overflow that ended the process,
+    #so the model runs in its own process
+    import subprocess
+    code = ('import sys, contextlib' + chr(10)
+            + 'sys.path.insert(0, ' + repr(os.path.dirname(os.path.abspath(__file__))) + ')' + chr(10)
+            + 'import exudyn as exu, testRunnerTools' + chr(10)
+            + 'with contextlib.redirect_stdout(testRunnerTools.PrintToLog()):' + chr(10)
+            + '    exu.config.printToConsole = True' + chr(10)
+            + '    print("probe3066")' + chr(10)
+            + '    exu.config.printToConsole = False' + chr(10))
+    result = subprocess.run([sys.executable, '-c', code], capture_output=True, text=True, timeout=120)
+    assert result.returncode == 0, result.stderr[-500:]
+    assert 'probe3066' in result.stdout
+
+
 def testWindowsHomeInAnyFormIsHidden(monkeypatch):
     #the account names are put together at run time: the pre-commit hook refuses a written home directory
     users = 'C:' + chr(92) + 'Users' + chr(92)

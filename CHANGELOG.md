@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 348 | 1.13.363 |
+| 1.13 | Newborn | 349 | 1.13.364 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.364** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
+  - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
+  - **notes:** A test model that sets exudyn.config.printToConsole=True in a quiet test run no longer ends the run by a stack overflow: PrintToLog writes what exu.Print prints meanwhile to the console stream it replaced.
+  - date resolved: **2026-11-05 00:48**, date raised: 2026-10-23
 - **1.13.363** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Scopes: xResolution 1 by default, the values of a plot over another sensor by xResolution, the default scopes a third of the height each; the design note as internals (#3252)
   - description: xResolution 4 draws more than needed; how many values a plot over another sensor draws was not defined (it took about xResolution per pixel of the width); the three default scopes fill only 3/5 of the height. Decided (maintainer): xResolution default 1; over another sensor every value, and for xResolution \< 1 every round(1/xResolution)-th value; the default locations a third of the height each, filling the height; docs/dev/design/scope.md cleaned to the current state and moved to docs/dev/internals/scope.md.
   - **notes:** Scopes: xResolution is 1 by default; a plot over another sensor draws every stored value, every (1/xResolution)-th below 1; the three default scopes are a third of the height each and fill the height of the window.

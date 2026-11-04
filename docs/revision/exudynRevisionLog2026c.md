@@ -5816,6 +5816,13 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   graphics, assemble, raytracer image; equal results. In the suite no window opens, so the lock is not contended there;
   run directly, the renderer draws meanwhile - to be run by the maintainer once (no window from here).
 
+<a id="rg11-8-24"></a>
+### RG11.8.24 — PrintToLog of the quiet test runs no longer recurses when a model switches printToConsole on (2026-11-05, #3066)
+- PrintToLog (testRunnerTools.py) keeps the stream that redirect_stdout replaced; what arrives while it writes - exu.Print
+  printing to sys.stdout with printToConsole set - goes to that stream instead of to exu.Print again.
+- test_runnerLogs.py runs the case in its own process (the old code ended the process by a stack overflow): fails on
+  the old code, passes now.
+
 <a id="rg20-2-5"></a>
 ### RG20.2.5 — The error estimate of the order of the method for SolveImplicitRungeKutta (2026-11-04, #3250)
 - Maintainer's questions (fourth answers): the unknowns per step - LobattoIIIA4 2 n + 2 m (A_2, A_3; Z_2, Z_3 for

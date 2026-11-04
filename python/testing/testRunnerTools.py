@@ -1036,10 +1036,21 @@ finally:
 #%%******************************************************************************************************
 class PrintToLog:
     """sys.stdout of a model in a quiet run: what it prints goes where exu.Print goes - into the log, and to the
-    console only if exudyn.config.printToConsole is set (#2895)"""
+    console only if exudyn.config.printToConsole is set (#2895). exu.Print writes to sys.stdout then, which is this
+    object again: what arrives while it writes goes to the stream it replaced (#3066)"""
+    def __init__(self):
+        self.console = sys.stdout   #the stream that redirect_stdout replaces with this object
+        self.writing = False
+
     def write(self, text):
+        if self.writing:
+            return self.console.write(text)
         import exudyn as exu                                                   # noqa: PLC0415
-        exu.Print(text, end='')
+        self.writing = True
+        try:
+            exu.Print(text, end='')
+        finally:
+            self.writing = False
         return len(text)
 
     def flush(self):
