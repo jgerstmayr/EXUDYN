@@ -1,0 +1,12 @@
+{
+  "number": 3248,
+  "title": "Scope: the legend writes the sensor name and the component (m0.Pos-X), a lighter background, the sensors setting with an example",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "The legend of a scope writes 'mass0, PositionY', the name of the sensor and its output variable; as sensor names are unique and a user names them by what they measure, the variable is redundant and makes the entries long. A line over another sensor writes 'mass0, PositionY over PositionX'. The background [0.9,0.9,0.9,0.9] is grey; the description of scope.sensors does not show what a row means. Decided: the legend writes the sensor name and, for a sensor of more than one component, '-' and the component as PlotSensor names it ('m0.Pos-X', 'm0.Pos[3]' for an unnamed component), and over another sensor 'm0.Pos-Y over m0.Pos-X'; backgroundColor [0.95,0.95,1,0.9]; the description of sensors with the example [[0,1],[2,3]]; scopeExample.py with sensor names as m0.Pos.",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03",
+  "file": "src/Graphics/ScopePlot.cpp"
+}

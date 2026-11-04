@@ -5729,6 +5729,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg6-20-7"></a>
+### RG6.20.7 — Lines, texts and points in the coordinates of the graph of a scope (2026-11-04, #3237)
+- Maintainer's decisions on the proposal of design scope.md section 7: polylines, outside the automatic range, named
+  lines in the legend, one list with the view and the scope in each item (each scope walks through it; many items in
+  many scopes are rare), the functions on `SC.renderer.scopes`; defaults color [0,0,0,1], width -1, front False,
+  name ''; points radius 4; texts size 1, front True.
+- `MainRendererScopes` (Python `RendererScopes`, `SC.renderer.scopes`): SetGraphics (all items checked before the list
+  is replaced), AddGraphics (a dict or a list), GetGraphics (all keys of the type), ClearGraphics(view, scope). Each
+  key is checked; a key the type does not have, a wrong type, a view outside 0-3, a scope outside 0-2, a line of one
+  point, width, size or radius not > 0 raise with the key named.
+- The list `ScopePlot::StaticGraphics` lives in VisualizationSystemContainer under an atomic flag; BuildScopes copies
+  the items of its view under it. AddScope draws the items with front False after the grid, the sensor lines, then
+  the items with front True, clipped to the plot area; a point is a circle of 16 lines, a text only if its position
+  is inside; named lines follow the sensor lines in the legend. A scope with static items and no sensor is drawn.
+- scopeTest.py: line, point and text on the raytracer image, clipped outside the zoom, other view and scope not drawn,
+  GetGraphics, ClearGraphics, four refusals. scopeExample.py: the circle of the first mass and the reach of the second
+  as named lines in the path plot, the pivot as a point and a text, the start height in scope0. Checked by eye on
+  the raytracer image; OpenGL draws the same primitives.
+
 <a id="rg6-20-9"></a>
 ### RG6.20.9 — mbs.Reset() and item changes while the renderer runs: a lock of the system (2026-11-04, #3239)
 - `PostProcessData::accessSystem` (an atomic flag per system) with `accessSystemOwner` (a nested lock in the same

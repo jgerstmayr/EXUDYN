@@ -237,12 +237,68 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetTextureNames', cName='GetText
                         returnType='list[str]',
                         )
 
-pb.CppCode('        .def_readwrite("materials", &MainRenderer::materials, py::return_value_policy::reference);\n')
+pb.CppCode('        .def_readwrite("materials", &MainRenderer::materials, py::return_value_policy::reference)\n')
 
 pb.DefDataAccess('materials','GraphicsMaterialList used for raytracer (possibly for OpenGL in future); list can be accessed with [] operator, reset and extended. Note that after Reset() there are at least 10 materials available, which are copied from visualizationSettings.raytracer.materials which are synced continuously',
                         dataType='GraphicsMaterialList', isTopLevel = False)
 
+pb.CppCode('        .def_readwrite("scopes", &MainRenderer::scopes, py::return_value_policy::reference)\n')
+
+pb.DefDataAccess('scopes','RendererScopes: lines, texts and points drawn in the scopes of the views, in the coordinates of their graphs (#3237)',
+                        dataType='RendererScopes', isTopLevel = False)
+
 pb.DefPyFinishClass('Renderer')
 #pb.DefFinishTable() #only finalize latex table
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+pyClassStr = 'RendererScopes'
+classStr = 'Main'+pyClassStr
+
+pb.DefPyStartClass(classStr, pyClassStr,
+                    "The static graphics of the scopes, `SC.renderer.scopes` (#3237): lines, texts and points in the coordinates of the graph of a scope - "+
+                    "time or the values of the x-sensor, and the y-values -, such as a threshold, an analytic reference or a marked value. "+
+                    "They are one list of dicts, each with the view and the scope it is drawn in; they are clipped to the plot area, do not change the "+
+                    "automatic range of the axes, and are drawn by OpenGL and the raytracer and in saved images, also by the solution viewer. "+
+                    "They are not settings: they are neither stored in `config.json` nor in the settings dialog, and stay until cleared or `SC.Reset()`. "+
+                    "Each dict has the key `type`, `'Line'`, `'Text'` or `'Point'`, and the keys of its type; a key not listed is refused. "+
+                    "All types: `view` (0), `scope` (0), `color` (RGBA, [0,0,0,1]), `front` (True: drawn over the sensor lines; False for lines and points, True for texts). "+
+                    "Line: `points` (a list of at least two [x, y], a polyline), `width` (in pixels, -1: the `lineWidth` of the scope), `name` (with a name, the line has an entry in the legend, after the sensor lines). "+
+                    "Text: `position` ([x, y], the bottom left corner of the first character), `text`, `size` (relative to the tick labels, 1). "+
+                    "Point: `position` ([x, y], the center), `radius` (in pixels, 4), `width` (the line width of the circle, -1).",
+                    subSection=True, labelName='sec:RendererScopes',
+                    forbidPythonConstructor=True)
+
+pb.DefStartTable(pyClassStr)
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='SetGraphics', cName='PySetGraphics',
+                        description="replace the static graphics of all scopes by a list of dicts; all are checked before anything is replaced",
+                        example = r"""SC.renderer.scopes.SetGraphics([{'type':'Line', 'points':[[0, 0.5], [10, 0.5]], 'color':[1, 0, 0, 1], 'name':'limit'},\\    {'type':'Text', 'position':[1, 0.55], 'text':'limit', 'scope':0}])""",
+                        argList=['items'],
+                        argTypes=['list[dict]'],
+                        returnType='None',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='AddGraphics', cName='PyAddGraphics',
+                        description="append a dict or a list of dicts to the static graphics",
+                        example = r"""SC.renderer.scopes.AddGraphics({'type':'Point', 'position':[2.5, 0.8], 'radius':5, 'color':[0, 0, 1, 1], 'view':0, 'scope':1})""",
+                        argList=['items'],
+                        argTypes=['dict | list[dict]'],
+                        returnType='None',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='GetGraphics', cName='PyGetGraphics',
+                        description="the static graphics as a list of dicts, with all the keys of their types",
+                        returnType='list[dict]',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='ClearGraphics', cName='ClearGraphics',
+                        description="remove the static graphics of a view and a scope; -1 for all views or all scopes, the default: all",
+                        argList=['view', 'scope'],
+                        argTypes=['int', 'int'],
+                        defaultArgs=['-1', '-1'],
+                        returnType='None',
+                        )
+
+pb.DefPyFinishClass('RendererScopes')
 
 pb.EndStubSection()

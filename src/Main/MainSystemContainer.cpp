@@ -1243,6 +1243,175 @@ py::list MainRenderer::GetItemSelection(bool resetSelection, Index viewID)
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//MainRendererScopes (#3237)
+namespace
+{
+	const char* scopeItemTypeNames[] = { "Line", "Text", "Point" };
+
+	//! a static item of a scope from its dict; every key is checked, and a key the type does not have is refused
+	ScopePlot::StaticItem ScopeStaticItem(const py::handle& object, const STDstring& function)
+	{
+		const STDstring where = "renderer.scopes." + function + ": ";
+		if (!py::isinstance<py::dict>(object))
+		{
+			PyError(where + "each item must be a dict, but received " + EXUstd::ToString(py::str(object)), PyErrorType::typeError);
+		}
+		py::dict d = py::reinterpret_borrow<py::dict>(object);
+		if (!d.contains("type"))
+		{
+			PyError(where + "the item needs the key 'type', 'Line', 'Text' or 'Point': " + EXUstd::ToString(py::str(d)), PyErrorType::valueError);
+		}
+		ScopePlot::StaticItem item;
+		auto Get = [&](const char* key, auto& value)
+		{
+			try { value = py::cast<std::remove_reference_t<decltype(value)>>(d[key]); }
+			catch (const py::cast_error&)
+			{
+				PyError(where + "the key '" + key + "' of " + EXUstd::ToString(py::str(d)) + " has the wrong type", PyErrorType::typeError);
+			}
+		};
+		STDstring type;
+		Get("type", type);
+		std::vector<STDstring> keys = { "type", "view", "scope", "color", "front" };
+		if (type == "Line") { item.type = ScopePlot::StaticItemType::Line; keys.insert(keys.end(), { "points", "width", "name" }); }
+		else if (type == "Text") { item.type = ScopePlot::StaticItemType::Text; item.front = true; keys.insert(keys.end(), { "position", "text", "size" }); }
+		else if (type == "Point") { item.type = ScopePlot::StaticItemType::Point; keys.insert(keys.end(), { "position", "radius", "width" }); }
+		else { PyError(where + "the type must be 'Line', 'Text' or 'Point', but is '" + type + "'", PyErrorType::valueError); }
+		for (auto entry : d)
+		{
+			STDstring key = py::str(entry.first);
+			if (std::find(keys.begin(), keys.end(), key) == keys.end())
+			{
+				STDstring list;
+				for (const STDstring& name : keys) { list += (list.size() ? ", " : "") + name; }
+				PyError(where + "a " + type + " has no key '" + key + "'; its keys are " + list, PyErrorType::valueError);
+			}
+		}
+		auto Has = [&](const char* key) { return d.contains(key); };
+		if (Has("view")) { Get("view", item.view); }
+		if (Has("scope")) { Get("scope", item.scope); }
+		if (item.view < 0 || item.view >= MAX_VIEWS_GLFW) { PyError(where + "the view must be 0 to " + EXUstd::ToString(MAX_VIEWS_GLFW - 1) + ", but is " + EXUstd::ToString(item.view), PyErrorType::indexError); }
+		if (item.scope < 0 || item.scope >= ScopePlot::numberOfScopes) { PyError(where + "the scope must be 0 to " + EXUstd::ToString(ScopePlot::numberOfScopes - 1) + ", but is " + EXUstd::ToString(item.scope), PyErrorType::indexError); }
+		if (Has("color"))
+		{
+			std::array<float, 4> color;
+			Get("color", color);
+			item.color = Float4({ color[0], color[1], color[2], color[3] });
+		}
+		if (Has("front")) { Get("front", item.front); }
+		if (Has("width")) { Get("width", item.width); }
+		if (!(item.width > 0.f || item.width == -1.f)) { PyError(where + "the width must be > 0, or -1 for the lineWidth of the scope, but is " + EXUstd::ToString(item.width), PyErrorType::valueError); }
+		if (item.type == ScopePlot::StaticItemType::Line)
+		{
+			if (!Has("points")) { PyError(where + "a Line needs 'points', a list of [x, y]", PyErrorType::valueError); }
+			std::vector<std::array<Real, 2>> points;
+			Get("points", points);
+			if (points.size() < 2) { PyError(where + "a Line needs at least two points", PyErrorType::valueError); }
+			for (const std::array<Real, 2>& point : points) { item.points.push_back(Vector2D({ point[0], point[1] })); }
+			if (Has("name")) { Get("name", item.name); }
+		}
+		else
+		{
+			if (!Has("position")) { PyError(where + "a " + type + " needs 'position', [x, y]", PyErrorType::valueError); }
+			std::array<Real, 2> position;
+			Get("position", position);
+			item.points.push_back(Vector2D({ position[0], position[1] }));
+			if (item.type == ScopePlot::StaticItemType::Text)
+			{
+				if (!Has("text")) { PyError(where + "a Text needs 'text'", PyErrorType::valueError); }
+				Get("text", item.text);
+				if (Has("size")) { Get("size", item.size); }
+				if (!(item.size > 0.f)) { PyError(where + "the size must be > 0, but is " + EXUstd::ToString(item.size), PyErrorType::valueError); }
+			}
+			else
+			{
+				if (Has("radius")) { Get("radius", item.radius); }
+				if (!(item.radius > 0.f)) { PyError(where + "the radius must be > 0, but is " + EXUstd::ToString(item.radius), PyErrorType::valueError); }
+			}
+		}
+		return item;
+	}
+
+	//! the items of a dict or a list of dicts
+	std::vector<ScopePlot::StaticItem> ScopeStaticItems(const py::object& items, const STDstring& function)
+	{
+		std::vector<ScopePlot::StaticItem> list;
+		if (py::isinstance<py::dict>(items)) { list.push_back(ScopeStaticItem(items, function)); }
+		else if (py::isinstance<py::list>(items) || py::isinstance<py::tuple>(items))
+		{
+			for (auto item : items) { list.push_back(ScopeStaticItem(item, function)); }
+		}
+		else
+		{
+			PyError("renderer.scopes." + function + ": expects a dict or a list of dicts, but received " + EXUstd::ToString(py::str(items)), PyErrorType::typeError);
+		}
+		return list;
+	}
+}
+
+void MainRendererScopes::PySetGraphics(const py::object& items)
+{
+	std::vector<ScopePlot::StaticItem> list = ScopeStaticItems(items, "SetGraphics"); //checked before anything is replaced
+	ScopePlot::StaticGraphics& graphics = mainSystemContainer->GetVisualizationSystemContainer().scopeStaticGraphics;
+	EXUstd::WaitAndLockSemaphore(graphics.lock);
+	graphics.items = std::move(list);
+	EXUstd::ReleaseSemaphore(graphics.lock);
+}
+
+void MainRendererScopes::PyAddGraphics(const py::object& items)
+{
+	std::vector<ScopePlot::StaticItem> list = ScopeStaticItems(items, "AddGraphics");
+	ScopePlot::StaticGraphics& graphics = mainSystemContainer->GetVisualizationSystemContainer().scopeStaticGraphics;
+	EXUstd::WaitAndLockSemaphore(graphics.lock);
+	graphics.items.insert(graphics.items.end(), list.begin(), list.end());
+	EXUstd::ReleaseSemaphore(graphics.lock);
+}
+
+py::list MainRendererScopes::PyGetGraphics() const
+{
+	ScopePlot::StaticGraphics& graphics = mainSystemContainer->GetVisualizationSystemContainer().scopeStaticGraphics;
+	EXUstd::WaitAndLockSemaphore(graphics.lock);
+	std::vector<ScopePlot::StaticItem> items = graphics.items;
+	EXUstd::ReleaseSemaphore(graphics.lock);
+	py::list list;
+	for (const ScopePlot::StaticItem& item : items)
+	{
+		py::dict d;
+		d["type"] = scopeItemTypeNames[(Index)item.type];
+		d["view"] = item.view;
+		d["scope"] = item.scope;
+		d["color"] = std::array<float, 4>({ item.color[0], item.color[1], item.color[2], item.color[3] });
+		d["front"] = item.front;
+		if (item.type == ScopePlot::StaticItemType::Line)
+		{
+			py::list points;
+			for (const Vector2D& point : item.points) { points.append(std::array<Real, 2>({ point[0], point[1] })); }
+			d["points"] = points;
+			d["width"] = item.width;
+			d["name"] = item.name;
+		}
+		else
+		{
+			d["position"] = std::array<Real, 2>({ item.points[0][0], item.points[0][1] });
+			if (item.type == ScopePlot::StaticItemType::Text) { d["text"] = item.text; d["size"] = item.size; }
+			else { d["radius"] = item.radius; d["width"] = item.width; }
+		}
+		list.append(d);
+	}
+	return list;
+}
+
+void MainRendererScopes::ClearGraphics(Index view, Index scope)
+{
+	ScopePlot::StaticGraphics& graphics = mainSystemContainer->GetVisualizationSystemContainer().scopeStaticGraphics;
+	EXUstd::WaitAndLockSemaphore(graphics.lock);
+	graphics.items.erase(std::remove_if(graphics.items.begin(), graphics.items.end(), [view, scope](const ScopePlot::StaticItem& item)
+		{ return (view < 0 || item.view == view) && (scope < 0 || item.scope == scope); }), graphics.items.end());
+	EXUstd::ReleaseSemaphore(graphics.lock);
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //MainGraphicsMaterialList
 Index MainGraphicsMaterialList::IndexOrName2Index(py::object indexOrName) const
 {

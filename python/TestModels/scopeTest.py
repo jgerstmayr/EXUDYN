@@ -6,7 +6,8 @@
 #           mbsNumber]; drawn by the raytracer into its image, which RedrawAndGetImage returns without a window.
 #           Without sensor lists the scopes show the first sensors that store their values, one per scope, with all
 #           components; a sensor without storeInternal and a verticalZoom beside the values show no line; a scope
-#           over another sensor draws its line.
+#           over another sensor draws its line. The static graphics of SC.renderer.scopes: a line, a point and a text
+#           drawn in their view and scope, clipped to the plot, cleared, and wrong items refused.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-04
@@ -113,6 +114,46 @@ window.scope1.sensors = []
 window.scope2.sensors = [[sVelocity, 1, sPosition, 1, 0]]
 image = Image()
 Check(Colored(Region(image, 2)) > 30 and np.array_equal(Region(image, 0), Region(background, 0)), 'over another sensor')
+
+#static graphics in the coordinates of the graph (SC.renderer.scopes): the sensor line far below the zoom, so that
+#only the static items are colored; outside the zoom they are clipped
+window.scope2.sensors = []
+window.scope0.sensors = [[sPosition, 1]]
+window.scope0.verticalZoom = [100, 200]
+window.scope0.showLegend = False
+plain = Image()
+scopes = SC.renderer.scopes
+scopes.SetGraphics([{'type': 'Line', 'points': [[0, 150], [2, 150]], 'color': [1, 0, 0, 1], 'width': 3}])
+Check(Colored(Region(Image(), 0)) > 50, 'a static line is not drawn')
+scopes.SetGraphics([{'type': 'Line', 'points': [[0, 300], [2, 300]], 'color': [1, 0, 0, 1]},
+                    {'type': 'Point', 'position': [1, 50], 'color': [0, 0, 1, 1]}])
+Check(Colored(Region(Image(), 0)) == 0, 'static items outside the zoom are not clipped')
+scopes.SetGraphics({'type': 'Point', 'position': [1, 150], 'color': [0, 0, 1, 1], 'radius': 6})
+Check(Colored(Region(Image(), 0)) > 10, 'a static point is not drawn')
+scopes.SetGraphics({'type': 'Text', 'position': [0.5, 150], 'text': 'limit', 'size': 1.5})
+image = Image()
+Check(Colored(Region(image, 0)) == 0 and np.any(Region(image, 0) != Region(plain, 0)), 'a static text is not drawn')
+scopes.AddGraphics([{'type': 'Line', 'points': [[0, 150], [2, 150]], 'color': [1, 0, 0, 1], 'view': 1}, #another view, another scope
+                    {'type': 'Line', 'points': [[0, 150], [2, 150]], 'color': [1, 0, 0, 1], 'scope': 1}])
+Check(Colored(Region(Image(), 0)) == 0, 'a static item of another view or scope is drawn')
+items = scopes.GetGraphics()
+Check(len(items) == 3 and items[0]['front'] and items[1]['view'] == 1 and items[2]['scope'] == 1 and items[2]['width'] == -1
+      and items[2]['name'] == '' and not items[2]['front'], 'GetGraphics: ' + str(items))
+scopes.ClearGraphics(view=0, scope=0)
+Check(len(scopes.GetGraphics()) == 2, 'ClearGraphics of a view and a scope')
+scopes.ClearGraphics()
+Check(scopes.GetGraphics() == [] and np.array_equal(Image(), plain), 'ClearGraphics')
+for wrong in [{'type': 'Line', 'points': [[0, 1]]}, {'type': 'Text', 'position': [0, 0], 'text': 'a', 'radius': 3},
+              {'type': 'Circle', 'position': [0, 0]}, {'type': 'Point', 'position': [0, 0], 'scope': 3}]:
+    try:
+        scopes.AddGraphics(wrong)
+        Check(False, 'not refused: ' + str(wrong))
+    except exu.ExudynError:
+        pass
+Check(scopes.GetGraphics() == [], 'a refused item is added')
+window.scope0.verticalZoom = [0, 0]
+window.scope0.showLegend = True
+window.scope0.sensors = []
 
 #run directly: the model with the scopes in the render window, the first two sensors in the automatic mode
 if not testIsActive:

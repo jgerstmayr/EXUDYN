@@ -173,7 +173,16 @@ Further:
 8. The lock of the stored sensor data, for the solver, the traces, the Scope and Python.
 9. Reset and item changes while the renderer runs (#3239): done, section 5.
 
-## 7. Proposal: static graphics in a scope (RG6.20.7; maintainer 2026-11-04, to be decided)
+## 7. Static graphics in a scope (RG6.20.7, done)
+
+**As done** (maintainer's decisions 2026-11-04): (a) polylines; (b) outside the automatic range; (c) a named line in
+the legend; (d) one list of dicts, each with its `view` and `scope`, which each scope walks through; (e)
+`SC.renderer.scopes.SetGraphics(items)`, `AddGraphics(item or items)`, `GetGraphics()`, `ClearGraphics(view=-1,
+scope=-1)` (class `RendererScopes`). Each dict has `type` 'Line', 'Text' or 'Point'; defaults `color` [0,0,0,1],
+`front` False (texts True), lines `width` -1 and `name` '', points `radius` 4 and `width` -1, texts `size` 1. Stored
+in `VisualizationSystemContainer::scopeStaticGraphics` under an atomic flag, copied per view by `BuildScopes`; cleared
+by `SC.Reset()`. scopeTest.py and scopeExample.py (the circle of the first mass, the reach of the second, the pivot).
+The proposal as it was written:
 
 The request (section 1): in the coordinates of the graph, extending the plotted lines like an analytic reference or
 a threshold - lines from (x0, y0) to (x1, y1) with an RGBA color, in front of or behind the other lines; texts at
@@ -215,6 +224,5 @@ as editable settings, rather like a renderer function (decision 10: Python lists
   (`sec-gui-scopes`) with an example in scopeExample.py (the analytic small-angle solution of the pendulum).
 - **Sub-steps**: .1 the interface and the storage, .2 the primitives in `ScopePlot` (polylines, texts, circles, the
   clipping, the order, the legend entries), .3 the test and the documentation.
-- **To be decided**: (a) polylines rather than single lines only; (b) the items outside the automatic range;
-  (c) legend entries for named lines; (d) per scope of each view (12 lists) rather than per view; (e) the names
-  `SetScopeGraphics`, `GetScopeGraphics`, `ClearScopeGraphics`.
+- **Decided**: (a) polylines; (b) outside the automatic range; (c) legend entries for named lines; (d) one list
+  with the view and the scope in each item; (e) `SC.renderer.scopes.GetGraphics(...)` and its siblings.

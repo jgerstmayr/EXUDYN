@@ -20,6 +20,7 @@
 #define VISUALIZATIONSYSTEMBASE__H
 
 class MainSystem;
+namespace ScopePlot { class StaticGraphics; }
 
 //MOVE to python generated class!!!
 
@@ -456,6 +457,7 @@ public:
         const VSettingsTraces& traces) = 0;
 
 	virtual std::vector<VSettingsMaterial>* GetGraphicsMaterialList() = 0;
+	virtual ScopePlot::StaticGraphics& GetScopeStaticGraphics() = 0; //!< the static items of the scopes (#3237)
 	virtual void CopyMaterialsFromVisualizationSettings() = 0;
 
 	//! added to directly access this data from GlfwClient

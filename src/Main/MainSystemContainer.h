@@ -82,6 +82,31 @@ public:
 
 //! substructure for rendering tasks with backlink to MainSystemContainer; 
 //! serves as unified access to rendering in Exudyn
+//! the static items of the scopes, SC.renderer.scopes (#3237): lines, texts and points in the coordinates of the graph
+//! of a scope, in one list of dicts with the view and the scope of each item
+class MainRendererScopes
+{
+private:
+	MainSystemContainer* mainSystemContainer = nullptr;
+public:
+	static MainRendererScopes* ForbidConstructor()
+	{
+		CHECKandTHROWstring("constructor RendererScopes() may not be called. It is automatically created inside Renderer and other usage of this class is not possible.", ExudynModelError);
+		return new MainRendererScopes(); //this is never called
+	}
+	void Initialize(MainSystemContainer* backlink) { mainSystemContainer = backlink; }
+
+	//! replace the items by a list of dicts
+	void PySetGraphics(const py::object& items);
+	//! append a dict or a list of dicts
+	void PyAddGraphics(const py::object& items);
+	//! the items as dicts with all their keys
+	py::list PyGetGraphics() const;
+	//! remove the items of a view and a scope; -1: of all views or all scopes
+	void ClearGraphics(Index view = -1, Index scope = -1);
+};
+
+//! substructure for rendering tasks with backlink to MainSystemContainer, unified access to rendering in Exudyn
 class MainRenderer
 {
 private:
@@ -89,6 +114,7 @@ private:
 public:
 	//public access to alleviate pybind interface:
 	MainGraphicsMaterialList materials;			//!< also accessible with Pybind11
+	MainRendererScopes scopes;					//!< the static items of the scopes (#3237)
 
 	static MainRenderer* ForbidConstructor()
 	{
@@ -100,6 +126,7 @@ public:
 	{
 		mainSystemContainer = backlink; 
 		materials.Initialize(backlink);
+		scopes.Initialize(backlink);
 	}
 
 	void DeprecationWarning(const STDstring& oldFunctionName, const STDstring& newFunctionName) const

@@ -53,6 +53,7 @@ exudyn.Parallel.multithreadedLLimitMassMatrices
 exudyn.Parallel.multithreadedLLimitResiduals
 exudyn.RealtimeSettings
 exudyn.Renderer
+exudyn.RendererScopes
 exudyn.ShowSettings
 exudyn.SimulationSettings
 exudyn.SimulationSettings.GetDictionaryWithTypeInfo

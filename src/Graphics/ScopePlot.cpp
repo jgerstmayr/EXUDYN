@@ -146,8 +146,41 @@ namespace ScopePlot
 		return (std::fabs(factor - 2.) < 1e-6) ? 4 : 5;
 	}
 
+	//! the static items of a scope with the given front flag, clipped to box; a text only if its position is inside
+	template<class TX, class TY>
+	void AddStaticItems(const std::vector<StaticItem>& statics, bool front, const Float4& box, float lineWidth,
+		float fontSize, TX X, TY Y, Graphics& graphics)
+	{
+		const Index circleSegments = 16;
+		std::vector<Float2> points;
+		for (const StaticItem& item : statics)
+		{
+			if (item.front != front || item.points.empty()) { continue; }
+			const float width = item.width > 0.f ? item.width : lineWidth;
+			const Float2 p0({ X(item.points[0][0]), Y(item.points[0][1]) });
+			points.clear();
+			if (item.type == StaticItemType::Line)
+			{
+				for (const Vector2D& point : item.points) { points.push_back(Float2({ X(point[0]), Y(point[1]) })); }
+			}
+			else if (item.type == StaticItemType::Point)
+			{
+				for (Index k = 0; k <= circleSegments; k++)
+				{
+					float phi = 2.f * (float)EXUstd::pi * (float)k / (float)circleSegments;
+					points.push_back(Float2({ p0[0] + item.radius * std::cos(phi), p0[1] + item.radius * std::sin(phi) }));
+				}
+			}
+			else if (p0[0] >= box[0] && p0[0] <= box[2] && p0[1] >= box[1] && p0[1] <= box[3])
+			{
+				graphics.AddText(p0, item.text, item.color, item.size * fontSize);
+			}
+			AddPolyline(points, box, item.color, width, 0, graphics);
+		}
+	}
+
 	void AddScope(const VSettingsScope& scope, const std::vector<Curve>& curves, const Vector2D& xRange,
-		const Float4& regionPixels, float fontSize, Graphics& graphics)
+		const Float4& regionPixels, float fontSize, Graphics& graphics, const std::vector<StaticItem>& statics)
 	{
 		const float lineWidth = scope.lineWidth;
 		const float cw = characterWidthFactor * fontSize;
@@ -260,7 +293,8 @@ namespace ScopePlot
 			graphics.AddText(Float2({ left, top + 0.2f * pad }), yLabel, scope.axesColor, fontSize);
 		}
 
-		//the lines
+		//the lines, between the static items behind and in front of them
+		AddStaticItems(statics, false, box, lineWidth, fontSize, X, Y, graphics);
 		std::vector<Float2> points;
 		for (size_t i = 0; i < curves.size(); i++)
 		{
@@ -272,17 +306,32 @@ namespace ScopePlot
 			}
 			AddPolyline(points, box, LineColor((Index)i), lineWidth, LineStyle((Index)i), graphics);
 		}
+		AddStaticItems(statics, true, box, lineWidth, fontSize, X, Y, graphics);
 
-		//the legend in the top right corner, as many entries as fit
-		if (scope.showLegend && curves.size())
+		//the legend in the top right corner, as many entries as fit: the sensor lines, then the named static lines
+		class LegendEntry
+		{
+		public:
+			STDstring label;
+			Float4 color;
+			Index style;
+			float width;
+		};
+		std::vector<LegendEntry> legend;
+		for (size_t i = 0; i < curves.size(); i++) { legend.push_back({ curves[i].label, LineColor((Index)i), LineStyle((Index)i), lineWidth }); }
+		for (const StaticItem& item : statics)
+		{
+			if (item.type == StaticItemType::Line && item.name.size()) { legend.push_back({ item.name, item.color, 0, item.width > 0.f ? item.width : lineWidth }); }
+		}
+		if (scope.showLegend && legend.size())
 		{
 			const float sample = 2.f * fontSize;
 			size_t maxChars = 3;
-			for (const Curve& curve : curves) { maxChars = std::max(maxChars, curve.label.size()); }
+			for (const LegendEntry& entry : legend) { maxChars = std::max(maxChars, entry.label.size()); }
 			size_t fittingChars = (size_t)std::max(3.f, (0.7f * (right - left) - sample - 2.f * pad) / cw);
 			maxChars = std::min(maxChars, fittingChars);
-			size_t entries = std::min(curves.size(), (size_t)std::max(1.f, (top - bottom - pad) / ch));
-			bool truncated = entries < curves.size();
+			size_t entries = std::min(legend.size(), (size_t)std::max(1.f, (top - bottom - pad) / ch));
+			bool truncated = entries < legend.size();
 			const float lx1 = right - 0.5f * pad, lx0 = lx1 - (sample + 2.f * pad + (float)maxChars * cw);
 			const float ly1 = top - 0.5f * pad, ly0 = ly1 - (float)entries * ch - 0.5f * pad;
 			Float4 legendColor = scope.backgroundColor;
@@ -292,12 +341,12 @@ namespace ScopePlot
 			for (size_t i = 0; i < entries; i++)
 			{
 				float y = ly1 - ((float)i + 1.f) * ch;
-				STDstring label = (truncated && i == entries - 1) ? STDstring("...") : curves[i].label;
+				STDstring label = (truncated && i == entries - 1) ? STDstring("...") : legend[i].label;
 				if (label.size() > maxChars) { label = label.substr(0, maxChars - 2) + ".."; }
 				if (!(truncated && i == entries - 1))
 				{
 					std::vector<Float2> sampleLine = { Float2({ lx0 + 0.5f * pad, y + 0.45f * ch }), Float2({ lx0 + 0.5f * pad + sample, y + 0.45f * ch }) };
-					AddPolyline(sampleLine, Float4({ lx0, ly0, lx1, ly1 }), LineColor((Index)i), lineWidth, LineStyle((Index)i), graphics);
+					AddPolyline(sampleLine, Float4({ lx0, ly0, lx1, ly1 }), legend[i].color, legend[i].width, legend[i].style, graphics);
 				}
 				graphics.AddText(Float2({ lx0 + pad + sample, y }), label, scope.axesColor, fontSize);
 			}
@@ -582,6 +631,12 @@ namespace ScopePlot
 			}
 		}
 
+		std::vector<StaticItem> viewStatics; //copied, so that Python may set them meanwhile
+		StaticGraphics& staticGraphics = container.GetScopeStaticGraphics();
+		EXUstd::WaitAndLockSemaphore(staticGraphics.lock);
+		for (const StaticItem& item : staticGraphics.items) { if (item.view == viewID) { viewStatics.push_back(item); } }
+		EXUstd::ReleaseSemaphore(staticGraphics.lock);
+
 		for (Index j = 0; j < numberOfScopes; j++)
 		{
 			const VSettingsScope& scope = *scopes[j];
@@ -604,7 +659,9 @@ namespace ScopePlot
 					else { rows.push_back({ sensors(i, 0), sensors(i, 1), sensors(i, 2), sensors(i, 3), sensors(i, 4) }); }
 				}
 			}
-			if (rows.empty()) { continue; }
+			std::vector<StaticItem> statics;
+			for (const StaticItem& item : viewStatics) { if (item.scope == j) { statics.push_back(item); } }
+			if (rows.empty() && statics.empty()) { continue; }
 
 			Float4 regionPixels({ scope.region[0] * (float)width, (1.f - scope.region[3]) * (float)height,
 				scope.region[2] * (float)width, (1.f - scope.region[1]) * (float)height });
@@ -616,7 +673,7 @@ namespace ScopePlot
 			Vector2D xRange = sources.size() ? HorizontalRange(scope, sources) : Vector2D({ 0., 1. });
 			Index bins = std::max((Index)1, (Index)(scope.xResolution * (regionPixels[2] - regionPixels[0])));
 			for (size_t i = 0; i < sources.size(); i++) { CollectCurve(sources[i], scope, xRange, bins, curves[i]); }
-			AddScope(scope, curves, xRange, regionPixels, fontSize, graphics);
+			AddScope(scope, curves, xRange, regionPixels, fontSize, graphics, statics);
 		}
 	}
 }

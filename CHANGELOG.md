@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 341 | 1.13.356 |
+| 1.13 | Newborn | 342 | 1.13.357 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.357** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A Scope in the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer (#3237)
+  - description: Users build their own scopes with graphicsDataUserFunction on ground objects, which are not meant for that. An integrated viewer of sensors with storeInternal: a region of the view (default top right) with frame, background, automatic axes, ticks, grid, legend and labels, the lines of a list of \[sensorY, componentY, sensorX, componentX\] up to the visualization time (as the sensor traces with showPast), so that the SolutionViewer animates it and saved images contain it; its own settings per view, an icon and SHIFT+S; one drawing description for OpenGL and the raytracer. Decided (maintainer 2026-11-04): a step of RG6 with a design note (docs/dev/design/scope.md, the defaults of the settings given there); simple and robust, faster than matplotlib; lines, texts and points in plot coordinates later.
+  - **notes:** Scopes in the render window: three per view (visualizationSettings.view0.window.scope0 to scope2, shown with window.showScopes or the scope icon) plot stored sensor values over time or over another sensor up to the visualization time, in OpenGL, the raytracer and saved images; lines, texts and points in the coordinates of the graphs are set with SC.renderer.scopes.SetGraphics, AddGraphics, GetGraphics and ClearGraphics.
+  - date resolved: **2026-11-04 21:52**, date raised: 2026-11-04
 - **1.13.356** <span class="textred">`BUG`</span> `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` mbs.Reset() and item changes while the renderer runs: no synchronization with the render thread (#3239)
   - description: MainSystem::Reset deletes the items, the sensors and their stored data without stopping or waiting for the renderer; the render thread may be in UpdateGraphicsData, which checks IsSystemConsistent() only at its start, or in the sensor traces, which check nothing, and then reads freed memory. Adding, deleting or modifying items from Python while the renderer runs is the same race, rarer because the items are not freed. SC.Reset() and deleting a SystemContainer are safe: they detach the renderer first, which stops the render loop and joins its thread. Decided: a lock of the system data, taken by Reset and the item changes and by the render thread while it reads the system, or a request to the render thread to finish its frame first; to be analyzed (docs/dev/design/scope.md section 5).
   - **notes:** mbs.Reset(), adding, deleting and modifying items, mbs.Assemble() and setting visualization parameters wait while the render thread reads the system - its graphics, the sensor traces and the scopes -, and the render thread waits for them, by a lock of each system; the main thread computes the user function drawings the render thread asks for while it waits. rendererItemChangesTest.py.

@@ -2,10 +2,14 @@
   "number": 3237,
   "title": "A Scope in the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "Users build their own scopes with graphicsDataUserFunction on ground objects, which are not meant for that. An integrated viewer of sensors with storeInternal: a region of the view (default top right) with frame, background, automatic axes, ticks, grid, legend and labels, the lines of a list of [sensorY, componentY, sensorX, componentX] up to the visualization time (as the sensor traces with showPast), so that the SolutionViewer animates it and saved images contain it; its own settings per view, an icon and SHIFT+S; one drawing description for OpenGL and the raytracer. Decided (maintainer 2026-11-04): a step of RG6 with a design note (docs/dev/design/scope.md, the defaults of the settings given there); simple and robust, faster than matplotlib; lines, texts and points in plot coordinates later.",
   "dateRaised": "2026-11-04",
-  "deadline": "2027-05-03"
+  "deadline": "2027-05-03",
+  "dateResolved": "2026-11-04 21:52",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Scopes in the render window: three per view (visualizationSettings.view0.window.scope0 to scope2, shown with window.showScopes or the scope icon) plot stored sensor values over time or over another sensor up to the visualization time, in OpenGL, the raytracer and saved images; lines, texts and points in the coordinates of the graphs are set with SC.renderer.scopes.SetGraphics, AddGraphics, GetGraphics and ClearGraphics.",
+  "resolvedInVersion": "1.13.357"
 }

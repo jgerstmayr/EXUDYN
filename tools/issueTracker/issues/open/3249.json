@@ -1,0 +1,12 @@
+{
+  "number": 3249,
+  "title": "Settings dialog: a list or matrix that the setting refuses raises in the tkinter callback instead of an error box",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "In the visualization settings dialog, a value of a list or matrix setting whose shape or types the setting refuses (e.g. scope0.sensors as [[0,1],[2]] or [[0,1.5]], or a number for a list) passes CheckType, which only checks fixed sizes, and SetDictionary raises in the tkinter callback: the user sees an exception or an empty error window, and the tree keeps the wrong value. Decided: CheckType checks lists and matrices of open size (a list of numbers, of integers for the index types, a matrix as a list of rows of equal length); the dialog sets the value on the settings and, if they refuse it, shows the message and the description of the setting and keeps the editor open, ESCAPE restoring the value.",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03",
+  "file": "python/exudyn/misc/GUI.py"
+}

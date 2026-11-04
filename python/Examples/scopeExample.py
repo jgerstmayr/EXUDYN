@@ -3,8 +3,9 @@
 #
 # Details:  The scopes of the render window (#3237): a double pendulum of two mass points, its heights over the last
 #           5 seconds, the velocity of the second mass and the path of the second mass, plotted in the render window
-#           while the simulation runs; the solution viewer shows the same plots with the animation, and saved images
-#           contain them.
+#           while the simulation runs; the circle of the first mass, the reach of the second and the pivot are static
+#           graphics in the coordinates of the path plot (SC.renderer.scopes). The solution viewer shows the same plots
+#           with the animation, and saved images contain them.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-04
@@ -16,6 +17,7 @@
 import exudyn as exu
 from exudyn.itemInterface import SensorBody
 import exudyn.graphics as graphics
+import numpy as np
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -57,6 +59,19 @@ window.scope2.region = [2/3, 0.4, 1, 0.8]
 window.scope2.xLabel = 'x (m)'
 window.scope2.yLabel = 'y (m)'
 window.scope2.timeHistory = 3
+
+#static graphics in the coordinates of the graphs: the circle of the first mass and the reach of the second as
+#references in the path plot, with entries in the legend, the pivot as a point and a text, and the start height in scope0
+phi = np.linspace(0, 2*np.pi, 121)
+SC.renderer.scopes.SetGraphics([
+    {'type': 'Line', 'scope': 2, 'points': np.column_stack([L*np.cos(phi), L*np.sin(phi)]).tolist(),
+     'color': [0.5, 0.5, 0.5, 1], 'width': 1, 'name': 'circle L'},
+    {'type': 'Line', 'scope': 2, 'points': np.column_stack([2*L*np.cos(phi), 2*L*np.sin(phi)]).tolist(),
+     'color': [0.8, 0.8, 0.8, 1], 'width': 1, 'name': 'reach 2L'},
+    {'type': 'Point', 'scope': 2, 'position': [0, 0], 'radius': 4, 'front': True},
+    {'type': 'Text', 'scope': 2, 'position': [0.1, -0.15], 'text': 'pivot', 'size': 0.8},
+    {'type': 'Line', 'scope': 0, 'points': [[0, 0], [1e3, 0]], 'color': [0, 0, 0, 0.5], 'width': 1, 'name': 'start'},
+    ])
 
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.endTime = 20

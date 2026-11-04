@@ -17,6 +17,7 @@
 #include "Utilities/BasicDefinitions.h"
 #include "Linalg/BasicLinalg.h"
 #include <vector>
+#include <atomic>
 
 class VisualizationSystemContainerBase;
 class VSettingsScope;
@@ -60,6 +61,34 @@ namespace ScopePlot
 		void AddText(const Float2& position, const STDstring& text, const Float4& color, float fontSize) { items.push_back({ ItemType::Text, position, position, color, fontSize, text }); }
 	};
 
+	enum class StaticItemType { Line, Text, Point };
+
+	//! an item of a scope in the coordinates of its graph, set from Python with SC.renderer.scopes (#3237): a polyline,
+	//! a text with the bottom left corner of its first character at the position, or a point drawn as a circle
+	class StaticItem
+	{
+	public:
+		StaticItemType type = StaticItemType::Line;
+		Index view = 0;
+		Index scope = 0;
+		std::vector<Vector2D> points;	//!< the points of a line; the position of a text or a point
+		Float4 color = Float4({ 0.f, 0.f, 0.f, 1.f });
+		float width = -1.f;			//!< the line width in pixels of a line or a point; -1: the lineWidth of the scope
+		bool front = false;			//!< true: drawn over the sensor lines
+		STDstring name;				//!< a line with a name has an entry in the legend
+		STDstring text;
+		float size = 1.f;			//!< the font size of a text relative to the tick labels
+		float radius = 4.f;			//!< the radius of a point in pixels
+	};
+
+	//! the static items of all scopes of a SystemContainer, written by Python and read by BuildScopes under the lock
+	class StaticGraphics
+	{
+	public:
+		std::vector<StaticItem> items;
+		std::atomic_flag lock = ATOMIC_FLAG_INIT;
+	};
+
 	//! one plotted line: its values, already reduced to what the plot can show, and its legend
 	class Curve
 	{
@@ -80,9 +109,10 @@ namespace ScopePlot
 	STDstring TickLabel(Real value, Real spacing);
 
 	//! the drawing of one scope: regionPixels is [x0, y0, x1, y1] from the bottom left corner of the window, xRange
-	//! the range of the horizontal axis, fontSize the font size in pixels
+	//! the range of the horizontal axis, fontSize the font size in pixels; the static items behind and in front of
+	//! the lines, outside the automatic range
 	void AddScope(const VSettingsScope& scope, const std::vector<Curve>& curves, const Vector2D& xRange,
-		const Float4& regionPixels, float fontSize, Graphics& graphics);
+		const Float4& regionPixels, float fontSize, Graphics& graphics, const std::vector<StaticItem>& statics = {});
 
 	//! the drawing of the scopes of a view from the stored sensor data, read under the lock of each sensor; nothing if
 	//! window.showScopes is False

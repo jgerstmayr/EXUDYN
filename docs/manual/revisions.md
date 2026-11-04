@@ -416,8 +416,10 @@ refused (#3238).
 **Scopes in the render window** (#3237): three per view, `visualizationSettings.view0.window.scope0` to `scope2`,
 shown with `window.showScopes` or the scope icon, plot stored sensor values over time or over another sensor, up to
 the visualization time, in OpenGL and the raytracer and in saved images; without sensor lists they show the first
-three sensors that store their values, see {ref}`sec-gui-scopes`. The stored values of a sensor are read and written
-under a lock, so that the renderer no longer reads them while the solver appends a row.
+three sensors that store their values, see {ref}`sec-gui-scopes`. Lines, texts and points in the coordinates of the
+graphs are added with `SC.renderer.scopes.SetGraphics`, `AddGraphics`, `GetGraphics` and `ClearGraphics`, see
+{ref}`sec-rendererscopes`. The stored values of a sensor are read and written under a lock, so that the renderer no
+longer reads them while the solver appends a row.
 
 **The solvers of `exudyn.symbolics.solvers` write at the exact write times** (#3241): the result, the solution file
 and the sensors at the multiples of their write periods, the state within a step interpolated by the cubic Hermite

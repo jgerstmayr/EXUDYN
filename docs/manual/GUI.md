@@ -153,8 +153,22 @@ SC.visualizationSettings.view0.window.scope1.sensors = [[sVelocity, 1, sPosition
 SC.visualizationSettings.view0.window.scope1.xLabel = 'position (m)'
 ```
 
+**Static graphics** in the coordinates of the graph - a threshold, an analytic reference, a marked value - are set
+with `SC.renderer.scopes`, see {ref}`sec-rendererscopes`: one list of dicts of the types `'Line'` (a polyline,
+with a `name` also in the legend), `'Text'` and `'Point'` (a circle of `radius` pixels), each with the `view` and the
+`scope` it belongs to, its `color` and whether it is drawn in `front` of the sensor lines. They are clipped to the
+plot and do not change the automatic range; they are not settings and stay until `ClearGraphics()` or `SC.Reset()`.
+
+```python
+SC.renderer.scopes.SetGraphics([
+    {'type': 'Line', 'points': [[0, 0.5], [10, 0.5]], 'color': [1, 0, 0, 1], 'name': 'limit'}, #view 0, scope 0
+    {'type': 'Text', 'position': [0.2, 0.55], 'text': 'limit', 'color': [1, 0, 0, 1]},
+    {'type': 'Point', 'position': [0, 0], 'radius': 5, 'scope': 2}])
+```
+
 `scopeExample.py` plots a double pendulum while it is simulated - the heights over the last 5 seconds, a velocity,
-and the paths of the masses - and shows the same plots in the solution viewer afterwards.
+and the paths of the masses with the circle of the first mass and the reach of the second as static lines - and
+shows the same plots in the solution viewer afterwards.
 
 (sec-overview-basics-visualizationsettings)=
 ### Visualization settings dialog

@@ -29,6 +29,7 @@
 #include "Graphics/VisualizationSystemContainerBase.h"
 #include "Graphics/VisualizationSystemData.h"
 #include "Graphics/VisualizationSystem.h"
+#include "Graphics/ScopePlot.h"
 
 
 //! object graphics data for ground objects, rigid bodies and mass points
@@ -108,6 +109,7 @@ public: //declared as public for direct access via pybind
 	VisualizationSettings settings;		//!< general settings for visualization
 	ResizableArray<VisualizationSystem*> visualizationSystems; //! linked to all visualization systems (placed in MainSystem); links need to be kept up-to-date by MainSystem Add/Delete
 	std::vector<VSettingsMaterial> materials; //!< std::vector because of std::string in class; managed by class MainGraphicsMaterialList; located here for communication between GlfwClient and VisualizationSystemContainer
+	ScopePlot::StaticGraphics scopeStaticGraphics; //!< the static items of the scopes, managed by MainRendererScopes (#3237)
 
 	//flags and data that affect all views:
 	bool computeMaxSceneRequest;		//! used to update max scene coordinates and center
@@ -197,6 +199,9 @@ public:
 
 		visualizationSystems.Flush();
 		graphicsDataList.Flush();
+		EXUstd::WaitAndLockSemaphore(scopeStaticGraphics.lock);
+		scopeStaticGraphics.items.clear();
+		EXUstd::ReleaseSemaphore(scopeStaticGraphics.lock);
 
 	}
 
@@ -304,6 +309,7 @@ public:
 
 	//! materials link for renderer
 	virtual std::vector<VSettingsMaterial>* GetGraphicsMaterialList() override { return &materials; }
+	virtual ScopePlot::StaticGraphics& GetScopeStaticGraphics() override { return scopeStaticGraphics; }
 	//! copy materials before using them in drawing
 	virtual void CopyMaterialsFromVisualizationSettings() override;
 
