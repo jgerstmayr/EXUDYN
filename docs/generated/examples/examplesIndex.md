@@ -132,6 +132,7 @@ rollerBearningModel
 ROSMassPoint
 ROSMobileManipulator
 ROSTurtle
+scopeExample
 serialRobotFlexible
 serialRobotInteractiveLimits
 serialRobotInverseKinematics

@@ -5729,6 +5729,16 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg6-20-6"></a>
+### RG6.20.6 follow-up — scopeTest.py without deprecated arguments, run directly with the renderer; scopeExample.py (2026-11-04, #3237)
+- Maintainer: scopeTest.py raised deprecation messages and opened no renderer when run in Spyder. It used `physicsMass`,
+  `bodyNumbers` and `solutionSettings.writeSolutionToFile`; now `mass`, `itemNumbers`, `solution.file.write`. Run
+  directly (not in the test suite), it shows the model with the scopes of the automatic mode for 10 s in real time.
+- scopeExample.py (new): a double pendulum of two mass points on distance constraints, scope0 the heights over the
+  last 5 s, scope1 all components of a velocity, scope2 the paths of both masses (y over x, last 3 s); live during the
+  simulation and in the solution viewer. Without a window it is not run in real time (0.1 s).
+- The legend of a line over another sensor names the x-component as well: "mass1, PositionY over PositionX".
+
 <a id="rg6-20-1"></a>
 ### RG6.20.1-.6, RG6.20.8 — The Scope: the decisions, the settings, ScopePlot, OpenGL and the raytracer, the lock of the stored sensor data (2026-11-04, #3237, #3239)
 - **Decisions** (maintainer 2026-11-04, on the eleven questions of the first evaluation; docs/dev/design/scope.md

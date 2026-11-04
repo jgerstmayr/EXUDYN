@@ -417,10 +417,16 @@ namespace ScopePlot
 			Real time = mainSystem->GetCSystem().GetSystemData().GetCData().GetVisualization().GetTime();
 			Index firstComponent = row[1] < 0 ? 0 : row[1];
 			Index lastComponent = row[1] < 0 ? componentsY - 1 : row[1];
+			STDstring overX; //a line over another sensor names its component: "..., PositionY over PositionX"
+			if (sensorX)
+			{
+				STDstring variableX = VariableName(*sensorX);
+				overX = " over " + (row[2] != row[0] ? mainSensors[row[2]]->GetName() + " " : STDstring()) + variableX + ComponentName(variableX, row[3]);
+			}
 			for (Index component = firstComponent; component <= lastComponent && (Index)sources.size() < maxLines; component++)
 			{
 				sources.push_back({ sensorY, sensorX, component, row[3], time,
-					mainSensors[row[0]]->GetName() + ", " + variable + ComponentName(variable, component) });
+					mainSensors[row[0]]->GetName() + ", " + variable + ComponentName(variable, component) + overX });
 			}
 		}
 	}

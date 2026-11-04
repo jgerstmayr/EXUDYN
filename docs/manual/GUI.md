@@ -153,6 +153,9 @@ SC.visualizationSettings.view0.window.scope1.sensors = [[sVelocity, 1, sPosition
 SC.visualizationSettings.view0.window.scope1.xLabel = 'position (m)'
 ```
 
+`scopeExample.py` plots a double pendulum while it is simulated - the heights over the last 5 seconds, a velocity,
+and the paths of the masses - and shows the same plots in the solution viewer afterwards.
+
 (sec-overview-basics-visualizationsettings)=
 ### Visualization settings dialog
 

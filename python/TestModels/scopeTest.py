@@ -19,6 +19,8 @@ import exudyn as exu
 from exudyn.itemInterface import SensorBody
 import numpy as np
 
+testIsActive = exu.sys.get('testIsActive', False)
+
 testError = 0
 def Check(condition, message):
     global testError
@@ -29,8 +31,8 @@ def Check(condition, message):
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 oGround = mbs.CreateGround()
-oMass = mbs.CreateMassPoint(referencePosition=[1, 0, 0], physicsMass=1, gravity=[0, -9.81, 0])
-mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], stiffness=100, damping=0.5)
+oMass = mbs.CreateMassPoint(referencePosition=[1, 0, 0], mass=1, gravity=[0, -9.81, 0])
+mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], stiffness=100, damping=0.5)
 sPosition = mbs.AddSensor(SensorBody(bodyNumber=oMass, storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
 sVelocity = mbs.AddSensor(SensorBody(bodyNumber=oMass, storeInternal=True, outputVariableType=exu.OutputVariableType.Velocity))
 sNotStored = mbs.AddSensor(SensorBody(bodyNumber=oMass, writeToFile=False, outputVariableType=exu.OutputVariableType.Acceleration))
@@ -39,7 +41,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.endTime = 2
 simulationSettings.timeIntegration.numberOfSteps = 1000
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 simulationSettings.timeIntegration.verboseMode = 0
 mbs.SolveDynamic(simulationSettings)
 
@@ -111,6 +113,24 @@ window.scope1.sensors = []
 window.scope2.sensors = [[sVelocity, 1, sPosition, 1, 0]]
 image = Image()
 Check(Colored(Region(image, 2)) > 30 and np.array_equal(Region(image, 0), Region(background, 0)), 'over another sensor')
+
+#run directly: the model with the scopes in the render window, the first two sensors in the automatic mode
+if not testIsActive:
+    window.scope2.sensors = []
+    window.renderWindowSize = [1024, 768]
+    window.showComputationInfo = True
+    v.bodies.show = True
+    v.connectors.show = True
+    v.nodes.show = True
+    v.nodes.drawNodesAsPoint = False
+    simulationSettings.timeIntegration.endTime = 10
+    simulationSettings.timeIntegration.numberOfSteps = 10000
+    simulationSettings.timeIntegration.simulateInRealtime = not exu.special.userInterface.suppressRenderer
+    SC.renderer.Start()
+    SC.renderer.DoIdleTasks()
+    mbs.SolveDynamic(simulationSettings)
+    SC.renderer.DoIdleTasks()
+    SC.renderer.Stop()
 
 u = testError
 exu.Print('solution of scopeTest=', u)
