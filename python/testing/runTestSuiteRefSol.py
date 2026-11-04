@@ -152,6 +152,7 @@ def TestExamplesReferenceSolution():
         'symbolicTrapezoidalGGLStepSizeTest.py':650.639057, #2026-11-04: the chain starts horizontally, before 812.639057; new 2026-11-04: the automatic step size of SolveTrapezoidalGGL on a bouncing ball and a whipping chain (#3243)
         'symbolicLobatto4Test.py':72.5816714, #2026-11-04: SolveImplicitRungeKutta with LobattoIIIA4, LobattoIIIC4-GGL and Radau3 (#3247), before 73.73288071; 2026-11-04: the variants with the constraints at the end, the automatic step size (#3246), before 4.58157969; new 2026-11-04: SolveLobatto4, IIIC-GGL, IIIA-GGL and IIIC, orders on a pendulum and a slider crank, a stiff spring (#3244)
         'symbolicEulerParametersTest.py':6.24213131, #new 2026-11-04: the user rigid body on Euler parameters, its node equation in SymbolicSystem, SolveExplicit with the projection (#3238)
+        'rendererItemChangesTest.py':1.1932480692, #new 2026-11-04: mbs.Reset, item changes and Assemble under the lock of the system, which the render thread takes too (#3239)
         'scopeTest.py':0, #new 2026-11-04: the scopes of the render window in the raytracer image, the automatic mode, the sensors as rows of 2 or 5 (#3237)
         'zoomToItemTest.py':0.02, #new 2026-10-18: SC.renderer.ZoomToItem, centered and zoomed to an item (#3027)
         'userNodeTest.py':30.45974515191901, #new 2026-10-18: NodeUser against NodePoint and NodeRigidBodyRxyz, Jacobians given and numerical (#2974)

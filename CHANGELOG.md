@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 340 | 1.13.355 |
+| 1.13 | Newborn | 341 | 1.13.356 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.356** <span class="textred">`BUG`</span> `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` mbs.Reset() and item changes while the renderer runs: no synchronization with the render thread (#3239)
+  - description: MainSystem::Reset deletes the items, the sensors and their stored data without stopping or waiting for the renderer; the render thread may be in UpdateGraphicsData, which checks IsSystemConsistent() only at its start, or in the sensor traces, which check nothing, and then reads freed memory. Adding, deleting or modifying items from Python while the renderer runs is the same race, rarer because the items are not freed. SC.Reset() and deleting a SystemContainer are safe: they detach the renderer first, which stops the render loop and joins its thread. Decided: a lock of the system data, taken by Reset and the item changes and by the render thread while it reads the system, or a request to the render thread to finish its frame first; to be analyzed (docs/dev/design/scope.md section 5).
+  - **notes:** mbs.Reset(), adding, deleting and modifying items, mbs.Assemble() and setting visualization parameters wait while the render thread reads the system - its graphics, the sensor traces and the scopes -, and the render thread waits for them, by a lock of each system; the main thread computes the user function drawings the render thread asks for while it waits. rendererItemChangesTest.py.
+  - date resolved: **2026-11-04 20:57**, date raised: 2026-11-04
 - **1.13.355** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Explicit solvers with constraints: coordinate constraints eliminated in the symbolic SolveExplicit, Euler parameters by projection after each step (#3238)
   - description: The C++ explicit solver eliminates CoordinateConstraints to the ground (explicit.eliminateConstraints) and refuses other constraints; the symbolic SolveExplicit refuses every algebraic equation; nodes with Euler parameters are refused by explicit solvers, as their norm is an algebraic equation. Decided (maintainer 2026-11-04, revision2026c step RG16.5): the elimination of coordinate constraints also in the symbolic SolveExplicit, in line with C++; Euler parameters in explicit solvers by the projection onto the unit norm after each step, without raising for their constraint, with a possible drift of momentum and energy; the analysis first (docs/dev/design/advancedSolvers.md section 3.5).
   - **notes:** SolveExplicit of exudyn.symbolics.solvers eliminates algebraic equations that fix one coordinate each, as Exudyn's explicit solver eliminates CoordinateConstraints to the ground, and integrates rigid bodies on Euler parameters with their constraint on acceleration level and the projection of the parameters onto the unit norm after each step. UserItemCreator.CreateRigidBody creates the user rigid body on a NodeRigidBodyEP (the default) or a NodeRigidBodyRxyz, and SymbolicSystem takes the algebraic equation of the Euler parameter nodes.

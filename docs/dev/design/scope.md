@@ -148,6 +148,16 @@ Further:
   the items are not freed. Raised as #3239 (RG6.20.9): a lock of the system data, taken by Reset and the item
   changes and by the render thread while it reads the system, or a request to the render thread to finish its frame
   first.
+- **Done (RG6.20.9)**: `PostProcessData::accessSystem`, an atomic flag per system with its owner thread, so that a
+  nested lock in the same thread passes. The main thread takes it (`SystemAccessGuard`) in `MainSystem::Reset`, the
+  `AddMain...`, `PyDelete...` and `PyModify...` functions of the five kinds of items, `Assemble`, and in
+  `PySet...Parameter` for the names starting with `V` (visualization; the other parameters are set without the lock,
+  as a pre-step function sets them every step and they are values in place); the render thread in
+  `VisualizationSystem::UpdateGraphicsData` after the visualization state, in `GetSensorsPositionsVectorsLists` (the
+  traces) and in `ScopePlot::BuildScopes` (all systems). While the main thread waits, it computes the user function
+  drawings the render thread requests while holding the lock (else both would wait, the render thread 200 ms); inside
+  these drawings the main thread does not lock (the render thread waits for them). Not covered: adding systems to a
+  SystemContainer while the renderer runs.
 
 ## 6. Sub-steps (as numbered in the plan)
 
@@ -161,7 +171,7 @@ Further:
 7. Later: the extras (lines, texts, points in plot coordinates) as Python lists on `SC.renderer` - the proposal in
    section 7.
 8. The lock of the stored sensor data, for the solver, the traces, the Scope and Python.
-9. Reset and item changes while the renderer runs (#3239).
+9. Reset and item changes while the renderer runs (#3239): done, section 5.
 
 ## 7. Proposal: static graphics in a scope (RG6.20.7; maintainer 2026-11-04, to be decided)
 

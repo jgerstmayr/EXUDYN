@@ -264,6 +264,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 
 	EXUstd::ReleaseSemaphore(postProcessData->accessState); //now visualizationStateUpdate can be written again in main thread
 
+	SystemAccessGuard systemAccess(*postProcessData, false); //the main thread does not change the items meanwhile (#3239)
 	try
 	{
 

@@ -429,6 +429,11 @@ a `NodeRigidBodyEP` - the default node type, as for `mbs.CreateRigidBody` - besi
 `SymbolicSystem` takes the algebraic equation of the node, and `SolveExplicit` integrates such bodies with the
 projection of the Euler parameters after each step.
 
+**Changes of the system while the renderer runs** (#3239): `mbs.Reset()`, adding, deleting and modifying items,
+`mbs.Assemble()` and setting visualization parameters (`Set...Parameter` of a name starting with `V`) wait until the
+render thread has finished reading the system, and the render thread waits for them; a script may rebuild its model
+while the window stays open. Setting other parameters does not wait.
+
 **`SolveTrapezoidalGGL` of `exudyn.symbolics.advancedSolvers`** (#3242): the trapezoidal rule with the GGL
 stabilization of index-3 constraints for symbolic systems, of order 2 and without numerical damping, with constant
 steps or a step size controlled by the local errors of the coordinates and velocities, with

@@ -73,7 +73,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
-  - RG6.20 Add a Scope to the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer (2 open sub-steps)
+  - RG6.20 Add a Scope to the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer (1 open sub-step)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -138,7 +138,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 5 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 4 | Graphics and rendering |
+| RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -811,9 +811,9 @@ CLOSED 2026-11-04 (#3237): scopeTest.py on the raytracer image; the GUI chapter,
 
 CLOSED 2026-11-04 (#3237): CSensor::LockInternalStorage, taken by the solver, the traces, ScopePlot and MainSensor::GetInternalStorage. [log](exudynRevisionLog2026c.md#rg6-20-1)
 
-#### **OPEN_RG6.20.9** mbs.Reset() and item changes while the renderer runs
+#### **CLOSED_RG6.20.9** mbs.Reset() and item changes while the renderer runs
 
-#3239. Design section 5: SC.Reset() stops the renderer first, mbs.Reset() and item changes do not; to be analyzed.
+CLOSED 2026-11-04 (#3239): a lock of the items per system (PostProcessData::accessSystem, SystemAccessGuard), taken by the main thread in Reset, the add, delete and modify functions, Assemble and the visualization parameters, and by the render thread in the graphics update, the traces and the scopes; the main thread computes the requested user function drawings while it waits. rendererItemChangesTest.py; with the renderer to be run directly once. [log](exudynRevisionLog2026c.md#rg6-20-9)
 
 ## **OPEN_RG7** Python user items
 

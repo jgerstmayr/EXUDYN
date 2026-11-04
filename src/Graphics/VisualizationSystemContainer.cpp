@@ -457,6 +457,7 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
 
     if (mbsNumber >= 0 && mbsNumber < NumberOFMainSystemsBacklink())
     {
+		SystemAccessGuard systemAccess(*GetMainSystemBacklink(mbsNumber)->GetCSystem().GetPostProcessData(), false); //the sensors stay (#3239)
 		const CSystem& cSystem = GetMainSystemBacklink(mbsNumber)->GetCSystem();
         Real time = cSystem.GetSystemData().GetCData().GetVisualization().GetTime();
         if (positionSensorIndex >= 0 && positionSensorIndex < cSystem.GetSystemData().GetCSensors().NumberOfItems())

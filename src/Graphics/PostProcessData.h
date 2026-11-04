@@ -19,6 +19,9 @@
 #ifndef POSTPROCESSDATA__H
 #define POSTPROCESSDATA__H
 
+#include <atomic>
+#include <thread>
+
 class MainSystem; 
 class VisualizationSystem; //for backlink to VisualizationSystem for PythonUserFunctions for drawing
 
@@ -51,12 +54,26 @@ public:
 	bool requestUserFunctionDrawing;	//!< if this flag is set, user functions request drawing update from computation thread
 	bool userFunctionOutsideMainThreadReported = false; //!< a call of a user function from the render thread was reported (#3003)
 	std::atomic_flag requestUserFunctionDrawingAtomicFlag;  //!< flag for user function drawing in python
+	//! the lock of the items of the system (#3239): taken by the main thread while it resets, adds, deletes or modifies
+	//! items or assembles, by the render thread while it reads them; not released by Reset()
+	std::atomic_flag accessSystem;
+	std::atomic<std::thread::id> accessSystemOwner; //!< the thread holding accessSystem, so that a nested lock passes
+	bool inUserFunctionDrawing = false; //!< the main thread computes the user function drawings, which the render thread waits for
 
 
 	PostProcessData()
 	{
 		Reset();
+		accessSystem.clear(std::memory_order_release);
+		accessSystemOwner.store(std::thread::id());
 	}
+
+	//! lock the items of the system (#3239); false if this thread holds the lock already, or computes the user function
+	//! drawings the render thread waits for (nothing to release then); with serveDrawing - the main thread - the user
+	//! function drawings the render thread requests while it holds the lock are computed while waiting
+	bool LockSystemAccess(bool serveDrawing);
+	//! release the lock of LockSystemAccess, if it returned true
+	void ReleaseSystemAccess(bool locked);
 
 	//! reset data according to MainSystem.Reset()
 	void Reset();
@@ -91,6 +108,19 @@ public:
 
 	void ProcessUserFunctionDrawing();
 
+};
+
+//! the lock of the items of a system for a scope (#3239)
+class SystemAccessGuard
+{
+	PostProcessData& postProcessData;
+	bool locked;
+public:
+	SystemAccessGuard(PostProcessData& data, bool serveDrawing, bool active = true) : postProcessData(data),
+		locked(active && data.LockSystemAccess(serveDrawing)) {}
+	~SystemAccessGuard() { postProcessData.ReleaseSystemAccess(locked); }
+	SystemAccessGuard(const SystemAccessGuard&) = delete;
+	SystemAccessGuard& operator=(const SystemAccessGuard&) = delete;
 };
 
 

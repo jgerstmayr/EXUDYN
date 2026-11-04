@@ -5729,6 +5729,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg6-20-9"></a>
+### RG6.20.9 — mbs.Reset() and item changes while the renderer runs: a lock of the system (2026-11-04, #3239)
+- `PostProcessData::accessSystem` (an atomic flag per system) with `accessSystemOwner` (a nested lock in the same
+  thread passes, so that AddNode in interactive mode, which assembles, and the raytracer inside the graphics update
+  need no counting) and `SystemAccessGuard` (RAII; also on exceptions). It is not released by PostProcessData::Reset,
+  which MainSystem::Reset calls while holding it.
+- Main thread: MainSystem::Reset, AddMainNode/Object/Marker/Load/Sensor, PyDelete* and PyModify* of the five kinds,
+  Assemble, PySet*Parameter for names starting with V. Not the other Set*Parameter: a pre-step function sets them
+  every step, and they are values in place - with the lock the solver would wait for every frame of the renderer.
+  While waiting, the main thread computes the user function drawings that the render thread requests while it holds
+  the lock (it waits up to 200 ms for them); within ProcessUserFunctionDrawing the main thread does not lock.
+- Render thread: VisualizationSystem::UpdateGraphicsData after the visualization state is taken, the traces
+  (GetSensorsPositionsVectorsLists) and the scopes (ScopePlot::BuildScopes, all systems in order; the main thread
+  holds at most one, so no deadlock).
+- rendererItemChangesTest.py (new): 20 runs of Reset, build, solve, add and delete a sensor, modify a connector, set
+  graphics, assemble, raytracer image; equal results. In the suite no window opens, so the lock is not contended there;
+  run directly, the renderer draws meanwhile - to be run by the maintainer once (no window from here).
+
 <a id="rg20-5-3"></a>
 ### RG20.5.3 — Euler parameters in the symbolic system and the projection in SolveExplicit (2026-11-04, #3238)
 - **UserItemCreator.CreateRigidBody** on a `NodeRigidBodyEP` (now the default, as `mbs.CreateRigidBody`; Rxyz stays):

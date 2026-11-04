@@ -147,12 +147,33 @@ std::string PostProcessData::GetSolutionMessage()
 }
 
 
+bool PostProcessData::LockSystemAccess(bool serveDrawing)
+{
+	if (accessSystemOwner.load() == std::this_thread::get_id() || (serveDrawing && inUserFunctionDrawing)) { return false; } //nested
+	while (accessSystem.test_and_set(std::memory_order_acquire))
+	{
+		//the render thread may wait for the user function drawings of this thread while it holds the lock
+		if (serveDrawing) { ProcessUserFunctionDrawing(); }
+		std::this_thread::sleep_for(std::chrono::microseconds(100));
+	}
+	accessSystemOwner.store(std::this_thread::get_id());
+	return true;
+}
+
+void PostProcessData::ReleaseSystemAccess(bool locked)
+{
+	if (!locked) { return; }
+	accessSystemOwner.store(std::thread::id());
+	accessSystem.clear(std::memory_order_release);
+}
+
 void PostProcessData::ProcessUserFunctionDrawing()
 {
 	EXUstd::WaitAndLockSemaphore(requestUserFunctionDrawingAtomicFlag);
 
 	if (requestUserFunctionDrawing && visualizationSystem->GetMainSystemBacklink()->HasMainSystemContainer())
 	{
+		inUserFunctionDrawing = true; //the render thread waits for this; a user function may change visualization parameters (#3239)
 		const VisualizationSettings& visSettings = visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainerConst().PyGetVisualizationSettings();
 		//std::cout << "requestUserFunctionDrawing ...\n";
 		//the bodies with bodies.show, the connectors - ObjectConnectorUser, ObjectJointUser - with connectors.show (#3161)
@@ -172,6 +193,7 @@ void PostProcessData::ProcessUserFunctionDrawing()
 		}
 		//the items that call user functions, which the render thread leaves to this thread (#3003)
 		visualizationSystem->UpdateMainThreadGraphics(visSettings);
+		inUserFunctionDrawing = false;
 		requestUserFunctionDrawing = false;
 		if (UserFunctionCalledOutsideMainThread() && !userFunctionOutsideMainThreadReported)
 		{

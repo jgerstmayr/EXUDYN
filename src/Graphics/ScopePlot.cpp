@@ -19,6 +19,7 @@
 #include <cstdio>
 #include <algorithm>
 #include <array>
+#include <memory>
 
 namespace ScopePlot
 {
@@ -559,6 +560,14 @@ namespace ScopePlot
 		const VSettingsWindow& window = GetSettingsView(viewID, container.GetVisualizationSettings()).window;
 		if (!window.showScopes || width <= 0 || height <= 0) { return; }
 		const VSettingsScope* scopes[numberOfScopes] = { &window.scope0, &window.scope1, &window.scope2 };
+		std::vector<std::unique_ptr<SystemAccessGuard>> systemAccess; //the sensors stay while they are read (#3239)
+		for (Index i = 0; i < container.NumberOFMainSystemsBacklink(); i++)
+		{
+			if (container.GetMainSystemBacklink(i))
+			{
+				systemAccess.push_back(std::make_unique<SystemAccessGuard>(*container.GetMainSystemBacklink(i)->GetCSystem().GetPostProcessData(), false));
+			}
+		}
 
 		//without any sensor list, the first three sensors of mbs 0 that store their values, one per scope
 		bool automatic = true;

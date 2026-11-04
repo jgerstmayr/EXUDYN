@@ -61,6 +61,7 @@ MainSystem::MainSystem()
 //! reset all lists and deallocate memory
 void MainSystem::Reset()
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	mainSystemData.Reset(); //
 	GetCSystem().GetSystemData().Reset();
 	GetCSystem().GetPythonUserFunctions().Reset();
@@ -414,6 +415,7 @@ py::dict MainSystem::GetAvailableFactoryItems()
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainNode(const py::dict& d)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainNode(*this, d);
 	InteractiveModeActions();
@@ -481,6 +483,7 @@ NodeIndex MainSystem::AddMainNodePyClass(const py::object& pyObject)
 //! Consistently deleta a MainNode from Python
 void MainSystem::PyDeleteNode(const py::object& nodeNumber, bool suppressWarnings)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	Index deleteItemNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(nodeNumber);
 	SystemHasChanged();
 	DeleteNode(deleteItemNumber, suppressWarnings);
@@ -641,6 +644,7 @@ py::dict MainSystem::PyGetNode(const py::object& itemIndex)
 //! modify node's dictionary
 void MainSystem::PyModifyNode(const py::object& itemIndex, py::dict nodeDict)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	Index nodeNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(nodeNumber, 0, mainSystemData.GetMainNodes().NumberOfItems()))
 	{
@@ -819,6 +823,7 @@ py::object MainSystem::PyGetNodeParameter(const py::object& itemIndex, const STD
 //! Set (write) parameter 'parameterName' of 'nodeNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetNodeParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true, parameterName.size() != 0 && parameterName[0] == 'V'); //a visualization parameter, which the render thread reads (#3239)
 	Index nodeNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(nodeNumber, 0, mainSystemData.GetMainNodes().NumberOfItems()))
 	{
@@ -841,6 +846,7 @@ void MainSystem::PySetNodeParameter(const py::object& itemIndex, const STDstring
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainObject(const py::dict& d)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainObject(*this, d);
 	InteractiveModeActions();
@@ -895,6 +901,7 @@ ObjectIndex MainSystem::AddMainObjectPyClass(const py::object& pyObject)
 //! Consistently deleta a MainObject from Python
 void MainSystem::PyDeleteObject(const py::object& objectNumber, bool deleteDependentItems, bool suppressWarnings)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	Index deleteItemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(objectNumber);
 	if (EXUstd::IndexIsInRange(deleteItemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
@@ -1060,6 +1067,7 @@ py::dict MainSystem::PyGetObject(const py::object& itemIndex, bool addGraphicsDa
 //! modify object's dictionary
 void MainSystem::PyModifyObject(const py::object& itemIndex, py::dict d)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
@@ -1636,6 +1644,7 @@ py::object MainSystem::PyGetObjectParameter(const py::object& itemIndex, const S
 //! Set (write) parameter 'parameterName' of 'objectNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetObjectParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true, parameterName.size() != 0 && parameterName[0] == 'V'); //a visualization parameter, which the render thread reads (#3239)
 	Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
@@ -1658,6 +1667,7 @@ void MainSystem::PySetObjectParameter(const py::object& itemIndex, const STDstri
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainMarker(const py::dict& d)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainMarker(*this, d);
 	InteractiveModeActions();
@@ -1712,6 +1722,7 @@ MarkerIndex MainSystem::AddMainMarkerPyClass(const py::object& pyObject)
 //! Consistently delete a MainMarker from Python
 void MainSystem::PyDeleteMarker(const py::object& markerNumber, bool suppressWarnings)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	Index deleteItemNumber = EPyUtils::ItemIndexFromPython<MarkerIndex>(markerNumber);
 	SystemHasChanged();
 	DeleteMarker(deleteItemNumber, suppressWarnings);
@@ -1880,6 +1891,7 @@ py::dict MainSystem::PyGetMarker(const py::object& itemIndex)
 //! modify object's dictionary
 void MainSystem::PyModifyMarker(const py::object& itemIndex, py::dict d)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	Index itemNumber = EPyUtils::ItemIndexFromPython<MarkerIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainMarkers().NumberOfItems()))
 	{
@@ -1937,6 +1949,7 @@ py::object MainSystem::PyGetMarkerParameter(const py::object& itemIndex, const S
 //! Set (write) parameter 'parameterName' of 'markerNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetMarkerParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true, parameterName.size() != 0 && parameterName[0] == 'V'); //a visualization parameter, which the render thread reads (#3239)
 	Index itemNumber = EPyUtils::ItemIndexFromPython<MarkerIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainMarkers().NumberOfItems()))
 	{
@@ -1977,6 +1990,7 @@ py::object MainSystem::PyGetMarkerOutputVariable(const py::object& itemIndex, Ou
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainLoad(const py::dict& d)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainLoad(*this, d);
 	InteractiveModeActions();
@@ -2031,6 +2045,7 @@ LoadIndex MainSystem::AddMainLoadPyClass(const py::object& pyObject)
 //! Consistently delete a MainLoad from Python
 void MainSystem::PyDeleteLoad(const py::object& loadNumber, bool deleteDependentMarkers, bool suppressWarnings)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	Index deleteItemNumber = EPyUtils::ItemIndexFromPython<LoadIndex>(loadNumber);
 	SystemHasChanged();
 	DeleteLoad(deleteItemNumber, deleteDependentMarkers, suppressWarnings);
@@ -2153,6 +2168,7 @@ py::dict MainSystem::PyGetLoad(const py::object& itemIndex)
 //! modify object's dictionary
 void MainSystem::PyModifyLoad(const py::object& itemIndex, py::dict d)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	Index itemNumber = EPyUtils::ItemIndexFromPython<LoadIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainLoads().NumberOfItems()))
 	{
@@ -2228,6 +2244,7 @@ py::object MainSystem::PyGetLoadParameter(const py::object& itemIndex, const STD
 //! Set (write) parameter 'parameterName' of 'loadNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetLoadParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true, parameterName.size() != 0 && parameterName[0] == 'V'); //a visualization parameter, which the render thread reads (#3239)
 	Index itemNumber = EPyUtils::ItemIndexFromPython<LoadIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainLoads().NumberOfItems()))
 	{
@@ -2249,6 +2266,7 @@ void MainSystem::PySetLoadParameter(const py::object& itemIndex, const STDstring
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainSensor(const py::dict& d)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainSensor(*this, d);
 	InteractiveModeActions();
@@ -2303,6 +2321,7 @@ SensorIndex MainSystem::AddMainSensorPyClass(const py::object& pyObject)
 //! Consistently delete a MainSensor from Python
 void MainSystem::PyDeleteSensor(const py::object& sensorNumber, bool suppressWarnings)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	Index deleteItemNumber = EPyUtils::ItemIndexFromPython<SensorIndex>(sensorNumber);
 	SystemHasChanged();
 	DeleteSensor(deleteItemNumber, suppressWarnings);
@@ -2419,6 +2438,7 @@ py::dict MainSystem::PyGetSensor(const py::object& itemIndex)
 //! modify object's dictionary
 void MainSystem::PyModifySensor(const py::object& itemIndex, py::dict d)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 	Index itemNumber = EPyUtils::ItemIndexFromPython<SensorIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainSensors().NumberOfItems()))
 	{
@@ -2516,6 +2536,7 @@ py::object MainSystem::PyGetSensorParameter(const py::object& itemIndex, const S
 //! Set (write) parameter 'parameterName' of 'SensorNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetSensorParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
+	SystemAccessGuard systemAccess(*GetCSystem().GetPostProcessData(), true, parameterName.size() != 0 && parameterName[0] == 'V'); //a visualization parameter, which the render thread reads (#3239)
 	Index itemNumber = EPyUtils::ItemIndexFromPython<SensorIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainSensors().NumberOfItems()))
 	{

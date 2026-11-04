@@ -174,6 +174,7 @@ public:
 	//   COMPUTATIONAL FUNCTIONS
 	void Assemble() 
 	{ 
+		SystemAccessGuard systemAccess(*cSystem.GetPostProcessData(), true); //the render thread does not read the items meanwhile (#3239)
 		cSystem.Assemble(*this); 
 		//visualizationSystem.InitializeRenderState(); //uses reference coordinates to obtain the scene center and its size
 	}
