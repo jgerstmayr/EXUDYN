@@ -31,6 +31,7 @@ graphics
 graphicsDataUtilities
 misc.GUI
 misc.settingsUtilities
+symbolics.advancedSolvers
 symbolics.codeExport
 symbolics.systemModel
 symbolics.solvers

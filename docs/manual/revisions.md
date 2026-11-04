@@ -424,6 +424,11 @@ and the sensors at the multiples of their write periods, the state within a step
 polynomial, see {ref}`sec-symbolicsolvers`; the solvers of Exudyn still write at the end of the step that passes a
 write time. `MainSolverExplicit`, `MainSolverImplicitSecondOrder` and `MainSolverStatic` have `WriteSensorsToFile`.
 
+**`SolveTrapezoidalGGL` of `exudyn.symbolics.advancedSolvers`** (#3242): the trapezoidal rule with the GGL
+stabilization of index-3 constraints for symbolic systems, of order 2 and without numerical damping, with constant
+steps or a step size controlled by the local error and `timeIntegration.absoluteTolerance` and `relativeTolerance`,
+see {ref}`sec-symbolicsolvers`.
+
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.
 

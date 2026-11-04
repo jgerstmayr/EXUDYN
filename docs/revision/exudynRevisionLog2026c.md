@@ -5729,6 +5729,43 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg20-1-2"></a>
+### RG20.1.2, RG20.1.3 — SolveTrapezoidalGGL with constant steps and with the step size by the local error (2026-11-04, #3242)
+- **The module** exudyn/symbolics/advancedSolvers.py (new, decision 7: the new solvers in a module of their own), on
+  the helpers of solvers.py (`_Output`, `_StepSize`, `_PostNewton`, `_InitialAccelerations`), in the utility docs.
+- **The method**: v1 = v0 + h/2 (a0 + a1), q1 = q0 + h/2 (v0 + v1) - C_q^T mu, M a1 = f - C_q^T z1, c(q1) = 0,
+  C_q v1 + c_t = 0 - Newmark with beta = 1/4, gamma = 1/2 plus the velocity constraints and the second multiplier mu.
+  Newton for (a1, y1, z1, mu), the ODE2 rows scaled by h^2/4 and the z columns by its inverse; the mu columns
+  -J_q C_q^T from a second SystemJacobian by q; the velocity rows with (C_q v)_q by a difference of C_q along v.
+  C_q is taken row by row from ODE2ReactionForcesLHS with unit multipliers, exact for joints and ObjectGenericDAE;
+  C_q^T mu in the positions at the previous iterate. ODE1 coordinates by the trapezoidal rule, their initial
+  velocities from the ODE1 equations; consistent initial accelerations and z. Algebraic equations of q_t, y or z are
+  refused (random variations, as `_FixedCoordinates`).
+- **On the way**: with C_q of the last Jacobian in the residual, the velocity constraint ended at 1e-6 and the
+  accelerations and z of a fine reference stagnated at 3e-3 - the reason for the exact C_q in the residual; then the
+  constraints hold to 1e-15 on both levels and a and z converge with order 2. Without (C_q v)_q the Newton method
+  needed 3 to 5 iterations per step on the slider crank, with it 1.3 to 3.
+- **Measured, constant steps**: pendulum (NumpySystem) and slider crank (two rigid bodies on revolute joints, the
+  slider a mass point on a spherical joint with its height fixed; SymbolicSystem of UserItemCreator) against
+  mbs.SolveDynamic with 5000 steps: order 2.00 to 2.02 in q, v, a, z; at an equal step 25 % more accurate in q than
+  generalized-alpha with spectral radius 0.8.
+- **The step size** (RG20.1.3, decision 1 and 3): the error h^2/12 (a1 - a0) = h^3/12 q_ttt of the positions, the
+  norm and the rule of CSolverExplicit (root mean square of the errors over atol + rtol max(|q0|, |q1|), h_opt = h
+  (1/err)^(1/3), safety, maximum increase, rejected if h_opt < h); `_ErrorStepSize`, derived from `_StepSize`, also
+  reduces the step after a failed Newton iteration or post-Newton step. Measured on the pendulum: the tolerances
+  1e-5 and 1e-7 give 74 and 343 steps, errors 8.4e-4 and 3.5e-5.
+- **Found**: at an equal number of steps the controlled step is no better than constant steps - equal on the free
+  pendulum, 4 times the error with a force pulse of width 0.01, 10 times on the slider crank. The estimate does not
+  see the local error h^3/12 a_tt of the velocities, which dominates the global error. Tried and not kept: a_tt by the
+  second difference of the end accelerations of two steps - spoiled by the undamped odd-even oscillation of the
+  trapezoidal accelerations (the error alternated 0.6, 1.5, 0.8 between steps, 26 rejections); the differences of the
+  mean accelerations (v1 - v0)/h of three steps, which are free of it - fewer rejections, but no better per step. The I
+  controller rejects 5 to 20 % of the steps where the error grows. Variable steps themselves are of order 2 (steps
+  alternating 1/300 and 1/600 against 1/400). RG20.1.4 added for the velocity error and a model of changing time
+  scales; RG20.8 for a PI controller.
+- symbolicTrapezoidalGGLTest.py (new, 7 s): the orders, the constraints, against SolveGeneralizedAlpha, ODE1
+  coordinates, the automatic step size with two tolerances, the refusal of an equation of the velocities.
+
 <a id="rg20-4-3"></a>
 ### RG20.4.3 — The output of the symbolic solvers at the exact write times, interpolated within the step (2026-11-04, #3241)
 - `_Output` of exudyn/symbolics/solvers.py keeps the state of the previous step and writes the result at

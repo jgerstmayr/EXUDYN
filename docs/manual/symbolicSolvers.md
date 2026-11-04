@@ -13,7 +13,18 @@ Exudyn's C++ solvers, written in Python with numpy and scipy:
 - `SolveGeneralizedAlpha(system, simulationSettings)`: the generalized-alpha method and the Newmark method, with ODE1
   coordinates and index 3 constraints, the Newton method with the exact Jacobian of the system.
 
-Both take the `SimulationSettings` of `mbs.SolveDynamic`: the steps, the solver parameters, the Newton tolerances, the
+`exudyn.symbolics.advancedSolvers` has solvers that Exudyn's C++ core does not have:
+
+- `SolveTrapezoidalGGL(system, simulationSettings)`: the trapezoidal rule with the stabilization of Gear, Gupta and
+  Leimkuhler (GGL): the position and the velocity constraints both hold in every step, a second multiplier moves the
+  positions back onto the constraints. It is of order 2 in the coordinates, velocities, accelerations and Lagrange
+  multipliers and has no numerical damping. With `timeIntegration.automaticStepSize` (the default) the step size
+  follows the local error of the coordinates, estimated from the accelerations at both ends of the step as
+  $h^2/12\,(\ddot{\mathbf q}_1 - \ddot{\mathbf q}_0)$, with `timeIntegration.absoluteTolerance` and
+  `relativeTolerance`, as the explicit solvers DOPRI5 and ODE23; the tolerances are those of one step. The algebraic
+  equations must depend on the coordinates and the time only (#3242).
+
+All of them take the `SimulationSettings` of `mbs.SolveDynamic`: the steps, the solver parameters, the Newton tolerances, the
 discontinuous iteration of the data coordinates and, with `timeIntegration.adaptiveStep`, the step size that a
 post-Newton step recommends, reduced and grown again as Exudyn's solvers do (see {ref}`sec-solvers`). For a
 `SymbolicSystem`, every step is written into its `mbs`: the solution file, the sensors and the renderer show the

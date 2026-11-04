@@ -2,10 +2,14 @@
   "number": 3242,
   "title": "TrapezoidalGGL: the trapezoidal rule with the GGL stabilization of index-3 constraints and an adaptive step size, in a module of exudyn.symbolics",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "The Python solvers of exudyn.symbolics integrate constrained systems by generalized-alpha with constant steps only; no solver of Exudyn has an error-controlled step for constraints. Decided: TrapezoidalGGL, the trapezoidal rule with the position and the velocity constraints enforced by the Gear-Gupta-Leimkuhler stabilization, in a module of its own on SymbolicSystemBase, first with constant steps against generalized-alpha, then the step size by the local error estimated from the difference of the accelerations at both ends of the step, with timeIntegration.absoluteTolerance and relativeTolerance and automaticStepSize as the explicit solvers; in C++ later (docs/dev/design/advancedSolvers.md section 3.1).",
   "dateRaised": "2026-11-04",
-  "deadline": "2027-05-03"
+  "deadline": "2027-05-03",
+  "dateResolved": "2026-11-04 16:57",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.symbolics.advancedSolvers.SolveTrapezoidalGGL integrates a symbolic system by the trapezoidal rule with the GGL stabilization: the position and the velocity constraints hold in every step, a second multiplier moves the positions onto the constraints; of order 2 in the coordinates, velocities, accelerations and multipliers, without numerical damping, with ODE1 coordinates, data coordinates and the output of the solvers of exudyn.symbolics.solvers. With timeIntegration.automaticStepSize the step size follows the local error of the coordinates, h^2/12 times the difference of the accelerations at both ends of the step, with timeIntegration.absoluteTolerance and relativeTolerance; symbolicTrapezoidalGGLTest.py.",
+  "resolvedInVersion": "1.13.350"
 }

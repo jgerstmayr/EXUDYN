@@ -187,6 +187,18 @@ that couples it without its rows and columns. Found on the way: Exudyn's explici
 coordinates only at the end of a step, not in the stages, so its RK44 is of order 1 with eliminated coordinates
 (#3240, RG20.5.4); it also ignores the offset.
 
+**RG20.4.3, RG20.1.2, RG20.1.3, done** (#3241, #3242): the Python solvers write at the exact write times, interpolated
+by the cubic Hermite polynomial; `exudyn.symbolics.advancedSolvers.SolveTrapezoidalGGL` with constant steps (order 2
+in q, v, the accelerations and z, measured on a pendulum and a slider crank) and with the step size by the
+acceleration difference. Measured: the controlled step distributes the steps by the error of the positions, but at an
+equal number of steps its global error on the pendulum and the slider crank is 1 to 10 times that of constant steps -
+the velocities, whose local error h^3/12 a_tt the estimate does not see, dominate the global error; an estimate of
+a_tt by the second difference of the accelerations is spoiled by their undamped odd-even oscillation (the
+trapezoidal rule does not damp it), and one by the mean accelerations (v1 - v0)/h of three steps was not better. The
+I controller rejects 5 to 20 % of the steps where the error grows (RG20.8: a PI controller). Open for the evaluation:
+a problem of changing time scales (contact, impact) where the controlled step pays off, and an estimate of the
+velocity error.
+
 ## 5. Steps (group RG20)
 
 - RG20.1 TrapezoidalGGL with an adaptive step in the symbolic solvers: .1 analysis, .2 the constant-step method

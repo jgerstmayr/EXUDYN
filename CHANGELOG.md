@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 334 | 1.13.349 |
+| 1.13 | Newborn | 335 | 1.13.350 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.350** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` TrapezoidalGGL: the trapezoidal rule with the GGL stabilization of index-3 constraints and an adaptive step size, in a module of exudyn.symbolics (#3242)
+  - description: The Python solvers of exudyn.symbolics integrate constrained systems by generalized-alpha with constant steps only; no solver of Exudyn has an error-controlled step for constraints. Decided: TrapezoidalGGL, the trapezoidal rule with the position and the velocity constraints enforced by the Gear-Gupta-Leimkuhler stabilization, in a module of its own on SymbolicSystemBase, first with constant steps against generalized-alpha, then the step size by the local error estimated from the difference of the accelerations at both ends of the step, with timeIntegration.absoluteTolerance and relativeTolerance and automaticStepSize as the explicit solvers; in C++ later (docs/dev/design/advancedSolvers.md section 3.1).
+  - **notes:** exudyn.symbolics.advancedSolvers.SolveTrapezoidalGGL integrates a symbolic system by the trapezoidal rule with the GGL stabilization: the position and the velocity constraints hold in every step, a second multiplier moves the positions onto the constraints; of order 2 in the coordinates, velocities, accelerations and multipliers, without numerical damping, with ODE1 coordinates, data coordinates and the output of the solvers of exudyn.symbolics.solvers. With timeIntegration.automaticStepSize the step size follows the local error of the coordinates, h^2/12 times the difference of the accelerations at both ends of the step, with timeIntegration.absoluteTolerance and relativeTolerance; symbolicTrapezoidalGGLTest.py.
+  - date resolved: **2026-11-04 16:57**, date raised: 2026-11-04
 - **1.13.349** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The solvers of exudyn.symbolics.solvers write their output at the exact times of the write periods, interpolated within the step (#3241)
   - description: SolveExplicit and SolveGeneralizedAlpha record the state, and write the solution file and the sensors through mbs, at the end of the first step that passes a write time, as CSolverBase::FinishStep: with a write period that is no multiple of the step, or with a variable step, the written times are those of the steps. Decided: in the Python solvers first, the times of solution.file.writePeriod and solution.sensors.writePeriod exactly, the state within the step by the cubic Hermite interpolation of q from q and q\_t at both ends, q\_t its derivative, the accelerations, the ODE1 and the algebraic coordinates linear; data coordinates those of the end of the step; the C++ solvers after it (revision2026c step RG20.4.2), as the design docs/dev/design/advancedSolvers.md section 3.4 says.
   - **notes:** SolveExplicit and SolveGeneralizedAlpha of exudyn.symbolics.solvers write the result, the solution file and the sensors at the multiples of solution.file.writePeriod and solution.sensors.writePeriod and at the end; within a step the coordinates by the cubic Hermite polynomial of the coordinates and velocities at both ends, the velocities by its derivative, the accelerations, ODE1 and algebraic coordinates linearly, the data coordinates of the end of the step. A write period that is a multiple of the step writes the states of the steps. The Python solver classes have WriteSensorsToFile; symbolicSolverOutputTest.py.

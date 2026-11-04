@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.349.dev1
+- Exudyn version = 1.13.350.dev1
 - last change = 2026-11-04
 - Number of issues = 3243
-- Number of resolved issues = 3126 (349 in current version)
+- Number of resolved issues = 3127 (350 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` TrapezoidalGGL: the trapezoidal rule with the GGL stabilization of index-3 constraints and an adaptive step size, in a module of exudyn.symbolics (#3242)
-  - description: The Python solvers of exudyn.symbolics integrate constrained systems by generalized-alpha with constant steps only; no solver of Exudyn has an error-controlled step for constraints. Decided: TrapezoidalGGL, the trapezoidal rule with the position and the velocity constraints enforced by the Gear-Gupta-Leimkuhler stabilization, in a module of its own on SymbolicSystemBase, first with constant steps against generalized-alpha, then the step size by the local error estimated from the difference of the accelerations at both ends of the step, with timeIntegration.absoluteTolerance and relativeTolerance and automaticStepSize as the explicit solvers; in C++ later (docs/dev/design/advancedSolvers.md section 3.1).
-  - date raised: 2026-11-04
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Explicit solvers with constraints: coordinate constraints eliminated in the symbolic SolveExplicit, Euler parameters by projection after each step (#3238)
   - description: The C++ explicit solver eliminates CoordinateConstraints to the ground (explicit.eliminateConstraints) and refuses other constraints; the symbolic SolveExplicit refuses every algebraic equation; nodes with Euler parameters are refused by explicit solvers, as their norm is an algebraic equation. Decided (maintainer 2026-11-04, revision2026c step RG16.5): the elimination of coordinate constraints also in the symbolic SolveExplicit, in line with C++; Euler parameters in explicit solvers by the projection onto the unit norm after each step, without raising for their constraint, with a possible drift of momentum and energy; the analysis first (docs/dev/design/advancedSolvers.md section 3.5).
   - **remarks:** 2026-11-04: the step is revision2026c RG20.5 (requested as RG16, which revision2026b has taken).

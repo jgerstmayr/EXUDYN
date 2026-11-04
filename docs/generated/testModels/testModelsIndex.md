@@ -235,6 +235,7 @@ symbolicSystemODE1Test
 symbolicSystemParametersTest
 symbolicSystemTest
 symbolicSystemVariablesTest
+symbolicTrapezoidalGGLTest
 symbolicUserConnectorsTest
 symbolicUserContactFrictionTest
 symbolicUserContactTest

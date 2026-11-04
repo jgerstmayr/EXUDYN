@@ -104,6 +104,7 @@ filesParsed=[
              'graphicsDataUtilities.py',
              'misc/GUI.py', 
              'misc/settingsUtilities.py',
+             'symbolics/advancedSolvers.py',
              'symbolics/codeExport.py',
              'symbolics/systemModel.py',
              'symbolics/solvers.py',
