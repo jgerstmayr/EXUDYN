@@ -1,0 +1,13 @@
+{
+  "number": 3240,
+  "title": "Explicit solver with eliminateConstraints: the RK stages do not fix the eliminated coordinates, which makes RK44 first order",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "CSolverExplicitTimeInt sets the coordinates of CoordinateConstraints to the ground to zero only at the end of a step and in the accelerations of the end; the stage accelerations rk.stageDerivODE2_t of these coordinates are not zeroed, so the following stages evaluate the forces with the fixed coordinates moved. A chain of three mass points with fixed coordinates (symbolicExplicitConstraintTest.py): RK44 with 500, 5000 and 50000 steps converges with order 1 (differences 4e-5, 4e-6), while SolveExplicit of exudyn.symbolics.solvers, which zeroes them in every stage, gives the converged result with 500 steps. Explicit Euler is not affected. The coordinate is also set to zero regardless of the offset and the factor of the constraint. Decided: zero the stage accelerations and velocities of the eliminated coordinates, and keep the value of the constraint equation, when the explicit solvers are revised in C++ (RG20.5).",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03",
+  "file": "src/Solver/CSolverExplicit.cpp"
+}

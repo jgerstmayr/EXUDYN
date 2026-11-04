@@ -408,6 +408,11 @@ current settings and view); stored from the dialog with the buttons → CFG0 ...
 **store model view**, or from a script with `exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0)`,
 see {ref}`sec-usersettings-storedconfigurations`. An icon of the icon bar switches the shadow (#3044).
 
+**`SolveExplicit` of `exudyn.symbolics.solvers` eliminates fixed coordinates**: algebraic equations that fix one
+coordinate each, such as a coordinate constraint to the ground, are eliminated with
+`timeIntegration.explicit.eliminateConstraints`, as Exudyn's explicit solver does; other algebraic equations are
+refused (#3238).
+
 **Scopes in the render window** (#3237): three per view, `visualizationSettings.view0.window.scope0` to `scope2`,
 shown with `window.showScopes` or the scope icon, plot stored sensor values over time or over another sensor, up to
 the visualization time, in OpenGL and the raytracer and in saved images; without sensor lists they show the first

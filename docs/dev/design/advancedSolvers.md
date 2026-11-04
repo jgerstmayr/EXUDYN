@@ -1,7 +1,7 @@
 # Advanced solvers: evaluation (revision2026c group RG20)
 
-A design note of open steps: the maintainer's request as given, then what exists, the evaluation per step, the open
-questions and the sub-steps. It leaves the repository when the steps close (WORKFLOW.md §8.4).
+A design note of open steps: the maintainer's request as given, then what exists, the evaluation per step, the
+decisions and the sub-steps. It leaves the repository when the steps close (WORKFLOW.md §8.4).
 
 ## 1. The request (maintainer 2026-11-04)
 
@@ -160,28 +160,43 @@ restart) out of CSolverBase into a class of its own, which also takes the interp
 controller class shared by all adaptive solvers; the Newton method as a class of its own on residual and Jacobian
 callbacks.
 
-## 4. Open questions (to be decided by the maintainer)
+## 4. Decisions (maintainer 2026-11-04)
 
-1. TrapezoidalGGL: the error estimate by the acceleration difference (recommended) or by a predictor?
-2. The name of step 2: `Lobatto4`, `LobattoIIIA3` or `LobattoGGL`, depending on the variant (IIIA with GGL, or the
-   IIIA-IIIB pair)?
-3. The tolerances of the adaptive implicit solvers: the existing `timeIntegration.absoluteTolerance/relativeTolerance`
-   of the explicit solvers, or new fields for the implicit ones?
-4. Step 4: the interpolation in C++ first (the test suite shifts once), or in the Python solvers first?
-5. Step 5: in the symbolic SolveExplicit only the elimination of coordinates fixed to the ground (as C++), or the
-   projection of general linear constraints?
-6. Step 5, Euler parameters: in C++ and in the Python solvers, or the Python solvers first?
+1. **TrapezoidalGGL**: the error estimate by the acceleration difference.
+2. **Lobatto**: named `Lobatto4`, by its order, as Radau5. The maintainer expects Lobatto IIIC with the constraints
+   enforced at all stages to be the variant for index 3; it is stiffly accurate and L-stable, but not FSAL - its first
+   stage is implicit as well, so three stages of unknowns instead of two for IIIA. RG20.2.2 compares IIIC with the
+   constraints at all stages against IIIA with GGL by order and stability and chooses. The error estimate: the
+   embedded trapezoidal solution and the classical estimate of the difference of the IIIA and IIIC solutions.
+   Radau IIA with two stages (`Radau3`, order 3, more damping) is another tableau of the same code: kept in mind in the
+   implementation, no step.
+3. **Tolerances**: `timeIntegration.absoluteTolerance` and `relativeTolerance` for the explicit and the implicit
+   adaptive solvers, as they were meant; they are per step and low, so a user usually adjusts them.
+4. **Output within the step**: the Python solvers first (RG20.4.3), to see what happens, then C++ (RG20.4.2).
+5. **Explicit elimination**: as in C++, coordinates fixed to the ground - done (RG20.5.2), see below.
+6. **Euler parameters**: the Python solvers first. Finding: `SymbolicSystem` refuses the norm constraint of
+   NodeRigidBodyEP (only ObjectJointUser and ObjectGenericDAE have algebraic equations there), so RG20.5.3 first takes
+   NodeRigidBodyEP into `SymbolicSystem`, which the implicit solvers gain from as well.
+7. **Python first everywhere**: the new solvers in a module of their own in `exudyn.symbolics`; C++ when settled.
+8. **A common step size controller**: step RG20.8.
 
-## 5. Steps proposed (group RG20)
+**RG20.5.2, done**: `SolveExplicit` eliminates algebraic equations that fix one coordinate each - found numerically
+for any system: linear in one ODE2 coordinate and independent of everything else -, keeps the coordinate at the value
+of its equation (with offset and factor), its velocity and acceleration zero in every stage, and solves a mass matrix
+that couples it without its rows and columns. Found on the way: Exudyn's explicit solver zeroes the fixed
+coordinates only at the end of a step, not in the stages, so its RK44 is of order 1 with eliminated coordinates
+(#3240, RG20.5.4); it also ignores the offset.
 
-- RG20.1 TrapezoidalGGL with an adaptive step in the symbolic solvers: .1 analysis (this note), .2 the constant-step
-  method against generalized-alpha, .3 the error estimate and the step control, measured on a pendulum and a slider
-  crank against a fine reference.
-- RG20.2 Lobatto (name to be decided) in the symbolic solvers: .1 analysis, .2 the method, .3 the error estimate.
-- RG20.3 Adjoint sensitivities on the symbolic system: .1 analysis (this note), .2 not proposed now.
-- RG20.4 Output interpolated within the step: .1 analysis, .2 C++, .3 Python solvers.
-- RG20.5 Explicit solvers with constraints (issue): .1 analysis, .2 the elimination of coordinate constraints in
-  SolveExplicit, .3 Euler parameters by projection.
-- RG20.6 Evaluate the structure of the C++ solvers (files, classes, Python bindings) and prepare it for adaptive implicit
-  solvers.
-- RG20.7 TrapezoidalGGL and Lobatto in C++, after RG20.6.
+## 5. Steps (group RG20)
+
+- RG20.1 TrapezoidalGGL with an adaptive step in the symbolic solvers: .1 analysis, .2 the constant-step method
+  against generalized-alpha, .3 the error estimate and the step control, against a fine reference.
+- RG20.2 Lobatto4: .1 analysis, .2 IIIC against IIIA with GGL at constant steps, .3 the error estimate and the
+  adaptive step.
+- RG20.3 Adjoint sensitivities: .1 analysis, .2 not proposed now.
+- RG20.4 Output interpolated within the step: .1 analysis, .3 Python first, then .2 C++.
+- RG20.5 Explicit solvers with constraints (#3238): .1 analysis, .2 the elimination in SolveExplicit (done), .3 Euler
+  parameters by projection, .4 the stages of Exudyn's explicit solver (#3240).
+- RG20.6 The structure of the C++ solvers.
+- RG20.7 TrapezoidalGGL and Lobatto4 in C++, after RG20.6.
+- RG20.8 A common step size controller, Python first, then C++.

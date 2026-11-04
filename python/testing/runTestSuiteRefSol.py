@@ -146,6 +146,7 @@ def TestExamplesReferenceSolution():
         'orientTrianglesTest.py':475.0, #new 2026-10-18: graphics.OrientTriangles and CheckTriangleOrientation, the STL import with orientTriangles (#2281)
         'textureTest.py':103.0, #new 2026-10-18: SC.renderer.AddTexture, textured TriangleList and 6-node triangles, GetGraphicsData texturedTriangles (#2154, #2155, #3029, #3030)
         'textureGraphicsTest.py':3684.0, #new 2026-10-18: textures in the raytracer, graphics.Quad/Cylinder/ProjectTexture/CheckerBoard with a texture, graphics.ImageFromFile (#3031, #3034, #3035, #3036)
+        'symbolicExplicitConstraintTest.py':4.4070517618, #new 2026-11-04: SolveExplicit with fixed coordinates eliminated, against SolveDynamic, a coupled mass matrix, the refusal (#3238)
         'scopeTest.py':0, #new 2026-11-04: the scopes of the render window in the raytracer image, the automatic mode, the sensors as rows of 2 or 5 (#3237)
         'zoomToItemTest.py':0.02, #new 2026-10-18: SC.renderer.ZoomToItem, centered and zoomed to an item (#3027)
         'userNodeTest.py':30.45974515191901, #new 2026-10-18: NodeUser against NodePoint and NodeRigidBodyRxyz, Jacobians given and numerical (#2974)

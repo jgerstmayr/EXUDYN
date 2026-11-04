@@ -5,7 +5,11 @@
 Exudyn's C++ solvers, written in Python with numpy and scipy:
 
 - `SolveExplicit(system, simulationSettings, solverType)`: explicit Euler, RK44 and velocity Verlet, the accelerations
-  by the inverse mass matrix of each body or by the decomposition of the mass matrix, without algebraic equations;
+  by the inverse mass matrix of each body or by the decomposition of the mass matrix; algebraic equations that fix
+  one coordinate each - a coordinate constraint to the ground, as `UserItemCreator.CreateCoordinateConstraint` makes
+  it - are eliminated with `timeIntegration.explicit.eliminateConstraints`, as Exudyn's explicit solver eliminates
+  CoordinateConstraints to the ground; the coordinate keeps the value of its equation, also in the stages, and any
+  other algebraic equation is refused (#3238);
 - `SolveGeneralizedAlpha(system, simulationSettings)`: the generalized-alpha method and the Newmark method, with ODE1
   coordinates and index 3 constraints, the Newton method with the exact Jacobian of the system.
 

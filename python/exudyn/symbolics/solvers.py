@@ -11,7 +11,8 @@
 #           (#3196); with timeIntegration.adaptiveStep, a step whose post-Newton step recommends a smaller step size, or
 #           whose discontinuous iteration does not converge, is repeated with a smaller step, which grows again after a
 #           few easy steps, as CSolverBase::SolveSteps (#3220); the statistics count the discontinuousIterations and the
-#           rejectedSteps.
+#           rejectedSteps. SolveExplicit eliminates coordinates fixed by algebraic equations, as Exudyn's explicit solver
+#           eliminates CoordinateConstraints to the ground (#3238).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-26 (created)
@@ -21,6 +22,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import numpy as np
+import warnings
 import exudyn
 import exudyn.cMath as cMath
 from exudyn.symbolics.systemModel import _denseMassMatrixSize
@@ -211,6 +213,57 @@ class _StepSize:
             self.sinceReduction = 0
 
 
+def _FixedCoordinates(system, q, q_t, y, t, epsilon=1e-6, tolerance=1e-8):
+    """the ODE2 coordinates fixed by the algebraic equations, which an explicit solver eliminates as Exudyn's explicit
+    solver eliminates CoordinateConstraints to the ground (#3238): every equation linear in one ODE2 coordinate and
+    independent of everything else - its velocity, the ODE1 coordinates, the multipliers, the time
+
+    Args:
+        system: the SymbolicSystemBase
+        q: the initial ODE2 coordinates
+        q_t: the initial ODE2 velocities
+        y: the initial ODE1 coordinates
+        t: the start time
+        epsilon: the step of the central differences of the constraint Jacobian
+        tolerance: an entry of the Jacobian below tolerance times its largest entry is zero
+
+    Returns:
+        (indices, values): the fixed coordinates and the values that fulfil their equations
+    """
+    nAE = system.nAE
+    z = np.zeros(nAE)
+    def C(q, q_t=q_t, y=y, z=z, t=t):
+        return np.asarray(system.AlgebraicEquations(q, q_t, y, z, t), dtype=float)
+    c0 = C(q)
+    C_q = np.zeros((nAE, system.nODE2))
+    for j in range(system.nODE2):
+        dq = np.zeros(system.nODE2)
+        dq[j] = epsilon
+        C_q[:, j] = (C(q + dq) - C(q - dq))/(2*epsilon)
+    scale = max(1., np.max(np.abs(c0)), np.max(np.abs(C_q)))
+    random = np.random.default_rng(1)
+    dq = random.uniform(-1., 1., system.nODE2)
+    variations = [C(q + dq) - (c0 + C_q @ dq), #linear in q
+                  C(q, q_t=q_t + random.uniform(-1., 1., len(q_t))) - c0,
+                  C(q, y=y + random.uniform(-1., 1., len(y))) - c0,
+                  C(q, z=random.uniform(-1., 1., nAE)) - c0,
+                  C(q, t=t + 1.) - c0]
+    indices = []
+    for i in range(nAE):
+        columns = np.flatnonzero(np.abs(C_q[i]) > tolerance*scale)
+        if len(columns) != 1 or max(abs(variation[i]) for variation in variations) > 1e3*tolerance*scale:
+            raise ValueError('SolveExplicit: an explicit solver eliminates only algebraic equations that fix one ODE2 '
+                             'coordinate each (linear in it and in nothing else, as a coordinate constraint to the ground; '
+                             'timeIntegration.explicit.eliminateConstraints), and equation ' + str(i) + ' does not; use '
+                             'SolveGeneralizedAlpha')
+        indices.append(int(columns[0]))
+    if len(set(indices)) != len(indices):
+        raise ValueError('SolveExplicit: a coordinate is fixed by two algebraic equations')
+    indices = np.array(indices, dtype=int)
+    values = q[indices] - c0/C_q[np.arange(nAE), indices]
+    return (indices, values)
+
+
 def _RefuseLieGroupNodes(system, useLieGroupIntegration, where):
     """Lie group nodes are integrated by Exudyn with the Lie group formulas, which are not implemented here"""
     mbs = getattr(system, 'mbs', None)
@@ -228,9 +281,14 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     coordinates rejects a step (#3220); the accelerations by the inverse per body with
     timeIntegration.explicit.computeMassMatrixInversePerBody, else by the sparse LU decomposition of the mass
     matrix, both once for a constant mass matrix (timeIntegration.reuseConstantMassMatrix); ODE1 coordinates in the
-    stages of explicit Euler and RK44, with zero initial velocities, as Exudyn (#3134); algebraic equations are refused
-    (Exudyn's explicit solver eliminates only constraints of coordinates on the ground); for a SymbolicSystem the
-    solution file, the sensors and the renderer of its mbs by simulationSettings.solution, as after SolveDynamic
+    stages of explicit Euler and RK44, with zero initial velocities, as Exudyn (#3134); algebraic equations that fix
+    one ODE2 coordinate each - linear in it and in nothing else, as a coordinate constraint to the ground - are
+    eliminated with timeIntegration.explicit.eliminateConstraints, as Exudyn's explicit solver eliminates
+    CoordinateConstraints to the ground: the coordinate keeps the value of its equation, its velocity and acceleration
+    are zero, and the other accelerations come from the mass matrix without its rows and columns; other algebraic
+    equations are refused, and all of them are ignored with a warning with eliminateConstraints=False, as Exudyn does
+    (#3238); for a SymbolicSystem the solution file, the sensors and the renderer of its mbs by
+    simulationSettings.solution, as after SolveDynamic
 
     Args:
         system: the system, a SymbolicSystemBase
@@ -250,9 +308,6 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     if solverType not in explicitSolverTypes:
         raise ValueError('SolveExplicit: solverType must be one of ' + str(explicitSolverTypes) + ', not ' + str(solverType))
     _RefuseLieGroupNodes(system, timeIntegration.explicit.useLieGroupIntegration, 'SolveExplicit')
-    if system.nAE:
-        raise ValueError('SolveExplicit: the system has algebraic equations, which an explicit solver does not integrate; '
-                         'use SolveGeneralizedAlpha')
     if system.nODE1 and solverType == exudyn.DynamicSolverType.VelocityVerlet:
         raise ValueError('SolveExplicit: VelocityVerlet integrates ODE2 coordinates only; use ExplicitEuler or RK44')
 
@@ -263,14 +318,32 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     discontinuous = timeIntegration.discontinuous
     statistics = {'discontinuousIterations': 0}
     system.data = system.InitialStateData()
-    def Accelerations(q, q_t, t, y=None):
-        forceEvaluations[0] += 1
-        forces = system.ODE2RHS(q, q_t, t, y=y) if system.nODE1 else system.ODE2RHS(q, q_t, t)
-        return massSolver.Accelerations(q, q_t, t, forces)
-
     (q, q_t) = system.InitialState()
     q_tt = np.zeros(system.nODE2)
     (y, y_t) = (system.InitialStateODE1(), np.zeros(system.nODE1))
+
+    #the coordinates fixed by the algebraic equations (#3238)
+    (fixed, fixedValues, free, coupled) = (np.zeros(0, dtype=int), np.zeros(0), None, False)
+    if system.nAE and not timeIntegration.explicit.eliminateConstraints:
+        warnings.warn('SolveExplicit: eliminateConstraints=False: the algebraic equations are ignored')
+    elif system.nAE:
+        (fixed, fixedValues) = _FixedCoordinates(system, q, q_t, y, tStart)
+        free = np.setdiff1d(np.arange(system.nODE2), fixed)
+        massMatrix = system.MassMatrix(q, q_t, tStart)
+        coupled = not system.IsMassMatrixConstant() or np.any(massMatrix[np.ix_(fixed, free)] != 0.)
+        (q[fixed], q_t[fixed]) = (fixedValues, 0.)
+
+    def Accelerations(q, q_t, t, y=None):
+        forceEvaluations[0] += 1
+        forces = system.ODE2RHS(q, q_t, t, y=y) if system.nODE1 else system.ODE2RHS(q, q_t, t)
+        if coupled: #the mass matrix without the rows and columns of the fixed coordinates
+            massMatrix = system.MassMatrix(q, q_t, t)
+            accelerations = np.zeros(system.nODE2)
+            accelerations[free] = np.linalg.solve(massMatrix[np.ix_(free, free)], forces[free])
+            return accelerations
+        accelerations = massSolver.Accelerations(q, q_t, t, forces)
+        accelerations[fixed] = 0.
+        return accelerations
     if solverType == exudyn.DynamicSolverType.VelocityVerlet:
         q_tt = Accelerations(q, q_t, tStart)
     output = _Output(system, simulationSettings, tStart, tEnd, h)

@@ -5729,6 +5729,33 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg20-5-2"></a>
+### RG20.5.2 — SolveExplicit eliminates fixed coordinates; the decisions of RG20 (2026-11-04, #3238, #3240)
+- **Decisions** (maintainer 2026-11-04 on the six questions of docs/dev/design/advancedSolvers.md): the acceleration
+  difference for TrapezoidalGGL; `Lobatto4`, the maintainer expecting Lobatto IIIC with the constraints at all stages
+  for index 3 (to be compared with IIIA and GGL in RG20.2.2; IIIC has three implicit stages, IIIA two), the embedded
+  trapezoidal and the IIIA/IIIC error estimates, Radau3 kept in mind; the existing absolute and relative tolerances for
+  all adaptive solvers; Python first for the output within the step and the Euler parameters, the new solvers in a
+  module of their own, C++ when settled; the elimination as in C++; a common step size controller - RG20.8 added,
+  RG20.2 and its sub-steps renamed, RG20.5.4 added for #3240.
+- **The elimination** (exudyn/symbolics/solvers.py `_FixedCoordinates`): the constraint Jacobian by central
+  differences at the initial state; an equation is a fixed coordinate if its row has one nonzero entry and the
+  equation does not change with a random variation of q (beyond the linear part), q_t, y, z and t; the value of the
+  coordinate from the equation, so an offset and a factor are kept; stages with zero velocity and acceleration of the
+  fixed coordinates; a mass matrix that couples a fixed coordinate (or is not constant) solved densely without its
+  rows and columns. eliminateConstraints=False warns and ignores the equations, as Exudyn.
+- **Found**: Exudyn's explicit solver zeroes the fixed coordinates at the end of the step only; its stages evaluate the
+  forces with them moved, so RK44 with eliminated coordinates converges with order 1 (the chain of the test: 500,
+  5000, 50000 steps differ by 4e-5 and 4e-6 at mass 1), while SolveExplicit is converged at 500 steps. Explicit Euler
+  agrees to 1e-10. #3240 raised. The finding also means that the elimination of the C++ solver cannot be the
+  reference of the RK44 result: the test compares RK44 against 2000 steps of itself and, to 2e-6, against 50000 steps
+  of Exudyn's.
+- **Euler parameters** (RG20.5.3): SymbolicSystem refuses NodeRigidBodyEP, as its norm constraint is an algebraic
+  equation of a node; the projection in SolveExplicit needs the node in SymbolicSystem first.
+- symbolicExplicitConstraintTest.py (new): a chain of three mass points of UserItemCreator, three coordinates fixed by
+  CreateCoordinateConstraint, against the built-in chain; an offset; a NumpySystem with a coupled mass matrix against
+  the system without the fixed coordinate; the refusal of a constraint between two coordinates.
+
 <a id="rg6-20-6"></a>
 ### RG6.20.6 follow-up — scopeTest.py without deprecated arguments, run directly with the renderer; scopeExample.py (2026-11-04, #3237)
 - Maintainer: scopeTest.py raised deprecation messages and opened no renderer when run in Spyder. It used `physicsMass`,

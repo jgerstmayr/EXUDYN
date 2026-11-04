@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.348.dev1
 - last change = 2026-11-04
-- Number of issues = 3240
+- Number of issues = 3241
 - Number of resolved issues = 3125 (348 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9455,6 +9455,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Explicit solver with eliminateConstraints: the RK stages do not fix the eliminated coordinates, which makes RK44 first order (#3240)
+  - description: CSolverExplicitTimeInt sets the coordinates of CoordinateConstraints to the ground to zero only at the end of a step and in the accelerations of the end; the stage accelerations rk.stageDerivODE2\_t of these coordinates are not zeroed, so the following stages evaluate the forces with the fixed coordinates moved. A chain of three mass points with fixed coordinates (symbolicExplicitConstraintTest.py): RK44 with 500, 5000 and 50000 steps converges with order 1 (differences 4e-5, 4e-6), while SolveExplicit of exudyn.symbolics.solvers, which zeroes them in every stage, gives the converged result with 500 steps. Explicit Euler is not affected. The coordinate is also set to zero regardless of the offset and the factor of the constraint. Decided: zero the stage accelerations and velocities of the eliminated coordinates, and keep the value of the constraint equation, when the explicit solvers are revised in C++ (RG20.5).
+  - date raised: 2026-11-04
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` mbs.Reset() and item changes while the renderer runs: no synchronization with the render thread (#3239)
   - description: MainSystem::Reset deletes the items, the sensors and their stored data without stopping or waiting for the renderer; the render thread may be in UpdateGraphicsData, which checks IsSystemConsistent() only at its start, or in the sensor traces, which check nothing, and then reads freed memory. Adding, deleting or modifying items from Python while the renderer runs is the same race, rarer because the items are not freed. SC.Reset() and deleting a SystemContainer are safe: they detach the renderer first, which stops the render loop and joins its thread. Decided: a lock of the system data, taken by Reset and the item changes and by the render thread while it reads the system, or a request to the render thread to finish its frame first; to be analyzed (docs/dev/design/scope.md section 5).
   - date raised: 2026-11-04
