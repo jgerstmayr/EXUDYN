@@ -929,9 +929,9 @@ class VSettingsScope:
     region: Tuple[float,float,float,float]
     """the region of the scope as ``[xmin, ymin, xmax, ymax]``, relative to the width and height of the window, measured from its top left corner."""
     sensors: List[List[int]]
-    """the lines of the scope, one row per line: ``[sensorY, componentY, sensorX, componentX, mbsNumber]``; ``sensorX=-1`` plots over time; ``componentY=-1`` plots all components of the sensor; rows of two, ``[sensorY, componentY]``, plot over time in mbs 0. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope."""
+    """the lines of the scope, a list of rows of integers, one row per line, all rows of 2 or all of 5 integers: ``[sensorY, componentY]`` plots component ``componentY`` of sensor ``sensorY`` of mbs 0 over time, e.g. ``[[0,1],[2,3]]`` plots component 1 of sensor 0 and component 3 of sensor 2; ``[sensorY, componentY, sensorX, componentX, mbsNumber]`` plots it over component ``componentX`` of sensor ``sensorX``, e.g. ``[[1,1,1,0,0]]`` the y-component of sensor 1 over its x-component, and ``sensorX=-1`` over time; ``componentY=-1`` plots all components of the sensor. The components count from 0, without the time; only sensors with ``storeInternal=True`` can be plotted. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope."""
     showLegend: bool
-    """True: the name of the sensor and the component of each line, in the top right corner of the plot."""
+    """True: the name of the sensor of each line, with ``-`` and the component for a sensor of more than one component, ``m0.Pos-X``, and ``m0.Pos-Y over m0.Pos-X`` for a line over another sensor, in the top right corner of the plot; so the name of a sensor should say what it measures; named lines of ``SC.renderer.scopes`` follow."""
     timeHistory: float
     """-1: all values up to the visualization time; otherwise only those of the last ``timeHistory`` seconds, e.g. 2 shows the last 2 seconds, and a plot over time scrolls."""
     useGrid: int

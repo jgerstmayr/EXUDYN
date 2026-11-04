@@ -4029,7 +4029,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsScope& data) {
     d["value"] = EPyUtils::ToPythonMember(data.sensors);
     d["type"] = "IndexMatrix";
     d["size"] = std::vector<int>{-1};
-    d["description"] = "the lines of the scope, one row per line: `[sensorY, componentY, sensorX, componentX, mbsNumber]`; `sensorX=-1` plots over time; `componentY=-1` plots all components of the sensor; rows of two, `[sensorY, componentY]`, plot over time in mbs 0. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope";
+    d["description"] = "the lines of the scope, a list of rows of integers, one row per line, all rows of 2 or all of 5 integers: `[sensorY, componentY]` plots component `componentY` of sensor `sensorY` of mbs 0 over time, e.g. `[[0,1],[2,3]]` plots component 1 of sensor 0 and component 3 of sensor 2; `[sensorY, componentY, sensorX, componentX, mbsNumber]` plots it over component `componentX` of sensor `sensorX`, e.g. `[[1,1,1,0,0]]` the y-component of sensor 1 over its x-component, and `sensorX=-1` over time; `componentY=-1` plots all components of the sensor. The components count from 0, without the time; only sensors with `storeInternal=True` can be plotted. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope";
     structureDict["sensors"] = d;
 
     d = py::dict(); //reset local dict
@@ -4037,7 +4037,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsScope& data) {
     d["value"] = data.showLegend;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "True: the name of the sensor and the component of each line, in the top right corner of the plot";
+    d["description"] = "True: the name of the sensor of each line, with `-` and the component for a sensor of more than one component, `m0.Pos-X`, and `m0.Pos-Y over m0.Pos-X` for a line over another sensor, in the top right corner of the plot; so the name of a sensor should say what it measures; named lines of `SC.renderer.scopes` follow";
     structureDict["showLegend"] = d;
 
     d = py::dict(); //reset local dict

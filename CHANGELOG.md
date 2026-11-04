@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 342 | 1.13.357 |
+| 1.13 | Newborn | 343 | 1.13.358 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.358** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Scope: the legend writes the sensor name and the component (m0.Pos-X), a lighter background, the sensors setting with an example (#3248)
+  - description: The legend of a scope writes 'mass0, PositionY', the name of the sensor and its output variable; as sensor names are unique and a user names them by what they measure, the variable is redundant and makes the entries long. A line over another sensor writes 'mass0, PositionY over PositionX'. The background \[0.9,0.9,0.9,0.9\] is grey; the description of scope.sensors does not show what a row means. Decided: the legend writes the sensor name and, for a sensor of more than one component, '-' and the component as PlotSensor names it ('m0.Pos-X', 'm0.Pos\[3\]' for an unnamed component), and over another sensor 'm0.Pos-Y over m0.Pos-X'; backgroundColor \[0.95,0.95,1,0.9\]; the description of sensors with the example \[\[0,1\],\[2,3\]\]; scopeExample.py with sensor names as m0.Pos.
+  - **notes:** The legend of a scope writes the sensor name and the component, m0.Pos-X, and m0.Pos-Y over m0.Pos-X for a line over another sensor; the default backgroundColor of a scope is \[0.95, 0.95, 1, 0.9\]; the description of scope.sensors has examples.
+  - date resolved: **2026-11-04 22:04**, date raised: 2026-11-04
 - **1.13.357** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A Scope in the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer (#3237)
   - description: Users build their own scopes with graphicsDataUserFunction on ground objects, which are not meant for that. An integrated viewer of sensors with storeInternal: a region of the view (default top right) with frame, background, automatic axes, ticks, grid, legend and labels, the lines of a list of \[sensorY, componentY, sensorX, componentX\] up to the visualization time (as the sensor traces with showPast), so that the SolutionViewer animates it and saved images contain it; its own settings per view, an icon and SHIFT+S; one drawing description for OpenGL and the raytracer. Decided (maintainer 2026-11-04): a step of RG6 with a design note (docs/dev/design/scope.md, the defaults of the settings given there); simple and robust, faster than matplotlib; lines, texts and points in plot coordinates later.
   - **notes:** Scopes in the render window: three per view (visualizationSettings.view0.window.scope0 to scope2, shown with window.showScopes or the scope icon) plot stored sensor values over time or over another sensor up to the visualization time, in OpenGL, the raytracer and saved images; lines, texts and points in the coordinates of the graphs are set with SC.renderer.scopes.SetGraphics, AddGraphics, GetGraphics and ClearGraphics.

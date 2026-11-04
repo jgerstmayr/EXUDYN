@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.357.dev1
+- Exudyn version = 1.13.358.dev1
 - last change = 2026-11-04
 - Number of issues = 3250
-- Number of resolved issues = 3134 (357 in current version)
+- Number of resolved issues = 3135 (358 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHANGE` `LOW EFF` `raised by: Claude-JG` Scope: the legend writes the sensor name and the component (m0.Pos-X), a lighter background, the sensors setting with an example (#3248)
-  - description: The legend of a scope writes 'mass0, PositionY', the name of the sensor and its output variable; as sensor names are unique and a user names them by what they measure, the variable is redundant and makes the entries long. A line over another sensor writes 'mass0, PositionY over PositionX'. The background \[0.9,0.9,0.9,0.9\] is grey; the description of scope.sensors does not show what a row means. Decided: the legend writes the sensor name and, for a sensor of more than one component, '-' and the component as PlotSensor names it ('m0.Pos-X', 'm0.Pos\[3\]' for an unnamed component), and over another sensor 'm0.Pos-Y over m0.Pos-X'; backgroundColor \[0.95,0.95,1,0.9\]; the description of sensors with the example \[\[0,1\],\[2,3\]\]; scopeExample.py with sensor names as m0.Pos.
-  - date raised: 2026-11-04
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` MarkerNodeUser: a marker on the coordinates of nodes by Python user functions (#3236)
   - description: CreateCoordinateConstraint of UserItemCreator and the built-in coordinate constraint use MarkerNodeCoordinate; a user marker on nodes, whose value and Jacobian are Python (and recordable) user functions of the coordinates of its nodes, lets the coordinate constraint and coordinate connectors be user items. Decided (maintainer 2026-11-04): MarkerNodeUser first, as a step of its own (revision2026c RG7.18); MarkerBodyUser with coordinates and user shapes for contact and flexible interfaces are not planned yet (\#3106 closed).
   - date raised: 2026-11-04

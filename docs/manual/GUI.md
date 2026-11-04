@@ -132,8 +132,12 @@ with `window.showScopes` or the scope icon of the icon bar. OpenGL and the raytr
 
 - **The sensors** of a scope are rows of integers, `[sensorY, componentY]` for a component over time, or
   `[sensorY, componentY, sensorX, componentX, mbsNumber]`, with `sensorX = -1` for the time; `componentY = -1` plots
-  all components. Only sensors with `storeInternal=True` keep their values; for another one, the console and the
-  window say once that it is not shown.
+  all components. `[[0, 1], [2, 3]]` plots component 1 of sensor 0 and component 3 of sensor 2, the components
+  counted from 0 without the time. Only sensors with `storeInternal=True` keep their values; for another one, the
+  console and the window say once that it is not shown.
+- **The legend** writes the name of the sensor and, for a sensor of more than one component, the component:
+  `m0.Pos-X`, and `m0.Pos-Y over m0.Pos-X` for a line over another sensor; a sensor name that says what it measures
+  makes the legend (#3248).
 - **Without any sensor list** in the three scopes of the view, they show the first three sensors of mbs 0 that store
   their values, one per scope, with all their components - a look at the results without a setting.
 - **The values** are those up to the visualization time, as the sensor traces show them; `timeHistory` limits them

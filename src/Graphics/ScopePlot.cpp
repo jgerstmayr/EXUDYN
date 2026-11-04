@@ -382,6 +382,15 @@ namespace ScopePlot
 		return GetOutputVariableTypeString(sensor.GetOutputVariableType());
 	}
 
+	//! a line in the legend: the name of the sensor, and for a sensor of more than one component the component,
+	//! "m0.Pos-X" or "m0.F[3]"; the name says what the sensor measures (#3248)
+	STDstring LineName(const MainSensor& mainSensor, const CSensor& sensor, Index component, Index components)
+	{
+		if (components <= 1) { return mainSensor.GetName(); }
+		STDstring componentName = ComponentName(VariableName(sensor), component);
+		return mainSensor.GetName() + (componentName[0] == '[' ? "" : "-") + componentName;
+	}
+
 	static STDstring scopeMessage;
 
 	bool MessageIsNew(const STDstring& message)
@@ -463,20 +472,15 @@ namespace ScopePlot
 				Message("sensor " + EXUstd::ToString(row[0]) + " has no component " + EXUstd::ToString(row[1]));
 				continue;
 			}
-			STDstring variable = VariableName(*sensorY);
 			Real time = mainSystem->GetCSystem().GetSystemData().GetCData().GetVisualization().GetTime();
 			Index firstComponent = row[1] < 0 ? 0 : row[1];
 			Index lastComponent = row[1] < 0 ? componentsY - 1 : row[1];
-			STDstring overX; //a line over another sensor names its component: "..., PositionY over PositionX"
-			if (sensorX)
-			{
-				STDstring variableX = VariableName(*sensorX);
-				overX = " over " + (row[2] != row[0] ? mainSensors[row[2]]->GetName() + " " : STDstring()) + variableX + ComponentName(variableX, row[3]);
-			}
+			STDstring overX; //a line over another sensor: "m0.Pos-Y over m0.Pos-X"
+			if (sensorX) { overX = " over " + LineName(*mainSensors[row[2]], *sensorX, row[3], componentsX); }
 			for (Index component = firstComponent; component <= lastComponent && (Index)sources.size() < maxLines; component++)
 			{
 				sources.push_back({ sensorY, sensorX, component, row[3], time,
-					mainSensors[row[0]]->GetName() + ", " + variable + ComponentName(variable, component) + overX });
+					LineName(*mainSensors[row[0]], *sensorY, component, componentsY) + overX });
 			}
 		}
 	}

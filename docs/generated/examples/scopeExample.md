@@ -42,10 +42,11 @@ oMass1 = mbs.CreateMassPoint(referencePosition=[2*L, 0, 0], initialVelocity=[0, 
 mbs.CreateDistanceConstraint(itemNumbers=[oGround, oMass0], localPosition0=[0, 0, 0], localPosition1=[0, 0, 0])
 mbs.CreateDistanceConstraint(itemNumbers=[oMass0, oMass1], localPosition0=[0, 0, 0], localPosition1=[0, 0, 0])
 
-#the scopes plot what the sensors store, so they need storeInternal=True; the legend shows their names, which are unique
-sPosition0 = mbs.AddSensor(SensorBody(name='mass0', bodyNumber=oMass0, storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
-sPosition1 = mbs.AddSensor(SensorBody(name='mass1', bodyNumber=oMass1, storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
-sVelocity1 = mbs.AddSensor(SensorBody(name='mass1.v', bodyNumber=oMass1, storeInternal=True, outputVariableType=exu.OutputVariableType.Velocity))
+#the scopes plot what the sensors store, so they need storeInternal=True; the legend shows their names with the
+#component, m0.Pos-Y, so a name says what the sensor measures
+sPosition0 = mbs.AddSensor(SensorBody(name='m0.Pos', bodyNumber=oMass0, storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
+sPosition1 = mbs.AddSensor(SensorBody(name='m1.Pos', bodyNumber=oMass1, storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
+sVelocity1 = mbs.AddSensor(SensorBody(name='m1.Vel', bodyNumber=oMass1, storeInternal=True, outputVariableType=exu.OutputVariableType.Velocity))
 mbs.Assemble()
 
 window = SC.visualizationSettings.view0.window

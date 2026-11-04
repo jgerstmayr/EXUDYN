@@ -105,7 +105,7 @@ Further:
   default False, switched by the icon):
   `sensors` (n x 5 or n x 2 integers, default empty), `region` (`[xmin, ymin, xmax, ymax]` relative to the window
   from its top left corner; defaults `[2/3, 0, 1, 1/5]`, `[2/3, 1/5, 1, 2/5]`, `[2/3, 2/5, 1, 3/5]`), `frameColor`
-  `[0.7, 0.7, 0.7, 0.9]`, `backgroundColor` `[0.9, 0.9, 0.9, 0.9]`, `axesColor` `[0.1, 0.1, 0.1, 1]`, `lineWidth`
+  `[0.7, 0.7, 0.7, 0.9]`, `backgroundColor` `[0.95, 0.95, 1, 0.9]` (#3248), `axesColor` `[0.1, 0.1, 0.1, 1]`, `lineWidth`
   2, `useGrid` 1, `verticalZoom` `[0, 0]`, `horizontalZoom` `[0, 0]`, `timeHistory` -1, `showLegend` True,
   `xLabel` `"time (s)"`, `yLabel` `""`, `xResolution` 4. The generator gets the types `Float2` and `MatrixI` (a
   list of lists of integers in Python).
