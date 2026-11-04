@@ -228,6 +228,7 @@ exudyn.VSettingsRaytracer.zOffsetCamera
 exudyn.VSettingsRaytracerAdvanced
 exudyn.VSettingsScene
 exudyn.VSettingsScope
+exudyn.VSettingsScopes
 exudyn.VSettingsSensors
 exudyn.VSettingsShells
 exudyn.VSettingsTraces

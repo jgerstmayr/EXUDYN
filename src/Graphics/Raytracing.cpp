@@ -1817,7 +1817,7 @@ ResizableArray<GLLine> triangles6Edges;
 		if (settingsView.window.showScopes) //over everything, as OpenGL draws them (#3237)
 		{
 			ScopePlot::Graphics scopeGraphics;
-			float fontSize = settingsView.window.globalFontSize * RTS.displayScaling * fontSmallFactor;
+			float fontSize = settingsView.window.globalFontSize * RTS.displayScaling; //scaled by sensors.scopes.fontSizeFactor
 			ScopePlot::BuildScopes(*basicVisualizationSystemContainer, viewID, width, height, fontSize, scopeGraphics);
 			if (ScopePlot::MessageIsNew(scopeGraphics.message)) { PrintDelayed(scopeGraphics.message); }
 			DrawScopes(scopeGraphics, width, height, nearPlaneZ);

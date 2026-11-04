@@ -90,7 +90,7 @@ names = {
     },
     'dictType': {                                   #the 'type' entry of GetDictionaryWithTypeInfo
         'ResizableVector': 'Vector', 'NumpyVector': 'Vector', 'NumpyMatrix': 'Matrix',
-        'StdArray33F': 'MatrixFloat',
+        'StdArray33F': 'MatrixFloat', 'StdArray22F': 'MatrixFloat',
         'Index2': 'IndexArray', 'Index4': 'IndexArray', 'ArrayIndex': 'IndexArray',
         'ArrayFloat': 'VectorFloat', 'Float2': 'VectorFloat', 'Float3': 'VectorFloat', 'Float4': 'VectorFloat',
         'MatrixI': 'IndexMatrix',
@@ -125,7 +125,7 @@ _scalarCpp = {'Bool': 'bool', 'Real': 'Real', 'float': 'float', 'Index': 'Index'
               'String': 'std::string', 'FileName': 'std::string'}
 _scalarPython = {'Bool': 'bool', 'Int': 'int', 'Index': 'int', 'Real': 'float', 'float': 'float',
                  'String': 'str', 'FileName': 'str'}
-_arrayLike = ['Matrix', 'SymmetricMatrix', 'NumpyVector', 'NumpyMatrix', 'NumpyMatrixI', 'StdArray33F']
+_arrayLike = ['Matrix', 'SymmetricMatrix', 'NumpyVector', 'NumpyMatrix', 'NumpyMatrixI', 'StdArray33F', 'StdArray22F']
 
 
 def _Scalar(typeName, table):

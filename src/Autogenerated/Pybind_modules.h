@@ -1040,8 +1040,34 @@
 
     //++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++
+    py::class_<VSettingsScopes>(m, "VSettingsScopes", "VSettingsScopes class") // AUTO: 
+        .def(py::init<>())
+        .def_property("axesColor", EPyUtils::MemberGetter(&VSettingsScopes::axesColor), EPyUtils::MemberSetter(&VSettingsScopes::axesColor, "VSettingsScopes.axesColor"), "RGBA color of the axes, ticks, grid, labels and legend")
+        .def_property("backgroundColor", EPyUtils::MemberGetter(&VSettingsScopes::backgroundColor), EPyUtils::MemberSetter(&VSettingsScopes::backgroundColor, "VSettingsScopes.backgroundColor"), "RGBA color of the area of a scope")
+        .def_property("fontSizeFactor", EPyUtils::MemberGetter(&VSettingsScopes::fontSizeFactor), EPyUtils::MemberSetter(&VSettingsScopes::fontSizeFactor, EPyUtils::RangeCheck::positive, "VSettingsScopes.fontSizeFactor"), "the font size of the scopes relative to `window.globalFontSize` of the view, which the display scaling multiplies as all texts")
+        .def_property("frameColor", EPyUtils::MemberGetter(&VSettingsScopes::frameColor), EPyUtils::MemberSetter(&VSettingsScopes::frameColor, "VSettingsScopes.frameColor"), "RGBA color of the frame around a scope")
+        .def_property("lineWidth", EPyUtils::MemberGetter(&VSettingsScopes::lineWidth), EPyUtils::MemberSetter(&VSettingsScopes::lineWidth, EPyUtils::RangeCheck::positive, "VSettingsScopes.lineWidth"), "width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it")
+        // AUTO: access functions for VSettingsScopes
+        .def("__repr__", [](const VSettingsScopes &item) { return "<VSettingsScopes:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const VSettingsScopes &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](VSettingsScopes &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const VSettingsScopes& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "VSettingsScopes: loading data with pickle received invalid data structure!", ExudynValueError);
+                VSettingsScopes self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
     py::class_<VSettingsSensors>(m, "VSettingsSensors", "VSettingsSensors class") // AUTO: 
         .def(py::init<>())
+        .def_readwrite("scopes", &VSettingsSensors::scopes, "the look of all scopes: colors, line width and font size; what each scope plots and where is in `view0.window.scope0`, ... (#3251)")
         .def_readwrite("traces", &VSettingsSensors::traces, "settings for showing (position/triad) sensor traces and vector plots in the render window")
         .def_property("defaultColor", EPyUtils::MemberGetter(&VSettingsSensors::defaultColor), EPyUtils::MemberSetter(&VSettingsSensors::defaultColor, "VSettingsSensors.defaultColor"), "default RGBA color for sensors; 4th value is alpha-transparency")
         .def_property("defaultSize", EPyUtils::MemberGetter(&VSettingsSensors::defaultSize), EPyUtils::MemberSetter(&VSettingsSensors::defaultSize, "VSettingsSensors.defaultSize"), "global sensor size; if -1.f, sensor size is relative to maxSceneSize")
@@ -1165,17 +1191,13 @@
     //++++++++++++++++++++++++++++++++
     py::class_<VSettingsScope>(m, "VSettingsScope", "VSettingsScope class") // AUTO: 
         .def(py::init<>())
-        .def_property("axesColor", EPyUtils::MemberGetter(&VSettingsScope::axesColor), EPyUtils::MemberSetter(&VSettingsScope::axesColor, "VSettingsScope.axesColor"), "RGBA color of the axes, ticks, grid, labels and legend")
-        .def_property("backgroundColor", EPyUtils::MemberGetter(&VSettingsScope::backgroundColor), EPyUtils::MemberSetter(&VSettingsScope::backgroundColor, "VSettingsScope.backgroundColor"), "RGBA color of the region")
-        .def_property("frameColor", EPyUtils::MemberGetter(&VSettingsScope::frameColor), EPyUtils::MemberSetter(&VSettingsScope::frameColor, "VSettingsScope.frameColor"), "RGBA color of the frame around the region")
-        .def_property("horizontalZoom", EPyUtils::MemberGetter(&VSettingsScope::horizontalZoom), EPyUtils::MemberSetter(&VSettingsScope::horizontalZoom, "VSettingsScope.horizontalZoom"), "`[xmin, xmax]` of the plot; both 0: fitted to the values, or the last `timeHistory` seconds")
-        .def_property("lineWidth", EPyUtils::MemberGetter(&VSettingsScope::lineWidth), EPyUtils::MemberSetter(&VSettingsScope::lineWidth, EPyUtils::RangeCheck::positive, "VSettingsScope.lineWidth"), "width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it")
-        .def_property("region", EPyUtils::MemberGetter(&VSettingsScope::region), EPyUtils::MemberSetter(&VSettingsScope::region, "VSettingsScope.region"), "the region of the scope as `[xmin, ymin, xmax, ymax]`, relative to the width and height of the window, measured from its top left corner")
+        .def_readwrite("location", &VSettingsScope::location, "where the scope is in the window, `[[xmin, ymin], [xmax, ymax]]`, its top left and its bottom right corner relative to the width and the height of the window, measured from its top left corner; e.g. `[[0.5, 0.], [1., 0.5]]` is the top right quarter")
+        .def_property("minMaxX", EPyUtils::MemberGetter(&VSettingsScope::minMaxX), EPyUtils::MemberSetter(&VSettingsScope::minMaxX, "VSettingsScope.minMaxX"), "`[xmin, xmax]` of the horizontal axis; both 0: fitted to the values, or the last `timeHistory` seconds")
+        .def_property("minMaxY", EPyUtils::MemberGetter(&VSettingsScope::minMaxY), EPyUtils::MemberSetter(&VSettingsScope::minMaxY, "VSettingsScope.minMaxY"), "`[ymin, ymax]` of the vertical axis; both 0: fitted to the values")
         .def_property("sensors", EPyUtils::MemberGetter(&VSettingsScope::sensors), EPyUtils::MemberSetter(&VSettingsScope::sensors, "VSettingsScope.sensors"), "the lines of the scope, a list of rows of integers, one row per line, all rows of 2 or all of 5 integers: `[sensorY, componentY]` plots component `componentY` of sensor `sensorY` of mbs 0 over time, e.g. `[[0,1],[2,3]]` plots component 1 of sensor 0 and component 3 of sensor 2; `[sensorY, componentY, sensorX, componentX, mbsNumber]` plots it over component `componentX` of sensor `sensorX`, e.g. `[[1,1,1,0,0]]` the y-component of sensor 1 over its x-component, and `sensorX=-1` over time; `componentY=-1` plots all components of the sensor. The components count from 0, without the time; only sensors with `storeInternal=True` can be plotted. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope")
         .def_property("showLegend", EPyUtils::MemberGetter(&VSettingsScope::showLegend), EPyUtils::MemberSetter(&VSettingsScope::showLegend, "VSettingsScope.showLegend"), "True: the name of the sensor of each line, with `-` and the component for a sensor of more than one component, `m0.Pos-X`, and `m0.Pos-Y over m0.Pos-X` for a line over another sensor, in the top right corner of the plot; so the name of a sensor should say what it measures; named lines of `SC.renderer.scopes` follow")
         .def_property("timeHistory", EPyUtils::MemberGetter(&VSettingsScope::timeHistory), EPyUtils::MemberSetter(&VSettingsScope::timeHistory, "VSettingsScope.timeHistory"), "-1: all values up to the visualization time; otherwise only those of the last `timeHistory` seconds, e.g. 2 shows the last 2 seconds, and a plot over time scrolls")
         .def_property("useGrid", EPyUtils::MemberGetter(&VSettingsScope::useGrid), EPyUtils::MemberSetter(&VSettingsScope::useGrid, "VSettingsScope.useGrid"), "0: no grid; 1: a grid at the ticks; 2: a grid at the ticks and the sub-ticks")
-        .def_property("verticalZoom", EPyUtils::MemberGetter(&VSettingsScope::verticalZoom), EPyUtils::MemberSetter(&VSettingsScope::verticalZoom, "VSettingsScope.verticalZoom"), "`[ymin, ymax]` of the plot; both 0: fitted to the values")
         .def_property("xLabel", EPyUtils::MemberGetter(&VSettingsScope::xLabel), EPyUtils::MemberSetter(&VSettingsScope::xLabel, "VSettingsScope.xLabel"), "label of the horizontal axis")
         .def_property("xResolution", EPyUtils::MemberGetter(&VSettingsScope::xResolution), EPyUtils::MemberSetter(&VSettingsScope::xResolution, EPyUtils::RangeCheck::positive, "VSettingsScope.xResolution"), "how many values are drawn per pixel of the width of the plot; more values are reduced to the minimum and the maximum of each pixel column, so that peaks stay; 0.25 is a very low resolution")
         .def_property("yLabel", EPyUtils::MemberGetter(&VSettingsScope::yLabel), EPyUtils::MemberSetter(&VSettingsScope::yLabel, "VSettingsScope.yLabel"), "label of the vertical axis, written above the plot")

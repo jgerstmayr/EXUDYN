@@ -110,7 +110,10 @@ Further:
   `xLabel` `"time (s)"`, `yLabel` `""`, `xResolution` 4. The generator gets the types `Float2` and `MatrixI` (a
   list of lists of integers in Python).
   `componentY = -1` draws all components of the sensor, as the automatic mode does.
-- **ScopePlot** (src/Graphics/ScopePlot.h/.cpp): the drawing of a scope as one list of primitives in **pixels of the
+  **Since #3251**: `region` is `location` `[[xmin, ymin], [xmax, ymax]]` (type StdArray22F), the zooms are `minMaxX`
+  and `minMaxY`, and `frameColor`, `backgroundColor`, `axesColor`, `lineWidth` and the new `fontSizeFactor` (0.75,
+  relative to `window.globalFontSize`) are common to all scopes in `visualizationSettings.sensors.scopes`.
+- **ScopePlot**(src/Graphics/ScopePlot.h/.cpp): the drawing of a scope as one list of primitives in **pixels of the
   window**, from its bottom left corner - filled rectangles, lines with their own width and color, texts with a size
   and color. The layout is computed once for both renderers:
   - the data of each line: the rows up to the visualization time (as the traces with `showPast`), within the last

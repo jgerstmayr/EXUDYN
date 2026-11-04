@@ -21,6 +21,7 @@
 
 class VisualizationSystemContainerBase;
 class VSettingsScope;
+class VSettingsScopes;
 
 namespace ScopePlot
 {
@@ -108,14 +109,15 @@ namespace ScopePlot
 	//! the label of a tick, with the digits the spacing needs
 	STDstring TickLabel(Real value, Real spacing);
 
-	//! the drawing of one scope: regionPixels is [x0, y0, x1, y1] from the bottom left corner of the window, xRange
-	//! the range of the horizontal axis, fontSize the font size in pixels; the static items behind and in front of
-	//! the lines, outside the automatic range
-	void AddScope(const VSettingsScope& scope, const std::vector<Curve>& curves, const Vector2D& xRange,
+	//! the drawing of one scope in the look of style: regionPixels is [x0, y0, x1, y1] from the bottom left corner of
+	//! the window, xRange the range of the horizontal axis, fontSize the font size in pixels; the static items behind
+	//! and in front of the lines, outside the automatic range
+	void AddScope(const VSettingsScope& scope, const VSettingsScopes& style, const std::vector<Curve>& curves, const Vector2D& xRange,
 		const Float4& regionPixels, float fontSize, Graphics& graphics, const std::vector<StaticItem>& statics = {});
 
 	//! the drawing of the scopes of a view from the stored sensor data, read under the lock of each sensor; nothing if
-	//! window.showScopes is False
+	//! window.showScopes is False; fontSize is the global font size of the view in pixels, which
+	//! sensors.scopes.fontSizeFactor scales
 	void BuildScopes(VisualizationSystemContainerBase& container, Index viewID, Index width, Index height,
 		float fontSize, Graphics& graphics);
 

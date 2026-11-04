@@ -1089,6 +1089,71 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        VSettingsScopes
+* @brief        The look of all scopes of all views, see VSettingsScope (#3237, #3251): their colors, line width and font size.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2026-11-04 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+class VSettingsScopes // AUTO: 
+{
+public: // AUTO: 
+  Float4 axesColor;                               //!< AUTO: RGBA color of the axes, ticks, grid, labels and legend
+  Float4 backgroundColor;                         //!< AUTO: RGBA color of the area of a scope
+  float fontSizeFactor;                           //!< AUTO: must be > 0; the font size of the scopes relative to `window.globalFontSize` of the view, which the display scaling multiplies as all texts
+  Float4 frameColor;                              //!< AUTO: RGBA color of the frame around a scope
+  float lineWidth;                                //!< AUTO: must be > 0; width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it
+
+private: // AUTO: 
+  VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsScopes()
+  {
+    backlink=nullptr;
+    axesColor = Float4({0.1f,0.1f,0.1f,1.f});
+    backgroundColor = Float4({0.95f,0.95f,1.f,0.9f});
+    fontSizeFactor = 0.75f;
+    frameColor = Float4({0.7f,0.7f,0.7f,0.9f});
+    lineWidth = 2.f;
+  };
+  void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
+
+  // AUTO: access functions
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsScopes" << ":\n";
+    os << "  axesColor = " << axesColor << "\n";
+    os << "  backgroundColor = " << backgroundColor << "\n";
+    os << "  fontSizeFactor = " << fontSizeFactor << "\n";
+    os << "  frameColor = " << frameColor << "\n";
+    os << "  lineWidth = " << lineWidth << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsScopes& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        VSettingsSensors
 * @brief        Visualization settings for sensors.
 *
@@ -1105,6 +1170,7 @@ public: // AUTO:
 class VSettingsSensors // AUTO: 
 {
 public: // AUTO: 
+  VSettingsScopes scopes;                         //!< AUTO: the look of all scopes: colors, line width and font size; what each scope plots and where is in `view0.window.scope0`, ... (#3251)
   VSettingsTraces traces;                         //!< AUTO: settings for showing (position/triad) sensor traces and vector plots in the render window
   Float4 defaultColor;                            //!< AUTO: default RGBA color for sensors; 4th value is alpha-transparency
   float defaultSize;                              //!< AUTO: global sensor size; if -1.f, sensor size is relative to maxSceneSize
@@ -1130,6 +1196,7 @@ public: // AUTO:
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
   {
     backlink = backlinkInit;
+    scopes.Init(backlinkInit);
     traces.Init(backlinkInit);
   }
 
@@ -1138,6 +1205,7 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsSensors" << ":\n";
+    os << "  scopes = " << scopes << "\n";
     os << "  traces = " << traces << "\n";
     os << "  defaultColor = " << defaultColor << "\n";
     os << "  defaultSize = " << defaultSize << "\n";
@@ -1419,7 +1487,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        VSettingsScope
-* @brief        A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with `window.showScopes` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with `storeInternal=True` have them.
+* @brief        A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with `window.showScopes` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with `storeInternal=True` have them. Colors, line width and font size are common to all scopes, in `sensors.scopes` (#3251).
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
@@ -1434,17 +1502,13 @@ public: // AUTO:
 class VSettingsScope // AUTO: 
 {
 public: // AUTO: 
-  Float4 axesColor;                               //!< AUTO: RGBA color of the axes, ticks, grid, labels and legend
-  Float4 backgroundColor;                         //!< AUTO: RGBA color of the region
-  Float4 frameColor;                              //!< AUTO: RGBA color of the frame around the region
-  Float2 horizontalZoom;                          //!< AUTO: `[xmin, xmax]` of the plot; both 0: fitted to the values, or the last `timeHistory` seconds
-  float lineWidth;                                //!< AUTO: must be > 0; width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it
-  Float4 region;                                  //!< AUTO: the region of the scope as `[xmin, ymin, xmax, ymax]`, relative to the width and height of the window, measured from its top left corner
+  StdArray22F location;                           //!< AUTO: where the scope is in the window, `[[xmin, ymin], [xmax, ymax]]`, its top left and its bottom right corner relative to the width and the height of the window, measured from its top left corner; e.g. `[[0.5, 0.], [1., 0.5]]` is the top right quarter
+  Float2 minMaxX;                                 //!< AUTO: `[xmin, xmax]` of the horizontal axis; both 0: fitted to the values, or the last `timeHistory` seconds
+  Float2 minMaxY;                                 //!< AUTO: `[ymin, ymax]` of the vertical axis; both 0: fitted to the values
   MatrixI sensors;                                //!< AUTO: the lines of the scope, a list of rows of integers, one row per line, all rows of 2 or all of 5 integers: `[sensorY, componentY]` plots component `componentY` of sensor `sensorY` of mbs 0 over time, e.g. `[[0,1],[2,3]]` plots component 1 of sensor 0 and component 3 of sensor 2; `[sensorY, componentY, sensorX, componentX, mbsNumber]` plots it over component `componentX` of sensor `sensorX`, e.g. `[[1,1,1,0,0]]` the y-component of sensor 1 over its x-component, and `sensorX=-1` over time; `componentY=-1` plots all components of the sensor. The components count from 0, without the time; only sensors with `storeInternal=True` can be plotted. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope
   bool showLegend;                                //!< AUTO: True: the name of the sensor of each line, with `-` and the component for a sensor of more than one component, `m0.Pos-X`, and `m0.Pos-Y over m0.Pos-X` for a line over another sensor, in the top right corner of the plot; so the name of a sensor should say what it measures; named lines of `SC.renderer.scopes` follow
   float timeHistory;                              //!< AUTO: -1: all values up to the visualization time; otherwise only those of the last `timeHistory` seconds, e.g. 2 shows the last 2 seconds, and a plot over time scrolls
   Index useGrid;                                  //!< AUTO: 0: no grid; 1: a grid at the ticks; 2: a grid at the ticks and the sub-ticks
-  Float2 verticalZoom;                            //!< AUTO: `[ymin, ymax]` of the plot; both 0: fitted to the values
   std::string xLabel;                             //!< AUTO: label of the horizontal axis
   float xResolution;                              //!< AUTO: must be > 0; how many values are drawn per pixel of the width of the plot; more values are reduced to the minimum and the maximum of each pixel column, so that peaks stay; 0.25 is a very low resolution
   std::string yLabel;                             //!< AUTO: label of the vertical axis, written above the plot
@@ -1458,17 +1522,13 @@ public: // AUTO:
   VSettingsScope()
   {
     backlink=nullptr;
-    axesColor = Float4({0.1f,0.1f,0.1f,1.f});
-    backgroundColor = Float4({0.95f,0.95f,1.f,0.9f});
-    frameColor = Float4({0.7f,0.7f,0.7f,0.9f});
-    horizontalZoom = Float2({0.f,0.f});
-    lineWidth = 2.f;
-    region = Float4({0.6666667f,0.f,1.f,0.2f});
+    location = StdArray22F({{ {{0.6666667f,0.f}}, {{1.f,0.2f}} }});
+    minMaxX = Float2({0.f,0.f});
+    minMaxY = Float2({0.f,0.f});
     sensors = MatrixI();
     showLegend = true;
     timeHistory = -1.f;
     useGrid = 1;
-    verticalZoom = Float2({0.f,0.f});
     xLabel = "time (s)";
     xResolution = 4.f;
   };
@@ -1482,17 +1542,13 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsScope" << ":\n";
-    os << "  axesColor = " << axesColor << "\n";
-    os << "  backgroundColor = " << backgroundColor << "\n";
-    os << "  frameColor = " << frameColor << "\n";
-    os << "  horizontalZoom = " << horizontalZoom << "\n";
-    os << "  lineWidth = " << lineWidth << "\n";
-    os << "  region = " << region << "\n";
+    os << "  location = [[" << location[0][0] << ", " << location[0][1] << "], [" << location[1][0] << ", " << location[1][1] << "]]\n";
+    os << "  minMaxX = " << minMaxX << "\n";
+    os << "  minMaxY = " << minMaxY << "\n";
     os << "  sensors = " << sensors << "\n";
     os << "  showLegend = " << showLegend << "\n";
     os << "  timeHistory = " << timeHistory << "\n";
     os << "  useGrid = " << useGrid << "\n";
-    os << "  verticalZoom = " << verticalZoom << "\n";
     os << "  xLabel = " << xLabel << "\n";
     os << "  xResolution = " << xResolution << "\n";
     os << "  yLabel = " << yLabel << "\n";
@@ -1566,8 +1622,8 @@ public: // AUTO:
     showScopes = false;
     showWindow = true;
     storeRenderWindowGeometry = false;
-    scope1.region = Float4({0.6666667f,0.2f,1.f,0.4f});
-    scope2.region = Float4({0.6666667f,0.4f,1.f,0.6f});
+    scope1.location = StdArray22F({{ {{0.6666667f,0.2f}}, {{1.f,0.4f}} }});
+    scope2.location = StdArray22F({{ {{0.6666667f,0.4f}}, {{1.f,0.6f}} }});
   };
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
   {

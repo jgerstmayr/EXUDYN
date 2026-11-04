@@ -600,7 +600,7 @@ void GlfwRenderer::RenderScopes(Index viewID, int width, int height)
 	if (!settingsView.window.showScopes) { return; }
 	RenderState* state = renderViews.State(viewID);
 	static ScopePlot::Graphics scopeGraphics;
-	float fontSize = settingsView.window.globalFontSize * state->displayScaling * fontSmallFactor;
+	float fontSize = settingsView.window.globalFontSize * state->displayScaling; //scaled by sensors.scopes.fontSizeFactor
 	ScopePlot::BuildScopes(*basicVisualizationSystemContainer, viewID, width, height, fontSize, scopeGraphics);
 	if (ScopePlot::MessageIsNew(scopeGraphics.message))
 	{

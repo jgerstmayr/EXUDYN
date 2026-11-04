@@ -5770,6 +5770,22 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   ModifyObject, which checks them.
 - test_guiValues.py: three accepted and six refused values.
 
+<a id="rg6-20-12"></a>
+### RG6.20.12 — The look of all scopes in sensors.scopes; location, minMaxX, minMaxY (2026-11-04, #3251)
+- Maintainer, after testing: axesColor, backgroundColor, frameColor and lineWidth per scope are settings nobody
+  changes per scope; no font size; region [xmin, ymin, xmax, ymax] not intuitive; horizontalZoom and verticalZoom
+  apart in the sorted lists.
+- `VSettingsScopes` at `visualizationSettings.sensors.scopes` (the maintainer's first choice): frameColor,
+  backgroundColor, axesColor, lineWidth, fontSizeFactor (0.75, the former fontSmallFactor, times
+  window.globalFontSize of the view and the display scaling, so it still differs per window). `VSettingsScope`:
+  `location` [[xmin, ymin], [xmax, ymax]] (the maintainer suggested scopeLocation; inside scope0 the prefix
+  repeats, so `location`), `minMaxX`, `minMaxY`. Renamed without deprecation, introduced after 1.13.0.
+- The settings type `StdArray22F` (a 2x2 float matrix, MatrixFloat [2,2] in the dictionaries and the dialog), as
+  StdArray33F: definitionTypes, typeModel, itemModel, the print of the header emitter; a CppValue default, which
+  the documentation of memberDefaults now renders. scopeTest.py, scopeExample.py, the GUI chapter; checked on the
+  raytracer image with fontSizeFactor 1 and a changed location.
+- The maintainer checked #3249 in the GUI: a wrong sensors value shows the message.
+
 <a id="rg6-20-9"></a>
 ### RG6.20.9 — mbs.Reset() and item changes while the renderer runs: a lock of the system (2026-11-04, #3239)
 - `PostProcessData::accessSystem` (an atomic flag per system) with `accessSystemOwner` (a nested lock in the same

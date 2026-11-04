@@ -141,14 +141,15 @@ with `window.showScopes` or the scope icon of the icon bar. OpenGL and the raytr
 - **Without any sensor list** in the three scopes of the view, they show the first three sensors of mbs 0 that store
   their values, one per scope, with all their components - a look at the results without a setting.
 - **The values** are those up to the visualization time, as the sensor traces show them; `timeHistory` limits them
-  to the last seconds, and a plot over time then scrolls. `horizontalZoom` and `verticalZoom` fix the ranges, both 0
-  fits them to the values. Per pixel of the width, `xResolution` values are drawn; more are reduced to the minimum
+  to the last seconds, and a plot over time then scrolls. `minMaxX` and `minMaxY` fix the ranges, both 0 fits them
+  to the values.Per pixel of the width, `xResolution` values are drawn; more are reduced to the minimum
   and the maximum of each pixel column, so that peaks stay.
-- **The look**: `region` places the scope relative to the window, from its top left corner (the defaults are the
-  top right third of the width, one fifth of the height each); `backgroundColor`, `frameColor`, `axesColor`,
-  `lineWidth`, `useGrid` (0, 1 at the ticks, 2 also at the sub-ticks), `xLabel`, `yLabel` (above the plot) and
-  `showLegend`. The lines take 16 colors, the first seven those of `PlotSensor`, and are dotted beyond 16 lines and
-  dashed beyond 32.
+- **The place and the axes** of each scope: `location`, `[[xmin, ymin], [xmax, ymax]]` relative to the window from
+  its top left corner (the defaults are the top right third of the width, one fifth of the height each), `useGrid`
+  (0, 1 at the ticks, 2 also at the sub-ticks), `xLabel`, `yLabel` (above the plot) and `showLegend`.
+- **The look of all scopes** is in `visualizationSettings.sensors.scopes` (#3251): `backgroundColor`, `frameColor`,
+  `axesColor`, `lineWidth` and `fontSizeFactor`, the font size relative to `window.globalFontSize` of the view. The
+  lines take 16 colors, the first seven those of `PlotSensor`, and are dotted beyond 16 lines and dashed beyond 32.
 
 ```python
 SC.visualizationSettings.view0.window.showScopes = True

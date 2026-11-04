@@ -820,6 +820,10 @@ CLOSED 2026-11-04 (#3248): maintainer: the legend writes the sensor name and the
 
 CLOSED 2026-11-04 (#3249): CheckType checks lists and matrices by their elements and rows; the dialog puts back what the settings refuse and shows the message with the description of the setting. test_guiValues.py. [log](exudynRevisionLog2026c.md#rg6-20-11)
 
+#### **CLOSED_RG6.20.12** The look of all scopes in sensors.scopes with a font size factor; location as [[xmin, ymin], [xmax, ymax]]; minMaxX and minMaxY
+
+CLOSED 2026-11-04 (#3251): VSettingsScopes at sensors.scopes (colors, lineWidth, fontSizeFactor relative to the globalFontSize of the view); per scope location (the settings type StdArray22F), minMaxX, minMaxY. [log](exudynRevisionLog2026c.md#rg6-20-12)
+
 ## **OPEN_RG7** Python user items
 
 Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8).

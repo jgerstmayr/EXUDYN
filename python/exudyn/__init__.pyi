@@ -1987,8 +1987,26 @@ class VSettingsTraces:
     def SetDictionary(self, d: dict) -> None: ...
 
 
+class VSettingsScopes:
+    """The look of all scopes of all views, see VSettingsScope (#3237, #3251): their colors, line width and font size."""
+    axesColor: Tuple[float,float,float,float]
+    """RGBA color of the axes, ticks, grid, labels and legend."""
+    backgroundColor: Tuple[float,float,float,float]
+    """RGBA color of the area of a scope."""
+    fontSizeFactor: float
+    """the font size of the scopes relative to ``window.globalFontSize`` of the view, which the display scaling multiplies as all texts."""
+    frameColor: Tuple[float,float,float,float]
+    """RGBA color of the frame around a scope."""
+    lineWidth: float
+    """width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+
 class VSettingsSensors:
     """Visualization settings for sensors."""
+    scopes: VSettingsScopes
+    """the look of all scopes: colors, line width and font size; what each scope plots and where is in ``view0.window.scope0``, ... (#3251)."""
     traces: VSettingsTraces
     """settings for showing (position/triad) sensor traces and vector plots in the render window."""
     defaultColor: Tuple[float,float,float,float]
@@ -2098,19 +2116,13 @@ class VSettingsScene:
 
 
 class VSettingsScope:
-    """A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with ``window.showScopes`` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with ``storeInternal=True`` have them."""
-    axesColor: Tuple[float,float,float,float]
-    """RGBA color of the axes, ticks, grid, labels and legend."""
-    backgroundColor: Tuple[float,float,float,float]
-    """RGBA color of the region."""
-    frameColor: Tuple[float,float,float,float]
-    """RGBA color of the frame around the region."""
-    horizontalZoom: Tuple[float,float]
-    """``[xmin, xmax]`` of the plot; both 0: fitted to the values, or the last ``timeHistory`` seconds."""
-    lineWidth: float
-    """width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it."""
-    region: Tuple[float,float,float,float]
-    """the region of the scope as ``[xmin, ymin, xmax, ymax]``, relative to the width and height of the window, measured from its top left corner."""
+    """A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with ``window.showScopes`` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with ``storeInternal=True`` have them. Colors, line width and font size are common to all scopes, in ``sensors.scopes`` (#3251)."""
+    location: ArrayLike
+    """where the scope is in the window, ``[[xmin, ymin], [xmax, ymax]]``, its top left and its bottom right corner relative to the width and the height of the window, measured from its top left corner; e.g. ``[[0.5, 0.], [1., 0.5]]`` is the top right quarter."""
+    minMaxX: Tuple[float,float]
+    """``[xmin, xmax]`` of the horizontal axis; both 0: fitted to the values, or the last ``timeHistory`` seconds."""
+    minMaxY: Tuple[float,float]
+    """``[ymin, ymax]`` of the vertical axis; both 0: fitted to the values."""
     sensors: List[List[int]]
     """the lines of the scope, a list of rows of integers, one row per line, all rows of 2 or all of 5 integers: ``[sensorY, componentY]`` plots component ``componentY`` of sensor ``sensorY`` of mbs 0 over time, e.g. ``[[0,1],[2,3]]`` plots component 1 of sensor 0 and component 3 of sensor 2; ``[sensorY, componentY, sensorX, componentX, mbsNumber]`` plots it over component ``componentX`` of sensor ``sensorX``, e.g. ``[[1,1,1,0,0]]`` the y-component of sensor 1 over its x-component, and ``sensorX=-1`` over time; ``componentY=-1`` plots all components of the sensor. The components count from 0, without the time; only sensors with ``storeInternal=True`` can be plotted. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope."""
     showLegend: bool
@@ -2119,8 +2131,6 @@ class VSettingsScope:
     """-1: all values up to the visualization time; otherwise only those of the last ``timeHistory`` seconds, e.g. 2 shows the last 2 seconds, and a plot over time scrolls."""
     useGrid: int
     """0: no grid; 1: a grid at the ticks; 2: a grid at the ticks and the sub-ticks."""
-    verticalZoom: Tuple[float,float]
-    """``[ymin, ymax]`` of the plot; both 0: fitted to the values."""
     xLabel: str
     """label of the horizontal axis."""
     xResolution: float

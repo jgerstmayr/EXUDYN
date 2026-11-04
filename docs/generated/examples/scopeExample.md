@@ -56,7 +56,7 @@ window.showScopes = True                    #also the scope icon of the icon bar
 #scope0: the heights of both masses, the last 5 seconds, scrolling
 window.scope0.sensors = [[sPosition0, 1], [sPosition1, 1]]
 window.scope0.timeHistory = 5
-window.scope0.verticalZoom = [-2.1, 1.1]
+window.scope0.minMaxY = [-2.1, 1.1]
 window.scope0.yLabel = 'height (m)'
 
 #scope1: all components of the velocity of the second mass
@@ -65,7 +65,7 @@ window.scope1.yLabel = 'velocity (m/s)'
 
 #scope2: the path of the second mass, its y-position over its x-position, and the first mass on its circle
 window.scope2.sensors = [[sPosition1, 1, sPosition1, 0, 0], [sPosition0, 1, sPosition0, 0, 0]]
-window.scope2.region = [2/3, 0.4, 1, 0.8]
+window.scope2.location = [[2/3, 0.4], [1, 0.8]]       #[[xmin, ymin], [xmax, ymax]] from the top left
 window.scope2.xLabel = 'x (m)'
 window.scope2.yLabel = 'y (m)'
 window.scope2.timeHistory = 3

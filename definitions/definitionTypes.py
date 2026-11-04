@@ -86,7 +86,7 @@ class CppValue:
 
 #the C++ types whose literals carry an f suffix; the suffix is a property of the type, not of the
 #value, which is why it is never stored with the number
-floatTypeNames = set(['float', 'UFloat', 'PFloat', 'Float2', 'Float3', 'Float4', 'StdArray33F'])
+floatTypeNames = set(['float', 'UFloat', 'PFloat', 'Float2', 'Float3', 'Float4', 'StdArray22F', 'StdArray33F'])
 
 
 def CppFloatLiteral(value, typeName=''):
@@ -1112,6 +1112,7 @@ TGeneralMatrixEigenSparse          = TypeSpec('GeneralMatrixEigenSparse')
 TLinearSolverType                  = TypeSpec('LinearSolverType')
 TKeyPressUserFunction              = TypeSpec('KeyPressUserFunction')
 TStdArray33F                       = TypeSpec('StdArray33F')
+TStdArray22F                       = TypeSpec('StdArray22F')     #a 2x2 float matrix, [[a, b], [c, d]] in Python (#3251)
 TArrayFloat                        = TypeSpec('ArrayFloat')
 TCSolverExplicitTimeInt            = TypeSpec('CSolverExplicitTimeInt')
 TCSolverImplicitSecondOrderTimeIntUserFunction = TypeSpec('CSolverImplicitSecondOrderTimeIntUserFunction')

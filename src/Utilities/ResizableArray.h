@@ -47,6 +47,7 @@ typedef ResizableArray<Index> ArrayIndex;
 typedef std::vector<Index> StdArrayIndex; //needed for user functions
 
 typedef std::array<std::array<float, 3>, 3> StdArray33F;
+typedef std::array<std::array<float, 2>, 2> StdArray22F; //!< a 2x2 matrix of a setting, [[a, b], [c, d]] in Python (#3251)
 
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 extern Index array_new_counts; //global counter of item allocations; is increased every time a new is called

@@ -351,6 +351,28 @@ VSettingsTraces has the following items:
 
 
 
+(sec-vsettingsscopes)=
+### VSettingsScopes
+
+The look of all scopes of all views, see VSettingsScope (#3237, #3251): their colors, line width and font size.
+
+Reached as `SC.visualizationSettings.sensors.scopes`.
+
+VSettingsScopes has the following items:
+
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
+```
+
+| name | type | default | description |
+|---|---|---|---|
+| `axesColor` | Float4 | [0.1,0.1,0.1,1.] | RGBA color of the axes, ticks, grid, labels and legend |
+| `backgroundColor` | Float4 | [0.95,0.95,1.,0.9] | RGBA color of the area of a scope |
+| `fontSizeFactor` | PFloat | 0.75 | the font size of the scopes relative to `window.globalFontSize` of the view, which the display scaling multiplies as all texts |
+| `frameColor` | Float4 | [0.7,0.7,0.7,0.9] | RGBA color of the frame around a scope |
+| `lineWidth` | PFloat | 2. | width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it |
+
+
+
 (sec-vsettingssensors)=
 ### VSettingsSensors
 
@@ -365,6 +387,7 @@ VSettingsSensors has the following items:
 
 | name | type | default | description |
 |---|---|---|---|
+| `scopes` | VSettingsScopes |  | the look of all scopes: colors, line width and font size; what each scope plots and where is in `view0.window.scope0`, ... (#3251) |
 | `traces` | VSettingsTraces |  | settings for showing (position/triad) sensor traces and vector plots in the render window |
 | `defaultColor` | Float4 | [0.6,0.6,0.1,1.] | default RGBA color for sensors; 4th value is alpha-transparency |
 | `defaultSize` | float | -1. | global sensor size; if -1.f, sensor size is relative to maxSceneSize |
@@ -465,7 +488,7 @@ VSettingsScene has the following items:
 (sec-vsettingsscope)=
 ### VSettingsScope
 
-A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with `window.showScopes` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with `storeInternal=True` have them.
+A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with `window.showScopes` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with `storeInternal=True` have them. Colors, line width and font size are common to all scopes, in `sensors.scopes` (#3251).
 
 Reached as `SC.visualizationSettings.view0.window.scope`.
 
@@ -476,17 +499,13 @@ VSettingsScope has the following items:
 
 | name | type | default | description |
 |---|---|---|---|
-| `axesColor` | Float4 | [0.1,0.1,0.1,1.] | RGBA color of the axes, ticks, grid, labels and legend |
-| `backgroundColor` | Float4 | [0.95,0.95,1.,0.9] | RGBA color of the region |
-| `frameColor` | Float4 | [0.7,0.7,0.7,0.9] | RGBA color of the frame around the region |
-| `horizontalZoom` | Float2 | [0.,0.] | `[xmin, xmax]` of the plot; both 0: fitted to the values, or the last `timeHistory` seconds |
-| `lineWidth` | PFloat | 2. | width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it |
-| `region` | Float4 | [0.6666667,0.,1.,0.2] | the region of the scope as `[xmin, ymin, xmax, ymax]`, relative to the width and height of the window, measured from its top left corner |
+| `location` | StdArray22F | [[0.6666667,0.], [1.,0.2]] | where the scope is in the window, `[[xmin, ymin], [xmax, ymax]]`, its top left and its bottom right corner relative to the width and the height of the window, measured from its top left corner; e.g. `[[0.5, 0.], [1., 0.5]]` is the top right quarter |
+| `minMaxX` | Float2 | [0.,0.] | `[xmin, xmax]` of the horizontal axis; both 0: fitted to the values, or the last `timeHistory` seconds |
+| `minMaxY` | Float2 | [0.,0.] | `[ymin, ymax]` of the vertical axis; both 0: fitted to the values |
 | `sensors` | MatrixI | [] | the lines of the scope, a list of rows of integers, one row per line, all rows of 2 or all of 5 integers: `[sensorY, componentY]` plots component `componentY` of sensor `sensorY` of mbs 0 over time, e.g. `[[0,1],[2,3]]` plots component 1 of sensor 0 and component 3 of sensor 2; `[sensorY, componentY, sensorX, componentX, mbsNumber]` plots it over component `componentX` of sensor `sensorX`, e.g. `[[1,1,1,0,0]]` the y-component of sensor 1 over its x-component, and `sensorX=-1` over time; `componentY=-1` plots all components of the sensor. The components count from 0, without the time; only sensors with `storeInternal=True` can be plotted. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope |
 | `showLegend` | bool | True | True: the name of the sensor of each line, with `-` and the component for a sensor of more than one component, `m0.Pos-X`, and `m0.Pos-Y over m0.Pos-X` for a line over another sensor, in the top right corner of the plot; so the name of a sensor should say what it measures; named lines of `SC.renderer.scopes` follow |
 | `timeHistory` | float | -1. | -1: all values up to the visualization time; otherwise only those of the last `timeHistory` seconds, e.g. 2 shows the last 2 seconds, and a plot over time scrolls |
 | `useGrid` | Index | 1 | 0: no grid; 1: a grid at the ticks; 2: a grid at the ticks and the sub-ticks |
-| `verticalZoom` | Float2 | [0.,0.] | `[ymin, ymax]` of the plot; both 0: fitted to the values |
 | `xLabel` | String | 'time (s)' | label of the horizontal axis |
 | `xResolution` | PFloat | 4. | how many values are drawn per pixel of the width of the plot; more values are reduced to the minimum and the maximum of each pixel column, so that peaks stay; 0.25 is a very low resolution |
 | `yLabel` | String | '' | label of the vertical axis, written above the plot |
@@ -508,8 +527,8 @@ VSettingsWindow has the following items:
 | name | type | default | description |
 |---|---|---|---|
 | `scope0` | VSettingsScope |  | the first scope of this view, at the top right corner |
-| `scope1` | VSettingsScope |  | the second scope of this view, below the first one; starts from region=[0.6666667, 0.2, 1., 0.4]; every other value is the default of the type |
-| `scope2` | VSettingsScope |  | the third scope of this view, below the second one; starts from region=[0.6666667, 0.4, 1., 0.6]; every other value is the default of the type |
+| `scope1` | VSettingsScope |  | the second scope of this view, below the first one; starts from location=[[0.6666667,0.2], [1.,0.4]]; every other value is the default of the type |
+| `scope2` | VSettingsScope |  | the third scope of this view, below the second one; starts from location=[[0.6666667,0.4], [1.,0.6]]; every other value is the default of the type |
 | `alwaysOnTop` | bool | False | True: render window of respective view will be always on top of all other windows |
 | `globalFontSize` | PFloat | 12. | general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card) |
 | `lockModelView` | bool | False | True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value |

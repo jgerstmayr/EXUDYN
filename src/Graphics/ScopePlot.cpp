@@ -179,22 +179,22 @@ namespace ScopePlot
 		}
 	}
 
-	void AddScope(const VSettingsScope& scope, const std::vector<Curve>& curves, const Vector2D& xRange,
+	void AddScope(const VSettingsScope& scope, const VSettingsScopes& style, const std::vector<Curve>& curves, const Vector2D& xRange,
 		const Float4& regionPixels, float fontSize, Graphics& graphics, const std::vector<StaticItem>& statics)
 	{
-		const float lineWidth = scope.lineWidth;
+		const float lineWidth = style.lineWidth;
 		const float cw = characterWidthFactor * fontSize;
 		const float ch = characterHeightFactor * fontSize;
 		const float pad = 0.4f * fontSize;
 		const float x0 = regionPixels[0], y0 = regionPixels[1], x1 = regionPixels[2], y1 = regionPixels[3];
 
-		graphics.AddRectangle(Float2({ x0, y0 }), Float2({ x1, y1 }), scope.backgroundColor);
-		AddFrame(Float2({ x0, y0 }), Float2({ x1, y1 }), scope.frameColor, lineWidth, graphics);
+		graphics.AddRectangle(Float2({ x0, y0 }), Float2({ x1, y1 }), style.backgroundColor);
+		AddFrame(Float2({ x0, y0 }), Float2({ x1, y1 }), style.frameColor, lineWidth, graphics);
 
 		//the ranges
 		Real xMin = xRange[0], xMax = xRange[1];
 		if (!(xMax > xMin)) { xMax = xMin + 1.; }
-		Real yMin = scope.verticalZoom[0], yMax = scope.verticalZoom[1];
+		Real yMin = scope.minMaxY[0], yMax = scope.minMaxY[1];
 		if (yMin == 0. && yMax == 0.)
 		{
 			yMin = EXUstd::MAXREAL; yMax = EXUstd::LOWESTREAL;
@@ -236,9 +236,9 @@ namespace ScopePlot
 		auto X = [&](Real x) { return (float)(left + (x - xMin) / (xMax - xMin) * (right - left)); };
 		auto Y = [&](Real y) { return (float)(bottom + (y - yMin) / (yMax - yMin) * (top - bottom)); };
 
-		Float4 gridColor = scope.axesColor;
+		Float4 gridColor = style.axesColor;
 		gridColor[3] *= 0.25f;
-		Float4 subGridColor = scope.axesColor;
+		Float4 subGridColor = style.axesColor;
 		subGridColor[3] *= 0.12f;
 		const float tickLength = 0.4f * fontSize;
 
@@ -263,34 +263,34 @@ namespace ScopePlot
 				{
 					float x = X(value);
 					if ((major && scope.useGrid >= 1) || (!major && scope.useGrid >= 2)) { graphics.AddLine(Float2({ x, bottom }), Float2({ x, top }), major ? gridColor : subGridColor, 0.5f * lineWidth); }
-					graphics.AddLine(Float2({ x, bottom }), Float2({ x, bottom + length }), scope.axesColor, width);
+					graphics.AddLine(Float2({ x, bottom }), Float2({ x, bottom + length }), style.axesColor, width);
 					if (major)
 					{
 						STDstring label = TickLabel(value, spacing);
-						graphics.AddText(Float2({ x - 0.5f * (float)label.size() * cw, bottom - 0.2f * fontSize - ch }), label, scope.axesColor, fontSize);
+						graphics.AddText(Float2({ x - 0.5f * (float)label.size() * cw, bottom - 0.2f * fontSize - ch }), label, style.axesColor, fontSize);
 					}
 				}
 				else
 				{
 					float y = Y(value);
 					if ((major && scope.useGrid >= 1) || (!major && scope.useGrid >= 2)) { graphics.AddLine(Float2({ left, y }), Float2({ right, y }), major ? gridColor : subGridColor, 0.5f * lineWidth); }
-					graphics.AddLine(Float2({ left, y }), Float2({ left + length, y }), scope.axesColor, width);
+					graphics.AddLine(Float2({ left, y }), Float2({ left + length, y }), style.axesColor, width);
 					if (major)
 					{
 						STDstring label = TickLabel(value, spacing);
-						graphics.AddText(Float2({ left - 0.3f * fontSize - (float)label.size() * cw, y - 0.5f * ch }), label, scope.axesColor, fontSize);
+						graphics.AddText(Float2({ left - 0.3f * fontSize - (float)label.size() * cw, y - 0.5f * ch }), label, style.axesColor, fontSize);
 					}
 				}
 			}
 		}
-		AddFrame(Float2({ left, bottom }), Float2({ right, top }), scope.axesColor, lineWidth, graphics);
+		AddFrame(Float2({ left, bottom }), Float2({ right, top }), style.axesColor, lineWidth, graphics);
 		if (xLabel.size())
 		{
-			graphics.AddText(Float2({ 0.5f * (left + right) - 0.5f * (float)xLabel.size() * cw, y0 + 0.5f * pad }), xLabel, scope.axesColor, fontSize);
+			graphics.AddText(Float2({ 0.5f * (left + right) - 0.5f * (float)xLabel.size() * cw, y0 + 0.5f * pad }), xLabel, style.axesColor, fontSize);
 		}
 		if (yLabel.size())
 		{
-			graphics.AddText(Float2({ left, top + 0.2f * pad }), yLabel, scope.axesColor, fontSize);
+			graphics.AddText(Float2({ left, top + 0.2f * pad }), yLabel, style.axesColor, fontSize);
 		}
 
 		//the lines, between the static items behind and in front of them
@@ -334,7 +334,7 @@ namespace ScopePlot
 			bool truncated = entries < legend.size();
 			const float lx1 = right - 0.5f * pad, lx0 = lx1 - (sample + 2.f * pad + (float)maxChars * cw);
 			const float ly1 = top - 0.5f * pad, ly0 = ly1 - (float)entries * ch - 0.5f * pad;
-			Float4 legendColor = scope.backgroundColor;
+			Float4 legendColor = style.backgroundColor;
 			legendColor[3] *= 0.6f; //the lines stay visible under the legend
 			graphics.AddRectangle(Float2({ lx0, ly0 }), Float2({ lx1, ly1 }), legendColor);
 			AddFrame(Float2({ lx0, ly0 }), Float2({ lx1, ly1 }), gridColor, 0.5f * lineWidth, graphics);
@@ -348,7 +348,7 @@ namespace ScopePlot
 					std::vector<Float2> sampleLine = { Float2({ lx0 + 0.5f * pad, y + 0.45f * ch }), Float2({ lx0 + 0.5f * pad + sample, y + 0.45f * ch }) };
 					AddPolyline(sampleLine, Float4({ lx0, ly0, lx1, ly1 }), legend[i].color, legend[i].width, legend[i].style, graphics);
 				}
-				graphics.AddText(Float2({ lx0 + pad + sample, y }), label, scope.axesColor, fontSize);
+				graphics.AddText(Float2({ lx0 + pad + sample, y }), label, style.axesColor, fontSize);
 			}
 		}
 	}
@@ -488,9 +488,9 @@ namespace ScopePlot
 	//! the range of the horizontal axis: horizontalZoom, else the last timeHistory seconds of the time, else the values
 	Vector2D HorizontalRange(const VSettingsScope& scope, const std::vector<LineSource>& sources)
 	{
-		if (scope.horizontalZoom[0] != 0.f || scope.horizontalZoom[1] != 0.f)
+		if (scope.minMaxX[0] != 0.f || scope.minMaxX[1] != 0.f)
 		{
-			return Vector2D({ (Real)scope.horizontalZoom[0], (Real)scope.horizontalZoom[1] });
+			return Vector2D({ (Real)scope.minMaxX[0], (Real)scope.minMaxX[1] });
 		}
 		Real xMin = EXUstd::MAXREAL, xMax = EXUstd::LOWESTREAL;
 		Real tFirst = EXUstd::MAXREAL, tLatest = EXUstd::LOWESTREAL;
@@ -612,6 +612,8 @@ namespace ScopePlot
 		graphics.Clear();
 		const VSettingsWindow& window = GetSettingsView(viewID, container.GetVisualizationSettings()).window;
 		if (!window.showScopes || width <= 0 || height <= 0) { return; }
+		const VSettingsScopes& style = container.GetVisualizationSettings().sensors.scopes;
+		fontSize *= style.fontSizeFactor;
 		const VSettingsScope* scopes[numberOfScopes] = { &window.scope0, &window.scope1, &window.scope2 };
 		std::vector<std::unique_ptr<SystemAccessGuard>> systemAccess; //the sensors stay while they are read (#3239)
 		for (Index i = 0; i < container.NumberOFMainSystemsBacklink(); i++)
@@ -667,8 +669,8 @@ namespace ScopePlot
 			for (const StaticItem& item : viewStatics) { if (item.scope == j) { statics.push_back(item); } }
 			if (rows.empty() && statics.empty()) { continue; }
 
-			Float4 regionPixels({ scope.region[0] * (float)width, (1.f - scope.region[3]) * (float)height,
-				scope.region[2] * (float)width, (1.f - scope.region[1]) * (float)height });
+			Float4 regionPixels({ scope.location[0][0] * (float)width, (1.f - scope.location[1][1]) * (float)height,
+				scope.location[1][0] * (float)width, (1.f - scope.location[0][1]) * (float)height });
 			if (!(regionPixels[2] > regionPixels[0] && regionPixels[3] > regionPixels[1])) { continue; }
 
 			std::vector<LineSource> sources;
@@ -677,7 +679,7 @@ namespace ScopePlot
 			Vector2D xRange = sources.size() ? HorizontalRange(scope, sources) : Vector2D({ 0., 1. });
 			Index bins = std::max((Index)1, (Index)(scope.xResolution * (regionPixels[2] - regionPixels[0])));
 			for (size_t i = 0; i < sources.size(); i++) { CollectCurve(sources[i], scope, xRange, bins, curves[i]); }
-			AddScope(scope, curves, xRange, regionPixels, fontSize, graphics, statics);
+			AddScope(scope, style, curves, xRange, regionPixels, fontSize, graphics, statics);
 		}
 	}
 }

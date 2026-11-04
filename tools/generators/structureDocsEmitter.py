@@ -56,6 +56,8 @@ def InstanceDefaultsText(className, pythonName):
 #************************************************
 def ReadableDefault(value):
     """a memberDefaults value as a reader wants it: Float3({0.f,1.f,0.f}) becomes [0, 1, 0]"""
+    if hasattr(value, 'ToDocument'):        #a CppValue knows how a document shows it
+        return value.ToDocument()
     if not isinstance(value, str):
         return str(value)
     for prefix in ['Float3({', 'Float4({', 'Vector3D({', 'Float2({']:

@@ -428,8 +428,10 @@ and the results of explicit models with such constraints change accordingly; a C
 `velocityLevel=True` raises with `eliminateConstraints`.
 
 **The legend of a scope** writes the sensor name and the component, `m0.Pos-X`, and `m0.Pos-Y over m0.Pos-X` over
-another sensor, instead of the name and the output variable; the default `backgroundColor` of a scope is
-`[0.95, 0.95, 1, 0.9]` (#3248).
+another sensor, instead of the name and the output variable; the default `backgroundColor` of the scopes is
+`[0.95, 0.95, 1, 0.9]` (#3248). The colors, the line width and the font size of all scopes are in
+`visualizationSettings.sensors.scopes`; each scope has `location` as `[[xmin, ymin], [xmax, ymax]]` and the ranges
+`minMaxX` and `minMaxY` (#3251).
 
 **The visualization settings dialog** refuses a list or a matrix that the setting cannot take - rows of different
 length, a float where an integer belongs, a number for a list - with a message and the description of the setting,

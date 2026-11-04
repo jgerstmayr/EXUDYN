@@ -1,0 +1,16 @@
+{
+  "number": 3251,
+  "title": "Scope settings: the colors, line width and a font size factor common to all scopes in sensors.scopes; location as [[xmin,ymin],[xmax,ymax]]; minMaxX and minMaxY",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "Each scope has its own axesColor, backgroundColor, frameColor and lineWidth, which nobody changes per scope; the font size of the scopes cannot be set; region [xmin, ymin, xmax, ymax] is not intuitive; horizontalZoom and verticalZoom are apart in the sorted lists. Decided: visualizationSettings.sensors.scopes (VSettingsScopes) holds frameColor, backgroundColor, axesColor, lineWidth and fontSizeFactor (relative to window.globalFontSize of the view, default 0.75 as now); each scope has location [[xmin, ymin], [xmax, ymax]] (a 2x2 float matrix, StdArray22F) and minMaxX, minMaxY; the names introduced after 1.13 are renamed without deprecation; tests and examples adapted.",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03",
+  "dateResolved": "2026-11-04 23:40",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/structureDefsVisualizationSettings.py",
+  "releaseNotes": "The colors, the line width and the font size of all scopes are in visualizationSettings.sensors.scopes (frameColor, backgroundColor, axesColor, lineWidth, fontSizeFactor relative to window.globalFontSize); each scope has location as [[xmin, ymin], [xmax, ymax]] and the ranges minMaxX and minMaxY.",
+  "resolvedInVersion": "1.13.362"
+}

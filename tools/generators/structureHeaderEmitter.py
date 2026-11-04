@@ -692,6 +692,11 @@ def StructureCppHeader(parseInfo):
                 s += '#ifndef __APPLE__\n' #does not compile currently
 
             label = parameter['pythonName'] if paramStr.find('.') == -1 else paramStr #the Python name, also where the C++ one differs (#2813)
+            if parameter['type'] == 'StdArray22F': #a 2x2 matrix, printed as Python writes it (#3251)
+                value = refChar + paramStr
+                s+=('    os << "  ' + label + ' = [[" << ' + value + '[0][0] << ", " << ' + value + '[0][1] << "], [" << '
+                    + value + '[1][0] << ", " << ' + value + '[1][1] << "]]\\n";\n')
+                continue
             s+='    os << "  ' + label + ' = " << ' + preStr + refChar + paramStr + postStr + ' << "\\n";\n'
 
             if parameter['type'] == 'StdArray33F': #special case of 3x3 Matrix, which is not printable

@@ -3477,10 +3477,79 @@ inline void SetDictionary(VSettingsTraces& data, const py::dict& d) {
 }
 
 //! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const VSettingsScopes& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "The look of all scopes of all views, see VSettingsScope (#3237, #3251): their colors, line width and font size.";
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.axesColor);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "RGBA color of the axes, ticks, grid, labels and legend";
+    structureDict["axesColor"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.backgroundColor);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "RGBA color of the area of a scope";
+    structureDict["backgroundColor"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.fontSizeFactor;
+    d["type"] = "PFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "the font size of the scopes relative to `window.globalFontSize` of the view, which the display scaling multiplies as all texts";
+    structureDict["fontSizeFactor"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.frameColor);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "RGBA color of the frame around a scope";
+    structureDict["frameColor"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.lineWidth;
+    d["type"] = "PFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it";
+    structureDict["lineWidth"] = d;
+
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const VSettingsScopes& data) {
+    auto structureDict = py::dict();
+    structureDict["axesColor"] = EPyUtils::ToPythonMember(data.axesColor);
+    structureDict["backgroundColor"] = EPyUtils::ToPythonMember(data.backgroundColor);
+    structureDict["fontSizeFactor"] = data.fontSizeFactor;
+    structureDict["frameColor"] = EPyUtils::ToPythonMember(data.frameColor);
+    structureDict["lineWidth"] = data.lineWidth;
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(VSettingsScopes& data, const py::dict& d) {
+    EPyUtils::FromPython(d["axesColor"], data.axesColor, "VSettingsScopes.axesColor");
+    EPyUtils::FromPython(d["backgroundColor"], data.backgroundColor, "VSettingsScopes.backgroundColor");
+    EPyUtils::FromPython(d["fontSizeFactor"], data.fontSizeFactor, EPyUtils::RangeCheck::positive, "VSettingsScopes.fontSizeFactor");
+    EPyUtils::FromPython(d["frameColor"], data.frameColor, "VSettingsScopes.frameColor");
+    EPyUtils::FromPython(d["lineWidth"], data.lineWidth, EPyUtils::RangeCheck::positive, "VSettingsScopes.lineWidth");
+}
+
+//! AUTO: read access to structure; converting into dictionary
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsSensors& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
     structureDict["structureDescription"] = "Visualization settings for sensors.";
+    structureDict["scopes"] = GetDictionaryWithTypeInfo(data.scopes);
     structureDict["traces"] = GetDictionaryWithTypeInfo(data.traces);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -3528,6 +3597,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsSensors& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsSensors& data) {
     auto structureDict = py::dict();
+    structureDict["scopes"] = GetDictionary(data.scopes);
     structureDict["traces"] = GetDictionary(data.traces);
     structureDict["defaultColor"] = EPyUtils::ToPythonMember(data.defaultColor);
     structureDict["defaultSize"] = data.defaultSize;
@@ -3539,6 +3609,7 @@ inline py::dict GetDictionary(const VSettingsSensors& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsSensors& data, const py::dict& d) {
+    SetDictionary(data.scopes, py::cast<py::dict>(d["scopes"]));
     SetDictionary(data.traces, py::cast<py::dict>(d["traces"]));
     EPyUtils::FromPython(d["defaultColor"], data.defaultColor, "VSettingsSensors.defaultColor");
     EPyUtils::FromPython(d["defaultSize"], data.defaultSize, "VSettingsSensors.defaultSize");
@@ -3975,54 +4046,30 @@ inline void SetDictionary(VSettingsScene& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsScope& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
-    structureDict["structureDescription"] = "A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with `window.showScopes` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with `storeInternal=True` have them.";
+    structureDict["structureDescription"] = "A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with `window.showScopes` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with `storeInternal=True` have them. Colors, line width and font size are common to all scopes, in `sensors.scopes` (#3251).";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.axesColor);
-    d["type"] = "VectorFloat";
-    d["size"] = std::vector<int>{4};
-    d["description"] = "RGBA color of the axes, ticks, grid, labels and legend";
-    structureDict["axesColor"] = d;
+    d["value"] = data.location;
+    d["type"] = "MatrixFloat";
+    d["size"] = std::vector<int>{2,2};
+    d["description"] = "where the scope is in the window, `[[xmin, ymin], [xmax, ymax]]`, its top left and its bottom right corner relative to the width and the height of the window, measured from its top left corner; e.g. `[[0.5, 0.], [1., 0.5]]` is the top right quarter";
+    structureDict["location"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.backgroundColor);
-    d["type"] = "VectorFloat";
-    d["size"] = std::vector<int>{4};
-    d["description"] = "RGBA color of the region";
-    structureDict["backgroundColor"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.frameColor);
-    d["type"] = "VectorFloat";
-    d["size"] = std::vector<int>{4};
-    d["description"] = "RGBA color of the frame around the region";
-    structureDict["frameColor"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.horizontalZoom);
+    d["value"] = EPyUtils::ToPythonMember(data.minMaxX);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{2};
-    d["description"] = "`[xmin, xmax]` of the plot; both 0: fitted to the values, or the last `timeHistory` seconds";
-    structureDict["horizontalZoom"] = d;
+    d["description"] = "`[xmin, xmax]` of the horizontal axis; both 0: fitted to the values, or the last `timeHistory` seconds";
+    structureDict["minMaxX"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.lineWidth;
-    d["type"] = "PFloat";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it";
-    structureDict["lineWidth"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.region);
+    d["value"] = EPyUtils::ToPythonMember(data.minMaxY);
     d["type"] = "VectorFloat";
-    d["size"] = std::vector<int>{4};
-    d["description"] = "the region of the scope as `[xmin, ymin, xmax, ymax]`, relative to the width and height of the window, measured from its top left corner";
-    structureDict["region"] = d;
+    d["size"] = std::vector<int>{2};
+    d["description"] = "`[ymin, ymax]` of the vertical axis; both 0: fitted to the values";
+    structureDict["minMaxY"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -4058,14 +4105,6 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsScope& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.verticalZoom);
-    d["type"] = "VectorFloat";
-    d["size"] = std::vector<int>{2};
-    d["description"] = "`[ymin, ymax]` of the plot; both 0: fitted to the values";
-    structureDict["verticalZoom"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.xLabel;
     d["type"] = "String";
     d["size"] = std::vector<int>{1};
@@ -4094,17 +4133,13 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsScope& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsScope& data) {
     auto structureDict = py::dict();
-    structureDict["axesColor"] = EPyUtils::ToPythonMember(data.axesColor);
-    structureDict["backgroundColor"] = EPyUtils::ToPythonMember(data.backgroundColor);
-    structureDict["frameColor"] = EPyUtils::ToPythonMember(data.frameColor);
-    structureDict["horizontalZoom"] = EPyUtils::ToPythonMember(data.horizontalZoom);
-    structureDict["lineWidth"] = data.lineWidth;
-    structureDict["region"] = EPyUtils::ToPythonMember(data.region);
+    structureDict["location"] = data.location;
+    structureDict["minMaxX"] = EPyUtils::ToPythonMember(data.minMaxX);
+    structureDict["minMaxY"] = EPyUtils::ToPythonMember(data.minMaxY);
     structureDict["sensors"] = EPyUtils::ToPythonMember(data.sensors);
     structureDict["showLegend"] = data.showLegend;
     structureDict["timeHistory"] = data.timeHistory;
     structureDict["useGrid"] = data.useGrid;
-    structureDict["verticalZoom"] = EPyUtils::ToPythonMember(data.verticalZoom);
     structureDict["xLabel"] = data.xLabel;
     structureDict["xResolution"] = data.xResolution;
     structureDict["yLabel"] = data.yLabel;
@@ -4113,17 +4148,13 @@ inline py::dict GetDictionary(const VSettingsScope& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsScope& data, const py::dict& d) {
-    EPyUtils::FromPython(d["axesColor"], data.axesColor, "VSettingsScope.axesColor");
-    EPyUtils::FromPython(d["backgroundColor"], data.backgroundColor, "VSettingsScope.backgroundColor");
-    EPyUtils::FromPython(d["frameColor"], data.frameColor, "VSettingsScope.frameColor");
-    EPyUtils::FromPython(d["horizontalZoom"], data.horizontalZoom, "VSettingsScope.horizontalZoom");
-    EPyUtils::FromPython(d["lineWidth"], data.lineWidth, EPyUtils::RangeCheck::positive, "VSettingsScope.lineWidth");
-    EPyUtils::FromPython(d["region"], data.region, "VSettingsScope.region");
+    data.location = py::cast<StdArray22F>(d["location"]);
+    EPyUtils::FromPython(d["minMaxX"], data.minMaxX, "VSettingsScope.minMaxX");
+    EPyUtils::FromPython(d["minMaxY"], data.minMaxY, "VSettingsScope.minMaxY");
     EPyUtils::FromPython(d["sensors"], data.sensors, "VSettingsScope.sensors");
     EPyUtils::FromPython(d["showLegend"], data.showLegend, "VSettingsScope.showLegend");
     EPyUtils::FromPython(d["timeHistory"], data.timeHistory, "VSettingsScope.timeHistory");
     EPyUtils::FromPython(d["useGrid"], data.useGrid, "VSettingsScope.useGrid");
-    EPyUtils::FromPython(d["verticalZoom"], data.verticalZoom, "VSettingsScope.verticalZoom");
     EPyUtils::FromPython(d["xLabel"], data.xLabel, "VSettingsScope.xLabel");
     EPyUtils::FromPython(d["xResolution"], data.xResolution, EPyUtils::RangeCheck::positive, "VSettingsScope.xResolution");
     EPyUtils::FromPython(d["yLabel"], data.yLabel, "VSettingsScope.yLabel");

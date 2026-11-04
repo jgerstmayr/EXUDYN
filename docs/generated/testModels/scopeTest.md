@@ -14,7 +14,7 @@ You can view and download this file on Github: [scopeTest.py](https://github.com
 #           scope2 with their sensors as rows [sensorY, componentY] or [sensorY, componentY, sensorX, componentX,
 #           mbsNumber]; drawn by the raytracer into its image, which RedrawAndGetImage returns without a window.
 #           Without sensor lists the scopes show the first sensors that store their values, one per scope, with all
-#           components; a sensor without storeInternal and a verticalZoom beside the values show no line; a scope
+#           components; a sensor without storeInternal and a minMaxY beside the values show no line; a scope
 #           over another sensor draws its line. The static graphics of SC.renderer.scopes: a line, a point and a text
 #           drawn in their view and scope, clipped to the plot, cleared, and wrong items refused.
 #
@@ -58,8 +58,10 @@ mbs.SolveDynamic(simulationSettings)
 #the settings: three scopes per view, the sensors as rows of 2 or 5 integers
 window = SC.visualizationSettings.view0.window
 Check(not window.showScopes and list(window.scope0.sensors) == [], 'defaults')
-Check(np.allclose(window.scope0.region, [2/3, 0, 1, 0.2]) and np.allclose(window.scope2.region, [2/3, 0.4, 1, 0.6]), 'regions')
-Check(np.allclose(window.scope0.axesColor, [0.1, 0.1, 0.1, 1]) and window.scope0.xLabel == 'time (s)', 'colors and labels')
+Check(np.allclose(window.scope0.location, [[2/3, 0], [1, 0.2]]) and np.allclose(window.scope2.location, [[2/3, 0.4], [1, 0.6]]), 'locations')
+look = SC.visualizationSettings.sensors.scopes #the look of all scopes (#3251)
+Check(np.allclose(look.axesColor, [0.1, 0.1, 0.1, 1]) and look.fontSizeFactor == 0.75 and window.scope0.xLabel == 'time (s)',
+      'colors and labels')
 window.scope1.sensors = [[sVelocity, 1, sPosition, 1, 0]]
 Check(window.scope1.sensors == [[1, 1, 0, 1, 0]], 'rows of 5: ' + str(window.scope1.sensors))
 try:
@@ -110,11 +112,11 @@ image = Image()
 Check(Colored(Region(image, 0)) == 0, 'a sensor without storeInternal is drawn')
 Check(Colored(Region(image, 1)) > 50, 'position and velocity are not drawn')
 
-#a verticalZoom beside the values: nothing of the lines is inside, and without the legend nothing is colored
-window.scope1.verticalZoom = [100, 200]
+#a minMaxY beside the values: nothing of the lines is inside, and without the legend nothing is colored
+window.scope1.minMaxY = [100, 200]
 window.scope1.showLegend = False
-Check(Colored(Region(Image(), 1)) == 0, 'verticalZoom: the lines are not clipped')
-window.scope1.verticalZoom = [0, 0]
+Check(Colored(Region(Image(), 1)) == 0, 'minMaxY: the lines are not clipped')
+window.scope1.minMaxY = [0, 0]
 window.scope1.showLegend = True
 
 #the velocity over the position
@@ -128,7 +130,7 @@ Check(Colored(Region(image, 2)) > 30 and np.array_equal(Region(image, 0), Region
 #only the static items are colored; outside the zoom they are clipped
 window.scope2.sensors = []
 window.scope0.sensors = [[sPosition, 1]]
-window.scope0.verticalZoom = [100, 200]
+window.scope0.minMaxY = [100, 200]
 window.scope0.showLegend = False
 plain = Image()
 scopes = SC.renderer.scopes
@@ -160,7 +162,7 @@ for wrong in [{'type': 'Line', 'points': [[0, 1]]}, {'type': 'Text', 'position':
     except exu.ExudynError:
         pass
 Check(scopes.GetGraphics() == [], 'a refused item is added')
-window.scope0.verticalZoom = [0, 0]
+window.scope0.minMaxY = [0, 0]
 window.scope0.showLegend = True
 window.scope0.sensors = []
 
