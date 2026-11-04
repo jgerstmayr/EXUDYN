@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.348.dev1
 - last change = 2026-11-04
-- Number of issues = 3239
+- Number of issues = 3240
 - Number of resolved issues = 3125 (348 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9455,6 +9455,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` mbs.Reset() and item changes while the renderer runs: no synchronization with the render thread (#3239)
+  - description: MainSystem::Reset deletes the items, the sensors and their stored data without stopping or waiting for the renderer; the render thread may be in UpdateGraphicsData, which checks IsSystemConsistent() only at its start, or in the sensor traces, which check nothing, and then reads freed memory. Adding, deleting or modifying items from Python while the renderer runs is the same race, rarer because the items are not freed. SC.Reset() and deleting a SystemContainer are safe: they detach the renderer first, which stops the render loop and joins its thread. Decided: a lock of the system data, taken by Reset and the item changes and by the render thread while it reads the system, or a request to the render thread to finish its frame first; to be analyzed (docs/dev/design/scope.md section 5).
+  - date raised: 2026-11-04
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
   - date raised: 2026-10-23

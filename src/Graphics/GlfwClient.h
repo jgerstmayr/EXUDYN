@@ -606,6 +606,9 @@ private: //to be called internally only!
        //! render sensor traces if activated and available
     static void RenderSensorTraces(Index viewID);
 
+	//! the scopes of the view over the overlay, before the image is saved (#3237)
+	static void RenderScopes(Index viewID, int width, int height);
+
     //! Render particulary the text of multibody system; selectionMode==true adds names
     static void RenderGraphicsDataText(Index viewID, GraphicsData* data, Index lastItemID, bool highlight, Index highlightID, Float4 highlightColor2, Float4 otherColor2, bool selectionMode=false);
 

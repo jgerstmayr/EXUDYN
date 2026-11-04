@@ -176,6 +176,7 @@ rollingDiscTangentialForces
 rotatingTableTest
 rotationMarkerDeprecationTest
 scissorPrismaticRevolute2D
+scopeTest
 sensorUserFunctionItemsTest
 sensorUserFunctionTest
 serialRobotTest

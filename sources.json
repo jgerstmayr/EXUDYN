@@ -11,6 +11,7 @@
         "src/Graphics/IconBar.cpp",
         "src/Graphics/PostProcessData.cpp",
         "src/Graphics/Raytracing.cpp",
+        "src/Graphics/ScopePlot.cpp",
         "src/Graphics/VisualizationPrimitives.cpp",
         "src/Graphics/VisualizationSystem.cpp",
         "src/Graphics/VisualizationSystemContainer.cpp",

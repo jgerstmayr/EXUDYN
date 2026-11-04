@@ -432,6 +432,29 @@ namespace EPyUtils {
 		destination = ArrayIndex(Conversion::CastOrRaise<std::vector<Index>>(value, "a list of integers", context));
 	}
 
+	//! a list of lists of integers, all of the same length, or a 2D numpy array of integers (#3237)
+	inline void FromPython(const py::object& value, MatrixI& destination, const char* context)
+	{
+		if (!Conversion::IsSequence(value))
+		{
+			PyError(STDstring("parameter ") + context + " expects a list of lists of integers, but received " + EXUstd::ToString(value), PyErrorType::typeError);
+		}
+		std::vector<std::vector<Index>> rows = Conversion::CastOrRaise<std::vector<std::vector<Index>>>(value, "a list of lists of integers", context);
+		Index columns = rows.size() ? (Index)rows[0].size() : 0;
+		for (const std::vector<Index>& row : rows)
+		{
+			if ((Index)row.size() != columns)
+			{
+				PyError(STDstring("parameter ") + context + " expects rows of equal length, but received " + EXUstd::ToString(value), PyErrorType::valueError);
+			}
+		}
+		destination.SetNumberOfRowsAndColumns((Index)rows.size(), columns);
+		for (Index i = 0; i < (Index)rows.size(); i++)
+		{
+			for (Index j = 0; j < columns; j++) { destination(i, j) = rows[i][j]; }
+		}
+	}
+
 	//! a list, tuple or 1D numpy array of any length (Vector)
 	template<class T>
 	inline void FromPython(const py::object& value, VectorBase<T>& destination, const char* context)
@@ -479,6 +502,16 @@ namespace EPyUtils {
 	}
 
 	inline std::vector<Index> ToPythonMember(const ArrayIndex& value) { return std::vector<Index>(value.begin(), value.end()); }
+
+	inline std::vector<std::vector<Index>> ToPythonMember(const MatrixI& value)
+	{
+		std::vector<std::vector<Index>> rows((size_t)value.NumberOfRows());
+		for (Index i = 0; i < value.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < value.NumberOfColumns(); j++) { rows[(size_t)i].push_back(value(i, j)); }
+		}
+		return rows;
+	}
 
 	//! pybind11 getter and setter of a structure data member, bound as
 	//! .def_property("name", MemberGetter(&C::name), MemberSetter(&C::name, [range,] "C.name"))

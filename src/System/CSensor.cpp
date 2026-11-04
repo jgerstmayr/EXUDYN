@@ -67,7 +67,10 @@ py::object MainSensor::GetSensorValues(const CSystemData& cSystemData, Configura
 
 py::array_t<Real> MainSensor::GetInternalStorage()
 {
-	return EPyUtils::ToPython(GetCSensor()->GetInternalStorage());
+	GetCSensor()->LockInternalStorage(); //the solver may append rows in another thread (#3237)
+	py::array_t<Real> data = EPyUtils::ToPython(GetCSensor()->GetInternalStorage());
+	GetCSensor()->ReleaseInternalStorage();
+	return data;
 }
 
 

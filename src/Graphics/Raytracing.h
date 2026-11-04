@@ -19,6 +19,7 @@
 #include "Graphics/VisualizationSystemContainer.h"
 #include "Graphics/VisualizationPrimitives.h"
 #include "Graphics/TextureStore.h"
+#include "Graphics/ScopePlot.h"
 
 #include "Graphics/GlfwClientBitmapText.h"
 #include "Graphics/characterBitmap.h"
@@ -466,6 +467,9 @@ public:
 
 	//! use most of openGL settings also for RTS
 	void CopyVisSettings2RTS(Index viewID);
+
+	//! the primitives of the scopes, in pixels of the window, drawn into the image (#3237)
+	void DrawScopes(const ScopePlot::Graphics& scopeGraphics, Index width, Index height, RTfloat nearPlaneZ);
 
 	//! print delayed via safe communication with main thread
 	void PrintDelayed(const STDstring& str, bool lineFeed = true, bool flush = false)

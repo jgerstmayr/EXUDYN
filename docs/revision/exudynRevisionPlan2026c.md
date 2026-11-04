@@ -73,7 +73,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
-  - RG6.20 Add a Scope to the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer (7 open sub-steps)
+  - RG6.20 Add a Scope to the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer (2 open sub-steps)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -138,7 +138,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 5 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 9 | Graphics and rendering |
+| RG6 | OPEN | 4 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -777,35 +777,43 @@ CLOSED 2026-10-20 (#3051): a gear wheel after the sensors, as the key V. [log](e
 
 ### **OPEN_RG6.20** Add a Scope to the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer
 
-#3237 (maintainer 2026-11-04: users build their own scopes with graphicsDataUserFunction on ground objects; simple and robust, faster than matplotlib, captured with the animations; the defaults of the settings as given). Design docs/dev/design/scope.md: the request, what exists, one list of 2D primitives for both renderers, the open questions.
+#3237 (maintainer 2026-11-04: users build their own scopes with graphicsDataUserFunction on ground objects; simple and robust, faster than matplotlib, captured with the animations; the defaults of the settings as given). Design docs/dev/design/scope.md: the request, the decisions, one list of primitives in pixels for both renderers, the lock of the stored sensor data.
 
-#### **OPEN_RG6.20.1** Decide the open questions of the Scope
+#### **CLOSED_RG6.20.1** Decide the open questions of the Scope
 
-#3237. Design section 4: one or several scopes per view; the settings in view.window.scope or view.scope; the sensor list as n x 4 integers and several mbs; xRange beside timeHistory and horizontalZoom; the color scheme; SHIFT+S; the legend names; reading the stored data while the solver writes; the extras as Python lists on the renderer; the default of axesColors (equal to the background in the request); the message for sensors without storeInternal.
+CLOSED 2026-11-04 (maintainer): three fixed scopes per view in view.window.scope0..2; the sensors as n x 5 integers [sensorY, componentY, sensorX, componentX, mbsNumber] or n x 2; xRange dropped; 16 colors x solid/dotted/dashed close to PlotLineCode; no key, the icon and the settings, with an automatic mode for the first three sensors of mbs 0; the component names in C++; a lock of the stored sensor data instead of reading it unlocked; Reset while the renderer runs checked (#3239); the extras later on SC.renderer; axesColor [0.1, 0.1, 0.1, 1]; the message once per run, 30 s in the window. Design section 2. [log](exudynRevisionLog2026c.md#rg6-20-1)
 
-#### **OPEN_RG6.20.2** VSettingsScope in the definitions of the visualization settings, with the defaults of the request
+#### **CLOSED_RG6.20.2** VSettingsScope and the settings types Float2 and MatrixI in the definitions and the generator
 
-#3237. Design section 5.2.
+CLOSED 2026-11-04 (#3237): VSettingsScope, window.showScopes and scope0..2; the settings types Float2 and MatrixI in the generator and the conversions. [log](exudynRevisionLog2026c.md#rg6-20-1)
 
-#### **OPEN_RG6.20.3** ScopePlot: the data up to the visualization time, the decimation, the axes, ticks, grid, legend - one list of 2D primitives
+#### **CLOSED_RG6.20.3** ScopePlot: the data up to the visualization time, the decimation, the axes, ticks, grid, legend - one list of 2D primitives
 
-#3237. Design section 3; tested on the primitives without a window.
+CLOSED 2026-11-04 (#3237): src/Graphics/ScopePlot.h/.cpp - an ordered list of primitives in pixels; decimation by the minimum and maximum per bin; ticks with at least two in the range. [log](exudynRevisionLog2026c.md#rg6-20-1)
 
-#### **OPEN_RG6.20.4** The Scope in OpenGL, drawn before the image is saved; the icon and SHIFT+S
+#### **CLOSED_RG6.20.4** The Scope in OpenGL, drawn before the image is saved; the icon, showScopes, the automatic mode and the message
 
-#3237.
+CLOSED 2026-11-04 (#3237): GlfwRenderer::RenderScopes before SaveImage; the icon; the automatic mode; the message once per start. The OpenGL drawing is not seen yet (no window opened). [log](exudynRevisionLog2026c.md#rg6-20-1)
 
-#### **OPEN_RG6.20.5** The Scope in the raytracer: the same primitives, filled triangles in screen space added
+#### **CLOSED_RG6.20.5** The Scope in the raytracer: the same primitives drawn into its image
 
-#3237.
+CLOSED 2026-11-04 (#3237): Raytracer::DrawScopes; lines shorter than a pixel drawn one pixel long. [log](exudynRevisionLog2026c.md#rg6-20-1)
 
-#### **OPEN_RG6.20.6** A test model, an example and the documentation of the Scope
+#### **CLOSED_RG6.20.6** A test model, an example and the documentation of the Scope
 
-#3237.
+CLOSED 2026-11-04 (#3237): scopeTest.py on the raytracer image; the GUI chapter, section Scopes; revisions.md. [log](exudynRevisionLog2026c.md#rg6-20-1)
 
-#### **OPEN_RG6.20.7** Later: several scopes per view; lines, texts and points in plot coordinates
+#### **OPEN_RG6.20.7** Later: lines, texts and points in plot coordinates as Python lists on SC.renderer
 
-#3237 (maintainer 2026-11-04: for later, possibly not as visualizationSettings fields).
+#3237 (maintainer 2026-11-04: Python lists on SC.renderer rather than visualizationSettings; a point a circle with the line width, so that the raytracer needs no triangles).
+
+#### **CLOSED_RG6.20.8** A lock of the stored sensor data, for the solver, the traces, the Scope and Python
+
+CLOSED 2026-11-04 (#3237): CSensor::LockInternalStorage, taken by the solver, the traces, ScopePlot and MainSensor::GetInternalStorage. [log](exudynRevisionLog2026c.md#rg6-20-1)
+
+#### **OPEN_RG6.20.9** mbs.Reset() and item changes while the renderer runs
+
+#3239. Design section 5: SC.Reset() stops the renderer first, mbs.Reset() and item changes do not; to be analyzed.
 
 ## **OPEN_RG7** Python user items
 

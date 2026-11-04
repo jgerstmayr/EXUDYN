@@ -5729,6 +5729,48 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg6-20-1"></a>
+### RG6.20.1-.6, RG6.20.8 — The Scope: the decisions, the settings, ScopePlot, OpenGL and the raytracer, the lock of the stored sensor data (2026-11-04, #3237, #3239)
+- **Decisions** (maintainer 2026-11-04, on the eleven questions of the first evaluation; docs/dev/design/scope.md
+  section 2): three fixed scopes per view; the settings in `view<i>.window.scope<j>` (the maintainer named
+  `view<i>.scopes.scope<j>` as the alternative; the place of the request was taken); the sensors as n x 5 integers
+  with the mbs number, n x 2 accepted; xRange dropped; 16 colors x 3 styles close to PlotLineCode, no markers; no key,
+  the icon and the settings, with an automatic mode; the component names in C++; a lock instead of reading unlocked;
+  Reset to be checked; the extras later on SC.renderer, a point a circle with the line width; axesColor
+  [0.1, 0.1, 0.1, 1]; the message once per run, 30 s in the window.
+- **Reset while the renderer runs** (decision 9): SC.Reset() and deleting a SystemContainer detach the renderer first,
+  which stops the loop and joins the thread; mbs.Reset() and item changes do not synchronize with the render thread -
+  #3239 raised, RG6.20.9.
+- **Settings** (RG6.20.2): VSettingsScope with sensors, region, frameColor, backgroundColor, axesColor, lineWidth,
+  useGrid, verticalZoom, horizontalZoom, timeHistory, showLegend, xLabel, yLabel, xResolution; `window.showScopes` and
+  scope0..2 (memberDefaults for the regions of scope1 and scope2). The generator got the types `Float2` (the zooms)
+  and `MatrixI` (the sensors, a list of lists in Python, rows of equal length or ValueError): typeModel,
+  structureHeaderEmitter (converted list members), itemModel.Size, EPyUtils::FromPython/ToPythonMember for MatrixI.
+  `componentY=-1` draws all components, as the automatic mode. parameterConversionTestReference.txt rewritten: only
+  the new settings added; the stubtest backlog has exudyn.VSettingsScope beside the other settings classes.
+- **ScopePlot** (RG6.20.3, src/Graphics/ScopePlot.h/.cpp): one ordered list of rectangles, lines with their width and
+  texts in pixels of the window - ordered, so that the legend box is drawn over the lines. The values up to the
+  visualization time and of the last timeHistory seconds, decimated to xResolution values per pixel by the minimum
+  and maximum of each bin in their order, with one value on each side of a horizontalZoom; over another sensor every
+  k-th row. Ticks of 1, 2, 5 x 10^k with at least two in the range (a scope of 50 pixels showed only the tick 0),
+  sub-ticks 5 (4 for a spacing of 2); a small scope leaves out the axis labels; the legend box at 60 % of the
+  background alpha, as it covered the lines of the default 1/5 height.
+- **Drawing** (RG6.20.4, .5): OpenGL in GlfwRenderer::RenderScopes after the overlay and before SaveImage, lines of
+  one width in one glBegin; the raytracer in Raytracer::DrawScopes into its image before the scaling down - the
+  rectangles blended, the lines by RasterizeLine as static objects, the texts by DrawString. RasterizeLine draws
+  nothing for a line shorter than a pixel (steps = 0), which dropped the flat parts of every plotted line; such a line
+  is drawn one pixel long by DrawScopes, RasterizeLine itself is unchanged. The raytracer image of a scope takes 20 ms
+  at 800 x 600. The icon "scope" after the sensors; the message (no such mbs or sensor, no storeInternal, rows not of
+  2 or 5) through ShowMessage for 30 s and PrintDelayed, once per start of the renderer; the raytracer prints it.
+  **The OpenGL drawing is not seen yet**: no window was opened; the raytracer image was checked.
+- **Lock** (RG6.20.8): CSensor::LockInternalStorage/ReleaseInternalStorage, an atomic flag in a member that a copy of
+  a sensor does not share; taken by CSolverBase when it resets and appends the rows, by the traces, by ScopePlot and
+  by MainSensor::GetInternalStorage. The type check of the triad sensor moved before the lock, as it may raise.
+- **Test** (RG6.20.6): scopeTest.py renders a mass on a spring with the model hidden, through the raytracer at
+  480 x 360: no scope without showScopes, the automatic mode, a sensor without storeInternal and a verticalZoom beside
+  the values without colored pixels, the velocity over the position; test_iconBar.py with the icon. The GUI chapter
+  has the section Scopes; revisions.md the entry.
+
 <a id="rg6-20-rg19-rg20"></a>
 ### RG6.20, RG19, RG20 — The Scope, the robotics revision and the advanced solvers planned and evaluated; closings (2026-11-04, #3237, #3238)
 - **Closings** (maintainer 2026-11-04): #2223 (Diff of vectors and matrices, superseded by #3115, #3163), #1104 (a general

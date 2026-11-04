@@ -12,7 +12,7 @@ import exudyn as exu
 
 order = ['quit', 'zoomAll', 'zoomRegion', 'viewXY', 'viewYZ', 'viewXZ', 'viewIsometric', 'ruler',
          'mouseCoordinates', 'lines', 'edges', 'faces', 'transparency', 'shadow', 'updateSpeed',
-         'nodes', 'bodies', 'connectors', 'markers', 'loads', 'sensors', 'settings',
+         'nodes', 'bodies', 'connectors', 'markers', 'loads', 'sensors', 'scope', 'settings',
          'config0', 'config1', 'config2', 'config3']
 
 

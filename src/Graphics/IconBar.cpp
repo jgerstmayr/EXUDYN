@@ -165,7 +165,7 @@ namespace IconBar
 	{
 		static const char* names[] = { "quit", "zoomAll", "zoomRegion", "viewXY", "viewYZ", "viewXZ", "viewIsometric",
 			"ruler", "mouseCoordinates", "lines", "edges", "faces", "transparency", "shadow", "updateSpeed",
-			"nodes", "bodies", "connectors", "markers", "loads", "sensors", "settings", "config0", "config1", "config2", "config3" };
+			"nodes", "bodies", "connectors", "markers", "loads", "sensors", "scope", "settings", "config0", "config1", "config2", "config3" };
 		return (icon >= 0 && icon < NumberOfIcons()) ? names[icon] : "";
 	}
 
@@ -193,6 +193,7 @@ namespace IconBar
 			"show markers (M; SHIFT: numbers, CTRL+M)",
 			"show loads (L; SHIFT: numbers, CTRL+L)",
 			"show sensors (S; SHIFT: numbers, CTRL+S)",
+			"scopes: stored sensor values plotted in the window (window.showScopes)",
 			"visualization settings (V)",
 			"switch to the stored configuration CFG0 (CTRL: store settings and view as CFG0)",
 			"switch to the stored configuration CFG1 (CTRL: store settings and view as CFG1)",
@@ -362,6 +363,20 @@ namespace IconBar
 			c.Line({ 32, 20 }, { 47, 38 }, 4, warning);
 			c.Disc({ 32, 20 }, 5, ink);
 			break;
+		case Icon::Scope: //the screen of an oscilloscope with a damped wave
+		{
+			c.Rectangle(5, 10, 59, 54, Float4({ 0.85f, 0.88f, 0.92f, 1.f }));
+			c.PolyLine({ {5, 10}, {59, 10}, {59, 54}, {5, 54} }, 3, ink, true);
+			c.Line({ 9, 32 }, { 55, 32 }, 1.5f, Float4({ 0.18f, 0.2f, 0.24f, 0.45f }));
+			std::vector<P> wave;
+			for (Index k = 0; k <= 40; k++)
+			{
+				float x = 9.f + 46.f*(float)k/40.f;
+				wave.push_back({ x, 32.f + 16.f*std::exp(-(x - 9.f)/30.f)*std::sin((x - 9.f)*0.3f) });
+			}
+			c.PolyLine(wave, 3.5f, accent);
+			break;
+		}
 		case Icon::Settings: //a gear wheel
 		{
 			std::vector<P> gear;

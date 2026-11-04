@@ -86,7 +86,7 @@ class CppValue:
 
 #the C++ types whose literals carry an f suffix; the suffix is a property of the type, not of the
 #value, which is why it is never stored with the number
-floatTypeNames = set(['float', 'UFloat', 'PFloat', 'Float3', 'Float4', 'StdArray33F'])
+floatTypeNames = set(['float', 'UFloat', 'PFloat', 'Float2', 'Float3', 'Float4', 'StdArray33F'])
 
 
 def CppFloatLiteral(value, typeName=''):
@@ -1101,7 +1101,9 @@ class Deprecated:
 
 
 #--------------------------------------------------------------------- one-off types used only by structures
+TFloat2                            = TypeSpec('Float2')
 TFloat3                            = TypeSpec('Float3')
+TMatrixI                           = TypeSpec('MatrixI')       #a matrix of integers, a list of lists in Python (#3237)
 TResizableVectorParallel           = TypeSpec('ResizableVectorParallel')
 TFileName                          = TypeSpec('FileName')
 TInt                               = TypeSpec('Int')

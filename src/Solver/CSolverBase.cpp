@@ -274,11 +274,13 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
                         stepsPlanned = EXUstd::Minimum(10000, stepsPlanned); //not too big, if they are never computed ...!
                     }
 
+                    item->LockInternalStorage(); //the renderer may read it (#3237)
                     //pre-allocate data:
                     item->GetInternalStorage().SetNumberOfRowsAndColumns(stepsPlanned, 4); //typical size for position sensor; will be less optimal for Coordinates sensor with 100+ coordinates, but only log2(nSteps) memory allocations
 
                     //this marks that sensor data is reset ...
                     item->GetInternalStorage().SetNumberOfRowsAndColumns(0, 0);
+                    item->ReleaseInternalStorage();
 
                 };
             }
@@ -2444,7 +2446,9 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 						PyError(msg, PyErrorType::modelError);
 					}
 				}
+				item->LockInternalStorage(); //a row appended may reallocate the storage the renderer reads (#3237)
 				item->GetInternalStorage().AppendRow(output.sensorValuesTemp2);
+				item->ReleaseInternalStorage();
 				sensorValuesCalled = true;
 
 			}

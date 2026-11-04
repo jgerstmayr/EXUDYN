@@ -273,7 +273,7 @@ def Size(member):
                 product *= value
             return str(product)
         return str(size)
-    fixed = {'Float3': '3', 'Float4': '4', 'StdArray33F': '3x3', 'Matrix6D': '36'}
+    fixed = {'Float2': '2', 'Float3': '3', 'Float4': '4', 'StdArray33F': '3x3', 'Matrix6D': '36'}
     fixed.update({name: str(n) for n, name in definitionTypes.vectorSizes.items()})
     fixed.update({name: str(r * c) for (r, c), name in definitionTypes.matrixSizes.items()})
     fixed.update({name: str(n) for n, name in definitionTypes.indexTupleSizes.items()})

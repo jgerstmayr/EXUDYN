@@ -462,6 +462,37 @@ VSettingsScene has the following items:
 
 
 
+(sec-vsettingsscope)=
+### VSettingsScope
+
+A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with `window.showScopes` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with `storeInternal=True` have them.
+
+Reached as `SC.visualizationSettings.view0.window.scope`.
+
+VSettingsScope has the following items:
+
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
+```
+
+| name | type | default | description |
+|---|---|---|---|
+| `axesColor` | Float4 | [0.1,0.1,0.1,1.] | RGBA color of the axes, ticks, grid, labels and legend |
+| `backgroundColor` | Float4 | [0.9,0.9,0.9,0.9] | RGBA color of the region |
+| `frameColor` | Float4 | [0.7,0.7,0.7,0.9] | RGBA color of the frame around the region |
+| `horizontalZoom` | Float2 | [0.,0.] | `[xmin, xmax]` of the plot; both 0: fitted to the values, or the last `timeHistory` seconds |
+| `lineWidth` | PFloat | 2. | width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it |
+| `region` | Float4 | [0.6666667,0.,1.,0.2] | the region of the scope as `[xmin, ymin, xmax, ymax]`, relative to the width and height of the window, measured from its top left corner |
+| `sensors` | MatrixI | [] | the lines of the scope, one row per line: `[sensorY, componentY, sensorX, componentX, mbsNumber]`; `sensorX=-1` plots over time; `componentY=-1` plots all components of the sensor; rows of two, `[sensorY, componentY]`, plot over time in mbs 0. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope |
+| `showLegend` | bool | True | True: the name of the sensor and the component of each line, in the top right corner of the plot |
+| `timeHistory` | float | -1. | -1: all values up to the visualization time; otherwise only those of the last `timeHistory` seconds, e.g. 2 shows the last 2 seconds, and a plot over time scrolls |
+| `useGrid` | Index | 1 | 0: no grid; 1: a grid at the ticks; 2: a grid at the ticks and the sub-ticks |
+| `verticalZoom` | Float2 | [0.,0.] | `[ymin, ymax]` of the plot; both 0: fitted to the values |
+| `xLabel` | String | 'time (s)' | label of the horizontal axis |
+| `xResolution` | PFloat | 4. | how many values are drawn per pixel of the width of the plot; more values are reduced to the minimum and the maximum of each pixel column, so that peaks stay; 0.25 is a very low resolution |
+| `yLabel` | String | '' | label of the vertical axis, written above the plot |
+
+
+
 (sec-vsettingswindow)=
 ### VSettingsWindow
 
@@ -476,6 +507,9 @@ VSettingsWindow has the following items:
 
 | name | type | default | description |
 |---|---|---|---|
+| `scope0` | VSettingsScope |  | the first scope of this view, at the top right corner |
+| `scope1` | VSettingsScope |  | the second scope of this view, below the first one; starts from region=[0.6666667, 0.2, 1., 0.4]; every other value is the default of the type |
+| `scope2` | VSettingsScope |  | the third scope of this view, below the second one; starts from region=[0.6666667, 0.4, 1., 0.6]; every other value is the default of the type |
 | `alwaysOnTop` | bool | False | True: render window of respective view will be always on top of all other windows |
 | `globalFontSize` | PFloat | 12. | general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card) |
 | `lockModelView` | bool | False | True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value |
@@ -487,6 +521,7 @@ VSettingsWindow has the following items:
 | `showMouseCoordinates` | bool | False | True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections |
 | `showRenderStateInfo` | bool | False | True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3' |
 | `showRuler` | bool | False | True: show a ruler along the bottom and the left border of the window, with ticks at 1, 2 or 5 times a power of 10 in model units; in an axis-aligned view the labels are the coordinates of the view, as the mouse coordinates show them, else the distance from the left or bottom end; only shown with perspective=0; switched on/off with key 'F5' (#2244) |
+| `showScopes` | bool | False | True: show the scopes `scope0`, `scope1` and `scope2` of this view, see VSettingsScope; switched on/off with the scope icon of the icon bar (#3237) |
 | `showWindow` | bool | True | True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically) |
 | `storeRenderWindowGeometry` | bool | False | True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition` - so that storing the settings keeps the window where you left it, see Section [](#sec-usersettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run |
 

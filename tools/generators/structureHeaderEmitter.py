@@ -52,10 +52,10 @@ scalarRangeForms = {'bool': None, 'float': None, 'Real': None, 'Index': None, 'I
 
 #further member types with a FromPython overload and a context; vectors and index
 #arrays are returned as lists through EPyUtils::ToPythonMember
-convertedMemberTypes = list(scalarRangeForms) + ['String', 'FileName', 'Float3', 'Float4', 'Index2', 'ArrayIndex',
+convertedMemberTypes = list(scalarRangeForms) + ['String', 'FileName', 'Float2', 'Float3', 'Float4', 'Index2', 'ArrayIndex', 'MatrixI',
                                                  'LinearSolverType', 'DynamicSolverType', 'OutputVariableType',
                                                  'ItemType', 'CrossSectionType']
-listMemberTypes = ['Float3', 'Float4', 'Index2', 'ArrayIndex']
+listMemberTypes = ['Float2', 'Float3', 'Float4', 'Index2', 'ArrayIndex', 'MatrixI']
 
 
 def RangeArgument(typeName):

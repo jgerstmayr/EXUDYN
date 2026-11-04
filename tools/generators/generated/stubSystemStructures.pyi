@@ -913,9 +913,49 @@ class VSettingsScene:
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
+#information for VSettingsScope
+class VSettingsScope:
+    """A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with ``window.showScopes`` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with ``storeInternal=True`` have them."""
+    axesColor: Tuple[float,float,float,float]
+    """RGBA color of the axes, ticks, grid, labels and legend."""
+    backgroundColor: Tuple[float,float,float,float]
+    """RGBA color of the region."""
+    frameColor: Tuple[float,float,float,float]
+    """RGBA color of the frame around the region."""
+    horizontalZoom: Tuple[float,float]
+    """``[xmin, xmax]`` of the plot; both 0: fitted to the values, or the last ``timeHistory`` seconds."""
+    lineWidth: float
+    """width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it."""
+    region: Tuple[float,float,float,float]
+    """the region of the scope as ``[xmin, ymin, xmax, ymax]``, relative to the width and height of the window, measured from its top left corner."""
+    sensors: List[List[int]]
+    """the lines of the scope, one row per line: ``[sensorY, componentY, sensorX, componentX, mbsNumber]``; ``sensorX=-1`` plots over time; ``componentY=-1`` plots all components of the sensor; rows of two, ``[sensorY, componentY]``, plot over time in mbs 0. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope."""
+    showLegend: bool
+    """True: the name of the sensor and the component of each line, in the top right corner of the plot."""
+    timeHistory: float
+    """-1: all values up to the visualization time; otherwise only those of the last ``timeHistory`` seconds, e.g. 2 shows the last 2 seconds, and a plot over time scrolls."""
+    useGrid: int
+    """0: no grid; 1: a grid at the ticks; 2: a grid at the ticks and the sub-ticks."""
+    verticalZoom: Tuple[float,float]
+    """``[ymin, ymax]`` of the plot; both 0: fitted to the values."""
+    xLabel: str
+    """label of the horizontal axis."""
+    xResolution: float
+    """how many values are drawn per pixel of the width of the plot; more values are reduced to the minimum and the maximum of each pixel column, so that peaks stay; 0.25 is a very low resolution."""
+    yLabel: str
+    """label of the vertical axis, written above the plot."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
 #information for VSettingsWindow
 class VSettingsWindow:
     """Settings for window that are individual to each view; in particular initial size, and behavior. Note that some of the settings are only used during creation of the window."""
+    scope0: VSettingsScope
+    """the first scope of this view, at the top right corner."""
+    scope1: VSettingsScope
+    """the second scope of this view, below the first one."""
+    scope2: VSettingsScope
+    """the third scope of this view, below the second one."""
     alwaysOnTop: bool
     """True: render window of respective view will be always on top of all other windows."""
     globalFontSize: float
@@ -938,6 +978,8 @@ class VSettingsWindow:
     """True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'."""
     showRuler: bool
     """True: show a ruler along the bottom and the left border of the window, with ticks at 1, 2 or 5 times a power of 10 in model units; in an axis-aligned view the labels are the coordinates of the view, as the mouse coordinates show them, else the distance from the left or bottom end; only shown with perspective=0; switched on/off with key 'F5' (#2244)."""
+    showScopes: bool
+    """True: show the scopes ``scope0``, ``scope1`` and ``scope2`` of this view, see VSettingsScope; switched on/off with the scope icon of the icon bar (#3237)."""
     showWindow: bool
     """True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)."""
     storeRenderWindowGeometry: bool

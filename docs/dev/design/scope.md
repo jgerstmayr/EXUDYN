@@ -1,7 +1,7 @@
 # The Scope: a sensor viewer in the render window (revision2026c step RG6.20, #3237)
 
-A design note of an open step: the maintainer's request as given, then what exists, the evaluation, the open questions
-and the sub-steps. It leaves the repository when the step closes (WORKFLOW.md §8.4).
+A design note of an open step: the maintainer's request as given, the decisions, what exists, the design and the
+sub-steps. It leaves the repository when the step closes (WORKFLOW.md §8.4).
 
 ## 1. The request (maintainer 2026-11-04)
 
@@ -47,93 +47,117 @@ Further:
   visualization time, so that the SolutionViewer keeps the plots in its animations;
 - rather simple and robust; also check what is missing; a first sub-step with the open questions.
 
-## 2. What exists
+## 2. Decisions (maintainer 2026-11-04, on the eleven questions of the first evaluation)
 
-- **Sensor traces** (`visualizationSettings.sensors.traces`, VSettingsTraces): `VisualizationSystemContainer::
+1. **Three fixed scopes per view**, `scope0`, `scope1`, `scope2`.
+2. **The settings in `view<i>.window.scope<j>`**, so that they stay out of the way (`view<i>.scopes.scope<j>` was
+   the alternative; the request's place was taken).
+3. **The sensor list** is a matrix of integers, `[[sensorY, componentY, sensorX, componentX, mbsNumber], ...]`,
+   n x 5, with `sensorX = -1` for the time; n x 2 is accepted and means `sensorX = -1`, `componentX = 0`,
+   `mbsNumber = 0`.
+4. **`timeHistory` and `horizontalZoom` stay, `xRange` is dropped** (it was the same as `timeHistory`).
+5. **The colors**: 16 colors, solid, then dotted, then dashed; the first seven those of `PlotLineCode` (red, green,
+   blue, black, cyan, magenta, yellow, as matplotlib draws them); no markers for now.
+6. **No key** for now. The Scope is switched in the settings and by an icon. Switched on while the sensor lists of
+   all three scopes are empty, the scopes show the first three sensors of mbs 0 that store their data, one per scope,
+   over time, with all their components (at most 3 x 16 lines) - a convenient look at the results without any
+   setting.
+7. **The legend**: the component names by OutputVariableType in C++ (X, Y, Z for vectors of 3, XX ... XY for 6,
+   `[i]` otherwise); the Scope does not call Python.
+8. **Thread safety of the sensor data**: reading the stored data without a lock while the solver appends rows is
+   dangerous (a reallocation frees the memory being read) and must not be accepted, neither for the Scope nor for the
+   traces. Copying the data would be slow and inconvenient for large data; therefore **a lock on the stored data of
+   each sensor**, taken by the solver while it appends or resets the rows and by the renderer while it reads them,
+   in the manner of the lock of the visualization state (`postProcessData->accessState`). Sensors are usually not
+   written in every step, and an uncontended lock costs nanoseconds.
+9. **Reset and deletion while the renderer runs**: to be checked (section 5).
+10. **The extras** (lines, texts, points in plot coordinates): later, as Python lists on `SC.renderer` rather than
+    visualizationSettings; a point is a circle drawn with the line width, so that the raytracer needs no triangles.
+11. **`axesColor` defaults to `[0.1, 0.1, 0.1, 1]`**.
+12. **A sensor without `storeInternal`**: a message once per run in the console and as renderer message, shown for
+    30 seconds.
+
+## 3. What exists
+
+- **Sensor traces** (`visualizationSettings.sensors.traces`): `VisualizationSystemContainer::
   GetSensorsPositionsVectorsLists` reads `CSensor::GetInternalStorage()` (time in column 0) up to the visualization
-  time of the system (`GetCData().GetVisualization().GetTime()`), with `showPast`/`showFuture`/`showCurrent`
-  (`UseTraceData`). The Scope takes the same data at the same time, so the SolutionViewer, which sets the visualization
-  state, gives the plots of the animation.
-- **Per-view window settings**: `VSettingsView` (`view0`..`view3`) with `camera`, `scene`, `window`; `VSettingsWindow`
-  has `showIconBar`, `showRuler`, `showMouseCoordinates`, `showRenderStateInfo`, `globalFontSize`, ... The Scope's
-  settings fit as `view<i>.window.scope` (a structure of its own, VSettingsScope) - or `view<i>.scope`, see Q2.
-- **Drawing in window coordinates**: the icon bar (src/Graphics/IconBar.cpp, `GlfwRenderer::DrawIconBar`) draws after
-  the frame is saved, so it is not in saved images (#3026); the Scope must be drawn **before** the image is saved
-  (requested: captured with the animations). Text: `GlfwRenderer::DrawString` (bitmap or texture fonts). An
-  orthographic pass in window coordinates exists (`glOrtho(0, 1, 1, 0, 0, 1)` in GlfwClient.cpp for the shadow
-  plane).
-- **Raytracer** (src/Graphics/Raytracing.cpp): `RasterizeLine` (with z-buffer and colors), `RasterizeCharacter`,
-  `DrawString` - lines and text in pixels exist, triangles in pixels (filled background, points) do not; sensor
-  traces are drawn there by `SensorTraceLines`.
-- **Icon bar**: 26 icons with names and tooltips in IconBar.cpp, drawn from code (no image files); a new icon "scope"
-  is a drawing function and an entry. **Keys**: python/exudyn/misc/keyBindings.py is the one table of the help, the
-  documentation and the check against GlfwClient.cpp (keyBindingsEmitter.py). S shows and hides the sensors, CTRL+S
-  is bound as well; SHIFT+S is free in GlfwClient.cpp, but keyBindings.py treats SHIFT as "a variant of a binding,
-  never one of its own", so SHIFT+S needs that rule extended (Q6).
-- **Colors**: `exudyn.graphics.colorList` (16 colors) and `PlotLineCode` (28 codes, 7 colors x 4 line styles) of
-  PlotSensor - not the same scheme; the request's 16 colors x 3 styles is a third (Q5).
-- **Sensor names and components**: a sensor has a name; the component names of an output variable (X, Y, Z, XX, ...)
-  are known in Python (PlotSensor labels them) - in C++ they would need a table by OutputVariableType and size (Q7).
+  time of the system, in the render thread, without a lock; `Raytracer::SensorTraceLines` builds the lines for both
+  renderers (#2877). The Scope takes the same data at the same time, so the SolutionViewer, which sets the
+  visualization state, gives the plots of the animation.
+- **The stored data** is a `ResizableMatrix` per sensor, reset by the solver at its start
+  (`CSolverBase::InitializeSolverOutput`) and appended row by row (`CSolverBase::WriteSensorsToFile`), which
+  reallocates when it grows; `MainSensor::GetInternalStorage` copies it for Python.
+- **The overlay of the window**: `GetGraphicsDataStatic` builds the texts, lines and triangles of the overlay
+  (computation info, ruler, colour bar) in modelview coordinates from pixels (`PixelsToModelViewCoordinates2D`) for
+  both renderers; the OpenGL renderer draws it after the scene and before `SaveImage`, the icon bar after it (not in
+  saved images, #3026). The raytracer draws lines into its image (`RasterizeLine`, without depth test for static
+  objects) and texts (`DrawString`, `RasterizeCharacter`); the static lines all have one width.
+- **Icon bar**: 26 icons drawn from code in IconBar.cpp, their state and action in GlfwClientExtended.cpp
+  (`IconBarIconIsOn`, the switch of the actions); test_iconBar.py checks the order.
+- **Renderer messages**: `GlfwRenderer::ShowMessage(text, timeout)`; console output from the render thread through
+  `PrintDelayed`.
+- **Settings types**: the structure generator knows `Float3`, `Float4`, `Index2`, `ArrayIndex` as list members;
+  neither a `Float2` nor a matrix of integers exists yet.
 
-## 3. Evaluation and recommendations
+## 4. The design
 
-- **One drawing description for both renderers**: a C++ class `ScopePlot` that builds, from the settings, the sensor
-  data and the window size in pixels, a list of 2D primitives - lines (with width and color, dashed/dotted as
-  segments), filled rectangles and triangles, texts (position, size, color, alignment) - in pixel coordinates. OpenGL
-  draws the list in an orthographic pass after the scene and before the image is saved; the raytracer rasterizes the
-  same list into its image after the 3D scene (lines and text exist there; filled triangles in screen space are to be
-  added, e.g. scanline, for the background and the points). The layout (ticks, labels, legend) is then computed once.
-- **Data**: per line the stored data of `sensorY` (column 1 + componentY) against time or against the component of
-  `sensorX`; only rows up to the visualization time (as traces with showPast), the last `timeHistory` seconds. The
-  internal storage is written by the solver thread while the renderer reads it - the traces do the same today; the
-  Scope reads under the same conditions (the visualization data lock of the renderer, Q8).
-- **Resolution**: with `xResolution` the rows are decimated to about `xResolution * width` points by taking, per
-  pixel column, the minimum and maximum (so peaks stay visible) - cheap and robust.
-- **Axes**: automatic ticks by the "nice numbers" rule (1, 2, 5 x 10^k) for about 5 major ticks, 4 or 5 sub-ticks;
-  labels with the fewest digits that distinguish the ticks; autofit with 5 % margin; a constant signal gets a range of
-  +-1 around it (or +-1 % of its value).
-- **Settings**: a structure VSettingsScope generated from definitions/structureDefsVisualizationSettings.py with the
-  fields of section 1; the sensor list as `sensors` (a list of lists, Python only at first; C++ needs a fixed type:
-  a matrix of n x 4 integers, Q3).
-- **Several scopes**: the request has one per view; two plots in one view (e.g. positions and forces) would need a list
-  of scopes - recommended later, with the same class (Q1).
-- **Extras (lines, texts, points in plot coordinates)**: kept for later, as asked; a Python-side list on the scope
-  object of the renderer, `SC.renderer.scope[i].AddLine(...)`, instead of visualizationSettings fields, would avoid
-  the settings problem (Q9).
-- **Not recommended**: drawing with matplotlib into a texture, or a second window - slower and not in the saved image.
+- **Settings** (`VSettingsScope`, in `view<i>.window.scope0`, `scope1`, `scope2`, and `view<i>.window.showScopes`,
+  default False, switched by the icon):
+  `sensors` (n x 5 or n x 2 integers, default empty), `region` (`[xmin, ymin, xmax, ymax]` relative to the window
+  from its top left corner; defaults `[2/3, 0, 1, 1/5]`, `[2/3, 1/5, 1, 2/5]`, `[2/3, 2/5, 1, 3/5]`), `frameColor`
+  `[0.7, 0.7, 0.7, 0.9]`, `backgroundColor` `[0.9, 0.9, 0.9, 0.9]`, `axesColor` `[0.1, 0.1, 0.1, 1]`, `lineWidth`
+  2, `useGrid` 1, `verticalZoom` `[0, 0]`, `horizontalZoom` `[0, 0]`, `timeHistory` -1, `showLegend` True,
+  `xLabel` `"time (s)"`, `yLabel` `""`, `xResolution` 4. The generator gets the types `Float2` and `MatrixI` (a
+  list of lists of integers in Python).
+  `componentY = -1` draws all components of the sensor, as the automatic mode does.
+- **ScopePlot** (src/Graphics/ScopePlot.h/.cpp): the drawing of a scope as one list of primitives in **pixels of the
+  window**, from its bottom left corner - filled rectangles, lines with their own width and color, texts with a size
+  and color. The layout is computed once for both renderers:
+  - the data of each line: the rows up to the visualization time (as the traces with `showPast`), within the last
+    `timeHistory` seconds, read **under the lock of the sensor**; decimated to `xResolution` values per pixel of the
+    plot width by keeping the minimum and the maximum of each pixel column in their order, so that peaks stay;
+  - the x-range: `horizontalZoom`, else for time over the last `timeHistory` seconds (scrolling once the time
+    exceeds it), else the data; the y-range: `verticalZoom`, else the data with 5 % margin, a constant signal $\pm$1 %
+    of its value (or $\pm$1);
+  - ticks at 1, 2, 5 times a power of ten, about one per 80 pixels in x and 40 in y, sub-ticks between them; the
+    labels with the digits the spacing needs; the grid by `useGrid`;
+  - the lines clipped to the plot area; dotted and dashed by the length along the line;
+  - the legend in the top right corner of the plot area, as many entries as fit;
+  - `yLabel` above the plot area (no rotated text), `xLabel` below the tick labels.
+- **OpenGL**: the primitives converted to the modelview coordinates of the overlay and drawn after it, without depth
+  test, **before `SaveImage`** - in saved images and animations, not under the icon bar.
+- **Raytracer**: the same primitives drawn into its image after the texts, before the image is scaled down: the
+  rectangles blended pixel by pixel, the lines by `RasterizeLine` as static objects with their width, the texts by
+  `DrawString`. With the raytracer in the window, the window shows its image, so OpenGL draws nothing more.
+- **The lock** (`CSensor::LockInternalStorage`, `ReleaseInternalStorage`): an atomic flag per sensor, taken by the
+  solver while it resets or appends the stored rows, by the traces and the Scope while they read them, and by
+  `MainSensor::GetInternalStorage` while it copies them.
+- **The automatic mode** and **the message** as decided (section 2, 6 and 12); the message is reset when the
+  renderer starts, so that it comes once per run.
 
-## 4. Open questions (to be decided by the maintainer)
+## 5. Reset and deletion while the renderer runs (decision 9)
 
-1. One scope per view (as requested), or a list of scopes per view, each with its own region?
-2. The place of the settings: `view<i>.window.scope` (as requested, the window settings) or `view<i>.scope`, beside
-   camera, scene and window? Recommended: `view<i>.scope`, as it is no window property.
-3. The sensor list: `[[sensorY, componentY, sensorX, componentX], ...]` as a matrix of integers in C++ (`ResizableMatrix`
-   of n x 4, -1 for "time"); and for systems with several mbs: the sensors of mbs 0 only, or a fifth column with the
-   mbs number?
-4. `xRange` and `horizontalZoom` and `timeHistory` overlap: `timeHistory` limits the data, `xRange` the shown range of
-   time, `horizontalZoom` a fixed range. Recommended: keep `timeHistory` and `horizontalZoom`, drop `xRange`
-   (`timeHistory` = 2 shows the last 2 s), or say which wins.
-5. The color scheme: `graphics.colorList` (16 colors) with solid / dotted / dashed, as requested - or PlotLineCode of
-   PlotSensor, so that a scope and a PlotSensor plot of the same sensors look alike? Recommended: the requested 16 x 3
-   scheme, and PlotSensor unchanged.
-6. SHIFT+S next to S (sensors on/off): fine, with keyBindings.py extended for SHIFT as a binding of its own - or
-   another key?
-7. The legend: the component names by OutputVariableType in C++ (X, Y, Z for vectors of 3, XX ... XY for 6, [i]
-   otherwise) - enough, or the names of PlotSensor (which Python knows)?
-8. Thread safety: the stored data of a sensor grows while the solver runs; the traces read it without a lock. Accept
-   the same (rare glitches while a row is appended), or copy under the lock of the renderer?
-9. The extras (lines, texts, points): later as Python lists on `SC.renderer` rather than visualizationSettings - agreed?
-10. `backgroundColor` and `axesColors` both default to `[0.9, 0.9, 0.9, 0.9]` in the request - the axes would then be
-    invisible on the background; intended default for `axesColors` e.g. `[0.1, 0.1, 0.1, 1]`?
-11. Sensors without `storeInternal`: the message once per run in the console and as text in the scope region?
+- **`SC.Reset()` and a deleted SystemContainer**: safe. `MainSystemContainer::Reset()` detaches the renderer first
+  (`DetachFromRenderEngine` → `GlfwRenderer::DetachVisualizationSystem` → `StopRenderer`), which sets the stop flag,
+  waits up to 1 s (20 s with the raytracer) for the render loop to end and joins the render thread; only then are
+  the systems deleted.
+- **`mbs.Reset()`, and adding, deleting or modifying items while the renderer runs**: not safe. `MainSystem::Reset`
+  deletes the items, the sensors and their stored data without telling the renderer; the render thread may be in
+  `UpdateGraphicsData` (which checks `IsSystemConsistent()` only once, at its start) or in the sensor traces (which
+  check nothing) at that moment. Item changes from Python while the renderer runs are the same race, rarer because
+  the items are not freed. Raised as #3239 (RG6.20.9): a lock of the system data, taken by Reset and the item
+  changes and by the render thread while it reads the system, or a request to the render thread to finish its frame
+  first.
 
-## 5. Sub-steps proposed
+## 6. Sub-steps (as numbered in the plan)
 
-1. The open questions (section 4) decided.
-2. VSettingsScope in the definitions, the regenerated settings and the dialog entries.
-3. `ScopePlot`: the data, the decimation, the axes, the ticks, the legend - the list of 2D primitives; a C++/pytest
-   test of the layout without a window (via the graphics data of the renderer).
-4. OpenGL: the orthographic pass before the saved image; the icon and SHIFT+S.
-5. Raytracer: the same list rasterized, filled triangles in screen space added.
-6. A test model and an example (a pendulum with a scope of angle and velocity); the documentation in the GUI chapter.
-7. Later: several scopes per view; the extras (lines, texts, points).
+1. The decisions (section 2) and this design: closed.
+2. VSettingsScope and the settings types Float2 and MatrixI in the definitions and the generator.
+3. ScopePlot: the data, the decimation, the axes, ticks, grid and legend as one list of primitives.
+4. OpenGL: the primitives drawn before the image is saved; the icon, `showScopes`, the automatic mode and the
+   message.
+5. The raytracer: the same primitives drawn into its image.
+6. A test model (the raytracer image of a scope), the documentation in the GUI chapter.
+7. Later: the extras (lines, texts, points in plot coordinates) as Python lists on `SC.renderer`.
+8. The lock of the stored sensor data, for the solver, the traces, the Scope and Python.
+9. Reset and item changes while the renderer runs (#3239).

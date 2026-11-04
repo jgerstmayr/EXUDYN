@@ -53,6 +53,7 @@
 #include "Graphics/GlfwClient.h"
 #include "Graphics/characterBitmap.h"
 #include "Graphics/IconBar.h"
+#include "Graphics/ScopePlot.h"
 #include "Graphics/TextureStore.h"
 
 
@@ -591,6 +592,78 @@ void GlfwRenderer::IconBarMouse(GLFWwindow* window, int width, int height, doubl
 	y *= (double)height/(double)EXUstd::Maximum(1, windowHeight);
 }
 
+//! the scopes as one list of primitives in pixels, drawn in modelview coordinates of the overlay without depth test;
+//! the raytracer draws the same list into its image (#3237)
+void GlfwRenderer::RenderScopes(Index viewID, int width, int height)
+{
+	const VSettingsView& settingsView = GetSettingsView(viewID, *visSettings);
+	if (!settingsView.window.showScopes) { return; }
+	RenderState* state = renderViews.State(viewID);
+	static ScopePlot::Graphics scopeGraphics;
+	float fontSize = settingsView.window.globalFontSize * state->displayScaling * fontSmallFactor;
+	ScopePlot::BuildScopes(*basicVisualizationSystemContainer, viewID, width, height, fontSize, scopeGraphics);
+	if (ScopePlot::MessageIsNew(scopeGraphics.message))
+	{
+		ShowMessage(scopeGraphics.message, 30.);
+		PrintDelayed(scopeGraphics.message);
+	}
+	if (scopeGraphics.items.empty()) { return; }
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glDisable(GL_DEPTH_TEST);
+	SetGLdepthMask(GL_FALSE);
+	glDisable(GL_LIGHTING);
+	glDisable(MY_GL_TEXTURE_2D);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if (visSettings->openGL.advanced.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
+	auto P = [&](const Float2& p) { return basicVisualizationSystemContainer->PixelsToModelViewCoordinates2D(p[0], p[1], width, height, state->zoom); };
+	bool inLines = false;
+	float currentWidth = -1.f;
+	for (const ScopePlot::Item& item : scopeGraphics.items)
+	{
+		const Float4& c = item.color;
+		if (item.type == ScopePlot::ItemType::Line)
+		{
+			if (!inLines || item.width != currentWidth) //consecutive lines of one width in one glBegin
+			{
+				if (inLines) { glEnd(); }
+				currentWidth = item.width;
+				glLineWidth(currentWidth);
+				glBegin(GL_LINES);
+				inLines = true;
+			}
+			Float2 p0 = P(item.p0), p1 = P(item.p1);
+			glColor4f(c[0], c[1], c[2], c[3]);
+			glVertex3f(p0[0], p0[1], 0.f);
+			glVertex3f(p1[0], p1[1], 0.f);
+			continue;
+		}
+		if (inLines) { glEnd(); inLines = false; }
+		if (item.type == ScopePlot::ItemType::Rectangle)
+		{
+			Float2 p0 = P(item.p0), p1 = P(item.p1);
+			glColor4f(c[0], c[1], c[2], c[3]);
+			glBegin(GL_QUADS);
+			glVertex3f(p0[0], p0[1], 0.f);
+			glVertex3f(p1[0], p0[1], 0.f);
+			glVertex3f(p1[0], p1[1], 0.f);
+			glVertex3f(p0[0], p1[1], 0.f);
+			glEnd();
+		}
+		else
+		{
+			Float2 p = P(item.p0);
+			DrawString(viewID, item.text.c_str(), item.width, Float3({ p[0], p[1], 0.f }), Float3({ 0.f, 0.f, 0.f }), c, true);
+		}
+	}
+	if (inLines) { glEnd(); }
+	glLineWidth(visSettings->openGL.lineWidth);
+	if (visSettings->openGL.advanced.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
+	SetGLdepthMask(GL_TRUE);
+	glEnable(GL_DEPTH_TEST);
+}
+
 //! true, if an icon is pressed (shown as pressed in the bar)
 bool GlfwRenderer::IconBarIconIsOn(Index viewID, Index icon)
 {
@@ -610,6 +683,7 @@ bool GlfwRenderer::IconBarIconIsOn(Index viewID, Index icon)
 	case IconBar::Icon::Markers: return visSettings->markers.show;
 	case IconBar::Icon::Loads: return visSettings->loads.show;
 	case IconBar::Icon::Sensors: return visSettings->sensors.show;
+	case IconBar::Icon::Scope: return view.window.showScopes;
 	default: return false;
 	}
 }
@@ -738,6 +812,7 @@ void GlfwRenderer::IconBarExecute(GLFWwindow* window, Index viewID, Index icon, 
 	case IconBar::Icon::Markers: Key(GLFW_KEY_M, shift ? GLFW_MOD_CONTROL : 0); break;
 	case IconBar::Icon::Loads: Key(GLFW_KEY_L, shift ? GLFW_MOD_CONTROL : 0); break;
 	case IconBar::Icon::Sensors: Key(GLFW_KEY_S, shift ? GLFW_MOD_CONTROL : 0); break;
+	case IconBar::Icon::Scope: view.window.showScopes = !view.window.showScopes; break;
 	case IconBar::Icon::Config0: case IconBar::Icon::Config1: case IconBar::Icon::Config2: case IconBar::Icon::Config3:
 	{
 		//in the Python thread, as the dialogs: the configurations are in config.json, which Python reads and writes (#3043)

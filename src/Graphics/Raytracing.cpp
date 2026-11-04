@@ -952,6 +952,60 @@ void Raytracer::DrawString(const char* text, float fontSizeScaled, const RTVecto
 }
 
 
+//! the primitives of the scopes, in pixels of the window, into the image: the rectangles blended, the lines and texts as
+//! static objects (#3237)
+void Raytracer::DrawScopes(const ScopePlot::Graphics& scopeGraphics, Index width, Index height, RTfloat nearPlaneZ)
+{
+	const RTfloat factorX = (RTfloat)RTS.imageWidth / (RTfloat)width; //pixels of the image per pixel of the window
+	const RTfloat factorY = (RTfloat)RTS.imageHeight / (RTfloat)height;
+	auto ModelView = [&](const Float2& p) {
+		return RTVector3D({ RTS.zoom * RTS.ratio * (2.f * p[0] / (RTfloat)width - 1.f), RTS.zoom * (2.f * p[1] / (RTfloat)height - 1.f), 0.f });
+	};
+	const RTfloat lineWidth = RTS.lineWidth;
+	for (const ScopePlot::Item& item : scopeGraphics.items)
+	{
+		if (item.type == ScopePlot::ItemType::Rectangle)
+		{
+			Index ix0 = EXUstd::Maximum((Index)0, (Index)std::round(item.p0[0] * factorX));
+			Index ix1 = EXUstd::Minimum(RTS.imageWidth, (Index)std::round(item.p1[0] * factorX));
+			Index iy0 = EXUstd::Maximum((Index)0, (Index)std::round(item.p0[1] * factorY));
+			Index iy1 = EXUstd::Minimum(RTS.imageHeight, (Index)std::round(item.p1[1] * factorY));
+			RTfloat alpha = item.color[3];
+			for (Index iy = iy0; iy < iy1; iy++)
+			{
+				for (Index ix = ix0; ix < ix1; ix++)
+				{
+					Index iRGBA = (iy * RTS.imageWidth + ix) * RTS.RTcolorDepth;
+					for (Index k = 0; k < 3; k++)
+					{
+						RTS.pixelsRGBA[iRGBA + k] = FloatColorToByte(item.color[k] * alpha + RTS.pixelsRGBA[iRGBA + k] / 255.f * (1.f - alpha));
+					}
+				}
+			}
+		}
+		else if (item.type == ScopePlot::ItemType::Line)
+		{
+			RTS.lineWidth = item.width / (RTfloat)RTS.imageSizeFactor; //RasterizeLine multiplies it with AAfactor
+			//RasterizeLine draws nothing for a line shorter than a pixel of the image, and a plotted line has up to
+			//xResolution values per pixel: such a line is drawn one pixel long
+			Float2 p1 = item.p1;
+			Float2 d({ (item.p1[0] - item.p0[0]) * factorX, (item.p1[1] - item.p0[1]) * factorY });
+			RTfloat length = d.GetL2Norm();
+			if (length < 1.01f)
+			{
+				if (length < 1e-6f) { d = Float2({ 1.f, 0.f }); length = 1.f; }
+				p1 = Float2({ item.p0[0] + 1.01f * d[0] / (length * factorX), item.p0[1] + 1.01f * d[1] / (length * factorY) });
+			}
+			RasterizeLine(ModelView(item.p0), ModelView(p1), item.color, item.color, RTS.zDepths, RTS.pixelsRGBA, RTS, true, nearPlaneZ);
+		}
+		else
+		{
+			DrawString(item.text.c_str(), item.width, ModelView(item.p0), RTVector3D({ 0.f, 0.f, 0.f }), item.color, true, true, true);
+		}
+	}
+	RTS.lineWidth = lineWidth;
+}
+
 void Raytracer::CopyVisSettings2RTS(Index viewID)
 {
 	const VSettingsView& settingsView = GetSettingsView(viewID, *visSettings);
@@ -1759,6 +1813,14 @@ ResizableArray<GLLine> triangles6Edges;
 					!visSettings->general.textHasBackground, alwaysInFront, text.itemID == itemIDstaticObject);
 			}
 			//DrawString("This is a Demo 123", 12 * RTS.displayScaling, Float3({ 0,0,1 }), RTVector3D(0), Float4({ 0,0,0,1 }), true, true);
+		}
+		if (settingsView.window.showScopes) //over everything, as OpenGL draws them (#3237)
+		{
+			ScopePlot::Graphics scopeGraphics;
+			float fontSize = settingsView.window.globalFontSize * RTS.displayScaling * fontSmallFactor;
+			ScopePlot::BuildScopes(*basicVisualizationSystemContainer, viewID, width, height, fontSize, scopeGraphics);
+			if (ScopePlot::MessageIsNew(scopeGraphics.message)) { PrintDelayed(scopeGraphics.message); }
+			DrawScopes(scopeGraphics, width, height, nearPlaneZ);
 		}
 
 

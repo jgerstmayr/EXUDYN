@@ -408,6 +408,12 @@ current settings and view); stored from the dialog with the buttons → CFG0 ...
 **store model view**, or from a script with `exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0)`,
 see {ref}`sec-usersettings-storedconfigurations`. An icon of the icon bar switches the shadow (#3044).
 
+**Scopes in the render window** (#3237): three per view, `visualizationSettings.view0.window.scope0` to `scope2`,
+shown with `window.showScopes` or the scope icon, plot stored sensor values over time or over another sensor, up to
+the visualization time, in OpenGL and the raytracer and in saved images; without sensor lists they show the first
+three sensors that store their values, see {ref}`sec-gui-scopes`. The stored values of a sensor are read and written
+under a lock, so that the renderer no longer reads them while the solver appends a row.
+
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.
 

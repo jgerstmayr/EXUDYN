@@ -464,6 +464,7 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
             const CSensor& sensor = *cSystem.GetSystemData().GetCSensors()[positionSensorIndex];
             if (EXUstd::IsOfType(sensor.GetOutputVariableType(), OutputVariableType::Position))
             {
+                sensor.LockInternalStorage(); //the solver appends rows while this thread reads them (#3237)
                 const ResizableMatrix& data = sensor.GetInternalStorage();
                 if (data.NumberOfRows() > 0 and data.NumberOfColumns() == 4) //must be position compatible data
                 {
@@ -476,10 +477,12 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
                         }
                     }
                 }
+                sensor.ReleaseInternalStorage();
 
                 if (traces.showVectors && vectorSensorIndex >= 0 && vectorSensorIndex < cSystem.GetSystemData().GetCSensors().NumberOfItems())
                 {
                     const CSensor& vectorSensor = *cSystem.GetSystemData().GetCSensors()[vectorSensorIndex];
+                    vectorSensor.LockInternalStorage();
                     const ResizableMatrix& data = vectorSensor.GetInternalStorage();
                     if (data.NumberOfRows() > 0 && data.NumberOfColumns() == 4) //must be Vector3D data
                     {
@@ -492,14 +495,16 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
                             }
                         }
                     }
+                    vectorSensor.ReleaseInternalStorage();
                 }
                 if (traces.showTriads && triadSensorIndex >= 0 && triadSensorIndex < cSystem.GetSystemData().GetCSensors().NumberOfItems())
                 {
                     //std::cout << "A," << GetOutputVariableTypeString(triadSensor.GetOutputVariableType()) << ";\n";
                     const CSensor& triadSensor = *cSystem.GetSystemData().GetCSensors()[triadSensorIndex];
+                    bool isRotationMatrix = EXUstd::IsOfType(triadSensor.GetOutputVariableType(), OutputVariableType::RotationMatrix); //before the lock, as it may raise
+                    triadSensor.LockInternalStorage();
                     const ResizableMatrix& data = triadSensor.GetInternalStorage();
-                    if (data.NumberOfRows() > 0 && data.NumberOfColumns() == 10 &&
-                        EXUstd::IsOfType(triadSensor.GetOutputVariableType(), OutputVariableType::RotationMatrix)) //must be Matrix3D data
+                    if (data.NumberOfRows() > 0 && data.NumberOfColumns() == 10 && isRotationMatrix) //must be Matrix3D data
                     {
                         for (Index i = 0; i < data.NumberOfRows(); i++)
                         {
@@ -513,6 +518,7 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
                             }
                         }
                     }
+                    triadSensor.ReleaseInternalStorage();
                 }
             }
         }

@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -206,7 +206,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -286,7 +286,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -381,7 +381,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -458,7 +458,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -538,7 +538,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -615,7 +615,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -677,7 +677,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -751,7 +751,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -837,7 +837,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -908,7 +908,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -985,7 +985,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1094,7 +1094,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1162,7 +1162,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1263,7 +1263,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1346,7 +1346,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1418,12 +1418,103 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        VSettingsScope
+* @brief        A scope: stored sensor values plotted over time, or over another sensor, in a region of the render window, drawn by OpenGL and the raytracer and part of saved images; each view has three, shown with `window.showScopes` (#3237). The values are those up to the visualization time, as the sensor traces show them, so that the solution viewer plots them in its animations; only sensors with `storeInternal=True` have them.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2026-11-04 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+class VSettingsScope // AUTO: 
+{
+public: // AUTO: 
+  Float4 axesColor;                               //!< AUTO: RGBA color of the axes, ticks, grid, labels and legend
+  Float4 backgroundColor;                         //!< AUTO: RGBA color of the region
+  Float4 frameColor;                              //!< AUTO: RGBA color of the frame around the region
+  Float2 horizontalZoom;                          //!< AUTO: `[xmin, xmax]` of the plot; both 0: fitted to the values, or the last `timeHistory` seconds
+  float lineWidth;                                //!< AUTO: must be > 0; width in pixels of the plotted lines, the axes and the ticks; the sub-ticks and the grid have half of it
+  Float4 region;                                  //!< AUTO: the region of the scope as `[xmin, ymin, xmax, ymax]`, relative to the width and height of the window, measured from its top left corner
+  MatrixI sensors;                                //!< AUTO: the lines of the scope, one row per line: `[sensorY, componentY, sensorX, componentX, mbsNumber]`; `sensorX=-1` plots over time; `componentY=-1` plots all components of the sensor; rows of two, `[sensorY, componentY]`, plot over time in mbs 0. If the lists of all three scopes of the view are empty, the scopes show the first three sensors of mbs 0 that store their values, one per scope
+  bool showLegend;                                //!< AUTO: True: the name of the sensor and the component of each line, in the top right corner of the plot
+  float timeHistory;                              //!< AUTO: -1: all values up to the visualization time; otherwise only those of the last `timeHistory` seconds, e.g. 2 shows the last 2 seconds, and a plot over time scrolls
+  Index useGrid;                                  //!< AUTO: 0: no grid; 1: a grid at the ticks; 2: a grid at the ticks and the sub-ticks
+  Float2 verticalZoom;                            //!< AUTO: `[ymin, ymax]` of the plot; both 0: fitted to the values
+  std::string xLabel;                             //!< AUTO: label of the horizontal axis
+  float xResolution;                              //!< AUTO: must be > 0; how many values are drawn per pixel of the width of the plot; more values are reduced to the minimum and the maximum of each pixel column, so that peaks stay; 0.25 is a very low resolution
+  std::string yLabel;                             //!< AUTO: label of the vertical axis, written above the plot
+
+private: // AUTO: 
+  VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsScope()
+  {
+    backlink=nullptr;
+    axesColor = Float4({0.1f,0.1f,0.1f,1.f});
+    backgroundColor = Float4({0.9f,0.9f,0.9f,0.9f});
+    frameColor = Float4({0.7f,0.7f,0.7f,0.9f});
+    horizontalZoom = Float2({0.f,0.f});
+    lineWidth = 2.f;
+    region = Float4({0.6666667f,0.f,1.f,0.2f});
+    sensors = MatrixI();
+    showLegend = true;
+    timeHistory = -1.f;
+    useGrid = 1;
+    verticalZoom = Float2({0.f,0.f});
+    xLabel = "time (s)";
+    xResolution = 4.f;
+  };
+  void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
+
+  // AUTO: access functions
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsScope" << ":\n";
+    os << "  axesColor = " << axesColor << "\n";
+    os << "  backgroundColor = " << backgroundColor << "\n";
+    os << "  frameColor = " << frameColor << "\n";
+    os << "  horizontalZoom = " << horizontalZoom << "\n";
+    os << "  lineWidth = " << lineWidth << "\n";
+    os << "  region = " << region << "\n";
+    os << "  sensors = " << sensors << "\n";
+    os << "  showLegend = " << showLegend << "\n";
+    os << "  timeHistory = " << timeHistory << "\n";
+    os << "  useGrid = " << useGrid << "\n";
+    os << "  verticalZoom = " << verticalZoom << "\n";
+    os << "  xLabel = " << xLabel << "\n";
+    os << "  xResolution = " << xResolution << "\n";
+    os << "  yLabel = " << yLabel << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsScope& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        VSettingsWindow
 * @brief        Settings for window that are individual to each view; in particular initial size, and behavior. Note that some of the settings are only used during creation of the window
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1434,6 +1525,9 @@ public: // AUTO:
 class VSettingsWindow // AUTO: 
 {
 public: // AUTO: 
+  VSettingsScope scope0;                          //!< AUTO: the first scope of this view, at the top right corner
+  VSettingsScope scope1;                          //!< AUTO: the second scope of this view, below the first one
+  VSettingsScope scope2;                          //!< AUTO: the third scope of this view, below the second one
   bool alwaysOnTop;                               //!< AUTO: True: render window of respective view will be always on top of all other windows
   float globalFontSize;                           //!< AUTO: must be > 0; general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)
   bool lockModelView;                             //!< AUTO: True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value
@@ -1445,6 +1539,7 @@ public: // AUTO:
   bool showMouseCoordinates;                      //!< AUTO: True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections
   bool showRenderStateInfo;                       //!< AUTO: True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'
   bool showRuler;                                 //!< AUTO: True: show a ruler along the bottom and the left border of the window, with ticks at 1, 2 or 5 times a power of 10 in model units; in an axis-aligned view the labels are the coordinates of the view, as the mouse coordinates show them, else the distance from the left or bottom end; only shown with perspective=0; switched on/off with key 'F5' (#2244)
+  bool showScopes;                                //!< AUTO: True: show the scopes `scope0`, `scope1` and `scope2` of this view, see VSettingsScope; switched on/off with the scope icon of the icon bar (#3237)
   bool showWindow;                                //!< AUTO: True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)
   bool storeRenderWindowGeometry;                 //!< AUTO: True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition` - so that storing the settings keeps the window where you left it, see Section [](#sec-usersettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run
 
@@ -1468,12 +1563,18 @@ public: // AUTO:
     showMouseCoordinates = false;
     showRenderStateInfo = false;
     showRuler = false;
+    showScopes = false;
     showWindow = true;
     storeRenderWindowGeometry = false;
+    scope1.region = Float4({0.6666667f,0.2f,1.f,0.4f});
+    scope2.region = Float4({0.6666667f,0.4f,1.f,0.6f});
   };
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
   {
     backlink = backlinkInit;
+    scope0.Init(backlinkInit);
+    scope1.Init(backlinkInit);
+    scope2.Init(backlinkInit);
   }
 
   // AUTO: access functions
@@ -1481,6 +1582,9 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsWindow" << ":\n";
+    os << "  scope0 = " << scope0 << "\n";
+    os << "  scope1 = " << scope1 << "\n";
+    os << "  scope2 = " << scope2 << "\n";
     os << "  alwaysOnTop = " << alwaysOnTop << "\n";
     os << "  globalFontSize = " << globalFontSize << "\n";
     os << "  lockModelView = " << lockModelView << "\n";
@@ -1492,6 +1596,7 @@ public: // AUTO:
     os << "  showMouseCoordinates = " << showMouseCoordinates << "\n";
     os << "  showRenderStateInfo = " << showRenderStateInfo << "\n";
     os << "  showRuler = " << showRuler << "\n";
+    os << "  showScopes = " << showScopes << "\n";
     os << "  showWindow = " << showWindow << "\n";
     os << "  storeRenderWindowGeometry = " << storeRenderWindowGeometry << "\n";
     os << "\n";
@@ -1512,7 +1617,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1571,7 +1676,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1674,7 +1779,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1756,7 +1861,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1830,7 +1935,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1901,7 +2006,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2119,7 +2224,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2231,7 +2336,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2311,7 +2416,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2642,7 +2747,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2713,7 +2818,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2805,7 +2910,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2984,7 +3089,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-31 (last modfied)
+* @date         AUTO: 2026-11-04 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

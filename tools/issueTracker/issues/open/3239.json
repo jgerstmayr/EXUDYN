@@ -1,0 +1,12 @@
+{
+  "number": 3239,
+  "title": "mbs.Reset() and item changes while the renderer runs: no synchronization with the render thread",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "MainSystem::Reset deletes the items, the sensors and their stored data without stopping or waiting for the renderer; the render thread may be in UpdateGraphicsData, which checks IsSystemConsistent() only at its start, or in the sensor traces, which check nothing, and then reads freed memory. Adding, deleting or modifying items from Python while the renderer runs is the same race, rarer because the items are not freed. SC.Reset() and deleting a SystemContainer are safe: they detach the renderer first, which stops the render loop and joins its thread. Decided: a lock of the system data, taken by Reset and the item changes and by the render thread while it reads the system, or a request to the render thread to finish its frame first; to be analyzed (docs/dev/design/scope.md section 5).",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03"
+}

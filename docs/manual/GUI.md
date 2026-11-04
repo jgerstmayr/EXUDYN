@@ -108,6 +108,7 @@ does and the key. From the top:
   in this list and the tooltip the list;
 - **show nodes, bodies, connectors, markers, loads, sensors** (N, B, C, M, L, S); with SHIFT, their numbers
   (CTRL+N, ...), which the icon marks with #;
+- **scopes**: the sensor values plotted in the window, see {ref}`sec-gui-scopes`;
 - **visualization settings**: opens the dialog, as V;
 - **CFG0** to **CFG3**: switch to one of the four configurations stored in `~/.exudyn/config.json`, to
   its settings and its model view, as far as it stores them; CTRL and the icon store the current
@@ -120,6 +121,37 @@ tooltips have the size of the version string, `window.globalFontSize` times 0.75
 times `displayScaleFactor` - they are made smaller where the window is not high enough for all of them -,
 `iconBarFoldDistance` sets how near to the border the mouse must come, and `iconBarTimeout` how many milliseconds the
 bar stays after the mouse left it.
+
+(sec-gui-scopes)=
+### Scopes
+
+A scope plots stored sensor values in a region of the render window, faster than matplotlib and as part of the
+saved images, so that an animation of the solution viewer shows the plots with the model (#3237). Each view has three
+scopes, `visualizationSettings.view0.window.scope0`, `scope1` and `scope2` (`view1`, ... for the other views), shown
+with `window.showScopes` or the scope icon of the icon bar. OpenGL and the raytracer draw them alike.
+
+- **The sensors** of a scope are rows of integers, `[sensorY, componentY]` for a component over time, or
+  `[sensorY, componentY, sensorX, componentX, mbsNumber]`, with `sensorX = -1` for the time; `componentY = -1` plots
+  all components. Only sensors with `storeInternal=True` keep their values; for another one, the console and the
+  window say once that it is not shown.
+- **Without any sensor list** in the three scopes of the view, they show the first three sensors of mbs 0 that store
+  their values, one per scope, with all their components - a look at the results without a setting.
+- **The values** are those up to the visualization time, as the sensor traces show them; `timeHistory` limits them
+  to the last seconds, and a plot over time then scrolls. `horizontalZoom` and `verticalZoom` fix the ranges, both 0
+  fits them to the values. Per pixel of the width, `xResolution` values are drawn; more are reduced to the minimum
+  and the maximum of each pixel column, so that peaks stay.
+- **The look**: `region` places the scope relative to the window, from its top left corner (the defaults are the
+  top right third of the width, one fifth of the height each); `backgroundColor`, `frameColor`, `axesColor`,
+  `lineWidth`, `useGrid` (0, 1 at the ticks, 2 also at the sub-ticks), `xLabel`, `yLabel` (above the plot) and
+  `showLegend`. The lines take 16 colors, the first seven those of `PlotSensor`, and are dotted beyond 16 lines and
+  dashed beyond 32.
+
+```python
+SC.visualizationSettings.view0.window.showScopes = True
+SC.visualizationSettings.view0.window.scope0.sensors = [[sPosition, 1], [sVelocity, 1]] #y-components over time
+SC.visualizationSettings.view0.window.scope1.sensors = [[sVelocity, 1, sPosition, 1, 0]] #velocity over position
+SC.visualizationSettings.view0.window.scope1.xLabel = 'position (m)'
+```
 
 (sec-overview-basics-visualizationsettings)=
 ### Visualization settings dialog

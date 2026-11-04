@@ -86,21 +86,23 @@ names = {
         #lists of fixed-size vectors and matrices are exchanged through their Py... wrapper classes
         'Vector2DList': 'PyVector2DList', 'Vector3DList': 'PyVector3DList', 'Vector6DList': 'PyVector6DList',
         'Matrix3DList': 'PyMatrix3DList',
+        'MatrixI': 'std::vector<std::vector<Index>>',   #a list of lists of integers (#3237)
     },
     'dictType': {                                   #the 'type' entry of GetDictionaryWithTypeInfo
         'ResizableVector': 'Vector', 'NumpyVector': 'Vector', 'NumpyMatrix': 'Matrix',
         'StdArray33F': 'MatrixFloat',
         'Index2': 'IndexArray', 'Index4': 'IndexArray', 'ArrayIndex': 'IndexArray',
-        'ArrayFloat': 'VectorFloat', 'Float3': 'VectorFloat', 'Float4': 'VectorFloat',
+        'ArrayFloat': 'VectorFloat', 'Float2': 'VectorFloat', 'Float3': 'VectorFloat', 'Float4': 'VectorFloat',
+        'MatrixI': 'IndexMatrix',
     },
     'stub': {
-        'ArrayIndex': 'List[int]', 'ArrayFloat': 'List[float]', 'Index2': 'Tuple[int,int]',
+        'ArrayIndex': 'List[int]', 'ArrayFloat': 'List[float]', 'Index2': 'Tuple[int,int]', 'MatrixI': 'List[List[int]]',
         'void': 'None', 'std::string': 'str', 'PyObject': 'Any',
         'HomogeneousTransformation': 'Any',         #a 4x4 array, its 16 values or an exu.HT (#2793)
         'HomogeneousTransformationList': 'Any',     #a list of them (#2798)
     },
     'pyTyping': {
-        'Vector': 'array_like', 'ArrayIndex': 'array_like',
+        'Vector': 'array_like', 'ArrayIndex': 'array_like', 'MatrixI': 'list of lists of int',
         'HomogeneousTransformation': 'array_like (4x4) or exudyn.HT',
         'HomogeneousTransformationList': 'list of array_like (4x4) or exudyn.HT',
     },
@@ -182,7 +184,7 @@ def _Python(typeName, destination):
     family, size = SizedName(typeName)
     arrayLike = 'ArrayLike' if destination == 'stub' else 'array_like'
     if destination == 'stub':
-        if family == 'Float' and size in [3, 4]:
+        if family == 'Float' and size in [2, 3, 4]:
             return 'Tuple[' + ','.join(['float'] * size) + ']'
         if typeName in _arrayLike or family == 'Matrix':
             return arrayLike

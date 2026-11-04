@@ -18,6 +18,7 @@
 
 #include "Graphics/Raytracing.h"
 #include "Graphics/TextureStore.h"
+#include "Graphics/ScopePlot.h"
 
 
 #ifdef USE_GLFW_GRAPHICS
@@ -2020,6 +2021,7 @@ void GlfwRenderer::InitCreateWindow()
 		//+++++++++++++++++++++++++++++++++
 		//do this just before RunLoop, all initialization finished ...
 		//DELETE: firstRun = 0; //zoom all on startup of window
+		ScopePlot::ResetMessage(); //the message of a scope comes once per start (#3237)
 		rendererActive = true; //this is still threadsafe, because main thread waits for this signal!
 		//+++++++++++++++++++++++++++++++++
 	}
@@ -2530,6 +2532,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 				ShowMessage("WARNING: contour plot color bar only works for one single MainSystem (mbs)");
 			}
 		}
+		RenderScopes(viewID, width, height); //the raytracer draws them into its image
 	}
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

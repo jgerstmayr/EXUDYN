@@ -114,6 +114,7 @@
     <ClCompile Include="..\src\Graphics\PostProcessData.cpp" />
     <ClCompile Include="..\src\Graphics\Raytracing.cpp" />
     <ClCompile Include="..\src\Graphics\IconBar.cpp" />
+    <ClCompile Include="..\src\Graphics\ScopePlot.cpp" />
     <ClCompile Include="..\src\Graphics\VisualizationPrimitives.cpp" />
     <ClCompile Include="..\src\Graphics\VisualizationSystem.cpp" />
     <ClCompile Include="..\src\Graphics\VisualizationSystemContainer.cpp" />
@@ -574,6 +575,7 @@
     <ClInclude Include="..\src\Graphics\Raytracing.h" />
     <ClInclude Include="..\src\Graphics\TextureStore.h" />
     <ClInclude Include="..\src\Graphics\IconBar.h" />
+    <ClInclude Include="..\src\Graphics\ScopePlot.h" />
     <ClInclude Include="..\src\Graphics\VisualizationBasics.h" />
     <ClInclude Include="..\src\Graphics\VisualizationPrimitives.h" />
     <ClInclude Include="..\src\Graphics\VisualizationSystem.h" />

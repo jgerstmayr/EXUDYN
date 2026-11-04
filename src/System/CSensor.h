@@ -22,14 +22,28 @@
 #include "Linalg/BasicLinalg.h"
 
 #include "Main/OutputVariable.h"
+#include "Utilities/AdvancedStuff.h"	//WaitAndLockSemaphore
+#include <atomic>
 
 
 class UserFunctionBase;
+
+//! the lock of the stored data of a sensor: the solver appends rows while the render thread reads them, and a row
+//! appended may reallocate the storage (#3237); a copy of a sensor gets a lock of its own, released
+class SensorStorageLock
+{
+public:
+	mutable std::atomic_flag flag = ATOMIC_FLAG_INIT;
+	SensorStorageLock() {}
+	SensorStorageLock(const SensorStorageLock&) {}
+	SensorStorageLock& operator=(const SensorStorageLock&) { return *this; }
+};
 
 class CSensor
 {
 protected: 
 	ResizableMatrix internalStorage; //!< resizable matrix for internal storage of sensor values; automatically resized by solver
+	SensorStorageLock internalStorageLock; //!< taken while the internal storage is changed or read from another thread (#3237)
 public: 
 	virtual ~CSensor() {} //added for correct deletion of derived classes
 
@@ -162,6 +176,11 @@ public:
 
 	//! write access to internal storage
 	virtual ResizableMatrix& GetInternalStorage() { return internalStorage; }
+
+	//! lock the internal storage while it is changed (solver) or read (renderer, Python); never hold it while waiting for something else (#3237)
+	void LockInternalStorage() const { EXUstd::WaitAndLockSemaphore(internalStorageLock.flag); }
+	//! release the lock of LockInternalStorage()
+	void ReleaseInternalStorage() const { EXUstd::ReleaseSemaphore(internalStorageLock.flag); }
 
 	//! directory and file name for sensor file output
 	virtual STDstring GetFileName() const {
