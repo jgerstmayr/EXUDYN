@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.354.dev1
+- Exudyn version = 1.13.355.dev1
 - last change = 2026-11-04
 - Number of issues = 3248
-- Number of resolved issues = 3131 (354 in current version)
+- Number of resolved issues = 3132 (355 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,10 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Explicit solvers with constraints: coordinate constraints eliminated in the symbolic SolveExplicit, Euler parameters by projection after each step (#3238)
-  - description: The C++ explicit solver eliminates CoordinateConstraints to the ground (explicit.eliminateConstraints) and refuses other constraints; the symbolic SolveExplicit refuses every algebraic equation; nodes with Euler parameters are refused by explicit solvers, as their norm is an algebraic equation. Decided (maintainer 2026-11-04, revision2026c step RG16.5): the elimination of coordinate constraints also in the symbolic SolveExplicit, in line with C++; Euler parameters in explicit solvers by the projection onto the unit norm after each step, without raising for their constraint, with a possible drift of momentum and energy; the analysis first (docs/dev/design/advancedSolvers.md section 3.5).
-  - **remarks:** 2026-11-04: the step is revision2026c RG20.5 (requested as RG16, which revision2026b has taken).
-  - date raised: 2026-11-04
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` A Scope in the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer (#3237)
   - description: Users build their own scopes with graphicsDataUserFunction on ground objects, which are not meant for that. An integrated viewer of sensors with storeInternal: a region of the view (default top right) with frame, background, automatic axes, ticks, grid, legend and labels, the lines of a list of \[sensorY, componentY, sensorX, componentX\] up to the visualization time (as the sensor traces with showPast), so that the SolutionViewer animates it and saved images contain it; its own settings per view, an icon and SHIFT+S; one drawing description for OpenGL and the raytracer. Decided (maintainer 2026-11-04): a step of RG6 with a design note (docs/dev/design/scope.md, the defaults of the settings given there); simple and robust, faster than matplotlib; lines, texts and points in plot coordinates later.
   - date raised: 2026-11-04

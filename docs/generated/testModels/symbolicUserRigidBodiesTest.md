@@ -153,7 +153,7 @@ exu.Print('Create functions with the arguments of mbs:', sameArguments, 'of 2')
 #an argument the user item does not support raises, naming it
 refused = 0
 inertia = InertiaCuboid(density=1000, sideLengths=[L, 0.05, 0.04])
-for (function, arguments, text) in [(creator.CreateRigidBody, dict(inertia=inertia), 'nodeType'),
+for (function, arguments, text) in [(creator.CreateRigidBody, dict(inertia=inertia, nodeType=exu.NodeType.RotationRotationVector), 'nodeType'),
                                     (creator.CreateTorsionalSpringDamper, dict(itemNumbers=[creator.CreateGround(),
                                         creator.CreateRigidBody(inertia=inertia, nodeType=exu.NodeType.RotationRxyz)],
                                         axis=[0, 0, 1], springTorqueUserFunction=lambda mbs, t, itemNumber, angle, omega,

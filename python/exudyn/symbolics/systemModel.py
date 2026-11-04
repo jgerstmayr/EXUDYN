@@ -594,10 +594,17 @@ class SymbolicSystem(SymbolicSystemBase):
         self.jointKinds = list(jointKinds.values())
         self.ode1Kinds = list(ode1Kinds.values())
         self.daeKinds = list(daeKinds.values())
+        #the nodes with Euler parameters and their algebraic equation p^T p - 1 = 0 (#3238)
+        self.eulerParameterNodes = []
+        for nodeNumber in range(mbs.systemData.NumberOfNodes()):
+            ltgAE = list(mbs.systemData.GetNodeLTGAE(nodeNumber))
+            if mbs.GetNode(nodeNumber)['nodeType'] == 'RigidBodyEP' and len(ltgAE):
+                self.eulerParameterNodes.append({'nodeNumber': nodeNumber, 'ltgAE': np.array(ltgAE, dtype=int),
+                                                 'ltg': np.array(list(mbs.systemData.GetNodeLTGODE2(nodeNumber))[3:7], dtype=int)})
         daeObjects = [dae for kind in self.daeKinds for dae in kind.parameters]
         if not refused and (sum(len(joint['ltgAE']) for kind in self.jointKinds for joint in kind.parameters)
-                            + sum(len(dae['ltgAE']) for dae in daeObjects)) != self.nAE:
-            refused += ['algebraic equations of other items than ObjectJointUser and ObjectGenericDAE']
+                            + sum(len(dae['ltgAE']) for dae in daeObjects) + len(self.eulerParameterNodes)) != self.nAE:
+            refused += ['algebraic equations of other items than ObjectJointUser, ObjectGenericDAE and NodeRigidBodyEP']
         connectorData = [connector['ltgData'] for kind in kinds.values() if kind.objectType == 'ConnectorUser' for connector in kind.parameters]
         if not refused and (sum(len(ltgData) for ltgData in connectorData) + sum(len(dae['ltgData']) for dae in daeObjects)) != self.nData:
             refused += ['data coordinates of other items than ObjectConnectorUser and ObjectGenericDAE']
@@ -1267,6 +1274,9 @@ class SymbolicSystem(SymbolicSystemBase):
                     c[dae['ltgAE']] = self._DAEConstraints(kind, i, q, y)
                     if 'constraintUserFunction' in kind.recordings: #+ c_u (#3191)
                         c[dae['ltgAE']] += self._DAEConstraintTerms(kind, i, q, q_t, y, z, t)[:len(dae['ltgAE'])]
+        for node in self.eulerParameterNodes: #p^T p - 1 of the Euler parameters, as CNodeRigidBodyEP (#3238)
+            p = self.qRef[node['ltg']] + q[node['ltg']]
+            c[node['ltgAE']] = p @ p - 1.
         return c
 
     def ODE2ReactionForcesLHS(self, q, q_t, y, z, t):
@@ -1308,6 +1318,8 @@ class SymbolicSystem(SymbolicSystemBase):
                     (q_t, y) = (self._State(q, q_t)[1], np.zeros(self.nODE1) if y is None else np.asarray(y, dtype=float))
                     nAE = len(dae['ltgAE'])
                     np.add.at(f, ltg, self._DAEConstraintTerms(kind, i, q, q_t, y, z, t)[nAE:nAE + len(ltg)])
+        for node in self.eulerParameterNodes: #2 p z of the Euler parameters (#3238)
+            f[node['ltg']] += (2.*z[node['ltgAE'][0]])*(self.qRef[node['ltg']] + q[node['ltg']])
         return f
 
     def SystemJacobian(self, q, q_t, q_tt, y, y_t, z, t, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=1.,
@@ -1353,6 +1365,12 @@ class SymbolicSystem(SymbolicSystemBase):
                     J[np.ix_(ltg, ltg)] += factor_q*dReaction
                     J[np.ix_(ltg, ltgAE)] += C_q.T
                     J[np.ix_(ltgAE, ltg)] += factor_q*C_q
+            for node in self.eulerParameterNodes: #c = p^T p - 1, the reaction 2 p z (#3238)
+                (ltg, row) = (node['ltg'], node['ltgAE'][0])
+                p = self.qRef[ltg] + q[ltg]
+                J[ltg, ltg] += factor_q*2.*z[row]
+                J[ltg, offset + row] += 2.*p
+                J[offset + row, ltg] += factor_q*2.*p
         if nODE1: #the rows g - y_t
             J[nODE2:offset, nODE2:offset] = factor_y*self.ODE1Jacobian(y, t, q, q_t) - factor_y_t*np.eye(nODE1)
         for kind in self.daeKinds: #the coupling blocks of ObjectGenericDAE (#3190), the ODE2 block by ODE2ResidualLHSJacobian
@@ -1915,6 +1933,9 @@ class SymbolicSystem(SymbolicSystemBase):
             (q, q_t, t) = variables[:3]
             if len(variables) > 3:
                 z = variables[3]
+        if self.eulerParameterNodes and (algebraicEquations or ODE2ReactionForcesLHS):
+            raise ValueError('SymbolicSystem.Equations: the algebraic equations of nodes with Euler parameters are not '
+                             'in the expressions yet; AlgebraicEquations and ODE2ReactionForcesLHS compute them')
         withZ = (ODE2ReactionForcesLHS or ODE1ReactionTermsLHS or postNewton
                  or (algebraicEquations and any('constraintUserFunction' in kind.recordings for kind in self.daeKinds)))
         if withZ and z is None:

@@ -260,7 +260,7 @@ class _StepSize:
             self.sinceReduction = 0
 
 
-def _FixedCoordinates(system, q, q_t, y, t, epsilon=1e-6, tolerance=1e-8):
+def _FixedCoordinates(system, q, q_t, y, t, rows, epsilon=1e-6, tolerance=1e-8):
     """the ODE2 coordinates fixed by the algebraic equations, which an explicit solver eliminates as Exudyn's explicit
     solver eliminates CoordinateConstraints to the ground (#3238): every equation linear in one ODE2 coordinate and
     independent of everything else - its velocity, the ODE1 coordinates, the multipliers, the time
@@ -271,6 +271,7 @@ def _FixedCoordinates(system, q, q_t, y, t, epsilon=1e-6, tolerance=1e-8):
         q_t: the initial ODE2 velocities
         y: the initial ODE1 coordinates
         t: the start time
+        rows: the algebraic equations to eliminate
         epsilon: the step of the central differences of the constraint Jacobian
         tolerance: an entry of the Jacobian below tolerance times its largest entry is zero
 
@@ -296,7 +297,7 @@ def _FixedCoordinates(system, q, q_t, y, t, epsilon=1e-6, tolerance=1e-8):
                   C(q, z=random.uniform(-1., 1., nAE)) - c0,
                   C(q, t=t + 1.) - c0]
     indices = []
-    for i in range(nAE):
+    for i in rows:
         columns = np.flatnonzero(np.abs(C_q[i]) > tolerance*scale)
         if len(columns) != 1 or max(abs(variation[i]) for variation in variations) > 1e3*tolerance*scale:
             raise ValueError('SolveExplicit: an explicit solver eliminates only algebraic equations that fix one ODE2 '
@@ -306,9 +307,19 @@ def _FixedCoordinates(system, q, q_t, y, t, epsilon=1e-6, tolerance=1e-8):
         indices.append(int(columns[0]))
     if len(set(indices)) != len(indices):
         raise ValueError('SolveExplicit: a coordinate is fixed by two algebraic equations')
-    indices = np.array(indices, dtype=int)
-    values = q[indices] - c0/C_q[np.arange(nAE), indices]
+    (indices, rows) = (np.array(indices, dtype=int), np.array(rows, dtype=int))
+    values = q[indices] - c0[rows]/C_q[rows, indices]
     return (indices, values)
+
+
+def _ProjectEulerParameters(nodes, qRef, q, q_t):
+    """the Euler parameters of nodes onto |p| = 1 and their velocities onto p^T p_t = 0, in place (#3238)"""
+    for node in nodes:
+        ltg = node['ltg']
+        p = qRef[ltg] + q[ltg]
+        p = p/cMath.norm(p)
+        q[ltg] = p - qRef[ltg]
+        q_t[ltg] -= (p @ q_t[ltg])*p
 
 
 def _RefuseLieGroupNodes(system, useLieGroupIntegration, where):
@@ -328,7 +339,10 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     coordinates rejects a step (#3220); the accelerations by the inverse per body with
     timeIntegration.explicit.computeMassMatrixInversePerBody, else by the sparse LU decomposition of the mass
     matrix, both once for a constant mass matrix (timeIntegration.reuseConstantMassMatrix); ODE1 coordinates in the
-    stages of explicit Euler and RK44, with zero initial velocities, as Exudyn (#3134); algebraic equations that fix
+    stages of explicit Euler and RK44, with zero initial velocities, as Exudyn (#3134); nodes with Euler parameters: the
+    accelerations with their constraint on acceleration level, 2 p^T a + 2 p_t^T p_t = 0, in [M C^T; C 0], and the
+    parameters projected onto |p| = 1 and their velocities onto p^T p_t = 0 after each step, so that the norm holds and
+    energy and momentum drift in the order of the error of the method (#3238); algebraic equations that fix
     one ODE2 coordinate each - linear in it and in nothing else, as a coordinate constraint to the ground - are
     eliminated with timeIntegration.explicit.eliminateConstraints, as Exudyn's explicit solver eliminates
     CoordinateConstraints to the ground: the coordinate keeps the value of its equation, its velocity and acceleration
@@ -369,24 +383,43 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
     q_tt = np.zeros(system.nODE2)
     (y, y_t) = (system.InitialStateODE1(), np.zeros(system.nODE1))
 
-    #the coordinates fixed by the algebraic equations (#3238)
-    (fixed, fixedValues, free, coupled) = (np.zeros(0, dtype=int), np.zeros(0), None, False)
-    if system.nAE and not timeIntegration.explicit.eliminateConstraints:
+    #the nodes with Euler parameters and the coordinates fixed by the other algebraic equations (#3238)
+    eulerParameterNodes = getattr(system, 'eulerParameterNodes', [])
+    rowsEP = [int(row) for node in eulerParameterNodes for row in node['ltgAE']]
+    rows = [i for i in range(system.nAE) if i not in rowsEP]
+    (fixed, fixedValues, free, coupled) = (np.zeros(0, dtype=int), np.zeros(0), np.arange(system.nODE2), bool(rowsEP))
+    if rows and not timeIntegration.explicit.eliminateConstraints:
         warnings.warn('SolveExplicit: eliminateConstraints=False: the algebraic equations are ignored')
-    elif system.nAE:
-        (fixed, fixedValues) = _FixedCoordinates(system, q, q_t, y, tStart)
+    elif rows:
+        (fixed, fixedValues) = _FixedCoordinates(system, q, q_t, y, tStart, rows)
         free = np.setdiff1d(np.arange(system.nODE2), fixed)
         massMatrix = system.MassMatrix(q, q_t, tStart)
-        coupled = not system.IsMassMatrixConstant() or np.any(massMatrix[np.ix_(fixed, free)] != 0.)
+        coupled = coupled or not system.IsMassMatrixConstant() or np.any(massMatrix[np.ix_(fixed, free)] != 0.)
         (q[fixed], q_t[fixed]) = (fixedValues, 0.)
+    if eulerParameterNodes:
+        qRef = system.qRef
+        _ProjectEulerParameters(eulerParameterNodes, qRef, q, q_t)
+        position = {int(i): k for (k, i) in enumerate(free)} #the free coordinate of each coordinate
 
     def Accelerations(q, q_t, t, y=None):
         forceEvaluations[0] += 1
         forces = system.ODE2RHS(q, q_t, t, y=y) if system.nODE1 else system.ODE2RHS(q, q_t, t)
-        if coupled: #the mass matrix without the rows and columns of the fixed coordinates
+        if coupled: #the mass matrix without the rows and columns of the fixed coordinates, with the Euler parameters
+            #[M C^T; C 0] [a; z] = [f; -2 p_t^T p_t], C = 2 p^T
             massMatrix = system.MassMatrix(q, q_t, t)
+            (nFree, nEP) = (len(free), len(eulerParameterNodes))
+            A = np.zeros((nFree + nEP, nFree + nEP))
+            rhs = np.zeros(nFree + nEP)
+            A[:nFree, :nFree] = massMatrix[np.ix_(free, free)]
+            rhs[:nFree] = forces[free]
+            for (k, node) in enumerate(eulerParameterNodes):
+                columns = [position[int(i)] for i in node['ltg']]
+                p = qRef[node['ltg']] + q[node['ltg']]
+                A[nFree + k, columns] = 2.*p
+                A[columns, nFree + k] = 2.*p
+                rhs[nFree + k] = -2.*(q_t[node['ltg']] @ q_t[node['ltg']])
             accelerations = np.zeros(system.nODE2)
-            accelerations[free] = np.linalg.solve(massMatrix[np.ix_(free, free)], forces[free])
+            accelerations[free] = np.linalg.solve(A, rhs)[:nFree]
             return accelerations
         accelerations = massSolver.Accelerations(q, q_t, t, forces)
         accelerations[fixed] = 0.
@@ -433,6 +466,8 @@ def SolveExplicit(system, simulationSettings=None, solverType=None):
                     q_tt = Accelerations(q, q_t, t, y)
                 else:
                     q_tt = K_t[-1]
+            if eulerParameterNodes:
+                _ProjectEulerParameters(eulerParameterNodes, qRef, q, q_t)
             done = _PostNewton(system, discontinuous, q, q_t, y, None, dataStart, t, iteration, statistics, stepSize, h)
             if done:
                 break

@@ -9,7 +9,10 @@ Exudyn's C++ solvers, written in Python with numpy and scipy:
   one coordinate each - a coordinate constraint to the ground, as `UserItemCreator.CreateCoordinateConstraint` makes
   it - are eliminated with `timeIntegration.explicit.eliminateConstraints`, as Exudyn's explicit solver eliminates
   CoordinateConstraints to the ground; the coordinate keeps the value of its equation, also in the stages, and any
-  other algebraic equation is refused (#3238);
+  other algebraic equation is refused (#3238); rigid bodies on Euler parameters are integrated with their constraint
+  on acceleration level, and the parameters are projected onto the unit norm and their velocities onto its tangent
+  after each step, so that the norm holds to rounding - energy and momentum drift in the order of the error of the
+  method (#3238);
 - `SolveGeneralizedAlpha(system, simulationSettings)`: the generalized-alpha method and the Newmark method, with ODE1
   coordinates and index 3 constraints, the Newton method with the exact Jacobian of the system.
 

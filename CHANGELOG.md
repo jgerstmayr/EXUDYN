@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 339 | 1.13.354 |
+| 1.13 | Newborn | 340 | 1.13.355 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.355** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Explicit solvers with constraints: coordinate constraints eliminated in the symbolic SolveExplicit, Euler parameters by projection after each step (#3238)
+  - description: The C++ explicit solver eliminates CoordinateConstraints to the ground (explicit.eliminateConstraints) and refuses other constraints; the symbolic SolveExplicit refuses every algebraic equation; nodes with Euler parameters are refused by explicit solvers, as their norm is an algebraic equation. Decided (maintainer 2026-11-04, revision2026c step RG16.5): the elimination of coordinate constraints also in the symbolic SolveExplicit, in line with C++; Euler parameters in explicit solvers by the projection onto the unit norm after each step, without raising for their constraint, with a possible drift of momentum and energy; the analysis first (docs/dev/design/advancedSolvers.md section 3.5).
+  - **notes:** SolveExplicit of exudyn.symbolics.solvers eliminates algebraic equations that fix one coordinate each, as Exudyn's explicit solver eliminates CoordinateConstraints to the ground, and integrates rigid bodies on Euler parameters with their constraint on acceleration level and the projection of the parameters onto the unit norm after each step. UserItemCreator.CreateRigidBody creates the user rigid body on a NodeRigidBodyEP (the default) or a NodeRigidBodyRxyz, and SymbolicSystem takes the algebraic equation of the Euler parameter nodes.
+  - date resolved: **2026-11-04 20:40**, date raised: 2026-11-04
 - **1.13.354** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolveImplicitRungeKutta with the methods LobattoIIIA4, LobattoIIIC4-GGL and Radau3, replacing SolveLobatto4 and its four variants (#3247)
   - description: SolveLobatto4 of exudyn.symbolics.advancedSolvers has the variants IIIA-end, IIIC-end, IIIA-GGL and IIIC-GGL; Radau IIA is not there. Decided: three methods with two implicit stages each, named by the method and its order - LobattoIIIA4 (IIIA with the constraints at the end of the step, the simplest form that solves index 3 directly), LobattoIIIC4-GGL (IIIC with GGL at the stages, damping) and Radau3 (Radau IIA with 2 stages) -, IIIC-end and IIIA-GGL dropped; the formulas of the error estimates in the design file.
   - **notes:** SolveImplicitRungeKutta(system, simulationSettings, method) of exudyn.symbolics.advancedSolvers replaces SolveLobatto4, with the methods LobattoIIIA4 (the default; the constraints and velocity constraints at the end of the step, without numerical damping), LobattoIIIC4-GGL (the GGL stabilization at the stages, damping fast modes) and Radau3 (Radau IIA of order 3, damping), listed in implicitRungeKuttaMethods.

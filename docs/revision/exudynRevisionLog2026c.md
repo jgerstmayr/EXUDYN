@@ -5729,6 +5729,27 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg20-5-3"></a>
+### RG20.5.3 — Euler parameters in the symbolic system and the projection in SolveExplicit (2026-11-04, #3238)
+- **UserItemCreator.CreateRigidBody** on a `NodeRigidBodyEP` (now the default, as `mbs.CreateRigidBody`; Rxyz stays):
+  the node as `mbs.CreateRigidBody` computes it, the user body with the variant `_rigidBodyEPFunctions` of the kind
+  rigidBody - mass matrix [[m I, -m A Skew(com) G], [.., G^T J G]] with GLocal(p) (3 x 4), the forces -G^T (omega x J
+  omega) and -A (omega x (U x omega)) (GLocal(p_t) p_t = 0), the access functions with GLocal; the algebraic equation
+  is the node's (CNodeRigidBodyEP, p^T p - 1). A heavy top on a spherical joint agrees with the built-in rigid body
+  in mbs.SolveDynamic to 1e-13.
+- **SymbolicSystem**: `eulerParameterNodes` (the nodes of type RigidBodyEP with an algebraic equation); in
+  AlgebraicEquations p^T p - 1 (p reference plus current), in ODE2ReactionForcesLHS 2 p z, in the exact SystemJacobian
+  2 z I, 2 p and 2 p^T (against central differences 1e-13); the count of the algebraic equations includes them.
+  Equations() refuses them in algebraicEquations and ODE2ReactionForcesLHS for now. SolveGeneralizedAlpha agrees
+  with mbs.SolveDynamic to 1e-12; the solvers of advancedSolvers take them as any constraint (LobattoIIIA4 of order
+  4.4, TrapezoidalGGL 2 on a body on a spring).
+- **SolveExplicit**: the equations of the Euler parameter nodes are not eliminated; with them the accelerations come
+  from [M C^T; C 0] [a; z] = [f; -2 p_t^T p_t], C = 2 p^T, on the free coordinates (dense, also with
+  computeMassMatrixInversePerBody, the mass matrix of Euler parameters being singular), and after each step p is
+  projected onto |p| = 1 and p_t onto p^T p_t = 0 (`_ProjectEulerParameters`); the other algebraic equations as before
+  (`_FixedCoordinates` on the rows given). A body on a spring-damper by RK44: order 3.96, the norm kept to 1e-16.
+- symbolicEulerParametersTest.py (new, 1.4 s).
+
 <a id="rg20-2-6"></a>
 ### RG20.2.6 — SolveImplicitRungeKutta: LobattoIIIA4, LobattoIIIC4-GGL, Radau3; the formulas of the error estimates (2026-11-04, #3247)
 - Maintainer (third answers): IIIA-end as `LobattoIIIA4`, IIIC-GGL as `LobattoIIIC4-GGL`, and Radau3 - three methods

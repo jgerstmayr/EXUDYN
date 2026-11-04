@@ -424,6 +424,11 @@ and the sensors at the multiples of their write periods, the state within a step
 polynomial, see {ref}`sec-symbolicsolvers`; the solvers of Exudyn still write at the end of the step that passes a
 write time. `MainSolverExplicit`, `MainSolverImplicitSecondOrder` and `MainSolverStatic` have `WriteSensorsToFile`.
 
+**Euler parameters in the symbolic system** (#3238): `UserItemCreator.CreateRigidBody` creates the user rigid body on
+a `NodeRigidBodyEP` - the default node type, as for `mbs.CreateRigidBody` - besides `NodeRigidBodyRxyz`;
+`SymbolicSystem` takes the algebraic equation of the node, and `SolveExplicit` integrates such bodies with the
+projection of the Euler parameters after each step.
+
 **`SolveTrapezoidalGGL` of `exudyn.symbolics.advancedSolvers`** (#3242): the trapezoidal rule with the GGL
 stabilization of index-3 constraints for symbolic systems, of order 2 and without numerical damping, with constant
 steps or a step size controlled by the local errors of the coordinates and velocities, with

@@ -8,7 +8,7 @@
 #           built; Record() replaces them by one symbolic recording per kind of item, which SymbolicSystem and the
 #           export take. A script that builds a system with creator = mbs builds the same system of user items with
 #           creator = UserItemCreator(mbs).
-#           The items: CreateGround, CreateMassPoint, CreateRigidBody (on NodeRigidBodyRxyz), CreateSpringDamper,
+#           The items: CreateGround, CreateMassPoint, CreateRigidBody (on NodeRigidBodyEP or NodeRigidBodyRxyz, #3238), CreateSpringDamper,
 #           CreateTorsionalSpringDamper, CreateSphereSphereContact (#3187, with a data node #3197), CreateCartesianSpringDamper,
 #           CreateRigidBodySpringDamper (#3193), CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint,
 #           CreateDistanceConstraint (ObjectJointUser, #3140), CreateCoordinateConstraint (ObjectGenericDAE, #3193),
@@ -34,7 +34,8 @@ from exudyn.advancedUtilities import CreateSymbolicUserFunction
 from exudyn.symbolics.codeExport import ToFunction
 import exudyn.symbolics.kinematics as su
 from exudyn.symbolics.utilities import IfThenElse
-from exudyn.rigidBodyUtilities import RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, ComputeOrthonormalBasis
+from exudyn.rigidBodyUtilities import (RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, ComputeOrthonormalBasis,
+                                       RotationMatrix2EulerParameters, AngularVelocity2EulerParameters_t)
 from exudyn.misc.mainSystemExtensions import GetMarkersPosRot, JointPreCheckCalcBodyMarkers, _FrameFromHT
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
@@ -125,6 +126,57 @@ def _UFrigidBodyRotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal
     F = _Functions(qTotal)
     rot = qTotal[3:6]
     return _Blocks3x6(None, su.RotXYZ2RotationMatrix(rot, F) @ su.RotXYZ2GLocal(rot, F), F)
+
+#the rigid body on a NodeRigidBodyEP (#3238), qTotal = [position, Euler parameters p], the parameters as above: the mass
+#matrix and the forces of CObjectRigidBody with GLocal(p), omega = GLocal p_t, GLocal(p_t) p_t = 0; the algebraic
+#equation p^T p - 1 = 0 is the one of the node
+def _BlocksEP(left, right, functions):
+    #the 3 x 7 matrix [left, right] of a 3 x 3 and a 3 x 4 matrix; None is a zero block
+    return _Matrix([[left[i, j] if left is not None else 0 for j in range(3)]
+                    + [right[i, j] if right is not None else 0 for j in range(4)] for i in range(3)], functions)
+
+def _UFrigidBodyEPMass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    F = _Functions(qTotal)
+    (m, A, G) = (parameters[0], su.EulerParameters2RotationMatrix(qTotal[3:7], F), su.EulerParameters2GLocal(qTotal[3:7], F))
+    Mrot = G.T @ su.Inertia6D2InertiaTensor(parameters[1:7], F) @ G
+    Mtr = (-m)*(A @ su.Skew(parameters[7:10], F) @ G)
+    return _Matrix([[m if i == j else 0 for j in range(3)] + [Mtr[i, j] for j in range(4)] for i in range(3)]
+                   + [[Mtr[j, i] for j in range(3)] + [Mrot[i, j] for j in range(4)] for i in range(4)], F)
+
+def _UFrigidBodyEPForce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    #-G^T (omega x J omega) on the Euler parameters, -A (omega x (U x omega)) on the translations, U = -m centerOfMass
+    F = _Functions(qTotal)
+    p = qTotal[3:7]
+    J = su.Inertia6D2InertiaTensor(parameters[1:7], F)
+    G = su.EulerParameters2GLocal(p, F)
+    omega = G @ q_t[3:7]
+    torques = G.T @ su.Cross(omega, J @ omega, F)
+    U = (-parameters[0])*parameters[7:10]
+    forces = su.EulerParameters2RotationMatrix(p, F) @ su.Cross(omega, su.Cross(U, omega, F), F)
+    return _Vector([-forces[i] for i in range(3)] + [-torques[i] for i in range(4)], F)
+
+def _UFrigidBodyEPMassIntegral(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    F = _Functions(qTotal)
+    (m, p) = (parameters[0], qTotal[3:7])
+    return _BlocksEP(_Matrix([[m if i == j else 0 for j in range(3)] for i in range(3)], F),
+                     (-m)*(su.EulerParameters2RotationMatrix(p, F) @ su.Skew(parameters[7:10], F) @ su.EulerParameters2GLocal(p, F)), F)
+
+def _UFrigidBodyEPPosition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return qTotal[0:3] + su.EulerParameters2RotationMatrix(qTotal[3:7], _Functions(qTotal)) @ localPosition
+
+def _UFrigidBodyEPPositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    F = _Functions(qTotal)
+    p = qTotal[3:7]
+    return _BlocksEP(_Matrix(np.eye(3), F), -(su.EulerParameters2RotationMatrix(p, F) @ su.Skew(localPosition, F)
+                                             @ su.EulerParameters2GLocal(p, F)), F)
+
+def _UFrigidBodyEPRotationMatrix(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return su.EulerParameters2RotationMatrix(qTotal[3:7], _Functions(qTotal))
+
+def _UFrigidBodyEPRotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    F = _Functions(qTotal)
+    p = qTotal[3:7]
+    return _BlocksEP(None, su.EulerParameters2RotationMatrix(p, F) @ su.EulerParameters2GLocal(p, F), F)
 
 #the connectors and joints get the frame of each marker, an exudyn.HT, and the connectors also its twist, an
 #exudyn.Twist; while recorded, a kinematics.HT and a kinematics.Twist of symbolic parts with the same methods (#3183)
@@ -456,6 +508,15 @@ _kindFunctions = {'massPoint': [('massMatrixUserFunction', _UFmassPointMass),
 #the number of equations of each kind of joint
 _jointConstraints = {'revoluteJoint': 5, 'prismaticJoint': 5, 'sphericalJoint': 3, 'distanceConstraint': 1}
 
+#the functions of a rigid body on Euler parameters, a variant of the kind rigidBody (#3238)
+_rigidBodyEPFunctions = [('massMatrixUserFunction', _UFrigidBodyEPMass),
+                         ('forceUserFunction', _UFrigidBodyEPForce),
+                         ('massIntegralUserFunction', _UFrigidBodyEPMassIntegral),
+                         ('positionUserFunction', _UFrigidBodyEPPosition),
+                         ('positionJacobianUserFunction', _UFrigidBodyEPPositionJacobian),
+                         ('rotationMatrixUserFunction', _UFrigidBodyEPRotationMatrix),
+                         ('rotationJacobianUserFunction', _UFrigidBodyEPRotationJacobian)]
+
 
 def _Numbers(values):
     """the values of parameters given as numbers or expressions, exudyn.symbolic.Real, for the item (#3152, #3159)"""
@@ -706,8 +767,8 @@ class UserItemCreator:
                         inertia=None, gravity=[0., 0., 0.], nodeType=exudyn.NodeType.RotationEulerParameters,
                         graphicsDataList=[], graphicsDataUserFunction=0, drawSize=-1, color=[-1., -1., -1., -1.],
                         show=True, create2D=False, returnDict=False, referenceHT=None, initialHT=None):
-        """a rigid body as ObjectUserBody on a NodeRigidBodyRxyz, with the node, markers and loads of
-        mbs.CreateRigidBody and its arguments; nodeType must be exu.NodeType.RotationRxyz
+        """a rigid body as ObjectUserBody on a NodeRigidBodyEP or a NodeRigidBodyRxyz, with the node, markers and loads
+        of mbs.CreateRigidBody and its arguments; on Euler parameters the node has their algebraic equation (#3238)
 
         Args:
             name: as in mbs.CreateRigidBody
@@ -722,8 +783,8 @@ class UserItemCreator:
                 InertiaCuboid(density=rho, sideLengths=[L, 0.1, 0.1]) with rho and L of mbs.symbolicVariables, kept in
                 parameterBindings (#3159)
             gravity: as in mbs.CreateRigidBody
-            nodeType: exu.NodeType.RotationRxyz; the default RotationEulerParameters is refused (the user body does not
-                give the algebraic equation of the Euler parameters), RotationRotationVector too (a Lie group node)
+            nodeType: exu.NodeType.RotationEulerParameters (the default) or RotationRxyz; RotationRotationVector is
+                refused (a Lie group node)
             graphicsDataList: as in mbs.CreateRigidBody, the graphicsData of the user body; empty: the graphics of inertia
             graphicsDataUserFunction: refused if given: the one of ObjectUserBody has other arguments
             drawSize: as in mbs.CreateRigidBody
@@ -741,10 +802,11 @@ class UserItemCreator:
         _Refuse('CreateRigidBody', 'create2D', create2D, False, 'a planar user rigid body does not exist yet')
         _Refuse('CreateRigidBody', 'graphicsDataUserFunction', graphicsDataUserFunction, 0,
                 'the one of ObjectUserBody has other arguments')
-        if nodeType != exudyn.NodeType.RotationRxyz:
+        if nodeType not in [exudyn.NodeType.RotationEulerParameters, exudyn.NodeType.RotationRxyz]:
             raise ValueError(where + ': the argument nodeType ' + str(nodeType) + ' is not supported by the user item '
-                             '(only exu.NodeType.RotationRxyz: Euler parameters need their algebraic equation, the '
-                             'rotation vector node is a Lie group node)')
+                             '(exu.NodeType.RotationEulerParameters or RotationRxyz; the rotation vector node is a Lie '
+                             'group node)')
+        eulerParameters = nodeType == exudyn.NodeType.RotationEulerParameters
         if inertia is None:
             raise ValueError(where + ': inertia must be given')
         (referencePosition, referenceRotationMatrix) = _FrameFromHT(where, 'referenceHT', referenceHT, 'referencePosition',
@@ -760,24 +822,29 @@ class UserItemCreator:
             graphicsDataList0 = [inertiaGraphics] if inertiaGraphics is not None else []
         if len(graphicsDataList0) != 0:
             drawSize = 0 #the node is shown (number, basis), but not drawn, as mbs.CreateRigidBody does
-        #the node as mbs.CreateRigidBody computes it for RotationRxyz
-        referenceRotation = RotationMatrix2RotXYZ(referenceRotationMatrix)
-        initialCoordinates = [0.]*6
+        #the node as mbs.CreateRigidBody computes it
+        (Rotation2Parameters, AngularVelocity2Parameters_t, NodeClass, VNodeClass) = (
+            (RotationMatrix2EulerParameters, AngularVelocity2EulerParameters_t, eii.NodeRigidBodyEP, eii.VNodeRigidBodyEP)
+            if eulerParameters else (RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, eii.NodeRigidBodyRxyz, eii.VNodeRigidBodyRxyz))
+        referenceRotation = np.array(Rotation2Parameters(referenceRotationMatrix))
+        initialCoordinates = [0.]*(3 + len(referenceRotation))
         if initialDisplacement is not None or initialRotationMatrix is not None:
             initialDisplacement = [0., 0., 0.] if initialDisplacement is None else initialDisplacement
             initialRotationMatrix = np.eye(3) if initialRotationMatrix is None else initialRotationMatrix
-            initialCoordinates = list(initialDisplacement) + list(RotationMatrix2RotXYZ(referenceRotationMatrix @ initialRotationMatrix)
+            initialCoordinates = list(initialDisplacement) + list(np.array(Rotation2Parameters(referenceRotationMatrix @ initialRotationMatrix))
                                                                  - referenceRotation)
-        nodeNumber = mbs.AddNode(eii.NodeRigidBodyRxyz(name='Node:' + name if name != '' else '',
-                                                       referenceCoordinates=referencePosition + list(referenceRotation),
-                                                       initialCoordinates=initialCoordinates,
-                                                       initialVelocities=list(initialVelocity) + list(AngularVelocity2RotXYZ_t(initialAngularVelocity, referenceRotation)),
-                                                       visualization=eii.VNodeRigidBodyRxyz(show=show, drawSize=drawSize, color=color)))
+        nodeNumber = mbs.AddNode(NodeClass(name='Node:' + name if name != '' else '',
+                                           referenceCoordinates=referencePosition + list(referenceRotation),
+                                           initialCoordinates=initialCoordinates,
+                                           initialVelocities=list(initialVelocity) + list(AngularVelocity2Parameters_t(initialAngularVelocity, referenceRotation)),
+                                           visualization=VNodeClass(show=show, drawSize=drawSize, color=color)))
         parameters = [inertia.mass] + list(inertia.GetInertia6D()) + list(inertia.com)
+        functions = _rigidBodyEPFunctions if eulerParameters else _kindFunctions['rigidBody']
         bodyNumber = self._AddUserItem('rigidBody', eii.ObjectUserBody(name=name, nodeNumbers=[nodeNumber], parameters=_Numbers(parameters),
                                                       centerOfMass=_Numbers(list(inertia.com)),
-                                                      **{functionName: function for (functionName, function) in _kindFunctions['rigidBody']},
-                                                      visualization=eii.VObjectUserBody(show=show, graphicsData=graphicsDataList0)), parameters)
+                                                      **{functionName: function for (functionName, function) in functions},
+                                                      visualization=eii.VObjectUserBody(show=show, graphicsData=graphicsDataList0)), parameters,
+                                       variant=_rigidBodyEPFunctions if eulerParameters else None)
         result = {'nodeNumber': nodeNumber, 'bodyNumber': bodyNumber}
         if cMath.norm(gravity) != 0.:
             result['markerBodyMass'] = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=bodyNumber))

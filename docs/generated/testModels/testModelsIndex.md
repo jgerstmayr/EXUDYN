@@ -202,6 +202,7 @@ stiffFlyballGovernor
 superElementRigidJointTest
 SwitchingConstraintsTest
 symbolicDeepRecordingTest
+symbolicEulerParametersTest
 symbolicExplicitConstraintTest
 symbolicExplicitSolverTest
 symbolicExportTest
