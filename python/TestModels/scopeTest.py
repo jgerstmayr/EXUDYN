@@ -49,7 +49,8 @@ mbs.SolveDynamic(simulationSettings)
 #the settings: three scopes per view, the sensors as rows of 2 or 5 integers
 window = SC.visualizationSettings.view0.window
 Check(not window.showScopes and list(window.scope0.sensors) == [], 'defaults')
-Check(np.allclose(window.scope0.location, [[2/3, 0], [1, 0.2]]) and np.allclose(window.scope2.location, [[2/3, 0.4], [1, 0.6]]), 'locations')
+Check(np.allclose(window.scope0.location, [[2/3, 0], [1, 1/3]]) and np.allclose(window.scope2.location, [[2/3, 2/3], [1, 1]])
+      and window.scope0.xResolution == 1, 'locations')
 look = SC.visualizationSettings.sensors.scopes #the look of all scopes (#3251)
 Check(np.allclose(look.axesColor, [0.1, 0.1, 0.1, 1]) and look.fontSizeFactor == 0.75 and window.scope0.xLabel == 'time (s)',
       'colors and labels')
@@ -80,7 +81,7 @@ def Image():
 
 def Region(image, j):
     """the pixels of scope j at its default place; the rows of the image go down from the top"""
-    return image[int(360*0.2*j)+3:int(360*0.2*(j+1))-3, int(480*2/3)+3:480-3]
+    return image[int(360*j/3)+3:int(360*(j+1)/3)-3, int(480*2/3)+3:480-3]
 
 def Colored(region):
     """pixels of a line: a color, not a grey"""

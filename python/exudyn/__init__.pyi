@@ -2134,7 +2134,7 @@ class VSettingsScope:
     xLabel: str
     """label of the horizontal axis."""
     xResolution: float
-    """how many values are drawn per pixel of the width of the plot; more values are reduced to the minimum and the maximum of each pixel column, so that peaks stay; 0.25 is a very low resolution."""
+    """over time: how many values are drawn per pixel of the width of the plot; more values are reduced to the minimum and the maximum of each pixel column, so that peaks stay; 0.25 is a very low resolution. Over another sensor: every stored value, and below 1 every (1/xResolution)-th value, e.g. 0.2 draws every 5th value."""
     yLabel: str
     """label of the vertical axis, written above the plot."""
     def GetDictionary(self) -> dict: ...

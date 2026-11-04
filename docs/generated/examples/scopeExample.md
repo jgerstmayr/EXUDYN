@@ -65,7 +65,6 @@ window.scope1.yLabel = 'velocity (m/s)'
 
 #scope2: the path of the second mass, its y-position over its x-position, and the first mass on its circle
 window.scope2.sensors = [[sPosition1, 1, sPosition1, 0, 0], [sPosition0, 1, sPosition0, 0, 0]]
-window.scope2.location = [[2/3, 0.4], [1, 0.8]]       #[[xmin, ymin], [xmax, ymax]] from the top left
 window.scope2.xLabel = 'x (m)'
 window.scope2.yLabel = 'y (m)'
 window.scope2.timeHistory = 3

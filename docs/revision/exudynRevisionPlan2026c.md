@@ -824,6 +824,10 @@ CLOSED 2026-11-04 (#3249): CheckType checks lists and matrices by their elements
 
 CLOSED 2026-11-04 (#3251): VSettingsScopes at sensors.scopes (colors, lineWidth, fontSizeFactor relative to the globalFontSize of the view); per scope location (the settings type StdArray22F), minMaxX, minMaxY. [log](exudynRevisionLog2026c.md#rg6-20-12)
 
+#### **CLOSED_RG6.20.13** xResolution 1, the values of a plot over another sensor, the default scopes a third of the height; the design note as internals page
+
+CLOSED 2026-11-05 (#3252): maintainer's adjustments after testing; docs/dev/internals/scope.md with the current state replaces the design note. [log](exudynRevisionLog2026c.md#rg6-20-13)
+
 ## **OPEN_RG7** Python user items
 
 Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8).

@@ -535,7 +535,8 @@ namespace ScopePlot
 	}
 
 	//! the values of a line, reduced to bins values per range: over time the minimum and maximum of each bin in their
-	//! order, so that peaks stay, with one value on each side outside the range; over a sensor every k-th value
+	//! order, so that peaks stay, with one value on each side outside the range; over a sensor every value, every
+	//! (1/xResolution)-th for xResolution < 1 (#3252), and the last one
 	void CollectCurve(const LineSource& source, const VSettingsScope& scope, const Vector2D& xRange, Index bins, Curve& curve)
 	{
 		curve.label = source.label;
@@ -550,7 +551,7 @@ namespace ScopePlot
 		{
 			Index used = 0;
 			for (Index i = 0; i < rows; i++) { if (UseRow(dataY, i, source.time, timeHistory)) { used++; } }
-			Index stride = std::max((Index)1, used / std::max((Index)1, bins));
+			Index stride = scope.xResolution < 1.f ? std::max((Index)1, (Index)std::lround(1.f / scope.xResolution)) : 1;
 			Index count = 0;
 			for (Index i = 0; i < rows; i++)
 			{

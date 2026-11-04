@@ -142,10 +142,12 @@ with `window.showScopes` or the scope icon of the icon bar. OpenGL and the raytr
   their values, one per scope, with all their components - a look at the results without a setting.
 - **The values** are those up to the visualization time, as the sensor traces show them; `timeHistory` limits them
   to the last seconds, and a plot over time then scrolls. `minMaxX` and `minMaxY` fix the ranges, both 0 fits them
-  to the values.Per pixel of the width, `xResolution` values are drawn; more are reduced to the minimum
-  and the maximum of each pixel column, so that peaks stay.
+  to the values. Over time, `xResolution` values are drawn per pixel of the width (1 by default); more are reduced
+  to the minimum and the maximum of each pixel column, so that peaks stay. Over another sensor every stored value is
+  drawn, and with `xResolution` below 1 every (1/`xResolution`)-th, e.g. every 5th for 0.2 (#3252).
 - **The place and the axes** of each scope: `location`, `[[xmin, ymin], [xmax, ymax]]` relative to the window from
-  its top left corner (the defaults are the top right third of the width, one fifth of the height each), `useGrid`
+  its top left corner (the defaults are the right third of the width, a third of the height each, so that the three
+  scopes fill the height), `useGrid`
   (0, 1 at the ticks, 2 also at the sub-ticks), `xLabel`, `yLabel` (above the plot) and `showLegend`.
 - **The look of all scopes** is in `visualizationSettings.sensors.scopes` (#3251): `backgroundColor`, `frameColor`,
   `axesColor`, `lineWidth` and `fontSizeFactor`, the font size relative to `window.globalFontSize` of the view. The

@@ -431,7 +431,9 @@ and the results of explicit models with such constraints change accordingly; a C
 another sensor, instead of the name and the output variable; the default `backgroundColor` of the scopes is
 `[0.95, 0.95, 1, 0.9]` (#3248). The colors, the line width and the font size of all scopes are in
 `visualizationSettings.sensors.scopes`; each scope has `location` as `[[xmin, ymin], [xmax, ymax]]` and the ranges
-`minMaxX` and `minMaxY` (#3251).
+`minMaxX` and `minMaxY` (#3251). The three default scopes fill the height of the window, a third each, and
+`xResolution` is 1 by default; a plot over another sensor draws every stored value, every (1/`xResolution`)-th
+below 1 (#3252).
 
 **The visualization settings dialog** refuses a list or a matrix that the setting cannot take - rows of different
 length, a float where an integer belongs, a number for a list - with a message and the description of the setting,

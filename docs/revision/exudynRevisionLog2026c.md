@@ -5786,6 +5786,18 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   raytracer image with fontSizeFactor 1 and a changed location.
 - The maintainer checked #3249 in the GUI: a wrong sensors value shows the message.
 
+<a id="rg6-20-13"></a>
+### RG6.20.13 — xResolution 1, the values over another sensor, the default scopes a third of the height; the internals page (2026-11-05, #3252)
+- Maintainer: xResolution 1 is by far sufficient (and faster); the default scopes a third of the height each, so that
+  the three default scopes fill the window; the values of a plot over another sensor were not defined - every value,
+  and every (1/xResolution)-th below 1. Before, they were thinned to about xResolution per pixel of the width.
+- scopeTest.py (the regions of the image in thirds), scopeExample.py (scope2 at its default place), the GUI chapter.
+- docs/dev/design/scope.md (the request, the questions, the proposals) replaced by docs/dev/internals/scope.md, the
+  current state only: the settings, ScopePlot, the renderers, the static graphics, the locks, the tests.
+- The maintainer checked #3249 in the GUI (a wrong sensors value: the message). EditLoose of the scratch edit tool
+  ate the leading spaces after a replaced text ending with a newline (definitions: one line of indentation) and a
+  space in GUI.md; both fixed, and the tool.
+
 <a id="rg6-20-9"></a>
 ### RG6.20.9 — mbs.Reset() and item changes while the renderer runs: a lock of the system (2026-11-04, #3239)
 - `PostProcessData::accessSystem` (an atomic flag per system) with `accessSystemOwner` (a nested lock in the same

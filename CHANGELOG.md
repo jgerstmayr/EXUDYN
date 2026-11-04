@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 347 | 1.13.362 |
+| 1.13 | Newborn | 348 | 1.13.363 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.363** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Scopes: xResolution 1 by default, the values of a plot over another sensor by xResolution, the default scopes a third of the height each; the design note as internals (#3252)
+  - description: xResolution 4 draws more than needed; how many values a plot over another sensor draws was not defined (it took about xResolution per pixel of the width); the three default scopes fill only 3/5 of the height. Decided (maintainer): xResolution default 1; over another sensor every value, and for xResolution \< 1 every round(1/xResolution)-th value; the default locations a third of the height each, filling the height; docs/dev/design/scope.md cleaned to the current state and moved to docs/dev/internals/scope.md.
+  - **notes:** Scopes: xResolution is 1 by default; a plot over another sensor draws every stored value, every (1/xResolution)-th below 1; the three default scopes are a third of the height each and fill the height of the window.
+  - date resolved: **2026-11-05 00:40**, date raised: 2026-11-05
 - **1.13.362** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Scope settings: the colors, line width and a font size factor common to all scopes in sensors.scopes; location as \[\[xmin,ymin\],\[xmax,ymax\]\]; minMaxX and minMaxY (#3251)
   - description: Each scope has its own axesColor, backgroundColor, frameColor and lineWidth, which nobody changes per scope; the font size of the scopes cannot be set; region \[xmin, ymin, xmax, ymax\] is not intuitive; horizontalZoom and verticalZoom are apart in the sorted lists. Decided: visualizationSettings.sensors.scopes (VSettingsScopes) holds frameColor, backgroundColor, axesColor, lineWidth and fontSizeFactor (relative to window.globalFontSize of the view, default 0.75 as now); each scope has location \[\[xmin, ymin\], \[xmax, ymax\]\] (a 2x2 float matrix, StdArray22F) and minMaxX, minMaxY; the names introduced after 1.13 are renamed without deprecation; tests and examples adapted.
   - **notes:** The colors, the line width and the font size of all scopes are in visualizationSettings.sensors.scopes (frameColor, backgroundColor, axesColor, lineWidth, fontSizeFactor relative to window.globalFontSize); each scope has location as \[\[xmin, ymin\], \[xmax, ymax\]\] and the ranges minMaxX and minMaxY.
