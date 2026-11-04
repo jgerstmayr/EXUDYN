@@ -73,7 +73,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
-  - RG6.20 Add a Scope to the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -138,7 +137,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 5 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 2 | Graphics and rendering |
+| RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -775,9 +774,9 @@ with the raytracer the bar shows at once): done as asked. [log](exudynRevisionLo
 
 CLOSED 2026-10-20 (#3051): a gear wheel after the sensors, as the key V. [log](exudynRevisionLog2026c.md#rg6-19-11)
 
-### **OPEN_RG6.20** Add a Scope to the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer
+### **CLOSED_RG6.20** Add a Scope to the render window: sensors plotted over time in a region of the view, for OpenGL and the raytracer
 
-#3237 (maintainer 2026-11-04: users build their own scopes with graphicsDataUserFunction on ground objects; simple and robust, faster than matplotlib, captured with the animations; the defaults of the settings as given). Design docs/dev/design/scope.md: the request, the decisions, one list of primitives in pixels for both renderers, the lock of the stored sensor data.
+CLOSED 2026-11-04 (#3237, #3239, #3248, #3249): the scopes of the render window with their static graphics, the locks of the sensor data and of the system, the legend and the settings dialog; sub-steps .1-.11.
 
 #### **CLOSED_RG6.20.1** Decide the open questions of the Scope
 
@@ -814,6 +813,14 @@ CLOSED 2026-11-04 (#3237): CSensor::LockInternalStorage, taken by the solver, th
 #### **CLOSED_RG6.20.9** mbs.Reset() and item changes while the renderer runs
 
 CLOSED 2026-11-04 (#3239): a lock of the items per system (PostProcessData::accessSystem, SystemAccessGuard), taken by the main thread in Reset, the add, delete and modify functions, Assemble and the visualization parameters, and by the render thread in the graphics update, the traces and the scopes; the main thread computes the requested user function drawings while it waits. rendererItemChangesTest.py; with the renderer to be run directly once. [log](exudynRevisionLog2026c.md#rg6-20-9)
+
+#### **CLOSED_RG6.20.10** The legend with the sensor name and the component, a lighter background, the sensors setting with an example
+
+CLOSED 2026-11-04 (#3248): maintainer: the legend writes the sensor name and the component, m0.Pos-X, and m0.Pos-Y over m0.Pos-X; backgroundColor [0.95, 0.95, 1, 0.9]; the description of sensors with an example; scopeExample.py with sensor names as m0.Pos. [log](exudynRevisionLog2026c.md#rg6-20-10)
+
+#### **CLOSED_RG6.20.11** The settings dialog: a list or matrix the setting refuses is refused with a message, not an exception
+
+CLOSED 2026-11-04 (#3249): CheckType checks lists and matrices by their elements and rows; the dialog puts back what the settings refuse and shows the message with the description of the setting. test_guiValues.py. [log](exudynRevisionLog2026c.md#rg6-20-11)
 
 ## **OPEN_RG7** Python user items
 

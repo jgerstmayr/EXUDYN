@@ -184,6 +184,9 @@ def testConvertValue2StringWritesFloatsAsSinglePrecision():
     ('7', 'Index', [1]),
     ('[1, 2, 3]', 'IndexArray', [3]),
     ('[[1, 2], [3, 4]]', 'MatrixFloat', [2, 2]),
+    ('[[0, 1], [2, -3]]', 'IndexMatrix', [-1]),
+    ('[]', 'IndexMatrix', [-1]),
+    ('[0.5, 1]', 'VectorFloat', [-1]),
     ])
 def testCheckTypeAcceptsWhatItShould(text, valueType, size):
     [isValid, message] = gui.CheckType(text, valueType, size)
@@ -201,6 +204,12 @@ def testCheckTypeAcceptsWhatItShould(text, valueType, size):
     ('[[1, 2, 3], [4, 5, 6]]', 'MatrixFloat', [2, 2], 'columns'),
     ('[[1, 2]]', 'MatrixFloat', [2, 2], 'rows'),
     ('[1, 2', 'IndexArray', [3], 'brackets'),
+    ('[[0, 1], [2]]', 'IndexMatrix', [-1], 'same length'),     #what the settings refused in the callback (#3249)
+    ('[[0, 1.5]]', 'IndexMatrix', [-1], 'integers'),
+    ('[0, 1]', 'IndexMatrix', [-1], 'rows'),
+    ('5', 'VectorFloat', [3], 'list'),
+    ("[1, 'a', 3]", 'VectorFloat', [3], 'numbers'),
+    ('[0, 1.5]', 'IndexArray', [-1], 'integers'),
     ])
 def testCheckTypeRejectsWithAMessageThatSaysWhy(text, valueType, size, inMessage):
     [isValid, message] = gui.CheckType(text, valueType, size)

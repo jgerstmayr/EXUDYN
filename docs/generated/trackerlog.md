@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.358.dev1
+- Exudyn version = 1.13.359.dev1
 - last change = 2026-11-04
 - Number of issues = 3250
-- Number of resolved issues = 3135 (358 in current version)
+- Number of resolved issues = 3136 (359 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9448,9 +9448,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` Settings dialog: a list or matrix that the setting refuses raises in the tkinter callback instead of an error box (#3249)
-  - description: In the visualization settings dialog, a value of a list or matrix setting whose shape or types the setting refuses (e.g. scope0.sensors as \[\[0,1\],\[2\]\] or \[\[0,1.5\]\], or a number for a list) passes CheckType, which only checks fixed sizes, and SetDictionary raises in the tkinter callback: the user sees an exception or an empty error window, and the tree keeps the wrong value. Decided: CheckType checks lists and matrices of open size (a list of numbers, of integers for the index types, a matrix as a list of rows of equal length); the dialog sets the value on the settings and, if they refuse it, shows the message and the description of the setting and keeps the editor open, ESCAPE restoring the value.
-  - date raised: 2026-11-04
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` The error norm of the automatic step size of CSolverExplicit scales by max(q\_new, q\_start) without absolute values (#3245)
   - description: CSolverExplicitTimeInt computes the scale of the error of ODE23 and DOPRI5 as absoluteTolerance + Maximum(q\_second, q\_start)\*relativeTolerance for the coordinates, velocities and ODE1 coordinates, without the absolute values: a negative coordinate makes the scale smaller than the absolute tolerance, zero or negative, so that the error of that coordinate is exaggerated or divided by zero. The norm of Hairer, Norsett and Wanner uses max(\|q\_second\|, \|q\_start\|), as the Python step size controller of exudyn.symbolics.advancedSolvers. Decided: fixed with the common step size controller in C++ (revision2026c step RG20.8).
   - date raised: 2026-11-04

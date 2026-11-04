@@ -421,6 +421,14 @@ graphs are added with `SC.renderer.scopes.SetGraphics`, `AddGraphics`, `GetGraph
 {ref}`sec-rendererscopes`. The stored values of a sensor are read and written under a lock, so that the renderer no
 longer reads them while the solver appends a row.
 
+**The legend of a scope** writes the sensor name and the component, `m0.Pos-X`, and `m0.Pos-Y over m0.Pos-X` over
+another sensor, instead of the name and the output variable; the default `backgroundColor` of a scope is
+`[0.95, 0.95, 1, 0.9]` (#3248).
+
+**The visualization settings dialog** refuses a list or a matrix that the setting cannot take - rows of different
+length, a float where an integer belongs, a number for a list - with a message and the description of the setting,
+and keeps the value it had (#3249).
+
 **The solvers of `exudyn.symbolics.solvers` write at the exact write times** (#3241): the result, the solution file
 and the sensors at the multiples of their write periods, the state within a step interpolated by the cubic Hermite
 polynomial, see {ref}`sec-symbolicsolvers`; the solvers of Exudyn still write at the end of the step that passes a

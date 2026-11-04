@@ -229,6 +229,30 @@ def CheckType(valueStr, vType, vSize, dictionaryTypesT=None):
         return [False, 'invalid array or matrix: check brackets and types']
 
     
+    #A LIST OR A MATRIX IS CHECKED BY ITS ELEMENTS TOO (#3249): one of open size, or with a
+    #string or a float where an integer belongs, passed here and was refused by the settings
+    #structure in the callback of the dialog, as an exception instead of this message
+    isMatrix = len(vSize) == 2 or vType in ['IndexMatrix', 'MatrixFloat']
+    isList = not isMatrix and len(vSize) == 1 and (vSize[0] > 1 or vSize[0] == -1)
+    integers = vType.startswith('Index')
+    elements = 'integers' if integers else 'numbers'
+    def IsElement(value):
+        if isinstance(value, bool):
+            return False
+        return isinstance(value, int) if integers else isinstance(value, (int, float))
+    if isList:
+        if not isinstance(x, (list, tuple)):
+            return [False, 'a list of ' + elements + ' is expected, e.g. [1, 2]']
+        if not all(IsElement(value) for value in x):
+            return [False, 'the list may only contain ' + elements]
+    if isMatrix:
+        if not isinstance(x, (list, tuple)) or not all(isinstance(row, (list, tuple)) for row in x):
+            return [False, 'a list of rows is expected, each a list of ' + elements + ', e.g. [[0, 1], [2, 3]]']
+        if not all(IsElement(value) for row in x for value in row):
+            return [False, 'the rows may only contain ' + elements]
+        if len(set(len(row) for row in x)) > 1:
+            return [False, 'all rows must have the same length']
+
     if len(vSize) == 1 and vSize[0] > 1: #vector/array
         if len(x) != vSize[0]:
             return [False, 'vector/array must have length '+str(vSize[0])]

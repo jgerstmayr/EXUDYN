@@ -5748,6 +5748,28 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   as named lines in the path plot, the pivot as a point and a text, the start height in scope0. Checked by eye on
   the raytracer image; OpenGL draws the same primitives.
 
+<a id="rg6-20-10"></a>
+### RG6.20.10 — The legend of a scope with the sensor name and the component; the background; the sensors setting (2026-11-04, #3248)
+- Maintainer (testing in OpenGL: "works really fine"): the legend wrote "mass0, PositionY"; a sensor name is unique
+  and the user names it by what it measures, so the legend writes the name and only the component: `m0.Pos-X`
+  (different from PlotSensor, but shorter); over another sensor `m0.Pos-Y over m0.Pos-X`. A sensor of one component
+  writes its name only; a component without a letter (not X, Y, Z or a tensor component) as `name[3]`.
+- `backgroundColor` default [0.95, 0.95, 1, 0.9]; the description of `sensors` with the examples `[[0,1],[2,3]]` and
+  `[[1,1,1,0,0]]`; scopeExample.py names its sensors m0.Pos, m1.Pos, m1.Vel. Checked on the raytracer image.
+
+<a id="rg6-20-11"></a>
+### RG6.20.11 — The settings dialog refuses what a list or matrix setting refuses (2026-11-04, #3249)
+- Maintainer: an illegal input in the sensors field raised an exception or opened an empty error window. CheckType
+  checked only fixed sizes: an IndexMatrix of open size passed with rows of different length or floats, and
+  `len()` of a number raised in CheckType itself; SetDictionary then raised in the tkinter callback.
+- CheckType checks lists (of numbers; of integers for the Index types) and matrices (a list of rows of equal length)
+  by their elements. OnCellCommit sets the value on the settings in a try; what they refuse is put back in the tree
+  and the settings, the undo entry dropped, and the message shown with the description of the setting, the editor
+  staying open (ESCAPE keeps the original value). The other inputs: enums are picked from a combo box, numbers and
+  file names were checked already; the item dialog of the right mouse button (EditDictionary) gives its values to
+  ModifyObject, which checks them.
+- test_guiValues.py: three accepted and six refused values.
+
 <a id="rg6-20-9"></a>
 ### RG6.20.9 — mbs.Reset() and item changes while the renderer runs: a lock of the system (2026-11-04, #3239)
 - `PostProcessData::accessSystem` (an atomic flag per system) with `accessSystemOwner` (a nested lock in the same

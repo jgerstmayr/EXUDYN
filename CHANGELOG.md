@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 343 | 1.13.358 |
+| 1.13 | Newborn | 344 | 1.13.359 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.359** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Settings dialog: a list or matrix that the setting refuses raises in the tkinter callback instead of an error box (#3249)
+  - description: In the visualization settings dialog, a value of a list or matrix setting whose shape or types the setting refuses (e.g. scope0.sensors as \[\[0,1\],\[2\]\] or \[\[0,1.5\]\], or a number for a list) passes CheckType, which only checks fixed sizes, and SetDictionary raises in the tkinter callback: the user sees an exception or an empty error window, and the tree keeps the wrong value. Decided: CheckType checks lists and matrices of open size (a list of numbers, of integers for the index types, a matrix as a list of rows of equal length); the dialog sets the value on the settings and, if they refuse it, shows the message and the description of the setting and keeps the editor open, ESCAPE restoring the value.
+  - **notes:** The visualization settings dialog refuses a list or a matrix that the setting cannot take - rows of different length, a float where an integer belongs, a number for a list - with a message and the description of the setting, and keeps the value it had, instead of raising in its callback.
+  - date resolved: **2026-11-04 22:04**, date raised: 2026-11-04
 - **1.13.358** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Scope: the legend writes the sensor name and the component (m0.Pos-X), a lighter background, the sensors setting with an example (#3248)
   - description: The legend of a scope writes 'mass0, PositionY', the name of the sensor and its output variable; as sensor names are unique and a user names them by what they measure, the variable is redundant and makes the entries long. A line over another sensor writes 'mass0, PositionY over PositionX'. The background \[0.9,0.9,0.9,0.9\] is grey; the description of scope.sensors does not show what a row means. Decided: the legend writes the sensor name and, for a sensor of more than one component, '-' and the component as PlotSensor names it ('m0.Pos-X', 'm0.Pos\[3\]' for an unnamed component), and over another sensor 'm0.Pos-Y over m0.Pos-X'; backgroundColor \[0.95,0.95,1,0.9\]; the description of sensors with the example \[\[0,1\],\[2,3\]\]; scopeExample.py with sensor names as m0.Pos.
   - **notes:** The legend of a scope writes the sensor name and the component, m0.Pos-X, and m0.Pos-Y over m0.Pos-X for a line over another sensor; the default backgroundColor of a scope is \[0.95, 0.95, 1, 0.9\]; the description of scope.sensors has examples.

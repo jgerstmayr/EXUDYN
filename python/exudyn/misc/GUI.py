@@ -1710,21 +1710,39 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 (isValid, message) = (False, rangeMessage)
 
         if not isValid:
-            self.cellEditor.unbind('<FocusOut>')    #otherwise OnCellCommit is called twice
-            tk.messagebox.showerror("Error", self.ItemPath(item) + ' expects ' + vType + ':\n'
-                                    + message + '\npress ESCAPE to keep the original value')
-            self.cellEditor.bind('<FocusOut>', self.OnCellCommit)
+            self.ShowValueError(item, vType, message)
+            return
+
+        #THE SETTINGS HAVE THE LAST WORD (#3249): what they refuse is put back and said, with the
+        #description of the setting, instead of an exception in the callback of the dialog
+        self.PushUndoState()
+        oldValueStr = self.tree.item(item, 'values')[0]
+        self.tree.item(item, values=(valueStr, vType, self.descriptionStorage[item]))
+        try:
+            self.modifiedDictionary = self.GetDictionary('')
+            self.UpdateSettingsStructure()      #only if according flag set in visualizationSettings
+        except Exception as exception:                                       # noqa: BLE001 - whatever the settings refuse
+            self.tree.item(item, values=(oldValueStr, vType, self.descriptionStorage[item]))
+            self.undoStack.pop()
+            self.undoButton.configure(state=tk.NORMAL if self.undoStack != [] else tk.DISABLED)
+            self.modifiedDictionary = self.GetDictionary('')
+            self.settingsStructure.SetDictionary(self.modifiedDictionary)
+            self.ShowValueError(item, vType, str(exception).split(' [Python file')[0])
             return
 
         self.CancelCellEdit()
-        self.PushUndoState()
-        self.tree.item(item, values=(valueStr, vType, self.descriptionStorage[item]))
         self.MarkChangedValue(item)
         self.tree.focus_set()
         self.tree.focus(item)
         self.ShowInfo(item)
-        self.modifiedDictionary = self.GetDictionary('')
-        self.UpdateSettingsStructure()      #only if according flag set in visualizationSettings
+
+    def ShowValueError(self, item, vType, message):
+        """say why a value is refused, with the description of the setting, and keep the editor open"""
+        self.cellEditor.unbind('<FocusOut>')    #otherwise OnCellCommit is called twice
+        tk.messagebox.showerror("Error", self.ItemPath(item) + ' expects ' + vType + ':\n'
+                                + message + '\n\n' + self.ItemPath(item) + ': ' + self.descriptionStorage[item]
+                                + '\n\npress ESCAPE to keep the original value')
+        self.cellEditor.bind('<FocusOut>', self.OnCellCommit)
 
 
 def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit'):
