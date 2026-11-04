@@ -1,0 +1,12 @@
+{
+  "number": 3245,
+  "title": "The error norm of the automatic step size of CSolverExplicit scales by max(q_new, q_start) without absolute values",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "CSolverExplicitTimeInt computes the scale of the error of ODE23 and DOPRI5 as absoluteTolerance + Maximum(q_second, q_start)*relativeTolerance for the coordinates, velocities and ODE1 coordinates, without the absolute values: a negative coordinate makes the scale smaller than the absolute tolerance, zero or negative, so that the error of that coordinate is exaggerated or divided by zero. The norm of Hairer, Norsett and Wanner uses max(|q_second|, |q_start|), as the Python step size controller of exudyn.symbolics.advancedSolvers. Decided: fixed with the common step size controller in C++ (revision2026c step RG20.8).",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03",
+  "file": "src/Solver/CSolverExplicit.cpp"
+}

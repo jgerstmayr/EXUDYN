@@ -199,6 +199,15 @@ I controller rejects 5 to 20 % of the steps where the error grows (RG20.8: a PI 
 a problem of changing time scales (contact, impact) where the controlled step pays off, and an estimate of the
 velocity error.
 
+**RG20.1.4, RG20.8.1, RG20.2.2, done** (#3243, #3244): on a bouncing ball (Hertz contact) the controlled step of
+TrapezoidalGGL needs a tenth of the steps of a constant step for a tenth of the error; on a chain falling from nearly
+upright it is worse than a constant step, as the error made in the unstable start grows and no local estimate sees
+that. The velocity error by the second difference of the mean accelerations (v1 - v0)/h - free of the alternation of
+the accelerations - and a PI controller (Gustafsson; rejections 1 to 12 instead of up to 65) are in. Lobatto4: IIIA and
+IIIC both with GGL at the implicit stages are of order 4 in q and v; IIIC with the constraints at all stages alone is
+of order 2 in v and drifts on velocity level; IIIA without GGL does not converge in a and z. IIIC-GGL is the default:
+it damps a fast mode of h omega = 70, where IIIA-GGL fails.
+
 ## 5. Steps (group RG20)
 
 - RG20.1 TrapezoidalGGL with an adaptive step in the symbolic solvers: .1 analysis, .2 the constant-step method

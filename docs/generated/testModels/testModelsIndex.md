@@ -211,6 +211,7 @@ symbolicHTTest
 symbolicItemOutputTest
 symbolicJacobianExpressionsTest
 symbolicJointJacobianTest
+symbolicLobatto4Test
 symbolicLookupTableTest
 symbolicMassMatrixDerivativeTest
 symbolicModuleTest
@@ -235,6 +236,7 @@ symbolicSystemODE1Test
 symbolicSystemParametersTest
 symbolicSystemTest
 symbolicSystemVariablesTest
+symbolicTrapezoidalGGLStepSizeTest
 symbolicTrapezoidalGGLTest
 symbolicUserConnectorsTest
 symbolicUserContactFrictionTest

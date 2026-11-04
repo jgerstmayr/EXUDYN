@@ -19,10 +19,21 @@ Exudyn's C++ solvers, written in Python with numpy and scipy:
   Leimkuhler (GGL): the position and the velocity constraints both hold in every step, a second multiplier moves the
   positions back onto the constraints. It is of order 2 in the coordinates, velocities, accelerations and Lagrange
   multipliers and has no numerical damping. With `timeIntegration.automaticStepSize` (the default) the step size
-  follows the local error of the coordinates, estimated from the accelerations at both ends of the step as
-  $h^2/12\,(\ddot{\mathbf q}_1 - \ddot{\mathbf q}_0)$, with `timeIntegration.absoluteTolerance` and
-  `relativeTolerance`, as the explicit solvers DOPRI5 and ODE23; the tolerances are those of one step. The algebraic
-  equations must depend on the coordinates and the time only (#3242).
+  follows the local errors of the coordinates and velocities, estimated from the accelerations - the coordinates
+  by $h^2/12\,(\ddot{\mathbf q}_1 - \ddot{\mathbf q}_0)$, the velocities by the second difference of the mean
+  accelerations of the last three steps -, with `timeIntegration.absoluteTolerance` and `relativeTolerance`, as the
+  explicit solvers DOPRI5 and ODE23, and a PI controller, which rejects few steps (#3243). The tolerances are those of
+  one step: the error of a motion that is sensitive to small changes - a chain falling from an unstable position -
+  grows beyond them, while a motion of changing time scales - a ball bouncing on the ground - needs a tenth of the
+  steps of a constant step size for the same error. The algebraic equations must depend on the coordinates and the
+  time only (#3242).
+- `SolveLobatto4(system, simulationSettings, variant)`: the 3-stage Lobatto methods of order 4 with constant steps
+  (#3244), with the constraints, the velocity constraints and a multiplier moving the positions onto the constraints
+  at each implicit stage: `'IIIC-GGL'` (the default), Lobatto IIIC, which damps fast modes, and `'IIIA-GGL'`,
+  Lobatto IIIA, which has one stage less, keeps the energy and has smaller errors of the accelerations, but does not
+  converge where a step is much larger than a fast period; both are of order 4 in the coordinates and velocities and
+  of order 2 in the accelerations and multipliers. `'IIIC'`, with the constraints at all stages only, is of order 2 in
+  the velocities and does not keep the velocity constraints.
 
 All of them take the `SimulationSettings` of `mbs.SolveDynamic`: the steps, the solver parameters, the Newton tolerances, the
 discontinuous iteration of the data coordinates and, with `timeIntegration.adaptiveStep`, the step size that a

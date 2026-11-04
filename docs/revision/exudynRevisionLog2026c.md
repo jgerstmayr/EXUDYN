@@ -5729,6 +5729,58 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg20-2-2"></a>
+### RG20.2.2 — Lobatto4 with constant steps: the variants measured, IIIC-GGL chosen (2026-11-04, #3244)
+- `_SolveLobatto` of exudyn/symbolics/advancedSolvers.py: one Newton method for the stages of a stiffly accurate
+  tableau, Q_i = q0 + h c_i v0 + h^2 (A^2)_ij A_j, V_i = v0 + h A_ij A_j, the stage equations of motion and
+  constraints at the implicit stages (a first row of zeros: the stage is the start, IIIA), with GGL also C_q V_i +
+  c_t = 0 and Q_i - C_q^T mu_i; the Jacobian per stage from two SystemJacobian calls (by q and by v) and the mass
+  matrix. Check: its 2-stage IIIA-GGL equals SolveTrapezoidalGGL to 5e-16. `SolveLobatto4(system, settings,
+  variant)` with `lobatto4Variants`; ODE1 and data coordinates refused for now.
+- **Measured** (pendulum, 25/50 steps against 400, Newton to 1e-13):
+
+  | variant | q | v | a, z | velocity constraint |
+  |---|---|---|---|---|
+  | IIIA-GGL (2 implicit stages) | 4.0 | 4.0 | 2.1 | 1e-14 |
+  | IIIC-GGL (3) | 3.6 | 4.1 | 2.0, errors 25x those of IIIA-GGL | 1e-14 |
+  | IIIC, constraints at all stages (3) | 4.1 | 2.1 | 1.0 | 2e-3 |
+  | IIIA index 3 without GGL (2) | 2.0 | 2.0 | does not converge | 1e-4 |
+
+  Slider crank (8/16 steps against mbs.SolveDynamic with 20000 steps): IIIA-GGL 3.97, IIIC-GGL 4.2 in q and v, IIIC
+  4.0 in q and 1.9 in v; Lobatto4 with 32 steps 1e-8, TrapezoidalGGL with 64 steps 4e-5. A pendulum with a mass on a
+  stiff linear spring (omega = 1414/s) at h = 0.05: IIIC-GGL damps the fast mode (its energy 0.5 removed, the slow
+  motion kept), IIIA-GGL and plain IIIC do not converge at h omega = 70; at h = 0.01 IIIA-GGL keeps the energy to
+  1e-3, TrapezoidalGGL loses 4.5 of it.
+- **Chosen**: IIIC-GGL as the default - order 4 in q and v and L-stable; the maintainer's expectation (IIIC with the
+  constraints at all stages) holds for q but not for v, which needs the velocity constraints. IIIA-GGL stays as the
+  variant without damping and of smaller acceleration errors, IIIC for the record.
+- symbolicLobatto4Test.py (new, 9 s).
+
+<a id="rg20-1-4"></a>
+### RG20.1.4, RG20.8.1 — The step size of TrapezoidalGGL on a whipping chain and a bouncing ball; the velocity error; the PI controller (2026-11-04, #3243, #3245)
+- **Models** (maintainer: a falling chain of about 10 elements, fixed on one side, the other nearly vertical up, the
+  whip effect; a contact sphere): a chain of 10 mass points (NumpySystem, 20 coordinates, 10 distance constraints)
+  from 80 degrees, its free end at 7.9 m/s at 0.7 s, against Exudyn's mass points and ObjectConnectorDistance with
+  generalized-alpha (spectral radius 0.9 - 1 is unstable with index 3 at small steps; 80000 and 320000 steps agree to
+  1e-6); a ball on the ground with Hertz contact k p^1.5 and Hunt-Crossley damping (two contacts of 10 ms in 1.5 s)
+  against scipy DOP853 at 1e-13.
+- **Ball**: the controlled step needs 419 steps for the error 9e-5, constant steps 4000 for 1e-3 and 16000 for 5e-5.
+- **Chain**: the controlled step is worse than a constant one: at 0.7 s 393 steps give 0.17, 200 constant steps
+  9e-3. The error is already at 0.4 s, before the whip, 60 times that of constant steps of the same mean size: the
+  start near the upright position is unstable, its errors grow exponentially, and the controller takes large steps
+  there as the local error is small. A local error controller does not see the sensitivity; tighter tolerances help.
+- **Velocity error**: by the second difference of the end accelerations it is spoiled with constraints by their
+  alternation (the slider crank then took 3243 steps at 1e-7 with the PI controller); by the second difference of the
+  mean accelerations (v1 - v0)/h of the last three steps it is not (1195 steps, error 3e-5, 2 rejections) and equals
+  the former on the unconstrained ball. Kept: positions by h^2/12 (a1 - a0) and velocities by the mean accelerations.
+- **PI controller** (RG20.8.1, Gustafsson: h safety (1/e)^(0.7/k) e_p^(0.4/k), after a rejection no growth): the
+  rejections drop from up to 65 (I controller) to 2-12 on all three models at equal accuracy.
+- Newton: a diverging iteration (NaN at a first step of the maximum size on the chain) counts as not converged, so
+  that the step is reduced.
+- Found: the C++ error norm of ODE23/DOPRI5 uses max(q_new, q_start) without absolute values - #3245, RG20.8.2.
+- symbolicTrapezoidalGGLStepSizeTest.py (new, 13 s); symbolicTrapezoidalGGLTest.py: 140 and 675 steps instead of 74
+  and 343 at the same tolerances, with 3.5 times smaller errors (the velocities are in the estimate).
+
 <a id="rg20-1-2"></a>
 ### RG20.1.2, RG20.1.3 — SolveTrapezoidalGGL with constant steps and with the step size by the local error (2026-11-04, #3242)
 - **The module** exudyn/symbolics/advancedSolvers.py (new, decision 7: the new solvers in a module of their own), on

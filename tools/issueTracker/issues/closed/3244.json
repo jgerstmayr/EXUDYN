@@ -1,0 +1,15 @@
+{
+  "number": 3244,
+  "title": "Lobatto4: the 3-stage Lobatto method of order 4 for constrained systems in exudyn.symbolics.advancedSolvers, Lobatto IIIC with the constraints at all stages against Lobatto IIIA with GGL",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "The symbolic solvers have no method of order 4 for systems with index-3 constraints. Decided: Lobatto4, the 3-stage Lobatto method, with constant steps first; Lobatto IIIC with the constraints enforced at all stages against Lobatto IIIA with the GGL stabilization, the variant chosen by order and stability on a pendulum and a slider crank; the error estimate and the adaptive step afterwards (docs/dev/design/advancedSolvers.md section 3.2).",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03",
+  "dateResolved": "2026-11-04 18:27",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.symbolics.advancedSolvers.SolveLobatto4 integrates a symbolic system with index-3 constraints by a 3-stage Lobatto method of order 4 with constant steps: 'IIIC-GGL' (default, Lobatto IIIC, damping fast modes) and 'IIIA-GGL' (Lobatto IIIA, without damping), both with the constraints, the velocity constraints and a multiplier moving the positions onto the constraints at each implicit stage, of order 4 in the coordinates and velocities and 2 in the accelerations and multipliers; 'IIIC' with the constraints at all stages only, of order 2 in the velocities; symbolicLobatto4Test.py.",
+  "resolvedInVersion": "1.13.352"
+}

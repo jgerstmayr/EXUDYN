@@ -426,8 +426,10 @@ write time. `MainSolverExplicit`, `MainSolverImplicitSecondOrder` and `MainSolve
 
 **`SolveTrapezoidalGGL` of `exudyn.symbolics.advancedSolvers`** (#3242): the trapezoidal rule with the GGL
 stabilization of index-3 constraints for symbolic systems, of order 2 and without numerical damping, with constant
-steps or a step size controlled by the local error and `timeIntegration.absoluteTolerance` and `relativeTolerance`,
-see {ref}`sec-symbolicsolvers`.
+steps or a step size controlled by the local errors of the coordinates and velocities, with
+`timeIntegration.absoluteTolerance` and `relativeTolerance` and a PI controller (#3243), see
+{ref}`sec-symbolicsolvers`. **`SolveLobatto4`** (#3244): the 3-stage Lobatto methods of order 4 with constant steps
+for symbolic systems with constraints, Lobatto IIIC (damping) or IIIA, both with the GGL stabilization.
 
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.

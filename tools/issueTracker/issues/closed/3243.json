@@ -1,0 +1,15 @@
+{
+  "number": 3243,
+  "title": "The automatic step size of SolveTrapezoidalGGL: the velocity error in the estimate and a PI controller, evaluated on a whipping chain and a bouncing ball",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "SolveTrapezoidalGGL estimates the local error of the positions only, by h^2/12 (a1 - a0), and controls the step by the I controller of Exudyn's explicit solvers: at an equal number of steps it was not better than constant steps on a pendulum and a slider crank, and it rejected 5 to 20 % of the steps. Decided: models of changing time scales - a falling chain of 10 elements fixed at one end and starting nearly vertical upwards, which whips, and a contact sphere -, an estimate of the velocity error, and the common step size controller of revision2026c step RG20.8 in Python first (a PI controller).",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03",
+  "dateResolved": "2026-11-04 18:27",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The automatic step size of SolveTrapezoidalGGL of exudyn.symbolics.advancedSolvers estimates the local errors of the coordinates, by the difference of the accelerations at both ends of the step, and of the velocities, by the second difference of the mean accelerations of the last three steps, and controls the step by a PI controller, which rejects few steps; a diverging Newton iteration reduces the step. Measured on a bouncing ball, where it needs a tenth of the steps of a constant step size for the same error, and on a chain falling from nearly upright, where the errors of the unstable start grow and a constant step size is better; symbolicTrapezoidalGGLStepSizeTest.py.",
+  "resolvedInVersion": "1.13.351"
+}
