@@ -320,6 +320,14 @@ _rungeKuttaTableaus = {'LobattoIIIA': (np.array([[0., 0., 0.], [5./24., 1./3., -
                        'Trapezoidal': (np.array([[0., 0.], [0.5, 0.5]]), np.array([0., 1.])),
                        'RadauIIA': (np.array([[5./12., -1./12.], [3./4., 1./4.]]), np.array([1./3., 1.]))}
 
+def _QuadratureError(points, b, stageValues):
+    """the error of the quadrature of the method, sum_j b_j stageValues_j, against the integral over the step of the
+    polynomial through points, a list of (tau, value) with tau the time from the start of the step in steps (#3250)"""
+    tau = np.array([point[0] for point in points])
+    weights = scipy.linalg.solve(np.vander(tau, len(tau), increasing=True).T, 1./np.arange(1., len(tau) + 1.))
+    return sum(bj*value for (bj, value) in zip(b, stageValues)) - sum(w*point[1] for (w, point) in zip(weights, points))
+
+
 #the methods of SolveImplicitRungeKutta: (tableau, where the constraints are)
 implicitRungeKuttaMethods = {'LobattoIIIA4': ('LobattoIIIA', 'end'), 'LobattoIIIC4-GGL': ('LobattoIIIC', 'GGL'),
                              'Radau3': ('RadauIIA', 'end')}
@@ -331,9 +339,10 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name):
     constraints: 'GGL', c = 0 and C_q V_i + c_t = 0 at the implicit stages, with a multiplier z_i per implicit stage and
     the positions Q_i - C_q^T mu_i; 'end', c = 0 and C_q v + c_t = 0 at the end of the step only, with a multiplier z_i
     per stage after the start, the one of a stage at the start the multiplier of the end of the previous step - an
-    equation of each kind for the two unknown multipliers. With timeIntegration.automaticStepSize the step by the
-    difference to the embedded trapezoidal solution of the first and the last stage (of the start and the last stage
-    if no stage is at the start), by _ErrorStepSize"""
+    equation of each kind for the two unknown multipliers. With timeIntegration.automaticStepSize the step by
+    _ErrorStepSize with the error of the quadrature of the method against the polynomial through the stage values of
+    the previous and this step (#3250); the first step by the difference to the embedded trapezoidal solution of the
+    first and the last stage (of the start and the last stage if no stage is at the start)"""
     if simulationSettings is None:
         simulationSettings = exudyn.SimulationSettings()
     timeIntegration = simulationSettings.timeIntegration
@@ -389,7 +398,8 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name):
                 - _ConstraintJacobian(system, qq - epsilon*v, v, empty, t))/(2*epsilon))
 
     (newtonIterations, jacobianEvaluations) = (0, 0)
-    stepSize = _ErrorStepSize(simulationSettings, order=3) #the error of the embedded trapezoidal solution, of order h^3
+    stepSize = _ErrorStepSize(simulationSettings, order=3) #the first step: the embedded trapezoidal solution, h^3
+    previous = None #the start, the step and the stage velocities and accelerations of the last accepted step
     while not stepSize.Done():
         (t0, t, h) = stepSize.Next()
         (q0, v0, a0, z0) = (q.copy(), q_t.copy(), q_tt.copy(), z.copy())
@@ -483,11 +493,29 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name):
             raise ValueError(name + ': Newton did not converge in step ' + str(stepSize.stepIndex + 1) + ' at t=' + str(t)
                              + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
         (Q, V) = Stages()
-        if stepSize.automatic: #against the trapezoidal rule of the first (or the start) and the last stage
+        if stepSize.automatic and previous is None: #the first step: against the trapezoidal rule of the first (or the
+            #start) and the last stage, an error of order h^3
             (vFirst, aFirst) = (V[0], stageA[0]) if c[0] == 0. else (v0, a0)
             errors = np.concatenate([Q[-1] - (q0 + (0.5*h)*(vFirst + V[-1])), V[-1] - (v0 + (0.5*h)*(aFirst + stageA[-1]))])
             if not stepSize.Control(stepSize.Error(errors, np.concatenate([q0, v0]), np.concatenate([Q[-1], V[-1]]))):
                 continue
+        elif stepSize.automatic: #the quadrature of the method against the polynomial through the stage velocities of
+            #the previous and this step, of the order of the method (#3250); the accelerations only without constraints,
+            #as their stage values are of order 2 with them
+            (tPrevious, hPrevious, VPrevious, APrevious) = previous
+            taus = [(tPrevious + hPrevious*cj - t0)/h for cj in c]
+            older = [j for j in range(s) if min(abs(taus[j] - ck) for ck in c) > 1e-9]
+            pointsV = [(taus[j], VPrevious[j]) for j in older] + [(c[j], V[j]) for j in range(s)]
+            errors = h*_QuadratureError(pointsV, A[-1], V)
+            (values0, values1) = (q0, Q[-1])
+            if nAE == 0:
+                pointsA = [(taus[j], APrevious[j]) for j in older] + [(c[j], stageA[j]) for j in range(s)]
+                errors = np.concatenate([errors, h*_QuadratureError(pointsA, A[-1], stageA)])
+                (values0, values1) = (np.concatenate([q0, v0]), np.concatenate([Q[-1], V[-1]]))
+            stepSize.order = len(pointsV) #the local error of a method of order len(points) - 1
+            if not stepSize.Control(stepSize.Error(errors, values0, values1)):
+                continue
+        previous = (t0, h, V, [a.copy() for a in stageA])
         (q, q_t, q_tt, z) = (Q[-1], V[-1], stageA[-1], stageZ[-1]) #stiffly accurate: the end is the last stage
         stepSize.Accept(t, 1)
         output.Step(stepSize.stepIndex, t, q, q_t, q_tt, last=stepSize.Done(), z=z, h=h)
@@ -514,10 +542,14 @@ def SolveImplicitRungeKutta(system, simulationSettings=None, method='LobattoIIIA
 
     All of order 2 in the accelerations and multipliers (measured on a pendulum and a slider crank) and stiffly
     accurate: the end of the step is the last stage. With timeIntegration.automaticStepSize (the default) the step
-    size is controlled by the difference to the embedded trapezoidal solution of the first (or the start) and the last
-    stage, q0 + h/2 (V_1 + V_3) and v0 + h/2 (A_1 + A_3), an error of order h^3, which overestimates the error of the
-    method: the tolerances are met with room. The PI controller and the settings as SolveTrapezoidalGGL; without it
-    the steps of timeIntegration.numberOfSteps. Newton's method for the stage accelerations and multipliers (and mu)
+    size is controlled by an estimate of the local error of the order of the method (#3250): the quadrature of the
+    method, h sum_j b_j V_j, against the integral of the polynomial through the stage velocities of the previous and
+    this step - for the Lobatto methods of degree 4, Simpson's error h^5/2880 v'''' -, and the same for the stage
+    accelerations without constraints (with them, their stage values are of order 2, and the error of q decides); no
+    extra solve. It is 0.3 to 0.6 times the true local error, for all step sizes; the global error is then of the size
+    of the tolerances. The first step, without a previous one, by the embedded trapezoidal solution of the first (or
+    the start) and the last stage, an error of order h^3. The PI controller and the settings as SolveTrapezoidalGGL;
+    without it the steps of timeIntegration.numberOfSteps. Newton's method for the stage accelerations and multipliers (and mu)
     with the Jacobian of the system, the ODE2 rows scaled by h^2, by timeIntegration.newton as SolveTrapezoidalGGL; a
     step whose Newton iteration does not converge is repeated with a smaller step with automaticStepSize or
     adaptiveStep, else raises. Consistent initial accelerations and algebraic coordinates; the output as the solvers

@@ -38,10 +38,12 @@ Exudyn's C++ solvers, written in Python with numpy and scipy:
   `'LobattoIIIC4-GGL'`, Lobatto IIIC of order 4, enforces them at each stage, with a multiplier moving the positions
   onto the constraints; it damps fast modes, also where the step is 70 times longer than 1/omega of the mode.
   `'Radau3'`, Radau IIA of order 3, has the constraints as `'LobattoIIIA4'` and damps as well. All are of order 2 in
-  the accelerations and multipliers. With `timeIntegration.automaticStepSize` (the default) the step size follows the
-  difference to the embedded trapezoidal solution, with the PI controller of `SolveTrapezoidalGGL`: an estimate of
-  order 2, which makes the error far smaller than the tolerances, with about the steps the trapezoidal rule would
-  need.
+  the accelerations and multipliers. With `timeIntegration.automaticStepSize` (the default) the step size follows an
+  estimate of the local error of the order of the method, with the PI controller of `SolveTrapezoidalGGL`: the
+  quadrature of the method against the polynomial through the stage velocities of the previous and this step - for
+  the Lobatto methods Simpson's error from the fourth difference of five values -, without an extra solve (#3250);
+  the accelerations enter it only without constraints. The local errors are then of the size of the tolerances, and
+  the steps grow by the order of the method as the tolerances are lowered.
 
 All of them take the `SimulationSettings` of `mbs.SolveDynamic`: the steps, the solver parameters, the Newton tolerances, the
 discontinuous iteration of the data coordinates and, with `timeIntegration.adaptiveStep`, the step size that a

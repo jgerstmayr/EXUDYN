@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 344 | 1.13.359 |
+| 1.13 | Newborn | 345 | 1.13.360 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.360** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolveImplicitRungeKutta: an error estimate of the order of the method from the stage values of this and the previous step (#3250)
+  - description: The automatic step size of SolveImplicitRungeKutta estimates the error by the embedded trapezoidal solution, of order h^3: the methods take about the steps of the trapezoidal rule, with errors far below the tolerance. Measured against the true local error (a reference of 64 steps from the same start, the step-doubling idea used only as a reference): the trapezoidal rule of one step overestimates the error of LobattoIIIA4 by 1e3 to 7e4, growing as 1/h^2; the quadrature error of the method against the polynomial through the stage velocities of the previous and this step (for Lobatto the fourth difference, Simpson's error h^5/2880 v'''') estimates it with a constant factor of 0.33 to 0.6 for all step sizes, on an oscillator and a pendulum; the same with the stage accelerations only without constraints, as their stage values are of order 2 with constraints. Decided: the estimate of the order of the method from the stages of the previous and this step, the first step by the trapezoidal rule; no extra solve.
+  - **notes:** The automatic step size of SolveImplicitRungeKutta estimates the local error with the order of the method, from the stage velocities of the previous and this step (for the Lobatto methods Simpson's error), without an extra solve: 4 to 23 times fewer steps, with local errors of the size of the tolerances.
+  - date resolved: **2026-11-04 22:24**, date raised: 2026-11-04
 - **1.13.359** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Settings dialog: a list or matrix that the setting refuses raises in the tkinter callback instead of an error box (#3249)
   - description: In the visualization settings dialog, a value of a list or matrix setting whose shape or types the setting refuses (e.g. scope0.sensors as \[\[0,1\],\[2\]\] or \[\[0,1.5\]\], or a number for a list) passes CheckType, which only checks fixed sizes, and SetDictionary raises in the tkinter callback: the user sees an exception or an empty error window, and the tree keeps the wrong value. Decided: CheckType checks lists and matrices of open size (a list of numbers, of integers for the index types, a matrix as a list of rows of equal length); the dialog sets the value on the settings and, if they refuse it, shows the message and the description of the setting and keeps the editor open, ESCAPE restoring the value.
   - **notes:** The visualization settings dialog refuses a list or a matrix that the setting cannot take - rows of different length, a float where an integer belongs, a number for a list - with a message and the description of the setting, and keeps the value it had, instead of raising in its callback.

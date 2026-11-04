@@ -5788,6 +5788,30 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   graphics, assemble, raytracer image; equal results. In the suite no window opens, so the lock is not contended there;
   run directly, the renderer draws meanwhile - to be run by the maintainer once (no window from here).
 
+<a id="rg20-2-5"></a>
+### RG20.2.5 — The error estimate of the order of the method for SolveImplicitRungeKutta (2026-11-04, #3250)
+- Maintainer's questions (fourth answers): the unknowns per step - LobattoIIIA4 2 n + 2 m (A_2, A_3; Z_2, Z_3 for
+  the two end equations c = 0 and C_q v + c_t = 0, no mu), Radau3 the same, LobattoIIIC4-GGL 3 n + 6 m (the first
+  stage of IIIC is implicit too; Z_i and mu_i at each); step doubling only as the reference; the trapezoidal formulas
+  evaluated without a solve, one step h^3 E and two substeps 2 (h/2)^3 E: their extrapolation is Simpson's rule, which
+  is q1 of IIIA, so q1 - S = 0 identically - the error of order 4 has another constant that the three values of a
+  step cannot see. Design advancedSolvers.md section 3.2.
+- Measured against the true local error (a reference of 64 steps from the same start), N = 25 to 200 constant steps
+  on 1 s, the middle stage recovered from the ends (V_2 = (6 (q1 - q0)/h - v0 - v1)/4): the trapezoid of one step
+  overestimates by 850 to 73000, growing as 1/h^2; the fourth difference of the stage velocities of the previous
+  and this step (Simpson's error) is 0.33 (oscillator) and 0.58 (pendulum) of it for all N; of the stage
+  accelerations 0.8-1.06 without constraints, 12-690 (1/h^2) on the pendulum, as its stage accelerations are of order
+  2; a fifth difference of the velocities for e_v 1.7-15, growing as 1/h. Radau3 with the cubic through four values:
+  0.54-0.86.
+- `_QuadratureError(points, b, stageValues)`: the integral of the interpolating polynomial by the weights of its
+  Vandermonde system, against the quadrature of the method; the points of the previous step that coincide with a
+  stage of this one are dropped. The first step by the trapezoidal rule (order 3), then the order len(points); e_v only
+  without constraints.
+- Automatic steps, tolerances 1e-4/1e-6/1e-8 on 2 s: 4 to 23 times fewer steps (pendulum, IIIA: 24, 52, 120 against
+  128, 598, 2753), the global error of q a few times the tolerance; slider crank 1e-6 in 12 steps, 7e-7 (68, 4e-10).
+  symbolicLobatto4Test.py: the slider crank, and the pendulum with the three methods at 1e-5 and 1e-7, the error below
+  10 steps times the tolerance and the steps growing with the local order (IIIA 6.6, IIIC 4.4, Radau 4.3).
+
 <a id="rg20-5-3"></a>
 ### RG20.5.3 — Euler parameters in the symbolic system and the projection in SolveExplicit (2026-11-04, #3238)
 - **UserItemCreator.CreateRigidBody** on a `NodeRigidBodyEP` (now the default, as `mbs.CreateRigidBody`; Rxyz stays):

@@ -6,8 +6,8 @@
 #           positions and velocities, Radau3 of order 3, all of order 2 in the accelerations and the multiplier, the
 #           constraints on both levels kept; the methods agree with fine steps, and the 2-stage Lobatto IIIA with GGL is
 #           SolveTrapezoidalGGL; on a slider crank of rigid bodies on the joints of UserItemCreator, LobattoIIIA4 of order
-#           4 against mbs.SolveDynamic with fine steps, and the automatic step size by the embedded trapezoidal solution,
-#           its error far below the tolerance; on a pendulum with a mass on a stiff spring at its bob,
+#           4 against mbs.SolveDynamic with fine steps, and the automatic step size by the error estimate of the order of
+#           the method, its error of the size of the tolerance; on a pendulum with a mass on a stiff spring at its bob,
 #           LobattoIIIC4-GGL and Radau3 damp the fast oscillation of the spring at a step of h omega = 70, LobattoIIIA4
 #           keeps it and the energy at a smaller step.
 #
@@ -115,7 +115,8 @@ order = Order(errors)
 exu.Print('slider crank, LobattoIIIA4: errors of q, q_t with 16 steps', errors[1], ', orders', order)
 Check(min(order) > 3.7, 'the order of the slider crank: ' + str(order))
 
-#the automatic step size by the embedded trapezoidal solution: of order h^3, it overestimates the error
+#the automatic step size by the error of the quadrature against the polynomial through the stages of two steps, of
+#the order of the method (#3250): the error is of the size of the tolerance
 settings = Settings(4, endTime)
 settings.timeIntegration.automaticStepSize = True
 settings.timeIntegration.absoluteTolerance = 1e-6
@@ -124,8 +125,22 @@ result = SolveImplicitRungeKutta(system, settings, 'LobattoIIIA4')
 error = np.max(np.abs(result['q'][-1] - referenceCrank[0]))
 exu.Print('slider crank, LobattoIIIA4, automatic step size, tolerance 1e-6:', result['steps'], 'steps,', result['rejectedStepsError'],
           'rejected, error', error)
-Check(error < 1e-8 and result['steps'] < 120 and abs(result['time'][-1] - endTime) < 1e-12, 'the automatic step size')
+Check(error < 5e-6 and result['steps'] < 20 and abs(result['time'][-1] - endTime) < 1e-12, 'the automatic step size')
 u += result['steps']
+for method in implicitRungeKuttaMethods: #the pendulum: the steps follow the order of the method
+    steps = []
+    for tolerance in [1e-5, 1e-7]:
+        settings = Settings(4)
+        settings.timeIntegration.automaticStepSize = True
+        settings.timeIntegration.absoluteTolerance = tolerance
+        settings.timeIntegration.relativeTolerance = tolerance
+        result = SolveImplicitRungeKutta(pendulum, settings, method)
+        steps.append(result['steps']) #the local errors of about the tolerance add up over the steps:
+        error = np.max(np.abs(result['q'][-1] - reference['q'][-1]))
+        Check(error < 10*result['steps']*tolerance, 'the automatic step size of ' + method + ', tolerance ' + str(tolerance) + ': error ' + str(error))
+    localOrder = 2*cMath.log(10.)/cMath.log(steps[1]/steps[0]) #the steps grow by 100^(1/(p+1)) for a local error of order p+1
+    exu.Print('pendulum, ' + method + ', automatic step size, tolerances 1e-5 and 1e-7:', steps, 'steps, local order', localOrder)
+    Check(localOrder > (3.3 if method == 'Radau3' else 3.8), 'the steps of the automatic step size of ' + method + ': ' + str(steps))
 
 #a pendulum with a mass on a stiff linear spring at its bob, displaced by 1 mm: a fast mode of omega = 1414/s
 stiffness = 1e6

@@ -101,10 +101,21 @@ multipliers z (lambda); M a = f(q, v, t) - C_q^T z.
   | c(Q_i) = 0 at all stages only (index 3) | IIIC | 4 | 2 | 1 | drifts |
   | | IIIA | 2 | 2 | no convergence | drifts |
 
-  The unknowns per step: LobattoIIIA4 2 n + 2 m, Radau3 2 n + 2 m, LobattoIIIC4-GGL 3 n + 6 m. A fast mode with
+  The unknowns per step (n coordinates, m constraints; maintainer's question 2026-11-04):
+  - LobattoIIIA4: 2 n + 2 m. The first stage is the start of the step (its row of A is zero, A_1 = a0), so the
+    stage accelerations A_2, A_3 are unknown (2 n). It is not GGL: no mu. But it has two multipliers, Z_2 and Z_3,
+    because there are two constraint equations at the end, c(q1) = 0 and C_q v1 + c_t = 0 (2 m); with one Z for the
+    step (2 n + m), only c(q1) = 0 can be imposed - v of order 2 and a drifting velocity constraint (the table).
+  - Radau3: 2 n + 2 m, the same: two implicit stages, the same two end equations.
+  - LobattoIIIC4-GGL: 3 n + 6 m. The first row of IIIC is not zero, so the first stage is implicit too (Q_1 and V_1
+    differ from q0 and v0): 3 stages of A_i (3 n), each with Z_i and mu_i for c(Q_i) = 0 and C_q V_i + c_t = 0
+    (6 m). 2 n + 4 m would be GGL on two implicit stages, i.e. IIIA-GGL (dropped 2026-11-04).
+
+  A fast mode with
   h omega = 70 (a stiff spring): LobattoIIIC4-GGL and Radau3 damp it (Radau3 also damps the slow motion slightly),
   LobattoIIIA4 does not converge there and keeps the energy to 1e-4 at h omega = 14; IIIC-end gained energy.
-- **Error estimates, the formulas.** The trapezoidal solutions from the stages of the same step:
+- **Error estimates, the formulas.** The trapezoidal solutions from the stages of the same step - evaluated from the
+  converged stages, without a solve and without the constraints (maintainer's proposal):
 
       one step:       T1 = q0 + h/2 (V_1 + V_3)
       two substeps:   T2 = q0 + h/4 (V_1 + 2 V_2 + V_3)
@@ -116,24 +127,55 @@ multipliers z (lambda); M a = f(q, v, t) - C_q^T z.
   error -h^3/12 q_ttt of the trapezoidal rule, not of the error -h^5/2880 q^(5) of Simpson's rule. This is general:
   an estimate must vanish where the method is exact, for V a polynomial of degree 2 - and the only combination of
   three values V_1, V_2, V_3 that vanishes for all quadratics is zero. **No estimate of order 4 comes from the
-  stages of one step alone**; a fourth (and fifth) value is needed. Implemented (RG20.2.3): S - T1 for q and v, with
-  the exponent of h^3; it controls the step as the trapezoidal rule would - the error of Lobatto4 ends far below the
+  stages of one step alone**; a fourth (and fifth) value is needed. RG20.2.3 used S - T1 for q and v, with the
+  exponent of h^3; it controlled the step as the trapezoidal rule would - the error of Lobatto4 ended far below the
   tolerance (slider crank at 1e-6: 68 steps, 4e-10, where 16 constant steps give 1e-8).
-- **Error estimates of order 4, the candidates** (RG20.2.5):
-  1. *Step doubling*: the step h and two steps h/2 from the same start, e = (y_{h/2,h/2} - y_h)/(2^4 - 1); reliable,
-     three solves per step (the two half steps can be kept, local extrapolation); the reference for the others.
-  2. *Lobatto IIIA against IIIC on the same step*: both of order 4 with different error constants, e ~ y_IIIA -
-     y_IIIC; a second solve (3 stages).
-  3. *The previous step* (a multistep device): the fourth divided difference of V over the five times t0 - h_p,
-     t0 - h_p/2, t0, t0 + h/2, t1, e_q ~ -h^5/2880 * 24 V[t_-2, ..., t_2], and of A for e_v; no extra solve, but the
-     stage values of IIIA are of stage order 3 (V) and 2 (A): their errors enter the fourth difference with h^-4 -
-     for e_v certainly too large, for e_q to be measured; the first step needs another estimate.
-  4. *A defect*: the quintic Hermite polynomial of (q, v, a) at both ends, its derivative at the midpoint against
-     V_2 - an estimate of the stage error, O(h^4), one order better than D, still not h^5.
-  Proposed order: measure 1 as the reference against the true local error on the pendulum and the ball, then 3 for
-  q with the trapezoidal v estimate, then 2.
-- **Radau3**: no stage at the start; the embedded trapezoidal solution of the start and the end,
-  q0 + h/2 (v0 + v1), v0 + h/2 (a0 + a1) - an estimate of order h^3 against the error h^4 of Radau3.
+
+  *The maintainer's idea, worked out* (2026-11-04): one trapezoidal step has the error h^3 E, two substeps
+  2 (h/2)^3 E = h^3 E/4, E = -q_ttt/12 - both are evaluations of the formulas, no solve, as proposed. With the same
+  constant E the two give E, and the extrapolation that removes it, (4 T2 - T1)/3, is Simpson's rule itself, i.e.
+  exactly q1 of IIIA: q1 - S = 0 identically. The error of the order-4 method is the next term, h^5 q^(5)/2880, a
+  different constant that three values of one step cannot see (they determine a quadratic, which Simpson integrates
+  exactly). So the trapezoidal evaluations estimate the trapezoidal error only.
+- **The error estimate of the order of the method** (RG20.2.5, #3250): the values of the previous step supply what
+  the stages of one step lack. The polynomial p through the stage velocities of the previous and this step (for the
+  Lobatto methods the five values at t0 - h_p, t0 - h_p/2, t0, t0 + h/2, t1, degree 4; for Radau3 the four at
+  t0 - 2 h_p/3, t0, t0 + h/3, t1, degree 3) is integrated over the step and compared with the quadrature of the method:
+
+      e_q = h sum_j b_j V_j - integral_t0^t1 p dt         (Lobatto, equal steps: e_q = h/180 (V_-2 - 4 V_-1 + 6 V_0 - 4 V_1 + V_2),
+                                                            Simpson's error h^5/2880 v'''')
+      e_v = the same with the stage accelerations A_j, only without constraints
+
+  (`_QuadratureError`: the weights of the integral of the interpolating polynomial from its Vandermonde system, so
+  unequal steps and Radau need no case of their own). No solve; the first step, without a previous one, by the
+  trapezoidal rule T1 with order 3; then order len(points) in the controller. The accelerations of a constrained
+  system are of order 2 at the stages, which spoils their fourth difference: there, only e_q enters the error norm.
+- **Measured** (RG20.2.5; the true local error by a reference of 64 steps of the method from the same start - the
+  step-doubling idea, used only as a reference, not in the method), estimate / true local error, median over a
+  run with constant steps (N = 25, 50, 100, 200 on 1 s):
+
+  | model, method | true e_q, N = 25 / 200 | trapezoid T1, q | e_q (this) | e_v (this) | e_v from the 5th difference of V |
+  |---|---|---|---|---|---|
+  | oscillator, IIIA | 4e-7 / 1e-11 | 850 ... 44000 (1/h^2) | 0.33 (all N) | 0.8 ... 1.06 | 2.4 ... 15 (1/h) |
+  | pendulum, IIIA | 3e-7 / 8e-12 | 1200 ... 73000 | 0.58 (all N) | 12 ... 690 (1/h^2) | 1.7 ... 7.6 |
+  | oscillator, Radau3 | 6e-6 / 2e-9 | | 0.54 ... 0.61 | | |
+  | pendulum, Radau3 | 2e-5 / 4e-9 | | 0.77 ... 0.86 | | |
+
+  The automatic step size with it (tolerances 1e-4, 1e-6, 1e-8 on 2 s; steps, global error of q):
+
+  | model, method | trapezoid T1 (before) | this (#3250) |
+  |---|---|---|
+  | oscillator, IIIA | 109 / 3e-7, 518 / 9e-10, 2414 / 2e-12 | 26 / 2e-4, 59 / 6e-6, 139 / 2e-7 |
+  | pendulum, IIIA | 128 / 2e-7, 598 / 5e-10, 2753 / 1e-11 | 24 / 7e-4, 52 / 2e-5, 120 / 4e-7 |
+  | pendulum, IIIC4-GGL | 106 / 2e-6, 507 / 5e-9, 2365 / 2e-11 | 27 / 3e-4, 80 / 4e-6, 243 / 5e-8 |
+  | pendulum, Radau3 | 103 / 1e-6, 485 / 4e-8, 2305 (51 rejected) / 6e-10 | 37 / 3e-4, 109 / 4e-6, 338 / 2e-7 |
+
+  4 to 23 times fewer steps; the steps grow with the tolerance as tol^(-1/(p+1)); the global error is that of a
+  control of the local error per step, the local errors of about the tolerance adding up over the steps. Slider
+  crank at 1e-6: 12 steps, 7e-7 (68 steps, 4e-10 before).
+- **Other candidates, not taken**: Lobatto IIIA against IIIC on the same step (a second solve); a defect of the
+  Hermite polynomial of both ends at the midpoint (O(h^4), one order short); step doubling as the estimate (three
+  solves per step) - it serves as the reference above.
 - **The names** (decision 2026-11-04, third answers): `LobattoIIIA4` - the simplest form that solves index 3 without
   tricks -, `LobattoIIIC4-GGL` and `Radau3`, the methods of `SolveImplicitRungeKutta`; HOTINT presumably had
   LobattoIIIA4 or IIIC4 with the constraints at the end.
@@ -222,6 +264,10 @@ trapezoidal estimate first.
 Third answers: `LobattoIIIA4` (constraints at the end), `LobattoIIIC4-GGL` and `Radau3` are the three methods,
 IIIC-end and IIIA-GGL dropped; the formulas of the error estimates in this file and a better estimate (section 3.2).
 
+Fourth answers: step doubling is no method of its own, only the reference of the true local error for the
+measurement; the estimate from the formulas evaluated without a solve - done with the stages of the previous step
+(section 3.2, #3250); the count of the unknowns explained in section 3.2.
+
 ## 5. Results
 
 - **TrapezoidalGGL, automatic step** (#3243): a bouncing ball (Hertz contact) needs a tenth of the steps of a
@@ -231,7 +277,8 @@ IIIC-end and IIIA-GGL dropped; the formulas of the error estimates in this file 
   rejections instead of up to 65.
 - **Lobatto and Radau** (#3244, #3246, #3247): the table of section 3.2; the slider crank in 0.5 s with
   LobattoIIIA4 against 1.4 s with LobattoIIIC4-GGL; Lobatto4 with 32 steps 1e-8 where TrapezoidalGGL with 64 steps
-  has 4e-5.
+  has 4e-5. The error estimate of the order of the method (#3250): 0.3 to 0.9 times the true local error at all step
+  sizes, 4 to 23 times fewer steps than with the trapezoidal estimate (section 3.2).
 - **Output within the step** (#3241): no result of the test suite changed; the interpolated output of RK44 converges
   with order 4.
 - **SolveExplicit with fixed coordinates** (#3238), the C++ findings #3240 and #3245.
@@ -241,7 +288,7 @@ IIIC-end and IIIA-GGL dropped; the formulas of the error estimates in this file 
 | step | status | what |
 |---|---|---|
 | RG20.1 TrapezoidalGGL | done | constant and automatic steps, PI controller (#3242, #3243) |
-| RG20.2 Lobatto4 | .1-.4 done, .5 open | the three methods (#3244, #3246, #3247); .5 an error estimate of order 4 (section 3.2) |
+| RG20.2 Lobatto4 | done | the three methods (#3244, #3246, #3247); the error estimate of the order of the method (#3250) |
 | RG20.3 Adjoint sensitivities | .1 done, .2 not proposed | |
 | RG20.4 Output within the step | .3 done (Python, #3241), .2 open (C++) | |
 | RG20.5 Explicit solvers with constraints | .1-.2 done, .3 Euler parameters, .4 open (#3240, C++) | |
