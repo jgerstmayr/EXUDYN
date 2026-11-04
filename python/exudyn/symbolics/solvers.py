@@ -12,7 +12,8 @@
 #           whose discontinuous iteration does not converge, is repeated with a smaller step, which grows again after a
 #           few easy steps, as CSolverBase::SolveSteps (#3220); the statistics count the discontinuousIterations and the
 #           rejectedSteps. SolveExplicit eliminates coordinates fixed by algebraic equations, as Exudyn's explicit solver
-#           eliminates CoordinateConstraints to the ground (#3238).
+#           eliminates CoordinateConstraints to the ground (#3238). The output is written at the exact times of the write
+#           periods, interpolated within the step (#3241).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-26 (created)
@@ -86,16 +87,34 @@ class _MassMatrixSolver:
         return a
 
 
+def _Interpolate(start, end, t):
+    """the state at t within a step from start to end, dicts of 'time', 'q', 'q_t', 'q_tt' and optionally 'y', 'y_t',
+    'z' (#3241): q by the cubic Hermite interpolation of q and q_t at both ends, q_t its derivative, the others linear"""
+    (t0, t1) = (start['time'], end['time'])
+    h = t1 - t0
+    s = (t - t0)/h
+    (h00, h10, h01, h11) = (2*s**3 - 3*s**2 + 1, s**3 - 2*s**2 + s, -2*s**3 + 3*s**2, s**3 - s**2)
+    (d00, d10, d01, d11) = (6*s**2 - 6*s, 3*s**2 - 4*s + 1, -6*s**2 + 6*s, 3*s**2 - 2*s)
+    state = {'time': t,
+             'q': h00*start['q'] + (h10*h)*start['q_t'] + h01*end['q'] + (h11*h)*end['q_t'],
+             'q_t': (d00/h)*start['q'] + d10*start['q_t'] + (d01/h)*end['q'] + d11*end['q_t']}
+    for name in ['q_tt', 'y', 'y_t', 'z']:
+        state[name] = None if end.get(name) is None else (1 - s)*start[name] + s*end[name]
+    return state
+
+
 class _Output:
-    """the output of a solver of this module: the states at the steps of solution.file.writePeriod, as CSolverBase writes
-    them - the start, then each time a write period is passed, and the last step -, and for a SymbolicSystem the output
-    through its mbs: an Exudyn solver object, which writes the solution file and the sensors and updates the renderer in
-    FinishStep, by simulationSettings.solution; it runs as explicit Euler without inverse per body, which only decides
-    what its initialization computes"""
+    """the output of a solver of this module: the states at the times of solution.file.writePeriod - the start, the
+    multiples of the write period and the end -, within a step by _Interpolate (#3241); for a SymbolicSystem the output
+    through its mbs: an Exudyn solver object writes the solution file and the sensors at the times of their write
+    periods, interpolated within the step as well, and updates the renderer at the end of each step in FinishStep, by
+    simulationSettings.solution; it runs as explicit Euler without inverse per body, which only decides what its
+    initialization computes. The data coordinates within a step are those of its end"""
     def __init__(self, system, simulationSettings, tStart, tEnd, h):
         (self.tStart, self.tEnd, self.h) = (tStart, tEnd, h)
         self.period = simulationSettings.solution.file.writePeriod
-        self.lastWritten = tStart
+        self.written = 0 #the write times passed, tStart + written*period
+        self.previous = None
         self.result = {'time': [], 'q': [], 'q_t': [], 'q_tt': []}
         if system.nODE1:
             self.result.update({'y': [], 'y_t': []})
@@ -117,29 +136,57 @@ class _Output:
             #the state vectors of mbs, written in place, without the conversion of SetODE2Coordinates (#3173); valid
             #as long as mbs is not assembled again
             self.state = system.mbs.systemData.GetSystemStateDict(reference=True)
+            self.writeFile = self.solver.output.writeToSolutionFile
+            self.writeSensors = system.mbs.systemData.NumberOfSensors() > 0 and simulationSettings.solution.sensors.active
+
+    def _Record(self, state):
+        for name in self.result:
+            self.result[name].append(np.copy(state[name]))
+
+    def _SetState(self, state):
+        """the state into mbs"""
+        for (name, value) in [('ODE2Coords', state['q']), ('ODE2Coords_t', state['q_t']), ('ODE2Coords_tt', state['q_tt']),
+                              ('ODE1Coords', state['y']), ('ODE1Coords_t', state['y_t']), ('AECoords', state['z']),
+                              ('dataCoords', self.system.data)]:
+            if value is not None and len(value):
+                self.state[name][:] = value
+        self.system.mbs.systemData.SetTime(state['time'])
+        self.solver.it.currentTime = state['time']
 
     def Step(self, stepIndex, t, q, q_t, q_tt, last=False, y=None, y_t=None, z=None, h=None):
         """the state after step stepIndex at t, of the step size h (None: the constant one); stepIndex 0 is the initial
-        state, as SolveDynamic writes it"""
+        state, as SolveDynamic writes it; the write times within the step interpolated from the previous state"""
         if h is not None:
             self.h = h
-        if last:
-            self.lastWritten = self.tEnd - self.h
-        if stepIndex == 0 or t - self.lastWritten >= -1e-10:
-            self.lastWritten = max(self.lastWritten + self.period, t)
-            for (name, value) in [('time', t), ('q', q), ('q_t', q_t), ('q_tt', q_tt), ('y', y), ('y_t', y_t), ('z', z)]:
-                if name in self.result:
-                    self.result[name].append(np.copy(value))
+        state = {'time': t, 'q': q, 'q_t': q_t, 'q_tt': q_tt, 'y': y, 'y_t': y_t, 'z': z}
+        if stepIndex == 0:
+            self._Record(state)
+            self.written = 1
+        else:
+            while self.tStart + self.written*self.period < t - 1e-10:
+                self._Record(_Interpolate(self.previous, state, self.tStart + self.written*self.period))
+                self.written += 1
+            if last or self.tStart + self.written*self.period <= t + 1e-10:
+                self._Record(state)
+                while self.tStart + self.written*self.period <= t + 1e-10:
+                    self.written += 1
         if self.solver is not None:
-            for (name, value) in [('ODE2Coords', q), ('ODE2Coords_t', q_t), ('ODE2Coords_tt', q_tt), ('ODE1Coords', y),
-                                  ('ODE1Coords_t', y_t), ('AECoords', z), ('dataCoords', self.system.data)]:
-                if value is not None and len(value):
-                    self.state[name][:] = value
-            self.system.mbs.systemData.SetTime(t)
+            output = self.solver.output
+            while stepIndex != 0: #the write times of the solution file and the sensors within the step; each writer
+                #writes if its write time is passed and advances it by its period
+                times = ([output.lastSolutionWritten] if self.writeFile else []) + ([output.lastSensorsWritten] if self.writeSensors else [])
+                if not times or min(times) >= t - 1e-10:
+                    break
+                self._SetState(_Interpolate(self.previous, state, min(times)))
+                if self.writeFile:
+                    self.solver.WriteCoordinatesToFile(self.system.mbs, self.simulationSettings)
+                if self.writeSensors:
+                    self.solver.WriteSensorsToFile(self.system.mbs, self.simulationSettings)
+            self._SetState(state)
             self.solver.it.currentStepIndex = stepIndex
-            self.solver.it.currentTime = t
             self.solver.it.currentStepSize = self.h
             self.solver.FinishStep(self.system.mbs, self.simulationSettings)
+        self.previous = {name: (None if value is None else np.copy(value)) for (name, value) in state.items()}
 
     def Finalize(self, statistics):
         """the result dict, with the statistics of the solver"""

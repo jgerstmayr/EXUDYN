@@ -295,6 +295,12 @@ public: //
 		CheckInitialized(mainSystem); GetCSolver().WriteCoordinatesToFile(mainSystem.cSystem, simulationSettings);
 	}
 
+	//! write the sensors, if a sensor write period is passed at the current time of the system (#3241)
+	virtual void WriteSensorsToFile(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
+	{
+		CheckInitialized(mainSystem); GetCSolver().WriteSensorsToFile(mainSystem.cSystem, simulationSettings);
+	}
+
 	//! return true, if file or console output is at or above the given level
 	virtual bool IsVerboseCheck(Index level) const 
 	{

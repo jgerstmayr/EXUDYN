@@ -293,7 +293,7 @@ each class and function takes and refuses is in its docstring.
 - **class function description**: the blocks given, else one block of all coordinates
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitConstraintTest.py) (TM), [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSystemODE1AETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemODE1AETest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicExplicitConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitConstraintTest.py) (TM), [`symbolicExplicitSolverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicExplicitSolverTest.py) (TM), [`symbolicSolverOutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSolverOutputTest.py) (TM), [`symbolicSystemODE1AETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemODE1AETest.py) (TM)
 
 
 (sec-module-symbolics.systemmodel-class-symbolickind)=

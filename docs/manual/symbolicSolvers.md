@@ -19,6 +19,12 @@ post-Newton step recommends, reduced and grown again as Exudyn's solvers do (see
 `SymbolicSystem`, every step is written into its `mbs`: the solution file, the sensors and the renderer show the
 solution as after `mbs.SolveDynamic`, and the solution viewer shows the solution file.
 
+The result, the solution file and the sensors are written at the exact times of `solution.file.writePeriod` and
+`solution.sensors.writePeriod`, and at the end: a write time within a step takes the state interpolated between the
+two ends of the step, the coordinates by the cubic Hermite polynomial of the coordinates and velocities, the
+velocities by its derivative, the accelerations, ODE1 and algebraic coordinates linearly, the data coordinates of the
+end of the step (#3241). A write period that is a multiple of the step writes the states of the steps as computed.
+
 The main use is a system of which the symbolic system is an exact replicate: it is solved as numpy code - or, once
 exported, compiled - while the visualization runs in Exudyn. With the same settings, the solution equals that of
 `mbs.SolveDynamic` up to the tolerances of the Newton method; a Newton iteration that does not converge raises instead

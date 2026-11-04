@@ -70,6 +70,7 @@ MainSolverStatic has the following items:
 | `UpdateCurrentTime(...)` | void | mainSystem, simulationSettings | update currentTime (and load factor); MUST be overwritten in special solver class |
 | `VerboseWrite(...)` | void | level, str | write to console and/or file in case of level |
 | `WriteCoordinatesToFile(...)` | void | mainSystem, simulationSettings | write unique coordinates solution file |
+| `WriteSensorsToFile(...)` | void | mainSystem, simulationSettings | write the sensors to their files and their internal storage, if a sensor write period is passed at the current time of the system; the solvers of exudyn.symbolics call it at the write times within a step (#3241) |
 | `WriteSolutionFileHeader(...)` | void | mainSystem, simulationSettings | write unique file header, depending on static/ dynamic simulation |
 
 
@@ -162,6 +163,7 @@ MainSolverImplicitSecondOrder has the following items:
 | `UpdateCurrentTime(...)` | void | mainSystem, simulationSettings | update currentTime (and load factor); MUST be overwritten in special solver class |
 | `VerboseWrite(...)` | void | level, str | write to console and/or file in case of level |
 | `WriteCoordinatesToFile(...)` | void | mainSystem, simulationSettings | write unique coordinates solution file |
+| `WriteSensorsToFile(...)` | void | mainSystem, simulationSettings | write the sensors to their files and their internal storage, if a sensor write period is passed at the current time of the system; the solvers of exudyn.symbolics call it at the write times within a step (#3241) |
 | `WriteSolutionFileHeader(...)` | void | mainSystem, simulationSettings | write unique file header, depending on static/ dynamic simulation |
 
 
@@ -229,4 +231,5 @@ MainSolverExplicit has the following items:
 | `UpdateCurrentTime(...)` | void | mainSystem, simulationSettings | update currentTime (and load factor); MUST be overwritten in special solver class |
 | `VerboseWrite(...)` | void | level, str | write to console and/or file in case of level |
 | `WriteCoordinatesToFile(...)` | void | mainSystem, simulationSettings | write unique coordinates solution file |
+| `WriteSensorsToFile(...)` | void | mainSystem, simulationSettings | write the sensors to their files and their internal storage, if a sensor write period is passed at the current time of the system; the solvers of exudyn.symbolics call it at the write times within a step (#3241) |
 | `WriteSolutionFileHeader(...)` | void | mainSystem, simulationSettings | write unique file header, depending on static/ dynamic simulation |

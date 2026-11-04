@@ -1951,6 +1951,7 @@
         .def("UpdateCurrentTime", &MainSolverStatic::UpdateCurrentTime, "update currentTime (and load factor); MUST be overwritten in special solver class", py::arg("mainSystem"), py::arg("simulationSettings"))
         .def("VerboseWrite", &MainSolverStatic::VerboseWrite, "write to console and/or file in case of level", py::arg("level"), py::arg("str"))
         .def("WriteCoordinatesToFile", &MainSolverStatic::WriteCoordinatesToFile, "write unique coordinates solution file", py::arg("mainSystem"), py::arg("simulationSettings"))
+        .def("WriteSensorsToFile", &MainSolverStatic::WriteSensorsToFile, "write the sensors to their files and their internal storage, if a sensor write period is passed at the current time of the system; the solvers of exudyn.symbolics call it at the write times within a step (#3241)", py::arg("mainSystem"), py::arg("simulationSettings"))
         .def("WriteSolutionFileHeader", &MainSolverStatic::WriteSolutionFileHeader, "write unique file header, depending on static/ dynamic simulation", py::arg("mainSystem"), py::arg("simulationSettings"))
         .def("__repr__", [](const MainSolverStatic &item) { return "<MainSolverStatic:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
         ; // AUTO: end of class definition!!!
@@ -2031,6 +2032,7 @@
         .def("UpdateCurrentTime", &MainSolverImplicitSecondOrder::UpdateCurrentTime, "update currentTime (and load factor); MUST be overwritten in special solver class", py::arg("mainSystem"), py::arg("simulationSettings"))
         .def("VerboseWrite", &MainSolverImplicitSecondOrder::VerboseWrite, "write to console and/or file in case of level", py::arg("level"), py::arg("str"))
         .def("WriteCoordinatesToFile", &MainSolverImplicitSecondOrder::WriteCoordinatesToFile, "write unique coordinates solution file", py::arg("mainSystem"), py::arg("simulationSettings"))
+        .def("WriteSensorsToFile", &MainSolverImplicitSecondOrder::WriteSensorsToFile, "write the sensors to their files and their internal storage, if a sensor write period is passed at the current time of the system; the solvers of exudyn.symbolics call it at the write times within a step (#3241)", py::arg("mainSystem"), py::arg("simulationSettings"))
         .def("WriteSolutionFileHeader", &MainSolverImplicitSecondOrder::WriteSolutionFileHeader, "write unique file header, depending on static/ dynamic simulation", py::arg("mainSystem"), py::arg("simulationSettings"))
         .def("__repr__", [](const MainSolverImplicitSecondOrder &item) { return "<MainSolverImplicitSecondOrder:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
         ; // AUTO: end of class definition!!!
@@ -2086,6 +2088,7 @@
         .def("UpdateCurrentTime", &MainSolverExplicit::UpdateCurrentTime, "update currentTime (and load factor); MUST be overwritten in special solver class", py::arg("mainSystem"), py::arg("simulationSettings"))
         .def("VerboseWrite", &MainSolverExplicit::VerboseWrite, "write to console and/or file in case of level", py::arg("level"), py::arg("str"))
         .def("WriteCoordinatesToFile", &MainSolverExplicit::WriteCoordinatesToFile, "write unique coordinates solution file", py::arg("mainSystem"), py::arg("simulationSettings"))
+        .def("WriteSensorsToFile", &MainSolverExplicit::WriteSensorsToFile, "write the sensors to their files and their internal storage, if a sensor write period is passed at the current time of the system; the solvers of exudyn.symbolics call it at the write times within a step (#3241)", py::arg("mainSystem"), py::arg("simulationSettings"))
         .def("WriteSolutionFileHeader", &MainSolverExplicit::WriteSolutionFileHeader, "write unique file header, depending on static/ dynamic simulation", py::arg("mainSystem"), py::arg("simulationSettings"))
         .def("__repr__", [](const MainSolverExplicit &item) { return "<MainSolverExplicit:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
         ; // AUTO: end of class definition!!!

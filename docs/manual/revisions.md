@@ -419,6 +419,11 @@ the visualization time, in OpenGL and the raytracer and in saved images; without
 three sensors that store their values, see {ref}`sec-gui-scopes`. The stored values of a sensor are read and written
 under a lock, so that the renderer no longer reads them while the solver appends a row.
 
+**The solvers of `exudyn.symbolics.solvers` write at the exact write times** (#3241): the result, the solution file
+and the sensors at the multiples of their write periods, the state within a step interpolated by the cubic Hermite
+polynomial, see {ref}`sec-symbolicsolvers`; the solvers of Exudyn still write at the end of the step that passes a
+write time. `MainSolverExplicit`, `MainSolverImplicitSecondOrder` and `MainSolverStatic` have `WriteSensorsToFile`.
+
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.
 

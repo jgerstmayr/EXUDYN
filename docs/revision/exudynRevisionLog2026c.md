@@ -5729,6 +5729,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg20-4-3"></a>
+### RG20.4.3 — The output of the symbolic solvers at the exact write times, interpolated within the step (2026-11-04, #3241)
+- `_Output` of exudyn/symbolics/solvers.py keeps the state of the previous step and writes the result at
+  tStart + k writePeriod (a counter, not a sum) and at the end; a write time within a step takes `_Interpolate`: q by
+  the cubic Hermite polynomial of q and q_t at both ends, q_t its derivative, q_tt, y, y_t and z linear. A write time
+  within 1e-10 of the end of a step writes the step as computed, so a period that is a multiple of the step gives the
+  states of the steps, as before.
+- Through mbs: the write times within the step are the next ones of the C++ writers, `output.lastSolutionWritten` and
+  `lastSensorsWritten`; for each, the interpolated state into mbs, then `WriteCoordinatesToFile` and the new binding
+  `WriteSensorsToFile` (MainSolverBase.h, the three solver classes of structureDefsSolvers.py), each of which writes if
+  its time is reached and advances it by its period; `FinishStep` at the end of the step as before - the post-step
+  user function, the renderer and the console output stay once per step. The data coordinates within the step are
+  those of its end.
+- Measured: no result of the test suite changed (its write periods are multiples of the steps or the models read the
+  last values). An oscillator by RK44 with 37 and 74 steps and the period 0.0137: the interpolated output converges
+  with order 4.03, the order of RK44.
+- symbolicSolverOutputTest.py (new): the write times, the order of the interpolated output, the states of the steps,
+  the sensor and the solution file of a SymbolicSystem at their own periods, equal to the result.
+
 <a id="rg20-5-2"></a>
 ### RG20.5.2 — SolveExplicit eliminates fixed coordinates; the decisions of RG20 (2026-11-04, #3238, #3240)
 - **Decisions** (maintainer 2026-11-04 on the six questions of docs/dev/design/advancedSolvers.md): the acceleration

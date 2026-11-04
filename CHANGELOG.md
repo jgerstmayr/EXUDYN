@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 333 | 1.13.348 |
+| 1.13 | Newborn | 334 | 1.13.349 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.349** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The solvers of exudyn.symbolics.solvers write their output at the exact times of the write periods, interpolated within the step (#3241)
+  - description: SolveExplicit and SolveGeneralizedAlpha record the state, and write the solution file and the sensors through mbs, at the end of the first step that passes a write time, as CSolverBase::FinishStep: with a write period that is no multiple of the step, or with a variable step, the written times are those of the steps. Decided: in the Python solvers first, the times of solution.file.writePeriod and solution.sensors.writePeriod exactly, the state within the step by the cubic Hermite interpolation of q from q and q\_t at both ends, q\_t its derivative, the accelerations, the ODE1 and the algebraic coordinates linear; data coordinates those of the end of the step; the C++ solvers after it (revision2026c step RG20.4.2), as the design docs/dev/design/advancedSolvers.md section 3.4 says.
+  - **notes:** SolveExplicit and SolveGeneralizedAlpha of exudyn.symbolics.solvers write the result, the solution file and the sensors at the multiples of solution.file.writePeriod and solution.sensors.writePeriod and at the end; within a step the coordinates by the cubic Hermite polynomial of the coordinates and velocities at both ends, the velocities by its derivative, the accelerations, ODE1 and algebraic coordinates linearly, the data coordinates of the end of the step. A write period that is a multiple of the step writes the states of the steps. The Python solver classes have WriteSensorsToFile; symbolicSolverOutputTest.py.
+  - date resolved: **2026-11-04 16:24**, date raised: 2026-11-04
 - **1.13.348** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The position and rotation Jacobians of NodeUser, ObjectUserBody and MarkerBodyUser by central differences (#3107)
   - description: revision2026c step RG7.17: when their Jacobian functions are missing, the three user items compute the position and rotation Jacobians by central differences, so a joint on them gets a partly numerical constraint Jacobian - nowhere else in Exudyn. To be decided (tbd): require the Jacobian functions, at least when a joint uses the item, and keep central differences only behind an exudyn.special flag with its dangers documented. Kept as it is for now.
   - **notes:** NodeUser, ObjectUserBody and MarkerBodyUser need their position Jacobian function, and with the orientation their rotation Jacobian function, where a connector or joint uses them through a marker; Assemble refuses them without, naming the item. The Jacobians are no longer approximated by central differences; a user item without connectors, such as a user beam with markers only on its nodes, needs none.

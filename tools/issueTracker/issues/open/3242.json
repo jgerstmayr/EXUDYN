@@ -1,0 +1,11 @@
+{
+  "number": 3242,
+  "title": "TrapezoidalGGL: the trapezoidal rule with the GGL stabilization of index-3 constraints and an adaptive step size, in a module of exudyn.symbolics",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "The Python solvers of exudyn.symbolics integrate constrained systems by generalized-alpha with constant steps only; no solver of Exudyn has an error-controlled step for constraints. Decided: TrapezoidalGGL, the trapezoidal rule with the position and the velocity constraints enforced by the Gear-Gupta-Leimkuhler stabilization, in a module of its own on SymbolicSystemBase, first with constant steps against generalized-alpha, then the step size by the local error estimated from the difference of the accelerations at both ends of the step, with timeIntegration.absoluteTolerance and relativeTolerance and automaticStepSize as the explicit solvers; in C++ later (docs/dev/design/advancedSolvers.md section 3.1).",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03"
+}

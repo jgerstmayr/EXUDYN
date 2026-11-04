@@ -219,6 +219,7 @@ symbolicOnePassJacobianTest
 symbolicOptimizeTest
 symbolicParameterJacobianTest
 symbolicRigidBodyInertiaTest
+symbolicSolverOutputTest
 symbolicSolversAdaptiveStepTest
 symbolicSparseMatrixProductTest
 symbolicSparseMatrixTest

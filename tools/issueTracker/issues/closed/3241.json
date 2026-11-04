@@ -1,0 +1,15 @@
+{
+  "number": 3241,
+  "title": "The solvers of exudyn.symbolics.solvers write their output at the exact times of the write periods, interpolated within the step",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "SolveExplicit and SolveGeneralizedAlpha record the state, and write the solution file and the sensors through mbs, at the end of the first step that passes a write time, as CSolverBase::FinishStep: with a write period that is no multiple of the step, or with a variable step, the written times are those of the steps. Decided: in the Python solvers first, the times of solution.file.writePeriod and solution.sensors.writePeriod exactly, the state within the step by the cubic Hermite interpolation of q from q and q_t at both ends, q_t its derivative, the accelerations, the ODE1 and the algebraic coordinates linear; data coordinates those of the end of the step; the C++ solvers after it (revision2026c step RG20.4.2), as the design docs/dev/design/advancedSolvers.md section 3.4 says.",
+  "dateRaised": "2026-11-04",
+  "deadline": "2027-05-03",
+  "dateResolved": "2026-11-04 16:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SolveExplicit and SolveGeneralizedAlpha of exudyn.symbolics.solvers write the result, the solution file and the sensors at the multiples of solution.file.writePeriod and solution.sensors.writePeriod and at the end; within a step the coordinates by the cubic Hermite polynomial of the coordinates and velocities at both ends, the velocities by its derivative, the accelerations, ODE1 and algebraic coordinates linearly, the data coordinates of the end of the step. A write period that is a multiple of the step writes the states of the steps. The Python solver classes have WriteSensorsToFile; symbolicSolverOutputTest.py.",
+  "resolvedInVersion": "1.13.349"
+}
