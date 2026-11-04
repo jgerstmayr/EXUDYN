@@ -661,7 +661,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tbool,
             pythonName='eliminateConstraints',
             defaultValue=True,
-            description=r'True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!'),
+            description=r'True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models): the coordinate is set to the value of the constraint equation in every stage and step (#3240). False: incompatible constraints are ignored (BE CAREFUL)!'),
         StructureParameter(type=Tbool,
             pythonName='useLieGroupIntegration',
             defaultValue=True,

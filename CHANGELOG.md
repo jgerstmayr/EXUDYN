@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 345 | 1.13.360 |
+| 1.13 | Newborn | 346 | 1.13.361 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.361** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Explicit solver with eliminateConstraints: the RK stages do not fix the eliminated coordinates, which makes RK44 first order (#3240)
+  - description: CSolverExplicitTimeInt sets the coordinates of CoordinateConstraints to the ground to zero only at the end of a step and in the accelerations of the end; the stage accelerations rk.stageDerivODE2\_t of these coordinates are not zeroed, so the following stages evaluate the forces with the fixed coordinates moved. A chain of three mass points with fixed coordinates (symbolicExplicitConstraintTest.py): RK44 with 500, 5000 and 50000 steps converges with order 1 (differences 4e-5, 4e-6), while SolveExplicit of exudyn.symbolics.solvers, which zeroes them in every stage, gives the converged result with 500 steps. Explicit Euler is not affected. The coordinate is also set to zero regardless of the offset and the factor of the constraint. Decided: zero the stage accelerations and velocities of the eliminated coordinates, and keep the value of the constraint equation, when the explicit solvers are revised in C++ (RG20.5).
+  - **notes:** Exudyn's explicit solvers fix the coordinates of CoordinateConstraints to the ground in every stage of the Runge-Kutta methods, to the value of their equation (offset, factor1, user functions) instead of 0: RK44 and DOPRI5 keep their order with eliminated coordinates (RK44 was of order 1), and results of explicit models with such constraints change; a CoordinateConstraint with velocityLevel=True raises with eliminateConstraints.
+  - date resolved: **2026-11-04 22:43**, date raised: 2026-11-04
 - **1.13.360** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolveImplicitRungeKutta: an error estimate of the order of the method from the stage values of this and the previous step (#3250)
   - description: The automatic step size of SolveImplicitRungeKutta estimates the error by the embedded trapezoidal solution, of order h^3: the methods take about the steps of the trapezoidal rule, with errors far below the tolerance. Measured against the true local error (a reference of 64 steps from the same start, the step-doubling idea used only as a reference): the trapezoidal rule of one step overestimates the error of LobattoIIIA4 by 1e3 to 7e4, growing as 1/h^2; the quadrature error of the method against the polynomial through the stage velocities of the previous and this step (for Lobatto the fourth difference, Simpson's error h^5/2880 v'''') estimates it with a constant factor of 0.33 to 0.6 for all step sizes, on an oscillator and a pendulum; the same with the stage accelerations only without constraints, as their stage values are of order 2 with constraints. Decided: the estimate of the order of the method from the stages of the previous and this step, the first step by the trapezoidal rule; no extra solve.
   - **notes:** The automatic step size of SolveImplicitRungeKutta estimates the local error with the order of the method, from the stage velocities of the previous and this step (for the Lobatto methods Simpson's error), without an extra solve: 4 to 23 times fewer steps, with local errors of the size of the tolerances.

@@ -14,8 +14,8 @@ You can view and download this file on Github: [symbolicExplicitConstraintTest.p
 #           Exudyn's explicit solver eliminates CoordinateConstraints to the ground: a chain of three mass points on
 #           spring-dampers under gravity, coordinates of two of them fixed, with the user items of UserItemCreator
 #           (CreateCoordinateConstraint is an ObjectGenericDAE) on the SymbolicSystem against the built-in items with
-#           mbs.SolveDynamic: explicit Euler alike, RK44 of order 4 against a fine solution (Exudyn's RK44 does not fix
-#           the coordinates in its stages, #3240); a fixed coordinate with an offset keeps the value of its equation;
+#           mbs.SolveDynamic: explicit Euler and RK44 alike, Exudyn's RK44 and DOPRI5 with the coordinates fixed in their
+#           stages (#3240) of order 4 and 5; a fixed coordinate with an offset keeps the value of its equation, in both;
 #           a NumpySystem whose mass matrix couples the fixed coordinate with a free one against the system without the
 #           fixed coordinate; a constraint between two coordinates is refused.
 #
@@ -71,8 +71,8 @@ def Chain(user, offset=0., coupling=False):
     mbs.Assemble()
     return mbs
 
-#the chain on the SymbolicSystem: explicit Euler as Exudyn's explicit solver; RK44 of order 4, which Exudyn's is not
-#with eliminated coordinates, as it does not fix them in the stages (#3240), so against a fine solution of it
+#the chain on the SymbolicSystem: explicit Euler and RK44 as Exudyn's explicit solver, which fixes the eliminated
+#coordinates in its stages (#3240)
 u = 0
 system = SymbolicSystem(Chain(user=True))
 mbsBuiltIn = Chain(user=False)
@@ -84,10 +84,13 @@ u += round(float(np.sum(np.abs(result['q'][-1]))), 10) #rounded: the last bits o
 
 result = SolveExplicit(system, Settings(exu.DynamicSolverType.RK44))
 resultFine = SolveExplicit(system, Settings(exu.DynamicSolverType.RK44, steps=2000))
-mbsBuiltIn.SolveDynamic(Settings(exu.DynamicSolverType.RK44, steps=50000))
+mbsBuiltIn.SolveDynamic(Settings(exu.DynamicSolverType.RK44))
 error = np.max(np.abs(result['q'][-1] - resultFine['q'][-1]))
 errorBuiltIn = np.max(np.abs(result['q'][-1] - mbsBuiltIn.systemData.GetODE2Coordinates()))
-Check(error < 1e-9 and errorBuiltIn < 2e-6, 'RK44: ' + str(error) + ', ' + str(errorBuiltIn))
+Check(error < 1e-9 and errorBuiltIn < 1e-12, 'RK44: ' + str(error) + ', ' + str(errorBuiltIn))
+mbsBuiltIn.SolveDynamic(Settings(exu.DynamicSolverType.DOPRI5)) #automatic step size
+errorBuiltIn = np.max(np.abs(resultFine['q'][-1] - mbsBuiltIn.systemData.GetODE2Coordinates()))
+Check(errorBuiltIn < 1e-10, 'DOPRI5: ' + str(errorBuiltIn))
 Check(np.max(np.abs(result['q'][:, [1, 2, 8]])) == 0. and np.max(np.abs(result['q_t'][:, [1, 2, 8]])) == 0.,
       'RK44: the fixed coordinates move')
 u += round(float(np.sum(np.abs(result['q'][-1]))), 10) #rounded: the last bits of numpy differ between platforms
@@ -99,6 +102,10 @@ result = SolveExplicit(system, Settings(exu.DynamicSolverType.RK44))
 residual = system.AlgebraicEquations(q, q_t, np.zeros(0), np.zeros(system.nAE), 0.5)
 Check(np.max(np.abs(residual)) < 1e-10 and abs(q[1] + 0.05) < 1e-10, 'offset: ' + str(residual) + str(q[1]))
 u += round(abs(q[1]), 8)
+mbsBuiltIn = Chain(user=False, offset=0.05)
+mbsBuiltIn.SolveDynamic(Settings(exu.DynamicSolverType.RK44))
+errorBuiltIn = np.max(np.abs(result['q'][-1] - mbsBuiltIn.systemData.GetODE2Coordinates()))
+Check(errorBuiltIn < 1e-12, 'offset, Exudyn\'s RK44: ' + str(errorBuiltIn))
 
 #a mass matrix that couples the fixed coordinate with the free one: the free one as in the system without the fixed one
 stiffness, fixedValue = 100., 0.1

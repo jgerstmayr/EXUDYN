@@ -421,6 +421,12 @@ graphs are added with `SC.renderer.scopes.SetGraphics`, `AddGraphics`, `GetGraph
 {ref}`sec-rendererscopes`. The stored values of a sensor are read and written under a lock, so that the renderer no
 longer reads them while the solver appends a row.
 
+**Explicit solvers with eliminated coordinates** (#3240): the coordinates of CoordinateConstraints to the ground are
+fixed in every stage of the Runge-Kutta methods, not only at the end of the step, to the value of their equation
+(offset, factor and user function) instead of 0. RK44 and DOPRI5 keep their order with them - RK44 was of order 1 -,
+and the results of explicit models with such constraints change accordingly; a CoordinateConstraint with
+`velocityLevel=True` raises with `eliminateConstraints`.
+
 **The legend of a scope** writes the sensor name and the component, `m0.Pos-X`, and `m0.Pos-Y over m0.Pos-X` over
 another sensor, instead of the name and the output variable; the default `backgroundColor` of a scope is
 `[0.95, 0.95, 1, 0.9]` (#3248).

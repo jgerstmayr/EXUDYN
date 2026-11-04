@@ -78,7 +78,7 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 
 	//++++++++++++++++++++++++++++++++++++++++++++++
 	//create list of constrained coordinates
-	constrainedODE2Coordinates.SetNumberOfItems(0);
+	eliminatedCoordinates.SetNumberOfItems(0);
 	if (data.nAE != 0)
 	{
 		PrecomputeConstraintElimination(computationalSystem, simulationSettings);
@@ -259,6 +259,8 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 			//update K-stage: K[i] = f(t+c[i], g[i]),
 			//update time for time-dependent loads or connectors:
 			computationalSystem.GetSystemData().GetCData().currentState.time = t0 + it.currentStepSize * rk.time[i];
+			//the eliminated coordinates at the time of the stage (#3240)
+			FixEliminatedCoordinates(computationalSystem, t0 + it.currentStepSize * rk.time[i], &solutionODE2, &solutionODE2_t, nullptr);
 			STOPTIMER(timer.integrationFormula);
 
 			if (IsVerbose(2))
@@ -274,6 +276,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 				STOPTIMER(timer.ODE1RHS);
 			}
 			ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, rk.stageDerivODE2_t[i], data.systemMassMatrix);
+			FixEliminatedCoordinates(computationalSystem, t0 + it.currentStepSize * rk.time[i], nullptr, nullptr, &rk.stageDerivODE2_t[i]);
 			if (!useLieGroupIntegration)
 			{
 				rk.stageDerivODE2[i].CopyFrom(solutionODE2_t);
@@ -282,7 +285,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 			{
 				STARTTIMER(timer.integrationFormula);
 				LieGroupComputeKstage(computationalSystem, solutionODE2_t, rk.stageDerivODE2[i],
-					rk.stageDerivODE2[i], it.currentStepSize, i);  //stageDerivLieODE2 
+					rk.stageDerivODE2[i], it.currentStepSize, i);  //stageDerivLieODE2
 				STOPTIMER(timer.integrationFormula);
 			}
 			//+++++++++++++++++++++++++++++++++++++++++++++++++
@@ -315,9 +318,8 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		}
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//eliminate constraints by setting coordinates to zero:
-		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2);
-		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_t);
+		//the eliminated coordinates at the end of the step:
+		FixEliminatedCoordinates(computationalSystem, it.currentTime, &solutionODE2, &solutionODE2_t, nullptr);
 		STOPTIMER(timer.integrationFormula);
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++
@@ -341,7 +343,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 			solutionODE2_tt.CopyFrom(rk.stageDerivODE2_t[nStages - 1]);
 		}
 		//also eliminate accelerations for constrained coordinates:
-		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_tt);
+		FixEliminatedCoordinates(computationalSystem, it.currentTime, nullptr, nullptr, &solutionODE2_tt);
 
 	}
 	else //VelocityVerlet - important for particle dynamics
@@ -373,9 +375,8 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 			solutionODE2.MultAdd(it.currentStepSize, solutionODE2_t);
 		}
 
-		//eliminate constraints by setting coordinates to zero; needed before we compute accelerations!
-		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2);
-		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_t);
+		//the eliminated coordinates; needed before we compute accelerations!
+		FixEliminatedCoordinates(computationalSystem, it.currentTime, &solutionODE2, &solutionODE2_t, nullptr);
 
 		//update time for time-dependent loads or connectors:
 		computationalSystem.GetSystemData().GetCData().currentState.time = it.currentTime; //it.currentTime has already step endTime
@@ -383,7 +384,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		STOPTIMER(timer.integrationFormula);
 		//evaluate accelerations at time t+h
 		ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
-		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_tt);
+		FixEliminatedCoordinates(computationalSystem, it.currentTime, nullptr, nullptr, &solutionODE2_tt);
 		STARTTIMER(timer.integrationFormula);
 
 		//v(t+h) = v(t+0.5h) + 0.5*h*a(t+h)
@@ -437,8 +438,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 			LieGroupODE2StepEvaluation(computationalSystem, rk.solutionSecondApproxODE2, it.currentStepSize, rk.weightEE);
 		}
 		//eliminate constraints for second approximation (otherwise problems with error control ...):
-		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, rk.solutionSecondApproxODE2);
-		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, rk.solutionSecondApproxODE2_t);
+		FixEliminatedCoordinates(computationalSystem, it.currentTime, &rk.solutionSecondApproxODE2, &rk.solutionSecondApproxODE2_t, nullptr);
 		STOPTIMER(timer.errorEstimator);
 	}
 
@@ -894,16 +894,28 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 					CObjectConnectorCoordinate* cc = (CObjectConnectorCoordinate*)object;
 					Index markerNodeCoordinate = 0; //count number of CMarkerNodeCoordinate markers (MUST BE 2)
 					Index markerGroundNode = 0; //count number of ground node markers (MUST BE 1)
-					for (Index i : cc->GetMarkerNumbers())
+					EliminatedCoordinate eliminated = { -1, cnt, false, 0., 0. };
+					if (cc->GetParameters().velocityLevel)
 					{
-						const CMarker& marker = computationalSystem.GetSystemData().GetCMarker(i);
+						PyError(STDstring("SolverExplicit: eliminateConstraints does not eliminate the CoordinateConstraint object ") +
+							EXUstd::ToString(cnt) + " with velocityLevel=True; aborting solver", PyErrorType::notImplementedError);
+					}
+					for (Index markerIndex = 0; markerIndex < 2; markerIndex++)
+					{
+						const CMarker& marker = computationalSystem.GetSystemData().GetCMarker(cc->GetMarkerNumbers()[markerIndex]);
 						if (ISCPPTYPE(marker, CMarkerNodeCoordinate))
 						{
 							markerNodeCoordinate++;
 							const CNode& node = computationalSystem.GetSystemData().GetCNode(marker.GetNodeNumber());
+							//the reference value that the marker adds to the coordinate (CMarkerNodeCoordinate::ComputeMarkerData)
+							const CMarkerNodeCoordinateParameters& markerParameters = ((const CMarkerNodeCoordinate&)marker).GetParameters();
+							LinkedDataVector reference = node.GetReferenceCoordinateVector();
+							Real referenceValue = (markerParameters.includeReferenceCoordinate && markerParameters.coordinate < reference.NumberOfItems())
+								? reference[markerParameters.coordinate] : 0.;
 							if (EXUstd::IsOfType(node.GetType(), Node::Ground))
 							{
 								markerGroundNode++;
+								eliminated.groundValue = referenceValue;
 							}
 							else if (!EXUstd::IsOfType(node.GetNodeGroup(), CNodeGroup::ODE2variables))
 							{
@@ -913,8 +925,9 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 							else //this must give the coordinate that should be constrained
 							{
 								Index globalCoord = node.GetGlobalODE2CoordinateIndex();
-								Index ind = globalCoord + ((const CMarkerNodeCoordinate&)marker).GetCoordinateNumber();
-								constrainedODE2Coordinates.Append(ind);
+								eliminated.coordinate = globalCoord + ((const CMarkerNodeCoordinate&)marker).GetCoordinateNumber();
+								eliminated.atMarker1 = markerIndex == 1;
+								eliminated.reference = referenceValue;
 							}
 						}
 						else
@@ -930,9 +943,15 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 					}
 					else if (markerNodeCoordinate != 2)
 					{
-						PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") + 
+						PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") +
 							EXUstd::ToString(cnt) + " which contains markers other than MarkerNodeCoordinate; aborting solver", PyErrorType::modelError);
 					}
+					if (eliminated.atMarker1 && cc->GetParameters().factor1 == 0.)
+					{
+						PyError(STDstring("SolverExplicit: the CoordinateConstraint object ") + EXUstd::ToString(cnt) +
+							" has factor1 = 0 and does not fix the coordinate of marker 1; aborting solver", PyErrorType::modelError);
+					}
+					eliminatedCoordinates.Append(eliminated);
 
 				}
 
@@ -945,22 +964,43 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 			cnt++;
 		}
 
-		Verbose(2, "constrainedODE2Coordinates = " + EXUstd::ToString(constrainedODE2Coordinates) + "\n");
+		Verbose(2, "eliminated coordinates: " + EXUstd::ToString(eliminatedCoordinates.NumberOfItems()) + "\n");
 		//check if all constraints are of CoordinateConstraint type
 		//SysError("SolverExplicit: eliminateCoordinateConstraints = True not implemented");
 	}
 
 }
 
-//! set all ODE2 coordinates given in cODE2 in solODE2 to zero; used for displacements and velocities
-void CSolverExplicitTimeInt::EliminateCoordinateConstraints(CSystem& computationalSystem, const ArrayIndex& cODE2, Vector& solODE2)
+//! the eliminated coordinates at time t (#3240): the value of factor1 value1 - value0 - offset = 0 with the other marker
+//! on the ground, its time derivative and the acceleration 0; an inactive constraint leaves its coordinate free
+void CSolverExplicitTimeInt::FixEliminatedCoordinates(CSystem& computationalSystem, Real t, Vector* q, Vector* q_t, Vector* q_tt)
 {
-	if (eliminateConstraints)
+	if (!eliminateConstraints) { return; }
+	for (const EliminatedCoordinate& eliminated : eliminatedCoordinates)
 	{
-		for (Index i : cODE2)
+		const CObjectConnectorCoordinate& constraint = (const CObjectConnectorCoordinate&)*computationalSystem.GetSystemData().GetCObjects()[eliminated.object];
+		const CObjectConnectorCoordinateParameters& parameters = constraint.GetParameters();
+		if (!parameters.activeConnector) { continue; }
+		if (q)
 		{
-			solODE2[i] = 0; //for now, only ground constriants; is simple
+			Real offset = parameters.offset;
+			if (parameters.offsetUserFunction)
+			{
+				constraint.EvaluateUserFunctionOffset(offset, computationalSystem.GetSystemData().GetMainSystemBacklink(), t);
+			}
+			(*q)[eliminated.coordinate] = (eliminated.atMarker1 ? (offset + eliminated.groundValue) / parameters.factor1
+				: parameters.factor1 * eliminated.groundValue - offset) - eliminated.reference;
 		}
+		if (q_t)
+		{
+			Real offset_t = 0.;
+			if (parameters.offsetUserFunction_t)
+			{
+				constraint.EvaluateUserFunctionOffset_t(offset_t, computationalSystem.GetSystemData().GetMainSystemBacklink(), t);
+			}
+			(*q_t)[eliminated.coordinate] = eliminated.atMarker1 ? offset_t / parameters.factor1 : -offset_t;
+		}
+		if (q_tt) { (*q_tt)[eliminated.coordinate] = 0.; }
 	}
 }
 

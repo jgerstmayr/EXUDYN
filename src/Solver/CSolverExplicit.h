@@ -59,7 +59,18 @@ public: //made public for access via pybind
 	//copy of parameters from integration scheme (cannot be changed during integration!)
 	DynamicSolverType dynamicSolverType; //must be explicit
 	bool eliminateConstraints;
-	ArrayIndex constrainedODE2Coordinates;
+	//! a coordinate eliminated by a CoordinateConstraint to the ground, fixed to the value of its equation
+	//! factor1 value1 - value0 - offset = 0 (#3240)
+	class EliminatedCoordinate
+	{
+	public:
+		Index coordinate;	//!< the global ODE2 coordinate
+		Index object;		//!< the CoordinateConstraint
+		bool atMarker1;		//!< the node is at marker 1, the ground at marker 0
+		Real groundValue;	//!< the value of the marker of the ground
+		Real reference;		//!< the reference value in the value of the marker of the node
+	};
+	ResizableArray<EliminatedCoordinate> eliminatedCoordinates;
 
 	bool hasConstantMassMatrix; //!< avoid recomputation of mass matrix
 	bool computeMassMatrixInversePerBody;
@@ -152,8 +163,9 @@ public:
 	//! precompute list of coordinates (constraints) that are eliminated
 	void PrecomputeConstraintElimination(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 
-	//! set all ODE2 coordinates given in cODE2 in solODE2 to zero; used for displacements and velocities
-	void EliminateCoordinateConstraints(CSystem& computationalSystem, const ArrayIndex& cODE2, Vector& solODE2);
+	//! the eliminated coordinates at time t (#3240): in q the value of their constraint equation, in q_t its time
+	//! derivative (by offsetUserFunction_t, else 0), in q_tt 0; nullptr leaves a vector unchanged
+	void FixEliminatedCoordinates(CSystem& computationalSystem, Real t, Vector* q, Vector* q_t, Vector* q_tt);
 
 	//++++++++++++++++++++++++++++++
 	//! precompute non-Lie group coordinates and Lie-group node indices

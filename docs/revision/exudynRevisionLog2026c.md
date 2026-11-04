@@ -5812,6 +5812,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   symbolicLobatto4Test.py: the slider crank, and the pendulum with the three methods at 1e-5 and 1e-7, the error below
   10 steps times the tolerance and the steps growing with the local order (IIIA 6.6, IIIC 4.4, Radau 4.3).
 
+<a id="rg20-5-4"></a>
+### RG20.5.4 — Exudyn's explicit solver: the eliminated coordinates fixed in the RK stages, with the value of their equation (2026-11-04, #3240)
+- CSolverExplicitTimeInt kept a list of the eliminated coordinates and set them to 0 at the end of the step only;
+  the stage accelerations of these coordinates were not zeroed, so the following stages moved them: RK44 of order 1
+  on the chain of symbolicExplicitConstraintTest.py. The offset, factor1 and the reference values of the markers were
+  ignored.
+- `EliminatedCoordinate` (coordinate, constraint, the marker of the node, the value of the ground marker, the
+  reference value of the node marker with includeReferenceCoordinate) and `FixEliminatedCoordinates(t, q, q_t, q_tt)`:
+  the value of factor1 value1 - value0 - offset = 0 (offsetUserFunction at t), its derivative (offsetUserFunction_t,
+  else 0), the acceleration 0; at each stage before the accelerations, the stage accelerations after them, the end of
+  the step, the second approximation of the error estimate, and VelocityVerlet. An inactive constraint leaves its
+  coordinate free; velocityLevel=True raises (notImplementedError), factor1 = 0 with the node at marker 1 raises.
+- Result: Exudyn's RK44 equals SolveExplicit of the SymbolicSystem to 3e-17 (500 steps), also with the offset; DOPRI5
+  (automatic) 3e-14 from a fine solution, ODE23 5e-9. symbolicExplicitConstraintTest.py compares them directly.
+- distanceSensor.py (an ANCF cable clamped by CoordinateConstraints, RK44) changes from 1.86776431077868 to
+  1.7491018054920742; with 4 times the steps the new result changes by 6e-10, so the old one was the error of the
+  moving clamp in the stages.
+
 <a id="rg20-5-3"></a>
 ### RG20.5.3 — Euler parameters in the symbolic system and the projection in SolveExplicit (2026-11-04, #3238)
 - **UserItemCreator.CreateRigidBody** on a `NodeRigidBodyEP` (now the default, as `mbs.CreateRigidBody`; Rxyz stays):

@@ -990,7 +990,7 @@ inline py::dict GetDictionaryWithTypeInfo(const ExplicitIntegrationSettings& dat
     d["value"] = data.eliminateConstraints;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!";
+    d["description"] = "True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models): the coordinate is set to the value of the constraint equation in every stage and step (#3240). False: incompatible constraints are ignored (BE CAREFUL)!";
     structureDict["eliminateConstraints"] = d;
 
     d = py::dict(); //reset local dict

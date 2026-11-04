@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.360.dev1
+- Exudyn version = 1.13.361.dev1
 - last change = 2026-11-04
 - Number of issues = 3251
-- Number of resolved issues = 3137 (360 in current version)
+- Number of resolved issues = 3138 (361 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9450,9 +9450,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` The error norm of the automatic step size of CSolverExplicit scales by max(q\_new, q\_start) without absolute values (#3245)
   - description: CSolverExplicitTimeInt computes the scale of the error of ODE23 and DOPRI5 as absoluteTolerance + Maximum(q\_second, q\_start)\*relativeTolerance for the coordinates, velocities and ODE1 coordinates, without the absolute values: a negative coordinate makes the scale smaller than the absolute tolerance, zero or negative, so that the error of that coordinate is exaggerated or divided by zero. The norm of Hairer, Norsett and Wanner uses max(\|q\_second\|, \|q\_start\|), as the Python step size controller of exudyn.symbolics.advancedSolvers. Decided: fixed with the common step size controller in C++ (revision2026c step RG20.8).
-  - date raised: 2026-11-04
-- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Explicit solver with eliminateConstraints: the RK stages do not fix the eliminated coordinates, which makes RK44 first order (#3240)
-  - description: CSolverExplicitTimeInt sets the coordinates of CoordinateConstraints to the ground to zero only at the end of a step and in the accelerations of the end; the stage accelerations rk.stageDerivODE2\_t of these coordinates are not zeroed, so the following stages evaluate the forces with the fixed coordinates moved. A chain of three mass points with fixed coordinates (symbolicExplicitConstraintTest.py): RK44 with 500, 5000 and 50000 steps converges with order 1 (differences 4e-5, 4e-6), while SolveExplicit of exudyn.symbolics.solvers, which zeroes them in every stage, gives the converged result with 500 steps. Explicit Euler is not affected. The coordinate is also set to zero regardless of the offset and the factor of the constraint. Decided: zero the stage accelerations and velocities of the eliminated coordinates, and keep the value of the constraint equation, when the explicit solvers are revised in C++ (RG20.5).
   - date raised: 2026-11-04
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.

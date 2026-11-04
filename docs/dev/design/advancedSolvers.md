@@ -291,7 +291,7 @@ measurement; the estimate from the formulas evaluated without a solve - done wit
 | RG20.2 Lobatto4 | done | the three methods (#3244, #3246, #3247); the error estimate of the order of the method (#3250) |
 | RG20.3 Adjoint sensitivities | .1 done, .2 not proposed | |
 | RG20.4 Output within the step | .3 done (Python, #3241), .2 open (C++) | |
-| RG20.5 Explicit solvers with constraints | .1-.2 done, .3 Euler parameters, .4 open (#3240, C++) | |
+| RG20.5 Explicit solvers with constraints | done | fixed coordinates (#3238), Euler parameters, the C++ stages (#3240) |
 | RG20.6 The structure of the C++ solvers | open | the analysis and a proposal |
 | RG20.7 TrapezoidalGGL and the Runge-Kutta methods in C++ | open | after RG20.6 |
 | RG20.8 Common step size controller | .1 done (Python), .2 open (C++, #3245) | |

@@ -338,9 +338,12 @@ However, this offers the great flexibility to compute finite elements (imported 
 A `CoordinateConstraint` that fixes a coordinate with index $j$ to ground leads to the simple algebraic {ref}`ODE2 <ODE2>` equation
 
 $$
-  g_j(\qv) = 0 \quad \Leftrightarrow \quad  q_j = 0
+  g_j(\qv) = 0 \quad \Leftrightarrow \quad  q_j = \bar q_j(t)
 $$
-which can be solved by the implemented explicit solvers by just setting $q_j = 0$ previously to every computation and $\dot q_j = 0$ after every {ref}`RHS <RHS>` evaluation.
+with $\bar q_j$ the value its equation `factor1*value1 - value0 - offset = 0` gives - 0 without an offset -, which the
+explicit solvers set in every stage and at the end of every step, its time derivative, by `offsetUserFunction_t`, as
+$\dot q_j$, and $\ddot q_j = 0$ (#3240). So the Runge-Kutta methods keep their order with eliminated coordinates. A
+`CoordinateConstraint` with `velocityLevel=True` is not eliminated and raises.
 
 NOTE that, if `explicit.eliminateConstraints == False`, constraints are ignored by the explicit solver (and all algebraic variables are set to zero). This may be wanted (e.g. to investigate the free motion of bodies), but in general leads to wrong and meaningless solution.
 
