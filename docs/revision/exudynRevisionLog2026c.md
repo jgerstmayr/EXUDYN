@@ -5729,6 +5729,35 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   docs/dev/design (maintainer 2026-11-02: the design files are temporary; docs/dev/internals rarely, with a note that it
   is on GitHub). No other citation in python/exudyn, definitions and docs/manual.
 
+<a id="rg20-2-3"></a>
+### RG20.2.3, RG20.2.4 — Lobatto4 with the constraints at the end of the step, its automatic step size; the chain from horizontal (2026-11-04, #3246)
+- **The chain from horizontal** (maintainer: start at horizontal or at a right angle): the free end reaches 7.5 m/s
+  at 0.46 s. At 0.5 s TrapezoidalGGL needs 99, 231, 514 automatic steps (tolerances 1e-4, 1e-5, 1e-6) for 1.8e-3,
+  2.1e-4, 3.5e-5; constant steps 100, 200, 400 give 1.5e-3, 3.7e-4, 9.1e-5 - as good, with an error following the
+  tolerance. The start near upright of RG20.1.4 is the exception, documented (maintainer: document only).
+  symbolicTrapezoidalGGLStepSizeTest.py starts horizontally.
+- **The constraints at the end** (maintainer: one of the 3-stage Lobatto methods worked in HOTINT with index 3 without
+  GGL, possibly with the constraints at the end only). Measured on the pendulum (25/50/100 steps, scratch solver):
+  - one multiplier constant over the step, c(q1) = 0: IIIA, IIIB, IIIC, IIIA-IIIB and IIIB-IIIA all of order 4 in q,
+    2 in v, 1.8 in z, the velocity constraint drifting by 4e-4 at 100 steps; the multiplier of a stage linear between
+    the previous and the new end value diverges;
+  - a multiplier per stage after the start, the start that of the previous end, c(q1) = 0 and C_q(q1) v1 = 0: IIIA
+    4.0/4.0/2.1 (q/v/z), IIIC 3.7/4.1/2.8, IIIA-IIIB 4.0/4.0/2.1, both constraints at 1e-15.
+  The second is in `_SolveLobatto` as constraints='end' (rewritten with 'GGL': one layout of the unknowns, the stage
+  accelerations of the implicit stages and the multipliers of the stages after the start, the end constraints at
+  their rows); `lobatto4Variants` 'IIIA-end' (default), 'IIIC-end', 'IIIA-GGL', 'IIIC-GGL', plain 'IIIC' dropped.
+  Slider crank (8/16/32 steps): IIIA-end 4.5/4.0, IIIC-end 4.1/4.2, in 0.5 s against 0.9 and 1.4 s of IIIA-GGL and
+  IIIC-GGL. Stiff spring (h omega = 70): IIIC-GGL damps the fast mode (energy -0.5), IIIC-end gains 0.28 there and
+  damps at h omega = 14, IIIA-end keeps the energy to 8e-5 at h omega = 14.
+- **The automatic step size** (RG20.2.3, maintainer: the embedded solution first): the trapezoidal solution of the
+  first and the last stage, q0 + h/2 (V_1 + V_3), v0 + h/2 (A_1 + A_3), its difference to the end of the step as the
+  error of order h^3 in the PI controller. It works (1 to 16 rejections), but estimates the order-2 error: Lobatto4
+  takes about the steps of the trapezoidal rule, with errors far below the tolerance - ball at 1e-6, 1e-8, 1e-10: 433,
+  1662, 7457 steps, errors 3e-8, 6e-9, 4e-11 (TrapezoidalGGL 419 steps, 9e-5); slider crank at 1e-6: 68 steps, 4e-10,
+  where 16 constant steps give 1e-8. RG20.2.5 added for an order-4 estimate.
+- symbolicLobatto4Test.py: the four variants, IIIA-end on the slider crank with constant and automatic steps,
+  IIIA-end keeping the energy of the stiff spring.
+
 <a id="rg20-2-2"></a>
 ### RG20.2.2 — Lobatto4 with constant steps: the variants measured, IIIC-GGL chosen (2026-11-04, #3244)
 - `_SolveLobatto` of exudyn/symbolics/advancedSolvers.py: one Newton method for the stages of a stiffly accurate

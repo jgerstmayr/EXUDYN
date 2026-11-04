@@ -318,15 +318,19 @@ _lobattoTableaus = {'IIIA': (np.array([[0., 0., 0.], [5./24., 1./3., -1./24.], [
                     'IIIC': (np.array([[1./6., -1./3., 1./6.], [1./6., 5./12., -1./12.], [1./6., 2./3., 1./6.]]), np.array([0., 0.5, 1.])),
                     'IIIA2': (np.array([[0., 0.], [0.5, 0.5]]), np.array([0., 1.]))}
 
-#the variants of SolveLobatto4: (tableau, GGL stabilization)
-lobatto4Variants = {'IIIC-GGL': ('IIIC', True), 'IIIA-GGL': ('IIIA', True), 'IIIC': ('IIIC', False)}
+#the variants of SolveLobatto4: (tableau, where the constraints are)
+lobatto4Variants = {'IIIA-end': ('IIIA', 'end'), 'IIIC-end': ('IIIC', 'end'), 'IIIA-GGL': ('IIIA', 'GGL'),
+                    'IIIC-GGL': ('IIIC', 'GGL')}
 
 
-def _SolveLobatto(system, simulationSettings, tableau, ggl, name):
+def _SolveLobatto(system, simulationSettings, tableau, constraints, name):
     """the stage equations of a stiffly accurate implicit Runge-Kutta method of the tableau (A, c) for q_t = v, v_t = a,
-    M a = f - C_q^T z and the constraints at the implicit stages, with constant steps; the stages of a first row of
-    zeros are the start of the step (Lobatto IIIA); with ggl also C_q V_i + c_t = 0 and the positions Q_i - C_q^T mu_i
-    at the implicit stages (#3244)"""
+    M a = f - C_q^T z (#3244, #3246); the stages of a first row of zeros are the start of the step (Lobatto IIIA). The
+    constraints: 'GGL', c = 0 and C_q V_i + c_t = 0 at the implicit stages, with a multiplier z_i per implicit stage and
+    the positions Q_i - C_q^T mu_i; 'end', c = 0 and C_q v + c_t = 0 at the end of the step only, with a multiplier z_i
+    per stage after the start, the one of the start the multiplier of the end of the previous step - an equation of
+    each kind for the two unknown multipliers of 3 stages. With timeIntegration.automaticStepSize the step by the
+    difference to the embedded trapezoidal solution of the first and the last stage, by _ErrorStepSize"""
     if simulationSettings is None:
         simulationSettings = exudyn.SimulationSettings()
     timeIntegration = simulationSettings.timeIntegration
@@ -338,12 +342,28 @@ def _SolveLobatto(system, simulationSettings, tableau, ggl, name):
     (n, tStart, tEnd, h) = _Steps(simulationSettings)
     (A, c) = tableau
     s = len(c)
+    ggl = constraints == 'GGL'
     implicit = [i for i in range(s) if np.any(A[i] != 0.)]
+    unknownZ = implicit if ggl else [i for i in range(s) if c[i] > 0.] #the stages of unknown multipliers
+    if not ggl and len(unknownZ) != 2:
+        raise ValueError(name + ': the constraints at the end need two stages after the start')
     A2 = A @ A
-    nMu = nAE if ggl else 0
-    nStage = nODE2 + nAE + nMu #the rows of a stage: ODE2, constraints, (velocity constraints)
-    (rowsODE2, rowsAE, rowsV) = (slice(0, nODE2), slice(nODE2, nODE2 + nAE), slice(nODE2 + nAE, nODE2 + nAE + nMu))
-    nUnknowns = len(implicit)*nStage
+    #the unknowns: per implicit stage A_i, (z_i, mu_i with GGL); then the multipliers of the end constraints
+    index = 0
+    (sliceA, sliceZ, sliceMu, rowsAE, rowsV) = ({}, {}, {}, {}, {})
+    for i in implicit:
+        sliceA[i] = slice(index, index + nODE2)
+        index += nODE2
+        if ggl:
+            (sliceZ[i], sliceMu[i]) = (slice(index, index + nAE), slice(index + nAE, index + 2*nAE))
+            (rowsAE[i], rowsV[i]) = (sliceZ[i], sliceMu[i]) #the constraint rows of a stage at the columns of its multipliers
+            index += 2*nAE
+    if not ggl:
+        for i in unknownZ:
+            sliceZ[i] = slice(index, index + nAE)
+            index += nAE
+        (rowsEndAE, rowsEndV) = (sliceZ[unknownZ[0]], sliceZ[unknownZ[1]])
+    nUnknowns = index
     errorFactor = np.sqrt(nUnknowns) if (newton.weightTolerancePerCoordinate and nUnknowns) else 1.
     empty = np.zeros(0)
 
@@ -360,21 +380,27 @@ def _SolveLobatto(system, simulationSettings, tableau, ggl, name):
         return (np.asarray(system.AlgebraicEquations(qq, q_t, empty, z, t + epsilon), dtype=float)
                 - np.asarray(system.AlgebraicEquations(qq, q_t, empty, z, t - epsilon), dtype=float))/(2*epsilon)
 
+    def VelocityDerivative(qq, v, t, epsilon=1e-6):
+        """C_q and H = (C_q)_q v, the derivative of C_q along v"""
+        return (_ConstraintJacobian(system, qq, v, empty, t), (_ConstraintJacobian(system, qq + epsilon*v, v, empty, t)
+                - _ConstraintJacobian(system, qq - epsilon*v, v, empty, t))/(2*epsilon))
+
     (newtonIterations, jacobianEvaluations) = (0, 0)
-    for step in range(n):
-        (t0, h) = (tStart + step*h, h)
+    stepSize = _ErrorStepSize(simulationSettings, order=3) #the error of the embedded trapezoidal solution, of order h^3
+    while not stepSize.Done():
+        (t0, t, h) = stepSize.Next()
+        (q0, v0, a0, z0) = (q.copy(), q_t.copy(), q_tt.copy(), z.copy())
         times = t0 + h*c
-        (q0, v0, a0) = (q.copy(), q_t.copy(), q_tt.copy())
         stageA = [a0.copy() for i in range(s)] #the stage accelerations, the first of IIIA the start of the step
-        stageZ = [z.copy() for i in range(s)]
-        stageMu = [np.zeros(nMu) for i in range(s)]
+        stageZ = [z0.copy() for i in range(s)]
+        stageMu = [np.zeros(nAE) for i in range(s)]
         qIterate = [q0 + (h*c[i])*v0 + (0.5*(h*c[i])**2)*a0 for i in range(s)] #for C_q^T mu
 
         def Stages():
             """the stage positions and velocities"""
             V = [v0 + h*sum(A[i, j]*stageA[j] for j in range(s)) for i in range(s)]
             Q = [q0 + (h*c[i])*v0 + h**2*sum(A2[i, j]*stageA[j] for j in range(s)) for i in range(s)]
-            if ggl:
+            if ggl and nAE:
                 for i in implicit:
                     Q[i] = Q[i] - system.ODE2ReactionForcesLHS(qIterate[i], V[i], empty, stageMu[i], times[i])
             return (Q, V)
@@ -382,43 +408,44 @@ def _SolveLobatto(system, simulationSettings, tableau, ggl, name):
         def Residual():
             (Q, V) = Stages()
             r = np.zeros(nUnknowns)
-            for (k, i) in enumerate(implicit):
-                rows = r[k*nStage:(k + 1)*nStage]
-                rows[:nODE2 + nAE] = system.SystemResidual(Q[i], V[i], stageA[i], empty, empty, stageZ[i], times[i])
-                rows[rowsODE2] *= h**2
-                if ggl and nAE:
-                    rows[rowsV] = h*(_ConstraintJacobian(system, Q[i], V[i], empty, times[i]) @ V[i] + TimeDerivative(Q[i], times[i]))
+            for i in implicit:
+                r[sliceA[i]] = h**2*system.SystemResidual(Q[i], V[i], stageA[i], empty, empty, stageZ[i], times[i])[:nODE2]
+            for i in (implicit if ggl else [s - 1]) if nAE else []:
+                (ae, vRows) = (rowsAE[i], rowsV[i]) if ggl else (rowsEndAE, rowsEndV)
+                r[ae] = system.AlgebraicEquations(Q[i], V[i], empty, stageZ[i], times[i])
+                r[vRows] = h*(_ConstraintJacobian(system, Q[i], V[i], empty, times[i]) @ V[i] + TimeDerivative(Q[i], times[i]))
             return r
 
         def Jacobian():
             (Q, V) = Stages()
             J = np.zeros((nUnknowns, nUnknowns))
-            for (k, i) in enumerate(implicit):
+            for i in implicit:
                 J_q = system.SystemJacobian(Q[i], V[i], stageA[i], empty, empty, stageZ[i], times[i], factor_q=1., factor_q_t=0.,
                                             factor_q_tt=0.)
                 J_v = system.SystemJacobian(Q[i], V[i], stageA[i], empty, empty, stageZ[i], times[i], factor_q=0., factor_q_t=1.,
-                                            factor_q_tt=0.)[:, :nODE2]
+                                            factor_q_tt=0.)[:nODE2, :nODE2]
                 M = system.MassMatrix(Q[i], V[i], times[i])
-                C_q = J_q[rowsAE, :nODE2]
-                rows = slice(k*nStage, k*nStage + nODE2 + nAE)
+                K = J_q[:nODE2, :nODE2]
+                for j in implicit:
+                    J[sliceA[i], sliceA[j]] = h**2*((h**2*A2[i, j])*K + (h*A[i, j])*J_v + (M if i == j else 0.))
+                if i in sliceZ:
+                    J[sliceA[i], sliceZ[i]] = h**2*J_q[:nODE2, nODE2:]
                 if ggl and nAE:
-                    epsilon = 1e-6 #H = (C_q)_q v, the derivative of C_q along v
-                    H = (_ConstraintJacobian(system, Q[i] + epsilon*V[i], V[i], empty, times[i])
-                         - _ConstraintJacobian(system, Q[i] - epsilon*V[i], V[i], empty, times[i]))/(2*epsilon)
-                for (m, j) in enumerate(implicit):
-                    columns = slice(m*nStage, m*nStage + nODE2)
-                    J[rows, columns] = (h**2*A2[i, j])*J_q[:, :nODE2] + (h*A[i, j])*J_v
-                    if i == j:
-                        J[k*nStage:k*nStage + nODE2, columns] += M
-                    if ggl and nAE:
-                        J[k*nStage + nODE2 + nAE:(k + 1)*nStage, columns] = h*((h*A[i, j])*C_q + (h**2*A2[i, j])*H)
-                J[rows, k*nStage + nODE2:k*nStage + nODE2 + nAE] = J_q[:, nODE2:]
-                if ggl and nAE:
-                    J[rows, k*nStage + nODE2 + nAE:(k + 1)*nStage] = -J_q[:, :nODE2] @ C_q.T #dQ_i/dmu_i = -C_q^T
-                    J[k*nStage + nODE2 + nAE:(k + 1)*nStage, k*nStage + nODE2 + nAE:(k + 1)*nStage] = -h*H @ C_q.T
-            for k in range(len(implicit)): #the ODE2 rows scaled by h^2, the multiplier columns by 1/h^2
-                J[k*nStage:k*nStage + nODE2, :] *= h**2
-                J[:, k*nStage + nODE2:k*nStage + nODE2 + nAE] /= h**2
+                    (C_q, H) = VelocityDerivative(Q[i], V[i], times[i])
+                    for j in implicit:
+                        J[rowsAE[i], sliceA[j]] = (h**2*A2[i, j])*C_q
+                        J[rowsV[i], sliceA[j]] = h*((h*A[i, j])*C_q + (h**2*A2[i, j])*H)
+                    J[rowsAE[i], sliceZ[i]] = J_q[nODE2:, nODE2:]
+                    J[sliceA[i], sliceMu[i]] = -h**2*K @ C_q.T #dQ_i/dmu_i = -C_q^T
+                    J[rowsAE[i], sliceMu[i]] = -C_q @ C_q.T
+                    J[rowsV[i], sliceMu[i]] = -h*H @ C_q.T
+            if not ggl and nAE: #the end of the step, the last stage
+                (C_q, H) = VelocityDerivative(Q[s - 1], V[s - 1], times[s - 1])
+                for j in implicit:
+                    J[rowsEndAE, sliceA[j]] = (h**2*A2[s - 1, j])*C_q
+                    J[rowsEndV, sliceA[j]] = h*((h*A[s - 1, j])*C_q + (h**2*A2[s - 1, j])*H)
+            for i in sliceZ: #the multiplier columns scaled by 1/h^2, as the ODE2 rows by h^2
+                J[:, sliceZ[i]] /= h**2
             return J
 
         factorization = None
@@ -429,59 +456,77 @@ def _SolveLobatto(system, simulationSettings, tableau, ggl, name):
                 factorization = scipy.linalg.lu_factor(Jacobian())
                 jacobianEvaluations += 1
             r = Residual()
-            if not np.all(np.isfinite(r)):
+            if not np.all(np.isfinite(r)): #diverged: as not converged
                 break
             if initialResidual is None:
                 initialResidual = max(cMath.norm(r)/errorFactor, 2*newton.absoluteTolerance)
             increment = scipy.linalg.lu_solve(factorization, r)
             if ggl:
                 qIterate = Stages()[0]
-            for (k, i) in enumerate(implicit):
-                stageA[i] = stageA[i] - increment[k*nStage:k*nStage + nODE2]
-                stageZ[i] = stageZ[i] - increment[k*nStage + nODE2:k*nStage + nODE2 + nAE]/h**2
-                stageMu[i] = stageMu[i] - increment[k*nStage + nODE2 + nAE:(k + 1)*nStage]
+            for i in implicit:
+                stageA[i] = stageA[i] - increment[sliceA[i]]
+                if ggl:
+                    stageMu[i] = stageMu[i] - increment[sliceMu[i]]
+            for i in sliceZ:
+                stageZ[i] = stageZ[i] - increment[sliceZ[i]]/h**2
             newtonIterations += 1
             residual = cMath.norm(Residual())/errorFactor
             if residual/initialResidual <= newton.relativeTolerance or residual <= newton.absoluteTolerance:
                 converged = True
                 break
         if not converged:
-            raise ValueError(name + ': Newton did not converge in step ' + str(step + 1) + ' at t=' + str(t0 + h)
+            if stepSize.Reduce(-1):
+                continue
+            raise ValueError(name + ': Newton did not converge in step ' + str(stepSize.stepIndex + 1) + ' at t=' + str(t)
                              + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
         (Q, V) = Stages()
+        if stepSize.automatic: #against the trapezoidal rule of the first and the last stage
+            errors = np.concatenate([Q[-1] - (q0 + (0.5*h)*(V[0] + V[-1])), V[-1] - (v0 + (0.5*h)*(stageA[0] + stageA[-1]))])
+            if not stepSize.Control(stepSize.Error(errors, np.concatenate([q0, v0]), np.concatenate([Q[-1], V[-1]]))):
+                continue
         (q, q_t, q_tt, z) = (Q[-1], V[-1], stageA[-1], stageZ[-1]) #stiffly accurate: the end is the last stage
-        output.Step(step + 1, t0 + h, q, q_t, q_tt, last=step + 1 == n, z=z, h=h)
+        stepSize.Accept(t, 1)
+        output.Step(stepSize.stepIndex, t, q, q_t, q_tt, last=stepSize.Done(), z=z, h=h)
 
-    return output.Finalize({'steps': n, 'newtonIterations': newtonIterations, 'jacobianEvaluations': jacobianEvaluations})
+    return output.Finalize({'steps': stepSize.stepIndex, 'newtonIterations': newtonIterations,
+                            'jacobianEvaluations': jacobianEvaluations, 'rejectedSteps': stepSize.rejected,
+                            'rejectedStepsError': stepSize.rejectedByError})
 
 
-def SolveLobatto4(system, simulationSettings=None, variant='IIIC-GGL'):
+def SolveLobatto4(system, simulationSettings=None, variant='IIIA-end'):
     """the implicit time integration of a SymbolicSystemBase by a 3-stage Lobatto method of order 4, with the stages
-    at the start, the middle and the end of the step and constant steps (#3244), in three variants for index-3
-    constraints (lobatto4Variants): 'IIIC-GGL', Lobatto IIIC - three implicit stages, L-stable, damping fast modes -,
-    and 'IIIA-GGL', Lobatto IIIA - its first stage the start of the step, two implicit stages, without damping -, both
-    with the constraints and the velocity constraints at the implicit stages and the positions of each stage moved
-    onto the constraints by a multiplier mu, as SolveTrapezoidalGGL does for the trapezoidal rule, the 2-stage Lobatto
-    IIIA; 'IIIC', Lobatto IIIC with the constraints at all stages only. All are stiffly accurate: the end of the step
-    is the last stage. Measured on a pendulum and a slider crank: the GGL variants of order 4 in q and v and of order
-    2 in the accelerations and z, IIIA-GGL with errors of the accelerations 25 times smaller; 'IIIC' of order 4 in q,
-    2 in v and 1 in the accelerations, with a drift of the velocity constraints; with a fast mode of h omega = 70,
-    IIIC-GGL damps it and IIIA-GGL does not converge. Newton's method for the stage accelerations, multipliers (and
-    mu) with the Jacobian of the system, the ODE2 rows scaled by h^2, by timeIntegration.newton as
-    SolveTrapezoidalGGL; the steps of timeIntegration.numberOfSteps, startTime and endTime; consistent initial
+    at the start, the middle and the end of the step (#3244, #3246), in variants for index-3 constraints
+    (lobatto4Variants): 'IIIA-end' and 'IIIC-end', Lobatto IIIA - its first stage the start of the step, two
+    implicit stages, without damping - and Lobatto IIIC - three implicit stages, L-stable, damping fast modes -, with
+    the constraints and the velocity constraints at the end of the step only and the multipliers of the stages, that
+    of the start from the end of the previous step; 'IIIA-GGL' and 'IIIC-GGL', with the constraints and the velocity
+    constraints at each implicit stage and its positions moved onto the constraints by a multiplier mu, as
+    SolveTrapezoidalGGL does for the trapezoidal rule, the 2-stage Lobatto IIIA. All are of order 4 in q and v and of
+    order 2 in the accelerations and multipliers (measured on a pendulum and a slider crank); the end variants need
+    fewer unknowns and equations. With a fast mode of h omega = 70, the IIIC variants damp it and the IIIA variants do
+    not converge. Stiffly accurate: the end of the step is the last stage.
+
+    With timeIntegration.automaticStepSize (the default) the step size is controlled by the difference to the embedded
+    trapezoidal solution of the first and the last stage, q0 + h/2 (V_1 + V_3) and v0 + h/2 (A_1 + A_3), an error
+    of order h^3, which overestimates the error of order h^5 of Lobatto4: the tolerances are met with room. The PI
+    controller and the settings as SolveTrapezoidalGGL; without it the steps of timeIntegration.numberOfSteps.
+    Newton's method for the stage accelerations and multipliers (and mu) with the Jacobian of the system, the ODE2 rows
+    scaled by h^2, by timeIntegration.newton as SolveTrapezoidalGGL; a step whose Newton iteration does not converge
+    is repeated with a smaller step with automaticStepSize or adaptiveStep, else raises. Consistent initial
     accelerations and algebraic coordinates; the output as the solvers of exudyn.symbolics.solvers. The algebraic
     equations must depend on q and t only; ODE1 and data coordinates are not implemented
 
     Args:
         system: the system, a SymbolicSystemBase
         simulationSettings: exudyn.SimulationSettings; None: the defaults
-        variant: 'IIIC-GGL', 'IIIA-GGL' or 'IIIC'
+        variant: 'IIIA-end', 'IIIC-end', 'IIIA-GGL' or 'IIIC-GGL'
 
     Returns:
         dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2), with algebraic equations 'z', at the times of
-        solution.file.writePeriod and the end, and the statistics 'steps', 'newtonIterations', 'jacobianEvaluations'
+        solution.file.writePeriod and the end, and the statistics 'steps', 'newtonIterations', 'jacobianEvaluations',
+        'rejectedSteps' (by Newton) and 'rejectedStepsError'
     """
     if variant not in lobatto4Variants:
         raise ValueError('SolveLobatto4: variant must be one of ' + str(list(lobatto4Variants)) + ', not ' + str(variant))
-    (tableau, ggl) = lobatto4Variants[variant]
-    return _SolveLobatto(system, simulationSettings, _lobattoTableaus[tableau], ggl, 'SolveLobatto4')
+    (tableau, constraints) = lobatto4Variants[variant]
+    return _SolveLobatto(system, simulationSettings, _lobattoTableaus[tableau], constraints, 'SolveLobatto4')

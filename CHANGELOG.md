@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 337 | 1.13.352 |
+| 1.13 | Newborn | 338 | 1.13.353 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.353** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Lobatto4: the index-3 constraints at the end of the step without GGL, and the automatic step size by the embedded trapezoidal solution (#3246)
+  - description: SolveLobatto4 enforces the constraints with the GGL stabilization at every implicit stage and has constant steps only. Decided: the 3-stage Lobatto methods with the constraints only at the end of the step, as the maintainer remembers from HOTINT, tried for IIIA, IIIB and IIIC; the automatic step size by the embedded trapezoidal solution first (revision2026c step RG20.2.3).
+  - **notes:** SolveLobatto4 of exudyn.symbolics.advancedSolvers has the variants 'IIIA-end' (the default) and 'IIIC-end', which enforce the constraints and the velocity constraints at the end of the step only, with a multiplier per stage after the start, of order 4 in the coordinates and velocities, beside 'IIIA-GGL' and 'IIIC-GGL'; the variant 'IIIC' with the constraints at all stages is removed. With timeIntegration.automaticStepSize the step size follows the difference to the embedded trapezoidal solution, with the PI controller of SolveTrapezoidalGGL; this estimate of order 2 keeps the error far below the tolerances.
+  - date resolved: **2026-11-04 19:17**, date raised: 2026-11-04
 - **1.13.352** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Lobatto4: the 3-stage Lobatto method of order 4 for constrained systems in exudyn.symbolics.advancedSolvers, Lobatto IIIC with the constraints at all stages against Lobatto IIIA with GGL (#3244)
   - description: The symbolic solvers have no method of order 4 for systems with index-3 constraints. Decided: Lobatto4, the 3-stage Lobatto method, with constant steps first; Lobatto IIIC with the constraints enforced at all stages against Lobatto IIIA with the GGL stabilization, the variant chosen by order and stability on a pendulum and a slider crank; the error estimate and the adaptive step afterwards (docs/dev/design/advancedSolvers.md section 3.2).
   - **notes:** exudyn.symbolics.advancedSolvers.SolveLobatto4 integrates a symbolic system with index-3 constraints by a 3-stage Lobatto method of order 4 with constant steps: 'IIIC-GGL' (default, Lobatto IIIC, damping fast modes) and 'IIIA-GGL' (Lobatto IIIA, without damping), both with the constraints, the velocity constraints and a multiplier moving the positions onto the constraints at each implicit stage, of order 4 in the coordinates and velocities and 2 in the accelerations and multipliers; 'IIIC' with the constraints at all stages only, of order 2 in the velocities; symbolicLobatto4Test.py.

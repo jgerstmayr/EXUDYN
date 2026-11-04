@@ -10,14 +10,15 @@ You can view and download this file on Github: [symbolicLobatto4Test.py](https:/
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  SolveLobatto4 of exudyn.symbolics.advancedSolvers (#3244), the 3-stage Lobatto methods with constant
-#           steps for index-3 constraints, in its variants: on a pendulum, 'IIIA-GGL' and 'IIIC-GGL' of order 4 in the
-#           positions and velocities and of order 2 in the accelerations and the multiplier, 'IIIC' with the constraints
-#           at all stages of order 4 in the positions only, 2 in the velocities, with a drift of the velocity
-#           constraint; the variants agree with fine steps, and the 2-stage form of the method is SolveTrapezoidalGGL; on
-#           a slider crank of rigid bodies on the joints of UserItemCreator, order 4 against mbs.SolveDynamic with fine
-#           steps; on a pendulum with a mass on a stiff spring at its bob, IIIC-GGL damps the fast oscillation of the
-#           spring at a step of h omega = 70, IIIA-GGL keeps it and the energy at a smaller step.
+# Details:  SolveLobatto4 of exudyn.symbolics.advancedSolvers (#3244, #3246), the 3-stage Lobatto methods for index-3
+#           constraints, in its variants: on a pendulum, all four - IIIA and IIIC, with the constraints at the end of the
+#           step or with GGL at the stages - of order 4 in the positions and velocities and of order 2 in the
+#           accelerations and the multiplier, the constraints on both levels kept; the variants agree with fine steps,
+#           and the 2-stage form of the method is SolveTrapezoidalGGL; on a slider crank of rigid bodies on the joints of
+#           UserItemCreator, IIIA-end of order 4 against mbs.SolveDynamic with fine steps, and the automatic step size
+#           by the embedded trapezoidal solution, its error far below the tolerance; on a pendulum with a mass on a
+#           stiff spring at its bob, IIIC-GGL damps the fast oscillation of the spring at a step of h omega = 70,
+#           IIIA-end keeps it and the energy at a smaller step.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-04
@@ -62,28 +63,29 @@ pendulum = NumpySystem(np.eye(2), lambda q, q_t, t: np.array([0., -g]), initialS
                        constraints=lambda q, q_t, y, z, t: np.array([0.5*(q @ q - L**2)]),
                        constraintJacobian=lambda q, q_t, y, t: np.array([q]), numberOfConstraints=1)
 reference = SolveLobatto4(pendulum, Settings(400), 'IIIA-GGL')
-difference = np.max(np.abs(SolveLobatto4(pendulum, Settings(400), 'IIIC-GGL')['q'][-1] - reference['q'][-1]))
-Check(difference < 1e-9, 'IIIA-GGL against IIIC-GGL: ' + str(difference))
+difference = max(np.max(np.abs(SolveLobatto4(pendulum, Settings(400), variant)['q'][-1] - reference['q'][-1]))
+                 for variant in lobatto4Variants)
+Check(difference < 1e-9, 'the variants with fine steps: ' + str(difference))
 u = 0
-expected = {'IIIA-GGL': [3.8, 3.8, 1.8, 1.8], 'IIIC-GGL': [3.6, 3.8, 1.8, 1.8], 'IIIC': [3.8, 1.8, 0.8, 0.8]}
+expected = {'IIIA-end': [3.8, 3.8, 1.8, 1.8], 'IIIC-end': [3., 3.8, 1.8, 1.8], 'IIIA-GGL': [3.8, 3.8, 1.8, 1.8], 'IIIC-GGL': [3.5, 3.8, 1.8, 1.8]}
 for variant in lobatto4Variants:
     errors = []
     for steps in [25, 50]:
         result = SolveLobatto4(pendulum, Settings(steps), variant)
         errors.append([np.max(np.abs(result[name][-1] - reference[name][-1])) for name in ['q', 'q_t', 'q_tt', 'z']])
         (q, v) = (result['q'][-1], result['q_t'][-1])
-        Check(abs(0.5*(q @ q - L**2)) < 1e-12, 'the constraint of the pendulum, ' + variant)
+        Check(abs(0.5*(q @ q - L**2)) < 1e-12 and abs(q @ v) < 1e-12, 'the constraints of the pendulum, ' + variant)
     order = Order(errors)
     exu.Print('pendulum, ' + variant + ': errors of q, q_t, q_tt, z with 50 steps', ['%.2e' % e for e in errors[1]], ', orders', order,
               ', velocity constraint', q @ v)
     Check(all(o > e for (o, e) in zip(order, expected[variant])), 'the order of ' + variant + ': ' + str(order))
     u += float(np.sum(np.abs(q)))
-Check(abs(q @ v) > 1e-6, 'IIIC: the velocity constraint drifts')
+
 
 #the 2-stage form of IIIA-GGL, the trapezoidal rule
 import exudyn.symbolics.advancedSolvers as advancedSolvers
-(tableau, ggl) = ((np.array([[0., 0.], [0.5, 0.5]]), np.array([0., 1.])), True)
-difference = np.max(np.abs(advancedSolvers._SolveLobatto(pendulum, Settings(50), tableau, ggl, 'test')['q'][-1]
+(tableau, constraints) = ((np.array([[0., 0.], [0.5, 0.5]]), np.array([0., 1.])), 'GGL')
+difference = np.max(np.abs(advancedSolvers._SolveLobatto(pendulum, Settings(50), tableau, constraints, 'test')['q'][-1]
                            - SolveTrapezoidalGGL(pendulum, Settings(50))['q'][-1]))
 Check(difference < 1e-13, 'the 2-stage IIIA-GGL against SolveTrapezoidalGGL: ' + str(difference))
 
@@ -115,12 +117,24 @@ mbs.SolveDynamic(settings)
 referenceCrank = [np.array(mbs.systemData.GetODE2Coordinates()), np.array(mbs.systemData.GetODE2Coordinates_t())]
 errors = []
 for steps in [8, 16]:
-    result = SolveLobatto4(system, Settings(steps, endTime), 'IIIC-GGL')
+    result = SolveLobatto4(system, Settings(steps, endTime), 'IIIA-end')
     errors.append([np.max(np.abs(result[name][-1] - value)) for (name, value) in zip(['q', 'q_t'], referenceCrank)])
     u += float(np.sum(np.abs(result['q'][-1])))
 order = Order(errors)
-exu.Print('slider crank, IIIC-GGL: errors of q, q_t with 16 steps', errors[1], ', orders', order)
+exu.Print('slider crank, IIIA-end: errors of q, q_t with 16 steps', errors[1], ', orders', order)
 Check(min(order) > 3.7, 'the order of the slider crank: ' + str(order))
+
+#the automatic step size by the embedded trapezoidal solution: of order h^3, it overestimates the error
+settings = Settings(4, endTime)
+settings.timeIntegration.automaticStepSize = True
+settings.timeIntegration.absoluteTolerance = 1e-6
+settings.timeIntegration.relativeTolerance = 1e-6
+result = SolveLobatto4(system, settings, 'IIIA-end')
+error = np.max(np.abs(result['q'][-1] - referenceCrank[0]))
+exu.Print('slider crank, IIIA-end, automatic step size, tolerance 1e-6:', result['steps'], 'steps,', result['rejectedStepsError'],
+          'rejected, error', error)
+Check(error < 1e-8 and result['steps'] < 120 and abs(result['time'][-1] - endTime) < 1e-12, 'the automatic step size')
+u += result['steps']
 
 #a pendulum with a mass on a stiff linear spring at its bob, displaced by 1 mm: a fast mode of omega = 1414/s
 stiffness = 1e6
@@ -143,10 +157,10 @@ exu.Print('stiff spring, IIIC-GGL, h = 0.05: the stretch of the spring', stretch
           energy0 - Energy(result['q'][-1], result['q_t'][-1]))
 Check(stretch < 1e-4, 'IIIC-GGL damps the fast mode')
 settings.timeIntegration.numberOfSteps = 200
-result = SolveLobatto4(stiff, settings, 'IIIA-GGL') #h omega = 14
+result = SolveLobatto4(stiff, settings, 'IIIA-end') #h omega = 14
 energyChange = Energy(result['q'][-1], result['q_t'][-1]) - energy0
-exu.Print('stiff spring, IIIA-GGL, h = 0.01: the energy changed by', energyChange)
-Check(abs(energyChange) < 1e-2, 'IIIA-GGL keeps the energy')
+exu.Print('stiff spring, IIIA-end, h = 0.01: the energy changed by', energyChange)
+Check(abs(energyChange) < 1e-3, 'IIIA-end keeps the energy')
 
 u = round(u, 8) + testError #rounded: the last bits of numpy differ between platforms
 exu.Print('solution of symbolicLobatto4Test=', u)

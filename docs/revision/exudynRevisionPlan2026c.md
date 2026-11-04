@@ -3167,7 +3167,7 @@ CLOSED 2026-11-04 (#3243): a bouncing ball (Hertz contact with Hunt-Crossley dam
 
 ### **OPEN_RG20.2** Lobatto4: the 3-stage Lobatto solver of order 4 in the symbolic solvers
 
-Design section 3.2. #3244.
+Design section 3.2. #3244, #3246.
 
 #### **CLOSED_RG20.2.1** Analyze the Lobatto methods for constrained systems, the error estimate and the name
 
@@ -3177,9 +3177,17 @@ CLOSED 2026-11-04: design section 3.2 - Lobatto IIIA with 3 stages, the IIIA-III
 
 CLOSED 2026-11-04 (#3244): SolveLobatto4 of exudyn.symbolics.advancedSolvers with constant steps, one stage solver for stiffly accurate tableaus with or without GGL at the implicit stages (its 2-stage IIIA-GGL is SolveTrapezoidalGGL to 5e-16). Pendulum: IIIA-GGL and IIIC-GGL of order 4 in q and v, 2 in a and z (IIIA-GGL with 25 times smaller errors of a); IIIC with the constraints at all stages of order 4 in q, 2 in v, 1 in a, and the velocity constraint drifts (2e-3); IIIA without GGL does not converge in a and z. Slider crank: IIIC-GGL of order 4.2. A fast mode of h omega = 70: IIIC-GGL damps it, IIIA-GGL does not converge (at h omega = 14 it keeps the energy to 1e-3). Chosen: IIIC-GGL as the default, IIIA-GGL and IIIC as variants. symbolicLobatto4Test.py. [log](exudynRevisionLog2026c.md#rg20-2-2)
 
-#### **OPEN_RG20.2.3** The error estimate of Lobatto4 (the embedded trapezoidal solution, the classical IIIA/IIIC estimate) and its adaptive step
+#### **CLOSED_RG20.2.3** The error estimate of Lobatto4 (the embedded trapezoidal solution, the classical IIIA/IIIC estimate) and its adaptive step
 
-Design section 3.2.
+CLOSED 2026-11-04 (#3246): the automatic step size of SolveLobatto4 by the embedded trapezoidal solution of the first and the last stage (maintainer: first), with the PI controller of RG20.8.1, order 3 of the local error. It works and rejects little, but it estimates the order-2 error: Lobatto4 takes about the steps of the trapezoidal rule with errors far below the tolerance (slider crank, 1e-6: 68 steps, 4e-10; ball, 1e-6: 433 steps, 3e-8, TrapezoidalGGL 419 steps, 9e-5). RG20.2.5 for an estimate of order 4. [log](exudynRevisionLog2026c.md#rg20-2-3)
+
+#### **CLOSED_RG20.2.4** Lobatto4 with the constraints at the end of the step, without GGL
+
+CLOSED 2026-11-04 (#3246): maintainer: one of the 3-stage Lobatto methods worked in HOTINT with index-3 constraints without GGL, possibly with the constraints at the end of the step only. With one multiplier constant over the step and c = 0 at the end: IIIA, IIIB, IIIC and the pair IIIA-IIIB of order 4 in q, 2 in v, the velocity constraint drifting. With a multiplier per stage after the start (the start that of the previous end) and c = 0 and C_q v + c_t = 0 at the end: IIIA, IIIC and IIIA-IIIB of order 4 in q and v and 2 in a and z. In SolveLobatto4 as 'IIIA-end' (the default) and 'IIIC-end'; half the time of the GGL variants on the slider crank; plain IIIC with the constraints at all stages dropped. [log](exudynRevisionLog2026c.md#rg20-2-3)
+
+#### **OPEN_RG20.2.5** An error estimate of order 4 for Lobatto4: the difference of IIIA and IIIC on the same stages, or local extrapolation
+
+After RG20.2.3: the embedded trapezoidal estimate is of order 2 and makes Lobatto4 take about the steps of the trapezoidal rule.
 
 ### **OPEN_RG20.3** Adjoint sensitivities on the symbolic system for optimization
 
