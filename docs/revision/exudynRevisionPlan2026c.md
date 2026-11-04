@@ -805,7 +805,7 @@ CLOSED 2026-11-04 (#3237): scopeTest.py on the raytracer image; the GUI chapter,
 
 #### **OPEN_RG6.20.7** Later: lines, texts and points in plot coordinates as Python lists on SC.renderer
 
-#3237 (maintainer 2026-11-04: Python lists on SC.renderer rather than visualizationSettings; a point a circle with the line width, so that the raytracer needs no triangles).
+#3237 (maintainer 2026-11-04: Python lists on SC.renderer rather than visualizationSettings; a point a circle with the line width, so that the raytracer needs no triangles). Proposal: design scope.md section 7 - SC.renderer.SetScopeGraphics(view, scope, lines, texts, points) with validated dicts, polylines in graph coordinates outside the automatic range, front or behind the sensor lines, named lines in the legend, stored in C++ under a lock; five points to be decided.
 
 #### **CLOSED_RG6.20.8** A lock of the stored sensor data, for the solver, the traces, the Scope and Python
 

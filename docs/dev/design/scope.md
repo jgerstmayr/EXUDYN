@@ -158,6 +158,53 @@ Further:
    message.
 5. The raytracer: the same primitives drawn into its image.
 6. A test model (the raytracer image of a scope), the documentation in the GUI chapter.
-7. Later: the extras (lines, texts, points in plot coordinates) as Python lists on `SC.renderer`.
+7. Later: the extras (lines, texts, points in plot coordinates) as Python lists on `SC.renderer` - the proposal in
+   section 7.
 8. The lock of the stored sensor data, for the solver, the traces, the Scope and Python.
 9. Reset and item changes while the renderer runs (#3239).
+
+## 7. Proposal: static graphics in a scope (RG6.20.7; maintainer 2026-11-04, to be decided)
+
+The request (section 1): in the coordinates of the graph, extending the plotted lines like an analytic reference or
+a threshold - lines from (x0, y0) to (x1, y1) with an RGBA color, in front of or behind the other lines; texts at
+(x, y) with a relative size and color; points (circles) at (x, y) with a radius in pixels and a color - probably not
+as editable settings, rather like a renderer function (decision 10: Python lists on `SC.renderer`).
+
+- **Python interface**, functions of `SC.renderer`, each item a dict validated in C++ as the item dicts are (unknown
+  keys and wrong types raise, with the name of the key):
+
+      SC.renderer.SetScopeGraphics(view=0, scope=0,
+          lines=[{'points': [[0, 1.5], [10, 1.5]], 'color': [1, 0, 0, 1], 'width': -1, 'front': False,
+                  'name': 'threshold'}],
+          texts=[{'position': [5, 1.6], 'text': 'limit', 'size': 1., 'color': [1, 0, 0, 1], 'front': True}],
+          points=[{'position': [2.5, 0.8], 'radius': 4, 'color': [0, 0, 1, 1], 'front': True}])
+      SC.renderer.GetScopeGraphics(view=0, scope=0)       #the lists as given
+      SC.renderer.ClearScopeGraphics(view=-1, scope=-1)   #-1: all views or all scopes
+
+  `SetScopeGraphics` replaces the lists of that scope; omitted lists stay. Defaults: `width` -1 (the `lineWidth` of
+  the scope), `front` True for texts and points and False for lines, `size` 1 (the size of the tick labels),
+  `radius` 4 pixels, `name` empty.
+- **A line is a polyline**: `points` with two or more points, so that an analytic reference (e.g. 200 points of
+  sin(t)) is one item; a single line is the case of two points. With a `name`, the line gets an entry in the legend,
+  after the sensor lines.
+- **Coordinates and range**: x and y in the units of the graph - time or the x-sensor, and the y-values. The items are
+  clipped to the plot area and do not enter the automatic range (a threshold far away does not shrink the plot); a
+  scope with `horizontalZoom` or `verticalZoom` shows them where they are. Over time with `timeHistory`, they scroll
+  with the axis, as the sensor lines.
+- **Order of drawing**: background, grid, the items with `front` False, the sensor lines, the items with `front`
+  True, the axes, the legend - in the one list of primitives of `ScopePlot`, so that OpenGL, the raytracer and saved
+  images show the same. A point is a circle of 16 segments drawn with the line width (decision 10; no triangles in
+  the raytracer); a text uses the font of the tick labels, scaled by `size`, its position the left end of the
+  baseline.
+- **Storage and threads**: the lists live in C++ in `VisualizationSystemContainer`, per view and scope, not in
+  `visualizationSettings` (not in `config.json`, not in `GetDictionary`); `SetScopeGraphics` replaces them under a lock
+  that `ScopePlot` also takes while it reads them, as the lock of the stored sensor data. They stay until cleared or
+  `SC.Reset()`, also through `mbs.SolutionViewer()`.
+- **Test and documentation**: scopeTest.py with a threshold line, a reference polyline, a text and a point on the
+  raytracer image (the pixel colors at their positions), the refusal of a wrong key; the GUI chapter
+  (`sec-gui-scopes`) with an example in scopeExample.py (the analytic small-angle solution of the pendulum).
+- **Sub-steps**: .1 the interface and the storage, .2 the primitives in `ScopePlot` (polylines, texts, circles, the
+  clipping, the order, the legend entries), .3 the test and the documentation.
+- **To be decided**: (a) polylines rather than single lines only; (b) the items outside the automatic range;
+  (c) legend entries for named lines; (d) per scope of each view (12 lists) rather than per view; (e) the names
+  `SetScopeGraphics`, `GetScopeGraphics`, `ClearScopeGraphics`.
