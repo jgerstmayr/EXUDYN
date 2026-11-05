@@ -361,8 +361,9 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   and test models cleaned up a first time (sensors stored internally, PlotSensor, models.py data).
 - RG19.3 Revise the URDF import: the inertia check and correction, textures, flipped joints, the UR offset, the store
   and load of Exudyn robot models; tested with the RTB robots and the local data set in examples; .1 done: the URDF
-  graphics (#3263); .2 done: one STL reader without numpy-stl (#3264); .3 open: a Robot saved and loaded as a dict and
-  HDF5 file (#3267), its textures with the images in dicts of RG11.4.5 (#3268).
+  graphics (#3263); .2 done: one STL reader without numpy-stl (#3264); .3 done: a Robot saved and loaded as a dict and
+  HDF5 file (#3267; the TX2-90L with its URDF meshes 7 MB, saved in 0.2 s, as SaveDictToHDF5 stores a list of numbers
+  as one dataset - one dataset per number before); its textures with the images in dicts of RG11.4.5 (#3268).
 - RG19.4 Revise Robot: q0, the control description with friction and end stops for both models, SetControl and
   PreStepControl, AddSensors, the static (and dynamic) compensation from the kinematic tree; .1 done: q0, friction and
   end stops per link by CoordinateSpringDamperExt in both models (in the redundant model on a relative coordinate

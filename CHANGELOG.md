@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 366 | 1.13.381 |
+| 1.13 | Newborn | 367 | 1.13.382 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.382** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Save and load a Robot of exudyn.robotics, e.g. as HDF5 file (#3267)
+  - description: A Robot imported from a URDF or built from a model (e.g. the Staubli TX2-90L of the joint frames with the graphics of its URDF) cannot be stored: the links, base, tool, their HTs and the graphics data must be written into a dict and read back. Proposed: Robot.GetDictionary and Robot.SetDictionary (or a Robot built from the dict), saved and loaded with SaveDictToHDF5 and LoadDictFromHDF5, extended where needed; textures of the graphics need the images in dicts (separate issue).
+  - **notes:** Robot.GetDictionary() and Robot.SetDictionary(robotDict) of exudyn.robotics store and rebuild a robot with its parameters, links, base, tool and their graphics data, e.g. saved with exudyn.advancedUtilities.SaveDictToHDF5 and loaded with LoadDictFromHDF5; SaveDictToHDF5 stores a list of only int or only float values as one dataset, so that meshes are saved in a fraction of a second; the textures named by the graphics data are not included.
+  - date resolved: **2026-11-05 20:50**, date raised: 2026-11-05
 - **1.13.381** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robot: q0, joint friction and end stops in both models, the control and the sensors of the redundant model (#3270)
   - description: The class Robot of exudyn.robotics has no initial configuration other than the reference, no friction and no end stops, and PreStepControl works only for the kinematic tree; the redundant coordinate model has no measured joint coordinate (its TorsionalSpringDamper acts about the z-axis only, and its first joint ignores the translation of preHT). Decided: Robot(q0, enableEndStops, frictionRegularization); per RobotLink jointLimits, viscousFriction, coulombFriction, endStopStiffness, endStopDamping, set for all links by SetJointFriction and SetEndStops, realized by CoordinateSpringDamperExt on the joint coordinate of both models (the node coordinate of the tree, a relative coordinate marker between the bodies of the redundant model); MarkerBodiesRelativeRotationCoordinate gets localRotation0/1 to measure between joint frames; PreStepControl and AddSensors (joint coordinates, velocities and drive forces as one vector each) for both models; LinkDict2Robot passes the joint limits.
   - **notes:** Robot of exudyn.robotics: q0 (initial joint coordinates), enableEndStops and frictionRegularization; RobotLink jointLimits, viscousFriction, coulombFriction, endStopStiffness, endStopDamping, for all links Robot.SetJointFriction and SetEndStops; both CreateKinematicTree and CreateRedundantCoordinateMBS realize them by CoordinateSpringDamperExt on the joint coordinate. PreStepControl controls both models, Robot.AddSensors adds the joint coordinates, velocities and drive forces as one vector each. MarkerBodiesRelativeRotationCoordinate has localRotation0 and localRotation1. In the redundant model the torsional spring-dampers act about the joint axis also for Rx and Ry joints, and the first joint takes the translation of preHT. LinkDict2Robot passes the joint limits of the models.

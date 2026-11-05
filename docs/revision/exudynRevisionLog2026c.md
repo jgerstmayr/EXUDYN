@@ -6111,6 +6111,18 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   (SensorBody of the tree, SensorUserFunction otherwise).
 - robotFrictionEndStopsTest.py: the TX2-90L and a robot with a prismatic joint, both models agree to 2e-6.
 
+<a id="rg19-3-3"></a>
+### RG19.3.3 — a Robot saved and loaded as a dict and HDF5 file (2026-11-05, #3267)
+- Requested by the maintainer (2026-11-05): a Robot, e.g. the TX2-90L built from joint frames with the meshes of its
+  URDF, could not be stored.
+- Robot.GetDictionary: the parameters (gravity, reference configuration, q0, end stops, friction regularization), base
+  and tool (HT, graphics data) and per link all RobotLink data with its visualization; Robot.SetDictionary rebuilds the
+  links by AddLink. The data of a created model (SetControl, item numbers) are not included.
+- SaveDictToHDF5 stored a list element by element, one dataset per number: a mesh of 1e5 coordinates was not
+  practicable. A list of only int or only float values is now one dataset ('numericList'), loaded back as a list.
+- The TX2-90L with its URDF meshes: 7 MB, saved in 0.2 s, loaded in 0.02 s, the same dict after the round trip.
+- robotDictionaryTest.py (the HDF5 part needs h5py and scipy; the result does not depend on it).
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

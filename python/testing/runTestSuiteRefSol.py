@@ -42,6 +42,7 @@ def TestExamplesReferenceSolution():
         'allExudynModulesTest.py': 1.0,                               #new 2026-02-03; test all modules (if some major error is contained...)
         'analyticInverseKinematicsTest.py': 27.199999999999996, #2026-11-05: the checks of ArmConfiguration (#3265), before 19.199999999999996; new 2026-11-05: the analytic inverse kinematics of KinematicChain and Robot (#3260)
         'numericalInverseKinematicsTest.py': 22.2, #new 2026-11-05: the Levenberg-Marquardt inverse kinematics of KinematicChain and Robot (#3269)
+        'robotDictionaryTest.py': 9.516012946428752, #new 2026-11-05: Robot.GetDictionary and SetDictionary, saved with SaveDictToHDF5 (#3267)
         'robotFrictionEndStopsTest.py': 11.680923235698522, #new 2026-11-05: friction, end stops, q0, control and sensors of both models of Robot (#3270)
         'stlFileImportTest.py': 9.398437499999998, #new 2026-11-05: graphics.FromSTLfile without numpy-stl, the mass properties of the mesh (#3264)
         'appendSystemTest.py': 6.274157091191782,                     #new 2026-10-04: SC.AppendSystem of a copy and of the system of another container, deleted once (#2842)

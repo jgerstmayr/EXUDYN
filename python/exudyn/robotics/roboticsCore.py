@@ -505,7 +505,68 @@ class Robot:
     
     def __repr__(self):
         return str(self)
-        
+
+    def GetDictionary(self):
+        """the robot as a dict of its parameters, links, base and tool with their graphics data (#3267), for
+        SetDictionary; save and load it, e.g., with exudyn.advancedUtilities.SaveDictToHDF5 and LoadDictFromHDF5; the
+        textures that the graphics data name are not included; the data of a created model (SetControl, the item numbers)
+        are not included either
+
+        Returns:
+            a dict of numbers, strings, lists and numpy arrays
+        """
+        linkVisualizationKeys = ['jointRadius', 'jointWidth', 'linkWidth', 'showMBSjoint', 'showCOM', 'linkColor']
+        links = []
+        for link in self.links:
+            links += [{'mass': link.mass, 'COM': np.array(link.COM), 'inertia': np.array(link.inertia),
+                       'localHT': link.localHT.HT44(), 'preHT': link.preHT.HT44(),
+                       'jointType': link.jointType, 'parent': link.parent,
+                       'PDcontrol': list(link.PDcontrol) if link.HasPDcontrol() else None,
+                       'jointLimits': link.jointLimits, 'viscousFriction': link.viscousFriction,
+                       'coulombFriction': link.coulombFriction, 'endStopStiffness': link.endStopStiffness,
+                       'endStopDamping': link.endStopDamping,
+                       'visualization': dict({key: getattr(link.visualization, key) for key in linkVisualizationKeys},
+                                             graphicsData=list(link.visualization.graphicsData))}]
+        return {'dictionaryType': 'Robot',
+                'gravity': np.array(self.gravity), 'referenceConfiguration': np.array(self.referenceConfiguration),
+                'q0': self._q0, 'enableEndStops': self.enableEndStops,
+                'frictionRegularization': self.frictionRegularization,
+                'base': {'HT': self.base.HT.HT44(), 'graphicsData': list(self.base.visualization.graphicsData)},
+                'tool': {'HT': self.tool.HT.HT44(), 'graphicsData': list(self.tool.visualization.graphicsData)},
+                'links': links}
+
+    def SetDictionary(self, robotDict):
+        """set the robot from a dict of GetDictionary (#3267), replacing its links, base and tool
+
+        Args:
+            robotDict: the dict, e.g. loaded with exudyn.advancedUtilities.LoadDictFromHDF5
+
+        Example:
+            from exudyn.advancedUtilities import SaveDictToHDF5, LoadDictFromHDF5
+            SaveDictToHDF5('robot.h5', robot.GetDictionary())
+            robot2 = Robot()
+            robot2.SetDictionary(LoadDictFromHDF5('robot.h5'))
+        """
+        if robotDict.get('dictionaryType') != 'Robot':
+            raise ValueError("Robot.SetDictionary: the dict is not one of Robot.GetDictionary (dictionaryType 'Robot')")
+        self.gravity = np.array(robotDict['gravity'], dtype=float)
+        self.base = RobotBase(HT=robotDict['base']['HT'], visualization=VRobotBase(graphicsData=robotDict['base']['graphicsData']))
+        self.tool = RobotTool(HT=robotDict['tool']['HT'], visualization=VRobotTool(graphicsData=robotDict['tool']['graphicsData']))
+        self.enableEndStops = bool(robotDict['enableEndStops'])
+        self.frictionRegularization = robotDict['frictionRegularization']
+        self.links = []
+        self.isSerialRobot = True
+        for linkDict in robotDict['links']:
+            PDcontrol = (None, None) if linkDict['PDcontrol'] is None else tuple(linkDict['PDcontrol'])
+            self.AddLink(RobotLink(mass=linkDict['mass'], COM=linkDict['COM'], inertia=linkDict['inertia'],
+                                   localHT=linkDict['localHT'], preHT=linkDict['preHT'], jointType=linkDict['jointType'],
+                                   parent=linkDict['parent'], PDcontrol=PDcontrol,
+                                   visualization=VRobotLink(**linkDict['visualization']),
+                                   jointLimits=linkDict['jointLimits'], viscousFriction=linkDict['viscousFriction'],
+                                   coulombFriction=linkDict['coulombFriction'], endStopStiffness=linkDict['endStopStiffness'],
+                                   endStopDamping=linkDict['endStopDamping']))
+        self.referenceConfiguration = np.array(robotDict['referenceConfiguration'], dtype=float)
+        self.q0 = robotDict['q0']
 
     def AddLink(self, robotLink):
         """add a link to serial robot

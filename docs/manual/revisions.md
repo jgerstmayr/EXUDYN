@@ -500,6 +500,9 @@ vector each. The redundant model measures each joint coordinate by a relative co
 spring-dampers act about the joint axis also for `'Rx'` and `'Ry'`, and its first joint takes the translation of
 `preHT`. `MarkerBodiesRelativeRotationCoordinate` has `localRotation0` and `localRotation1`, the frames between which
 it measures. `LinkDict2Robot` passes the `jointLimits` of the models (#3270).
+`Robot.GetDictionary()` and `Robot.SetDictionary(robotDict)` store and rebuild a robot with its links, base, tool and
+their graphics data; `exudyn.advancedUtilities.SaveDictToHDF5` saves the dict, and stores a list of only int or only
+float values as one dataset (#3267).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and
