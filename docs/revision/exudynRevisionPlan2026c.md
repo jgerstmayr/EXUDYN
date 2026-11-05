@@ -3210,6 +3210,10 @@ CLOSED 2026-11-04 (#3247): maintainer: keep IIIA-end as LobattoIIIA4 - the simpl
 
 CLOSED 2026-11-05 (#3253): errorEstimate='twoSteps'/'oneStep' in SolveImplicitRungeKutta and SolveTrapezoidalGGL (for the trapezoidal rule both give the same steps); the ODE1 coordinates by the Runge-Kutta method, the data coordinates by the post-Newton step; symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py. [log](exudynRevisionLog2026c.md#rg20-2-7)
 
+#### **CLOSED_RG20.2.8** Index 3 at the implicit stages alone, without velocity constraints: measured against the constraints at the end
+
+CLOSED 2026-11-05: Radau IIA and Lobatto IIIC converge with the positions of the full order, the velocities and multipliers lose orders (Radau 3/2/1), the velocity constraint drifts; Lobatto IIIA does not converge; the end constraints kept, they need only c, C_q and c_t (the term (C_q v)_q of the Jacobian can be left out). Design advancedSolvers.md section 3.2. [log](exudynRevisionLog2026c.md#rg20-2-8)
+
 ### **OPEN_RG20.3** Adjoint sensitivities on the symbolic system for optimization
 
 Design section 3.3 (maintainer 2026-11-04: lowest priority; the step exists, but is not proposed to be done; no issue).

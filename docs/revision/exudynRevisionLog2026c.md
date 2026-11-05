@@ -5894,6 +5894,17 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py (maintainer's approval), with the ODE1, data
   and errorEstimate cases; symbolicTrapezoidalGGLStepSizeTest.py with 'twoSteps' on the ball.
 
+<a id="rg20-2-8"></a>
+### RG20.2.8 — index 3 at the stages alone, measured (2026-11-05)
+- Maintainer: why not c(Q_i) = 0 at both implicit stages of Radau IIA or Lobatto (or one multiplier for both), index 3
+  directly, which would spare the velocity constraints of the user items in C++? Measured with a scratch variant of
+  _SolveRungeKutta (pendulum 25/50/100 steps, slider crank 16/32): Radau IIA orders q/v/z 3/2/1, Lobatto IIIC 4/2/1,
+  the velocity constraint 4e-4 to 6e-4 (100 steps) - the theory of Hairer, Lubich, Roche; Lobatto IIIA 2/2/no
+  convergence; one shared multiplier the same or failing (IIIA). The velocities projected after the step: v of the
+  full order, z of order 1. The end form needs only c, C_q and c_t (C_q v + c_t, c_t numerical); without the term
+  H = (C_q v)_q in its Jacobian the results are the same with 3 % to 27 % more Newton iterations. Design
+  advancedSolvers.md section 3.2; no code change.
+
 <a id="rg20-6-1"></a>
 ### RG20.6.1 — The C++ solvers as they are (2026-11-05)
 - docs/dev/design/cppSolverStructure.md: the files and sizes, the classes (CSolverBase with the static, the implicit

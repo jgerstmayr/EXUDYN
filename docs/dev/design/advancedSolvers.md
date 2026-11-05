@@ -98,8 +98,38 @@ multipliers z (lambda); M a = f(q, v, t) - C_q^T z.
   | end: c(q1) = 0 only, one Z for the step | IIIA, IIIB, IIIC, IIIA-IIIB | 4 | 2 | 1-2 | drifts (O(h^2)) |
   | GGL at each implicit stage: c(Q_i) = 0, C_q V_i = 0, Q_i - C_q^T mu_i | IIIA, IIIC (`LobattoIIIC4-GGL`) | 4 | 4 | 2 | 1e-15 |
   | | Radau IIA | 3 | 3 | 2 | 1e-15 |
-  | c(Q_i) = 0 at all stages only (index 3) | IIIC | 4 | 2 | 1 | drifts |
-  | | IIIA | 2 | 2 | no convergence | drifts |
+  | c(Q_i) = 0 at each implicit stage only, Z_i per stage (index 3) | IIIC | 4 | 2 | 1 | 4e-4 (O(h^2)) |
+  | | Radau IIA | 3 | 2 | 1 | 6e-4 |
+  | | IIIA | 2 | 2 | no convergence | 1e-4 |
+  | the same, v projected onto C_q v + c_t = 0 after each step | IIIC | 4 | 4 | 1 | 1e-17 |
+  | | Radau IIA | 3 | 3 | 1 | 1e-17 |
+  | | IIIA | 3 | 3 | 1 | 1e-17 |
+  | end: c(q1) = 0 only, one Z for all implicit stages | IIIC, Radau IIA | 4, 3 | 2 | 1 | 4e-4 |
+  | | IIIA | Newton fails | | | |
+
+  (The velocity constraints of the last column: the pendulum with 100 steps on 1 s.)
+
+  **Index 3 at the stages alone** (maintainer's question 2026-11-05: c(Q_i) = 0 at the two implicit stages of Radau
+  IIA or Lobatto, without velocity constraints, would need no velocity constraints of the user items). Measured with
+  the stage solver, pendulum 25/50/100 steps, slider crank 16/32 steps: it converges for Radau IIA and Lobatto IIIC,
+  with the positions of the full order, but the velocities lose one (Radau) or two (Lobatto) orders and the
+  multipliers one - slider crank with 32 steps, Radau IIA: the velocity error 2.7e-3 against 6.9e-6 with the
+  constraints at the end, the multipliers 6e-2 against 2e-3. This is the theory (Hairer, Lubich, Roche 1989; Hairer,
+  Wanner II, VII.4): in q_t = v, M v_t = f - C_q^T z, c(q) = 0 the velocities are the index-2 and the multipliers the
+  index-3 components, of the global orders 2s - 1, s and s - 1 for an s-stage Radau IIA method (s = 2: 3, 2, 1), and
+  no stage equation fixes the velocity constraint, which drifts by O(h^2). Lobatto IIIA does not converge at all in
+  a and z: its first stage is the end of the previous step, and with |R(inf)| = 1 the errors of the algebraic
+  components are not damped. A projection of v after each step onto the velocity constraint gives back the order of
+  v, not that of z. One multiplier shared by the stages is no better and fails for IIIA.
+
+  **The velocity constraint needs nothing from the items** beyond an index-3 solver: it is C_q v + c_t, with the
+  Jacobian C_q that every constraint has for its reaction forces C_q^T z, and c_t, the partial derivative of the
+  position constraint by time (zero unless the constraint depends on t; numerical by two evaluations at t +- eps in
+  the Python solvers). No velocity-level implementation of a constraint (the `velocityLevel` variants of the C++
+  joints) is used. Its Jacobian has the term H = (C_q v)_q, the derivative of C_q along v; without it - C_q only -
+  the orders and errors are the same, and Newton takes 3 % (pendulum, 292 against 283 iterations) to 27 % (slider
+  crank, 84 against 66) more iterations. So the constraints at the end of the step, which keep all orders, need only
+  c, C_q and c_t, the same as an index-3 solver; they stay the form of `LobattoIIIA4` and `Radau3`.
 
   The unknowns per step (n coordinates, m constraints; maintainer's question 2026-11-04):
   - LobattoIIIA4: 2 n + 2 m. The first stage is the start of the step (its row of A is zero, A_1 = a0), so the
@@ -263,6 +293,10 @@ trapezoidal estimate first.
 
 Third answers: `LobattoIIIA4` (constraints at the end), `LobattoIIIC4-GGL` and `Radau3` are the three methods,
 IIIC-end and IIIA-GGL dropped; the formulas of the error estimates in this file and a better estimate (section 3.2).
+
+Fifth question (2026-11-05): index 3 at the stages alone, without velocity constraints - measured (section 3.2):
+the positions of the full order, the velocities and the multipliers not; the end constraints kept, as they need
+only c, C_q and c_t.
 
 Fourth answers: step doubling is no method of its own, only the reference of the true local error for the
 measurement; the estimate from the formulas evaluated without a solve - done with the stages of the previous step
