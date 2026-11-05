@@ -167,13 +167,13 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetState', cName='GetState',
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetDictionary', cName='GetDictionary',
-                        description="what the renderer holds besides visualizationSettings, as a dictionary (#2075): 'materials', the list of the materials as GraphicsMaterialList.GetDict gives them, 'scopeGraphics', the static graphics of the scopes as scopes.GetGraphics gives them, and 'states', the render states of the enabled views by their number, as GetState gives them; the textures are not in it",
+                        description="what the renderer holds besides visualizationSettings, as a dictionary (#2075): 'materials', the list of the materials as GraphicsMaterialList.GetDict gives them, 'scopeGraphics', the static graphics of the scopes as scopes.GetGraphics gives them, 'states', the render states of the enabled views by their number, as GetState gives them, and 'textures', the list of the textures as GetTexture gives them (#3268)",
                         example = r"""rendererData = SC.renderer.GetDictionary()\\SC.renderer.SetDictionary(rendererData)""",
                         returnType='dict',
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetDictionary', cName='SetDictionary',
-                        description="set the materials, the static graphics of the scopes and the render states of the views from a dictionary as GetDictionary gives it; a key left out stays as it is, an unknown key raises; materials beyond the existing ones are appended, and a state is set as SetState(state, waitForRendererFullStartup=False, viewID) sets it, which needs the view enabled",
+                        description="set the materials, the static graphics of the scopes, the render states of the views and the textures from a dictionary as GetDictionary gives it; a key left out stays as it is, an unknown key raises; materials beyond the existing ones are appended, a state is set as SetState(state, waitForRendererFullStartup=False, viewID) sets it, which needs the view enabled, and a texture is added as AddTexture adds it, replacing the image of its name",
                         argList=['values'],
                         argTypes=['dict'],
                         returnType='None',
@@ -243,6 +243,14 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='RemoveTexture', cName='RemoveTex
                         argList=['name'],
                         argTypes=['str'],
                         returnType='bool',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='GetTexture', cName='GetTexture',
+                        description="A texture as a dict (#3268): 'name', 'image', the pixels as AddTexture takes them - a numpy array of uint8 of shape (height, width) for TextureInterpretation.Grey and (height, width, channels) otherwise, its first row the top of the image -, 'interpretation', the name of the TextureInterpretation, e.g. 'RGB', and 'flags', the TextureFlags as int; GetDictionary and SC.GetDictionary give all textures this way, so that they can be saved, e.g. with SaveDictToHDF5; raises for an unknown name",
+                        example = r"""texture = SC.renderer.GetTexture('redTop')\\print(texture['image'].shape, texture['interpretation'])""",
+                        argList=['name'],
+                        argTypes=['str'],
+                        returnType='dict',
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetTextureNames', cName='GetTextureNames',

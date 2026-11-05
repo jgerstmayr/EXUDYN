@@ -6,6 +6,8 @@
 #           saved to an HDF5 file with exudyn.advancedUtilities.SaveDictToHDF5 and loaded with LoadDictFromHDF5 (if
 #           h5py is installed). The Staubli TX2-90L of exudyn.robotics.models with graphics, q0, friction and PD
 #           control: the loaded robot has the same dict, the same tool frame and the same motion in a kinematic tree.
+#           The texture of the tool graphics is in the dict (#3268): removed from the renderer, the loaded robot adds
+#           it again.
 #           The result is 1 if all checks pass plus the joint coordinates at the end, weighted by 1 to 6.
 #
 # Author:   Johannes Gerstmayr
@@ -53,14 +55,22 @@ robot = LinkDict2Robot(ManipulatorStaubliTX2_90L())
 robot.q0 = [0.1, 0.4, 1.2, -0.3, 0.8, 0.2]
 robot.SetJointFriction(viscous=0.5, coulomb=1.)
 robot.base.visualization.graphicsData = [graphics.Cylinder([0, 0, 0], [0, 0, 0.3], radius=0.2, color=graphics.color.grey)]
-robot.tool.visualization.graphicsData = [graphics.Brick([0, 0, 0.02], [0.05, 0.05, 0.04], color=graphics.color.red)]
+SC = exu.SystemContainer()
+textureImage = np.array([[[255, 0, 0], [255, 255, 255]], [[255, 255, 255], [255, 0, 0]]], dtype=np.uint8)
+SC.renderer.AddTexture('robotDictionaryTest.logo', textureImage, interpretation=exu.TextureInterpretation.RGB)
+robot.tool.visualization.graphicsData = [graphics.Brick([0, 0, 0.02], [0.05, 0.05, 0.04], color=graphics.color.red),
+                                         graphics.Quad([[-0.02, -0.02, 0.041], [0.02, -0.02, 0.041], [0.02, 0.02, 0.041], [-0.02, 0.02, 0.041]],
+                                                       texture='robotDictionaryTest.logo')]
 for link in robot.links:
     link.visualization.graphicsData = [graphics.Brick(link.COM, [0.1, 0.1, 0.2], color=graphics.color.lightgrey, addEdges=True)]
 
 robotDict = robot.GetDictionary()
+checks += [[texture['name'] for texture in robotDict['textures']] == ['robotDictionaryTest.logo']]
+SC.renderer.RemoveTexture('robotDictionaryTest.logo')
 robot2 = Robot()
 robot2.SetDictionary(robotDict)
 checks += [Equal(robotDict, robot2.GetDictionary())]
+checks += [np.array_equal(SC.renderer.GetTexture('robotDictionaryTest.logo')['image'], textureImage)]
 
 try:
     import h5py, scipy #both needed by SaveDictToHDF5
@@ -91,6 +101,7 @@ try:
 except ValueError:
     checks += [True]
 
+SC.renderer.RemoveTexture('robotDictionaryTest.logo')
 u = float(all(checks)) + q @ np.arange(1, 7) #the same with and without h5py
 exu.Print('checks:', checks)
 exu.Print('solution of robotDictionaryTest=', u)

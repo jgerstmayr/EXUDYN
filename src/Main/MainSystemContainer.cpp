@@ -72,6 +72,7 @@ py::dict MainSystemContainer::GetDictionary() const
 
 	d["renderState"] = PyGetRenderState();
 	d["visualizationSettings"] = EPyUtils::GetDictionary(GetVisualizationSystemContainer().GetVisualizationSettings());
+	d["textures"] = PyGetTextures(); //which the graphics data name (#3268)
 
 	//missing:
 	//d["cSystemData"]
@@ -89,6 +90,10 @@ void MainSystemContainer::SetDictionary(const py::dict& d)
 	{
 		PyError(STDstring("SetDictionary: Exudyn version is ") + EXUstd::exudynVersion +
 			", but loaded dictionary has been built with version " + py::cast<STDstring>(d["__version__"]) + "; you can disable this exception in exudyn.special.exceptions", PyErrorType::valueError);
+	}
+	if (d.contains("textures")) //before the systems, whose graphics data name them (#3268)
+	{
+		for (auto texture : py::list(d["textures"])) { PySetTexture(py::reinterpret_borrow<py::object>(texture)); }
 	}
 
 	py::list systemList = py::cast<py::list>(d["systems"]);
@@ -579,6 +584,63 @@ bool MainRenderer::RemoveTexture(const STDstring& name)
 std::vector<STDstring> MainRenderer::GetTextureNames() const
 {
 	return textureStore.GetNames();
+}
+
+py::dict MainRenderer::GetTexture(const STDstring& name) const
+{
+	return PyGetTexture(name);
+}
+
+//! the image as AddTexture takes it: uint8, (height, width) for one channel and (height, width, channels) otherwise,
+//! the first row at the top; the interpretation by its name, e.g. 'RGB', so that the dict can be saved as a file
+py::dict PyGetTexture(const STDstring& name)
+{
+	Index id = textureStore.GetID(name);
+	if (id == -1) { PyError("renderer.GetTexture: no texture has the name '" + name + "'", PyErrorType::valueError); }
+	Texture texture = textureStore.GetCopy(id);
+	std::vector<py::ssize_t> shape = { (py::ssize_t)texture.height, (py::ssize_t)texture.width };
+	if (texture.channels != 1) { shape.push_back((py::ssize_t)texture.channels); }
+	py::array_t<uint8_t> image(shape);
+	const size_t rowSize = (size_t)(texture.width * texture.channels);
+	for (Index row = 0; row < texture.height; row++) //the store holds the rows from the bottom
+	{
+		const unsigned char* source = texture.data.data() + (size_t)(texture.height - 1 - row) * rowSize;
+		std::copy(source, source + rowSize, image.mutable_data() + (size_t)row * rowSize);
+	}
+	py::dict d;
+	d["name"] = name;
+	d["image"] = image;
+	d["interpretation"] = EXUstd::ToString(texture.interpretation);
+	d["flags"] = texture.flags;
+	return d;
+}
+
+void PySetTexture(const py::object& textureDict)
+{
+	if (!py::isinstance<py::dict>(textureDict)) { PyError("SetTexture: a texture must be a dict with the keys name, image, interpretation and flags, as renderer.GetTexture gives it", PyErrorType::typeError); }
+	py::dict d = py::reinterpret_borrow<py::dict>(textureDict);
+	for (const char* key : { "name", "image", "interpretation", "flags" })
+	{
+		if (!d.contains(key)) { PyError(STDstring("SetTexture: the dict of a texture has no key '") + key + "'; the keys are name, image, interpretation and flags", PyErrorType::valueError); }
+	}
+	STDstring interpretationName = py::str(d["interpretation"]);
+	if (interpretationName.rfind("TextureInterpretation.", 0) == 0) { interpretationName = interpretationName.substr(22); } //also the enum itself
+	for (TextureInterpretation interpretation : { TextureInterpretation::Grey, TextureInterpretation::RGB, TextureInterpretation::RGBA, TextureInterpretation::RGBAMask })
+	{
+		if (EXUstd::ToString(interpretation) == interpretationName)
+		{
+			PyAddTexture(py::str(d["name"]), d["image"], interpretation, py::cast<Index>(d["flags"]), true);
+			return;
+		}
+	}
+	PyError("SetTexture: unknown interpretation '" + interpretationName + "'; it is Grey, RGB, RGBA or RGBAMask", PyErrorType::valueError);
+}
+
+py::list PyGetTextures()
+{
+	py::list textures;
+	for (const STDstring& name : textureStore.GetNames()) { textures.append(PyGetTexture(name)); }
+	return textures;
 }
 
 py::array_t<uint8_t> MainRenderer::RedrawAndGetImage(bool useRaytracer, Index viewID)
@@ -1087,6 +1149,7 @@ py::dict MainRenderer::GetDictionary() const
 		if (VSC.GetRenderViewData(viewID).renderState.viewEnabled) { states[py::int_(viewID)] = GetState(viewID); }
 	}
 	d["states"] = states;
+	d["textures"] = PyGetTextures();
 	return d;
 }
 
@@ -1095,10 +1158,15 @@ void MainRenderer::SetDictionary(const py::dict& d)
 	for (auto item : d)
 	{
 		STDstring key = py::str(item.first);
-		if (key != "materials" && key != "scopeGraphics" && key != "states")
+		if (key != "materials" && key != "scopeGraphics" && key != "states" && key != "textures")
 		{
-			PyError("renderer.SetDictionary: unknown key '" + key + "'; the keys are materials, scopeGraphics and states", PyErrorType::valueError);
+			PyError("renderer.SetDictionary: unknown key '" + key + "'; the keys are materials, scopeGraphics, states and textures", PyErrorType::valueError);
 		}
+	}
+	if (d.contains("textures")) //first, as the graphics may name them
+	{
+		for (auto texture : py::list(d["textures"])) { PySetTexture(py::reinterpret_borrow<py::object>(texture)); }
+		SendRedrawSignal();
 	}
 	if (d.contains("materials"))
 	{

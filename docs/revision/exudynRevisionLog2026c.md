@@ -6123,6 +6123,22 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - The TX2-90L with its URDF meshes: 7 MB, saved in 0.2 s, loaded in 0.02 s, the same dict after the round trip.
 - robotDictionaryTest.py (the HDF5 part needs h5py and scipy; the result does not depend on it).
 
+<a id="rg11-4-5"></a>
+### RG11.4.5 — the textures as dicts (2026-11-05, #3268)
+- Requested by the maintainer (2026-11-05): no image to dict and back, so that neither a Robot nor an mbs dict could
+  carry its textures.
+- SC.renderer.GetTexture(name): 'name', 'image' as AddTexture takes it (uint8, (height, width) for Grey and (height,
+  width, channels) otherwise, the first row at the top - the store holds the rows from the bottom), 'interpretation'
+  by its name (a string, so that the dict saves as a file; the enum is accepted back as well) and 'flags' as int.
+- 'textures', the list of all textures, in renderer.GetDictionary and SC.GetDictionary; their SetDictionary adds them
+  (SC: before the systems, whose graphics name them). The mbs dict has none: the textures are shared by all systems.
+- Robot.GetDictionary has the textures its graphics data name, SetDictionary adds them (by the module functions
+  _GetTexture and _SetTexture, as the robot has no SystemContainer).
+- Seen: SC.GetDictionary calls the deprecated SC.GetRenderState and warns (raised as an issue).
+- Found by robotDictionaryTest.py, whose tool graphics with a texture appeared in the next robot test models of the
+  suite: Robot(base=RobotBase(), tool=RobotTool()) and the visualization defaults of RobotBase and RobotTool were
+  objects shared by all robots; now None, a new object each.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

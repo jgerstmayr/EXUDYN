@@ -358,7 +358,7 @@ class VRobotTool:
 class RobotTool:
     """define tool of robot: containing graphics and HT (may add features in future)
     """
-    def __init__(self, HT=None, visualization=VRobotTool()):
+    def __init__(self, HT=None, visualization=None):
         """initialize robot tool
 
         Args:
@@ -366,7 +366,7 @@ class RobotTool:
             graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
         """
         self.HT = HT
-        self.visualization = visualization
+        self.visualization = VRobotTool() if visualization is None else visualization #a new one per tool: a default argument would be shared by all tools
 
     @property
     def HT(self):
@@ -395,7 +395,7 @@ class VRobotBase:
 class RobotBase:
     """define base of robot: containing graphics and HT (may add features in future)
     """
-    def __init__(self, HT=None, visualization=VRobotBase()):
+    def __init__(self, HT=None, visualization=None):
         """initialize robot base
 
         Args:
@@ -403,7 +403,7 @@ class RobotBase:
             graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
         """
         self.HT = HT
-        self.visualization = visualization
+        self.visualization = VRobotBase() if visualization is None else visualization
 
     @property
     def HT(self):
@@ -430,8 +430,8 @@ class Robot:
     """
     def __init__(self, 
                  gravity=[0,0,-9.81],
-                 base = RobotBase(),
-                 tool = RobotTool(),
+                 base = None,
+                 tool = None,
                  referenceConfiguration = [],
                  q0 = None,
                  enableEndStops = False,
@@ -440,8 +440,8 @@ class Robot:
         """initialize robot class
 
         Args:
-            base: definition of base using RobotBase() class
-            tool: definition of tool using RobotTool() class
+            base: definition of base using RobotBase() class; None: a new RobotBase()
+            tool: definition of tool using RobotTool() class; None: a new RobotTool()
             gravity: a list or 3D numpy array defining gravity
             referenceConfiguration: a list of scalar quantities defining the parameters for reference configuration
             q0: the initial joint coordinates of the models of CreateKinematicTree and CreateRedundantCoordinateMBS; None: the referenceConfiguration
@@ -449,8 +449,8 @@ class Robot:
             frictionRegularization: the joint velocity (rad/s or m/s) below which the Coulomb friction of the links is linear in the velocity
         """
         self.gravity = np.array(gravity)
-        self.base = base
-        self.tool = tool
+        self.base = RobotBase() if base is None else base #new ones per robot: default arguments would be shared by all robots
+        self.tool = RobotTool() if tool is None else tool
         self.referenceConfiguration = np.array(referenceConfiguration)
         self.q0 = q0
         self.enableEndStops = enableEndStops
@@ -507,10 +507,10 @@ class Robot:
         return str(self)
 
     def GetDictionary(self):
-        """the robot as a dict of its parameters, links, base and tool with their graphics data (#3267), for
-        SetDictionary; save and load it, e.g., with exudyn.advancedUtilities.SaveDictToHDF5 and LoadDictFromHDF5; the
-        textures that the graphics data name are not included; the data of a created model (SetControl, the item numbers)
-        are not included either
+        """the robot as a dict of its parameters, links, base and tool with their graphics data (#3267) and the
+        textures that the graphics data name, as renderer.GetTexture gives them (#3268), for SetDictionary; save and load
+        it, e.g., with exudyn.advancedUtilities.SaveDictToHDF5 and LoadDictFromHDF5; the data of a created model
+        (SetControl, the item numbers) are not included
 
         Returns:
             a dict of numbers, strings, lists and numpy arrays
@@ -527,16 +527,29 @@ class Robot:
                        'endStopDamping': link.endStopDamping,
                        'visualization': dict({key: getattr(link.visualization, key) for key in linkVisualizationKeys},
                                              graphicsData=list(link.visualization.graphicsData))}]
+        #the textures of the graphics data; a name without texture is drawn without and left out
+        textureNames = []
+        for graphicsList in [self.base.visualization.graphicsData, self.tool.visualization.graphicsData] + [link.visualization.graphicsData for link in self.links]:
+            for data in graphicsList:
+                if isinstance(data, dict) and 'texture' in data and data['texture'] not in textureNames:
+                    textureNames += [data['texture']]
+        textures = []
+        for name in textureNames:
+            try:
+                textures += [exudyn._compiledModule._GetTexture(name)]
+            except ValueError:
+                pass
         return {'dictionaryType': 'Robot',
                 'gravity': np.array(self.gravity), 'referenceConfiguration': np.array(self.referenceConfiguration),
                 'q0': self._q0, 'enableEndStops': self.enableEndStops,
                 'frictionRegularization': self.frictionRegularization,
                 'base': {'HT': self.base.HT.HT44(), 'graphicsData': list(self.base.visualization.graphicsData)},
                 'tool': {'HT': self.tool.HT.HT44(), 'graphicsData': list(self.tool.visualization.graphicsData)},
-                'links': links}
+                'links': links, 'textures': textures}
 
     def SetDictionary(self, robotDict):
-        """set the robot from a dict of GetDictionary (#3267), replacing its links, base and tool
+        """set the robot from a dict of GetDictionary (#3267), replacing its links, base and tool; the textures of
+        the dict are added as renderer.AddTexture adds them, replacing the images of their names (#3268)
 
         Args:
             robotDict: the dict, e.g. loaded with exudyn.advancedUtilities.LoadDictFromHDF5
@@ -567,6 +580,8 @@ class Robot:
                                    endStopDamping=linkDict['endStopDamping']))
         self.referenceConfiguration = np.array(robotDict['referenceConfiguration'], dtype=float)
         self.q0 = robotDict['q0']
+        for texture in robotDict.get('textures', []):
+            exudyn._compiledModule._SetTexture(texture)
 
     def AddLink(self, robotLink):
         """add a link to serial robot

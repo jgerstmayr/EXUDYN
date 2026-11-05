@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.382.dev1
+- Exudyn version = 1.13.383.dev1
 - last change = 2026-11-05
 - Number of issues = 3271
-- Number of resolved issues = 3159 (382 in current version)
+- Number of resolved issues = 3160 (383 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Images in dicts: textures of graphics data and of the renderer to and from a dict (#3268)
-  - description: There is no conversion of an image (the textures added by SC.renderer.AddTexture and referenced by graphics data) into a dict and back, so a dict of an mbs, the renderer or a Robot cannot carry its textures. Proposed: an image as a dict of its size, interpretation, flags and pixel array, written by the GetDictionary functions and read by SetDictionary and by the HDF5 load and save.
-  - date raised: 2026-11-05
 - `CHECK` `LOW EFF` `raised by: Claude-JG` generalized-alpha: an ODE1 coordinate coupled to ODE2 coordinates converges with order 1 (#3258)
   - description: In the genericDAE model of modelLibrary.py (an ObjectGenericDAE pendulum with a first order lag of its horizontal position on an ODE1 coordinate) SolveDynamic with generalized-alpha gives the ODE2 coordinates with order 2 and the ODE1 coordinate with order 1 (errors 3.2e-5, 1.7e-5, 8.9e-6 for the steps 4e-3, 2e-3, 1e-3, also with spectral radius 1), found by python/testing/solverStudy.py. To be analyzed: how the ODE1 equations are discretized in the generalized-alpha solver and whether the coupling or the ODE1 scheme itself is first order.
   - date raised: 2026-11-05

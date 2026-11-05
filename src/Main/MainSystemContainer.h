@@ -221,6 +221,8 @@ public:
 	bool RemoveTexture(const STDstring& name);
 	//! the names of the textures
 	std::vector<STDstring> GetTextureNames() const;
+	//! a texture as a dict, see PyGetTexture (#3268)
+	py::dict GetTexture(const STDstring& name) const;
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -241,6 +243,12 @@ public:
 //! add a texture to the TextureStore from a numpy image (#3029); allowReserved: also names starting with 'exudyn.'
 void PyAddTexture(const STDstring& name, const py::object& image, TextureInterpretation interpretation,
 	Index flags, bool allowReserved);
+//! a texture of the TextureStore as a dict of its name, image, interpretation and flags (#3268)
+py::dict PyGetTexture(const STDstring& name);
+//! add a texture from a dict of PyGetTexture (#3268); also names starting with 'exudyn.'
+void PySetTexture(const py::object& textureDict);
+//! all textures of the TextureStore as a list of dicts of PyGetTexture (#3268)
+py::list PyGetTextures();
 
 //! This is the extension of SystemContainer, which contains all objects needed for management and in the Python world.
 //  The System objects have their corresponding python object, which contains a pointer to the system (main) objects.

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 367 | 1.13.382 |
+| 1.13 | Newborn | 368 | 1.13.383 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.383** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Images in dicts: textures of graphics data and of the renderer to and from a dict (#3268)
+  - description: There is no conversion of an image (the textures added by SC.renderer.AddTexture and referenced by graphics data) into a dict and back, so a dict of an mbs, the renderer or a Robot cannot carry its textures. Proposed: an image as a dict of its size, interpretation, flags and pixel array, written by the GetDictionary functions and read by SetDictionary and by the HDF5 load and save.
+  - **notes:** SC.renderer.GetTexture(name) gives a texture as a dict of name, image (uint8, the first row at the top, as AddTexture takes it), interpretation (its name, e.g. 'RGB') and flags; SC.renderer.GetDictionary and SC.GetDictionary contain all textures under 'textures', and their SetDictionary adds them again; Robot.GetDictionary contains the textures its graphics data name, SetDictionary adds them, so that they are saved with SaveDictToHDF5. A Robot without base or tool, and a RobotBase or RobotTool without visualization, gets its own object instead of one shared by all.
+  - date resolved: **2026-11-05 21:12**, date raised: 2026-11-05
 - **1.13.382** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Save and load a Robot of exudyn.robotics, e.g. as HDF5 file (#3267)
   - description: A Robot imported from a URDF or built from a model (e.g. the Staubli TX2-90L of the joint frames with the graphics of its URDF) cannot be stored: the links, base, tool, their HTs and the graphics data must be written into a dict and read back. Proposed: Robot.GetDictionary and Robot.SetDictionary (or a Robot built from the dict), saved and loaded with SaveDictToHDF5 and LoadDictFromHDF5, extended where needed; textures of the graphics need the images in dicts (separate issue).
   - **notes:** Robot.GetDictionary() and Robot.SetDictionary(robotDict) of exudyn.robotics store and rebuild a robot with its parameters, links, base, tool and their graphics data, e.g. saved with exudyn.advancedUtilities.SaveDictToHDF5 and loaded with LoadDictFromHDF5; SaveDictToHDF5 stores a list of only int or only float values as one dataset, so that meshes are saved in a fraction of a second; the textures named by the graphics data are not included.

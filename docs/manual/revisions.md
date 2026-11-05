@@ -387,7 +387,11 @@ raytracer; 6-node triangles with a texture become four flat ones. `graphics.Quad
 `texture=name`, and `graphics.ProjectTexture` gives any TriangleList texture coordinates by a planar, box, cylindrical
 or spherical projection. `visualizationSettings.openGL.showTextures = False` draws the colors of the points instead.
 `SC.renderer.GetGraphicsData()` returns the textured triangles under `texturedTriangles`. `texturesExample.py` shows a
-wooden floor and a cylinder with a computed pattern, rendered with the raytracer.
+wooden floor and a cylinder with a computed pattern, rendered with the raytracer. `SC.renderer.GetTexture(name)` gives
+a texture as a dict - `name`, `image` (uint8, first row at the top), `interpretation` (its name, e.g. `'RGB'`) and
+`flags` -; `SC.renderer.GetDictionary()` and `SC.GetDictionary()` contain all textures this way under `'textures'`,
+their `SetDictionary` adds them again, and `Robot.GetDictionary()` contains those its graphics name, so that they are
+saved, e.g. with `SaveDictToHDF5` (#3268).
 
 **Bits combine with `|`**: the values of `OutputVariableType`, `NodeType`, `MarkerType`, `CrossSectionType`,
 `LinearSolverType` and `TextureFlags` combine with `|` and `&` into an int, as in C++ (#3037).
@@ -502,7 +506,9 @@ spring-dampers act about the joint axis also for `'Rx'` and `'Ry'`, and its firs
 it measures. `LinkDict2Robot` passes the `jointLimits` of the models (#3270).
 `Robot.GetDictionary()` and `Robot.SetDictionary(robotDict)` store and rebuild a robot with its links, base, tool and
 their graphics data; `exudyn.advancedUtilities.SaveDictToHDF5` saves the dict, and stores a list of only int or only
-float values as one dataset (#3267).
+float values as one dataset (#3267). A Robot created without `base` or `tool`, and a RobotBase or RobotTool without
+`visualization`, gets its own: before, all of them shared one object, so that the tool graphics of one robot appeared on
+every other robot (#3268).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

@@ -12,8 +12,10 @@ You can view and download this file on Github: [rendererDictionaryTest.py](https
 #
 # Details:  SC.renderer.GetDictionary and SetDictionary (#2075): the materials, the static graphics of the scopes and
 #           the render states of the enabled views of one SystemContainer, changed and set on a second one, which then
-#           gives the same dictionary; a key left out stays, an unknown key is refused. exudyn.config has its
-#           GetDictionary and SetDictionary too.
+#           gives the same dictionary; a key left out stays, an unknown key is refused. The textures as dicts (#3268):
+#           SC.renderer.GetTexture gives the image as AddTexture took it, for one, three and four channels; a texture
+#           removed is added again from its dict by SetDictionary; SC.GetDictionary has the textures too.
+#           exudyn.config has its GetDictionary and SetDictionary too.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-05
@@ -34,7 +36,7 @@ def Check(condition, message):
 
 SC = exu.SystemContainer()
 values = SC.renderer.GetDictionary()
-Check(sorted(values.keys()) == ['materials', 'scopeGraphics', 'states'], 'keys: ' + str(values.keys()))
+Check(sorted(values.keys()) == ['materials', 'scopeGraphics', 'states', 'textures'], 'keys: ' + str(values.keys()))
 Check(len(values['materials']) == 10 and values['scopeGraphics'] == [] and list(values['states'].keys()) == [0],
       'the defaults: ten materials, no static graphics, the state of view 0')
 
@@ -60,6 +62,37 @@ try:
     Check(False, 'an unknown key is not refused')
 except exu.ExudynError:
     pass
+
+#the textures as dicts (#3268): the image as it was added, the first row at the top
+imageRGB = np.array([[[255, 0, 0], [0, 255, 0], [0, 0, 255]], [[10, 20, 30], [40, 50, 60], [70, 80, 90]]], dtype=np.uint8)
+imageGrey = np.array([[0., 0.5], [1., 0.25]])
+imageRGBA = np.random.default_rng(1).integers(0, 256, size=(4, 5, 4)).astype(np.uint8)
+SC.renderer.AddTexture('dictTestRGB', imageRGB, interpretation=exu.TextureInterpretation.RGB, flags=exu.TextureFlags.Nearest)
+SC.renderer.AddTexture('dictTestGrey', imageGrey, interpretation=exu.TextureInterpretation.Grey)
+SC.renderer.AddTexture('dictTestRGBA', imageRGBA, interpretation=exu.TextureInterpretation.RGBAMask,
+                       flags=exu.TextureFlags.Clamp | exu.TextureFlags.Replace)
+texture = SC.renderer.GetTexture('dictTestRGB')
+Check(np.array_equal(texture['image'], imageRGB) and texture['image'].dtype == np.uint8 and texture['interpretation'] == 'RGB'
+      and texture['flags'] == int(exu.TextureFlags.Nearest) and texture['name'] == 'dictTestRGB', 'GetTexture RGB')
+textureGrey = SC.renderer.GetTexture('dictTestGrey')
+Check(np.array_equal(textureGrey['image'], np.round(imageGrey*255)) and textureGrey['image'].shape == (2, 2)
+      and textureGrey['interpretation'] == 'Grey', 'GetTexture Grey')
+textureRGBA = SC.renderer.GetTexture('dictTestRGBA')
+Check(np.array_equal(textureRGBA['image'], imageRGBA) and textureRGBA['interpretation'] == 'RGBAMask'
+      and textureRGBA['flags'] == int(exu.TextureFlags.Clamp | exu.TextureFlags.Replace), 'GetTexture RGBA')
+Check([t['name'] for t in SC.renderer.GetDictionary()['textures'] if t['name'].startswith('dictTest')]
+      == ['dictTestRGB', 'dictTestGrey', 'dictTestRGBA'], 'the textures of GetDictionary')
+Check('dictTestRGB' in [t['name'] for t in SC.GetDictionary()['textures']], 'the textures of SC.GetDictionary')
+SC.renderer.RemoveTexture('dictTestRGB')
+SC2.renderer.SetDictionary({'textures': [texture]})
+Check(np.array_equal(SC.renderer.GetTexture('dictTestRGB')['image'], imageRGB), 'a texture added again from its dict')
+try:
+    SC.renderer.GetTexture('noTexture')
+    Check(False, 'an unknown texture is not refused')
+except exu.ExudynError:
+    pass
+for name in ['dictTestRGB', 'dictTestGrey', 'dictTestRGBA']:
+    SC.renderer.RemoveTexture(name)
 
 #exudyn.config: the same pair
 config = exu.config.GetDictionary()

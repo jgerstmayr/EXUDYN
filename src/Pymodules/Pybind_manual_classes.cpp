@@ -740,6 +740,9 @@ void Init_Pybind_manual_classes(py::module& m) {
 		Index flags) { PyAddTexture(name, image, interpretation, flags, true); },
 		"internal: add a texture; names starting with 'exudyn.' are allowed", py::arg("name"), py::arg("image"),
 		py::arg("interpretation"), py::arg("flags")); //no defaults: the enums are registered after this
+	//a texture as a dict and back, e.g. for the dict of a Robot (#3268)
+	m.def("_GetTexture", &PyGetTexture, "internal: a texture as a dict, as renderer.GetTexture", py::arg("name"));
+	m.def("_SetTexture", &PySetTexture, "internal: add a texture from a dict of renderer.GetTexture; names starting with 'exudyn.' are allowed", py::arg("textureDict"));
 
 	//the images of the icons of the icon bar, for their test (#3026): a list of [name, uint8 array (64, 64, 4)], first row at the top
 	m.def("_IconBarImages", []() {

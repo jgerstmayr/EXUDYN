@@ -4399,7 +4399,7 @@ class Renderer:
         ...
     @overload
     def GetDictionary(self) -> dict: 
-        """What the renderer holds besides visualizationSettings, as a dictionary (#2075): 'materials', the list of the materials as GraphicsMaterialList.GetDict gives them, 'scopeGraphics', the static graphics of the scopes as scopes.GetGraphics gives them, and 'states', the render states of the enabled views by their number, as GetState gives them; the textures are not in it.
+        """What the renderer holds besides visualizationSettings, as a dictionary (#2075): 'materials', the list of the materials as GraphicsMaterialList.GetDict gives them, 'scopeGraphics', the static graphics of the scopes as scopes.GetGraphics gives them, 'states', the render states of the enabled views by their number, as GetState gives them, and 'textures', the list of the textures as GetTexture gives them (#3268).
         
         Examples:
             rendererData = SC.renderer.GetDictionary()
@@ -4408,7 +4408,7 @@ class Renderer:
         ...
     @overload
     def SetDictionary(self, values: dict) -> None: 
-        """Set the materials, the static graphics of the scopes and the render states of the views from a dictionary as GetDictionary gives it; a key left out stays as it is, an unknown key raises; materials beyond the existing ones are appended, and a state is set as SetState(state, waitForRendererFullStartup=False, viewID) sets it, which needs the view enabled."""
+        """Set the materials, the static graphics of the scopes, the render states of the views and the textures from a dictionary as GetDictionary gives it; a key left out stays as it is, an unknown key raises; materials beyond the existing ones are appended, a state is set as SetState(state, waitForRendererFullStartup=False, viewID) sets it, which needs the view enabled, and a texture is added as AddTexture adds it, replacing the image of its name."""
         ...
     @overload
     def SetState(self, renderState: dict, waitForRendererFullStartup: bool=True, viewID: int=0) -> None: 
@@ -4463,6 +4463,17 @@ class Renderer:
     @overload
     def RemoveTexture(self, name: str) -> bool: 
         """Remove a texture by its name; triangles that refer to it are drawn without texture; returns False if no texture has this name."""
+        ...
+    @overload
+    def GetTexture(self, name: str) -> dict: 
+        """A texture as a dict (#3268): 'name', 'image', the pixels as AddTexture takes them - a numpy array of uint8 of shape (height, width) for TextureInterpretation.Grey and (height, width, channels) otherwise, its first row the top of the image -, 'interpretation', the name of the TextureInterpretation, e.g. 'RGB', and 'flags', the TextureFlags as int; GetDictionary and SC.GetDictionary give all textures this way, so that they can be saved, e.g.
+        
+        with SaveDictToHDF5; raises for an unknown name
+        
+        Examples:
+            texture = SC.renderer.GetTexture('redTop')
+            print(texture['image'].shape, texture['interpretation'])
+        """
         ...
     @overload
     def GetTextureNames(self) -> list[str]: 

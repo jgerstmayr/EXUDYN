@@ -101,7 +101,7 @@ The class **MainRenderer** has the following **functions and structures**:
   print(renderState['zoom'])
   ```
 
-- **`GetDictionary()`**: what the renderer holds besides visualizationSettings, as a dictionary (#2075): 'materials', the list of the materials as GraphicsMaterialList.GetDict gives them, 'scopeGraphics', the static graphics of the scopes as scopes.GetGraphics gives them, and 'states', the render states of the enabled views by their number, as GetState gives them; the textures are not in it
+- **`GetDictionary()`**: what the renderer holds besides visualizationSettings, as a dictionary (#2075): 'materials', the list of the materials as GraphicsMaterialList.GetDict gives them, 'scopeGraphics', the static graphics of the scopes as scopes.GetGraphics gives them, 'states', the render states of the enabled views by their number, as GetState gives them, and 'textures', the list of the textures as GetTexture gives them (#3268)
 
   *Example*:
 
@@ -110,7 +110,7 @@ The class **MainRenderer** has the following **functions and structures**:
   SC.renderer.SetDictionary(rendererData)
   ```
 
-- **`SetDictionary(values)`**: set the materials, the static graphics of the scopes and the render states of the views from a dictionary as GetDictionary gives it; a key left out stays as it is, an unknown key raises; materials beyond the existing ones are appended, and a state is set as SetState(state, waitForRendererFullStartup=False, viewID) sets it, which needs the view enabled
+- **`SetDictionary(values)`**: set the materials, the static graphics of the scopes, the render states of the views and the textures from a dictionary as GetDictionary gives it; a key left out stays as it is, an unknown key raises; materials beyond the existing ones are appended, a state is set as SetState(state, waitForRendererFullStartup=False, viewID) sets it, which needs the view enabled, and a texture is added as AddTexture adds it, replacing the image of its name
 - **`SetState(renderState, waitForRendererFullStartup = True, viewID = 0)`**: Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; waitForRendererFullStartup is used to wait at startup for the first frame to be drawn (and zoom all to be set), but be be set False in case of performance issues; NOTE: before setting available state values, this function may also first initialize renderState from visualizationSettings (if renderer is inactive)
 
   *Example*:
@@ -147,6 +147,15 @@ The class **MainRenderer** has the following **functions and structures**:
   ```
 
 - **`RemoveTexture(name)`**: Remove a texture by its name; triangles that refer to it are drawn without texture; returns False if no texture has this name
+- **`GetTexture(name)`**: A texture as a dict (#3268): 'name', 'image', the pixels as AddTexture takes them - a numpy array of uint8 of shape (height, width) for TextureInterpretation.Grey and (height, width, channels) otherwise, its first row the top of the image -, 'interpretation', the name of the TextureInterpretation, e.g. 'RGB', and 'flags', the TextureFlags as int; GetDictionary and SC.GetDictionary give all textures this way, so that they can be saved, e.g. with SaveDictToHDF5; raises for an unknown name
+
+  *Example*:
+
+  ```python
+  texture = SC.renderer.GetTexture('redTop')
+  print(texture['image'].shape, texture['interpretation'])
+  ```
+
 - **`GetTextureNames()`**: The names of the textures added with AddTexture, in the order they were added
 - **`materials`**: GraphicsMaterialList used for raytracer (possibly for OpenGL in future); list can be accessed with [] operator, reset and extended. Note that after Reset() there are at least 10 materials available, which are copied from visualizationSettings.raytracer.materials which are synced continuously (`returns a reference`)
 - **`scopes`**: RendererScopes: lines, texts and points drawn in the scopes of the views, in the coordinates of their graphs (#3237) (`returns a reference`)
