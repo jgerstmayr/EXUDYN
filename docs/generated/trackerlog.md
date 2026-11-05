@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.369.dev1
+- Exudyn version = 1.13.370.dev1
 - last change = 2026-11-05
 - Number of issues = 3257
-- Number of resolved issues = 3146 (369 in current version)
+- Number of resolved issues = 3147 (370 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9103,10 +9103,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: replace CopyDictLevel1 with function that takes visualization and VItemClass in all self.visualization inits and either call VItemClass(\*\*visualization) if visualization is a dict, or store VItemClass object; this would enable to accept visualization as dict with only non-default values set; add try-except for dict-based call
   - **remarks:** planned as revision2026b step RG12.44 (triage 2026-10-07)
   - date raised: 2026-04-17
-- `FIX` `LOW EFF` SliderCrank Benchmark (#2326)
-  - description: adapt TestModels/sliderCrank3Dbenchmark.py to revised IFToMM model
-  - **remarks:** planned as revision2026b step RG2.6 (triage 2026-10-07)
-  - date raised: 2026-03-23
 - `DOCU` `LOW EFF` GenericJoint (#2325)
   - description: improve documentation, in particular about order of axes for case of 1 and 2 rotation axes constrained
   - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)

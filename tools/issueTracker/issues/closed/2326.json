@@ -1,0 +1,15 @@
+{
+  "number": 2326,
+  "title": "SliderCrank Benchmark",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "adapt TestModels/sliderCrank3Dbenchmark.py to revised IFToMM model",
+  "dateRaised": "2026-03-23",
+  "deadline": "2026-09-19",
+  "dateResolved": "2026-11-05 09:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "sliderCrank3Dbenchmark.py is the IFToMM spatial slider-crank model of 2026: Lie group nodes, the joints in the body frames, 5 s with the step 1e-4 and the results file of the benchmark when run directly, 0.5 s as test model; optional timings of 10 runs.",
+  "resolvedInVersion": "1.13.370"
+}

@@ -5894,7 +5894,19 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py (maintainer's approval), with the ODE1, data
   and errorEstimate cases; symbolicTrapezoidalGGLStepSizeTest.py with 'twoSteps' on the ball.
 
-<a id="rg19-2-3"></a>
+<a id="rg2-9-3"></a>
+### RG2.9.3 — sliderCrank3Dbenchmark on the IFToMM model of 2026 (2026-11-05, #2326)
+- Maintainer: the file of tmp/IftommSlidercrank2026 (made with Exudyn 1.10: Lie group nodes, AddRigidBody, joints by
+  markers in the body frames, 5 s with the step 1e-4, the results file of the benchmark, timings of 10 runs) replaces
+  the test model, cleaned up, the reference value computed again; directly the settings of the file, as test 0.5 s.
+- Cleaned: CreateRigidBody with NodeType.RotationRotationVector (the same NodeRigidBodyRotVecLG), sensors stored
+  internally, PlotSensor instead of the figures for the paper, the results file (time, slider position, crank angle
+  every 0.01 s) written through OutputFilePath, doTimings kept (10 runs without graphics and sensors); sys.exudynFast
+  dropped (the module is chosen by EXUDYN_MODULE now).
+- Against the results file of 1.10: the slider position differs by at most 8.9e-7 m, the crank angle by 3.5e-5 rad
+  over the 5 s (54.3 rad), at 0.5 s by 2e-7 rad. The test runs 0.32 s; its value 5.7911915103432765. The entry of the
+  AVX2 list was removed: the model is new, its fast-module value is recorded from the next '_fast' log if it differs.
+
 ### RG19.2.3 — the URDF import in exudyn.robotics.urdfImport (2026-11-05, #3256)
 - Decision 1 of the design (maintainer 2026-11-05): GetRoboticsToolboxInternalModel, LoadURDFrobot and
   GetURDFrobotData moved unchanged from robotics/utilities.py to robotics/urdfImport.py; utilities.py keeps AddLidar

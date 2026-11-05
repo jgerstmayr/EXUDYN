@@ -299,7 +299,7 @@ def TestExamplesReferenceSolution():
         #depends on which numpy release built the marker positions. It is the value numpy
         #2.2.4 produced and the one an explicit sum produces; the old 7.256859912845965 was
         #what numpy 2.4.6's matmul happened to give
-        'sliderCrank3Dbenchmark.py':7.2568600591641665, #2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 7.256860059072022; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 7.256859912753395; 2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 7.256859914829453;              #new 2026-09-11; tEnd shortened 5->0.5, the value the file itself calls converged
+        'sliderCrank3Dbenchmark.py':5.7911915103432765, #2026-11-05: the IFToMM model of 2026 (#2326) - Lie group nodes, joints in the body frames, generalized-alpha with the default spectral radius - replaces the former model (Euler parameters, 7.2568600591641665); tEnd 0.5 of the 5 s of the benchmark
         'sliderCrank3Dtest.py':3.3642761721569, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 3.364276178092191
         'sliderCrankFloatingTest.py':0.5916491633788337,
         'solverExplicitODE1ODE2test.py':3.3767933275918964,         #new 2022-07-11 (CState Parallel); 
@@ -752,7 +752,6 @@ def AVX2ReferenceSolutionUpdate():
         'explicitSolversPostNewtonTest.py':       4.5634820142002335,         #drift 1.2e-08
         'ANCFbeltDrive.py':                       -0.0011715990134786303,    #drift 1.0e-08
         'geometricallyExactBeamRightAngleFrame.py':3.306181716261244,         #drift 6.2e-09
-        'sliderCrank3Dbenchmark.py':              7.256859914928583,         #drift 2.2e-09
         'computeItemTest.py':                     71.26280786921733,         #drift 2.0e-09
         'bricardMechanism.py':                    4.1721896493074,           #drift 1.7e-09
         'coordinateSpringDamperExt.py':           17.084935539925155,        #drift 5.8e-10

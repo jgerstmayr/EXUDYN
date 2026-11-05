@@ -60,7 +60,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG1.2 Tag the past releases whose commits can be identified
 - **RG2** Testing and verification
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
-  - RG2.9 Add three old test models (3 open sub-steps)
+  - RG2.9 Add three old test models (2 open sub-steps)
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
@@ -131,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | group | status | open steps | title |
 |---|---|---|---|
 | RG1 | OPEN | 1 | Release and publication |
-| RG2 | OPEN | 5 | Testing and verification |
+| RG2 | OPEN | 4 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 5 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
@@ -180,9 +180,9 @@ What the test suite, the examples and pytest do not cover. Open without a step: 
 
 #591.
 
-#### **OPEN_RG2.9.3** Adapt sliderCrank3Dbenchmark to the revised IFToMM model
+#### **CLOSED_RG2.9.3** Adapt sliderCrank3Dbenchmark to the revised IFToMM model
 
-#2326.
+CLOSED 2026-11-05 (#2326): the IFToMM model of 2026 (Lie group nodes, joints in the body frames) replaces the test model, cleaned up; 5 s and the benchmark's results file directly, 0.5 s as test; the slider position within 8.9e-7 m of the 1.10 results. [log](exudynRevisionLog2026c.md#rg2-9-3)
 
 ### **CLOSED_RG2.10** Limit the threads of the numerical libraries in the processes of the parallel examples run
 

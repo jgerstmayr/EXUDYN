@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 354 | 1.13.369 |
+| 1.13 | Newborn | 355 | 1.13.370 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.370** `FIX` `LOW EFF` `resolved by: Claude-JG` SliderCrank Benchmark (#2326)
+  - description: adapt TestModels/sliderCrank3Dbenchmark.py to revised IFToMM model
+  - **notes:** sliderCrank3Dbenchmark.py is the IFToMM spatial slider-crank model of 2026: Lie group nodes, the joints in the body frames, 5 s with the step 1e-4 and the results file of the benchmark when run directly, 0.5 s as test model; optional timings of 10 runs.
+  - date resolved: **2026-11-05 09:25**, date raised: 2026-03-23
 - **1.13.369** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics: the URDF import in its own module exudyn.robotics.urdfImport (#3256)
   - description: GetRoboticsToolboxInternalModel, LoadURDFrobot and GetURDFrobotData were in exudyn.robotics.utilities together with AddLidar. Decided: they move to exudyn.robotics.urdfImport (lowerCamelCase as the other module files), unchanged; the names in utilities stay as deprecated wrappers; the examples import from urdfImport.
   - **notes:** robotics: GetRoboticsToolboxInternalModel, LoadURDFrobot and GetURDFrobotData are in the new module exudyn.robotics.urdfImport; the names in exudyn.robotics.utilities are deprecated.
