@@ -234,7 +234,7 @@ class RobotTool:
         """initialize robot tool
 
         Args:
-            HT: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool, stored as exudyn.HT; default (None) = identity
+            HT: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from the frame of the last link (after its localHT, as Robot.LinkHT) to the tool, stored as exudyn.HT; default (None) = identity
             graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
         """
         self.HT = HT
@@ -648,13 +648,13 @@ class Robot:
             if len(linkVisualization.graphicsData) != 0:
                 graphicsDataLink += linkVisualization.graphicsData
 
-            #add transformed graphicsData of tool to link graphics
+            #add transformed graphicsData of tool to link graphics; the tool is relative to the frame of the last link,
+            #the graphics of the tree to its joint frame (#3255)
             if (i==len(self.links)-1 and #tool
                 self.tool.visualization.graphicsData != []):
-                pOff = self.tool.HT.translation
-                Aoff = self.tool.HT.rotation
+                toolHT = link.localHT * self.tool.HT
                 for data in self.tool.visualization.graphicsData:
-                    graphicsDataLink += [exudyn.graphics.Move(data, pOff, Aoff)] 
+                    graphicsDataLink += [exudyn.graphics.Move(data, toolHT.translation, toolHT.rotation)] 
 
             graphicsDataList += [graphicsDataLink]
         
@@ -1157,9 +1157,10 @@ class InverseKinematicsNumerical():
 
         self.robotDict = self.robot.CreateKinematicTree(self.mbsIK)
         
-        #the tool frame, with its rotation, is the marker's (#2745): the sensors read the pose of the tool center point
-        self.mTool = self.mbsIK.AddMarker(eii.MarkerKinematicTreeRigid(objectNumber=self.robotDict['objectKinematicTree'], linkNumber=self.nLinks-1, 
-                                                                           localHT=self.robot.tool.HT))
+        #the tool frame, with its rotation, is the marker's (#2745): the sensors read the pose of the tool center point;
+        #the tool is relative to the frame of the last link, the marker to its joint frame (#3255)
+        self.mTool = self.mbsIK.AddMarker(eii.MarkerKinematicTreeRigid(objectNumber=self.robotDict['objectKinematicTree'], linkNumber=self.nLinks-1,
+                                                                           localHT=self.robot.links[-1].localHT*self.robot.tool.HT))
         
         self.sToolTrans = self.mbsIK.AddSensor(eii.SensorMarker(markerNumber=self.mTool, 
                                               outputVariableType=exudyn.OutputVariableType.Position, storeInternal=False))
@@ -1238,7 +1239,7 @@ class InverseKinematicsNumerical():
         rotAng = np.linalg.norm(rot12, 2) # rotation vector is angle * normalized rotation axis 
 
 
-        n = min(minSteps, 1+int(rotAng/rotStep)) # number of steps
+        n = max(minSteps, 1+int(rotAng/rotStep)) # number of steps (#3255)
         T = []
         for i in range(n): 
             roti = rot12*(i+1)/n

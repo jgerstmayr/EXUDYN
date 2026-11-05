@@ -5894,7 +5894,29 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py (maintainer's approval), with the ODE1, data
   and errorEstimate cases; symbolicTrapezoidalGGLStepSizeTest.py with 'twoSteps' on the ball.
 
-<a id="rg19-1-3"></a>
+<a id="rg19-2-2"></a>
+### RG19.2.2 — the problems found in the robotics module fixed (2026-11-05, #3255)
+- Maintainer: fix the problems of design section 2.1; the tool frame by the recommendation (the last link frame) also
+  in the IK; the Panda of models.py named FrankaEmikaPanda; the Puma inertias by suitable values, said in the model;
+  RTB 1.5.0 in venvP313rtb. Decided as well: urdfImport.py, future.py removed after the C++ IK, the cUtilities
+  kinematic chain with Python versions of each function (design section 4.1).
+- The tool frame: the marker of InverseKinematicsNumerical and the tool graphics of CreateKinematicTree on
+  localHT * tool.HT of the last link (the redundant model had it there already); the two examples and the test model
+  that wrote the goal as JointHT(q)[-1] * tool.HT use LinkHT - for the Puma560 and the test model's UR5 goal the
+  values change only where the last localHT is not the identity. UR5 from 0.5 rad off: 35 of 40 found, before none.
+- InterpolateHTs takes max(minSteps, ...): SolveSafe interpolates now, 12 of 40 random poses instead of 8 to 10, at 6
+  to 8 ms - far apart poses need the LM IK of RG19.6, not more steps.
+- The Panda against the RTB 1.5 Panda (modified DH): LinkDict2Robot builds a robot of dhMode modDHKK (preHT and localHT
+  of ModDHKK2HT, the inertia parameters as given); the forward kinematics agree to 1e-15, the gravity torques to
+  1e-15 once the COM of link 7 is moved into the flange frame (Gaz et al. give it in frame 7, the dictionary merges
+  the flange offset 0.107 into the last link, as the RTB does). Its standard DH parameters were wrong (alpha of joints
+  1 and 2 with the opposite sign, a = 0.088 instead of 0.0825 for joints 3 and 4; equal only at q = 0, 0.52 m apart at
+  a general q) and agree now; the tool is the Franka hand of the RTB (0.103, -45 deg about z) instead of 0.11. The
+  deprecated LinkDictModDHKK2Robot read the base and tool dicts as HT - fixed as well.
+- Puma560: link 0 had I = diag(0, 0.35, 0), only the moment about its joint axis, the one that acts - now
+  diag(0.2, 0.35, 0.2); link 2 had I_zz = 0.0125 with 0.066 + 0.0125 < 0.086 - now 0.025; said in the docstring. The
+  gravity torques agree with the RTB's Puma560 (mass and COM unchanged).
+
 ### RG19.1.3, RG19.2.1 — the robotics module measured; the commented-out code removed (2026-11-05, #3254)
 - Maintainer: start with the evaluation and the cleanup; the analytic 6R IK, and possibly other functions, also as C++
   in exudyn.cUtilities for efficiency.

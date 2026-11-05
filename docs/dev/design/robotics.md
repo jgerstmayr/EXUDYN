@@ -146,7 +146,8 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   robustness (a quarter of the random poses found from the last solution), not speed. An analytic 6R IK in Python
   would take some 30 to 60 us (about 30 cMath functions, 10 HT operations, two ZYZ angle sets per wrist solution) -
   fine for single poses, but a Cartesian path evaluated in each step adds it to every step.
-- **Found in the analysis** (to be fixed in the steps named):
+- **Found in the analysis** (the tool frame, InterpolateHTs, the Panda and the Puma560 inertias fixed in #3255, RG19.2.2;
+  future.py goes with the C++ IK, RG19.6):
   - `InverseKinematicsNumerical` places the tool on the joint frame of the last link, without that link's `localHT`
     (`MarkerKinematicTreeRigid(localHT=tool.HT)`), while `Robot.Jacobian` and `LinkHT` take the link frame: for the
     UR5 (d6 = 0.0823) the tool frames differ by 0.079 m, and the IK of a pose from `LinkHT(q)[-1] * tool.HT` fails
@@ -164,15 +165,21 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
     deprecated `LinkDictModDHKK2Robot` fails on the base HT (a dict passed as HT) - the Panda of models.py cannot be
     made a Robot (RG19.7). The Puma560 inertias of links 0 and 2 violate the triangle inequality (link 0 has only
     I_zz = 0.35, as in the RTB's data) - the warning of RigidBodyInertia at each use (RG19.3, RG19.7).
-  - The RTB environment `venvP310rtb` has roboticstoolbox 1.1.1 (and exudyn 1.10), not release 1.5 (RG19.1.2,
-    question 8).
+  - The RTB environment `venvP310rtb` had roboticstoolbox 1.1.1; `venvP313rtb` has release 1.5.0 (decision 8).
+- **After #3255**: the IK of a pose `LinkHT(q)[-1] * tool.HT` from 0.1 / 0.5 rad off: UR5 39 / 35 of 40, Puma560 39 /
+  31 of 40; SolveSafe, which now interpolates, 12 of 40 for both (from 8 to 10) at 6 to 8 ms - the random poses are far
+  apart, a robust numerical IK is the LM of RG19.6. The Panda of models.py: the modified DH parameters, the tool (the
+  Franka hand, as the RTB) and the gravity torques agree with the RTB 1.5 Panda to 1e-15; its standard DH parameters
+  were wrong (alpha of joints 1 and 2, a = 0.088 instead of 0.0825 for joints 3 and 4) and agree now as well; the
+  Puma560 gravity torques agree with the RTB's.
 
 ## 3. Evaluation and recommendations
 
-- **Structure**: robotics/urdfImport.py (the URDF and RTB functions, moved from utilities.py; utilities.py keeps
-  AddLidar), roboticsCore.py (Robot and links), kinematics in roboticsCore or a new robotics/kinematics.py (HT of the
-  links, Jacobian, static torques, IK), motion.py (trajectories), models.py, special.py; future.py dissolved - its
-  analytic IK into the IK of Robot, MakeCorkeRobot into urdfImport.py.
+- **Structure** (decided, decision 1): robotics/urdfImport.py (the URDF and RTB functions, moved from utilities.py;
+  utilities.py keeps AddLidar), roboticsCore.py (Robot and links), kinematics in roboticsCore or a new
+  robotics/kinematics.py (HT of the links, Jacobian, static torques, IK, the Python versions of the C++ functions),
+  motion.py (trajectories), models.py, special.py; future.py removed - its analytic IK (3R, Puma560, UR) replaced by
+  the revised analytic IK in C++ and Python, MakeCorkeRobot into urdfImport.py.
 - **HT**: the lists of 4x4 numpy matrices of LinkHT/JointHT/COMHT become lists of exudyn.HT (composition in C++,
   `Relative`, `Inverse`); the Jacobian and the static torques from the kinematic tree through mbs.ComputeItem of
   MarkerKinematicTreeRigid (the Jacobian of a marker on a link exists in C++) - a separate mbs of the robot without
@@ -209,9 +216,9 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   - numerical: Levenberg-Marquardt / damped least squares on the 6D pose error (the logarithm of the relative HT, as
     the RTB's ik_LM), with the Jacobian of the tree or the Python Jacobian, joint limits by clamping, restarts from
     random q for robustness; no mbs needed per solve.
-- **C++ in exudyn.cUtilities** (maintainer 2026-11-05): a small kinematic chain in C++ - the link data (preHT,
-  localHT, joint type, parent, mass, COM, inertia) given once from Robot, as a class of cUtilities (e.g.
-  `cUtilities.KinematicChain`) or as arrays passed per call - with:
+- **C++ in exudyn.cUtilities** (decided, decision 10): a small kinematic chain in C++ - the link data (preHT,
+  localHT, joint type, parent, mass, COM, inertia) given once from Robot, as a class of cUtilities
+  (`cUtilities.KinematicChain`) - with:
   - the forward kinematics (the HT of all joints and links), the Jacobian of a point or frame of a link, and the
     static torques (J^T m g summed in one backward pass, O(n) instead of a Jacobian per link, O(n^2));
   - the analytic IK of 6R robots with a spherical wrist (Pieper: the wrist center from the first three joints, closed
@@ -220,8 +227,8 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   - the numerical IK by Levenberg-Marquardt on the 6D pose error (`LogSE3` of the relative HT, as the RTB's ik_LM)
     with the Jacobian above - the iteration loop in C++, restarts from random q in Python or C++;
   - shared with ObjectKinematicTree, which computes the same transformations and Jacobians (CObjectKinematicTree), so
-    that the two cannot differ; Robot keeps Python functions of the same names that call it, the Python versions
-    staying for teaching (or as the reference of the tests).
+    that the two cannot differ; every C++ function has a Python version of the same algorithm in exudyn.robotics,
+    the two docstrings citing each other - for checking, for teaching, and as the reference of the tests.
   Expected: about 1 us for the forward kinematics and the static torques of 6 links (100 times the Python path), a few
   us for the analytic IK; to be measured in RG19.6 against the table of section 2.1.
 - **URDF import**: inertia check (mass > 0, inertia positive definite, triangle inequality of the principal moments)
@@ -236,36 +243,59 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
 - **Scripts**: the serial robot examples and test models rewritten on `PreStepControl` and `AddSensors`, storeInternal
   and PlotSensor instead of files and matplotlib; the redefined robot data replaced by models.py.
 
-## 4. Open questions (to be decided by the maintainer)
+## 4. Decisions and open questions
 
-1. The file layout: urdfImport.py (the name style of the module files is lowerCamelCase - `URDFimport.py` as
-   requested, or `urdfImport.py`)? future.py dissolved?
-2. The control interface: `robot.SetControl(trajectory, compensation)` and `robot.PreStepControl(mbs, t)` - agreed, and
-   with several robots one PreStepUserFunction calling each?
-3. Friction and end stops: one parameter set per link (RobotLink fields), realized by CoordinateSpringDamperExt in
-   both models - agreed?
-4. The static torques: from the kinematic tree (a ComputeItem of ObjectKinematicTree giving the inverse dynamics, to be
-   added), keeping the Python StaticTorques for robots without mbs?
-5. Cartesian trajectories need the IK at each evaluation (or a precomputed joint trajectory sampled in time): which -
-   IK per PreStep evaluation (exact, slower) or precomputed and splined (fast, approximate)?
-6. The numerical IK: Levenberg-Marquardt as the RTB's ik_LM (recommended), replacing InverseKinematicsNumerical, or
-   kept beside it?
-7. The data set path: an environment variable, `exudyn.config`, or an argument only?
-8. The RTB environment for the analysis of the import against release 1.5: when it is available, the URDF part of the
-   analysis is repeated with it. `venvP310rtb` has 1.1.1 - is that the environment, or will one with 1.5 come?
-9. The tool frame: relative to the last joint frame (as now in CreateKinematicTree, the IK and the scripts) or to the
-   last link frame, i.e. after the last localHT (DH and the RTB; `Robot.Jacobian` and `LinkHT` now)? Recommended: the
-   link frame, as in the DH convention - the scripts that write `JointHT(q)[-1] * tool.HT` change, the robots with an
-   identity last localHT (Puma560) not.
-10. The C++ kinematic chain: a class of cUtilities built from Robot (recommended), or functions on arrays; analytic IK
-    for the spherical wrist and the UR geometry, the numerical LM IK in C++ as well?
+### 4.1 Decided (maintainer 2026-11-05)
+
+1. **File layout**: the URDF import moves to `robotics/urdfImport.py` (the lowerCamelCase of the module files);
+   future.py is removed once its content has a place - the analytic IK as the revised C++ and Python IK (RG19.6),
+   MakeCorkeRobot into urdfImport.py.
+8. **RTB environment**: `venvP313rtb` with roboticstoolbox 1.5.0 (`pip install exudyn[all]`; further packages may be
+   installed there).
+9. **Tool frame**: the tool HT is relative to the frame of the last link (after its localHT), the DH convention and
+   the RTB's - in LinkHT, the Jacobian, the IK and the graphics of the kinematic tree (#3255).
+10. **C++**: a kinematic chain class in exudyn.cUtilities (forward kinematics, Jacobian, static torques, the analytic
+    IK of 3R, 6R with a spherical wrist and the UR geometry, the numerical LM IK); each function has a Python version
+    of the same algorithm in exudyn.robotics, cross-referenced, for checking and teaching.
+- Fixed now: the problems of section 2.1 (#3255); the Panda of models.py is `ManipulatorFrankaEmikaPanda`
+  (`ManipulatorPANDA` deprecated), the Puma560 inertias are physical (the change is said in its docstring).
+
+### 4.2 Open (numbered as before)
+
+2. **The joint control in the scripts.** Today every robot example writes its own PreStepUserFunction: it evaluates
+   the trajectory, writes the joint offsets into the model (`jointPositionOffsetVector` of the kinematic tree, or the
+   `offset` of each spring-damper of the redundant model) and adds `StaticTorques`. Proposed: the robot keeps the
+   trajectory and the kind of compensation, `robot.SetControl(trajectory, compensation='static')`, and offers
+   `robot.PreStepControl(mbs, t)`, which a script passes directly, `mbs.SetPreStepUserFunction(robot.PreStepControl)`;
+   it works for both models because the creators store the item numbers in the robot. With several robots, the
+   script's own PreStep calls `PreStepControl` of each. Agreed?
+3. **Friction and end stops of the joints.** Neither model has them now. Proposed: one set of parameters per link in
+   RobotLink (viscous and Coulomb friction, lower and upper stop with stiffness and damping), realized by a
+   CoordinateSpringDamperExt on the joint coordinate - in the kinematic tree on its node's coordinate, in the
+   redundant model between the two bodies by MarkerBodiesRelativeRotationCoordinate. Agreed?
+4. **Where the static torques come from.** Decision 10 puts them into the C++ chain (O(n), shared with
+   ObjectKinematicTree). Proposed consequence: `Robot.StaticTorques` calls the chain, the present Python loop becomes its
+   Python version; no separate ComputeItem of ObjectKinematicTree for them. Agreed, or a ComputeItem of the tree as
+   well (for a tree built without Robot)?
+5. **Cartesian paths need the IK.** A linear or circular path of the tool is given in Cartesian space; the joint
+   controller needs joint coordinates. Either the IK runs at each evaluation in the PreStep (exact; a few us with the
+   analytic C++ IK, so affordable now), or the path is converted once before the simulation into a joint trajectory
+   sampled in time and splined (fast, approximate between the samples). Recommended now: the IK at each evaluation,
+   the sampled form as an option for the numerical IK. Agreed?
+6. **The fate of InverseKinematicsNumerical.** It solves the IK as a static problem of a kinematic tree in its own mbs
+   (robust only with tuning, section 2.1). The LM IK of decision 10 does not need an mbs. Replace it (the class kept
+   for a deprecation period, calling the LM IK) or keep both?
+7. **Where the local robot data set is found.** The URDF files (spot, the mars rover, anymal, KUKA, Staeubli) are
+   not in the repository; examples and lectures that use them need their path. By an environment variable (e.g.
+   `EXUDYN_ROBOT_DATA`), a key of `exudyn.config` (the ~/.exudyn/config.json of the settings), or only an argument of
+   the loading function? Without the data, the examples say what is missing and stop.
 
 ## 5. Steps proposed (group RG19)
 
 - RG19.1 Analyze the robotics submodule and propose the revision (this note): .1 the code analysis (done), .2 the URDF
   import against RTB 1.5 and the local data set (with the maintainer's environment).
 - RG19.2 Clean up (.1 done: the commented-out code and the dead branches of all files except future.py, 220 lines,
-  #3254): urdfImport.py, the commented code, future.py dissolved, exudyn.HT in the kinematics; the examples
+  #3254; .2 done: the problems of section 2.1, #3255): urdfImport.py, the commented code, future.py removed after RG19.6, exudyn.HT in the kinematics; the examples
   and test models cleaned up a first time (sensors stored internally, PlotSensor, models.py data).
 - RG19.3 Revise the URDF import: the inertia check and correction, textures, flipped joints, the UR offset, the store
   and load of Exudyn robot models; tested with the RTB robots and the local data set in examples.

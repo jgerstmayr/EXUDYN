@@ -27,10 +27,10 @@ linkWidth=0.1
 graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.12,0.12,0.1], graphics.color.grey)]
 graphicsBaseList +=[graphics.Cylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, graphics.colorList[0])] #belongs to first body
 
-from exudyn.robotics.models import ManipulatorPuma560, ManipulatorPANDA, ManipulatorUR5
+from exudyn.robotics.models import ManipulatorPuma560, ManipulatorFrankaEmikaPanda, ManipulatorUR5
 # robotDef = ManipulatorPuma560()
 robotDef = ManipulatorUR5()
-# robotDef = ManipulatorPANDA()
+# robotDef = ManipulatorFrankaEmikaPanda()
 flagStdDH = True
 # LinkList2Robot() # todo: build robot using the utility function
 
@@ -64,7 +64,7 @@ for cnt, link in enumerate(robotDef['links']):
 myIkine = InverseKinematicsNumerical(robot2, useRenderer=True)
 #the target pose is the one of a known configuration, so it is reachable; the solver starts from another one
 qTarget = [0.2, -0.9, -0.8, -0.7, 0.6, 1.4]
-T3 = robot2.JointHT(qTarget)[-1] @ robot2.tool.HT #the tool frame in the target configuration
+T3 = robot2.LinkHT(qTarget)[-1] @ robot2.tool.HT #the tool frame in the target configuration
 q0 = [0, -np.pi/4, -np.pi/4, -np.pi/4, np.pi/4, np.pi/2]
 [q, success] = myIkine.Solve(T3, q0=q0)
 print('success = {}\nq = {} rad'.format(success, None if q is None else np.round(q, 3)))

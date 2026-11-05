@@ -3136,6 +3136,10 @@ Design section 3; after the decisions of section 4.
 
 CLOSED 2026-11-05 (#3254): 220 lines in all files except future.py, which is dissolved. [log](exudynRevisionLog2026c.md#rg19-1-3)
 
+#### **CLOSED_RG19.2.2** Fix the problems found: the tool frame of the IK and the kinematic tree, InterpolateHTs, the Franka Emika Panda of models.py, the Puma560 inertias
+
+CLOSED 2026-11-05 (#3255): the tool on the last link frame also in InverseKinematicsNumerical and the graphics of CreateKinematicTree; InterpolateHTs with max; LinkDict2Robot for modDHKK, ManipulatorFrankaEmikaPanda checked against the RTB 1.5 Panda (its standard DH parameters corrected), ManipulatorPANDA deprecated; the Puma560 inertias physical. [log](exudynRevisionLog2026c.md#rg19-2-2)
+
 ### **OPEN_RG19.3** Revise the URDF import: the check and correction of the inertia, textures, flipped joints, the offsets, storing and loading robot models; tested with the common robots and the local data set
 
 Design section 3.

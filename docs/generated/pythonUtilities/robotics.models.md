@@ -32,24 +32,32 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - **notes**: DH-parameters: [theta, d, a, alpha], according to P. Corke Values according to Wörnle simple example with l1=0 d=[h1 0 0]; theta=[beta1 beta2 beta3]; a=[l1 l2 l3]; alpha=[pi/2 0 0];
 
 
-(sec-models-manipulatorpanda)=
-## Function: ManipulatorPANDA
+(sec-models-manipulatorfrankaemikapanda)=
+## Function: ManipulatorFrankaEmikaPanda
 
-[`ManipulatorPANDA()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L228)
+[`ManipulatorFrankaEmikaPanda()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L228)
 
 - **function description**: generate Franka Emika Panda manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
 - **author**: Martin Sereinig
-- **notes**: all Parameter according to Gaz et. al [GazDeLuca2019] DH-parameters(std): [theta, d, a, alpha], according to P. Corke Standard DH Parameters, masses, inertias and com according P.Corke and Gaz et. al (they working with modified DH parameter) changes to standard DH Parameter checked with P.Corke toolbox
+- **notes**: all Parameter according to Gaz et. al [GazDeLuca2019] DH-parameters(std): [theta, d, a, alpha], according to P. Corke masses, inertias and COM according to Gaz et al., w.r.t. the frames of the modified DH parameters (modDHKK, the dhMode of the dictionary); the last link frame is the flange, 0.107 after joint 7, in both conventions, so the COM of the last link is moved by -0.107 in z against Gaz et al.; the standard DH parameters give the same kinematics, but the inertia parameters are not transformed to their frames; both checked against the RTB's Panda (#3255)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex)
 
 
+(sec-models-manipulatorpanda)=
+## Function: ManipulatorPANDA
+
+[`ManipulatorPANDA()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L374)
+
+- **function description**: DEPRECATED: the former name of ManipulatorFrankaEmikaPanda (#3255)
+
+
 (sec-models-manipulatorur5)=
 ## Function: ManipulatorUR5
 
-[`ManipulatorUR5()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L375)
+[`ManipulatorUR5()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L383)
 
 - **function description**: generate UR5 manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
@@ -63,12 +71,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKine
 (sec-models-manipulatorpuma560)=
 ## Function: ManipulatorPuma560
 
-[`ManipulatorPuma560()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L469)
+[`ManipulatorPuma560()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L477)
 
 - **function description**: generate puma560 manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
 - **author**: Martin Sereinig
-- **notes**: std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138, puma p560 limits, taken from Corke Visual Control of Robots
+- **notes**: std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138, puma p560 limits, taken from Corke Visual Control of Robots; the inertias of links 0 and 2 are adjusted against Corke's data so that the principal moments fulfill the triangle inequality: link 0 has only I_yy = 0.35 there, the moment about its joint axis and the only one that acts, and gets I_xx = I_zz = 0.2; link 2 gets I_zz = 0.025 instead of 0.0125 (0.066 + 0.0125 < 0.086 is not physical)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex)
@@ -77,7 +85,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-models-linkdict2robot)=
 ## Function: LinkDict2Robot
 
-[`LinkDict2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L565)
+[`LinkDict2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L576)
 
 - **function description**: generate serial manipulator as robotClass object from robotLinkDict
 - **input**:
@@ -94,7 +102,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-models-linkdictmoddhkk2robot)=
 ## Function: LinkDictModDHKK2Robot
 
-[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L629)
+[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L648)
 
 - **function description**: special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
 - **input**:

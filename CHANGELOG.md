@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 352 | 1.13.367 |
+| 1.13 | Newborn | 353 | 1.13.368 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.368** `FIX` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics: the tool frame on the last link frame in InverseKinematicsNumerical and CreateKinematicTree, the steps of InterpolateHTs, the Franka Emika Panda made a Robot, the Puma560 inertias physical (#3255)
+  - description: InverseKinematicsNumerical put the tool on the joint frame of the last link, while Robot.LinkHT and Robot.Jacobian put it on the link frame (after localHT), so the IK of a pose from LinkHT failed for robots with a last localHT (UR5: 0.079 m); the tool graphics of CreateKinematicTree were on the joint frame as well. InverseKinematicsNumerical.InterpolateHTs took min instead of max of minSteps and the steps by rotation, so SolveSafe never interpolated. models.py: LinkDict2Robot refused dhMode modDHKK, the mode of the Panda, so the Panda could not be made a Robot; the Puma560 inertias of links 0 and 2 violated the triangle inequality of the principal moments. Decided: the tool HT is relative to the frame of the last link (DH convention, as the RTB) also in the IK and the kinematic tree graphics; InterpolateHTs takes the maximum; LinkDict2Robot builds modDHKK robots; ManipulatorPANDA renamed ManipulatorFrankaEmikaPanda (the old name deprecated); the Puma560 inertias adjusted to physical values.
+  - **notes:** robotics: the tool HT is relative to the frame of the last link also in InverseKinematicsNumerical and in the tool graphics of CreateKinematicTree (as LinkHT and Jacobian); InverseKinematicsNumerical.InterpolateHTs takes the larger of minSteps and the steps by rotation; LinkDict2Robot builds robots of dhMode modDHKK; the Franka Emika Panda is ManipulatorFrankaEmikaPanda (ManipulatorPANDA deprecated), checked against the RTB 1.5 Panda: its standard DH parameters corrected, the COM of the last link in the flange frame, the tool the Franka hand; the Puma560 inertias of links 0 and 2 physical (the triangle inequality), said in its docstring.
+  - date resolved: **2026-11-05 09:02**, date raised: 2026-11-05
 - **1.13.367** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.robotics: the commented-out code and the dead branches removed (#3254)
   - description: The robotics files carried about 220 lines of commented-out code (earlier versions of LinkHT and JointHT, of the Jacobian, the inertia transformation of LinkDictModDHKK2Robot, a plotting example in motion.py, the alternatives of the manipulability measures, the URDF debugging lines) and dead branches (if 0, if 1, if False). Decided: removed from all files of exudyn.robotics except future.py, which is dissolved in revision2026c step RG19.2; comments that explain the code and the commented dict of the mobile robot (a documentation of its keys) stay; no change of behaviour.
   - **notes:** exudyn.robotics: about 220 lines of commented-out code and the dead branches removed from all files except future.py; no change of behaviour

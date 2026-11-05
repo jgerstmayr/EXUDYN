@@ -61,7 +61,7 @@ for link in robotDef['links']:
                             localHT=StdDH2HT(link['stdDH']), PDcontrol=(1e3, 10)))
 ik = InverseKinematicsNumerical(robot)
 q0 = [0, -0.25, 0.25, 0.1, -0.2, 0.3]
-T = robot.JointHT(q0)[-1] @ robot.tool.HT #the pose of the tool for q0 - reachable
+T = robot.LinkHT(q0)[-1] @ robot.tool.HT #the pose of the tool for q0 - reachable
 [q, success] = ik.Solve(T, q0=[0, -0.2, 0.2, 0, -0.1, 0.2])
 checks += [success]
 checks += [RendererContainer() is SC or not hasRenderer]

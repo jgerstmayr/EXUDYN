@@ -27,7 +27,7 @@ import exudyn.graphics as graphics
 from exudyn.rigidBodyUtilities import *
 from exudyn.robotics import *
 from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration, ProfilePTP
-from exudyn.robotics.models import ManipulatorPuma560, ManipulatorPANDA, ManipulatorUR5, LinkDict2Robot
+from exudyn.robotics.models import ManipulatorPuma560, ManipulatorFrankaEmikaPanda, ManipulatorUR5, LinkDict2Robot
 from exudyn.lieGroupBasics import LogSE3, ExpSE3
 
 import numpy as np
@@ -76,7 +76,7 @@ graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color
 # differ, so the HTmove may need to be adjusted to be inside the workspace
 robotDef = ManipulatorPuma560()
 # robotDef = ManipulatorUR5()
-# robotDef = ManipulatorPANDA()
+# robotDef = ManipulatorFrankaEmikaPanda()
 HTtool = exu.HT(translation=[0,0,0.08])
 
 robot = Robot(gravity=[0,0,-9.81],
@@ -110,8 +110,8 @@ q0 = [0,0,0,0,0,0] #zero angle configuration
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 mbs.variables['myIkine'] = ik
-jointHTs = robot.JointHT(q0)
-HTlastJoint = jointHTs[-1]@HTtool
+HTtcp = robot.LinkHT(q0)[-1]@HTtool #the tool frame, relative to the frame of the last link
+HTtoolJoint = robot.links[-1].localHT@HTtool #the tool frame relative to the joint frame of the last link, as the tree's sensors
 
 #prescribed motion:
 #HTmove = HTtranslate([-0.25,0.,0.3])
@@ -129,13 +129,13 @@ rotMove = Skew2Vec(logMove[0:3,0:3])
 dispMove = HT2translation(logMove)
 
 q0=[0,0,0,0.01,0.02,0.03]
-[q1, success] = ik.SolveSafe(HTlastJoint@HTmove, q0)
+[q1, success] = ik.SolveSafe(HTtcp@HTmove, q0)
 if not success: print('[q1, success]=',[q1, success])
-[q2, success] = ik.SolveSafe(HTlastJoint@HTmove@HTmove, q1)
+[q2, success] = ik.SolveSafe(HTtcp@HTmove@HTmove, q1)
 if not success: print('[q2, success]=',[q2, success])
 
 #initialize for first simulation step:
-[q, success] = ik.Solve(HTlastJoint, q0)
+[q, success] = ik.Solve(HTtcp, q0)
 print('[q, success]=',[q, success])
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -152,9 +152,9 @@ trajectory.Add(ProfileConstantAcceleration(q2,1))
 
 
 #use frame for prescribed TCP:
-gFrame = [graphics.Frame(HTlastJoint, length=0.3, colors=[graphics.color.lightgrey]*3)]
-gFrame += [graphics.Frame(HTlastJoint@HTmove, length=0.3, colors=[graphics.color.grey]*3)]
-gFrame += [graphics.Frame(HTlastJoint@HTmove@HTmove, length=0.3, colors=[graphics.color.dodgerblue]*3)]
+gFrame = [graphics.Frame(HTtcp, length=0.3, colors=[graphics.color.lightgrey]*3)]
+gFrame += [graphics.Frame(HTtcp@HTmove, length=0.3, colors=[graphics.color.grey]*3)]
+gFrame += [graphics.Frame(HTtcp@HTmove@HTmove, length=0.3, colors=[graphics.color.dodgerblue]*3)]
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=gFrame)))
 
 robotDict = robot.CreateKinematicTree(mbs)
@@ -164,11 +164,11 @@ oKT = robotDict['objectKinematicTree']
 sJoints = mbs.AddSensor(SensorNode(nodeNumber=robotDict['nodeGeneric'], storeInternal=True, 
                          outputVariableType=exu.OutputVariableType.Coordinates))
 
-sPosTCP = mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=5, localPosition=HT2translation(HTtool), 
+sPosTCP = mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=5, localPosition=HT2translation(HTtoolJoint), 
                                             storeInternal=True, 
                                             outputVariableType=exu.OutputVariableType.Position))
 
-sRotTCP = mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=5, localPosition=HT2translation(HTtool), 
+sRotTCP = mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=5, localPosition=HT2translation(HTtoolJoint), 
                                             storeInternal=True, 
                                             outputVariableType=exu.OutputVariableType.RotationMatrix))
 
@@ -178,12 +178,12 @@ def PreStepUF(mbs, t):
         ik = mbs.variables['myIkine']
         if t < 2:
             tt = min(t,1)
-            T = HTlastJoint@ExpSE3(list(tt*dispMove)+list(tt*rotMove))
+            T = HTtcp@ExpSE3(list(tt*dispMove)+list(tt*rotMove))
         elif t < 4:
             tt=min(t-2,1)
-            T = HTlastJoint@HTmove@ExpSE3(list(tt*dispMove)+list(tt*rotMove))
+            T = HTtcp@HTmove@ExpSE3(list(tt*dispMove)+list(tt*rotMove))
         else:
-            T = HTlastJoint@HTmove@HTmove
+            T = HTtcp@HTmove@HTmove
 
         [q,success]=ik.Solve(T) #, q0) #takes 60 us internally
         mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', q)

@@ -168,7 +168,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 
 - **class function description**: initialize robot tool
 - **input**:
-  - `HT`: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool, stored as exudyn.HT; default (None) = identity
+  - `HT`: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from the frame of the last link (after its localHT, as Robot.LinkHT) to the tool, stored as exudyn.HT; default (None) = identity
   - `graphicsData`: dictionary containing a list of GraphicsData, same as in exudyn Objects
 
 
@@ -438,7 +438,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-getcurrentrobotht)=
 ### Class function: GetCurrentRobotHT
 
-[`GetCurrentRobotHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1206)
+[`GetCurrentRobotHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1207)
 
 - **class function description**: Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution ** output: T: homogeneous transformation (exudyn.HT) of the current TCP pose
 
@@ -446,7 +446,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-interpolatehts)=
 ### Class function: InterpolateHTs
 
-[`InterpolateHTs(self, T1, T2, rotStep = np.pi/16, minSteps = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1217)
+[`InterpolateHTs(self, T1, T2, rotStep = np.pi/16, minSteps = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1218)
 
 - **class function description**: 
 - **input**:
@@ -462,7 +462,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-solvesafe)=
 ### Class function: SolveSafe
 
-[`SolveSafe(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1253)
+[`SolveSafe(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1254)
 
 - **class function description**: This Method can be used to solve the inverse kinematics problem by solving the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. This helps the function Solve() to find the correct solutions.
 - **input**:
@@ -476,7 +476,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-solve)=
 ### Class function: Solve
 
-[`Solve(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1310)
+[`Solve(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1311)
 
 - **class function description**: This Method can be used to solve the inverse kinematics problem by solving the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. T his helps the fucntion Solve to find the correct solutions.
 - **input**:

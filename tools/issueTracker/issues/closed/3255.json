@@ -1,0 +1,15 @@
+{
+  "number": 3255,
+  "title": "robotics: the tool frame on the last link frame in InverseKinematicsNumerical and CreateKinematicTree, the steps of InterpolateHTs, the Franka Emika Panda made a Robot, the Puma560 inertias physical",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "InverseKinematicsNumerical put the tool on the joint frame of the last link, while Robot.LinkHT and Robot.Jacobian put it on the link frame (after localHT), so the IK of a pose from LinkHT failed for robots with a last localHT (UR5: 0.079 m); the tool graphics of CreateKinematicTree were on the joint frame as well. InverseKinematicsNumerical.InterpolateHTs took min instead of max of minSteps and the steps by rotation, so SolveSafe never interpolated. models.py: LinkDict2Robot refused dhMode modDHKK, the mode of the Panda, so the Panda could not be made a Robot; the Puma560 inertias of links 0 and 2 violated the triangle inequality of the principal moments. Decided: the tool HT is relative to the frame of the last link (DH convention, as the RTB) also in the IK and the kinematic tree graphics; InterpolateHTs takes the maximum; LinkDict2Robot builds modDHKK robots; ManipulatorPANDA renamed ManipulatorFrankaEmikaPanda (the old name deprecated); the Puma560 inertias adjusted to physical values.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 09:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "robotics: the tool HT is relative to the frame of the last link also in InverseKinematicsNumerical and in the tool graphics of CreateKinematicTree (as LinkHT and Jacobian); InverseKinematicsNumerical.InterpolateHTs takes the larger of minSteps and the steps by rotation; LinkDict2Robot builds robots of dhMode modDHKK; the Franka Emika Panda is ManipulatorFrankaEmikaPanda (ManipulatorPANDA deprecated), checked against the RTB 1.5 Panda: its standard DH parameters corrected, the COM of the last link in the flange frame, the tool the Franka hand; the Puma560 inertias of links 0 and 2 physical (the triangle inequality), said in its docstring.",
+  "resolvedInVersion": "1.13.368"
+}

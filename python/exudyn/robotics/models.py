@@ -34,7 +34,7 @@ from exudyn.rigidBodyUtilities import RigidBodyInertia
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'Manipulator4Rsimple', 'Manipulator3RSimple', 'ManipulatorPANDA', 'ManipulatorUR5',
+    'Manipulator4Rsimple', 'Manipulator3RSimple', 'ManipulatorFrankaEmikaPanda', 'ManipulatorPANDA', 'ManipulatorUR5',
     'ManipulatorPuma560', 'LinkDict2Robot', 'LinkDictModDHKK2Robot',
     ]
 
@@ -225,7 +225,7 @@ def Manipulator3RSimple():
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @docmeta(author='Martin Sereinig')
-def ManipulatorPANDA():
+def ManipulatorFrankaEmikaPanda():
     """generate Franka Emika Panda manipulator as myRobot dictionary, settings are done in function
 
     Returns:
@@ -234,8 +234,10 @@ def ManipulatorPANDA():
     Note:
         all Parameter according to Gaz et. al [GazDeLuca2019]
         DH-parameters(std): [theta, d, a, alpha], according to P. Corke
-        Standard DH Parameters, masses, inertias and com according P.Corke and Gaz et. al (they working with modified DH parameter)
-        changes to standard DH Parameter checked with P.Corke toolbox
+        masses, inertias and COM according to Gaz et al., w.r.t. the frames of the modified DH parameters (modDHKK, the
+        dhMode of the dictionary); the last link frame is the flange, 0.107 after joint 7, in both conventions, so the COM
+        of the last link is moved by -0.107 in z against Gaz et al.; the standard DH parameters give the same kinematics,
+        but the inertia parameters are not transformed to their frames; both checked against the RTB's Panda (#3255)
     """
 
        
@@ -267,10 +269,10 @@ def ManipulatorPANDA():
                             [ -0.000428,    0.010027,   -0.000741],
                             [ -0.001196,   -0.000741,    0.004815]  ])
     
-    stdDHparameter=([[0,      0.333,      0,                np.pi/2],
-                     [0,          0,      0,                -np.pi/2],
-                     [0,      0.316,      0.088,            np.pi/2],
-                     [0,      0,         -0.088,           -np.pi/2],
+    stdDHparameter=([[0,      0.333,      0,                -np.pi/2],
+                     [0,          0,      0,                np.pi/2],
+                     [0,      0.316,      0.0825,           np.pi/2],
+                     [0,      0,         -0.0825,          -np.pi/2],
                      [0,      0.384,      0,                np.pi/2],
                      [0,      0,          0.088,            np.pi/2],
                      [0,      0.107,      0,                   0]])
@@ -279,7 +281,7 @@ def ManipulatorPANDA():
     stiffness= [1,1,1,1,1,1,1]#some assumed values, not taken from real robot
 
     
-    link0={'stdDH':[0,0.333,0,np.pi/2], 
+    link0={'stdDH':[0,0.333,0,-np.pi/2],
            'modDHKK':[0,0,0,0.333],
             'mass':4.970684,  #not needed!
             'inertia':inertiaLink0, #w.r.t. COM!
@@ -288,7 +290,7 @@ def ManipulatorPANDA():
             'jointLimits': [-2.8973, 2.8973],   # from datasheet
             'COM':[3.875e-03,2.081e-03,0]} #w.r.t. modDH joint coordinatesystem
     
-    link1={'stdDH':[0,0,0,-np.pi/2],
+    link1={'stdDH':[0,0,0,np.pi/2],
            'modDHKK':[-np.pi/2,0,0,0], 
             'mass':0.646926, 
             'inertia':inertiaLink1, #w.r.t. COM!
@@ -297,7 +299,7 @@ def ManipulatorPANDA():
             'jointLimits': [-1.7628,1.7628],  # from datasheet
             'COM':[-3.141e-03,-2.872e-02,3.495e-03]} #w.r.t. modDH joint coordinatesystem
     
-    link2={'stdDH':[0,0.316,0.088,np.pi/2], 
+    link2={'stdDH':[0,0.316,0.0825,np.pi/2], 
            'modDHKK':[np.pi/2,0,0,0.316],
             'mass':3.228604, 
             'inertia':inertiaLink2, #w.r.t. COM!
@@ -306,7 +308,7 @@ def ManipulatorPANDA():
             'jointLimits': [-2.8973,2.8973], # from datasheet
             'COM':[ 2.7518e-02,3.9252e-02,-6.6502e-02]} #w.r.t. modDH joint coordinatesystem
     
-    link3={'stdDH':[0,0,-0.088,-np.pi/2], 
+    link3={'stdDH':[0,0,-0.0825,-np.pi/2], 
            'modDHKK':[np.pi/2,0.0825,0,0],
             'mass':3.587895, 
             'inertia':inertiaLink3, #w.r.t. COM!
@@ -340,7 +342,7 @@ def ManipulatorPANDA():
             'jointStiffness':1, # not set correctly yet
             'jointTorqueMax': 12, # from datasheet
             'jointLimits': [-2.8973,2.8973], # from datasheet
-            'COM':[1.0517e-02,-4.252e-03,6.1597e-02]} #w.r.t. modDH joint coordinatesystem
+            'COM':[1.0517e-02,-4.252e-03,6.1597e-02-0.107]} #w.r.t. the flange frame (modDH frame 7 moved by r=0.107)
     massRobotArm=0
     
     linkList=[link0, link1, link2, link3, link4, link5, link6]
@@ -356,7 +358,7 @@ def ManipulatorPANDA():
            'jointStiffnessMatrix':   np.diag(JointStiffness),
            'joinTorqueMaxMatrix':    np.diag(Tmax),
            'base':{'HT':exudyn.HT()},
-           'tool':{'HT':exudyn.HT(translation=[0,0,0.11])},
+           'tool':{'HT':exudyn.HT().SetRotationZ(-0.25*np.pi)*exudyn.HT(translation=[0,0,0.103])}, #the TCP of the Franka hand, as the RTB
            'gravity':[0,0,-9.81],
            'referenceConfiguration':[0]*7, #reference configuration for bodies; at which the myRobot is built
            'dhMode':'modDHKK', #this mode prescribes the default DH mode to be used; 
@@ -366,6 +368,12 @@ def ManipulatorPANDA():
 
 
     return myRobot
+
+
+@Deprecated('1.13.0', 2029, use='ManipulatorFrankaEmikaPanda')
+def ManipulatorPANDA():
+    """DEPRECATED: the former name of ManipulatorFrankaEmikaPanda (#3255)"""
+    return ManipulatorFrankaEmikaPanda()
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -474,12 +482,15 @@ def ManipulatorPuma560():
 
     Note:
         std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138,
-        puma p560 limits, taken from Corke Visual Control of Robots
+        puma p560 limits, taken from Corke Visual Control of Robots;
+        the inertias of links 0 and 2 are adjusted against Corke's data so that the principal moments fulfill the triangle
+        inequality: link 0 has only I_yy = 0.35 there, the moment about its joint axis and the only one that acts, and gets
+        I_xx = I_zz = 0.2; link 2 gets I_zz = 0.025 instead of 0.0125 (0.066 + 0.0125 < 0.086 is not physical)
     """
     link0={'stdDH':[0,0,0,np.pi/2], 
            'modDHKK':[0,0,0,0],
            'mass':20,  #not needed!
-           'inertia':np.diag([0,0.35,0]), #w.r.t. COM!
+           'inertia':np.diag([0.2,0.35,0.2]), #w.r.t. COM! I_xx, I_zz not in Corke's data, see Note
            'jointStiffness':68000, # Values from literature described in KIM1995 Puma Joint Stiffness
            'jointTorqueMax': 56,  # maximum joint torques Puma560, taken from taken from Corke Visual Control of Robots, p58 table2.21
            'jointLimits': [-np.pi, np.pi], # taken from Corke Visual Control of Robots 
@@ -497,7 +508,7 @@ def ManipulatorPuma560():
     link2={'stdDH':[0,0.15005,0.0203,-np.pi/2],
            'modDHKK':[0,0.4318,0,0.15005],
            'mass':4.8, 
-           'inertia':np.diag([0.066,0.086,0.0125]), #w.r.t. COM!
+           'inertia':np.diag([0.066,0.086,0.025]), #w.r.t. COM! I_zz 0.0125 in Corke's data, see Note
            'jointStiffness':11650,  # Values from literature described in KIM1995 Puma Joint Stiffness
            'jointTorqueMax': 52, # maximum joint torques Puma560, taken from taken from Corke Visual Control of Robots, p58 table2.21
            'jointLimits': [-2.79253, 2.61799], # taken from Corke Visual Control of Robots 
@@ -611,12 +622,20 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
                                visualization=rob.VRobotLink(linkColor=graphics.colorList[i])
                                 ))
     elif dhMode=='modDHKK':
-        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        raise ValueError('WARNING: LinkDict2Robot: untested for modDHKK')
-        #@Martin: #MS Todo!!
-        #  NEEDED: this branch should create the robot from modDHKK in case that inertia is defined according to
-        #          modDHKK (Panda)
-        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #the inertia parameters are w.r.t. the frames of the modified DH parameters (#3255)
+        for i, link in enumerate(robotLinkDict['links']):
+            PDcontrol = (None, None)
+            if 'Pcontrol' in robotLinkDict and 'Dcontrol' in robotLinkDict :
+                PDcontrol = (robotLinkDict['Pcontrol'][i], robotLinkDict['Dcontrol'][i])
+            [preHT, localHT] = rob.ModDHKK2HT(link['modDHKK'])
+            robotClass.AddLink(rob.RobotLink(mass=link['mass'],
+                               COM=link['COM'],
+                               inertia=link['inertia'],
+                               preHT=preHT,
+                               localHT=localHT,
+                               PDcontrol = PDcontrol,
+                               visualization=rob.VRobotLink(linkColor=graphics.colorList[i])
+                                ))
     else:
         raise ValueError('LinkDict2Robot: dhMode not set in robotLinkDict')
     
@@ -650,9 +669,9 @@ def LinkDictModDHKK2Robot(robotLinkDict, robotClass=None):
         robotClass=rob.Robot(gravity=gravity)
 
         if 'base' in robotLinkDict:
-            robotClass.base = rob.RobotBase(HT=robotLinkDict['base'])
+            robotClass.base = rob.RobotBase(HT=robotLinkDict['base']['HT'])
         if 'tool' in robotLinkDict:
-            robotClass.tool = rob.RobotTool(HT=robotLinkDict['tool'])
+            robotClass.tool = rob.RobotTool(HT=robotLinkDict['tool']['HT'])
 
         if 'referenceConfiguration' in robotLinkDict:
             robotClass.referenceConfiguration = robotLinkDict['referenceConfiguration']
