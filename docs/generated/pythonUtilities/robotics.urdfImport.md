@@ -12,7 +12,7 @@ MakeCorkeRobot, an RTB robot of the DH parameters of a robot dictionary of exudy
 (sec-urdfimport-getroboticstoolboxinternalmodel)=
 ## Function: GetRoboticsToolboxInternalModel
 
-[`GetRoboticsToolboxInternalModel(modelName = '', ignoreURDFerrors = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L29)
+[`GetRoboticsToolboxInternalModel(modelName = '', ignoreURDFerrors = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L30)
 
 - **function description**: Interface to roboticstoolbox (RTB) for loading internal robot models: the model of roboticstoolbox.models.URDF of this name, read from its URDF or xacro file. See the github project of roboticstoolbox-python of P. Corke and J. Haviland for more details. The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.__all__ !
 - **input**:
@@ -28,7 +28,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-loadurdfrobot)=
 ## Function: LoadURDFrobot
 
-[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L65)
+[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L66)
 
 - **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland. Use this function for loading urdf/xacro files.
 - **input**:
@@ -43,7 +43,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-geturdfrobotdata)=
 ## Function: GetURDFrobotData
 
-[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L116)
+[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1, meshDensity = 0., correctInertia = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L147)
 
 - **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
 - **input**:
@@ -54,7 +54,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
   - `returnStaticGraphicsList`: return a list of GraphicsData which can be put into a ground to check visualization for zero joints, using: mbs.CreateGround(graphicsDataList=staticGraphicsList)
   - `exportMesh`: if True, the returned dict also contains a meshSetList which refers to the MeshSet in pymeshlab, which can be used for debugging purposes
   - `verbose`: 0 .. no output printed (only exceptions), 1 .. warnings, 2 .. further information
-- **output**: returns dictionary with items linkList (the joint links, each with its preHT relative to the joint link above, its parentName, mass, com, inertiaCOM, jointType, jointLimits and graphicsDataList), numberOfJoints, graphicsBaseList (the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint are in the graphics of that link), staticJointValues and staticGraphicsList; a link of the URDF without joint (a fixed joint) moves with the joint link above it, which gets its graphics and its mass (#3280)
+  - `meshDensity`: if > 0, a joint link without mass gets the mass, center of mass and inertia of the solid its meshes enclose, with this density (kg/m^3); a mesh that does not close gives an estimate only (#3282)
+  - `correctInertia`: if True, an inertia tensor that is not positive definite or whose principal moments violate the triangle inequality gets its principal moments raised as little as possible, and a zero one that of the shape of the meshes with the mass of the link; every link reports the problems of its mass and inertia in 'inertiaProblems', and they are printed with verbose > 0 (#3282)
+- **output**: returns dictionary with items linkList (the joint links, each with its preHT relative to the joint link above, its parentName, mass, com, inertiaCOM, jointType, jointLimits and graphicsDataList), numberOfJoints, graphicsBaseList (the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint are in the graphics of that link), staticJointValues and staticGraphicsList; a link of the URDF without joint (a fixed joint) moves with the joint link above it, which gets its graphics and its mass (#3280); a flipped joint (axis -1 in the URDF) has the same joint coordinate in a link frame turned by pi, flipHT of the link (#3282)
 - **notes**: requires installation (pip install) of roboticstoolbox-python and pymeshlab; if pymeshlab is not installed, a warning is raised and graphics is ignored
 
 
@@ -64,7 +66,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-makecorkerobot)=
 ## Function: MakeCorkeRobot
 
-[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L302)
+[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L401)
 
 - **function description**: makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters
 - **input**:
@@ -77,7 +79,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-loadurdfgraphics)=
 ## Function: LoadURDFgraphics
 
-[`LoadURDFgraphics(urdfFile, packagePath = None, color = None, invertTriangles = False, orientTriangles = True, smoothNormals = True, smoothingAngle = 0.25*np.pi, addEdges = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L359)
+[`LoadURDFgraphics(urdfFile, packagePath = None, color = None, invertTriangles = False, orientTriangles = True, smoothNormals = True, smoothingAngle = 0.25*np.pi, addEdges = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L458)
 
 - **function description**: the visual meshes of the links of a URDF file as Exudyn graphics, without the Robotics Toolbox (#3263): for each <link> its <visual> elements with a mesh of an STL file (binary or text, read by graphics.FromSTLfile), their <origin> and scale, and the color of their <material>; meshes of other formats and the shapes box, cylinder, sphere are skipped with a warning. The triangles of STL files are often not oriented consistently, and their normals are those of the triangles: the options invert them, orient them (graphics.OrientTriangles) and smoothen the normals (graphics.AddEdgesAndSmoothenNormals), as the meshes of a URDF need
 - **input**:
@@ -95,7 +97,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-addurdfgraphics)=
 ## Function: AddURDFgraphics
 
-[`AddURDFgraphics(robot, urdfFile, linkNames, baseLinkName = None, packagePath = None, color = None, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L433)
+[`AddURDFgraphics(robot, urdfFile, linkNames, baseLinkName = None, packagePath = None, color = None, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L532)
 
 - **function description**: the graphics of a Robot from the visual meshes of a URDF file (#3263), for a robot whose link frames are the frames of the URDF links, as the models of exudyn.robotics.models with dhMode 'jointFrames' (e.g. ManipulatorStaubliTX2_90L, whose dict names the URDF and its links in 'urdfGraphics'); the joint and COM graphics of the links switched off; further keyword arguments go to LoadURDFgraphics (invertTriangles, orientTriangles, smoothNormals, smoothingAngle, addEdges)
 - **input**:

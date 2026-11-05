@@ -543,7 +543,10 @@ joint (fixed joints) to the joint link above them, with their graphics and their
 links - the Interbotix robots, Spot, ANYmal - have the kinematics of the RTB; its argument `urdf` is no longer used
 (#3280).
 The user manual has a chapter {ref}`Robotics <sec-robotics>` - the modules, the workflows, the URDF import and ROS -
-with the notebook tutorialRobotics of the Puma560 (#3281).
+with the notebook tutorialRobotics of the Puma560 (#3281). `GetURDFrobotData` handles flipped joints (the URDF
+coordinate in a link frame turned by `flipHT`), reports the problems of the mass and inertia of each link in
+`'inertiaProblems'`, corrects them with `correctInertia=True`, computes the mass of a link without one from its meshes
+with `meshDensity`, and draws textured meshes with their texture (#3282).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

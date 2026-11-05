@@ -3184,6 +3184,12 @@ CLOSED 2026-11-05 (#3273): dictionaryVersion 1, raised by 1 per release with a c
 
 CLOSED 2026-11-05 (#3275): no inversion by default in FromSTLfile, FromSTLfileASCII, ExportSTL, LoadURDFgraphics; OrientTriangles for open parts enclosing a volume; checkOrientation; raytracer.advanced.backFaceColor; design question 11 answered. [log](exudynRevisionLog2026c.md#rg19-3-5)
 
+#### **CLOSED_RG19.3.6** Flipped joints, the check and correction of the inertia, the mass from the meshes and the textures in GetURDFrobotData
+
+CLOSED 2026-11-06 (#3282; maintainer 2026-11-05): flipHT, inertiaProblems, correctInertia, meshDensity, textures; LBR, KUKA and the Mars rover equal to the RTB; test_urdfRobotData.py. [log](exudynRevisionLog2026c.md#rg19-3-6)
+
+#3282. Maintainer 2026-11-05: RG19.3 - the inertia check of imported links, textures from .dae/.obj, flipped joints.
+
 ### **OPEN_RG19.4** Revise Robot: q0, one control description with friction and end stops for both models, the control as PreStepUserFunction, AddSensors, the static and dynamic compensation from the kinematic tree
 
 Design section 3.

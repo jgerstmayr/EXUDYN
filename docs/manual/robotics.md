@@ -115,9 +115,12 @@ mbs.SolveDynamic(simulationSettings)
 is read through the Robotics Toolbox for Python 1.5 (`pip install roboticstoolbox-python`, and pymeshlab for the
 meshes): `GetRoboticsToolboxInternalModel('Puma560')` for the URDF models of the toolbox, `LoadURDFrobot(file,
 packagePath)` for a URDF or xacro file of a ROS package, and `GetURDFrobotData` for the links as `Robot` needs them; the
-links of fixed joints are added to the joint link above them. The import gives the kinematics of the toolbox for the
-robots of its data and of the local robot data sets tried, except for flipped joints; many URDF files have no masses
-or inertias, which a dynamic model needs. The example serialRobotURDF.py builds robots this way.
+links of fixed joints are added to the joint link above them, and a flipped joint keeps its coordinate in a link
+frame turned by `flipHT`. The import gives the kinematics of the toolbox for the robots of its data and of the robot
+data sets tried (KUKA, Stäubli, ANYmal, Spot, a Mars rover). Many URDF files have no masses or inertias, which a
+dynamic model needs: every link reports the problems of its mass and inertia, `correctInertia=True` makes them
+physical, and `meshDensity` gives a link without mass that of its meshes. Textured meshes (.dae, .obj) are drawn with
+their texture. The example serialRobotURDF.py builds robots this way.
 
 (sec-robotics-ros)=
 ## ROS

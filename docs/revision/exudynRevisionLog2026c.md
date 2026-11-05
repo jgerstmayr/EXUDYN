@@ -6304,6 +6304,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   false, as before). rendererDictionaryTest.py checks that a GetDictionary/SetDictionary pair warns of nothing (the
   SetRenderState warning appeared before the fix; result unchanged, 11).
 
+<a id="rg19-3-6"></a>
+### RG19.3.6 — flipped joints, inertia check and correction, mass from meshes, textures (2026-11-06, #3282)
+- Maintainer 2026-11-05: after RG19.1.2, the RG19.3 items inertia check, textures from .dae/.obj, flipped joints.
+- Flipped joint (RTB isflip: the link turns by -q): F = rotation by pi about an axis normal to the joint axis
+  (diag(1,-1,-1) for z); preHT' = preHT F, COM and inertia transformed by F, the visuals and the links above which the
+  next ones hang prefixed by F; the joint coordinate stays that of the URDF; linkDict 'flipHT' = F, the URDF link frame
+  is the Exudyn frame times F. Check (RTB 1.5): LBR, KUKA kr3/kr6/kr10/kr150 and the Mars rover now equal to 1e-16;
+  the Mars rover (flips and fixed links, masses): total mass 24.53 and the global COM equal to 1e-16.
+- Inertia: _InertiaProblems (mass > 0, symmetric, positive definite, triangle inequality) per link in
+  'inertiaProblems', printed with verbose > 0; correctInertia=True raises the principal moments as little as possible,
+  a zero tensor first gets the shape of the meshes scaled to the mass (AL5D: four links with zero inertia, all
+  physical after it); meshDensity > 0 gives a link without mass that of the solid of its meshes (TX2-90L with 2700:
+  47, 36, 21, 17, 1.7, 0.07 kg; open meshes give estimates).
+- Textures: a mesh with wedge texture coordinates and a texture file (pymeshlab) gets one point per triangle corner,
+  the texture coordinates of the mesh, white color, and its first texture added by _SetTexture under the file name;
+  ANYmal raytraced shows its textures, the logo readable (not mirrored, so the coordinates need no flip).
+- test_urdfRobotData.py: a stub of the RTB interface (no toolbox needed) with a flipped joint and fixed links; the
+  inertia helpers.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

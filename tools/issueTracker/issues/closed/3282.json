@@ -1,0 +1,16 @@
+{
+  "number": 3282,
+  "title": "GetURDFrobotData: flipped joints, the check and correction of the inertias, mass from the meshes, textures of the meshes",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "GetURDFrobotData warns that flipped joints (axis -1 in the URDF) are not implemented, and the kinematics of such robots (KUKA, LBR, the Mars rover) are wrong; it does not check masses and inertias, which many URDF files lack or give unphysically, and it ignores the textures of .dae and .obj meshes. Decided: a flipped joint keeps the joint coordinate of the URDF in a link frame turned by pi about an axis normal to the joint axis (flipHT); every link reports the problems of its mass and inertia, optionally corrected by raising the principal moments; a link without mass optionally gets mass, COM and inertia of its meshes with a given density; the first texture of a mesh is added and drawn with the texture coordinates of the mesh.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 00:34",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/robotics/urdfImport.py",
+  "releaseNotes": "GetURDFrobotData handles flipped joints (flipHT), reports the problems of the mass and inertia of each link, corrects them with correctInertia=True, gives links without mass that of their meshes with meshDensity, and draws textured .dae/.obj meshes with their texture.",
+  "resolvedInVersion": "1.13.395"
+}

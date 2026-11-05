@@ -13,6 +13,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from exudyn.misc.docmeta import docmeta
+import os
 import numpy as np
 import exudyn
 import exudyn.graphics as graphics
@@ -83,7 +84,6 @@ def LoadURDFrobot(urdfFilePath, urdfBasePath,
         xacrodoc (#3280). Note that some models do not include mass and inertia and therefore will not run as dynamic
         models!
     """
-    import os
     try:
         import roboticstoolbox as rtb
         from roboticstoolbox.models.URDF.URDFRobot import URDF_file
@@ -112,6 +112,37 @@ def LoadURDFrobot(urdfFilePath, urdfBasePath,
 
 
 #%%+++++++++++++++++++++++++++++++
+def _InertiaProblems(mass, inertia):
+    """the problems of the mass and the inertia tensor (at the COM) of a link, as a list of strings; empty if it is
+    physical: mass > 0, the tensor symmetric and positive definite, its principal moments fulfilling the triangle
+    inequality (#3282)"""
+    if mass <= 0:
+        return ['mass ' + str(mass)]
+    inertia = np.array(inertia, dtype=float)
+    if np.max(np.abs(inertia - inertia.T)) > 1e-12*max(1e-300, np.max(np.abs(inertia))):
+        return ['inertia not symmetric']
+    moments = np.linalg.eigvalsh(inertia)
+    if moments[0] <= 0:
+        return ['inertia not positive definite, principal moments ' + str(moments)]
+    if moments[0] + moments[1] < moments[2]*(1 - 1e-9):
+        return ['principal moments ' + str(moments) + ' violate the triangle inequality']
+    return []
+
+def _CorrectedInertia(inertia):
+    """the inertia tensor with its principal moments raised as little as possible to be positive and to fulfill the
+    triangle inequality, in the same principal axes (#3282)"""
+    inertia = 0.5*(np.array(inertia, dtype=float) + np.array(inertia, dtype=float).T)
+    (moments, axes) = np.linalg.eigh(inertia)
+    moments = np.maximum(moments, 1e-6*max(1e-12, moments[2]))
+    deficit = moments[2] - moments[0] - moments[1]
+    if deficit > 0:
+        moments[0] += 0.5*deficit
+        moments[1] += 0.5*deficit
+    return axes @ np.diag(moments) @ axes.T
+
+def _Steiner(mass, d):
+    """the inertia of a point mass at the distance vector d"""
+    return mass*(np.dot(d, d)*np.eye(3) - np.outer(d, d))
 
 def GetURDFrobotData(robot, 
                      urdf=None, 
@@ -119,7 +150,9 @@ def GetURDFrobotData(robot,
                      staticJointValues=None,
                      returnStaticGraphicsList = False,
                      exportMesh = False,
-                     verbose=1):
+                     verbose=1,
+                     meshDensity = 0.,
+                     correctInertia = False):
     """Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
 
     Args:
@@ -130,13 +163,20 @@ def GetURDFrobotData(robot,
         returnStaticGraphicsList: return a list of GraphicsData which can be put into a ground to check visualization for zero joints, using: mbs.CreateGround(graphicsDataList=staticGraphicsList)
         exportMesh: if True, the returned dict also contains a meshSetList which refers to the MeshSet in pymeshlab, which can be used for debugging purposes
         verbose: 0 .. no output printed (only exceptions), 1 .. warnings, 2 .. further information
+        meshDensity: if > 0, a joint link without mass gets the mass, center of mass and inertia of the solid its meshes
+            enclose, with this density (kg/m^3); a mesh that does not close gives an estimate only (#3282)
+        correctInertia: if True, an inertia tensor that is not positive definite or whose principal moments violate the
+            triangle inequality gets its principal moments raised as little as possible, and a zero one that of the shape
+            of the meshes with the mass of the link; every link reports the problems
+            of its mass and inertia in 'inertiaProblems', and they are printed with verbose > 0 (#3282)
 
     Returns:
         returns dictionary with items linkList (the joint links, each with its preHT relative to the joint link above,
         its parentName, mass, com, inertiaCOM, jointType, jointLimits and graphicsDataList), numberOfJoints,
         graphicsBaseList (the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint
         are in the graphics of that link), staticJointValues and staticGraphicsList; a link of the URDF without joint
-        (a fixed joint) moves with the joint link above it, which gets its graphics and its mass (#3280)
+        (a fixed joint) moves with the joint link above it, which gets its graphics and its mass (#3280); a flipped joint
+        (axis -1 in the URDF) has the same joint coordinate in a link frame turned by pi, flipHT of the link (#3282)
 
     Note:
         requires installation (pip install) of roboticstoolbox-python and pymeshlab; if pymeshlab is not installed, a warning is raised and graphics is ignored
@@ -179,14 +219,23 @@ def GetURDFrobotData(robot,
     def LinkTs(link): #the frame of the link relative to its parent at zero joint values; None for a link at the root
         return np.eye(4) if link.Ts is None else np.array(link.Ts)
 
-    def JointAncestor(link):
+    #a flipped joint turns its link by -q: the link of Exudyn turns by q in a frame turned by pi about an axis normal to
+    #the joint axis, F; the frame of the RTB link is that frame times F, and F also transforms what is given in it
+    def FlipHT(link):
+        HT = np.eye(4)
+        if link is not None and link.isjoint and link.isflip:
+            HT[:3, :3] = np.diag({'x': [-1., 1., -1.], 'y': [-1., -1., 1.], 'z': [1., -1., -1.]}[link.v.axis[-1].lower()])
+        return HT
+
+    def JointAncestor(link): #the joint link above, and the frame relative to the frame of its Exudyn link
         HT = np.eye(4)
         while link is not None and not link.isjoint:
             HT = LinkTs(link) @ HT
             link = link.parent
-        return link, HT
+        return link, FlipHT(link) @ HT
 
     linkDictOfName = {}
+    texturesAdded = []
     for i, link in enumerate(robot.links):
         #the frame of the link at staticJointValues
         if link.parent is None:
@@ -195,7 +244,7 @@ def GetURDFrobotData(robot,
             staticHT = np.array(robot.fkine(staticJointValues, end=link))
 
         jointIndex = link.jindex
-        (ancestor, HTancestor) = (link, np.eye(4)) if link.isjoint else JointAncestor(link)
+        (ancestor, HTancestor) = (link, FlipHT(link)) if link.isjoint else JointAncestor(link)
         linkDict = None if ancestor is None else linkDictOfName.get(ancestor.name) #None: the base
         if link.isjoint:
             if jointIndex is None: raise ValueError('inconsistent joint index / isjoint in robot structure')
@@ -207,9 +256,11 @@ def GetURDFrobotData(robot,
             linkDict['jointNumber'] = jointIndex
             linkDict['parentNumber'] = -1 if parent is None else parent.number
             linkDict['parentName'] = 'None' if parent is None else parent.name
-            linkDict['preHT'] = HTparent @ LinkTs(link) #A(0), relative to the joint link above
-            linkDict['inertiaCOM'] = np.array(link.I)
-            linkDict['com'] = np.array(link.r)
+            F = FlipHT(link)
+            linkDict['preHT'] = HTparent @ LinkTs(link) @ F #A(0), relative to the joint link above
+            linkDict['inertiaCOM'] = F[:3, :3] @ np.array(link.I) @ F[:3, :3]
+            linkDict['com'] = F[:3, :3] @ np.array(link.r)
+            linkDict['flipHT'] = F #the frame of the URDF link is the frame of the Exudyn link times flipHT
             linkDict['mass'] = link.m
             linkDict['jointType'] = rtbAxis2exuJointType[link.v.axis] #link.v.axis #Rx,Ry,Rz,tx,ty,tz
             #optional fields:
@@ -226,17 +277,13 @@ def GetURDFrobotData(robot,
 
             linkList += [linkDict]
             linkDictOfName[link.name] = linkDict
-            if link.isflip and verbose > 0:
-                exudyn.Print('WARNING: joint',i,'is flipped, but this is not implemented!')
         elif linkDict is not None and link.m > 0: #the mass of a fixed link, added to its joint link
             R = HTancestor[:3, :3]
             (m0, c0, I0) = (linkDict['mass'], linkDict['com'], linkDict['inertiaCOM'])
             (m1, c1, I1) = (link.m, HTancestor[:3, :3] @ np.array(link.r) + HTancestor[:3, 3], R @ np.array(link.I) @ R.T)
             m = m0 + m1
             c = (m0*c0 + m1*c1)/m
-            def Steiner(mass, d):
-                return mass*(np.dot(d, d)*np.eye(3) - np.outer(d, d))
-            linkDict['inertiaCOM'] = I0 + Steiner(m0, c0 - c) + I1 + Steiner(m1, c1 - c)
+            linkDict['inertiaCOM'] = I0 + _Steiner(m0, c0 - c) + I1 + _Steiner(m1, c1 - c)
             linkDict['com'] = c
             linkDict['mass'] = m
             
@@ -257,14 +304,37 @@ def GetURDFrobotData(robot,
                 elif hasattr(scene, 'color'):
                     color = scene.color
                 
-                gData = graphics.FromPointsAndTrigs(points = mesh.vertex_matrix() * scene.scale,
-                                                    triangles = mesh.face_matrix(),
-                                                    normals = mesh.vertex_normal_matrix(),
-                                                    color = color,
-                                                    )
+                textureFile = ''
+                if mesh.has_wedge_tex_coord() and mesh.texture_number() > 0 and linkColorList is None:
+                    textureFile = os.path.join(os.path.dirname(scene.filename), list(mesh.textures().keys())[0])
+                if textureFile != '' and os.path.isfile(textureFile):
+                    #a textured mesh (.dae, .obj): a point per corner of each triangle, as the texture coordinates are
+                    #given per corner; the first texture of the mesh, added under the name of its file (#3282)
+                    faces = mesh.face_matrix()
+                    gData = graphics.FromPointsAndTrigs(points = (mesh.vertex_matrix() * scene.scale)[faces].reshape(-1, 3),
+                                                        triangles = np.arange(3*len(faces)).reshape(-1, 3),
+                                                        normals = mesh.vertex_normal_matrix()[faces].reshape(-1, 3),
+                                                        color = graphics.color.white)
+                    textureName = os.path.basename(textureFile)
+                    if textureName not in texturesAdded:
+                        image = graphics.ImageFromFile(textureFile)
+                        if image.ndim == 2:
+                            image = np.stack([image]*3, axis=-1)
+                        if image.shape[2] == 3:
+                            image = np.concatenate([image, np.full(image.shape[:2] + (1,), 255, dtype=np.uint8)], axis=2)
+                        exudyn._compiledModule._SetTexture({'name': textureName, 'image': image, 'interpretation': 'RGBA', 'flags': 0})
+                        texturesAdded.append(textureName)
+                    gData['texture'] = textureName
+                    gData['textureCoordinates'] = np.array(mesh.wedge_tex_coord_matrix(), dtype=float).flatten()
+                else:
+                    gData = graphics.FromPointsAndTrigs(points = mesh.vertex_matrix() * scene.scale,
+                                                        triangles = mesh.face_matrix(),
+                                                        normals = mesh.vertex_normal_matrix(),
+                                                        color = color,
+                                                        )
 
                 #if mesh has face colors (.obj files), read them and store in gData:
-                if mesh.has_face_color() and (linkColorList is None):
+                if mesh.has_face_color() and (linkColorList is None) and 'texture' not in gData:
                     faceColors = mesh.face_color_matrix()
                     triangles = mesh.face_matrix()
                     #convert face colors to vertex colors: (only available for .obj files)
@@ -285,6 +355,35 @@ def GetURDFrobotData(robot,
                 
                 if returnStaticGraphicsList :
                     staticGraphicsList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT) )]
+
+    def MeshMassProperties(linkDict, density): #[mass, COM, inertia at the COM] of the meshes of a link; mass 0 without meshes
+        parts = []
+        for g in linkDict['graphicsDataList']:
+            if g['type'] == 'TriangleList':
+                points = np.array(g['points'], dtype=float).reshape(-1, 3)
+                parts.append(graphics._MassPropertiesOfTriangles(points[np.array(g['triangles'], dtype=int).reshape(-1, 3)], density))
+        m = sum(part[1] for part in parts)
+        if m <= 0:
+            return [0., np.zeros(3), np.zeros((3, 3))]
+        c = sum(part[1]*np.array(part[2]) for part in parts)/m
+        return [m, c, sum(np.array(part[3]) + _Steiner(part[1], np.array(part[2]) - c) for part in parts)]
+
+    for linkDict in linkList:
+        if linkDict['mass'] <= 0 and meshDensity > 0:
+            [m, c, inertia] = MeshMassProperties(linkDict, meshDensity)
+            if m > 0:
+                (linkDict['mass'], linkDict['com'], linkDict['inertiaCOM']) = (m, c, inertia)
+        problems = _InertiaProblems(linkDict['mass'], linkDict['inertiaCOM'])
+        if correctInertia and len(problems) != 0 and linkDict['mass'] > 0:
+            if np.max(np.abs(linkDict['inertiaCOM'])) == 0: #no inertia at all: that of the shape of the meshes, with the mass
+                [m, c, inertia] = MeshMassProperties(linkDict, 1.)
+                if m > 0:
+                    linkDict['inertiaCOM'] = inertia*(linkDict['mass']/m)
+            linkDict['inertiaCOM'] = _CorrectedInertia(linkDict['inertiaCOM'])
+            problems = [problem + ' (corrected)' for problem in problems]
+        linkDict['inertiaProblems'] = problems
+        if len(problems) != 0 and verbose > 0:
+            exudyn.Print('WARNING: GetURDFrobotData: link', linkDict['name'] + ':', '; '.join(problems))
 
     robotData = {'linkList': linkList,
             'numberOfJoints': numberOfJoints,

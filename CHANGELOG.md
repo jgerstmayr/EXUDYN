@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 379 | 1.13.394 |
+| 1.13 | Newborn | 380 | 1.13.395 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.395** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GetURDFrobotData: flipped joints, the check and correction of the inertias, mass from the meshes, textures of the meshes (#3282)
+  - description: GetURDFrobotData warns that flipped joints (axis -1 in the URDF) are not implemented, and the kinematics of such robots (KUKA, LBR, the Mars rover) are wrong; it does not check masses and inertias, which many URDF files lack or give unphysically, and it ignores the textures of .dae and .obj meshes. Decided: a flipped joint keeps the joint coordinate of the URDF in a link frame turned by pi about an axis normal to the joint axis (flipHT); every link reports the problems of its mass and inertia, optionally corrected by raising the principal moments; a link without mass optionally gets mass, COM and inertia of its meshes with a given density; the first texture of a mesh is added and drawn with the texture coordinates of the mesh.
+  - **notes:** GetURDFrobotData handles flipped joints (flipHT), reports the problems of the mass and inertia of each link, corrects them with correctInertia=True, gives links without mass that of their meshes with meshDensity, and draws textured .dae/.obj meshes with their texture.
+  - date resolved: **2026-11-06 00:34**, date raised: 2026-11-06
 - **1.13.394** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SC.GetDictionary warns that SC.GetRenderState is deprecated (#3271)
   - description: SystemContainer.GetDictionary calls the deprecated PyGetRenderState for its 'renderState' and so issues the DeprecationWarning of SC.GetRenderState to the user, who did not call it. Proposed: the state from the renderer (renderer.GetState) without the warning, keeping the key.
   - **notes:** SC.GetDictionary and SC.SetDictionary no longer warn of the deprecated SC.GetRenderState and SC.SetRenderState, which they called internally.
