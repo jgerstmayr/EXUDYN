@@ -241,7 +241,6 @@ def GetURDFrobotData(robot,
             linkDict['mass'] = m
             
         sceneGroup = link.geometry
-        nScenes = len(sceneGroup)
         for j, scene in enumerate(sceneGroup):
             if hasPymeshlab and scene.stype == 'mesh' and scene.filename != '':
                 ms = pymeshlab.MeshSet()
