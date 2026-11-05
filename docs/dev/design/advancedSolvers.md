@@ -294,6 +294,10 @@ trapezoidal estimate first.
 Third answers: `LobattoIIIA4` (constraints at the end), `LobattoIIIC4-GGL` and `Radau3` are the three methods,
 IIIC-end and IIIA-GGL dropped; the formulas of the error estimates in this file and a better estimate (section 3.2).
 
+Decided (2026-11-05): LobattoIIIA4 (the constraints at the end), LobattoIIIC4-GGL and Radau3 go into C++ next to
+TrapezoidalGGL, with the automatic step size for TrapezoidalGGL and one Lobatto method; the other variants of section
+3.2 are not implemented; no Python interface of the phases of the new solvers (cppSolverStructure.md section 8).
+
 Fifth question (2026-11-05): index 3 at the stages alone, without velocity constraints - measured (section 3.2):
 the positions of the full order, the velocities and the multipliers not; the end constraints kept, as they need
 only c, C_q and c_t.

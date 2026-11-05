@@ -5894,7 +5894,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py (maintainer's approval), with the ODE1, data
   and errorEstimate cases; symbolicTrapezoidalGGLStepSizeTest.py with 'twoSteps' on the ball.
 
-<a id="rg20-9-1"></a>
+<a id="rg20-6-2"></a>
+### RG20.6.2 — the structure of the C++ solvers recommended (2026-11-05)
+- Maintainer: LobattoIIIA4 (constraints at the end), LobattoIIIC4-GGL and Radau3 are the candidates for C++ next to
+  TrapezoidalGGL, the automatic step size for TrapezoidalGGL and one Lobatto method, the other tested variants not; no
+  Python interfaces of the new solvers (the pre- and post-step functions and the symbolic solvers serve); the class
+  structure wanted.
+- Design cppSolverStructure.md section 8: one class CSolverImplicitRungeKutta for the four methods, the method as data
+  (tableau, constraint form, order; TrapezoidalGGL is the 2-stage Lobatto IIIA with GGL), overriding Newton() as the
+  explicit solver does, so the step loop, the discontinuous iteration, the output and the restart stay in CSolverBase
+  and nothing of the existing solvers changes; a stage Newton with its own unknowns and matrix (simplified Newton on M,
+  K, D, C_q of the start of the step, H left out); StepErrorEstimate (oneStep, twoSteps) and a StepSizeController
+  shared with ODE23 and DOPRI5 (RG20.8.2); four DynamicSolverType values and timeIntegration.errorEstimate.
+- The automatic step size is a function of the tableau: restricting it to two methods saves no code; recommended for
+  all four, tested on TrapezoidalGGL and LobattoIIIA4.
+- Cases named for the maintainer: velocity-level and nonholonomic constraints (the Python solvers refuse them, the C++
+  models use them often - rolling); Lie group nodes (refuse first or the exponential map in the stages); the initial
+  accelerations; the dense output for RG20.4.2.
+
 ### RG20.9.1 — a library of test models and a solver study (2026-11-05, #3257, #3258)
 - Maintainer: a set of models relevant for tests - mass oscillator, n-pendulum on distance constraints, a rigid body
   mechanism with joints and one with spring-dampers, the IFToMM slider crank, a kinematic tree, a 3D beam, an

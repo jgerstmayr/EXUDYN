@@ -2,9 +2,9 @@
 
 A design note of an open step: the analysis of the present structure of the solvers of the C++ core - files, classes,
 the step loop, Newton, step size control, output, the Python layer - as the basis of RG20.7 (TrapezoidalGGL and the
-Runge-Kutta methods of exudyn.symbolics.advancedSolvers in C++). It states what is there; the recommendations follow
-in the next sub-step, after the symbolic solvers are final (maintainer 2026-11-05). It leaves the repository when
-the step closes (WORKFLOW.md §8.4).
+Runge-Kutta methods of exudyn.symbolics.advancedSolvers in C++). Sections 1 to 7 state what is there (RG20.6.1),
+section 8 recommends the structure of the new solvers (RG20.6.2). It leaves the repository when the step closes
+(WORKFLOW.md §8.4).
 
 ## 1. Files and sizes
 
@@ -123,3 +123,118 @@ SolveSteps:  FinishStep for the initial state (or the restart state)
   separate code; RG20.8.2 (#3245) is the common controller.
 - The output at the write times needs the state within the step (Hermite interpolation of q, v), which
   `FinishStep` does not have (RG20.4.2).
+
+## 8. Recommendations for the C++ solvers (RG20.6.2)
+
+### 8.1 What goes into C++ (maintainer 2026-11-05)
+
+- The methods: **TrapezoidalGGL**, **LobattoIIIA4** (the constraints at the end of the step), **LobattoIIIC4-GGL**
+  and **Radau3** - the forms of `exudyn.symbolics.advancedSolvers`; the other variants measured in RG20.2
+  (advancedSolvers.md section 3.2: constraints at all stages, index 3 at the stages alone, one shared multiplier)
+  are not implemented. The automatic step size for TrapezoidalGGL and one Lobatto method.
+- No Python interface of their phases: the MainSolver classes (`MainSolverImplicitSecondOrder`, ... with
+  `ComputeNewtonResidual` and the rest) and the user-function solver are not made for them; the pre- and post-step
+  user functions are the access of a script; special studies use the solvers of exudyn.symbolics.
+
+### 8.2 One class for the four methods
+
+The four are one algorithm: a stiffly accurate implicit Runge-Kutta method given by its tableau (A, c) and the place
+of its constraints - TrapezoidalGGL is the 2-stage Lobatto IIIA with GGL, which the Python test confirms
+(`_SolveRungeKutta` with the trapezoidal tableau equals `SolveTrapezoidalGGL`). So the C++ has one solver class whose
+method is data, not four classes:
+
+```
+CSolverBase                                   unchanged: step loop, discontinuous iteration, output, restart
+ ├─ CSolverStatic                             unchanged
+ ├─ CSolverImplicitSecondOrderTimeInt         unchanged (generalized-alpha, Newmark, TrapezoidalIndex2)
+ │   └─ ...UserFunction                       unchanged
+ ├─ CSolverExplicitTimeInt                    unchanged, but its step size rule moves to StepSizeController
+ └─ CSolverImplicitRungeKutta                 new: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3
+       has  ImplicitRungeKuttaMethod          the tableau (A, c, s), the implicit stages, the constraint form
+                                              (GGL | End), the order; four constexpr instances
+       has  StageNewton                       the unknowns and the Newton iteration of one step (8.3)
+       has  StepErrorEstimate                 oneStep (embedded trapezoidal) | twoSteps (the stages of the last
+                                              accepted step kept), the RMS norm of the tolerances
+       uses StepSizeController                shared with the explicit solver (RG20.8.2, #3245)
+```
+
+- **The method as data**: `ImplicitRungeKuttaMethod {name, s, A[s][s], c[s], implicitStages, constraintForm, order}`;
+  the four instances are a table in one header, so a fifth method (e.g. a 3-stage Radau IIA of order 5) is a table
+  entry, and the tests of the Python solvers carry over one to one.
+- **`CSolverImplicitRungeKutta` overrides `Newton()`**, as the explicit solver does: the whole step - the stage
+  unknowns, their Newton iteration, the error estimate - happens inside it, and the base class keeps the step loop,
+  the reduction of a failed step, the discontinuous iteration (data coordinates by `PostNewton` after the stages
+  converged, as in the Python solvers), the pre- and post-step functions, the files and the restart. Nothing of the
+  existing solvers changes in RG20.7.
+- **DynamicSolverType** gets `TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL`, `Radau3` (the hyphen of the Python
+  name is not possible in an enum); `exudyn.solver.SolveDynamic` runs them like the others. The settings are those
+  of `timeIntegration` (newton, automaticStepSize, the tolerances, minimumStepSize, stepSizeSafety,
+  stepSizeMaxIncrease, discontinuous) plus one new setting `timeIntegration.errorEstimate` (oneStep | twoSteps, the
+  default per method as in Python: twoSteps for the Runge-Kutta methods, oneStep for TrapezoidalGGL).
+
+### 8.3 The stage Newton
+
+- **Unknowns** (as in `_SolveRungeKutta`): per implicit stage the accelerations A_i (nODE2) and the ODE1 velocities
+  Yd_i (nODE1); with GGL per implicit stage the multipliers z_i and mu_i (2 nAE); with End the two multipliers of the
+  end constraints (2 nAE). Size `nStage = s_impl (nODE2 + nODE1) + 2 nAE` or `+ 2 s_impl nAE` - not `nSys`, so the
+  class keeps its own vectors and its own `GeneralMatrix` (dense or sparse by `linearSolverType`), not the
+  `SolverLocalData` ones.
+- **Residual**: the stage states Q_i, V_i, Y_i from the unknowns and the start of the step, then per implicit stage
+  the system residual of `CSystem` (the same calls as generalized-alpha: ODE2 right-hand side, mass matrix times A_i,
+  C_q^T z_i, ODE1 right-hand side), and the constraint rows c and C_q v + c_t (c_t numerically, as in Python; no
+  velocity-level implementation of the items is needed, advancedSolvers.md section 3.2).
+- **Jacobian - simplified Newton**: the blocks M, K = -f_q, D = -f_v, the ODE1 blocks and C_q are evaluated once, at
+  the start of the step (or kept over steps, as `useModifiedNewton` now), and the stage Jacobian is assembled from them
+  with the coefficients of A and A^2 (a Kronecker structure, 2 implicit stages: a 2 x 2 block matrix of system-size
+  blocks). The term H = (C_q v)_q is left out (section 3.2: the same errors, 3 to 27 % more iterations). The
+  factorization is reused while the iterations converge; a full Newton with the Jacobians at each stage is the fallback
+  when they do not (as `modifiedNewtonContractivity` decides now).
+- **Sparse assembly**: the system Jacobian of `CSystem` already comes as sparse triplets; the stage Jacobian is the
+  same triplets placed into the blocks, so its sparsity is that of the system times s_impl^2.
+- Lie group nodes (`NodeRigidBodyRotVecLG`): the Python solvers refuse them; the C++ solver either refuses them too
+  (first version) or composes the stage rotations with the exponential map as the explicit Lie group integrator does
+  (later). Euler parameter nodes are ordinary: their norm is a constraint.
+
+### 8.4 Step size control and error estimate
+
+- **`StepSizeController`** (new, small, `src/Solver/StepSizeController.h`): the PI controller of `_ErrorStepSize`
+  (RG20.8.1) with the settings of `timeIntegration` (safety, maximal increase and decrease, minimum step), the
+  rejection and the step after a rejection; used by `CSolverImplicitRungeKutta` and, replacing its elementary rule, by
+  the explicit ODE23 and DOPRI5 (RG20.8.2). The reduction after a failed Newton stays the base class path.
+- **`StepErrorEstimate`**: `oneStep` - the difference to the embedded trapezoidal solution of the first and the last
+  stage; `twoSteps` - the quadrature error against the polynomial through the stage values of the previous and this
+  step, which needs the stage velocities and accelerations of the last accepted step kept (a few vectors of nODE2 +
+  nODE1), the first step by `oneStep`. Both in the RMS norm of the tolerances, as the explicit solver.
+- Automatic step size works for all four methods once it works for one: the estimate is a function of the tableau.
+  Restricting it to TrapezoidalGGL and one Lobatto method saves no code; recommended: implemented for all, tested on
+  TrapezoidalGGL and LobattoIIIA4 (the measurements of RG20.1 and RG20.2), the others by the same test with a
+  looser check.
+
+### 8.5 Files and sizes (expected)
+
+| file | lines | what |
+|---|---|---|
+| `src/Solver/CSolverImplicitRungeKutta.h/.cpp` | 150 / 900 | the class, the four methods, the stage Newton, the estimate |
+| `src/Solver/StepSizeController.h` | 80 | the PI controller, shared |
+| `definitions/structureDefsSimulationSettings.py`, `definitions/enumTypes.py` | +20 | `errorEstimate`; the four DynamicSolverType values |
+| `python/exudyn/solver.py` | +10 | SolveDynamic runs the new types |
+| test models | | the Python tests of RG20.1/RG20.2 against the C++ solver: the same models, agreement to the tolerance of the Newton iteration with constant steps, the same accepted steps with the automatic step |
+
+- The solver study of RG20.9 (`python/testing/solverStudy.py` on `modelLibrary.py`) is the regression of orders and
+  times for the new solvers beside generalized-alpha.
+
+### 8.6 Cases to decide or to keep in mind
+
+- **Velocity-level and nonholonomic constraints** (rolling disc, `velocityLevel=True` of the joints, the
+  `CoordinateConstraint` on velocities): the Python solvers refuse them (`_RefuseConstraintsBeyondPositions`). In C++
+  they are common; they have no position equation, so GGL and End take only their velocity equation (index 2, at each
+  implicit stage or at the end). Recommended: the C++ solver treats them so from the start; otherwise the new solvers
+  cannot run the many models with rolling.
+- **Lie group nodes** (8.3): refuse first, or the exponential map in the stages.
+- **Data coordinates and contact** (the post-Newton step): as in Python, the discontinuous iteration around the whole
+  step; with the automatic step a step rejected by the discontinuous iteration uses the base class reduction.
+- **The initial accelerations**: as generalized-alpha computes them (`computeInitialAccelerations`), needed for the
+  first stage of Lobatto IIIA and the trapezoidal estimate.
+- **Output within the step** (RG20.4.2): the stage values give a dense output of the order of the method; the base
+  class `FinishStep` needs a virtual `InterpolateState(t)` for the write times - a later extension of this structure,
+  not needed for RG20.7.
