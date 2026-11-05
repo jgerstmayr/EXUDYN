@@ -5894,6 +5894,17 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py (maintainer's approval), with the ODE1, data
   and errorEstimate cases; symbolicTrapezoidalGGLStepSizeTest.py with 'twoSteps' on the ball.
 
+<a id="rg20-6-1"></a>
+### RG20.6.1 — The C++ solvers as they are (2026-11-05)
+- docs/dev/design/cppSolverStructure.md: the files and sizes, the classes (CSolverBase with the static, the implicit
+  second-order and the explicit solver; the Main classes and the user-function variant for Python), the step loop
+  (InitializeStep, DiscontinuousIteration around Newton and PostNewton, FinishStep, reduction and increase of the
+  step), the generic Newton on nSys unknowns, the two step size rules (the explicit error control inside Newton(), the
+  adaptive step of the implicit solver), output and restart, the Python layer, and the facts that matter for RG20.7:
+  more unknowns than nSys (mu, stages), Jacobians per stage, the stages of the previous step not kept, output at the
+  end of the step. Maintainer: analysis of the present state only; the recommendations after the symbolic solvers
+  are final (RG20.6.2).
+
 <a id="rg20-5-3"></a>
 ### RG20.5.3 — Euler parameters in the symbolic system and the projection in SolveExplicit (2026-11-04, #3238)
 - **UserItemCreator.CreateRigidBody** on a `NodeRigidBodyEP` (now the default, as `mbs.CreateRigidBody`; Rxyz stays):
