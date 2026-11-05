@@ -17,7 +17,10 @@ You can view and download this file on Github: [staubliTX2trajectories.py](https
 #           (ProfileCartesianLinear), and back by a polynomial of degree 5. The control by Robot.SetControl and
 #           Robot.PreStepControl, without compensation of gravity; sensors of the joint angles and of the tool
 #           position, the deviation of the tool from the straight line printed. The meshes of the URDF of the robot by
-#           urdfImport.AddURDFgraphics if the local robot data set is found, else simple link graphics.
+#           urdfImport.AddURDFgraphics if the local robot data set is found; the robot with these graphics is then
+#           saved by Robot.GetDictionary and SaveDictToHDF5 to solution/staubliTX2_90L.h5, and loaded from there by
+#           LoadDictFromHDF5 and Robot.SetDictionary when the data set is not found (h5py and scipy needed); without
+#           both, simple link graphics.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-05
@@ -29,7 +32,8 @@ You can view and download this file on Github: [staubliTX2trajectories.py](https
 import exudyn as exu
 import exudyn.graphics as graphics
 import exudyn.itemInterface as eii
-from exudyn.robotics import RobotBase, VRobotBase
+from exudyn.robotics import Robot, RobotBase, VRobotBase
+from exudyn.basicUtilities import OutputFilePath
 from exudyn.robotics.models import ManipulatorStaubliTX2_90L, LinkDict2Robot
 from exudyn.robotics.urdfImport import AddURDFgraphics
 from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration, ProfilePolynomial5, ProfileCartesianLinear
@@ -46,8 +50,23 @@ robot = LinkDict2Robot(robotDict)
 robotDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tmp', 'URDF')
 urdf = robotDict['urdfGraphics']
 urdfFile = os.path.join(robotDataPath, urdf['file'])
+#the robot with its meshes as HDF5 file, a dict of Robot.GetDictionary
+robotFile = OutputFilePath('solution/staubliTX2_90L.h5', 'staubliTX2trajectories')
+try:
+    from exudyn.advancedUtilities import SaveDictToHDF5, LoadDictFromHDF5
+    import h5py, scipy #needed by SaveDictToHDF5 and LoadDictFromHDF5
+    hasHDF5 = True
+except ImportError:
+    hasHDF5 = False
 if os.path.exists(urdfFile):
     AddURDFgraphics(robot, urdfFile, urdf['links'], baseLinkName=urdf['baseLink'])
+    if hasHDF5:
+        SaveDictToHDF5(robotFile, robot.GetDictionary())
+        exu.Print('the robot with its meshes is saved to', robotFile)
+elif hasHDF5 and os.path.exists(robotFile):
+    robot = Robot()
+    robot.SetDictionary(LoadDictFromHDF5(robotFile))
+    exu.Print('the robot with its meshes is loaded from', robotFile)
 else:
     exu.Print('the URDF meshes were not found at', urdfFile, '; download the package from', urdf['source'],
               'into', robotDataPath, '; the example continues with simple link graphics')

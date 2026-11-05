@@ -1,0 +1,15 @@
+{
+  "number": 3273,
+  "title": "Robot: format version of the saved dict, GetGlobalToolHT, the TX2-90L saved in its example",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "A dict of Robot.GetDictionary carries no version, so that a later change of its format cannot be read back; Robot has no function for the tool frame in global coordinates (GetToolHT is the local one); the example of the TX2-90L does not show how to save it. Decided: 'dictionaryVersion' starting at 1, raised by 1 when the format changes between two releases, SetDictionary converts earlier versions and refuses later ones; Robot.GetGlobalToolHT(q), with the note that the C++ chain is faster for many q; staubliTX2trajectories.py saves the robot with its meshes to Examples/solution and loads it from there without the data set.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 21:51",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The dict of Robot.GetDictionary has the format version 'dictionaryVersion' (1), raised by 1 when the format changes between two releases; Robot.SetDictionary reads the earlier versions and refuses a later one. Robot.GetGlobalToolHT(q) gives the tool frame in global coordinates; for many q, GetKinematicChain().ToolHT(q) is about 100 times faster. The example staubliTX2trajectories.py saves the TX2-90L with its URDF meshes to solution/staubliTX2_90L.h5 and loads it from there when the data set is missing.",
+  "resolvedInVersion": "1.13.385"
+}

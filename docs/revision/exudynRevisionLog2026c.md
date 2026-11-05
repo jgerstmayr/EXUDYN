@@ -6156,6 +6156,17 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - Trajectory.Add evaluates a new profile at its start against the end of the trajectory (jumpTolerance = 1e-6).
 - robotCartesianPathsTest.py. Open in RG19.5: blending (RG19.5.2), a Cartesian blend.
 
+<a id="rg19-3-4"></a>
+### RG19.3.4 — the format version of the Robot dict, GetGlobalToolHT, the TX2-90L saved in its example (2026-11-05, #3273)
+- Maintainer 2026-11-05: a version number of the saved Robot, starting with 1, raised by 1 only if the stored format
+  changes between two releases (it stays until the next release); the tool frame in global coordinates as
+  GetGlobalToolHT; the TX2-90L of staubliTX2trajectories.py stored with the HDF5 functions in Examples/solution.
+- robotDictionaryVersion = 1 in roboticsCore.py, 'dictionaryVersion' in the dict; SetDictionary refuses a later
+  version and has the place for the conversions of earlier ones.
+- GetGlobalToolHT(q) = LinkHT(q)[-1] * tool.HT in Python; the docstring points to the chain (some 100000 ToolHT per
+  second, measured by the maintainer).
+- The example saves the robot when the URDF data set is found and loads it from the file otherwise.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

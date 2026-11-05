@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 369 | 1.13.384 |
+| 1.13 | Newborn | 370 | 1.13.385 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.385** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robot: format version of the saved dict, GetGlobalToolHT, the TX2-90L saved in its example (#3273)
+  - description: A dict of Robot.GetDictionary carries no version, so that a later change of its format cannot be read back; Robot has no function for the tool frame in global coordinates (GetToolHT is the local one); the example of the TX2-90L does not show how to save it. Decided: 'dictionaryVersion' starting at 1, raised by 1 when the format changes between two releases, SetDictionary converts earlier versions and refuses later ones; Robot.GetGlobalToolHT(q), with the note that the C++ chain is faster for many q; staubliTX2trajectories.py saves the robot with its meshes to Examples/solution and loads it from there without the data set.
+  - **notes:** The dict of Robot.GetDictionary has the format version 'dictionaryVersion' (1), raised by 1 when the format changes between two releases; Robot.SetDictionary reads the earlier versions and refuses a later one. Robot.GetGlobalToolHT(q) gives the tool frame in global coordinates; for many q, GetKinematicChain().ToolHT(q) is about 100 times faster. The example staubliTX2trajectories.py saves the TX2-90L with its URDF meshes to solution/staubliTX2\_90L.h5 and loads it from there when the data set is missing.
+  - date resolved: **2026-11-05 21:51**, date raised: 2026-11-05
 - **1.13.384** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics.motion: circular, screw and spline paths of the tool, the arm configuration kept, the check of jumps in Trajectory (#3272)
   - description: exudyn.robotics.motion has the straight line as its only Cartesian path, which follows the nearest solution of the inverse kinematics and may change the arm configuration, and Trajectory does not notice a profile that starts with a jump. Decided (design sections 3 and 6.2): ProfileCartesianCircular (via point and end), ProfileCartesianScrew (axis, angle, translation) and ProfileCartesianSpline (via frames) on the common code of ProfileCartesianLinear; keepConfiguration (default True) keeps the arm configuration of the start and raises at a jump of the joint coordinates on the path; Trajectory(jumpTolerance) raises if a profile starts at other coordinates than the trajectory ends.
   - **notes:** exudyn.robotics.motion: ProfileCartesianCircular (the arc through a via point to the end), ProfileCartesianScrew (the tool frame turned about an axis and moved along it) and ProfileCartesianSpline (through via frames, positions and rotation vectors as natural cubic splines); with keepConfiguration=True (default) these and ProfileCartesianLinear keep the arm configuration of the start and raise a ValueError when the joint coordinates jump on the path; Trajectory(jumpTolerance) raises in Add if a profile starts at other coordinates than the trajectory ends.

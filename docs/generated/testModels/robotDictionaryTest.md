@@ -16,7 +16,7 @@ You can view and download this file on Github: [robotDictionaryTest.py](https://
 #           h5py is installed). The Staubli TX2-90L of exudyn.robotics.models with graphics, q0, friction and PD
 #           control: the loaded robot has the same dict, the same tool frame and the same motion in a kinematic tree.
 #           The texture of the tool graphics is in the dict (#3268): removed from the renderer, the loaded robot adds
-#           it again.
+#           it again. A dict of a later format version is refused; GetGlobalToolHT agrees with the C++ chain (#3273).
 #           The result is 1 if all checks pass plus the joint coordinates at the end, weighted by 1 to 6.
 #
 # Author:   Johannes Gerstmayr
@@ -103,12 +103,16 @@ q = SimulateTree(robot)
 q2 = SimulateTree(robot2)
 checks += [np.max(np.abs(q - q2)) == 0 and np.max(np.abs(q - robot.q0)) < 1e-2]
 
-#a dict of another kind is refused
-try:
-    robot2.SetDictionary({'links': []})
-    checks += [False]
-except ValueError:
-    checks += [True]
+#a dict of another kind and a dict of a later format version are refused (#3273)
+for wrongDict in [{'links': []}, dict(robotDict, dictionaryVersion=robotDict['dictionaryVersion'] + 1)]:
+    try:
+        robot2.SetDictionary(wrongDict)
+        checks += [False]
+    except ValueError:
+        checks += [True]
+
+#the tool frame in global coordinates, in Python and by the C++ chain (#3273)
+checks += [np.max(np.abs(robot.GetGlobalToolHT(robot.q0).HT44() - HT)) < 1e-14]
 
 SC.renderer.RemoveTexture('robotDictionaryTest.logo')
 u = float(all(checks)) + q @ np.arange(1, 7) #the same with and without h5py

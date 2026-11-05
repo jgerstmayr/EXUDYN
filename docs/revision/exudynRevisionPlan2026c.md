@@ -3172,6 +3172,10 @@ CLOSED 2026-11-05 (#3264): _ReadSTL and the mass properties in graphics, useNump
 
 CLOSED 2026-11-05 (#3267): Robot.GetDictionary and SetDictionary; SaveDictToHDF5 stores a list of numbers as one dataset (the TX2-90L with its URDF meshes: 7 MB, 0.2 s); robotDictionaryTest.py; the textures with RG11.4.5 (#3268). [log](exudynRevisionLog2026c.md#rg19-3-3)
 
+#### **CLOSED_RG19.3.4** The format version of the Robot dict, Robot.GetGlobalToolHT, the TX2-90L saved in its example
+
+CLOSED 2026-11-05 (#3273): dictionaryVersion 1, raised by 1 per release with a changed format; GetGlobalToolHT(q) in Python, the chain for many q; staubliTX2trajectories.py saves and loads solution/staubliTX2_90L.h5. [log](exudynRevisionLog2026c.md#rg19-3-4)
+
 ### **OPEN_RG19.4** Revise Robot: q0, one control description with friction and end stops for both models, the control as PreStepUserFunction, AddSensors, the static and dynamic compensation from the kinematic tree
 
 Design section 3.

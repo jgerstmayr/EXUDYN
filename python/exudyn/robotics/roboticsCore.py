@@ -34,7 +34,7 @@ import exudyn.cUtilities #KinematicChain, the kinematics of Robot in C++ (#3259)
 __all__ = [
     'dictJointTypeText2Exudyn', 'dictJointType2HT', 'dictJointType2Axis',
     'dictJointType2coordinate6D', 'VRobotLink', 'RobotLink', 'VRobotTool', 'RobotTool',
-    'VRobotBase', 'RobotBase', 'Robot', 'StdDH2HT', 'ModDHKK2HT',
+    'VRobotBase', 'RobotBase', 'robotDictionaryVersion', 'Robot', 'StdDH2HT', 'ModDHKK2HT',
     'projectAngleToPMPi', 'InverseKinematicsNumerical',
     ]
 
@@ -425,6 +425,10 @@ class RobotBase:
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++  Define robot ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the version of the format of Robot.GetDictionary (#3273): 1, 2, ...; it is raised by 1 when the format changes between
+#two releases, and SetDictionary reads every version up to it
+robotDictionaryVersion = 1
+
 class Robot:
     """class to define a robot
     """
@@ -513,7 +517,8 @@ class Robot:
         (SetControl, the item numbers) are not included
 
         Returns:
-            a dict of numbers, strings, lists and numpy arrays
+            a dict of numbers, strings, lists and numpy arrays; 'dictionaryVersion' is the version of its format, which
+            SetDictionary uses to read dicts of earlier versions (#3273)
         """
         linkVisualizationKeys = ['jointRadius', 'jointWidth', 'linkWidth', 'showMBSjoint', 'showCOM', 'linkColor']
         links = []
@@ -539,7 +544,7 @@ class Robot:
                 textures += [exudyn._compiledModule._GetTexture(name)]
             except ValueError:
                 pass
-        return {'dictionaryType': 'Robot',
+        return {'dictionaryType': 'Robot', 'dictionaryVersion': robotDictionaryVersion,
                 'gravity': np.array(self.gravity), 'referenceConfiguration': np.array(self.referenceConfiguration),
                 'q0': self._q0, 'enableEndStops': self.enableEndStops,
                 'frictionRegularization': self.frictionRegularization,
@@ -562,6 +567,11 @@ class Robot:
         """
         if robotDict.get('dictionaryType') != 'Robot':
             raise ValueError("Robot.SetDictionary: the dict is not one of Robot.GetDictionary (dictionaryType 'Robot')")
+        version = robotDict.get('dictionaryVersion')
+        if not isinstance(version, int) or version < 1 or version > robotDictionaryVersion:
+            raise ValueError('Robot.SetDictionary: the dict has the format version ' + str(version) + ', but this Exudyn reads the versions 1 to '
+                             + str(robotDictionaryVersion) + '; a dict of a later Exudyn needs that version')
+        #the dicts of earlier versions are converted here, version by version, when the format changes
         self.gravity = np.array(robotDict['gravity'], dtype=float)
         self.base = RobotBase(HT=robotDict['base']['HT'], visualization=VRobotBase(graphicsData=robotDict['base']['graphicsData']))
         self.tool = RobotTool(HT=robotDict['tool']['HT'], visualization=VRobotTool(graphicsData=robotDict['tool']['graphicsData']))
@@ -637,9 +647,23 @@ class Robot:
         return self.base.HT
 
     def GetToolHT(self):
-        """return base as homogeneous transformation
+        """return the tool frame relative to the frame of the last link, as homogeneous transformation; GetGlobalToolHT
+        gives it in global coordinates
         """
         return self.tool.HT
+
+    def GetGlobalToolHT(self, q):
+        """the tool frame (TCP) in global coordinates at the joint coordinates q, an exudyn.HT (#3273), computed in Python
+        by LinkHT; for many q, e.g. along a trajectory, create the C++ chain once, chain = robot.GetKinematicChain(), and
+        call chain.ToolHT(q), about 100 times faster (some 100000 evaluations per second)
+
+        Args:
+            q: the joint coordinates
+
+        Returns:
+            the exudyn.HT of the tool in global coordinates
+        """
+        return self.LinkHT(q)[-1] * self.tool.HT
     
     def SetControl(self, trajectory, compensation=None):
         """the joint control of the model of CreateKinematicTree or CreateRedundantCoordinateMBS, by PreStepControl

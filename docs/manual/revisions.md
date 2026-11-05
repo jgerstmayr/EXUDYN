@@ -513,7 +513,11 @@ every other robot (#3268). `ProfileCartesianCircular` (the arc through a via poi
 via frames, position and rotation as natural cubic splines) of `exudyn.robotics.motion` complete the Cartesian paths;
 with `keepConfiguration=True` (default) they and `ProfileCartesianLinear` keep the arm configuration of the start and
 raise when the joint coordinates jump on the path, through or close to a singular configuration. `Trajectory.Add`
-raises if a profile starts at other coordinates than the trajectory ends, by more than `jumpTolerance` (#3272).
+raises if a profile starts at other coordinates than the trajectory ends, by more than `jumpTolerance` (#3272). The
+dict of `Robot.GetDictionary()` has a format version, `'dictionaryVersion'` (1), raised by 1 when the format changes
+between two releases; `SetDictionary` reads the earlier versions and refuses a later one. `Robot.GetGlobalToolHT(q)`
+gives the tool frame in global coordinates; for many evaluations `GetKinematicChain().ToolHT(q)` is about 100 times
+faster. The example staubliTX2trajectories.py saves the robot with its meshes as HDF5 file (#3273).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and
