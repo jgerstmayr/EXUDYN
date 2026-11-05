@@ -3206,6 +3206,10 @@ CLOSED 2026-11-04 (#3250): maintainer: step doubling only as the reference, the 
 
 CLOSED 2026-11-04 (#3247): maintainer: keep IIIA-end as LobattoIIIA4 - the simplest form that solves index 3 without tricks -, IIIC-GGL as LobattoIIIC4-GGL, and Radau3, three methods of two implicit stages; IIIC-end and IIIA-GGL dropped. SolveImplicitRungeKutta(system, settings, method) replaces SolveLobatto4. Radau IIA (c = 1/3, 1) with the constraints at the end: order 3 in q and v, 2 in a and z (with GGL the same); it damps a fast mode of h omega = 70 and the slow motion slightly. The design file with the formulas of the error estimates: the trapezoidal solutions of one step and of two substeps from the stages are the same second difference (Simpson = (4 T2 - T1)/3), no order-4 estimate from the three stages of a step; the candidates for RG20.2.5. [log](exudynRevisionLog2026c.md#rg20-2-6)
 
+#### **CLOSED_RG20.2.7** ODE1 and data coordinates in SolveImplicitRungeKutta; the error estimates of one and of two steps selectable in both solvers
+
+CLOSED 2026-11-05 (#3253): errorEstimate='twoSteps'/'oneStep' in SolveImplicitRungeKutta and SolveTrapezoidalGGL (for the trapezoidal rule both give the same steps); the ODE1 coordinates by the Runge-Kutta method, the data coordinates by the post-Newton step; symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py. [log](exudynRevisionLog2026c.md#rg20-2-7)
+
 ### **OPEN_RG20.3** Adjoint sensitivities on the symbolic system for optimization
 
 Design section 3.3 (maintainer 2026-11-04: lowest priority; the step exists, but is not proposed to be done; no issue).

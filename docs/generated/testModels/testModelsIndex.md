@@ -211,10 +211,10 @@ symbolicExportTest
 symbolicFunctionTest
 symbolicGeneralizedAlphaTest
 symbolicHTTest
+symbolicImplicitRungeKuttaTest
 symbolicItemOutputTest
 symbolicJacobianExpressionsTest
 symbolicJointJacobianTest
-symbolicLobatto4Test
 symbolicLookupTableTest
 symbolicMassMatrixDerivativeTest
 symbolicModuleTest

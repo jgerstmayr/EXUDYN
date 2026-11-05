@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 350 | 1.13.365 |
+| 1.13 | Newborn | 351 | 1.13.366 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.366** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolveImplicitRungeKutta with ODE1 and data coordinates; the two error estimates of SolveImplicitRungeKutta and SolveTrapezoidalGGL selectable by errorEstimate (#3253)
+  - description: SolveImplicitRungeKutta refuses ODE1 and data coordinates. The error estimate of the order of the method from the stages of two steps (\#3250) is in SolveImplicitRungeKutta only; SolveTrapezoidalGGL estimates from the accelerations of one step (and the mean accelerations of three for v). Maintainer: two kinds of estimators in each integrator, switched by a flag - a simple one of one step, inaccurate, and the accurate one, which needs the stage velocities of the previous step (not available in the C++ solvers yet, but resolvable). Decided: the ODE1 coordinates by the same Runge-Kutta method with their stage velocities as unknowns, the data coordinates by the post-Newton step as SolveTrapezoidalGGL; errorEstimate='twoSteps' or 'oneStep' in both solvers.
+  - **notes:** SolveImplicitRungeKutta integrates ODE1 coordinates by the same method and data coordinates by the post-Newton step; SolveImplicitRungeKutta and SolveTrapezoidalGGL take errorEstimate='twoSteps' or 'oneStep', the estimate from the stages of the previous and this step or the simple one of one step.
+  - date resolved: **2026-11-05 01:18**, date raised: 2026-11-05
 - **1.13.365** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` GetDictionary (#2075)
   - description: add read/write dict access for new structures SC.renderer and exudyn.config
   - **notes:** SC.renderer.GetDictionary() and SetDictionary() give and set the materials, the static graphics of the scopes and the render states of the enabled views; exudyn.config has GetDictionary and SetDictionary as well; GraphicsMaterialList.GetDict works again.

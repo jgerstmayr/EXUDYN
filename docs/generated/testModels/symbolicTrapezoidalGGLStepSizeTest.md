@@ -15,7 +15,8 @@ You can view and download this file on Github: [symbolicTrapezoidalGGLStepSizeTe
 #           flights and contacts of 10 ms, where the controlled step needs a tenth of the steps of a constant step for
 #           a tenth of its error; and a chain of 10 mass points on distance constraints, fixed at one end and starting
 #           horizontally, which falls and whips, against mbs.SolveDynamic with fine steps - the controlled step is as
-#           good as a constant one there, its error follows the tolerance. The PI controller rejects few steps.
+#           good as a constant one there, its error follows the tolerance. The PI controller rejects few steps. The
+#           error estimate errorEstimate='twoSteps' gives the steps of the default one on the ball (#3253).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-04
@@ -75,6 +76,9 @@ exu.Print('ball: 4000 constant steps, error', errorConstant, '; automatic step s
 Check(automatic['steps'] < 600 and errorAutomatic < errorConstant/5 and automatic['rejectedStepsError'] < 20,
       'the automatic step size of the ball')
 u = automatic['steps'] + round(float(automatic['q'][-1][1]), 6)
+twoSteps = SolveTrapezoidalGGL(ball, Settings(10, endTime, automatic=True, tolerance=1e-6), errorEstimate='twoSteps')
+exu.Print("ball, errorEstimate='twoSteps':", twoSteps['steps'], 'steps, error', np.max(np.abs(twoSteps['q'][-1] - reference)))
+Check(abs(twoSteps['steps'] - automatic['steps']) < 0.1*automatic['steps'], "the error estimate 'twoSteps' (#3253)")
 
 #a chain of 10 mass points, length 1, horizontal, its first point on a distance constraint to the origin
 (n, length, angle, mass) = (10, 1., 0., 0.1)

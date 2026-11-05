@@ -9,7 +9,9 @@
 #           4 against mbs.SolveDynamic with fine steps, and the automatic step size by the error estimate of the order of
 #           the method, its error of the size of the tolerance; on a pendulum with a mass on a stiff spring at its bob,
 #           LobattoIIIC4-GGL and Radau3 damp the fast oscillation of the spring at a step of h omega = 70, LobattoIIIA4
-#           keeps it and the energy at a smaller step.
+#           keeps it and the energy at a smaller step. ODE1 coordinates beside the pendulum of the order of each method,
+#           data coordinates of a bouncing ball by the post-Newton step against SolveGeneralizedAlpha (#3253), and the
+#           simple error estimate errorEstimate='oneStep' with more steps.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-04
@@ -30,7 +32,7 @@ testError = 0
 def Check(condition, message):
     global testError
     if not condition:
-        exu.Print('symbolicLobatto4Test: ' + message)
+        exu.Print('symbolicImplicitRungeKuttaTest: ' + message)
         testError += 1
 
 def Settings(steps, endTime=1., writePeriod=None):
@@ -170,7 +172,76 @@ energyChange = Energy(result['q'][-1], result['q_t'][-1]) - energy0
 exu.Print('stiff spring, LobattoIIIA4, h = 0.01: the energy changed by', energyChange)
 Check(abs(energyChange) < 1e-3, 'LobattoIIIA4 keeps the energy')
 
+#ODE1 coordinates beside the pendulum, coupled to its velocity: the order of each method (#3253)
+withODE1 = NumpySystem(np.eye(2), lambda q, q_t, t, y: np.array([0., -g]), initialState=([L, 0.], [0., 0.]),
+                       ode1RHS=lambda q, q_t, y, t: -y*(1 + 0.1*q_t[0]**2), initialStateODE1=[1.],
+                       constraints=lambda q, q_t, y, z, t: np.array([0.5*(q @ q - L**2)]),
+                       constraintJacobian=lambda q, q_t, y, t: np.array([q]), numberOfConstraints=1)
+referenceY = SolveImplicitRungeKutta(withODE1, Settings(800))['y'][-1][0]
+for method in implicitRungeKuttaMethods:
+    errors = [abs(SolveImplicitRungeKutta(withODE1, Settings(steps), method)['y'][-1][0] - referenceY) for steps in [25, 50]]
+    order = float(np.log2(errors[0]/errors[1]))
+    exu.Print('ODE1 coordinates, ' + method + ': error with 50 steps', errors[1], ', order', order)
+    Check(order > (2.8 if method == 'Radau3' else 3.8), 'the order of the ODE1 coordinates, ' + method + ': ' + str(order))
+    u += round(float(SolveImplicitRungeKutta(withODE1, Settings(50), method)['y'][-1][0]), 8)
+
+#data coordinates: a ball on a unilateral spring, switched by its data coordinate in the post-Newton step (#3253)
+from exudyn.itemInterface import NodePoint, ObjectGenericODE2, LoadForceVector, MarkerNodePosition, MarkerBodyPosition, \
+    ObjectGround, NodeGenericData, ObjectConnectorUser
+from exudyn.symbolics.solvers import SolveGeneralizedAlpha
+from exudyn.advancedUtilities import CreateSymbolicUserFunction
+esym = exu.symbolic
+(kContact, massBall) = (1e4, 0.5)
+def UFcontactForce(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, parameters):
+    force = esym.IfThenElse(dataCoordinates[0] < 0, -kContact*HT1.translation[1], 0.)
+    return [0, -force, 0, 0, force, 0]
+def UFcontactPostNewton(mbs, t, itemNumber, HT0, twist0, HT1, twist1, dataCoordinates, dataCoordinatesStartOfStep, parameters):
+    gap = HT1.translation[1]
+    switched = (gap < 0) != (dataCoordinates[0] < 0)
+    return [esym.IfThenElse(switched, kContact*esym.abs(gap), 0.), -1., gap]
+def BallModel():
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    ball = mbs.AddNode(NodePoint(referenceCoordinates=[0, 0.2, 0], initialVelocities=[0, 1, 0]))
+    mbs.AddObject(ObjectGenericODE2(nodeNumbers=[ball], massMatrix=massBall*np.eye(3)))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=ball)), loadVector=[0, -massBall*g, 0]))
+    ground = mbs.AddMarker(MarkerBodyPosition(bodyNumber=mbs.AddObject(ObjectGround())))
+    data = mbs.AddNode(NodeGenericData(initialCoordinates=[0.2], numberOfDataCoordinates=1))
+    contact = mbs.AddObject(ObjectConnectorUser(markerNumbers=[ground, mbs.AddMarker(MarkerNodePosition(nodeNumber=ball))], nodeNumber=data,
+                                                forceUserFunction=UFcontactForce, postNewtonStepUserFunction=UFcontactPostNewton))
+    recordings = []
+    for (name, function) in [('forceUserFunction', UFcontactForce), ('postNewtonStepUserFunction', UFcontactPostNewton)]:
+        recordings.append(CreateSymbolicUserFunction(mbs, function, name, contact))
+        mbs.SetObjectParameter(contact, name, recordings[-1])
+    mbs.variables['recordings'] = recordings #they live as long as the system
+    mbs.Assemble()
+    return (mbs, ball)
+(mbsBall, ball) = BallModel()
+SolveGeneralizedAlpha(SymbolicSystem(mbsBall), Settings(20000))
+referenceHeight = mbsBall.GetNodeOutput(ball, exu.OutputVariableType.Position)[1]
+(mbsBall, ball) = BallModel()
+result = SolveImplicitRungeKutta(SymbolicSystem(mbsBall), Settings(1000), 'LobattoIIIA4')
+height = mbsBall.GetNodeOutput(ball, exu.OutputVariableType.Position)[1]
+exu.Print('data coordinates, LobattoIIIA4: the height of the ball against generalized-alpha with fine steps',
+          height - referenceHeight, ', discontinuous iterations', result['discontinuousIterations'])
+Check(abs(height - referenceHeight) < 2e-3 and result['discontinuousIterations'] > 1000, 'the data coordinates')
+u += round(float(height), 6)
+
+#the simple error estimate of one step: about the steps of the trapezoidal rule
+settings = Settings(4)
+settings.timeIntegration.automaticStepSize = True
+settings.timeIntegration.absoluteTolerance = 1e-6
+settings.timeIntegration.relativeTolerance = 1e-6
+steps = [SolveImplicitRungeKutta(pendulum, settings, 'LobattoIIIA4', errorEstimate)['steps'] for errorEstimate in ['twoSteps', 'oneStep']]
+exu.Print("pendulum, LobattoIIIA4, tolerance 1e-6, errorEstimate 'twoSteps' and 'oneStep':", steps, 'steps')
+Check(4*steps[0] < steps[1], 'the error estimates: ' + str(steps))
+try:
+    SolveImplicitRungeKutta(pendulum, settings, 'LobattoIIIA4', 'embedded')
+    Check(False, 'a wrong errorEstimate is not refused')
+except ValueError:
+    pass
+
 u = round(u, 8) + testError #rounded: the last bits of numpy differ between platforms
-exu.Print('solution of symbolicLobatto4Test=', u)
+exu.Print('solution of symbolicImplicitRungeKuttaTest=', u)
 
 exu.sys['testResult'] = u

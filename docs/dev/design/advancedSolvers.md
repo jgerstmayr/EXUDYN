@@ -278,7 +278,10 @@ measurement; the estimate from the formulas evaluated without a solve - done wit
 - **Lobatto and Radau** (#3244, #3246, #3247): the table of section 3.2; the slider crank in 0.5 s with
   LobattoIIIA4 against 1.4 s with LobattoIIIC4-GGL; Lobatto4 with 32 steps 1e-8 where TrapezoidalGGL with 64 steps
   has 4e-5. The error estimate of the order of the method (#3250): 0.3 to 0.9 times the true local error at all step
-  sizes, 4 to 23 times fewer steps than with the trapezoidal estimate (section 3.2).
+  sizes, 4 to 23 times fewer steps than with the trapezoidal estimate (section 3.2). Both estimates selectable in
+  both solvers by `errorEstimate` (#3253): for TrapezoidalGGL the two-step one gives the same steps (both of the
+  order of the method); ODE1 and data coordinates in SolveImplicitRungeKutta. For C++, the two-step estimate needs the
+  stage velocities of the previous step kept by the solver.
 - **Output within the step** (#3241): no result of the test suite changed; the interpolated output of RK44 converges
   with order 4.
 - **SolveExplicit with fixed coordinates** (#3238), the C++ findings #3240 and #3245.

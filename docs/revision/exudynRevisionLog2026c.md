@@ -5875,6 +5875,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   1.7491018054920742; with 4 times the steps the new result changes by 6e-10, so the old one was the error of the
   moving clamp in the stages.
 
+<a id="rg20-2-7"></a>
+### RG20.2.7 — ODE1 and data coordinates in SolveImplicitRungeKutta; errorEstimate in both solvers (2026-11-05, #3253)
+- Maintainer: two estimators in each integrator, switched by a flag: the simple one of one step, and the accurate one
+  of two steps, which needs the stage velocities of the previous step (not kept by the C++ solvers yet, resolvable).
+  `errorEstimate='twoSteps'` / `'oneStep'`: the default of SolveImplicitRungeKutta 'twoSteps' (#3250), of
+  SolveTrapezoidalGGL 'oneStep' (as before).
+- SolveTrapezoidalGGL 'twoSteps': the trapezoidal rule against the parabola through the velocities at the start of the
+  previous step and at both ends of this step (the accelerations without constraints; with them the velocity error
+  by the mean accelerations, as 'oneStep' - with q only, the whipping chain took 79 steps and 1.6e-3 instead of 231 and
+  2.1e-4). Ball 1e-6: 417 steps, 8.7e-5 against 419, 9.0e-5; chain 1e-5: 230 steps, 2.4e-4 against 231, 2.1e-4 - for
+  a method of order 2 both estimates are of its order, so the steps are the same.
+- SolveImplicitRungeKutta: the ODE1 velocities of the implicit stages as unknowns, Y_i = y0 + h sum A_ij Yd_j, the
+  ODE1 rows of SystemResidual scaled by h, their Jacobian blocks from SystemJacobian by y and y_t; the data
+  coordinates by _PostNewton in a loop around the step as SolveTrapezoidalGGL (a rejected step resets system.data).
+  ODE1 beside the pendulum: order 4.0, 3.9, 3.0; the bouncing ball with a data coordinate (1000 steps): 4e-4 from
+  generalized-alpha with 20000 steps (generalized-alpha with 1000: 7e-4); 'oneStep' 295 steps against 31.
+- symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py (maintainer's approval), with the ODE1, data
+  and errorEstimate cases; symbolicTrapezoidalGGLStepSizeTest.py with 'twoSteps' on the ball.
+
 <a id="rg20-5-3"></a>
 ### RG20.5.3 — Euler parameters in the symbolic system and the projection in SolveExplicit (2026-11-04, #3238)
 - **UserItemCreator.CreateRigidBody** on a `NodeRigidBodyEP` (now the default, as `mbs.CreateRigidBody`; Rxyz stays):

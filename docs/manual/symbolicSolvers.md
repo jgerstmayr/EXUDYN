@@ -30,7 +30,8 @@ Exudyn's C++ solvers, written in Python with numpy and scipy:
   chain falling from horizontal and whipping as many. The tolerances are those of one step: where a motion is
   sensitive to small changes - a chain starting near its upright position - the global error grows far beyond
   them, as no local estimate sees the sensitivity; tighter tolerances help. The algebraic equations must depend on the
-  coordinates and the time only (#3242).
+  coordinates and the time only (#3242). `errorEstimate='twoSteps'` estimates the errors as `SolveImplicitRungeKutta`
+  does, from the velocities of the previous and this step; for the trapezoidal rule it gives the same steps (#3253).
 - `SolveImplicitRungeKutta(system, simulationSettings, method)`: implicit Runge-Kutta methods with two implicit
   stages (#3244, #3246, #3247). `'LobattoIIIA4'` (the default), Lobatto IIIA of order 4, enforces the constraints and
   the velocity constraints at the end of the step only, with a multiplier for each stage after the start: the
@@ -43,7 +44,9 @@ Exudyn's C++ solvers, written in Python with numpy and scipy:
   quadrature of the method against the polynomial through the stage velocities of the previous and this step - for
   the Lobatto methods Simpson's error from the fourth difference of five values -, without an extra solve (#3250);
   the accelerations enter it only without constraints. The local errors are then of the size of the tolerances, and
-  the steps grow by the order of the method as the tolerances are lowered.
+  the steps grow by the order of the method as the tolerances are lowered. `errorEstimate='oneStep'` takes the
+  embedded trapezoidal rule of one step instead - simple, but of order 2: about ten times the steps. ODE1 coordinates
+  are integrated by the same method, data coordinates by the post-Newton step (#3253).
 
 All of them take the `SimulationSettings` of `mbs.SolveDynamic`: the steps, the solver parameters, the Newton tolerances, the
 discontinuous iteration of the data coordinates and, with `timeIntegration.adaptiveStep`, the step size that a

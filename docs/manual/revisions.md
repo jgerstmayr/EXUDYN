@@ -464,7 +464,8 @@ steps or a step size controlled by the local errors of the coordinates and veloc
 {ref}`sec-symbolicsolvers`. **`SolveImplicitRungeKutta`** (#3244, #3246, #3247): implicit Runge-Kutta methods for
 symbolic systems with constraints - Lobatto IIIA of order 4 with the constraints at the end of the step, Lobatto IIIC
 of order 4 with the GGL stabilization (damping) and Radau IIA of order 3 -, with constant steps or an automatic step
-size by an estimate of the local error of the order of the method (#3250).
+size by an estimate of the local error of the order of the method (#3250), with ODE1 and data coordinates; the
+argument `errorEstimate` of both solvers selects the estimate of two steps or of one (#3253).
 
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.

@@ -1,0 +1,16 @@
+{
+  "number": 3253,
+  "title": "SolveImplicitRungeKutta with ODE1 and data coordinates; the two error estimates of SolveImplicitRungeKutta and SolveTrapezoidalGGL selectable by errorEstimate",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "SolveImplicitRungeKutta refuses ODE1 and data coordinates. The error estimate of the order of the method from the stages of two steps (#3250) is in SolveImplicitRungeKutta only; SolveTrapezoidalGGL estimates from the accelerations of one step (and the mean accelerations of three for v). Maintainer: two kinds of estimators in each integrator, switched by a flag - a simple one of one step, inaccurate, and the accurate one, which needs the stage velocities of the previous step (not available in the C++ solvers yet, but resolvable). Decided: the ODE1 coordinates by the same Runge-Kutta method with their stage velocities as unknowns, the data coordinates by the post-Newton step as SolveTrapezoidalGGL; errorEstimate='twoSteps' or 'oneStep' in both solvers.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 01:18",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/symbolics/advancedSolvers.py",
+  "releaseNotes": "SolveImplicitRungeKutta integrates ODE1 coordinates by the same method and data coordinates by the post-Newton step; SolveImplicitRungeKutta and SolveTrapezoidalGGL take errorEstimate='twoSteps' or 'oneStep', the estimate from the stages of the previous and this step or the simple one of one step.",
+  "resolvedInVersion": "1.13.366"
+}

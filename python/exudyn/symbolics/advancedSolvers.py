@@ -4,7 +4,9 @@
 # Details:  Implicit solvers beyond those of Exudyn's C++ core, for the systems of exudyn.symbolics.systemModel:
 #           SolveTrapezoidalGGL integrates a SymbolicSystemBase by the trapezoidal rule with the position and the
 #           velocity constraints enforced by the stabilization of Gear, Gupta and Leimkuhler (GGL), with constant steps
-#           or with a step size controlled by the local error estimated from the accelerations (#3242). They take the
+#           or with a step size controlled by the local error estimated from the accelerations (#3242);
+#           SolveImplicitRungeKutta by the Lobatto and Radau methods with two implicit stages (#3247), its step size by
+#           an estimate of the order of the method from the stages of two steps (#3250). They take the
 #           SimulationSettings of Exudyn and write their output as the solvers of exudyn.symbolics.solvers.
 #
 # Author:   Johannes Gerstmayr
@@ -133,7 +135,7 @@ def _RefuseConstraintsBeyondPositions(system, q, q_t, y, t):
                              'SolveGeneralizedAlpha')
 
 
-def SolveTrapezoidalGGL(system, simulationSettings=None):
+def SolveTrapezoidalGGL(system, simulationSettings=None, errorEstimate='oneStep'):
     """the implicit time integration of a SymbolicSystemBase by the trapezoidal rule with the stabilization of Gear,
     Gupta and Leimkuhler (GGL) for index-3 constraints (#3242): per step v1 = v0 + h/2 (a0 + a1), q1 = q0 + h/2 (v0 +
     v1) - C_q^T mu, M a1 = f(q1, v1, t1) - C_q^T z1, c(q1, t1) = 0 and C_q v1 + c_t = 0, with C_q = C_q(q1) - in the term of mu that of the previous Newton iterate -, the multiplier mu of the velocity
@@ -145,9 +147,14 @@ def SolveTrapezoidalGGL(system, simulationSettings=None):
     only; C_q comes from the reaction forces of the system.
 
     With timeIntegration.automaticStepSize (the default, as for the explicit solvers DOPRI5 and ODE23) the step size
-    is controlled by the local errors of the positions, h^3/12 q_ttt = h^2/12 (a1 - a0), and of the velocities, h^3/12
-    a_tt by the second difference of the mean accelerations (v1 - v0)/h of the last three steps - the accelerations a
-    of the trapezoidal rule alternate with constraints, their means do not -, with the PI controller of
+    is controlled by the local errors; errorEstimate='oneStep': of the positions, h^3/12 q_ttt = h^2/12 (a1 - a0), and
+    of the velocities, h^3/12 a_tt by the second difference of the mean accelerations (v1 - v0)/h of the last three
+    steps - the accelerations a of the trapezoidal rule alternate with constraints, their means do not;
+    errorEstimate='twoSteps': the trapezoidal rule against the integral of the parabola through the velocities at the
+    start of the previous step, the start and the end of this step (#3253), for the velocities the same with the
+    accelerations without constraints and the mean accelerations as 'oneStep' with them; the first step as 'oneStep'.
+    For the trapezoidal rule both are of the order of the method and give the same steps (a bouncing ball, a whipping
+    chain); 'twoSteps' is there to compare with SolveImplicitRungeKutta. With the PI controller of
     _ErrorStepSize and timeIntegration.absoluteTolerance, relativeTolerance, stepSizeSafety, stepSizeMaxIncrease,
     initialStepSize and minimumStepSize, the maximum step (endTime - startTime)/numberOfSteps; the tolerances are
     those of a step, the global error grows with the number of steps and with the sensitivity of the motion. The
@@ -164,6 +171,7 @@ def SolveTrapezoidalGGL(system, simulationSettings=None):
     Args:
         system: the system, a SymbolicSystemBase
         simulationSettings: exudyn.SimulationSettings; None: the defaults
+        errorEstimate: 'oneStep' (the default) or 'twoSteps', the error estimate of the automatic step size
 
     Returns:
         dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2), with ODE1 coordinates 'y', 'y_t', with algebraic
@@ -173,6 +181,8 @@ def SolveTrapezoidalGGL(system, simulationSettings=None):
     """
     if simulationSettings is None:
         simulationSettings = exudyn.SimulationSettings()
+    if errorEstimate not in ['twoSteps', 'oneStep']:
+        raise ValueError("SolveTrapezoidalGGL: errorEstimate must be 'twoSteps' or 'oneStep', not " + str(errorEstimate))
     timeIntegration = simulationSettings.timeIntegration
     newton = timeIntegration.newton
     _RefuseLieGroupNodes(system, True, 'SolveTrapezoidalGGL')
@@ -282,14 +292,24 @@ def SolveTrapezoidalGGL(system, simulationSettings=None):
                                  + str(t) + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
             (q, q_t, y_t) = State()
             q_tt = a
-            if stepSize.automatic: #the local errors h^3/12 q''' and h^3/12 v''', from the accelerations
+            twoSteps = stepSize.automatic and errorEstimate == 'twoSteps' and len(history) != 0
+            if twoSteps: #the trapezoidal rule against the parabola through the velocities (and accelerations) of the
+                #start of the previous step and of this step (#3253)
+                (hPrevious, vPrevious, aPrevious) = history[-1][2]
+                tau = -hPrevious/h
+                errors = [(h*_QuadratureError([(tau, vPrevious), (0., v0), (1., q_t)], [0.5, 0.5], [v0, q_t]), q0, q)]
+                if nAE == 0:
+                    errors.append((h*_QuadratureError([(tau, aPrevious), (0., a0), (1., a)], [0.5, 0.5], [a0, a]), v0, q_t))
+            elif stepSize.automatic: #the local errors h^3/12 q''' and h^3/12 v''', from the accelerations
                 errors = [((h**2/12.)*(a - a0), q0, q)]
-                if len(history) == 2: #v''' by the mean accelerations of the steps, which do not alternate as a
-                    mean = (q_t - v0)/h
-                    ((mean1, h1), (mean2, h2)) = (history[1], history[0])
-                    (tau1, tau2) = (0.5*(h + h1), 0.5*(h1 + h2))
-                    a_tt = (2./(tau1 + tau2))*((mean - mean1)/tau1 - (mean1 - mean2)/tau2)
-                    errors.append(((h**3/12.)*a_tt, v0, q_t))
+            if stepSize.automatic and (not twoSteps or nAE) and len(history) == 2: #v''' by the mean accelerations of
+                #the steps, which do not alternate as a does with constraints
+                mean = (q_t - v0)/h
+                ((mean1, h1, _), (mean2, h2, _)) = (history[1], history[0])
+                (tau1, tau2) = (0.5*(h + h1), 0.5*(h1 + h2))
+                a_tt = (2./(tau1 + tau2))*((mean - mean1)/tau1 - (mean1 - mean2)/tau2)
+                errors.append(((h**3/12.)*a_tt, v0, q_t))
+            if stepSize.automatic:
                 error = stepSize.Error(*(np.concatenate(x) for x in zip(*errors)))
                 if not stepSize.Control(error): #rejected: the step again with the smaller step size
                     system.data = dataStart.copy()
@@ -304,7 +324,8 @@ def SolveTrapezoidalGGL(system, simulationSettings=None):
                 (t0, t, h) = stepSize.Next()
                 discontinuousIteration = 0
         stepSize.Accept(t, newtonSteps + discontinuousIteration + 1)
-        history = (history + [((q_t - start[1])/h, h)])[-2:] #the mean accelerations (v1 - v0)/h of the last steps
+        history = (history + [((q_t - start[1])/h, h, (h, start[1], start[2]))])[-2:] #the mean accelerations (v1 -
+        #v0)/h of the last steps; the step, the velocity and the acceleration at its start
         output.Step(stepSize.stepIndex, t, q, q_t, q_tt, last=stepSize.Done(), y=y, y_t=y_t, z=z, h=h)
 
     return output.Finalize({'steps': stepSize.stepIndex, 'newtonIterations': newtonIterations,
@@ -333,24 +354,26 @@ implicitRungeKuttaMethods = {'LobattoIIIA4': ('LobattoIIIA', 'end'), 'LobattoIII
                              'Radau3': ('RadauIIA', 'end')}
 
 
-def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name):
+def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name, errorEstimate='twoSteps'):
     """the stage equations of a stiffly accurate implicit Runge-Kutta method of the tableau (A, c) for q_t = v, v_t = a,
-    M a = f - C_q^T z (#3244, #3246); the stages of a first row of zeros are the start of the step (Lobatto IIIA). The
-    constraints: 'GGL', c = 0 and C_q V_i + c_t = 0 at the implicit stages, with a multiplier z_i per implicit stage and
-    the positions Q_i - C_q^T mu_i; 'end', c = 0 and C_q v + c_t = 0 at the end of the step only, with a multiplier z_i
-    per stage after the start, the one of a stage at the start the multiplier of the end of the previous step - an
-    equation of each kind for the two unknown multipliers. With timeIntegration.automaticStepSize the step by
-    _ErrorStepSize with the error of the quadrature of the method against the polynomial through the stage values of
-    the previous and this step (#3250); the first step by the difference to the embedded trapezoidal solution of the
-    first and the last stage (of the start and the last stage if no stage is at the start)"""
+    M a = f - C_q^T z, and the ODE1 equations y_t = g (#3244, #3246, #3253); the stages of a first row of zeros are the
+    start of the step (Lobatto IIIA). The constraints: 'GGL', c = 0 and C_q V_i + c_t = 0 at the implicit stages, with a
+    multiplier z_i per implicit stage and the positions Q_i - C_q^T mu_i; 'end', c = 0 and C_q v + c_t = 0 at the end of
+    the step only, with a multiplier z_i per stage after the start, the one of a stage at the start the multiplier of
+    the end of the previous step - an equation of each kind for the two unknown multipliers. With
+    timeIntegration.automaticStepSize the step by _ErrorStepSize: errorEstimate 'twoSteps', the error of the quadrature
+    of the method against the polynomial through the stage values of the previous and this step (#3250), the first
+    step as 'oneStep'; 'oneStep', the difference to the embedded trapezoidal solution of the first and the last stage
+    (of the start and the last stage if no stage is at the start). Data coordinates by the post-Newton step, as
+    SolveTrapezoidalGGL"""
     if simulationSettings is None:
         simulationSettings = exudyn.SimulationSettings()
+    if errorEstimate not in ['twoSteps', 'oneStep']:
+        raise ValueError(name + ": errorEstimate must be 'twoSteps' or 'oneStep', not " + str(errorEstimate))
     timeIntegration = simulationSettings.timeIntegration
     newton = timeIntegration.newton
     _RefuseLieGroupNodes(system, True, name)
-    (nODE2, nAE) = (system.nODE2, system.nAE)
-    if system.nODE1 or system.nData:
-        raise ValueError(name + ': ODE1 and data coordinates are not implemented')
+    (nODE2, nODE1, nAE) = (system.nODE2, system.nODE1, system.nAE)
     (n, tStart, tEnd, h) = _Steps(simulationSettings)
     (A, c) = tableau
     s = len(c)
@@ -360,12 +383,13 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name):
     if not ggl and len(unknownZ) != 2:
         raise ValueError(name + ': the constraints at the end need two stages after the start')
     A2 = A @ A
-    #the unknowns: per implicit stage A_i, (z_i, mu_i with GGL); then the multipliers of the end constraints
+    #the unknowns: per implicit stage A_i, the ODE1 velocities Yd_i, (z_i, mu_i with GGL); then the multipliers of the
+    #end constraints
     index = 0
-    (sliceA, sliceZ, sliceMu, rowsAE, rowsV) = ({}, {}, {}, {}, {})
+    (sliceA, sliceY, sliceZ, sliceMu, rowsAE, rowsV) = ({}, {}, {}, {}, {}, {})
     for i in implicit:
-        sliceA[i] = slice(index, index + nODE2)
-        index += nODE2
+        (sliceA[i], sliceY[i]) = (slice(index, index + nODE2), slice(index + nODE2, index + nODE2 + nODE1))
+        index += nODE2 + nODE1
         if ggl:
             (sliceZ[i], sliceMu[i]) = (slice(index, index + nAE), slice(index + nAE, index + 2*nAE))
             (rowsAE[i], rowsV[i]) = (sliceZ[i], sliceMu[i]) #the constraint rows of a stage at the columns of its multipliers
@@ -377,155 +401,199 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name):
         (rowsEndAE, rowsEndV) = (sliceZ[unknownZ[0]], sliceZ[unknownZ[1]])
     nUnknowns = index
     errorFactor = np.sqrt(nUnknowns) if (newton.weightTolerancePerCoordinate and nUnknowns) else 1.
-    empty = np.zeros(0)
+    (colsODE2, colsODE1, colsAE) = (slice(0, nODE2), slice(nODE2, nODE2 + nODE1), slice(nODE2 + nODE1, nODE2 + nODE1 + nAE))
+    rowsSystemODE1 = colsODE1
 
     (q, q_t) = system.InitialState()
+    y = system.InitialStateODE1()
     system.data = system.InitialStateData()
     if nAE:
-        _RefuseConstraintsBeyondPositions(system, q, q_t, empty, tStart)
-    (q_tt, z) = _InitialAccelerations(system, q, q_t, empty, tStart)
+        _RefuseConstraintsBeyondPositions(system, q, q_t, y, tStart)
+    (q_tt, z) = _InitialAccelerations(system, q, q_t, y, tStart)
+    y_t = system.ODE1RHS(q, q_t, y, tStart) if nODE1 else np.zeros(0)
     output = _Output(system, simulationSettings, tStart, tEnd, h)
-    output.Step(0, tStart, q, q_t, q_tt, z=z)
+    output.Step(0, tStart, q, q_t, q_tt, y=y, y_t=y_t, z=z)
 
-    def TimeDerivative(qq, t, epsilon=1e-6):
+    def TimeDerivative(qq, yy, t, epsilon=1e-6):
         """c_t, the partial derivative of the constraints by time"""
-        return (np.asarray(system.AlgebraicEquations(qq, q_t, empty, z, t + epsilon), dtype=float)
-                - np.asarray(system.AlgebraicEquations(qq, q_t, empty, z, t - epsilon), dtype=float))/(2*epsilon)
+        return (np.asarray(system.AlgebraicEquations(qq, q_t, yy, z, t + epsilon), dtype=float)
+                - np.asarray(system.AlgebraicEquations(qq, q_t, yy, z, t - epsilon), dtype=float))/(2*epsilon)
 
-    def VelocityDerivative(qq, v, t, epsilon=1e-6):
+    def VelocityDerivative(qq, v, yy, t, epsilon=1e-6):
         """C_q and H = (C_q)_q v, the derivative of C_q along v"""
-        return (_ConstraintJacobian(system, qq, v, empty, t), (_ConstraintJacobian(system, qq + epsilon*v, v, empty, t)
-                - _ConstraintJacobian(system, qq - epsilon*v, v, empty, t))/(2*epsilon))
+        return (_ConstraintJacobian(system, qq, v, yy, t), (_ConstraintJacobian(system, qq + epsilon*v, v, yy, t)
+                - _ConstraintJacobian(system, qq - epsilon*v, v, yy, t))/(2*epsilon))
 
     (newtonIterations, jacobianEvaluations) = (0, 0)
+    discontinuous = timeIntegration.discontinuous
+    statistics = {'discontinuousIterations': 0}
     stepSize = _ErrorStepSize(simulationSettings, order=3) #the first step: the embedded trapezoidal solution, h^3
     previous = None #the start, the step and the stage velocities and accelerations of the last accepted step
     while not stepSize.Done():
+        start = (q, q_t, q_tt, y, y_t, z)
+        dataStart = system.data.copy()
         (t0, t, h) = stepSize.Next()
-        (q0, v0, a0, z0) = (q.copy(), q_t.copy(), q_tt.copy(), z.copy())
-        times = t0 + h*c
-        stageA = [a0.copy() for i in range(s)] #the stage accelerations, the first of IIIA the start of the step
-        stageZ = [z0.copy() for i in range(s)]
-        stageMu = [np.zeros(nAE) for i in range(s)]
-        qIterate = [q0 + (h*c[i])*v0 + (0.5*(h*c[i])**2)*a0 for i in range(s)] #for C_q^T mu
+        discontinuousIteration = 0
+        while True:
+            (q0, v0, a0, y0, yd0, z0) = (x.copy() for x in start) #the step again from its start, with the new data
+            times = t0 + h*c
+            stageA = [a0.copy() for i in range(s)] #the stage accelerations, the first of IIIA the start of the step
+            stageYd = [yd0.copy() for i in range(s)] #the stage ODE1 velocities
+            stageZ = [z0.copy() for i in range(s)]
+            stageMu = [np.zeros(nAE) for i in range(s)]
+            qIterate = [q0 + (h*c[i])*v0 + (0.5*(h*c[i])**2)*a0 for i in range(s)] #for C_q^T mu
 
-        def Stages():
-            """the stage positions and velocities"""
-            V = [v0 + h*sum(A[i, j]*stageA[j] for j in range(s)) for i in range(s)]
-            Q = [q0 + (h*c[i])*v0 + h**2*sum(A2[i, j]*stageA[j] for j in range(s)) for i in range(s)]
-            if ggl and nAE:
-                for i in implicit:
-                    Q[i] = Q[i] - system.ODE2ReactionForcesLHS(qIterate[i], V[i], empty, stageMu[i], times[i])
-            return (Q, V)
-
-        def Residual():
-            (Q, V) = Stages()
-            r = np.zeros(nUnknowns)
-            for i in implicit:
-                r[sliceA[i]] = h**2*system.SystemResidual(Q[i], V[i], stageA[i], empty, empty, stageZ[i], times[i])[:nODE2]
-            for i in (implicit if ggl else [s - 1]) if nAE else []:
-                (ae, vRows) = (rowsAE[i], rowsV[i]) if ggl else (rowsEndAE, rowsEndV)
-                r[ae] = system.AlgebraicEquations(Q[i], V[i], empty, stageZ[i], times[i])
-                r[vRows] = h*(_ConstraintJacobian(system, Q[i], V[i], empty, times[i]) @ V[i] + TimeDerivative(Q[i], times[i]))
-            return r
-
-        def Jacobian():
-            (Q, V) = Stages()
-            J = np.zeros((nUnknowns, nUnknowns))
-            for i in implicit:
-                J_q = system.SystemJacobian(Q[i], V[i], stageA[i], empty, empty, stageZ[i], times[i], factor_q=1., factor_q_t=0.,
-                                            factor_q_tt=0.)
-                J_v = system.SystemJacobian(Q[i], V[i], stageA[i], empty, empty, stageZ[i], times[i], factor_q=0., factor_q_t=1.,
-                                            factor_q_tt=0.)[:nODE2, :nODE2]
-                M = system.MassMatrix(Q[i], V[i], times[i])
-                K = J_q[:nODE2, :nODE2]
-                for j in implicit:
-                    J[sliceA[i], sliceA[j]] = h**2*((h**2*A2[i, j])*K + (h*A[i, j])*J_v + (M if i == j else 0.))
-                if i in sliceZ:
-                    J[sliceA[i], sliceZ[i]] = h**2*J_q[:nODE2, nODE2:]
+            def Stages():
+                """the stage positions, velocities and ODE1 coordinates"""
+                V = [v0 + h*sum(A[i, j]*stageA[j] for j in range(s)) for i in range(s)]
+                Q = [q0 + (h*c[i])*v0 + h**2*sum(A2[i, j]*stageA[j] for j in range(s)) for i in range(s)]
+                Y = [y0 + h*sum(A[i, j]*stageYd[j] for j in range(s)) for i in range(s)]
                 if ggl and nAE:
-                    (C_q, H) = VelocityDerivative(Q[i], V[i], times[i])
-                    for j in implicit:
-                        J[rowsAE[i], sliceA[j]] = (h**2*A2[i, j])*C_q
-                        J[rowsV[i], sliceA[j]] = h*((h*A[i, j])*C_q + (h**2*A2[i, j])*H)
-                    J[rowsAE[i], sliceZ[i]] = J_q[nODE2:, nODE2:]
-                    J[sliceA[i], sliceMu[i]] = -h**2*K @ C_q.T #dQ_i/dmu_i = -C_q^T
-                    J[rowsAE[i], sliceMu[i]] = -C_q @ C_q.T
-                    J[rowsV[i], sliceMu[i]] = -h*H @ C_q.T
-            if not ggl and nAE: #the end of the step, the last stage
-                (C_q, H) = VelocityDerivative(Q[s - 1], V[s - 1], times[s - 1])
-                for j in implicit:
-                    J[rowsEndAE, sliceA[j]] = (h**2*A2[s - 1, j])*C_q
-                    J[rowsEndV, sliceA[j]] = h*((h*A[s - 1, j])*C_q + (h**2*A2[s - 1, j])*H)
-            for i in sliceZ: #the multiplier columns scaled by 1/h^2, as the ODE2 rows by h^2
-                J[:, sliceZ[i]] /= h**2
-            return J
+                    for i in implicit:
+                        Q[i] = Q[i] - system.ODE2ReactionForcesLHS(qIterate[i], V[i], Y[i], stageMu[i], times[i])
+                return (Q, V, Y)
 
-        factorization = None
-        converged = False
-        initialResidual = residual = None
-        for iteration in range(int(newton.maxIterations)):
-            if factorization is None or not newton.useModifiedNewton:
-                factorization = scipy.linalg.lu_factor(Jacobian())
-                jacobianEvaluations += 1
-            r = Residual()
-            if not np.all(np.isfinite(r)): #diverged: as not converged
-                break
-            if initialResidual is None:
-                initialResidual = max(cMath.norm(r)/errorFactor, 2*newton.absoluteTolerance)
-            increment = scipy.linalg.lu_solve(factorization, r)
-            if ggl:
-                qIterate = Stages()[0]
-            for i in implicit:
-                stageA[i] = stageA[i] - increment[sliceA[i]]
+            def Residual():
+                (Q, V, Y) = Stages()
+                r = np.zeros(nUnknowns)
+                for i in implicit:
+                    residual = system.SystemResidual(Q[i], V[i], stageA[i], Y[i], stageYd[i], stageZ[i], times[i])
+                    r[sliceA[i]] = h**2*residual[colsODE2]
+                    r[sliceY[i]] = h*residual[rowsSystemODE1]
+                for i in (implicit if ggl else [s - 1]) if nAE else []:
+                    (ae, vRows) = (rowsAE[i], rowsV[i]) if ggl else (rowsEndAE, rowsEndV)
+                    r[ae] = system.AlgebraicEquations(Q[i], V[i], Y[i], stageZ[i], times[i])
+                    r[vRows] = h*(_ConstraintJacobian(system, Q[i], V[i], Y[i], times[i]) @ V[i] + TimeDerivative(Q[i], Y[i], times[i]))
+                return r
+
+            def Jacobian():
+                (Q, V, Y) = Stages()
+                J = np.zeros((nUnknowns, nUnknowns))
+                rowsScale = np.concatenate([np.full(nODE2, h**2), np.full(nODE1, h)]) #as the rows of Residual
+                for i in implicit:
+                    stage = (Q[i], V[i], stageA[i], Y[i], stageYd[i], stageZ[i], times[i])
+                    J_q = system.SystemJacobian(*stage, factor_q=1., factor_q_t=0., factor_q_tt=0., factor_y=0.)
+                    J_v = system.SystemJacobian(*stage, factor_q=0., factor_q_t=1., factor_q_tt=0., factor_y=0.)
+                    M = system.MassMatrix(Q[i], V[i], times[i])
+                    if nODE1:
+                        J_y = system.SystemJacobian(*stage, factor_q=0., factor_y=1.)
+                        J_yd = system.SystemJacobian(*stage, factor_q=0., factor_y=0., factor_y_t=1.)
+                    rows = slice(0, nODE2 + nODE1)
+                    for j in implicit:
+                        blockA = (h**2*A2[i, j])*J_q[rows, colsODE2] + (h*A[i, j])*J_v[rows, colsODE2]
+                        if i == j:
+                            blockA[:nODE2] += M
+                        J[sliceA[i], sliceA[j]] = rowsScale[:nODE2, None]*blockA[:nODE2]
+                        J[sliceY[i], sliceA[j]] = rowsScale[nODE2:, None]*blockA[nODE2:]
+                        if nODE1:
+                            blockY = (h*A[i, j])*J_y[rows, colsODE1] + (J_yd[rows, colsODE1] if i == j else 0.)
+                            J[sliceA[i], sliceY[j]] = rowsScale[:nODE2, None]*blockY[:nODE2]
+                            J[sliceY[i], sliceY[j]] = rowsScale[nODE2:, None]*blockY[nODE2:]
+                    if i in sliceZ:
+                        J[sliceA[i], sliceZ[i]] = h**2*J_q[colsODE2, colsAE]
+                        J[sliceY[i], sliceZ[i]] = h*J_q[rowsSystemODE1, colsAE]
+                    if ggl and nAE:
+                        (C_q, H) = VelocityDerivative(Q[i], V[i], Y[i], times[i])
+                        for j in implicit:
+                            J[rowsAE[i], sliceA[j]] = (h**2*A2[i, j])*C_q
+                            J[rowsV[i], sliceA[j]] = h*((h*A[i, j])*C_q + (h**2*A2[i, j])*H)
+                        J[rowsAE[i], sliceZ[i]] = J_q[colsAE, colsAE]
+                        J[sliceA[i], sliceMu[i]] = -h**2*J_q[colsODE2, colsODE2] @ C_q.T #dQ_i/dmu_i = -C_q^T
+                        J[sliceY[i], sliceMu[i]] = -h*J_q[rowsSystemODE1, colsODE2] @ C_q.T
+                        J[rowsAE[i], sliceMu[i]] = -C_q @ C_q.T
+                        J[rowsV[i], sliceMu[i]] = -h*H @ C_q.T
+                if not ggl and nAE: #the end of the step, the last stage
+                    (C_q, H) = VelocityDerivative(Q[s - 1], V[s - 1], Y[s - 1], times[s - 1])
+                    for j in implicit:
+                        J[rowsEndAE, sliceA[j]] = (h**2*A2[s - 1, j])*C_q
+                        J[rowsEndV, sliceA[j]] = h*((h*A[s - 1, j])*C_q + (h**2*A2[s - 1, j])*H)
+                for i in sliceZ: #the multiplier columns scaled by 1/h^2, as the ODE2 rows by h^2
+                    J[:, sliceZ[i]] /= h**2
+                return J
+
+            factorization = None
+            converged = False
+            newtonSteps = 0
+            initialResidual = residual = None
+            for iteration in range(int(newton.maxIterations)):
+                if factorization is None or not newton.useModifiedNewton:
+                    factorization = scipy.linalg.lu_factor(Jacobian())
+                    jacobianEvaluations += 1
+                r = Residual()
+                if not np.all(np.isfinite(r)): #diverged: as not converged
+                    break
+                if initialResidual is None:
+                    initialResidual = max(cMath.norm(r)/errorFactor, 2*newton.absoluteTolerance)
+                increment = scipy.linalg.lu_solve(factorization, r)
                 if ggl:
-                    stageMu[i] = stageMu[i] - increment[sliceMu[i]]
-            for i in sliceZ:
-                stageZ[i] = stageZ[i] - increment[sliceZ[i]]/h**2
-            newtonIterations += 1
-            residual = cMath.norm(Residual())/errorFactor
-            if residual/initialResidual <= newton.relativeTolerance or residual <= newton.absoluteTolerance:
-                converged = True
+                    qIterate = Stages()[0]
+                for i in implicit:
+                    stageA[i] = stageA[i] - increment[sliceA[i]]
+                    stageYd[i] = stageYd[i] - increment[sliceY[i]]
+                    if ggl:
+                        stageMu[i] = stageMu[i] - increment[sliceMu[i]]
+                for i in sliceZ:
+                    stageZ[i] = stageZ[i] - increment[sliceZ[i]]/h**2
+                newtonIterations += 1
+                newtonSteps += 1
+                residual = cMath.norm(Residual())/errorFactor
+                if residual/initialResidual <= newton.relativeTolerance or residual <= newton.absoluteTolerance:
+                    converged = True
+                    break
+            if not converged:
+                if stepSize.Reduce(-1):
+                    system.data = dataStart.copy()
+                    (t0, t, h) = stepSize.Next()
+                    discontinuousIteration = 0
+                    continue
+                raise ValueError(name + ': Newton did not converge in step ' + str(stepSize.stepIndex + 1) + ' at t=' + str(t)
+                                 + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
+            (Q, V, Y) = Stages()
+            if stepSize.automatic:
+                if previous is None or errorEstimate == 'oneStep': #against the trapezoidal rule of the first (or the
+                    #start) and the last stage, an error of order h^3
+                    (vFirst, aFirst) = (V[0], stageA[0]) if c[0] == 0. else (v0, a0)
+                    errors = np.concatenate([Q[-1] - (q0 + (0.5*h)*(vFirst + V[-1])), V[-1] - (v0 + (0.5*h)*(aFirst + stageA[-1]))])
+                    (values0, values1) = (np.concatenate([q0, v0]), np.concatenate([Q[-1], V[-1]]))
+                    stepSize.order = 3
+                else: #the quadrature of the method against the polynomial through the stage velocities of the
+                    #previous and this step, of the order of the method (#3250); the accelerations only without
+                    #constraints, as their stage values are of order 2 with them
+                    (tPrevious, hPrevious, VPrevious, APrevious) = previous
+                    taus = [(tPrevious + hPrevious*cj - t0)/h for cj in c]
+                    older = [j for j in range(s) if min(abs(taus[j] - ck) for ck in c) > 1e-9]
+                    pointsV = [(taus[j], VPrevious[j]) for j in older] + [(c[j], V[j]) for j in range(s)]
+                    errors = h*_QuadratureError(pointsV, A[-1], V)
+                    (values0, values1) = (q0, Q[-1])
+                    if nAE == 0:
+                        pointsA = [(taus[j], APrevious[j]) for j in older] + [(c[j], stageA[j]) for j in range(s)]
+                        errors = np.concatenate([errors, h*_QuadratureError(pointsA, A[-1], stageA)])
+                        (values0, values1) = (np.concatenate([q0, v0]), np.concatenate([Q[-1], V[-1]]))
+                    stepSize.order = len(pointsV) #the local error of a method of order len(points) - 1
+                if not stepSize.Control(stepSize.Error(errors, values0, values1)): #rejected: again with the smaller step
+                    system.data = dataStart.copy()
+                    (t0, t, h) = stepSize.Next()
+                    discontinuousIteration = 0
+                    continue
+            #stiffly accurate: the end is the last stage
+            (q, q_t, q_tt, y, y_t, z) = (Q[-1], V[-1], stageA[-1], Y[-1], stageYd[-1], stageZ[-1])
+            done = _PostNewton(system, discontinuous, q, q_t, y, z, dataStart, t, discontinuousIteration, statistics, stepSize, h)
+            if done:
                 break
-        if not converged:
-            if stepSize.Reduce(-1):
-                continue
-            raise ValueError(name + ': Newton did not converge in step ' + str(stepSize.stepIndex + 1) + ' at t=' + str(t)
-                             + ' after ' + str(int(newton.maxIterations)) + ' iterations; residual ' + str(residual))
-        (Q, V) = Stages()
-        if stepSize.automatic and previous is None: #the first step: against the trapezoidal rule of the first (or the
-            #start) and the last stage, an error of order h^3
-            (vFirst, aFirst) = (V[0], stageA[0]) if c[0] == 0. else (v0, a0)
-            errors = np.concatenate([Q[-1] - (q0 + (0.5*h)*(vFirst + V[-1])), V[-1] - (v0 + (0.5*h)*(aFirst + stageA[-1]))])
-            if not stepSize.Control(stepSize.Error(errors, np.concatenate([q0, v0]), np.concatenate([Q[-1], V[-1]]))):
-                continue
-        elif stepSize.automatic: #the quadrature of the method against the polynomial through the stage velocities of
-            #the previous and this step, of the order of the method (#3250); the accelerations only without constraints,
-            #as their stage values are of order 2 with them
-            (tPrevious, hPrevious, VPrevious, APrevious) = previous
-            taus = [(tPrevious + hPrevious*cj - t0)/h for cj in c]
-            older = [j for j in range(s) if min(abs(taus[j] - ck) for ck in c) > 1e-9]
-            pointsV = [(taus[j], VPrevious[j]) for j in older] + [(c[j], V[j]) for j in range(s)]
-            errors = h*_QuadratureError(pointsV, A[-1], V)
-            (values0, values1) = (q0, Q[-1])
-            if nAE == 0:
-                pointsA = [(taus[j], APrevious[j]) for j in older] + [(c[j], stageA[j]) for j in range(s)]
-                errors = np.concatenate([errors, h*_QuadratureError(pointsA, A[-1], stageA)])
-                (values0, values1) = (np.concatenate([q0, v0]), np.concatenate([Q[-1], V[-1]]))
-            stepSize.order = len(pointsV) #the local error of a method of order len(points) - 1
-            if not stepSize.Control(stepSize.Error(errors, values0, values1)):
-                continue
+            discontinuousIteration += 1
+            if done is None: #rejected: the step with the smaller step size, from the start of the step and its data
+                (t0, t, h) = stepSize.Next()
+                discontinuousIteration = 0
         previous = (t0, h, V, [a.copy() for a in stageA])
-        (q, q_t, q_tt, z) = (Q[-1], V[-1], stageA[-1], stageZ[-1]) #stiffly accurate: the end is the last stage
-        stepSize.Accept(t, 1)
-        output.Step(stepSize.stepIndex, t, q, q_t, q_tt, last=stepSize.Done(), z=z, h=h)
+        stepSize.Accept(t, newtonSteps + discontinuousIteration + 1)
+        output.Step(stepSize.stepIndex, t, q, q_t, q_tt, last=stepSize.Done(), y=y, y_t=y_t, z=z, h=h)
 
     return output.Finalize({'steps': stepSize.stepIndex, 'newtonIterations': newtonIterations,
                             'jacobianEvaluations': jacobianEvaluations, 'rejectedSteps': stepSize.rejected,
-                            'rejectedStepsError': stepSize.rejectedByError})
+                            'rejectedStepsError': stepSize.rejectedByError, **statistics})
 
 
-def SolveImplicitRungeKutta(system, simulationSettings=None, method='LobattoIIIA4'):
+def SolveImplicitRungeKutta(system, simulationSettings=None, method='LobattoIIIA4', errorEstimate='twoSteps'):
     """the implicit time integration of a SymbolicSystemBase by an implicit Runge-Kutta method for index-3 constraints
     (#3244, #3246, #3247), of implicitRungeKuttaMethods, each with two implicit stages:
 
@@ -541,33 +609,40 @@ def SolveImplicitRungeKutta(system, simulationSettings=None, method='LobattoIIIA
       L-stable.
 
     All of order 2 in the accelerations and multipliers (measured on a pendulum and a slider crank) and stiffly
-    accurate: the end of the step is the last stage. With timeIntegration.automaticStepSize (the default) the step
-    size is controlled by an estimate of the local error of the order of the method (#3250): the quadrature of the
+    accurate: the end of the step is the last stage. The ODE1 coordinates are integrated by the same method, with
+    their velocities at the stages as unknowns (#3253). With timeIntegration.automaticStepSize (the default) the step
+    size is controlled with errorEstimate='twoSteps' by an estimate of the local error of the order of the method (#3250): the quadrature of the
     method, h sum_j b_j V_j, against the integral of the polynomial through the stage velocities of the previous and
     this step - for the Lobatto methods of degree 4, Simpson's error h^5/2880 v'''' -, and the same for the stage
     accelerations without constraints (with them, their stage values are of order 2, and the error of q decides); no
     extra solve. It is 0.3 to 0.6 times the true local error, for all step sizes; the global error is then of the size
     of the tolerances. The first step, without a previous one, by the embedded trapezoidal solution of the first (or
-    the start) and the last stage, an error of order h^3. The PI controller and the settings as SolveTrapezoidalGGL;
+    the start) and the last stage, an error of order h^3; errorEstimate='oneStep' takes that one in every step - simple,
+    but it overestimates the error of the method and takes about the steps of the trapezoidal rule. The ODE1
+    coordinates are not in the estimate. The PI controller and the settings as SolveTrapezoidalGGL;
     without it the steps of timeIntegration.numberOfSteps. Newton's method for the stage accelerations and multipliers (and mu)
     with the Jacobian of the system, the ODE2 rows scaled by h^2, by timeIntegration.newton as SolveTrapezoidalGGL; a
     step whose Newton iteration does not converge is repeated with a smaller step with automaticStepSize or
-    adaptiveStep, else raises. Consistent initial accelerations and algebraic coordinates; the output as the solvers
-    of exudyn.symbolics.solvers. The algebraic equations must depend on q and t only; ODE1 and data coordinates are not
-    implemented
+    adaptiveStep, else raises. Data coordinates by the post-Newton step, with timeIntegration.discontinuous, as
+    SolveTrapezoidalGGL. Consistent initial accelerations and algebraic coordinates, the initial ODE1 velocities those
+    of the ODE1 equations; the output as the solvers of exudyn.symbolics.solvers. The algebraic equations must depend on
+    q and t only
 
     Args:
         system: the system, a SymbolicSystemBase
         simulationSettings: exudyn.SimulationSettings; None: the defaults
         method: 'LobattoIIIA4', 'LobattoIIIC4-GGL' or 'Radau3'
+        errorEstimate: 'twoSteps' (the default) or 'oneStep', the error estimate of the automatic step size
 
     Returns:
-        dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2), with algebraic equations 'z', at the times of
-        solution.file.writePeriod and the end, and the statistics 'steps', 'newtonIterations', 'jacobianEvaluations',
-        'rejectedSteps' (by Newton) and 'rejectedStepsError'
+        dict with 'time' (n_out), 'q', 'q_t', 'q_tt' (n_out x nODE2), with ODE1 coordinates 'y', 'y_t', with algebraic
+        equations 'z', at the times of solution.file.writePeriod and the end, and the statistics 'steps',
+        'newtonIterations', 'jacobianEvaluations', 'discontinuousIterations', 'rejectedSteps' (by Newton or the
+        post-Newton step) and 'rejectedStepsError'
     """
     if method not in implicitRungeKuttaMethods:
         raise ValueError('SolveImplicitRungeKutta: method must be one of ' + str(list(implicitRungeKuttaMethods))
                          + ', not ' + str(method))
     (tableau, constraints) = implicitRungeKuttaMethods[method]
-    return _SolveRungeKutta(system, simulationSettings, _rungeKuttaTableaus[tableau], constraints, 'SolveImplicitRungeKutta')
+    return _SolveRungeKutta(system, simulationSettings, _rungeKuttaTableaus[tableau], constraints, 'SolveImplicitRungeKutta',
+                            errorEstimate)
