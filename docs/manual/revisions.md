@@ -528,6 +528,11 @@ by which it passes. The example staubliTX2blending.py shows a handling task with
 inverse dynamics by the recursive Newton-Euler algorithm (about 2 us for 6 links), `Robot.InverseDynamics` the same in
 Python; `Robot.SetControl(trajectory, compensation='dynamic')` adds them as feed-forward to the PD control of both
 models, which then follow a fast trajectory of the TX2-90L 20 times more closely than with `'static'` (#3276).
+The models of `exudyn.robotics.models` have named `'configurations'` - for the Puma560, UR5 and Panda those of the
+Robotics Toolbox (`'qz'`, `'qr'`, ...), for the TX2-90L upright and ready with the tool pointing down - and an
+`'initialConfiguration'`; `LinkDict2Robot(model, initialConfiguration='model')` (or a name, or coordinates) sets
+`Robot.q0`, and `friction=True` gives the links the friction of the model, for the Puma560 from the motor data of the
+Robotics Toolbox. Without these arguments the robots are as before (#3277).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

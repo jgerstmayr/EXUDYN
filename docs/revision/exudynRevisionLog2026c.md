@@ -6217,6 +6217,20 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   of degree 5 in 0.6 s: tracking error 2.3e-3 rad with 'static', 1.2e-4 rad with 'dynamic', the same in both models.
 - robotInverseDynamicsTest.py.
 
+<a id="rg19-7-1"></a>
+### RG19.7.1 — configurations, initial configuration and friction of the models (2026-11-05, #3277)
+- Maintainer 2026-11-05: next step 3 of the report (RG19.7: models.py with initial configurations and friction).
+- From the RTB 1.5 (venvP313rtb, no network): the configs of the DH Puma560 (qr, qz, qn, qs), UR5 (qr, qz) and Panda
+  (qr, qz); the friction of the Puma560 (B, Tc, G per link at the motor; at the joint B G^2 and the mean of |Tc| times
+  |G|: viscous 5.8, 9.5, 4.0, 0.41, 0.43, 0.22 Nms/rad, Coulomb 26, 10.6, 6.4, 1.07, 0.85, 0.55 Nm); the UR5 and the
+  Panda have none there. The forward kinematics agree with the RTB (Puma560: the RTB's base is 0.67183 m higher).
+- The TX2-90L: qz upright, qr = [0, 0.5, 1.4, 0, pi - 1.9, 0] with the tool pointing down.
+- LinkDict2Robot(initialConfiguration=None, friction=False): the defaults keep the robots of the existing scripts as
+  they were (q0 = reference, no friction); 'model' takes the model's initialConfiguration (qr for all four).
+- Seen, open: the joint limits of the Puma560 of models.py (Corke, Visual Control) differ from the RTB's; the model
+  Manipulator4Rsimple has 3 links.
+- robotModelsTest.py.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

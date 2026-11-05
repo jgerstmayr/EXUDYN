@@ -381,7 +381,10 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   KinematicChain with the forward kinematics, the Jacobian and the static torques (#3259); .2 done: the analytic IK
   (3R, 6R with a spherical wrist, UR) in the chain and in Robot, future.py removed (#3260); .3 done: the arm
   configuration (#3265); .4 done: the LM IK in the chain with its Python version, the class deprecated (#3269).
-- RG19.7 Revise models.py: PUMA560, UR5, Panda, Stäubli TX2-90L, their initial configurations; all models checked.
+- RG19.7 Revise models.py: PUMA560, UR5, Panda, Stäubli TX2-90L, their initial configurations; all models checked; .1 done:
+  the configurations, the initial configuration and the friction of the models, the kinematics checked against RTB 1.5
+  (#3277); open: the joint limits of the Puma560 differ from the RTB's (Corke, Visual Control vs. the RTB), the
+  inertia check of RG19.3, Manipulator4Rsimple has 3 links.
 - RG19.8 Clean up the robotics examples and test models on the revised interfaces.
 
 ## 6. Proposals (2026-11-05, not decided)

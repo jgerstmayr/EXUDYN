@@ -182,6 +182,7 @@ robotCartesianPathsTest
 robotDictionaryTest
 robotFrictionEndStopsTest
 robotInverseDynamicsTest
+robotModelsTest
 robotTrajectoryProfilesTest
 rollingCoinPenaltyTest
 rollingCoinTest

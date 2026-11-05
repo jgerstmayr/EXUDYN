@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 373 | 1.13.388 |
+| 1.13 | Newborn | 374 | 1.13.389 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.389** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics.models: named configurations, the initial configuration and the friction of the models, checked against the RTB (#3277)
+  - description: The robots of exudyn.robotics.models start at zero, which for the Puma560 and the Panda is not a usual pose, and carry no friction; LinkDict2Robot cannot set Robot.q0 or the friction of the links (RG19.7). Decided: 'configurations' per model (the RTB's qz, qr and further ones; the TX2-90L upright and ready with the tool down) and 'initialConfiguration'; LinkDict2Robot(initialConfiguration, friction) - None and False keep the former behaviour; the Puma560 gets the joint friction from the motor data of the RTB; the forward kinematics of Puma560, UR5 and Panda checked against the RTB 1.5.
+  - **notes:** The models of exudyn.robotics.models have named 'configurations' (for the Puma560, UR5 and Franka Emika Panda those of the Robotics Toolbox, for the Staubli TX2-90L upright and ready with the tool pointing down) and an 'initialConfiguration'; LinkDict2Robot(model, initialConfiguration='model' or a name or coordinates) sets Robot.q0, friction=True gives the links the friction of the model, for the Puma560 from the motor data of the Robotics Toolbox; the forward kinematics of Puma560, UR5 and Panda agree with the Robotics Toolbox 1.5.
+  - date resolved: **2026-11-05 22:58**, date raised: 2026-11-05
 - **1.13.388** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robot: inverse dynamics in KinematicChain and Robot, the dynamic compensation of the joint control (#3276)
   - description: The joint control of Robot compensates gravity only (compensation='static'); the feed-forward of the inverse dynamics with the planned velocities and accelerations, which leaves the PD control the errors only, is missing (RG19.4.2), and KinematicChain has no inertias. Decided: KinematicChain gets the inertia tensors and InverseDynamics(q, q\_t, q\_tt) by the recursive Newton-Euler algorithm in C++, Robot.InverseDynamics the same in Python; SetControl(trajectory, compensation='dynamic') for both models.
   - **notes:** KinematicChain(..., inertias) and KinematicChain.InverseDynamics(q, q\_t, q\_tt) of exudyn.cUtilities give the joint torques and forces of the inverse dynamics by the recursive Newton-Euler algorithm (about 2 us for 6 links); Robot.InverseDynamics is the same in Python, and Robot.GetKinematicChain passes the inertias of the links. Robot.SetControl(trajectory, compensation='dynamic') adds them as feed-forward to the PD control of the kinematic tree and of the redundant coordinate model.

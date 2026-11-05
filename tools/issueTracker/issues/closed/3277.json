@@ -1,0 +1,15 @@
+{
+  "number": 3277,
+  "title": "robotics.models: named configurations, the initial configuration and the friction of the models, checked against the RTB",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The robots of exudyn.robotics.models start at zero, which for the Puma560 and the Panda is not a usual pose, and carry no friction; LinkDict2Robot cannot set Robot.q0 or the friction of the links (RG19.7). Decided: 'configurations' per model (the RTB's qz, qr and further ones; the TX2-90L upright and ready with the tool down) and 'initialConfiguration'; LinkDict2Robot(initialConfiguration, friction) - None and False keep the former behaviour; the Puma560 gets the joint friction from the motor data of the RTB; the forward kinematics of Puma560, UR5 and Panda checked against the RTB 1.5.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 22:58",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The models of exudyn.robotics.models have named 'configurations' (for the Puma560, UR5 and Franka Emika Panda those of the Robotics Toolbox, for the Staubli TX2-90L upright and ready with the tool pointing down) and an 'initialConfiguration'; LinkDict2Robot(model, initialConfiguration='model' or a name or coordinates) sets Robot.q0, friction=True gives the links the friction of the model, for the Puma560 from the motor data of the Robotics Toolbox; the forward kinematics of Puma560, UR5 and Panda agree with the Robotics Toolbox 1.5.",
+  "resolvedInVersion": "1.13.389"
+}

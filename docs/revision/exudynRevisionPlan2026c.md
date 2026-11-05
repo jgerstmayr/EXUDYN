@@ -3232,6 +3232,10 @@ CLOSED 2026-11-05 (#3269): the same iteration in C++ and Python, restarts by a f
 
 Design section 3.
 
+#### **CLOSED_RG19.7.1** Named configurations, the initial configuration and the friction of the models, checked against the RTB
+
+CLOSED 2026-11-05 (#3277): configurations and initialConfiguration per model, LinkDict2Robot(initialConfiguration, friction), the Puma560 friction from the RTB motor data; Puma560, UR5, Panda equal to the RTB 1.5; robotModelsTest.py. [log](exudynRevisionLog2026c.md#rg19-7-1)
+
 ### **OPEN_RG19.8** Clean up the robotics examples and test models on the revised interfaces
 
 Design section 3; P/D values adjusted slightly in favour of simple scripts.

@@ -52,7 +52,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKine
 (sec-models-manipulatorpanda)=
 ## Function: ManipulatorPANDA
 
-[`ManipulatorPANDA()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L374)
+[`ManipulatorPANDA()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L376)
 
 - **function description**: DEPRECATED: the former name of ManipulatorFrankaEmikaPanda (#3255)
 
@@ -60,7 +60,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKine
 (sec-models-manipulatorur5)=
 ## Function: ManipulatorUR5
 
-[`ManipulatorUR5()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L383)
+[`ManipulatorUR5()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L385)
 
 - **function description**: generate UR5 manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
@@ -74,7 +74,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKine
 (sec-models-manipulatorpuma560)=
 ## Function: ManipulatorPuma560
 
-[`ManipulatorPuma560()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L477)
+[`ManipulatorPuma560()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L481)
 
 - **function description**: generate puma560 manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
@@ -82,13 +82,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKine
 - **notes**: std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138, puma p560 limits, taken from Corke Visual Control of Robots; the inertias of links 0 and 2 are adjusted against Corke's data so that the principal moments fulfill the triangle inequality: link 0 has only I_yy = 0.35 there, the moment about its joint axis and the only one that acts, and gets I_xx = I_zz = 0.2; link 2 gets I_zz = 0.025 instead of 0.0125 (0.066 + 0.0125 < 0.086 is not physical)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`numericalInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/numericalInverseKinematicsTest.py) (TM), [`robotInverseDynamicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotInverseDynamicsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`numericalInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/numericalInverseKinematicsTest.py) (TM), [`robotInverseDynamicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotInverseDynamicsTest.py) (TM), [`robotModelsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotModelsTest.py) (TM)
 
 
 (sec-models-manipulatorstaublitx2-90l)=
 ## Function: ManipulatorStaubliTX2_90L
 
-[`ManipulatorStaubliTX2_90L()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L572)
+[`ManipulatorStaubliTX2_90L()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L586)
 
 - **function description**: generate the Staubli TX2-90L manipulator as robot dictionary, with the joint frames of its URDF (dhMode 'jointFrames': per link the joint type and the translation from the previous joint frame; all link frames parallel at q = 0, the arm upright); a 6R robot with a spherical wrist, for KinematicChain.InverseKinematicsAnalytic
 - **output**: robot dictionary for LinkDict2Robot
@@ -101,15 +101,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2b
 (sec-models-linkdict2robot)=
 ## Function: LinkDict2Robot
 
-[`LinkDict2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L621)
+[`LinkDict2Robot(robotLinkDict, robotClass = None, initialConfiguration = None, friction = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L638)
 
 - **function description**: generate serial manipulator as robotClass object from robotLinkDict
 - **input**:
   - `robotClass`: robot class object from roboticsCore; if robotClass is provided, gravity, tool and base are used from there
   - `robotLinkDict`: list of robot links generated by manipulator import for individual robot dictionary
+  - `initialConfiguration`: None: Robot.q0 is the reference configuration; 'model': the configuration the model names in 'initialConfiguration' (e.g. 'qr', the arm ready, as in the RTB); the name of one of the model's 'configurations' (e.g. 'qz', 'qr'); or the joint coordinates (#3277)
+  - `friction`: if True, the 'viscousFriction' and 'coulombFriction' of the links of the model (where known, e.g. the Puma560) become those of the RobotLinks (#3277)
 - **output**: updated robot class
 - **author**: Martin Sereinig
-- **notes**: dhMode 'stdDH', 'modDHKK' or 'jointFrames' (per link 'jointType' and 'preHT', the link frame the joint frame); the optional 'jointLimits' of a link become RobotLink jointLimits DH Parameter Information stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha) modDH = [alpha, dx, theta, rz] with used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d) used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r) Important note:  d(khali)=a(corke)  and r(khali)=d(corke)
+- **notes**: dhMode 'stdDH', 'modDHKK' or 'jointFrames' (per link 'jointType' and 'preHT', the link frame the joint frame); the optional 'jointLimits' of a link become RobotLink jointLimits; 'configurations' are named joint coordinates of the model, as the configs of the Robotics Toolbox DH Parameter Information stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha) modDH = [alpha, dx, theta, rz] with used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d) used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r) Important note:  d(khali)=a(corke)  and r(khali)=d(corke)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`staubliTX2blending.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2blending.py) (Ex), [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`analyticInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/analyticInverseKinematicsTest.py) (TM), [`kinematicChainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicChainTest.py) (TM), [`numericalInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/numericalInverseKinematicsTest.py) (TM), [`robotCartesianPathsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCartesianPathsTest.py) (TM), ...
@@ -118,7 +120,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-models-linkdictmoddhkk2robot)=
 ## Function: LinkDictModDHKK2Robot
 
-[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L711)
+[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L749)
 
 - **function description**: special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
 - **input**:
