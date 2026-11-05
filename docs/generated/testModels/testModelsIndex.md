@@ -141,6 +141,7 @@ markerNodeCoordinateReferenceTest
 MathematicalPendulumTest
 matrixContainerTest
 mecanumWheelRollingDiscTest
+modelLibraryTest
 movingGroundRobotTest
 multithreadingUserFunctionTest
 NGsolveCMStest

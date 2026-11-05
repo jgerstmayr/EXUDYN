@@ -1,0 +1,15 @@
+{
+  "number": 3257,
+  "title": "a library of small test models and a solver study on it",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "The solver tests use models of their own in each test model; several models repeat. Decided (maintainer 2026-11-05): python/TestModels/modelLibrary.py collects small, fast models - a mass-spring-damper, a pendulum of mass points on distance constraints, a chain of rigid bodies on revolute joints and on rigid body spring-dampers, the IFToMM spatial slider-crank, a kinematic tree, a 3D beam, an ObjectFFRFreducedOrder of a stored mesh, an ObjectGenericDAE with nonlinear user functions - with modelNames and GetModel(i) returning the assembled mbs, the settings of a fast run and the state to compare; modelLibraryTest.py runs them; python/testing/solverStudy.py determines a reference solution per model, varies the steps (tolerances for the adaptive solvers) with a time limit per run and reports error, order, steps and time per solver.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 09:41",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "python/TestModels/modelLibrary.py: nine small models for tests (mass-spring-damper, pendulum on distance constraints, rigid body chains on joints and on spring-dampers, the IFToMM slider-crank, a kinematic tree, a 3D beam, an ObjectFFRFreducedOrder of a stored mesh, an ObjectGenericDAE with user functions), GetModel(i) returns the assembled mbs with the settings of a fast run; modelLibraryTest.py runs them; python/testing/solverStudy.py compares the dynamic solvers on them against a reference, with varied steps or tolerances and a time limit per run.",
+  "resolvedInVersion": "1.13.371"
+}

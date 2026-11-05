@@ -42,7 +42,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 - **function description**: compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1) as the rows of a 3x3 numpy array, unpacked as `[v0, v1, v2] = GramSchmidt(vector0, vector1)`; a zero vector or parallel vectors raise a ValueError; computed in C++ by exudyn.cUtilities.GramSchmidt
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ACFtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py) (TM), [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`sliderCrank3Dbenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dbenchmark.py) (TM), [`sliderCrank3Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dtest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ACFtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py) (TM), [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`modelLibrary.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/modelLibrary.py) (TM), [`sliderCrank3Dbenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dbenchmark.py) (TM), [`sliderCrank3Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dtest.py) (TM)
 
 
 (sec-rigidbodyutilities-symmetricbasis)=
@@ -813,7 +813,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
   - `graphicsData`: graphicsDataList link; None automatically adds a suitable graphical object from next joint to this joint; use empty list [] to add no graphics for link
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py) (TM), [`modelLibrary.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/modelLibrary.py) (TM)
 
 
 (sec-module-rigidbodyutilities-class-rigidbodyinertia)=
@@ -977,7 +977,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 - **class function description**: get graphicsData object from inertia; this simplifies the rigid body creation process and allows to check for consistency; currently does not include HT-rotations!
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`openAIgymNLinkContinuous.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`createRollingDiscPenaltyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscPenaltyTest.py) (TM), [`rigidBody2Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBody2Dtest.py) (TM), [`rigidBodyCOMtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyCOMtest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`openAIgymNLinkContinuous.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`createRollingDiscPenaltyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscPenaltyTest.py) (TM), [`modelLibrary.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/modelLibrary.py) (TM), [`rigidBody2Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBody2Dtest.py) (TM), ...
 
 
 (sec-module-rigidbodyutilities-class-inertiacuboid(rigidbodyinertia))=

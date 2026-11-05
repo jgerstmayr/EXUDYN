@@ -231,6 +231,7 @@ def TestExamplesReferenceSolution():
         'restartFileTest.py':-2.93185, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before -2.931759; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before -2.93176; 2026-10-06: the final state rounded to 6 digits, it differs on Linux in the 10th (#2874), before -2.9317602918648324; new 2026-10-05: a simulation continued from its restart file computes what the uninterrupted one computes, generalized-alpha and RK44 (#2850)
         'createItemNumbersTest.py':10.515707884914624, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 10.51570788484358; new 2026-10-05: the Create functions take bodies, nodes or markers in itemNumbers, bodyNumbers deprecated (#2863)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)
+        'modelLibraryTest.py':18.4910098095576, #new 2026-11-05: the models of modelLibrary.py, each with its step and half of it (#3257)
         'homogeneousTransformationInterfaceTest.py':9.245684006275722, #new 2026-10-03: exu.HT with the node coordinates, Relative, the interpolations, angle and axis (#2810)
         'homogeneousTransformationTest.py':178.9377398330175, #new 2026-10-02: exudyn.HT against the 4x4 matrices of rigidBodyUtilities, and the output variable HomogeneousTransformation (#2780)
         'inspectTest.py':49, #2026-10-04: the node types a node marker requests (#2817), before 47; 2026-10-02: the output variable HomogeneousTransformation of the rigid body and its node (#2780), before 45; 2026-10-02: a rigid body reports PotentialEnergy = 0 (#2202), before 44; new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
@@ -389,6 +390,8 @@ def DeliberatelyNotRun():
         #    overrides the runner's False, so these open a render window and never return
         'ANCFThinPlateTests.py':
             'useGraphics=True at line 32 overrides the runner; opens AnimateModes (timeout >300s)',
+        'modelLibrary.py':
+            'the library of models for tests (GetModel), not a test model; modelLibraryTest.py runs it (#3257)',
         'ANCFoutputTest.py':
             'useGraphics=True at line 33 overrides the runner (timeout >300s)',
         'doublePendulum2DControl.py':

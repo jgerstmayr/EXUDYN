@@ -5894,7 +5894,30 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py (maintainer's approval), with the ODE1, data
   and errorEstimate cases; symbolicTrapezoidalGGLStepSizeTest.py with 'twoSteps' on the ball.
 
-<a id="rg2-9-3"></a>
+<a id="rg20-9-1"></a>
+### RG20.9.1 — a library of test models and a solver study (2026-11-05, #3257, #3258)
+- Maintainer: a set of models relevant for tests - mass oscillator, n-pendulum on distance constraints, a rigid body
+  mechanism with joints and one with spring-dampers, the IFToMM slider crank, a kinematic tree, a 3D beam, an
+  FFRFreducedOrder of a stored FEM, a GenericDAE with nonlinearities - in one file of TestModels with the names and a
+  function returning the mbs of model i, fast settings, usable for solver tests and other things; the solver tests run
+  in a more sophisticated way (the settings of a reference, varied steps, timeouts); test models may later use it.
+- python/TestModels/modelLibrary.py: modelNames, GetModel(index or name, SC=None) -> assembled mbs,
+  mbs.variables['modelLibrary'] (name, description, endTime, stepSize), SimulationSettings(mbs, stepSize, endTime),
+  Result(mbs) (ODE2 and ODE1 coordinates). Each model runs in 1 to 31 ms with generalized-alpha; the FFRF model computes
+  its 4 Hurty-Craig-Bampton modes of netgenTestMesh.npz in 0.17 s. The slider crank is a compact copy of
+  sliderCrank3Dbenchmark.py, which stays self-contained as the benchmark file. modelLibraryTest.py (0.47 s) runs each
+  model with its step and half of it (the state changes by less than 1e-2 of its size); modelLibrary.py is in
+  DeliberatelyNotRun.
+- python/testing/solverStudy.py: the reference by RK67 where it runs (the unconstrained models), else generalized-alpha,
+  halving the step until two results agree to 1e-8 and extrapolating the last two by Richardson; then each solver with
+  h, h/2, ... (ODE23, DOPRI5 with the tolerances 1e-3, 1e-4, ...), error against the reference, observed order, steps,
+  time; a run beyond the time limit stopped by a PostStepUserFunction returning False.
+- Found by the first study: generalized-alpha and TrapezoidalIndex2 of order 2 on all models but two; the 3D beam
+  reduces its step (223 instead of 200 steps at h = 1e-3; its axial stiffness), the observed order irregular; the
+  GenericDAE model gives its ODE1 coordinate (the lag) with order 1 - #3258, to be analyzed; TrapezoidalIndex2 fails on
+  it because its constraintUserFunction ignores velocityLevel (a property of the model); the explicit solvers refuse all
+  constrained models, as they should.
+
 ### RG2.9.3 — sliderCrank3Dbenchmark on the IFToMM model of 2026 (2026-11-05, #2326)
 - Maintainer: the file of tmp/IftommSlidercrank2026 (made with Exudyn 1.10: Lie group nodes, AddRigidBody, joints by
   markers in the body frames, 5 s with the step 1e-4, the results file of the benchmark, timings of 10 runs) replaces

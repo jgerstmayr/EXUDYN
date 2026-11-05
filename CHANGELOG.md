@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 355 | 1.13.370 |
+| 1.13 | Newborn | 356 | 1.13.371 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.371** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a library of small test models and a solver study on it (#3257)
+  - description: The solver tests use models of their own in each test model; several models repeat. Decided (maintainer 2026-11-05): python/TestModels/modelLibrary.py collects small, fast models - a mass-spring-damper, a pendulum of mass points on distance constraints, a chain of rigid bodies on revolute joints and on rigid body spring-dampers, the IFToMM spatial slider-crank, a kinematic tree, a 3D beam, an ObjectFFRFreducedOrder of a stored mesh, an ObjectGenericDAE with nonlinear user functions - with modelNames and GetModel(i) returning the assembled mbs, the settings of a fast run and the state to compare; modelLibraryTest.py runs them; python/testing/solverStudy.py determines a reference solution per model, varies the steps (tolerances for the adaptive solvers) with a time limit per run and reports error, order, steps and time per solver.
+  - **notes:** python/TestModels/modelLibrary.py: nine small models for tests (mass-spring-damper, pendulum on distance constraints, rigid body chains on joints and on spring-dampers, the IFToMM slider-crank, a kinematic tree, a 3D beam, an ObjectFFRFreducedOrder of a stored mesh, an ObjectGenericDAE with user functions), GetModel(i) returns the assembled mbs with the settings of a fast run; modelLibraryTest.py runs them; python/testing/solverStudy.py compares the dynamic solvers on them against a reference, with varied steps or tolerances and a time limit per run.
+  - date resolved: **2026-11-05 09:41**, date raised: 2026-11-05
 - **1.13.370** `FIX` `LOW EFF` `resolved by: Claude-JG` SliderCrank Benchmark (#2326)
   - description: adapt TestModels/sliderCrank3Dbenchmark.py to revised IFToMM model
   - **notes:** sliderCrank3Dbenchmark.py is the IFToMM spatial slider-crank model of 2026: Lie group nodes, the joints in the body frames, 5 s with the step 1e-4 and the results file of the benchmark when run directly, 0.5 s as test model; optional timings of 10 runs.

@@ -1,0 +1,38 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The models of modelLibrary.py, each by GetModel and simulated with the settings of its fast run
+#           (generalized-alpha), and again with half the step: the state at the end of each changes by less than 1e-2
+#           of its size. The result is the sum of the norms of the states at the end plus the number of models that
+#           pass; useful for a quick look at all models when run directly.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-05
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform
+from modelLibrary import modelNames, GetModel, SimulationSettings, Result
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+u = 0
+for (i, name) in enumerate(modelNames):
+    states = []
+    for stepFactor in [1, 0.5]:
+        mbs = GetModel(i)
+        info = mbs.variables['modelLibrary']
+        mbs.SolveDynamic(SimulationSettings(mbs, stepSize=stepFactor*info['stepSize']))
+        states.append(Result(mbs))
+    size = cMath.norm(states[0])
+    change = cMath.norm(states[1] - states[0])
+    passed = change < 1e-2*size
+    exu.Print('{:24s} |state| = {:.10g}, change with half the step {:.3g}'.format(name, size, change)
+              + ('' if passed else ' - TOO LARGE'))
+    u += size + passed
+
+exu.Print('solution of modelLibraryTest=', u)
+exu.sys['testResult'] = u

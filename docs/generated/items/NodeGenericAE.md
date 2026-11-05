@@ -57,4 +57,4 @@ if other objects provide the equations.
 The coordinates are algebraic variables: they add algebraic equations, which the objects provide.
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM), [`genericDAEUserFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEUserFunctionsTest.py) (TM), [`symbolicSystemGenericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemGenericDAETest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`genericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAETest.py) (TM), [`genericDAEUserFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericDAEUserFunctionsTest.py) (TM), [`modelLibrary.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/modelLibrary.py) (TM), [`symbolicSystemGenericDAETest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSystemGenericDAETest.py) (TM)

@@ -1,0 +1,11 @@
+{
+  "number": 3258,
+  "title": "generalized-alpha: an ODE1 coordinate coupled to ODE2 coordinates converges with order 1",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "In the genericDAE model of modelLibrary.py (an ObjectGenericDAE pendulum with a first order lag of its horizontal position on an ODE1 coordinate) SolveDynamic with generalized-alpha gives the ODE2 coordinates with order 2 and the ODE1 coordinate with order 1 (errors 3.2e-5, 1.7e-5, 8.9e-6 for the steps 4e-3, 2e-3, 1e-3, also with spectral radius 1), found by python/testing/solverStudy.py. To be analyzed: how the ODE1 equations are discretized in the generalized-alpha solver and whether the coupling or the ODE1 scheme itself is first order.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04"
+}

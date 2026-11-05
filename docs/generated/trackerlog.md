@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.370.dev1
+- Exudyn version = 1.13.371.dev1
 - last change = 2026-11-05
-- Number of issues = 3257
-- Number of resolved issues = 3147 (370 in current version)
+- Number of issues = 3259
+- Number of resolved issues = 3148 (371 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` `LOW EFF` `raised by: Claude-JG` generalized-alpha: an ODE1 coordinate coupled to ODE2 coordinates converges with order 1 (#3258)
+  - description: In the genericDAE model of modelLibrary.py (an ObjectGenericDAE pendulum with a first order lag of its horizontal position on an ODE1 coordinate) SolveDynamic with generalized-alpha gives the ODE2 coordinates with order 2 and the ODE1 coordinate with order 1 (errors 3.2e-5, 1.7e-5, 8.9e-6 for the steps 4e-3, 2e-3, 1e-3, also with spectral radius 1), found by python/testing/solverStudy.py. To be analyzed: how the ODE1 equations are discretized in the generalized-alpha solver and whether the coupling or the ODE1 scheme itself is first order.
+  - date raised: 2026-11-05
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` MarkerNodeUser: a marker on the coordinates of nodes by Python user functions (#3236)
   - description: CreateCoordinateConstraint of UserItemCreator and the built-in coordinate constraint use MarkerNodeCoordinate; a user marker on nodes, whose value and Jacobian are Python (and recordable) user functions of the coordinates of its nodes, lets the coordinate constraint and coordinate connectors be user items. Decided (maintainer 2026-11-04): MarkerNodeUser first, as a step of its own (revision2026c RG7.18); MarkerBodyUser with coordinates and user shapes for contact and flexible interfaces are not planned yet (\#3106 closed).
   - date raised: 2026-11-04
