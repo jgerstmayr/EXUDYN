@@ -536,6 +536,12 @@ Robotics Toolbox. Without these arguments the robots are as before (#3277). The 
 `ManipulatorPuma560` are those of the Robotics Toolbox 1.5; `Manipulator4Rsimple` is removed. The robotics examples
 use the robots of `exudyn.robotics.models`, `Robot.SetControl` with `PreStepControl`, `Robot.AddSensors` and
 `PlotSensor`; serialRobotInteractiveLimits.py limits the joints by the end stops of `Robot.SetEndStops` (#3279).
+The URDF import of `exudyn.robotics.urdfImport` works with the Robotics Toolbox 1.5: `GetRoboticsToolboxInternalModel`
+creates the RTB's model (UR3, UR5, UR10, Panda and a few more are downloaded by robot_descriptions on their first use),
+`LoadURDFrobot` reads a URDF or xacro file with the ROS packages next to it; `GetURDFrobotData` adds the links without
+joint (fixed joints) to the joint link above them, with their graphics and their mass, so that the robots with such
+links - the Interbotix robots, Spot, ANYmal - have the kinematics of the RTB; its argument `urdf` is no longer used
+(#3280).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

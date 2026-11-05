@@ -1,7 +1,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Example of a serial robot with URDF file
+# Details:  Robots of the URDF models of the Robotics Toolbox for Python 1.5 (RTB): read by
+#           GetRoboticsToolboxInternalModel, with their meshes by GetURDFrobotData (pymeshlab), as kinematic trees
+#           following a trajectory by Robot.SetControl; several robots in one PreStepUserFunction. Puma560, LBR, AL5D and
+#           the Interbotix robots (px150, vx300, wx250, ...) are part of the RTB's data; UR3, UR5, UR10 and Panda are
+#           downloaded by the package robot_descriptions on their first use.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2024-11-07
@@ -33,10 +37,9 @@ mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[1.5,2,0], size=6
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #%%+++++++++++++++++++++++++++++++
 robotModels = ['UR3', 'UR5', 'UR10', 'Puma560', 'LBR', 'Panda', 'vx300', 'wx250', 'px150']
-robotModels = ['UR5'] #only one robot
+robotModels = ['Puma560'] #only one robot
 onlyShowModel = False #True: only graphics, no simulation
-listKinematicTree = []
-listTrajectory = []
+listRobots = []
 saveHDF5 = False        #use this to save robot data, allowing to load directly from there
 loadFromHDF5 = False#faster load; does not require roboticstoolbox, pymeshlab, etc.
 
@@ -182,17 +185,15 @@ for modelCnt, modelName in enumerate(robotModels):
     trajectory.Add(ProfileConstantAcceleration(q2,0.25))
     trajectory.Add(ProfileConstantAcceleration(q3,0.25))
     trajectory.Add(ProfileConstantAcceleration(q0,0.25))
-    listTrajectory.append(trajectory)
     
     
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #build mbs mbsRobot model:
+    mbsRobot.q0 = q0
     robotDict = mbsRobot.CreateKinematicTree(mbs)
     oKT = robotDict['objectKinematicTree']
-    nKT = robotDict['nodeGeneric']
-    listKinematicTree.append(oKT)
-    #if non-zero values chosen, set them here as well:
-    mbs.SetNodeParameter(nKT, 'initialCoordinates', robotDataDict['staticJointValues'])
+    mbsRobot.SetControl(trajectory) #the PD control along the trajectory
+    listRobots.append(mbsRobot)
         
     
     #add sensors (only last sensor is kept)
@@ -204,16 +205,10 @@ for modelCnt, modelName in enumerate(robotModels):
                                           outputVariableType=exu.OutputVariableType.Force))
         
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#user function which is called only once per step, prescribe trajectory
+#the control of all robots, called once per step
 def PreStepUF(mbs, t):
-
-    for cnt, oKT in enumerate(listKinematicTree):
-        #set position and velocity in kinematic tree joints:
-        [u,v,a] = listTrajectory[cnt].Evaluate(t)
-        #note: here we would need to add the gear ratios to u and v, if they shall represent motor angles!!!
-        mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', u)
-        mbs.SetObjectParameter(oKT, 'jointVelocityOffsetVector', v)
-    
+    for mbsRobot in listRobots:
+        mbsRobot.PreStepControl(mbs, t)
     return True
 
 mbs.SetPreStepUserFunction(PreStepUF)
@@ -258,7 +253,7 @@ SC.visualizationSettings.general.autoFitScene=False
 SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
 SC.visualizationSettings.view0.camera.perspective=1
 # SC.visualizationSettings.openGL.light0.shadow=0.25
-SC.visualizationSettings.openGL.lightModelAmbient = [0.5,0.5,0.5]
+SC.visualizationSettings.openGL.lightModelAmbient = [0.5,0.5,0.5,1]
 SC.visualizationSettings.openGL.light0.diffuse = 0.5
 SC.visualizationSettings.openGL.light0.position = [2,-4,8,0]
 

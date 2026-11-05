@@ -6262,6 +6262,26 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - Puma560 jointLimits of the RTB 1.5 (160, -45..225, -225..45, -110..170, 100, 266 degrees); robotModelsTest.py checks
   them instead of the removed model (result unchanged).
 
+<a id="rg19-1-2"></a>
+### RG19.1.2 — the URDF import against the RTB 1.5 and the local data set (2026-11-05, #3280)
+- Exudyn 1.13.390 installed into venvP313rtb (it had 1.13.6); no network: the RTB models that robot_descriptions
+  downloads (UR3/5/10, Panda, KinovaGen3, Jaco, Fetch, PR2) were not loaded.
+- Found: GetRoboticsToolboxInternalModel and LoadURDFrobot failed with RTB 1.5 (roboticstoolbox.tools.xacro and
+  Robot.URDF_read removed; the models are URDFRobot classes reading by URDF_file/xacrodoc; urdf_string empty). Ported:
+  the model class, robot.urdf_filepath, URDF_file with the package of the file, the directories next to it and below it
+  registered (ANYmal uses package://meshes). GetURDFrobotData: the visual origins from the RTB links (scene.T, local),
+  the static frames by fkine(end=link), the UR offset special case removed; links without joint moved into the joint
+  link above (preHT composed, parentName the joint link, graphics and mass/COM/inertia added by Steiner).
+- Check (scratchpad script; per model: Robot of the linkList against RTB fkine(end=link) at 5 random q, RTB rne
+  against Robot.InverseDynamics for serial robots with masses, the inertia, flips, limits, meshes):
+  - equal (fk 1e-16): Puma560, AL5D (rne 3e-16), px100/px150/rx150/rx200/vx300/vx300s/wx200/wx250/wx250s (branched by
+    the gripper fingers), KUKA kr5_arc (rne 8e-17), Staubli tx2_60, tx2_90l, tx90 (rne 2e-16), tx60l (rne 6e-16),
+    ANYmal, Spot; before the fixed links were composed the Interbotix robots were off by 0.6-1.7 m;
+  - wrong: flipped joints (LBR link_4; KUKA kr3/kr6/kr10/kr150 links 1, 4, 6; Mars rover 11 joints): not implemented;
+  - inertia: m = 0 (Puma560, LBR, KUKA except kr5_arc, TX2, Spot), not positive definite (AL5D).
+- serialRobotURDF.py: the Puma560 (no download), Robot.SetControl and one PreStepUserFunction for all robots, the
+  invalid lightModelAmbient of 3 values fixed; run with Puma560, LBR, vx300, px150, AL5D.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

@@ -78,6 +78,8 @@ importToDistribution = {
 #imports that can never become an extra. Each entry carries the reason; the reason is the point of
 #the list - without it the next maintainer cannot tell an exemption from an oversight.
 exemptImports = {
+    'rtbdata':       'the data package (rtb-data) of roboticstoolbox-python, which is in [all] and installs it (#3280)',
+    'xacrodoc':      'the xacro reader of roboticstoolbox-python 1.5, which is in [all] and installs it (#3280)',
     'rospy':         'ROS is not distributed on PyPI; installed with the ROS distribution',
     'geometry_msgs': 'ROS message package, not on PyPI',
     'std_msgs':      'ROS message package, not on PyPI',

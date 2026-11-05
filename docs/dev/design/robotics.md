@@ -354,8 +354,13 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
 
 ## 5. Steps proposed (group RG19)
 
-- RG19.1 Analyze the robotics submodule and propose the revision (this note): .1 the code analysis (done), .2 the URDF
-  import against RTB 1.5 and the local data set (with the maintainer's environment).
+- RG19.1 Analyze the robotics submodule and propose the revision (this note): .1 the code analysis (done), .2 done:
+  the URDF import against RTB 1.5 and the local data set (#3280): ported to the RTB 1.5 API (the model classes,
+  URDF_file with xacrodoc), the fixed links into the joint link above them; equal to the RTB (forward kinematics 1e-16,
+  rne 1e-16 where masses are given) for Puma560, AL5D, the Interbotix robots, KUKA kr5_arc, Staubli tx2_60/tx2_90l/
+  tx90/tx60l, ANYmal, Spot; wrong for flipped joints (LBR, KUKA kr3/kr6/kr10/kr150, the Mars rover); inertias missing
+  (Puma560, LBR, KUKA, TX2, Spot) or not positive definite (AL5D); UR, Panda, Kinova not checked (robot_descriptions
+  downloads them).
 - RG19.2 Clean up (.1 done: the commented-out code and the dead branches of all files except future.py, 220 lines,
   #3254; .2 done: the problems of section 2.1, #3255; .3 done: urdfImport.py, #3256): the commented code, future.py removed after RG19.6, exudyn.HT in the kinematics; the examples
   and test models cleaned up a first time (sensors stored internally, PlotSensor, models.py data).

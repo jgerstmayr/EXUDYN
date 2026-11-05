@@ -1,0 +1,16 @@
+{
+  "number": 3280,
+  "title": "The URDF import of urdfImport with the Robotics Toolbox 1.5",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "GetRoboticsToolboxInternalModel and LoadURDFrobot fail with the Robotics Toolbox 1.5: roboticstoolbox.tools.xacro and Robot.URDF_read no longer exist, the models are classes reading their URDF by URDF_file (xacrodoc), some of them through robot_descriptions, which downloads them. GetURDFrobotData matches the visuals by the urdf object of the RTB and shifts the link frames for the UR robots by a special case. Decided: the functions use the API of RTB 1.5 - the models' classes, URDF_file with the package of the URDF registered, the visual origins of the RTB links and the frames of fkine per link -, and the import is checked against the RTB (forward kinematics, inverse dynamics, inertias, joint limits, meshes) on the RTB models that need no download and the local data set.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-06 00:06",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/robotics/urdfImport.py",
+  "releaseNotes": "The URDF import works with the Robotics Toolbox 1.5 (GetRoboticsToolboxInternalModel, LoadURDFrobot); GetURDFrobotData adds links without joint to the joint link above them, with graphics and mass; checked against the RTB on its bundled URDF models and the local data set: equal except flipped joints.",
+  "resolvedInVersion": "1.13.392"
+}

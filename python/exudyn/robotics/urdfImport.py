@@ -27,77 +27,38 @@ __all__ = [
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def GetRoboticsToolboxInternalModel(modelName='', ignoreURDFerrors=True):
-    """Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in
-    site-packages/rtbdata/xacro/. See the github project of roboticstoolbox-python of P. Corke and J. Haviland for more details.
-    The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.__all__ !
+    """Interface to roboticstoolbox (RTB) for loading internal robot models: the model of roboticstoolbox.models.URDF of
+    this name, read from its URDF or xacro file. See the github project of roboticstoolbox-python of P. Corke and J.
+    Haviland for more details. The model name is the short name used internally in the RTB. For available names, see the
+    list roboticstoolbox.models.URDF.__all__ !
 
     Args:
         modelName: string for model, such as UR5, Puma560, Panda or LBR
-        ignoreURDFerrors: if set True, urdf errors are ignored and only the model is loaded
+        ignoreURDFerrors: not used; kept for the scripts that pass it
 
     Returns:
-        returns dictionary with 'robot' (RTB Robot class), 'urdf' which is the RTB representation of the URDF file for loading mesh files
+        returns dictionary with 'robot' (RTB Robot class), 'urdf' (None; the visuals are in the links of the robot),
+        'urdfBasePath' (the xacro directory of the rtb-data package) and 'urdfFilePath' (the file that was read)
 
     Note:
-        requires installation (pip install) of roboticstoolbox-python; in our tests we had problems with installers on newer Python and therefore tested with Python 3.9! Note that some models doe not include mass and inertia and therefore will not run as dynamic models!
+        requires the Robotics Toolbox for Python 1.5 (pip install roboticstoolbox-python); its models Panda, UR3, UR5,
+        UR10, KinovaGen3, Jaco, Fetch and PR2 are read through the package robot_descriptions, which downloads them on
+        first use; Puma560, LBR, AL5D and the Interbotix robots (px150, vx300, wx250, ...) are part of the RTB's data.
+        Some models do not include mass and inertia and therefore will not run as dynamic models (#3280)
     """
-    from pathlib import Path
     try:
         import roboticstoolbox as rtb
-        from roboticstoolbox.tools.data import rtb_path_to_datafile
-        from roboticstoolbox.tools import xacro
+        import rtbdata
     except ImportError:
         raise ImportError('GetRoboticsToolboxInternalModel: import of roboticstoolbox failed. You have to do "pip install roboticstoolbox-python" in order to use this function!')
-    
-    try:
-        robotFunc = getattr(rtb.models.URDF, modelName)
-        robot = robotFunc() #this reads out the main robot structure
-    except Exception:
-        raise ValueError('GetRoboticsToolboxInternalModel: could not retrieve robot model "'+modelName+'"')
-        
-    urdf = None
-    urdfBasePath = None
-    urdfFilePath = None
 
-    try:
-        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
-        #now try to find the path in the robotFunc (this is a dirty hack, 
-        #  but RTB does not deliver the urdf file, nor the paths!!!)    
-        import inspect
-        import re
-        functionSourceCode = inspect.getsource(robotFunc)
-        
-        pattern = r'URDF_read\(\s*"([^"]+)"\s*\)'
-        
-        # Search for the pattern
-        match = re.search(pattern, functionSourceCode)
-        
-        # Extract the result if found
-        if match:
-            urdfFilePath = match.group(1)
-        else:
-            raise ValueError("GetRoboticsToolboxInternalModel: URDF path not found. Try to load urdf/xacro files manually")
-        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
-        
-        urdfBasePath = rtb_path_to_datafile("xacro")
-        
-        if str(urdfFilePath).endswith('.xacro'):
-            urdfString = xacro.main(Path(urdfBasePath)/urdfFilePath, None)
-        else:
-            urdfString = open(urdfFilePath).read()
-        
-        urdf = rtb.tools.urdf.urdf.URDF.loadstr(urdfString,  
-                                                Path(urdfBasePath) / urdfFilePath,
-                                                urdfBasePath)
-    except Exception: #except Exception as e:
-        if int(ignoreURDFerrors) <= 1:  #if somebody gets annoyed of warning!
-            exudyn.Print('WARNING: GetRoboticsToolboxInternalModel could not retreive urdf file!')
-        if not ignoreURDFerrors:
-            raise
-
-    return {'robot':robot, 'urdf':urdf, 
-            'urdfBasePath':str(urdfBasePath), 
-            'urdfFilePath':str(urdfFilePath)}
+    if modelName not in rtb.models.URDF.__all__:
+        raise ValueError('GetRoboticsToolboxInternalModel: unknown robot model "'+modelName+'"; available are '+str(rtb.models.URDF.__all__))
+    robot = getattr(rtb.models.URDF, modelName)() #reads the URDF or xacro file
+    from pathlib import Path
+    return {'robot':robot, 'urdf':None,
+            'urdfBasePath':str(Path(rtbdata.__file__).parent / 'xacro'),
+            'urdfFilePath':str(robot.urdf_filepath)}
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -107,38 +68,46 @@ def LoadURDFrobot(urdfFilePath, urdfBasePath,
 
     Args:
         urdfFilePath: string relative to urdfBasePath, representing xacro or urdf file
-        urdfBasePath: string representing the base path of the urdf or xacro directory for the respective robot; the urdfBasePath is used to load further files which are given internally in urdf files, such as collision or mesh files
+        urdfBasePath: string representing the base path of the urdf or xacro directory for the respective robot, the
+            directory of its ROS package; meshes given as package://<name>/... are found there and in the directories
+            next to it
         gripperLinks: list of link numbers representing gripper (as used internally in RTB Robot class)
-        manufacturer: not used
+        manufacturer: the manufacturer, stored in the RTB robot
 
     Returns:
-        returns dictionary with 'robot' (RTB Robot class), 'urdf' which is the RTB representation of the URDF file for loading mesh files
+        returns dictionary with 'robot' (RTB Robot class), 'urdf' (None; the visuals are in the links of the robot),
+        'urdfBasePath' and 'urdfFilePath'
 
     Note:
-        requires installation (pip install) of roboticstoolbox-python; in our tests we had problems with installers on newer Python and therefore tested with Python 3.9! Note that some models doe not include mass and inertia and therefore will not run as dynamic models!
+        requires the Robotics Toolbox for Python 1.5 (pip install roboticstoolbox-python), which reads the file by
+        xacrodoc (#3280). Note that some models do not include mass and inertia and therefore will not run as dynamic
+        models!
     """
-    from pathlib import Path
+    import os
     try:
         import roboticstoolbox as rtb
+        from roboticstoolbox.models.URDF.URDFRobot import URDF_file
+        from xacrodoc import packages
     except ImportError:
         raise ImportError('LoadURDFrobot: import of roboticstoolbox failed. You have to do "pip install roboticstoolbox-python" in order to use this function!')
-    
-    links, name, urdfString, urdfFilePath_URDF_read = rtb.robot.Robot.URDF_read(urdfFilePath, urdfBasePath)
-    #create robot:
-    robot = rtb.robot.Robot(
-        links,
-        name=name.upper(),
-        gripper_links=gripperLinks, #links[7], #adjusted per robot
-        urdf_string=urdfString,
-        urdf_filepath=urdfFilePath_URDF_read,
-    )
-    #also load urdf file, needed for visualization
-    urdf = rtb.tools.urdf.urdf.URDF.loadstr(urdfString,
-                                            Path(urdfBasePath) / urdfFilePath, 
-                                            urdfBasePath)
 
-    return {'robot':robot, 'urdf':urdf, 
-            'urdfBasePath':str(urdfBasePath), 
+    #the package of the robot and the packages next to it, for package:// and $(find ...)
+    basePath = os.path.abspath(urdfBasePath)
+    parent = os.path.dirname(basePath)
+    packageMap = {os.path.basename(basePath): basePath}
+    for directory in [parent, basePath]: #also package://meshes/... as some URDF files use
+        for d in os.listdir(directory):
+            if os.path.isdir(os.path.join(directory, d)) and d not in packageMap:
+                packageMap[d] = os.path.join(directory, d)
+    packages.update_package_cache(packageMap)
+
+    links, name, filePath = URDF_file(os.path.join(basePath, urdfFilePath))
+    if gripperLinks is not None:
+        gripperLinks = [links[i] if isinstance(i, int) else i for i in gripperLinks]
+    robot = rtb.Robot(links, name=name, manufacturer=manufacturer, gripper_links=gripperLinks)
+
+    return {'robot':robot, 'urdf':None,
+            'urdfBasePath':str(urdfBasePath),
             'urdfFilePath':str(urdfFilePath)}
 
 
@@ -155,7 +124,7 @@ def GetURDFrobotData(robot,
 
     Args:
         robot: a RTB Robot (class) model, as returned e.g. by LoadURDFrobot
-        urdf: a RTB URDF (class) representing the URDF data, as returned e.g. by LoadURDFrobot
+        urdf: not used: the visuals and their origins are those of the links of robot (#3280)
         linkColorList: if not None, this can contain a list of RGBA color lists for each link to prescribe colors instead of using internally stored colors or general color information (.obj files); set linkColorList=[graphics.color.red]*8 to set 8 link colors red; links are counted as in the urdf file and may be different from the number of joints
         staticJointValues: if not None, has to be a list of joint angles (or displacements) for computing the static graphics list
         returnStaticGraphicsList: return a list of GraphicsData which can be put into a ground to check visualization for zero joints, using: mbs.CreateGround(graphicsDataList=staticGraphicsList)
@@ -163,7 +132,11 @@ def GetURDFrobotData(robot,
         verbose: 0 .. no output printed (only exceptions), 1 .. warnings, 2 .. further information
 
     Returns:
-        returns dictionary with items linkList, graphicsBaseList, graphicsToolList
+        returns dictionary with items linkList (the joint links, each with its preHT relative to the joint link above,
+        its parentName, mass, com, inertiaCOM, jointType, jointLimits and graphicsDataList), numberOfJoints,
+        graphicsBaseList (the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint
+        are in the graphics of that link), staticJointValues and staticGraphicsList; a link of the URDF without joint
+        (a fixed joint) moves with the joint link above it, which gets its graphics and its mass (#3280)
 
     Note:
         requires installation (pip install) of roboticstoolbox-python and pymeshlab; if pymeshlab is not installed, a warning is raised and graphics is ignored
@@ -183,9 +156,8 @@ def GetURDFrobotData(robot,
         index2linkName[i] = link.name
     
     numberOfJoints = robot.n
-    if verbose > 1: 
-        exudyn.Print('load robot "'+robot.name+'": #joints=',numberOfJoints,', #links=',len(robot.links),
-              ', #vlinks=',len(urdf.links))
+    if verbose > 1:
+        exudyn.Print('load robot "'+robot.name+'": #joints=',numberOfJoints,', #links=',len(robot.links))
     
     graphicsBaseList = []
     graphicsToolList = []
@@ -202,37 +174,40 @@ def GetURDFrobotData(robot,
     elif len(staticJointValues) != numberOfJoints:
         raise ValueError('GetURDFrobotData: staticJointValues are inconsistent: robot has '+str(numberOfJoints)+', but len(staticJointValues)='+str(len(staticJointValues)) )
 
-    robotFkine = robot.fkine_all(staticJointValues)
-    
-    staticHTlinks = []
-    for HT in robotFkine: #convert into numpy arrays
-        staticHTlinks.append(np.array(HT))
-    
-    jointFound = False #first links without joints added to base graphics
-    for i, link in enumerate(robot.links):
-        offsetLink = 1 #+1 as 0 is the base link; 
-        
-        #offsetLink: no offset for UR5 ?WHY?
-        if any(substring in robot.name for substring in ['UR3','UR5','UR10']):
-            offsetLink = 0
-            
-        staticHT = staticHTlinks[i+offsetLink]
-        
-        jointIndex = link.jindex
+    #a link without joint (a fixed joint of the URDF) moves with the nearest joint link above it, or with the base: its
+    #frame relative to that one, its mass and its graphics are added there (#3280)
+    def LinkTs(link): #the frame of the link relative to its parent at zero joint values; None for a link at the root
+        return np.eye(4) if link.Ts is None else np.array(link.Ts)
 
-        linkDict = {} #filled later
+    def JointAncestor(link):
+        HT = np.eye(4)
+        while link is not None and not link.isjoint:
+            HT = LinkTs(link) @ HT
+            link = link.parent
+        return link, HT
+
+    linkDictOfName = {}
+    for i, link in enumerate(robot.links):
+        #the frame of the link at staticJointValues
+        if link.parent is None:
+            staticHT = np.array(robot.base) @ LinkTs(link)
+        else:
+            staticHT = np.array(robot.fkine(staticJointValues, end=link))
+
+        jointIndex = link.jindex
+        (ancestor, HTancestor) = (link, np.eye(4)) if link.isjoint else JointAncestor(link)
+        linkDict = None if ancestor is None else linkDictOfName.get(ancestor.name) #None: the base
         if link.isjoint:
             if jointIndex is None: raise ValueError('inconsistent joint index / isjoint in robot structure')
-            jointFound = True
+            (parent, HTparent) = JointAncestor(link.parent)
 
-            parentNumber = -1 if link.parent is None else link.parent.number
-            parentName = 'None' if link.parent is None else link.parent.name
+            linkDict = {}
             #required fields:
             linkDict['name'] = link.name
             linkDict['jointNumber'] = jointIndex
-            linkDict['parentNumber'] = parentNumber
-            linkDict['parentName'] = parentName
-            linkDict['preHT'] = np.array(link.Ts) #A(0)
+            linkDict['parentNumber'] = -1 if parent is None else parent.number
+            linkDict['parentName'] = 'None' if parent is None else parent.name
+            linkDict['preHT'] = HTparent @ LinkTs(link) #A(0), relative to the joint link above
             linkDict['inertiaCOM'] = np.array(link.I)
             linkDict['com'] = np.array(link.r)
             linkDict['mass'] = link.m
@@ -246,15 +221,24 @@ def GetURDFrobotData(robot,
 
             linkDict['staticHT'] = staticHT
             linkDict['graphicsDataList'] = []
-            
-            if verbose > 1: exudyn.Print('define link',i,', joint',jointIndex, ', type=', linkDict['jointType'],#link.v.axis, 
-                  #'Ts=\n',np.array(link.Ts).round(3),
-                  #'staticHT=\n',staticHT.round(3)
-                  )
-            
+
+            if verbose > 1: exudyn.Print('define link',i,', joint',jointIndex, ', type=', linkDict['jointType'])
+
             linkList += [linkDict]
+            linkDictOfName[link.name] = linkDict
             if link.isflip and verbose > 0:
                 exudyn.Print('WARNING: joint',i,'is flipped, but this is not implemented!')
+        elif linkDict is not None and link.m > 0: #the mass of a fixed link, added to its joint link
+            R = HTancestor[:3, :3]
+            (m0, c0, I0) = (linkDict['mass'], linkDict['com'], linkDict['inertiaCOM'])
+            (m1, c1, I1) = (link.m, HTancestor[:3, :3] @ np.array(link.r) + HTancestor[:3, 3], R @ np.array(link.I) @ R.T)
+            m = m0 + m1
+            c = (m0*c0 + m1*c1)/m
+            def Steiner(mass, d):
+                return mass*(np.dot(d, d)*np.eye(3) - np.outer(d, d))
+            linkDict['inertiaCOM'] = I0 + Steiner(m0, c0 - c) + I1 + Steiner(m1, c1 - c)
+            linkDict['com'] = c
+            linkDict['mass'] = m
             
         sceneGroup = link.geometry
         nScenes = len(sceneGroup)
@@ -292,37 +276,17 @@ def GetURDFrobotData(robot,
                             vertexColors[vertex,:] = color
                     gData['colors'] = np.array(vertexColors).flatten()
 
-                #simple search to check if indices match (use names):
-                k = None
-                for index, visLink in enumerate(urdf.links):
-                    if visLink.name == link.name:
-                        k = index
-    
-                if k is None:
-                    if verbose > 0: exudyn.Print('WARNING: inconsistent urdf and robot model detected!')
-                else:
-                    if len(urdf.links[k].visuals) != nScenes:
-                        if verbose > 0: exudyn.Print('WARNING: inconsistent urdf and robot model: number of visual objects is different!')
-                        continue
-                    
-                    visualHT = urdf.links[k].visuals[j].origin
-    
-                    if link.isjoint:
-                        linkDict['graphicsDataList'] += [graphics.Move(gData, HT2translation(visualHT), HT2rotationMatrix(visualHT))]
-    
-                    totalHT = staticHT@visualHT
-    
-                    if jointIndex is None and not jointFound:
-                        #add to base
-                        graphicsBaseList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT))]
-                    elif jointIndex is None and jointFound:
-                        #here we probably need to store some additional transformations, starting with last link
-                        graphicsToolList += [graphics.Move(gData, HT2translation(visualHT), HT2rotationMatrix(visualHT))]
-                        #check robot.ee_links for tool links?
-                    
-                    if returnStaticGraphicsList :
-                        staticGraphicsList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT) )]
+                visualHT = np.array(scene.T) #the origin of the visual in the link frame
+                totalHT = staticHT@visualHT
+                if linkDict is not None: #in the frame of the joint link it moves with
+                    localHT = HTancestor@visualHT
+                    linkDict['graphicsDataList'] += [graphics.Move(gData, HT2translation(localHT), HT2rotationMatrix(localHT))]
+                else: #fixed to the base
+                    graphicsBaseList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT))]
                 
+                if returnStaticGraphicsList :
+                    staticGraphicsList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT) )]
+
     robotData = {'linkList': linkList,
             'numberOfJoints': numberOfJoints,
             'graphicsBaseList': graphicsBaseList,

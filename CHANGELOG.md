@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 376 | 1.13.391 |
+| 1.13 | Newborn | 377 | 1.13.392 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.392** `FIX` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The URDF import of urdfImport with the Robotics Toolbox 1.5 (#3280)
+  - description: GetRoboticsToolboxInternalModel and LoadURDFrobot fail with the Robotics Toolbox 1.5: roboticstoolbox.tools.xacro and Robot.URDF\_read no longer exist, the models are classes reading their URDF by URDF\_file (xacrodoc), some of them through robot\_descriptions, which downloads them. GetURDFrobotData matches the visuals by the urdf object of the RTB and shifts the link frames for the UR robots by a special case. Decided: the functions use the API of RTB 1.5 - the models' classes, URDF\_file with the package of the URDF registered, the visual origins of the RTB links and the frames of fkine per link -, and the import is checked against the RTB (forward kinematics, inverse dynamics, inertias, joint limits, meshes) on the RTB models that need no download and the local data set.
+  - **notes:** The URDF import works with the Robotics Toolbox 1.5 (GetRoboticsToolboxInternalModel, LoadURDFrobot); GetURDFrobotData adds links without joint to the joint link above them, with graphics and mass; checked against the RTB on its bundled URDF models and the local data set: equal except flipped joints.
+  - date resolved: **2026-11-06 00:06**, date raised: 2026-11-05
 - **1.13.391** `EXAMPLE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robotics examples and test models on the revised interfaces of exudyn.robotics (#3279)
   - description: The serial robot examples define the robot data again, write their own PreStepUserFunction with the trajectory, the PD offsets and the static torques, write sensor files and plot by hand, and use the deprecated InverseKinematicsNumerical. Decided: they take the robots of exudyn.robotics.models, Robot.SetControl with PreStepControl, Robot.AddSensors with sensors stored internally and PlotSensor, Robot.q0 and the IK of KinematicChain/Robot; P and D values may be adjusted slightly for simple scripts. Test models keep what they test.
   - **notes:** The serial robot examples use the robots of exudyn.robotics.models, Robot.SetControl with PreStepControl, Robot.AddSensors and PlotSensor; serialRobotInteractiveLimits.py limits the joints by end stops; the Puma560 joint limits are those of the Robotics Toolbox 1.5; Manipulator4Rsimple is removed.
