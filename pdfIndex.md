@@ -96,6 +96,7 @@ docs/dev/README
 
 docs/howTo/condaEnvironments
 docs/howTo/sphinxDocs
+docs/howTo/misc
 ```
 
 ```{toctree}

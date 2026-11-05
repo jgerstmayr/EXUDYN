@@ -2014,6 +2014,10 @@ in the manual): docs/dev/internals/ symbolic, userFunctions, userItems, systemUt
 docs/manual/symbolicUserFunctions.md; the scripts in tools/benchmarks; WORKFLOW.md §8.4 the rule for design notes.
 [log](exudynRevisionLog2026c.md#rg11-12)
 
+### **CLOSED_RG11.13** Restructure the developer documentation into groups, and publish the how-to notes under Misc
+
+CLOSED 2026-11-05 (#3278): DEVELOPMENT.md and internals/README.md as group pages, GIT under GETTING_STARTED, building and running in BUILD.md; docs/howTo/misc.md with the five notes, published, without duplicates and history. [log](exudynRevisionLog2026c.md#rg11-13)
+
 ## **OPEN_RG12** Symbolic
 
 `exudyn.symbolic` and its user functions (maintainer 2026-10-12): the interface of the symbolic user functions was the

@@ -1,0 +1,15 @@
+{
+  "number": 3278,
+  "title": "Restructure the developer documentation and publish the how-to notes under Misc",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "The developer documentation lists all its pages flat. Decided: the internals pages go at its end under a page Internals; the repository layout, the development workflow, releasing and the manual GUI check go under a page Development and release workflow; working with git goes under getting started as a developer; the section Building and running of its front page goes into Building Exudyn from source. The how-to notes of the developer front page are removed there; the five maintainer notes (build quirks, GCC vs. MSVC, Visual Studio 2022, ffmpeg, matplotlib) are published under a page Misc of the top-level how-to notes, without duplicates of the other pages and without the history of where they came from.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 23:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The developer documentation in groups: Development and release workflow (repository layout, workflow, release, GUI check), Internals at the end, git under getting started, building and running in the build page; the maintainer notes published under Misc of the how-to notes, without duplicates.",
+  "resolvedInVersion": "1.13.390"
+}

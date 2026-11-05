@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 374 | 1.13.389 |
+| 1.13 | Newborn | 375 | 1.13.390 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.390** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Restructure the developer documentation and publish the how-to notes under Misc (#3278)
+  - description: The developer documentation lists all its pages flat. Decided: the internals pages go at its end under a page Internals; the repository layout, the development workflow, releasing and the manual GUI check go under a page Development and release workflow; working with git goes under getting started as a developer; the section Building and running of its front page goes into Building Exudyn from source. The how-to notes of the developer front page are removed there; the five maintainer notes (build quirks, GCC vs. MSVC, Visual Studio 2022, ffmpeg, matplotlib) are published under a page Misc of the top-level how-to notes, without duplicates of the other pages and without the history of where they came from.
+  - **notes:** The developer documentation in groups: Development and release workflow (repository layout, workflow, release, GUI check), Internals at the end, git under getting started, building and running in the build page; the maintainer notes published under Misc of the how-to notes, without duplicates.
+  - date resolved: **2026-11-05 23:29**, date raised: 2026-11-05
 - **1.13.389** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics.models: named configurations, the initial configuration and the friction of the models, checked against the RTB (#3277)
   - description: The robots of exudyn.robotics.models start at zero, which for the Puma560 and the Panda is not a usual pose, and carry no friction; LinkDict2Robot cannot set Robot.q0 or the friction of the links (RG19.7). Decided: 'configurations' per model (the RTB's qz, qr and further ones; the TX2-90L upright and ready with the tool down) and 'initialConfiguration'; LinkDict2Robot(initialConfiguration, friction) - None and False keep the former behaviour; the Puma560 gets the joint friction from the motor data of the RTB; the forward kinematics of Puma560, UR5 and Panda checked against the RTB 1.5.
   - **notes:** The models of exudyn.robotics.models have named 'configurations' (for the Puma560, UR5 and Franka Emika Panda those of the Robotics Toolbox, for the Staubli TX2-90L upright and ready with the tool pointing down) and an 'initialConfiguration'; LinkDict2Robot(model, initialConfiguration='model' or a name or coordinates) sets Robot.q0, friction=True gives the links the friction of the model, for the Puma560 from the motor data of the Robotics Toolbox; the forward kinematics of Puma560, UR5 and Panda agree with the Robotics Toolbox 1.5.

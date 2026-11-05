@@ -55,14 +55,8 @@ docs/dev/README
 
 docs/howTo/condaEnvironments
 docs/howTo/sphinxDocs
+docs/howTo/misc
 ```
-
-Five further notes are written for whoever maintains Exudyn rather than for whoever uses it — the
-Windows build quirks, what MSVC accepts where GCC does not, the Visual Studio 2022 components,
-converting the demo videos with ffmpeg and the matplotlib recipes of the examples. They are in
-the repository, in
-[`docs/howTo/`](https://github.com/jgerstmayr/EXUDYN/tree/master/docs/howTo), and are listed in
-the [developer documentation](docs/dev/README.md).
 
 ```{toctree}
 :caption: Examples, models and issues

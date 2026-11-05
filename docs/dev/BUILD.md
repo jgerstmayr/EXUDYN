@@ -28,6 +28,22 @@ builds the wheel, installs it into that environment and then **checks that the i
 the one just built** — the failure mode this guards against is testing yesterday's binary. The rest
 of this page is what that driver does, and what to do when it does not work.
 
+**The driver**: one command, `exudev` - `exudev --help`, and `exudev -n <command>` to see what a
+command would run without running it. Its commands are in
+[`tools/exudev/README.md`](../../tools/exudev/README.md).
+
+**Editors.** The everyday work happens in **VS Code** - the Python package, the definition
+files, the documentation, and Claude Code. **Visual Studio 2022** is the debugger: stepping from
+a Python script into a C++ item's `ComputeODE2LHS` with one debugger is the project's most
+valuable development capability and is protected by design. `tools/setupLocalWorkspace.py`
+prepares both.
+
+Entry points of the C++ worth knowing:
+
+- `src/Pymodules/PybindModule.cpp` — module creation.
+- `src/Main/MainObjectFactory.h/.cpp` — item creation behind `mbs.AddNode(...)`; dispatch is
+  on the `objectType` **string** from the Python dict, through a runtime class-factory registry.
+
 ## What you need, on every platform
 
 | | |
@@ -74,7 +90,7 @@ pip install --force-reinstall --no-deps dist\exudyn-1.12.61.dev1-cp313-cp313-win
 ```
 
 The compiler is Visual Studio 2022; which components it needs is in
-[visualStudio2022.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/visualStudio2022.md).
+[visualStudio2022.md](../howTo/visualStudio2022.md).
 VS2019 is **not** supported: it has problems with Eigen and produces wrong results with the sparse
 solver.
 
@@ -177,11 +193,11 @@ ImportError: .../exudyn.cpython-313-x86_64-linux-gnu.so: undefined symbol: ...
 An undefined symbol at **import** time is a compile-time mistake that the linker of a shared object
 does not catch — most often a `static const` used as a template argument, which needs to be
 `constexpr`.
-[gccVsMsvcTraps.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/gccVsMsvcTraps.md)
+[gccVsMsvcTraps.md](../howTo/gccVsMsvcTraps.md)
 collects that one and its relatives.
 
 For the Windows side of *"it built but it does not work"*, see
-[buildQuirks.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/buildQuirks.md).
+[buildQuirks.md](../howTo/buildQuirks.md).
 
 If `import exudyn` reports the **wrong version**, the wheel was installed into a different
 interpreter than the one running: `python -m exudyn info` prints which Python, which Exudyn and

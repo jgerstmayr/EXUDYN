@@ -21,7 +21,7 @@ install requirements.
 | scipy | FEM, eigenvalue computations, sparse solvers — **pin to 1.15.2**, see note below |
 | matplotlib | plotting in examples and `exudyn.plot` |
 | ngsolve, h5py | FEM mesh import and `FEMinterface` |
-| numpy-stl | STL import/export |
+| numpy-stl | the optional second STL reader, `graphics.FromSTLfile(..., useNumpySTL=True)` |
 | numba | a few accelerated example kernels |
 | torch, stable-baselines3 | reinforcement learning examples |
 | mpi4py | parallel parameter-variation examples |
@@ -87,17 +87,8 @@ for that version. `--py all` of `exudev` means these five; a newer Python is use
 
 ### Documentation toolchain only
 
-If an existing environment only needs the docs tools added, from the repository root:
-
-```bash
-pip install --group docs
-```
-
-Build the HTML documentation from the repository root:
-
-```bash
-sphinx-build -b html . _build -E
-```
+If an existing environment only needs the docs tools, `pip install --group docs` from the repository root adds them;
+building the documentation is in [sphinxDocs.md](sphinxDocs.md).
 
 (sec-install-extras)=
 ### Optional packages via the Exudyn extras
@@ -109,7 +100,7 @@ instead of being listed by hand:
 |---|---|
 | `pip install exudyn[basic]` | what most models need: scipy (eigenvalues, sparse matrices, FEM) and matplotlib (plots, `PlotSensor`) - **recommended to start with** |
 | `pip install exudyn[tests]` | the above plus exactly what `TestModels/` needs: h5py, networkx, psutil, ngsolve |
-| `pip install exudyn[common]` | the above plus what frequently used features need: numpy-stl (STL import), tqdm (optimization progress), ffmpeg-python (video export; the program itself: `conda install ffmpeg`) - **to use most features** |
+| `pip install exudyn[common]` | the above plus what frequently used features need: numpy-stl (the optional STL reader of `useNumpySTL=True`), tqdm (optimization progress), ffmpeg-python (video export; the program itself: `conda install ffmpeg`) - **to use most features** |
 | `pip install exudyn[all]` | the above plus everything else the package and the Examples refer to: pymeshlab, roboticstoolbox-python, spatialmath-python, numba, dispy, mpi4py |
 | `pip install exudyn[rl]` | reinforcement learning: torch, stable-baselines3, gymnasium, gym, tensorboard |
 
@@ -158,7 +149,8 @@ conda update -n base -c defaults conda -y   # update conda itself
 
 ## manylinux wheels (auditwheel)
 
-Now normally done with Docker; kept here for reference.
+The release wheels for Linux are built in the manylinux docker image (`exudev linux`, {ref}`sec-dev-build`). A wheel
+built on the machine itself is turned into a manylinux wheel by auditwheel:
 
 ```bash
 pip install auditwheel patchelf

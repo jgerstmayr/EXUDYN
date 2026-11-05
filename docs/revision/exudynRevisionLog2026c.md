@@ -6231,6 +6231,20 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   Manipulator4Rsimple has 3 links.
 - robotModelsTest.py.
 
+<a id="rg11-13"></a>
+### RG11.13 — the developer documentation in groups, the how-to notes under Misc (2026-11-05, #3278)
+- Maintainer 2026-11-05: internals at the end, a group for workflow and release, git under getting started, building
+  and running into the build page; the how-to notes of the developer front page under Misc, without duplicates and
+  history.
+- docs/dev/README.md: one table in the order of the toctree, which has 12 entries instead of 22; new pages
+  docs/dev/DEVELOPMENT.md (the repository layout, toctree WORKFLOW, RELEASE, GUI_MANUAL_CHECK) and
+  docs/dev/internals/README.md (the eight internals pages); GIT under GETTING_STARTED; the editors, the driver and the
+  C++ entry points into BUILD.md.
+- docs/howTo/misc.md publishes the five maintainer notes (no longer in exclude_patterns of conf.py, #2585 reversed by
+  the maintainer); index.md and pdfIndex.md list it. Removed: the origins of the build quirks, the Anaconda 2020.02
+  and MKL notes (history), the CC/CXX entry and the scipy pin (in BUILD.md and condaEnvironments.md), the
+  documentation commands of condaEnvironments.md (in sphinxDocs.md); numpy-stl described as the optional reader.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

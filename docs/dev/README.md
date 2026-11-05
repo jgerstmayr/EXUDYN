@@ -6,30 +6,27 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 
 | document | contents |
 |---|---|
+| [GETTING_STARTED.md](GETTING_STARTED.md) | from nothing to a build and a passing test run: clone, environment, `setupLocalWorkspace.py`; with [GIT.md](GIT.md), branches, commit messages and what a contribution provides |
+| [BUILD.md](BUILD.md) | the build per platform, the editors and the driver `exudev`, and what to do when the build does not work |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | the C++ internals: items, the C/Main/Visualization split, the object factory, modules, solvers |
 | [CODING_STYLE.md](CODING_STYLE.md) | naming, abbreviations, file headers, how to report an error from C++ (§10), what is deprecated |
-| [WORKFLOW.md](WORKFLOW.md) | issue tracker, versioning, the four commit gates |
 | [NEW_ITEM.md](NEW_ITEM.md) | how to set up a new item: the definition, what is generated, the C++, what to run |
-| [RELEASE.md](RELEASE.md) | how a release reaches GitHub, PyPI and the documentation: the commands in order, the rehearsal on GitHub, the traps |
-| [GUI_MANUAL_CHECK.md](GUI_MANUAL_CHECK.md) | the manual check of the render window and the dialogs before a release, per platform |
+| [DEVELOPMENT.md](DEVELOPMENT.md) | the development and release workflow: the repository layout, [WORKFLOW.md](WORKFLOW.md) (issue tracker, versioning, the four commit gates), [RELEASE.md](RELEASE.md) (a release on GitHub, PyPI and the documentation) and [GUI_MANUAL_CHECK.md](GUI_MANUAL_CHECK.md) (the manual check of the render window and the dialogs before a release) |
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
-| [../../tools/generators/README.md](../../tools/generators/README.md) | the new generator code and how to re-emit the definitions |
-| [internals/symbolic.md](internals/symbolic.md) | exudyn.symbolic inside: the recording, symbolic user functions, the flat program, the copies for the threads, Optimize, the export, exudyn.symbolics.kinematics |
-| [internals/userFunctions.md](internals/userFunctions.md) | the C++/Python boundary of the user functions: the stored function, the path of a call, the threads, the cost |
-| [internals/userItems.md](internals/userItems.md) | what each kind of item gives the solver, and how the user items are built |
-| [internals/systemUtilities.md](internals/systemUtilities.md) | exudyn.systemUtilities: SystemQuantity, the energy, the constraint drift, the system graph |
-| [internals/symmetricBasis.md](internals/symmetricBasis.md) | the frame of two slope vectors, its rotation Jacobian and the variants measured |
-| [internals/symbolicSystem.md](internals/symbolicSystem.md) | the symbolic system inside: the representation, what is assembled, the composed system, the Jacobians, the interface of the solvers, the solvers |
-| [internals/systemJacobians.md](internals/systemJacobians.md) | the system Jacobians: the local Jacobians of the items, the connector interface, the parallel assembly, the checks |
-| [internals/scope.md](internals/scope.md) | the scopes of the render window: the settings, one list of primitives for OpenGL and the raytracer, the static graphics, the locks |
+| [../../tools/generators/README.md](../../tools/generators/README.md) | the generator code and how to re-emit the definitions |
+| [../../tools/exudev/README.md](../../tools/exudev/README.md) | the commands of the driver `exudev` |
+| [../../CONTRIBUTING.md](../../CONTRIBUTING.md) | how to contribute from outside |
+| [internals/README.md](internals/README.md) | how parts of Exudyn work inside: exudyn.symbolic, the symbolic system, the user functions and user items, the system utilities, the symmetric basis, the system Jacobians, the scopes of the render window |
 | `docs/dev/design/` | the design notes of the steps that are open - analyses, options, decisions, measurements, written while planning a step; not published. When the step closes, what it built goes into the manual and into internals/, and the note leaves the repository (WORKFLOW.md §8.4) |
 | [exudynRevisionInfo2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md) | general information on the v1.11.0 → v2.0 restructuring: rules, facts, decisions |
-| [exudynRevisionPlan2026c.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026c.md) | **the plan that is open**, by group RG1 ... RG12; checked and partly written by `docs/revision/planManager.py` |
+| [exudynRevisionPlan2026c.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026c.md) | **the plan that is open**, by group; checked and partly written by `docs/revision/planManager.py` |
 | [exudynRevisionPlan2026b.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026b.md) | the second plan, closed 2026-10-10 - one line per step |
 | [exudynRevisionPlan2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026.md) | the finished plan of the 2026 revision, phases R0 ... R11 — a record; the revision completed as 1.12 |
 | [exudynRevisionLog2026c.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026c.md) / [exudynRevisionLog2026b.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026b.md) / [exudynRevisionLog2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026.md) | what each closed step actually turned out to be — the first is where the work of revision2026c is written up, the other two are closed with their plans |
-| [../../CONTRIBUTING.md](../../CONTRIBUTING.md) | how to contribute from outside |
 | [CLAUDE.md](https://github.com/jgerstmayr/EXUDYN/blob/master/CLAUDE.md) | the working contract for Claude Code sessions |
+
+The how-to notes - the conda environments, building the documentation, and under *Misc* the build quirks, what MSVC
+accepts and GCC does not, Visual Studio 2022, ffmpeg and matplotlib - follow this part of the documentation.
 
 ```{toctree}
 :hidden:
@@ -37,109 +34,17 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 
 /docs/dev/GETTING_STARTED
 /docs/dev/BUILD
-/docs/dev/GIT
 /docs/dev/ARCHITECTURE
 /docs/dev/CODING_STYLE
-/docs/dev/WORKFLOW
-/docs/dev/RELEASE
 /docs/dev/NEW_ITEM
-/docs/dev/GUI_MANUAL_CHECK
-/docs/dev/internals/symbolic
-/docs/dev/internals/symbolicSystem
-/docs/dev/internals/userFunctions
-/docs/dev/internals/userItems
-/docs/dev/internals/systemUtilities
-/docs/dev/internals/symmetricBasis
-/docs/dev/internals/systemJacobians
-/docs/dev/internals/scope
+/docs/dev/DEVELOPMENT
 /docs/generated/deprecations
 /definitions/README
 /tools/generators/README
 /tools/exudev/README
 /CONTRIBUTING
+/docs/dev/internals/README
 ```
-
-## Repository layout
-
-```
-setup.py                                  the real build
-exudynTemplate.sln                        VS2022 solution template (exudynPython.pyproj + cppsrc.vcxproj)
-msvc/cppsrc.vcxproj                       the C++ source list; sources.json is generated from it
-src/                                      hand-written C++: Graphics ImplMarkers ImplNodes ImplObjects
-                                          Linalg Main Pymodules Solver System Tests Utilities
-src/Autogenerated/                        generated C++ - never edit by hand
-definitions/, tools/generators/          the generator input and the generators
-python/exudyn/                            the shipped Python package
-python/TestModels/                        the test models, nothing else
-python/PerformanceModels/                 the performance models
-python/MiniExamples/                      the generated mini examples
-python/Examples/                          the examples
-python/testing/                           the runners: runTestSuite.py and the rest
-python/logs/                              testmodels/ examples/ performance/ tmp/
-index.md                                  the table of contents of the documentation, hand-written: what comes in which order
-docs/manual/                              the user manual, hand-written Markdown
-docs/generated/                           the generated documentation (emitters, issue tracker)
-docs/figures/                             the images of the documentation
-docs/howTo/                               loose how-to notes, see below
-tools/issueTracker/                       issue tracker and version source of truth
-tools/exudev/                             the dev driver: build, test, docs, release
-```
-
-## Building and running
-
-Three pages, in the order a new developer needs them:
-
-| | |
-|---|---|
-| [GETTING_STARTED.md](GETTING_STARTED.md) | from nothing: clone, environment, `setupLocalWorkspace.py`, first build, first test run |
-| [BUILD.md](BUILD.md) | the build itself, per platform, and what to do when it does not work |
-| [GIT.md](GIT.md) | branches, commit messages, pull, push, merge, and what a contribution provides |
-
-**Editors.** The everyday work happens in **VS Code** - the Python package, the definition
-files, the documentation, and Claude Code. **Visual Studio 2022** is the debugger: stepping from
-a Python script into a C++ item's `ComputeODE2LHS` with one debugger is the project's most
-valuable development capability and is protected by design. `tools/setupLocalWorkspace.py`
-prepares both.
-
-**The driver**: one command, `exudev` - `exudev --help`, and `exudev -n <command>` to see what a
-command would run without running it. Its commands are in
-[`tools/exudev/README.md`](../../tools/exudev/README.md).
-
-Entry points worth knowing:
-
-- `src/Pymodules/PybindModule.cpp` — module creation.
-- `src/Main/MainObjectFactory.h/.cpp` — item creation behind `mbs.AddNode(...)`; dispatch is
-  on the `objectType` **string** from the Python dict, through a runtime class-factory registry.
-
-## How-to notes
-
-`docs/howTo/` was cut from 26 loose `.txt` files to 8 in the 2026-09 cleanup. Anything referring to
-VS2017/VS2019, 32-bit builds, Python ≤ 3.7 or the pre-WSLg X-server era was deleted; the specifics
-worth keeping were lifted into `buildQuirks.md`. The originals remain in git history, in the
-archived internal repository and on GitHub.
-
-Three of them are **pages of the documentation**, because a user or a first-time contributor
-needs them:
-
-| file | what it is for |
-|---|---|
-| [condaEnvironments.md](../howTo/condaEnvironments.md) | environment recipes, the package→feature map, the scipy pin |
-| [sphinxDocs.md](../howTo/sphinxDocs.md) | building the documentation locally |
-
-The other five are **maintainer notes**: they are in the repository, and they are linked here to
-GitHub rather than to a page, because they are not published (#2585 — `exclude_patterns` in
-`conf.py`).
-
-| file | what it is for |
-|---|---|
-| [buildQuirks.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/buildQuirks.md) | traps that cost real time: MSVC↔GCC flags, `/bigobj`, ABI tags, debugging a startup crash |
-| [gccVsMsvcTraps.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/gccVsMsvcTraps.md) | what MSVC accepts and GCC does not, and why |
-| [visualStudio2022.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/visualStudio2022.md) | VS2022 install specifics and `dumpbin /version` |
-| [convertVideosFfmpeg.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/convertVideosFfmpeg.md) | producing the demo animations |
-| [matplotlibExamples.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/matplotlibExamples.md) | plotting recipes used in examples |
-
-macOS setup is covered in [docs/manual/gettingStarted.md](../manual/gettingStarted.md),
-not here.
 
 ## Invariants
 

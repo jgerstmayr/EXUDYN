@@ -103,14 +103,6 @@ exclude_patterns = ['rotorAnsys.rst',
                     'CLAUDE.md',         #the working contract for Claude Code sessions
                     '.github/*',         #issue and pull request templates: GitHub reads them,
                                          #Sphinx must not
-                    #maintainer notes: they stay in the repository and are linked from the
-                    #how-to section of the documentation, but they are not pages of the manual
-                    #(#2585)
-                    'docs/howTo/buildQuirks.md',
-                    'docs/howTo/convertVideosFfmpeg.md',
-                    'docs/howTo/gccVsMsvcTraps.md',
-                    'docs/howTo/matplotlibExamples.md',
-                    'docs/howTo/visualStudio2022.md',
                     #the mouse and keyboard tables, generated from
                     #python/exudyn/misc/keyBindings.py and INCLUDED by docs/manual/GUI.md;
                     #as documents of their own they would be orphans and fail the strict

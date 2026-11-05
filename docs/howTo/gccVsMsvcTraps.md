@@ -86,11 +86,10 @@ warning: deleting object of polymorphic class type 'CLoad' which has non-virtual
 ```
 
 GCC is right and MSVC is silent: every base class with virtual functions needs a virtual
-destructor. `CLoad`, `CMarker`, `MainLoad`, `VisualizationLoad` and `ResizableArray` all got one.
+destructor, as `CLoad`, `CMarker`, `MainLoad`, `VisualizationLoad` and `ResizableArray` have.
 
-The other direction is worth doing at the same time: a class with **no** derived class does not
-need `virtual` at all — it was removed from `MarkerDataStructure` and from the destructor of
-`SlimVectorBase`.
+The other direction is worth checking at the same time: a class with **no** derived class does not
+need `virtual` at all, as `MarkerDataStructure` and `SlimVectorBase`.
 
 ## Initialisation order in constructors
 
