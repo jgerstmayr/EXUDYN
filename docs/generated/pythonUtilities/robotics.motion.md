@@ -117,7 +117,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **class function description**: the profile in Trajectory
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`robotInverseDynamicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotInverseDynamicsTest.py) (TM), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM)
 
 
 (sec-module-robotics.motion-class-profilecartesianlinear(-profilecartesian))=

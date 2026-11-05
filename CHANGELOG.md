@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 372 | 1.13.387 |
+| 1.13 | Newborn | 373 | 1.13.388 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.388** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robot: inverse dynamics in KinematicChain and Robot, the dynamic compensation of the joint control (#3276)
+  - description: The joint control of Robot compensates gravity only (compensation='static'); the feed-forward of the inverse dynamics with the planned velocities and accelerations, which leaves the PD control the errors only, is missing (RG19.4.2), and KinematicChain has no inertias. Decided: KinematicChain gets the inertia tensors and InverseDynamics(q, q\_t, q\_tt) by the recursive Newton-Euler algorithm in C++, Robot.InverseDynamics the same in Python; SetControl(trajectory, compensation='dynamic') for both models.
+  - **notes:** KinematicChain(..., inertias) and KinematicChain.InverseDynamics(q, q\_t, q\_tt) of exudyn.cUtilities give the joint torques and forces of the inverse dynamics by the recursive Newton-Euler algorithm (about 2 us for 6 links); Robot.InverseDynamics is the same in Python, and Robot.GetKinematicChain passes the inertias of the links. Robot.SetControl(trajectory, compensation='dynamic') adds them as feed-forward to the PD control of the kinematic tree and of the redundant coordinate model.
+  - date resolved: **2026-11-05 22:47**, date raised: 2026-11-05
 - **1.13.387** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` STL import: the triangles as in the file (outward), open meshes oriented by their volume, a check of the orientation, back faces in the raytracer (#3275)
   - description: graphics.FromSTLfile and FromSTLfileASCII invert the triangles and normals of an STL file by default, although STL files and Exudyn both have the corners counterclockwise seen from outside (OpenGL front faces, outward normals): standard meshes come in inside out, and OrientTriangles fixes only closed parts, so open meshes of URDFs (the links 1, 2 and the base of the TX2-90L) stay inverted. Decided: no inversion by default (also in LoadURDFgraphics); OrientTriangles orients an open part that encloses a volume by its signed volume; checkOrientation warns when an imported mesh encloses a volume with inward triangles; raytracer.advanced.backFaceColor draws faces seen from their back in a color, to check normals as OpenGL's one-sided lighting does.
   - **notes:** STL files keep their orientation: STL files and Exudyn both have the triangles counterclockwise seen from outside and the normals outward, so graphics.FromSTLfile, FromSTLfileASCII, ExportSTL and urdfImport.LoadURDFgraphics no longer invert them by default (pass invertTriangles=True, invertNormals=True for the former behaviour). checkOrientation=True of the readers warns if a mesh encloses a volume with inward triangles; graphics.OrientTriangles orients an open part that encloses a volume outward by its signed volume. visualizationSettings.raytracer.advanced.backFaceColor draws faces seen from their back in a color, to check normals.

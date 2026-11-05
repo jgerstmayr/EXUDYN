@@ -672,13 +672,13 @@ class Robot:
 
         Args:
             trajectory: an exudyn.robotics.motion.Trajectory (or an object with Evaluate(t) returning [q, q_t, q_tt])
-            compensation: None, or 'static': the static torques of gravity added as joint forces (KinematicChain.StaticTorques)
+            compensation: None; 'static': the joint forces that hold the robot against gravity at the coordinates of the trajectory (-KinematicChain.StaticTorques); 'dynamic': the joint forces of the inverse dynamics with the velocities and accelerations of the trajectory (KinematicChain.InverseDynamics, #3276), a feed-forward that leaves the PD control the errors only
         """
-        if compensation not in [None, 'static']:
-            raise ValueError("Robot.SetControl: compensation must be None or 'static', not " + str(compensation))
+        if compensation not in [None, 'static', 'dynamic']:
+            raise ValueError("Robot.SetControl: compensation must be None, 'static' or 'dynamic', not " + str(compensation))
         self.controlTrajectory = trajectory
         self.controlCompensation = compensation
-        self.controlChain = self.GetKinematicChain() if compensation == 'static' else None
+        self.controlChain = self.GetKinematicChain() if compensation is not None else None
 
     def _ModelData(self, functionName):
         """the data of the model created last by CreateKinematicTree or CreateRedundantCoordinateMBS"""
@@ -705,17 +705,18 @@ class Robot:
             raise ValueError('Robot.PreStepControl: call SetControl(trajectory) first')
         data = self._ModelData('PreStepControl')
         [q, q_t, q_tt] = self.controlTrajectory.Evaluate(t)
+        drive = np.zeros(len(self.links)) #the joint forces of the compensation, acting on the links of the joints
         if self.controlCompensation == 'static':
-            tau = self.controlChain.StaticTorques(q)
-        else:
-            tau = np.zeros(len(self.links))
+            drive = -self.controlChain.StaticTorques(q)
+        elif self.controlCompensation == 'dynamic':
+            drive = self.controlChain.InverseDynamics(q, q_t, q_tt)
 
         if data['modelType'] == 'kinematicTree':
             oKT = data['objectKinematicTree']
             mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', q)
             mbs.SetObjectParameter(oKT, 'jointVelocityOffsetVector', q_t)
             if self.controlCompensation is not None:
-                mbs.SetObjectParameter(oKT, 'jointForceVector', -tau)
+                mbs.SetObjectParameter(oKT, 'jointForceVector', drive)
         else:
             #the spring-dampers measure the absolute joint coordinate; their force acts against it, the drive is -force
             for (i, objectSD) in enumerate(data['springDamperList']):
@@ -724,7 +725,7 @@ class Robot:
                 mbs.SetObjectParameter(objectSD, 'offset', q[i])
                 mbs.SetObjectParameter(objectSD, 'velocityOffset', q_t[i])
                 if self.controlCompensation is not None:
-                    mbs.SetObjectParameter(objectSD, 'torque' if self.links[i].jointType[0] == 'R' else 'force', tau[i])
+                    mbs.SetObjectParameter(objectSD, 'torque' if self.links[i].jointType[0] == 'R' else 'force', -drive[i])
         return True
 
     def AddSensors(self, mbs, outputVariables=[exudyn.OutputVariableType.Coordinates, exudyn.OutputVariableType.Coordinates_t],
@@ -832,7 +833,8 @@ class Robot:
                                                 parents=[self.GetParentIndex(i) for i in range(len(self.links))],
                                                 masses=[link.mass for link in self.links],
                                                 COMs=[link.COM for link in self.links],
-                                                baseHT=self.base.HT, toolHT=self.tool.HT, gravity=self.gravity)
+                                                baseHT=self.base.HT, toolHT=self.tool.HT, gravity=self.gravity,
+                                                inertias=[link.inertia for link in self.links])
 
     def LinkHT(self, q):
         """compute list of homogeneous transformations (exudyn.HT) for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different! The C++ version is KinematicChain.LinkHT of GetKinematicChain()
@@ -901,6 +903,58 @@ class Robot:
             else:
                 jointTorques[i] = massSum[i] * (axis @ gravity)
         return jointTorques
+
+    def InverseDynamics(self, q, q_t, q_tt):
+        """the joint torques and forces that move the robot with the joint accelerations q_tt at the joint coordinates q
+        and velocities q_t against gravity (#3276), M(q) q_tt + h(q, q_t) minus the generalized forces of gravity - at
+        q_t = q_tt = 0 the negative of StaticTorques; the recursive Newton-Euler algorithm in global vectors: forward the
+        angular velocity and acceleration of each link and the acceleration of its joint origin (the base accelerated by
+        -g, which gives the weights), the force m a_c at the COM and the moment I alpha + omega x I omega; backward the
+        force and the moment about the joint origin, summed over the subtree, projected on the joint axis; the C++
+        version is KinematicChain.InverseDynamics of GetKinematicChain(), about 100 times faster
+
+        Args:
+            q: the joint coordinates
+            q_t: the joint velocities
+            q_tt: the joint accelerations
+
+        Returns:
+            the joint torques (revolute) and forces (prismatic), a numpy array
+        """
+        n = len(self.links)
+        jointHTs = self.JointHT(q)
+        linkHTs = self.LinkHT(q)
+        (omega, alpha, accelerationOrigin, force, moment) = ([None]*n, [None]*n, [None]*n, [None]*n, [None]*n)
+        origins = [np.array(H.translation) for H in jointHTs]
+        axes = [np.array(jointHTs[i].rotation) @ dictJointType2Axis[self.links[i].jointType] for i in range(n)]
+        for i in range(n):
+            link = self.links[i]
+            if self.HasParent(i):
+                p = self.GetParentIndex(i)
+                (omegaParent, alphaParent, accelerationParent, originParent) = (omega[p], alpha[p], accelerationOrigin[p], origins[p])
+            else:
+                (omegaParent, alphaParent, accelerationParent) = (np.zeros(3), np.zeros(3), -np.array(self.gravity, dtype=float))
+                originParent = np.array(self.base.HT.translation)
+            r = origins[i] - originParent
+            accelerationOrigin[i] = accelerationParent + np.cross(alphaParent, r) + np.cross(omegaParent, np.cross(omegaParent, r))
+            if link.jointType[0] == 'R':
+                omega[i] = omegaParent + q_t[i]*axes[i]
+                alpha[i] = alphaParent + q_tt[i]*axes[i] + np.cross(omegaParent, q_t[i]*axes[i])
+            else: #the origin slides along the axis
+                (omega[i], alpha[i]) = (omegaParent, alphaParent)
+                accelerationOrigin[i] = accelerationOrigin[i] + q_tt[i]*axes[i] + 2.*np.cross(omegaParent, q_t[i]*axes[i])
+            c = np.array(linkHTs[i].rotation) @ link.COM + np.array(linkHTs[i].translation) - origins[i]
+            accelerationCOM = accelerationOrigin[i] + np.cross(alpha[i], c) + np.cross(omega[i], np.cross(omega[i], c))
+            R = np.array(linkHTs[i].rotation)
+            inertia = R @ link.inertia @ R.T
+            force[i] = link.mass*accelerationCOM
+            moment[i] = inertia @ alpha[i] + np.cross(omega[i], inertia @ omega[i]) + np.cross(c, force[i])
+        for i in reversed(range(n)): #the links of the subtree come after their parent
+            if self.HasParent(i):
+                p = self.GetParentIndex(i)
+                force[p] = force[p] + force[i]
+                moment[p] = moment[p] + moment[i] + np.cross(origins[i] - origins[p], force[i])
+        return np.array([axes[i] @ (moment[i] if self.links[i].jointType[0] == 'R' else force[i]) for i in range(n)])
     
     
     def Jacobian(self, HT, toolPosition=[], mode='all', linkIndex=None):

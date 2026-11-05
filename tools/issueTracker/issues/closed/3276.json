@@ -1,0 +1,15 @@
+{
+  "number": 3276,
+  "title": "Robot: inverse dynamics in KinematicChain and Robot, the dynamic compensation of the joint control",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The joint control of Robot compensates gravity only (compensation='static'); the feed-forward of the inverse dynamics with the planned velocities and accelerations, which leaves the PD control the errors only, is missing (RG19.4.2), and KinematicChain has no inertias. Decided: KinematicChain gets the inertia tensors and InverseDynamics(q, q_t, q_tt) by the recursive Newton-Euler algorithm in C++, Robot.InverseDynamics the same in Python; SetControl(trajectory, compensation='dynamic') for both models.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 22:47",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "KinematicChain(..., inertias) and KinematicChain.InverseDynamics(q, q_t, q_tt) of exudyn.cUtilities give the joint torques and forces of the inverse dynamics by the recursive Newton-Euler algorithm (about 2 us for 6 links); Robot.InverseDynamics is the same in Python, and Robot.GetKinematicChain passes the inertias of the links. Robot.SetControl(trajectory, compensation='dynamic') adds them as feed-forward to the PD control of the kinematic tree and of the redundant coordinate model.",
+  "resolvedInVersion": "1.13.388"
+}

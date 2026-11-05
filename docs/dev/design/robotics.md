@@ -368,7 +368,9 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   PreStepControl, AddSensors, the static (and dynamic) compensation from the kinematic tree; .1 done: q0, friction and
   end stops per link by CoordinateSpringDamperExt in both models (in the redundant model on a relative coordinate
   marker, MarkerBodiesRelativeRotationCoordinate with localRotation0/1), PreStepControl and AddSensors for both, the
-  two models equal to 1e-6 (#3270); open: the dynamic compensation.
+  two models equal to 1e-6 (#3270); .2 done: the dynamic compensation by KinematicChain.InverseDynamics (recursive
+  Newton-Euler with the inertias, equal to M q_tt + the left-hand side of the kinematic tree), not by the tree as
+  decision 4 expected - the chain needs no mbs and takes 2 us (#3276).
 - RG19.5 Extend the trajectories: quintic and cubic polynomials, linear profiles completed, Cartesian linear, circular,
   screw and spline paths, mixed in Trajectory with the check of jumps; .1 done: ProfilePolynomial5 and
   ProfileCartesianLinear (#3262); .2 done: blending (section 6.1, #3274); .3 done: ProfileCartesianCircular,

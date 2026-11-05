@@ -181,6 +181,7 @@ RigidPendulumTest
 robotCartesianPathsTest
 robotDictionaryTest
 robotFrictionEndStopsTest
+robotInverseDynamicsTest
 robotTrajectoryProfilesTest
 rollingCoinPenaltyTest
 rollingCoinTest

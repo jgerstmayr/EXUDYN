@@ -63,7 +63,7 @@ checks += [np.max(np.abs(chain.ToolHT(qEnd).HT44() - HT1.HT44())) < 1e-10]
 #the analytic inverse kinematics of the TX2-90L and the control settings
 checks += [len(chain.InverseKinematicsAnalytic(chain.ToolHT(q0))) == 8]
 try:
-    robot.SetControl(trajectory, compensation='dynamic')
+    robot.SetControl(trajectory, compensation='full')
     checks += [False]
 except ValueError:
     checks += [True]

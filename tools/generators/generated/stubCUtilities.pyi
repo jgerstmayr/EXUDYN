@@ -103,10 +103,10 @@ def RelativeTwist(HT0: HT, twist0: Twist, HT1: HT, twist1: Twist) -> Twist:
 
 #stub information for class KinematicChain functions
 class KinematicChain:
-    """The KinematicChain is the kinematics of a serial or tree-like robot in C++: per link a joint type, the parent link, preHT (from the link frame of the parent to the joint frame, before the joint motion), localHT (from the joint frame after the joint motion to the link frame), mass and center of mass in the link frame; the base HT, the tool HT relative to the frame of the last link, and gravity - the data of exudyn.robotics.Robot, whose GetKinematicChain() creates it.
+    """The KinematicChain is the kinematics of a serial or tree-like robot in C++: per link a joint type, the parent link, preHT (from the link frame of the parent to the joint frame, before the joint motion), localHT (from the joint frame after the joint motion to the link frame), mass, center of mass and inertia tensor in the link frame; the base HT, the tool HT relative to the frame of the last link, and gravity - the data of exudyn.robotics.Robot, whose GetKinematicChain() creates it.
 
     The joint frame of link i is JointHT_i = LinkHT_parent * preHT_i * HTjoint(q_i), its link frame LinkHT_i = JointHT_i * localHT_i
-    Robot.JointHT, Robot.LinkHT, Robot.Jacobian, Robot.StaticTorques and Robot.InverseKinematicsAnalytic are the Python versions of the same algorithms.
+    Robot.JointHT, Robot.LinkHT, Robot.Jacobian, Robot.StaticTorques, Robot.InverseDynamics and Robot.InverseKinematicsAnalytic are the Python versions of the same algorithms.
     """
     def NumberOfLinks(self) -> int: 
         """The number of links."""
@@ -125,6 +125,9 @@ class KinematicChain:
         ...
     def StaticTorques(self, q: ArrayLike) -> NDArray: 
         """The generalized forces of gravity on the joints for the joint coordinates q, the sum over the links j of J_j^T m_j g with the Jacobian J_j of the center of mass of link j, computed in one backward pass over the links (the mass and its first moment summed over the links after each joint); the joint torques that hold the robot are their negative; the Python version is Robot.StaticTorques."""
+        ...
+    def InverseDynamics(self, q: ArrayLike, q_t: ArrayLike, q_tt: ArrayLike) -> NDArray: 
+        """The joint torques and forces that move the chain with the joint accelerations q_tt at the joint coordinates q and velocities q_t against gravity (#3276), M(q) q_tt + h(q, q_t) minus the generalized forces of gravity - at q_t = q_tt = 0 the negative of StaticTorques; by the recursive Newton-Euler algorithm, O(n), with the masses, COMs and inertias; the Python version is Robot.InverseDynamics."""
         ...
     def InverseKinematicsNumerical(self, HT: HT, qInitial: ArrayLike, weights: ArrayLike=None, tolerance: float=1e-10, maxIterations: int=100, restarts: int=0) -> tuple[NDArray, bool, int]: 
         """The numerical inverse kinematics by Levenberg-Marquardt: joint coordinates q with ToolHT(q) equal to HT (exu.HT or 4x4 matrix), starting from qInitial, for any serial chain (also with fewer or more than 6 joints); the error e is the position difference and the rotation vector of R_HT R(q)^T, multiplied by the 6 weights (None: ones; zeros for components that are free), the step (J^T J + lambda I) dq = J^T e with lambda adapted (divided by 10 after a step that lowers |e|, multiplied by 10 until one does); converged for |e| <= tolerance; restarts further starts from qInitial shifted by the fixed sequence pi (2 frac(k sqrt(p_i)) - 1) with the primes p_i for the revolute joints; returns (q, success, iterations), q of the last start if none converged; the Python version is Robot.InverseKinematicsNumerical."""

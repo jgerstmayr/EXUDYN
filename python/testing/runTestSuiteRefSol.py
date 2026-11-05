@@ -44,6 +44,7 @@ def TestExamplesReferenceSolution():
         'numericalInverseKinematicsTest.py': 22.2, #new 2026-11-05: the Levenberg-Marquardt inverse kinematics of KinematicChain and Robot (#3269)
         'robotCartesianPathsTest.py': 24.036760791972597, #new 2026-11-05: circular, screw and spline paths, keepConfiguration, the jumps in Trajectory (#3272)
         'trajectoryBlendingTest.py': 10.527218840445627, #new 2026-11-05: the blending of the profiles of Trajectory (#3274)
+        'robotInverseDynamicsTest.py': 14.002447714997835, #new 2026-11-05: KinematicChain.InverseDynamics, Robot.InverseDynamics, the dynamic compensation (#3276)
         'robotDictionaryTest.py': 9.516012946428752, #new 2026-11-05: Robot.GetDictionary and SetDictionary, saved with SaveDictToHDF5 (#3267)
         'robotFrictionEndStopsTest.py': 11.680923235698522, #new 2026-11-05: friction, end stops, q0, control and sensors of both models of Robot (#3270)
         'raytracerBackFaceTest.py': 0.7, #new 2026-11-05: raytracer.advanced.backFaceColor (#3275)

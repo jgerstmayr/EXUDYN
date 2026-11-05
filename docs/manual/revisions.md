@@ -524,6 +524,10 @@ reaches the end of the next profile exactly. `Evaluate`, `EvaluateCoordinate` an
 (default True) to compare with the profiles one after the other, and `GetBlendings(kinematicChain)` gives for each
 blending its times and the distances from the via point - of the coordinates and of the tool - at which it starts and
 by which it passes. The example staubliTX2blending.py shows a handling task with and without blending (#3274).
+`KinematicChain(..., inertias)` and `KinematicChain.InverseDynamics(q, q_t, q_tt)` give the joint torques of the
+inverse dynamics by the recursive Newton-Euler algorithm (about 2 us for 6 links), `Robot.InverseDynamics` the same in
+Python; `Robot.SetControl(trajectory, compensation='dynamic')` adds them as feed-forward to the PD control of both
+models, which then follow a fast trajectory of the TX2-90L 20 times more closely than with `'static'` (#3276).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

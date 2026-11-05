@@ -6204,6 +6204,19 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   triangles inverted and not oriented.
 - raytracerBackFaceTest.py; stlFileImportTest.py and test_urdfGraphics.py write the STL outward.
 
+<a id="rg19-4-2"></a>
+### RG19.4.2 — the inverse dynamics, the dynamic compensation of the control (2026-11-05, #3276)
+- Maintainer 2026-11-05: next steps 2 and 3 of the report (this one the dynamic compensation of RG19.4).
+- Decision 4 of the design put the dynamic compensation in the kinematic tree; the chain is used instead, with the
+  same data and a new argument inertias: KinematicChain.InverseDynamics by the recursive Newton-Euler algorithm in
+  global vectors (the base accelerated by -g), Robot.InverseDynamics the same in Python, 1.4 to 1.8 us in C++.
+- Checked against M q_tt + the left-hand side of ObjectKinematicTree (mass matrix of the solver, OutputVariable Force)
+  for Rx/Ry/Rz, prismatic joints and the Puma560 to 1e-10 relative; at q_t = q_tt = 0 the negative of StaticTorques.
+- SetControl(compensation='dynamic'): the drive of the inverse dynamics with the q, q_t, q_tt of the trajectory, in
+  the tree as jointForceVector, in the redundant model as -torque of the spring-dampers. The TX2-90L on a polynomial
+  of degree 5 in 0.6 s: tracking error 2.3e-3 rad with 'static', 1.2e-4 rad with 'dynamic', the same in both models.
+- robotInverseDynamicsTest.py.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

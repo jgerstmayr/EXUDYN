@@ -33,6 +33,7 @@ class PyKinematicChain
 	ResizableArray<HomogeneousTransformation> localHTs;
 	Vector masses;
 	Vector3DList COMs;				//!< the centers of mass in the link frames
+	ResizableArray<Matrix3D> inertias;	//!< the inertia tensors at the centers of mass, in the link frames (#3276)
 	HomogeneousTransformation baseHT;
 	HomogeneousTransformation toolHT;
 	Vector3D gravity;
@@ -88,10 +89,11 @@ class PyKinematicChain
 
 public:
 	//! the chain of jointTypes (a list of 'Rx', 'Ry', 'Rz', 'Px', 'Py', 'Pz'), parents (None: a serial chain), preHTs and
-	//! localHTs (None: identities), masses and COMs (None: zero), the base and tool HT (None: identity) and gravity
+	//! localHTs (None: identities), masses and COMs (None: zero), the base and tool HT (None: identity), gravity and the
+	//! inertia tensors at the COMs in the link frames (None: zero)
 	PyKinematicChain(const py::object& jointTypesPy, const py::object& preHTsPy, const py::object& localHTsPy,
 		const py::object& parentsPy, const py::object& massesPy, const py::object& COMsPy, const py::object& baseHTPy,
-		const py::object& toolHTPy, const py::object& gravityPy)
+		const py::object& toolHTPy, const py::object& gravityPy, const py::object& inertiasPy)
 	{
 		py::list types = py::cast<py::list>(jointTypesPy);
 		numberOfLinks = (Index)types.size();
@@ -144,6 +146,14 @@ public:
 		if (!baseHTPy.is_none()) { EPyUtils::HTFromPython(baseHTPy, baseHT, "KinematicChain: baseHT"); }
 		if (!toolHTPy.is_none()) { EPyUtils::HTFromPython(toolHTPy, toolHT, "KinematicChain: toolHT"); }
 		gravity = gravityPy.is_none() ? Vector3D({ 0., 0., 0. }) : PyCUtilities::GetVector<3>(gravityPy, "KinematicChain", "gravity");
+		inertias.SetNumberOfItems(numberOfLinks);
+		for (Index i = 0; i < numberOfLinks; i++) { inertias[i].SetScalarMatrix(3, 0.); }
+		if (!inertiasPy.is_none())
+		{
+			py::list list = py::cast<py::list>(inertiasPy);
+			if ((Index)list.size() != numberOfLinks) { PyError("KinematicChain: inertias must have one entry per link", PyErrorType::valueError); }
+			for (Index i = 0; i < numberOfLinks; i++) { inertias[i] = PyCUtilities::GetMatrix3D(list[i], "KinematicChain", "inertias"); }
+		}
 	}
 
 	//! KinematicChain() without arguments is refused: a chain needs its links
@@ -264,6 +274,74 @@ public:
 				data[i] = axis * lever.CrossProduct(gravity);
 			}
 			else { data[i] = massSum[i] * (axis * gravity); }
+		}
+		return tau;
+	}
+
+	//! the inverse dynamics (#3276): the joint torques and forces that move the chain with the joint accelerations q_tt at
+	//! q, q_t against gravity, M(q) q_tt + h(q, q_t) - the generalized forces of gravity; recursive Newton-Euler in global
+	//! vectors: forward the angular velocity and acceleration of each link and the acceleration of its joint origin (the
+	//! base accelerated by -g, which gives the weights), then the force at the COM, m a_c, and the moment
+	//! I alpha + omega x I omega; backward the force and the moment about the joint origin, summed over the subtree, and
+	//! tau_i their projection on the joint axis
+	py::array_t<Real> InverseDynamics(const py::object& q, const py::object& q_t, const py::object& q_tt) const
+	{
+		Vector qv = GetCoordinates(q, "KinematicChain.InverseDynamics");
+		Vector qv_t = GetCoordinates(q_t, "KinematicChain.InverseDynamics");
+		Vector qv_tt = GetCoordinates(q_tt, "KinematicChain.InverseDynamics");
+		ResizableArray<HomogeneousTransformation> jointFrames, linkFrames;
+		ComputeFrames(qv, jointFrames, linkFrames);
+		Vector3DList omega, alpha, accelerationOrigin, force, moment;
+		for (Vector3DList* list : { &omega, &alpha, &accelerationOrigin, &force, &moment }) { list->SetNumberOfItems(numberOfLinks); }
+		for (Index i = 0; i < numberOfLinks; i++)
+		{
+			Vector3D axis = JointAxis(i, jointFrames[i]);
+			Vector3D origin = jointFrames[i].GetTranslation();
+			Vector3D omegaParent({ 0., 0., 0. }), alphaParent({ 0., 0., 0. }), accelerationParent = -1.*gravity;
+			Vector3D originParent = baseHT.GetTranslation();
+			if (parents[i] != -1)
+			{
+				Index p = parents[i];
+				omegaParent = omega[p];
+				alphaParent = alpha[p];
+				accelerationParent = accelerationOrigin[p];
+				originParent = jointFrames[p].GetTranslation();
+			}
+			Vector3D r = origin - originParent;
+			accelerationOrigin[i] = accelerationParent + alphaParent.CrossProduct(r) + omegaParent.CrossProduct(omegaParent.CrossProduct(r));
+			if (jointTypes[i] < 3) //revolute
+			{
+				omega[i] = omegaParent + qv_t[i] * axis;
+				alpha[i] = alphaParent + qv_tt[i] * axis + omegaParent.CrossProduct(qv_t[i] * axis);
+			}
+			else //prismatic: the origin slides along the axis
+			{
+				omega[i] = omegaParent;
+				alpha[i] = alphaParent;
+				accelerationOrigin[i] += qv_tt[i] * axis + 2. * omegaParent.CrossProduct(qv_t[i] * axis);
+			}
+			Vector3D c = linkFrames[i] * COMs[i] - origin; //from the joint origin to the COM
+			Vector3D accelerationCOM = accelerationOrigin[i] + alpha[i].CrossProduct(c) + omega[i].CrossProduct(omega[i].CrossProduct(c));
+			Matrix3D R = linkFrames[i].GetRotation();
+			Matrix3D inertia = R * inertias[i] * R.GetTransposed(); //global, at the COM
+			force[i] = masses[i] * accelerationCOM;
+			moment[i] = inertia * alpha[i] + omega[i].CrossProduct(inertia * omega[i]) + c.CrossProduct(force[i]); //about the joint origin
+		}
+		for (Index i = numberOfLinks - 1; i >= 0; i--) //the links of the subtree come after their parent
+		{
+			Index p = parents[i];
+			if (p != -1)
+			{
+				force[p] += force[i];
+				moment[p] += moment[i] + (jointFrames[i].GetTranslation() - jointFrames[p].GetTranslation()).CrossProduct(force[i]);
+			}
+		}
+		py::array_t<Real> tau(numberOfLinks);
+		Real* data = tau.mutable_data();
+		for (Index i = 0; i < numberOfLinks; i++)
+		{
+			Vector3D axis = JointAxis(i, jointFrames[i]);
+			data[i] = jointTypes[i] < 3 ? axis * moment[i] : axis * force[i];
 		}
 		return tau;
 	}
