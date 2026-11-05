@@ -19,9 +19,9 @@ from exudyn.robotics.urdfImport import LoadURDFgraphics, AddURDFgraphics
 from exudyn.graphics import _ReadSTL
 
 def _WriteSTL(fileName, graphicsData, binary):
-    """a closed brick as STL, its triangles in the orientation of STL files (the inverse of Exudyn's, as FromSTLfile)"""
+    """a closed brick as STL, its triangles counterclockwise seen from outside, as graphics.Brick and STL files (#3275)"""
     points = np.array(graphicsData['points']).reshape((-1, 3))
-    triangles = np.array(graphicsData['triangles']).reshape((-1, 3))[:, ::-1]
+    triangles = np.array(graphicsData['triangles']).reshape((-1, 3))
     corners = points[triangles]
     normals = np.cross(corners[:, 1] - corners[:, 0], corners[:, 2] - corners[:, 0])
     if binary:
@@ -70,7 +70,7 @@ def testTheMeshesHaveTheOriginScaleColorAndOrientation(tmp_path):
     for name in ['l1', 'l2']: #outward, as graphics.Brick
         report = graphics.OrientTriangles(linkGraphics[name][0], returnReport=True)[1]
         assert report['flipped'] == 0 and report['invertedComponents'] == 0
-    inverted = LoadURDFgraphics(urdfFile, invertTriangles=False, orientTriangles=False, smoothNormals=False)
+    inverted = LoadURDFgraphics(urdfFile, invertTriangles=True, orientTriangles=False, smoothNormals=False)
     assert graphics.OrientTriangles(inverted['l1'][0], returnReport=True)[1]['invertedComponents'] == 1
     assert 'normals' in LoadURDFgraphics(urdfFile)['l1'][0] #smoothened
 

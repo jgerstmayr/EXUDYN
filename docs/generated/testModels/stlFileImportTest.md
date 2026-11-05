@@ -12,9 +12,10 @@ You can view and download this file on Github: [stlFileImportTest.py](https://gi
 #
 # Details:  graphics.FromSTLfile without numpy-stl (#3264): a brick written as a binary and as a text STL file, read
 #           with scale, rotation Aoff and offset pOff and density: the points agree with FromSTLfileASCII, the normals
-#           point outward after the inversion, and volume, mass, center of mass and the inertia tensor at the center of
-#           mass agree with the formulas of the brick, the inertia rotated by Aoff. The result is the number of checks
-#           that pass plus the mass and the trace of the inertia.
+#           point outward as the triangles of the file (counterclockwise seen from outside, #3275), and volume, mass,
+#           center of mass and the inertia tensor at the center of mass agree with the formulas of the brick, the
+#           inertia rotated by Aoff; a file with its triangles inward is turned outward by orientTriangles. The result
+#           is the number of checks that pass plus the mass and the trace of the inertia.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-05
@@ -32,10 +33,13 @@ import tempfile
 
 testIsActive = exu.sys.get('testIsActive', False)
 
-def WriteSTL(fileName, graphicsData, binary):
-    """a closed mesh as STL, its triangles reversed, as FromSTLfile inverts them by default"""
+def WriteSTL(fileName, graphicsData, binary, inward=False):
+    """a closed mesh as STL, its triangles counterclockwise seen from outside as in graphics.Brick and STL files, or
+    reversed (inward)"""
     points = np.array(graphicsData['points']).reshape((-1, 3))
-    triangles = np.array(graphicsData['triangles']).reshape((-1, 3))[:, ::-1]
+    triangles = np.array(graphicsData['triangles']).reshape((-1, 3))
+    if inward:
+        triangles = triangles[:, ::-1]
     corners = points[triangles]
     normals = np.cross(corners[:, 1] - corners[:, 0], corners[:, 2] - corners[:, 0])
     if binary:
@@ -66,6 +70,10 @@ with tempfile.TemporaryDirectory() as directory:
     WriteSTL(files[1], brick, False)
     results = [graphics.FromSTLfile(fileName, density=density, scale=scale, Aoff=A, pOff=pOff) for fileName in files]
     ascii = graphics.FromSTLfileASCII(files[1])
+    fileInward = os.path.join(directory, 'brickInward.stl')
+    WriteSTL(fileInward, brick, True, inward=True)
+    oriented = graphics.FromSTLfile(fileInward, orientTriangles=True)
+    plain = graphics.FromSTLfile(files[0]) #the defaults: as the file
 
 #the same points from both files and from FromSTLfileASCII (scaled, rotated and moved)
 points = [np.array(g['points']).reshape((-1, 3)) for (g, data) in results]
@@ -78,6 +86,8 @@ normals = np.array(gData['normals']).reshape((-1, 3))
 c = scale*A @ center + pOff
 checks += [all(n @ (p - c) > 0 for (n, p) in zip(normals, points[0]))]
 checks += [np.max(np.abs(np.linalg.norm(normals, axis=1) - 1.)) < 1e-12]
+checks += [graphics.OrientTriangles(oriented, returnReport=True)[1]['flipped'] == 0
+           and graphics.OrientTriangles(plain, returnReport=True)[1]['flipped'] == 0]
 
 #the mass properties of the scaled brick
 s = scale*size

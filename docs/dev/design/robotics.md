@@ -421,7 +421,8 @@ A robot that passes a via point without stopping: the next motion starts before 
 - ProfileCartesianLinear follows the nearest IK solution of the previous one; with `configuration` of #3265 it could keep
   the configuration of the start explicitly and raise when the path crosses a singular configuration, instead of
   jumping to another branch.
-- Open question 11: FromSTLfile inverts the STL triangles by default, while graphics.Brick and the STL standard are both
+- Answered (#3275): STL files are counterclockwise outward as Exudyn and OpenGL's front; the inversion default was
+  wrong, the TX2 meshes are outward (the links 1, 2 and the base are open and stayed inverted). Before: FromSTLfile inverts the STL triangles by default, while graphics.Brick and the STL standard are both
   counterclockwise outward; which orientation does the renderer draw as front (the TX2 meshes looked right only
   inverted)? A wrong default would make closed STL meshes from other tools inside out.
 - Robot.GetDictionary/SetDictionary (#3267) would also give a `copy` and a pickle of a Robot, and the robot of a URDF

@@ -1,0 +1,15 @@
+{
+  "number": 3275,
+  "title": "STL import: the triangles as in the file (outward), open meshes oriented by their volume, a check of the orientation, back faces in the raytracer",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "graphics.FromSTLfile and FromSTLfileASCII invert the triangles and normals of an STL file by default, although STL files and Exudyn both have the corners counterclockwise seen from outside (OpenGL front faces, outward normals): standard meshes come in inside out, and OrientTriangles fixes only closed parts, so open meshes of URDFs (the links 1, 2 and the base of the TX2-90L) stay inverted. Decided: no inversion by default (also in LoadURDFgraphics); OrientTriangles orients an open part that encloses a volume by its signed volume; checkOrientation warns when an imported mesh encloses a volume with inward triangles; raytracer.advanced.backFaceColor draws faces seen from their back in a color, to check normals as OpenGL's one-sided lighting does.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 22:27",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "STL files keep their orientation: STL files and Exudyn both have the triangles counterclockwise seen from outside and the normals outward, so graphics.FromSTLfile, FromSTLfileASCII, ExportSTL and urdfImport.LoadURDFgraphics no longer invert them by default (pass invertTriangles=True, invertNormals=True for the former behaviour). checkOrientation=True of the readers warns if a mesh encloses a volume with inward triangles; graphics.OrientTriangles orients an open part that encloses a volume outward by its signed volume. visualizationSettings.raytracer.advanced.backFaceColor draws faces seen from their back in a color, to check normals.",
+  "resolvedInVersion": "1.13.387"
+}

@@ -1,0 +1,52 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The back faces in the raytracer (#3275): visualizationSettings.raytracer.advanced.backFaceColor with an
+#           alpha > 0 draws the faces seen from their back - whose normals point away from the camera - in its color,
+#           to check the normals of imported meshes. Two spheres side by side, the left with outward normals, the right
+#           inverted by graphics.InvertTriangles: with the setting, the pixels of the back face color are only on the
+#           right half of the image; without it there are none. The result is the fraction of these pixels in the
+#           right half, rounded to one digit, plus their number in the left half.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-05
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+import exudyn.graphics as graphics
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+sphere = graphics.Sphere([-1.2, 0, 0], radius=1., color=graphics.color.grey, nTiles=24)
+inverted = graphics.InvertTriangles(graphics.Sphere([1.2, 0, 0], radius=1., color=graphics.color.grey, nTiles=24))
+mbs.CreateGround(graphicsDataList=[sphere, inverted])
+mbs.Assemble()
+
+SC.visualizationSettings.view0.window.renderWindowSize = [200, 100]
+SC.visualizationSettings.general.useGradientBackground = False
+SC.visualizationSettings.view0.window.showComputationInfo = False
+SC.visualizationSettings.general.showSolverInformation = False
+SC.visualizationSettings.view0.scene.drawWorldBasis = False
+SC.visualizationSettings.raytracer.numberOfThreads = 1
+SC.renderer.SetModelView(3., [0, 0, 0], [0, 0, 0])
+
+def BackFacePixels(useBackFaceColor):
+    """the pixels of the back face color in the left and in the right half of the raytraced image"""
+    SC.visualizationSettings.raytracer.advanced.backFaceColor = [1., 0., 1., 1. if useBackFaceColor else 0.]
+    image = SC.renderer.RedrawAndGetImage(True)[:, :, :3].astype(int)
+    magenta = (image[:, :, 0] > 250) & (image[:, :, 1] < 5) & (image[:, :, 2] > 250)
+    half = image.shape[1]//2
+    return (int(np.sum(magenta[:, :half])), int(np.sum(magenta[:, half:])), image.shape[0]*half)
+
+(left, right, n) = BackFacePixels(True)
+(leftOff, rightOff, n) = BackFacePixels(False)
+exu.Print('back face pixels: left', left, 'right', right, 'of', n, '; without the setting', leftOff, rightOff)
+u = round(right/n, 1) + left + leftOff + rightOff
+exu.Print('solution of raytracerBackFaceTest=', u)
+exu.sys['testResult'] = u

@@ -393,7 +393,7 @@ def _URDForigin(element):
     return exudyn.HT(rotation=np.array(R.rotation), translation=xyz)
 
 
-def LoadURDFgraphics(urdfFile, packagePath=None, color=None, invertTriangles=True, orientTriangles=True,
+def LoadURDFgraphics(urdfFile, packagePath=None, color=None, invertTriangles=False, orientTriangles=True,
                      smoothNormals=True, smoothingAngle=0.25*np.pi, addEdges=False):
     """the visual meshes of the links of a URDF file as Exudyn graphics, without the Robotics Toolbox (#3263): for each
     <link> its <visual> elements with a mesh of an STL file (binary or text, read by graphics.FromSTLfile), their <origin> and scale,
@@ -407,10 +407,11 @@ def LoadURDFgraphics(urdfFile, packagePath=None, color=None, invertTriangles=Tru
         packagePath: the directory that contains the packages of the mesh file names package://package/...; None: the
             directory above the package of the URDF file (the layout package/urdf/robot.urdf of ROS packages)
         color: None, the colors of the URDF materials (grey without one); or one RGBA color for all meshes
-        invertTriangles: if True, the orientation of the triangles of the STL file inverted, into the one of Exudyn (as
-            graphics.FromSTLfile); False for meshes that come inside out
-        orientTriangles: if True, then the triangles of each mesh oriented consistently, closed parts outward; an open
-            surface (the meshes of many URDFs) keeps the orientation that most of its triangles have
+        invertTriangles: if True, the orientation of the triangles of the STL files inverted, for meshes that come
+            inside out; STL files and Exudyn have the corners counterclockwise seen from outside (#3275)
+        orientTriangles: if True, then the triangles of each mesh oriented consistently, closed parts and open parts
+            that enclose a volume (the meshes of many URDFs have gaps) outward (graphics.OrientTriangles); another
+            open surface keeps the orientation that most of its triangles have
         smoothNormals: if True, the normals smoothened at the points, except at edges sharper than smoothingAngle;
             else the normals of the triangles
         smoothingAngle: the angle between two triangles (in radians) above which their common edge stays sharp
@@ -454,7 +455,8 @@ def LoadURDFgraphics(urdfFile, packagePath=None, color=None, invertTriangles=Tru
             scale = [float(x) for x in mesh.get('scale', '1 1 1').split()]
             H = _URDForigin(visual.find('origin'))
             gData = graphics.FromSTLfile(fileName, color=rgba, scale=np.array(scale), Aoff=np.array(H.rotation),
-                                         pOff=np.array(H.translation), invertTriangles=invertTriangles)
+                                         pOff=np.array(H.translation), invertTriangles=invertTriangles, invertNormals=invertTriangles,
+                                         checkOrientation=not orientTriangles)
             if orientTriangles:
                 gData = graphics.OrientTriangles(gData, outward=True, normals='remove')
             if smoothNormals or addEdges:

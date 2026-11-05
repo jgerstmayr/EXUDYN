@@ -87,6 +87,8 @@ public:
 	//unchanged for now:
 	RTfloat minZ;			//!< for triangles and reflections, etc.
 	RTVector3D backgroundColorReflections; //!< for refraction
+	RTVector3D backFaceColor; //!< the color of faces seen from their back, if useBackFaceColor (#3275)
+	bool useBackFaceColor = false;
 	RTVector3D ambientLightColor;
 	RTfloat globalFogDensity;
 	RTVector3D globalFogColor;

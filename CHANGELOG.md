@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 371 | 1.13.386 |
+| 1.13 | Newborn | 372 | 1.13.387 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.387** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` STL import: the triangles as in the file (outward), open meshes oriented by their volume, a check of the orientation, back faces in the raytracer (#3275)
+  - description: graphics.FromSTLfile and FromSTLfileASCII invert the triangles and normals of an STL file by default, although STL files and Exudyn both have the corners counterclockwise seen from outside (OpenGL front faces, outward normals): standard meshes come in inside out, and OrientTriangles fixes only closed parts, so open meshes of URDFs (the links 1, 2 and the base of the TX2-90L) stay inverted. Decided: no inversion by default (also in LoadURDFgraphics); OrientTriangles orients an open part that encloses a volume by its signed volume; checkOrientation warns when an imported mesh encloses a volume with inward triangles; raytracer.advanced.backFaceColor draws faces seen from their back in a color, to check normals as OpenGL's one-sided lighting does.
+  - **notes:** STL files keep their orientation: STL files and Exudyn both have the triangles counterclockwise seen from outside and the normals outward, so graphics.FromSTLfile, FromSTLfileASCII, ExportSTL and urdfImport.LoadURDFgraphics no longer invert them by default (pass invertTriangles=True, invertNormals=True for the former behaviour). checkOrientation=True of the readers warns if a mesh encloses a volume with inward triangles; graphics.OrientTriangles orients an open part that encloses a volume outward by its signed volume. visualizationSettings.raytracer.advanced.backFaceColor draws faces seen from their back in a color, to check normals.
+  - date resolved: **2026-11-05 22:27**, date raised: 2026-11-05
 - **1.13.386** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Trajectory: blending of profiles by superposition, and an example of the Staubli TX2-90L with and without blending (#3274)
   - description: A Trajectory of exudyn.robotics.motion stops at the end of every profile; a robot cannot pass a via point without stopping. Decided (design section 6.1): superposition of the rest-to-rest profiles, Trajectory.Add(profile, blendTimeWithNext), the next profile starting by this time earlier; Evaluate, EvaluateCoordinate and GetTimes with enableBlending (default True) to compare with the unblended trajectory; GetBlendings with the distances from the via point at which blending starts and the closest approach, also of the tool; an example of the TX2-90L with a gripper on an L-shaped path into a cup, without and with blending, the paths drawn.
   - **notes:** Trajectory.Add(profile, blendTimeWithNext) of exudyn.robotics.motion blends a profile with the next: the next starts by this time earlier and the trajectory is the sum of the motions of both, so that it passes near the via point without stopping and reaches the end of the next profile exactly; Evaluate, EvaluateCoordinate and GetTimes take enableBlending (default True); GetBlendings(kinematicChain) gives the times of each blending and the distances from the via point, of the coordinates and of the tool, at which it starts and by which it passes. The example staubliTX2blending.py: the TX2-90L with a gripper on an L-shaped path into a cup, without and with blending.

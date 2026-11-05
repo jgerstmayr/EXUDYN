@@ -1064,6 +1064,8 @@ class VSettingsMaterial:
 #information for VSettingsRaytracerAdvanced
 class VSettingsRaytracerAdvanced:
     """Advanced settings for raytracer."""
+    backFaceColor: Tuple[float,float,float,float]
+    """if the alpha (fourth) value is > 0: faces seen from their back - whose normals point away from the camera, e.g. the inward normals of a closed body - are drawn in this RGB color, without light, to check the orientation of the normals of imported meshes, as the one-sided lighting of OpenGL (openGL.advanced.lightModelTwoSide = False) shows them dark (#3275); 0: drawn as the front."""
     backgroundColorReflections: Tuple[float,float,float,float]
     """scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached."""
     searchTreeFactor: int

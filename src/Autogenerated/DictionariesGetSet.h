@@ -4585,6 +4585,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data
     structureDict["structureDescription"] = "Advanced settings for raytracer.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.backFaceColor);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "if the alpha (fourth) value is > 0: faces seen from their back - whose normals point away from the camera, e.g. the inward normals of a closed body - are drawn in this RGB color, without light, to check the orientation of the normals of imported meshes, as the one-sided lighting of OpenGL (openGL.advanced.lightModelTwoSide = False) shows them dark (#3275); 0: drawn as the front";
+    structureDict["backFaceColor"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.backgroundColorReflections);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
@@ -4645,6 +4653,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsRaytracerAdvanced& data) {
     auto structureDict = py::dict();
+    structureDict["backFaceColor"] = EPyUtils::ToPythonMember(data.backFaceColor);
     structureDict["backgroundColorReflections"] = EPyUtils::ToPythonMember(data.backgroundColorReflections);
     structureDict["searchTreeFactor"] = data.searchTreeFactor;
     structureDict["shadowScalingFactor"] = data.shadowScalingFactor;
@@ -4657,6 +4666,7 @@ inline py::dict GetDictionary(const VSettingsRaytracerAdvanced& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsRaytracerAdvanced& data, const py::dict& d) {
+    EPyUtils::FromPython(d["backFaceColor"], data.backFaceColor, "VSettingsRaytracerAdvanced.backFaceColor");
     EPyUtils::FromPython(d["backgroundColorReflections"], data.backgroundColorReflections, "VSettingsRaytracerAdvanced.backgroundColorReflections");
     EPyUtils::FromPython(d["searchTreeFactor"], data.searchTreeFactor, EPyUtils::RangeCheck::positive, "VSettingsRaytracerAdvanced.searchTreeFactor");
     EPyUtils::FromPython(d["shadowScalingFactor"], data.shadowScalingFactor, EPyUtils::RangeCheck::nonNegative, "VSettingsRaytracerAdvanced.shadowScalingFactor");

@@ -2901,8 +2901,16 @@ def _OrientTrianglesAnalysis(graphicsData, outward, tolerance):
                     queue.append(n)
         members = np.array(members)
         closed = not np.any(openTriangles[members])
-        if closed and outward:
-            volume = np.sum(np.where(flip[members], -volumes[members], volumes[members]))
+        enclosing = closed
+        if outward and not closed: #an open surface that encloses a volume, e.g. a housing with gaps, as a closed one (#3275)
+            c = np.mean(points[corners[members]].reshape((-1, 3)), axis=0)
+            q0, q1, q2 = p0[members] - c, p1[members] - c, p2[members] - c
+            signs = np.where(flip[members], -1., 1.)
+            volume = np.sum(signs*np.einsum('ij,ij->i', q0, np.cross(q1, q2)))/6. #about its center, as it is not closed
+            area = 0.5*np.sum(np.linalg.norm(np.cross(q1 - q0, q2 - q0), axis=1))
+            enclosing = area > 0 and 6.*np.sqrt(np.pi)*abs(volume)/(area*cMath.sqrt(area)) > 0.05 #1 for a sphere, 0 for a plane
+        if enclosing and outward:
+            volume = np.sum(np.where(flip[members], -volumes[members], volumes[members])) if closed else volume
             if volume < 0: #inward: the whole component turns
                 flip[members] = ~flip[members]
                 invertedComponents += 1
@@ -2925,7 +2933,9 @@ def OrientTriangles(graphicsData, outward=True, normals='recompute', tolerance=N
     Args:
         graphicsData: GraphicsData of type TriangleList, with 'triangles' and/or 'triangles6'
         outward: if True, every closed part is oriented such that its triangle normals point outward (positive
-            volume); an open surface keeps the orientation that most of its triangles have
+            volume), and so is an open part that encloses a volume, as a housing with gaps of an STL file does (#3275):
+            its signed volume about its center, at least 5 percent of that of a sphere of its area; another open
+            surface keeps the orientation that most of its triangles have
         normals: 'recompute': the normals of the points are computed from the oriented triangles, area-weighted (a
             point shared by triangles gets their mean, a point of one triangle - as in STL files - its normal);
             'remove': the normals are left out and the renderer computes them per triangle; 'keep': the given normals
@@ -3267,21 +3277,24 @@ def ProjectTexture(graphicsData, texture, projection='box', point=[0,0,0], rotat
 
 
 @_ReturnsRows
-def FromSTLfileASCII(fileName,color=[0.,0.,0.,1.], verbose=False, invertNormals=True, invertTriangles=True,
-                     orientTriangles=False):
+def FromSTLfileASCII(fileName,color=[0.,0.,0.,1.], verbose=False, invertNormals=False, invertTriangles=False,
+                     orientTriangles=False, checkOrientation=True):
     """generate graphics data from STL file (text format!) and use color for visualization; this function is slow, FromSTLfile(...) reads text and binary files faster
 
     Args:
         fileName: string containing directory and filename of STL-file (in text / SCII format) to load
         color: provided as list of 4 RGBA values
         verbose: if True, useful information is provided during reading
-        invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
-        invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+        invertNormals: if True, the normals of the file are inverted; an STL file has them outward, as Exudyn (#3275)
+        invertTriangles: if True, the triangle orientation is inverted; an STL file has the corners counterclockwise
+            seen from outside, as Exudyn (#3275)
         orientTriangles: if True, the triangles are oriented consistently and closed parts outward with OrientTriangles,
             and the normals are computed from them (#2281)
+        checkOrientation: if True and orientTriangles is False, a warning if the triangles enclose a volume but point
+            inward, which draws the mesh inside out (#3275)
 
     Returns:
-        creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
+        creates graphicsData from the STL triangles, their points and normals
     """
 #file format, just one triangle, using GOMinspect:
 #solid solidName
@@ -3366,7 +3379,24 @@ def FromSTLfileASCII(fileName,color=[0.,0.,0.,1.], verbose=False, invertNormals=
     data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
     if orientTriangles:
         data = _Flat(OrientTriangles(data))
+    elif checkOrientation:
+        _CheckTrianglesOutward(np.array(points).reshape((-1, 3))[np.array(triangles).reshape((-1, 3))], fileName)
     return data
+
+
+def _CheckTrianglesOutward(corners, fileName):
+    """a warning if the triangles (corners of shape (n, 3, 3)) enclose a volume - their signed volume about their center
+    at least 5 percent of that of a sphere of their area - with the triangles pointing inward (#3275); STL files are often
+    wrong in this"""
+    if len(corners) == 0:
+        return
+    c = np.mean(corners.reshape((-1, 3)), axis=0)
+    q0, q1, q2 = corners[:, 0] - c, corners[:, 1] - c, corners[:, 2] - c
+    volume = np.sum(np.einsum('ij,ij->i', q0, np.cross(q1, q2)))/6.
+    area = 0.5*np.sum(cMath.sqrt(np.sum(np.cross(q1 - q0, q2 - q0)**2, axis=1)))
+    if area > 0 and volume < 0 and 6.*np.sqrt(np.pi)*abs(volume)/(area*cMath.sqrt(area)) > 0.05:
+        exudyn.Print('WARNING: the triangles of ' + str(fileName) + ' point inward (negative volume); they are drawn inside out: '
+                     + 'orientTriangles=True orients each part outward, invertTriangles=True and invertNormals=True invert all')
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -3486,8 +3516,8 @@ def _MassPropertiesOfTriangles(points, density):
     return [volume, density*volume, COM, density*inertia]
 
 @_ReturnsRows
-def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=1., Aoff=[], pOff=[], invertNormals=True, invertTriangles=True,
-                orientTriangles=False, useNumpySTL=False):
+def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=1., Aoff=[], pOff=[], invertNormals=False, invertTriangles=False,
+                orientTriangles=False, useNumpySTL=False, checkOrientation=True):
     """generate graphics data from STL file, allowing text or binary format, read with numpy (#3264); additionally can scale, rotate and translate
 
     Args:
@@ -3496,15 +3526,19 @@ def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=
         verbose: if True, useful information is provided during reading
         density: if not 0, mass, volume, inertia, etc. are computed for a closed mesh and returned
         scale: point coordinates are transformed by scaling factor, or by three factors for x, y, z
-        invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
-        invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
-        orientTriangles: if True, the triangles are oriented consistently and closed parts outward with OrientTriangles,
-            and the normals are computed from them - for STL files whose triangles are not oriented consistently (#2281)
+        invertNormals: if True, the normals (computed from the triangles) are inverted; an STL file has them outward, as Exudyn (#3275)
+        invertTriangles: if True, the triangle orientation is inverted; an STL file has the corners counterclockwise
+            seen from outside, as Exudyn (#3275)
+        orientTriangles: if True, the triangles are oriented consistently and closed parts - and open ones that enclose
+            a volume - outward with OrientTriangles, and the normals are computed from them - for STL files whose
+            triangles are not oriented consistently (#2281, #3275)
         useNumpySTL: if True, the file is read and the mass properties are computed with numpy-stl (pip install numpy-stl),
             for a file the reader of Exudyn does not handle
+        checkOrientation: if True and orientTriangles is False, a warning if the triangles enclose a volume but point
+            inward, which draws the mesh inside out (#3275)
 
     Returns:
-        creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index); with density != 0, [graphicsData, dict] with the keys minPos, maxPos, volume, mass, COM and inertia (the inertia tensor at the COM)
+        creates graphicsData from the STL triangles; with density != 0, [graphicsData, dict] with the keys minPos, maxPos, volume, mass, COM and inertia (the inertia tensor at the COM)
 
     Note:
         the model is first scaled, then rotated, then the offset pOff is added; finally min, max, mass, volume, inertia, com are computed!
@@ -3565,6 +3599,8 @@ def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=
                     'points':points, 'triangles':triangles}
     if orientTriangles:
         dictGraphics = _Flat(OrientTriangles(dictGraphics))
+    elif checkOrientation:
+        _CheckTrianglesOutward(corners[:, ::-1] if invertTriangles else corners, fileName)
     if density == 0:
         return dictGraphics 
     else:
@@ -3743,15 +3779,16 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle 
     
     return graphicsData2
 
-def ExportSTL(graphicsData, fileName, solidName='ExudynSolid', invertNormals=True, invertTriangles=True):
+def ExportSTL(graphicsData, fileName, solidName='ExudynSolid', invertNormals=False, invertTriangles=False):
     """export given graphics data (only type TriangleList allowed!) to STL ascii file using fileName
 
     Args:
         graphicsData: a single GraphicsData dictionary with type='TriangleList', no list of GraphicsData
         fileName: file name including (local) path to export STL file
         solidName: optional name used in STL file
-        invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
-        invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+        invertNormals: if True, the normals are written inverted; STL files and Exudyn have them outward (#3275)
+        invertTriangles: if True, the triangles are written inverted; STL files and Exudyn have the corners
+            counterclockwise seen from outside (#3275)
     """
     graphicsData = _Flat(Triangles6ToTriangles(SpheresToTriangleList(graphicsData)))
     if graphicsData['type'] != 'TriangleList':

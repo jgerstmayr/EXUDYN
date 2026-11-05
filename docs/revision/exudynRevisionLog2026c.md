@@ -6186,6 +6186,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   passes it at 0.036 m.
 - staubliTX2blending.py: 3.7 s for the task without and 2.8 s with blendings of 0.3 s; trajectoryBlendingTest.py.
 
+<a id="rg19-3-5"></a>
+### RG19.3.5 — STL files keep their orientation, open meshes oriented by their volume, back faces in the raytracer (2026-11-05, #3275)
+- Maintainer 2026-11-05 (image of the TX2-90L in OpenGL): the triangles or normals of some links flipped, links 3, 5
+  and 6 right; the normals should point outward; a check during the STL import, e.g. by the volume; the back faces
+  visible in the raytracer as in OpenGL; open question 11 checked in the GLFW client.
+- OpenGL keeps glFrontFace at GL_CCW (no call in GlfwClient.cpp), the GraphicsData docs say counterclockwise seen from
+  outside, graphics.Brick is so, and the 7 STL files of the TX2 have positive signed volumes with their file normals
+  agreeing - STL files are outward as Exudyn. FromSTLfile inverted them by default; OrientTriangles turned the closed
+  parts (links 3, 5, 6) outward again, the open ones (links 1, 2, base: 6 to 18 open edges) stayed inverted.
+- Defaults of FromSTLfile, FromSTLfileASCII, ExportSTL and LoadURDFgraphics: no inversion; LoadURDFgraphics inverts
+  the normals with the triangles when asked. OrientTriangles(outward=True): an open part whose signed volume about its
+  center is at least 5 % of that of a sphere of its area (the TX2 meshes: 18 % to 79 %) is oriented by its volume;
+  the result is now the same whether the file is inverted or not. checkOrientation: the cheap test of the whole mesh.
+- raytracer.advanced.backFaceColor (alpha > 0): the hits from the back (hitFromBack) in a flat color. The TX2 with its
+  meshes raytraced from below: 11 of 300000 pixels back faces (at edges) with the new defaults, 15201 with the
+  triangles inverted and not oriented.
+- raytracerBackFaceTest.py; stlFileImportTest.py and test_urdfGraphics.py write the STL outward.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

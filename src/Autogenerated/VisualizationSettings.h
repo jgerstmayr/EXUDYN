@@ -2002,6 +2002,7 @@ public: // AUTO:
 class VSettingsRaytracerAdvanced // AUTO: 
 {
 public: // AUTO: 
+  Float4 backFaceColor;                           //!< AUTO: if the alpha (fourth) value is > 0: faces seen from their back - whose normals point away from the camera, e.g. the inward normals of a closed body - are drawn in this RGB color, without light, to check the orientation of the normals of imported meshes, as the one-sided lighting of OpenGL (openGL.advanced.lightModelTwoSide = False) shows them dark (#3275); 0: drawn as the front
   Float4 backgroundColorReflections;              //!< AUTO: scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached
   Index searchTreeFactor;                         //!< AUTO: must be > 0; This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128
   Index shadowScalingFactor;                      //!< AUTO: must be >= 0; if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries
@@ -2019,6 +2020,7 @@ public: // AUTO:
   VSettingsRaytracerAdvanced()
   {
     backlink=nullptr;
+    backFaceColor = Float4({0.f,0.f,0.f,0.f});
     backgroundColorReflections = Float4({0.4f,0.4f,0.4f,1.f});
     searchTreeFactor = 1;
     shadowScalingFactor = 3;
@@ -2037,6 +2039,7 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsRaytracerAdvanced" << ":\n";
+    os << "  backFaceColor = " << backFaceColor << "\n";
     os << "  backgroundColorReflections = " << backgroundColorReflections << "\n";
     os << "  searchTreeFactor = " << searchTreeFactor << "\n";
     os << "  shadowScalingFactor = " << shadowScalingFactor << "\n";

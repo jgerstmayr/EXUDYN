@@ -3176,6 +3176,10 @@ CLOSED 2026-11-05 (#3267): Robot.GetDictionary and SetDictionary; SaveDictToHDF5
 
 CLOSED 2026-11-05 (#3273): dictionaryVersion 1, raised by 1 per release with a changed format; GetGlobalToolHT(q) in Python, the chain for many q; staubliTX2trajectories.py saves and loads solution/staubliTX2_90L.h5. [log](exudynRevisionLog2026c.md#rg19-3-4)
 
+#### **CLOSED_RG19.3.5** STL files keep their orientation, open meshes oriented by their volume, the check of the orientation, back faces in the raytracer
+
+CLOSED 2026-11-05 (#3275): no inversion by default in FromSTLfile, FromSTLfileASCII, ExportSTL, LoadURDFgraphics; OrientTriangles for open parts enclosing a volume; checkOrientation; raytracer.advanced.backFaceColor; design question 11 answered. [log](exudynRevisionLog2026c.md#rg19-3-5)
+
 ### **OPEN_RG19.4** Revise Robot: q0, one control description with friction and end stops for both models, the control as PreStepUserFunction, AddSensors, the static and dynamic compensation from the kinematic tree
 
 Design section 3.

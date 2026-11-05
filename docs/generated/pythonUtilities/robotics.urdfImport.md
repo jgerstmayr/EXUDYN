@@ -77,15 +77,15 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-loadurdfgraphics)=
 ## Function: LoadURDFgraphics
 
-[`LoadURDFgraphics(urdfFile, packagePath = None, color = None, invertTriangles = True, orientTriangles = True, smoothNormals = True, smoothingAngle = 0.25*np.pi, addEdges = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L396)
+[`LoadURDFgraphics(urdfFile, packagePath = None, color = None, invertTriangles = False, orientTriangles = True, smoothNormals = True, smoothingAngle = 0.25*np.pi, addEdges = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L396)
 
 - **function description**: the visual meshes of the links of a URDF file as Exudyn graphics, without the Robotics Toolbox (#3263): for each <link> its <visual> elements with a mesh of an STL file (binary or text, read by graphics.FromSTLfile), their <origin> and scale, and the color of their <material>; meshes of other formats and the shapes box, cylinder, sphere are skipped with a warning. The triangles of STL files are often not oriented consistently, and their normals are those of the triangles: the options invert them, orient them (graphics.OrientTriangles) and smoothen the normals (graphics.AddEdgesAndSmoothenNormals), as the meshes of a URDF need
 - **input**:
   - `urdfFile`: the path of the URDF file
   - `packagePath`: the directory that contains the packages of the mesh file names package://package/...; None: the directory above the package of the URDF file (the layout package/urdf/robot.urdf of ROS packages)
   - `color`: None, the colors of the URDF materials (grey without one); or one RGBA color for all meshes
-  - `invertTriangles`: if True, the orientation of the triangles of the STL file inverted, into the one of Exudyn (as graphics.FromSTLfile); False for meshes that come inside out
-  - `orientTriangles`: if True, then the triangles of each mesh oriented consistently, closed parts outward; an open surface (the meshes of many URDFs) keeps the orientation that most of its triangles have
+  - `invertTriangles`: if True, the orientation of the triangles of the STL files inverted, for meshes that come inside out; STL files and Exudyn have the corners counterclockwise seen from outside (#3275)
+  - `orientTriangles`: if True, then the triangles of each mesh oriented consistently, closed parts and open parts that enclose a volume (the meshes of many URDFs have gaps) outward (graphics.OrientTriangles); another open surface keeps the orientation that most of its triangles have
   - `smoothNormals`: if True, the normals smoothened at the points, except at edges sharper than smoothingAngle; else the normals of the triangles
   - `smoothingAngle`: the angle between two triangles (in radians) above which their common edge stays sharp
   - `addEdges`: if True, the sharp edges added as lines
@@ -95,7 +95,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-addurdfgraphics)=
 ## Function: AddURDFgraphics
 
-[`AddURDFgraphics(robot, urdfFile, linkNames, baseLinkName = None, packagePath = None, color = None, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L468)
+[`AddURDFgraphics(robot, urdfFile, linkNames, baseLinkName = None, packagePath = None, color = None, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L470)
 
 - **function description**: the graphics of a Robot from the visual meshes of a URDF file (#3263), for a robot whose link frames are the frames of the URDF links, as the models of exudyn.robotics.models with dhMode 'jointFrames' (e.g. ManipulatorStaubliTX2_90L, whose dict names the URDF and its links in 'urdfGraphics'); the joint and COM graphics of the links switched off; further keyword arguments go to LoadURDFgraphics (invertTriangles, orientTriangles, smoothNormals, smoothingAngle, addEdges)
 - **input**:

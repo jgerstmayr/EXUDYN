@@ -163,6 +163,7 @@ pickleCopyMbs
 plotSensorTest
 postNewtonStepContactTest
 pythonUserFunctionArgumentsTest
+raytracerBackFaceTest
 raytracerNOGLFWtest
 reevingSystemSpringsTest
 relativeRotationTranslationMechanism

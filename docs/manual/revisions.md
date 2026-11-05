@@ -529,6 +529,16 @@ by which it passes. The example staubliTX2blending.py shows a handling task with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and
 `useNumpySTL=True` reads the file with numpy-stl as before. `urdfImport.LoadURDFgraphics` uses it.
 
+**STL files keep their orientation** (#3275): STL files and Exudyn both have the corners of a triangle counterclockwise
+seen from outside and the normals outward, which OpenGL draws as the front. `graphics.FromSTLfile`,
+`FromSTLfileASCII`, `ExportSTL` and `urdfImport.LoadURDFgraphics` therefore no longer invert the triangles and normals
+by default (`invertTriangles=False`, `invertNormals=False`); a script that passed nothing and relied on the inversion
+passes `invertTriangles=True, invertNormals=True`. `checkOrientation=True` of the readers warns if a mesh encloses a
+volume with its triangles inward. `graphics.OrientTriangles` orients an open part that encloses a volume - a housing
+with gaps, as in many URDF meshes - outward by its signed volume, as a closed one.
+`visualizationSettings.raytracer.advanced.backFaceColor` draws the faces seen from their back in a color, to check
+the normals of a mesh in the raytracer.
+
 **Implicit Runge-Kutta solvers in C++.** `DynamicSolverType.TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL` and
 `Radau3` run with `mbs.SolveDynamic` on every model of the implicit solver: index-3 constraints without index
 reduction, orders 2, 4, 4 and 3 in positions and velocities, with constant steps or, by default, the automatic step

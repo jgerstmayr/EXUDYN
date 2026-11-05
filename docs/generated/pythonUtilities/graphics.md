@@ -727,7 +727,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 - **output**: returns new graphicsData (copy) with modified triangles and normals
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`orientTrianglesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/orientTrianglesTest.py) (TM), [`textureGraphicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/textureGraphicsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`orientTrianglesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/orientTrianglesTest.py) (TM), [`raytracerBackFaceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerBackFaceTest.py) (TM), [`textureGraphicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/textureGraphicsTest.py) (TM)
 
 
 (sec-graphics-inconsistenttriangles)=
@@ -747,12 +747,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 (sec-graphics-orienttriangles)=
 ## Function: OrientTriangles
 
-[`OrientTriangles(graphicsData, outward = True, normals = 'recompute', tolerance = None, returnReport = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2920)
+[`OrientTriangles(graphicsData, outward = True, normals = 'recompute', tolerance = None, returnReport = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2928)
 
 - **function description**: orient the triangles of a TriangleList consistently - two triangles that share an edge run it in opposite directions - and, for every closed part, outward; for imported geometry such as STL files, whose orientation is often not consistent (#2281)
 - **input**:
   - `graphicsData`: GraphicsData of type TriangleList, with 'triangles' and/or 'triangles6'
-  - `outward`: if True, every closed part is oriented such that its triangle normals point outward (positive volume); an open surface keeps the orientation that most of its triangles have
+  - `outward`: if True, every closed part is oriented such that its triangle normals point outward (positive volume), and so is an open part that encloses a volume, as a housing with gaps of an STL file does (#3275): its signed volume about its center, at least 5 percent of that of a sphere of its area; another open surface keeps the orientation that most of its triangles have
   - `normals`: 'recompute': the normals of the points are computed from the oriented triangles, area-weighted (a point shared by triangles gets their mean, a point of one triangle - as in STL files - its normal); 'remove': the normals are left out and the renderer computes them per triangle; 'keep': the given normals stay, for input whose normals are correct
   - `tolerance`: points closer than this are the same point; default: 1e-9 times the size of the bounding box
   - `returnReport`: if True, also return a dict with the number of triangles, flipped triangles, connected components, closed and inverted components, and the inconsistent, open (one triangle) and non-manifold (more than two triangles) edges
@@ -760,13 +760,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 - **notes**: points are merged by position, so the triangles of an STL file, which have points of their own, are connected; the orientation does not cross non-manifold edges; about 0.5 s for 100000 triangles
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`orientTrianglesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/orientTrianglesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`orientTrianglesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/orientTrianglesTest.py) (TM), [`stlFileImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stlFileImportTest.py) (TM)
 
 
 (sec-graphics-checktriangleorientation)=
 ## Function: CheckTriangleOrientation
 
-[`CheckTriangleOrientation(graphicsData, tolerance = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2982)
+[`CheckTriangleOrientation(graphicsData, tolerance = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2992)
 
 - **function description**: check the orientation of the triangles of a TriangleList without changing it (#2281)
 - **input**:
@@ -781,7 +781,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`orientTrian
 (sec-graphics-ngsolvemesh2pointsandtrigs)=
 ## Function: NGsolveMesh2PointsAndTrigs
 
-[`NGsolveMesh2PointsAndTrigs(mesh = None, ngMesh = None, meshOrder = 2, scale = 1, addNormals = True, verbose = False, triangles6 = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2999)
+[`NGsolveMesh2PointsAndTrigs(mesh = None, ngMesh = None, meshOrder = 2, scale = 1, addNormals = True, verbose = False, triangles6 = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3009)
 
 - **function description**: convert NGsolve (surface) mesh into (surface) points and triangles; clearly, it requires to have ngsolve installed
 - **input**:
@@ -817,7 +817,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCb
 (sec-graphics-imagefromfile)=
 ## Function: ImageFromFile
 
-[`ImageFromFile(fileName)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3138)
+[`ImageFromFile(fileName)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3148)
 
 - **function description**: load an image file - PNG, JPG and the other formats of Pillow - as a numpy array for SC.renderer.AddTexture (#3035); uses Pillow (PIL), else matplotlib, which reads PNG without Pillow; neither is a dependency of Exudyn
 - **input**:
@@ -838,7 +838,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`texturesExa
 (sec-graphics-projecttexture)=
 ## Function: ProjectTexture
 
-[`ProjectTexture(graphicsData, texture, projection = 'box', point = [0,0,0], rotationMatrix = np.eye(3), size = 1., tiles = 1, color = [1.,1.,1.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3173)
+[`ProjectTexture(graphicsData, texture, projection = 'box', point = [0,0,0], rotationMatrix = np.eye(3), size = 1., tiles = 1, color = [1.,1.,1.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3183)
 
 - **function description**: add a texture to a TriangleList with texture coordinates computed by a projection, for geometry that has none (#3031); 6-node triangles become flat ones (which the renderer does with a texture anyway)
 - **input**:
@@ -867,17 +867,18 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`texturesExa
 (sec-graphics-fromstlfileascii)=
 ## Function: FromSTLfileASCII
 
-[`FromSTLfileASCII(fileName, color = [0.,0.,0.,1.], verbose = False, invertNormals = True, invertTriangles = True, orientTriangles = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3270)
+[`FromSTLfileASCII(fileName, color = [0.,0.,0.,1.], verbose = False, invertNormals = False, invertTriangles = False, orientTriangles = False, checkOrientation = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3280)
 
 - **function description**: generate graphics data from STL file (text format!) and use color for visualization; this function is slow, FromSTLfile(...) reads text and binary files faster
 - **input**:
   - `fileName`: string containing directory and filename of STL-file (in text / SCII format) to load
   - `color`: provided as list of 4 RGBA values
   - `verbose`: if True, useful information is provided during reading
-  - `invertNormals`: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
-  - `invertTriangles`: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+  - `invertNormals`: if True, the normals of the file are inverted; an STL file has them outward, as Exudyn (#3275)
+  - `invertTriangles`: if True, the triangle orientation is inverted; an STL file has the corners counterclockwise seen from outside, as Exudyn (#3275)
   - `orientTriangles`: if True, the triangles are oriented consistently and closed parts outward with OrientTriangles, and the normals are computed from them (#2281)
-- **output**: creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
+  - `checkOrientation`: if True and orientTriangles is False, a warning if the triangles enclose a volume but point inward, which draws the mesh inside out (#3275)
+- **output**: creates graphicsData from the STL triangles, their points and normals
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCgeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveOCCgeometry.py) (Ex), [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex), [`orientTrianglesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/orientTrianglesTest.py) (TM), [`stlFileImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stlFileImportTest.py) (TM)
@@ -886,7 +887,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCg
 (sec-graphics-frompymeshlabfile)=
 ## Function: FromPyMeshlabFile
 
-[`FromPyMeshlabFile(fileName, defaultColor = color.defaultBody, invertNormals = False, invertTriangles = False, normalizeNormals = True, useDefaultColor = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3374)
+[`FromPyMeshlabFile(fileName, defaultColor = color.defaultBody, invertNormals = False, invertTriangles = False, normalizeNormals = True, useDefaultColor = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3404)
 
 - **function description**: generate graphics data from any file that can be loaded with PyMeshLab (in particular .obj, .dae and .stl); either use defaultColor or given color in mesh.
 - **input**:
@@ -907,7 +908,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pymeshlabFi
 (sec-graphics-fromstlfile)=
 ## Function: FromSTLfile
 
-[`FromSTLfile(fileName, color = [0.,0.,0.,1.], verbose = False, density = 0., scale = 1., Aoff = [], pOff = [], invertNormals = True, invertTriangles = True, orientTriangles = False, useNumpySTL = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3489)
+[`FromSTLfile(fileName, color = [0.,0.,0.,1.], verbose = False, density = 0., scale = 1., Aoff = [], pOff = [], invertNormals = False, invertTriangles = False, orientTriangles = False, useNumpySTL = False, checkOrientation = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3519)
 
 - **function description**: generate graphics data from STL file, allowing text or binary format, read with numpy (#3264); additionally can scale, rotate and translate
 - **input**:
@@ -916,11 +917,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pymeshlabFi
   - `verbose`: if True, useful information is provided during reading
   - `density`: if not 0, mass, volume, inertia, etc. are computed for a closed mesh and returned
   - `scale`: point coordinates are transformed by scaling factor, or by three factors for x, y, z
-  - `invertNormals`: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
-  - `invertTriangles`: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
-  - `orientTriangles`: if True, the triangles are oriented consistently and closed parts outward with OrientTriangles, and the normals are computed from them - for STL files whose triangles are not oriented consistently (#2281)
+  - `invertNormals`: if True, the normals (computed from the triangles) are inverted; an STL file has them outward, as Exudyn (#3275)
+  - `invertTriangles`: if True, the triangle orientation is inverted; an STL file has the corners counterclockwise seen from outside, as Exudyn (#3275)
+  - `orientTriangles`: if True, the triangles are oriented consistently and closed parts - and open ones that enclose a volume - outward with OrientTriangles, and the normals are computed from them - for STL files whose triangles are not oriented consistently (#2281, #3275)
   - `useNumpySTL`: if True, the file is read and the mass properties are computed with numpy-stl (pip install numpy-stl), for a file the reader of Exudyn does not handle
-- **output**: creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index); with density != 0, [graphicsData, dict] with the keys minPos, maxPos, volume, mass, COM and inertia (the inertia tensor at the COM)
+  - `checkOrientation`: if True and orientTriangles is False, a warning if the triangles enclose a volume but point inward, which draws the mesh inside out (#3275)
+- **output**: creates graphicsData from the STL triangles; with density != 0, [graphicsData, dict] with the keys minPos, maxPos, volume, mass, COM and inertia (the inertia tensor at the COM)
 - **notes**: the model is first scaled, then rotated, then the offset pOff is added; finally min, max, mass, volume, inertia, com are computed! The normals are those of the triangles, computed from their points.
 
 
@@ -930,7 +932,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-graphics-addedgesandsmoothennormals)=
 ## Function: AddEdgesAndSmoothenNormals
 
-[`AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle = 0.25*pi, addEdges = True, smoothNormals = True, roundDigits = 5, triangleColor = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3575)
+[`AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle = 0.25*pi, addEdges = True, smoothNormals = True, roundDigits = 5, triangleColor = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3611)
 
 - **function description**: compute and return GraphicsData with edges and smoothend normals for mesh consisting of points and triangles (e.g., as returned from GraphicsData2PointsAndTrigs); ignores stored normals graphicsData: single GraphicsData object of type TriangleList; existing edges are ignored edgeColor: optional color for edges edgeAngle: angle above which edges are added to geometry addEdges: if True, edges are added in TriangleList of GraphicsData smoothNormals: if True, algorithm tries to smoothen normals at vertices; otherwise, uses triangle normals roundDigits: number of digits, relative to max dimensions of object, at which points are assumed to be equal; too small or too larger number of digits may cause artifacts triangleColor: if triangleColor is set to a RGBA color, this color is used for the new triangle mesh throughout; otherwise, stored colors are unchanged
 - **output**: returns GraphicsData with added edges and smoothed normals
@@ -943,15 +945,15 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-graphics-exportstl)=
 ## Function: ExportSTL
 
-[`ExportSTL(graphicsData, fileName, solidName = 'ExudynSolid', invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3746)
+[`ExportSTL(graphicsData, fileName, solidName = 'ExudynSolid', invertNormals = False, invertTriangles = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3782)
 
 - **function description**: export given graphics data (only type TriangleList allowed!) to STL ascii file using fileName
 - **input**:
   - `graphicsData`: a single GraphicsData dictionary with type='TriangleList', no list of GraphicsData
   - `fileName`: file name including (local) path to export STL file
   - `solidName`: optional name used in STL file
-  - `invertNormals`: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
-  - `invertTriangles`: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+  - `invertNormals`: if True, the normals are written inverted; STL files and Exudyn have them outward (#3275)
+  - `invertTriangles`: if True, the triangles are written inverted; STL files and Exudyn have the corners counterclockwise seen from outside (#3275)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCgeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveOCCgeometry.py) (Ex), [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex), [`orientTrianglesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/orientTrianglesTest.py) (TM)

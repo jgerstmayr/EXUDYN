@@ -46,7 +46,8 @@ def TestExamplesReferenceSolution():
         'trajectoryBlendingTest.py': 10.527218840445627, #new 2026-11-05: the blending of the profiles of Trajectory (#3274)
         'robotDictionaryTest.py': 9.516012946428752, #new 2026-11-05: Robot.GetDictionary and SetDictionary, saved with SaveDictToHDF5 (#3267)
         'robotFrictionEndStopsTest.py': 11.680923235698522, #new 2026-11-05: friction, end stops, q0, control and sensors of both models of Robot (#3270)
-        'stlFileImportTest.py': 9.398437499999998, #new 2026-11-05: graphics.FromSTLfile without numpy-stl, the mass properties of the mesh (#3264)
+        'raytracerBackFaceTest.py': 0.7, #new 2026-11-05: raytracer.advanced.backFaceColor (#3275)
+        'stlFileImportTest.py': 10.398437499999995, #2026-11-05: the file outward as Exudyn, a check of orientTriangles (#3275), before 9.398437499999998; new 2026-11-05: graphics.FromSTLfile without numpy-stl, the mass properties of the mesh (#3264)
         'appendSystemTest.py': 6.274157091191782,                     #new 2026-10-04: SC.AppendSystem of a copy and of the system of another container, deleted once (#2842)
         'ANCFBeamTest.py': 1.0105101312118379, #2026-10-14: the strains in the symmetric basis of the slopes (#2992), +2.4e-5; before 1.010486312300453; 2026-10-13: the frame of the slopes is their symmetric basis (#2228), +2.6e-10; before 1.0104863120355159; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 1.010486312035481;new 2023-04-04, after resolving local kappa bug; 2026-10-02: the rotation of the slope nodes consistent (#2763), -2.6e-10
         'ANCFcable2DuserFunction.py': 0.6015588367721794, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.6015588367721973;new 2023-12-13

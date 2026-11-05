@@ -404,6 +404,8 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 
 	//for overlay triangles (e.g. colorbar), we only use the basic color value
 	if (IsStaticTriangle(closestHit.triangleIndex)) { return RTVector3D({ closestHit.color[0], closestHit.color[1], closestHit.color[2] }); }
+	//a face seen from its back, e.g. an inward normal, to check imported meshes (#3275)
+	if (RTS.useBackFaceColor && closestHit.hitFromBack && shadowMode != 1) { return RTS.backFaceColor; }
 
 	for (Index lightID = 0; lightID < (Index)RTS.lights.size(); lightID++)
 	{
@@ -1018,6 +1020,8 @@ void Raytracer::CopyVisSettings2RTS(Index viewID)
 	RTS.maxTransparencyDepth = EXUstd::Clamp(visSettings->raytracer.maxTransparencyDepth, 0, 32);
 	RTS.keepWindowActive = visSettings->raytracer.keepWindowActive;
 	RTS.backgroundColorReflections = ColorRGBA2RGB(visSettings->raytracer.advanced.backgroundColorReflections);
+	RTS.backFaceColor = ColorRGBA2RGB(visSettings->raytracer.advanced.backFaceColor);
+	RTS.useBackFaceColor = visSettings->raytracer.advanced.backFaceColor[3] > 0.f;
 	RTS.ambientLightColor = ColorRGBA2RGB(visSettings->openGL.lightModelAmbient); //previously: raytracer.ambientLightColor);
 	RTS.globalFogDensity = visSettings->raytracer.globalFogDensity;
 	RTS.globalFogColor = ColorRGBA2RGB(visSettings->raytracer.globalFogColor);

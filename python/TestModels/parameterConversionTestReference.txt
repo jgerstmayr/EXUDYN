@@ -228,7 +228,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   VisualizationSettings.openGL.light2: position(attribute,dict)
   VisualizationSettings.openGL.light3: position(attribute,dict)
   VisualizationSettings.raytracer: globalFogColor(attribute,dict)
-  VisualizationSettings.raytracer.advanced: backgroundColorReflections(attribute,dict)
+  VisualizationSettings.raytracer.advanced: backFaceColor(attribute,dict) backgroundColorReflections(attribute,dict)
   VisualizationSettings.sensors: defaultColor(attribute,dict)
   VisualizationSettings.sensors.scopes: axesColor(attribute,dict) backgroundColor(attribute,dict) frameColor(attribute,dict)
 
