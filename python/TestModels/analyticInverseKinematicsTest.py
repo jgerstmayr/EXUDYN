@@ -1,0 +1,93 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The analytic inverse kinematics of exudyn.robotics (#3260): KinematicChain.InverseKinematicsAnalytic in C++
+#           against Robot.InverseKinematicsAnalytic in Python, for the 3R robot (the position of the tool), the Puma560
+#           of standard and of modified DH parameters (a spherical wrist) and the UR5, each with a base and a tool, at
+#           random joint coordinates: the solutions of C++ and Python agree, every solution reaches the pose, and the
+#           joint coordinates of the pose are among them, sorted by the distance from qReference; a pose out of reach has no
+#           solution, a singular wrist takes the free angle from qReference, and the Panda (7 joints) is refused. The
+#           result is the number of checks that pass plus the nearest solution of one pose of the Puma560, its
+#           components weighted by 1 to 6.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-05
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform
+from exudyn.robotics import RobotBase, RobotTool
+from exudyn.robotics.models import Manipulator3RSimple, ManipulatorPuma560, ManipulatorUR5, ManipulatorFrankaEmikaPanda, LinkDict2Robot
+from exudyn.robotics.roboticsCore import Robot
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+def Robots():
+    """the robots of models.py with a base and a tool; the Puma560 also of modified DH parameters"""
+    robots = {}
+    for (name, Function, dhMode) in [('3R', Manipulator3RSimple, 'stdDH'), ('Puma560', ManipulatorPuma560, 'stdDH'),
+                                     ('Puma560modDH', ManipulatorPuma560, 'modDHKK'), ('UR5', ManipulatorUR5, 'stdDH')]:
+        robotDict = Function()
+        robotDict['dhMode'] = dhMode
+        robot = LinkDict2Robot(robotDict, Robot(gravity=[0, 0, -9.81]))
+        robot.base = RobotBase(HT=exu.HT(translation=[0.1, -0.2, 0.3]).SetRotationZ(0.4)*exu.HT().SetRotationX(0.2))
+        robot.tool = RobotTool(HT=exu.HT(translation=[0.01, 0.02, 0.1]))
+        robots[name] = robot
+    return robots
+
+checks = []
+rng = np.random.default_rng(1)
+for (name, robot) in Robots().items():
+    chain = robot.GetKinematicChain()
+    n = len(robot.links)
+    difference = 0 #C++ against Python
+    poseError = 0 #of all solutions
+    nearestFound = True
+    numberOfSolutions = 0
+    for k in range(10):
+        q = rng.uniform(-np.pi, np.pi, n)
+        T = chain.ToolHT(q)
+        for qReference in [None, q + 0.01]:
+            solutions = chain.InverseKinematicsAnalytic(T, qReference)
+            solutionsPython = robot.InverseKinematicsAnalytic(T, qReference)
+            numberOfSolutions += len(solutions)
+            if solutions.shape != solutionsPython.shape:
+                difference = np.inf
+            elif len(solutions):
+                difference = max(difference, np.max(np.abs(solutions - solutionsPython)))
+            for s in solutions:
+                if n == 3: #the position of the tool only
+                    poseError = max(poseError, cMath.norm(chain.ToolHT(s).translation - T.translation))
+                else:
+                    poseError = max(poseError, np.max(np.abs(chain.ToolHT(s).HT44() - T.HT44())))
+        #q among the solutions, which are sorted by their distance from qReference (two may lie closer to it than q)
+        distances = [cMath.norm(s - q - 0.01) for s in solutions]
+        nearestFound = (nearestFound and any(cMath.norm(s - q) < 1e-8 for s in solutions)
+                        and all(a <= b for (a, b) in zip(distances[:-1], distances[1:])))
+    exu.Print(name + ': C++ against Python', difference, ', pose error', poseError, ', solutions', numberOfSolutions)
+    checks += [difference < 1e-10, poseError < 1e-10, nearestFound]
+
+#out of reach, a singular wrist (q_5 = 0: q_4 + q_6 fixed, q_4 from qReference), a robot of 7 joints
+chain = Robots()['Puma560'].GetKinematicChain()
+checks += [chain.InverseKinematicsAnalytic(exu.HT(translation=[5, 0, 0])).shape == (0, 6)]
+q = np.array([0.3, -0.5, 0.4, 0.2, 0., -0.1])
+solutions = chain.InverseKinematicsAnalytic(chain.ToolHT(q), q + 0.05)
+checks += [abs(solutions[0][3] - 0.25) < 1e-12 and abs(solutions[0][3] + solutions[0][5] - 0.1) < 1e-12]
+try:
+    LinkDict2Robot(ManipulatorFrankaEmikaPanda()).GetKinematicChain().InverseKinematicsAnalytic(exu.HT())
+    checks += [False]
+except ValueError:
+    checks += [True]
+
+q = np.array([0.3, -0.5, 0.4, 0.2, 0.7, -0.1])
+qNearest = chain.InverseKinematicsAnalytic(chain.ToolHT(q), [3.4, -0.4, 0.3, 0.3, 0.6, 0.])[0]
+exu.Print('nearest solution of the Puma560:', qNearest)
+
+u = sum(checks) + qNearest @ np.arange(1, 7)
+exu.Print('checks:', checks)
+exu.Print('solution of analyticInverseKinematicsTest=', u)
+exu.sys['testResult'] = u

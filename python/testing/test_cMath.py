@@ -75,5 +75,6 @@ def testTheModuleHasWhatItsStubSays(module):
         tree = ast.parse(file.read())
     stubNames = {node.name for node in tree.body if isinstance(node, ast.FunctionDef)}
     stubNames |= {node.target.id for node in tree.body if isinstance(node, ast.AnnAssign)}
+    stubNames |= {node.name for node in tree.body if isinstance(node, ast.ClassDef)} #KinematicChain (#3259)
     assert stubNames == set(module.__all__)
     assert all(callable(getattr(module, n)) or n == 'pi' for n in module.__all__)

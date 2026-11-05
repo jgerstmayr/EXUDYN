@@ -6008,6 +6008,30 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - #3254: 220 lines of commented-out code and the dead branches (if 0, if 1, if False) removed from all robotics files
   except future.py; ruff finds the same 64 items before and after.
 
+<a id="rg19-6-2"></a>
+### RG19.6.2 — the analytic inverse kinematics in KinematicChain and Robot; future.py removed (2026-11-05, #3260)
+- Maintainer 2026-11-05: the IK of future.py for UR5 and 3R into C++, revised, with the 6R spherical wrist; then
+  future.py removed (decision 1).
+- The algorithm (C++ KinematicChain.InverseKinematicsAnalytic, Python Robot.InverseKinematicsAnalytic, the same steps):
+  the chain as a product of exponentials T(q) = E_1(q_1) ... E_n(q_n) T(0), the axes and their points from the joint
+  frames at q = 0, so that the DH convention, the base and the tool do not matter. The arm: q_1 puts the target point
+  into the plane normal to the parallel axes 2 and 3 in which links 2 and 3 move it (a cos + b sin = e, 2 solutions),
+  q_3 by the distance from axis 2 (subproblem 3), q_2 by subproblem 1. Spherical wrist: the wrist center (axes 4 and
+  5 crossing, axis 6 through it) by the arm, then q_4, q_5 by subproblem 2 on omega_6 and q_6 by subproblem 1. UR: q_1
+  for the crossing point of the axes 5 and 6, q_5 from the component of axis 6 along the parallel axes (independent of
+  q_2 + q_3 + q_4), q_6 and the sum q_2 + q_3 + q_4 by subproblem 1, then the arm for a point of axis 4. Each solution
+  checked by the forward kinematics (pose error relative to the size of the robot < 1e-8), angles in [-pi, pi) or
+  nearest to qReference and sorted by the distance from it; a free angle of a singular configuration from qReference.
+- future.py: ComputeIK3R, ComputeIKPuma560 and ComputeIKUR took the robot dictionaries with standard DH parameters
+  only, printed, returned NaN rows and unchecked solutions; MakeCorkeRobot moved to urdfImport.py (without its print,
+  the docstring argument corrected); the module and its baseline entries (pydoclint, ruff, stubtest) removed.
+- Measured (design section 2.1): C++ 2.9 / 8.2 / 7.3 us (3R / Puma560 / UR5), Python 0.36 / 2.5 / 1.6 ms; 8 solutions
+  for the Puma560, 2 to 8 for the UR5 at random poses - as many as 300 numerical solutions from random starts find.
+- analyticInverseKinematicsTest.py: the 3R, the Puma560 of standard and modified DH parameters and the UR5 with base
+  and tool, C++ against Python (5.5e-13), the pose of every solution, q among the solutions sorted by the distance from
+  qReference (two elbow solutions of a nearly stretched arm can lie closer to the reference than q), out of reach,
+  the singular wrist, the Panda refused.
+
 <a id="rg20-2-8"></a>
 ### RG20.2.8 — index 3 at the stages alone, measured (2026-11-05)
 - Maintainer: why not c(Q_i) = 0 at both implicit stages of Radau IIA or Lobatto (or one multiplier for both), index 3

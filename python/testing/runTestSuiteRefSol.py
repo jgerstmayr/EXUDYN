@@ -40,6 +40,7 @@ def TestExamplesReferenceSolution():
         'SwitchingConstraintsTest.py': 0.,
         'abaqusImportTest.py': 0.0005885208722206048,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
         'allExudynModulesTest.py': 1.0,                               #new 2026-02-03; test all modules (if some major error is contained...)
+        'analyticInverseKinematicsTest.py': 19.199999999999996, #new 2026-11-05: the analytic inverse kinematics of KinematicChain and Robot (#3260)
         'appendSystemTest.py': 6.274157091191782,                     #new 2026-10-04: SC.AppendSystem of a copy and of the system of another container, deleted once (#2842)
         'ANCFBeamTest.py': 1.0105101312118379, #2026-10-14: the strains in the symmetric basis of the slopes (#2992), +2.4e-5; before 1.010486312300453; 2026-10-13: the frame of the slopes is their symmetric basis (#2228), +2.6e-10; before 1.0104863120355159; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 1.010486312035481;new 2023-04-04, after resolving local kappa bug; 2026-10-02: the rotation of the slope nodes consistent (#2763), -2.6e-10
         'ANCFcable2DuserFunction.py': 0.6015588367721794, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.6015588367721973;new 2023-12-13

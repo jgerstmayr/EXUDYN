@@ -467,6 +467,18 @@ of order 4 with the GGL stabilization (damping) and Radau IIA of order 3 -, with
 size by an estimate of the local error of the order of the method (#3250), with ODE1 and data coordinates; the
 argument `errorEstimate` of both solvers selects the estimate of two steps or of one (#3253).
 
+**Robotics.** The tool frame of `RobotTool` is relative to the frame of the last link, in `LinkHT`, the inverse
+kinematics and the graphics of the kinematic tree (#3255). `ManipulatorFrankaEmikaPanda` of `exudyn.robotics.models`
+replaces `ManipulatorPANDA` (deprecated), with the kinematics and the hand of the Robotics Toolbox; the inertias of
+`ManipulatorPuma560` are physical, see its docstring (#3255). The URDF import is `exudyn.robotics.urdfImport`
+(`LoadURDFrobot`, `GetURDFrobotData`, `GetRoboticsToolboxInternalModel`, `MakeCorkeRobot`; the names in
+`robotics.utilities` are deprecated) (#3256). `exudyn.cUtilities.KinematicChain`, created by
+`Robot.GetKinematicChain()`, computes the frames, the Jacobian and the static torques of a robot in C++, about 1 us per
+call (#3259), and `InverseKinematicsAnalytic(HT, qReference)` gives all solutions of the inverse kinematics of 3R robots
+and of 6R robots with a spherical wrist (Puma560, KUKA, Staeubli) or of the UR geometry, the nearest to `qReference`
+first, in about 8 us; `Robot.InverseKinematicsAnalytic` is the same in Python. `exudyn.robotics.future` is removed:
+use these instead of `ComputeIK3R`, `ComputeIKPuma560` and `ComputeIKUR` (#3260).
+
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.
 

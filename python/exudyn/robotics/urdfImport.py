@@ -2,7 +2,8 @@
 # This is an EXUDYN python utility library for robotics
 #
 # Details:  The import of robots from URDF files, through the Robotics Toolbox for Python (RTB) of P. Corke and
-#           J. Haviland: the internal models of the RTB, a URDF file, and the data of a robot for Robot and its graphics
+#           J. Haviland: the internal models of the RTB, a URDF file, and the data of a robot for Robot and its graphics;
+#           MakeCorkeRobot, an RTB robot of the DH parameters of a robot dictionary of exudyn.robotics.models
 #
 # Authors:  Johannes Gerstmayr
 # Date:     2023-04-15
@@ -11,6 +12,7 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+from exudyn.misc.docmeta import docmeta
 import numpy as np
 import exudyn
 import exudyn.graphics as graphics
@@ -19,7 +21,7 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData',
+    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'MakeCorkeRobot',
     ]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -331,3 +333,46 @@ def GetURDFrobotData(robot,
     return robotData
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@docmeta(author='Martin Sereinig')
+def MakeCorkeRobot(robotDic):
+    """makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters
+
+    Args:
+        robotDic: robot dictionary by exudyn robotic models, its 'dhMode' stdDH for standard DH parameters, modKKDH for modified ones
+
+    Returns:
+        serial robot object by corke
+
+    Note:
+        DH Parameter Information:
+        stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)
+        modDH = [alpha, dx, theta, rz] with
+        used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)
+        used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)
+        Important note:  d(khali)=a(corke)  and r(khali)=d(corke)
+    """
+    
+    try:
+        import roboticstoolbox as rtb
+
+        nLinks = len(robotDic['links'])
+        dhpara = robotDic['dhMode']
+        Links = []
+        if dhpara == 'stdDH':
+            for i in range(nLinks):
+                Links += [rtb.RevoluteDH(d = robotDic['links'][i][dhpara][1], a = robotDic['links'][i][dhpara][2], alpha = robotDic['links'][i][dhpara][3])]
+                
+        elif dhpara == 'modKKDH':
+            for i in range(nLinks):   
+                Links += [rtb.RevoluteMDH(d = robotDic['links'][i][dhpara][3], a = robotDic['links'][i][dhpara][1], alpha = robotDic['links'][i][dhpara][0])]
+        
+        robotCorke = rtb.robot.DHRobot ( Links )
+        
+    except Exception as e:
+        #printing and continuing left robotCorke undefined, so the next line raised
+        #UnboundLocalError instead of saying what was wrong, #2489
+        raise ImportError('MakeCorkeRobot: check the installation of roboticstoolbox from Peter '
+                          'Corke ("pip install roboticstoolbox-python"); the original error was: '+str(e)) from e
+
+    return robotCorke

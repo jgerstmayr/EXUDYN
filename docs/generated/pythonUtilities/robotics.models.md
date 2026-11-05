@@ -43,7 +43,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - **notes**: all Parameter according to Gaz et. al [GazDeLuca2019] DH-parameters(std): [theta, d, a, alpha], according to P. Corke masses, inertias and COM according to Gaz et al., w.r.t. the frames of the modified DH parameters (modDHKK, the dhMode of the dictionary); the last link frame is the flange, 0.107 after joint 7, in both conventions, so the COM of the last link is moved by -0.107 in z against Gaz et al.; the standard DH parameters give the same kinematics, but the inertia parameters are not transformed to their frames; both checked against the RTB's Panda (#3255)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`analyticInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/analyticInverseKinematicsTest.py) (TM)
 
 
 (sec-models-manipulatorpanda)=
@@ -96,7 +96,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 - **notes**: DH Parameter Information stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha) modDH = [alpha, dx, theta, rz] with used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d) used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r) Important note:  d(khali)=a(corke)  and r(khali)=d(corke)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`kinematicChainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicChainTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`analyticInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/analyticInverseKinematicsTest.py) (TM), [`kinematicChainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicChainTest.py) (TM)
 
 
 (sec-models-linkdictmoddhkk2robot)=

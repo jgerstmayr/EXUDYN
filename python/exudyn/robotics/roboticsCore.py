@@ -100,6 +100,120 @@ dictJointType2coordinate6D = {
 #preerb.HT must be added for joint axes definitions and for currentHT
 #inertia and COM need to be converted by localHT of StdDH into ModDH configuration!!!
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the analytic inverse kinematics (#3260): the robot as a product of exponentials, T(q) = E_1(q_1) ... E_n(q_n) T(0),
+#E_i the rotation about the axis of joint i at q = 0 (direction omega_i through the point p_i); the subproblems of
+#Paden and Kahan solve it for the geometries of _IKGeometry; KinematicChain.InverseKinematicsAnalytic is the C++
+#version of the same algorithm
+
+def _IKRotate(axis, angle, v):
+    """v rotated about the unit vector axis by angle (Rodrigues)"""
+    c = cMath.cos(angle)
+    s = cMath.sin(angle)
+    return v*c + np.cross(axis, v)*s + axis*(axis @ v)*(1.-c)
+
+def _IKRotationMatrix(axis, angle):
+    """the rotation matrix about the unit vector axis by angle"""
+    return np.column_stack([_IKRotate(axis, angle, e) for e in np.eye(3)])
+
+def _IKAngle(axis, u, v, fallback):
+    """subproblem 1: the angle about axis that rotates u into v, both projected onto the plane normal to axis;
+    fallback if a projection vanishes (any angle does it, a singular configuration)"""
+    up = u - axis*(axis @ u)
+    vp = v - axis*(axis @ v)
+    if cMath.norm(up) < 1e-12*(1.+cMath.norm(u)) or cMath.norm(vp) < 1e-12*(1.+cMath.norm(v)):
+        return fallback
+    return cMath.atan2(axis @ np.cross(up, vp), up @ vp)
+
+def _IKAnglesCosSin(a, b, e, fallback, tolerance):
+    """the angles x of a cos(x) + b sin(x) = e: two, or none if |e| > |(a, b)|, or fallback if a = b = e = 0"""
+    r = cMath.sqrt(a*a + b*b)
+    if r < tolerance:
+        return [fallback] if abs(e) < tolerance else []
+    x = e/r
+    if abs(x) > 1.+1e-10:
+        return []
+    phi = cMath.atan2(b, a)
+    d = cMath.acos(min(1., max(-1., x)))
+    return [phi + d, phi - d]
+
+def _IKArm(omega, p, W0, X, fallback, tolerance):
+    """the joint angles q_1, q_2, q_3 that move the point W0 (fixed in link 3, at q = 0) to X, for the axes 2 and 3
+    parallel and axis 1 not parallel to them: q_1 puts X into the plane normal to axis 2 in which links 2 and 3 move W0,
+    subproblem 3 gives q_3 from the distance to axis 2, subproblem 1 gives q_2; up to 4 solutions"""
+    n = omega[1]
+    w = omega[0]
+    d = X - p[0]
+    wd = w @ d
+    q1List = _IKAnglesCosSin(n @ d - wd*(w @ n), -(n @ np.cross(w, d)), n @ (W0 - p[0]) - wd*(w @ n), fallback[0], tolerance)
+    solutions = []
+    for q1 in q1List:
+        for (q2, q3) in _IKPlanar2R(omega[1], omega[2], p[1], p[2], W0, p[0] + _IKRotate(w, -q1, d), fallback, tolerance):
+            solutions += [[q1, q2, q3]]
+    return solutions
+
+def _IKPlanar2R(omega2, omega3, p2, p3, W0, Y, fallback, tolerance):
+    """the angles q_2, q_3 about the parallel axes 2 and 3 that move the point W0 to Y: subproblem 3 for q_3, the
+    distance of the point from axis 2, then subproblem 1 for q_2; up to 2 solutions"""
+    def Projected(x):
+        return x - omega2*(omega2 @ x)
+    u = Projected(W0 - p3)
+    v = Projected(p2 - p3)
+    delta = cMath.norm(Projected(Y - p2))
+    nu = cMath.norm(u)
+    nv = cMath.norm(v)
+    if nu < tolerance or nv < tolerance:
+        return []
+    kappa = (nu*nu + nv*nv - delta*delta)/(2.*nu*nv)
+    if abs(kappa) > 1.+1e-10:
+        return []
+    alpha = cMath.atan2(omega3 @ np.cross(v, u), v @ u)
+    d = cMath.acos(min(1., max(-1., kappa)))
+    solutions = []
+    for q3 in [-alpha + d, -alpha - d]:
+        Z = p3 + _IKRotate(omega3, q3, W0 - p3)
+        solutions += [[_IKAngle(omega2, Z - p2, Y - p2, fallback[1]), q3]]
+    return solutions
+
+def _IKWrist(omega4, omega5, omega6, R, fallback):
+    """the angles q_4, q_5, q_6 of R_4 R_5 R_6 = R for three axes through one point: subproblem 2 for q_4, q_5, which
+    turn omega_6 into R omega_6, then subproblem 1 for q_6; up to 2 solutions"""
+    u = omega6
+    v = R @ omega6
+    c = omega4 @ omega5
+    cross = np.cross(omega4, omega5)
+    if cMath.norm(cross) < 1e-12:
+        return []
+    alpha = (omega4 @ v - c*(omega5 @ u))/(1.-c*c)
+    beta = (omega5 @ u - c*(omega4 @ v))/(1.-c*c)
+    gamma2 = (u @ u - alpha*alpha - beta*beta - 2.*alpha*beta*c)/(cross @ cross)
+    if gamma2 < -1e-10:
+        return []
+    gamma = cMath.sqrt(max(0., gamma2))
+    #a vector normal to omega6 for q_6
+    x = np.cross(omega6, cross) if cMath.norm(np.cross(omega6, cross)) > 1e-6 else np.cross(omega6, omega4)
+    solutions = []
+    for g in [gamma, -gamma]:
+        z = alpha*omega4 + beta*omega5 + g*cross
+        q5 = _IKAngle(omega5, u, z, fallback[4])
+        q4 = _IKAngle(omega4, z, v, fallback[3])
+        y = _IKRotationMatrix(omega5, q5).T @ _IKRotationMatrix(omega4, q4).T @ R @ x
+        solutions += [[q4, q5, _IKAngle(omega6, x, y, fallback[5])]]
+    return solutions
+
+def _IKLineIntersection(p0, a0, p1, a1):
+    """the point nearest to the lines p0 + s a0 and p1 + t a1 (unit vectors), and their distance; None for parallel lines"""
+    w = p0 - p1
+    b = a0 @ a1
+    if 1.-b*b < 1e-12:
+        return (None, np.inf)
+    s = (b*(a1 @ w) - a0 @ w)/(1.-b*b)
+    t = (a1 @ w - b*(a0 @ w))/(1.-b*b)
+    x0 = p0 + s*a0
+    x1 = p1 + t*a1
+    return (0.5*(x0 + x1), cMath.norm(x0 - x1))
+
+
 class VRobotLink:
     """class to define visualization of RobotLink
     """
@@ -542,8 +656,108 @@ class Robot:
     
         return J
 
+    def InverseKinematicsAnalytic(self, HT, qReference=None):
+        """the analytic inverse kinematics: all joint coordinates q with the tool frame LinkHT(q)[-1]*tool.HT equal to HT
+        (an exu.HT or 4x4 matrix in global coordinates), for three geometries of revolute joints in series: 3 links with
+        the axes 2 and 3 parallel (the position of the tool only, up to 4 solutions); 6 links with the axes 2 and 3
+        parallel and the axes 4, 5, 6 through one point, a spherical wrist (the Puma560, KUKA, Staeubli; up to 8); 6
+        links with the axes 2, 3 and 4 parallel and the axes 5 and 6 crossing (the UR robots; up to 8); a ValueError
+        for other robots. The robot is a product of exponentials, T(q) = E_1(q_1) ... E_n(q_n) T(0), solved by the
+        subproblems of Paden and Kahan (#3260); every solution is checked by the forward kinematics. In a singular
+        configuration, where a joint angle is free, it takes the value of qReference (or 0).
 
-    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        Args:
+            HT: the desired tool frame, exu.HT or 4x4 matrix
+            qReference: None, or joint coordinates; then the angles are shifted by multiples of 2 pi to be nearest to
+                qReference and the solutions are sorted by their distance from it, the nearest first
+
+        Returns:
+            a numpy array with one solution per row, angles in (-pi, pi] without qReference; no rows if the pose cannot
+            be reached
+
+        Note:
+            the C++ version is KinematicChain.InverseKinematicsAnalytic of GetKinematicChain(), about 100 times faster
+        """
+        n = len(self.links)
+        if not self.isSerialRobot or any(link.jointType[0] != 'R' for link in self.links) or n not in [3, 6]:
+            raise ValueError('Robot.InverseKinematicsAnalytic: the analytic inverse kinematics needs 3 or 6 revolute joints in series')
+        fallback = np.zeros(n) if qReference is None else np.array(qReference, dtype=float)
+        if len(fallback) != n:
+            raise ValueError('Robot.InverseKinematicsAnalytic: qReference must have '+str(n)+' components')
+        JH0 = self.JointHT(np.zeros(n))
+        omega = [_ToHT(H).rotation @ dictJointType2Axis[link.jointType] for (H, link) in zip(JH0, self.links)]
+        p = [np.array(_ToHT(H).translation) for H in JH0]
+        T0 = self.LinkHT(np.zeros(n))[-1]*self.tool.HT
+        T = _ToHT(HT)
+        scale = 1. + max(cMath.norm(x - p[0]) for x in p + [np.array(T0.translation)])
+        tolerance = 1e-10*scale
+
+        def Parallel(i, j):
+            return cMath.norm(np.cross(omega[i], omega[j])) < 1e-10
+        if not Parallel(1, 2) or Parallel(0, 1):
+            raise ValueError('Robot.InverseKinematicsAnalytic: the axes of joints 2 and 3 must be parallel and that of joint 1 not parallel to them')
+
+        G = T*T0.Inverse() #T(q) T(0)^-1 = E_1 ... E_n
+        RG = np.array(G.rotation)
+        solutions = []
+        if n == 3:
+            solutions = _IKArm(omega, p, np.array(T0.translation), np.array(T.translation), fallback, tolerance)
+        else:
+            (W0, distance) = _IKLineIntersection(p[3], omega[3], p[4], omega[4])
+            if W0 is not None and distance < tolerance and cMath.norm(np.cross(W0 - p[5], omega[5])) < tolerance:
+                #spherical wrist: the wrist center from q_1, q_2, q_3, then the wrist angles
+                for q123 in _IKArm(omega, p, W0, G*W0, fallback, tolerance):
+                    R123 = _IKRotationMatrix(omega[0], q123[0]) @ _IKRotationMatrix(omega[1], q123[1]) @ _IKRotationMatrix(omega[2], q123[2])
+                    for q456 in _IKWrist(omega[3], omega[4], omega[5], R123.T @ RG, fallback):
+                        solutions += [q123 + q456]
+            else:
+                (W0, distance) = _IKLineIntersection(p[4], omega[4], p[5], omega[5])
+                if not Parallel(1, 3) or W0 is None or distance > tolerance or Parallel(3, 4):
+                    raise ValueError('Robot.InverseKinematicsAnalytic: a robot of 6 joints needs a spherical wrist (the axes 4, 5, 6 '
+                                     'through one point) or the axes 2, 3, 4 parallel and the axes 5 and 6 crossing (UR)')
+                #UR: q_1 from the point W0 of the axes 5 and 6, q_5 from the axis 6, q_6, the sum of q_2, q_3, q_4, then
+                #q_2, q_3 for a point of axis 4
+                nAxis = omega[1]
+                X = G*W0
+                d = X - p[0]
+                w = omega[0]
+                wd = w @ d
+                for q1 in _IKAnglesCosSin(nAxis @ d - wd*(w @ nAxis), -(nAxis @ np.cross(w, d)), nAxis @ (W0 - p[0]) - wd*(w @ nAxis),
+                                          fallback[0], tolerance):
+                    R1 = _IKRotationMatrix(w, q1)
+                    Rrest = R1.T @ RG #R(n, q_2+q_3+q_4) R_5 R_6
+                    b = Rrest @ omega[5]
+                    c56 = omega[4] @ omega[5]
+                    for q5 in _IKAnglesCosSin(nAxis @ omega[5] - c56*(nAxis @ omega[4]), nAxis @ np.cross(omega[4], omega[5]),
+                                              nAxis @ b - c56*(nAxis @ omega[4]), fallback[4], 1e-10):
+                        R5 = _IKRotationMatrix(omega[4], q5)
+                        q6 = _IKAngle(omega[5], Rrest.T @ nAxis, R5.T @ nAxis, fallback[5])
+                        Rn = Rrest @ _IKRotationMatrix(omega[5], q6).T @ R5.T
+                        x = np.cross(nAxis, omega[4]) #normal to the parallel axes
+                        q234 = _IKAngle(nAxis, x, Rn @ x, 0.)
+                        Y = p[0] + _IKRotate(w, -q1, d)
+                        target4 = Y - _IKRotate(nAxis, q234, W0 - p[3])
+                        for (q2, q3) in _IKPlanar2R(omega[1], omega[2], p[1], p[2], p[3], target4, fallback, tolerance):
+                            q4 = (q234 - (omega[1] @ nAxis)*q2 - (omega[2] @ nAxis)*q3)/(omega[3] @ nAxis)
+                            solutions += [[q1, q2, q3, q4, q5, q6]]
+
+        #the angles in (-pi, pi] or nearest to qReference, checked by the forward kinematics, without repetitions
+        result = []
+        for q in solutions:
+            q = np.array(q)
+            q = (q + np.pi) % (2*np.pi) - np.pi if qReference is None else q - 2*np.pi*np.round((q - fallback)/(2*np.pi))
+            Tq = self.LinkHT(q)[-1]*self.tool.HT
+            error = cMath.norm(np.array(Tq.translation) - np.array(T.translation))/scale
+            if n == 6:
+                error += cMath.norm(np.array(Tq.rotation) - np.array(T.rotation))
+            if error < 1e-8 and all(cMath.norm(q - r) > 1e-8 for r in result):
+                result += [q]
+        if qReference is not None:
+            result.sort(key=lambda q: cMath.norm(q - fallback))
+        return np.array(result).reshape((len(result), n))
+
+
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def CreateKinematicTree(self, mbs, name = '', forceUserFunction = 0):
         """Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class;
         Joints defined by the kinematics as well as links (and inertia) are transferred to the kinematic tree object;
@@ -1255,7 +1469,7 @@ class InverseKinematicsNumerical():
         t12 = t2 - t1
         R12 = np.transpose(R1) @ R2
         rot12 = erb.RotationMatrix2RotationVector(R12)
-        rotAng = np.linalg.norm(rot12, 2) # rotation vector is angle * normalized rotation axis 
+        rotAng = cMath.norm(rot12, 2) # rotation vector is angle * normalized rotation axis 
 
 
         n = max(minSteps, 1+int(rotAng/rotStep)) # number of steps (#3255)

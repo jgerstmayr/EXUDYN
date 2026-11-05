@@ -4,14 +4,15 @@
 # Module: robotics.urdfImport
 
 The import of robots from URDF files, through the Robotics Toolbox for Python (RTB) of P. Corke and
-J. Haviland: the internal models of the RTB, a URDF file, and the data of a robot for Robot and its graphics
+J. Haviland: the internal models of the RTB, a URDF file, and the data of a robot for Robot and its graphics;
+MakeCorkeRobot, an RTB robot of the DH parameters of a robot dictionary of exudyn.robotics.models
 
 - **Date**: 2023-04-15
 
 (sec-urdfimport-getroboticstoolboxinternalmodel)=
 ## Function: GetRoboticsToolboxInternalModel
 
-[`GetRoboticsToolboxInternalModel(modelName = '', ignoreURDFerrors = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L26)
+[`GetRoboticsToolboxInternalModel(modelName = '', ignoreURDFerrors = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L28)
 
 - **function description**: Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in site-packages/rtbdata/xacro/. See the github project of roboticstoolbox-python of P. Corke and J. Haviland for more details. The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.__all__ !
 - **input**:
@@ -27,7 +28,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-loadurdfrobot)=
 ## Function: LoadURDFrobot
 
-[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L101)
+[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L103)
 
 - **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland. Use this function for loading urdf/xacro files.
 - **input**:
@@ -42,7 +43,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-geturdfrobotdata)=
 ## Function: GetURDFrobotData
 
-[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L144)
+[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L146)
 
 - **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
 - **input**:
@@ -58,3 +59,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex)
+
+
+(sec-urdfimport-makecorkerobot)=
+## Function: MakeCorkeRobot
+
+[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L338)
+
+- **function description**: makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters
+- **input**:
+  - `robotDic`: robot dictionary by exudyn robotic models, its 'dhMode' stdDH for standard DH parameters, modKKDH for modified ones
+- **output**: serial robot object by corke
+- **author**: Martin Sereinig
+- **notes**: DH Parameter Information: stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha) modDH = [alpha, dx, theta, rz] with used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d) used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r) Important note:  d(khali)=a(corke)  and r(khali)=d(corke)

@@ -10,6 +10,7 @@ This section includes all TestModels for Exudyn. They can also be found and down
 abaqusImportTest
 accessFunctionsTest
 allExudynModulesTest
+analyticInverseKinematicsTest
 ANCFBeamGeometricallyExactComparisonTest
 ANCFBeamTest
 ANCFbeltDrive

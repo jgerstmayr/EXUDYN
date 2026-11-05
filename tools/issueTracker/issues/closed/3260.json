@@ -1,0 +1,15 @@
+{
+  "number": 3260,
+  "title": "Analytic inverse kinematics of 3R and 6R robots in KinematicChain and Robot; future.py removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The analytic inverse kinematics of exudyn.robotics.future (ComputeIK3R, ComputeIKPuma560, ComputeIKUR) took robot dictionaries of standard DH parameters, printed, returned unchecked or NaN rows and was not used. Decided: KinematicChain.InverseKinematicsAnalytic in C++ and Robot.InverseKinematicsAnalytic in Python, the same algorithm on the product of exponentials of the chain (the subproblems of Paden and Kahan), independent of the DH convention, for 3 revolute joints with the axes 2 and 3 parallel, 6 with a spherical wrist (Puma560, KUKA, Staeubli) and 6 of the UR geometry; all solutions, checked by the forward kinematics, the nearest to a reference first; MakeCorkeRobot moved to urdfImport.py and future.py removed.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 11:35",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.robotics: KinematicChain.InverseKinematicsAnalytic (C++) and Robot.InverseKinematicsAnalytic (Python) give all solutions of the inverse kinematics of 3R robots and of 6R robots with a spherical wrist (Puma560, KUKA, Staeubli) or of the UR geometry, checked by the forward kinematics and the nearest to qReference first, for any DH convention, base and tool; about 8 us in C++. exudyn.robotics.future is removed; MakeCorkeRobot is in exudyn.robotics.urdfImport.",
+  "resolvedInVersion": "1.13.373"
+}

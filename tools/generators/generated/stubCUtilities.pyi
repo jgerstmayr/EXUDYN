@@ -106,7 +106,7 @@ class KinematicChain:
     """The KinematicChain is the kinematics of a serial or tree-like robot in C++: per link a joint type, the parent link, preHT (from the link frame of the parent to the joint frame, before the joint motion), localHT (from the joint frame after the joint motion to the link frame), mass and center of mass in the link frame; the base HT, the tool HT relative to the frame of the last link, and gravity - the data of exudyn.robotics.Robot, whose GetKinematicChain() creates it.
 
     The joint frame of link i is JointHT_i = LinkHT_parent * preHT_i * HTjoint(q_i), its link frame LinkHT_i = JointHT_i * localHT_i
-    Robot.JointHT, Robot.LinkHT, Robot.Jacobian and Robot.StaticTorques are the Python versions of the same algorithms.
+    Robot.JointHT, Robot.LinkHT, Robot.Jacobian, Robot.StaticTorques and Robot.InverseKinematicsAnalytic are the Python versions of the same algorithms.
     """
     def NumberOfLinks(self) -> int: 
         """The number of links."""
@@ -125,6 +125,9 @@ class KinematicChain:
         ...
     def StaticTorques(self, q: ArrayLike) -> NDArray: 
         """The generalized forces of gravity on the joints for the joint coordinates q, the sum over the links j of J_j^T m_j g with the Jacobian J_j of the center of mass of link j, computed in one backward pass over the links (the mass and its first moment summed over the links after each joint); the joint torques that hold the robot are their negative; the Python version is Robot.StaticTorques."""
+        ...
+    def InverseKinematicsAnalytic(self, HT: HT, qReference: ArrayLike=None) -> NDArray: 
+        """The analytic inverse kinematics: all joint coordinates q with ToolHT(q) equal to HT (exu.HT or 4x4 matrix), one solution per row, no rows if the pose cannot be reached; for revolute joints in series: 3 links with the axes 2 and 3 parallel (the position of the tool only, up to 4 solutions), 6 links with the axes 2 and 3 parallel and the axes 4, 5, 6 through one point (a spherical wrist: Puma560, KUKA, Staeubli; up to 8), 6 links with the axes 2, 3, 4 parallel and the axes 5 and 6 crossing (UR; up to 8), a ValueError for other robots; by the subproblems of Paden and Kahan on the product of exponentials, every solution checked by the forward kinematics; with qReference the angles nearest to it and the solutions sorted by their distance from it, the nearest first, else in [-pi, pi); an angle that is free in a singular configuration takes its value from qReference (or 0); the Python version is Robot.InverseKinematicsAnalytic."""
         ...
     def __repr__(self) -> str: 
         """The string representation of the KinematicChain."""

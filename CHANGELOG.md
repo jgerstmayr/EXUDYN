@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 357 | 1.13.372 |
+| 1.13 | Newborn | 358 | 1.13.373 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.373** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Analytic inverse kinematics of 3R and 6R robots in KinematicChain and Robot; future.py removed (#3260)
+  - description: The analytic inverse kinematics of exudyn.robotics.future (ComputeIK3R, ComputeIKPuma560, ComputeIKUR) took robot dictionaries of standard DH parameters, printed, returned unchecked or NaN rows and was not used. Decided: KinematicChain.InverseKinematicsAnalytic in C++ and Robot.InverseKinematicsAnalytic in Python, the same algorithm on the product of exponentials of the chain (the subproblems of Paden and Kahan), independent of the DH convention, for 3 revolute joints with the axes 2 and 3 parallel, 6 with a spherical wrist (Puma560, KUKA, Staeubli) and 6 of the UR geometry; all solutions, checked by the forward kinematics, the nearest to a reference first; MakeCorkeRobot moved to urdfImport.py and future.py removed.
+  - **notes:** exudyn.robotics: KinematicChain.InverseKinematicsAnalytic (C++) and Robot.InverseKinematicsAnalytic (Python) give all solutions of the inverse kinematics of 3R robots and of 6R robots with a spherical wrist (Puma560, KUKA, Staeubli) or of the UR geometry, checked by the forward kinematics and the nearest to qReference first, for any DH convention, base and tool; about 8 us in C++. exudyn.robotics.future is removed; MakeCorkeRobot is in exudyn.robotics.urdfImport.
+  - date resolved: **2026-11-05 11:35**, date raised: 2026-11-05
 - **1.13.372** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.cUtilities.KinematicChain: the forward kinematics, the Jacobian and the static torques of a robot in C++ (#3259)
   - description: Robot.LinkHT, JointHT, Jacobian and StaticTorques of exudyn.robotics compute in Python (17, 23 and 114 us for 6 links); the static compensation in a PreStepUserFunction makes a kinematic tree simulation 15 times slower. Decided (design robotics.md, decision 10): a class KinematicChain in exudyn.cUtilities with the link data of Robot (joint types, parents, preHT, localHT, masses, centers of mass, base, tool, gravity) and JointHT, LinkHT, ToolHT, Jacobian of a point of a link and StaticTorques in one backward pass; Robot.GetKinematicChain() creates it; the Python functions of Robot are the Python versions of the same algorithms, cross-referenced; Robot.StaticTorques uses the same O(n) algorithm. The analytic and numerical inverse kinematics follow in the same class.
   - **notes:** exudyn.cUtilities.KinematicChain: the forward kinematics (JointHT, LinkHT, ToolHT), the Jacobian of a point of a link and the static torques of a serial or tree-like robot in C++, about 1 us per call for 6 links; Robot.GetKinematicChain() creates it from a Robot; Robot.StaticTorques computes in one backward pass as the C++ version.
