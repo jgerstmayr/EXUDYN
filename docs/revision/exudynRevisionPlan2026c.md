@@ -3200,6 +3200,10 @@ CLOSED 2026-11-05 (#3260): KinematicChain.InverseKinematicsAnalytic and Robot.In
 
 CLOSED 2026-11-05 (#3265): ArmConfiguration(q) from the joint axes, InverseKinematicsAnalytic(HT, qReference, configuration). [log](exudynRevisionLog2026c.md#rg19-3-2)
 
+#### **CLOSED_RG19.6.4** The numerical inverse kinematics by Levenberg-Marquardt in KinematicChain and Robot; InverseKinematicsNumerical deprecated
+
+CLOSED 2026-11-05 (#3269): the same iteration in C++ and Python, restarts by a fixed sequence, (q, success, iterations); numericalInverseKinematicsTest.py. [log](exudynRevisionLog2026c.md#rg19-6-4)
+
 ### **OPEN_RG19.7** Revise models.py: PUMA560, UR5, Franka Emika Panda, Staeubli TX2-90L and their initial configurations
 
 Design section 3.

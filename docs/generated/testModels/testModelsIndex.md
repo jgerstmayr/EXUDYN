@@ -148,6 +148,7 @@ modelLibraryTest
 movingGroundRobotTest
 multithreadingUserFunctionTest
 NGsolveCMStest
+numericalInverseKinematicsTest
 objectFFRFreducedOrderAccelerations
 objectFFRFreducedOrderTest
 objectFFRFTest

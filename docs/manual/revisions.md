@@ -487,7 +487,10 @@ smoothened normals, and `AddURDFgraphics` puts them on the links of a Robot; the
 `ArmConfiguration(q)` of KinematicChain and Robot gives the signs [shoulder, elbow, wrist] of a solution of the inverse
 kinematics, from the joint axes and independent of the DH convention, and `InverseKinematicsAnalytic(HT, qReference,
 configuration)` returns only the solutions of a configuration, e.g. `ArmConfiguration(qReference)` (#3265).
-`Robot.BuildFromDictionary`, deprecated, is removed (#3266).
+`Robot.BuildFromDictionary`, deprecated, is removed (#3266). `InverseKinematicsNumerical(HT, qInitial, weights,
+tolerance, maxIterations, restarts)` of KinematicChain and Robot solves the inverse kinematics of any serial robot by
+Levenberg-Marquardt, in about 10 us in C++ and with restarts from a fixed sequence of starts, returning `(q, success,
+iterations)`; the class `InverseKinematicsNumerical` of `exudyn.robotics` is deprecated and calls it (#3269).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

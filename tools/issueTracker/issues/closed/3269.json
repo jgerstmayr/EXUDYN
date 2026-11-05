@@ -1,0 +1,15 @@
+{
+  "number": 3269,
+  "title": "The numerical inverse kinematics by Levenberg-Marquardt in KinematicChain and Robot; InverseKinematicsNumerical deprecated",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "InverseKinematicsNumerical solved a static problem of a kinematic tree pulled to the goal, which failed for poses far from the start (12 of 40 random poses with SolveSafe). Decided: KinematicChain.InverseKinematicsNumerical (C++) and Robot.InverseKinematicsNumerical (Python), the same Levenberg-Marquardt iteration on the weighted 6D pose error with the damping E + lambda, restarts by a fixed sequence, returning (q, success, iterations); the class InverseKinematicsNumerical is deprecated and calls the C++ version.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 18:50",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.robotics: InverseKinematicsNumerical(HT, qInitial, weights, tolerance, maxIterations, restarts) of KinematicChain (C++, about 10 us) and Robot (Python) solve the inverse kinematics of any serial robot by Levenberg-Marquardt on the weighted position and rotation error, with restarts from a fixed sequence of starts, returning (q, success, iterations); the class InverseKinematicsNumerical is deprecated and calls the C++ version.",
+  "resolvedInVersion": "1.13.380"
+}

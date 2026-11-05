@@ -15,12 +15,12 @@
 
 #constants and fixed structures:
 from exudyn.misc.docmeta import docmeta
+from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
 import numpy as np
 
 import exudyn
 
 import exudyn.itemInterface as eii
-import exudyn.advancedUtilities as eau
 
 import exudyn.rigidBodyUtilities as erb
 import exudyn.graphics as graphics
@@ -691,6 +691,77 @@ class Robot:
             J[3:6,0:n] = Jomega
     
         return J
+
+    def InverseKinematicsNumerical(self, HT, qInitial, weights=None, tolerance=1e-10, maxIterations=100, restarts=0):
+        """the numerical inverse kinematics by Levenberg-Marquardt (#3269): joint coordinates q with the tool frame
+        LinkHT(q)[-1]*tool.HT equal to HT (exu.HT or 4x4 matrix), starting from qInitial, for any serial robot (also
+        with fewer or more than 6 joints). The error e is the position difference and the rotation vector of
+        R_HT R(q)^T, multiplied by weights; the step solves (J^T J + lambda I) dq = J^T e, which lowers E = e.e/2; lambda
+        divided by 10 after a step that lowers E and multiplied by 10 until one does
+
+        Args:
+            HT: the desired tool frame, exu.HT or 4x4 matrix
+            qInitial: the joint coordinates to start from
+            weights: None (ones), or 6 weights of the position and rotation errors; zeros for components that are free
+            tolerance: converged for |e| <= tolerance
+            maxIterations: the iterations per start
+            restarts: further starts from qInitial shifted by the fixed sequence pi (2 frac(k sqrt(p_i)) - 1) with the
+                primes p_i, for the revolute joints
+
+        Returns:
+            (q, success, iterations), q of the last start if none converged
+
+        Note:
+            the C++ version is KinematicChain.InverseKinematicsNumerical of GetKinematicChain(), about 90 times faster (10 us for the Puma560)
+        """
+        if not self.isSerialRobot:
+            raise ValueError('Robot.InverseKinematicsNumerical: the numerical inverse kinematics needs a serial robot')
+        n = len(self.links)
+        T = _ToHT(HT)
+        qInitial = np.array(qInitial, dtype=float)
+        if len(qInitial) != n:
+            raise ValueError('Robot.InverseKinematicsNumerical: qInitial must have '+str(n)+' components')
+        weights = np.ones(6) if weights is None else np.array(weights, dtype=float)
+        primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53]
+        revolute = np.array([link.jointType[0] == 'R' for link in self.links])
+
+        def PoseError(q):
+            Tq = self.LinkHT(q)[-1]*self.tool.HT
+            e = np.hstack([np.array(T.translation) - np.array(Tq.translation),
+                           erb.RotationMatrix2RotationVector(np.array(T.rotation) @ np.array(Tq.rotation).T)])*weights
+            return (e, 0.5*(e @ e), np.array(Tq.translation))
+
+        iterations = 0
+        success = False
+        for start in range(restarts + 1):
+            s = start*np.sqrt([primes[i % 16] for i in range(n)])
+            q = qInitial + revolute*np.pi*(2.*(s - np.floor(s)) - 1.)*(start > 0)
+            (e, E, p) = PoseError(q)
+            lam = 1e-3
+            for it in range(maxIterations):
+                if np.sqrt(2.*E) <= tolerance:
+                    success = True
+                    break
+                iterations += 1
+                J = self.Jacobian(self.JointHT(q), toolPosition=p)*weights[:, None]
+                A = J.T @ J
+                g = J.T @ e
+                accepted = False
+                while not accepted and lam <= 1e10:
+                    qNew = q + np.linalg.solve(A + lam*np.eye(n), g)
+                    (eNew, ENew, pNew) = PoseError(qNew)
+                    if ENew < E:
+                        (q, e, E, p) = (qNew, eNew, ENew, pNew)
+                        lam = max(0.1*lam, 1e-12)
+                        accepted = True
+                    else:
+                        lam *= 10.
+                if not accepted: #no descent: a local minimum
+                    break
+            if success or np.sqrt(2.*E) <= tolerance:
+                success = True
+                break
+        return (q, success, iterations)
 
     def ArmConfiguration(self, q):
         """the configuration of the arm at the joint coordinates q, which tells the solutions of InverseKinematicsAnalytic
@@ -1384,113 +1455,31 @@ def projectAngleToPMPi(q0):
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @docmeta(author='Peter Manzl, Johannes Gerstmayr')
-class InverseKinematicsNumerical(): 
-    """This class can be used to solve the inverse kinematics problem using a multibody system
-    by solving the static problem of a serial robot
-
-    Note:
-        still under development; errors in orientations of solution may occure. proviedes mtehods to calculate inverse Kinematics
+class InverseKinematicsNumerical():
+    """DEPRECATED: the numerical inverse kinematics of a serial robot, by the Levenberg-Marquardt iteration of
+    KinematicChain.InverseKinematicsNumerical (#3269); it solved a static problem of a kinematic tree before; use
+    Robot.InverseKinematicsNumerical or robot.GetKinematicChain().InverseKinematicsNumerical instead
     """
-    # initialize system
-    @docmeta(author='Peter Manzl')
-    def __init__(self, robot, jointStiffness = 1e0, useRenderer=False, flagDebug=False, 
-                 useAlternativeConstraints=False): 
-        """initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
+    @Deprecated('1.13.0', 2029, use='Robot.InverseKinematicsNumerical')
+    def __init__(self, robot, jointStiffness = 1e0, useRenderer=False, flagDebug=False,
+                 useAlternativeConstraints=False):
+        """DEPRECATED: the inverse kinematics of robot
 
         Args:
             robot: robot class
-            jointStiffness: the stiffness used for the robot's model joints
-            useRenderer: when solving the inverse kinematics the renderer is used to show the starting/end
-                         configuration of the robot using the graphics objects definded in the robot object
+            jointStiffness: no effect (of the former static solution)
+            useRenderer: no effect (of the former static solution)
+            flagDebug: no effect (of the former static solution)
+            useAlternativeConstraints: no effect (of the former static solution)
         """
-        #without the renderer, the render window stays with the container of the model (#2259)
-        self.SC = exudyn.SystemContainer(attachToRenderer=useRenderer)
-        self.mbsIK = self.SC.AddSystem()
         self.robot = robot
-        self.nLinks = len(self.robot.links)
-        self.useRenderer = useRenderer
-        self.flagDebug = flagDebug
-        self.epsRotationMatrix = 1e-14
-        self.epsSolution = 1e-14
-        self.useAlternativeConstraints = useAlternativeConstraints
-        
-        self.oGround = self.mbsIK.AddObject(eii.ObjectGround(referencePosition=robot.GetBaseHT().translation, 
-                                                  ))
-        
-        self.baseMarker = self.mbsIK.AddMarker(eii.MarkerBodyRigid(bodyNumber=self.oGround, localPosition=[0,0,0]))
-        self.mGroundEE = self.mbsIK.AddMarker(eii.MarkerBodyRigid(bodyNumber=self.oGround, localPosition=[0,0,0]))
-        self.ToolHT = robot.tool.HT
-        
-        if eau.IsValidRealInt(jointStiffness): # build list from real
-            jointStiffness = [jointStiffness] * self.nLinks 
-        
-        
-        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        # build kinemtic tree model of the robot
-        self.robot.gravity = [0,0,0]    # no gravity needed
-        listOldControl = [None]*self.nLinks #store previous PDcontrol
-        for i in range(self.nLinks):     
-            listOldControl[i] = self.robot.links[i].PDcontrol 
-            self.robot.links[i].PDcontrol = (jointStiffness[i],0)
+        self.chain = robot.GetKinematicChain()
+        self.q = np.zeros(len(robot.links)) if len(robot.referenceConfiguration) != len(robot.links) \
+            else np.array(robot.referenceConfiguration, dtype=float)
 
-        self.robotDict = self.robot.CreateKinematicTree(self.mbsIK)
-        
-        #the tool frame, with its rotation, is the marker's (#2745): the sensors read the pose of the tool center point;
-        #the tool is relative to the frame of the last link, the marker to its joint frame (#3255)
-        self.mTool = self.mbsIK.AddMarker(eii.MarkerKinematicTreeRigid(objectNumber=self.robotDict['objectKinematicTree'], linkNumber=self.nLinks-1,
-                                                                           localHT=self.robot.links[-1].localHT*self.robot.tool.HT))
-        
-        self.sToolTrans = self.mbsIK.AddSensor(eii.SensorMarker(markerNumber=self.mTool, 
-                                              outputVariableType=exudyn.OutputVariableType.Position, storeInternal=False))
-        
-        self.sToolRot = self.mbsIK.AddSensor(eii.SensorMarker(markerNumber=self.mTool, 
-                                            outputVariableType=exudyn.OutputVariableType.RotationMatrix, storeInternal=False))
-
-    
-        self.constraintTool= self.mbsIK.AddObject(eii.GenericJoint(markerNumbers=[self.mGroundEE , self.mTool],
-                                               alternativeConstraints = self.useAlternativeConstraints))
-        #restore PDcontrol for robot!        
-        for i in range(self.nLinks):     
-            self.robot.links[i].PDcontrol = listOldControl[i]
-        
-        
-        # set simulation settings for static solver 
-        self.simulationSettings = exudyn.SimulationSettings()
-        self.simulationSettings.solution.file.write = False
-        self.simulationSettings.solution.file.binary = False
-        self.simulationSettings.linearSolver.ignoreSingularJacobian = True
-        self.simulationSettings.show.computationTime = False
-        self.simulationSettings.show.statistics = False
-        
-        self.simulationSettings.staticSolver.newton.maxIterations = 50 #original: 500
-        self.simulationSettings.staticSolver.adaptiveStep = True
-        self.simulationSettings.staticSolver.verboseMode = 0
-        self.simulationSettings.show.globalTimers = 0
-        self.staticSolver = exudyn.MainSolverStatic()
-        # sparse solver settings are faster for redundant mbs
-        self.mbsIK.Assemble()   
-        self.sysStateList = self.mbsIK.systemData.GetSystemState()
-
-    def __def__(self):
-        self.staticSolver.FinalizeSolver(self.mbsIK, self.simulationSettings)
-        
-    # debugging helper function 
-    def createVector(p0, p01): 
-        x = [p0[0], p0[0] + p01[0]]
-        y = [p0[1], p0[1] + p01[1]]
-        z = [p0[2], p0[2] + p01[2]]
-        return x, y, z
-
-
-    def GetCurrentRobotHT(self): 
-        """Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution
-        ** output:
-          T: homogeneous transformation (exudyn.HT) of the current TCP pose
-        """
-        posFKine = self.mbsIK.GetSensorValues(self.sToolTrans) 
-        RotFkine = self.mbsIK.GetSensorValues(self.sToolRot).reshape((3,3))
-        T = exudyn.HT(rotation=RotFkine, translation=posFKine) # global HT
-        return T
+    def GetCurrentRobotHT(self):
+        """the HT of the tool at the last solution (or the reference configuration), an exudyn.HT"""
+        return self.chain.ToolHT(self.q)
 
     @docmeta(author='Peter Manzl')
     def InterpolateHTs(self, T1, T2, rotStep=np.pi/16, minSteps = 1): 
@@ -1528,146 +1517,34 @@ class InverseKinematicsNumerical():
         T += [_ToHT(T2)] # to satisfy the boundry condition
         return T
     
-    @docmeta(author='Peter Manzl, Johannes Gerstmayr')
     def SolveSafe(self, T, q0 = None):
-        """This Method can be used to solve the inverse kinematics problem by solving
-        the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve.
-        This helps the function Solve() to find the correct solutions.
+        """the inverse kinematics of Solve with 10 restarts
 
         Args:
-            T: the homogeneous transformation, an exudyn.HT or a 4x4 matrix, representing the desired position and orientation of the Endeffector
-            q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
+            T: the desired pose of the tool, an exudyn.HT or a 4x4 matrix
+            q0: the joint coordinates to start from; None: the last solution
 
         Returns:
-            [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
-            success: flag to indicate if method was successful
-
-        Note:
-            still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke
+            [q, success]; q is None if no solution was found
         """
-        T0 = self.GetCurrentRobotHT()
-        TInterp = self.InterpolateHTs(T0, T, rotStep=np.pi/3) # no steps in between needed!
-        q = q0
-        for Ti in TInterp:
-            [q, success] = self.Solve(Ti, q)
-            if not success: 
-                if self.flagDebug: 
-                    exudyn.Print('WARNING: InverseKinematics: SolveSafe failed to solve')
-                break
+        return self._Solve(T, q0, 10)
 
-        if success:
-            TSol = self.GetCurrentRobotHT() # the forward kinematics after solving
-        else:
-            TSol = T0
-    
-        if ((np.array(TSol)-np.array(T)) >= self.epsSolution).any(): #*JG: 1e-12; try once again with even finer discretization ...
-            if self.flagDebug:
-                exudyn.Print('WARNING: InverseKinematics: SolveSafe refine')
-                if success:
-                    exudyn.Print(' at err = \n', (np.round((np.array(TSol)-np.array(T)), 10)) ) # round for better readability
+    def Solve(self, T, q0 = None):
+        """the inverse kinematics by KinematicChain.InverseKinematicsNumerical from q0
 
-            TInterp = self.InterpolateHTs(T0, T, rotStep = np.pi/20, minSteps=4) #*JG:2023-03-29: changed from TSol to T0
-            q = q0
-            for Ti in TInterp:
-                [q, success] = self.Solve(Ti, q)
-                if not success: 
-                    break
+        Args:
+            T: the desired pose of the tool, an exudyn.HT or a 4x4 matrix
+            q0: the joint coordinates to start from; None: the last solution
 
-            if success:
-                TSol = self.GetCurrentRobotHT()
-                if (np.abs(np.array(TSol)-np.array(T)) >= 1e-8).any(): 
-                    if self.flagDebug: 
-                        exudyn.Print('WARNING: InverseKinematics: SolveSafe refinement failed: err = ', (np.round((np.array(TSol)-np.array(T)), 10))) # round for better readability
-                    success = False
+        Returns:
+            [q, success]; q is None if no solution was found
+        """
+        return self._Solve(T, q0, 0)
 
+    def _Solve(self, T, q0, restarts):
+        (q, success, iterations) = self.chain.InverseKinematicsNumerical(_ToHT(T), self.q if q0 is None else q0,
+                                                                         restarts=restarts)
         if not success:
-            q = None
-
-        return [q, success]
-    
-    @docmeta(author='Peter Manzl, Johannes Gerstmayr')
-    def Solve(self, T, q0 = None): 
-        """This Method can be used to solve the inverse kinematics problem by solving
-         the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve.
-        T his helps the fucntion Solve to find the correct solutions.
-
-        Args:
-            T: the homogeneous transformation, an exudyn.HT or a 4x4 matrix, representing the desired position and orientation of the Endeffector
-            q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
-
-        Returns:
-            [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
-
-        Note:
-            still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke
-        """
-        # check type of T 
-        T = np.array(T)
-        if T.shape != (4,4) or round(np.linalg.det(T[0:3, 0:3]),10) != 1.0:  # check if is homogeneous TF
-            raise ValueError('inverse Kinematics only possible for homogeneous transformations, represented by a 4x4 array with structure of [[R, t], [0,0,0,1]].')
-        q = None
-        if not(hasattr(q0, '__iter__')) and q0 is None: #replace with: q0 is None
-            q0 = self.mbsIK.systemData.GetODE2Coordinates() # + (np.random.random(self.nLinks)-0.5)*0.1 # [0]*self.nLinks
-        
-        #always set q0 as zero-configuration for springs!
-        q0 = projectAngleToPMPi(q0) 
-        self.mbsIK.SetObjectParameter(self.robotDict['objectKinematicTree'], 'jointPositionOffsetVector', q0)
-
-        
-        self.mbsIK.systemData.SetODE2Coordinates(coordinates=q0, configuration=exudyn.ConfigurationType.Initial)
-        T = _ToHT(T) #an exudyn.HT or a 4x4 matrix
-
-        # the desired pose of the tool center point is the frame of the ground marker (in global "ground" sytem)
-        self.mbsIK.SetMarkerParameter(self.mGroundEE, 'localHT', T)
-        
-        try: 
-            if self.useRenderer: 
-                self.SC.renderer.Start() #the system container is a member, #2488
-                self.SC.renderer.DoIdleTasks() #stop before simulating
-
-            success = self.staticSolver.SolveSystem(self.mbsIK, self.simulationSettings)
-            
-            q = self.mbsIK.systemData.GetODE2Coordinates()
-            q = projectAngleToPMPi(q) # solution of the inverse kinematics problem projected into -pi/pi range
-            self.mbsIK.systemData.SetODE2Coordinates(coordinates=q, configuration=exudyn.ConfigurationType.Initial)
-            
-        except Exception:
-            if self.flagDebug: 
-                exudyn.Print('WARNING: InverseKinematics: Solve: static solver failed')
-            [q, success] = None, False
-            
-        if success:
-            # read output from sensors to check if the solution of the inverse Kinematics was correct
-            self.fKineSolved = self.GetCurrentRobotHT()
-            if (np.abs(self.fKineSolved.HT44() - T.HT44()) <= self.epsSolution).all():  
-                success = True
-            else: 
-                success = False
-                # forwards kinematics deviates from desired HT; happens when desired TCP is outside of the robot's working space
-                # or when the orientation is not set correctly; can happen because of current implementation of generic joint 
-                if self.flagDebug: 
-                    exudyn.Print('\n'*1)
-                    exudyn.Print('WARNING: InverseKinematics: solution incorrect:') 
-                    p1 = self.fKineSolved.translation
-                    p2 = T.translation
-                    exudyn.Print('pos error: ', np.round(p1-p2, 17)) # if TF is in the workspace then the position works
-                    # rotation may still be wrong
-                    R1 = self.fKineSolved.rotation
-                    R2 = T.rotation
-                    rot1 = erb.RotationMatrix2RotXYZ(R1)
-                    rot2 = erb.RotationMatrix2RotXYZ(R2) 
-                    exudyn.Print('rot1 = {}, rot2 = {}'.format(rot1, rot2))
-                    exudyn.Print('R1:\n{}, \nR2:\n{}'.format(R1, R2))
-                    exudyn.Print('\n'*1)
-                    # raise ValueError('no valid solution found for inverse kinematics')
-        else:
-            q = None
-
-        if self.useRenderer:    
-            self.simulationSettings.solution.file.information = 'success = {}\nq={}'.format(
-                success, None if q is None else np.round(q, 3)) #q is None when the solver failed (#2896)
-            self.SC.renderer.DoIdleTasks() # stop before closing
-            self.SC.renderer.Stop() # close rendering window! 
-
-        return [q, success]
-
+            return [None, False]
+        self.q = projectAngleToPMPi(q)
+        return [self.q, True]

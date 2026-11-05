@@ -86,14 +86,11 @@ robot = Robot(gravity=[0,0,-9.81],
 
 robot=LinkDict2Robot(robotDef, robot)
 
-ik = InverseKinematicsNumerical(robot=robot, useRenderer=False, 
-                                #flagDebug=True, 
-                                #jointStiffness=1e4
-                                ) #, useAlternativeConstraints=True)
+chain = robot.GetKinematicChain() #its InverseKinematicsNumerical by Levenberg-Marquardt (#3269)
 SC = exu.SystemContainer() 
 SC.renderer.Attach()
 mbs = SC.AddSystem()
-# the system container holds one or several systems; the inverse kinematics uses a second system container without visualization
+# the system container holds one or several systems
 # in the mbs the mainsystem (multibody system) is stored; in the SC more than one mbs can be created but they do not interact with each other. 
 
 
@@ -109,7 +106,6 @@ q0 = [0,0,0,0,0,0] #zero angle configuration
 #create robot model in mbs
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-mbs.variables['myIkine'] = ik
 HTtcp = robot.LinkHT(q0)[-1]@HTtool #the tool frame, relative to the frame of the last link
 HTtoolJoint = robot.links[-1].localHT@HTtool #the tool frame relative to the joint frame of the last link, as the tree's sensors
 
@@ -129,13 +125,14 @@ rotMove = Skew2Vec(logMove[0:3,0:3])
 dispMove = HT2translation(logMove)
 
 q0=[0,0,0,0.01,0.02,0.03]
-[q1, success] = ik.SolveSafe(HTtcp@HTmove, q0)
+(q1, success, iterations) = chain.InverseKinematicsNumerical(HTtcp@HTmove, q0, restarts=10)
 if not success: print('[q1, success]=',[q1, success])
-[q2, success] = ik.SolveSafe(HTtcp@HTmove@HTmove, q1)
+(q2, success, iterations) = chain.InverseKinematicsNumerical(HTtcp@HTmove@HTmove, q1, restarts=10)
 if not success: print('[q2, success]=',[q2, success])
 
 #initialize for first simulation step:
-[q, success] = ik.Solve(HTtcp, q0)
+(q, success, iterations) = chain.InverseKinematicsNumerical(HTtcp, q0)
+mbs.variables['qIK'] = q #the start of the next solution
 print('[q, success]=',[q, success])
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -175,7 +172,6 @@ sRotTCP = mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=5, loca
 #user function which is called only once per step, speeds up simulation drastically
 def PreStepUF(mbs, t):
     if not jointSpaceInterpolation:
-        ik = mbs.variables['myIkine']
         if t < 2:
             tt = min(t,1)
             T = HTtcp@ExpSE3(list(tt*dispMove)+list(tt*rotMove))
@@ -185,7 +181,8 @@ def PreStepUF(mbs, t):
         else:
             T = HTtcp@HTmove@HTmove
 
-        [q,success]=ik.Solve(T) #, q0) #takes 60 us internally
+        (q, success, iterations) = chain.InverseKinematicsNumerical(T, mbs.variables['qIK']) #a few us
+        mbs.variables['qIK'] = q
         mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', q)
         
     else:

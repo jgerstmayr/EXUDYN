@@ -4,7 +4,7 @@
 
 Every name of Exudyn that is deprecated, with the version it was deprecated in and the year it is removed. A use warns once per session and is counted in `exudyn.sys['deprecationUse']`; `tools/checkDeprecations.py` fails for a deprecation whose year has come, which then has to be removed. How to deprecate something: `CODING_STYLE.md` §10.5. The version is 1.11.0 for what was deprecated before the history of this repository begins.
 
-## Functions and arguments of the Python library (44)
+## Functions and arguments of the Python library (45)
 
 | name | since | removed in | instead | declared in |
 |---|---|---|---|---|
@@ -28,6 +28,7 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `robotics.mobile.MecanumXYphi2WheelVelocities` | 1.11.0 | 2029 | MobileKinematics | python/exudyn/robotics/mobile.py |
 | `robotics.models.LinkDictModDHKK2Robot` | 1.11.0 | 2029 | LinkDict2Robot | python/exudyn/robotics/models.py |
 | `robotics.models.ManipulatorPANDA` | 1.13.0 | 2029 | ManipulatorFrankaEmikaPanda | python/exudyn/robotics/models.py |
+| `robotics.roboticsCore.__init__` | 1.13.0 | 2029 | Robot.InverseKinematicsNumerical | python/exudyn/robotics/roboticsCore.py |
 | `robotics.utilities.GetRoboticsToolboxInternalModel` | 1.13.0 | 2029 | robotics.urdfImport.GetRoboticsToolboxInternalModel | python/exudyn/robotics/utilities.py |
 | `robotics.utilities.GetURDFrobotData` | 1.13.0 | 2029 | robotics.urdfImport.GetURDFrobotData | python/exudyn/robotics/utilities.py |
 | `robotics.utilities.LoadURDFrobot` | 1.13.0 | 2029 | robotics.urdfImport.LoadURDFrobot | python/exudyn/robotics/utilities.py |

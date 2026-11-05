@@ -206,6 +206,16 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   `InverseKinematicsAnalytic(HT, qReference, ArmConfiguration(q))` returns q alone. The signs follow the axis
   directions: up/down, lefty/righty are the names of a manufacturer for one of the signs, which also takes the zero
   angles into account (Staubli's epositive is q3 > 0).
+- **The LM IK** (#3269): `InverseKinematicsNumerical(HT, qInitial, weights, tolerance, maxIterations, restarts)` in
+  KinematicChain and Robot, the same iteration: the weighted error of the position and the rotation vector of
+  R_HT R(q)^T, the step (J^T J + lambda I) dq = J^T e, lambda / 10 after a step that lowers the error, * 10 until one
+  does; restarts from qInitial shifted by pi (2 frac(k sqrt(p_i)) - 1). The damping E + lambda (Sugihara) was tried first:
+  of 100 random poses from random starts 96 / 93 / 91 converged (Puma560, UR5, Panda) against 97 / 94 / 91 with lambda
+  alone, in 16 against 13 iterations. From 0.5 rad off: 40 of 40 for all four robots in 5 to 7 iterations, 10 us per solve in
+  C++ (0.9 ms in Python); C++ and Python agree to 3e-12. A pose near the boundary of the workspace (the Puma560 arm 0.09
+  rad from stretched) converges slowly from every start (3000 iterations). The class InverseKinematicsNumerical
+  (deprecated) calls the chain; serialRobotInverseKinematics.py gives the same joint angles at the end as with the
+  static solution.
 - **After #3255**: the IK of a pose `LinkHT(q)[-1] * tool.HT` from 0.1 / 0.5 rad off: UR5 39 / 35 of 40, Puma560 39 /
   31 of 40; SolveSafe, which now interpolates, 12 of 40 for both (from 8 to 10) at 6 to 8 ms - the random poses are far
   apart, a robust numerical IK is the LM of RG19.6. The Panda of models.py: the modified DH parameters, the tool (the
@@ -350,7 +360,7 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   (6R, Panda); the kinematic chain, the IK and the static torques in C++ (exudyn.cUtilities, section 3); .1 done: the
   KinematicChain with the forward kinematics, the Jacobian and the static torques (#3259); .2 done: the analytic IK
   (3R, 6R with a spherical wrist, UR) in the chain and in Robot, future.py removed (#3260); .3 done: the arm
-  configuration (#3265); open: the LM IK in the chain with its Python version.
+  configuration (#3265); .4 done: the LM IK in the chain with its Python version, the class deprecated (#3269).
 - RG19.7 Revise models.py: PUMA560, UR5, Panda, Stäubli TX2-90L, their initial configurations; all models checked.
 - RG19.8 Clean up the robotics examples and test models on the revised interfaces.
 

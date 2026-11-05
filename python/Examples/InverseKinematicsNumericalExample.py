@@ -19,7 +19,6 @@ from exudyn.robotics import *
 import numpy as np
 
 from exudyn.kinematicTree import KinematicTree66, JointTransformMotionSubspace
-# from exudyn.robotics import InverseKinematicsNumerical
 
 jointWidth=0.1
 jointRadius=0.06
@@ -61,10 +60,11 @@ for cnt, link in enumerate(robotDef['links']):
         # Important note:  d(khali)=a(corke)  and r(khali)=d(corke)  
         alpha[cnt], dx[cnt], rz[cnt],  = link['stdDH'][0],link['stdDH'][1], link['stdDH'][3]
 
-myIkine = InverseKinematicsNumerical(robot2, useRenderer=True)
+#the numerical inverse kinematics by Levenberg-Marquardt of the robot's KinematicChain (#3269)
+chain = robot2.GetKinematicChain()
 #the target pose is the one of a known configuration, so it is reachable; the solver starts from another one
 qTarget = [0.2, -0.9, -0.8, -0.7, 0.6, 1.4]
 T3 = robot2.LinkHT(qTarget)[-1] @ robot2.tool.HT #the tool frame in the target configuration
 q0 = [0, -np.pi/4, -np.pi/4, -np.pi/4, np.pi/4, np.pi/2]
-[q, success] = myIkine.Solve(T3, q0=q0)
+(q, success, iterations) = chain.InverseKinematicsNumerical(T3, q0)
 print('success = {}\nq = {} rad'.format(success, None if q is None else np.round(q, 3)))

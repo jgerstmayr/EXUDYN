@@ -32,6 +32,9 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - **notes**: DH-parameters: [theta, d, a, alpha], according to P. Corke Values according to Wörnle simple example with l1=0 d=[h1 0 0]; theta=[beta1 beta2 beta3]; a=[l1 l2 l3]; alpha=[pi/2 0 0];
 
 
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`numericalInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/numericalInverseKinematicsTest.py) (TM)
+
+
 (sec-models-manipulatorfrankaemikapanda)=
 ## Function: ManipulatorFrankaEmikaPanda
 
@@ -79,7 +82,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKine
 - **notes**: std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138, puma p560 limits, taken from Corke Visual Control of Robots; the inertias of links 0 and 2 are adjusted against Corke's data so that the principal moments fulfill the triangle inequality: link 0 has only I_yy = 0.35 there, the moment about its joint axis and the only one that acts, and gets I_xx = I_zz = 0.2; link 2 gets I_zz = 0.025 instead of 0.0125 (0.066 + 0.0125 < 0.086 is not physical)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`numericalInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/numericalInverseKinematicsTest.py) (TM)
 
 
 (sec-models-manipulatorstaublitx2-90l)=
@@ -109,7 +112,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 - **notes**: dhMode 'stdDH', 'modDHKK' or 'jointFrames' (per link 'jointType' and 'preHT', the link frame the joint frame) DH Parameter Information stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha) modDH = [alpha, dx, theta, rz] with used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d) used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r) Important note:  d(khali)=a(corke)  and r(khali)=d(corke)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`analyticInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/analyticInverseKinematicsTest.py) (TM), [`kinematicChainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicChainTest.py) (TM), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`analyticInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/analyticInverseKinematicsTest.py) (TM), [`kinematicChainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicChainTest.py) (TM), [`numericalInverseKinematicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/numericalInverseKinematicsTest.py) (TM), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM)
 
 
 (sec-models-linkdictmoddhkk2robot)=

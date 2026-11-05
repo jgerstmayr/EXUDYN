@@ -484,7 +484,158 @@ private:
 		configuration[2] = n == 3 ? 0 : Sign(omega[4] * omega[3].CrossProduct(omega[5]), 1e-10);
 	}
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//the numerical inverse kinematics by Levenberg-Marquardt (#3269); Robot.InverseKinematicsNumerical is the Python
+	//version of the same algorithm
+
+	//! the weighted 6D error of the tool frame at q from T: T.p - p(q), and the rotation vector of R_T R(q)^T; returns
+	//! E = e.e/2
+	Real IKPoseError(const Vector& q, const HomogeneousTransformation& T, const Real* weights, Real* e,
+		ResizableArray<HomogeneousTransformation>& jointFrames, ResizableArray<HomogeneousTransformation>& linkFrames) const
+	{
+		ComputeFrames(q, jointFrames, linkFrames);
+		HomogeneousTransformation Tq = linkFrames[numberOfLinks - 1] * toolHT;
+		Vector3D dp = T.GetTranslation() - Tq.GetTranslation();
+		Vector3D rotation = EXUlie::LogSO3Vector(T.GetRotation() * Tq.GetRotation().GetTransposed());
+		Real E = 0.;
+		for (Index k = 0; k < 3; k++)
+		{
+			e[k] = weights[k] * dp[k];
+			e[3 + k] = weights[3 + k] * rotation[k];
+		}
+		for (Index k = 0; k < 6; k++) { E += 0.5 * e[k] * e[k]; }
+		return E;
+	}
+
+	//! x of A x = b for the symmetric positive definite n x n matrix A (row by row), by Gaussian elimination with partial
+	//! pivoting; A and b are overwritten
+	static void IKSolve(Index n, std::vector<Real>& A, std::vector<Real>& b, Vector& x)
+	{
+		for (Index k = 0; k < n; k++)
+		{
+			Index pivot = k;
+			for (Index i = k + 1; i < n; i++) { if (fabs(A[i * n + k]) > fabs(A[pivot * n + k])) { pivot = i; } }
+			if (pivot != k)
+			{
+				for (Index j = 0; j < n; j++) { std::swap(A[k * n + j], A[pivot * n + j]); }
+				std::swap(b[k], b[pivot]);
+			}
+			for (Index i = k + 1; i < n; i++)
+			{
+				Real f = A[i * n + k] / A[k * n + k];
+				for (Index j = k; j < n; j++) { A[i * n + j] -= f * A[k * n + j]; }
+				b[i] -= f * b[k];
+			}
+		}
+		for (Index i = n - 1; i >= 0; i--)
+		{
+			Real sum = b[i];
+			for (Index j = i + 1; j < n; j++) { sum -= A[i * n + j] * x[j]; }
+			x[i] = sum / A[i * n + i];
+		}
+	}
+
 public:
+	//! the numerical inverse kinematics by Levenberg-Marquardt (#3269): q with ToolHT(q) equal to HT from qInitial, the
+	//! damping lambda of the weighted pose error E = e.e/2 adapted; restarts from qInitial shifted by the
+	//! fixed sequence pi (2 frac(k sqrt(p_i)) - 1) of the primes p_i for the revolute joints; returns (q, success,
+	//! iterations), q of the last start if no start converged
+	py::tuple InverseKinematicsNumerical(const py::object& HTpy, const py::object& qInitialPy, const py::object& weightsPy,
+		Real tolerance, Index maxIterations, Index restarts) const
+	{
+		const char* functionName = "KinematicChain.InverseKinematicsNumerical";
+		const Index n = numberOfLinks;
+		for (Index i = 0; i < n; i++)
+		{
+			if (parents[i] != i - 1) { PyError(STDstring(functionName) + ": the numerical inverse kinematics needs a serial chain", PyErrorType::valueError); }
+		}
+		HomogeneousTransformation T;
+		EPyUtils::HTFromPython(HTpy, T, "KinematicChain.InverseKinematicsNumerical: HT");
+		Vector qInitial = GetCoordinates(qInitialPy, functionName);
+		Real weights[6] = { 1., 1., 1., 1., 1., 1. };
+		if (!weightsPy.is_none())
+		{
+			SlimVectorBase<Real, 6> w = PyCUtilities::GetVector<6>(weightsPy, "KinematicChain.InverseKinematicsNumerical", "weights");
+			for (Index k = 0; k < 6; k++) { weights[k] = w[k]; }
+		}
+		const Real primes[16] = { 2., 3., 5., 7., 11., 13., 17., 19., 23., 29., 31., 37., 41., 43., 47., 53. };
+		ResizableArray<HomogeneousTransformation> jointFrames, linkFrames;
+		Vector q(n), qNew(n), dq(n);
+		Real e[6], eNew[6];
+		std::vector<Real> J(6 * n), A(n * n), g(n), Ad(n * n), gd(n);
+		Vector3D toolPoint = toolHT.GetTranslation(); //in the frame of the last link
+		Index iterations = 0;
+		bool success = false;
+		for (Index start = 0; start <= restarts && !success; start++)
+		{
+			for (Index i = 0; i < n; i++)
+			{
+				Real s = start * sqrt(primes[i % 16]);
+				q[i] = qInitial[i] + (jointTypes[i] < 3 ? EXUstd::pi * (2. * (s - std::floor(s)) - 1.) * (start > 0) : 0.);
+			}
+			Real E = IKPoseError(q, T, weights, e, jointFrames, linkFrames);
+			Real lambda = 1e-3;
+			for (Index it = 0; it < maxIterations; it++)
+			{
+				if (sqrt(2. * E) <= tolerance) { success = true; break; }
+				iterations++;
+				//the weighted Jacobian of the tool point and frame, frames of q from IKPoseError
+				Vector3D p = linkFrames[n - 1] * toolPoint;
+				for (Index i = 0; i < n; i++)
+				{
+					Vector3D axis = JointAxis(i, jointFrames[i]);
+					Vector3D velocity = axis;
+					Vector3D omega({ 0., 0., 0. });
+					if (jointTypes[i] < 3)
+					{
+						velocity = axis.CrossProduct(p - jointFrames[i].GetTranslation());
+						omega = axis;
+					}
+					for (Index k = 0; k < 3; k++)
+					{
+						J[k * n + i] = weights[k] * velocity[k];
+						J[(3 + k) * n + i] = weights[3 + k] * omega[k];
+					}
+				}
+				for (Index i = 0; i < n; i++)
+				{
+					g[i] = 0.;
+					for (Index k = 0; k < 6; k++) { g[i] += J[k * n + i] * e[k]; }
+					for (Index j = 0; j < n; j++)
+					{
+						A[i * n + j] = 0.;
+						for (Index k = 0; k < 6; k++) { A[i * n + j] += J[k * n + i] * J[k * n + j]; }
+					}
+				}
+				bool accepted = false;
+				while (!accepted && lambda <= 1e10)
+				{
+					Ad = A;
+					gd = g;
+					for (Index i = 0; i < n; i++) { Ad[i * n + i] += lambda; }
+					IKSolve(n, Ad, gd, dq);
+					qNew = q + dq;
+					Real ENew = IKPoseError(qNew, T, weights, eNew, jointFrames, linkFrames);
+					if (ENew < E)
+					{
+						q = qNew;
+						E = ENew;
+						for (Index k = 0; k < 6; k++) { e[k] = eNew[k]; }
+						lambda = EXUstd::Maximum(0.1 * lambda, 1e-12);
+						accepted = true;
+					}
+					else { lambda *= 10.; }
+				}
+				if (!accepted) { break; } //no descent: a local minimum
+				ComputeFrames(q, jointFrames, linkFrames);
+			}
+			if (!success && sqrt(2. * E) <= tolerance) { success = true; }
+		}
+		py::array_t<Real> qResult(n);
+		for (Index i = 0; i < n; i++) { qResult.mutable_data()[i] = q[i]; }
+		return py::make_tuple(qResult, success, iterations);
+	}
+
 	//! the configuration [shoulder, elbow, wrist] of the arm at q (#3265), each +1 or -1, 0 in the singular configuration
 	//! between them, from the joint axes at q: shoulder the sign of (W - p_1) . (omega_1 x omega_2), elbow of
 	//! omega_3 . (a x b), wrist of omega_5 . (omega_4 x omega_6); Robot.ArmConfiguration is the Python version

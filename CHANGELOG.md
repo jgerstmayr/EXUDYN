@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 364 | 1.13.379 |
+| 1.13 | Newborn | 365 | 1.13.380 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.380** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The numerical inverse kinematics by Levenberg-Marquardt in KinematicChain and Robot; InverseKinematicsNumerical deprecated (#3269)
+  - description: InverseKinematicsNumerical solved a static problem of a kinematic tree pulled to the goal, which failed for poses far from the start (12 of 40 random poses with SolveSafe). Decided: KinematicChain.InverseKinematicsNumerical (C++) and Robot.InverseKinematicsNumerical (Python), the same Levenberg-Marquardt iteration on the weighted 6D pose error with the damping E + lambda, restarts by a fixed sequence, returning (q, success, iterations); the class InverseKinematicsNumerical is deprecated and calls the C++ version.
+  - **notes:** exudyn.robotics: InverseKinematicsNumerical(HT, qInitial, weights, tolerance, maxIterations, restarts) of KinematicChain (C++, about 10 us) and Robot (Python) solve the inverse kinematics of any serial robot by Levenberg-Marquardt on the weighted position and rotation error, with restarts from a fixed sequence of starts, returning (q, success, iterations); the class InverseKinematicsNumerical is deprecated and calls the C++ version.
+  - date resolved: **2026-11-05 18:50**, date raised: 2026-11-05
 - **1.13.379** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Remove Robot.BuildFromDictionary of exudyn.robotics (#3266)
   - description: Robot.BuildFromDictionary built a robot from the dictionary structure of 2020 and was deprecated. Decided: removed, with its module variable buildFromDictionaryWarned and the commented calls in the test models.
   - **notes:** exudyn.robotics: Robot.BuildFromDictionary, deprecated, is removed.

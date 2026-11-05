@@ -6081,6 +6081,18 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - #3266: BuildFromDictionary, buildFromDictionaryWarned and the two commented calls in the test models removed.
 - #3267 (RG19.3.3) and #3268 (RG11.4.5) raised, open. Blending: design section 6.1, step RG19.5.2.
 
+<a id="rg19-6-4"></a>
+### RG19.6.4 — the Levenberg-Marquardt IK in KinematicChain and Robot (2026-11-05, #3269)
+- Decision 6 of the design (2026-11-05): InverseKinematicsNumerical replaced by the LM IK, the class kept for a
+  deprecation period, calling it.
+- KinematicChain.InverseKinematicsNumerical (C++: the Jacobian of the tool point in the loop, a Gaussian elimination
+  of the n x n system) and Robot.InverseKinematicsNumerical (Python); the class InverseKinematicsNumerical deprecated
+  (on __init__), Solve and SolveSafe (10 restarts) call the chain, InterpolateHTs kept.
+- First with the damping E + lambda; lambda alone converged more often and faster (design section 2.1). Restarts by a
+  fixed sequence, the same in C++ and Python, so that both give the same q.
+- numericalInverseKinematicsTest.py; systemContainerComputeOnlyTest.py, InverseKinematicsNumericalExample.py and
+  serialRobotInverseKinematics.py on the chain (the latter ends at the same joint angles as before).
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

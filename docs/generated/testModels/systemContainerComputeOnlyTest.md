@@ -12,7 +12,7 @@ You can view and download this file on Github: [systemContainerComputeOnlyTest.p
 #
 # Details:  A SystemContainer only to compute (#2259): SystemContainer(attachToRenderer=False) is not attached to the
 #           renderer, so the render window stays with the container of the model while another one computes, is
-#           destroyed, or computes the inverse kinematics of a robot; SC.renderer.Attach() attaches it later. The
+#           destroyed, or the inverse kinematics of a robot is computed; SC.renderer.Attach() attaches it later. The
 #           container the renderer is attached to is exu.special.currentRendererSystemContainer.
 #
 # Author:   Johannes Gerstmayr
@@ -23,7 +23,6 @@ You can view and download this file on Github: [systemContainerComputeOnlyTest.p
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.robotics import InverseKinematicsNumerical
 from exudyn.robotics.models import ManipulatorUR5
 from exudyn.robotics import Robot, RobotLink, RobotBase, RobotTool, StdDH2HT
 import gc
@@ -62,19 +61,17 @@ SC.renderer.Attach()
 del SCcompute, SCother
 gc.collect()
 
-#the inverse kinematics computes in a container of its own, which leaves the renderer with SC
+#the inverse kinematics needs no container (#3269) and leaves the renderer with SC
 robotDef = ManipulatorUR5()
 robot = Robot(base=RobotBase(HT=exu.HT()), tool=RobotTool(HT=exu.HT(translation=[0,0,0.1])))
 for link in robotDef['links']:
     robot.AddLink(RobotLink(mass=link['mass'], COM=link['COM'], inertia=link['inertia'],
                             localHT=StdDH2HT(link['stdDH']), PDcontrol=(1e3, 10)))
-ik = InverseKinematicsNumerical(robot)
 q0 = [0, -0.25, 0.25, 0.1, -0.2, 0.3]
 T = robot.LinkHT(q0)[-1] @ robot.tool.HT #the pose of the tool for q0 - reachable
-[q, success] = ik.Solve(T, q0=[0, -0.2, 0.2, 0, -0.1, 0.2])
+(q, success, iterations) = robot.GetKinematicChain().InverseKinematicsNumerical(T, [0, -0.2, 0.2, 0, -0.1, 0.2])
 checks += [success]
 checks += [RendererContainer() is SC or not hasRenderer]
-del ik
 gc.collect()
 checks += [RendererContainer() is SC or not hasRenderer]
 
