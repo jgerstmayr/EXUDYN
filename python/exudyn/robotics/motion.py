@@ -646,6 +646,7 @@ class Trajectory:
         self.globalMaxAccelerations = maxAccelerations
 
         self.profiles = []
+        self.blendTimes = [] #per profile, the overlap with the next one (#3274)
         self.initialized = False #this marks that the trajectory has been changed and is not initialized
         self.timesList = []
         if min(list(maxVelocities)+[1]) <= 0:
@@ -662,59 +663,129 @@ class Trajectory:
             return self.profiles[-1].GetFinalCoordinates()
 
 
-    def Add(self, profile):
+    def Add(self, profile, blendTimeWithNext=0.):
         """add successively profiles, using MotionProfile class; raises a ValueError if the profile starts at other
         coordinates than the trajectory ends, by more than jumpTolerance
+
+        Args:
+            profile: the profile, e.g. ProfilePTP, ProfilePolynomial5 or ProfileCartesianLinear
+            blendTimeWithNext: the time by which the next profile starts before this one ends (#3274): in this time, the
+                trajectory is the sum of the motions of both (the superposition of the two rest-to-rest profiles), so
+                that it passes near the end of this profile without stopping and reaches the end of the next one
+                exactly; at most the duration of this profile and of the next; e.g. the deceleration time of this
+                profile, if the next one accelerates in the same time, keeps the velocity of an axis that moves on in
+                the same direction; the summed velocities are not checked against limits; without a next profile it
+                has no effect; see GetBlendings and Evaluate(t, enableBlending)
         """
         self.initialized = False
         previousCoordinates = np.array(self.GetFinalCoordinates(), dtype=float)
-        ptp = profile.GetBasicProfile(self.GetTimes()[-1], previousCoordinates,
+        ptp = profile.GetBasicProfile(self._UnblendedTimes()[-1], previousCoordinates,
                                     self.globalMaxVelocities,self.globalMaxAccelerations)
         jump = np.max(np.abs(np.array(ptp.Evaluate(ptp.initialTime)[0]) - previousCoordinates)) #the check of jumps (#3272)
         if jump > self.jumpTolerance:
             raise ValueError('Trajectory.Add: the profile ' + type(profile).__name__ + ' (number ' + str(len(self.profiles))
                              + ') starts with a jump of ' + str(jump) + ' in the coordinates, more than jumpTolerance=' + str(self.jumpTolerance))
+        duration = ptp.finalTime - ptp.initialTime
+        if blendTimeWithNext < 0 or blendTimeWithNext > duration:
+            raise ValueError('Trajectory.Add: blendTimeWithNext=' + str(blendTimeWithNext) + ' must be in [0, ' + str(duration) + '], the duration of the profile')
+        if len(self.profiles) != 0 and self.blendTimes[-1] > duration:
+            raise ValueError('Trajectory.Add: the blendTimeWithNext=' + str(self.blendTimes[-1]) + ' of the profile before is longer than this profile, ' + str(duration))
         self.profiles+=[ptp]
+        self.blendTimes+=[blendTimeWithNext]
 
-    def GetTimes(self):
-        """return vector of times of start/end of profiles
-        """
+    def _UnblendedTimes(self):
+        """the times of start and end of the profiles, one after the other"""
         timesList = [self.initialTime]
         for profile in self.profiles:
             timesList+=[profile.finalTime]
         return timesList
 
+    def _Shifts(self):
+        """per profile, the time by which it starts earlier with blending: the blend times of the profiles before it"""
+        return np.concatenate([[0.], np.cumsum(self.blendTimes[:-1])]) if len(self.profiles) != 0 else np.zeros(0)
+
+    def GetTimes(self, enableBlending=True):
+        """return vector of times of start/end of profiles; with blending (#3274), the start time and the times at which
+        the profiles end, each earlier by the blend times of the profiles before it
+        """
+        if not enableBlending:
+            return self._UnblendedTimes()
+        shifts = self._Shifts()
+        return [self.initialTime] + [profile.finalTime - shifts[k] for (k, profile) in enumerate(self.profiles)]
+
+    def HasBlending(self):
+        """True if a profile, which has a next one, has a blendTimeWithNext"""
+        return any(b > 0 for b in self.blendTimes[:-1])
+
     def Initialize(self):
         """initialize some parameters for faster evaluation
         """
-        self.timesList = self.GetTimes();
+        self.timesList = self._UnblendedTimes()
+        self.shifts = self._Shifts()
+        self.hasBlending = self.HasBlending()
         self.initialized = True
 
-    def Evaluate(self, t):
+    def _EvaluateBlended(self, t, coordinate=None):
+        """the superposition of the profiles (#3274): the initial coordinates plus the displacement of each profile from
+        its start, at the time t shifted into the unblended time of the profile; the profiles that have not started add
+        nothing, those that have ended their whole displacement"""
+        def Values(profile, time):
+            return profile.Evaluate(time) if coordinate is None else profile.EvaluateCoordinate(time, coordinate)
+        initial = np.array(self.profiles[0].GetInitialCoordinates(), dtype=float)
+        s = initial.copy() if coordinate is None else initial[coordinate]
+        v = 0.*s
+        a = 0.*s
+        for (k, profile) in enumerate(self.profiles):
+            time = t + self.shifts[k]
+            if time <= profile.initialTime:
+                break #the later profiles start later
+            start = np.array(profile.GetInitialCoordinates(), dtype=float)
+            if time >= profile.finalTime:
+                end = np.array(profile.GetFinalCoordinates(), dtype=float)
+                s = s + ((end - start) if coordinate is None else (end - start)[coordinate])
+            else:
+                [sk, vk, ak] = Values(profile, time)
+                s = s + (sk - start if coordinate is None else sk - start[coordinate])
+                v = v + vk
+                a = a + ak
+        return [s, v, a]
+
+    def Evaluate(self, t, enableBlending=True):
         """return interpolation of trajectory for coordinates, velocities and accelerations at given time
+
+        Args:
+            t: the time
+            enableBlending: True: the profiles overlap by their blendTimeWithNext (#3274); False: one after the other, at rest at the end of each, to compare with the blended trajectory
 
         Returns:
             [s, v, a] as numpy arrays representing coordinates, velocities and accelerations
         """
         if not self.initialized: self.Initialize()
+        if enableBlending and self.hasBlending:
+            return self._EvaluateBlended(t)
 
         cnt = 0
         while cnt < len(self.timesList) and t > self.timesList[cnt]:
             cnt += 1
-        
+
         if cnt > 0 and cnt < len(self.timesList):
             return self.profiles[cnt-1].Evaluate(t)
         elif cnt == 0:
             u0 = self.profiles[0].GetInitialCoordinates()
             n = len(u0)
-            return [u0, np.zeros(n), np.zeros(n)] 
+            return [u0, np.zeros(n), np.zeros(n)]
         else:
             uL = self.profiles[-1].GetFinalCoordinates()
             n = len(uL)
             return [uL, np.zeros(n), np.zeros(n)]
 
-    def EvaluateCoordinate(self, t, coordinate):
+    def EvaluateCoordinate(self, t, coordinate, enableBlending=True):
         """return interpolation of trajectory for coordinate, including velocity and acceleration coordinate at given time
+
+        Args:
+            t: the time
+            coordinate: the index of the coordinate
+            enableBlending: True: the profiles overlap by their blendTimeWithNext (#3274); False: one after the other
 
         Returns:
             [s, v, a] being scalar position, velocity and acceleration
@@ -722,19 +793,55 @@ class Trajectory:
         Note:
             faster for single coordinate than Evaluate(...)
         """
-        if not self.initialized: 
+        if not self.initialized:
             self.Initialize()
+        if enableBlending and self.hasBlending:
+            return self._EvaluateBlended(t, coordinate)
 
         cnt = 0
         while cnt < len(self.timesList) and t > self.timesList[cnt]:
             cnt += 1
-        
+
         if cnt > 0 and cnt < len(self.timesList):
             return self.profiles[cnt-1].EvaluateCoordinate(t, coordinate)
         elif cnt == 0:
             return [self.profiles[0].GetInitialCoordinates()[coordinate], 0., 0.]
         else:
             return [self.profiles[-1].GetFinalCoordinates()[coordinate], 0., 0.]
+
+    def GetBlendings(self, kinematicChain=None, numberOfSamples=101):
+        """the blendings of the trajectory (#3274), one dict per profile with a blendTimeWithNext and a next profile:
+        'profile', its index; 'startTime' and 'endTime', the time in which the two profiles overlap; 'viaCoordinates',
+        the end of the profile, which the blended trajectory passes near; 'startDistance', the distance (2-norm of the
+        coordinates) from the via coordinates at which the blending starts; 'minDistance', the closest the blended
+        trajectory comes to them; with a kinematicChain (Robot.GetKinematicChain()), also 'viaToolPosition',
+        'toolStartDistance' and 'toolMinDistance', the same for the position of the tool
+
+        Args:
+            kinematicChain: an exudyn.cUtilities.KinematicChain of the robot, for the distances of the tool; None: the coordinates only
+            numberOfSamples: the number of times in each blending at which the distances are evaluated
+
+        Returns:
+            a list of dicts
+        """
+        if not self.initialized: self.Initialize()
+        blendings = []
+        times = self.GetTimes()
+        for k in range(len(self.profiles) - 1):
+            b = self.blendTimes[k]
+            if b <= 0:
+                continue
+            via = np.array(self.profiles[k].GetFinalCoordinates(), dtype=float)
+            qs = [self._EvaluateBlended(t)[0] for t in np.linspace(times[k+1] - b, times[k+1], numberOfSamples)]
+            distances = [cMath.norm(q - via) for q in qs]
+            d = {'profile': k, 'startTime': times[k+1] - b, 'endTime': times[k+1], 'viaCoordinates': via,
+                 'startDistance': distances[0], 'minDistance': min(distances)}
+            if kinematicChain is not None:
+                pVia = np.array(kinematicChain.ToolHT(via).translation)
+                toolDistances = [cMath.norm(np.array(kinematicChain.ToolHT(q).translation) - pVia) for q in qs]
+                d.update({'viaToolPosition': pVia, 'toolStartDistance': toolDistances[0], 'toolMinDistance': min(toolDistances)})
+            blendings += [d]
+        return blendings
 
     def __iter__(self):
         """iterator allows to use for x in trajectory: ... constructs

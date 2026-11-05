@@ -518,6 +518,12 @@ dict of `Robot.GetDictionary()` has a format version, `'dictionaryVersion'` (1),
 between two releases; `SetDictionary` reads the earlier versions and refuses a later one. `Robot.GetGlobalToolHT(q)`
 gives the tool frame in global coordinates; for many evaluations `GetKinematicChain().ToolHT(q)` is about 100 times
 faster. The example staubliTX2trajectories.py saves the robot with its meshes as HDF5 file (#3273).
+`Trajectory.Add(profile, blendTimeWithNext)` blends a profile with the next one: the next starts by this time earlier,
+and the trajectory is the sum of the motions of both, so that it passes near the via point without stopping and
+reaches the end of the next profile exactly. `Evaluate`, `EvaluateCoordinate` and `GetTimes` take `enableBlending`
+(default True) to compare with the profiles one after the other, and `GetBlendings(kinematicChain)` gives for each
+blending its times and the distances from the via point - of the coordinates and of the tool - at which it starts and
+by which it passes. The example staubliTX2blending.py shows a handling task with and without blending (#3274).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

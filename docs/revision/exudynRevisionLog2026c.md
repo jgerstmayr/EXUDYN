@@ -6167,6 +6167,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   second, measured by the maintainer).
 - The example saves the robot when the URDF data set is found and loads it from the file otherwise.
 
+<a id="rg19-5-2"></a>
+### RG19.5.2 — blending of the profiles of Trajectory, the example staubliTX2blending.py (2026-11-05, #3274)
+- Maintainer 2026-11-05: the superposition of design section 6.1 agreed; the name blendTimeWithNext (the blending
+  at the end of this profile and the start of the next) instead of blendTime; the distance at which blending occurs;
+  Evaluate and EvaluateCoordinate with and without blending (enableBlending=True); a demo of the TX2-90L with a
+  gripper, an L-shaped path in a horizontal plane with a cup in the middle, PTP and CP profiles mixed, twice (without,
+  then with blending), the two paths and the points drawn.
+- The profiles keep their times one after the other; with blending, profile k is evaluated at t plus the blend times
+  of the profiles before it, and the trajectory is the start plus the displacements of the profiles that have
+  started. Any profile works, also the Cartesian ones (their joint coordinates are superposed, so the tool leaves the
+  line in the blending).
+- GetTimes(enableBlending=True) gives the blended times (the starts of later profiles move); Add uses the unblended
+  ones internally. A blend time longer than this or the next profile raises.
+- GetBlendings: per blending the times, the via coordinates, the distance at which it starts and the closest
+  approach; with a KinematicChain the same for the tool. Two constant-acceleration profiles blended by the
+  deceleration time: the axis that moves on keeps its velocity; the TX2 tool starts 0.18 m before the via point and
+  passes it at 0.036 m.
+- staubliTX2blending.py: 3.7 s for the task without and 2.8 s with blendings of 0.3 s; trajectoryBlendingTest.py.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

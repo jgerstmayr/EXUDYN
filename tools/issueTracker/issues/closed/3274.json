@@ -1,0 +1,15 @@
+{
+  "number": 3274,
+  "title": "Trajectory: blending of profiles by superposition, and an example of the Staubli TX2-90L with and without blending",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "A Trajectory of exudyn.robotics.motion stops at the end of every profile; a robot cannot pass a via point without stopping. Decided (design section 6.1): superposition of the rest-to-rest profiles, Trajectory.Add(profile, blendTimeWithNext), the next profile starting by this time earlier; Evaluate, EvaluateCoordinate and GetTimes with enableBlending (default True) to compare with the unblended trajectory; GetBlendings with the distances from the via point at which blending starts and the closest approach, also of the tool; an example of the TX2-90L with a gripper on an L-shaped path into a cup, without and with blending, the paths drawn.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 22:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Trajectory.Add(profile, blendTimeWithNext) of exudyn.robotics.motion blends a profile with the next: the next starts by this time earlier and the trajectory is the sum of the motions of both, so that it passes near the via point without stopping and reaches the end of the next profile exactly; Evaluate, EvaluateCoordinate and GetTimes take enableBlending (default True); GetBlendings(kinematicChain) gives the times of each blending and the distances from the via point, of the coordinates and of the tool, at which it starts and by which it passes. The example staubliTX2blending.py: the TX2-90L with a gripper on an L-shaped path into a cup, without and with blending.",
+  "resolvedInVersion": "1.13.386"
+}

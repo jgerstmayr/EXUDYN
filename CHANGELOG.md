@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 370 | 1.13.385 |
+| 1.13 | Newborn | 371 | 1.13.386 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.386** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Trajectory: blending of profiles by superposition, and an example of the Staubli TX2-90L with and without blending (#3274)
+  - description: A Trajectory of exudyn.robotics.motion stops at the end of every profile; a robot cannot pass a via point without stopping. Decided (design section 6.1): superposition of the rest-to-rest profiles, Trajectory.Add(profile, blendTimeWithNext), the next profile starting by this time earlier; Evaluate, EvaluateCoordinate and GetTimes with enableBlending (default True) to compare with the unblended trajectory; GetBlendings with the distances from the via point at which blending starts and the closest approach, also of the tool; an example of the TX2-90L with a gripper on an L-shaped path into a cup, without and with blending, the paths drawn.
+  - **notes:** Trajectory.Add(profile, blendTimeWithNext) of exudyn.robotics.motion blends a profile with the next: the next starts by this time earlier and the trajectory is the sum of the motions of both, so that it passes near the via point without stopping and reaches the end of the next profile exactly; Evaluate, EvaluateCoordinate and GetTimes take enableBlending (default True); GetBlendings(kinematicChain) gives the times of each blending and the distances from the via point, of the coordinates and of the tool, at which it starts and by which it passes. The example staubliTX2blending.py: the TX2-90L with a gripper on an L-shaped path into a cup, without and with blending.
+  - date resolved: **2026-11-05 22:02**, date raised: 2026-11-05
 - **1.13.385** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robot: format version of the saved dict, GetGlobalToolHT, the TX2-90L saved in its example (#3273)
   - description: A dict of Robot.GetDictionary carries no version, so that a later change of its format cannot be read back; Robot has no function for the tool frame in global coordinates (GetToolHT is the local one); the example of the TX2-90L does not show how to save it. Decided: 'dictionaryVersion' starting at 1, raised by 1 when the format changes between two releases, SetDictionary converts earlier versions and refuses later ones; Robot.GetGlobalToolHT(q), with the note that the C++ chain is faster for many q; staubliTX2trajectories.py saves the robot with its meshes to Examples/solution and loads it from there without the data set.
   - **notes:** The dict of Robot.GetDictionary has the format version 'dictionaryVersion' (1), raised by 1 when the format changes between two releases; Robot.SetDictionary reads the earlier versions and refuses a later one. Robot.GetGlobalToolHT(q) gives the tool frame in global coordinates; for many q, GetKinematicChain().ToolHT(q) is about 100 times faster. The example staubliTX2trajectories.py saves the TX2-90L with its URDF meshes to solution/staubliTX2\_90L.h5 and loads it from there when the data set is missing.

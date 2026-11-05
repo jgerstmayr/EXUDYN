@@ -107,4 +107,4 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
   - `color`: as LoadURDFgraphics
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2blending.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2blending.py) (Ex), [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex)

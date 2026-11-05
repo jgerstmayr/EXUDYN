@@ -274,6 +274,7 @@ systemUtilitiesTest
 taskmanagerTest
 textureGraphicsTest
 textureTest
+trajectoryBlendingTest
 typeInformationTest
 userANCFBeam3DTest
 userANCFCable2DTest
