@@ -491,6 +491,15 @@ configuration)` returns only the solutions of a configuration, e.g. `ArmConfigur
 tolerance, maxIterations, restarts)` of KinematicChain and Robot solves the inverse kinematics of any serial robot by
 Levenberg-Marquardt, in about 10 us in C++ and with restarts from a fixed sequence of starts, returning `(q, success,
 iterations)`; the class `InverseKinematicsNumerical` of `exudyn.robotics` is deprecated and calls it (#3269).
+`Robot(q0, enableEndStops, frictionRegularization)` and the `RobotLink` arguments `jointLimits`, `viscousFriction`,
+`coulombFriction`, `endStopStiffness` and `endStopDamping` (for all links: `SetJointFriction`, `SetEndStops`) give the
+initial configuration, the joint friction and the end stops of both models, `CreateKinematicTree` and
+`CreateRedundantCoordinateMBS`, by a `CoordinateSpringDamperExt` on the joint coordinate; `PreStepControl` controls
+both models, and `Robot.AddSensors(mbs, outputVariables)` adds the joint coordinates, velocities and drive forces as one
+vector each. The redundant model measures each joint coordinate by a relative coordinate marker; its torsional
+spring-dampers act about the joint axis also for `'Rx'` and `'Ry'`, and its first joint takes the translation of
+`preHT`. `MarkerBodiesRelativeRotationCoordinate` has `localRotation0` and `localRotation1`, the frames between which
+it measures. `LinkDict2Robot` passes the `jointLimits` of the models (#3270).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

@@ -1750,7 +1750,9 @@ items = {
       'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number of NodeGenericData with 1 coordinate which contains previous angle for continuation of angles (initialize accordingly if needed); if node is not supplied, angles will have jump outside :math:`\\pm \\pi`'},
       'localPosition0': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to'},
       'localPosition1': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to'},
-      'axis0': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[1.,0.,0.]', 'mustBeGiven': False, 'description': 'axis defined in body 0, along which the relative rotation is measured'},
+      'axis0': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[1.,0.,0.]', 'mustBeGiven': False, 'description': 'axis defined in the frame of marker 0 (body 0 turned by localRotation0), along which the relative rotation is measured'},
+      'localRotation0': {'type': 'Matrix3D', 'size': '9', 'range': '', 'default': 'IIDiagMatrix(rowsColumns=3,value=1)', 'mustBeGiven': False, 'description': 'rotation of the frame of marker 0 relative to body 0; the relative rotation is measured between the two marker frames, e.g. the frames of a robot joint whose links have other frames'},
+      'localRotation1': {'type': 'Matrix3D', 'size': '9', 'range': '', 'default': 'IIDiagMatrix(rowsColumns=3,value=1)', 'mustBeGiven': False, 'description': 'rotation of the frame of marker 1 relative to body 1'},
       'offset': {'type': 'Real', 'size': '', 'range': '', 'default': '0.', 'mustBeGiven': False, 'description': 'rotation offset [SI:1] subtracted from the measured rotation; can be used to change the zero rotation'},
     },
     'visualization': {

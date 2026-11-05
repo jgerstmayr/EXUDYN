@@ -216,6 +216,17 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   rad from stretched) converges slowly from every start (3000 iterations). The class InverseKinematicsNumerical
   (deprecated) calls the chain; serialRobotInverseKinematics.py gives the same joint angles at the end as with the
   static solution.
+- **Friction and end stops** (#3270): per joint up to two CoordinateSpringDamperExt against a ground coordinate - the
+  regularized friction (damping = viscous, dynamicFrictionForce = Coulomb, frictionProportionalZone =
+  Robot.frictionRegularization) and the end stops (useLimitStops, with a data node); one object for both is refused by
+  the Ext (limit stops switch it to the bristle model, which needs a sticking stiffness). The tree acts on its node
+  coordinates (relative to the reference, so the limits are shifted by -qRef). MarkerBodiesRelativeRotationCoordinate
+  measured between the body frames, which equals the joint angle only if preHT and localHT turn about the joint axis -
+  not for DH robots (alpha = 90 deg): it got localRotation0/1, the joint frames in the bodies. Found on the way: the
+  TorsionalSpringDamper of the redundant model acted about z also for 'Rx'/'Ry' joints, and its first joint ignored the
+  translation of preHT (the TX2-90L could not be simulated in the redundant model); both fixed. The Puma560 and the
+  TX2-90L with q0, friction, an end stop and the static compensation: the two models agree to 1e-6 in the joint
+  coordinates (robotFrictionEndStopsTest.py).
 - **After #3255**: the IK of a pose `LinkHT(q)[-1] * tool.HT` from 0.1 / 0.5 rad off: UR5 39 / 35 of 40, Puma560 39 /
   31 of 40; SolveSafe, which now interpolates, 12 of 40 for both (from 8 to 10) at 6 to 8 ms - the random poses are far
   apart, a robust numerical IK is the LM of RG19.6. The Panda of models.py: the modified DH parameters, the tool (the
@@ -314,8 +325,8 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
 
 2. **Joint control**: the robot keeps the trajectory and the compensation, `robot.SetControl(trajectory,
    compensation=None | 'static')`, and `robot.PreStepControl(mbs, t)` is passed directly,
-   `mbs.SetPreStepUserFunction(robot.PreStepControl)` (done for the kinematic tree, #3262; the redundant model in
-   RG19.4).
+   `mbs.SetPreStepUserFunction(robot.PreStepControl)` (done for the kinematic tree, #3262, and the redundant model,
+   #3270).
 3. **Friction and end stops**: per link in RobotLink (viscous and Coulomb friction, lower and upper stop with
    stiffness and damping), by a CoordinateSpringDamperExt on the joint coordinate (the node coordinate of the kinematic
    tree; MarkerBodiesRelativeRotationCoordinate between the bodies of the redundant model). `Robot(...,
@@ -353,7 +364,10 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   graphics (#3263); .2 done: one STL reader without numpy-stl (#3264); .3 open: a Robot saved and loaded as a dict and
   HDF5 file (#3267), its textures with the images in dicts of RG11.4.5 (#3268).
 - RG19.4 Revise Robot: q0, the control description with friction and end stops for both models, SetControl and
-  PreStepControl, AddSensors, the static (and dynamic) compensation from the kinematic tree.
+  PreStepControl, AddSensors, the static (and dynamic) compensation from the kinematic tree; .1 done: q0, friction and
+  end stops per link by CoordinateSpringDamperExt in both models (in the redundant model on a relative coordinate
+  marker, MarkerBodiesRelativeRotationCoordinate with localRotation0/1), PreStepControl and AddSensors for both, the
+  two models equal to 1e-6 (#3270); open: the dynamic compensation.
 - RG19.5 Extend the trajectories: quintic and cubic polynomials, linear profiles completed, Cartesian linear, circular,
   screw and spline paths, mixed in Trajectory with the check of jumps.
 - RG19.6 Inverse kinematics: analytic for 6R with a spherical wrist, numerical by Levenberg-Marquardt; the two tests

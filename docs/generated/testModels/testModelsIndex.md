@@ -177,6 +177,7 @@ rigidBodyAsUserFunctionTest
 rigidBodyCOMtest
 rigidBodySpringDamperIntrinsic
 RigidPendulumTest
+robotFrictionEndStopsTest
 robotTrajectoryProfilesTest
 rollingCoinPenaltyTest
 rollingCoinTest

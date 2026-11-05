@@ -6093,6 +6093,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - numericalInverseKinematicsTest.py; systemContainerComputeOnlyTest.py, InverseKinematicsNumericalExample.py and
   serialRobotInverseKinematics.py on the chain (the latter ends at the same joint angles as before).
 
+<a id="rg19-4-1"></a>
+### RG19.4.1 — q0, friction and end stops in both models of Robot, the control and the sensors of the redundant model (2026-11-05, #3270)
+- Decisions 2 and 3 of the design (2026-11-05): friction and end stops per link by a CoordinateSpringDamperExt on the
+  joint coordinate, the node coordinate of the tree and a relative coordinate marker between the bodies of the
+  redundant model; Robot(..., enableEndStops=False); the global friction by a function of Robot (SetJointFriction).
+- Friction and stops in two Ext objects per joint: one with both is refused (the stops switch it to the bristle
+  model). SetEndStops sets stiffness and damping for all links with limits; a limit without a stiffness raises when
+  the stops are enabled.
+- MarkerBodiesRelativeRotationCoordinate measured between the body frames, which is the joint angle only if preHT and
+  localHT turn about the joint axis; localRotation0/1 added (C++), the joint frames in the bodies.
+- Found and fixed in CreateRedundantCoordinateMBS: the TorsionalSpringDamper acted about z for 'Rx'/'Ry' joints, the
+  first joint ignored the translation of preHT (the TX2-90L failed); the spring-dampers start at q0.
+- q0: the initial coordinates of the tree node, the initial pose of the bodies (initialRotationMatrix in the body
+  frame), the initial offsets of the PD control.
+- PreStepControl and AddSensors act on the model created last; the sensors give one vector over the joints
+  (SensorBody of the tree, SensorUserFunction otherwise).
+- robotFrictionEndStopsTest.py: the TX2-90L and a robot with a prismatic joint, both models agree to 2e-6.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

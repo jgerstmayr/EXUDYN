@@ -8882,7 +8882,11 @@ class MarkerBodiesRelativeRotationCoordinate:
 
         localPosition1: local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to; type: [float,float,float]
 
-        axis0: axis defined in body 0, along which the relative rotation is measured; type: [float,float,float]
+        axis0: axis defined in the frame of marker 0 (body 0 turned by localRotation0), along which the relative rotation is measured; type: [float,float,float]
+
+        localRotation0: rotation of the frame of marker 0 relative to body 0; the relative rotation is measured between the two marker frames, e.g. the frames of a robot joint whose links have other frames; type: array_like
+
+        localRotation1: rotation of the frame of marker 1 relative to body 1; type: array_like
 
         offset: rotation offset [SI:1] subtracted from the measured rotation; can be used to change the zero rotation; type: float
 
@@ -8892,13 +8896,15 @@ class MarkerBodiesRelativeRotationCoordinate:
         Marker has/provides the following types: ``Node``, ``Object``, ``Body``, ``Coordinate``
 
     """
-    def __init__(self, name = '', bodyNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], axis0 = [1.,0.,0.], offset = 0., visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], axis0 = [1.,0.,0.], localRotation0 = IIDiagMatrix(rowsColumns=3,value=1), localRotation1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., visualization = {'show': True}):
         self.name = name
         self.bodyNumbers = copy.copy(bodyNumbers)
         self.nodeNumber = nodeNumber
         self.localPosition0 = np.array(localPosition0)
         self.localPosition1 = np.array(localPosition1)
         self.axis0 = np.array(axis0)
+        self.localRotation0 = np.array(localRotation0)
+        self.localRotation1 = np.array(localRotation1)
         self.offset = offset
         self.visualization = CopyDictLevel1(visualization)
 
@@ -8910,6 +8916,8 @@ class MarkerBodiesRelativeRotationCoordinate:
         yield 'localPosition0', self.localPosition0
         yield 'localPosition1', self.localPosition1
         yield 'axis0', self.axis0
+        yield 'localRotation0', self.localRotation0
+        yield 'localRotation1', self.localRotation1
         yield 'offset', self.offset
         yield 'Vshow', dict(self.visualization)["show"]
 

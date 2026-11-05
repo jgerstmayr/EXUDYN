@@ -123,6 +123,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectKinematicTree: jointOffsets(class,dict,set) linkCOMs(class,dict,set) linkForces(class,dict,set) linkTorques(class,dict,set)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError !ExudynValueError !ExudynTypeError !ExudynValueError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError
+  MarkerBodiesRelativeRotationCoordinate: localRotation0(class,dict,set) localRotation1(class,dict,set)
   ObjectConnectorRigidBodySpringDamper: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectConnectorTorsionalSpringDamper: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectFFRFreducedOrder: centerOfMassTilde(class,dict,set) inertia(class,dict,set) physicsCenterOfMassTilde(set) physicsInertia(set)
@@ -1268,7 +1269,7 @@ outcome: str=default
   LoadForceVector: Vshow(omit) bodyFixed(omit) loadVector(omit) loadVectorUserFunction(omit) markerNumber(omit)
   LoadMassProportional: Vshow(omit) loadVector(omit) loadVectorUserFunction(omit) markerNumber(omit)
   LoadTorqueVector: Vshow(omit) bodyFixed(omit) loadVector(omit) loadVectorUserFunction(omit) markerNumber(omit)
-  MarkerBodiesRelativeRotationCoordinate: Vshow(omit) axis0(omit) bodyNumbers(omit) localPosition0(omit) localPosition1(omit) nodeNumber(omit) offset(omit)
+  MarkerBodiesRelativeRotationCoordinate: Vshow(omit) axis0(omit) bodyNumbers(omit) localPosition0(omit) localPosition1(omit) localRotation0(omit) localRotation1(omit) nodeNumber(omit) offset(omit)
   MarkerBodiesRelativeTranslationCoordinate: Vshow(omit) axis0(omit) bodyNumbers(omit) localPosition0(omit) localPosition1(omit) offset(omit)
   MarkerBodyBeamShape: Vshow(omit) bodyNumber(omit)
   MarkerBodyCable2DCoordinates: Vshow(omit) bodyNumber(omit)

@@ -33,7 +33,8 @@ void CMarkerBodiesRelativeRotationCoordinate::GetVelocity(const CSystemData& cSy
 void CMarkerBodiesRelativeRotationCoordinate::GetRotationMatrix(const CSystemData& cSystemData, Matrix3D& rotationMatrix, ConfigurationType configuration) const
 {
 
-	rotationMatrix = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumbers[0]]))->GetRotationMatrix(parameters.localPosition0, configuration);
+	rotationMatrix = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumbers[0]]))->GetRotationMatrix(parameters.localPosition0, configuration)
+		* parameters.localRotation0; //the frame of marker 0, in which axis0 is given
 }
 
 void CMarkerBodiesRelativeRotationCoordinate::GetAngularVelocity(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration) const
@@ -55,10 +56,9 @@ void CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerData(const CSystemDat
 	((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumbers[0]]))->ComputeRigidBodyMarkerData(parameters.localPosition0, computeJacobian, markerData);
 	//Vector3D position0 = markerData.position;
 	//Vector3D velocity0 = markerData.velocity;
-	Matrix3D A0 = markerData.orientation;
-	Vector3D angularVelocityLocal0 = markerData.angularVelocityLocal;
+	Vector3D angularVelocity0 = markerData.orientation * markerData.angularVelocityLocal; //global
+	Matrix3D A0 = markerData.orientation * parameters.localRotation0; //the marker frames: the bodies turned by localRotation0/1
 	Vector3D globalAxis0 = A0 * parameters.axis0;
-	Vector3D globalAxis0_t = markerData.orientation * (angularVelocityLocal0.CrossProduct(parameters.axis0) );
 
 	Index body0ODE2 = markerData.rotationJacobian.NumberOfColumns();
 	Index body1ODE2 = cSystemData.GetCObjects()[parameters.bodyNumbers[1]]->GetODE2Size();
@@ -80,8 +80,8 @@ void CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerData(const CSystemDat
 	((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumbers[1]]))->ComputeRigidBodyMarkerData(parameters.localPosition1, computeJacobian, markerData);
 	//Vector3D position1 = markerData.position;
 	//Vector3D velocity1 = markerData.velocity;
-	Matrix3D A1 = markerData.orientation;
-	Vector3D angularVelocityLocal1 = markerData.angularVelocityLocal;
+	Vector3D angularVelocity1 = markerData.orientation * markerData.angularVelocityLocal; //global
+	Matrix3D A1 = markerData.orientation * parameters.localRotation1;
 
 	if (computeJacobian)
 	{
@@ -108,7 +108,7 @@ void CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerData(const CSystemDat
 		value = EXUmath::ContinuousAngle(value, anglePrev);
 	}
 
-	Real value_t = globalAxis0 * (A1 * angularVelocityLocal1 - A0 * angularVelocityLocal0); //relative angular velocity around global axis0
+	Real value_t = globalAxis0 * (angularVelocity1 - angularVelocity0); //relative angular velocity around global axis0
 
 	markerData.vectorValue.SetVector({ value }); //relative rotation
 	markerData.vectorValue_t.SetVector({ value_t }); 

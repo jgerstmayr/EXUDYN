@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-29  18:30:26 (last modified)
+* @date         2026-11-05  20:21:38 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,7 +31,9 @@ public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number of NodeGenericData with 1 coordinate which contains previous angle for continuation of angles (initialize accordingly if needed); if node is not supplied, angles will have jump outside \f$\pm \pi\f$
     Vector3D localPosition0;                      //!< AUTO: local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to
     Vector3D localPosition1;                      //!< AUTO: local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to
-    Vector3D axis0;                               //!< AUTO: axis defined in body 0, along which the relative rotation is measured
+    Vector3D axis0;                               //!< AUTO: axis defined in the frame of marker 0 (body 0 turned by localRotation0), along which the relative rotation is measured
+    Matrix3D localRotation0;                      //!< AUTO: rotation of the frame of marker 0 relative to body 0; the relative rotation is measured between the two marker frames, e.g. the frames of a robot joint whose links have other frames
+    Matrix3D localRotation1;                      //!< AUTO: rotation of the frame of marker 1 relative to body 1
     Real offset;                                  //!< AUTO: rotation offset [SI:1] subtracted from the measured rotation; can be used to change the zero rotation
     //! AUTO: default constructor with parameter initialization
     CMarkerBodiesRelativeRotationCoordinateParameters()
@@ -41,6 +43,8 @@ public: // AUTO:
         localPosition0 = Vector3D({0.,0.,0.});
         localPosition1 = Vector3D({0.,0.,0.});
         axis0 = Vector3D({1.,0.,0.});
+        localRotation0 = EXUmath::unitMatrix3D;
+        localRotation1 = EXUmath::unitMatrix3D;
         offset = 0.;
     };
 };

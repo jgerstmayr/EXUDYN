@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 365 | 1.13.380 |
+| 1.13 | Newborn | 366 | 1.13.381 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.381** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robot: q0, joint friction and end stops in both models, the control and the sensors of the redundant model (#3270)
+  - description: The class Robot of exudyn.robotics has no initial configuration other than the reference, no friction and no end stops, and PreStepControl works only for the kinematic tree; the redundant coordinate model has no measured joint coordinate (its TorsionalSpringDamper acts about the z-axis only, and its first joint ignores the translation of preHT). Decided: Robot(q0, enableEndStops, frictionRegularization); per RobotLink jointLimits, viscousFriction, coulombFriction, endStopStiffness, endStopDamping, set for all links by SetJointFriction and SetEndStops, realized by CoordinateSpringDamperExt on the joint coordinate of both models (the node coordinate of the tree, a relative coordinate marker between the bodies of the redundant model); MarkerBodiesRelativeRotationCoordinate gets localRotation0/1 to measure between joint frames; PreStepControl and AddSensors (joint coordinates, velocities and drive forces as one vector each) for both models; LinkDict2Robot passes the joint limits.
+  - **notes:** Robot of exudyn.robotics: q0 (initial joint coordinates), enableEndStops and frictionRegularization; RobotLink jointLimits, viscousFriction, coulombFriction, endStopStiffness, endStopDamping, for all links Robot.SetJointFriction and SetEndStops; both CreateKinematicTree and CreateRedundantCoordinateMBS realize them by CoordinateSpringDamperExt on the joint coordinate. PreStepControl controls both models, Robot.AddSensors adds the joint coordinates, velocities and drive forces as one vector each. MarkerBodiesRelativeRotationCoordinate has localRotation0 and localRotation1. In the redundant model the torsional spring-dampers act about the joint axis also for Rx and Ry joints, and the first joint takes the translation of preHT. LinkDict2Robot passes the joint limits of the models.
+  - date resolved: **2026-11-05 20:39**, date raised: 2026-11-05
 - **1.13.380** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The numerical inverse kinematics by Levenberg-Marquardt in KinematicChain and Robot; InverseKinematicsNumerical deprecated (#3269)
   - description: InverseKinematicsNumerical solved a static problem of a kinematic tree pulled to the goal, which failed for poses far from the start (12 of 40 random poses with SolveSafe). Decided: KinematicChain.InverseKinematicsNumerical (C++) and Robot.InverseKinematicsNumerical (Python), the same Levenberg-Marquardt iteration on the weighted 6D pose error with the damping E + lambda, restarts by a fixed sequence, returning (q, success, iterations); the class InverseKinematicsNumerical is deprecated and calls the C++ version.
   - **notes:** exudyn.robotics: InverseKinematicsNumerical(HT, qInitial, weights, tolerance, maxIterations, restarts) of KinematicChain (C++, about 10 us) and Robot (Python) solve the inverse kinematics of any serial robot by Levenberg-Marquardt on the weighted position and rotation error, with restarts from a fixed sequence of starts, returning (q, success, iterations); the class InverseKinematicsNumerical is deprecated and calls the C++ version.

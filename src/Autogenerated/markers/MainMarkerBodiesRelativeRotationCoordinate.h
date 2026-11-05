@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-05  20:21:38 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,6 +113,8 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "localPosition0")) { EPyUtils::FromPython(d["localPosition0"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0); }
         if (EPyUtils::DictItemExists(d, "localPosition1")) { EPyUtils::FromPython(d["localPosition1"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1); }
         if (EPyUtils::DictItemExists(d, "axis0")) { EPyUtils::FromPython(d["axis0"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0); }
+        if (EPyUtils::DictItemExists(d, "localRotation0")) { EPyUtils::FromPython<Real, 3, 3>(d["localRotation0"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().localRotation0); }
+        if (EPyUtils::DictItemExists(d, "localRotation1")) { EPyUtils::FromPython<Real, 3, 3>(d["localRotation1"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().localRotation1); }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().offset, "MarkerBodiesRelativeRotationCoordinate.offset"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerBodiesRelativeRotationCoordinate->GetShow(), "MarkerBodiesRelativeRotationCoordinate.Vshow"); }
@@ -128,6 +130,8 @@ public: // AUTO:
         d["localPosition0"] = EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0);
         d["localPosition1"] = EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1);
         d["axis0"] = EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0);
+        d["localRotation0"] = EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localRotation0);
+        d["localRotation1"] = EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localRotation1);
         d["offset"] = (Real)cMarkerBodiesRelativeRotationCoordinate->GetParameters().offset;
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationMarkerBodiesRelativeRotationCoordinate->GetShow();
@@ -143,6 +147,8 @@ public: // AUTO:
         else if (parameterName.compare("localPosition0") == 0) { return EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0); } //! AUTO: get parameter
         else if (parameterName.compare("localPosition1") == 0) { return EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1); } //! AUTO: get parameter
         else if (parameterName.compare("axis0") == 0) { return EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0); } //! AUTO: get parameter
+        else if (parameterName.compare("localRotation0") == 0) { return EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localRotation0); } //! AUTO: get parameter
+        else if (parameterName.compare("localRotation1") == 0) { return EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localRotation1); } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cMarkerBodiesRelativeRotationCoordinate->GetParameters().offset); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerBodiesRelativeRotationCoordinate->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("MarkerBodiesRelativeRotationCoordinate::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
@@ -159,6 +165,8 @@ public: // AUTO:
         else if (parameterName.compare("localPosition0") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0); } //! AUTO: set parameter
         else if (parameterName.compare("localPosition1") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1); } //! AUTO: set parameter
         else if (parameterName.compare("axis0") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0); } //! AUTO: set parameter
+        else if (parameterName.compare("localRotation0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().localRotation0); } //! AUTO: set parameter
+        else if (parameterName.compare("localRotation1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().localRotation1); } //! AUTO: set parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().offset, "MarkerBodiesRelativeRotationCoordinate.offset"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerBodiesRelativeRotationCoordinate->GetShow(), "MarkerBodiesRelativeRotationCoordinate.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerBodiesRelativeRotationCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user

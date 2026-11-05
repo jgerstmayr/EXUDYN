@@ -1,0 +1,15 @@
+{
+  "number": 3270,
+  "title": "Robot: q0, joint friction and end stops in both models, the control and the sensors of the redundant model",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "The class Robot of exudyn.robotics has no initial configuration other than the reference, no friction and no end stops, and PreStepControl works only for the kinematic tree; the redundant coordinate model has no measured joint coordinate (its TorsionalSpringDamper acts about the z-axis only, and its first joint ignores the translation of preHT). Decided: Robot(q0, enableEndStops, frictionRegularization); per RobotLink jointLimits, viscousFriction, coulombFriction, endStopStiffness, endStopDamping, set for all links by SetJointFriction and SetEndStops, realized by CoordinateSpringDamperExt on the joint coordinate of both models (the node coordinate of the tree, a relative coordinate marker between the bodies of the redundant model); MarkerBodiesRelativeRotationCoordinate gets localRotation0/1 to measure between joint frames; PreStepControl and AddSensors (joint coordinates, velocities and drive forces as one vector each) for both models; LinkDict2Robot passes the joint limits.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 20:39",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Robot of exudyn.robotics: q0 (initial joint coordinates), enableEndStops and frictionRegularization; RobotLink jointLimits, viscousFriction, coulombFriction, endStopStiffness, endStopDamping, for all links Robot.SetJointFriction and SetEndStops; both CreateKinematicTree and CreateRedundantCoordinateMBS realize them by CoordinateSpringDamperExt on the joint coordinate. PreStepControl controls both models, Robot.AddSensors adds the joint coordinates, velocities and drive forces as one vector each. MarkerBodiesRelativeRotationCoordinate has localRotation0 and localRotation1. In the redundant model the torsional spring-dampers act about the joint axis also for Rx and Ry joints, and the first joint takes the translation of preHT. LinkDict2Robot passes the joint limits of the models.",
+  "resolvedInVersion": "1.13.381"
+}

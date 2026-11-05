@@ -629,7 +629,8 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
         updated robot class
 
     Note:
-        dhMode 'stdDH', 'modDHKK' or 'jointFrames' (per link 'jointType' and 'preHT', the link frame the joint frame)
+        dhMode 'stdDH', 'modDHKK' or 'jointFrames' (per link 'jointType' and 'preHT', the link frame the joint frame);
+        the optional 'jointLimits' of a link become RobotLink jointLimits
         DH Parameter Information
         stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)
         modDH = [alpha, dx, theta, rz] with
@@ -665,7 +666,8 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
                                inertia=link['inertia'], 
                                localHT= rob.StdDH2HT(link['stdDH']), 
                                PDcontrol = PDcontrol, 
-                               visualization=rob.VRobotLink(linkColor=graphics.colorList[i])
+                               visualization=rob.VRobotLink(linkColor=graphics.colorList[i]),
+                               jointLimits=link.get('jointLimits'),
                                 ))
     elif dhMode=='modDHKK':
         #the inertia parameters are w.r.t. the frames of the modified DH parameters (#3255)
@@ -680,7 +682,8 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
                                preHT=preHT,
                                localHT=localHT,
                                PDcontrol = PDcontrol,
-                               visualization=rob.VRobotLink(linkColor=graphics.colorList[i])
+                               visualization=rob.VRobotLink(linkColor=graphics.colorList[i]),
+                               jointLimits=link.get('jointLimits'),
                                 ))
     elif dhMode=='jointFrames': #the joint type and the translation of each joint frame, as in a URDF (#3262)
         for i, link in enumerate(robotLinkDict['links']):
@@ -693,7 +696,8 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
                                jointType=link['jointType'],
                                preHT=link['preHT'],
                                PDcontrol = PDcontrol,
-                               visualization=rob.VRobotLink(linkColor=graphics.colorList[i])
+                               visualization=rob.VRobotLink(linkColor=graphics.colorList[i]),
+                               jointLimits=link.get('jointLimits'),
                                 ))
     else:
         raise ValueError('LinkDict2Robot: dhMode not set in robotLinkDict')

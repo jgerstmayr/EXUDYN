@@ -24,7 +24,9 @@ The parameters of the item; in a dictionary, its type is 'BodiesRelativeRotation
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number of NodeGenericData with 1 coordinate which contains previous angle for continuation of angles (initialize accordingly if needed); if node is not supplied, angles will have jump outside $\pm \pi$ |
 | **localPosition0** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{m_0}{\pv}_0$) local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to |
 | **localPosition1** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{m_1}{\pv}_1$) local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to |
-| **axis0** | Vector3D | 3 | [1.,0.,0.] | (symbol: $\LU{m_0}{\av}_0$) axis defined in body 0, along which the relative rotation is measured |
+| **axis0** | Vector3D | 3 | [1.,0.,0.] | (symbol: $\LU{m_0}{\av}_0$) axis defined in the frame of marker 0 (body 0 turned by localRotation0), along which the relative rotation is measured |
+| **localRotation0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{b_0,m_0}{\Rot}$) rotation of the frame of marker 0 relative to body 0; the relative rotation is measured between the two marker frames, e.g. the frames of a robot joint whose links have other frames |
+| **localRotation1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{b_1,m_1}{\Rot}$) rotation of the frame of marker 1 relative to body 1 |
 | **offset** | Real |  | 0. | (symbol: $x_\mathrm{off}$) rotation offset [SI:1] subtracted from the measured rotation; can be used to change the zero rotation |
 | **visualization** | VMarkerBodiesRelativeRotationCoordinate |  |  | parameters for visualization of item |
 
@@ -44,7 +46,9 @@ Drawn as [all markers](#sec-drawing-markers).
 
 The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
 depending on local positions $\LU{m_0}{\pv}_0$ and $\LU{m_1}{\pv}_1$,
-and marker orientations $\LU{0,m_0}{\Rot}_{m0}$ and $\LU{0,m_1}{\Rot}_{m1}$.
+and marker orientations $\LU{0,m_0}{\Rot}_{m0} = \LU{0,b_0}{\Rot}_{b0} \LU{b_0,m_0}{\Rot}$ and
+$\LU{0,m_1}{\Rot}_{m1} = \LU{0,b_1}{\Rot}_{b1} \LU{b_1,m_1}{\Rot}$, the orientations of the bodies turned by
+`localRotation0` and `localRotation1`.
 From the given axis `axis0`, we compute an orthonormal basis (orthonormal to axis0) relative to marker $m_0$,
 
 $$

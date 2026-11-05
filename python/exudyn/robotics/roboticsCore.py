@@ -256,7 +256,8 @@ class VRobotLink:
 class RobotLink:
     """class to define one link of a robot
     """
-    def __init__(self, mass, COM, inertia, localHT=None, jointType='Rz', parent=-2, preHT=None, PDcontrol=(None,None), visualization=VRobotLink()):
+    def __init__(self, mass, COM, inertia, localHT=None, jointType='Rz', parent=-2, preHT=None, PDcontrol=(None,None), visualization=VRobotLink(),
+                 jointLimits=None, viscousFriction=0., coulombFriction=0., endStopStiffness=0., endStopDamping=0.):
         """initialize robot link
 
         Args:
@@ -269,6 +270,11 @@ class RobotLink:
             parent: for building robots as kinematic tree; use '-2' to automatically set parents for serial robot (on fixed base), use '-1' for ground-parent and any other 0-based index for connection to parent link
             PDcontrol: tuple of P and D control values, defining position (rotation) proportional value P and velocitiy proportional value D
             visualization: VRobotLink structure containing options for drawing of link and joints; see class VRobotLink
+            jointLimits: None or [lower, upper], the range of the joint coordinate (rad or m); the end stops of the models of Robot(enableEndStops=True) act outside of it
+            viscousFriction: the viscous friction of the joint, a torque (force) per joint velocity, in Nm/(rad/s) or N/(m/s)
+            coulombFriction: the Coulomb friction torque (force) of the joint, in Nm or N, regularized below Robot.frictionRegularization
+            endStopStiffness: the stiffness of the end stops at the jointLimits, in Nm/rad or N/m
+            endStopDamping: the damping of the end stops, in Nm/(rad/s) or N/(m/s)
         """
         self.mass = mass
         self.COM = np.array(COM)
@@ -280,6 +286,12 @@ class RobotLink:
         self.visualization = deepcopy(visualization)
         if PDcontrol[0] is not None:
             self.PDcontrol = PDcontrol
+        #friction and end stops, realized in both models of Robot by a CoordinateSpringDamperExt on the joint coordinate (#3270)
+        self.jointLimits = None if jointLimits is None else [float(jointLimits[0]), float(jointLimits[1])]
+        self.viscousFriction = viscousFriction
+        self.coulombFriction = coulombFriction
+        self.endStopStiffness = endStopStiffness
+        self.endStopDamping = endStopDamping
 
     @property
     def localHT(self):
@@ -324,6 +336,9 @@ class RobotLink:
         s += '\n  preHT = ' + str(self.preHT)
         s += '\n  jointType = ' + str(self.jointType)
         s += '\n  parent = ' + str(self.parent)
+        s += '\n  jointLimits = ' + str(self.jointLimits)
+        s += '\n  friction (viscous, Coulomb) = ' + str((self.viscousFriction, self.coulombFriction))
+        s += '\n  end stop (stiffness, damping) = ' + str((self.endStopStiffness, self.endStopDamping))
         s += '\n  visualization:\n' + str(self.visualization)
         if self.HasPDcontrol():
             s += '\n  PDcontrol = ' + str(self.PDcontrol)
@@ -417,7 +432,10 @@ class Robot:
                  gravity=[0,0,-9.81],
                  base = RobotBase(),
                  tool = RobotTool(),
-                 referenceConfiguration = []
+                 referenceConfiguration = [],
+                 q0 = None,
+                 enableEndStops = False,
+                 frictionRegularization = 0.01,
                  ):
         """initialize robot class
 
@@ -426,17 +444,60 @@ class Robot:
             tool: definition of tool using RobotTool() class
             gravity: a list or 3D numpy array defining gravity
             referenceConfiguration: a list of scalar quantities defining the parameters for reference configuration
+            q0: the initial joint coordinates of the models of CreateKinematicTree and CreateRedundantCoordinateMBS; None: the referenceConfiguration
+            enableEndStops: if True, the models get end stops at the jointLimits of the links (with their endStopStiffness and endStopDamping)
+            frictionRegularization: the joint velocity (rad/s or m/s) below which the Coulomb friction of the links is linear in the velocity
         """
         self.gravity = np.array(gravity)
         self.base = base
         self.tool = tool
         self.referenceConfiguration = np.array(referenceConfiguration)
+        self.q0 = q0
+        self.enableEndStops = enableEndStops
+        self.frictionRegularization = frictionRegularization
         self.links = [] #initialize list of link data
         self.isSerialRobot = True #this is true as long as parent = link index - 1
+
+    @property
+    def q0(self):
+        """the initial joint coordinates of the models, a numpy array; the referenceConfiguration if not set (#3270)"""
+        if self._q0 is None:
+            return np.array(self.referenceConfiguration, dtype=float)
+        return self._q0
+
+    @q0.setter
+    def q0(self, value):
+        self._q0 = None if value is None else np.array(value, dtype=float)
+
+    def SetJointFriction(self, viscous=0., coulomb=0.):
+        """set the same viscous and Coulomb friction in every link (RobotLink viscousFriction, coulombFriction)
+
+        Args:
+            viscous: the viscous friction, a torque (force) per joint velocity
+            coulomb: the Coulomb friction torque (force)
+        """
+        for link in self.links:
+            link.viscousFriction = viscous
+            link.coulombFriction = coulomb
+
+    def SetEndStops(self, stiffness, damping, enable=True):
+        """set the same end stop stiffness and damping in every link that has jointLimits, and enableEndStops
+
+        Args:
+            stiffness: the end stop stiffness, in Nm/rad or N/m
+            damping: the end stop damping, in Nm/(rad/s) or N/(m/s)
+            enable: the value of enableEndStops
+        """
+        for link in self.links:
+            if link.jointLimits is not None:
+                link.endStopStiffness = stiffness
+                link.endStopDamping = damping
+        self.enableEndStops = enable
 
     def __str__(self):
         s = 'gravity = ' + str(self.gravity)
         s += '\nreferenceConfiguration = ' + str(self.referenceConfiguration)
+        s += '\nq0 = ' + str(self.q0)
         s += '\nbase: \n' + str(self.base)
         s += '\ntool: \n' + str(self.tool)
         s += '\nlinks: \n' + str(self.links)
@@ -505,8 +566,9 @@ class Robot:
         return self.tool.HT
     
     def SetControl(self, trajectory, compensation=None):
-        """the joint control of the kinematic tree of CreateKinematicTree, by PreStepControl (#3262): the PD control of
-        the links (RobotLink PDcontrol) towards the joint coordinates and velocities of trajectory
+        """the joint control of the model of CreateKinematicTree or CreateRedundantCoordinateMBS, by PreStepControl
+        (#3262, #3270): the PD control of the links (RobotLink PDcontrol) towards the joint coordinates and velocities of
+        trajectory
 
         Args:
             trajectory: an exudyn.robotics.motion.Trajectory (or an object with Evaluate(t) returning [q, q_t, q_tt])
@@ -518,14 +580,22 @@ class Robot:
         self.controlCompensation = compensation
         self.controlChain = self.GetKinematicChain() if compensation == 'static' else None
 
+    def _ModelData(self, functionName):
+        """the data of the model created last by CreateKinematicTree or CreateRedundantCoordinateMBS"""
+        data = getattr(self, 'modelData', None)
+        if data is None:
+            raise ValueError('Robot.' + functionName + ': create the model first, by CreateKinematicTree or CreateRedundantCoordinateMBS')
+        return data
+
     def PreStepControl(self, mbs, t):
-        """the PreStepUserFunction of the joint control of SetControl (#3262): the joint position and velocity offsets of
-        the kinematic tree of CreateKinematicTree from the trajectory at time t (and the joint forces of the compensation);
-        pass it directly, mbs.SetPreStepUserFunction(robot.PreStepControl), or call it in the PreStepUserFunction of the
-        script for several robots
+        """the PreStepUserFunction of the joint control of SetControl (#3262, #3270), for the model created last by
+        CreateKinematicTree or CreateRedundantCoordinateMBS: the joint position and velocity offsets of the PD control
+        from the trajectory at time t, and the joint forces of the compensation; pass it directly,
+        mbs.SetPreStepUserFunction(robot.PreStepControl), or call it in the PreStepUserFunction of the script for
+        several robots
 
         Args:
-            mbs: the MainSystem of the kinematic tree
+            mbs: the MainSystem of the model
             t: the time
 
         Returns:
@@ -533,15 +603,123 @@ class Robot:
         """
         if getattr(self, 'controlTrajectory', None) is None:
             raise ValueError('Robot.PreStepControl: call SetControl(trajectory) first')
-        if getattr(self, 'kinematicTreeData', None) is None:
-            raise ValueError('Robot.PreStepControl: the control needs the kinematic tree of CreateKinematicTree')
-        oKT = self.kinematicTreeData['objectKinematicTree']
+        data = self._ModelData('PreStepControl')
         [q, q_t, q_tt] = self.controlTrajectory.Evaluate(t)
-        mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', q)
-        mbs.SetObjectParameter(oKT, 'jointVelocityOffsetVector', q_t)
         if self.controlCompensation == 'static':
-            mbs.SetObjectParameter(oKT, 'jointForceVector', -self.controlChain.StaticTorques(q))
+            tau = self.controlChain.StaticTorques(q)
+        else:
+            tau = np.zeros(len(self.links))
+
+        if data['modelType'] == 'kinematicTree':
+            oKT = data['objectKinematicTree']
+            mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', q)
+            mbs.SetObjectParameter(oKT, 'jointVelocityOffsetVector', q_t)
+            if self.controlCompensation is not None:
+                mbs.SetObjectParameter(oKT, 'jointForceVector', -tau)
+        else:
+            #the spring-dampers measure the absolute joint coordinate; their force acts against it, the drive is -force
+            for (i, objectSD) in enumerate(data['springDamperList']):
+                if objectSD is None:
+                    continue
+                mbs.SetObjectParameter(objectSD, 'offset', q[i])
+                mbs.SetObjectParameter(objectSD, 'velocityOffset', q_t[i])
+                if self.controlCompensation is not None:
+                    mbs.SetObjectParameter(objectSD, 'torque' if self.links[i].jointType[0] == 'R' else 'force', tau[i])
         return True
+
+    def AddSensors(self, mbs, outputVariables=[exudyn.OutputVariableType.Coordinates, exudyn.OutputVariableType.Coordinates_t],
+                   storeInternal=True, fileName='', writeToFile=None):
+        """add sensors of the joints to the model created last by CreateKinematicTree or CreateRedundantCoordinateMBS
+        (#3270); each sensor gives the vector of one quantity over all joints, the same in both models
+
+        Args:
+            mbs: the MainSystem of the model
+            outputVariables: a list of exudyn.OutputVariableType: Coordinates (the joint coordinates q), Coordinates_t (the joint velocities), Force (the joint torques and forces of the PD control and the compensation, acting on the link of the joint)
+            storeInternal: if True, the sensors store their values in the mbs (mbs.GetSensorStoredData, PlotSensor)
+            fileName: if not empty, the base of the file names; the name of the output variable is appended
+            writeToFile: None: write to a file if fileName is given; True or False otherwise
+
+        Returns:
+            a dict of the sensor numbers, with the output variables as keys
+        """
+        data = self._ModelData('AddSensors')
+        OVT = exudyn.OutputVariableType
+        nLinks = len(self.links)
+        sensors = {}
+        for ovt in outputVariables:
+            if ovt not in [OVT.Coordinates, OVT.Coordinates_t, OVT.Force]:
+                raise ValueError('Robot.AddSensors: outputVariables must be Coordinates, Coordinates_t or Force, not ' + str(ovt))
+            args = {'storeInternal': storeInternal,
+                    'fileName': (fileName + str(ovt).split('.')[-1] + '.txt') if fileName != '' else '',
+                    'writeToFile': (fileName != '') if writeToFile is None else writeToFile}
+            if data['modelType'] == 'kinematicTree' and ovt != OVT.Force:
+                sensors[ovt] = mbs.AddSensor(eii.SensorBody(bodyNumber=data['objectKinematicTree'], outputVariableType=ovt, **args))
+                continue
+
+            if data['modelType'] == 'kinematicTree': #the force of the PD control and the joint forces
+                oKT = data['objectKinematicTree']
+                def SensorUF(mbs, t, sensorNumbers, factors, configuration, oKT=oKT):
+                    q = mbs.GetObjectOutputBody(oKT, OVT.Coordinates, configuration=configuration)
+                    q_t = mbs.GetObjectOutputBody(oKT, OVT.Coordinates_t, configuration=configuration)
+                    f = np.zeros(nLinks)
+                    P = mbs.GetObjectParameter(oKT, 'jointPControlVector')
+                    if len(P) != 0:
+                        f += P*(mbs.GetObjectParameter(oKT, 'jointPositionOffsetVector') - q)
+                    D = mbs.GetObjectParameter(oKT, 'jointDControlVector')
+                    if len(D) != 0:
+                        f += D*(mbs.GetObjectParameter(oKT, 'jointVelocityOffsetVector') - q_t)
+                    fJoint = mbs.GetObjectParameter(oKT, 'jointForceVector')
+                    if len(fJoint) != 0:
+                        f += fJoint
+                    return f
+            elif ovt == OVT.Force: #the spring-dampers of the redundant model
+                springDampers = [(i, objectSD, OVT.TorqueLocal if self.links[i].jointType[0] == 'R' else OVT.ForceLocal)
+                                 for (i, objectSD) in enumerate(data['springDamperList']) if objectSD is not None]
+                def SensorUF(mbs, t, sensorNumbers, factors, configuration, springDampers=springDampers):
+                    f = np.zeros(nLinks)
+                    for (i, objectSD, ovtSD) in springDampers:
+                        f[i] = -mbs.GetObjectOutput(objectSD, ovtSD, configuration=configuration)
+                    return f
+            else: #the joint coordinates of the redundant model, measured by its coordinate markers
+                markers = data['jointCoordinateMarkerList']
+                ovtMarker = ovt
+                def SensorUF(mbs, t, sensorNumbers, factors, configuration, markers=markers, ovtMarker=ovtMarker):
+                    return np.array([mbs.GetMarkerOutput(m, ovtMarker, configuration=configuration)[0] for m in markers])
+
+            sensors[ovt] = mbs.AddSensor(eii.SensorUserFunction(sensorUserFunction=SensorUF, **args))
+        return sensors
+
+    def _HasJointConnector(self, i):
+        """True if link i needs the CoordinateSpringDamperExt of its friction or end stops (#3270)"""
+        link = self.links[i]
+        hasEndStops = self.enableEndStops and link.jointLimits is not None
+        if hasEndStops and link.endStopStiffness == 0:
+            raise ValueError('Robot: link ' + str(i) + ' has jointLimits but no endStopStiffness; set it, e.g. by Robot.SetEndStops, or enableEndStops=False')
+        return hasEndStops or link.viscousFriction != 0 or link.coulombFriction != 0
+
+    def _AddJointConnectors(self, mbs, i, groundMarker, marker, coordinateOffset):
+        """the CoordinateSpringDamperExt of the friction and the one of the end stops of link i between the coordinate
+        marker of its joint and a ground coordinate marker (#3270), each None if not needed; coordinateOffset is the
+        value of the marker at the joint coordinate zero"""
+        link = self.links[i]
+        friction = None
+        endStop = None
+        if link.viscousFriction != 0 or link.coulombFriction != 0: #regularized, without a data node
+            friction = mbs.AddObject(eii.CoordinateSpringDamperExt(markerNumbers=[groundMarker, marker],
+                                                                   damping=link.viscousFriction,
+                                                                   dynamicFrictionForce=link.coulombFriction,
+                                                                   frictionProportionalZone=self.frictionRegularization,
+                                                                   visualization=eii.VCoordinateSpringDamperExt(show=False)))
+        if self.enableEndStops and link.jointLimits is not None: #a separate object, as the stops switch to the PostNewton iteration
+            nData = mbs.AddNode(eii.NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0,0,0]))
+            endStop = mbs.AddObject(eii.CoordinateSpringDamperExt(markerNumbers=[groundMarker, marker], nodeNumber=nData,
+                                                                  useLimitStops=True,
+                                                                  limitStopsLower=link.jointLimits[0] + coordinateOffset,
+                                                                  limitStopsUpper=link.jointLimits[1] + coordinateOffset,
+                                                                  limitStopsStiffness=link.endStopStiffness,
+                                                                  limitStopsDamping=link.endStopDamping,
+                                                                  visualization=eii.VCoordinateSpringDamperExt(show=False)))
+        return (friction, endStop)
 
     def GetKinematicChain(self):
         """the kinematics of the robot in C++, an exudyn.cUtilities.KinematicChain of its links, base, tool and gravity
@@ -933,7 +1111,10 @@ class Robot:
             forceUserFunction: defines the user function for computation of joint forces in KinematicTree; transferred to KinematicTree, default = 0
 
         Returns:
-            the function returns a dictionary containing 'nodeGeneric': generic ODE2 node number ,'objectKinematicTree': the kinematic tree object, 'baseObject': the base object if created, otherwise None; further values will be added in future
+            the function returns a dictionary containing 'nodeGeneric': generic ODE2 node number ,'objectKinematicTree': the kinematic tree object, 'baseObject': the base object if created, otherwise None, 'jointFrictionList' and 'jointEndStopList': per link the CoordinateSpringDamperExt of its friction and of its end stops, or None
+
+        Note:
+            the initial joint coordinates are q0; the friction and the end stops of the links act by a CoordinateSpringDamperExt on the joint coordinate (#3270); PreStepControl and AddSensors act on this model until another one is created
         """
 
         #add graphics for base:
@@ -952,7 +1133,8 @@ class Robot:
                                                     visualization=eii.VObjectGround(graphicsData=graphicsDataBase)))
 
         #+++++++++++++++++++++++
-        qRef = self.referenceConfiguration
+        qRef = np.array(self.referenceConfiguration, dtype=float)
+        q0 = self.q0
         
         nLinks = len(self.links)
         graphicsDataList = []   #list of graphicsData per link
@@ -967,7 +1149,7 @@ class Robot:
         #if PD control exists, this vector is kept, otherwise erased:
         jointPControlVector = [0]*nLinks
         jointDControlVector = [0]*nLinks
-        jointPositionOffsetVector = [0]*nLinks
+        jointPositionOffsetVector = list(q0) #the control holds the initial configuration
         jointVelocityOffsetVector = [0]*nLinks
         hasPDcontrol = False #True, if any link has control
         
@@ -1054,7 +1236,7 @@ class Robot:
         
         #create node for unknowns of KinematicTree
         nGeneric = mbs.AddNode(eii.NodeGenericODE2(referenceCoordinates=qRef,
-                                               initialCoordinates=[0.]*nLinks,
+                                               initialCoordinates=q0-qRef,
                                                initialCoordinates_t=[0.]*nLinks,
                                                numberOfODE2Coordinates=nLinks))
 
@@ -1078,10 +1260,22 @@ class Robot:
                                           jointVelocityOffsetVector = jointVelocityOffsetVector, jointDControlVector = jointDControlVector,
                                           visualization=eii.VObjectKinematicTree(graphicsDataList = graphicsDataList)))
 
-        #return some needed variables for further use        
+        #friction and end stops on the node coordinates, which are relative to the reference configuration (#3270)
+        jointFrictionList = [None]*nLinks
+        jointEndStopList = [None]*nLinks
+        groundMarker = None
+        for i in range(nLinks):
+            if self._HasJointConnector(i):
+                if groundMarker is None:
+                    groundMarker = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber=mbs.AddNode(eii.NodePointGround()), coordinate=0))
+                mCoordinate = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber=nGeneric, coordinate=i))
+                (jointFrictionList[i], jointEndStopList[i]) = self._AddJointConnectors(mbs, i, groundMarker, mCoordinate, -qRef[i])
+
+        #return some needed variables for further use
         d = {'nodeGeneric': nGeneric, 'objectKinematicTree': oKT, 'baseObject': baseObject,
+             'jointFrictionList': jointFrictionList, 'jointEndStopList': jointEndStopList,
              }
-        self.kinematicTreeData = d #for PreStepControl (#3262)
+        self.modelData = dict(d, modelType='kinematicTree') #for PreStepControl and AddSensors (#3262, #3270)
         return d
 
                       
@@ -1107,12 +1301,18 @@ class Robot:
             rigidBodyNodeType: specify node type of rigid body node, e.g., exudyn.NodeType.RotationEulerParameters, etc.
 
         Returns:
-            the function returns a dictionary containing per link nodes and object (body) numbers, 'nodeList', 'bodyList', the object numbers for joints, 'jointList', list of load numbers for joint torques (jointTorque0List, jointTorque1List); unit torque vectors in local coordinates of the bodies to which the torques are applied (unitTorque0List, unitTorque1List); springDamperList contains the spring dampers if defined by PDcontrol of links
+            the function returns a dictionary containing per link nodes and object (body) numbers, 'nodeList', 'bodyList', the object numbers for joints, 'jointList', list of load numbers for joint torques (jointTorque0List, jointTorque1List); unit torque vectors in local coordinates of the bodies to which the torques are applied (unitTorque0List, unitTorque1List); springDamperList contains the spring dampers if defined by PDcontrol of links; 'jointCoordinateMarkerList': per joint the marker of its coordinate (MarkerBodiesRelativeRotationCoordinate or MarkerBodiesRelativeTranslationCoordinate, the absolute joint coordinate), 'jointFrictionList' and 'jointEndStopList': per link the CoordinateSpringDamperExt of its friction and of its end stops, or None
+
+        Note:
+            the initial joint coordinates are q0; the friction and the end stops of the links act by a CoordinateSpringDamperExt on the joint coordinate marker (#3270), which needs a baseMarker on a body (e.g. MarkerBodyRigid of the ground); PreStepControl and AddSensors act on this model until another one is created
         """
         #build robot model:
         nodeList = []           #node number or rigid node for link
         bodyList = []           #body number or rigid body for link
         jointList = []          #joint which links to previous link or base
+        jointCoordinateMarkerList = [] #the marker of each joint coordinate (#3270)
+        jointFrictionList = [] #the CoordinateSpringDamperExt of the friction of each joint, or None
+        jointEndStopList = [] #the CoordinateSpringDamperExt of the end stops of each joint, or None
         markerList0 = []        #contains n marker numbers per link (=body) which connect to previous/left link
         markerList1 = []        #contains n marker numbers per link (=body) which connect to next/right link
         jointTorque0List = []   #load number of joint torque at previous/left link (negative); 
@@ -1122,13 +1322,16 @@ class Robot:
         springDamperList = []   #contains torsional or linear spring dampers for control of joint axes
         
         HTlist = [] #list of homogeneous transformations for links stored (for parent link relation in tree)
+        HTinitialList = [] #the same at the initial configuration q0
+        groundMarker = None
 
         #delete: lastMarker = baseMarker
         lastMarkerRotation = np.identity(3) #base rotation included in marker
         if rotationMarkerBase is not None:
             lastMarkerRotation = rotationMarkerBase
             
-        qRef = self.referenceConfiguration
+        qRef = np.array(self.referenceConfiguration, dtype=float)
+        q0 = self.q0
         
         baseObject = -1 #if it does not exist
         if self.base.visualization.graphicsData != []:
@@ -1165,6 +1368,9 @@ class Robot:
 
             Tcurrent = Tcurrent * T01
             HTlist += [Tcurrent]
+            T01initial = link.preHT * dictJointType2HT[link.jointType](q0[i]) * link.localHT
+            Tinitial = (self.GetBaseHT() if not self.HasParent(i) else HTinitialList[self.GetParentIndex(i)]) * T01initial
+            HTinitialList += [Tinitial]
 
             #++++++++++++++++++++++++++++++++++++++++++++++
         
@@ -1209,8 +1415,12 @@ class Robot:
             
             #++++++++++++++++++++++++
             #now add body for link:
-            dictLink = mbs.CreateRigidBody(referenceHT=Tcurrent,
-                                           inertia=inertiaLink,  
+            initialArgs = {}
+            if cMath.norm(Tinitial.HT44() - Tcurrent.HT44()) != 0: #the initial configuration q0 differs from the reference
+                initialArgs['initialDisplacement'] = Tinitial.translation - Tcurrent.translation
+                initialArgs['initialRotationMatrix'] = Tcurrent.rotation.T @ Tinitial.rotation #superimposed in the body frame
+            dictLink = mbs.CreateRigidBody(referenceHT=Tcurrent, **initialArgs,
+                                           inertia=inertiaLink,    
                                            gravity=self.gravity,  
                                            nodeType=rigidBodyNodeType,  
                                            graphicsDataList=graphicsList,  
@@ -1224,6 +1434,13 @@ class Robot:
 
             if i == 0:
                 lastMarkerRotation = link.preHT.rotation @ lastMarkerRotation #is rotationMarkerBase
+                if cMath.norm(link.preHT.translation) != 0: #the first joint after the base marker, by the translation of preHT (#3270)
+                    baseData = mbs.GetMarker(baseMarker)
+                    if 'localHT' not in baseData:
+                        raise ValueError('CreateRedundantCoordinateMBS: the preHT of the first link has a translation, which needs a baseMarker with localHT, e.g. MarkerBodyRigid')
+                    baseData = {key: value for (key, value) in baseData.items() if key not in ['name', 'localPosition'] and key[0] != 'V'}
+                    baseData['localHT'] = exudyn.HT(baseData['localHT']) * exudyn.HT(translation=link.preHT.translation)
+                    baseMarker = mbs.AddMarker(baseData)
                 (mLink0LastBody, rotationMarker0) = erb._MarkerWithRotation(mbs, baseMarker, lastMarkerRotation)
             else:
                 lastMarkerRotation = link.preHT.rotation
@@ -1285,13 +1502,22 @@ class Robot:
                 if i < len(jointSpringDamperUserFunctionList) or link.HasPDcontrol():
                     PDcontrol = link.GetPDcontrol()
                     #generic node for infinite revolutions:
-                    nGeneric=mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0], 
+                    nGeneric=mbs.AddNode(eii.NodeGenericData(initialCoordinates=[q0[i]],
                                                          numberOfDataCoordinates=1)) #for infinite rotations
+                    #the spring-damper acts about the z-axis of its marker frames: frames with z along the joint axis (#3270)
+                    (markerSD0, markerSD1, rotationSD0) = (marker0, marker1, rotationMarker0)
+                    if link.jointType != 'Rz':
+                        Raxis = erb.RotationMatrixY(0.5*np.pi) if link.jointType == 'Rx' else erb.RotationMatrixX(-0.5*np.pi) #z to x or y
+                        if i == 0:
+                            (markerSD0, rotationSD0) = erb._MarkerWithRotation(mbs, baseMarker, lastMarkerRotation @ Raxis)
+                        else:
+                            markerSD0 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=parentBody, localHT=link.preHT*exudyn.HT(rotation=Raxis)))
+                        markerSD1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=dictLink['bodyNumber'], localHT=localHTinv*exudyn.HT(rotation=Raxis)))
                     #torsional spring-damper allows control of rotation
-                    objectSD = mbs.AddObject(eii.TorsionalSpringDamper(markerNumbers=[marker0, marker1],
+                    objectSD = mbs.AddObject(eii.TorsionalSpringDamper(markerNumbers=[markerSD0, markerSD1],
                                                         nodeNumber=nGeneric,
-                                                        **erb._RotationMarkerArgs(rotationMarker0, rotationMarker1), #only a rotation the base marker cannot take (#2820)
-                                                        stiffness=PDcontrol[0],
+                                                        **erb._RotationMarkerArgs(rotationSD0, rotationMarker1), #only a rotation the base marker cannot take (#2820)
+                                                        stiffness=PDcontrol[0], offset=q0[i], #holds the initial configuration
                                                         damping=PDcontrol[1],
                                                         visualization=eii.VTorsionalSpringDamper(show=False)
                                                         ))
@@ -1304,13 +1530,43 @@ class Robot:
                     #linear spring-damper allows control in translational direction
                     objectSD = mbs.AddObject(eii.LinearSpringDamper(markerNumbers=[marker0, marker1],
                                                                 axisMarker0 = rotationMarker0 @ jointAxis, #the joint axis in marker 0
-                                                                stiffness=PDcontrol[0],
+                                                                stiffness=PDcontrol[0], offset=q0[i],
                                                                 damping=PDcontrol[1],
                                                                 visualization=eii.VLinearSpringDamper(show=False)
                                                                 ))
                     
             springDamperList += [objectSD]
-            
+
+            #the joint coordinate between the joint frames of the two bodies, absolute (#3270)
+            if i == 0:
+                baseData = mbs.GetMarker(baseMarker)
+                if 'bodyNumber' not in baseData:
+                    raise ValueError('CreateRedundantCoordinateMBS: the coordinate of the first joint needs a baseMarker on a body, e.g. MarkerBodyRigid')
+                bodyPrevious = baseData['bodyNumber']
+                baseHT = exudyn.HT(baseData['localHT']) if 'localHT' in baseData else exudyn.HT(translation=baseData.get('localPosition', [0,0,0]))
+                localPosition0 = baseHT.translation
+                localRotation0 = baseHT.rotation @ lastMarkerRotation
+            else:
+                bodyPrevious = bodyList[self.GetParentIndex(i)]
+                localPosition0 = link.preHT.translation
+                localRotation0 = link.preHT.rotation
+            coordinateArgs = {'bodyNumbers': [bodyPrevious, dictLink['bodyNumber']], 'localPosition0': localPosition0,
+                              'localPosition1': localHTinv.translation}
+            if link.jointType[0] == 'R':
+                mCoordinate = mbs.AddMarker(eii.MarkerBodiesRelativeRotationCoordinate(**coordinateArgs, axis0=jointAxis,
+                    localRotation0=localRotation0, localRotation1=localHTinv.rotation,
+                    nodeNumber=mbs.AddNode(eii.NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[q0[i]])))) #continuous angles
+            else:
+                mCoordinate = mbs.AddMarker(eii.MarkerBodiesRelativeTranslationCoordinate(**coordinateArgs, axis0=localRotation0 @ jointAxis))
+            jointCoordinateMarkerList += [mCoordinate]
+            connectors = (None, None)
+            if self._HasJointConnector(i):
+                if groundMarker is None:
+                    groundMarker = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber=mbs.AddNode(eii.NodePointGround()), coordinate=0))
+                connectors = self._AddJointConnectors(mbs, i, groundMarker, mCoordinate, 0.)
+            jointFrictionList += [connectors[0]]
+            jointEndStopList += [connectors[1]]
+
             
             #end loop over links
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1324,7 +1580,10 @@ class Robot:
              'jointTorque1List': jointTorque1List,
              'unitTorque0List': unitTorque0List,
              'unitTorque1List': unitTorque1List,
+             'jointCoordinateMarkerList': jointCoordinateMarkerList,
+             'jointFrictionList': jointFrictionList, 'jointEndStopList': jointEndStopList,
              'baseObject':baseObject}
+        self.modelData = dict(d, modelType='redundant') #for PreStepControl and AddSensors (#3270)
         return d
     
         

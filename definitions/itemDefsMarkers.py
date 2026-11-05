@@ -1002,7 +1002,9 @@ definitions.append(ItemDefinition(
     miniExamplePerformanceTest={'numberOfSteps': 349140},
     detailedDescription=r"""    The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
     depending on local positions $\LU{m_0}{\pv}_0$ and $\LU{m_1}{\pv}_1$, 
-    and marker orientations $\LU{0,m_0}{\Rot}_{m0}$ and $\LU{0,m_1}{\Rot}_{m1}$.
+    and marker orientations $\LU{0,m_0}{\Rot}_{m0} = \LU{0,b_0}{\Rot}_{b0} \LU{b_0,m_0}{\Rot}$ and
+    $\LU{0,m_1}{\Rot}_{m1} = \LU{0,b_1}{\Rot}_{b1} \LU{b_1,m_1}{\Rot}$, the orientations of the bodies turned by
+    `localRotation0` and `localRotation1`.
     From the given axis `axis0`, we compute an orthonormal basis (orthonormal to axis0) relative to marker $m_0$,
 
 
@@ -1081,7 +1083,15 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
             pythonName='axis0',
             defaultValue='Vector3D({1.,0.,0.})',
-            description=r"""$\LU{m_0}{\av}_0$axis defined in body 0, along which the relative rotation is measured"""),
+            description=r"""$\LU{m_0}{\av}_0$axis defined in the frame of marker 0 (body 0 turned by localRotation0), along which the relative rotation is measured"""),
+        ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
+            pythonName='localRotation0',
+            defaultValue='EXUmath::unitMatrix3D',
+            description=r"""$\LU{b_0,m_0}{\Rot}$rotation of the frame of marker 0 relative to body 0; the relative rotation is measured between the two marker frames, e.g. the frames of a robot joint whose links have other frames"""),
+        ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
+            pythonName='localRotation1',
+            defaultValue='EXUmath::unitMatrix3D',
+            description=r"""$\LU{b_1,m_1}{\Rot}$rotation of the frame of marker 1 relative to body 1"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='offset',
             defaultValue=0.,
