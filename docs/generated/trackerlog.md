@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.383.dev1
+- Exudyn version = 1.13.384.dev1
 - last change = 2026-11-05
-- Number of issues = 3271
-- Number of resolved issues = 3160 (383 in current version)
+- Number of issues = 3273
+- Number of resolved issues = 3161 (384 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `FIX` `LOW EFF` `raised by: Claude-JG` SC.GetDictionary warns that SC.GetRenderState is deprecated (#3271)
+  - description: SystemContainer.GetDictionary calls the deprecated PyGetRenderState for its 'renderState' and so issues the DeprecationWarning of SC.GetRenderState to the user, who did not call it. Proposed: the state from the renderer (renderer.GetState) without the warning, keeping the key.
+  - date raised: 2026-11-05
 - `CHECK` `LOW EFF` `raised by: Claude-JG` generalized-alpha: an ODE1 coordinate coupled to ODE2 coordinates converges with order 1 (#3258)
   - description: In the genericDAE model of modelLibrary.py (an ObjectGenericDAE pendulum with a first order lag of its horizontal position on an ODE1 coordinate) SolveDynamic with generalized-alpha gives the ODE2 coordinates with order 2 and the ODE1 coordinate with order 1 (errors 3.2e-5, 1.7e-5, 8.9e-6 for the steps 4e-3, 2e-3, 1e-3, also with spectral radius 1), found by python/testing/solverStudy.py. To be analyzed: how the ODE1 equations are discretized in the generalized-alpha solver and whether the coupling or the ODE1 scheme itself is first order.
   - date raised: 2026-11-05

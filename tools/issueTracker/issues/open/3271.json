@@ -1,0 +1,11 @@
+{
+  "number": 3271,
+  "title": "SC.GetDictionary warns that SC.GetRenderState is deprecated",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "SystemContainer.GetDictionary calls the deprecated PyGetRenderState for its 'renderState' and so issues the DeprecationWarning of SC.GetRenderState to the user, who did not call it. Proposed: the state from the renderer (renderer.GetState) without the warning, keeping the key.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04"
+}

@@ -370,7 +370,10 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   marker, MarkerBodiesRelativeRotationCoordinate with localRotation0/1), PreStepControl and AddSensors for both, the
   two models equal to 1e-6 (#3270); open: the dynamic compensation.
 - RG19.5 Extend the trajectories: quintic and cubic polynomials, linear profiles completed, Cartesian linear, circular,
-  screw and spline paths, mixed in Trajectory with the check of jumps.
+  screw and spline paths, mixed in Trajectory with the check of jumps; .1 done: ProfilePolynomial5 and
+  ProfileCartesianLinear (#3262); .3 done: ProfileCartesianCircular, ProfileCartesianScrew, ProfileCartesianSpline,
+  keepConfiguration (the configuration of the start, a jump on the path raises), Trajectory(jumpTolerance) (#3272);
+  open: blending (.2, section 6.1).
 - RG19.6 Inverse kinematics: analytic for 6R with a spherical wrist, numerical by Levenberg-Marquardt; the two tests
   (6R, Panda); the kinematic chain, the IK and the static torques in C++ (exudyn.cUtilities, section 3); .1 done: the
   KinematicChain with the forward kinematics, the Jacobian and the static torques (#3259); .2 done: the analytic IK

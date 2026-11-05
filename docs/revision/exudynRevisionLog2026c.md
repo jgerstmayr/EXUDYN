@@ -6139,6 +6139,23 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   suite: Robot(base=RobotBase(), tool=RobotTool()) and the visualization defaults of RobotBase and RobotTool were
   objects shared by all robots; now None, a new object each.
 
+<a id="rg19-5-3"></a>
+### RG19.5.3 — circular, screw and spline paths, the arm configuration kept, the jumps in Trajectory (2026-11-05, #3272)
+- The request (2026-11-04): continuous paths - linear, screw including circular, spline - in a common way, all mixed
+  in Trajectory, jumps detected and raised; design section 6.2: the configuration of #3265 kept on Cartesian paths.
+- _ProfileCartesian: the common code of ProfileCartesianLinear (#3262); a profile gives its path as the frame of the
+  tool and the derivatives of its position and rotation by the path parameter. Circular: the circle through start, via
+  point and end, the rotation interpolated as for the line; screw: the tool frame as a rigid body about an axis, with a
+  translation along it; spline: natural cubic splines on the chord length of the positions and of the rotation vectors
+  relative to the start (piecewise interpolated rotations, tried first, gave a jump of the angular velocity at the via
+  frames: 21 % between the joint velocities and the difference of the coordinates, 4e-6 with the spline).
+- keepConfiguration: on a 6R robot with a spherical wrist all 8 configurations reach every pose, so keeping one never
+  fails on reach; it fails as a jump - through the singular wrist the kept solution turns q4 and q6 by pi. The path
+  is followed in 200 steps when the profile is added, and a step of more than 0.5 rad raises; without
+  keepConfiguration the nearest solution passes, changing the configuration.
+- Trajectory.Add evaluates a new profile at its start against the end of the trajectory (jumpTolerance = 1e-6).
+- robotCartesianPathsTest.py. Open in RG19.5: blending (RG19.5.2), a Cartesian blend.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

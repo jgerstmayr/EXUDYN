@@ -177,6 +177,7 @@ rigidBodyAsUserFunctionTest
 rigidBodyCOMtest
 rigidBodySpringDamperIntrinsic
 RigidPendulumTest
+robotCartesianPathsTest
 robotDictionaryTest
 robotFrictionEndStopsTest
 robotTrajectoryProfilesTest

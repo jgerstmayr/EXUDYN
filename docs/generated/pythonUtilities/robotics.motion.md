@@ -22,7 +22,7 @@ path planning and motion
 (sec-motion-profileconstantacceleration---init--)=
 ### Class function: __init__
 
-[`__init__(self, finalCoordinates, duration)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L153)
+[`__init__(self, finalCoordinates, duration)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L155)
 
 - **class function description**: initialize ProfileConstantAcceleration with vector of final coordinates and duration (time span)
 
@@ -30,7 +30,7 @@ path planning and motion
 (sec-motion-profileconstantacceleration-getbasicprofile)=
 ### Class function: GetBasicProfile
 
-[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L159)
+[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L161)
 
 - **class function description**: return a class representing profile which is used in Trajectory
 
@@ -57,7 +57,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-motion-profilelinearaccelerationslist---init--)=
 ### Class function: __init__
 
-[`__init__(self, accelerationList)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L186)
+[`__init__(self, accelerationList)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L188)
 
 - **class function description**: initialize ProfileLinearAccelerationsList with a list of tuples containing time and acceleration vector
 
@@ -65,7 +65,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-motion-profilelinearaccelerationslist-getbasicprofile)=
 ### Class function: GetBasicProfile
 
-[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L197)
+[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L199)
 
 - **class function description**: return a class representing profile which is used in Trajectory
 
@@ -84,7 +84,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-motion-profileptp---init--)=
 ### Class function: __init__
 
-[`__init__(self, finalCoordinates, syncAccTimes = True, maxVelocities = [], maxAccelerations = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L219)
+[`__init__(self, finalCoordinates, syncAccTimes = True, maxVelocities = [], maxAccelerations = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L221)
 
 - **class function description**: initialize ProfilePTP with final coordinates of motion, optionally max. velocities and accelerations just for this profile (overrides global settings)
 
@@ -92,7 +92,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-motion-profileptp-getbasicprofile)=
 ### Class function: GetBasicProfile
 
-[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L233)
+[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L235)
 
 - **class function description**: return a class representing profile which is used in Trajectory
 
@@ -112,7 +112,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-profilepolynomial5-getbasicprofile)=
 ### Class function: GetBasicProfile
 
-[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L352)
+[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L354)
 
 - **class function description**: the profile in Trajectory
 
@@ -120,26 +120,68 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM)
 
 
-(sec-module-robotics.motion-class-profilecartesianlinear)=
-## CLASS ProfileCartesianLinear (in module robotics.motion)
+(sec-module-robotics.motion-class-profilecartesianlinear(-profilecartesian))=
+## CLASS ProfileCartesianLinear(_ProfileCartesian) (in module robotics.motion)
 
-**class description**: a Cartesian profile of a robot: the tool frame moves on a straight line from its frame at the start of the profile to finalHT, with its rotation about one fixed axis (exu.HT.InterpolateSO3), by the time law timeLaw (#3262); the joint coordinates by the analytic inverse kinematics of the robot (KinematicChain.InverseKinematicsAnalytic) at each evaluation, the solution nearest to the last one evaluated, the joint velocities from the twist of the tool by the Jacobian, the accelerations by their difference in time; a ValueError if a pose of the path is out of reach. It needs a robot of the analytic inverse kinematics (6 revolute joints with a spherical wrist or of the UR geometry); a path through a singular configuration gives large joint velocities
+**class description**: a Cartesian profile of a robot: the tool frame moves on a straight line from its frame at the start of the profile to finalHT, with its rotation about one fixed axis (exu.HT.InterpolateSO3), by the time law timeLaw (#3262); the joint coordinates by the analytic inverse kinematics of the robot (KinematicChain.InverseKinematicsAnalytic) at each evaluation, the solution nearest to the last one evaluated, the joint velocities from the twist of the tool by the Jacobian, the accelerations by their difference in time; a ValueError if a pose of the path is out of reach. It needs a robot of the analytic inverse kinematics (6 revolute joints with a spherical wrist or of the UR geometry); a path close to a singular configuration gives large joint velocities, a jump of the joint coordinates on the path (more than 0.5 rad in 1/200 of it) raises a ValueError
 
 - **input**:
   - `robot`: the exudyn.robotics.Robot
   - `finalHT`: the tool frame at the end, exu.HT in global coordinates
   - `duration`: the time of the profile
   - `timeLaw`: 'polynomial5' (default) or 'constantAcceleration', the path parameter in time
+  - `keepConfiguration`: True: the solutions in the arm configuration of the start (KinematicChain.ArmConfiguration), as a robot controller keeps it on a Cartesian path; a path on which it cannot be kept without a jump of the joint coordinates, through or close to a singular configuration, raises a ValueError; False: the solution nearest to the last one, which may change the configuration (#3272)
 
-(sec-motion-profilecartesianlinear-getbasicprofile)=
-### Class function: GetBasicProfile
-
-[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L389)
-
-- **class function description**: the profile in Trajectory; the joint coordinates of the end by following the path from the start
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`robotCartesianPathsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCartesianPathsTest.py) (TM), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM)
+(sec-module-robotics.motion-class-profilecartesiancircular(-profilecartesian))=
+## CLASS ProfileCartesianCircular(_ProfileCartesian) (in module robotics.motion)
+
+**class description**: a Cartesian profile of a robot (#3272): the tool position moves on the arc of the circle from its position at the start of the profile through viaPosition to the position of finalHT, the rotation of the tool from the start to that of finalHT about one fixed axis (exu.HT.InterpolateSO3), both by the time law timeLaw; the joint coordinates as in ProfileCartesianLinear; for a tool that turns with the arc, see ProfileCartesianScrew
+
+- **input**:
+  - `robot`: the exudyn.robotics.Robot
+  - `viaPosition`: a point of the arc between the start and the end, in global coordinates
+  - `finalHT`: the tool frame at the end, exu.HT in global coordinates
+  - `duration`: the time of the profile
+  - `timeLaw`: 'polynomial5' (default) or 'constantAcceleration', the path parameter in time
+  - `keepConfiguration`: True: the arm configuration of the start is kept, see ProfileCartesianLinear
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartesianPathsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCartesianPathsTest.py) (TM)
+
+
+(sec-module-robotics.motion-class-profilecartesianscrew(-profilecartesian))=
+## CLASS ProfileCartesianScrew(_ProfileCartesian) (in module robotics.motion)
+
+**class description**: a Cartesian profile of a robot (#3272): the tool frame moves as a rigid body by a screw motion from its frame at the start of the profile, the rotation by angle about the axis through axisPoint along axis together with the translation translation along it, both by the time law timeLaw; translation = 0 is the circle about the axis with the tool turning with it, angle = 0 the straight line along the axis; the joint coordinates as in ProfileCartesianLinear
+
+- **input**:
+  - `robot`: the exudyn.robotics.Robot
+  - `axisPoint`: a point of the screw axis, in global coordinates
+  - `axis`: the direction of the screw axis, in global coordinates (normalized)
+  - `angle`: the angle of the rotation about the axis, in rad, positive by the right-hand rule
+  - `translation`: the translation along the axis
+  - `duration`: the time of the profile
+  - `timeLaw`: 'polynomial5' (default) or 'constantAcceleration', the path parameter in time
+  - `keepConfiguration`: True: the arm configuration of the start is kept, see ProfileCartesianLinear
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartesianPathsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCartesianPathsTest.py) (TM)
+
+
+(sec-module-robotics.motion-class-profilecartesianspline(-profilecartesian))=
+## CLASS ProfileCartesianSpline(_ProfileCartesian) (in module robotics.motion)
+
+**class description**: a Cartesian profile of a robot (#3272): the tool position moves on the natural cubic spline through its position at the start of the profile and the positions of viaHTs, parametrized by the length of the chords between them; the rotation of the tool by the natural cubic spline of the rotation vectors of the frames relative to the start, on the same parameter (the rotations less than pi from the start), so that the position and the angular velocity are continuous at the via frames; the path parameter by the time law timeLaw; the last frame of viaHTs is the end; the joint coordinates as in ProfileCartesianLinear
+
+- **input**:
+  - `robot`: the exudyn.robotics.Robot
+  - `viaHTs`: a list of the tool frames the path passes, exu.HT in global coordinates; the last is the end
+  - `duration`: the time of the profile
+  - `timeLaw`: 'polynomial5' (default) or 'constantAcceleration', the path parameter in time
+  - `keepConfiguration`: True: the arm configuration of the start is kept, see ProfileCartesianLinear
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartesianPathsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCartesianPathsTest.py) (TM)
 
 
 (sec-module-robotics.motion-class-trajectory)=
@@ -166,7 +208,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 (sec-motion-trajectory---init--)=
 ### Class function: __init__
 
-[`__init__(self, initialCoordinates, initialTime = 0, maxVelocities = [], maxAccelerations = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L436)
+[`__init__(self, initialCoordinates, initialTime = 0, maxVelocities = [], maxAccelerations = [], jumpTolerance = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L632)
 
 - **class function description**: initialize robot link with parameters, being self-explaining
 - **input**:
@@ -174,12 +216,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
   - `initialCoordinates`: initial coordinates for profile
   - `maxVelocities`: list or numpy array to describe global maximum velocities per coordinate
   - `maxAccelerations`: list or numpy array to describe global maximum accelerations per coordinate
+  - `jumpTolerance`: Add raises a ValueError if a profile starts at coordinates that differ by more than this from the end of the profile before, e.g. a Cartesian profile whose inverse kinematics starts in another solution (#3272)
 
 
 (sec-motion-trajectory-getfinalcoordinates)=
 ### Class function: GetFinalCoordinates
 
-[`GetFinalCoordinates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L458)
+[`GetFinalCoordinates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L656)
 
 - **class function description**: returns the coordinates at the end of the (currently) Final profile
 
@@ -187,15 +230,15 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 (sec-motion-trajectory-add)=
 ### Class function: Add
 
-[`Add(self, profile)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L467)
+[`Add(self, profile)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L665)
 
-- **class function description**: add successively profiles, using MotionProfile class
+- **class function description**: add successively profiles, using MotionProfile class; raises a ValueError if the profile starts at other coordinates than the trajectory ends, by more than jumpTolerance
 
 
 (sec-motion-trajectory-gettimes)=
 ### Class function: GetTimes
 
-[`GetTimes(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L475)
+[`GetTimes(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L679)
 
 - **class function description**: return vector of times of start/end of profiles
 
@@ -203,7 +246,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 (sec-motion-trajectory-initialize)=
 ### Class function: Initialize
 
-[`Initialize(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L483)
+[`Initialize(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L687)
 
 - **class function description**: initialize some parameters for faster evaluation
 
@@ -211,7 +254,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 (sec-motion-trajectory-evaluate)=
 ### Class function: Evaluate
 
-[`Evaluate(self, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L489)
+[`Evaluate(self, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L693)
 
 - **class function description**: return interpolation of trajectory for coordinates, velocities and accelerations at given time
 - **output**: [s, v, a] as numpy arrays representing coordinates, velocities and accelerations
@@ -220,7 +263,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 (sec-motion-trajectory-evaluatecoordinate)=
 ### Class function: EvaluateCoordinate
 
-[`EvaluateCoordinate(self, t, coordinate)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L512)
+[`EvaluateCoordinate(self, t, coordinate)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L716)
 
 - **class function description**: return interpolation of trajectory for coordinate, including velocity and acceleration coordinate at given time
 - **output**: [s, v, a] being scalar position, velocity and acceleration
@@ -230,7 +273,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 (sec-motion-trajectory---iter--)=
 ### Class function: __iter__
 
-[`__iter__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L535)
+[`__iter__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L739)
 
 - **class function description**: iterator allows to use for x in trajectory: ... constructs
 
@@ -238,7 +281,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 (sec-motion-trajectory---getitem--)=
 ### Class function: __getitem__
 
-[`__getitem__(self, key)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L540)
+[`__getitem__(self, key)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L744)
 
 - **class function description**: access to profiles via operator [], allowing trajectory[0], etc.
 
@@ -246,7 +289,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 (sec-motion-trajectory---len--)=
 ### Class function: __len__
 
-[`__len__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L545)
+[`__len__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L749)
 
 - **class function description**: allow using len(trajectory)
 
@@ -254,9 +297,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 (sec-motion-trajectory---repr--)=
 ### Class function: __repr__
 
-[`__repr__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L551)
+[`__repr__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L755)
 
 - **class function description**: representation of Trajectory is given a list of profiles, allowing easy inspection of data
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py) (Ex), [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`mecanumWheelRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mecanumWheelRollingDiscTest.py) (TM), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), [`robotFrictionEndStopsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotFrictionEndStopsTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py) (Ex), [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`mecanumWheelRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mecanumWheelRollingDiscTest.py) (TM), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), [`robotCartesianPathsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCartesianPathsTest.py) (TM), ...

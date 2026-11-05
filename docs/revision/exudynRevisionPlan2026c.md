@@ -92,7 +92,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
 - **RG11** Misc
-  - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
+  - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
   - RG11.6 Write the joints and their Jacobians on homogeneous transformations
   - RG11.7 Let objects compute from the coordinates passed in instead of reading their nodes
@@ -140,7 +140,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 9 | Misc |
+| RG11 | OPEN | 10 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
 | RG13 | OPEN | 2 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -1700,6 +1700,10 @@ others in the HDF5 load and save).
 
 CLOSED 2026-11-05 (#3268): SC.renderer.GetTexture(name) as a dict of name, image, interpretation and flags; 'textures' in the dicts of the renderer, the SystemContainer and Robot, added again by their SetDictionary; rendererDictionaryTest.py and robotDictionaryTest.py extended. [log](exudynRevisionLog2026c.md#rg11-4-5)
 
+#### **OPEN_RG11.4.6** SC.GetDictionary without the deprecation warning of SC.GetRenderState
+
+#3271: the render state from renderer.GetState, the key kept; seen in RG11.4.5.
+
 ### **OPEN_RG11.5** Document single items that the general pages did not reach
 
 #625 (`ObjectRigidBody`), #626 and #2325 (`ObjectJointGeneric`), #627 (`ObjectContactFrictionCircleCable2D`), #987
@@ -3191,6 +3195,10 @@ CLOSED 2026-11-05 (#3262): the joint-space and Cartesian trajectories of a demo;
 #### **OPEN_RG19.5.2** Blending of PTP motions
 
 Proposed in design section 6.1 (superposition of the rest-to-rest segments, Trajectory.Add(profile, blendTime)); no issue before it is decided.
+
+#### **CLOSED_RG19.5.3** Circular, screw and spline paths of the tool, the arm configuration kept, the check of jumps in Trajectory
+
+CLOSED 2026-11-05 (#3272): ProfileCartesianCircular, ProfileCartesianScrew, ProfileCartesianSpline (positions and rotation vectors by natural cubic splines) on the code of ProfileCartesianLinear; keepConfiguration; Trajectory(jumpTolerance); robotCartesianPathsTest.py. [log](exudynRevisionLog2026c.md#rg19-5-3)
 
 ### **OPEN_RG19.6** Inverse kinematics: analytic for 6R robots with a spherical wrist, numerical by Levenberg-Marquardt; tests with a 6R robot and the Panda
 

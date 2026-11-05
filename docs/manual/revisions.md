@@ -508,7 +508,12 @@ it measures. `LinkDict2Robot` passes the `jointLimits` of the models (#3270).
 their graphics data; `exudyn.advancedUtilities.SaveDictToHDF5` saves the dict, and stores a list of only int or only
 float values as one dataset (#3267). A Robot created without `base` or `tool`, and a RobotBase or RobotTool without
 `visualization`, gets its own: before, all of them shared one object, so that the tool graphics of one robot appeared on
-every other robot (#3268).
+every other robot (#3268). `ProfileCartesianCircular` (the arc through a via point to the end),
+`ProfileCartesianScrew` (the tool frame turned about an axis and moved along it) and `ProfileCartesianSpline` (through
+via frames, position and rotation as natural cubic splines) of `exudyn.robotics.motion` complete the Cartesian paths;
+with `keepConfiguration=True` (default) they and `ProfileCartesianLinear` keep the arm configuration of the start and
+raise when the joint coordinates jump on the path, through or close to a singular configuration. `Trajectory.Add`
+raises if a profile starts at other coordinates than the trajectory ends, by more than `jumpTolerance` (#3272).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

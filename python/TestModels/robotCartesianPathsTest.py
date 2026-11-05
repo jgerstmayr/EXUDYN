@@ -1,0 +1,110 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The Cartesian paths of exudyn.robotics.motion (#3272) on the Staubli TX2-90L of exudyn.robotics.models:
+#           ProfileCartesianCircular - the tool on the circle through the start, a via point and the end;
+#           ProfileCartesianScrew - the tool frame turned about an axis and moved along it; ProfileCartesianSpline -
+#           the tool through via frames; at their ends the given frames, the arm configuration of the start kept, the
+#           joint velocities against the difference of the joint coordinates in time. A straight line through the
+#           singular wrist raises with keepConfiguration and is followed by the nearest solution without; Trajectory
+#           refuses a profile that starts with a jump of the coordinates; a circle through three points of one line is
+#           refused. The result is the number of checks that pass plus the joint coordinates at the end of the spline,
+#           weighted by 1 to 6.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-05
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.rigidBodyUtilities import RotationVector2RotationMatrix
+from exudyn.robotics.models import ManipulatorStaubliTX2_90L, LinkDict2Robot
+from exudyn.robotics.motion import (Trajectory, BasicProfile, ProfileCartesianLinear, ProfileCartesianCircular,
+                                    ProfileCartesianScrew, ProfileCartesianSpline)
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+checks = []
+robot = LinkDict2Robot(ManipulatorStaubliTX2_90L())
+chain = robot.GetKinematicChain()
+q0 = np.array([0, 0.5, 1.4, 0, 1.2, 0])
+HT0 = chain.ToolHT(q0)
+p0 = np.array(HT0.translation)
+R0 = np.array(HT0.rotation)
+configuration0 = chain.ArmConfiguration(q0)
+
+def Follow(profile, n=201):
+    """the joint coordinates, velocities and tool positions of the profile from q0 at n times in [0, 1]"""
+    trajectory = Trajectory(q0)
+    trajectory.Add(profile)
+    times = np.linspace(0, 1, n)
+    (qs, vs) = (np.zeros((n, 6)), np.zeros((n, 6)))
+    for (i, t) in enumerate(times):
+        [qs[i], vs[i], a] = trajectory.Evaluate(t)
+    positions = np.array([chain.ToolHT(q).translation for q in qs])
+    velocityError = np.max(np.abs(vs[1:-1] - (qs[2:] - qs[:-2])/(times[2] - times[0])))/np.max(np.abs(vs))
+    sameConfiguration = all(np.array_equal(chain.ArmConfiguration(q), configuration0) for q in qs)
+    return (qs, positions, velocityError, sameConfiguration)
+
+def SameHT(H0, H1):
+    return np.max(np.abs(H0.HT44() - H1.HT44())) < 1e-10
+
+#the circle through the start, a via point and the end, the rotation of the tool turned by 0.3 rad
+via = p0 + [0.1, 0.1, 0.]
+end = exu.HT(rotation=RotationVector2RotationMatrix([0, 0, 0.3]) @ R0, translation=p0 + [0., 0.2, 0.])
+(qs, positions, velocityError, sameConfiguration) = Follow(ProfileCartesianCircular(robot, via, end, 1.))
+center = p0 + [0., 0.1, 0.]
+checks += [np.max(np.abs(np.linalg.norm(positions - center, axis=1) - 0.1)) < 1e-12]
+checks += [np.min(np.linalg.norm(positions - via, axis=1)) < 1e-12] #the via point is at the middle of the path
+checks += [SameHT(chain.ToolHT(qs[-1]), end) and sameConfiguration and velocityError < 1e-3]
+exu.Print('circle: velocity error', velocityError)
+
+#the screw: 1 rad about the vertical axis through p0 + [0.1, 0, 0], 0.1 upwards
+axisPoint = p0 + [0.1, 0., 0.]
+(qs, positions, velocityError, sameConfiguration) = Follow(ProfileCartesianScrew(robot, axisPoint, [0, 0, 1], 1., 0.1, 1.))
+A = RotationVector2RotationMatrix([0, 0, 1.])
+endScrew = exu.HT(rotation=A @ R0, translation=axisPoint + A @ (p0 - axisPoint) + [0, 0, 0.1])
+checks += [np.max(np.abs(np.linalg.norm(positions[:, :2] - axisPoint[:2], axis=1) - 0.1)) < 1e-12]
+checks += [SameHT(chain.ToolHT(qs[-1]), endScrew) and sameConfiguration and velocityError < 1e-3]
+exu.Print('screw: velocity error', velocityError)
+
+#the spline through three frames, the last turned by 0.2 rad
+vias = [exu.HT(rotation=R0, translation=p0 + [0.1, 0.05, 0.05]), exu.HT(rotation=R0, translation=p0 + [0.15, 0.15, 0.]),
+        exu.HT(rotation=RotationVector2RotationMatrix([0.2, 0, 0]) @ R0, translation=p0 + [0.1, 0.25, -0.05])]
+(qs, positions, velocityError, sameConfiguration) = Follow(ProfileCartesianSpline(robot, vias, 1.), n=2001)
+checks += [max(np.min(np.linalg.norm(positions - H.translation, axis=1)) for H in vias) < 1e-4]
+checks += [SameHT(chain.ToolHT(qs[-1]), vias[-1]) and sameConfiguration and velocityError < 1e-3]
+exu.Print('spline: velocity error', velocityError)
+qSpline = qs[-1]
+
+#a line through the singular wrist (q5 from 0.3 to -0.3): the configuration cannot be kept, the nearest solution passes
+qa = np.array([0, 0.5, 1.4, 0, 0.3, 0])
+qb = np.array([0, 0.5, 1.4, 0, -0.3, 0])
+try:
+    Trajectory(qa).Add(ProfileCartesianLinear(robot, chain.ToolHT(qb), 1.))
+    checks += [False]
+except ValueError:
+    checks += [True]
+trajectory = Trajectory(qa)
+trajectory.Add(ProfileCartesianLinear(robot, chain.ToolHT(qb), 1., keepConfiguration=False))
+checks += [np.max(np.abs(trajectory.GetFinalCoordinates() - qb)) < 1e-10]
+
+#a profile that starts elsewhere is refused by Trajectory; a circle through three points of a line is refused
+class ProfileStartingElsewhere:
+    """a profile that starts 0.1 away from the end of the trajectory"""
+    def GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations):
+        return BasicProfile([initialCoordinates + 0.1, initialCoordinates], initialTime, initialTime + 1., [0.5]*6, [0.4]*6, [0.8]*6)
+for profile in [ProfileStartingElsewhere(), ProfileCartesianCircular(robot, p0 + [0.1, 0, 0], exu.HT(rotation=R0, translation=p0 + [0.2, 0, 0]), 1.)]:
+    try:
+        Trajectory(q0).Add(profile)
+        checks += [False]
+    except ValueError:
+        checks += [True]
+
+u = sum(checks) + qSpline @ np.arange(1, 7)
+exu.Print('checks:', checks)
+exu.Print('solution of robotCartesianPathsTest=', u)
+exu.sys['testResult'] = u

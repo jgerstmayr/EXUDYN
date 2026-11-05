@@ -1,0 +1,15 @@
+{
+  "number": 3272,
+  "title": "robotics.motion: circular, screw and spline paths of the tool, the arm configuration kept, the check of jumps in Trajectory",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "exudyn.robotics.motion has the straight line as its only Cartesian path, which follows the nearest solution of the inverse kinematics and may change the arm configuration, and Trajectory does not notice a profile that starts with a jump. Decided (design sections 3 and 6.2): ProfileCartesianCircular (via point and end), ProfileCartesianScrew (axis, angle, translation) and ProfileCartesianSpline (via frames) on the common code of ProfileCartesianLinear; keepConfiguration (default True) keeps the arm configuration of the start and raises at a jump of the joint coordinates on the path; Trajectory(jumpTolerance) raises if a profile starts at other coordinates than the trajectory ends.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 21:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.robotics.motion: ProfileCartesianCircular (the arc through a via point to the end), ProfileCartesianScrew (the tool frame turned about an axis and moved along it) and ProfileCartesianSpline (through via frames, positions and rotation vectors as natural cubic splines); with keepConfiguration=True (default) these and ProfileCartesianLinear keep the arm configuration of the start and raise a ValueError when the joint coordinates jump on the path; Trajectory(jumpTolerance) raises in Add if a profile starts at other coordinates than the trajectory ends.",
+  "resolvedInVersion": "1.13.384"
+}

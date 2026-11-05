@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 368 | 1.13.383 |
+| 1.13 | Newborn | 369 | 1.13.384 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.384** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics.motion: circular, screw and spline paths of the tool, the arm configuration kept, the check of jumps in Trajectory (#3272)
+  - description: exudyn.robotics.motion has the straight line as its only Cartesian path, which follows the nearest solution of the inverse kinematics and may change the arm configuration, and Trajectory does not notice a profile that starts with a jump. Decided (design sections 3 and 6.2): ProfileCartesianCircular (via point and end), ProfileCartesianScrew (axis, angle, translation) and ProfileCartesianSpline (via frames) on the common code of ProfileCartesianLinear; keepConfiguration (default True) keeps the arm configuration of the start and raises at a jump of the joint coordinates on the path; Trajectory(jumpTolerance) raises if a profile starts at other coordinates than the trajectory ends.
+  - **notes:** exudyn.robotics.motion: ProfileCartesianCircular (the arc through a via point to the end), ProfileCartesianScrew (the tool frame turned about an axis and moved along it) and ProfileCartesianSpline (through via frames, positions and rotation vectors as natural cubic splines); with keepConfiguration=True (default) these and ProfileCartesianLinear keep the arm configuration of the start and raise a ValueError when the joint coordinates jump on the path; Trajectory(jumpTolerance) raises in Add if a profile starts at other coordinates than the trajectory ends.
+  - date resolved: **2026-11-05 21:33**, date raised: 2026-11-05
 - **1.13.383** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Images in dicts: textures of graphics data and of the renderer to and from a dict (#3268)
   - description: There is no conversion of an image (the textures added by SC.renderer.AddTexture and referenced by graphics data) into a dict and back, so a dict of an mbs, the renderer or a Robot cannot carry its textures. Proposed: an image as a dict of its size, interpretation, flags and pixel array, written by the GetDictionary functions and read by SetDictionary and by the HDF5 load and save.
   - **notes:** SC.renderer.GetTexture(name) gives a texture as a dict of name, image (uint8, the first row at the top, as AddTexture takes it), interpretation (its name, e.g. 'RGB') and flags; SC.renderer.GetDictionary and SC.GetDictionary contain all textures under 'textures', and their SetDictionary adds them again; Robot.GetDictionary contains the textures its graphics data name, SetDictionary adds them, so that they are saved with SaveDictToHDF5. A Robot without base or tool, and a RobotBase or RobotTool without visualization, gets its own object instead of one shared by all.

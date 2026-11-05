@@ -17,11 +17,13 @@ import numpy as np
 from copy import copy
 import exudyn
 import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
+import exudyn.rigidBodyUtilities as erb
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'BasicProfile', 'ProfileConstantAcceleration', 'ProfileLinearAccelerationsList', 'ProfilePTP',
-    'ProfilePolynomial5', 'ProfileCartesianLinear', 'Trajectory', 'BasicProfileLinearAcceleration',
+    'ProfilePolynomial5', 'ProfileCartesianLinear', 'ProfileCartesianCircular', 'ProfileCartesianScrew',
+    'ProfileCartesianSpline', 'Trajectory', 'BasicProfileLinearAcceleration',
     ]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -359,64 +361,258 @@ class ProfilePolynomial5:
         return _BasicProfileTimeLaw(q0, self.finalCoordinates, initialTime, initialTime + self.duration, Function)
 
 
-class ProfileCartesianLinear:
+class _ProfileCartesian:
+    """internal: the common part of the Cartesian profiles (#3262, #3272): the tool frame on a path HT(sigma), sigma in
+    [0, 1] by the time law; the joint coordinates by the analytic inverse kinematics at each evaluation, the solution
+    nearest to the last one evaluated, in the arm configuration of the start if keepConfiguration; the joint velocities
+    from the twist of the path by the Jacobian, the accelerations by their difference in time. A subclass gives
+    _Path(HT0), a function sigma -> (HT, dp, omega): the tool frame and the derivatives of its position and of its
+    rotation (global angular velocity) by sigma"""
+    def __init__(self, robot, duration, timeLaw, keepConfiguration):
+        name = type(self).__name__
+        if duration <= 0:
+            raise ValueError(name + ': duration must be > 0')
+        _TimeLaw(timeLaw, 0., 1.) #checks timeLaw
+        self.chain = robot.GetKinematicChain()
+        self.toolPosition = np.array(robot.tool.HT.translation)
+        self.duration = duration
+        self.timeLaw = timeLaw
+        self.keepConfiguration = keepConfiguration
+
+    def GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations):
+        """the profile in Trajectory; the joint coordinates of the end by following the path from the start"""
+        name = type(self).__name__
+        chain = self.chain
+        q0 = np.array(initialCoordinates, dtype=float)
+        Path = self._Path(chain.ToolHT(q0))
+        configuration = chain.ArmConfiguration(q0) if self.keepConfiguration else None
+        state = {'q': q0}
+        def Pose(sigma, qReference):
+            solutions = chain.InverseKinematicsAnalytic(Path(sigma)[0], qReference, configuration)
+            if len(solutions) == 0:
+                if self.keepConfiguration and len(chain.InverseKinematicsAnalytic(Path(sigma)[0], qReference)) != 0:
+                    raise ValueError(name + ': the pose at the path parameter ' + str(sigma) + ' is not reachable in the arm configuration ' + str(configuration)
+                                     + ' of the start; the path crosses a singular configuration (keepConfiguration=False follows the nearest solution)')
+                raise ValueError(name + ': the pose at the path parameter ' + str(sigma) + ' is out of reach')
+            return solutions[0]
+        def Velocities(q, sigma, sigma_t):
+            (H, dp, omega) = Path(sigma)
+            return np.linalg.solve(chain.Jacobian(q, -1, self.toolPosition), np.concatenate([dp, omega])*sigma_t)
+        qEnd = q0
+        sigmaPrevious = 0.
+        for sigma in np.linspace(0., 1., 201)[1:]: #the end along the path, its reach and its continuity
+            q = Pose(sigma, qEnd)
+            step = np.max(np.abs(q - qEnd))
+            if step > 0.5: #a jump: tens of radians per path, a singular configuration on the path or close to it
+                raise ValueError(name + ': the joint coordinates jump by ' + str(round(step, 3)) + ' rad between the path parameters '
+                                 + str(sigmaPrevious) + ' and ' + str(sigma) + '; the path crosses or passes close to a singular configuration'
+                                 + (', in which the arm configuration of the start cannot be kept (keepConfiguration=False follows the nearest solution)' if self.keepConfiguration else ''))
+            (qEnd, sigmaPrevious) = (q, sigma)
+        def Function(t):
+            tau = (t - initialTime)/self.duration
+            (sigma, sigma_t, sigma_tt) = _TimeLaw(self.timeLaw, tau, self.duration)
+            q = Pose(sigma, state['q'])
+            state['q'] = q
+            v = Velocities(q, sigma, sigma_t)
+            taus = [max(0., tau - 1e-6), min(1., tau + 1e-6)]
+            sigmas = [_TimeLaw(self.timeLaw, x, self.duration) for x in taus]
+            vs = [Velocities(Pose(x[0], q), x[0], x[1]) for x in sigmas]
+            a = (vs[1] - vs[0])/((taus[1] - taus[0])*self.duration) if taus[1] > taus[0] else 0.*v
+            return [q, v, a]
+        return _BasicProfileTimeLaw(q0, qEnd, initialTime, initialTime + self.duration, Function)
+
+
+def _CheckHT(name, H, argument):
+    if not isinstance(H, exudyn.HT):
+        raise TypeError(name + ': ' + argument + ' must be an exudyn.HT')
+
+
+class ProfileCartesianLinear(_ProfileCartesian):
     """a Cartesian profile of a robot: the tool frame moves on a straight line from its frame at the start of the
     profile to finalHT, with its rotation about one fixed axis (exu.HT.InterpolateSO3), by the time law timeLaw
     (#3262); the joint coordinates by the analytic inverse kinematics of the robot (KinematicChain.InverseKinematicsAnalytic)
     at each evaluation, the solution nearest to the last one evaluated, the joint velocities from the twist of the tool by
     the Jacobian, the accelerations by their difference in time; a ValueError if a pose of the path is out of reach. It
     needs a robot of the analytic inverse kinematics (6 revolute joints with a spherical wrist or of the UR geometry); a
-    path through a singular configuration gives large joint velocities
+    path close to a singular configuration gives large joint velocities, a jump of the joint coordinates on the path
+    (more than 0.5 rad in 1/200 of it) raises a ValueError
 
     Args:
         robot: the exudyn.robotics.Robot
         finalHT: the tool frame at the end, exu.HT in global coordinates
         duration: the time of the profile
         timeLaw: 'polynomial5' (default) or 'constantAcceleration', the path parameter in time
+        keepConfiguration: True: the solutions in the arm configuration of the start (KinematicChain.ArmConfiguration), as a robot controller keeps it on a Cartesian path; a path on which it cannot be kept without a jump of the joint coordinates, through or close to a singular configuration, raises a ValueError; False: the solution nearest to the last one, which may change the configuration (#3272)
     """
-    def __init__(self, robot, finalHT, duration, timeLaw='polynomial5'):
-        if duration <= 0:
-            raise ValueError('ProfileCartesianLinear: duration must be > 0')
-        _TimeLaw(timeLaw, 0., 1.) #checks timeLaw
-        self.chain = robot.GetKinematicChain()
-        self.toolPosition = np.array(robot.tool.HT.translation)
-        if not isinstance(finalHT, exudyn.HT):
-            raise TypeError('ProfileCartesianLinear: finalHT must be an exudyn.HT')
+    def __init__(self, robot, finalHT, duration, timeLaw='polynomial5', keepConfiguration=True):
+        _ProfileCartesian.__init__(self, robot, duration, timeLaw, keepConfiguration)
+        _CheckHT('ProfileCartesianLinear', finalHT, 'finalHT')
         self.finalHT = finalHT
-        self.duration = duration
-        self.timeLaw = timeLaw
 
-    def GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations):
-        """the profile in Trajectory; the joint coordinates of the end by following the path from the start"""
-        chain = self.chain
-        q0 = np.array(initialCoordinates, dtype=float)
-        HT0 = chain.ToolHT(q0)
+    def _Path(self, HT0):
         HT1 = self.finalHT
-        velocity = np.array(HT1.translation) - np.array(HT0.translation)
+        dp = np.array(HT1.translation) - np.array(HT0.translation)
         omega = np.array(HT0.rotation) @ (HT0.Relative(HT1).GetRotationVector()) #the rotation of the path, global
-        state = {'q': q0}
-        def Pose(sigma, qReference):
-            solutions = chain.InverseKinematicsAnalytic(HT0.InterpolateSO3(HT1, sigma), qReference)
-            if len(solutions) == 0:
-                raise ValueError('ProfileCartesianLinear: the pose at the path parameter ' + str(sigma) + ' is out of reach')
-            return solutions[0]
-        def Velocities(q, sigma_t):
-            return np.linalg.solve(chain.Jacobian(q, -1, self.toolPosition), np.concatenate([velocity, omega])*sigma_t)
-        qEnd = q0
-        for sigma in np.linspace(0., 1., 51)[1:]: #the end along the path, and its reach
-            qEnd = Pose(sigma, qEnd)
-        def Function(t):
-            tau = (t - initialTime)/self.duration
-            (sigma, sigma_t, sigma_tt) = _TimeLaw(self.timeLaw, tau, self.duration)
-            q = Pose(sigma, state['q'])
-            state['q'] = q
-            v = Velocities(q, sigma_t)
-            taus = [max(0., tau - 1e-6), min(1., tau + 1e-6)]
-            sigmas = [_TimeLaw(self.timeLaw, x, self.duration) for x in taus]
-            vs = [Velocities(Pose(x[0], q), x[1]) for x in sigmas]
-            a = (vs[1] - vs[0])/((taus[1] - taus[0])*self.duration) if taus[1] > taus[0] else 0.*v
-            return [q, v, a]
-        return _BasicProfileTimeLaw(q0, qEnd, initialTime, initialTime + self.duration, Function)
+        return lambda sigma: (HT0.InterpolateSO3(HT1, sigma), dp, omega)
+
+
+class ProfileCartesianCircular(_ProfileCartesian):
+    """a Cartesian profile of a robot (#3272): the tool position moves on the arc of the circle from its position at the
+    start of the profile through viaPosition to the position of finalHT, the rotation of the tool from the start to that
+    of finalHT about one fixed axis (exu.HT.InterpolateSO3), both by the time law timeLaw; the joint coordinates as in
+    ProfileCartesianLinear; for a tool that turns with the arc, see ProfileCartesianScrew
+
+    Args:
+        robot: the exudyn.robotics.Robot
+        viaPosition: a point of the arc between the start and the end, in global coordinates
+        finalHT: the tool frame at the end, exu.HT in global coordinates
+        duration: the time of the profile
+        timeLaw: 'polynomial5' (default) or 'constantAcceleration', the path parameter in time
+        keepConfiguration: True: the arm configuration of the start is kept, see ProfileCartesianLinear
+    """
+    def __init__(self, robot, viaPosition, finalHT, duration, timeLaw='polynomial5', keepConfiguration=True):
+        _ProfileCartesian.__init__(self, robot, duration, timeLaw, keepConfiguration)
+        _CheckHT('ProfileCartesianCircular', finalHT, 'finalHT')
+        self.viaPosition = np.array(viaPosition, dtype=float)
+        self.finalHT = finalHT
+
+    def _Path(self, HT0):
+        HT1 = self.finalHT
+        p0 = np.array(HT0.translation)
+        a = self.viaPosition - p0
+        b = np.array(HT1.translation) - p0
+        n = np.cross(a, b)
+        if cMath.norm(n) <= 1e-12*max(1., cMath.norm(a)*cMath.norm(b)):
+            raise ValueError('ProfileCartesianCircular: the start, viaPosition and the end are on one line; no circle passes through them')
+        center = p0 + np.cross(a @ a * b - b @ b * a, n)/(2.*(n @ n)) #the center of the circle through the three points
+        n = n/cMath.norm(n) #the axis about which start, via point and end follow each other
+        r0 = p0 - center
+        r1 = np.array(HT1.translation) - center
+        angle = cMath.atan2(n @ np.cross(r0, r1), r0 @ r1)
+        if angle <= 0:
+            angle += 2*np.pi #the arc through the via point, counterclockwise about n
+        omega = np.array(HT0.rotation) @ (HT0.Relative(HT1).GetRotationVector())
+        def Path(sigma):
+            r = erb.RotationVector2RotationMatrix(sigma*angle*n) @ r0
+            H = HT0.InterpolateSO3(HT1, sigma)
+            return (exudyn.HT(rotation=H.rotation, translation=center + r), angle*np.cross(n, r), omega)
+        return Path
+
+
+class ProfileCartesianScrew(_ProfileCartesian):
+    """a Cartesian profile of a robot (#3272): the tool frame moves as a rigid body by a screw motion from its frame at
+    the start of the profile, the rotation by angle about the axis through axisPoint along axis together with the
+    translation translation along it, both by the time law timeLaw; translation = 0 is the circle about the axis with
+    the tool turning with it, angle = 0 the straight line along the axis; the joint coordinates as in
+    ProfileCartesianLinear
+
+    Args:
+        robot: the exudyn.robotics.Robot
+        axisPoint: a point of the screw axis, in global coordinates
+        axis: the direction of the screw axis, in global coordinates (normalized)
+        angle: the angle of the rotation about the axis, in rad, positive by the right-hand rule
+        translation: the translation along the axis
+        duration: the time of the profile
+        timeLaw: 'polynomial5' (default) or 'constantAcceleration', the path parameter in time
+        keepConfiguration: True: the arm configuration of the start is kept, see ProfileCartesianLinear
+    """
+    def __init__(self, robot, axisPoint, axis, angle, translation, duration, timeLaw='polynomial5', keepConfiguration=True):
+        _ProfileCartesian.__init__(self, robot, duration, timeLaw, keepConfiguration)
+        if cMath.norm(axis) == 0:
+            raise ValueError('ProfileCartesianScrew: axis must not be zero')
+        self.axisPoint = np.array(axisPoint, dtype=float)
+        self.axis = np.array(axis, dtype=float)/cMath.norm(axis)
+        self.angle = angle
+        self.translation = translation
+
+    def _Path(self, HT0):
+        e = self.axis
+        r0 = np.array(HT0.translation) - self.axisPoint
+        R0 = np.array(HT0.rotation)
+        def Path(sigma):
+            A = erb.RotationVector2RotationMatrix(sigma*self.angle*e)
+            r = A @ r0
+            return (exudyn.HT(rotation=A @ R0, translation=self.axisPoint + r + sigma*self.translation*e),
+                    self.angle*np.cross(e, r) + self.translation*e, self.angle*e)
+        return Path
+
+
+class ProfileCartesianSpline(_ProfileCartesian):
+    """a Cartesian profile of a robot (#3272): the tool position moves on the natural cubic spline through its position
+    at the start of the profile and the positions of viaHTs, parametrized by the length of the chords between them; the
+    rotation of the tool by the natural cubic spline of the rotation vectors of the frames relative to the start, on the
+    same parameter (the rotations less than pi from the start), so that the position and the angular velocity are
+    continuous at the via frames; the path parameter by the time law timeLaw; the last frame of viaHTs is the end; the
+    joint coordinates as in ProfileCartesianLinear
+
+    Args:
+        robot: the exudyn.robotics.Robot
+        viaHTs: a list of the tool frames the path passes, exu.HT in global coordinates; the last is the end
+        duration: the time of the profile
+        timeLaw: 'polynomial5' (default) or 'constantAcceleration', the path parameter in time
+        keepConfiguration: True: the arm configuration of the start is kept, see ProfileCartesianLinear
+    """
+    def __init__(self, robot, viaHTs, duration, timeLaw='polynomial5', keepConfiguration=True):
+        _ProfileCartesian.__init__(self, robot, duration, timeLaw, keepConfiguration)
+        if len(viaHTs) == 0:
+            raise ValueError('ProfileCartesianSpline: viaHTs must contain at least the end')
+        for H in viaHTs:
+            _CheckHT('ProfileCartesianSpline', H, 'every entry of viaHTs')
+        self.viaHTs = list(viaHTs)
+
+    def _Path(self, HT0):
+        frames = [HT0] + self.viaHTs
+        points = np.array([H.translation for H in frames])
+        chords = cMath.sqrt(np.sum(np.diff(points, axis=0)**2, axis=1))
+        if min(chords) <= 0:
+            raise ValueError('ProfileCartesianSpline: two successive positions of the path are equal')
+        u = np.concatenate([[0.], np.cumsum(chords)])/np.sum(chords) #the parameter of each point
+        R0 = np.array(HT0.rotation)
+        rotationVectors = np.array([erb.RotationMatrix2RotationVector(R0.T @ np.array(H.rotation)) for H in frames])
+        (Mp, Mr) = (_NaturalSpline(u, points), _NaturalSpline(u, rotationVectors))
+        def Path(sigma):
+            (p, dp) = _EvaluateSpline(u, points, Mp, sigma)
+            (r, dr) = _EvaluateSpline(u, rotationVectors, Mr, sigma)
+            return (exudyn.HT(rotation=R0 @ erb.RotationVector2RotationMatrix(r), translation=p), dp, R0 @ (_TangentOperator(r) @ dr))
+        return Path
+
+
+def _NaturalSpline(u, values):
+    """the second derivatives at the parameters u of the natural cubic spline through the rows of values (zero at both
+    ends)"""
+    m = len(u) - 1
+    M = np.zeros(values.shape)
+    if m > 1:
+        h = np.diff(u)
+        A = np.zeros((m - 1, m - 1))
+        rhs = np.zeros((m - 1, values.shape[1]))
+        for k in range(1, m):
+            A[k - 1, k - 1] = 2.*(h[k - 1] + h[k])
+            if k > 1:
+                A[k - 1, k - 2] = h[k - 1]
+            if k < m - 1:
+                A[k - 1, k] = h[k]
+            rhs[k - 1] = 6.*((values[k + 1] - values[k])/h[k] - (values[k] - values[k - 1])/h[k - 1])
+        M[1:m] = np.linalg.solve(A, rhs)
+    return M
+
+
+def _EvaluateSpline(u, values, M, sigma):
+    """the value and the derivative of the cubic spline of _NaturalSpline at sigma"""
+    k = max(min(int(np.searchsorted(u, sigma, side='right')) - 1, len(u) - 2), 0)
+    h = u[k + 1] - u[k]
+    (x0, x1) = (u[k + 1] - sigma, sigma - u[k])
+    (c0, c1) = (values[k]/h - M[k]*h/6., values[k + 1]/h - M[k + 1]*h/6.)
+    return ((M[k]*x0**3 + M[k + 1]*x1**3)/(6.*h) + c0*x0 + c1*x1, (-M[k]*x0**2 + M[k + 1]*x1**2)/(2.*h) - c0 + c1)
+
+
+def _TangentOperator(r):
+    """the matrix T with omega = T(r) r_t, the angular velocity of exp(r) in the frame it is turned from"""
+    angle = cMath.norm(r)
+    rTilde = np.array([[0, -r[2], r[1]], [r[2], 0, -r[0]], [-r[1], r[0], 0]])
+    if angle < 1e-6: #the series, to its second order
+        return np.eye(3) + 0.5*rTilde + rTilde @ rTilde/6.
+    return np.eye(3) + (1. - cMath.cos(angle))/angle**2*rTilde + (angle - cMath.sin(angle))/angle**3*(rTilde @ rTilde)
 
 
 class Trajectory:
@@ -433,7 +629,7 @@ class Trajectory:
         #now evaluate trajectory at certain time point (this could be now applied in a user function)
         [s,v,a] = traj.Evaluate(t=0.5)
     """
-    def __init__(self, initialCoordinates, initialTime = 0, maxVelocities=[], maxAccelerations=[]):
+    def __init__(self, initialCoordinates, initialTime = 0, maxVelocities=[], maxAccelerations=[], jumpTolerance=1e-6):
         """initialize robot link with parameters, being self-explaining
 
         Args:
@@ -441,9 +637,11 @@ class Trajectory:
             initialCoordinates: initial coordinates for profile
             maxVelocities: list or numpy array to describe global maximum velocities per coordinate
             maxAccelerations: list or numpy array to describe global maximum accelerations per coordinate
+            jumpTolerance: Add raises a ValueError if a profile starts at coordinates that differ by more than this from the end of the profile before, e.g. a Cartesian profile whose inverse kinematics starts in another solution (#3272)
         """
         self.initialTime = initialTime
         self.initialCoordinates = initialCoordinates
+        self.jumpTolerance = jumpTolerance
         self.globalMaxVelocities = maxVelocities
         self.globalMaxAccelerations = maxAccelerations
 
@@ -465,11 +663,17 @@ class Trajectory:
 
 
     def Add(self, profile):
-        """add successively profiles, using MotionProfile class
+        """add successively profiles, using MotionProfile class; raises a ValueError if the profile starts at other
+        coordinates than the trajectory ends, by more than jumpTolerance
         """
         self.initialized = False
-        ptp = profile.GetBasicProfile(self.GetTimes()[-1], self.GetFinalCoordinates(),
+        previousCoordinates = np.array(self.GetFinalCoordinates(), dtype=float)
+        ptp = profile.GetBasicProfile(self.GetTimes()[-1], previousCoordinates,
                                     self.globalMaxVelocities,self.globalMaxAccelerations)
+        jump = np.max(np.abs(np.array(ptp.Evaluate(ptp.initialTime)[0]) - previousCoordinates)) #the check of jumps (#3272)
+        if jump > self.jumpTolerance:
+            raise ValueError('Trajectory.Add: the profile ' + type(profile).__name__ + ' (number ' + str(len(self.profiles))
+                             + ') starts with a jump of ' + str(jump) + ' in the coordinates, more than jumpTolerance=' + str(self.jumpTolerance))
         self.profiles+=[ptp]
 
     def GetTimes(self):
