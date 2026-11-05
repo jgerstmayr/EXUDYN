@@ -6282,6 +6282,21 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - serialRobotURDF.py: the Puma560 (no download), Robot.SetControl and one PreStepUserFunction for all robots, the
   invalid lightModelAmbient of 3 values fixed; run with Puma560, LBR, vx300, px150, AL5D.
 
+<a id="rg19-9"></a>
+### RG19.9 — the chapter Robotics (2026-11-06, #3281)
+- Maintainer 2026-11-05: a top-level chapter between the advanced topics and the symbolic system, the features and
+  workflows, an image of a nice model, a notebook of the robot example; ROS integrated, its features said untested.
+- docs/manual/robotics.md: the modules, a robot, the kinematics without a model, the two models, trajectories, control
+  and sensors with a typical script, the URDF import (with the result of RG19.1.2), ROS, the examples.
+- docs/figures/robotStaubliTX2.png: the TX2-90L with its URDF meshes, the gripper, the cup and the two tool paths of
+  staubliTX2blending.py, raytraced by ShowImage (1600 x 1200); the modelRotation of ShowImage is the transpose of
+  Rx(-1.15) Rz(-2.3) for z up.
+- python/Notebooks/tutorialRobotics.ipynb: Puma560 in qn (qr is upright, where a Cartesian line soon leaves the
+  workspace), analytic IK (8 solutions), a PTP blended into a Cartesian line, the kinematic tree with
+  compensation='dynamic' (largest deviation 5e-5 rad; with friction=True 0.069 rad, as the friction is not
+  compensated, so the notebook leaves the friction out), sensors and plots; its page is in the chapter's toctree.
+- The ROS section of the advanced topics moved into the chapter; index.md and pdfIndex.md list the chapter.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

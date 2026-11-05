@@ -28,6 +28,7 @@ docs/manual/tutorial
 docs/manual/GUI
 docs/manual/performanceErrors
 docs/manual/introductionAdvanced
+docs/manual/robotics
 docs/manual/symbolic
 docs/manual/notation
 docs/manual/theory

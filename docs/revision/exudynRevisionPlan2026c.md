@@ -3248,6 +3248,10 @@ Design section 3; P/D values adjusted slightly in favour of simple scripts.
 
 CLOSED 2026-11-05 (#3279; maintainer 2026-11-05: the RTB limits, Manipulator4Rsimple removed): seven examples rewritten, the joint torque load tests kept. [log](exudynRevisionLog2026c.md#rg19-8-1)
 
+### **CLOSED_RG19.9** A chapter Robotics in the user manual with an image and a notebook, ROS moved there
+
+CLOSED 2026-11-06 (#3281; maintainer 2026-11-05): docs/manual/robotics.md, the TX2-90L raytraced, tutorialRobotics.ipynb, ROS with its features said untested. [log](exudynRevisionLog2026c.md#rg19-9)
+
 ## **OPEN_RG20** Advanced solvers
 
 Maintainer 2026-11-04: an index-3 trapezoidal solver with GGL stabilization and an adaptive step, a 4th-order Lobatto solver, adjoint sensitivities, output interpolated within the step, explicit solvers with constraints - first on the symbolic system as test and evaluation, then a cleanup of the C++ solvers and the adaptive solvers in C++. Design docs/dev/design/advancedSolvers.md; no issues before the evaluation is decided, except RG20.5. Requested as group 16, a number that revision2026b has taken, as 15, 17 and 18 (step numbers are permanent).

@@ -368,11 +368,7 @@ the `exudyn.utilities` functions
 Basically, data can be transmitted in both directions, e.g., within a preStepUserFunction. In Examples, you can find
  TCPIPexudynMatlab.py which shows a basic example for such a connectivity.
 
-(sec-overview-advanced-ros)=
-## ROS
-
-Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is no (and will never be any) Python 2
-support for Exudyn.
+The interface to ROS is in {ref}`sec-robotics-ros`.
 
 (sec-overview-advanced-tools)=
 ## Tools that are not part of a model

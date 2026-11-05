@@ -1,0 +1,15 @@
+{
+  "number": 3281,
+  "title": "A chapter Robotics in the user manual, with a notebook of a robot",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "The user manual has no chapter on exudyn.robotics; ROS is a short section of the advanced topics. Decided: a chapter Robotics at the top level of the user manual, between the advanced topics and the symbolic system and user functions: the features and the workflows (robots from the models, DH parameters or URDF; the kinematic tree and the redundant model; control, compensation, friction and end stops; trajectories and blending; kinematics, inverse kinematics and dynamics; sensors; saving), an image of a robot, a notebook of a robot as tutorial, and the ROS section, which says that the ROS features and examples are currently untested.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 00:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The user manual has a chapter Robotics: the modules, the workflows, kinematics and models, trajectories, control and sensors, the URDF import and ROS, with an image of the Staubli TX2-90L and the notebook tutorialRobotics of the Puma560.",
+  "resolvedInVersion": "1.13.393"
+}

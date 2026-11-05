@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 377 | 1.13.392 |
+| 1.13 | Newborn | 378 | 1.13.393 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.393** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A chapter Robotics in the user manual, with a notebook of a robot (#3281)
+  - description: The user manual has no chapter on exudyn.robotics; ROS is a short section of the advanced topics. Decided: a chapter Robotics at the top level of the user manual, between the advanced topics and the symbolic system and user functions: the features and the workflows (robots from the models, DH parameters or URDF; the kinematic tree and the redundant model; control, compensation, friction and end stops; trajectories and blending; kinematics, inverse kinematics and dynamics; sensors; saving), an image of a robot, a notebook of a robot as tutorial, and the ROS section, which says that the ROS features and examples are currently untested.
+  - **notes:** The user manual has a chapter Robotics: the modules, the workflows, kinematics and models, trajectories, control and sensors, the URDF import and ROS, with an image of the Staubli TX2-90L and the notebook tutorialRobotics of the Puma560.
+  - date resolved: **2026-11-06 00:16**, date raised: 2026-11-06
 - **1.13.392** `FIX` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The URDF import of urdfImport with the Robotics Toolbox 1.5 (#3280)
   - description: GetRoboticsToolboxInternalModel and LoadURDFrobot fail with the Robotics Toolbox 1.5: roboticstoolbox.tools.xacro and Robot.URDF\_read no longer exist, the models are classes reading their URDF by URDF\_file (xacrodoc), some of them through robot\_descriptions, which downloads them. GetURDFrobotData matches the visuals by the urdf object of the RTB and shifts the link frames for the UR robots by a special case. Decided: the functions use the API of RTB 1.5 - the models' classes, URDF\_file with the package of the URDF registered, the visual origins of the RTB links and the frames of fkine per link -, and the import is checked against the RTB (forward kinematics, inverse dynamics, inertias, joint limits, meshes) on the RTB models that need no download and the local data set.
   - **notes:** The URDF import works with the Robotics Toolbox 1.5 (GetRoboticsToolboxInternalModel, LoadURDFrobot); GetURDFrobotData adds links without joint to the joint link above them, with graphics and mass; checked against the RTB on its bundled URDF models and the local data set: equal except flipped joints.
