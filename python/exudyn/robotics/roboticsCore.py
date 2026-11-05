@@ -29,6 +29,7 @@ import exudyn.graphics as graphics
 
 from copy import copy, deepcopy
 import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
+import exudyn.cUtilities #KinematicChain, the kinematics of Robot in C++ (#3259)
 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
@@ -392,8 +393,21 @@ class Robot:
         """
         return self.tool.HT
     
+    def GetKinematicChain(self):
+        """the kinematics of the robot in C++, an exudyn.cUtilities.KinematicChain of its links, base, tool and gravity
+        (#3259): JointHT, LinkHT, ToolHT, Jacobian and StaticTorques of the chain compute what the functions of the
+        same names of Robot compute in Python, some hundred times faster; create it again after the robot is changed
+        """
+        return exudyn.cUtilities.KinematicChain(jointTypes=[link.jointType for link in self.links],
+                                                preHTs=[link.preHT for link in self.links],
+                                                localHTs=[link.localHT for link in self.links],
+                                                parents=[self.GetParentIndex(i) for i in range(len(self.links))],
+                                                masses=[link.mass for link in self.links],
+                                                COMs=[link.COM for link in self.links],
+                                                baseHT=self.base.HT, toolHT=self.tool.HT, gravity=self.gravity)
+
     def LinkHT(self, q):
-        """compute list of homogeneous transformations (exudyn.HT) for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!
+        """compute list of homogeneous transformations (exudyn.HT) for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different! The C++ version is KinematicChain.LinkHT of GetKinematicChain()
         """
         HT = []
 
@@ -412,7 +426,7 @@ class Robot:
         return HT    
 
     def JointHT(self, q):
-        """compute list of homogeneous transformations (exudyn.HT) for every joint (after rotation), using current joint coordinates q
+        """compute list of homogeneous transformations (exudyn.HT) for every joint (after rotation), using current joint coordinates q; the C++ version is KinematicChain.JointHT of GetKinematicChain()
         """
         HT = []
 
@@ -439,25 +453,30 @@ class Robot:
         return HTCOM
     
     def StaticTorques(self,HT):
-        """compute list of joint torques for serial robot due to gravity (gravity and mass as given in robot), taking HT from Robot.JointHT()
+        """compute the generalized forces of gravity on the joints (gravity and masses as given in robot), the sum over the links j of J_j^T m_j g with the Jacobian J_j of the center of mass of link j, taking HT from Robot.JointHT(); in one backward pass (#3259): the mass and its first moment summed over the links after each joint, then tau_i = axis . ((S_i - M_i o_i) x g) for a revolute joint at o_i, axis . (M_i g) for a prismatic one; the joint torques that hold the robot are their negative; the C++ version is KinematicChain.StaticTorques of GetKinematicChain()
         """
-        jointTorques = np.zeros(np.size(self.links))
-    
-        #compute HTs for COM
-        HTcom=self.COMHT(HT)
-        
-        #sum up the torques of all gravity loads:
-        for i in range(len(HTcom)):
-            p = HTcom[i].translation
-            Jcom = self.Jacobian(HT[0:i+1],toolPosition=p,mode='trans')
-            fG = self.links[i].mass * self.gravity
-            tau = Jcom.T @ fG
-            jointTorques[0:i+1] += tau
+        n = len(self.links)
+        HTcom = self.COMHT(HT)
+        massSum = np.array([link.mass for link in self.links], dtype=float)
+        momentSum = [self.links[i].mass * np.array(HTcom[i].translation) for i in range(n)]
+        for i in reversed(range(n)): #the links after a joint come after it
+            if self.HasParent(i):
+                massSum[self.GetParentIndex(i)] += massSum[i]
+                momentSum[self.GetParentIndex(i)] = momentSum[self.GetParentIndex(i)] + momentSum[i]
+        gravity = np.array(self.gravity, dtype=float)
+        jointTorques = np.zeros(n)
+        for i in range(n):
+            Hjoint = _ToHT(HT[i])
+            axis = Hjoint.rotation @ dictJointType2Axis[self.links[i].jointType]
+            if self.links[i].jointType[0] == 'R':
+                jointTorques[i] = axis @ np.cross(momentSum[i] - massSum[i] * Hjoint.translation, gravity)
+            else:
+                jointTorques[i] = massSum[i] * (axis @ gravity)
         return jointTorques
     
     
     def Jacobian(self, HT, toolPosition=[], mode='all', linkIndex=None):
-        """compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes
+        """compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes; the C++ version is KinematicChain.Jacobian of GetKinematicChain(), which takes q and a position in the link frame
 
         Args:
             HT: list of homogeneous transformations per joint , as computed by Robot.JointHT(...)

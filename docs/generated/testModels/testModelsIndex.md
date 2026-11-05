@@ -122,6 +122,7 @@ initialConstraintsCheckTest
 inspectTest
 itemParameterRenamesTest
 jointArgsTest
+kinematicChainTest
 kinematicTreeAndMBStest
 kinematicTreeConstraintTest
 kinematicTreeFloatingBaseTest

@@ -28,6 +28,7 @@ __all__ = [
     'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G', 'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t',
     'AngularVelocity2RotXYZ_t', 'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX',
     'RotationMatrixY', 'RotationMatrixZ', 'RotationMatrix2D', 'PointVelocity', 'LocalTwist', 'RelativeTwist',
+    'KinematicChain',
     ]
 
 _cUtilities = _compiledModule._cUtilities
@@ -65,3 +66,4 @@ RotationMatrix2D = _cUtilities.RotationMatrix2D
 PointVelocity = _cUtilities.PointVelocity
 LocalTwist = _cUtilities.LocalTwist
 RelativeTwist = _cUtilities.RelativeTwist
+KinematicChain = _cUtilities.KinematicChain #the kinematics of a robot (#3259)

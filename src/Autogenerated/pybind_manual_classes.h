@@ -372,6 +372,20 @@
         m.def("PointVelocity", &PyCUtilities::PointVelocity, "the velocity of a point fixed in the frame HT, given by its position localPoint in the frame, for the twist of the frame: $\vv + \tomega \times (\Rot\, \pv_{loc})$; computed by RigidBodyMath::PointVelocity of the C++ code", py::arg("HT"), py::arg("twist"), py::arg("localPoint"));
         m.def("LocalTwist", &PyCUtilities::LocalTwist, "the twist in the components of the frame HT: $[\Rot\tp \vv,\; \Rot\tp \tomega]$; computed by RigidBodyMath::LocalTwist of the C++ code", py::arg("HT"), py::arg("twist"));
         m.def("RelativeTwist", &PyCUtilities::RelativeTwist, "the velocity of frame 1 relative to frame 0 in the components of frame 0, the time derivative of HT0.Relative(HT1): $[\Rot_0\tp (\vv_1 - \vv_0 - \tomega_0 \times (\pv_1 - \pv_0)),\; \Rot_0\tp (\tomega_1 - \tomega_0)]$; computed by RigidBodyMath::RelativeTwist of the C++ code", py::arg("HT0"), py::arg("twist0"), py::arg("HT1"), py::arg("twist1"));
+
+    py::class_<PyKinematicChain>(m, "KinematicChain")
+        .def(py::init(&PyKinematicChain::ForbidConstructor))
+        .def(py::init<const py::object&, const py::object&, const py::object&, const py::object&, const py::object&, const py::object&, const py::object&, const py::object&, const py::object&>(), py::arg("jointTypes"), py::arg("preHTs") = py::none(), py::arg("localHTs") = py::none(), py::arg("parents") = py::none(), py::arg("masses") = py::none(), py::arg("COMs") = py::none(), py::arg("baseHT") = py::none(), py::arg("toolHT") = py::none(), py::arg("gravity") = py::none())
+        .def("NumberOfLinks", &PyKinematicChain::NumberOfLinks, "the number of links")
+        .def("JointHT", &PyKinematicChain::JointHT, "the global joint frames of all links, after the joint motion, for the joint coordinates q, a list of exu.HT; the Python version is Robot.JointHT", py::arg("q"))
+        .def("LinkHT", &PyKinematicChain::LinkHT, "the global link frames of all links for the joint coordinates q, a list of exu.HT; the Python version is Robot.LinkHT", py::arg("q"))
+        .def("ToolHT", &PyKinematicChain::ToolHT, "the global frame of the tool, the link frame of the last link times the tool HT, for the joint coordinates q", py::arg("q"))
+        .def("Jacobian", &PyKinematicChain::Jacobian, "the 6 x n Jacobian of the point localPosition (None the origin), given in the link frame of link linkIndex (-1 the last link), for the joint coordinates q: rows 0 to 2 the velocity of the point, rows 3 to 5 the angular velocity of the link, per joint velocity; the columns of the joints not between the link and the base are zero; the Python version is Robot.Jacobian, which takes the joint frames and the global position", py::arg("q"), py::arg("linkIndex") = -1, py::arg("localPosition") = py::none())
+        .def("StaticTorques", &PyKinematicChain::StaticTorques, "the generalized forces of gravity on the joints for the joint coordinates q, the sum over the links j of J_j^T m_j g with the Jacobian J_j of the center of mass of link j, computed in one backward pass over the links (the mass and its first moment summed over the links after each joint); the joint torques that hold the robot are their negative; the Python version is Robot.StaticTorques", py::arg("q"))
+        .def("__repr__", [](const PyKinematicChain &item) {
+            return item.ToString(); }, "the string representation of the KinematicChain")
+        ; // end of KinematicChain pybind definitions
+
         }
         }
         m.attr("experimental") = py::cast(&pyExperimental);

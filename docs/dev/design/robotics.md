@@ -166,6 +166,13 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
     made a Robot (RG19.7). The Puma560 inertias of links 0 and 2 violate the triangle inequality (link 0 has only
     I_zz = 0.35, as in the RTB's data) - the warning of RigidBodyInertia at each use (RG19.3, RG19.7).
   - The RTB environment `venvP310rtb` had roboticstoolbox 1.1.1; `venvP313rtb` has release 1.5.0 (decision 8).
+- **exudyn.cUtilities.KinematicChain** (#3259, RG19.6.1): the forward kinematics, the Jacobian and the static torques
+  in C++, created by `Robot.GetKinematicChain()`; they agree with the Python functions of Robot to 1.4e-14 (Puma560,
+  UR5, Panda, a tree with prismatic joints). Per call for 6 links: LinkHT 1.7 us (17 in Python; most of it the list
+  of exu.HT returned), Jacobian 1.0 us (23), StaticTorques 1.0 us (130; the Python version is now the same O(n)
+  backward pass, as fast as before because JointHT and COMHT dominate it). A kinematic tree step of the Puma560 with
+  the static compensation in the PreStepUserFunction: 14.9 us with `KinematicChain.StaticTorques`, 145 us with the
+  Python function, 9.8 us without the compensation.
 - **After #3255**: the IK of a pose `LinkHT(q)[-1] * tool.HT` from 0.1 / 0.5 rad off: UR5 39 / 35 of 40, Puma560 39 /
   31 of 40; SolveSafe, which now interpolates, 12 of 40 for both (from 8 to 10) at 6 to 8 ms - the random poses are far
   apart, a robust numerical IK is the LM of RG19.6. The Panda of models.py: the modified DH parameters, the tool (the
@@ -304,6 +311,9 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
 - RG19.5 Extend the trajectories: quintic and cubic polynomials, linear profiles completed, Cartesian linear, circular,
   screw and spline paths, mixed in Trajectory with the check of jumps.
 - RG19.6 Inverse kinematics: analytic for 6R with a spherical wrist, numerical by Levenberg-Marquardt; the two tests
-  (6R, Panda); the kinematic chain, the IK and the static torques in C++ (exudyn.cUtilities, section 3).
+  (6R, Panda); the kinematic chain, the IK and the static torques in C++ (exudyn.cUtilities, section 3); .1 done: the
+  KinematicChain with the forward kinematics, the Jacobian and the static torques (#3259); open: the analytic IK (3R,
+  6R with a spherical wrist - Puma, KUKA, Staeubli -, UR) and the LM IK in the chain with their Python versions,
+  then future.py removed.
 - RG19.7 Revise models.py: PUMA560, UR5, Panda, Stäubli TX2-90L, their initial configurations; all models checked.
 - RG19.8 Clean up the robotics examples and test models on the revised interfaces.

@@ -5894,7 +5894,23 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py (maintainer's approval), with the ODE1, data
   and errorEstimate cases; symbolicTrapezoidalGGLStepSizeTest.py with 'twoSteps' on the ball.
 
-<a id="rg20-6-2"></a>
+<a id="rg19-6-1"></a>
+### RG19.6.1 — exudyn.cUtilities.KinematicChain: forward kinematics, Jacobian, static torques in C++ (2026-11-05, #3259)
+- Decision 10 of the design (maintainer 2026-11-05): the kinematic chain as a class of cUtilities, each function with
+  a Python version in exudyn.robotics, cross-referenced.
+- src/Pymodules/PyKinematicChain.h, bound in definitions/pybindCUtilities.py (the first class of a C submodule: the
+  stub writer of the submodules removed the @overload lines without their indentation, so the methods of the class were
+  indented twice - pybindEmitter.py removes the whole line now): KinematicChain(jointTypes, preHTs, localHTs, parents,
+  masses, COMs, baseHT, toolHT, gravity), NumberOfLinks, JointHT, LinkHT, ToolHT, Jacobian(q, linkIndex, localPosition)
+  (6 x n, the point in the link frame), StaticTorques(q) in one backward pass over the links (mass and first moment
+  summed per subtree). Robot.GetKinematicChain() creates it; Robot.StaticTorques is the same O(n) algorithm in Python
+  now (before a Jacobian per link, O(n^2)), the docstrings of JointHT, LinkHT, Jacobian and StaticTorques name the C++
+  version.
+- Measured (design section 2.1): Jacobian and StaticTorques 1.0 us against 23 and 130 us in Python, LinkHT 1.7 us
+  against 17; the kinematic tree step of the Puma560 with the static compensation 14.9 us instead of 145 us.
+  kinematicChainTest.py: the chain against Robot for the Puma560, UR5, Panda (with base and tool) and a tree with
+  prismatic joints, to 1.4e-14, and the static torques against J^T m g summed.
+
 ### RG20.6.2 — the structure of the C++ solvers recommended (2026-11-05)
 - Maintainer: LobattoIIIA4 (constraints at the end), LobattoIIIC4-GGL and Radau3 are the candidates for C++ next to
   TrapezoidalGGL, the automatic step size for TrapezoidalGGL and one Lobatto method, the other tested variants not; no

@@ -100,3 +100,32 @@ def LocalTwist(HT: HT, twist: Twist) -> Twist:
 def RelativeTwist(HT0: HT, twist0: Twist, HT1: HT, twist1: Twist) -> Twist: 
     r"""The velocity of frame 1 relative to frame 0 in the components of frame 0, the time derivative of HT0.Relative(HT1): $[\Rot_0\tp (\vv_1 - \vv_0 - \tomega_0 \times (\pv_1 - \pv_0)),\; \Rot_0\tp (\tomega_1 - \tomega_0)]$; computed by RigidBodyMath::RelativeTwist of the C++ code."""
     ...
+
+#stub information for class KinematicChain functions
+class KinematicChain:
+    """The KinematicChain is the kinematics of a serial or tree-like robot in C++: per link a joint type, the parent link, preHT (from the link frame of the parent to the joint frame, before the joint motion), localHT (from the joint frame after the joint motion to the link frame), mass and center of mass in the link frame; the base HT, the tool HT relative to the frame of the last link, and gravity - the data of exudyn.robotics.Robot, whose GetKinematicChain() creates it.
+
+    The joint frame of link i is JointHT_i = LinkHT_parent * preHT_i * HTjoint(q_i), its link frame LinkHT_i = JointHT_i * localHT_i
+    Robot.JointHT, Robot.LinkHT, Robot.Jacobian and Robot.StaticTorques are the Python versions of the same algorithms.
+    """
+    def NumberOfLinks(self) -> int: 
+        """The number of links."""
+        ...
+    def JointHT(self, q: ArrayLike) -> list[HT]: 
+        """The global joint frames of all links, after the joint motion, for the joint coordinates q, a list of exu.HT; the Python version is Robot.JointHT."""
+        ...
+    def LinkHT(self, q: ArrayLike) -> list[HT]: 
+        """The global link frames of all links for the joint coordinates q, a list of exu.HT; the Python version is Robot.LinkHT."""
+        ...
+    def ToolHT(self, q: ArrayLike) -> HT: 
+        """The global frame of the tool, the link frame of the last link times the tool HT, for the joint coordinates q."""
+        ...
+    def Jacobian(self, q: ArrayLike, linkIndex: int=-1, localPosition: ArrayLike=None) -> NDArray: 
+        """The 6 x n Jacobian of the point localPosition (None the origin), given in the link frame of link linkIndex (-1 the last link), for the joint coordinates q: rows 0 to 2 the velocity of the point, rows 3 to 5 the angular velocity of the link, per joint velocity; the columns of the joints not between the link and the base are zero; the Python version is Robot.Jacobian, which takes the joint frames and the global position."""
+        ...
+    def StaticTorques(self, q: ArrayLike) -> NDArray: 
+        """The generalized forces of gravity on the joints for the joint coordinates q, the sum over the links j of J_j^T m_j g with the Jacobian J_j of the center of mass of link j, computed in one backward pass over the links (the mass and its first moment summed over the links after each joint); the joint torques that hold the robot are their negative; the Python version is Robot.StaticTorques."""
+        ...
+    def __repr__(self) -> str: 
+        """The string representation of the KinematicChain."""
+        ...

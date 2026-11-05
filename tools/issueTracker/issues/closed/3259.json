@@ -1,0 +1,15 @@
+{
+  "number": 3259,
+  "title": "exudyn.cUtilities.KinematicChain: the forward kinematics, the Jacobian and the static torques of a robot in C++",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "Robot.LinkHT, JointHT, Jacobian and StaticTorques of exudyn.robotics compute in Python (17, 23 and 114 us for 6 links); the static compensation in a PreStepUserFunction makes a kinematic tree simulation 15 times slower. Decided (design robotics.md, decision 10): a class KinematicChain in exudyn.cUtilities with the link data of Robot (joint types, parents, preHT, localHT, masses, centers of mass, base, tool, gravity) and JointHT, LinkHT, ToolHT, Jacobian of a point of a link and StaticTorques in one backward pass; Robot.GetKinematicChain() creates it; the Python functions of Robot are the Python versions of the same algorithms, cross-referenced; Robot.StaticTorques uses the same O(n) algorithm. The analytic and numerical inverse kinematics follow in the same class.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 10:13",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.cUtilities.KinematicChain: the forward kinematics (JointHT, LinkHT, ToolHT), the Jacobian of a point of a link and the static torques of a serial or tree-like robot in C++, about 1 us per call for 6 links; Robot.GetKinematicChain() creates it from a Robot; Robot.StaticTorques computes in one backward pass as the C++ version.",
+  "resolvedInVersion": "1.13.372"
+}

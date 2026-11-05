@@ -235,6 +235,26 @@ Usage: `import exudyn.cUtilities as cu` and `cu.RotationMatrixZ(0.1)`. The funct
 - **`LocalTwist(HT, twist)`**: the twist in the components of the frame HT: $[\Rot\tp \vv,\; \Rot\tp \tomega]$; computed by RigidBodyMath::LocalTwist of the C++ code
 - **`RelativeTwist(HT0, twist0, HT1, twist1)`**: the velocity of frame 1 relative to frame 0 in the components of frame 0, the time derivative of HT0.Relative(HT1): $[\Rot_0\tp (\vv_1 - \vv_0 - \tomega_0 \times (\pv_1 - \pv_0)),\; \Rot_0\tp (\tomega_1 - \tomega_0)]$; computed by RigidBodyMath::RelativeTwist of the C++ code
 
+(sec-cutilities-kinematicchain)=
+### KinematicChain
+
+The KinematicChain is the kinematics of a serial or tree-like robot in C++: per link a joint type, the parent link, preHT (from the link frame of the parent to the joint frame, before the joint motion), localHT (from the joint frame after the joint motion to the link frame), mass and center of mass in the link frame; the base HT, the tool HT relative to the frame of the last link, and gravity - the data of exudyn.robotics.Robot, whose GetKinematicChain() creates it. The joint frame of link i is JointHT_i = LinkHT_parent * preHT_i * HTjoint(q_i), its link frame LinkHT_i = JointHT_i * localHT_i. Robot.JointHT, Robot.LinkHT, Robot.Jacobian and Robot.StaticTorques are the Python versions of the same algorithms.
+
+
+The class **KinematicChain** has the following **functions and structures**:
+
+- KinematicChain(jointTypes, preHTs=None, localHTs=None, parents=None, masses=None, COMs=None, baseHT=None, toolHT=None, gravity=None): jointTypes a list of Rx, Ry, Rz, Px, Py, Pz (revolute about or prismatic along an axis of the joint frame), preHTs and localHTs a list of one exu.HT (or 4x4 matrix) per link, None the identities, parents the parent link per link (-1 the base, a link before it), None a serial chain, masses and COMs (the centers of mass in the link frames) None for zero, baseHT and toolHT None for the identity, gravity a 3D vector
+
+- **`NumberOfLinks()`**: the number of links
+- **`JointHT(q)`**: the global joint frames of all links, after the joint motion, for the joint coordinates q, a list of exu.HT; the Python version is Robot.JointHT
+- **`LinkHT(q)`**: the global link frames of all links for the joint coordinates q, a list of exu.HT; the Python version is Robot.LinkHT
+- **`ToolHT(q)`**: the global frame of the tool, the link frame of the last link times the tool HT, for the joint coordinates q
+- **`Jacobian(q, linkIndex = -1, localPosition = None)`**: the 6 x n Jacobian of the point localPosition (None the origin), given in the link frame of link linkIndex (-1 the last link), for the joint coordinates q: rows 0 to 2 the velocity of the point, rows 3 to 5 the angular velocity of the link, per joint velocity; the columns of the joints not between the link and the base are zero; the Python version is Robot.Jacobian, which takes the joint frames and the global position
+- **`StaticTorques(q)`**: the generalized forces of gravity on the joints for the joint coordinates q, the sum over the links j of J_j^T m_j g with the Jacobian J_j of the center of mass of link j, computed in one backward pass over the links (the mass and its first moment summed over the links after each joint); the joint torques that hold the robot are their negative; the Python version is Robot.StaticTorques
+- **`__repr__()`**: the string representation of the KinematicChain
+
+
+
 (sec-exudyn-experimental)=
 ## exudyn.experimental
 

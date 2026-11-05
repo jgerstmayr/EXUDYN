@@ -266,8 +266,9 @@ def main():
             writer.sPy += writerSubmodule.sPy
             writer.sMarkdown += '\n' + writerSubmodule.sMarkdown #a paragraph of its own
             #one signature per function: the @overload the writer adds for the module functions of symbolic (float and
-            #symbolic.Real) would be a single overload here, which a type checker refuses
-            stubsOfSubmodules[submoduleName] = writerSubmodule.sPyi.replace('@overload\n', '')
+            #symbolic.Real) would be a single overload here, which a type checker refuses; the whole line, so that the
+            #methods of a class of a submodule keep their indentation (#3259)
+            stubsOfSubmodules[submoduleName] = re.sub(r'^[ ]*@overload\n', '', writerSubmodule.sPyi, flags=re.M)
     replay.submodulesHook = ReplaySubmodules
 
     for name in ['pybindModule', 'pybindSystemContainer', 'pybindRenderer', 'pybindMainSystem', 'pybindSystemData']:
