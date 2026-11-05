@@ -477,7 +477,11 @@ replaces `ManipulatorPANDA` (deprecated), with the kinematics and the hand of th
 call (#3259), and `InverseKinematicsAnalytic(HT, qReference)` gives all solutions of the inverse kinematics of 3R robots
 and of 6R robots with a spherical wrist (Puma560, KUKA, Staeubli) or of the UR geometry, the nearest to `qReference`
 first, in about 8 us; `Robot.InverseKinematicsAnalytic` is the same in Python. `exudyn.robotics.future` is removed:
-use these instead of `ComputeIK3R`, `ComputeIKPuma560` and `ComputeIKUR` (#3260).
+use these instead of `ComputeIK3R`, `ComputeIKPuma560` and `ComputeIKUR` (#3260). `ManipulatorStaubliTX2_90L`
+(kinematics of the URDF, estimated inertias), the profiles `ProfilePolynomial5` and `ProfileCartesianLinear` (a straight
+line of the tool, the joint coordinates by the analytic inverse kinematics at each evaluation), and
+`Robot.SetControl(trajectory, compensation)` with `mbs.SetPreStepUserFunction(robot.PreStepControl)` for the joint
+control of the kinematic tree; see the example staubliTX2trajectories.py (#3262).
 
 **Implicit Runge-Kutta solvers in C++.** `DynamicSolverType.TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL` and
 `Radau3` run with `mbs.SolveDynamic` on every model of the implicit solver: index-3 constraints without index

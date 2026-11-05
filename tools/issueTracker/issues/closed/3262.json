@@ -1,0 +1,15 @@
+{
+  "number": 3262,
+  "title": "Robotics: Staubli TX2-90L model, quintic and Cartesian linear profiles, Robot.SetControl and PreStepControl",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "models.py has no Staubli robot, motion.py no quintic polynomial profile and no Cartesian path, and every robot example writes its own PreStepUserFunction for the joint control. Decided: ManipulatorStaubliTX2_90L from the joint frames of its URDF (dhMode jointFrames, estimated inertias); ProfilePolynomial5 and ProfileCartesianLinear (the tool on a straight line with the rotation on SO(3), the joint coordinates by the analytic IK at each evaluation); Robot.SetControl(trajectory, compensation) and Robot.PreStepControl(mbs, t) for the kinematic tree; an example of the TX2-90L with joint-space and Cartesian trajectories.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 13:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.robotics: ManipulatorStaubliTX2_90L (the kinematics of its URDF, estimated inertias) and dhMode 'jointFrames' of LinkDict2Robot; the profiles ProfilePolynomial5 and ProfileCartesianLinear (a straight line of the tool, the joint coordinates by the analytic inverse kinematics at each evaluation); Robot.SetControl(trajectory, compensation) and Robot.PreStepControl(mbs, t) for the joint control of the kinematic tree; the example staubliTX2trajectories.py.",
+  "resolvedInVersion": "1.13.375"
+}

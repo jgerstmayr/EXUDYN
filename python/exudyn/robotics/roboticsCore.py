@@ -507,6 +507,45 @@ class Robot:
         """
         return self.tool.HT
     
+    def SetControl(self, trajectory, compensation=None):
+        """the joint control of the kinematic tree of CreateKinematicTree, by PreStepControl (#3262): the PD control of
+        the links (RobotLink PDcontrol) towards the joint coordinates and velocities of trajectory
+
+        Args:
+            trajectory: an exudyn.robotics.motion.Trajectory (or an object with Evaluate(t) returning [q, q_t, q_tt])
+            compensation: None, or 'static': the static torques of gravity added as joint forces (KinematicChain.StaticTorques)
+        """
+        if compensation not in [None, 'static']:
+            raise ValueError("Robot.SetControl: compensation must be None or 'static', not " + str(compensation))
+        self.controlTrajectory = trajectory
+        self.controlCompensation = compensation
+        self.controlChain = self.GetKinematicChain() if compensation == 'static' else None
+
+    def PreStepControl(self, mbs, t):
+        """the PreStepUserFunction of the joint control of SetControl (#3262): the joint position and velocity offsets of
+        the kinematic tree of CreateKinematicTree from the trajectory at time t (and the joint forces of the compensation);
+        pass it directly, mbs.SetPreStepUserFunction(robot.PreStepControl), or call it in the PreStepUserFunction of the
+        script for several robots
+
+        Args:
+            mbs: the MainSystem of the kinematic tree
+            t: the time
+
+        Returns:
+            True
+        """
+        if getattr(self, 'controlTrajectory', None) is None:
+            raise ValueError('Robot.PreStepControl: call SetControl(trajectory) first')
+        if getattr(self, 'kinematicTreeData', None) is None:
+            raise ValueError('Robot.PreStepControl: the control needs the kinematic tree of CreateKinematicTree')
+        oKT = self.kinematicTreeData['objectKinematicTree']
+        [q, q_t, q_tt] = self.controlTrajectory.Evaluate(t)
+        mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', q)
+        mbs.SetObjectParameter(oKT, 'jointVelocityOffsetVector', q_t)
+        if self.controlCompensation == 'static':
+            mbs.SetObjectParameter(oKT, 'jointForceVector', -self.controlChain.StaticTorques(q))
+        return True
+
     def GetKinematicChain(self):
         """the kinematics of the robot in C++, an exudyn.cUtilities.KinematicChain of its links, base, tool and gravity
         (#3259): JointHT, LinkHT, ToolHT, Jacobian and StaticTorques of the chain compute what the functions of the
@@ -920,6 +959,7 @@ class Robot:
         #return some needed variables for further use        
         d = {'nodeGeneric': nGeneric, 'objectKinematicTree': oKT, 'baseObject': baseObject,
              }
+        self.kinematicTreeData = d #for PreStepControl (#3262)
         return d
 
                       

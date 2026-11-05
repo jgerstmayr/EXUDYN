@@ -21,7 +21,7 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'BasicProfile', 'ProfileConstantAcceleration', 'ProfileLinearAccelerationsList', 'ProfilePTP',
-    'Trajectory', 'BasicProfileLinearAcceleration',
+    'ProfilePolynomial5', 'ProfileCartesianLinear', 'Trajectory', 'BasicProfileLinearAcceleration',
     ]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -293,6 +293,132 @@ class ProfilePTP:
                           maxAccelerations=aMax)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def _TimeLaw(timeLaw, tau, duration):
+    """the path parameter sigma in [0, 1] and its first and second time derivative at tau = (t - t0)/duration in [0, 1]:
+    'polynomial5', the polynomial of degree 5 with zero velocity and acceleration at both ends; 'constantAcceleration',
+    accelerate in the first half, decelerate in the second"""
+    if timeLaw == 'polynomial5':
+        return (tau**3*(10. - 15.*tau + 6.*tau**2), 30.*tau**2*(1. - tau)**2/duration,
+                60.*tau*(1. - 3.*tau + 2.*tau**2)/duration**2)
+    if timeLaw == 'constantAcceleration':
+        if tau < 0.5:
+            return (2.*tau**2, 4.*tau/duration, 4./duration**2)
+        return (1. - 2.*(1. - tau)**2, 4.*(1. - tau)/duration, -4./duration**2)
+    raise ValueError("timeLaw must be 'polynomial5' or 'constantAcceleration', not " + str(timeLaw))
+
+
+class _BasicProfileTimeLaw:
+    """internal: a profile of the coordinates as a function of the time, for Trajectory; Function(t) returns [s, v, a]"""
+    def __init__(self, initialCoordinates, finalCoordinates, initialTime, finalTime, Function):
+        self.coordinateSets = [np.array(initialCoordinates, dtype=float), np.array(finalCoordinates, dtype=float)]
+        self.initialTime = initialTime
+        self.finalTime = finalTime
+        self.Function = Function
+
+    def __repr__(self):
+        return str({'initialTime': self.initialTime, 'finalTime': self.finalTime, 'coordinateSets': self.coordinateSets})
+
+    def GetInitialCoordinates(self):
+        return self.coordinateSets[0]
+
+    def GetFinalCoordinates(self):
+        return self.coordinateSets[-1]
+
+    def Evaluate(self, time):
+        """[s, v, a], the coordinates, velocities and accelerations at time"""
+        return self.Function(min(max(time, self.initialTime), self.finalTime))
+
+    def EvaluateCoordinate(self, time, coordinate):
+        """[s, v, a] of one coordinate at time"""
+        return [x[coordinate] for x in self.Evaluate(time)]
+
+
+class ProfilePolynomial5:
+    """a point-to-point profile in which each coordinate follows the polynomial of degree 5 from rest to rest, with zero
+    velocity and acceleration at both ends (#3262): s(t) = s0 + (s1 - s0) (10 tau^3 - 15 tau^4 + 6 tau^5), tau = (t -
+    t0)/duration; the maximum velocity is 1.875 and the maximum acceleration 5.77 times (s1 - s0)/duration and (s1 -
+    s0)/duration^2; the global maximum velocities and accelerations of Trajectory are not used
+
+    Args:
+        finalCoordinates: list or numpy array with the coordinates at the end of the profile
+        duration: the time of the profile
+    """
+    def __init__(self, finalCoordinates, duration):
+        if duration <= 0:
+            raise ValueError('ProfilePolynomial5: duration must be > 0')
+        self.duration = duration
+        self.finalCoordinates = np.array(finalCoordinates, dtype=float)
+
+    def GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations):
+        """the profile in Trajectory"""
+        q0 = np.array(initialCoordinates, dtype=float)
+        distances = self.finalCoordinates - q0
+        def Function(t):
+            (sigma, sigma_t, sigma_tt) = _TimeLaw('polynomial5', (t - initialTime)/self.duration, self.duration)
+            return [q0 + sigma*distances, sigma_t*distances, sigma_tt*distances]
+        return _BasicProfileTimeLaw(q0, self.finalCoordinates, initialTime, initialTime + self.duration, Function)
+
+
+class ProfileCartesianLinear:
+    """a Cartesian profile of a robot: the tool frame moves on a straight line from its frame at the start of the
+    profile to finalHT, with its rotation about one fixed axis (exu.HT.InterpolateSO3), by the time law timeLaw
+    (#3262); the joint coordinates by the analytic inverse kinematics of the robot (KinematicChain.InverseKinematicsAnalytic)
+    at each evaluation, the solution nearest to the last one evaluated, the joint velocities from the twist of the tool by
+    the Jacobian, the accelerations by their difference in time; a ValueError if a pose of the path is out of reach. It
+    needs a robot of the analytic inverse kinematics (6 revolute joints with a spherical wrist or of the UR geometry); a
+    path through a singular configuration gives large joint velocities
+
+    Args:
+        robot: the exudyn.robotics.Robot
+        finalHT: the tool frame at the end, exu.HT in global coordinates
+        duration: the time of the profile
+        timeLaw: 'polynomial5' (default) or 'constantAcceleration', the path parameter in time
+    """
+    def __init__(self, robot, finalHT, duration, timeLaw='polynomial5'):
+        if duration <= 0:
+            raise ValueError('ProfileCartesianLinear: duration must be > 0')
+        _TimeLaw(timeLaw, 0., 1.) #checks timeLaw
+        self.chain = robot.GetKinematicChain()
+        self.toolPosition = np.array(robot.tool.HT.translation)
+        if not isinstance(finalHT, exudyn.HT):
+            raise TypeError('ProfileCartesianLinear: finalHT must be an exudyn.HT')
+        self.finalHT = finalHT
+        self.duration = duration
+        self.timeLaw = timeLaw
+
+    def GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations):
+        """the profile in Trajectory; the joint coordinates of the end by following the path from the start"""
+        chain = self.chain
+        q0 = np.array(initialCoordinates, dtype=float)
+        HT0 = chain.ToolHT(q0)
+        HT1 = self.finalHT
+        velocity = np.array(HT1.translation) - np.array(HT0.translation)
+        omega = np.array(HT0.rotation) @ (HT0.Relative(HT1).GetRotationVector()) #the rotation of the path, global
+        state = {'q': q0}
+        def Pose(sigma, qReference):
+            solutions = chain.InverseKinematicsAnalytic(HT0.InterpolateSO3(HT1, sigma), qReference)
+            if len(solutions) == 0:
+                raise ValueError('ProfileCartesianLinear: the pose at the path parameter ' + str(sigma) + ' is out of reach')
+            return solutions[0]
+        def Velocities(q, sigma_t):
+            return np.linalg.solve(chain.Jacobian(q, -1, self.toolPosition), np.concatenate([velocity, omega])*sigma_t)
+        qEnd = q0
+        for sigma in np.linspace(0., 1., 51)[1:]: #the end along the path, and its reach
+            qEnd = Pose(sigma, qEnd)
+        def Function(t):
+            tau = (t - initialTime)/self.duration
+            (sigma, sigma_t, sigma_tt) = _TimeLaw(self.timeLaw, tau, self.duration)
+            q = Pose(sigma, state['q'])
+            state['q'] = q
+            v = Velocities(q, sigma_t)
+            taus = [max(0., tau - 1e-6), min(1., tau + 1e-6)]
+            sigmas = [_TimeLaw(self.timeLaw, x, self.duration) for x in taus]
+            vs = [Velocities(Pose(x[0], q), x[1]) for x in sigmas]
+            a = (vs[1] - vs[0])/((taus[1] - taus[0])*self.duration) if taus[1] > taus[0] else 0.*v
+            return [q, v, a]
+        return _BasicProfileTimeLaw(q0, qEnd, initialTime, initialTime + self.duration, Function)
+
+
 class Trajectory:
     """class to define (PTP) trajectories for robots and multibody systems; trajectories are defined for a set of coordinates (e.g. joint angles or other coordinates which need to be interpolated over time)
 

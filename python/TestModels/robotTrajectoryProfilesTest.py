@@ -1,0 +1,74 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The trajectory profiles of exudyn.robotics.motion (#3262) on the Staubli TX2-90L of exudyn.robotics.models:
+#           ProfilePolynomial5 at rest at both ends, the polynomial at the middle; ProfileCartesianLinear - the tool on
+#           the straight line, at the interpolated rotation, the joint velocities against the difference of the joint
+#           coordinates in time; the 8 solutions of the analytic inverse kinematics of the TX2-90L; SetControl refuses
+#           an unknown compensation. The result is the number of checks that pass plus the joint coordinates at the
+#           end of the Cartesian profile, weighted by 1 to 6.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-05
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform
+from exudyn.robotics.models import ManipulatorStaubliTX2_90L, LinkDict2Robot
+from exudyn.robotics.motion import Trajectory, ProfilePolynomial5, ProfileCartesianLinear
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+checks = []
+robot = LinkDict2Robot(ManipulatorStaubliTX2_90L())
+chain = robot.GetKinematicChain()
+q0 = np.array([0, 0.5, 1.4, 0, 1.2, 0])
+q1 = np.array([-0.6, 0.6, 1.2, -0.3, 1.0, 0.8])
+
+#the polynomial of degree 5: at rest at both ends, half way at the middle
+trajectory = Trajectory(initialCoordinates=q0, initialTime=0.)
+trajectory.Add(ProfilePolynomial5(q1, 2.))
+[s, v, a] = trajectory.Evaluate(0.)
+[s1, v1, a1] = trajectory.Evaluate(2.)
+[sMid, vMid, aMid] = trajectory.Evaluate(1.)
+checks += [cMath.norm(s - q0) + cMath.norm(v) + cMath.norm(a) + cMath.norm(s1 - q1) + cMath.norm(v1) + cMath.norm(a1) < 1e-12]
+checks += [cMath.norm(sMid - 0.5*(q0 + q1)) < 1e-12 and cMath.norm(vMid - 1.875*(q1 - q0)/2.) < 1e-12 and cMath.norm(aMid) < 1e-12]
+
+#the Cartesian line from the tool frame at q1
+HT0 = chain.ToolHT(q1)
+HT1 = exu.HT(rotation=np.array(HT0.rotation) @ np.array(exu.HT().SetRotationZ(0.3).rotation),
+             translation=np.array(HT0.translation) + [0.25, 0.3, -0.15])
+trajectory.Add(ProfileCartesianLinear(robot, HT1, 1.))
+lineError = 0.
+velocityError = 0.
+direction = np.array(HT1.translation) - np.array(HT0.translation)
+for t in np.linspace(2., 3., 11):
+    [q, q_t, q_tt] = trajectory.Evaluate(t)
+    p = np.array(chain.ToolHT(q).translation) - np.array(HT0.translation)
+    lineError = max(lineError, cMath.norm(p - (p @ direction)/(direction @ direction)*direction))
+    sigma = (p @ direction)/(direction @ direction)
+    lineError = max(lineError, np.max(np.abs(np.array(chain.ToolHT(q).rotation) - np.array(HT0.InterpolateSO3(HT1, sigma).rotation))))
+    if 2. < t < 3.:
+        qDifference = (trajectory.Evaluate(t + 1e-6)[0] - trajectory.Evaluate(t - 1e-6)[0])/2e-6
+        velocityError = max(velocityError, cMath.norm(q_t - qDifference))
+exu.Print('Cartesian line: largest distance from the line and rotation error', lineError, ', velocity error', velocityError)
+checks += [lineError < 1e-10, velocityError < 1e-5]
+qEnd = trajectory.Evaluate(3.)[0]
+checks += [np.max(np.abs(chain.ToolHT(qEnd).HT44() - HT1.HT44())) < 1e-10]
+
+#the analytic inverse kinematics of the TX2-90L and the control settings
+checks += [len(chain.InverseKinematicsAnalytic(chain.ToolHT(q0))) == 8]
+try:
+    robot.SetControl(trajectory, compensation='dynamic')
+    checks += [False]
+except ValueError:
+    checks += [True]
+
+u = sum(checks) + qEnd @ np.arange(1, 7)
+exu.Print('checks:', checks)
+exu.Print('solution of robotTrajectoryProfilesTest=', u)
+exu.sys['testResult'] = u

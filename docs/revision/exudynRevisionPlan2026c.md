@@ -3156,6 +3156,10 @@ Design section 3.
 
 Design section 3.
 
+#### **CLOSED_RG19.5.1** Staubli TX2-90L model, ProfilePolynomial5 and ProfileCartesianLinear, Robot.SetControl and PreStepControl, the TX2-90L example
+
+CLOSED 2026-11-05 (#3262): the joint-space and Cartesian trajectories of a demo; the tool on the line to 5e-16 in the kinematics, 5.8 mm in the simulation without compensation, 0.55 mm with the static compensation. [log](exudynRevisionLog2026c.md#rg19-5-1)
+
 ### **OPEN_RG19.6** Inverse kinematics: analytic for 6R robots with a spherical wrist, numerical by Levenberg-Marquardt; tests with a 6R robot and the Panda
 
 Design section 3; the test suite runs < 0.25 s of positions.

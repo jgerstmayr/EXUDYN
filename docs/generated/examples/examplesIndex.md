@@ -157,6 +157,7 @@ springDamperUserFunctionNumbaJIT
 springMassFriction
 springsDeactivateConnectors
 SpringWithConstraints
+staubliTX2trajectories
 stiffFlyballGovernor2
 stiffFlyballGovernorKT
 stlFileImport

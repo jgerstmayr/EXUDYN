@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 359 | 1.13.374 |
+| 1.13 | Newborn | 360 | 1.13.375 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.375** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robotics: Staubli TX2-90L model, quintic and Cartesian linear profiles, Robot.SetControl and PreStepControl (#3262)
+  - description: models.py has no Staubli robot, motion.py no quintic polynomial profile and no Cartesian path, and every robot example writes its own PreStepUserFunction for the joint control. Decided: ManipulatorStaubliTX2\_90L from the joint frames of its URDF (dhMode jointFrames, estimated inertias); ProfilePolynomial5 and ProfileCartesianLinear (the tool on a straight line with the rotation on SO(3), the joint coordinates by the analytic IK at each evaluation); Robot.SetControl(trajectory, compensation) and Robot.PreStepControl(mbs, t) for the kinematic tree; an example of the TX2-90L with joint-space and Cartesian trajectories.
+  - **notes:** exudyn.robotics: ManipulatorStaubliTX2\_90L (the kinematics of its URDF, estimated inertias) and dhMode 'jointFrames' of LinkDict2Robot; the profiles ProfilePolynomial5 and ProfileCartesianLinear (a straight line of the tool, the joint coordinates by the analytic inverse kinematics at each evaluation); Robot.SetControl(trajectory, compensation) and Robot.PreStepControl(mbs, t) for the joint control of the kinematic tree; the example staubliTX2trajectories.py.
+  - date resolved: **2026-11-05 13:23**, date raised: 2026-11-05
 - **1.13.374** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The implicit Runge-Kutta solvers TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL and Radau3 in the C++ core (#3261)
   - description: The solvers of exudyn.symbolics.advancedSolvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4-GGL, Radau3) exist only for symbolic systems in Python. Decided: one class CSolverImplicitRungeKutta with the method as data (tableau, constraint form, order), the four values of DynamicSolverType run by SolveDynamic, the automatic step size for all four with the PI controller in a StepSizeController shared later with ODE23 and DOPRI5; in C++ also the cases the Python prototypes refuse: velocity-level constraints and Lie group nodes; no Python interface of the solver phases.
   - **notes:** DynamicSolverType.TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL and Radau3: the implicit Runge-Kutta solvers for index-3 constraints in the C++ core, run by SolveDynamic; orders 2, 4, 4 and 3, constant steps or the automatic step size (PI controller) with timeIntegration.absoluteTolerance and relativeTolerance; velocity-level constraints at the implicit stages; Lie group nodes at moderate step sizes.

@@ -6032,6 +6032,21 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   qReference (two elbow solutions of a nearly stretched arm can lie closer to the reference than q), out of reach,
   the singular wrist, the Panda refused.
 
+<a id="rg19-5-1"></a>
+### RG19.5.1 — Staubli TX2-90L, quintic and Cartesian linear profiles, SetControl and PreStepControl (2026-11-05, #3262)
+- Maintainer 2026-11-05: the decisions 2 to 7 of the design (section 4.2); for a demo the Staubli TX2-90L with
+  joint-space trajectories (polynomials of degree 5, constant accelerations) and a continuous path by the analytic IK,
+  simple control without compensation.
+- models.py: dhMode 'jointFrames' of LinkDict2Robot (per link the joint type and the translation of its joint frame,
+  as a URDF); ManipulatorStaubliTX2_90L from tx2_90l.urdf (kinematics, joint limits, maximum velocities), estimated
+  masses and inertias, PD values; a spherical wrist, 8 IK solutions.
+- motion.py: ProfilePolynomial5; ProfileCartesianLinear (the path by InterpolateSO3, the IK nearest to the last
+  evaluation, the velocities by the Jacobian, the accelerations by a difference in time; the end of the path followed
+  in 50 steps at the construction, which checks the reach); the time laws polynomial5 and constantAcceleration.
+- roboticsCore.py: SetControl, PreStepControl; CreateKinematicTree keeps its dict in the robot.
+- The local data set copied to tmp/URDF (staubli, spot, mars rover, anymal, kuka).
+- robotTrajectoryProfilesTest.py; Examples/staubliTX2trajectories.py (4.5 s, 4500 steps of generalized-alpha).
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

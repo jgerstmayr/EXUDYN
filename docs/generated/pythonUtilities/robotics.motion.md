@@ -100,6 +100,48 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py) (Ex), [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`serialRobotKinematicTree.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py) (Ex), [`serialRobotTSD.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotTSD.py) (Ex)
 
 
+(sec-module-robotics.motion-class-profilepolynomial5)=
+## CLASS ProfilePolynomial5 (in module robotics.motion)
+
+**class description**: a point-to-point profile in which each coordinate follows the polynomial of degree 5 from rest to rest, with zero velocity and acceleration at both ends (#3262): s(t) = s0 + (s1 - s0) (10 tau^3 - 15 tau^4 + 6 tau^5), tau = (t - t0)/duration; the maximum velocity is 1.875 and the maximum acceleration 5.77 times (s1 - s0)/duration and (s1 - s0)/duration^2; the global maximum velocities and accelerations of Trajectory are not used
+
+- **input**:
+  - `finalCoordinates`: list or numpy array with the coordinates at the end of the profile
+  - `duration`: the time of the profile
+
+(sec-motion-profilepolynomial5-getbasicprofile)=
+### Class function: GetBasicProfile
+
+[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L352)
+
+- **class function description**: the profile in Trajectory
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM)
+
+
+(sec-module-robotics.motion-class-profilecartesianlinear)=
+## CLASS ProfileCartesianLinear (in module robotics.motion)
+
+**class description**: a Cartesian profile of a robot: the tool frame moves on a straight line from its frame at the start of the profile to finalHT, with its rotation about one fixed axis (exu.HT.InterpolateSO3), by the time law timeLaw (#3262); the joint coordinates by the analytic inverse kinematics of the robot (KinematicChain.InverseKinematicsAnalytic) at each evaluation, the solution nearest to the last one evaluated, the joint velocities from the twist of the tool by the Jacobian, the accelerations by their difference in time; a ValueError if a pose of the path is out of reach. It needs a robot of the analytic inverse kinematics (6 revolute joints with a spherical wrist or of the UR geometry); a path through a singular configuration gives large joint velocities
+
+- **input**:
+  - `robot`: the exudyn.robotics.Robot
+  - `finalHT`: the tool frame at the end, exu.HT in global coordinates
+  - `duration`: the time of the profile
+  - `timeLaw`: 'polynomial5' (default) or 'constantAcceleration', the path parameter in time
+
+(sec-motion-profilecartesianlinear-getbasicprofile)=
+### Class function: GetBasicProfile
+
+[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L389)
+
+- **class function description**: the profile in Trajectory; the joint coordinates of the end by following the path from the start
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM)
+
+
 (sec-module-robotics.motion-class-trajectory)=
 ## CLASS Trajectory (in module robotics.motion)
 
@@ -124,7 +166,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory---init--)=
 ### Class function: __init__
 
-[`__init__(self, initialCoordinates, initialTime = 0, maxVelocities = [], maxAccelerations = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L310)
+[`__init__(self, initialCoordinates, initialTime = 0, maxVelocities = [], maxAccelerations = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L436)
 
 - **class function description**: initialize robot link with parameters, being self-explaining
 - **input**:
@@ -137,7 +179,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-getfinalcoordinates)=
 ### Class function: GetFinalCoordinates
 
-[`GetFinalCoordinates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L332)
+[`GetFinalCoordinates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L458)
 
 - **class function description**: returns the coordinates at the end of the (currently) Final profile
 
@@ -145,7 +187,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-add)=
 ### Class function: Add
 
-[`Add(self, profile)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L341)
+[`Add(self, profile)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L467)
 
 - **class function description**: add successively profiles, using MotionProfile class
 
@@ -153,7 +195,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-gettimes)=
 ### Class function: GetTimes
 
-[`GetTimes(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L349)
+[`GetTimes(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L475)
 
 - **class function description**: return vector of times of start/end of profiles
 
@@ -161,7 +203,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-initialize)=
 ### Class function: Initialize
 
-[`Initialize(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L357)
+[`Initialize(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L483)
 
 - **class function description**: initialize some parameters for faster evaluation
 
@@ -169,7 +211,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-evaluate)=
 ### Class function: Evaluate
 
-[`Evaluate(self, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L363)
+[`Evaluate(self, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L489)
 
 - **class function description**: return interpolation of trajectory for coordinates, velocities and accelerations at given time
 - **output**: [s, v, a] as numpy arrays representing coordinates, velocities and accelerations
@@ -178,7 +220,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-evaluatecoordinate)=
 ### Class function: EvaluateCoordinate
 
-[`EvaluateCoordinate(self, t, coordinate)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L386)
+[`EvaluateCoordinate(self, t, coordinate)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L512)
 
 - **class function description**: return interpolation of trajectory for coordinate, including velocity and acceleration coordinate at given time
 - **output**: [s, v, a] being scalar position, velocity and acceleration
@@ -188,7 +230,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory---iter--)=
 ### Class function: __iter__
 
-[`__iter__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L409)
+[`__iter__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L535)
 
 - **class function description**: iterator allows to use for x in trajectory: ... constructs
 
@@ -196,7 +238,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory---getitem--)=
 ### Class function: __getitem__
 
-[`__getitem__(self, key)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L414)
+[`__getitem__(self, key)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L540)
 
 - **class function description**: access to profiles via operator [], allowing trajectory[0], etc.
 
@@ -204,7 +246,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory---len--)=
 ### Class function: __len__
 
-[`__len__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L419)
+[`__len__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L545)
 
 - **class function description**: allow using len(trajectory)
 
@@ -212,9 +254,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory---repr--)=
 ### Class function: __repr__
 
-[`__repr__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L425)
+[`__repr__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L551)
 
 - **class function description**: representation of Trajectory is given a list of profiles, allowing easy inspection of data
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py) (Ex), [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`mecanumWheelRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mecanumWheelRollingDiscTest.py) (TM), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), [`serialRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/serialRobotTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py) (Ex), [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`mecanumWheelRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mecanumWheelRollingDiscTest.py) (TM), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM), ...

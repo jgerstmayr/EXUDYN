@@ -35,7 +35,7 @@ from exudyn.rigidBodyUtilities import RigidBodyInertia
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'Manipulator4Rsimple', 'Manipulator3RSimple', 'ManipulatorFrankaEmikaPanda', 'ManipulatorPANDA', 'ManipulatorUR5',
-    'ManipulatorPuma560', 'LinkDict2Robot', 'LinkDictModDHKK2Robot',
+    'ManipulatorPuma560', 'ManipulatorStaubliTX2_90L', 'LinkDict2Robot', 'LinkDictModDHKK2Robot',
     ]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -569,6 +569,46 @@ def ManipulatorPuma560():
 
 
 
+def ManipulatorStaubliTX2_90L():
+    """generate the Staubli TX2-90L manipulator as robot dictionary, with the joint frames of its URDF (dhMode
+    'jointFrames': per link the joint type and the translation from the previous joint frame; all link frames parallel
+    at q = 0, the arm upright); a 6R robot with a spherical wrist, for KinematicChain.InverseKinematicsAnalytic
+
+    Returns:
+        robot dictionary for LinkDict2Robot
+
+    Note:
+        the kinematics, the joint limits and the maximum joint velocities are those of tx2_90l.urdf of the
+        ros-industrial staubli_experimental repository (https://github.com/ros-industrial/staubli_experimental,
+        staubli_tx2_90_support); the URDF has no inertia data: the masses (about 77 kg of the arm without the base, of
+        114 kg in the data sheet) and the inertias of cylinders are estimates for simulation, not data of the
+        manufacturer; the tool frame is the flange, 0.1 m after the wrist center
+    """
+    def Cylinder(mass, length, radius):
+        """the inertia of a cylinder along z about its center"""
+        Ixx = mass*(3*radius**2 + length**2)/12
+        return np.diag([Ixx, Ixx, 0.5*mass*radius**2])
+    #joint type, translation from the previous joint frame, mass, COM and length/radius of the cylinder, joint limits, max. velocity
+    data = [('Rz', [0, 0, 0.478],  35., [0, 0, -0.10],  0.30, 0.15, [-np.pi, np.pi], 3.927),
+            ('Ry', [0.050, 0, 0],  20., [0, 0, 0.25],   0.50, 0.09, [-2.269, 2.574], 3.142),
+            ('Ry', [0, 0.050, 0.500], 12., [0, 0, 0.10], 0.30, 0.08, [-2.531, 2.531], 4.712),
+            ('Rz', [0, 0, 0],      7.,  [0, 0, 0.30],   0.40, 0.06, [-4.712, 4.712], 7.854),
+            ('Ry', [0, 0, 0.550],  2.5, [0, 0, 0.04],   0.12, 0.05, [-2.007, 2.443], 6.458),
+            ('Rz', [0, 0, 0.100],  0.5, [0, 0, -0.01],  0.03, 0.04, [-4.712, 4.712], 10.996)]
+    links = []
+    for (jointType, translation, mass, COM, length, radius, limits, maxVelocity) in data:
+        links += [{'jointType': jointType, 'preHT': exudyn.HT(translation=translation), 'mass': mass, 'COM': COM,
+                   'inertia': Cylinder(mass, length, radius), #w.r.t. COM
+                   'jointLimits': limits, 'maxVelocity': maxVelocity}]
+    return {'links': links,
+            'dhMode': 'jointFrames',
+            'gravity': [0, 0, -9.81],
+            'referenceConfiguration': [0.]*6,
+            'Pcontrol': np.array([4e4, 4e4, 2e4, 2e3, 2e3, 5e2]),
+            'Dcontrol': np.array([4e2, 4e2, 2e2, 2e1, 2e1, 5.]),
+            }
+
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -584,6 +624,7 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
         updated robot class
 
     Note:
+        dhMode 'stdDH', 'modDHKK' or 'jointFrames' (per link 'jointType' and 'preHT', the link frame the joint frame)
         DH Parameter Information
         stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)
         modDH = [alpha, dx, theta, rz] with
@@ -633,6 +674,19 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
                                inertia=link['inertia'],
                                preHT=preHT,
                                localHT=localHT,
+                               PDcontrol = PDcontrol,
+                               visualization=rob.VRobotLink(linkColor=graphics.colorList[i])
+                                ))
+    elif dhMode=='jointFrames': #the joint type and the translation of each joint frame, as in a URDF (#3262)
+        for i, link in enumerate(robotLinkDict['links']):
+            PDcontrol = (None, None)
+            if 'Pcontrol' in robotLinkDict and 'Dcontrol' in robotLinkDict :
+                PDcontrol = (robotLinkDict['Pcontrol'][i], robotLinkDict['Dcontrol'][i])
+            robotClass.AddLink(rob.RobotLink(mass=link['mass'],
+                               COM=link['COM'],
+                               inertia=link['inertia'],
+                               jointType=link['jointType'],
+                               preHT=link['preHT'],
                                PDcontrol = PDcontrol,
                                visualization=rob.VRobotLink(linkColor=graphics.colorList[i])
                                 ))

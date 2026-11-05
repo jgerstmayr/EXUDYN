@@ -181,6 +181,11 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   the same number as 300 numerical solutions from random starts find), 4 for the 3R. C++ 2.9 / 8.2 / 7.3 us per call
   (3R / Puma560 / UR5), Python 0.36 / 2.5 / 1.6 ms; the two agree to 5.5e-13. In a singular configuration the free angle
   takes the value of qReference (wrist q_5 = 0: q_4 from qReference, q_4 + q_6 from the pose).
+- **Staubli TX2-90L and the trajectories** (#3262): `ManipulatorStaubliTX2_90L` from the joint frames of
+  tx2_90l.urdf (no inertia data in the URDF: estimated masses and inertias); ProfilePolynomial5 and
+  ProfileCartesianLinear (the tool on the straight line to 5e-16, the joint velocities by the Jacobian to 7e-10 of the
+  difference of the coordinates); staubliTX2trajectories.py with PD control without compensation: the tool 5.8 mm off
+  the line (gravity), 0.55 mm with compensation='static'.
 - **After #3255**: the IK of a pose `LinkHT(q)[-1] * tool.HT` from 0.1 / 0.5 rad off: UR5 39 / 35 of 40, Puma560 39 /
   31 of 40; SolveSafe, which now interpolates, 12 of 40 for both (from 8 to 10) at 6 to 8 ms - the random poses are far
   apart, a robust numerical IK is the LM of RG19.6. The Panda of models.py: the modified DH parameters, the tool (the
@@ -275,35 +280,36 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
 - Fixed now: the problems of section 2.1 (#3255); the Panda of models.py is `ManipulatorFrankaEmikaPanda`
   (`ManipulatorPANDA` deprecated), the Puma560 inertias are physical (the change is said in its docstring).
 
-### 4.2 Open (numbered as before)
+### 4.2 Decided (maintainer 2026-11-05, numbered as before)
 
-2. **The joint control in the scripts.** Today every robot example writes its own PreStepUserFunction: it evaluates
-   the trajectory, writes the joint offsets into the model (`jointPositionOffsetVector` of the kinematic tree, or the
-   `offset` of each spring-damper of the redundant model) and adds `StaticTorques`. Proposed: the robot keeps the
-   trajectory and the kind of compensation, `robot.SetControl(trajectory, compensation='static')`, and offers
-   `robot.PreStepControl(mbs, t)`, which a script passes directly, `mbs.SetPreStepUserFunction(robot.PreStepControl)`;
-   it works for both models because the creators store the item numbers in the robot. With several robots, the
-   script's own PreStep calls `PreStepControl` of each. Agreed?
-3. **Friction and end stops of the joints.** Neither model has them now. Proposed: one set of parameters per link in
-   RobotLink (viscous and Coulomb friction, lower and upper stop with stiffness and damping), realized by a
-   CoordinateSpringDamperExt on the joint coordinate - in the kinematic tree on its node's coordinate, in the
-   redundant model between the two bodies by MarkerBodiesRelativeRotationCoordinate. Agreed?
-4. **Where the static torques come from.** Decision 10 puts them into the C++ chain (O(n), shared with
-   ObjectKinematicTree). Proposed consequence: `Robot.StaticTorques` calls the chain, the present Python loop becomes its
-   Python version; no separate ComputeItem of ObjectKinematicTree for them. Agreed, or a ComputeItem of the tree as
-   well (for a tree built without Robot)?
-5. **Cartesian paths need the IK.** A linear or circular path of the tool is given in Cartesian space; the joint
-   controller needs joint coordinates. Either the IK runs at each evaluation in the PreStep (exact; a few us with the
-   analytic C++ IK, so affordable now), or the path is converted once before the simulation into a joint trajectory
-   sampled in time and splined (fast, approximate between the samples). Recommended now: the IK at each evaluation,
-   the sampled form as an option for the numerical IK. Agreed?
-6. **The fate of InverseKinematicsNumerical.** It solves the IK as a static problem of a kinematic tree in its own mbs
-   (robust only with tuning, section 2.1). The LM IK of decision 10 does not need an mbs. Replace it (the class kept
-   for a deprecation period, calling the LM IK) or keep both?
-7. **Where the local robot data set is found.** The URDF files (spot, the mars rover, anymal, KUKA, Staeubli) are
-   not in the repository; examples and lectures that use them need their path. By an environment variable (e.g.
-   `EXUDYN_ROBOT_DATA`), a key of `exudyn.config` (the ~/.exudyn/config.json of the settings), or only an argument of
-   the loading function? Without the data, the examples say what is missing and stop.
+2. **Joint control**: the robot keeps the trajectory and the compensation, `robot.SetControl(trajectory,
+   compensation=None | 'static')`, and `robot.PreStepControl(mbs, t)` is passed directly,
+   `mbs.SetPreStepUserFunction(robot.PreStepControl)` (done for the kinematic tree, #3262; the redundant model in
+   RG19.4).
+3. **Friction and end stops**: per link in RobotLink (viscous and Coulomb friction, lower and upper stop with
+   stiffness and damping), by a CoordinateSpringDamperExt on the joint coordinate (the node coordinate of the kinematic
+   tree; MarkerBodiesRelativeRotationCoordinate between the bodies of the redundant model). `Robot(...,
+   enableEndStops=False)`; global viscous and Coulomb friction as arguments of a function of Robot that sets them in
+   every link; the models get friction values where known; end stops from the models or the URDF (joint limits),
+   friction from the URDF (`<dynamics damping friction>`) into the links where given.
+4. **Static torques** (the question of the maintainer, answered here): ObjectKinematicTree evaluated with zero
+   velocities and accelerations gives the static generalized forces as well - the gravity part of its ODE2 right-hand
+   side - from the same data (joint frames, masses, COMs, gravity), so the two are consistent by construction and by
+   test (kinematicChainTest.py compares the Python algorithm, the C++ chain and J^T m g). The difference is where they
+   are used: the tree needs an mbs, its state set and an evaluation of the item (a ComputeItem or ComputeODE2RHS of the
+   whole system, which also contains the PD forces and other loads); the chain is standalone - a controller, the
+   planning of a trajectory, the IK and a PreStepUserFunction call it without an mbs, at 1 us. They take the same input;
+   the IK needs only the kinematic part (joint types, preHT, localHT, base, tool), the static torques also masses, COMs
+   and gravity. Recommended: no ComputeItem of the tree for the static torques; if a tree built without Robot needs
+   them, a KinematicChain created from the parameters of the ObjectKinematicTree (a function GetKinematicChain of the
+   tree's parameters), so both still share one algorithm and one data set. The dynamic compensation (M a + h) is the
+   tree's domain.
+5. **Cartesian paths**: the IK at each evaluation, also for the numerical IK (ProfileCartesianLinear, #3262).
+6. **InverseKinematicsNumerical**: replaced by the LM IK, the class kept for a deprecation period, calling it.
+7. **The robot data set**: by a path given to the loading function; the folders of spot, the mars rover, anymal,
+   KUKA and Staeubli copied to `EXUDYN_git/tmp/URDF` (inside the repository, not committed, as tmp/ is ignored);
+   without the data an example says what is missing and where to download it (the ros-industrial repositories on
+   GitHub, e.g. https://github.com/ros-industrial/staubli_experimental), and stops.
 
 ## 5. Steps proposed (group RG19)
 
