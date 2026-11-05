@@ -1,0 +1,15 @@
+{
+  "number": 3264,
+  "title": "graphics.FromSTLfile reads binary and text STL with numpy, without numpy-stl, and computes the mass properties itself",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "FromSTLfile needed numpy-stl for reading, and its verbose output referred to the volume also without density. Decided: the numpy reader of LoadURDFgraphics moves into graphics (_ReadSTL) and FromSTLfile uses it; volume, mass, COM and the inertia at the COM from the tetrahedra of the triangles with the origin; scale may have three factors; the normals of the triangles computed from the points; useNumpySTL=False forces numpy-stl for files the reader does not handle; LoadURDFgraphics calls FromSTLfile.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 18:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "graphics.FromSTLfile reads binary and text STL files with numpy and no longer needs numpy-stl; with density it computes volume, mass, center of mass and the inertia at the center of mass from the mesh; scale may have three factors; useNumpySTL=True reads the file with numpy-stl. urdfImport.LoadURDFgraphics uses FromSTLfile.",
+  "resolvedInVersion": "1.13.377"
+}

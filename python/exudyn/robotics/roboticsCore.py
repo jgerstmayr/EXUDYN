@@ -11,8 +11,6 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Example:    New robot model uses the class Robot with class RobotLink; the old dictionary structure is defined in the example in ComputeJointHT for the definition of the 'robot' dictionary.
-#
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #constants and fixed structures:
@@ -36,7 +34,7 @@ import exudyn.cUtilities #KinematicChain, the kinematics of Robot in C++ (#3259)
 __all__ = [
     'dictJointTypeText2Exudyn', 'dictJointType2HT', 'dictJointType2Axis',
     'dictJointType2coordinate6D', 'VRobotLink', 'RobotLink', 'VRobotTool', 'RobotTool',
-    'VRobotBase', 'RobotBase', 'buildFromDictionaryWarned', 'Robot', 'StdDH2HT', 'ModDHKK2HT',
+    'VRobotBase', 'RobotBase', 'Robot', 'StdDH2HT', 'ModDHKK2HT',
     'projectAngleToPMPi', 'InverseKinematicsNumerical',
     ]
 
@@ -409,7 +407,6 @@ class RobotBase:
         return str(self)
 
 
-buildFromDictionaryWarned = False #do not use this variable, it is for deprecation warnings!
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++  Define robot ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -695,7 +692,54 @@ class Robot:
     
         return J
 
-    def InverseKinematicsAnalytic(self, HT, qReference=None):
+    def ArmConfiguration(self, q):
+        """the configuration of the arm at the joint coordinates q, which tells the solutions of InverseKinematicsAnalytic
+        apart (#3265): [shoulder, elbow, wrist], each +1 or -1, and 0 in the singular configuration between them; from
+        the joint axes omega_i at q, independent of the DH convention and the zero angles of the joints, for the robots of
+        InverseKinematicsAnalytic. The wrist center W is the point of the axes 5 and 6 (of 4, 5, 6 for a spherical
+        wrist), or the tool position (3 links); a, b are the vectors from axis 2 to axis 3 and from axis 3 to W (to axis 4
+        for the UR), normal to omega_2:
+        shoulder = sign((W - p_1) . (omega_1 x omega_2)), W in front of (+1) or behind axis 1, 0 for W on axis 1;
+        elbow = sign(omega_3 . (a x b)), the bend of the elbow about axis 3, 0 for the arm stretched;
+        wrist = sign(omega_5 . (omega_4 x omega_6)), 0 for axis 6 parallel to axis 4 (always 0 for 3 links).
+        The signs follow the directions of the axes; which sign is called up or down, left or right is that of the robot.
+
+        Args:
+            q: the joint coordinates
+
+        Returns:
+            a list of three ints
+
+        Note:
+            the C++ version is KinematicChain.ArmConfiguration of GetKinematicChain()
+        """
+        n = len(self.links)
+        if not self.isSerialRobot or any(link.jointType[0] != 'R' for link in self.links) or n not in [3, 6]:
+            raise ValueError('Robot.ArmConfiguration: the configuration needs 3 or 6 revolute joints in series')
+        JH = [_ToHT(H) for H in self.JointHT(q)]
+        omega = [np.array(H.rotation) @ dictJointType2Axis[link.jointType] for (H, link) in zip(JH, self.links)]
+        p = [np.array(H.translation) for H in JH]
+        scale = 1. + max(cMath.norm(x - p[0]) for x in p)
+        if n == 3:
+            W = np.array((self.LinkHT(q)[-1]*self.tool.HT).translation)
+        else:
+            W = _IKLineIntersection(p[4], omega[4], p[5], omega[5])[0]
+            if W is None:
+                raise ValueError('Robot.ArmConfiguration: the axes 5 and 6 must cross')
+        E = W #the point after the elbow
+        if n == 6 and cMath.norm(np.cross(omega[1], omega[3])) < 1e-10: #UR: axis 4 parallel to axis 2
+            E = p[3]
+        def Sign(x, tolerance):
+            return 0 if abs(x) < tolerance else int(np.sign(x))
+        n12 = np.cross(omega[0], omega[1])
+        shoulder = Sign((W - p[0]) @ n12/cMath.norm(n12), 1e-10*scale)
+        a = p[2] - p[1] - omega[1]*(omega[1] @ (p[2] - p[1]))
+        b = E - p[2] - omega[1]*(omega[1] @ (E - p[2]))
+        elbow = Sign(omega[2] @ np.cross(a, b)/max(cMath.norm(a)*cMath.norm(b), 1e-300), 1e-10)
+        wrist = 0 if n == 3 else Sign(omega[4] @ np.cross(omega[3], omega[5]), 1e-10)
+        return [shoulder, elbow, wrist]
+
+    def InverseKinematicsAnalytic(self, HT, qReference=None, configuration=None):
         """the analytic inverse kinematics: all joint coordinates q with the tool frame LinkHT(q)[-1]*tool.HT equal to HT
         (an exu.HT or 4x4 matrix in global coordinates), for three geometries of revolute joints in series: 3 links with
         the axes 2 and 3 parallel (the position of the tool only, up to 4 solutions); 6 links with the axes 2 and 3
@@ -709,6 +753,9 @@ class Robot:
             HT: the desired tool frame, exu.HT or 4x4 matrix
             qReference: None, or joint coordinates; then the angles are shifted by multiples of 2 pi to be nearest to
                 qReference and the solutions are sorted by their distance from it, the nearest first
+            configuration: None, or [shoulder, elbow, wrist] of ArmConfiguration, each +1, -1, or 0 or None (any), e.g.
+                ArmConfiguration(qReference) to keep the configuration of the robot; only the solutions of this
+                configuration are returned, and those on its boundary (0)
 
         Returns:
             a numpy array with one solution per row, angles in (-pi, pi] without qReference; no rows if the pose cannot
@@ -723,6 +770,8 @@ class Robot:
         fallback = np.zeros(n) if qReference is None else np.array(qReference, dtype=float)
         if len(fallback) != n:
             raise ValueError('Robot.InverseKinematicsAnalytic: qReference must have '+str(n)+' components')
+        if configuration is not None and (len(configuration) != 3 or any(c not in [None, 0, 1, -1] for c in configuration)):
+            raise ValueError('Robot.InverseKinematicsAnalytic: configuration must be None or [shoulder, elbow, wrist], each 1, -1, or 0 or None for any')
         JH0 = self.JointHT(np.zeros(n))
         omega = [_ToHT(H).rotation @ dictJointType2Axis[link.jointType] for (H, link) in zip(JH0, self.links)]
         p = [np.array(_ToHT(H).translation) for H in JH0]
@@ -790,7 +839,9 @@ class Robot:
             if n == 6:
                 error += cMath.norm(np.array(Tq.rotation) - np.array(T.rotation))
             if error < 1e-8 and all(cMath.norm(q - r) > 1e-8 for r in result):
-                result += [q]
+                if configuration is None or all(not c or s == 0 or s == c
+                                                for (s, c) in zip(self.ArmConfiguration(q), configuration)):
+                    result += [q]
         if qReference is not None:
             result.sort(key=lambda q: cMath.norm(q - fallback))
         return np.array(result).reshape((len(result), n))
@@ -1281,52 +1332,6 @@ class Robot:
         return graphicsList
 
     
-    def BuildFromDictionary(self, robotDict):
-        """build robot structre from dictionary; this is a DEPRECATED function, which is used in older models; DO NOT USE
-        """
-        global buildFromDictionaryWarned
-        if not buildFromDictionaryWarned:
-            buildFromDictionaryWarned = True
-            exudyn.Print("WARNING: function BuildFromDictionary in class Robot is DEPRECATED; DO NOT USE")
-
-        if 'base' in robotDict:
-            self.base.HT = robotDict['base']['HT']
-        if 'tool' in robotDict:
-            self.tool.HT = robotDict['tool']['HT']
-        if 'gravity' in robotDict:
-            self.gravity = np.array(robotDict['gravity'])
-        if 'referenceConfiguration' in robotDict:
-            self.referenceConfiguration = np.array(robotDict['referenceConfiguration'])
-        
-        warnedModDH = False
-        for i in range(len(robotDict['links'])):
-            link = robotDict['links'][i]
-            
-            if 'stdDH' in link:
-                localHT = StdDH2HT(link['stdDH']) #using theta=0
-            #modified DH parameters are re-interpreted as standard DH parameters, which does not always work / needs additional adjustments!
-            elif 'modDHcraig' in link: #according to Craig (1986) and modified DH parameters in Corke's toolbox (2017)
-                if not warnedModDH:
-                    warnedModDH = True
-                    exudyn.Print('WARNING: BuildFromDictionary untested for modDH; missing transformation for inertia and COM?')
-                [theta, d, a, alpha] = link['modDHcraig']
-                a1 = 0 #if no succeeding link follows
-                alpha1 = 0
-                if i < len(robotDict['links'])-1: #there exists a next link, which we use as additional standard DH-parameters for this link
-                    [theta1, d1, a1, alpha1] = link['modDHcraig']
-                if i == 0: #put first two DH parameters to base
-                    self.base.HT = self.base.HT * exudyn.HT().SetRotationX(alpha) * exudyn.HT(translation=[a,0,0])
-                
-                #local HT re-interpreted as standard DH-parameters, as suggested by Corke 2017, page 219:
-                localHT = exudyn.HT().SetRotationZ(theta) * exudyn.HT(translation=[a1,0,d]) * exudyn.HT().SetRotationX(alpha1)
-            else:
-                raise ValueError('BuildFromDictionary in class Robot: only supports links with stdDH parameters')
-
-            robotLink = RobotLink(mass=link['mass'], COM=link['COM'], inertia=link['inertia'], localHT=localHT)
-            self.AddLink(robotLink)
-
-        
-
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++  DH-PARAMETERS  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

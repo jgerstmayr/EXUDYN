@@ -6061,6 +6061,26 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - test_urdfGraphics.py: a URDF and binary and text STL of a brick written by the test; origin, scale, color, the
   orientation outward and inside out without the inversion, the links of a Robot.
 
+<a id="rg19-3-2"></a>
+### RG19.3.2, RG19.6.3, RG19.2.4 — one STL reader, the arm configuration, BuildFromDictionary removed (2026-11-05, #3264-#3268)
+- Maintainer 2026-11-05: fuse the numpy STL reader with FromSTLfile, ideally without numpy-stl (the mass and inertia from
+  the mesh), useNumpySTL to force it; elbow up/down etc. in the analytic IK, as a preference or by a function on all
+  solutions; BuildFromDictionary removed; a step and issue for saving a Robot (HDF5) and for images in dicts; a
+  proposal for the blending of PTP motions first.
+- #3264: graphics._ReadSTL (moved from urdfImport) and _MassPropertiesOfTriangles (tetrahedra with the origin, the sign
+  of the orientation removed); FromSTLfile reads with it, the normals from the triangles (numpy-stl's were not
+  normalized), scale of three factors, the verbose volume only with density (it raised a NameError without);
+  useNumpySTL=True the old path. Against numpy-stl in venvP312 on an irregular octahedron: 1e-8 relative, the float32
+  of numpy-stl. stlFileImportTest.py: a brick written binary and text, scaled, rotated, moved.
+- Seen: graphics.Brick is counterclockwise outward (positive volume), and FromSTLfile inverts the STL triangles by
+  default; the test writes its STL inverted for it. Open question 11 of the design.
+- #3265: ArmConfiguration in C++ and Python; first with W a point of axis 4 for the UR, where the shoulder did not tell
+  the two q1 apart (4 of 20 poses): W is the point of the axes 5 and 6 for both 6R geometries, the elbow measured to
+  axis 4 for the UR. The 3R has wrist 0, so 0 means any in configuration, as None. analyticInverseKinematicsTest.py
+  checks the configurations (8 more checks, 27.2).
+- #3266: BuildFromDictionary, buildFromDictionaryWarned and the two commented calls in the test models removed.
+- #3267 (RG19.3.3) and #3268 (RG11.4.5) raised, open. Blending: design section 6.1, step RG19.5.2.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

@@ -869,7 +869,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`texturesExa
 
 [`FromSTLfileASCII(fileName, color = [0.,0.,0.,1.], verbose = False, invertNormals = True, invertTriangles = True, orientTriangles = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3270)
 
-- **function description**: generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with FromSTLfile(...)
+- **function description**: generate graphics data from STL file (text format!) and use color for visualization; this function is slow, FromSTLfile(...) reads text and binary files faster
 - **input**:
   - `fileName`: string containing directory and filename of STL-file (in text / SCII format) to load
   - `color`: provided as list of 4 RGBA values
@@ -880,7 +880,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`texturesExa
 - **output**: creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCgeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveOCCgeometry.py) (Ex), [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex), [`orientTrianglesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/orientTrianglesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCgeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveOCCgeometry.py) (Ex), [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex), [`orientTrianglesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/orientTrianglesTest.py) (TM), [`stlFileImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stlFileImportTest.py) (TM)
 
 
 (sec-graphics-frompymeshlabfile)=
@@ -907,29 +907,30 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pymeshlabFi
 (sec-graphics-fromstlfile)=
 ## Function: FromSTLfile
 
-[`FromSTLfile(fileName, color = [0.,0.,0.,1.], verbose = False, density = 0., scale = 1., Aoff = [], pOff = [], invertNormals = True, invertTriangles = True, orientTriangles = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3455)
+[`FromSTLfile(fileName, color = [0.,0.,0.,1.], verbose = False, density = 0., scale = 1., Aoff = [], pOff = [], invertNormals = True, invertTriangles = True, orientTriangles = False, useNumpySTL = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3489)
 
-- **function description**: generate graphics data from STL file, allowing text or binary format; requires numpy-stl to be installed; additionally can scale, rotate and translate
+- **function description**: generate graphics data from STL file, allowing text or binary format, read with numpy (#3264); additionally can scale, rotate and translate
 - **input**:
-  - `fileName`: string containing directory and filename of STL-file (in text / SCII format) to load
+  - `fileName`: string containing directory and filename of STL-file (binary or text format) to load
   - `color`: provided as list of 4 RGBA values
   - `verbose`: if True, useful information is provided during reading
-  - `density`: if given and if verbose, mass, volume, inertia, etc. are computed
-  - `scale`: point coordinates are transformed by scaling factor
+  - `density`: if not 0, mass, volume, inertia, etc. are computed for a closed mesh and returned
+  - `scale`: point coordinates are transformed by scaling factor, or by three factors for x, y, z
   - `invertNormals`: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
   - `invertTriangles`: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
   - `orientTriangles`: if True, the triangles are oriented consistently and closed parts outward with OrientTriangles, and the normals are computed from them - for STL files whose triangles are not oriented consistently (#2281)
-- **output**: creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
-- **notes**: the model is first scaled, then rotated, then the offset pOff is added; finally min, max, mass, volume, inertia, com are computed!
+  - `useNumpySTL`: if True, the file is read and the mass properties are computed with numpy-stl (pip install numpy-stl), for a file the reader of Exudyn does not handle
+- **output**: creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index); with density != 0, [graphicsData, dict] with the keys minPos, maxPos, volume, mass, COM and inertia (the inertia tensor at the COM)
+- **notes**: the model is first scaled, then rotated, then the offset pOff is added; finally min, max, mass, volume, inertia, com are computed! The normals are those of the triangles, computed from their points.
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`ROSTurtle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSTurtle.py) (Ex), [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`ROSTurtle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSTurtle.py) (Ex), [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex), [`stlFileImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stlFileImportTest.py) (TM)
 
 
 (sec-graphics-addedgesandsmoothennormals)=
 ## Function: AddEdgesAndSmoothenNormals
 
-[`AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle = 0.25*pi, addEdges = True, smoothNormals = True, roundDigits = 5, triangleColor = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3538)
+[`AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle = 0.25*pi, addEdges = True, smoothNormals = True, roundDigits = 5, triangleColor = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3575)
 
 - **function description**: compute and return GraphicsData with edges and smoothend normals for mesh consisting of points and triangles (e.g., as returned from GraphicsData2PointsAndTrigs); ignores stored normals graphicsData: single GraphicsData object of type TriangleList; existing edges are ignored edgeColor: optional color for edges edgeAngle: angle above which edges are added to geometry addEdges: if True, edges are added in TriangleList of GraphicsData smoothNormals: if True, algorithm tries to smoothen normals at vertices; otherwise, uses triangle normals roundDigits: number of digits, relative to max dimensions of object, at which points are assumed to be equal; too small or too larger number of digits may cause artifacts triangleColor: if triangleColor is set to a RGBA color, this color is used for the new triangle mesh throughout; otherwise, stored colors are unchanged
 - **output**: returns GraphicsData with added edges and smoothed normals
@@ -942,7 +943,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-graphics-exportstl)=
 ## Function: ExportSTL
 
-[`ExportSTL(graphicsData, fileName, solidName = 'ExudynSolid', invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3709)
+[`ExportSTL(graphicsData, fileName, solidName = 'ExudynSolid', invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3746)
 
 - **function description**: export given graphics data (only type TriangleList allowed!) to STL ascii file using fileName
 - **input**:

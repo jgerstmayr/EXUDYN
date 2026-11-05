@@ -1,0 +1,11 @@
+{
+  "number": 3267,
+  "title": "Save and load a Robot of exudyn.robotics, e.g. as HDF5 file",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "A Robot imported from a URDF or built from a model (e.g. the Staubli TX2-90L of the joint frames with the graphics of its URDF) cannot be stored: the links, base, tool, their HTs and the graphics data must be written into a dict and read back. Proposed: Robot.GetDictionary and Robot.SetDictionary (or a Robot built from the dict), saved and loaded with SaveDictToHDF5 and LoadDictFromHDF5, extended where needed; textures of the graphics need the images in dicts (separate issue).",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04"
+}

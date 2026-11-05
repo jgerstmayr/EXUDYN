@@ -73,13 +73,6 @@ newRobot.AddLink(RobotLink(mass=0.34, COM=[0,0,0], inertia=np.diag([0.0003,0.000
 newRobot.AddLink(RobotLink(mass=0.09, COM=[0,0,0.032], inertia=np.diag([0.00015,0.00015,4e-5]), localHT = StdDH2HT([0,0,0,0]), visualization=VRobotLink(linkColor=graphics.colorList[5])))
 
 
-# newRobot = Robot(gravity=[0,0,-9.81], referenceConfiguration = [])
-# newRobot.BuildFromDictionary(myRobot) #this allows conversion from old structure
-
-#assumption, as the bodies in the mbs have their COM at the reference position
-#for link in robot['links']:
-#    link['COM']=[0,0,0]
-
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #configurations and trajectory
 q0 = [0,0,0,0,0,0] #zero angle configuration

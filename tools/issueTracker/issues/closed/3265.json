@@ -1,0 +1,15 @@
+{
+  "number": 3265,
+  "title": "The arm configuration (shoulder, elbow, wrist) in the analytic inverse kinematics of KinematicChain and Robot",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "InverseKinematicsAnalytic returns all solutions sorted by the distance from qReference, but a configuration such as elbow up or down could not be asked for. Decided: ArmConfiguration(q) in C++ and Python gives the signs [shoulder, elbow, wrist] from the joint axes at q, independent of the DH convention (0 at the singular configuration between two of them), and InverseKinematicsAnalytic(HT, qReference, configuration) returns only the solutions of the given configuration (each sign 1, -1 or None for any) and of its boundary.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 18:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.robotics: ArmConfiguration(q) of KinematicChain and Robot gives the signs [shoulder, elbow, wrist] of the arm from the joint axes, independent of the DH convention, 0 in a singular configuration; InverseKinematicsAnalytic(HT, qReference, configuration) returns only the solutions of a configuration (each sign 1, -1, or 0 or None for any), e.g. ArmConfiguration(qReference).",
+  "resolvedInVersion": "1.13.378"
+}

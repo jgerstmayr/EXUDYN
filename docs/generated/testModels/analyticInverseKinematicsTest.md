@@ -14,7 +14,8 @@ You can view and download this file on Github: [analyticInverseKinematicsTest.py
 #           against Robot.InverseKinematicsAnalytic in Python, for the 3R robot (the position of the tool), the Puma560
 #           of standard and of modified DH parameters (a spherical wrist) and the UR5, each with a base and a tool, at
 #           random joint coordinates: the solutions of C++ and Python agree, every solution reaches the pose, and the
-#           joint coordinates of the pose are among them, sorted by the distance from qReference; a pose out of reach has no
+#           joint coordinates of the pose are among them, sorted by the distance from qReference; each solution has an arm
+#           configuration of its own, which selects it (#3265); a pose out of reach has no
 #           solution, a singular wrist takes the free angle from qReference, and the Panda (7 joints) is refused. The
 #           result is the number of checks that pass plus the nearest solution of one pose of the Puma560, its
 #           components weighted by 1 to 6.
@@ -56,6 +57,8 @@ for (name, robot) in Robots().items():
     difference = 0 #C++ against Python
     poseError = 0 #of all solutions
     nearestFound = True
+    configurationsDistinct = True
+    configurationSelects = True
     numberOfSolutions = 0
     for k in range(10):
         q = rng.uniform(-np.pi, np.pi, n)
@@ -77,8 +80,15 @@ for (name, robot) in Robots().items():
         distances = [cMath.norm(s - q - 0.01) for s in solutions]
         nearestFound = (nearestFound and any(cMath.norm(s - q) < 1e-8 for s in solutions)
                         and all(a <= b for (a, b) in zip(distances[:-1], distances[1:])))
+        #each solution a configuration of its own (#3265), the same in C++ and Python; the configuration of q selects q
+        configurations = [tuple(chain.ArmConfiguration(s)) for s in solutions]
+        configurationsDistinct = (configurationsDistinct and len(set(configurations)) == len(configurations)
+                                  and configurations == [tuple(robot.ArmConfiguration(s)) for s in solutions])
+        for selected in [chain.InverseKinematicsAnalytic(T, q, chain.ArmConfiguration(q)),
+                         robot.InverseKinematicsAnalytic(T, q, robot.ArmConfiguration(q))]:
+            configurationSelects = configurationSelects and len(selected) == 1 and cMath.norm(selected[0] - q) < 1e-8
     exu.Print(name + ': C++ against Python', difference, ', pose error', poseError, ', solutions', numberOfSolutions)
-    checks += [difference < 1e-10, poseError < 1e-10, nearestFound]
+    checks += [difference < 1e-10, poseError < 1e-10, nearestFound, configurationsDistinct, configurationSelects]
 
 #out of reach, a singular wrist (q_5 = 0: q_4 + q_6 fixed, q_4 from qReference), a robot of 7 joints
 chain = Robots()['Puma560'].GetKinematicChain()

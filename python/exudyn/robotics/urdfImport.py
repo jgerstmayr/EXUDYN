@@ -382,24 +382,6 @@ def MakeCorkeRobot(robotDic):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the visual meshes of a URDF file without the RTB (#3263)
 
-def _ReadSTL(fileName):
-    """the triangles of an STL file, binary or text, as an array (nTriangles, 3, 3) of the points and (nTriangles, 3) of the
-    normals; numpy only"""
-    with open(fileName, 'rb') as file:
-        data = file.read()
-    if len(data) >= 84:
-        count = int(np.frombuffer(data, dtype='<u4', count=1, offset=80)[0])
-        if 84 + 50*count == len(data): #binary
-            records = np.frombuffer(data, dtype=np.dtype([('normal', '<f4', 3), ('points', '<f4', (3, 3)), ('attribute', '<u2')]),
-                                    count=count, offset=84)
-            return (records['points'].astype(float), records['normal'].astype(float))
-    values = [line.split()[1:] for line in data.decode('ascii', errors='replace').splitlines()
-              if line.strip().startswith(('vertex', 'facet'))]
-    normals = np.array([v[1:4] for v in values if v[0] == 'normal'], dtype=float)
-    points = np.array([v for v in values if v[0] != 'normal'], dtype=float).reshape((-1, 3, 3))
-    return (points, normals)
-
-
 def _URDForigin(element):
     """the HT of an <origin xyz rpy> element (None: identity); rpy as in URDF, R = Rz(yaw) Ry(pitch) Rx(roll)"""
     H = exudyn.HT()
@@ -414,7 +396,7 @@ def _URDForigin(element):
 def LoadURDFgraphics(urdfFile, packagePath=None, color=None, invertTriangles=True, orientTriangles=True,
                      smoothNormals=True, smoothingAngle=0.25*np.pi, addEdges=False):
     """the visual meshes of the links of a URDF file as Exudyn graphics, without the Robotics Toolbox (#3263): for each
-    <link> its <visual> elements with a mesh of an STL file (binary or text, read with numpy), their <origin> and scale,
+    <link> its <visual> elements with a mesh of an STL file (binary or text, read by graphics.FromSTLfile), their <origin> and scale,
     and the color of their <material>; meshes of other formats and the shapes box, cylinder, sphere are skipped with a
     warning. The triangles of STL files are often not oriented consistently, and their normals are those of the
     triangles: the options invert them, orient them (graphics.OrientTriangles) and smoothen the normals
@@ -471,11 +453,8 @@ def LoadURDFgraphics(urdfFile, packagePath=None, color=None, invertTriangles=Tru
                 rgba = list(color)
             scale = [float(x) for x in mesh.get('scale', '1 1 1').split()]
             H = _URDForigin(visual.find('origin'))
-            points = _ReadSTL(fileName)[0] #the normals of the file are recomputed
-            points = (points*scale) @ np.array(H.rotation).T + np.array(H.translation)
-            nPoints = 3*len(points)
-            gData = {'type': 'TriangleList', 'colors': np.tile(rgba, nPoints), 'points': points.flatten(),
-                     'triangles': np.arange(nPoints - 1, -1, -1) if invertTriangles else np.arange(nPoints)}
+            gData = graphics.FromSTLfile(fileName, color=rgba, scale=np.array(scale), Aoff=np.array(H.rotation),
+                                         pOff=np.array(H.translation), invertTriangles=invertTriangles)
             if orientTriangles:
                 gData = graphics.OrientTriangles(gData, outward=True, normals='remove')
             if smoothNormals or addEdges:

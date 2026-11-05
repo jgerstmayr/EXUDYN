@@ -15,7 +15,8 @@ import numpy as np
 import exudyn as exu
 import exudyn.graphics as graphics
 from exudyn.robotics import Robot, RobotLink
-from exudyn.robotics.urdfImport import LoadURDFgraphics, AddURDFgraphics, _ReadSTL
+from exudyn.robotics.urdfImport import LoadURDFgraphics, AddURDFgraphics
+from exudyn.graphics import _ReadSTL
 
 def _WriteSTL(fileName, graphicsData, binary):
     """a closed brick as STL, its triangles in the orientation of STL files (the inverse of Exudyn's, as FromSTLfile)"""

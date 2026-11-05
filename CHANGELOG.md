@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 361 | 1.13.376 |
+| 1.13 | Newborn | 364 | 1.13.379 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.379** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Remove Robot.BuildFromDictionary of exudyn.robotics (#3266)
+  - description: Robot.BuildFromDictionary built a robot from the dictionary structure of 2020 and was deprecated. Decided: removed, with its module variable buildFromDictionaryWarned and the commented calls in the test models.
+  - **notes:** exudyn.robotics: Robot.BuildFromDictionary, deprecated, is removed.
+  - date resolved: **2026-11-05 18:23**, date raised: 2026-11-05
+- **1.13.378** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The arm configuration (shoulder, elbow, wrist) in the analytic inverse kinematics of KinematicChain and Robot (#3265)
+  - description: InverseKinematicsAnalytic returns all solutions sorted by the distance from qReference, but a configuration such as elbow up or down could not be asked for. Decided: ArmConfiguration(q) in C++ and Python gives the signs \[shoulder, elbow, wrist\] from the joint axes at q, independent of the DH convention (0 at the singular configuration between two of them), and InverseKinematicsAnalytic(HT, qReference, configuration) returns only the solutions of the given configuration (each sign 1, -1 or None for any) and of its boundary.
+  - **notes:** exudyn.robotics: ArmConfiguration(q) of KinematicChain and Robot gives the signs \[shoulder, elbow, wrist\] of the arm from the joint axes, independent of the DH convention, 0 in a singular configuration; InverseKinematicsAnalytic(HT, qReference, configuration) returns only the solutions of a configuration (each sign 1, -1, or 0 or None for any), e.g. ArmConfiguration(qReference).
+  - date resolved: **2026-11-05 18:23**, date raised: 2026-11-05
+- **1.13.377** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics.FromSTLfile reads binary and text STL with numpy, without numpy-stl, and computes the mass properties itself (#3264)
+  - description: FromSTLfile needed numpy-stl for reading, and its verbose output referred to the volume also without density. Decided: the numpy reader of LoadURDFgraphics moves into graphics (\_ReadSTL) and FromSTLfile uses it; volume, mass, COM and the inertia at the COM from the tetrahedra of the triangles with the origin; scale may have three factors; the normals of the triangles computed from the points; useNumpySTL=False forces numpy-stl for files the reader does not handle; LoadURDFgraphics calls FromSTLfile.
+  - **notes:** graphics.FromSTLfile reads binary and text STL files with numpy and no longer needs numpy-stl; with density it computes volume, mass, center of mass and the inertia at the center of mass from the mesh; scale may have three factors; useNumpySTL=True reads the file with numpy-stl. urdfImport.LoadURDFgraphics uses FromSTLfile.
+  - date resolved: **2026-11-05 18:23**, date raised: 2026-11-05
 - **1.13.376** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robotics: the meshes of a URDF as the graphics of a Robot, without the Robotics Toolbox (#3263)
   - description: The graphics of a URDF were available only through the RTB and pymeshlab in GetURDFrobotData, together with the import of the whole robot; a model of models.py could not show the meshes of its URDF. Decided: LoadURDFgraphics reads the visual STL meshes of a URDF with numpy (package paths, origin, scale, material color), with options for the orientation of the triangles (inverted from STL, oriented outward) and smoothened normals; AddURDFgraphics puts them on the links and the base of a Robot whose link frames are the URDF link frames; ManipulatorStaubliTX2\_90L names its URDF in urdfGraphics; the example works with and without the local data.
   - **notes:** exudyn.robotics.urdfImport: LoadURDFgraphics reads the visual STL meshes of a URDF without the Robotics Toolbox (package paths, origin, scale, material color), with the options invertTriangles, orientTriangles, smoothNormals, smoothingAngle and addEdges; AddURDFgraphics puts them on the links and the base of a Robot; ManipulatorStaubliTX2\_90L names its URDF in 'urdfGraphics', and staubliTX2trajectories.py shows the meshes when the local robot data are found.

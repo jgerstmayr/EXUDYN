@@ -1,0 +1,15 @@
+{
+  "number": 3266,
+  "title": "Remove Robot.BuildFromDictionary of exudyn.robotics",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Robot.BuildFromDictionary built a robot from the dictionary structure of 2020 and was deprecated. Decided: removed, with its module variable buildFromDictionaryWarned and the commented calls in the test models.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 18:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.robotics: Robot.BuildFromDictionary, deprecated, is removed.",
+  "resolvedInVersion": "1.13.379"
+}

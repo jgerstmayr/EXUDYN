@@ -1,0 +1,11 @@
+{
+  "number": 3268,
+  "title": "Images in dicts: textures of graphics data and of the renderer to and from a dict",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "There is no conversion of an image (the textures added by SC.renderer.AddTexture and referenced by graphics data) into a dict and back, so a dict of an mbs, the renderer or a Robot cannot carry its textures. Proposed: an image as a dict of its size, interpretation, flags and pixel array, written by the GetDictionary functions and read by SetDictionary and by the HDF5 load and save.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04"
+}

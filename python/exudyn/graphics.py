@@ -3269,7 +3269,7 @@ def ProjectTexture(graphicsData, texture, projection='box', point=[0,0,0], rotat
 @_ReturnsRows
 def FromSTLfileASCII(fileName,color=[0.,0.,0.,1.], verbose=False, invertNormals=True, invertTriangles=True,
                      orientTriangles=False):
-    """generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with FromSTLfile(...)
+    """generate graphics data from STL file (text format!) and use color for visualization; this function is slow, FromSTLfile(...) reads text and binary files faster
 
     Args:
         fileName: string containing directory and filename of STL-file (in text / SCII format) to load
@@ -3318,7 +3318,7 @@ def FromSTLfileASCII(fileName,color=[0.,0.,0.,1.], verbose=False, invertNormals=
     lineCnt+=1
     
     if nLines > 500000:
-        exudyn.Print('large ascii STL file; switch to numpy-stl and binary format for faster loading!')
+        exudyn.Print('large ascii STL file; use FromSTLfile and the binary format for faster loading!')
 
     while lineCnt < nLines and fileLines[lineCnt].strip().split()[0] != 'endsolid':
         if lineCnt%100000 == 0 and lineCnt !=0: 
@@ -3451,78 +3451,115 @@ def FromPyMeshlabFile(fileName, defaultColor=color.defaultBody,
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def _ReadSTL(fileName):
+    """the triangles of an STL file, binary or text, as an array (nTriangles, 3, 3) of the points and (nTriangles, 3) of the
+    normals stored in the file; numpy only (#3264)"""
+    with open(fileName, 'rb') as file:
+        data = file.read()
+    if len(data) >= 84:
+        count = int(np.frombuffer(data, dtype='<u4', count=1, offset=80)[0])
+        if 84 + 50*count == len(data): #binary
+            records = np.frombuffer(data, dtype=np.dtype([('normal', '<f4', 3), ('points', '<f4', (3, 3)), ('attribute', '<u2')]),
+                                    count=count, offset=84)
+            return (records['points'].astype(float), records['normal'].astype(float))
+    values = [line.split()[1:] for line in data.decode('ascii', errors='replace').splitlines()
+              if line.strip().startswith(('vertex', 'facet'))]
+    normals = np.array([v[1:4] for v in values if v[0] == 'normal'], dtype=float).reshape((-1, 3))
+    points = np.array([v for v in values if v[0] != 'normal'], dtype=float).reshape((-1, 3, 3))
+    return (points, normals)
+
+def _MassPropertiesOfTriangles(points, density):
+    """[volume, mass, COM, inertia] of the solid of density enclosed by the triangles points (nTriangles, 3, 3), oriented
+    consistently, outward or inward; the inertia tensor at the COM; summed over the tetrahedra of each triangle with the
+    origin (#3264)"""
+    (a, b, c) = (points[:, 0], points[:, 1], points[:, 2])
+    v = np.einsum('ij,ij->i', a, np.cross(b, c))/6. #signed volumes of the tetrahedra
+    if np.sum(v) < 0: #triangles oriented inward
+        v = -v
+    volume = np.sum(v)
+    s = a + b + c
+    COM = (v @ s)/(4.*volume)
+    #the second moments of a tetrahedron with the corners 0, a, b, c: v/20 (a a^T + b b^T + c c^T + s s^T)
+    C = np.einsum('k,ki,kj->ij', v/20., a, a) + np.einsum('k,ki,kj->ij', v/20., b, b) \
+        + np.einsum('k,ki,kj->ij', v/20., c, c) + np.einsum('k,ki,kj->ij', v/20., s, s)
+    inertia = np.trace(C)*np.eye(3) - C - volume*((COM @ COM)*np.eye(3) - np.outer(COM, COM))
+    return [volume, density*volume, COM, density*inertia]
+
 @_ReturnsRows
 def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=1., Aoff=[], pOff=[], invertNormals=True, invertTriangles=True,
-                orientTriangles=False):
-    """generate graphics data from STL file, allowing text or binary format; requires numpy-stl to be installed; additionally can scale, rotate and translate
+                orientTriangles=False, useNumpySTL=False):
+    """generate graphics data from STL file, allowing text or binary format, read with numpy (#3264); additionally can scale, rotate and translate
 
     Args:
-        fileName: string containing directory and filename of STL-file (in text / SCII format) to load
+        fileName: string containing directory and filename of STL-file (binary or text format) to load
         color: provided as list of 4 RGBA values
         verbose: if True, useful information is provided during reading
-        density: if given and if verbose, mass, volume, inertia, etc. are computed
-        scale: point coordinates are transformed by scaling factor
+        density: if not 0, mass, volume, inertia, etc. are computed for a closed mesh and returned
+        scale: point coordinates are transformed by scaling factor, or by three factors for x, y, z
         invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
         invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
         orientTriangles: if True, the triangles are oriented consistently and closed parts outward with OrientTriangles,
             and the normals are computed from them - for STL files whose triangles are not oriented consistently (#2281)
+        useNumpySTL: if True, the file is read and the mass properties are computed with numpy-stl (pip install numpy-stl),
+            for a file the reader of Exudyn does not handle
 
     Returns:
-        creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
+        creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index); with density != 0, [graphicsData, dict] with the keys minPos, maxPos, volume, mass, COM and inertia (the inertia tensor at the COM)
 
     Note:
         the model is first scaled, then rotated, then the offset pOff is added; finally min, max, mass, volume, inertia, com are computed!
+        The normals are those of the triangles, computed from their points.
     """
-    try:
-        from stl import mesh
-    except ImportError:
-        raise ValueError('FromSTLfile requires installation of numpy-stl; try "pip install numpy-stl"')
-    
-    data=mesh.Mesh.from_file(fileName)
-    nPoints = 3*len(data.points) #data.points has shape (nTrigs,9), one triangle has 3 points!
-    
-    if scale != 1.:
-        data.points *= scale
-    
-    p = copy.copy(pOff)
-    A = copy.deepcopy(Aoff) #deepcopy for list of lists
-    
-    if not IsEmptyList(p) or not IsEmptyList(A):
-        if IsEmptyList(p): p=[0,0,0]
-        if IsEmptyList(A): A=np.eye(3)
-        HT = HomogeneousTransformation(A, p)
-        
-        data.transform(HT)
-        
+    p = np.zeros(3) if IsEmptyList(pOff) else np.array(pOff, dtype=float)
+    A = np.eye(3) if IsEmptyList(Aoff) else np.array(Aoff, dtype=float)
+    if useNumpySTL:
+        try:
+            from stl import mesh
+        except ImportError:
+            raise ValueError('FromSTLfile(..., useNumpySTL=True) requires installation of numpy-stl; try "pip install numpy-stl"')
+        data = mesh.Mesh.from_file(fileName)
+        data.vectors *= scale
+        data.transform(HomogeneousTransformation(A, p))
+        corners = np.array(data.vectors, dtype=float)
+    else:
+        corners = _ReadSTL(fileName)[0]*scale @ A.T + p
+    nPoints = 3*len(corners)
+
     dictData = {}
     if verbose:
         exudyn.Print('FromSTLfile:')
-        exudyn.Print('  max point=', list(data.max_))
-        exudyn.Print('  min point=', list(data.min_))
+        exudyn.Print('  max point=', list(corners.reshape((-1, 3)).max(axis=0)))
+        exudyn.Print('  min point=', list(corners.reshape((-1, 3)).min(axis=0)))
         exudyn.Print('  STL points=', nPoints)
     if density != 0:
-        [volume, mass, COM, inertia] = data.get_mass_properties_with_density(density)
-        dictData = {'minPos':data.min_,
-                    'maxPos':data.max_,
+        if useNumpySTL:
+            [volume, mass, COM, inertia] = data.get_mass_properties_with_density(density)
+        else:
+            [volume, mass, COM, inertia] = _MassPropertiesOfTriangles(corners, density)
+        dictData = {'minPos':corners.reshape((-1, 3)).min(axis=0),
+                    'maxPos':corners.reshape((-1, 3)).max(axis=0),
                     'volume':volume,
                     'mass':mass,
                     'COM':COM,
                     'inertia':inertia
                     }
-    if verbose:
-        exudyn.Print('  volume =', volume)
-        exudyn.Print('  center of mass =', list(COM))
-        exudyn.Print('  inertia =', list(inertia))
-    
+        if verbose:
+            exudyn.Print('  volume =', volume)
+            exudyn.Print('  center of mass =', list(COM))
+            exudyn.Print('  inertia =', list(inertia))
+
     colors = np.tile(color, nPoints)
 
     if invertTriangles:
         triangles = np.arange(nPoints-1,-1,-1)              #inverted sorting
     else:
         triangles = np.arange(0,nPoints)                    #unmodified sorting of indices
-    points = data.points.flatten()
+    points = corners.flatten()
+    triangleNormals = np.cross(corners[:, 1] - corners[:, 0], corners[:, 2] - corners[:, 0])
+    lengths = np.linalg.norm(triangleNormals, axis=1, keepdims=True)
+    triangleNormals = np.divide(triangleNormals, lengths, out=np.zeros_like(triangleNormals), where=lengths != 0)
     nf = 1.-2.*int(invertNormals)                           #+1 or -1 (inverted)
-    normals = np.kron([nf,nf,nf],data.normals).flatten()    #normals must be per point
+    normals = np.kron([nf,nf,nf],triangleNormals).flatten() #normals must be per point
 
     dictGraphics = {'type':'TriangleList', 'colors':colors, 'normals':normals,
                     'points':points, 'triangles':triangles}

@@ -445,22 +445,90 @@ private:
 		return true;
 	}
 
+	//! true for 3 or 6 revolute joints in series, the robots of the analytic inverse kinematics
+	bool IsRevoluteSerial36() const
+	{
+		bool revoluteSerial = (numberOfLinks == 3 || numberOfLinks == 6);
+		for (Index i = 0; i < numberOfLinks; i++) { if (jointTypes[i] >= 3 || parents[i] != i - 1) { revoluteSerial = false; } }
+		return revoluteSerial;
+	}
+
+	//! the signs [shoulder, elbow, wrist] of the arm at q (#3265), 0 in a singular configuration; see ArmConfiguration
+	void ComputeArmConfiguration(const Vector& q, Index configuration[3]) const
+	{
+		const Index n = numberOfLinks;
+		ResizableArray<HomogeneousTransformation> jointFrames, linkFrames;
+		ComputeFrames(q, jointFrames, linkFrames);
+		Vector3D omega[6], p[6];
+		Real scale = 1.;
+		for (Index i = 0; i < n; i++)
+		{
+			omega[i] = JointAxis(i, jointFrames[i]);
+			p[i] = jointFrames[i].GetTranslation();
+			scale = EXUstd::Maximum(scale, 1. + (p[i] - p[0]).GetL2Norm());
+		}
+		Vector3D W = (linkFrames[n - 1] * toolHT).GetTranslation();
+		Vector3D E = W; //the point after the elbow
+		if (n == 6)
+		{
+			Real distance;
+			if (!IKLineIntersection(p[4], omega[4], p[5], omega[5], W, distance)) { PyError("KinematicChain.ArmConfiguration: the axes 5 and 6 must cross", PyErrorType::valueError); }
+			E = omega[1].CrossProduct(omega[3]).GetL2Norm() < 1e-10 ? p[3] : W; //UR: axis 4 parallel to axis 2
+		}
+		auto Sign = [](Real x, Real tolerance) { return fabs(x) < tolerance ? (Index)0 : (x > 0 ? (Index)1 : (Index)-1); };
+		Vector3D n12 = omega[0].CrossProduct(omega[1]);
+		configuration[0] = Sign((W - p[0]) * n12 / n12.GetL2Norm(), 1e-10 * scale);
+		Vector3D a = p[2] - p[1] - (omega[1] * (p[2] - p[1])) * omega[1];
+		Vector3D b = E - p[2] - (omega[1] * (E - p[2])) * omega[1];
+		configuration[1] = Sign(omega[2] * a.CrossProduct(b) / EXUstd::Maximum(a.GetL2Norm() * b.GetL2Norm(), 1e-300), 1e-10);
+		configuration[2] = n == 3 ? 0 : Sign(omega[4] * omega[3].CrossProduct(omega[5]), 1e-10);
+	}
+
 public:
+	//! the configuration [shoulder, elbow, wrist] of the arm at q (#3265), each +1 or -1, 0 in the singular configuration
+	//! between them, from the joint axes at q: shoulder the sign of (W - p_1) . (omega_1 x omega_2), elbow of
+	//! omega_3 . (a x b), wrist of omega_5 . (omega_4 x omega_6); Robot.ArmConfiguration is the Python version
+	py::list ArmConfiguration(const py::object& qPy) const
+	{
+		if (!IsRevoluteSerial36()) { PyError("KinematicChain.ArmConfiguration: the configuration needs 3 or 6 revolute joints in series", PyErrorType::valueError); }
+		Index configuration[3];
+		ComputeArmConfiguration(GetCoordinates(qPy, "KinematicChain.ArmConfiguration"), configuration);
+		py::list result;
+		for (Index i = 0; i < 3; i++) { result.append(configuration[i]); }
+		return result;
+	}
+
 	//! the analytic inverse kinematics: all joint coordinates q with ToolHT(q) equal to HT, for 3 revolute joints with
 	//! the axes 2 and 3 parallel (the position only), 6 with the axes 2 and 3 parallel and a spherical wrist, or 6 with the
 	//! axes 2, 3, 4 parallel and the axes 5 and 6 crossing (UR); one solution per row, checked by the forward kinematics;
-	//! with qReference the angles nearest to it and sorted by the distance from it, else in [-pi, pi)
-	py::array_t<Real> InverseKinematicsAnalytic(const py::object& HTpy, const py::object& qReferencePy) const
+	//! with qReference the angles nearest to it and sorted by the distance from it, else in [-pi, pi); with a
+	//! configuration [shoulder, elbow, wrist] (each 1, -1, or 0 or None for any) only the solutions of it and of its
+	//! boundary (#3265)
+	py::array_t<Real> InverseKinematicsAnalytic(const py::object& HTpy, const py::object& qReferencePy, const py::object& configurationPy) const
 	{
 		const char* functionName = "KinematicChain.InverseKinematicsAnalytic";
 		const Index n = numberOfLinks;
-		bool revoluteSerial = (n == 3 || n == 6);
-		for (Index i = 0; i < n; i++) { if (jointTypes[i] >= 3 || parents[i] != i - 1) { revoluteSerial = false; } }
-		if (!revoluteSerial) { PyError(STDstring(functionName) + ": the analytic inverse kinematics needs 3 or 6 revolute joints in series", PyErrorType::valueError); }
+		if (!IsRevoluteSerial36()) { PyError(STDstring(functionName) + ": the analytic inverse kinematics needs 3 or 6 revolute joints in series", PyErrorType::valueError); }
 		Vector fallback(n);
 		fallback.SetAll(0.);
 		bool hasReference = !qReferencePy.is_none();
 		if (hasReference) { fallback = GetCoordinates(qReferencePy, functionName); }
+		Index wanted[3] = { 0, 0, 0 }; //0: any
+		if (!configurationPy.is_none())
+		{
+			bool valid = py::isinstance<py::list>(configurationPy) || py::isinstance<py::tuple>(configurationPy);
+			py::sequence list = valid ? py::cast<py::sequence>(configurationPy) : py::sequence();
+			valid = valid && list.size() == 3;
+			for (Index i = 0; valid && i < 3; i++)
+			{
+				if (!list[i].is_none())
+				{
+					valid = py::isinstance<py::int_>(list[i]);
+					if (valid) { wanted[i] = py::cast<Index>(list[i]); valid = (wanted[i] >= -1 && wanted[i] <= 1); }
+				}
+			}
+			if (!valid) { PyError(STDstring(functionName) + ": configuration must be None or [shoulder, elbow, wrist], each 1, -1, or 0 or None for any", PyErrorType::valueError); }
+		}
 		HomogeneousTransformation T;
 		EPyUtils::HTFromPython(HTpy, T, "KinematicChain.InverseKinematicsAnalytic: HT");
 
@@ -578,6 +646,12 @@ public:
 			}
 			bool isNew = true;
 			for (const Vector& r : result) { if ((q - r).GetL2Norm() <= 1e-8) { isNew = false; } }
+			if (error < 1e-8 && isNew && !configurationPy.is_none())
+			{
+				Index configuration[3];
+				ComputeArmConfiguration(q, configuration);
+				for (Index i = 0; i < 3; i++) { if (wanted[i] != 0 && configuration[i] != 0 && configuration[i] != wanted[i]) { isNew = false; } }
+			}
 			if (error < 1e-8 && isNew) { result.push_back(q); }
 		}
 		if (hasReference)

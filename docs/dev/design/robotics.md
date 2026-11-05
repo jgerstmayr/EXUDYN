@@ -192,6 +192,20 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   none flipped) and the normals smoothened (AddEdgesAndSmoothenNormals, edges above 45 degrees sharp) - each an option,
   as URDFs differ; 2.8 s for the 56000 triangles of the TX2-90L. AddURDFgraphics on the links of a model of
   dhMode 'jointFrames'; a model names its URDF, base and links in 'urdfGraphics'.
+- **One STL reader** (#3264): the numpy reader of LoadURDFgraphics is graphics.FromSTLfile, which no longer needs
+  numpy-stl; with density the volume, mass, COM and inertia at the COM from the tetrahedra of the triangles with the
+  origin (oriented outward or inward), equal to numpy-stl's to its single precision (an irregular octahedron, 1e-8);
+  `useNumpySTL=True` keeps the numpy-stl path; LoadURDFgraphics calls FromSTLfile (scale of three factors, Aoff, pOff).
+  Seen: graphics.Brick is counterclockwise outward, as the STL standard, but FromSTLfile inverts the STL triangles by
+  default (invertTriangles=True), which the TX2 meshes needed - open question 11 below.
+- **The arm configuration** (#3265): `ArmConfiguration(q)` in KinematicChain and Robot, [shoulder, elbow, wrist] from
+  the joint axes at q - shoulder the side of axis 1 the wrist center W (axes 5 and 6) lies on, along omega_1 x omega_2;
+  elbow the bend about axis 3 (from axis 3 to W, to axis 4 for the UR); wrist the sign of omega_5 . (omega_4 x omega_6);
+  0 at the singular configurations (W on axis 1, the arm stretched, axis 6 parallel to axis 4). The 4 or 8 solutions
+  of the 3R, Puma560, UR5 and TX2-90L have 4 or 8 different configurations (20 random poses each), and
+  `InverseKinematicsAnalytic(HT, qReference, ArmConfiguration(q))` returns q alone. The signs follow the axis
+  directions: up/down, lefty/righty are the names of a manufacturer for one of the signs, which also takes the zero
+  angles into account (Staubli's epositive is q3 > 0).
 - **After #3255**: the IK of a pose `LinkHT(q)[-1] * tool.HT` from 0.1 / 0.5 rad off: UR5 39 / 35 of 40, Puma560 39 /
   31 of 40; SolveSafe, which now interpolates, 12 of 40 for both (from 8 to 10) at 6 to 8 ms - the random poses are far
   apart, a robust numerical IK is the LM of RG19.6. The Panda of models.py: the modified DH parameters, the tool (the
@@ -325,7 +339,9 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   #3254; .2 done: the problems of section 2.1, #3255; .3 done: urdfImport.py, #3256): the commented code, future.py removed after RG19.6, exudyn.HT in the kinematics; the examples
   and test models cleaned up a first time (sensors stored internally, PlotSensor, models.py data).
 - RG19.3 Revise the URDF import: the inertia check and correction, textures, flipped joints, the UR offset, the store
-  and load of Exudyn robot models; tested with the RTB robots and the local data set in examples.
+  and load of Exudyn robot models; tested with the RTB robots and the local data set in examples; .1 done: the URDF
+  graphics (#3263); .2 done: one STL reader without numpy-stl (#3264); .3 open: a Robot saved and loaded as a dict and
+  HDF5 file (#3267), its textures with the images in dicts of RG11.4.5 (#3268).
 - RG19.4 Revise Robot: q0, the control description with friction and end stops for both models, SetControl and
   PreStepControl, AddSensors, the static (and dynamic) compensation from the kinematic tree.
 - RG19.5 Extend the trajectories: quintic and cubic polynomials, linear profiles completed, Cartesian linear, circular,
@@ -333,7 +349,46 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
 - RG19.6 Inverse kinematics: analytic for 6R with a spherical wrist, numerical by Levenberg-Marquardt; the two tests
   (6R, Panda); the kinematic chain, the IK and the static torques in C++ (exudyn.cUtilities, section 3); .1 done: the
   KinematicChain with the forward kinematics, the Jacobian and the static torques (#3259); .2 done: the analytic IK
-  (3R, 6R with a spherical wrist, UR) in the chain and in Robot, future.py removed (#3260); open: the LM IK in the
-  chain with its Python version.
+  (3R, 6R with a spherical wrist, UR) in the chain and in Robot, future.py removed (#3260); .3 done: the arm
+  configuration (#3265); open: the LM IK in the chain with its Python version.
 - RG19.7 Revise models.py: PUMA560, UR5, Panda, Stäubli TX2-90L, their initial configurations; all models checked.
 - RG19.8 Clean up the robotics examples and test models on the revised interfaces.
+
+## 6. Proposals (2026-11-05, not decided)
+
+### 6.1 Blending of PTP motions (requested by the maintainer)
+
+A robot that passes a via point without stopping: the next motion starts before the present one has ended.
+
+- **Recommended: superposition of the motions.** Each segment k stays a rest-to-rest profile of its own,
+  `d_k(t) = q_k(t) - q_k(t_k)`, from its start to its goal (trapezoidal, ProfilePTP, ProfilePolynomial5, any profile).
+  With blending, segment k+1 starts the time `tBlend` before segment k ends, and the trajectory is the sum of the
+  displacements of the active segments, `q(t) = q0 + sum_k d_k(t)`. Each d_k has zero velocity and acceleration at
+  both ends, so the sum is as smooth as the profiles (q and q_t continuous for the trapezoid, also q_tt for the quintic)
+  and reaches the final goal exactly; the via point is passed near, not through. With `tBlend` equal to the deceleration
+  of k and the acceleration of k+1 of the same acceleration, the velocity of an axis moving on in the same direction
+  stays constant in the overlap; in general the sum of the two velocities is checked against maxVelocities and the
+  overlap is shortened until it holds.
+- **Interface**: `Trajectory.Add(profile, blendTime=0.)` or `blendTime` as an argument of the profile;
+  `blendTime='auto'` for the largest overlap that keeps the limits; `blendTime` limited to the deceleration time of k and
+  the acceleration time of k+1, and to the duration of both. `Trajectory.Evaluate` sums the segments active at t; the
+  times of GetTimes are the starts and ends of the segments (ends of a blended segment are then later than the start of
+  the next); the check of jumps at the junctions (RG19.5) is unaffected, as no segment jumps.
+- **Cartesian segments**: two ProfileCartesianLinear blended this way blend in joint space (the tool leaves the line in
+  the overlap, on a curve between the two lines); a blend in the Cartesian space - the superposition of the
+  displacements of the tool positions and rotation vectors, with the IK of the sum - is the variant for welding or
+  gluing paths, later.
+- **Alternatives, not recommended**: parabolic blends at via points (Craig's linear segments with parabolic blends)
+  replace the profiles and need the segment velocities; a quintic polynomial over a window around the via point,
+  matching q, q_t, q_tt at both ends, is local and C2 but may overshoot and needs the limits checked again.
+
+### 6.2 Further adjustments seen
+
+- ProfileCartesianLinear follows the nearest IK solution of the previous one; with `configuration` of #3265 it could keep
+  the configuration of the start explicitly and raise when the path crosses a singular configuration, instead of
+  jumping to another branch.
+- Open question 11: FromSTLfile inverts the STL triangles by default, while graphics.Brick and the STL standard are both
+  counterclockwise outward; which orientation does the renderer draw as front (the TX2 meshes looked right only
+  inverted)? A wrong default would make closed STL meshes from other tools inside out.
+- Robot.GetDictionary/SetDictionary (#3267) would also give a `copy` and a pickle of a Robot, and the robot of a URDF
+  could be stored once and loaded without the RTB.

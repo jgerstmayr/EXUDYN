@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.376.dev1
+- Exudyn version = 1.13.379.dev1
 - last change = 2026-11-05
-- Number of issues = 3264
-- Number of resolved issues = 3153 (376 in current version)
+- Number of issues = 3269
+- Number of resolved issues = 3156 (379 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Images in dicts: textures of graphics data and of the renderer to and from a dict (#3268)
+  - description: There is no conversion of an image (the textures added by SC.renderer.AddTexture and referenced by graphics data) into a dict and back, so a dict of an mbs, the renderer or a Robot cannot carry its textures. Proposed: an image as a dict of its size, interpretation, flags and pixel array, written by the GetDictionary functions and read by SetDictionary and by the HDF5 load and save.
+  - date raised: 2026-11-05
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Save and load a Robot of exudyn.robotics, e.g. as HDF5 file (#3267)
+  - description: A Robot imported from a URDF or built from a model (e.g. the Staubli TX2-90L of the joint frames with the graphics of its URDF) cannot be stored: the links, base, tool, their HTs and the graphics data must be written into a dict and read back. Proposed: Robot.GetDictionary and Robot.SetDictionary (or a Robot built from the dict), saved and loaded with SaveDictToHDF5 and LoadDictFromHDF5, extended where needed; textures of the graphics need the images in dicts (separate issue).
+  - date raised: 2026-11-05
 - `CHECK` `LOW EFF` `raised by: Claude-JG` generalized-alpha: an ODE1 coordinate coupled to ODE2 coordinates converges with order 1 (#3258)
   - description: In the genericDAE model of modelLibrary.py (an ObjectGenericDAE pendulum with a first order lag of its horizontal position on an ODE1 coordinate) SolveDynamic with generalized-alpha gives the ODE2 coordinates with order 2 and the ODE1 coordinate with order 1 (errors 3.2e-5, 1.7e-5, 8.9e-6 for the steps 4e-3, 2e-3, 1e-3, also with spectral radius 1), found by python/testing/solverStudy.py. To be analyzed: how the ODE1 equations are discretized in the generalized-alpha solver and whether the coupling or the ODE1 scheme itself is first order.
   - date raised: 2026-11-05

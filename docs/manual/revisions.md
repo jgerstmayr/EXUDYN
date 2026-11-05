@@ -484,6 +484,14 @@ line of the tool, the joint coordinates by the analytic inverse kinematics at ea
 control of the kinematic tree; see the example staubliTX2trajectories.py (#3262). `urdfImport.LoadURDFgraphics` reads
 the visual STL meshes of a URDF without the Robotics Toolbox, with options for the orientation of the triangles and
 smoothened normals, and `AddURDFgraphics` puts them on the links of a Robot; the TX2-90L names its URDF for it (#3263).
+`ArmConfiguration(q)` of KinematicChain and Robot gives the signs [shoulder, elbow, wrist] of a solution of the inverse
+kinematics, from the joint axes and independent of the DH convention, and `InverseKinematicsAnalytic(HT, qReference,
+configuration)` returns only the solutions of a configuration, e.g. `ArmConfiguration(qReference)` (#3265).
+`Robot.BuildFromDictionary`, deprecated, is removed (#3266).
+
+**`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
+`density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and
+`useNumpySTL=True` reads the file with numpy-stl as before. `urdfImport.LoadURDFgraphics` uses it.
 
 **Implicit Runge-Kutta solvers in C++.** `DynamicSolverType.TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL` and
 `Radau3` run with `mbs.SolveDynamic` on every model of the implicit solver: index-3 constraints without index

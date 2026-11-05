@@ -206,6 +206,7 @@ SpringDamperMesh
 springDamperUserFunctionTest
 springDamperVelocityOffsetTest
 stiffFlyballGovernor
+stlFileImportTest
 superElementRigidJointTest
 SwitchingConstraintsTest
 symbolicDeepRecordingTest
