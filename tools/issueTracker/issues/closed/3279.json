@@ -1,0 +1,15 @@
+{
+  "number": 3279,
+  "title": "Robotics examples and test models on the revised interfaces of exudyn.robotics",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXAMPLE",
+  "effort": "HIGH",
+  "description": "The serial robot examples define the robot data again, write their own PreStepUserFunction with the trajectory, the PD offsets and the static torques, write sensor files and plot by hand, and use the deprecated InverseKinematicsNumerical. Decided: they take the robots of exudyn.robotics.models, Robot.SetControl with PreStepControl, Robot.AddSensors with sensors stored internally and PlotSensor, Robot.q0 and the IK of KinematicChain/Robot; P and D values may be adjusted slightly for simple scripts. Test models keep what they test.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 23:50",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The serial robot examples use the robots of exudyn.robotics.models, Robot.SetControl with PreStepControl, Robot.AddSensors and PlotSensor; serialRobotInteractiveLimits.py limits the joints by end stops; the Puma560 joint limits are those of the Robotics Toolbox 1.5; Manipulator4Rsimple is removed.",
+  "resolvedInVersion": "1.13.391"
+}

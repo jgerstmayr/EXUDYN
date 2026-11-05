@@ -34,98 +34,9 @@ from exudyn.rigidBodyUtilities import RigidBodyInertia
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'Manipulator4Rsimple', 'Manipulator3RSimple', 'ManipulatorFrankaEmikaPanda', 'ManipulatorPANDA', 'ManipulatorUR5',
+    'Manipulator3RSimple', 'ManipulatorFrankaEmikaPanda', 'ManipulatorPANDA', 'ManipulatorUR5',
     'ManipulatorPuma560', 'ManipulatorStaubliTX2_90L', 'LinkDict2Robot', 'LinkDictModDHKK2Robot',
     ]
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#+++
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-@docmeta(author='Martin Sereinig')
-def Manipulator4Rsimple():
-    """generate 4R manipulator as myRobot dictionary, settings are done in function
-
-    Returns:
-        myRobot dictionary
-
-    Note:
-        the 4th joint is used to simulate a paralell kinematics manipulator
-    """
-    inertiaLink0=np.array([ [  0.703370,   -0.0001390,    0.0067720],
-                            [ -0.000139,    0.7066100,    0.0192169],
-                            [  0.006772,    0.0192169,    0.0091170]  ])
-    
-    inertiaLink1=np.array([ [  0.007962,   -0.003925,    0.010254],
-                            [ -0.003925,    0.028110,    0.000704],
-                            [  0.010254,    0.000704,    0.025995]  ])
-    
-    inertiaLink2=np.array([ [  0.037242,   -0.004761,   -0.011396],
-                            [ -0.004761,    0.036155,   -0.012805],
-                            [ -0.011396,   -0.012805,    0.010830]  ])
-    
-    inertiaLink3=np.array([ [  0.025853,    0.007796,   -0.001332],
-                            [  0.007796,    0.019552,    0.008641],
-                            [ -0.001332,    0.008641,    0.028323]  ])
-    
-    link0={'stdDH':[0,0,0,np.pi/2*0],  
-           'modDHKK':[0,0,0,0],          
-            'mass':4,  
-            'inertia':inertiaLink0,         #w.r.t. COM!
-            'jointStiffness':70000,         # placeholder 
-            'jointTorqueMax': 50,           # placeholder 
-            'jointLimits': [-np.pi, np.pi], # placeholder 
-            'COM':[0,0,0]}                  #w.r.t. stdDH joint coordinatesystem
-    
-    link1={'stdDH':[0,0,0.25,0],   
-           'modDHKK':[-np.pi/2,0,0,0], 
-            'mass':1, 
-            'inertia':inertiaLink1, #w.r.t. COM!
-            'jointStiffness':70000,# placeholder 
-            'jointTorqueMax': 50,# placeholder 
-            'jointLimits': [-np.pi, np.pi],# placeholder Value
-            'COM':[0.25/2,0,0]} #w.r.t. stdDH joint coordinatesystem
-    
-    link2={'stdDH':[0,0,0.25,0],
-            'modDHKK':[0,0.25,0,0],            
-            'mass':1, 
-            'inertia':inertiaLink2, #w.r.t. COM!
-            'jointStiffness':70000, # placeholder 
-            'jointTorqueMax': 50, # placeholder 
-            'jointLimits': [-np.pi, np.pi], # placeholder 
-            'COM':[0.25/2,0,0]}  #w.r.t. stdDH joint coordinatesystem
-    
-    link3={'stdDH':[0,0,0,0],
-           'modDHKK':[0,0.25,0,0],         
-            'mass':1, 
-            'inertia':inertiaLink3, #w.r.t. COM!
-            'jointStiffness':70000, # placeholder 
-            'jointTorqueMax': 50, # placeholder 
-            'jointLimits': [-np.pi, np.pi],# placeholder value
-            'COM':[ 0,0,0]} #w.r.t. stdDH joint coordinatesystem
-    
-    
-    linkList=[link0, link1, link2]
-    Tmax=[]
-    JointStiffness=[]
-    for link in linkList:
-         JointStiffness += [link['jointStiffness']]
-         Tmax += [link['jointTorqueMax']]   
-    
-    #this is the global myRobot structure
-    myRobot={'links':linkList,
-           'jointType':[1,1,1], #1=revolute, 0=prismatic
-           'jointStiffnessMatrix':   np.diag(JointStiffness),
-           'joinTorqueMaxMatrix':    np.diag(Tmax),
-           'base':{'HT':exudyn.HT()},
-           'tool':{'HT':exudyn.HT().SetRotationX(np.pi/2) * exudyn.HT().SetRotationY(np.pi/2)},
-           'gravity':[0,0,-9.81],
-           'referenceConfiguration':[0]*3, #reference configuration for bodies; at which the myRobot is built
-           'dhMode':'stdDH', #this mode prescribes the default DH mode to be used; 
-           'Pcontrol': np.array([1000, 1000, 100, 100,  ]), #UNTESTED; some assumed values, not taken from real robot
-           'Dcontrol': np.array([10,   10,   10,   10,   ]),#UNTESTED; some assumed values, not taken from real robot
-           } 
-
-    return myRobot
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
@@ -486,7 +397,7 @@ def ManipulatorPuma560():
 
     Note:
         std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138,
-        puma p560 limits, taken from Corke Visual Control of Robots;
+        the joint limits are those of the Robotics Toolbox 1.5 (160, -45..225, -225..45, -110..170, 100, 266 degrees);
         the inertias of links 0 and 2 are adjusted against Corke's data so that the principal moments fulfill the triangle
         inequality: link 0 has only I_yy = 0.35 there, the moment about its joint axis and the only one that acts, and gets
         I_xx = I_zz = 0.2; link 2 gets I_zz = 0.025 instead of 0.0125 (0.066 + 0.0125 < 0.086 is not physical)
@@ -497,7 +408,7 @@ def ManipulatorPuma560():
            'inertia':np.diag([0.2,0.35,0.2]), #w.r.t. COM! I_xx, I_zz not in Corke's data, see Note
            'jointStiffness':68000, # Values from literature described in KIM1995 Puma Joint Stiffness
            'jointTorqueMax': 56,  # maximum joint torques Puma560, taken from taken from Corke Visual Control of Robots, p58 table2.21
-           'jointLimits': [-np.pi, np.pi], # taken from Corke Visual Control of Robots 
+           'jointLimits': [-2.792527, 2.792527], # those of the RTB 1.5 (#3279)
            'COM':[0,0,0]} # w.r.t. stdDH joint coordinatesystem
     
     link1={'stdDH':[0,0,0.4318,0],
@@ -506,7 +417,7 @@ def ManipulatorPuma560():
            'inertia':np.diag([0.13,0.524,0.539]), #w.r.t. COM!
            'jointStiffness':66500,  # Values from literature described in KIM1995 Puma Joint Stiffness
            'jointTorqueMax': 97, # maximum joint torques Puma560, taken from taken from Corke Visual Control of Robots, p58 table2.21
-           'jointLimits': [-2.9671, 2.8798], # taken from Corke Visual Control of Robots 
+           'jointLimits': [-0.785398, 3.926991], # those of the RTB 1.5 (#3279)
            'COM':[-0.3638, 0.006, 0.2275]} # w.r.t. stdDH joint coordinatesystem
     
     link2={'stdDH':[0,0.15005,0.0203,-np.pi/2],
@@ -515,7 +426,7 @@ def ManipulatorPuma560():
            'inertia':np.diag([0.066,0.086,0.025]), #w.r.t. COM! I_zz 0.0125 in Corke's data, see Note
            'jointStiffness':11650,  # Values from literature described in KIM1995 Puma Joint Stiffness
            'jointTorqueMax': 52, # maximum joint torques Puma560, taken from taken from Corke Visual Control of Robots, p58 table2.21
-           'jointLimits': [-2.79253, 2.61799], # taken from Corke Visual Control of Robots 
+           'jointLimits': [-3.926991, 0.785398], # those of the RTB 1.5 (#3279)
            'COM':[-0.0203,-0.0141,0.07]}     # .r.t. stdDH joint coordinatesystem
 
     link3={'stdDH':[0,0.4318,0,np.pi/2],
@@ -524,7 +435,7 @@ def ManipulatorPuma560():
            'inertia':np.diag([0.0018,0.0013,0.0018]), #w.r.t. COM!
            'jointStiffness':2150,  # Values from literature described in KIM1995 Puma Joint Stiffness
            'jointTorqueMax': 10, # maximum joint torques Puma560, taken from taken from Corke Visual Control of Robots, p58 table2.21
-           'jointLimits': [-np.pi, np.pi], # taken from Corke Visual Control of Robots 
+           'jointLimits': [-1.919862, 2.967060], # those of the RTB 1.5 (#3279)
            'COM':[0,0.019,0]}# w.r.t. stdDH joint coordinatesystem
     
     link4={'stdDH':[0,0,0,-np.pi/2],
@@ -533,7 +444,7 @@ def ManipulatorPuma560():
            'inertia':np.diag([0.0003,0.0004,0.0003]), #w.r.t. COM!
            'jointStiffness':1130,  # Values from literature described in KIM1995 Puma Joint Stiffness
            'jointTorqueMax': 10, # maximum joint torques Puma560, taken from taken from Corke Visual Control of Robots, p58 table2.21
-           'jointLimits': [-0.17453, 1.74533], # taken from Corke Visual Control of Robots 
+           'jointLimits': [-1.745329, 1.745329], # those of the RTB 1.5 (#3279)
            'COM':[0,0,0]}# w.r.t. stdDH joint coordinatesystem
     
     link5={'stdDH':[0,0,0,0], 
@@ -542,7 +453,7 @@ def ManipulatorPuma560():
            'inertia':np.diag([0.00015,0.00015,4e-5]), #w.r.t. COM!
            'jointStiffness':1680,  # Values from literature described in KIM1995 Puma Joint Stiffness
            'jointTorqueMax': 10, # maximum joint torques Puma560, taken from taken from Corke Visual Control of Robots, p58 table2.21
-           'jointLimits': [-np.pi, np.pi], # taken from Corke Visual Control of Robots 
+           'jointLimits': [-4.642576, 4.642576], # those of the RTB 1.5 (#3279)
            'COM':[0,0,0.032]} # w.r.t. stdDH joint coordinatesystem
     linkList=[link0, link1, link2, link3, link4, link5]
     Tmax=[]

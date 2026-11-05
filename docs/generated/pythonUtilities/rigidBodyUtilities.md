@@ -538,7 +538,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 - **function description**: return inverse {ref}`HT <HT>` such that inv(T)*T = np.eye(4); T is a 4x4 array or an exudyn.HT
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotKinematicTree.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py) (Ex), [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM), [`homogeneousTransformationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM), [`homogeneousTransformationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py) (TM)
 
 
 (sec-rigidbodyutilities-rotationx2t66)=

@@ -1,8 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Example of a serial robot with minimal and redundant coordinates
-#           Robot interacts with particles
+# Details:  The Puma560 of exudyn.robotics.models as kinematic tree digs in particles with a cup at its tool, repeating
+#           its trajectory; the control by Robot.SetControl and PreStepControl, called with the time of the cycle
 #
 # Author:   Johannes Gerstmayr
 # Date:     2022-12-09
@@ -32,14 +32,10 @@ mbs = SC.AddSystem()
 sensorWriteToFile = True
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-compensateStaticTorques = False #static torque compensation converges slowly!
-useKinematicTree = True
+compensateStaticTorques = False #True: the static compensation of gravity
 useGraphics = True
 addParticles = True
 doFast = 0 #0 / 1
-#kinematic tree and redundant mbs agrees for stdDH version up to 1e-10, with compensateStaticTorques = False
-# KT:      rotations at tEnd= 1.8464514676503092 , [0.4921990591981066, 0.2718999073958087, 0.818158053005264, -0.0030588904101585936, 0.26831938569719394, -0.0010660472359057434] 
-# red. MBS:rotations at tEnd= 1.8464514674961 ,   [ 0.49219906  0.27189991  0.81815805 -0.00305889  0.26831939 -0.00106605]
 
 
 #cup dimensions
@@ -224,7 +220,7 @@ if True: #add cup
 
 
 
-from exudyn.robotics.models import ManipulatorPuma560, ManipulatorUR5
+from exudyn.robotics.models import ManipulatorPuma560, LinkDict2Robot
 
 robotDef = ManipulatorPuma560() #get dictionary that defines kinematics
 
@@ -256,14 +252,11 @@ robot = Robot(gravity=gravity,
 
 
 
-for cnt, link in enumerate(robotDef['links']):
-    robot.AddLink(RobotLink(mass=link['mass'], 
-                               COM=link['COM'], 
-                               inertia=link['inertia'], 
-                               localHT=StdDH2HT(link['stdDH']),
-                               PDcontrol=(Pcontrol[cnt], Dcontrol[cnt]),
-                               visualization=VRobotLink(linkColor=graphics.colorList[cnt], showCOM=False, showMBSjoint=useGraphics)
-                               ))
+robotDef['Pcontrol'] = Pcontrol
+robotDef['Dcontrol'] = Dcontrol
+LinkDict2Robot(robotDef, robotClass=robot) #the links of the Puma560 added to robot
+for (cnt, link) in enumerate(robot.links):
+    link.visualization = VRobotLink(linkColor=graphics.colorList[cnt], showCOM=False, showMBSjoint=useGraphics)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #configurations and trajectory
@@ -308,20 +301,6 @@ trajectory.Add(ProfileConstantAcceleration(q0,0.25))
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-jointList = [0]*robot.NumberOfLinks() #this list must be filled afterwards with the joint numbers in the mbs!
-
-def ComputeMBSstaticRobotTorques(robot):
-    
-    if not useKinematicTree:
-        q=[]
-        for joint in jointList:
-            q += [mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2]] #z-rotation
-    else:
-        q = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Coordinates, localPosition=[0,0,0])
-
-    HT=robot.JointHT(q)
-    return robot.StaticTorques(HT)
-
 #++++++++++++++++++++++++++++++++++++++++++++++++
 #base, graphics, object and marker:
 
@@ -337,10 +316,9 @@ baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPositio
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #build mbs robot model:
 if True:
+    robot.q0 = q0 #the initial coordinates of the model
     robotDict = robot.CreateKinematicTree(mbs)
     oKT = robotDict['objectKinematicTree']
-    
-    mbs.SetNodeParameter(robotDict['nodeGeneric'],'initialCoordinates',q0) #set according initial coordinates
     
     sTCP = mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=5, localPosition=[xOffTool,0,zOffTool],
                                              storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
@@ -357,25 +335,11 @@ if True:
     
     tMax = trajectory.GetTimes()[-1] #total trajectory time
     print('trajectory cycle time=',round(tMax))
-    #user function which is called only once per step, speeds up simulation drastically
+    #the joint control along the trajectory, repeated every tMax
+    robot.SetControl(trajectory, compensation='static' if compensateStaticTorques else None)
     def PreStepUF(mbs, t):
-        if compensateStaticTorques:
-            staticTorques = ComputeMBSstaticRobotTorques(robot)
-            #print("tau=", staticTorques)
-        else:
-            staticTorques = np.zeros(len(jointList))
-        
-        tCnt = int(t/tMax)
-        tOff = tCnt*tMax
-        [u,v,a] = trajectory.Evaluate(t-tOff)
-    
-        #in case of kinematic tree, very simple operations!
-        mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', u)
-        mbs.SetObjectParameter(oKT, 'jointVelocityOffsetVector', v)
-        mbs.SetObjectParameter(oKT, 'jointForceVector', staticTorques)
-        
-        return True
-    
+        return robot.PreStepControl(mbs, t - int(t/tMax)*tMax)
+
     mbs.SetPreStepUserFunction(PreStepUF)
 
 

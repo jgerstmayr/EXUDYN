@@ -15,8 +15,8 @@ You can view and download this file on Github: [robotModelsTest.py](https://gith
 #           positions at one joint configuration, stored here; the RTB's Puma560 stands 0.67183 m higher); the named
 #           configurations of the models - the RTB's for these three, the TX2-90L upright and ready with the tool
 #           pointing down - and LinkDict2Robot(initialConfiguration='model') sets Robot.q0 to the model's; with
-#           friction=True the Puma560 gets the joint friction of the RTB's motor data, the kinematic tree with it is
-#           held at its ready configuration with the static compensation. The result is the number of checks that pass
+#           friction=True the Puma560 gets the joint friction of the RTB's motor data, its joint limits are the RTB's
+#           (#3279); the kinematic tree with it is held at its ready configuration with the static compensation. The result is the number of checks that pass
 #           plus the joint coordinates of the Puma560 at the end, weighted by 1 to 6.
 #
 # Author:   Johannes Gerstmayr
@@ -27,7 +27,7 @@ You can view and download this file on Github: [robotModelsTest.py](https://gith
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.robotics.models import (Manipulator4Rsimple, Manipulator3RSimple, ManipulatorFrankaEmikaPanda, ManipulatorUR5,
+from exudyn.robotics.models import (Manipulator3RSimple, ManipulatorFrankaEmikaPanda, ManipulatorUR5,
                                     ManipulatorPuma560, ManipulatorStaubliTX2_90L, LinkDict2Robot)
 from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration
 import numpy as np
@@ -36,7 +36,7 @@ testIsActive = exu.sys.get('testIsActive', False)
 
 checks = []
 robots = {}
-for Model in [Manipulator4Rsimple, Manipulator3RSimple, ManipulatorFrankaEmikaPanda, ManipulatorUR5, ManipulatorPuma560,
+for Model in [Manipulator3RSimple, ManipulatorFrankaEmikaPanda, ManipulatorUR5, ManipulatorPuma560,
               ManipulatorStaubliTX2_90L]:
     model = Model()
     robots[Model.__name__] = LinkDict2Robot(model, initialConfiguration='model' if 'configurations' in model else None)
@@ -50,6 +50,10 @@ for (name, positionRTB, offset) in [('ManipulatorPuma560', [0.49718, -0.100919, 
     robot = robots[name]
     position = np.array(robot.GetGlobalToolHT(q[:len(robot.links)]).translation) + offset
     checks += [np.max(np.abs(position - positionRTB)) < 2e-6]
+
+#the joint limits of the Puma560 are those of the RTB 1.5 (#3279), in degrees
+checks += [np.allclose(np.degrees([link.jointLimits for link in robots['ManipulatorPuma560'].links]),
+                       [[-160, 160], [-45, 225], [-225, 45], [-110, 170], [-100, 100], [-266, 266]], atol=1e-4)]
 
 #the configurations: the RTB's ready ones, the TX2 with the tool pointing down
 checks += [np.allclose(robots['ManipulatorPuma560'].q0, [0, 0.5*np.pi, -0.5*np.pi, 0, 0, 0])

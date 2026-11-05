@@ -6245,6 +6245,23 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   and MKL notes (history), the CC/CXX entry and the scipy pin (in BUILD.md and condaEnvironments.md), the
   documentation commands of condaEnvironments.md (in sphinxDocs.md); numpy-stl described as the optional reader.
 
+<a id="rg19-8-1"></a>
+### RG19.8.1 — the serial robot examples on the revised interfaces; Puma560 limits, Manipulator4Rsimple (2026-11-05, #3279)
+- Maintainer 2026-11-05: RG19.8 now; the Puma560 joint limits as in the RTB (more up to date); Manipulator4Rsimple
+  removed with the cleanup (outdated, 3 links).
+- Rewritten on LinkDict2Robot(ManipulatorPuma560(), robotClass=...), SetControl/PreStepControl, AddSensors, PlotSensor:
+  serialRobotKinematicTree.py (both models by a flag; equal to 1e-11 at the end; the default solver, as
+  TrapezoidalIndex2 exceeds the drift tolerance with the redundant model), serialRobotTSD.py (redundant model, rotations
+  up to 3 pi), serialRobotFlexible.py (control and sensors; result equal to before, 37.2276725), 
+  serialRobotKinematicTreeDigging.py (PreStepControl with the time of the cycle), humanRobotInteraction.py (two robots
+  in one PreStepUserFunction; equal to before), serialRobotInteractiveLimits.py (the limits as end stops of
+  SetEndStops instead of a spring torque user function; not run interactively here), InverseKinematicsNumericalExample.py
+  (UR5 of models.py, numerical and analytic IK).
+- Kept: serialRobotTest.py and movingGroundRobotTest.py test the deprecated joint torque loads of
+  CreateRedundantCoordinateMBS; ROSMobileManipulator.py has a state machine with brakes, not a trajectory.
+- Puma560 jointLimits of the RTB 1.5 (160, -45..225, -225..45, -110..170, 100, 266 degrees); robotModelsTest.py checks
+  them instead of the removed model (result unchanged).
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

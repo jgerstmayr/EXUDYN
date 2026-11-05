@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 375 | 1.13.390 |
+| 1.13 | Newborn | 376 | 1.13.391 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.391** `EXAMPLE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robotics examples and test models on the revised interfaces of exudyn.robotics (#3279)
+  - description: The serial robot examples define the robot data again, write their own PreStepUserFunction with the trajectory, the PD offsets and the static torques, write sensor files and plot by hand, and use the deprecated InverseKinematicsNumerical. Decided: they take the robots of exudyn.robotics.models, Robot.SetControl with PreStepControl, Robot.AddSensors with sensors stored internally and PlotSensor, Robot.q0 and the IK of KinematicChain/Robot; P and D values may be adjusted slightly for simple scripts. Test models keep what they test.
+  - **notes:** The serial robot examples use the robots of exudyn.robotics.models, Robot.SetControl with PreStepControl, Robot.AddSensors and PlotSensor; serialRobotInteractiveLimits.py limits the joints by end stops; the Puma560 joint limits are those of the Robotics Toolbox 1.5; Manipulator4Rsimple is removed.
+  - date resolved: **2026-11-05 23:50**, date raised: 2026-11-05
 - **1.13.390** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Restructure the developer documentation and publish the how-to notes under Misc (#3278)
   - description: The developer documentation lists all its pages flat. Decided: the internals pages go at its end under a page Internals; the repository layout, the development workflow, releasing and the manual GUI check go under a page Development and release workflow; working with git goes under getting started as a developer; the section Building and running of its front page goes into Building Exudyn from source. The how-to notes of the developer front page are removed there; the five maintainer notes (build quirks, GCC vs. MSVC, Visual Studio 2022, ffmpeg, matplotlib) are published under a page Misc of the top-level how-to notes, without duplicates of the other pages and without the history of where they came from.
   - **notes:** The developer documentation in groups: Development and release workflow (repository layout, workflow, release, GUI check), Internals at the end, git under getting started, building and running in the build page; the maintainer notes published under Misc of the how-to notes, without duplicates.

@@ -10,7 +10,11 @@ You can view and download this file on Github: [serialRobotFlexible.py](https://
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Example of a serial robot with redundant coordinates
+# Details:  A serial robot (the geometry of the Puma560) in redundant coordinates on a rigid base or, with
+#           useFlexBody = True, on a flexible base by ObjectFFRFreducedOrder meshed with NGsolve; the joint control
+#           along the trajectory by Robot.SetControl and PreStepControl with the static compensation of gravity, the
+#           joints measured by Robot.AddSensors; the hand position and velocity of the rigid run are written to files
+#           and compared with the flexible run.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-02-16
@@ -364,22 +368,6 @@ trajectory.Add(ProfileConstantAcceleration(q0,0.25))
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #test robot model
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#desired angles:
-qE = q0
-qE = [pi*0.5,-pi*0.25,pi*0.75, 0,0,0]
-tStart = [0,0,0, 0,0,0]
-duration = 0.1
-
-
-jointList = [0]*newRobot.NumberOfLinks() #this list must be filled afterwards with the joint numbers in the mbs!
-
-def ComputeMBSstaticRobotTorques(newRobot):
-    q=[]
-    for joint in jointList:
-        q += [mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2]] #z-rotation
-    HT=newRobot.JointHT(q)
-    return newRobot.StaticTorques(HT)
-
 #++++++++++++++++++++++++++++++++++++++++++++++++
 #base, graphics, object and marker:
 
@@ -392,87 +380,27 @@ if not useFlexBody:
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #build mbs robot model:
-robotDict = newRobot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker)
-    
-jointList = robotDict['jointList'] #must be stored there for the load user function
+robotDict = newRobot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
 
-unitTorques0 = robotDict['unitTorque0List'] #(left body)
-unitTorques1 = robotDict['unitTorque1List'] #(right body)
-
-loadList0 = robotDict['jointTorque0List'] #(left body)
-loadList1 = robotDict['jointTorque1List'] #(right body)
-#print(loadList0, loadList1)
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#control robot
-compensateStaticTorques = True
-    
-torsionalSDlist = robotDict['springDamperList']
-
-#user function which is called only once per step, speeds up simulation drastically
-def PreStepUF(mbs, t):
-    if compensateStaticTorques:
-        staticTorques = ComputeMBSstaticRobotTorques(newRobot)
-    else:
-        staticTorques = np.zeros(len(jointList))
-        
-    [u,v,a] = trajectory.Evaluate(t)
-
-    #compute load for joint number
-    for i in range(len(jointList)):
-        joint = jointList[i]
-        phi = mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2] #z-rotation
-        omega = mbs.GetObjectOutput(joint, exu.OutputVariableType.AngularVelocityLocal)[2] #z-angular velocity
-        tsd = torsionalSDlist[i]
-        mbs.SetObjectParameter(tsd, 'offset', u[i])
-        mbs.SetObjectParameter(tsd, 'velocityOffset', v[i])
-        mbs.SetObjectParameter(tsd, 'torque', staticTorques[i]) #additional torque from given velocity 
-    
-    return True
-
-mbs.SetPreStepUserFunction(PreStepUF)
-
+#the joint control along the trajectory, with the static compensation of gravity
+newRobot.SetControl(trajectory, compensation='static')
+mbs.SetPreStepUserFunction(newRobot.PreStepControl)
 
 if useFlexBody:
     baseType = 'Flexible'
 else:
     baseType = 'Rigid'
 
-#add sensors:
-cnt = 0
-jointTorque0List = []
-jointRotList = []
-for i in range(len(jointList)):
-    jointLink = jointList[i]
-    tsd = torsionalSDlist[i]
-    #using TSD:
-    sJointRot = mbs.AddSensor(SensorObject(objectNumber=tsd, 
-                               fileName='solution/joint' + str(i) + 'Rot'+baseType+'.txt',
-                               outputVariableType=exu.OutputVariableType.Rotation,
-                               writeToFile = sensorWriteToFile))
-    jointRotList += [sJointRot]
-
-    sJointAngVel = mbs.AddSensor(SensorObject(objectNumber=jointLink, 
-                               fileName='solution/joint' + str(i) + 'AngVel'+baseType+'.txt',
-                               outputVariableType=exu.OutputVariableType.AngularVelocityLocal,
-                               writeToFile = sensorWriteToFile))
-
-    sTorque = mbs.AddSensor(SensorObject(objectNumber=tsd, 
-                            fileName='solution/joint' + str(i) + 'Torque'+baseType+'.txt',
-                            outputVariableType=exu.OutputVariableType.TorqueLocal,
-                            writeToFile = sensorWriteToFile))
-
-    sHandPos = mbs.AddSensor(SensorBody(bodyNumber=robotDict['bodyList'][-1], 
-                            fileName='solution/handPos'+baseType+'.txt',
-                            outputVariableType=exu.OutputVariableType.Position,
-                            writeToFile = sensorWriteToFile))
-
-    sHandVel = mbs.AddSensor(SensorBody(bodyNumber=robotDict['bodyList'][-1], 
-                            fileName='solution/handVel'+baseType+'.txt',
-                            outputVariableType=exu.OutputVariableType.Velocity,
-                            writeToFile = sensorWriteToFile))
-
-    jointTorque0List += [sTorque]
-
+#the joint angles and torques; the position and velocity of the hand to files, to compare the rigid and the flexible base
+sensors = newRobot.AddSensors(mbs, [exu.OutputVariableType.Coordinates, exu.OutputVariableType.Force])
+sHandPos = mbs.AddSensor(SensorBody(bodyNumber=robotDict['bodyList'][-1], storeInternal=True,
+                                    fileName='solution/handPos'+baseType+'.txt',
+                                    outputVariableType=exu.OutputVariableType.Position,
+                                    writeToFile = sensorWriteToFile))
+sHandVel = mbs.AddSensor(SensorBody(bodyNumber=robotDict['bodyList'][-1], storeInternal=True,
+                                    fileName='solution/handVel'+baseType+'.txt',
+                                    outputVariableType=exu.OutputVariableType.Velocity,
+                                    writeToFile = sensorWriteToFile))
 
 mbs.Assemble()
 #mbs.systemData.Info()
@@ -537,11 +465,7 @@ mbs.SolutionViewer()
 
 lastRenderState = SC.renderer.GetState() #store model view
 
-#compute final torques:
-measuredTorques=[]
-for sensorNumber in jointTorque0List:
-    measuredTorques += [abs(mbs.GetSensorValues(sensorNumber))]
-exu.Print('torques at tEnd=', np.sum(measuredTorques))
+exu.Print('torques at tEnd=', np.sum(np.abs(mbs.GetSensorValues(sensors[exu.OutputVariableType.Force]))))
 
 
 #%%+++++++++++++++++++++
@@ -551,10 +475,10 @@ if True:
     exudyn.plot.PlotSensorDefaults().fontSize = 12
     
     title = baseType + ' base'
-    mbs.PlotSensor(sensorNumbers=jointTorque0List, components=0, title='joint torques, '+title, closeAll=True,
+    mbs.PlotSensor(sensorNumbers=sensors[exu.OutputVariableType.Force], components=list(range(6)), title='joint torques, '+title, closeAll=True,
                fileName='solution/robotJointTorques'+baseType+'.pdf'
                )
-    mbs.PlotSensor(sensorNumbers=jointRotList, components=0, title='joint angles, '+title,
+    mbs.PlotSensor(sensorNumbers=sensors[exu.OutputVariableType.Coordinates], components=list(range(6)), title='joint angles, '+title,
                fileName='solution/robotJointAngles'+baseType+'.pdf'
                )
     

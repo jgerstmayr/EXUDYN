@@ -19,9 +19,6 @@ Here, we gather special functions, which are depending on other modules and do n
 - **output**: a color and line style code for matplotlib plot
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`serialRobotTSD.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotTSD.py) (Ex)
-
-
 (sec-advancedutilities-findobjectindex)=
 ## Function: FindObjectIndex
 

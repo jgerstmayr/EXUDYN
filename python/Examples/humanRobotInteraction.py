@@ -1,7 +1,10 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  3D rigid body tutorial with 2 bodies and revolute joints, using new utilities functions
+# Details:  A Puma560 (exudyn.robotics.models) moves its tool against the hand of an articulated dummy, modelled as a
+#           second Robot of revolute joints; both are kinematic trees with the control of Robot.SetControl, called in
+#           one PreStepUserFunction, and touch by general contact. The STL files of the dummy are not part of Exudyn
+#           (GrabCAD, articulated-dummy).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-08-05
@@ -271,6 +274,7 @@ if useKT:
     #create kinematic tree of body
     articulatedBodyDict = articulatedBody.CreateKinematicTree(mbs)
     oKTarticulatedBody = articulatedBodyDict['objectKinematicTree']
+    articulatedBody.SetControl(bodyTrajectory)
 
     mHand = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber = oKTarticulatedBody, linkNumber = 3, 
                                                    localPosition=leftHand-leftElbow))
@@ -327,7 +331,7 @@ else:
 #add simple robot:
 
 if addRobot:
-    from exudyn.robotics.models import ManipulatorPuma560, ManipulatorUR5
+    from exudyn.robotics.models import ManipulatorPuma560, LinkDict2Robot
     
     robotDef = ManipulatorPuma560() #get dictionary that defines kinematics
     fc = 0.5
@@ -366,14 +370,9 @@ if addRobot:
                   tool = RobotTool(HT=exu.HT(), visualization=VRobotTool(graphicsData=graphicsToolList)),
                   referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
-    for cnt, link in enumerate(robotDef['links']):
-        robot.AddLink(RobotLink(mass=link['mass'], 
-                                   COM=link['COM'], 
-                                   inertia=link['inertia'], 
-                                   localHT=StdDH2HT(link['stdDH']),
-                                   PDcontrol=(Pcontrol[cnt], Dcontrol[cnt]),
-                                   visualization=VRobotLink(linkColor=graphics.colorList[cnt], showCOM=False, showMBSjoint=True)
-                                   ))
+    robotDef['Pcontrol'] = Pcontrol
+    robotDef['Dcontrol'] = Dcontrol
+    LinkDict2Robot(robotDef, robotClass=robot) #the links of the Puma560 added to robot
 
     q0 = [0,0.5*pi,-0.5*pi,0,0,0] #zero angle configuration
     
@@ -382,7 +381,7 @@ if addRobot:
     q3 = [-0.35*pi,0.25*pi,-0.75*pi,0,0,0] #zero angle configuration
     q4 = [ 0.07*pi,0.38*pi,-0.88*pi,0,0,0] #zero angle configuration
 
-    robot.referenceConfiguration = q0
+    robot.q0 = q0 #the initial configuration of the model
     
     #trajectory generated with optimal acceleration profiles:
     robotTrajectory = Trajectory(initialCoordinates=q0, initialTime=0.)
@@ -394,6 +393,7 @@ if addRobot:
     
     robotDict = robot.CreateKinematicTree(mbs)
     oKTrobot = robotDict['objectKinematicTree']
+    robot.SetControl(robotTrajectory)
 
     mRobotTCP0 = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber = oKTrobot, linkNumber = 5, 
                                                    localPosition=[0,0,0.12]))
@@ -402,24 +402,12 @@ if addRobot:
     # mRobotTCP2 = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber = oKTrobot, linkNumber = 5, 
     #                                                localPosition=[0,0,0.14]))
 
+#the control of both, the articulated body and the robot, in one PreStepUserFunction
 def PreStepUF(mbs, t):
     if useKT:
-        [u,v,a] = bodyTrajectory.Evaluate(t)
-    
-        #in case of kinematic tree, very simple operations!
-        mbs.SetObjectParameter(oKTarticulatedBody, 'jointPositionOffsetVector', u)
-        mbs.SetObjectParameter(oKTarticulatedBody, 'jointVelocityOffsetVector', v)
-        # if compensateStaticTorques:
-        # mbs.SetObjectParameter(oKTarticulatedBody, 'jointForceVector', ComputeMBSstaticRobotTorques(articulatedBody))
+        articulatedBody.PreStepControl(mbs, t)
     if addRobot:
-        [u,v,a] = robotTrajectory.Evaluate(t)
-    
-        #in case of kinematic tree, very simple operations!
-        mbs.SetObjectParameter(oKTrobot, 'jointPositionOffsetVector', u)
-        mbs.SetObjectParameter(oKTrobot, 'jointVelocityOffsetVector', v)
-        # if compensateStaticTorques:
-        # mbs.SetObjectParameter(oKTrobot, 'jointForceVector', ComputeMBSstaticRobotTorques(articulatedBody))
-    
+        robot.PreStepControl(mbs, t)
     return True
 
 mbs.SetPreStepUserFunction(PreStepUF)

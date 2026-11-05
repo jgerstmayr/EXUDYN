@@ -3244,6 +3244,10 @@ CLOSED 2026-11-05 (#3277): configurations and initialConfiguration per model, Li
 
 Design section 3; P/D values adjusted slightly in favour of simple scripts.
 
+#### **CLOSED_RG19.8.1** The serial robot examples on models.py, SetControl, AddSensors and PlotSensor; the Puma560 joint limits of the RTB, Manipulator4Rsimple removed
+
+CLOSED 2026-11-05 (#3279; maintainer 2026-11-05: the RTB limits, Manipulator4Rsimple removed): seven examples rewritten, the joint torque load tests kept. [log](exudynRevisionLog2026c.md#rg19-8-1)
+
 ## **OPEN_RG20** Advanced solvers
 
 Maintainer 2026-11-04: an index-3 trapezoidal solver with GGL stabilization and an adaptive step, a 4th-order Lobatto solver, adjoint sensitivities, output interpolated within the step, explicit solvers with constraints - first on the symbolic system as test and evaluation, then a cleanup of the C++ solvers and the adaptive solvers in C++. Design docs/dev/design/advancedSolvers.md; no issues before the evaluation is decided, except RG20.5. Requested as group 16, a number that revision2026b has taken, as 15, 17 and 18 (step numbers are permanent).

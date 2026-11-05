@@ -532,7 +532,10 @@ The models of `exudyn.robotics.models` have named `'configurations'` - for the P
 Robotics Toolbox (`'qz'`, `'qr'`, ...), for the TX2-90L upright and ready with the tool pointing down - and an
 `'initialConfiguration'`; `LinkDict2Robot(model, initialConfiguration='model')` (or a name, or coordinates) sets
 `Robot.q0`, and `friction=True` gives the links the friction of the model, for the Puma560 from the motor data of the
-Robotics Toolbox. Without these arguments the robots are as before (#3277).
+Robotics Toolbox. Without these arguments the robots are as before (#3277). The joint limits of
+`ManipulatorPuma560` are those of the Robotics Toolbox 1.5; `Manipulator4Rsimple` is removed. The robotics examples
+use the robots of `exudyn.robotics.models`, `Robot.SetControl` with `PreStepControl`, `Robot.AddSensors` and
+`PlotSensor`; serialRobotInteractiveLimits.py limits the joints by the end stops of `Robot.SetEndStops` (#3279).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

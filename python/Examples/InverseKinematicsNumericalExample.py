@@ -1,7 +1,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  example for inverse kinematics of serial manipulator UR5
+# Details:  The numerical inverse kinematics of the UR5 of exudyn.robotics.models: KinematicChain.InverseKinematicsNumerical
+#           (Levenberg-Marquardt) finds the joint coordinates of a tool pose, starting from another configuration;
+#           the analytic inverse kinematics of the UR geometry gives all solutions of the same pose.
 #
 # Author:   Peter Manzel; Johannes Gerstmayr
 # Date:     2019-07-15
@@ -11,60 +13,21 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
-from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics
-from exudyn.rigidBodyUtilities import *
-from exudyn.robotics import *
+from exudyn.robotics.models import ManipulatorUR5, LinkDict2Robot
 import numpy as np
 
-from exudyn.kinematicTree import KinematicTree66, JointTransformMotionSubspace
+robot = LinkDict2Robot(ManipulatorUR5())
+chain = robot.GetKinematicChain()
 
-jointWidth=0.1
-jointRadius=0.06
-linkWidth=0.1
-graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.12,0.12,0.1], graphics.color.grey)]
-graphicsBaseList +=[graphics.Cylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, graphics.colorList[0])] #belongs to first body
-
-from exudyn.robotics.models import ManipulatorPuma560, ManipulatorFrankaEmikaPanda, ManipulatorUR5
-# robotDef = ManipulatorPuma560()
-robotDef = ManipulatorUR5()
-# robotDef = ManipulatorFrankaEmikaPanda()
-flagStdDH = True
-# LinkList2Robot() # todo: build robot using the utility function
-
-toolGraphics = [graphics.Basis(length=0.3*0)]
-robot2 = Robot(gravity=[0,0,-9.81],
-              base = RobotBase(HT=exu.HT(), visualization=VRobotBase(graphicsData=graphicsBaseList)),
-              tool = RobotTool(HT=exu.HT(translation=[0,0,0.1*0]), visualization=VRobotTool(graphicsData=toolGraphics)),
-              referenceConfiguration = []) #referenceConfiguration created with 0s automatically
-
-nLinks = len(robotDef['links'])
-# save read DH-Parameters into variables for convenience
-a,d,alpha,rz, dx = [0]*nLinks, [0]*nLinks, [0]*nLinks, [0]*nLinks, [0]*nLinks
-for cnt, link in enumerate(robotDef['links']):
-    robot2.AddLink(RobotLink(mass=link['mass'], 
-                               COM=link['COM'], 
-                               inertia=link['inertia'], 
-                                localHT=StdDH2HT(link['stdDH']),
-                                # localHT=StdDH2HT(link['modKKDH']),
-                               PDcontrol=(10, 1),
-                               visualization=VRobotLink(linkColor=graphics.colorList[cnt], showCOM=False, showMBSjoint=True)
-                               ))                                                
-    # save read DH-Parameters into variables for convenience
-    if flagStdDH: # std-dh  
-        # stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)                                                                                          
-        d[cnt], a[cnt], alpha[cnt] = link['stdDH'][1],link['stdDH'][2], link['stdDH'][3]
-    else: 
-        # modDH = [alpha, dx, theta, rz] as used by Khali: Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)
-        # Important note:  d(khali)=a(corke)  and r(khali)=d(corke)  
-        alpha[cnt], dx[cnt], rz[cnt],  = link['stdDH'][0],link['stdDH'][1], link['stdDH'][3]
-
-#the numerical inverse kinematics by Levenberg-Marquardt of the robot's KinematicChain (#3269)
-chain = robot2.GetKinematicChain()
 #the target pose is the one of a known configuration, so it is reachable; the solver starts from another one
 qTarget = [0.2, -0.9, -0.8, -0.7, 0.6, 1.4]
-T3 = robot2.LinkHT(qTarget)[-1] @ robot2.tool.HT #the tool frame in the target configuration
+HTtarget = chain.ToolHT(qTarget)
 q0 = [0, -np.pi/4, -np.pi/4, -np.pi/4, np.pi/4, np.pi/2]
-(q, success, iterations) = chain.InverseKinematicsNumerical(T3, q0)
-print('success = {}\nq = {} rad'.format(success, None if q is None else np.round(q, 3)))
+(q, success, iterations) = chain.InverseKinematicsNumerical(HTtarget, q0)
+exu.Print('success = {} after {} iterations\nq = {} rad'.format(success, iterations, None if q is None else np.round(q, 3)))
+if success:
+    exu.Print('the error of the tool position:', np.linalg.norm(np.array(chain.ToolHT(q).translation) - HTtarget.translation))
+
+#the analytic inverse kinematics: all configurations of the same pose
+for qa in robot.InverseKinematicsAnalytic(HTtarget, qReference=qTarget):
+    exu.Print('analytic solution:', np.round(qa, 3))

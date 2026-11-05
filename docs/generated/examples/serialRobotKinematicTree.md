@@ -10,7 +10,12 @@ You can view and download this file on Github: [serialRobotKinematicTree.py](htt
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Example of a serial robot with minimal and redundant coordinates
+# Details:  The Puma560 of exudyn.robotics.models as a serial robot in minimal coordinates (ObjectKinematicTree) or,
+#           with useKinematicTree = False, in redundant coordinates (rigid bodies and joints, see also
+#           serialRobotTSD.py); both give the same motion. The robot follows a trajectory of four point-to-point
+#           motions by Robot.SetControl and PreStepControl, the PD control of the model with the static
+#           compensation of gravity; the joint angles and torques are measured by Robot.AddSensors and plotted with
+#           PlotSensor. At the end, the graphics of the scene are drawn by matplotlib (PlotImage).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2022-06-26
@@ -19,398 +24,110 @@ You can view and download this file on Github: [serialRobotKinematicTree.py](htt
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
 import exudyn as exu
-from exudyn.itemInterface import *
-from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
-from exudyn.rigidBodyUtilities import *
-from exudyn.robotics import *
-from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration, ProfilePTP
+from exudyn.itemInterface import ObjectGround, MarkerBodyRigid
+from exudyn.robotics import Robot, RobotBase, VRobotBase, RobotTool, VRobotTool
+from exudyn.robotics.models import ManipulatorPuma560, LinkDict2Robot
+from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration
 
 import numpy as np
-from numpy import linalg as LA
 from math import pi
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-sensorWriteToFile = False
+useKinematicTree = True #False: the redundant coordinate model
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-compensateStaticTorques = True #static torque compensation converges slowly!
-useKinematicTree = True
-#kinematic tree and redundant mbs agrees for stdDH version up to 1e-10, with compensateStaticTorques = False
-# KT:      rotations at tEnd= 1.8464514676503092 , [0.4921990591981066, 0.2718999073958087, 0.818158053005264, -0.0030588904101585936, 0.26831938569719394, -0.0010660472359057434] 
-# red. MBS:rotations at tEnd= 1.8464514674961 ,   [ 0.49219906  0.27189991  0.81815805 -0.00305889  0.26831939 -0.00106605]
-
-mode='newDH'
-# mode='newModDH' #modified DH parameters #position agrees for all digits: 1.846440411790352
-
-jointWidth=0.1
-jointRadius=0.06
-linkWidth=0.1
-
-graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.12,0.12,0.1], graphics.color.grey)]
-graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
-graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
-graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
-graphicsBaseList +=[graphics.Cylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, graphics.colorList[0])] #belongs to first body
-
+#the base with the axes of the global frame, and a gripper as tool
+graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.12,0.12,0.1], graphics.color.grey),
+                    graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red),
+                    graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green),
+                    graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue),
+                    graphics.Cylinder([0,0,-0.1], [0,0,0.1], 0.05, graphics.colorList[0])] #belongs to the first link
 ty = 0.03
 tz = 0.04
 zOff = -0.05
-toolSize= [0.05,0.5*ty,0.06]
-graphicsToolList = [graphics.Cylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=graphics.color.red)]
-graphicsToolList+= [graphics.Brick([0,ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
-graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
+toolSize = [0.05,0.5*ty,0.06]
+graphicsToolList = [graphics.Cylinder(pAxis=[0,0,zOff], vAxis=[0,0,tz], radius=ty*1.5, color=graphics.color.red),
+                    graphics.Brick([0,ty,1.5*tz+zOff], toolSize, graphics.color.grey),
+                    graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
 
-#control parameters, per joint:
-fc=1
-Pcontrol = np.array([40000, 40000, 40000, 100, 100, 10])
-Dcontrol = np.array([400,   400,   100,   1,   1,   0.1])
-Pcontrol = fc*Pcontrol
-Dcontrol = fc*Dcontrol
+#the Puma560 with its PD control values (models.py); gravity, base and tool from the robot given
+robot = LinkDict2Robot(ManipulatorPuma560(),
+                       robotClass=Robot(gravity=[0,0,-9.81],
+                                        base=RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
+                                        tool=RobotTool(HT=exu.HT(translation=[0,0,0.1]),
+                                                       visualization=VRobotTool(graphicsData=graphicsToolList))))
 
-
-#changed to new robot structure July 2021:
-robot = Robot(gravity=[0,0,9.81],
-              base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
-              tool = RobotTool(HT=exu.HT(translation=[0,0,0.1]), visualization=VRobotTool(graphicsData=graphicsToolList)),
-             referenceConfiguration = []) #referenceConfiguration created with 0s automatically
-
-#modDHKK according to Khalil and Kleinfinger, 1986
-link0={'stdDH':[0,0,0,pi/2], 
-       'modDHKK':[0,0,0,0], 
-        'mass':20,  #not needed!
-        'inertia':np.diag([1e-8,0.35,1e-8]), #w.r.t. COM! in stdDH link frame
-        'COM':[0,0,0]} #in stdDH link frame
-
-link1={'stdDH':[0,0,0.4318,0],
-       'modDHKK':[0.5*pi,0,0,0], 
-        'mass':17.4, 
-        'inertia':np.diag([0.13,0.524,0.539]), #w.r.t. COM! in stdDH link frame
-        'COM':[-0.3638, 0.006, 0.2275]} #in stdDH link frame
-
-link2={'stdDH':[0,0.15,0.0203,-pi/2], 
-       'modDHKK':[0,0.4318,0,0.15], 
-        'mass':4.8, 
-        'inertia':np.diag([0.066,0.086,0.0125]), #w.r.t. COM! in stdDH link frame
-        'COM':[-0.0203,-0.0141,0.07]} #in stdDH link frame
-
-link3={'stdDH':[0,0.4318,0,pi/2], 
-       'modDHKK':[-0.5*pi,0.0203,0,0.4318], 
-        'mass':0.82, 
-        'inertia':np.diag([0.0018,0.0013,0.0018]), #w.r.t. COM! in stdDH link frame
-        'COM':[0,0.019,0]} #in stdDH link frame
-
-link4={'stdDH':[0,0,0,-pi/2], 
-       'modDHKK':[0.5*pi,0,0,0], 
-        'mass':0.34, 
-        'inertia':np.diag([0.0003,0.0004,0.0003]), #w.r.t. COM! in stdDH link frame
-        'COM':[0,0,0]} #in stdDH link frame
-
-link5={'stdDH':[0,0,0,0], 
-       'modDHKK':[-0.5*pi,0,0,0], 
-        'mass':0.09, 
-        'inertia':np.diag([0.00015,0.00015,4e-5]), #w.r.t. COM! in stdDH link frame
-        'COM':[0,0,0.032]} #in stdDH link frame
-linkList=[link0, link1, link2, link3, link4, link5]
-
-#++++++++++++++++++++++++++
-#test example for graphicsData in VRobotLink
-s0=0.08
-wj = 0.12
-rj = 0.06
-
-if mode=='newDH':
-    for cnt, link in enumerate(linkList):
-        robot.AddLink(RobotLink(mass=link['mass'], 
-                                   COM=link['COM'], 
-                                   inertia=link['inertia'], 
-                                   localHT=StdDH2HT(link['stdDH']),
-                                   PDcontrol=(Pcontrol[cnt], Dcontrol[cnt]),
-                                   visualization=VRobotLink(linkColor=graphics.colorList[cnt])
-                                   ))
-elif mode=='newModDH': #computes preHT and localHT, but ALSO converts inertia parameters from stdDH to modDHKK (NEEDED!)
-    for cnt, link in enumerate(linkList): 
-        [preHT, localHT] =  ModDHKK2HT(link['modDHKK'])
-        stdLocalHT =  StdDH2HT(link['stdDH'])
-        HT = InverseHT(stdLocalHT) @ (localHT) #from stdHT back and forward in localHT of ModDHKK
-        
-        rbi = RigidBodyInertia()
-        rbi.SetWithCOMinertia(link['mass'], link['inertia'], link['COM'])
-
-        rbi = rbi.Transformed(InverseHT(HT)) #inertia parameters need to be transformed to new modDHKK link frame
-        
-        robot.AddLink(RobotLink(mass=rbi.mass,
-                                   COM=rbi.COM(), 
-                                   inertia=rbi.InertiaCOM(),
-                                   preHT = preHT,
-                                   localHT=localHT,
-                                   PDcontrol=(Pcontrol[cnt], Dcontrol[cnt]),
-                                   visualization=VRobotLink(linkColor=graphics.colorList[cnt])
-                                   #visualization=VRobotLink(showCOM=True, showMBSjoint=False, graphicsData=gLinkList[cnt])
-                                   ))
-else:
-    raise ValueError('invalid mode!')
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#configurations and trajectory
+#configurations and trajectory, starting at rest in q0
 q0 = [0,0,0,0,0,0] #zero angle configuration
+q1 = [0, pi/8, pi*0.5, 0,pi/8,0]
+q2 = [0.8*pi,-0.8*pi, -pi*0.5,0.75*pi,-pi*0.4,pi*0.4]
+q3 = [0.5*pi,0,-0.25*pi,0,0,0]
+robot.q0 = q0
 
-#this set of coordinates only works with TSD, not with old fashion load control:
-# q1 = [0, pi/8, pi*0.75, 0,pi/8,0] #configuration 1
-# q2 = [pi,-pi, -pi*0.5,1.5*pi,-pi*2,pi*2] #configuration 2
-# q3 = [3*pi,0,-0.25*pi,0,0,0] #zero angle configuration
-
-#this set also works with load control:
-q1 = [0, pi/8, pi*0.5, 0,pi/8,0] #configuration 1
-q2 = [0.8*pi,-0.8*pi, -pi*0.5,0.75*pi,-pi*0.4,pi*0.4] #configuration 2
-q3 = [0.5*pi,0,-0.25*pi,0,0,0] #zero angle configuration
-
-#trajectory generated with optimal acceleration profiles:
 trajectory = Trajectory(initialCoordinates=q0, initialTime=0)
 trajectory.Add(ProfileConstantAcceleration(q3,0.25))
 trajectory.Add(ProfileConstantAcceleration(q1,0.25))
 trajectory.Add(ProfileConstantAcceleration(q2,0.25))
 trajectory.Add(ProfileConstantAcceleration(q0,0.25))
-#traj.Add(ProfilePTP([1,1],syncAccTimes=False, maxVelocities=[1,1], maxAccelerations=[5,5]))
 
-# x = traj.EvaluateCoordinate(t,0)
-
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#test robot model
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-jointList = [0]*robot.NumberOfLinks() #this list must be filled afterwards with the joint numbers in the mbs!
-
-## user function to compute static torque compensation (slows down simulation!)
-def ComputeMBSstaticRobotTorques(robot):
-    
-    if not useKinematicTree:
-        q=[]
-        for joint in jointList:
-            q += [mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2]] #z-rotation
-    else:
-        q = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Coordinates)
-
-    HT=robot.JointHT(q)
-    return robot.StaticTorques(HT)
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-#base, graphics, object and marker:
-
-objectGround = mbs.AddObject(ObjectGround(referencePosition=robot.GetBaseHT().translation, 
-                                      #visualization=VObjectGround(graphicsData=graphicsBaseList)
-                                          ))
-
-
-#baseMarker; could also be a moving base!
-baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
-
-
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#build mbs robot model:
-if not useKinematicTree:
-    robotDict = robot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker, 
-                                                      createJointTorqueLoads=False,
-                                                      )
-        
-    jointList = robotDict['jointList'] #must be stored there for the load user function
-else:
+#the model, its control and its sensors
+if useKinematicTree:
     robotDict = robot.CreateKinematicTree(mbs)
-    oKT = robotDict['objectKinematicTree']
-    
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#user function which is called only once per step, speeds up simulation drastically
-def PreStepUF(mbs, t):
-    if compensateStaticTorques:
-        staticTorques = ComputeMBSstaticRobotTorques(robot)
-        #print("tau=", staticTorques)
-    else:
-        staticTorques = np.zeros(len(jointList))
-        
-    [u,v,a] = trajectory.Evaluate(t)
-
-    #compute load for joint number
-    if not useKinematicTree:
-        for i in range(len(robot.links)):
-            joint = jointList[i]
-            phi = mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2] #z-rotation
-            omega = mbs.GetObjectOutput(joint, exu.OutputVariableType.AngularVelocityLocal)[2] #z-angular velocity
-            tsd = torsionalSDlist[i]
-            mbs.SetObjectParameter(tsd, 'offset', u[i])
-            mbs.SetObjectParameter(tsd, 'velocityOffset', v[i])
-            mbs.SetObjectParameter(tsd, 'torque', staticTorques[i]) #additional torque from given velocity 
-    else:
-        #in case of kinematic tree, very simple operations!
-        mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', u)
-        mbs.SetObjectParameter(oKT, 'jointVelocityOffsetVector', v)
-        mbs.SetObjectParameter(oKT, 'jointForceVector', -staticTorques) #negative sign needed here!
-    
-    return True
-
-mbs.SetPreStepUserFunction(PreStepUF)
-
-sListJointAngles = []
-sListTorques = []
-nJoints = len(jointList)
-if not useKinematicTree:
-    torsionalSDlist = robotDict['springDamperList']
-    sJointRotComponents = [0]*nJoints #only one component
-    sTorqueComponents = [0]*nJoints   #only one component
-    
-    #add sensors:
-    cnt = 0
-    for i in range(len(jointList)):
-        jointLink = jointList[i]
-        tsd = torsionalSDlist[i]
-        #using TSD:
-        sJointRot = mbs.AddSensor(SensorObject(objectNumber=tsd, storeInternal=True, 
-                                   fileName="solution/joint" + str(i) + "Rot.txt",
-                                   outputVariableType=exu.OutputVariableType.Rotation,
-                                   writeToFile = sensorWriteToFile))
-        sListJointAngles += [sJointRot]
-        sJointAngVel = mbs.AddSensor(SensorObject(objectNumber=jointLink, storeInternal=True, 
-                                                  fileName="solution/joint" + str(i) + "AngVel.txt",
-                                                  outputVariableType=exu.OutputVariableType.AngularVelocityLocal,
-                                                  writeToFile = sensorWriteToFile))
-
-    cnt = 0
-    for iSD in robotDict['springDamperList']:
-        sTorque = mbs.AddSensor(SensorObject(objectNumber=iSD, storeInternal=True, 
-                                             fileName="solution/jointTorque" + str(cnt) + ".txt", 
-                                             outputVariableType=exu.OutputVariableType.TorqueLocal,
-                                             writeToFile = sensorWriteToFile))
-        sListTorques += [sTorque]
-        
-        cnt+=1
 else:
-    sJointRotComponents = list(np.arange(0,nJoints))
-    sTorqueComponents = list(np.arange(0,nJoints))
+    objectGround = mbs.AddObject(ObjectGround(referencePosition=[0,0,0]))
+    baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
+    robotDict = robot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
 
-    sJointRot = mbs.AddSensor(SensorBody(bodyNumber=oKT, 
-                                         storeInternal=True, 
-                                         outputVariableType=exu.OutputVariableType.Coordinates))
-    sListJointAngles = [sJointRot]*6
-
-    #exu.OutputVariableType.Force is not the joint torque!
-    sTorques = mbs.AddSensor(SensorBody(bodyNumber=oKT, storeInternal=True, 
-                                          outputVariableType=exu.OutputVariableType.Force))
-    sListTorques = [sTorques]*6
-
+robot.SetControl(trajectory, compensation='static')
+mbs.SetPreStepUserFunction(robot.PreStepControl)
+sensors = robot.AddSensors(mbs, [exu.OutputVariableType.Coordinates, exu.OutputVariableType.Force])
 
 mbs.Assemble()
-#mbs.systemData.Info()
 
 SC.visualizationSettings.connectors.showJointAxes = True
 SC.visualizationSettings.connectors.jointAxesLength = 0.02
 SC.visualizationSettings.connectors.jointAxesRadius = 0.002
-
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.1
 SC.visualizationSettings.loads.show = False
+SC.visualizationSettings.openGL.multiSampling = 4
+SC.visualizationSettings.general.autoFitScene = False
+SC.visualizationSettings.view0.window.renderWindowSize = [1920,1200]
 
-SC.visualizationSettings.openGL.multiSampling=4
-    
-# tEnd = 1.25
-# h = 0.002
 tEnd = 1.25
-h = 0.001#*0.1*0.01
-
-#SC.renderer.DoIdleTasks()
-simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-
+h = 0.001
+simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solution.file.writePeriod = 0.005
 simulationSettings.solution.sensors.writePeriod = 0.005
 simulationSettings.solution.file.binary = True
-#simulationSettings.solution.file.write = False
-# simulationSettings.timeIntegration.realtime.active = True
-# simulationSettings.timeIntegration.realtime.factor = 0.25
-
 simulationSettings.timeIntegration.verboseMode = 1
-# simulationSettings.show.computationTime = True
 simulationSettings.show.statistics = True
 simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
-
-#simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
+simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
 
-simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
-SC.visualizationSettings.general.autoFitScene=False
-SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
-useGraphics = False
+mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
-    SC.renderer.Start()
-    SC.renderer.RestoreSavedState()
-    SC.renderer.DoIdleTasks()
-    
-mbs.SolveDynamic(simulationSettings, 
-                 solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
-                 showHints=True)
-#explicit integration also possible for KinematicTree:
-# mbs.SolveDynamic(simulationSettings, 
-#                  solverType=exu.DynamicSolverType.RK33,
-#                  showHints=True)
+q = mbs.GetSensorValues(sensors[exu.OutputVariableType.Coordinates])
+exu.Print("rotations at tEnd=", np.sum(q), ',', q)
+f = mbs.GetSensorValues(sensors[exu.OutputVariableType.Force])
+exu.Print("torques at tEnd=", np.sum(f), ',', f)
 
+mbs.SolutionViewer() #the stored solution, replayed in the render window
 
-if useGraphics:
-    SC.visualizationSettings.general.autoFitScene = False
-    SC.renderer.Stop()
+mbs.PlotSensor(sensors[exu.OutputVariableType.Coordinates], components=list(range(6)),
+               labels=['q'+str(i) for i in range(6)], title='joint angles', closeAll=True)
+mbs.PlotSensor(sensors[exu.OutputVariableType.Force], components=list(range(6)),
+               labels=['tau'+str(i) for i in range(6)], title='joint torques')
 
-if False:
-    mbs.SolutionViewer()
-
-
-if not useKinematicTree:
-    #compute final torques:
-    measuredTorques=[]
-    for sensorNumber in sListTorques:
-        measuredTorques += [abs(mbs.GetSensorValues(sensorNumber)) ]
-    exu.Print("torques at tEnd=", np.sum(measuredTorques))
-
-    measuredRot = []
-    for sensorNumber in sListJointAngles :
-        measuredRot += [(mbs.GetSensorValues(sensorNumber)) ]
-    exu.Print("rotations at tEnd=", np.sum(measuredRot), ',', measuredRot)
-
-else:
-    q = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Coordinates)
-    exu.Print("rotations at tEnd=", np.sum(q), ',', q)
-    f = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Force)
-    exu.Print("torques at tEnd=", np.sum(f), ',', f)
-    
-
-
-
-#%%++++++++++++++++++++++++++++
-if True:
-    mbs.PlotSensor(sensorNumbers=sListJointAngles, components=sJointRotComponents, 
-                   title='joint angles', closeAll=True)
-    if useKinematicTree: #otherwise not available
-        mbs.PlotSensor(sensorNumbers=sListTorques, components=sTorqueComponents, 
-                       title='joint torques')
-    #sListJointAngles
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# test export of graphics data
+#the graphics of the scene drawn by matplotlib, without render window; matplotlib draws hidden triangles as well
 from exudyn.plot import PlotImage
-data = SC.renderer.GetGraphicsData() #the drawing elements; no render window needed
-
-#note: that basically works, but the drawing capabilities of matplotlib are limited, 
-#      so some hidden triangles occur, etc.; ideally draw outer edges (like of cylinders) and triangle faces
-PlotImage(data, 
-          triangleEdgeWidths=0, 
-          plot3D=True,
-          trianglesAsLines=False,
-          fileName='solution/serialRobotKinematicTree_PlotImage.pdf'
-          )
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++
+data = SC.renderer.GetGraphicsData()
+PlotImage(data, triangleEdgeWidths=0, plot3D=True, trianglesAsLines=False,
+          fileName='solution/serialRobotKinematicTree_PlotImage.pdf')
 ```
