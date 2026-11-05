@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 351 | 1.13.366 |
+| 1.13 | Newborn | 352 | 1.13.367 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.367** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.robotics: the commented-out code and the dead branches removed (#3254)
+  - description: The robotics files carried about 220 lines of commented-out code (earlier versions of LinkHT and JointHT, of the Jacobian, the inertia transformation of LinkDictModDHKK2Robot, a plotting example in motion.py, the alternatives of the manipulability measures, the URDF debugging lines) and dead branches (if 0, if 1, if False). Decided: removed from all files of exudyn.robotics except future.py, which is dissolved in revision2026c step RG19.2; comments that explain the code and the commented dict of the mobile robot (a documentation of its keys) stay; no change of behaviour.
+  - **notes:** exudyn.robotics: about 220 lines of commented-out code and the dead branches removed from all files except future.py; no change of behaviour
+  - date resolved: **2026-11-05 07:25**, date raised: 2026-11-05
 - **1.13.366** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolveImplicitRungeKutta with ODE1 and data coordinates; the two error estimates of SolveImplicitRungeKutta and SolveTrapezoidalGGL selectable by errorEstimate (#3253)
   - description: SolveImplicitRungeKutta refuses ODE1 and data coordinates. The error estimate of the order of the method from the stages of two steps (\#3250) is in SolveImplicitRungeKutta only; SolveTrapezoidalGGL estimates from the accelerations of one step (and the mean accelerations of three for v). Maintainer: two kinds of estimators in each integrator, switched by a flag - a simple one of one step, inaccurate, and the accurate one, which needs the stage velocities of the previous step (not available in the C++ solvers yet, but resolvable). Decided: the ODE1 coordinates by the same Runge-Kutta method with their stage velocities as unknowns, the data coordinates by the post-Newton step as SolveTrapezoidalGGL; errorEstimate='twoSteps' or 'oneStep' in both solvers.
   - **notes:** SolveImplicitRungeKutta integrates ODE1 coordinates by the same method and data coordinates by the post-Newton step; SolveImplicitRungeKutta and SolveTrapezoidalGGL take errorEstimate='twoSteps' or 'oneStep', the estimate from the stages of the previous and this step or the simple one of one step.

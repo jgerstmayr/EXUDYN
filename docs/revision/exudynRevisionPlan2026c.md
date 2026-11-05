@@ -3124,9 +3124,17 @@ CLOSED 2026-11-04: design sections 2-5 - the files and what is used from outside
 
 With the environment the maintainer provides (design section 4, question 8).
 
+#### **CLOSED_RG19.1.3** Measure the Python kinematics and the IK, and evaluate C++ functions in exudyn.cUtilities
+
+CLOSED 2026-11-05: design section 2.1 - the times of the kinematics, StaticTorques in the control loop 15 times the step of a kinematic tree, the IK's rate; found: the tool frame of the IK, InterpolateHTs, future.py, the Panda of models.py, the Puma560 inertias, RTB 1.1.1; recommended a C++ kinematic chain in cUtilities with the analytic and the numerical IK, questions 9 and 10. [log](exudynRevisionLog2026c.md#rg19-1-3)
+
 ### **OPEN_RG19.2** Clean up the robotics files: the URDF import into its own module, the commented code, future.py, exudyn.HT in the kinematics; the scripts a first time
 
 Design section 3; after the decisions of section 4.
+
+#### **CLOSED_RG19.2.1** Remove the commented-out code and the dead branches of exudyn.robotics
+
+CLOSED 2026-11-05 (#3254): 220 lines in all files except future.py, which is dissolved. [log](exudynRevisionLog2026c.md#rg19-1-3)
 
 ### **OPEN_RG19.3** Revise the URDF import: the check and correction of the inertia, textures, flipped joints, the offsets, storing and loading robot models; tested with the common robots and the local data set
 

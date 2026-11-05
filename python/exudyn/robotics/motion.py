@@ -92,7 +92,6 @@ class BasicProfile:
                 v[i] = t*sign[i]*aMax[i]
                 a[i] = sign[i]*aMax[i]
             elif t < deltaT-tAcc[i]:
-                #s = q0[joint] + vMax * t - 0.5*vMax**2/aMax
                 s[i] = s0[i] + sign[i]*(vMax[i] * (t-tAcc[i]) + 0.5*aMax[i]*(tAcc[i]**2))
                 v[i] = sign[i]*vMax[i]
             elif t <= deltaT:
@@ -259,8 +258,6 @@ class ProfilePTP:
         if len(self.maxVelocities) != 0:
             vMax = np.minimum(vMax, self.maxVelocities)
         
-        #does not work in case that sMax[i]=0 ==> vMax[i]=0
-        #durations = abs(sMax)/vMax + vMax/aMax
         durations = vMax/aMax
         for i in range(len(durations)):
             if vMax[i] != 0:
@@ -286,7 +283,6 @@ class ProfilePTP:
                 else:
                     raise ValueError('SynchronousMotion: invalid parameters in trajectory: cannot resolve synchronous profile')
             vMaxSync[joint] = min((-b-np.sqrt(det))*0.5, vMax[joint])
-            # aMaxSync[joint] = aMax[joint]
             tAccSync[joint] = vMaxSync[joint]/aMax[joint]
 
         return BasicProfile(coordinateSets=[np.array(initialCoordinates,dtype=float),self.finalCoordinates],
@@ -431,42 +427,6 @@ class Trajectory:
         """
         return str(self.profiles)
 
-    # slower version:
-    # def EvaluateCoordinate(self, t, coordinate):
-    # [s,v,a] = self.Evaluate(t)
-    # return [s[coordinate], v[coordinate], a[coordinate]]
-            
-
-# #Example:
-# traj = Trajectory(initialCoordinates=[1,1], initialTime=1)
-# traj.Add(ProfileConstantAcceleration([2.,3.],2.))
-# traj.Add(ProfileConstantAcceleration([3.,-1.],2.))
-# traj.Add(ProfilePTP([1,1],syncAccTimes=False, maxVelocities=[1,1], maxAccelerations=[5,5]))
-
-# n=200*2
-# vals=np.zeros((n,3+2+2))
-# for i in range(n):
-#     t=i/n*12
-#     vals[i,0] = t
-#     [s,v,a] = traj.Evaluate(t)
-#     vals[i,1:3] = s
-#     vals[i,3:5] = v
-#     vals[i,5:7] = a
-
-
-# import matplotlib.pyplot as plt
-# plt.close('all')
-# plt.figure('pos')
-# plt.plot(vals[:,0],vals[:,1],'r-')
-# plt.plot(vals[:,0],vals[:,2],'b-')
-# plt.figure('vel')
-# plt.plot(vals[:,0],vals[:,3],'r-')
-# plt.plot(vals[:,0],vals[:,4],'b-')
-# plt.figure('acc')
-# plt.plot(vals[:,0],vals[:,5],'r-')
-# plt.plot(vals[:,0],vals[:,6],'b-')
-# plt.show()
-
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #internal class, which stores information on PTP profiles with linear accelerations
 #DO NOT USE this class, as it is an internal interface, which will be adapted significantly in future!
@@ -482,16 +442,6 @@ class BasicProfileLinearAcceleration:
         self.coordinateSets_t = [0.*np.array(initialCoordinates,dtype=float)] #zero velocities at beginning
 
         self.Initialize() #computes according missing values
-
-        # #to be computed:
-        # self.finalTime
-        # self.coordinateSets
-        # self.coordinateSets_t
-        # self.distances = self.coordinateSets[1]-self.coordinateSets[0]
-
-        #not available:
-        # self.maxVelocities = maxVelocities
-        # self.maxAccelerations = maxAccelerations
 
     #classFunction: initialize profile, finalTime, final coordinates and distances
     def Initialize(self):

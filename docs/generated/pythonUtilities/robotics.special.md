@@ -28,7 +28,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 (sec-special-forcemanipulability)=
 ## Function: ForceManipulability
 
-[`ForceManipulability(robot, HT, mode, singularWeight = 100)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L65)
+[`ForceManipulability(robot, HT, mode, singularWeight = 100)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L64)
 
 - **function description**: compute force manipulability measure for given pose (homogeneous  transformation)
 - **input**:
@@ -44,7 +44,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 (sec-special-stiffnessmanipulability)=
 ## Function: StiffnessManipulability
 
-[`StiffnessManipulability(robot, JointStiffness, HT, mode, singularWeight = 1000)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L111)
+[`StiffnessManipulability(robot, JointStiffness, HT, mode, singularWeight = 1000)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L105)
 
 - **function description**: compute cartesian stiffness measure for given pose (homogeneous transformation)
 - **input**:
@@ -61,7 +61,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 (sec-special-jointjacobian)=
 ## Function: JointJacobian
 
-[`JointJacobian(robot, HTJoint, HTLink)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L160)
+[`JointJacobian(robot, HTJoint, HTLink)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L154)
 
 - **function description**: compute joint jacobian for each frame for given pose (homogeneous transformation)
 - **input**:
@@ -75,7 +75,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 (sec-special-massmatrix)=
 ## Function: MassMatrix
 
-[`MassMatrix(robot, HT, jointJacobian)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L222)
+[`MassMatrix(robot, HT, jointJacobian)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L214)
 
 - **function description**: compute mass matrix from jointJacobian
 - **input**:
@@ -93,7 +93,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-special-dynamicmanipulability)=
 ## Function: DynamicManipulability
 
-[`DynamicManipulability(robot, HT, MassMatrix, Tmax, mode, singularWeight = 1000)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L258)
+[`DynamicManipulability(robot, HT, MassMatrix, Tmax, mode, singularWeight = 1000)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L248)
 
 - **function description**: compute dynamic manipulability measure for given pose (homogeneous transformation)
 - **input**:
@@ -112,7 +112,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`symbolicSys
 (sec-special-calculateallmeasures)=
 ## Function: CalculateAllMeasures
 
-[`CalculateAllMeasures(robot, robotDic, q, mode, flag = [0,0,0,0])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L309)
+[`CalculateAllMeasures(robot, robotDic, q, mode, flag = [0,0,0,0])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/special.py#L299)
 
 - **function description**: calculation of 4 different manipulability measures using a certain serial robot
 - **input**:

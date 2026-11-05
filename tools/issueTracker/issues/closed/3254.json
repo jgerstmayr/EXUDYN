@@ -1,0 +1,16 @@
+{
+  "number": 3254,
+  "title": "exudyn.robotics: the commented-out code and the dead branches removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The robotics files carried about 220 lines of commented-out code (earlier versions of LinkHT and JointHT, of the Jacobian, the inertia transformation of LinkDictModDHKK2Robot, a plotting example in motion.py, the alternatives of the manipulability measures, the URDF debugging lines) and dead branches (if 0, if 1, if False). Decided: removed from all files of exudyn.robotics except future.py, which is dissolved in revision2026c step RG19.2; comments that explain the code and the commented dict of the mobile robot (a documentation of its keys) stay; no change of behaviour.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 07:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.robotics: about 220 lines of commented-out code and the dead branches removed from all files except future.py; no change of behaviour",
+  "resolvedInVersion": "1.13.367"
+}

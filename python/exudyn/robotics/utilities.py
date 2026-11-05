@@ -102,7 +102,6 @@ def GetRoboticsToolboxInternalModel(modelName='', ignoreURDFerrors=True):
         requires installation (pip install) of roboticstoolbox-python; in our tests we had problems with installers on newer Python and therefore tested with Python 3.9! Note that some models doe not include mass and inertia and therefore will not run as dynamic models!
     """
     from pathlib import Path
-    #import spatialgeometry as sg
     try:
         import roboticstoolbox as rtb
         from roboticstoolbox.tools.data import rtb_path_to_datafile
@@ -141,10 +140,8 @@ def GetRoboticsToolboxInternalModel(modelName='', ignoreURDFerrors=True):
         #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
         
         urdfBasePath = rtb_path_to_datafile("xacro")
-        #urdfBasePath = 'Anaconda/envs/myenv/Lib/site-packages/rtbdata/xacro'
         
         if str(urdfFilePath).endswith('.xacro'):
-            # xacro_tld = None
             urdfString = xacro.main(Path(urdfBasePath)/urdfFilePath, None)
         else:
             urdfString = open(urdfFilePath).read()
@@ -185,15 +182,11 @@ def LoadURDFrobot(urdfFilePath, urdfBasePath,
     except ImportError:
         raise ImportError('LoadURDFrobot: import of roboticstoolbox failed. You have to do "pip install roboticstoolbox-python" in order to use this function!')
     
-    # urdfFilePath = 'ur_description/urdf/ur5_joint_limited_robot.urdf.xacro'
-    # urdfBasePath = '[installation-specific]/Anaconda/[depends-on-envs]/site-packages/rtbdata/xacro'
-    
     links, name, urdfString, urdfFilePath_URDF_read = rtb.robot.Robot.URDF_read(urdfFilePath, urdfBasePath)
     #create robot:
     robot = rtb.robot.Robot(
         links,
         name=name.upper(),
-        #manufacturer='', #not needed!
         gripper_links=gripperLinks, #links[7], #adjusted per robot
         urdf_string=urdfString,
         urdf_filepath=urdfFilePath_URDF_read,
@@ -327,7 +320,6 @@ def GetURDFrobotData(robot,
         for j, scene in enumerate(sceneGroup):
             if hasPymeshlab and scene.stype == 'mesh' and scene.filename != '':
                 ms = pymeshlab.MeshSet()
-                #ms.load_new_mesh(fileDir+'ur5_description/visual/base.dae')
                 ms.load_new_mesh(scene.filename)
                 mesh = ms.current_mesh()
                 meshSetList.append(ms) #for debugging
@@ -335,8 +327,6 @@ def GetURDFrobotData(robot,
                 
                 if cMath.norm(mesh.transform_matrix()-np.eye(4)) != 0:
                     if verbose > 1: exudyn.Print('mesh',i,'has additional transformation')
-                # if mesh.has_face_color(): #only in case of .obj files! use: convert3d.org/dae-to-obj
-                #     if verbose > 0: exudyn.Print('link',i,'scene',j,'has colored faces')
                 color = graphics.colorList[i%16]
                 if linkColorList is not None:
                     color = linkColorList[i]
@@ -348,8 +338,6 @@ def GetURDFrobotData(robot,
                                                     normals = mesh.vertex_normal_matrix(),
                                                     color = color,
                                                     )
-                # normals = mesh.vertex_normal_matrix()
-                # gData['normals'] = np.array(normals).flatten()
 
                 #if mesh has face colors (.obj files), read them and store in gData:
                 if mesh.has_face_color() and (linkColorList is None):
@@ -368,7 +356,6 @@ def GetURDFrobotData(robot,
                 for index, visLink in enumerate(urdf.links):
                     if visLink.name == link.name:
                         k = index
-                        #exudyn.Print('visuals for link',i,'(visual',k,')=',link.name)
     
                 if k is None:
                     if verbose > 0: exudyn.Print('WARNING: inconsistent urdf and robot model detected!')
@@ -381,11 +368,6 @@ def GetURDFrobotData(robot,
     
                     if link.isjoint:
                         linkDict['graphicsDataList'] += [graphics.Move(gData, HT2translation(visualHT), HT2rotationMatrix(visualHT))]
-                        # lg = linkDict['graphicsDataList'][-1]
-                        # lg['normals'] = np.array(lg['normals'])
-                        # lg['points'] = np.array(lg['points'])
-                        # lg['triangles'] = np.array(lg['triangles'])
-                        # lg['colors'] = np.array(lg['colors'])
     
                     totalHT = staticHT@visualHT
     

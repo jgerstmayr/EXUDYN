@@ -67,6 +67,10 @@ and the connection to the Robotics Toolbox for Python (RTB) of P. Corke are revi
   with quasi-random end-effector HT in the work space (one run with many positions, in the test suite as many as run in
   < 0.25 s), and a similar test with the Franka Emika Panda.
 
+**C++ functions** (maintainer 2026-11-05)
+- the analytic inverse kinematics of 6R robots, and possibly other functions, also as C++ functions in
+  exudyn.cUtilities, for efficiency.
+
 **Misc**
 - models.py still working at the end (it could be revised; some models may be outdated or lack files); wanted: PUMA560,
   UR5, Franka Emika Panda, possibly the Stäubli TX2-90L; models.py has only the kinematics (runs without the RTB);
@@ -121,6 +125,48 @@ and the connection to the Robotics Toolbox for Python (RTB) of P. Corke are revi
 - **models.py**: the kinematics (DH or modified DH, masses, inertias, COM) of 4R, 3R, Panda, UR5, Puma560 as dicts;
   no initial configuration, no Stäubli.
 
+### 2.1 Measured (2026-11-05)
+
+Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
+
+| function | time per call |
+|---|---|
+| `Robot.LinkHT(q)`, `JointHT(q)` | 17 us |
+| `Robot.Jacobian(HT)` | 23 us |
+| `Robot.StaticTorques(HT)` (a Jacobian per link) | 114 us |
+| an exudyn.HT product, `HT.Inverse()`, `cMath.atan2` | 0.5, 0.4, 0.2 us (a numpy 4x4 product 2.3 us) |
+| a step of the Puma560 as ObjectKinematicTree with PD control (generalized-alpha) | 9.8 us |
+| the same with `StaticTorques(JointHT(q))` in the PreStepUserFunction | 145 us |
+| `InverseKinematicsNumerical.Solve` from 0.1 / 0.5 rad off the goal | 0.1 / 0.3 to 0.5 ms, 39 / 31 to 35 of 40 found |
+| `InverseKinematicsNumerical.SolveSafe` from the last solution | 3.5 to 5 ms, 8 to 10 of 40 found |
+
+- **The Python kinematics in the control loop costs 15 times the step**: the static compensation in a PreStep
+  makes a kinematic tree simulation 15 times slower - the reason for C++ (or the tree's own functions) for
+  StaticTorques, the Jacobian and the forward kinematics. The numerical IK is fast enough per solve; it lacks
+  robustness (a quarter of the random poses found from the last solution), not speed. An analytic 6R IK in Python
+  would take some 30 to 60 us (about 30 cMath functions, 10 HT operations, two ZYZ angle sets per wrist solution) -
+  fine for single poses, but a Cartesian path evaluated in each step adds it to every step.
+- **Found in the analysis** (to be fixed in the steps named):
+  - `InverseKinematicsNumerical` places the tool on the joint frame of the last link, without that link's `localHT`
+    (`MarkerKinematicTreeRigid(localHT=tool.HT)`), while `Robot.Jacobian` and `LinkHT` take the link frame: for the
+    UR5 (d6 = 0.0823) the tool frames differ by 0.079 m, and the IK of a pose from `LinkHT(q)[-1] * tool.HT` fails
+    for all 40 poses started 0.5 rad off; with the marker on `localHT * tool.HT` 35 of 40 are found (39 from 0.1 rad). The examples and test models write
+    the goal as `JointHT(q)[-1] * tool.HT`, which matches the IK; the tool graphics of CreateKinematicTree are on the
+    joint frame as well. Which frame the tool HT is relative to - the last joint frame (Exudyn now) or the last link
+    frame (DH, the RTB's fkine) - is question 9 (RG19.4, RG19.6).
+  - `InverseKinematicsNumerical.InterpolateHTs` takes `n = min(minSteps, 1 + int(rotAng/rotStep))` steps, with
+    `minSteps=1` always one: SolveSafe does not interpolate between the poses as intended (`max` meant) - one reason
+    for its low rate (RG19.6).
+  - future.py: `ComputeIK3R`, `ComputeIKPuma560`, `ComputeIKUR` call `rob.ComputeJointHT`, `rob.HTtranslate` and
+    `rob.HTrotateX`, which exudyn.robotics no longer has, on a robot dict with 'stdDH' per link - they cannot run.
+    Nothing calls them (RG19.2, RG19.6).
+  - models.py: `LinkDict2Robot` refuses `dhMode='modDHKK'` ('untested'), the dhMode of `ManipulatorPANDA`, and the
+    deprecated `LinkDictModDHKK2Robot` fails on the base HT (a dict passed as HT) - the Panda of models.py cannot be
+    made a Robot (RG19.7). The Puma560 inertias of links 0 and 2 violate the triangle inequality (link 0 has only
+    I_zz = 0.35, as in the RTB's data) - the warning of RigidBodyInertia at each use (RG19.3, RG19.7).
+  - The RTB environment `venvP310rtb` has roboticstoolbox 1.1.1 (and exudyn 1.10), not release 1.5 (RG19.1.2,
+    question 8).
+
 ## 3. Evaluation and recommendations
 
 - **Structure**: robotics/urdfImport.py (the URDF and RTB functions, moved from utilities.py; utilities.py keeps
@@ -163,6 +209,21 @@ and the connection to the Robotics Toolbox for Python (RTB) of P. Corke are revi
   - numerical: Levenberg-Marquardt / damped least squares on the 6D pose error (the logarithm of the relative HT, as
     the RTB's ik_LM), with the Jacobian of the tree or the Python Jacobian, joint limits by clamping, restarts from
     random q for robustness; no mbs needed per solve.
+- **C++ in exudyn.cUtilities** (maintainer 2026-11-05): a small kinematic chain in C++ - the link data (preHT,
+  localHT, joint type, parent, mass, COM, inertia) given once from Robot, as a class of cUtilities (e.g.
+  `cUtilities.KinematicChain`) or as arrays passed per call - with:
+  - the forward kinematics (the HT of all joints and links), the Jacobian of a point or frame of a link, and the
+    static torques (J^T m g summed in one backward pass, O(n) instead of a Jacobian per link, O(n^2));
+  - the analytic IK of 6R robots with a spherical wrist (Pieper: the wrist center from the first three joints, closed
+    form for the Puma/Staeubli/KUKA geometry; the wrist angles from the remaining rotation; up to 8 solutions, the one
+    nearest to a given q) and of the UR geometry (no spherical wrist, its own closed form);
+  - the numerical IK by Levenberg-Marquardt on the 6D pose error (`LogSE3` of the relative HT, as the RTB's ik_LM)
+    with the Jacobian above - the iteration loop in C++, restarts from random q in Python or C++;
+  - shared with ObjectKinematicTree, which computes the same transformations and Jacobians (CObjectKinematicTree), so
+    that the two cannot differ; Robot keeps Python functions of the same names that call it, the Python versions
+    staying for teaching (or as the reference of the tests).
+  Expected: about 1 us for the forward kinematics and the static torques of 6 links (100 times the Python path), a few
+  us for the analytic IK; to be measured in RG19.6 against the table of section 2.1.
 - **URDF import**: inertia check (mass > 0, inertia positive definite, triangle inequality of the principal moments)
   with a report per link and an option to correct (e.g. a minimum ratio, or replace by the inertia of the mesh's
   bounding box with the given mass); textures from the meshes (pymeshlab gives texture coordinates and file names for
@@ -191,13 +252,20 @@ and the connection to the Robotics Toolbox for Python (RTB) of P. Corke are revi
    kept beside it?
 7. The data set path: an environment variable, `exudyn.config`, or an argument only?
 8. The RTB environment for the analysis of the import against release 1.5: when it is available, the URDF part of the
-   analysis is repeated with it.
+   analysis is repeated with it. `venvP310rtb` has 1.1.1 - is that the environment, or will one with 1.5 come?
+9. The tool frame: relative to the last joint frame (as now in CreateKinematicTree, the IK and the scripts) or to the
+   last link frame, i.e. after the last localHT (DH and the RTB; `Robot.Jacobian` and `LinkHT` now)? Recommended: the
+   link frame, as in the DH convention - the scripts that write `JointHT(q)[-1] * tool.HT` change, the robots with an
+   identity last localHT (Puma560) not.
+10. The C++ kinematic chain: a class of cUtilities built from Robot (recommended), or functions on arrays; analytic IK
+    for the spherical wrist and the UR geometry, the numerical LM IK in C++ as well?
 
 ## 5. Steps proposed (group RG19)
 
 - RG19.1 Analyze the robotics submodule and propose the revision (this note): .1 the code analysis (done), .2 the URDF
   import against RTB 1.5 and the local data set (with the maintainer's environment).
-- RG19.2 Clean up: urdfImport.py, the commented code, future.py dissolved, exudyn.HT in the kinematics; the examples
+- RG19.2 Clean up (.1 done: the commented-out code and the dead branches of all files except future.py, 220 lines,
+  #3254): urdfImport.py, the commented code, future.py dissolved, exudyn.HT in the kinematics; the examples
   and test models cleaned up a first time (sensors stored internally, PlotSensor, models.py data).
 - RG19.3 Revise the URDF import: the inertia check and correction, textures, flipped joints, the UR offset, the store
   and load of Exudyn robot models; tested with the RTB robots and the local data set in examples.
@@ -206,6 +274,6 @@ and the connection to the Robotics Toolbox for Python (RTB) of P. Corke are revi
 - RG19.5 Extend the trajectories: quintic and cubic polynomials, linear profiles completed, Cartesian linear, circular,
   screw and spline paths, mixed in Trajectory with the check of jumps.
 - RG19.6 Inverse kinematics: analytic for 6R with a spherical wrist, numerical by Levenberg-Marquardt; the two tests
-  (6R, Panda).
+  (6R, Panda); the kinematic chain, the IK and the static torques in C++ (exudyn.cUtilities, section 3).
 - RG19.7 Revise models.py: PUMA560, UR5, Panda, Stäubli TX2-90L, their initial configurations; all models checked.
 - RG19.8 Clean up the robotics examples and test models on the revised interfaces.

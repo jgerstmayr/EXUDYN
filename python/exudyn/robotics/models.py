@@ -680,24 +680,6 @@ def LinkDictModDHKK2Robot(robotLinkDict, robotClass=None):
                                            localHT=localHT,
                                            ))
 
-            #old, Martin:
-            # [preHT, localHT] =  rob.ModDHKK2HT(link['modDHKK'])
-            # stdLocalHT =  rob.StdDH2HT(link['stdDH'])
-            # com = HTtranslate(link['COM'])
-            # comNew = InverseHT(localHT) @ (stdLocalHT) @ com
-            # Astd = HT2rotationMatrix(stdLocalHT)
-            # Amod = HT2rotationMatrix(localHT)
-            # A = Amod.T @ Astd #transforms from std to mod joint orientation
-            # J = link['inertia']
-            # Jmod = A.T @ J @ A
-            # robotClass.AddLink(rob.RobotLink(mass=link['mass'], 
-            #                            COM=HT2translation(comNew), 
-            #                            inertia=Jmod, 
-            #                            #preHT = preHT,
-            #                            preHT = preHT@localHT,
-            #                            #localHT=localHT,
-            #                            localHT=HT0(),
-            #                            ))
     else:
         #++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         raise ValueError('LinkDictModDHKK2Robot: dhMode not set in robotLinkDict')

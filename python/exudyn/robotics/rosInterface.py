@@ -172,8 +172,6 @@ class ROSInterface:
             just supports ROS1, ROS2 support will be given in future releases
         """
         # check and set ROSVersion 
-        #os.system('rosversion -d')
-        #self.myROSversionString = os.popen('rosversion -d').read()
         self.myROSversionEnvInt = int(os.getenv('ROS_VERSION','0'))
         self.myROSdistriEnv = os.getenv('ROS_DISTRO','unknown')
         rospy.loginfo('-ROS'+str(self.myROSversionEnvInt)+' '+self.myROSdistriEnv+'-')  
@@ -221,9 +219,6 @@ class ROSInterface:
                     pos = nodeCoordinates[0:3] # pos = [x,y,z]
                     rotE = np.roll(nodeCoordinates[3:7],-1) # rotE = [x,y,z,w]
 
-                    if False: # for debug
-                        print('position: ',nodeCoordinates[0:3])
-                        print('orientation: ',nodeCoordinates[3:7]) # eulerparameter exu [w,x,y,z]
                 else: 
                     print('node type not supported')
             else:
@@ -277,9 +272,6 @@ class ROSInterface:
                     # get linear and angular velocity form exudyn via node 
                     velLin= mbs.GetNodeOutput(mbs.variables['nodeNumber'],variableType = exu.OutputVariableType.Velocity)
                     velAng = mbs.GetNodeOutput(mbs.variables['nodeNumber'],variableType = exu.OutputVariableType.AngularVelocity)
-                    # same could be done to get acceleration from exudyn node 
-                    # nUIPLinearAcc= mbs.GetNodeOutput(nUIP,variableType = exu.OutputVariableType.Acceleration)
-                    # nUIPAngularAcc= mbs.GetNodeOutput(nUIP,variableType = exu.OutputVariableType.AngularAcceleration)
             
             twistExu = np.append(velLin,velAng)
             # compose message and publish

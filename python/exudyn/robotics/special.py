@@ -53,7 +53,6 @@ def VelocityManipulability(robot, HT, mode):
     #check for singular Matrix not needed, no inverse is used
     mv2 = np.linalg.det(J@J.T)
     mv3 = np.max([0, mv2]) # to avoid negative values they are set to zero, same as corke
-    #mv3 = np.abs(mv2)  #to avoid negative values, the absolute value of the determinat is used should be better
     mv = np.sqrt(mv3)
 
     return np.real(mv)
@@ -93,13 +92,8 @@ def ForceManipulability(robot, HT, mode,singularWeight=100):
     if np.linalg.det(Jhelp)!=0: #check singular Matrix 
         mf2 = np.linalg.det(np.linalg.inv(Jhelp))
         mf3 = np.max([0, mf2])      # to avoid negative values they are set to zero, same as corke
-        #mf3 = np.abs(mf2) #to avoid negative values, the absolute value of the determinat is used should be better 
         mf = np.sqrt(mf3)
     else:   #matrix is singular for this joint configuration, force manipulability is set to a high value
-        #alternative idea to handle singular matrix inversion(not working yet)
-        #JhelpPinv=np.linalg.pinv(Jhelp)
-        #mf2 = np.linalg.det(JhelpPinv)
-        #mf = np.max([0, mf2])      # to avoid negative values they are set to zero, same as corke
         mf =singularWeight
     return np.real(mf)
 
@@ -181,7 +175,6 @@ def JointJacobian(robot, HTJoint,HTLink):
     rotAxis = np.array([0, 0, 1])  # robot axis in local coordinates
     
     for frame in range(n):  # frames located in joints
-        #if n > len(robot['links']): #old robot dictionary
         if n > len(robot.links):
             exudyn.Print(
                 "ERROR: number of homogeneous transformations (HT) greater than number of links")
@@ -201,7 +194,6 @@ def JointJacobian(robot, HTJoint,HTLink):
                 d[i] = HT2rotationMatrix(HTLink[frame]).T @ (HT2translation(HTCOM[frame])-HT2translation(HTLink[i-1]))
  
             # revolute joint:
-            # if robot['jointType'][frame] == 1:  # revolute joint  #old version with robot dictionary
             if robot.links[frame].jointType[0] == 'R':
                 # only considered, if revolute joint
                 Jvel[0:3, i] = Skew(u[i]) @ d[i]
@@ -237,14 +229,12 @@ def MassMatrix(robot, HT, jointJacobian):
     """
     # inertia (mass) matrix
     MM = np.zeros((len(robot.links), len(robot.links)))
-    # MMa=[MM]*3  #for testing
     for i in range(len(robot.links)):
             # inertia matrix given in actual frame
             I = robot.links[i].inertia
             MM += jointJacobian[i][0].T @ I @ jointJacobian[i][0] + \
                 robot.links[i].mass * \
                     jointJacobian[i][1].T @ jointJacobian[i][1]
-            # MMa[i]=jointJacobian[i][0].T @ I @ jointJacobian[i][0]+ robot['links'][i]['mass'] * jointJacobian[i][1].T @ jointJacobian[i][1]
 
     return MM
 
@@ -347,24 +337,6 @@ def CalculateAllMeasures(robot,robotDic,q,mode, flag = [0,0,0,0] ):
     if flag[3]:
         ma,maM = DynamicManipulability(robot, HT0newJoint, MMatrixHT0, TmaxDiag, mode, singularWeight=1000)        
 
-    #too complicated:
-    # if flag == [1,0,0,0]:
-    #     mv = VelocityManipulability(robot, HT0newJoint, mode)       
-    # elif flag ==  [1,1,0,0]:
-    #     mv = VelocityManipulability(robot, HT0newJoint, mode)     
-    #     mf = ForceManipulability(robot, HT0newJoint, mode,singularWeight=100)        
-    # elif flag ==  [1,1,1,0]:
-    #     mv = VelocityManipulability(robot, HT0newJoint, mode)     
-    #     mf = ForceManipulability(robot, HT0newJoint, mode,singularWeight=100)     
-    #     mst,mstM = StiffnessManipulability(robot, JointStiffnesM, HT0newJoint, mode, singularWeight=1000)            
-    # elif flag ==  [1,1,1,1]:
-    #     mv = VelocityManipulability(robot, HT0newJoint, mode)     
-    #     mf = ForceManipulability(robot, HT0newJoint, mode,singularWeight=100)     
-    #     mst,mstM = StiffnessManipulability(robot, JointStiffnesM, HT0newJoint, mode, singularWeight=1000)      
-    #     ma,maM = DynamicManipulability(robot, HT0newJoint, MMatrixHT0, TmaxDiag, mode, singularWeight=1000)        
-    # else:
-    #     exudyn.Print('flag not defined')
- 
 
     return [mv,mf,mst,mstM,ma,maM]
 

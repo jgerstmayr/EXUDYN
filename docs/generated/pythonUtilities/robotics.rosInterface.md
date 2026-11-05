@@ -107,7 +107,7 @@ for more functionality see also: ROSExampleMassPoint.py, ROSExampleBringup.launc
 (sec-rosinterface-rosinterface-publishposeupdate)=
 ### Class function: PublishPoseUpdate
 
-[`PublishPoseUpdate(self, mbs, tExu, getData = 'node')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/rosInterface.py#L186)
+[`PublishPoseUpdate(self, mbs, tExu, getData = 'node')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/rosInterface.py#L184)
 
 - **class function description**: Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
 - **input**:
@@ -121,7 +121,7 @@ for more functionality see also: ROSExampleMassPoint.py, ROSExampleBringup.launc
 (sec-rosinterface-rosinterface-publishtwistupdate)=
 ### Class function: PublishTwistUpdate
 
-[`PublishTwistUpdate(self, mbs, tExu, getData = 'node')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/rosInterface.py#L252)
+[`PublishTwistUpdate(self, mbs, tExu, getData = 'node')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/rosInterface.py#L247)
 
 - **class function description**: Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
 - **input**:
@@ -135,7 +135,7 @@ for more functionality see also: ROSExampleMassPoint.py, ROSExampleBringup.launc
 (sec-rosinterface-rosinterface-publishsystemstateupdate)=
 ### Class function: PublishSystemStateUpdate
 
-[`PublishSystemStateUpdate(self, mbs, tExu)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/rosInterface.py#L299)
+[`PublishSystemStateUpdate(self, mbs, tExu)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/rosInterface.py#L291)
 
 - **class function description**: method to be send system state data once per frame/control cycle in Exudyn PreStepUserFunction
 - **input**:

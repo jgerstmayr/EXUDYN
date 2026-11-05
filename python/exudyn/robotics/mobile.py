@@ -204,10 +204,7 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
         if mobileRobot['wheelType']==2:
             frictionAngle = 0
         # additional graphics for visualization of rollers on the wheel (JUST FOR DRAWING!):
-        # graphicsWheel = [graphics.Brick(centerPoint=[0,0,0],size=[1.1*wWheel,0.7*rWheel,0.7*rWheel], color=graphics.color.lightred)]
         graphicsWheel = [graphics.Cylinder(pAxis=[-0.55*wWheel,0,0], vAxis=[1.1*wWheel,0,0], radius=0.34*rWheel, color=graphics.color.lightred)]
-        if 0: # debugging roller orientations
-            graphicsWheel += [graphics.Cylinder([-0.1,0,0], [0.001, 0, 0], radius = param['r'], nTiles = 64, color=graphics.color.lawngreen)]
         
         if flagGraphicsRollers: 
             contour =  [[-param['lRoll']/2, 0]]  
@@ -241,7 +238,6 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
         if iWheel == 1 or iWheel == 3: dy *= -1
         kRolling = mobileRobot['wheelContactStiffness']
         dRolling = mobileRobot['wheelContactDamping']
-        #v0Wheel = Skew(omega0Wheel) @ initialRotationWheel @ [0,0,rWheel]   #initial angular velocity of center point
         v0Wheel = mobileRobot['platformInitialVelocity'] #approx.
         initialRotation = RotationMatrixZ(-pi/2)
         pOff = [dx,dy,0-p0Car[2]]    #[dx,dy,0]
@@ -283,7 +279,6 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
                                                     rollingViscousFriction=mobileRobot['friction'][2], 
                                                     useLinearProportionalZone=mobileRobot['linearRegularization'], 
                                                     contactStiffness=kRolling, contactDamping=dRolling,
-                                                    # visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=graphics.color.blue)))
                                                     visualization=VObjectConnectorRollingDiscPenalty(show=False)))
         oRollingDiscsList += [oRolling]
     d = {'nPlatformList': nPlatformList,
@@ -342,10 +337,6 @@ class MobileKinematics:
                                             [1,   cc,  -lx - cc*ly], 
                                             [1,   -cc,  lx + cc*ly]])
         else:  # todo: add wheeltype to adjusted, this is used to test adjusted kinematics 
-            # self.Jacobian = 1/R * np.array([[1, -1, -lx - ly + lcx + lcy], 
-            #                                [1,   1,   lx + ly-lcx + lcy], 
-            #                                [1,   1,  -lx - ly - lcx + lcy], 
-            #                                [1,   -1,  lx + ly + lcx + lcy]])
             c1 = 1/(4*lx*ly) # m*g/(4*Lx*Ly)
             c2 = ly*lcx
             F1 = ((ly+lcy)*lx + c2) * c1
@@ -453,16 +444,11 @@ def Generatrix2Polynomial(param, GeneratrixFunction, tol=1e-14, nFit=101, nTest 
     for i in range(nFits): 
         order += [2*i]
         coefficients += [np.polyfit(x, y, order[i], rcond=None, full=False, w=None, cov=False)]
-        # for j in range(i):  #  only use the even coefficients
-        #     if (j % 2) == 1:
-        #         coefficients[i][j] = 0
         err     += [yTest - np.polyval(coefficients[i], xTest)]
-        # exu.Print('Polynomial of order ' + str(order[i]) + ' is used for Roll Geometry, max err = ' + str(max(abs(err[i]))))
         
         #break for loop if tolerance reached
         if max(abs(err[i])) < tol:
             ibest = i
-            # exu.Print('tolerance reached for order '+ str(order[i]) + '.')
             break
     maxErr = np.max(np.abs(err),1)
     if np.min(maxErr) > tol:

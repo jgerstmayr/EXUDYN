@@ -14,11 +14,4 @@
 #everything inside roboticsCore goes into exudyn.robotics !
 from .roboticsCore import *
 
-##this makes the submodules available; does not work under Python 3.6:
-#import exudyn.robotics.utilities as utilities
-#import exudyn.robotics.future as future
-#import exudyn.robotics.special as special
-#import exudyn.robotics.models as models
-#import exudyn.robotics.mobile as mobile
-
 

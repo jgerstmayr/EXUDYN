@@ -22,7 +22,7 @@ path planning and motion
 (sec-motion-profileconstantacceleration---init--)=
 ### Class function: __init__
 
-[`__init__(self, finalCoordinates, duration)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L154)
+[`__init__(self, finalCoordinates, duration)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L153)
 
 - **class function description**: initialize ProfileConstantAcceleration with vector of final coordinates and duration (time span)
 
@@ -30,7 +30,7 @@ path planning and motion
 (sec-motion-profileconstantacceleration-getbasicprofile)=
 ### Class function: GetBasicProfile
 
-[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L160)
+[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L159)
 
 - **class function description**: return a class representing profile which is used in Trajectory
 
@@ -57,7 +57,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-motion-profilelinearaccelerationslist---init--)=
 ### Class function: __init__
 
-[`__init__(self, accelerationList)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L187)
+[`__init__(self, accelerationList)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L186)
 
 - **class function description**: initialize ProfileLinearAccelerationsList with a list of tuples containing time and acceleration vector
 
@@ -65,7 +65,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-motion-profilelinearaccelerationslist-getbasicprofile)=
 ### Class function: GetBasicProfile
 
-[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L198)
+[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L197)
 
 - **class function description**: return a class representing profile which is used in Trajectory
 
@@ -84,7 +84,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-motion-profileptp---init--)=
 ### Class function: __init__
 
-[`__init__(self, finalCoordinates, syncAccTimes = True, maxVelocities = [], maxAccelerations = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L220)
+[`__init__(self, finalCoordinates, syncAccTimes = True, maxVelocities = [], maxAccelerations = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L219)
 
 - **class function description**: initialize ProfilePTP with final coordinates of motion, optionally max. velocities and accelerations just for this profile (overrides global settings)
 
@@ -92,7 +92,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-motion-profileptp-getbasicprofile)=
 ### Class function: GetBasicProfile
 
-[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L234)
+[`GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L233)
 
 - **class function description**: return a class representing profile which is used in Trajectory
 
@@ -124,7 +124,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory---init--)=
 ### Class function: __init__
 
-[`__init__(self, initialCoordinates, initialTime = 0, maxVelocities = [], maxAccelerations = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L314)
+[`__init__(self, initialCoordinates, initialTime = 0, maxVelocities = [], maxAccelerations = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L310)
 
 - **class function description**: initialize robot link with parameters, being self-explaining
 - **input**:
@@ -137,7 +137,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-getfinalcoordinates)=
 ### Class function: GetFinalCoordinates
 
-[`GetFinalCoordinates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L336)
+[`GetFinalCoordinates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L332)
 
 - **class function description**: returns the coordinates at the end of the (currently) Final profile
 
@@ -145,7 +145,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-add)=
 ### Class function: Add
 
-[`Add(self, profile)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L345)
+[`Add(self, profile)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L341)
 
 - **class function description**: add successively profiles, using MotionProfile class
 
@@ -153,7 +153,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-gettimes)=
 ### Class function: GetTimes
 
-[`GetTimes(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L353)
+[`GetTimes(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L349)
 
 - **class function description**: return vector of times of start/end of profiles
 
@@ -161,7 +161,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-initialize)=
 ### Class function: Initialize
 
-[`Initialize(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L361)
+[`Initialize(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L357)
 
 - **class function description**: initialize some parameters for faster evaluation
 
@@ -169,7 +169,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-evaluate)=
 ### Class function: Evaluate
 
-[`Evaluate(self, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L367)
+[`Evaluate(self, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L363)
 
 - **class function description**: return interpolation of trajectory for coordinates, velocities and accelerations at given time
 - **output**: [s, v, a] as numpy arrays representing coordinates, velocities and accelerations
@@ -178,7 +178,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory-evaluatecoordinate)=
 ### Class function: EvaluateCoordinate
 
-[`EvaluateCoordinate(self, t, coordinate)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L390)
+[`EvaluateCoordinate(self, t, coordinate)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L386)
 
 - **class function description**: return interpolation of trajectory for coordinate, including velocity and acceleration coordinate at given time
 - **output**: [s, v, a] being scalar position, velocity and acceleration
@@ -188,7 +188,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory---iter--)=
 ### Class function: __iter__
 
-[`__iter__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L413)
+[`__iter__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L409)
 
 - **class function description**: iterator allows to use for x in trajectory: ... constructs
 
@@ -196,7 +196,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory---getitem--)=
 ### Class function: __getitem__
 
-[`__getitem__(self, key)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L418)
+[`__getitem__(self, key)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L414)
 
 - **class function description**: access to profiles via operator [], allowing trajectory[0], etc.
 
@@ -204,7 +204,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory---len--)=
 ### Class function: __len__
 
-[`__len__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L423)
+[`__len__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L419)
 
 - **class function description**: allow using len(trajectory)
 
@@ -212,7 +212,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-motion-trajectory---repr--)=
 ### Class function: __repr__
 
-[`__repr__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L429)
+[`__repr__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L425)
 
 - **class function description**: representation of Trajectory is given a list of profiles, allowing easy inspection of data
 

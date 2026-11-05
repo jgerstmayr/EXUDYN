@@ -58,7 +58,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-utilities-loadurdfrobot)=
 ## Function: LoadURDFrobot
 
-[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L167)
+[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L164)
 
 - **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland. Use this function for loading urdf/xacro files.
 - **input**:
@@ -72,7 +72,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-utilities-geturdfrobotdata)=
 ## Function: GetURDFrobotData
 
-[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L213)
+[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L206)
 
 - **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
 - **input**:

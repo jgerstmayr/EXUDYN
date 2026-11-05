@@ -5894,6 +5894,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py (maintainer's approval), with the ODE1, data
   and errorEstimate cases; symbolicTrapezoidalGGLStepSizeTest.py with 'twoSteps' on the ball.
 
+<a id="rg19-1-3"></a>
+### RG19.1.3, RG19.2.1 — the robotics module measured; the commented-out code removed (2026-11-05, #3254)
+- Maintainer: start with the evaluation and the cleanup; the analytic 6R IK, and possibly other functions, also as C++
+  in exudyn.cUtilities for efficiency.
+- Measured (design robotics.md section 2.1): LinkHT/JointHT 17 us, Jacobian 23 us, StaticTorques 114 us per call for
+  6 links; a kinematic tree step of the Puma560 9.8 us, 145 us with StaticTorques in the PreStepUserFunction - the
+  Python kinematics in the control loop costs 15 times the step. InverseKinematicsNumerical: 0.1 to 0.5 ms per Solve,
+  SolveSafe 8 to 10 of 40 random poses.
+- Found: the IK puts the tool on the last joint frame, LinkHT and Jacobian on the last link frame (UR5: 0.079 m apart,
+  no pose found; with the marker on localHT * tool.HT 35 of 40) - question 9; InterpolateHTs uses min instead of
+  max (always one step); future.py's IK functions call functions exudyn.robotics no longer has; LinkDict2Robot
+  refuses modDHKK, so the Panda of models.py cannot be made a Robot; the Puma560 inertias of links 0 and 2 violate the
+  triangle inequality; venvP310rtb has RTB 1.1.1, not 1.5. Recommended: a C++ kinematic chain in cUtilities (forward
+  kinematics, Jacobian, static torques in one pass, analytic IK for the spherical wrist and the UR geometry, LM IK),
+  shared with ObjectKinematicTree; questions 9 and 10 added.
+- #3254: 220 lines of commented-out code and the dead branches (if 0, if 1, if False) removed from all robotics files
+  except future.py; ruff finds the same 64 items before and after.
+
 <a id="rg20-2-8"></a>
 ### RG20.2.8 — index 3 at the stages alone, measured (2026-11-05)
 - Maintainer: why not c(Q_i) = 0 at both implicit stages of Radau IIA or Lobatto (or one multiplier for both), index 3
