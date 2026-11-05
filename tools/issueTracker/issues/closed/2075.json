@@ -1,0 +1,15 @@
+{
+  "number": 2075,
+  "title": "GetDictionary",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add read/write dict access for new structures SC.renderer and exudyn.config",
+  "dateRaised": "2025-06-02",
+  "deadline": "2025-11-29",
+  "dateResolved": "2026-11-05 01:03",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SC.renderer.GetDictionary() and SetDictionary() give and set the materials, the static graphics of the scopes and the render states of the enabled views; exudyn.config has GetDictionary and SetDictionary as well; GraphicsMaterialList.GetDict works again.",
+  "resolvedInVersion": "1.13.365"
+}

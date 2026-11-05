@@ -421,6 +421,9 @@ graphs are added with `SC.renderer.scopes.SetGraphics`, `AddGraphics`, `GetGraph
 {ref}`sec-rendererscopes`. The stored values of a sensor are read and written under a lock, so that the renderer no
 longer reads them while the solver appends a row.
 
+**`SC.renderer.GetDictionary()` and `SetDictionary()`** (#2075): the materials, the static graphics of the scopes and
+the render states of the enabled views as one dictionary; `exudyn.config` has the same pair.
+
 **Explicit solvers with eliminated coordinates** (#3240): the coordinates of CoordinateConstraints to the ground are
 fixed in every stage of the Runge-Kutta methods, not only at the end of the step, to the value of their equation
 (offset, factor and user function) instead of 0. RK44 and DOPRI5 keep their order with them - RK44 was of order 1 -,

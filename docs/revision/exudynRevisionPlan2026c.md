@@ -92,7 +92,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
 - **RG11** Misc
-  - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
+  - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
   - RG11.6 Write the joints and their Jacobians on homogeneous transformations
   - RG11.7 Let objects compute from the coordinates passed in instead of reading their nodes
@@ -140,7 +140,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 10 | Misc |
+| RG11 | OPEN | 9 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
 | RG13 | OPEN | 2 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -1679,9 +1679,9 @@ of `MarkerNodeRigid`, and `GetPosition2D` of a planar frame (#2809).
 
 From revision2026b group RG12.
 
-#### **OPEN_RG11.4.1** Add GetDictionary and SetDictionary to the renderer and exudyn.config
+#### **CLOSED_RG11.4.1** Add GetDictionary and SetDictionary to the renderer and exudyn.config
 
-#2075.
+CLOSED 2026-11-05 (#2075): SC.renderer.GetDictionary/SetDictionary with the materials, the static graphics of the scopes and the render states of the enabled views; exudyn.config had them (#2685); GraphicsMaterialList.GetDict fixed. rendererDictionaryTest.py. [log](exudynRevisionLog2026c.md#rg11-4-1)
 
 #### **OPEN_RG11.4.2** Accept the visualization of an item as its VItem class or as a dict
 

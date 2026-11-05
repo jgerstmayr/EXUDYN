@@ -101,6 +101,16 @@ The class **MainRenderer** has the following **functions and structures**:
   print(renderState['zoom'])
   ```
 
+- **`GetDictionary()`**: what the renderer holds besides visualizationSettings, as a dictionary (#2075): 'materials', the list of the materials as GraphicsMaterialList.GetDict gives them, 'scopeGraphics', the static graphics of the scopes as scopes.GetGraphics gives them, and 'states', the render states of the enabled views by their number, as GetState gives them; the textures are not in it
+
+  *Example*:
+
+  ```python
+  rendererData = SC.renderer.GetDictionary()
+  SC.renderer.SetDictionary(rendererData)
+  ```
+
+- **`SetDictionary(values)`**: set the materials, the static graphics of the scopes and the render states of the views from a dictionary as GetDictionary gives it; a key left out stays as it is, an unknown key raises; materials beyond the existing ones are appended, and a state is set as SetState(state, waitForRendererFullStartup=False, viewID) sets it, which needs the view enabled
 - **`SetState(renderState, waitForRendererFullStartup = True, viewID = 0)`**: Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; waitForRendererFullStartup is used to wait at startup for the first frame to be drawn (and zoom all to be set), but be be set False in case of performance issues; NOTE: before setting available state values, this function may also first initialize renderState from visualizationSettings (if renderer is inactive)
 
   *Example*:

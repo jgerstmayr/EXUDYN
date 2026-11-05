@@ -1073,6 +1073,53 @@ py::dict MainRenderer::GetState(Index viewID) const
 	return mainSystemContainer->RenderState2PyDict(mainSystemContainer->GetVisualizationSystemContainer().GetRenderViewData(viewID).renderState);
 }
 
+py::dict MainRenderer::GetDictionary() const
+{
+	py::dict d;
+	py::list materialList;
+	for (Index i = 0; i < materials.NumberOfItems(); i++) { materialList.append(materials.PyGetMaterialDict(py::int_(i))); }
+	d["materials"] = materialList;
+	d["scopeGraphics"] = scopes.PyGetGraphics();
+	py::dict states; //the views that are enabled; a disabled view has no state to give
+	VisualizationSystemContainer& VSC = mainSystemContainer->GetVisualizationSystemContainer();
+	for (Index viewID = 0; viewID < MAX_VIEWS_GLFW; viewID++)
+	{
+		if (VSC.GetRenderViewData(viewID).renderState.viewEnabled) { states[py::int_(viewID)] = GetState(viewID); }
+	}
+	d["states"] = states;
+	return d;
+}
+
+void MainRenderer::SetDictionary(const py::dict& d)
+{
+	for (auto item : d)
+	{
+		STDstring key = py::str(item.first);
+		if (key != "materials" && key != "scopeGraphics" && key != "states")
+		{
+			PyError("renderer.SetDictionary: unknown key '" + key + "'; the keys are materials, scopeGraphics and states", PyErrorType::valueError);
+		}
+	}
+	if (d.contains("materials"))
+	{
+		Index i = 0;
+		for (auto material : py::list(d["materials"]))
+		{
+			if (i < materials.NumberOfItems()) { materials.PySetMaterial(py::int_(i), py::reinterpret_borrow<py::object>(material)); }
+			else { materials.PyAppend(py::reinterpret_borrow<py::object>(material)); }
+			i++;
+		}
+	}
+	if (d.contains("scopeGraphics")) { scopes.PySetGraphics(d["scopeGraphics"]); }
+	if (d.contains("states"))
+	{
+		for (auto item : py::dict(d["states"]))
+		{
+			SetState(py::dict(py::reinterpret_borrow<py::object>(item.second)), false, py::cast<Index>(item.first));
+		}
+	}
+}
+
 //! restore the render state that exudyn.sys holds
 bool MainRenderer::RestoreSavedState(Index viewID)
 {
@@ -1495,14 +1542,15 @@ py::dict MainGraphicsMaterialList::PyGetMaterialDict(py::object indexOrName) con
 {
 	const VSettingsMaterial& mat = GetMaterial(indexOrName);
 	py::dict matDict;
+	auto List3 = [](const Float3& v) { return std::array<float, 3>({ v[0], v[1], v[2] }); }; //Float3 has no pybind type (#2075)
 	matDict["name"] = mat.name;
-	matDict["baseColor"] = mat.baseColor;
-	matDict["specular"] = mat.specular;
+	matDict["baseColor"] = List3(mat.baseColor);
+	matDict["specular"] = List3(mat.specular);
 	matDict["shininess"] = mat.shininess;
 	matDict["reflectivity"] = mat.reflectivity;
 	matDict["alpha"] = mat.alpha;
 	matDict["ior"] = mat.ior;
-	matDict["emission"] = mat.emission;
+	matDict["emission"] = List3(mat.emission);
 
 	return matDict;
 }

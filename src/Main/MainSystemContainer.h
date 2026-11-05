@@ -186,6 +186,12 @@ public:
 	//! get render state dictionary
 	py::dict GetState(Index viewID = VisualizationSystemContainer::mainViewID) const;
 
+	//! what the renderer holds besides visualizationSettings, as a dictionary (#2075): the materials, the static
+	//! graphics of the scopes and the render states of the enabled views
+	py::dict GetDictionary() const;
+	//! set what GetDictionary gives; a key left out stays as it is, an unknown key raises
+	void SetDictionary(const py::dict& d);
+
 	//! set render state dictionary
 	void SetState(py::dict renderState, bool waitForRendererFullStartup = false,
 		Index viewID = VisualizationSystemContainer::mainViewID);

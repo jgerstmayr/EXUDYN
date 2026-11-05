@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.364.dev1
+- Exudyn version = 1.13.365.dev1
 - last change = 2026-11-05
 - Number of issues = 3253
-- Number of resolved issues = 3141 (364 in current version)
+- Number of resolved issues = 3142 (365 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9167,10 +9167,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add frictionStiffness similar to bristle model in ANCF contact
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2025-06-15
-- `EXTENSION` `MEDIUM EFF` GetDictionary (#2075)
-  - description: add read/write dict access for new structures SC.renderer and exudyn.config
-  - **remarks:** planned as revision2026b step RG12.44 (triage 2026-10-07)
-  - date raised: 2025-06-02
 - `EXTENSION` `MEDIUM EFF` Body force sensor (#1989)
   - description: add force sensor option for single-noded bodies and bodies which do not share nodes (mass points, rigid bodies, ffrf); for rigid bodies, obtains force and torque; for FFRF, it is generalized force; implement in a way that the contributions of loads are computed like in GeneralContact - based on a flag -, as soon as a BodySensor measures a force or torque
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

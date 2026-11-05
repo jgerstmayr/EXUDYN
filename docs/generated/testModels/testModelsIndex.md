@@ -161,6 +161,7 @@ pythonUserFunctionArgumentsTest
 raytracerNOGLFWtest
 reevingSystemSpringsTest
 relativeRotationTranslationMechanism
+rendererDictionaryTest
 rendererItemChangesTest
 restartFileTest
 resultsMonitorTest

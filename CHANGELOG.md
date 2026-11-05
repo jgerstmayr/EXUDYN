@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 349 | 1.13.364 |
+| 1.13 | Newborn | 350 | 1.13.365 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.365** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` GetDictionary (#2075)
+  - description: add read/write dict access for new structures SC.renderer and exudyn.config
+  - **notes:** SC.renderer.GetDictionary() and SetDictionary() give and set the materials, the static graphics of the scopes and the render states of the enabled views; exudyn.config has GetDictionary and SetDictionary as well; GraphicsMaterialList.GetDict works again.
+  - date resolved: **2026-11-05 01:03**, date raised: 2025-06-02
 - **1.13.364** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
   - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
   - **notes:** A test model that sets exudyn.config.printToConsole=True in a quiet test run no longer ends the run by a stack overflow: PrintToLog writes what exu.Print prints meanwhile to the console stream it replaced.

@@ -5816,6 +5816,16 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   graphics, assemble, raytracer image; equal results. In the suite no window opens, so the lock is not contended there;
   run directly, the renderer draws meanwhile - to be run by the maintainer once (no window from here).
 
+<a id="rg11-4-1"></a>
+### RG11.4.1 — GetDictionary and SetDictionary of the renderer and exudyn.config (2026-11-05, #2075)
+- exudyn.config had them already (#2685, GetDictionary, SetDictionary, GetDefaults); the renderer gets them:
+  'materials' (GraphicsMaterialList.GetDict of each), 'scopeGraphics' (scopes.GetGraphics), 'states' (GetState of
+  each enabled view, by its number). SetDictionary sets what is given - materials beyond the existing ones appended,
+  the states by SetState without waiting for the renderer - and refuses an unknown key. Textures are not in it (images).
+- GraphicsMaterialList.GetDict raised "Unregistered type SlimVectorBase<float,3>": the Float3 members are given as
+  lists now.
+- rendererDictionaryTest.py (new).
+
 <a id="rg11-8-24"></a>
 ### RG11.8.24 — PrintToLog of the quiet test runs no longer recurses when a model switches printToConsole on (2026-11-05, #3066)
 - PrintToLog (testRunnerTools.py) keeps the stream that redirect_stdout replaced; what arrives while it writes - exu.Print

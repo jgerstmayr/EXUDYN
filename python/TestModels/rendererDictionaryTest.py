@@ -1,0 +1,63 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  SC.renderer.GetDictionary and SetDictionary (#2075): the materials, the static graphics of the scopes and
+#           the render states of the enabled views of one SystemContainer, changed and set on a second one, which then
+#           gives the same dictionary; a key left out stays, an unknown key is refused. exudyn.config has its
+#           GetDictionary and SetDictionary too.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-05
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+import numpy as np
+
+testError = 0
+def Check(condition, message):
+    global testError
+    if not condition:
+        exu.Print('rendererDictionaryTest: ' + message)
+        testError += 1
+
+SC = exu.SystemContainer()
+values = SC.renderer.GetDictionary()
+Check(sorted(values.keys()) == ['materials', 'scopeGraphics', 'states'], 'keys: ' + str(values.keys()))
+Check(len(values['materials']) == 10 and values['scopeGraphics'] == [] and list(values['states'].keys()) == [0],
+      'the defaults: ten materials, no static graphics, the state of view 0')
+
+#changed and set on a second SystemContainer
+values['materials'][1]['baseColor'] = [0.1, 0.2, 0.3]
+values['materials'].append(dict(values['materials'][0], name='extra'))
+values['scopeGraphics'] = [{'type': 'Line', 'points': [[0, 1], [2, 1]], 'name': 'limit'}]
+values['states'][0]['zoom'] = 3.5
+SC2 = exu.SystemContainer()
+SC2.renderer.SetDictionary(values)
+values2 = SC2.renderer.GetDictionary()
+Check(np.allclose(values2['materials'][1]['baseColor'], [0.1, 0.2, 0.3]) and len(values2['materials']) == 11
+      and values2['materials'][10]['name'] == 'extra', 'the materials')
+Check(len(values2['scopeGraphics']) == 1 and values2['scopeGraphics'][0]['name'] == 'limit', 'the static graphics')
+Check(abs(values2['states'][0]['zoom'] - 3.5) < 1e-6, 'the render state')
+
+#a key left out stays; an unknown key is refused
+SC2.renderer.SetDictionary({'scopeGraphics': []})
+Check(SC2.renderer.GetDictionary()['materials'][10]['name'] == 'extra' and SC2.renderer.scopes.GetGraphics() == [],
+      'a key left out')
+try:
+    SC2.renderer.SetDictionary({'material': []})
+    Check(False, 'an unknown key is not refused')
+except exu.ExudynError:
+    pass
+
+#exudyn.config: the same pair
+config = exu.config.GetDictionary()
+Check('printToConsole' in config and 'outputPrecision' in config, 'exudyn.config.GetDictionary: ' + str(config.keys()))
+exu.config.SetDictionary({'outputPrecision': config['outputPrecision']})
+
+u = testError + len(values2['materials'])
+exu.Print('solution of rendererDictionaryTest=', u)
+
+exu.sys['testResult'] = u
