@@ -70,7 +70,7 @@ py::dict MainSystemContainer::GetDictionary() const
 	//settings["..."] = GetVisualizationSystemContainer().;
 	//d["settings"] = settings;
 
-	d["renderState"] = PyGetRenderState();
+	d["renderState"] = renderer.GetState(); //not PyGetRenderState, which warns of its deprecation (#3271)
 	d["visualizationSettings"] = EPyUtils::GetDictionary(GetVisualizationSystemContainer().GetVisualizationSettings());
 	d["textures"] = PyGetTextures(); //which the graphics data name (#3268)
 
@@ -104,7 +104,7 @@ void MainSystemContainer::SetDictionary(const py::dict& d)
 		mbs.SetDictionary(py::cast<py::dict>(item) );
 	}
 
-	PySetRenderState(py::cast<py::dict>(d["renderState"]));
+	renderer.SetState(py::cast<py::dict>(d["renderState"]), false); //not PySetRenderState, which warns (#3271)
 	EPyUtils::SetDictionary(GetVisualizationSystemContainer().GetVisualizationSettings(), py::cast<py::dict>(d["visualizationSettings"]) );
 
 }

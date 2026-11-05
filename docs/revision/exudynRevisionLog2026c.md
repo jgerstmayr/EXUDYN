@@ -6297,6 +6297,13 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   compensated, so the notebook leaves the friction out), sensors and plots; its page is in the chapter's toctree.
 - The ROS section of the advanced topics moved into the chapter; index.md and pdfIndex.md list the chapter.
 
+<a id="rg11-4-6"></a>
+### RG11.4.6 — SC.GetDictionary without deprecation warnings (2026-11-06, #3271)
+- SC.GetDictionary called PyGetRenderState and SC.SetDictionary PySetRenderState, the deprecated Python functions,
+  which warned the user of calls they had not made; both call renderer.GetState/SetState now (waitForRendererFullStartup
+  false, as before). rendererDictionaryTest.py checks that a GetDictionary/SetDictionary pair warns of nothing (the
+  SetRenderState warning appeared before the fix; result unchanged, 11).
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

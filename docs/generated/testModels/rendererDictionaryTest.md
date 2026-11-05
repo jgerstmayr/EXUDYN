@@ -15,6 +15,7 @@ You can view and download this file on Github: [rendererDictionaryTest.py](https
 #           gives the same dictionary; a key left out stays, an unknown key is refused. The textures as dicts (#3268):
 #           SC.renderer.GetTexture gives the image as AddTexture took it, for one, three and four channels; a texture
 #           removed is added again from its dict by SetDictionary; SC.GetDictionary has the textures too.
+#           SC.GetDictionary and SC.SetDictionary warn of no deprecated function, as they call none (#3271).
 #           exudyn.config has its GetDictionary and SetDictionary too.
 #
 # Author:   Johannes Gerstmayr
@@ -93,6 +94,15 @@ except exu.ExudynError:
     pass
 for name in ['dictTestRGB', 'dictTestGrey', 'dictTestRGBA']:
     SC.renderer.RemoveTexture(name)
+
+#SC.GetDictionary and SetDictionary with the render state, without a deprecation warning (#3271)
+import warnings
+with warnings.catch_warnings(record=True) as caught:
+    warnings.simplefilter('always')
+    SC3 = exu.SystemContainer()
+    SC3.SetDictionary(SC.GetDictionary())
+Check([str(w.message) for w in caught if issubclass(w.category, DeprecationWarning)] == [],
+      'SC.GetDictionary/SetDictionary warn: ' + str([str(w.message) for w in caught]))
 
 #exudyn.config: the same pair
 config = exu.config.GetDictionary()

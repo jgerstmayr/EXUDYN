@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 378 | 1.13.393 |
+| 1.13 | Newborn | 379 | 1.13.394 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.394** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SC.GetDictionary warns that SC.GetRenderState is deprecated (#3271)
+  - description: SystemContainer.GetDictionary calls the deprecated PyGetRenderState for its 'renderState' and so issues the DeprecationWarning of SC.GetRenderState to the user, who did not call it. Proposed: the state from the renderer (renderer.GetState) without the warning, keeping the key.
+  - **notes:** SC.GetDictionary and SC.SetDictionary no longer warn of the deprecated SC.GetRenderState and SC.SetRenderState, which they called internally.
+  - date resolved: **2026-11-06 00:22**, date raised: 2026-11-05
 - **1.13.393** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A chapter Robotics in the user manual, with a notebook of a robot (#3281)
   - description: The user manual has no chapter on exudyn.robotics; ROS is a short section of the advanced topics. Decided: a chapter Robotics at the top level of the user manual, between the advanced topics and the symbolic system and user functions: the features and the workflows (robots from the models, DH parameters or URDF; the kinematic tree and the redundant model; control, compensation, friction and end stops; trajectories and blending; kinematics, inverse kinematics and dynamics; sensors; saving), an image of a robot, a notebook of a robot as tutorial, and the ROS section, which says that the ROS features and examples are currently untested.
   - **notes:** The user manual has a chapter Robotics: the modules, the workflows, kinematics and models, trajectories, control and sensors, the URDF import and ROS, with an image of the Staubli TX2-90L and the notebook tutorialRobotics of the Puma560.
