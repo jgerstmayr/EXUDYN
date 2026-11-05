@@ -6323,6 +6323,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - test_urdfRobotData.py: a stub of the RTB interface (no toolbox needed) with a flipped joint and fixed links; the
   inertia helpers.
 
+<a id="rg19-5-4"></a>
+### RG19.5.4 — blending: 'auto', the velocity check, Cartesian space (2026-11-06, #3283)
+- Maintainer 2026-11-05: the blending extras suggested at the end of the last report.
+- 'auto' (resolved when the next profile is added): the largest of 20 steps below min(acceleration phase of both;
+  half the duration for profiles without phases) whose blended velocities (51 samples) stay within the limit per
+  coordinate - the larger of the peak velocities of the two profiles and maxVelocities of Trajectory, so that a profile
+  that exceeds maxVelocities by itself (ProfileConstantAcceleration ignores them) is not blamed on the blending.
+  Two profiles of constant acceleration always give the full phase (the summed velocities are linear in the overlap,
+  their maximum at its ends); two quintic profiles of 1 s give 0.45 s.
+- A numeric blend time is checked when maxVelocities are given (ValueError with the ratio).
+- blendSpace='cartesian' (both profiles Cartesian, checked at the next Add): the Cartesian profiles carry ToolMotion(t)
+  (frame, velocity, angular velocity from the path and the time law); in the overlap p = p_k + p_k1 - p_k1(start),
+  R = A R_k with A = R_k1 R_k1(start)^T, v = v_k + v_k1, omega = omega_k1 + A omega_k; the joints by the analytic IK
+  in the configuration of profile k nearest to the joint superposition, q_t by the Jacobian, q_tt by central
+  difference. TX2-90L, two lines at a right angle: in the plane and rotation to 9e-16 (joint blending: 8e-5); the
+  velocity and acceleration equal to the difference quotients.
+- staubliTX2blending.py blends its line-line corners in Cartesian space; trajectoryBlendingCartesianTest.py.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

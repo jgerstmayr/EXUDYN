@@ -400,7 +400,8 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
 
 Decided: the superposition; the argument `blendTimeWithNext` of Add (the overlap of this profile with the next);
 Evaluate and EvaluateCoordinate with `enableBlending`; the distance from the via point at which blending starts
-(`GetBlendings`, also for the tool by a KinematicChain). Not done: `'auto'` and the check of the summed velocities.
+(`GetBlendings`, also for the tool by a KinematicChain). Done later (#3283): `'auto'`, the check of the summed velocities
+against the peak velocities of the profiles or maxVelocities, and `blendSpace='cartesian'` for two Cartesian profiles.
 The proposal as it was:
 
 

@@ -7,7 +7,8 @@
 #           of the tool (ProfileCartesianLinear), and back to A in joint space (ProfileConstantAcceleration). The task
 #           runs twice: first each profile ends at rest, then the profiles are blended (Trajectory.Add(profile,
 #           blendTimeWithNext)): the next profile starts before the present one ends, and the trajectory is the sum
-#           of both, so that the tool passes near the corners without stopping. The two paths of the tool are drawn
+#           of both, so that the tool passes near the corners without stopping; two lines are blended in Cartesian
+#           space (blendSpace='cartesian'), so that the tool rounds the corner in their plane. The two paths of the tool are drawn
 #           on the ground: the first in grey, the blended one in orange; red spheres at the ends of the profiles,
 #           blue ones where the blendings start and end. The control by Robot.SetControl and PreStepControl with the
 #           static compensation; the meshes of the URDF if the local robot data set is found (see
@@ -66,10 +67,11 @@ def Pose(p):
     return exu.HT(rotation=rotation, translation=p)
 
 def AddTask(trajectory, blendTime):
-    """the task once; blendTime: the overlap at the corners above the cup and at C"""
-    trajectory.Add(ProfileCartesianLinear(robot, Pose(pB), 0.8, timeLaw='constantAcceleration'), blendTimeWithNext=blendTime)
+    """the task once; blendTime: the overlap at the corners above the cup and at C; the corners between two lines
+    blended in Cartesian space, so that the tool rounds them in the plane of the lines (#3283)"""
+    trajectory.Add(ProfileCartesianLinear(robot, Pose(pB), 0.8, timeLaw='constantAcceleration'), blendTimeWithNext=blendTime, blendSpace='cartesian')
     trajectory.Add(ProfileCartesianLinear(robot, Pose(pB - [0, 0, depth]), 0.6, timeLaw='constantAcceleration')) #stops in the cup
-    trajectory.Add(ProfileCartesianLinear(robot, Pose(pB), 0.6, timeLaw='constantAcceleration'), blendTimeWithNext=blendTime)
+    trajectory.Add(ProfileCartesianLinear(robot, Pose(pB), 0.6, timeLaw='constantAcceleration'), blendTimeWithNext=blendTime, blendSpace='cartesian')
     trajectory.Add(ProfileCartesianLinear(robot, Pose(pC), 0.7, timeLaw='constantAcceleration'), blendTimeWithNext=blendTime)
     trajectory.Add(ProfileConstantAcceleration(qA, 1.0)) #back to A in joint space, at rest
 

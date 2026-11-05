@@ -419,7 +419,13 @@ class _ProfileCartesian:
             vs = [Velocities(Pose(x[0], q), x[0], x[1]) for x in sigmas]
             a = (vs[1] - vs[0])/((taus[1] - taus[0])*self.duration) if taus[1] > taus[0] else 0.*v
             return [q, v, a]
-        return _BasicProfileTimeLaw(q0, qEnd, initialTime, initialTime + self.duration, Function)
+        profile = _BasicProfileTimeLaw(q0, qEnd, initialTime, initialTime + self.duration, Function)
+        def ToolMotion(t): #the tool frame and its velocity and global angular velocity at the time t (#3283)
+            (sigma, sigma_t, sigma_tt) = _TimeLaw(self.timeLaw, (min(max(t, profile.initialTime), profile.finalTime) - initialTime)/self.duration, self.duration)
+            (H, dp, omega) = Path(sigma)
+            return (np.array(H.translation), np.array(H.rotation), np.array(dp)*sigma_t, np.array(omega)*sigma_t)
+        profile.cartesian = {'ToolMotion': ToolMotion, 'chain': chain, 'toolPosition': self.toolPosition, 'configuration': configuration}
+        return profile
 
 
 def _CheckHT(name, H, argument):
@@ -647,6 +653,7 @@ class Trajectory:
 
         self.profiles = []
         self.blendTimes = [] #per profile, the overlap with the next one (#3274)
+        self.blendSpaces = [] #per profile, 'joint' or 'cartesian' (#3283)
         self.initialized = False #this marks that the trajectory has been changed and is not initialized
         self.timesList = []
         if min(list(maxVelocities)+[1]) <= 0:
@@ -663,7 +670,7 @@ class Trajectory:
             return self.profiles[-1].GetFinalCoordinates()
 
 
-    def Add(self, profile, blendTimeWithNext=0.):
+    def Add(self, profile, blendTimeWithNext=0., blendSpace='joint'):
         """add successively profiles, using MotionProfile class; raises a ValueError if the profile starts at other
         coordinates than the trajectory ends, by more than jumpTolerance
 
@@ -674,8 +681,18 @@ class Trajectory:
                 that it passes near the end of this profile without stopping and reaches the end of the next one
                 exactly; at most the duration of this profile and of the next; e.g. the deceleration time of this
                 profile, if the next one accelerates in the same time, keeps the velocity of an axis that moves on in
-                the same direction; the summed velocities are not checked against limits; without a next profile it
-                has no effect; see GetBlendings and Evaluate(t, enableBlending)
+                the same direction; without a next profile it has no effect; see GetBlendings and Evaluate(t,
+                enableBlending). 'auto': when the next profile is added, the largest overlap - at most the deceleration
+                phase of this profile and the acceleration phase of the next (half their durations for the profiles
+                without phases) - in which the blended velocities stay within the limits: the peak velocities of the two
+                profiles, so that the blending is not faster than they are, or maxVelocities of Trajectory where they
+                are larger (#3283). With maxVelocities of Trajectory, a given blend time whose velocities exceed these
+                limits raises a ValueError
+            blendSpace: 'joint': the motions of the joints are summed; 'cartesian': this profile and the next are
+                Cartesian profiles (ProfileCartesianLinear, ...) of the same robot, and in the overlap the motions of the
+                tool - its position and rotation from the start of the next profile - are summed, the joint coordinates
+                follow by the inverse kinematics in the arm configuration of this profile; the tool then rounds the
+                corner in the plane of two lines, while the blending of the joints lets it leave the paths (#3283)
         """
         self.initialized = False
         previousCoordinates = np.array(self.GetFinalCoordinates(), dtype=float)
@@ -686,12 +703,64 @@ class Trajectory:
             raise ValueError('Trajectory.Add: the profile ' + type(profile).__name__ + ' (number ' + str(len(self.profiles))
                              + ') starts with a jump of ' + str(jump) + ' in the coordinates, more than jumpTolerance=' + str(self.jumpTolerance))
         duration = ptp.finalTime - ptp.initialTime
-        if blendTimeWithNext < 0 or blendTimeWithNext > duration:
-            raise ValueError('Trajectory.Add: blendTimeWithNext=' + str(blendTimeWithNext) + ' must be in [0, ' + str(duration) + '], the duration of the profile')
-        if len(self.profiles) != 0 and self.blendTimes[-1] > duration:
-            raise ValueError('Trajectory.Add: the blendTimeWithNext=' + str(self.blendTimes[-1]) + ' of the profile before is longer than this profile, ' + str(duration))
+        if blendTimeWithNext != 'auto' and (blendTimeWithNext < 0 or blendTimeWithNext > duration):
+            raise ValueError('Trajectory.Add: blendTimeWithNext=' + str(blendTimeWithNext) + " must be 'auto' or in [0, " + str(duration) + '], the duration of the profile')
+        if blendSpace not in ['joint', 'cartesian']:
+            raise ValueError("Trajectory.Add: blendSpace must be 'joint' or 'cartesian', not " + str(blendSpace))
+        if len(self.profiles) != 0 and self.blendTimes[-1] != 'auto':
+            if self.blendTimes[-1] > duration:
+                raise ValueError('Trajectory.Add: the blendTimeWithNext=' + str(self.blendTimes[-1]) + ' of the profile before is longer than this profile, ' + str(duration))
+        if len(self.profiles) != 0 and self.blendSpaces[-1] == 'cartesian':
+            if not (hasattr(self.profiles[-1], 'cartesian') and hasattr(ptp, 'cartesian')):
+                raise ValueError("Trajectory.Add: blendSpace='cartesian' needs two Cartesian profiles, this one (" + type(profile).__name__ + ') and the one before')
         self.profiles+=[ptp]
         self.blendTimes+=[blendTimeWithNext]
+        self.blendSpaces+=[blendSpace]
+        if len(self.profiles) > 1: #the blending with the profile before (#3283)
+            k = len(self.profiles) - 2
+            if self.blendTimes[k] == 'auto':
+                self.blendTimes[k] = self._AutoBlendTime(k)
+            elif self.blendTimes[k] > 0 and len(self.globalMaxVelocities) != 0:
+                ratio = self._BlendingVelocityRatio(k)
+                if ratio > 1. + 1e-6:
+                    raise ValueError('Trajectory.Add: the blending of the profiles ' + str(k) + ' and ' + str(k+1) + ' reaches ' + str(round(ratio, 4))
+                                     + ' times its limit, the peak velocity of the profiles or maxVelocities; a shorter blendTimeWithNext, or ' + "'auto'")
+        self.initialized = False
+
+    def _BlendingVelocities(self, k, numberOfSamples=51):
+        """the largest absolute velocities per coordinate in the blending of the profiles k and k+1, and the peak
+        velocities of the two profiles without blending (#3283)"""
+        self.Initialize()
+        b = self.blendTimes[k]
+        tEnd = self.GetTimes()[k+1]
+        blended = np.max([np.abs(self._EvaluateBlended(t)[1]) for t in np.linspace(tEnd - b, tEnd, numberOfSamples)], axis=0)
+        profiles = np.max([np.abs(profile.Evaluate(t)[1]) for profile in self.profiles[k:k+2]
+                           for t in np.linspace(profile.initialTime, profile.finalTime, numberOfSamples)], axis=0)
+        return (blended, profiles)
+
+    def _BlendingVelocityRatio(self, k):
+        """the largest ratio of the blended velocity to its limit: the peak velocity of the two profiles, or
+        maxVelocities if larger (#3283); a profile that exceeds maxVelocities itself is not the blending's fault"""
+        (blended, profiles) = self._BlendingVelocities(k)
+        limits = np.maximum(np.array(self.globalMaxVelocities, dtype=float), profiles) if len(self.globalMaxVelocities) != 0 else profiles
+        tolerance = 1e-12*max(1., np.max(limits))
+        return max([blended[i]/limits[i] if limits[i] > tolerance else (1. if blended[i] <= tolerance else np.inf)
+                    for i in range(len(blended))])
+
+    def _AutoBlendTime(self, k):
+        """the largest blend time of the profiles k and k+1 within the phases of deceleration and acceleration whose
+        velocities stay within the limits (#3283)"""
+        def Phase(profile): #the acceleration (deceleration) time, or half the duration for a profile without phases
+            times = getattr(profile, 'accelerationTimes', None)
+            duration = profile.finalTime - profile.initialTime
+            return min(duration, max(times)) if times is not None and len(times) != 0 else 0.5*duration
+        bMax = min(Phase(self.profiles[k]), Phase(self.profiles[k+1]))
+        for b in np.linspace(bMax, 0., 21)[:-1]:
+            self.blendTimes[k] = b
+            if self._BlendingVelocityRatio(k) <= 1. + 1e-6:
+                return b
+        self.blendTimes[k] = 0.
+        return 0.
 
     def _UnblendedTimes(self):
         """the times of start and end of the profiles, one after the other"""
@@ -715,7 +784,7 @@ class Trajectory:
 
     def HasBlending(self):
         """True if a profile, which has a next one, has a blendTimeWithNext"""
-        return any(b > 0 for b in self.blendTimes[:-1])
+        return any(b != 'auto' and b > 0 for b in self.blendTimes[:-1])
 
     def Initialize(self):
         """initialize some parameters for faster evaluation
@@ -723,6 +792,10 @@ class Trajectory:
         self.timesList = self._UnblendedTimes()
         self.shifts = self._Shifts()
         self.hasBlending = self.HasBlending()
+        times = self.GetTimes()
+        #the overlaps blended in Cartesian space: [start, end, k] in the time of the trajectory (#3283)
+        self.cartesianBlendings = [[times[k+1] - self.blendTimes[k], times[k+1], k] for k in range(len(self.profiles) - 1)
+                                   if self.blendSpaces[k] == 'cartesian' and self.blendTimes[k] > 0]
         self.initialized = True
 
     def _EvaluateBlended(self, t, coordinate=None):
@@ -731,6 +804,10 @@ class Trajectory:
         nothing, those that have ended their whole displacement"""
         def Values(profile, time):
             return profile.Evaluate(time) if coordinate is None else profile.EvaluateCoordinate(time, coordinate)
+        for (tStart, tEnd, k) in self.cartesianBlendings:
+            if tStart < t < tEnd:
+                [s, v, a] = self._CartesianBlended(t, k)
+                return [s, v, a] if coordinate is None else [s[coordinate], v[coordinate], a[coordinate]]
         initial = np.array(self.profiles[0].GetInitialCoordinates(), dtype=float)
         s = initial.copy() if coordinate is None else initial[coordinate]
         v = 0.*s
@@ -749,6 +826,47 @@ class Trajectory:
                 v = v + vk
                 a = a + ak
         return [s, v, a]
+
+    def _CartesianBlended(self, t, k, joint=True):
+        """the blending of the Cartesian profiles k and k+1 at t in their overlap (#3283): the tool frame of profile k
+        moved by the motion of the tool of profile k+1 from its start - position p_k + p_k1 - p_k1(start), rotation
+        A R_k with A = R_k1 R_k1(start)^T -, its velocity v_k + v_k1 and angular velocity omega_k1 + A omega_k; the
+        joint coordinates by the inverse kinematics nearest to the blending of the joints, the joint velocities by the
+        Jacobian, the accelerations by their difference in time"""
+        (profile0, profile1) = (self.profiles[k], self.profiles[k+1])
+        data = profile0.cartesian
+        chain = data['chain']
+        def Joint(time):
+            (p0, R0, v0, w0) = data['ToolMotion'](time + self.shifts[k])
+            (p1, R1, v1, w1) = profile1.cartesian['ToolMotion'](time + self.shifts[k+1])
+            (pS, RS, vS, wS) = profile1.cartesian['ToolMotion'](profile1.initialTime)
+            A = R1 @ RS.T
+            H = exudyn.HT(rotation=A @ R0, translation=p0 + p1 - pS)
+            qReference = self._EvaluateJointBlended(time)
+            solutions = chain.InverseKinematicsAnalytic(H, qReference, data['configuration'])
+            if len(solutions) == 0:
+                raise ValueError('Trajectory: the Cartesian blending of the profiles ' + str(k) + ' and ' + str(k+1) + ' leaves the reach of the robot at t=' + str(time))
+            q = solutions[0]
+            q_t = np.linalg.solve(chain.Jacobian(q, -1, data['toolPosition']), np.concatenate([v0 + v1, w1 + A @ w0]))
+            return (q, q_t)
+        (q, q_t) = Joint(t)
+        dt = 1e-6
+        q_tt = (Joint(t + dt)[1] - Joint(t - dt)[1])/(2.*dt)
+        return [q, q_t, q_tt]
+
+    def _EvaluateJointBlended(self, t):
+        """the joint coordinates of the superposition of the profiles in joint space, the reference of the inverse
+        kinematics of the Cartesian blending"""
+        initial = np.array(self.profiles[0].GetInitialCoordinates(), dtype=float)
+        s = initial.copy()
+        for (k, profile) in enumerate(self.profiles):
+            time = t + self.shifts[k]
+            if time <= profile.initialTime:
+                break
+            start = np.array(profile.GetInitialCoordinates(), dtype=float)
+            end = np.array(profile.GetFinalCoordinates(), dtype=float) if time >= profile.finalTime else np.array(profile.Evaluate(time)[0], dtype=float)
+            s = s + end - start
+        return s
 
     def Evaluate(self, t, enableBlending=True):
         """return interpolation of trajectory for coordinates, velocities and accelerations at given time

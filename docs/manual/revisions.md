@@ -546,7 +546,11 @@ The user manual has a chapter {ref}`Robotics <sec-robotics>` - the modules, the 
 with the notebook tutorialRobotics of the Puma560 (#3281). `GetURDFrobotData` handles flipped joints (the URDF
 coordinate in a link frame turned by `flipHT`), reports the problems of the mass and inertia of each link in
 `'inertiaProblems'`, corrects them with `correctInertia=True`, computes the mass of a link without one from its meshes
-with `meshDensity`, and draws textured meshes with their texture (#3282).
+with `meshDensity`, and draws textured meshes with their texture (#3282). `Trajectory.Add(profile,
+blendTimeWithNext='auto')` chooses the largest overlap within the deceleration and acceleration phases in which the
+blending is not faster than the profiles (or `maxVelocities` of `Trajectory`, where larger), a given blend time is
+checked against these limits when `maxVelocities` are given, and `blendSpace='cartesian'` blends two Cartesian
+profiles by the sum of the motions of the tool, which then rounds the corner in the plane of two lines (#3283).
 
 **`graphics.FromSTLfile` without numpy-stl** (#3264): binary and text STL files are read with numpy, and with
 `density` the volume, mass, center of mass and inertia are computed from the mesh; `scale` takes three factors, and

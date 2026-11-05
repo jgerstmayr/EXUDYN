@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 380 | 1.13.395 |
+| 1.13 | Newborn | 381 | 1.13.396 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.396** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Trajectory blending: automatic blend times, the velocity check and the blending in Cartesian space (#3283)
+  - description: The blend time of Trajectory.Add must be chosen by hand, the summed velocities of a blending are not checked, and two Cartesian profiles blend in joint space, so that the tool leaves the plane of the two paths in the corner. Decided: blendTimeWithNext='auto' takes the largest overlap, at most the deceleration and acceleration phases of the two profiles, in which the blended velocities stay within the velocity limits; the limits are maxVelocities of Trajectory if given, else the peak velocities of the two profiles; a given blend time is checked against maxVelocities of Trajectory; Add(..., blendSpace='cartesian') blends two Cartesian profiles by the superposition of the motions of the tool, with the inverse kinematics of the sum.
+  - **notes:** Trajectory.Add takes blendTimeWithNext='auto', the largest overlap in which the blending is not faster than the profiles or maxVelocities; a given blend time is checked against these limits when maxVelocities are given; blendSpace='cartesian' blends two Cartesian profiles by the sum of the motions of the tool.
+  - date resolved: **2026-11-06 00:46**, date raised: 2026-11-06
 - **1.13.395** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GetURDFrobotData: flipped joints, the check and correction of the inertias, mass from the meshes, textures of the meshes (#3282)
   - description: GetURDFrobotData warns that flipped joints (axis -1 in the URDF) are not implemented, and the kinematics of such robots (KUKA, LBR, the Mars rover) are wrong; it does not check masses and inertias, which many URDF files lack or give unphysically, and it ignores the textures of .dae and .obj meshes. Decided: a flipped joint keeps the joint coordinate of the URDF in a link frame turned by pi about an axis normal to the joint axis (flipHT); every link reports the problems of its mass and inertia, optionally corrected by raising the principal moments; a link without mass optionally gets mass, COM and inertia of its meshes with a given density; the first texture of a mesh is added and drawn with the texture coordinates of the mesh.
   - **notes:** GetURDFrobotData handles flipped joints (flipHT), reports the problems of the mass and inertia of each link, corrects them with correctInertia=True, gives links without mass that of their meshes with meshDensity, and draws textured .dae/.obj meshes with their texture.

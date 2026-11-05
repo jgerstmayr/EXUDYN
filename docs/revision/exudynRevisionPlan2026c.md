@@ -3218,6 +3218,12 @@ CLOSED 2026-11-05 (#3274): the superposition of design section 6.1, Trajectory.A
 
 CLOSED 2026-11-05 (#3272): ProfileCartesianCircular, ProfileCartesianScrew, ProfileCartesianSpline (positions and rotation vectors by natural cubic splines) on the code of ProfileCartesianLinear; keepConfiguration; Trajectory(jumpTolerance); robotCartesianPathsTest.py. [log](exudynRevisionLog2026c.md#rg19-5-3)
 
+#### **CLOSED_RG19.5.4** Blending: automatic blend times, the velocity check and the blending in Cartesian space
+
+CLOSED 2026-11-06 (#3283; maintainer 2026-11-05): blendTimeWithNext='auto', the check against the profiles' peak velocities or maxVelocities, blendSpace='cartesian'; trajectoryBlendingCartesianTest.py. [log](exudynRevisionLog2026c.md#rg19-5-4)
+
+#3283. Maintainer 2026-11-05: the blending extras 'auto', the velocity-limit check and a blend in Cartesian space so that the tool stays on the path.
+
 ### **OPEN_RG19.6** Inverse kinematics: analytic for 6R robots with a spherical wrist, numerical by Levenberg-Marquardt; tests with a 6R robot and the Panda
 
 Design section 3; the test suite runs < 0.25 s of positions.

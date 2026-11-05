@@ -79,7 +79,9 @@ velocity and acceleration), `ProfilePolynomial5`, and the paths of the tool `Pro
 `ProfileCartesianCircular`, `ProfileCartesianScrew` and `ProfileCartesianSpline`, which keep the arm configuration of
 their start and raise where the joint coordinates would jump. `Trajectory.Add(profile, blendTimeWithNext)` lets the
 next profile start earlier; the trajectory is then the sum of both motions and passes the via point at a distance that
-`GetBlendings` reports.
+`GetBlendings` reports. `blendTimeWithNext='auto'` takes the largest overlap in which the blending is not faster than
+the profiles, and `blendSpace='cartesian'` sums the motions of the tool instead of the joints, so that the tool
+rounds the corner between two lines in their plane.
 
 `robot.SetControl(trajectory, compensation)` and `mbs.SetPreStepUserFunction(robot.PreStepControl)` let the joint
 control follow the trajectory, in either model; `compensation='static'` adds the torques against gravity and
