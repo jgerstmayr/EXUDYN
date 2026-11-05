@@ -479,6 +479,13 @@ and of 6R robots with a spherical wrist (Puma560, KUKA, Staeubli) or of the UR g
 first, in about 8 us; `Robot.InverseKinematicsAnalytic` is the same in Python. `exudyn.robotics.future` is removed:
 use these instead of `ComputeIK3R`, `ComputeIKPuma560` and `ComputeIKUR` (#3260).
 
+**Implicit Runge-Kutta solvers in C++.** `DynamicSolverType.TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL` and
+`Radau3` run with `mbs.SolveDynamic` on every model of the implicit solver: index-3 constraints without index
+reduction, orders 2, 4, 4 and 3 in positions and velocities, with constant steps or, by default, the automatic step
+size of `timeIntegration.automaticStepSize` with the tolerances `absoluteTolerance` and `relativeTolerance`;
+velocity-level constraints (rolling) are solved at the implicit stages. Lie group nodes work at moderate step sizes;
+their Newton iteration stalls at small ones (#3261).
+
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.
 

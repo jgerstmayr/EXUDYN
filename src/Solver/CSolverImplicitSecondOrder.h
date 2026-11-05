@@ -21,6 +21,7 @@
 #define CSOLVERIMPLICITSECONDORDERTIMEINT__H
 
 #include "Solver/CSolverBase.h" 
+#include "Solver/CSolverImplicitRungeKutta.h" //TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (#3261)
 
 //! this is the new general implicit second order time integration solver
 class CSolverImplicitSecondOrderTimeInt : public CSolverBase
@@ -45,13 +46,26 @@ public: //made public for access via pybind
 	ResizableArray<Index> lieGroupDirectUpdateNodes;	//filled with Lie group node indices with direct updates during initialization; ONLY if useLieGroupIntegration=true
 	//UNUSED: //ResizableArray<Index> nonLieODE2Coordinates;		//filled with ODE2 coordinates, for which no Lie group integration is used; ONLY if useLieGroupIntegration=true
 	ResizableVectorParallel lieGroupDirectUpdateNewtonSolution; //this is the previous newton solution in case of direct update
+	CSolverImplicitRungeKutta rungeKutta;	//!< the implicit Runge-Kutta methods; active if timeIntegration.solverType is one of them (#3261)
 public:
 
 	//! return true, if static solver; needs to be overwritten in derived class
 	virtual bool IsStaticSolver() const override { return false; }
 
 	//! get solver name - needed for output file header and visualization window
-	virtual const STDstring GetSolverName() const override { return "implicit second order time integration"; }
+	virtual const STDstring GetSolverName() const override
+	{
+		if (rungeKutta.active) { return STDstring("implicit Runge-Kutta time integration (") + rungeKutta.method.name + ")"; }
+		return "implicit second order time integration";
+	}
+
+	//! the implicit Runge-Kutta methods control their step size (#3261)
+	virtual bool HasAutomaticStepSizeControl() const override { return rungeKutta.active; }
+	virtual Real GetNextStepSize() const override { return rungeKutta.active ? rungeKutta.nextStepSize : -1.; }
+	virtual void SetNextStepSize(Real stepSize) override { if (rungeKutta.active) { rungeKutta.nextStepSize = stepSize; } }
+
+	//! the Newton iteration of generalized-alpha, or the step of an implicit Runge-Kutta method (#3261)
+	virtual bool Newton(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
 	//! reduce step size (0 .. with given step size, 1..normal, 2..severe problems); return true, if reduction was successful
 	virtual bool ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,

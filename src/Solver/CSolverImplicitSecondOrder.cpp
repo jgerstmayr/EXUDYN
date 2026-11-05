@@ -44,6 +44,16 @@ bool CSolverImplicitSecondOrderTimeInt::ReduceStepSize(CSystem& computationalSys
 {
 	//it.currentTime is the only important value to be updated in order to reset the step time:
 	it.currentTime = computationalSystem.GetSystemData().GetCData().currentState.time;
+	if (rungeKutta.active)
+	{
+		rungeKutta.nextStepSize = -1.;
+		if (rungeKutta.rejectedByError) //the error estimate set the step size already (#3261)
+		{
+			rungeKutta.rejectedByError = false;
+			return true;
+		}
+		rungeKutta.controller.rejectedLast = true; //no growth after the reduction
+	}
 
 	if (it.currentStepSize > it.minStepSize)
 	{
@@ -68,6 +78,7 @@ bool CSolverImplicitSecondOrderTimeInt::ReduceStepSize(CSystem& computationalSys
 void CSolverImplicitSecondOrderTimeInt::IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,
 	Real suggestedStepSize)
 {
+	if (rungeKutta.active && it.automaticStepSize) { return; } //the error estimate controls the step (#3261)
 	if ((it.currentStepSize != it.maxStepSize))
 	{
 		it.currentStepSize = EXUstd::Minimum(it.maxStepSize, simulationSettings.timeIntegration.adaptiveStepIncrease*it.currentStepSize);
@@ -185,7 +196,14 @@ void CSolverImplicitSecondOrderTimeInt::CheckConstraintDrift(CSystem& computatio
 void CSolverImplicitSecondOrderTimeInt::FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool writeSolution)
 {
 	CheckConstraintDrift(computationalSystem, simulationSettings);
+	if (rungeKutta.active) { rungeKutta.AcceptStep(); }
 	CSolverBase::FinishStep(computationalSystem, simulationSettings, writeSolution);
+}
+
+bool CSolverImplicitSecondOrderTimeInt::Newton(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+	if (rungeKutta.active) { return rungeKutta.Step(*this, computationalSystem, simulationSettings); }
+	return CSolverBase::Newton(computationalSystem, simulationSettings);
 }
 
 void CSolverImplicitSecondOrderTimeInt::FinalizeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
@@ -508,6 +526,17 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 //! initialize static step / time step: do some outputs, checks, etc.
 void CSolverImplicitSecondOrderTimeInt::UpdateCurrentTime(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
+	if (rungeKutta.active && it.automaticStepSize)
+	{
+		if (rungeKutta.nextStepSize > 0) //the size proposed by the error estimate of the previous step (#3261)
+		{
+			it.currentStepSize = rungeKutta.nextStepSize;
+			rungeKutta.nextStepSize = -1;
+		}
+		if (it.currentTime + it.currentStepSize > it.endTime) { it.currentStepSize = it.endTime - it.currentTime; }
+		it.currentTime += it.currentStepSize;
+		return;
+	}
 	if (!it.adaptiveStep)
 	{
 		it.currentTime = it.currentStepIndex * it.currentStepSize + it.startTime; //use this to avoid round-off errors in time 
@@ -527,6 +556,7 @@ void CSolverImplicitSecondOrderTimeInt::UpdateCurrentTime(CSystem& computational
 void CSolverImplicitSecondOrderTimeInt::PreInitializeSolverSpecific(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	const TimeIntegrationSettings& timeint = simulationSettings.timeIntegration;
+	rungeKutta.active = CSolverImplicitRungeKutta::GetMethod(timeint.solverType, rungeKutta.method); //before the automatic step size is decided (#3261)
 
 	if (simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints &&
 		!simulationSettings.timeIntegration.generalizedAlpha.useNewmark)
@@ -565,7 +595,7 @@ void CSolverImplicitSecondOrderTimeInt::PreInitializeSolverSpecific(CSystem& com
 //! post-initialize for solver specific tasks; called at the end of InitializeSolver
 void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
-	if (IsVerbose(2))
+	if (IsVerbose(2) && !rungeKutta.active)
 	{
 		if (simulationSettings.timeIntegration.generalizedAlpha.useNewmark)
 		{
@@ -654,7 +684,7 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 
 	}
 	//++++++++++++++++++++++++++++++++++++++++
-
+	rungeKutta.Initialize(*this, computationalSystem, simulationSettings); //(#3261)
 }
 
 

@@ -114,7 +114,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-solversuccess)=
 ## Function: SolverSuccess
 
-[`SolverSuccess(solverStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L381)
+[`SolverSuccess(solverStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L383)
 
 - **function description**: return success (True/False) and error message of solver after SolveSteps(...), SolveSystem(...), SolveDynamic(...) or SolveStatic(...) have been called. May also be set if other higher level functions called e.g. SolveSystem(...)
 - **input**:
@@ -142,7 +142,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-usesparselinearsolver)=
 ## Function: UseSparseLinearSolver
 
-[`UseSparseLinearSolver(simulationSettings, sparse)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L423)
+[`UseSparseLinearSolver(simulationSettings, sparse)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L425)
 
 - **function description**: with sparse, set simulationSettings.linearSolver.solverType to EigenSparse, so that the solver computes sparse system matrices (#1529); returns the type before, which the caller restores
 
@@ -150,7 +150,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-computelinearizedsystem)=
 ## Function: ComputeLinearizedSystem
 
-[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True, useSparseMatrices = False) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L432)
+[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True, useSparseMatrices = False) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L434)
 
 - **function description**: compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints; for computation of eigenvalues and advanced computation with constrained systems, see ComputeODE2Eigenvalues; the current implementation is also able to project into the constrained space, however, this currently does not generally work with non-holonomic systems
 - **input**:
@@ -199,7 +199,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-computeode2eigenvalues)=
 ## Function: ComputeODE2Eigenvalues
 
-[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L573)
+[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L575)
 
 - **function description**: compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see {ref}`sec-mbs-systemdata`); with useSparseSolver=True, mass and stiffness matrices are computed and exported as sparse matrices (unless computeComplexEigenvalues or the projection of algebraic equations needs them dense).
 - **input**:
@@ -260,7 +260,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-computesystemdegreeoffreedom)=
 ## Function: ComputeSystemDegreeOfFreedom
 
-[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L830)
+[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L832)
 
 - **function description**: compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
 - **input**:
@@ -306,7 +306,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-checksolverinfostatistics)=
 ## Function: CheckSolverInfoStatistics
 
-[`CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L960)
+[`CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L962)
 
 - **function description**: helper function for solvers to check e.g. if high number of memory allocations happened during simulation This can happen, if large amount of sensors are attached and output is written in every time step
 - **input**: stat=exudyn.special.InfoStat() from previous step, numberOfEvaluations is a counter which is proportional to number of RHS evaluations in method

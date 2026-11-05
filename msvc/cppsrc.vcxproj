@@ -237,6 +237,7 @@
     <ClCompile Include="..\src\Solver\CSolver.cpp" />
     <ClCompile Include="..\src\Solver\CSolverBase.cpp" />
     <ClCompile Include="..\src\Solver\CSolverExplicit.cpp" />
+    <ClCompile Include="..\src\Solver\CSolverImplicitRungeKutta.cpp" />
     <ClCompile Include="..\src\Solver\CSolverImplicitSecondOrder.cpp" />
     <ClCompile Include="..\src\Solver\CSolverStatic.cpp" />
     <ClCompile Include="..\src\Solver\MainSolver.cpp" />
@@ -637,7 +638,9 @@
     <ClInclude Include="..\src\Solver\CSolver.h" />
     <ClInclude Include="..\src\Solver\CSolverBase.h" />
     <ClInclude Include="..\src\Solver\CSolverExplicit.h" />
+    <ClInclude Include="..\src\Solver\CSolverImplicitRungeKutta.h" />
     <ClInclude Include="..\src\Solver\CSolverImplicitSecondOrder.h" />
+    <ClInclude Include="..\src\Solver\StepSizeController.h" />
     <ClInclude Include="..\src\Solver\CSolverStatic.h" />
     <ClInclude Include="..\src\Solver\MainSolverBase.h" />
     <ClInclude Include="..\src\System\CContact.h" />

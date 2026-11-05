@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 358 | 1.13.373 |
+| 1.13 | Newborn | 359 | 1.13.374 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.374** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The implicit Runge-Kutta solvers TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL and Radau3 in the C++ core (#3261)
+  - description: The solvers of exudyn.symbolics.advancedSolvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4-GGL, Radau3) exist only for symbolic systems in Python. Decided: one class CSolverImplicitRungeKutta with the method as data (tableau, constraint form, order), the four values of DynamicSolverType run by SolveDynamic, the automatic step size for all four with the PI controller in a StepSizeController shared later with ODE23 and DOPRI5; in C++ also the cases the Python prototypes refuse: velocity-level constraints and Lie group nodes; no Python interface of the solver phases.
+  - **notes:** DynamicSolverType.TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL and Radau3: the implicit Runge-Kutta solvers for index-3 constraints in the C++ core, run by SolveDynamic; orders 2, 4, 4 and 3, constant steps or the automatic step size (PI controller) with timeIntegration.absoluteTolerance and relativeTolerance; velocity-level constraints at the implicit stages; Lie group nodes at moderate step sizes.
+  - date resolved: **2026-11-05 12:38**, date raised: 2026-11-05
 - **1.13.373** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Analytic inverse kinematics of 3R and 6R robots in KinematicChain and Robot; future.py removed (#3260)
   - description: The analytic inverse kinematics of exudyn.robotics.future (ComputeIK3R, ComputeIKPuma560, ComputeIKUR) took robot dictionaries of standard DH parameters, printed, returned unchecked or NaN rows and was not used. Decided: KinematicChain.InverseKinematicsAnalytic in C++ and Robot.InverseKinematicsAnalytic in Python, the same algorithm on the product of exponentials of the chain (the subproblems of Paden and Kahan), independent of the DH convention, for 3 revolute joints with the axes 2 and 3 parallel, 6 with a spherical wrist (Puma560, KUKA, Staeubli) and 6 of the UR geometry; all solutions, checked by the forward kinematics, the nearest to a reference first; MakeCorkeRobot moved to urdfImport.py and future.py removed.
   - **notes:** exudyn.robotics: KinematicChain.InverseKinematicsAnalytic (C++) and Robot.InverseKinematicsAnalytic (Python) give all solutions of the inverse kinematics of 3R robots and of 6R robots with a spherical wrist (Puma560, KUKA, Staeubli) or of the UR geometry, checked by the forward kinematics and the nearest to qReference first, for any DH convention, base and tool; about 8 us in C++. exudyn.robotics.future is removed; MakeCorkeRobot is in exudyn.robotics.urdfImport.

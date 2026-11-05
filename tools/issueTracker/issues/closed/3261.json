@@ -1,0 +1,15 @@
+{
+  "number": 3261,
+  "title": "The implicit Runge-Kutta solvers TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL and Radau3 in the C++ core",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "The solvers of exudyn.symbolics.advancedSolvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4-GGL, Radau3) exist only for symbolic systems in Python. Decided: one class CSolverImplicitRungeKutta with the method as data (tableau, constraint form, order), the four values of DynamicSolverType run by SolveDynamic, the automatic step size for all four with the PI controller in a StepSizeController shared later with ODE23 and DOPRI5; in C++ also the cases the Python prototypes refuse: velocity-level constraints and Lie group nodes; no Python interface of the solver phases.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 12:38",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "DynamicSolverType.TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL and Radau3: the implicit Runge-Kutta solvers for index-3 constraints in the C++ core, run by SolveDynamic; orders 2, 4, 4 and 3, constant steps or the automatic step size (PI controller) with timeIntegration.absoluteTolerance and relativeTolerance; velocity-level constraints at the implicit stages; Lie group nodes at moderate step sizes.",
+  "resolvedInVersion": "1.13.374"
+}

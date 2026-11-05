@@ -267,6 +267,9 @@
     <ClCompile Include="..\src\Solver\CSolverStatic.cpp">
       <Filter>CPPsystemAndSolver</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Solver\CSolverImplicitRungeKutta.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Solver\CSolverImplicitSecondOrder.cpp">
       <Filter>CPPsystemAndSolver</Filter>
     </ClCompile>

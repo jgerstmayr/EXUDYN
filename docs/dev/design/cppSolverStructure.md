@@ -223,6 +223,27 @@ CSolverBase                                   unchanged: step loop, discontinuou
 - The solver study of RG20.9 (`python/testing/solverStudy.py` on `modelLibrary.py`) is the regression of orders and
   times for the new solvers beside generalized-alpha.
 
+### 8.5a As implemented (RG20.7.1, #3261)
+
+- `CSolverImplicitRungeKutta` (src/Solver/CSolverImplicitRungeKutta.h/.cpp) is a component of
+  `CSolverImplicitSecondOrderTimeInt`, not a subclass of `CSolverBase`: the implicit solver runs its `Step()` in
+  `Newton()` when `timeIntegration.solverType` is one of the four, so that the initial accelerations, the
+  discontinuous iteration, the output, the restart, `MainSolverImplicitSecondOrder` and the implicit branch of
+  `SolveDynamic` serve it without a new Main class. `StepSizeController.h` is the PI controller; ODE23 and DOPRI5 use
+  it in RG20.8.2.
+- The stage Newton: the Jacobians of the system (by q and by v, the mass matrix) at the last stage of the current
+  iterate, placed into the stage matrix by the coefficients of A and A^2 as sparse triplets; mu is h^2 times its
+  unknown; the rows scaled to entries of order 1 (ODE2 and ODE1 equations 1, constraints 1/h^2, velocity constraints
+  1/h); the convergence by the norm of the unscaled residual, as generalized-alpha.
+- Velocity-level constraints (`UsesVelocityLevel`) and the equations of a multiplier (an inactive constraint, a
+  diagonal of the AE-AE block) are special rows: with GGL their equation at each implicit stage and mu = 0, at the end
+  their equation at the last two stages.
+- Measured on modelLibrary.py (constant steps h, h/2, h/4 against LobattoIIIA4 with h/16): orders 2.0, 4.0, 4.0, 3.0
+  on the pendulum of mass points, the chain of rigid bodies on joints and on spring-dampers, the kinematic tree;
+  2 to 4 iterations per step. Lie group nodes (the slider crank): Newton converges at h = 1e-3 and stalls at a
+  floor of 2e-10 at h/16 - the stage Jacobian has no tangent operator (RG20.7.2). The genericDAE model fails as with
+  TrapezoidalIndex2: its constraintUserFunction ignores velocityLevel.
+
 ### 8.6 Cases to decide or to keep in mind
 
 - **Velocity-level and nonholonomic constraints** (rolling disc, `velocityLevel=True` of the joints, the

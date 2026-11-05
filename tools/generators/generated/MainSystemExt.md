@@ -213,7 +213,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`3SpringsDis
 (sec-mainsystemextensions-computelinearizedsystem)=
 #### Function: ComputeLinearizedSystem
 
-[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True, useSparseMatrices = False) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L432)
+[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True, useSparseMatrices = False) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L434)
 
 - **function description**: compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints; for computation of eigenvalues and advanced computation with constrained systems, see ComputeODE2Eigenvalues; the current implementation is also able to project into the constrained space, however, this currently does not generally work with non-holonomic systems - NOTE that this function is added to MainSystem via Python function ComputeLinearizedSystem.
 - **input**:
@@ -263,7 +263,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEig
 (sec-mainsystemextensions-computeode2eigenvalues)=
 #### Function: ComputeODE2Eigenvalues
 
-[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L573)
+[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L575)
 
 - **function description**: compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see {ref}`sec-mbs-systemdata`); with useSparseSolver=True, mass and stiffness matrices are computed and exported as sparse matrices (unless computeComplexEigenvalues or the projection of algebraic equations needs them dense). - NOTE that this function is added to MainSystem via Python function ComputeODE2Eigenvalues.
 - **input**:
@@ -325,7 +325,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscill
 (sec-mainsystemextensions-computesystemdegreeoffreedom)=
 #### Function: ComputeSystemDegreeOfFreedom
 
-[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L830)
+[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L832)
 
 - **function description**: compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True) - NOTE that this function is added to MainSystem via Python function ComputeSystemDegreeOfFreedom.
 - **input**:

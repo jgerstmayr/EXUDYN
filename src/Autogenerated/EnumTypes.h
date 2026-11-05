@@ -361,7 +361,11 @@ enum class DynamicSolverType {
     ODE23 = 8,             //!< an explicit Runge Kutta method with automatic step size selection with 3rd order of accuracy and 2nd order error estimation, see Bogacki and Shampine, 1989; also known as ODE23 in MATLAB
     DOPRI5 = 9,            //!< an explicit Runge Kutta method with automatic step size selection with 5th order of accuracy and 4th order error estimation, see  Dormand and Prince, 'A Family of Embedded Runge-Kutta Formulae.', J. Comp. Appl. Math. 6, 1980
     DVERK6 = 10,           //!< [NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 6th order with 5th order error estimation; includes adaptive step selection
-    VelocityVerlet = 11    //!< [TEST phase] a special explicit time integration scheme, the 'velocity Verlet' method (similar to leap frog method), with second order accuracy for conservative second order differential equations, often used for particle dynamics and contact; implementation uses Explicit Euler for ODE1 equations
+    VelocityVerlet = 11,   //!< [TEST phase] a special explicit time integration scheme, the 'velocity Verlet' method (similar to leap frog method), with second order accuracy for conservative second order differential equations, often used for particle dynamics and contact; implementation uses Explicit Euler for ODE1 equations
+    TrapezoidalGGL = 12,   //!< an implicit solver for index 3 problems: the trapezoidal rule with the constraints and the velocity constraints at the end of the step, the positions moved onto the constraints by a second multiplier (GGL stabilization); order 2, without numerical damping; automatic step size by the error of the embedded trapezoidal solution (#3261)
+    LobattoIIIA4 = 13,     //!< an implicit Runge-Kutta solver for index 3 problems: Lobatto IIIA with three stages (start, middle, end of the step), the constraints and the velocity constraints at the end of the step; order 4 in positions and velocities, without numerical damping; automatic step size by an error estimate of the order of the method (#3261)
+    LobattoIIIC4GGL = 14,  //!< an implicit Runge-Kutta solver for index 3 problems: Lobatto IIIC with three implicit stages, the constraints and velocity constraints at each stage with the GGL stabilization; order 4 in positions and velocities, L-stable (damps fast modes); automatic step size as LobattoIIIA4 (#3261)
+    Radau3 = 15            //!< an implicit Runge-Kutta solver for index 3 problems: Radau IIA with the stages at 1/3 and the end of the step, the constraints as LobattoIIIA4; order 3, L-stable; automatic step size as LobattoIIIA4 (#3261)
 };
 
 //! ostream operator for printing of DynamicSolverType
@@ -380,6 +384,10 @@ inline std::ostream& operator<<(std::ostream& os, DynamicSolverType value)
     case DynamicSolverType::DOPRI5: return os << "DOPRI5";
     case DynamicSolverType::DVERK6: return os << "DVERK6";
     case DynamicSolverType::VelocityVerlet: return os << "VelocityVerlet";
+    case DynamicSolverType::TrapezoidalGGL: return os << "TrapezoidalGGL";
+    case DynamicSolverType::LobattoIIIA4: return os << "LobattoIIIA4";
+    case DynamicSolverType::LobattoIIIC4GGL: return os << "LobattoIIIC4GGL";
+    case DynamicSolverType::Radau3: return os << "Radau3";
     default: return os << "DynamicSolverType::invalid";
     }
 }

@@ -296,7 +296,9 @@ def _SolveDynamic(mbs, simulationSettings, solverType, updateInitialValues, stor
         exudyn.Print('WARNING: SolveDynamic: mbs.systemIsConsistent=False, therefore calling mbs.Assemble() before solving; to avoid this, set autoAssemble=False')
         mbs.Assemble()
 
-    if (solverType == exudyn.DynamicSolverType.TrapezoidalIndex2 or solverType == exudyn.DynamicSolverType.GeneralizedAlpha):
+    if solverType in [exudyn.DynamicSolverType.TrapezoidalIndex2, exudyn.DynamicSolverType.GeneralizedAlpha,
+                      exudyn.DynamicSolverType.TrapezoidalGGL, exudyn.DynamicSolverType.LobattoIIIA4,
+                      exudyn.DynamicSolverType.LobattoIIIC4GGL, exudyn.DynamicSolverType.Radau3]: #the implicit Runge-Kutta methods in the implicit solver (#3261)
     
         dynamicSolver = exudyn.MainSolverImplicitSecondOrder()
         if storeSolver:

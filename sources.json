@@ -130,6 +130,7 @@
         "src/Solver/CSolver.cpp",
         "src/Solver/CSolverBase.cpp",
         "src/Solver/CSolverExplicit.cpp",
+        "src/Solver/CSolverImplicitRungeKutta.cpp",
         "src/Solver/CSolverImplicitSecondOrder.cpp",
         "src/Solver/CSolverStatic.cpp",
         "src/Solver/MainSolver.cpp",

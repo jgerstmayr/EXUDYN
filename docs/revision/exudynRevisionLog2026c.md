@@ -6032,6 +6032,23 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   qReference (two elbow solutions of a nearly stretched arm can lie closer to the reference than q), out of reach,
   the singular wrist, the Panda refused.
 
+<a id="rg20-7-1"></a>
+### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
+- Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;
+  the C++ needs the cases the prototypes refuse (velocity-level constraints, Lie group nodes).
+- Implemented as design section 8.5a: a component of the implicit second-order solver (no new Main class), the
+  method as data (GetMethod), the stage Newton of the Python _SolveRungeKutta with the Jacobian at the last stage and
+  H left out, the error estimates of one and of two steps, StepSizeController (the PI controller of _ErrorStepSize).
+- Two errors found on the way: the first Jacobian of a step was taken at the stage state of the previous step (at
+  the first step zero vectors - Euler parameters p = 0, a singular or wrong matrix, apparently random failures); the
+  residual norm was that of the scaled rows (h^2 times the forces), so that Newton stopped after one iteration at
+  small steps - now the unscaled norm, and the rows scaled to entries of order 1.
+- Orders measured (section 8.5a): 2, 4, 4, 3 on four models with constraints and Euler parameters; the automatic step
+  size works (mass on a spring, tolerance 1e-8: 180 steps from a maximum step of 0.05).
+- Open: Lie group nodes at small steps (RG20.7.2); per-step allocations of the triplets, the setting
+  timeIntegration.errorEstimate (RG20.7.3); ODE23 and DOPRI5 on StepSizeController (RG20.8.2).
+- implicitRungeKuttaSolversTest.py: the orders on the pendulum and the rigid body chain, the automatic step size.
+
 <a id="rg20-2-8"></a>
 ### RG20.2.8 — index 3 at the stages alone, measured (2026-11-05)
 - Maintainer: why not c(Q_i) = 0 at both implicit stages of Radau IIA or Lobatto (or one multiplier for both), index 3
