@@ -17,7 +17,7 @@ import exudyn.graphics as graphics
 #from exudyn.rigidBodyUtilities import *
 from exudyn.robotics import *
 from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration, ProfilePTP
-from exudyn.robotics.utilities import GetRoboticsToolboxInternalModel, LoadURDFrobot, GetURDFrobotData
+from exudyn.robotics.urdfImport import GetRoboticsToolboxInternalModel, LoadURDFrobot, GetURDFrobotData
 
 import numpy as np
 from numpy import linalg as LA

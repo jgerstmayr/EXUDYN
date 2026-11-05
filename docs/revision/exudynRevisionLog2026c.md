@@ -5894,7 +5894,13 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - symbolicLobatto4Test.py renamed to symbolicImplicitRungeKuttaTest.py (maintainer's approval), with the ODE1, data
   and errorEstimate cases; symbolicTrapezoidalGGLStepSizeTest.py with 'twoSteps' on the ball.
 
-<a id="rg19-2-2"></a>
+<a id="rg19-2-3"></a>
+### RG19.2.3 — the URDF import in exudyn.robotics.urdfImport (2026-11-05, #3256)
+- Decision 1 of the design (maintainer 2026-11-05): GetRoboticsToolboxInternalModel, LoadURDFrobot and
+  GetURDFrobotData moved unchanged from robotics/utilities.py to robotics/urdfImport.py; utilities.py keeps AddLidar
+  and the three names as deprecated wrappers; spotModel.py and serialRobotURDF.py import from urdfImport. The revision
+  of the import itself is RG19.3.
+
 ### RG19.2.2 — the problems found in the robotics module fixed (2026-11-05, #3255)
 - Maintainer: fix the problems of design section 2.1; the tool frame by the recommendation (the last link frame) also
   in the IK; the Panda of models.py named FrankaEmikaPanda; the Puma inertias by suitable values, said in the model;

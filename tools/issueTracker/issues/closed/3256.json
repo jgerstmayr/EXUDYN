@@ -1,0 +1,15 @@
+{
+  "number": 3256,
+  "title": "robotics: the URDF import in its own module exudyn.robotics.urdfImport",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "GetRoboticsToolboxInternalModel, LoadURDFrobot and GetURDFrobotData were in exudyn.robotics.utilities together with AddLidar. Decided: they move to exudyn.robotics.urdfImport (lowerCamelCase as the other module files), unchanged; the names in utilities stay as deprecated wrappers; the examples import from urdfImport.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 09:14",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "robotics: GetRoboticsToolboxInternalModel, LoadURDFrobot and GetURDFrobotData are in the new module exudyn.robotics.urdfImport; the names in exudyn.robotics.utilities are deprecated.",
+  "resolvedInVersion": "1.13.369"
+}

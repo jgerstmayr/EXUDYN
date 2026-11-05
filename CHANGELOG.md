@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 353 | 1.13.368 |
+| 1.13 | Newborn | 354 | 1.13.369 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.369** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics: the URDF import in its own module exudyn.robotics.urdfImport (#3256)
+  - description: GetRoboticsToolboxInternalModel, LoadURDFrobot and GetURDFrobotData were in exudyn.robotics.utilities together with AddLidar. Decided: they move to exudyn.robotics.urdfImport (lowerCamelCase as the other module files), unchanged; the names in utilities stay as deprecated wrappers; the examples import from urdfImport.
+  - **notes:** robotics: GetRoboticsToolboxInternalModel, LoadURDFrobot and GetURDFrobotData are in the new module exudyn.robotics.urdfImport; the names in exudyn.robotics.utilities are deprecated.
+  - date resolved: **2026-11-05 09:14**, date raised: 2026-11-05
 - **1.13.368** `FIX` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics: the tool frame on the last link frame in InverseKinematicsNumerical and CreateKinematicTree, the steps of InterpolateHTs, the Franka Emika Panda made a Robot, the Puma560 inertias physical (#3255)
   - description: InverseKinematicsNumerical put the tool on the joint frame of the last link, while Robot.LinkHT and Robot.Jacobian put it on the link frame (after localHT), so the IK of a pose from LinkHT failed for robots with a last localHT (UR5: 0.079 m); the tool graphics of CreateKinematicTree were on the joint frame as well. InverseKinematicsNumerical.InterpolateHTs took min instead of max of minSteps and the steps by rotation, so SolveSafe never interpolated. models.py: LinkDict2Robot refused dhMode modDHKK, the mode of the Panda, so the Panda could not be made a Robot; the Puma560 inertias of links 0 and 2 violated the triangle inequality of the principal moments. Decided: the tool HT is relative to the frame of the last link (DH convention, as the RTB) also in the IK and the kinematic tree graphics; InterpolateHTs takes the maximum; LinkDict2Robot builds modDHKK robots; ManipulatorPANDA renamed ManipulatorFrankaEmikaPanda (the old name deprecated); the Puma560 inertias adjusted to physical values.
   - **notes:** robotics: the tool HT is relative to the frame of the last link also in InverseKinematicsNumerical and in the tool graphics of CreateKinematicTree (as LinkHT and Jacobian); InverseKinematicsNumerical.InterpolateHTs takes the larger of minSteps and the steps by rotation; LinkDict2Robot builds robots of dhMode modDHKK; the Franka Emika Panda is ManipulatorFrankaEmikaPanda (ManipulatorPANDA deprecated), checked against the RTB 1.5 Panda: its standard DH parameters corrected, the COM of the last link in the flange frame, the tool the Franka hand; the Puma560 inertias of links 0 and 2 physical (the triangle inequality), said in its docstring.

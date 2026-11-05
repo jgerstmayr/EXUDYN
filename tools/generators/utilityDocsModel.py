@@ -127,6 +127,7 @@ filesParsed=[
              'robotics/motion.py',
              'robotics/special.py',
              'robotics/utilities.py',
+             'robotics/urdfImport.py',
              'shells.py',
              'signalProcessing.py',
              'solver.py',

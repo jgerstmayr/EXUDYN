@@ -341,8 +341,6 @@ python/exudyn/robotics/special.py
 python/exudyn/robotics/utilities.py
     DOC101: Function `AddLidar`: Docstring contains fewer arguments than in function signature.
     DOC103: Function `AddLidar`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [mbs: ].
-    DOC101: Function `LoadURDFrobot`: Docstring contains fewer arguments than in function signature.
-    DOC103: Function `LoadURDFrobot`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [manufacturer: ].
 --------------------
 python/exudyn/signalProcessing.py
     DOC104: Function `FilterSensorOutput`: Arguments are the same in the docstring and the function signature, but are in a different order.

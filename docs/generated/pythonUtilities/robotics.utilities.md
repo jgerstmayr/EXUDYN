@@ -3,14 +3,14 @@
 (sec-module-robotics.utilities)=
 # Module: robotics.utilities
 
-The utilities contains general helper functions for the robotics module
+The utilities contains general helper functions for the robotics module: the lidar sensors
 
 - **Date**: 2023-04-15
 
 (sec-utilities-addlidar)=
 ## Function: AddLidar
 
-[`AddLidar(mbs, generalContactIndex, positionOrMarker, minDistance = 0, maxDistance = 1e7, cylinderRadius = 0, lineLength = 1, numberOfSensors = 100, angleStart = 0, angleEnd = 2*np.pi, inclination = 0, rotation = np.eye(3), selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList, storeInternal = False, fileName = '', measureVelocity = False, addGraphicsObject = True, drawDisplaced = True, color = [1.0, 0.0, 0.0, 1.0])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L26)
+[`AddLidar(mbs, generalContactIndex, positionOrMarker, minDistance = 0, maxDistance = 1e7, cylinderRadius = 0, lineLength = 1, numberOfSensors = 100, angleStart = 0, angleEnd = 2*np.pi, inclination = 0, rotation = np.eye(3), selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList, storeInternal = False, fileName = '', measureVelocity = False, addGraphicsObject = True, drawDisplaced = True, color = [1.0, 0.0, 0.0, 1.0])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L25)
 
 - **function description**: Function to add many distance sensors to represent Lidar; sensors can be either placed on absolute position or attached to rigid body marker
 - **input**:
@@ -42,14 +42,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 (sec-utilities-getroboticstoolboxinternalmodel)=
 ## Function: GetRoboticsToolboxInternalModel
 
-[`GetRoboticsToolboxInternalModel(modelName = '', ignoreURDFerrors = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L89)
+[`GetRoboticsToolboxInternalModel(*args, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L89)
 
-- **function description**: Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in site-packages/rtbdata/xacro/. See the github project of roboticstoolbox-python of P. Corke and J. Haviland for more details. The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.__all__ !
-- **input**:
-  - `modelName`: string for model, such as UR5, Puma560, Panda or LBR
-  - `ignoreURDFerrors`: if set True, urdf errors are ignored and only the model is loaded
-- **output**: returns dictionary with 'robot' (RTB Robot class), 'urdf' which is the RTB representation of the URDF file for loading mesh files
-- **notes**: requires installation (pip install) of roboticstoolbox-python; in our tests we had problems with installers on newer Python and therefore tested with Python 3.9! Note that some models doe not include mass and inertia and therefore will not run as dynamic models!
+- **function description**: DEPRECATED: moved to exudyn.robotics.urdfImport
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex)
@@ -58,33 +53,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-utilities-loadurdfrobot)=
 ## Function: LoadURDFrobot
 
-[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L164)
+[`LoadURDFrobot(*args, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L94)
 
-- **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland. Use this function for loading urdf/xacro files.
-- **input**:
-  - `urdfFilePath`: string relative to urdfBasePath, representing xacro or urdf file
-  - `urdfBasePath`: string representing the base path of the urdf or xacro directory for the respective robot; the urdfBasePath is used to load further files which are given internally in urdf files, such as collision or mesh files
-  - `gripperLinks`: list of link numbers representing gripper (as used internally in RTB Robot class)
-- **output**: returns dictionary with 'robot' (RTB Robot class), 'urdf' which is the RTB representation of the URDF file for loading mesh files
-- **notes**: requires installation (pip install) of roboticstoolbox-python; in our tests we had problems with installers on newer Python and therefore tested with Python 3.9! Note that some models doe not include mass and inertia and therefore will not run as dynamic models!
+- **function description**: DEPRECATED: moved to exudyn.robotics.urdfImport
 
 
 (sec-utilities-geturdfrobotdata)=
 ## Function: GetURDFrobotData
 
-[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L206)
+[`GetURDFrobotData(*args, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L99)
 
-- **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
-- **input**:
-  - `robot`: a RTB Robot (class) model, as returned e.g. by LoadURDFrobot
-  - `urdf`: a RTB URDF (class) representing the URDF data, as returned e.g. by LoadURDFrobot
-  - `linkColorList`: if not None, this can contain a list of RGBA color lists for each link to prescribe colors instead of using internally stored colors or general color information (.obj files); set linkColorList=[graphics.color.red]*8 to set 8 link colors red; links are counted as in the urdf file and may be different from the number of joints
-  - `staticJointValues`: if not None, has to be a list of joint angles (or displacements) for computing the static graphics list
-  - `returnStaticGraphicsList`: return a list of GraphicsData which can be put into a ground to check visualization for zero joints, using: mbs.CreateGround(graphicsDataList=staticGraphicsList)
-  - `exportMesh`: if True, the returned dict also contains a meshSetList which refers to the MeshSet in pymeshlab, which can be used for debugging purposes
-  - `verbose`: 0 .. no output printed (only exceptions), 1 .. warnings, 2 .. further information
-- **output**: returns dictionary with items linkList, graphicsBaseList, graphicsToolList
-- **notes**: requires installation (pip install) of roboticstoolbox-python and pymeshlab; if pymeshlab is not installed, a warning is raised and graphics is ignored
+- **function description**: DEPRECATED: moved to exudyn.robotics.urdfImport
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex)

@@ -54,6 +54,7 @@ robotics.mobile
 robotics.motion
 robotics.special
 robotics.utilities
+robotics.urdfImport
 shells
 signalProcessing
 solver

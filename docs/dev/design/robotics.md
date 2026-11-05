@@ -295,7 +295,7 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
 - RG19.1 Analyze the robotics submodule and propose the revision (this note): .1 the code analysis (done), .2 the URDF
   import against RTB 1.5 and the local data set (with the maintainer's environment).
 - RG19.2 Clean up (.1 done: the commented-out code and the dead branches of all files except future.py, 220 lines,
-  #3254; .2 done: the problems of section 2.1, #3255): urdfImport.py, the commented code, future.py removed after RG19.6, exudyn.HT in the kinematics; the examples
+  #3254; .2 done: the problems of section 2.1, #3255; .3 done: urdfImport.py, #3256): the commented code, future.py removed after RG19.6, exudyn.HT in the kinematics; the examples
   and test models cleaned up a first time (sensors stored internally, PlotSensor, models.py data).
 - RG19.3 Revise the URDF import: the inertia check and correction, textures, flipped joints, the UR offset, the store
   and load of Exudyn robot models; tested with the RTB robots and the local data set in examples.
