@@ -16,7 +16,8 @@ You can view and download this file on Github: [staubliTX2trajectories.py](https
 #           straight line of the tool in Cartesian space with the joint coordinates by the analytic inverse kinematics
 #           (ProfileCartesianLinear), and back by a polynomial of degree 5. The control by Robot.SetControl and
 #           Robot.PreStepControl, without compensation of gravity; sensors of the joint angles and of the tool
-#           position, the deviation of the tool from the straight line printed.
+#           position, the deviation of the tool from the straight line printed. The meshes of the URDF of the robot by
+#           urdfImport.AddURDFgraphics if the local robot data set is found, else simple link graphics.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-05
@@ -30,15 +31,27 @@ import exudyn.graphics as graphics
 import exudyn.itemInterface as eii
 from exudyn.robotics import RobotBase, VRobotBase
 from exudyn.robotics.models import ManipulatorStaubliTX2_90L, LinkDict2Robot
+from exudyn.robotics.urdfImport import AddURDFgraphics
 from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration, ProfilePolynomial5, ProfileCartesianLinear
 import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform
 import numpy as np
+import os
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-robot = LinkDict2Robot(ManipulatorStaubliTX2_90L())
-robot.base = RobotBase(visualization=VRobotBase(graphicsData=[graphics.Cylinder([0, 0, 0], [0, 0, 0.3], 0.12, graphics.color.grey)]))
+robotDict = ManipulatorStaubliTX2_90L()
+robot = LinkDict2Robot(robotDict)
+#the meshes of the URDF, if the local robot data set is there (tmp/URDF of the repository, or give its path here)
+robotDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tmp', 'URDF')
+urdf = robotDict['urdfGraphics']
+urdfFile = os.path.join(robotDataPath, urdf['file'])
+if os.path.exists(urdfFile):
+    AddURDFgraphics(robot, urdfFile, urdf['links'], baseLinkName=urdf['baseLink'])
+else:
+    exu.Print('the URDF meshes were not found at', urdfFile, '; download the package from', urdf['source'],
+              'into', robotDataPath, '; the example continues with simple link graphics')
+    robot.base = RobotBase(visualization=VRobotBase(graphicsData=[graphics.Cylinder([0, 0, 0], [0, 0, 0.3], 0.12, graphics.color.grey)]))
 
 #the trajectory: joint space, then a straight line of the tool, then back
 q0 = np.array([0, 0.5, 1.4, 0, 1.2, 0])

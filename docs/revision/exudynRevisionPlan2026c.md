@@ -3148,6 +3148,10 @@ CLOSED 2026-11-05 (#3256): the three functions moved unchanged, deprecated wrapp
 
 Design section 3.
 
+#### **CLOSED_RG19.3.1** The meshes of a URDF as the graphics of a Robot, without the RTB: LoadURDFgraphics, AddURDFgraphics; the TX2-90L with its meshes
+
+CLOSED 2026-11-05 (#3263): STL read with numpy, the orientation and smoothing as options; the model names its URDF. [log](exudynRevisionLog2026c.md#rg19-3-1)
+
 ### **OPEN_RG19.4** Revise Robot: q0, one control description with friction and end stops for both models, the control as PreStepUserFunction, AddSensors, the static and dynamic compensation from the kinematic tree
 
 Design section 3.

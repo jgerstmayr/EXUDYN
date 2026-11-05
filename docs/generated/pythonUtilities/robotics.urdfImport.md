@@ -12,7 +12,7 @@ MakeCorkeRobot, an RTB robot of the DH parameters of a robot dictionary of exudy
 (sec-urdfimport-getroboticstoolboxinternalmodel)=
 ## Function: GetRoboticsToolboxInternalModel
 
-[`GetRoboticsToolboxInternalModel(modelName = '', ignoreURDFerrors = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L28)
+[`GetRoboticsToolboxInternalModel(modelName = '', ignoreURDFerrors = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L29)
 
 - **function description**: Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in site-packages/rtbdata/xacro/. See the github project of roboticstoolbox-python of P. Corke and J. Haviland for more details. The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.__all__ !
 - **input**:
@@ -28,7 +28,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-loadurdfrobot)=
 ## Function: LoadURDFrobot
 
-[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L103)
+[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L104)
 
 - **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland. Use this function for loading urdf/xacro files.
 - **input**:
@@ -43,7 +43,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-geturdfrobotdata)=
 ## Function: GetURDFrobotData
 
-[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L146)
+[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L147)
 
 - **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
 - **input**:
@@ -64,7 +64,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-makecorkerobot)=
 ## Function: MakeCorkeRobot
 
-[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L338)
+[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L339)
 
 - **function description**: makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters
 - **input**:
@@ -72,3 +72,39 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **output**: serial robot object by corke
 - **author**: Martin Sereinig
 - **notes**: DH Parameter Information: stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha) modDH = [alpha, dx, theta, rz] with used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d) used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r) Important note:  d(khali)=a(corke)  and r(khali)=d(corke)
+
+
+(sec-urdfimport-loadurdfgraphics)=
+## Function: LoadURDFgraphics
+
+[`LoadURDFgraphics(urdfFile, packagePath = None, color = None, invertTriangles = True, orientTriangles = True, smoothNormals = True, smoothingAngle = 0.25*np.pi, addEdges = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L414)
+
+- **function description**: the visual meshes of the links of a URDF file as Exudyn graphics, without the Robotics Toolbox (#3263): for each <link> its <visual> elements with a mesh of an STL file (binary or text, read with numpy), their <origin> and scale, and the color of their <material>; meshes of other formats and the shapes box, cylinder, sphere are skipped with a warning. The triangles of STL files are often not oriented consistently, and their normals are those of the triangles: the options invert them, orient them (graphics.OrientTriangles) and smoothen the normals (graphics.AddEdgesAndSmoothenNormals), as the meshes of a URDF need
+- **input**:
+  - `urdfFile`: the path of the URDF file
+  - `packagePath`: the directory that contains the packages of the mesh file names package://package/...; None: the directory above the package of the URDF file (the layout package/urdf/robot.urdf of ROS packages)
+  - `color`: None, the colors of the URDF materials (grey without one); or one RGBA color for all meshes
+  - `invertTriangles`: if True, the orientation of the triangles of the STL file inverted, into the one of Exudyn (as graphics.FromSTLfile); False for meshes that come inside out
+  - `orientTriangles`: if True, then the triangles of each mesh oriented consistently, closed parts outward; an open surface (the meshes of many URDFs) keeps the orientation that most of its triangles have
+  - `smoothNormals`: if True, the normals smoothened at the points, except at edges sharper than smoothingAngle; else the normals of the triangles
+  - `smoothingAngle`: the angle between two triangles (in radians) above which their common edge stays sharp
+  - `addEdges`: if True, the sharp edges added as lines
+- **output**: a dict of the link names to lists of graphics data in the frame of the link
+
+
+(sec-urdfimport-addurdfgraphics)=
+## Function: AddURDFgraphics
+
+[`AddURDFgraphics(robot, urdfFile, linkNames, baseLinkName = None, packagePath = None, color = None, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L489)
+
+- **function description**: the graphics of a Robot from the visual meshes of a URDF file (#3263), for a robot whose link frames are the frames of the URDF links, as the models of exudyn.robotics.models with dhMode 'jointFrames' (e.g. ManipulatorStaubliTX2_90L, whose dict names the URDF and its links in 'urdfGraphics'); the joint and COM graphics of the links switched off; further keyword arguments go to LoadURDFgraphics (invertTriangles, orientTriangles, smoothNormals, smoothingAngle, addEdges)
+- **input**:
+  - `robot`: the exudyn.robotics.Robot
+  - `urdfFile`: the path of the URDF file
+  - `linkNames`: the names of the URDF links of the robot links, one per link
+  - `baseLinkName`: None, or the name of the URDF link of the base
+  - `packagePath`: as LoadURDFgraphics
+  - `color`: as LoadURDFgraphics
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex)

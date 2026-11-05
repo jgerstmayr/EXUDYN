@@ -382,11 +382,13 @@ def DeprecatedLibrary():
 def SubmodulesNotLoaded():
     """the submodules of exudyn that 'import exudyn' does not load"""
     os.environ.setdefault('EXUDYN_NO_USER_SETTINGS', '1')
+    #in a new interpreter: in this one, other code may have imported a submodule already (a test before, #3263)
+    code = ('import pkgutil, exudyn; print(" ".join(m.name for m in pkgutil.iter_modules(exudyn.__path__) '
+            'if not hasattr(exudyn, m.name) and not m.name.startswith("_")))')
     try:
-        import pkgutil                                                      # noqa: PLC0415
-        import exudyn                                                       # noqa: PLC0415
-        return set(module.name for module in pkgutil.iter_modules(exudyn.__path__)
-                   if not hasattr(exudyn, module.name) and not module.name.startswith('_'))
+        import subprocess                                                   # noqa: PLC0415
+        result = subprocess.run([sys.executable, '-c', code], capture_output=True, text=True, timeout=120)
+        return set(result.stdout.split()) if result.returncode == 0 else set()
     except Exception:                                                        # noqa: BLE001
         return set()
 

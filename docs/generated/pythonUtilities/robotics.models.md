@@ -89,7 +89,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 
 - **function description**: generate the Staubli TX2-90L manipulator as robot dictionary, with the joint frames of its URDF (dhMode 'jointFrames': per link the joint type and the translation from the previous joint frame; all link frames parallel at q = 0, the arm upright); a 6R robot with a spherical wrist, for KinematicChain.InverseKinematicsAnalytic
 - **output**: robot dictionary for LinkDict2Robot
-- **notes**: the kinematics, the joint limits and the maximum joint velocities are those of tx2_90l.urdf of the ros-industrial staubli_experimental repository (https://github.com/ros-industrial/staubli_experimental, staubli_tx2_90_support); the URDF has no inertia data: the masses (about 77 kg of the arm without the base, of 114 kg in the data sheet) and the inertias of cylinders are estimates for simulation, not data of the manufacturer; the tool frame is the flange, 0.1 m after the wrist center
+- **notes**: the kinematics, the joint limits and the maximum joint velocities are those of tx2_90l.urdf of the ros-industrial staubli_experimental repository (https://github.com/ros-industrial/staubli_experimental, staubli_tx2_90_support); the URDF has no inertia data: the masses (about 77 kg of the arm without the base, of 114 kg in the data sheet) and the inertias of cylinders are estimates for simulation, not data of the manufacturer; the tool frame is the flange, 0.1 m after the wrist center; 'urdfGraphics' names the URDF file and its links for exudyn.robotics.urdfImport.AddURDFgraphics, which adds the meshes of the URDF
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM)
@@ -98,7 +98,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2t
 (sec-models-linkdict2robot)=
 ## Function: LinkDict2Robot
 
-[`LinkDict2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L616)
+[`LinkDict2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L621)
 
 - **function description**: generate serial manipulator as robotClass object from robotLinkDict
 - **input**:
@@ -115,7 +115,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-models-linkdictmoddhkk2robot)=
 ## Function: LinkDictModDHKK2Robot
 
-[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L702)
+[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L707)
 
 - **function description**: special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
 - **input**:

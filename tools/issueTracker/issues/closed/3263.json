@@ -1,0 +1,15 @@
+{
+  "number": 3263,
+  "title": "Robotics: the meshes of a URDF as the graphics of a Robot, without the Robotics Toolbox",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "The graphics of a URDF were available only through the RTB and pymeshlab in GetURDFrobotData, together with the import of the whole robot; a model of models.py could not show the meshes of its URDF. Decided: LoadURDFgraphics reads the visual STL meshes of a URDF with numpy (package paths, origin, scale, material color), with options for the orientation of the triangles (inverted from STL, oriented outward) and smoothened normals; AddURDFgraphics puts them on the links and the base of a Robot whose link frames are the URDF link frames; ManipulatorStaubliTX2_90L names its URDF in urdfGraphics; the example works with and without the local data.",
+  "dateRaised": "2026-11-05",
+  "deadline": "2027-05-04",
+  "dateResolved": "2026-11-05 14:45",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.robotics.urdfImport: LoadURDFgraphics reads the visual STL meshes of a URDF without the Robotics Toolbox (package paths, origin, scale, material color), with the options invertTriangles, orientTriangles, smoothNormals, smoothingAngle and addEdges; AddURDFgraphics puts them on the links and the base of a Robot; ManipulatorStaubliTX2_90L names its URDF in 'urdfGraphics', and staubliTX2trajectories.py shows the meshes when the local robot data are found.",
+  "resolvedInVersion": "1.13.376"
+}

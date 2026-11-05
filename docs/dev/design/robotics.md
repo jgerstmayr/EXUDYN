@@ -186,6 +186,12 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   ProfileCartesianLinear (the tool on the straight line to 5e-16, the joint velocities by the Jacobian to 7e-10 of the
   difference of the coordinates); staubliTX2trajectories.py with PD control without compensation: the tool 5.8 mm off
   the line (gravity), 0.55 mm with compensation='static'.
+- **URDF graphics without the RTB** (#3263): LoadURDFgraphics reads the visual meshes (STL, binary or text, with
+  numpy) with package paths, origin, scale and material color; the STL triangles inverted into Exudyn's orientation
+  (as graphics.FromSTLfile), oriented consistently (OrientTriangles; the TX2-90 meshes are open surfaces, consistent,
+  none flipped) and the normals smoothened (AddEdgesAndSmoothenNormals, edges above 45 degrees sharp) - each an option,
+  as URDFs differ; 2.8 s for the 56000 triangles of the TX2-90L. AddURDFgraphics on the links of a model of
+  dhMode 'jointFrames'; a model names its URDF, base and links in 'urdfGraphics'.
 - **After #3255**: the IK of a pose `LinkHT(q)[-1] * tool.HT` from 0.1 / 0.5 rad off: UR5 39 / 35 of 40, Puma560 39 /
   31 of 40; SolveSafe, which now interpolates, 12 of 40 for both (from 8 to 10) at 6 to 8 ms - the random poses are far
   apart, a robust numerical IK is the LM of RG19.6. The Panda of models.py: the modified DH parameters, the tool (the

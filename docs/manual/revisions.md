@@ -481,7 +481,9 @@ use these instead of `ComputeIK3R`, `ComputeIKPuma560` and `ComputeIKUR` (#3260)
 (kinematics of the URDF, estimated inertias), the profiles `ProfilePolynomial5` and `ProfileCartesianLinear` (a straight
 line of the tool, the joint coordinates by the analytic inverse kinematics at each evaluation), and
 `Robot.SetControl(trajectory, compensation)` with `mbs.SetPreStepUserFunction(robot.PreStepControl)` for the joint
-control of the kinematic tree; see the example staubliTX2trajectories.py (#3262).
+control of the kinematic tree; see the example staubliTX2trajectories.py (#3262). `urdfImport.LoadURDFgraphics` reads
+the visual STL meshes of a URDF without the Robotics Toolbox, with options for the orientation of the triangles and
+smoothened normals, and `AddURDFgraphics` puts them on the links of a Robot; the TX2-90L names its URDF for it (#3263).
 
 **Implicit Runge-Kutta solvers in C++.** `DynamicSolverType.TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL` and
 `Radau3` run with `mbs.SolveDynamic` on every model of the implicit solver: index-3 constraints without index

@@ -21,7 +21,8 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'MakeCorkeRobot',
+    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'MakeCorkeRobot', 'LoadURDFgraphics',
+    'AddURDFgraphics',
     ]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -376,3 +377,141 @@ def MakeCorkeRobot(robotDic):
                           'Corke ("pip install roboticstoolbox-python"); the original error was: '+str(e)) from e
 
     return robotCorke
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the visual meshes of a URDF file without the RTB (#3263)
+
+def _ReadSTL(fileName):
+    """the triangles of an STL file, binary or text, as an array (nTriangles, 3, 3) of the points and (nTriangles, 3) of the
+    normals; numpy only"""
+    with open(fileName, 'rb') as file:
+        data = file.read()
+    if len(data) >= 84:
+        count = int(np.frombuffer(data, dtype='<u4', count=1, offset=80)[0])
+        if 84 + 50*count == len(data): #binary
+            records = np.frombuffer(data, dtype=np.dtype([('normal', '<f4', 3), ('points', '<f4', (3, 3)), ('attribute', '<u2')]),
+                                    count=count, offset=84)
+            return (records['points'].astype(float), records['normal'].astype(float))
+    values = [line.split()[1:] for line in data.decode('ascii', errors='replace').splitlines()
+              if line.strip().startswith(('vertex', 'facet'))]
+    normals = np.array([v[1:4] for v in values if v[0] == 'normal'], dtype=float)
+    points = np.array([v for v in values if v[0] != 'normal'], dtype=float).reshape((-1, 3, 3))
+    return (points, normals)
+
+
+def _URDForigin(element):
+    """the HT of an <origin xyz rpy> element (None: identity); rpy as in URDF, R = Rz(yaw) Ry(pitch) Rx(roll)"""
+    H = exudyn.HT()
+    if element is None:
+        return H
+    xyz = [float(x) for x in element.get('xyz', '0 0 0').split()]
+    (r, p, y) = [float(x) for x in element.get('rpy', '0 0 0').split()]
+    R = exudyn.HT().SetRotationZ(y)*exudyn.HT().SetRotationY(p)*exudyn.HT().SetRotationX(r)
+    return exudyn.HT(rotation=np.array(R.rotation), translation=xyz)
+
+
+def LoadURDFgraphics(urdfFile, packagePath=None, color=None, invertTriangles=True, orientTriangles=True,
+                     smoothNormals=True, smoothingAngle=0.25*np.pi, addEdges=False):
+    """the visual meshes of the links of a URDF file as Exudyn graphics, without the Robotics Toolbox (#3263): for each
+    <link> its <visual> elements with a mesh of an STL file (binary or text, read with numpy), their <origin> and scale,
+    and the color of their <material>; meshes of other formats and the shapes box, cylinder, sphere are skipped with a
+    warning. The triangles of STL files are often not oriented consistently, and their normals are those of the
+    triangles: the options invert them, orient them (graphics.OrientTriangles) and smoothen the normals
+    (graphics.AddEdgesAndSmoothenNormals), as the meshes of a URDF need
+
+    Args:
+        urdfFile: the path of the URDF file
+        packagePath: the directory that contains the packages of the mesh file names package://package/...; None: the
+            directory above the package of the URDF file (the layout package/urdf/robot.urdf of ROS packages)
+        color: None, the colors of the URDF materials (grey without one); or one RGBA color for all meshes
+        invertTriangles: if True, the orientation of the triangles of the STL file inverted, into the one of Exudyn (as
+            graphics.FromSTLfile); False for meshes that come inside out
+        orientTriangles: if True, then the triangles of each mesh oriented consistently, closed parts outward; an open
+            surface (the meshes of many URDFs) keeps the orientation that most of its triangles have
+        smoothNormals: if True, the normals smoothened at the points, except at edges sharper than smoothingAngle;
+            else the normals of the triangles
+        smoothingAngle: the angle between two triangles (in radians) above which their common edge stays sharp
+        addEdges: if True, the sharp edges added as lines
+
+    Returns:
+        a dict of the link names to lists of graphics data in the frame of the link
+    """
+    import xml.etree.ElementTree as ElementTree
+    import os
+    if packagePath is None:
+        packagePath = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(urdfFile))))
+    root = ElementTree.parse(urdfFile).getroot()
+    materials = {m.get('name'): m.find('color') for m in root.findall('material')}
+    linkGraphics = {}
+    for link in root.findall('link'):
+        graphicsList = []
+        for visual in link.findall('visual'):
+            mesh = visual.find('geometry/mesh')
+            if mesh is None:
+                exudyn.Print('WARNING: LoadURDFgraphics: link ' + str(link.get('name')) + ': only meshes are loaded')
+                continue
+            fileName = mesh.get('filename')
+            if fileName.startswith('package://'):
+                fileName = os.path.join(packagePath, fileName[len('package://'):])
+            elif not os.path.isabs(fileName):
+                fileName = os.path.join(os.path.dirname(os.path.abspath(urdfFile)), fileName)
+            if not fileName.lower().endswith('.stl'):
+                exudyn.Print('WARNING: LoadURDFgraphics: ' + fileName + ' skipped; only STL files are read')
+                continue
+            rgba = [0.6, 0.6, 0.6, 1.]
+            material = visual.find('material')
+            if material is not None:
+                colorElement = material.find('color')
+                if colorElement is None:
+                    colorElement = materials.get(material.get('name'))
+                if colorElement is not None:
+                    rgba = [float(x) for x in colorElement.get('rgba').split()]
+            if color is not None:
+                rgba = list(color)
+            scale = [float(x) for x in mesh.get('scale', '1 1 1').split()]
+            H = _URDForigin(visual.find('origin'))
+            points = _ReadSTL(fileName)[0] #the normals of the file are recomputed
+            points = (points*scale) @ np.array(H.rotation).T + np.array(H.translation)
+            nPoints = 3*len(points)
+            gData = {'type': 'TriangleList', 'colors': np.tile(rgba, nPoints), 'points': points.flatten(),
+                     'triangles': np.arange(nPoints - 1, -1, -1) if invertTriangles else np.arange(nPoints)}
+            if orientTriangles:
+                gData = graphics.OrientTriangles(gData, outward=True, normals='remove')
+            if smoothNormals or addEdges:
+                gData = graphics.AddEdgesAndSmoothenNormals(gData, edgeAngle=smoothingAngle, addEdges=addEdges,
+                                                            smoothNormals=smoothNormals)
+            graphicsList += [gData]
+        linkGraphics[link.get('name')] = graphicsList
+    return linkGraphics
+
+
+def AddURDFgraphics(robot, urdfFile, linkNames, baseLinkName=None, packagePath=None, color=None, **options):
+    """the graphics of a Robot from the visual meshes of a URDF file (#3263), for a robot whose link frames are the
+    frames of the URDF links, as the models of exudyn.robotics.models with dhMode 'jointFrames' (e.g.
+    ManipulatorStaubliTX2_90L, whose dict names the URDF and its links in 'urdfGraphics'); the joint and COM graphics of
+    the links switched off; further keyword arguments go to LoadURDFgraphics (invertTriangles, orientTriangles,
+    smoothNormals, smoothingAngle, addEdges)
+
+    Args:
+        robot: the exudyn.robotics.Robot
+        urdfFile: the path of the URDF file
+        linkNames: the names of the URDF links of the robot links, one per link
+        baseLinkName: None, or the name of the URDF link of the base
+        packagePath: as LoadURDFgraphics
+        color: as LoadURDFgraphics
+    """
+    if len(linkNames) != len(robot.links):
+        raise ValueError('AddURDFgraphics: linkNames must have one name per link (' + str(len(robot.links)) + ')')
+    linkGraphics = LoadURDFgraphics(urdfFile, packagePath, color, **options)
+    from copy import copy
+    from exudyn.robotics.roboticsCore import VRobotBase
+    for (link, name) in zip(robot.links, linkNames):
+        if name not in linkGraphics:
+            raise ValueError('AddURDFgraphics: the URDF file has no link ' + str(name))
+        link.visualization = copy(link.visualization) #a default VRobotLink may be shared by links
+        link.visualization.graphicsData = linkGraphics[name]
+        link.visualization.showMBSjoint = False
+        link.visualization.showCOM = False
+    if baseLinkName is not None:
+        robot.base.visualization = VRobotBase(graphicsData=linkGraphics[baseLinkName])

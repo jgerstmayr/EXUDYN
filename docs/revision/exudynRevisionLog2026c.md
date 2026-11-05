@@ -6047,6 +6047,20 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - The local data set copied to tmp/URDF (staubli, spot, mars rover, anymal, kuka).
 - robotTrajectoryProfilesTest.py; Examples/staubliTX2trajectories.py (4.5 s, 4500 steps of generalized-alpha).
 
+<a id="rg19-3-1"></a>
+### RG19.3.1 — the meshes of a URDF as the graphics of a Robot, without the RTB (2026-11-05, #3263)
+- Maintainer 2026-11-05: the Staubli with the graphics of its URDF, working with and without the data; the mesh
+  inverted into the orientation of Exudyn and smoothened, as options of the loader.
+- urdfImport.py: _ReadSTL (binary and text STL with numpy; numpy-stl not needed), LoadURDFgraphics (xml.etree; the
+  options invertTriangles, orientTriangles, smoothNormals, smoothingAngle, addEdges), AddURDFgraphics (copies the
+  link visualization, which a default argument may share; the joint and COM graphics off).
+- models.py: 'urdfGraphics' of ManipulatorStaubliTX2_90L (file relative to the data set, base, links, source link);
+  staubliTX2trajectories.py with the meshes from tmp/URDF or the simple graphics and a message.
+- First attempt with the orientation and the normals of FromSTLfile copied (both inverted): the maintainer saw it
+  inside out in the renderer (fine in the raytracer); the normals of the files are not used now.
+- test_urdfGraphics.py: a URDF and binary and text STL of a brick written by the test; origin, scale, color, the
+  orientation outward and inside out without the inversion, the links of a Robot.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

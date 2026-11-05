@@ -582,7 +582,8 @@ def ManipulatorStaubliTX2_90L():
         ros-industrial staubli_experimental repository (https://github.com/ros-industrial/staubli_experimental,
         staubli_tx2_90_support); the URDF has no inertia data: the masses (about 77 kg of the arm without the base, of
         114 kg in the data sheet) and the inertias of cylinders are estimates for simulation, not data of the
-        manufacturer; the tool frame is the flange, 0.1 m after the wrist center
+        manufacturer; the tool frame is the flange, 0.1 m after the wrist center; 'urdfGraphics' names the URDF file and
+        its links for exudyn.robotics.urdfImport.AddURDFgraphics, which adds the meshes of the URDF
     """
     def Cylinder(mass, length, radius):
         """the inertia of a cylinder along z about its center"""
@@ -606,6 +607,10 @@ def ManipulatorStaubliTX2_90L():
             'referenceConfiguration': [0.]*6,
             'Pcontrol': np.array([4e4, 4e4, 2e4, 2e3, 2e3, 5e2]),
             'Dcontrol': np.array([4e2, 4e2, 2e2, 2e1, 2e1, 5.]),
+            #the meshes for urdfImport.AddURDFgraphics, the file relative to the local robot data set (#3263)
+            'urdfGraphics': {'file': 'staubli/staubli_tx2_90_support/urdf/tx2_90l.urdf', 'baseLink': 'base_link',
+                             'links': ['link_' + str(i) for i in range(1, 7)],
+                             'source': 'https://github.com/ros-industrial/staubli_experimental/tree/256a71acea2161b64e12af1a6b925a7f26695007/staubli_tx2_90_support'},
             }
 
 

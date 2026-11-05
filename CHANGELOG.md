@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 360 | 1.13.375 |
+| 1.13 | Newborn | 361 | 1.13.376 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.376** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robotics: the meshes of a URDF as the graphics of a Robot, without the Robotics Toolbox (#3263)
+  - description: The graphics of a URDF were available only through the RTB and pymeshlab in GetURDFrobotData, together with the import of the whole robot; a model of models.py could not show the meshes of its URDF. Decided: LoadURDFgraphics reads the visual STL meshes of a URDF with numpy (package paths, origin, scale, material color), with options for the orientation of the triangles (inverted from STL, oriented outward) and smoothened normals; AddURDFgraphics puts them on the links and the base of a Robot whose link frames are the URDF link frames; ManipulatorStaubliTX2\_90L names its URDF in urdfGraphics; the example works with and without the local data.
+  - **notes:** exudyn.robotics.urdfImport: LoadURDFgraphics reads the visual STL meshes of a URDF without the Robotics Toolbox (package paths, origin, scale, material color), with the options invertTriangles, orientTriangles, smoothNormals, smoothingAngle and addEdges; AddURDFgraphics puts them on the links and the base of a Robot; ManipulatorStaubliTX2\_90L names its URDF in 'urdfGraphics', and staubliTX2trajectories.py shows the meshes when the local robot data are found.
+  - date resolved: **2026-11-05 14:45**, date raised: 2026-11-05
 - **1.13.375** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Robotics: Staubli TX2-90L model, quintic and Cartesian linear profiles, Robot.SetControl and PreStepControl (#3262)
   - description: models.py has no Staubli robot, motion.py no quintic polynomial profile and no Cartesian path, and every robot example writes its own PreStepUserFunction for the joint control. Decided: ManipulatorStaubliTX2\_90L from the joint frames of its URDF (dhMode jointFrames, estimated inertias); ProfilePolynomial5 and ProfileCartesianLinear (the tool on a straight line with the rotation on SO(3), the joint coordinates by the analytic IK at each evaluation); Robot.SetControl(trajectory, compensation) and Robot.PreStepControl(mbs, t) for the kinematic tree; an example of the TX2-90L with joint-space and Cartesian trajectories.
   - **notes:** exudyn.robotics: ManipulatorStaubliTX2\_90L (the kinematics of its URDF, estimated inertias) and dhMode 'jointFrames' of LinkDict2Robot; the profiles ProfilePolynomial5 and ProfileCartesianLinear (a straight line of the tool, the joint coordinates by the analytic inverse kinematics at each evaluation); Robot.SetControl(trajectory, compensation) and Robot.PreStepControl(mbs, t) for the joint control of the kinematic tree; the example staubliTX2trajectories.py.
