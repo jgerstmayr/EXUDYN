@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 402 | 1.13.417 |
+| 1.13 | Newborn | 403 | 1.13.418 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.418** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` LinkedDataVector cannot be copied (#3302)
+  - description: LinkedDataVectorBase had the implicit copy constructor, which calls the copy constructor of VectorBase: a copy allocated memory and copied the data, and the destructor of LinkedDataVectorBase, which sets data to nullptr, never freed it - a leak and an allocation per copy, as the conditional expression in ObjectKinematicTree had (\#3291). Decided: the copy constructor is deleted, so that the compiler refuses every copy; linking is done by LinkDataTo or a constructor.
+  - **notes:** LinkedDataVector cannot be copied: its copy constructor allocated memory that was never freed; the compiler now refuses a copy, and none is left in the code.
+  - date resolved: **2026-11-06 17:02**, date raised: 2026-11-06
 - **1.13.417** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Test models that repeat a model of modelLibrary.py (#3301)
   - description: revision2026c step RG20.9.2: list the test models whose model is one of modelLibrary.py and use GetModel where this makes them shorter without hiding what they test. Decided: a test model is changed only if its model is the library model itself, not a variant of it.
   - **notes:** Checked: no test model repeats a model of modelLibrary.py - each closest one is a variant of it for what it tests - so none was changed.

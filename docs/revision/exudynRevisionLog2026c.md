@@ -6427,6 +6427,14 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg5-1-5"></a>
+### RG5.1.5 — LinkedDataVector cannot be copied (2026-11-06, #3302)
+- LinkedDataVectorBase had the implicit copy constructor: it calls VectorBase(const VectorBase&), which allocates and
+  copies (and counts a linkedDataVectorCast with runtime checks), and ~LinkedDataVectorBase sets data to nullptr, so
+  the copy was never freed - an allocation and a leak per copy, the case of ObjectKinematicTree in #3291.
+- Probe: the copy constructor declared deleted; the regular and the fast module (exudev build --fast) compile, so no
+  copy is left in the code. Kept deleted, so that the compiler refuses every new copy. The suite and pytest pass.
+
 <a id="rg20-9-2"></a>
 ### RG20.9.2 — the test models that repeat a model of the library (2026-11-06, #3301)
 - Compared each model of modelLibrary.py with the test models of the same kind:

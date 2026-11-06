@@ -43,6 +43,9 @@ class LinkedDataVectorBase : public VectorBase<T>
 public:
     //! default constructor, does not link yet (data=nullptr means no linking)
     LinkedDataVectorBase() : VectorBase<T>() {}
+    //! no copy: the copy of VectorBase<T> would allocate memory, which the destructor of LinkedDataVectorBase never frees;
+    //! link with LinkDataTo or a constructor instead (#3302)
+    LinkedDataVectorBase(const LinkedDataVectorBase& other) = delete;
 
 	//! links data to VectorBase<T> (also resizable VectorBase<T>); no copying!
     //! @todo check a way to eliminate the const_cast for LinkedDataVectorBase(const VectorBase<T>& vector)

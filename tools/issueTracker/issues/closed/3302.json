@@ -1,0 +1,16 @@
+{
+  "number": 3302,
+  "title": "LinkedDataVector cannot be copied",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "LinkedDataVectorBase had the implicit copy constructor, which calls the copy constructor of VectorBase: a copy allocated memory and copied the data, and the destructor of LinkedDataVectorBase, which sets data to nullptr, never freed it - a leak and an allocation per copy, as the conditional expression in ObjectKinematicTree had (#3291). Decided: the copy constructor is deleted, so that the compiler refuses every copy; linking is done by LinkDataTo or a constructor.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 17:02",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/LinkedDataVector.h",
+  "releaseNotes": "LinkedDataVector cannot be copied: its copy constructor allocated memory that was never freed; the compiler now refuses a copy, and none is left in the code.",
+  "resolvedInVersion": "1.13.418"
+}

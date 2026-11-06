@@ -484,6 +484,10 @@ From #728.
 
 #142, #161, #710.
 
+#### **CLOSED_RG5.1.5** Forbid the copy of LinkedDataVector
+
+CLOSED 2026-11-06 (#3302): the implicit copy constructor allocated through VectorBase and leaked, as the destructor never frees; deleted - the regular and the fast module compile without a single copy, so none was left after #3291. [log](exudynRevisionLog2026c.md#rg5-1-5)
+
 ### **OPEN_RG5.2** Make the hot linear algebra vectorizable with compile-time sizes
 
 The solver time of long-vector models sits in `ODE2RHS` - per-object 3x3 and short-vector work - and
