@@ -6427,6 +6427,35 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-4-4"></a>
+### RG20.4.4 and RG20.9.12 — the interpolated output on the solver page, the study figures revised; LobattoIIIC4GGL evaluated (2026-11-06, #3310, #3311, #3312, #3313)
+- Maintainer 2026-11-06: no information on the interpolated output of RG20.4.2 found; no real advantage of
+  LobattoIIIC4GGL seen - keep it?; why the multipliers of rigidBodySpringDampers do not converge, also with
+  generalized-alpha; the efficiency figure split into constant and automatic steps, with larger ranges.
+- #3310: solver.md, section Output of the solution and the sensors (sec-solver-output) in General solver structure:
+  the write times, the Hermite polynomial of the ODE2 coordinates, the linear interpolation of the others and of Lie
+  group nodes, the data coordinates of the end, automatic steps, the static solver, the symbolic solvers.
+- #3311, the multipliers: the algebraic coordinates of rigidBodySpringDampers are the multipliers of the three Euler
+  parameter constraints, and they are zero in the exact solution - the mass matrix G^T J G and the forces G^T (...)
+  have no component along theta (G theta = 0), so the row theta^T of the equations of motion gives 2 |theta|^2 lambda
+  = 0. The reference was 0 to 1e-12, divided by max(norm, 1e-14): 1 to 1e4 for every solver. A group whose
+  reference has an L2 norm below 1e-10 is left out of the figures now (in Plot, the stored data unchanged).
+- #3311, the efficiency: efficiency_models.png with constant steps, efficiency_adaptive.png (new) with the tolerances
+  1e-2 ... 1e-10, both 2x2 and 4.2 x 3.4 in per subplot; the automatic-step runs computed again. The global error at
+  the end lies 10 to 200 times above the tolerance; at 1e-2 to 1e-4 the largest step (a tenth of the time) limits.
+- Found with it: LobattoIIIA4 on sliderCrank3D stays at an error of 1e-6 to 1e-7 for the tolerances 1e-5 to 1e-10
+  (21 to 106 steps), while 106 constant steps give 1e-10 - #3313 (RG20.8.3).
+- LobattoIIIC4GGL, measured (velocities against LobattoIIIC4GGL with h0/64, constant steps): rigidBodySpringDampers
+  (stiffness 1e5, the stiff period about 16 ms) at 16 h0 = 0.032 s: LobattoIIIA4 1.0e-5, LobattoIIIC4GGL 5.8e-5,
+  Radau3 1.2e-3, generalized-alpha 8.8e-2; FFRFreducedOrder at 4 h0 to 8 h0: LobattoIIIC4GGL 2 to 3 times more
+  accurate than LobattoIIIA4, at h0 equal; CPU time 2.5 to 3 times that of LobattoIIIA4. Its L-stability does not pay
+  off on these models: LobattoIIIA4 is not damped but stays accurate at steps above the stiff period. What it adds:
+  the multipliers without the step-to-step oscillation of LobattoIIIA4 (the reference of the study) and the
+  constraints at every stage. Radau3 is L-stable too, at a third of its cost. Recommendation to the maintainer:
+  remove it from SolveDynamic (unreleased, no deprecation), the reference of the study by Radau3 at small steps.
+- Found with it: about 10 memory allocations per step of the Runge-Kutta solvers on rigidBodySpringDampers (16000
+  steps, the warning of the solver), none with generalized-alpha - #3312 (RG20.7.12).
+
 <a id="rg20-9"></a>
 ### RG20.9 closed, the fast-module checkpoint; RG11.8.20 superseded; the open robotics tasks (2026-11-06, #2993)
 - Maintainer 2026-11-06: which RG19 tasks are open, the design note revised; why RG20.9 is still open.

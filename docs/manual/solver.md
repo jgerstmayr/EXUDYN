@@ -230,6 +230,38 @@ Solver flow chart for DiscontinuousIteration(), which is run for every solved st
 Solver flow chart for Newton(), which is run inside the DiscontinuousIteration(). The shown case is valid for residualMode = 0.
 ```
 
+(sec-solver-output)=
+### Output of the solution and the sensors
+
+The dynamic solvers write the solution file and the sensors at the multiples of their write periods,
+`solution.file.writePeriod` and `solution.sensors.writePeriod`, and at the end time, independently of the step size
+(#3286). A write time that falls within a step $[t_0, t_0 + h]$ takes the state interpolated between the start and
+the end of the step, with $\tau = (t - t_0)/h$:
+
+- the ODE2 coordinates by the cubic Hermite polynomial of the coordinates and velocities at both ends,
+  
+  $$
+  \qv(\tau) = (2\tau^3 - 3\tau^2 + 1)\, \qv_0 + (\tau^3 - 2\tau^2 + \tau)\, h \dot \qv_0
+            + (-2\tau^3 + 3\tau^2)\, \qv_1 + (\tau^3 - \tau^2)\, h \dot \qv_1 ,
+  $$
+  
+  and the velocities by its derivative; the interpolation is of order 4 in the coordinates, so it does not reduce the
+  accuracy of the methods of order up to 4;
+- the accelerations, the ODE1 coordinates and their derivatives and the algebraic coordinates linearly;
+- the ODE2 coordinates of Lie group nodes (rotation vectors updated by composition) linearly, as their velocities are
+  not the derivatives of their coordinates;
+- the data coordinates (contact states, friction, plasticity) as at the end of the step.
+
+The sensors and the solution file are evaluated in the interpolated state, so a sensor of a position, a force or an
+output variable of an item gives its value at the write time. After writing, the state of the end of the step is
+restored; the interpolation does not change the solution.
+
+A write period that is a multiple of the step gives the steps as rows, as without interpolation. A period smaller
+than the step gives a row per period rather than per step, and with automatic step size (ODE23, DOPRI5, the implicit
+Runge-Kutta solvers) the rows are at the multiples of the period, not at the varying steps. A period of 0 writes every
+step. The static solver writes at its load steps, without interpolation. The solvers of `exudyn.symbolics` follow the
+same rule (#3241), see {ref}`sec-symbolicsolvers`.
+
 (sec-explicitsolver)=
 ## Explicit solvers
 
@@ -852,15 +884,26 @@ discontinuities, whose errors do not follow the order of a method anyway.
 ```{figure} /docs/figures/solverStudy/efficiency_models.png
 :width: 100%
 
-Error against CPU time on four models, with constant steps (solid) and with automatic step size for the
-tolerances $10^{-3} \ldots 10^{-8}$ (dashed); the explicit solvers only on the kinematic tree, which has no
-constraints
+Error against CPU time on four models with constant steps $2 h_0 \ldots h_0/16$; the explicit solvers only on the
+kinematic tree, which has no constraints
 ```
 
-With automatic step size, {numref}`fig-solver-efficiency-models`, the Runge-Kutta solvers with the estimate
-`twoSteps` lie on the curves of their constant steps or below, where the motion allows larger steps; `TrapezoidalGGL`
-lies on its own curve. Without constraints, the explicit `DOPRI5` is the most efficient solver as long as the step is
-not limited by stability, as on the kinematic tree.
+(fig-solver-efficiency-adaptive)=
+```{figure} /docs/figures/solverStudy/efficiency_adaptive.png
+:width: 100%
+
+Error against CPU time on the same models with automatic step size, for the tolerances
+$10^{-2} \ldots 10^{-10}$ (`absoluteTolerance` = `relativeTolerance`), the error estimate `'default'`
+```
+
+With automatic step size, {numref}`fig-solver-efficiency-adaptive` against {numref}`fig-solver-efficiency-models`,
+the Runge-Kutta solvers with the estimate `twoSteps` reach the accuracy of their constant steps for about the same
+CPU time, or less where the motion allows larger steps. Their errors decrease with the tolerance; the tolerance
+bounds the error of a step, so the relative error at the end lies 10 to 200 times above it. At the largest tolerances the step is limited by its maximum, a tenth of the simulated time,
+and the error no longer grows. On the spatial slider crank the error of `LobattoIIIA4` stays at about $10^{-7}$ for
+the tolerances below $10^{-6}$ (#3313). `TrapezoidalGGL`, with the estimate `oneStep`, lies on its own curve.
+Without constraints, the explicit `DOPRI5` is the most efficient solver as long as the step is not limited by
+stability, as on the kinematic tree.
 
 (fig-solver-convergence-explicit)=
 ```{figure} /docs/figures/solverStudy/convergence_explicit.png
@@ -887,7 +930,9 @@ A chain of three rigid bodies (Euler parameters) on revolute joints
 ```{figure} /docs/figures/solverStudy/convergence_rigidBodySpringDampers.png
 :width: 80%
 
-The same chain on rigid body spring-dampers; the algebraic coordinates are those of the Euler parameters
+The same chain on rigid body spring-dampers; its algebraic coordinates, the multipliers of the Euler parameter
+constraints, are zero in the exact solution - neither the mass matrix nor the forces act along the Euler parameters -
+so they have no relative error and are not shown (#3311)
 ```
 
 ```{figure} /docs/figures/solverStudy/convergence_sliderCrank3D.png

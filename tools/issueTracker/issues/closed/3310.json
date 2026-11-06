@@ -1,0 +1,16 @@
+{
+  "number": 3310,
+  "title": "The solver page: the output of the solution and the sensors interpolated within the step",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The interpolated output of the dynamic solvers (#3286, #3241) is described in the settings solution.file.writePeriod and solution.sensors.writePeriod, in revisions.md and in symbolicSolvers.md, but not on the solver page. Decided: a section on the output of the dynamic solvers in solver.md - the write times, the interpolation of each kind of coordinate, Lie group nodes, the automatic step size, the static solver.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 23:48",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/solver.md",
+  "releaseNotes": "The solver documentation describes the output of the dynamic solvers: the solution file and the sensors at the multiples of their write periods, the state within a step interpolated (the ODE2 coordinates by the cubic Hermite polynomial).",
+  "resolvedInVersion": "1.13.428"
+}

@@ -7,7 +7,7 @@
 #           their velocities, ODE1 coordinates, algebraic coordinates (Lagrange multipliers) - in the L2 norm, relative to the L2 norm of
 #           the group in the reference solution. The reference is LobattoIIIC4GGL (RK67 for the models without
 #           algebraic and ODE1 coordinates) with h0/2^k, the last two results extrapolated by Richardson with the order
-#           observed in the last three; the adaptive solvers run with the tolerances 1e-3 ... 1e-8. The CPU time is that of
+#           observed in the last three; the adaptive solvers run with the tolerances 1e-2 ... 1e-10. The CPU time is that of
 #           SolveDynamic, the minimum of three runs. Writes PNG files into docs/figures/solverStudy/ and the data into
 #           solverStudy.json beside them; not part of the test suite.
 #
@@ -49,7 +49,8 @@ groups = ['ODE2', 'ODE2_t', 'ODE1', 'AE']
 groupTitles = {'ODE2': 'ODE2 coordinates', 'ODE2_t': 'ODE2 velocities', 'ODE1': 'ODE1 coordinates',
                'AE': 'algebraic coordinates'}
 stepFactors = [2., 1., 0.5, 0.25, 0.125, 0.0625]
-tolerances = [1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8]
+vanishingReference = 1e-10 #the L2 norm below which a reference group counts as zero
+tolerances = [1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10]
 
 #the models of a figure each; massOscillator and rigidBodySpringDampers only in the figure of the explicit solvers
 #beam3D is left out of the figures: its errors stay at 1e-6 to 1e-3 and do not converge smoothly at these steps
@@ -202,6 +203,18 @@ def Plot(data):
     def Present(model):
         return [g for g in groups if data[model]['reference']['groups'][g] is not None]
 
+    #a group whose reference vanishes has no relative error: the multipliers of the Euler parameters of bodies without
+    #joints (rigidBodySpringDampers) are zero in the exact solution, as G theta = 0 (#3311); left out of the figures
+    for entry in data.values():
+        for g in groups:
+            reference = entry['reference']['groups'][g]
+            if reference is not None and np.linalg.norm(reference) < vanishingReference:
+                entry['reference']['groups'][g] = None
+                for rows in list(entry['fixed'].values()) + list(entry['adaptive'].values()):
+                    for row in rows:
+                        if row['errors']:
+                            row['errors'][g] = None
+
     def Subplots(n, width, height):
         """n subplots in one row, 2x2 for four; returns the figure, the axes in order, those of the left column and
         the one beside which the legend goes"""
@@ -279,25 +292,27 @@ def Plot(data):
     figure.tight_layout()
     Save(figure, 'convergence_mean')
 
-    #4) efficiency: the error of the ODE2 coordinates against the CPU time, fixed steps (solid) and adaptive (dashed)
-    figure, axes = plt.subplots(1, len(efficiencyModels), figsize=(3.0*len(efficiencyModels) + 0.6, 3.2), squeeze=False)
-    for (axis, model) in zip(axes[0], efficiencyModels):
-        entry = data[model]
-        for (solverName, rows) in entry['fixed'].items():
-            Line(axis, [r['time'] for r in rows], [r['errors']['ODE2'] if r['errors'] else None for r in rows], solverName)
-        for (solverName, rows) in entry['adaptive'].items():
-            Line(axis, [r['time'] for r in rows], [r['errors']['ODE2'] if r['errors'] else None for r in rows], solverName,
-                 dashed=True, label=solverName not in entry['fixed'])
-        axis.set_title(model)
-        axis.set_xlabel('CPU time [s]')
-    axes[0][0].set_ylabel('relative error, ODE2 coordinates')
-    handles = {}
-    for axis in axes[0]:
-        for (handle, label) in zip(*axis.get_legend_handles_labels()):
-            handles.setdefault(label, handle)
-    handles['dashed: automatic step size'] = matplotlib.lines.Line2D([], [], color='#777777', linestyle='--')
-    axes[0][-1].legend(handles.values(), handles.keys(), loc='center left', bbox_to_anchor=(1.02, 0.5))
-    Save(figure, 'efficiency_models')
+    #4) efficiency: the error of the ODE2 coordinates against the CPU time, constant steps and automatic steps apart
+    def Efficiency(kind, name, note):
+        (figure, axes, leftAxes, legendAxis) = Subplots(len(efficiencyModels), 4.2, 3.4)
+        handles = {}
+        for (axis, model) in zip(axes, efficiencyModels):
+            for (solverName, rows) in data[model][kind].items():
+                Line(axis, [r['time'] for r in rows], [r['errors']['ODE2'] if r['errors'] else None for r in rows], solverName)
+            axis.set_title(model)
+            axis.set_xlabel('CPU time [s]')
+            for (handle, label) in zip(*axis.get_legend_handles_labels()):
+                handles.setdefault(label, handle)
+        for axis in leftAxes:
+            axis.set_ylabel('relative error, ODE2 coordinates')
+        handles[note] = matplotlib.lines.Line2D([], [], color='none')
+        legendAxis.legend(handles.values(), handles.keys(), loc='center left', bbox_to_anchor=(1.02, 0.5))
+        figure.tight_layout()
+        Save(figure, name)
+
+    Efficiency('fixed', 'efficiency_models', 'constant steps 2 h0 ... h0/16')
+    Efficiency('adaptive', 'efficiency_adaptive', 'tolerances ' + '{:.0e}'.format(tolerances[0]) + ' ... '
+               + '{:.0e}'.format(tolerances[-1]))
 
     #5) the mean efficiency: geometric means of the error and of the CPU time relative to generalized-alpha at h0
     figure, axis = plt.subplots(1, 1, figsize=(5.4, 3.6))

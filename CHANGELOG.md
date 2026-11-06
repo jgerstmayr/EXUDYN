@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 411 | 1.13.426 |
+| 1.13 | Newborn | 413 | 1.13.429 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.429** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The solver study: zero multipliers as a group, the efficiency figure split into constant and automatic steps (#3311)
+  - description: The algebraic coordinates of rigidBodySpringDampers are the multipliers of the Euler parameter constraints, which are zero in the exact solution (G theta = 0: neither the mass matrix nor the forces act along the parameters); their reference is 0 to 1e-12, so the relative error of the figure is noise divided by 1e-14 (1 to 1e4). The figure of the error against the CPU time on four models has small subplots with constant and automatic steps together. Decided: a group whose reference vanishes is left out of the figures with its reason in the caption; the efficiency figure split into one with constant steps and one with automatic steps, 2x2 each and larger, the tolerances of the automatic steps over a wider range.
+  - **notes:** The convergence figures of the solver documentation leave out the multipliers of Euler parameter constraints of bodies without joints, which are zero in the exact solution; the efficiency is shown in separate figures for constant and automatic steps, the latter for the tolerances 1e-2 to 1e-10.
+  - date resolved: **2026-11-06 23:48**, date raised: 2026-11-06
+- **1.13.428** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The solver page: the output of the solution and the sensors interpolated within the step (#3310)
+  - description: The interpolated output of the dynamic solvers (\#3286, \#3241) is described in the settings solution.file.writePeriod and solution.sensors.writePeriod, in revisions.md and in symbolicSolvers.md, but not on the solver page. Decided: a section on the output of the dynamic solvers in solver.md - the write times, the interpolation of each kind of coordinate, Lie group nodes, the automatic step size, the static solver.
+  - **notes:** The solver documentation describes the output of the dynamic solvers: the solution file and the sensors at the multiples of their write periods, the state within a step interpolated (the ODE2 coordinates by the cubic Hermite polynomial).
+  - date resolved: **2026-11-06 23:48**, date raised: 2026-11-06
 - **1.13.426** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The convergence figures of the solvers with the ODE2 velocities (#3309)
   - description: The convergence figures of solverConvergenceFigures.py (\#3305) show the errors of the ODE2 coordinates, the ODE1 coordinates and the algebraic coordinates; the velocities of the ODE2 coordinates are a group of their own. Decided: the ODE2 velocities as a fourth group, the subplots of a model in one row, 2x2 with four groups; the mean figure 2x2.
   - **notes:** The convergence figures of the dynamic solvers in the solver documentation show the errors of the ODE2 velocities as well.

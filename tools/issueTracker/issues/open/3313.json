@@ -1,0 +1,12 @@
+{
+  "number": 3313,
+  "title": "Automatic step size of LobattoIIIA4 on the spatial slider crank: the error stays at 1e-7 for the tolerances 1e-5 to 1e-10",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "The solver study (solverConvergenceFigures.py, efficiency_adaptive.png): LobattoIIIA4 with automatic step size on sliderCrank3D of modelLibrary.py takes 21 to 106 steps for the tolerances 1e-5 to 1e-10, but the relative error of the ODE2 coordinates stays at 1.2e-6 to 1.1e-7, while 106 constant steps give about 1e-10 and Radau3 with automatic steps reaches 2e-10. On the other models its error follows the tolerance. To be analyzed: the error estimate twoSteps with the Lie group nodes of the model, a single step with a large error (the first one, or one after a rejection), the interpolated output.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "file": "src/Solver/CSolverImplicitRungeKutta.cpp"
+}

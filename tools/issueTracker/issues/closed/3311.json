@@ -1,0 +1,16 @@
+{
+  "number": 3311,
+  "title": "The solver study: zero multipliers as a group, the efficiency figure split into constant and automatic steps",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The algebraic coordinates of rigidBodySpringDampers are the multipliers of the Euler parameter constraints, which are zero in the exact solution (G theta = 0: neither the mass matrix nor the forces act along the parameters); their reference is 0 to 1e-12, so the relative error of the figure is noise divided by 1e-14 (1 to 1e4). The figure of the error against the CPU time on four models has small subplots with constant and automatic steps together. Decided: a group whose reference vanishes is left out of the figures with its reason in the caption; the efficiency figure split into one with constant steps and one with automatic steps, 2x2 each and larger, the tolerances of the automatic steps over a wider range.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 23:48",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/solverConvergenceFigures.py",
+  "releaseNotes": "The convergence figures of the solver documentation leave out the multipliers of Euler parameter constraints of bodies without joints, which are zero in the exact solution; the efficiency is shown in separate figures for constant and automatic steps, the latter for the tolerances 1e-2 to 1e-10.",
+  "resolvedInVersion": "1.13.429"
+}
