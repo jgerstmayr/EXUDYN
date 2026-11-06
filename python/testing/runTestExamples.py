@@ -294,6 +294,8 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
                 fileString = file.read()
 
             timeExample = -time.time()
+            runnerFile = globals()['__file__']
+            globals()['__file__'] = os.path.abspath(dirPath+exampleFileName) #the example finds its data beside it (#3284)
             try:
                 exec(testRunnerTools.PrepareExampleSource(fileString, quietMode), globals())
             except SystemExit: #AnimateModes ends the script with sys.exit(), see PrepareExampleSource
@@ -304,6 +306,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
                 exu.Print(exStr)
                 print(exStr, flush=True)
                 examplesFailed += [str(testExamplesCnt)+' : '+exampleFileName]
+            globals()['__file__'] = runnerFile
             exampleTimings[exampleFileName] = timeExample + time.time()
 
     timeStart += time.time()

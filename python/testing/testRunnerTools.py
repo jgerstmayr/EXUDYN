@@ -848,6 +848,8 @@ for _name in ['SolveDynamic', 'SolveStatic', 'SolveSystem']:
         setattr(exu.MainSystem, _name, _Wrapped)
 
 import testRunnerTools
+#an example finds its data beside it by __file__, as when it is run directly (#3284)
+__file__ = os.path.abspath({examplePath!r})
 _source = open({examplePath!r}, encoding='utf8').read()
 exec(testRunnerTools.PrepareExampleSource(_source, {quietMode!r}), globals())
 """

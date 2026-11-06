@@ -1,0 +1,17 @@
+{
+  "number": 3284,
+  "title": "The examples runner gives each example its __file__",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "runTestExamples.py executes an example by exec without __file__, so an example that finds its data relative to its own file - staubliTX2blending.py and staubliTX2trajectories.py, since #3263 - fails with a NameError in the examples run, while it runs when started directly. Decided: the runner sets __file__ to the path of the example, in the worker of the parallel run and in the serial run.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 07:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/testRunnerTools.py",
+  "releaseNotes": "The examples runner sets __file__ to the path of each example, in the parallel and in the serial run, so that examples finding their data beside their file - staubliTX2blending.py, staubliTX2trajectories.py - run as when started directly; all 196 examples pass.",
+  "resolvedInVersion": "1.13.397"
+}
