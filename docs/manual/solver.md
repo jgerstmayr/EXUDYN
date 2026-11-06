@@ -808,7 +808,7 @@ mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.LobattoIII
 The figures of this section are computed by `python/testing/solverConvergenceFigures.py` on the small models of
 `python/TestModels/modelLibrary.py` (#3305). Each solver runs with the steps $2 h_0, h_0, \ldots, h_0/16$, where
 $h_0$ is the step of the model's fast run. The error is taken at the end time per group of coordinates - the ODE2
-coordinates, the ODE1 coordinates and the algebraic coordinates (the Lagrange multipliers) - as the L2 norm of the
+coordinates, their velocities, the ODE1 coordinates and the algebraic coordinates (the Lagrange multipliers) - as the L2 norm of the
 difference to a reference solution, divided by the L2 norm of the group in the reference. The reference is
 `LobattoIIIC4GGL` (`RK67` without constraints) at $h_0/128$, extrapolated by Richardson. The Newton tolerances are
 `relativeTolerance` $10^{-10}$ and `absoluteTolerance` $10^{-10}$, which set the floor of about $10^{-12}$ that the
@@ -825,11 +825,12 @@ solver failed on one of the models (`TrapezoidalIndex2` at the larger steps)
 ```
 
 {numref}`fig-solver-convergence-mean` shows the orders of {ref}`sec-solver-overview`: 2 for the Newmark-type
-solvers and `TrapezoidalGGL`, 3 for `Radau3` and 4 for the Lobatto solvers in the ODE2 and ODE1 coordinates; the
+solvers and `TrapezoidalGGL`, 3 for `Radau3` and 4 for the Lobatto solvers in the ODE2 coordinates, their velocities
+and the ODE1 coordinates; the
 Lagrange multipliers converge with order 2 in all solvers, with errors 10 to 100 times smaller in the Lobatto and
 Radau solvers than in generalized-alpha. The orders measured between $h_0$ and $h_0/4$ on the single models are 1.95 to
-2.0 for generalized-alpha, 3.98 to 4.07 for `LobattoIIIA4` and 2.87 to 3.01 for `Radau3` (3.77 on the spatial slider
-crank, whose errors reach the floor).
+2.0 for generalized-alpha, 3.99 to 4.37 for `LobattoIIIA4` and 2.87 to 3.01 for `Radau3`, the same within 0.1 for the
+velocities - except on the spatial slider crank, whose errors of the Runge-Kutta solvers reach the floor.
 
 (fig-solver-efficiency-mean)=
 ```{figure} /docs/figures/solverStudy/efficiency_mean.png
@@ -842,7 +843,7 @@ steps $2 h_0 \ldots h_0/16$
 
 A step costs about 2 (`TrapezoidalGGL`), 3 (`LobattoIIIA4`, `Radau3`) and 9 (`LobattoIIIC4GGL`) times a step of
 generalized-alpha. The higher order pays off nevertheless, {numref}`fig-solver-efficiency-mean`: at 1.6 times the
-CPU time of generalized-alpha with $h_0$, `LobattoIIIA4` with $2 h_0$ has a 500 times smaller error; below a
+CPU time of generalized-alpha with $h_0$, `LobattoIIIA4` with $2 h_0$ has a 600 times smaller error; below a
 relative error of about $10^{-4}$ it is the most efficient of these solvers on these models. Generalized-alpha remains the choice where the accuracy of
 the order 2 suffices, where its numerical damping is wanted, and for models with contact, friction or other
 discontinuities, whose errors do not follow the order of a method anyway.

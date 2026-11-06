@@ -1,0 +1,16 @@
+{
+  "number": 3309,
+  "title": "The convergence figures of the solvers with the ODE2 velocities",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The convergence figures of solverConvergenceFigures.py (#3305) show the errors of the ODE2 coordinates, the ODE1 coordinates and the algebraic coordinates; the velocities of the ODE2 coordinates are a group of their own. Decided: the ODE2 velocities as a fourth group, the subplots of a model in one row, 2x2 with four groups; the mean figure 2x2.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 21:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/solverConvergenceFigures.py",
+  "releaseNotes": "The convergence figures of the dynamic solvers in the solver documentation show the errors of the ODE2 velocities as well.",
+  "resolvedInVersion": "1.13.426"
+}

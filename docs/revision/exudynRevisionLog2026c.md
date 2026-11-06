@@ -6427,6 +6427,19 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-9-11"></a>
+### RG20.9.11 — the ODE2 velocities in the convergence figures (2026-11-06, #3309)
+- Maintainer 2026-11-06: the ODE2 velocities also in the convergence plots, arranged 4x1 or 2x2.
+- solverConvergenceFigures.py: the group ODE2_t (GetODE2Coordinates_t) with its own Richardson reference; the
+  subplots of a model in one row (three for the constrained models, two for kinematicTree), 2x2 for genericDAE, the
+  only model with all four groups, with its title in the space tight_layout leaves; the mean figure 2x2. A run computes
+  a stored model again whose reference lacks a group.
+- The whole study again (25 min). The velocities converge with the orders of the coordinates between h0 and h0/4:
+  generalized-alpha and TrapezoidalGGL 2.0 to 2.06, Radau3 2.82 to 3.02, LobattoIIIA4 4.0 to 4.29, except on
+  sliderCrank3D, whose Runge-Kutta errors are at the floor. The mean efficiency: LobattoIIIA4 at 2 h0 has a 600 times
+  smaller error than generalized-alpha at h0 (before 500; the CPU times of a new run) for 1.55 times its CPU time.
+  solver.md says so.
+
 <a id="rg20-9-10"></a>
 ### RG20.9.10 — the stage Jacobian by Euler parameters against finite differences (2026-11-06, #3308)
 - Maintainer 2026-11-06: do RG20.9.10.

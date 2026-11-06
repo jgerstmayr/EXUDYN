@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 410 | 1.13.425 |
+| 1.13 | Newborn | 411 | 1.13.426 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.426** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The convergence figures of the solvers with the ODE2 velocities (#3309)
+  - description: The convergence figures of solverConvergenceFigures.py (\#3305) show the errors of the ODE2 coordinates, the ODE1 coordinates and the algebraic coordinates; the velocities of the ODE2 coordinates are a group of their own. Decided: the ODE2 velocities as a fourth group, the subplots of a model in one row, 2x2 with four groups; the mean figure 2x2.
+  - **notes:** The convergence figures of the dynamic solvers in the solver documentation show the errors of the ODE2 velocities as well.
+  - date resolved: **2026-11-06 21:35**, date raised: 2026-11-06
 - **1.13.425** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Stage Jacobian of the implicit Runge-Kutta solvers: entries by the first Euler parameter with the opposite sign (#3308)
   - description: The check of the stage Jacobian against finite differences (verbose 4, CSolverImplicitRungeKutta::CheckJacobian) of LobattoIIIA4 shows single entries of the constraint rows at the end of the step by the acceleration of the first Euler parameter with the opposite sign: rigidBodyJoints of modelLibrary.py, step 1e-3, velocity constraint row 4 by A2\[3\]: numeric -6.26574e-5, Jacobian 6.26575e-5; FFRFreducedOrder, position constraint row 2 by A1\[3\]: numeric -1.74388e-5, Jacobian 1.74388e-5. The other differences shrink with the step (the Jacobian of the end of the step is used at all stages); these do not. The Newton iteration converges, more slowly than it could. To be analyzed: the Jacobian of the constraints by the Euler parameters (JacobianAE) or the finite differences of the check.
   - **notes:** Checked: the stage Jacobian of the implicit Runge-Kutta solvers by Euler parameters differs from finite differences only along the parameters themselves, which the derivative by G leaves out and the Euler parameter constraint fixes; no change of the solvers.

@@ -3514,3 +3514,7 @@ CLOSED 2026-11-06 (#3307; maintainer 2026-11-06): the Newton iteration followed 
 #### **CLOSED_RG20.9.10** Stage Jacobian entries by the first Euler parameter with the opposite sign
 
 CLOSED 2026-11-06 (#3308; maintainer 2026-11-06): no defect. The Jacobian of an item by Euler parameters is the derivative along the rotations, -A p~ G; its component along the parameters themselves is zero (G theta = 0), while the rotation matrix, quadratic in the parameters, changes along them. The finite differences of the check contain that component, which at small angles makes the entries of the first parameter the negatives of the Jacobian; the tangential parts agree to rounding. The constraint of the Euler parameters fixes that direction, and the reaction forces use the same G. A comment in CheckJacobian says so. [log](exudynRevisionLog2026c.md#rg20-9-10)
+
+#### **CLOSED_RG20.9.11** The ODE2 velocities in the convergence figures
+
+CLOSED 2026-11-06 (#3309; maintainer 2026-11-06): the ODE2 velocities a fourth group of solverConvergenceFigures.py; the figure of a model in one row, 2x2 for genericDAE with all four groups, the mean figure 2x2; the study computed again. The velocities converge with the orders of the coordinates (2, 3, 4). solver.md with the new numbers. [log](exudynRevisionLog2026c.md#rg20-9-11)

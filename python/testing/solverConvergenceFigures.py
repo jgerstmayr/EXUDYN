@@ -4,7 +4,7 @@
 # Details:  The convergence and efficiency figures of the dynamic solvers in the documentation (docs/manual/solver.md,
 #           #3305), computed on the models of python/TestModels/modelLibrary.py: each solver with the steps 2 h0 ...
 #           h0/16 of the model's fast run (h0), the error at the end time per group of coordinates - ODE2 coordinates,
-#           ODE1 coordinates, algebraic coordinates (Lagrange multipliers) - in the L2 norm, relative to the L2 norm of
+#           their velocities, ODE1 coordinates, algebraic coordinates (Lagrange multipliers) - in the L2 norm, relative to the L2 norm of
 #           the group in the reference solution. The reference is LobattoIIIC4GGL (RK67 for the models without
 #           algebraic and ODE1 coordinates) with h0/2^k, the last two results extrapolated by Richardson with the order
 #           observed in the last three; the adaptive solvers run with the tolerances 1e-3 ... 1e-8. The CPU time is that of
@@ -45,8 +45,9 @@ implicitSolvers = ['GeneralizedAlpha', 'TrapezoidalIndex2', 'TrapezoidalGGL', 'L
 explicitSolvers = ['RK44', 'RK67']
 explicitAdaptiveSolvers = ['ODE23', 'DOPRI5']
 implicitAdaptiveSolvers = ['TrapezoidalGGL', 'LobattoIIIA4', 'LobattoIIIC4GGL', 'Radau3']
-groups = ['ODE2', 'ODE1', 'AE']
-groupTitles = {'ODE2': 'ODE2 coordinates', 'ODE1': 'ODE1 coordinates', 'AE': 'algebraic coordinates'}
+groups = ['ODE2', 'ODE2_t', 'ODE1', 'AE']
+groupTitles = {'ODE2': 'ODE2 coordinates', 'ODE2_t': 'ODE2 velocities', 'ODE1': 'ODE1 coordinates',
+               'AE': 'algebraic coordinates'}
 stepFactors = [2., 1., 0.5, 0.25, 0.125, 0.0625]
 tolerances = [1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8]
 
@@ -68,7 +69,8 @@ markers = {'GeneralizedAlpha': 'o', 'TrapezoidalIndex2': 's', 'TrapezoidalGGL': 
 def Groups(mbs):
     """the coordinates at the end per group, None for a group the model does not have"""
     sd = mbs.systemData
-    values = {'ODE2': np.array(sd.GetODE2Coordinates()), 'ODE1': np.array(sd.GetODE1Coordinates()),
+    values = {'ODE2': np.array(sd.GetODE2Coordinates()), 'ODE2_t': np.array(sd.GetODE2Coordinates_t()),
+              'ODE1': np.array(sd.GetODE1Coordinates()),
               'AE': np.array(sd.GetAECoordinates())}
     return {g: (v if len(v) else None) for (g, v) in values.items()}
 
@@ -154,7 +156,7 @@ def AdaptiveRuns(model, entry):
 def Compute(models):
     data = json.load(open(dataFile)) if os.path.exists(dataFile) else {} #a run continues where a previous one stopped
     for model in models:
-        if model in data:
+        if model in data and all(g in data[model]['reference']['groups'] for g in groups):
             continue
         print('model', model, flush=True)
         reference = Reference(model)
@@ -200,6 +202,13 @@ def Plot(data):
     def Present(model):
         return [g for g in groups if data[model]['reference']['groups'][g] is not None]
 
+    def Subplots(n, width, height):
+        """n subplots in one row, 2x2 for four; returns the figure, the axes in order, those of the left column and
+        the one beside which the legend goes"""
+        (rows, columns) = (2, 2) if n == 4 else (1, n)
+        figure, axes = plt.subplots(rows, columns, figsize=(width*columns + 0.6, height*rows), squeeze=False)
+        return (figure, list(axes.flat), [row[0] for row in axes], axes[0][-1])
+
     def Line(axis, xs, ys, solverName, dashed=False, label=True):
         points = [(x, y) for (x, y) in zip(xs, ys) if x is not None and y is not None and y > 0]
         if points:
@@ -217,17 +226,23 @@ def Plot(data):
     for model in convergenceModels:
         entry = data[model]
         present = Present(model)
-        figure, axes = plt.subplots(1, len(present), figsize=(3.3*len(present) + 0.6, 3.2), squeeze=False)
-        for (axis, g) in zip(axes[0], present):
+        (figure, axes, leftAxes, legendAxis) = Subplots(len(present), 3.3, 3.2)
+        for (axis, g) in zip(axes, present):
             for (solverName, rows) in entry['fixed'].items():
                 Line(axis, [r['h'] for r in rows], [r['errors'][g] if r['errors'] else None for r in rows], solverName)
             OrderTriangles(axis, [r['h'] for r in rows], [2, 4])
             axis.set_title(groupTitles[g])
             axis.set_xlabel('step size h [s]')
-        axes[0][0].set_ylabel('relative error at the end')
-        axes[0][-1].legend(loc='center left', bbox_to_anchor=(1.02, 0.5))
+        for axis in leftAxes:
+            axis.set_ylabel('relative error at the end')
+        legendAxis.legend(loc='center left', bbox_to_anchor=(1.02, 0.5))
         description = modelLibrary.GetModel(model).variables['modelLibrary']['description']
-        figure.suptitle('\n'.join(textwrap.wrap(model + ': ' + description, 110)), fontsize=9, y=1.02 + 0.04*(len(description) > 100))
+        lines = textwrap.wrap(model + ': ' + description, 110)
+        if len(present) == 4: #the title in the space the layout leaves above the subplots
+            figure.tight_layout(rect=(0, 0, 1, 1 - 0.025*len(lines)))
+            figure.suptitle('\n'.join(lines), fontsize=9, y=1., va='top')
+        else:
+            figure.suptitle('\n'.join(lines), fontsize=9, y=1.02 + 0.04*(len(description) > 100))
         Save(figure, 'convergence_' + model)
 
     #2) the explicit solvers on the models they run, those without constraints (Euler parameters have one)
@@ -245,7 +260,7 @@ def Plot(data):
     Save(figure, 'convergence_explicit')
 
     #3) the mean over the models: the geometric mean of the relative errors at the same relative step h/h0
-    figure, axes = plt.subplots(1, 3, figsize=(10.5, 3.2))
+    (figure, axes, leftAxes, legendAxis) = Subplots(len(groups), 3.3, 3.2)
     for (axis, g) in zip(axes, groups):
         for solverName in implicitSolvers:
             means = []
@@ -258,8 +273,10 @@ def Plot(data):
         count = sum(1 for m in convergenceModels if data[m]['reference']['groups'][g] is not None)
         axis.set_title(groupTitles[g] + ' (' + str(count) + (' models)' if count > 1 else ' model)'))
         axis.set_xlabel('relative step size h/h0')
-    axes[0].set_ylabel('geometric mean of the relative errors')
-    axes[-1].legend(loc='center left', bbox_to_anchor=(1.02, 0.5))
+    for axis in leftAxes:
+        axis.set_ylabel('geometric mean of the relative errors')
+    legendAxis.legend(loc='center left', bbox_to_anchor=(1.02, 0.5))
+    figure.tight_layout()
     Save(figure, 'convergence_mean')
 
     #4) efficiency: the error of the ODE2 coordinates against the CPU time, fixed steps (solid) and adaptive (dashed)
