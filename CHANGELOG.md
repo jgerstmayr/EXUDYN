@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 404 | 1.13.419 |
+| 1.13 | Newborn | 406 | 1.13.421 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.421** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The genericDAE model of modelLibrary.py gives its position constraint also at velocity level (#3304)
+  - description: The constraintUserFunction of the genericDAE model ignores velocityLevel and returns the position constraint in both cases. The solvers that use the velocity constraint - LobattoIIIA4, LobattoIIIC4GGL, Radau3, TrapezoidalIndex2 - then solve a wrong equation: LobattoIIIA4 and Radau3 diverge within 0.05 s at every step size (found with the convergence figures). Decided: the user function returns the time derivative of the constraint for velocityLevel.
+  - **notes:** The genericDAE model of python/TestModels/modelLibrary.py gives the time derivative of its constraint at velocity level, so that LobattoIIIA4, LobattoIIIC4GGL, Radau3 and TrapezoidalIndex2 run on it.
+  - date resolved: **2026-11-06 18:30**, date raised: 2026-11-06
+- **1.13.420** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Modified Newton of generalized-alpha leaves the ODE1 coordinate of genericDAE off by 3.6e-6 at relativeTolerance 1e-12 (#3300)
+  - description: The genericDAE model of modelLibrary.py, SolveDynamic with generalized-alpha, step 1e-3, end time 0.5, newton.relativeTolerance 1e-12 and absoluteTolerance 1e-14: with useModifiedNewton the ODE1 coordinate at the end differs from the full Newton method by 3.6e-6 (6.7 iterations per step), while the ODE2 coordinates agree to 1e-14; at relativeTolerance 1e-8 both agree to 2e-11. The step sizes 1e-3 to 2.5e-4 give erratic differences of the ODE1 coordinate of 1e-6 with modified Newton, the order 2 with full Newton (found with \#3258). To be analyzed: the convergence criterion of the modified Newton method for the ODE1 rows.
+  - **notes:** A restart of the modified Newton method of the generalized-alpha solver restores the derivatives of the ODE1 coordinates of the start of the step; they were those of the rejected iteration, an error of about h^2 per restart.
+  - date resolved: **2026-11-06 18:30**, date raised: 2026-11-06
 - **1.13.419** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Examples and test models find their data beside their file, not in the working directory (#3303)
   - description: 17 test models, 4 examples and a performance model read their input data by paths relative to the working directory ('testData/...', '../Examples/testData/...', '../TestModels/testData/...'), so they ran only when started in their own directory or by a runner that changes into a sibling of it; objectFFRFreducedOrderStressModesTest.py chose between two paths by testIsActive. Decided: they build the path from os.path.dirname(os.path.abspath(\_\_file\_\_)), and runPerformanceTests.py sets \_\_file\_\_ of each model as runTestExamples.py does (\#3284).
   - **notes:** The examples, test models and performance models that read data from testData find it beside their own file (by \_\_file\_\_) instead of in the working directory, so they run from any directory; runPerformanceTests.py sets \_\_file\_\_ for each model.

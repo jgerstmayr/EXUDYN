@@ -1,0 +1,12 @@
+{
+  "number": 3305,
+  "title": "Convergence and efficiency figures of the dynamic solvers on the model library",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-11-06: log-log convergence plots for all solvers evaluated with the models of modelLibrary.py, the ODE2, ODE1 and algebraic coordinates in subplots, at most about 15 figures; for the implicit solvers a mean of the errors normalized by the L2 norm of each group of coordinates, to show the overall performance of a solver; few explicit; a typical efficiency diagram of accuracy against CPU time. Decided: python/testing/solverConvergenceFigures.py computes them into docs/figures/solverStudy/ with the data as JSON; the solver page shows them.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "file": "python/testing/solverConvergenceFigures.py"
+}

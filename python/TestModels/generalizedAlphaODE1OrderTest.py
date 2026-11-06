@@ -6,7 +6,8 @@
 #           ODE1 coordinate, simulated over 0.5 s with the steps 4e-3, 2e-3 and 1e-3 and the full Newton method. The
 #           ODE1 coordinates are integrated by the trapezoidal rule, which starts from their derivatives at the
 #           initial state; the differences between the steps fall by a factor of 4 for the ODE2 and the ODE1
-#           coordinates, order 2. The result is the number of passed checks plus the ODE1 coordinate at the end.
+#           coordinates, order 2. The modified Newton method gives the same solution as the full one (#3300). The
+#           result is the number of passed checks plus the ODE1 coordinate at the end.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-06
@@ -25,11 +26,11 @@ from modelLibrary import GetModel, SimulationSettings, Result
 
 testIsActive = exu.sys.get('testIsActive', False)
 
-def State(stepSize, spectralRadius):
+def State(stepSize, spectralRadius, useModifiedNewton=False):
     mbs = GetModel('genericDAE')
     simulationSettings = SimulationSettings(mbs, stepSize=stepSize, endTime=0.5)
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = spectralRadius
-    simulationSettings.timeIntegration.newton.useModifiedNewton = False
+    simulationSettings.timeIntegration.newton.useModifiedNewton = useModifiedNewton
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-12
     simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-14
     mbs.SolveDynamic(simulationSettings)
@@ -43,6 +44,12 @@ for spectralRadius in [0.6, 1.]:
     exu.Print('spectral radius', spectralRadius, ': ratios of the differences of x, y, ODE1 coordinate', ratios)
     u += int(np.all(ratios > 3.5) and np.all(ratios < 4.5))
     u += states[-1][2]
+
+#the modified Newton method, which restarts from the start of the step several times at this tolerance, gives the same
+#solution: a restart takes the ODE1 derivatives of the start of the step, not of the rejected iteration (#3300)
+difference = np.max(np.abs(State(1e-3, 0.6, useModifiedNewton=True) - State(1e-3, 0.6)))
+exu.Print('modified against full Newton:', difference)
+u += int(difference < 1e-12)
 
 exu.Print('solution of generalizedAlphaODE1OrderTest=', u)
 

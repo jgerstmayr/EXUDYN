@@ -1,0 +1,11 @@
+{
+  "number": 3307,
+  "title": "Newton of LobattoIIIA4 stalls at a constant residual on genericDAE",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "The genericDAE model of modelLibrary.py with LobattoIIIA4, step 1.5625e-4, newton.relativeTolerance 1e-10 and absoluteTolerance 1e-12: the Newton residual stays at 1.007e-12 (initial 3.2e-3) from the second to the 25th iteration, so the step is rejected and the run stops at the minimum step size; with the default absoluteTolerance 1e-10 it converges. To be analyzed: which rows keep the residual - the velocity constraint of ObjectGenericDAE, whose jacobianUserFunction gives no derivative of it by the velocities, or the ODE1 rows. [2026-11-06, Claude-JG]: FFRFreducedOrder of modelLibrary.py with LobattoIIIA4 and the default Newton tolerances: the Newton residual stays at a floor that grows as the step shrinks (1.0e-10, 4e-10, 1.6e-9, 6.4e-9 ... 1e-7 while the step is halved from 1.2e-4), so LobattoIIIA4 and Radau3 stop below a step of about 6e-5; LobattoIIIC4GGL and generalized-alpha run at 7.8e-6. The residual norm is taken before the row scaling, so the floor is in the unscaled equations.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05"
+}

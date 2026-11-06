@@ -168,6 +168,8 @@ def _GenericDAE(mbs):
     def UFforce(mbs, t, itemNumber, q, q_t, y, x, parameters):
         return [-d*q_t[0], -d*q_t[1]]
     def UFconstraint(mbs, t, itemNumber, q, q_t, y, z, x, velocityLevel, parameters):
+        if velocityLevel: #its time derivative, for the solvers with velocity constraints
+            return [2*(x0 + q[0])*q_t[0] + 2*(y0 + q[1])*q_t[1]]
         return [(x0 + q[0])**2 + (y0 + q[1])**2 - L**2]
     def UFrhs(mbs, t, itemNumber, q, q_t, y, x, parameters):
         return [((x0 + q[0])/L - y[0])/tau]

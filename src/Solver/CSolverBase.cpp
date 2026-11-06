@@ -1725,7 +1725,9 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 						if (data.nODE1)
 						{
 							solutionODE1 = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE1Coords;
-							//done in ComputeNewtonUpdate(..., initial=true): solutionODE1_t = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE1Coords_t;
+							//the predictor of ComputeNewtonUpdate(..., initial=true) adds h/2 solutionODE1_t: the derivatives at the start
+							//of the step, not those of the rejected iteration (#3300)
+							if (!IsStaticSolver()) { solutionODE1_t = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE1Coords_t; }
 						}
 						solutionAE.SetAll(0.); //use zero Lagrange multipliers as start guess for Newton iterations step ==> does not work for algebraic variables such as in sliding joint
 

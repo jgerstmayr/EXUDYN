@@ -1,0 +1,16 @@
+{
+  "number": 3304,
+  "title": "The genericDAE model of modelLibrary.py gives its position constraint also at velocity level",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The constraintUserFunction of the genericDAE model ignores velocityLevel and returns the position constraint in both cases. The solvers that use the velocity constraint - LobattoIIIA4, LobattoIIIC4GGL, Radau3, TrapezoidalIndex2 - then solve a wrong equation: LobattoIIIA4 and Radau3 diverge within 0.05 s at every step size (found with the convergence figures). Decided: the user function returns the time derivative of the constraint for velocityLevel.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 18:30",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/modelLibrary.py",
+  "releaseNotes": "The genericDAE model of python/TestModels/modelLibrary.py gives the time derivative of its constraint at velocity level, so that LobattoIIIA4, LobattoIIIC4GGL, Radau3 and TrapezoidalIndex2 run on it.",
+  "resolvedInVersion": "1.13.421"
+}

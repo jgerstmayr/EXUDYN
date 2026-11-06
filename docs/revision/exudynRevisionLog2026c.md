@@ -6427,6 +6427,23 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-9-5"></a>
+### RG20.9.5 and RG20.9.6 — the restart of the modified Newton method with ODE1 coordinates; the velocity constraint of genericDAE (2026-11-06, #3300, #3304)
+- Maintainer 2026-11-06: do RG20.9.5; the description of the new solvers and the convergence figures (RG20.9.7,
+  RG20.9.8).
+- #3300, the cause: with relativeTolerance 1e-12 the modified Newton method of generalized-alpha restarts a step 14
+  times in 500 steps of genericDAE (bad contractivity). The restart (CSolverBase::Newton) set the coordinates back to
+  the start of the step but not the ODE1 derivatives, assuming the predictor did - and the predictor adds h/2 times the
+  current ODE1Coords_t, which were those of the rejected iteration: an error of about h^2/2 y_tt per restart. Now the
+  restart restores ODE1Coords_t from the start of the step (not in the static solver). Modified against full Newton
+  at h = 1e-3: 3.6e-6 before, 5e-15 now; generalizedAlphaODE1OrderTest.py checks it (3.6e-14).
+- #3304, found with the convergence figures: LobattoIIIA4 and Radau3 diverged on genericDAE within 0.05 s at every
+  step (the Newton residual growing tenfold per step), TrapezoidalIndex2 failed at h0. The constraintUserFunction of
+  the model ignored velocityLevel and gave the position constraint also as velocity constraint; a mass point on a
+  DistanceConstraint with an ObjectGenericODE1 lag ran with all solvers, which located it. The user function returns
+  2 (x0 + q0) q_t0 + 2 (y0 + q1) q_t1 for velocityLevel now; all six implicit solvers run.
+- References: modelLibraryTest (both changes), generalizedAlphaODE1OrderTest (the new check).
+
 <a id="rg2-11"></a>
 ### RG2.11 — the examples and test models find their data beside their file (2026-11-06, #3303)
 - Found by grep for 'testData' on code lines: 16 test models (abaqusImportTest, compareAbaqusAnsysRotorEigenfrequencies,

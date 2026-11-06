@@ -1,0 +1,12 @@
+{
+  "number": 3306,
+  "title": "The solver page describes the implicit Runge-Kutta solvers, their error estimates and the step size controller",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "docs/manual/solver.md describes the explicit solvers and generalized-alpha, but TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL and Radau3 (#3261), their error estimates oneStep and twoSteps (#3287) and the PI step size controller shared with ODE23 and DOPRI5 (#3245) only in the enumeration and the settings. Decided: a section on the implicit Runge-Kutta solvers - the methods, the constraints at the end of the step and the GGL stabilization, the orders, damping, Lie group nodes, ODE1 and data coordinates -, the error estimates and the controller, a table of all dynamic solvers, and the convergence and efficiency figures.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "file": "docs/manual/solver.md"
+}

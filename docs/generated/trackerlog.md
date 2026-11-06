@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.419.dev1
+- Exudyn version = 1.13.421.dev1
 - last change = 2026-11-06
-- Number of issues = 3304
-- Number of resolved issues = 3196 (419 in current version)
+- Number of issues = 3308
+- Number of resolved issues = 3198 (421 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,8 +9039,14 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHECK` `LOW EFF` `raised by: Claude-JG` Modified Newton of generalized-alpha leaves the ODE1 coordinate of genericDAE off by 3.6e-6 at relativeTolerance 1e-12 (#3300)
-  - description: The genericDAE model of modelLibrary.py, SolveDynamic with generalized-alpha, step 1e-3, end time 0.5, newton.relativeTolerance 1e-12 and absoluteTolerance 1e-14: with useModifiedNewton the ODE1 coordinate at the end differs from the full Newton method by 3.6e-6 (6.7 iterations per step), while the ODE2 coordinates agree to 1e-14; at relativeTolerance 1e-8 both agree to 2e-11. The step sizes 1e-3 to 2.5e-4 give erratic differences of the ODE1 coordinate of 1e-6 with modified Newton, the order 2 with full Newton (found with \#3258). To be analyzed: the convergence criterion of the modified Newton method for the ODE1 rows.
+- `CHECK` `LOW EFF` `raised by: Claude-JG` Newton of LobattoIIIA4 stalls at a constant residual on genericDAE (#3307)
+  - description: The genericDAE model of modelLibrary.py with LobattoIIIA4, step 1.5625e-4, newton.relativeTolerance 1e-10 and absoluteTolerance 1e-12: the Newton residual stays at 1.007e-12 (initial 3.2e-3) from the second to the 25th iteration, so the step is rejected and the run stops at the minimum step size; with the default absoluteTolerance 1e-10 it converges. To be analyzed: which rows keep the residual - the velocity constraint of ObjectGenericDAE, whose jacobianUserFunction gives no derivative of it by the velocities, or the ODE1 rows. \[2026-11-06, Claude-JG\]: FFRFreducedOrder of modelLibrary.py with LobattoIIIA4 and the default Newton tolerances: the Newton residual stays at a floor that grows as the step shrinks (1.0e-10, 4e-10, 1.6e-9, 6.4e-9 ... 1e-7 while the step is halved from 1.2e-4), so LobattoIIIA4 and Radau3 stop below a step of about 6e-5; LobattoIIIC4GGL and generalized-alpha run at 7.8e-6. The residual norm is taken before the row scaling, so the floor is in the unscaled equations.
+  - date raised: 2026-11-06
+- `DOCU` `MEDIUM EFF` `raised by: Claude-JG` The solver page describes the implicit Runge-Kutta solvers, their error estimates and the step size controller (#3306)
+  - description: docs/manual/solver.md describes the explicit solvers and generalized-alpha, but TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL and Radau3 (\#3261), their error estimates oneStep and twoSteps (\#3287) and the PI step size controller shared with ODE23 and DOPRI5 (\#3245) only in the enumeration and the settings. Decided: a section on the implicit Runge-Kutta solvers - the methods, the constraints at the end of the step and the GGL stabilization, the orders, damping, Lie group nodes, ODE1 and data coordinates -, the error estimates and the controller, a table of all dynamic solvers, and the convergence and efficiency figures.
+  - date raised: 2026-11-06
+- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Convergence and efficiency figures of the dynamic solvers on the model library (#3305)
+  - description: Maintainer 2026-11-06: log-log convergence plots for all solvers evaluated with the models of modelLibrary.py, the ODE2, ODE1 and algebraic coordinates in subplots, at most about 15 figures; for the implicit solvers a mean of the errors normalized by the L2 norm of each group of coordinates, to show the overall performance of a solver; few explicit; a typical efficiency diagram of accuracy against CPU time. Decided: python/testing/solverConvergenceFigures.py computes them into docs/figures/solverStudy/ with the data as JSON; the solver page shows them.
   - date raised: 2026-11-06
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` MarkerNodeUser: a marker on the coordinates of nodes by Python user functions (#3236)
   - description: CreateCoordinateConstraint of UserItemCreator and the built-in coordinate constraint use MarkerNodeCoordinate; a user marker on nodes, whose value and Jacobian are Python (and recordable) user functions of the coordinates of its nodes, lets the coordinate constraint and coordinate connectors be user items. Decided (maintainer 2026-11-04): MarkerNodeUser first, as a step of its own (revision2026c RG7.18); MarkerBodyUser with coordinates and user shapes for contact and flexible interfaces are not planned yet (\#3106 closed).
