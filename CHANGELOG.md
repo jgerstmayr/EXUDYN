@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 391 | 1.13.406 |
+| 1.13 | Newborn | 393 | 1.13.408 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.408** `TESTING` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the AVX2 references of the fast module are recorded again (#3294)
+  - description: AVX2ReferenceSolutionUpdate was last recorded on 2026-10-10; since then the regular values of many models moved (\#3201, \#3245, \#3288, \#3289, ...), so 30 models failed with the fast module on stale entries. Decided: recorded again from the fast-module suite, an entry for every model and mini example whose fast result differs from the regular value by more than its tolerance; revision2026c step RG20.7.6. \[2026-11-06, Claude-JG\]: Counted after \#3293: 40 test models and 2 mini examples failed on stale entries, not 30.
+  - **notes:** AVX2ReferenceSolutionUpdate recorded again from the fast-module suite: 46 entries, every model and mini example whose fast result differs from the regular value by more than its tolerance; the fast suite passes serially and in parallel.
+  - date resolved: **2026-11-06 12:13**, date raised: 2026-11-06
+- **1.13.407** <span class="textred">`BUG`</span> `HIGH` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the fast module crashes or accepts wrong input where the regular module refuses it (#3293)
+  - description: The test suite with exudynCPPfast stopped at symbolicFunctionTest with a segmentation fault, and 10 models failed for reasons other than rounding: user checks of the symbolic module (esym.Function, the sizes of vector and matrix operands, Diff of a component, EvaluateJacobian, the recording) and of MainSystem (a configuration of a system that is not assembled, RaiseIfNotConsistent...) are CHECKandTHROW, which the fast module compiles out - so an out-of-range write or a crash instead of the error; a FEM mesh stored with a pickled exudyn.exudynCPP enum could not be loaded with the fast module (pybind11 type registered twice). Decided: those checks by PyError or ThrowPyErrorType, as CODING\_STYLE.md section 10.1 requires; the name exudyn.exudynCPP resolves to the fast module when it is loaded; revision2026c step RG20.7.6.
+  - **notes:** The checks of the input to exudyn.symbolic that the tests reach - esym.Function, the sizes of the operands of vector and matrix operations, Diff, the derivative of an operation without one, Evaluate and EvaluateJacobian, what a recording must not do, a variable outside mbs.symbolicVariables - raise by PyError, and the MainSystem checks of a configuration and of a system not assembled by ThrowPyErrorType: the fast module, which compiles CHECKandTHROW out, crashed or computed with wrong sizes. With the fast module, the name exudyn.exudynCPP resolves to it, so that a pickle naming it loads.
+  - date resolved: **2026-11-06 12:13**, date raised: 2026-11-06
 - **1.13.406** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` modelLibrary.py uses the deprecated arguments bodyNumbers and physicsMass (#3292)
   - description: The models of modelLibrary.py call CreateSpringDamper, CreateDistanceConstraint, CreateRevoluteJoint and CreateRigidBodySpringDamper with bodyNumbers and CreateMassPoint with physicsMass, which are deprecated; the tests that use the library show their warnings. Decided: itemNumbers and mass; revision2026c step RG20.9.3. \[2026-11-06, Claude-JG\]: The plan step is revision2026c step RG20.9.4 (RG20.9.3 was taken).
   - **notes:** modelLibrary.py uses itemNumbers and mass instead of the deprecated bodyNumbers and physicsMass; the results are unchanged.

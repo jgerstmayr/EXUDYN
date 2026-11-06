@@ -251,8 +251,7 @@ public:
 	{
 		const ResizableConstVector& leftExpr = left->EvaluateRef();
 		const ResizableConstVector& rightExpr = right->EvaluateRef();
-		CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(),
-			"symbolic.Vector::operator+ : inconsistent vector sizes");
+		if (leftExpr.NumberOfItems() != rightExpr.NumberOfItems()) { PyError("symbolic.Vector::operator+ : inconsistent vector sizes", PyErrorType::valueError); }
 		buffer.SetNumberOfItems(leftExpr.NumberOfItems());
 		for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] + rightExpr[i]; }
 		return buffer;
@@ -265,7 +264,7 @@ public:
 	//the flat evaluation (#3054)
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
-	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(), "symbolic.Vector::operator+ : inconsistent vector sizes"); buffer.SetNumberOfItems(leftExpr.NumberOfItems()); for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] + rightExpr[i]; } return buffer; }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); if (!(leftExpr.NumberOfItems() == rightExpr.NumberOfItems())) { PyError("symbolic.Vector::operator+ : inconsistent vector sizes", PyErrorType::valueError); } buffer.SetNumberOfItems(leftExpr.NumberOfItems()); for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] + rightExpr[i]; } return buffer; }
 	virtual const char* FlatName() const override { return "+"; }
 	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new VectorExpressionOperatorPlus((VectorExpressionBase*)operands[0].node, (VectorExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " + " + operands[1] + ")"; }
@@ -287,8 +286,7 @@ public:
 	{
 		const ResizableConstVector& leftExpr = left->EvaluateRef();
 		const ResizableConstVector& rightExpr = right->EvaluateRef();
-		CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(),
-			"symbolic.Vector::operator- : inconsistent vector sizes");
+		if (!(leftExpr.NumberOfItems() == rightExpr.NumberOfItems())) { PyError("symbolic.Vector::operator- : inconsistent vector sizes", PyErrorType::valueError); }
 		buffer.SetNumberOfItems(leftExpr.NumberOfItems());
 		for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] - rightExpr[i]; }
 		return buffer;
@@ -301,7 +299,7 @@ public:
 	//the flat evaluation (#3054)
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
-	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(), "symbolic.Vector::operator- : inconsistent vector sizes"); buffer.SetNumberOfItems(leftExpr.NumberOfItems()); for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] - rightExpr[i]; } return buffer; }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); if (!(leftExpr.NumberOfItems() == rightExpr.NumberOfItems())) { PyError("symbolic.Vector::operator- : inconsistent vector sizes", PyErrorType::valueError); } buffer.SetNumberOfItems(leftExpr.NumberOfItems()); for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] - rightExpr[i]; } return buffer; }
 	virtual const char* FlatName() const override { return "-"; }
 	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new VectorExpressionOperatorMinus((VectorExpressionBase*)operands[0].node, (VectorExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " - " + operands[1] + ")"; }
@@ -360,8 +358,7 @@ public:
 
 	virtual const ResizableConstVector& EvaluateRef() const override
 	{
-		//CHECKandTHROW(left->NumberOfColumns() == right->NumberOfItems(),
-		//	"symbolic.Vector::operator*(Matrix) : inconsistent matrix/vector sizes");
+		//if (!(left->NumberOfColumns() == right->NumberOfItems())) { PyError(//	"symbolic.Vector::operator*(Matrix) : inconsistent matrix/vector sizes", PyErrorType::valueError); }
 		EXUmath::MultMatrixVector(left->EvaluateRef(), right->EvaluateRef(), buffer);
 		return buffer;
 	}
@@ -396,8 +393,7 @@ public:
 
 	virtual const ResizableConstVector& EvaluateRef() const override
 	{
-		//CHECKandTHROW(left->NumberOfColumns() == right->NumberOfItems(),
-		//	"symbolic.Vector::operator*(Matrix) : inconsistent matrix/vector sizes");
+		//if (!(left->NumberOfColumns() == right->NumberOfItems())) { PyError(//	"symbolic.Vector::operator*(Matrix) : inconsistent matrix/vector sizes", PyErrorType::valueError); }
 		EXUmath::MultMatrixTransposedVector(left->EvaluateRef(), right->EvaluateRef(), buffer);
 		return buffer;
 	}
@@ -494,8 +490,7 @@ public:
 		const ResizableConstVector& l = left->EvaluateRef();
 		const ResizableConstVector& r = right->EvaluateRef();
 
-		CHECKandTHROW(l.NumberOfItems() == r.NumberOfItems(),
-			"symbolic.MultComponents(...): inconsistent vector sizes");
+		if (!(l.NumberOfItems() == r.NumberOfItems())) { PyError("symbolic.MultComponents(...): inconsistent vector sizes", PyErrorType::valueError); }
 
 		buffer.SetNumberOfItems(l.NumberOfItems());
 		EXUmath::MultVectorComponents(l, r, buffer);
@@ -511,7 +506,7 @@ public:
 	//the flat evaluation (#3054)
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
-	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& l = (*values[0].vector); const ResizableConstVector& r = (*values[1].vector); CHECKandTHROW(l.NumberOfItems() == r.NumberOfItems(), "symbolic.MultComponents(...): inconsistent vector sizes"); buffer.SetNumberOfItems(l.NumberOfItems()); EXUmath::MultVectorComponents(l, r, buffer); return buffer; }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& l = (*values[0].vector); const ResizableConstVector& r = (*values[1].vector); if (!(l.NumberOfItems() == r.NumberOfItems())) { PyError("symbolic.MultComponents(...): inconsistent vector sizes", PyErrorType::valueError); } buffer.SetNumberOfItems(l.NumberOfItems()); EXUmath::MultVectorComponents(l, r, buffer); return buffer; }
 	virtual const char* FlatName() const override { return "multiply"; }
 	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new VectorExpressionMultComponents((VectorExpressionBase*)operands[0].node, (VectorExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0] + ".multiply(" + operands[1] + ")"; }
@@ -539,8 +534,7 @@ public:
 	{
 		const ResizableConstVector& leftExpr = left->EvaluateRef();
 		const ResizableConstVector& rightExpr = right->EvaluateRef();
-		CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(),
-			"symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes");
+		if (!(leftExpr.NumberOfItems() == rightExpr.NumberOfItems())) { PyError("symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes", PyErrorType::valueError); }
 
 		return leftExpr * rightExpr;
 
@@ -555,7 +549,7 @@ public:
 	//the flat evaluation (#3054)
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
-	virtual Real EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(), "symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes"); return leftExpr * rightExpr; }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); if (!(leftExpr.NumberOfItems() == rightExpr.NumberOfItems())) { PyError("symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes", PyErrorType::valueError); } return leftExpr * rightExpr; }
 	virtual const char* FlatName() const override { return "@"; }
 	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new VectorExpressionOperatorMultVectorVector((VectorExpressionBase*)operands[0].node, (VectorExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " @ " + operands[1] + ")"; }

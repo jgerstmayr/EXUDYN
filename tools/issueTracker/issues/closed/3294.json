@@ -1,0 +1,17 @@
+{
+  "number": 3294,
+  "title": "the AVX2 references of the fast module are recorded again",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "AVX2ReferenceSolutionUpdate was last recorded on 2026-10-10; since then the regular values of many models moved (#3201, #3245, #3288, #3289, ...), so 30 models failed with the fast module on stale entries. Decided: recorded again from the fast-module suite, an entry for every model and mini example whose fast result differs from the regular value by more than its tolerance; revision2026c step RG20.7.6. [2026-11-06, Claude-JG]: Counted after #3293: 40 test models and 2 mini examples failed on stale entries, not 30.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 12:13",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/runTestSuiteRefSol.py",
+  "releaseNotes": "AVX2ReferenceSolutionUpdate recorded again from the fast-module suite: 46 entries, every model and mini example whose fast result differs from the regular value by more than its tolerance; the fast suite passes serially and in parallel.",
+  "resolvedInVersion": "1.13.408"
+}

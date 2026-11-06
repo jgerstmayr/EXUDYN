@@ -2551,6 +2551,7 @@ void MainSystem::PySetSensorParameter(const py::object& itemIndex, const STDstri
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //MainSystemData functions
+//the checks of the user's calls throw in every module, the fast one included, which compiles CHECKandTHROW out (#3293)
 void MainSystemData::RaiseIfConfigurationIllegal(const char* functionName, ConfigurationType configuration, Index itemIndex, ItemType itemType) const
 {
 	if ((Index)configuration <= (Index)ConfigurationType::_None)
@@ -2558,14 +2559,14 @@ void MainSystemData::RaiseIfConfigurationIllegal(const char* functionName, Confi
 		STDstring s = STDstring("MainSystem::") + functionName;
 		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
 		s += ": called with illegal configuration ConfigurationType._None";
-		CHECKandTHROWstring(s, ExudynValueError);
+		ThrowPyErrorType(PyErrorType::valueError, s.c_str());
 	}
 	else if ((Index)configuration >= (Index)ConfigurationType::EndOfEnumList)
 	{
 		STDstring s = STDstring("MainSystem::") + functionName;
 		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
 		s += ": called with illegal configuration ConfigurationType.???";
-		CHECKandTHROWstring(s, ExudynValueError);
+		ThrowPyErrorType(PyErrorType::valueError, s.c_str());
 	}
 	//else if (configuration == ConfigurationType::StartOfStep) //StartOfStep currently also initialized in CSystem
 	//{
@@ -2582,7 +2583,7 @@ void MainSystemData::RaiseIfNotConsistentNorReference(const char* functionName, 
 		STDstring s = STDstring("MainSystem::") + functionName;
 		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
 		s += ": called with illegal configuration for inconsistent system; it may be either called for consistent system (needs mbs.Assemble() prior to this call and not change in mbs any more) or use configuration = ConfigurationType.Reference";
-		CHECKandTHROWstring(s, ExudynModelError);
+		ThrowPyErrorType(PyErrorType::modelError, s.c_str());
 	}
 }
 
@@ -2593,7 +2594,7 @@ void MainSystemData::RaiseIfNotConsistent(const char* functionName, Index itemIn
 		STDstring s = STDstring("MainSystem::") + functionName;
 		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
 		s += ": called for inconsistent system; a call to mbs.Assemble() is necessary prior to this function call (such that mbs.systemIsConsistent returns True)";
-		CHECKandTHROWstring(s, ExudynModelError);
+		ThrowPyErrorType(PyErrorType::modelError, s.c_str());
 	}
 }
 
@@ -2612,7 +2613,7 @@ void MainSystemData::RaiseIfNotOutputVariableTypeForReferenceConfiguration(const
 		STDstring s = functionName;
 		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
 		s += ": called with ConfigurationType.Reference is only possible with an OutputVariableType suitable for reference configuration, being Position, Displacement, Distance, Rotation or Coordinate-like, but not Velocity, Acceleration, Force, Stress, etc.";
-		CHECKandTHROWstring(s, ExudynValueError);
+		ThrowPyErrorType(PyErrorType::valueError, s.c_str());
 	}
 }
 

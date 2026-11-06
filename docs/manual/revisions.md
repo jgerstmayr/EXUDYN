@@ -610,6 +610,12 @@ the spatial slider crank with Lie group nodes.
 **ObjectKinematicTree allocates no memory per step** (#3291): it copied the joint velocities in each evaluation
 of its mass matrix, forces and Jacobian, up to 29 times per step of an implicit solver.
 
+**The fast module refuses what the regular one refuses** (#3293): checks of the input to `exudyn.symbolic` - the
+inputs of `esym.Function`, the sizes of vector and matrix operands, `Diff`, `EvaluateJacobian`, what a recording
+must not do - and the calls of `mbs.GetNodeOutput` and alike on a system that is not assembled were compiled out of
+`exudynCPPfast`, which then crashed or computed with wrong sizes; they raise in both modules. A pickle that names
+`exudyn.exudynCPP`, as a stored FEM mesh may, loads with the fast module.
+
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.
 

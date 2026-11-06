@@ -150,6 +150,10 @@ special = _compiledModule.special     #exudyn.special: the rarely needed corners
 if _compiledModuleName == 'exudynCPPfast':
     #not behind the switch below: running without range checks is worth saying every time
     print('Imported exudyn fast version without range checks')
+    #a pickle names the types of the regular module, e.g. exudyn.exudynCPP.OutputVariableType in a stored FEM mesh; the
+    #two cannot be loaded together, as pybind11 registers each type once, so the name resolves to this module (#3293)
+    import sys as _sys #exudyn.sys, the dict of the module, has replaced the name sys here
+    _sys.modules.setdefault(__name__ + '.exudynCPP', _compiledModule)
 elif __useExudynFast:
     #the user ASKED for the fast module and did not get it; say so, and say why. Falling back
     #in silence is how someone spends an afternoon wondering where the speed went

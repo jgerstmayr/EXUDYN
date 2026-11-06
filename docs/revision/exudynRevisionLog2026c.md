@@ -6427,6 +6427,34 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-7-6"></a>
+### RG20.7.6 — the fast module: user checks compiled out, the AVX2 references (2026-11-06, #3293, #3294)
+- Maintainer 2026-11-06: fix the related problems; the AVX2 references were to be recorded again after RG20.7.2.
+- exudynCPPfast built here (exudev build --fast, 2m15s). Its suite stopped at test model 152, symbolicFunctionTest,
+  with a segmentation fault: esym.Function(t, [t + 1]) refused an input that is no named variable by CHECKandTHROW,
+  which __FAST_EXUDYN_LINALG compiles out, and then dereferenced the null node. Run in parallel (each model in its
+  own interpreter): 47 models and 2 mini examples failed - 10 not by rounding: symbolicItemOutputTest,
+  symbolicDeepRecordingTest, symbolicVectorDiffTest, symbolicJacobianExpressionsTest, symbolicModuleTest (refusals
+  that did not raise), symbolicVariableScopeTest (a TypeError after a missing refusal), symbolicSystemTest (access
+  violation: GetNodeOutput of a system not assembled, whose refusal in RaiseIfNotConsistentNorReference was
+  CHECKandTHROWstring), createFFRFReducedOrderObjectTest and modelLibraryTest (ImportError 'type Real is already
+  registered': netgenTestMesh.npz holds a pickled exudyn.exudynCPP.OutputVariableType, whose unpickling imported the
+  regular module next to the fast one).
+- Fixed (#3293): the user checks the tests reach by PyError (CODING_STYLE.md section 10.1) - esym.Function (4), the
+  sizes of the operands of every vector and matrix operation ('inconsistent', 26 in SymbolicVector.h,
+  SymbolicMatrix.h, SymbolicTable.cpp), Diff of a component and of an unnamed variable, the derivative of an operation
+  without one (2), Evaluate without the MainSystem, EvaluateJacobian (2), a named variable set or created while
+  recording (2), a variable outside mbs.symbolicVariables; the five MainSystemData::RaiseIf... by ThrowPyErrorType,
+  which throws without printing, as CHECKandTHROWstring did. exudyn/__init__.py: with the fast module loaded,
+  sys.modules['exudyn.exudynCPP'] is that module. About 100 CHECKandTHROW of the symbolic module remain, not reached by
+  a test; whether they check user input is not audited.
+- Then the 40 models and 2 mini examples left differed from the regular values by 6e-14 to 4.8e-3 - stale entries of
+  AVX2ReferenceSolutionUpdate (last recorded 2026-10-10) or none. Recorded again (#3294) from the log by a script:
+  an entry for every model and mini example whose fast result differs from the regular reference by more than its
+  tolerance, ordered by the difference - 46 entries, 12 new, 9 removed (their fast and regular values agree now); the
+  entry of runPerformanceTests kept, not run here. The fast suite passes, in parallel and serially (292 models, 99
+  mini examples), the regular one as well.
+
 <a id="rg20-7-5"></a>
 ### RG20.7.5 / RG20.9.4 — ObjectKinematicTree without allocations, modelLibrary.py without deprecated arguments (2026-11-06, #3291, #3292)
 - Maintainer 2026-11-06: fix the related problems.

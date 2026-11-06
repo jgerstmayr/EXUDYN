@@ -781,8 +781,8 @@ public:
 			argIndex++;
 		}
 
-		CHECKandTHROW(mainSystem || itemOutputs.empty(), "symbolic user function " + functionName
-			+ ": Evaluate needs the MainSystem as first argument, as the function reads outputs of items");
+		if (!(mainSystem || itemOutputs.empty())) { PyError("symbolic user function " + functionName
+			+ ": Evaluate needs the MainSystem as first argument, as the function reads outputs of items", PyErrorType::valueError); }
 		std::unique_ptr<ItemOutputScope> itemOutputScope(mainSystem ? new ItemOutputScope(*this, *mainSystem) : nullptr);
 		if (returnValue.IsReal())
 		{
@@ -834,8 +834,8 @@ public:
 				variable = &matrix; size = matrix.NumberOfRows()*matrix.NumberOfColumns();
 			}
 		}
-		CHECKandTHROW(variable != nullptr, "symbolic user function " + functionName + ": EvaluateJacobian: no argument named '" + argumentName + "'");
-		CHECKandTHROW(itemOutputs.empty(), "symbolic user function " + functionName + ": EvaluateJacobian: the function reads outputs of items, which have no derivative");
+		if (variable == nullptr) { PyError("symbolic user function " + functionName + ": EvaluateJacobian: no argument named '" + argumentName + "'", PyErrorType::valueError); }
+		if (!itemOutputs.empty()) { PyError("symbolic user function " + functionName + ": EvaluateJacobian: the function reads outputs of items, which have no derivative", PyErrorType::valueError); }
 		Index columns = (size < 0) ? 1 : size;
 		FlatNode root = ResultNode();
 		std::vector<Real> leafDerivative; //of a result without operations: the unit matrix if it is the variable, else zero

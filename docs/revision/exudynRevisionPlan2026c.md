@@ -3423,6 +3423,12 @@ Found with RG20.7.3 (#3287): the kinematic tree of modelLibrary.py allocated 4 t
 
 CLOSED 2026-11-06 (#3291; maintainer 2026-11-06: the related problems): the LinkedDataVector of the joint velocities was initialized by a conditional expression, which copied it; linked by LinkDataTo, no allocation per step; test_kinematicTreeAllocations.py. [log](exudynRevisionLog2026c.md#rg20-7-5)
 
+#### **CLOSED_RG20.7.6** The fast module: the user checks that it compiled out, its AVX2 references
+
+The AVX2 references were to be recorded again after RG20.7.2 (#3288).
+
+CLOSED 2026-11-06 (#3293, #3294; maintainer 2026-11-06: the related problems): the fast-module suite crashed in symbolicFunctionTest; user checks of the symbolic module and of MainSystemData were CHECKandTHROW, compiled out in exudynCPPfast - now PyError or ThrowPyErrorType; a pickled exudyn.exudynCPP enum (the FEM test mesh) resolves to the fast module. The AVX2 references recorded again: 46 entries. Both suites pass, the fast one serial and in parallel. [log](exudynRevisionLog2026c.md#rg20-7-6)
+
 ### **CLOSED_RG20.8** A common step size controller for the adaptive solvers, Python first, then C++
 
 Maintainer 2026-11-04 (design section 3.6): one controller (PI, with safety factor, limits and rejection) for TrapezoidalGGL, Lobatto4, ODE23, DOPRI5 and the reduction by the post-Newton step, with timeIntegration.absoluteTolerance and relativeTolerance.

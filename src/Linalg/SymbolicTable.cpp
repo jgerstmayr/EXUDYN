@@ -201,7 +201,7 @@ static void ArrayResultSize(OperationCode code, const FlatNode& node, const Slot
 	switch (code)
 	{
 	case OperationCode::Dot:
-		CHECKandTHROW(x[0].rows == x[1].rows, "symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes");
+		if (!(x[0].rows == x[1].rows)) { PyError("symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes", PyErrorType::valueError); }
 		break;
 	case OperationCode::VectorEqual: case OperationCode::VectorNotEqual:
 		CHECKandTHROW(x[0].rows == x[1].rows, "VectorBase::operator==: incompatible size of vectors");
@@ -209,11 +209,11 @@ static void ArrayResultSize(OperationCode code, const FlatNode& node, const Slot
 	case OperationCode::Norm: case OperationCode::VectorComponent: case OperationCode::MatrixComponent: break;
 	case OperationCode::VectorOfComponents: rows = numberOfOperands; break;
 	case OperationCode::VectorPlus:
-		CHECKandTHROW(x[0].rows == x[1].rows, "symbolic.Vector::operator+ : inconsistent vector sizes");
+		if (x[0].rows != x[1].rows) { PyError("symbolic.Vector::operator+ : inconsistent vector sizes", PyErrorType::valueError); }
 		rows = x[0].rows;
 		break;
 	case OperationCode::VectorMinus:
-		CHECKandTHROW(x[0].rows == x[1].rows, "symbolic.Vector::operator- : inconsistent vector sizes");
+		if (!(x[0].rows == x[1].rows)) { PyError("symbolic.Vector::operator- : inconsistent vector sizes", PyErrorType::valueError); }
 		rows = x[0].rows;
 		break;
 	case OperationCode::VectorScalar: rows = x[1].rows; break;
@@ -227,7 +227,7 @@ static void ArrayResultSize(OperationCode code, const FlatNode& node, const Slot
 		break;
 	case OperationCode::VectorPositive: case OperationCode::VectorNegative: rows = x[0].rows; break;
 	case OperationCode::VectorMultiply:
-		CHECKandTHROW(x[0].rows == x[1].rows, "symbolic.MultComponents(...): inconsistent vector sizes");
+		if (!(x[0].rows == x[1].rows)) { PyError("symbolic.MultComponents(...): inconsistent vector sizes", PyErrorType::valueError); }
 		rows = x[0].rows;
 		break;
 	case OperationCode::MatrixOfComponents:
@@ -235,17 +235,17 @@ static void ArrayResultSize(OperationCode code, const FlatNode& node, const Slot
 		columns = ((const MatrixExpressionBase*)node.node)->NumberOfColumns();
 		break;
 	case OperationCode::MatrixPlus:
-		CHECKandTHROW(x[0].rows == x[1].rows && x[0].columns == x[1].columns, "symbolic.Matrix::operator+ : inconsistent matrix sizes");
+		if (!(x[0].rows == x[1].rows && x[0].columns == x[1].columns)) { PyError("symbolic.Matrix::operator+ : inconsistent matrix sizes", PyErrorType::valueError); }
 		rows = x[0].rows; columns = x[0].columns;
 		break;
 	case OperationCode::MatrixMinus:
-		CHECKandTHROW(x[0].rows == x[1].rows && x[0].columns == x[1].columns, "symbolic.Matrix::operator- : inconsistent matrix sizes");
+		if (!(x[0].rows == x[1].rows && x[0].columns == x[1].columns)) { PyError("symbolic.Matrix::operator- : inconsistent matrix sizes", PyErrorType::valueError); }
 		rows = x[0].rows; columns = x[0].columns;
 		break;
 	case OperationCode::MatrixScalar: rows = x[1].rows; columns = x[1].columns; break;
 	case OperationCode::MatrixPositive: case OperationCode::MatrixNegative: rows = x[0].rows; columns = x[0].columns; break;
 	case OperationCode::MatrixMatrix:
-		CHECKandTHROW(x[0].columns == x[1].rows, "symbolic.Matrix::operator@ (matrix matrix multiplication) : inconsistent matrix sizes");
+		if (!(x[0].columns == x[1].rows)) { PyError("symbolic.Matrix::operator@ (matrix matrix multiplication) : inconsistent matrix sizes", PyErrorType::valueError); }
 		rows = x[0].rows; columns = x[1].columns;
 		break;
 	case OperationCode::MatrixTransposed: rows = x[0].columns; columns = x[0].rows; break;
@@ -570,7 +570,7 @@ void ForwardDerivative(int rule, const FlatNode& node, const SlotValue& value, c
 		{
 			for (Index c = 0; c < v[i].Components()*n; c++)
 			{
-				CHECKandTHROW(d[i][c] == 0., STDstring("exudyn.symbolic: the operation '") + OperationName(node) + "' has no derivative", ExudynValueError);
+				if (d[i][c] != 0.) { PyError(STDstring("exudyn.symbolic: the operation '") + OperationName(node) + "' has no derivative", PyErrorType::valueError); }
 			}
 		}
 		for (Index i = 0; i < m*n; i++) { out[i] = 0.; }
@@ -945,8 +945,8 @@ static SymbolicDerivativeValue SymbolicDerivativeOfOperation(int rule, const Fla
 		return DerivativeOfMatrix(d[0]->matrix*x[1]->matrix + x[0]->matrix*d[1]->matrix);
 	case MatrixTransposed: return IsZero(0, d) ? result : DerivativeOfMatrix(d[0]->matrix.Transposed());
 	default:
-		CHECKandTHROW(false, STDstring("exudyn.symbolic.Jacobian: the operation '") + OperationName(node)
-			+ "' has no derivative as an expression", ExudynValueError);
+		PyError(STDstring("exudyn.symbolic.Jacobian: the operation '") + OperationName(node)
+			+ "' has no derivative as an expression", PyErrorType::valueError);
 		return result;
 	}
 }

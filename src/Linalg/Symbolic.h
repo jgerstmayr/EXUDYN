@@ -1421,8 +1421,8 @@ public:
 	static bool recordingFunction;
 	static void CheckNotRecordingFunction()
 	{
-		CHECKandTHROW(!recordingFunction, "exudyn.symbolic: SetValue, SetVector, SetMatrix or a component of a named variable "
-			"is set while a user function is recorded, which the recording would not follow: compute a new symbolic value instead");
+		if (recordingFunction) { PyError("exudyn.symbolic: SetValue, SetVector, SetMatrix or a component of a named variable "
+			"is set while a user function is recorded, which the recording would not follow: compute a new symbolic value instead", PyErrorType::valueError); }
 	}
 	static bool flagDebug;
 

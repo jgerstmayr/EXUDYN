@@ -258,13 +258,13 @@ public:
 	virtual Index NumberOfRows() const override
 	{ 
 		Index leftRows = left->NumberOfRows();
-		CHECKandTHROW(leftRows == right->NumberOfRows(), "symbolic.Matrix::operator+ : inconsistent number of rows");
+		if (!(leftRows == right->NumberOfRows())) { PyError("symbolic.Matrix::operator+ : inconsistent number of rows", PyErrorType::valueError); }
 		return leftRows;
 	}
 	virtual Index NumberOfColumns() const override
 	{ 
 		Index leftColumns = left->NumberOfColumns();
-		CHECKandTHROW(leftColumns == right->NumberOfColumns(), "symbolic.Matrix::operator+ : inconsistent number of columns");
+		if (!(leftColumns == right->NumberOfColumns())) { PyError("symbolic.Matrix::operator+ : inconsistent number of columns", PyErrorType::valueError); }
 		return leftColumns;
 	}
 
@@ -272,8 +272,7 @@ public:
 	{
 		const ResizableMatrix& leftExpr = left->EvaluateRef();
 		const ResizableMatrix& rightExpr = right->EvaluateRef();
-		CHECKandTHROW( (leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()),
-			"symbolic.Matrix::operator+ : inconsistent matrix sizes");
+		if (!((leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()))) { PyError("symbolic.Matrix::operator+ : inconsistent matrix sizes", PyErrorType::valueError); }
 		buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), leftExpr.NumberOfColumns());
 		for (Index i = 0; i < leftExpr.NumberOfRows()*leftExpr.NumberOfColumns(); i++)
 		{
@@ -298,7 +297,7 @@ public:
 	//the flat evaluation (#3054)
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
-	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& leftExpr = (*values[0].matrix); const ResizableMatrix& rightExpr = (*values[1].matrix); CHECKandTHROW( (leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()), "symbolic.Matrix::operator+ : inconsistent matrix sizes"); buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), leftExpr.NumberOfColumns()); for (Index i = 0; i < leftExpr.NumberOfRows()*leftExpr.NumberOfColumns(); i++) { buffer.GetDataPointer()[i] = leftExpr.GetDataPointer()[i] + rightExpr.GetDataPointer()[i]; } return buffer; }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& leftExpr = (*values[0].matrix); const ResizableMatrix& rightExpr = (*values[1].matrix); if (!((leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()))) { PyError("symbolic.Matrix::operator+ : inconsistent matrix sizes", PyErrorType::valueError); } buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), leftExpr.NumberOfColumns()); for (Index i = 0; i < leftExpr.NumberOfRows()*leftExpr.NumberOfColumns(); i++) { buffer.GetDataPointer()[i] = leftExpr.GetDataPointer()[i] + rightExpr.GetDataPointer()[i]; } return buffer; }
 	virtual const char* FlatName() const override { return "+"; }
 	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new MatrixExpressionOperatorPlus((MatrixExpressionBase*)operands[0].node, (MatrixExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " + " + operands[1] + ")"; }
@@ -320,13 +319,13 @@ public:
 	virtual Index NumberOfRows() const override
 	{
 		Index leftRows = left->NumberOfRows();
-		CHECKandTHROW(leftRows == right->NumberOfRows(), "symbolic.Matrix::operator+ : inconsistent number of rows");
+		if (!(leftRows == right->NumberOfRows())) { PyError("symbolic.Matrix::operator+ : inconsistent number of rows", PyErrorType::valueError); }
 		return leftRows;
 	}
 	virtual Index NumberOfColumns() const override
 	{
 		Index leftColumns = left->NumberOfColumns();
-		CHECKandTHROW(leftColumns == right->NumberOfColumns(), "symbolic.Matrix::operator+ : inconsistent number of columns");
+		if (!(leftColumns == right->NumberOfColumns())) { PyError("symbolic.Matrix::operator+ : inconsistent number of columns", PyErrorType::valueError); }
 		return leftColumns;
 	}
 
@@ -334,8 +333,7 @@ public:
 	{
 		const ResizableMatrix& leftExpr = left->EvaluateRef();
 		const ResizableMatrix& rightExpr = right->EvaluateRef();
-		CHECKandTHROW((leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()),
-			"symbolic.Matrix::operator- : inconsistent matrix sizes");
+		if (!((leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()))) { PyError("symbolic.Matrix::operator- : inconsistent matrix sizes", PyErrorType::valueError); }
 		buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), leftExpr.NumberOfColumns());
 		for (Index i = 0; i < leftExpr.NumberOfRows()*leftExpr.NumberOfColumns(); i++)
 		{
@@ -359,7 +357,7 @@ public:
 	//the flat evaluation (#3054)
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
-	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& leftExpr = (*values[0].matrix); const ResizableMatrix& rightExpr = (*values[1].matrix); CHECKandTHROW((leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()), "symbolic.Matrix::operator- : inconsistent matrix sizes"); buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), leftExpr.NumberOfColumns()); for (Index i = 0; i < leftExpr.NumberOfRows()*leftExpr.NumberOfColumns(); i++) { buffer.GetDataPointer()[i] = leftExpr.GetDataPointer()[i] - rightExpr.GetDataPointer()[i]; } return buffer; }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& leftExpr = (*values[0].matrix); const ResizableMatrix& rightExpr = (*values[1].matrix); if (!((leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()))) { PyError("symbolic.Matrix::operator- : inconsistent matrix sizes", PyErrorType::valueError); } buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), leftExpr.NumberOfColumns()); for (Index i = 0; i < leftExpr.NumberOfRows()*leftExpr.NumberOfColumns(); i++) { buffer.GetDataPointer()[i] = leftExpr.GetDataPointer()[i] - rightExpr.GetDataPointer()[i]; } return buffer; }
 	virtual const char* FlatName() const override { return "-"; }
 	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new MatrixExpressionOperatorMinus((MatrixExpressionBase*)operands[0].node, (MatrixExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " - " + operands[1] + ")"; }
@@ -533,8 +531,7 @@ public:
 //		ResizableMatrix l = left->Evaluate();
 //		ResizableMatrix r = right->Evaluate();
 //
-//		CHECKandTHROW(l.NumberOfItems() == r.NumberOfItems(),
-//			"symbolic.MultComponents(...): inconsistent matrix sizes");
+//		if (!(l.NumberOfItems() == r.NumberOfItems())) { PyError(//			"symbolic.MultComponents(...): inconsistent matrix sizes", PyErrorType::valueError); }
 //
 //		ResizableMatrix result(l.NumberOfItems());
 //		EXUmath::MultMatrixComponents(l, r, result);
@@ -579,8 +576,7 @@ public:
 	{
 		const ResizableMatrix& leftExpr = left->EvaluateRef();
 		const ResizableMatrix& rightExpr = right->EvaluateRef();
-		CHECKandTHROW((leftExpr.NumberOfColumns() == rightExpr.NumberOfRows()),
-			"symbolic.Matrix::operator@ (matrix matrix multiplication) : inconsistent matrix sizes");
+		if (!((leftExpr.NumberOfColumns() == rightExpr.NumberOfRows()))) { PyError("symbolic.Matrix::operator@ (matrix matrix multiplication) : inconsistent matrix sizes", PyErrorType::valueError); }
 		buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), rightExpr.NumberOfColumns());
 		for (Index i = 0; i < leftExpr.NumberOfRows(); i++)
 		{
@@ -618,7 +614,7 @@ public:
 	//the flat evaluation (#3054)
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
-	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& leftExpr = (*values[0].matrix); const ResizableMatrix& rightExpr = (*values[1].matrix); CHECKandTHROW((leftExpr.NumberOfColumns() == rightExpr.NumberOfRows()), "symbolic.Matrix::operator@ (matrix matrix multiplication) : inconsistent matrix sizes"); buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), rightExpr.NumberOfColumns()); for (Index i = 0; i < leftExpr.NumberOfRows(); i++) { for (Index j = 0; j < rightExpr.NumberOfColumns(); j++) { Real value = 0.; for (Index k = 0; k < leftExpr.NumberOfColumns(); k++) { value += leftExpr(i, k)*rightExpr(k, j); } buffer(i, j) = value; } } return buffer; }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& leftExpr = (*values[0].matrix); const ResizableMatrix& rightExpr = (*values[1].matrix); if (!((leftExpr.NumberOfColumns() == rightExpr.NumberOfRows()))) { PyError("symbolic.Matrix::operator@ (matrix matrix multiplication) : inconsistent matrix sizes", PyErrorType::valueError); } buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), rightExpr.NumberOfColumns()); for (Index i = 0; i < leftExpr.NumberOfRows(); i++) { for (Index j = 0; j < rightExpr.NumberOfColumns(); j++) { Real value = 0.; for (Index k = 0; k < leftExpr.NumberOfColumns(); k++) { value += leftExpr(i, k)*rightExpr(k, j); } buffer(i, j) = value; } } return buffer; }
 	virtual const char* FlatName() const override { return "@"; }
 	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new MatrixExpressionOperatorMultMatrixMatrix((MatrixExpressionBase*)operands[0].node, (MatrixExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " @ " + operands[1] + ")"; }

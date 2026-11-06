@@ -952,8 +952,8 @@ static bool VariablesWithoutScope()
 //! the scope of a named variable created in Python (#3208): esym.variables for None, the scope of a MainSystem, or a VariableSet
 static VariableSet& ScopeOfNamedVariable(const py::object& scope, const STDstring& name)
 {
-	CHECKandTHROW(!SReal::recordingFunction, "exudyn.symbolic: the named variable '" + name + "' is created while a user function is "
-		"recorded; a named variable belongs to the model: create it before the recording, esym.Real(name, value, scope=mbs)", ExudynValueError);
+	if (SReal::recordingFunction) { PyError("exudyn.symbolic: the named variable '" + name + "' is created while a user function is "
+		"recorded; a named variable belongs to the model: create it before the recording, esym.Real(name, value, scope=mbs)", PyErrorType::valueError); }
 	if (scope.is_none()) { return py::module_::import("exudyn").attr("symbolic").attr("variables").cast<VariableSet&>(); }
 	if (py::isinstance<VariableSet>(scope)) { return py::cast<VariableSet&>(scope); }
 	if (py::isinstance<MainSystem>(scope)) { return py::cast<MainSystem&>(scope).GetSymbolicVariables().cast<VariableSet&>(); }
@@ -1046,9 +1046,9 @@ void CheckVariablesOfRecording(const py::object& returnValue, const py::list& ar
 	for (const auto& [node, variableName] : namedVariables)
 	{
 		if (std::find(argumentNodes.begin(), argumentNodes.end(), node) != argumentNodes.end()) { continue; }
-		CHECKandTHROW(IsVariableOfScope(scope, node, variableName), "CreateSymbolicUserFunction " + name + ": the function reads the named variable '" + variableName
+		if (!IsVariableOfScope(scope, node, variableName)) { PyError("CreateSymbolicUserFunction " + name + ": the function reads the named variable '" + variableName
 			+ "', which is not in mbs.symbolicVariables, the scope of the model; create it with esym.Real('" + variableName
-			+ "', value, scope=mbs) - or esym.Vector, esym.Matrix - before the recording", ExudynValueError);
+			+ "', value, scope=mbs) - or esym.Vector, esym.Matrix - before the recording", PyErrorType::valueError); }
 	}
 }
 
@@ -1110,11 +1110,12 @@ py::object FunctionOfExpression(const py::object& result, const py::object& inpu
 	for (const py::object& input : inputList)
 	{
 		const void* node = FlatProgramData::NamedNode(input);
-		CHECKandTHROW(node != nullptr, "esym.Function: an input must be a named variable, esym.Real('x', 1.), esym.Vector('v', [...]) or esym.Matrix('M', [[...]]), but received " + py::cast<STDstring>(py::str(input)), ExudynValueError);
+		//user input: PyError, which the fast module keeps (#3293)
+		if (node == nullptr) { PyError("esym.Function: an input must be a named variable, esym.Real('x', 1.), esym.Vector('v', [...]) or esym.Matrix('M', [[...]]), but received " + py::cast<STDstring>(py::str(input)), PyErrorType::valueError); }
 		STDstring inputName = py::isinstance<SReal>(input) ? py::cast<const SReal&>(input).GetExpressionNamedReal().GetName()
 			: (py::isinstance<SymbolicRealVector>(input) ? py::cast<const SymbolicRealVector&>(input).GetExpressionNamedReal().GetName()
 			: py::cast<const SymbolicRealMatrix&>(input).GetExpressionNamedReal().GetName());
-		CHECKandTHROW(std::find(names.begin(), names.end(), inputName) == names.end(), "esym.Function: two inputs are named '" + inputName + "'", ExudynValueError);
+		if (std::find(names.begin(), names.end(), inputName) != names.end()) { PyError("esym.Function: two inputs are named '" + inputName + "'", PyErrorType::valueError); }
 		names.push_back(inputName);
 		inputNodes.push_back(node);
 		argList.append(input);
@@ -1123,8 +1124,7 @@ py::object FunctionOfExpression(const py::object& result, const py::object& inpu
 	}
 	py::object returnValue = result;
 	if (py::isinstance<py::float_>(result) || py::isinstance<py::int_>(result)) { returnValue = py::cast(SReal(py::cast<Real>(result))); }
-	CHECKandTHROW(py::isinstance<SReal>(returnValue) || py::isinstance<SymbolicRealVector>(returnValue) || py::isinstance<SymbolicRealMatrix>(returnValue),
-		"esym.Function: the result must be an esym.Real, Vector or Matrix, but received " + py::cast<STDstring>(py::str(result)), ExudynValueError);
+	if (!(py::isinstance<SReal>(returnValue) || py::isinstance<SymbolicRealVector>(returnValue) || py::isinstance<SymbolicRealMatrix>(returnValue))) { PyError("esym.Function: the result must be an esym.Real, Vector or Matrix, but received " + py::cast<STDstring>(py::str(result)), PyErrorType::valueError); }
 	//every named variable of the result is an input, or a variable of esym.variables, which the function reads at every call;
 	//found by a traversal of the nodes, not by the entries of GetFlatProgramData, which cost 80 percent of the call (#3198)
 	std::vector<std::pair<const void*, STDstring>> namedVariables;
@@ -1135,8 +1135,8 @@ py::object FunctionOfExpression(const py::object& result, const py::object& inpu
 		if (std::find(inputNodes.begin(), inputNodes.end(), node) != inputNodes.end()) { continue; }
 		bool global = globalVariables.HasVariable(variableName) && !globalVariables.IsArray(variableName)
 			&& (const void*)globalVariables.GetVariable(variableName).GetExpression() == node;
-		CHECKandTHROW(global, "esym.Function " + name + ": the result depends on the variable '" + variableName
-			+ "', which is no input and not in esym.variables", ExudynValueError);
+		if (!global) { PyError("esym.Function " + name + ": the result depends on the variable '" + variableName
+			+ "', which is no input and not in esym.variables", PyErrorType::valueError); }
 	}
 	py::dict functionDict;
 	functionDict["functionName"] = name;
@@ -1989,11 +1989,11 @@ STDstring SymbolicToString(const TSymbolic& x, const STDstring& format)
 //! the node of a named vector variable and the checked component, for Diff (#3115)
 static const void* NamedVectorOfDiff(const SymbolicRealVector& variable, Index component, Index& size)
 {
-	CHECKandTHROW(variable.IsExpressionNamedReal(), "symbolic Diff: the variable must be a named symbolic.Vector");
+	if (!variable.IsExpressionNamedReal()) { PyError("symbolic Diff: the variable must be a named symbolic.Vector", PyErrorType::valueError); }
 	const VectorExpressionNamedReal& named = variable.GetExpressionNamedReal();
 	size = named.NumberOfItems();
-	CHECKandTHROW(component >= 0 && component < size, "symbolic Diff: the component " + EXUstd::ToString(component)
-		+ " is out of range of the vector variable of size " + EXUstd::ToString(size));
+	if (component < 0 || component >= size) { PyError("symbolic Diff: the component " + EXUstd::ToString(component)
+		+ " is out of range of the vector variable of size " + EXUstd::ToString(size), PyErrorType::indexError); }
 	return &named;
 }
 
