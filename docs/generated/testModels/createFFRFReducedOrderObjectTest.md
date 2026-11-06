@@ -25,6 +25,7 @@ You can view and download this file on Github: [createFFRFReducedOrderObjectTest
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.FEM import *
@@ -43,7 +44,7 @@ a = 0.1
 nModes = 4
 
 fem = FEMinterface()
-fem.LoadFromFile('testData/netgenTestMesh', mode='NPZ')
+fem.LoadFromFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'netgenTestMesh'), mode='NPZ')
 
 nodesLeft = fem.GetNodesInPlane([0,0,0], [-1,0,0])
 weightsLeft = fem.GetNodeWeightsFromSurfaceAreas(nodesLeft)

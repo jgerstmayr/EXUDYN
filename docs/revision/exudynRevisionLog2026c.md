@@ -6427,6 +6427,26 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg2-11"></a>
+### RG2.11 — the examples and test models find their data beside their file (2026-11-06, #3303)
+- Found by grep for 'testData' on code lines: 16 test models (abaqusImportTest, compareAbaqusAnsysRotorEigenfrequencies,
+  createFFRFReducedOrderObjectTest, linearFEMgenericODE2, NGsolveCMStest, the five objectFFRFreducedOrder*,
+  objectFFRFTest, objectFFRFTest2, objectGenericODE2Test, superElementRigidJointTest, textureGraphicsTest,
+  urdfRobotHDF5Test), 4 examples (netgenSTLtest, pymeshlabFileImport, texturesExample,
+  publications/sliderCrankCMSacme) and perfObjectFFRFreducedOrder read their input by paths relative to the working
+  directory - 'testData/...', or sideways '../Examples/testData/...' and '../TestModels/testData/...' so that they
+  worked from the runners' directories; objectFFRFreducedOrderStressModesTest chose between two paths by testIsActive.
+- Now os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', ...). The runners give __file__: the test
+  suite (ExecModel), the examples (#3284) and now runPerformanceTests.py, which set it for each model and restores its
+  own. Left: NGsolvePistonEngine.py exports meshes to testData/ inside "if False", pendulumVerify.py defines an unused
+  fileName, the notebook CMSexampleCourseJupyter.ipynb (run in its directory).
+- Checked: the 16 test models, the performance model and two examples run with the working directory in the
+  scratchpad, results unchanged; the suite, pytest, all 196 examples and the performance tests pass.
+  NGsolveCMStest wrote its round trip to OutputFilePath(fileName + '2'), which refuses an absolute name: now
+  OutputFilePath('testData/netgenTestMesh2'), the place it had.
+- The performance tests (the checkpoint of #3299) found perfRigidPendulum off by 5.4e-10 relative since #303 (RG4.21):
+  the differences of fourth order summed in another order, as the six test models there; recorded again.
+
 <a id="rg5-1-5"></a>
 ### RG5.1.5 — LinkedDataVector cannot be copied (2026-11-06, #3302)
 - LinkedDataVectorBase had the implicit copy constructor: it calls VectorBase(const VectorBase&), which allocates and

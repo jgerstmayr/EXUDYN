@@ -19,6 +19,7 @@ You can view and download this file on Github: [objectFFRFreducedOrderTest.py](h
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
@@ -35,7 +36,7 @@ import numpy as np
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
-inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
+inputFileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'rotorDiscTest')
 #if not testIsActive:
 #    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
 

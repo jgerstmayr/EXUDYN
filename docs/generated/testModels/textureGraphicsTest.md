@@ -152,7 +152,7 @@ Check(read.dtype == np.uint8 and read.shape[0:2] == (3, 5) and np.array_equal(re
 os.remove(fileName)
 
 #a real texture: the JPEG of a wooden floor (OpenGameArt, CC0) of the examples, brown on a quad in the raytracer
-wood = graphics.ImageFromFile('../Examples/testData/hardwood_small.jpg')
+wood = graphics.ImageFromFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'Examples', 'testData', 'hardwood_small.jpg'))
 meanColor = wood.reshape((-1, 3)).mean(axis=0)
 Check(wood.dtype == np.uint8 and wood.shape == (1024, 1024, 3) and meanColor[0] > meanColor[1] > meanColor[2],
       'hardwood_small.jpg: ' + str(wood.shape) + str(meanColor))

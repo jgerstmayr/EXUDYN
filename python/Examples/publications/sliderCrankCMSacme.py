@@ -42,7 +42,7 @@ massRayleigh=0.0001
 
 loadFromSavedNPYfile = False
 
-sourceDir = 'testData/sliderCrankACME/'
+sourceDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'sliderCrankACME', '')
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import Conrod

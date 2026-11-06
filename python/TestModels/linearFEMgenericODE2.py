@@ -12,6 +12,7 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
@@ -32,7 +33,7 @@ mbs = SC.AddSystem()
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
-fileDir = 'testData/abaqus/block'
+fileDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'abaqus', 'block')
 
 fem = FEMinterface()
 inputFileName = fileDir+'C3D8'

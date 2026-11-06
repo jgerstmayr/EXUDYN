@@ -11,6 +11,7 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
@@ -33,7 +34,7 @@ modeNames = ['FFRF_MG','FFRF']
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
-inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
+inputFileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'rotorDiscTest')
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
 elements = np.array(fem.elements[0]['Hex8'])

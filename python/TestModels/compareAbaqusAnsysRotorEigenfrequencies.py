@@ -15,6 +15,7 @@ import numpy as np
 from scipy.sparse import linalg
 import scipy as sp
 
+import os
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
@@ -27,7 +28,7 @@ useSparseSolverRoutine = False
 
 errorResult = 0
 
-testDataDir = "testData/"
+testDataDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', '')
 #if not testIsActive:
 #    testDataDir = "testData/"
 

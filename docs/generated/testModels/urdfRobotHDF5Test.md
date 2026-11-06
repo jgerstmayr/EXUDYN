@@ -27,6 +27,7 @@ You can view and download this file on Github: [urdfRobotHDF5Test.py](https://gi
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import exudyn as exu
 from exudyn.robotics import Robot
 from exudyn.advancedUtilities import LoadDictFromHDF5
@@ -40,7 +41,7 @@ checks = []
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 robot = Robot()
-robot.SetDictionary(LoadDictFromHDF5('testData/urdf/testRobot/testRobot.h5'))
+robot.SetDictionary(LoadDictFromHDF5(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'urdf', 'testRobot', 'testRobot.h5')))
 (link1, link2) = robot.links
 
 #the brick of arm.obj, 0.2 x 0.05 x 0.05 m, with 1000 kg/m^3; its center at -0.1 in x of the flipped frame

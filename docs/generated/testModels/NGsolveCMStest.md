@@ -42,7 +42,7 @@ mbs = SC.AddSystem()
 #mesh - changing its own reference value. The .npz was CONVERTED from that .pkl, so the mesh and
 #the reference value are unchanged. (The PKL/HDF5 round trip further below still tests those
 #formats; it writes into the output directory, not here.)
-fileName = 'testData/netgenTestMesh'
+fileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'netgenTestMesh')
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #netgen/meshing part:
@@ -156,7 +156,7 @@ SC.visualizationSettings.contour.outputVariableComponent = 0 #x-component
 #exudyn.config.outputDirectory, which the test suite sets per model, so that two models cannot
 #write the same file (#2418); the mesh loaded further above is INPUT and is read as given
 from exudyn.basicUtilities import OutputFilePath
-fileName2 = OutputFilePath(fileName+'2', 'NGsolveCMStest')
+fileName2 = OutputFilePath('testData/netgenTestMesh2', 'NGsolveCMStest')
 try:
     fem.SaveToFile(fileName2+'2.npz')
     fem.LoadFromFile(fileName2+'2', mode='NPZ')

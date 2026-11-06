@@ -21,6 +21,7 @@ You can view and download this file on Github: [netgenSTLtest.py](https://github
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
+import os
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -56,7 +57,7 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
     import netgen.stl as nstl
     #load STL file; needs to be closed (no holes) and consistent!
     #               and may not have defects (may require some processing of STL files!)
-    geom = nstl.STLGeometry('../Examples/testData/gyro.stl') #Peter's gyro
+    geom = nstl.STLGeometry(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'gyro.stl')) #Peter's gyro
 
     maxh=0.01
     mesh = ngs.Mesh( geom.GenerateMesh(maxh=maxh))

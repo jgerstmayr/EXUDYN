@@ -189,6 +189,10 @@ CLOSED 2026-10-17 (#3019; maintainer: add a step, the local machine might not be
 processes get OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS and NGS_NUM_THREADS = cores / processes;
 NGsolveOCCboundaries2.py reserves 6.3 GB instead of 17 GB. [log](exudynRevisionLog2026c.md#rg2-10)
 
+### **CLOSED_RG2.11** Find the data of the examples and test models beside their file
+
+CLOSED 2026-11-06 (#3303): 16 test models, 4 examples and a performance model read testData by paths relative to the working directory; now by __file__, which runPerformanceTests.py sets as well. [log](exudynRevisionLog2026c.md#rg2-11)
+
 ## **CLOSED_RG3** Docs
 
 What the documentation still gets wrong or does not say.

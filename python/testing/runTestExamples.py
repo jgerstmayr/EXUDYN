@@ -39,9 +39,8 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     import numpy as np
     import testRunnerTools
 
-    #the examples reach sideways with '../Examples/testData/...', so the working directory has
-    #to be a SIBLING of Examples/ - python/TestModels/, exactly as before the runners moved out
-    #of it (#2512, #2513)
+    #the examples find their data beside their file by __file__ (#3303); the working directory
+    #python/TestModels/ keeps the relative output of the examples where it was (#2512, #2513)
     testRunnerTools.WorkInModelsDirectory(testRunnerTools.testModelsDir)
 
     import exudyn as exu

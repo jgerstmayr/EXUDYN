@@ -269,6 +269,8 @@ for file in testFileList:
     exu.sys['testResult'] = invalidResult #a value that says 'the model set none'
     timeStart= -time.time()
     testRaised[name] = False
+    runnerFile = globals()['__file__']
+    globals()['__file__'] = os.path.abspath(file) #the model finds its data beside it (#3303)
     try:
         with open(file, encoding='utf-8') as modelFile:
             exec(modelFile.read(), globals())
@@ -277,6 +279,7 @@ for file in testFileList:
         exu.Print('PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
         print('PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
 
+    globals()['__file__'] = runnerFile
     timeStart += time.time()
     totalTime += timeStart
 

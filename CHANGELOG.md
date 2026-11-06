@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 403 | 1.13.418 |
+| 1.13 | Newborn | 404 | 1.13.419 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.419** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Examples and test models find their data beside their file, not in the working directory (#3303)
+  - description: 17 test models, 4 examples and a performance model read their input data by paths relative to the working directory ('testData/...', '../Examples/testData/...', '../TestModels/testData/...'), so they ran only when started in their own directory or by a runner that changes into a sibling of it; objectFFRFreducedOrderStressModesTest.py chose between two paths by testIsActive. Decided: they build the path from os.path.dirname(os.path.abspath(\_\_file\_\_)), and runPerformanceTests.py sets \_\_file\_\_ of each model as runTestExamples.py does (\#3284).
+  - **notes:** The examples, test models and performance models that read data from testData find it beside their own file (by \_\_file\_\_) instead of in the working directory, so they run from any directory; runPerformanceTests.py sets \_\_file\_\_ for each model.
+  - date resolved: **2026-11-06 17:25**, date raised: 2026-11-06
 - **1.13.418** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` LinkedDataVector cannot be copied (#3302)
   - description: LinkedDataVectorBase had the implicit copy constructor, which calls the copy constructor of VectorBase: a copy allocated memory and copied the data, and the destructor of LinkedDataVectorBase, which sets data to nullptr, never freed it - a leak and an allocation per copy, as the conditional expression in ObjectKinematicTree had (\#3291). Decided: the copy constructor is deleted, so that the compiler refuses every copy; linking is done by LinkDataTo or a constructor.
   - **notes:** LinkedDataVector cannot be copied: its copy constructor allocated memory that was never freed; the compiler now refuses a copy, and none is left in the code.

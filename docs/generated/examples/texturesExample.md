@@ -23,6 +23,7 @@ You can view and download this file on Github: [texturesExample.py](https://gith
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
@@ -36,7 +37,7 @@ mbs = SC.AddSystem()
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the textures: the image of a wooden floor, and a pattern computed from sin and cos
-wood = graphics.ImageFromFile('../Examples/testData/hardwood_small.jpg') #1024 x 1024 x 3, uint8; the path works from TestModels/ as well
+wood = graphics.ImageFromFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'hardwood_small.jpg')) #1024 x 1024 x 3, uint8
 SC.renderer.AddTexture('hardwood', wood, interpretation=exu.TextureInterpretation.RGB)
 
 (height, width) = (256, 512) #rows along the axis of the cylinder, columns around it

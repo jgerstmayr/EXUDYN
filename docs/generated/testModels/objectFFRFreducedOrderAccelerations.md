@@ -19,6 +19,7 @@ You can view and download this file on Github: [objectFFRFreducedOrderAccelerati
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import exudyn as exu
 #a local run must not open a plot window when windows are suppressed (#2477)
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
@@ -39,7 +40,7 @@ testIsActive = True #without test
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
 #inputFileName = 'C:/DATA/cpp/EXUDYN_git/main/pythonDev/TestModels/testData/rotorDiscTest' #runTestSuite.py is at another directory
-inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
+inputFileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'rotorDiscTest')
 #if not testIsActive:
 #    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
 

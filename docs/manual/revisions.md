@@ -622,6 +622,10 @@ coordinates converged with order 1. They start now from their derivatives at the
 (ObjectGenericODE1, ObjectGenericDAE, symbolic systems with ODE1 coordinates) change, by up to a few percent in short
 simulations of a lag.
 
+**The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
+and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the
+publications - find it beside their own file instead of in the working directory.
+
 **ObjectKinematicTree allocates no memory per step** (#3291): it copied the joint velocities in each evaluation
 of its mass matrix, forces and Jacobian, up to 29 times per step of an implicit solver.
 

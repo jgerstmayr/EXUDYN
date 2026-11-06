@@ -20,6 +20,7 @@ You can view and download this file on Github: [abaqusImportTest.py](https://git
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
@@ -35,7 +36,7 @@ import sys
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
-fileDir = 'testData/abaqus/block'
+fileDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'abaqus', 'block')
 result = 0
 
 elements = ['C3D4','C3D10','C3D8','C3D20','C3D20R']

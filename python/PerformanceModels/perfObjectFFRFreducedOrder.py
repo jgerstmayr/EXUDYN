@@ -10,6 +10,7 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import exudyn as exu
 import testRunnerTools
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -29,9 +30,8 @@ import numpy as np
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
 #the rotor mesh is shared with eight test models, so it stays in TestModels/testData/ rather
-#than being copied here (#2513). runPerformanceTests.py runs with
-#python/PerformanceModels/ as working directory.
-inputFileName = '../TestModels/testData/rotorDiscTest'
+#than being copied here (#2513)
+inputFileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'TestModels', 'testData', 'rotorDiscTest')
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
 

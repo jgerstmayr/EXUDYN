@@ -1,0 +1,15 @@
+{
+  "number": 3303,
+  "title": "Examples and test models find their data beside their file, not in the working directory",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "17 test models, 4 examples and a performance model read their input data by paths relative to the working directory ('testData/...', '../Examples/testData/...', '../TestModels/testData/...'), so they ran only when started in their own directory or by a runner that changes into a sibling of it; objectFFRFreducedOrderStressModesTest.py chose between two paths by testIsActive. Decided: they build the path from os.path.dirname(os.path.abspath(__file__)), and runPerformanceTests.py sets __file__ of each model as runTestExamples.py does (#3284).",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 17:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The examples, test models and performance models that read data from testData find it beside their own file (by __file__) instead of in the working directory, so they run from any directory; runPerformanceTests.py sets __file__ for each model.",
+  "resolvedInVersion": "1.13.419"
+}

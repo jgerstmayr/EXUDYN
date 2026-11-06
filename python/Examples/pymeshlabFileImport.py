@@ -11,6 +11,7 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -41,7 +42,7 @@ iCube0 = iCube0.Translated([-0.25*L,0,0]) #transform COM, COM not at reference p
 
 #graphics for body
 #chose one of the files:
-fileName = '../Examples/testData/objImportTest.obj'
+fileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testData', 'objImportTest.obj')
 
 graphicsBody0 = graphics.FromPyMeshlabFile(fileName, 
                                            invertNormals=False,
