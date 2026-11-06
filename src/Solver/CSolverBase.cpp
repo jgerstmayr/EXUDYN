@@ -1239,6 +1239,9 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//the multiples of the write periods within the step, then the end of the step (#3286)
+	WriteOutputWithinStep(computationalSystem, simulationSettings, writeSolution);
+
 	if (output.writeToSolutionFile && writeSolution)
 	{
 
@@ -2460,6 +2463,109 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 			cnt++;
 		}
 	}
+}
+
+//write the solution file and the sensors at the multiples of their write periods within the step just finished (#3286)
+void CSolverBase::WriteOutputWithinStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool writeSolution)
+{
+	CData& cData = computationalSystem.GetSystemData().GetCData();
+	Real t0 = cData.startOfStepState.time;
+	Real t = cData.currentState.time;
+	const Real tolerance = 1e-10; //a write time this close to the end of the step is written by the end of the step
+	if (IsStaticSolver() || !writeSolution || t - t0 <= tolerance) { return; }
+
+	const SolutionSettings& solution = simulationSettings.solution;
+	bool writeFile = output.writeToSolutionFile && solution.file.writePeriod > 0.;
+	bool writeSensors = solution.sensors.active && solution.sensors.writePeriod > 0. &&
+		computationalSystem.GetSystemData().GetCSensors().NumberOfItems() != 0;
+	if (!(writeFile && output.lastSolutionWritten < t - tolerance) &&
+		!(writeSensors && output.lastSensorsWritten < t - tolerance)) { return; }
+
+	STARTTIMER(timer.writeSolution);
+	outputEndOfStepState = cData.currentState;
+	for (;;)
+	{
+		//the next write time within the step; one of the writers or both
+		Real T = EXUstd::MAXREAL;
+		if (writeFile && output.lastSolutionWritten < t - tolerance) { T = output.lastSolutionWritten; }
+		if (writeSensors && output.lastSensorsWritten < t - tolerance) { T = EXUstd::Minimum(T, output.lastSensorsWritten); }
+		if (T == EXUstd::MAXREAL) { break; }
+		T = EXUstd::Maximum(T, t0); //a write time missed before the step, e.g. after a restart, at its start
+
+		SetStateWithinStep(computationalSystem, T);
+		Real lastSolution = output.lastSolutionWritten;
+		Real lastSensors = output.lastSensorsWritten;
+		if (writeFile && fabs(output.lastSolutionWritten - T) <= tolerance) { WriteCoordinatesToFile(computationalSystem, simulationSettings); }
+		if (writeSensors && fabs(output.lastSensorsWritten - T) <= tolerance) { WriteSensorsToFile(computationalSystem, simulationSettings); }
+		if (output.lastSolutionWritten == lastSolution && output.lastSensorsWritten == lastSensors)
+		{
+			//nothing written at T (a write time before the start of the step): continue at the next multiples
+			if (writeFile && output.lastSolutionWritten < T + tolerance) { output.lastSolutionWritten += solution.file.writePeriod; }
+			if (writeSensors && output.lastSensorsWritten < T + tolerance) { output.lastSensorsWritten += solution.sensors.writePeriod; }
+		}
+	}
+	cData.currentState = outputEndOfStepState;
+	STOPTIMER(timer.writeSolution);
+}
+
+//the state at time T within the step from startOfStepState to outputEndOfStepState (#3286)
+void CSolverBase::SetStateWithinStep(CSystem& computationalSystem, Real T)
+{
+	CData& cData = computationalSystem.GetSystemData().GetCData();
+	const CSystemState& s0 = cData.startOfStepState;
+	const CSystemState& s1 = outputEndOfStepState;
+	CSystemState& s = cData.currentState;
+
+	Index nODE2 = s1.ODE2Coords.NumberOfItems();
+	if (outputLinearODE2.NumberOfItems() != nODE2)
+	{
+		//the velocities of Lie group nodes are not the derivatives of their coordinates: these interpolated linearly
+		outputLinearODE2.SetNumberOfItems(nODE2);
+		outputLinearODE2.SetAll(0);
+		for (auto* node : computationalSystem.GetSystemData().GetCNodes())
+		{
+			if (EXUstd::IsOfType(node->GetType(), Node::LieGroupWithDirectUpdate))
+			{
+				Index off = node->GetGlobalODE2CoordinateIndex();
+				for (Index j = 0; j < node->GetNumberOfODE2Coordinates(); j++) { outputLinearODE2[off + j] = 1; }
+			}
+		}
+	}
+
+	Real h = s1.time - s0.time;
+	Real x = (T - s0.time) / h;
+	Real h00 = (1. + 2. * x) * (1. - x) * (1. - x); //the cubic Hermite polynomials and their derivatives by x
+	Real h10 = x * (1. - x) * (1. - x);
+	Real h01 = x * x * (3. - 2. * x);
+	Real h11 = x * x * (x - 1.);
+	Real d00 = 6. * x * x - 6. * x;
+	Real d10 = 3. * x * x - 4. * x + 1.;
+	Real d01 = -d00;
+	Real d11 = 3. * x * x - 2. * x;
+	auto Linear = [x](const StateVectorsType& v0, const StateVectorsType& v1, StateVectorsType& v)
+	{
+		for (Index i = 0; i < v.NumberOfItems(); i++) { v[i] = (1. - x) * v0[i] + x * v1[i]; }
+	};
+
+	for (Index i = 0; i < nODE2; i++)
+	{
+		if (outputLinearODE2[i])
+		{
+			s.ODE2Coords[i] = (1. - x) * s0.ODE2Coords[i] + x * s1.ODE2Coords[i];
+			s.ODE2Coords_t[i] = (1. - x) * s0.ODE2Coords_t[i] + x * s1.ODE2Coords_t[i];
+		}
+		else
+		{
+			Real q0 = s0.ODE2Coords[i], v0 = s0.ODE2Coords_t[i], q1 = s1.ODE2Coords[i], v1 = s1.ODE2Coords_t[i];
+			s.ODE2Coords[i] = h00 * q0 + h * h10 * v0 + h01 * q1 + h * h11 * v1;
+			s.ODE2Coords_t[i] = (d00 * q0 + d01 * q1) / h + d10 * v0 + d11 * v1;
+		}
+	}
+	Linear(s0.ODE2Coords_tt, s1.ODE2Coords_tt, s.ODE2Coords_tt);
+	Linear(s0.ODE1Coords, s1.ODE1Coords, s.ODE1Coords);
+	Linear(s0.ODE1Coords_t, s1.ODE1Coords_t, s.ODE1Coords_t);
+	Linear(s0.AECoords, s1.AECoords, s.AECoords);
+	s.time = T;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

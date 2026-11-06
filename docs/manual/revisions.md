@@ -446,10 +446,18 @@ below 1 (#3252).
 length, a float where an integer belongs, a number for a list - with a message and the description of the setting,
 and keeps the value it had (#3249).
 
+**The dynamic solvers write at the exact write times** (#3286): the solution file and the sensors are written at the
+multiples of `solution.file.writePeriod` and `solution.sensors.writePeriod` and at the end. A write time within a step
+takes the state interpolated between the start and the end of the step - the ODE2 coordinates by the cubic Hermite
+polynomial of the coordinates and velocities, the velocities by its derivative, the accelerations, ODE1 and algebraic
+coordinates linear, the coordinates of Lie group nodes linear, the data coordinates of the end of the step. A write
+period that is a multiple of the step gives the rows as before; a period smaller than the step gives a row per period
+instead of one per step, and the automatic step sizes of DOPRI5 and ODE23 give rows at the multiples. A period of 0
+writes every step.
+
 **The solvers of `exudyn.symbolics.solvers` write at the exact write times** (#3241): the result, the solution file
 and the sensors at the multiples of their write periods, the state within a step interpolated by the cubic Hermite
-polynomial, see {ref}`sec-symbolicsolvers`; the solvers of Exudyn still write at the end of the step that passes a
-write time. `MainSolverExplicit`, `MainSolverImplicitSecondOrder` and `MainSolverStatic` have `WriteSensorsToFile`.
+polynomial, see {ref}`sec-symbolicsolvers`. `MainSolverExplicit`, `MainSolverImplicitSecondOrder` and `MainSolverStatic` have `WriteSensorsToFile`.
 
 **Euler parameters in the symbolic system** (#3238): `UserItemCreator.CreateRigidBody` creates the user rigid body on
 a `NodeRigidBodyEP` - the default node type, as for `mbs.CreateRigidBody` - besides `NodeRigidBodyRxyz`;

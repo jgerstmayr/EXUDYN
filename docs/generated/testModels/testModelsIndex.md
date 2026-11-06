@@ -205,6 +205,7 @@ SlidingJoint2DTest
 solutionFileWithoutCoordinatesTest
 solverExplicitODE1ODE2test
 solverFailureMessageTest
+solverOutputWithinStepTest
 sparseMatrixSpringDamperTest
 sparseSystemMatricesTest
 sphereTriangleTest2

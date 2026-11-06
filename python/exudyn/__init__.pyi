@@ -1262,7 +1262,7 @@ class SolutionFileSettings:
     writeInitialValues: bool
     """flag (true/false); if true, initial values are exported for the start time; applies to the solution file and the sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation."""
     writePeriod: float
-    """time span (period), determines how often the solution file is written during a simulation."""
+    """time span (period), determines how often the solution file is written during a simulation; the dynamic solvers write at the multiples of writePeriod and at the end, a time within a step by the state interpolated between its start and its end (#3286): the ODE2 coordinates by the cubic Hermite polynomial of the coordinates and velocities, the velocities by its derivative, the others linear, the data coordinates of the end of the step; 0 writes every step."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
@@ -1278,7 +1278,7 @@ class SolutionSensorsSettings:
     writeHeader: bool
     """flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)."""
     writePeriod: float
-    """time span (period), determines how often the sensor output is written to file or internal storage during a simulation."""
+    """time span (period), determines how often the sensor output is written to file or internal storage during a simulation; the dynamic solvers write at the multiples of writePeriod and at the end, a time within a step from the state interpolated as for solution.file.writePeriod (#3286); 0 writes every step."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 

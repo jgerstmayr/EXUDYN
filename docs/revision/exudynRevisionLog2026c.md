@@ -6382,6 +6382,30 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - urdfImport: the joint axis by ET.kind instead of ET.axis, deprecated since RTB 1.4, which warned in every import;
   the stub of test_urdfRobotData.py likewise.
 
+<a id="rg20-4-2"></a>
+### RG20.4.2 — the C++ solvers write at the multiples of the write periods, interpolated within the step (2026-11-06, #3286)
+- Maintainer 2026-11-06: continue with the open solver tasks RG20.4, RG20.8, RG20.7.
+- `CSolverBase::FinishStep` calls `WriteOutputWithinStep` before the writers of the end of the step: for each multiple
+  of `solution.file.writePeriod` and `solution.sensors.writePeriod` (the next ones are `output.lastSolutionWritten`,
+  `lastSensorsWritten`, as before) more than 1e-10 before the end of the step, `SetStateWithinStep` sets the current
+  state to the interpolation between `startOfStepState` and the end of the step, copied to `outputEndOfStepState`: q by
+  the cubic Hermite polynomial of q and q_t, q_t its derivative, q_tt, ODE1, ODE1_t and AE linear, the data coordinates
+  of the end; the ODE2 coordinates of nodes of type `LieGroupWithDirectUpdate` linear (their velocities are not the
+  derivatives of the coordinates). The writers write and advance their time by the period; the end is restored. Not
+  for the static solver, a write period of 0 (every step) or the initial state. Same rule as the Python solvers (#3241).
+- Test suite: 4 of 291 changed, all by the output times: compareFullModifiedNewton.py (solution file period 1e-4,
+  step 0.02: 20001 rows instead of 101, the summed difference 0.000201 -> 0.0391) and geneticOptimizationTest.py
+  (sensor period 2e-3, step 0.01: 0.101 -> 0.225), userConnectorContactTest.py (4e-12) and
+  explicitSolversPostNewtonTest.py (8e-7), whose steps are reduced at the contacts. The AVX2 reference of
+  explicitSolversPostNewtonTest.py (fast module, not built here) is to be re-recorded at the next fast-module run.
+- solverOutputWithinStepTest.py (new): a mass on a spring with the period 0.0137 against 37 and 74 steps - the
+  written times are the multiples and the end, the error of the output converges with order 4.03 (RK44) and 1.99
+  (generalized-alpha, spectral radius 1); a period equal to the step gives the steps; DOPRI5 with the automatic step:
+  the sensor and the solution file (twice the period) at the multiples, error 2.4e-8; a rigid body with a Lie group
+  node: the angle at the multiples to 1e-14.
+- The descriptions of `solution.file.writePeriod` and `solution.sensors.writePeriod` say how they are written; design
+  notes advancedSolvers.md 3.4 and cppSolverStructure.md sections 5 and 8.6 updated.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

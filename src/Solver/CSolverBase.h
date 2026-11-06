@@ -67,6 +67,8 @@ public: //made public for simpler access via pybind; nevertheless, C++ functions
 	} restart;
 	Index stepsSinceLastStepSizeReduction = 0; //!< steps since the step size was reduced; an increase waits for adaptiveStepRecoverySteps of them
 	Real pausedSeconds = 0.; //!< wall-clock time the simulation was paused (SPACE, pauseAfterEachStep), not counted by the real-time mode (#2905)
+	CSystemState outputEndOfStepState; //!< the state at the end of the step while the output within the step is written (#3286)
+	ArrayIndex outputLinearODE2; //!< 1 for the ODE2 coordinates interpolated linearly in the output within the step: those of Lie group nodes (#3286)
 public:
 	CSolverBase()
 	{
@@ -227,6 +229,15 @@ public:
 
 	//! write unique sensor solution file
 	virtual void WriteSensorsToFile(const CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+
+	//! write the solution file and the sensors at the multiples of their write periods within the step just finished,
+	//! from the state interpolated between the start and the end of the step; the end of the step is restored (#3286)
+	void WriteOutputWithinStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool writeSolution);
+
+	//! set the current state to the state interpolated at time T within the step from startOfStepState to
+	//! outputEndOfStepState: q by the cubic Hermite polynomial of q and q_t, q_t its derivative, q_tt, the ODE1 and the
+	//! algebraic coordinates linear, the coordinates of Lie group nodes linear, the data coordinates of the end (#3286)
+	void SetStateWithinStep(CSystem& computationalSystem, Real T);
 
 	//! the solver and the numbers of coordinates and items: what a restart file must fit (#2850)
 	virtual STDstring RestartFingerprint(const CSystem& computationalSystem) const;

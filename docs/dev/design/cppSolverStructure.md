@@ -90,9 +90,10 @@ SolveSteps:  FinishStep for the initial state (or the restart state)
 ## 5. Output and restart
 
 - `FinishStep` writes the solution file (`WriteCoordinatesToFile`, text or binary) and the sensors
-  (`WriteSensorsToFile`, files and internal storage under the lock of each sensor) when the time passes a multiple of
-  the write period - at the end of the step that passes it, not at the write time (RG20.4.2 open: interpolated output,
-  done in Python, #3241). The visualization state is copied for the renderer; the pre- and post-step user functions
+  (`WriteSensorsToFile`, files and internal storage under the lock of each sensor) at the multiples of the write
+  periods: `WriteOutputWithinStep` sets the state interpolated between `startOfStepState` and the end of the step
+  (`SetStateWithinStep`) for each multiple within the step, calls the writers and restores the end (RG20.4.2, #3286;
+  Python #3241). The visualization state is copied for the renderer; the pre- and post-step user functions
   are called in `InitializeStep` / `FinishStep`.
 - The restart file (#2850): the state, the step index and step size, written at its period after a finished step;
   read and applied at the start of `SolveSteps`.
@@ -256,6 +257,6 @@ CSolverBase                                   unchanged: step loop, discontinuou
   step; with the automatic step a step rejected by the discontinuous iteration uses the base class reduction.
 - **The initial accelerations**: as generalized-alpha computes them (`computeInitialAccelerations`), needed for the
   first stage of Lobatto IIIA and the trapezoidal estimate.
-- **Output within the step** (RG20.4.2): the stage values give a dense output of the order of the method; the base
-  class `FinishStep` needs a virtual `InterpolateState(t)` for the write times - a later extension of this structure,
-  not needed for RG20.7.
+- **Output within the step** (done, #3286): `FinishStep` writes at the multiples of the write periods by the cubic
+  Hermite interpolation of the base class, for all dynamic solvers; the stage values of the Runge-Kutta methods would
+  give a dense output of the order of the method (Hermite is of order 4 in q, enough for the methods of order <= 4).

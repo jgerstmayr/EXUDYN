@@ -241,6 +241,8 @@ multipliers z (lambda); M a = f(q, v, t) - C_q^T z.
   coordinates) take the end of the step; written as it is.
 - **Test suite**: models with `writePeriod` not a multiple of the step change their output times (the reference
   values of models that read the last sensor value stay, as the last step is written as before).
+- **Done**: the Python solvers (#3241, RG20.4.3), the C++ solvers (#3286, RG20.4.2): of 291 test models 4 changed -
+  two with a write period below the step (a row per period now), two with steps reduced at contacts.
 
 ### 3.5 Explicit solvers with constraints (step 5, #3238)
 
