@@ -495,7 +495,8 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     maxIterations, useModifiedNewton (the Jacobian once per step) and weightTolerancePerCoordinate; for a
     SymbolicSystem the solution file, the sensors and the renderer of its mbs, as SolveExplicit. With adaptiveStep, a
     step rejected by the post-Newton step of data coordinates is repeated with a smaller step size, as in SolveExplicit
-    (#3220); a step whose Newton iteration does not converge raises. The ODE1 velocities start at zero, as in Exudyn
+    (#3220); a step whose Newton iteration does not converge raises. The ODE1 velocities start from the right-hand
+    side of the ODE1 equations at the initial state, as in Exudyn (#3258)
 
     Args:
         system: the system, a SymbolicSystemBase
@@ -534,6 +535,7 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
     q_tt = np.zeros(nODE2)
     (y, y_t, z) = (system.InitialStateODE1(), np.zeros(nODE1), np.zeros(nAE))
     system.data = system.InitialStateData()
+    zInitial = np.zeros(nAE)
     if generalizedAlpha.computeInitialAccelerations:
         if not general:
             q_tt = scipy.sparse.linalg.spsolve(system.MassMatrix(q, q_t, tStart, sparse=True).tocsc(), system.ODE2RHS(q, q_t, tStart))
@@ -541,6 +543,8 @@ def SolveGeneralizedAlpha(system, simulationSettings=None):
             (q_tt, zInitial) = _InitialAccelerations(system, q, q_t, y, tStart)
             if generalizedAlpha.storeInitialAlgebraicCoordinates:
                 z = zInitial
+    if nODE1: #the trapezoidal rule starts from the derivatives of the initial state, as Exudyn (#3258)
+        y_t = system.ODE1RHS(q, q_t, y, tStart) - (system.ODE1ReactionTermsLHS(q, q_t, y, zInitial, tStart) if nAE else 0.)
     aAlgorithmic = q_tt.copy()
     output = _Output(system, simulationSettings, tStart, tEnd, h)
     output.Step(0, tStart, q, q_t, q_tt, y=y, y_t=y_t, z=z)

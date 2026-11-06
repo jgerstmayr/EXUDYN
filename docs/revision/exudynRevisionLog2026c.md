@@ -6427,6 +6427,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-9-3"></a>
+### RG20.9.3 — the order of an ODE1 coordinate coupled to ODE2 coordinates in generalized-alpha (2026-11-06, #3258)
+- Cause: the ODE1 coordinates are integrated by the trapezoidal rule y1 = y0 + h/2 (y_t0 + y_t1), and y_t0 of the first
+  step was zero - the initial accelerations set only the ODE2 part, the ODE1 rows of their system are a unit matrix.
+  The first step lost h/2 g(y0): for the lag of genericDAE (g(y0) = 2.82, decaying with exp(-t/0.2)) 0.116 h at 0.5 s,
+  as measured (1.15e-4 at h = 1e-3), order 1.
+- CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions sets ODE1Coords_t = F_ODE1 - C_y^T lambda0
+  (lambda0 of the initial accelerations if computed, also when storeInitialAlgebraicCoordinates is False, else zero);
+  exudyn.symbolics.solvers.SolveGeneralizedAlpha the same, so that it keeps agreeing with SolveDynamic (it had the
+  zero start as well, "as in Exudyn").
+- Order now 2 for both: the ratios of the differences between the steps 4e-3, 2e-3, 1e-3 are 3.998 to 4.000 for x, y
+  and the ODE1 coordinate (spectral radius 0.6 and 1): generalizedAlphaODE1OrderTest.py.
+- With modified Newton and relativeTolerance 1e-12 the ODE1 coordinate stayed erratic at 1e-6 (3.6e-6 off the full
+  Newton method at h = 1e-3, the ODE2 coordinates 1e-14): #3300, RG20.9.5.
+- References: 9 test models with ODE1 coordinates (ode1LoadsJacobianTest 8.8e-3 absolute, genericODE1JacobianTest
+  1.3e-2, taskmanagerTest 1.2e-2, ...) and the mini example ObjectGenericDAE (0.0482 -> 0.0464, a short lag); the
+  comparisons of SolveGeneralizedAlpha against SolveDynamic went from 1e-3 to 1e-13 (symbolicSystemGenericDAETest,
+  genericDAEUserFunctionsTest, symbolicSystemODE1Test, symbolicSystemODE1AETest 1e-10). solver.md, revisions.md.
+
 <a id="rg4-21"></a>
 ### RG4.21 — the initial accelerations with the constraints at velocity level and those depending on the time (2026-11-06, #303, #574)
 - Maintainer 2026-11-06: do the suggested steps 1-5 (RG4.21, RG20.9.3, RG20.9.2, the copy of LinkedDataVector, the

@@ -90,6 +90,7 @@ generalContactImplicit1
 generalContactImplicit2
 generalContactSpheresTest
 generalContactTriangleMomentumTest
+generalizedAlphaODE1OrderTest
 genericDAEDataTest
 genericDAESymbolicTest
 genericDAETest

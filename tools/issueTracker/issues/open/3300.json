@@ -1,0 +1,11 @@
+{
+  "number": 3300,
+  "title": "Modified Newton of generalized-alpha leaves the ODE1 coordinate of genericDAE off by 3.6e-6 at relativeTolerance 1e-12",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "The genericDAE model of modelLibrary.py, SolveDynamic with generalized-alpha, step 1e-3, end time 0.5, newton.relativeTolerance 1e-12 and absoluteTolerance 1e-14: with useModifiedNewton the ODE1 coordinate at the end differs from the full Newton method by 3.6e-6 (6.7 iterations per step), while the ODE2 coordinates agree to 1e-14; at relativeTolerance 1e-8 both agree to 2e-11. The step sizes 1e-3 to 2.5e-4 give erratic differences of the ODE1 coordinate of 1e-6 with modified Newton, the order 2 with full Newton (found with #3258). To be analyzed: the convergence criterion of the modified Newton method for the ODE1 rows.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05"
+}

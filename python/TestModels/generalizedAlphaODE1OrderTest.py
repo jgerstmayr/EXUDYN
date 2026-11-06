@@ -1,0 +1,49 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The order of the generalized-alpha solver for an ODE1 coordinate coupled to ODE2 coordinates (#3258): the
+#           genericDAE model of modelLibrary.py, a pendulum with a first order lag of its horizontal position on an
+#           ODE1 coordinate, simulated over 0.5 s with the steps 4e-3, 2e-3 and 1e-3 and the full Newton method. The
+#           ODE1 coordinates are integrated by the trapezoidal rule, which starts from their derivatives at the
+#           initial state; the differences between the steps fall by a factor of 4 for the ODE2 and the ODE1
+#           coordinates, order 2. The result is the number of passed checks plus the ODE1 coordinate at the end.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-06
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+import exudyn as exu
+import numpy as np
+from modelLibrary import GetModel, SimulationSettings, Result
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+def State(stepSize, spectralRadius):
+    mbs = GetModel('genericDAE')
+    simulationSettings = SimulationSettings(mbs, stepSize=stepSize, endTime=0.5)
+    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = spectralRadius
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False
+    simulationSettings.timeIntegration.newton.relativeTolerance = 1e-12
+    simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-14
+    mbs.SolveDynamic(simulationSettings)
+    return Result(mbs) #x, y of the pendulum, the ODE1 coordinate
+
+u = 0
+for spectralRadius in [0.6, 1.]:
+    states = [State(h, spectralRadius) for h in [4e-3, 2e-3, 1e-3]]
+    differences = [np.abs(states[k] - states[k + 1]) for k in range(2)]
+    ratios = differences[0]/differences[1]
+    exu.Print('spectral radius', spectralRadius, ': ratios of the differences of x, y, ODE1 coordinate', ratios)
+    u += int(np.all(ratios > 3.5) and np.all(ratios < 4.5))
+    u += states[-1][2]
+
+exu.Print('solution of generalizedAlphaODE1OrderTest=', u)
+
+exu.sys['testResult'] = u

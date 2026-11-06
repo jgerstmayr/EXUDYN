@@ -3475,10 +3475,14 @@ CLOSED 2026-11-05 (#3257): the nine models, each 1 to 31 ms; the study with a Ri
 
 Open: list the test models whose model is one of the library (the slider cranks, the pendulums, the kinematic trees, the FFRF pendulums) and use GetModel where this makes them shorter without hiding what they test.
 
-#### **OPEN_RG20.9.3** The order of an ODE1 coordinate coupled to ODE2 coordinates in generalized-alpha
+#### **CLOSED_RG20.9.3** The order of an ODE1 coordinate coupled to ODE2 coordinates in generalized-alpha
 
-#3258: order 1 for the lag coordinate of the genericDAE model, order 2 for its ODE2 coordinates; to be analyzed.
+CLOSED 2026-11-06 (#3258): the trapezoidal rule of the ODE1 coordinates started from zero derivatives, the first step lost h/2 g(y0); the derivatives at the initial state now, in the C++ solver and in SolveGeneralizedAlpha; order 2 (ratios 4.00), generalizedAlphaODE1OrderTest.py; found #3300. [log](exudynRevisionLog2026c.md#rg20-9-3)
 
 #### **CLOSED_RG20.9.4** modelLibrary.py without deprecated arguments
 
 CLOSED 2026-11-06 (#3292; maintainer 2026-11-06: the related problems): itemNumbers instead of bodyNumbers, mass instead of physicsMass; the results unchanged. [log](exudynRevisionLog2026c.md#rg20-7-5)
+
+#### **OPEN_RG20.9.5** Modified Newton of generalized-alpha and the convergence of the ODE1 coordinates
+
+#3300: at relativeTolerance 1e-12 the ODE1 coordinate of genericDAE differs from the full Newton method by 3.6e-6; to be analyzed.

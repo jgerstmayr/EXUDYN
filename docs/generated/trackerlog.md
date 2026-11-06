@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.415.dev1
+- Exudyn version = 1.13.416.dev1
 - last change = 2026-11-06
-- Number of issues = 3300
-- Number of resolved issues = 3192 (415 in current version)
+- Number of issues = 3301
+- Number of resolved issues = 3193 (416 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHECK` `LOW EFF` `raised by: Claude-JG` generalized-alpha: an ODE1 coordinate coupled to ODE2 coordinates converges with order 1 (#3258)
-  - description: In the genericDAE model of modelLibrary.py (an ObjectGenericDAE pendulum with a first order lag of its horizontal position on an ODE1 coordinate) SolveDynamic with generalized-alpha gives the ODE2 coordinates with order 2 and the ODE1 coordinate with order 1 (errors 3.2e-5, 1.7e-5, 8.9e-6 for the steps 4e-3, 2e-3, 1e-3, also with spectral radius 1), found by python/testing/solverStudy.py. To be analyzed: how the ODE1 equations are discretized in the generalized-alpha solver and whether the coupling or the ODE1 scheme itself is first order.
-  - date raised: 2026-11-05
+- `CHECK` `LOW EFF` `raised by: Claude-JG` Modified Newton of generalized-alpha leaves the ODE1 coordinate of genericDAE off by 3.6e-6 at relativeTolerance 1e-12 (#3300)
+  - description: The genericDAE model of modelLibrary.py, SolveDynamic with generalized-alpha, step 1e-3, end time 0.5, newton.relativeTolerance 1e-12 and absoluteTolerance 1e-14: with useModifiedNewton the ODE1 coordinate at the end differs from the full Newton method by 3.6e-6 (6.7 iterations per step), while the ODE2 coordinates agree to 1e-14; at relativeTolerance 1e-8 both agree to 2e-11. The step sizes 1e-3 to 2.5e-4 give erratic differences of the ODE1 coordinate of 1e-6 with modified Newton, the order 2 with full Newton (found with \#3258). To be analyzed: the convergence criterion of the modified Newton method for the ODE1 rows.
+  - date raised: 2026-11-06
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` MarkerNodeUser: a marker on the coordinates of nodes by Python user functions (#3236)
   - description: CreateCoordinateConstraint of UserItemCreator and the built-in coordinate constraint use MarkerNodeCoordinate; a user marker on nodes, whose value and Jacobian are Python (and recordable) user functions of the coordinates of its nodes, lets the coordinate constraint and coordinate connectors be user items. Decided (maintainer 2026-11-04): MarkerNodeUser first, as a step of its own (revision2026c RG7.18); MarkerBodyUser with coordinates and user shapes for contact and flexible interfaces are not planned yet (\#3106 closed).
   - date raised: 2026-11-04

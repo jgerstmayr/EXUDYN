@@ -514,7 +514,9 @@ Once an update $\qv^\mathrm{Newton}_{k+1}$ has been computed, the interpolation 
 
 #### (B) Solve for unknown displacements
 
-This approach is similar to the previous approach and follows exactly the algorithm given by Arnold and Brüls [Arnold2007], however, extended for {ref}`ODE1 <ODE1>` variables, which are integrated by the (undamped) trapezoidal rule.
+This approach is similar to the previous approach and follows exactly the algorithm given by Arnold and Brüls [Arnold2007], however, extended for {ref}`ODE1 <ODE1>` variables, which are integrated by the (undamped) trapezoidal rule. The trapezoidal rule starts from the derivatives
+of the ODE1 coordinates at the initial state, their right-hand side minus the reaction terms of the initial algebraic
+coordinates, which keeps the ODE1 coordinates at order 2 (#3258).
 Documentation will be added lateron.
 
 ### Initial accelerations

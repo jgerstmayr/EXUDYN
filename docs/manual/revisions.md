@@ -615,6 +615,13 @@ along the motion and in time; the user functions of the constraints are therefor
 of the simulated time, at most 2e-3, before the start time. Rolling discs and coins with initial velocities change by up to 5e-3 relative, a
 GenericJoint with an offset user function by 2e-11.
 
+**ODE1 coordinates keep the order 2 in the generalized-alpha solver** (#3258): the trapezoidal rule of the ODE1
+coordinates started from zero derivatives, so the first step lost h/2 times their right-hand side and the ODE1
+coordinates converged with order 1. They start now from their derivatives at the initial state, in
+`MainSolverImplicitSecondOrder` and in `exudyn.symbolics.solvers.SolveGeneralizedAlpha`; models with ODE1 coordinates
+(ObjectGenericODE1, ObjectGenericDAE, symbolic systems with ODE1 coordinates) change, by up to a few percent in short
+simulations of a lag.
+
 **ObjectKinematicTree allocates no memory per step** (#3291): it copied the joint velocities in each evaluation
 of its mass matrix, forces and Jacobian, up to 29 times per step of an implicit solver.
 

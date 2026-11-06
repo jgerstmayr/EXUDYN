@@ -393,6 +393,8 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 	Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
 
 	bool computeInitialAccelerations = simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations;
+	Vector initialMultipliers(data.nAE); //lambda of the initial accelerations, for the ODE1 derivatives
+	initialMultipliers.SetAll(0.);
 	//+++++++++++++++++++++++++++++++++++++++++
 	//compute initial values for accelerations:
 	//to be fully consistent the initial accelerations must be computed with Lagrange multipliers
@@ -457,6 +459,7 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 
 			LinkedDataVector ode2InitialValues(systemInitialValues, 0, data.nODE2);
 			solutionODE2_tt.CopyFrom(ode2InitialValues);
+			initialMultipliers.CopyFrom(LinkedDataVector(systemInitialValues, data.startAE, data.nAE));
 			if (simulationSettings.timeIntegration.generalizedAlpha.storeInitialAlgebraicCoordinates)
 			{
 				LinkedDataVector ae2InitialValues(systemInitialValues, data.startAE, data.nAE);
@@ -488,7 +491,16 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 	//these vectors are used in time stepping from previous step
 	data.aAlgorithmic.CopyFrom(solutionODE2_tt);
 
-	if (IsVerbose(3)) { Verbose(3, STDstring("initial accelerations     = ") + EXUstd::ToString(solutionODE2_tt) + "\n"); }
+	//the trapezoidal rule of the ODE1 coordinates starts from their derivatives at the initial state, F_ODE1 - C_y^T lambda
+	//with the initial multipliers if computed: zero derivatives cost the first step h/2 F_ODE1, the order 1 (#3258)
+	if (data.nODE1 != 0)
+	{
+		Vector& solutionODE1_t = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords_t;
+		computationalSystem.ComputeSystemODE1RHS(data.tempCompData, solutionODE1_t);
+		computationalSystem.ComputeODE1ProjectedReactionTerms(data.tempCompDataArray, initialMultipliers, solutionODE1_t, -1.);
+	}
+
+	if (IsVerbose(3)) { Verbose(3, STDstring("initial accelerations     = ")+ EXUstd::ToString(solutionODE2_tt) + "\n"); }
 	if (IsVerbose(3)) { Verbose(3, STDstring("initial constraint forces = ") + EXUstd::ToString(solutionAE) + "\n"); }
 	
 }
