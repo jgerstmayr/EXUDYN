@@ -6427,6 +6427,31 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg4-21"></a>
+### RG4.21 — the initial accelerations with the constraints at velocity level and those depending on the time (2026-11-06, #303, #574)
+- Maintainer 2026-11-06: do the suggested steps 1-5 (RG4.21, RG20.9.3, RG20.9.2, the copy of LinkedDataVector, the
+  examples that depend on the working directory).
+- Found: the right-hand side of the constraint rows had only (C_q v)_q v (#3289), and only with initial velocities.
+  The velocity-level constraints (ObjectJointRollingDisc, CoordinateConstraint and CoordinateVectorConstraint with
+  velocityLevel) were left out of it, so their rows read C_v a = 0 instead of C_v a = -(C_q v + C_t); the terms by the
+  time (2 C_qt v + C_tt, C_t) were left out everywhere, so a prescribed motion from rest started without acceleration.
+- CSystem::ComputeConstraintVelocityTerm now gives all terms: (C_q v)_q v as before; the others from the residuals
+  G(sigma, tau) = g(q0 + sigma v, v, t0 + tau) (ComputeAlgebraicEquations at position level, which a velocity-level
+  constraint answers with its velocity equation) by central differences of fourth order, 25 evaluations at the
+  start: velocity rows G_sigma + G_tau, position rows 2 G_sigmatau + G_tautau. The differences in tau are taken of
+  G - G(sigma, 0), so they are exactly zero for a constraint that does not depend on the time: no flag needed (#303
+  asked for one), the rows of a velocity-level object from ComputeObjectJacobianAE (usesVelocityLevel). The step in
+  tau is 1e-3 of endTime - startTime, at most 1e-3; the user functions are evaluated up to two steps before the start
+  time (documented in solver.md). Called also without initial velocities.
+- initialAccelerationsTest.py: a prescribed motion A(1-cos(omega t)) from rest, at position level (error 3e-11) and by
+  offsetUserFunction_t at velocity level (1e-10); a tilted coin rolling on a plane: the accelerations after one step of
+  h differ from the initial ones by 0.089 and 0.0089 for h = 1e-3 and 1e-4, i.e. O(h).
+- References: rollingCoinTest 4.7e-3, createRollingDiscTest 4.7e-5, rollingDiscTangentialForces 1.4e-9 (C_q v of the
+  rolling discs), genericJointUserFunctionTest 2.5e-11 (the offset by the time); ANCFbeltDrive, ballBearingTest,
+  contactCurveExample, createFunctionsTest, computeItemTest, homogeneousTransformationParameterTest 1e-13 to 3e-9 (the
+  same differences summed in another order). solver.md, the descriptions of CoordinateConstraint,
+  CoordinateVectorConstraint, GenericJoint and computeInitialAccelerations no longer say the time is left out.
+
 <a id="rg20-7-11"></a>
 ### RG20.7.11 — the performance tests with the regular module at the checkpoint of a completed group (2026-11-06, #3299)
 - Maintainer 2026-11-06: yes to the proposal after RG20.7.9 - the performance tests are not in the gates, so

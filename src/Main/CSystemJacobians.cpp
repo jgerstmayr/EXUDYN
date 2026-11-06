@@ -1184,17 +1184,24 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 
 
 
-//! (C_q v)_q v, v the ODE2 velocities: the second derivative of the constraints along the motion with constant
-//! velocities v, by the central difference of fourth order of C_q v at the positions moved by +-eps v and +-2 eps v -
-//! Lie group nodes by the composition of their rotation with the increment, as the solvers update them; C_q with its
-//! part along the Euler parameters; eps v 1e-4 of the largest reference plus current coordinate, at least
-//! minimumCoordinateSize (#3289)
-void CSystem::ComputeConstraintVelocityTerm(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
-	const Vector& v, Vector& f0, Vector& f1, Vector& result)
+//! the terms of the differentiated constraints without the accelerations, for the initial accelerations: with the
+//! ODE2 velocities v and the motion q(s) = q0 + s v (Lie group nodes by the composition of their rotation with the
+//! increment, as the solvers update them), t(s) = t0 + s, a constraint g(q, t) at position level gives
+//! (C_q v)_q v + 2 C_qt v + C_tt, a constraint g(q, v, t) at velocity level C_q v + C_t, the rows of the matrix being
+//! C_q and C_v. (C_q v)_q v by the central difference of fourth order of C_q v, with its part along the Euler
+//! parameters (#3289), the step eps v 1e-4 of the largest reference plus current coordinate, at least
+//! minimumCoordinateSize; the other terms from the residuals G(sigma, tau) = g(q(sigma), v, t0 + tau) by central
+//! differences of fourth order, with the step timeStep in tau: the residuals of a constraint that does not depend on
+//! the time are the same at every tau, its terms by the time are zero (#303, #574)
+void CSystem::ComputeConstraintVelocityTerm(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+	const Vector& v, Real timeStep, Vector& result)
 {
+	TemporaryComputationData& temp = tempArray[0];
 	Vector& q = cSystemData.GetCData().currentState.ODE2Coords;
+	Real& t = cSystemData.GetCData().currentState.time;
 	const Vector& qRef = cSystemData.GetCData().referenceState.ODE2Coords;
 	const Vector q0(q); //only at the initialization of a solver
+	const Real t0 = t;
 	Real vMax = 0., size = numDiff.minimumCoordinateSize;
 	for (Index i = 0; i < v.NumberOfItems(); i++)
 	{
@@ -1204,8 +1211,8 @@ void CSystem::ComputeConstraintVelocityTerm(TemporaryComputationData& temp, cons
 	const Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 	result.SetNumberOfItems(nAE);
 	result.SetAll(0.);
-	if (vMax == 0.) { return; }
-	const Real eps = 1e-4 * size / vMax;
+	if (nAE == 0) { return; }
+	const Real eps = (vMax == 0.) ? 0. : 1e-4 * size / vMax;
 
 	auto MoveAlong = [this, &q, &q0, &v](Real factor)
 	{
@@ -1226,17 +1233,77 @@ void CSystem::ComputeConstraintVelocityTerm(TemporaryComputationData& temp, cons
 			rigidNode.CompositionRule(position0, rotation0, incrementalMotion, position, rotation);
 		}
 	};
-	//(8 (f(eps) - f(-eps)) - (f(2 eps) - f(-2 eps)))/(12 eps)
-	const Real factors[2] = { 8., -1. };
-	for (Index k = 0; k < 2; k++)
+	//the central differences of fourth order at the points -2, -1, 1, 2
+	const Real points[4] = { -2., -1., 1., 2. };
+	const Real first[4] = { 1. / 12., -8. / 12., 8. / 12., -1. / 12. };
+	const Real second[4] = { -1. / 12., 16. / 12., 16. / 12., -1. / 12. }; //-30/12 at 0, times G(0) - G(0) = 0
+
+	//(C_q v)_q v of the position-level rows: the velocity-level constraints are left out of C_q v
+	Vector f(nAE);
+	if (vMax != 0.)
 	{
-		MoveAlong((k + 1) * eps);
-		NumericalConstraintJacobianTimesVector(temp, v, f1);
-		MoveAlong(-(k + 1) * eps);
-		NumericalConstraintJacobianTimesVector(temp, v, f0);
-		for (Index i = 0; i < nAE; i++) { result[i] += factors[k] * (f1[i] - f0[i]) / (12. * eps); }
+		for (Index k = 0; k < 4; k++)
+		{
+			MoveAlong(points[k] * eps);
+			NumericalConstraintJacobianTimesVector(temp, v, f);
+			result.MultAdd(first[k] / eps, f);
+		}
+		q.CopyFrom(q0);
+	}
+
+	//the rows of the constraints at velocity level
+	std::vector<bool> velocityRows(nAE, false);
+	for (Index j : cSystemData.objectsWithAlgebraicEquations)
+	{
+		bool usesVelocityLevel;
+		JacobianType::Type filledJacobians;
+		ComputeObjectJacobianAE(j, temp, usesVelocityLevel, filledJacobians);
+		if (usesVelocityLevel) { for (Index i : cSystemData.GetLocalToGlobalAE()[j]) { velocityRows[i] = true; } }
+	}
+
+	auto Residual = [this, &tempArray, &MoveAlong, &t, t0](Real sigma, Real tau, Vector& g)
+	{
+		MoveAlong(sigma);
+		t = t0 + tau;
+		ComputeAlgebraicEquations(tempArray, g, false);
+	};
+	//G_tau, G_tautau at sigma = 0; G_sigma, G_sigmatau; the differences in tau of G - G(sigma, 0), exactly zero for a
+	//constraint that does not depend on the time
+	Vector gTau(nAE), gTauTau(nAE), gSigma(nAE), gSigmaTau(nAE), gTauAtSigma(nAE), gAtSigma(nAE);
+	gTau.SetAll(0.); gTauTau.SetAll(0.); gSigma.SetAll(0.); gSigmaTau.SetAll(0.);
+	Residual(0., 0., gAtSigma);
+	for (Index l = 0; l < 4; l++)
+	{
+		Residual(0., points[l] * timeStep, f);
+		f -= gAtSigma;
+		gTau.MultAdd(first[l] / timeStep, f);
+		gTauTau.MultAdd(second[l] / (timeStep * timeStep), f);
+	}
+	if (vMax != 0.)
+	{
+		for (Index k = 0; k < 4; k++)
+		{
+			Residual(points[k] * eps, 0., gAtSigma);
+			gSigma.MultAdd(first[k] / eps, gAtSigma);
+			gTauAtSigma.SetAll(0.);
+			for (Index l = 0; l < 4; l++)
+			{
+				Residual(points[k] * eps, points[l] * timeStep, f);
+				f -= gAtSigma;
+				gTauAtSigma.MultAdd(first[l] / timeStep, f);
+			}
+			gSigmaTau.MultAdd(first[k] / eps, gTauAtSigma);
+		}
 	}
 	q.CopyFrom(q0);
+	t = t0;
+	PreComputeItems();
+
+	for (Index i = 0; i < nAE; i++)
+	{
+		if (velocityRows[i]) { result[i] = gSigma[i] + gTau[i]; }
+		else { result[i] += 2. * gSigmaTau[i] + gTauTau[i]; }
+	}
 }
 
 //! compute (C_{q2} * v), v being an arbitrary vector

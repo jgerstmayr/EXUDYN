@@ -1396,7 +1396,7 @@ class GeneralizedAlphaSettings:
     checkInitialConstraints: bool
     """True: at the start of the time integration, the constraints are evaluated with the initial positions and with the initial velocities; if the largest residual exceeds initialConstraintsTolerance, a warning names the item - inconsistent initial conditions give large constraint forces and oscillations in the first steps; the residuals are in the output of the solver; False: no check and no warning; see sec-solver-initialconstraints (#2234)."""
     computeInitialAccelerations: bool
-    """True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations."""
+    """True: compute initial accelerations from system EOM in acceleration form, with the derivatives of the constraints by the time, e.g. of their user functions; False: use zero accelerations."""
     constraintDriftCheckPeriod: int
     """the number of steps between two checks of checkConstraintDrift."""
     constraintDriftTolerance: float

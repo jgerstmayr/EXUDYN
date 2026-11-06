@@ -399,19 +399,13 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 
 	if (computeInitialAccelerations)
 	{
-		//initial accelerations can be computed, if the system is written in acceleration form
-		//qODE1_t terms currently not considered! (could be considered via ODE1 jacobian?)
-		//[ M    C_q^T][q_tt  ]   [             -ODE2RHS                 ]   [0]
-		//|    0      ||qODE1 | + |               qODE1                  | = |qODE1_init|
-		//[C_q   0    ][lambda]   [ C_tt + 2(C_q)_t*q_t + (C_q*q_t)_q*q_t]   [0]
-		//==> constraints need to be transformed to acceleration level
-		//==> velocity constraints Ct give: d(Ct)/dt = Ct_t + Ct_qt * q_tt ==> only Ct_t is necessary (if existing) ==> set Ct_qt * q_tt = 0
-		//for now, the following terms are neglegted: C_tt = 0, 2(C_q)_t*q_t = 0
-		//   ==> no explicit dependence of constraints w.r.t. time, or at least requiring this dependence to be zero at initialization
-		//[ M    C_q^T][q_tt  ]   [   -ODE2RHS     ]   [0]
-		//|           ||      | + |                | = | |
-		//[C_q   0    ][lambda]   [ (C_q*q_t)_q*q_t]   [0]
-		//the term (C_q*q_t)_q*q_t is computed numerically and only exists, if initial velocities are != 0
+		//the initial accelerations from the system written in acceleration form, the ODE1 coordinates kept:
+		//[ M    C_q^T][q_tt  ]   [ -ODE2RHS ]   [0]
+		//|    0      ||qODE1 | + |   qODE1  | = |qODE1_init|
+		//[C_q   0    ][lambda]   [    c     ]   [0]
+		//the row of a constraint at velocity level is C_v, its derivative by the velocities; c are the terms of the
+		//differentiated constraints without the accelerations: (C_q q_t)_q q_t + 2 C_qt q_t + C_tt at position level,
+		//C_q q_t + C_t at velocity level (#3289, #303, #574)
 
 		//the matrix [M C_q^T; C_q 0] does not depend on the velocities: the projection of the velocities left it factorized
 		Index factorizeOutput = systemJacobianFactorized ? -1 : FactorizeInitialSystemJacobian(computationalSystem, simulationSettings);
@@ -428,19 +422,17 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		ode1RHS.SetAll(0); //nothing to be computed for ODE1
 		aeRHS.SetAll(0);
 
-		//.... for velocity level constraints: add dg/dq*\dot q and ODE1 term in future
-
-		if (computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t.GetL2Norm() > 1e-10)
 		{
-			{
-				Vector& vInitial = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t; //=initialState! for consistency here, only currentState is used
-				Vector Cqv2(data.nAE);
-				computationalSystem.ComputeConstraintVelocityTerm(data.tempCompData, newton.numericalDifferentiation, vInitial, data.tempODE2F0, data.tempODE2F1, Cqv2); //(#3289)
-				aeRHS -= Cqv2;
+			Vector& vInitial = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t; //=initialState! for consistency here, only currentState is used
+			//the step in time of the differences, 1e-3 of the simulated time, at most 1e-3
+			const Real timeStep = 1e-3 * EXUstd::Minimum(1., simulationSettings.timeIntegration.endTime - simulationSettings.timeIntegration.startTime);
+			Vector constraintTerms(data.nAE);
+			computationalSystem.ComputeConstraintVelocityTerm(data.tempCompDataArray, newton.numericalDifferentiation, vInitial,
+				timeStep > 0. ? timeStep : 1e-3, constraintTerms);
+			aeRHS -= constraintTerms;
 
-				if (IsVerbose(3)) { Verbose(3, STDstring("    vInitial = ") + EXUstd::ToString(vInitial) + "\n"); }
-				if (IsVerbose(3)) { Verbose(3, STDstring("    Cqv2     = ") + EXUstd::ToString(Cqv2) + "\n"); }
-			}
+			if (IsVerbose(3)) { Verbose(3, STDstring("    vInitial = ") + EXUstd::ToString(vInitial) + "\n"); }
+			if (IsVerbose(3)) { Verbose(3, STDstring("    constraint terms = ") + EXUstd::ToString(constraintTerms) + "\n"); }
 		}
 
 		if (factorizeOutput != -1)

@@ -812,7 +812,7 @@ inline py::dict GetDictionaryWithTypeInfo(const GeneralizedAlphaSettings& data) 
     d["value"] = data.computeInitialAccelerations;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations";
+    d["description"] = "True: compute initial accelerations from system EOM in acceleration form, with the derivatives of the constraints by the time, e.g. of their user functions; False: use zero accelerations";
     structureDict["computeInitialAccelerations"] = d;
 
     d = py::dict(); //reset local dict

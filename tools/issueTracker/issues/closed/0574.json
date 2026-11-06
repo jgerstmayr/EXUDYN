@@ -1,0 +1,15 @@
+{
+  "number": 574,
+  "title": "initialAccelerations",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add dg/dq*(dot q) term for initial accelerations in velocity level constraints; check with rolling coin",
+  "dateRaised": "2021-02-07",
+  "deadline": "2021-04-08",
+  "dateResolved": "2026-11-06 16:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The initial accelerations include the term C_q v of the velocity-level constraints (rolling disc, CoordinateConstraint with velocityLevel); checked with a rolling coin, whose accelerations after a step of h differ from the initial ones by O(h).",
+  "resolvedInVersion": "1.13.415"
+}

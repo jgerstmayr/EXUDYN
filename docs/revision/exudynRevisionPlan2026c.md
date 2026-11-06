@@ -66,7 +66,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG2.9 Add three old test models (2 open sub-steps)
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
-  - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
   - RG4.24 Extend the viscous rolling friction of ObjectRollingDiscPenalty to any axis
 - **RG5** Performance
@@ -133,7 +132,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | OPEN | 1 | Release and publication |
 | RG2 | OPEN | 4 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 5 | Implementation problems and bugs |
+| RG4 | OPEN | 4 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
@@ -389,9 +388,9 @@ CLOSED 2026-10-14 (#2218, #2219; maintainer: close them if resolved): the rotati
 Jacobian of ObjectANCFThinPlate and the symmetric rotation of NodePointSlope12 with its
 GetRotationJacobianTTimesVector_q came with #2228 (RG11.8.8). [log](exudynRevisionLog2026c.md#rg11-8-21)
 
-### **OPEN_RG4.21** Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
+### **CLOSED_RG4.21** Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
 
-#303 (the flag), #574 (the term of the velocity-level constraints, checked with the rolling coin).
+CLOSED 2026-11-06 (#303, #574): the initial accelerations with C_q v + C_t of the velocity-level constraints and 2 C_qt v + C_tt of those at position level, from the residuals of the constraints by central differences along the motion and in time; no flag needed, a constraint without time dependence gives zero; initialAccelerationsTest.py with a prescribed motion and a rolling coin; rollingCoinTest moved by 4.7e-3. [log](exudynRevisionLog2026c.md#rg4-21)
 
 ### **OPEN_RG4.22** Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 

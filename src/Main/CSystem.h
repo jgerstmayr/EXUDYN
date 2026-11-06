@@ -313,10 +313,11 @@ public:
 	//! compute (C_{q2} * v), v being an arbitrary vector, system-wide; C_q with its part along the Euler parameters
 	void NumericalConstraintJacobianTimesVector(TemporaryComputationData& temp, const Vector& v, Vector& result);
 
-	//! (C_q v)_q v, v the ODE2 velocities, by the central difference of C_q v along the motion (Lie group nodes by the
-	//! composition) (#3289); f0, f1: work vectors
-	void ComputeConstraintVelocityTerm(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
-		const Vector& v, Vector& f0, Vector& f1, Vector& result);
+	//! the terms of the differentiated constraints without the accelerations, for the initial accelerations: (C_q v)_q v
+	//! + 2 C_qt v + C_tt at position level, C_q v + C_t at velocity level, v the ODE2 velocities, by central differences
+	//! along the motion (Lie group nodes by the composition) and in time with the step timeStep (#3289, #303, #574)
+	void ComputeConstraintVelocityTerm(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+		const Vector& v, Real timeStep, Vector& result);
 
 	//! PostNewtonStep: do this for every object (connector), which has a PostNewtonStep ->discontinuous iteration e.g. to resolve contact, friction or plasticity; returns an error (residual)
 	//! recommended step size \f$h_{recom}\f$ after PostNewton(...): \f$h_{recom} < 0\f$: no recommendation, \f$h_{recom}==0\f$: use minimum step size, \f$h_{recom}>0\f$: use specific step size, if no smaller size requested by other reason

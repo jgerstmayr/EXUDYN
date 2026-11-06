@@ -108,7 +108,8 @@ The vector $\dv$ in velocity level equations is zero, except if `parameters.velo
 
 Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag `parameters.velocityLevel = True` (or both).
 However, the `constraintUserFunction` has to be chosen accordingly by the user, either as position or as velocity level.
-The user functions include dependency on time $t$, but this time dependency is not respected in the computation of initial accelerations. Therefore,
+The initial accelerations of the implicit solvers include the derivatives of the user function by the time, see the
+section *Initial accelerations* of the solver page.
 
 If `activeConnector = False`, the (index 1) algebraic equation reads for ALL cases:
 

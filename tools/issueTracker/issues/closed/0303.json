@@ -1,0 +1,15 @@
+{
+  "number": 303,
+  "title": "constraints derivatives",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add consistent flag, if constraints have velocity coordinate dependence or if they explicitly depend on time (needs additional derivatives for consistent initial accelerations)!",
+  "dateRaised": "2019-12-26",
+  "deadline": "2020-02-24",
+  "dateResolved": "2026-11-06 16:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The initial accelerations of the implicit solvers include the derivatives of the constraints by the time (2 C_qt v + C_tt at position level, C_t at velocity level), e.g. of an offsetUserFunction; they come from the residuals of the constraints by central differences, so no flag is needed: a constraint that does not depend on the time contributes zero.",
+  "resolvedInVersion": "1.13.414"
+}

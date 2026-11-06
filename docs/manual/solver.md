@@ -553,7 +553,7 @@ $$
         {-\frac{\partial \gv}{\partial \qv} \dot \qv_0-\frac{\partial \gv}{\partial \yv} \dot \yv_0 - \frac{\partial \gv}{\partial t}}  \, ,
 $$ (eq-initialaccelerationsvelb)
 
-The term $\frac{\partial \gv}{\partial t}$ can only occur in case of user functions and therefore currently not implemented, and the {ref}`ODE1 <ODE1>` term $\frac{\partial \gv}{\partial \yv} = 0$ is not used yet in constraints.
+The {ref}`ODE1 <ODE1>` term $\frac{\partial \gv}{\partial \yv} = 0$ is not used yet in constraints.
 
 For position level constraints, we assume $\frac{\partial \gv}{\partial \dot \qv} = 0$ and $\frac{\partial \gv}{\partial \yv} = 0$ in {eq}`eq-initialaccelerationsvel` and perform a second derivation w.r.t. time,
 
@@ -594,7 +594,16 @@ The term $\frac{\partial^2 \gv}{\partial \qv^2} \dot \qv_0^2$ is the second deri
 motion with constant velocities: a central difference of fourth order of $\frac{\partial \gv}{\partial \qv} \dot \qv_0$
 at the positions moved by $\pm \varepsilon \dot \qv_0$ and $\pm 2 \varepsilon \dot \qv_0$. The rotation of a Lie group
 node is moved by the composition with its angular velocity, and the constraint Jacobian of Euler parameters includes
-its part along the parameters (#3289). The terms with the time derivatives of $\gv$ are left out.
+its part along the parameters (#3289).
+
+The other terms come from the residuals of the constraints along the motion and in time,
+$\mathbf{G}(\sigma, \tau) = \gv(\qv_0 + \sigma \dot \qv_0, \dot \qv_0, t_0 + \tau)$, by central differences of fourth order:
+at velocity level $\frac{\partial \gv}{\partial \qv} \dot \qv_0 + \frac{\partial \gv}{\partial t} = \mathbf{G}_\sigma + \mathbf{G}_\tau$,
+at position level $2 \frac{\partial^2 \gv}{\partial \qv \partial t} \dot \qv_0 + \frac{\partial^2 \gv}{\partial t^2} =
+2 \mathbf{G}_{\sigma\tau} + \mathbf{G}_{\tau\tau}$ (#303, #574). The step in $\tau$ is $10^{-3}$ of the simulated time, at most $10^{-3}$;
+the user functions of the constraints, such as an `offsetUserFunction`, are therefore also evaluated up to two such steps
+before the start time. A constraint that does not depend on the time gives the same residuals at every $\tau$, and its
+terms by the time are zero.
 
 (sec-solver-initialconstraints)=
 ### Consistent initial conditions

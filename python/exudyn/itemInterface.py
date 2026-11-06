@@ -1530,7 +1530,7 @@ class ObjectConnectorCoordinateOffsetUserFunction(Protocol):
     r"""A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
     
     It is NECESSARY to use sufficiently smooth functions, having **initial offsets** consistent with **initial configuration** of bodies,
-    either zero or compatible initial offset-velocity, and no initial accelerations.
+    either zero or compatible initial offset-velocity.
     The ``offsetUserFunction`` is **ONLY used** in case of static computation or index3 (generalizedAlpha) time integration.
     In order to be on the safe side, provide both  ``offsetUserFunction`` and  ``offsetUserFunction_t``.
     
@@ -1639,7 +1639,7 @@ class ObjectJointGenericOffsetUserFunction(Protocol):
     
     e.g., in order to move or rotate a body on a prescribed trajectory.
     It is NECESSARY to use sufficiently smooth functions, having **initial offsets** consistent with **initial configuration** of bodies,
-    either zero or compatible initial offset-velocity, and no initial accelerations.
+    either zero or compatible initial offset-velocity.
     The ``offsetUserFunction`` is **ONLY used** in case of static computation or index3 (generalizedAlpha) time integration.
     In order to be on the safe side, provide both  ``offsetUserFunction`` and  ``offsetUserFunction_t``.
     

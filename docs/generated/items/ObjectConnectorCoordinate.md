@@ -105,8 +105,8 @@ $$
 
 and `iN` represents the itemNumber (=objectNumber).
 Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag parameters.velocityLevel = True (or both).
-The user functions include dependency on time $t$, but this time dependency is not respected in the computation of initial accelerations. Therefore,
-it is recommended that $\mathrm{UF}$ and $\mathrm{UF}_t$ does not include initial accelerations.
+The initial accelerations of the implicit solvers include the derivatives of the user functions by the time, see the
+section *Initial accelerations* of the solver page.
 
 If `activeConnector = False`, the (index 1) algebraic equation reads for ALL cases:
 
@@ -117,7 +117,7 @@ $$
 **Userfunction**: `offsetUserFunction(mbs, t, itemNumber, lOffset)`
 A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
 It is NECESSARY to use sufficiently smooth functions, having **initial offsets** consistent with **initial configuration** of bodies,
-either zero or compatible initial offset-velocity, and no initial accelerations.
+either zero or compatible initial offset-velocity.
 The `offsetUserFunction` is **ONLY used** in case of static computation or index3 (generalizedAlpha) time integration.
 In order to be on the safe side, provide both  `offsetUserFunction` and  `offsetUserFunction_t`.
 

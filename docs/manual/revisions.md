@@ -607,6 +607,14 @@ crank by up to a quarter of the accelerations, and limited LobattoIIIA4 to order
 accelerations: models with initial velocities and constraints change, by 1e-9 relative with other nodes, by 1e-7 on
 the spatial slider crank with Lie group nodes.
 
+**The initial accelerations include the constraints at velocity level and those depending on the time** (#303,
+#574): the term C_q v of a velocity-level constraint (a rolling disc, a `CoordinateConstraint` with `velocityLevel`) was
+left out, and so were the derivatives by the time, e.g. of an `offsetUserFunction`; a prescribed motion that starts
+from rest got no initial acceleration. Both come now from the residuals of the constraints by central differences
+along the motion and in time; the user functions of the constraints are therefore also evaluated up to two steps of 1e-3
+of the simulated time, at most 2e-3, before the start time. Rolling discs and coins with initial velocities change by up to 5e-3 relative, a
+GenericJoint with an offset user function by 2e-11.
+
 **ObjectKinematicTree allocates no memory per step** (#3291): it copied the joint velocities in each evaluation
 of its mass matrix, forces and Jacobian, up to 29 times per step of an implicit solver.
 

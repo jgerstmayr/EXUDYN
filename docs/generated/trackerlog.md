@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.413.dev1
+- Exudyn version = 1.13.415.dev1
 - last change = 2026-11-06
 - Number of issues = 3300
-- Number of resolved issues = 3190 (413 in current version)
+- Number of resolved issues = 3192 (415 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9396,10 +9396,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Check forceVector and gravity forces in comparison to paper
   - **remarks:** planned as revision2026b step RG2.6 (triage 2026-10-07)
   - date raised: 2021-02-21
-- `EXTENSION` `MEDIUM EFF` initialAccelerations (#574)
-  - description: add dg/dq\*(dot q) term for initial accelerations in velocity level constraints; check with rolling coin
-  - **remarks:** planned as revision2026b step RG4.21 (triage 2026-10-07)
-  - date raised: 2021-02-07
 - `EXTENSION` `HIGH EFF` Gen alpha2 (#561)
   - description: setup new generalized alpha integrator with GGL
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9416,10 +9412,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add user marker
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2020-01-10
-- `EXTENSION` `MEDIUM EFF` constraints derivatives (#303)
-  - description: add consistent flag, if constraints have velocity coordinate dependence or if they explicitly depend on time (needs additional derivatives for consistent initial accelerations)!
-  - **remarks:** planned as revision2026b step RG4.21 (triage 2026-10-07)
-  - date raised: 2019-12-26
 - `EXTENSION` `MEDIUM EFF` static computation (#260)
   - description: add consistent flag to markerdata computation, ODE2RHS computation, etc. for static computation, which does not compute information on velocities then.
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

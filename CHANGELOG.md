@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 398 | 1.13.413 |
+| 1.13 | Newborn | 400 | 1.13.415 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.415** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` initialAccelerations (#574)
+  - description: add dg/dq\*(dot q) term for initial accelerations in velocity level constraints; check with rolling coin
+  - **notes:** The initial accelerations include the term C\_q v of the velocity-level constraints (rolling disc, CoordinateConstraint with velocityLevel); checked with a rolling coin, whose accelerations after a step of h differ from the initial ones by O(h).
+  - date resolved: **2026-11-06 16:25**, date raised: 2021-02-07
+- **1.13.414** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` constraints derivatives (#303)
+  - description: add consistent flag, if constraints have velocity coordinate dependence or if they explicitly depend on time (needs additional derivatives for consistent initial accelerations)!
+  - **notes:** The initial accelerations of the implicit solvers include the derivatives of the constraints by the time (2 C\_qt v + C\_tt at position level, C\_t at velocity level), e.g. of an offsetUserFunction; they come from the residuals of the constraints by central differences, so no flag is needed: a constraint that does not depend on the time contributes zero.
+  - date resolved: **2026-11-06 16:25**, date raised: 2019-12-26
 - **1.13.413** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The performance tests with the regular module at the checkpoint of a completed group (#3299)
   - description: The performance tests (exudev perf) are not in the gates; perfRigidPendulum failed for one commit after \#3289 without being noticed (\#3297). Decided: the checkpoint of a completed group or significant step (WORKFLOW.md section 8, \#3296) runs the performance tests with the regular module as well as with the fast module; a result outside the tolerance is a bug or a reference to record again, as in the test suite.
   - **notes:** The performance tests with the regular module are run at the checkpoint of a completed group or significant step, together with the fast module (docs/dev/WORKFLOW.md section 8).

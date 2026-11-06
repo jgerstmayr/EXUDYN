@@ -18,6 +18,9 @@ You can view and download this file on Github: [initialAccelerationsTest.py](htt
 #           computeInitialAccelerations the accelerations are zero. A rigid body spinning about a spherical joint
 #           away from its center, with Euler parameters, a Lie group node and Rxyz: the term of the initial velocities
 #           along the motion of each node type, the accelerations of the center the same for the three (#3289).
+#           A mass point moved from rest by a coordinate constraint depending on the time, at position and at velocity
+#           level, and a coin rolling on a plane, whose constraints are at velocity level: the terms by the time and
+#           C_q v of the velocity-level constraints (#303, #574).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-05
@@ -90,6 +93,72 @@ for nodeType in [exu.NodeType.RotationEulerParameters, exu.NodeType.RotationRota
     exu.Print(nodeType, ': accelerations of the center', aNode, ', with Rxyz', aRxyz)
     u += int(cMath.norm(aNode - aRxyz) < 1e-8)
 u += aRxyz[0]
+
+#a mass point moved from rest by a coordinate constraint depending on the time, A(1-cos(omega t)) at position level or
+#its derivative at velocity level: the initial acceleration A omega^2 comes from the terms by the time (#303, #574)
+A = 0.2
+omega = 5.
+def PrescribedAcceleration(velocityLevel):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    nGround = mbs.AddNode(NodePointGround())
+    oMass = mbs.CreateMassPoint(referencePosition=[0,0,0], mass=2)
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    mMass = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.GetObject(oMass)['nodeNumber'], coordinate=0))
+    if velocityLevel:
+        mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround, mMass], velocityLevel=True,
+                                           offsetUserFunction_t=lambda mbs, t, itemNumber, offset: A*omega*cMath.sin(omega*t)))
+    else:
+        mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround, mMass],
+                                           offsetUserFunction=lambda mbs, t, itemNumber, offset: A*(1-cMath.cos(omega*t))))
+    mbs.Assemble()
+    settings = exu.SimulationSettings()
+    settings.solution.file.write = False
+    settings.timeIntegration.verboseMode = 0
+    solver = exu.MainSolverImplicitSecondOrder()
+    solver.InitializeSolver(mbs, settings)
+    return mbs.systemData.GetODE2Coordinates_tt()[0]
+
+for velocityLevel in [False, True]:
+    a = PrescribedAcceleration(velocityLevel)
+    exu.Print('prescribed motion, velocityLevel =', velocityLevel, ': initial acceleration', a, ', expected', A*omega**2)
+    u += int(abs(a - A*omega**2) < 1e-6) + 0.1*a
+
+#a tilted coin rolling on a plane, its constraints at velocity level: the initial accelerations contain C_q v, and the
+#accelerations after one step of size h differ from them by O(h) (#574)
+def CoinAccelerations(h):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    r = 0.1
+    rotation = RotationMatrixY(0.3)
+    omega = np.array([0.5, 2., 3.])
+    oCoin = mbs.CreateRigidBody(inertia=RigidBodyInertia(mass=1, inertiaTensor=np.diag([0.5*r**2, 0.25*r**2, 0.25*r**2])),
+                                referencePosition=rotation @ [0, 0, r], referenceRotationMatrix=rotation,
+                                initialVelocity=np.cross(omega, rotation @ [0, 0, r]), initialAngularVelocity=omega,
+                                gravity=[0, 0, -g])
+    oGround = mbs.CreateGround()
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
+    mCoin = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oCoin))
+    mbs.AddObject(ObjectJointRollingDisc(markerNumbers=[mGround, mCoin], constrainedAxes=[1,1,1], discRadius=r))
+    mbs.Assemble()
+    settings = exu.SimulationSettings()
+    settings.solution.file.write = False
+    settings.timeIntegration.verboseMode = 0
+    settings.timeIntegration.endTime = h
+    settings.timeIntegration.numberOfSteps = 1
+    settings.timeIntegration.newton.relativeTolerance = 1e-12
+    solver = exu.MainSolverImplicitSecondOrder()
+    solver.InitializeSolver(mbs, settings)
+    a0 = np.array(mbs.systemData.GetODE2Coordinates_tt())
+    solver.SolveSystem(mbs, settings)
+    solver.FinalizeSolver(mbs, settings)
+    return (a0, np.array(mbs.systemData.GetODE2Coordinates_tt()))
+
+for h in [1e-3, 1e-4]:
+    (a0, a1) = CoinAccelerations(h)
+    exu.Print('rolling coin: change of the accelerations in the first step of', h, ':', cMath.norm(a1 - a0))
+    u += int(cMath.norm(a1 - a0) < 100*h)
+u += 0.1*a0[0]
 
 exu.Print('solution of initialAccelerationsTest=', u)
 

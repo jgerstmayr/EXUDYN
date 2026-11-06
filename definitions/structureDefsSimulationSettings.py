@@ -602,7 +602,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tbool,
             pythonName='computeInitialAccelerations',
             defaultValue=True,
-            description=r'True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations'),
+            description=r'True: compute initial accelerations from system EOM in acceleration form, with the derivatives of the constraints by the time, e.g. of their user functions; False: use zero accelerations'),
         StructureParameter(type=Tbool,
             pythonName='storeInitialAlgebraicCoordinates',
             defaultValue=True,
