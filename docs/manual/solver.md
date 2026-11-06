@@ -386,7 +386,7 @@ Hereafter, the system equations are solved at the end of the time step ($T$) for
 - For consistency reasons, one may set $\gamma_\FO = \gamma$, but **currently we use** $\gamma_T = \frac 1 2$, leading to no numerical damping for {ref}`ODE1 <ODE1>` variables $\yv$.
 - In the extension to the so-called generalized-$\alpha$ method [Chung1993], algorithmic accelerations $\aalg$ are used in {eq}`eq-newmark-interpolation`.
 - Algorithmic accelerations are no longer equivalent to the time derivatives of displacements, $\aalg \neq \ddot \qv$; thus, both sets of variables are used independently. In case of Newmark or the implicit trapezoidal rule just use $\aalg = \ddot \qv$.
-- Implicit solvers are also available with Lie groups, if according rigid body nodes (`NodeRigidBodyRotVecLG`) are used, for theory see Holzinger et al. [HolzingerArnoldGerst2023].
+- Implicit solvers are also available with Lie groups, if according rigid body nodes (`NodeRigidBodyRotVecLG`) are used, for theory see Holzinger et al. [HolzingerArnoldGerst2023]. The implicit Runge-Kutta solvers (`TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL`, `Radau3`) compose the rotation of stage $i$ with the increment $\Delta_i = h \sum_j a_{ij} \Tm^{-1}(\Delta_j) \tomega_j$ of Runge-Kutta-Munthe-Kaas, $\tomega_j$ the angular velocities of stage $j$ and $\Tm$ the tangent operator, by a fixed-point iteration; with $\Tm = \Im$ the order would be 2 (#3290).
 
 For generalized-$\alpha$, the algorithmic accelerations $\aalg$ are computed from the recurrence relation
 
@@ -589,6 +589,12 @@ The linear system of equations, either {eq}`eq-initialaccelerationsvelb` or {eq}
 - `simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True`,
 
 which is the default value.
+
+The term $\frac{\partial^2 \gv}{\partial \qv^2} \dot \qv_0^2$ is the second derivative of the constraints along the
+motion with constant velocities: a central difference of fourth order of $\frac{\partial \gv}{\partial \qv} \dot \qv_0$
+at the positions moved by $\pm \varepsilon \dot \qv_0$ and $\pm 2 \varepsilon \dot \qv_0$. The rotation of a Lie group
+node is moved by the composition with its angular velocity, and the constraint Jacobian of Euler parameters includes
+its part along the parameters (#3289). The terms with the time derivatives of $\gv$ are left out.
 
 (sec-solver-initialconstraints)=
 ### Consistent initial conditions

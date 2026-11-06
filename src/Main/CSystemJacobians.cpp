@@ -1184,235 +1184,59 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 
 
 
-//! compute numerically the derivative of (C_{q2} * v), v being an arbitrary vector
-//! jacobianCqV = scalarFactor*d/dq2(C_{q2} * v)
-void CSystem::ComputeConstraintJacobianDerivative(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Vector& f0, Vector& f1,
-	const Vector& v, GeneralMatrix& jacobianCqV, Real scalarFactor)
+//! (C_q v)_q v, v the ODE2 velocities: the second derivative of the constraints along the motion with constant
+//! velocities v, by the central difference of fourth order of C_q v at the positions moved by +-eps v and +-2 eps v -
+//! Lie group nodes by the composition of their rotation with the increment, as the solvers update them; C_q with its
+//! part along the Euler parameters; eps v 1e-4 of the largest reference plus current coordinate, at least
+//! minimumCoordinateSize (#3289)
+void CSystem::ComputeConstraintVelocityTerm(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
+	const Vector& v, Vector& f0, Vector& f1, Vector& result)
 {
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++
-	//jacobian
-	//Real relEps = numDiff.relativeEpsilon;			//relative differentiation parameter
-	//Real minCoord = numDiff.minimumCoordinateSize;	//absolute differentiation parameter is limited to this minimum
-
-	//Index nAE = cSystemData.GetNumberOfCoordinatesAE();
-	//Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
-
-	jacobianCqV.SetAllZero(); //works for dense and sparse modes
-
-	ResizableMatrix& localJacobian = temp.localJacobian;
-	//Real currentTime = cSystemData.GetCData().currentState.time;
-
-	Vector& xODE2 = cSystemData.GetCData().currentState.ODE2Coords;			//current coordinates ==> this is what is differentiated for
-	Vector& xRefODE2 = cSystemData.GetCData().referenceState.ODE2Coords;	//reference coordinates; might be important for numerical differentiation
-	//Vector& xODE2_t = cSystemData.GetCData().currentState.ODE2Coords_t;		//for diff w.r.t. velocities
-
-
-	for (Index j : cSystemData.objectsWithAlgebraicEquations)
+	Vector& q = cSystemData.GetCData().currentState.ODE2Coords;
+	const Vector& qRef = cSystemData.GetCData().referenceState.ODE2Coords;
+	const Vector q0(q); //only at the initialization of a solver
+	Real vMax = 0., size = numDiff.minimumCoordinateSize;
+	for (Index i = 0; i < v.NumberOfItems(); i++)
 	{
-		//work over bodies, connectors, etc.
-		ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j]; //as we do not perform numerical differentiation, LTG duplicates are needed!
-		ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[j];
-		Index nLocalODE2 = ltgODE2.NumberOfItems();
-		Index aeSize = cSystemData.GetCObjects()[j]->GetAlgebraicEquationsSize();
-
-		f0.SetNumberOfItems(nLocalODE2);
-		f1.SetNumberOfItems(nLocalODE2);
-
-		localJacobian.SetNumberOfRowsAndColumns(aeSize, nLocalODE2); //needs not to be initialized, because the matrix is fully computed
-
-		ComputeConstraintJacobianTimesVector(temp, v, f0, j, -1);
-
-		AddNumDiffObject(numDiff, -scalarFactor, xODE2, xRefODE2, localJacobian, f0, f1, ltgODE2, //-scalarFactor because of interchange of f0 and f1: diff=(f0-f1)/eps; gives same sign as in previous dense mode
-			[this, &temp, &v, &f1, &j]
-			{
-				ComputeConstraintJacobianTimesVector(temp, v, f1, j, -1);
-			}, true); //set values
-
-		jacobianCqV.AddSubmatrix(localJacobian, 1., ltgAE, ltgODE2, 0, 0);
+		vMax = EXUstd::Maximum(vMax, fabs(v[i]));
+		size = EXUstd::Maximum(size, fabs(q0[i] + qRef[i]));
 	}
+	const Index nAE = cSystemData.GetNumberOfCoordinatesAE();
+	result.SetNumberOfItems(nAE);
+	result.SetAll(0.);
+	if (vMax == 0.) { return; }
+	const Real eps = 1e-4 * size / vMax;
 
-	ArrayIndex& ltgODE2 = temp.tempIndex2; //also used for loads
-	ArrayIndex& ltgAE = temp.tempIndex3; //also used for loads
-	for (Index j : cSystemData.nodesODE2WithAE)
+	auto MoveAlong = [this, &q, &q0, &v](Real factor)
 	{
-		CNode& node = *(cSystemData.GetCNodes()[j]);
-
-		Index aeSize = node.GetAlgebraicEquationsSize();
-		if (aeSize) //currently, only used for Euler Parameter constraints
+		q.CopyFrom(q0);
+		q.MultAdd(factor, v);
+		for (Index k = 0; k < cSystemData.GetCNodes().NumberOfItems(); k++)
 		{
-			Index nLocalODE2 = node.GetNumberOfODE2Coordinates();
-			f0.SetNumberOfItems(nLocalODE2);
-			f1.SetNumberOfItems(nLocalODE2);
-			Index ode2Offset = node.GetGlobalODE2CoordinateIndex();
-			Index aeOffset = node.GetGlobalAECoordinateIndex();
-
-			//build node ltgs which do not exist
-			ltgODE2.SetNumberOfItems(nLocalODE2);
-			for (Index i = 0; i < nLocalODE2; i++)
-			{
-				ltgODE2[i] = ode2Offset + i; //node ltg
-			}
-			ltgAE.SetNumberOfItems(aeSize);
-			for (Index i = 0; i < aeSize; i++)
-			{
-				ltgAE[i] = aeOffset + i; //node ltg
-			}
-
-			localJacobian.SetNumberOfRowsAndColumns(aeSize, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
-			ComputeConstraintJacobianTimesVector(temp, v, f0, -1, j);
-
-			AddNumDiffObject(numDiff, -scalarFactor, xODE2, xRefODE2, localJacobian, f0, f1, ltgODE2,
-				[this, &temp, &v, &f1, &j]
-				{
-					ComputeConstraintJacobianTimesVector(temp, v, f1, -1, j);
-				}, true); //set values
-
-			jacobianCqV.AddSubmatrix(localJacobian, 1., ltgAE, ltgODE2, 0, 0);
+			const CNode* node = cSystemData.GetCNodes()[k];
+			if (!EXUstd::IsOfType(node->GetType(), Node::LieGroupWithDirectUpdate)) { continue; }
+			const CNodeRigidBody& rigidNode = *(const CNodeRigidBody*)node;
+			Index nPos = rigidNode.GetNumberOfDisplacementCoordinates();
+			Index nRot = rigidNode.GetNumberOfRotationCoordinates();
+			Index off = rigidNode.GetGlobalODE2CoordinateIndex();
+			LinkedDataVector position0(q0, off, nPos), rotation0(q0, off + nPos, nRot);
+			LinkedDataVector position(q, off, nPos), rotation(q, off + nPos, nRot);
+			Vector6D incrementalMotion;
+			for (Index i = 0; i < nPos + nRot; i++) { incrementalMotion[i] = factor * v[off + i]; }
+			rigidNode.CompositionRule(position0, rotation0, incrementalMotion, position, rotation);
 		}
-	}
-
-}
-
-//! compute object-wise (C_{q2} * v), v being an arbitrary vector
-void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& temp, const Vector& v, Vector& localAEcontributions, Index objectIndex, Index nodeIndex)
-{
-	CHECKandTHROW(v.NumberOfItems() == cSystemData.GetNumberOfCoordinatesODE2(), "CSystem::NumericalConstraintJacobianTimesVector: v size mismatch!");
-	
-	localAEcontributions.SetNumberOfItems(0); //for safety, if no subfunction called, should contain no values
-
-	JacobianType::Type filledJacobians;
-
-	//algebraic equations from objects (e.g. Euler parameters) and constraints
-	if (objectIndex >= 0)
+	};
+	//(8 (f(eps) - f(-eps)) - (f(2 eps) - f(-2 eps)))/(12 eps)
+	const Real factors[2] = { 8., -1. };
+	for (Index k = 0; k < 2; k++)
 	{
-		//work over bodies, connectors, etc.
-		ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[objectIndex];
-		ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[objectIndex];
-
-		localAEcontributions.SetNumberOfItems(ltgAE.NumberOfItems());
-		localAEcontributions.SetAll(0.);
-
-		bool objectUsesVelocityLevel;// = false;
-
-		if (ltgAE.NumberOfItems() && ltgODE2.NumberOfItems() && cSystemData.GetCObjects()[objectIndex]->GetAlgebraicEquationsSize()) //omit bodies and ground objects ...
-		{
-			ComputeObjectJacobianAE(objectIndex, temp, objectUsesVelocityLevel, filledJacobians);
-
-			if (!objectUsesVelocityLevel) //for velocity constraints, only Ct_t would be needed!
-			{
-				if (filledJacobians & JacobianType::AE_ODE2) //(flagAE_ODE2filled)
-				{
-					const ResizableMatrix& jac = temp.localJacobianAE_ODE2;
-
-					//multiply Cq^T * lambda:
-					for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
-					{
-						for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
-						{
-							localAEcontributions[ii] += jac(ii, jj) * v[ltgODE2[jj]];  //add terms to existing residual forces
-						}
-					}
-				}
-			}
-
-			//the block by ODE1 coordinates does not enter C_q v, v the ODE2 velocities (#3143)
-		}
-	}
-
-	if (nodeIndex >= 0)
-	{
-		CNode& node = *(cSystemData.GetCNodes()[nodeIndex]);
-
-		if (node.GetAlgebraicEquationsSize()) //currently, only used for Euler Parameter constraints
-		{
-			localAEcontributions.SetNumberOfItems(node.GetAlgebraicEquationsSize());
-			localAEcontributions.SetAll(0.);
-
-			((CNodeODE2&)node).ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE,
-				filledJacobians); //for objects, all jacobians need to be set!
-
-			if (filledJacobians & JacobianType::AE_ODE2)
-			{
-				//ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE_ODE2 : temp.localJacobianAE_ODE2_t;
-				const ResizableMatrix& jac = temp.localJacobianAE_ODE2;
-				//Index rowOffset = node.GetGlobalAECoordinateIndex();
-				Index columnOffset = node.GetGlobalODE2CoordinateIndex();
-
-				//multiply Cq^T * lambda:
-				for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
-				{
-					for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
-					{
-						localAEcontributions[ii] += jac(ii, jj) * v[columnOffset + jj];  //add terms to existing residual forces
-					}
-				}
-			}
-			//CHECKandTHROW(!(flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled), "CSystem: NumericalConstraintJacobianTimesVector(...): mode not implemented for node algebraic equations");
-			CHECKandTHROW(!(filledJacobians & (JacobianType::AE_ODE2_t + JacobianType::AE_ODE1 + JacobianType::AE_AE)),
-				"CSystem: NumericalConstraintJacobianTimesVector(...): mode not implemented for node algebraic equations", ExudynNotImplementedError);
-		}
-	}
-
-}
-
-
-
-//! compute numerically the derivative of (C_{q2} * v), v being an arbitrary vector
-//! jacobianCqV = scalarFactor*d/dq2(C_{q2} * v)
-void CSystem::NumericalConstraintJacobianDerivative(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Vector& f0, Vector& f1, 
-	const Vector& v, GeneralMatrix& jacobianCqV, Real scalarFactor)
-{
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++
-	//jacobian
-	Real relEps = numDiff.relativeEpsilon;			//relative differentiation parameter
-	Real minCoord = numDiff.minimumCoordinateSize;	//absolute differentiation parameter is limited to this minimum
-	Real eps, epsInv; //coordinate(column)-wise differentiation parameter; depends on size of coordinate
-
-	Index nAE = cSystemData.GetNumberOfCoordinatesAE();
-	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
-	Vector& x = cSystemData.GetCData().currentState.ODE2Coords;
-	//Vector& x_t = cSystemData.GetCData().currentState.ODE2Coords_t; //velocity coordinates
-	Real xStore; //store value of x; avoid roundoff error effects in numerical differentiation
-
-	//Vector& z = cSystemData.GetCData().currentState.AECoords; //not needed
-	//Real zStore; //store value of x; avoid roundoff error effects in numerical differentiation
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++
-
-    if (!EXUstd::IsOfType(LinearSolverType::Dense, jacobianCqV.GetSystemMatrixType()))
-    { CHECKandTHROWstring("CSystem::NumericalConstraintJacobianDerivative: illegal LinearSolverType, only possible for dense matrix!", ExudynValueError); }
-	
-    ResizableMatrix& jacobian = ((GeneralMatrixEXUdense&)jacobianCqV).GetMatrixEXUdense();
-	
-	f0.SetNumberOfItems(nAE);
-	f1.SetNumberOfItems(nAE);
-	NumericalConstraintJacobianTimesVector(temp, v, f0);
-	//pout << "f0=" << f0 << "\n";
-	//bool velocityLevel = false;
-
-	//brute force approach, done for full matrix!
-	//differentiation w.r.t. ODE2 coordinates
-	for (Index i = 0; i < nODE2; i++)
-	{
-		eps = relEps * (EXUstd::Maximum(minCoord, fabs(x[i])));
-
-		xStore = x[i];
-		x[i] += eps;
+		MoveAlong((k + 1) * eps);
 		NumericalConstraintJacobianTimesVector(temp, v, f1);
-		x[i] = xStore;
-
-		epsInv = scalarFactor / eps;
-
-		for (Index j = 0; j < nAE; j++)
-		{
-			Real x = epsInv * (f1[j] - f0[j]);
-			//jacobian(j + rowOffset, i + columnOffset) = x;
-			jacobian(j, i) = x;
-		}
+		MoveAlong(-(k + 1) * eps);
+		NumericalConstraintJacobianTimesVector(temp, v, f0);
+		for (Index i = 0; i < nAE; i++) { result[i] += factors[k] * (f1[i] - f0[i]) / (12. * eps); }
 	}
-
+	q.CopyFrom(q0);
 }
 
 //! compute (C_{q2} * v), v being an arbitrary vector
@@ -1445,15 +1269,15 @@ void CSystem::NumericalConstraintJacobianTimesVector(TemporaryComputationData& t
 			{
 				if (filledJacobians & JacobianType::AE_ODE2) //(flagAE_ODE2filled)
 				{
-					//ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE_ODE2 : temp.localJacobianAE_ODE2_t;
-					const ResizableMatrix& jac = temp.localJacobianAE_ODE2;
-
-					//multiply Cq^T * lambda:
-					for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+					//C_q v, with the part along the Euler parameters (#3289)
+					for (const ResizableMatrix* jac : { &temp.localJacobianAE_ODE2, &temp.localJacobianAE_ODE2radial })
 					{
-						for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+						for (Index ii = 0; ii < jac->NumberOfRows(); ii++)
 						{
-							result[ltgAE[ii]] += jac(ii, jj) * v[ltgODE2[jj]];  //add terms to existing residual forces
+							for (Index jj = 0; jj < jac->NumberOfColumns(); jj++)
+							{
+								result[ltgAE[ii]] += (*jac)(ii, jj) * v[ltgODE2[jj]];
+							}
 						}
 					}
 				}

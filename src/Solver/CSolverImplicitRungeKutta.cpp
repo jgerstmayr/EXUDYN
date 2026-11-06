@@ -176,16 +176,40 @@ void CSolverImplicitRungeKutta::ComputeStages(CSolverImplicitSecondOrderTimeInt&
 		}
 		Q[i].CopyFrom(q0);
 		Q[i] += temp2;
-		for (Index k : lieGroupNodes) //the rotation by composition, as generalized-alpha
+	}
+	//Lie group nodes: the rotation of stage i by the composition of the start of the step with the increment
+	//Delta_i = h sum_j A_ij TExpSO3Inv(Delta_j) omega_j, omega_j the angular velocities of stage j (Runge-Kutta-Munthe-Kaas,
+	//as the explicit solvers), by a fixed-point iteration from Delta_i = h sum_j A_ij omega_j, the increment of the
+	//other coordinates, which limits the order to 2 (#3290)
+	const Index maxFixedPointIterations = 10;
+	for (Index k : lieGroupNodes)
+	{
+		const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(k));
+		Index nPos = node.GetNumberOfDisplacementCoordinates();
+		Index nRot = node.GetNumberOfRotationCoordinates();
+		Index off = node.GetGlobalODE2CoordinateIndex();
+		Vector3D delta[ImplicitRungeKuttaMethod::maxStages], w[ImplicitRungeKuttaMethod::maxStages];
+		for (Index i = 0; i < s; i++) { delta[i] = Vector3D(Q[i], off + nPos) - Vector3D(q0, off + nPos); }
+		for (Index iteration = 0; iteration < maxFixedPointIterations; iteration++)
 		{
-			const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(k));
-			Index nPos = node.GetNumberOfDisplacementCoordinates();
-			Index nRot = node.GetNumberOfRotationCoordinates();
-			Index off = node.GetGlobalODE2CoordinateIndex();
+			for (Index j = 0; j < s; j++) { w[j] = EXUlie::TExpSO3Inv(delta[j]) * Vector3D(V[j], off + nPos); }
+			Real change = 0.;
+			for (Index i = 0; i < s; i++)
+			{
+				Vector3D newDelta(0.);
+				for (Index j = 0; j < s; j++) { if (method.A[i][j] != 0.) { newDelta += (h * method.A[i][j]) * w[j]; } }
+				for (Index m = 0; m < 3; m++) { change = EXUstd::Maximum(change, fabs(newDelta[m] - delta[i][m])); }
+				delta[i] = newDelta;
+			}
+			if (change <= 1e-15) { break; }
+		}
+		for (Index i = 0; i < s; i++)
+		{
 			LinkedDataVector position0(q0, off, nPos), rotation0(q0, off + nPos, nRot);
 			LinkedDataVector position(Q[i], off, nPos), rotation(Q[i], off + nPos, nRot);
 			Vector6D incrementalMotion;
-			incrementalMotion.CopyFrom(LinkedDataVector(temp2, off, nPos + nRot));
+			for (Index m = 0; m < nPos; m++) { incrementalMotion[m] = Q[i][off + m] - q0[off + m]; }
+			for (Index m = 0; m < 3; m++) { incrementalMotion[nPos + m] = delta[i][m]; }
 			node.CompositionRule(position0, rotation0, incrementalMotion, position, rotation);
 		}
 	}

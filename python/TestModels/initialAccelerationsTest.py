@@ -6,7 +6,9 @@
 #           L - starts horizontally with velocity v perpendicular to the rod. Its initial acceleration is the
 #           centripetal v^2/L towards the pivot plus gravity; the term of the initial velocity comes from the
 #           derivative of the constraint Jacobian, and the multiplier is the rod force m v^2/L. Without
-#           computeInitialAccelerations the accelerations are zero.
+#           computeInitialAccelerations the accelerations are zero. A rigid body spinning about a spherical joint
+#           away from its center, with Euler parameters, a Lie group node and Rxyz: the term of the initial velocities
+#           along the motion of each node type, the accelerations of the center the same for the three (#3289).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-05
@@ -51,6 +53,34 @@ for linearSolverType in [exu.LinearSolverType.EXUdense, exu.LinearSolverType.Eig
 (a, multipliers) = InitialAccelerations(False)
 exu.Print('without computeInitialAccelerations:', a)
 u += int(cMath.norm(a) == 0)
+
+#a rigid body spinning about a spherical joint away from its center: the accelerations of its center
+def RigidBodyAccelerations(nodeType):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    rotation = RotationMatrixZ(0.4) @ RotationMatrixX(0.7)
+    center = np.array([0.1, 0.2, 0.3])
+    omega = np.array([1., 2., 3.])
+    offset = rotation @ np.array([0.5, 0.1, 0])
+    oBody = mbs.CreateRigidBody(inertia=RigidBodyInertia(mass=1, inertiaTensor=np.diag([1, 2, 3])), nodeType=nodeType,
+                                referencePosition=center, referenceRotationMatrix=rotation, initialVelocity=np.cross(omega, offset),
+                                initialAngularVelocity=omega, gravity=[0, 0, -g])
+    oGround = mbs.CreateGround()
+    mbs.CreateSphericalJoint(itemNumbers=[oGround, oBody], position=center - offset)
+    mbs.Assemble()
+    settings = exu.SimulationSettings()
+    settings.solution.file.write = False
+    settings.timeIntegration.verboseMode = 0
+    solver = exu.MainSolverImplicitSecondOrder()
+    solver.InitializeSolver(mbs, settings)
+    return np.array(mbs.systemData.GetODE2Coordinates_tt()[0:3])
+
+aRxyz = RigidBodyAccelerations(exu.NodeType.RotationRxyz)
+for nodeType in [exu.NodeType.RotationEulerParameters, exu.NodeType.RotationRotationVector]:
+    aNode = RigidBodyAccelerations(nodeType)
+    exu.Print(nodeType, ': accelerations of the center', aNode, ', with Rxyz', aRxyz)
+    u += int(cMath.norm(aNode - aRxyz) < 1e-8)
+u += aRxyz[0]
 
 exu.Print('solution of initialAccelerationsTest=', u)
 

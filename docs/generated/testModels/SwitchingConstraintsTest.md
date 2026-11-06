@@ -112,7 +112,7 @@ u = mbs.systemData.GetODE2Coordinates()
 exu.Print('u =',u)
 exu.Print('sum(u) =',sum(u))
 
-testResult = abs(sum(u)-8.376384072333597) #2020-01-09: 376384072333597; before 13.12.2019: 8.342236349593959
+testResult = abs(sum(u)-8.376384071751081) #2026-11-06: the term of the initial velocities in the initial accelerations by a central difference (#3289), before 8.376384072333597; 2020-01-09: 376384072333597; before 13.12.2019: 8.342236349593959
 exu.Print('solution of SwitchingConstraintsTest=', testResult)
 exu.sys['testResult'] = testResult
 ```

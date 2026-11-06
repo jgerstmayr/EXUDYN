@@ -6427,6 +6427,41 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-7-4"></a>
+### RG20.7.4 — the order on the spatial slider crank: the initial accelerations, the stages of Lie group nodes (2026-11-06, #3289, #3290)
+- Maintainer 2026-11-06: do the open steps, fix the related problems.
+- Measured on sliderCrank3D of modelLibrary.py to t = 0.2, h = 2e-3 to 2.5e-4, against LobattoIIIC4GGL with h/64,
+  Newton tolerances 1e-12: with Euler parameters LobattoIIIA4 2.0, LobattoIIIC4GGL 4, Radau3 3, TrapezoidalGGL 2;
+  with Lie group nodes all four 2. The two methods without a stage at the start (IIIC, Radau) were right with Euler
+  parameters, so LobattoIIIA4 had a cause of its own: its first stage takes the accelerations of the start of the step.
+- The initial accelerations against the derivative of the velocities of a fine run (LobattoIIIC4GGL, 20 steps per
+  1e-3 s, one-sided difference of second order): with Rxyz right to 1e-4 (the difference), with Euler parameters and
+  Lie group nodes wrong by up to 3.4 of 12.8 (slider crank) and on a single body spinning about a spherical joint away
+  from its center. Causes: C_q v of ComputeConstraintJacobianTimesVector left out temp.localJacobianAE_ODE2radial,
+  the part along the Euler parameters which the rows of [M C_q^T; C_q 0] contain since #3201 (the derivative of
+  (J_rad v) along the motion, r |v|^2, was missing); with Lie group nodes (C_q v)_q was differentiated by adding to
+  the rotation vector and multiplied by the angular velocities, which is not the derivative along the motion.
+- Fixed (#3289): CSystem::ComputeConstraintVelocityTerm, (C_q v)_q v as the central difference of fourth order of C_q v
+  at the positions moved by +-eps v and +-2 eps v, Lie group nodes by CompositionRule with the increment, C_q v with the
+  radial part; eps v 1e-4 of the largest reference plus current coordinate (at least minimumCoordinateSize). Replaces
+  NumericalConstraintJacobianDerivative (dense only) and ComputeConstraintJacobianDerivative (sparse), the matrix
+  (C_q v)_q is not formed any more. A central difference of second order with 1e-5 gave 2e-10 on the pendulum of
+  initialAccelerationsTest, the fourth order its exact value. With it the accelerations agree with the fine run for all
+  three node types; LobattoIIIA4 with Euler parameters: order 4 (errors 6.3e-10, 4.0e-11, 2.7e-12).
+- Lie group nodes: the stage rotation was q0 composed with h sum_j A_ij omega_j - the increment of the other
+  coordinates; the rotation vector of the motion with body angular velocity omega satisfies Delta' = TExpSO3Inv(Delta)
+  omega, so the increment differs by terms of h^2 (order 2). Fixed (#3290): Delta_i = h sum_j A_ij TExpSO3Inv(Delta_j)
+  omega_j (Runge-Kutta-Munthe-Kaas, as CSolverExplicit), by a fixed-point iteration from the linear increment, at most
+  10 iterations, until the change is below 1e-15. The Jacobian keeps the tangent operator of the linear increment.
+  After it, Lie group nodes: LobattoIIIA4 3.99/3.85, LobattoIIIC4GGL 3.96, Radau3 2.97, TrapezoidalGGL 2.00 - as Euler
+  parameters; implicitRungeKuttaLieGroupTest: Lie group against Euler parameters 2e-16 to 2e-15 for the order-4
+  methods, 2.0 Newton iterations per step (the sum of the test 13 instead of 15).
+- Test suite: initialAccelerationsTest.py extended by the rigid body on a spherical joint with Euler parameters, Lie
+  group node and Rxyz (the accelerations of its center equal); 8 references changed by 1e-11 to 6e-9 relative
+  (generalized-alpha starts from the initial accelerations; the other node types by the central instead of the forward
+  difference), modelLibraryTest by 3e-7 (the slider crank with Lie group nodes), SwitchingConstraintsTest its constant
+  by 5.8e-10. The AVX2 references of the changed models are re-recorded with the fast module.
+
 <a id="rg20-7-3"></a>
 ### RG20.7.3 — no allocations per step in the implicit Runge-Kutta solvers, timeIntegration.errorEstimate (2026-11-06, #3287)
 - Maintainer 2026-11-06: the open solver tasks RG20.4, RG20.8, RG20.7.

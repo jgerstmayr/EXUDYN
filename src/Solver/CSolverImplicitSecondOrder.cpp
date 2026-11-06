@@ -432,33 +432,11 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 
 		if (computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t.GetL2Norm() > 1e-10)
 		{
-			//if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolver.solverType))
-			//{
-			//	PyWarning("Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!");
-			//}
-			//else
 			{
-
-				Real factor = -1.; //(C_q*q_t)_q*q_t put on RHS
 				Vector& vInitial = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t; //=initialState! for consistency here, only currentState is used
-				data.jacobianAE->SetNumberOfRowsAndColumns(data.nAE, data.nODE2);
-				if (EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolver.solverType))
-				{
-					computationalSystem.NumericalConstraintJacobianDerivative(data.tempCompData, newton.numericalDifferentiation,
-						data.tempODE2F0, data.tempODE2F1, vInitial, *(data.jacobianAE), factor);
-				}
-				else //sparse; we could only use the second mode, as it also works for dense matrices!!!
-				{
-					computationalSystem.ComputeConstraintJacobianDerivative(data.tempCompData, newton.numericalDifferentiation,
-						data.tempODE2F0, data.tempODE2F1, vInitial, *(data.jacobianAE), factor);
-				}
-
-				if (IsVerbose(3)) { Verbose(3, STDstring("    (C_q*q_t)_q =\n        ") + EXUstd::ToString(*(data.jacobianAE)) + "\n"); }
-
-
 				Vector Cqv2(data.nAE);
-				data.jacobianAE->MultMatrixVector(vInitial, Cqv2);
-				aeRHS += Cqv2;
+				computationalSystem.ComputeConstraintVelocityTerm(data.tempCompData, newton.numericalDifferentiation, vInitial, data.tempODE2F0, data.tempODE2F1, Cqv2); //(#3289)
+				aeRHS -= Cqv2;
 
 				if (IsVerbose(3)) { Verbose(3, STDstring("    vInitial = ") + EXUstd::ToString(vInitial) + "\n"); }
 				if (IsVerbose(3)) { Verbose(3, STDstring("    Cqv2     = ") + EXUstd::ToString(Cqv2) + "\n"); }

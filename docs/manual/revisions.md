@@ -589,7 +589,8 @@ reduction, orders 2, 4, 4 and 3 in positions and velocities, with constant steps
 size of `timeIntegration.automaticStepSize` with the tolerances `absoluteTolerance` and `relativeTolerance` and the
 error estimate of `timeIntegration.errorEstimate`, of one step or of two steps (#3287); they allocate no memory per
 step; velocity-level constraints (rolling) are solved at the implicit stages; Lie group nodes work at all step sizes,
-with the tangent operator in the stage Jacobian (#3261, #3288).
+with the tangent operator in the stage Jacobian (#3261, #3288), and keep the order of the method: the rotation of a
+stage is composed with the increment of Runge-Kutta-Munthe-Kaas, which the explicit solvers use (#3290).
 
 **The composition of rotation vectors keeps small rotations** (#3288): `EXUlie::CompositionRotationVector` and
 `lieGroupBasics.CompositionRuleForRotationVectors` take the composed angle from the vector part of the quaternion
@@ -597,6 +598,14 @@ product instead of from the cosine of its half: a rotation increment below about
 stopped the Newton iteration of the implicit Runge-Kutta solvers at small steps. Simulations with Lie group nodes
 (`NodeRigidBodyRotVecLG`) change at the level of rounding; models with contact and friction, which amplify it, by up
 to 1e-4 relative.
+
+**The initial accelerations are right for Euler parameters and Lie group nodes** (#3289): the term of the initial
+velocities, the second derivative of the constraints along the motion, is a central difference along the motion -
+the rotation of a Lie group node by the composition with its angular velocity, the constraint Jacobian of Euler
+parameters with its part along the parameters. With initial velocities it was wrong for both, on the spatial slider
+crank by up to a quarter of the accelerations, and limited LobattoIIIA4 to order 2. Generalized-alpha starts from these
+accelerations: models with initial velocities and constraints change, by 1e-9 relative with other nodes, by 1e-7 on
+the spatial slider crank with Lie group nodes.
 
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.

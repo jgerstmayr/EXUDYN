@@ -1,0 +1,17 @@
+{
+  "number": 3289,
+  "title": "the initial accelerations of the implicit solvers are wrong for Euler parameters and Lie group nodes with initial velocities",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "The initial accelerations solve [M C_q^T; C_q 0] [a; lambda] = [f; -(C_q v)_q v]. With Euler parameter nodes C_q v left out the part of C_q along the Euler parameters, which the rows of the matrix contain since #3201; with Lie group nodes (C_q v)_q was differentiated by adding to the rotation vector, while the velocities are angular velocities. On a body on a spherical joint away from its center, spinning, the accelerations were wrong by up to 1 (of 5); with Rxyz nodes they were right. Generalized-alpha starts from them, LobattoIIIA4 uses them in its first stage, which limited it to order 2 on the spatial slider crank of modelLibrary.py. Decided: (C_q v)_q v as the central difference of C_q v along the motion - the positions moved by +-eps v, Lie group nodes by the composition, C_q with its part along the Euler parameters; revision2026c step RG20.7.4.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 11:17",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/CSystemJacobians.cpp",
+  "releaseNotes": "The term (C_q v)_q v of the initial accelerations is the central difference of fourth order of C_q v along the motion: the positions moved by +-eps v and +-2 eps v, the rotation of Lie group nodes by the composition, C_q v with its part along the Euler parameters (CSystem::ComputeConstraintVelocityTerm, dense and sparse). The initial accelerations of Euler parameters and Lie group nodes with initial velocities were wrong, by up to a quarter on the spatial slider crank; generalized-alpha and LobattoIIIA4 start from them. initialAccelerationsTest.py: a rigid body on a spherical joint with three node types.",
+  "resolvedInVersion": "1.13.403"
+}

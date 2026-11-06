@@ -1,0 +1,17 @@
+{
+  "number": 3290,
+  "title": "the implicit Runge-Kutta solvers have order 2 with Lie group nodes",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The rotation of a stage was the composition of the start of the step with the increment h sum_j A_ij omega_j, the formula of the other coordinates; the rotation vector of the increment differs from it by terms of h^2, so LobattoIIIA4, LobattoIIIC4GGL and Radau3 converged with order 2 on the spatial slider crank of modelLibrary.py with NodeRigidBodyRotVecLG (4, 4, 3 with Euler parameters). Decided: the increment of stage i is Delta_i = h sum_j A_ij TExpSO3Inv(Delta_j) omega_j (Runge-Kutta-Munthe-Kaas, as the explicit solvers), by a fixed-point iteration within the stages; revision2026c step RG20.7.4.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 11:17",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Solver/CSolverImplicitRungeKutta.cpp",
+  "releaseNotes": "The implicit Runge-Kutta solvers compose the rotation of a stage of a Lie group node with the increment Delta_i = h sum_j A_ij TExpSO3Inv(Delta_j) omega_j (Runge-Kutta-Munthe-Kaas, by a fixed-point iteration) instead of h sum_j A_ij omega_j: LobattoIIIA4, LobattoIIIC4GGL and Radau3 have their orders 4, 4, 3 with NodeRigidBodyRotVecLG, as with Euler parameters; it was 2.",
+  "resolvedInVersion": "1.13.404"
+}
