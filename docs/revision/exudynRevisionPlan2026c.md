@@ -24,7 +24,7 @@ steps. **Run `planManager.py update` after every edit**; it must end with `OK`.
 step below it. A closed step keeps its title and one or two lines - date, issues, outcome; the details go to the log.
 
 **Closing a group or a significant step** includes the test suite and the performance tests with the fast module,
-and the AVX2 references recorded again if they moved (docs/dev/WORKFLOW.md section 8, #3296).
+the performance tests with the regular module (#3299), and the AVX2 references recorded again if they moved (docs/dev/WORKFLOW.md section 8, #3296).
 
 **Numbers are permanent.** `RGx.y.z`, given when the step is written down and never reused - also not a number that
 revision2026b gave, which `planManager.py add` knows. The content of a step may change when the plan changes or a
@@ -3447,6 +3447,10 @@ CLOSED 2026-11-06 (#3297): the AVX2 entry of perfAccessFunctionsAD confirmed; pe
 #### **CLOSED_RG20.7.10** testTheBrowserOpensOneIssue: retries of the headless browser, a skip if it never finishes
 
 CLOSED 2026-11-06 (#3298): three attempts of 60 s, each with its own profile, then a skip with the reason. [log](exudynRevisionLog2026c.md#rg20-7-7)
+
+#### **CLOSED_RG20.7.11** The performance tests with the regular module at the checkpoint of a completed group
+
+CLOSED 2026-11-06 (#3299): WORKFLOW.md section 8 and the table of section 5, the how-to of the plan: the checkpoint of #3296 runs the performance tests with the regular module as well; they are not in the gates. [log](exudynRevisionLog2026c.md#rg20-7-11)
 
 ### **CLOSED_RG20.8** A common step size controller for the adaptive solvers, Python first, then C++
 

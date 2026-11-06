@@ -1,0 +1,15 @@
+{
+  "number": 3299,
+  "title": "The performance tests with the regular module at the checkpoint of a completed group",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The performance tests (exudev perf) are not in the gates; perfRigidPendulum failed for one commit after #3289 without being noticed (#3297). Decided: the checkpoint of a completed group or significant step (WORKFLOW.md section 8, #3296) runs the performance tests with the regular module as well as with the fast module; a result outside the tolerance is a bug or a reference to record again, as in the test suite.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 14:46",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The performance tests with the regular module are run at the checkpoint of a completed group or significant step, together with the fast module (docs/dev/WORKFLOW.md section 8).",
+  "resolvedInVersion": "1.13.413"
+}

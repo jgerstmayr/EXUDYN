@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 397 | 1.13.412 |
+| 1.13 | Newborn | 398 | 1.13.413 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.413** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The performance tests with the regular module at the checkpoint of a completed group (#3299)
+  - description: The performance tests (exudev perf) are not in the gates; perfRigidPendulum failed for one commit after \#3289 without being noticed (\#3297). Decided: the checkpoint of a completed group or significant step (WORKFLOW.md section 8, \#3296) runs the performance tests with the regular module as well as with the fast module; a result outside the tolerance is a bug or a reference to record again, as in the test suite.
+  - **notes:** The performance tests with the regular module are run at the checkpoint of a completed group or significant step, together with the fast module (docs/dev/WORKFLOW.md section 8).
+  - date resolved: **2026-11-06 14:46**, date raised: 2026-11-06
 - **1.13.412** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` testTheBrowserOpensOneIssue times out in the parallel pytest run (#3298)
   - description: The headless Edge of testTheBrowserOpensOneIssue did not finish within 180 s in one of three gate runs with pytest -n; the test passes alone and in the other runs. Decided: a shorter timeout with retries in a fresh browser profile, and a skip with the reason if the browser never finishes, as for a browser that prints no DOM; revision2026c step RG20.7.10.
   - **notes:** The headless browser of the issue tracker tests is tried three times for 60 s, each with its own profile, and the test is skipped with the reason if it never finishes.

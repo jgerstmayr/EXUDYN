@@ -376,7 +376,7 @@ The gates that require them are §8.
 | performance of the items | every MiniExample, the solver timers | `exudev perf --mini` (regular), `--full` for a comparison, `--compare LOG1 LOG2` |
 | performance over versions | the performance tests, before and after a change expected to matter, regular and fast module | `exudev perf` and `exudev perf --fast`, then `exudev perf --history-add LOG ...`: the run goes into `python/logs/performance/performanceHistory.json`, and `performanceHistory.md` shows the tables and plots (#3079); an older version, down to 1.11, installed in an environment of its own: `exudev perf --env ENV -- --tolerant` (#3080) |
 | nightly / release | models, performance tests, all examples and the pytest files | `exudev build --complete`, or `exudev release`, which calls the runners |
-| fast module | the test suite and the performance tests with `exudynCPPfast`, when a group or a significant step is completed and before a release (#3296) | `exudev build --fast`, `exudev test --fast` (also `--parallel`), `runPerformanceTests.py --fast-module`; then `tools/recordAVX2References.py --write`, see §8 |
+| fast module | the test suite and the performance tests with `exudynCPPfast`, and the performance tests with the regular module, when a group or a significant step is completed and before a release (#3296, #3299) | `exudev build --fast`, `exudev test --fast` (also `--parallel`), `runPerformanceTests.py --fast-module`; then `tools/recordAVX2References.py --write`, see §8 |
 | examples | all 171 examples, in parallel, as an API check | `exudev examples`, i.e. `runTestExamples.py` (49 s; `--serial`, `--parallel=N`, `--timeout=S`, `--exit-code`) |
 | C++ unit tests | the `lest` tests in `src/Tests/` | only in a build with the `performUnitTests` switch, or the VS `Debug` configuration; then `runTestSuite.py` runs them |
 
@@ -795,7 +795,8 @@ than quietly testing the regular module under a fast-module log name.
 development of a group (RG) or of a significant step - the symbolic solvers, the C++ implicit Runge-Kutta solvers -
 is completed, and before a release: `exudev build --fast`, then `exudev test --fast` and `--fast --parallel` (each
 model in its own interpreter, so a crash costs one model and not the rest of the suite) and
-`runPerformanceTests.py --fast-module`. A failure that is more than rounding is a bug - mostly a user check the
+`runPerformanceTests.py --fast-module`, and the performance tests with the regular module, `exudev perf`, which are
+not in the gates (#3299). A failure that is more than rounding is a bug - mostly a user check the
 fast module compiles out (CODING_STYLE.md §10.1, #3293, #3295). The rest are the references:
 `python tools/recordAVX2References.py --write` records `AVX2ReferenceSolutionUpdate()` from the newest `_fast` log -
 an entry for every model whose fast result differs from its regular reference by more than its tolerance - after

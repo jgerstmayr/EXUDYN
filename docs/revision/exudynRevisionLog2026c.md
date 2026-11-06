@@ -6427,6 +6427,13 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-7-11"></a>
+### RG20.7.11 — the performance tests with the regular module at the checkpoint of a completed group (2026-11-06, #3299)
+- Maintainer 2026-11-06: yes to the proposal after RG20.7.9 - the performance tests are not in the gates, so
+  perfRigidPendulum failed for one commit after #3289 unnoticed.
+- WORKFLOW.md section 8 and the row "fast module" of section 5, the how-to of the plan: the checkpoint of #3296 runs
+  `exudev perf` with the regular module as well. Run now: 10 performance tests successful, 46.0 s.
+
 <a id="rg20-7-7"></a>
 ### RG20.7.7 to RG20.7.10 — user checks in every module, the fast module tested regularly, its performance references, the browser test (2026-11-06, #3295 to #3298)
 - Maintainer 2026-11-06: do RG20.7.7 (the user checks the fast module compiles out), RG20.7.8 (the fast module
