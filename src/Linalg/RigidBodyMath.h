@@ -1024,9 +1024,10 @@ namespace EXUlie {
 		T s0 = EXUmath::Sinc(w1Half);
 		T s1 = EXUmath::Sinc(w2Half);
 		T x = c0 * c1 - (T)0.25 * s0 * s1 * (v0 * Omega);
-		T xTemp = sqrt(fabs(1 - EXUstd::Square(x))); //fabs added, because term may be slightly smaller than zero
-		T w = EXUstd::pi - (T)2. * EM::Atan2(x, xTemp);
 		SlimVectorBase<T,3> rho = s0 * c1 * v0 + c0 * s1 * Omega + (T)0.5 * s0 * s1 * v0.CrossProduct(Omega);
+		//x and rho/2 are the scalar and the vector part of the product of the unit quaternions: sin(w/2) = |rho|/2, which
+		//keeps small angles that sqrt(1 - x^2) rounds to 0 below about 1e-8 (#3288)
+		T w = (T)2. * EM::Atan2((T)0.5 * rho.GetL2Norm(), x); //in [0, 2*pi], as pi - 2*atan2(x, sin(w/2)), without its cancellation
 		SlimVectorBase<T,3> n;
 		RotationVector2RotationAxis(rho, n);
 		return w * n;

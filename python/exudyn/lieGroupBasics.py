@@ -647,9 +647,9 @@ def CompositionRuleForRotationVectors(v0, Omega):
     a norm w > pi, use (2*pi - w) about the negated axis.
 
     Note also that accuracy degrades towards w = 2*pi, which is the singularity of the tangent
-    operator: TExpSO3Inv() returns entries of order 1e15 there. How much is lost depends on the
-    axis - composing pi*n with itself is exact to about 1e-15 for n = [1,1,1]/sqrt(3) and to about
-    4e-8 for n = [0,0,1].
+    operator: TExpSO3Inv() returns entries of order 1e15 there. Composing pi*n with itself is exact to
+    about 1e-15 for any axis n; small rotation increments are kept down to the precision of the
+    rotation vector (#3288).
 
     Args:
         v0: 3D rotation vector as np.array
@@ -665,15 +665,11 @@ def CompositionRuleForRotationVectors(v0, Omega):
     s0 = Sinc(w1Half)
     s1 = Sinc(w2Half)
     x = c0*c1 - 0.25*s0*s1*np.dot(v0,Omega)
-    xPower = x**2
-    #abs() as in the C++ implementation EXUlie::CompositionRotationVector (RigidBodyMath.h), which
-    #is the verified one: x is the cosine of the half composed angle, so 1-x*x is analytically >= 0,
-    #but rounding makes it slightly negative near a half angle of pi/2 - and math.sqrt then raises
-    #"math domain error" instead of returning the answer. Composing pi*n with itself did exactly
-    #that (#2494); the C++ returned 2*pi*n there and the Python crashed
-    xTemp = sqrt(abs(1 - xPower))
-    w = np.pi - 2*atan2(x,xTemp)        
     rho = s0*c1*v0 + c0*s1*Omega + 0.5*s0*s1*np.cross(v0, Omega)
+    #x and rho/2 are the scalar and the vector part of the product of the unit quaternions: sin(w/2) = |rho|/2,
+    #which keeps small angles that sqrt(1 - x**2) rounds to 0 below about 1e-8, as the C++ implementation
+    #EXUlie::CompositionRotationVector (#3288)
+    w = 2*atan2(0.5*norm(rho), x) #in [0, 2*pi], as pi - 2*atan2(x, sin(w/2)), without its cancellation
     n = ComputeRotationAxisFromRotationVector(rho)
     v = w*n
     return v

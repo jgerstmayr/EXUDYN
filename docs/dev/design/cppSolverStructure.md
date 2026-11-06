@@ -244,8 +244,11 @@ CSolverBase                                   unchanged: step loop, discontinuou
   2 to 4 iterations per step (#3287: no allocations per step - the work arrays of the stage Jacobian kept, the products
   by sorted vectors, the dense matrix gives its entries without a copy; `timeIntegration.errorEstimate`; the oneStep
   estimate of TrapezoidalGGL is h^2/12 (a1 - a0) and the velocity error by the mean accelerations, as in Python -
-  against the trapezoidal rule it was zero). Lie group nodes (the slider crank): Newton converges at h = 1e-3 and stalls at a
-  floor of 2e-10 at h/16 - the stage Jacobian has no tangent operator (RG20.7.2). The genericDAE model fails as with
+  against the trapezoidal rule it was zero). Lie group nodes (the slider crank): Newton stalled at a floor of 2e-10 at
+  h/16 because the composition of rotation vectors rounded increments below 1e-8 rad to zero (#3288, fixed); the stage
+  Jacobian has the tangent operator T(Delta) of the last stage, as generalized-alpha; the orders equal those with
+  Euler parameters. Verbose level 3 prints the residual per block, level 4 checks the stage Jacobian against finite
+  differences. The genericDAE model fails as with
   TrapezoidalIndex2: its constraintUserFunction ignores velocityLevel.
 
 ### 8.6 Cases to decide or to keep in mind

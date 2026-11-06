@@ -311,7 +311,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 
 [`CompositionRuleForRotationVectors(v0, Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L636)
 
-- **function description**: compute composition operation for rotation vectors v0 and Omega, see [Holzinger2021] The composed vector is NOT mapped into the principal range: its norm lies in [0, 2*pi] and may therefore exceed pi. It always describes the correct rotation - ExpSO3 of it is the intended rotation matrix - but it need not be the shortest representative of it. Composing pi*n with itself, for example, gives a vector of norm 2*pi rather than 0; both are the identity rotation. This matches the C++ implementation EXUlie::CompositionRotationVector (src/Linalg/RigidBodyMath.h), which is the verified one used by the Lie group integrator, and is a deliberate decision (#2494): the formulas accept and pass on such noise rather than snapping to a boundary, which keeps every existing result unchanged. A caller who needs the principal range must map it - for a norm w > pi, use (2*pi - w) about the negated axis. Note also that accuracy degrades towards w = 2*pi, which is the singularity of the tangent operator: TExpSO3Inv() returns entries of order 1e15 there. How much is lost depends on the axis - composing pi*n with itself is exact to about 1e-15 for n = [1,1,1]/sqrt(3) and to about 4e-8 for n = [0,0,1].
+- **function description**: compute composition operation for rotation vectors v0 and Omega, see [Holzinger2021] The composed vector is NOT mapped into the principal range: its norm lies in [0, 2*pi] and may therefore exceed pi. It always describes the correct rotation - ExpSO3 of it is the intended rotation matrix - but it need not be the shortest representative of it. Composing pi*n with itself, for example, gives a vector of norm 2*pi rather than 0; both are the identity rotation. This matches the C++ implementation EXUlie::CompositionRotationVector (src/Linalg/RigidBodyMath.h), which is the verified one used by the Lie group integrator, and is a deliberate decision (#2494): the formulas accept and pass on such noise rather than snapping to a boundary, which keeps every existing result unchanged. A caller who needs the principal range must map it - for a norm w > pi, use (2*pi - w) about the negated axis. Note also that accuracy degrades towards w = 2*pi, which is the singularity of the tangent operator: TExpSO3Inv() returns entries of order 1e15 there. Composing pi*n with itself is exact to about 1e-15 for any axis n; small rotation increments are kept down to the precision of the rotation vector (#3288).
 - **input**:
   - `v0`: 3D rotation vector as np.array
   - `Omega`: 3D (incremental) rotation vector as np.array
@@ -319,13 +319,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **author**: Stefan Holzinger
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`LieGroupIntegrationUnitTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LieGroupIntegrationUnitTests.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`implicitRungeKuttaLieGroupTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/implicitRungeKuttaLieGroupTest.py) (TM), [`LieGroupIntegrationUnitTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LieGroupIntegrationUnitTests.py) (TM)
 
 
 (sec-liegroupbasics-compositionrulerotxyzanglesrotationvector)=
 ## Function: CompositionRuleRotXYZAnglesRotationVector
 
-[`CompositionRuleRotXYZAnglesRotationVector(alpha0, Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L683)
+[`CompositionRuleRotXYZAnglesRotationVector(alpha0, Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L679)
 
 - **function description**: compute composition operation for RotXYZ angles, see [Holzinger2021]
 - **input**:

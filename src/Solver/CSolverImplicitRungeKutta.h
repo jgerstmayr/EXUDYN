@@ -119,6 +119,8 @@ public:
 	std::vector<Index> rightStart, rightColumns;	//!< AddProduct: the right block by rows (compressed)
 	std::vector<Real> rightValues;
 	std::vector<std::pair<int64_t, Real>> productEntries; //!< AddProduct: (row * nRight + column, value), sorted
+	//! the entries of jq in the rotation columns of Lie group nodes: (slot of the node * nRows + row, column 0..2, value)
+	std::vector<std::pair<int64_t, std::pair<Index, Real>>> lieGroupEntries;
 
 	//! the method of a solver type, false if it is none of the four
 	static bool GetMethod(DynamicSolverType type, ImplicitRungeKuttaMethod& method);
@@ -139,6 +141,8 @@ private:
 	Real ComputeResidual(CSolverImplicitSecondOrderTimeInt& solver, CSystem& computationalSystem, const SimulationSettings& simulationSettings, Real t0, Real h);
 	void ComputeJacobian(CSolverImplicitSecondOrderTimeInt& solver, CSystem& computationalSystem, const SimulationSettings& simulationSettings, Real t0, Real h);
 	void ComputeRowScale(const CSolverImplicitSecondOrderTimeInt& solver, Real h);
+	void ApplyTangentOperator(CSystem& computationalSystem, Index nRows, Real h);
+	void CheckJacobian(CSolverImplicitSecondOrderTimeInt& solver, CSystem& computationalSystem, const SimulationSettings& simulationSettings, Real t0, Real h);
 	void AddBlock(const IRKBlock& block, Index rowOffset, Index columnOffset, Real factor, Index rowSelect = -1);
 	void AddProduct(const IRKBlock& left, const IRKBlock& right, Index rowOffset, Index columnOffset, Real factor, Index nRight);
 	Real ErrorEstimate(CSolverImplicitSecondOrderTimeInt& solver, const SimulationSettings& simulationSettings, Real t0, Real h, Real& order);

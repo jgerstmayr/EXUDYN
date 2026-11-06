@@ -588,8 +588,15 @@ the normals of a mesh in the raytracer.
 reduction, orders 2, 4, 4 and 3 in positions and velocities, with constant steps or, by default, the automatic step
 size of `timeIntegration.automaticStepSize` with the tolerances `absoluteTolerance` and `relativeTolerance` and the
 error estimate of `timeIntegration.errorEstimate`, of one step or of two steps (#3287); they allocate no memory per
-step; velocity-level constraints (rolling) are solved at the implicit stages. Lie group nodes work at moderate step sizes;
-their Newton iteration stalls at small ones (#3261).
+step; velocity-level constraints (rolling) are solved at the implicit stages; Lie group nodes work at all step sizes,
+with the tangent operator in the stage Jacobian (#3261, #3288).
+
+**The composition of rotation vectors keeps small rotations** (#3288): `EXUlie::CompositionRotationVector` and
+`lieGroupBasics.CompositionRuleForRotationVectors` take the composed angle from the vector part of the quaternion
+product instead of from the cosine of its half: a rotation increment below about 1e-8 rad was rounded to zero, which
+stopped the Newton iteration of the implicit Runge-Kutta solvers at small steps. Simulations with Lie group nodes
+(`NodeRigidBodyRotVecLG`) change at the level of rounding; models with contact and friction, which amplify it, by up
+to 1e-4 relative.
 
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.

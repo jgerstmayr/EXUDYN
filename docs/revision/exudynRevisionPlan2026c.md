@@ -3402,13 +3402,17 @@ After RG20.6 and the evaluation of RG20.1 and RG20.2.
 
 CLOSED 2026-11-05 (#3261): a component of the implicit solver; orders 2, 4, 4, 3 measured on four models of modelLibrary.py; automatic step size by StepSizeController. [log](exudynRevisionLog2026c.md#rg20-7-1)
 
-#### **OPEN_RG20.7.2** Lie group nodes in the implicit Runge-Kutta solvers: the tangent operator in the stage Jacobian
+#### **CLOSED_RG20.7.2** Lie group nodes in the implicit Runge-Kutta solvers: the tangent operator in the stage Jacobian
 
-Open: with NodeRigidBodyRotVecLG Newton converges at moderate steps and stalls at a floor of 2e-10 at small ones (the slider crank at h = 6e-5); the stage Jacobian without the tangent operator; then the order of the rotation measured.
+CLOSED 2026-11-06 (#3288; maintainer 2026-11-06): the floor was the composition of rotation vectors, which rounded increments below 1e-8 rad to zero (fixed in C++ and Python); the tangent operator in the stage Jacobian; the Jacobian check at verbose 4; the orders with Lie group nodes equal those with Euler parameters; implicitRungeKuttaLieGroupTest.py. [log](exudynRevisionLog2026c.md#rg20-7-2)
 
 #### **CLOSED_RG20.7.3** The implicit Runge-Kutta solvers: no allocations per step, the setting timeIntegration.errorEstimate
 
 CLOSED 2026-11-06 (#3287; maintainer 2026-11-06): the work arrays kept, no array or matrix per step; errorEstimate 'default' | 'oneStep' | 'twoSteps'; the oneStep estimate of TrapezoidalGGL as in Python (it was zero); test_implicitRungeKuttaAllocations.py, implicitRungeKuttaErrorEstimateTest.py. [log](exudynRevisionLog2026c.md#rg20-7-3)
+
+#### **OPEN_RG20.7.4** The order 2 of the implicit Runge-Kutta solvers on the spatial slider crank
+
+Found with RG20.7.2 (#3288): on sliderCrank3D of modelLibrary.py LobattoIIIA4, LobattoIIIC4GGL and Radau3 converge with order 2 in the positions and rotation matrices (h = 2e-3 to 5e-4, against LobattoIIIA4 with h/32), with Lie group nodes and with Euler parameters alike, while the chains of modelLibrary.py give 4, 4, 3. Suspected: the initial accelerations, computed without (C_q v)_q v, for a model that starts with velocities - a one-time error of order h^2 in the first step; or the free axes of the generic joints (the equations of their multipliers). A restart from a state of small steps with its accelerations was tried and did not give a usable comparison. To be analyzed.
 
 ### **CLOSED_RG20.8** A common step size controller for the adaptive solvers, Python first, then C++
 

@@ -10,8 +10,10 @@
 ************************************************************************************************ */
 
 #include <algorithm>
+#include <map>
 #include "Utilities/ExceptionsTemplates.h"
 #include "Linalg/BasicLinalg.h"
+#include "Linalg/RigidBodyMath.h"
 #include "Main/CSystem.h"
 #include "Solver/CSolverImplicitSecondOrder.h"
 
@@ -255,6 +257,19 @@ Real CSolverImplicitRungeKutta::ComputeResidual(CSolverImplicitSecondOrderTimeIn
 			residual[offZ[1] + j] = tempAEv[j];
 		}
 	}
+	if (solver.IsVerboseCheck(3)) //the largest residual of each block of unknowns
+	{
+		auto MaxAbs = [this](Index offset, Index n) { Real m = 0.; for (Index j = 0; j < n; j++) { m = EXUstd::Maximum(m, fabs(residual[offset + j])); } return m; };
+		STDstring blocks;
+		for (Index k = 0; k < implicitStages.NumberOfItems(); k++)
+		{
+			blocks += " stage " + EXUstd::ToString(implicitStages[k]) + ": ODE2 " + EXUstd::ToString(MaxAbs(offA[k], n2)) + ", ODE1 " + EXUstd::ToString(MaxAbs(offY[k], n1));
+			blocks += ", |z| " + EXUstd::ToString(stageZ[implicitStages[k]].GetL2Norm()) + ", |a| " + EXUstd::ToString(stageA[implicitStages[k]].GetL2Norm());
+			if (method.ggl) { blocks += ", AE " + EXUstd::ToString(MaxAbs(offZ[k], na)) + ", mu " + EXUstd::ToString(MaxAbs(offMu[k], na)); }
+		}
+		if (!method.ggl && na) { blocks += "; end: AE " + EXUstd::ToString(MaxAbs(offZ[0], na)) + ", velocity AE " + EXUstd::ToString(MaxAbs(offZ[1], na)); }
+		solver.VerboseWrite(3, "    residual (largest per block):" + blocks + "\n");
+	}
 	Real sum = 0.;
 	for (Index j = 0; j < nUnknowns; j++)
 	{
@@ -361,6 +376,68 @@ void CSolverImplicitRungeKutta::AddProduct(const IRKBlock& left, const IRKBlock&
 	}
 }
 
+//! the columns of the rotation coordinates of Lie group nodes in the entries of jq times the tangent operator T(Delta)
+//! of the increment Delta of the last stage: the rotation of a stage is the composition of the start of the step with
+//! Delta, which depends on the stage accelerations through T, as generalized-alpha with lieGroupAddTangentOperator
+void CSolverImplicitRungeKutta::ApplyTangentOperator(CSystem& computationalSystem, Index nRows, Real h)
+{
+	const Index s = method.s;
+	std::vector<Index>& rows = entryRows;
+	std::vector<Index>& columns = entryColumns;
+	std::vector<Real>& values = entryValues;
+	//the entries in the rotation columns, moved out of the list and sorted by node and row
+	lieGroupEntries.clear();
+	for (Index slot = 0; slot < lieGroupNodes.NumberOfItems(); slot++)
+	{
+		const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(lieGroupNodes[slot]));
+		Index first = node.GetGlobalODE2CoordinateIndex() + node.GetNumberOfDisplacementCoordinates();
+		for (size_t k = 0; k < values.size(); k++)
+		{
+			if (columns[k] >= first && columns[k] < first + 3 && values[k] != 0.)
+			{
+				lieGroupEntries.push_back({ (int64_t)slot * (int64_t)nRows + rows[k], { columns[k] - first, values[k] } });
+				values[k] = 0.;
+			}
+		}
+	}
+	std::sort(lieGroupEntries.begin(), lieGroupEntries.end(),
+		[](const std::pair<int64_t, std::pair<Index, Real>>& a, const std::pair<int64_t, std::pair<Index, Real>>& b) { return a.first < b.first; });
+
+	Index lastSlot = -1;
+	Matrix3D T;
+	Index first = 0;
+	for (size_t k = 0; k < lieGroupEntries.size(); )
+	{
+		int64_t key = lieGroupEntries[k].first;
+		Index slot = (Index)(key / nRows);
+		Index row = (Index)(key % nRows);
+		if (slot != lastSlot)
+		{
+			//the rotation increment of the last stage: h c v0 + h^2 sum_j A^2 a_j
+			const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(lieGroupNodes[slot]));
+			first = node.GetGlobalODE2CoordinateIndex() + node.GetNumberOfDisplacementCoordinates();
+			Vector3D increment;
+			for (Index m = 0; m < 3; m++)
+			{
+				increment[m] = h * method.c[s - 1] * v0[first + m];
+				for (Index j = 0; j < s; j++) { increment[m] += h * h * A2[s - 1][j] * stageA[j][first + m]; }
+			}
+			T = EXUlie::TExpSO3(increment);
+			lastSlot = slot;
+		}
+		Vector3D rowValues(0.);
+		for (; k < lieGroupEntries.size() && lieGroupEntries[k].first == key; k++)
+		{
+			rowValues[lieGroupEntries[k].second.first] += lieGroupEntries[k].second.second;
+		}
+		for (Index j = 0; j < 3; j++)
+		{
+			Real value = rowValues[0] * T(0, j) + rowValues[1] * T(1, j) + rowValues[2] * T(2, j);
+			if (value != 0.) { rows.push_back(row); columns.push_back(first + j); values.push_back(value); }
+		}
+	}
+}
+
 //! the stage Jacobian from the Jacobians of the system at the last stage, by the coefficients of A and A^2
 void CSolverImplicitRungeKutta::ComputeJacobian(CSolverImplicitSecondOrderTimeInt& solver, CSystem& computationalSystem,
 	const SimulationSettings& simulationSettings, Real t0, Real h)
@@ -398,6 +475,7 @@ void CSolverImplicitRungeKutta::ComputeJacobian(CSolverImplicitSecondOrderTimeIn
 	std::vector<Index>& columns = entryColumns;
 	std::vector<Real>& values = entryValues;
 	jq->GetSparseEntries(rows, columns, values);
+	if (lieGroupNodes.NumberOfItems()) { ApplyTangentOperator(computationalSystem, n2 + n1 + na, h); }
 	IRKBlock* qBlocks[3][3] = { {&blockK, &blockKy, &blockCt}, {&blockGq, &blockGy, &blockCyt}, {&blockCq, &blockCy, &blockCaa} };
 	specialRow.CopyFrom(velocityLevelRow);
 	for (size_t k = 0; k < values.size(); k++)
@@ -594,6 +672,71 @@ Real CSolverImplicitRungeKutta::ErrorEstimate(CSolverImplicitSecondOrderTimeInt&
 	return count ? sqrt(sum / count) : 0.;
 }
 
+//! verbose 4: the stage Jacobian against the finite differences of the residual, the largest difference per block of
+//! rows and columns (A: accelerations, Y: ODE1 velocities, Z: multipliers, M: mu of GGL; stage index)
+void CSolverImplicitRungeKutta::CheckJacobian(CSolverImplicitSecondOrderTimeInt& solver, CSystem& computationalSystem,
+	const SimulationSettings& simulationSettings, Real t0, Real h)
+{
+	const Index n2 = solver.data.nODE2, n1 = solver.data.nODE1, na = solver.data.nAE;
+	ResizableMatrix J = stageMatrix->GetEXUdenseMatrix();
+	ComputeResidual(solver, computationalSystem, simulationSettings, t0, h);
+	Vector r0 = residual;
+	auto Unknown = [&](Index u) -> Real&
+	{
+		for (Index k = 0; k < implicitStages.NumberOfItems(); k++)
+		{
+			Index i = implicitStages[k];
+			if (u >= offA[k] && u < offA[k] + n2) { return stageA[i][u - offA[k]]; }
+			if (u >= offY[k] && u < offY[k] + n1) { return stageYd[i][u - offY[k]]; }
+			if (u >= offZ[k] && u < offZ[k] + na) { return stageZ[i][u - offZ[k]]; }
+			if (method.ggl && u >= offMu[k] && u < offMu[k] + na) { return stageMu[i][u - offMu[k]]; }
+		}
+		CHECKandTHROWstring("CheckJacobian: unknown");
+		return stageA[0][0];
+	};
+	auto Block = [&](Index u) -> STDstring
+	{
+		for (Index k = 0; k < implicitStages.NumberOfItems(); k++)
+		{
+			STDstring stage = EXUstd::ToString(implicitStages[k]);
+			if (u >= offA[k] && u < offA[k] + n2) { return "A" + stage + "[" + EXUstd::ToString(u - offA[k]) + "]"; }
+			if (u >= offY[k] && u < offY[k] + n1) { return "Y" + stage + "[" + EXUstd::ToString(u - offY[k]) + "]"; }
+			if (u >= offZ[k] && u < offZ[k] + na) { return "Z" + stage + "[" + EXUstd::ToString(u - offZ[k]) + "]"; }
+			if (method.ggl && u >= offMu[k] && u < offMu[k] + na) { return "M" + stage + "[" + EXUstd::ToString(u - offMu[k]) + "]"; }
+		}
+		return "?";
+	};
+	std::map<STDstring, std::pair<Real, STDstring>> largest; //block pair -> (difference, entry)
+	for (Index c = 0; c < nUnknowns; c++)
+	{
+		Real& x = Unknown(c);
+		Real x0 = x;
+		bool isMu = false;
+		for (Index k = 0; k < implicitStages.NumberOfItems(); k++) { if (method.ggl && c >= offMu[k] && c < offMu[k] + na) { isMu = true; } }
+		Real scale = isMu ? h * h : 1.; //mu is h^2 times its unknown
+		Real eps = 1e-3 * EXUstd::Maximum(1., fabs(x0 / scale)); //large: the constraints at the end change by h^2 times it
+		x = x0 + eps * scale;
+		ComputeResidual(solver, computationalSystem, simulationSettings, t0, h);
+		x = x0;
+		for (Index r = 0; r < nUnknowns; r++)
+		{
+			Real numeric = (residual[r] - r0[r]) / eps;
+			Real difference = fabs(numeric - J(r, c));
+			STDstring rowBlock = Block(r), columnBlock = Block(c);
+			STDstring key = rowBlock.substr(0, 2) + "/" + columnBlock.substr(0, 2);
+			if (difference > largest[key].first)
+			{
+				largest[key] = { difference, rowBlock + "/" + columnBlock + ": numeric " + EXUstd::ToString(numeric) + ", Jacobian " + EXUstd::ToString(J(r, c)) };
+			}
+		}
+	}
+	ComputeResidual(solver, computationalSystem, simulationSettings, t0, h);
+	for (const auto& entry : largest)
+	{
+		if (entry.second.first > 1e-6) { solver.VerboseWrite(4, "    Jacobian check " + entry.first + ": largest difference " + EXUstd::ToString(entry.second.first) + " at " + entry.second.second + "\n"); }
+	}
+}
+
 bool CSolverImplicitRungeKutta::Step(CSolverImplicitSecondOrderTimeInt& solver, CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	const NewtonSettings& newton = simulationSettings.timeIntegration.newton;
@@ -631,6 +774,7 @@ bool CSolverImplicitRungeKutta::Step(CSolverImplicitSecondOrderTimeInt& solver, 
 		{
 			ComputeJacobian(solver, computationalSystem, simulationSettings, t0, h);
 			solver.it.newtonJacobiCount++;
+			if (solver.IsVerboseCheck(4)) { CheckJacobian(solver, computationalSystem, simulationSettings, t0, h); } //before the factorization
 			if (stageMatrix->FactorizeNew() != -1) { solver.conv.linearSolverFailed = true; break; } //singular: as not converged
 			factorized = true;
 			ComputeRowScale(solver, h); //the special rows of the multipliers are known now

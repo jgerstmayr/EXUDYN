@@ -6456,6 +6456,37 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   1e-3, an invalid value refused. parameterConversionTestReference.txt: the new setting recorded.
 - Seen, not changed: modelLibrary.py calls CreateRevoluteJoint with the deprecated bodyNumbers.
 
+<a id="rg20-7-2"></a>
+### RG20.7.2 — Lie group nodes in the implicit Runge-Kutta solvers; the composition of small rotations (2026-11-06, #3288)
+- Maintainer 2026-11-06: the open solver tasks RG20.4, RG20.8, RG20.7.
+- Reproduced on sliderCrank3D of modelLibrary.py (NodeRigidBodyRotVecLG), to t = 0.2: LobattoIIIA4 and Radau3 fail at
+  h = 6.25e-5 (Newton cycles at 2.5e-10 in the first step), TrapezoidalGGL and LobattoIIIC4GGL run; with Euler
+  parameters or Rxyz all converge to 1e-12 in 2-3 iterations. Not the Jacobian: a fresh Jacobian in each iteration and
+  the tangent operator (added first) changed nothing. The residual per block (new, verbose 3) put the floor in the
+  ODE2 equations of the middle stage; the stage Jacobian against finite differences (new, verbose 4, before the
+  factorization, perturbations 1e-3 as the constraints at the end change by h^2 times them) showed the position
+  constraint at the end not depending on a stage acceleration at all: the composed rotation of the slider did not
+  change.
+- Cause: EXUlie::CompositionRotationVector took the composed angle from x = cos(w/2) as pi - 2 atan2(x, sqrt(1 - x^2));
+  for w below about 1e-8 rad, x rounds to 1 and the angle to 0 - rotation increments of a few 1e-12 rad, as Newton
+  corrects at small steps, were lost. Fixed: rho/2, the vector part of the quaternion product, has the norm sin(w/2),
+  so w = 2 atan2(|rho|/2, x), equal in exact arithmetic on [0, 2 pi] and accurate for small angles (pi - 2 atan2(x, s)
+  also cancels against pi, 1e-4 relative at w = 1e-12). The same in CompositionRuleForRotationVectors of
+  lieGroupBasics.py, whose abs() workaround (#2494) is not needed any more; composing pi n with itself is now exact to
+  1e-15 for any axis (it was 4e-8 for n = [0, 0, 1]).
+- The stage Jacobian multiplies the rotation columns of jq of Lie group nodes by TExpSO3 of the rotation increment of
+  the last stage, as generalized-alpha with lieGroupAddTangentOperator (ApplyTangentOperator, on the sparse entries).
+- After it, sliderCrank3D to t = 0.2: all four methods run at 1e-3, 2.5e-4, 6.25e-5; LobattoIIIA4 at 6.25e-5 in 3
+  iterations per step. Orders against LobattoIIIA4 with h/32 (h = 2e-3, 1e-3, 5e-4): 2.0 for all four methods and for
+  generalized-alpha, with Lie group nodes and with Euler parameters alike - not of the Lie group nodes; RG20.7.4 added.
+- Test suite: 10 test models with Lie group nodes changed by their rounding: generalContactFrictionTests by 4.6e-4 and
+  generalContactCylinderTest by 3.6e-4 absolute (the models whose AVX2 references already differ by 7.5e-3 and
+  4.2e-5), sphereTriangleTest2 by 4.3e-5, the other seven by 2e-8 or less. Performance tests: perfConnectorInterface (the explicit
+  runs with Lie group nodes) by 1.5e-9 and 2e-10. The examples run: all 196 pass. Their AVX2
+  references (fast module, not built here) are to be re-recorded at the next fast-module run.
+- implicitRungeKuttaLieGroupTest.py (new): the slider crank at h = 6.25e-5 to t = 0.005, Lie group nodes against Euler
+  parameters to 1e-10 with at most 3 iterations per step for the four methods; the composition keeps 1e-12 rad.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;
