@@ -122,7 +122,9 @@ frame turned by `flipHT`. The import gives the kinematics of the toolbox for the
 data sets tried (KUKA, Stäubli, ANYmal, Spot, a Mars rover). Many URDF files have no masses or inertias, which a
 dynamic model needs: every link reports the problems of its mass and inertia, `correctInertia=True` makes them
 physical, and `meshDensity` gives a link without mass that of its meshes. Textured meshes (.dae, .obj) are drawn with
-their texture. The example serialRobotURDF.py builds robots this way.
+their texture. The example serialRobotURDF.py builds robots this way. `robot.GetDictionary()` saved as HDF5 keeps all of
+this, so that the robot loads without the toolbox; the test model urdfRobotHDF5Test.py loads a small robot of a URDF
+file read with `meshDensity` and `correctInertia` this way.
 
 (sec-robotics-ros)=
 ## ROS

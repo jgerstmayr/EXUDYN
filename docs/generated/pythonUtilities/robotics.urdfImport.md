@@ -19,7 +19,7 @@ MakeCorkeRobot, an RTB robot of the DH parameters of a robot dictionary of exudy
   - `modelName`: string for model, such as UR5, Puma560, Panda or LBR
   - `ignoreURDFerrors`: not used; kept for the scripts that pass it
 - **output**: returns dictionary with 'robot' (RTB Robot class), 'urdf' (None; the visuals are in the links of the robot), 'urdfBasePath' (the xacro directory of the rtb-data package) and 'urdfFilePath' (the file that was read)
-- **notes**: requires the Robotics Toolbox for Python 1.5 (pip install roboticstoolbox-python); its models Panda, UR3, UR5, UR10, KinovaGen3, Jaco, Fetch and PR2 are read through the package robot_descriptions, which downloads them on first use; Puma560, LBR, AL5D and the Interbotix robots (px150, vx300, wx250, ...) are part of the RTB's data. Some models do not include mass and inertia and therefore will not run as dynamic models (#3280)
+- **notes**: requires the Robotics Toolbox for Python 1.5 (pip install roboticstoolbox-python); its models UR3, UR5, UR10, KinovaGen3, Jaco, Fetch and PR2 are read through the package robot_descriptions, which downloads them on first use; Puma560, Panda, LBR, AL5D and the Interbotix robots (px150, vx300, wx250, ...) are part of the RTB's data. Some models do not include mass and inertia and therefore will not run as dynamic models (#3280)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex)

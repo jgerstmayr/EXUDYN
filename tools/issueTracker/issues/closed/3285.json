@@ -1,0 +1,17 @@
+{
+  "number": 3285,
+  "title": "A small URDF robot in the repository and its import stored as HDF5: masses from the meshes, corrected inertia, flipped joint, texture",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The URDF import (GetURDFrobotData) is tested only on a stub of the Robotics Toolbox and on the local data set outside the repository. Decided: a robot of three links in python/TestModels/testData/urdf/testRobot - STL meshes, a fixed link turned by rpy, a flipped joint, a link without mass with a textured OBJ mesh, an inertia violating the triangle inequality - imported with meshDensity and correctInertia and stored by Robot.GetDictionary as a small HDF5 file beside it; a test model loads that file without the toolbox and checks the masses, the inertia, the frames and the texture and simulates the robot; a pytest, run where the toolbox is installed, compares a new import with the stored file. The UR offset of the old import is no special case any more: the UR robots of the toolbox equal it since the fixed links are merged (#3280).",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 07:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/testData/urdf/testRobot/urdf/testRobot.urdf",
+  "releaseNotes": "A robot of three links in python/TestModels/testData/urdf/testRobot (STL meshes, a fixed link turned by rpy, a flipped joint, a link without mass with a textured OBJ mesh, an inertia violating the triangle inequality), its import with meshDensity and correctInertia stored by Robot.GetDictionary in testRobot.h5; urdfRobotHDF5Test.py loads it without the Robotics Toolbox and checks masses, inertia, frames and texture; test_urdfRobotData.py compares a new import with it where the toolbox is installed. UR3, UR5, UR10, KinovaGen3, Jaco and Panda equal the toolbox's kinematics; GetURDFrobotData reads the joint axis by ET.kind instead of the deprecated ET.axis.",
+  "resolvedInVersion": "1.13.398"
+}

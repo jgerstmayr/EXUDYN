@@ -42,9 +42,9 @@ def GetRoboticsToolboxInternalModel(modelName='', ignoreURDFerrors=True):
         'urdfBasePath' (the xacro directory of the rtb-data package) and 'urdfFilePath' (the file that was read)
 
     Note:
-        requires the Robotics Toolbox for Python 1.5 (pip install roboticstoolbox-python); its models Panda, UR3, UR5,
-        UR10, KinovaGen3, Jaco, Fetch and PR2 are read through the package robot_descriptions, which downloads them on
-        first use; Puma560, LBR, AL5D and the Interbotix robots (px150, vx300, wx250, ...) are part of the RTB's data.
+        requires the Robotics Toolbox for Python 1.5 (pip install roboticstoolbox-python); its models UR3, UR5, UR10,
+        KinovaGen3, Jaco, Fetch and PR2 are read through the package robot_descriptions, which downloads them on first
+        use; Puma560, Panda, LBR, AL5D and the Interbotix robots (px150, vx300, wx250, ...) are part of the RTB's data.
         Some models do not include mass and inertia and therefore will not run as dynamic models (#3280)
     """
     try:
@@ -224,7 +224,7 @@ def GetURDFrobotData(robot,
     def FlipHT(link):
         HT = np.eye(4)
         if link is not None and link.isjoint and link.isflip:
-            HT[:3, :3] = np.diag({'x': [-1., 1., -1.], 'y': [-1., -1., 1.], 'z': [1., -1., -1.]}[link.v.axis[-1].lower()])
+            HT[:3, :3] = np.diag({'x': [-1., 1., -1.], 'y': [-1., -1., 1.], 'z': [1., -1., -1.]}[link.v.kind[-1].lower()])
         return HT
 
     def JointAncestor(link): #the joint link above, and the frame relative to the frame of its Exudyn link
@@ -262,7 +262,7 @@ def GetURDFrobotData(robot,
             linkDict['com'] = F[:3, :3] @ np.array(link.r)
             linkDict['flipHT'] = F #the frame of the URDF link is the frame of the Exudyn link times flipHT
             linkDict['mass'] = link.m
-            linkDict['jointType'] = rtbAxis2exuJointType[link.v.axis] #link.v.axis #Rx,Ry,Rz,tx,ty,tz
+            linkDict['jointType'] = rtbAxis2exuJointType[link.v.kind] #Rx,Ry,Rz,tx,ty,tz; ET.axis is deprecated since RTB 1.4 (#3285)
             #optional fields:
             linkDict['motorViscousFriction'] = link.B if hasattr(link, "B") else 0
             linkDict['motorCoulombFriction'] = np.array(link.Tc) if hasattr(link, "Tc") else np.zeros(2)

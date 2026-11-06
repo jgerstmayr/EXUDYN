@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!-- A small robot for the tests of exudyn.robotics.urdfImport (#3285): a base with an STL mesh; link1 with a mass whose
+     inertia violates the triangle inequality and an STL mesh scaled; a fixed link flange turned by rpy; link2 with a
+     flipped joint (axis 0 -1 0), no mass and a brick of an OBJ file with a texture; a fixed tool link. -->
+<robot name="testRobot">
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.05"/>
+      <geometry><mesh filename="package://testRobot/meshes/base.stl"/></geometry>
+      <material name="grey"><color rgba="0.5 0.5 0.5 1"/></material>
+    </visual>
+  </link>
+  <joint name="joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.15" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-2" upper="2" effort="50" velocity="2"/>
+  </joint>
+  <link name="link1">
+    <inertial>
+      <origin xyz="0.15 0 0"/>
+      <mass value="2"/>
+      <inertia ixx="0.0066" ixy="0" ixz="0" iyy="0.00125" iyz="0" izz="0.0086"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.15 0 0"/>
+      <geometry><mesh filename="package://testRobot/meshes/link1.stl" scale="1 1 1"/></geometry>
+      <material name="red"><color rgba="0.8 0.2 0.2 1"/></material>
+    </visual>
+  </link>
+  <joint name="flangeJoint" type="fixed">
+    <parent link="link1"/>
+    <child link="flange"/>
+    <origin xyz="0.3 0 0" rpy="0.4 0 0"/>
+  </joint>
+  <link name="flange"/>
+  <joint name="joint2" type="revolute">
+    <parent link="flange"/>
+    <child link="link2"/>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    <axis xyz="0 -1 0"/>
+    <limit lower="-1.5" upper="1.5" effort="20" velocity="2"/>
+  </joint>
+  <link name="link2">
+    <visual>
+      <origin xyz="0.1 0 0"/>
+      <geometry><mesh filename="package://testRobot/meshes/arm.obj"/></geometry>
+    </visual>
+  </link>
+  <joint name="toolJoint" type="fixed">
+    <parent link="link2"/>
+    <child link="tool0"/>
+    <origin xyz="0.2 0 0"/>
+  </joint>
+  <link name="tool0"/>
+</robot>

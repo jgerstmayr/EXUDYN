@@ -280,6 +280,7 @@ textureTest
 trajectoryBlendingCartesianTest
 trajectoryBlendingTest
 typeInformationTest
+urdfRobotHDF5Test
 userANCFBeam3DTest
 userANCFCable2DTest
 userConnectorContactTest

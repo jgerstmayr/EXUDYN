@@ -3,8 +3,8 @@
 #
 # Details:  Robots of the URDF models of the Robotics Toolbox for Python 1.5 (RTB): read by
 #           GetRoboticsToolboxInternalModel, with their meshes by GetURDFrobotData (pymeshlab), as kinematic trees
-#           following a trajectory by Robot.SetControl; several robots in one PreStepUserFunction. Puma560, LBR, AL5D and
-#           the Interbotix robots (px150, vx300, wx250, ...) are part of the RTB's data; UR3, UR5, UR10 and Panda are
+#           following a trajectory by Robot.SetControl; several robots in one PreStepUserFunction. Puma560, Panda, LBR,
+#           AL5D and the Interbotix robots (px150, vx300, wx250, ...) are part of the RTB's data; UR3, UR5 and UR10 are
 #           downloaded by the package robot_descriptions on their first use.
 #
 # Author:   Johannes Gerstmayr

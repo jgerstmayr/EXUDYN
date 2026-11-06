@@ -1,0 +1,82 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  A robot read from a URDF file, loaded from the HDF5 file it was stored in, without the Robotics Toolbox
+#           (#3285): testData/urdf/testRobot/testRobot.urdf has STL meshes, a fixed link turned by rpy, a flipped joint
+#           (axis 0 -1 0), a link without mass whose brick of an OBJ file has a texture, and an inertia violating the
+#           triangle inequality; urdfImport.GetURDFrobotData read it with meshDensity=1000 and correctInertia=True, and
+#           Robot.GetDictionary stored it in testRobot.h5 (python/testing/test_urdfRobotData.py, where the toolbox is
+#           installed). Checked: the mass and inertia of the brick, the corrected inertia, the frames of the links and
+#           the tool against the URDF computed here, the texture and its coordinates; the robot simulated as a
+#           kinematic tree. The result is the number of checks that pass plus the joint coordinates at the end,
+#           weighted by 1 and 2.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-06
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.robotics import Robot
+from exudyn.advancedUtilities import LoadDictFromHDF5
+from exudyn.rigidBodyUtilities import RotationMatrixX, RotationMatrixY, RotationMatrixZ
+import h5py #needed by LoadDictFromHDF5
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+checks = []
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+robot = Robot()
+robot.SetDictionary(LoadDictFromHDF5('testData/urdf/testRobot/testRobot.h5'))
+(link1, link2) = robot.links
+
+#the brick of arm.obj, 0.2 x 0.05 x 0.05 m, with 1000 kg/m^3; its center at -0.1 in x of the flipped frame
+(a, b, c) = (0.2, 0.05, 0.05)
+mass = 1000*a*b*c
+checks += [abs(link2.mass - mass) < 1e-12 and np.max(np.abs(np.array(link2.COM) - [-0.1, 0, 0])) < 1e-12]
+checks += [np.max(np.abs(np.array(link2.inertia) - mass/12*np.diag([b**2 + c**2, a**2 + c**2, a**2 + b**2]))) < 1e-12]
+#the principal moments 0.0066, 0.00125, 0.0086 of link1 raised to fulfill the triangle inequality, the largest kept
+moments = np.linalg.eigvalsh(link1.inertia)
+checks += [link1.mass == 2. and abs(moments[0] + moments[1] - moments[2]) < 1e-14 and abs(moments[2] - 0.0086) < 1e-14]
+
+#the frames of the URDF: link2 turned by -q2 about y, the Exudyn link2 in the frame turned by pi about z (flipHT)
+q = np.array([0.5, 0.7])
+R2 = RotationMatrixZ(q[0]) @ RotationMatrixX(0.4) @ RotationMatrixY(-q[1])
+p2 = np.array([0, 0, 0.15]) + RotationMatrixZ(q[0]) @ (np.array([0.3, 0, 0]) + RotationMatrixX(0.4) @ [0, 0, 0.05])
+HT2 = robot.LinkHT(q)[1]
+F = np.diag([-1., -1., 1.])
+checks += [np.max(np.abs(np.array(HT2.rotation) @ F - R2)) < 1e-14 and np.max(np.abs(np.array(HT2.translation) - p2)) < 1e-14]
+checks += [np.max(np.abs(np.array(HT2.rotation) @ link2.COM + HT2.translation - (p2 + R2 @ [0.1, 0, 0]))) < 1e-14]
+checks += [np.max(np.abs(np.array(robot.GetGlobalToolHT(q).translation) - (p2 + R2 @ [0.2, 0, 0]))) < 1e-14]
+
+#the texture of arm.png: red left, blue top right, white bottom right; a point per corner of the 12 triangles
+image = SC.renderer.GetTexture('arm.png')['image']
+checks += [image.shape == (16, 16, 4) and list(image[0, 0]) == [255, 0, 0, 255] and list(image[0, 15]) == [0, 0, 255, 255]
+           and list(image[15, 15]) == [255, 255, 255, 255]]
+armGraphics = link2.visualization.graphicsData[0]
+checks += [armGraphics['texture'] == 'arm.png' and np.size(armGraphics['points']) == 3*36
+           and np.size(armGraphics['textureCoordinates']) == 2*36]
+checks += [len(robot.base.visualization.graphicsData) == 1 and len(link1.visualization.graphicsData) == 1]
+
+#the robot held by its PD control at q0 under gravity
+robot.q0 = q
+robot.CreateKinematicTree(mbs)
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 200
+simulationSettings.timeIntegration.endTime = 0.2
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.solution.file.write = False
+mbs.SolveDynamic(simulationSettings)
+qEnd = mbs.GetObjectOutputBody(robot.modelData['objectKinematicTree'], exu.OutputVariableType.Coordinates)
+checks += [np.max(np.abs(qEnd - q)) < 0.1]
+
+SC.renderer.RemoveTexture('arm.png')
+u = sum(checks) + qEnd @ [1, 2]
+exu.Print('checks:', checks)
+exu.Print('solution of urdfRobotHDF5Test=', u)
+exu.sys['testResult'] = u

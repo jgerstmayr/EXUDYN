@@ -3190,6 +3190,10 @@ CLOSED 2026-11-06 (#3282; maintainer 2026-11-05): flipHT, inertiaProblems, corre
 
 #3282. Maintainer 2026-11-05: RG19.3 - the inertia check of imported links, textures from .dae/.obj, flipped joints.
 
+#### **CLOSED_RG19.3.7** A small URDF robot in the repository, its import stored as HDF5 with the masses of its meshes, the corrected inertia, a flipped joint and a texture; UR, Panda, Kinova checked
+
+CLOSED 2026-11-06 (#3285; maintainer 2026-11-06): python/TestModels/testData/urdf/testRobot with testRobot.h5, urdfRobotHDF5Test.py without the toolbox, test_urdfRobotData.py with it; UR3/5/10, KinovaGen3, Jaco, Panda equal to the RTB; ET.kind for the deprecated ET.axis. [log](exudynRevisionLog2026c.md#rg19-3-7)
+
 ### **OPEN_RG19.4** Revise Robot: q0, one control description with friction and end stops for both models, the control as PreStepUserFunction, AddSensors, the static and dynamic compensation from the kinematic tree
 
 Design section 3.
@@ -3259,6 +3263,10 @@ Design section 3; P/D values adjusted slightly in favour of simple scripts.
 #### **CLOSED_RG19.8.1** The serial robot examples on models.py, SetControl, AddSensors and PlotSensor; the Puma560 joint limits of the RTB, Manipulator4Rsimple removed
 
 CLOSED 2026-11-05 (#3279; maintainer 2026-11-05: the RTB limits, Manipulator4Rsimple removed): seven examples rewritten, the joint torque load tests kept. [log](exudynRevisionLog2026c.md#rg19-8-1)
+
+#### **CLOSED_RG19.8.2** The examples runner gives each example its __file__; the TX2 examples find their data in the examples run
+
+CLOSED 2026-11-06 (#3284; maintainer 2026-11-06: a full examples run): the worker of the parallel run and the serial run set __file__; all 196 examples pass. [log](exudynRevisionLog2026c.md#rg19-8-2)
 
 ### **CLOSED_RG19.9** A chapter Robotics in the user manual with an image and a notebook, ROS moved there
 

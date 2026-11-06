@@ -1,0 +1,4 @@
+newmtl arm
+Ka 1 1 1
+Kd 1 1 1
+map_Kd arm.png

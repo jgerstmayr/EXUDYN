@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 381 | 1.13.396 |
+| 1.13 | Newborn | 383 | 1.13.398 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.398** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A small URDF robot in the repository and its import stored as HDF5: masses from the meshes, corrected inertia, flipped joint, texture (#3285)
+  - description: The URDF import (GetURDFrobotData) is tested only on a stub of the Robotics Toolbox and on the local data set outside the repository. Decided: a robot of three links in python/TestModels/testData/urdf/testRobot - STL meshes, a fixed link turned by rpy, a flipped joint, a link without mass with a textured OBJ mesh, an inertia violating the triangle inequality - imported with meshDensity and correctInertia and stored by Robot.GetDictionary as a small HDF5 file beside it; a test model loads that file without the toolbox and checks the masses, the inertia, the frames and the texture and simulates the robot; a pytest, run where the toolbox is installed, compares a new import with the stored file. The UR offset of the old import is no special case any more: the UR robots of the toolbox equal it since the fixed links are merged (\#3280).
+  - **notes:** A robot of three links in python/TestModels/testData/urdf/testRobot (STL meshes, a fixed link turned by rpy, a flipped joint, a link without mass with a textured OBJ mesh, an inertia violating the triangle inequality), its import with meshDensity and correctInertia stored by Robot.GetDictionary in testRobot.h5; urdfRobotHDF5Test.py loads it without the Robotics Toolbox and checks masses, inertia, frames and texture; test\_urdfRobotData.py compares a new import with it where the toolbox is installed. UR3, UR5, UR10, KinovaGen3, Jaco and Panda equal the toolbox's kinematics; GetURDFrobotData reads the joint axis by ET.kind instead of the deprecated ET.axis.
+  - date resolved: **2026-11-06 07:15**, date raised: 2026-11-06
+- **1.13.397** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The examples runner gives each example its \_\_file\_\_ (#3284)
+  - description: runTestExamples.py executes an example by exec without \_\_file\_\_, so an example that finds its data relative to its own file - staubliTX2blending.py and staubliTX2trajectories.py, since \#3263 - fails with a NameError in the examples run, while it runs when started directly. Decided: the runner sets \_\_file\_\_ to the path of the example, in the worker of the parallel run and in the serial run.
+  - **notes:** The examples runner sets \_\_file\_\_ to the path of each example, in the parallel and in the serial run, so that examples finding their data beside their file - staubliTX2blending.py, staubliTX2trajectories.py - run as when started directly; all 196 examples pass.
+  - date resolved: **2026-11-06 07:15**, date raised: 2026-11-06
 - **1.13.396** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Trajectory blending: automatic blend times, the velocity check and the blending in Cartesian space (#3283)
   - description: The blend time of Trajectory.Add must be chosen by hand, the summed velocities of a blending are not checked, and two Cartesian profiles blend in joint space, so that the tool leaves the plane of the two paths in the corner. Decided: blendTimeWithNext='auto' takes the largest overlap, at most the deceleration and acceleration phases of the two profiles, in which the blended velocities stay within the velocity limits; the limits are maxVelocities of Trajectory if given, else the peak velocities of the two profiles; a given blend time is checked against maxVelocities of Trajectory; Add(..., blendSpace='cartesian') blends two Cartesian profiles by the superposition of the motions of the tool, with the inverse kinematics of the sum.
   - **notes:** Trajectory.Add takes blendTimeWithNext='auto', the largest overlap in which the blending is not faster than the profiles or maxVelocities; a given blend time is checked against these limits when maxVelocities are given; blendSpace='cartesian' blends two Cartesian profiles by the sum of the motions of the tool.

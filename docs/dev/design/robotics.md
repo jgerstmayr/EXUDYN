@@ -359,8 +359,9 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   URDF_file with xacrodoc), the fixed links into the joint link above them; equal to the RTB (forward kinematics 1e-16,
   rne 1e-16 where masses are given) for Puma560, AL5D, the Interbotix robots, KUKA kr5_arc, Staubli tx2_60/tx2_90l/
   tx90/tx60l, ANYmal, Spot; flipped joints (LBR, KUKA kr3/kr6/kr10/kr150, the Mars rover) added by #3282; inertias missing
-  (Puma560, LBR, KUKA, TX2, Spot) or not positive definite (AL5D); UR, Panda, Kinova not checked (robot_descriptions
-  downloads them).
+  (Puma560, LBR, KUKA, TX2, Spot) or not positive definite (AL5D); UR3/UR5/UR10, KinovaGen3, Jaco (downloaded by
+  robot_descriptions) and Panda checked 2026-11-06, equal to the RTB as well (#3285) - the UR offset of the old import
+  was a symptom of the fixed links, no special case is needed.
 - RG19.2 Clean up (.1 done: the commented-out code and the dead branches of all files except future.py, 220 lines,
   #3254; .2 done: the problems of section 2.1, #3255; .3 done: urdfImport.py, #3256): the commented code, future.py removed after RG19.6, exudyn.HT in the kinematics; the examples
   and test models cleaned up a first time (sensors stored internally, PlotSensor, models.py data).
@@ -368,7 +369,9 @@ Puma560 and UR5 of models.py (6 links), Python 3.13, one core:
   and load of Exudyn robot models; tested with the RTB robots and the local data set in examples; .1 done: the URDF
   graphics (#3263); .2 done: one STL reader without numpy-stl (#3264); .3 done: a Robot saved and loaded as a dict and
   HDF5 file (#3267; the TX2-90L with its URDF meshes 7 MB, saved in 0.2 s, as SaveDictToHDF5 stores a list of numbers
-  as one dataset - one dataset per number before); its textures with the images in dicts of RG11.4.5 (#3268).
+  as one dataset - one dataset per number before); its textures with the images in dicts of RG11.4.5 (#3268); .7 done:
+  a small URDF robot in python/TestModels/testData/urdf, its import with the masses of its meshes, the corrected
+  inertia, a flipped joint and a texture stored as HDF5 and checked without the toolbox (#3285).
 - RG19.4 Revise Robot: q0, the control description with friction and end stops for both models, SetControl and
   PreStepControl, AddSensors, the static (and dynamic) compensation from the kinematic tree; .1 done: q0, friction and
   end stops per link by CoordinateSpringDamperExt in both models (in the redundant model on a relative coordinate

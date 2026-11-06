@@ -45,6 +45,7 @@ def TestExamplesReferenceSolution():
         'robotCartesianPathsTest.py': 24.036760791972597, #new 2026-11-05: circular, screw and spline paths, keepConfiguration, the jumps in Trajectory (#3272)
         'trajectoryBlendingTest.py': 10.527218840445627, #new 2026-11-05: the blending of the profiles of Trajectory (#3274)
         'trajectoryBlendingCartesianTest.py': 7.984211565491496, #new 2026-11-06: auto blend times, the velocity check, the blending in Cartesian space (#3283)
+        'urdfRobotHDF5Test.py': 11.896535862956235, #new 2026-11-06: a robot of a URDF file in the repository, its import stored as HDF5: masses from the meshes, corrected inertia, flipped joint, texture (#3285)
         'robotInverseDynamicsTest.py': 14.002447714997835, #new 2026-11-05: KinematicChain.InverseDynamics, Robot.InverseDynamics, the dynamic compensation (#3276)
         'robotModelsTest.py': 14.429203529941592, #new 2026-11-05: the models of exudyn.robotics.models, their configurations and friction (#3277)
         'robotDictionaryTest.py': 9.516012946428752, #new 2026-11-05: Robot.GetDictionary and SetDictionary, saved with SaveDictToHDF5 (#3267)

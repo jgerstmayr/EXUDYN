@@ -6341,6 +6341,47 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
   velocity and acceleration equal to the difference quotients.
 - staubliTX2blending.py blends its line-line corners in Cartesian space; trajectoryBlendingCartesianTest.py.
 
+<a id="rg19-8-2"></a>
+### RG19.8.2 — the examples runner gives each example its __file__ (2026-11-06, #3284)
+- Maintainer 2026-11-06: a full examples run (suggested at the end of the last report).
+- `exudev examples` (parallel, venvExuP313): 2 of 196 failed, staubliTX2blending.py and staubliTX2trajectories.py, with
+  NameError `__file__`: they find the local URDF data relative to their file, and the runner executes the source by
+  exec without `__file__` - failing in every examples run since #3263, unnoticed as the test suite does not run examples.
+- Fix: the worker script of the parallel run sets `__file__` to the absolute path of the example before the exec; the
+  serial run sets it in its globals for each example and restores its own afterwards. Parallel run after the fix: all
+  196 pass (46 s); the TX2 examples load their meshes and save the HDF5 file.
+- The serial run (`--serial`, kept for the debugger): spotModel.py and publications/sliderCrankCMSacme.py fail, as
+  they read their data relative to the working directory, which only the parallel run sets to the folder of the example
+  (#2757); not changed here. Its examples share the working directory: rendererNOGLFWexample.py wrote
+  python/TestModels/images/ (removed).
+
+<a id="rg19-3-7"></a>
+### RG19.3.7 — a small URDF robot in the repository, stored as HDF5; UR, Panda, Kinova checked (2026-11-06, #3285)
+- Maintainer 2026-11-06: the URDF check of UR, Panda and Kinova with network access; the rest of RG19.3 - robots with
+  inertias from their meshes and textures saved as HDF5, a small test URDF in the repository.
+- Check (scratchpad urdfCheck.py, RTB 1.5 in venvP313rtb; robot_descriptions cloned example-robot-data, ros2_kortex and
+  kinova-ros from GitHub): UR3, UR5, UR10 forward kinematics 1e-16/2e-16, rne 1.3e-16, 8.2e-17; KinovaGen3 fk 2e-16,
+  rne 2.1e-16; Jaco (10 joints with the fingers, a tree) fk 1e-16; Panda (bundled with the RTB, not downloaded) fk
+  1e-16, without masses. The UR offset of the old import ("no offset for UR5 ?WHY?") is gone: it was a symptom of the
+  fixed links that #3280 merges. Panda was wrongly said to be downloaded in the urdfImport docstring, the example
+  serialRobotURDF.py and revisions.md; corrected.
+- python/TestModels/testData/urdf/testRobot (2.0 kB of meshes): testRobot.urdf with base_link (STL brick),
+  joint1 Rz, link1 (2 kg, principal moments 0.0066, 0.00125, 0.0086 violating the triangle inequality, STL brick),
+  a fixed link flange (rpy 0.4 about x), joint2 with axis 0 -1 0 (flipped), link2 without mass with arm.obj (a brick
+  0.2 x 0.05 x 0.05 with arm.mtl and a 16 x 16 arm.png of three colored areas), a fixed tool0. arm.obj is force-added,
+  as .gitignore ignores *.obj (compiler output), as objImportTest.obj.
+- testRobot.h5 (56 kB): Robot.GetDictionary of the import with meshDensity=1000, correctInertia=True, PD control and the
+  tool frame of tool0 (flipHT times the relative frame of the RTB); written by test_urdfRobotData.py
+  (TestRobotFromURDF) with EXUDYN_RECORD_URDF_REFERENCE=1, compared to 1e-12 otherwise; skipped without the toolbox,
+  pymeshlab, h5py, scipy. Run in venvP313rtb with the pytest of venvExuP313 appended to sys.path (no pytest there):
+  3 passed.
+- urdfRobotHDF5Test.py (test suite, needs h5py): the brick mass 0.5 kg, COM (-0.1, 0, 0) in the flipped frame and
+  inertia; the corrected moments of link1 (largest kept, sum of the two smaller equal to it); the frames of link2 and
+  the tool against the URDF chain computed by hand (rotation times flipHT); the texture image and the 36 corners with
+  texture coordinates; held by PD control at q0 for 0.2 s. Result 11.896535862956235.
+- urdfImport: the joint axis by ET.kind instead of ET.axis, deprecated since RTB 1.4, which warned in every import;
+  the stub of test_urdfRobotData.py likewise.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;
