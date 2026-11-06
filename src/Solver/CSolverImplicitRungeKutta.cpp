@@ -698,6 +698,8 @@ Real CSolverImplicitRungeKutta::ErrorEstimate(CSolverImplicitSecondOrderTimeInt&
 
 //! verbose 4: the stage Jacobian against the finite differences of the residual, the largest difference per block of
 //! rows and columns (A: accelerations, Y: ODE1 velocities, Z: multipliers, M: mu of GGL; stage index)
+//! the columns of Euler parameters differ by the derivative along the parameters themselves, which the Jacobian by G
+//! leaves out and the constraint of the Euler parameters fixes; at small angles such entries have the opposite sign (#3308)
 void CSolverImplicitRungeKutta::CheckJacobian(CSolverImplicitSecondOrderTimeInt& solver, CSystem& computationalSystem,
 	const SimulationSettings& simulationSettings, Real t0, Real h)
 {

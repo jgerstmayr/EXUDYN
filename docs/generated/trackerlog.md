@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.424.dev1
+- Exudyn version = 1.13.425.dev1
 - last change = 2026-11-06
 - Number of issues = 3309
-- Number of resolved issues = 3201 (424 in current version)
+- Number of resolved issues = 3202 (425 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHECK` `LOW EFF` `raised by: Claude-JG` Stage Jacobian of the implicit Runge-Kutta solvers: entries by the first Euler parameter with the opposite sign (#3308)
-  - description: The check of the stage Jacobian against finite differences (verbose 4, CSolverImplicitRungeKutta::CheckJacobian) of LobattoIIIA4 shows single entries of the constraint rows at the end of the step by the acceleration of the first Euler parameter with the opposite sign: rigidBodyJoints of modelLibrary.py, step 1e-3, velocity constraint row 4 by A2\[3\]: numeric -6.26574e-5, Jacobian 6.26575e-5; FFRFreducedOrder, position constraint row 2 by A1\[3\]: numeric -1.74388e-5, Jacobian 1.74388e-5. The other differences shrink with the step (the Jacobian of the end of the step is used at all stages); these do not. The Newton iteration converges, more slowly than it could. To be analyzed: the Jacobian of the constraints by the Euler parameters (JacobianAE) or the finite differences of the check.
-  - date raised: 2026-11-06
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` MarkerNodeUser: a marker on the coordinates of nodes by Python user functions (#3236)
   - description: CreateCoordinateConstraint of UserItemCreator and the built-in coordinate constraint use MarkerNodeCoordinate; a user marker on nodes, whose value and Jacobian are Python (and recordable) user functions of the coordinates of its nodes, lets the coordinate constraint and coordinate connectors be user items. Decided (maintainer 2026-11-04): MarkerNodeUser first, as a step of its own (revision2026c RG7.18); MarkerBodyUser with coordinates and user shapes for contact and flexible interfaces are not planned yet (\#3106 closed).
   - date raised: 2026-11-04

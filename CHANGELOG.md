@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 409 | 1.13.424 |
+| 1.13 | Newborn | 410 | 1.13.425 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.425** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Stage Jacobian of the implicit Runge-Kutta solvers: entries by the first Euler parameter with the opposite sign (#3308)
+  - description: The check of the stage Jacobian against finite differences (verbose 4, CSolverImplicitRungeKutta::CheckJacobian) of LobattoIIIA4 shows single entries of the constraint rows at the end of the step by the acceleration of the first Euler parameter with the opposite sign: rigidBodyJoints of modelLibrary.py, step 1e-3, velocity constraint row 4 by A2\[3\]: numeric -6.26574e-5, Jacobian 6.26575e-5; FFRFreducedOrder, position constraint row 2 by A1\[3\]: numeric -1.74388e-5, Jacobian 1.74388e-5. The other differences shrink with the step (the Jacobian of the end of the step is used at all stages); these do not. The Newton iteration converges, more slowly than it could. To be analyzed: the Jacobian of the constraints by the Euler parameters (JacobianAE) or the finite differences of the check.
+  - **notes:** Checked: the stage Jacobian of the implicit Runge-Kutta solvers by Euler parameters differs from finite differences only along the parameters themselves, which the derivative by G leaves out and the Euler parameter constraint fixes; no change of the solvers.
+  - date resolved: **2026-11-06 21:22**, date raised: 2026-11-06
 - **1.13.424** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Newton of LobattoIIIA4 stalls at a constant residual on genericDAE (#3307)
   - description: The genericDAE model of modelLibrary.py with LobattoIIIA4, step 1.5625e-4, newton.relativeTolerance 1e-10 and absoluteTolerance 1e-12: the Newton residual stays at 1.007e-12 (initial 3.2e-3) from the second to the 25th iteration, so the step is rejected and the run stops at the minimum step size; with the default absoluteTolerance 1e-10 it converges. To be analyzed: which rows keep the residual - the velocity constraint of ObjectGenericDAE, whose jacobianUserFunction gives no derivative of it by the velocities, or the ODE1 rows. \[2026-11-06, Claude-JG\]: FFRFreducedOrder of modelLibrary.py with LobattoIIIA4 and the default Newton tolerances: the Newton residual stays at a floor that grows as the step shrinks (1.0e-10, 4e-10, 1.6e-9, 6.4e-9 ... 1e-7 while the step is halved from 1.2e-4), so LobattoIIIA4 and Radau3 stop below a step of about 6e-5; LobattoIIIC4GGL and generalized-alpha run at 7.8e-6. The residual norm is taken before the row scaling, so the floor is in the unscaled equations.
   - **notes:** LobattoIIIA4 and Radau3 converge with small steps: the Newton iteration followed the rounding of the position constraints, divided by h^2, and stalled at a residual that grew as the step shrank, so the solvers reduced the step until they stopped (steps of about 1e-5 with tight Newton tolerances, 6e-5 on a flexible body). A position constraint residual at the rounding of the coordinates counts as zero.

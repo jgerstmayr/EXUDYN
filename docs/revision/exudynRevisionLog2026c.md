@@ -6427,6 +6427,23 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-9-10"></a>
+### RG20.9.10 — the stage Jacobian by Euler parameters against finite differences (2026-11-06, #3308)
+- Maintainer 2026-11-06: do RG20.9.10.
+- No defect. The Jacobian of an item by Euler parameters is the derivative along the rotations, -A p~ G for a point p
+  of the body: G theta = 0, so it has no component along the parameters themselves. The rotation matrix of
+  EP2RotationMatrix is quadratic in the parameters and changes along them (by 2 (A - I) p per unit length). The
+  finite differences of CheckJacobian perturb one parameter, mostly along theta for theta0 near 1, and contain that
+  component. Checked with numpy at a rotation of 0.3 about z: the two Jacobians times the projector I - theta theta^T
+  agree to rounding; along theta the G form gives 0, the quadratic form (-0.047, 0.114, 0); in the column of theta0
+  the entries are (0.032, -0.053) against (-0.015, 0.060), and at small angles they are the negatives - the entries
+  of the issue (rigidBodyJoints -6.26574e-5 against 6.26575e-5, FFRFreducedOrder -1.74388e-5 against 1.74388e-5).
+- Left as it is: the constraint of the Euler parameters (its row 2 theta^T) fixes the increments along theta, which
+  are driven by its residual alone and vanish after the first iteration; the reaction forces C_q^T lambda use the same
+  G, so the matrix stays the transposed pair of the constraint rows. LobattoIIIA4 needs 1.9 Newton iterations per
+  step on rigidBodyJoints with the step 1e-5. Generalized-alpha uses the same Jacobians.
+- A comment in CSolverImplicitRungeKutta::CheckJacobian names the expected differences.
+
 <a id="rg20-9-9"></a>
 ### RG20.9.9 — the Newton floor of LobattoIIIA4 and Radau3 at small steps (2026-11-06, #3307, #3308)
 - Maintainer 2026-11-06: do RG20.9.9.
