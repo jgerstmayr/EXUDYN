@@ -91,6 +91,7 @@ public:
 	Vector q0, v0, a0, y0, yd0, z0;
 	Vector residual, increment, temp2, tempF, temp1, tempAE, tempAEv, tempAEm;
 	Vector rowScale;					//!< the scaling factors of the rows of the residual (h^2, h, 1)
+	Real constraintRoundoff = 0.;		//!< the rounding of a position constraint at the coordinates of the step; a smaller residual is zero (#3307)
 
 	//the previous accepted step, for the error estimate of two steps
 	bool hasPrevious = false;

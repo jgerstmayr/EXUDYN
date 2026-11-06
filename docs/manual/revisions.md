@@ -627,6 +627,12 @@ generalized-alpha solver, after bad contractivity, set the coordinates back to t
 derivatives of the ODE1 coordinates of the rejected iteration, an error of about h^2 per restart. Models with ODE1
 coordinates and `useModifiedNewton = True` (the default) whose Newton iteration restarts change.
 
+**LobattoIIIA4 and Radau3 converge with small steps** (#3307): the Newton iteration followed the rounding of the
+position constraints, divided by h^2, and stalled at a residual that grew as the step shrank; with steps of about
+1e-5, or on a flexible body below 6e-5, the solvers reduced the step until they stopped. A position constraint
+residual at the rounding of the coordinates counts as zero now. Results of these solvers change at the level of the
+Newton tolerance.
+
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the
 publications - find it beside their own file instead of in the working directory.

@@ -3507,6 +3507,10 @@ CLOSED 2026-11-06 (#3305; maintainer 2026-11-06): python/testing/solverConvergen
 
 CLOSED 2026-11-06 (#3306; maintainer 2026-11-06): docs/manual/solver.md - a table of all dynamic solvers, the section on the implicit Runge-Kutta solvers (stages, constraints, oneStep and twoSteps), the section on convergence and efficiency with the figures of #3305. [log](exudynRevisionLog2026c.md#rg20-9-7)
 
-#### **OPEN_RG20.9.9** The Newton floor of LobattoIIIA4 and Radau3 at small steps
+#### **CLOSED_RG20.9.9** The Newton floor of LobattoIIIA4 and Radau3 at small steps
 
-#3307: on genericDAE the residual stays at 1e-12, on FFRFreducedOrder at a floor that grows as the step shrinks, so LobattoIIIA4 and Radau3 stop below a step of about 6e-5; LobattoIIIC4GGL runs. To be analyzed.
+CLOSED 2026-11-06 (#3307; maintainer 2026-11-06): the Newton iteration followed the rounding of the position constraints at the end of the step, which the rows of 1/h^2 turn into increments of the accelerations of eps |q| / h^2; with the Jacobian of the end of the step at all stages they left a residual of the stage equations growing as 1/h. A position constraint residual below 16 eps max|q_ref + q| counts as zero; LobattoIIIA4 and Radau3 run on nPendulum and rigidBodyJoints with the step 1e-5 and the Newton tolerance 1e-12 (implicitRungeKuttaSmallStepTest.py), on sliderCrank3D with 1.6e-5 and on FFRFreducedOrder with 7.8e-6. [log](exudynRevisionLog2026c.md#rg20-9-9)
+
+#### **OPEN_RG20.9.10** Stage Jacobian entries by the first Euler parameter with the opposite sign
+
+#3308: the check of the stage Jacobian against finite differences (verbose 4) shows single entries of the constraint rows at the end of the step by the acceleration of the first Euler parameter with the opposite sign, which do not shrink with the step (rigidBodyJoints, FFRFreducedOrder). The Newton iteration converges. To be analyzed.

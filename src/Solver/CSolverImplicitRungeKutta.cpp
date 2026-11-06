@@ -262,7 +262,7 @@ Real CSolverImplicitRungeKutta::ComputeResidual(CSolverImplicitSecondOrderTimeIn
 			computationalSystem.ComputeAlgebraicEquations(solver.data.tempCompDataArray, tempAEv, true);
 			for (Index j = 0; j < na; j++)
 			{
-				residual[offZ[k] + j] = tempAE[j];
+				residual[offZ[k] + j] = (specialRow[j] == 0 && fabs(tempAE[j]) <= constraintRoundoff) ? 0. : tempAE[j];
 				residual[offMu[k] + j] = specialRow[j] ? stageMu[i][j] : tempAEv[j];
 			}
 		}
@@ -277,7 +277,7 @@ Real CSolverImplicitRungeKutta::ComputeResidual(CSolverImplicitSecondOrderTimeIn
 		computationalSystem.ComputeAlgebraicEquations(solver.data.tempCompDataArray, tempAEv, true);
 		for (Index j = 0; j < na; j++)
 		{
-			residual[offZ[0] + j] = specialRow[j] ? tempAEm[j] : tempAE[j];
+			residual[offZ[0] + j] = specialRow[j] ? tempAEm[j] : ((fabs(tempAE[j]) <= constraintRoundoff) ? 0. : tempAE[j]);
 			residual[offZ[1] + j] = tempAEv[j];
 		}
 	}
@@ -785,6 +785,13 @@ bool CSolverImplicitRungeKutta::Step(CSolverImplicitSecondOrderTimeInt& solver, 
 		qIterate[i].MultAdd(h * method.c[i], v0);
 		qIterate[i].MultAdd(0.5 * EXUstd::Square(h * method.c[i]), a0);
 	}
+
+	//a position constraint is evaluated to the rounding of the coordinates, which the rows of 1/h^2 turn into increments of
+	//the accelerations of eps |q| / h^2 per iteration; the Newton iteration does not follow them (#3307)
+	const Vector& qRef = systemData.GetCData().referenceState.ODE2Coords;
+	Real qMax = 1.;
+	for (Index j = 0; j < q0.NumberOfItems(); j++) { qMax = EXUstd::Maximum(qMax, fabs(qRef[j] + q0[j])); }
+	constraintRoundoff = 16. * std::numeric_limits<Real>::epsilon() * qMax;
 
 	Real errorFactor = (newton.weightTolerancePerCoordinate && nUnknowns) ? sqrt((Real)nUnknowns) : 1.;
 	ComputeRowScale(solver, h);

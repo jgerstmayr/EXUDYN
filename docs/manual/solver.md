@@ -761,6 +761,14 @@ stages. The unknowns per step are $2 n + 2 m$ for `LobattoIIIA4` and `Radau3`, $
 $n$ coordinates and $m$ constraints. Lie group nodes are treated as in {ref}`sec-implicittrapezoidalsolver`, the
 rotations of the stages by Runge-Kutta-Munthe-Kaas (#3290).
 
+The unknowns are the stage accelerations, and a position constraint changes with $h^2$ times them; its equation is
+therefore divided by $h^2$ in the Newton iteration. A position constraint is evaluated only to the rounding of the
+coordinates, which this turns into increments of the accelerations of about $\varepsilon |\qv| / h^2$ in every
+iteration; with the Jacobian of the end of the step at all stages they leave a residual of the equations of motion
+that grows as the step shrinks. A residual of a position constraint below $16 \varepsilon \max_j |q_{\mathrm{ref},j} +
+q_j|$, $\varepsilon$ the machine precision, therefore counts as zero, and the Newton iteration reaches tolerances of
+$10^{-12}$ also with steps of $10^{-5}$ (#3307).
+
 ### Error estimates and automatic step size
 
 With `timeIntegration.automaticStepSize = True` the step size follows the controller of {ref}`sec-explicitsolver`,

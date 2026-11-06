@@ -6427,6 +6427,33 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-9-9"></a>
+### RG20.9.9 — the Newton floor of LobattoIIIA4 and Radau3 at small steps (2026-11-06, #3307, #3308)
+- Maintainer 2026-11-06: do RG20.9.9.
+- Located on FFRFreducedOrder with the step 3.125e-5 (verbose 3, the largest residual per block): the stage
+  equations of motion of stage 1 stay at 8e-11 and jump by factors of 2 between iterations, stage 2 is at 1e-13, the
+  position constraints at the end at 1.1e-16 - one rounding of the coordinates, which the row scale 1/h^2 makes 1e-7
+  in the scaled system. Each iteration therefore moves the stage accelerations by about eps |q| / h^2, and the
+  Jacobian of the end of the step, used at all stages, misfits stage 1 by O(h) (the check of verbose 4: differences
+  of 7e-4 in A1/A1 at h, 3.5e-4 at h/2): a residual of eps |q| / h, the floor doubling as the step halves. The
+  differentiation epsilon changes nothing (1e-5 and 1e-9). Generalized-alpha has the same rows but starts from a
+  residual 1e4 times larger, so its relative tolerance ends the iteration above the floor; the good predictor of the
+  Runge-Kutta solvers (the accelerations of the start) makes the relative tolerance demand 3.5e-12.
+- The fix: in ComputeResidual a position constraint residual (the rows at the end, and the position rows of GGL
+  that are not velocity-level or equations of a multiplier) below 16 eps max|q_ref + q0| is zero. Considered and
+  left: the Jacobian per stage (the mass matrix and C_q at each stage, the cost of a Jacobian times the stages, and
+  the increments would remain), and a test of stagnation in the Newton loop (a heuristic on the contraction).
+- Without the fix, with the step 1e-5 and the Newton tolerances 1e-10 / 1e-12, LobattoIIIA4 and Radau3 fail in the
+  first steps on nPendulum, rigidBodyJoints and sliderCrank3D (1.6e-5); LobattoIIIC4GGL and TrapezoidalGGL run. With
+  the fix all run with the constant number of steps, on FFRFreducedOrder down to 7.8e-6. genericDAE ran in both
+  builds over 0.1 s, so it is not in the test.
+- implicitRungeKuttaSmallStepTest.py (new): nPendulum and rigidBodyJoints, 1e-5, 0.02 s, both solvers, 8004 steps.
+  No reference of the suite changed.
+- The study: the automatic-step runs again (--adaptive); LobattoIIIA4 on sliderCrank3D with the tolerance 1e-8 had
+  failed and runs (43 steps); efficiency_models.png changed in that point.
+- #3308 raised (RG20.9.10): the Jacobian check shows single entries of the constraint rows by the acceleration of the
+  first Euler parameter with the opposite sign, which do not shrink with the step (rigidBodyJoints, FFRFreducedOrder).
+
 <a id="rg20-9-7"></a>
 ### RG20.9.7 and RG20.9.8 — the convergence and efficiency figures, the solver page (2026-11-06, #3305, #3306)
 - Maintainer 2026-11-06: the description of the new solvers in the solver section, specifics and error estimators;

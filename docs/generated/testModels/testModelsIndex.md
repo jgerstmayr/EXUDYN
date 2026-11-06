@@ -121,6 +121,7 @@ homogeneousTransformationTest
 hydraulicActuatorSimpleTest
 implicitRungeKuttaErrorEstimateTest
 implicitRungeKuttaLieGroupTest
+implicitRungeKuttaSmallStepTest
 implicitRungeKuttaSolversTest
 inactiveConnectorForceTest
 initialAccelerationsTest

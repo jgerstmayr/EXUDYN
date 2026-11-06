@@ -1,0 +1,12 @@
+{
+  "number": 3308,
+  "title": "Stage Jacobian of the implicit Runge-Kutta solvers: entries by the first Euler parameter with the opposite sign",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "The check of the stage Jacobian against finite differences (verbose 4, CSolverImplicitRungeKutta::CheckJacobian) of LobattoIIIA4 shows single entries of the constraint rows at the end of the step by the acceleration of the first Euler parameter with the opposite sign: rigidBodyJoints of modelLibrary.py, step 1e-3, velocity constraint row 4 by A2[3]: numeric -6.26574e-5, Jacobian 6.26575e-5; FFRFreducedOrder, position constraint row 2 by A1[3]: numeric -1.74388e-5, Jacobian 1.74388e-5. The other differences shrink with the step (the Jacobian of the end of the step is used at all stages); these do not. The Newton iteration converges, more slowly than it could. To be analyzed: the Jacobian of the constraints by the Euler parameters (JacobianAE) or the finite differences of the check.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "file": "src/Solver/CSolverImplicitRungeKutta.cpp"
+}
