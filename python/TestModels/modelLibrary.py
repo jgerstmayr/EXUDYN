@@ -32,9 +32,9 @@ g = [0, -9.81, 0] #gravity of the planar models; the spatial ones have their own
 
 def _MassOscillator(mbs):
     """a mass point on a spring-damper to ground, 1 coordinate moving"""
-    oMass = mbs.CreateMassPoint(referencePosition=[1, 0, 0], initialDisplacement=[0.1, 0, 0], physicsMass=2)
+    oMass = mbs.CreateMassPoint(referencePosition=[1, 0, 0], initialDisplacement=[0.1, 0, 0], mass=2)
     oGround = mbs.CreateGround()
-    mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], stiffness=800, damping=4)
+    mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], stiffness=800, damping=4)
     return {'description': 'a mass of 2 kg on a spring-damper (800 N/m, 4 Ns/m) to ground, released 0.1 m off',
             'endTime': 1, 'stepSize': 2e-3}
 
@@ -44,8 +44,8 @@ def _NPendulum(mbs, n=4):
     oGround = mbs.CreateGround()
     previous = oGround
     for i in range(n):
-        oMass = mbs.CreateMassPoint(referencePosition=[0.25*(i + 1), 0, 0], physicsMass=0.5, gravity=g)
-        mbs.CreateDistanceConstraint(bodyNumbers=[previous, oMass])
+        oMass = mbs.CreateMassPoint(referencePosition=[0.25*(i + 1), 0, 0], mass=0.5, gravity=g)
+        mbs.CreateDistanceConstraint(itemNumbers=[previous, oMass])
         previous = oMass
     return {'description': 'a pendulum of ' + str(n) + ' mass points of 0.5 kg on distance constraints of 0.25 m, '
             'released horizontally under gravity',
@@ -64,9 +64,9 @@ def _RigidBodyChain(mbs, useJoints, n=3):
         body = mbs.CreateRigidBody(inertia=inertia, referencePosition=[L*(i + 0.5), 0, 0], gravity=g,
                                    graphicsDataList=[graphics.Brick(size=[L, w, w], color=graphics.colorList[i])])
         if useJoints:
-            mbs.CreateRevoluteJoint(bodyNumbers=[previous, body], position=[L*i, 0, 0], axis=[0, 0, 1])
+            mbs.CreateRevoluteJoint(itemNumbers=[previous, body], position=[L*i, 0, 0], axis=[0, 0, 1])
         else:
-            mbs.CreateRigidBodySpringDamper(bodyNumbers=[previous, body], localPosition0=[L*i, 0, 0] if i == 0 else [0.5*L, 0, 0],
+            mbs.CreateRigidBodySpringDamper(itemNumbers=[previous, body], localPosition0=[L*i, 0, 0] if i == 0 else [0.5*L, 0, 0],
                                             localPosition1=[-0.5*L, 0, 0], stiffness=stiffness, damping=damping)
         previous = body
     kind = 'revolute joints' if useJoints else 'rigid body spring-dampers (1e5 N/m, 1e2 Nm/rad, free about z)'

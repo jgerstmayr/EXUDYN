@@ -3417,6 +3417,12 @@ Found with RG20.7.2 (#3288): on sliderCrank3D of modelLibrary.py all methods con
 
 CLOSED 2026-11-06 (#3289, #3290; maintainer 2026-11-06: the open steps): two causes. The initial accelerations were wrong with Euler parameters (C_q v without its part along the parameters) and Lie group nodes ((C_q v)_q by adding to the rotation vector) - (C_q v)_q v is now a central difference of fourth order along the motion; LobattoIIIA4 uses them in its first stage. The stages of Lie group nodes took the increment of the other coordinates - now Runge-Kutta-Munthe-Kaas, Delta_i = h sum_j A_ij TExpSO3Inv(Delta_j) omega_j by a fixed-point iteration. Orders now 4, 4, 3, 2 with both node types; initialAccelerationsTest.py with a rigid body. [log](exudynRevisionLog2026c.md#rg20-7-4)
 
+#### **CLOSED_RG20.7.5** ObjectKinematicTree without allocations per evaluation
+
+Found with RG20.7.3 (#3287): the kinematic tree of modelLibrary.py allocated 4 to 29 vectors per step in every solver.
+
+CLOSED 2026-11-06 (#3291; maintainer 2026-11-06: the related problems): the LinkedDataVector of the joint velocities was initialized by a conditional expression, which copied it; linked by LinkDataTo, no allocation per step; test_kinematicTreeAllocations.py. [log](exudynRevisionLog2026c.md#rg20-7-5)
+
 ### **CLOSED_RG20.8** A common step size controller for the adaptive solvers, Python first, then C++
 
 Maintainer 2026-11-04 (design section 3.6): one controller (PI, with safety factor, limits and rejection) for TrapezoidalGGL, Lobatto4, ODE23, DOPRI5 and the reduction by the post-Newton step, with timeIntegration.absoluteTolerance and relativeTolerance.
@@ -3444,3 +3450,7 @@ Open: list the test models whose model is one of the library (the slider cranks,
 #### **OPEN_RG20.9.3** The order of an ODE1 coordinate coupled to ODE2 coordinates in generalized-alpha
 
 #3258: order 1 for the lag coordinate of the genericDAE model, order 2 for its ODE2 coordinates; to be analyzed.
+
+#### **CLOSED_RG20.9.4** modelLibrary.py without deprecated arguments
+
+CLOSED 2026-11-06 (#3292; maintainer 2026-11-06: the related problems): itemNumbers instead of bodyNumbers, mass instead of physicsMass; the results unchanged. [log](exudynRevisionLog2026c.md#rg20-7-5)

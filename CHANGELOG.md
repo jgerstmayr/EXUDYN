@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 389 | 1.13.404 |
+| 1.13 | Newborn | 391 | 1.13.406 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.406** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` modelLibrary.py uses the deprecated arguments bodyNumbers and physicsMass (#3292)
+  - description: The models of modelLibrary.py call CreateSpringDamper, CreateDistanceConstraint, CreateRevoluteJoint and CreateRigidBodySpringDamper with bodyNumbers and CreateMassPoint with physicsMass, which are deprecated; the tests that use the library show their warnings. Decided: itemNumbers and mass; revision2026c step RG20.9.3. \[2026-11-06, Claude-JG\]: The plan step is revision2026c step RG20.9.4 (RG20.9.3 was taken).
+  - **notes:** modelLibrary.py uses itemNumbers and mass instead of the deprecated bodyNumbers and physicsMass; the results are unchanged.
+  - date resolved: **2026-11-06 11:35**, date raised: 2026-11-06
+- **1.13.405** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectKinematicTree allocates a vector in every evaluation of its mass matrix, forces and Jacobian (#3291)
+  - description: Found with the allocation test of the implicit Runge-Kutta solvers (\#3287): the kinematic tree of modelLibrary.py allocates 4 vectors per step with ExplicitEuler, 10 with RK44, 27 to 29 with the implicit solvers; ComputeMassMatrixAndODE2LHS initialized the LinkedDataVector of the joint velocities by a conditional expression, which copied it. Decided: q and q\_t linked by LinkDataTo; a pytest of the allocations per step; revision2026c step RG20.7.5.
+  - **notes:** ObjectKinematicTree links the joint coordinates and velocities without a copy and allocates no vector per evaluation of its mass matrix, forces and Jacobian; it allocated up to 29 per step of an implicit solver. test\_kinematicTreeAllocations.py.
+  - date resolved: **2026-11-06 11:35**, date raised: 2026-11-06
 - **1.13.404** <span class="textred">`BUG`</span> `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the implicit Runge-Kutta solvers have order 2 with Lie group nodes (#3290)
   - description: The rotation of a stage was the composition of the start of the step with the increment h sum\_j A\_ij omega\_j, the formula of the other coordinates; the rotation vector of the increment differs from it by terms of h^2, so LobattoIIIA4, LobattoIIIC4GGL and Radau3 converged with order 2 on the spatial slider crank of modelLibrary.py with NodeRigidBodyRotVecLG (4, 4, 3 with Euler parameters). Decided: the increment of stage i is Delta\_i = h sum\_j A\_ij TExpSO3Inv(Delta\_j) omega\_j (Runge-Kutta-Munthe-Kaas, as the explicit solvers), by a fixed-point iteration within the stages; revision2026c step RG20.7.4.
   - **notes:** The implicit Runge-Kutta solvers compose the rotation of a stage of a Lie group node with the increment Delta\_i = h sum\_j A\_ij TExpSO3Inv(Delta\_j) omega\_j (Runge-Kutta-Munthe-Kaas, by a fixed-point iteration) instead of h sum\_j A\_ij omega\_j: LobattoIIIA4, LobattoIIIC4GGL and Radau3 have their orders 4, 4, 3 with NodeRigidBodyRotVecLG, as with Euler parameters; it was 2.

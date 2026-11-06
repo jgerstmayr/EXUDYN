@@ -562,8 +562,11 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatr
 		tempVector.CopyFrom(GetCNode(0)->GetCurrentCoordinateVector());
 		tempVector += GetCNode(0)->GetReferenceCoordinateVector();
 	}
-	LinkedDataVector q(qTotal ? *qTotal : tempVector);
-	LinkedDataVector q_t(qGiven_t ? LinkedDataVector(*qGiven_t) : ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t());
+	//linked without a copy: a LinkedDataVector initialized by a conditional expression is copied, which allocates (#3291)
+	LinkedDataVector q, q_t;
+	q.LinkDataTo(qTotal ? *qTotal : tempVector);
+	if (qGiven_t) { q_t.LinkDataTo(*qGiven_t); }
+	else { q_t.LinkDataTo(cSystemData->GetCData().currentState.ODE2Coords_t, ((CNodeODE2*)GetCNode(0))->GetGlobalODE2CoordinateIndex(), NumberOfLinks()); }
 
 	//the floating base (#1549): its motion (wB, vB) in its frame and its bias acceleration (aB, avB), with the gravity as an
 	//acceleration of the base; its motion subspace by A and Glocal

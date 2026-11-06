@@ -1,0 +1,17 @@
+{
+  "number": 3291,
+  "title": "ObjectKinematicTree allocates a vector in every evaluation of its mass matrix, forces and Jacobian",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Found with the allocation test of the implicit Runge-Kutta solvers (#3287): the kinematic tree of modelLibrary.py allocates 4 vectors per step with ExplicitEuler, 10 with RK44, 27 to 29 with the implicit solvers; ComputeMassMatrixAndODE2LHS initialized the LinkedDataVector of the joint velocities by a conditional expression, which copied it. Decided: q and q_t linked by LinkDataTo; a pytest of the allocations per step; revision2026c step RG20.7.5.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 11:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectKinematicTree.cpp",
+  "releaseNotes": "ObjectKinematicTree links the joint coordinates and velocities without a copy and allocates no vector per evaluation of its mass matrix, forces and Jacobian; it allocated up to 29 per step of an implicit solver. test_kinematicTreeAllocations.py.",
+  "resolvedInVersion": "1.13.405"
+}

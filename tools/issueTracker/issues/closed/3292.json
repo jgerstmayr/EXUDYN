@@ -1,0 +1,17 @@
+{
+  "number": 3292,
+  "title": "modelLibrary.py uses the deprecated arguments bodyNumbers and physicsMass",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The models of modelLibrary.py call CreateSpringDamper, CreateDistanceConstraint, CreateRevoluteJoint and CreateRigidBodySpringDamper with bodyNumbers and CreateMassPoint with physicsMass, which are deprecated; the tests that use the library show their warnings. Decided: itemNumbers and mass; revision2026c step RG20.9.3. [2026-11-06, Claude-JG]: The plan step is revision2026c step RG20.9.4 (RG20.9.3 was taken).",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 11:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/modelLibrary.py",
+  "releaseNotes": "modelLibrary.py uses itemNumbers and mass instead of the deprecated bodyNumbers and physicsMass; the results are unchanged.",
+  "resolvedInVersion": "1.13.406"
+}

@@ -75,7 +75,7 @@ def RigidBodyAccelerations(nodeType):
                                 referencePosition=center, referenceRotationMatrix=rotation, initialVelocity=np.cross(omega, offset),
                                 initialAngularVelocity=omega, gravity=[0, 0, -g])
     oGround = mbs.CreateGround()
-    mbs.CreateSphericalJoint(bodyNumbers=[oGround, oBody], position=center - offset)
+    mbs.CreateSphericalJoint(itemNumbers=[oGround, oBody], position=center - offset)
     mbs.Assemble()
     settings = exu.SimulationSettings()
     settings.solution.file.write = False

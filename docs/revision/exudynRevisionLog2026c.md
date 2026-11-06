@@ -6427,6 +6427,22 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-7-5"></a>
+### RG20.7.5 / RG20.9.4 — ObjectKinematicTree without allocations, modelLibrary.py without deprecated arguments (2026-11-06, #3291, #3292)
+- Maintainer 2026-11-06: fix the related problems.
+- Measured with exu.special.InfoStat on the kinematic tree of modelLibrary.py, 100 against 200 steps: 28.9 vectors per
+  step with generalized-alpha, 28.6 TrapezoidalIndex2, 26.6 LobattoIIIA4, 10 RK44, 4 ExplicitEuler, each one a
+  LinkedDataVector copied into a Vector (linkedDataVectorCast_counts the same); per call of mbs.ComputeItem one for
+  ODE2LHS and MassMatrix, 1 + n for each Jacobian - one per call of ComputeMassMatrixAndODE2LHS. The joint velocities
+  were linked by LinkedDataVector q_t(qGiven_t ? LinkedDataVector(*qGiven_t) : node->GetCurrentCoordinateVector_t()),
+  which MSVC copies through the copy constructor of VectorBase. Fixed (#3291): q and q_t declared empty and linked by
+  LinkDataTo; 0 per step in all five solvers. The same pattern is nowhere else in src (a conditional in a constructor
+  of a LinkedDataVector only for indices). test_kinematicTreeAllocations.py (generalized-alpha, RK44, LobattoIIIA4).
+- modelLibrary.py (#3292): itemNumbers for bodyNumbers (4 calls), mass for physicsMass (2); modelLibraryTest gives
+  the same result and no DeprecationWarning (run with -W error::DeprecationWarning). The other test models with
+  bodyNumbers in a Create function are libraryDeprecationTest and createItemNumbersTest, which test the old name, and
+  the rolling discs, whose bodyNumbers is not deprecated.
+
 <a id="rg20-7-4"></a>
 ### RG20.7.4 — the order on the spatial slider crank: the initial accelerations, the stages of Lie group nodes (2026-11-06, #3289, #3290)
 - Maintainer 2026-11-06: do the open steps, fix the related problems.

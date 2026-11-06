@@ -607,6 +607,9 @@ crank by up to a quarter of the accelerations, and limited LobattoIIIA4 to order
 accelerations: models with initial velocities and constraints change, by 1e-9 relative with other nodes, by 1e-7 on
 the spatial slider crank with Lie group nodes.
 
+**ObjectKinematicTree allocates no memory per step** (#3291): it copied the joint velocities in each evaluation
+of its mass matrix, forces and Jacobian, up to 29 times per step of an implicit solver.
+
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.
 
