@@ -310,7 +310,7 @@ void CObjectJointSliding2D::GetOutputVariableConnector(OutputVariableType variab
 		Vector2D slidingPosition = CObjectANCFCable2D::MapCoordinates(CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L), qNode0, qNode1);
 		Vector2D tangent = CObjectANCFCable2D::MapCoordinates(CObjectANCFCable2D::ComputeShapeFunctions_x(slidingCoordinate, L), qNode0, qNode1);
 		Real tangentLength = tangent.GetL2Norm();
-		CHECKandTHROW(tangentLength != 0., "ObjectJointSliding2D: the slope of the cable is zero at the sliding position");
+		CHECKandTHROW(tangentLength != 0., "ObjectJointSliding2D: the slope of the cable is zero at the sliding position", ExudynArithmeticError);
 		tangent *= 1. / tangentLength;
 		Vector2D vPos({ slidingPosition[0] - markerData.GetMarkerData(0).position[0], slidingPosition[1] - markerData.GetMarkerData(0).position[1] });
 		value.SetVector({ vPos * tangent, vPos[1] * tangent[0] - vPos[0] * tangent[1], 0. });

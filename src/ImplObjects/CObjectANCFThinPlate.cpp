@@ -982,7 +982,7 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
             //    eps = h^2 kappa^2 / 12 in pure bending; the material measure does not.
             SlimVectorBase<TReal, 3> n3  = r_x_cur.CrossProduct(r_y_cur); // current surface normal: n3 = r_x × r_y
             TReal n3Norm                 = n3.GetL2Norm();
-            CHECKandTHROW((Real)n3Norm != 0., "CObjectANCFThinPlate::ComputeODE2LHStemplate: plate normal is degenerated");
+            CHECKandTHROW((Real)n3Norm != 0., "CObjectANCFThinPlate::ComputeODE2LHStemplate: plate normal is degenerated", ExudynArithmeticError);
             TReal rxNorm  = r_x_cur.GetL2Norm();   // |r_x| current
             TReal ryNorm  = r_y_cur.GetL2Norm();   // |r_y| current
             TReal invNx   = TReal(1.0) / (n3Norm * rxNorm);                  // 1/(|n3| |r_x|)
@@ -1688,7 +1688,7 @@ void CObjectANCFThinPlate::GetSlopes(const Vector3D& localPosition, Vector3D& sl
     SlimVectorBase<Real, 3> r_eta_ref = MapCoordinates(sf_y, qANCFref);
     SlimVectorBase<Real, 3> n0        = r_xi_ref.CrossProduct(r_eta_ref);
     Real n0_norm = n0.GetL2Norm();
-    CHECKandTHROW(n0_norm > 0., "CObjectANCFThinPlate::GetSlopes: degenerate reference element (zero normal)");
+    CHECKandTHROW(n0_norm > 0., "CObjectANCFThinPlate::GetSlopes: degenerate reference element (zero normal)", ExudynArithmeticError);
     Matrix2D J0 = GetElementJacobian(r_xi_ref, r_eta_ref, n0 * (Real(1.) / n0_norm));
     Matrix2D A  = J0.GetInverse();
 
@@ -1706,7 +1706,7 @@ Vector3D CObjectANCFThinPlate::GetNormal(const Vector3D& localPosition, Configur
     GetSlopes(localPosition, slopeX, slopeY, configuration);
     Vector3D n = slopeX.CrossProduct(slopeY);
     Real len = n.GetL2Norm(); 
-    CHECKandTHROW(len != 0., "CObjectANCFThinPlate::GetNormal: normal has length zero; check model setup and solver convergence");
+    CHECKandTHROW(len != 0., "CObjectANCFThinPlate::GetNormal: normal has length zero; check model setup and solver convergence", ExudynArithmeticError);
     n.Normalize();
     return n;
 }
@@ -1794,7 +1794,7 @@ Vector3D CObjectANCFThinPlate::GetVelocity(const Vector3D& localPosition,
         SlimVectorBase<Real, 3> r_eta_ref = MapCoordinates(sf_y, qANCFref);
         SlimVectorBase<Real, 3> n0_ref    = r_xi_ref.CrossProduct(r_eta_ref);
         Real n0_ref_norm = n0_ref.GetL2Norm();
-        CHECKandTHROW(n0_ref_norm > 0., "CObjectANCFThinPlate::GetVelocity: degenerate reference element");
+        CHECKandTHROW(n0_ref_norm > 0., "CObjectANCFThinPlate::GetVelocity: degenerate reference element", ExudynArithmeticError);
         Matrix2D J0 = GetElementJacobian(r_xi_ref, r_eta_ref, n0_ref * (Real(1.) / n0_ref_norm));
         Matrix2D A  = J0.GetInverse();
 
@@ -1811,7 +1811,7 @@ Vector3D CObjectANCFThinPlate::GetVelocity(const Vector3D& localPosition,
         // dn/dt from time derivative of unit normal n = (r_x x r_y) / |r_x x r_y|
         Vector3D n_unnorm = r_x.CrossProduct(r_y);
         Real     len      = n_unnorm.GetL2Norm();
-        CHECKandTHROW(len > 0., "CObjectANCFThinPlate::GetVelocity: degenerate element (zero normal)");
+        CHECKandTHROW(len > 0., "CObjectANCFThinPlate::GetVelocity: degenerate element (zero normal)", ExudynArithmeticError);
 
         Vector3D dn_unnorm_dt = v_rx.CrossProduct(r_y) + r_x.CrossProduct(v_ry);
         Real     d_len_dt     = (n_unnorm * dn_unnorm_dt) / len;  // dot product / len
@@ -1859,7 +1859,7 @@ Vector3D CObjectANCFThinPlate::GetAcceleration(const Vector3D& localPosition,
         SlimVectorBase<Real, 3> r_eta_ref = MapCoordinates(sf_y, qANCFref);
         SlimVectorBase<Real, 3> n0_ref    = r_xi_ref.CrossProduct(r_eta_ref);
         Real n0_ref_norm = n0_ref.GetL2Norm();
-        CHECKandTHROW(n0_ref_norm > 0., "CObjectANCFThinPlate::GetAcceleration: degenerate reference element");
+        CHECKandTHROW(n0_ref_norm > 0., "CObjectANCFThinPlate::GetAcceleration: degenerate reference element", ExudynArithmeticError);
         Matrix2D J0 = GetElementJacobian(r_xi_ref, r_eta_ref, n0_ref * (Real(1.) / n0_ref_norm));
         Matrix2D A  = J0.GetInverse();
 
@@ -1877,7 +1877,7 @@ Vector3D CObjectANCFThinPlate::GetAcceleration(const Vector3D& localPosition,
         // Same structure as dn/dt in GetVelocity, substituting velocities with accelerations
         Vector3D n_unnorm        = r_x.CrossProduct(r_y);
         Real     len             = n_unnorm.GetL2Norm();
-        CHECKandTHROW(len > 0., "CObjectANCFThinPlate::GetAcceleration: degenerate element (zero normal)");
+        CHECKandTHROW(len > 0., "CObjectANCFThinPlate::GetAcceleration: degenerate element (zero normal)", ExudynArithmeticError);
 
         Vector3D d2n_unnorm_dt2  = a_rx.CrossProduct(r_y) + r_x.CrossProduct(a_ry);
         Real     d_len_dt2       = (n_unnorm * d2n_unnorm_dt2) / len;
@@ -1906,7 +1906,7 @@ static void ANCFThinPlateSlopes(const CObjectANCFThinPlate& plate, const Vector3
     SlimVectorBase<Real, 3> r_eta_ref = plate.MapCoordinates(sf_y, qANCFref);
     SlimVectorBase<Real, 3> n0 = r_xi_ref.CrossProduct(r_eta_ref);
     Real n0_norm = n0.GetL2Norm();
-    CHECKandTHROW(n0_norm > 0., "CObjectANCFThinPlate: degenerate reference element (zero normal)");
+    CHECKandTHROW(n0_norm > 0., "CObjectANCFThinPlate: degenerate reference element (zero normal)", ExudynArithmeticError);
     Matrix2D A = plate.GetElementJacobian(r_xi_ref, r_eta_ref, n0 * (Real(1.) / n0_norm)).GetInverse();
     for (Index j = 0; j < 12; j++)
     {

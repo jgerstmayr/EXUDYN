@@ -286,7 +286,7 @@ void PythonUserFunctionBase<UFT>::SetPythonObject(const PyUFobject& pyObjectInit
 	if (py::isinstance<py::dict>(pyObjectInit))
 	{
 		py::dict pyDict = py::cast<py::dict>(pyObjectInit);
-		CHECKandTHROW(pyDict.contains("function") && pyDict.contains("type"), "PythonUserFunctionBase::SetPythonObject: invalid function dictionary");
+		CHECKandTHROW(pyDict.contains("function") && pyDict.contains("type"), "PythonUserFunctionBase::SetPythonObject: invalid function dictionary", ExudynValueError);
 
 		STDstring typeString = py::cast<STDstring>(pyDict["type"]);
 
@@ -685,7 +685,7 @@ public:
 	py::dict ArgumentEntry(const py::object& x)
 	{
 		const void* node = NamedNode(x);
-		CHECKandTHROW(node != nullptr, "GetFlatProgramData: an argument must be a named variable, esym.Real('x', 1.), esym.Vector('v', [...]) or esym.Matrix('M', [[...]]), but received " + py::cast<STDstring>(py::str(x)));
+		CHECKandTHROW(node != nullptr, "GetFlatProgramData: an argument must be a named variable, esym.Real('x', 1.), esym.Vector('v', [...]) or esym.Matrix('M', [[...]]), but received " + py::cast<STDstring>(py::str(x)), ExudynValueError);
 		if (slotOfNode.find(node) != slotOfNode.end()) { return ArgumentEntry(py::cast<py::dict>(operations[slotOfNode[node]])); }
 		FlatProgramData single; //an argument that the expressions do not use
 		return ArgumentEntry(py::cast<py::dict>(single.operations[single.Add(x)]));
@@ -873,8 +873,8 @@ SymbolicRealVector ItemOutputExpression(const STDstring& kind, Index itemNumber,
 	const STDstring kinds[] = { "Node", "Object", "ObjectBody", "Marker", "Sensor" };
 	Index k = 0;
 	while (k < 5 && kinds[k] != kind) { k++; }
-	CHECKandTHROW(k < 5, "symbolic._ItemOutput: invalid kind " + kind);
-	CHECKandTHROW(localPosition.size() == 3, "symbolic._ItemOutput: localPosition must have 3 components");
+	CHECKandTHROW(k < 5, "symbolic._ItemOutput: invalid kind " + kind, ExudynValueError);
+	CHECKandTHROW(localPosition.size() == 3, "symbolic._ItemOutput: localPosition must have 3 components", ExudynValueError);
 	VectorExpressionBase::NewCount()++;
 	return SymbolicRealVector(new VectorExpressionItemOutput((VectorExpressionItemOutput::Kind)k, itemNumber, (Index64)variableType,
 		(Index)configuration, Vector3D({ localPosition[0], localPosition[1], localPosition[2] }), Vector(valueAtRecording)));
@@ -1292,7 +1292,7 @@ std::vector<STDstring> FlatProgramResultNames(const py::object& resultNames, Ind
 {
 	std::vector<STDstring> names;
 	if (!resultNames.is_none()) { names = py::cast<std::vector<STDstring>>(resultNames); }
-	CHECKandTHROW(resultNames.is_none() || (Index)names.size() == numberOfResults, "GetFlatProgramData: resultNames must have one name per expression");
+	CHECKandTHROW(resultNames.is_none() || (Index)names.size() == numberOfResults, "GetFlatProgramData: resultNames must have one name per expression", ExudynValueError);
 	if (resultNames.is_none())
 	{
 		for (Index i = 0; i < numberOfResults; i++) { names.push_back(numberOfResults == 1 ? "result" : "result[" + EXUstd::ToString(i) + "]"); }
@@ -1757,7 +1757,7 @@ class Optimizer
 public:
 	Optimizer(Index levelInit, bool mergeDuplicatesInit) : level(levelInit), mergeDuplicates(mergeDuplicatesInit)
 	{
-		CHECKandTHROW(level >= 0 && level <= 2, "Optimize: level must be 0, 1 or 2");
+		CHECKandTHROW(level >= 0 && level <= 2, "Optimize: level must be 0, 1 or 2", ExudynValueError);
 	}
 
 	//! the new node of a root, after its operands, depth first and without recursion, as FlatProgram::Build
@@ -2069,7 +2069,7 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def("GetStatistics", [](const Symbolic::SReal& item, bool detailed) { return Symbolic::StatisticsOfExpressions(py::cast(item), detailed); },
 			"the counts of the nodes of the expression, a dict; detailed: also per operation and per kind (#3142)", py::arg("detailed") = false)
 		.def("Diff", [](const Symbolic::SReal& item, const Symbolic::SReal& var) {
-				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Real.Diff: the variable must be a named symbolic.Real");
+				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Real.Diff: the variable must be a named symbolic.Real", ExudynValueError);
 				return Symbolic::PyRealDiff(item, var.GetExpression(), 1, 0);
 			}, "the derivative by a named scalar variable at the current values, by the one-pass derivative of the table (#3171)")
 		.def("Diff", [](const Symbolic::SReal& item, const Symbolic::SymbolicRealVector& var, Index component) {
@@ -2371,7 +2371,7 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def("GetStatistics", [](const Symbolic::SymbolicRealVector& item, bool detailed) { return Symbolic::StatisticsOfExpressions(py::cast(item), detailed); },
 			"the counts of the nodes of the expression, a dict; detailed: also per operation and per kind (#3142)", py::arg("detailed") = false)
 		.def("Diff", [](const Symbolic::SymbolicRealVector& item, const Symbolic::SReal& var) {
-				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Vector.Diff: the variable must be a named symbolic.Real");
+				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Vector.Diff: the variable must be a named symbolic.Real", ExudynValueError);
 				return Symbolic::PyVectorDiff(item, var.GetExpression(), 1, 0);
 			}, "the derivative by a named scalar variable at the current values, as numpy array (#3115)", py::arg("variable"))
 		.def("Diff", [](const Symbolic::SymbolicRealVector& item, const Symbolic::SymbolicRealVector& var, Index component) {
@@ -2529,7 +2529,7 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def("GetStatistics", [](const Symbolic::SymbolicRealMatrix& item, bool detailed) { return Symbolic::StatisticsOfExpressions(py::cast(item), detailed); },
 			"the counts of the nodes of the expression, a dict; detailed: also per operation and per kind (#3142)", py::arg("detailed") = false)
 		.def("Diff", [](const Symbolic::SymbolicRealMatrix& item, const Symbolic::SReal& var) {
-				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Matrix.Diff: the variable must be a named symbolic.Real");
+				CHECKandTHROW(var.IsExpressionNamedReal(), "symbolic.Matrix.Diff: the variable must be a named symbolic.Real", ExudynValueError);
 				return Symbolic::PyMatrixDiff(item, var.GetExpression(), 1, 0);
 			}, "the derivative by a named scalar variable at the current values, as numpy array (#3115)", py::arg("variable"))
 		.def("Diff", [](const Symbolic::SymbolicRealMatrix& item, const Symbolic::SymbolicRealVector& var, Index component) {

@@ -253,7 +253,7 @@ void CObjectContactCurveCircles::ComputeConnectorProperties(const MarkerDataStru
 void CObjectContactCurveCircles::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectContactCurveCircles::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
+		"CObjectContactCurveCircles::ComputeAlgebraicEquations: marker do not provide velocityLevel information", ExudynModelError);
 
 
 	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
@@ -293,7 +293,7 @@ void CObjectContactCurveCircles::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDat
 			if (iCircle >= 0)
 			{
 				Index colsMarker = markerData.GetMarkerData(1+iCircle).positionJacobian.NumberOfColumns();
-				CHECKandTHROW(colsPerCircleMarker == colsMarker, "CObjectContactCurveCircles::ComputeODE2LHS: circle markers must all have the same type and dimension!");
+				CHECKandTHROW(colsPerCircleMarker == colsMarker, "CObjectContactCurveCircles::ComputeODE2LHS: circle markers must all have the same type and dimension!", ExudynModelError);
 
 				Vector3D fVec3D({ segmentsForceLocalX[jSeg], segmentsForceLocalY[jSeg], 0. });
 				fVec3D = A0 * fVec3D;

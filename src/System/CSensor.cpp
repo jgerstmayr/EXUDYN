@@ -92,7 +92,7 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 	const CObject* cObject = cSystemData.GetCObjects()[parameters.objectNumber];
 
 	//connectors, or special objects have no configuration-dependent functions (ComputeMarkerDataStructure)
-	CHECKandTHROW(configuration == ConfigurationType::Current, "SensorObject::GetSensorValues: only Current configuration can be used"); 
+	CHECKandTHROW(configuration == ConfigurationType::Current, "SensorObject::GetSensorValues: only Current configuration can be used", ExudynValueError); 
 
 	if (((Index)cObject->GetType() & (Index)CObjectType::Connector) == 0)
 	{

@@ -113,7 +113,7 @@ void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType vari
 		{
 			Vector3D t0 = A0 * parameters.axisMarker0;
 			Real axisLength = t0.GetL2Norm();
-			CHECKandTHROW(axisLength != 0., "CObjectJointPrismatic2D: axisMarker0 must not be zero");
+			CHECKandTHROW(axisLength != 0., "CObjectJointPrismatic2D: axisMarker0 must not be zero", ExudynValueError);
 			value.SetVector({ (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position) * t0 / axisLength });
 			break;
 		}

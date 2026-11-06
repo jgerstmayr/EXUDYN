@@ -77,7 +77,7 @@ void CMarkerBodyCable2DShape::ComputeMarkerData(const CSystemData& cSystemData, 
 	Vector2D r_x(0.); //suppress warnings
 	Real verticalOffset = parameters.verticalOffset;
 	Vector4D SVx(0.);
-	CHECKandTHROW(!(isALE && verticalOffset != 0.), "CMarkerBodyCable2DShape::ComputeMarkerData: for ALEANCFCable2D elements, the verticalOffset must be zero");
+	CHECKandTHROW(!(isALE && verticalOffset != 0.), "CMarkerBodyCable2DShape::ComputeMarkerData: for ALEANCFCable2D elements, the verticalOffset must be zero", ExudynValueError);
 
 	markerData.GetHelper() = L; //store reference length of element in helper
 	markerData.GetHelper2() = 0.; //ALE coordinate

@@ -30,7 +30,7 @@ void CObjectConnectorDistance::ComputeConstraintEquationsTemplate(const MarkerPo
 	equations.SetNumberOfItems(1);
 	SlimVectorBase<TReal, 3> vPos = markers[1].position - markers[0].position;
 	TReal currentDistance = sqrt(vPos * vPos);
-	CHECKandTHROW((Real)currentDistance != 0., "ObjectConnectorDistance: the distance of the markers is zero");
+	CHECKandTHROW((Real)currentDistance != 0., "ObjectConnectorDistance: the distance of the markers is zero", ExudynArithmeticError);
 	if (!velocityLevel)
 	{
 		equations[0] = currentDistance - parameters.distance;

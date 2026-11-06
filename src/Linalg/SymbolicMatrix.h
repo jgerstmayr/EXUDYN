@@ -48,7 +48,7 @@ public:
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{ 
-		CHECKandTHROW(row < matrix.NumberOfRows() && column < matrix.NumberOfColumns(), "MatrixExpressionReal: invalid row/column");
+		CHECKandTHROW(row < matrix.NumberOfRows() && column < matrix.NumberOfColumns(), "MatrixExpressionReal: invalid row/column", ExudynIndexError);
 		return matrix(row, column); 
 	};
 	virtual STDstring ToString() const override
@@ -70,7 +70,7 @@ class MatrixExpressionNamedReal : public MatrixExpressionReal
 public:
 	MatrixExpressionNamedReal(const Matrix& matrixInit, const STDstring& nameInit = "") : MatrixExpressionReal(matrixInit), name(nameInit)
 	{
-		CHECKandTHROW(ExpressionBase::IsRegularVariableName(nameInit), "MatrixExpressionNamedmatrix(matrix, name): string must start with letter and contain only regular letters or numbers");
+		CHECKandTHROW(ExpressionBase::IsRegularVariableName(nameInit), "MatrixExpressionNamedmatrix(matrix, name): string must start with letter and contain only regular letters or numbers", ExudynValueError);
 	}
 
 	virtual STDstring ToString() const override
@@ -196,7 +196,7 @@ public:
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{
-		CHECKandTHROW(row < (Index)exprMatrix.size() && column < (Index)exprMatrix[0].size(), "MatrixExpressionSReal: invalid row/column");
+		CHECKandTHROW(row < (Index)exprMatrix.size() && column < (Index)exprMatrix[0].size(), "MatrixExpressionSReal: invalid row/column", ExudynIndexError);
 		return exprMatrix[row][column]->Evaluate();
 	};
 
@@ -285,7 +285,7 @@ public:
 	{
 		CHECKandTHROW((row < left->NumberOfRows()) && (column < left->NumberOfColumns()) &&
 			(row < right->NumberOfRows()) && (column < right->NumberOfColumns()),
-			"symbolic.Matrix::operator+: invalid row/column");
+			"symbolic.Matrix::operator+: invalid row/column", ExudynIndexError);
 		return left->EvaluateComponent(row,column) + right->EvaluateComponent(row, column);
 	};
 
@@ -345,7 +345,7 @@ public:
 	{
 		CHECKandTHROW((row < left->NumberOfRows()) && (column < left->NumberOfColumns()) &&
 			(row < right->NumberOfRows()) && (column < right->NumberOfColumns()),
-			"symbolic.Matrix::operator-: invalid row/column");
+			"symbolic.Matrix::operator-: invalid row/column", ExudynIndexError);
 		return left->EvaluateComponent(row, column) - right->EvaluateComponent(row, column);
 	};
 
@@ -400,7 +400,7 @@ public:
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{
 		CHECKandTHROW((row < right->NumberOfRows()) && (column < right->NumberOfColumns()),
-			"symbolic.Matrix::operator* (scalar): invalid row/column");
+			"symbolic.Matrix::operator* (scalar): invalid row/column", ExudynIndexError);
 		return left->Evaluate() * right->EvaluateComponent(row, column);
 	};
 
@@ -448,7 +448,7 @@ public:
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{
 		CHECKandTHROW(row < operand->NumberOfRows() && column < operand->NumberOfColumns(),
-			"symbolic.Matrix::UnaryPlus: invalid row/column");
+			"symbolic.Matrix::UnaryPlus: invalid row/column", ExudynIndexError);
 		return operand->EvaluateComponent(row, column);
 	};
 
@@ -497,7 +497,7 @@ public:
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{
 		CHECKandTHROW((row < operand->NumberOfRows()) && (column < operand->NumberOfColumns()),
-			"symbolic.Matrix::UnaryMinus: invalid row/column");
+			"symbolic.Matrix::UnaryMinus: invalid row/column", ExudynIndexError);
 		return -operand->EvaluateComponent(row, column);
 	};
 	virtual STDstring ToString() const override {
@@ -594,7 +594,7 @@ public:
 		Index nSum = left->NumberOfColumns();
 		CHECKandTHROW((row < left->NumberOfRows()) && (column < right->NumberOfColumns()) && 
 			(nSum == right->NumberOfRows()),
-			"symbolic.Matrix::operator* (matrix): invalid row/column");
+			"symbolic.Matrix::operator* (matrix): invalid row/column", ExudynIndexError);
 		Real result = 0;
 
 		//this may be slower or faster than whole multiplication
@@ -706,7 +706,7 @@ public:
 		Real columnReal = indexColumn->Evaluate();
 		Index column = (Index)columnReal;
 
-		CHECKandTHROW(((Real)row == rowReal) && ((Real)column == columnReal), "MatrixExpressionBase::operator[] index must contain integer indices");
+		CHECKandTHROW(((Real)row == rowReal) && ((Real)column == columnReal), "MatrixExpressionBase::operator[] index must contain integer indices", ExudynValueError);
 		//ResizableMatrix m = operand->Evaluate(); //this is not super fast, but anyway we need to evaluate expression
 		//CHECKandTHROW((row >= 0) && (row < m.NumberOfRows()) && 
 		//	(column >= 0) && (column < m.NumberOfColumns()), "MatrixExpressionBase::operator[] index out of range");
@@ -722,7 +722,7 @@ public:
 	//the flat evaluation (#3054)
 	virtual Index NumberOfOperands() const override { return 3; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(operand) : i == 1 ? FlatNode(indexRow) : FlatNode(indexColumn); }
-	virtual Real EvaluateFromOperands(const FlatValue* values) const override { Real rowReal = values[1].real; Index row = (Index)rowReal; Real columnReal = values[2].real; Index column = (Index)columnReal; CHECKandTHROW(((Real)row == rowReal) && ((Real)column == columnReal), "MatrixExpressionBase::operator[] index must contain integer indices"); return (*values[0].matrix)(row, column); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { Real rowReal = values[1].real; Index row = (Index)rowReal; Real columnReal = values[2].real; Index column = (Index)columnReal; CHECKandTHROW(((Real)row == rowReal) && ((Real)column == columnReal), "MatrixExpressionBase::operator[] index must contain integer indices", ExudynValueError); return (*values[0].matrix)(row, column); }
 	virtual const char* FlatName() const override { return "component"; }
 	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new MatrixExpressionOperatorBracket((MatrixExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node, (ExpressionBase*)operands[2].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0] + "[" + operands[1] +"," + operands[2] + "]"; }
@@ -902,19 +902,19 @@ public:
 	}
 	MatrixExpressionNamedReal& GetExpressionNamedReal() 
 	{ 
-		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealMatrix::GetExpressionNamedReal expects MatrixExpressionNamedReal in expression");
+		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealMatrix::GetExpressionNamedReal expects MatrixExpressionNamedReal in expression", ExudynValueError);
 		return (MatrixExpressionNamedReal&)(*exprMatrix);
 	}
 	const MatrixExpressionNamedReal& GetExpressionNamedReal() const 
 	{ 
-		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealMatrix::GetExpressionNamedReal (const) expects MatrixExpressionNamedReal in expression");
+		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealMatrix::GetExpressionNamedReal (const) expects MatrixExpressionNamedReal in expression", ExudynValueError);
 		return (const MatrixExpressionNamedReal&)(*exprMatrix);
 	}
 
 	//! assume that expression e holds a NamedReal and override its value
 	void SetExpressionNamedMatrix(const ResizableConstMatrix& matrixInit)
 	{
-		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealMatrix::SetExpressionNamedMatrix expects MatrixExpressionNamedReal in expression");
+		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealMatrix::SetExpressionNamedMatrix expects MatrixExpressionNamedReal in expression", ExudynValueError);
 		GetExpressionNamedReal().SetMatrix(matrixInit);
 	}
 
@@ -931,7 +931,7 @@ public:
 		}
 		else
 		{
-			CHECKandTHROW(exprMatrix == nullptr, "SymbolicRealMatrix::SetValue can only be called for symbolic Real variables");
+			CHECKandTHROW(exprMatrix == nullptr, "SymbolicRealMatrix::SetValue can only be called for symbolic Real variables", ExudynValueError);
 			matrix = temp;
 		}
 	}
@@ -943,16 +943,16 @@ public:
 		{
 			SReal::CheckNotRecordingFunction();
 			CHECKandTHROW(row < GetExpressionNamedReal().NumberOfRows(),
-				"SymbolicRealMatrix::SetExpressionNamedMatrixComponent: row out of range");
+				"SymbolicRealMatrix::SetExpressionNamedMatrixComponent: row out of range", ExudynIndexError);
 			CHECKandTHROW(column < GetExpressionNamedReal().NumberOfColumns(),
-				"SymbolicRealMatrix::SetExpressionNamedMatrixComponent: column out of range");
+				"SymbolicRealMatrix::SetExpressionNamedMatrixComponent: column out of range", ExudynIndexError);
 			GetExpressionNamedReal().SetComponent(row, column, value);
 		}
 		else
 		{
-			CHECKandTHROW(exprMatrix == nullptr, "SymbolicRealMatrix::SetMatrix can only be called for symbolic Matrix variables");
-			CHECKandTHROW(row < matrix.NumberOfRows(), "SymbolicRealMatrix::SetExpressionNamedMatrixComponent: row out of range");
-			CHECKandTHROW(column < matrix.NumberOfColumns(), "SymbolicRealMatrix::SetExpressionNamedMatrixComponent: column out of range");
+			CHECKandTHROW(exprMatrix == nullptr, "SymbolicRealMatrix::SetMatrix can only be called for symbolic Matrix variables", ExudynValueError);
+			CHECKandTHROW(row < matrix.NumberOfRows(), "SymbolicRealMatrix::SetExpressionNamedMatrixComponent: row out of range", ExudynIndexError);
+			CHECKandTHROW(column < matrix.NumberOfColumns(), "SymbolicRealMatrix::SetExpressionNamedMatrixComponent: column out of range", ExudynIndexError);
 			matrix(row, column) = value;
 		}
 	}
@@ -1321,13 +1321,13 @@ public:
 		{
 			Real rowReal = Number2Real(srow);
 			Index row = (Index)rowReal;
-			CHECKandTHROW((row >= 0) && (row < matrix.NumberOfRows()), "SymbolicRealMatrix::operator(row,column): invalid row");
-			CHECKandTHROW(rowReal == (Real)row, "SymbolicRealMatrix::operator(row,column): row index must be integer");
+			CHECKandTHROW((row >= 0) && (row < matrix.NumberOfRows()), "SymbolicRealMatrix::operator(row,column): invalid row", ExudynIndexError);
+			CHECKandTHROW(rowReal == (Real)row, "SymbolicRealMatrix::operator(row,column): row index must be integer", ExudynValueError);
 
 			Real columnReal = Number2Real(scolumn);
 			Index column = (Index)columnReal;
-			CHECKandTHROW((column >= 0) && (column < matrix.NumberOfColumns()), "SymbolicRealMatrix::operator(row,column): invalid column");
-			CHECKandTHROW(columnReal == (Real)column, "SymbolicRealMatrix::operator(row,column): column index must be integer");
+			CHECKandTHROW((column >= 0) && (column < matrix.NumberOfColumns()), "SymbolicRealMatrix::operator(row,column): invalid column", ExudynIndexError);
+			CHECKandTHROW(columnReal == (Real)column, "SymbolicRealMatrix::operator(row,column): column index must be integer", ExudynValueError);
 
 			return matrix(row, column);
 		}

@@ -554,25 +554,19 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
 {
 	Vector3D loadVector3D(0); //initialization in order to avoid gcc warnings
 	Vector1D loadVector1D(0); //scalar loads...//initialization in order to avoid gcc warnings
-#ifndef __FAST_EXUDYN_LINALG
 	bool loadVector1Ddefined = false; //add checks such that wrong formats would fail
 	bool loadVector3Ddefined = false; //add checks such that wrong formats would fail
-#endif
 
 	CLoad* cLoad = cSystemData.GetCLoads()[(Index)loadIndex];
 	if (cLoad->IsVector())
 	{
 		loadVector3D = cLoad->GetLoadVector(cSystemData.GetMainSystemBacklink(), currentTime);
-#ifndef __FAST_EXUDYN_LINALG
 		loadVector3Ddefined = true;
-#endif
 	}
 	else
 	{
 		loadVector1D = Vector1D(cLoad->GetLoadValue(cSystemData.GetMainSystemBacklink(), currentTime));
-#ifndef __FAST_EXUDYN_LINALG
 		loadVector1Ddefined = true;
-#endif
 	}
 
 	Index markerNumber = cLoad->GetMarkerNumber();

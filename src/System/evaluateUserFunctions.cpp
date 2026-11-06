@@ -351,7 +351,7 @@ void CObjectGenericDAE::AddUserFunctionJacobian(const PythonUserFunctionBase< st
 	const char* name, Index argument, Real factor, ResizableMatrix& jacobian) const
 {
 	Symbolic::PySymbolicUserFunction* symbolicFunction = userFunction.GetSymbolicFunction();
-	CHECKandTHROW(symbolicFunction != nullptr, STDstring("ObjectGenericDAE: the Jacobian of the ") + name + " is numerical for a Python function");
+	CHECKandTHROW(symbolicFunction != nullptr, STDstring("ObjectGenericDAE: the Jacobian of the ") + name + " is numerical for a Python function", ExudynModelError);
 	ComputeDataCoordinates(tempCoordinatesData);
 	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
 	UserFunctionExceptionHandling([&]
@@ -417,7 +417,7 @@ void CObjectGenericDAE::EvaluateConstraintUserFunction(bool velocityLevel, Vecto
 void CObjectGenericDAE::AddConstraintUserFunctionJacobian(Index argument, ResizableMatrix& jacobian) const
 {
 	Symbolic::PySymbolicUserFunction* symbolicFunction = parameters.constraintUserFunction.GetSymbolicFunction();
-	CHECKandTHROW(symbolicFunction != nullptr, "ObjectGenericDAE: a Python constraintUserFunction needs the jacobianUserFunction");
+	CHECKandTHROW(symbolicFunction != nullptr, "ObjectGenericDAE: a Python constraintUserFunction needs the jacobianUserFunction", ExudynModelError);
 	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
 	const bool velocityLevel = false;
 	UserFunctionExceptionHandling([&]
@@ -726,7 +726,7 @@ void CObjectConnectorUser::EvaluateUserFunctionForce(Vector& ode2Lhs, const Mark
 			const ResizableMatrix& jacobian = (k == 0) ? marker.positionJacobian : marker.rotationJacobian;
 			if (jacobian.NumberOfColumns() == 0) { continue; } //ground
 			CHECKandTHROW(jacobian.NumberOfColumns() == blockSizes[i] && jacobian.NumberOfRows() == 3,
-				"ObjectConnectorUser::forceUserFunction: the Jacobian of a marker does not fit its coordinates");
+				"ObjectConnectorUser::forceUserFunction: the Jacobian of a marker does not fit its coordinates", ExudynValueError);
 			Index offset = i*perMarker + 3*k;
 			for (Index j = 0; j < blockSizes[i]; j++)
 			{

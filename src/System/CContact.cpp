@@ -2771,7 +2771,7 @@ Index GeneralContact::GetItemsInBox(const Box3D& box,
 	for (Index gi : tempArray)
 	{
 		GlobalToLocalItemAndTypeIndex(gi, localIndex, typeIndex);
-		CHECKandTHROW(typeIndex < Contact::IndexEndOfEnumList, "GeneralContact::GetItemsInBox: invalid typeIndex");
+		CHECKandTHROW(typeIndex < Contact::IndexEndOfEnumList, "GeneralContact::GetItemsInBox: invalid typeIndex", ExudynIndexError);
 		listArrays[typeIndex]->AppendPure(localIndex);
 	}
 	return tempArray.NumberOfItems();
@@ -2796,7 +2796,7 @@ bool GeneralContact::ShortestDistanceAlongLine(const Vector3D& pStart, const Vec
 	if (fabs(dir0[2]) > fabs(dir0[1]) && fabs(dir0[2]) > fabs(dir0[0])) { searchAxis = 2; }
 	//pout << "dir0=" << dir0 << ", searchAxis=" << searchAxis << "\n";
 
-	CHECKandTHROW(dir0[searchAxis] != 0., "GeneralContact::ShortestDistanceAlongLine: search dir axis length should not be zero");
+	CHECKandTHROW(dir0[searchAxis] != 0., "GeneralContact::ShortestDistanceAlongLine: search dir axis length should not be zero", ExudynValueError);
 
 	Box3D boxST = searchTree.GetBox();
 	Real minVal = boxST.PMin()[searchAxis];
@@ -3058,7 +3058,7 @@ void GeneralContact::UpdateContacts(const CSystem& cSystem)
 //! returns list of contacts, with global indices OR in case of itemIndex == -1, it will return all items with active contacts of the contact type (0=first contact type item)
 void GeneralContact::GetActiveContacts(Contact::TypeIndex selectedTypeIndex, Index itemIndex, ArrayIndex*& foundContacts)
 {
-    CHECKandTHROW(selectedTypeIndex < Contact::IndexEndOfEnumList && selectedTypeIndex >= 0, "GetContactInteractions: selectedTypeIndex must be within available types");
+    CHECKandTHROW(selectedTypeIndex < Contact::IndexEndOfEnumList && selectedTypeIndex >= 0, "GetContactInteractions: selectedTypeIndex must be within available types", ExudynIndexError);
     Index nItemsAvailable = globalContactIndexOffsets[selectedTypeIndex+1] - globalContactIndexOffsets[selectedTypeIndex];
 
 	if (itemIndex == -1)
@@ -3075,7 +3075,7 @@ void GeneralContact::GetActiveContacts(Contact::TypeIndex selectedTypeIndex, Ind
 	else
 	{
 		//in this case, foundContacts will be set to destination array
-		CHECKandTHROW(itemIndex < nItemsAvailable, "GetContactInteractions: itemIndex is out of available range");
+		CHECKandTHROW(itemIndex < nItemsAvailable, "GetContactInteractions: itemIndex is out of available range", ExudynIndexError);
 		__UNUSED(nItemsAvailable); //avoid unused variable warnings
 
 		Index globalIndex = itemIndex + globalContactIndexOffsets[selectedTypeIndex];

@@ -27,7 +27,7 @@ const Real jointUserDifferenceStep = 1e-6;
 //! Exudyn, as it gives artifacts (#3101)
 void CObjectJointUser::ComputeJacobianIncrements(Matrix& jacobian, Real t, const Vector3D* positions, const Matrix3D* rotations) const
 {
-	CHECKandTHROW(parameters.jacobianUserFunction, "ObjectJointUser: jacobianUserFunction is not given");
+	CHECKandTHROW(parameters.jacobianUserFunction, "ObjectJointUser: jacobianUserFunction is not given", ExudynModelError);
 	EvaluateUserFunctionJacobian(jacobian, t, positions[0], rotations[0], positions[1], rotations[1]);
 }
 

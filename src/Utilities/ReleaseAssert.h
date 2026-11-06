@@ -111,7 +111,7 @@ public: using ExudynError::ExudynError;
 
 	//!check if _checkExpression is true; if no, trow std::exception(_exceptionMessage); _exceptionMessage will be a const char*, e.g. "VectorBase::operator[]: invalid index"
 	//!linalg matrix/vector access functions, memory allocation, array classes and solvers will throw exceptions if the errors are not recoverable
-	//!this, as a consequence leads to a pybind exception translated to python; the message will be visible in python; for __FAST_EXUDYN_LINALG, no checks are performed
+	//!this, as a consequence leads to a pybind exception translated to python; the message will be visible in python; for __FAST_EXUDYN_LINALG, the checks without a class are left out (#3295)
 
 	//The LAST argument is optional and names the exception class the check raises (#2521):
 	//    CHECKandTHROW(index < n, "...")                       ExudynInternalError: an EXUDYN BUG
@@ -134,27 +134,30 @@ public: using ExudynError::ExudynError;
 	//240 places; putting it here costs one token per site.
 	//EXU_EXPAND is needed because MSVC's traditional preprocessor passes __VA_ARGS__ as ONE token
 	//to the selector macro unless the result is expanded again.
-	#define EXU_EXPAND(_x) _x
-	#define EXU_SELECT_3RD(_1,_2,_3,_name,...) _name
-	#define EXU_SELECT_2ND(_1,_2,_name,...) _name
-
 	#define CHECKandTHROW_2(_checkExpression,_exceptionMessage) ((_checkExpression) ? 0 : throw ExudynInternalError(_exceptionMessage))
-	#define CHECKandTHROW_3(_checkExpression,_exceptionMessage,_exceptionClass) ((_checkExpression) ? 0 : throw _exceptionClass(_exceptionMessage))
-	#define CHECKandTHROW(...) EXU_EXPAND(EXU_SELECT_3RD(__VA_ARGS__, CHECKandTHROW_3, CHECKandTHROW_2, )(__VA_ARGS__))
 
 	//no message at all, so nothing but an internal error can be meant by it
 	#define CHECKandTHROWcond(_checkExpression) ((_checkExpression) ? 0 : throw ExudynInternalError("unexpected EXUDYN internal error"))
-
-	//always throw:
-	#define CHECKandTHROWstring_1(_exceptionMessage) (throw ExudynInternalError(_exceptionMessage))
-	#define CHECKandTHROWstring_2(_exceptionMessage,_exceptionClass) (throw _exceptionClass(_exceptionMessage))
-	#define CHECKandTHROWstring(...) EXU_EXPAND(EXU_SELECT_2ND(__VA_ARGS__, CHECKandTHROWstring_2, CHECKandTHROWstring_1, )(__VA_ARGS__))
 #else
-	//no checks in __FAST_EXUDYN_LINALG mode
-	#define CHECKandTHROW(...)
+	//__FAST_EXUDYN_LINALG: no checks of Exudyn's invariants - the checks without a class
+	#define CHECKandTHROW_2(_checkExpression,_exceptionMessage)
 	#define CHECKandTHROWcond(_checkExpression)
-	#define CHECKandTHROWstring(...)
 #endif
+
+//IN EVERY MODULE, the fast one included (#3295): a check with an exception class is one a user can trigger from
+//Python (see above), so the fast module keeps it - it costs a comparison; CHECKandTHROWstring is an unconditional
+//throw, reached only on the path of the error, which costs nothing and without which the code runs on past it
+#define EXU_EXPAND(_x) _x
+#define EXU_SELECT_3RD(_1,_2,_3,_name,...) _name
+#define EXU_SELECT_2ND(_1,_2,_name,...) _name
+
+#define CHECKandTHROW_3(_checkExpression,_exceptionMessage,_exceptionClass) ((_checkExpression) ? 0 : throw _exceptionClass(_exceptionMessage))
+#define CHECKandTHROW(...) EXU_EXPAND(EXU_SELECT_3RD(__VA_ARGS__, CHECKandTHROW_3, CHECKandTHROW_2, )(__VA_ARGS__))
+
+//always throw:
+#define CHECKandTHROWstring_1(_exceptionMessage) (throw ExudynInternalError(_exceptionMessage))
+#define CHECKandTHROWstring_2(_exceptionMessage,_exceptionClass) (throw _exceptionClass(_exceptionMessage))
+#define CHECKandTHROWstring(...) EXU_EXPAND(EXU_SELECT_2ND(__VA_ARGS__, CHECKandTHROWstring_2, CHECKandTHROWstring_1, )(__VA_ARGS__))
 
 //add some macro to define unused variable, not trowing compiler warning, especially in case of __FAST_EXUDYN_LINALG where some variables will not be used any more
 #define __UNUSED(x) ((void)(true ? 0 : (x)))

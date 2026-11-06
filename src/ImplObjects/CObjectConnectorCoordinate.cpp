@@ -31,7 +31,7 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 	}
 	const bool withVelocities = velocityLevel || parameters.velocityLevel;
 	CHECKandTHROW(!withVelocities || (markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable),
-		"CObjectConnectorCoordinate::ComputeAlgebraicEquations: marker does not provide velocityLevel information");
+		"CObjectConnectorCoordinate::ComputeAlgebraicEquations: marker does not provide velocityLevel information", ExudynModelError);
 	MarkerCoordinate<Real> markers[2];
 	for (Index k = 0; k < 2; k++)
 	{

@@ -1,0 +1,17 @@
+{
+  "number": 3295,
+  "title": "the fast module compiles out the checks of user input that are written as CHECKandTHROW",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "HIGH",
+  "description": "Found with #3293: exudynCPPfast defines CHECKandTHROW, CHECKandTHROWstring and CHECKandTHROWcond as nothing, so every check of user input written with them is missing there - errorTriage.py counts 208 CHECKandTHROW and 339 CHECKandTHROWstring sites with a user audience; a wrong input then crashes or computes with wrong sizes instead of raising. Decided: the checks a user can trigger raise in every module - a CHECKandTHROW with an exception class and every CHECKandTHROWstring (an unconditional throw, which costs nothing on the path without an error) stay in the fast module; the user checks without a class get one; revision2026c step RG20.7.7.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 13:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/ReleaseAssert.h",
+  "releaseNotes": "exudynCPPfast keeps every CHECKandTHROW with an exception class and every CHECKandTHROWstring, the checks a user can trigger; it leaves out only the checks without a class, Exudyn's invariants and the range checks of vectors and matrices. 59 user checks of C++ and 75 of the symbolic module got a class, so that a wrong size, index or parameter raises in the fast module as well instead of crashing; CODING_STYLE.md section 10.1.",
+  "resolvedInVersion": "1.13.409"
+}

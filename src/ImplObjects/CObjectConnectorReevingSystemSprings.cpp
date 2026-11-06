@@ -158,7 +158,7 @@ void CObjectConnectorReevingSystemSprings::ComputeReevingGeometry(const MarkerDa
 void CObjectConnectorReevingSystemSprings::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectConnectorReevingSystemSprings::ComputeODE2LHS: marker do not provide velocityLevel information");
+		"CObjectConnectorReevingSystemSprings::ComputeODE2LHS: marker do not provide velocityLevel information", ExudynModelError);
 
 	Index nRigidBodyMarkers = parameters.markerNumbers.NumberOfItems() - 2 * (Index)parameters.hasCoordinateMarkers;
 

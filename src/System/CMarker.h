@@ -151,7 +151,7 @@ public: //
 	{
 		TemporaryMarkerDataStructure temporary;
 		const MarkerData& markerData = ComputeMarkerDataInto(cSystemData, temporary);
-		CHECKandTHROW(markerData.velocityAvailable, "CMarker::GetKinematicsJacobianRigid: the marker provides no velocity");
+		CHECKandTHROW(markerData.velocityAvailable, "CMarker::GetKinematicsJacobianRigid: the marker provides no velocity", ExudynModelError);
 		kinematics.frame = HomogeneousTransformation(markerData.orientation, markerData.position);
 		kinematics.velocity = markerData.velocity;
 		kinematics.angularVelocityLocal = markerData.angularVelocityLocal;
@@ -164,7 +164,7 @@ public: //
 	{
 		TemporaryMarkerDataStructure temporary;
 		const MarkerData& markerData = ComputeMarkerDataInto(cSystemData, temporary);
-		CHECKandTHROW(markerData.velocityAvailable, "CMarker::GetKinematicsJacobianCoordinate: the marker provides no velocity");
+		CHECKandTHROW(markerData.velocityAvailable, "CMarker::GetKinematicsJacobianCoordinate: the marker provides no velocity", ExudynModelError);
 		kinematics.value = markerData.vectorValue[0];
 		kinematics.value_t = markerData.vectorValue_t[0];
 		temp.coordinateJacobian.CopyFrom(markerData.jacobian);

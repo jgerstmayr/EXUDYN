@@ -1,0 +1,17 @@
+{
+  "number": 3298,
+  "title": "testTheBrowserOpensOneIssue times out in the parallel pytest run",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The headless Edge of testTheBrowserOpensOneIssue did not finish within 180 s in one of three gate runs with pytest -n; the test passes alone and in the other runs. Decided: a shorter timeout with retries in a fresh browser profile, and a skip with the reason if the browser never finishes, as for a browser that prints no DOM; revision2026c step RG20.7.10.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 13:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/test_issueTracker.py",
+  "releaseNotes": "The headless browser of the issue tracker tests is tried three times for 60 s, each with its own profile, and the test is skipped with the reason if it never finishes.",
+  "resolvedInVersion": "1.13.412"
+}

@@ -56,7 +56,7 @@ void CObjectJointRollingDisc::ComputeAlgebraicEquations(Vector& algebraicEquatio
 	if (parameters.activeConnector)
 	{
 		CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable, 
-			"CObjectJointRollingDisc::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
+			"CObjectJointRollingDisc::ComputeAlgebraicEquations: marker do not provide velocityLevel information", ExudynModelError);
 
 		algebraicEquations.SetNumberOfItems(nConstraints);
 		const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
@@ -123,7 +123,7 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, 
 {
 	if (parameters.activeConnector)
 	{
-		CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable, "CObjectJointRollingDisc::ComputeJacobianAE: marker do not provide velocityLevel information");
+		CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable, "CObjectJointRollingDisc::ComputeJacobianAE: marker do not provide velocityLevel information", ExudynModelError);
 		//for free axes, set jacobian_AE diagonal term to 1 
 		jacobian_AE.SetScalarMatrix(nConstraints, 0.); //represents derivative of algebraic equation '[lambda0,lambda1]^T = [0,0]^T'
 		for (Index i = 0; i < nConstraints; i++)

@@ -76,7 +76,7 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 			else
 			{
 				CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-					"CObjectConnectorCoordinateVector::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
+					"CObjectConnectorCoordinateVector::ComputeAlgebraicEquations: marker do not provide velocityLevel information", ExudynModelError);
 
 				//C(q,q_t,t) = scalingMarker1*qMarker1_t - scalingMarker0*qMarker0_t = 0
 				algebraicEquations.SetAll(0.);
@@ -118,7 +118,7 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 			EvaluateUserFunctionConstraint(algebraicEquations, cSystemData->GetMainSystemBacklink(), markerData.GetTime(),
 				markerData.GetMarkerData(0).vectorValue, markerData.GetMarkerData(1).vectorValue,
 				markerData.GetMarkerData(0).vectorValue_t, markerData.GetMarkerData(1).vectorValue_t, velocityLevel || parameters.velocityLevel);
-			CHECKandTHROW(algebraicEquations.NumberOfItems() == nAE, "CObjectConnectorCoordinateVector::ComputeAlgebraicEquations with constraintUserFunction: size returned =" + EXUstd::ToString(algebraicEquations.NumberOfItems()) + " but expected size of algebraic equations =" + EXUstd::ToString(nAE));
+			CHECKandTHROW(algebraicEquations.NumberOfItems() == nAE, "CObjectConnectorCoordinateVector::ComputeAlgebraicEquations with constraintUserFunction: size returned =" + EXUstd::ToString(algebraicEquations.NumberOfItems()) + " but expected size of algebraic equations =" + EXUstd::ToString(nAE), ExudynValueError);
 		}
 	}
 	else

@@ -915,17 +915,25 @@ def Browser():
     return None
 
 
-def DumpDom(browser, tmp_path, address, name):
-    """run the headless browser on one address and return (dom, console)"""
+def DumpDom(browser, tmp_path, address, name, attempts=3, timeout=60):
+    """run the headless browser on one address and return (dom, console). A headless Edge
+    occasionally never finishes under the load of the parallel pytest run (#3298): each attempt
+    has its own profile, and a browser that never finishes skips the test - it says nothing
+    about the page, as a browser that prints no DOM does not (BrowserCanDumpDom)"""
     import subprocess                                                           # noqa: PLC0415
 
-    result = subprocess.run(
-        [browser, '--headless=new', '--disable-gpu', '--no-first-run',
-         '--user-data-dir=' + str(tmp_path / ('browser' + name)),
-         '--enable-logging=stderr', '--log-level=0',
-         '--virtual-time-budget=8000', '--dump-dom', address],
-        capture_output=True, text=True, timeout=180)
-    return (result.stdout, result.stderr)
+    for attempt in range(attempts):
+        try:
+            result = subprocess.run(
+                [browser, '--headless=new', '--disable-gpu', '--no-first-run',
+                 '--user-data-dir=' + str(tmp_path / ('browser' + name + '_' + str(attempt))),
+                 '--enable-logging=stderr', '--log-level=0',
+                 '--virtual-time-budget=8000', '--dump-dom', address],
+                capture_output=True, text=True, timeout=timeout)
+            return (result.stdout, result.stderr)
+        except subprocess.TimeoutExpired:
+            pass
+    pytest.skip('the headless browser did not finish within ' + str(timeout) + ' s, ' + str(attempts) + ' times')
 
 
 def BrowserCanDumpDom(browser, tmp_path):

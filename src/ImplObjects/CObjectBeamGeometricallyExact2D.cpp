@@ -494,7 +494,7 @@ void CObjectBeamGeometricallyExact2D::GetPositionJacobian(const Vector3D& localP
         value(0, 3*i) = SV[i];
         value(1, 3*i+1) = SV[i];
     }
-	CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact2D::GetPositionJacobian (for MarkerBody): only implemented if localPosition[1]==0");
+	CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact2D::GetPositionJacobian (for MarkerBody): only implemented if localPosition[1]==0", ExudynNotImplementedError);
 }
 
 //! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
@@ -519,7 +519,7 @@ void CObjectBeamGeometricallyExact2D::GetRotationJacobian(const Vector3D& localP
 //! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero (#2744)
 bool CObjectBeamGeometricallyExact2D::GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const
 {
-	CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact2D::GetJacobianTransposedTimesVectorDerivative [JacobianTtimesVector_q] (for MarkerBody): only implemented if localPosition[1]==0");
+	CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact2D::GetJacobianTransposedTimesVectorDerivative [JacobianTtimesVector_q] (for MarkerBody): only implemented if localPosition[1]==0", ExudynNotImplementedError);
 	return false; //all entries are zero
 }
 

@@ -254,11 +254,13 @@ tells them whether the mistake was theirs.
 | `PyWarning(message)` | prints a warning | no |
 | `PyDeprecated(message)` | a real Python `DeprecationWarning`, shown once per call site | no |
 
-**The three `CHECKandTHROW*` macros are compiled out** in `exudynCPPfast`
-(`__FAST_EXUDYN_LINALG`). `PyError` and `SysError` are not. So a validation the user must get in
-**every** module — a parameter check at the Python boundary — belongs in `PyError`,
-not in a macro. A macro is for a check that protects the computation and may cost a comparison
-per element.
+**What `exudynCPPfast` keeps** (`__FAST_EXUDYN_LINALG`, #3295): a `CHECKandTHROW` **with** a class and every
+`CHECKandTHROWstring` - the class says that a user can trigger the check, and an unconditional throw costs nothing
+on the path without the error; `PyError` and `SysError` as well. It compiles out `CHECKandTHROW` **without** a
+class and `CHECKandTHROWcond`: Exudyn's invariants, the range checks of the vectors and matrices, the checks that
+may cost a comparison per element. So a check a user can reach from Python - a parameter at the boundary, a size,
+an index into the user's data - has a class or is a `PyError`; without one, the fast module crashes or computes
+with wrong sizes instead of raising.
 
 **The helper does not decide the type.** The same macro states a user's index mistake in one
 place and an Exudyn invariant in the next; that is measured, not assumed (`tools/errorTriage.py`).

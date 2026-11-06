@@ -268,7 +268,7 @@ Real CObjectConnectorCoordinateSpringDamperExt::PostNewtonStep(const MarkerDataS
     Real discontinuousError = 0;
     flags = PostNewtonFlags::_None;
 
-    CHECKandTHROW(parameters.nodeNumber != EXUstd::InvalidIndex, "CObjectConnectorCoordinateSpringDamperExt::PostNewtonStep: invalid node number for PostNewton; report to Exudyn on github");
+    CHECKandTHROW(parameters.nodeNumber != EXUstd::InvalidIndex, "CObjectConnectorCoordinateSpringDamperExt::PostNewtonStep: invalid node number for PostNewton; report to Exudyn on github", ExudynModelError);
 
     Real startofStepStateFriction = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep)[0];
     Real& currentStateFriction = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[0];

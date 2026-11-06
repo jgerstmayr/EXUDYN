@@ -1,0 +1,17 @@
+{
+  "number": 3296,
+  "title": "the test suite with the fast module is run when a group or a significant step is completed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The fast-module suite was last run at 1.13.92 and had drifted until #3293 and #3294: a crash and 40 stale references. Decided: not in every commit, but at least when the development of a group (RG) or of a significant step (such as the symbolic solvers) is completed, and before a release; the rule in WORKFLOW.md and in the rules of the plan; revision2026c step RG20.7.8.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 13:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/WORKFLOW.md",
+  "releaseNotes": "The fast module is tested when the development of a group or a significant step is completed and before a release (WORKFLOW.md section 8, the plan); tools/recordAVX2References.py records AVX2ReferenceSolutionUpdate from the newest _fast log.",
+  "resolvedInVersion": "1.13.410"
+}

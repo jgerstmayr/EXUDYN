@@ -23,6 +23,9 @@ steps. **Run `planManager.py update` after every edit**; it must end with `OK`.
 **Status.** A group is open as long as one of its steps is open, and closed otherwise. A closed step has no open
 step below it. A closed step keeps its title and one or two lines - date, issues, outcome; the details go to the log.
 
+**Closing a group or a significant step** includes the test suite and the performance tests with the fast module,
+and the AVX2 references recorded again if they moved (docs/dev/WORKFLOW.md section 8, #3296).
+
 **Numbers are permanent.** `RGx.y.z`, given when the step is written down and never reused - also not a number that
 revision2026b gave, which `planManager.py add` knows. The content of a step may change when the plan changes or a
 measurement points elsewhere; its number does not. Groups RG1 to RG11 continue those of revision2026b with their
@@ -3428,6 +3431,22 @@ CLOSED 2026-11-06 (#3291; maintainer 2026-11-06: the related problems): the Link
 The AVX2 references were to be recorded again after RG20.7.2 (#3288).
 
 CLOSED 2026-11-06 (#3293, #3294; maintainer 2026-11-06: the related problems): the fast-module suite crashed in symbolicFunctionTest; user checks of the symbolic module and of MainSystemData were CHECKandTHROW, compiled out in exudynCPPfast - now PyError or ThrowPyErrorType; a pickled exudyn.exudynCPP enum (the FEM test mesh) resolves to the fast module. The AVX2 references recorded again: 46 entries. Both suites pass, the fast one serial and in parallel. [log](exudynRevisionLog2026c.md#rg20-7-6)
+
+#### **CLOSED_RG20.7.7** The user checks of C++ in every module: a CHECKandTHROW with a class and CHECKandTHROWstring kept in the fast module, the user checks given a class
+
+CLOSED 2026-11-06 (#3295; maintainer 2026-11-06): ReleaseAssert.h keeps a CHECKandTHROW with a class and every CHECKandTHROWstring in exudynCPPfast; 59 user checks outside the symbolic module and 75 in it given a class; CODING_STYLE.md section 10.1. [log](exudynRevisionLog2026c.md#rg20-7-7)
+
+#### **CLOSED_RG20.7.8** The fast module tested when a group or a significant step is completed, the AVX2 references by tools/recordAVX2References.py
+
+CLOSED 2026-11-06 (#3296; maintainer 2026-11-06: regularly, but not in every commit - at least when the development of an RG or a significant step such as the symbolic solvers is completed): the rule in WORKFLOW.md section 8 and in the how-to of this plan; tools/recordAVX2References.py. [log](exudynRevisionLog2026c.md#rg20-7-7)
+
+#### **CLOSED_RG20.7.9** The performance tests with the fast module, their references
+
+CLOSED 2026-11-06 (#3297): the AVX2 entry of perfAccessFunctionsAD confirmed; perfRigidPendulum failed in both modules since #3289 (5.3e-6), recorded again. [log](exudynRevisionLog2026c.md#rg20-7-7)
+
+#### **CLOSED_RG20.7.10** testTheBrowserOpensOneIssue: retries of the headless browser, a skip if it never finishes
+
+CLOSED 2026-11-06 (#3298): three attempts of 60 s, each with its own profile, then a skip with the reason. [log](exudynRevisionLog2026c.md#rg20-7-7)
 
 ### **CLOSED_RG20.8** A common step size controller for the adaptive solvers, Python first, then C++
 

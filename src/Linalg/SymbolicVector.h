@@ -73,7 +73,7 @@ class VectorExpressionNamedReal: public VectorExpressionReal
 public:
 	VectorExpressionNamedReal(const Vector& vectorInit, const STDstring& nameInit = ""): VectorExpressionReal(vectorInit), name(nameInit)
 	{
-		CHECKandTHROW(ExpressionBase::IsRegularVariableName(nameInit), "VectorExpressionNamedVector(vector, name): string must start with letter and contain only regular letters or numbers");
+		CHECKandTHROW(ExpressionBase::IsRegularVariableName(nameInit), "VectorExpressionNamedVector(vector, name): string must start with letter and contain only regular letters or numbers", ExudynValueError);
 	}
 
 	virtual STDstring ToString() const override
@@ -601,11 +601,11 @@ public:
 	{
 		Real iReal = index->Evaluate();
 		Index i = (Index)iReal;
-		CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer");
+		CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer", ExudynValueError);
 		const ResizableConstVector& v = operand->EvaluateRef();
 		//while a user function is recorded, its vector arguments have no size yet: the component has no value then (#3007)
 		if (SReal::recordExpressions && v.NumberOfItems() == 0 && i >= 0) { return 0.; }
-		CHECKandTHROW((i >= 0) && (i < v.NumberOfItems()), "VectorExpressionBase::operator[] index out of range");
+		CHECKandTHROW((i >= 0) && (i < v.NumberOfItems()), "VectorExpressionBase::operator[] index out of range", ExudynIndexError);
 		return v[i];
 	}
 	virtual STDstring ToString() const override
@@ -617,7 +617,7 @@ public:
 	//the flat evaluation (#3054)
 	virtual Index NumberOfOperands() const override { return 2; }
 	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(operand) : FlatNode(index); }
-	virtual Real EvaluateFromOperands(const FlatValue* values) const override { Real iReal = values[1].real; Index i = (Index)iReal; CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer"); const ResizableConstVector& v = (*values[0].vector); if (SReal::recordExpressions && v.NumberOfItems() == 0 && i >= 0) { return 0.; } CHECKandTHROW((i >= 0) && (i < v.NumberOfItems()), "VectorExpressionBase::operator[] index out of range"); return v[i]; }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { Real iReal = values[1].real; Index i = (Index)iReal; CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer", ExudynValueError); const ResizableConstVector& v = (*values[0].vector); if (SReal::recordExpressions && v.NumberOfItems() == 0 && i >= 0) { return 0.; } CHECKandTHROW((i >= 0) && (i < v.NumberOfItems()), "VectorExpressionBase::operator[] index out of range", ExudynIndexError); return v[i]; }
 	virtual const char* FlatName() const override { return "component"; }
 	virtual FlatNode NewWithOperands(const FlatNode* operands) const override { return FlatNode(new VectorExpressionOperatorBracket((VectorExpressionBase*)operands[0].node, (ExpressionBase*)operands[1].node)); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0] + "[" + operands[1] + "]"; }
@@ -805,19 +805,19 @@ public:
 	}
 	VectorExpressionNamedReal& GetExpressionNamedReal() 
 	{ 
-		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealVector::GetExpressionNamedVector expects VectorExpressionNamedReal in expression");
+		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealVector::GetExpressionNamedVector expects VectorExpressionNamedReal in expression", ExudynValueError);
 		return (VectorExpressionNamedReal&)(*exprList);
 	}
 	const VectorExpressionNamedReal& GetExpressionNamedReal() const 
 	{ 
-		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealVector::GetExpressionNamedVector (const) expects VectorExpressionNamedReal in expression");
+		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealVector::GetExpressionNamedVector (const) expects VectorExpressionNamedReal in expression", ExudynValueError);
 		return (const VectorExpressionNamedReal&)(*exprList);
 	}
 
 	//! assume that expression e holds a NamedReal and override its value
 	void SetExpressionNamedVector(const ResizableConstVector& vectorInit)
 	{
-		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealVector::SetExpressionNamedVector expects VectorExpressionNamedReal in expression");
+		CHECKandTHROW(IsExpressionNamedReal(), "SymbolicRealVector::SetExpressionNamedVector expects VectorExpressionNamedReal in expression", ExudynValueError);
 		GetExpressionNamedReal().SetVector(vectorInit);
 	}
 
@@ -832,7 +832,7 @@ public:
 		}
 		else
 		{
-			CHECKandTHROW(exprList == nullptr, "SymbolicRealVector::SetValue can only be called for symbolic Real variables");
+			CHECKandTHROW(exprList == nullptr, "SymbolicRealVector::SetValue can only be called for symbolic Real variables", ExudynValueError);
 			vector = ResizableConstVector(vectorInit);
 		}
 	}
@@ -844,14 +844,14 @@ public:
 		{
 			SReal::CheckNotRecordingFunction();
 			CHECKandTHROW(index < GetExpressionNamedReal().NumberOfItems(),
-				"SymbolicRealVector::SetExpressionNamedVectorComponent: index out of range");
+				"SymbolicRealVector::SetExpressionNamedVectorComponent: index out of range", ExudynIndexError);
 			GetExpressionNamedReal().SetComponent(index, value);
 		}
 		else
 		{
-			CHECKandTHROW(exprList == nullptr, "SymbolicRealVector::SetVector can only be called for symbolic Vector variables");
+			CHECKandTHROW(exprList == nullptr, "SymbolicRealVector::SetVector can only be called for symbolic Vector variables", ExudynValueError);
 			CHECKandTHROW(index < vector.NumberOfItems(),
-				"SymbolicRealVector::SetExpressionNamedVectorComponent: index out of range");
+				"SymbolicRealVector::SetExpressionNamedVectorComponent: index out of range", ExudynIndexError);
 			vector[index] = value;
 		}
 	}
@@ -1167,8 +1167,8 @@ public:
 		{
 			Real iReal = Number2Real(index);
 			Index i = (Index)iReal;
-			CHECKandTHROW((i >= 0) && (i < vector.NumberOfItems()), "SymbolicRealVector::operator[]: invalid index");
-			CHECKandTHROW(iReal == (Real)i, "SymbolicRealVector::operator[]: index must be integer");
+			CHECKandTHROW((i >= 0) && (i < vector.NumberOfItems()), "SymbolicRealVector::operator[]: invalid index", ExudynIndexError);
+			CHECKandTHROW(iReal == (Real)i, "SymbolicRealVector::operator[]: index must be integer", ExudynValueError);
 			return vector[i];
 		}
 		ExpressionBase::NewCount()++;

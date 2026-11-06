@@ -726,7 +726,7 @@ void CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian(Matrix& value) con
 
 		CHECKandTHROW((parameters.mPhitTPsi.NumberOfRows() == CNodeRigidBody::nDim3D) &&
 			(parameters.mPhitTPsi.NumberOfColumns() == GetCNode(genericNodeNumber)->GetNumberOfODE2Coordinates()), 
-            "CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian:DisplacementMassIntegral_q: inconsistent dimensions of matrix mPhitTPsi");
+            "CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian:DisplacementMassIntegral_q: inconsistent dimensions of matrix mPhitTPsi", ExudynValueError);
 
 		//EXUmath::MultMatrixTransposedMatrixTemplate<Matrix, Matrix3D, ResizableMatrix>(parameters.mPhitTPsi, A.GetTransposed(), tempMatrix);
 		EXUmath::MultMatrixMatrixTemplate<Matrix3D, Matrix, ResizableMatrix>(A, parameters.mPhitTPsi, tempMatrix);

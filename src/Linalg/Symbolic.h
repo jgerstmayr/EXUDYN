@@ -1266,10 +1266,10 @@ struct PyLookupTable
 	std::shared_ptr<const LookupTableData> data;
 	PyLookupTable(const std::vector<Real>& values, Real step, Real start, const STDstring& outside, const STDstring& interpolation)
 	{
-		CHECKandTHROW(values.size() != 0, "esym.LookupTable: values must have at least one value");
-		CHECKandTHROW(step > 0., "esym.LookupTable: step must be positive, not " + EXUstd::ToString(step));
+		CHECKandTHROW(values.size() != 0, "esym.LookupTable: values must have at least one value", ExudynValueError);
+		CHECKandTHROW(step > 0., "esym.LookupTable: step must be positive, not " + EXUstd::ToString(step), ExudynValueError);
 		CHECKandTHROW(interpolation == "linear", "esym.LookupTable: interpolation must be 'linear', not '" + interpolation
-			+ "'; 'closest' and 'quadratic' are not available yet");
+			+ "'; 'closest' and 'quadratic' are not available yet", ExudynValueError);
 		LookupTableData* table = new LookupTableData();
 		table->values = values;
 		table->step = step;
@@ -1350,7 +1350,7 @@ class ExpressionNamedReal: public ExpressionReal
 public:
 	ExpressionNamedReal(const STDstring& nameInit, Real valueInit) : ExpressionReal(valueInit), name(nameInit)
 	{
-		CHECKandTHROW(IsRegularVariableName(nameInit), "ExpressionNamedReal(value, name): string must start with letter and contain only regular letters or numbers");
+		CHECKandTHROW(IsRegularVariableName(nameInit), "ExpressionNamedReal(value, name): string must start with letter and contain only regular letters or numbers", ExudynValueError);
 		//pout << "initialize NamedReal: " << name << ": " << value << "\n";
 	}
 
@@ -1477,7 +1477,7 @@ public:
 	void SetExpressionNamedReal(Real value)
 	{
 		CHECKandTHROW((expr != nullptr) && (typeid(*expr) == typeid(ExpressionNamedReal) ), 
-			"SReal::SetExpressionNamedReal expects ExpressionNamedReal in expression");
+			"SReal::SetExpressionNamedReal expects ExpressionNamedReal in expression", ExudynValueError);
 		((ExpressionNamedReal*)expr)->SetValue(value);
 	}
 
@@ -1531,12 +1531,12 @@ public:
 	//access to internal value, not intended for Python
 	void SetValue(Real valueInit)
 	{
-		CHECKandTHROW(expr == nullptr, "value can only be accessed if Real does not contain an expression");
+		CHECKandTHROW(expr == nullptr, "value can only be accessed if Real does not contain an expression", ExudynValueError);
 		value = valueInit;
 	}
 	Real GetValue() const 
 	{ 
-		CHECKandTHROW(expr == nullptr, "value can only be accessed if Real does not contain an expression");
+		CHECKandTHROW(expr == nullptr, "value can only be accessed if Real does not contain an expression", ExudynValueError);
 		return value;
 	}
 
@@ -1545,7 +1545,7 @@ public:
 	void SetSymbolicValue(RealType valueInit)
 	{
 		CHECKandTHROW((typeid(RealType) == typeid(Real)),
-			"SetValue can only be called with float numbers");
+			"SetValue can only be called with float numbers", ExudynValueError);
 		if (IsExpressionNamedReal())
 		{
 			SReal::CheckNotRecordingFunction();
@@ -1554,7 +1554,7 @@ public:
 		}
 		else
 		{
-			CHECKandTHROW(expr == nullptr, "SetValue can only be called for symbolic Real variables");
+			CHECKandTHROW(expr == nullptr, "SetValue can only be called for symbolic Real variables", ExudynValueError);
 			value = (Real)valueInit;
 		}
 	}
@@ -1576,7 +1576,7 @@ public:
 	//! the derivative by a named variable at the current values, by the one-pass derivative of the table (#3171)
 	Real DiffSReal(const SReal& var) const
 	{
-		CHECKandTHROW(var.IsExpressionNamedReal(), "Symbolic::SReal::DiffSReal expects ExpressionNamedReal in expression");
+		CHECKandTHROW(var.IsExpressionNamedReal(), "Symbolic::SReal::DiffSReal expects ExpressionNamedReal in expression", ExudynValueError);
 		if (!expr) { return 0.; } //diff(value) = 0
 		std::vector<Real> derivative;
 		OnePassDerivative(FlatNode(expr), var.GetExpression(), 1, derivative);

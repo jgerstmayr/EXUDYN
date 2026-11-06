@@ -1,0 +1,17 @@
+{
+  "number": 3297,
+  "title": "the AVX2 reference of the performance tests is recorded again",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "AVX2ReferenceSolutionUpdate holds one entry of runPerformanceTests.py, perfAccessFunctionsAD:cable-n200-implicit, recorded 2026-10-08; it was not checked with #3294. Decided: run the performance tests with the fast module, record the entries that differ from the regular values by more than their tolerance; revision2026c step RG20.7.9.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 13:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/runTestSuiteRefSol.py",
+  "releaseNotes": "The performance tests run with the fast module: the AVX2 entry of perfAccessFunctionsAD is confirmed; the reference of perfRigidPendulum, which had moved by 5.3e-6 with #3289 in both modules, is recorded again.",
+  "resolvedInVersion": "1.13.411"
+}

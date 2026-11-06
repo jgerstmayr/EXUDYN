@@ -1164,7 +1164,7 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 		return py::none();
 	}
 	data.RaiseIfNotConsistent("ComputeItem", number, itemType);
-	CHECKandTHROW(localPositionList.size() == 3, "ComputeItem: localPosition must have 3 components");
+	CHECKandTHROW(localPositionList.size() == 3, "ComputeItem: localPosition must have 3 components", ExudynValueError);
 	const Vector3D localPosition({ localPositionList[0], localPositionList[1], localPositionList[2] });
 	CSystemData& cSystemData = GetCSystem().GetSystemData();
 
@@ -1346,7 +1346,7 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 			{
 				Index row = ltg.GetIndexOfItem(item.row());
 				Index column = ltg.GetIndexOfItem(item.col());
-				CHECKandTHROW(row != EXUstd::InvalidIndex && column != EXUstd::InvalidIndex, "ComputeItem: JacobianODE2 outside the coordinates of the object");
+				CHECKandTHROW(row != EXUstd::InvalidIndex && column != EXUstd::InvalidIndex, "ComputeItem: JacobianODE2 outside the coordinates of the object", ExudynIndexError);
 				matrix(row, column) += item.value();
 			}
 			return EPyUtils::ToPython(matrix);

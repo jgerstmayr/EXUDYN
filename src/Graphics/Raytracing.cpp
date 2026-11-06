@@ -1286,7 +1286,7 @@ ResizableArray<GLLine> triangles6Edges;
 			{
 				TransformVertexRM(trig.points[i], RTS.modelViewRM, trigNew.points[i]);
 				trigNew.normals[i] = RTS.rotationView * trig.normals[i];
-				CHECKandTHROW(!trigNew.points[i].HasInvalid(), "SoftwareRenderer: triangle points contain invalid (nan) coordinates - check your geometry!");
+				CHECKandTHROW(!trigNew.points[i].HasInvalid(), "SoftwareRenderer: triangle points contain invalid (nan) coordinates - check your geometry!", ExudynValueError);
 				box3D.Add(trigNew.points[i]);
 			}
 			Float3 n = EGeometry::ComputeTriangleNormalTemplate<RTfloat, std::array<Float3, 3>>(trig.points);
@@ -1336,7 +1336,7 @@ ResizableArray<GLLine> triangles6Edges;
 			Float3 surfacePoint;
 			TransformVertexRM(sphere.point + Float3({ sphere.radius, 0.f, 0.f }), RTS.modelViewRM, surfacePoint);
 			sphereNew.radius = (surfacePoint - sphereNew.point).GetL2Norm();
-			CHECKandTHROW(!sphereNew.point.HasInvalid(), "SoftwareRenderer: sphere centers contain invalid (nan) coordinates - check your geometry!");
+			CHECKandTHROW(!sphereNew.point.HasInvalid(), "SoftwareRenderer: sphere centers contain invalid (nan) coordinates - check your geometry!", ExudynValueError);
 			box3D.Add(sphereNew.point + Float3({ sphereNew.radius, sphereNew.radius, sphereNew.radius }));
 			box3D.Add(sphereNew.point - Float3({ sphereNew.radius, sphereNew.radius, sphereNew.radius }));
 			graphicsData.glSpheres.Append(sphereNew);

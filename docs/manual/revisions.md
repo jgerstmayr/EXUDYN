@@ -615,6 +615,8 @@ inputs of `esym.Function`, the sizes of vector and matrix operands, `Diff`, `Eva
 must not do - and the calls of `mbs.GetNodeOutput` and alike on a system that is not assembled were compiled out of
 `exudynCPPfast`, which then crashed or computed with wrong sizes; they raise in both modules. A pickle that names
 `exudyn.exudynCPP`, as a stored FEM mesh may, loads with the fast module.
+The fast module keeps every check whose error a user can cause - a wrong size, index or parameter - and leaves out
+only the checks of Exudyn's own invariants and the range checks of its vectors and matrices (#3295).
 
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.

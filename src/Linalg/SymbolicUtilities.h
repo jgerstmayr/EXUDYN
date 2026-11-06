@@ -158,7 +158,7 @@ protected:
 		{
 			if (function.itemOutputs.empty()) { return; }
 			CHECKandTHROW(!function.evaluatingItemOutputs, "symbolic user function " + function.functionName
-				+ ": an output that it reads by the MainSystem calls the function again; an item cannot read its own output in its user function");
+				+ ": an output that it reads by the MainSystem calls the function again; an item cannot read its own output in its user function", ExudynValueError);
 			function.evaluatingItemOutputs = true;
 			for (const VectorExpressionItemOutput* output : function.itemOutputs) { output->mainSystem = &mainSystem; }
 		}
@@ -176,7 +176,7 @@ protected:
 		Index thread = ExuThreading::TaskManager::GetThreadId();
 		if (thread == 0) { return nullptr; }
 		CHECKandTHROW(thread <= (Index)threadCopies.size(), "symbolic user function " + functionName
-			+ ": evaluated in a thread for which it has no copy of its recording");
+			+ ": evaluated in a thread for which it has no copy of its recording", ExudynValueError);
 		return threadCopies[thread - 1];
 	}
 	//! true, if the recording can be evaluated in the threads (#2978): by copies of its flat program, if every operation
@@ -226,7 +226,7 @@ protected:
 	{
 		if (copy) { return (ExpressionNamedReal*)copy->arguments[i].node; }
 		SReal* real = argRealList[i].GetReal();
-		CHECKandTHROW(real->IsExpressionNamedReal(), "SReal::SetExpressionNamedReal expects ExpressionNamedReal in expression");
+		CHECKandTHROW(real->IsExpressionNamedReal(), "SReal::SetExpressionNamedReal expects ExpressionNamedReal in expression", ExudynValueError);
 		return &real->GetExpressionNamedReal();
 	}
 	VectorExpressionNamedReal* ArgumentVector(ThreadCopy* copy, Index i)
@@ -628,7 +628,7 @@ public:
 	void EvaluateJacobianAdd(ResizableMatrix& jacobian, Index argument, Real factor, const MainSystem& mainSystem, const Args&... args)
 	{
 		ThreadCopy* copy = CurrentThreadCopy();
-		CHECKandTHROW(itemOutputs.empty(), "symbolic user function " + functionName + ": its Jacobian: the function reads outputs of items, which have no derivative");
+		CHECKandTHROW(itemOutputs.empty(), "symbolic user function " + functionName + ": its Jacobian: the function reads outputs of items, which have no derivative", ExudynValueError);
 		Index argIndex = 0;
 		(..., processArgument(args, copy, argIndex));
 		const void* variable = copy ? copy->arguments[argument].node : (const void*)&argRealList[argument].GetVector()->GetExpressionNamedReal();
@@ -646,7 +646,7 @@ public:
 		table.Evaluate();
 		table.Differentiate(variable, columns);
 		CHECKandTHROW(table.ResultComponents(0) == rows, "symbolic user function " + functionName + ": its Jacobian: the result has "
-			+ EXUstd::ToString(table.ResultComponents(0)) + " components, but " + EXUstd::ToString(rows) + " are needed");
+			+ EXUstd::ToString(table.ResultComponents(0)) + " components, but " + EXUstd::ToString(rows) + " are needed", ExudynValueError);
 		const Real* derivative = table.ResultDerivative(0);
 		for (Index i = 0; i < rows; i++)
 		{
@@ -723,7 +723,7 @@ public:
 		if (resultComponents && ltg.NumberOfItems() != 0) //sparse: only the components that are not the constant 0 (#3022)
 		{
 			CHECKandTHROW(resultComponents->NumberOfRows() <= ltg.NumberOfItems() && resultComponents->NumberOfColumns() <= ltg.NumberOfItems(),
-				"symbolic user function: the matrix result is larger than the coordinates of the item");
+				"symbolic user function: the matrix result is larger than the coordinates of the item", ExudynValueError);
 			result.SetUseDenseMatrix(false);
 			ResizableArray<EXUmath::Triplet>& triplets = result.GetInternalSparseTripletMatrix().GetTriplets();
 			if (EvaluatingProgram(copy)) //all components in one pass (#3053), in a thread by its copy (#2978)
@@ -760,7 +760,7 @@ public:
 		const MainSystem* mainSystem = nullptr; //for the outputs of items the recording reads (#2984)
 		for (const auto& arg : args) {
 			if (py::isinstance<MainSystem>(arg)) { mainSystem = &py::cast<const MainSystem&>(arg); continue; }
-			CHECKandTHROW(argIndex < argRealList.NumberOfItems(), "Symbolic::SymbolicFunction::Evaluate: too many arguments");
+			CHECKandTHROW(argIndex < argRealList.NumberOfItems(), "Symbolic::SymbolicFunction::Evaluate: too many arguments", ExudynValueError);
 			SymbolicGeneric& symbolicArg = argRealList[argIndex];
 			if (symbolicArg.IsReal())
 			{
@@ -898,7 +898,7 @@ public:
 			indexType = itemIndex.GetTypeString();
 
 			CHECKandTHROW(itemNumber < mainSystem.GetCSystem().GetSystemData().GetCObjects().NumberOfItems(),
-				"Symbolic::SymbolicUserFunction: illegal objectNumber");
+				"Symbolic::SymbolicUserFunction: illegal objectNumber", ExudynIndexError);
 			itemTypeName = STDstring("Object")+mainSystem.GetMainSystemData().GetMainObjects()[itemNumber]->GetTypeName();
 		}
 		else if (py::isinstance<LoadIndex>(pyItemIndex)) //(sType == "LoadIndex")
@@ -908,13 +908,13 @@ public:
 			indexType = itemIndex.GetTypeString();
 
 			CHECKandTHROW(itemNumber < mainSystem.GetCSystem().GetSystemData().GetCLoads().NumberOfItems(),
-				"Symbolic::SymbolicUserFunction: illegal loadNumber");
+				"Symbolic::SymbolicUserFunction: illegal loadNumber", ExudynIndexError);
 			itemTypeName = STDstring("Load") + mainSystem.GetMainSystemData().GetMainLoads()[itemNumber]->GetTypeName();
 		}
 		else if (py::isinstance<py::int_>(pyItemIndex)) //MainSystem
 		{
 			//Index itemIndex = py::cast<Index>(pyItemIndex);
-			CHECKandTHROW(py::cast<Index>(pyItemIndex) == -1, "Symbolic::SymbolicUserFunction: invalid item type (must be ObjectIndex, LoadIndex or -1 for MainSystem)");
+			CHECKandTHROW(py::cast<Index>(pyItemIndex) == -1, "Symbolic::SymbolicUserFunction: invalid item type (must be ObjectIndex, LoadIndex or -1 for MainSystem)", ExudynIndexError);
 			indexType = "None";
 			itemTypeName = "MainSystem";
 			itemNumber = -1;

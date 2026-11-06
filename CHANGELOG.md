@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 393 | 1.13.408 |
+| 1.13 | Newborn | 397 | 1.13.412 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.412** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` testTheBrowserOpensOneIssue times out in the parallel pytest run (#3298)
+  - description: The headless Edge of testTheBrowserOpensOneIssue did not finish within 180 s in one of three gate runs with pytest -n; the test passes alone and in the other runs. Decided: a shorter timeout with retries in a fresh browser profile, and a skip with the reason if the browser never finishes, as for a browser that prints no DOM; revision2026c step RG20.7.10.
+  - **notes:** The headless browser of the issue tracker tests is tried three times for 60 s, each with its own profile, and the test is skipped with the reason if it never finishes.
+  - date resolved: **2026-11-06 13:03**, date raised: 2026-11-06
+- **1.13.411** `TESTING` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the AVX2 reference of the performance tests is recorded again (#3297)
+  - description: AVX2ReferenceSolutionUpdate holds one entry of runPerformanceTests.py, perfAccessFunctionsAD:cable-n200-implicit, recorded 2026-10-08; it was not checked with \#3294. Decided: run the performance tests with the fast module, record the entries that differ from the regular values by more than their tolerance; revision2026c step RG20.7.9.
+  - **notes:** The performance tests run with the fast module: the AVX2 entry of perfAccessFunctionsAD is confirmed; the reference of perfRigidPendulum, which had moved by 5.3e-6 with \#3289 in both modules, is recorded again.
+  - date resolved: **2026-11-06 13:03**, date raised: 2026-11-06
+- **1.13.410** `TESTING` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the test suite with the fast module is run when a group or a significant step is completed (#3296)
+  - description: The fast-module suite was last run at 1.13.92 and had drifted until \#3293 and \#3294: a crash and 40 stale references. Decided: not in every commit, but at least when the development of a group (RG) or of a significant step (such as the symbolic solvers) is completed, and before a release; the rule in WORKFLOW.md and in the rules of the plan; revision2026c step RG20.7.8.
+  - **notes:** The fast module is tested when the development of a group or a significant step is completed and before a release (WORKFLOW.md section 8, the plan); tools/recordAVX2References.py records AVX2ReferenceSolutionUpdate from the newest \_fast log.
+  - date resolved: **2026-11-06 13:03**, date raised: 2026-11-06
+- **1.13.409** <span class="textred">`BUG`</span> `HIGH` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the fast module compiles out the checks of user input that are written as CHECKandTHROW (#3295)
+  - description: Found with \#3293: exudynCPPfast defines CHECKandTHROW, CHECKandTHROWstring and CHECKandTHROWcond as nothing, so every check of user input written with them is missing there - errorTriage.py counts 208 CHECKandTHROW and 339 CHECKandTHROWstring sites with a user audience; a wrong input then crashes or computes with wrong sizes instead of raising. Decided: the checks a user can trigger raise in every module - a CHECKandTHROW with an exception class and every CHECKandTHROWstring (an unconditional throw, which costs nothing on the path without an error) stay in the fast module; the user checks without a class get one; revision2026c step RG20.7.7.
+  - **notes:** exudynCPPfast keeps every CHECKandTHROW with an exception class and every CHECKandTHROWstring, the checks a user can trigger; it leaves out only the checks without a class, Exudyn's invariants and the range checks of vectors and matrices. 59 user checks of C++ and 75 of the symbolic module got a class, so that a wrong size, index or parameter raises in the fast module as well instead of crashing; CODING\_STYLE.md section 10.1.
+  - date resolved: **2026-11-06 13:03**, date raised: 2026-11-06
 - **1.13.408** `TESTING` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the AVX2 references of the fast module are recorded again (#3294)
   - description: AVX2ReferenceSolutionUpdate was last recorded on 2026-10-10; since then the regular values of many models moved (\#3201, \#3245, \#3288, \#3289, ...), so 30 models failed with the fast module on stale entries. Decided: recorded again from the fast-module suite, an entry for every model and mini example whose fast result differs from the regular value by more than its tolerance; revision2026c step RG20.7.6. \[2026-11-06, Claude-JG\]: Counted after \#3293: 40 test models and 2 mini examples failed on stale entries, not 30.
   - **notes:** AVX2ReferenceSolutionUpdate recorded again from the fast-module suite: 46 entries, every model and mini example whose fast result differs from the regular value by more than its tolerance; the fast suite passes serially and in parallel.

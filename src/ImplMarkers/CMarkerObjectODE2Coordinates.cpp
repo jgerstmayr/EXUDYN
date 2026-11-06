@@ -31,7 +31,7 @@ void CMarkerObjectODE2Coordinates::GetObjectODE2Coordinates(const CSystemData& c
 {
 	Index objectNumber = GetObjectNumber();
 	const CObject& cObject = *(cSystemData.GetCObjects()[objectNumber]);
-	CHECKandTHROW(((Index)cObject.GetType() & (Index)CObjectType::Body) != 0, "CMarkerObjectODE2Coordinates::GetObjectODE2Coordinates: object must be a body!");
+	CHECKandTHROW(((Index)cObject.GetType() & (Index)CObjectType::Body) != 0, "CMarkerObjectODE2Coordinates::GetObjectODE2Coordinates: object must be a body!", ExudynModelError);
 
 	Index nOC = GetDimension(cSystemData);
 	objectCoordinates.SetNumberOfItems(nOC);

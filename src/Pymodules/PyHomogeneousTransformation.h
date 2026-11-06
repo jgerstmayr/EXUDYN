@@ -33,7 +33,7 @@ public:
 		if (py::isinstance<PyHT>(rotation)) //a copy of an exu.HT, so that exu.HT(H) takes an HT as it takes a 4x4 matrix (#2824)
 		{
 			CHECKandTHROW(translation.is_none() && eulerParameters.is_none() && Rxyz.is_none() && rotationVector.is_none(),
-				"HT: with an HT, the other arguments must be None");
+				"HT: with an HT, the other arguments must be None", ExudynValueError);
 			*this = py::cast<const PyHT&>(rotation);
 			return;
 		}
@@ -43,7 +43,7 @@ public:
 			if (rows.size() == 16 || rows.size() == 4)
 			{
 				CHECKandTHROW(translation.is_none() && eulerParameters.is_none() && Rxyz.is_none() && rotationVector.is_none(),
-					"HT: with a 4x4 matrix or its 16 values, the other arguments must be None");
+					"HT: with a 4x4 matrix or its 16 values, the other arguments must be None", ExudynValueError);
 				ConstSizeMatrix<16> matrix44(4, 4);
 				if (rows.size() == 16)
 				{
@@ -90,13 +90,13 @@ public:
 		const py::object& rotationVector)
 	{
 		Index given = (Index)!rotation.is_none() + (Index)!eulerParameters.is_none() + (Index)!Rxyz.is_none() + (Index)!rotationVector.is_none();
-		CHECKandTHROW(given <= 1, "HT: give at most one of rotation, eulerParameters, Rxyz and rotationVector");
+		CHECKandTHROW(given <= 1, "HT: give at most one of rotation, eulerParameters, Rxyz and rotationVector", ExudynValueError);
 		if (!rotation.is_none()) { SetRotationPy(rotation); }
 		else if (!eulerParameters.is_none())
 		{
 			Vector4D ep;
 			EPyUtils::FromPython(eulerParameters, ep);
-			CHECKandTHROW(fabs(ep.GetL2NormSquared() - 1.) < 1e-10, "HT: the Euler parameters must have unit length");
+			CHECKandTHROW(fabs(ep.GetL2NormSquared() - 1.) < 1e-10, "HT: the Euler parameters must have unit length", ExudynValueError);
 			SetRotationMatrixChecked(RigidBodyMath::EP2RotationMatrix(ep));
 		}
 		else if (!Rxyz.is_none())
@@ -152,7 +152,7 @@ public:
 		ConstSizeMatrix<16> matrix44(4, 4);
 		EPyUtils::FromPython<Real, 4, 4>(matrix, matrix44);
 		CHECKandTHROW(matrix44(3, 0) == 0. && matrix44(3, 1) == 0. && matrix44(3, 2) == 0. && matrix44(3, 3) == 1.,
-			"HT[...] = value: the last row of an HT is [0,0,0,1] and cannot be written");
+			"HT[...] = value: the last row of an HT is [0,0,0,1] and cannot be written", ExudynValueError);
 		SetHT44(matrix44);
 		UpdateNoRotationFlag();
 	}
@@ -240,7 +240,7 @@ public:
 	{
 		std::vector<Real> q = py::cast<std::vector<Real>>(coordinates);
 		Index size = (kind == 0) ? 7 : 6;
-		CHECKandTHROW((Index)q.size() == size, (STDstring("HT: the coordinates must have ") + EXUstd::ToString(size) + " components").c_str());
+		CHECKandTHROW((Index)q.size() == size, (STDstring("HT: the coordinates must have ") + EXUstd::ToString(size) + " components").c_str(), ExudynValueError);
 		py::list rotationParameters;
 		for (Index i = 3; i < size; i++) { rotationParameters.append(q[i]); }
 		py::list translation;
@@ -260,7 +260,7 @@ public:
 		Real angle = v.GetL2Norm();
 		if (angle == 0.)
 		{
-			CHECKandTHROW(!raiseError, "HT.RotationAxis(): the transformation has no rotation; use raiseError=False to get [0,0,0]");
+			CHECKandTHROW(!raiseError, "HT.RotationAxis(): the transformation has no rotation; use raiseError=False to get [0,0,0]", ExudynValueError);
 			return EPyUtils::ToPython(v);
 		}
 		return EPyUtils::ToPython((1. / angle) * v);
@@ -272,7 +272,7 @@ public:
 		Vector3D n;
 		EPyUtils::FromPython(axis, n);
 		Real norm = n.GetL2Norm();
-		CHECKandTHROW(norm != 0., "HT.SetRotationAxis(...): the axis must not be zero");
+		CHECKandTHROW(norm != 0., "HT.SetRotationAxis(...): the axis must not be zero", ExudynValueError);
 		SetRotationMatrixChecked(EXUlie::ExpSO3((angle / norm) * n));
 		GetTranslation().SetAll(0.);
 	}
@@ -322,7 +322,7 @@ public:
 	static void MotionVectorFromPython(const py::object& vector, Vector3D& U, Vector3D& Omega, const char* where)
 	{
 		std::vector<Real> v = py::cast<std::vector<Real>>(vector);
-		CHECKandTHROW(v.size() == 6, (STDstring(where) + ": the vector must have 6 components").c_str());
+		CHECKandTHROW(v.size() == 6, (STDstring(where) + ": the vector must have 6 components").c_str(), ExudynValueError);
 		U = Vector3D({ v[0], v[1], v[2] });
 		Omega = Vector3D({ v[3], v[4], v[5] });
 	}
@@ -375,7 +375,7 @@ public:
 	{
 		if (py::isinstance<PyTwist>(velocityInit))
 		{
-			CHECKandTHROW(angularVelocityInit.is_none(), "Twist: with a Twist, angularVelocity must be None");
+			CHECKandTHROW(angularVelocityInit.is_none(), "Twist: with a Twist, angularVelocity must be None", ExudynValueError);
 			*this = py::cast<const PyTwist&>(velocityInit);
 			return;
 		}

@@ -91,7 +91,7 @@ Index CMarkerNodeCoordinate::GetKinematicsCoordinate(const CSystemData& cSystemD
 		kinematics.value_t = 0.;
 		return 0;
 	}
-	CHECKandTHROW((Index)node->GetNodeGroup() & (Index)CNodeGroup::ODE2variables, "MarkerNodeCoordinate::GetKinematicsCoordinate: the marker provides no velocity");
+	CHECKandTHROW((Index)node->GetNodeGroup() & (Index)CNodeGroup::ODE2variables, "MarkerNodeCoordinate::GetKinematicsCoordinate: the marker provides no velocity", ExudynModelError);
 	kinematics.value = node->GetCurrentCoordinateVector()[parameters.coordinate]
 		+ ReferenceValue(node, parameters.coordinate, parameters.includeReferenceCoordinate);
 	kinematics.value_t = ((const CNodeODE2*)node)->GetCurrentCoordinateVector_t()[parameters.coordinate];

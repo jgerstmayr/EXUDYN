@@ -113,7 +113,7 @@ void CNodePoint2DSlope1::GetRotationJacobian(Matrix& value) const
 	Real y = u[3] + ref[3]; //y-slopex
 
 	Real g = (x*x + y * y);
-	CHECKandTHROW(g != 0., "CNodePoint2DSlope1::GetRotationJacobian: slope vector has zero length; check initial values!");
+	CHECKandTHROW(g != 0., "CNodePoint2DSlope1::GetRotationJacobian: slope vector has zero length; check initial values!", ExudynArithmeticError);
 	value.SetMatrix(3, 4, { 0.,0.,0.,0., 
 							0.,0.,0.,0.,
 							0.,0.,-y / g, x / g });
@@ -152,7 +152,7 @@ void CNodePoint2DSlope1::GetRotationJacobianTTimesVector_q(const Vector3D& vecto
 	jacobian_q.SetNumberOfRowsAndColumns(4, 4);
 	jacobian_q.SetAll(0.);
 	Real g2 = EXUstd::Square(x*x + y * y);
-	CHECKandTHROW(g2 != 0., "CNodePoint2DSlope1::GetRotationJacobianTTimesVector_q: slope vector has zero length; check initial values!");
+	CHECKandTHROW(g2 != 0., "CNodePoint2DSlope1::GetRotationJacobianTTimesVector_q: slope vector has zero length; check initial values!", ExudynArithmeticError);
 
 	Real divG2 = 1. / g2;
 	jacobian_q(2, 2) = vector[2] * (y*(2 * x)) * divG2;

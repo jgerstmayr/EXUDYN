@@ -1085,7 +1085,7 @@ void CObjectKinematicTree::ComputeJacobian(Index linkNumber, const Vector3D& pos
 
 		i = parameters.linkParents[i];
 	}
-	CHECKandTHROW(cnt <= n, "CObjectKinematicTree::ComputeJacobian: too many iterations when computing jacobian; check parent indices");
+	CHECKandTHROW(cnt <= n, "CObjectKinematicTree::ComputeJacobian: too many iterations when computing jacobian; check parent indices", ExudynValueError);
 }
 
 //! the global axis of the joint of link i in its joint frame
@@ -1106,7 +1106,7 @@ void CObjectKinematicTree::GetLinkChain(Index linkNumber, ArrayIndex& chain) con
 		chain.Append(i);
 		i = parameters.linkParents[i];
 	}
-	CHECKandTHROW(i == noParent, "CObjectKinematicTree::GetLinkChain: too many iterations; check parent indices");
+	CHECKandTHROW(i == noParent, "CObjectKinematicTree::GetLinkChain: too many iterations; check parent indices", ExudynValueError);
 }
 
 //! the derivative of column i of the position and rotation Jacobians of the global point position on a link by the

@@ -125,7 +125,7 @@ inline void OutputVariableHomogeneousTransformation(const TGet& get, TVector& va
 	get(OutputVariableType::Position, position);
 	get(OutputVariableType::RotationMatrix, rotation);
 	CHECKandTHROW(position.NumberOfItems() == 3 && rotation.NumberOfItems() == 9,
-		"OutputVariableType::HomogeneousTransformation: the item gives no 3D position and 3x3 rotation matrix");
+		"OutputVariableType::HomogeneousTransformation: the item gives no 3D position and 3x3 rotation matrix", ExudynValueError);
 	value.SetNumberOfItems(16);
 	for (Index i = 0; i < 3; i++)
 	{

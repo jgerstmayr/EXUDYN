@@ -204,7 +204,7 @@ static void ArrayResultSize(OperationCode code, const FlatNode& node, const Slot
 		if (!(x[0].rows == x[1].rows)) { PyError("symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes", PyErrorType::valueError); }
 		break;
 	case OperationCode::VectorEqual: case OperationCode::VectorNotEqual:
-		CHECKandTHROW(x[0].rows == x[1].rows, "VectorBase::operator==: incompatible size of vectors");
+		CHECKandTHROW(x[0].rows == x[1].rows, "VectorBase::operator==: incompatible size of vectors", ExudynValueError);
 		break;
 	case OperationCode::Norm: case OperationCode::VectorComponent: case OperationCode::MatrixComponent: break;
 	case OperationCode::VectorOfComponents: rows = numberOfOperands; break;
@@ -218,11 +218,11 @@ static void ArrayResultSize(OperationCode code, const FlatNode& node, const Slot
 		break;
 	case OperationCode::VectorScalar: rows = x[1].rows; break;
 	case OperationCode::MatrixVector:
-		CHECKandTHROW(x[0].columns == x[1].rows, "EXUmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
+		CHECKandTHROW(x[0].columns == x[1].rows, "EXUmath::MultMatrixVector(matrix,vector,result,T): Size mismatch", ExudynValueError);
 		rows = x[0].rows;
 		break;
 	case OperationCode::MatrixTransposedVector:
-		CHECKandTHROW(x[0].rows == x[1].rows, "EXUmath::MultMatrixTransposedVectorTemplate(matrix,vector,result): Size mismatch");
+		CHECKandTHROW(x[0].rows == x[1].rows, "EXUmath::MultMatrixTransposedVectorTemplate(matrix,vector,result): Size mismatch", ExudynValueError);
 		rows = x[0].columns;
 		break;
 	case OperationCode::VectorPositive: case OperationCode::VectorNegative: rows = x[0].rows; break;
@@ -273,10 +273,10 @@ Real ArrayOperation(OperationCode code, const SlotValue* x, Index numberOfOperan
 	{
 		Real iReal = x[1].real;
 		Index i = (Index)iReal;
-		CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer");
+		CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer", ExudynValueError);
 		//while a user function is recorded, its vector arguments have no size yet: the component has no value then (#3007)
 		if (SReal::recordExpressions && x[0].rows == 0 && i >= 0) { return 0.; }
-		CHECKandTHROW((i >= 0) && (i < x[0].rows), "VectorExpressionBase::operator[] index out of range");
+		CHECKandTHROW((i >= 0) && (i < x[0].rows), "VectorExpressionBase::operator[] index out of range", ExudynIndexError);
 		return x[0].data[i];
 	}
 	case OperationCode::VectorEqual: case OperationCode::VectorNotEqual:
@@ -291,9 +291,9 @@ Real ArrayOperation(OperationCode code, const SlotValue* x, Index numberOfOperan
 		Index row = (Index)rowReal;
 		Real columnReal = x[2].real;
 		Index column = (Index)columnReal;
-		CHECKandTHROW(((Real)row == rowReal) && ((Real)column == columnReal), "MatrixExpressionBase::operator[] index must contain integer indices");
-		CHECKandTHROW((row >= 0) && (row < x[0].rows), "Matrix::operator()(Index, Index) const: request of invalid row");
-		CHECKandTHROW((column >= 0) && (column < x[0].columns), "Matrix::operator()(Index, Index) const: request of invalid column");
+		CHECKandTHROW(((Real)row == rowReal) && ((Real)column == columnReal), "MatrixExpressionBase::operator[] index must contain integer indices", ExudynValueError);
+		CHECKandTHROW((row >= 0) && (row < x[0].rows), "Matrix::operator()(Index, Index) const: request of invalid row", ExudynIndexError);
+		CHECKandTHROW((column >= 0) && (column < x[0].columns), "Matrix::operator()(Index, Index) const: request of invalid column", ExudynIndexError);
 		return x[0].data[row*x[0].columns + column];
 	}
 	case OperationCode::VectorOfComponents: case OperationCode::MatrixOfComponents:
