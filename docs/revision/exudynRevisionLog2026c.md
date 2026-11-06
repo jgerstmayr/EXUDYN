@@ -6427,6 +6427,21 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-9-2"></a>
+### RG20.9.2 — the test models that repeat a model of the library (2026-11-06, #3301)
+- Compared each model of modelLibrary.py with the test models of the same kind:
+  - sliderCrank3D is sliderCrank3Dbenchmark.py, whose purpose is the benchmark itself (results file, timings, 5 s run
+    directly): taking it from the library would hide the benchmark model; sliderCrank3Dtest.py is another variant
+    (Euler parameters, other inertia of the crank, index 2, sensors).
+  - genericDAE is one of the variants of genericDAEUserFunctionsTest.py (Python and recorded user functions, the mass
+    matrix function, the coupled constraint, against built-in items); FFRFreducedOrder the pendulum of
+    createFFRFReducedOrderObjectTest.py, which tests the arguments and refusals of CreateFFRFReducedOrderObject.
+  - kinematicTree: kinematicTreeTest.py (five links, ObjectKinematicTree directly) and the other kinematic tree tests
+    vary the links; nPendulum, rigidBodyJoints/SpringDampers, massOscillator, beam3D have no test model with the
+    same model (MathematicalPendulumTest, energiesTest, restartFileTest, the beam tests use other parameters and
+    items).
+- Decided (#3301): a test model is changed only if its model is the library model itself; none is. Nothing changed.
+
 <a id="rg20-9-3"></a>
 ### RG20.9.3 — the order of an ODE1 coordinate coupled to ODE2 coordinates in generalized-alpha (2026-11-06, #3258)
 - Cause: the ODE1 coordinates are integrated by the trapezoidal rule y1 = y0 + h/2 (y_t0 + y_t1), and y_t0 of the first

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 401 | 1.13.416 |
+| 1.13 | Newborn | 402 | 1.13.417 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.417** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Test models that repeat a model of modelLibrary.py (#3301)
+  - description: revision2026c step RG20.9.2: list the test models whose model is one of modelLibrary.py and use GetModel where this makes them shorter without hiding what they test. Decided: a test model is changed only if its model is the library model itself, not a variant of it.
+  - **notes:** Checked: no test model repeats a model of modelLibrary.py - each closest one is a variant of it for what it tests - so none was changed.
+  - date resolved: **2026-11-06 16:46**, date raised: 2026-11-06
 - **1.13.416** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` generalized-alpha: an ODE1 coordinate coupled to ODE2 coordinates converges with order 1 (#3258)
   - description: In the genericDAE model of modelLibrary.py (an ObjectGenericDAE pendulum with a first order lag of its horizontal position on an ODE1 coordinate) SolveDynamic with generalized-alpha gives the ODE2 coordinates with order 2 and the ODE1 coordinate with order 1 (errors 3.2e-5, 1.7e-5, 8.9e-6 for the steps 4e-3, 2e-3, 1e-3, also with spectral radius 1), found by python/testing/solverStudy.py. To be analyzed: how the ODE1 equations are discretized in the generalized-alpha solver and whether the coupling or the ODE1 scheme itself is first order.
   - **notes:** The generalized-alpha solver starts the trapezoidal rule of the ODE1 coordinates from their derivatives at the initial state instead of zero, in MainSolverImplicitSecondOrder and in exudyn.symbolics.solvers.SolveGeneralizedAlpha: ODE1 coordinates coupled to ODE2 coordinates converge with order 2 instead of 1; models with ODE1 coordinates change.

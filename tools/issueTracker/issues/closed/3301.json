@@ -1,0 +1,15 @@
+{
+  "number": 3301,
+  "title": "Test models that repeat a model of modelLibrary.py",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "revision2026c step RG20.9.2: list the test models whose model is one of modelLibrary.py and use GetModel where this makes them shorter without hiding what they test. Decided: a test model is changed only if its model is the library model itself, not a variant of it.",
+  "dateRaised": "2026-11-06",
+  "deadline": "2027-05-05",
+  "dateResolved": "2026-11-06 16:46",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Checked: no test model repeats a model of modelLibrary.py - each closest one is a variant of it for what it tests - so none was changed.",
+  "resolvedInVersion": "1.13.417"
+}
