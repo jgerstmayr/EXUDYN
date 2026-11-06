@@ -9,7 +9,7 @@ solvers that integrate them: the explicit and implicit dynamic solvers, the stat
 The user has a couple of basic solvers available in Exudyn , see {numref}`fig-available-solvers`:
 
 - `mbs.SolveStatic(...)`: compute static solution for given problem (may also be used to compute kinematic behavior by prescribing joint motion)
-- `mbs.SolveDynamic(...)`: time integration of equations of motion
+- `mbs.SolveDynamic(...)`: time integration of equations of motion, by one of the solvers of {ref}`sec-solver-overview`
 - `mbs.ComputeLinearizedSystem(...)`: computes the linearized system of equations and returns mass, stiffness, damping matrices
 - `mbs.ComputeODE2Eigenvalues(...)`: computes the eigenvalues of the linearized system of equations; only possible if no algebraic constraints in system; uses scipy to compute eigenvalues
 
@@ -43,6 +43,31 @@ The function `mbs.SolveDynamic(...)` sets the according variables internally. Fo
 - `storeSolver`: if `True`, the solver is stored in `mbs.sys['staticSolver']` or `mbs.sys['dynamicSolver']` and also solver settings are stored in `mbs.sys['simulationSettings']`. After the solver has finished, `mbs.sys['staticSolver']` can be used to retrieve additional information on convergence, system matrices, etc. (see the solver structure).
 - `showHints`: This shows a lot of possible solutions in case of no convergence
 - `showCausingItems`: This shows a potential causing item if the linear solver failed; the item number is computed from the coordinate number that caused problems (e.g., a row that became zero during factorization); note that this item may not be the real cause in your problem
+
+(sec-solver-overview)=
+### Overview of the dynamic solvers
+
+`mbs.SolveDynamic(..., solverType=exu.DynamicSolverType.<name>)` selects the solver. The orders are those of the
+global error with a constant step size, for the ODE2 coordinates $\qv$ and velocities $\dot \qv$ and for the
+accelerations and Lagrange multipliers $\tlambda$ of a constrained system; {ref}`sec-solver-convergence` shows them
+measured.
+
+| solver | kind | order $\qv$, $\dot \qv$ / $\tlambda$ | constraints | numerical damping | step size |
+|---|---|---|---|---|---|
+| `GeneralizedAlpha` | implicit, Newmark-type | 2 / 2 | index 3 | by `spectralRadius` | constant (reduced on failure) |
+| `TrapezoidalIndex2` | implicit, Newmark-type | 2 / 2 | index 2, the positions drift | none | constant |
+| `TrapezoidalGGL` | implicit Runge-Kutta | 2 / 2 | index 3 with GGL stabilization | none | constant or automatic |
+| `LobattoIIIA4` | implicit Runge-Kutta | 4 / 2 | positions and velocities at the end of the step | none | constant or automatic |
+| `LobattoIIIC4GGL` | implicit Runge-Kutta | 4 / 2 | positions and velocities at each stage (GGL) | L-stable | constant or automatic |
+| `Radau3` | implicit Runge-Kutta | 3 / 2 | positions and velocities at the end of the step | L-stable | constant or automatic |
+| `ExplicitEuler`, `ExplicitMidpoint`, `RK33`, `RK44`, `RK67` | explicit Runge-Kutta | 1, 2, 3, 4, 6 | `CoordinateConstraint` to the ground only | none | constant |
+| `ODE23`, `DOPRI5` | explicit, embedded | 3, 5 | as above | none | automatic |
+| `VelocityVerlet` | explicit | 2 | as above | none | constant |
+
+The implicit solvers need the Jacobian of the system and solve a nonlinear system per step; they take steps far
+above the stability limit of the explicit solvers and handle constraints. The ODE1 coordinates are integrated by
+the trapezoidal rule in the Newmark-type solvers and by the Runge-Kutta method itself in the implicit Runge-Kutta
+solvers.
 
 (sec-systemequations)=
 ## The system equations
@@ -682,6 +707,204 @@ and the largest residual at velocity level and records them with a sensor, see {
 ```python
 sDrift = SystemConstraintDrift(mbs).AddSensor()     #after mbs.Assemble()
 mbs.Assemble()
+```
+
+(sec-solver-implicitrungekutta)=
+## Implicit Runge-Kutta solvers
+
+The solvers `TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL` and `Radau3` are implicit Runge-Kutta methods for
+the constrained equations of motion {eq}`eq-system-eom`, in one solver class with the method given by its tableau
+(#3261). They share the Newton iteration over all stages, the error estimates and the step size controller of
+{ref}`sec-explicitsolver`.
+
+### Stage equations
+
+A method of $s$ stages with the coefficients $a_{ij}$, $c_i$ - stiffly accurate, the last stage being the end of the
+step - has the stage accelerations $\mathbf{A}_i$ as unknowns, from which the stage velocities and positions follow,
+
+$$
+\begin{aligned}
+  \mathbf{V}_i &= \dot \qv_0 + h \sum_j a_{ij} \mathbf{A}_j , \\
+  \mathbf{Q}_i &= \qv_0 + h c_i \dot \qv_0 + h^2 \sum_j (\Am^2)_{ij} \mathbf{A}_j ,
+\end{aligned}
+$$
+and at each implicit stage the equations of motion hold,
+$\Mm(\mathbf{Q}_i) \mathbf{A}_i = \fv_\SO(\mathbf{Q}_i, \mathbf{V}_i, t_0 + c_i h) - \Cm_{q}(\mathbf{Q}_i)\tp \tlambda_i$. The end of the step is
+$\qv_1 = \mathbf{Q}_s$, $\dot \qv_1 = \mathbf{V}_s$. The ODE1 coordinates have stage derivatives of their own, the data coordinates
+are updated by the post-Newton step as in the other solvers. The tableaus:
+
+- `LobattoIIIA4`: Lobatto IIIA with $c = (0, \frac 1 2, 1)$; the first stage is the start of the step, so two stages
+  are implicit; $\qv_1 = \qv_0 + \frac h 6 (\mathbf{V}_1 + 4 \mathbf{V}_2 + \mathbf{V}_3)$ is Simpson's rule. Order 4, no numerical damping.
+- `LobattoIIIC4GGL`: Lobatto IIIC with the same $c$, all three stages implicit; L-stable, it damps fast modes.
+- `Radau3`: Radau IIA with $c = (\frac 1 3, 1)$, two implicit stages; order 3, L-stable, it also damps the slow motion
+  slightly.
+- `TrapezoidalGGL`: the trapezoidal rule, $\dot \qv_1 = \dot \qv_0 + \frac h 2 (\ddot \qv_0 + \ddot \qv_1)$ and
+  $\qv_1 = \qv_0 + \frac h 2 (\dot \qv_0 + \dot \qv_1) - \Cm_q\tp \tmu$; order 2 in all quantities, no damping.
+
+### Constraints
+
+An index 3 solver must fix the positions and the velocities on the constraints; where it does so decides the order
+of the velocities and multipliers:
+
+- `LobattoIIIA4` and `Radau3` impose $\gv(\qv_1, t_1) = \Null$ and the velocity constraint
+  $\Cm_q \dot \qv_1 + \gv_t = \Null$ at the end of the step, with a multiplier $\tlambda_i$ per implicit stage. Both
+  hold to the Newton tolerance, nothing drifts, and the velocities keep the order of the positions; the
+  multipliers and accelerations converge with order 2.
+- `TrapezoidalGGL` and `LobattoIIIC4GGL` use the stabilization of Gear, Gupta and Leimkuhler (GGL): both constraint
+  levels at each implicit stage, the positions moved onto $\gv = \Null$ by a second multiplier $\tmu_i$ along
+  $\Cm_q\tp$.
+
+The velocity constraint needs nothing from the items beyond the Jacobian $\Cm_q$ of the reaction forces: it is
+$\Cm_q \dot \qv + \gv_t$, with $\gv_t$ the derivative of a constraint by the time. A constraint at velocity level - a
+rolling disc, a `CoordinateConstraint` with `velocityLevel = True` - enters with its own equation at the implicit
+stages. The unknowns per step are $2 n + 2 m$ for `LobattoIIIA4` and `Radau3`, $3 n + 6 m$ for `LobattoIIIC4GGL`,
+$n$ coordinates and $m$ constraints. Lie group nodes are treated as in {ref}`sec-implicittrapezoidalsolver`, the
+rotations of the stages by Runge-Kutta-Munthe-Kaas (#3290).
+
+### Error estimates and automatic step size
+
+With `timeIntegration.automaticStepSize = True` the step size follows the controller of {ref}`sec-explicitsolver`,
+with the tolerances `absoluteTolerance` and `relativeTolerance` and the error norm of the explicit solvers. The
+error of a step comes from the converged stages, without a further solve; `timeIntegration.errorEstimate` selects it
+(#3287):
+
+- `'oneStep'`: the trapezoidal rule of the first and the last stage against the solution of the method,
+  $\ev_q = \qv_1 - (\qv_0 + \frac h 2 (\mathbf{V}_1 + \mathbf{V}_s))$, and the same for the velocities with the stage
+  accelerations. It estimates the local error of the trapezoidal rule, order 3. For `TrapezoidalGGL`, which is the
+  trapezoidal rule, the estimate is $\ev_q = \frac{h^2}{12} (\ddot \qv_1 - \ddot \qv_0)$ for the positions, and for
+  the velocities the second difference of the mean accelerations $(\dot \qv_1 - \dot \qv_0)/h$ of the last three
+  steps (the end accelerations alternate from step to step with constraints, their means do not).
+- `'twoSteps'`: the quadrature of the method against the integral of the polynomial through the stage velocities of
+  the previous and of this step - for the Lobatto methods five values, for `Radau3` four. It estimates the local
+  error of the method itself, of the order of the method plus one (for Lobatto with equal steps
+  $\ev_q = \frac h {180} (\mathbf{V}_{-2} - 4 \mathbf{V}_{-1} + 6 \mathbf{V}_0 - 4 \mathbf{V}_1 + \mathbf{V}_2)$, Simpson's error); the first step, without a
+  previous one, uses the one-step estimate. The stage accelerations of a constrained system are of order 2 only, so
+  the velocities enter the error only without constraints.
+- `'default'`: `twoSteps` for the Runge-Kutta methods, `oneStep` for `TrapezoidalGGL`.
+
+The stages of one step alone cannot estimate an error of order 4: three stage values determine a quadratic, which
+Simpson's rule integrates exactly. With `'oneStep'` the Lobatto methods therefore take about the steps of the
+trapezoidal rule and end with errors far below the tolerance; `'twoSteps'` takes 4 to 23 times fewer steps for the
+same tolerance.
+
+```python
+simulationSettings.timeIntegration.automaticStepSize = True
+simulationSettings.timeIntegration.absoluteTolerance = 1e-6
+simulationSettings.timeIntegration.relativeTolerance = 1e-6
+mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.LobattoIIIA4)
+```
+
+(sec-solver-convergence)=
+## Convergence and efficiency of the dynamic solvers
+
+The figures of this section are computed by `python/testing/solverConvergenceFigures.py` on the small models of
+`python/TestModels/modelLibrary.py` (#3305). Each solver runs with the steps $2 h_0, h_0, \ldots, h_0/16$, where
+$h_0$ is the step of the model's fast run. The error is taken at the end time per group of coordinates - the ODE2
+coordinates, the ODE1 coordinates and the algebraic coordinates (the Lagrange multipliers) - as the L2 norm of the
+difference to a reference solution, divided by the L2 norm of the group in the reference. The reference is
+`LobattoIIIC4GGL` (`RK67` without constraints) at $h_0/128$, extrapolated by Richardson. The Newton tolerances are
+`relativeTolerance` $10^{-10}$ and `absoluteTolerance` $10^{-10}$, which set the floor of about $10^{-12}$ that the
+methods of order 4 reach. The CPU time is that of `SolveDynamic` on one core, the smallest of three runs; for models
+this small it includes a share of fixed costs.
+
+(fig-solver-convergence-mean)=
+```{figure} /docs/figures/solverStudy/convergence_mean.png
+:width: 100%
+
+The mean convergence of the implicit solvers over the models of the following figures: at each relative step
+$h/h_0$ the geometric mean of the relative errors of all models that have the group; a mean is left out where a
+solver failed on one of the models (`TrapezoidalIndex2` at the larger steps)
+```
+
+{numref}`fig-solver-convergence-mean` shows the orders of {ref}`sec-solver-overview`: 2 for the Newmark-type
+solvers and `TrapezoidalGGL`, 3 for `Radau3` and 4 for the Lobatto solvers in the ODE2 and ODE1 coordinates; the
+Lagrange multipliers converge with order 2 in all solvers, with errors 10 to 100 times smaller in the Lobatto and
+Radau solvers than in generalized-alpha. The orders measured between $h_0$ and $h_0/4$ on the single models are 1.95 to
+2.0 for generalized-alpha, 3.98 to 4.07 for `LobattoIIIA4` and 2.87 to 3.01 for `Radau3` (3.77 on the spatial slider
+crank, whose errors reach the floor).
+
+(fig-solver-efficiency-mean)=
+```{figure} /docs/figures/solverStudy/efficiency_mean.png
+:width: 70%
+
+Mean efficiency of the implicit solvers: the geometric mean over the models of the relative error of the ODE2
+coordinates against that of the CPU time, relative to generalized-alpha with the step $h_0$; the points are the
+steps $2 h_0 \ldots h_0/16$
+```
+
+A step costs about 2 (`TrapezoidalGGL`), 3 (`LobattoIIIA4`, `Radau3`) and 9 (`LobattoIIIC4GGL`) times a step of
+generalized-alpha. The higher order pays off nevertheless, {numref}`fig-solver-efficiency-mean`: at 1.6 times the
+CPU time of generalized-alpha with $h_0$, `LobattoIIIA4` with $2 h_0$ has a 500 times smaller error; below a
+relative error of about $10^{-4}$ it is the most efficient of these solvers on these models. Generalized-alpha remains the choice where the accuracy of
+the order 2 suffices, where its numerical damping is wanted, and for models with contact, friction or other
+discontinuities, whose errors do not follow the order of a method anyway.
+
+(fig-solver-efficiency-models)=
+```{figure} /docs/figures/solverStudy/efficiency_models.png
+:width: 100%
+
+Error against CPU time on four models, with constant steps (solid) and with automatic step size for the
+tolerances $10^{-3} \ldots 10^{-8}$ (dashed); the explicit solvers only on the kinematic tree, which has no
+constraints
+```
+
+With automatic step size, {numref}`fig-solver-efficiency-models`, the Runge-Kutta solvers with the estimate
+`twoSteps` lie on the curves of their constant steps or below, where the motion allows larger steps; `TrapezoidalGGL`
+lies on its own curve. Without constraints, the explicit `DOPRI5` is the most efficient solver as long as the step is
+not limited by stability, as on the kinematic tree.
+
+(fig-solver-convergence-explicit)=
+```{figure} /docs/figures/solverStudy/convergence_explicit.png
+:width: 80%
+
+The explicit solvers `RK44` and `RK67` with constant steps on the models without constraints, against
+generalized-alpha and `LobattoIIIA4`: orders 4 and 6 down to the floor of the reference
+```
+
+The errors of the single models, the groups of coordinates in subplots:
+
+```{figure} /docs/figures/solverStudy/convergence_nPendulum.png
+:width: 80%
+
+A pendulum of four mass points on distance constraints
+```
+
+```{figure} /docs/figures/solverStudy/convergence_rigidBodyJoints.png
+:width: 80%
+
+A chain of three rigid bodies (Euler parameters) on revolute joints
+```
+
+```{figure} /docs/figures/solverStudy/convergence_rigidBodySpringDampers.png
+:width: 80%
+
+The same chain on rigid body spring-dampers; the algebraic coordinates are those of the Euler parameters
+```
+
+```{figure} /docs/figures/solverStudy/convergence_sliderCrank3D.png
+:width: 80%
+
+The spatial slider-crank of the IFToMM benchmark with Lie group nodes; the errors of the Runge-Kutta solvers reach
+the floor of $10^{-12}$ at the smaller steps
+```
+
+```{figure} /docs/figures/solverStudy/convergence_kinematicTree.png
+:width: 60%
+
+A kinematic tree of three links with PD control, without constraints
+```
+
+```{figure} /docs/figures/solverStudy/convergence_FFRFreducedOrder.png
+:width: 80%
+
+A flexible pendulum, ObjectFFRFreducedOrder with four modes, on a revolute joint
+```
+
+```{figure} /docs/figures/solverStudy/convergence_genericDAE.png
+:width: 100%
+
+ObjectGenericDAE: a pendulum in Cartesian coordinates with a first order lag on an ODE1 coordinate; the ODE1
+coordinate converges with the order of the solver
 ```
 
 ## Optimization and parameter variation

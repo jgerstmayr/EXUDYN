@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 406 | 1.13.421 |
+| 1.13 | Newborn | 408 | 1.13.423 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.423** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The solver page describes the implicit Runge-Kutta solvers, their error estimates and the step size controller (#3306)
+  - description: docs/manual/solver.md describes the explicit solvers and generalized-alpha, but TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL and Radau3 (\#3261), their error estimates oneStep and twoSteps (\#3287) and the PI step size controller shared with ODE23 and DOPRI5 (\#3245) only in the enumeration and the settings. Decided: a section on the implicit Runge-Kutta solvers - the methods, the constraints at the end of the step and the GGL stabilization, the orders, damping, Lie group nodes, ODE1 and data coordinates -, the error estimates and the controller, a table of all dynamic solvers, and the convergence and efficiency figures.
+  - **notes:** The solver page has an overview table of all dynamic solvers, a section on the implicit Runge-Kutta solvers TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL and Radau3 - stage equations, constraints, the error estimates oneStep and twoSteps - and a section on convergence and efficiency with the measured orders and CPU times.
+  - date resolved: **2026-11-06 18:39**, date raised: 2026-11-06
+- **1.13.422** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Convergence and efficiency figures of the dynamic solvers on the model library (#3305)
+  - description: Maintainer 2026-11-06: log-log convergence plots for all solvers evaluated with the models of modelLibrary.py, the ODE2, ODE1 and algebraic coordinates in subplots, at most about 15 figures; for the implicit solvers a mean of the errors normalized by the L2 norm of each group of coordinates, to show the overall performance of a solver; few explicit; a typical efficiency diagram of accuracy against CPU time. Decided: python/testing/solverConvergenceFigures.py computes them into docs/figures/solverStudy/ with the data as JSON; the solver page shows them.
+  - **notes:** python/testing/solverConvergenceFigures.py computes the convergence and efficiency figures of the dynamic solvers on the models of modelLibrary.py - errors per group of coordinates, their geometric mean over the models, error against CPU time with constant and automatic step size - into docs/figures/solverStudy/.
+  - date resolved: **2026-11-06 18:39**, date raised: 2026-11-06
 - **1.13.421** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The genericDAE model of modelLibrary.py gives its position constraint also at velocity level (#3304)
   - description: The constraintUserFunction of the genericDAE model ignores velocityLevel and returns the position constraint in both cases. The solvers that use the velocity constraint - LobattoIIIA4, LobattoIIIC4GGL, Radau3, TrapezoidalIndex2 - then solve a wrong equation: LobattoIIIA4 and Radau3 diverge within 0.05 s at every step size (found with the convergence figures). Decided: the user function returns the time derivative of the constraint for velocityLevel.
   - **notes:** The genericDAE model of python/TestModels/modelLibrary.py gives the time derivative of its constraint at velocity level, so that LobattoIIIA4, LobattoIIIC4GGL, Radau3 and TrapezoidalIndex2 run on it.

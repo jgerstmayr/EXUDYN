@@ -6427,6 +6427,31 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-9-7"></a>
+### RG20.9.7 and RG20.9.8 — the convergence and efficiency figures, the solver page (2026-11-06, #3305, #3306)
+- Maintainer 2026-11-06: the description of the new solvers in the solver section, specifics and error estimators;
+  log-log convergence plots of all solvers on the library models, few explicit, a selection for the implicit ones, a
+  mean of the errors normalized by the L2 norm per group of coordinates, the groups ODE2, ODE1 and AE in subplots,
+  about 15 figures; a typical efficiency diagram, accuracy against CPU time.
+- python/testing/solverConvergenceFigures.py (maintainer tool, not in the suite): 8 models (beam3D left out - its
+  errors stay between 1e-6 and 1e-3 without converging smoothly at these steps), steps 2 h0 ... h0/16, tolerances
+  1e-3 ... 1e-8 for the automatic step size (the largest step a tenth of the run, the first h0), Newton tolerances
+  1e-10; errors at the end per group relative to the L2 norm of the group of the reference; CPU time the minimum of
+  three runs; the data in docs/figures/solverStudy/solverStudy.json, --replot and --adaptive. About 25 minutes.
+- The reference: first LobattoIIIA4 at h0/128 with Richardson - the multipliers of all solvers then stalled at 8e-6
+  on genericDAE: LobattoIIIA4 does not damp the multipliers, an oscillation from step to step that does not vanish
+  with the step; LobattoIIIC4GGL (L-stable) is the reference now, RK67 without constraints. LobattoIIIA4 and Radau3
+  stop at small steps on FFRFreducedOrder with a growing Newton floor (#3307, RG20.9.9).
+- Found on the way: #3304 (RG20.9.6). The first study ran with the largest step of the automatic step size equal to
+  h0, so the adaptive runs could not take larger steps; now a tenth of the end time.
+- Results (docs/manual/solver.md, section Convergence and efficiency): orders between h0 and h0/4 - generalized-alpha
+  1.95-2.0, TrapezoidalGGL 1.95-2.0, LobattoIIIA4 3.99-4.07 (4.36 near the floor), Radau3 2.87-3.01, multipliers 2;
+  CPU per step against generalized-alpha 2 (TrapezoidalGGL), 2.9 (LobattoIIIA4), 3.0 (Radau3), 9.0 (LobattoIIIC4GGL);
+  LobattoIIIA4 at 2 h0 has a 500 times smaller error than generalized-alpha at h0 for 1.6 times its CPU time.
+- solver.md: the overview table of the dynamic solvers, the section Implicit Runge-Kutta solvers (stage equations,
+  tableaus, the constraints at the end against GGL, unknowns per step, error estimates oneStep and twoSteps and why
+  one step cannot estimate order 4), the section Convergence and efficiency with the 11 figures.
+
 <a id="rg20-9-5"></a>
 ### RG20.9.5 and RG20.9.6 — the restart of the modified Newton method with ODE1 coordinates; the velocity constraint of genericDAE (2026-11-06, #3300, #3304)
 - Maintainer 2026-11-06: do RG20.9.5; the description of the new solvers and the convergence figures (RG20.9.7,
