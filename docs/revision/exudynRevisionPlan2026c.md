@@ -3124,6 +3124,8 @@ Was RG12.51.5: design docs/dev/design/symbolicSystem.md section 1 G1, with a sma
 
 Maintainer 2026-11-04: the URDF import and the connection to the Robotics Toolbox for Python revised as a whole (RG11.8.11 closed), the class Robot built on the kinematic tree for both models, a unified control and sensors, trajectories with polynomial and Cartesian paths, analytic and numerical inverse kinematics, models.py and the scripts cleaned up. Design docs/dev/design/robotics.md; no issues before the evaluation is decided. Requested as group 15, a number that revision2026b has taken, as 16 to 18 (step numbers are permanent).
 
+Maintainer 2026-11-06: paused; the open tasks are listed in section 1 of the design note, first the storage of the URDF files and of the models saved as HDF5, for which the maintainer brings a solution.
+
 ### **OPEN_RG19.1** Analyze the robotics submodule and propose the revision
 
 Design docs/dev/design/robotics.md.
@@ -3142,7 +3144,7 @@ CLOSED 2026-11-05: design section 2.1 - the times of the kinematics, StaticTorqu
 
 ### **OPEN_RG19.2** Clean up the robotics files: the URDF import into its own module, the commented code, future.py, exudyn.HT in the kinematics; the scripts a first time
 
-Design section 3; after the decisions of section 4.
+Design docs/dev/design/robotics.md (decisions section 3); after the decisions of section 4.
 
 #### **CLOSED_RG19.2.1** Remove the commented-out code and the dead branches of exudyn.robotics
 
@@ -3162,7 +3164,7 @@ CLOSED 2026-11-05 (#3266): with buildFromDictionaryWarned and the commented call
 
 ### **OPEN_RG19.3** Revise the URDF import: the check and correction of the inertia, textures, flipped joints, the offsets, storing and loading robot models; tested with the common robots and the local data set
 
-Design section 3.
+Design docs/dev/design/robotics.md (decisions section 3).
 
 #### **CLOSED_RG19.3.1** The meshes of a URDF as the graphics of a Robot, without the RTB: LoadURDFgraphics, AddURDFgraphics; the TX2-90L with its meshes
 
@@ -3196,7 +3198,7 @@ CLOSED 2026-11-06 (#3285; maintainer 2026-11-06): python/TestModels/testData/urd
 
 ### **OPEN_RG19.4** Revise Robot: q0, one control description with friction and end stops for both models, the control as PreStepUserFunction, AddSensors, the static and dynamic compensation from the kinematic tree
 
-Design section 3.
+Design docs/dev/design/robotics.md (decisions section 3).
 
 #### **CLOSED_RG19.4.1** Robot: q0, friction and end stops in both models, PreStepControl and AddSensors for the redundant model
 
@@ -3208,7 +3210,7 @@ CLOSED 2026-11-05 (#3276): KinematicChain.InverseDynamics (recursive Newton-Eule
 
 ### **OPEN_RG19.5** Extend the trajectories: polynomial profiles, linear profiles completed, Cartesian linear, circular, screw and spline paths, mixed in Trajectory with the check of jumps
 
-Design section 3.
+Design docs/dev/design/robotics.md (decisions section 3).
 
 #### **CLOSED_RG19.5.1** Staubli TX2-90L model, ProfilePolynomial5 and ProfileCartesianLinear, Robot.SetControl and PreStepControl, the TX2-90L example
 
@@ -3230,7 +3232,7 @@ CLOSED 2026-11-06 (#3283; maintainer 2026-11-05): blendTimeWithNext='auto', the 
 
 ### **OPEN_RG19.6** Inverse kinematics: analytic for 6R robots with a spherical wrist, numerical by Levenberg-Marquardt; tests with a 6R robot and the Panda
 
-Design section 3; the test suite runs < 0.25 s of positions.
+Design docs/dev/design/robotics.md (decisions section 3); the test suite runs < 0.25 s of positions.
 
 #### **CLOSED_RG19.6.1** exudyn.cUtilities.KinematicChain: forward kinematics, Jacobian and static torques in C++, with their Python versions in Robot
 
@@ -3250,7 +3252,7 @@ CLOSED 2026-11-05 (#3269): the same iteration in C++ and Python, restarts by a f
 
 ### **OPEN_RG19.7** Revise models.py: PUMA560, UR5, Franka Emika Panda, Staeubli TX2-90L and their initial configurations
 
-Design section 3.
+Design docs/dev/design/robotics.md (decisions section 3).
 
 #### **CLOSED_RG19.7.1** Named configurations, the initial configuration and the friction of the models, checked against the RTB
 
@@ -3258,7 +3260,7 @@ CLOSED 2026-11-05 (#3277): configurations and initialConfiguration per model, Li
 
 ### **OPEN_RG19.8** Clean up the robotics examples and test models on the revised interfaces
 
-Design section 3; P/D values adjusted slightly in favour of simple scripts.
+Design docs/dev/design/robotics.md (decisions section 3); P/D values adjusted slightly in favour of simple scripts.
 
 #### **CLOSED_RG19.8.1** The serial robot examples on models.py, SetControl, AddSensors and PlotSensor; the Puma560 joint limits of the RTB, Manipulator4Rsimple removed
 
