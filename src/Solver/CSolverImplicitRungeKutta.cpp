@@ -9,7 +9,7 @@
 *
 ************************************************************************************************ */
 
-#include <unordered_map>
+#include <algorithm>
 #include "Utilities/ExceptionsTemplates.h"
 #include "Linalg/BasicLinalg.h"
 #include "Main/CSystem.h"
@@ -51,7 +51,15 @@ void CSolverImplicitRungeKutta::Initialize(CSolverImplicitSecondOrderTimeInt& so
 	active = GetMethod(timeint.solverType, method);
 	if (!active) { return; }
 	const Index s = method.s;
-	errorEstimateTwoSteps = (timeint.solverType != DynamicSolverType::TrapezoidalGGL);
+	//the error estimate of the automatic step size (#3287)
+	if (timeint.errorEstimate == "default") { errorEstimateTwoSteps = (timeint.solverType != DynamicSolverType::TrapezoidalGGL); }
+	else if (timeint.errorEstimate == "twoSteps") { errorEstimateTwoSteps = true; }
+	else if (timeint.errorEstimate == "oneStep") { errorEstimateTwoSteps = false; }
+	else
+	{
+		PyError(STDstring(method.name) + ": timeIntegration.errorEstimate must be 'default', 'oneStep' or 'twoSteps', not '"
+			+ timeint.errorEstimate + "'", PyErrorType::valueError);
+	}
 	for (Index i = 0; i < s; i++)
 	{
 		for (Index j = 0; j < s; j++)
@@ -110,6 +118,7 @@ void CSolverImplicitRungeKutta::Initialize(CSolverImplicitSecondOrderTimeInt& so
 	residual.SetNumberOfItems(nUnknowns); increment.SetNumberOfItems(nUnknowns);
 	temp2.SetNumberOfItems(n2); tempF.SetNumberOfItems(n2); temp1.SetNumberOfItems(n1);
 	tempAE.SetNumberOfItems(na); tempAEv.SetNumberOfItems(na); tempAEm.SetNumberOfItems(na);
+	meanA1.SetNumberOfItems(n2); meanA2.SetNumberOfItems(n2); candidateMeanA.SetNumberOfItems(n2);
 
 	bool dense = EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolver.solverType);
 	jq = dense ? (GeneralMatrix*)&jqDense : (GeneralMatrix*)&jqSparse;
@@ -131,6 +140,7 @@ void CSolverImplicitRungeKutta::Initialize(CSolverImplicitSecondOrderTimeInt& so
 	rejectedStepsError = 0;
 	hasPrevious = false;
 	candidateH = 0.;
+	numberOfMeans = 0;
 	minStepSizeWarned = false;
 }
 
@@ -308,26 +318,46 @@ void CSolverImplicitRungeKutta::AddBlock(const IRKBlock& block, Index rowOffset,
 void CSolverImplicitRungeKutta::AddProduct(const IRKBlock& left, const IRKBlock& right, Index rowOffset, Index columnOffset, Real factor, Index nRight)
 {
 	if (factor == 0.) { return; }
-	std::unordered_map<Index, std::vector<std::pair<Index, Real>>> rightRows; //row of right -> (column, value)
+	//the right block by rows, compressed, in the work arrays of the solver (#3287)
+	Index nRows = 0;
+	for (Index row : right.rows) { nRows = EXUstd::Maximum(nRows, row + 1); }
+	rightStart.assign(nRows + 1, 0);
+	for (size_t k = 0; k < right.values.size(); k++) { if (!specialRow[right.columns[k]]) { rightStart[right.rows[k] + 1]++; } }
+	for (Index i = 0; i < nRows; i++) { rightStart[i + 1] += rightStart[i]; }
+	rightColumns.resize(rightStart[nRows]);
+	rightValues.resize(rightStart[nRows]);
 	for (size_t k = 0; k < right.values.size(); k++)
 	{
-		if (!specialRow[right.columns[k]]) { rightRows[right.rows[k]].push_back({ right.columns[k], right.values[k] }); }
-	}
-	std::unordered_map<int64_t, Real> product;
-	for (size_t k = 0; k < left.values.size(); k++)
-	{
-		auto found = rightRows.find(left.columns[k]);
-		if (found == rightRows.end()) { continue; }
-		for (const auto& entry : found->second)
+		if (!specialRow[right.columns[k]])
 		{
-			product[(int64_t)left.rows[k] * (int64_t)nRight + entry.first] += left.values[k] * entry.second;
+			Index position = rightStart[right.rows[k]]++;
+			rightColumns[position] = right.columns[k];
+			rightValues[position] = right.values[k];
 		}
 	}
-	for (const auto& entry : product)
+	for (Index i = nRows; i > 0; i--) { rightStart[i] = rightStart[i - 1]; } //back to the starts of the rows
+	rightStart[0] = 0;
+
+	//the products, summed per entry after sorting
+	productEntries.clear();
+	for (size_t k = 0; k < left.values.size(); k++)
 	{
-		tripletRows.push_back((Index)(entry.first / nRight) + rowOffset);
-		tripletColumns.push_back((Index)(entry.first % nRight) + columnOffset);
-		tripletValues.push_back(factor * entry.second);
+		Index row = left.columns[k];
+		if (row >= nRows) { continue; }
+		for (Index position = rightStart[row]; position < rightStart[row + 1]; position++)
+		{
+			productEntries.push_back({ (int64_t)left.rows[k] * (int64_t)nRight + rightColumns[position], left.values[k] * rightValues[position] });
+		}
+	}
+	std::sort(productEntries.begin(), productEntries.end(), [](const std::pair<int64_t, Real>& a, const std::pair<int64_t, Real>& b) { return a.first < b.first; });
+	for (size_t k = 0; k < productEntries.size(); )
+	{
+		int64_t key = productEntries[k].first;
+		Real value = 0.;
+		for (; k < productEntries.size() && productEntries[k].first == key; k++) { value += productEntries[k].second; }
+		tripletRows.push_back((Index)(key / nRight) + rowOffset);
+		tripletColumns.push_back((Index)(key % nRight) + columnOffset);
+		tripletValues.push_back(factor * value);
 	}
 }
 
@@ -364,8 +394,9 @@ void CSolverImplicitRungeKutta::ComputeJacobian(CSolverImplicitSecondOrderTimeIn
 	for (IRKBlock* b : { &blockK, &blockKy, &blockCt, &blockGq, &blockGy, &blockCyt, &blockCq, &blockCy, &blockCaa, &blockD, &blockGv, &blockCv, &blockM }) { b->Clear(); }
 	auto Range = [n2, n1](Index i) { return (i < n2) ? 0 : ((i < n2 + n1) ? 1 : 2); };
 	auto Local = [n2, startAE](Index i) { return (i < n2) ? i : ((i < startAE) ? i - n2 : i - startAE); };
-	std::vector<Index> rows, columns;
-	std::vector<Real> values;
+	std::vector<Index>& rows = entryRows; //the work arrays of the solver (#3287)
+	std::vector<Index>& columns = entryColumns;
+	std::vector<Real>& values = entryValues;
 	jq->GetSparseEntries(rows, columns, values);
 	IRKBlock* qBlocks[3][3] = { {&blockK, &blockKy, &blockCt}, {&blockGq, &blockGy, &blockCyt}, {&blockCq, &blockCy, &blockCaa} };
 	specialRow.CopyFrom(velocityLevelRow);
@@ -457,9 +488,9 @@ void CSolverImplicitRungeKutta::ComputeJacobian(CSolverImplicitSecondOrderTimeIn
 	}
 	for (size_t k = 0; k < tripletValues.size(); k++) { tripletValues[k] *= rowScale[tripletRows[k]]; }
 	stageMatrix->SetAllZero();
-	SparseTripletVector triplets;
-	for (size_t k = 0; k < tripletValues.size(); k++) { triplets.Append(EXUmath::Triplet(tripletRows[k], tripletColumns[k], tripletValues[k])); }
-	stageMatrix->AddSparseTriplets(triplets);
+	stageTriplets.SetNumberOfItems(0);
+	for (size_t k = 0; k < tripletValues.size(); k++) { stageTriplets.Append(EXUmath::Triplet(tripletRows[k], tripletColumns[k], tripletValues[k])); }
+	stageMatrix->AddSparseTriplets(stageTriplets);
 	stageMatrix->FinalizeMatrix();
 	if (solver.IsVerboseCheck(3)) { solver.VerboseWrite(3, "    stage Jacobian = " + EXUstd::ToString(stageMatrix->GetEXUdenseMatrix()) + "\n"); }
 }
@@ -480,7 +511,27 @@ Real CSolverImplicitRungeKutta::ErrorEstimate(CSolverImplicitSecondOrderTimeInt&
 		sum += EXUstd::Square(error / scale);
 		count++;
 	};
-	if (!hasPrevious || !errorEstimateTwoSteps)
+	//TrapezoidalGGL: the velocity error h^3/12 a_tt, a_tt by the second difference of the mean accelerations (v1 - v0)/h
+	//of this and the last two steps, which do not alternate as the accelerations do with constraints; as SolveTrapezoidalGGL (#3287)
+	const bool trapezoidal = (s == 2 && method.c[0] == 0. && method.ggl);
+	const bool twoSteps = hasPrevious && errorEstimateTwoSteps;
+	if (trapezoidal && (!twoSteps || solver.data.nAE) && numberOfMeans == 2)
+	{
+		Real tau1 = 0.5 * (h + meanH1), tau2 = 0.5 * (meanH1 + meanH2);
+		for (Index j = 0; j < n2; j++)
+		{
+			Real mean = (V[s - 1][j] - v0[j]) / h;
+			Real a_tt = (2. / (tau1 + tau2)) * ((mean - meanA1[j]) / tau1 - (meanA1[j] - meanA2[j]) / tau2);
+			Add((h * h * h / 12.) * a_tt, v0[j], V[s - 1][j]);
+		}
+	}
+	if (trapezoidal && !twoSteps)
+	{
+		//the position error h^3/12 q_ttt = h^2/12 (a1 - a0) of the trapezoidal rule (#3287)
+		for (Index j = 0; j < n2; j++) { Add((h * h / 12.) * (stageA[s - 1][j] - stageA[0][j]), q0[j], Q[s - 1][j]); }
+		order = 3.;
+	}
+	else if (!twoSteps)
 	{
 		//against the trapezoidal rule of the first (or the start) and the last stage, an error of order h^3
 		const Vector& vFirst = (method.c[0] == 0.) ? V[0] : v0;
@@ -652,6 +703,7 @@ bool CSolverImplicitRungeKutta::Step(CSolverImplicitSecondOrderTimeInt& solver, 
 	//the stages of this step, which becomes the previous one when it is accepted
 	candidateT0 = t0;
 	candidateH = h;
+	for (Index j = 0; j < solver.data.nODE2; j++) { candidateMeanA[j] = (V[s - 1][j] - v0[j]) / h; }
 	for (Index j = 0; j < s; j++) { candidateV[j].CopyFrom(V[j]); candidateA[j].CopyFrom(stageA[j]); }
 	return true;
 }
@@ -661,6 +713,11 @@ void CSolverImplicitRungeKutta::AcceptStep()
 	if (candidateH <= 0.) { return; } //the initial state
 	previousT0 = candidateT0;
 	previousH = candidateH;
+	meanA2.CopyFrom(meanA1); //the mean accelerations of the last two steps (#3287)
+	meanA1.CopyFrom(candidateMeanA);
+	meanH2 = meanH1;
+	meanH1 = candidateH;
+	numberOfMeans = EXUstd::Minimum(numberOfMeans + 1, (Index)2);
 	for (Index j = 0; j < method.s; j++) { previousV[j].CopyFrom(candidateV[j]); previousA[j].CopyFrom(candidateA[j]); }
 	hasPrevious = true;
 	candidateH = 0.;

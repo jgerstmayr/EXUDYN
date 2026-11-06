@@ -241,7 +241,10 @@ CSolverBase                                   unchanged: step loop, discontinuou
   their equation at the last two stages.
 - Measured on modelLibrary.py (constant steps h, h/2, h/4 against LobattoIIIA4 with h/16): orders 2.0, 4.0, 4.0, 3.0
   on the pendulum of mass points, the chain of rigid bodies on joints and on spring-dampers, the kinematic tree;
-  2 to 4 iterations per step. Lie group nodes (the slider crank): Newton converges at h = 1e-3 and stalls at a
+  2 to 4 iterations per step (#3287: no allocations per step - the work arrays of the stage Jacobian kept, the products
+  by sorted vectors, the dense matrix gives its entries without a copy; `timeIntegration.errorEstimate`; the oneStep
+  estimate of TrapezoidalGGL is h^2/12 (a1 - a0) and the velocity error by the mean accelerations, as in Python -
+  against the trapezoidal rule it was zero). Lie group nodes (the slider crank): Newton converges at h = 1e-3 and stalls at a
   floor of 2e-10 at h/16 - the stage Jacobian has no tangent operator (RG20.7.2). The genericDAE model fails as with
   TrapezoidalIndex2: its constraintUserFunction ignores velocityLevel.
 

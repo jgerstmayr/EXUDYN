@@ -298,6 +298,8 @@ class TimeIntegrationSettings:
     """0:  jacobian of loads not considered (may lead to slow convergence or Newton failure); 1: in case of implicit integrators, compute (numerical) Jacobian of ODE2 and ODE1 coordinates for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; 2: also compute ODE2_t dependencies for jacobian; note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies."""
     endTime: float
     """: end time of time integration."""
+    errorEstimate: str
+    """the error estimate of the automatic step size of the implicit Runge-Kutta solvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3): 'oneStep', against the trapezoidal rule of the first and the last stage, of order 3; 'twoSteps', the quadrature of the method against the polynomial through the stage velocities of the previous and this step, of the order of the method; 'default', twoSteps for the Runge-Kutta methods and oneStep for TrapezoidalGGL (#3287); the argument errorEstimate of the solvers of exudyn.symbolics.advancedSolvers."""
     initialStepSize: float
     """: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster."""
     minimumStepSize: float

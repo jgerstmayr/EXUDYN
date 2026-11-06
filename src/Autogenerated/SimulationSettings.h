@@ -1118,6 +1118,7 @@ public: // AUTO:
   bool automaticStepSize;                         //!< AUTO: True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads \f$h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}\f$
   Index computeLoadsJacobian;                     //!< AUTO: must be >= 0; 0:  jacobian of loads not considered (may lead to slow convergence or Newton failure); 1: in case of implicit integrators, compute (numerical) Jacobian of ODE2 and ODE1 coordinates for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; 2: also compute ODE2_t dependencies for jacobian; note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies
   Real endTime;                                   //!< AUTO: must be >= 0; \f$t_{end}\f$: end time of time integration
+  std::string errorEstimate;                      //!< AUTO: the error estimate of the automatic step size of the implicit Runge-Kutta solvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3): 'oneStep', against the trapezoidal rule of the first and the last stage, of order 3; 'twoSteps', the quadrature of the method against the polynomial through the stage velocities of the previous and this step, of the order of the method; 'default', twoSteps for the Runge-Kutta methods and oneStep for TrapezoidalGGL (#3287); the argument errorEstimate of the solvers of exudyn.symbolics.advancedSolvers
   Real initialStepSize;                           //!< AUTO: must be >= 0; \f$h_{init}\f$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.
   Real minimumStepSize;                           //!< AUTO: must be > 0; \f$h_{min}\f$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
   Real numberOfSteps;                             //!< AUTO: must be > 0; \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance \f$100\cdot\varepsilon\f$) as it is silently rounded to int
@@ -1149,6 +1150,7 @@ public: // AUTO:
     automaticStepSize = true;
     computeLoadsJacobian = 0;
     endTime = 1;
+    errorEstimate = "default";
     initialStepSize = 0;
     minimumStepSize = 1e-8;
     numberOfSteps = 100;
@@ -1208,6 +1210,7 @@ public: // AUTO:
     os << "  automaticStepSize = " << automaticStepSize << "\n";
     os << "  computeLoadsJacobian = " << computeLoadsJacobian << "\n";
     os << "  endTime = " << endTime << "\n";
+    os << "  errorEstimate = " << errorEstimate << "\n";
     os << "  initialStepSize = " << initialStepSize << "\n";
     os << "  minimumStepSize = " << minimumStepSize << "\n";
     os << "  numberOfSteps = " << numberOfSteps << "\n";

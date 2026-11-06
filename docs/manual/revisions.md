@@ -586,8 +586,9 @@ the normals of a mesh in the raytracer.
 **Implicit Runge-Kutta solvers in C++.** `DynamicSolverType.TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL` and
 `Radau3` run with `mbs.SolveDynamic` on every model of the implicit solver: index-3 constraints without index
 reduction, orders 2, 4, 4 and 3 in positions and velocities, with constant steps or, by default, the automatic step
-size of `timeIntegration.automaticStepSize` with the tolerances `absoluteTolerance` and `relativeTolerance`;
-velocity-level constraints (rolling) are solved at the implicit stages. Lie group nodes work at moderate step sizes;
+size of `timeIntegration.automaticStepSize` with the tolerances `absoluteTolerance` and `relativeTolerance` and the
+error estimate of `timeIntegration.errorEstimate`, of one step or of two steps (#3287); they allocate no memory per
+step; velocity-level constraints (rolling) are solved at the implicit stages. Lie group nodes work at moderate step sizes;
 their Newton iteration stalls at small ones (#3261).
 
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse

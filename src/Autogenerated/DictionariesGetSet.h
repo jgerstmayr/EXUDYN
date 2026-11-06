@@ -1172,6 +1172,14 @@ inline py::dict GetDictionaryWithTypeInfo(const TimeIntegrationSettings& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.errorEstimate;
+    d["type"] = "String";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "the error estimate of the automatic step size of the implicit Runge-Kutta solvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3): 'oneStep', against the trapezoidal rule of the first and the last stage, of order 3; 'twoSteps', the quadrature of the method against the polynomial through the stage velocities of the previous and this step, of the order of the method; 'default', twoSteps for the Runge-Kutta methods and oneStep for TrapezoidalGGL (#3287); the argument errorEstimate of the solvers of exudyn.symbolics.advancedSolvers";
+    structureDict["errorEstimate"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.initialStepSize;
     d["type"] = "UReal";
     d["size"] = std::vector<int>{1};
@@ -1286,6 +1294,7 @@ inline py::dict GetDictionary(const TimeIntegrationSettings& data) {
     structureDict["automaticStepSize"] = data.automaticStepSize;
     structureDict["computeLoadsJacobian"] = data.computeLoadsJacobian;
     structureDict["endTime"] = data.endTime;
+    structureDict["errorEstimate"] = data.errorEstimate;
     structureDict["initialStepSize"] = data.initialStepSize;
     structureDict["minimumStepSize"] = data.minimumStepSize;
     structureDict["numberOfSteps"] = data.numberOfSteps;
@@ -1317,6 +1326,7 @@ inline void SetDictionary(TimeIntegrationSettings& data, const py::dict& d) {
     EPyUtils::FromPython(d["automaticStepSize"], data.automaticStepSize, "TimeIntegrationSettings.automaticStepSize");
     EPyUtils::FromPython(d["computeLoadsJacobian"], data.computeLoadsJacobian, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.computeLoadsJacobian");
     EPyUtils::FromPython(d["endTime"], data.endTime, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.endTime");
+    EPyUtils::FromPython(d["errorEstimate"], data.errorEstimate, "TimeIntegrationSettings.errorEstimate");
     EPyUtils::FromPython(d["initialStepSize"], data.initialStepSize, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.initialStepSize");
     EPyUtils::FromPython(d["minimumStepSize"], data.minimumStepSize, EPyUtils::RangeCheck::positive, "TimeIntegrationSettings.minimumStepSize");
     EPyUtils::FromPython(d["numberOfSteps"], data.numberOfSteps, EPyUtils::RangeCheck::positive, "TimeIntegrationSettings.numberOfSteps");

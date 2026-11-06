@@ -6427,6 +6427,35 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-7-3"></a>
+### RG20.7.3 — no allocations per step in the implicit Runge-Kutta solvers, timeIntegration.errorEstimate (2026-11-06, #3287)
+- Maintainer 2026-11-06: the open solver tasks RG20.4, RG20.8, RG20.7.
+- Measured by exu.special.InfoStat, 100 against 200 steps (nPendulum, rigidBodyJoints, kinematicTree of
+  modelLibrary.py): TrapezoidalGGL and LobattoIIIA4 created 6 to 10 arrays per step, and with the dense solver 3
+  matrices per step; generalized-alpha none. The arrays: the local SparseTripletVector of the stage Jacobian; the
+  matrices: GetSparseEntries of the dense matrix, by default a dense copy (GetEXUdenseMatrix) of jq, jv and the mass
+  matrix per Jacobian. Not counted by InfoStat, also per Jacobian: the std::vectors of the entries and the two
+  unordered_maps of each AddProduct.
+- Changed: GeneralMatrixEXUdense::GetSparseEntries reads its matrix without a copy; the entries, the stage triplets
+  (SetNumberOfItems(0) keeps the memory) and the work of AddProduct are members of CSolverImplicitRungeKutta;
+  AddProduct by the right block compressed by rows and the products as (key, value) sorted and summed, instead of the
+  hash maps. After it: 0 arrays and 0 matrices per step for all four methods, dense and sparse (+-1 when a work array
+  grows). The kinematic tree creates 17 to 29 vectors per step in every solver, generalized-alpha as well - a matter
+  of ObjectKinematicTree, not of these solvers (not changed here).
+- `timeIntegration.errorEstimate` (TString, default 'default'): 'oneStep', 'twoSteps', 'default' (twoSteps for the
+  Runge-Kutta methods, oneStep for TrapezoidalGGL, as before); another value raises a ValueError at the start.
+- Found while testing it: the oneStep estimate - the difference to the trapezoidal rule of the first and the last
+  stage - is zero for TrapezoidalGGL, which is that rule: its automatic step size (the default) always took the
+  maximum step (the mass on a spring with the tolerances 1e-6: 21 steps, error 0.024). Now as SolveTrapezoidalGGL:
+  the position error h^2/12 (a1 - a0) and the velocity error h^3/12 a_tt by the second difference of the mean
+  accelerations (v1 - v0)/h of this and the last two accepted steps (also with twoSteps when there are constraints):
+  692 steps, error 6.1e-5; twoSteps 696 steps, 5.9e-5. No test model used the automatic step of TrapezoidalGGL in C++.
+- test_implicitRungeKuttaAllocations.py (new pytest): the arrays and matrices of 100 and 400 steps differ by at most
+  2, for the four methods, dense and sparse, and with the automatic step. implicitRungeKuttaErrorEstimateTest.py (new):
+  default equal to twoSteps (LobattoIIIA4) and oneStep (TrapezoidalGGL), the two estimates different, the errors below
+  1e-3, an invalid value refused. parameterConversionTestReference.txt: the new setting recorded.
+- Seen, not changed: modelLibrary.py calls CreateRevoluteJoint with the deprecated bodyNumbers.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

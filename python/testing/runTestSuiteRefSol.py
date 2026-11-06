@@ -46,6 +46,7 @@ def TestExamplesReferenceSolution():
         'trajectoryBlendingTest.py': 10.527218840445627, #new 2026-11-05: the blending of the profiles of Trajectory (#3274)
         'trajectoryBlendingCartesianTest.py': 7.984211565491496, #new 2026-11-06: auto blend times, the velocity check, the blending in Cartesian space (#3283)
         'explicitStepSizeControlTest.py': 25, #new 2026-11-06: the PI controller and the absolute values in the error scale of ODE23 and DOPRI5 (#3245)
+        'implicitRungeKuttaErrorEstimateTest.py': 2169, #new 2026-11-06: timeIntegration.errorEstimate, the step size of TrapezoidalGGL controlled (#3287)
         'solverOutputWithinStepTest.py': 5.000036595791131, #new 2026-11-06: the output of the C++ solvers at the multiples of the write periods, interpolated within the step (#3286)
         'urdfRobotHDF5Test.py': 11.896535862956235, #new 2026-11-06: a robot of a URDF file in the repository, its import stored as HDF5: masses from the meshes, corrected inertia, flipped joint, texture (#3285)
         'robotInverseDynamicsTest.py': 14.002447714997835, #new 2026-11-05: KinematicChain.InverseDynamics, Robot.InverseDynamics, the dynamic compensation (#3276)

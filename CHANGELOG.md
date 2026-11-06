@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 385 | 1.13.400 |
+| 1.13 | Newborn | 386 | 1.13.401 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.401** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The implicit Runge-Kutta solvers allocate no memory per step; the setting timeIntegration.errorEstimate (#3287)
+  - description: CSolverImplicitRungeKutta allocates per step: the triplets of the stage Jacobian, the entries of the system Jacobians (a dense copy of each matrix with the dense solver), the maps of the products in the stage Jacobian - 7 to 10 arrays and, dense, 3 matrices per step, where generalized-alpha allocates none. The error estimate of one or of two steps is fixed by the method (two steps for the Runge-Kutta methods, one step for TrapezoidalGGL), while the Python solvers select it. Decided (revision2026c step RG20.7.3): the work arrays kept between steps, the dense matrix gives its entries without a copy, the products of the stage Jacobian by sorted vectors; timeIntegration.errorEstimate selects 'default' (as now), 'oneStep' or 'twoSteps', as the argument errorEstimate of the Python solvers.
+  - **notes:** The implicit Runge-Kutta solvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3) allocate no arrays or matrices per step: the work arrays of the stage Jacobian are kept, its products formed by sorted vectors, and a dense matrix gives its entries without a copy. timeIntegration.errorEstimate selects the error estimate of the automatic step size: 'default', 'oneStep' or 'twoSteps'. The oneStep estimate of TrapezoidalGGL is that of SolveTrapezoidalGGL, h^2/12 (a1 - a0) and the velocity error by the mean accelerations; it was zero, so that its automatic step size always took the maximum step.
+  - date resolved: **2026-11-06 09:14**, date raised: 2026-11-06
 - **1.13.400** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The error norm of the automatic step size of CSolverExplicit scales by max(q\_new, q\_start) without absolute values (#3245)
   - description: CSolverExplicitTimeInt computes the scale of the error of ODE23 and DOPRI5 as absoluteTolerance + Maximum(q\_second, q\_start)\*relativeTolerance for the coordinates, velocities and ODE1 coordinates, without the absolute values: a negative coordinate makes the scale smaller than the absolute tolerance, zero or negative, so that the error of that coordinate is exaggerated or divided by zero. The norm of Hairer, Norsett and Wanner uses max(\|q\_second\|, \|q\_start\|), as the Python step size controller of exudyn.symbolics.advancedSolvers. Decided: fixed with the common step size controller in C++ (revision2026c step RG20.8).
   - **notes:** ODE23 and DOPRI5 scale the error of each coordinate by absoluteTolerance + relativeTolerance\*max(\|q\_new\|, \|q\_start\|), with the absolute values, and take their step sizes from the PI controller shared with the implicit Runge-Kutta solvers instead of the elementary rule; the steps and results of these solvers change slightly, the errors of the test models became smaller; explicitStepSizeControlTest.py.

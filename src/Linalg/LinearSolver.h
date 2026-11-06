@@ -449,6 +449,19 @@ public:
 		return matrix;
 	}
 
+	//! the entries that are not zero, as (row, column, value), read from the matrix without a copy (#3287)
+	virtual void GetSparseEntries(std::vector<Index>& rows, std::vector<Index>& columns, std::vector<Real>& values) const override
+	{
+		rows.clear(); columns.clear(); values.clear();
+		for (Index i = 0; i < matrix.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < matrix.NumberOfColumns(); j++)
+			{
+				if (matrix(i, j) != 0.) { rows.push_back(i); columns.push_back(j); values.push_back(matrix(i, j)); }
+			}
+		}
+	}
+
 	//! function to print matrix
 	virtual void PrintMatrix(std::ostream& os) const override
 	{

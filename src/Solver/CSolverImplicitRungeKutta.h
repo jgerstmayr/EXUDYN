@@ -98,6 +98,10 @@ public:
 	Vector previousV[ImplicitRungeKuttaMethod::maxStages], previousA[ImplicitRungeKuttaMethod::maxStages];
 	Vector candidateV[ImplicitRungeKuttaMethod::maxStages], candidateA[ImplicitRungeKuttaMethod::maxStages];
 	Real candidateT0 = 0., candidateH = 0.;
+	//TrapezoidalGGL: the mean accelerations (v1 - v0)/h of the last two accepted steps, for the velocity error (#3287)
+	Vector meanA1, meanA2, candidateMeanA;
+	Real meanH1 = 0., meanH2 = 0.;
+	Index numberOfMeans = 0;
 
 	//the matrices
 	GeneralMatrixEXUdense jqDense, jvDense, stageDense;
@@ -108,6 +112,13 @@ public:
 	IRKBlock blockK, blockKy, blockCt, blockGq, blockGy, blockCyt, blockCq, blockCy, blockCaa, blockD, blockGv, blockCv, blockM;
 	std::vector<Index> tripletRows, tripletColumns;
 	std::vector<Real> tripletValues;
+	//the work arrays of the stage Jacobian, kept between steps (#3287)
+	std::vector<Index> entryRows, entryColumns;		//!< the entries of a system Jacobian
+	std::vector<Real> entryValues;
+	SparseTripletVector stageTriplets;
+	std::vector<Index> rightStart, rightColumns;	//!< AddProduct: the right block by rows (compressed)
+	std::vector<Real> rightValues;
+	std::vector<std::pair<int64_t, Real>> productEntries; //!< AddProduct: (row * nRight + column, value), sorted
 
 	//! the method of a solver type, false if it is none of the four
 	static bool GetMethod(DynamicSolverType type, ImplicitRungeKuttaMethod& method);

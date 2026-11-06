@@ -355,6 +355,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError str
   SimulationSettings.solution: solverInformationFileName(attribute,dict)
   SimulationSettings.solution.file: information(attribute,dict) name(attribute,dict)
   SimulationSettings.solution.restart: name(attribute,dict)
+  SimulationSettings.timeIntegration: errorEstimate(attribute,dict)
   VisualizationSettings.exportImages: saveImageFileName(attribute,dict) saveImageFormat(attribute,dict)
   VisualizationSettings.general: renderWindowString(attribute,dict)
   VisualizationSettings.raytracer.material0: name(attribute,dict)
