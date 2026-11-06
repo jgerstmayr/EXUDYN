@@ -773,17 +773,17 @@ def AVX2ReferenceSolutionUpdate():
     refSolAVX2 = {
         'generalContactFrictionTests.py':          12.022115875486731,        #drift 4.8e-03
         'generalContactCylinderTest.py':           12.246589711797922,        #drift 3.1e-04
-        'sphereTriangleTest2.py':                  4.356258097388173,         #drift 8.0e-06
+        'sphereTriangleTest2.py':                  4.356258097407118,         #drift 8.0e-06
         'explicitSolversPostNewtonTest.py':        4.557710447618821,         #drift 7.7e-06
         'restartFileTest.py':                      -2.931848,                 #drift 1.0e-06
         'generalContactImplicit1.py':              0.7758156549599001,        #drift 8.9e-08
-        'rollingDiscTangentialForces.py':          1.0342017444582357,        #drift 5.9e-09
-        'coordinateSpringDamperExt.py':            17.432698712456553,        #drift 1.7e-09
-        'homogeneousTransformationParameterTest.py': 8.981932851042316,         #drift 1.6e-09
+        'rollingDiscTangentialForces.py':          1.0342017444582357,        #drift 4.4e-09
+        'computeItemTest.py':                      71.26280786410713,         #drift 2.2e-09
+        'coordinateSpringDamperExt.py':            17.432698712456773,        #drift 1.7e-09
         'createSphereQuadContact.py':              1.1243943000689443,        #drift 1.5e-09
         'geometricallyExactBeamRightAngleFrame.py': 3.3061810764103385,        #drift 5.5e-10
-        'computeItemTest.py':                      71.26280786921733,         #drift 4.1e-10
         'geometricallyExactBeamMassTest.py':       2.994207078782524,         #drift 3.6e-10
+        'homogeneousTransformationParameterTest.py': 8.981932851070072,         #drift 3.5e-10
         'createSphereTriangleContact.py':          4.840244059191676,         #drift 2.2e-10
         'sliderCrank3Dbenchmark.py':               5.791191499538414,         #drift 1.5e-10
         'ObjectJointGeneric.py':                   -3.1340201971054413,       #drift 3.6e-11
@@ -792,31 +792,30 @@ def AVX2ReferenceSolutionUpdate():
         'rigidBodySpringDamperIntrinsic.py':       0.5472368462946675,        #drift 5.8e-12
         'contactSphereTorusMomentumTest.py':       4.227231105378637,         #drift 2.7e-12
         'heavyTop.py':                             33.423125751719226,        #drift 2.6e-12
-        'ballBearingTest.py':                      0.037852414009470606,      #drift 2.4e-12
         'ObjectContactFrictionCircleCable2D.py':   -0.09630714358841744,      #drift 2.3e-12
         'genericODE2matrixFormatsTest.py':         2.089237240674427,         #drift 1.9e-12
         'connectorRigidBodySpringDamperTest.py':   0.1827622474313096,        #drift 6.4e-13
         'generalContactSpheresTest.py':            -1.1138547720263723,       #drift 6.3e-13
         'revoluteJointPrismaticJointTest.py':      1.253880679636323,         #drift 5.7e-13
         'userMarkerTest.py':                       -0.35693486535296615,      #drift 4.4e-13
+        'ballBearingTest.py':                      0.03785241401050154,       #drift 3.7e-13
         'geometricallyExactBeam2DquadraticTest.py': 0.7426300926716076,        #drift 2.9e-13
-        'rollingCoinTest.py':                      1.0634381189348778,        #drift 2.3e-13
+        'mainSystemExtensionsTests.py':            57.6463944753733,          #drift 2.1e-13
         'userConnectorTest.py':                    0.3942810318185901,        #drift 2.1e-13
-        'genericJointUserFunctionTest.py':         1.1922383980809548,        #drift 2.0e-13
         'ObjectJointSpherical.py':                 -0.003786192075485726,     #drift 1.7e-13
         'contactComparisonTest.py':                4.773734739232184,         #drift 1.6e-13
         'bricardMechanism.py':                     4.172189592784257,         #drift 1.4e-13
         'userConnectorContactTest.py':             26.27081007873662,         #drift 1.3e-13
-        'modelLibraryTest.py':                     18.491003336653478,        #drift 1.2e-13
+        'modelLibraryTest.py':                     18.490979056790795,        #drift 1.2e-13
         'ANCFBeamTest.py':                         1.0105101312117235,        #drift 1.1e-13
-        'symbolicItemOutputTest.py':               3.420794832400213,         #drift 1.1e-13
+        'symbolicItemOutputTest.py':               3.4207948324002095,        #drift 1.1e-13
         'createSphereQuadContact2.py':             0.15616582432934165,       #drift 1.0e-13
         'energiesFlexibleBodiesTest.py':           5.850170605188781,         #drift 9.3e-14
-        'mainSystemExtensionsTests.py':            57.646394475373,           #drift 8.5e-14
         'genericODE2test.py':                      0.03604546349916921,       #drift 8.0e-14
         'userRigidBodyTest.py':                    13.47575502137632,         #drift 7.3e-14
         'generalContactTriangleMomentumTest.py':   4.035299999516811,         #drift 7.0e-14
         'distanceSensor.py':                       1.7491018054920164,        #drift 5.8e-14
+        'genericJointUserFunctionTest.py':         1.1922383980561477,        #drift 5.6e-14
         #a single run of runPerformanceTests.py: its result moves by 20% with the Newton tolerance (#2914)
         'perfAccessFunctionsAD:cable-n200-implicit': 0.004662459533372243,  #drift 8.4e-07
         }

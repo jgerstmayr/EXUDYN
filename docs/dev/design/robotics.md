@@ -4,17 +4,20 @@ A design note of open steps: the open tasks, the maintainer's request as given, 
 is done. The analysis, the measurements and the details of each step are in the log (exudynRevisionLog2026c.md, the
 entries RG19.*). The note leaves the repository when the steps close (WORKFLOW.md §8.4).
 
-## 1. Open tasks (2026-11-06)
+## 1. Open tasks (checked 2026-11-06)
 
-The maintainer continues later; a solution for the storage of the URDF files and of the models saved as HDF5 will
-come from the maintainer first (task 1), and several of the other tasks depend on it.
+The group is paused. The maintainer brings a solution for the storage of the URDF files and of the models saved as
+HDF5 (task 1) first; tasks 3 and 5 depend on it, tasks 2, 4 and 6 do not. Each line below was checked against the code
+on 2026-11-06.
 
 1. **Storage of URDF files and HDF5 models** (to be decided by the maintainer). Now:
    - the local data set (KUKA, Stäubli, ANYmal, Spot, the Mars rover) is in `EXUDYN_git/tmp/URDF`, ignored by git
      (decision 7); staubliTX2trajectories.py and staubliTX2blending.py find it by `__file__` and run without meshes
      when it is missing;
-   - Examples/FurtherExamples/spotModel.py loads `spotData.h5` (tracked, beside it) from the working directory; the
-     serial examples run (`--serial`) does not change into the folder of an example and fails on it (#3284);
+   - Examples/FurtherExamples/spotModel.py loads `spotData.h5` (tracked, beside it) by a path relative to the working
+     directory, so it fails when run from elsewhere; the pattern of #3303 -
+     `os.path.join(os.path.dirname(os.path.abspath(__file__)), ...)`, which 20 test models and examples use and the
+     examples runner supports (#3284) - fixes it in one line, independently of the decision;
    - humanRobotInteraction.py reads the articulated dummy from an absolute path of the maintainer's machine
      (`C:/DATA/cpp/DocumentationAndInformation/STL/...`);
    - serialRobotURDF.py has `saveHDF5`/`loadFromHDF5` writing `solution/robot<model>.h5`;
@@ -42,8 +45,15 @@ come from the maintainer first (task 1), and several of the other tasks depend o
 7. **Not revised**: exudyn.robotics.mobile (mecanum wheels), special.py (manipulability) and rosInterface.py, which is
    untested (no ROS in the tests); ROSMobileManipulator.py keeps its state machine.
 8. **Checks by hand**: serialRobotInteractiveLimits.py (sliders, mouse drag, end stops) ran only without windows.
-9. **The plan**: RG19.1 to RG19.8 are open with all their sub-steps closed; they close when the maintainer has
-   decided task 1 and the tasks above that are wanted.
+9. **The plan**: RG19.1 to RG19.8 are open with all their 27 sub-steps closed, RG19.9 is closed; RG19.1 to RG19.8
+   close when the maintainer has decided task 1 and the tasks above that are wanted, each wanted task a sub-step with
+   an issue. The robotics step outside the group, RG11.8.20 (#2993, InverseKinematicsNumerical without PDcontrol), is
+   closed as superseded by #3269: the deprecated class calls the LM IK of KinematicChain, which needs no PDcontrol and
+   leaves the robot unchanged.
+
+Suggested order when the group resumes: task 1 (the maintainer's solution) with the one-line fix of spotModel.py and
+the path of humanRobotInteraction.py; task 2, which also gives task 3 its function; task 4; task 6 when the
+deprecation period of the joint torque loads ends; task 5 as a design question of its own.
 
 ## 2. The request (maintainer 2026-11-04)
 
@@ -188,3 +198,4 @@ and the connection to the Robotics Toolbox for Python (RTB) of P. Corke are revi
 | RG19.7.1 | #3277, #3279 | the configurations, initial configuration and friction of models.py; the Puma560 limits of the RTB; Manipulator4Rsimple removed |
 | RG19.8.1, RG19.8.2 | #3279, #3284 | the serial robot examples on the revised interfaces; the examples runner gives `__file__` |
 | RG19.9 | #3281 | the chapter Robotics of the user manual and tutorialRobotics.ipynb |
+| RG11.8.20 | #2993 | closed as superseded by #3269 (see task 9) |

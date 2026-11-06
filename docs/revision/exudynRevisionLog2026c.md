@@ -6427,6 +6427,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-9"></a>
+### RG20.9 closed, the fast-module checkpoint; RG11.8.20 superseded; the open robotics tasks (2026-11-06, #2993)
+- Maintainer 2026-11-06: which RG19 tasks are open, the design note revised; why RG20.9 is still open.
+- RG20.9 was left open for the checkpoint of #3296 at the completion of a group; its eleven sub-steps were closed.
+  Closed now, with the checkpoint run at V1.13.427: the fast module built (2 min 14 s); its suite 9 of 294 failed,
+  all rounding or stale entries - modelLibraryTest and rollingCoinTest kept AVX2 references from before #3304 and
+  #303 (their fast results equal the regular references to 1.2e-13 and 1.3e-14; rollingCoinTest needs no entry any
+  more), the others drift by 5.6e-14 to 2.8e-11 against their entries. recordAVX2References.py --write: 10 entries
+  updated, rollingCoinTest removed; the fast suite (also --parallel) and the regular suite pass. Performance tests
+  pass with both modules: 47.9 s regular (46.0 s at V1.13.418), 39.0 s fast.
+- RG11.8.20 (#2993) closed as superseded by #3269: the deprecated InverseKinematicsNumerical builds a KinematicChain
+  and runs its LM IK; a Puma560 of models.py built without PDcontrol reaches its tool HT to 2e-13 and keeps its
+  gravity.
+- docs/dev/design/robotics.md: section 1 checked against the code - every task still applies; spotModel.py still loads
+  spotData.h5 relative to the working directory (fixed in one line by the pattern of #3303, independent of task 1),
+  humanRobotInteraction.py still reads an absolute path; which tasks depend on task 1, an order for when the group
+  resumes, #2993 in the table of what is done. RG19 stays paused.
+
 <a id="rg20-9-11"></a>
 ### RG20.9.11 — the ODE2 velocities in the convergence figures (2026-11-06, #3309)
 - Maintainer 2026-11-06: the ODE2 velocities also in the convergence plots, arranged 4x1 or 2x2.
