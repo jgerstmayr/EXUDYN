@@ -446,6 +446,12 @@ below 1 (#3252).
 length, a float where an integer belongs, a number for a list - with a message and the description of the setting,
 and keeps the value it had (#3249).
 
+**The automatic step size of ODE23 and DOPRI5** (#3245): the error of a coordinate is scaled by
+`absoluteTolerance + relativeTolerance*max(|q_new|, |q_start|)` - before, without the absolute values, a negative
+coordinate made the scale small, zero or negative and the steps too small; and the step sizes come from the PI
+controller of the implicit Runge-Kutta solvers instead of the elementary rule, see {ref}`sec-explicitsolver`. The
+steps and results of these solvers change slightly; on the test models the errors became smaller.
+
 **The dynamic solvers write at the exact write times** (#3286): the solution file and the sensors are written at the
 multiples of `solution.file.writePeriod` and `solution.sensors.writePeriod` and at the end. A write time within a step
 takes the state interpolated between the start and the end of the step - the ODE2 coordinates by the cubic Hermite

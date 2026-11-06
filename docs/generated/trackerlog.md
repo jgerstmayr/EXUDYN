@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.399.dev1
+- Exudyn version = 1.13.400.dev1
 - last change = 2026-11-06
 - Number of issues = 3287
-- Number of resolved issues = 3176 (399 in current version)
+- Number of resolved issues = 3177 (400 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9443,9 +9443,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` The error norm of the automatic step size of CSolverExplicit scales by max(q\_new, q\_start) without absolute values (#3245)
-  - description: CSolverExplicitTimeInt computes the scale of the error of ODE23 and DOPRI5 as absoluteTolerance + Maximum(q\_second, q\_start)\*relativeTolerance for the coordinates, velocities and ODE1 coordinates, without the absolute values: a negative coordinate makes the scale smaller than the absolute tolerance, zero or negative, so that the error of that coordinate is exaggerated or divided by zero. The norm of Hairer, Norsett and Wanner uses max(\|q\_second\|, \|q\_start\|), as the Python step size controller of exudyn.symbolics.advancedSolvers. Decided: fixed with the common step size controller in C++ (revision2026c step RG20.8).
-  - date raised: 2026-11-04
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` InverseKinematicsNumerical fails for a robot whose links have no PDcontrol (#2993)
   - description: revision2026c step RG11.8.20: InverseKinematicsNumerical.\_\_init\_\_ reads self.robot.links\[i\].PDcontrol to store it, but RobotLink sets the attribute only when PDcontrol is given, so a robot built without control raises AttributeError ('RobotLink' object has no attribute 'PDcontrol'); it also leaves the joint stiffness of the inverse kinematics and robot.gravity = \[0,0,0\] in the robot it is given. Found with the test model of \#2259.
   - date raised: 2026-10-14

@@ -22,6 +22,7 @@
 
 #include "Solver/CSolverBase.h" 
 #include "Linalg/ResizableVectorParallel.h"	 
+#include "Solver/StepSizeController.h"
 
 static constexpr Index cSolverExplicitTimeIntMaxStages = 7; //for RK67
 
@@ -76,6 +77,7 @@ public: //made public for access via pybind
 	bool computeMassMatrixInversePerBody;
 
 	bool minStepSizeWarned; //!< set true, if already warned because of reaching minimum step due to error control
+	StepSizeController controller; //!< the PI controller of the automatic step size, shared with the implicit Runge-Kutta solvers (#3245)
 	Real nextStepSize; //!< step size the error control proposes for the NEXT step, applied when it starts; -1: none (#2109)
 
 	virtual Real GetNextStepSize() const override { return nextStepSize; }

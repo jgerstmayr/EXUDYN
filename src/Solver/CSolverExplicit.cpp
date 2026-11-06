@@ -75,6 +75,8 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 
 	//it.automaticStepSize is used such that it is only on, if solver has automatic step size control
 	if (!rk.hasStepSizeControl) { it.automaticStepSize = false; }
+	controller.Initialize(simulationSettings.timeIntegration.stepSizeSafety, simulationSettings.timeIntegration.stepSizeMaxIncrease,
+		it.minStepSize, it.maxStepSize);
 
 	//++++++++++++++++++++++++++++++++++++++++++++++
 	//create list of constrained coordinates
@@ -456,44 +458,36 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		Real rtol = simulationSettings.timeIntegration.relativeTolerance;
 		CHECKandTHROW(atol > 0, "SolverExplicit: absolute tolerance must be > 0", ExudynValueError);
 		
+		//the scale of each error by the absolute values, as Hairer, Norsett and Wanner (#3245)
 		Real scODE1, scODE2;
 		Real err = 0;
 		for (Index i = 0; i < data.nODE1; i++)
 		{
-			scODE1 = atol + EXUstd::Maximum(rk.solutionSecondApproxODE1[i], rk.startOfStepODE1[i])*rtol;
+			scODE1 = atol + EXUstd::Maximum(fabs(rk.solutionSecondApproxODE1[i]), fabs(rk.startOfStepODE1[i]))*rtol;
 			err += EXUstd::Square((rk.solutionSecondApproxODE1[i] - solutionODE1[i]) / scODE1); //==> add up to error
 		}
 		for (Index i = 0; i < data.nODE2; i++)
 		{
-			scODE2 = atol + EXUstd::Maximum(rk.solutionSecondApproxODE2[i], rk.startOfStepODE2[i])*rtol;		//position error //** 2023-02-10: check Celledoni step size control
-			err += EXUstd::Square((rk.solutionSecondApproxODE2[i] - solutionODE2[i]) / scODE2);					//==> add up to error //** 2023-02-10: wrong, CORRECT!
-			//(rk.solutionSecondApproxODE2inc - rk.startOfStepODE2) - solutionODE2increment => this is then also valid for Lie group methods !!!!
-			scODE2 = atol + EXUstd::Maximum(rk.solutionSecondApproxODE2_t[i], rk.startOfStepODE2_t[i])*rtol;	//velocity error
-			err += EXUstd::Square((rk.solutionSecondApproxODE2_t[i] - solutionODE2_t[i]) / scODE2);				//==> add up to error
+			scODE2 = atol + EXUstd::Maximum(fabs(rk.solutionSecondApproxODE2[i]), fabs(rk.startOfStepODE2[i]))*rtol;		//position error
+			err += EXUstd::Square((rk.solutionSecondApproxODE2[i] - solutionODE2[i]) / scODE2);
+			scODE2 = atol + EXUstd::Maximum(fabs(rk.solutionSecondApproxODE2_t[i]), fabs(rk.startOfStepODE2_t[i]))*rtol;	//velocity error
+			err += EXUstd::Square((rk.solutionSecondApproxODE2_t[i] - solutionODE2_t[i]) / scODE2);
 		}
 		const Index nError = data.nODE1 + 2*data.nODE2; //ODE2 displacements, ODE2 velocities and ODE1 coordinates
 		err = (nError != 0) ? sqrt(err / nError) : 0.; //a system without coordinates has no error: the step size grows to its maximum (#2790)
 		it.automaticStepSizeError = err;			
 		if (err == 0.) { err = 1e-12; } //set err to a very small error (based on atol and rtol, this is very small) and would lead to significant step size increase
 
-		//stepsize control according to Hairer, Norsett and Wanner I, p. 168:
+		//the PI controller shared with the implicit Runge-Kutta solvers (#3245); rk.orderMethod = q+1 in Hairer, Norsett and Wanner
 		Real h = it.currentStepSize;
-		Real hOpt = h * EM::Pow((1. / err), 1. / (rk.orderMethod)); //rk.orderMethod = q+1 in Hairer, Norsett and Wanner
-
-		Real hMax = EXUstd::Minimum(it.maxStepSize, h * simulationSettings.timeIntegration.stepSizeMaxIncrease);
-		Real hMin = it.minStepSize;
-		Real fSafe = simulationSettings.timeIntegration.stepSizeSafety; //safety factor for increasing step size
-		Real hNew = EXUstd::Minimum(hMax, EXUstd::Maximum(hMin, fSafe*hOpt));
-
-		if (hNew == hMin && !minStepSizeWarned)
+		Real hNew;
+		bool minimumReached;
+		stepRejected = !controller.Control(err, h, (Real)rk.orderMethod, hNew, minimumReached);
+		if (stepRejected) { it.rejectedAutomaticStepSizeSteps++; }
+		if (minimumReached && !minStepSizeWarned)
 		{
 			PyWarning("ExplicitSolver: t="+ EXUstd::ToString(t0) + "; automatic stepsize control reached minStepSize; integration continued, but error will be larger than given tolerances; reduce timeIntegration.minStepSize or increase tolerances");
 			minStepSizeWarned = true;
-		}
-		else if (hOpt < h)
-		{
-			stepRejected = true;
-			it.rejectedAutomaticStepSizeSteps++;
 		}
 
 		//a rejected step is repeated at once with the smaller step size; an accepted step keeps its step size
@@ -512,7 +506,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		STOPTIMER(timer.errorEstimator);
 
 		if (IsVerbose(2)) {
-			Verbose(2, "  Explicit step: error estimation = " + EXUstd::ToString(err) + ", hOpt=" + EXUstd::ToString(hOpt) + ", hNew=" + EXUstd::ToString(hNew) + "\n");
+			Verbose(2, "  Explicit step: error estimation = " + EXUstd::ToString(err) + ", hNew=" + EXUstd::ToString(hNew) + "\n");
 			if (stepRejected) { Verbose(2, "    step REJECTED. Restart with h=hNew\n"); }
 		}
 

@@ -6406,6 +6406,27 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - The descriptions of `solution.file.writePeriod` and `solution.sensors.writePeriod` say how they are written; design
   notes advancedSolvers.md 3.4 and cppSolverStructure.md sections 5 and 8.6 updated.
 
+<a id="rg20-8-2"></a>
+### RG20.8.2 — the PI step size controller in ODE23 and DOPRI5, the error scale by absolute values (2026-11-06, #3245)
+- Maintainer 2026-11-06: the open solver tasks RG20.4, RG20.8, RG20.7.
+- `CSolverExplicitTimeInt` has a `StepSizeController` (src/Solver/StepSizeController.h, the PI controller of
+  CSolverImplicitRungeKutta, #3261), initialized in PostInitializeSolverSpecific with stepSizeSafety,
+  stepSizeMaxIncrease, minimumStepSize and the maximum step; `Control(err, h, orderMethod)` decides acceptance
+  (err <= 1, as before) and the next or the repeated step size, replacing the elementary rule; the warning at the
+  minimum step as before. The scale of each error is atol + rtol max(|q_second|, |q_start|) for the positions, the
+  velocities and the ODE1 coordinates (#3245: without the absolute values the scale went through zero at
+  q = -atol/rtol). The reduction after a failed Newton or a post-Newton step stays the base class path (design
+  cppSolverStructure.md 8.4), so RG20.8 is closed with it.
+- Test suite: 3 of 292 changed: solverExplicitODE1ODE2test.py 3.377 -> 2.070 (the summed errors of DOPRI5 at the
+  tolerances 1 to 1e-6, smaller), explicitLieGroupIntegratorTest.py 0.16164 -> 0.16192, explicitSolversPostNewtonTest.py
+  4.5635 -> 4.5577 (DOPRI5 and ODE23 with contact). Their AVX2 references (fast module, not built here) are to be
+  re-recorded at the next fast-module run.
+- explicitStepSizeControlTest.py (new): a mass on a spring about x = -1 and about x = +1 takes the same steps with
+  ODE23 (57, 1 rejected) and DOPRI5 (21, 1 rejected), the end positions mirror each other to 1e-12, the errors 0.013
+  and 0.004 at the tolerances 1e-3.
+- solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
+  round.
+
 <a id="rg20-7-1"></a>
 ### RG20.7.1 — the implicit Runge-Kutta solvers in C++: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3 (2026-11-05, #3261)
 - Maintainer 2026-11-05: the one class CSolverImplicitRungeKutta and the step size control for all four are agreed;

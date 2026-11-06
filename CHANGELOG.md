@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 384 | 1.13.399 |
+| 1.13 | Newborn | 385 | 1.13.400 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.400** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The error norm of the automatic step size of CSolverExplicit scales by max(q\_new, q\_start) without absolute values (#3245)
+  - description: CSolverExplicitTimeInt computes the scale of the error of ODE23 and DOPRI5 as absoluteTolerance + Maximum(q\_second, q\_start)\*relativeTolerance for the coordinates, velocities and ODE1 coordinates, without the absolute values: a negative coordinate makes the scale smaller than the absolute tolerance, zero or negative, so that the error of that coordinate is exaggerated or divided by zero. The norm of Hairer, Norsett and Wanner uses max(\|q\_second\|, \|q\_start\|), as the Python step size controller of exudyn.symbolics.advancedSolvers. Decided: fixed with the common step size controller in C++ (revision2026c step RG20.8).
+  - **notes:** ODE23 and DOPRI5 scale the error of each coordinate by absoluteTolerance + relativeTolerance\*max(\|q\_new\|, \|q\_start\|), with the absolute values, and take their step sizes from the PI controller shared with the implicit Runge-Kutta solvers instead of the elementary rule; the steps and results of these solvers change slightly, the errors of the test models became smaller; explicitStepSizeControlTest.py.
+  - date resolved: **2026-11-06 08:55**, date raised: 2026-11-04
 - **1.13.399** `CHANGE` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The C++ solvers write the solution file and the sensors at the exact multiples of their write periods, interpolated within the step (#3286)
   - description: The C++ solvers write the solution file and the sensors at the end of the step that passes a multiple of the write period, so that the written times are not the multiples when the period is not a multiple of the step, and an adaptive step writes once for several periods. The Python solvers interpolate within the step since \#3241. Decided (revision2026c step RG20.4.2, design advancedSolvers.md section 3.4): the dynamic C++ solvers write at each multiple of the write period within the step the state interpolated between the start and the end of the step - q by the cubic Hermite polynomial of q and q\_t, q\_t its derivative, the rest linear, the data coordinates of the end of the step, the coordinates of Lie group nodes linear - and restore the end of the step; a write period of 0 and the static solver write each step as before.
   - **notes:** The dynamic C++ solvers write the solution file and the sensors at the multiples of solution.file.writePeriod and solution.sensors.writePeriod and at the end; a write time within a step takes the state interpolated between the start and the end of the step (the ODE2 coordinates by the cubic Hermite polynomial of coordinates and velocities, the velocities by its derivative, the rest linear, Lie group nodes linear, the data coordinates of the end). A period that is a multiple of the step writes as before; a smaller period gives a row per period; 0 writes every step. Four test models changed by their output times; solverOutputWithinStepTest.py.

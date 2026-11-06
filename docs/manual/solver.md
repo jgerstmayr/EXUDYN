@@ -297,20 +297,25 @@ Then the relative, scaled, scalar error for the step, which needs to fulfill $er
 $$
   err = \sqrt{\frac 1 n \sum_{j=1}^n \left( \frac{\xi_{1j} - \hat \xi_{1j}}{s_j} \right)^2}
 $$
-The optimal step size then reads
+A step with $err \le 1$ is accepted, otherwise it is repeated at once with a smaller step size. The step sizes come
+from the PI controller of Gustafsson, which also serves the implicit Runge-Kutta solvers: after an accepted step, the
+next one reads
 
 $$
-  h_{opt} = h \cdot \left(\frac{1}{err} \right)^{(1/(q+1))}
+  h_{new} = \mathrm{min}\left(h_{max}, h \cdot f_{maxInc}, \mathrm{max}\left(h_{min}, f_{sfty} \cdot h \cdot
+  \left(\frac{1}{err} \right)^{0.7/(q+1)} err_{prev}^{0.4/(q+1)} \right) \right)
 $$
-Currently we use the suggested step size as
+with $err_{prev}$ the error of the previous accepted step. The first accepted step and a rejected step use the
+elementary rule $f_{sfty} \cdot h_{opt}$ with
 
 $$
-  h_{new} = \mathrm{min}\left(h_{max}, \mathrm{min}\left(h \cdot f_{maxInc},  \mathrm{max}(h_{min}, f_{sfty} \cdot h_{opt}) \right) \right)
+  h_{opt} = h \cdot \left(\frac{1}{err} \right)^{(1/(q+1))} ,
 $$
-With the maximum step size $h_{max} = \frac{t_{start} - t_{end}}{n_{steps}}$ and the minimum step size $h_{min}$, given in the `timeIntegration`
-`simulationSettings`.
-The factor $f_{maxInc}$ limits the increase of the current step size $h$, the factor $f_{sfty}$ is a safety factor for limiting the chosen step size relative to the optimal one in order to avoid frequent step rejections.
-If $h_{new} \le h$, the current step is accepted, otherwise the step is recomputed with $h_{new}$.
+and after a rejection the step size does not grow. The maximum step size is $h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}$,
+the minimum step size $h_{min}$ is given in the `timeIntegration` `simulationSettings`; a step at $h_{min}$ is accepted
+with a warning. The factor $f_{maxInc}$ limits the increase of the current step size $h$, the factor $f_{sfty}$ is a
+safety factor for limiting the chosen step size relative to the optimal one in order to avoid frequent step
+rejections.
 For more details, see Hairer et al. [Hairer1987].
 
 ### Stability limit

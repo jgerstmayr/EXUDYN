@@ -78,6 +78,7 @@ explicitLieGroupIntegratorPythonTest
 explicitLieGroupIntegratorTest
 explicitLieGroupMBSTest
 explicitSolversPostNewtonTest
+explicitStepSizeControlTest
 fileHeaderThreadsTest
 flexiblePendulumBeamComparison
 fourBarMechanismIftomm
