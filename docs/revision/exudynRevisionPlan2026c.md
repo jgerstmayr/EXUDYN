@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (8 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (9 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 14 | Structural core improvements |
+| RG9 | OPEN | 15 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -215,6 +215,8 @@ CLOSED 2026-11-07 (#3321): contactDistanceOutputTest.py (the contact shapes by c
 #### **OPEN_RG2.12.2** The test models added since September 2026 checked for a visible simulation; a recommendation, then the changes
 
 #3322: about 114 of them simulate without a viewer, 63 simulate nothing (git, added since 2026-09-01). Per group of models: does a picture help, which graphics are missing.
+
+Evaluated 2026-11-07 (maintainer: the models created from 2026-09-20; the point is the animation in the SolutionViewer; a model of several cases names the case shown in renderWindowString, or is left out): 184 models, 14 shown already, 47 without a simulation, 123 simulate. Recommended: show 41 (A: beams, rigid bodies and robots, mass points and contacts) and 7 of several cases with the case named (B); leave 75 whose subject is a number (C: Jacobians, orders, outputs, generic and symbolic coordinates, files). The lists: docs/revision/testModelViewerReview.md; waits for the maintainer's decision.
 
 #### **CLOSED_RG2.12.3** The contact items of the contact test models drawn: visualization show=True
 
@@ -1604,13 +1606,19 @@ CLOSED 2026-11-07 (#3323): infinitePlane of ObjectContactSphereTriangle - the pl
 
 #### **OPEN_RG9.12.11** Truncated cones: ObjectContactConeCone and ObjectContactConeTriangle
 
-#### **OPEN_RG9.12.12** The contact inside a hollow cylinder and a hollow cone, as options of CylinderCylinder and ConeCone (isHollowCylinder1, isHollowCone1) or own items
+#### **OPEN_RG9.12.12** The contact inside a hollow cylinder and a hollow cone: the flags isHollowCylinder1 of CylinderCylinder and isHollowCone1 of ConeCone
+
+Decided (maintainer 2026-11-07): the flags, as isHollowSphere1 of SphereSphere; the hollow shape keeps its length and the edges at both ends. A check at Assemble that the inner shape fits: cylindersRadii[0] <= cylindersRadii[1]; for the cone, whose radii vary along the axis, the inner cone fits through the seat somewhere - made exact with the geometry (contactPrimitives.md 8.6).
 
 #### **OPEN_RG9.12.13** ObjectJournalBearing on the geometry of the cylinder inside a cylinder: short, long and finite bearing models
 
 #### **CLOSED_RG9.12.14** User functions of the contact force for all primitive contacts, also symbolic
 
 CLOSED 2026-11-07 (#3324, #3325): contactForceUserFunction(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity) of SphereTriangle and SphereCylinder, the force on marker 0, also symbolic; the items to come get it; the type names of SphereTriangle and SphereTorus corrected (#3325); contactUserFunctionTest.py. [log](exudynRevisionLog2026c.md#rg9-12-14)
+
+#### **OPEN_RG9.12.15** The impact model as the enumeration type ContactImpactModel in all contact items
+
+#3327. Maintainer 2026-11-07: impactModel is a number 0, 1, 2 in ObjectContactCoordinate, SphereSphere, SphereTorus, SphereTriangle and SphereCylinder, explained only in its description; an enumeration type as the other types (definitions/enumTypes.py) names the linear, the Hunt-Crossley and the mixed Gonthier/Carvalho-Martins model. Open: whether a number is still accepted (impactModel exists since before 1.11.0, so it is not removed without a deprecation). Before the further items of RG9.12.5 ff. take the parameter, or with them.
 
 ## **CLOSED_RG10** Tooling and process
 

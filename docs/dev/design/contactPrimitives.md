@@ -217,9 +217,11 @@ cylinder within the bore (edge loading when tilted), or along a line when aligne
 - up to 2 contact points (one per end), with the data blocks of section 3.3 per point; aligned axes give 2 points of
   equal gap, a line contact by its ends.
 
-`ObjectContactCylinderInCylinder` with `innerRadius`, `innerLength`, `boreRadius`, `boreLength` and the law of
-section 3.3. The cone inside a cone (a taper seat): the same with the radii of section 8.2, the gap normal to the cone
-surface; as an option `inside` of ObjectContactConeCone, or its own item - to be decided.
+The bore is the hollow cylinder of marker 1: its radius and length, `cylindersRadii[1]` and `cylindersLengths[1]`, are those of
+the bore, with an edge at each end; the inner cylinder is that of marker 0. The flag `isHollowCylinder1` of
+ObjectContactCylinderCylinder selects this geometry and keeps the law of section 3.3 and the outputs (decided, 8.6).
+The cone inside a cone (a taper seat): the same with the radii of section 8.2, the gap normal to the cone surface, by
+the flag `isHollowCone1` of ObjectContactConeCone.
 
 ### 8.4 The journal bearing
 
@@ -254,7 +256,8 @@ for all primitive items; per contact point with the manifold.
 1. `infinitePlane` as an option of the triangle items, not an item of its own: yes; it costs nothing significant.
 2. The truncated cone as `ConvexShapeType::Cone`, the items ConeCone and ConeTriangle with these parameter names: yes.
 3. The inside contacts: if possible as an option of the outside item, as ObjectContactSphereSphere covers a sphere
-   inside a hollow sphere; checked below, decided in RG9.12.12.
+   inside a hollow sphere; checked below. Decided after the check: the flags `isHollowCylinder1` and `isHollowCone1`,
+   with a check at Assemble that the inner shape fits the hollow one.
 4. The journal bearing as a separate item on the geometry of the inside contact, with the models short, long and
    finite and the contact force of Flores et al.: yes; further bearing models will follow, and the force user
    function adds others - its example implements one of the built-in models.
@@ -265,11 +268,14 @@ On 3: ObjectContactSphereSphere has no negative radius but the flag `isHollowSph
 the second sphere: $g = h_1 d - (r_0 + h_1 r_1)$ and the normal $h_1 \Delta\pv/d$. That works because the distance of
 two spheres is a function of the distance of their centers alone, for both cases. For two cylinders or two cones it
 is not: the outside contact is GJK and EPA of two convex shapes, the inside one the closed form of section 8.3 - two
-geometry functions in any case. A negative radius would also leave the bore without a length of its own and turn
-the check of the radii into one of their signs. Recommended: the inside contact as the flag `isHollowCylinder1` of
-ObjectContactCylinderCylinder and `isHollowCone1` of ObjectContactConeCone, named as in SphereSphere, which select
-the geometry of section 8.3 and keep the parameters, the law and the outputs; no item ObjectContactCylinderInCylinder
-or ConeInCone. To be confirmed in RG9.12.12.
+geometry functions in any case. The hollow shape keeps its length and the edges at both ends, as the bore of section
+8.3; a negative radius could carry that as well, but would turn the check of the radii into one of their signs.
+Decided (maintainer 2026-11-07): the inside contact as the flag `isHollowCylinder1` of ObjectContactCylinderCylinder
+and `isHollowCone1` of ObjectContactConeCone, named as in SphereSphere, which select the geometry of section 8.3 and
+keep the parameters, the law and the outputs; no item ObjectContactCylinderInCylinder or ConeInCone. The check at
+Assemble: with `isHollowCylinder1`, `cylindersRadii[0]` $\le$ `cylindersRadii[1]`; with `isHollowCone1` the radii of a
+cone vary along the axis, so the check is that the inner cone fits through the seat somewhere - its smaller radius
+not above the larger radius of the seat -, made exact with the geometry in RG9.12.12.
 
 References: P. Flores, J. Ambrosio, J.C.P. Claro, H.M. Lankarani, C.S. Koshy, Lubricated revolute joints in rigid
 multibody systems, Nonlinear Dynamics 56 (2009); M. Machado, J. Costa, E. Seabra, P. Flores, The effect of the
