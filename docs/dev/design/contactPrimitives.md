@@ -151,7 +151,7 @@ Common to all four, with the names and meaning of ObjectContactSphereTriangle:
   from shape 0 to shape 1), `DisplacementLocal` (the gap, as the others), `Velocity` (relative, at the contact point),
   `Force`, `Torque` (on marker 0).
 - Drawing: the shapes and, with `contact.showContactForces`-like settings, the contact point and normal; the existing
-  `contact.showSpheres`, `contact.showTriangles` and new `contact.showCylinders`, `contact.colorCylinders`.
+  `contact.show.spheres`, `contact.show.triangles` and new `contact.show.cylinders`, `contact.color.cylinders`.
 
 ## 5. C++ structure
 

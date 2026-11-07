@@ -106,8 +106,8 @@ exu.Print('difference of the Python user function to the built-in law', errorPyt
 checks = [errorPython < 1e-6, errorSymbolic < 1e-10, states[0][3] < 0.8 and states[0][3] > 0.6] #rolls after sliding
 
 if not testIsActive:
-    SC.visualizationSettings.contact.showCylinders = True
-    SC.visualizationSettings.contact.showTriangles = True
+    SC.visualizationSettings.contact.show.cylinders = True
+    SC.visualizationSettings.contact.show.triangles = True
     mbs.SolutionViewer()
 
 u = sum(checks) + states[0][0] + states[3][0]

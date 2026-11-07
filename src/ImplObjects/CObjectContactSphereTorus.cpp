@@ -350,18 +350,18 @@ void VisualizationObjectContactSphereTorus::UpdateGraphics(const VisualizationSe
 
 	if (color[0] != -1.f) { currentColor = color; }
 
-	if (visualizationSettings.contact.showSpheres)
+	if (visualizationSettings.contact.show.spheres)
 	{
 		//marker0 is sphere:
-		Float4 currentColor = visualizationSettings.contact.colorSpheres;
+		Float4 currentColor = visualizationSettings.contact.color.spheres;
 		if (color[0] != -1.f) { currentColor = color; }
 		EXUvis::DrawSphere(pos[0], cItem->GetParameters().sphereRadius, currentColor, vSystem->graphicsData, 
 						   itemID, visualizationSettings.contact.tilingSpheres);
 	}
-	if (visualizationSettings.contact.showTori)
+	if (visualizationSettings.contact.show.tori)
 	{
 		//marker1 is torus:
-		Float4 currentColor = visualizationSettings.contact.colorTori;
+		Float4 currentColor = visualizationSettings.contact.color.tori;
 		if (color[0] != -1.f) { currentColor = color; }
 
 		Vector3D v[3];

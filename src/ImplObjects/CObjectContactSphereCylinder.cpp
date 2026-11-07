@@ -206,15 +206,15 @@ void VisualizationObjectContactSphereCylinder::UpdateGraphics(const Visualizatio
 
 	if (color[0] != -1.f) { currentColor = color; }
 
-	if (visualizationSettings.contact.showSpheres)
+	if (visualizationSettings.contact.show.spheres)
 	{
-		Float4 sphereColor = visualizationSettings.contact.colorSpheres;
+		Float4 sphereColor = visualizationSettings.contact.color.spheres;
 		if (color[0] != -1.f) { sphereColor = color; }
 		EXUvis::DrawSphere(pos[0], cItem->GetParameters().sphereRadius, sphereColor, vSystem->graphicsData, itemID, visualizationSettings.general.sphereTiling);
 	}
-	if (visualizationSettings.contact.showCylinders)
+	if (visualizationSettings.contact.show.cylinders)
 	{
-		Float4 cylinderColor = visualizationSettings.contact.colorCylinders;
+		Float4 cylinderColor = visualizationSettings.contact.color.cylinders;
 		if (color[0] != -1.f) { cylinderColor = color; }
 		Matrix3D A1;
 		vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetRotationMatrix(*vSystem->systemData, A1, ConfigurationType::Visualization);

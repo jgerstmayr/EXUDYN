@@ -1093,28 +1093,76 @@
 
     //++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++
+    py::class_<VSettingsContactShow>(m, "VSettingsContactShow", "VSettingsContactShow class") // AUTO: 
+        .def(py::init<>())
+        .def_property("cones", EPyUtils::MemberGetter(&VSettingsContactShow::cones), EPyUtils::MemberSetter(&VSettingsContactShow::cones, "VSettingsContactShow.cones"), "show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True")
+        .def_property("cylinders", EPyUtils::MemberGetter(&VSettingsContactShow::cylinders), EPyUtils::MemberSetter(&VSettingsContactShow::cylinders, "VSettingsContactShow.cylinders"), "show the cylinders of the contact items (ObjectContactSphereCylinder, ObjectContactCylinderCylinder, ObjectJournalBearing, ...) whose visualization has show=True")
+        .def_property("spheres", EPyUtils::MemberGetter(&VSettingsContactShow::spheres), EPyUtils::MemberSetter(&VSettingsContactShow::spheres, "VSettingsContactShow.spheres"), "show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True")
+        .def_property("tori", EPyUtils::MemberGetter(&VSettingsContactShow::tori), EPyUtils::MemberSetter(&VSettingsContactShow::tori, "VSettingsContactShow.tori"), "show the torus of each ObjectContactSphereTorus whose visualization has show=True")
+        .def_property("triangles", EPyUtils::MemberGetter(&VSettingsContactShow::triangles), EPyUtils::MemberSetter(&VSettingsContactShow::triangles, "VSettingsContactShow.triangles"), "show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ObjectContactConvexConvex, ...) whose visualization has show=True")
+        // AUTO: access functions for VSettingsContactShow
+        .def("__repr__", [](const VSettingsContactShow &item) { return "<VSettingsContactShow:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const VSettingsContactShow &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](VSettingsContactShow &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const VSettingsContactShow& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "VSettingsContactShow: loading data with pickle received invalid data structure!", ExudynValueError);
+                VSettingsContactShow self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
+    py::class_<VSettingsContactColor>(m, "VSettingsContactColor", "VSettingsContactColor class") // AUTO: 
+        .def(py::init<>())
+        .def_property("cones", EPyUtils::MemberGetter(&VSettingsContactColor::cones), EPyUtils::MemberSetter(&VSettingsContactColor::cones, "VSettingsContactColor.cones"), "RGBA color of the contact cones, see show.cones")
+        .def_property("cylinders", EPyUtils::MemberGetter(&VSettingsContactColor::cylinders), EPyUtils::MemberSetter(&VSettingsContactColor::cylinders, "VSettingsContactColor.cylinders"), "RGBA color of the contact cylinders, see show.cylinders")
+        .def_property("spheres", EPyUtils::MemberGetter(&VSettingsContactColor::spheres), EPyUtils::MemberSetter(&VSettingsContactColor::spheres, "VSettingsContactColor.spheres"), "RGBA color of the contact spheres, see show.spheres")
+        .def_property("tori", EPyUtils::MemberGetter(&VSettingsContactColor::tori), EPyUtils::MemberSetter(&VSettingsContactColor::tori, "VSettingsContactColor.tori"), "RGBA color of the contact tori, see show.tori")
+        .def_property("triangles", EPyUtils::MemberGetter(&VSettingsContactColor::triangles), EPyUtils::MemberSetter(&VSettingsContactColor::triangles, "VSettingsContactColor.triangles"), "RGBA color of the contact triangles, see show.triangles")
+        // AUTO: access functions for VSettingsContactColor
+        .def("__repr__", [](const VSettingsContactColor &item) { return "<VSettingsContactColor:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const VSettingsContactColor &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](VSettingsContactColor &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const VSettingsContactColor& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "VSettingsContactColor: loading data with pickle received invalid data structure!", ExudynValueError);
+                VSettingsContactColor self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
     py::class_<VSettingsContact>(m, "VSettingsContact", "VSettingsContact class") // AUTO: 
         .def(py::init<>())
+        .def_readwrite("color", &VSettingsContact::color, "the colors of the shapes of the contacts (#3340)")
+        .def_readwrite("show", &VSettingsContact::show, "which shapes of the contacts are drawn: triangles, spheres, tori, cylinders, cones (#3340)")
         .def_property("colorBoundingBoxes", EPyUtils::MemberGetter(&VSettingsContact::colorBoundingBoxes), EPyUtils::MemberSetter(&VSettingsContact::colorBoundingBoxes, "VSettingsContact.colorBoundingBoxes"), "RGBA color for boudnding boxes, see showBoundingBoxes")
-        .def_property("colorCones", EPyUtils::MemberGetter(&VSettingsContact::colorCones), EPyUtils::MemberSetter(&VSettingsContact::colorCones, "VSettingsContact.colorCones"), "RGBA color for contact cones, see showCones")
-        .def_property("colorCylinders", EPyUtils::MemberGetter(&VSettingsContact::colorCylinders), EPyUtils::MemberSetter(&VSettingsContact::colorCylinders, "VSettingsContact.colorCylinders"), "RGBA color for contact cylinders, see showCylinders")
         .def_property("colorSearchTree", EPyUtils::MemberGetter(&VSettingsContact::colorSearchTree), EPyUtils::MemberSetter(&VSettingsContact::colorSearchTree, "VSettingsContact.colorSearchTree"), "RGBA color for search tree, see showSearchTree")
-        .def_property("colorSpheres", EPyUtils::MemberGetter(&VSettingsContact::colorSpheres), EPyUtils::MemberSetter(&VSettingsContact::colorSpheres, "VSettingsContact.colorSpheres"), "RGBA color for contact spheres, see showSpheres")
-        .def_property("colorTori", EPyUtils::MemberGetter(&VSettingsContact::colorTori), EPyUtils::MemberSetter(&VSettingsContact::colorTori, "VSettingsContact.colorTori"), "RGBA color for contact tori, see showTori")
-        .def_property("colorTriangles", EPyUtils::MemberGetter(&VSettingsContact::colorTriangles), EPyUtils::MemberSetter(&VSettingsContact::colorTriangles, "VSettingsContact.colorTriangles"), "RGBA color for contact triangles, see showTriangles")
+        .def_property("colorSpheres", &VSettingsContact::PyGetColorSpheres, &VSettingsContact::PySetColorSpheres)
+        .def_property("colorTori", &VSettingsContact::PyGetColorTori, &VSettingsContact::PySetColorTori)
+        .def_property("colorTriangles", &VSettingsContact::PyGetColorTriangles, &VSettingsContact::PySetColorTriangles)
         .def_property("contactForcesFactor", EPyUtils::MemberGetter(&VSettingsContact::contactForcesFactor), EPyUtils::MemberSetter(&VSettingsContact::contactForcesFactor, "VSettingsContact.contactForcesFactor"), "factor used for scaling of contact forces is showContactForces=True; for the arrows of the contact items: their length per force [SI:m/N]")
         .def_property("contactForcesRadius", EPyUtils::MemberGetter(&VSettingsContact::contactForcesRadius), EPyUtils::MemberSetter(&VSettingsContact::contactForcesRadius, EPyUtils::RangeCheck::nonNegative, "VSettingsContact.contactForcesRadius"), "radius of the shaft of the arrows of the contact forces [SI:m], see showContactForces; at most a tenth of the length of an arrow (#3339)")
         .def_property("contactPointsDefaultSize", EPyUtils::MemberGetter(&VSettingsContact::contactPointsDefaultSize), EPyUtils::MemberSetter(&VSettingsContact::contactPointsDefaultSize, "VSettingsContact.contactPointsDefaultSize"), "global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle")
         .def_property("showBoundingBoxes", EPyUtils::MemberGetter(&VSettingsContact::showBoundingBoxes), EPyUtils::MemberSetter(&VSettingsContact::showBoundingBoxes, "VSettingsContact.showBoundingBoxes"), "show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!")
-        .def_property("showCones", EPyUtils::MemberGetter(&VSettingsContact::showCones), EPyUtils::MemberSetter(&VSettingsContact::showCones, "VSettingsContact.showCones"), "show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True")
         .def_property("showContactForces", EPyUtils::MemberGetter(&VSettingsContact::showContactForces), EPyUtils::MemberSetter(&VSettingsContact::showContactForces, "VSettingsContact.showContactForces"), "if True, contact forces are drawn for certain contact models; the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing whose visualization has show=True draw at each contact point the force on marker 0 as a red arrow and the force on marker 1 as a green one, their heads meeting at the contact point, except with a user function of the force (#3339)")
         .def_property("showContactForcesValues", EPyUtils::MemberGetter(&VSettingsContact::showContactForcesValues), EPyUtils::MemberSetter(&VSettingsContact::showContactForcesValues, "VSettingsContact.showContactForcesValues"), "if True and showContactForces=True, numerical values for  contact forces are shown at certain points")
-        .def_property("showCylinders", EPyUtils::MemberGetter(&VSettingsContact::showCylinders), EPyUtils::MemberSetter(&VSettingsContact::showCylinders, "VSettingsContact.showCylinders"), "show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True")
         .def_property("showSearchTree", EPyUtils::MemberGetter(&VSettingsContact::showSearchTree), EPyUtils::MemberSetter(&VSettingsContact::showSearchTree, "VSettingsContact.showSearchTree"), "show outer box of search tree for all GeneralContacts")
         .def_property("showSearchTreeCells", EPyUtils::MemberGetter(&VSettingsContact::showSearchTreeCells), EPyUtils::MemberSetter(&VSettingsContact::showSearchTreeCells, "VSettingsContact.showSearchTreeCells"), "show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!")
-        .def_property("showSpheres", EPyUtils::MemberGetter(&VSettingsContact::showSpheres), EPyUtils::MemberSetter(&VSettingsContact::showSpheres, "VSettingsContact.showSpheres"), "show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True")
-        .def_property("showTori", EPyUtils::MemberGetter(&VSettingsContact::showTori), EPyUtils::MemberSetter(&VSettingsContact::showTori, "VSettingsContact.showTori"), "show the torus of each ObjectContactSphereTorus whose visualization has show=True")
-        .def_property("showTriangles", EPyUtils::MemberGetter(&VSettingsContact::showTriangles), EPyUtils::MemberSetter(&VSettingsContact::showTriangles, "VSettingsContact.showTriangles"), "show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ...) whose visualization has show=True")
+        .def_property("showSpheres", &VSettingsContact::PyGetShowSpheres, &VSettingsContact::PySetShowSpheres)
+        .def_property("showTori", &VSettingsContact::PyGetShowTori, &VSettingsContact::PySetShowTori)
+        .def_property("showTriangles", &VSettingsContact::PyGetShowTriangles, &VSettingsContact::PySetShowTriangles)
         .def_property("tilingCurves", EPyUtils::MemberGetter(&VSettingsContact::tilingCurves), EPyUtils::MemberSetter(&VSettingsContact::tilingCurves, EPyUtils::RangeCheck::positive, "VSettingsContact.tilingCurves"), "tiling for nonlinear/polynomial curves; higher values give smoother curves")
         .def_property("tilingSpheres", EPyUtils::MemberGetter(&VSettingsContact::tilingSpheres), EPyUtils::MemberSetter(&VSettingsContact::tilingSpheres, EPyUtils::RangeCheck::positive, "VSettingsContact.tilingSpheres"), "tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates")
         // AUTO: access functions for VSettingsContact

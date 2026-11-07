@@ -306,8 +306,8 @@ def DifferentialDriveRobot(SC, mbs,
     # SC.visualizationSettings.openGL.light0.shadow = 0.25
     #SC.visualizationSettings.openGL.light0.position = [-3,3,10,0]
     # SC.visualizationSettings.contact.showBoundingBoxes = True
-    SC.visualizationSettings.contact.showTriangles = True
-    SC.visualizationSettings.contact.showSpheres = True
+    SC.visualizationSettings.contact.show.triangles = True
+    SC.visualizationSettings.contact.show.spheres = True
 
     return ddr
 

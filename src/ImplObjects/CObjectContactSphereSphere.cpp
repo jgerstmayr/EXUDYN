@@ -391,9 +391,9 @@ void VisualizationObjectContactSphereSphere::UpdateGraphics(const VisualizationS
 
 	if (color[0] != -1.f) { currentColor = color; }
 
-	if (visualizationSettings.contact.showSpheres)
+	if (visualizationSettings.contact.show.spheres)
 	{
-		Float4 currentColor = visualizationSettings.contact.colorSpheres;
+		Float4 currentColor = visualizationSettings.contact.color.spheres;
 		if (color[0] != -1.f) { currentColor = color; }
 		for (Index i = 0; i < 2; i++)
 		{

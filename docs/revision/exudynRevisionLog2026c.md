@@ -6427,6 +6427,19 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-20"></a>
+### RG9.12.20 — contact.show and contact.color (2026-11-07, #3340)
+- VSettingsContactShow and VSettingsContactColor (new), the members show and color of VSettingsContact, each with
+  triangles, spheres, tori, cylinders, cones (the defaults and colors of the former members).
+- The members of 1.13.6 (git f172eb2c4, version.txt 1.13.6) - showTriangles, showSpheres, showTori, colorTriangles,
+  colorSpheres, colorTori - forward as deprecated (Deprecated('1.13.454', 2031), the path contact.show.spheres etc. from
+  the top structure); showCylinders, showCones, colorCylinders, colorCones came after 1.13 and are removed.
+- The rest of contact (search tree, bounding boxes, tilings, the contact forces) stays: those are not per shape.
+- Renamed in the C++ (the contact items, CContact.cpp), the drawingSettings and descriptions of itemDefsObjects.py, 22
+  models and tests of python/, the design document and the section after 1.13 of revisions.md.
+- parameterConversionTestReference.txt re-recorded (contact.show, contact.color); checkDescriptions marked for the four
+  sphere contacts.
+
 <a id="rg9-12-19"></a>
 ### RG9.12.19 — the contact forces drawn as two arrows (2026-11-07, #3339)
 - EXUvis::DrawContactForce: the force on marker 0 red (0.9, 0.1, 0.1), its negative green (0.1, 0.75, 0.1), each

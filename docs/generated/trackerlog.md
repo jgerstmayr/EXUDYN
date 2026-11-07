@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.453.dev1
+- Exudyn version = 1.13.454.dev1
 - last change = 2026-11-07
 - Number of issues = 3345
-- Number of resolved issues = 3230 (453 in current version)
+- Number of resolved issues = 3231 (454 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9050,9 +9050,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-07
 - `EXAMPLE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` contactPrimitivesShowcase.py revised: a visible ground, moving rings and bearing, a richer polytope, a scene for the raytracer (#3341)
   - description: In contactPrimitivesShowcase.py the floor and the inclined plane are not drawn, so the bodies roll in space; the shaft starts inside the ring and hardly moves; the journal bearing is a tiny disc at rest; the polytope is a cube; the contact shapes are drawn with a fine tiling. Decided: the ground drawn, the ring contact and the bearing large enough to see what they do, a polytope with more faces, shadows and settings for a raytraced picture.
-  - date raised: 2026-11-07
-- `CHANGE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The shapes of visualizationSettings.contact in the substructures contact.show and contact.color (#3340)
-  - description: visualizationSettings.contact has a show and a color setting for each kind of contact shape (showTriangles, showSpheres, showTori, showCylinders, showCones, colorTriangles, ...), which fill up the structure as shapes are added. Decided: the substructures contact.show and contact.color with triangles, spheres, tori, cylinders and cones; the names of 1.13.6 (showTriangles, showSpheres, showTori, colorTriangles, colorSpheres, colorTori) forward to them as deprecated; showCylinders, showCones, colorCylinders and colorCones are removed (introduced after 1.13); the models of the repository use the new names.
   - date raised: 2026-11-07
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` Radau5: the implicit Runge-Kutta method Radau IIA with 3 stages, of order 5, in the C++ and the Python solvers (#3318)
   - description: A reference method of higher order for the solver study instead of LobattoIIIC4GGL (\#3314): Radau IIA with 3 stages (c = (4 - sqrt 6)/10, (4 + sqrt 6)/10, 1), order 5, L-stable, three implicit stages without GGL multipliers, the constraints at the end of the step as in Radau3; the tableau of CSolverImplicitRungeKutta and of exudyn.symbolics.advancedSolvers, its error estimate, DynamicSolverType.Radau5. Decided: implemented with the Jacobian of the last stage for all stages, as the other methods, no W-method; its convergence orders measured on the model library, and as the reference of the study if it converges as expected; revision2026c step RG20.10.1.

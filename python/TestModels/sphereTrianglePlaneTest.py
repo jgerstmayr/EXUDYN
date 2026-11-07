@@ -93,7 +93,7 @@ exu.Print('after 1 s: the ball on the plane at x =', xPlane, ', z =', zPlane, ';
 checks += [xPlane > 0.1, abs(zPlane - zRest) < 1e-6, zTriangle < -0.5]
 
 if not testIsActive:
-    SC.visualizationSettings.contact.showTriangles = True
+    SC.visualizationSettings.contact.show.triangles = True
     mbs.SolutionViewer()
 
 u = sum(checks) + zPlane + zTriangle

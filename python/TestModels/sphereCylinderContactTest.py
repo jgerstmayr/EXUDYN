@@ -48,7 +48,7 @@ def Model(position, velocity=[0, 0, 0], cylinderHT=np.eye(4), friction=0., activ
                                                         dynamicFriction=friction, frictionProportionalZone=1e-3, activeConnector=active,
                                                         visualization=VObjectContactSphereCylinder(show=True)))
     mbs.Assemble()
-    SC.visualizationSettings.contact.showCylinders = True
+    SC.visualizationSettings.contact.show.cylinders = True
     return mbs, node, contact
 
 #the distance of a deactivated contact against cUtilities.Distance, with a tilted and shifted cylinder

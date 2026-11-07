@@ -1225,6 +1225,136 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        VSettingsContactShow
+* @brief        Which shapes of the contacts are drawn: of GeneralContact and of the contact items whose visualization has show=True (#3340)
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2026-11-07 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+class VSettingsContactShow // AUTO: 
+{
+public: // AUTO: 
+  bool cones;                                     //!< AUTO: show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True
+  bool cylinders;                                 //!< AUTO: show the cylinders of the contact items (ObjectContactSphereCylinder, ObjectContactCylinderCylinder, ObjectJournalBearing, ...) whose visualization has show=True
+  bool spheres;                                   //!< AUTO: show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True
+  bool tori;                                      //!< AUTO: show the torus of each ObjectContactSphereTorus whose visualization has show=True
+  bool triangles;                                 //!< AUTO: show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ObjectContactConvexConvex, ...) whose visualization has show=True
+
+private: // AUTO: 
+  VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsContactShow()
+  {
+    backlink=nullptr;
+    cones = false;
+    cylinders = false;
+    spheres = false;
+    tori = false;
+    triangles = false;
+  };
+  void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
+
+  // AUTO: access functions
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsContactShow" << ":\n";
+    os << "  cones = " << cones << "\n";
+    os << "  cylinders = " << cylinders << "\n";
+    os << "  spheres = " << spheres << "\n";
+    os << "  tori = " << tori << "\n";
+    os << "  triangles = " << triangles << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsContactShow& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
+* @class        VSettingsContactColor
+* @brief        The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color (#3340)
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2026-11-07 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+class VSettingsContactColor // AUTO: 
+{
+public: // AUTO: 
+  Float4 cones;                                   //!< AUTO: RGBA color of the contact cones, see show.cones
+  Float4 cylinders;                               //!< AUTO: RGBA color of the contact cylinders, see show.cylinders
+  Float4 spheres;                                 //!< AUTO: RGBA color of the contact spheres, see show.spheres
+  Float4 tori;                                    //!< AUTO: RGBA color of the contact tori, see show.tori
+  Float4 triangles;                               //!< AUTO: RGBA color of the contact triangles, see show.triangles
+
+private: // AUTO: 
+  VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsContactColor()
+  {
+    backlink=nullptr;
+    cones = Float4({0.6f,0.5f,0.7f,1.f});
+    cylinders = Float4({0.5f,0.6f,0.7f,1.f});
+    spheres = Float4({0.8f,0.5f,0.2f,1.f});
+    tori = Float4({0.8f,0.2f,0.8f,1.f});
+    triangles = Float4({0.5f,0.5f,0.5f,1.f});
+  };
+  void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
+
+  // AUTO: access functions
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsContactColor" << ":\n";
+    os << "  cones = " << cones << "\n";
+    os << "  cylinders = " << cylinders << "\n";
+    os << "  spheres = " << spheres << "\n";
+    os << "  tori = " << tori << "\n";
+    os << "  triangles = " << triangles << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsContactColor& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        VSettingsContact
 * @brief        Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle
 *
@@ -1241,26 +1371,18 @@ public: // AUTO:
 class VSettingsContact // AUTO: 
 {
 public: // AUTO: 
+  VSettingsContactColor color;                    //!< AUTO: the colors of the shapes of the contacts (#3340)
+  VSettingsContactShow show;                      //!< AUTO: which shapes of the contacts are drawn: triangles, spheres, tori, cylinders, cones (#3340)
   Float4 colorBoundingBoxes;                      //!< AUTO: RGBA color for boudnding boxes, see showBoundingBoxes
-  Float4 colorCones;                              //!< AUTO: RGBA color for contact cones, see showCones
-  Float4 colorCylinders;                          //!< AUTO: RGBA color for contact cylinders, see showCylinders
   Float4 colorSearchTree;                         //!< AUTO: RGBA color for search tree, see showSearchTree
-  Float4 colorSpheres;                            //!< AUTO: RGBA color for contact spheres, see showSpheres
-  Float4 colorTori;                               //!< AUTO: RGBA color for contact tori, see showTori
-  Float4 colorTriangles;                          //!< AUTO: RGBA color for contact triangles, see showTriangles
   float contactForcesFactor;                      //!< AUTO: factor used for scaling of contact forces is showContactForces=True; for the arrows of the contact items: their length per force [SI:m/N]
   float contactForcesRadius;                      //!< AUTO: must be >= 0; radius of the shaft of the arrows of the contact forces [SI:m], see showContactForces; at most a tenth of the length of an arrow (#3339)
   float contactPointsDefaultSize;                 //!< AUTO: global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle
   bool showBoundingBoxes;                         //!< AUTO: show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!
-  bool showCones;                                 //!< AUTO: show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True
   bool showContactForces;                         //!< AUTO: if True, contact forces are drawn for certain contact models; the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing whose visualization has show=True draw at each contact point the force on marker 0 as a red arrow and the force on marker 1 as a green one, their heads meeting at the contact point, except with a user function of the force (#3339)
   bool showContactForcesValues;                   //!< AUTO: if True and showContactForces=True, numerical values for  contact forces are shown at certain points
-  bool showCylinders;                             //!< AUTO: show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True
   bool showSearchTree;                            //!< AUTO: show outer box of search tree for all GeneralContacts
   bool showSearchTreeCells;                       //!< AUTO: show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!
-  bool showSpheres;                               //!< AUTO: show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True
-  bool showTori;                                  //!< AUTO: show the torus of each ObjectContactSphereTorus whose visualization has show=True
-  bool showTriangles;                             //!< AUTO: show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ...) whose visualization has show=True
   Index tilingCurves;                             //!< AUTO: must be > 0; tiling for nonlinear/polynomial curves; higher values give smoother curves
   Index tilingSpheres;                            //!< AUTO: must be > 0; tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
 
@@ -1274,58 +1396,72 @@ public: // AUTO:
   {
     backlink=nullptr;
     colorBoundingBoxes = Float4({0.9f,0.1f,0.1f,1.f});
-    colorCones = Float4({0.6f,0.5f,0.7f,1.f});
-    colorCylinders = Float4({0.5f,0.6f,0.7f,1.f});
     colorSearchTree = Float4({0.1f,0.1f,0.9f,1.f});
-    colorSpheres = Float4({0.8f,0.5f,0.2f,1.f});
-    colorTori = Float4({0.8f,0.2f,0.8f,1.f});
-    colorTriangles = Float4({0.5f,0.5f,0.5f,1.f});
     contactForcesFactor = 0.001f;
     contactForcesRadius = 0.002f;
     contactPointsDefaultSize = 0.001f;
     showBoundingBoxes = false;
-    showCones = false;
     showContactForces = false;
     showContactForcesValues = false;
-    showCylinders = false;
     showSearchTree = false;
     showSearchTreeCells = false;
-    showSpheres = false;
-    showTori = false;
-    showTriangles = false;
     tilingCurves = 8;
     tilingSpheres = 4;
   };
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
   {
     backlink = backlinkInit;
+    color.Init(backlinkInit);
+    show.Init(backlinkInit);
   }
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use contact.color.spheres
+  void PySetColorSpheres(const std::array<float,4>& spheresInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use contact.color.spheres
+  std::array<float,4> PyGetColorSpheres() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use contact.color.tori
+  void PySetColorTori(const std::array<float,4>& toriInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use contact.color.tori
+  std::array<float,4> PyGetColorTori() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use contact.color.triangles
+  void PySetColorTriangles(const std::array<float,4>& trianglesInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use contact.color.triangles
+  std::array<float,4> PyGetColorTriangles() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use contact.show.spheres
+  void PySetShowSpheres(const bool& spheresInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use contact.show.spheres
+  bool PyGetShowSpheres() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use contact.show.tori
+  void PySetShowTori(const bool& toriInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use contact.show.tori
+  bool PyGetShowTori() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use contact.show.triangles
+  void PySetShowTriangles(const bool& trianglesInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use contact.show.triangles
+  bool PyGetShowTriangles() const ;
+
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsContact" << ":\n";
+    os << "  color = " << color << "\n";
+    os << "  show = " << show << "\n";
     os << "  colorBoundingBoxes = " << colorBoundingBoxes << "\n";
-    os << "  colorCones = " << colorCones << "\n";
-    os << "  colorCylinders = " << colorCylinders << "\n";
     os << "  colorSearchTree = " << colorSearchTree << "\n";
-    os << "  colorSpheres = " << colorSpheres << "\n";
-    os << "  colorTori = " << colorTori << "\n";
-    os << "  colorTriangles = " << colorTriangles << "\n";
     os << "  contactForcesFactor = " << contactForcesFactor << "\n";
     os << "  contactForcesRadius = " << contactForcesRadius << "\n";
     os << "  contactPointsDefaultSize = " << contactPointsDefaultSize << "\n";
     os << "  showBoundingBoxes = " << showBoundingBoxes << "\n";
-    os << "  showCones = " << showCones << "\n";
     os << "  showContactForces = " << showContactForces << "\n";
     os << "  showContactForcesValues = " << showContactForcesValues << "\n";
-    os << "  showCylinders = " << showCylinders << "\n";
     os << "  showSearchTree = " << showSearchTree << "\n";
     os << "  showSearchTreeCells = " << showSearchTreeCells << "\n";
-    os << "  showSpheres = " << showSpheres << "\n";
-    os << "  showTori = " << showTori << "\n";
-    os << "  showTriangles = " << showTriangles << "\n";
     os << "  tilingCurves = " << tilingCurves << "\n";
     os << "  tilingSpheres = " << tilingSpheres << "\n";
     os << "\n";
@@ -3421,6 +3557,72 @@ inline bool VSettingsContour::PyGetShowColorBar() const {
     PyDeprecated("visualizationSettings", "contour.showColorBar", "VisualizationSettings parameter contour.showColorBar is deprecated! use contour.advanced.showColorBar instead!");
     if (backlink == nullptr) { CHECKandTHROWstring("contour.showColorBar is deprecated and forwards to contour.advanced.showColorBar, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
     return bool(backlink->contour.advanced.showColorBar); 
+    }
+
+inline void VSettingsContact::PySetColorSpheres(const std::array<float,4>& spheresInit) { 
+    PyDeprecated("visualizationSettings", "contact.colorSpheres", "VisualizationSettings parameter contact.colorSpheres is deprecated! use contact.color.spheres instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.colorSpheres is deprecated and forwards to contact.color.spheres, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    backlink->contact.color.spheres= (const Float4&)spheresInit; 
+    }
+inline std::array<float,4> VSettingsContact::PyGetColorSpheres() const { 
+    PyDeprecated("visualizationSettings", "contact.colorSpheres", "VisualizationSettings parameter contact.colorSpheres is deprecated! use contact.color.spheres instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.colorSpheres is deprecated and forwards to contact.color.spheres, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    return std::array<float,4>(backlink->contact.color.spheres); 
+    }
+
+inline void VSettingsContact::PySetColorTori(const std::array<float,4>& toriInit) { 
+    PyDeprecated("visualizationSettings", "contact.colorTori", "VisualizationSettings parameter contact.colorTori is deprecated! use contact.color.tori instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.colorTori is deprecated and forwards to contact.color.tori, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    backlink->contact.color.tori= (const Float4&)toriInit; 
+    }
+inline std::array<float,4> VSettingsContact::PyGetColorTori() const { 
+    PyDeprecated("visualizationSettings", "contact.colorTori", "VisualizationSettings parameter contact.colorTori is deprecated! use contact.color.tori instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.colorTori is deprecated and forwards to contact.color.tori, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    return std::array<float,4>(backlink->contact.color.tori); 
+    }
+
+inline void VSettingsContact::PySetColorTriangles(const std::array<float,4>& trianglesInit) { 
+    PyDeprecated("visualizationSettings", "contact.colorTriangles", "VisualizationSettings parameter contact.colorTriangles is deprecated! use contact.color.triangles instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.colorTriangles is deprecated and forwards to contact.color.triangles, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    backlink->contact.color.triangles= (const Float4&)trianglesInit; 
+    }
+inline std::array<float,4> VSettingsContact::PyGetColorTriangles() const { 
+    PyDeprecated("visualizationSettings", "contact.colorTriangles", "VisualizationSettings parameter contact.colorTriangles is deprecated! use contact.color.triangles instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.colorTriangles is deprecated and forwards to contact.color.triangles, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    return std::array<float,4>(backlink->contact.color.triangles); 
+    }
+
+inline void VSettingsContact::PySetShowSpheres(const bool& spheresInit) { 
+    PyDeprecated("visualizationSettings", "contact.showSpheres", "VisualizationSettings parameter contact.showSpheres is deprecated! use contact.show.spheres instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.showSpheres is deprecated and forwards to contact.show.spheres, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    backlink->contact.show.spheres= (const bool&)spheresInit; 
+    }
+inline bool VSettingsContact::PyGetShowSpheres() const { 
+    PyDeprecated("visualizationSettings", "contact.showSpheres", "VisualizationSettings parameter contact.showSpheres is deprecated! use contact.show.spheres instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.showSpheres is deprecated and forwards to contact.show.spheres, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    return bool(backlink->contact.show.spheres); 
+    }
+
+inline void VSettingsContact::PySetShowTori(const bool& toriInit) { 
+    PyDeprecated("visualizationSettings", "contact.showTori", "VisualizationSettings parameter contact.showTori is deprecated! use contact.show.tori instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.showTori is deprecated and forwards to contact.show.tori, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    backlink->contact.show.tori= (const bool&)toriInit; 
+    }
+inline bool VSettingsContact::PyGetShowTori() const { 
+    PyDeprecated("visualizationSettings", "contact.showTori", "VisualizationSettings parameter contact.showTori is deprecated! use contact.show.tori instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.showTori is deprecated and forwards to contact.show.tori, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    return bool(backlink->contact.show.tori); 
+    }
+
+inline void VSettingsContact::PySetShowTriangles(const bool& trianglesInit) { 
+    PyDeprecated("visualizationSettings", "contact.showTriangles", "VisualizationSettings parameter contact.showTriangles is deprecated! use contact.show.triangles instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.showTriangles is deprecated and forwards to contact.show.triangles, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    backlink->contact.show.triangles= (const bool&)trianglesInit; 
+    }
+inline bool VSettingsContact::PyGetShowTriangles() const { 
+    PyDeprecated("visualizationSettings", "contact.showTriangles", "VisualizationSettings parameter contact.showTriangles is deprecated! use contact.show.triangles instead!");
+    if (backlink == nullptr) { CHECKandTHROWstring("contact.showTriangles is deprecated and forwards to contact.show.triangles, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    return bool(backlink->contact.show.triangles); 
     }
 
 inline void VSettingsWindowDeprecated::PySetAlwaysOnTop(const bool& alwaysOnTopInit) { 

@@ -646,9 +646,9 @@ void VisualizationObjectContactCylinderCylinder::UpdateGraphics(const Visualizat
 	CObjectContactCylinderCylinder* cItem = (CObjectContactCylinderCylinder*)vSystem->systemData->GetCObjects()[itemNumber];
 	const auto& parameters = cItem->GetParameters();
 
-	if (visualizationSettings.contact.showCylinders)
+	if (visualizationSettings.contact.show.cylinders)
 	{
-		Float4 cylinderColor = visualizationSettings.contact.colorCylinders;
+		Float4 cylinderColor = visualizationSettings.contact.color.cylinders;
 		if (color[0] != -1.f) { cylinderColor = color; }
 		ContactCylinder::DrawCylinderOfMarker(vSystem, cItem->GetMarkerNumbers()[0], parameters.cylindersRadii[0],
 			parameters.cylindersLengths[0], cylinderColor, itemID, visualizationSettings.general.cylinderTiling);
@@ -716,9 +716,9 @@ void VisualizationObjectContactCylinderTriangle::UpdateGraphics(const Visualizat
 	CObjectContactCylinderTriangle* cItem = (CObjectContactCylinderTriangle*)vSystem->systemData->GetCObjects()[itemNumber];
 	const auto& parameters = cItem->GetParameters();
 
-	if (visualizationSettings.contact.showCylinders)
+	if (visualizationSettings.contact.show.cylinders)
 	{
-		Float4 cylinderColor = visualizationSettings.contact.colorCylinders;
+		Float4 cylinderColor = visualizationSettings.contact.color.cylinders;
 		if (color[0] != -1.f) { cylinderColor = color; }
 		ContactCylinder::DrawCylinderOfMarker(vSystem, cItem->GetMarkerNumbers()[0], parameters.cylinderRadius,
 			parameters.cylinderLength, cylinderColor, itemID, visualizationSettings.general.cylinderTiling);
@@ -727,9 +727,9 @@ void VisualizationObjectContactCylinderTriangle::UpdateGraphics(const Visualizat
 		"ObjectContactCylinderTriangle", ContactCylinder::ComputePoints);
 	Vector3D pos1;
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetPosition(*vSystem->systemData, pos1, ConfigurationType::Visualization);
-	if (visualizationSettings.contact.showTriangles && parameters.trianglePoints.NumberOfItems() == 3)
+	if (visualizationSettings.contact.show.triangles && parameters.trianglePoints.NumberOfItems() == 3)
 	{
-		Float4 triangleColor = visualizationSettings.contact.colorTriangles;
+		Float4 triangleColor = visualizationSettings.contact.color.triangles;
 		if (color[0] != -1.f) { triangleColor = color; }
 		Matrix3D A1;
 		vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetRotationMatrix(*vSystem->systemData, A1, ConfigurationType::Visualization);
@@ -829,9 +829,9 @@ void VisualizationObjectContactConeCone::UpdateGraphics(const VisualizationSetti
 	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	CObjectContactConeCone* cItem = (CObjectContactConeCone*)vSystem->systemData->GetCObjects()[itemNumber];
 	const auto& parameters = cItem->GetParameters();
-	if (visualizationSettings.contact.showCones)
+	if (visualizationSettings.contact.show.cones)
 	{
-		Float4 coneColor = visualizationSettings.contact.colorCones;
+		Float4 coneColor = visualizationSettings.contact.color.cones;
 		if (color[0] != -1.f) { coneColor = color; }
 		ContactCylinder::DrawConeOfMarker(vSystem, cItem->GetMarkerNumbers()[0], parameters.conesRadii0[0], parameters.conesRadii0[1],
 			parameters.conesLengths[0], coneColor, itemID, visualizationSettings.general.cylinderTiling);
@@ -847,18 +847,18 @@ void VisualizationObjectContactConeTriangle::UpdateGraphics(const VisualizationS
 	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	CObjectContactConeTriangle* cItem = (CObjectContactConeTriangle*)vSystem->systemData->GetCObjects()[itemNumber];
 	const auto& parameters = cItem->GetParameters();
-	if (visualizationSettings.contact.showCones)
+	if (visualizationSettings.contact.show.cones)
 	{
-		Float4 coneColor = visualizationSettings.contact.colorCones;
+		Float4 coneColor = visualizationSettings.contact.color.cones;
 		if (color[0] != -1.f) { coneColor = color; }
 		ContactCylinder::DrawConeOfMarker(vSystem, cItem->GetMarkerNumbers()[0], parameters.coneRadii[0], parameters.coneRadii[1],
 			parameters.coneLength, coneColor, itemID, visualizationSettings.general.cylinderTiling);
 	}
 	ContactPoints::DrawForces<CObjectContactConeTriangle, ContactCylinder::Points>(*cItem, visualizationSettings, vSystem, itemID,
 		"ObjectContactConeTriangle", ContactCylinder::ComputePoints);
-	if (visualizationSettings.contact.showTriangles && parameters.trianglePoints.NumberOfItems() == 3)
+	if (visualizationSettings.contact.show.triangles && parameters.trianglePoints.NumberOfItems() == 3)
 	{
-		Float4 triangleColor = visualizationSettings.contact.colorTriangles;
+		Float4 triangleColor = visualizationSettings.contact.color.triangles;
 		if (color[0] != -1.f) { triangleColor = color; }
 		Vector3D pos1;
 		Matrix3D A1;

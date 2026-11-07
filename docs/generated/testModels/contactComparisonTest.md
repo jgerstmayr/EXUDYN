@@ -123,7 +123,7 @@ def Drop(kind, law, z0=z0, vx=0, mu=0, frictionProportionalZone=1e-3, sensorType
             mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=r,
                                                       trianglePoints=exu.Vector3DList(trianglePoints),
                                                       visualization=VObjectContactSphereTriangle(show=True), **law, **friction))
-            SC.visualizationSettings.contact.showTriangles = True
+            SC.visualizationSettings.contact.show.triangles = True
         sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=sensorType,
                                           storeInternal=True, writeToFile=False))
     mbs.Assemble()

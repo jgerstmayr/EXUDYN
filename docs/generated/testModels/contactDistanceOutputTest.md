@@ -106,9 +106,9 @@ checks += [distances[3] == gap, abs(distances[3] + 9.81/1e5) < 1e-6]
 
 u = sum(checks) + sum(distances)
 if not testIsActive: #the shapes of the contacts: the ball and the large sphere, the triangle, the torus
-    SC.visualizationSettings.contact.showSpheres = True
-    SC.visualizationSettings.contact.showTriangles = True
-    SC.visualizationSettings.contact.showTori = True
+    SC.visualizationSettings.contact.show.spheres = True
+    SC.visualizationSettings.contact.show.triangles = True
+    SC.visualizationSettings.contact.show.tori = True
     SC.visualizationSettings.general.sphereTiling = 32
     mbs.SolutionViewer()
 

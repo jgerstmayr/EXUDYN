@@ -172,7 +172,7 @@ class SpotEnv(OpenAIGymInterfaceEnv):
         self.simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = True
         
         
-        self.SC.visualizationSettings.contact.showSpheres = False
+        self.SC.visualizationSettings.contact.show.spheres = False
         self.SC.visualizationSettings.view0.scene.drawWorldBasis = True
         self.SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
         self.SC.visualizationSettings.general.graphicsUpdateInterval = 0.2

@@ -397,6 +397,50 @@ VSettingsSensors has the following items:
 
 
 
+(sec-vsettingscontactshow)=
+### VSettingsContactShow
+
+Which shapes of the contacts are drawn: of GeneralContact and of the contact items whose visualization has show=True (#3340).
+
+Reached as `SC.visualizationSettings.contact.contactShow`.
+
+VSettingsContactShow has the following items:
+
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
+```
+
+| name | type | default | description |
+|---|---|---|---|
+| `cones` | bool | False | show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True |
+| `cylinders` | bool | False | show the cylinders of the contact items (ObjectContactSphereCylinder, ObjectContactCylinderCylinder, ObjectJournalBearing, ...) whose visualization has show=True |
+| `spheres` | bool | False | show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True |
+| `tori` | bool | False | show the torus of each ObjectContactSphereTorus whose visualization has show=True |
+| `triangles` | bool | False | show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ObjectContactConvexConvex, ...) whose visualization has show=True |
+
+
+
+(sec-vsettingscontactcolor)=
+### VSettingsContactColor
+
+The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color (#3340).
+
+Reached as `SC.visualizationSettings.contact.contactColor`.
+
+VSettingsContactColor has the following items:
+
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
+```
+
+| name | type | default | description |
+|---|---|---|---|
+| `cones` | Float4 | [0.6,0.5,0.7,1.] | RGBA color of the contact cones, see show.cones |
+| `cylinders` | Float4 | [0.5,0.6,0.7,1.] | RGBA color of the contact cylinders, see show.cylinders |
+| `spheres` | Float4 | [0.8,0.5,0.2,1.] | RGBA color of the contact spheres, see show.spheres |
+| `tori` | Float4 | [0.8,0.2,0.8,1.] | RGBA color of the contact tori, see show.tori |
+| `triangles` | Float4 | [0.5,0.5,0.5,1.] | RGBA color of the contact triangles, see show.triangles |
+
+
+
 (sec-vsettingscontact)=
 ### VSettingsContact
 
@@ -411,26 +455,18 @@ VSettingsContact has the following items:
 
 | name | type | default | description |
 |---|---|---|---|
+| `color` | VSettingsContactColor |  | the colors of the shapes of the contacts (#3340) |
+| `show` | VSettingsContactShow |  | which shapes of the contacts are drawn: triangles, spheres, tori, cylinders, cones (#3340) |
 | `colorBoundingBoxes` | Float4 | [0.9,0.1,0.1,1.] | RGBA color for boudnding boxes, see showBoundingBoxes |
-| `colorCones` | Float4 | [0.6,0.5,0.7,1.] | RGBA color for contact cones, see showCones |
-| `colorCylinders` | Float4 | [0.5,0.6,0.7,1.] | RGBA color for contact cylinders, see showCylinders |
 | `colorSearchTree` | Float4 | [0.1,0.1,0.9,1.] | RGBA color for search tree, see showSearchTree |
-| `colorSpheres` | Float4 | [0.8,0.5,0.2,1.] | RGBA color for contact spheres, see showSpheres |
-| `colorTori` | Float4 | [0.8,0.2,0.8,1.] | RGBA color for contact tori, see showTori |
-| `colorTriangles` | Float4 | [0.5,0.5,0.5,1.] | RGBA color for contact triangles, see showTriangles |
 | `contactForcesFactor` | float | 0.001 | factor used for scaling of contact forces is showContactForces=True; for the arrows of the contact items: their length per force [SI:m/N] |
 | `contactForcesRadius` | UFloat | 0.002 | radius of the shaft of the arrows of the contact forces [SI:m], see showContactForces; at most a tenth of the length of an arrow (#3339) |
 | `contactPointsDefaultSize` | float | 0.001 | global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle |
 | `showBoundingBoxes` | bool | False | show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects! |
-| `showCones` | bool | False | show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True |
 | `showContactForces` | bool | False | if True, contact forces are drawn for certain contact models; the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing whose visualization has show=True draw at each contact point the force on marker 0 as a red arrow and the force on marker 1 as a green one, their heads meeting at the contact point, except with a user function of the force (#3339) |
 | `showContactForcesValues` | bool | False | if True and showContactForces=True, numerical values for contact forces are shown at certain points |
-| `showCylinders` | bool | False | show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True |
 | `showSearchTree` | bool | False | show outer box of search tree for all GeneralContacts |
 | `showSearchTreeCells` | bool | False | show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells! |
-| `showSpheres` | bool | False | show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True |
-| `showTori` | bool | False | show the torus of each ObjectContactSphereTorus whose visualization has show=True |
-| `showTriangles` | bool | False | show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ...) whose visualization has show=True |
 | `tilingCurves` | PInt | 8 | tiling for nonlinear/polynomial curves; higher values give smoother curves |
 | `tilingSpheres` | PInt | 4 | tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates |
 
@@ -924,6 +960,12 @@ The following parameter changes have been made:
 - `visualizationSettings.contour.colorBarPrecision` → `visualizationSettings.contour.advanced.colorBarPrecision` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.contour.colorBarTiling` → `visualizationSettings.contour.advanced.colorBarTiling` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.contour.showColorBar` → `visualizationSettings.contour.advanced.showColorBar` (changed in version 1.10.80, expires: 2030)
+- `visualizationSettings.contact.colorSpheres` → `visualizationSettings.contact.color.spheres` (changed in version 1.13.454, expires: 2031)
+- `visualizationSettings.contact.colorTori` → `visualizationSettings.contact.color.tori` (changed in version 1.13.454, expires: 2031)
+- `visualizationSettings.contact.colorTriangles` → `visualizationSettings.contact.color.triangles` (changed in version 1.13.454, expires: 2031)
+- `visualizationSettings.contact.showSpheres` → `visualizationSettings.contact.show.spheres` (changed in version 1.13.454, expires: 2031)
+- `visualizationSettings.contact.showTori` → `visualizationSettings.contact.show.tori` (changed in version 1.13.454, expires: 2031)
+- `visualizationSettings.contact.showTriangles` → `visualizationSettings.contact.show.triangles` (changed in version 1.13.454, expires: 2031)
 - `visualizationSettings.window.alwaysOnTop` → `visualizationSettings.view0.window.alwaysOnTop` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.window.ignoreKeys` → `visualizationSettings.interactive.ignoreKeys` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.window.keyPressUserFunction` → `visualizationSettings.interactive.keyPressUserFunction` (changed in version 1.10.80, expires: 2030)

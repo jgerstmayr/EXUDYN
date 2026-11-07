@@ -146,8 +146,8 @@ SC.visualizationSettings.openGL.multiSampling=4
 SC.visualizationSettings.openGL.light0.shadow = 0.25
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = radius*1.5
-# SC.visualizationSettings.contact.showSpheres = True
-# SC.visualizationSettings.contact.showTori = True
+# SC.visualizationSettings.contact.show.spheres = True
+# SC.visualizationSettings.contact.show.tori = True
 
 SC.renderer.Start()              #start graphics visualization
 SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue

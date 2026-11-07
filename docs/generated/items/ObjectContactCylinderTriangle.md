@@ -55,9 +55,9 @@ The parameters of `VObjectContactCylinderTriangle`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); the cylinder with `contact.showCylinders` and the triangle with `contact.showTriangles`.
+Drawn as [all connectors](#sec-drawing-objectsconnector); the cylinder with `contact.show.cylinders` and the triangle with `contact.show.triangles`.
 
-Settings beyond those of all connectors: [`contact.colorCylinders`](#sec-vsettingscontact), [`contact.colorTriangles`](#sec-vsettingscontact), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.showCylinders`](#sec-vsettingscontact), [`contact.showTriangles`](#sec-vsettingscontact), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+Settings beyond those of all connectors: [`contact.color.cylinders`](#sec-vsettingscontactcolor), [`contact.color.triangles`](#sec-vsettingscontactcolor), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.show.cylinders`](#sec-vsettingscontactshow), [`contact.show.triangles`](#sec-vsettingscontactshow), [`general.cylinderTiling`](#sec-vsettingsgeneral).
 
 ## Output variables
 

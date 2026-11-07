@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 437 | 1.13.453 |
+| 1.13 | Newborn | 438 | 1.13.454 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.454** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The shapes of visualizationSettings.contact in the substructures contact.show and contact.color (#3340)
+  - description: visualizationSettings.contact has a show and a color setting for each kind of contact shape (showTriangles, showSpheres, showTori, showCylinders, showCones, colorTriangles, ...), which fill up the structure as shapes are added. Decided: the substructures contact.show and contact.color with triangles, spheres, tori, cylinders and cones; the names of 1.13.6 (showTriangles, showSpheres, showTori, colorTriangles, colorSpheres, colorTori) forward to them as deprecated; showCylinders, showCones, colorCylinders and colorCones are removed (introduced after 1.13); the models of the repository use the new names.
+  - **notes:** The contact shapes are switched on in visualizationSettings.contact.show (triangles, spheres, tori, cylinders, cones) and colored in contact.color; contact.showSpheres, showTriangles, showTori, colorSpheres, colorTriangles and colorTori still work and warn that they are deprecated.
+  - date resolved: **2026-11-07 21:40**, date raised: 2026-11-07
 - **1.13.453** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The contact forces of the contact items drawn as two arrows meeting at the contact point (#3339)
   - description: The contact items between spheres, cylinders, cones, triangles, polytopes and the journal bearing do not show their forces; visualizationSettings.contact.showContactForces and contactForcesFactor are used only by ObjectContactFrictionCircleCable2D. Decided: with showContactForces, each contact point of these items draws the force on marker 0 as a red 3D arrow and the force on marker 1 as a green one, opposite, their heads meeting at the contact point, scaled by contactForcesFactor; the radius of the arrows by a new setting contact.contactForcesRadius.
   - **notes:** With visualizationSettings.contact.showContactForces, the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing draw the force on marker 0 as a red arrow and the force on marker 1 as a green arrow, their heads meeting at each contact point; contact.contactForcesRadius sets their radius.

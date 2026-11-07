@@ -218,9 +218,9 @@ void VisualizationObjectContactConvexConvex::UpdateGraphics(const VisualizationS
 	{
 		vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[i]]->GetPosition(*vSystem->systemData, pos[i], ConfigurationType::Visualization);
 	}
-	if (visualizationSettings.contact.showTriangles)
+	if (visualizationSettings.contact.show.triangles)
 	{
-		Float4 triangleColor = visualizationSettings.contact.colorTriangles;
+		Float4 triangleColor = visualizationSettings.contact.color.triangles;
 		if (color[0] != -1.f) { triangleColor = color; }
 		std::array<Float4, 3> colors = { triangleColor, triangleColor, triangleColor };
 		for (Index i = 0; i < 2; i++)

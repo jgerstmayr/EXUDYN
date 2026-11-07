@@ -45,9 +45,9 @@ The parameters of `VObjectJournalBearing`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); the bearing as a tube and the journal as a cylinder with `contact.showCylinders`.
+Drawn as [all connectors](#sec-drawing-objectsconnector); the bearing as a tube and the journal as a cylinder with `contact.show.cylinders`.
 
-Settings beyond those of all connectors: [`contact.colorCylinders`](#sec-vsettingscontact), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.showCylinders`](#sec-vsettingscontact), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+Settings beyond those of all connectors: [`contact.color.cylinders`](#sec-vsettingscontactcolor), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.show.cylinders`](#sec-vsettingscontactshow), [`general.cylinderTiling`](#sec-vsettingsgeneral).
 
 ## Output variables
 

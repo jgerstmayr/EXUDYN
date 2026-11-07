@@ -394,7 +394,7 @@ if __name__=='__main__':
     simulationSettings.timeIntegration.verboseMode = 1
     # simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
         
-    SC.visualizationSettings.contact.showSpheres = False
+    SC.visualizationSettings.contact.show.spheres = False
     SC.visualizationSettings.view0.scene.drawWorldBasis = False
     SC.visualizationSettings.general.autoFitScene=False
     SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]

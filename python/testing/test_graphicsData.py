@@ -308,7 +308,7 @@ def testTheCylindersAndConesOfCPlusPlusWindOutward():
                                                   nodeNumber=nData, sphereRadius=0.1, cylinderRadius=0.2, cylinderLength=1,
                                                   visualization=items.VObjectContactSphereCylinder(show=True)))
     mbs.Assemble()
-    SC.visualizationSettings.contact.showCylinders = True
+    SC.visualizationSettings.contact.show.cylinders = True
     SC.visualizationSettings.nodes.show = True
     SC.visualizationSettings.nodes.showBasis = True
     SC.visualizationSettings.nodes.drawNodesAsPoint = False #the basis as cylinders and cones

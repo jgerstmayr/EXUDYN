@@ -2,12 +2,16 @@
   "number": 3340,
   "title": "The shapes of visualizationSettings.contact in the substructures contact.show and contact.color",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "visualizationSettings.contact has a show and a color setting for each kind of contact shape (showTriangles, showSpheres, showTori, showCylinders, showCones, colorTriangles, ...), which fill up the structure as shapes are added. Decided: the substructures contact.show and contact.color with triangles, spheres, tori, cylinders and cones; the names of 1.13.6 (showTriangles, showSpheres, showTori, colorTriangles, colorSpheres, colorTori) forward to them as deprecated; showCylinders, showCones, colorCylinders and colorCones are removed (introduced after 1.13); the models of the repository use the new names.",
   "dateRaised": "2026-11-07",
   "deadline": "2027-05-06",
-  "file": "definitions/structureDefsVisualizationSettings.py"
+  "dateResolved": "2026-11-07 21:40",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/structureDefsVisualizationSettings.py",
+  "releaseNotes": "The contact shapes are switched on in visualizationSettings.contact.show (triangles, spheres, tori, cylinders, cones) and colored in contact.color; contact.showSpheres, showTriangles, showTori, colorSpheres, colorTriangles and colorTori still work and warn that they are deprecated.",
+  "resolvedInVersion": "1.13.454"
 }

@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (5 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (4 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 11 | Structural core improvements |
+| RG9 | OPEN | 10 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1670,9 +1670,11 @@ CLOSED 2026-11-07 (#3338): EPA ran into its 128 iterations on the nearly flat si
 
 CLOSED 2026-11-07 (#3339): with contact.showContactForces the ten primitive contact items (and the journal bearing) draw the force on marker 0 red and on marker 1 green, the heads at each contact point, from the state shown; contact.contactForcesRadius new; not with a user function of the force (render thread); test in test_graphicsData.py. [log](exudynRevisionLog2026c.md#rg9-12-19)
 
-#### **OPEN_RG9.12.20** contact.show and contact.color as substructures
+#### **CLOSED_RG9.12.20** contact.show and contact.color as substructures
 
 #3340. Maintainer 2026-11-07: the show and color settings per contact primitive fill up the contact settings; contact.color.cones etc., the same for contact.show; deprecation only for the settings of 1.13.6; the model scripts adjusted.
+
+CLOSED 2026-11-07 (#3340): visualizationSettings.contact.show and contact.color with triangles, spheres, tori, cylinders, cones; the six members of 1.13.6 forward as deprecated, the four added after 1.13 are removed; the models of the repository renamed. [log](exudynRevisionLog2026c.md#rg9-12-20)
 
 #### **OPEN_RG9.12.21** contactPrimitivesShowcase.py revised for a raytraced picture
 

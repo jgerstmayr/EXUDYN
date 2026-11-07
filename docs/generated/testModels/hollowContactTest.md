@@ -107,8 +107,8 @@ exu.Print('heights', heights, '\n expected', expected)
 checks += [abs(h - e) < 1e-6 for h, e in zip(heights, expected)]
 
 if not testIsActive:
-    SC.visualizationSettings.contact.showCylinders = True
-    SC.visualizationSettings.contact.showCones = True
+    SC.visualizationSettings.contact.show.cylinders = True
+    SC.visualizationSettings.contact.show.cones = True
     mbs.SolutionViewer()
 
 u = sum(checks) + sum(heights)

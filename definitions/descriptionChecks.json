@@ -334,22 +334,22 @@
   "ObjectContactSphereCylinder": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "89a256710816"
+   "fingerprint": "de58634b387c"
   },
   "ObjectContactSphereSphere": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "d32fda7b8d46"
+   "fingerprint": "5c0ee2c64b03"
   },
   "ObjectContactSphereTorus": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "6057a66d2bdf"
+   "fingerprint": "92d753f6b893"
   },
   "ObjectContactSphereTriangle": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "473322da1da3"
+   "fingerprint": "f2f9f5d24581"
   },
   "ObjectFFRF": {
    "checked": "2026-10-25",

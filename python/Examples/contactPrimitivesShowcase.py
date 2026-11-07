@@ -109,8 +109,8 @@ simulationSettings.timeIntegration.endTime = 2
 simulationSettings.solution.file.writePeriod = 0.01
 mbs.SolveDynamic(simulationSettings)
 
-SC.visualizationSettings.contact.showSpheres = True
-SC.visualizationSettings.contact.showCylinders = True
-SC.visualizationSettings.contact.showCones = True
-SC.visualizationSettings.contact.showTriangles = False
+SC.visualizationSettings.contact.show.spheres = True
+SC.visualizationSettings.contact.show.cylinders = True
+SC.visualizationSettings.contact.show.cones = True
+SC.visualizationSettings.contact.show.triangles = False
 mbs.SolutionViewer()

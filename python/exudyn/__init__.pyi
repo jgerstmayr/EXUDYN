@@ -2054,22 +2054,48 @@ class VSettingsSensors:
     def SetDictionary(self, d: dict) -> None: ...
 
 
+class VSettingsContactShow:
+    """Which shapes of the contacts are drawn: of GeneralContact and of the contact items whose visualization has show=True (#3340)."""
+    cones: bool
+    """show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True."""
+    cylinders: bool
+    """show the cylinders of the contact items (ObjectContactSphereCylinder, ObjectContactCylinderCylinder, ObjectJournalBearing, ...) whose visualization has show=True."""
+    spheres: bool
+    """show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True."""
+    tori: bool
+    """show the torus of each ObjectContactSphereTorus whose visualization has show=True."""
+    triangles: bool
+    """show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ObjectContactConvexConvex, ...) whose visualization has show=True."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+
+class VSettingsContactColor:
+    """The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color (#3340)."""
+    cones: Tuple[float,float,float,float]
+    """RGBA color of the contact cones, see show.cones."""
+    cylinders: Tuple[float,float,float,float]
+    """RGBA color of the contact cylinders, see show.cylinders."""
+    spheres: Tuple[float,float,float,float]
+    """RGBA color of the contact spheres, see show.spheres."""
+    tori: Tuple[float,float,float,float]
+    """RGBA color of the contact tori, see show.tori."""
+    triangles: Tuple[float,float,float,float]
+    """RGBA color of the contact triangles, see show.triangles."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+
 class VSettingsContact:
     """Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle."""
+    color: VSettingsContactColor
+    """the colors of the shapes of the contacts (#3340)."""
+    show: VSettingsContactShow
+    """which shapes of the contacts are drawn: triangles, spheres, tori, cylinders, cones (#3340)."""
     colorBoundingBoxes: Tuple[float,float,float,float]
     """RGBA color for boudnding boxes, see showBoundingBoxes."""
-    colorCones: Tuple[float,float,float,float]
-    """RGBA color for contact cones, see showCones."""
-    colorCylinders: Tuple[float,float,float,float]
-    """RGBA color for contact cylinders, see showCylinders."""
     colorSearchTree: Tuple[float,float,float,float]
     """RGBA color for search tree, see showSearchTree."""
-    colorSpheres: Tuple[float,float,float,float]
-    """RGBA color for contact spheres, see showSpheres."""
-    colorTori: Tuple[float,float,float,float]
-    """RGBA color for contact tori, see showTori."""
-    colorTriangles: Tuple[float,float,float,float]
-    """RGBA color for contact triangles, see showTriangles."""
     contactForcesFactor: float
     """factor used for scaling of contact forces is showContactForces=True; for the arrows of the contact items: their length per force [SI:m/N]."""
     contactForcesRadius: float
@@ -2078,24 +2104,14 @@ class VSettingsContact:
     """global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle."""
     showBoundingBoxes: bool
     """show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!"""
-    showCones: bool
-    """show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True."""
     showContactForces: bool
     """if True, contact forces are drawn for certain contact models; the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing whose visualization has show=True draw at each contact point the force on marker 0 as a red arrow and the force on marker 1 as a green one, their heads meeting at the contact point, except with a user function of the force (#3339)."""
     showContactForcesValues: bool
     """if True and showContactForces=True, numerical values for  contact forces are shown at certain points."""
-    showCylinders: bool
-    """show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True."""
     showSearchTree: bool
     """show outer box of search tree for all GeneralContacts."""
     showSearchTreeCells: bool
     """show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!"""
-    showSpheres: bool
-    """show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True."""
-    showTori: bool
-    """show the torus of each ObjectContactSphereTorus whose visualization has show=True."""
-    showTriangles: bool
-    """show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ...) whose visualization has show=True."""
     tilingCurves: int
     """tiling for nonlinear/polynomial curves; higher values give smoother curves."""
     tilingSpheres: int

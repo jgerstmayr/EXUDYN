@@ -151,7 +151,7 @@ SC.visualizationSettings.view0.window.renderWindowSize=[1900,1200]
 SC.visualizationSettings.openGL.multiSampling = 4
 #improved OpenGL rendering
 
-SC.visualizationSettings.contact.showSpheres = True
+SC.visualizationSettings.contact.show.spheres = True
 SC.visualizationSettings.contact.tilingSpheres = 4
 
 

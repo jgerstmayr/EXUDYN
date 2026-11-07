@@ -55,9 +55,9 @@ The parameters of `VObjectContactConeCone`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); both truncated cones with `contact.showCones`.
+Drawn as [all connectors](#sec-drawing-objectsconnector); both truncated cones with `contact.show.cones`.
 
-Settings beyond those of all connectors: [`contact.colorCones`](#sec-vsettingscontact), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showCones`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+Settings beyond those of all connectors: [`contact.color.cones`](#sec-vsettingscontactcolor), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.show.cones`](#sec-vsettingscontactshow), [`contact.showContactForces`](#sec-vsettingscontact), [`general.cylinderTiling`](#sec-vsettingsgeneral).
 
 ## Output variables
 

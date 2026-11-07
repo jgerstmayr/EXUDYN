@@ -302,17 +302,17 @@ void VisualizationObjectContactSphereTriangle::UpdateGraphics(const Visualizatio
 
 	if (color[0] != -1.f) { currentColor = color; }
 
-	if (visualizationSettings.contact.showSpheres)
+	if (visualizationSettings.contact.show.spheres)
 	{
 		//marker0 is sphere:
-		Float4 currentColor = visualizationSettings.contact.colorSpheres;
+		Float4 currentColor = visualizationSettings.contact.color.spheres;
 		if (color[0] != -1.f) { currentColor = color; }
 		EXUvis::DrawSphere(pos[0], cItem->GetParameters().sphereRadius, currentColor, vSystem->graphicsData, itemID, visualizationSettings.general.sphereTiling);
 	}
-	if (visualizationSettings.contact.showTriangles)
+	if (visualizationSettings.contact.show.triangles)
 	{
 		//marker1 is triangle:
-		Float4 currentColor = visualizationSettings.contact.colorTriangles;
+		Float4 currentColor = visualizationSettings.contact.color.triangles;
 		if (color[0] != -1.f) { currentColor = color; }
 
 		Matrix3D A1;

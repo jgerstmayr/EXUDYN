@@ -3629,10 +3629,148 @@ inline void SetDictionary(VSettingsSensors& data, const py::dict& d) {
 }
 
 //! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const VSettingsContactShow& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Which shapes of the contacts are drawn: of GeneralContact and of the contact items whose visualization has show=True (#3340)";
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.cones;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True";
+    structureDict["cones"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.cylinders;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "show the cylinders of the contact items (ObjectContactSphereCylinder, ObjectContactCylinderCylinder, ObjectJournalBearing, ...) whose visualization has show=True";
+    structureDict["cylinders"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.spheres;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True";
+    structureDict["spheres"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.tori;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "show the torus of each ObjectContactSphereTorus whose visualization has show=True";
+    structureDict["tori"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.triangles;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ObjectContactConvexConvex, ...) whose visualization has show=True";
+    structureDict["triangles"] = d;
+
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const VSettingsContactShow& data) {
+    auto structureDict = py::dict();
+    structureDict["cones"] = data.cones;
+    structureDict["cylinders"] = data.cylinders;
+    structureDict["spheres"] = data.spheres;
+    structureDict["tori"] = data.tori;
+    structureDict["triangles"] = data.triangles;
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(VSettingsContactShow& data, const py::dict& d) {
+    EPyUtils::FromPython(d["cones"], data.cones, "VSettingsContactShow.cones");
+    EPyUtils::FromPython(d["cylinders"], data.cylinders, "VSettingsContactShow.cylinders");
+    EPyUtils::FromPython(d["spheres"], data.spheres, "VSettingsContactShow.spheres");
+    EPyUtils::FromPython(d["tori"], data.tori, "VSettingsContactShow.tori");
+    EPyUtils::FromPython(d["triangles"], data.triangles, "VSettingsContactShow.triangles");
+}
+
+//! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const VSettingsContactColor& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color (#3340)";
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.cones);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "RGBA color of the contact cones, see show.cones";
+    structureDict["cones"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.cylinders);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "RGBA color of the contact cylinders, see show.cylinders";
+    structureDict["cylinders"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.spheres);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "RGBA color of the contact spheres, see show.spheres";
+    structureDict["spheres"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.tori);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "RGBA color of the contact tori, see show.tori";
+    structureDict["tori"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.triangles);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "RGBA color of the contact triangles, see show.triangles";
+    structureDict["triangles"] = d;
+
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const VSettingsContactColor& data) {
+    auto structureDict = py::dict();
+    structureDict["cones"] = EPyUtils::ToPythonMember(data.cones);
+    structureDict["cylinders"] = EPyUtils::ToPythonMember(data.cylinders);
+    structureDict["spheres"] = EPyUtils::ToPythonMember(data.spheres);
+    structureDict["tori"] = EPyUtils::ToPythonMember(data.tori);
+    structureDict["triangles"] = EPyUtils::ToPythonMember(data.triangles);
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(VSettingsContactColor& data, const py::dict& d) {
+    EPyUtils::FromPython(d["cones"], data.cones, "VSettingsContactColor.cones");
+    EPyUtils::FromPython(d["cylinders"], data.cylinders, "VSettingsContactColor.cylinders");
+    EPyUtils::FromPython(d["spheres"], data.spheres, "VSettingsContactColor.spheres");
+    EPyUtils::FromPython(d["tori"], data.tori, "VSettingsContactColor.tori");
+    EPyUtils::FromPython(d["triangles"], data.triangles, "VSettingsContactColor.triangles");
+}
+
+//! AUTO: read access to structure; converting into dictionary
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
     structureDict["structureDescription"] = "Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle";
+    structureDict["color"] = GetDictionaryWithTypeInfo(data.color);
+    structureDict["show"] = GetDictionaryWithTypeInfo(data.show);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.colorBoundingBoxes);
@@ -3643,51 +3781,11 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.colorCones);
-    d["type"] = "VectorFloat";
-    d["size"] = std::vector<int>{4};
-    d["description"] = "RGBA color for contact cones, see showCones";
-    structureDict["colorCones"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.colorCylinders);
-    d["type"] = "VectorFloat";
-    d["size"] = std::vector<int>{4};
-    d["description"] = "RGBA color for contact cylinders, see showCylinders";
-    structureDict["colorCylinders"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.colorSearchTree);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for search tree, see showSearchTree";
     structureDict["colorSearchTree"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.colorSpheres);
-    d["type"] = "VectorFloat";
-    d["size"] = std::vector<int>{4};
-    d["description"] = "RGBA color for contact spheres, see showSpheres";
-    structureDict["colorSpheres"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.colorTori);
-    d["type"] = "VectorFloat";
-    d["size"] = std::vector<int>{4};
-    d["description"] = "RGBA color for contact tori, see showTori";
-    structureDict["colorTori"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = EPyUtils::ToPythonMember(data.colorTriangles);
-    d["type"] = "VectorFloat";
-    d["size"] = std::vector<int>{4};
-    d["description"] = "RGBA color for contact triangles, see showTriangles";
-    structureDict["colorTriangles"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -3723,14 +3821,6 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.showCones;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True";
-    structureDict["showCones"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.showContactForces;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
@@ -3747,14 +3837,6 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.showCylinders;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True";
-    structureDict["showCylinders"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.showSearchTree;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
@@ -3768,30 +3850,6 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     d["size"] = std::vector<int>{1};
     d["description"] = "show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!";
     structureDict["showSearchTreeCells"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.showSpheres;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True";
-    structureDict["showSpheres"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.showTori;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "show the torus of each ObjectContactSphereTorus whose visualization has show=True";
-    structureDict["showTori"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.showTriangles;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ...) whose visualization has show=True";
-    structureDict["showTriangles"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -3815,26 +3873,18 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsContact& data) {
     auto structureDict = py::dict();
+    structureDict["color"] = GetDictionary(data.color);
+    structureDict["show"] = GetDictionary(data.show);
     structureDict["colorBoundingBoxes"] = EPyUtils::ToPythonMember(data.colorBoundingBoxes);
-    structureDict["colorCones"] = EPyUtils::ToPythonMember(data.colorCones);
-    structureDict["colorCylinders"] = EPyUtils::ToPythonMember(data.colorCylinders);
     structureDict["colorSearchTree"] = EPyUtils::ToPythonMember(data.colorSearchTree);
-    structureDict["colorSpheres"] = EPyUtils::ToPythonMember(data.colorSpheres);
-    structureDict["colorTori"] = EPyUtils::ToPythonMember(data.colorTori);
-    structureDict["colorTriangles"] = EPyUtils::ToPythonMember(data.colorTriangles);
     structureDict["contactForcesFactor"] = data.contactForcesFactor;
     structureDict["contactForcesRadius"] = data.contactForcesRadius;
     structureDict["contactPointsDefaultSize"] = data.contactPointsDefaultSize;
     structureDict["showBoundingBoxes"] = data.showBoundingBoxes;
-    structureDict["showCones"] = data.showCones;
     structureDict["showContactForces"] = data.showContactForces;
     structureDict["showContactForcesValues"] = data.showContactForcesValues;
-    structureDict["showCylinders"] = data.showCylinders;
     structureDict["showSearchTree"] = data.showSearchTree;
     structureDict["showSearchTreeCells"] = data.showSearchTreeCells;
-    structureDict["showSpheres"] = data.showSpheres;
-    structureDict["showTori"] = data.showTori;
-    structureDict["showTriangles"] = data.showTriangles;
     structureDict["tilingCurves"] = data.tilingCurves;
     structureDict["tilingSpheres"] = data.tilingSpheres;
     return structureDict;
@@ -3842,26 +3892,18 @@ inline py::dict GetDictionary(const VSettingsContact& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsContact& data, const py::dict& d) {
+    SetDictionary(data.color, py::cast<py::dict>(d["color"]));
+    SetDictionary(data.show, py::cast<py::dict>(d["show"]));
     EPyUtils::FromPython(d["colorBoundingBoxes"], data.colorBoundingBoxes, "VSettingsContact.colorBoundingBoxes");
-    EPyUtils::FromPython(d["colorCones"], data.colorCones, "VSettingsContact.colorCones");
-    EPyUtils::FromPython(d["colorCylinders"], data.colorCylinders, "VSettingsContact.colorCylinders");
     EPyUtils::FromPython(d["colorSearchTree"], data.colorSearchTree, "VSettingsContact.colorSearchTree");
-    EPyUtils::FromPython(d["colorSpheres"], data.colorSpheres, "VSettingsContact.colorSpheres");
-    EPyUtils::FromPython(d["colorTori"], data.colorTori, "VSettingsContact.colorTori");
-    EPyUtils::FromPython(d["colorTriangles"], data.colorTriangles, "VSettingsContact.colorTriangles");
     EPyUtils::FromPython(d["contactForcesFactor"], data.contactForcesFactor, "VSettingsContact.contactForcesFactor");
     EPyUtils::FromPython(d["contactForcesRadius"], data.contactForcesRadius, EPyUtils::RangeCheck::nonNegative, "VSettingsContact.contactForcesRadius");
     EPyUtils::FromPython(d["contactPointsDefaultSize"], data.contactPointsDefaultSize, "VSettingsContact.contactPointsDefaultSize");
     EPyUtils::FromPython(d["showBoundingBoxes"], data.showBoundingBoxes, "VSettingsContact.showBoundingBoxes");
-    EPyUtils::FromPython(d["showCones"], data.showCones, "VSettingsContact.showCones");
     EPyUtils::FromPython(d["showContactForces"], data.showContactForces, "VSettingsContact.showContactForces");
     EPyUtils::FromPython(d["showContactForcesValues"], data.showContactForcesValues, "VSettingsContact.showContactForcesValues");
-    EPyUtils::FromPython(d["showCylinders"], data.showCylinders, "VSettingsContact.showCylinders");
     EPyUtils::FromPython(d["showSearchTree"], data.showSearchTree, "VSettingsContact.showSearchTree");
     EPyUtils::FromPython(d["showSearchTreeCells"], data.showSearchTreeCells, "VSettingsContact.showSearchTreeCells");
-    EPyUtils::FromPython(d["showSpheres"], data.showSpheres, "VSettingsContact.showSpheres");
-    EPyUtils::FromPython(d["showTori"], data.showTori, "VSettingsContact.showTori");
-    EPyUtils::FromPython(d["showTriangles"], data.showTriangles, "VSettingsContact.showTriangles");
     EPyUtils::FromPython(d["tilingCurves"], data.tilingCurves, EPyUtils::RangeCheck::positive, "VSettingsContact.tilingCurves");
     EPyUtils::FromPython(d["tilingSpheres"], data.tilingSpheres, EPyUtils::RangeCheck::positive, "VSettingsContact.tilingSpheres");
 }
@@ -5779,6 +5821,12 @@ inline void SetDictionary(VisualizationSettings& data, const py::dict& dGiven) {
         {"contour.showColorBar", "contour.advanced.showColorBar"},
         {"contour.colorBarPrecision", "contour.advanced.colorBarPrecision"},
         {"contour.colorBarTiling", "contour.advanced.colorBarTiling"},
+        {"contact.showTriangles", "contact.show.triangles"},
+        {"contact.showSpheres", "contact.show.spheres"},
+        {"contact.showTori", "contact.show.tori"},
+        {"contact.colorTriangles", "contact.color.triangles"},
+        {"contact.colorSpheres", "contact.color.spheres"},
+        {"contact.colorTori", "contact.color.tori"},
         {"openGL.shadow", "openGL.light0.shadow"},
         {"openGL.lightPositionsInCameraFrame", "openGL.light0.useCameraFrame"},
         {"openGL.enableLight0", "openGL.light0.enable"},

@@ -131,8 +131,8 @@ void VisualizationObjectJournalBearing::UpdateGraphics(const VisualizationSettin
 		cItem->ComputeBearingForce(markerData, eccentricity, eccentricity_t, radial, force);
 		DrawContactForce(visualizationSettings, vSystem, itemID, markerData.GetMarkerData(0).position + parameters.journalRadius * radial, force);
 	}
-	if (!visualizationSettings.contact.showCylinders) { return; }
-	Float4 cylinderColor = visualizationSettings.contact.colorCylinders;
+	if (!visualizationSettings.contact.show.cylinders) { return; }
+	Float4 cylinderColor = visualizationSettings.contact.color.cylinders;
 	if (color[0] != -1.f) { cylinderColor = color; }
 	for (Index i = 0; i < 2; i++)
 	{

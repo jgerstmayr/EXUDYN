@@ -166,7 +166,7 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `ObjectRigidBody2D.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectRigidBody2D) |
 | `ObjectRotationalMass1D.physicsInertia` | 1.12.258 | 2031 | inertia | definitions (ObjectRotationalMass1D) |
 
-## Settings (154)
+## Settings (160)
 
 | name | since | removed in | instead | declared in |
 |---|---|---|---|---|
@@ -321,6 +321,12 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `TimeIntegrationSettings.realtimeFactor` | 1.12.256 | 2031 | timeIntegration.realtime.factor | definitions (TimeIntegrationSettings) |
 | `TimeIntegrationSettings.realtimeWaitMicroseconds` | 1.12.256 | 2031 | timeIntegration.realtime.waitMicroseconds | definitions (TimeIntegrationSettings) |
 | `TimeIntegrationSettings.simulateInRealtime` | 1.12.256 | 2031 | timeIntegration.realtime.active | definitions (TimeIntegrationSettings) |
+| `VSettingsContact.colorSpheres` | 1.13.454 | 2031 | contact.color.spheres | definitions (VSettingsContact) |
+| `VSettingsContact.colorTori` | 1.13.454 | 2031 | contact.color.tori | definitions (VSettingsContact) |
+| `VSettingsContact.colorTriangles` | 1.13.454 | 2031 | contact.color.triangles | definitions (VSettingsContact) |
+| `VSettingsContact.showSpheres` | 1.13.454 | 2031 | contact.show.spheres | definitions (VSettingsContact) |
+| `VSettingsContact.showTori` | 1.13.454 | 2031 | contact.show.tori | definitions (VSettingsContact) |
+| `VSettingsContact.showTriangles` | 1.13.454 | 2031 | contact.show.triangles | definitions (VSettingsContact) |
 | `VSettingsGeneral.linuxDisplayScaleFactor` | 1.12.445 | 2031 | displayScaleFactor | definitions (VSettingsGeneral) |
 | `VSettingsGeneral.useWindowsDisplayScaleFactor` | 1.12.445 | 2031 | (no effect) | definitions (VSettingsGeneral) |
 | `VSettingsDialogs.fontScalingMacOS` | 1.12.15 | 2032 | dialogs.fontScaling | definitions (VSettingsDialogs) |

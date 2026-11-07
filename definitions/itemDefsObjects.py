@@ -13061,8 +13061,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactSphereSphere',
-    drawing=r'The two spheres with `contact.showSpheres`, in `contact.colorSpheres`.',
-    drawingSettings=['contact.colorSpheres', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.showSpheres', 'contact.tilingSpheres', 'general.cylinderTiling'],
+    drawing=r'The two spheres with `contact.show.spheres`, in `contact.color.spheres`.',
+    drawingSettings=['contact.color.spheres', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.spheres', 'contact.tilingSpheres', 'general.cylinderTiling'],
     image='itemImages/ObjectContactSphereSphere.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
@@ -13449,8 +13449,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactSphereTorus',
-    drawing=r'The sphere with `contact.showSpheres` and the center circle of the torus with `contact.showTori`.',
-    drawingSettings=['contact.colorSpheres', 'contact.colorTori', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.showSpheres', 'contact.showTori', 'contact.tilingSpheres', 'general.circleTiling', 'general.cylinderTiling'],
+    drawing=r'The sphere with `contact.show.spheres` and the center circle of the torus with `contact.show.tori`.',
+    drawingSettings=['contact.color.spheres', 'contact.color.tori', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.spheres', 'contact.show.tori', 'contact.tilingSpheres', 'general.circleTiling', 'general.cylinderTiling'],
     addProtectedC=r"""    static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
     static constexpr Index dataIndexVtangent = 1; //!< index in data node representing tangent velocity
@@ -13707,8 +13707,8 @@ def ObjectContactSphereTriangle_contactForceUserFunction(mbs: MainSystem, t: Rea
 
 definitions.append(ItemDefinition(
     className='ObjectContactSphereTriangle',
-    drawing=r'The sphere with `contact.showSpheres` and the triangle with `contact.showTriangles`.',
-    drawingSettings=['contact.colorSpheres', 'contact.colorTriangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.showSpheres', 'contact.showTriangles', 'general.cylinderTiling', 'general.sphereTiling'],
+    drawing=r'The sphere with `contact.show.spheres` and the triangle with `contact.show.triangles`.',
+    drawingSettings=['contact.color.spheres', 'contact.color.triangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.spheres', 'contact.show.triangles', 'general.cylinderTiling', 'general.sphereTiling'],
     addProtectedC=r"""    static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
     static constexpr Index dataIndexVtangent = 1; //!< index in data node representing tangent velocity
@@ -13987,8 +13987,8 @@ def ObjectContactSphereCylinder_contactForceUserFunction(mbs: MainSystem, t: Rea
 
 definitions.append(ItemDefinition(
     className='ObjectContactSphereCylinder',
-    drawing=r'The sphere with `contact.showSpheres` and the cylinder with `contact.showCylinders`.',
-    drawingSettings=['contact.colorCylinders', 'contact.colorSpheres', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.showCylinders', 'contact.showSpheres', 'general.cylinderTiling', 'general.sphereTiling'],
+    drawing=r'The sphere with `contact.show.spheres` and the cylinder with `contact.show.cylinders`.',
+    drawingSettings=['contact.color.cylinders', 'contact.color.spheres', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.cylinders', 'contact.show.spheres', 'general.cylinderTiling', 'general.sphereTiling'],
     addProtectedC=r"""    static constexpr Index nDataVariables = 3; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
     static constexpr Index dataIndexVtangent = 1; //!< index in data node representing tangent velocity
@@ -14252,8 +14252,8 @@ def ObjectContactCylinderCylinder_contactForceUserFunction(mbs: MainSystem, t: R
 
 definitions.append(ItemDefinition(
     className='ObjectContactCylinderCylinder',
-    drawing=r'Both cylinders with `contact.showCylinders`.',
-    drawingSettings=['contact.colorCylinders', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.showCylinders', 'general.cylinderTiling'],
+    drawing=r'Both cylinders with `contact.show.cylinders`.',
+    drawingSettings=['contact.color.cylinders', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.cylinders', 'general.cylinderTiling'],
     addPublicC=r"""    static constexpr Index nDataVariables = 12; //!< a block of 3 per contact point (4): gap, tangential velocity, impact velocity
 """,
     author=r'Gerstmayr Johannes',
@@ -14536,8 +14536,8 @@ def ObjectContactConeCone_contactForceUserFunction(mbs: MainSystem, t: Real, ite
 
 definitions.append(ItemDefinition(
     className='ObjectContactConeCone',
-    drawing=r'Both truncated cones with `contact.showCones`.',
-    drawingSettings=['contact.colorCones', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showCones', 'contact.showContactForces', 'general.cylinderTiling'],
+    drawing=r'Both truncated cones with `contact.show.cones`.',
+    drawingSettings=['contact.color.cones', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.show.cones', 'contact.showContactForces', 'general.cylinderTiling'],
     addPublicC=r"""    static constexpr Index nDataVariables = 12; //!< a block of 3 per contact point (4): gap, tangential velocity, impact velocity
 """,
     author=r'Gerstmayr Johannes',
@@ -14820,8 +14820,8 @@ def ObjectContactConeTriangle_contactForceUserFunction(mbs: MainSystem, t: Real,
 
 definitions.append(ItemDefinition(
     className='ObjectContactConeTriangle',
-    drawing=r'The cone with `contact.showCones` and the triangle with `contact.showTriangles`.',
-    drawingSettings=['contact.colorCones', 'contact.colorTriangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showCones', 'contact.showContactForces', 'contact.showTriangles', 'general.cylinderTiling'],
+    drawing=r'The cone with `contact.show.cones` and the triangle with `contact.show.triangles`.',
+    drawingSettings=['contact.color.cones', 'contact.color.triangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.show.cones', 'contact.showContactForces', 'contact.show.triangles', 'general.cylinderTiling'],
     addPublicC=r"""    static constexpr Index nDataVariables = 12; //!< a block of 3 per contact point (4): gap, tangential velocity, impact velocity
 """,
     author=r'Gerstmayr Johannes',
@@ -15109,8 +15109,8 @@ def ObjectContactConvexConvex_contactForceUserFunction(mbs: MainSystem, t: Real,
 
 definitions.append(ItemDefinition(
     className='ObjectContactConvexConvex',
-    drawing=r'The triangles of both shapes with `contact.showTriangles`.',
-    drawingSettings=['contact.colorTriangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.showTriangles', 'general.cylinderTiling'],
+    drawing=r'The triangles of both shapes with `contact.show.triangles`.',
+    drawingSettings=['contact.color.triangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.triangles', 'general.cylinderTiling'],
     addPublicC=r"""    static constexpr Index nDataVariables = 24; //!< a block of 3 per contact point (8): gap, tangential velocity, impact velocity
 """,
     author=r'Gerstmayr Johannes',
@@ -15390,8 +15390,8 @@ def ObjectContactCylinderTriangle_contactForceUserFunction(mbs: MainSystem, t: R
 
 definitions.append(ItemDefinition(
     className='ObjectContactCylinderTriangle',
-    drawing=r'The cylinder with `contact.showCylinders` and the triangle with `contact.showTriangles`.',
-    drawingSettings=['contact.colorCylinders', 'contact.colorTriangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.showCylinders', 'contact.showTriangles', 'general.cylinderTiling'],
+    drawing=r'The cylinder with `contact.show.cylinders` and the triangle with `contact.show.triangles`.',
+    drawingSettings=['contact.color.cylinders', 'contact.color.triangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.cylinders', 'contact.show.triangles', 'general.cylinderTiling'],
     addPublicC=r"""    static constexpr Index nDataVariables = 12; //!< a block of 3 per contact point (4): gap, tangential velocity, impact velocity
 """,
     author=r'Gerstmayr Johannes',
@@ -15675,8 +15675,8 @@ def ObjectJournalBearing_forceUserFunction(mbs: MainSystem, t: Real, itemNumber:
 
 definitions.append(ItemDefinition(
     className='ObjectJournalBearing',
-    drawing=r'The bearing as a tube and the journal as a cylinder with `contact.showCylinders`.',
-    drawingSettings=['contact.colorCylinders', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.showCylinders', 'general.cylinderTiling'],
+    drawing=r'The bearing as a tube and the journal as a cylinder with `contact.show.cylinders`.',
+    drawingSettings=['contact.color.cylinders', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.cylinders', 'general.cylinderTiling'],
     author=r'Gerstmayr Johannes',
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A lubricated journal bearing, a revolute joint with clearance between a journal (marker 0) and a bearing (marker 1), whose axis is the local z axis of marker 1: the hydrodynamic force of the oil film by the model of the infinitely short or the infinitely long bearing, and a penalty contact where the eccentricity exceeds the clearance; a user function for further models.',

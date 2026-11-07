@@ -637,7 +637,7 @@ Newton tolerance.
 capsule, cylinder, box, triangle, convex points) and `exudyn.cUtilities.Distance` give the signed distance, the
 closest points and the normal of two shapes in their frames (#3317). `ObjectContactSphereCylinder` is a penalty
 contact of a sphere and a finite cylinder, with the contact law and friction of ObjectContactSphereTriangle and a
-data node of 3 coordinates; `contact.showCylinders` draws its cylinder (#3320). The sphere contacts and the new one
+data node of 3 coordinates; `contact.show.cylinders` draws its cylinder (#3320). The sphere contacts and the new one
 have the output variable `Distance`, the signed gap, also when the contact is deactivated (#3319).
 `ObjectContactSphereTriangle(infinitePlane=True)` contacts the plane of the triangle instead, one-sided along its
 normal and without edges, for a floor or a wall of any size (#3323).
@@ -665,7 +665,7 @@ still accepted, and the parameter is read back as the enumeration.
 **Contacts of convex polytopes and of truncated cones** (#3331, #3332): `ObjectContactConvexConvex` is the penalty
 contact of two convex shapes given by points and triangles (numpy arrays), with up to 8 contact points on faces - a
 box rests on its 4 corners. `ObjectContactConeCone` and `ObjectContactConeTriangle` (with `infinitePlane`) are the
-contacts of truncated cones, with the contact points of the cylinder contacts and `contact.showCones`.
+contacts of truncated cones, with the contact points of the cylinder contacts and `contact.show.cones`.
 `exudyn.cUtilities.ConvexShape('Cone', radius, length, radius1=...)` gives their distance.
 **Systems with a Cartesian spring-damper of UserItemCreator on a mass point are drawn** (#3333): its drawing asked
 the position marker for a rotation, and the error stopped the drawing of all user items of the system.
@@ -685,6 +685,10 @@ penetration of the faces, and such contacts are faster.
 **The contact items draw their forces** (#3339): with `visualizationSettings.contact.showContactForces`, the contacts
 between spheres, cylinders, cones, triangles and polytopes and `ObjectJournalBearing` draw the force on marker 0 as a
 red arrow and the force on marker 1 as a green one, meeting at each contact point; `contact.contactForcesRadius` is new.
+**The contact shapes are switched on in `contact.show` and colored in `contact.color`** (#3340):
+`visualizationSettings.contact.show.spheres`, `.triangles`, `.tori`, `.cylinders`, `.cones` and the same members of
+`contact.color`; `contact.showSpheres`, `showTriangles`, `showTori`, `colorSpheres`, `colorTriangles` and `colorTori`
+still work and warn that they are deprecated.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

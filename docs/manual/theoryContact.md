@@ -690,7 +690,8 @@ symbolic user function, which is evaluated in C++.
 
 ### Drawing
 
-An item with `visualization` `show=True` draws its shapes with the settings `visualizationSettings.contact`, and, with
+An item with `visualization` `show=True` draws the shapes switched on in `visualizationSettings.contact.show` (`triangles`,
+`spheres`, `tori`, `cylinders`, `cones`) in the colors of `contact.color`, and, with
 `contact.showContactForces`, the force of each contact point: the force on marker 0 as a red arrow and the force on
 marker 1 as a green one, their heads meeting at the contact point, `contactForcesFactor` long per newton and of the
 radius `contactForcesRadius`. The forces are those of the state shown, with the contact state from the gaps; an item

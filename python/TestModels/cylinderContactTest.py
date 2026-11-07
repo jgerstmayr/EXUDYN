@@ -151,8 +151,8 @@ exu.Print('heights', heights, '\n expected', expected)
 checks += [abs(vRoller - 2/3*v0) < 2e-3, errorUF < 1e-5] + [abs(h - e) < 1e-6 for h, e in zip(heights, expected)]
 
 if not testIsActive:
-    SC.visualizationSettings.contact.showTriangles = True
-    SC.visualizationSettings.contact.colorTriangles = [0.6, 0.6, 0.6, 0.5]
+    SC.visualizationSettings.contact.show.triangles = True
+    SC.visualizationSettings.contact.color.triangles = [0.6, 0.6, 0.6, 0.5]
     mbs.SolutionViewer()
 
 u = sum(checks) + sum(heights)

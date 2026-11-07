@@ -60,7 +60,7 @@ TimerStructureRegistrator TSRcontactANCFCable4("Contact:ANCFCable4", TScontactAN
 void VisuGeneralContact::DrawContacts(const GeneralContact& gContact, const VisualizationSettings& visualizationSettings,
 	VisualizationSystem* vSystem)
 {
-	if (visualizationSettings.contact.showSpheres)
+	if (visualizationSettings.contact.show.spheres)
 	{
 		const ResizableArray<ContactSpheresMarkerBased>& spheres = gContact.GetSpheresMarkerBased();
 		Vector3D p(0);
@@ -69,12 +69,12 @@ void VisuGeneralContact::DrawContacts(const GeneralContact& gContact, const Visu
 			vSystem->systemData->GetCMarker(item.markerIndex).GetPosition(*vSystem->systemData, p,
 				ConfigurationType::Visualization);
 
-			vSystem->graphicsData.AddSphere(p, visualizationSettings.contact.colorSpheres,
+			vSystem->graphicsData.AddSphere(p, visualizationSettings.contact.color.spheres,
 				itemIDinvalidValue, (float)item.radius, visualizationSettings.contact.tilingSpheres);
 		}
 	}
 
-	if (visualizationSettings.contact.showTriangles)
+	if (visualizationSettings.contact.show.triangles)
 	{
 		const ResizableArray<ContactTriangleRigidBodyBased>& trigs = gContact.TrigsRigidBodyBased();
 		const ResizableArray<ContactRigidBodyMarkerBased>& markers = gContact.RigidBodyMarkerBased();
@@ -100,7 +100,7 @@ void VisuGeneralContact::DrawContacts(const GeneralContact& gContact, const Visu
 
 		std::array<Vector3D, 3> points;
 		std::array<Float4, 3> colors;
-		for (Index i = 0; i < (Index)colors.size(); i++) { colors[i] = visualizationSettings.contact.colorTriangles; }
+		for (Index i = 0; i < (Index)colors.size(); i++) { colors[i] = visualizationSettings.contact.color.triangles; }
 
 		for (const auto& item : trigs)
 		{

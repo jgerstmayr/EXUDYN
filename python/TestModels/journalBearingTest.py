@@ -117,7 +117,7 @@ exu.Print('the user function against the built-in short bearing:', errorUser, ';
 checks += [errorUser < 1e-12, abs(cMath.norm(eDry) - c - m*g/kc) < 1e-10]
 
 if not testIsActive:
-    SC.visualizationSettings.contact.showCylinders = True
+    SC.visualizationSettings.contact.show.cylinders = True
     mbs.SolutionViewer()
 
 u = sum(checks) + eps + epsL

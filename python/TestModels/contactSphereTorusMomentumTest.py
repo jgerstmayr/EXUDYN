@@ -42,7 +42,7 @@ def Run(mu, stepSize=1e-5, tEnd=0.05):
     mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mB,mR], nodeNumber=nD, sphereRadius=0.01, torusMajorRadius=0.1, torusMinorRadius=0.011,
         torusAxis=[0,0,1], contactStiffness=1e6, contactDamping=1e2, dynamicFriction=mu, frictionProportionalZone=1e-3,
         visualization=VObjectContactSphereTorus(show=True)))
-    SC.visualizationSettings.contact.showTori = True
+    SC.visualizationSettings.contact.show.tori = True
     sens={}
     for name,n in [('B',nB),('R',nR)]:
         for ov in ['Position','Velocity','AngularVelocity','RotationMatrix']:

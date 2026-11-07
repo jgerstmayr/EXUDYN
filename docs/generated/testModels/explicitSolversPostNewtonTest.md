@@ -90,7 +90,7 @@ def Drop(kind, solverType, numberOfSteps=6000, useRecommendedStepSize=True, last
         mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround, mBall], nodeNumber=nData,
                                                 spheresRadii=[1, r], contactStiffness=1e5, contactDamping=100,
                                                 visualization=VObjectContactSphereSphere(show=True)))
-        SC.visualizationSettings.contact.showSpheres = True
+        SC.visualizationSettings.contact.show.spheres = True
         sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,
                                           storeInternal=True, writeToFile=False))
     Solve(mbs, 0.3, numberOfSteps, solverType, useRecommendedStepSize, show)
