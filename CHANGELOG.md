@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 443 | 1.13.459 |
+| 1.13 | Newborn | 444 | 1.13.460 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.460** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Create functions of the primitive contacts in \_\_all\_\_ of mainSystemExtensions (#3348)
+  - description: The six Create functions of \#3342 (CreateSphereCylinderContact, CreateCylinderCylinderContact, CreateCylinderTriangleContact, CreateConeConeContact, CreateConeTriangleContact, CreateConvexConvexContact) are not in \_\_all\_\_ of exudyn.misc.mainSystemExtensions; tools/checkAll.py reports it. Decided: \_\_all\_\_ written by checkAll.py --write.
+  - **notes:** The Create functions of the contacts between primitive shapes are listed in \_\_all\_\_ of exudyn.misc.mainSystemExtensions.
+  - date resolved: **2026-11-07 23:23**, date raised: 2026-11-07
 - **1.13.459** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CreateSphereTriangleContact: trianglePoints as a list, and the option infinitePlane (#3347)
   - description: mbs.CreateSphereTriangleContact says that trianglePoints may be a Vector3DList, a list or a numpy array, but passes a list to ObjectContactSphereTriangle, which refuses it with an ExudynTypeError; and it has no argument infinitePlane, the option of the item since \#3323, so a floor or a wall of any size needs the item itself. Found with the test of the shaken table (\#3343). Decided: the triangle points converted as in the Create functions of \#3342, and the argument infinitePlane; a test in createSphereTriangleContact.py.
   - **notes:** mbs.CreateSphereTriangleContact takes the triangle points as a list or a numpy array, as it said, and the option infinitePlane for a floor or a wall of any size.

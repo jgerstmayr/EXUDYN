@@ -1714,6 +1714,12 @@ CLOSED 2026-11-07 (#3346): EPA says whether it converged; if not, its result is 
 
 CLOSED 2026-11-07 (#3347): trianglePoints converted (a list or numpy array, as the docstring said) and the argument infinitePlane; a ball on an infinite plane given as a list in createPrimitiveContactsTest.py. [log](exudynRevisionLog2026c.md#rg9-12-27)
 
+#### **CLOSED_RG9.12.28** The Create functions of the primitive contacts in __all__
+
+#3348. Left from RG9.12.22: tools/checkAll.py reports the six Create functions missing in __all__ of mainSystemExtensions; the gates had stopped at it unnoticed.
+
+CLOSED 2026-11-07 (#3348): __all__ written by tools/checkAll.py --write. [log](exudynRevisionLog2026c.md#rg9-12-28)
+
 ## **CLOSED_RG10** Tooling and process
 
 exudev, the issue tracker, the generators, the checks of the commit gate, CI. Open without a step: #2541 (`exudyn.config`

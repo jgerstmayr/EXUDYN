@@ -1,0 +1,17 @@
+{
+  "number": 3348,
+  "title": "The Create functions of the primitive contacts in __all__ of mainSystemExtensions",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The six Create functions of #3342 (CreateSphereCylinderContact, CreateCylinderCylinderContact, CreateCylinderTriangleContact, CreateConeConeContact, CreateConeTriangleContact, CreateConvexConvexContact) are not in __all__ of exudyn.misc.mainSystemExtensions; tools/checkAll.py reports it. Decided: __all__ written by checkAll.py --write.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 23:23",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/mainSystemExtensions.py",
+  "releaseNotes": "The Create functions of the contacts between primitive shapes are listed in __all__ of exudyn.misc.mainSystemExtensions.",
+  "resolvedInVersion": "1.13.460"
+}

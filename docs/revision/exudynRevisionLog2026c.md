@@ -6427,6 +6427,12 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-28"></a>
+### RG9.12.28 — the Create functions of the primitive contacts in __all__ (2026-11-07, #3348)
+- tools/checkAll.py: __all__ of misc/mainSystemExtensions.py lacked the six Create functions of #3342; written with
+  checkAll.py --write (31 names). The generate gate had stopped at checkAll in the runs of #3342 and #3347; its short
+  output was misread as passing (the gates are now read in full).
+
 <a id="rg9-12-27"></a>
 ### RG9.12.27 — CreateSphereTriangleContact with a list and infinitePlane (2026-11-07, #3347)
 - Found writing the test of the shaken table: CreateSphereTriangleContact passed trianglePoints to the item as given,
