@@ -3695,6 +3695,8 @@ CLOSED 2026-11-06 (#3245; maintainer 2026-11-06): StepSizeController in CSolverE
 
 #3313: the error stays at 1e-6 to 1e-7 for the tolerances 1e-5 to 1e-10, while constant steps and Radau3 reach 1e-10. To be analyzed.
 
+Analyzed 2026-11-08: only LobattoIIIA4 with Lie group nodes and changing steps (Euler parameters converge, Radau3 converges, constant steps order 4); the cause in the Lie group stages across a change of h is still to be found; details in the remark of #3313.
+
 ### **CLOSED_RG20.9** A library of small test models for the solvers and other tests, a solver study on it, the test models unified on it
 
 Maintainer 2026-11-05: a set of fast models in one file of TestModels (names, GetModel(i) returning the mbs), for the solver tests and other things; the solver tests with a reference, varied steps and time limits; test models re-using the library where this simplifies them.
