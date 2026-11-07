@@ -1564,6 +1564,8 @@ Decided (maintainer 2026-11-07, design section 6): GJK and EPA; one contact poin
 
 Maintainer 2026-11-07: further primitives - a cylinder inside a cylinder ring (and a journal bearing on it), truncated cones from the outside and inside, cone-triangle, the infinite plane of the triangle contacts, user functions of the contact force; design section 8, its decisions open.
 
+Decided (maintainer 2026-11-07, design section 8.6): infinitePlane as an option; the cone shape and ConeCone, ConeTriangle; the inside contacts as an option of the outside item if possible (recommended: isHollowCylinder1, isHollowCone1 as isHollowSphere1 of SphereSphere; confirmed in RG9.12.12); the journal bearing as a separate item, further models and a user function for others; the user function signature; the order 8.1 and 8.5 with the first items.
+
 #### **CLOSED_RG9.12.1** The design of the contact between primitives, decided
 
 CLOSED 2026-11-07 (#3315): docs/dev/design/contactPrimitives.md with the decisions of the maintainer in its section 6 and the data coordinates of section 3.3.
@@ -1596,7 +1598,7 @@ CLOSED 2026-11-07 (#3320): ObjectContactSphereCylinder with the analytic geometr
 
 #### **OPEN_RG9.12.11** Truncated cones: ObjectContactConeCone and ObjectContactConeTriangle
 
-#### **OPEN_RG9.12.12** The contact inside a hollow cylinder and a hollow cone: ObjectContactCylinderInCylinder, the cone inside a cone
+#### **OPEN_RG9.12.12** The contact inside a hollow cylinder and a hollow cone, as options of CylinderCylinder and ConeCone (isHollowCylinder1, isHollowCone1) or own items
 
 #### **OPEN_RG9.12.13** ObjectJournalBearing on the geometry of the cylinder inside a cylinder: short, long and finite bearing models
 

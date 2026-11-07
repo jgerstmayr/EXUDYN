@@ -173,7 +173,7 @@ Common to all four, with the names and meaning of ObjectContactSphereTriangle:
 | RG9.12.13 | ObjectJournalBearing on the geometry of RG9.12.12 (section 8.4) |
 | RG9.12.14 | user functions of the contact force for all primitive contacts, also symbolic (section 8.5) |
 
-## 8. Further primitives (maintainer 2026-11-07, to be decided)
+## 8. Further primitives (maintainer 2026-11-07)
 
 Requested: a cylinder inside a cylinder ring, cone-cone (truncated cones, also a cone inside a cone), cone-triangle
 (less relevant), the infinite plane of the triangle without its boundaries, a journal bearing on the cylinder in the
@@ -249,16 +249,27 @@ tangential 2]; it replaces the law of section 3.3, while the geometry and the ac
 user function (exudyn.symbolic) it is evaluated in C++ and costs about as much as the built-in law. The same signature
 for all primitive items; per contact point with the manifold.
 
-### 8.6 Decisions for the maintainer
+### 8.6 Decisions (maintainer 2026-11-07)
 
-1. `infinitePlane` as an option of the triangle items, not an item of its own.
-2. The truncated cone as `ConvexShapeType::Cone`, the items ConeCone and ConeTriangle with these parameter names.
-3. The inside contacts: ObjectContactCylinderInCylinder; the cone inside a cone as an option `inside` of ConeCone, or
-   an item ObjectContactConeInCone.
+1. `infinitePlane` as an option of the triangle items, not an item of its own: yes; it costs nothing significant.
+2. The truncated cone as `ConvexShapeType::Cone`, the items ConeCone and ConeTriangle with these parameter names: yes.
+3. The inside contacts: if possible as an option of the outside item, as ObjectContactSphereSphere covers a sphere
+   inside a hollow sphere; checked below, decided in RG9.12.12.
 4. The journal bearing as a separate item on the geometry of the inside contact, with the models short, long and
-   finite and the contact force of Flores et al.; which finite model.
-5. The signature of `contactForceUserFunction`.
-6. The order: 8.1 and 8.5 with the first items (RG9.12.4/.5), 8.2 after RG9.12.6, then 8.3 and 8.4.
+   finite and the contact force of Flores et al.: yes; further bearing models will follow, and the force user
+   function adds others - its example implements one of the built-in models.
+5. The signature of `contactForceUserFunction`: yes.
+6. The order: 8.1 and 8.5 with the first items (RG9.12.4/.5), 8.2 after RG9.12.6, then 8.3 and 8.4: yes.
+
+On 3: ObjectContactSphereSphere has no negative radius but the flag `isHollowSphere1`, which flips the sign $h_1$ of
+the second sphere: $g = h_1 d - (r_0 + h_1 r_1)$ and the normal $h_1 \Delta\pv/d$. That works because the distance of
+two spheres is a function of the distance of their centers alone, for both cases. For two cylinders or two cones it
+is not: the outside contact is GJK and EPA of two convex shapes, the inside one the closed form of section 8.3 - two
+geometry functions in any case. A negative radius would also leave the bore without a length of its own and turn
+the check of the radii into one of their signs. Recommended: the inside contact as the flag `isHollowCylinder1` of
+ObjectContactCylinderCylinder and `isHollowCone1` of ObjectContactConeCone, named as in SphereSphere, which select
+the geometry of section 8.3 and keep the parameters, the law and the outputs; no item ObjectContactCylinderInCylinder
+or ConeInCone. To be confirmed in RG9.12.12.
 
 References: P. Flores, J. Ambrosio, J.C.P. Claro, H.M. Lankarani, C.S. Koshy, Lubricated revolute joints in rigid
 multibody systems, Nonlinear Dynamics 56 (2009); M. Machado, J. Costa, E. Seabra, P. Flores, The effect of the
