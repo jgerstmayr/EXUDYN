@@ -1,0 +1,17 @@
+{
+  "number": 3330,
+  "title": "The cylinders and cones drawn in C++ have their faces flipped",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "EXUvis::DrawCylinder and EXUvis::DrawCone - the cylinders of the contact items, spring-dampers, the hydraulic actuator, the rolling disc, the arrows and the axes of frames - give every triangle the winding of an inward face while its normals point outward: the basis of ComputeOrthogonalBasisVectors is right-handed, and the points run clockwise about the axis. The maintainer saw the cylinders of sphereCylinderContactTest.py with flipped faces; the triangles of exudyn.graphics.Cylinder wind outward. Decided: both functions add their triangles with the winding of the outward normal, the points unchanged; DrawCylinder gets radiusEnd, the radius at the end of the axis, so that it draws a truncated cone as well, for the cone contacts.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 15:37",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/VisualizationPrimitives.cpp",
+  "releaseNotes": "The cylinders and cones drawn in C++ (contact items, connectors, the hydraulic actuator, the rolling disc, arrows and frame axes) show their outside; their faces were wound inward and looked flipped.",
+  "resolvedInVersion": "1.13.442"
+}

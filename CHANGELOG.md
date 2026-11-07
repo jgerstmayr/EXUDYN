@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 425 | 1.13.441 |
+| 1.13 | Newborn | 426 | 1.13.442 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.442** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The cylinders and cones drawn in C++ have their faces flipped (#3330)
+  - description: EXUvis::DrawCylinder and EXUvis::DrawCone - the cylinders of the contact items, spring-dampers, the hydraulic actuator, the rolling disc, the arrows and the axes of frames - give every triangle the winding of an inward face while its normals point outward: the basis of ComputeOrthogonalBasisVectors is right-handed, and the points run clockwise about the axis. The maintainer saw the cylinders of sphereCylinderContactTest.py with flipped faces; the triangles of exudyn.graphics.Cylinder wind outward. Decided: both functions add their triangles with the winding of the outward normal, the points unchanged; DrawCylinder gets radiusEnd, the radius at the end of the axis, so that it draws a truncated cone as well, for the cone contacts.
+  - **notes:** The cylinders and cones drawn in C++ (contact items, connectors, the hydraulic actuator, the rolling disc, arrows and frame axes) show their outside; their faces were wound inward and looked flipped.
+  - date resolved: **2026-11-07 15:37**, date raised: 2026-11-07
 - **1.13.441** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactCylinderCylinder and ObjectContactCylinderTriangle, penalty contacts of finite cylinders (#3329)
   - description: A cylinder in contact with a cylinder or a triangle needs the items of the design contactPrimitives.md: ObjectContactCylinderCylinder (cylindersRadii, cylindersLengths, each cylinder along the local z axis of its marker) and ObjectContactCylinderTriangle (cylinderRadius, cylinderLength, trianglePoints in the frame of marker 1). Decided: the distance by GJK and EPA of GeometryConvex.h, one contact point (the middle of the closest points), the contact law of ContactPrimitiveForce.h with 3 data coordinates, the output Distance also when inactive, contactForceUserFunction as the sphere contacts; CylinderTriangle with the option infinitePlane, the support point of the cylinder against the plane; both markers rigid; drawn with contact.showCylinders and showTriangles.
   - **notes:** ObjectContactCylinderCylinder and ObjectContactCylinderTriangle (with the option infinitePlane) are penalty contacts of finite cylinders, with the contact law and friction of the sphere contacts, the output Distance and a contactForceUserFunction; up to 4 contact points carry a line or a face of contact, with a data node of 12 coordinates.

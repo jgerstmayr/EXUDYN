@@ -21,6 +21,7 @@ import pytest
 
 import exudyn as exu
 import exudyn.graphics as graphics
+import exudyn.itemInterface as items
 from exudyn.utilities import InertiaCuboid                                  # noqa: F401 - installs mbs.Create...
 
 kinds = ['lines', 'spheres', 'circles', 'texts', 'triangles', 'lines3', 'triangles6', 'texturedTriangles']
@@ -291,3 +292,29 @@ def testTheItemsOnAUserBodyAreDrawnOnceAndWhereTheyAre():
         assert counts[0] == counts[1], kind
         if len(reference[kind]['items']):
             assert np.allclose(np.sort(reference[kind]['points'], axis=0), np.sort(user[kind]['points'], axis=0)), kind
+
+
+def testTheCylindersAndConesOfCPlusPlusWindOutward():
+    """a triangle of EXUvis::DrawCylinder and DrawCone winds as its normal points, as exudyn.graphics does (#3330):
+    a cylinder of a contact item and the arrows of a frame, drawn by a node"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.CreateGround()
+    node = mbs.AddNode(items.NodeRigidBodyEP(referenceCoordinates=[0, 0, 1, 1, 0, 0, 0]))
+    ball = mbs.AddObject(items.ObjectRigidBody(nodeNumber=node, physicsMass=1, physicsInertia=[1, 1, 1, 0, 0, 0]))
+    nData = mbs.AddNode(items.NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[1, 0, 0]))
+    mbs.AddObject(items.ObjectContactSphereCylinder(markerNumbers=[mbs.AddMarker(items.MarkerBodyRigid(bodyNumber=ball)),
+                                                                 mbs.AddMarker(items.MarkerBodyRigid(bodyNumber=oGround))],
+                                                  nodeNumber=nData, sphereRadius=0.1, cylinderRadius=0.2, cylinderLength=1,
+                                                  visualization=items.VObjectContactSphereCylinder(show=True)))
+    mbs.Assemble()
+    SC.visualizationSettings.contact.showCylinders = True
+    SC.visualizationSettings.nodes.show = True
+    SC.visualizationSettings.nodes.showBasis = True
+    SC.visualizationSettings.nodes.drawNodesAsPoint = False #the basis as cylinders and cones
+    triangles = SC.renderer.GetGraphicsData()['triangles']
+    points, normals = np.array(triangles['points']), np.array(triangles['normals'])
+    assert len(points) > 64
+    winding = np.cross(points[:, 1] - points[:, 0], points[:, 2] - points[:, 0])
+    agree = np.einsum('ij,ij->i', winding, normals.mean(axis=1))
+    assert np.all(agree[np.abs(agree) > 1e-12] > 0)

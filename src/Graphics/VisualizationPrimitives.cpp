@@ -1138,10 +1138,11 @@ namespace EXUvis {
 	//! cutPlain=true: a plain cut through cylinder is made; false: draw the cake shape ...
 	//! innerRadius: if > 0, then this is a cylinder with a hole
 	void DrawCylinder(const Vector3D& pAxis0, const Vector3D& vAxis, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
-		Index nTiles, Real innerRadius, Vector2D angleRange, bool lastFace, bool cutPlain, bool drawSmooth)
+		Index nTiles, Real innerRadius, Vector2D angleRange, bool lastFace, bool cutPlain, bool drawSmooth, Real radiusEnd)
 	{
 		if (nTiles < 2) { nTiles = 2; } //less than 2 tiles makes no sense
 		if (radius <= 0.) { return; } //just a line
+		if (radiusEnd < 0.) { radiusEnd = radius; } //a cylinder; else a truncated cone with radiusEnd at pAxis0+vAxis
 		if (vAxis.GetL2NormSquared() == 0.) { return; } //too short
 
 		//create points at left and right face
@@ -1162,8 +1163,15 @@ namespace EXUvis {
 		std::array<Vector3D, 3> normals;
 		std::array<Float4, 3> colors = { {color,color,color} }; //std::array has no real initializer list==>use {{}}; all triangles have same color
 
+		//each triangle with the winding that agrees with its outward normal, as the triangles of exudyn.graphics (#3330)
+		auto AddOutward = [&](const std::array<Vector3D, 3>& p, const std::array<Vector3D, 3>& n)
+		{
+			graphicsData.AddTriangle(std::array<Vector3D, 3>({ p[0], p[2], p[1] }), std::array<Vector3D, 3>({ n[0], n[2], n[1] }), colors, itemID);
+		};
+
 		Vector3D nF1 = vAxis;
 		nF1.Normalize();
+		const Vector3D nF1Axis = nF1;
 
 #ifdef FLIP_NORMALS
 		nF1 = -nF1;
@@ -1189,8 +1197,8 @@ namespace EXUvis {
 			Vector3D vv1 = x1 * basisN1 + y1 * basisN2;
 			Vector3D pzL0 = pAxis0 + radius * vv0;
 			Vector3D pzL1 = pAxis0 + radius * vv1;
-			Vector3D pzR0 = pAxis1 + radius * vv0;
-			Vector3D pzR1 = pAxis1 + radius * vv1;
+			Vector3D pzR0 = pAxis1 + radiusEnd * vv0;
+			Vector3D pzR1 = pAxis1 + radiusEnd * vv1;
 			if (drawSmooth)
 			{
 #ifdef FLIP_NORMALS
@@ -1200,6 +1208,12 @@ namespace EXUvis {
 				n0 = vv0;
 				n1 = vv1;
 #endif
+				if (radiusEnd != radius) //the normal of the cone: tilted towards the smaller end
+				{
+					Real slope = (radius - radiusEnd) / vAxis.GetL2Norm();
+					n0 += slope * nF1Axis;
+					n1 += slope * nF1Axis;
+				}
 				n0.Normalize();
 				n1.Normalize();
 			}
@@ -1212,7 +1226,7 @@ namespace EXUvis {
 			points[0] = pzL0;
 			points[1] = pzR1;
 			points[2] = pzR0;
-			graphicsData.AddTriangle(points, normals, colors, itemID);
+			AddOutward(points, normals);
 
 			//normals[0] = n0;
 			//normals[1] = n1;
@@ -1220,7 +1234,7 @@ namespace EXUvis {
 			//points[0] = pzL0;
 			points[1] = pzL1;
 			points[2] = pzR1;
-			graphicsData.AddTriangle(points, normals, colors, itemID);
+			AddOutward(points, normals);
 
 			if (innerRadius > 0.)
 			{
@@ -1237,7 +1251,7 @@ namespace EXUvis {
 				points[0] = pzL0i;
 				points[1] = pzR0i;
 				points[2] = pzR1i;
-				graphicsData.AddTriangle(points, normals, colors, itemID);
+				AddOutward(points, normals);
 
 				//normals[0] = -n0;
 				//normals[1] = -n1;
@@ -1245,28 +1259,28 @@ namespace EXUvis {
 				//points[0] = pzL0i;
 				points[1] = pzR1i;
 				points[2] = pzL1i;
-				graphicsData.AddTriangle(points, normals, colors, itemID);
+				AddOutward(points, normals);
 
 				//+++++++++++++++++++++++++++++++
 				//side faces:
 				points[0] = pzL0i;
 				points[1] = pzL1;
 				points[2] = pzL0;
-				graphicsData.AddTriangle(points, normalsFace0, colors, itemID);
+				AddOutward(points, normalsFace0);
 				points[0] = pzL0i;
 				points[1] = pzL1i;
 				points[2] = pzL1;
-				graphicsData.AddTriangle(points, normalsFace0, colors, itemID);
+				AddOutward(points, normalsFace0);
 
 				points[0] = pzR0i;
 				points[1] = pzR0;
 				points[2] = pzR1;
-				graphicsData.AddTriangle(points, normalsFace1, colors, itemID);
+				AddOutward(points, normalsFace1);
 
 				points[0] = pzR1i;
 				points[1] = pzR0i;
 				points[2] = pzR1;
-				graphicsData.AddTriangle(points, normalsFace1, colors, itemID);
+				AddOutward(points, normalsFace1);
 			}
 			else
 			{
@@ -1275,12 +1289,15 @@ namespace EXUvis {
 				points[0] = pAxis0;
 				points[1] = pzL1;
 				points[2] = pzL0;
-				graphicsData.AddTriangle(points, normalsFace0, colors, itemID);
+				AddOutward(points, normalsFace0);
 
-				points[0] = pAxis1;
-				points[1] = pzR0;
-				points[2] = pzR1;
-				graphicsData.AddTriangle(points, normalsFace1, colors, itemID);
+				if (radiusEnd > 0.) //no end face for a pointed cone
+				{
+					points[0] = pAxis1;
+					points[1] = pzR0;
+					points[2] = pzR1;
+					AddOutward(points, normalsFace1);
+				}
 			}
 		}
 	}
@@ -1492,6 +1509,12 @@ namespace EXUvis {
 		std::array<Vector3D, 3> normals = { Vector3D(0), Vector3D(0), Vector3D(0) };
 		std::array<Float4, 3> colors = { color,color,color }; //all triangles have same color
 
+		//each triangle with the winding that agrees with its outward normal, as the triangles of exudyn.graphics (#3330)
+		auto AddOutward = [&](const std::array<Vector3D, 3>& p, const std::array<Vector3D, 3>& n)
+		{
+			graphicsData.AddTriangle(std::array<Vector3D, 3>({ p[0], p[2], p[1] }), std::array<Vector3D, 3>({ n[0], n[2], n[1] }), colors, itemID);
+		};
+
 		Vector3D nF0 = vAxis;
 		nF0.Normalize();
 
@@ -1536,14 +1559,14 @@ namespace EXUvis {
 			points[0] = pzL0;
 			points[1] = pzL1;
 			points[2] = pAxis1;
-			graphicsData.AddTriangle(points, normals, colors, itemID);
+			AddOutward(points, normals);
 
 			//+++++++++++++++++++++++++++++++
 			//side faces:
 			points[0] = pAxis0;
 			points[1] = pzL1;
 			points[2] = pzL0;
-			graphicsData.AddTriangle(points, normalsFace0, colors, itemID);
+			AddOutward(points, normalsFace0);
 		}
 	}
 

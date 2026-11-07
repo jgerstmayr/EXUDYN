@@ -6427,6 +6427,20 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-17"></a>
+### RG9.12.17 — the faces of the cylinders and cones drawn in C++ (2026-11-07, #3330)
+- Maintainer 2026-11-07: the cylinders of sphereCylinderContactTest.py have flipped faces; use the existing cylinder
+  function; a cone drawing for the cone contacts, as an extension of the C++ cylinder. The item already used
+  EXUvis::DrawCylinder - the function itself is wrong: from GetGraphicsData, all 64 triangles of a contact cylinder
+  wound inward while their normals pointed outward (graphics.Cylinder: 128 of 128 outward). The basis of
+  ComputeOrthogonalBasisVectors is right-handed and the points run clockwise about the axis; DrawCone the same. Every
+  C++ cylinder and cone was affected: spring-dampers, the hydraulic actuator, the rolling disc, arrows, frame axes.
+- Both functions add each triangle with the winding of its outward normal (points 1 and 2 exchanged), the points and
+  normals unchanged, so that angleRange keeps its meaning; the graphics regression fingerprints did not change.
+- DrawCylinder(..., radiusEnd): the radius at pAxis0 + vAxis, a truncated cone (0: pointed, without end face), the
+  smooth normals tilted by (radius - radiusEnd)/L along the axis; for the cone contacts of RG9.12.11.
+- test_graphicsData.py: the triangles of a contact cylinder and of the 3D axes of a node wind as their normals point.
+
 <a id="rg9-12-5"></a>
 ### RG9.12.5 — ObjectContactCylinderCylinder and ObjectContactCylinderTriangle, with contact points (2026-11-07, #3329)
 - First with one contact point, as the design said: crossed cylinders, a rim on a side and a tilted cylinder on a

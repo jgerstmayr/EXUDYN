@@ -1628,6 +1628,10 @@ CLOSED 2026-11-07 (#3324, #3325): contactForceUserFunction(mbs, t, itemNumber, g
 
 CLOSED 2026-11-07 (#3328): found on the way to RG9.12.5 - Torque of SphereSphere, SphereTriangle, SphereTorus and SphereCylinder was the negative of the friction torque on marker 0, against their Force output and their descriptions; corrected, checked in sphereCylinderContactTest.py (mu m g r about +y while sliding). [log](exudynRevisionLog2026c.md#rg9-12-16)
 
+#### **CLOSED_RG9.12.17** The faces of the cylinders and cones drawn in C++; DrawCylinder draws a truncated cone
+
+CLOSED 2026-11-07 (#3330): the maintainer saw the cylinders of sphereCylinderContactTest.py with flipped faces - EXUvis::DrawCylinder and DrawCone wound every triangle inward against its outward normal (all C++ cylinders, cones, arrows, frame axes); now outward, as exudyn.graphics; radiusEnd draws the truncated cones of RG9.12.11. [log](exudynRevisionLog2026c.md#rg9-12-17)
+
 ## **CLOSED_RG10** Tooling and process
 
 exudev, the issue tracker, the generators, the checks of the commit gate, CI. Open without a step: #2541 (`exudyn.config`
