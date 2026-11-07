@@ -28,6 +28,9 @@ ObjectContactSphereTorus
 ObjectContactSphereTriangle
 ObjectContactSphereCylinder
 ObjectContactCylinderCylinder
+ObjectContactConeCone
+ObjectContactConeTriangle
+ObjectContactConvexConvex
 ObjectContactCylinderTriangle
 ObjectContactCurveCircles
 ```

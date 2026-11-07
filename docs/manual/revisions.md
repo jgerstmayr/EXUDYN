@@ -662,6 +662,11 @@ they looked flipped in the renderer.
 **The impact model of the contacts has names** (#3327): `impactModel` of the contact items and of the Create functions
 takes `exu.ContactImpactModel.Linear`, `.HuntCrossley` or `.GonthierCarvalhoMartins`; the integers 0, 1 and 2 are
 still accepted, and the parameter is read back as the enumeration.
+**Contacts of convex polytopes and of truncated cones** (#3331, #3332): `ObjectContactConvexConvex` is the penalty
+contact of two convex shapes given by points and triangles (numpy arrays), with up to 8 contact points on faces - a
+box rests on its 4 corners. `ObjectContactConeCone` and `ObjectContactConeTriangle` (with `infinitePlane`) are the
+contacts of truncated cones, with the contact points of the cylinder contacts and `contact.showCones`.
+`exudyn.cUtilities.ConvexShape('Cone', radius, length, radius1=...)` gives their distance.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

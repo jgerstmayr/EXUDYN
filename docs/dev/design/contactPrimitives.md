@@ -82,7 +82,10 @@ RG9.12.5, up to 4 with a data block of 3 each (12 data coordinates):
   cylinders go over into each other continuously; a gap within 1e-10 of zero counts as apart;
 - otherwise (rim on rim, rim on side) the one point of GJK and EPA.
 
-RG9.12.7 keeps the manifold of ConvexConvex.
+ObjectContactConvexConvex (RG9.12.6/.7, #3331) has up to 8 points: the points of one shape over the face of the other
+whose normal is the contact normal, from both for a face on a face. The cones (RG9.12.11, #3332) use the face points
+with the radius of each rim and, at the side, the side line of cone 0 with the exact signed distance to cone 1: its
+minimum by golden section and the ends of the penetration by bisection.
 
 ### 3.3 The contact law
 

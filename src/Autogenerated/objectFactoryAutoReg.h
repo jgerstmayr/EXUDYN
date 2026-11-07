@@ -748,6 +748,39 @@ bool MainObjectContactCylinderCylinderIsRegistered = ClassFactoryItemsSystemData
 		return object;
 	});
 
+bool MainObjectContactConeConeIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactConeCone", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactConeCone();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactConeCone(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactConeCone* vObject = new VisualizationObjectContactConeCone();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
+bool MainObjectContactConeTriangleIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactConeTriangle", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactConeTriangle();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactConeTriangle(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactConeTriangle* vObject = new VisualizationObjectContactConeTriangle();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
+bool MainObjectContactConvexConvexIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactConvexConvex", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactConvexConvex();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactConvexConvex(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactConvexConvex* vObject = new VisualizationObjectContactConvexConvex();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectContactCylinderTriangleIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactCylinderTriangle", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectContactCylinderTriangle();

@@ -6427,6 +6427,42 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-11"></a>
+### RG9.12.11 — truncated cones: ObjectContactConeCone and ObjectContactConeTriangle (2026-11-07, #3332)
+- ConvexShapeType::Cone (radius at -L/2, radius1 at +L/2, one may be 0): support of the farther rim, the closest point
+  in the trapezoid of the half-plane, the refinement of curved sides as the cylinder; cUtilities.ConvexShape('Cone',
+  radius, length, radius1=...). The Cylinder struct of the cylinder contacts carries the radius of each end, so the
+  face points (deepest rim point, end of the side line, two rim points; none at a tip) serve the cones as well.
+- Cone on cone at the side: along the side line of cone 0 the signed distance to cone 1 (exact, by the trapezoid);
+  convex along the line, so its minimum by golden section and the ends of the penetration by bisection, the minimum
+  carrying the penetration beyond the line of the ends. Found while making it run (the lying cone on a cylinder
+  failed at the first contact, Newton stalled at a residual of 1e-2..1e-5): (1) the half-plane from the closest point
+  of EPA is not exact (noise 1e-6 N); (2) from the closest points of the two axes it jumps where the axes intersect -
+  a rotation of 1e-8 gave 5300 N; now through the point of the axis of cone 1 closest to the center of cone 0, smooth;
+  (3) the zero gap of the ends switched by +-zeroGap, a jump of 1e-5 N inside Newton: now a continuous offset
+  gap + zeroGap, also for the cylinder sides (cylinderContactTest 9.8466099132801 -> ...2201).
+- coneContactTest.py (new, the SolutionViewer shows five cones): Distance against cUtilities.Distance 2.6e-16;
+  standing, upside down on a triangle, on a fixed cone - L/2 - m g/(3k) to 1e-17; lying on a side line on the plane and
+  on a cylinder - the line sinks at the center by m g (x1^2 + x2^2)/(k (x2 - x1)^2), the ends' penetrations balancing
+  the moment of the weight (my first expectation m g/(2k) was 5e-6 off) - to 1e-8. DrawCylinder(radiusEnd) draws them
+  (#3330), contact.showCones and colorCones.
+
+<a id="rg9-12-6"></a>
+### RG9.12.6 and RG9.12.7 — ObjectContactConvexConvex with the contact points of faces (2026-11-07, #3331)
+- points0, triangles0, points1, triangles1 as numpy arrays (NumpyMatrix, NumpyMatrixI); CheckPreAssembleConsistency:
+  rows of 3, indices in range, triangles with area, every point inside every triangle plane within 1e-8 of the size
+  (convex, outward normals). GJK and EPA on ConvexShapeType::Points reading the rows of the matrix without a copy
+  (ConvexShape.pointRows).
+- The points: the face of shape 1 whose outward normal is -n (triangles with this normal within 1e-6), the points of
+  shape 0 over it (projected into one of its triangles); the face of shape 0 with the normal n, the points of shape 1;
+  coincident points of both skipped; of more, the 8 deepest, ordered by point index so that a point keeps its data
+  block (24 coordinates); else the closest point. The shared code of the points (force, generalized forces, outputs,
+  post Newton) moved into ContactPrimitivePoints.h, used by the cylinder, cone and convex contacts.
+- convexConvexContactTest.py (new, five cubes): Distance against cUtilities.Distance 5.6e-17; a cube on a box, dropped
+  tilted, on a small box: 0.3 - m g/(4k) to 1e-16; sliding 0.169895 against v0^2/(2 mu g) = 0.169895; the user
+  function against the law 1.5e-13. My first file name, convexContactTest.py, overwrote the tracked
+  ConvexContactTest.py on the case-insensitive file system; restored from git.
+
 <a id="rg2-12-2"></a>
 ### RG2.12.2 — the test models created from 2026-09-20 show their simulation (2026-11-07, #3322)
 - Maintainer 2026-11-07: the models created from 2026-09-20; the point is the animation in the SolutionViewer; a

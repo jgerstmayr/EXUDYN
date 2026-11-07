@@ -36,6 +36,7 @@ complexEigenvaluesTest
 computeItemTest
 computeODE2AEeigenvaluesTest
 computeODE2EigenvaluesTest
+coneContactTest
 connectorFrameOutputsTest
 connectorGravityTest
 connectorOutputVariablesTest
@@ -52,6 +53,7 @@ contactSphereSphereTestEAPM
 contactSphereTorusMomentumTest
 contactUserFunctionTest
 ConvexContactTest
+convexConvexContactTest
 convexDistanceTest
 coordinateSpringDamperExt
 coordinateSpringDamperExtVelocityOffsetTest

@@ -25,7 +25,8 @@ class PyConvexShape : public EGeometry::ConvexShape
 public:
 	//! the shape of a type with its parameters: radius (Sphere, Capsule, Cylinder), length (Capsule, Cylinder),
 	//! size (Box: the edge lengths), points (Triangle: 3 points, Points: n >= 1 points, rows of 3)
-	PyConvexShape(const STDstring& shapeType, Real radiusInit, Real lengthInit, const py::object& size, const py::object& pointsInit)
+	PyConvexShape(const STDstring& shapeType, Real radiusInit, Real lengthInit, const py::object& size, const py::object& pointsInit,
+		Real radius1Init)
 	{
 		const STDstring name = "ConvexShape";
 		auto Refuse = [&](const STDstring& message) { PyError(name + "('" + shapeType + "'): " + message, PyErrorType::valueError); };
@@ -35,17 +36,26 @@ public:
 		else if (shapeType == "Box") { type = EGeometry::ConvexShapeType::Box; }
 		else if (shapeType == "Triangle") { type = EGeometry::ConvexShapeType::Triangle; }
 		else if (shapeType == "Points") { type = EGeometry::ConvexShapeType::Points; }
-		else { PyError(name + ": shapeType must be 'Sphere', 'Capsule', 'Cylinder', 'Box', 'Triangle' or 'Points', not '" + shapeType + "'", PyErrorType::valueError); }
+		else if (shapeType == "Cone") { type = EGeometry::ConvexShapeType::Cone; }
+		else { PyError(name + ": shapeType must be 'Sphere', 'Capsule', 'Cylinder', 'Box', 'Triangle', 'Points' or 'Cone', not '" + shapeType + "'", PyErrorType::valueError); }
 		radius = radiusInit;
 		length = lengthInit;
+		bool isCone = type == EGeometry::ConvexShapeType::Cone;
+		if (isCone)
+		{
+			radius1 = radius1Init;
+			if (!(radius >= 0. && radius1 >= 0. && radius + radius1 > 0.)) { Refuse("radius and radius1 must be >= 0, not both 0"); }
+			if (!(length > 0.)) { Refuse("length must be positive"); }
+		}
+		else if (radius1Init != 0.) { Refuse("has no radius1"); }
 		bool usesRadius = type == EGeometry::ConvexShapeType::Sphere || type == EGeometry::ConvexShapeType::Capsule
 			|| type == EGeometry::ConvexShapeType::Cylinder;
 		bool usesLength = type == EGeometry::ConvexShapeType::Capsule || type == EGeometry::ConvexShapeType::Cylinder;
 		bool usesPoints = type == EGeometry::ConvexShapeType::Triangle || type == EGeometry::ConvexShapeType::Points;
 		if (usesRadius && !(radius > 0.)) { Refuse("radius must be positive"); }
-		if (!usesRadius && radius != 0.) { Refuse("has no radius"); }
+		if (!usesRadius && !isCone && radius != 0.) { Refuse("has no radius"); }
 		if (usesLength && (type == EGeometry::ConvexShapeType::Cylinder ? !(length > 0.) : !(length >= 0.))) { Refuse("length must be positive"); }
-		if (!usesLength && length != 0.) { Refuse("has no length"); }
+		if (!usesLength && !isCone && length != 0.) { Refuse("has no length"); }
 		if (type == EGeometry::ConvexShapeType::Box)
 		{
 			if (size.is_none()) { Refuse("needs size, the three edge lengths"); }
@@ -76,13 +86,13 @@ public:
 	//! ConvexShape() without arguments is refused: a shape needs its type
 	static PyConvexShape* ForbidConstructor()
 	{
-		PyError("exudyn.cUtilities.ConvexShape() needs shapeType, 'Sphere', 'Capsule', 'Cylinder', 'Box', 'Triangle' or 'Points'", PyErrorType::typeError);
+		PyError("exudyn.cUtilities.ConvexShape() needs shapeType, 'Sphere', 'Capsule', 'Cylinder', 'Box', 'Triangle', 'Points' or 'Cone'", PyErrorType::typeError);
 		return nullptr; //never reached
 	}
 
 	STDstring ShapeType() const
 	{
-		const char* names[] = { "Sphere", "Capsule", "Cylinder", "Box", "Triangle", "Points" };
+		const char* names[] = { "Sphere", "Capsule", "Cylinder", "Box", "Triangle", "Points", "Cone" };
 		return names[(Index)type];
 	}
 
@@ -90,7 +100,8 @@ public:
 	{
 		STDstring s = "ConvexShape('" + ShapeType() + "'";
 		if (Margin() != 0. || type == EGeometry::ConvexShapeType::Cylinder) { s += ", radius=" + EXUstd::ToString(radius); }
-		if (type == EGeometry::ConvexShapeType::Capsule || type == EGeometry::ConvexShapeType::Cylinder) { s += ", length=" + EXUstd::ToString(length); }
+		if (type == EGeometry::ConvexShapeType::Cone) { s += ", radius=" + EXUstd::ToString(radius) + ", radius1=" + EXUstd::ToString(radius1); }
+		if (type == EGeometry::ConvexShapeType::Capsule || type == EGeometry::ConvexShapeType::Cylinder || type == EGeometry::ConvexShapeType::Cone) { s += ", length=" + EXUstd::ToString(length); }
 		if (type == EGeometry::ConvexShapeType::Box) { s += ", size=" + EXUstd::ToString(2. * halfSize); }
 		if (type == EGeometry::ConvexShapeType::Triangle) { s += ", 3 points"; }
 		if (!points.empty()) { s += ", " + EXUstd::ToString((Index)points.size()) + " points"; }

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 428 | 1.13.444 |
+| 1.13 | Newborn | 430 | 1.13.446 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.446** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactConeCone and ObjectContactConeTriangle, penalty contacts of truncated cones (#3332)
+  - description: Truncated cones - tapers, rollers, bevel-gear-like bodies - need the contacts of the design contactPrimitives.md section 8.2. Decided: ConvexShapeType::Cone (radius at z = -L/2, radius1 at z = +L/2, one of them may be 0) with its support, its closest point and the refinement of the curved side as the cylinder, also in cUtilities.ConvexShape; ObjectContactConeCone (conesRadii0, conesRadii1, conesLengths) and ObjectContactConeTriangle (coneRadii, coneLength, trianglePoints, infinitePlane) with the contact points of the cylinders - the face points with the radii of the rims, and along the side line of cone 0 the ends of the interval of penetration into cone 1 by bisection; drawn by DrawCylinder with radiusEnd and the settings contact.showCones and colorCones.
+  - **notes:** ObjectContactConeCone and ObjectContactConeTriangle: penalty contacts of truncated cones, with the contact points of the cylinder contacts; ConvexShape('Cone') in exudyn.cUtilities; contact.showCones and colorCones.
+  - date resolved: **2026-11-07 16:41**, date raised: 2026-11-07
+- **1.13.445** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactConvexConvex, the penalty contact of two convex polytopes with contact points on their faces (#3331)
+  - description: Two convex bodies given by points and triangles - boxes, prisms, the collision shapes of robots - need a contact item: ObjectContactConvexConvex with points0, triangles0, points1, triangles1 in the frames of the two rigid markers (design contactPrimitives.md, section 4). One contact point fails for a face on a face, as RG9.12.5 showed for the cylinders. Decided: the distance by GJK and EPA; where the normal is that of a face of one shape, the vertices of the other shape over that face are the contact points, from both shapes for a face on a face, up to 8 with a data block of 3 each; otherwise the one point of GJK and EPA; the law, Distance and contactForceUserFunction of the cylinder contacts; the shapes drawn by their triangles with contact.showTriangles; the convexity and the outward triangles checked at Assemble. Together with RG9.12.7, the manifold of the faces.
+  - **notes:** ObjectContactConvexConvex: the penalty contact of two convex polytopes given by points and triangles, with up to 8 contact points on faces.
+  - date resolved: **2026-11-07 16:41**, date raised: 2026-11-07
 - **1.13.444** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the test models added since September 2026 checked for a visible simulation (#3322)
   - description: About 114 of the test models added to python/TestModels since 2026-09-01 run a simulation without a renderer or SolutionViewer when run directly, and 63 run none. Decided: each checked whether showing it helps a reader - a simulation with bodies, contact or motion gets the SolutionViewer behind testIsActive and graphics where its items draw nothing (CreateRigidBody with an inertia draws a body already); tests of functions, parameters or solver statistics stay without; a recommendation per group of models first, then the changes; revision2026c step RG2.12.2.
   - **notes:** 43 test models added since 2026-09-20 show their simulation in the SolutionViewer when run directly (not testIsActive); models of several cases name the case shown in the render window.

@@ -30,18 +30,21 @@
 
 namespace EGeometry {
 
-	enum class ConvexShapeType { Sphere, Capsule, Cylinder, Box, Triangle, Points };
+	enum class ConvexShapeType { Sphere, Capsule, Cylinder, Box, Triangle, Points, Cone };
 
 	//! a convex shape in its local frame, centered at the origin of the frame except Triangle and Points
 	class ConvexShape
 	{
 	public:
 		ConvexShapeType type = ConvexShapeType::Sphere;
-		Real radius = 0.;				//!< Sphere, Capsule, Cylinder
+		Real radius = 0.;				//!< Sphere, Capsule, Cylinder; Cone: the radius at z = -length/2
+		Real radius1 = 0.;				//!< Cone: the radius at z = +length/2, a truncated cone (#3332)
 		Real length = 0.;				//!< Capsule: the segment between the centers of the caps, along z; Cylinder: along z
 		Vector3D halfSize = Vector3D({ 0., 0., 0. });	//!< Box: half the edge lengths along x, y, z
 		Vector3D triangle[3];			//!< Triangle: its 3 points, without allocation, for the contact items
 		std::vector<Vector3D> points;	//!< Points: the points whose convex hull is the shape
+		const Real* pointRows = nullptr;	//!< Points, instead of points: the rows x, y, z of a matrix, without a copy (#3331)
+		Index numberOfPointRows = 0;
 
 		//! the radius added to the core: the sphere is a point, the capsule a segment
 		Real Margin() const { return (type == ConvexShapeType::Sphere || type == ConvexShapeType::Capsule) ? radius : 0.; }
@@ -54,6 +57,7 @@ namespace EGeometry {
 			case ConvexShapeType::Sphere: return radius;
 			case ConvexShapeType::Capsule: return radius + 0.5 * length;
 			case ConvexShapeType::Cylinder: return sqrt(radius * radius + 0.25 * length * length);
+			case ConvexShapeType::Cone: { Real r = EXUstd::Maximum(radius, radius1); return sqrt(r * r + 0.25 * length * length); }
 			case ConvexShapeType::Box: return halfSize.GetL2Norm();
 			case ConvexShapeType::Triangle:
 				return EXUstd::Maximum(triangle[0].GetL2Norm(), EXUstd::Maximum(triangle[1].GetL2Norm(), triangle[2].GetL2Norm()));
@@ -61,6 +65,7 @@ namespace EGeometry {
 			{
 				Real r = 0.;
 				for (const Vector3D& p : points) { r = EXUstd::Maximum(r, p.GetL2Norm()); }
+				for (Index i = 0; i < numberOfPointRows; i++) { r = EXUstd::Maximum(r, Vector3D({ pointRows[3 * i], pointRows[3 * i + 1], pointRows[3 * i + 2] }).GetL2Norm()); }
 				return r;
 			}
 			}
@@ -80,6 +85,17 @@ namespace EGeometry {
 				if (rho <= 1e-15 * fabs(d[2])) { return Vector3D({ 0., 0., z }); } //along the axis: the center of the cap
 				return Vector3D({ radius * d[0] / rho, radius * d[1] / rho, z });
 			}
+			case ConvexShapeType::Cone:
+			{
+				Real rho = sqrt(d[0] * d[0] + d[1] * d[1]);
+				Real h = 0.5 * length;
+				Real ex = 0., ey = 0.;
+				if (rho > 1e-15 * fabs(d[2])) { ex = d[0] / rho; ey = d[1] / rho; }
+				Real value0 = radius * rho - h * d[2]; //the rim at z = -h
+				Real value1 = radius1 * rho + h * d[2]; //the rim at z = +h
+				if (value1 >= value0) { return Vector3D({ radius1 * ex, radius1 * ey, h }); }
+				return Vector3D({ radius * ex, radius * ey, -h });
+			}
 			case ConvexShapeType::Box:
 				return Vector3D({ d[0] >= 0. ? halfSize[0] : -halfSize[0], d[1] >= 0. ? halfSize[1] : -halfSize[1],
 					d[2] >= 0. ? halfSize[2] : -halfSize[2] });
@@ -91,6 +107,17 @@ namespace EGeometry {
 			}
 			default:
 			{
+				if (pointRows != nullptr)
+				{
+					Index best = 0;
+					Real bestValue = pointRows[0] * d[0] + pointRows[1] * d[1] + pointRows[2] * d[2];
+					for (Index i = 1; i < numberOfPointRows; i++)
+					{
+						Real value = pointRows[3 * i] * d[0] + pointRows[3 * i + 1] * d[1] + pointRows[3 * i + 2] * d[2];
+						if (value > bestValue) { bestValue = value; best = i; }
+					}
+					return Vector3D({ pointRows[3 * best], pointRows[3 * best + 1], pointRows[3 * best + 2] });
+				}
 				Index best = 0;
 				Real bestValue = points[0] * d;
 				for (Index i = 1; i < (Index)points.size(); i++)
@@ -545,6 +572,29 @@ namespace EGeometry {
 			q[2] = EXUstd::Minimum(h, EXUstd::Maximum(-h, x[2]));
 			break;
 		}
+		case ConvexShapeType::Cone:
+		{
+			Real rho = sqrt(x[0] * x[0] + x[1] * x[1]);
+			Real z = x[2];
+			Real r0 = shape.radius, r1 = shape.radius1;
+			Real rz = r0 + (r1 - r0) * (z + h) / shape.length; //the radius at z
+			if (fabs(z) <= h && rho <= rz) { break; } //inside
+			//the closest of the bottom, the top and the side of the trapezoid (rho, z)
+			Real bestRho = EXUstd::Minimum(rho, r0), bestZ = -h;
+			Real best = (rho - bestRho) * (rho - bestRho) + (z + h) * (z + h);
+			Real topRho = EXUstd::Minimum(rho, r1);
+			Real top = (rho - topRho) * (rho - topRho) + (z - h) * (z - h);
+			if (top < best) { best = top; bestRho = topRho; bestZ = h; }
+			Real sr = r1 - r0, sz = shape.length; //the side from (r0, -h) to (r1, h)
+			Real t = EXUstd::Minimum(1., EXUstd::Maximum(0., ((rho - r0) * sr + (z + h) * sz) / (sr * sr + sz * sz)));
+			Real sideRho = r0 + t * sr, sideZ = -h + t * sz;
+			Real side = (rho - sideRho) * (rho - sideRho) + (z - sideZ) * (z - sideZ);
+			if (side < best) { bestRho = sideRho; bestZ = sideZ; }
+			if (rho > 0.) { q[0] = x[0] * bestRho / rho; q[1] = x[1] * bestRho / rho; }
+			else { q[0] = bestRho; q[1] = 0.; }
+			q[2] = bestZ;
+			break;
+		}
 		case ConvexShapeType::Box:
 			for (Index i = 0; i < 3; i++) { q[i] = EXUstd::Minimum(shape.halfSize[i], EXUstd::Maximum(-shape.halfSize[i], x[i])); }
 			break;
@@ -618,7 +668,8 @@ namespace EGeometry {
 		Real scale = shape0.BoundingRadius() + shape1.BoundingRadius() + (HT0.GetTranslation() - HT1.GetTranslation()).GetL2Norm();
 		if (scale == 0.) { scale = 1.; }
 		const Real absoluteTolerance = 1e-14 * scale;
-		const bool cylinder = shape0.type == ConvexShapeType::Cylinder || shape1.type == ConvexShapeType::Cylinder;
+		const bool cylinder = shape0.type == ConvexShapeType::Cylinder || shape1.type == ConvexShapeType::Cylinder ||
+			shape0.type == ConvexShapeType::Cone || shape1.type == ConvexShapeType::Cone; //curved sides: refined
 		ConvexSimplex simplex;
 		Vector3D v;
 		Index count = 0;

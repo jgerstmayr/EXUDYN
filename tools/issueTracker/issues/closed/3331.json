@@ -1,0 +1,17 @@
+{
+  "number": 3331,
+  "title": "ObjectContactConvexConvex, the penalty contact of two convex polytopes with contact points on their faces",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "Two convex bodies given by points and triangles - boxes, prisms, the collision shapes of robots - need a contact item: ObjectContactConvexConvex with points0, triangles0, points1, triangles1 in the frames of the two rigid markers (design contactPrimitives.md, section 4). One contact point fails for a face on a face, as RG9.12.5 showed for the cylinders. Decided: the distance by GJK and EPA; where the normal is that of a face of one shape, the vertices of the other shape over that face are the contact points, from both shapes for a face on a face, up to 8 with a data block of 3 each; otherwise the one point of GJK and EPA; the law, Distance and contactForceUserFunction of the cylinder contacts; the shapes drawn by their triangles with contact.showTriangles; the convexity and the outward triangles checked at Assemble. Together with RG9.12.7, the manifold of the faces.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 16:41",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectContactConvexConvex.cpp",
+  "releaseNotes": "ObjectContactConvexConvex: the penalty contact of two convex polytopes given by points and triangles, with up to 8 contact points on faces.",
+  "resolvedInVersion": "1.13.445"
+}

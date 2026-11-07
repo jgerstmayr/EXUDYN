@@ -2050,6 +2050,8 @@ class VSettingsContact:
     """Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle."""
     colorBoundingBoxes: Tuple[float,float,float,float]
     """RGBA color for boudnding boxes, see showBoundingBoxes."""
+    colorCones: Tuple[float,float,float,float]
+    """RGBA color for contact cones, see showCones."""
     colorCylinders: Tuple[float,float,float,float]
     """RGBA color for contact cylinders, see showCylinders."""
     colorSearchTree: Tuple[float,float,float,float]
@@ -2066,6 +2068,8 @@ class VSettingsContact:
     """global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle."""
     showBoundingBoxes: bool
     """show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!"""
+    showCones: bool
+    """show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True."""
     showContactForces: bool
     """if True, contact forces are drawn for certain contact models."""
     showContactForcesValues: bool

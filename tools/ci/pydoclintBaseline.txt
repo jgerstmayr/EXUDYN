@@ -159,6 +159,9 @@ python/exudyn/itemInterface.py
     DOC108: Method `ObjectContactSphereTriangle.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectContactSphereCylinder.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectContactCylinderCylinder.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectContactConeCone.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectContactConeTriangle.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectContactConvexConvex.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectContactCylinderTriangle.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectJointGeneric.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `MarkerBodyUser.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature

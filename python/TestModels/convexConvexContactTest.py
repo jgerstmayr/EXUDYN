@@ -1,0 +1,124 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  ObjectContactConvexConvex (#3331): the Distance of a deactivated contact of two tilted boxes against
+#           exudyn.cUtilities.Distance; then five cubes side by side, each in its own contact with a fixed box, which
+#           show the contact points: a cube on a large box, resting on its 4 lower corners (0.3 - m g/(4k)); a cube
+#           dropped tilted, which settles on its face; a cube on a small box, resting on the 4 upper corners of the
+#           box; a cube sliding with friction until it stops, after about v0^2/(2 mu g); the same cube with the law as
+#           contactForceUserFunction. Run directly, the SolutionViewer shows the five cubes. The result is the sum of
+#           the checks and of the final heights.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-07
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import *
+from exudyn.cUtilities import ConvexShape, Distance
+from exudyn import cMath
+import exudyn.graphics as graphics
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+oGround = mbs.CreateGround()
+
+k, d = 1e5, 1e3     #contact stiffness and damping
+g = 9.81
+a = 0.2             #edge of the cubes
+checks = []
+
+def Box(size):
+    """the 8 corners and the 12 triangles, with outward normals, of a box centered at the origin"""
+    points = [[sx*size[0]/2, sy*size[1]/2, sz*size[2]/2] for sz in [-1, 1] for sy in [-1, 1] for sx in [-1, 1]]
+    triangles = [[0, 2, 1], [1, 2, 3], [4, 5, 6], [5, 7, 6], [0, 1, 4], [1, 5, 4], [2, 6, 3], [3, 6, 7], [0, 4, 2], [2, 4, 6], [1, 3, 5], [3, 7, 5]]
+    return np.array(points), np.array(triangles)
+
+def Cube(position, color, velocity=[0, 0, 0], rotation=np.eye(3)):
+    """a rigid cube of edge a; returns its node, its mass and its marker"""
+    inertia = InertiaCuboid(density=1000, sideLengths=[a]*3)
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=list(position) + list(RotationMatrix2EulerParameters(rotation)),
+                                       initialVelocities=velocity + [0]*4))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D(),
+                                         visualization=VObjectRigidBody(graphicsData=[graphics.Brick(size=[a]*3, color=color, addEdges=True)])))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0, 0, -g]))
+    return node, inertia.Mass(), mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))
+
+def Contact(marker, fixedPosition, fixedSize, active=True, **law):
+    """the contact of the cube of marker with a fixed box of fixedSize centered at fixedPosition, drawn on the ground"""
+    mbs.AddObject(ObjectGround(referencePosition=fixedPosition,
+                               visualization=VObjectGround(graphicsData=[graphics.Brick(size=fixedSize, color=graphics.color.lightgrey)])))
+    points0, triangles0 = Box([a]*3)
+    points1, triangles1 = Box(fixedSize)
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=24, initialCoordinates=[1, 0, 0]*8)) #apart at the start
+    return mbs.AddObject(ObjectContactConvexConvex(markerNumbers=[marker, mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=fixedPosition))],
+                                                   nodeNumber=nData, points0=points0, triangles0=triangles0, points1=points1, triangles1=triangles1,
+                                                   contactStiffness=k, contactDamping=d, activeConnector=active, **law))
+
+#the Distance of a deactivated contact: a tilted cube and a tilted box
+rotation = RotationMatrixZ(0.4) @ RotationMatrixX(0.3)
+nTest, _, mTest = Cube([0.15, 10.1, 0.35], graphics.color.grey, rotation=rotation)
+cTest = Contact(mTest, [0, 10, 0], [0.6, 0.4, 0.3], active=False)
+mbs.Assemble()
+errorDistance = 0.
+for position in [[0.15, 10.1, 0.35], [0.3, 9.9, 0.2], [0.0, 10.0, 0.1]]: #apart, apart, penetrating
+    mbs.SetNodeParameter(nTest, 'referenceCoordinates', position + list(RotationMatrix2EulerParameters(rotation)))
+    mbs.Assemble()
+    H0 = HomogeneousTransformation(rotation, position)
+    dExact = Distance(ConvexShape('Points', points=Box([a]*3)[0]), H0, ConvexShape('Points', points=Box([0.6, 0.4, 0.3])[0]),
+                      HTtranslate([0, 10, 0]))[0]
+    errorDistance = max(errorDistance, abs(mbs.GetObjectOutput(cTest, exu.OutputVariableType.Distance) - dExact))
+mbs.SetNodeParameter(nTest, 'referenceCoordinates', [0.15, 10.1, 0.35] + list(RotationMatrix2EulerParameters(rotation)))
+exu.Print('Distance of the deactivated contact against cUtilities.Distance:', errorDistance)
+checks += [errorDistance < 1e-14]
+
+#five cubes side by side, each on its own fixed box
+big = [1, 1, 0.2]
+nRest, mRest, marker = Cube([0, 0, 0.1 + a/2], graphics.color.orange)
+Contact(marker, [0, 0, 0], big)
+nDrop, mDrop, marker = Cube([0, 1.5, 0.1 + a/2 + 0.1], graphics.color.steelblue, rotation=RotationMatrixX(0.3) @ RotationMatrixY(0.2))
+Contact(marker, [0, 1.5, 0], big)
+nSmall, mSmall, marker = Cube([0, 3, 0.1 + a/2], graphics.color.green)
+Contact(marker, [0, 3, 0], [0.1, 0.1, 0.2])
+mu, v0 = 0.3, 1.
+nSlide, mSlide, marker = Cube([-0.6, 4.5, 0.1 + a/2], graphics.color.red, velocity=[v0, 0, 0])
+Contact(marker, [0, 4.5, 0], [2, 1, 0.2], dynamicFriction=mu, frictionProportionalZone=1e-3)
+def UFcontact(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity):
+    fN = -k*gap - d*gap_t #normal force, > 0 in compression
+    vt = tangentialVelocity
+    fT = mu*fN/max(cMath.norm(vt), 1e-3) #regularized Coulomb friction
+    return [-fN*normal[i] + fT*vt[i] for i in range(3)]
+nSlideUF, _, marker = Cube([-0.6, 6, 0.1 + a/2], graphics.color.brown, velocity=[v0, 0, 0])
+Contact(marker, [0, 6, 0], [2, 1, 0.2], dynamicFriction=mu, contactForceUserFunction=UFcontact)
+mbs.Assemble()
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 2000
+simulationSettings.timeIntegration.endTime = 1
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
+mbs.SolveDynamic(simulationSettings)
+
+def Position(node):
+    return np.array(mbs.GetNodeOutput(node, exu.OutputVariableType.Position))
+heights = [Position(n)[2] for n in [nRest, nDrop, nSmall]]
+expected = [0.1 + a/2 - m*g/(4*k) for m in [mRest, mDrop, mSmall]]
+xSlide = Position(nSlide)[0] + 0.6
+errorUF = cMath.norm(Position(nSlideUF) - Position(nSlide) - [0, 1.5, 0])
+exu.Print('heights', heights, '\n expected', expected)
+exu.Print('sliding distance', xSlide, ', v0^2/(2 mu g) =', v0**2/(2*mu*g), '; the user function against the law:', errorUF)
+checks += [abs(h - e) < 1e-6 for h, e in zip(heights, expected)]
+checks += [abs(xSlide - v0**2/(2*mu*g)) < 2e-3, errorUF < 1e-5]
+
+if not testIsActive:
+    mbs.SolutionViewer()
+
+u = sum(checks) + sum(heights) + xSlide
+exu.Print('checks:', checks)
+exu.Print('solution of convexConvexContactTest=', u)
+exu.sys['testResult'] = u

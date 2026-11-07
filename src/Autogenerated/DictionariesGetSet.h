@@ -3643,6 +3643,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.colorCones);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "RGBA color for contact cones, see showCones";
+    structureDict["colorCones"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.colorCylinders);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
@@ -3704,6 +3712,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     d["size"] = std::vector<int>{1};
     d["description"] = "show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!";
     structureDict["showBoundingBoxes"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.showCones;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True";
+    structureDict["showCones"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -3792,6 +3808,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 inline py::dict GetDictionary(const VSettingsContact& data) {
     auto structureDict = py::dict();
     structureDict["colorBoundingBoxes"] = EPyUtils::ToPythonMember(data.colorBoundingBoxes);
+    structureDict["colorCones"] = EPyUtils::ToPythonMember(data.colorCones);
     structureDict["colorCylinders"] = EPyUtils::ToPythonMember(data.colorCylinders);
     structureDict["colorSearchTree"] = EPyUtils::ToPythonMember(data.colorSearchTree);
     structureDict["colorSpheres"] = EPyUtils::ToPythonMember(data.colorSpheres);
@@ -3800,6 +3817,7 @@ inline py::dict GetDictionary(const VSettingsContact& data) {
     structureDict["contactForcesFactor"] = data.contactForcesFactor;
     structureDict["contactPointsDefaultSize"] = data.contactPointsDefaultSize;
     structureDict["showBoundingBoxes"] = data.showBoundingBoxes;
+    structureDict["showCones"] = data.showCones;
     structureDict["showContactForces"] = data.showContactForces;
     structureDict["showContactForcesValues"] = data.showContactForcesValues;
     structureDict["showCylinders"] = data.showCylinders;
@@ -3816,6 +3834,7 @@ inline py::dict GetDictionary(const VSettingsContact& data) {
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsContact& data, const py::dict& d) {
     EPyUtils::FromPython(d["colorBoundingBoxes"], data.colorBoundingBoxes, "VSettingsContact.colorBoundingBoxes");
+    EPyUtils::FromPython(d["colorCones"], data.colorCones, "VSettingsContact.colorCones");
     EPyUtils::FromPython(d["colorCylinders"], data.colorCylinders, "VSettingsContact.colorCylinders");
     EPyUtils::FromPython(d["colorSearchTree"], data.colorSearchTree, "VSettingsContact.colorSearchTree");
     EPyUtils::FromPython(d["colorSpheres"], data.colorSpheres, "VSettingsContact.colorSpheres");
@@ -3824,6 +3843,7 @@ inline void SetDictionary(VSettingsContact& data, const py::dict& d) {
     EPyUtils::FromPython(d["contactForcesFactor"], data.contactForcesFactor, "VSettingsContact.contactForcesFactor");
     EPyUtils::FromPython(d["contactPointsDefaultSize"], data.contactPointsDefaultSize, "VSettingsContact.contactPointsDefaultSize");
     EPyUtils::FromPython(d["showBoundingBoxes"], data.showBoundingBoxes, "VSettingsContact.showBoundingBoxes");
+    EPyUtils::FromPython(d["showCones"], data.showCones, "VSettingsContact.showCones");
     EPyUtils::FromPython(d["showContactForces"], data.showContactForces, "VSettingsContact.showContactForces");
     EPyUtils::FromPython(d["showContactForcesValues"], data.showContactForcesValues, "VSettingsContact.showContactForcesValues");
     EPyUtils::FromPython(d["showCylinders"], data.showCylinders, "VSettingsContact.showCylinders");

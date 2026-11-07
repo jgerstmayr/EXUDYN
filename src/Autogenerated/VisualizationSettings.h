@@ -1242,6 +1242,7 @@ class VSettingsContact // AUTO:
 {
 public: // AUTO: 
   Float4 colorBoundingBoxes;                      //!< AUTO: RGBA color for boudnding boxes, see showBoundingBoxes
+  Float4 colorCones;                              //!< AUTO: RGBA color for contact cones, see showCones
   Float4 colorCylinders;                          //!< AUTO: RGBA color for contact cylinders, see showCylinders
   Float4 colorSearchTree;                         //!< AUTO: RGBA color for search tree, see showSearchTree
   Float4 colorSpheres;                            //!< AUTO: RGBA color for contact spheres, see showSpheres
@@ -1250,6 +1251,7 @@ public: // AUTO:
   float contactForcesFactor;                      //!< AUTO: factor used for scaling of contact forces is showContactForces=True
   float contactPointsDefaultSize;                 //!< AUTO: global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle
   bool showBoundingBoxes;                         //!< AUTO: show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!
+  bool showCones;                                 //!< AUTO: show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True
   bool showContactForces;                         //!< AUTO: if True, contact forces are drawn for certain contact models
   bool showContactForcesValues;                   //!< AUTO: if True and showContactForces=True, numerical values for  contact forces are shown at certain points
   bool showCylinders;                             //!< AUTO: show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True
@@ -1271,6 +1273,7 @@ public: // AUTO:
   {
     backlink=nullptr;
     colorBoundingBoxes = Float4({0.9f,0.1f,0.1f,1.f});
+    colorCones = Float4({0.6f,0.5f,0.7f,1.f});
     colorCylinders = Float4({0.5f,0.6f,0.7f,1.f});
     colorSearchTree = Float4({0.1f,0.1f,0.9f,1.f});
     colorSpheres = Float4({0.8f,0.5f,0.2f,1.f});
@@ -1279,6 +1282,7 @@ public: // AUTO:
     contactForcesFactor = 0.001f;
     contactPointsDefaultSize = 0.001f;
     showBoundingBoxes = false;
+    showCones = false;
     showContactForces = false;
     showContactForcesValues = false;
     showCylinders = false;
@@ -1301,6 +1305,7 @@ public: // AUTO:
   {
     os << "VSettingsContact" << ":\n";
     os << "  colorBoundingBoxes = " << colorBoundingBoxes << "\n";
+    os << "  colorCones = " << colorCones << "\n";
     os << "  colorCylinders = " << colorCylinders << "\n";
     os << "  colorSearchTree = " << colorSearchTree << "\n";
     os << "  colorSpheres = " << colorSpheres << "\n";
@@ -1309,6 +1314,7 @@ public: // AUTO:
     os << "  contactForcesFactor = " << contactForcesFactor << "\n";
     os << "  contactPointsDefaultSize = " << contactPointsDefaultSize << "\n";
     os << "  showBoundingBoxes = " << showBoundingBoxes << "\n";
+    os << "  showCones = " << showCones << "\n";
     os << "  showContactForces = " << showContactForces << "\n";
     os << "  showContactForcesValues = " << showContactForcesValues << "\n";
     os << "  showCylinders = " << showCylinders << "\n";

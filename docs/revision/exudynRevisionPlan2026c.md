@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (7 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (4 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 13 | Structural core improvements |
+| RG9 | OPEN | 10 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1596,11 +1596,15 @@ CLOSED 2026-11-07 (#3320): ObjectContactSphereCylinder with the analytic geometr
 
 CLOSED 2026-11-07 (#3329): both items with GJK and EPA, infinitePlane, the output Distance and the contactForceUserFunction; one contact point failed for every line or face contact, so the maintainer decided on the contact points of the cylinders now (up to 4, 12 data coordinates, contactPrimitives.md 3.2); cylinderContactTest.py, two MiniExamples. [log](exudynRevisionLog2026c.md#rg9-12-5)
 
-#### **OPEN_RG9.12.6** ObjectContactConvexConvex
+#### **CLOSED_RG9.12.6** ObjectContactConvexConvex
 
-#### **OPEN_RG9.12.7** The contact manifold for flat contacts of ObjectContactConvexConvex
+CLOSED 2026-11-07 (#3331): ObjectContactConvexConvex with points0, triangles0, points1, triangles1 (numpy, checked at Assemble: convex, outward), GJK and EPA on the points without a copy, up to 8 contact points from the faces; convexConvexContactTest.py. [log](exudynRevisionLog2026c.md#rg9-12-6)
+
+#### **CLOSED_RG9.12.7** The contact manifold for flat contacts of ObjectContactConvexConvex
 
 The contact points of the cylinders (caps, sides, a cylinder on a face) came with RG9.12.5; this step keeps the faces of convex shapes.
+
+CLOSED 2026-11-07 (#3331): the face manifold came with RG9.12.6 - the points of one shape over the face of the other whose normal is the contact normal, from both for a face on a face, the 8 deepest, in a stable order. [log](exudynRevisionLog2026c.md#rg9-12-6)
 
 #### **OPEN_RG9.12.8** Examples of the contact primitives and the theory section of the contact manual
 
@@ -1610,7 +1614,9 @@ The contact points of the cylinders (caps, sides, a cylinder on a face) came wit
 
 CLOSED 2026-11-07 (#3323): infinitePlane of ObjectContactSphereTriangle - the plane of the triangle, one-sided, without edges; for CylinderTriangle and ConeTriangle with these items; sphereTrianglePlaneTest.py. [log](exudynRevisionLog2026c.md#rg9-12-10)
 
-#### **OPEN_RG9.12.11** Truncated cones: ObjectContactConeCone and ObjectContactConeTriangle
+#### **CLOSED_RG9.12.11** Truncated cones: ObjectContactConeCone and ObjectContactConeTriangle
+
+CLOSED 2026-11-07 (#3332): ConvexShapeType::Cone, ObjectContactConeCone and ObjectContactConeTriangle with the contact points of the cylinders; drawn by DrawCylinder(radiusEnd), contact.showCones; coneContactTest.py. [log](exudynRevisionLog2026c.md#rg9-12-11)
 
 #### **OPEN_RG9.12.12** The contact inside a hollow cylinder and a hollow cone: the flags isHollowCylinder1 of CylinderCylinder and isHollowCone1 of ConeCone
 

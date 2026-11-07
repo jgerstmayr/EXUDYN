@@ -147,7 +147,7 @@ class KinematicChain:
 
 #stub information for class ConvexShape functions
 class ConvexShape:
-    """A ConvexShape is a convex primitive in its local frame, for the distance of two shapes by Distance: a sphere about the origin, a capsule (a segment of the given length along the local z axis, centered, with the radius), a cylinder (along the local z axis, centered, with radius and length), a box (centered, with the edge lengths size along x, y, z), a triangle (3 points), or the convex hull of points.
+    """A ConvexShape is a convex primitive in its local frame, for the distance of two shapes by Distance: a sphere about the origin, a capsule (a segment of the given length along the local z axis, centered, with the radius), a cylinder (along the local z axis, centered, with radius and length), a box (centered, with the edge lengths size along x, y, z), a triangle (3 points), the convex hull of points, or a truncated cone (centered along the local z axis, with radius and radius1 at its ends).
 
     Distance computes it by GJK and EPA, the same functions as the contact items in C++.
     """

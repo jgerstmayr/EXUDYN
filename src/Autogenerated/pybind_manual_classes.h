@@ -403,7 +403,7 @@
 
     py::class_<PyConvexShape>(m, "ConvexShape")
         .def(py::init(&PyConvexShape::ForbidConstructor))
-        .def(py::init<const STDstring&, Real, Real, const py::object&, const py::object&>(), py::arg("shapeType"), py::arg("radius") = 0., py::arg("length") = 0., py::arg("size") = py::none(), py::arg("points") = py::none())
+        .def(py::init<const STDstring&, Real, Real, const py::object&, const py::object&, Real>(), py::arg("shapeType"), py::arg("radius") = 0., py::arg("length") = 0., py::arg("size") = py::none(), py::arg("points") = py::none(), py::arg("radius1") = 0.)
         .def("ShapeType", &PyConvexShape::ShapeType, "the type of the shape, 'Sphere', 'Capsule', 'Cylinder', 'Box', 'Triangle' or 'Points'")
         .def("__repr__", [](const PyConvexShape &item) {
             return item.ToString(); }, "the string representation of the ConvexShape")

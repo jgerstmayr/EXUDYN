@@ -412,6 +412,7 @@ VSettingsContact has the following items:
 | name | type | default | description |
 |---|---|---|---|
 | `colorBoundingBoxes` | Float4 | [0.9,0.1,0.1,1.] | RGBA color for boudnding boxes, see showBoundingBoxes |
+| `colorCones` | Float4 | [0.6,0.5,0.7,1.] | RGBA color for contact cones, see showCones |
 | `colorCylinders` | Float4 | [0.5,0.6,0.7,1.] | RGBA color for contact cylinders, see showCylinders |
 | `colorSearchTree` | Float4 | [0.1,0.1,0.9,1.] | RGBA color for search tree, see showSearchTree |
 | `colorSpheres` | Float4 | [0.8,0.5,0.2,1.] | RGBA color for contact spheres, see showSpheres |
@@ -420,6 +421,7 @@ VSettingsContact has the following items:
 | `contactForcesFactor` | float | 0.001 | factor used for scaling of contact forces is showContactForces=True |
 | `contactPointsDefaultSize` | float | 0.001 | global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle |
 | `showBoundingBoxes` | bool | False | show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects! |
+| `showCones` | bool | False | show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True |
 | `showContactForces` | bool | False | if True, contact forces are drawn for certain contact models |
 | `showContactForcesValues` | bool | False | if True and showContactForces=True, numerical values for contact forces are shown at certain points |
 | `showCylinders` | bool | False | show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True |

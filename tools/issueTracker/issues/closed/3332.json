@@ -1,0 +1,17 @@
+{
+  "number": 3332,
+  "title": "ObjectContactConeCone and ObjectContactConeTriangle, penalty contacts of truncated cones",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "Truncated cones - tapers, rollers, bevel-gear-like bodies - need the contacts of the design contactPrimitives.md section 8.2. Decided: ConvexShapeType::Cone (radius at z = -L/2, radius1 at z = +L/2, one of them may be 0) with its support, its closest point and the refinement of the curved side as the cylinder, also in cUtilities.ConvexShape; ObjectContactConeCone (conesRadii0, conesRadii1, conesLengths) and ObjectContactConeTriangle (coneRadii, coneLength, trianglePoints, infinitePlane) with the contact points of the cylinders - the face points with the radii of the rims, and along the side line of cone 0 the ends of the interval of penetration into cone 1 by bisection; drawn by DrawCylinder with radiusEnd and the settings contact.showCones and colorCones.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 16:41",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectContactCylinderCylinder.cpp",
+  "releaseNotes": "ObjectContactConeCone and ObjectContactConeTriangle: penalty contacts of truncated cones, with the contact points of the cylinder contacts; ConvexShape('Cone') in exudyn.cUtilities; contact.showCones and colorCones.",
+  "resolvedInVersion": "1.13.446"
+}

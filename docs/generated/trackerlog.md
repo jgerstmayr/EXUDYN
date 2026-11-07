@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.444.dev1
+- Exudyn version = 1.13.446.dev1
 - last change = 2026-11-07
 - Number of issues = 3333
-- Number of resolved issues = 3221 (444 in current version)
+- Number of resolved issues = 3223 (446 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,12 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectContactConeCone and ObjectContactConeTriangle, penalty contacts of truncated cones (#3332)
-  - description: Truncated cones - tapers, rollers, bevel-gear-like bodies - need the contacts of the design contactPrimitives.md section 8.2. Decided: ConvexShapeType::Cone (radius at z = -L/2, radius1 at z = +L/2, one of them may be 0) with its support, its closest point and the refinement of the curved side as the cylinder, also in cUtilities.ConvexShape; ObjectContactConeCone (conesRadii0, conesRadii1, conesLengths) and ObjectContactConeTriangle (coneRadii, coneLength, trianglePoints, infinitePlane) with the contact points of the cylinders - the face points with the radii of the rims, and along the side line of cone 0 the ends of the interval of penetration into cone 1 by bisection; drawn by DrawCylinder with radiusEnd and the settings contact.showCones and colorCones.
-  - date raised: 2026-11-07
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectContactConvexConvex, the penalty contact of two convex polytopes with contact points on their faces (#3331)
-  - description: Two convex bodies given by points and triangles - boxes, prisms, the collision shapes of robots - need a contact item: ObjectContactConvexConvex with points0, triangles0, points1, triangles1 in the frames of the two rigid markers (design contactPrimitives.md, section 4). One contact point fails for a face on a face, as RG9.12.5 showed for the cylinders. Decided: the distance by GJK and EPA; where the normal is that of a face of one shape, the vertices of the other shape over that face are the contact points, from both shapes for a face on a face, up to 8 with a data block of 3 each; otherwise the one point of GJK and EPA; the law, Distance and contactForceUserFunction of the cylinder contacts; the shapes drawn by their triangles with contact.showTriangles; the convexity and the outward triangles checked at Assemble. Together with RG9.12.7, the manifold of the faces.
-  - date raised: 2026-11-07
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` Radau5: the implicit Runge-Kutta method Radau IIA with 3 stages, of order 5, in the C++ and the Python solvers (#3318)
   - description: A reference method of higher order for the solver study instead of LobattoIIIC4GGL (\#3314): Radau IIA with 3 stages (c = (4 - sqrt 6)/10, (4 + sqrt 6)/10, 1), order 5, L-stable, three implicit stages without GGL multipliers, the constraints at the end of the step as in Radau3; the tableau of CSolverImplicitRungeKutta and of exudyn.symbolics.advancedSolvers, its error estimate, DynamicSolverType.Radau5. Decided: implemented with the Jacobian of the last stage for all stages, as the other methods, no W-method; its convergence orders measured on the model library, and as the reference of the study if it converges as expected; revision2026c step RG20.10.1.
   - date raised: 2026-11-07

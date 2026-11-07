@@ -262,12 +262,12 @@ The class **KinematicChain** has the following **functions and structures**:
 (sec-cutilities-convexshape)=
 ### ConvexShape
 
-A ConvexShape is a convex primitive in its local frame, for the distance of two shapes by Distance: a sphere about the origin, a capsule (a segment of the given length along the local z axis, centered, with the radius), a cylinder (along the local z axis, centered, with radius and length), a box (centered, with the edge lengths size along x, y, z), a triangle (3 points), or the convex hull of points. Distance computes it by GJK and EPA, the same functions as the contact items in C++.
+A ConvexShape is a convex primitive in its local frame, for the distance of two shapes by Distance: a sphere about the origin, a capsule (a segment of the given length along the local z axis, centered, with the radius), a cylinder (along the local z axis, centered, with radius and length), a box (centered, with the edge lengths size along x, y, z), a triangle (3 points), the convex hull of points, or a truncated cone (centered along the local z axis, with radius and radius1 at its ends). Distance computes it by GJK and EPA, the same functions as the contact items in C++.
 
 
 The class **ConvexShape** has the following **functions and structures**:
 
-- ConvexShape(shapeType, radius=0., length=0., size=None, points=None): shapeType 'Sphere' (radius), 'Capsule' (radius, length >= 0), 'Cylinder' (radius, length), 'Box' (size, the 3 edge lengths), 'Triangle' (points, 3 rows of 3 coordinates) or 'Points' (points, n rows of 3 coordinates, their convex hull); a parameter that the type does not use, or a radius, length or size not positive, raises a ValueError
+- ConvexShape(shapeType, radius=0., length=0., size=None, points=None, radius1=0.): shapeType 'Sphere' (radius), 'Capsule' (radius, length >= 0), 'Cylinder' (radius, length), 'Box' (size, the 3 edge lengths), 'Triangle' (points, 3 rows of 3 coordinates), 'Points' (points, n rows of 3 coordinates, their convex hull) or 'Cone' (a truncated cone along the local z axis, centered: radius at z = -length/2, radius1 at z = +length/2, one of them may be 0); a parameter that the type does not use, or a radius, length or size not positive, raises a ValueError
 
 - **`ShapeType()`**: the type of the shape, 'Sphere', 'Capsule', 'Cylinder', 'Box', 'Triangle' or 'Points'
 - **`__repr__()`**: the string representation of the ConvexShape
