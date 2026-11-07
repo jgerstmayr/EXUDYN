@@ -125,6 +125,14 @@ exudyn.VSettingsBodies
 exudyn.VSettingsCamera
 exudyn.VSettingsConnectors
 exudyn.VSettingsContact
+exudyn.VSettingsContact.colorSpheres
+exudyn.VSettingsContact.colorTori
+exudyn.VSettingsContact.colorTriangles
+exudyn.VSettingsContact.showSpheres
+exudyn.VSettingsContact.showTori
+exudyn.VSettingsContact.showTriangles
+exudyn.VSettingsContactColor
+exudyn.VSettingsContactShow
 exudyn.VSettingsContour
 exudyn.VSettingsContour.colorBarPrecision
 exudyn.VSettingsContour.colorBarTiling

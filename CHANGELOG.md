@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 440 | 1.13.456 |
+| 1.13 | Newborn | 441 | 1.13.457 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.457** `EXAMPLE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` contactPrimitivesShowcase.py revised: a visible ground, moving rings and bearing, a richer polytope, a scene for the raytracer (#3341)
+  - description: In contactPrimitivesShowcase.py the floor and the inclined plane are not drawn, so the bodies roll in space; the shaft starts inside the ring and hardly moves; the journal bearing is a tiny disc at rest; the polytope is a cube; the contact shapes are drawn with a fine tiling. Decided: the ground drawn, the ring contact and the bearing large enough to see what they do, a polytope with more faces, shadows and settings for a raytraced picture.
+  - **notes:** contactPrimitivesShowcase.py shows the contacts between primitive shapes on a drawn floor: a ball over a cylinder, a roller down a ramp, a rolling cone, an icosahedron tumbling into a cube, a ring swinging on a shaft and a rotor floating in a journal bearing, with the contact forces as arrows, shadows and a switch for a raytraced picture.
+  - date resolved: **2026-11-07 22:42**, date raised: 2026-11-07
 - **1.13.456** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJournalBearing pushes the journal out when it turns the other way about the bearing axis (#3345)
   - description: The film forces of ObjectJournalBearing (infinitely short and long bearing after Flores et al. 2009) hold for a positive w = omega - 2 gammaDot, the film in the converging gap in the direction of rotation; with a negative w, a journal turning the other way about the axis of marker 1, the radial force pushes the journal outwards and the tangential force acts on the wrong side: a rotor of contactPrimitivesShowcase.py turning at -50 rad/s about the axis drifts to the clearance instead of floating at its equilibrium. Decided: for a negative w the forces of the mirrored bearing - w by its magnitude, the tangential direction reversed; a test of both directions of rotation in journalBearingTest.py.
   - **notes:** ObjectJournalBearing carries a journal turning either way about the axis of the bearing: with the journal turning the other way, the film pushed it out to the clearance.

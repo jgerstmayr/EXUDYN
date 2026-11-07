@@ -1,13 +1,14 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  The contacts between primitive shapes side by side: a ball rolling over a cylinder (ObjectContactSphereCylinder)
-#           onto the floor (ObjectContactSphereTriangle with infinitePlane), a roller rolling down an inclined plane
-#           (ObjectContactCylinderTriangle with infinitePlane), a truncated cone
-#           rolling in a circle on the plane (ObjectContactConeTriangle), a cube dropped tilted onto a box, tipping onto
-#           its face (ObjectContactConvexConvex), a shaft falling into a short ring (ObjectContactCylinderCylinder with
-#           isHollowCylinder1) and a rotor floating in a lubricated journal bearing (ObjectJournalBearing). The shapes
-#           of the contacts are drawn by the contact settings; the solution is shown in the SolutionViewer.
+# Details:  The contacts between primitive shapes side by side, in six lanes on a floor: a ball rolling over a lying
+#           cylinder (ObjectContactSphereCylinder) onto the floor (ObjectContactSphereTriangle with infinitePlane); a
+#           roller rolling down a ramp onto the floor (ObjectContactCylinderTriangle); a truncated cone rolling in a
+#           circle (ObjectContactConeTriangle); an icosahedron tumbling down a wedge into a cube
+#           (ObjectContactConvexConvex); a ring swinging on a fixed shaft (ObjectContactCylinderCylinder with
+#           isHollowCylinder1); a rotor floating in a lubricated journal bearing (ObjectJournalBearing). The contact
+#           forces are drawn as arrows, red on the first and green on the second marker of a contact. With
+#           useRaytracer = True the SolutionViewer shows the raytraced scene, with soft shadows.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-07
@@ -22,15 +23,19 @@ import exudyn.graphics as graphics
 import numpy as np
 from exudyn import cMath
 
+useRaytracer = False #True: the SolutionViewer raytraces the scene (slower)
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-oGround = mbs.CreateGround()
+oGround = mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0.5, 2.5, 0], size=6, nTiles=12)])
 
 k, d, mu, g = 1e5, 500., 0.4, 9.81
-law = dict(contactStiffness=k, contactDamping=d, dynamicFriction=mu)
+#the friction proportional to the sliding velocity below 1 cm/s: bodies coming to rest switch less often between
+#sticking and sliding than with the default 1 mm/s
+law = dict(contactStiffness=k, contactDamping=d, dynamicFriction=mu, frictionProportionalZone=0.01)
 
 def Body(position, inertia, graphicsList, rotation=np.eye(3), velocity=[0, 0, 0], angularVelocity=[0, 0, 0]):
-    """a rigid body under gravity; returns its marker at the center"""
+    """a rigid body under gravity; returns the body"""
     ep = RotationMatrix2EulerParameters(rotation)
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=list(position) + list(ep),
                                        initialVelocities=list(velocity) + list(AngularVelocity2EulerParameters_t(angularVelocity, ep))))
@@ -39,78 +44,155 @@ def Body(position, inertia, graphicsList, rotation=np.eye(3), velocity=[0, 0, 0]
     mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0, 0, -g]))
     return body
 
+def Marker(body, HT=np.eye(4)):
+    return mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localHT=HT))
+
 def DataNode(n):
-    return mbs.AddNode(NodeGenericData(numberOfDataCoordinates=n, initialCoordinates=([1, 0, 0]*(n//3))))
+    """the data node of a contact item: n coordinates in blocks of 3, apart at the start"""
+    return mbs.AddNode(NodeGenericData(numberOfDataCoordinates=n, initialCoordinates=[1, 0, 0]*(n//3)))
 
-def GroundMarker(HT):
-    return mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HT))
+def ConvexHull(points):
+    """the points and the triangles of the convex hull of a few points, outward; a face of more than 3 points as a fan"""
+    points = np.array(points, dtype=float)
+    center = points.mean(axis=0)
+    triangles, normals = [], []
+    n = len(points)
+    for i in range(n):
+        for j in range(i+1, n):
+            for m in range(j+1, n):
+                normal = np.cross(points[j] - points[i], points[m] - points[i])
+                length = cMath.sqrt(normal @ normal)
+                if length < 1e-12:
+                    continue
+                normal = normal/length
+                if normal @ (points[i] - center) < 0:
+                    normal = -normal
+                heights = points @ normal - normal @ points[i]
+                if heights.max() > 1e-9 or any(normal @ other > 1 - 1e-9 for other in normals):
+                    continue #not a face, or a face found already
+                normals.append(normal)
+                face = [q for q in range(n) if abs(heights[q]) < 1e-9]
+                faceCenter = points[face].mean(axis=0)
+                axis0 = points[face[0]] - faceCenter
+                axis1 = np.cross(normal, axis0)
+                face.sort(key=lambda q: cMath.atan2((points[q] - faceCenter) @ axis1, (points[q] - faceCenter) @ axis0))
+                triangles += [[face[0], face[q], face[q+1]] for q in range(1, len(face) - 1)]
+    return points, np.array(triangles)
 
-plane = exu.Vector3DList([[-10, -10, 0], [10, -10, 0], [0, 10, 0]])
+floor = exu.Vector3DList([[-10, -10, 0], [10, -10, 0], [0, 10, 0]]) #with infinitePlane: the plane of the triangle
+mGround = Marker(oGround)
 
-#a ball rolling over a cylinder lying along y
+#lane 0: a ball rolling over a cylinder lying along y
 r = 0.08
-ball = Body([-0.3, 0, 0.35], InertiaSphere(mass=1, radius=r), [graphics.Sphere(radius=r, color=graphics.color.orange, nTiles=16, addEdges=True)],
-            velocity=[0.6, 0, 0])
-mbs.AddObject(ObjectContactSphereCylinder(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball)), GroundMarker(HTtranslate([0, 0, 0.15]) @ HTrotateX(0.5*np.pi))],
+ball = Body([-0.02, 0, 0.38], InertiaSphere(mass=1, radius=r), [graphics.Sphere(radius=r, color=graphics.color.orange, nTiles=12, addEdges=True)],
+            velocity=[0.2, 0, 0])
+mbs.AddObject(ObjectContactSphereCylinder(markerNumbers=[Marker(ball), Marker(oGround, HTtranslate([0, 0, 0.15]) @ HTrotateX(0.5*np.pi))],
                                           nodeNumber=DataNode(3), sphereRadius=r, cylinderRadius=0.15, cylinderLength=0.6,
                                           visualization=VObjectContactSphereCylinder(show=True), **law))
-mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball)), GroundMarker(np.eye(4))],
-                                          nodeNumber=mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[1, 0, 0, 0])),
-                                          sphereRadius=r, trianglePoints=plane, infinitePlane=True, **law)) #the floor
-#a roller rolling down a plane inclined by 10 degrees
-incline = HTtranslate([0, 1, 0]) @ HTrotateY(-10/180*np.pi)
-roller = Body([-0.6, 1, 0.1 + 0.11*cMath.sin(10/180*np.pi)], InertiaCylinder(density=1000, length=0.15, outerRadius=0.1, axis=1),
+mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[Marker(ball), mGround], nodeNumber=mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[1, 0, 0, 0])),
+                                          sphereRadius=r, trianglePoints=floor, infinitePlane=True,
+                                          visualization=VObjectContactSphereTriangle(show=True), **law))
+mbs.CreateGround(referencePosition=[0, 0, 0.15], graphicsDataList=[graphics.Cylinder(pAxis=[0, -0.3, 0], vAxis=[0, 0.6, 0], radius=0.15,
+                                                                                    color=graphics.color.lightgrey, nTiles=32)])
+
+#lane 1: a roller rolling down a ramp of 10 degrees onto the floor
+slope = 10/180*np.pi
+h = 1.2*cMath.tan(slope)
+ramp = exu.Vector3DList([[-1.2, 0.2, h], [-1.2, 1.8, h], [0.6, 1, -0.6*cMath.tan(slope)]]) #the plane of the ramp, beyond its end
+roller = Body([-1.0, 1, 0.1/cMath.cos(slope) + 1.0*cMath.tan(slope)], InertiaCylinder(density=1000, length=0.15, outerRadius=0.1, axis=1),
               [graphics.Cylinder(pAxis=[0, -0.075, 0], vAxis=[0, 0.15, 0], radius=0.1, color=graphics.color.steelblue, nTiles=24, addEdges=True)],
-              rotation=RotationMatrixY(-10/180*np.pi))
-mbs.AddObject(ObjectContactCylinderTriangle(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=roller, localHT=HTrotateX(0.5*np.pi))), GroundMarker(incline)],
-                                            nodeNumber=DataNode(12), cylinderRadius=0.1, cylinderLength=0.15, trianglePoints=plane,
-                                            infinitePlane=True, visualization=VObjectContactCylinderTriangle(show=True), **law))
-#a truncated cone rolling in a circle, lying on its side line
+              rotation=RotationMatrixY(slope))
+for (plane, infinite) in [(ramp, False), (floor, True)]:
+    mbs.AddObject(ObjectContactCylinderTriangle(markerNumbers=[Marker(roller, HTrotateX(0.5*np.pi)), mGround], nodeNumber=DataNode(12),
+                                                cylinderRadius=0.1, cylinderLength=0.15, trianglePoints=plane, infinitePlane=infinite,
+                                                visualization=VObjectContactCylinderTriangle(show=True), **law))
+rampSolid = ConvexHull([[-1.2, 0.7, 0], [0, 0.7, 0], [-1.2, 0.7, h], [-1.2, 1.3, 0], [0, 1.3, 0], [-1.2, 1.3, h]])
+mbs.CreateGround(graphicsDataList=[graphics.FromPointsAndTrigs(rampSolid[0], rampSolid[1], color=graphics.color.lightgrey)])
+
+#lane 2: a truncated cone rolling in a circle, lying on its side line
 r0, r1, L = 0.1, 0.05, 0.2
 alpha = cMath.atan((r0 - r1)/L)
 rm = 0.5*(r0 + r1)
-cone = Body([0, 2, rm*cMath.cos(alpha)], InertiaCylinder(density=1000, length=L, outerRadius=rm, axis=2), [],
+coneGraphics = graphics.SolidOfRevolution(pAxis=[0, 0, -0.5*L], vAxis=[0, 0, 1], contour=[[0, 0], [0, r0], [L, r1], [L, 0]],
+                                          color=graphics.color.red, nTiles=24, addEdges=True)
+cone = Body([0, 2, rm*cMath.cos(alpha)], InertiaCylinder(density=1000, length=L, outerRadius=rm, axis=2), [coneGraphics],
             rotation=RotationMatrixY(0.5*np.pi + alpha), angularVelocity=[-8*cMath.cos(alpha), 0, 8*cMath.sin(alpha)])
-mbs.AddObject(ObjectContactConeTriangle(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=cone)), GroundMarker(np.eye(4))],
-                                        nodeNumber=DataNode(12), coneRadii=[r0, r1], coneLength=L, trianglePoints=plane, infinitePlane=True,
-                                        visualization=VObjectContactConeTriangle(show=True), **law))
-#a cube dropped tilted onto a box
+mbs.AddObject(ObjectContactConeTriangle(markerNumbers=[Marker(cone), mGround], nodeNumber=DataNode(12), coneRadii=[r0, r1], coneLength=L,
+                                        trianglePoints=floor, infinitePlane=True, visualization=VObjectContactConeTriangle(show=True), **law))
+
+#lane 3: an icosahedron tumbling down a wedge into a cube; the floor as a flat box below it
+phi = 0.5*(1 + cMath.sqrt(5))
+icoPoints, icoTriangles = ConvexHull(0.1/cMath.sqrt(1 + phi*phi)*np.array([[0, s1, s2*phi] for s1 in [-1, 1] for s2 in [-1, 1]]
+    + [[s1, s2*phi, 0] for s1 in [-1, 1] for s2 in [-1, 1]] + [[s1*phi, 0, s2] for s1 in [-1, 1] for s2 in [-1, 1]]))
+icosahedron = Body([-0.85, 3, 0.65], RigidBodyInertia(mass=2, inertiaTensor=np.diag([0.008]*3)),
+                   [graphics.FromPointsAndTrigs(icoPoints, icoTriangles, color=graphics.color.green)], velocity=[0.5, 0, 0], angularVelocity=[0, 6, 0])
 a = 0.15
-def Box(size):
-    points = [[sx*size[0]/2, sy*size[1]/2, sz*size[2]/2] for sz in [-1, 1] for sy in [-1, 1] for sx in [-1, 1]]
-    triangles = [[0, 2, 1], [1, 2, 3], [4, 5, 6], [5, 7, 6], [0, 1, 4], [1, 5, 4], [2, 6, 3], [3, 6, 7], [0, 4, 2], [2, 4, 6], [1, 3, 5], [3, 7, 5]]
-    return np.array(points), np.array(triangles)
-cube = Body([0, 3, 0.1 + a + 0.1], InertiaCuboid(density=1000, sideLengths=[a]*3), [graphics.Brick(size=[a]*3, color=graphics.color.green, addEdges=True)],
-            rotation=RotationMatrixX(0.6) @ RotationMatrixY(0.3))
-mbs.AddObject(ObjectGround(referencePosition=[0, 3, 0], visualization=VObjectGround(graphicsData=[graphics.Brick(size=[0.8, 0.8, 0.2], color=graphics.color.lightgrey)])))
-points0, triangles0 = Box([a]*3)
-points1, triangles1 = Box([0.8, 0.8, 0.2])
-mbs.AddObject(ObjectContactConvexConvex(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=cube)), GroundMarker(HTtranslate([0, 3, 0]))],
-                                        nodeNumber=DataNode(24), points0=points0, triangles0=triangles0, points1=points1, triangles1=triangles1,
-                                        **law))
-#a shaft falling into a short ring along x
-shaft = Body([0, 4, 0.03], InertiaCylinder(density=1000, length=0.5, outerRadius=0.05, axis=0),
-             [graphics.Cylinder(pAxis=[-0.25, 0, 0], vAxis=[0.5, 0, 0], radius=0.05, color=graphics.color.red, nTiles=24, addEdges=True)])
-mbs.AddObject(ObjectContactCylinderCylinder(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=shaft, localHT=HTrotateY(0.5*np.pi))),
-                                                           GroundMarker(HTtranslate([0, 4, 0]) @ HTrotateY(0.5*np.pi))],
-                                            nodeNumber=DataNode(24), cylindersRadii=[0.05, 0.07], cylindersLengths=[0.5, 0.1], isHollowCylinder1=True,
+cubePoints, cubeTriangles = ConvexHull([[sx*a/2, sy*a/2, sz*a/2] for sx in [-1, 1] for sy in [-1, 1] for sz in [-1, 1]])
+cube = Body([0.38, 3, a/2], InertiaCuboid(density=1000, sideLengths=[a]*3), [graphics.Brick(size=[a]*3, color=graphics.color.yellow, addEdges=True)])
+wedge = ConvexHull([[-1.0, 2.7, 0], [0, 2.7, 0], [-1.0, 2.7, 0.6], [-1.0, 3.3, 0], [0, 3.3, 0], [-1.0, 3.3, 0.6]])
+slab = ConvexHull([[sx*1.5, 3 + sy*0.5, -0.2*sz] for sx in [-1, 1] for sy in [-1, 1] for sz in [0, 1]])
+mbs.CreateGround(graphicsDataList=[graphics.FromPointsAndTrigs(wedge[0], wedge[1], color=graphics.color.lightgrey)])
+for (body, points, triangles, fixed) in [(icosahedron, icoPoints, icoTriangles, [wedge, slab]), (cube, cubePoints, cubeTriangles, [slab])]:
+    for (fixedPoints, fixedTriangles) in fixed:
+        mbs.AddObject(ObjectContactConvexConvex(markerNumbers=[Marker(body), mGround], nodeNumber=DataNode(24), points0=points, triangles0=triangles,
+                                                points1=fixedPoints, triangles1=fixedTriangles, visualization=VObjectContactConvexConvex(show=True), **law))
+mbs.AddObject(ObjectContactConvexConvex(markerNumbers=[Marker(icosahedron), Marker(cube)], nodeNumber=DataNode(24), points0=icoPoints, triangles0=icoTriangles,
+                                        points1=cubePoints, triangles1=cubeTriangles, visualization=VObjectContactConvexConvex(show=True), **law))
+
+#lane 4: a ring swinging on a fixed shaft along x, 0.4 above the floor
+ring = Body([0, 4, 0.4 - 0.09], InertiaCylinder(density=1000, length=0.05, outerRadius=0.14, innerRadius=0.12, axis=0),
+            [graphics.Cylinder(pAxis=[-0.025, 0, 0], vAxis=[0.05, 0, 0], radius=0.14, radiusInner=0.12, color=graphics.color.blue, nTiles=32, addEdges=True)],
+            velocity=[0, 1.2, 0])
+mbs.AddObject(ObjectContactCylinderCylinder(markerNumbers=[Marker(oGround, HTtranslate([0, 4, 0.4]) @ HTrotateY(0.5*np.pi)), Marker(ring, HTrotateY(0.5*np.pi))],
+                                            nodeNumber=DataNode(24), cylindersRadii=[0.03, 0.12], cylindersLengths=[0.6, 0.05], isHollowCylinder1=True,
                                             visualization=VObjectContactCylinderCylinder(show=True), **law))
-#a rotor floating in a lubricated journal bearing, turning at 100 rad/s
-rotor = Body([0, 5, 0], InertiaCylinder(density=7800, length=0.01, outerRadius=0.02, axis=2), [], angularVelocity=[0, 0, 100])
-mbs.AddObject(ObjectJournalBearing(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=rotor, localHT=HTrotateX(0.5*np.pi))),
-                                                  GroundMarker(HTtranslate([0, 5, 0]) @ HTrotateX(0.5*np.pi))],
-                                   journalRadius=0.02 - 1e-4, bearingRadius=0.02, bearingLength=0.01, viscosity=0.04, contactStiffness=1e8,
+mbs.CreateGround(graphicsDataList=[graphics.Cylinder(pAxis=[-0.3, 4, 0.4], vAxis=[0.6, 0, 0], radius=0.03, color=graphics.color.lightgrey, nTiles=24)]
+                 + [graphics.Brick(centerPoint=[x, 4, 0.22], size=[0.04, 0.04, 0.44], color=graphics.color.grey) for x in [-0.32, 0.32]])
+
+#lane 5: a rotor of 50 rad/s floating in a journal bearing along y with 5 mm clearance; the viscosity of the infinitely
+#short bearing for the eccentricity ratio 0.9 under its weight, where it floats stably; released below the center
+R, c, Lb, omega, epsilon = 0.1, 0.005, 0.1, 50, 0.9
+rotorInertia = InertiaCylinder(density=2700, length=Lb, outerRadius=R - c, axis=1)
+s2 = 1 - epsilon**2
+viscosity = rotorInertia.Mass()*g*4*c**2/(omega*(R - c)*Lb**3)*s2**2/(epsilon*cMath.sqrt(np.pi**2*s2 + 16*epsilon**2))
+rotor = Body([0, 5, 0.3 - epsilon*c], rotorInertia,
+             [graphics.Cylinder(pAxis=[0, -0.15, 0], vAxis=[0, 0.3, 0], radius=R - c, color=graphics.color.steelblue, nTiles=32, addEdges=True),
+              graphics.Brick(centerPoint=[0, -0.15, 0.06], size=[0.03, 0.01, 0.04], color=graphics.color.red)],
+             angularVelocity=[0, omega, 0])
+mbs.AddObject(ObjectJournalBearing(markerNumbers=[Marker(rotor, HTrotateX(0.5*np.pi)), Marker(oGround, HTtranslate([0, 5, 0.3]) @ HTrotateX(0.5*np.pi))],
+                                   journalRadius=R - c, bearingRadius=R, bearingLength=Lb, viscosity=viscosity, contactStiffness=1e7,
                                    visualization=VObjectJournalBearing(show=True)))
+mbs.CreateGround(graphicsDataList=[graphics.Cylinder(pAxis=[0, 4.95, 0.3], vAxis=[0, 0.1, 0], radius=0.14, radiusInner=R, color=graphics.color.grey, nTiles=32),
+                                   graphics.Brick(centerPoint=[0, 5, 0.08], size=[0.2, 0.1, 0.16], color=graphics.color.grey)])
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.timeIntegration.numberOfSteps = 4000
-simulationSettings.timeIntegration.endTime = 2
+simulationSettings.timeIntegration.numberOfSteps = 2000
+simulationSettings.timeIntegration.endTime = 3
 simulationSettings.solution.file.writePeriod = 0.01
 mbs.SolveDynamic(simulationSettings)
 
-SC.visualizationSettings.contact.show.spheres = True
-SC.visualizationSettings.contact.show.cylinders = True
-SC.visualizationSettings.contact.show.cones = True
-SC.visualizationSettings.contact.show.triangles = False
+v = SC.visualizationSettings
+v.contact.showContactForces = True
+v.contact.contactForcesFactor = 0.005   #0.5 m per 100 N
+v.contact.contactForcesRadius = 0.004
+v.connectors.show = False
+v.view0.scene.drawWorldBasis = False
+v.view0.scene.drawCoordinateSystem = False
+v.general.showSolverInformation = False
+v.general.showSolutionInformation = False
+v.openGL.light0.position = [2, -3, 6, 0] #a directional light from above, casting the shadows
+v.openGL.light0.shadow = 0.4
+v.openGL.light0.lightRadius = 0.1        #soft shadows in the raytracer
+v.openGL.lightModelAmbient = [0.5, 0.5, 0.5, 1]
+v.openGL.advanced.initialCenterPoint = [0.5, 2.5, 0.1]
+v.openGL.advanced.initialModelRotation = RotationMatrixZ(0.5) @ RotationMatrixX(0.5*np.pi - 0.45) #z up, seen from above
+v.openGL.advanced.initialZoom = 3
+if useRaytracer:
+    v.view0.camera.useRaytracer = True
+    v.general.showSolverTime = False        #a picture without text
+    v.raytracer.numberOfThreads = 8         #about the number of cores of the computer
+    v.raytracer.multiSampling = 2           #smooth edges, 4 times the work
+    v.raytracer.lightRadiusVariations = 7   #soft shadows from 7 points of the light
+    v.raytracer.keepWindowActive = True
 mbs.SolutionViewer()

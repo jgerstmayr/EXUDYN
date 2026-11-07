@@ -6427,6 +6427,30 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-21"></a>
+### RG9.12.21 — contactPrimitivesShowcase.py revised (2026-11-07, #3341)
+- Six lanes on a checkerboard floor, each drawn: the ball over a lying cylinder onto the floor; the roller down a
+  drawn ramp (a finite CylinderTriangle, the plane continued below the floor) onto the floor; the cone in its circle;
+  an icosahedron (12 points, ConvexHull of the script: faces of coplanar points as fans, outward) tumbling down a
+  wedge of 31 degrees (at 19 degrees it stuck: tan < mu) into a cube, 4 ConvexConvex contacts; a ring (inner radius
+  0.12) swinging on a fixed shaft of radius 0.03 on two posts (with 3 cm clearance it hardly moved); a rotor of 0.1 m
+  in a bearing with 5 mm clearance, the viscosity from the closed form of the short bearing for eps = 0.9, released
+  below the center: it settles at the closed-form attitude (0.0016, -0.0042).
+- Found on the way: the cube sinking at rest (#3338, RG9.12.18), the rotor turning the other way about the axis of
+  marker 1, which is along -y (#3345, RG9.12.25), the resting icosahedron (#3346, RG9.12.26).
+- The lane of the polytopes failed the discontinuous iteration also with these fixes, with 1500 steps alone and with
+  3000 steps together with the ring: the icosahedron slides at about 1 mm/s, the default frictionProportionalZone, and
+  switches between sticking and sliding in each iteration; with 1e-4 or 1e-2 it runs. The example uses 0.01; with it
+  all lanes run with 1500, 2000, 3000, 4000 and 6000 steps to the same end.
+- Contact forces drawn (#3339), 0.5 m per 100 N; light from above with shadow 0.4 and a light radius for soft shadows;
+  useRaytracer switches the SolutionViewer to the raytracer, without the texts. The view z up as in the other examples
+  (RotationMatrixZ @ RotationMatrixX, checked with interactive.ShowImage, which takes the initial settings; the window
+  itself was not opened).
+- Time: 3.9 s for the script, 2000 steps (the old one 5.8 s with 4000 steps, most of it EPA at its iteration limit);
+  the lane of the polytopes is 2.3 of it.
+- Left from RG9.12.20 (#3340): the stubtest baseline lacked VSettingsContactShow, VSettingsContactColor (the metaclass,
+  as every structure) and the six deprecated members of VSettingsContact (as VSettingsGeneral.drawWorldBasis); written
+  here. The gates had run the stub check before the build, against the module installed before the change.
 <a id="rg9-12-25"></a>
 ### RG9.12.25 — ObjectJournalBearing for both directions of rotation (2026-11-07, #3345)
 - Found with the revised contactPrimitivesShowcase.py: the bearing axis is the local z axis of marker 1, there along
