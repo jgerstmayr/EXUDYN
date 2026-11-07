@@ -50,6 +50,7 @@ contactSphereSphereTest
 contactSphereSphereTestEAPM
 contactSphereTorusMomentumTest
 ConvexContactTest
+convexDistanceTest
 coordinateSpringDamperExt
 coordinateSpringDamperExtVelocityOffsetTest
 CoordinateSpringDamperTest

@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (8 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (7 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -146,7 +146,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 14 | Structural core improvements |
+| RG9 | OPEN | 13 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1553,9 +1553,11 @@ Decided (maintainer 2026-11-07, design section 6): GJK and EPA; one contact poin
 
 CLOSED 2026-11-07 (#3315): docs/dev/design/contactPrimitives.md with the decisions of the maintainer in its section 6 and the data coordinates of section 3.3.
 
-#### **OPEN_RG9.12.2** The distance kernels: support functions, GJK and EPA, the analytic sphere-cylinder distance, in exudyn.cUtilities
+#### **CLOSED_RG9.12.2** The distance kernels: support functions, GJK and EPA, the analytic sphere-cylinder distance, in exudyn.cUtilities
 
 #3317: src/Linalg/GeometryConvex.h with the shapes sphere, capsule, cylinder, box, triangle and convex points; cUtilities.Distance; tests against analytic distances.
+
+CLOSED 2026-11-07 (#3317): src/Linalg/GeometryConvex.h - GJK, EPA with a connected visible set, alternating projections and an outward refinement for cylinders; cUtilities.ConvexShape and Distance; distances to rounding, with a cylinder to about 1e-7 of the size within 1e-6 of contact; convexDistanceTest.py. [log](exudynRevisionLog2026c.md#rg9-12-2)
 
 #### **OPEN_RG9.12.3** The Distance output of ObjectContactSphereSphere, SphereTriangle and SphereTorus, computed when inactive
 

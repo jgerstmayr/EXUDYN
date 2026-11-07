@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 415 | 1.13.431 |
+| 1.13 | Newborn | 416 | 1.13.432 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.432** `EXTENSION` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` distance and penetration of convex primitives by GJK and EPA, in exudyn.cUtilities (#3317)
+  - description: The kernels of the contact primitives and of the collision check of path planning: support functions of sphere, capsule, cylinder, box, triangle and convex point sets, the distance and the witness points by GJK, the penetration depth and normal by EPA, the analytic sphere-cylinder distance; exported as shapes and cUtilities.Distance(shape0, HT0, shape1, HT1). Decided: one implementation for the contact items and the planner, tested against analytic distances; revision2026c step RG9.12.2.
+  - **notes:** exudyn.cUtilities.ConvexShape and Distance: the signed distance, closest points and normal of two convex shapes (sphere, capsule, cylinder, box, triangle, convex points) by GJK and EPA, the kernels of the coming contact primitives.
+  - date resolved: **2026-11-07 10:43**, date raised: 2026-11-07
 - **1.13.431** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the design of path planning and navigation of robots decided (#3316)
   - description: The design note of path planning for serial and mobile robots. Decided: the module robotics/navigation.py; the collision shapes next to RobotLink and Robot in roboticsCore.py; grid A\* for mobile robots, RRT-Connect with shortcut smoothing for serial robots and in SE(2); the collision check in C++ only (cUtilities.CollisionModel); the shapes sphere, capsule, cylinder, box, convex points and triangles, the common collision geometries of the URDF read under the key 'collision' of GetURDFrobotData; Trajectory.FromWaypoints with blending and pure pursuit for differential drives; the distance kernels of RG9.12 first; examples with the UR5, a mecanum-wheeled robot and a differential-drive robot with graphics of their bodies; revision2026c step RG21.1.
   - **notes:** The design of path planning and navigation of robots decided: grid A\*, RRT-Connect, collision shapes of the links, a collision check in C++.

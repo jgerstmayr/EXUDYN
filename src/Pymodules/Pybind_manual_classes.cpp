@@ -408,6 +408,7 @@ void PyDoRendererIdleTasks(Real waitSeconds, bool deprecationWarning = false)
 #include "Utilities/MathFunctions.h"	//exudyn.experimental.EvaluateMathFunction (#2947)
 #include "Pymodules/PyCUtilities.h"	//exudyn.cUtilities (#2960)
 #include "Pymodules/PyKinematicChain.h"	//exudyn.cUtilities.KinematicChain (#3259)
+#include "Pymodules/PyConvexShape.h"	//exudyn.cUtilities.ConvexShape and Distance (#3317)
 #include "Linalg/Symbolic.h"	//exudyn.cMath with a symbolic argument (#3114)
 PyExperimental pyExperimental;	//! for experimental things, not to be used by common user
 PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care

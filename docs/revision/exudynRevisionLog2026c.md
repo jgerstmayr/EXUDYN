@@ -6427,6 +6427,33 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-2"></a>
+### RG9.12.2 — the distance kernels of convex shapes: GJK, EPA, exudyn.cUtilities.Distance (2026-11-07, #3317)
+- Maintainer 2026-11-07: the design of contactPrimitives.md decided (#3315), the RG9.12 steps first.
+- src/Linalg/GeometryConvex.h (new): ConvexShape (Sphere, Capsule, Cylinder, Box, Triangle, Points) with support
+  functions of the core - the sphere a point and the capsule a segment, their radius a margin -; GJK with the closest
+  point of a simplex by its Voronoi regions (Ericson 5.1.5), EPA from the simplex and the supports along the axes
+  (the polytope of the largest tetrahedron, a new point removes the faces it sees connected to the one it sees most,
+  rejected if a new face would be degenerate); a flat Minkowski difference (two cores without volume) gives the
+  depth 0 and its plane normal. The analytic sphere-cylinder distance as check and fast path.
+- Measured on random pairs of all 36 combinations: separated distances to rounding (1e-14) for every pair except
+  those with a cylinder. GJK stalls on the side of a cylinder - its points are combinations of the two rims at
+  slightly different angles, and the gain of a step is quadratic in the gap - leaving errors of 4e-8 at distances of
+  0.08; alternating projections of the closest points onto the cores (closed forms per shape, GJK for a point set)
+  give the rounding. EPA on a cylinder ended at 128 iterations with depth errors up to 0.15; with 1000 iterations
+  the polytope broke up (faces that see a point within the tolerance left holes) and the run did not end - hence the
+  connected visible set and the rejection of degenerate faces. A penetration with a cylinder is refined by moving
+  shape 1 out by (d + delta) n: the closest point p of C = A - B to T with its normal m is a point of the boundary,
+  p.m the support value of C in m and so an upper bound of the depth; the smallest bound kept, converging linearly
+  with a factor of about 0.3.
+- Remaining: with a cylinder, within about 1e-6 of contact (separated or penetrating) the distance to about 1e-7 of
+  the size, as the alternating projections converge slowly there; the normal at the side of a cylinder to 1e-7.
+  Fine for the prototypes; the contact items of a cylinder (RG9.12.4/.5) will show whether it matters.
+- 15 us per call on average. exudyn.cUtilities.ConvexShape and Distance (src/Pymodules/PyConvexShape.h, bound in
+  definitions/pybindCUtilities.py); convexDistanceTest.py (new): closed forms (boxes, crossed capsules, parallel and
+  crossed cylinders, sphere-triangle), the analytic sphere-cylinder against GJK/EPA (4e-16), random pairs moved to
+  contact (3e-8) and 0.01 apart (1.5e-12), refusals.
+
 <a id="rg20-4-4"></a>
 ### RG20.4.4 and RG20.9.12 — the interpolated output on the solver page, the study figures revised; LobattoIIIC4GGL evaluated (2026-11-06, #3310, #3311, #3312, #3313)
 - Maintainer 2026-11-06: no information on the interpolated output of RG20.4.2 found; no real advantage of

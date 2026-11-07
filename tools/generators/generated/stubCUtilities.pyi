@@ -144,3 +144,19 @@ class KinematicChain:
     def __repr__(self) -> str: 
         """The string representation of the KinematicChain."""
         ...
+
+#stub information for class ConvexShape functions
+class ConvexShape:
+    """A ConvexShape is a convex primitive in its local frame, for the distance of two shapes by Distance: a sphere about the origin, a capsule (a segment of the given length along the local z axis, centered, with the radius), a cylinder (along the local z axis, centered, with radius and length), a box (centered, with the edge lengths size along x, y, z), a triangle (3 points), or the convex hull of points.
+
+    Distance computes it by GJK and EPA, the same functions as the contact items in C++.
+    """
+    def ShapeType(self) -> str: 
+        """The type of the shape, 'Sphere', 'Capsule', 'Cylinder', 'Box', 'Triangle' or 'Points'."""
+        ...
+    def __repr__(self) -> str: 
+        """The string representation of the ConvexShape."""
+        ...
+def Distance(shape0: ConvexShape, HT0: HT, shape1: ConvexShape, HT1: HT, analytic: bool=True) -> tuple[float, NDArray, NDArray, NDArray]: 
+    """The signed distance of two ConvexShape in the frames HT0 and HT1 (exu.HT or 4x4 matrix) as a tuple (distance, point0, point1, normal): distance negative for a penetration (minus the penetration depth), point0 and point1 the closest points of the shapes (the deepest points of a penetration), normal the unit vector from shape 0 to shape 1, all global; by GJK on the cores (the sphere a point, the capsule a segment, their radii subtracted) and EPA where the cores overlap, to the rounding for spheres, capsules, boxes, triangles and points; a cylinder, whose curved side GJK and EPA approach slowly, is refined by alternating projections of the closest points (separated) and by moving shape 1 out along the normal (penetrating), to about 1e-12 of the size of the shapes when they are apart and 1e-7 within about 1e-6 of contact; with analytic=True a sphere and a cylinder by the closed formula."""
+    ...
