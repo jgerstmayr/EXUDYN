@@ -216,6 +216,10 @@ CLOSED 2026-11-07 (#3321): contactDistanceOutputTest.py (the contact shapes by c
 
 #3322: about 114 of them simulate without a viewer, 63 simulate nothing (git, added since 2026-09-01). Per group of models: does a picture help, which graphics are missing.
 
+#### **CLOSED_RG2.12.3** The contact items of the contact test models drawn: visualization show=True
+
+CLOSED 2026-11-07 (#3326): the maintainer saw nothing of contactDistanceOutputTest.py and no cylinder in sphereCylinderContactTest.py - the contact items keep the default show=False of their visualization, which the contact.show... settings need. The four contact test models set show=True; the descriptions of the settings and WORKFLOW.md say so. [log](exudynRevisionLog2026c.md#rg2-12-3)
+
 ## **CLOSED_RG3** Docs
 
 What the documentation still gets wrong or does not say.

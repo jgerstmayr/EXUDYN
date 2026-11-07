@@ -53,7 +53,7 @@ def Contact(mBall, infinitePlane, active=True):
     return mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=r,
                                                      trianglePoints=trianglePoints, infinitePlane=infinitePlane,
                                                      contactStiffness=k, contactDamping=d, dynamicFriction=0.3,
-                                                     activeConnector=active))
+                                                     activeConnector=active, visualization=VObjectContactSphereTriangle(show=True)))
 
 #two balls on the triangle, sliding towards its edge x + y = 0 and rolling over it (x > 0 after 1 s); the first in contact with the plane, the second with the triangle
 zRest = r - g/k
@@ -65,7 +65,7 @@ mGroundUp = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0, 
 nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0, 0, 0, 0]))
 contactTriangle = mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mTriangle, mGroundUp], nodeNumber=nData, sphereRadius=r,
                                                             trianglePoints=trianglePoints, contactStiffness=k, contactDamping=d,
-                                                            dynamicFriction=0.3))
+                                                            dynamicFriction=0.3, visualization=VObjectContactSphereTriangle(show=True)))
 #deactivated, for the distances: a third ball at rest beside the edge
 nodeBeside, mBeside = Ball([0.3, 0.3, 0.25], [0, 0, 0], graphics.color.grey)
 mbs.SetNodeParameter(nodeBeside, 'referenceCoordinates', [0.3, 0.3, 0.25] + eulerParameters0)

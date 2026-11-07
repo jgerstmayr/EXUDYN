@@ -156,6 +156,8 @@ python/exudyn/itemInterface.py
     DOC108: Method `ObjectJointUser.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectConnectorCoordinate.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectConnectorCoordinateVector.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectContactSphereTriangle.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectContactSphereCylinder.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `ObjectJointGeneric.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `MarkerBodyUser.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `LoadForceVector.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
@@ -304,10 +306,6 @@ python/exudyn/robotics/motion.py
     DOC302: Class `ProfilePTP`: The class docstring does not need a "Returns" section, because __init__() cannot return anything
     DOC304: Class `ProfilePTP`: Class docstring has an argument/parameter section; please put it in the __init__() docstring
     DOC104: Method `Trajectory.__init__`: Arguments are the same in the docstring and the function signature, but are in a different order.
-    DOC101: Method `Trajectory.Evaluate`: Docstring contains fewer arguments than in function signature.
-    DOC103: Method `Trajectory.Evaluate`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [t: ].
-    DOC101: Method `Trajectory.EvaluateCoordinate`: Docstring contains fewer arguments than in function signature.
-    DOC103: Method `Trajectory.EvaluateCoordinate`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [coordinate: , t: ].
 --------------------
 python/exudyn/robotics/roboticsCore.py
     DOC104: Method `VRobotLink.__init__`: Arguments are the same in the docstring and the function signature, but are in a different order.
@@ -315,8 +313,6 @@ python/exudyn/robotics/roboticsCore.py
     DOC103: Method `RobotTool.__init__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [visualization: ]. Arguments in the docstring but not in the function signature: [graphicsData: ].
     DOC103: Method `RobotBase.__init__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [visualization: ]. Arguments in the docstring but not in the function signature: [graphicsData: ].
     DOC104: Method `Robot.__init__`: Arguments are the same in the docstring and the function signature, but are in a different order.
-    DOC101: Method `InverseKinematicsNumerical.__init__`: Docstring contains fewer arguments than in function signature.
-    DOC103: Method `InverseKinematicsNumerical.__init__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [flagDebug: , useAlternativeConstraints: ].
 --------------------
 python/exudyn/robotics/rosInterface.py
     DOC103: Method `ROSInterface.InitPublisher`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [queueSize: ]. Arguments in the docstring but not in the function signature: [queSize: ].

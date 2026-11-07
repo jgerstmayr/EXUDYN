@@ -69,7 +69,8 @@ def Contact(item, y, color, userFunction=0, **shape):
                                         initialCoordinates=[1, 0, 0] + ([] if item == ObjectContactSphereCylinder else [0])))
     contact = mbs.AddObject(item(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=r, contactStiffness=k,
                                  contactDamping=d, dynamicFriction=mu, frictionProportionalZone=vReg,
-                                 contactForceUserFunction=userFunction, **shape))
+                                 contactForceUserFunction=userFunction, **shape,
+                                 visualization=(VObjectContactSphereCylinder if item == ObjectContactSphereCylinder else VObjectContactSphereTriangle)(show=True)))
     return node, contact
 
 cylinder = {'cylinderRadius': 0.1, 'cylinderLength': 1.}

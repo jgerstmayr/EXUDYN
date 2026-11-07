@@ -1252,12 +1252,12 @@ public: // AUTO:
   bool showBoundingBoxes;                         //!< AUTO: show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!
   bool showContactForces;                         //!< AUTO: if True, contact forces are drawn for certain contact models
   bool showContactForcesValues;                   //!< AUTO: if True and showContactForces=True, numerical values for  contact forces are shown at certain points
-  bool showCylinders;                             //!< AUTO: show the cylinders of the primitive contacts (ObjectContactSphereCylinder, ...)
+  bool showCylinders;                             //!< AUTO: show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True
   bool showSearchTree;                            //!< AUTO: show outer box of search tree for all GeneralContacts
   bool showSearchTreeCells;                       //!< AUTO: show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!
-  bool showSpheres;                               //!< AUTO: show contact spheres (SpheresWithMarker, ...)
-  bool showTori;                                  //!< AUTO: show each contact torus
-  bool showTriangles;                             //!< AUTO: show contact triangles (TrianglesRigidBodyBased, ...)
+  bool showSpheres;                               //!< AUTO: show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True
+  bool showTori;                                  //!< AUTO: show the torus of each ObjectContactSphereTorus whose visualization has show=True
+  bool showTriangles;                             //!< AUTO: show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ...) whose visualization has show=True
   Index tilingCurves;                             //!< AUTO: must be > 0; tiling for nonlinear/polynomial curves; higher values give smoother curves
   Index tilingSpheres;                            //!< AUTO: must be > 0; tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
 

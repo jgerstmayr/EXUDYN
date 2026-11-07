@@ -254,6 +254,7 @@ exudyn.VisualizationSettings
 exudyn.VisualizationSettings.GetDictionaryWithTypeInfo
 exudyn.VisualizationSettings.window
 exudyn.artificialIntelligence
+exudyn.cUtilities.ConvexShape
 exudyn.cUtilities.KinematicChain
 exudyn.machines.i
 exudyn.machines.x

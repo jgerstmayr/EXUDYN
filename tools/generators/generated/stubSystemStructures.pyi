@@ -867,17 +867,17 @@ class VSettingsContact:
     showContactForcesValues: bool
     """if True and showContactForces=True, numerical values for  contact forces are shown at certain points."""
     showCylinders: bool
-    """show the cylinders of the primitive contacts (ObjectContactSphereCylinder, ...)."""
+    """show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True."""
     showSearchTree: bool
     """show outer box of search tree for all GeneralContacts."""
     showSearchTreeCells: bool
     """show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!"""
     showSpheres: bool
-    """show contact spheres (SpheresWithMarker, ...)."""
+    """show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True."""
     showTori: bool
-    """show each contact torus."""
+    """show the torus of each ObjectContactSphereTorus whose visualization has show=True."""
     showTriangles: bool
-    """show contact triangles (TrianglesRigidBodyBased, ...)."""
+    """show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ...) whose visualization has show=True."""
     tilingCurves: int
     """tiling for nonlinear/polynomial curves; higher values give smoother curves."""
     tilingSpheres: int

@@ -6427,6 +6427,20 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg2-12-3"></a>
+### RG2.12.3 — the contact items of the contact test models drawn (2026-11-07, #3326)
+- Maintainer 2026-11-07: contactDistanceOutputTest.py showed nothing, sphereCylinderContactTest.py the ball but no
+  cylinder. The contact.show... settings draw only the contact items whose visualization has show=True, and the
+  sphere contacts have show=False by default; checked with SC.renderer.GetGraphicsData(): show=True adds the sphere
+  and the 64 triangles of the cylinder, the settings alone add nothing.
+- contactDistanceOutputTest.py, sphereCylinderContactTest.py, sphereTrianglePlaneTest.py, contactUserFunctionTest.py:
+  the contact items with visualization show=True; their results unchanged. The descriptions of contact.showSpheres,
+  showTriangles, showTori, showCylinders and the rule in WORKFLOW.md name the condition.
+- The all-checks of exudev generate had stopped at checkDescriptions since RG9.12.4 (the three sphere contacts
+  changed by the Distance output, #3324 and #3325; their descriptions were updated then, now marked), and behind it at
+  the stubs (cUtilities.ConvexShape, a pybind class, into the stubtest backlog as KinematicChain) and pydoclint (the
+  DOC108 of the two new user function parameters, deliberate per #2664; baseline regenerated). All 19 pass.
+
 <a id="rg9-12-14"></a>
 ### RG9.12.14 — the contact force user function; the type names of two sphere contacts (2026-11-07, #3324, #3325)
 - contactForceUserFunction(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity) of

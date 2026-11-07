@@ -422,12 +422,12 @@ VSettingsContact has the following items:
 | `showBoundingBoxes` | bool | False | show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects! |
 | `showContactForces` | bool | False | if True, contact forces are drawn for certain contact models |
 | `showContactForcesValues` | bool | False | if True and showContactForces=True, numerical values for contact forces are shown at certain points |
-| `showCylinders` | bool | False | show the cylinders of the primitive contacts (ObjectContactSphereCylinder, ...) |
+| `showCylinders` | bool | False | show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True |
 | `showSearchTree` | bool | False | show outer box of search tree for all GeneralContacts |
 | `showSearchTreeCells` | bool | False | show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells! |
-| `showSpheres` | bool | False | show contact spheres (SpheresWithMarker, ...) |
-| `showTori` | bool | False | show each contact torus |
-| `showTriangles` | bool | False | show contact triangles (TrianglesRigidBodyBased, ...) |
+| `showSpheres` | bool | False | show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True |
+| `showTori` | bool | False | show the torus of each ObjectContactSphereTorus whose visualization has show=True |
+| `showTriangles` | bool | False | show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ...) whose visualization has show=True |
 | `tilingCurves` | PInt | 8 | tiling for nonlinear/polynomial curves; higher values give smoother curves |
 | `tilingSpheres` | PInt | 4 | tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates |
 

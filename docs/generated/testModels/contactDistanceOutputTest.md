@@ -53,16 +53,19 @@ def GroundMarker(position):
 sphereCenter = [1, 0, 0.5]
 oSphere = mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[GroundMarker(sphereCenter), mBall], nodeNumber=DataNode(),
                                                   spheresRadii=[0.5, r], contactStiffness=1e5, contactDamping=1e3,
-                                                  activeConnector=False))
+                                                  activeConnector=False, visualization=VObjectContactSphereSphere(show=True)))
 oTriangle = mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, GroundMarker([0.3, 0, 0])], nodeNumber=DataNode(),
                                                       sphereRadius=r, trianglePoints=exu.Vector3DList([[0, -1, -1], [0, 1, -1], [0, 0, 2]]),
-                                                      contactStiffness=1e5, contactDamping=1e3, activeConnector=False))
+                                                      contactStiffness=1e5, contactDamping=1e3, activeConnector=False,
+                                                      visualization=VObjectContactSphereTriangle(show=True)))
 oTorus = mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mBall, GroundMarker([0, 0, 0.5])], nodeNumber=DataNode(),
                                                 sphereRadius=r, torusMajorRadius=0.4, torusMinorRadius=0.2, torusAxis=[0, 0, 1],
-                                                contactStiffness=1e5, contactDamping=1e3, activeConnector=False))
+                                                contactStiffness=1e5, contactDamping=1e3, activeConnector=False,
+                                                visualization=VObjectContactSphereTorus(show=True)))
 #active: the ball lands on a sphere of radius 0.2 at the origin
 oFloor = mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[GroundMarker([0, 0, 0]), mBall], nodeNumber=DataNode(),
-                                                 spheresRadii=[0.2, r], contactStiffness=1e5, contactDamping=1e3))
+                                                 spheresRadii=[0.2, r], contactStiffness=1e5, contactDamping=1e3,
+                                                 visualization=VObjectContactSphereSphere(show=True)))
 
 mbs.Assemble()
 

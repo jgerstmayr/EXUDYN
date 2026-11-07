@@ -3726,7 +3726,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     d["value"] = data.showCylinders;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "show the cylinders of the primitive contacts (ObjectContactSphereCylinder, ...)";
+    d["description"] = "show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True";
     structureDict["showCylinders"] = d;
 
     d = py::dict(); //reset local dict
@@ -3750,7 +3750,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     d["value"] = data.showSpheres;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "show contact spheres (SpheresWithMarker, ...)";
+    d["description"] = "show contact spheres (SpheresWithMarker, ...) and the spheres of the contact items (ObjectContactSphereSphere, ...) whose visualization has show=True";
     structureDict["showSpheres"] = d;
 
     d = py::dict(); //reset local dict
@@ -3758,7 +3758,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     d["value"] = data.showTori;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "show each contact torus";
+    d["description"] = "show the torus of each ObjectContactSphereTorus whose visualization has show=True";
     structureDict["showTori"] = d;
 
     d = py::dict(); //reset local dict
@@ -3766,7 +3766,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     d["value"] = data.showTriangles;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "show contact triangles (TrianglesRigidBodyBased, ...)";
+    d["description"] = "show contact triangles (TrianglesRigidBodyBased, ...) and the triangles of the contact items (ObjectContactSphereTriangle, ...) whose visualization has show=True";
     structureDict["showTriangles"] = d;
 
     d = py::dict(); //reset local dict

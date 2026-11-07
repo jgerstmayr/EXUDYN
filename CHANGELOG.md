@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 422 | 1.13.438 |
+| 1.13 | Newborn | 423 | 1.13.439 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.439** `TESTING` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The contact test models show the contact shapes in the SolutionViewer (#3326)
+  - description: contactDistanceOutputTest.py, sphereCylinderContactTest.py, sphereTrianglePlaneTest.py and contactUserFunctionTest.py set the contact.show... settings, but their contact items keep the default show=False of the visualization, so no contact shape is drawn: contactDistanceOutputTest.py shows nothing, sphereCylinderContactTest.py only the ball. Decided: the contact items of these models get visualization show=True; the descriptions of contact.showSpheres, showTriangles, showTori and showCylinders say that they draw the items whose visualization has show=True, and so does the rule in WORKFLOW.md.
+  - **notes:** The contact items of the contact test models contactDistanceOutputTest.py, sphereCylinderContactTest.py, sphereTrianglePlaneTest.py and contactUserFunctionTest.py are drawn in the SolutionViewer: they set visualization show=True, which the contact.show... settings need; the descriptions of contact.showSpheres, showTriangles, showTori and showCylinders say so.
+  - date resolved: **2026-11-07 14:04**, date raised: 2026-11-07
 - **1.13.438** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactSphereTriangle and ObjectContactSphereTorus report the type ContactSphereSphere (#3325)
   - description: Found with \#3324: GetTypeName of both items returns ContactSphereSphere, copied from ObjectContactSphereSphere, so mbs.GetObject(i)\['objectType'\] names the wrong item - a dictionary of the item added again creates a sphere-sphere contact - and CreateSymbolicUserFunction looks up the user functions of the wrong item. Decided: ContactSphereTriangle and ContactSphereTorus; revision2026c step RG9.12.14.
   - **notes:** ObjectContactSphereTriangle and ObjectContactSphereTorus report their own type in GetObject (objectType), instead of ContactSphereSphere.

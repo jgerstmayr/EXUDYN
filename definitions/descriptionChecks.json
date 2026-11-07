@@ -332,19 +332,19 @@
    "fingerprint": "3f8898cf229f"
   },
   "ObjectContactSphereSphere": {
-   "checked": "2026-11-02",
+   "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "e6df070a3823"
+   "fingerprint": "bad2479062e5"
   },
   "ObjectContactSphereTorus": {
-   "checked": "2026-11-02",
+   "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "70e23282f82b"
+   "fingerprint": "d625e078cb8c"
   },
   "ObjectContactSphereTriangle": {
-   "checked": "2026-11-02",
+   "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "2e3e207e99e9"
+   "fingerprint": "235270d05644"
   },
   "ObjectFFRF": {
    "checked": "2026-10-25",

@@ -1,0 +1,17 @@
+{
+  "number": 3326,
+  "title": "The contact test models show the contact shapes in the SolutionViewer",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "contactDistanceOutputTest.py, sphereCylinderContactTest.py, sphereTrianglePlaneTest.py and contactUserFunctionTest.py set the contact.show... settings, but their contact items keep the default show=False of the visualization, so no contact shape is drawn: contactDistanceOutputTest.py shows nothing, sphereCylinderContactTest.py only the ball. Decided: the contact items of these models get visualization show=True; the descriptions of contact.showSpheres, showTriangles, showTori and showCylinders say that they draw the items whose visualization has show=True, and so does the rule in WORKFLOW.md.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 14:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/contactDistanceOutputTest.py",
+  "releaseNotes": "The contact items of the contact test models contactDistanceOutputTest.py, sphereCylinderContactTest.py, sphereTrianglePlaneTest.py and contactUserFunctionTest.py are drawn in the SolutionViewer: they set visualization show=True, which the contact.show... settings need; the descriptions of contact.showSpheres, showTriangles, showTori and showCylinders say so.",
+  "resolvedInVersion": "1.13.439"
+}

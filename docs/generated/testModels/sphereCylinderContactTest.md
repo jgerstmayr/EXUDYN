@@ -54,7 +54,8 @@ def Model(position, velocity=[0, 0, 0], cylinderHT=np.eye(4), friction=0., activ
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[1, 0, 0])) #no contact at the start
     contact = mbs.AddObject(ObjectContactSphereCylinder(markerNumbers=[mBall, mCylinder], nodeNumber=nData, sphereRadius=r,
                                                         cylinderRadius=rC, cylinderLength=L, contactStiffness=k, contactDamping=d,
-                                                        dynamicFriction=friction, frictionProportionalZone=1e-3, activeConnector=active))
+                                                        dynamicFriction=friction, frictionProportionalZone=1e-3, activeConnector=active,
+                                                        visualization=VObjectContactSphereCylinder(show=True)))
     mbs.Assemble()
     SC.visualizationSettings.contact.showCylinders = True
     return mbs, node, contact
