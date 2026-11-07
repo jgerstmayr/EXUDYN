@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.434.dev1
+- Exudyn version = 1.13.435.dev1
 - last change = 2026-11-07
-- Number of issues = 3321
-- Number of resolved issues = 3211 (434 in current version)
+- Number of issues = 3323
+- Number of resolved issues = 3212 (435 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the test models added since September 2026 checked for a visible simulation (#3322)
+  - description: About 114 of the test models added to python/TestModels since 2026-09-01 run a simulation without a renderer or SolutionViewer when run directly, and 63 run none. Decided: each checked whether showing it helps a reader - a simulation with bodies, contact or motion gets the SolutionViewer behind testIsActive and graphics where its items draw nothing (CreateRigidBody with an inertia draws a body already); tests of functions, parameters or solver statistics stay without; a recommendation per group of models first, then the changes; revision2026c step RG2.12.2.
+  - date raised: 2026-11-07
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` Radau5: the implicit Runge-Kutta method Radau IIA with 3 stages, of order 5, in the C++ and the Python solvers (#3318)
   - description: A reference method of higher order for the solver study instead of LobattoIIIC4GGL (\#3314): Radau IIA with 3 stages (c = (4 - sqrt 6)/10, (4 + sqrt 6)/10, 1), order 5, L-stable, three implicit stages without GGL multipliers, the constraints at the end of the step as in Radau3; the tableau of CSolverImplicitRungeKutta and of exudyn.symbolics.advancedSolvers, its error estimate, DynamicSolverType.Radau5. Decided: implemented with the Jacobian of the last stage for all stages, as the other methods, no W-method; its convergence orders measured on the model library, and as the reference of the study if it converges as expected; revision2026c step RG20.10.1.
   - date raised: 2026-11-07

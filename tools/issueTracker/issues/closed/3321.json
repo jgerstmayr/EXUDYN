@@ -1,0 +1,17 @@
+{
+  "number": 3321,
+  "title": "the test models of the contact primitives show their simulation when run directly",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "contactDistanceOutputTest.py and sphereCylinderContactTest.py ran their simulations without a picture, so a reader could not see what they do. Decided: a test model of a simulation writes its solution and opens the SolutionViewer when it is run directly (not testIsActive), with graphics where needed - the contact shapes by the contact.show settings, the ball as a sphere with edges that show its rotation; the rule in WORKFLOW.md (What a test model looks like); revision2026c step RG2.12.1.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 12:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/sphereCylinderContactTest.py",
+  "releaseNotes": "The test models of the contact primitives open the SolutionViewer when run directly.",
+  "resolvedInVersion": "1.13.435"
+}

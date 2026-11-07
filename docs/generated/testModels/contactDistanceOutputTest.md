@@ -14,7 +14,8 @@ You can view and download this file on Github: [contactDistanceOutputTest.py](ht
 #           ObjectContactSphereTorus (#3319): a ball falls freely past a large sphere, a triangle and a torus, whose
 #           contacts are deactivated (activeConnector=False), and onto a sphere with an active contact. The Distance
 #           of the inactive contacts follows the fall by the closed forms and adds no force; the active one is the gap,
-#           negative at rest, as DisplacementLocal. The result is the sum of the distances at the end.
+#           negative at rest, as DisplacementLocal. The result is the sum of the distances at the end. Run directly,
+#           the SolutionViewer shows the fall with the shapes of the contacts.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-07
@@ -26,6 +27,7 @@ You can view and download this file on Github: [contactDistanceOutputTest.py](ht
 import exudyn as exu
 from exudyn.utilities import *
 from exudyn import cMath
+import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -82,7 +84,7 @@ tEnd = 0.25
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 250
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 mbs.SolveDynamic(simulationSettings)
 z = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
 errorFall = abs(z - (z0 - 0.5*9.81*tEnd**2))
@@ -100,6 +102,13 @@ exu.Print('at rest: Distance of the floor contact', distances[3], ', Displacemen
 checks += [distances[3] == gap, abs(distances[3] + 9.81/1e5) < 1e-6]
 
 u = sum(checks) + sum(distances)
+if not testIsActive: #the shapes of the contacts: the ball and the large sphere, the triangle, the torus
+    SC.visualizationSettings.contact.showSpheres = True
+    SC.visualizationSettings.contact.showTriangles = True
+    SC.visualizationSettings.contact.showTori = True
+    SC.visualizationSettings.general.sphereTiling = 32
+    mbs.SolutionViewer()
+
 exu.Print('checks:', checks)
 exu.Print('solution of contactDistanceOutputTest=', u)
 exu.sys['testResult'] = u

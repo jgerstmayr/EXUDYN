@@ -431,6 +431,11 @@ exu.sys['testResult'] = testResult
 - **The renderer calls stay behind `if not testIsActive:`.** The runners suppress windows anyway
   (`exu.special.userInterface.SuppressAll(True)`), but a test is worth running **with** graphics
   by hand, and the branch is what makes that possible.
+- **A test model of a simulation shows it when run directly** (#3321): with
+  `simulationSettings.solution.file.write = not testIsActive` and `if not testIsActive: mbs.SolutionViewer()`
+  after the solve, and graphics where the model has none - a body made by `CreateRigidBody` with an inertia is
+  drawn already, the contact items draw their shapes with the `contact.show...` settings, a sphere with
+  `addEdges=True` shows its rotation. A reader sees what the model does and checks the result by eye.
 - **The result is the model's own number, and the reference lives in
   `python/testing/runTestSuiteRefSol.py`** - not in the model. Print it with a name: that is what
   lets a reference be recomputed without running the suite.

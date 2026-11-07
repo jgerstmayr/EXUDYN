@@ -1,0 +1,13 @@
+{
+  "number": 3322,
+  "title": "the test models added since September 2026 checked for a visible simulation",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "About 114 of the test models added to python/TestModels since 2026-09-01 run a simulation without a renderer or SolutionViewer when run directly, and 63 run none. Decided: each checked whether showing it helps a reader - a simulation with bodies, contact or motion gets the SolutionViewer behind testIsActive and graphics where its items draw nothing (CreateRigidBody with an inertia draws a body already); tests of functions, parameters or solver statistics stay without; a recommendation per group of models first, then the changes; revision2026c step RG2.12.2.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "file": "python/TestModels"
+}

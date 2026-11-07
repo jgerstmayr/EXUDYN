@@ -14,7 +14,8 @@ You can view and download this file on Github: [sphereCylinderContactTest.py](ht
 #           exudyn.cUtilities.Distance for a sphere beside the side, above a cap, beside a rim and inside a tilted
 #           cylinder; a ball at rest on the cap and on the side of a cylinder, m g / k into it; a ball sliding along
 #           the top of a cylinder with friction rolls at 5/7 of its initial velocity. The result is the sum of the
-#           checks and of the final positions.
+#           checks and of the final positions. Run directly, the SolutionViewer shows the drops and the rolling ball,
+#           whose edges show its rotation.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-07
@@ -27,6 +28,7 @@ import exudyn as exu
 from exudyn.utilities import *
 from exudyn.cUtilities import ConvexShape, Distance
 import numpy as np
+import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -43,7 +45,8 @@ def Model(position, velocity=[0, 0, 0], cylinderHT=np.eye(4), friction=0., activ
     inertia = InertiaSphere(mass=1, radius=r)
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=list(position) + eulerParameters0,
                                        initialVelocities=list(velocity) + [0]*4))
-    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D(),
+                                         visualization=VObjectRigidBody(graphicsData=[graphics.Sphere(radius=r, color=graphics.color.orange, nTiles=16, addEdges=True)])))
     if gravity:
         mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0, 0, -g]))
     mCylinder = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=cylinderHT))
@@ -53,6 +56,7 @@ def Model(position, velocity=[0, 0, 0], cylinderHT=np.eye(4), friction=0., activ
                                                         cylinderRadius=rC, cylinderLength=L, contactStiffness=k, contactDamping=d,
                                                         dynamicFriction=friction, frictionProportionalZone=1e-3, activeConnector=active))
     mbs.Assemble()
+    SC.visualizationSettings.contact.showCylinders = True
     return mbs, node, contact
 
 #the distance of a deactivated contact against cUtilities.Distance, with a tilted and shifted cylinder
@@ -73,13 +77,14 @@ checks += [error < 1e-14]
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 2000
 simulationSettings.timeIntegration.endTime = 1
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 #at rest on the cap (axis vertical) and on the side (axis along x)
 zEnd = []
 for (cylinderHT, zRest) in [(np.eye(4), 0.5*L + r - g/k), (HTrotateY(0.5*np.pi), rC + r - g/k)]:
     mbs, node, contact = Model([0.05, 0, zRest + 0.05], cylinderHT=cylinderHT)
     mbs.SolveDynamic(simulationSettings)
+    if not testIsActive: mbs.SolutionViewer()
     z = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
     exu.Print('at rest: z =', z, ', expected', zRest)
     checks += [abs(z - zRest) < 1e-8]
@@ -91,6 +96,7 @@ mbs, node, contact = Model([-0.4, 0, rC + r - g/k], velocity=[v0, 0, 0], cylinde
 simulationSettings.timeIntegration.endTime = 0.4
 simulationSettings.timeIntegration.numberOfSteps = 4000
 mbs.SolveDynamic(simulationSettings)
+if not testIsActive: mbs.SolutionViewer()
 vx = mbs.GetNodeOutput(node, exu.OutputVariableType.Velocity)[0]
 omega = mbs.GetNodeOutput(node, exu.OutputVariableType.AngularVelocity)[1]
 exu.Print('rolling: vx =', vx, ', 5/7 v0 =', 5/7*v0, ', omega r =', omega*r)
