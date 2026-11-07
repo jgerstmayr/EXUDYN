@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.446.dev1
 - last change = 2026-11-07
-- Number of issues = 3333
+- Number of issues = 3334
 - Number of resolved issues = 3223 (446 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9444,3 +9444,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The drawing of CreateCartesianSpringDamper of UserItemCreator fails for a mass point marker (#3333)
+  - description: Drawing a model with a Cartesian spring-damper of exudyn.symbolics.userItems.UserItemCreator between a mass point and a body (symbolicUserConnectorsTest.py) raises in VisualizationObjectConnectorUser::CallUserFunction: Invalid OutputVariableType 'RotationMatrix'; the marker 'marker7' cannot compute the requested variable type; only 2 lines are drawn. Found in RG2.12.2 (\#3322), which left this model without the SolutionViewer. Decided: the visualization user function reads the rotation only of markers that have one; the model then shows its simulation.
+  - date raised: 2026-11-07

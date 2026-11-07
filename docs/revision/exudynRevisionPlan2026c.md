@@ -77,7 +77,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
 - **RG7** Python user items
-  - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
+  - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker (1 open sub-step)
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
@@ -145,7 +145,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 4 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | OPEN | 2 | Python user items |
+| RG7 | OPEN | 3 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 10 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -1162,6 +1162,10 @@ CLOSED 2026-10-26 (#3104; maintainer 2026-10-26: a user finite element may be us
 #### **CLOSED_RG7.15.8** Give ObjectConnectorUser and ObjectJointUser a parameter requestedMarkerType for the type their markers must provide
 
 CLOSED 2026-10-26 (#3105): ObjectConnectorUser.requestedMarkerType, default exu.MarkerType._None (any marker), returned by GetRequestedMarkerType and checked at Assemble; ObjectJointUser keeps its fixed Position | Orientation - it computes on the rigid connector interface, so no other value would work. [log](exudynRevisionLog2026c.md#rg7-15-8)
+
+#### **OPEN_RG7.15.9** The drawing of CreateCartesianSpringDamper of UserItemCreator for a mass point marker
+
+#3333: found in RG2.12.2 - the visualization user function asks a position marker for its RotationMatrix and raises; symbolicUserConnectorsTest.py then gets its SolutionViewer.
 
 ### **CLOSED_RG7.16** Add the marker type Coordinates to MarkerBodyUser, and user shapes for contact and flexible interfaces
 
