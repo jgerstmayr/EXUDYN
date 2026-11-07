@@ -205,4 +205,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coneContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coneContactTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesShowcase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactPrimitivesShowcase.py) (Ex), [`coneContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coneContactTest.py) (TM)

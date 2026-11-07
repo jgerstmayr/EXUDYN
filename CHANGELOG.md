@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 434 | 1.13.450 |
+| 1.13 | Newborn | 435 | 1.13.451 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.451** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The theory section and an example of the contacts between primitive shapes (#3337)
+  - description: The contacts between primitive shapes (spheres, cylinders, cones, triangles, polytopes, hollow shapes, the journal bearing) have no common description in the contact manual and no example. Decided: a section of theoryContact.md - the items, the distance by GJK and EPA, the contact points of lines and faces, the law with the impact models and the plasticity, the data node and the active set, the user functions, the journal bearing - and the example contactPrimitivesShowcase.py with one body per kind of contact.
+  - **notes:** The contact manual has a section on the contacts between primitive shapes, and the example contactPrimitivesShowcase.py shows one body per kind of contact.
+  - date resolved: **2026-11-07 19:35**, date raised: 2026-11-07
 - **1.13.450** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The plastic overlap and the adhesion of the contact points of the cylinder, cone and convex contacts (#3336)
   - description: The adhesive elasto-plastic model of ObjectContactSphereSphere (Edinburgh model: loading with k\_c, unloading and reloading with K2 from a plastic overlap, adhesion, a constant pull-off force) is wanted for the other primitive contacts as an option (design contactPrimitives.md 3.3: a data block of 4 per contact point). Decided: the parameters contactPlasticityRatio, adhesionCoefficient, adhesionExponent, constantPullOffForce of SphereSphere for ObjectContactCylinderCylinder, CylinderTriangle, ConeCone, ConeTriangle and ConvexConvex; with contactPlasticityRatio \> 0 each contact point has a block of 4 data coordinates, the fourth the plastic overlap; the law shared in ContactPrimitiveForce.h. SphereTriangle and SphereCylinder, which have one point and their own data layout, follow separately if wanted.
   - **notes:** The adhesive elasto-plastic model of ObjectContactSphereSphere (contactPlasticityRatio, adhesionCoefficient, adhesionExponent, constantPullOffForce) is an option of the cylinder, cone and convex contacts; each contact point then has 4 data coordinates.

@@ -42,6 +42,7 @@ CMSexampleCourse
 ComputeSensitivitiesExample
 contactCurvePolynomial
 contactCurveWithLongCurve
+contactPrimitivesShowcase
 coordinateSpringDamper
 craneReevingSystem
 dispyParameterVariationExample

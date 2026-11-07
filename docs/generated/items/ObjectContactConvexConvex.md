@@ -197,4 +197,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPlasticityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactPlasticityTest.py) (TM), [`convexConvexContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/convexConvexContactTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesShowcase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactPrimitivesShowcase.py) (Ex), [`contactPlasticityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactPlasticityTest.py) (TM), [`convexConvexContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/convexConvexContactTest.py) (TM)

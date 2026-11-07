@@ -94,7 +94,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (1 open sub-step)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +146,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 7 | Structural core improvements |
+| RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1570,7 +1569,7 @@ From RG9.11.7: neither is in the Newton Jacobians, also not in the system-wide n
 
 CLOSED 2026-11-02 (#3230 resolved, #3201 stays open): constraintReactionDerivative (False), numerical per item, serially; fourBarMechanismIftomm 1058 / 802 iterations with full Newton, the other constrained models unchanged at 1.4 to 2.6 times the time; d(M q_tt)/dq by #3228. [log](exudynRevisionLog2026c.md#rg9-11-18)
 
-### **OPEN_RG9.12** Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output
+### **CLOSED_RG9.12** Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output
 
 Maintainer 2026-11-06: further contact primitives built like ObjectContactSphereSphere (without adhesion) and ObjectContactSphereTriangle, prototypes for the revised contact module, with an output of the minimum distance for the path planning of RG21, also when deactivated. Design docs/dev/design/contactPrimitives.md; no issues before it is decided.
 
@@ -1579,6 +1578,8 @@ Decided (maintainer 2026-11-07, design section 6): GJK and EPA; one contact poin
 Maintainer 2026-11-07: further primitives - a cylinder inside a cylinder ring (and a journal bearing on it), truncated cones from the outside and inside, cone-triangle, the infinite plane of the triangle contacts, user functions of the contact force; design section 8, its decisions open.
 
 Decided (maintainer 2026-11-07, design section 8.6): infinitePlane as an option; the cone shape and ConeCone, ConeTriangle; the inside contacts as an option of the outside item if possible (recommended: isHollowCylinder1, isHollowCone1 as isHollowSphere1 of SphereSphere; confirmed in RG9.12.12); the journal bearing as a separate item, further models and a user function for others; the user function signature; the order 8.1 and 8.5 with the first items.
+
+CLOSED 2026-11-07: all sub-steps done.
 
 #### **CLOSED_RG9.12.1** The design of the contact between primitives, decided
 
@@ -1612,7 +1613,9 @@ The contact points of the cylinders (caps, sides, a cylinder on a face) came wit
 
 CLOSED 2026-11-07 (#3331): the face manifold came with RG9.12.6 - the points of one shape over the face of the other whose normal is the contact normal, from both for a face on a face, the 8 deepest, in a stable order. [log](exudynRevisionLog2026c.md#rg9-12-6)
 
-#### **OPEN_RG9.12.8** Examples of the contact primitives and the theory section of the contact manual
+#### **CLOSED_RG9.12.8** Examples of the contact primitives and the theory section of the contact manual
+
+CLOSED 2026-11-07 (#3337): theoryContact.md section 'Contact between primitive shapes' (items, distance, contact points, law, data node, user functions, journal bearing); python/Examples/contactPrimitivesShowcase.py with one body per kind of contact. The Create functions of design section 4 (CreateSphereCylinderContact, ...) are not part of this step. [log](exudynRevisionLog2026c.md#rg9-12-8)
 
 #### **CLOSED_RG9.12.9** The plastic overlap and the adhesion as an option, with a data block of 4 per contact point
 

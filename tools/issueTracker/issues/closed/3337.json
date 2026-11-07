@@ -1,0 +1,17 @@
+{
+  "number": 3337,
+  "title": "The theory section and an example of the contacts between primitive shapes",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The contacts between primitive shapes (spheres, cylinders, cones, triangles, polytopes, hollow shapes, the journal bearing) have no common description in the contact manual and no example. Decided: a section of theoryContact.md - the items, the distance by GJK and EPA, the contact points of lines and faces, the law with the impact models and the plasticity, the data node and the active set, the user functions, the journal bearing - and the example contactPrimitivesShowcase.py with one body per kind of contact.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 19:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/theoryContact.md",
+  "releaseNotes": "The contact manual has a section on the contacts between primitive shapes, and the example contactPrimitivesShowcase.py shows one body per kind of contact.",
+  "resolvedInVersion": "1.13.451"
+}

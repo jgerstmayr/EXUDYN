@@ -6427,6 +6427,19 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-8"></a>
+### RG9.12.8 — the theory section and the example of the primitive contacts; RG9.12 closed (2026-11-07, #3337)
+- docs/manual/theoryContact.md, section "Contact between primitive shapes" (label sec-contact-primitives), before the
+  ANCF section: the table of the ten items with their options, the distance (GJK, EPA, the refinement of curved sides,
+  cUtilities.Distance, the output Distance when inactive), the contact points of lines, faces, hollow shapes and
+  polytopes, the law with ContactImpactModel and the elasto-plastic option, the data node and the active set, the
+  contact force user function, the journal bearing with the load capacity of the short bearing and its whirl.
+- python/Examples/contactPrimitivesShowcase.py: a ball over a cylinder onto the floor, a roller down an inclined plane,
+  a cone rolling in a circle, a cube tipping onto a box, a shaft falling into a ring, a rotor in a journal bearing;
+  checked by its final positions (all at rest or rolling as expected) and the graphics data.
+- Not in this step: the Create functions of the design (CreateSphereCylinderContact, ...), and the plastic option of
+  SphereTriangle and SphereCylinder (#3336).
+
 <a id="rg9-12-9"></a>
 ### RG9.12.9 — the plastic overlap and the adhesion of the contact points (2026-11-07, #3336)
 - The Edinburgh adhesive elasto-plastic model of ObjectContactSphereSphere (loading with k_c, unloading and reloading

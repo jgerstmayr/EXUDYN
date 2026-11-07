@@ -603,6 +603,107 @@ $$
 
 Jacobians for the derivative of contact forces w.r.t. marker positions and rotations only include the main dependencies of normal and tangential forces.
 
+(sec-contact-primitives)=
+## Contact between primitive shapes
+
+The primitive contacts couple two rigid markers, each carrying a shape in its frame, by a penalty force: spheres,
+finite cylinders and truncated cones (centered at their marker along its local z axis), triangles and their infinite
+planes, and convex polytopes given by points and triangles. They are single items - one item per pair of shapes - and
+need no search; `GeneralContact` is the choice for many bodies.
+
+| item | marker 0 | marker 1 | options |
+|---|---|---|---|
+| `ObjectContactSphereSphere` | sphere | sphere | `isHollowSphere1`, adhesive elasto-plastic model |
+| `ObjectContactSphereTriangle` | sphere | triangle | `infinitePlane` |
+| `ObjectContactSphereTorus` | sphere | torus | sphere inside the tube |
+| `ObjectContactSphereCylinder` | sphere | cylinder | |
+| `ObjectContactCylinderCylinder` | cylinder | cylinder | `isHollowCylinder1` |
+| `ObjectContactCylinderTriangle` | cylinder | triangle | `infinitePlane` |
+| `ObjectContactConeCone` | truncated cone | truncated cone | `isHollowCone1` |
+| `ObjectContactConeTriangle` | truncated cone | triangle | `infinitePlane` |
+| `ObjectContactConvexConvex` | convex polytope | convex polytope | |
+| `ObjectJournalBearing` | journal | bearing | lubricated, see below |
+
+### Distance
+
+The signed distance $g$ of two convex shapes - negative for a penetration -, their closest points and the unit normal
+$\nv$ from shape 0 to shape 1 are computed by the algorithm of Gilbert, Johnson and Keerthi (GJK) on the cores of the
+shapes, the sphere a point, and, where the cores overlap, by the expanding polytope algorithm (EPA), which gives the
+penetration depth. The curved sides of cylinders and cones are refined by alternating projections of the closest
+points and, in penetration, by moving shape 1 out along the normal; the sphere and the cylinder have a closed form.
+The same functions are available without a system as `exudyn.cUtilities.Distance` of two `exudyn.cUtilities.ConvexShape`
+in their frames, and every primitive contact has the output variable `Distance`, also while it is deactivated
+(`activeConnector = False`).
+
+### Contact points
+
+A sphere touches at one point. A cylinder, a cone or a polytope may touch along a line or a face, and one point at the
+deepest place would jump between the ends of the line and stop the Newton iteration; such contacts have up to 4 contact
+points (8 for polytopes and hollow shapes), each with its own gap $g_k$, normal and point on each shape:
+
+- **a cylinder or cone on a face** (the plane or a triangle, the cap of the other cylinder or cone): the deepest point
+  of the lower rim and the other end of the side line through it, clipped to the face, and two points of the lower rim
+  at $\pm 120$ degrees - a roller rests on the two ends of its line, a standing cylinder on three points of its rim;
+- **side on side**: along the side line of shape 0, the ends of the interval where it penetrates shape 1 and its
+  deepest point, which carries only the penetration beyond the line of the ends, so that crossed shapes touch at one
+  point and parallel shapes at two;
+- **inside a hollow shape**: on each rim of the inner shape, within the hollow one, the point towards the eccentricity
+  and the points at $\pm 120$ degrees;
+- **polytopes**: where the normal is that of a face of one shape, the points of the other shape over that face;
+- otherwise the closest points of GJK and EPA.
+
+The stiffness is that of each point, so a line contact on two points is twice as stiff as a point contact.
+
+### Contact law
+
+For each contact point in contact, the normal force follows from the penetration $\delta = -g$,
+
+$$
+f_N = k_c\, \delta^{n_\mathrm{exp}} - d_c\, \dot g + f_\mathrm{impact} ,
+$$
+
+with `contactStiffness` $k_c$, `contactStiffnessExponent` $n_\mathrm{exp}$, `contactDamping` $d_c$ and the term of the
+impact model `impactModel` (`exu.ContactImpactModel`: `Linear`, `HuntCrossley`, `GonthierCarvalhoMartins`), which uses
+the restitution coefficient and the velocity at impact. The regularized Coulomb friction with `dynamicFriction` $\mu_d$
+acts against the tangential relative velocity at the contact point, proportional to it below
+`frictionProportionalZone`, as in the section on regularized friction above. With
+`contactPlasticityRatio` $\lambda_P > 0$, the adhesive elasto-plastic model of `ObjectContactSphereSphere` replaces the
+elastic law: loading with $k_c$, unloading and reloading with $K_2 = k_c/(1 - \lambda_P)$ from the plastic overlap
+$\lambda_P \delta_{max}$, adhesion and a constant pull-off force.
+
+The force acts on marker 0 at the contact point, the middle of the points on both shapes, and its negative on
+marker 1; the outputs `Force` and `Torque` are the sums on marker 0.
+
+### The data node and the active set
+
+The contact state is kept in a `NodeGenericData` with a block of 3 coordinates per contact point - the gap, the norm of
+the tangential velocity and the impact velocity of the last post Newton step -, 4 with the plastic overlap. During the
+Newton iterations of a step, contact and the friction regime are those of the data node; the post Newton step updates
+them and repeats the step where they changed (the discontinuous iteration), and it proposes the step size of the
+contact switch.
+
+### User functions
+
+`contactForceUserFunction(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity)` replaces the law
+for each contact point and returns the force on marker 0; the item keeps the geometry and the contact state. It can be a
+symbolic user function, which is evaluated in C++.
+
+### Journal bearing
+
+`ObjectJournalBearing` is a revolute joint with clearance $c = R_B - R_J$ between a journal and a bearing, whose axis is
+the local z axis of marker 1. The oil film carries the journal by the force of the infinitely short bearing (Ocvirk) or
+of the infinitely long bearing (Sommerfeld), `exu.JournalBearingModel`, as functions of the eccentricity ratio
+$\varepsilon = e/c$, its rate, the rate of the attitude angle and the sum of the angular velocities of journal and
+bearing, after Flores, Ambrosio, Claro, Lankarani and Koshy (2009); a penalty contact acts where $e > c$. For a steady
+load $W$ the short bearing gives
+
+$$
+W = \frac{\mu \omega R L^3}{4 c^2} \frac{\varepsilon}{(1-\varepsilon^2)^2} \sqrt{\pi^2 (1-\varepsilon^2) + 16 \varepsilon^2} ,
+$$
+
+with the viscosity $\mu$, the angular velocity $\omega$, the journal radius $R$ and the length $L$. A rigid rotor whirls
+at eccentricity ratios below about 0.8; the `forceUserFunction` adds further bearing models.
+
 ## Contact relations for ANCF cable $g_i$ (marker $m0$) and sphere $g_j$ (marker $m1$)
 
  If contact is active, we have two relative axial reference coordinates $s_0$ and $s_1$, which define start and end location at the beam, for which the span in between intersects with the circle, see {numref}`fig-contact-ancf2dcircle`.

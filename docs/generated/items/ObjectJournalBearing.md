@@ -180,4 +180,4 @@ exu.sys['testResult'] = mbs.GetObjectOutput(mbs.systemData.NumberOfObjects()-1, 
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`journalBearingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/journalBearingTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesShowcase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactPrimitivesShowcase.py) (Ex), [`journalBearingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/journalBearingTest.py) (TM)
