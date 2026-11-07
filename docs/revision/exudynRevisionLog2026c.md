@@ -6427,6 +6427,15 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-30"></a>
+### RG9.12.30 — the showcase and the table test draw their contact forces (2026-11-07, #3350)
+- connectors.show = False removed from contactPrimitivesShowcase.py and from the viewer part of
+  contactPrimitivesTableTest.py; the generic joint of the table is not drawn (CreateGenericJoint(show=False)).
+- Rendered with interactive.ShowImage: the arrow of the bearing is now drawn. The arrows of the other contacts are drawn
+  but hidden: as specified, their heads meet at the contact point, so the arrow of the force on marker 0 lies in the
+  body of marker 1 and the other in the body of marker 0 - inside opaque bodies. Left to the maintainer: transparent
+  bodies, or the arrows from the contact point outwards.
+
 <a id="rg9-12-24"></a>
 ### RG9.12.24 — the contacts as a group of the reference manual (2026-11-07, #3344)
 - The groups of the objects are the objectType of the definitions, used only by the documentation (itemDocsEmitter,

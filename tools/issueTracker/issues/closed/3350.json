@@ -1,0 +1,17 @@
+{
+  "number": 3350,
+  "title": "contactPrimitivesShowcase.py and contactPrimitivesTableTest.py hide the contact forces they switch on",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Both set visualizationSettings.connectors.show = False and contact.showContactForces = True; contacts are drawn only with connectors.show, as every connector, so the arrows of the contact forces (#3339) are not drawn. Found with the group Contact of the reference manual (#3344). Decided: connectors.show left on; the generic joint of the table not drawn by its own show.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 00:14",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples/contactPrimitivesShowcase.py",
+  "releaseNotes": "contactPrimitivesShowcase.py and contactPrimitivesTableTest.py draw the contact forces they switch on; they had switched off the drawing of all connectors, and with it the contacts.",
+  "resolvedInVersion": "1.13.464"
+}

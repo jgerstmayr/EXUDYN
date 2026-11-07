@@ -56,7 +56,7 @@ def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters):
 def UFoffset_t(mbs, t, itemNumber, offsetUserFunctionParameters):
     return [a*Pulse(t)[1] for a in amplitudes]
 
-oJoint = mbs.CreateGenericJoint(itemNumbers=[oGround, oTable], position=[0, 0, 0], constrainedAxes=[1]*6)
+oJoint = mbs.CreateGenericJoint(itemNumbers=[oGround, oTable], position=[0, 0, 0], constrainedAxes=[1]*6, show=False)
 mbs.SetObjectParameter(oJoint, 'offsetUserFunction', UFoffset)
 mbs.SetObjectParameter(oJoint, 'offsetUserFunction_t', UFoffset_t)
 
@@ -180,7 +180,6 @@ if not testIsActive: #at rest at the end
 if not testIsActive:
     SC.visualizationSettings.contact.showContactForces = True
     SC.visualizationSettings.contact.contactForcesFactor = 0.01
-    SC.visualizationSettings.connectors.show = False
     SC.visualizationSettings.openGL.light0.shadow = 0.3
     mbs.SolutionViewer()
 

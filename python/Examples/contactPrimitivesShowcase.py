@@ -176,7 +176,6 @@ v = SC.visualizationSettings
 v.contact.showContactForces = True
 v.contact.contactForcesFactor = 0.005   #0.5 m per 100 N
 v.contact.contactForcesRadius = 0.004
-v.connectors.show = False
 v.view0.scene.drawWorldBasis = False
 v.view0.scene.drawCoordinateSystem = False
 v.general.showSolverInformation = False

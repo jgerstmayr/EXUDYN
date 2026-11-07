@@ -1730,6 +1730,12 @@ CLOSED 2026-11-07 (#3348): __all__ written by tools/checkAll.py --write. [log](e
 
 CLOSED 2026-11-07 (#3349): the kept points take the data blocks deepest first, equal gaps by id, so that the points in contact keep the first blocks; an icosahedron dropped flat in convexConvexContactTest.py. [log](exudynRevisionLog2026c.md#rg9-12-29)
 
+#### **CLOSED_RG9.12.30** The showcase and the table test draw their contact forces
+
+#3350. Found with the group Contact (RG9.12.24): both scripts set connectors.show = False, which hides every contact and so the arrows they switch on.
+
+CLOSED 2026-11-07 (#3350): connectors.show left on in both scripts, the joint of the table not drawn; the arrows inside opaque bodies stay hidden by their layout (heads at the contact point), left to the maintainer. [log](exudynRevisionLog2026c.md#rg9-12-30)
+
 ## **CLOSED_RG10** Tooling and process
 
 exudev, the issue tracker, the generators, the checks of the commit gate, CI. Open without a step: #2541 (`exudyn.config`

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 447 | 1.13.463 |
+| 1.13 | Newborn | 448 | 1.13.464 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.464** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` contactPrimitivesShowcase.py and contactPrimitivesTableTest.py hide the contact forces they switch on (#3350)
+  - description: Both set visualizationSettings.connectors.show = False and contact.showContactForces = True; contacts are drawn only with connectors.show, as every connector, so the arrows of the contact forces (\#3339) are not drawn. Found with the group Contact of the reference manual (\#3344). Decided: connectors.show left on; the generic joint of the table not drawn by its own show.
+  - **notes:** contactPrimitivesShowcase.py and contactPrimitivesTableTest.py draw the contact forces they switch on; they had switched off the drawing of all connectors, and with it the contacts.
+  - date resolved: **2026-11-08 00:14**, date raised: 2026-11-08
 - **1.13.463** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The contact items as a group of their own in the reference manual of the items (#3344)
   - description: The reference manual lists the objects in the groups Body, SuperElement, FiniteElement, Joint, Connector, Constraint and Object; the contact items are listed among the connectors, now more than a dozen. Decided: a group Contact for the items of the contact type.
   - **notes:** The reference manual of the items lists the contacts as a group of their own, Object (Contact), with a general page on the data node, the active set and the Create functions.
