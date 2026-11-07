@@ -184,7 +184,7 @@ namespace EXUvis {
 	//! angleRange is used to draw only part of the cylinder; 
 	//! if lastFace=true, a closing face is drawn in case of limited angle; 
 	//! cutPlain=true: a plain cut through cylinder is made; false: draw the cake shape ...
-	//! radiusEnd >= 0: the radius at pAxis0+vAxis, a truncated cone (0: pointed); the inner radius stays a cylinder
+	//! radiusEnd >= 0: the radius at pAxis0+vAxis, a truncated cone (0: pointed); the inner radius scales as the outer one
 	void DrawCylinder(const Vector3D& pAxis0, const Vector3D& vAxis, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
 		Index nTiles = 12, Real innerRadius = 0, Vector2D angleRange = Vector2D({ 0., 2 * EXUstd::pi }), bool lastFace = true, bool cutPlain = true, bool drawSmooth = true, Real radiusEnd = -1.);
 

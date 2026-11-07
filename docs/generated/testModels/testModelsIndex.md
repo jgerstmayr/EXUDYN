@@ -121,6 +121,7 @@ graphicsDataErrorsTest
 GraphicsDataTest
 gridGeomExactBeam2D
 heavyTop
+hollowContactTest
 homogeneousTransformationInterfaceTest
 homogeneousTransformationParameterTest
 homogeneousTransformationTest

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  16:02:06 (last modified)
+* @date         2026-11-07  17:26:42 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -120,6 +120,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "conesRadii0")) { EPyUtils::FromPython(d["conesRadii0"], cObjectContactConeCone->GetParameters().conesRadii0); }
         if (EPyUtils::DictItemExists(d, "conesRadii1")) { EPyUtils::FromPython(d["conesRadii1"], cObjectContactConeCone->GetParameters().conesRadii1); }
         if (EPyUtils::DictItemExists(d, "conesLengths")) { EPyUtils::FromPython(d["conesLengths"], cObjectContactConeCone->GetParameters().conesLengths); }
+        if (EPyUtils::DictItemExists(d, "isHollowCone1")) { EPyUtils::FromPython(d["isHollowCone1"], cObjectContactConeCone->GetParameters().isHollowCone1, "ObjectContactConeCone.isHollowCone1"); }
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactConeCone->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeCone.dynamicFriction"); }
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { EPyUtils::FromPython(d["frictionProportionalZone"], cObjectContactConeCone->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeCone.frictionProportionalZone"); }
         if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactConeCone->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeCone.contactStiffness"); }
@@ -146,6 +147,7 @@ public: // AUTO:
         d["conesRadii0"] = EPyUtils::ToPython(cObjectContactConeCone->GetParameters().conesRadii0);
         d["conesRadii1"] = EPyUtils::ToPython(cObjectContactConeCone->GetParameters().conesRadii1);
         d["conesLengths"] = EPyUtils::ToPython(cObjectContactConeCone->GetParameters().conesLengths);
+        d["isHollowCone1"] = (bool)cObjectContactConeCone->GetParameters().isHollowCone1;
         d["dynamicFriction"] = (Real)cObjectContactConeCone->GetParameters().dynamicFriction;
         d["frictionProportionalZone"] = (Real)cObjectContactConeCone->GetParameters().frictionProportionalZone;
         d["contactStiffness"] = (Real)cObjectContactConeCone->GetParameters().contactStiffness;
@@ -171,6 +173,7 @@ public: // AUTO:
         else if (parameterName.compare("conesRadii0") == 0) { return EPyUtils::ToPython(cObjectContactConeCone->GetParameters().conesRadii0); } //! AUTO: get parameter
         else if (parameterName.compare("conesRadii1") == 0) { return EPyUtils::ToPython(cObjectContactConeCone->GetParameters().conesRadii1); } //! AUTO: get parameter
         else if (parameterName.compare("conesLengths") == 0) { return EPyUtils::ToPython(cObjectContactConeCone->GetParameters().conesLengths); } //! AUTO: get parameter
+        else if (parameterName.compare("isHollowCone1") == 0) { return py::cast((bool)cObjectContactConeCone->GetParameters().isHollowCone1); } //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { return py::cast((Real)cObjectContactConeCone->GetParameters().dynamicFriction); } //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { return py::cast((Real)cObjectContactConeCone->GetParameters().frictionProportionalZone); } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectContactConeCone->GetParameters().contactStiffness); } //! AUTO: get parameter
@@ -197,6 +200,7 @@ public: // AUTO:
         else if (parameterName.compare("conesRadii0") == 0) { EPyUtils::FromPython(value, cObjectContactConeCone->GetParameters().conesRadii0); } //! AUTO: set parameter
         else if (parameterName.compare("conesRadii1") == 0) { EPyUtils::FromPython(value, cObjectContactConeCone->GetParameters().conesRadii1); } //! AUTO: set parameter
         else if (parameterName.compare("conesLengths") == 0) { EPyUtils::FromPython(value, cObjectContactConeCone->GetParameters().conesLengths); } //! AUTO: set parameter
+        else if (parameterName.compare("isHollowCone1") == 0) { EPyUtils::FromPython(value, cObjectContactConeCone->GetParameters().isHollowCone1, "ObjectContactConeCone.isHollowCone1"); } //! AUTO: set parameter
         else if (parameterName.compare("dynamicFriction") == 0) { EPyUtils::FromPython(value, cObjectContactConeCone->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeCone.dynamicFriction"); } //! AUTO: set parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { EPyUtils::FromPython(value, cObjectContactConeCone->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeCone.frictionProportionalZone"); } //! AUTO: set parameter
         else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactConeCone->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeCone.contactStiffness"); } //! AUTO: set parameter

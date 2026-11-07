@@ -7838,11 +7838,13 @@ class ObjectContactCylinderCylinder:
 
         markerNumbers: list of markers: the centers of cylinder 0 and cylinder 1, the local z axis of each marker the axis of its cylinder; type: ArrayMarkerIndex
 
-        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCylinder1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
 
         cylindersRadii: the radii of cylinder 0 and cylinder 1, both > 0 [SI:m]; type: [float,float]
 
         cylindersLengths: the lengths of cylinder 0 and cylinder 1 along the local z axes of their markers, from :math:`-L_i/2` to :math:`L_i/2`, both > 0 [SI:m]; type: [float,float]
+
+        isHollowCylinder1: if True, cylinder 1 is hollow, a bore or a seat with its radii and its length, open at both ends, and cylinder 0 is inside it: the contact is with the inner wall of cylinder 1 (#3334); then the data node needs 24 coordinates; checked at Assemble: the radius of cylinder 0 not larger than that of cylinder 1; type: bool
 
         dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
@@ -7874,12 +7876,13 @@ class ObjectContactCylinderCylinder:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], isHollowCylinder1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
         self.cylindersRadii = np.array(cylindersRadii)
         self.cylindersLengths = np.array(cylindersLengths)
+        self.isHollowCylinder1 = isHollowCylinder1
         self.dynamicFriction = dynamicFriction
         self.frictionProportionalZone = frictionProportionalZone
         self.contactStiffness = contactStiffness
@@ -7899,6 +7902,7 @@ class ObjectContactCylinderCylinder:
         yield 'nodeNumber', self.nodeNumber
         yield 'cylindersRadii', self.cylindersRadii
         yield 'cylindersLengths', self.cylindersLengths
+        yield 'isHollowCylinder1', self.isHollowCylinder1
         yield 'dynamicFriction', self.dynamicFriction
         yield 'frictionProportionalZone', self.frictionProportionalZone
         yield 'contactStiffness', self.contactStiffness
@@ -7945,13 +7949,15 @@ class ObjectContactConeCone:
 
         markerNumbers: list of markers: the centers of cone 0 and cone 1, the local z axis of each marker the axis of its cone; type: ArrayMarkerIndex
 
-        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCone1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
 
         conesRadii0: the radii of cone 0 at :math:`z=-L_0/2` and at :math:`z=L_0/2` along the local z axis of marker 0, >= 0 and not both 0 [SI:m]; type: [float,float]
 
         conesRadii1: the radii of cone 1 at :math:`z=-L_1/2` and at :math:`z=L_1/2` along the local z axis of marker 1, >= 0 and not both 0 [SI:m]; type: [float,float]
 
         conesLengths: the lengths of cone 0 and cone 1 along the local z axes of their markers, both > 0 [SI:m]; type: [float,float]
+
+        isHollowCone1: if True, cone 1 is hollow, a bore or a seat with its radii and its length, open at both ends, and cone 0 is inside it: the contact is with the inner wall of cone 1 (#3334); then the data node needs 24 coordinates; checked at Assemble: the radius of cone 0 not larger than that of cone 1; type: bool
 
         dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
@@ -7983,13 +7989,14 @@ class ObjectContactConeCone:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), conesRadii0 = [0.,0.], conesRadii1 = [0.,0.], conesLengths = [0.,0.], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConeConeContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), conesRadii0 = [0.,0.], conesRadii1 = [0.,0.], conesLengths = [0.,0.], isHollowCone1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConeConeContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
         self.conesRadii0 = np.array(conesRadii0)
         self.conesRadii1 = np.array(conesRadii1)
         self.conesLengths = np.array(conesLengths)
+        self.isHollowCone1 = isHollowCone1
         self.dynamicFriction = dynamicFriction
         self.frictionProportionalZone = frictionProportionalZone
         self.contactStiffness = contactStiffness
@@ -8010,6 +8017,7 @@ class ObjectContactConeCone:
         yield 'conesRadii0', self.conesRadii0
         yield 'conesRadii1', self.conesRadii1
         yield 'conesLengths', self.conesLengths
+        yield 'isHollowCone1', self.isHollowCone1
         yield 'dynamicFriction', self.dynamicFriction
         yield 'frictionProportionalZone', self.frictionProportionalZone
         yield 'contactStiffness', self.contactStiffness

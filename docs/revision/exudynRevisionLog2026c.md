@@ -6427,6 +6427,23 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-12"></a>
+### RG9.12.12 — the contact inside a hollow cylinder and a hollow cone (2026-11-07, #3334)
+- isHollowCylinder1 of ObjectContactCylinderCylinder and isHollowCone1 of ObjectContactConeCone, as decided in the
+  design 8.6; the hollow shape keeps its radii, its length and two open ends. The points (HollowPoints): on each rim of
+  the inner shape - or, where the inner shape leaves the hollow one, at its end plane (a long shaft through a ring
+  rests on the ring's edges) - the point in the direction of the eccentricity of the rim and the points at +-120
+  degrees, so a centered shape (a cone in its seat) rests on all sides; the distance of a point of a side line from
+  the axis is largest at its ends, so the rims carry the contact. The gap (R - rho)/sqrt(1 + R'^2) is normal to the
+  wall; the normal is that of the wall. Up to 6 points: the cylinder contacts have room for 8, and the data node needs
+  24 coordinates with the flag (GetDataVariablesSize; the post Newton step loops over the blocks of the data node).
+- The check at Assemble: cylindersRadii[0] <= cylindersRadii[1]; for cones the smaller radius of the inner cone not
+  above the larger of the seat. The hollow shape is drawn as a tube 0.2 of its radii thick; DrawCylinder scales the
+  inner radius with the outer one, for the conical tube.
+- hollowContactTest.py (new): the shaft in the bore and through the ring, R - r + m g/(2k) below the axis to 1e-17;
+  the cone in the seat of the same taper m g (1 + R'^2)/(6 k R'^2) below the fit to 1e-17; the refusal of a shaft
+  larger than the bore.
+
 <a id="rg7-15-9"></a>
 ### RG7.15.9 — the drawing of CreateCartesianSpringDamper of UserItemCreator (2026-11-07, #3333)
 - _JointGraphics of userItems.py read the RotationMatrix of marker 0 for every shape; a Cartesian spring-damper on a

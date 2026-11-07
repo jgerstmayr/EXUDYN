@@ -23,9 +23,10 @@ The parameters of the item; in a dictionary, its type is 'ContactCylinderCylinde
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers: the centers of cylinder 0 and cylinder 1, the local z axis of each marker the axis of its cylinder |
-| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points $i$ holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCylinder1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points $i$ holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity |
 | **cylindersRadii** | Vector2D | 2 | [0.,0.] | (symbol: $[r_0,r_1]\tp$) the radii of cylinder 0 and cylinder 1, both > 0 [SI:m] |
 | **cylindersLengths** | Vector2D | 2 | [0.,0.] | (symbol: $[L_0,L_1]\tp$) the lengths of cylinder 0 and cylinder 1 along the local z axes of their markers, from $-L_i/2$ to $L_i/2$, both > 0 [SI:m] |
+| **isHollowCylinder1** | Bool |  | False | if True, cylinder 1 is hollow, a bore or a seat with its radii and its length, open at both ends, and cylinder 0 is inside it: the contact is with the inner wall of cylinder 1 (#3334); then the data node needs 24 coordinates; checked at Assemble: the radius of cylinder 0 not larger than that of cylinder 1 |
 | **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
 | **frictionProportionalZone** | UReal |  | 0.001 | (symbol: $v_{reg}$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
 | **contactStiffness** | UReal |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$) |
@@ -109,6 +110,16 @@ that of the body of marker 1 relative to that of marker 0,
 $\LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (\LU{0}{\pv}_{c,k} - \LU{0}{\pv}_{m1}) - \LU{0}{\vv}_{m0} -
 \LU{0}{\tomega}_{m0} \times (\LU{0}{\pv}_{c,k} - \LU{0}{\pv}_{m0})$.
 
+With `isHollowCylinder1 = True`, cylinder 1 is hollow - a bore or a seat, open at both ends, its wall at the radii of
+cylinder 1 - and cylinder 0 is inside it. On each rim of cylinder 0 - where cylinder 0 leaves the hollow
+cylinder, the rim at its end plane - the point farthest from the axis of cylinder 1, in the direction of the
+eccentricity of the rim, and the points at $\pm 120$ degrees on the rim are contact points, so that a centered
+cylinder rests on all sides; for a centered rim the direction goes over into the local x axis of marker 0. The gap
+of a point at the distance $\rho$ from the axis and the radius $R$ of the wall at its axial position is
+$g = (R - \rho)/\sqrt{1 + R'^2}$, normal to the wall with the slope $R'$ of the radius; the normal is that of the
+wall, outwards. The outer side of a rim within the hollow shape carries the contact, as the distance of a point of
+a side line from the axis of cylinder 1 is largest at its ends.
+
 ### Connector forces
 
 For each contact point, the normal force - from the penetration $\delta_k = -g_k$, with `contactStiffness`
@@ -188,4 +199,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cylinderContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cylinderContactTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cylinderContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cylinderContactTest.py) (TM), [`hollowContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/hollowContactTest.py) (TM)

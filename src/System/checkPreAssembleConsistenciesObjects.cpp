@@ -998,10 +998,10 @@ bool CheckPreAssembleContactCylinder(const MainSystem& mainSystem, const TCObjec
 		return false;
 	}
 	Index nc = ((const CNodeGenericData&)(cObject->GetCSystemData()->GetCNode(node))).GetNumberOfDataCoordinates();
-	if (nc != TCObject::nDataVariables)
+	if (nc != cObject->GetDataVariablesSize())
 	{
 		errorString = itemName + ": NodeGenericData (Node " + EXUstd::ToString(node) + ") must have " +
-			EXUstd::ToString(TCObject::nDataVariables) + " coordinates (found: " + EXUstd::ToString(nc) + ")";
+			EXUstd::ToString(cObject->GetDataVariablesSize()) + " coordinates (found: " + EXUstd::ToString(nc) + ")";
 		return false;
 	}
 	const ArrayIndex& nMarkers = cObject->GetParameters().markerNumbers;
@@ -1031,6 +1031,12 @@ bool MainObjectContactCylinderCylinder::CheckPreAssembleConsistency(const MainSy
 				EXUstd::ToString(parameters.cylindersRadii) + ", lengths " + EXUstd::ToString(parameters.cylindersLengths) + ")";
 			return false;
 		}
+	}
+	if (parameters.isHollowCylinder1 && !(parameters.cylindersRadii[0] <= parameters.cylindersRadii[1]))
+	{
+		errorString = "ObjectContactCylinderCylinder: with isHollowCylinder1, cylinder 0 is inside cylinder 1, so cylindersRadii[0] must not be larger than cylindersRadii[1] (found " +
+			EXUstd::ToString(parameters.cylindersRadii) + ")";
+		return false;
 	}
 	return CheckPreAssembleContactCylinder(mainSystem, cObject, "ObjectContactCylinderCylinder", errorString);
 }
@@ -1137,6 +1143,12 @@ bool MainObjectContactConeCone::CheckPreAssembleConsistency(const MainSystem& ma
 	const auto& parameters = cObject->GetParameters();
 	if (!CheckConeShape(parameters.conesRadii0, parameters.conesLengths[0], "ObjectContactConeCone", "cone 0", errorString)) { return false; }
 	if (!CheckConeShape(parameters.conesRadii1, parameters.conesLengths[1], "ObjectContactConeCone", "cone 1", errorString)) { return false; }
+	if (parameters.isHollowCone1 && !(EXUstd::Minimum(parameters.conesRadii0[0], parameters.conesRadii0[1]) <= EXUstd::Maximum(parameters.conesRadii1[0], parameters.conesRadii1[1])))
+	{
+		errorString = "ObjectContactConeCone: with isHollowCone1, cone 0 is inside cone 1, so the smaller radius of cone 0 must not be larger than the larger radius of cone 1 (found " +
+			EXUstd::ToString(parameters.conesRadii0) + " and " + EXUstd::ToString(parameters.conesRadii1) + ")";
+		return false;
+	}
 	return CheckPreAssembleContactCylinder(mainSystem, cObject, "ObjectContactConeCone", errorString);
 }
 

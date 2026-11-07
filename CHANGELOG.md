@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 431 | 1.13.447 |
+| 1.13 | Newborn | 432 | 1.13.448 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.448** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The contact inside a hollow cylinder and a hollow cone: isHollowCylinder1 and isHollowCone1 (#3334)
+  - description: A shaft in a bore, a pin in a ring and a taper in a conical seat need the contact with the inner wall of a hollow shape (design contactPrimitives.md, sections 8.3 and 8.6). Decided: the flags isHollowCylinder1 of ObjectContactCylinderCylinder and isHollowCone1 of ObjectContactConeCone, as isHollowSphere1 of ObjectContactSphereSphere; the hollow shape has its radii, its length and open ends; on each rim of the inner shape, clipped to the axial range of the hollow one, the point in the direction of the eccentricity and the points at +-120 degrees; the gap normal to the wall; a check at Assemble that the inner shape fits; the hollow shape drawn as a tube.
+  - **notes:** ObjectContactCylinderCylinder(isHollowCylinder1=True) and ObjectContactConeCone(isHollowCone1=True): the contact of a cylinder or cone inside a hollow cylinder or conical seat open at both ends, such as a shaft in a bore or through a ring and a taper in its seat.
+  - date resolved: **2026-11-07 17:44**, date raised: 2026-11-07
 - **1.13.447** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The drawing of CreateCartesianSpringDamper of UserItemCreator fails for a mass point marker (#3333)
   - description: Drawing a model with a Cartesian spring-damper of exudyn.symbolics.userItems.UserItemCreator between a mass point and a body (symbolicUserConnectorsTest.py) raises in VisualizationObjectConnectorUser::CallUserFunction: Invalid OutputVariableType 'RotationMatrix'; the marker 'marker7' cannot compute the requested variable type; only 2 lines are drawn. Found in RG2.12.2 (\#3322), which left this model without the SolutionViewer. Decided: the visualization user function reads the rotation only of markers that have one; the model then shows its simulation.
   - **notes:** Systems with a Cartesian spring-damper of exudyn.symbolics.userItems.UserItemCreator on a mass point are drawn: its drawing asked the position marker for a rotation, and the error stopped the drawing of all user items.

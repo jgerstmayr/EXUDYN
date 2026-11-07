@@ -156,7 +156,8 @@ namespace ContactPoints {
 		LinkedDataVector dataStartofStepState = ((CNodeData*)item.GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep);
 		LinkedDataVector data = ((CNodeData*)item.GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);
 
-		for (Index i = 0; i < TPoints::capacity; i++)
+		Index blocks = EXUstd::Minimum(TPoints::capacity, data.NumberOfItems() / blockSize); //the data node holds the blocks of the item
+		for (Index i = 0; i < blocks; i++)
 		{
 			Index index = i * blockSize;
 			Real currentGap = 1.; //a point that is not there is apart

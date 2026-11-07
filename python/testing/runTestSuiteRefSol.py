@@ -254,6 +254,7 @@ def TestExamplesReferenceSolution():
         'convexDistanceTest.py':13.364213562373093,
         'convexConvexContactTest.py':6.769306311053007, #new 2026-11-07: ObjectContactConvexConvex, Distance, the contact points of faces, friction, the user function (#3331)
         'coneContactTest.py':6.694817130343234, #new 2026-11-07: ObjectContactConeCone and ObjectContactConeTriangle, Distance, standing, upside down, lying on a side line (#3332)
+        'hollowContactTest.py':4.0186324058130305, #new 2026-11-07: isHollowCylinder1 and isHollowCone1: a shaft in a bore, a shaft through a ring, a cone in a seat, the refusal of a shaft too large (#3334)
         'cylinderContactTest.py':9.846609913220105, #2026-11-07: the gap offset of the side points made continuous (#3332), before 9.846609913280105; new 2026-11-07: ObjectContactCylinderCylinder and ObjectContactCylinderTriangle, Distance, the contact points of line and face contacts, the user function (#3329)
         'sphereCylinderContactTest.py':8.613788897624327, #new 2026-11-07: ObjectContactSphereCylinder, its Distance against cUtilities.Distance, at rest on cap and side, rolling with friction (#3320) #new 2026-11-07: exudyn.cUtilities.Distance of convex shapes by GJK and EPA against closed forms and random pairs (#3317)
         'sphereTrianglePlaneTest.py':6.456291520443378, #new 2026-11-07: the option infinitePlane of ObjectContactSphereTriangle (#3323)

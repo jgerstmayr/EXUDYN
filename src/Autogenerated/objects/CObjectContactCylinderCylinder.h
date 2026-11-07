@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  15:39:40 (last modified)
+* @date         2026-11-07  17:26:42 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,9 +31,10 @@ class CObjectContactCylinderCylinderParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers: the centers of cylinder 0 and cylinder 1, the local z axis of each marker the axis of its cylinder
-    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points \f$i\f$ holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity
+    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCylinder1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points \f$i\f$ holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity
     Vector2D cylindersRadii;                      //!< AUTO: the radii of cylinder 0 and cylinder 1, both > 0 [SI:m]
     Vector2D cylindersLengths;                    //!< AUTO: the lengths of cylinder 0 and cylinder 1 along the local z axes of their markers, from \f$-L_i/2\f$ to \f$L_i/2\f$, both > 0 [SI:m]
+    bool isHollowCylinder1;                       //!< AUTO: if True, cylinder 1 is hollow, a bore or a seat with its radii and its length, open at both ends, and cylinder 0 is inside it: the contact is with the inner wall of cylinder 1 (#3334); then the data node needs 24 coordinates; checked at Assemble: the radius of cylinder 0 not larger than that of cylinder 1
     Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
     Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)
     Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m] (units in case that \f$n_\mathrm{exp}=1\f$)
@@ -51,6 +52,7 @@ public: // AUTO:
         nodeNumber = EXUstd::InvalidIndex;
         cylindersRadii = Vector2D({0.,0.});
         cylindersLengths = Vector2D({0.,0.});
+        isHollowCylinder1 = false;
         dynamicFriction = 0.;
         frictionProportionalZone = 0.001;
         contactStiffness = 0.;
@@ -149,7 +151,7 @@ public: // AUTO:
     //! AUTO:  data (history) variable simplifies contact switching for implicit time integration and Newton method
     virtual Index GetDataVariablesSize() const override
     {
-        return nDataVariables;
+        return parameters.isHollowCylinder1 ? 24 : nDataVariables;
     }
 
     //! AUTO:  flag to be set for connectors, which use DiscontinuousIteration

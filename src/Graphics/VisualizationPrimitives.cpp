@@ -1240,8 +1240,9 @@ namespace EXUvis {
 			{
 				Vector3D pzL0i = pAxis0 + innerRadius * vv0;
 				Vector3D pzL1i = pAxis0 + innerRadius * vv1;
-				Vector3D pzR0i = pAxis1 + innerRadius * vv0;
-				Vector3D pzR1i = pAxis1 + innerRadius * vv1;
+				Real innerRadiusEnd = innerRadius * radiusEnd / radius; //the inner radius scales as the outer one, a wall of constant ratio
+				Vector3D pzR0i = pAxis1 + innerRadiusEnd * vv0;
+				Vector3D pzR1i = pAxis1 + innerRadiusEnd * vv1;
 
 				//+++++++++++++++++++++++++++++++
 				//circumference:

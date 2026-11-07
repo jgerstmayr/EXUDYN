@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  16:02:06 (last modified)
+* @date         2026-11-07  17:26:42 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,10 +31,11 @@ class CObjectContactConeConeParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers: the centers of cone 0 and cone 1, the local z axis of each marker the axis of its cone
-    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points \f$i\f$ holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity
+    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCone1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points \f$i\f$ holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity
     Vector2D conesRadii0;                         //!< AUTO: the radii of cone 0 at \f$z=-L_0/2\f$ and at \f$z=L_0/2\f$ along the local z axis of marker 0, >= 0 and not both 0 [SI:m]
     Vector2D conesRadii1;                         //!< AUTO: the radii of cone 1 at \f$z=-L_1/2\f$ and at \f$z=L_1/2\f$ along the local z axis of marker 1, >= 0 and not both 0 [SI:m]
     Vector2D conesLengths;                        //!< AUTO: the lengths of cone 0 and cone 1 along the local z axes of their markers, both > 0 [SI:m]
+    bool isHollowCone1;                           //!< AUTO: if True, cone 1 is hollow, a bore or a seat with its radii and its length, open at both ends, and cone 0 is inside it: the contact is with the inner wall of cone 1 (#3334); then the data node needs 24 coordinates; checked at Assemble: the radius of cone 0 not larger than that of cone 1
     Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
     Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)
     Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m] (units in case that \f$n_\mathrm{exp}=1\f$)
@@ -53,6 +54,7 @@ public: // AUTO:
         conesRadii0 = Vector2D({0.,0.});
         conesRadii1 = Vector2D({0.,0.});
         conesLengths = Vector2D({0.,0.});
+        isHollowCone1 = false;
         dynamicFriction = 0.;
         frictionProportionalZone = 0.001;
         contactStiffness = 0.;
@@ -151,7 +153,7 @@ public: // AUTO:
     //! AUTO:  data (history) variable simplifies contact switching for implicit time integration and Newton method
     virtual Index GetDataVariablesSize() const override
     {
-        return nDataVariables;
+        return parameters.isHollowCone1 ? 24 : nDataVariables;
     }
 
     //! AUTO:  flag to be set for connectors, which use DiscontinuousIteration

@@ -38,7 +38,7 @@
 
 namespace ContactCylinder {
 
-	constexpr Index maxPoints = 4;			//!< the contact points of a cylinder contact
+	constexpr Index maxPoints = 8;			//!< the contact points of a cylinder contact: 4, and 6 inside a hollow shape
 	using Points = ContactPoints::Points<maxPoints>;
 	using ContactPoints::ForcesRigid;
 	using ContactPoints::OutputVariable;
@@ -273,6 +273,68 @@ namespace ContactCylinder {
 
 	inline bool CapPoints(const Cylinder& c0, const Cylinder& c1, Points& points);
 
+	//! the contact points of shape 0 inside the hollow shape 1, a bore or a conical seat with its radii at the ends of its
+	//! length (#3334): on each rim of shape 0 - clipped to the axial range of the hollow shape -, the point farthest
+	//! from the axis of shape 1, in the direction of the eccentricity of the rim, and the points at +-120 degrees, so that
+	//! a centered shape rests on all sides; the gap normal to the wall of the hollow shape
+	inline void HollowPoints(const Cylinder& c0, const Cylinder& c1, Points& points)
+	{
+		points.count = 0;
+		Real H = c1.halfLength;
+		Real slope = (c1.radiusTop - c1.radius) / (2. * H); //dR/dt of the wall
+		Real scale = 1. / sqrt(1. + slope * slope);
+		Real a01 = c0.axis * c1.axis;
+		Real deepest = EXUstd::MAXREAL;
+		for (Real sign : { -1., 1. })
+		{
+			Real s = sign * c0.halfLength;
+			Vector3D center = c0.center + s * c0.axis;
+			Real t = (center - c1.center) * c1.axis;
+			if (fabs(t) > H) //the rim is outside the hollow shape: the rim where shape 0 leaves it
+			{
+				if (a01 == 0.) { continue; }
+				s += ((t > 0. ? H : -H) - t) / a01;
+				if (fabs(s) > c0.halfLength) { continue; }
+				center = c0.center + s * c0.axis;
+				t = (center - c1.center) * c1.axis;
+			}
+			Real r = c0.radius + (c0.radiusTop - c0.radius) * (s + c0.halfLength) / (2. * c0.halfLength);
+			//the eccentricity in the plane of the rim; for a centered rim it goes over into the local x axis of marker 0
+			Vector3D e = center - (c1.center + t * c1.axis);
+			e -= (e * c0.axis) * c0.axis;
+			Real eccentricity = e.GetL2Norm() / c1.radius;
+			e *= 1. / c1.radius;
+			e += (standingBlend * standingBlend / (standingBlend + eccentricity)) * c0.side;
+			if (e.GetL2Norm() == 0.) { e = c0.side; }
+			e.Normalize();
+			Vector3D tangent = c0.axis.CrossProduct(e);
+			for (Real angle : { 0., 2. * EXUstd::pi / 3., -2. * EXUstd::pi / 3. })
+			{
+				Vector3D point = center + r * (EM::Cos(angle) * e + EM::Sin(angle) * tangent);
+				Vector3D d = point - c1.center;
+				Real tPoint = d * c1.axis;
+				Vector3D radial = d - tPoint * c1.axis;
+				Real rho = radial.GetL2Norm();
+				if (rho > 0.) { radial *= 1. / rho; }
+				else { radial = e; }
+				Real R = c1.radius + slope * (tPoint + H);
+				Real gap = (R - rho) * scale;
+				Vector3D normal = scale * (radial - slope * c1.axis); //the wall of shape 1, outwards
+				points.Add(point, point + gap * normal, normal, gap);
+				if (gap < deepest)
+				{
+					deepest = gap;
+					points.closest.distance = gap; points.closest.point0 = point; points.closest.point1 = point + gap * normal; points.closest.normal = normal;
+				}
+			}
+		}
+		if (points.count == 0) //shape 0 is outside the hollow shape along its axis
+		{
+			points.closest.distance = c1.radius; points.closest.point0 = c0.center; points.closest.point1 = c1.center; points.closest.normal = c1.axis;
+		}
+	}
+
+
 	//! the contact points of two cylinders
 	inline void CylinderCylinderPoints(const Cylinder& c0, const Cylinder& c1, Points& points)
 	{
@@ -478,7 +540,8 @@ namespace ContactCylinder {
 		const auto& parameters = item.GetParameters();
 		Cylinder c0(markerData.GetMarkerData(0), parameters.cylindersRadii[0], parameters.cylindersLengths[0]);
 		Cylinder c1(markerData.GetMarkerData(1), parameters.cylindersRadii[1], parameters.cylindersLengths[1]);
-		CylinderCylinderPoints(c0, c1, points);
+		if (parameters.isHollowCylinder1) { HollowPoints(c0, c1, points); }
+		else { CylinderCylinderPoints(c0, c1, points); }
 	}
 
 	//! the points of a cylinder-triangle contact from the marker data
@@ -498,7 +561,8 @@ namespace ContactCylinder {
 		const auto& parameters = item.GetParameters();
 		Cylinder c0(markerData.GetMarkerData(0), parameters.conesRadii0[0], parameters.conesLengths[0], parameters.conesRadii0[1]);
 		Cylinder c1(markerData.GetMarkerData(1), parameters.conesRadii1[0], parameters.conesLengths[1], parameters.conesRadii1[1]);
-		ConeConePoints(c0, c1, points);
+		if (parameters.isHollowCone1) { HollowPoints(c0, c1, points); }
+		else { ConeConePoints(c0, c1, points); }
 	}
 
 	//! the points of a cone-triangle contact from the marker data
@@ -514,8 +578,10 @@ namespace ContactCylinder {
 
 	//! a truncated cone of a marker drawn along its local z axis
 	inline void DrawConeOfMarker(VisualizationSystem* vSystem, Index markerNumber, Real radius0, Real radius1, Real length,
-		const Float4& color, Index itemID, Index tiling)
+		const Float4& color, Index itemID, Index tiling, bool hollow = false)
 	{
+		Real wall = hollow ? 0.2 : 0.; //a hollow shape as a tube with the wall of 0.2 times its radii outside them
+		if (hollow) { radius0 *= 1. + wall; radius1 *= 1. + wall; }
 		Vector3D position;
 		Matrix3D A;
 		vSystem->systemData->GetCMarkers()[markerNumber]->GetPosition(*vSystem->systemData, position, ConfigurationType::Visualization);
@@ -523,13 +589,13 @@ namespace ContactCylinder {
 		Vector3D axis = length * Vector3D({ A(0, 2), A(1, 2), A(2, 2) });
 		if (radius0 > 0.)
 		{
-			EXUvis::DrawCylinder(position - 0.5 * axis, axis, radius0, color, vSystem->graphicsData, itemID, tiling, 0., Vector2D({ 0., 2 * EXUstd::pi }),
-				true, true, true, radius1);
+			EXUvis::DrawCylinder(position - 0.5 * axis, axis, radius0, color, vSystem->graphicsData, itemID, tiling, radius0 / (1. + wall) * (hollow ? 1. : 0.),
+				Vector2D({ 0., 2 * EXUstd::pi }), true, true, true, radius1);
 		}
 		else //the tip at the start: drawn from the other end
 		{
-			EXUvis::DrawCylinder(position + 0.5 * axis, -1. * axis, radius1, color, vSystem->graphicsData, itemID, tiling, 0., Vector2D({ 0., 2 * EXUstd::pi }),
-				true, true, true, radius0);
+			EXUvis::DrawCylinder(position + 0.5 * axis, -1. * axis, radius1, color, vSystem->graphicsData, itemID, tiling, radius1 / (1. + wall) * (hollow ? 1. : 0.),
+				Vector2D({ 0., 2 * EXUstd::pi }), true, true, true, radius0);
 		}
 	}
 }
@@ -584,11 +650,10 @@ void VisualizationObjectContactCylinderCylinder::UpdateGraphics(const Visualizat
 	{
 		Float4 cylinderColor = visualizationSettings.contact.colorCylinders;
 		if (color[0] != -1.f) { cylinderColor = color; }
-		for (Index i = 0; i < 2; i++)
-		{
-			ContactCylinder::DrawCylinderOfMarker(vSystem, cItem->GetMarkerNumbers()[i], parameters.cylindersRadii[i],
-				parameters.cylindersLengths[i], cylinderColor, itemID, visualizationSettings.general.cylinderTiling);
-		}
+		ContactCylinder::DrawCylinderOfMarker(vSystem, cItem->GetMarkerNumbers()[0], parameters.cylindersRadii[0],
+			parameters.cylindersLengths[0], cylinderColor, itemID, visualizationSettings.general.cylinderTiling);
+		ContactCylinder::DrawConeOfMarker(vSystem, cItem->GetMarkerNumbers()[1], parameters.cylindersRadii[1], parameters.cylindersRadii[1],
+			parameters.cylindersLengths[1], cylinderColor, itemID, visualizationSettings.general.cylinderTiling, parameters.isHollowCylinder1);
 	}
 	if (visualizationSettings.connectors.showNumbers)
 	{
@@ -767,7 +832,7 @@ void VisualizationObjectContactConeCone::UpdateGraphics(const VisualizationSetti
 		ContactCylinder::DrawConeOfMarker(vSystem, cItem->GetMarkerNumbers()[0], parameters.conesRadii0[0], parameters.conesRadii0[1],
 			parameters.conesLengths[0], coneColor, itemID, visualizationSettings.general.cylinderTiling);
 		ContactCylinder::DrawConeOfMarker(vSystem, cItem->GetMarkerNumbers()[1], parameters.conesRadii1[0], parameters.conesRadii1[1],
-			parameters.conesLengths[1], coneColor, itemID, visualizationSettings.general.cylinderTiling);
+			parameters.conesLengths[1], coneColor, itemID, visualizationSettings.general.cylinderTiling, parameters.isHollowCone1);
 	}
 }
 
