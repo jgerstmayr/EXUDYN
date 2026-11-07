@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 417 | 1.13.433 |
+| 1.13 | Newborn | 418 | 1.13.434 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.434** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactSphereCylinder: penalty contact of a sphere and a finite cylinder (#3320)
+  - description: The first of the new contact primitives (docs/dev/design/contactPrimitives.md): a sphere at marker 0 and a cylinder centered at marker 1 along its local z axis, with the law and friction of ObjectContactSphereTriangle. Decided: the analytic sphere-cylinder distance of EGeometry (side, caps, rims, a center inside), the contact law as one function shared with ObjectContactSphereTriangle, 3 data coordinates (gap, tangential velocity, impact velocity), the output Distance also when inactive, contact.showCylinders and colorCylinders for the drawing; tested against the analytic case and by a drop test; revision2026c step RG9.12.4.
+  - **notes:** ObjectContactSphereCylinder: a penalty contact between a sphere and a finite cylinder, with friction and the impact models of the sphere contacts.
+  - date resolved: **2026-11-07 11:19**, date raised: 2026-11-07
 - **1.13.433** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the output variable Distance of ObjectContactSphereSphere, SphereTriangle and SphereTorus (#3319)
   - description: The contact primitives give their signed distance under OutputVariableType.Distance, the name of exudyn.cUtilities.Distance and of the coming primitive contacts; the sphere contacts have it only as the gap in DisplacementLocal. Decided: Distance, the signed gap (\< 0: penetration) from the current configuration, also with activeConnector = False, for path planning and monitoring; revision2026c step RG9.12.3.
   - **notes:** ObjectContactSphereSphere, ObjectContactSphereTriangle and ObjectContactSphereTorus have the output variable Distance, the signed gap, also when the contact is deactivated.

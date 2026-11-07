@@ -633,6 +633,13 @@ position constraints, divided by h^2, and stalled at a residual that grew as the
 residual at the rounding of the coordinates counts as zero now. Results of these solvers change at the level of the
 Newton tolerance.
 
+**Distances of convex shapes and the contact of a sphere with a cylinder.** `exudyn.cUtilities.ConvexShape` (sphere,
+capsule, cylinder, box, triangle, convex points) and `exudyn.cUtilities.Distance` give the signed distance, the
+closest points and the normal of two shapes in their frames (#3317). `ObjectContactSphereCylinder` is a penalty
+contact of a sphere and a finite cylinder, with the contact law and friction of ObjectContactSphereTriangle and a
+data node of 3 coordinates; `contact.showCylinders` draws its cylinder (#3320). The sphere contacts and the new one
+have the output variable `Distance`, the signed gap, also when the contact is deactivated (#3319).
+
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the
 publications - find it beside their own file instead of in the working directory.

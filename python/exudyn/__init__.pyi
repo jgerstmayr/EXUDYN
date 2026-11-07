@@ -2037,6 +2037,8 @@ class VSettingsContact:
     """Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle."""
     colorBoundingBoxes: Tuple[float,float,float,float]
     """RGBA color for boudnding boxes, see showBoundingBoxes."""
+    colorCylinders: Tuple[float,float,float,float]
+    """RGBA color for contact cylinders, see showCylinders."""
     colorSearchTree: Tuple[float,float,float,float]
     """RGBA color for search tree, see showSearchTree."""
     colorSpheres: Tuple[float,float,float,float]
@@ -2055,6 +2057,8 @@ class VSettingsContact:
     """if True, contact forces are drawn for certain contact models."""
     showContactForcesValues: bool
     """if True and showContactForces=True, numerical values for  contact forces are shown at certain points."""
+    showCylinders: bool
+    """show the cylinders of the primitive contacts (ObjectContactSphereCylinder, ...)."""
     showSearchTree: bool
     """show outer box of search tree for all GeneralContacts."""
     showSearchTreeCells: bool

@@ -81,6 +81,7 @@
         "src/ImplObjects/CObjectContactCoordinate.cpp",
         "src/ImplObjects/CObjectContactCurveCircles.cpp",
         "src/ImplObjects/CObjectContactFrictionCircleCable2D.cpp",
+        "src/ImplObjects/CObjectContactSphereCylinder.cpp",
         "src/ImplObjects/CObjectContactSphereSphere.cpp",
         "src/ImplObjects/CObjectContactSphereTorus.cpp",
         "src/ImplObjects/CObjectContactSphereTriangle.cpp",

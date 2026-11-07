@@ -105,36 +105,37 @@ __all__ = [
     'ObjectContactCircleCable2D', 'VObjectContactFrictionCircleCable2D',
     'ObjectContactFrictionCircleCable2D', 'VObjectContactSphereSphere', 'ObjectContactSphereSphere',
     'VObjectContactSphereTorus', 'ObjectContactSphereTorus', 'VObjectContactSphereTriangle',
-    'ObjectContactSphereTriangle', 'VObjectContactCurveCircles', 'ObjectContactCurveCircles',
-    'CamFollowerContactPlanar', 'VCamFollowerContactPlanar', 'VObjectJointGeneric',
-    'ObjectJointGeneric', 'GenericJoint', 'VGenericJoint', 'VObjectJointRevoluteZ',
-    'ObjectJointRevoluteZ', 'RevoluteJointZ', 'VRevoluteJointZ', 'VObjectJointPrismaticX',
-    'ObjectJointPrismaticX', 'PrismaticJointX', 'VPrismaticJointX', 'VObjectJointSpherical',
-    'ObjectJointSpherical', 'SphericalJoint', 'VSphericalJoint', 'VObjectJointRollingDisc',
-    'ObjectJointRollingDisc', 'RollingDiscJoint', 'VRollingDiscJoint', 'VObjectJointRevolute2D',
-    'ObjectJointRevolute2D', 'RevoluteJoint2D', 'VRevoluteJoint2D', 'VObjectJointPrismatic2D',
-    'ObjectJointPrismatic2D', 'PrismaticJoint2D', 'VPrismaticJoint2D', 'VObjectJointSliding',
-    'ObjectJointSliding', 'SlidingJoint', 'VSlidingJoint', 'VObjectJointSliding2D',
-    'ObjectJointSliding2D', 'SlidingJoint2D', 'VSlidingJoint2D', 'VObjectJointALEMoving2D',
-    'ObjectJointALEMoving2D', 'ALEMovingJoint2D', 'VALEMovingJoint2D', 'VMarkerBodyMass',
-    'MarkerBodyMass', 'VMarkerBodyPosition', 'MarkerBodyPosition', 'VMarkerBodyRigid',
-    'MarkerBodyRigid', 'VMarkerNodePosition', 'MarkerNodePosition', 'VMarkerNodeRigid',
-    'MarkerNodeRigid', 'VMarkerNodeCoordinate', 'MarkerNodeCoordinate', 'VMarkerNodeCoordinates',
-    'MarkerNodeCoordinates', 'VMarkerNodeODE1Coordinate', 'MarkerNodeODE1Coordinate',
-    'VMarkerNodeRotationCoordinate', 'MarkerNodeRotationCoordinate',
-    'VMarkerBodiesRelativeTranslationCoordinate', 'MarkerBodiesRelativeTranslationCoordinate',
-    'VMarkerBodiesRelativeRotationCoordinate', 'MarkerBodiesRelativeRotationCoordinate',
-    'VMarkerSuperElementPosition', 'MarkerSuperElementPosition', 'VMarkerSuperElementRigid',
-    'MarkerSuperElementRigid', 'VMarkerKinematicTreeRigid', 'MarkerKinematicTreeRigid',
-    'VMarkerObjectODE2Coordinates', 'MarkerObjectODE2Coordinates', 'VMarkerBodyCable2DShape',
-    'MarkerBodyCable2DShape', 'VMarkerBodyCable2DCoordinates', 'MarkerBodyCable2DCoordinates',
-    'VMarkerBodyBeamShape', 'MarkerBodyBeamShape', 'VMarkerBodyUser', 'MarkerBodyUser',
-    'VLoadForceVector', 'LoadForceVector', 'Force', 'VForce', 'VLoadTorqueVector',
-    'LoadTorqueVector', 'Torque', 'VTorque', 'VLoadMassProportional', 'LoadMassProportional',
-    'Gravity', 'VGravity', 'VLoadCoordinate', 'LoadCoordinate', 'VSensorNode', 'SensorNode',
-    'VSensorObject', 'SensorObject', 'VSensorBody', 'SensorBody', 'VSensorSuperElement',
-    'SensorSuperElement', 'VSensorKinematicTree', 'SensorKinematicTree', 'VSensorMarker',
-    'SensorMarker', 'VSensorLoad', 'SensorLoad', 'VSensorUserFunction', 'SensorUserFunction',
+    'ObjectContactSphereTriangle', 'VObjectContactSphereCylinder', 'ObjectContactSphereCylinder',
+    'VObjectContactCurveCircles', 'ObjectContactCurveCircles', 'CamFollowerContactPlanar',
+    'VCamFollowerContactPlanar', 'VObjectJointGeneric', 'ObjectJointGeneric', 'GenericJoint',
+    'VGenericJoint', 'VObjectJointRevoluteZ', 'ObjectJointRevoluteZ', 'RevoluteJointZ',
+    'VRevoluteJointZ', 'VObjectJointPrismaticX', 'ObjectJointPrismaticX', 'PrismaticJointX',
+    'VPrismaticJointX', 'VObjectJointSpherical', 'ObjectJointSpherical', 'SphericalJoint',
+    'VSphericalJoint', 'VObjectJointRollingDisc', 'ObjectJointRollingDisc', 'RollingDiscJoint',
+    'VRollingDiscJoint', 'VObjectJointRevolute2D', 'ObjectJointRevolute2D', 'RevoluteJoint2D',
+    'VRevoluteJoint2D', 'VObjectJointPrismatic2D', 'ObjectJointPrismatic2D', 'PrismaticJoint2D',
+    'VPrismaticJoint2D', 'VObjectJointSliding', 'ObjectJointSliding', 'SlidingJoint',
+    'VSlidingJoint', 'VObjectJointSliding2D', 'ObjectJointSliding2D', 'SlidingJoint2D',
+    'VSlidingJoint2D', 'VObjectJointALEMoving2D', 'ObjectJointALEMoving2D', 'ALEMovingJoint2D',
+    'VALEMovingJoint2D', 'VMarkerBodyMass', 'MarkerBodyMass', 'VMarkerBodyPosition',
+    'MarkerBodyPosition', 'VMarkerBodyRigid', 'MarkerBodyRigid', 'VMarkerNodePosition',
+    'MarkerNodePosition', 'VMarkerNodeRigid', 'MarkerNodeRigid', 'VMarkerNodeCoordinate',
+    'MarkerNodeCoordinate', 'VMarkerNodeCoordinates', 'MarkerNodeCoordinates',
+    'VMarkerNodeODE1Coordinate', 'MarkerNodeODE1Coordinate', 'VMarkerNodeRotationCoordinate',
+    'MarkerNodeRotationCoordinate', 'VMarkerBodiesRelativeTranslationCoordinate',
+    'MarkerBodiesRelativeTranslationCoordinate', 'VMarkerBodiesRelativeRotationCoordinate',
+    'MarkerBodiesRelativeRotationCoordinate', 'VMarkerSuperElementPosition',
+    'MarkerSuperElementPosition', 'VMarkerSuperElementRigid', 'MarkerSuperElementRigid',
+    'VMarkerKinematicTreeRigid', 'MarkerKinematicTreeRigid', 'VMarkerObjectODE2Coordinates',
+    'MarkerObjectODE2Coordinates', 'VMarkerBodyCable2DShape', 'MarkerBodyCable2DShape',
+    'VMarkerBodyCable2DCoordinates', 'MarkerBodyCable2DCoordinates', 'VMarkerBodyBeamShape',
+    'MarkerBodyBeamShape', 'VMarkerBodyUser', 'MarkerBodyUser', 'VLoadForceVector',
+    'LoadForceVector', 'Force', 'VForce', 'VLoadTorqueVector', 'LoadTorqueVector', 'Torque',
+    'VTorque', 'VLoadMassProportional', 'LoadMassProportional', 'Gravity', 'VGravity',
+    'VLoadCoordinate', 'LoadCoordinate', 'VSensorNode', 'SensorNode', 'VSensorObject',
+    'SensorObject', 'VSensorBody', 'SensorBody', 'VSensorSuperElement', 'SensorSuperElement',
+    'VSensorKinematicTree', 'SensorKinematicTree', 'VSensorMarker', 'SensorMarker', 'VSensorLoad',
+    'SensorLoad', 'VSensorUserFunction', 'SensorUserFunction',
     ]
 
 
@@ -7441,6 +7442,113 @@ class ObjectContactSphereTriangle:
         yield 'Vcolor', dict(self.visualization)["color"]
         if self.radiusSphere is not None:
             yield 'radiusSphere', self.radiusSphere
+
+    def __repr__(self):
+        return str(dict(self))
+
+class VObjectContactSphereCylinder:
+    """Visualization data for ObjectContactSphereCylinder.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; draws the sphere and the cylinder with the contact settings; type: bool
+
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
+
+    """
+    def __init__(self, show = False, color = [0.7,0.7,0.7,1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectContactSphereCylinder:
+    r"""A penalty contact between a sphere (marker 0) and a finite cylinder (marker 1), with its side, its caps and its rims; the cylinder is centered at marker 1 along its local z axis.
+    
+    Contact law and friction as for ObjectContactSphereTriangle.
+    
+    Args:
+        name: connector's unique name; type: str
+
+        markerNumbers: list of markers: the center of the sphere (marker 0) and the center of the cylinder (marker 1), whose local z axis is the axis of the cylinder; type: ArrayMarkerIndex
+
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 3, needed for the discontinuous iteration (friction and contact); the data variables hold the values of the last PostNewton iteration: data[0] the gap, data[1] the norm of the tangential velocity (stick or slip), data[2] the impact velocity; type: NodeIndex
+
+        sphereRadius: radius of the sphere [SI:m]; type: float
+
+        cylinderRadius: radius of the cylinder [SI:m]; type: float
+
+        cylinderLength: length of the cylinder along the local z axis of marker 1, from :math:`-L/2` to :math:`L/2` [SI:m]; type: float
+
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
+
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
+
+        contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
+
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+
+        contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
+
+        restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
+
+        minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
+
+        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
+
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectContactSphereCylinder
+
+    Notes:
+        Object has/provides the following types: ``Connector``
+
+        Requested Marker type: ``Position`` + ``Orientation``
+
+        Requested Node type: ``GenericData``
+
+    """
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., cylinderRadius = 0., cylinderLength = 0., dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.nodeNumber = nodeNumber
+        self.sphereRadius = sphereRadius
+        self.cylinderRadius = cylinderRadius
+        self.cylinderLength = cylinderLength
+        self.dynamicFriction = dynamicFriction
+        self.frictionProportionalZone = frictionProportionalZone
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.contactStiffnessExponent = contactStiffnessExponent
+        self.restitutionCoefficient = restitutionCoefficient
+        self.minimumImpactVelocity = minimumImpactVelocity
+        self.impactModel = impactModel
+        self.activeConnector = activeConnector
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ContactSphereCylinder'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'sphereRadius', self.sphereRadius
+        yield 'cylinderRadius', self.cylinderRadius
+        yield 'cylinderLength', self.cylinderLength
+        yield 'dynamicFriction', self.dynamicFriction
+        yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'restitutionCoefficient', self.restitutionCoefficient
+        yield 'minimumImpactVelocity', self.minimumImpactVelocity
+        yield 'impactModel', self.impactModel
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
 
     def __repr__(self):
         return str(dict(self))

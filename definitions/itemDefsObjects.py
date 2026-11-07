@@ -13895,6 +13895,221 @@ definitions.append(ItemDefinition(
     ))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   ObjectContactSphereCylinder   +++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+definitions.append(ItemDefinition(
+    className='ObjectContactSphereCylinder',
+    drawing=r'The sphere with `contact.showSpheres` and the cylinder with `contact.showCylinders`.',
+    drawingSettings=['contact.colorCylinders', 'contact.colorSpheres', 'contact.showCylinders', 'contact.showSpheres', 'general.cylinderTiling', 'general.sphereTiling'],
+    addProtectedC=r"""    static constexpr Index nDataVariables = 3; //number of data variables for tangential and normal contact
+    static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
+    static constexpr Index dataIndexVtangent = 1; //!< index in data node representing tangent velocity
+    static constexpr Index dataIndexImpactVel = 2; //!< index in data node representing last impact velocity
+""",
+    author=r'Gerstmayr Johannes',
+    cParentClass=ParentClassCObjectConnector,
+    overallDescription=r'A penalty contact between a sphere (marker 0) and a finite cylinder (marker 1), with its side, its caps and its rims; the cylinder is centered at marker 1 along its local z axis. Contact law and friction as for ObjectContactSphereTriangle.',
+    classType=ClassTypeObject,
+    miniExample=r"""    #a ball dropped onto a cylinder lying along the x axis, fixed to the ground
+    inertia = InertiaSphere(mass=1, radius=0.1)
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2,0,0.5]+eulerParameters0))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0,0,-9.81]))
+    mCylinder = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0], localHT=HTrotateY(0.5*pi)))
+    mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0,0,0]))
+    mbs.AddObject(ObjectContactSphereCylinder(markerNumbers=[mBall, mCylinder], nodeNumber=nData, sphereRadius=0.1,
+                                              cylinderRadius=0.2, cylinderLength=1, contactStiffness=1e5, contactDamping=1e3))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1000
+    mbs.SolveDynamic(simulationSettings)
+
+    #at rest on top of the cylinder: 0.2 + 0.1 - m*g/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2] #0.2999
+    """,
+    miniExamplePerformanceTest={'numberOfSteps': 274900},
+    detailedDescription=r"""    #### Definition of quantities
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | center of the sphere, provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | center of the cylinder, provided by marker m1 |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | rotation of the cylinder, its axis the local z axis of marker m1 |
+    | sphere center in the cylinder frame | $\pv_c = \LU{0,m1}{\Rot}\tp (\LU{0}{\pv}_{m0} - \LU{0}{\pv}_{m1}) = [x,\,y,\,z]\tp$ | with $\rho = \sqrt{x^2+y^2}$ |
+    | marker velocities | $\LU{0}{\vv}_{m0}$, $\LU{0}{\vv}_{m1}$ | global velocities |
+    | data coordinates | $\xv=[x_0,\,x_1,\,x_2]\tp$ | the gap (0), the norm of the tangential velocity (1), the impact velocity (2) |
+
+    #### Geometric relations
+
+    The cylinder has the radius $r_C$ and the length $L$, from $z=-L/2$ to $z=L/2$, with $h = L/2$. The point
+    $\pv_C$ of the cylinder closest to the sphere center $\pv_c$, the distance $d$ of the center from the
+    cylinder and the normal $\nv_C$ of the cylinder towards the center follow from the region of the center:
+
+    | region | closest point $\pv_C$ | $d$ |
+    |---|---|---|
+    | beside the side: $\rho > r_C$, $\vert z\vert \le h$ | $[r_C x/\rho,\, r_C y/\rho,\, z]\tp$ | $\rho - r_C$ |
+    | above or below a cap: $\rho \le r_C$, $\vert z\vert > h$ | $[x,\, y,\, \mathrm{sign}(z)\, h]\tp$ | $\vert z\vert - h$ |
+    | beside a rim: $\rho > r_C$, $\vert z\vert > h$ | $[r_C x/\rho,\, r_C y/\rho,\, \mathrm{sign}(z)\, h]\tp$ | $\Vert \pv_c - \pv_C \Vert$ |
+    | inside: $\rho \le r_C$, $\vert z\vert \le h$ | on the side if $r_C - \rho < h - \vert z\vert$, else on the cap | $-(r_C - \rho)$ or $-(h - \vert z\vert)$ |
+
+    With the global closest point $\LU{0}{\pv}_C$ and the normal $\LU{0}{\nv} = -\LU{0,m1}{\Rot}\,\nv_C$ from the
+    sphere to the cylinder,
+
+    $$
+    g = d - r_S .
+    $$
+
+    The velocity of the contact point on the cylinder includes the rotation of marker 1; that of the sphere
+    includes its rotation only if friction is used, because only then does marker 0 need an orientation.
+
+    #### Connector forces
+
+    The normal force - from the penetration $\delta = -g$, with `contactStiffness` $k_c$, the exponent
+    $n_\mathrm{exp}$, `contactDamping` $d_c$ and the impact model `impactModel` with the restitution
+    coefficient - and the regularized dry friction with $\mu_d$ and `frictionProportionalZone` are
+    computed as for `ObjectContactSphereSphere`, see [](#sec-item-objectcontactspheresphere), with the normal
+    $\LU{0}{\nv}$ and the relative velocity at the contact point of this contact. The force on marker 1 is
+    $\LU{0}{\fv}$, the force on marker 0 is $-\LU{0}{\fv}$; the friction force also gives a torque about the
+    centers. The data coordinates hold the gap, the tangential velocity and the impact velocity of the last
+    post Newton step, which decide on contact and on the friction regime during the Newton iterations (active
+    set).
+    """,
+    mainParentClass=MainParentClassMainObjectConnector,
+    objectType=ObjectTypeConnector,
+    outputVariables=[
+        ItemOutputVariable(OVDistance, 'the signed distance of the sphere surface and the cylinder, the gap (< 0: penetration), from the current configuration, also with activeConnector = False'),
+        ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
+        ItemOutputVariable(OVDisplacement, 'global vector from the sphere center (marker 0) to the closest point of the cylinder'),
+        ItemOutputVariable(OVVelocity, 'velocity of the closest point of the cylinder, with the rotation of its body, relative to the sphere center'),
+        ItemOutputVariable(OVDisplacementLocal, '1D Vector, containing only gap'),
+        ItemOutputVariable(OVDirector1, 'the contact normal, the unit vector from the sphere center (marker 0) towards the cylinder'),
+        ItemOutputVariable(OVForce, 'global contact force vector on marker 1'),
+        ItemOutputVariable(OVTorque, 'global torque due to friction on marker 0'),
+        ],
+    visuParentClass=VisuParentClassVisualizationObject,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"""connector's unique name"""),
+        ItemParameter(type=TArrayIndex(ItemMarker, size=2), destination=DestComp+DestParam,
+            pythonName='markerNumbers',
+            defaultValue='ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })',
+            description=r"""$[m0,m1]\tp$list of markers: the center of the sphere (marker 0) and the center of the cylinder (marker 1), whose local z axis is the axis of the cylinder"""),
+        ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
+            pythonName='nodeNumber',
+            defaultValue=DVInvalidIndex,
+            description=r'$n_d$node number of a NodeGenericData with numberOfDataCoordinates = 3, needed for the discontinuous iteration (friction and contact); the data variables hold the values of the last PostNewton iteration: data[0] the gap, data[1] the norm of the tangential velocity (stick or slip), data[2] the impact velocity'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
+            pythonName='sphereRadius',
+            defaultValue=0.,
+            description=r'$r_S$radius of the sphere [SI:m]'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
+            pythonName='cylinderRadius',
+            defaultValue=0.,
+            description=r'$r_C$radius of the cylinder [SI:m]'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
+            pythonName='cylinderLength',
+            defaultValue=0.,
+            description=r'$L$length of the cylinder along the local z axis of marker 1, from $-L/2$ to $L/2$ [SI:m]'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='dynamicFriction',
+            defaultValue=0.,
+            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='frictionProportionalZone',
+            defaultValue=0.001,
+            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='contactStiffness',
+            defaultValue=0.,
+            description=r"""$k_c$normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$)"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='contactDamping',
+            defaultValue=0.,
+            description=r'$d_c$linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam,
+            pythonName='contactStiffnessExponent',
+            defaultValue=1.,
+            description=r'$n_\mathrm{exp}$exponent in normal contact model [SI:1]'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam,
+            pythonName='restitutionCoefficient',
+            defaultValue=1.,
+            description=r"""$e_\mathrm{res}$coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='minimumImpactVelocity',
+            defaultValue=0.,
+            description=r"""$\dot\delta_\mathrm{-,min}$minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)"""),
+        ItemParameter(type=TIndex(minimum=0), destination=DestComp+DestParam,
+            pythonName='impactModel',
+            defaultValue=0,
+            description=r"""$m_\mathrm{impact}$ number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!"""),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='activeConnector',
+            defaultValue=True,
+            description=r'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags=CFConst,
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags='',
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('GetNodeNumber',
+            implementation="""CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);
+        return parameters.nodeNumber;"""),
+        ItemFunctionDef('SetNodeNumber',
+            implementation='parameters.nodeNumber=nodeNumber;'),
+        ItemFunctionDef('GetNumberOfNodes',
+            implementation='return 1;'),
+        ItemFunctionDef('GetDataVariablesSize',
+            implementation='return nDataVariables;'),
+        ItemFunctionDef('HasDiscontinuousIteration',
+            implementation='return true;'),
+        ItemFunctionDef('PostNewtonStep'),
+        ItemFunctionDef('PostDiscontinuousIterationStep'),
+        ItemFunctionDef('IsPenaltyConnector',
+            implementation='return true;'),
+        ItemFunctionDef('GetAvailableJacobians',
+            implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);'),
+        *ItemConnectorInterface('Rigid', jacobian='numerical', velocityDerivative=True),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeConnectorForceRigid', args='const MarkerRigid<Real>* markers, Real t, Vector3D* forces, Vector3D* torques',
+            description=r'the force and torque on each marker from the kinematics of the two markers (#2745)'),
+        ItemFunctionDef('GetOutputVariableConnector'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ComputeConnectorProperties',
+            args='const MarkerDataStructure& markerData, const LinkedDataVector& data, Real& frictionCoeff, Real& gap, Vector3D& deltaP, Vector3D& deltaV, Vector3D& fVec, Vector3D& fFriction, Vector3D& n0, bool contactFromData = true',
+            description=r'the contact kinematics and forces: the gap, the vector from the sphere center to the closest point of the cylinder, the relative velocity there, the force on marker 1 and the normal'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
+        ItemRequestedTypes('Marker', ['Position'], conditional=[('Orientation', 'dynamicFriction')]),
+        ItemRequestedTypes('Node', ['GenericData']),
+        ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
+            pythonName='GetType',
+            implementation='return CObjectType::Connector;',
+            description=r'return object type (for node treatment in computation)'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
+            pythonName='GetTypeName',
+            implementation='return "ContactSphereCylinder";',
+            description=r"Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?"),
+        ItemFunctionDef('IsActive',
+            implementation='return parameters.activeConnector;'),
+        ItemFunctionDef('UpdateGraphics'),
+        ItemFunctionDef('IsConnector',
+            implementation='return true;'),
+        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
+            pythonName='show',
+            defaultValue=False,
+            description=r'set true, if item is shown in visualization and false if it is not shown; draws the sphere and the cylinder with the contact settings'),
+        ItemParameter(type=TFloat4, destination=DestVisu,
+            pythonName='color',
+            defaultValue='Float4({0.7f,0.7f,0.7f,1.f})',
+            description=r'RGBA connector color; if R==-1, use default color'),
+        ],
+    ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectContactCurveCircles   +++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(

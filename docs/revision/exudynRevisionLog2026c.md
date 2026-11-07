@@ -6427,6 +6427,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-4"></a>
+### RG9.12.4 — ObjectContactSphereCylinder (2026-11-07, #3320)
+- The definition as ObjectContactSphereTriangle: sphere at marker 0, the cylinder centered at marker 1 along its
+  local z axis (`cylinderRadius`, `cylinderLength`), the contact law, friction and impact models, the numerical
+  Jacobian of the rigid connector interface; 3 data coordinates (gap, tangential velocity, impact velocity) as
+  decided in contactPrimitives.md section 3.3, without the unused fourth one of the sphere contacts.
+- The geometry by EGeometry::DistanceSphereCylinder (#3317): the regions side, cap, rim and inside; the normal from
+  the sphere towards the cylinder, also for a center inside, where the vector to the closest point would point the
+  wrong way.
+- The contact law moved out of ObjectContactSphereTriangle into src/ImplObjects/ContactPrimitiveForce.h, a template
+  on the parameter structure, used by both; SphereTriangle keeps its member as a call of it - the suite unchanged.
+- contact.showCylinders and contact.colorCylinders (visualization settings) for the drawing.
+- MiniExample (a ball at rest on a lying cylinder, 0.3 - m g/k); sphereCylinderContactTest.py (new): the Distance
+  of a deactivated contact against cUtilities.Distance on a tilted cylinder for side, cap, rim and inside (exact),
+  at rest on cap and side (1e-8), a ball sliding along the top with friction 0.5 rolls at 5/7 v0 (vx 0.71399,
+  omega r 0.71469). parameterConversionTestReference.txt recorded with the new item.
+- Not in this step: a Create function (RG9.12.8 with the examples), the contact force user function (RG9.12.14).
+
 <a id="rg9-12-3"></a>
 ### RG9.12.3 — the output variable Distance of the sphere contacts (2026-11-07, #3319)
 - OutputVariableType.Distance exists (bit 0, the connectors' distance); ObjectContactSphereSphere, SphereTriangle

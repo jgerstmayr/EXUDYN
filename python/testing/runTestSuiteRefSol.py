@@ -250,7 +250,8 @@ def TestExamplesReferenceSolution():
         'implicitRungeKuttaSolversTest.py': 206.0, #new 2026-11-05: the C++ solvers TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3: their orders and the automatic step size (#3261)
         'implicitRungeKuttaSmallStepTest.py': 8004, #new 2026-11-06: LobattoIIIA4 and Radau3 with steps 1e-5 and the Newton tolerance 1e-12 (#3307)
         'contactDistanceOutputTest.py':5.272467570487764, #new 2026-11-07: the output variable Distance of the sphere contacts, also when deactivated (#3319)
-        'convexDistanceTest.py':13.364213562373093, #new 2026-11-07: exudyn.cUtilities.Distance of convex shapes by GJK and EPA against closed forms and random pairs (#3317)
+        'convexDistanceTest.py':13.364213562373093,
+        'sphereCylinderContactTest.py':6.613788897624327, #new 2026-11-07: ObjectContactSphereCylinder, its Distance against cUtilities.Distance, at rest on cap and side, rolling with friction (#3320) #new 2026-11-07: exudyn.cUtilities.Distance of convex shapes by GJK and EPA against closed forms and random pairs (#3317)
         'kinematicChainTest.py':37.53287798230574, #new 2026-11-05: exudyn.cUtilities.KinematicChain against the Python functions of Robot (#3259)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)
         'modelLibraryTest.py':18.490979056790675, #2026-11-06: a restart of the modified Newton method takes the ODE1 derivatives of the start of the step (#3300), before 18.49098226089841; 2026-11-06: the ODE1 coordinates start from their derivatives at the initial state (#3258), before 18.491003336653357; 2026-11-06: the term of the initial velocities in the initial accelerations along the motion, with the part along the Euler parameters (#3289) and the stages of Lie group nodes in the implicit Runge-Kutta solvers by Runge-Kutta-Munthe-Kaas (#3290), before 18.49100303707696; 2026-11-06: the composition of rotation vectors without the quantization of small angles (#3288); before 18.4910098095576; new 2026-11-05: the models of modelLibrary.py, each with its step and half of it (#3257)
@@ -589,6 +590,7 @@ def MiniExamplesReferenceSolution():
         'ObjectContactCircleCable2D.py':-0.08340198465657866,
         'ObjectContactFrictionCircleCable2D.py':-0.0963071435860746,
         'ObjectContactSphereSphere.py':1.0999019,
+        'ObjectContactSphereCylinder.py':0.29990189999999994, #new 2026-11-07 (#3320)
         'ObjectContactSphereTriangle.py':0.09990189999999996,
         'ObjectContactSphereTorus.py':0.10101,
         'ObjectContactCurveCircles.py':0.09949999999999998,

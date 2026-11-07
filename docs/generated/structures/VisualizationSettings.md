@@ -412,6 +412,7 @@ VSettingsContact has the following items:
 | name | type | default | description |
 |---|---|---|---|
 | `colorBoundingBoxes` | Float4 | [0.9,0.1,0.1,1.] | RGBA color for boudnding boxes, see showBoundingBoxes |
+| `colorCylinders` | Float4 | [0.5,0.6,0.7,1.] | RGBA color for contact cylinders, see showCylinders |
 | `colorSearchTree` | Float4 | [0.1,0.1,0.9,1.] | RGBA color for search tree, see showSearchTree |
 | `colorSpheres` | Float4 | [0.8,0.5,0.2,1.] | RGBA color for contact spheres, see showSpheres |
 | `colorTori` | Float4 | [0.8,0.2,0.8,1.] | RGBA color for contact tori, see showTori |
@@ -421,6 +422,7 @@ VSettingsContact has the following items:
 | `showBoundingBoxes` | bool | False | show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects! |
 | `showContactForces` | bool | False | if True, contact forces are drawn for certain contact models |
 | `showContactForcesValues` | bool | False | if True and showContactForces=True, numerical values for contact forces are shown at certain points |
+| `showCylinders` | bool | False | show the cylinders of the primitive contacts (ObjectContactSphereCylinder, ...) |
 | `showSearchTree` | bool | False | show outer box of search tree for all GeneralContacts |
 | `showSearchTreeCells` | bool | False | show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells! |
 | `showSpheres` | bool | False | show contact spheres (SpheresWithMarker, ...) |

@@ -26,5 +26,6 @@ ObjectContactFrictionCircleCable2D
 ObjectContactSphereSphere
 ObjectContactSphereTorus
 ObjectContactSphereTriangle
+ObjectContactSphereCylinder
 ObjectContactCurveCircles
 ```

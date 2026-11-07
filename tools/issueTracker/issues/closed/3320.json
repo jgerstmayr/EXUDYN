@@ -1,0 +1,17 @@
+{
+  "number": 3320,
+  "title": "ObjectContactSphereCylinder: penalty contact of a sphere and a finite cylinder",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The first of the new contact primitives (docs/dev/design/contactPrimitives.md): a sphere at marker 0 and a cylinder centered at marker 1 along its local z axis, with the law and friction of ObjectContactSphereTriangle. Decided: the analytic sphere-cylinder distance of EGeometry (side, caps, rims, a center inside), the contact law as one function shared with ObjectContactSphereTriangle, 3 data coordinates (gap, tangential velocity, impact velocity), the output Distance also when inactive, contact.showCylinders and colorCylinders for the drawing; tested against the analytic case and by a drop test; revision2026c step RG9.12.4.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 11:19",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectContactSphereCylinder.cpp",
+  "releaseNotes": "ObjectContactSphereCylinder: a penalty contact between a sphere and a finite cylinder, with friction and the impact models of the sphere contacts.",
+  "resolvedInVersion": "1.13.434"
+}

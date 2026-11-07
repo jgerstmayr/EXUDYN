@@ -437,7 +437,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 - **function description**: {ref}`HT <HT>` for translation with vector r
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`homogeneousTransformationInterfaceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py) (TM), [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM), [`homogeneousTransformationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py) (TM), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeFloatingBaseTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeFloatingBaseTest.py) (TM), [`kinematicTreeMarkerCacheTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeMarkerCacheTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`homogeneousTransformationInterfaceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py) (TM), [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM), [`homogeneousTransformationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py) (TM), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeFloatingBaseTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeFloatingBaseTest.py) (TM), [`kinematicTreeMarkerCacheTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeMarkerCacheTest.py) (TM), ...
 
 
 (sec-rigidbodyutilities-httranslatex)=
@@ -486,7 +486,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 - **function description**: {ref}`HT <HT>` for rotation around axis X (first axis)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM), [`sphereCylinderContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereCylinderContactTest.py) (TM)
 
 
 (sec-rigidbodyutilities-htrotatey)=
@@ -495,6 +495,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`homogeneous
 [`HTrotateY(angle)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L547)
 
 - **function description**: {ref}`HT <HT>` for rotation around axis X (first axis)
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`sphereCylinderContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereCylinderContactTest.py) (TM)
 
 
 (sec-rigidbodyutilities-htrotatez)=
