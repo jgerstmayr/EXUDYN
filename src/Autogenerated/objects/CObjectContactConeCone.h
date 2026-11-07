@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  17:26:42 (last modified)
+* @date         2026-11-07  19:12:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,7 +31,7 @@ class CObjectContactConeConeParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers: the centers of cone 0 and cone 1, the local z axis of each marker the axis of its cone
-    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCone1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points \f$i\f$ holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity
+    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCone1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points \f$i\f$ holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; with contactPlasticityRatio > 0 a block of 4, the fourth the plastic overlap
     Vector2D conesRadii0;                         //!< AUTO: the radii of cone 0 at \f$z=-L_0/2\f$ and at \f$z=L_0/2\f$ along the local z axis of marker 0, >= 0 and not both 0 [SI:m]
     Vector2D conesRadii1;                         //!< AUTO: the radii of cone 1 at \f$z=-L_1/2\f$ and at \f$z=L_1/2\f$ along the local z axis of marker 1, >= 0 and not both 0 [SI:m]
     Vector2D conesLengths;                        //!< AUTO: the lengths of cone 0 and cone 1 along the local z axes of their markers, both > 0 [SI:m]
@@ -41,6 +41,10 @@ public: // AUTO:
     Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m] (units in case that \f$n_\mathrm{exp}=1\f$)
     Real contactDamping;                          //!< AUTO: must be >= 0; linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.
     Real contactStiffnessExponent;                //!< AUTO: must be > 0; exponent in normal contact model [SI:1]
+    Real contactPlasticityRatio;                  //!< AUTO: must be >= 0; ratio of contact stiffness for first loading and unloading/reloading [SI:1] of the Edinburgh adhesive elasto-plastic model, as in ObjectContactSphereSphere, with impactModel Linear: unloading and reloading with \f$K_2 = k_c/(1-\lambda_\mathrm{P})\f$ from the plastic overlap \f$\lambda_\mathrm{P}\,\delta_{max}\f$ of the contact; 0: the elastic law; not 0: each contact point has a block of 4 data coordinates, the fourth the plastic overlap (#3336)
+    Real adhesionCoefficient;                     //!< AUTO: must be >= 0; coefficient for adhesion [SI:N/m] (units in case that \f$n_\mathrm{adh}=1\f$) of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0
+    Real adhesionExponent;                        //!< AUTO: must be >= 0; exponent for adhesion coefficient [SI:1] of the Edinburgh adhesive elasto-plastic model
+    Real constantPullOffForce;                    //!< AUTO: must be >= 0; constant adhesion force [SI:N] of each contact point in contact, of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0
     Real restitutionCoefficient;                  //!< AUTO: must be > 0; coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)
     Real minimumImpactVelocity;                   //!< AUTO: must be >= 0; minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
     ContactImpactModel impactModel;               //!< AUTO: the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
@@ -60,6 +64,10 @@ public: // AUTO:
         contactStiffness = 0.;
         contactDamping = 0.;
         contactStiffnessExponent = 1.;
+        contactPlasticityRatio = 0.;
+        adhesionCoefficient = 0.;
+        adhesionExponent = 1.;
+        constantPullOffForce = 0.;
         restitutionCoefficient = 1.;
         minimumImpactVelocity = 0.;
         impactModel = ContactImpactModel::Linear;
@@ -153,7 +161,7 @@ public: // AUTO:
     //! AUTO:  data (history) variable simplifies contact switching for implicit time integration and Newton method
     virtual Index GetDataVariablesSize() const override
     {
-        return parameters.isHollowCone1 ? 24 : nDataVariables;
+        return (parameters.isHollowCone1 ? 8 : 4) * (parameters.contactPlasticityRatio != 0. ? 4 : 3);
     }
 
     //! AUTO:  flag to be set for connectors, which use DiscontinuousIteration

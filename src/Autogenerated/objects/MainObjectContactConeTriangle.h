@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  16:02:06 (last modified)
+* @date         2026-11-07  19:12:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -126,6 +126,10 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactConeTriangle->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.contactStiffness"); }
         if (EPyUtils::DictItemExists(d, "contactDamping")) { EPyUtils::FromPython(d["contactDamping"], cObjectContactConeTriangle->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.contactDamping"); }
         if (EPyUtils::DictItemExists(d, "contactStiffnessExponent")) { EPyUtils::FromPython(d["contactStiffnessExponent"], cObjectContactConeTriangle->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactConeTriangle.contactStiffnessExponent"); }
+        if (EPyUtils::DictItemExists(d, "contactPlasticityRatio")) { EPyUtils::FromPython(d["contactPlasticityRatio"], cObjectContactConeTriangle->GetParameters().contactPlasticityRatio, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.contactPlasticityRatio"); }
+        if (EPyUtils::DictItemExists(d, "adhesionCoefficient")) { EPyUtils::FromPython(d["adhesionCoefficient"], cObjectContactConeTriangle->GetParameters().adhesionCoefficient, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.adhesionCoefficient"); }
+        if (EPyUtils::DictItemExists(d, "adhesionExponent")) { EPyUtils::FromPython(d["adhesionExponent"], cObjectContactConeTriangle->GetParameters().adhesionExponent, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.adhesionExponent"); }
+        if (EPyUtils::DictItemExists(d, "constantPullOffForce")) { EPyUtils::FromPython(d["constantPullOffForce"], cObjectContactConeTriangle->GetParameters().constantPullOffForce, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.constantPullOffForce"); }
         if (EPyUtils::DictItemExists(d, "restitutionCoefficient")) { EPyUtils::FromPython(d["restitutionCoefficient"], cObjectContactConeTriangle->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactConeTriangle.restitutionCoefficient"); }
         if (EPyUtils::DictItemExists(d, "minimumImpactVelocity")) { EPyUtils::FromPython(d["minimumImpactVelocity"], cObjectContactConeTriangle->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.minimumImpactVelocity"); }
         if (EPyUtils::DictItemExists(d, "impactModel")) { cObjectContactConeTriangle->GetParameters().impactModel = (ContactImpactModel)py::cast<Index>(d["impactModel"]); }
@@ -153,6 +157,10 @@ public: // AUTO:
         d["contactStiffness"] = (Real)cObjectContactConeTriangle->GetParameters().contactStiffness;
         d["contactDamping"] = (Real)cObjectContactConeTriangle->GetParameters().contactDamping;
         d["contactStiffnessExponent"] = (Real)cObjectContactConeTriangle->GetParameters().contactStiffnessExponent;
+        d["contactPlasticityRatio"] = (Real)cObjectContactConeTriangle->GetParameters().contactPlasticityRatio;
+        d["adhesionCoefficient"] = (Real)cObjectContactConeTriangle->GetParameters().adhesionCoefficient;
+        d["adhesionExponent"] = (Real)cObjectContactConeTriangle->GetParameters().adhesionExponent;
+        d["constantPullOffForce"] = (Real)cObjectContactConeTriangle->GetParameters().constantPullOffForce;
         d["restitutionCoefficient"] = (Real)cObjectContactConeTriangle->GetParameters().restitutionCoefficient;
         d["minimumImpactVelocity"] = (Real)cObjectContactConeTriangle->GetParameters().minimumImpactVelocity;
         d["impactModel"] = (ContactImpactModel)cObjectContactConeTriangle->GetParameters().impactModel;
@@ -179,6 +187,10 @@ public: // AUTO:
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectContactConeTriangle->GetParameters().contactStiffness); } //! AUTO: get parameter
         else if (parameterName.compare("contactDamping") == 0) { return py::cast((Real)cObjectContactConeTriangle->GetParameters().contactDamping); } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffnessExponent") == 0) { return py::cast((Real)cObjectContactConeTriangle->GetParameters().contactStiffnessExponent); } //! AUTO: get parameter
+        else if (parameterName.compare("contactPlasticityRatio") == 0) { return py::cast((Real)cObjectContactConeTriangle->GetParameters().contactPlasticityRatio); } //! AUTO: get parameter
+        else if (parameterName.compare("adhesionCoefficient") == 0) { return py::cast((Real)cObjectContactConeTriangle->GetParameters().adhesionCoefficient); } //! AUTO: get parameter
+        else if (parameterName.compare("adhesionExponent") == 0) { return py::cast((Real)cObjectContactConeTriangle->GetParameters().adhesionExponent); } //! AUTO: get parameter
+        else if (parameterName.compare("constantPullOffForce") == 0) { return py::cast((Real)cObjectContactConeTriangle->GetParameters().constantPullOffForce); } //! AUTO: get parameter
         else if (parameterName.compare("restitutionCoefficient") == 0) { return py::cast((Real)cObjectContactConeTriangle->GetParameters().restitutionCoefficient); } //! AUTO: get parameter
         else if (parameterName.compare("minimumImpactVelocity") == 0) { return py::cast((Real)cObjectContactConeTriangle->GetParameters().minimumImpactVelocity); } //! AUTO: get parameter
         else if (parameterName.compare("impactModel") == 0) { return py::cast((ContactImpactModel)cObjectContactConeTriangle->GetParameters().impactModel); } //! AUTO: get parameter
@@ -206,6 +218,10 @@ public: // AUTO:
         else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactConeTriangle->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.contactStiffness"); } //! AUTO: set parameter
         else if (parameterName.compare("contactDamping") == 0) { EPyUtils::FromPython(value, cObjectContactConeTriangle->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.contactDamping"); } //! AUTO: set parameter
         else if (parameterName.compare("contactStiffnessExponent") == 0) { EPyUtils::FromPython(value, cObjectContactConeTriangle->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactConeTriangle.contactStiffnessExponent"); } //! AUTO: set parameter
+        else if (parameterName.compare("contactPlasticityRatio") == 0) { EPyUtils::FromPython(value, cObjectContactConeTriangle->GetParameters().contactPlasticityRatio, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.contactPlasticityRatio"); } //! AUTO: set parameter
+        else if (parameterName.compare("adhesionCoefficient") == 0) { EPyUtils::FromPython(value, cObjectContactConeTriangle->GetParameters().adhesionCoefficient, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.adhesionCoefficient"); } //! AUTO: set parameter
+        else if (parameterName.compare("adhesionExponent") == 0) { EPyUtils::FromPython(value, cObjectContactConeTriangle->GetParameters().adhesionExponent, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.adhesionExponent"); } //! AUTO: set parameter
+        else if (parameterName.compare("constantPullOffForce") == 0) { EPyUtils::FromPython(value, cObjectContactConeTriangle->GetParameters().constantPullOffForce, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.constantPullOffForce"); } //! AUTO: set parameter
         else if (parameterName.compare("restitutionCoefficient") == 0) { EPyUtils::FromPython(value, cObjectContactConeTriangle->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactConeTriangle.restitutionCoefficient"); } //! AUTO: set parameter
         else if (parameterName.compare("minimumImpactVelocity") == 0) { EPyUtils::FromPython(value, cObjectContactConeTriangle->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactConeTriangle.minimumImpactVelocity"); } //! AUTO: set parameter
         else if (parameterName.compare("impactModel") == 0) { cObjectContactConeTriangle->GetParameters().impactModel = (ContactImpactModel)py::cast<Index>(value); } //! AUTO: set parameter

@@ -22,7 +22,23 @@
 
 namespace ContactPoints {
 
-	constexpr Index blockSize = 3;			//!< the data coordinates of a point: gap, tangential velocity, impact velocity
+	//! the data coordinates of a point: gap, tangential velocity, impact velocity, and the plastic overlap with the
+	//! adhesive elasto-plastic model (#3336)
+	template<class TParameters>
+	Index BlockSize(const TParameters& parameters) { return parameters.contactPlasticityRatio != 0. ? 4 : 3; }
+
+	//! the parameters of the adhesive elasto-plastic model of an item, with the plastic overlap of a point
+	template<class TParameters>
+	ContactPlasticity Plasticity(const TParameters& parameters, Real deltaPlastic)
+	{
+		ContactPlasticity plasticity;
+		plasticity.plasticityRatio = parameters.contactPlasticityRatio;
+		plasticity.adhesionCoefficient = parameters.adhesionCoefficient;
+		plasticity.adhesionExponent = parameters.adhesionExponent;
+		plasticity.pullOffForce = parameters.constantPullOffForce;
+		plasticity.deltaPlastic = deltaPlastic;
+		return plasticity;
+	}
 
 	//! a contact point: point0 on shape 0, point1 on shape 1, the normal from shape 0 to shape 1, the gap
 	struct Point
@@ -63,6 +79,7 @@ namespace ContactPoints {
 		deltaV = velocity[1] - velocity[0];
 
 		fVec.SetAll(0.);
+		Index blockSize = BlockSize(parameters);
 		Index index = block * blockSize;
 		bool hasContact = contactFromData ? (data[index] < 0) : (point.gap < 0);
 		if (hasContact && parameters.activeConnector)
@@ -78,8 +95,9 @@ namespace ContactPoints {
 				//frictionRegularizedRegion is only used in case that contactFromData=true
 				bool frictionRegularizedRegion = data[index + 1] < parameters.frictionProportionalZone;
 				Vector3D fFriction;
+				ContactPlasticity plasticity = Plasticity(parameters, blockSize == 4 ? data[index + 3] : 0.);
 				ContactPrimitiveForce<Real>(parameters, data[index + 2], itemName, point.gap, point.normal, deltaVnormal,
-					deltaV, parameters.dynamicFriction, frictionRegularizedRegion, fVec, fFriction, contactFromData);
+					deltaV, parameters.dynamicFriction, frictionRegularizedRegion, fVec, fFriction, contactFromData, &plasticity);
 			}
 		}
 	}
@@ -156,6 +174,7 @@ namespace ContactPoints {
 		LinkedDataVector dataStartofStepState = ((CNodeData*)item.GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep);
 		LinkedDataVector data = ((CNodeData*)item.GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);
 
+		Index blockSize = BlockSize(parameters);
 		Index blocks = EXUstd::Minimum(TPoints::capacity, data.NumberOfItems() / blockSize); //the data node holds the blocks of the item
 		for (Index i = 0; i < blocks; i++)
 		{
@@ -197,6 +216,19 @@ namespace ContactPoints {
 				{
 					discontinuousError += fabs((parameters.dynamicFriction * normalForce / parameters.frictionProportionalZone) * (vTangent - parameters.frictionProportionalZone));
 				}
+			}
+
+			//the plastic overlap: the largest of the current contact, kept from the start of the step (#3336)
+			if (blockSize == 4)
+			{
+				Real deltaPlastic = 0.;
+				if (currentGap < 0)
+				{
+					Real n = parameters.contactStiffnessExponent;
+					deltaPlastic = (n != 1. ? EM::Pow(parameters.contactPlasticityRatio, 1. / n) : parameters.contactPlasticityRatio) * (-currentGap);
+					deltaPlastic = EXUstd::Maximum(deltaPlastic, dataStartofStepState[index + 3]);
+				}
+				data[index + 3] = deltaPlastic;
 			}
 
 			//the impact velocity, if an impact occured; else that of the start of the step

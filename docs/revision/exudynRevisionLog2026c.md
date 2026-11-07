@@ -6427,6 +6427,21 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-9"></a>
+### RG9.12.9 — the plastic overlap and the adhesion of the contact points (2026-11-07, #3336)
+- The Edinburgh adhesive elasto-plastic model of ObjectContactSphereSphere (loading with k_c, unloading and reloading
+  with K2 = k_c/(1 - lambda_P) from the plastic overlap, adhesion -k_adh delta^n_adh, a constant pull-off force, with
+  impactModel Linear) as the option ContactPlasticity of ContactPrimitiveForce.h, used by the contact points
+  (ContactPrimitivePoints.h) of CylinderCylinder, CylinderTriangle, ConeCone, ConeTriangle and ConvexConvex, with the
+  four parameters of SphereSphere. With contactPlasticityRatio > 0 the blocks are 4 long (GetDataVariablesSize), the
+  fourth the plastic overlap, updated in the post Newton step as in SphereSphere: lambda_P times the deepest penetration
+  of the current contact, kept from the start of the step, 0 apart.
+- SphereTriangle and SphereCylinder keep their own data (one point, 4 and 3 coordinates); they are not changed here.
+- contactPlasticityTest.py (new): an elastic cube rests m g/(4k) deep to 1e-17; a plastic one with a pull-off force at
+  lambda_P delta_max + (m g/4 + f0)/K2 to 1e-17 with the overlap of the data node; the sensor of the Distance, written
+  at the step size, gives delta_max 2e-4 lower than the overlap - the deepest instant lies in a step reduced at the
+  impact, between the written times.
+
 <a id="rg9-12-13"></a>
 ### RG9.12.13 — ObjectJournalBearing (2026-11-07, #3335)
 - A separate item, as decided (design 8.4, 8.6): journal (marker 0) and bearing (marker 1, its local z axis the axis),

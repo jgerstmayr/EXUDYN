@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 433 | 1.13.449 |
+| 1.13 | Newborn | 434 | 1.13.450 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.450** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The plastic overlap and the adhesion of the contact points of the cylinder, cone and convex contacts (#3336)
+  - description: The adhesive elasto-plastic model of ObjectContactSphereSphere (Edinburgh model: loading with k\_c, unloading and reloading with K2 from a plastic overlap, adhesion, a constant pull-off force) is wanted for the other primitive contacts as an option (design contactPrimitives.md 3.3: a data block of 4 per contact point). Decided: the parameters contactPlasticityRatio, adhesionCoefficient, adhesionExponent, constantPullOffForce of SphereSphere for ObjectContactCylinderCylinder, CylinderTriangle, ConeCone, ConeTriangle and ConvexConvex; with contactPlasticityRatio \> 0 each contact point has a block of 4 data coordinates, the fourth the plastic overlap; the law shared in ContactPrimitiveForce.h. SphereTriangle and SphereCylinder, which have one point and their own data layout, follow separately if wanted.
+  - **notes:** The adhesive elasto-plastic model of ObjectContactSphereSphere (contactPlasticityRatio, adhesionCoefficient, adhesionExponent, constantPullOffForce) is an option of the cylinder, cone and convex contacts; each contact point then has 4 data coordinates.
+  - date resolved: **2026-11-07 19:24**, date raised: 2026-11-07
 - **1.13.449** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJournalBearing, a lubricated revolute joint with the hydrodynamic force of the short and the long bearing (#3335)
   - description: A rotor in a lubricated bearing needs the hydrodynamic force of the oil film (design contactPrimitives.md, sections 8.4 and 8.6). Decided: a separate item ObjectJournalBearing on two rigid markers, the bearing axis the local z axis of marker 1; the eccentricity of the journal center, its rate and the sum of the angular velocities about the axis; the force of the infinitely short bearing (Ocvirk) or the infinitely long bearing (Sommerfeld) as in Flores et al. (2009), selected by the enumeration type JournalBearingModel, with the eccentricity ratio limited below 1, and a penalty contact where the eccentricity exceeds the clearance; a forceUserFunction for further models, its example the short bearing; finite bearing models follow as further models.
   - **notes:** ObjectJournalBearing: a lubricated journal bearing, a revolute joint with clearance, with the oil film force of the infinitely short or long bearing (exu.JournalBearingModel), a contact beyond the clearance and a forceUserFunction for further models.

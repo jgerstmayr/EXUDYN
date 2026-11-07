@@ -675,6 +675,9 @@ a shaft in a bore or through a ring, a taper in its seat; the data node needs 24
 **A lubricated journal bearing** (#3335): `ObjectJournalBearing` is a revolute joint with clearance whose oil film
 carries the journal with the force of the infinitely short (Ocvirk) or long (Sommerfeld) bearing, `exu.JournalBearingModel`,
 and a contact where the eccentricity exceeds the clearance; a `forceUserFunction` adds further models.
+**Plastic contacts with adhesion for cylinders, cones and convex shapes** (#3336): the adhesive elasto-plastic model of
+`ObjectContactSphereSphere` (`contactPlasticityRatio`, `adhesionCoefficient`, `adhesionExponent`, `constantPullOffForce`)
+is an option of the cylinder, cone and convex contacts; each contact point then has 4 data coordinates.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

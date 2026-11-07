@@ -18,6 +18,17 @@
 #ifndef CONTACTPRIMITIVEFORCE__H
 #define CONTACTPRIMITIVEFORCE__H
 
+//! the parameters of the Edinburgh adhesive elasto-plastic model of ObjectContactSphereSphere and the plastic overlap
+//! of the contact point, from its data block (#3336)
+struct ContactPlasticity
+{
+	Real plasticityRatio = 0.;		//!< lambda_P = 1 - k_c/K_2; 0: the elastic law
+	Real adhesionCoefficient = 0.;
+	Real adhesionExponent = 1.;
+	Real pullOffForce = 0.;
+	Real deltaPlastic = 0.;			//!< the plastic overlap of the last post Newton step
+};
+
 //! the contact force fVec on marker 0 (with the friction force fFriction in it) and the normal force; impactVelocity
 //! the one of the data node, deltaVnormal the separation velocity, deltaVji the velocity of marker 1 relative to
 //! marker 0 at the contact point; with forceFrictionMode the friction regime is frictionRegularizedRegion (from the
@@ -25,7 +36,8 @@
 template<typename TReal, class TParameters>
 TReal ContactPrimitiveForce(const TParameters& parameters, Real impactVelocity, const char* itemName, TReal gap,
 	const SlimVectorBase<TReal, 3>& n0, TReal deltaVnormal, const SlimVectorBase<TReal, 3>& deltaVji, TReal dryFriction,
-	bool frictionRegularizedRegion, SlimVectorBase<TReal, 3>& fVec, SlimVectorBase<TReal, 3>& fFriction, bool forceFrictionMode)
+	bool frictionRegularizedRegion, SlimVectorBase<TReal, 3>& fVec, SlimVectorBase<TReal, 3>& fFriction, bool forceFrictionMode,
+	const ContactPlasticity* plasticity = nullptr)
 {
 	Real k1 = parameters.contactStiffness;
 	Real d1 = parameters.contactDamping;
@@ -36,7 +48,23 @@ TReal ContactPrimitiveForce(const TParameters& parameters, Real impactVelocity, 
 	TReal fDamp = -d1 * deltaVnormal;
 	TReal contactForce = k1 * deltaExp + fDamp;
 
-	if (parameters.impactModel != ContactImpactModel::Linear)
+	if (plasticity && plasticity->plasticityRatio != 0. && parameters.impactModel == ContactImpactModel::Linear)
+	{
+		//the adhesive elasto-plastic model of ObjectContactSphereSphere: loading with k1, unloading and reloading with
+		//k2 from the plastic overlap, adhesion down to -kAdh*delta^nAdh, a constant pull-off force (#3336)
+		Real k2 = k1 / (1. - plasticity->plasticityRatio);
+		TReal deltaPlasticExp = plasticity->deltaPlastic;
+		if (n != 1) { deltaPlasticExp = EXUstd::SignReal(deltaPlasticExp) * EM::Pow(fabs(deltaPlasticExp), n); }
+		TReal deltaAdhExp = -gap;
+		if (plasticity->adhesionExponent != 1) { deltaAdhExp = EXUstd::SignReal(deltaAdhExp) * EM::Pow(fabs(deltaAdhExp), plasticity->adhesionExponent); }
+		TReal unloading = k2 * (deltaExp - deltaPlasticExp);
+		TReal adhesion = -plasticity->adhesionCoefficient * deltaAdhExp;
+		if (unloading >= k1 * deltaExp) { contactForce = k1 * deltaExp; } //loading
+		else if (unloading > adhesion) { contactForce = unloading; } //unloading
+		else { contactForce = adhesion; } //unloading with adhesion
+		contactForce += -plasticity->pullOffForce + fDamp;
+	}
+	else if (parameters.impactModel != ContactImpactModel::Linear)
 	{
 		// if impactModel != 0  treat the contact force with restitution model
 		// for resititution coefficient < 1, lambda must be negative as component acting in direction of damping is added

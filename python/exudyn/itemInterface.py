@@ -7868,7 +7868,7 @@ class ObjectContactCylinderCylinder:
 
         markerNumbers: list of markers: the centers of cylinder 0 and cylinder 1, the local z axis of each marker the axis of its cylinder; type: ArrayMarkerIndex
 
-        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCylinder1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCylinder1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; with contactPlasticityRatio > 0 a block of 4, the fourth the plastic overlap; type: NodeIndex
 
         cylindersRadii: the radii of cylinder 0 and cylinder 1, both > 0 [SI:m]; type: [float,float]
 
@@ -7885,6 +7885,14 @@ class ObjectContactCylinderCylinder:
         contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
+
+        contactPlasticityRatio: ratio of contact stiffness for first loading and unloading/reloading [SI:1] of the Edinburgh adhesive elasto-plastic model, as in ObjectContactSphereSphere, with impactModel Linear: unloading and reloading with :math:`K_2 = k_c/(1-\lambda_\mathrm{P})` from the plastic overlap :math:`\lambda_\mathrm{P}\,\delta_{max}` of the contact; 0: the elastic law; not 0: each contact point has a block of 4 data coordinates, the fourth the plastic overlap (#3336); type: float
+
+        adhesionCoefficient: coefficient for adhesion [SI:N/m] (units in case that :math:`n_\mathrm{adh}=1`) of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
+
+        adhesionExponent: exponent for adhesion coefficient [SI:1] of the Edinburgh adhesive elasto-plastic model; type: float
+
+        constantPullOffForce: constant adhesion force [SI:N] of each contact point in contact, of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
 
         restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
 
@@ -7906,7 +7914,7 @@ class ObjectContactCylinderCylinder:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], isHollowCylinder1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], isHollowCylinder1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7918,6 +7926,10 @@ class ObjectContactCylinderCylinder:
         self.contactStiffness = contactStiffness
         self.contactDamping = contactDamping
         self.contactStiffnessExponent = contactStiffnessExponent
+        self.contactPlasticityRatio = contactPlasticityRatio
+        self.adhesionCoefficient = adhesionCoefficient
+        self.adhesionExponent = adhesionExponent
+        self.constantPullOffForce = constantPullOffForce
         self.restitutionCoefficient = restitutionCoefficient
         self.minimumImpactVelocity = minimumImpactVelocity
         self.impactModel = impactModel
@@ -7938,6 +7950,10 @@ class ObjectContactCylinderCylinder:
         yield 'contactStiffness', self.contactStiffness
         yield 'contactDamping', self.contactDamping
         yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'contactPlasticityRatio', self.contactPlasticityRatio
+        yield 'adhesionCoefficient', self.adhesionCoefficient
+        yield 'adhesionExponent', self.adhesionExponent
+        yield 'constantPullOffForce', self.constantPullOffForce
         yield 'restitutionCoefficient', self.restitutionCoefficient
         yield 'minimumImpactVelocity', self.minimumImpactVelocity
         yield 'impactModel', self.impactModel
@@ -7979,7 +7995,7 @@ class ObjectContactConeCone:
 
         markerNumbers: list of markers: the centers of cone 0 and cone 1, the local z axis of each marker the axis of its cone; type: ArrayMarkerIndex
 
-        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCone1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12 (24 with isHollowCone1), needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 (8) contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; with contactPlasticityRatio > 0 a block of 4, the fourth the plastic overlap; type: NodeIndex
 
         conesRadii0: the radii of cone 0 at :math:`z=-L_0/2` and at :math:`z=L_0/2` along the local z axis of marker 0, >= 0 and not both 0 [SI:m]; type: [float,float]
 
@@ -7998,6 +8014,14 @@ class ObjectContactConeCone:
         contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
+
+        contactPlasticityRatio: ratio of contact stiffness for first loading and unloading/reloading [SI:1] of the Edinburgh adhesive elasto-plastic model, as in ObjectContactSphereSphere, with impactModel Linear: unloading and reloading with :math:`K_2 = k_c/(1-\lambda_\mathrm{P})` from the plastic overlap :math:`\lambda_\mathrm{P}\,\delta_{max}` of the contact; 0: the elastic law; not 0: each contact point has a block of 4 data coordinates, the fourth the plastic overlap (#3336); type: float
+
+        adhesionCoefficient: coefficient for adhesion [SI:N/m] (units in case that :math:`n_\mathrm{adh}=1`) of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
+
+        adhesionExponent: exponent for adhesion coefficient [SI:1] of the Edinburgh adhesive elasto-plastic model; type: float
+
+        constantPullOffForce: constant adhesion force [SI:N] of each contact point in contact, of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
 
         restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
 
@@ -8019,7 +8043,7 @@ class ObjectContactConeCone:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), conesRadii0 = [0.,0.], conesRadii1 = [0.,0.], conesLengths = [0.,0.], isHollowCone1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConeConeContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), conesRadii0 = [0.,0.], conesRadii1 = [0.,0.], conesLengths = [0.,0.], isHollowCone1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConeConeContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -8032,6 +8056,10 @@ class ObjectContactConeCone:
         self.contactStiffness = contactStiffness
         self.contactDamping = contactDamping
         self.contactStiffnessExponent = contactStiffnessExponent
+        self.contactPlasticityRatio = contactPlasticityRatio
+        self.adhesionCoefficient = adhesionCoefficient
+        self.adhesionExponent = adhesionExponent
+        self.constantPullOffForce = constantPullOffForce
         self.restitutionCoefficient = restitutionCoefficient
         self.minimumImpactVelocity = minimumImpactVelocity
         self.impactModel = impactModel
@@ -8053,6 +8081,10 @@ class ObjectContactConeCone:
         yield 'contactStiffness', self.contactStiffness
         yield 'contactDamping', self.contactDamping
         yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'contactPlasticityRatio', self.contactPlasticityRatio
+        yield 'adhesionCoefficient', self.adhesionCoefficient
+        yield 'adhesionExponent', self.adhesionExponent
+        yield 'constantPullOffForce', self.constantPullOffForce
         yield 'restitutionCoefficient', self.restitutionCoefficient
         yield 'minimumImpactVelocity', self.minimumImpactVelocity
         yield 'impactModel', self.impactModel
@@ -8094,7 +8126,7 @@ class ObjectContactConeTriangle:
 
         markerNumbers: list of markers: the center of the cone (marker 0), whose local z axis is the axis of the cone, and the frame of the triangle points (marker 1); type: ArrayMarkerIndex
 
-        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; with contactPlasticityRatio > 0 a block of 4, the fourth the plastic overlap; type: NodeIndex
 
         coneRadii: the radii of the cone at :math:`z=-L/2` and at :math:`z=L/2` along the local z axis of marker 0, >= 0 and not both 0 [SI:m]; type: [float,float]
 
@@ -8113,6 +8145,14 @@ class ObjectContactConeTriangle:
         contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
+
+        contactPlasticityRatio: ratio of contact stiffness for first loading and unloading/reloading [SI:1] of the Edinburgh adhesive elasto-plastic model, as in ObjectContactSphereSphere, with impactModel Linear: unloading and reloading with :math:`K_2 = k_c/(1-\lambda_\mathrm{P})` from the plastic overlap :math:`\lambda_\mathrm{P}\,\delta_{max}` of the contact; 0: the elastic law; not 0: each contact point has a block of 4 data coordinates, the fourth the plastic overlap (#3336); type: float
+
+        adhesionCoefficient: coefficient for adhesion [SI:N/m] (units in case that :math:`n_\mathrm{adh}=1`) of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
+
+        adhesionExponent: exponent for adhesion coefficient [SI:1] of the Edinburgh adhesive elasto-plastic model; type: float
+
+        constantPullOffForce: constant adhesion force [SI:N] of each contact point in contact, of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
 
         restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
 
@@ -8134,7 +8174,7 @@ class ObjectContactConeTriangle:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), coneRadii = [0.,0.], coneLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConeTriangleContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), coneRadii = [0.,0.], coneLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConeTriangleContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -8147,6 +8187,10 @@ class ObjectContactConeTriangle:
         self.contactStiffness = contactStiffness
         self.contactDamping = contactDamping
         self.contactStiffnessExponent = contactStiffnessExponent
+        self.contactPlasticityRatio = contactPlasticityRatio
+        self.adhesionCoefficient = adhesionCoefficient
+        self.adhesionExponent = adhesionExponent
+        self.constantPullOffForce = constantPullOffForce
         self.restitutionCoefficient = restitutionCoefficient
         self.minimumImpactVelocity = minimumImpactVelocity
         self.impactModel = impactModel
@@ -8168,6 +8212,10 @@ class ObjectContactConeTriangle:
         yield 'contactStiffness', self.contactStiffness
         yield 'contactDamping', self.contactDamping
         yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'contactPlasticityRatio', self.contactPlasticityRatio
+        yield 'adhesionCoefficient', self.adhesionCoefficient
+        yield 'adhesionExponent', self.adhesionExponent
+        yield 'constantPullOffForce', self.constantPullOffForce
         yield 'restitutionCoefficient', self.restitutionCoefficient
         yield 'minimumImpactVelocity', self.minimumImpactVelocity
         yield 'impactModel', self.impactModel
@@ -8209,7 +8257,7 @@ class ObjectContactConvexConvex:
 
         markerNumbers: list of markers: the frames of shape 0 and shape 1, in which their points are given; type: ArrayMarkerIndex
 
-        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 24, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 8 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 24, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 8 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; with contactPlasticityRatio > 0 a block of 4, the fourth the plastic overlap; type: NodeIndex
 
         points0: the points of shape 0 in the frame of marker 0, rows of 3 coordinates; shape 0 is their convex hull; type: array_like
 
@@ -8228,6 +8276,14 @@ class ObjectContactConvexConvex:
         contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
+
+        contactPlasticityRatio: ratio of contact stiffness for first loading and unloading/reloading [SI:1] of the Edinburgh adhesive elasto-plastic model, as in ObjectContactSphereSphere, with impactModel Linear: unloading and reloading with :math:`K_2 = k_c/(1-\lambda_\mathrm{P})` from the plastic overlap :math:`\lambda_\mathrm{P}\,\delta_{max}` of the contact; 0: the elastic law; not 0: each contact point has a block of 4 data coordinates, the fourth the plastic overlap (#3336); type: float
+
+        adhesionCoefficient: coefficient for adhesion [SI:N/m] (units in case that :math:`n_\mathrm{adh}=1`) of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
+
+        adhesionExponent: exponent for adhesion coefficient [SI:1] of the Edinburgh adhesive elasto-plastic model; type: float
+
+        constantPullOffForce: constant adhesion force [SI:N] of each contact point in contact, of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
 
         restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
 
@@ -8249,7 +8305,7 @@ class ObjectContactConvexConvex:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), points0 = [], triangles0 = [], points1 = [], triangles1 = [], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConvexConvexContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), points0 = [], triangles0 = [], points1 = [], triangles1 = [], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConvexConvexContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -8262,6 +8318,10 @@ class ObjectContactConvexConvex:
         self.contactStiffness = contactStiffness
         self.contactDamping = contactDamping
         self.contactStiffnessExponent = contactStiffnessExponent
+        self.contactPlasticityRatio = contactPlasticityRatio
+        self.adhesionCoefficient = adhesionCoefficient
+        self.adhesionExponent = adhesionExponent
+        self.constantPullOffForce = constantPullOffForce
         self.restitutionCoefficient = restitutionCoefficient
         self.minimumImpactVelocity = minimumImpactVelocity
         self.impactModel = impactModel
@@ -8283,6 +8343,10 @@ class ObjectContactConvexConvex:
         yield 'contactStiffness', self.contactStiffness
         yield 'contactDamping', self.contactDamping
         yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'contactPlasticityRatio', self.contactPlasticityRatio
+        yield 'adhesionCoefficient', self.adhesionCoefficient
+        yield 'adhesionExponent', self.adhesionExponent
+        yield 'constantPullOffForce', self.constantPullOffForce
         yield 'restitutionCoefficient', self.restitutionCoefficient
         yield 'minimumImpactVelocity', self.minimumImpactVelocity
         yield 'impactModel', self.impactModel
@@ -8324,7 +8388,7 @@ class ObjectContactCylinderTriangle:
 
         markerNumbers: list of markers: the center of the cylinder (marker 0), whose local z axis is the axis of the cylinder, and the frame of the triangle points (marker 1); type: ArrayMarkerIndex
 
-        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; with contactPlasticityRatio > 0 a block of 4, the fourth the plastic overlap; type: NodeIndex
 
         cylinderRadius: radius of the cylinder [SI:m]; type: float
 
@@ -8343,6 +8407,14 @@ class ObjectContactCylinderTriangle:
         contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
+
+        contactPlasticityRatio: ratio of contact stiffness for first loading and unloading/reloading [SI:1] of the Edinburgh adhesive elasto-plastic model, as in ObjectContactSphereSphere, with impactModel Linear: unloading and reloading with :math:`K_2 = k_c/(1-\lambda_\mathrm{P})` from the plastic overlap :math:`\lambda_\mathrm{P}\,\delta_{max}` of the contact; 0: the elastic law; not 0: each contact point has a block of 4 data coordinates, the fourth the plastic overlap (#3336); type: float
+
+        adhesionCoefficient: coefficient for adhesion [SI:N/m] (units in case that :math:`n_\mathrm{adh}=1`) of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
+
+        adhesionExponent: exponent for adhesion coefficient [SI:1] of the Edinburgh adhesive elasto-plastic model; type: float
+
+        constantPullOffForce: constant adhesion force [SI:N] of each contact point in contact, of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
 
         restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
 
@@ -8364,7 +8436,7 @@ class ObjectContactCylinderTriangle:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylinderRadius = 0., cylinderLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderTriangleContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylinderRadius = 0., cylinderLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderTriangleContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -8377,6 +8449,10 @@ class ObjectContactCylinderTriangle:
         self.contactStiffness = contactStiffness
         self.contactDamping = contactDamping
         self.contactStiffnessExponent = contactStiffnessExponent
+        self.contactPlasticityRatio = contactPlasticityRatio
+        self.adhesionCoefficient = adhesionCoefficient
+        self.adhesionExponent = adhesionExponent
+        self.constantPullOffForce = constantPullOffForce
         self.restitutionCoefficient = restitutionCoefficient
         self.minimumImpactVelocity = minimumImpactVelocity
         self.impactModel = impactModel
@@ -8398,6 +8474,10 @@ class ObjectContactCylinderTriangle:
         yield 'contactStiffness', self.contactStiffness
         yield 'contactDamping', self.contactDamping
         yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'contactPlasticityRatio', self.contactPlasticityRatio
+        yield 'adhesionCoefficient', self.adhesionCoefficient
+        yield 'adhesionExponent', self.adhesionExponent
+        yield 'constantPullOffForce', self.constantPullOffForce
         yield 'restitutionCoefficient', self.restitutionCoefficient
         yield 'minimumImpactVelocity', self.minimumImpactVelocity
         yield 'impactModel', self.impactModel
