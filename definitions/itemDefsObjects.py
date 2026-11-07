@@ -15735,6 +15735,10 @@ definitions.append(ItemDefinition(
           + \frac{2 \varepsilon \dot\varepsilon}{(2+\varepsilon^2)(1-\varepsilon^2)} \right) .
     $$
 
+    The film lies in the gap converging in the direction of rotation, on either side: the first term of $F_r$, which
+    pulls the journal towards the center, takes $|\omega - 2\dot\gamma|$, and $F_t$ changes its sign with
+    $\omega - 2\dot\gamma$; a journal turning the other way floats at the mirrored eccentricity (#3345).
+
     For a steady load ($\dot\varepsilon = \dot\gamma = 0$) the short bearing carries
     $W = \frac{\mu \omega R L^3}{4 c^2} \frac{\varepsilon}{(1-\varepsilon^2)^2} \sqrt{\pi^2 (1-\varepsilon^2) + 16 \varepsilon^2}$
     at the attitude angle $\arctan\frac{\pi \sqrt{1-\varepsilon^2}}{4 \varepsilon}$. The ratio $\varepsilon$ is limited to

@@ -17,7 +17,8 @@ You can view and download this file on Github: [journalBearingTest.py](https://g
 #           film near that equilibrium (a small whirl decays slowly; at eccentricity ratios below about 0.8 a rigid rotor
 #           whirls, so the loads are chosen above): the short bearing, the long bearing against the steady force of
 #           Sommerfeld, the short bearing as forceUserFunction against the built-in one; without viscosity the journal
-#           rests on the contact, m g/k beyond the clearance. Run directly, the SolutionViewer shows the four journals.
+#           rests on the contact, m g/k beyond the clearance; journals turning the other way float at the mirrored
+#           eccentricities (#3345). Run directly, the SolutionViewer shows the six journals.
 #           The result is the sum of the checks and of the eccentricity ratios.
 #
 # Author:   Johannes Gerstmayr
@@ -73,6 +74,8 @@ bShort = Journal(0, viscosity=mu, bearingModel=exu.JournalBearingModel.Short)
 bLong = Journal(0.1, omega=omegaLong, viscosity=mu, bearingModel=exu.JournalBearingModel.Long)
 bUser = Journal(0.2, viscosity=mu, forceUserFunction=UFshortBearing)
 bDry = Journal(0.3)
+bShortReverse = Journal(0.4, omega=-omegaShort, viscosity=mu, bearingModel=exu.JournalBearingModel.Short) #turning the other way (#3345)
+bLongReverse = Journal(0.5, omega=-omegaLong, viscosity=mu, bearingModel=exu.JournalBearingModel.Long)
 mbs.Assemble()
 
 #the film force at the closed-form equilibrium of the short bearing: the journal placed at the eccentricity ratio of
@@ -124,6 +127,11 @@ checks += [abs(cMath.sqrt(Fr**2 + Ft**2) - m*g) < 1e-3*m*g]
 errorUser = cMath.norm(eUser - eShort)
 exu.Print('the user function against the built-in short bearing:', errorUser, '; dry: e - c =', cMath.norm(eDry) - c, 'against m g/k =', m*g/kc)
 checks += [errorUser < 1e-12, abs(cMath.norm(eDry) - c - m*g/kc) < 1e-10]
+#turning the other way: the mirrored eccentricities
+eShortReverse, eLongReverse = Eccentricity(bShortReverse), Eccentricity(bLongReverse)
+errorReverse = max(cMath.norm(eShortReverse - eShort*np.array([-1, 1, 1])), cMath.norm(eLongReverse - eLong*np.array([-1, 1, 1])))
+exu.Print('turning the other way, the eccentricities against the mirrored ones:', errorReverse)
+checks += [errorReverse < 1e-4*c] #the same equilibrium; the squeeze term of F_t differs during the transient
 
 if not testIsActive:
     SC.visualizationSettings.contact.show.cylinders = True

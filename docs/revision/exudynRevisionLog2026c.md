@@ -6427,6 +6427,22 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-25"></a>
+### RG9.12.25 — ObjectJournalBearing for both directions of rotation (2026-11-07, #3345)
+- Found with the revised contactPrimitivesShowcase.py: the bearing axis is the local z axis of marker 1, there along
+  -y, the rotor turns at +50 rad/s about y, so omega = -50 about the axis; the rotor drifted to the clearance.
+- The forces of Flores et al. (2009) assume the film in the gap converging in the direction of rotation, w = omega -
+  2 gammaDot > 0. With w < 0 the wedge term of Fr, -K 2 eps^2 w/(1-eps^2)^2 (long: -K eps^2 w/((2+eps^2)(1-eps^2))),
+  pushes outwards.
+- First tried the exact mirror (|w| and the whole Ft reversed): the squeeze term of Ft then jumps where w changes its
+  sign, which it does at the start from the center (gammaDot = e_t.u_t/e large for small e); even the journal turning
+  forward failed the Newton iteration at t = 0.004 (relative tolerance 1e-10 of the test).
+- Taken: the wedge term of Fr with |w|, continuous; Ft unchanged, whose wedge term changes its sign with w. The steady
+  equilibrium is the exact mirror; transients differ in the squeeze term of Ft only.
+- journalBearingTest.py: a short and a long journal turning the other way, at the mirrored eccentricities to 6.4e-10 m
+  (c = 1e-4; checked to 1e-4 c); before the fix 1.8e-4 m off. The forward journals changed by 1e-6 in eps (their start
+  transient has w < 0 for a moment); the description of the item says it, checkDescriptions marked.
+
 <a id="rg9-12-26"></a>
 ### RG9.12.26 — EPA refined where it stops before it converges (2026-11-07, #3346)
 - Found with the revised contactPrimitivesShowcase.py: an icosahedron resting on a face on the slab made the

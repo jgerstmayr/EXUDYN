@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 439 | 1.13.455 |
+| 1.13 | Newborn | 440 | 1.13.456 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.456** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJournalBearing pushes the journal out when it turns the other way about the bearing axis (#3345)
+  - description: The film forces of ObjectJournalBearing (infinitely short and long bearing after Flores et al. 2009) hold for a positive w = omega - 2 gammaDot, the film in the converging gap in the direction of rotation; with a negative w, a journal turning the other way about the axis of marker 1, the radial force pushes the journal outwards and the tangential force acts on the wrong side: a rotor of contactPrimitivesShowcase.py turning at -50 rad/s about the axis drifts to the clearance instead of floating at its equilibrium. Decided: for a negative w the forces of the mirrored bearing - w by its magnitude, the tangential direction reversed; a test of both directions of rotation in journalBearingTest.py.
+  - **notes:** ObjectJournalBearing carries a journal turning either way about the axis of the bearing: with the journal turning the other way, the film pushed it out to the clearance.
+  - date resolved: **2026-11-07 22:28**, date raised: 2026-11-07
 - **1.13.455** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` EPA returns a normal that is not converged when it stops early: the faces of a resting polytope are missed (#3346)
   - description: Since \#3338 the expanding polytope algorithm stops when a new point would turn a face over; the face it stops at is then not a face of the Minkowski difference, and its normal is off by up to 0.01 rad: in 2 of 5000 poses of an icosahedron resting on a face on a box (contactPrimitivesShowcase.py). ObjectContactConvexConvex takes the face manifold only for a normal within 1e-6 of a face normal, so it switches between the face points and one closest point from one Newton iteration to the next, and the discontinuous iteration fails at the minimum step size. Decided: EPA says whether it converged; if not, the penetration is refined as for the cylinders, by moving shape 1 out along the normal until the separated distance gives a face of the difference; resting poses of an icosahedron in convexConvexContactTest.py.
   - **notes:** Where the expanding polytope algorithm stops before it converges, the penetration of two convex shapes is refined: a polytope resting on a face, as an icosahedron on a box with ObjectContactConvexConvex, keeps the normal of the face, which the contact needs for its points.

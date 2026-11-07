@@ -674,7 +674,8 @@ and `ObjectContactConeCone(isHollowCone1=True)` put shape 0 inside shape 1, a bo
 a shaft in a bore or through a ring, a taper in its seat; the data node needs 24 coordinates then.
 **A lubricated journal bearing** (#3335): `ObjectJournalBearing` is a revolute joint with clearance whose oil film
 carries the journal with the force of the infinitely short (Ocvirk) or long (Sommerfeld) bearing, `exu.JournalBearingModel`,
-and a contact where the eccentricity exceeds the clearance; a `forceUserFunction` adds further models.
+and a contact where the eccentricity exceeds the clearance; a `forceUserFunction` adds further models. A journal turning either way about
+the axis of the bearing floats on the film (#3345).
 **Plastic contacts with adhesion for cylinders, cones and convex shapes** (#3336): the adhesive elasto-plastic model of
 `ObjectContactSphereSphere` (`contactPlasticityRatio`, `adhesionCoefficient`, `adhesionExponent`, `constantPullOffForce`)
 is an option of the cylinder, cone and convex contacts; each contact point then has 4 data coordinates.

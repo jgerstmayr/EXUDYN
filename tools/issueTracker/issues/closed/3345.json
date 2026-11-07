@@ -2,12 +2,16 @@
   "number": 3345,
   "title": "ObjectJournalBearing pushes the journal out when it turns the other way about the bearing axis",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "priority": "HIGH",
   "effort": "LOW",
   "description": "The film forces of ObjectJournalBearing (infinitely short and long bearing after Flores et al. 2009) hold for a positive w = omega - 2 gammaDot, the film in the converging gap in the direction of rotation; with a negative w, a journal turning the other way about the axis of marker 1, the radial force pushes the journal outwards and the tangential force acts on the wrong side: a rotor of contactPrimitivesShowcase.py turning at -50 rad/s about the axis drifts to the clearance instead of floating at its equilibrium. Decided: for a negative w the forces of the mirrored bearing - w by its magnitude, the tangential direction reversed; a test of both directions of rotation in journalBearingTest.py.",
   "dateRaised": "2026-11-07",
   "deadline": "2027-05-06",
-  "file": "src/ImplObjects/CObjectJournalBearing.cpp"
+  "dateResolved": "2026-11-07 22:28",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectJournalBearing.cpp",
+  "releaseNotes": "ObjectJournalBearing carries a journal turning either way about the axis of the bearing: with the journal turning the other way, the film pushed it out to the clearance.",
+  "resolvedInVersion": "1.13.456"
 }

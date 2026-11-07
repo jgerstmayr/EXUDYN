@@ -61,6 +61,9 @@ void CObjectJournalBearing::ComputeBearingForce(const MarkerDataStructure& marke
 	Real epsilon_t = e_t / c;
 	Real gamma_t = e > 0. ? (eccentricity_t * tangent) / e : 0.;
 	Real w = angularVelocity - 2. * gamma_t;
+	//the film in the gap converging in the direction of rotation, on either side: the wedge term of Fr with |w|, which
+	//pulls the journal in for both directions; Ft changes its sign with w (#3345)
+	Real wAbs = fabs(w);
 	Real e2 = epsilon * epsilon;
 	Real s = 1. - e2;
 	Real pi = EXUstd::pi;
@@ -68,13 +71,13 @@ void CObjectJournalBearing::ComputeBearingForce(const MarkerDataStructure& marke
 	if (parameters.bearingModel == JournalBearingModel::Short)
 	{
 		Real K = mu * R * L * L * L / (2. * c * c);
-		Fr = -K * (2. * e2 * w / (s * s) + pi * (1. + 2. * e2) * epsilon_t / (s * s * sqrt(s)));
+		Fr = -K * (2. * e2 * wAbs / (s * s) + pi * (1. + 2. * e2) * epsilon_t / (s * s * sqrt(s)));
 		Ft = K * (pi * epsilon * w / (2. * s * sqrt(s)) + 4. * epsilon * epsilon_t / (s * s));
 	}
 	else
 	{
 		Real K = 12. * mu * L * R * R * R / (c * c);
-		Fr = -K * (e2 * w / ((2. + e2) * s) + epsilon_t / (s * sqrt(s)) * (0.5 * pi - 8. / (pi * (2. + e2))));
+		Fr = -K * (e2 * wAbs / ((2. + e2) * s) + epsilon_t / (s * sqrt(s)) * (0.5 * pi - 8. / (pi * (2. + e2))));
 		Ft = K * (pi * epsilon * w / (2. * (2. + e2) * sqrt(s)) + 2. * epsilon * epsilon_t / ((2. + e2) * s));
 	}
 	force = Fr * radial + Ft * tangent;
