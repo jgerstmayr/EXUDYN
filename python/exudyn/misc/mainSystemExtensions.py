@@ -2275,7 +2275,7 @@ def MainSystemCreateSphereSphereContact(mbs, name='', itemNumbers=[None, None],
                                        contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1,
                                        constantPullOffForce = 0, contactPlasticityRatio = 0, adhesionCoefficient = 0, adhesionExponent = 1,
                                        restitutionCoefficient = 1, minimumImpactVelocity = 0,
-                                       impactModel = 0,
+                                       impactModel = exu.ContactImpactModel.Linear,
                                        dataInitialCoordinates = [0,0,0,0],
                                        activeConnector=True,
                                        show=False, color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
@@ -2300,7 +2300,7 @@ def MainSystemCreateSphereSphereContact(mbs, name='', itemNumbers=[None, None],
         adhesionExponent: exponent for adhesion coefficient [SI:1]; Edinburgh Adhesive Elasto-Plastic Model
         restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)
         minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
-        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
+        impactModel: the impact model, exu.ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
         dataInitialCoordinates: a list of four values for initialization of the data node, used for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused
         activeConnector: flag to activate or deactivate the connector
         show: if True, connector visualization is drawn
@@ -2376,8 +2376,8 @@ def MainSystemCreateSphereSphereContact(mbs, name='', itemNumbers=[None, None],
             RaiseTypeError(where=where, argumentName='restitutionCoefficient', received = restitutionCoefficient, expectedType = ExpectedType.Real)
         if not IsValidURealInt(minimumImpactVelocity):
             RaiseTypeError(where=where, argumentName='minimumImpactVelocity', received = minimumImpactVelocity, expectedType = ExpectedType.Real)
-        if not IsValidInt(impactModel) or impactModel < 0 or impactModel > 2:
-            RaiseTypeError(where=where, argumentName='impactModel', received = impactModel, expectedType = 'expected type=int, in range [0,2]')
+        if not isinstance(impactModel, exu.ContactImpactModel) and (not IsValidInt(impactModel) or impactModel < 0 or impactModel > 2):
+            RaiseTypeError(where=where, argumentName='impactModel', received = impactModel, expectedType = 'expected exu.ContactImpactModel or int in range [0,2]')
 
         if not IsVector(dataInitialCoordinates, 4):
             RaiseTypeError(where=where, argumentName='dataInitialCoordinates', received = dataInitialCoordinates, expectedType = ExpectedType.Vector, dim=4)
@@ -2427,7 +2427,7 @@ def MainSystemCreateSphereQuadContact(mbs, name='', itemNumbers=[None, None],
                                        includeEdges = 15, dynamicFriction = 0., frictionProportionalZone = 1e-3,
                                        contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1,
                                        restitutionCoefficient = 1, minimumImpactVelocity = 0,
-                                       impactModel = 0,
+                                       impactModel = exu.ContactImpactModel.Linear,
                                        dataInitialCoordinates = [0,0,0,0],
                                        activeConnector=True,
                                        localPosition1 = [0.,0.,0.], 
@@ -2449,7 +2449,7 @@ def MainSystemCreateSphereQuadContact(mbs, name='', itemNumbers=[None, None],
         contactStiffnessExponent: exponent in normal contact model [SI:1]
         restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)
         minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
-        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
+        impactModel: the impact model, exu.ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
         dataInitialCoordinates: a list of four values for initialization of the data node, used for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused
         activeConnector: flag to activate or deactivate the connector
         localPosition1: local position (as 3D list or numpy array) of quad1 on body1; this is usually not needed and adds simply an offset to the quad coordinates
@@ -2499,8 +2499,8 @@ def MainSystemCreateSphereQuadContact(mbs, name='', itemNumbers=[None, None],
             RaiseTypeError(where=where, argumentName='restitutionCoefficient', received = restitutionCoefficient, expectedType = ExpectedType.Real)
         if not IsValidURealInt(minimumImpactVelocity):
             RaiseTypeError(where=where, argumentName='minimumImpactVelocity', received = minimumImpactVelocity, expectedType = ExpectedType.Real)
-        if not IsValidInt(impactModel) or impactModel < 0 or impactModel > 2:
-            RaiseTypeError(where=where, argumentName='impactModel', received = impactModel, expectedType = ExpectedType.Real)
+        if not isinstance(impactModel, exu.ContactImpactModel) and (not IsValidInt(impactModel) or impactModel < 0 or impactModel > 2):
+            RaiseTypeError(where=where, argumentName='impactModel', received = impactModel, expectedType = 'expected exu.ContactImpactModel or int in range [0,2]')
 
         if not IsVector(dataInitialCoordinates, 4):
             RaiseTypeError(where=where, argumentName='dataInitialCoordinates', received = dataInitialCoordinates, expectedType = ExpectedType.Vector, dim=4)
@@ -2557,7 +2557,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', itemNumbers=[None, None]
                                        includeEdges = 7, dynamicFriction = 0., frictionProportionalZone = 1e-3,
                                        contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1,
                                        restitutionCoefficient = 1, minimumImpactVelocity = 0,
-                                       impactModel = 0,
+                                       impactModel = exu.ContactImpactModel.Linear,
                                        dataInitialCoordinates = [0,0,0,0],
                                        activeConnector=True,
                                        localPosition1 = [0.,0.,0.], 
@@ -2579,7 +2579,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', itemNumbers=[None, None]
         contactStiffnessExponent: exponent in normal contact model [SI:1]
         restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)
         minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
-        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
+        impactModel: the impact model, exu.ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
         dataInitialCoordinates: a list of four values for initialization of the data node, used for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused
         activeConnector: flag to activate or deactivate the connector
         localPosition1: local position (as 3D list or numpy array) of triangle1 on body1; this is usually not needed and adds simply an offset to the triangle coordinates
@@ -2629,8 +2629,8 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', itemNumbers=[None, None]
             RaiseTypeError(where=where, argumentName='restitutionCoefficient', received = restitutionCoefficient, expectedType = ExpectedType.Real)
         if not IsValidURealInt(minimumImpactVelocity):
             RaiseTypeError(where=where, argumentName='minimumImpactVelocity', received = minimumImpactVelocity, expectedType = ExpectedType.Real)
-        if not IsValidInt(impactModel) or impactModel < 0 or impactModel > 2:
-            RaiseTypeError(where=where, argumentName='impactModel', received = impactModel, expectedType = ExpectedType.Real)
+        if not isinstance(impactModel, exu.ContactImpactModel) and (not IsValidInt(impactModel) or impactModel < 0 or impactModel > 2):
+            RaiseTypeError(where=where, argumentName='impactModel', received = impactModel, expectedType = 'expected exu.ContactImpactModel or int in range [0,2]')
 
         if not IsVector(dataInitialCoordinates, 4):
             RaiseTypeError(where=where, argumentName='dataInitialCoordinates', received = dataInitialCoordinates, expectedType = ExpectedType.Vector, dim=4)

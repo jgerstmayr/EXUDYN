@@ -38,7 +38,7 @@ mass = 1.6                              #mass in kg
 contactStiffness = 1e6                  #stiffness of spring-damper in N/m
 contactDamping = 0*5e-4*contactStiffness  #damping constant in N/(m/s)
 restitutionCoefficient = 0.7
-impactModel = 2
+impactModel = exu.ContactImpactModel.GonthierCarvalhoMartins #the int 2 is accepted as well (#3327)
 
 tEnd = 2     #end time of simulation
 stepSize = 2e-5*20

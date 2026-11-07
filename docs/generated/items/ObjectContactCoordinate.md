@@ -21,13 +21,13 @@ The parameters of the item; in a dictionary, its type is 'ContactCoordinate':
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | markers define contact gap |
-| **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with 1 data coordinate, the gap of the last discontinuous iteration (active set strategy), and a second one, the last impact velocity, if impactModel is not 0 |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with 1 data coordinate, the gap of the last discontinuous iteration (active set strategy), and a second one, the last impact velocity, if impactModel is not ContactImpactModel.Linear |
 | **contactStiffness** | UReal |  | 0. | contact (penalty) stiffness [SI:N/m]; acts only upon penetration |
 | **contactDamping** | UReal |  | 0. | contact damping [SI:N/(m s)]; acts only upon penetration |
 | **contactStiffnessExponent** | PReal |  | 1. | (symbol: $n_\mathrm{exp}$) exponent in the contact law [SI:1], as in ObjectContactSphereSphere; 1 is linear |
-| **restitutionCoefficient** | PReal |  | 1. | (symbol: $e_\mathrm{res}$) coefficient of restitution [SI:1], used by impactModel 1 and 2; must be > 0 |
+| **restitutionCoefficient** | PReal |  | 1. | (symbol: $e_\mathrm{res}$) coefficient of restitution [SI:1], used by the impact models HuntCrossley and GonthierCarvalhoMartins; must be > 0 |
 | **minimumImpactVelocity** | UReal |  | 0. | (symbol: $\dot g_\mathrm{-,min}$) lower bound [SI:m/s] of the impact velocity in the impact models; a larger damping at low impact velocities and in permanent contact |
-| **impactModel** | UInt |  | 0 | (symbol: $m_\mathrm{impact}$) impact model, as in ObjectContactSphereSphere: 0) linear damping only; 1) Hunt-Crossley; 2) Gonthier et al. / Carvalho-Martins; contactDamping is added in all of them |
+| **impactModel** | ContactImpactModel |  | ContactImpactModel.Linear | (symbol: $m_\mathrm{impact}$) the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327) |
 | **offset** | Real |  | 0. | offset [SI:m] of contact |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactCoordinate |  |  | parameters for visualization of item |
@@ -88,7 +88,7 @@ $$
 f_c = \begin{cases} -\left(k_c\, \delta^{n_\mathrm{exp}} - d_c\, \dot g + \lambda\, \delta^{n_\mathrm{exp}} \dot g \right) & \mathrm{contact} \\ 0 & \mathrm{else} \end{cases}
 $$
 
-with $\delta^{n_\mathrm{exp}}$ keeping the sign of $\delta$. For `impactModel = 0` it is $\lambda = 0$,
+with $\delta^{n_\mathrm{exp}}$ keeping the sign of $\delta$. For `impactModel = ContactImpactModel.Linear` it is $\lambda = 0$,
 and for $n_\mathrm{exp} = 1$ the linear law $f_c = k_c\, g + d_c\, \dot g$. For the impact models,
 with the impact velocity $v_-$ - the gap velocity when the contact began, bounded below by
 `minimumImpactVelocity`, kept in the second data coordinate -

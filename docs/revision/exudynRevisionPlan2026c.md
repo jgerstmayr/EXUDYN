@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (8 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (7 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 14 | Structural core improvements |
+| RG9 | OPEN | 13 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1620,9 +1620,11 @@ Decided (maintainer 2026-11-07): the flags, as isHollowSphere1 of SphereSphere; 
 
 CLOSED 2026-11-07 (#3324, #3325): contactForceUserFunction(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity) of SphereTriangle and SphereCylinder, the force on marker 0, also symbolic; the items to come get it; the type names of SphereTriangle and SphereTorus corrected (#3325); contactUserFunctionTest.py. [log](exudynRevisionLog2026c.md#rg9-12-14)
 
-#### **OPEN_RG9.12.15** The impact model as the enumeration type ContactImpactModel in all contact items
+#### **CLOSED_RG9.12.15** The impact model as the enumeration type ContactImpactModel in all contact items
 
 #3327. Maintainer 2026-11-07: impactModel is a number 0, 1, 2 in ObjectContactCoordinate, SphereSphere, SphereTorus, SphereTriangle and SphereCylinder, explained only in its description; an enumeration type as the other types (definitions/enumTypes.py) names the linear, the Hunt-Crossley and the mixed Gonthier/Carvalho-Martins model. Open: whether a number is still accepted (impactModel exists since before 1.11.0, so it is not removed without a deprecation). Before the further items of RG9.12.5 ff. take the parameter, or with them.
+
+CLOSED 2026-11-07 (#3327): exu.ContactImpactModel (Linear, HuntCrossley, GonthierCarvalhoMartins) for impactModel of the 7 contact items and of the Create functions; the integers 0, 1, 2 stay accepted, as the type of MarkerBodyUser.providedMarkerType does, so no deprecation; the value is read back as the enumeration. [log](exudynRevisionLog2026c.md#rg9-12-15)
 
 #### **CLOSED_RG9.12.16** The sign of the output Torque of the sphere contacts
 

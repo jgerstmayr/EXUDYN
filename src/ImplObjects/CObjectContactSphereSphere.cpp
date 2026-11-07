@@ -39,7 +39,7 @@ TReal CObjectContactSphereSphere::ComputeContactForces(TReal gap, const SlimVect
 	TReal fDamp = - d1 * deltaVnormal;
 	TReal contactForce = k1 * deltaExp + fDamp;
 	////////////////////////// use Adhesive Elasto-Plastic model in the case that impactModel == 0
-	if (parameters.impactModel == 0)
+	if (parameters.impactModel == ContactImpactModel::Linear)
 	{
 		if (parameters.contactPlasticityRatio != 0.)
 		{
@@ -78,10 +78,10 @@ TReal CObjectContactSphereSphere::ComputeContactForces(TReal gap, const SlimVect
 		{
 			TReal lambda = k1 / minImpactVel;
 			const Real& ee = parameters.restitutionCoefficient; 
-			if (parameters.impactModel == 1) // Hunt-Crossley
+			if (parameters.impactModel == ContactImpactModel::HuntCrossley) // Hunt-Crossley
 			{
 				lambda *= 3. / 2. * (ee - 1.);
-			} else if (parameters.impactModel == 2) // mixed Gonthier/EtAl-Carvalho/Martins
+			} else if (parameters.impactModel == ContactImpactModel::GonthierCarvalhoMartins) // mixed Gonthier/EtAl-Carvalho/Martins
 			{
 				if (ee > 1. / 3.)
 				{

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 426 | 1.13.442 |
+| 1.13 | Newborn | 427 | 1.13.443 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.443** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The impact model of the contact items as an enumeration type ContactImpactModel (#3327)
+  - description: ObjectContactCoordinate, ObjectContactSphereSphere, ObjectContactSphereTorus, ObjectContactSphereTriangle and ObjectContactSphereCylinder select the impact model by the number impactModel: 0 the linear model (linear damping only), 1 the Hunt-Crossley model, 2 the mixed model of Gonthier et al. and Carvalho and Martins; the numbers are explained only in the parameter description and checked by each item. Decided: an enumeration type exu.ContactImpactModel for the parameter impactModel of all contact items, defined in definitions/enumTypes.py as the other enumeration types, with the names of the three models; the further contact items of RG9.12 take it from the start.
+  - **notes:** impactModel of the contact items and of the Create functions takes the enumeration exu.ContactImpactModel (Linear, HuntCrossley, GonthierCarvalhoMartins); the integers 0, 1, 2 are still accepted.
+  - date resolved: **2026-11-07 15:50**, date raised: 2026-11-07
 - **1.13.442** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The cylinders and cones drawn in C++ have their faces flipped (#3330)
   - description: EXUvis::DrawCylinder and EXUvis::DrawCone - the cylinders of the contact items, spring-dampers, the hydraulic actuator, the rolling disc, the arrows and the axes of frames - give every triangle the winding of an inward face while its normals point outward: the basis of ComputeOrthogonalBasisVectors is right-handed, and the points run clockwise about the axis. The maintainer saw the cylinders of sphereCylinderContactTest.py with flipped faces; the triangles of exudyn.graphics.Cylinder wind outward. Decided: both functions add their triangles with the winding of the outward normal, the points unchanged; DrawCylinder gets radiusEnd, the radius at the end of the axis, so that it draws a truncated cone as well, for the cone contacts.
   - **notes:** The cylinders and cones drawn in C++ (contact items, connectors, the hydraulic actuator, the rolling disc, arrows and frame axes) show their outside; their faces were wound inward and looked flipped.

@@ -718,6 +718,19 @@ class ContactTypeIndex(Enum):
     """signals end of list"""
 
 
+class ContactImpactModel(Enum):
+    """The enumeration type ContactImpactModel selects the impact model of the penalty contacts (ObjectContactCoordinate, ObjectContactSphereSphere, ObjectContactSphereTriangle, ...), the parameter impactModel; the integers 0, 1 and 2 are accepted for it as well.
+
+    In all models the linear contactDamping is added, if it is not zero (#3327).
+    """
+    Linear = int
+    """the linear model: the contact stiffness and only the linear contactDamping"""
+    HuntCrossley = int
+    """the model of Hunt and Crossley: a damping proportional to the penetration, from the restitution coefficient and the impact velocity"""
+    GonthierCarvalhoMartins = int
+    """the mixed model of Gonthier et al. and Carvalho and Martins, much more accurate for the coefficient of restitution in the full range (0, 1]"""
+
+
 class MatrixContainer:
     """The MatrixContainer is a versatile representation for dense and sparse matrices.
 

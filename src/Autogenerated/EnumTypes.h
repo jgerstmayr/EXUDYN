@@ -474,4 +474,11 @@ enum class TextureFlags {
     Replace = 1 << 2  //!< the texture replaces the color of the triangle instead of being multiplied with it; the triangle color and the lighting are not applied
 };
 
+//! the impact model of the penalty contacts (#3327)
+enum class ContactImpactModel {
+    Linear = 0,                  //!< the linear model: the contact stiffness and only the linear contactDamping
+    HuntCrossley = 1,            //!< the model of Hunt and Crossley: a damping proportional to the penetration, from the restitution coefficient and the impact velocity
+    GonthierCarvalhoMartins = 2  //!< the mixed model of Gonthier et al. and Carvalho and Martins, much more accurate for the coefficient of restitution in the full range (0, 1]
+};
+
 #endif //ENUMTYPES__H

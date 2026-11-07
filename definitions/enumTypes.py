@@ -306,4 +306,11 @@ enumTypes = [
               ],
              stringFunction='GetTypeIndexString', stringPrefix='Index',
              cppNote='maps contact types to arrays in GeneralContact'),
+    EnumType('ContactImpactModel', 'ContactImpactModel',
+             'The enumeration type ContactImpactModel selects the impact model of the penalty contacts (ObjectContactCoordinate, ObjectContactSphereSphere, ObjectContactSphereTriangle, ...), the parameter impactModel; the integers 0, 1 and 2 are accepted for it as well. In all models the linear contactDamping is added, if it is not zero (#3327).\n\n',
+             [EnumValue('Linear', 0, 'the linear model: the contact stiffness and only the linear contactDamping'),
+              EnumValue('HuntCrossley', 1, 'the model of Hunt and Crossley: a damping proportional to the penetration, from the restitution coefficient and the impact velocity'),
+              EnumValue('GonthierCarvalhoMartins', 2, 'the mixed model of Gonthier et al. and Carvalho and Martins, much more accurate for the coefficient of restitution in the full range (0, 1]'),
+              ],
+             cppNote='the impact model of the penalty contacts (#3327)'),
     ]

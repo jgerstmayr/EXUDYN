@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-07  15:39:40 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -121,7 +121,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "contactStiffnessExponent")) { EPyUtils::FromPython(d["contactStiffnessExponent"], cObjectContactCoordinate->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactCoordinate.contactStiffnessExponent"); }
         if (EPyUtils::DictItemExists(d, "restitutionCoefficient")) { EPyUtils::FromPython(d["restitutionCoefficient"], cObjectContactCoordinate->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactCoordinate.restitutionCoefficient"); }
         if (EPyUtils::DictItemExists(d, "minimumImpactVelocity")) { EPyUtils::FromPython(d["minimumImpactVelocity"], cObjectContactCoordinate->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.minimumImpactVelocity"); }
-        if (EPyUtils::DictItemExists(d, "impactModel")) { EPyUtils::FromPython(d["impactModel"], cObjectContactCoordinate->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.impactModel"); }
+        if (EPyUtils::DictItemExists(d, "impactModel")) { cObjectContactCoordinate->GetParameters().impactModel = (ContactImpactModel)py::cast<Index>(d["impactModel"]); }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectContactCoordinate->GetParameters().offset, "ObjectContactCoordinate.offset"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactCoordinate->GetParameters().activeConnector, "ObjectContactCoordinate.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
@@ -143,7 +143,7 @@ public: // AUTO:
         d["contactStiffnessExponent"] = (Real)cObjectContactCoordinate->GetParameters().contactStiffnessExponent;
         d["restitutionCoefficient"] = (Real)cObjectContactCoordinate->GetParameters().restitutionCoefficient;
         d["minimumImpactVelocity"] = (Real)cObjectContactCoordinate->GetParameters().minimumImpactVelocity;
-        d["impactModel"] = (Index)cObjectContactCoordinate->GetParameters().impactModel;
+        d["impactModel"] = (ContactImpactModel)cObjectContactCoordinate->GetParameters().impactModel;
         d["offset"] = (Real)cObjectContactCoordinate->GetParameters().offset;
         d["activeConnector"] = (bool)cObjectContactCoordinate->GetParameters().activeConnector;
         d["name"] = (std::string)name;
@@ -164,7 +164,7 @@ public: // AUTO:
         else if (parameterName.compare("contactStiffnessExponent") == 0) { return py::cast((Real)cObjectContactCoordinate->GetParameters().contactStiffnessExponent); } //! AUTO: get parameter
         else if (parameterName.compare("restitutionCoefficient") == 0) { return py::cast((Real)cObjectContactCoordinate->GetParameters().restitutionCoefficient); } //! AUTO: get parameter
         else if (parameterName.compare("minimumImpactVelocity") == 0) { return py::cast((Real)cObjectContactCoordinate->GetParameters().minimumImpactVelocity); } //! AUTO: get parameter
-        else if (parameterName.compare("impactModel") == 0) { return py::cast((Index)cObjectContactCoordinate->GetParameters().impactModel); } //! AUTO: get parameter
+        else if (parameterName.compare("impactModel") == 0) { return py::cast((ContactImpactModel)cObjectContactCoordinate->GetParameters().impactModel); } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cObjectContactCoordinate->GetParameters().offset); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactCoordinate->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactCoordinate->GetShow()); } //! AUTO: get parameter
@@ -186,7 +186,7 @@ public: // AUTO:
         else if (parameterName.compare("contactStiffnessExponent") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactCoordinate.contactStiffnessExponent"); } //! AUTO: set parameter
         else if (parameterName.compare("restitutionCoefficient") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactCoordinate.restitutionCoefficient"); } //! AUTO: set parameter
         else if (parameterName.compare("minimumImpactVelocity") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.minimumImpactVelocity"); } //! AUTO: set parameter
-        else if (parameterName.compare("impactModel") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.impactModel"); } //! AUTO: set parameter
+        else if (parameterName.compare("impactModel") == 0) { cObjectContactCoordinate->GetParameters().impactModel = (ContactImpactModel)py::cast<Index>(value); } //! AUTO: set parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().offset, "ObjectContactCoordinate.offset"); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().activeConnector, "ObjectContactCoordinate.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactCoordinate->GetShow(), "ObjectContactCoordinate.Vshow"); } //! AUTO: set parameter

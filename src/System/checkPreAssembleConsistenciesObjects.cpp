@@ -661,7 +661,7 @@ bool MainObjectContactCoordinate::CheckPreAssembleConsistency(const MainSystem& 
 			" coordinate(s), 2 with an impactModel (found: " + EXUstd::ToString(nc) + ")";
 		return false;
 	}
-	if (cObject->GetParameters().impactModel > 2)
+	if ((Index)cObject->GetParameters().impactModel < 0 || (Index)cObject->GetParameters().impactModel > 2)
 	{
 		errorString = "ObjectContactCoordinate: impactModel must be 0, 1 or 2";
 		return false;
@@ -764,7 +764,7 @@ bool MainObjectContactSphereSphere::CheckPreAssembleConsistency(const MainSystem
 	if (!IsInRange(errorString, cObject->GetParameters().restitutionCoefficient, 0., 1.,
 		"CObjectContactSphereSphere::CheckPreAssembleConsistency: ", "restitutionCoefficient")) { return false; }
 
-	if (!IsInRange(errorString, cObject->GetParameters().impactModel, 0, 2,
+	if (!IsInRange(errorString, (Index)cObject->GetParameters().impactModel, 0, 2,
 		"CObjectContactSphereSphere::CheckPreAssembleConsistency: ", "impactModel")) { return false; }
 
 	if (!IsInRange(errorString, cObject->GetParameters().contactPlasticityRatio, 0., 1. - 2*EXUstd::EPSILONREAL,
@@ -834,7 +834,7 @@ bool MainObjectContactSphereTorus::CheckPreAssembleConsistency(const MainSystem&
 		return false;
 	}
 
-	if (!IsInRange(errorString, cObject->GetParameters().impactModel, 0, 2,
+	if (!IsInRange(errorString, (Index)cObject->GetParameters().impactModel, 0, 2,
 		"CObjectContactSphereTorus::CheckPreAssembleConsistency: ", "impactModel")) {
 		return false;
 	}
@@ -909,7 +909,7 @@ bool MainObjectContactSphereTriangle::CheckPreAssembleConsistency(const MainSyst
 		return false;
 	}
 
-	if (!IsInRange(errorString, cObject->GetParameters().impactModel, 0, 2,
+	if (!IsInRange(errorString, (Index)cObject->GetParameters().impactModel, 0, 2,
 		"CObjectContactSphereTriangle::CheckPreAssembleConsistency: ", "impactModel")) {
 		return false;
 	}
@@ -970,7 +970,7 @@ bool MainObjectContactSphereCylinder::CheckPreAssembleConsistency(const MainSyst
 		return false;
 	}
 
-	if (!IsInRange(errorString, cObject->GetParameters().impactModel, 0, 2,
+	if (!IsInRange(errorString, (Index)cObject->GetParameters().impactModel, 0, 2,
 		"CObjectContactSphereCylinder::CheckPreAssembleConsistency: ", "impactModel")) {
 		return false;
 	}
@@ -1012,7 +1012,7 @@ bool CheckPreAssembleContactCylinder(const MainSystem& mainSystem, const TCObjec
 		}
 	}
 	if (!IsInRange(errorString, cObject->GetParameters().restitutionCoefficient, 0., 1., itemName + "::CheckPreAssembleConsistency: ", "restitutionCoefficient")) { return false; }
-	if (!IsInRange(errorString, cObject->GetParameters().impactModel, 0, 2, itemName + "::CheckPreAssembleConsistency: ", "impactModel")) { return false; }
+	if (!IsInRange(errorString, (Index)cObject->GetParameters().impactModel, 0, 2, itemName + "::CheckPreAssembleConsistency: ", "impactModel")) { return false; }
 	return true;
 }
 

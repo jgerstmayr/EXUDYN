@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  12:15:25 (last modified)
+* @date         2026-11-07  15:39:40 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -42,7 +42,7 @@ public: // AUTO:
     Real contactStiffnessExponent;                //!< AUTO: must be > 0; exponent in normal contact model [SI:1]
     Real restitutionCoefficient;                  //!< AUTO: must be > 0; coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)
     Real minimumImpactVelocity;                   //!< AUTO: must be >= 0; minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
-    Index impactModel;                            //!< AUTO: must be >= 0;  number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
+    ContactImpactModel impactModel;               //!< AUTO: the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,Real,Real,StdVector3D,StdVector3D,Real)> > contactForceUserFunction;//!< AUTO: A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used, except dynamicFriction > 0 for the rotation of marker 0; see description below (#3324)
     //! AUTO: default constructor with parameter initialization
@@ -60,7 +60,7 @@ public: // AUTO:
         contactStiffnessExponent = 1.;
         restitutionCoefficient = 1.;
         minimumImpactVelocity = 0.;
-        impactModel = 0;
+        impactModel = ContactImpactModel::Linear;
         activeConnector = true;
         contactForceUserFunction = 0;
     };

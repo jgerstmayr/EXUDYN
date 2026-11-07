@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  12:18:13 (last modified)
+* @date         2026-11-07  15:39:40 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -127,7 +127,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "contactStiffnessExponent")) { EPyUtils::FromPython(d["contactStiffnessExponent"], cObjectContactSphereTorus->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.contactStiffnessExponent"); }
         if (EPyUtils::DictItemExists(d, "restitutionCoefficient")) { EPyUtils::FromPython(d["restitutionCoefficient"], cObjectContactSphereTorus->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.restitutionCoefficient"); }
         if (EPyUtils::DictItemExists(d, "minimumImpactVelocity")) { EPyUtils::FromPython(d["minimumImpactVelocity"], cObjectContactSphereTorus->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTorus.minimumImpactVelocity"); }
-        if (EPyUtils::DictItemExists(d, "impactModel")) { EPyUtils::FromPython(d["impactModel"], cObjectContactSphereTorus->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTorus.impactModel"); }
+        if (EPyUtils::DictItemExists(d, "impactModel")) { cObjectContactSphereTorus->GetParameters().impactModel = (ContactImpactModel)py::cast<Index>(d["impactModel"]); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactSphereTorus->GetParameters().activeConnector, "ObjectContactSphereTorus.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactSphereTorus->GetShow(), "ObjectContactSphereTorus.Vshow"); }
@@ -154,7 +154,7 @@ public: // AUTO:
         d["contactStiffnessExponent"] = (Real)cObjectContactSphereTorus->GetParameters().contactStiffnessExponent;
         d["restitutionCoefficient"] = (Real)cObjectContactSphereTorus->GetParameters().restitutionCoefficient;
         d["minimumImpactVelocity"] = (Real)cObjectContactSphereTorus->GetParameters().minimumImpactVelocity;
-        d["impactModel"] = (Index)cObjectContactSphereTorus->GetParameters().impactModel;
+        d["impactModel"] = (ContactImpactModel)cObjectContactSphereTorus->GetParameters().impactModel;
         d["activeConnector"] = (bool)cObjectContactSphereTorus->GetParameters().activeConnector;
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationObjectContactSphereTorus->GetShow();
@@ -179,7 +179,7 @@ public: // AUTO:
         else if (parameterName.compare("contactStiffnessExponent") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().contactStiffnessExponent); } //! AUTO: get parameter
         else if (parameterName.compare("restitutionCoefficient") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().restitutionCoefficient); } //! AUTO: get parameter
         else if (parameterName.compare("minimumImpactVelocity") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().minimumImpactVelocity); } //! AUTO: get parameter
-        else if (parameterName.compare("impactModel") == 0) { return py::cast((Index)cObjectContactSphereTorus->GetParameters().impactModel); } //! AUTO: get parameter
+        else if (parameterName.compare("impactModel") == 0) { return py::cast((ContactImpactModel)cObjectContactSphereTorus->GetParameters().impactModel); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactSphereTorus->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactSphereTorus->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectContactSphereTorus->GetColor())); } //! AUTO: get parameter
@@ -206,7 +206,7 @@ public: // AUTO:
         else if (parameterName.compare("contactStiffnessExponent") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.contactStiffnessExponent"); } //! AUTO: set parameter
         else if (parameterName.compare("restitutionCoefficient") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.restitutionCoefficient"); } //! AUTO: set parameter
         else if (parameterName.compare("minimumImpactVelocity") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTorus.minimumImpactVelocity"); } //! AUTO: set parameter
-        else if (parameterName.compare("impactModel") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTorus.impactModel"); } //! AUTO: set parameter
+        else if (parameterName.compare("impactModel") == 0) { cObjectContactSphereTorus->GetParameters().impactModel = (ContactImpactModel)py::cast<Index>(value); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().activeConnector, "ObjectContactSphereTorus.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactSphereTorus->GetShow(), "ObjectContactSphereTorus.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectContactSphereTorus->GetColor(), "ObjectContactSphereTorus.Vcolor"); } //! AUTO: set parameter

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.442.dev1
+- Exudyn version = 1.13.443.dev1
 - last change = 2026-11-07
 - Number of issues = 3331
-- Number of resolved issues = 3219 (442 in current version)
+- Number of resolved issues = 3220 (443 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The impact model of the contact items as an enumeration type ContactImpactModel (#3327)
-  - description: ObjectContactCoordinate, ObjectContactSphereSphere, ObjectContactSphereTorus, ObjectContactSphereTriangle and ObjectContactSphereCylinder select the impact model by the number impactModel: 0 the linear model (linear damping only), 1 the Hunt-Crossley model, 2 the mixed model of Gonthier et al. and Carvalho and Martins; the numbers are explained only in the parameter description and checked by each item. Decided: an enumeration type exu.ContactImpactModel for the parameter impactModel of all contact items, defined in definitions/enumTypes.py as the other enumeration types, with the names of the three models; the further contact items of RG9.12 take it from the start.
-  - date raised: 2026-11-07
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the test models added since September 2026 checked for a visible simulation (#3322)
   - description: About 114 of the test models added to python/TestModels since 2026-09-01 run a simulation without a renderer or SolutionViewer when run directly, and 63 run none. Decided: each checked whether showing it helps a reader - a simulation with bodies, contact or motion gets the SolutionViewer behind testIsActive and graphics where its items draw nothing (CreateRigidBody with an inertia draws a body already); tests of functions, parameters or solver statistics stay without; a recommendation per group of models first, then the changes; revision2026c step RG2.12.2.
   - date raised: 2026-11-07

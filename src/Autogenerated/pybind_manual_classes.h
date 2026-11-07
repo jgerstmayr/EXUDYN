@@ -265,6 +265,12 @@
 		.value("IndexEndOfEnumList", Contact::IndexEndOfEnumList, "signals end of list")
 		;
 
+  py::enum_<ContactImpactModel>(m, "ContactImpactModel")
+		.value("Linear", ContactImpactModel::Linear, "the linear model: the contact stiffness and only the linear contactDamping")
+		.value("HuntCrossley", ContactImpactModel::HuntCrossley, "the model of Hunt and Crossley: a damping proportional to the penetration, from the restitution coefficient and the impact velocity")
+		.value("GonthierCarvalhoMartins", ContactImpactModel::GonthierCarvalhoMartins, "the mixed model of Gonthier et al. and Carvalho and Martins, much more accurate for the coefficient of restitution in the full range (0, 1]")
+		;
+
 
         m.def("Help", &PyHelp, "Show basic help information");
         m.def("StartRenderer", &PyStartOpenGLRenderer, "DEPRECATED; Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g., Spyder; removed in 2029", py::arg("verbose") = 0, py::arg("deprecationWarning") = true);

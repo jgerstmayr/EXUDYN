@@ -6427,6 +6427,21 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-15"></a>
+### RG9.12.15 — the impact model as the enumeration type ContactImpactModel (2026-11-07, #3327)
+- The open question (a number still accepted?) was not answered; decided as the least change for users: the
+  parameter takes exu.ContactImpactModel or the integer 0, 1, 2, converted in C++ by py::cast<Index> as
+  providedMarkerType of MarkerBodyUser takes exu.MarkerType or an int (#3103); GetObjectParameter and GetObject give
+  the enumeration. So nothing is deprecated, and the many models with impactModel=2 run unchanged.
+- definitions/enumTypes.py: ContactImpactModel, Linear 0, HuntCrossley 1, GonthierCarvalhoMartins 2;
+  definitionTypes.py: TContactImpactModel with the default ContactImpactModel::Linear; itemHeaderEmitter.py: the
+  conversion. The 7 contact items (ContactCoordinate, SphereSphere, SphereTorus, SphereTriangle, SphereCylinder,
+  CylinderCylinder, CylinderTriangle) with one description; the C++ compares with the names; the checks at Assemble
+  still refuse a value outside 0..2 (checked: SetObjectParameter(o, 'impactModel', 5) is refused at Assemble).
+- CreateSphereSphereContact and the two other Create functions with impactModel: default ContactImpactModel.Linear,
+  accept the enumeration or the int. contactSphereSphereTest.py uses the name; parameterConversionTestReference
+  re-recorded.
+
 <a id="rg9-12-17"></a>
 ### RG9.12.17 — the faces of the cylinders and cones drawn in C++ (2026-11-07, #3330)
 - Maintainer 2026-11-07: the cylinders of sphereCylinderContactTest.py have flipped faces; use the existing cylinder

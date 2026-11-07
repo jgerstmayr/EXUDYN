@@ -317,9 +317,9 @@
    "fingerprint": "59796370b0b5"
   },
   "ObjectContactCoordinate": {
-   "checked": "2026-11-02",
+   "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "706128339fb4"
+   "fingerprint": "5e2d7d74df7b"
   },
   "ObjectContactCurveCircles": {
    "checked": "2026-11-06",
@@ -334,22 +334,22 @@
   "ObjectContactSphereCylinder": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "ee216385ad29"
+   "fingerprint": "6ebe2d913d87"
   },
   "ObjectContactSphereSphere": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "90121bb974af"
+   "fingerprint": "215cb1146293"
   },
   "ObjectContactSphereTorus": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "929e9322fff8"
+   "fingerprint": "6aca5dec188d"
   },
   "ObjectContactSphereTriangle": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "174d70cf87f6"
+   "fingerprint": "0e373d9a9ebc"
   },
   "ObjectFFRF": {
    "checked": "2026-10-25",

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  14:41:37 (last modified)
+* @date         2026-11-07  15:39:40 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -128,7 +128,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "contactStiffnessExponent")) { EPyUtils::FromPython(d["contactStiffnessExponent"], cObjectContactCylinderTriangle->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactCylinderTriangle.contactStiffnessExponent"); }
         if (EPyUtils::DictItemExists(d, "restitutionCoefficient")) { EPyUtils::FromPython(d["restitutionCoefficient"], cObjectContactCylinderTriangle->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactCylinderTriangle.restitutionCoefficient"); }
         if (EPyUtils::DictItemExists(d, "minimumImpactVelocity")) { EPyUtils::FromPython(d["minimumImpactVelocity"], cObjectContactCylinderTriangle->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactCylinderTriangle.minimumImpactVelocity"); }
-        if (EPyUtils::DictItemExists(d, "impactModel")) { EPyUtils::FromPython(d["impactModel"], cObjectContactCylinderTriangle->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactCylinderTriangle.impactModel"); }
+        if (EPyUtils::DictItemExists(d, "impactModel")) { cObjectContactCylinderTriangle->GetParameters().impactModel = (ContactImpactModel)py::cast<Index>(d["impactModel"]); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactCylinderTriangle->GetParameters().activeConnector, "ObjectContactCylinderTriangle.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "contactForceUserFunction")) { cObjectContactCylinderTriangle->GetParameters().contactForceUserFunction = d["contactForceUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
@@ -155,7 +155,7 @@ public: // AUTO:
         d["contactStiffnessExponent"] = (Real)cObjectContactCylinderTriangle->GetParameters().contactStiffnessExponent;
         d["restitutionCoefficient"] = (Real)cObjectContactCylinderTriangle->GetParameters().restitutionCoefficient;
         d["minimumImpactVelocity"] = (Real)cObjectContactCylinderTriangle->GetParameters().minimumImpactVelocity;
-        d["impactModel"] = (Index)cObjectContactCylinderTriangle->GetParameters().impactModel;
+        d["impactModel"] = (ContactImpactModel)cObjectContactCylinderTriangle->GetParameters().impactModel;
         d["activeConnector"] = (bool)cObjectContactCylinderTriangle->GetParameters().activeConnector;
         d["contactForceUserFunction"] = (py::object)cObjectContactCylinderTriangle->GetParameters().contactForceUserFunction;
         d["name"] = (std::string)name;
@@ -181,7 +181,7 @@ public: // AUTO:
         else if (parameterName.compare("contactStiffnessExponent") == 0) { return py::cast((Real)cObjectContactCylinderTriangle->GetParameters().contactStiffnessExponent); } //! AUTO: get parameter
         else if (parameterName.compare("restitutionCoefficient") == 0) { return py::cast((Real)cObjectContactCylinderTriangle->GetParameters().restitutionCoefficient); } //! AUTO: get parameter
         else if (parameterName.compare("minimumImpactVelocity") == 0) { return py::cast((Real)cObjectContactCylinderTriangle->GetParameters().minimumImpactVelocity); } //! AUTO: get parameter
-        else if (parameterName.compare("impactModel") == 0) { return py::cast((Index)cObjectContactCylinderTriangle->GetParameters().impactModel); } //! AUTO: get parameter
+        else if (parameterName.compare("impactModel") == 0) { return py::cast((ContactImpactModel)cObjectContactCylinderTriangle->GetParameters().impactModel); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactCylinderTriangle->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("contactForceUserFunction") == 0) { return cObjectContactCylinderTriangle->GetParameters().contactForceUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactCylinderTriangle->GetShow()); } //! AUTO: get parameter
@@ -208,7 +208,7 @@ public: // AUTO:
         else if (parameterName.compare("contactStiffnessExponent") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderTriangle->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactCylinderTriangle.contactStiffnessExponent"); } //! AUTO: set parameter
         else if (parameterName.compare("restitutionCoefficient") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderTriangle->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactCylinderTriangle.restitutionCoefficient"); } //! AUTO: set parameter
         else if (parameterName.compare("minimumImpactVelocity") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderTriangle->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactCylinderTriangle.minimumImpactVelocity"); } //! AUTO: set parameter
-        else if (parameterName.compare("impactModel") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderTriangle->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactCylinderTriangle.impactModel"); } //! AUTO: set parameter
+        else if (parameterName.compare("impactModel") == 0) { cObjectContactCylinderTriangle->GetParameters().impactModel = (ContactImpactModel)py::cast<Index>(value); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderTriangle->GetParameters().activeConnector, "ObjectContactCylinderTriangle.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("contactForceUserFunction") == 0) { cObjectContactCylinderTriangle->GetParameters().contactForceUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactCylinderTriangle->GetShow(), "ObjectContactCylinderTriangle.Vshow"); } //! AUTO: set parameter

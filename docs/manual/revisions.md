@@ -659,6 +659,9 @@ rim -, each with its block of 3 coordinates in a data node of 12.
 **The cylinders and cones drawn in C++ show their outside** (#3330): the cylinders of contact items, connectors,
 the hydraulic actuator and the rolling disc, and the arrows and axes of frames had their faces wound inward, so that
 they looked flipped in the renderer.
+**The impact model of the contacts has names** (#3327): `impactModel` of the contact items and of the Create functions
+takes `exu.ContactImpactModel.Linear`, `.HuntCrossley` or `.GonthierCarvalhoMartins`; the integers 0, 1 and 2 are
+still accepted, and the parameter is read back as the enumeration.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

@@ -2,12 +2,16 @@
   "number": 3327,
   "title": "The impact model of the contact items as an enumeration type ContactImpactModel",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "ObjectContactCoordinate, ObjectContactSphereSphere, ObjectContactSphereTorus, ObjectContactSphereTriangle and ObjectContactSphereCylinder select the impact model by the number impactModel: 0 the linear model (linear damping only), 1 the Hunt-Crossley model, 2 the mixed model of Gonthier et al. and Carvalho and Martins; the numbers are explained only in the parameter description and checked by each item. Decided: an enumeration type exu.ContactImpactModel for the parameter impactModel of all contact items, defined in definitions/enumTypes.py as the other enumeration types, with the names of the three models; the further contact items of RG9.12 take it from the start.",
   "dateRaised": "2026-11-07",
   "deadline": "2027-05-06",
-  "file": "definitions/enumTypes.py"
+  "dateResolved": "2026-11-07 15:50",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/enumTypes.py",
+  "releaseNotes": "impactModel of the contact items and of the Create functions takes the enumeration exu.ContactImpactModel (Linear, HuntCrossley, GonthierCarvalhoMartins); the integers 0, 1, 2 are still accepted.",
+  "resolvedInVersion": "1.13.443"
 }

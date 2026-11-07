@@ -654,14 +654,8 @@ outcome: !ExudynValueError int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int
   MarkerNodeODE1Coordinate: coordinate(class,dict,set)
   MarkerNodeRotationCoordinate: rotationCoordinate(class,dict,set)
   NodeGenericData: numberOfDataCoordinates(class,dict,set)
-  ObjectContactCoordinate: impactModel(class,dict,set)
   ObjectContactCurveCircles: contactModel(class,dict,set)
-  ObjectContactCylinderCylinder: impactModel(class,dict,set)
-  ObjectContactCylinderTriangle: impactModel(class,dict,set)
-  ObjectContactSphereCylinder: impactModel(class,dict,set)
-  ObjectContactSphereSphere: impactModel(class,dict,set)
-  ObjectContactSphereTorus: impactModel(class,dict,set)
-  ObjectContactSphereTriangle: impactModel(class,dict,set) includeEdges(class,dict,set)
+  ObjectContactSphereTriangle: includeEdges(class,dict,set)
   SensorKinematicTree: linkNumber(class,dict,set)
   SensorSuperElement: meshNodeNumber(class,dict,set)
   SimulationSettings: consolePrecision(attribute,dict)
@@ -743,6 +737,15 @@ outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !Type
 
 outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError list2=[1.0,2.0] list3=[1.0,2.0,3.0] list4=[1.0,2.0,3.0,4.0] list3=[1.0,2.0,3.0] !TypeError !TypeError !TypeError list2=[0.0,1.0] !TypeError
   VisualizationSettings.sensors.traces: traceColors(attribute)
+
+outcome: ContactImpactModel ContactImpactModel ContactImpactModel !RuntimeError !RuntimeError ContactImpactModel !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError ContactImpactModel ContactImpactModel !RuntimeError !RuntimeError
+  ObjectContactCoordinate: impactModel(class,dict,set)
+  ObjectContactCylinderCylinder: impactModel(class,dict,set)
+  ObjectContactCylinderTriangle: impactModel(class,dict,set)
+  ObjectContactSphereCylinder: impactModel(class,dict,set)
+  ObjectContactSphereSphere: impactModel(class,dict,set)
+  ObjectContactSphereTorus: impactModel(class,dict,set)
+  ObjectContactSphereTriangle: impactModel(class,dict,set)
 
 outcome: LoadIndex LoadIndex
   LoadCoordinate: (defaults)

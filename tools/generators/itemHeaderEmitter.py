@@ -117,6 +117,8 @@ def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDiction
     if typeCastStr == 'OutputVariableType' and fromDictionary:
         #Index64: the bits of OutputVariableType go beyond 32 (KineticEnergy is bit 32, #2766)
         return destStr + ' = (OutputVariableType)py::cast<Index64>(' + source + ');'
+    if typeName == 'ContactImpactModel': #an exu.ContactImpactModel or the int 0, 1, 2 (#3327)
+        return destStr + ' = (ContactImpactModel)py::cast<Index>(' + source + ');'
     if typeName == 'MarkerType': #an exu.MarkerType or the int that | gives for a combination (#3103)
         return destStr + ' = (Marker::Type)py::cast<Index>(' + source + ');'
     if typeName in ['Float3', 'Float4', 'ArrayIndex', 'Vector']: #the same overloads as the structure members

@@ -43,14 +43,14 @@ Real CObjectContactCoordinate::ComputeContactForce(Real gap, Real gap_t) const
 		Real deltaExp = -gap;
 		if (parameters.contactStiffnessExponent != 1.) { deltaExp = EXUstd::SignReal(deltaExp) * EM::Pow(fabs(deltaExp), parameters.contactStiffnessExponent); }
 		Real fNormal = k * deltaExp - parameters.contactDamping * gap_t;
-		if (parameters.impactModel != 0)
+		if (parameters.impactModel != ContactImpactModel::Linear)
 		{
 			Real impactVelocity = EXUstd::Maximum(parameters.minimumImpactVelocity, GetCNode(0)->GetCurrentCoordinate(dataIndexImpactVelocity));
 			if (impactVelocity > 0)
 			{
 				const Real& e = parameters.restitutionCoefficient;
 				Real lambda = k / impactVelocity;
-				if (parameters.impactModel == 1) { lambda *= 3. / 2. * (e - 1.); } //Hunt-Crossley
+				if (parameters.impactModel == ContactImpactModel::HuntCrossley) { lambda *= 3. / 2. * (e - 1.); } //Hunt-Crossley
 				else if (e > 1. / 3.) { lambda *= 3. / 2. * (e - 1.) * (11. - e) / (1. + 9. * e); } //Gonthier et al. / Carvalho-Martins
 				else { lambda *= (e * e - 1.) / e; }
 				fNormal += lambda * deltaExp * gap_t;
@@ -128,7 +128,7 @@ Real CObjectContactCoordinate::PostNewtonStep(const MarkerDataStructure& markerD
 	currentState = currentGap;
 
 	//the gap velocity when the contact began, for the impact models; unchanged during the discontinuous iterations (#2750)
-	if (parameters.impactModel != 0)
+	if (parameters.impactModel != ContactImpactModel::Linear)
 	{
 		Real startOfStepImpactVelocity = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep)[dataIndexImpactVelocity];
 		Real& impactVelocity = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[dataIndexImpactVelocity];

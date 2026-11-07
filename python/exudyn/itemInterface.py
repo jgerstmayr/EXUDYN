@@ -6982,7 +6982,7 @@ class ObjectContactCoordinate:
 
         markerNumbers: markers define contact gap; type: ArrayMarkerIndex
 
-        nodeNumber: node number of a NodeGenericData with 1 data coordinate, the gap of the last discontinuous iteration (active set strategy), and a second one, the last impact velocity, if impactModel is not 0; type: NodeIndex
+        nodeNumber: node number of a NodeGenericData with 1 data coordinate, the gap of the last discontinuous iteration (active set strategy), and a second one, the last impact velocity, if impactModel is not ContactImpactModel.Linear; type: NodeIndex
 
         contactStiffness: contact (penalty) stiffness [SI:N/m]; acts only upon penetration; type: float
 
@@ -6990,11 +6990,11 @@ class ObjectContactCoordinate:
 
         contactStiffnessExponent: exponent in the contact law [SI:1], as in ObjectContactSphereSphere; 1 is linear; type: float
 
-        restitutionCoefficient: coefficient of restitution [SI:1], used by impactModel 1 and 2; must be > 0; type: float
+        restitutionCoefficient: coefficient of restitution [SI:1], used by the impact models HuntCrossley and GonthierCarvalhoMartins; must be > 0; type: float
 
         minimumImpactVelocity: lower bound [SI:m/s] of the impact velocity in the impact models; a larger damping at low impact velocities and in permanent contact; type: float
 
-        impactModel: impact model, as in ObjectContactSphereSphere: 0) linear damping only; 1) Hunt-Crossley; 2) Gonthier et al. / Carvalho-Martins; contactDamping is added in all of them; type: int
+        impactModel: the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
 
         offset: offset [SI:m] of contact; type: float
 
@@ -7010,7 +7010,7 @@ class ObjectContactCoordinate:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7296,7 +7296,7 @@ class ObjectContactSphereSphere:
 
         minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
 
-        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
+        impactModel: the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -7310,7 +7310,7 @@ class ObjectContactSphereSphere:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), spheresRadii = [-1.,-1.], isHollowSphere1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., constantPullOffForce = 0., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), spheresRadii = [-1.,-1.], isHollowSphere1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., constantPullOffForce = 0., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7411,7 +7411,7 @@ class ObjectContactSphereTorus:
 
         minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
 
-        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
+        impactModel: the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -7427,7 +7427,7 @@ class ObjectContactSphereTorus:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., torusMajorRadius = 0., torusMinorRadius = 0., torusAxis = [0,0,0], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, radiusSphere = None, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., torusMajorRadius = 0., torusMinorRadius = 0., torusAxis = [0,0,0], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, radiusSphere = None, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7527,7 +7527,7 @@ class ObjectContactSphereTriangle:
 
         minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
 
-        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
+        impactModel: the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -7545,7 +7545,7 @@ class ObjectContactSphereTriangle:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., trianglePoints = None, includeEdges = 7, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, contactForceUserFunction: Union[ObjectContactSphereTriangleContactForceUserFunction, int] = 0, radiusSphere = None, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., trianglePoints = None, includeEdges = 7, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactSphereTriangleContactForceUserFunction, int] = 0, radiusSphere = None, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7645,7 +7645,7 @@ class ObjectContactSphereCylinder:
 
         minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
 
-        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
+        impactModel: the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -7661,7 +7661,7 @@ class ObjectContactSphereCylinder:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., cylinderRadius = 0., cylinderLength = 0., dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, contactForceUserFunction: Union[ObjectContactSphereCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., cylinderRadius = 0., cylinderLength = 0., dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactSphereCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7754,7 +7754,7 @@ class ObjectContactCylinderCylinder:
 
         minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
 
-        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
+        impactModel: the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -7770,7 +7770,7 @@ class ObjectContactCylinderCylinder:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7865,7 +7865,7 @@ class ObjectContactCylinderTriangle:
 
         minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
 
-        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
+        impactModel: the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -7881,7 +7881,7 @@ class ObjectContactCylinderTriangle:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylinderRadius = 0., cylinderLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderTriangleContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylinderRadius = 0., cylinderLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderTriangleContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
