@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 438 | 1.13.454 |
+| 1.13 | Newborn | 439 | 1.13.455 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.455** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` EPA returns a normal that is not converged when it stops early: the faces of a resting polytope are missed (#3346)
+  - description: Since \#3338 the expanding polytope algorithm stops when a new point would turn a face over; the face it stops at is then not a face of the Minkowski difference, and its normal is off by up to 0.01 rad: in 2 of 5000 poses of an icosahedron resting on a face on a box (contactPrimitivesShowcase.py). ObjectContactConvexConvex takes the face manifold only for a normal within 1e-6 of a face normal, so it switches between the face points and one closest point from one Newton iteration to the next, and the discontinuous iteration fails at the minimum step size. Decided: EPA says whether it converged; if not, the penetration is refined as for the cylinders, by moving shape 1 out along the normal until the separated distance gives a face of the difference; resting poses of an icosahedron in convexConvexContactTest.py.
+  - **notes:** Where the expanding polytope algorithm stops before it converges, the penetration of two convex shapes is refined: a polytope resting on a face, as an icosahedron on a box with ObjectContactConvexConvex, keeps the normal of the face, which the contact needs for its points.
+  - date resolved: **2026-11-07 22:11**, date raised: 2026-11-07
 - **1.13.454** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The shapes of visualizationSettings.contact in the substructures contact.show and contact.color (#3340)
   - description: visualizationSettings.contact has a show and a color setting for each kind of contact shape (showTriangles, showSpheres, showTori, showCylinders, showCones, colorTriangles, ...), which fill up the structure as shapes are added. Decided: the substructures contact.show and contact.color with triangles, spheres, tori, cylinders and cones; the names of 1.13.6 (showTriangles, showSpheres, showTori, colorTriangles, colorSpheres, colorTori) forward to them as deprecated; showCylinders, showCones, colorCylinders and colorCones are removed (introduced after 1.13); the models of the repository use the new names.
   - **notes:** The contact shapes are switched on in visualizationSettings.contact.show (triangles, spheres, tori, cylinders, cones) and colored in contact.color; contact.showSpheres, showTriangles, showTori, colorSpheres, colorTriangles and colorTori still work and warn that they are deprecated.

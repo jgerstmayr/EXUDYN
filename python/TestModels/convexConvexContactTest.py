@@ -2,7 +2,8 @@
 # This is an EXUDYN example
 #
 # Details:  ObjectContactConvexConvex (#3331): the Distance of a deactivated contact of two tilted boxes against
-#           exudyn.cUtilities.Distance; then five cubes side by side, each in its own contact with a fixed box, which
+#           exudyn.cUtilities.Distance; the depth and the normal of a cube and of an icosahedron resting on a face, in
+#           poses where the expanding polytope algorithm failed (#3338, #3346); then five cubes side by side, each in its own contact with a fixed box, which
 #           show the contact points: a cube on a large box, resting on its 4 lower corners (0.3 - m g/(4k)); a cube
 #           dropped tilted, which settles on its face; a cube on a small box, resting on the 4 upper corners of the
 #           box; a cube sliding with friction until it stops, after about v0^2/(2 mu g); the same cube with the law as
@@ -91,6 +92,24 @@ for i in range(nResting):
     errorResting = max(errorResting, abs(distance + depth), abs(normal[2] + 1))
 exu.Print('resting cube, largest error of depth and normal:', errorResting)
 checks += [errorResting < 1e-8]
+
+#an icosahedron resting on a face on a slab, in the pose of contactPrimitivesShowcase.py where EPA stopped before it
+#converged and its normal was 0.01 rad off the face (#3346): the normal must be that of the face
+phi = 0.5*(1 + cMath.sqrt(5))
+ico = ConvexShape('Points', points=0.1/cMath.sqrt(1 + phi*phi)*np.array([[0, s1, s2*phi] for s1 in [-1, 1] for s2 in [-1, 1]]
+    + [[s1, s2*phi, 0] for s1 in [-1, 1] for s2 in [-1, 1]] + [[s1*phi, 0, s2] for s1 in [-1, 1] for s2 in [-1, 1]]))
+slab = ConvexShape('Points', points=[[sx*1.5, 3 + sy*0.5, -0.2*sz] for sx in [-1, 1] for sy in [-1, 1] for sz in [0, 1]])
+icoRotation = RotationVector2RotationMatrix([1.4577485821616545e-09, -0.3648638264325505, 2.1823974721104404e-09])
+icoPosition = np.array([0.09192147370913861, 2.999999999740251, 0.07940004729572492])
+generator = np.random.default_rng(2)
+errorIco = 0.
+for i in range(5000):
+    H0 = HomogeneousTransformation(RotationVector2RotationMatrix(1e-6*generator.standard_normal(3)) @ icoRotation,
+                                   icoPosition + 1e-6*generator.standard_normal(3))
+    normal = Distance(ico, H0, slab, np.eye(4))[3]
+    errorIco = max(errorIco, abs(normal[2] + 1))
+exu.Print('resting icosahedron, largest error of the normal:', errorIco)
+checks += [errorIco < 1e-8]
 
 #five cubes side by side, each on its own fixed box
 big = [1, 1, 0.2]

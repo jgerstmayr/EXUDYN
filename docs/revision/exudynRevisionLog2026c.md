@@ -6427,6 +6427,21 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-26"></a>
+### RG9.12.26 — EPA refined where it stops before it converges (2026-11-07, #3346)
+- Found with the revised contactPrimitivesShowcase.py: an icosahedron resting on a face on the slab made the
+  discontinuous iteration fail at the minimum step size (lane 3 alone with 1500 steps at t = 2.297; all lanes with
+  3000 steps at 1.87). cUtilities.Distance near that pose: 2 of 5000 normals 0.0115 rad off -z. The guard of #3338 stops
+  EPA at a face that is not one of the Minkowski difference; ObjectContactConvexConvex takes the face points only for a
+  normal within 1e-6 (cos) of a face, else one closest point.
+- ConvexEPA::converged: true only when the support in the normal is on the face (the tolerance); ConvexDistanceCores
+  then refines a result that did not converge as the cylinders (shape 1 moved out along the normal, GJK on the
+  separated shapes, the smallest support bound kept). 0 of 20000 off; the resting cube to 3e-10.
+- convexConvexContactTest.py: 5000 poses around the one of the showcase, with its slab points in their order (the order
+  decides the ties of the support of a box: with the box of the test centered the poses did not fail); the normal to
+  1e-16, without the fix 6.7e-5 (checked by building without it).
+- The failure of the showcase lane itself remained: it is the friction, see RG9.12.21.
+
 <a id="rg9-12-20"></a>
 ### RG9.12.20 — contact.show and contact.color (2026-11-07, #3340)
 - VSettingsContactShow and VSettingsContactColor (new), the members show and color of VSettingsContact, each with

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.454.dev1
+- Exudyn version = 1.13.455.dev1
 - last change = 2026-11-07
-- Number of issues = 3345
-- Number of resolved issues = 3231 (454 in current version)
+- Number of issues = 3347
+- Number of resolved issues = 3232 (455 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9456,3 +9456,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `LOW EFF` `raised by: Claude-JG` ObjectJournalBearing pushes the journal out when it turns the other way about the bearing axis (#3345)
+  - description: The film forces of ObjectJournalBearing (infinitely short and long bearing after Flores et al. 2009) hold for a positive w = omega - 2 gammaDot, the film in the converging gap in the direction of rotation; with a negative w, a journal turning the other way about the axis of marker 1, the radial force pushes the journal outwards and the tangential force acts on the wrong side: a rotor of contactPrimitivesShowcase.py turning at -50 rad/s about the axis drifts to the clearance instead of floating at its equilibrium. Decided: for a negative w the forces of the mirrored bearing - w by its magnitude, the tangential direction reversed; a test of both directions of rotation in journalBearingTest.py.
+  - date raised: 2026-11-07

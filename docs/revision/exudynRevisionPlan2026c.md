@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (4 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (5 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 10 | Structural core improvements |
+| RG9 | OPEN | 11 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1691,6 +1691,16 @@ CLOSED 2026-11-07 (#3340): visualizationSettings.contact.show and contact.color 
 #### **OPEN_RG9.12.24** The contact items as a group Contact in the reference manual
 
 #3344. Maintainer 2026-11-07: the objects are grouped into Body, SuperElement, ...; an additional group for Contact, as there are now more elements.
+
+#### **OPEN_RG9.12.25** ObjectJournalBearing for both directions of rotation
+
+#3345. Found while revising contactPrimitivesShowcase.py (RG9.12.21): with the bearing axis along -y the rotor turns at -50 rad/s about it and drifts to the clearance; the forces of Flores et al. (2009) hold for a positive w = omega - 2 gammaDot.
+
+#### **CLOSED_RG9.12.26** EPA refined where it stops before it converges
+
+#3346. Found while revising contactPrimitivesShowcase.py (RG9.12.21): an icosahedron resting on a box fails the discontinuous iteration; EPA, stopped by the guard of RG9.12.18, returns a normal 0.01 rad off a face.
+
+CLOSED 2026-11-07 (#3346): EPA says whether it converged; if not, its result is refined by moving shape 1 out along the normal, as for the cylinders; the resting icosahedron of the showcase keeps the normal of its face; test in convexConvexContactTest.py. [log](exudynRevisionLog2026c.md#rg9-12-26)
 
 ## **CLOSED_RG10** Tooling and process
 

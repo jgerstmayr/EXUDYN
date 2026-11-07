@@ -372,6 +372,7 @@ namespace EGeometry {
 		std::vector<Index> edges;	//directed edges of the horizon, two indices each
 		std::vector<Index> visible;	//the faces seen by a new point
 		std::vector<bool> takenFaces;
+		bool converged = false;		//!< the support in the normal of the result is on its face; false if a point was refused or at the iteration limit (#3346)
 
 		bool AddFace(Index i0, Index i1, Index i2)
 		{
@@ -473,6 +474,7 @@ namespace EGeometry {
 			const Index maxIterations = 128;
 			vertices.clear();
 			faces.clear();
+			converged = false;
 			//the candidates: the simplex and the supports along the axes, whose hull contains the origin
 			std::vector<ConvexVertex> candidates;
 			for (Index i = 0; i < simplex.size; i++) { candidates.push_back(simplex.vertex[i]); }
@@ -550,7 +552,7 @@ namespace EGeometry {
 				for (Index j = 1; j < (Index)faces.size(); j++) { if (faces[j].d < faces[nearest].d) { nearest = j; } }
 				Face f = faces[nearest];
 				ConvexVertex w = pair.Support(f.n);
-				if (w.w * f.n - f.d <= tolerance) { break; }
+				if (w.w * f.n - f.d <= tolerance) { converged = true; break; }
 				if (!AddPoint(w, tolerance, true)) { break; }
 			}
 			nearest = 0;
@@ -717,8 +719,9 @@ namespace EGeometry {
 		Real depth;
 		bool solid = epa.Compute(pair, simplex, 1e-10 * scale, depth, normal, pointA, pointB, count);
 		iterations += count;
-		if (!(refine && cylinder && solid)) { return -depth; }
-		//EPA converges slowly on a cylinder: shape 1 moved by T = (d + delta) n out of shape 0, the closest point of
+		if (!(refine && (cylinder || !epa.converged) && solid)) { return -depth; }
+		//EPA converges slowly on a cylinder, and where it stops early its face is not one of C (#3346): shape 1 moved by
+		//T = (d + delta) n out of shape 0, the closest point of
 		//C = A - B to T is a point p of its boundary with the normal m; T along m again, until p is parallel to m.
 		//p.m is the support value of C in m, an upper bound of the depth, as the support value in the normal of EPA:
 		//the smallest bound is kept
