@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 436 | 1.13.452 |
+| 1.13 | Newborn | 437 | 1.13.453 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.453** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The contact forces of the contact items drawn as two arrows meeting at the contact point (#3339)
+  - description: The contact items between spheres, cylinders, cones, triangles, polytopes and the journal bearing do not show their forces; visualizationSettings.contact.showContactForces and contactForcesFactor are used only by ObjectContactFrictionCircleCable2D. Decided: with showContactForces, each contact point of these items draws the force on marker 0 as a red 3D arrow and the force on marker 1 as a green one, opposite, their heads meeting at the contact point, scaled by contactForcesFactor; the radius of the arrows by a new setting contact.contactForcesRadius.
+  - **notes:** With visualizationSettings.contact.showContactForces, the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing draw the force on marker 0 as a red arrow and the force on marker 1 as a green arrow, their heads meeting at each contact point; contact.contactForcesRadius sets their radius.
+  - date resolved: **2026-11-07 21:28**, date raised: 2026-11-07
 - **1.13.452** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` EPA loses the origin where two convex shapes touch on faces: a resting cube sinks into a box (#3338)
   - description: A cube resting flat on a box with ObjectContactConvexConvex (contactPrimitivesShowcase.py) sinks 2 cm into it after 0.47 s and jumps: in about 2 percent of the poses near rest, the expanding polytope algorithm adds points of tiny height on the nearly flat side of the Minkowski difference until a thin face turns over, the origin lies outside the polytope, and the distance is returned as -0 with the normal of the opposite side; the iteration limit of 128 is reached, which also makes the contact slow. Decided: EPA starts from the tetrahedron of GJK, which contains the origin, refuses a point that is a vertex already and, while expanding, a face that has the origin outside; a test of resting poses in convexConvexContactTest.py.
   - **notes:** A convex shape resting on a face of another, as a cube on a box with ObjectContactConvexConvex, was in some poses pushed into it: the penetration was returned as 0 with the normal of the opposite side. The expanding polytope algorithm keeps the origin inside its polytope; such contacts are also faster.

@@ -243,6 +243,8 @@ void VisualizationObjectContactConvexConvex::UpdateGraphics(const VisualizationS
 			}
 		}
 	}
+	ContactPoints::DrawForces<CObjectContactConvexConvex, ContactConvex::Points>(*cItem, visualizationSettings, vSystem, itemID,
+		"ObjectContactConvexConvex", ContactConvex::ComputePoints);
 	if (visualizationSettings.connectors.showNumbers)
 	{
 		Float4 currentColor = visualizationSettings.connectors.defaultColor;

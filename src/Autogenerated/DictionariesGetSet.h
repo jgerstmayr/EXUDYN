@@ -3694,8 +3694,16 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     d["value"] = data.contactForcesFactor;
     d["type"] = "float";
     d["size"] = std::vector<int>{1};
-    d["description"] = "factor used for scaling of contact forces is showContactForces=True";
+    d["description"] = "factor used for scaling of contact forces is showContactForces=True; for the arrows of the contact items: their length per force [SI:m/N]";
     structureDict["contactForcesFactor"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.contactForcesRadius;
+    d["type"] = "UFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "radius of the shaft of the arrows of the contact forces [SI:m], see showContactForces; at most a tenth of the length of an arrow (#3339)";
+    structureDict["contactForcesRadius"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -3726,7 +3734,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     d["value"] = data.showContactForces;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "if True, contact forces are drawn for certain contact models";
+    d["description"] = "if True, contact forces are drawn for certain contact models; the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing whose visualization has show=True draw at each contact point the force on marker 0 as a red arrow and the force on marker 1 as a green one, their heads meeting at the contact point, except with a user function of the force (#3339)";
     structureDict["showContactForces"] = d;
 
     d = py::dict(); //reset local dict
@@ -3815,6 +3823,7 @@ inline py::dict GetDictionary(const VSettingsContact& data) {
     structureDict["colorTori"] = EPyUtils::ToPythonMember(data.colorTori);
     structureDict["colorTriangles"] = EPyUtils::ToPythonMember(data.colorTriangles);
     structureDict["contactForcesFactor"] = data.contactForcesFactor;
+    structureDict["contactForcesRadius"] = data.contactForcesRadius;
     structureDict["contactPointsDefaultSize"] = data.contactPointsDefaultSize;
     structureDict["showBoundingBoxes"] = data.showBoundingBoxes;
     structureDict["showCones"] = data.showCones;
@@ -3841,6 +3850,7 @@ inline void SetDictionary(VSettingsContact& data, const py::dict& d) {
     EPyUtils::FromPython(d["colorTori"], data.colorTori, "VSettingsContact.colorTori");
     EPyUtils::FromPython(d["colorTriangles"], data.colorTriangles, "VSettingsContact.colorTriangles");
     EPyUtils::FromPython(d["contactForcesFactor"], data.contactForcesFactor, "VSettingsContact.contactForcesFactor");
+    EPyUtils::FromPython(d["contactForcesRadius"], data.contactForcesRadius, EPyUtils::RangeCheck::nonNegative, "VSettingsContact.contactForcesRadius");
     EPyUtils::FromPython(d["contactPointsDefaultSize"], data.contactPointsDefaultSize, "VSettingsContact.contactPointsDefaultSize");
     EPyUtils::FromPython(d["showBoundingBoxes"], data.showBoundingBoxes, "VSettingsContact.showBoundingBoxes");
     EPyUtils::FromPython(d["showCones"], data.showCones, "VSettingsContact.showCones");

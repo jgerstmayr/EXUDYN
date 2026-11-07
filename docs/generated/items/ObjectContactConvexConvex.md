@@ -57,7 +57,7 @@ The parameters of `VObjectContactConvexConvex`, given as `visualization`:
 
 Drawn as [all connectors](#sec-drawing-objectsconnector); the triangles of both shapes with `contact.showTriangles`.
 
-Settings beyond those of all connectors: [`contact.colorTriangles`](#sec-vsettingscontact), [`contact.showTriangles`](#sec-vsettingscontact).
+Settings beyond those of all connectors: [`contact.colorTriangles`](#sec-vsettingscontact), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.showTriangles`](#sec-vsettingscontact), [`general.cylinderTiling`](#sec-vsettingsgeneral).
 
 ## Output variables
 

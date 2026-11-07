@@ -2071,7 +2071,9 @@ class VSettingsContact:
     colorTriangles: Tuple[float,float,float,float]
     """RGBA color for contact triangles, see showTriangles."""
     contactForcesFactor: float
-    """factor used for scaling of contact forces is showContactForces=True."""
+    """factor used for scaling of contact forces is showContactForces=True; for the arrows of the contact items: their length per force [SI:m/N]."""
+    contactForcesRadius: float
+    """radius of the shaft of the arrows of the contact forces [SI:m], see showContactForces; at most a tenth of the length of an arrow (#3339)."""
     contactPointsDefaultSize: float
     """global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle."""
     showBoundingBoxes: bool
@@ -2079,7 +2081,7 @@ class VSettingsContact:
     showCones: bool
     """show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True."""
     showContactForces: bool
-    """if True, contact forces are drawn for certain contact models."""
+    """if True, contact forces are drawn for certain contact models; the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing whose visualization has show=True draw at each contact point the force on marker 0 as a red arrow and the force on marker 1 as a green one, their heads meeting at the contact point, except with a user function of the force (#3339)."""
     showContactForcesValues: bool
     """if True and showContactForces=True, numerical values for  contact forces are shown at certain points."""
     showCylinders: bool

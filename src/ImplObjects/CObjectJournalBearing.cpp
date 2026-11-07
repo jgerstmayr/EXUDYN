@@ -122,6 +122,15 @@ void VisualizationObjectJournalBearing::UpdateGraphics(const VisualizationSettin
 	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	CObjectJournalBearing* cItem = (CObjectJournalBearing*)vSystem->systemData->GetCObjects()[itemNumber];
 	const auto& parameters = cItem->GetParameters();
+	if (DrawContactForces(visualizationSettings, parameters.forceUserFunction) && parameters.activeConnector)
+	{
+		//the force of the film on the journal, marker 0, at the journal surface towards the eccentricity (#3339)
+		MarkerDataStructure markerData;
+		VisualizationMarkerData(*vSystem->systemData, cItem->GetMarkerNumbers(), markerData);
+		Vector3D eccentricity, eccentricity_t, radial, force;
+		cItem->ComputeBearingForce(markerData, eccentricity, eccentricity_t, radial, force);
+		DrawContactForce(visualizationSettings, vSystem, itemID, markerData.GetMarkerData(0).position + parameters.journalRadius * radial, force);
+	}
 	if (!visualizationSettings.contact.showCylinders) { return; }
 	Float4 cylinderColor = visualizationSettings.contact.colorCylinders;
 	if (color[0] != -1.f) { cylinderColor = color; }

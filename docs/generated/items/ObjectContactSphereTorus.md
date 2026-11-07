@@ -55,7 +55,7 @@ The parameters of `VObjectContactSphereTorus`, given as `visualization`:
 
 Drawn as [all connectors](#sec-drawing-objectsconnector); the sphere with `contact.showSpheres` and the center circle of the torus with `contact.showTori`.
 
-Settings beyond those of all connectors: [`contact.colorSpheres`](#sec-vsettingscontact), [`contact.colorTori`](#sec-vsettingscontact), [`contact.showSpheres`](#sec-vsettingscontact), [`contact.showTori`](#sec-vsettingscontact), [`contact.tilingSpheres`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral).
+Settings beyond those of all connectors: [`contact.colorSpheres`](#sec-vsettingscontact), [`contact.colorTori`](#sec-vsettingscontact), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.showSpheres`](#sec-vsettingscontact), [`contact.showTori`](#sec-vsettingscontact), [`contact.tilingSpheres`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral), [`general.cylinderTiling`](#sec-vsettingsgeneral).
 
 ## Output variables
 

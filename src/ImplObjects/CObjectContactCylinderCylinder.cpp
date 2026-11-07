@@ -655,6 +655,8 @@ void VisualizationObjectContactCylinderCylinder::UpdateGraphics(const Visualizat
 		ContactCylinder::DrawConeOfMarker(vSystem, cItem->GetMarkerNumbers()[1], parameters.cylindersRadii[1], parameters.cylindersRadii[1],
 			parameters.cylindersLengths[1], cylinderColor, itemID, visualizationSettings.general.cylinderTiling, parameters.isHollowCylinder1);
 	}
+	ContactPoints::DrawForces<CObjectContactCylinderCylinder, ContactCylinder::Points>(*cItem, visualizationSettings, vSystem, itemID,
+		"ObjectContactCylinderCylinder", ContactCylinder::ComputePoints);
 	if (visualizationSettings.connectors.showNumbers)
 	{
 		Vector3D pos[2];
@@ -721,6 +723,8 @@ void VisualizationObjectContactCylinderTriangle::UpdateGraphics(const Visualizat
 		ContactCylinder::DrawCylinderOfMarker(vSystem, cItem->GetMarkerNumbers()[0], parameters.cylinderRadius,
 			parameters.cylinderLength, cylinderColor, itemID, visualizationSettings.general.cylinderTiling);
 	}
+	ContactPoints::DrawForces<CObjectContactCylinderTriangle, ContactCylinder::Points>(*cItem, visualizationSettings, vSystem, itemID,
+		"ObjectContactCylinderTriangle", ContactCylinder::ComputePoints);
 	Vector3D pos1;
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetPosition(*vSystem->systemData, pos1, ConfigurationType::Visualization);
 	if (visualizationSettings.contact.showTriangles && parameters.trianglePoints.NumberOfItems() == 3)
@@ -834,6 +838,8 @@ void VisualizationObjectContactConeCone::UpdateGraphics(const VisualizationSetti
 		ContactCylinder::DrawConeOfMarker(vSystem, cItem->GetMarkerNumbers()[1], parameters.conesRadii1[0], parameters.conesRadii1[1],
 			parameters.conesLengths[1], coneColor, itemID, visualizationSettings.general.cylinderTiling, parameters.isHollowCone1);
 	}
+	ContactPoints::DrawForces<CObjectContactConeCone, ContactCylinder::Points>(*cItem, visualizationSettings, vSystem, itemID,
+		"ObjectContactConeCone", ContactCylinder::ComputePoints);
 }
 
 void VisualizationObjectContactConeTriangle::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
@@ -848,6 +854,8 @@ void VisualizationObjectContactConeTriangle::UpdateGraphics(const VisualizationS
 		ContactCylinder::DrawConeOfMarker(vSystem, cItem->GetMarkerNumbers()[0], parameters.coneRadii[0], parameters.coneRadii[1],
 			parameters.coneLength, coneColor, itemID, visualizationSettings.general.cylinderTiling);
 	}
+	ContactPoints::DrawForces<CObjectContactConeTriangle, ContactCylinder::Points>(*cItem, visualizationSettings, vSystem, itemID,
+		"ObjectContactConeTriangle", ContactCylinder::ComputePoints);
 	if (visualizationSettings.contact.showTriangles && parameters.trianglePoints.NumberOfItems() == 3)
 	{
 		Float4 triangleColor = visualizationSettings.contact.colorTriangles;

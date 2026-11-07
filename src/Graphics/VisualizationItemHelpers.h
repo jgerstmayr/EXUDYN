@@ -421,4 +421,51 @@ void UpdateGraphicsBeam3D(const VisualizationSettings& visualizationSettings, Vi
 
 }
 
+//! the marker data of the markers of a connector in the visualization configuration, without Jacobians: position,
+//! orientation and velocities; the unit matrix and no angular velocity for a position marker (#3339)
+inline void VisualizationMarkerData(const CSystemData& systemData, const ArrayIndex& markerNumbers, MarkerDataStructure& markerData)
+{
+	markerData.SetNumberOfMarkerData(markerNumbers.NumberOfItems());
+	markerData.SetTime(systemData.GetCData().GetVisualization().GetTime());
+	for (Index i = 0; i < markerNumbers.NumberOfItems(); i++)
+	{
+		const CMarker& marker = *systemData.GetCMarkers()[markerNumbers[i]];
+		MarkerData& data = markerData.GetMarkerData(i);
+		marker.GetPosition(systemData, data.position, ConfigurationType::Visualization);
+		marker.GetVelocity(systemData, data.velocity, ConfigurationType::Visualization);
+		if (marker.GetType() & Marker::Orientation)
+		{
+			marker.GetRotationMatrix(systemData, data.orientation, ConfigurationType::Visualization);
+			marker.GetAngularVelocityLocal(systemData, data.angularVelocityLocal, ConfigurationType::Visualization);
+		}
+		else
+		{
+			data.orientation = EXUmath::unitMatrix3D;
+			data.angularVelocityLocal.SetAll(0.);
+		}
+		data.velocityAvailable = true;
+	}
+}
+
+//! true, if the contact forces of an item are drawn: contact.showContactForces, and no user function of the force,
+//! which the render thread cannot call (#3003, #3339)
+inline bool DrawContactForces(const VisualizationSettings& visualizationSettings, const UserFunctionBase& forceUserFunction)
+{
+	return visualizationSettings.contact.showContactForces && !forceUserFunction.IsValid();
+}
+
+//! true, if the contact forces of an item without a user function of the force are drawn (#3339)
+inline bool DrawContactForces(const VisualizationSettings& visualizationSettings)
+{
+	return visualizationSettings.contact.showContactForces;
+}
+
+//! the force on marker 0 at a contact point, drawn by the settings of contact (#3339)
+inline void DrawContactForce(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemID,
+	const Vector3D& contactPoint, const Vector3D& force0)
+{
+	EXUvis::DrawContactForce(contactPoint, force0, visualizationSettings.contact.contactForcesFactor,
+		visualizationSettings.contact.contactForcesRadius, vSystem->graphicsData, itemID, visualizationSettings.general.cylinderTiling);
+}
+
 #endif

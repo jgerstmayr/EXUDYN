@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (6 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (5 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 12 | Structural core improvements |
+| RG9 | OPEN | 11 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1664,9 +1664,11 @@ CLOSED 2026-11-07 (#3330): the maintainer saw the cylinders of sphereCylinderCon
 
 CLOSED 2026-11-07 (#3338): EPA ran into its 128 iterations on the nearly flat side of the Minkowski difference until a thin face turned over; AddPoint now refuses a vertex already there and a face with the origin outside, EPA starts from the tetrahedron of GJK; 0 of 20000 resting poses fail, the showcase solves 3.6 times faster; resting poses in convexConvexContactTest.py. [log](exudynRevisionLog2026c.md#rg9-12-18)
 
-#### **OPEN_RG9.12.19** The contact forces drawn as two arrows meeting at the contact point
+#### **CLOSED_RG9.12.19** The contact forces drawn as two arrows meeting at the contact point
 
 #3339. Maintainer 2026-11-07: for the new and the existing contact connectors a red arrow on marker 0 and a green one on marker 1, opposite, the heads meeting at the contact point, 3D arrows only; contact.showContactForces and contactForcesFactor used, a missing setting proposed.
+
+CLOSED 2026-11-07 (#3339): with contact.showContactForces the ten primitive contact items (and the journal bearing) draw the force on marker 0 red and on marker 1 green, the heads at each contact point, from the state shown; contact.contactForcesRadius new; not with a user function of the force (render thread); test in test_graphicsData.py. [log](exudynRevisionLog2026c.md#rg9-12-19)
 
 #### **OPEN_RG9.12.20** contact.show and contact.color as substructures
 

@@ -5,7 +5,8 @@
 #
 # The drawing of an item is its UpdateGraphics function in src/ (Visualization<Item>::UpdateGraphics) and
 # the helpers it calls (src/Graphics/VisualizationItemHelpers.h, the EXUvis functions of
-# VisualizationPrimitives.cpp). This reads them and says, per item:
+# VisualizationPrimitives.cpp, the drawing of the contact points in src/ImplObjects/ContactPrimitivePoints.h). This reads
+# them and says, per item:
 #   - the visualization settings they read (visualizationSettings.<structure>.<member>, also through a
 #     local reference to a structure), with those of the helpers;
 #   - the visualization parameters of its definition (V...) they read - and those they do not read;
@@ -72,7 +73,8 @@ def Helpers():
     """the functions of the drawing helpers, by name: their body (all overloads together)"""
     helpers = {}
     for path in [os.path.join(root, 'src', 'Graphics', 'VisualizationItemHelpers.h'),
-                 os.path.join(root, 'src', 'Graphics', 'VisualizationPrimitives.cpp')]:
+                 os.path.join(root, 'src', 'Graphics', 'VisualizationPrimitives.cpp'),
+                 os.path.join(root, 'src', 'ImplObjects', 'ContactPrimitivePoints.h')]:
         text = WithoutComments(Read(path))
         for match in re.finditer(r'\n[ \t]*(?:inline\s+|static\s+)?(?:void|bool|Index|Real|float)\s+(\w+)\s*\([^;{]*\)\s*(?:const\s*)?\{', text):
             helpers[match.group(1)] = helpers.get(match.group(1), '') + Body(text, match.end() - 1)

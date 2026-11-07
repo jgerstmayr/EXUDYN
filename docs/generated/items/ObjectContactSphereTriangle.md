@@ -58,7 +58,7 @@ The parameters of `VObjectContactSphereTriangle`, given as `visualization`:
 
 Drawn as [all connectors](#sec-drawing-objectsconnector); the sphere with `contact.showSpheres` and the triangle with `contact.showTriangles`.
 
-Settings beyond those of all connectors: [`contact.colorSpheres`](#sec-vsettingscontact), [`contact.colorTriangles`](#sec-vsettingscontact), [`contact.showSpheres`](#sec-vsettingscontact), [`contact.showTriangles`](#sec-vsettingscontact), [`general.sphereTiling`](#sec-vsettingsgeneral).
+Settings beyond those of all connectors: [`contact.colorSpheres`](#sec-vsettingscontact), [`contact.colorTriangles`](#sec-vsettingscontact), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.showSpheres`](#sec-vsettingscontact), [`contact.showTriangles`](#sec-vsettingscontact), [`general.cylinderTiling`](#sec-vsettingsgeneral), [`general.sphereTiling`](#sec-vsettingsgeneral).
 
 ## Output variables
 

@@ -1656,6 +1656,17 @@ namespace EXUvis {
 		}
 	}
 
+	void DrawContactForce(const Vector3D& contactPoint, const Vector3D& force0, Real factor, Real radius, GraphicsData& graphicsData,
+		Index itemID, Index nTiles)
+	{
+		Vector3D v = factor * force0;
+		Real length = v.GetL2Norm();
+		if (length == 0.) { return; }
+		Real r = EXUstd::Minimum(radius, 0.1 * length); //the head is 7.5 radii long
+		DrawArrow(contactPoint - v, v, r, Float4({ 0.9f, 0.1f, 0.1f, 1.f }), graphicsData, itemID, nTiles);
+		DrawArrow(contactPoint + v, -1. * v, r, Float4({ 0.1f, 0.75f, 0.1f, 1.f }), graphicsData, itemID, nTiles);
+	}
+
 	//! draw node either with 3 circles or with sphere at given point and with given radius
 	void DrawNode(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID, bool draw3D, Index nTiles)
 	{

@@ -998,7 +998,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tbool, 
             pythonName='showContactForces',
             defaultValue=False,
-            description=r'if True, contact forces are drawn for certain contact models'),
+            description=r'if True, contact forces are drawn for certain contact models; the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing whose visualization has show=True draw at each contact point the force on marker 0 as a red arrow and the force on marker 1 as a green one, their heads meeting at the contact point, except with a user function of the force (#3339)'),
         StructureParameter(type=Tbool, 
             pythonName='showContactForcesValues',
             defaultValue=False,
@@ -1006,7 +1006,11 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tfloat, 
             pythonName='contactForcesFactor',
             defaultValue=0.001,
-            description=r'factor used for scaling of contact forces is showContactForces=True'),
+            description=r'factor used for scaling of contact forces is showContactForces=True; for the arrows of the contact items: their length per force [SI:m/N]'),
+        StructureParameter(type=Tfloat(minimum=0),
+            pythonName='contactForcesRadius',
+            defaultValue=0.002,
+            description=r'radius of the shaft of the arrows of the contact forces [SI:m], see showContactForces; at most a tenth of the length of an arrow (#3339)'),
         ],
     ))
 

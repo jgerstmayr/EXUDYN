@@ -6427,6 +6427,26 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-19"></a>
+### RG9.12.19 — the contact forces drawn as two arrows (2026-11-07, #3339)
+- EXUvis::DrawContactForce: the force on marker 0 red (0.9, 0.1, 0.1), its negative green (0.1, 0.75, 0.1), each
+  contactForcesFactor times the force long, the heads at the contact point; the radius contactForcesRadius (new, 2 mm),
+  at most a tenth of the length, so that DrawArrow (head 7.5 radii) keeps a shaft.
+- VisualizationItemHelpers.h: VisualizationMarkerData (position, rotation, velocities of the markers in the
+  visualization configuration; position markers with the unit matrix), DrawContactForces (showContactForces and no
+  user function of the force: the render thread cannot call a Python function, #3003, and a symbolic one has no copy
+  of its recording for that thread).
+- ContactPoints::DrawForces for CylinderCylinder, CylinderTriangle, ConeCone, ConeTriangle and ConvexConvex: the points
+  of the visualization configuration, PointForce with the contact state from the gaps (contactFromData=false) and the
+  visualization coordinates of the data node. SphereSphere, SphereTriangle, SphereTorus, SphereCylinder by their
+  ComputeConnectorProperties at the point of their Position output; the journal bearing at the journal surface
+  towards the eccentricity.
+- Sign: forces[k] of ComputeConnectorForceRigid are in the sign of the left-hand side (#2745), forces[1] = fVec, so fVec
+  is the physical force on marker 0 in all of them (first drawn with the opposite sign, found by the test).
+- Drawn only for items with visualization show=True, as the shapes (#3326); the description of showContactForces says so.
+- test_graphicsData.py: two spheres 1 cm deep (100 N, 0.1 m arrows, the red one above the contact point), a cube on a
+  box with 4 arrows of each color.
+
 <a id="rg9-12-18"></a>
 ### RG9.12.18 — EPA keeps the origin inside its polytope (2026-11-07, #3338)
 - Found in contactPrimitivesShowcase.py: the cube resting flat on the box (ObjectContactConvexConvex, 0.08 mm deep)

@@ -1248,11 +1248,12 @@ public: // AUTO:
   Float4 colorSpheres;                            //!< AUTO: RGBA color for contact spheres, see showSpheres
   Float4 colorTori;                               //!< AUTO: RGBA color for contact tori, see showTori
   Float4 colorTriangles;                          //!< AUTO: RGBA color for contact triangles, see showTriangles
-  float contactForcesFactor;                      //!< AUTO: factor used for scaling of contact forces is showContactForces=True
+  float contactForcesFactor;                      //!< AUTO: factor used for scaling of contact forces is showContactForces=True; for the arrows of the contact items: their length per force [SI:m/N]
+  float contactForcesRadius;                      //!< AUTO: must be >= 0; radius of the shaft of the arrows of the contact forces [SI:m], see showContactForces; at most a tenth of the length of an arrow (#3339)
   float contactPointsDefaultSize;                 //!< AUTO: global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle
   bool showBoundingBoxes;                         //!< AUTO: show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!
   bool showCones;                                 //!< AUTO: show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True
-  bool showContactForces;                         //!< AUTO: if True, contact forces are drawn for certain contact models
+  bool showContactForces;                         //!< AUTO: if True, contact forces are drawn for certain contact models; the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing whose visualization has show=True draw at each contact point the force on marker 0 as a red arrow and the force on marker 1 as a green one, their heads meeting at the contact point, except with a user function of the force (#3339)
   bool showContactForcesValues;                   //!< AUTO: if True and showContactForces=True, numerical values for  contact forces are shown at certain points
   bool showCylinders;                             //!< AUTO: show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True
   bool showSearchTree;                            //!< AUTO: show outer box of search tree for all GeneralContacts
@@ -1280,6 +1281,7 @@ public: // AUTO:
     colorTori = Float4({0.8f,0.2f,0.8f,1.f});
     colorTriangles = Float4({0.5f,0.5f,0.5f,1.f});
     contactForcesFactor = 0.001f;
+    contactForcesRadius = 0.002f;
     contactPointsDefaultSize = 0.001f;
     showBoundingBoxes = false;
     showCones = false;
@@ -1312,6 +1314,7 @@ public: // AUTO:
     os << "  colorTori = " << colorTori << "\n";
     os << "  colorTriangles = " << colorTriangles << "\n";
     os << "  contactForcesFactor = " << contactForcesFactor << "\n";
+    os << "  contactForcesRadius = " << contactForcesRadius << "\n";
     os << "  contactPointsDefaultSize = " << contactPointsDefaultSize << "\n";
     os << "  showBoundingBoxes = " << showBoundingBoxes << "\n";
     os << "  showCones = " << showCones << "\n";

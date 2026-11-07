@@ -402,5 +402,15 @@ void VisualizationObjectContactSphereSphere::UpdateGraphics(const VisualizationS
 		}
 	}
 
+	if (DrawContactForces(visualizationSettings) && cItem->GetParameters().activeConnector) //fVec is the force on marker 0 (#3339)
+	{
+		MarkerDataStructure markerData;
+		VisualizationMarkerData(*vSystem->systemData, cItem->GetMarkerNumbers(), markerData);
+		Vector3D deltaP, deltaV, fVec, fFriction, n0;
+		Real frictionCoeff, gap;
+		cItem->ComputeConnectorProperties(markerData, cItem->GetCNode(0)->GetVisualizationCoordinateVector(), frictionCoeff, gap, deltaP, deltaV, fVec, fFriction, n0, false);
+		Vector3D contactPoint = markerData.GetMarkerData(0).position + (cItem->GetParameters().spheresRadii[0] + 0.5 * gap) * n0;
+		DrawContactForce(visualizationSettings, vSystem, itemID, contactPoint, fVec);
+	}
 	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0]+pos[1]), vSystem, itemID, "", currentColor); }
 }

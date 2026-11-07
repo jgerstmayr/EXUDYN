@@ -221,6 +221,12 @@ namespace EXUvis {
 	void DrawArrow(const Vector3D& p, const Vector3D& v, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
 		Index nTiles = 12, bool doubleArrow = false, bool draw3D = true);
 
+	//! the force of a contact point: the force on marker 0 (force0) as a red 3D arrow and its negative, on marker 1, as
+	//! a green one, both scaled by factor, their heads meeting at the contact point; the radius at most 1/10 of the
+	//! length, so that short arrows keep their heads (#3339)
+	void DrawContactForce(const Vector3D& contactPoint, const Vector3D& force0, Real factor, Real radius, GraphicsData& graphicsData,
+		Index itemID, Index nTiles = 12);
+
 	//! draw node either with 3 circles or with sphere at given point and with given radius
 	void DrawNode(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, 
 		Index itemID, bool draw3D = true, Index nTiles = 12);

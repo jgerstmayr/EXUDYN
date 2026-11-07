@@ -682,6 +682,9 @@ is an option of the cylinder, cone and convex contacts; each contact point then 
 faces, as a cube resting on a box, was in some poses returned as 0 with the normal of the opposite side, and
 `ObjectContactConvexConvex` pushed the cube into the box; `exudyn.cUtilities.Distance` and the contact items give the
 penetration of the faces, and such contacts are faster.
+**The contact items draw their forces** (#3339): with `visualizationSettings.contact.showContactForces`, the contacts
+between spheres, cylinders, cones, triangles and polytopes and `ObjectJournalBearing` draw the force on marker 0 as a
+red arrow and the force on marker 1 as a green one, meeting at each contact point; `contact.contactForcesRadius` is new.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

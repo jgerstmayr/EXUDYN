@@ -336,3 +336,69 @@ def testTheUserItemsOfACartesianSpringDamperOnAMassPointAreDrawn():
     mbs.Assemble()
     data = SC.renderer.GetGraphicsData()
     assert len(data['triangles']['items']) == 12 and len(data['spheres']['items']) == 1 and len(data['lines']['items']) >= 1
+
+
+def ArrowTriangles(data, color):
+    """the corners of the triangles of one color of the arrows of the contact forces"""
+    triangles = data['triangles']
+    select = np.all(np.abs(np.array(triangles['colors'])[:, 0, :3] - color) < 1e-6, axis=1)
+    return np.array(triangles['points'])[select].reshape(-1, 3)
+
+
+def testTheContactForcesAreArrowsMeetingAtTheContactPoint():
+    """with contact.showContactForces, a contact item with visualization show=True draws the force on marker 0 in red and on marker 1 in green, of the
+    length contactForcesFactor times the force, their heads at the contact point (#3339): two spheres 1 cm deep, a
+    cube on a box on its 4 corners"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.CreateGround()
+    node = mbs.AddNode(items.NodeRigidBodyEP(referenceCoordinates=[0, 0, 0.19, 1, 0, 0, 0]))
+    ball = mbs.AddObject(items.ObjectRigidBody(nodeNumber=node, mass=1, inertia=[1, 1, 1, 0, 0, 0]))
+    k = 1e4
+    nData = mbs.AddNode(items.NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[-1, 0, 0, 0]))
+    mbs.AddObject(items.ObjectContactSphereSphere(markerNumbers=[mbs.AddMarker(items.MarkerBodyRigid(bodyNumber=oGround)),
+                                                               mbs.AddMarker(items.MarkerBodyRigid(bodyNumber=ball))],
+                                                nodeNumber=nData, spheresRadii=[0.1, 0.1], contactStiffness=k,
+                                                visualization=items.VObjectContactSphereSphere(show=True)))
+    mbs.Assemble()
+    SC.visualizationSettings.contact.showContactForces = True
+    SC.visualizationSettings.contact.contactForcesFactor = 1e-3
+    data = SC.renderer.GetGraphicsData()
+    red, green = ArrowTriangles(data, [0.9, 0.1, 0.1]), ArrowTriangles(data, [0.1, 0.75, 0.1])
+    contactPoint, length = 0.095, 1e-3 * k * 0.01 #the middle of the overlap; 0.1 m for 100 N
+    #the ground sphere, marker 0, is pushed down: its red arrow comes from above, the green one from below; float32
+    assert len(red) > 0 and len(red) == len(green)
+    assert abs(red[:, 2].min() - contactPoint) < 1e-6 and abs(red[:, 2].max() - (contactPoint + length)) < 1e-6
+    assert abs(green[:, 2].max() - contactPoint) < 1e-6 and abs(green[:, 2].min() - (contactPoint - length)) < 1e-6
+    trianglesOfOneArrow = len(red)
+
+    SC.visualizationSettings.contact.showContactForces = False
+    assert len(ArrowTriangles(SC.renderer.GetGraphicsData(), [0.9, 0.1, 0.1])) == 0
+
+    #a cube 1 mm deep in a box: the 4 corners
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.CreateGround()
+    a = 0.2
+    node = mbs.AddNode(items.NodeRigidBodyEP(referenceCoordinates=[0, 0, 0.1 + a/2 - 1e-3, 1, 0, 0, 0]))
+    cube = mbs.AddObject(items.ObjectRigidBody(nodeNumber=node, mass=1, inertia=[1, 1, 1, 0, 0, 0]))
+    def Box(size):
+        points = [[sx*size[0]/2, sy*size[1]/2, sz*size[2]/2] for sz in [-1, 1] for sy in [-1, 1] for sx in [-1, 1]]
+        triangles = [[0, 2, 1], [1, 2, 3], [4, 5, 6], [5, 7, 6], [0, 1, 4], [1, 5, 4], [2, 6, 3], [3, 6, 7], [0, 4, 2], [2, 4, 6],
+                     [1, 3, 5], [3, 7, 5]]
+        return np.array(points), np.array(triangles)
+    (points0, triangles0), (points1, triangles1) = Box([a]*3), Box([1, 1, 0.2])
+    nData = mbs.AddNode(items.NodeGenericData(numberOfDataCoordinates=24, initialCoordinates=[1, 0, 0]*8))
+    mbs.AddObject(items.ObjectContactConvexConvex(markerNumbers=[mbs.AddMarker(items.MarkerBodyRigid(bodyNumber=cube)),
+                                                               mbs.AddMarker(items.MarkerBodyRigid(bodyNumber=oGround))],
+                                                nodeNumber=nData, points0=points0, triangles0=triangles0, points1=points1,
+                                                triangles1=triangles1, contactStiffness=k,
+                                                visualization=items.VObjectContactConvexConvex(show=True)))
+    mbs.Assemble()
+    SC.visualizationSettings.contact.showContactForces = True
+    data = SC.renderer.GetGraphicsData()
+    red, green = ArrowTriangles(data, [0.9, 0.1, 0.1]), ArrowTriangles(data, [0.1, 0.75, 0.1])
+    assert len(red) == 4*trianglesOfOneArrow and len(green) == 4*trianglesOfOneArrow
+    #the cube, marker 0, is pushed up: its red arrows from below, 1e-3 k 1e-3 = 1 cm long, at the corners
+    assert abs(red[:, 2].max() - (0.1 - 5e-4)) < 1e-6 and abs(red[:, 2].min() - (0.1 - 5e-4 - 1e-2)) < 1e-6
+    assert abs(np.abs(red[:, 0]).max() - a/2) <= 2.5*1e-3 + 1e-6 #the head: 2.5 radii, the radius a tenth of 1 cm

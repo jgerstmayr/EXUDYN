@@ -688,6 +688,14 @@ contact switch.
 for each contact point and returns the force on marker 0; the item keeps the geometry and the contact state. It can be a
 symbolic user function, which is evaluated in C++.
 
+### Drawing
+
+An item with `visualization` `show=True` draws its shapes with the settings `visualizationSettings.contact`, and, with
+`contact.showContactForces`, the force of each contact point: the force on marker 0 as a red arrow and the force on
+marker 1 as a green one, their heads meeting at the contact point, `contactForcesFactor` long per newton and of the
+radius `contactForcesRadius`. The forces are those of the state shown, with the contact state from the gaps; an item
+with a user function of the force draws none, as the renderer cannot call it.
+
 ### Journal bearing
 
 `ObjectJournalBearing` is a revolute joint with clearance $c = R_B - R_J$ between a journal and a bearing, whose axis is

@@ -418,11 +418,12 @@ VSettingsContact has the following items:
 | `colorSpheres` | Float4 | [0.8,0.5,0.2,1.] | RGBA color for contact spheres, see showSpheres |
 | `colorTori` | Float4 | [0.8,0.2,0.8,1.] | RGBA color for contact tori, see showTori |
 | `colorTriangles` | Float4 | [0.5,0.5,0.5,1.] | RGBA color for contact triangles, see showTriangles |
-| `contactForcesFactor` | float | 0.001 | factor used for scaling of contact forces is showContactForces=True |
+| `contactForcesFactor` | float | 0.001 | factor used for scaling of contact forces is showContactForces=True; for the arrows of the contact items: their length per force [SI:m/N] |
+| `contactForcesRadius` | UFloat | 0.002 | radius of the shaft of the arrows of the contact forces [SI:m], see showContactForces; at most a tenth of the length of an arrow (#3339) |
 | `contactPointsDefaultSize` | float | 0.001 | global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle |
 | `showBoundingBoxes` | bool | False | show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects! |
 | `showCones` | bool | False | show the truncated cones of the contact items (ObjectContactConeCone, ObjectContactConeTriangle) whose visualization has show=True |
-| `showContactForces` | bool | False | if True, contact forces are drawn for certain contact models |
+| `showContactForces` | bool | False | if True, contact forces are drawn for certain contact models; the contact items between spheres, cylinders, cones, triangles and polytopes and ObjectJournalBearing whose visualization has show=True draw at each contact point the force on marker 0 as a red arrow and the force on marker 1 as a green one, their heads meeting at the contact point, except with a user function of the force (#3339) |
 | `showContactForcesValues` | bool | False | if True and showContactForces=True, numerical values for contact forces are shown at certain points |
 | `showCylinders` | bool | False | show the cylinders of the contact items (ObjectContactSphereCylinder, ...) whose visualization has show=True |
 | `showSearchTree` | bool | False | show outer box of search tree for all GeneralContacts |
