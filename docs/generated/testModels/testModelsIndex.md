@@ -49,6 +49,7 @@ contactCurveExample
 contactDistanceOutputTest
 contactFrictionCircleCable2DnoFrictionTest
 contactPlasticityTest
+contactPrimitivesTableTest
 contactSphereSphereTest
 contactSphereSphereTestEAPM
 contactSphereTorusMomentumTest

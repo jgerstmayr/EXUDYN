@@ -1072,7 +1072,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createFunct
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createContactSphereSphere.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createContactSphereSphere.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`createSphereQuadContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py) (TM), [`createSphereQuadContact2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact2.py) (TM), [`createSphereTriangleContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py) (TM), [`restartFileTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/restartFileTest.py) (TM), [`symbolicSolversAdaptiveStepTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSolversAdaptiveStepTest.py) (TM), [`symbolicUserContactFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserContactFrictionTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactPrimitivesTableTest.py) (TM), [`createContactSphereSphere.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createContactSphereSphere.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`createSphereQuadContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py) (TM), [`createSphereQuadContact2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact2.py) (TM), [`createSphereTriangleContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py) (TM), [`restartFileTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/restartFileTest.py) (TM), [`symbolicSolversAdaptiveStepTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicSolversAdaptiveStepTest.py) (TM), ...
 
 
 (sec-mainsystemextensions-createspherequadcontact)=
@@ -1145,7 +1145,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rendererNOG
 - **output**: (type: ObjectIndex) returns index of created joint
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM), [`createSphereQuadContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py) (TM), [`createSphereTriangleContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactPrimitivesTableTest.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM), [`createSphereQuadContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py) (TM), [`createSphereTriangleContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py) (TM)
 
 
 (sec-mainsystemextensions-createspherecylindercontact)=
@@ -1197,7 +1197,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createItemN
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactPrimitivesTableTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
 
 
 (sec-mainsystemextensions-createcylindercylindercontact)=
@@ -1255,7 +1255,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactPrimitivesTableTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
 
 
 (sec-mainsystemextensions-createcylindertrianglecontact)=
@@ -1313,7 +1313,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactPrimitivesTableTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
 
 
 (sec-mainsystemextensions-createconeconecontact)=
@@ -1371,7 +1371,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactPrimitivesTableTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
 
 
 (sec-mainsystemextensions-createconetrianglecontact)=
@@ -1429,7 +1429,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactPrimitivesTableTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
 
 
 (sec-mainsystemextensions-createconvexconvexcontact)=
@@ -1489,7 +1489,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactPrimitivesTableTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM)
 
 
 (sec-mainsystemextensions-createkinematictree)=

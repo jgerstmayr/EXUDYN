@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 445 | 1.13.461 |
+| 1.13 | Newborn | 446 | 1.13.462 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.462** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A test model of all primitive contacts: bodies on a shaken table with borders (#3343)
+  - description: The primitive contacts are tested pairwise; nothing tests many of them at once, with impacts and the bodies coming to rest. Decided: a test model with two spheres, two cylinders, two cones and two polytopes on a rectangular table with borders, shaken by a short translation and rotation, every pair of bodies in contact by its item; the test checks that no body leaves the table and that the solver finishes; a short time when run as a test.
+  - **notes:** The test model contactPrimitivesTableTest.py shakes spheres, cylinders, cones and polytopes on a table with borders, with all contacts between primitive shapes at once, and checks that the solver finishes and no body leaves the table.
+  - date resolved: **2026-11-07 23:53**, date raised: 2026-11-07
 - **1.13.461** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactConvexConvex: a polytope with more than 8 points landing on a face fails the discontinuous iteration (#3349)
   - description: An icosahedron dropped flat onto a box with ObjectContactConvexConvex makes the solver fail at the minimum step size when it touches: all 12 points are over the face of the box, the 8 deepest are kept, and points of equal height take turns among the kept ones from one Newton iteration to the next; as the kept points are given to the data blocks in the order of their ids, the 3 points in contact move to other blocks, and the contact state of the data never settles. A cube, with 8 points, is not affected. Found with the test of the shaken table (\#3343). Decided: the kept points given to the blocks deepest first, equal gaps by their ids, so that the points in contact take the first blocks; an icosahedron dropped flat in convexConvexContactTest.py.
   - **notes:** A polytope of more than 8 points landing on a face with ObjectContactConvexConvex, as an icosahedron on a box, made the solver stop at the minimum step size: the points in contact moved between the data blocks. They now take the first blocks.

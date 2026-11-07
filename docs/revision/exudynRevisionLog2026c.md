@@ -6427,6 +6427,22 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-23"></a>
+### RG9.12.23 — all primitive contacts on a shaken table (2026-11-07, #3343)
+- contactPrimitivesTableTest.py (new): a table of 1 x 0.7 m with borders 0.15 m high, moved by CreateGenericJoint with
+  an offsetUserFunction: a sin^2 pulse of 0.2 s, 5 cm up, 2 cm sideways, 0.12 rad about x, then at rest. On it two
+  spheres, two cylinders lying along y, two cones standing, a cube and an icosahedron; 52 contact items, all by the
+  Create functions of #3342: the planes of top and borders for spheres (CreateSphereTriangleContact with
+  infinitePlane, #3347), cylinders and cones, the boxes of top and borders for the polytopes; the pairs sphere-sphere,
+  sphere-cylinder (4), cylinder-cylinder, cone-cone, cylinder-cone as ConeCone with equal radii (4), cube-icosahedron.
+- It found two bugs at once: CreateSphereTriangleContact refused the list of points and had no infinitePlane (#3347),
+  and the icosahedron landing flat stopped the solver in the first step (#3349).
+- Checks: the solver finishes; every body inside the borders and above the top; the bodies jump (0.17 m); run directly
+  for 2 s, the largest velocity below 0.05 m/s (0.027: spheres and cylinders roll on, nothing resists rolling). The same
+  with 750 and 1500 steps per second. As a test the first 0.4 s, 3 s, with the tolerance 1e-7 of the model
+  (exu.sys['testTolerance']): impacts make the last digits depend on the platform; two runs gave the same digits.
+- checkInitialConstraints off: the offset user function of the generic joint has no velocity level.
+
 <a id="rg9-12-29"></a>
 ### RG9.12.29 — ObjectContactConvexConvex: the points in contact in the first blocks (2026-11-07, #3349)
 - Found with the test of the shaken table: the solver failed in the first step (t = 0.001); by switching the groups of

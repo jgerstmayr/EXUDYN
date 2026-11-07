@@ -2,12 +2,16 @@
   "number": 3343,
   "title": "A test model of all primitive contacts: bodies on a shaken table with borders",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "TESTING",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The primitive contacts are tested pairwise; nothing tests many of them at once, with impacts and the bodies coming to rest. Decided: a test model with two spheres, two cylinders, two cones and two polytopes on a rectangular table with borders, shaken by a short translation and rotation, every pair of bodies in contact by its item; the test checks that no body leaves the table and that the solver finishes; a short time when run as a test.",
   "dateRaised": "2026-11-07",
   "deadline": "2027-05-06",
-  "file": "python/TestModels/contactPrimitivesTableTest.py"
+  "dateResolved": "2026-11-07 23:53",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/contactPrimitivesTableTest.py",
+  "releaseNotes": "The test model contactPrimitivesTableTest.py shakes spheres, cylinders, cones and polytopes on a table with borders, with all contacts between primitive shapes at once, and checks that the solver finishes and no body leaves the table.",
+  "resolvedInVersion": "1.13.462"
 }

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.461.dev1
+- Exudyn version = 1.13.462.dev1
 - last change = 2026-11-07
 - Number of issues = 3350
-- Number of resolved issues = 3238 (461 in current version)
+- Number of resolved issues = 3239 (462 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9041,9 +9041,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The contact items as a group of their own in the reference manual of the items (#3344)
   - description: The reference manual lists the objects in the groups Body, SuperElement, FiniteElement, Joint, Connector, Constraint and Object; the contact items are listed among the connectors, now more than a dozen. Decided: a group Contact for the items of the contact type.
-  - date raised: 2026-11-07
-- `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A test model of all primitive contacts: bodies on a shaken table with borders (#3343)
-  - description: The primitive contacts are tested pairwise; nothing tests many of them at once, with impacts and the bodies coming to rest. Decided: a test model with two spheres, two cylinders, two cones and two polytopes on a rectangular table with borders, shaken by a short translation and rotation, every pair of bodies in contact by its item; the test checks that no body leaves the table and that the solver finishes; a short time when run as a test.
   - date raised: 2026-11-07
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` Radau5: the implicit Runge-Kutta method Radau IIA with 3 stages, of order 5, in the C++ and the Python solvers (#3318)
   - description: A reference method of higher order for the solver study instead of LobattoIIIC4GGL (\#3314): Radau IIA with 3 stages (c = (4 - sqrt 6)/10, (4 + sqrt 6)/10, 1), order 5, L-stable, three implicit stages without GGL multipliers, the constraints at the end of the step as in Radau3; the tableau of CSolverImplicitRungeKutta and of exudyn.symbolics.advancedSolvers, its error estimate, DynamicSolverType.Radau5. Decided: implemented with the Jacobian of the last stage for all stages, as the other methods, no W-method; its convergence orders measured on the model library, and as the reference of the study if it converges as expected; revision2026c step RG20.10.1.
