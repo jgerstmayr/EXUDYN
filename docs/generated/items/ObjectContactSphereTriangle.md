@@ -29,6 +29,7 @@ The parameters of the item; in a dictionary, its type is 'ContactSphereTriangle'
 | **sphereRadius** | PReal |  | 0. | (symbol: $r_S$) radius of sphere [SI:m]; **must be given**: the default is only a placeholder |
 | **trianglePoints** | Vector3DList |  | [] | (symbol: $[\LU{m_1}{\pv}_0,\LU{m_1}{\pv}_1,\LU{m_1}{\pv}_2]$) triangle points, defined in marker 1 local coordinates |
 | **includeEdges** | UInt |  | 7 | Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1 |
+| **infinitePlane** | Bool |  | False | if True, the contact is with the infinite plane of the triangle instead of the triangle: one-sided along the normal of the triangle by the order of its points, of any depth, without edges; includeEdges is then ignored (#3323) |
 | **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
 | **frictionProportionalZone** | UReal |  | 0.001 | (symbol: $v_{reg}$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
 | **contactStiffness** | UReal |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$) |
@@ -99,6 +100,13 @@ $$
 g = \Vert \Delta\pv \Vert - r_S , \quad \LU{0}{\nv} = \frac{\Delta\pv}{\Vert \Delta\pv \Vert} .
 $$
 
+With `infinitePlane` the contact is with the plane of the triangle instead: with its unit normal
+$\LU{0}{\nv}_T$ by the order of the points, $(\LU{0}{\pv}_1 - \LU{0}{\pv}_0) \times (\LU{0}{\pv}_2 - \LU{0}{\pv}_0)$
+normalized, the signed distance of the center is $d = \LU{0}{\nv}_T\tp (\LU{0}{\pv}_{m0} - \LU{0}{\pv}_0)$,
+the closest point $\LU{0}{\pv}_T = \LU{0}{\pv}_{m0} - d\, \LU{0}{\nv}_T$, $g = d - r_S$ and
+$\LU{0}{\nv} = -\LU{0}{\nv}_T$ - also for a center behind the plane, so that a penetration of any depth
+pushes the sphere back to the side of the normal.
+
 A contact on an edge counts only if `includeEdges` contains that edge (bit 1: edge 0 from point 0 to
 1, bit 2: edge 1, bit 4: edge 2). The velocity of the contact point on the triangle includes the
 rotation of marker 1; that of the sphere includes its rotation only if friction is used, because
@@ -143,4 +151,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactComparisonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactComparisonTest.py) (TM), [`contactDistanceOutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactDistanceOutputTest.py) (TM), [`inactiveConnectorForceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/inactiveConnectorForceTest.py) (TM), [`sphereTriangleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest.py) (TM), [`sphereTriangleTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest2.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactComparisonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactComparisonTest.py) (TM), [`contactDistanceOutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactDistanceOutputTest.py) (TM), [`inactiveConnectorForceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/inactiveConnectorForceTest.py) (TM), [`sphereTrianglePlaneTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTrianglePlaneTest.py) (TM), [`sphereTriangleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest.py) (TM), [`sphereTriangleTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest2.py) (TM)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-07  12:03:15 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,6 +119,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "sphereRadius") && (!EPyUtils::DictItemExists(d, "radiusSphere") || d["radiusSphere"].is_none())) { EPyUtils::RequireGiven(d["sphereRadius"], 0., "ObjectContactSphereTriangle.sphereRadius"); EPyUtils::FromPython(d["sphereRadius"], cObjectContactSphereTriangle->GetParameters().sphereRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTriangle.sphereRadius"); } else { if (!EPyUtils::DictItemExists(d, "radiusSphere") || d["radiusSphere"].is_none()) EPyUtils::RequireGiven(py::cast(cObjectContactSphereTriangle->GetParameters().sphereRadius), 0., "ObjectContactSphereTriangle.sphereRadius"); }
         if (EPyUtils::DictItemExists(d, "trianglePoints")) { EPyUtils::SetVector3DListSafely(d["trianglePoints"], cObjectContactSphereTriangle->GetParameters().trianglePoints); }
         if (EPyUtils::DictItemExists(d, "includeEdges")) { EPyUtils::FromPython(d["includeEdges"], cObjectContactSphereTriangle->GetParameters().includeEdges, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.includeEdges"); }
+        if (EPyUtils::DictItemExists(d, "infinitePlane")) { EPyUtils::FromPython(d["infinitePlane"], cObjectContactSphereTriangle->GetParameters().infinitePlane, "ObjectContactSphereTriangle.infinitePlane"); }
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactSphereTriangle->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.dynamicFriction"); }
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { EPyUtils::FromPython(d["frictionProportionalZone"], cObjectContactSphereTriangle->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.frictionProportionalZone"); }
         if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactSphereTriangle->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.contactStiffness"); }
@@ -145,6 +146,7 @@ public: // AUTO:
         d["sphereRadius"] = (Real)cObjectContactSphereTriangle->GetParameters().sphereRadius;
         d["trianglePoints"] = (PyVector3DList)cObjectContactSphereTriangle->GetParameters().trianglePoints;
         d["includeEdges"] = (Index)cObjectContactSphereTriangle->GetParameters().includeEdges;
+        d["infinitePlane"] = (bool)cObjectContactSphereTriangle->GetParameters().infinitePlane;
         d["dynamicFriction"] = (Real)cObjectContactSphereTriangle->GetParameters().dynamicFriction;
         d["frictionProportionalZone"] = (Real)cObjectContactSphereTriangle->GetParameters().frictionProportionalZone;
         d["contactStiffness"] = (Real)cObjectContactSphereTriangle->GetParameters().contactStiffness;
@@ -169,6 +171,7 @@ public: // AUTO:
         else if (parameterName.compare("sphereRadius") == 0) { return py::cast((Real)cObjectContactSphereTriangle->GetParameters().sphereRadius); } //! AUTO: get parameter
         else if (parameterName.compare("trianglePoints") == 0) { return py::cast((PyVector3DList)cObjectContactSphereTriangle->GetParameters().trianglePoints); } //! AUTO: get parameter
         else if (parameterName.compare("includeEdges") == 0) { return py::cast((Index)cObjectContactSphereTriangle->GetParameters().includeEdges); } //! AUTO: get parameter
+        else if (parameterName.compare("infinitePlane") == 0) { return py::cast((bool)cObjectContactSphereTriangle->GetParameters().infinitePlane); } //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { return py::cast((Real)cObjectContactSphereTriangle->GetParameters().dynamicFriction); } //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { return py::cast((Real)cObjectContactSphereTriangle->GetParameters().frictionProportionalZone); } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectContactSphereTriangle->GetParameters().contactStiffness); } //! AUTO: get parameter
@@ -195,6 +198,7 @@ public: // AUTO:
         else if (parameterName.compare("sphereRadius") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().sphereRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTriangle.sphereRadius"); } //! AUTO: set parameter
         else if (parameterName.compare("trianglePoints") == 0) { EPyUtils::SetVector3DListSafely(value, cObjectContactSphereTriangle->GetParameters().trianglePoints); } //! AUTO: set parameter
         else if (parameterName.compare("includeEdges") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().includeEdges, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.includeEdges"); } //! AUTO: set parameter
+        else if (parameterName.compare("infinitePlane") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().infinitePlane, "ObjectContactSphereTriangle.infinitePlane"); } //! AUTO: set parameter
         else if (parameterName.compare("dynamicFriction") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.dynamicFriction"); } //! AUTO: set parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.frictionProportionalZone"); } //! AUTO: set parameter
         else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.contactStiffness"); } //! AUTO: set parameter

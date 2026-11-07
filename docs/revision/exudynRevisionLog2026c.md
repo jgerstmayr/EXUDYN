@@ -6427,6 +6427,19 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-10"></a>
+### RG9.12.10 — infinitePlane of ObjectContactSphereTriangle (2026-11-07, #3323)
+- Maintainer 2026-11-07: the decisions of contactPrimitives.md section 8.6; the clear steps first (8.1 and 8.5 with
+  the first items).
+- The parameter infinitePlane (False): the plane of the triangle with its normal by the order of the points
+  (EGeometry::ComputeTriangleNormal, as the drawing), the signed distance of the center, the normal from the sphere
+  to the plane fixed to minus the triangle normal, so that a center behind the plane is pushed back to the front;
+  includeEdges ignored. One cross product per evaluation instead of the point-triangle distance.
+- sphereTrianglePlaneTest.py (new, with the SolutionViewer): the distances of deactivated contacts beside the
+  triangle (to the plane 0.15, to the edge 0.392) and behind the plane (-0.15, normal -z), exact; two balls sliding
+  over the edge of the triangle with friction: on the plane the ball rolls on at r - m g/k, on the triangle it falls
+  off. parameterConversionTestReference.txt recorded.
+
 <a id="rg9-12-4"></a>
 ### RG9.12.4 — ObjectContactSphereCylinder (2026-11-07, #3320)
 - The definition as ObjectContactSphereTriangle: sphere at marker 0, the cylinder centered at marker 1 along its

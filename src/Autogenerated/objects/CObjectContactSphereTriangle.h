@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  10:48:54 (last modified)
+* @date         2026-11-07  12:03:15 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,6 +32,7 @@ public: // AUTO:
     Real sphereRadius;                            //!< AUTO: must be > 0;  radius of sphere [SI:m]
     Vector3DList trianglePoints;                  //!< AUTO:  triangle points, defined in marker 1 local coordinates
     Index includeEdges;                           //!< AUTO: must be >= 0; Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1
+    bool infinitePlane;                           //!< AUTO: if True, the contact is with the infinite plane of the triangle instead of the triangle: one-sided along the normal of the triangle by the order of its points, of any depth, without edges; includeEdges is then ignored (#3323)
     Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
     Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)
     Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m] (units in case that \f$n_\mathrm{exp}=1\f$)
@@ -49,6 +50,7 @@ public: // AUTO:
         sphereRadius = 0.;
         trianglePoints = Vector3DList();
         includeEdges = 7;
+        infinitePlane = false;
         dynamicFriction = 0.;
         frictionProportionalZone = 0.001;
         contactStiffness = 0.;

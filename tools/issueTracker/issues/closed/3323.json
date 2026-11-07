@@ -1,0 +1,17 @@
+{
+  "number": 3323,
+  "title": "the option infinitePlane of ObjectContactSphereTriangle: contact with the plane of the triangle",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "A floor or a wall is mostly a plane; the triangle limits the contact to its area and switches the normal at its edges. Decided (contactPrimitives.md section 8.1): a parameter infinitePlane, False by default, with which the contact is with the plane of the triangle - its normal by the order of the points, one-sided, any depth, the edges and includeEdges ignored; the same option for CylinderTriangle and ConeTriangle when they come; revision2026c step RG9.12.10.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 12:12",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectContactSphereTriangle.cpp",
+  "releaseNotes": "ObjectContactSphereTriangle has the option infinitePlane: the contact with the plane of the triangle, one-sided and without edges, for a floor or a wall.",
+  "resolvedInVersion": "1.13.436"
+}

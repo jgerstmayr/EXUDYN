@@ -13735,6 +13735,13 @@ definitions.append(ItemDefinition(
     g = \Vert \Delta\pv \Vert - r_S , \quad \LU{0}{\nv} = \frac{\Delta\pv}{\Vert \Delta\pv \Vert} .
     $$
 
+    With `infinitePlane` the contact is with the plane of the triangle instead: with its unit normal
+    $\LU{0}{\nv}_T$ by the order of the points, $(\LU{0}{\pv}_1 - \LU{0}{\pv}_0) \times (\LU{0}{\pv}_2 - \LU{0}{\pv}_0)$
+    normalized, the signed distance of the center is $d = \LU{0}{\nv}_T\tp (\LU{0}{\pv}_{m0} - \LU{0}{\pv}_0)$,
+    the closest point $\LU{0}{\pv}_T = \LU{0}{\pv}_{m0} - d\, \LU{0}{\nv}_T$, $g = d - r_S$ and
+    $\LU{0}{\nv} = -\LU{0}{\nv}_T$ - also for a center behind the plane, so that a penetration of any depth
+    pushes the sphere back to the side of the normal.
+
     A contact on an edge counts only if `includeEdges` contains that edge (bit 1: edge 0 from point 0 to
     1, bit 2: edge 1, bit 4: edge 2). The velocity of the contact point on the triangle includes the
     rotation of marker 1; that of the sphere includes its rotation only if friction is used, because
@@ -13795,6 +13802,10 @@ definitions.append(ItemDefinition(
             pythonName='includeEdges',
             defaultValue=7,
             description=r'Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1'),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='infinitePlane',
+            defaultValue=False,
+            description=r'if True, the contact is with the infinite plane of the triangle instead of the triangle: one-sided along the normal of the triangle by the order of its points, of any depth, without edges; includeEdges is then ignored (#3323)'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='dynamicFriction',
             defaultValue=0.,

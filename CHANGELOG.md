@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 419 | 1.13.435 |
+| 1.13 | Newborn | 420 | 1.13.436 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.436** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the option infinitePlane of ObjectContactSphereTriangle: contact with the plane of the triangle (#3323)
+  - description: A floor or a wall is mostly a plane; the triangle limits the contact to its area and switches the normal at its edges. Decided (contactPrimitives.md section 8.1): a parameter infinitePlane, False by default, with which the contact is with the plane of the triangle - its normal by the order of the points, one-sided, any depth, the edges and includeEdges ignored; the same option for CylinderTriangle and ConeTriangle when they come; revision2026c step RG9.12.10.
+  - **notes:** ObjectContactSphereTriangle has the option infinitePlane: the contact with the plane of the triangle, one-sided and without edges, for a floor or a wall.
+  - date resolved: **2026-11-07 12:12**, date raised: 2026-11-07
 - **1.13.435** `TESTING` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the test models of the contact primitives show their simulation when run directly (#3321)
   - description: contactDistanceOutputTest.py and sphereCylinderContactTest.py ran their simulations without a picture, so a reader could not see what they do. Decided: a test model of a simulation writes its solution and opens the SolutionViewer when it is run directly (not testIsActive), with graphics where needed - the contact shapes by the contact.show settings, the ball as a sphere with edges that show its rotation; the rule in WORKFLOW.md (What a test model looks like); revision2026c step RG2.12.1.
   - **notes:** The test models of the contact primitives open the SolutionViewer when run directly.

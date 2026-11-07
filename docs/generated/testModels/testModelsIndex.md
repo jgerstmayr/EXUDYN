@@ -216,6 +216,7 @@ solverOutputWithinStepTest
 sparseMatrixSpringDamperTest
 sparseSystemMatricesTest
 sphereCylinderContactTest
+sphereTrianglePlaneTest
 sphereTriangleTest2
 sphericalJointTest
 SpringDamperMesh

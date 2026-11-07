@@ -639,6 +639,8 @@ closest points and the normal of two shapes in their frames (#3317). `ObjectCont
 contact of a sphere and a finite cylinder, with the contact law and friction of ObjectContactSphereTriangle and a
 data node of 3 coordinates; `contact.showCylinders` draws its cylinder (#3320). The sphere contacts and the new one
 have the output variable `Distance`, the signed gap, also when the contact is deactivated (#3319).
+`ObjectContactSphereTriangle(infinitePlane=True)` contacts the plane of the triangle instead, one-sided along its
+normal and without edges, for a floor or a wall of any size (#3323).
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

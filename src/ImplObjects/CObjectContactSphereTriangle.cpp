@@ -48,27 +48,37 @@ void CObjectContactSphereTriangle::ComputeConnectorProperties(const MarkerDataSt
 	const Vector3D& v0 = markerData.GetMarkerData(0).velocity;
 
 	Vector3D trigPP;
-	Index inside, onEdge;
-	//Vector3D t0, t1, t2;
-	
-	EGeometry::MinDistTrigEdges(A1 * parameters.trianglePoints[0] + p1,
-								A1 * parameters.trianglePoints[1] + p1,
-								A1 * parameters.trianglePoints[2] + p1,
-		p0, trigPP, inside, onEdge);
-	
-	deltaP = (trigPP - p0); //points from sphereI to trigJ!!!
-	//==>trigPP = p0 + deltaP = p0 + n0*(radius+gap); //for torque
-
-	Real dist = deltaP.GetL2Norm();
-	if (!contactFromData && onEdge && !(onEdge & parameters.includeEdges)) 
-	{ 
-		dist += parameters.sphereRadius; //in this case, we need to signal PostNewtonStep that there is no contact
+	Index inside, onEdge = 0;
+	Real dist;
+	Vector3D t0 = A1 * parameters.trianglePoints[0] + p1;
+	Vector3D t1 = A1 * parameters.trianglePoints[1] + p1;
+	Vector3D t2 = A1 * parameters.trianglePoints[2] + p1;
+	if (parameters.infinitePlane) //the plane of the triangle, one-sided along its normal, without edges (#3323)
+	{
+		Vector3D normal = EGeometry::ComputeTriangleNormal({ t0, t1, t2 });
+		dist = normal * (p0 - t0); //signed: negative behind the plane
+		trigPP = p0 - dist * normal;
+		deltaP = trigPP - p0;
+		n0 = -1. * normal; //from the sphere towards the plane, also with the center behind it
 	}
+	else
+	{
+		EGeometry::MinDistTrigEdges(t0, t1, t2, p0, trigPP, inside, onEdge);
 
-	Real invDist = 1.;
-	if (dist != 0) { invDist = 1. / dist; }
-	//compute contact forces
-	n0 = invDist * deltaP;
+		deltaP = (trigPP - p0); //points from sphereI to trigJ!!!
+		//==>trigPP = p0 + deltaP = p0 + n0*(radius+gap); //for torque
+
+		dist = deltaP.GetL2Norm();
+		if (!contactFromData && onEdge && !(onEdge & parameters.includeEdges))
+		{
+			dist += parameters.sphereRadius; //in this case, we need to signal PostNewtonStep that there is no contact
+		}
+
+		Real invDist = 1.;
+		if (dist != 0) { invDist = 1. / dist; }
+		//compute contact forces
+		n0 = invDist * deltaP;
+	}
 
 	//compute velocities
 	//global trig velocity at contact point

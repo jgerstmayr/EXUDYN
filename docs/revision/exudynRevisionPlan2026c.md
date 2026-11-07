@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (10 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (9 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 16 | Structural core improvements |
+| RG9 | OPEN | 15 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1594,7 +1594,9 @@ CLOSED 2026-11-07 (#3320): ObjectContactSphereCylinder with the analytic geometr
 
 #### **OPEN_RG9.12.9** The plastic overlap and the adhesion as an option, with a data block of 4 per contact point
 
-#### **OPEN_RG9.12.10** The option infinitePlane of SphereTriangle, CylinderTriangle and ConeTriangle
+#### **CLOSED_RG9.12.10** The option infinitePlane of SphereTriangle, CylinderTriangle and ConeTriangle
+
+CLOSED 2026-11-07 (#3323): infinitePlane of ObjectContactSphereTriangle - the plane of the triangle, one-sided, without edges; for CylinderTriangle and ConeTriangle with these items; sphereTrianglePlaneTest.py. [log](exudynRevisionLog2026c.md#rg9-12-10)
 
 #### **OPEN_RG9.12.11** Truncated cones: ObjectContactConeCone and ObjectContactConeTriangle
 
