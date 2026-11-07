@@ -1,8 +1,7 @@
 # Path planning and navigation of robots (revision2026c group RG21)
 
-A design note of open steps: the request, the evaluation and the proposed design, the decisions to be taken. The
-note leaves the repository when the steps close (WORKFLOW.md §8.4). No issues are raised before the maintainer has
-decided section 5.
+A design note of open steps: the request, the evaluation and the design, decided by the maintainer on 2026-11-07
+(section 5). The note leaves the repository when the steps close (WORKFLOW.md §8.4).
 
 ## 1. The request (maintainer 2026-11-06)
 
@@ -42,8 +41,8 @@ decided section 5.
 navigation covers maps, path planning in the plane and in configuration space, and localization and mapping (SLAM);
 the planning of a serial robot is planning in its configuration space, which the same module holds. Alternatives:
 `planning.py` (clear for the planners, odd for SLAM later), `motionPlanning.py` (the term of manipulators, odd for
-SLAM). Shared pieces that are not navigation - the collision model - go into `robotics/collision.py` (section 4.1),
-so that a later SLAM in navigation.py does not mix with the geometry.
+SLAM). The collision shapes belong to the links and stay next to the classes RobotLink and Robot in roboticsCore.py
+(section 4.1, decision 1), so that a later SLAM in navigation.py does not mix with the geometry.
 
 ### 3.2 The algorithms
 
@@ -68,8 +67,8 @@ A planner calls the check 1e4 to 1e5 times per query (RRT) or once per grid cell
 - a serial robot: per sample the link HTs by KinematicChain (1 us), per pair of a link shape and an obstacle shape a
   distance (primitive kernels, 0.1 to 1 us in C++), pairs filtered by bounding spheres; with 7 links of 1 to 3 shapes
   and 20 obstacle shapes some 100 pairs, 10 to 50 us in C++, about 1 ms in Python per sample - **the check belongs in
-  C++**, as one call `CollisionModel.MinimumDistance(q)` or `IsFree(q)`, with a Python version of the same algorithm
-  for teaching and tests (decision 10 of the robotics revision);
+  C++**, as one call `CollisionModel.MinimumDistance(q)` or `IsFree(q)`; no Python version of the check
+  (decision 3);
 - an edge between two samples by checking points at a maximum joint step (e.g. 0.02 rad) or, better, by the
   distance: a step is free if the distance exceeds the largest motion of any link point (a conservative bound from the
   Jacobian norms), which needs fewer checks;
@@ -84,16 +83,18 @@ planner, so the items and the planner share one implementation; the item output 
 
 ## 4. Proposed design
 
-### 4.1 robotics/collision.py
+### 4.1 The collision shapes in robotics/roboticsCore.py
 
-- `CollisionShape`: a primitive in a local frame - `Sphere(radius)`, `Cylinder(radius, length)` (axis along local z,
-  centered), `Capsule(radius, length)`, `Convex(points)` (e.g. a box, a convex link mesh), `Triangles(points,
-  triangles)` (an environment surface, as triangles); with the local HT.
+- `CollisionShape`: a primitive in a local frame - `Sphere(radius)`, `Capsule(radius, length)`, `Cylinder(radius,
+  length)` (axis along local z, centered), `Box(size)`, `Convex(points)` (e.g. a convex link mesh), `Triangles(points,
+  triangles)` (an environment surface, as triangles); with the local HT. The shapes of a link are a list
+  `collisionShapes` of RobotLink, the shapes of the base one of Robot, next to the graphics data of both.
 - `CollisionModel(robot=None)`: the shapes of each link of the robot (`AddLinkShape(linkIndex, shape, HT)`), of the
   base, and of the environment (`AddObstacle(shape, HT)`); pairs of adjacent links and pairs given by the user are
   excluded; `MinimumDistance(q)`, `IsFree(q, margin=0)`, `IsEdgeFree(q0, q1, margin)`; built in C++ from these lists.
-- `ShapesFromURDF(urdfFile, ...)`: the `<collision>` elements of a URDF - box, cylinder, sphere, mesh (as its convex
-  hull, or as triangles) - per link; an extension of urdfImport.GetURDFrobotData under a new key `'collision'`.
+- the `<collision>` elements of a URDF - all its geometries: box, cylinder, sphere, mesh (as its convex hull, or as
+  triangles), and the capsule of the URDF extensions where it is used - per link, read by urdfImport.GetURDFrobotData
+  under a new key `'collision'` and passed into the `collisionShapes` of the links.
 - `ShapesFromLinks(robot, radius)`: capsules along the links of a Robot for a robot without collision data.
 - `AddToMbs(mbs, ...)`: the shapes as contact items with `activeConnector=False` and their Distance output, and as
   graphics, to see and check the model.
@@ -129,27 +130,33 @@ Mobile robots:
 ### 4.4 C++
 
 - the distance kernels (shared with RG9.12) and a class `CollisionModel` in exudyn.cUtilities (a KinematicChain plus
-  shapes per link and obstacles; MinimumDistance, IsFree, IsEdgeFree);
+  shapes per link and obstacles; MinimumDistance, IsFree, IsEdgeFree), the only implementation of the check;
 - optionally the RRT loop in C++ later, if Python is the bottleneck (it should not be: the check dominates).
 
-## 5. Decisions for the maintainer
+## 5. Decisions (maintainer 2026-11-07)
 
-1. The module name: `navigation.py` (proposed), `planning.py` or another; `collision.py` for the shapes.
-2. The algorithms: grid A\* and RRT-Connect with smoothing, RRT in SE(2) for mobile robots; PRM later or not.
-3. The collision check in C++ (`cUtilities.CollisionModel`) with a Python version, as for KinematicChain.
-4. The shapes: sphere, cylinder, capsule, convex points, triangles - the capsule is not in the list of the request,
-   but it is the cheapest shape for links (a segment distance) and a cylinder for GJK anyway.
+The design as proposed, kept open for extensions (further planners, SLAM, the contact module replacing the
+primitives):
+
+1. The module `navigation.py`; the collision shapes next to RobotLink and Robot in roboticsCore.py, no `collision.py`.
+2. Grid A\* and RRT-Connect with smoothing, RRT in SE(2) for mobile robots; other planners later.
+3. The collision check in C++ (`cUtilities.CollisionModel`), without a Python version.
+4. The shapes sphere, capsule, cylinder, box, convex points and triangles; the common collision geometries of the
+   URDF supported.
 5. `<collision>` from the URDF under the new key `'collision'` of GetURDFrobotData.
-6. Trajectory.FromWaypoints with blending, and the pure-pursuit controller for differential drives.
-7. The order: RG9.12 first (the distance kernels), then RG21.
+6. Trajectory.FromWaypoints with blending; the pure-pursuit controller for differential drives.
+7. RG9.12 first (the distance kernels), then RG21.
+8. Examples: the UR5 among obstacles, a mecanum-wheeled robot and a differential-drive robot (a vacuum cleaner), the
+   two mobile robots built in the example with a cuboid and a flat cylindrical body and graphics shapes of their
+   bodies.
 
 ## 6. Proposed steps (RG21)
 
 | step | what |
 |---|---|
-| RG21.1 | this evaluation and design, decided by the maintainer |
-| RG21.2 | robotics/collision.py and cUtilities.CollisionModel on the distance kernels of RG9.12; ShapesFromLinks; tests of distances against analytic cases |
+| RG21.1 | this evaluation and design, decided by the maintainer (2026-11-07) |
+| RG21.2 | the collision shapes of RobotLink and Robot and cUtilities.CollisionModel on the distance kernels of RG9.12; ShapesFromLinks; tests of distances against analytic cases |
 | RG21.3 | `<collision>` from the URDF; the test robot of #3285 with collision shapes |
 | RG21.4 | RRT-Connect and shortcut smoothing for serial robots, PlanToPose; Trajectory.FromWaypoints; a test with the UR5 or Panda among boxes and cylinders, run within 0.25 s |
 | RG21.5 | occupancy grid, A\*, smoothing, RRT in SE(2); the mecanum and differential-drive execution with pure pursuit; tests on a fixed map |
-| RG21.6 | examples (a serial robot around obstacles, a mobile robot through a room), a section of the robotics chapter, a notebook for teaching |
+| RG21.6 | examples: the UR5 among obstacles, a mecanum-wheeled robot with a cuboid body and a differential-drive robot like a vacuum cleaner through a room, with graphics of their bodies; a section of the robotics chapter, a notebook for teaching |

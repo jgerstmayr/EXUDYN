@@ -1,8 +1,7 @@
 # Contact between primitives: cylinders and convex shapes (revision2026c step RG9.12)
 
-A design note of open steps, for the maintainer to check the approach, the item names and the parameter names before
-any code. It leaves the repository when the steps close (WORKFLOW.md §8.4). No issues are raised before section 6 is
-decided.
+A design note of open steps: the approach, the item names and the parameter names, decided by the maintainer on
+2026-11-07 (section 6). It leaves the repository when the steps close (WORKFLOW.md §8.4).
 
 ## 1. The request (maintainer 2026-11-06)
 
@@ -74,8 +73,19 @@ As ObjectContactSphereTriangle: normal force $f_n = k_c \delta^{n_\mathrm{exp}} 
 damping), 1 (Hunt-Crossley) or 2 (Gonthier / Carvalho-Martins); regularized Coulomb friction
 ($\mu_d$, `frictionProportionalZone`) on the relative tangential velocity of the two bodies at the contact point; no
 adhesion and no plastic overlap. The active set by the data node (the gap and the tangential velocity of the last
-PostNewton, the impact velocity), with **3 data coordinates**; with the manifold of phase 2, 3 per contact point
-(the number of points fixed per item, e.g. `numberOfContactPoints` = 1 or 4).
+PostNewton, the impact velocity), with **3 data coordinates** per contact point.
+
+Common codes keep no plastic state per contact: Bullet's persistent manifold stores per point the witness points, the
+normal, the distance and the impulses of the last step (for warm starting), MuJoCo and ODE a soft constraint
+(stiffness and damping); adhesion and plasticity are Exudyn's own (ObjectContactSphereSphere). The data coordinates
+are therefore laid out to be extended without a change of the items' interface:
+
+- a parameter `numberOfContactPoints` (1 in phase 1, up to 4 with the manifold of phase 2);
+- the data node holds `numberOfContactPoints` blocks of equal size, the block of point i at i times the block size;
+  the block size is the node's number of coordinates divided by `numberOfContactPoints`;
+- block size 3 (gap, tangential velocity, impact velocity): the elastic law of this section; block size 4 adds the
+  plastic overlap and enables the adhesive elasto-plastic law of ObjectContactSphereSphere as a later option, for the
+  shapes where it is meaningful; any other size is refused in CheckPreAssembleConsistency.
 
 ### 3.4 The distance output and deactivation
 
@@ -108,9 +118,10 @@ Common to all four, with the names and meaning of ObjectContactSphereTriangle:
   Exudyn way, as for joints.)
 - The sphere is marker 0 where a sphere is involved, as in SphereTriangle; the triangle is marker 1.
 - The convex shapes: the points are assumed convex (their convex hull is used); the triangles of a closed convex
-  surface, checked at Assemble (closed, outward normals, convex within a tolerance). Their type: there is no list of
-  index triples among the item parameter types; proposed `TArrayIndex` with 3 entries per triangle, or a new type
-  `Index3List` in the generator.
+  surface, checked at Assemble (closed, outward normals, convex within a tolerance). The points are a `NumpyMatrix`
+  of n x 3 and the triangles a `NumpyMatrixI` of m x 3 (the type of `triangleMesh` of the FFRF objects), both set
+  from 2D numpy arrays or lists of lists, without a new parameter type; CheckPreAssembleConsistency checks the
+  3 columns and the indices.
 - Create functions: `CreateSphereCylinderContact`, `CreateCylinderCylinderContact`, `CreateCylinderTriangleContact`,
   `CreateConvexConvexContact` (the data node and markers created, as CreateSphereSphereContact), and
   `graphics.Cylinder`/`FromPointsAndTrigs` with the same geometry for the bodies.
@@ -123,32 +134,36 @@ Common to all four, with the names and meaning of ObjectContactSphereTriangle:
 ## 5. C++ structure
 
 - `src/Linalg/GeometryConvex.h` (new): support functions of `ConvexSphere`, `ConvexCylinder`, `ConvexCapsule`,
-  `ConvexTriangle`, `ConvexPoints`; `GJKDistance(shape0, HT0, shape1, HT1, result)` and `EPAPenetration(...)` with
+  `ConvexBox`, `ConvexTriangle`, `ConvexPoints` (the box for the URDF shapes of RG21); `GJKDistance(shape0, HT0, shape1, HT1, result)` and `EPAPenetration(...)` with
   the closest points, the normal and the simplex for warm starting (the simplex of the last step, kept per item -
   a speed-up the future module will need);
 - `src/ImplObjects/CObjectContact<...>.cpp` - the four items on one helper for the law and the friction shared with
   SphereTriangle (`ComputeContactForces` moved into a common function);
 - `src/Pymodules/` - the shapes and `Distance` in exudyn.cUtilities.
 
-## 6. Decisions for the maintainer
+## 6. Decisions (maintainer 2026-11-07)
 
-1. GJK + EPA for all pairs, with the analytic sphere-cylinder as check and fast path.
-2. One contact point first; the contact manifold of up to 4 points as a later step.
-3. The names: ObjectContactSphereCylinder, CylinderCylinder, CylinderTriangle, ConvexConvex; the parameters of
-   section 4; the cylinder axis along the local z axis of its marker.
-4. The type of the triangle list (`TArrayIndex` flat or a new `Index3List`).
-5. 3 data coordinates (no plastic overlap).
-6. `OutputVariableType.Distance` for all primitive contact items, computed when inactive; `cUtilities.Distance`.
+1. GJK + EPA for all pairs, with the analytic sphere-cylinder as check and fast path: yes.
+2. One contact point first, the contact manifold of up to 4 points as a later step: yes, with data coordinates that
+   extend smoothly to several points (section 3.3: blocks per point, `numberOfContactPoints`).
+3. The names ObjectContactSphereCylinder, CylinderCylinder, CylinderTriangle, ConvexConvex, the parameters of
+   section 4, the cylinder axis along the local z axis of its marker: yes.
+4. The points and triangles of the convex shapes as numpy arrays (`NumpyMatrix`, `NumpyMatrixI`) of 3 columns,
+   checked in CheckPreAssembleConsistency, instead of a new type `Index3List`.
+5. The data coordinates: what common codes keep (no plastic state); 3 per point, a block of 4 enabling plasticity and
+   adhesion as a later option (section 3.3).
+6. `OutputVariableType.Distance` for all primitive contact items, computed when inactive; `cUtilities.Distance`: yes.
 
 ## 7. Proposed steps (RG9.12)
 
 | step | what |
 |---|---|
-| RG9.12.1 | this design, decided by the maintainer |
-| RG9.12.2 | GeometryConvex.h: support functions, GJK, EPA; cUtilities shapes and Distance; tests against analytic distances (sphere-sphere, sphere-cylinder, parallel and crossed cylinders, box-box) |
+| RG9.12.1 | this design, decided by the maintainer (2026-11-07) |
+| RG9.12.2 | GeometryConvex.h: support functions (sphere, capsule, cylinder, box, triangle, points), GJK, EPA; cUtilities shapes and Distance; tests against analytic distances (sphere-sphere, sphere-cylinder, parallel and crossed cylinders, box-box) |
 | RG9.12.3 | the Distance output for SphereSphere, SphereTriangle, SphereTorus, computed when inactive |
 | RG9.12.4 | ObjectContactSphereCylinder, with a test against the analytic case and a drop test |
 | RG9.12.5 | ObjectContactCylinderCylinder and ObjectContactCylinderTriangle |
 | RG9.12.6 | ObjectContactConvexConvex |
 | RG9.12.7 | the contact manifold for flat contacts (cylinder caps and sides, convex faces) |
 | RG9.12.8 | examples and the theory section of the contact manual |
+| RG9.12.9 | the plastic overlap and the adhesion as an option with a data block of 4 per point (section 3.3) |

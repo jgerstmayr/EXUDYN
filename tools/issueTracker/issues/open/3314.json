@@ -1,0 +1,13 @@
+{
+  "number": 3314,
+  "title": "LobattoIIIC4GGL removed, or replaced by an implicit Runge-Kutta method of order 5 or 6",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "LobattoIIIC4GGL is not more accurate than LobattoIIIA4 in the solver study (rigidBodySpringDampers at 16 h0: 5.8e-5 against 1.0e-5; FFRFreducedOrder 2 to 3 times more accurate only at 4 to 8 h0) and costs 2.5 to 3 times its CPU time: three implicit stages, each with the multipliers of the GGL stabilization; its use is the reference of the study, with multipliers that do not alternate from step to step. Candidates of higher order with three implicit stages and no GGL multipliers: Radau IIA with 3 stages (order 5, stage order 3, L-stable, the constraints at the end of the step as in Radau3) and Lobatto IIIA with 4 stages (order 6, the first stage explicit, A-stable but not L-stable, so its multipliers alternate as those of LobattoIIIA4). The tableau of CSolverImplicitRungeKutta holds 3 stages; Lobatto IIIA with 4 needs 4. Open: the maintainer decides between removing LobattoIIIC4GGL (not released, no deprecation) and replacing it by Radau IIA of order 5 as the reference method; revision2026c step RG20.10.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "file": "src/Solver/CSolverImplicitRungeKutta.cpp"
+}

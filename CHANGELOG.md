@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 413 | 1.13.429 |
+| 1.13 | Newborn | 415 | 1.13.431 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.431** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the design of path planning and navigation of robots decided (#3316)
+  - description: The design note of path planning for serial and mobile robots. Decided: the module robotics/navigation.py; the collision shapes next to RobotLink and Robot in roboticsCore.py; grid A\* for mobile robots, RRT-Connect with shortcut smoothing for serial robots and in SE(2); the collision check in C++ only (cUtilities.CollisionModel); the shapes sphere, capsule, cylinder, box, convex points and triangles, the common collision geometries of the URDF read under the key 'collision' of GetURDFrobotData; Trajectory.FromWaypoints with blending and pure pursuit for differential drives; the distance kernels of RG9.12 first; examples with the UR5, a mecanum-wheeled robot and a differential-drive robot with graphics of their bodies; revision2026c step RG21.1.
+  - **notes:** The design of path planning and navigation of robots decided: grid A\*, RRT-Connect, collision shapes of the links, a collision check in C++.
+  - date resolved: **2026-11-07 01:44**, date raised: 2026-11-07
+- **1.13.430** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the design of the contact between primitives decided (#3315)
+  - description: The design note of the contacts sphere-cylinder, cylinder-cylinder, cylinder-triangle and convex-convex with a distance output. Decided: GJK and EPA for all pairs with the analytic sphere-cylinder distance as check and fast path; one contact point first, the data coordinates in blocks per contact point (numberOfContactPoints) so that the contact manifold of up to 4 points extends them; a block of 3 (no plastic state, as common codes), a block of 4 enabling plasticity and adhesion later; the names and parameters of the note, the cylinder axis along the local z axis of its marker; points and triangles of convex shapes as numpy arrays of 3 columns, checked in CheckPreAssembleConsistency; OutputVariableType.Distance computed when inactive, cUtilities.Distance; revision2026c step RG9.12.1.
+  - **notes:** The design of the contact between primitives (sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex) decided: GJK and EPA, data coordinates per contact point, a Distance output.
+  - date resolved: **2026-11-07 01:44**, date raised: 2026-11-07
 - **1.13.429** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The solver study: zero multipliers as a group, the efficiency figure split into constant and automatic steps (#3311)
   - description: The algebraic coordinates of rigidBodySpringDampers are the multipliers of the Euler parameter constraints, which are zero in the exact solution (G theta = 0: neither the mass matrix nor the forces act along the parameters); their reference is 0 to 1e-12, so the relative error of the figure is noise divided by 1e-14 (1 to 1e4). The figure of the error against the CPU time on four models has small subplots with constant and automatic steps together. Decided: a group whose reference vanishes is left out of the figures with its reason in the caption; the efficiency figure split into one with constant steps and one with automatic steps, 2x2 each and larger, the tolerances of the automatic steps over a wider range.
   - **notes:** The convergence figures of the solver documentation leave out the multipliers of Euler parameter constraints of bodies without joints, which are zero in the exact solution; the efficiency is shown in separate figures for constant and automatic steps, the latter for the tolerances 1e-2 to 1e-10.

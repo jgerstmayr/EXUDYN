@@ -1,0 +1,13 @@
+{
+  "number": 3317,
+  "title": "distance and penetration of convex primitives by GJK and EPA, in exudyn.cUtilities",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "HIGH",
+  "description": "The kernels of the contact primitives and of the collision check of path planning: support functions of sphere, capsule, cylinder, box, triangle and convex point sets, the distance and the witness points by GJK, the penetration depth and normal by EPA, the analytic sphere-cylinder distance; exported as shapes and cUtilities.Distance(shape0, HT0, shape1, HT1). Decided: one implementation for the contact items and the planner, tested against analytic distances; revision2026c step RG9.12.2.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "file": "src/Linalg/GeometryConvex.h"
+}

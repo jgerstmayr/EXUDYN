@@ -1,0 +1,17 @@
+{
+  "number": 3315,
+  "title": "the design of the contact between primitives decided",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The design note of the contacts sphere-cylinder, cylinder-cylinder, cylinder-triangle and convex-convex with a distance output. Decided: GJK and EPA for all pairs with the analytic sphere-cylinder distance as check and fast path; one contact point first, the data coordinates in blocks per contact point (numberOfContactPoints) so that the contact manifold of up to 4 points extends them; a block of 3 (no plastic state, as common codes), a block of 4 enabling plasticity and adhesion later; the names and parameters of the note, the cylinder axis along the local z axis of its marker; points and triangles of convex shapes as numpy arrays of 3 columns, checked in CheckPreAssembleConsistency; OutputVariableType.Distance computed when inactive, cUtilities.Distance; revision2026c step RG9.12.1.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 01:44",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/design/contactPrimitives.md",
+  "releaseNotes": "The design of the contact between primitives (sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex) decided: GJK and EPA, data coordinates per contact point, a Distance output.",
+  "resolvedInVersion": "1.13.430"
+}

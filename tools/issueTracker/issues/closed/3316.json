@@ -1,0 +1,17 @@
+{
+  "number": 3316,
+  "title": "the design of path planning and navigation of robots decided",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The design note of path planning for serial and mobile robots. Decided: the module robotics/navigation.py; the collision shapes next to RobotLink and Robot in roboticsCore.py; grid A* for mobile robots, RRT-Connect with shortcut smoothing for serial robots and in SE(2); the collision check in C++ only (cUtilities.CollisionModel); the shapes sphere, capsule, cylinder, box, convex points and triangles, the common collision geometries of the URDF read under the key 'collision' of GetURDFrobotData; Trajectory.FromWaypoints with blending and pure pursuit for differential drives; the distance kernels of RG9.12 first; examples with the UR5, a mecanum-wheeled robot and a differential-drive robot with graphics of their bodies; revision2026c step RG21.1.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 01:44",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/design/robotPlanning.md",
+  "releaseNotes": "The design of path planning and navigation of robots decided: grid A*, RRT-Connect, collision shapes of the links, a collision check in C++.",
+  "resolvedInVersion": "1.13.431"
+}
