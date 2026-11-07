@@ -1598,7 +1598,7 @@ CLOSED 2026-11-07 (#3329): both items with GJK and EPA, infinitePlane, the outpu
 
 #### **OPEN_RG9.12.7** The contact manifold for flat contacts of ObjectContactConvexConvex
 
-The contact points of the cylinders (caps, sides, a cylinder on a face) came with RG9.12.5 (#3329); this step keeps the faces of convex shapes.
+The contact points of the cylinders (caps, sides, a cylinder on a face) came with RG9.12.5; this step keeps the faces of convex shapes.
 
 #### **OPEN_RG9.12.8** Examples of the contact primitives and the theory section of the contact manual
 
