@@ -624,6 +624,12 @@ need no search; `GeneralContact` is the choice for many bodies.
 | `ObjectContactConvexConvex` | convex polytope | convex polytope | |
 | `ObjectJournalBearing` | journal | bearing | lubricated, see below |
 
+The Create functions `mbs.CreateSphereSphereContact`, `CreateSphereTriangleContact`, `CreateSphereCylinderContact`,
+`CreateCylinderCylinderContact`, `CreateCylinderTriangleContact`, `CreateConeConeContact`, `CreateConeTriangleContact` and
+`CreateConvexConvexContact` add an item with its markers and its data node, of the size the item needs: two bodies,
+nodes or markers, the shapes at a local position on them, a cylinder or a cone along a local axis, the points of
+triangles and polytopes in the frame of their body - for a polytope, from `graphics.ToPointsAndTrigs` of its graphics.
+
 ### Distance
 
 The signed distance $g$ of two convex shapes - negative for a penetration -, their closest points and the unit normal

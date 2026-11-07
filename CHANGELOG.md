@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 441 | 1.13.457 |
+| 1.13 | Newborn | 442 | 1.13.458 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.458** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Create functions for the contacts between primitive shapes (#3342)
+  - description: The design of the primitive contacts (docs/dev/design/contactPrimitives.md) proposes mbs.Create functions, which add the markers, the data node of the right size and the contact item for two bodies; a user now adds the data node with its initial coordinates by hand. Decided: Create functions for the sphere, cylinder, cone, triangle and convex contacts, with the shapes in the frames of the bodies, as the other Create functions.
+  - **notes:** mbs.CreateSphereCylinderContact, CreateCylinderCylinderContact, CreateCylinderTriangleContact, CreateConeConeContact, CreateConeTriangleContact and CreateConvexConvexContact add a contact between primitive shapes with its markers and a data node of the right size; cylinders and cones are placed by a local position and a local axis on their body.
+  - date resolved: **2026-11-07 23:01**, date raised: 2026-11-07
 - **1.13.457** `EXAMPLE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` contactPrimitivesShowcase.py revised: a visible ground, moving rings and bearing, a richer polytope, a scene for the raytracer (#3341)
   - description: In contactPrimitivesShowcase.py the floor and the inclined plane are not drawn, so the bodies roll in space; the shaft starts inside the ring and hardly moves; the journal bearing is a tiny disc at rest; the polytope is a cube; the contact shapes are drawn with a fine tiling. Decided: the ground drawn, the ring contact and the bearing large enough to see what they do, a polytope with more faces, shadows and settings for a raytraced picture.
   - **notes:** contactPrimitivesShowcase.py shows the contacts between primitive shapes on a drawn floor: a ball over a cylinder, a roller down a ramp, a rolling cone, an icosahedron tumbling into a cube, a ring swinging on a shaft and a rotor floating in a journal bearing, with the contact forces as arrows, shadows and a switch for a raytraced picture.

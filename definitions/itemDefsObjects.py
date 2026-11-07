@@ -13061,7 +13061,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactSphereSphere',
-    drawing=r'The two spheres with `contact.show.spheres`, in `contact.color.spheres`.',
+    drawing=r'The two spheres with `contact.show.spheres`, in `contact.color.spheres`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
     drawingSettings=['contact.color.spheres', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.spheres', 'contact.tilingSpheres', 'general.cylinderTiling'],
     image='itemImages/ObjectContactSphereSphere.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
@@ -13449,7 +13449,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactSphereTorus',
-    drawing=r'The sphere with `contact.show.spheres` and the center circle of the torus with `contact.show.tori`.',
+    drawing=r'The sphere with `contact.show.spheres` and the center circle of the torus with `contact.show.tori`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
     drawingSettings=['contact.color.spheres', 'contact.color.tori', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.spheres', 'contact.show.tori', 'contact.tilingSpheres', 'general.circleTiling', 'general.cylinderTiling'],
     addProtectedC=r"""    static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
@@ -13707,7 +13707,7 @@ def ObjectContactSphereTriangle_contactForceUserFunction(mbs: MainSystem, t: Rea
 
 definitions.append(ItemDefinition(
     className='ObjectContactSphereTriangle',
-    drawing=r'The sphere with `contact.show.spheres` and the triangle with `contact.show.triangles`.',
+    drawing=r'The sphere with `contact.show.spheres` and the triangle with `contact.show.triangles`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
     drawingSettings=['contact.color.spheres', 'contact.color.triangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.spheres', 'contact.show.triangles', 'general.cylinderTiling', 'general.sphereTiling'],
     addProtectedC=r"""    static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
@@ -13987,7 +13987,8 @@ def ObjectContactSphereCylinder_contactForceUserFunction(mbs: MainSystem, t: Rea
 
 definitions.append(ItemDefinition(
     className='ObjectContactSphereCylinder',
-    drawing=r'The sphere with `contact.show.spheres` and the cylinder with `contact.show.cylinders`.',
+    createFunctions=['CreateSphereCylinderContact'],
+    drawing=r'The sphere with `contact.show.spheres` and the cylinder with `contact.show.cylinders`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
     drawingSettings=['contact.color.cylinders', 'contact.color.spheres', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.cylinders', 'contact.show.spheres', 'general.cylinderTiling', 'general.sphereTiling'],
     addProtectedC=r"""    static constexpr Index nDataVariables = 3; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
@@ -14252,7 +14253,8 @@ def ObjectContactCylinderCylinder_contactForceUserFunction(mbs: MainSystem, t: R
 
 definitions.append(ItemDefinition(
     className='ObjectContactCylinderCylinder',
-    drawing=r'Both cylinders with `contact.show.cylinders`.',
+    createFunctions=['CreateCylinderCylinderContact'],
+    drawing=r'Both cylinders with `contact.show.cylinders`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
     drawingSettings=['contact.color.cylinders', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.cylinders', 'general.cylinderTiling'],
     addPublicC=r"""    static constexpr Index nDataVariables = 12; //!< a block of 3 per contact point (4): gap, tangential velocity, impact velocity
 """,
@@ -14536,7 +14538,8 @@ def ObjectContactConeCone_contactForceUserFunction(mbs: MainSystem, t: Real, ite
 
 definitions.append(ItemDefinition(
     className='ObjectContactConeCone',
-    drawing=r'Both truncated cones with `contact.show.cones`.',
+    createFunctions=['CreateConeConeContact'],
+    drawing=r'Both truncated cones with `contact.show.cones`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
     drawingSettings=['contact.color.cones', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.show.cones', 'contact.showContactForces', 'general.cylinderTiling'],
     addPublicC=r"""    static constexpr Index nDataVariables = 12; //!< a block of 3 per contact point (4): gap, tangential velocity, impact velocity
 """,
@@ -14820,7 +14823,8 @@ def ObjectContactConeTriangle_contactForceUserFunction(mbs: MainSystem, t: Real,
 
 definitions.append(ItemDefinition(
     className='ObjectContactConeTriangle',
-    drawing=r'The cone with `contact.show.cones` and the triangle with `contact.show.triangles`.',
+    createFunctions=['CreateConeTriangleContact'],
+    drawing=r'The cone with `contact.show.cones` and the triangle with `contact.show.triangles`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
     drawingSettings=['contact.color.cones', 'contact.color.triangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.show.cones', 'contact.showContactForces', 'contact.show.triangles', 'general.cylinderTiling'],
     addPublicC=r"""    static constexpr Index nDataVariables = 12; //!< a block of 3 per contact point (4): gap, tangential velocity, impact velocity
 """,
@@ -15109,7 +15113,8 @@ def ObjectContactConvexConvex_contactForceUserFunction(mbs: MainSystem, t: Real,
 
 definitions.append(ItemDefinition(
     className='ObjectContactConvexConvex',
-    drawing=r'The triangles of both shapes with `contact.show.triangles`.',
+    createFunctions=['CreateConvexConvexContact'],
+    drawing=r'The triangles of both shapes with `contact.show.triangles`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
     drawingSettings=['contact.color.triangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.triangles', 'general.cylinderTiling'],
     addPublicC=r"""    static constexpr Index nDataVariables = 24; //!< a block of 3 per contact point (8): gap, tangential velocity, impact velocity
 """,
@@ -15390,7 +15395,8 @@ def ObjectContactCylinderTriangle_contactForceUserFunction(mbs: MainSystem, t: R
 
 definitions.append(ItemDefinition(
     className='ObjectContactCylinderTriangle',
-    drawing=r'The cylinder with `contact.show.cylinders` and the triangle with `contact.show.triangles`.',
+    createFunctions=['CreateCylinderTriangleContact'],
+    drawing=r'The cylinder with `contact.show.cylinders` and the triangle with `contact.show.triangles`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
     drawingSettings=['contact.color.cylinders', 'contact.color.triangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.cylinders', 'contact.show.triangles', 'general.cylinderTiling'],
     addPublicC=r"""    static constexpr Index nDataVariables = 12; //!< a block of 3 per contact point (4): gap, tangential velocity, impact velocity
 """,
@@ -15675,7 +15681,7 @@ def ObjectJournalBearing_forceUserFunction(mbs: MainSystem, t: Real, itemNumber:
 
 definitions.append(ItemDefinition(
     className='ObjectJournalBearing',
-    drawing=r'The bearing as a tube and the journal as a cylinder with `contact.show.cylinders`.',
+    drawing=r'The bearing as a tube and the journal as a cylinder with `contact.show.cylinders`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
     drawingSettings=['contact.color.cylinders', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.cylinders', 'general.cylinderTiling'],
     author=r'Gerstmayr Johannes',
     cParentClass=ParentClassCObjectConnector,

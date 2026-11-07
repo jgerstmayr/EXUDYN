@@ -691,6 +691,10 @@ red arrow and the force on marker 1 as a green one, meeting at each contact poin
 `visualizationSettings.contact.show.spheres`, `.triangles`, `.tori`, `.cylinders`, `.cones` and the same members of
 `contact.color`; `contact.showSpheres`, `showTriangles`, `showTori`, `colorSpheres`, `colorTriangles` and `colorTori`
 still work and warn that they are deprecated.
+**Create functions of the contacts between primitive shapes** (#3342): `mbs.CreateSphereCylinderContact`,
+`CreateCylinderCylinderContact`, `CreateCylinderTriangleContact`, `CreateConeConeContact`, `CreateConeTriangleContact` and
+`CreateConvexConvexContact` add the item with its markers and a data node of the right size; cylinders and cones are
+placed by a local position and a local axis on their body.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

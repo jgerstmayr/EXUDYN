@@ -2,12 +2,16 @@
   "number": 3342,
   "title": "Create functions for the contacts between primitive shapes",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The design of the primitive contacts (docs/dev/design/contactPrimitives.md) proposes mbs.Create functions, which add the markers, the data node of the right size and the contact item for two bodies; a user now adds the data node with its initial coordinates by hand. Decided: Create functions for the sphere, cylinder, cone, triangle and convex contacts, with the shapes in the frames of the bodies, as the other Create functions.",
   "dateRaised": "2026-11-07",
   "deadline": "2027-05-06",
-  "file": "python/exudyn/misc/mainSystemExtensions.py"
+  "dateResolved": "2026-11-07 23:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/mainSystemExtensions.py",
+  "releaseNotes": "mbs.CreateSphereCylinderContact, CreateCylinderCylinderContact, CreateCylinderTriangleContact, CreateConeConeContact, CreateConeTriangleContact and CreateConvexConvexContact add a contact between primitive shapes with its markers and a data node of the right size; cylinders and cones are placed by a local position and a local axis on their body.",
+  "resolvedInVersion": "1.13.458"
 }

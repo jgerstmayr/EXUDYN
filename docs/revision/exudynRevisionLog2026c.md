@@ -6427,6 +6427,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-22"></a>
+### RG9.12.22 — Create functions of the primitive contacts (2026-11-07, #3342)
+- mbs.CreateSphereCylinderContact, CreateCylinderCylinderContact, CreateCylinderTriangleContact, CreateConeConeContact,
+  CreateConeTriangleContact, CreateConvexConvexContact (the design proposed the first three and the convex one; the cones
+  came later, RG9.12.11). Each adds the markers, a data node of the size of the item (points times 3, times 4 with
+  contactPlasticityRatio > 0, apart at the start) and the item; arguments as CreateSphereSphereContact: itemNumbers
+  (body, node or marker), the law, impactModel, the plastic model, contactForceUserFunction, activeConnector, show, color.
+- A cylinder or a cone is placed by localPosition and localAxis on its item (a rigid marker whose z axis is the axis:
+  the columns n1, n2, axis of ComputeOrthonormalBasis); a marker is used as it is, with the axis [0,0,1]. Triangle points
+  relative to localPosition1; polytope points relative to localPosition0/1 (added to the points: the marker stays at the
+  body origin), e.g. from graphics.ToPointsAndTrigs.
+- Shared helpers (not public): AxisHT, ShapeMarker, TrianglePointsArgument (a Vector3DList; the item refuses a list),
+  CheckPrimitiveContact, AddPrimitiveContact. RaiseTypeError raises a ValueError, also for a radius of 0.
+- createPrimitiveContactsTest.py (new): six bodies at rest at their closed-form heights (to 1e-11; the shaft in the ring
+  on its 2 rims, the cones on 3 rim points, the cube on 4 corners), the data node sizes 24 and 32, two refused
+  arguments. The six docstring examples run and come to rest where expected.
+- The drawing texts of the ten contact items name the force arrows of #3339; theoryContact.md lists the Create
+  functions; the design document says they are done.
+
 <a id="rg9-12-21"></a>
 ### RG9.12.21 — contactPrimitivesShowcase.py revised (2026-11-07, #3341)
 - Six lanes on a checkerboard floor, each drawn: the ball over a lying cylinder onto the floor; the roller down a

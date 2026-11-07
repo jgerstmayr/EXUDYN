@@ -67,6 +67,8 @@ mutableArgsFunctionsChecked = [
     'MainSystemCreateDistanceConstraint', 'MainSystemCreateRollingDiscPenalty', 'MainSystemCreateRollingDisc', 'MainSystemCreateKinematicTree',
     'MainSystemCreateForce','MainSystemCreateTorque','MainSystemCreateCoordinateConstraint',
     'MainSystemCreateSphereSphereContact','MainSystemCreateSphereQuadContact','MainSystemCreateSphereTriangleContact',
+    'MainSystemCreateSphereCylinderContact','MainSystemCreateCylinderCylinderContact','MainSystemCreateCylinderTriangleContact',
+    'MainSystemCreateConeConeContact','MainSystemCreateConeTriangleContact','MainSystemCreateConvexConvexContact',
     'MainSystemCreateFFRFReducedOrderObject',
     #plot:
     'PlotSensor', 'DataArrayFromSensorList',

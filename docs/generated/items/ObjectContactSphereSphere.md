@@ -57,7 +57,7 @@ The parameters of `VObjectContactSphereSphere`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); the two spheres with `contact.show.spheres`, in `contact.color.spheres`.
+Drawn as [all connectors](#sec-drawing-objectsconnector); the two spheres with `contact.show.spheres`, in `contact.color.spheres`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).
 
 Settings beyond those of all connectors: [`contact.color.spheres`](#sec-vsettingscontactcolor), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.show.spheres`](#sec-vsettingscontactshow), [`contact.tilingSpheres`](#sec-vsettingscontact), [`general.cylinderTiling`](#sec-vsettingsgeneral).
 

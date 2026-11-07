@@ -144,7 +144,8 @@ Common to all four, with the names and meaning of ObjectContactSphereTriangle:
   of n x 3 and the triangles a `NumpyMatrixI` of m x 3 (the type of `triangleMesh` of the FFRF objects), both set
   from 2D numpy arrays or lists of lists, without a new parameter type; CheckPreAssembleConsistency checks the
   3 columns and the indices.
-- Create functions: `CreateSphereCylinderContact`, `CreateCylinderCylinderContact`, `CreateCylinderTriangleContact`,
+- Create functions (done with #3342, also for the cones; a cylinder or a cone placed by `localPosition` and `localAxis`):
+  `CreateSphereCylinderContact`, `CreateCylinderCylinderContact`, `CreateCylinderTriangleContact`,
   `CreateConvexConvexContact` (the data node and markers created, as CreateSphereSphereContact), and
   `graphics.Cylinder`/`FromPointsAndTrigs` with the same geometry for the bodies.
 - Outputs: `Distance` (new), `Position` (the contact point, midpoint of the witness points), `Director1` (the normal

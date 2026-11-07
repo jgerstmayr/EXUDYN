@@ -18,6 +18,12 @@ from exudyn.misc.mainSystemExtensions import MainSystemCreateRollingDiscPenalty 
 from exudyn.misc.mainSystemExtensions import MainSystemCreateSphereSphereContact as _MainSystemCreateSphereSphereContact
 from exudyn.misc.mainSystemExtensions import MainSystemCreateSphereQuadContact as _MainSystemCreateSphereQuadContact
 from exudyn.misc.mainSystemExtensions import MainSystemCreateSphereTriangleContact as _MainSystemCreateSphereTriangleContact
+from exudyn.misc.mainSystemExtensions import MainSystemCreateSphereCylinderContact as _MainSystemCreateSphereCylinderContact
+from exudyn.misc.mainSystemExtensions import MainSystemCreateCylinderCylinderContact as _MainSystemCreateCylinderCylinderContact
+from exudyn.misc.mainSystemExtensions import MainSystemCreateCylinderTriangleContact as _MainSystemCreateCylinderTriangleContact
+from exudyn.misc.mainSystemExtensions import MainSystemCreateConeConeContact as _MainSystemCreateConeConeContact
+from exudyn.misc.mainSystemExtensions import MainSystemCreateConeTriangleContact as _MainSystemCreateConeTriangleContact
+from exudyn.misc.mainSystemExtensions import MainSystemCreateConvexConvexContact as _MainSystemCreateConvexConvexContact
 from exudyn.misc.mainSystemExtensions import MainSystemCreateKinematicTree as _MainSystemCreateKinematicTree
 from exudyn.misc.mainSystemExtensions import MainSystemCreateFFRFReducedOrderObject as _MainSystemCreateFFRFReducedOrderObject
 from exudyn.misc.mainSystemExtensions import MainSystemCreateForce as _MainSystemCreateForce
@@ -54,6 +60,12 @@ class MainSystem:
     CreateSphereSphereContact = _MainSystemCreateSphereSphereContact
     CreateSphereQuadContact = _MainSystemCreateSphereQuadContact
     CreateSphereTriangleContact = _MainSystemCreateSphereTriangleContact
+    CreateSphereCylinderContact = _MainSystemCreateSphereCylinderContact
+    CreateCylinderCylinderContact = _MainSystemCreateCylinderCylinderContact
+    CreateCylinderTriangleContact = _MainSystemCreateCylinderTriangleContact
+    CreateConeConeContact = _MainSystemCreateConeConeContact
+    CreateConeTriangleContact = _MainSystemCreateConeTriangleContact
+    CreateConvexConvexContact = _MainSystemCreateConvexConvexContact
     CreateKinematicTree = _MainSystemCreateKinematicTree
     CreateFFRFReducedOrderObject = _MainSystemCreateFFRFReducedOrderObject
     CreateForce = _MainSystemCreateForce

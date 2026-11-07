@@ -10,6 +10,8 @@ A penalty contact between two truncated cones, each centered at its marker along
 
 Author: Gerstmayr Johannes
 
+**Simpler**: [`mbs.CreateConeConeContact`](#sec-mainsystemextensions-createconeconecontact) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Nodes it takes: [](#sec-item-nodegenericdata)
@@ -55,7 +57,7 @@ The parameters of `VObjectContactConeCone`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); both truncated cones with `contact.show.cones`.
+Drawn as [all connectors](#sec-drawing-objectsconnector); both truncated cones with `contact.show.cones`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).
 
 Settings beyond those of all connectors: [`contact.color.cones`](#sec-vsettingscontactcolor), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.show.cones`](#sec-vsettingscontactshow), [`contact.showContactForces`](#sec-vsettingscontact), [`general.cylinderTiling`](#sec-vsettingsgeneral).
 

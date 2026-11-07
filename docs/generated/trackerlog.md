@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.457.dev1
+- Exudyn version = 1.13.458.dev1
 - last change = 2026-11-07
 - Number of issues = 3347
-- Number of resolved issues = 3234 (457 in current version)
+- Number of resolved issues = 3235 (458 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9044,9 +9044,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-07
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A test model of all primitive contacts: bodies on a shaken table with borders (#3343)
   - description: The primitive contacts are tested pairwise; nothing tests many of them at once, with impacts and the bodies coming to rest. Decided: a test model with two spheres, two cylinders, two cones and two polytopes on a rectangular table with borders, shaken by a short translation and rotation, every pair of bodies in contact by its item; the test checks that no body leaves the table and that the solver finishes; a short time when run as a test.
-  - date raised: 2026-11-07
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` Create functions for the contacts between primitive shapes (#3342)
-  - description: The design of the primitive contacts (docs/dev/design/contactPrimitives.md) proposes mbs.Create functions, which add the markers, the data node of the right size and the contact item for two bodies; a user now adds the data node with its initial coordinates by hand. Decided: Create functions for the sphere, cylinder, cone, triangle and convex contacts, with the shapes in the frames of the bodies, as the other Create functions.
   - date raised: 2026-11-07
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` Radau5: the implicit Runge-Kutta method Radau IIA with 3 stages, of order 5, in the C++ and the Python solvers (#3318)
   - description: A reference method of higher order for the solver study instead of LobattoIIIC4GGL (\#3314): Radau IIA with 3 stages (c = (4 - sqrt 6)/10, (4 + sqrt 6)/10, 1), order 5, L-stable, three implicit stages without GGL multipliers, the constraints at the end of the step as in Radau3; the tableau of CSolverImplicitRungeKutta and of exudyn.symbolics.advancedSolvers, its error estimate, DynamicSolverType.Radau5. Decided: implemented with the Jacobian of the last stage for all stages, as the other methods, no W-method; its convergence orders measured on the model library, and as the reference of the study if it converges as expected; revision2026c step RG20.10.1.

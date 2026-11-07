@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (3 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (2 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 9 | Structural core improvements |
+| RG9 | OPEN | 8 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1682,9 +1682,11 @@ CLOSED 2026-11-07 (#3340): visualizationSettings.contact.show and contact.color 
 
 CLOSED 2026-11-07 (#3341): floor, ramp, wedge, shaft and bearing drawn; the icosahedron tumbles into a cube, the ring swings on a thin shaft, the rotor floats at the closed-form equilibrium of the short bearing; contact forces drawn, shadows, a switch for the raytracer; frictionProportionalZone 0.01 against stick-slip switching; 3.9 s. Found on the way: #3338, #3345, #3346. [log](exudynRevisionLog2026c.md#rg9-12-21)
 
-#### **OPEN_RG9.12.22** Create functions for the primitive contacts
+#### **CLOSED_RG9.12.22** Create functions for the primitive contacts
 
 #3342. Maintainer 2026-11-07: the Create functions as proposed in the design (docs/dev/design/contactPrimitives.md).
+
+CLOSED 2026-11-07 (#3342): mbs.CreateSphereCylinderContact, CreateCylinderCylinderContact, CreateCylinderTriangleContact, CreateConeConeContact, CreateConeTriangleContact, CreateConvexConvexContact - markers, data node of the right size, item; cylinders and cones by localPosition and localAxis; createPrimitiveContactsTest.py with six bodies at their closed-form heights. [log](exudynRevisionLog2026c.md#rg9-12-22)
 
 #### **OPEN_RG9.12.23** A test model with all primitive contacts on a shaken table
 

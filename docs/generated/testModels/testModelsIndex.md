@@ -67,6 +67,7 @@ createFunctionsTest
 createItemNumbersTest
 createKinematicTreeTest
 createLinearSpringDamperTest
+createPrimitiveContactsTest
 createRollingDiscPenaltyTest
 createRollingDiscTest
 createSphereQuadContact

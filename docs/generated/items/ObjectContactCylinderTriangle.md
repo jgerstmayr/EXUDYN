@@ -10,6 +10,8 @@ A penalty contact between a finite cylinder (marker 0), centered at its marker a
 
 Author: Gerstmayr Johannes
 
+**Simpler**: [`mbs.CreateCylinderTriangleContact`](#sec-mainsystemextensions-createcylindertrianglecontact) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Nodes it takes: [](#sec-item-nodegenericdata)
@@ -55,7 +57,7 @@ The parameters of `VObjectContactCylinderTriangle`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); the cylinder with `contact.show.cylinders` and the triangle with `contact.show.triangles`.
+Drawn as [all connectors](#sec-drawing-objectsconnector); the cylinder with `contact.show.cylinders` and the triangle with `contact.show.triangles`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).
 
 Settings beyond those of all connectors: [`contact.color.cylinders`](#sec-vsettingscontactcolor), [`contact.color.triangles`](#sec-vsettingscontactcolor), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.show.cylinders`](#sec-vsettingscontactshow), [`contact.show.triangles`](#sec-vsettingscontactshow), [`general.cylinderTiling`](#sec-vsettingsgeneral).
 
