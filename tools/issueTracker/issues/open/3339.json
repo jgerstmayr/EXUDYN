@@ -1,0 +1,13 @@
+{
+  "number": 3339,
+  "title": "The contact forces of the contact items drawn as two arrows meeting at the contact point",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The contact items between spheres, cylinders, cones, triangles, polytopes and the journal bearing do not show their forces; visualizationSettings.contact.showContactForces and contactForcesFactor are used only by ObjectContactFrictionCircleCable2D. Decided: with showContactForces, each contact point of these items draws the force on marker 0 as a red 3D arrow and the force on marker 1 as a green one, opposite, their heads meeting at the contact point, scaled by contactForcesFactor; the radius of the arrows by a new setting contact.contactForcesRadius.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "file": "src/ImplObjects/ContactPrimitivePoints.h"
+}

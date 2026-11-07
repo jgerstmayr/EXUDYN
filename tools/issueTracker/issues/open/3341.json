@@ -1,0 +1,13 @@
+{
+  "number": 3341,
+  "title": "contactPrimitivesShowcase.py revised: a visible ground, moving rings and bearing, a richer polytope, a scene for the raytracer",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXAMPLE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "In contactPrimitivesShowcase.py the floor and the inclined plane are not drawn, so the bodies roll in space; the shaft starts inside the ring and hardly moves; the journal bearing is a tiny disc at rest; the polytope is a cube; the contact shapes are drawn with a fine tiling. Decided: the ground drawn, the ring contact and the bearing large enough to see what they do, a polytope with more faces, shadows and settings for a raytraced picture.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "file": "python/Examples/contactPrimitivesShowcase.py"
+}

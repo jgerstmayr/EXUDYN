@@ -6427,6 +6427,21 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-18"></a>
+### RG9.12.18 — EPA keeps the origin inside its polytope (2026-11-07, #3338)
+- Found in contactPrimitivesShowcase.py: the cube resting flat on the box (ObjectContactConvexConvex, 0.08 mm deep)
+  sank 2.2 cm at t = 0.471 s and bounced. The Distance was -0 with the normal +z instead of -z; the face points were
+  then measured against the bottom face of the box (gaps -0.2).
+- Reproduced with cUtilities.Distance: 439 of 20000 poses near rest (turned about z, tilted by 1e-9, 0.02-0.2 mm deep).
+  EPA ran into its 128 iterations: on the nearly flat side of the Minkowski difference it added points of 1e-9 height
+  (above its tolerance of 1e-10 scale), grew to 210 faces, until a thin new face turned over (minD = -dBefore), the
+  origin lay outside the polytope, and the face of the most negative distance was returned with the depth 0.
+- ConvexEPA: AddPoint refuses a point that is a vertex already and, while expanding (keepOrigin), a new face with the
+  origin outside (n.a < -tolerance); EPA stops at the last valid face. It starts from the tetrahedron of GJK when GJK
+  ends with one that is not flat (volume > 1e-6 of the greedy one) - alone this did not help, it keeps the start
+  inside. 0 of 20000 fail, the depth to 9e-10 (the tilt); the showcase solves in 1.4 s instead of 5.2 s.
+- convexConvexContactTest.py: 2000 resting poses, depth and normal to 1e-8 (+1 in the result); no other test changed.
+
 <a id="rg9-12-8"></a>
 ### RG9.12.8 — the theory section and the example of the primitive contacts; RG9.12 closed (2026-11-07, #3337)
 - docs/manual/theoryContact.md, section "Contact between primitive shapes" (label sec-contact-primitives), before the

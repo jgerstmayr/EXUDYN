@@ -1,0 +1,17 @@
+{
+  "number": 3338,
+  "title": "EPA loses the origin where two convex shapes touch on faces: a resting cube sinks into a box",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "A cube resting flat on a box with ObjectContactConvexConvex (contactPrimitivesShowcase.py) sinks 2 cm into it after 0.47 s and jumps: in about 2 percent of the poses near rest, the expanding polytope algorithm adds points of tiny height on the nearly flat side of the Minkowski difference until a thin face turns over, the origin lies outside the polytope, and the distance is returned as -0 with the normal of the opposite side; the iteration limit of 128 is reached, which also makes the contact slow. Decided: EPA starts from the tetrahedron of GJK, which contains the origin, refuses a point that is a vertex already and, while expanding, a face that has the origin outside; a test of resting poses in convexConvexContactTest.py.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 21:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/GeometryConvex.h",
+  "releaseNotes": "A convex shape resting on a face of another, as a cube on a box with ObjectContactConvexConvex, was in some poses pushed into it: the penetration was returned as 0 with the normal of the opposite side. The expanding polytope algorithm keeps the origin inside its polytope; such contacts are also faster.",
+  "resolvedInVersion": "1.13.452"
+}

@@ -486,7 +486,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 - **function description**: {ref}`HT <HT>` for rotation around axis X (first axis)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesShowcase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactPrimitivesShowcase.py) (Ex), [`cylinderContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cylinderContactTest.py) (TM), [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM), [`sphereCylinderContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereCylinderContactTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrimitivesShowcase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactPrimitivesShowcase.py) (Ex), [`convexConvexContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/convexConvexContactTest.py) (TM), [`cylinderContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cylinderContactTest.py) (TM), [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM), [`sphereCylinderContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereCylinderContactTest.py) (TM)
 
 
 (sec-rigidbodyutilities-htrotatey)=
@@ -508,7 +508,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrim
 - **function description**: {ref}`HT <HT>` for rotation around axis X (first axis)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`homogeneousTransformationInterfaceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py) (TM), [`homogeneousTransformationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`convexConvexContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/convexConvexContactTest.py) (TM), [`homogeneousTransformationInterfaceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py) (TM), [`homogeneousTransformationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py) (TM)
 
 
 (sec-rigidbodyutilities-ht2translation)=

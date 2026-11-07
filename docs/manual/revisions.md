@@ -678,6 +678,10 @@ and a contact where the eccentricity exceeds the clearance; a `forceUserFunction
 **Plastic contacts with adhesion for cylinders, cones and convex shapes** (#3336): the adhesive elasto-plastic model of
 `ObjectContactSphereSphere` (`contactPlasticityRatio`, `adhesionCoefficient`, `adhesionExponent`, `constantPullOffForce`)
 is an option of the cylinder, cone and convex contacts; each contact point then has 4 data coordinates.
+**A convex shape resting on a face of another stays on it** (#3338): the penetration of two convex shapes that touch on
+faces, as a cube resting on a box, was in some poses returned as 0 with the normal of the opposite side, and
+`ObjectContactConvexConvex` pushed the cube into the box; `exudyn.cUtilities.Distance` and the contact items give the
+penetration of the faces, and such contacts are faster.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

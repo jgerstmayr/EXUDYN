@@ -94,6 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (6 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -146,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 5 | Structural core improvements |
+| RG9 | OPEN | 12 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1569,7 +1570,7 @@ From RG9.11.7: neither is in the Newton Jacobians, also not in the system-wide n
 
 CLOSED 2026-11-02 (#3230 resolved, #3201 stays open): constraintReactionDerivative (False), numerical per item, serially; fourBarMechanismIftomm 1058 / 802 iterations with full Newton, the other constrained models unchanged at 1.4 to 2.6 times the time; d(M q_tt)/dq by #3228. [log](exudynRevisionLog2026c.md#rg9-11-18)
 
-### **CLOSED_RG9.12** Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output
+### **OPEN_RG9.12** Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output
 
 Maintainer 2026-11-06: further contact primitives built like ObjectContactSphereSphere (without adhesion) and ObjectContactSphereTriangle, prototypes for the revised contact module, with an output of the minimum distance for the path planning of RG21, also when deactivated. Design docs/dev/design/contactPrimitives.md; no issues before it is decided.
 
@@ -1656,6 +1657,36 @@ CLOSED 2026-11-07 (#3328): found on the way to RG9.12.5 - Torque of SphereSphere
 #### **CLOSED_RG9.12.17** The faces of the cylinders and cones drawn in C++; DrawCylinder draws a truncated cone
 
 CLOSED 2026-11-07 (#3330): the maintainer saw the cylinders of sphereCylinderContactTest.py with flipped faces - EXUvis::DrawCylinder and DrawCone wound every triangle inward against its outward normal (all C++ cylinders, cones, arrows, frame axes); now outward, as exudyn.graphics; radiusEnd draws the truncated cones of RG9.12.11. [log](exudynRevisionLog2026c.md#rg9-12-17)
+
+#### **CLOSED_RG9.12.18** EPA keeps the origin inside its polytope where convex shapes touch on faces
+
+#3338. Found in contactPrimitivesShowcase.py (maintainer 2026-11-07: the cube suddenly penetrates): a cube resting on a box sinks 2 cm at 0.47 s; EPA reaches 128 iterations on the nearly flat side of the Minkowski difference and a thin face turns over.
+
+CLOSED 2026-11-07 (#3338): EPA ran into its 128 iterations on the nearly flat side of the Minkowski difference until a thin face turned over; AddPoint now refuses a vertex already there and a face with the origin outside, EPA starts from the tetrahedron of GJK; 0 of 20000 resting poses fail, the showcase solves 3.6 times faster; resting poses in convexConvexContactTest.py. [log](exudynRevisionLog2026c.md#rg9-12-18)
+
+#### **OPEN_RG9.12.19** The contact forces drawn as two arrows meeting at the contact point
+
+#3339. Maintainer 2026-11-07: for the new and the existing contact connectors a red arrow on marker 0 and a green one on marker 1, opposite, the heads meeting at the contact point, 3D arrows only; contact.showContactForces and contactForcesFactor used, a missing setting proposed.
+
+#### **OPEN_RG9.12.20** contact.show and contact.color as substructures
+
+#3340. Maintainer 2026-11-07: the show and color settings per contact primitive fill up the contact settings; contact.color.cones etc., the same for contact.show; deprecation only for the settings of 1.13.6; the model scripts adjusted.
+
+#### **OPEN_RG9.12.21** contactPrimitivesShowcase.py revised for a raytraced picture
+
+#3341. Maintainer 2026-11-07: the ground is not visible, the cube penetrates suddenly (RG9.12.18), the ring on the shaft hardly moves, a tiny disc does not move, the convex example could be more complex, the model loads slowly; shadows and settings for a raytraced screenshot.
+
+#### **OPEN_RG9.12.22** Create functions for the primitive contacts
+
+#3342. Maintainer 2026-11-07: the Create functions as proposed in the design (docs/dev/design/contactPrimitives.md).
+
+#### **OPEN_RG9.12.23** A test model with all primitive contacts on a shaken table
+
+#3343. Maintainer 2026-11-07: a rectangular table with borders (triangle or convex contacts), shaken by a short translation and rotation so that the objects jump, then at rest; 2 spheres, 2 cylinders, 2 cones, 2 polytopes with all couplings; checks that no object is lost and the solver does not fail; a short time when the test is active.
+
+#### **OPEN_RG9.12.24** The contact items as a group Contact in the reference manual
+
+#3344. Maintainer 2026-11-07: the objects are grouped into Body, SuperElement, ...; an additional group for Contact, as there are now more elements.
 
 ## **CLOSED_RG10** Tooling and process
 

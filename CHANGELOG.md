@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 435 | 1.13.451 |
+| 1.13 | Newborn | 436 | 1.13.452 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.452** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` EPA loses the origin where two convex shapes touch on faces: a resting cube sinks into a box (#3338)
+  - description: A cube resting flat on a box with ObjectContactConvexConvex (contactPrimitivesShowcase.py) sinks 2 cm into it after 0.47 s and jumps: in about 2 percent of the poses near rest, the expanding polytope algorithm adds points of tiny height on the nearly flat side of the Minkowski difference until a thin face turns over, the origin lies outside the polytope, and the distance is returned as -0 with the normal of the opposite side; the iteration limit of 128 is reached, which also makes the contact slow. Decided: EPA starts from the tetrahedron of GJK, which contains the origin, refuses a point that is a vertex already and, while expanding, a face that has the origin outside; a test of resting poses in convexConvexContactTest.py.
+  - **notes:** A convex shape resting on a face of another, as a cube on a box with ObjectContactConvexConvex, was in some poses pushed into it: the penetration was returned as 0 with the normal of the opposite side. The expanding polytope algorithm keeps the origin inside its polytope; such contacts are also faster.
+  - date resolved: **2026-11-07 21:03**, date raised: 2026-11-07
 - **1.13.451** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The theory section and an example of the contacts between primitive shapes (#3337)
   - description: The contacts between primitive shapes (spheres, cylinders, cones, triangles, polytopes, hollow shapes, the journal bearing) have no common description in the contact manual and no example. Decided: a section of theoryContact.md - the items, the distance by GJK and EPA, the contact points of lines and faces, the law with the impact models and the plasticity, the data node and the active set, the user functions, the journal bearing - and the example contactPrimitivesShowcase.py with one body per kind of contact.
   - **notes:** The contact manual has a section on the contacts between primitive shapes, and the example contactPrimitivesShowcase.py shows one body per kind of contact.

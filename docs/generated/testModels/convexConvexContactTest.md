@@ -87,6 +87,20 @@ mbs.SetNodeParameter(nTest, 'referenceCoordinates', [0.15, 10.1, 0.35] + list(Ro
 exu.Print('Distance of the deactivated contact against cUtilities.Distance:', errorDistance)
 checks += [errorDistance < 1e-14]
 
+#a cube resting flat on a box, turned about z, slightly tilted and slightly penetrating: the faces touch, and the
+#penetration depth and the normal must be those of the faces (#3338)
+cube, box = ConvexShape('Points', points=Box([0.15]*3)[0]), ConvexShape('Points', points=Box([0.8, 0.8, 0.2])[0])
+generator = np.random.default_rng(1)
+errorResting, nResting = 0., 2000
+for i in range(nResting):
+    depth = 1e-4*generator.uniform(0.2, 2)
+    position = [-0.079 + 1e-4*generator.standard_normal(), 0.039 + 1e-4*generator.standard_normal(), 0.1 + 0.075 - depth]
+    H0 = HTtranslate(position) @ HTrotateZ(0.2333 + 1e-3*generator.standard_normal()) @ HTrotateX(1e-9*generator.standard_normal())
+    distance, _, _, normal = Distance(cube, H0, box, np.eye(4))
+    errorResting = max(errorResting, abs(distance + depth), abs(normal[2] + 1))
+exu.Print('resting cube, largest error of depth and normal:', errorResting)
+checks += [errorResting < 1e-8]
+
 #five cubes side by side, each on its own fixed box
 big = [1, 1, 0.2]
 nRest, mRest, marker = Cube([0, 0, 0.1 + a/2], graphics.color.orange)

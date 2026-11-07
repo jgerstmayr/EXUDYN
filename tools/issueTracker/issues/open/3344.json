@@ -1,0 +1,13 @@
+{
+  "number": 3344,
+  "title": "The contact items as a group of their own in the reference manual of the items",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The reference manual lists the objects in the groups Body, SuperElement, FiniteElement, Joint, Connector, Constraint and Object; the contact items are listed among the connectors, now more than a dozen. Decided: a group Contact for the items of the contact type.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "file": "tools/generators/itemDocsEmitter.py"
+}

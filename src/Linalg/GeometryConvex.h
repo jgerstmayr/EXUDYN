@@ -389,9 +389,12 @@ namespace EGeometry {
 		}
 
 		//! the point added to the hull: the faces it sees, connected to the face it sees most, removed and the
-		//! horizon closed with new faces; nothing changed and false if it sees none or a new face is degenerate
-		bool AddPoint(const ConvexVertex& w, Real tolerance)
+		//! horizon closed with new faces; nothing changed and false if it sees none, if it is a vertex already, if a
+		//! new face is degenerate or, with keepOrigin, if a new face has the origin outside: the thin faces on a
+		//! nearly flat side of C, where two shapes touch on faces, may turn over (#3338)
+		bool AddPoint(const ConvexVertex& w, Real tolerance, bool keepOrigin = false)
 		{
+			for (const ConvexVertex& v : vertices) { if ((v.w - w.w).GetL2NormSquared() <= tolerance * tolerance) { return false; } }
 			const Index nFaces = (Index)faces.size();
 			Index seed = -1;
 			Real seedHeight = tolerance;
@@ -451,6 +454,7 @@ namespace EGeometry {
 				const Vector3D& a = vertices[edges[j]].w;
 				Vector3D n = (vertices[edges[j + 1]].w - a).CrossProduct(w.w - a);
 				valid = n.GetL2NormSquared() > 0. && n * (w.w - a) == n * (w.w - a); //not zero, not NaN
+				if (valid && keepOrigin) { valid = n * a >= -tolerance * n.GetL2Norm(); }
 			}
 			if (!valid) { for (Face& f : faces) { f.alive = true; } return false; }
 			for (Index j = 0; j < nFaces; j++) { faces[j].alive = !taken[j]; }
@@ -521,6 +525,13 @@ namespace EGeometry {
 				if (normal * (pair.HT1.GetTranslation() - pair.HT0.GetTranslation()) < 0.) { normal *= -1.; }
 				return false;
 			}
+			//the tetrahedron of GJK, which contains the origin, if it is not flat: a polytope of the candidates that
+			//does not contain it lets EPA expand the wrong faces where the shapes touch on faces (#3338)
+			if (simplex.size == 4)
+			{
+				Real volume = fabs((candidates[1].w - candidates[0].w).CrossProduct(candidates[2].w - candidates[0].w) * (candidates[3].w - candidates[0].w));
+				if (volume > 1e-6 * bestVolume) { for (Index k = 0; k < 4; k++) { t[k] = k; } }
+			}
 			for (Index k = 0; k < 4; k++) { vertices.push_back(candidates[t[k]]); }
 			if ((vertices[1].w - vertices[0].w).CrossProduct(vertices[2].w - vertices[0].w) * (vertices[3].w - vertices[0].w) < 0.)
 			{
@@ -540,7 +551,7 @@ namespace EGeometry {
 				Face f = faces[nearest];
 				ConvexVertex w = pair.Support(f.n);
 				if (w.w * f.n - f.d <= tolerance) { break; }
-				if (!AddPoint(w, tolerance)) { break; }
+				if (!AddPoint(w, tolerance, true)) { break; }
 			}
 			nearest = 0;
 			for (Index j = 1; j < (Index)faces.size(); j++) { if (faces[j].d < faces[nearest].d) { nearest = j; } }
