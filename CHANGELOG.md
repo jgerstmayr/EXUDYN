@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 427 | 1.13.443 |
+| 1.13 | Newborn | 428 | 1.13.444 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.444** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the test models added since September 2026 checked for a visible simulation (#3322)
+  - description: About 114 of the test models added to python/TestModels since 2026-09-01 run a simulation without a renderer or SolutionViewer when run directly, and 63 run none. Decided: each checked whether showing it helps a reader - a simulation with bodies, contact or motion gets the SolutionViewer behind testIsActive and graphics where its items draw nothing (CreateRigidBody with an inertia draws a body already); tests of functions, parameters or solver statistics stay without; a recommendation per group of models first, then the changes; revision2026c step RG2.12.2.
+  - **notes:** 43 test models added since 2026-09-20 show their simulation in the SolutionViewer when run directly (not testIsActive); models of several cases name the case shown in the render window.
+  - date resolved: **2026-11-07 16:40**, date raised: 2026-11-07
 - **1.13.443** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The impact model of the contact items as an enumeration type ContactImpactModel (#3327)
   - description: ObjectContactCoordinate, ObjectContactSphereSphere, ObjectContactSphereTorus, ObjectContactSphereTriangle and ObjectContactSphereCylinder select the impact model by the number impactModel: 0 the linear model (linear damping only), 1 the Hunt-Crossley model, 2 the mixed model of Gonthier et al. and Carvalho and Martins; the numbers are explained only in the parameter description and checked by each item. Decided: an enumeration type exu.ContactImpactModel for the parameter impactModel of all contact items, defined in definitions/enumTypes.py as the other enumeration types, with the names of the three models; the further contact items of RG9.12 take it from the start.
   - **notes:** impactModel of the contact items and of the Create functions takes the enumeration exu.ContactImpactModel (Linear, HuntCrossley, GonthierCarvalhoMartins); the integers 0, 1, 2 are still accepted.

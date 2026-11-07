@@ -14,7 +14,8 @@ You can view and download this file on Github: [contactFrictionCircleCable2DnoFr
 #           frictionVelocityPenalty zero - has no tangential force, whatever the friction coefficient and
 #           whatever slip state the data node starts with (#1290). A cable lies on a fixed circle, in contact
 #           from the start, its data node initialized to slip; the cable is pulled along its axis. The motion
-#           with frictionCoefficient 0.5 equals the one with 0, and the tangential force is zero in every step.
+#           with frictionCoefficient 0.5 equals the one with 0, and the tangential force is zero in every step. Run
+#           directly, the SolutionViewer shows the cable with frictionCoefficient 0.5.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-05
@@ -71,8 +72,10 @@ def Run(frictionCoefficient):
     simulationSettings.timeIntegration.numberOfSteps = 1000 #100 steps did not resolve the contact: Newton failed and the result depended on the rounding (#2912)
     simulationSettings.timeIntegration.endTime = 0.1
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive and frictionCoefficient != 0 #for the SolutionViewer
     mbs.SolveDynamic(simulationSettings)
+    if not testIsActive and frictionCoefficient != 0:
+        mbs.SolutionViewer()
     return (mbs.systemData.GetODE2Coordinates(), mbs.variables['tangential'])
 
 (q0, tangential0) = Run(0.)

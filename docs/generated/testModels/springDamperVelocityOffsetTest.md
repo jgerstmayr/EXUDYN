@@ -13,6 +13,8 @@ You can view and download this file on Github: [springDamperVelocityOffsetTest.p
 # Details:  The velocityOffset of CoordinateSpringDamper, CartesianSpringDamper and RigidBodySpringDamper (#829, #1631):
 #           a damper between the ground and a mass, without spring, drives the mass towards the velocity offset,
 #           m*v_t = -d*(v - vOff), so v(t) = vOff*(1 - exp(-d*t/m)) - instead of a user function that moves the damper.
+#           Run directly, the SolutionViewer shows the three masses: the Mass1D (blue, drawn above the others), the mass
+#           point (orange) and the rigid body, which also turns.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-12
@@ -25,6 +27,9 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
 from exudyn import cMath
+import exudyn.graphics as graphics
+
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -39,12 +44,14 @@ oGround = mbs.CreateGround()
 nGround = mbs.AddNode(NodePointGround())
 mGroundCoordinate = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 n1D = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-mbs.AddObject(Mass1D(nodeNumber=n1D, mass=m))
+mbs.AddObject(Mass1D(nodeNumber=n1D, mass=m, referencePosition=[0, 0.3, 0], #drawn above the others
+                     visualization=VMass1D(graphicsData=[graphics.Sphere(radius=0.05, color=graphics.color.blue)])))
 mbs.AddObject(CoordinateSpringDamper(markerNumbers=[mGroundCoordinate, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n1D, coordinate=0))],
                                      stiffness=0, damping=d, velocityOffset=vOff))
 
 #Cartesian spring-damper on a mass point, three velocity offsets
-massPoint = mbs.CreateMassPoint(referencePosition=[0, 0, 0], mass=m)
+massPoint = mbs.CreateMassPoint(referencePosition=[0, 0, 0], mass=m,
+                                graphicsDataList=[graphics.Sphere(radius=0.05, color=graphics.color.orange)])
 mbs.AddObject(CartesianSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround)),
                                                    mbs.AddMarker(MarkerBodyPosition(bodyNumber=massPoint))],
                                     stiffness=[0, 0, 0], damping=[d, d, d], velocityOffset=[vOff, -vOff, 2*vOff]))
@@ -63,8 +70,10 @@ simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 0
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 mbs.SolveDynamic(simulationSettings)
+if not testIsActive:
+    mbs.SolutionViewer()
 
 def Exact(vOffset, mass):
     return vOffset*(1 - cMath.exp(-d*tEnd/mass))

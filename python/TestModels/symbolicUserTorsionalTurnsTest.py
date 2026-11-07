@@ -8,7 +8,8 @@
 #           and swings back; the Python and the recorded user items against mbs.CreateTorsionalSpringDamper, by
 #           generalized-alpha and RK44, SymbolicSystem by SolveGeneralizedAlpha and SolveExplicit against SolveDynamic,
 #           and the angle in (-pi, pi] of unlimitedRotations=False giving another motion. The result is the final angular velocity of the
-#           generalized-alpha solution plus the number of checks that pass.
+#           generalized-alpha solution plus the number of checks that pass. Run directly, the SolutionViewer shows the
+#           disc of the recorded user items by generalized-alpha, whose edges show the turns.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-02
@@ -23,6 +24,9 @@ from exudyn.symbolics.userItems import UserItemCreator
 from exudyn.symbolics.systemModel import SymbolicSystem
 from exudyn.symbolics.solvers import SolveExplicit, SolveGeneralizedAlpha
 import numpy as np
+import exudyn.graphics as graphics
+
+testIsActive = exu.sys.get('testIsActive', False)
 
 def Build(userItems, record=False, unlimitedRotations=True):
     SC = exu.SystemContainer()
@@ -31,7 +35,9 @@ def Build(userItems, record=False, unlimitedRotations=True):
     ground = creator.CreateGround()
     disc = creator.CreateRigidBody(inertia=InertiaCylinder(density=1000, length=0.02, outerRadius=0.1, axis=2),
                                    referencePosition=[0, 0, 0], initialAngularVelocity=[0, 0, 20],
-                                   nodeType=exu.NodeType.RotationRxyz)
+                                   nodeType=exu.NodeType.RotationRxyz,
+                                   graphicsDataList=[graphics.Cylinder(pAxis=[0, 0, -0.01], vAxis=[0, 0, 0.02], radius=0.1,
+                                                                       color=graphics.color.orange, nTiles=16, addEdges=True)])
     creator.CreateTorsionalSpringDamper(itemNumbers=[ground, disc], position=[0, 0, 0], axis=[0, 0, 1], stiffness=0.1,
                                         damping=0.002, unlimitedRotations=unlimitedRotations)
     if record:
@@ -45,7 +51,7 @@ simulationSettings.timeIntegration.numberOfSteps = 2000
 simulationSettings.timeIntegration.endTime = 1
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 def State(mbs, disc):
     """the angular velocity about z and the position of a point on the rim"""
@@ -60,6 +66,8 @@ for solverType in [exu.DynamicSolverType.GeneralizedAlpha, exu.DynamicSolverType
         (SC, mbs, disc) = Build(userItems, record)
         mbs.SolveDynamic(simulationSettings)
         results.append(State(mbs, disc))
+        if not testIsActive and solverType == exu.DynamicSolverType.GeneralizedAlpha and record:
+            mbs.SolutionViewer()
     difference = max(np.max(np.abs(results[1] - results[0])), np.max(np.abs(results[2] - results[0])))
     (SC, mbs, disc) = Build(True, True)
     system = SymbolicSystem(mbs)

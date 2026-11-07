@@ -8,7 +8,8 @@
 #           user functions and after Record with symbolic ones equal the built-in items, with the implicit solver and
 #           with RK44; the system of the recorded user items as SymbolicSystem, one kind each, by SolveExplicit
 #           equals SolveDynamic. The Create functions have the arguments of those of mbs; an argument the user item
-#           does not support raises, naming it.
+#           does not support raises, naming it. Run directly, the SolutionViewer shows the chain of the recorded user
+#           items by the implicit solver.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-27
@@ -27,6 +28,8 @@ import exudyn.graphics as graphics
 import numpy as np
 import inspect
 
+testIsActive = exu.sys.get('testIsActive', False)
+
 def UFforce(mbs, t, loadVector):
     return cMath.sin(10*t)*loadVector #cMath: the function computes numbers and is recorded
 
@@ -37,7 +40,8 @@ def Chain(creator, mbs):
     previous = ground
     for i in range(3):
         bodies.append(creator.CreateMassPoint(referencePosition=[0.5*(i + 1), 0, 0], initialVelocity=[0, 0, 0.2*i],
-                                              mass=0.5 + 0.1*i, gravity=[0, -9.81, 0], drawSize=0.1))
+                                              mass=0.5 + 0.1*i, gravity=[0, -9.81, 0], drawSize=0.1,
+                                              graphicsDataList=[graphics.Sphere(radius=0.05, color=graphics.color.orange)]))
         creator.CreateSpringDamper(itemNumbers=[previous, bodies[-1]], stiffness=400, damping=2 + i, force=0.5*i,
                                    drawSize=0.02 if i == 0 else -1, color=graphics.color.red)
         previous = bodies[-1]
@@ -59,7 +63,7 @@ simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 400
 simulationSettings.timeIntegration.endTime = 0.4
 simulationSettings.timeIntegration.verboseMode = 0
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 def Positions(mbs, bodies):
     return np.array([mbs.GetObjectOutputBody(body, exu.OutputVariableType.Position, localPosition=[0, 0, 0]) for body in bodies])
@@ -73,6 +77,8 @@ for solverType in [exu.DynamicSolverType.GeneralizedAlpha, exu.DynamicSolverType
         mbs.SolveDynamic(simulationSettings, solverType=solverType)
         results.append(Positions(mbs, bodies))
         models[(userItems, record)] = (SC, mbs, bodies)
+        if not testIsActive and solverType == exu.DynamicSolverType.GeneralizedAlpha and record:
+            mbs.SolutionViewer()
     exu.Print(str(solverType) + ': Python user items', np.max(np.abs(results[1] - results[0])), ', recorded',
               np.max(np.abs(results[2] - results[0])), ', lowest point', results[0][:, 1].min())
     difference = max(difference, np.max(np.abs(results[1] - results[0])), np.max(np.abs(results[2] - results[0])))

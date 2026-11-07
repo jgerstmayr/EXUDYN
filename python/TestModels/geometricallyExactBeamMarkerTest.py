@@ -6,7 +6,8 @@
 #           the equivalent loads on the nodes. (1) a flexible pendulum under gravity through
 #           LoadMassProportional, against gravity as nodal forces; (2) a cantilever with a tip force
 #           and a tip torque on the last element's end, against the same on the last node; (3) a force
-#           at the middle of an element, against half of it on each of its nodes.
+#           at the middle of an element, against half of it on each of its nodes. Run directly, the
+#           SolutionViewer shows the pendulum (1) with gravity through LoadMassProportional.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-29
@@ -63,9 +64,12 @@ def Pendulum(throughElements):
     s = exu.SimulationSettings()
     s.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     s.timeIntegration.numberOfSteps = 200; s.timeIntegration.endTime = 0.5
-    s.solution.file.write = False
+    s.solution.file.write = not testIsActive and throughElements #for the SolutionViewer
     s.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     mbs.SolveDynamic(s)
+    if not testIsActive and throughElements:
+        SC.visualizationSettings.general.renderWindowString = 'pendulum, gravity through LoadMassProportional'
+        mbs.SolutionViewer()
     return mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)
 
 

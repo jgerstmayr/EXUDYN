@@ -64,7 +64,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG2** Testing and verification
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
   - RG2.9 Add three old test models (2 open sub-steps)
-  - RG2.12 Test models show their simulation when run directly (1 open sub-step)
+  - RG2.12 Test models show their simulation when run directly
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
@@ -140,7 +140,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | group | status | open steps | title |
 |---|---|---|---|
 | RG1 | OPEN | 1 | Release and publication |
-| RG2 | OPEN | 6 | Testing and verification |
+| RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
@@ -212,11 +212,13 @@ Maintainer 2026-11-07: the testIsActive flag is there to render a model and open
 
 CLOSED 2026-11-07 (#3321): contactDistanceOutputTest.py (the contact shapes by contact.showSpheres, showTriangles, showTori) and sphereCylinderContactTest.py (the ball with edges, contact.showCylinders) write the solution and open the SolutionViewer when not testIsActive; WORKFLOW.md, What a test model looks like.
 
-#### **OPEN_RG2.12.2** The test models added since September 2026 checked for a visible simulation; a recommendation, then the changes
+#### **CLOSED_RG2.12.2** The test models added since September 2026 checked for a visible simulation; a recommendation, then the changes
 
 #3322: about 114 of them simulate without a viewer, 63 simulate nothing (git, added since 2026-09-01). Per group of models: does a picture help, which graphics are missing.
 
 Evaluated 2026-11-07 (maintainer: the models created from 2026-09-20; the point is the animation in the SolutionViewer; a model of several cases names the case shown in renderWindowString, or is left out): 184 models, 14 shown already, 47 without a simulation, 123 simulate. Recommended: show 41 (A: beams, rigid bodies and robots, mass points and contacts) and 7 of several cases with the case named (B); leave 75 whose subject is a number (C: Jacobians, orders, outputs, generic and symbolic coordinates, files). The lists: docs/revision/testModelViewerReview.md; waits for the maintainer's decision.
+
+CLOSED 2026-11-07 (#3322): the maintainer approved the recommendation; 43 of the 48 models of groups A and B show their simulation when run directly (7 of several cases name the case shown in renderWindowString); results identical to the last digit; skipped: ANCFThinPlateRotationTest, implicitRungeKuttaLieGroupTest, multithreadingUserFunctionTest, symbolicUserFunctionThreadsTest (runs of milliseconds or motions of millimeters on long chains: nothing to see), symbolicUserConnectorsTest (a drawing bug of the UserItemCreator, raised separately). [log](exudynRevisionLog2026c.md#rg2-12-2)
 
 #### **CLOSED_RG2.12.3** The contact items of the contact test models drawn: visualization show=True
 

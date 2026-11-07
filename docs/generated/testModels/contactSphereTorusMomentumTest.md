@@ -16,7 +16,8 @@ You can view and download this file on Github: [contactSphereTorusMomentumTest.p
 #           with and without friction. Measured: the angular momentum about the origin stays at its initial
 #           value to 3e-9 (without friction) and 2e-9 (with friction), the linear momentum to 1e-15 - the
 #           torque of the normal force on the ring, which acts at the contact point and not at the center of
-#           the ring, was missing without friction (angular momentum off by 6e-3 of 0.09).
+#           the ring, was missing without friction (angular momentum off by 6e-3 of 0.09). Run directly, the
+#           SolutionViewer shows the ball and the transparent ring with the torus of its groove, with friction.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-30
@@ -27,6 +28,7 @@ You can view and download this file on Github: [contactSphereTorusMomentumTest.p
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
 
 import numpy as np
 
@@ -39,12 +41,17 @@ def Run(mu, stepSize=1e-5, tEnd=0.05):
     iR=InertiaCylinder(density=7800, length=0.02, outerRadius=0.12, innerRadius=0.1, axis=2)
     nB=mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.1005,0,0]+eulerParameters0, initialVelocities=[0.5,1,0.2]+list(AngularVelocity2EulerParameters_t([0,0,50],eulerParameters0))))
     nR=mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0, initialVelocities=[0,0,0]+list(AngularVelocity2EulerParameters_t([0,2,3],eulerParameters0))))
-    b=mbs.AddObject(ObjectRigidBody(nodeNumber=nB, mass=iB.Mass(), inertia=iB.GetInertia6D()))
-    r=mbs.AddObject(ObjectRigidBody(nodeNumber=nR, mass=iR.Mass(), inertia=iR.GetInertia6D(), centerOfMass=iR.COM()))
+    b=mbs.AddObject(ObjectRigidBody(nodeNumber=nB, mass=iB.Mass(), inertia=iB.GetInertia6D(),
+        visualization=VObjectRigidBody(graphicsData=[graphics.Sphere(radius=0.01, color=graphics.color.orange, nTiles=16, addEdges=True)])))
+    r=mbs.AddObject(ObjectRigidBody(nodeNumber=nR, mass=iR.Mass(), inertia=iR.GetInertia6D(), centerOfMass=iR.COM(),
+        visualization=VObjectRigidBody(graphicsData=[graphics.Cylinder(pAxis=[0,0,-0.01], vAxis=[0,0,0.02], radius=0.12, radiusInner=0.1,
+                                                                       color=[0.4,0.4,0.9,0.3], nTiles=32, addEdges=True)])))
     mB=mbs.AddMarker(MarkerBodyRigid(bodyNumber=b)); mR=mbs.AddMarker(MarkerBodyRigid(bodyNumber=r))
     nD=mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
     mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mB,mR], nodeNumber=nD, sphereRadius=0.01, torusMajorRadius=0.1, torusMinorRadius=0.011,
-        torusAxis=[0,0,1], contactStiffness=1e6, contactDamping=1e2, dynamicFriction=mu, frictionProportionalZone=1e-3))
+        torusAxis=[0,0,1], contactStiffness=1e6, contactDamping=1e2, dynamicFriction=mu, frictionProportionalZone=1e-3,
+        visualization=VObjectContactSphereTorus(show=True)))
+    SC.visualizationSettings.contact.showTori = True
     sens={}
     for name,n in [('B',nB),('R',nR)]:
         for ov in ['Position','Velocity','AngularVelocity','RotationMatrix']:
@@ -52,9 +59,12 @@ def Run(mu, stepSize=1e-5, tEnd=0.05):
     mbs.Assemble()
     s=exu.SimulationSettings(); s.timeIntegration.numberOfSteps=int(tEnd/stepSize); s.timeIntegration.endTime=tEnd
     s.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
-    s.solution.file.write=False; s.solution.sensors.writePeriod=stepSize*10
+    s.solution.file.write=not testIsActive and mu!=0; s.solution.sensors.writePeriod=stepSize*10 #for the SolutionViewer
+    s.solution.file.writePeriod=stepSize*10
     s.timeIntegration.generalizedAlpha.spectralRadius=1
     mbs.SolveDynamic(s)
+    if not testIsActive and mu!=0:
+        mbs.SolutionViewer()
     D={k:mbs.GetSensorStoredData(v)[:,1:] for k,v in sens.items()}
     t=mbs.GetSensorStoredData(sens['BPosition'])[:,0]
     def L(name, inertia, mass, com):

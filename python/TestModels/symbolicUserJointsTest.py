@@ -6,7 +6,8 @@
 #           bar on a spherical joint and a mass point on a distance constraint to the end of a bar, under gravity. The
 #           same script builds the system with the built-in items (creator = mbs) and with ObjectJointUser and
 #           ObjectUserBody, with Python and with recorded user functions; SolveDynamic by the generalized-alpha method,
-#           the positions and angular velocities of the bodies compared.
+#           the positions and angular velocities of the bodies compared. Run directly, the SolutionViewer shows the
+#           system of user items with recorded user functions.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-28
@@ -19,6 +20,9 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.symbolics.userItems import UserItemCreator
 import numpy as np
+import exudyn.graphics as graphics
+
+testIsActive = exu.sys.get('testIsActive', False)
 
 def Bar(creator, position, angularVelocity=[0, 0, 0], velocity=[0, 0, 0]):
     return creator.CreateRigidBody(inertia=InertiaCuboid(density=1000, sideLengths=[0.4, 0.05, 0.03]).Translated([0.02, 0.01, 0]),
@@ -45,7 +49,8 @@ def Build(userItems, record=False):
     #a mass point hanging from the end of the bar by a distance constraint; its velocity relative to the end of the
     #bar, [0, 0.4, -0.8], perpendicular to the distance
     point = creator.CreateMassPoint(referencePosition=[0.5, -0.3, 0.8], mass=0.2, gravity=[0, -9.81, 0],
-                                    initialVelocity=[0, 0.4, -0.3])
+                                    initialVelocity=[0, 0.4, -0.3],
+                                    graphicsDataList=[graphics.Sphere(radius=0.03, color=graphics.color.orange)])
     creator.CreateDistanceConstraint(itemNumbers=[b3, point], localPosition0=[0.2, 0, 0])
     if record:
         creator.Record()
@@ -66,13 +71,15 @@ simulationSettings.timeIntegration.endTime = 0.2
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-12
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer, which shows the last system
 
 results = []
 for (userItems, record) in [(False, False), (True, False), (True, True)]:
     (SC, mbs, bodies, point) = Build(userItems, record)
     mbs.SolveDynamic(simulationSettings)
     results.append(State(mbs, bodies, point))
+if not testIsActive:
+    mbs.SolutionViewer()
 differences = [np.max(np.abs(result - results[0]))/np.max(np.abs(results[0])) for result in results[1:]]
 exu.Print('relative difference of the user joints to the built-in joints: Python', differences[0], ', recorded', differences[1])
 

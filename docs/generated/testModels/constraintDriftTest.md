@@ -17,6 +17,7 @@ You can view and download this file on Github: [constraintDriftTest.py](https://
 #           constraintDriftTolerance stops the solver. The index 3 solver keeps the drift at the Newton tolerance.
 #           The drift in the current state: mbs.ComputeConstraintResiduals, ComputeItemType.ConstraintDrift, the output
 #           variable ConstraintEquation of the constraint, and the sensor of SystemConstraintDrift (exudyn.systemUtilities).
+#           Run directly, the SolutionViewer shows the pendulum and the tumbling body of the index 3 solution (4).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-15
@@ -29,17 +30,20 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.systemUtilities import SystemConstraintDrift
 import numpy as np
+import exudyn.graphics as graphics
 
-SC = exu.SystemContainer()
+testIsActive = exu.sys.get('testIsActive', False)
 OVT = exu.OutputVariableType
 L = 1.      #length of the pendulum
 
 def Model():
     """the pendulum and the free rigid body; returns mbs, the distance constraint, the node of the rigid body and the
     sensor of the drift"""
+    SC = exu.SystemContainer() #a container for each case: the SolutionViewer draws all systems of a container
     mbs = SC.AddSystem()
     oGround = mbs.CreateGround()
-    oMass = mbs.CreateMassPoint(referencePosition=[L, 0, 0], initialVelocity=[0, 2, 0], mass=1, gravity=[0, -9.81, 0])
+    oMass = mbs.CreateMassPoint(referencePosition=[L, 0, 0], initialVelocity=[0, 2, 0], mass=1, gravity=[0, -9.81, 0],
+                                graphicsDataList=[graphics.Sphere(radius=0.1, color=graphics.color.orange)])
     oDistance = mbs.CreateDistanceConstraint(itemNumbers=[oGround, oMass], distance=L)
     oBody = mbs.CreateRigidBody(referencePosition=[0, 0, 2], inertia=InertiaCuboid(1000, [0.4, 0.2, 0.1]),
                                 initialAngularVelocity=[1, 4, 0.5], nodeType=exu.NodeType.RotationEulerParameters)
@@ -54,7 +58,7 @@ def Settings(tolerance=1e-6):
     simulationSettings.timeIntegration.numberOfSteps = 1000
     simulationSettings.timeIntegration.endTime = 2
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
     simulationSettings.solution.sensors.writePeriod = 0.002
     simulationSettings.timeIntegration.generalizedAlpha.constraintDriftTolerance = tolerance
     return simulationSettings
@@ -108,6 +112,8 @@ mbs.SolveDynamic(simulationSettings)
 drift3 = mbs.sys['dynamicSolver'].output.constraintDriftMaximum
 exu.Print('(4) index 3: largest drift', drift3)
 checks += [0 <= drift3 < 1e-9]
+if not testIsActive:
+    mbs.SolutionViewer()
 
 exu.Print('checks:', checks)
 u = sum(checks) - len(checks) + drift2

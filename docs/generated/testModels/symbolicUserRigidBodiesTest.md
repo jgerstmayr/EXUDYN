@@ -21,7 +21,8 @@ You can view and download this file on Github: [symbolicUserRigidBodiesTest.py](
 #           markers of user bodies and the ground, with the rotations - by SolveExplicit and SolveGeneralizedAlpha equals
 #           SolveDynamic, its Jacobian of the residual the one of central differences. The Create functions have the
 #           arguments of those of mbs; an argument the user item does not support raises, naming it. The times of the
-#           runs are printed, not judged.
+#           runs are printed, not judged. Run directly, the SolutionViewer shows the chain of the recorded user items
+#           by the implicit solver.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-28
@@ -39,6 +40,8 @@ import exudyn.cMath as cMath
 import numpy as np
 import inspect
 import time
+
+testIsActive = exu.sys.get('testIsActive', False)
 
 def UFforce(mbs, t, loadVector):
     return cMath.sin(10*t)*loadVector
@@ -83,7 +86,7 @@ simulationSettings.timeIntegration.numberOfSteps = 250
 simulationSettings.timeIntegration.endTime = 0.25
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 def State(mbs, bodies):
     #the positions of a point off the node and the angular velocities
@@ -104,6 +107,8 @@ for (solverType, cases) in [(exu.DynamicSolverType.RK44, [(False, False), (True,
         results.append(State(mbs, bodies))
     differences[solverType] = max(np.max(np.abs(result - results[0])) for result in results[1:])/np.max(np.abs(results[0]))
     exu.Print(str(solverType) + ': relative difference of the user items to the built-in items', differences[solverType])
+if not testIsActive:
+    mbs.SolutionViewer() #the recorded user items, solved last by the generalized-alpha method
 
 #the recorded user items as SymbolicSystem: SolveExplicit (RK44) and SolveGeneralizedAlpha against SolveDynamic
 (SC, mbs, bodies) = Build(True, True)

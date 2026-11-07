@@ -14,7 +14,8 @@ You can view and download this file on Github: [coSimulationTest.py](https://git
 #           (generalized-alpha), mbs1 - a mass m1 on a spring to m0 - explicitly (RK44). In each step of mbs0, its
 #           PreStepUserFunction gives the position of m0 to mbs1, advances mbs1 by one step and gives the spring force
 #           back to m0 as a load. The same model as one system is the reference; the coupling error is of first order
-#           in the step size.
+#           in the step size. Run directly, the SolutionViewer shows the reference, the two masses in one system
+#           (the co-simulation writes the solution of mbs0 only).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-11
@@ -25,6 +26,9 @@ You can view and download this file on Github: [coSimulationTest.py](https://git
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+
+testIsActive = exu.sys.get('testIsActive', False)
 
 m0 = 1.
 k0 = 100.
@@ -99,8 +103,9 @@ def Monolithic(stepSize):
     ground = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
     n0 = mbs.AddNode(Node1D(referenceCoordinates=[0]))
     n1 = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[x1Initial]))
-    mbs.AddObject(Mass1D(nodeNumber=n0, mass=m0))
-    mbs.AddObject(Mass1D(nodeNumber=n1, mass=m1))
+    mbs.AddObject(Mass1D(nodeNumber=n0, mass=m0, visualization=VMass1D(graphicsData=[graphics.Sphere(radius=0.03, color=graphics.color.blue)])))
+    mbs.AddObject(Mass1D(nodeNumber=n1, mass=m1, referencePosition=[0.3, 0, 0], #drawn right of m0
+                         visualization=VMass1D(graphicsData=[graphics.Sphere(radius=0.03, color=graphics.color.orange)])))
     marker0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=0))
     marker1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n1, coordinate=0))
     mbs.AddObject(CoordinateSpringDamper(markerNumbers=[ground, marker0], stiffness=k0))
@@ -111,8 +116,11 @@ def Monolithic(stepSize):
     simulationSettings.timeIntegration.numberOfSteps = int(round(tEnd/stepSize))
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
     mbs.SolveDynamic(simulationSettings)
+    if not testIsActive:
+        SC.visualizationSettings.general.renderWindowString = 'the reference: one system, step size ' + str(stepSize)
+        mbs.SolutionViewer()
     return (mbs.GetNodeOutput(n0, exu.OutputVariableType.Coordinates),
             mbs.GetNodeOutput(n1, exu.OutputVariableType.Coordinates))
 

@@ -10,7 +10,8 @@
 #           10 elements per leg and step 0.05 until t = 30: out-of-plane displacement of the tip 8.24 at
 #           t = 7.40 and -9.75 at t = 15.85, of the elbow -4.07 at t = 10.85 - the extrema of the published
 #           curves; 40 elements with step 0.005 give 8.25 at 7.44, -9.73 at 15.87 and -4.06 at 10.87, and
-#           differ from the test by at most 0.24 (tip) and 0.14 (elbow) over the whole time.
+#           differ from the test by at most 0.24 (tip) and 0.14 (elbow) over the whole time. Run directly,
+#           the SolutionViewer shows the oscillation of the cantilever.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-30
@@ -78,10 +79,12 @@ simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1   #no numerical damping
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-8
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 simulationSettings.solution.sensors.writePeriod = stepSize
 
 mbs.SolveDynamic(simulationSettings)
+if not testIsActive:
+    mbs.SolutionViewer()
 
 elbow = mbs.GetSensorStoredData(sElbow)
 tip = mbs.GetSensorStoredData(sTip)

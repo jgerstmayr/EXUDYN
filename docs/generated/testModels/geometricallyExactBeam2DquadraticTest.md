@@ -18,7 +18,8 @@ You can view and download this file on Github: [geometricallyExactBeam2Dquadrati
 #           0.636616 with 1, 2, 4 and 8 quadratic elements - fourth order - against 0.707107, 0.653281 and
 #           0.640729 with 2, 4 and 8 linear elements. (3) A pendulum of 4 quadratic elements falling under
 #           gravity through MarkerBodyMass, hinged at one end: tip y -0.001862 at t = 1, 8 and 16 elements
-#           give -0.001827 and -0.001830.
+#           give -0.001827 and -0.001830. Run directly, the SolutionViewer shows the load steps of (2) with 4
+#           elements, the cantilever rolling up into the half circle.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-30
@@ -37,8 +38,9 @@ testIsActive = exu.sys.get('testIsActive', False)
 L = 1; EI = 100; GA = 1e4; EA = 1e5
 
 
-def Beam(nElements, force=0, moment=0, dynamic=False):
-    """the tip position of a beam of quadratic elements: a clamped cantilever, or a pendulum under gravity"""
+def Beam(nElements, force=0, moment=0, dynamic=False, show=False):
+    """the tip position of a beam of quadratic elements: a clamped cantilever, or a pendulum under gravity;
+    show=True shows the static solution in the SolutionViewer, if the model is run directly"""
     SC = exu.SystemContainer(); mbs = SC.AddSystem()
     nodes = [mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[L*i/(2*nElements), 0, 0])) for i in range(2*nElements+1)]
     elements = [mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=nodes[2*k:2*k+3], length=L/nElements,
@@ -64,7 +66,11 @@ def Beam(nElements, force=0, moment=0, dynamic=False):
         mbs.AddLoad(LoadTorqueVector(markerNumber=mTip, loadVector=[0, 0, moment]))
         mbs.Assemble()
         simulationSettings.staticSolver.numberOfLoadSteps = 10 if moment != 0 else 1
+        simulationSettings.solution.file.write = not testIsActive and show #for the SolutionViewer
         mbs.SolveStatic(simulationSettings)
+        if not testIsActive and show:
+            SC.visualizationSettings.general.renderWindowString = 'case 2: tip moment, half circle, 4 quadratic elements, static'
+            mbs.SolutionViewer()
     return mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)
 
 
@@ -74,7 +80,7 @@ exu.Print('small tip force, one element: deflection', tipForce, ', Timoshenko', 
 testResult = 1000*tipForce
 
 for nElements in [2, 4]:
-    tipMoment = Beam(nElements, moment=np.pi*EI/L)[1]
+    tipMoment = Beam(nElements, moment=np.pi*EI/L, show=(nElements == 4))[1]
     exu.Print('half circle,', nElements, 'elements: tip y', tipMoment, ', exact', 2*L/np.pi)
     testResult += tipMoment
 

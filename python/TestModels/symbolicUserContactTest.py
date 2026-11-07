@@ -9,7 +9,8 @@
 #           user items against the built-in ones, and SymbolicSystem by SolveGeneralizedAlpha and SolveExplicit against
 #           SolveDynamic. The recommended step size of the switch is not used, as the solvers of SymbolicSystem have a
 #           constant step size. The result is the final position of the ball with the linear contact plus the number of
-#           checks that pass.
+#           checks that pass. Run directly, the SolutionViewer shows the ball of the recorded user items bouncing off
+#           the two spheres with the restitution model, by generalized-alpha.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-01
@@ -24,6 +25,9 @@ from exudyn.symbolics.userItems import UserItemCreator
 from exudyn.symbolics.systemModel import SymbolicSystem
 from exudyn.symbolics.solvers import SolveExplicit, SolveGeneralizedAlpha
 import numpy as np
+import exudyn.graphics as graphics
+
+testIsActive = exu.sys.get('testIsActive', False)
 
 radius = 0.1
 k = 1e5
@@ -32,8 +36,10 @@ def Build(userItems, record=False, impactModel=0):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     creator = UserItemCreator(mbs) if userItems else mbs
-    ground = creator.CreateGround()
-    ball = creator.CreateMassPoint(referencePosition=[0.05, 0.4, 0], mass=0.5, gravity=[0, -9.81, 0], drawSize=2*radius)
+    ground = creator.CreateGround(graphicsDataList=[graphics.Sphere(point=[0, 0, 0], radius=0.2, color=graphics.color.grey),
+                                                    graphics.Sphere(point=[0.6, -0.4, 0], radius=0.15, color=graphics.color.grey)])
+    ball = creator.CreateMassPoint(referencePosition=[0.05, 0.4, 0], mass=0.5, gravity=[0, -9.81, 0], drawSize=2*radius,
+                                   graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.orange)])
     model = dict(contactDamping=20.) if impactModel == 0 else dict(impactModel=impactModel, restitutionCoefficient=0.7)
     for (position, sphereRadius) in [([0, 0, 0], 0.2), ([0.6, -0.4, 0], 0.15)]:
         creator.CreateSphereSphereContact(itemNumbers=[ground, ball], localPosition0=position, spheresRadii=[sphereRadius, radius],
@@ -50,7 +56,7 @@ simulationSettings.timeIntegration.endTime = 0.8
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = False
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 def Position(mbs, ball):
     return np.array(mbs.GetObjectOutputBody(ball, exu.OutputVariableType.Position, localPosition=[0, 0, 0]))
@@ -64,6 +70,8 @@ for impactModel in [0, 2]:
             (SC, mbs, ball) = Build(userItems, record, impactModel)
             mbs.SolveDynamic(simulationSettings)
             results.append(Position(mbs, ball))
+            if not testIsActive and impactModel == 2 and solverType == exu.DynamicSolverType.GeneralizedAlpha and record:
+                mbs.SolutionViewer()
         difference = max(np.max(np.abs(results[1] - results[0])), np.max(np.abs(results[2] - results[0])))
         (SC, mbs, ball) = Build(True, True, impactModel)
         system = SymbolicSystem(mbs)

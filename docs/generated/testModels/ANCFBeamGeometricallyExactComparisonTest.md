@@ -17,7 +17,8 @@ You can view and download this file on Github: [ANCFBeamGeometricallyExactCompar
 #           of the last element, static: the rotation Jacobian of the element and its derivative; (3) the same torque,
 #           dynamic: the frame and the angular velocity of the end of the element are those of its end node. The cross
 #           section penalty factor is 100: the slopes of the ANCF beam then stay orthogonal to 0.005 degrees, so that its
-#           frame describes a rigid cross section, as the geometrically exact beam has.
+#           frame describes a rigid cross section, as the geometrically exact beam has. Run directly, the
+#           SolutionViewer shows the load steps of case (2) with the ANCF beam.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-13
@@ -31,7 +32,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
 from exudyn import cMath #the norm of the C++ code, the same bits on every platform
 
-SC = exu.SystemContainer()
+testIsActive = exu.sys.get('testIsActive', False)
 
 #the cantilever of ANCFBeamTest.py, case 2 (general bending)
 L = 2
@@ -56,6 +57,7 @@ sectionData.massPerLength = rho*A
 
 def Cantilever(useANCF, torque, torqueOnElement):
     """the cantilever and its tip node and last element; the torque on the tip node or on the end of the last element"""
+    SC = exu.SystemContainer() #a container for each case: the SolutionViewer draws all systems of a container
     mbs = SC.AddSystem()
     nGround = mbs.AddNode(NodePointGround())
     if useANCF:
@@ -80,9 +82,9 @@ def Cantilever(useANCF, torque, torqueOnElement):
     mbs.Assemble()
     return (mbs, nodes[-1], elements[-1])
 
-def Settings():
+def Settings(show=False):
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = show #for the SolutionViewer
     simulationSettings.staticSolver.verboseMode = 0
     simulationSettings.timeIntegration.verboseMode = 0
     simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
@@ -105,7 +107,11 @@ for useANCF in [True, False]:
 #Jacobian of the element and its derivative
 for useANCF in [True, False]:
     (mbs, tipNode, lastElement) = Cantilever(useANCF, [4e6, 0, 2e6], True)
-    mbs.SolveStatic(Settings())
+    show = not testIsActive and useANCF
+    mbs.SolveStatic(Settings(show))
+    if show:
+        mbs.GetSystemContainer().visualizationSettings.general.renderWindowString = 'case 2: tip torque on the element, ANCF beam, static'
+        mbs.SolutionViewer()
     results[('element', useANCF)] = (mbs.GetNodeOutput(tipNode, OVT.Position),
                                      mbs.GetNodeOutput(tipNode, OVT.RotationMatrix).reshape(3, 3))
 

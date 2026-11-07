@@ -14,7 +14,8 @@ You can view and download this file on Github: [SpringDamperMesh.py](https://git
 #           It is solved **statically and dynamically**, and the result is the sum of the two errors;
 #           the static solver runs with numerical differentiation of the connectors.
 #           The model compares against a reference value written into it, so its
-#           result is that difference and its reference solution is 0 (#2632).
+#           result is that difference and its reference solution is 0 (#2632). Run directly, the
+#           SolutionViewer shows the dynamic solution, a sphere per mass point.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-01, reworked 2026-09-24
@@ -47,7 +48,8 @@ for j in range(nBodies2):
         # body = mbs.AddObject({'objectType': 'MassPoint', 'mass': 10, 'nodeNumber': node})
         node = mbs.AddNode(NodePoint2D(referenceCoordinates=[i+1, j],
                                        initialCoordinates=[(i+1)*0.05*0, 0]))
-        body = mbs.AddObject(ObjectMassPoint2D(mass= 10, nodeNumber= node))
+        body = mbs.AddObject(ObjectMassPoint2D(mass= 10, nodeNumber= node,
+                                               visualization=VMassPoint2D(graphicsData=[graphics.Sphere(radius=0.1, color=graphics.color.orange)])))
         mbs.AddMarker({'markerType': 'BodyPosition',  'bodyNumber': body,  'localPosition': [0.0, 0.0, 0.0], 'bodyFixed': False})
 
 #add spring-dampers:
@@ -96,7 +98,7 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.show.statistics = True
-simulationSettings.solution.file.write=False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 SC.visualizationSettings.nodes.defaultSize = 0.05
 
@@ -105,8 +107,9 @@ SC.visualizationSettings.nodes.defaultSize = 0.05
 
 mbs.SolveDynamic(simulationSettings)
 
-if not testIsActive: 
+if not testIsActive:
     SC.renderer.DoIdleTasks()
+    mbs.SolutionViewer() #the dynamic solution; the static solution below writes the file again
 
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
 exu.Print('dynamic tip displacement (y)=', u[1])

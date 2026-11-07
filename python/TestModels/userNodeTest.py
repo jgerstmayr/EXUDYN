@@ -7,7 +7,8 @@
 #           NodeRigidBodyRxyz - position and Tait-Bryan angles - with the mass matrix of a rigid body in
 #           ObjectGenericODE2, a RigidBodySpringDamper on MarkerNodeRigid and a torque, against NodeRigidBodyRxyz; the
 #           output variables of both; what NodeUser refuses - a connector on it without the Jacobian functions at
-#           Assemble (#3107) -; the node drawn in the graphics data.
+#           Assemble (#3107) -; the node drawn in the graphics data. Run directly, the SolutionViewer shows case (2)
+#           with NodeUser, the node drawn with its frame.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-18
@@ -21,6 +22,7 @@ from exudyn.utilities import *
 import exudyn.cUtilities as cu
 import numpy as np
 
+testIsActive = exu.sys.get('testIsActive', False)
 testError = 0
 def Check(condition, message):
     global testError
@@ -28,14 +30,24 @@ def Check(condition, message):
         exu.Print('userNodeTest: ' + message)
         testError += 1
 
-def Solve(mbs, endTime=0.5, steps=200):
+def Solve(mbs, endTime=0.5, steps=200, show=''):
+    """show: the text of the render window; if not empty, the solution is shown in the SolutionViewer when the model is
+    run directly"""
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = steps
     simulationSettings.timeIntegration.endTime = endTime
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive and show != '' #for the SolutionViewer
     simulationSettings.solution.sensors.active = False
     mbs.SolveDynamic(simulationSettings)
+    if not testIsActive and show != '':
+        visualizationSettings = mbs.GetSystemContainer().visualizationSettings
+        visualizationSettings.general.renderWindowString = show
+        visualizationSettings.nodes.drawNodesAsPoint = False
+        visualizationSettings.nodes.showBasis = True
+        visualizationSettings.nodes.defaultSize = 0.05
+        visualizationSettings.nodes.basisSize = 0.3
+        mbs.SolutionViewer()
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #(1) a point
@@ -90,7 +102,7 @@ def RxyzRotation(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
 def RxyzRotationJacobian(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return np.hstack([np.zeros((3, 3)), cu.RotXYZ2G(qTotal[3:6])])
 
-def RigidModel(kind):
+def RigidModel(kind, show=''):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     reference = [0.5, 0, 0, 0, 0, 0]
@@ -125,7 +137,7 @@ def RigidModel(kind):
                                         damping=np.diag([1, 1, 1, 0.1, 0.1, 0.1])))
     mbs.AddLoad(LoadTorqueVector(markerNumber=mNode, loadVector=[0.5, -0.2, 0.1]))
     mbs.Assemble()
-    Solve(mbs)
+    Solve(mbs, show=show)
     outputs = [mbs.GetNodeOutput(node, variable) for variable in [exu.OutputVariableType.Position, exu.OutputVariableType.Velocity,
                                                                  exu.OutputVariableType.RotationMatrix, exu.OutputVariableType.AngularVelocity,
                                                                  exu.OutputVariableType.AngularVelocityLocal]]
@@ -133,7 +145,7 @@ def RigidModel(kind):
 
 reference = RigidModel('NodeRigidBodyRxyz')[1]
 for kind in ['jacobian']:
-    result = RigidModel(kind)[1]
+    result = RigidModel(kind, show='case 2: NodeUser with the coordinates of NodeRigidBodyRxyz')[1]
     Check(np.abs(result - reference).max() < 1e-5, 'rigid (' + kind + '): ' + str(np.abs(result - reference).max()))
 u += float(np.sum(np.abs(reference)))
 

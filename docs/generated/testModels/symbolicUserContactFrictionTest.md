@@ -17,7 +17,8 @@ You can view and download this file on Github: [symbolicUserContactFrictionTest.
 #           sphere; friction slows it and spins it up until it rolls at 5/7 of the speed. The Python and the recorded
 #           user items against mbs.CreateSphereSphereContact by generalized-alpha and RK44, SymbolicSystem by
 #           SolveGeneralizedAlpha and SolveExplicit against SolveDynamic. The result is the final speed of the ball
-#           by generalized-alpha plus the number of checks that pass.
+#           by generalized-alpha plus the number of checks that pass. Run directly, the SolutionViewer shows the ball
+#           of the recorded user items by generalized-alpha, whose edges show it spin up, on the top of the large sphere.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-02
@@ -32,6 +33,9 @@ from exudyn.symbolics.userItems import UserItemCreator
 from exudyn.symbolics.systemModel import SymbolicSystem
 from exudyn.symbolics.solvers import SolveExplicit, SolveGeneralizedAlpha
 import numpy as np
+import exudyn.graphics as graphics
+
+testIsActive = exu.sys.get('testIsActive', False)
 
 (radius, R, k, mu) = (0.1, 1000., 1e5, 0.3)
 inertia = InertiaSphere(mass=4., radius=radius)
@@ -41,9 +45,10 @@ def Build(userItems, record=False):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     creator = UserItemCreator(mbs) if userItems else mbs
-    ground = creator.CreateGround()
+    ground = creator.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0.2, 0, 0], normal=[0, 1, 0], size=1)]) #the top of the large sphere
     ball = creator.CreateRigidBody(inertia=inertia, referencePosition=[0, radius - penetration, 0], initialVelocity=[1, 0, 0],
-                                   gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationRxyz)
+                                   gravity=[0, -9.81, 0], nodeType=exu.NodeType.RotationRxyz,
+                                   graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.orange, nTiles=16, addEdges=True)])
     creator.CreateSphereSphereContact(itemNumbers=[ground, ball], localPosition0=[0, -R, 0], spheresRadii=[R, radius],
                                       contactStiffness=k, contactDamping=200., dynamicFriction=mu, frictionProportionalZone=1e-3,
                                       dataInitialCoordinates=[-penetration, 1., 0, 0])
@@ -59,7 +64,7 @@ simulationSettings.timeIntegration.endTime = 0.2
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = False
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 def State(mbs, ball):
     """the velocity of the ball in x and its angular velocity about z"""
@@ -74,6 +79,8 @@ for solverType in [exu.DynamicSolverType.GeneralizedAlpha, exu.DynamicSolverType
         (SC, mbs, ball) = Build(userItems, record)
         mbs.SolveDynamic(simulationSettings)
         results.append(State(mbs, ball))
+        if not testIsActive and solverType == exu.DynamicSolverType.GeneralizedAlpha and record:
+            mbs.SolutionViewer()
     difference = max(np.max(np.abs(results[1] - results[0])), np.max(np.abs(results[2] - results[0])))
     (SC, mbs, ball) = Build(True, True)
     system = SymbolicSystem(mbs)

@@ -14,7 +14,8 @@ You can view and download this file on Github: [CoordinateSpringDamperTest.py](h
 #           connectors instead - one per coordinate, the first one loaded. The two results differ in
 #           the last digits because this one carries an offset.
 #           The model compares against a reference value written into it, so its
-#           result is that difference and its reference solution is 0 (#2632).
+#           result is that difference and its reference solution is 0 (#2632). Run directly, the
+#           SolutionViewer shows the oscillating mass point as a sphere.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-01, reworked 2026-09-24
@@ -51,7 +52,8 @@ nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [L,0,0]))
 
 #add mass points and ground object:
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0]))
-massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = n1))
+massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = n1,
+                                    visualization=VMassPoint(graphicsData=[graphics.Sphere(radius=0.03, color=graphics.color.orange)])))
 
 #marker for constraint / springDamper
 groundCoordinateMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
@@ -79,7 +81,7 @@ simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.show.statistics = False
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
-simulationSettings.solution.file.write=False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 if not testIsActive: 
     SC.renderer.Start()
@@ -89,6 +91,7 @@ mbs.SolveDynamic(simulationSettings)
 if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
+    mbs.SolutionViewer()
 
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
 uCoordinateSpringDamper= u[0] - L

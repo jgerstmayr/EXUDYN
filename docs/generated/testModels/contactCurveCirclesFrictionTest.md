@@ -15,7 +15,8 @@ You can view and download this file on Github: [contactCurveCirclesFrictionTest.
 #           decelerates it by mu*g, so after the time t its velocity is v0 - mu*g*t. The output variables per
 #           segment: DisplacementLocal the gap (the static penetration m*g/(k*l) for contactModel 0, with the
 #           length l of the segment), VelocityLocal its rate, ForceLocal the force on the circle, [-mu*m*g, m*g]
-#           while it slides.
+#           while it slides. Run directly, the SolutionViewer shows the circle sliding, its edges how friction
+#           turns it.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-07
@@ -27,6 +28,7 @@ You can view and download this file on Github: [contactCurveCirclesFrictionTest.
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
+import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -39,7 +41,9 @@ mbs = SC.AddSystem()
 oGround = mbs.AddObject(ObjectGround())
 gapStatic = mass*g/(k*lSegment)
 node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0, radius - gapStatic, 0], initialVelocities=[v0, 0, 0]))
-oBody = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=mass, inertia=0.01))
+oBody = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=mass, inertia=0.01,
+                                        visualization=VObjectRigidBody2D(graphicsData=[graphics.Cylinder(pAxis=[0, 0, -0.01], vAxis=[0, 0, 0.02], radius=radius,
+                                                                                                         color=graphics.color.orange, nTiles=16, addEdges=True)])))
 mCircle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody))
 mbs.AddLoad(LoadForceVector(markerNumber=mCircle, loadVector=[0, -mass*g, 0]))
 mCurve = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
@@ -55,8 +59,10 @@ simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 3000
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 0
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 mbs.SolveDynamic(simulationSettings)
+if not testIsActive:
+    mbs.SolutionViewer()
 
 velocity = mbs.GetNodeOutput(node, exu.OutputVariableType.Velocity)
 gap = np.atleast_1d(mbs.GetObjectOutput(oContact, exu.OutputVariableType.DisplacementLocal)) #one value per segment

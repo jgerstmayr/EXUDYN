@@ -8,7 +8,7 @@
 #           three differ from a 40-element GE2D solution by 9 mm (GE2D), 11 mm (GE3D) and 5 mm (ANCF2D)
 #           in the tip position; with 40 elements GE3D agrees with GE2D to 0.1 mm and ANCF2D to 0.7 mm.
 #           The result is the sum of the tip positions at the end, so that a change of any of the three
-#           moves it.
+#           moves it. Run directly, the SolutionViewer shows the pendulum of ObjectBeamGeometricallyExact.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-29
@@ -88,10 +88,13 @@ def Pendulum(kind):
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive and kind == 'GE3D' #for the SolutionViewer
     simulationSettings.solution.sensors.writePeriod = stepSize
     simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     mbs.SolveDynamic(simulationSettings)
+    if not testIsActive and kind == 'GE3D':
+        SC.visualizationSettings.general.renderWindowString = 'ObjectBeamGeometricallyExact (GE3D)'
+        mbs.SolutionViewer()
     return mbs.GetSensorStoredData(sTip)
 
 

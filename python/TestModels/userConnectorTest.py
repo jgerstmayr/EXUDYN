@@ -11,7 +11,8 @@
 #           resting on a simply supported ANCF cable: the contact searches the closest point on each element of the
 #           cable and acts there; the static solution carries the weight and deflects the cable as a point load
 #           does. (4) What a ConnectorMarker refuses; a marker without the requestedMarkerType refused at Assemble; both user
-#           functions, a forceUserFunction of one marker or of a wrong result size refused.
+#           functions, a forceUserFunction of one marker or of a wrong result size refused. Run directly, the
+#           SolutionViewer shows the rigid body of (2) on the markerAccessUserFunction.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-23
@@ -25,12 +26,14 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.cMath as cMath
 import numpy as np
 
+testIsActive = exu.sys.get('testIsActive', False)
+
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 200
 simulationSettings.timeIntegration.endTime = 0.5
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #(1) a Cartesian spring-damper as user connector
@@ -137,6 +140,9 @@ def RigidModel(isUser):
                                             stiffness=[kPoint]*3, damping=[0.1]*3))
     mbs.Assemble()
     mbs.SolveDynamic(simulationSettings)
+    if not testIsActive and isUser:
+        SC.visualizationSettings.general.renderWindowString = 'case 2: rigid body, markerAccessUserFunction'
+        mbs.SolutionViewer()
     return np.hstack([mbs.GetObjectOutputBody(body, exu.OutputVariableType.Position, localPosition=pPoint),
                       mbs.GetObjectOutputBody(body, exu.OutputVariableType.AngularVelocity, localPosition=[0, 0, 0])])
 

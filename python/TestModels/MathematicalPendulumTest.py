@@ -5,7 +5,8 @@
 #           `DistanceConstraint` and once with a stiff `SpringDamper`. Both are integrated over 2 s
 #           and compared with their own reference; the result is the sum of the two errors.
 #           The model compares against a reference value written into it, so its
-#           result is that difference and its reference solution is 0 (#2632).
+#           result is that difference and its reference solution is 0 (#2632). Run directly, the
+#           SolutionViewer shows both pendulums, the constrained one red, the one on the spring blue.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-01, reworked 2026-09-24
@@ -36,7 +37,8 @@ for k in range(2):
 
     #add mass points and ground object:
     objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0]))
-    massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = n1))
+    massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = n1,
+                                        visualization=VMassPoint(graphicsData=[graphics.Sphere(radius=0.05, color=[graphics.color.red, graphics.color.blue][k])])))
 
     #marker for constraint / springDamper
     groundMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber = objectGround, localPosition= [0, 0, 0]))
@@ -60,7 +62,7 @@ if not testIsActive:
 
 simulationSettings = exu.SimulationSettings()
 
-simulationSettings.solution.file.write=False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 
@@ -77,6 +79,7 @@ mbs.SolveDynamic(simulationSettings)
 if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
+    mbs.SolutionViewer()
 
 u1 = mbs.GetNodeOutput(nodeList[0], exu.OutputVariableType.Position) #tip node
 exu.Print('solution mathematicalPendulum Constraint=',u1[1])

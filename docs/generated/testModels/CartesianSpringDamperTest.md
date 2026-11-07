@@ -14,7 +14,8 @@ You can view and download this file on Github: [CartesianSpringDamperTest.py](ht
 #           1 s in 1000 steps: the x-displacement at the end, which agrees with the analytical
 #           solution to about 3e-6.
 #           The model compares against a reference value written into it, so its
-#           result is that difference and its reference solution is 0 (#2632).
+#           result is that difference and its reference solution is 0 (#2632). Run directly, the
+#           SolutionViewer shows the oscillating mass point as a sphere.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-01, reworked 2026-09-24
@@ -49,7 +50,8 @@ n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0,0,
 
 #add mass points and ground object:
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0]))
-massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = n1))
+massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = n1,
+                                    visualization=VMassPoint(graphicsData=[graphics.Sphere(radius=0.03, color=graphics.color.orange)])))
 
 #marker for constraint / springDamper
 groundMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber = objectGround, localPosition= [0, 0, 0]))
@@ -64,7 +66,7 @@ mbs.AddLoad({'loadType': 'ForceVector',  'markerNumber': bodyMarker,  'loadVecto
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solution.file.write=False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 tEnd = 1
 steps = 1000
 simulationSettings.timeIntegration.numberOfSteps = steps
@@ -73,6 +75,8 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD w
 simulationSettings.show.statistics = False
 
 mbs.SolveDynamic(simulationSettings)
+if not testIsActive:
+    mbs.SolutionViewer()
 
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
 uCartesianSpringDamper= u[0] - L

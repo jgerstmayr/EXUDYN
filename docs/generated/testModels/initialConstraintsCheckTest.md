@@ -18,6 +18,7 @@ You can view and download this file on Github: [initialConstraintsCheckTest.py](
 #           constraint force of the first step jumps; (3) with projectInitialVelocities the radial component is
 #           removed and the solution is that of (1); (4) a wrong initial distance violates the position level, which
 #           the solver does not correct; (5) checkInitialConstraints = False: no check, no warning, no count.
+#           Run directly, the SolutionViewer shows the pendulum (2) with the radial initial velocity.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-14
@@ -29,20 +30,23 @@ You can view and download this file on Github: [initialConstraintsCheckTest.py](
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn import cMath
+import exudyn.graphics as graphics
 
-SC = exu.SystemContainer()
+testIsActive = exu.sys.get('testIsActive', False)
 OVT = exu.OutputVariableType
 L = 1.      #length of the pendulum
 mass = 2.
 vTangential = 2.
 
-def Pendulum(initialVelocity, distance=L, check=True, project=False):
+def Pendulum(initialVelocity, distance=L, check=True, project=False, show=False):
     """the pendulum from [L, 0, 0] with the given initial velocity; returns the output of the solver, the position
-    and velocity at the end and the largest constraint force of the first 10 steps"""
+    and velocity at the end and the largest constraint force of the first 10 steps; show=True shows the solution in
+    the SolutionViewer, if the model is run directly"""
+    SC = exu.SystemContainer() #a container for each case: the SolutionViewer draws all systems of a container
     mbs = SC.AddSystem()
     oGround = mbs.CreateGround()
     oMass = mbs.CreateMassPoint(referencePosition=[distance, 0, 0], initialVelocity=initialVelocity, mass=mass,
-                                gravity=[0, -9.81, 0])
+                                gravity=[0, -9.81, 0], graphicsDataList=[graphics.Sphere(radius=0.05, color=graphics.color.orange)])
     oDistance = mbs.CreateDistanceConstraint(itemNumbers=[oGround, oMass], distance=L)
     sForce = mbs.AddSensor(SensorObject(objectNumber=oDistance, storeInternal=True, outputVariableType=OVT.Force))
     mbs.Assemble()
@@ -51,11 +55,13 @@ def Pendulum(initialVelocity, distance=L, check=True, project=False):
     simulationSettings.timeIntegration.numberOfSteps = 200
     simulationSettings.timeIntegration.endTime = 0.2
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive and show #for the SolutionViewer
     simulationSettings.solution.sensors.writePeriod = 0.001
     simulationSettings.timeIntegration.generalizedAlpha.checkInitialConstraints = check
     simulationSettings.timeIntegration.generalizedAlpha.projectInitialVelocities = project
     mbs.SolveDynamic(simulationSettings, storeSolver=True)
+    if not testIsActive and show:
+        mbs.SolutionViewer()
 
     output = mbs.sys['dynamicSolver'].output
     nMass = mbs.GetObject(oMass)['nodeNumber']
@@ -78,7 +84,7 @@ exu.Print('(1) consistent: residuals', consistent['residualPosition'], consisten
           ', largest force of the first steps', consistent['maxForceStart'])
 
 #(2) a radial component of 0.5: the velocity-level residual of the distance constraint is 0.5
-radial = Pendulum([0.5, vTangential, 0])
+radial = Pendulum([0.5, vTangential, 0], show=True)
 checks += [abs(radial['residualVelocity'] - 0.5) < 1e-14, not radial['projected'],
            exu.special.solver.initialConstraintsViolations == counter0 + 1,
            radial['maxForceStart'] > 10*consistent['maxForceStart']]

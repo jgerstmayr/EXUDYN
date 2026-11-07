@@ -17,7 +17,8 @@ You can view and download this file on Github: [robotFrictionEndStopsTest.py](ht
 #           revolute joints about x and z and a prismatic joint between them, with an end stop of the prismatic joint.
 #           Both models give the same joint coordinates and drive torques (sensors of Robot.AddSensors); the end stop
 #           holds the joint near its limit. The result is the number of checks that pass plus the joint coordinates
-#           of the kinematic tree at the end, weighted by 1 to n.
+#           of the kinematic tree at the end, weighted by 1 to n. Run directly, the SolutionViewer shows the TX2-90L
+#           as kinematic tree.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-05
@@ -37,8 +38,9 @@ import numpy as np
 testIsActive = exu.sys.get('testIsActive', False)
 OVT = exu.OutputVariableType
 
-def Simulate(robot, model, endTime=1., numberOfSteps=500):
-    """the model of robot with its sensors, simulated; returns the stored joint coordinates and drive forces"""
+def Simulate(robot, model, endTime=1., numberOfSteps=500, show=False):
+    """the model of robot with its sensors, simulated; returns the stored joint coordinates and drive forces;
+    show=True shows the solution in the SolutionViewer, if the model is run directly"""
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     if model == 'tree':
@@ -55,9 +57,11 @@ def Simulate(robot, model, endTime=1., numberOfSteps=500):
     simulationSettings.timeIntegration.numberOfSteps = numberOfSteps
     simulationSettings.timeIntegration.endTime = endTime
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive and show #for the SolutionViewer
     simulationSettings.solution.sensors.writePeriod = endTime/numberOfSteps
     mbs.SolveDynamic(simulationSettings)
+    if not testIsActive and show:
+        mbs.SolutionViewer()
     return (mbs.GetSensorStoredData(sensors[OVT.Coordinates]), mbs.GetSensorStoredData(sensors[OVT.Force]))
 
 checks = []
@@ -78,7 +82,7 @@ trajectory.Add(ProfileConstantAcceleration([0.5, 0.5, 0.2, 0.5, 0., 0.2], 0.5))
 trajectory.Add(ProfileConstantAcceleration(q0, 0.5))
 robot.SetControl(trajectory, compensation='static')
 
-(qTree, tauTree) = Simulate(robot, 'tree')
+(qTree, tauTree) = Simulate(robot, 'tree', show=True)
 (qRedundant, tauRedundant) = Simulate(robot, 'redundant')
 checks += [np.max(np.abs(qTree[0,1:] - q0)) < 1e-14]
 checks += [np.max(np.abs(qTree[:,1:] - qRedundant[:,1:])) < 1e-5]

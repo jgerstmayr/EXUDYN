@@ -6,7 +6,8 @@
 #           CartesianSpringDamper to the ground, under gravity. The same system as redundant model of three rigid
 #           bodies and two revolute joints; on a Lie group node, on Euler parameters and on Tait-Bryan angles, with
 #           generalized-alpha, and the tree on the Lie group node also with RK44, the explicit Lie group integration.
-#           The tip of the tree follows the redundant model to the error of the time integration.
+#           The tip of the tree follows the redundant model to the error of the time integration. Run directly, the
+#           SolutionViewer shows the tree with RK44.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-02
@@ -18,6 +19,7 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn import cMath #the norm of the C++ code, the same bits on every platform
+import exudyn.graphics as graphics
 
 import numpy as np
 
@@ -48,7 +50,9 @@ def Model(useTree, nodeType, solver, steps=1600, tEnd=0.4):
                              jointOffsets=exu.Vector3DList([[0, 0, 0], offsets[1]]), baseOffset=offsets[0],
                              linkInertiasCOM=exu.Matrix3DList([inertias[1].InertiaCOM(), inertias[2].InertiaCOM()]),
                              linkCOMs=exu.Vector3DList([[L/2, 0, 0]]*2),
-                             linkMasses=[inertias[1].Mass(), inertias[2].Mass()], gravity=gravity))
+                             linkMasses=[inertias[1].Mass(), inertias[2].Mass()], gravity=gravity,
+                             visualization=VObjectKinematicTree(graphicsDataList=[[graphics.Brick(centerPoint=[L/2, 0, 0], size=[L, 0.06, 0.05], color=graphics.color.steelblue)],
+                                                                                  [graphics.Brick(centerPoint=[L/2, 0, 0], size=[L, 0.05, 0.04], color=graphics.color.orange)]])))
         tip = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=tree, linkNumber=1, localHT=HTtranslate([L, 0, 0])))
     else:
         #the links as rigid bodies, their initial state from the kinematics of the tree
@@ -81,8 +85,10 @@ def Model(useTree, nodeType, solver, steps=1600, tEnd=0.4):
     s.timeIntegration.newton.relativeTolerance = 1e-12
     s.timeIntegration.newton.absoluteTolerance = 1e-14
     s.timeIntegration.newton.useModifiedNewton = False
-    s.solution.file.write = False
+    s.solution.file.write = not testIsActive and solver == exu.DynamicSolverType.RK44 #for the SolutionViewer
     mbs.SolveDynamic(s, solverType=solver, showHints=False)
+    if not testIsActive and solver == exu.DynamicSolverType.RK44:
+        mbs.SolutionViewer()
     return np.array(mbs.GetSensorValues(sensor))
 
 testResult = 0

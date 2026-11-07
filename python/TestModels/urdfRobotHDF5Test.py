@@ -9,7 +9,7 @@
 #           installed). Checked: the mass and inertia of the brick, the corrected inertia, the frames of the links and
 #           the tool against the URDF computed here, the texture and its coordinates; the robot simulated as a
 #           kinematic tree. The result is the number of checks that pass plus the joint coordinates at the end,
-#           weighted by 1 and 2.
+#           weighted by 1 and 2. Run directly, the SolutionViewer shows the robot with its meshes and the textured brick.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-06
@@ -71,8 +71,10 @@ simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 200
 simulationSettings.timeIntegration.endTime = 0.2
 simulationSettings.timeIntegration.verboseMode = 0
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 mbs.SolveDynamic(simulationSettings)
+if not testIsActive:
+    mbs.SolutionViewer()
 qEnd = mbs.GetObjectOutputBody(robot.modelData['objectKinematicTree'], exu.OutputVariableType.Coordinates)
 checks += [np.max(np.abs(qEnd - q)) < 0.1]
 

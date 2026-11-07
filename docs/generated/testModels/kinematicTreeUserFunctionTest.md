@@ -13,7 +13,8 @@ You can view and download this file on Github: [kinematicTreeUserFunctionTest.py
 # Details:  The forceUserFunction of ObjectKinematicTree, which receives the joint coordinates q and velocities q_t
 #           (#2845): two equal trees of a revolute and a prismatic joint under gravity, the first damped by the D control
 #           of the tree (jointDControlVector), the second by a user function that returns the same forces from q_t;
-#           both must move alike.
+#           both must move alike. Run directly, the SolutionViewer shows both, the thin orange tree of the user
+#           function inside the transparent tree of the D control.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-04
@@ -26,6 +27,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
 from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
+import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -36,6 +38,9 @@ def Tree(mbs, userFunction=0):
     nKT = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0, 0.2], initialCoordinates=[0.3, 0], initialCoordinates_t=[0, 0.1],
                                       numberOfODE2Coordinates=2))
     useControl = userFunction == 0
+    (w, color) = (0.06, graphics.color.steelblue[0:3] + [0.4]) if useControl else (0.03, graphics.color.orange)
+    linkGraphics = [[graphics.Brick(centerPoint=[0.25, 0, 0], size=[0.5, w, w], color=color)],
+                    [graphics.Brick(centerPoint=[0.1, 0, 0], size=[0.2, w, w], color=color)]]
     oKT = mbs.AddObject(ObjectKinematicTree(nodeNumber=nKT, linkParents=[-1, 0],
                                             jointTypes=[exu.JointType.RevoluteZ, exu.JointType.PrismaticX],
                                             jointTransformations=exu.Matrix3DList([np.eye(3)]*2),
@@ -46,7 +51,8 @@ def Tree(mbs, userFunction=0):
                                             jointPositionOffsetVector=[0.1, 0.2], jointPControlVector=[50, 200],
                                             jointVelocityOffsetVector=[0, 0] if useControl else [],
                                             jointDControlVector=damping if useControl else [],
-                                            forceUserFunction=userFunction))
+                                            forceUserFunction=userFunction,
+                                            visualization=VObjectKinematicTree(graphicsDataList=linkGraphics)))
     return nKT
 
 #the D control as a user function: the tree subtracts what it returns, as it subtracts D*(0 - q_t)
@@ -62,8 +68,10 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 500
 simulationSettings.timeIntegration.endTime = 1
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 mbs.SolveDynamic(simulationSettings)
+if not testIsActive:
+    mbs.SolutionViewer()
 
 qControl = mbs.GetNodeOutput(nControl, exu.OutputVariableType.Coordinates)
 qUser = mbs.GetNodeOutput(nUser, exu.OutputVariableType.Coordinates)

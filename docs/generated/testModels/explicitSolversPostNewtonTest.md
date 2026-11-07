@@ -22,7 +22,8 @@ You can view and download this file on Github: [explicitSolversPostNewtonTest.py
 #           Last, the drop with DOPRI5 and a large maximum step size (300 steps for 0.3 s), with and without
 #           the step size the contacts recommend where they begin and end (#2109): the height after the
 #           rebound 0.11615 with the recommendation for both contacts, against 0.11625 of the implicit solver
-#           with 20 000 steps; without it the step size control alone gives 0.1147 to 0.1196.
+#           with 20 000 steps; without it the step size control alone gives 0.1147 to 0.1196. Run directly, the
+#           SolutionViewer shows this drop on ObjectContactSphereSphere with the recommended step size.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-30
@@ -43,21 +44,26 @@ solverTypes = ['GeneralizedAlpha', 'ExplicitEuler', 'ExplicitMidpoint', 'RK33', 
                'DOPRI5', 'VelocityVerlet']
 
 
-def Solve(mbs, endTime, numberOfSteps, solverType, useRecommendedStepSize=True):
+def Solve(mbs, endTime, numberOfSteps, solverType, useRecommendedStepSize=True, show=''):
+    """show: the text of the render window; if not empty, the solution is shown in the SolutionViewer when the model is
+    run directly"""
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = useRecommendedStepSize
     simulationSettings.timeIntegration.numberOfSteps = numberOfSteps
     simulationSettings.timeIntegration.endTime = endTime
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive and show != '' #for the SolutionViewer
     simulationSettings.solution.sensors.writePeriod = endTime/numberOfSteps
     mbs.SolveDynamic(simulationSettings, solverType=getattr(exu.DynamicSolverType, solverType))
+    if not testIsActive and show != '':
+        mbs.GetSystemContainer().visualizationSettings.general.renderWindowString = show
+        mbs.SolutionViewer()
 
 
-def Drop(kind, solverType, numberOfSteps=6000, useRecommendedStepSize=True, lastValue=False):
+def Drop(kind, solverType, numberOfSteps=6000, useRecommendedStepSize=True, lastValue=False, show=''):
     """the deepest point of the center of a ball of radius 0.1 dropped from 0.2 onto the ground, or the
-    height at the end"""
+    height at the end; show as in Solve"""
     r = 0.1; m = 1; g = 9.81; z0 = 0.2
     SC = exu.SystemContainer(); mbs = SC.AddSystem()
     oGround = mbs.AddObject(ObjectGround())
@@ -82,10 +88,12 @@ def Drop(kind, solverType, numberOfSteps=6000, useRecommendedStepSize=True, last
         nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0, 0, 0, 0]))
         mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0.1, 0.1, -1]))
         mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround, mBall], nodeNumber=nData,
-                                                spheresRadii=[1, r], contactStiffness=1e5, contactDamping=100))
+                                                spheresRadii=[1, r], contactStiffness=1e5, contactDamping=100,
+                                                visualization=VObjectContactSphereSphere(show=True)))
+        SC.visualizationSettings.contact.showSpheres = True
         sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,
                                           storeInternal=True, writeToFile=False))
-    Solve(mbs, 0.3, numberOfSteps, solverType, useRecommendedStepSize)
+    Solve(mbs, 0.3, numberOfSteps, solverType, useRecommendedStepSize, show)
     if lastValue:
         return mbs.GetSensorStoredData(sensor)[-1, -1]
     return mbs.GetSensorStoredData(sensor)[:, -1].min()
@@ -133,7 +141,8 @@ for (name, Case) in cases:
 #DOPRI5 with a large maximum step size; without the recommended step size it did not finish (#2109)
 for kind in ['coordinate', 'sphere']:
     for useRecommendedStepSize in [True, False]:
-        height = Drop(kind, 'DOPRI5', 300, useRecommendedStepSize, lastValue=True)
+        show = 'drop on ObjectContactSphereSphere, DOPRI5, 300 steps, recommended step size' if kind == 'sphere' and useRecommendedStepSize else ''
+        height = Drop(kind, 'DOPRI5', 300, useRecommendedStepSize, lastValue=True, show=show)
         exu.Print('drop with DOPRI5, 300 steps,', kind, 'contact, recommended step size', useRecommendedStepSize,
                   ': height at the end', round(height, 5))
         testResult += height

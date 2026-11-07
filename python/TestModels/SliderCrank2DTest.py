@@ -5,7 +5,8 @@
 #           index 3 and as an index 2 system**: the x-position of the slider from both, added up, so
 #           that the test covers the two constraint formulations at once.
 #           The model compares against a reference value written into it, so its
-#           result is that difference and its reference solution is 0 (#2632).
+#           result is that difference and its reference solution is 0 (#2632). Run directly, the
+#           SolutionViewer shows the slider-crank of the index 2 solution.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-01, reworked 2026-09-24
@@ -97,7 +98,7 @@ mbs.AddLoad(Torque(markerNumber = mR0Left, loadVector = [0, 0, 10])) #apply torq
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-simulationSettings.solution.file.write=False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 1
@@ -135,6 +136,7 @@ exu.Print('error errorSliderCrankIndex2=',errorSliderCrankIndex2)
 if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
+    mbs.SolutionViewer() #the index 2 solution, the last one written
 
 
 testResult = abs(errorSliderCrankIndex3)+abs(errorSliderCrankIndex2)

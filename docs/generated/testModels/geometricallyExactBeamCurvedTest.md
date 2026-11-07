@@ -17,6 +17,7 @@ You can view and download this file on Github: [geometricallyExactBeamCurvedTest
 #           with 8 elements at P = 300, 450, 600: (58.60, 22.14, 40.36), (52.05, 18.40, 48.57),
 #           (46.98, 15.59, 53.46); Simo and Vu-Quoc (1986), 8 elements: (58.84, 22.33, 40.08),
 #           (52.32, 18.62, 48.39), (47.23, 15.79, 53.37). With 32 elements at P = 600: (46.90, 15.56, 53.60).
+#           Run directly, the SolutionViewer shows the load steps of the bend at P = 600.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-29
@@ -65,7 +66,10 @@ def Bend(force):
     simulationSettings.staticSolver.numberOfLoadSteps = 20
     simulationSettings.staticSolver.newton.relativeTolerance = 1e-10
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-6 #P = 0 has no load to measure the residual against: its round-off differs between platforms
+    simulationSettings.solution.file.write = not testIsActive and force == 600 #for the SolutionViewer
     mbs.SolveStatic(simulationSettings)
+    if not testIsActive and force == 600:
+        mbs.SolutionViewer()
     return mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)
 
 

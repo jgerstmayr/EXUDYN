@@ -14,7 +14,8 @@ You can view and download this file on Github: [SwitchingConstraintsTest.py](htt
 #           integration** through `activeConnector`, over 2 s in 4000 steps: the sum of the final
 #           coordinates.
 #           The model compares against a reference value written into it, so its
-#           result is that difference and its reference solution is 0 (#2632).
+#           result is that difference and its reference solution is 0 (#2632). Run directly, the
+#           SolutionViewer shows the pendulum and the mass point (a sphere) released from it.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-01, reworked 2026-09-24
@@ -59,7 +60,8 @@ mCoordR1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nRigid, coordinate=1))
 
 #additional mass point attached to COM of rigid body:
 nMass = mbs.AddNode(Point2D(referenceCoordinates=[-0.5,0], initialVelocities=[0,omega0*a]));
-oMass = mbs.AddObject(MassPoint2D(mass=mass, nodeNumber=nMass) )
+oMass = mbs.AddObject(MassPoint2D(mass=mass, nodeNumber=nMass,
+                                  visualization=VMassPoint2D(graphicsData=[graphics.Sphere(radius=0.05, color=graphics.color.orange)])))
 
 mCoordM0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nMass, coordinate=0)) 
 mCoordM1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nMass, coordinate=1)) 
@@ -96,7 +98,7 @@ simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.solution.file.information = "Rigid pendulum with switching constraints"
 simulationSettings.show.statistics = False
-simulationSettings.solution.file.write=False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 #(not testIsActive) = True
 if not testIsActive: 
@@ -107,6 +109,7 @@ mbs.SolveDynamic(simulationSettings)
 if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
+    mbs.SolutionViewer()
 
 u = mbs.systemData.GetODE2Coordinates()
 exu.Print('u =',u)

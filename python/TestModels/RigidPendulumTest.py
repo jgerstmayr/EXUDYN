@@ -4,7 +4,8 @@
 # Details:  A `RigidBody2D` hanging in a `RevoluteJoint2D` and swinging under gravity, integrated
 #           over 0.5 s: the vertical position of the tip at the end.
 #           The model compares against a reference value written into it, so its
-#           result is that difference and its reference solution is 0 (#2632).
+#           result is that difference and its reference solution is 0 (#2632). Run directly, the
+#           SolutionViewer shows the swinging pendulum.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-01, reworked 2026-09-24
@@ -50,7 +51,7 @@ mbs.Assemble()
 #mbs.systemData.Info()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-simulationSettings.solution.file.write=False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 0.5
@@ -74,6 +75,7 @@ mbs.SolveDynamic(simulationSettings)
 if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
+    mbs.SolutionViewer()
 
 
 u = mbs.GetNodeOutput(nRigid, exu.OutputVariableType.Position) #tip node

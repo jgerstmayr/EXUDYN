@@ -6427,6 +6427,27 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg2-12-2"></a>
+### RG2.12.2 — the test models created from 2026-09-20 show their simulation (2026-11-07, #3322)
+- Maintainer 2026-11-07: the models created from 2026-09-20; the point is the animation in the SolutionViewer; a
+  model of several cases names the case in renderWindowString or is left out. Evaluated in
+  docs/revision/testModelViewerReview.md (184 models: 41 + 7 to show, 75 + 47 to leave, 14 shown already);
+  approved with "do the suggested next steps".
+- Done by a subagent, checked here by the full test suite: 43 models changed, each run in test mode before and after
+  (testResult identical to the last digit) and run directly with the SolutionViewer replaced by a probe that loads
+  the solution file and counts the shapes of GetGraphicsData (bodies draw something in every one).
+- Beyond the recipe: constraintDriftTest, initialConstraintsCheckTest and ANCFBeamGeometricallyExactComparisonTest
+  create one SystemContainer per case, so that the viewer does not draw all cases on top of each other; some models
+  write the solution only for the shown case; Mass1D got a referencePosition in springDamperVelocityOffsetTest and
+  coSimulationTest so the masses are drawn apart; contactSphereTorusMomentumTest and generalContactTriangleMomentumTest
+  a file.writePeriod for more frames. coSimulationTest shows the one-system reference (the co-simulation writes only
+  mbs0).
+- Skipped: ANCFThinPlateRotationTest (10 ms, 9 mm on 1 m), implicitRungeKuttaLieGroupTest (5 ms, the subject is the
+  Newton iterations), multithreadingUserFunctionTest and symbolicUserFunctionThreadsTest (long chains moving
+  centimeters, the subject is the threads), symbolicUserConnectorsTest (put back: the visualization user function of
+  CreateCartesianSpringDamper of the UserItemCreator raises "Invalid OutputVariableType 'RotationMatrix'" for a mass
+  point marker - raised as its own issue).
+
 <a id="rg9-12-15"></a>
 ### RG9.12.15 — the impact model as the enumeration type ContactImpactModel (2026-11-07, #3327)
 - The open question (a number still accepted?) was not answered; decided as the least change for users: the

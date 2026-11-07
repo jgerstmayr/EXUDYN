@@ -17,6 +17,7 @@ You can view and download this file on Github: [createFFRFReducedOrderObjectTest
 #           x-axis to the global z-axis; without this rotation the beam would only twist about its own axis.
 #           The function refuses illegal rigid body node types, offsets and transformations.
 #           The result is the tip displacement at the end of the simulation, plus 1 if every illegal call was refused.
+#           Run directly, the SolutionViewer shows the swinging pendulum.
 #
 # Author:   Sebastian Weyrer
 # Date:     2026-10-30
@@ -75,7 +76,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
 simulationSettings.solution.sensors.writePeriod = h
-simulationSettings.solution.file.write = not testIsActive
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 
 SC.visualizationSettings.nodes.show = False
 
@@ -141,6 +142,8 @@ result = RunPendulum(rigidBodyNodeType='NodeType.RotationRxyz',
                      superElementRigidMarkersOffsets=[offset],
                      superElementRigidMarkersLocalHTs=[exu.HT(rotation=A, translation=offset)])
 result += float(allRefused)
+if not testIsActive:
+    mbs.SolutionViewer()
 
 exu.Print('solution of createFFRFReducedOrderObjectTest=', result)
 

@@ -17,7 +17,8 @@ You can view and download this file on Github: [robotInverseDynamicsTest.py](htt
 #           x, y and z and prismatic joints, at random states. The Staubli TX2-90L follows a fast trajectory with
 #           Robot.SetControl and PreStepControl, in the kinematic tree and in the redundant coordinate model: with
 #           compensation='dynamic' the tracking error is less than a tenth of that with 'static', the same in both
-#           models. The result is the number of checks that pass plus the tracking errors.
+#           models. The result is the number of checks that pass plus the tracking errors. Run directly, the
+#           SolutionViewer shows the kinematic tree with compensation='dynamic'.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-05
@@ -98,9 +99,12 @@ for model in ['tree', 'redundant']:
         simulationSettings.timeIntegration.numberOfSteps = 300
         simulationSettings.timeIntegration.endTime = 0.6
         simulationSettings.timeIntegration.verboseMode = 0
-        simulationSettings.solution.file.write = False
+        show = not testIsActive and model == 'tree' and compensation == 'dynamic'
+        simulationSettings.solution.file.write = show #for the SolutionViewer
         simulationSettings.solution.sensors.writePeriod = 0.002
         mbs.SolveDynamic(simulationSettings)
+        if show:
+            mbs.SolutionViewer()
         data = mbs.GetSensorStoredData(sensors[OVT.Coordinates])
         errors[(model, compensation)] = max(np.max(np.abs(row[1:] - trajectory.Evaluate(row[0])[0])) for row in data)
 exu.Print('tracking errors:', errors)

@@ -17,7 +17,8 @@ You can view and download this file on Github: [generalContactTriangleMomentumTe
 #           origin stays at its initial value to 3e-9 (without friction) and 8e-10 (with friction), the
 #           linear momentum to 1e-16 - the torque of the normal force on the plate, which acts at the
 #           contact point and not at the reference point of the plate, was missing without friction
-#           (angular momentum off by 7e-3 of 0.015).
+#           (angular momentum off by 7e-3 of 0.015). Run directly, the SolutionViewer shows the ball hitting
+#           the plate, with friction.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-05
@@ -46,8 +47,12 @@ def Run(mu, stepSize=1e-5, tEnd=0.02):
                                         initialVelocities=[0.3, 0.1, -1] + list(AngularVelocity2EulerParameters_t([0, 0, 20], eulerParameters0))))
     nPlate = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 0, 0] + eulerParameters0,
                                          initialVelocities=[0, 0, 0] + list(AngularVelocity2EulerParameters_t([0, 1, 2], eulerParameters0))))
-    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=nBall, mass=iBall.Mass(), inertia=iBall.GetInertia6D()))
-    plate = mbs.AddObject(ObjectRigidBody(nodeNumber=nPlate, mass=iPlate.Mass(), inertia=iPlate.GetInertia6D()))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=nBall, mass=iBall.Mass(), inertia=iBall.GetInertia6D(),
+                                         visualization=VObjectRigidBody(graphicsData=[graphics.Sphere(radius=rBall, color=graphics.color.orange,
+                                                                                                      nTiles=16, addEdges=True)])))
+    plate = mbs.AddObject(ObjectRigidBody(nodeNumber=nPlate, mass=iPlate.Mass(), inertia=iPlate.GetInertia6D(),
+                                          visualization=VObjectRigidBody(graphicsData=[graphics.Brick([0, 0, 0], plateSize, color=graphics.color.steelblue,
+                                                                                                      addEdges=True)])))
 
     gContact = mbs.AddGeneralContact()
     gContact.frictionProportionalZone = 1e-3
@@ -71,9 +76,12 @@ def Run(mu, stepSize=1e-5, tEnd=0.02):
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive and mu != 0 #for the SolutionViewer
+    simulationSettings.solution.file.writePeriod = stepSize*10
     simulationSettings.solution.sensors.writePeriod = stepSize*10
     mbs.SolveDynamic(simulationSettings)
+    if not testIsActive and mu != 0:
+        mbs.SolutionViewer()
 
     data = dict((key, mbs.GetSensorStoredData(sensor)[:, 1:]) for (key, sensor) in sensors.items())
     def Momentum(name, inertia):

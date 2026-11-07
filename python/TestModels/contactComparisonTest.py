@@ -25,6 +25,8 @@
 #           GeneralContact, implicit, against the rigid-body solution - the ball rolls after
 #           t = 2 v0/(7 mu g) with 5/7 of its initial velocity. Measured: both to 3e-7 while it
 #           slides, to 6e-4 when it rolls (the regularized friction and the penetration).
+#           Run directly, the SolutionViewer shows the ball sliding on the triangle of ObjectContactSphereTriangle,
+#           whose edges show it spin up until it rolls.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-29
@@ -35,6 +37,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
 
 import numpy as np
 
@@ -54,10 +57,11 @@ trianglePoints = [[-1, -1, 0], [2, -1, 0], [0, 2, 0]]    #the ground triangle, a
 
 
 def Drop(kind, law, z0=z0, vx=0, mu=0, frictionProportionalZone=1e-3, sensorType=exu.OutputVariableType.Position,
-         component=3):
+         component=3, show=False):
     """a component of a sensor of the ball over time - the height of its center by default -, for one of the four
     contact cases, a contact law (a dict of the law's parameters), and a ball that starts at height z0 with the
-    velocity vx and slides with the friction coefficient mu"""
+    velocity vx and slides with the friction coefficient mu; show=True shows the solution in the SolutionViewer,
+    if the model is run directly"""
     nImpact = 1 if law.get('impactModel', 0) != 0 else 0
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
@@ -79,7 +83,8 @@ def Drop(kind, law, z0=z0, vx=0, mu=0, frictionProportionalZone=1e-3, sensorType
         node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.1, 0.1, z0] + eulerParameters0,
                                            initialVelocities=[vx, 0, 0, 0, 0, 0, 0]))
         ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m,
-                                             inertia=InertiaSphere(mass=m, radius=r).GetInertia6D()))
+                                             inertia=InertiaSphere(mass=m, radius=r).GetInertia6D(),
+                                             visualization=VObjectRigidBody(graphicsData=[graphics.Sphere(radius=r, color=graphics.color.orange, nTiles=16, addEdges=True)])))
         mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball))
         mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[0, 0, -m*g]))
         friction = {'dynamicFriction': mu, 'frictionProportionalZone': frictionProportionalZone} if mu != 0 else {}
@@ -108,7 +113,8 @@ def Drop(kind, law, z0=z0, vx=0, mu=0, frictionProportionalZone=1e-3, sensorType
             mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
             mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=r,
                                                       trianglePoints=exu.Vector3DList(trianglePoints),
-                                                      **law, **friction))
+                                                      visualization=VObjectContactSphereTriangle(show=True), **law, **friction))
+            SC.visualizationSettings.contact.showTriangles = True
         sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=sensorType,
                                           storeInternal=True, writeToFile=False))
     mbs.Assemble()
@@ -118,8 +124,10 @@ def Drop(kind, law, z0=z0, vx=0, mu=0, frictionProportionalZone=1e-3, sensorType
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = 0
     simulationSettings.solution.sensors.writePeriod = tEnd/nSteps
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive and show #for the SolutionViewer
     mbs.SolveDynamic(simulationSettings)
+    if not testIsActive and show:
+        mbs.SolutionViewer()
     data = mbs.GetSensorStoredData(sensor)
     #on one time grid: the adaptive step control puts the sensor times of the release step at different places
     return np.interp(np.linspace(0, tEnd, nSteps+1), data[:, 0], data[:, component])
@@ -158,7 +166,8 @@ mu = 0.2
 tRoll = 2*v0/(7*mu*g)
 zRest = r - m*g/k       #the static penetration
 for kind in ['triangle', 'general']:
-    vx = Drop(kind, laws['linear'], z0=zRest, vx=v0, mu=mu, sensorType=exu.OutputVariableType.Velocity, component=1)
+    vx = Drop(kind, laws['linear'], z0=zRest, vx=v0, mu=mu, sensorType=exu.OutputVariableType.Velocity, component=1,
+              show=(kind == 'triangle'))
     iHalf = np.argmax(t >= 0.5*tRoll)
     exu.Print(kind + ': velocity while sliding', vx[iHalf], 'instead of', v0 - mu*g*t[iHalf],
               ', when rolling', vx[-1], 'instead of', 5/7*v0)

@@ -5,7 +5,8 @@
 #           force. Solved dynamically once and statically twice, the second time with the Newton
 #           tolerances at 1e-14 so that it converges onto the MATLAB reference it is compared with.
 #           The model compares against a reference value written into it, so its
-#           result is that difference and its reference solution is 0 (#2632).
+#           result is that difference and its reference solution is 0 (#2632). Run directly, the
+#           SolutionViewer shows the dynamic solution, the cantilever swinging under the tip force.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-01, reworked 2026-09-24
@@ -77,7 +78,7 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 simulationSettings.solution.file.name = "solution/ANCFCable2D_bending_test.txt"
-simulationSettings.solution.file.write=False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 simulationSettings.timeIntegration.numberOfSteps = 1000
 #simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/1000
 simulationSettings.timeIntegration.endTime = 0.1
@@ -91,6 +92,8 @@ if not testIsActive:
     SC.renderer.Start()
 
 mbs.SolveDynamic(simulationSettings)
+if not testIsActive:
+    mbs.SolutionViewer() #the dynamic solution; the static solutions below write the file again
 
 sol = mbs.systemData.GetODE2Coordinates(); n = len(sol)
 #tip displacements:

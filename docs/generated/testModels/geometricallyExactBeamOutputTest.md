@@ -16,7 +16,8 @@ You can view and download this file on Github: [geometricallyExactBeamOutputTest
 #           (2) A tip force: in every element, the section force ForceLocal rotated by the rotation matrix
 #           at the middle of the element gives the tip force of 4.7 - to 5.6e-3 with 8 elements, 3.9e-4 with 32:
 #           the section forces of an element are constant, the mean of a field that varies along it.
-#           Also the other output variables at the ends of an element, against its nodes.
+#           Also the other output variables at the ends of an element, against its nodes. Run directly, the
+#           SolutionViewer shows the load steps of the cantilever with 8 elements under the tip force.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-30
@@ -60,6 +61,7 @@ def Cantilever(force, torque, nElements=8):
     simulationSettings.staticSolver.numberOfLoadSteps = 10
     simulationSettings.staticSolver.newton.relativeTolerance = 1e-10
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-12
+    simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer, which shows the last cantilever
     mbs.SolveStatic(simulationSettings)
     return (mbs, elements, nodes)
 
@@ -84,6 +86,8 @@ for nElements in [32, 8]:
         rotation = Out(mbs, e, exu.OutputVariableType.RotationMatrix).reshape(3, 3)
         errorForce = max(errorForce, cMath.norm(rotation @ Out(mbs, e, exu.OutputVariableType.ForceLocal) - force))
     exu.Print(nElements, 'elements, tip force: largest error of the section force, rotated to global', errorForce)
+if not testIsActive:
+    mbs.SolutionViewer()
 testResult += sum(Out(mbs, elements[0], exu.OutputVariableType.TorqueLocal))
 testResult += sum(Out(mbs, elements[0], exu.OutputVariableType.StrainLocal))
 

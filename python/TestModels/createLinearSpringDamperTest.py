@@ -5,7 +5,8 @@
 #           axis, held by a linear spring-damper along the same axis against gravity. The static deflection
 #           along the axis is m g_axis / k; the spring-damper given with the axis in global coordinates, in the
 #           frame of a turned body 0 (useGlobalFrame=False), and between two markers gives it. A dynamic run
-#           checks the damping: the oscillation decays towards the static deflection.
+#           checks the damping: the oscillation decays towards the static deflection. Run directly, the
+#           SolutionViewer shows the dynamic run.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-05
@@ -47,13 +48,15 @@ def Model(variant, dynamic=False):
         mbs.CreateLinearSpringDamper(itemNumbers=[m0, m1], position=[], axis=axis, stiffness=stiffness, damping=20)
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.write = not testIsActive and dynamic #for the SolutionViewer
     simulationSettings.timeIntegration.verboseMode = 0
     simulationSettings.staticSolver.verboseMode = 0
     if dynamic:
         simulationSettings.timeIntegration.numberOfSteps = 2000
         simulationSettings.timeIntegration.endTime = 2
         mbs.SolveDynamic(simulationSettings)
+        if not testIsActive:
+            mbs.SolutionViewer()
     else:
         mbs.SolveStatic(simulationSettings)
     return mbs.GetObjectOutputBody(oBody, exu.OutputVariableType.Displacement, localPosition=[0,0,0]) @ axis

@@ -5,7 +5,8 @@
 #           `ObjectJointSliding2D`, which moves the contact from one element to the next as it goes:
 #           the vertical position of its centre of mass after a short dynamic step.
 #           The model compares against a reference value written into it, so its
-#           result is that difference and its reference solution is 0 (#2632).
+#           result is that difference and its reference solution is 0 (#2632). Run directly, the
+#           SolutionViewer shows the body sliding along the cable.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-01, reworked 2026-09-24
@@ -131,7 +132,7 @@ simulationSettings.solution.file.write=False
 fact = 200
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.001*fact*0.5
-simulationSettings.solution.file.write = True
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/fact
 simulationSettings.timeIntegration.verboseMode = 1
 
@@ -170,6 +171,7 @@ if nRigid != -1:
 if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
+    mbs.SolutionViewer()
 
 testResult = abs(error)
 exu.Print('solution of SlidingJoint2DTest=', testResult)

@@ -6,7 +6,8 @@
 #           constraints and a chain of rigid bodies with Euler parameters on revolute joints -, with constant steps h
 #           and h/2 against LobattoIIIA4 with h/8: the measured orders 2, 4, 4 and 3; and the automatic step size of
 #           LobattoIIIA4 on a mass on a spring with the tolerances 1e-8. The result is the sum of the measured orders,
-#           rounded to one digit, plus the number of steps of the automatic step size.
+#           rounded to one digit, plus the number of steps of the automatic step size. Run directly, the
+#           SolutionViewer shows the reference solution of the pendulum, its mass points drawn as their nodes.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-05
@@ -26,20 +27,29 @@ testIsActive = exu.sys.get('testIsActive', False)
 solverTypes = [exu.DynamicSolverType.TrapezoidalGGL, exu.DynamicSolverType.LobattoIIIA4,
                exu.DynamicSolverType.LobattoIIIC4GGL, exu.DynamicSolverType.Radau3]
 
-def Solve(name, solverType, stepSize, endTime, automaticStepSize=False, tolerance=1e-6):
-    """the ODE2 coordinates at the end and the number of steps"""
+def Solve(name, solverType, stepSize, endTime, automaticStepSize=False, tolerance=1e-6, show=''):
+    """the ODE2 coordinates at the end and the number of steps; show: the text of the render window; if not empty,
+    the solution is shown in the SolutionViewer when the model is run directly"""
     mbs = modelLibrary.GetModel(name)
     simulationSettings = modelLibrary.SimulationSettings(mbs, stepSize, endTime)
     simulationSettings.timeIntegration.automaticStepSize = automaticStepSize
     simulationSettings.timeIntegration.absoluteTolerance = tolerance
     simulationSettings.timeIntegration.relativeTolerance = tolerance
+    simulationSettings.solution.file.write = not testIsActive and show != '' #for the SolutionViewer
     mbs.SolveDynamic(simulationSettings, solverType=solverType)
+    if not testIsActive and show != '':
+        visualizationSettings = mbs.GetSystemContainer().visualizationSettings
+        visualizationSettings.general.renderWindowString = show
+        visualizationSettings.nodes.drawNodesAsPoint = False #the mass points have no graphics
+        visualizationSettings.nodes.defaultSize = 0.05
+        mbs.SolutionViewer()
     return (np.array(mbs.systemData.GetODE2Coordinates()), mbs.sys['dynamicSolver'].it.currentStepIndex)
 
 u = 0
 for (name, endTime) in [('nPendulum', 0.2), ('rigidBodyJoints', 0.1)]:
     h = 2e-3
-    reference = Solve(name, exu.DynamicSolverType.LobattoIIIA4, h/8, endTime)[0]
+    show = 'nPendulum, LobattoIIIA4, step size h/8, the reference' if name == 'nPendulum' else ''
+    reference = Solve(name, exu.DynamicSolverType.LobattoIIIA4, h/8, endTime, show=show)[0]
     for solverType in solverTypes:
         errors = [cMath.norm(Solve(name, solverType, stepSize, endTime)[0] - reference) for stepSize in [h, h/2]]
         order = cMath.log(errors[0]/errors[1])/cMath.log(2.)

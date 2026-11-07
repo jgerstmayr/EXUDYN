@@ -8,7 +8,8 @@
 #           small out-of-plane force 1e-4*P as imperfection. The frame buckles out of its plane at the
 #           critical load 1.088 N of the literature. Measured with 16 elements per arm: the out-of-plane
 #           displacement of the tip reaches 1 mm at P = 1.081 N, 5 mm at 1.088 N and 10 mm at 1.092 N;
-#           8 and 32 elements agree to 0.003 N.
+#           8 and 32 elements agree to 0.003 N. Run directly, the SolutionViewer shows the load steps, in
+#           which the frame buckles out of its plane.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-30
@@ -74,10 +75,12 @@ simulationSettings.staticSolver.useLoadFactor = False   #the load follows the us
 simulationSettings.staticSolver.numberOfLoadSteps = 240
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-8
 simulationSettings.staticSolver.newton.absoluteTolerance = 1e-7 #forces of 1 N; the default 1e-10 is below the round-off
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
 simulationSettings.solution.sensors.writePeriod = 1e-4
 
 mbs.SolveStatic(simulationSettings)
+if not testIsActive:
+    mbs.SolutionViewer()
 
 data = mbs.GetSensorStoredData(sTip)
 force = forceMax*data[:, 0]
