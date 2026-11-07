@@ -690,7 +690,7 @@ bool CObjectRigidBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D
 	//differentiates it (#3201): Glocal^T (	ilde uLocal) 2 (A - I)^T f e^T/(e^T e)
 	Vector3D radial;
 	Matrix3D radialRotation;
-	ResizableVector radial_q;
+	ResizableConstVector radial_q; //the 7 coordinates of a rigid node in its local data: no allocation per call (#3312)
 	if (RigidBodyNodeRadialKinematics(*(const CNodeODE2*)GetCNode(0), localPosition, radial, radialRotation, radial_q))
 	{
 		const Vector3D w = localPosition.CrossProduct(radialRotation.GetTransposed() * force);

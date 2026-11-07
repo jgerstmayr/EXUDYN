@@ -2,11 +2,15 @@
   "number": 3312,
   "title": "Memory allocations per step of the implicit Runge-Kutta solvers on rigid body spring-dampers",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHECK",
   "effort": "LOW",
   "description": "rigidBodySpringDampers of modelLibrary.py with the step 3.125e-5 (16000 steps): TrapezoidalGGL, LobattoIIIA4 and LobattoIIIC4GGL warn of about 160000 memory allocations, 10 per step; generalized-alpha does not, nor the implicit Runge-Kutta solvers on rigidBodyJoints or nPendulum. To be located: ObjectConnectorRigidBodySpringDamper in an evaluation that only the Runge-Kutta solvers make (the Jacobian by the velocities or the stage states).",
   "dateRaised": "2026-11-06",
   "deadline": "2027-05-05",
-  "file": "src/Solver/CSolverImplicitRungeKutta.cpp"
+  "dateResolved": "2026-11-08 00:29",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Solver/CSolverImplicitRungeKutta.cpp",
+  "releaseNotes": "The implicit Runge-Kutta solvers allocate no memory per step with rigid body spring-dampers: the Jacobian of ObjectRigidBody allocated a vector per marker and evaluation.",
+  "resolvedInVersion": "1.13.465"
 }

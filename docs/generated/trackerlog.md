@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.464.dev1
+- Exudyn version = 1.13.465.dev1
 - last change = 2026-11-08
-- Number of issues = 3351
-- Number of resolved issues = 3241 (464 in current version)
+- Number of issues = 3352
+- Number of resolved issues = 3242 (465 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Two memory allocations per Jacobian evaluation with ObjectFFRFreducedOrder (#3351)
+  - description: Found with \#3312: the system Jacobian of the model FFRFreducedOrder of modelLibrary.py (an ObjectFFRFreducedOrder on a generic joint) allocates 2 vectors per evaluation, with any factors of the positions and velocities; the implicit Runge-Kutta solvers evaluate it twice per step. To be located.
+  - date raised: 2026-11-08
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` Radau5: the implicit Runge-Kutta method Radau IIA with 3 stages, of order 5, in the C++ and the Python solvers (#3318)
   - description: A reference method of higher order for the solver study instead of LobattoIIIC4GGL (\#3314): Radau IIA with 3 stages (c = (4 - sqrt 6)/10, (4 + sqrt 6)/10, 1), order 5, L-stable, three implicit stages without GGL multipliers, the constraints at the end of the step as in Radau3; the tableau of CSolverImplicitRungeKutta and of exudyn.symbolics.advancedSolvers, its error estimate, DynamicSolverType.Radau5. Decided: implemented with the Jacobian of the last stage for all stages, as the other methods, no W-method; its convergence orders measured on the model library, and as the reference of the study if it converges as expected; revision2026c step RG20.10.1.
   - date raised: 2026-11-07
@@ -9047,9 +9050,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-07
 - `CHECK` `LOW EFF` `raised by: Claude-JG` Automatic step size of LobattoIIIA4 on the spatial slider crank: the error stays at 1e-7 for the tolerances 1e-5 to 1e-10 (#3313)
   - description: The solver study (solverConvergenceFigures.py, efficiency\_adaptive.png): LobattoIIIA4 with automatic step size on sliderCrank3D of modelLibrary.py takes 21 to 106 steps for the tolerances 1e-5 to 1e-10, but the relative error of the ODE2 coordinates stays at 1.2e-6 to 1.1e-7, while 106 constant steps give about 1e-10 and Radau3 with automatic steps reaches 2e-10. On the other models its error follows the tolerance. To be analyzed: the error estimate twoSteps with the Lie group nodes of the model, a single step with a large error (the first one, or one after a rejection), the interpolated output.
-  - date raised: 2026-11-06
-- `CHECK` `LOW EFF` `raised by: Claude-JG` Memory allocations per step of the implicit Runge-Kutta solvers on rigid body spring-dampers (#3312)
-  - description: rigidBodySpringDampers of modelLibrary.py with the step 3.125e-5 (16000 steps): TrapezoidalGGL, LobattoIIIA4 and LobattoIIIC4GGL warn of about 160000 memory allocations, 10 per step; generalized-alpha does not, nor the implicit Runge-Kutta solvers on rigidBodyJoints or nPendulum. To be located: ObjectConnectorRigidBodySpringDamper in an evaluation that only the Runge-Kutta solvers make (the Jacobian by the velocities or the stage states).
   - date raised: 2026-11-06
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` MarkerNodeUser: a marker on the coordinates of nodes by Python user functions (#3236)
   - description: CreateCoordinateConstraint of UserItemCreator and the built-in coordinate constraint use MarkerNodeCoordinate; a user marker on nodes, whose value and Jacobian are Python (and recordable) user functions of the coordinates of its nodes, lets the coordinate constraint and coordinate connectors be user items. Decided (maintainer 2026-11-04): MarkerNodeUser first, as a step of its own (revision2026c RG7.18); MarkerBodyUser with coordinates and user shapes for contact and flexible interfaces are not planned yet (\#3106 closed).

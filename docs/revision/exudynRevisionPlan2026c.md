@@ -3669,9 +3669,15 @@ CLOSED 2026-11-06 (#3298): three attempts of 60 s, each with its own profile, th
 
 CLOSED 2026-11-06 (#3299): WORKFLOW.md section 8 and the table of section 5, the how-to of the plan: the checkpoint of #3296 runs the performance tests with the regular module as well; they are not in the gates. [log](exudynRevisionLog2026c.md#rg20-7-11)
 
-#### **OPEN_RG20.7.12** Memory allocations per step of the implicit Runge-Kutta solvers on rigid body spring-dampers
+#### **CLOSED_RG20.7.12** Memory allocations per step of the implicit Runge-Kutta solvers on rigid body spring-dampers
 
 #3312: rigidBodySpringDampers with 16000 steps, about 10 allocations per step in TrapezoidalGGL, LobattoIIIA4 and LobattoIIIC4GGL, none in generalized-alpha. To be located.
+
+CLOSED 2026-11-08 (#3312): a local ResizableVector in the Jacobian derivative of ObjectRigidBody, one allocation per body marker per Jacobian; now a ResizableConstVector; no allocation per step; the allocation test counts vectors and includes rigidBodySpringDampers. [log](exudynRevisionLog2026c.md#rg20-7-12)
+
+#### **OPEN_RG20.7.13** Memory allocations per Jacobian evaluation of ObjectFFRFreducedOrder
+
+#3351. Found with RG20.7.12: 2 vector allocations per evaluation of the system Jacobian on the model FFRFreducedOrder.
 
 ### **OPEN_RG20.8** A common step size controller for the adaptive solvers, Python first, then C++
 

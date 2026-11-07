@@ -6427,6 +6427,19 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-7-12"></a>
+### RG20.7.12 — no allocations per step with rigid body spring-dampers (2026-11-08, #3312)
+- Measured with exu.special.InfoStat (difference of 200 and 400 steps): 10 vectors per step with TrapezoidalGGL,
+  LobattoIIIA4 and Radau3 on rigidBodySpringDampers, none with generalized-alpha; per evaluation of the system
+  Jacobian (MainSolverImplicitSecondOrder.ComputeJacobianODE2RHS) 5, with any factors - the Runge-Kutta solvers
+  evaluate it twice per step (positions, velocities), generalized-alpha with modified Newton seldom.
+- 1 for a spring-damper on the ground, 3 for two: one per marker on a body. The cause: the local ResizableVector
+  radial_q in the derivative of J^T f of ObjectRigidBody (the Euler parameter direction of #3201), allocated at its
+  first size in every call. Now a ResizableConstVector, which holds the 7 coordinates of a rigid node locally. 0 per
+  step for the three solvers; 0 per Jacobian on all models of the library except FFRFreducedOrder, 2 per Jacobian:
+  raised as #3351.
+- test_implicitRungeKuttaAllocations.py counts the vectors too and includes rigidBodySpringDampers.
+
 <a id="rg9-12-30"></a>
 ### RG9.12.30 — the showcase and the table test draw their contact forces (2026-11-07, #3350)
 - connectors.show = False removed from contactPrimitivesShowcase.py and from the viewer part of

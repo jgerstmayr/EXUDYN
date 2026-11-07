@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 448 | 1.13.464 |
+| 1.13 | Newborn | 449 | 1.13.465 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.465** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Memory allocations per step of the implicit Runge-Kutta solvers on rigid body spring-dampers (#3312)
+  - description: rigidBodySpringDampers of modelLibrary.py with the step 3.125e-5 (16000 steps): TrapezoidalGGL, LobattoIIIA4 and LobattoIIIC4GGL warn of about 160000 memory allocations, 10 per step; generalized-alpha does not, nor the implicit Runge-Kutta solvers on rigidBodyJoints or nPendulum. To be located: ObjectConnectorRigidBodySpringDamper in an evaluation that only the Runge-Kutta solvers make (the Jacobian by the velocities or the stage states).
+  - **notes:** The implicit Runge-Kutta solvers allocate no memory per step with rigid body spring-dampers: the Jacobian of ObjectRigidBody allocated a vector per marker and evaluation.
+  - date resolved: **2026-11-08 00:29**, date raised: 2026-11-06
 - **1.13.464** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` contactPrimitivesShowcase.py and contactPrimitivesTableTest.py hide the contact forces they switch on (#3350)
   - description: Both set visualizationSettings.connectors.show = False and contact.showContactForces = True; contacts are drawn only with connectors.show, as every connector, so the arrows of the contact forces (\#3339) are not drawn. Found with the group Contact of the reference manual (\#3344). Decided: connectors.show left on; the generic joint of the table not drawn by its own show.
   - **notes:** contactPrimitivesShowcase.py and contactPrimitivesTableTest.py draw the contact forces they switch on; they had switched off the drawing of all connectors, and with it the contacts.

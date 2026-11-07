@@ -1,0 +1,13 @@
+{
+  "number": 3351,
+  "title": "Two memory allocations per Jacobian evaluation with ObjectFFRFreducedOrder",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Found with #3312: the system Jacobian of the model FFRFreducedOrder of modelLibrary.py (an ObjectFFRFreducedOrder on a generic joint) allocates 2 vectors per evaluation, with any factors of the positions and velocities; the implicit Runge-Kutta solvers evaluate it twice per step. To be located.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "file": "src/ImplObjects/CObjectFFRFreducedOrder.cpp"
+}
