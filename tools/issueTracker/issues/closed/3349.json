@@ -1,0 +1,17 @@
+{
+  "number": 3349,
+  "title": "ObjectContactConvexConvex: a polytope with more than 8 points landing on a face fails the discontinuous iteration",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "An icosahedron dropped flat onto a box with ObjectContactConvexConvex makes the solver fail at the minimum step size when it touches: all 12 points are over the face of the box, the 8 deepest are kept, and points of equal height take turns among the kept ones from one Newton iteration to the next; as the kept points are given to the data blocks in the order of their ids, the 3 points in contact move to other blocks, and the contact state of the data never settles. A cube, with 8 points, is not affected. Found with the test of the shaken table (#3343). Decided: the kept points given to the blocks deepest first, equal gaps by their ids, so that the points in contact take the first blocks; an icosahedron dropped flat in convexConvexContactTest.py.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 23:41",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectContactConvexConvex.cpp",
+  "releaseNotes": "A polytope of more than 8 points landing on a face with ObjectContactConvexConvex, as an icosahedron on a box, made the solver stop at the minimum step size: the points in contact moved between the data blocks. They now take the first blocks.",
+  "resolvedInVersion": "1.13.461"
+}

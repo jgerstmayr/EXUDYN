@@ -7,7 +7,8 @@
 #           show the contact points: a cube on a large box, resting on its 4 lower corners (0.3 - m g/(4k)); a cube
 #           dropped tilted, which settles on its face; a cube on a small box, resting on the 4 upper corners of the
 #           box; a cube sliding with friction until it stops, after about v0^2/(2 mu g); the same cube with the law as
-#           contactForceUserFunction. Run directly, the SolutionViewer shows the five cubes. The result is the sum of
+#           contactForceUserFunction; an icosahedron dropped flat, resting on 3 points (#3349). Run directly, the
+#           SolutionViewer shows the five cubes and the icosahedron. The result is the sum of
 #           the checks and of the final heights.
 #
 # Author:   Johannes Gerstmayr
@@ -129,6 +130,31 @@ def UFcontact(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impact
     return [-fN*normal[i] + fT*vt[i] for i in range(3)]
 nSlideUF, _, marker = Cube([-0.6, 6, 0.1 + a/2], graphics.color.brown, velocity=[v0, 0, 0])
 Contact(marker, [0, 6, 0], [2, 1, 0.2], dynamicFriction=mu, contactForceUserFunction=UFcontact)
+#an icosahedron dropped flat from 1 mm onto a box: 12 points over the face of the box for 8 blocks, the 3 points in contact
+#must keep their blocks (#3349); it rests on its face, m g/(3k) deep
+icoPoints = 0.1/cMath.sqrt(1 + phi*phi)*np.array([[0, s1, s2*phi] for s1 in [-1, 1] for s2 in [-1, 1]]
+    + [[s1, s2*phi, 0] for s1 in [-1, 1] for s2 in [-1, 1]] + [[s1*phi, 0, s2] for s1 in [-1, 1] for s2 in [-1, 1]])
+edge = min(cMath.sqrt((p - q) @ (p - q)) for p in icoPoints for q in icoPoints if (p - q) @ (p - q) > 0)
+icoTriangles = []
+for i in range(12):
+    for j in range(i+1, 12):
+        for m in range(j+1, 12):
+            if all(abs(cMath.sqrt((icoPoints[x] - icoPoints[y]) @ (icoPoints[x] - icoPoints[y])) - edge) < 1e-12 for (x, y) in [(i, j), (j, m), (i, m)]):
+                normal = np.cross(icoPoints[j] - icoPoints[i], icoPoints[m] - icoPoints[i])
+                icoTriangles += [[i, j, m] if normal @ icoPoints[i] > 0 else [i, m, j]]
+faceCenter = np.mean(icoPoints[icoTriangles[0]], axis=0)
+inRadius = cMath.sqrt(faceCenter @ faceCenter)
+axis = np.cross(faceCenter/inRadius, [0, 0, -1])
+faceDown = RotationVector2RotationMatrix(axis/cMath.sqrt(axis @ axis)*cMath.acos(-faceCenter[2]/inRadius))
+mIco = 1.
+nIco = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 7.5, 0.1 + inRadius + 1e-3] + list(RotationMatrix2EulerParameters(faceDown))))
+oIco = mbs.AddObject(ObjectRigidBody(nodeNumber=nIco, mass=mIco, inertia=[0.004, 0.004, 0.004, 0, 0, 0],
+                                     visualization=VObjectRigidBody(graphicsData=[graphics.FromPointsAndTrigs(icoPoints, icoTriangles, color=graphics.color.yellow)])))
+mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=oIco)), loadVector=[0, 0, -g]))
+mbs.AddObject(ObjectGround(referencePosition=[0, 7.5, 0], visualization=VObjectGround(graphicsData=[graphics.Brick(size=big, color=graphics.color.lightgrey)])))
+mbs.AddObject(ObjectContactConvexConvex(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oIco)), mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0, 7.5, 0]))],
+                                        nodeNumber=mbs.AddNode(NodeGenericData(numberOfDataCoordinates=24, initialCoordinates=[1, 0, 0]*8)),
+                                        points0=icoPoints, triangles0=icoTriangles, points1=Box(big)[0], triangles1=Box(big)[1], contactStiffness=k, contactDamping=d))
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
@@ -139,8 +165,8 @@ mbs.SolveDynamic(simulationSettings)
 
 def Position(node):
     return np.array(mbs.GetNodeOutput(node, exu.OutputVariableType.Position))
-heights = [Position(n)[2] for n in [nRest, nDrop, nSmall]]
-expected = [0.1 + a/2 - m*g/(4*k) for m in [mRest, mDrop, mSmall]]
+heights = [Position(n)[2] for n in [nRest, nDrop, nSmall, nIco]]
+expected = [0.1 + a/2 - m*g/(4*k) for m in [mRest, mDrop, mSmall]] + [0.1 + inRadius - mIco*g/(3*k)]
 xSlide = Position(nSlide)[0] + 0.6
 errorUF = cMath.norm(Position(nSlideUF) - Position(nSlide) - [0, 1.5, 0])
 exu.Print('heights', heights, '\n expected', expected)

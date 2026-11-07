@@ -1720,6 +1720,12 @@ CLOSED 2026-11-07 (#3347): trianglePoints converted (a list or numpy array, as t
 
 CLOSED 2026-11-07 (#3348): __all__ written by tools/checkAll.py --write. [log](exudynRevisionLog2026c.md#rg9-12-28)
 
+#### **CLOSED_RG9.12.29** ObjectContactConvexConvex: the points in contact in the first data blocks
+
+#3349. Found with the test of the shaken table (RG9.12.23): an icosahedron landing flat fails the discontinuous iteration; with 12 candidates for 8 blocks, points of equal height take turns and the order by id moves the points in contact to other blocks.
+
+CLOSED 2026-11-07 (#3349): the kept points take the data blocks deepest first, equal gaps by id, so that the points in contact keep the first blocks; an icosahedron dropped flat in convexConvexContactTest.py. [log](exudynRevisionLog2026c.md#rg9-12-29)
+
 ## **CLOSED_RG10** Tooling and process
 
 exudev, the issue tracker, the generators, the checks of the commit gate, CI. Open without a step: #2541 (`exudyn.config`

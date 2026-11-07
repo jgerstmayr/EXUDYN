@@ -111,6 +111,9 @@ way; for a face on a face, both, without the points that coincide;
 - of more than 8 points the 8 deepest; otherwise the closest points of GJK and EPA, one point: an edge on an edge,
 a vertex on an edge.
 
+The points take the blocks of the data node deepest first, so that the points in contact keep the first blocks
+whichever points of equal height are kept (#3349).
+
 The contact point is the middle of the points on both shapes, $\LU{0}{\pv}_{c,k}$, and the relative velocity there
 is that of the body of marker 1 relative to that of marker 0.
 

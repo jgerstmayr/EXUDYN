@@ -6427,6 +6427,21 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-29"></a>
+### RG9.12.29 — ObjectContactConvexConvex: the points in contact in the first blocks (2026-11-07, #3349)
+- Found with the test of the shaken table: the solver failed in the first step (t = 0.001); by switching the groups of
+  contacts off, the polytopes against the boxes of the table; the cube alone rests at every start, the icosahedron
+  placed or dropped flat (0, 1e-4) fails, started 1e-5 deep it runs.
+- Cause: all 12 points of the icosahedron are over the face of the box; Candidates keeps the 8 deepest; the 3 points of
+  each layer have equal heights, so which of them are kept changes from one Newton iteration to the next; CopyTo gave
+  the kept points to the data blocks in the order of their ids (#3331, so that a point keeps its block), and the 3
+  points in contact moved to other blocks: the gap of a block switched sign each iteration.
+- Now deepest first, equal gaps by id: the points in contact take the first blocks whichever others are kept; two points
+  in contact may swap blocks, which changes no contact state. The icosahedron of the experiment runs from 0, 1e-4 and
+  1e-2 above the slab, and inside the borders.
+- convexConvexContactTest.py: an icosahedron dropped flat from 1 mm rests at its inradius - m g/(3k) (to 1e-15); with the
+  old order the SolverError of the minimum step size (checked by building without the fix). The cubes are unchanged.
+
 <a id="rg9-12-28"></a>
 ### RG9.12.28 — the Create functions of the primitive contacts in __all__ (2026-11-07, #3348)
 - tools/checkAll.py: __all__ of misc/mainSystemExtensions.py lacked the six Create functions of #3342; written with

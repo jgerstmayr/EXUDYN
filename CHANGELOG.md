@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 444 | 1.13.460 |
+| 1.13 | Newborn | 445 | 1.13.461 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.461** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactConvexConvex: a polytope with more than 8 points landing on a face fails the discontinuous iteration (#3349)
+  - description: An icosahedron dropped flat onto a box with ObjectContactConvexConvex makes the solver fail at the minimum step size when it touches: all 12 points are over the face of the box, the 8 deepest are kept, and points of equal height take turns among the kept ones from one Newton iteration to the next; as the kept points are given to the data blocks in the order of their ids, the 3 points in contact move to other blocks, and the contact state of the data never settles. A cube, with 8 points, is not affected. Found with the test of the shaken table (\#3343). Decided: the kept points given to the blocks deepest first, equal gaps by their ids, so that the points in contact take the first blocks; an icosahedron dropped flat in convexConvexContactTest.py.
+  - **notes:** A polytope of more than 8 points landing on a face with ObjectContactConvexConvex, as an icosahedron on a box, made the solver stop at the minimum step size: the points in contact moved between the data blocks. They now take the first blocks.
+  - date resolved: **2026-11-07 23:41**, date raised: 2026-11-07
 - **1.13.460** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Create functions of the primitive contacts in \_\_all\_\_ of mainSystemExtensions (#3348)
   - description: The six Create functions of \#3342 (CreateSphereCylinderContact, CreateCylinderCylinderContact, CreateCylinderTriangleContact, CreateConeConeContact, CreateConeTriangleContact, CreateConvexConvexContact) are not in \_\_all\_\_ of exudyn.misc.mainSystemExtensions; tools/checkAll.py reports it. Decided: \_\_all\_\_ written by checkAll.py --write.
   - **notes:** The Create functions of the contacts between primitive shapes are listed in \_\_all\_\_ of exudyn.misc.mainSystemExtensions.

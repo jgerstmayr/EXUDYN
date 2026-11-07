@@ -683,7 +683,8 @@ is an option of the cylinder, cone and convex contacts; each contact point then 
 faces, as a cube resting on a box, was in some poses returned as 0 with the normal of the opposite side, and
 `ObjectContactConvexConvex` pushed the cube into the box; `exudyn.cUtilities.Distance` and the contact items give the
 penetration of the faces, and such contacts are faster; where the algorithm stops before it converges, the penetration
-is refined, so that a polytope resting on a face keeps the normal of the face (#3346).
+is refined, so that a polytope resting on a face keeps the normal of the face (#3346). A polytope of more than 8
+points landing on a face, as an icosahedron, no longer stops the solver (#3349).
 **The contact items draw their forces** (#3339): with `visualizationSettings.contact.showContactForces`, the contacts
 between spheres, cylinders, cones, triangles and polytopes and `ObjectJournalBearing` draw the force on marker 0 as a
 red arrow and the force on marker 1 as a green one, meeting at each contact point; `contact.contactForcesRadius` is new.

@@ -95,7 +95,10 @@ namespace ContactConvex {
 		}
 	};
 
-	//! the deepest candidates, at most maxPoints, kept in the order of their ids so that a point keeps its data block
+	//! the deepest candidates, at most maxPoints, given to the data blocks deepest first, equal gaps by their ids: the
+	//! points in contact take the first blocks whichever points are kept - with more candidates than blocks, points of
+	//! equal height take turns among the kept ones, and an order by id moved the points in contact to other blocks from
+	//! one iteration to the next (#3349)
 	struct Candidates
 	{
 		ContactPoints::Point point[maxPoints];
@@ -122,10 +125,13 @@ namespace ContactConvex {
 		void CopyTo(Points& points) const
 		{
 			bool used[maxPoints] = { false };
-			for (Index k = 0; k < count; k++) //by increasing id
+			for (Index k = 0; k < count; k++) //by increasing gap, then id
 			{
 				Index next = -1;
-				for (Index i = 0; i < count; i++) { if (!used[i] && (next < 0 || id[i] < id[next])) { next = i; } }
+				for (Index i = 0; i < count; i++)
+				{
+					if (!used[i] && (next < 0 || point[i].gap < point[next].gap || (point[i].gap == point[next].gap && id[i] < id[next]))) { next = i; }
+				}
 				used[next] = true;
 				points.Add(point[next].point0, point[next].point1, point[next].normal, point[next].gap);
 			}
