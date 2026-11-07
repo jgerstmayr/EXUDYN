@@ -45,9 +45,9 @@ The parameters of `VObjectContactFrictionCircleCable2D`, given as `visualization
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); with `connectors.showContact`, the circle (`showContactCircle`, 4 times `general.circleTiling` segments), the contact points of the cable, colored by stick and slip, and with `contact.showContactForces` the contact forces.
+Drawn as [all contacts](#sec-drawing-objectscontact); with `connectors.showContact`, the circle (`showContactCircle`, 4 times `general.circleTiling` segments), the contact points of the cable, colored by stick and slip, and with `contact.showContactForces` the contact forces.
 
-Settings beyond those of all connectors: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.showContactForcesValues`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral), [`general.rendererPrecision`](#sec-vsettingsgeneral).
+Settings beyond those of all contacts: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.showContactForcesValues`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral), [`general.rendererPrecision`](#sec-vsettingsgeneral).
 
 ## Output variables
 

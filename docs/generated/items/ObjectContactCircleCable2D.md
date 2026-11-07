@@ -41,9 +41,9 @@ The parameters of `VObjectContactCircleCable2D`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); with `connectors.showContact`, the circle (`showContactCircle`, 4 times `general.circleTiling` segments), the contact points of the cable, and lines where it penetrates.
+Drawn as [all contacts](#sec-drawing-objectscontact); with `connectors.showContact`, the circle (`showContactCircle`, 4 times `general.circleTiling` segments), the contact points of the cable, and lines where it penetrates.
 
-Settings beyond those of all connectors: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral).
+Settings beyond those of all contacts: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral).
 (description-objectcontactcirclecable2d)=
 ## Detailed description
 

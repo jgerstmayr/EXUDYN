@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 446 | 1.13.462 |
+| 1.13 | Newborn | 447 | 1.13.463 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.463** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The contact items as a group of their own in the reference manual of the items (#3344)
+  - description: The reference manual lists the objects in the groups Body, SuperElement, FiniteElement, Joint, Connector, Constraint and Object; the contact items are listed among the connectors, now more than a dozen. Decided: a group Contact for the items of the contact type.
+  - **notes:** The reference manual of the items lists the contacts as a group of their own, Object (Contact), with a general page on the data node, the active set and the Create functions.
+  - date resolved: **2026-11-08 00:04**, date raised: 2026-11-07
 - **1.13.462** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A test model of all primitive contacts: bodies on a shaken table with borders (#3343)
   - description: The primitive contacts are tested pairwise; nothing tests many of them at once, with impacts and the bodies coming to rest. Decided: a test model with two spheres, two cylinders, two cones and two polytopes on a rectangular table with borders, shaken by a short translation and rotation, every pair of bodies in contact by its item; the test checks that no body leaves the table and that the solver finishes; a short time when run as a test.
   - **notes:** The test model contactPrimitivesTableTest.py shakes spheres, cylinders, cones and polytopes on a table with borders, with all contacts between primitive shapes at once, and checks that the solver finishes and no body leaves the table.

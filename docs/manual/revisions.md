@@ -697,6 +697,9 @@ still work and warn that they are deprecated.
 `CreateConvexConvexContact` add the item with its markers and a data node of the right size; cylinders and cones are
 placed by a local position and a local axis on their body. `CreateSphereTriangleContact` takes the triangle points as a list as well,
 as it said, and the option `infinitePlane` (#3347).
+**The contacts are a group of the reference manual** (#3344): the contact items, `ObjectConnectorRollingDiscPenalty`
+and `ObjectJournalBearing` are listed under Object (Contact), with a general page on the data node, the active set
+and the Create functions.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

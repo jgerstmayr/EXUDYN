@@ -505,7 +505,7 @@ def ItemTypeFileName(key):
 #the title of the general page of a kind is "General info for all <plural>" (#2739)
 kindPlural = {'Nodes': 'nodes', 'Objects (Body)': 'bodies', 'Objects (SuperElement)': 'super elements',
               'Objects (Object)': 'objects', 'Objects (FiniteElement)': 'finite elements',
-              'Objects (Connector)': 'connectors', 'Objects (Constraint)': 'constraints',
+              'Objects (Connector)': 'connectors', 'Objects (Contact)': 'contacts', 'Objects (Constraint)': 'constraints',
               'Objects (Joint)': 'joints', 'Markers': 'markers', 'Loads': 'loads', 'Sensors': 'sensors'}
 
 
@@ -680,7 +680,7 @@ def main():
     continueOperation = True #flag to signal that operation shall be terminated
 
     #++++++++++++++++++++++++++    
-    objectClassNames = ['Body','SuperElement','FiniteElement','Joint','Connector','Constraint','Object']
+    objectClassNames = ['Body','SuperElement','FiniteElement','Joint','Connector','Contact','Constraint','Object']
     sPythonGlobalNames = ['Node','Object','Marker','Load','Sensor']  #global python interface class types
     nObjectTypes = len(objectClassNames)
     

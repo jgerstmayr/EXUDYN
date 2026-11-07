@@ -51,7 +51,7 @@ The parameters of `VObjectContactConvexRoll`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); the contact point, a small sphere.
+Drawn as [all contacts](#sec-drawing-objectscontact); the contact point, a small sphere.
 
 ## Output variables
 

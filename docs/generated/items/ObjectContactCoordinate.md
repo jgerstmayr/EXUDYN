@@ -44,9 +44,9 @@ The parameters of `VObjectContactCoordinate`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); with `connectors.showContact`, a circle at each marker of diameter `drawSize` (or `contact.contactPointsDefaultSize`), red while in contact.
+Drawn as [all contacts](#sec-drawing-objectscontact); with `connectors.showContact`, a circle at each marker of diameter `drawSize` (or `contact.contactPointsDefaultSize`), red while in contact.
 
-Settings beyond those of all connectors: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact).
+Settings beyond those of all contacts: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact).
 
 ## Output variables
 

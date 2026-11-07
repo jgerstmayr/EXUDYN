@@ -48,13 +48,10 @@ classical joints, and `HomogeneousTransformationLocal` the frame $J1$ relative t
 and connectors on rigid markers. Both give an `exu.HT` and are stored by a sensor as 16 values row by
 row.
 
-## Contact connectors
+## Contacts
 
-The contact connectors - `ObjectContact...`, `ObjectConnectorRollingDiscPenalty` - are penalty
-formulations with a discontinuous contact state. They need a `NodeGenericData`, whose data
-coordinates hold the state of the last post Newton step - gap, friction regime, impact velocity -,
-and the solver repeats a step when the state changes (active set strategy). `mbs.CreateSphereSphereContact`
-and its relatives add the node, the markers and the connector.
+The connectors that act only where shapes touch - `ObjectContact...`, `ObjectConnectorRollingDiscPenalty`,
+`ObjectJournalBearing` - are the group Contact, described there.
 
 (sec-drawing-objectsconnector)=
 ## Drawing

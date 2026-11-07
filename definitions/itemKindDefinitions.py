@@ -331,13 +331,43 @@ definitions.append(ItemKindDefinition(
     and connectors on rigid markers. Both give an `exu.HT` and are stored by a sensor as 16 values row by
     row.
 
-    ## Contact connectors
+    ## Contacts
 
-    The contact connectors - `ObjectContact...`, `ObjectConnectorRollingDiscPenalty` - are penalty
-    formulations with a discontinuous contact state. They need a `NodeGenericData`, whose data
-    coordinates hold the state of the last post Newton step - gap, friction regime, impact velocity -,
-    and the solver repeats a step when the state changes (active set strategy). `mbs.CreateSphereSphereContact`
-    and its relatives add the node, the markers and the connector.
+    The connectors that act only where shapes touch - `ObjectContact...`, `ObjectConnectorRollingDiscPenalty`,
+    `ObjectJournalBearing` - are the group Contact, described there.
+    """,
+    ))
+
+definitions.append(ItemKindDefinition(
+    kind='Objects (Contact)',
+    overallDescription=r"""A Contact is a Connector that acts where the shapes on its markers touch: a penalty force of their penetration, with damping, an impact model and friction, whose contact state switches during the simulation.""",
+    drawing=r"""A contact is drawn as a connector, if `connectors.show` and its own `show` are True: the shapes switched on in
+    `contact.show`, in the colors of `contact.color` or its own `color`, and, for the contacts of primitive shapes, with
+    `contact.showContactForces` the force of each contact point; `connectors.showNumbers` writes its number.""",
+    drawingSettings=['connectors.show', 'connectors.showNumbers', 'connectors.defaultColor', 'connectors.defaultSize'],
+    detailedDescription=r"""
+    ## The principle every contact follows
+
+    A contact is a connector: its markers give it positions, orientations and velocities, it computes a force, and the
+    force goes back to the coordinates through the Jacobians of the markers. It adds the force only where its shapes
+    penetrate - a penalty force of the penetration, a damping, an impact model with a coefficient of restitution, and a
+    regularized Coulomb friction at the contact point - and none where they are apart. Its output `Distance` is the
+    signed distance of the shapes, negative for a penetration, also where the contact is not active.
+
+    ## The data node and the active set
+
+    The contact state is discontinuous. A contact - except `ObjectJournalBearing`, whose film force is smooth - needs a
+    `NodeGenericData`, whose data coordinates hold the state of the last post Newton step: the gap, the friction regime
+    and the impact velocity, for each contact point. During the Newton iterations of a step, contact and friction
+    regime are those of the data node; the post Newton step updates them, and the solver repeats the step where they
+    changed (active set strategy).
+
+    ## Create functions
+
+    `mbs.CreateSphereSphereContact`, `CreateSphereTriangleContact`, `CreateSphereCylinderContact`,
+    `CreateCylinderCylinderContact`, `CreateCylinderTriangleContact`, `CreateConeConeContact`,
+    `CreateConeTriangleContact` and `CreateConvexConvexContact` add the data node of the right size, the markers and the
+    contact; the theory of the contacts between primitive shapes is in [](#sec-contact-primitives).
     """,
     ))
 

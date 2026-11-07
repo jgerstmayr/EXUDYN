@@ -633,6 +633,7 @@ ClassTypeSensor      = 'Sensor'
 ObjectTypeObject        = 'Object'
 ObjectTypeBody          = 'Body'
 ObjectTypeConnector     = 'Connector'
+ObjectTypeContact       = 'Contact'     #a connector acting where shapes touch: a group of its own in the documentation (#3344)
 ObjectTypeConstraint    = 'Constraint'
 ObjectTypeJoint         = 'Joint'
 ObjectTypeFiniteElement = 'FiniteElement'

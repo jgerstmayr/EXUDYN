@@ -6427,6 +6427,20 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-24"></a>
+### RG9.12.24 — the contacts as a group of the reference manual (2026-11-07, #3344)
+- The groups of the objects are the objectType of the definitions, used only by the documentation (itemDocsEmitter,
+  itemDocumentationReport; the C++ CObjectType is separate): ObjectTypeContact = 'Contact' (new), objectClassNames and
+  kindPlural of itemDocsEmitter. The contact type the maintainer remembered was the section "Contact connectors" of the
+  kind Connector in itemKindDefinitions.py.
+- The 14 ObjectContact... items, ObjectConnectorRollingDiscPenalty (named a contact connector by that section) and
+  ObjectJournalBearing (its theory is in theoryContact.md) are of the type Contact: the pages objectContactIndex and
+  objectContactGeneral; the section of the Connector page is now a pointer, the Contact page has the principle, the
+  data node and the active set (the journal bearing needs none), the Create functions.
+- Drawing: contacts are drawn only with connectors.show, as every connector (VisualizationSystem.cpp:205) - said on the
+  Contact page. contactPrimitivesShowcase.py and contactPrimitivesTableTest.py set connectors.show = False and so hide
+  their arrows: raised as #3350.
+
 <a id="rg9-12-23"></a>
 ### RG9.12.23 — all primitive contacts on a shaken table (2026-11-07, #3343)
 - contactPrimitivesTableTest.py (new): a table of 1 x 0.7 m with borders 0.15 m high, moved by CreateGenericJoint with

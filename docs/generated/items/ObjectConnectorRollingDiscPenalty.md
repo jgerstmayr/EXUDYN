@@ -58,9 +58,9 @@ The parameters of `VObjectConnectorRollingDiscPenalty`, given as `visualization`
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); the disc of width `discWidth`, with 4 times `general.cylinderTiling` segments, and its axis.
+Drawn as [all contacts](#sec-drawing-objectscontact); the disc of width `discWidth`, with 4 times `general.cylinderTiling` segments, and its axis.
 
-Settings beyond those of all connectors: [`general.cylinderTiling`](#sec-vsettingsgeneral).
+Settings beyond those of all contacts: [`general.cylinderTiling`](#sec-vsettingsgeneral).
 
 ## Output variables
 

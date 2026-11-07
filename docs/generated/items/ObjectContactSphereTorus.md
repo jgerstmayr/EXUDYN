@@ -53,9 +53,9 @@ The parameters of `VObjectContactSphereTorus`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); the sphere with `contact.show.spheres` and the center circle of the torus with `contact.show.tori`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).
+Drawn as [all contacts](#sec-drawing-objectscontact); the sphere with `contact.show.spheres` and the center circle of the torus with `contact.show.tori`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).
 
-Settings beyond those of all connectors: [`contact.color.spheres`](#sec-vsettingscontactcolor), [`contact.color.tori`](#sec-vsettingscontactcolor), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.show.spheres`](#sec-vsettingscontactshow), [`contact.show.tori`](#sec-vsettingscontactshow), [`contact.tilingSpheres`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+Settings beyond those of all contacts: [`contact.color.spheres`](#sec-vsettingscontactcolor), [`contact.color.tori`](#sec-vsettingscontactcolor), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactForcesRadius`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.show.spheres`](#sec-vsettingscontactshow), [`contact.show.tori`](#sec-vsettingscontactshow), [`contact.tilingSpheres`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral), [`general.cylinderTiling`](#sec-vsettingsgeneral).
 
 ## Output variables
 

@@ -11662,7 +11662,7 @@ definitions.append(ItemDefinition(
                         $$
 """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground"""),
         ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}_{trail}$current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point!"""),
@@ -11932,7 +11932,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     acts onto the body, resulting from the slip force acting not in the bodies center.
 """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}_{C}$current global position of contact point between roller and ground"""),
         ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}_{C}$current velocity of the trail (contact) point in global coordinates; this is the velocity with which the contact moves over the ground plane"""),
@@ -12170,7 +12170,7 @@ definitions.append(ItemDefinition(
     outputVariables=[
         ItemOutputVariable(OVDistance, r'$g$ the gap, coordinate of marker 1 minus coordinate of marker 0 minus offset; negative in contact'),
         ],
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, fromParent=True,
@@ -12342,7 +12342,7 @@ definitions.append(ItemDefinition(
     the last post Newton step and decide on contact (active set).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, fromParent=True,
@@ -12931,7 +12931,7 @@ definitions.append(ItemDefinition(
     circle's marker are set to zero.
 """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVCoordinates, r"""$[u_{t,0},\, g_0,\, u_{t,1},\, g_1,\, \ldots,\, u_{t,n_{cs}},\, g_{n_{cs}}]\tp$local (relative) displacement in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$); values are only provided in case of contact, otherwise zero; tangential displacement is only non-zero in case of sticking!"""),
         ItemOutputVariable(OVCoordinates_t, r"""$[v_{t,0},\, v_{n,0},\, v_{t,1},\, v_{n,1},\, \ldots,\, v_{t,n_{cs}},\, v_{n,n_{cs}}]\tp$local (relative) velocity in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$); values are only provided in case of contact, otherwise zero"""),
@@ -13296,7 +13296,7 @@ definitions.append(ItemDefinition(
     It can be seen that the torque due to the connector is the same for both spheres, if $r_0=r_1$ applies.
 """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDistance, 'the signed distance of the two sphere surfaces, the gap (< 0: penetration), from the current configuration, also with activeConnector = False; the same as DisplacementLocal, under the name of the other contact items and of exudyn.cUtilities.Distance'),
         ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
@@ -13529,7 +13529,7 @@ definitions.append(ItemDefinition(
     Newton iterations (active set).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDistance, 'the signed distance of the sphere and the torus surface, the gap (< 0: penetration), from the current configuration, also with activeConnector = False; the same as DisplacementLocal, under the name of the other contact items and of exudyn.cUtilities.Distance'),
         ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
@@ -13786,7 +13786,7 @@ definitions.append(ItemDefinition(
     Newton iterations (active set).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDistance, 'the signed distance of the sphere surface and the triangle, the gap (< 0: penetration), from the current configuration, also with activeConnector = False; the same as DisplacementLocal, under the name of the other contact items and of exudyn.cUtilities.Distance'),
         ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
@@ -14066,7 +14066,7 @@ definitions.append(ItemDefinition(
     set).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDistance, 'the signed distance of the sphere surface and the cylinder, the gap (< 0: penetration), from the current configuration, also with activeConnector = False'),
         ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
@@ -14340,7 +14340,7 @@ definitions.append(ItemDefinition(
     contact and on the friction regime during the Newton iterations (active set).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDistance, 'the signed distance of the two cylinders, the gap (< 0: penetration), from the current configuration, also with activeConnector = False'),
         ItemOutputVariable(OVPosition, 'the center of the contact points weighted by their normal forces; without contact force the middle of the closest points'),
@@ -14621,7 +14621,7 @@ definitions.append(ItemDefinition(
     contact and on the friction regime during the Newton iterations (active set).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDistance, 'the signed distance of the two cones, the gap (< 0: penetration), from the current configuration, also with activeConnector = False'),
         ItemOutputVariable(OVPosition, 'the center of the contact points weighted by their normal forces; without contact force the middle of the closest points'),
@@ -14910,7 +14910,7 @@ definitions.append(ItemDefinition(
     contact and on the friction regime during the Newton iterations (active set).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDistance, 'the signed distance of the cone and the triangle (or its plane), the gap (< 0: penetration), from the current configuration, also with activeConnector = False'),
         ItemOutputVariable(OVPosition, 'the center of the contact points weighted by their normal forces; without contact force the middle of the closest points'),
@@ -15196,7 +15196,7 @@ definitions.append(ItemDefinition(
     iterations (active set).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDistance, 'the signed distance of the two shapes, the gap (< 0: penetration), from the current configuration, also with activeConnector = False'),
         ItemOutputVariable(OVPosition, 'the center of the contact points weighted by their normal forces; without contact force the middle of the closest points'),
@@ -15485,7 +15485,7 @@ definitions.append(ItemDefinition(
     contact and on the friction regime during the Newton iterations (active set).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDistance, 'the signed distance of the cylinder and the triangle (or its plane), the gap (< 0: penetration), from the current configuration, also with activeConnector = False'),
         ItemOutputVariable(OVPosition, 'the center of the contact points weighted by their normal forces; without contact force the middle of the closest points'),
@@ -15758,7 +15758,7 @@ definitions.append(ItemDefinition(
     replaces the force of the model and of the contact.
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDisplacement, 'the eccentricity: the global vector from the center of the bearing to that of the journal, normal to the axis'),
         ItemOutputVariable(OVVelocity, 'the rate of the eccentricity'),
@@ -15963,7 +15963,7 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     with `frictionProportionalZone` $v_{reg}$ (0: no regularization); there is no sticking state.
     """,
     mainParentClass=MainParentClassMainObjectConnector,
-    objectType=ObjectTypeConnector,
+    objectType=ObjectTypeContact,
     outputVariables=[
         ItemOutputVariable(OVDisplacementLocal, r'$[g_0,\,g_1,\,\ldots]\tp$per segment, the gap of the circle closest to it (< 0: penetration), from the current configuration; the largest float if there is no circle'),
         ItemOutputVariable(OVVelocityLocal, r'$[\dot g_0,\,\dot g_1,\,\ldots]\tp$per segment, the normal relative velocity of that circle'),

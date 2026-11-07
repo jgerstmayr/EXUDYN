@@ -49,9 +49,9 @@ The parameters of `VObjectContactCurveCircles`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all connectors](#sec-drawing-objectsconnector); with `connectors.showContact`, the curve as lines with points at its segments, and the circles of the markers with `general.circleTiling` segments.
+Drawn as [all contacts](#sec-drawing-objectscontact); with `connectors.showContact`, the curve as lines with points at its segments, and the circles of the markers with `general.circleTiling` segments.
 
-Settings beyond those of all connectors: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact), [`contact.tilingCurves`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral), [`general.sphereTiling`](#sec-vsettingsgeneral).
+Settings beyond those of all contacts: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact), [`contact.tilingCurves`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral), [`general.sphereTiling`](#sec-vsettingsgeneral).
 
 ## Output variables
 

@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (1 open sub-step)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 7 | Structural core improvements |
+| RG9 | OPEN | 6 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1694,9 +1694,11 @@ CLOSED 2026-11-07 (#3342): mbs.CreateSphereCylinderContact, CreateCylinderCylind
 
 CLOSED 2026-11-07 (#3343): contactPrimitivesTableTest.py - 8 bodies, 52 contact items by the Create functions, a table shaken by a pulse of 0.2 s; the bodies jump 0.17 m, none is lost, the solver finishes; found #3347 and #3349. [log](exudynRevisionLog2026c.md#rg9-12-23)
 
-#### **OPEN_RG9.12.24** The contact items as a group Contact in the reference manual
+#### **CLOSED_RG9.12.24** The contact items as a group Contact in the reference manual
 
 #3344. Maintainer 2026-11-07: the objects are grouped into Body, SuperElement, ...; an additional group for Contact, as there are now more elements.
+
+CLOSED 2026-11-07 (#3344): objectType Contact for the 16 contact items, the rolling disc penalty and the journal bearing; the page Object (Contact) with its general section (principle, data node and active set, Create functions), taken from the Connector page. [log](exudynRevisionLog2026c.md#rg9-12-24)
 
 #### **CLOSED_RG9.12.25** ObjectJournalBearing for both directions of rotation
 

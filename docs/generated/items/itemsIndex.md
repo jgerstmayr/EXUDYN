@@ -18,6 +18,7 @@ objectFiniteElementIndex
 objectConnectorIndex
 objectJointIndex
 objectConstraintIndex
+objectContactIndex
 markerIndex
 loadIndex
 sensorIndex
