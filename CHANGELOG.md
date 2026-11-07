@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 423 | 1.13.439 |
+| 1.13 | Newborn | 424 | 1.13.440 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.440** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The output Torque of the sphere contacts is the negative of the friction torque on marker 0 (#3328)
+  - description: ObjectContactSphereSphere, SphereTriangle, SphereTorus and SphereCylinder give as output variable Torque the negative of the friction torque on marker 0, which their descriptions name, while their output Force is the force on marker 0 with the right sign: a ball sliding in +x on the ground gets the friction force -x, which Force shows, and starts to turn about +y, but Torque shows -y. The simulation is right; only the output is affected. The description of SphereCylinder also names the forces on the two markers with the wrong signs. Decided: Torque is the torque on marker 0 about its position, (p\_c - p\_0) x f with the contact point p\_c and the force f on marker 0, for the four items; the description of SphereCylinder corrected.
+  - **notes:** The output variable Torque of ObjectContactSphereSphere, ObjectContactSphereTriangle, ObjectContactSphereTorus and ObjectContactSphereCylinder is the friction torque on marker 0; it had the opposite sign. The simulation was not affected.
+  - date resolved: **2026-11-07 14:19**, date raised: 2026-11-07
 - **1.13.439** `TESTING` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The contact test models show the contact shapes in the SolutionViewer (#3326)
   - description: contactDistanceOutputTest.py, sphereCylinderContactTest.py, sphereTrianglePlaneTest.py and contactUserFunctionTest.py set the contact.show... settings, but their contact items keep the default show=False of the visualization, so no contact shape is drawn: contactDistanceOutputTest.py shows nothing, sphereCylinderContactTest.py only the ball. Decided: the contact items of these models get visualization show=True; the descriptions of contact.showSpheres, showTriangles, showTori and showCylinders say that they draw the items whose visualization has show=True, and so does the rule in WORKFLOW.md.
   - **notes:** The contact items of the contact test models contactDistanceOutputTest.py, sphereCylinderContactTest.py, sphereTrianglePlaneTest.py and contactUserFunctionTest.py are drawn in the SolutionViewer: they set visualization show=True, which the contact.show... settings need; the descriptions of contact.showSpheres, showTriangles, showTori and showCylinders say so.

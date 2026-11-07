@@ -647,6 +647,10 @@ function (#3324).
 **ObjectContactSphereTriangle and ObjectContactSphereTorus report their own type**: `mbs.GetObject(i)['objectType']`
 gave `ContactSphereSphere` for both, so that the dictionary of such an item, added again, created a sphere-sphere
 contact (#3325).
+**The output Torque of the sphere contacts has the sign of the torque on marker 0** (#3328): ObjectContactSphereSphere,
+SphereTriangle, SphereTorus and SphereCylinder gave the negative of the friction torque on marker 0 that their output
+Force goes with; a ball sliding in +x showed a torque about -y while it starts to turn about +y. The simulation was
+not affected; sensors of this output change their sign.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

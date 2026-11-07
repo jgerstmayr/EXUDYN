@@ -115,9 +115,9 @@ The normal force - from the penetration $\delta = -g$, with `contactStiffness` $
 $n_\mathrm{exp}$, `contactDamping` $d_c$ and the impact model `impactModel` with the restitution
 coefficient - and the regularized dry friction with $\mu_d$ and `frictionProportionalZone` are
 computed as for `ObjectContactSphereSphere`, see [](#sec-item-objectcontactspheresphere), with the normal
-$\LU{0}{\nv}$ and the relative velocity at the contact point of this contact. The force on marker 1 is
-$\LU{0}{\fv}$, the force on marker 0 is $-\LU{0}{\fv}$; the friction force also gives a torque about the
-centers. The data coordinates hold the gap, the tangential velocity and the impact velocity of the last
+$\LU{0}{\nv}$ and the relative velocity at the contact point of this contact. The force on marker 0 is
+$\LU{0}{\fv}$ (the output Force), the force on marker 1 is $-\LU{0}{\fv}$; the friction force also gives a
+torque about the centers (the output Torque, on marker 0). The data coordinates hold the gap, the tangential velocity and the impact velocity of the last
 post Newton step, which decide on contact and on the friction regime during the Newton iterations (active
 set).
 

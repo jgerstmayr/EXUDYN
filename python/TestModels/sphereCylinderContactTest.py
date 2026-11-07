@@ -4,9 +4,9 @@
 # Details:  ObjectContactSphereCylinder (#3320): the output Distance of a deactivated contact against
 #           exudyn.cUtilities.Distance for a sphere beside the side, above a cap, beside a rim and inside a tilted
 #           cylinder; a ball at rest on the cap and on the side of a cylinder, m g / k into it; a ball sliding along
-#           the top of a cylinder with friction rolls at 5/7 of its initial velocity. The result is the sum of the
-#           checks and of the final positions. Run directly, the SolutionViewer shows the drops and the rolling ball,
-#           whose edges show its rotation.
+#           the top of a cylinder with friction, with the friction torque mu m g r about +y, rolls at 5/7 of its
+#           initial velocity. The result is the sum of the checks and of the final positions. Run directly, the
+#           SolutionViewer shows the drops and the rolling ball, whose edges show its rotation.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-07
@@ -85,9 +85,15 @@ for (cylinderHT, zRest) in [(np.eye(4), 0.5*L + r - g/k), (HTrotateY(0.5*np.pi),
 #sliding along the top of a cylinder lying along x: friction makes the ball roll at 5/7 of its initial velocity
 v0 = 1.
 mbs, node, contact = Model([-0.4, 0, rC + r - g/k], velocity=[v0, 0, 0], cylinderHT=HTrotateY(0.5*np.pi), friction=0.5)
+sTorque = mbs.AddSensor(SensorObject(objectNumber=contact, outputVariableType=exu.OutputVariableType.Torque, storeInternal=True))
+mbs.Assemble()
 simulationSettings.timeIntegration.endTime = 0.4
 simulationSettings.timeIntegration.numberOfSteps = 4000
 mbs.SolveDynamic(simulationSettings)
+#while it slides (until t = 2 v0/(7 mu g) = 0.058 s), the friction torque on the ball is mu m g r about +y (#3328)
+torqueSliding = mbs.GetSensorStoredData(sTorque)[2] #t = 0.02
+exu.Print('friction torque while sliding:', torqueSliding[1:4], ', mu m g r =', 0.5*g*r)
+checks += [abs(torqueSliding[2] - 0.5*g*r) < 1e-3*0.5*g*r, abs(torqueSliding[1]) + abs(torqueSliding[3]) < 1e-10]
 if not testIsActive: mbs.SolutionViewer()
 vx = mbs.GetNodeOutput(node, exu.OutputVariableType.Velocity)[0]
 omega = mbs.GetNodeOutput(node, exu.OutputVariableType.AngularVelocity)[1]

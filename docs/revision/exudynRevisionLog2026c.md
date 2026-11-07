@@ -6427,6 +6427,17 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-16"></a>
+### RG9.12.16 — the sign of the output Torque of the sphere contacts (2026-11-07, #3328)
+- Found while setting the conventions of RG9.12.5: a ball sliding in +x on a triangle, a large sphere and a large
+  cylinder, one step of 1e-5 s - Force [-2.943, 0, 9.81] (friction -x, normal +z: the force on the ball, marker 0),
+  the ball's angular velocity +y, but Torque -0.2942 about y. The output was ((-(r + g/2)) n0) x f, the
+  contribution to the left-hand side that ComputeConnectorForceRigid gives for marker 0; the torque on marker 0 is
+  ((r + g/2) n0) x f. The simulation uses ComputeConnectorForceRigid and was right.
+- Corrected in the four items; the description of SphereCylinder named the forces on the two markers the other way
+  round, corrected. sphereCylinderContactTest.py: the sliding ball has a Torque sensor, +0.4902 about y at t = 0.02
+  against mu m g r = 0.4905 (old build: -0.4902); 2 checks more (6.614 -> 8.614).
+
 <a id="rg2-12-3"></a>
 ### RG2.12.3 — the contact items of the contact test models drawn (2026-11-07, #3326)
 - Maintainer 2026-11-07: contactDistanceOutputTest.py showed nothing, sphereCylinderContactTest.py the ball but no

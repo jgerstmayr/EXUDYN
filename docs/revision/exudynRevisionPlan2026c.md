@@ -1620,6 +1620,10 @@ CLOSED 2026-11-07 (#3324, #3325): contactForceUserFunction(mbs, t, itemNumber, g
 
 #3327. Maintainer 2026-11-07: impactModel is a number 0, 1, 2 in ObjectContactCoordinate, SphereSphere, SphereTorus, SphereTriangle and SphereCylinder, explained only in its description; an enumeration type as the other types (definitions/enumTypes.py) names the linear, the Hunt-Crossley and the mixed Gonthier/Carvalho-Martins model. Open: whether a number is still accepted (impactModel exists since before 1.11.0, so it is not removed without a deprecation). Before the further items of RG9.12.5 ff. take the parameter, or with them.
 
+#### **CLOSED_RG9.12.16** The sign of the output Torque of the sphere contacts
+
+CLOSED 2026-11-07 (#3328): found on the way to RG9.12.5 - Torque of SphereSphere, SphereTriangle, SphereTorus and SphereCylinder was the negative of the friction torque on marker 0, against their Force output and their descriptions; corrected, checked in sphereCylinderContactTest.py (mu m g r about +y while sliding). [log](exudynRevisionLog2026c.md#rg9-12-16)
+
 ## **CLOSED_RG10** Tooling and process
 
 exudev, the issue tracker, the generators, the checks of the commit gate, CI. Open without a step: #2541 (`exudyn.config`

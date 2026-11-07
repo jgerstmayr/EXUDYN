@@ -237,7 +237,7 @@ void CObjectContactSphereTorus::GetOutputVariableConnector(OutputVariableType va
 	case OutputVariableType::Director2: value.CopyFrom((pCircle1 - p1) *(1. / parameters.torusMajorRadius) ); break;
 	case OutputVariableType::Director3: value.CopyFrom(n0); break;
 	case OutputVariableType::Force: value.CopyFrom(fVec); break;
-	case OutputVariableType::Torque: value.CopyFrom(((-(parameters.sphereRadius + 0.5 * gap)) * n0).CrossProduct(fVec)); break;
+	case OutputVariableType::Torque: value.CopyFrom(((parameters.sphereRadius + 0.5 * gap) * n0).CrossProduct(fVec)); break; //the torque on marker 0 (#3328)
 	default:
 		SysError("CObjectContactSphereTorus::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
 	}

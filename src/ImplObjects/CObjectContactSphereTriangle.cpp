@@ -188,7 +188,7 @@ void CObjectContactSphereTriangle::GetOutputVariableConnector(OutputVariableType
 	case OutputVariableType::Velocity: value.CopyFrom(deltaV); break;
 	case OutputVariableType::Director1: value.CopyFrom(n0); break;
 	case OutputVariableType::Force: value.CopyFrom(fVec); break;
-	case OutputVariableType::Torque: value.CopyFrom((-(parameters.sphereRadius + 0.5 * gap) * n0).CrossProduct(fVec)); break;
+	case OutputVariableType::Torque: value.CopyFrom(((parameters.sphereRadius + 0.5 * gap) * n0).CrossProduct(fVec)); break; //the torque on marker 0 (#3328)
 	default:
 		SysError("CObjectContactSphereTriangle::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
 	}

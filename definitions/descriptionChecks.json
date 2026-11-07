@@ -331,20 +331,25 @@
    "by": "Claude-JG",
    "fingerprint": "3f8898cf229f"
   },
+  "ObjectContactSphereCylinder": {
+   "checked": "2026-11-07",
+   "by": "Claude-JG",
+   "fingerprint": "ee216385ad29"
+  },
   "ObjectContactSphereSphere": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "bad2479062e5"
+   "fingerprint": "90121bb974af"
   },
   "ObjectContactSphereTorus": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "d625e078cb8c"
+   "fingerprint": "929e9322fff8"
   },
   "ObjectContactSphereTriangle": {
    "checked": "2026-11-07",
    "by": "Claude-JG",
-   "fingerprint": "235270d05644"
+   "fingerprint": "174d70cf87f6"
   },
   "ObjectFFRF": {
    "checked": "2026-10-25",

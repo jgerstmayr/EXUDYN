@@ -252,7 +252,7 @@ def TestExamplesReferenceSolution():
         'contactDistanceOutputTest.py':5.272467570487764, #new 2026-11-07: the output variable Distance of the sphere contacts, also when deactivated (#3319)
         'contactUserFunctionTest.py':2.785239240769, #new 2026-11-07: the contactForceUserFunction of the sphere-cylinder and sphere-triangle contacts, Python and symbolic, against the built-in law (#3324)
         'convexDistanceTest.py':13.364213562373093,
-        'sphereCylinderContactTest.py':6.613788897624327, #new 2026-11-07: ObjectContactSphereCylinder, its Distance against cUtilities.Distance, at rest on cap and side, rolling with friction (#3320) #new 2026-11-07: exudyn.cUtilities.Distance of convex shapes by GJK and EPA against closed forms and random pairs (#3317)
+        'sphereCylinderContactTest.py':8.613788897624327, #new 2026-11-07: ObjectContactSphereCylinder, its Distance against cUtilities.Distance, at rest on cap and side, rolling with friction (#3320) #new 2026-11-07: exudyn.cUtilities.Distance of convex shapes by GJK and EPA against closed forms and random pairs (#3317)
         'sphereTrianglePlaneTest.py':6.456291520443378, #new 2026-11-07: the option infinitePlane of ObjectContactSphereTriangle (#3323)
         'kinematicChainTest.py':37.53287798230574, #new 2026-11-05: exudyn.cUtilities.KinematicChain against the Python functions of Robot (#3259)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)
