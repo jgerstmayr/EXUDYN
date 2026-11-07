@@ -104,6 +104,7 @@
         "src/ImplObjects/CObjectJointSliding2D.cpp",
         "src/ImplObjects/CObjectJointSpherical.cpp",
         "src/ImplObjects/CObjectJointUser.cpp",
+        "src/ImplObjects/CObjectJournalBearing.cpp",
         "src/ImplObjects/CObjectKinematicTree.cpp",
         "src/ImplObjects/CObjectMass1D.cpp",
         "src/ImplObjects/CObjectMassPoint.cpp",

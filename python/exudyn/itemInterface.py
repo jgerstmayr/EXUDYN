@@ -55,7 +55,8 @@ __all__ = [
     'ObjectContactConeConeContactForceUserFunction',
     'ObjectContactConeTriangleContactForceUserFunction',
     'ObjectContactConvexConvexContactForceUserFunction',
-    'ObjectContactCylinderTriangleContactForceUserFunction', 'ObjectJointGenericOffsetUserFunction',
+    'ObjectContactCylinderTriangleContactForceUserFunction',
+    'ObjectJournalBearingForceUserFunction', 'ObjectJointGenericOffsetUserFunction',
     'ObjectJointGenericOffsetUserFunction_t', 'MarkerBodyUserPositionUserFunction',
     'MarkerBodyUserPositionJacobianUserFunction', 'MarkerBodyUserRotationMatrixUserFunction',
     'MarkerBodyUserRotationJacobianUserFunction', 'LoadForceVectorLoadVectorUserFunction',
@@ -116,36 +117,37 @@ __all__ = [
     'VObjectContactCylinderCylinder', 'ObjectContactCylinderCylinder', 'VObjectContactConeCone',
     'ObjectContactConeCone', 'VObjectContactConeTriangle', 'ObjectContactConeTriangle',
     'VObjectContactConvexConvex', 'ObjectContactConvexConvex', 'VObjectContactCylinderTriangle',
-    'ObjectContactCylinderTriangle', 'VObjectContactCurveCircles', 'ObjectContactCurveCircles',
-    'CamFollowerContactPlanar', 'VCamFollowerContactPlanar', 'VObjectJointGeneric',
-    'ObjectJointGeneric', 'GenericJoint', 'VGenericJoint', 'VObjectJointRevoluteZ',
-    'ObjectJointRevoluteZ', 'RevoluteJointZ', 'VRevoluteJointZ', 'VObjectJointPrismaticX',
-    'ObjectJointPrismaticX', 'PrismaticJointX', 'VPrismaticJointX', 'VObjectJointSpherical',
-    'ObjectJointSpherical', 'SphericalJoint', 'VSphericalJoint', 'VObjectJointRollingDisc',
-    'ObjectJointRollingDisc', 'RollingDiscJoint', 'VRollingDiscJoint', 'VObjectJointRevolute2D',
-    'ObjectJointRevolute2D', 'RevoluteJoint2D', 'VRevoluteJoint2D', 'VObjectJointPrismatic2D',
-    'ObjectJointPrismatic2D', 'PrismaticJoint2D', 'VPrismaticJoint2D', 'VObjectJointSliding',
-    'ObjectJointSliding', 'SlidingJoint', 'VSlidingJoint', 'VObjectJointSliding2D',
-    'ObjectJointSliding2D', 'SlidingJoint2D', 'VSlidingJoint2D', 'VObjectJointALEMoving2D',
-    'ObjectJointALEMoving2D', 'ALEMovingJoint2D', 'VALEMovingJoint2D', 'VMarkerBodyMass',
-    'MarkerBodyMass', 'VMarkerBodyPosition', 'MarkerBodyPosition', 'VMarkerBodyRigid',
-    'MarkerBodyRigid', 'VMarkerNodePosition', 'MarkerNodePosition', 'VMarkerNodeRigid',
-    'MarkerNodeRigid', 'VMarkerNodeCoordinate', 'MarkerNodeCoordinate', 'VMarkerNodeCoordinates',
-    'MarkerNodeCoordinates', 'VMarkerNodeODE1Coordinate', 'MarkerNodeODE1Coordinate',
-    'VMarkerNodeRotationCoordinate', 'MarkerNodeRotationCoordinate',
-    'VMarkerBodiesRelativeTranslationCoordinate', 'MarkerBodiesRelativeTranslationCoordinate',
-    'VMarkerBodiesRelativeRotationCoordinate', 'MarkerBodiesRelativeRotationCoordinate',
-    'VMarkerSuperElementPosition', 'MarkerSuperElementPosition', 'VMarkerSuperElementRigid',
-    'MarkerSuperElementRigid', 'VMarkerKinematicTreeRigid', 'MarkerKinematicTreeRigid',
-    'VMarkerObjectODE2Coordinates', 'MarkerObjectODE2Coordinates', 'VMarkerBodyCable2DShape',
-    'MarkerBodyCable2DShape', 'VMarkerBodyCable2DCoordinates', 'MarkerBodyCable2DCoordinates',
-    'VMarkerBodyBeamShape', 'MarkerBodyBeamShape', 'VMarkerBodyUser', 'MarkerBodyUser',
-    'VLoadForceVector', 'LoadForceVector', 'Force', 'VForce', 'VLoadTorqueVector',
-    'LoadTorqueVector', 'Torque', 'VTorque', 'VLoadMassProportional', 'LoadMassProportional',
-    'Gravity', 'VGravity', 'VLoadCoordinate', 'LoadCoordinate', 'VSensorNode', 'SensorNode',
-    'VSensorObject', 'SensorObject', 'VSensorBody', 'SensorBody', 'VSensorSuperElement',
-    'SensorSuperElement', 'VSensorKinematicTree', 'SensorKinematicTree', 'VSensorMarker',
-    'SensorMarker', 'VSensorLoad', 'SensorLoad', 'VSensorUserFunction', 'SensorUserFunction',
+    'ObjectContactCylinderTriangle', 'VObjectJournalBearing', 'ObjectJournalBearing',
+    'VObjectContactCurveCircles', 'ObjectContactCurveCircles', 'CamFollowerContactPlanar',
+    'VCamFollowerContactPlanar', 'VObjectJointGeneric', 'ObjectJointGeneric', 'GenericJoint',
+    'VGenericJoint', 'VObjectJointRevoluteZ', 'ObjectJointRevoluteZ', 'RevoluteJointZ',
+    'VRevoluteJointZ', 'VObjectJointPrismaticX', 'ObjectJointPrismaticX', 'PrismaticJointX',
+    'VPrismaticJointX', 'VObjectJointSpherical', 'ObjectJointSpherical', 'SphericalJoint',
+    'VSphericalJoint', 'VObjectJointRollingDisc', 'ObjectJointRollingDisc', 'RollingDiscJoint',
+    'VRollingDiscJoint', 'VObjectJointRevolute2D', 'ObjectJointRevolute2D', 'RevoluteJoint2D',
+    'VRevoluteJoint2D', 'VObjectJointPrismatic2D', 'ObjectJointPrismatic2D', 'PrismaticJoint2D',
+    'VPrismaticJoint2D', 'VObjectJointSliding', 'ObjectJointSliding', 'SlidingJoint',
+    'VSlidingJoint', 'VObjectJointSliding2D', 'ObjectJointSliding2D', 'SlidingJoint2D',
+    'VSlidingJoint2D', 'VObjectJointALEMoving2D', 'ObjectJointALEMoving2D', 'ALEMovingJoint2D',
+    'VALEMovingJoint2D', 'VMarkerBodyMass', 'MarkerBodyMass', 'VMarkerBodyPosition',
+    'MarkerBodyPosition', 'VMarkerBodyRigid', 'MarkerBodyRigid', 'VMarkerNodePosition',
+    'MarkerNodePosition', 'VMarkerNodeRigid', 'MarkerNodeRigid', 'VMarkerNodeCoordinate',
+    'MarkerNodeCoordinate', 'VMarkerNodeCoordinates', 'MarkerNodeCoordinates',
+    'VMarkerNodeODE1Coordinate', 'MarkerNodeODE1Coordinate', 'VMarkerNodeRotationCoordinate',
+    'MarkerNodeRotationCoordinate', 'VMarkerBodiesRelativeTranslationCoordinate',
+    'MarkerBodiesRelativeTranslationCoordinate', 'VMarkerBodiesRelativeRotationCoordinate',
+    'MarkerBodiesRelativeRotationCoordinate', 'VMarkerSuperElementPosition',
+    'MarkerSuperElementPosition', 'VMarkerSuperElementRigid', 'MarkerSuperElementRigid',
+    'VMarkerKinematicTreeRigid', 'MarkerKinematicTreeRigid', 'VMarkerObjectODE2Coordinates',
+    'MarkerObjectODE2Coordinates', 'VMarkerBodyCable2DShape', 'MarkerBodyCable2DShape',
+    'VMarkerBodyCable2DCoordinates', 'MarkerBodyCable2DCoordinates', 'VMarkerBodyBeamShape',
+    'MarkerBodyBeamShape', 'VMarkerBodyUser', 'MarkerBodyUser', 'VLoadForceVector',
+    'LoadForceVector', 'Force', 'VForce', 'VLoadTorqueVector', 'LoadTorqueVector', 'Torque',
+    'VTorque', 'VLoadMassProportional', 'LoadMassProportional', 'Gravity', 'VGravity',
+    'VLoadCoordinate', 'LoadCoordinate', 'VSensorNode', 'SensorNode', 'VSensorObject',
+    'SensorObject', 'VSensorBody', 'SensorBody', 'VSensorSuperElement', 'SensorSuperElement',
+    'VSensorKinematicTree', 'SensorKinematicTree', 'VSensorMarker', 'SensorMarker', 'VSensorLoad',
+    'SensorLoad', 'VSensorUserFunction', 'SensorUserFunction',
     ]
 
 
@@ -278,6 +280,7 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectContactConeTriangle,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactConeTriangleContactForceUserFunction']],
         'ObjectContactConvexConvex,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactConvexConvexContactForceUserFunction']],
         'ObjectContactCylinderTriangle,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactCylinderTriangleContactForceUserFunction']],
+        'ObjectJournalBearing,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector3D', 'Real', 'StdVector3D'], ['mbs', 't', 'itemNumber', 'eccentricity', 'eccentricity_t', 'angularVelocity', 'axis'], ['StdVector3D'], ['ObjectJournalBearingForceUserFunction']],
         'ObjectJointGeneric,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 't', 'itemNumber', 'offsetUserFunctionParameters'], ['StdVector6D'], ['ObjectJointGenericOffsetUserFunction']],
         'ObjectJointGeneric,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 't', 'itemNumber', 'offsetUserFunctionParameters'], ['StdVector6D'], ['ObjectJointGenericOffsetUserFunction_t']],
         'MarkerBodyUser,positionUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['StdVector3D'], ['MarkerBodyUserPositionUserFunction']],
@@ -1877,6 +1880,33 @@ class ObjectContactCylinderTriangleContactForceUserFunction(Protocol):
         np.ndarray: the global contact force on marker 0, a list or numpy array of 3 values
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, gap: float, gap_t: float, normal: np.ndarray, tangentialVelocity: np.ndarray, impactVelocity: float) -> np.ndarray: ...
+
+class ObjectJournalBearingForceUserFunction(Protocol):
+    r"""A user function which replaces the force of the bearing model and of the contact: it computes the force of the.
+    
+    film on the journal from the eccentricity, its rate and the angular velocity, while the item computes the
+    kinematics (#3335). The force is the one on marker 0, the journal, the convention of the output variable Force;
+    marker 1 gets its negative on the same line of action.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        eccentricity (np.ndarray): :math:`{}^{0}{\mathbf{e}}`, the global vector from the center of the bearing to the center of the journal, normal to the axis
+
+        eccentricity_t (np.ndarray): :math:`{}^{0}{\dot{\mathbf{e}}}`, its rate, the relative velocity of the centers normal to the axis
+
+        angularVelocity (float): :math:`\omega`, the sum of the angular velocities of the journal and of the bearing about the axis
+
+        axis (np.ndarray): :math:`{}^{0}{\av}`, the global unit axis of the bearing, the local z axis of marker 1
+
+    Returns:
+        np.ndarray: the global force of the film on the journal (marker 0), a list or numpy array of 3 values
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, eccentricity: np.ndarray, eccentricity_t: np.ndarray, angularVelocity: float, axis: np.ndarray) -> np.ndarray: ...
 
 class ObjectJointGenericOffsetUserFunction(Protocol):
     r"""A user function, which computes scalar offset for relative joint translation and joint rotation for the GenericJoint,.
@@ -8373,6 +8403,97 @@ class ObjectContactCylinderTriangle:
         yield 'impactModel', self.impactModel
         yield 'activeConnector', self.activeConnector
         yield 'contactForceUserFunction', self.contactForceUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+
+class VObjectJournalBearing:
+    """Visualization data for ObjectJournalBearing.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; draws the bearing and the journal with the contact settings; type: bool
+
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
+
+    """
+    def __init__(self, show = False, color = [0.7,0.7,0.7,1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectJournalBearing:
+    """A lubricated journal bearing, a revolute joint with clearance between a journal (marker 0) and a bearing (marker 1), whose axis is the local z axis of marker 1: the hydrodynamic force of the oil film by the model of the infinitely short or the infinitely long bearing, and a penalty contact where the eccentricity exceeds the clearance; a user function for further models.
+    
+    Args:
+        name: connector's unique name; type: str
+
+        markerNumbers: list of markers: the center of the journal (marker 0) and the center of the bearing (marker 1), whose local z axis is the axis of the bearing; type: ArrayMarkerIndex
+
+        journalRadius: radius of the journal [SI:m]; type: float
+
+        bearingRadius: radius of the bearing, larger than journalRadius; the clearance is :math:`c = R_B - R_J` [SI:m]; type: float
+
+        bearingLength: length of the bearing along its axis [SI:m]; type: float
+
+        viscosity: dynamic viscosity of the lubricant [SI:Pa s]; type: float
+
+        bearingModel: the model of the film, see JournalBearingModel: Short (Ocvirk) or Long (Sommerfeld); the integers 0, 1 are accepted as well
+
+        maximumEccentricityRatio: the largest eccentricity ratio :math:`e/c` the film force is evaluated at, below 1, where it is singular [SI:1]; type: float
+
+        contactStiffness: stiffness of the contact where the eccentricity exceeds the clearance [SI:N/m]; type: float
+
+        contactDamping: damping of the contact where the eccentricity exceeds the clearance [SI:N/(m s)]; type: float
+
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        forceUserFunction: A Python function which replaces the force of the bearing model and of the contact and returns the force of the film on marker 0, the journal; see description below (#3335); type: ObjectJournalBearingForceUserFunction
+
+        visualization: visualization data, see VObjectJournalBearing
+
+    Notes:
+        Object has/provides the following types: ``Connector``
+
+        Requested Marker type: ``Position`` + ``Orientation``
+
+    """
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], journalRadius = 0., bearingRadius = 0., bearingLength = 0., viscosity = 0., bearingModel = exudyn.JournalBearingModel.Short, maximumEccentricityRatio = 0.99, contactStiffness = 0., contactDamping = 0., activeConnector = True, forceUserFunction: Union[ObjectJournalBearingForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.journalRadius = journalRadius
+        self.bearingRadius = bearingRadius
+        self.bearingLength = bearingLength
+        self.viscosity = viscosity
+        self.bearingModel = bearingModel
+        self.maximumEccentricityRatio = maximumEccentricityRatio
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.activeConnector = activeConnector
+        self.forceUserFunction = forceUserFunction
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'JournalBearing'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'journalRadius', self.journalRadius
+        yield 'bearingRadius', self.bearingRadius
+        yield 'bearingLength', self.bearingLength
+        yield 'viscosity', self.viscosity
+        yield 'bearingModel', self.bearingModel
+        yield 'maximumEccentricityRatio', self.maximumEccentricityRatio
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'activeConnector', self.activeConnector
+        yield 'forceUserFunction', self.forceUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
 

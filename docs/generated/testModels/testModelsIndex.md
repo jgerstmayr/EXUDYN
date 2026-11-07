@@ -136,6 +136,7 @@ initialConstraintsCheckTest
 inspectTest
 itemParameterRenamesTest
 jointArgsTest
+journalBearingTest
 kinematicChainTest
 kinematicTreeAndMBStest
 kinematicTreeConstraintTest

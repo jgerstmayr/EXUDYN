@@ -792,6 +792,17 @@ bool MainObjectContactCylinderTriangleIsRegistered = ClassFactoryItemsSystemData
 		return object;
 	});
 
+bool MainObjectJournalBearingIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("JournalBearing", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectJournalBearing();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectJournalBearing(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectJournalBearing* vObject = new VisualizationObjectJournalBearing();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectContactCurveCirclesIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactCurveCircles", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectContactCurveCircles();

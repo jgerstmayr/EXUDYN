@@ -271,6 +271,11 @@
 		.value("GonthierCarvalhoMartins", ContactImpactModel::GonthierCarvalhoMartins, "the mixed model of Gonthier et al. and Carvalho and Martins, much more accurate for the coefficient of restitution in the full range (0, 1]")
 		;
 
+  py::enum_<JournalBearingModel>(m, "JournalBearingModel")
+		.value("Short", JournalBearingModel::Short, "the infinitely short bearing of Ocvirk, for a length/diameter ratio below about 0.5")
+		.value("Long", JournalBearingModel::Long, "the infinitely long bearing of Sommerfeld, with the half-film (Guembel) condition")
+		;
+
 
         m.def("Help", &PyHelp, "Show basic help information");
         m.def("StartRenderer", &PyStartOpenGLRenderer, "DEPRECATED; Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g., Spyder; removed in 2029", py::arg("verbose") = 0, py::arg("deprecationWarning") = true);

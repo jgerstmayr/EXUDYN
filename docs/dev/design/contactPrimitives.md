@@ -86,6 +86,8 @@ ObjectContactConvexConvex (RG9.12.6/.7, #3331) has up to 8 points: the points of
 whose normal is the contact normal, from both for a face on a face. The cones (RG9.12.11, #3332) use the face points
 with the radius of each rim and, at the side, the side line of cone 0 with the exact signed distance to cone 1: its
 minimum by golden section and the ends of the penetration by bisection.
+The inside contacts (RG9.12.12, #3334) carry the rims of the inner shape, 3 points each; ObjectJournalBearing (RG9.12.13,
+#3335) has the short and the long bearing built in, finite bearings by its user function.
 
 ### 3.3 The contact law
 

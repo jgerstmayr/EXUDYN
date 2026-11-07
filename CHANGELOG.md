@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 432 | 1.13.448 |
+| 1.13 | Newborn | 433 | 1.13.449 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.449** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJournalBearing, a lubricated revolute joint with the hydrodynamic force of the short and the long bearing (#3335)
+  - description: A rotor in a lubricated bearing needs the hydrodynamic force of the oil film (design contactPrimitives.md, sections 8.4 and 8.6). Decided: a separate item ObjectJournalBearing on two rigid markers, the bearing axis the local z axis of marker 1; the eccentricity of the journal center, its rate and the sum of the angular velocities about the axis; the force of the infinitely short bearing (Ocvirk) or the infinitely long bearing (Sommerfeld) as in Flores et al. (2009), selected by the enumeration type JournalBearingModel, with the eccentricity ratio limited below 1, and a penalty contact where the eccentricity exceeds the clearance; a forceUserFunction for further models, its example the short bearing; finite bearing models follow as further models.
+  - **notes:** ObjectJournalBearing: a lubricated journal bearing, a revolute joint with clearance, with the oil film force of the infinitely short or long bearing (exu.JournalBearingModel), a contact beyond the clearance and a forceUserFunction for further models.
+  - date resolved: **2026-11-07 18:11**, date raised: 2026-11-07
 - **1.13.448** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The contact inside a hollow cylinder and a hollow cone: isHollowCylinder1 and isHollowCone1 (#3334)
   - description: A shaft in a bore, a pin in a ring and a taper in a conical seat need the contact with the inner wall of a hollow shape (design contactPrimitives.md, sections 8.3 and 8.6). Decided: the flags isHollowCylinder1 of ObjectContactCylinderCylinder and isHollowCone1 of ObjectContactConeCone, as isHollowSphere1 of ObjectContactSphereSphere; the hollow shape has its radii, its length and open ends; on each rim of the inner shape, clipped to the axial range of the hollow one, the point in the direction of the eccentricity and the points at +-120 degrees; the gap normal to the wall; a check at Assemble that the inner shape fits; the hollow shape drawn as a tube.
   - **notes:** ObjectContactCylinderCylinder(isHollowCylinder1=True) and ObjectContactConeCone(isHollowCone1=True): the contact of a cylinder or cone inside a hollow cylinder or conical seat open at both ends, such as a shaft in a bore or through a ring and a taper in its seat.

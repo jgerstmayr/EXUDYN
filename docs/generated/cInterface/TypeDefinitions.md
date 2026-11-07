@@ -390,3 +390,15 @@ The class **ContactImpactModel** has the following **functions and structures**:
 - **`Linear`**: the linear model: the contact stiffness and only the linear contactDamping
 - **`HuntCrossley`**: the model of Hunt and Crossley: a damping proportional to the penetration, from the restitution coefficient and the impact velocity
 - **`GonthierCarvalhoMartins`**: the mixed model of Gonthier et al. and Carvalho and Martins, much more accurate for the coefficient of restitution in the full range (0, 1]
+
+
+(sec-journalbearingmodel)=
+## JournalBearingModel
+
+The enumeration type JournalBearingModel selects the model of the oil film of ObjectJournalBearing, the parameter bearingModel; the integers 0 and 1 are accepted for it as well (#3335).
+
+
+The class **JournalBearingModel** has the following **functions and structures**:
+
+- **`Short`**: the infinitely short bearing of Ocvirk, for a length/diameter ratio below about 0.5
+- **`Long`**: the infinitely long bearing of Sommerfeld, with the half-film (Guembel) condition

@@ -6427,6 +6427,27 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-13"></a>
+### RG9.12.13 — ObjectJournalBearing (2026-11-07, #3335)
+- A separate item, as decided (design 8.4, 8.6): journal (marker 0) and bearing (marker 1, its local z axis the axis),
+  no data node. The eccentricity normal to the axis, its rate (radial rate and the rate of the attitude angle) and
+  omega, the sum of the angular velocities of journal and bearing about the axis. The film force in the frame of the
+  eccentricity after Flores, Ambrosio, Claro, Lankarani, Koshy (2009): the short bearing (Ocvirk) and the long bearing
+  (Sommerfeld, half film) with their squeeze terms; the formulas are written from that paper and checked here against
+  the classical steady forms - the load capacity and attitude angle of the short bearing, the steady radial and
+  tangential force of the long bearing; the squeeze terms are not checked by a closed form. epsilon is limited by
+  maximumEccentricityRatio (0.99); beyond the clearance a linear penalty contact. The force acts on the line through
+  the journal center; no friction torque of the film. JournalBearingModel {Short, Long} as the enumeration of #3327
+  (ints accepted); the generator converts both enumerations by one branch. forceUserFunction(mbs, t, itemNumber,
+  eccentricity, eccentricity_t, angularVelocity, axis) replaces model and contact; its example is the short bearing.
+- Finite bearings (correction functions, Bastani and de Queiroz) are not built in; they are the "further models" the
+  user function adds, or a later bearingModel.
+- journalBearingTest.py (new): the film force at the closed-form equilibrium of the short bearing (eps 0.8613 for
+  m g = 98.1 N, attitude 0.4339) is [0, m g, 0] to 1e-12; floating journals: a rigid rotor at eps below about 0.8 whirled
+  (oil whip: a first run at 1000 rad/s ended at eps 1.8), so the speeds give eps 0.86 (short) and 0.93 (long); a small
+  whirl decays slowly, so the floating journals are checked to 1e-3 of the load; the user function against the built-in
+  short bearing 1e-17; the dry journal m g/k beyond the clearance to 1e-16.
+
 <a id="rg9-12-12"></a>
 ### RG9.12.12 — the contact inside a hollow cylinder and a hollow cone (2026-11-07, #3334)
 - isHollowCylinder1 of ObjectContactCylinderCylinder and isHollowCone1 of ObjectContactConeCone, as decided in the

@@ -15570,6 +15570,232 @@ mbs.AddObject(ObjectContactCylinderTriangle(markerNumbers=[mRoller, mGround], no
         ],
     ))
 
+#++++++++++++++++   ObjectJournalBearing   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectJournalBearing_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                           eccentricity: Vector3D, eccentricity_t: Vector3D,
+                                           angularVelocity: Real, axis: Vector3D) -> Vector3D:
+    r"""A user function which replaces the force of the bearing model and of the contact: it computes the force of the
+    film on the journal from the eccentricity, its rate and the angular velocity, while the item computes the
+    kinematics (#3335). The force is the one on marker 0, the journal, the convention of the output variable Force;
+    marker 1 gets its negative on the same line of action.
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        eccentricity: $\LU{0}{\mathbf{e}}$, the global vector from the center of the bearing to the center of the journal, normal to the axis
+        eccentricity_t: $\LU{0}{\dot{\mathbf{e}}}$, its rate, the relative velocity of the centers normal to the axis
+        angularVelocity: $\omega$, the sum of the angular velocities of the journal and of the bearing about the axis
+        axis: $\LU{0}{\av}$, the global unit axis of the bearing, the local z axis of marker 1
+    Returns:
+        the global force of the film on the journal (marker 0), a list or numpy array of 3 values
+    """
+
+definitions.append(ItemDefinition(
+    className='ObjectJournalBearing',
+    drawing=r'The bearing as a tube and the journal as a cylinder with `contact.showCylinders`.',
+    drawingSettings=['contact.colorCylinders', 'contact.showCylinders', 'general.cylinderTiling'],
+    author=r'Gerstmayr Johannes',
+    cParentClass=ParentClassCObjectConnector,
+    overallDescription=r'A lubricated journal bearing, a revolute joint with clearance between a journal (marker 0) and a bearing (marker 1), whose axis is the local z axis of marker 1: the hydrodynamic force of the oil film by the model of the infinitely short or the infinitely long bearing, and a penalty contact where the eccentricity exceeds the clearance; a user function for further models.',
+    classType=ClassTypeObject,
+    miniExample=r"""    #a journal under its weight in a fixed bearing, turning at 100 rad/s: it floats on the film
+    m, R, c, L = 10., 0.02, 1e-4, 0.01
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0, initialVelocities=[0,0,0]+list(AngularVelocity2EulerParameters_t([0,0,100], eulerParameters0))))
+    journal = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m, inertia=[1e-3,1e-3,1e-3,0,0,0]))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=journal)), loadVector=[0,-9.81,0]))
+    mJournal = mbs.AddMarker(MarkerBodyRigid(bodyNumber=journal))
+    mBearing = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
+    mbs.AddObject(ObjectJournalBearing(markerNumbers=[mJournal, mBearing], journalRadius=R-c, bearingRadius=R,
+                                       bearingLength=L, viscosity=0.04, contactStiffness=1e8))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1000
+    simulationSettings.timeIntegration.endTime = 0.5
+    mbs.SolveDynamic(simulationSettings)
+
+    #the eccentricity of the journal, below the clearance 1e-4
+    exu.sys['testResult'] = mbs.GetObjectOutput(mbs.systemData.NumberOfObjects()-1, exu.OutputVariableType.Displacement)[1]
+    """,
+    detailedDescription=r"""    #### Definition of quantities
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0, m1 positions | $\LU{0}{\pv}_{m0}$, $\LU{0}{\pv}_{m1}$ | the centers of the journal and of the bearing |
+    | bearing axis | $\LU{0}{\av}$ | the local z axis of marker m1 |
+    | eccentricity | $\LU{0}{\mathbf{e}} = (\Im - \LU{0}{\av}\LU{0}{\av}\tp)(\LU{0}{\pv}_{m0} - \LU{0}{\pv}_{m1})$ | normal to the axis, $e = \Vert \LU{0}{\mathbf{e}} \Vert$ |
+    | radial and tangential directions | $\LU{0}{\uv}_r = \LU{0}{\mathbf{e}}/e$, $\LU{0}{\uv}_t = \LU{0}{\av} \times \LU{0}{\uv}_r$ | for $e = 0$, $\LU{0}{\uv}_r$ is the local x axis of marker m1 |
+    | eccentricity rate | $\LU{0}{\dot{\mathbf{e}}}$, $\dot e = \LU{0}{\dot{\mathbf{e}}}\tp \LU{0}{\uv}_r$, $\dot \gamma = \LU{0}{\dot{\mathbf{e}}}\tp \LU{0}{\uv}_t / e$ | the relative velocity of the centers normal to the axis, its radial rate and the rate of the attitude angle |
+    | angular velocity | $\omega = (\LU{0}{\tomega}_{m0} + \LU{0}{\tomega}_{m1})\tp \LU{0}{\av}$ | the sum of the angular velocities of journal and bearing about the axis |
+    | clearance, eccentricity ratio | $c = R_B - R_J$, $\varepsilon = \min(e/c,\, \varepsilon_{max})$, $\dot\varepsilon = \dot e/c$ | |
+
+    #### Connector forces
+
+    The force of the film on the journal is $\LU{0}{\fv} = F_r \LU{0}{\uv}_r + F_t \LU{0}{\uv}_t$, after Flores, Ambrosio,
+    Claro, Lankarani and Koshy (2009) with the models of Pinkus and Sternlicht, with the viscosity $\mu$, the bearing
+    length $L$ and the journal radius $R = R_J$. The infinitely short bearing of Ocvirk (`JournalBearingModel.Short`,
+    length/diameter below about 0.5):
+
+    $$
+    F_r = -\frac{\mu R L^3}{2 c^2} \left( \frac{2 \varepsilon^2 (\omega - 2\dot\gamma)}{(1-\varepsilon^2)^2}
+          + \frac{\pi (1 + 2\varepsilon^2) \dot\varepsilon}{(1-\varepsilon^2)^{5/2}} \right) , \quad
+    F_t = \frac{\mu R L^3}{2 c^2} \left( \frac{\pi \varepsilon (\omega - 2\dot\gamma)}{2 (1-\varepsilon^2)^{3/2}}
+          + \frac{4 \varepsilon \dot\varepsilon}{(1-\varepsilon^2)^2} \right) ;
+    $$
+
+    the infinitely long bearing of Sommerfeld (`JournalBearingModel.Long`):
+
+    $$
+    F_r = -\frac{12 \mu L R^3}{c^2} \left( \frac{\varepsilon^2 (\omega - 2\dot\gamma)}{(2+\varepsilon^2)(1-\varepsilon^2)}
+          + \frac{\dot\varepsilon}{(1-\varepsilon^2)^{3/2}} \left(\frac{\pi}{2} - \frac{8}{\pi (2+\varepsilon^2)}\right) \right) , \quad
+    F_t = \frac{12 \mu L R^3}{c^2} \left( \frac{\pi \varepsilon (\omega - 2\dot\gamma)}{2 (2+\varepsilon^2)(1-\varepsilon^2)^{1/2}}
+          + \frac{2 \varepsilon \dot\varepsilon}{(2+\varepsilon^2)(1-\varepsilon^2)} \right) .
+    $$
+
+    For a steady load ($\dot\varepsilon = \dot\gamma = 0$) the short bearing carries
+    $W = \frac{\mu \omega R L^3}{4 c^2} \frac{\varepsilon}{(1-\varepsilon^2)^2} \sqrt{\pi^2 (1-\varepsilon^2) + 16 \varepsilon^2}$
+    at the attitude angle $\arctan\frac{\pi \sqrt{1-\varepsilon^2}}{4 \varepsilon}$. The ratio $\varepsilon$ is limited to
+    $\varepsilon_{max}$ = `maximumEccentricityRatio`, where the film forces become singular; where the eccentricity
+    exceeds the clearance, the penalty contact $-(k_c (e - c) + d_c \dot e)\, \LU{0}{\uv}_r$ is added, with
+    `contactStiffness` and `contactDamping`. The force acts on marker 0 (the output Force) and its negative on marker 1, on
+    the line through the center of the journal; no friction torque of the film. With the `forceUserFunction`, its result
+    replaces the force of the model and of the contact.
+    """,
+    mainParentClass=MainParentClassMainObjectConnector,
+    objectType=ObjectTypeConnector,
+    outputVariables=[
+        ItemOutputVariable(OVDisplacement, 'the eccentricity: the global vector from the center of the bearing to that of the journal, normal to the axis'),
+        ItemOutputVariable(OVVelocity, 'the rate of the eccentricity'),
+        ItemOutputVariable(OVDistance, 'the minimum thickness of the film, the clearance minus the eccentricity (< 0: contact)'),
+        ItemOutputVariable(OVDirector1, 'the radial unit vector, along the eccentricity'),
+        ItemOutputVariable(OVForce, 'global force of the film and the contact on marker 0, the journal; marker 1 gets its negative'),
+        ],
+    visuParentClass=VisuParentClassVisualizationObject,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"""connector's unique name"""),
+        ItemParameter(type=TArrayIndex(ItemMarker, size=2), destination=DestComp+DestParam,
+            pythonName='markerNumbers',
+            defaultValue='ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })',
+            description=r"""$[m0,m1]\tp$list of markers: the center of the journal (marker 0) and the center of the bearing (marker 1), whose local z axis is the axis of the bearing"""),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
+            pythonName='journalRadius',
+            defaultValue=0.,
+            description=r'$R_J$radius of the journal [SI:m]'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
+            pythonName='bearingRadius',
+            defaultValue=0.,
+            description=r'$R_B$radius of the bearing, larger than journalRadius; the clearance is $c = R_B - R_J$ [SI:m]'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
+            pythonName='bearingLength',
+            defaultValue=0.,
+            description=r'$L$length of the bearing along its axis [SI:m]'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='viscosity',
+            defaultValue=0.,
+            description=r'$\mu$dynamic viscosity of the lubricant [SI:Pa s]'),
+        ItemParameter(type=TJournalBearingModel, destination=DestComp+DestParam,
+            pythonName='bearingModel',
+            defaultValue='JournalBearingModel::Short',
+            description=r'the model of the film, see JournalBearingModel: Short (Ocvirk) or Long (Sommerfeld); the integers 0, 1 are accepted as well'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam,
+            pythonName='maximumEccentricityRatio',
+            defaultValue=0.99,
+            description=r'$\varepsilon_{max}$the largest eccentricity ratio $e/c$ the film force is evaluated at, below 1, where it is singular [SI:1]'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='contactStiffness',
+            defaultValue=0.,
+            description=r'$k_c$stiffness of the contact where the eccentricity exceeds the clearance [SI:N/m]'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='contactDamping',
+            defaultValue=0.,
+            description=r'$d_c$damping of the contact where the eccentricity exceeds the clearance [SI:N/(m s)]'),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='activeConnector',
+            defaultValue=True,
+            description=r'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='forceUserFunction',
+            defaultValue=0,
+            description=r'''$\mathrm{UF} \in \Rcal^3$A Python function which replaces the force of the bearing model and of the contact and returns the force of the film on marker 0, the journal; see description below (#3335)''',
+            userFunction=ObjectJournalBearing_forceUserFunction,
+            userFunctionExample=r'''
+#the infinitely short bearing as a user function, the same as bearingModel=JournalBearingModel.Short
+import numpy as np
+mu, R, c, L = 0.04, 0.02-1e-4, 1e-4, 0.01
+def UFbearing(mbs, t, itemNumber, eccentricity, eccentricity_t, angularVelocity, axis):
+    e = np.linalg.norm(eccentricity)
+    if e == 0: return [0, 0, 0]
+    ur = np.array(eccentricity)/e
+    ut = np.cross(axis, ur)
+    eps = min(e/c, 0.99)
+    eps_t = np.dot(eccentricity_t, ur)/c
+    gamma_t = np.dot(eccentricity_t, ut)/e
+    K = mu*R*L**3/(2*c**2)
+    w = angularVelocity - 2*gamma_t
+    Fr = -K*(2*eps**2*w/(1-eps**2)**2 + np.pi*(1+2*eps**2)*eps_t/(1-eps**2)**2.5)
+    Ft = K*(np.pi*eps*w/(2*(1-eps**2)**1.5) + 4*eps*eps_t/(1-eps**2)**2)
+    return Fr*ur + Ft*ut
+
+mbs.AddObject(ObjectJournalBearing(markerNumbers=[mJournal, mBearing], journalRadius=R, bearingRadius=R+c,
+              bearingLength=L, forceUserFunction=UFbearing))
+'''),
+        ItemFunctionDef('HasUserFunction',
+            implementation='return (parameters.forceUserFunction!=0);'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionForce',
+            args='Vector3D& force, const MainSystemBase& mainSystem, Real t, const Vector3D& eccentricity, const Vector3D& eccentricity_t, Real angularVelocity, const Vector3D& axis',
+            description=r'call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ComputeBearingForce',
+            args='const MarkerDataStructure& markerData, Vector3D& eccentricity, Vector3D& eccentricity_t, Vector3D& radial, Vector3D& force',
+            description=r'the eccentricity, its rate, the radial direction and the force of the film and the contact on marker 0'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags=CFConst,
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags='',
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('IsPenaltyConnector',
+            implementation='return true;'),
+        ItemFunctionDef('GetAvailableJacobians',
+            implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);'),
+        *ItemConnectorInterface('Rigid', jacobian='numerical', velocityDerivative=True),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeConnectorForceRigid', args='const MarkerRigid<Real>* markers, Real t, Vector3D* forces, Vector3D* torques',
+            description=r'the force and torque on each marker from the kinematics of the two markers (#2745)'),
+        ItemFunctionDef('GetOutputVariableConnector'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
+        ItemRequestedTypes('Marker', ['Position', 'Orientation']),
+        ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
+            pythonName='GetType',
+            implementation='return CObjectType::Connector;',
+            description=r'return object type (for node treatment in computation)'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
+            pythonName='GetTypeName',
+            implementation='return "JournalBearing";',
+            description=r"Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?"),
+        ItemFunctionDef('IsActive',
+            implementation='return parameters.activeConnector;'),
+        ItemFunctionDef('UpdateGraphics'),
+        ItemFunctionDef('IsConnector',
+            implementation='return true;'),
+        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
+            pythonName='show',
+            defaultValue=False,
+            description=r'set true, if item is shown in visualization and false if it is not shown; draws the bearing and the journal with the contact settings'),
+        ItemParameter(type=TFloat4, destination=DestVisu,
+            pythonName='color',
+            defaultValue='Float4({0.7f,0.7f,0.7f,1.f})',
+            description=r'RGBA connector color; if R==-1, use default color'),
+        ],
+    ))
+
 #++++++++++++++++   ObjectContactCurveCircles   +++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(

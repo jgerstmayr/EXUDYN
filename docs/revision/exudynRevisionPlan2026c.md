@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (3 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (2 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 9 | Structural core improvements |
+| RG9 | OPEN | 8 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1630,7 +1630,9 @@ Decided (maintainer 2026-11-07): the flags, as isHollowSphere1 of SphereSphere; 
 
 CLOSED 2026-11-07 (#3334): isHollowCylinder1 and isHollowCone1 - on each rim of the inner shape, clipped to the axial range of the hollow one, the point of the eccentricity and the points at +-120 degrees (6 points, 24 data coordinates), the gap normal to the wall; the fit checked at Assemble; the hollow shape drawn as a tube; hollowContactTest.py. [log](exudynRevisionLog2026c.md#rg9-12-12)
 
-#### **OPEN_RG9.12.13** ObjectJournalBearing on the geometry of the cylinder inside a cylinder: short, long and finite bearing models
+#### **CLOSED_RG9.12.13** ObjectJournalBearing on the geometry of the cylinder inside a cylinder: short, long and finite bearing models
+
+CLOSED 2026-11-07 (#3335): ObjectJournalBearing on two rigid markers - the force of the infinitely short (Ocvirk) or long (Sommerfeld) bearing after Flores et al. (2009), selected by exu.JournalBearingModel, the eccentricity ratio limited below 1, a penalty contact beyond the clearance, a forceUserFunction for further models (its example the short bearing); finite bearings as further models; journalBearingTest.py. [log](exudynRevisionLog2026c.md#rg9-12-13)
 
 #### **CLOSED_RG9.12.14** User functions of the contact force for all primitive contacts, also symbolic
 

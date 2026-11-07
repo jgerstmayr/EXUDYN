@@ -1,0 +1,126 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  ObjectJournalBearing (#3335): the film force of the short bearing at the closed-form equilibrium of Ocvirk -
+#           the eccentricity ratio of the load capacity W = mu omega R L^3/(4 c^2) eps/(1-eps^2)^2
+#           sqrt(pi^2 (1-eps^2) + 16 eps^2) = m g and the attitude angle arctan(pi sqrt(1-eps^2)/(4 eps)) - carries m g;
+#           then journals under their weight, turning at a constant angular velocity in fixed bearings, float on the
+#           film near that equilibrium (a small whirl decays slowly; at eccentricity ratios below about 0.8 a rigid rotor
+#           whirls, so the loads are chosen above): the short bearing, the long bearing against the steady force of
+#           Sommerfeld, the short bearing as forceUserFunction against the built-in one; without viscosity the journal
+#           rests on the contact, m g/k beyond the clearance. Run directly, the SolutionViewer shows the four journals.
+#           The result is the sum of the checks and of the eccentricity ratios.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-07
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import *
+from exudyn import cMath
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+oGround = mbs.CreateGround()
+
+m, g = 10., 9.81
+R, c, L, mu = 0.02, 1e-4, 0.01, 0.04 #journal radius, clearance, bearing length, viscosity
+omegaShort, omegaLong = 100., 10. #loads that give eccentricity ratios above 0.8: below, a rigid rotor whirls (oil whip)
+kc = 1e8
+checks = []
+
+def Journal(y, omega=omegaShort, **bearing):
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, y, 0] + eulerParameters0,
+                                       initialVelocities=[0, 0, 0] + list(AngularVelocity2EulerParameters_t([0, 0, omega], eulerParameters0))))
+    journal = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m, inertia=[1e-3, 1e-3, 2e-3, 0, 0, 0]))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=journal)), loadVector=[0, -g, 0]))
+    mBearing = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0, y, 0]))
+    return mbs.AddObject(ObjectJournalBearing(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=journal)), mBearing],
+                                              journalRadius=R, bearingRadius=R + c, bearingLength=L, contactStiffness=kc,
+                                              contactDamping=1e3, visualization=VObjectJournalBearing(show=True), **bearing))
+
+def UFshortBearing(mbs, t, itemNumber, eccentricity, eccentricity_t, angularVelocity, axis):
+    e = cMath.norm(eccentricity)
+    if e == 0:
+        return [0, 0, 0]
+    ur = np.array(eccentricity)/e
+    ut = np.cross(axis, ur)
+    eps = min(e/c, 0.99)
+    eps_t = np.dot(eccentricity_t, ur)/c
+    gamma_t = np.dot(eccentricity_t, ut)/e
+    K = mu*R*L**3/(2*c**2)
+    w = angularVelocity - 2*gamma_t
+    Fr = -K*(2*eps**2*w/(1 - eps**2)**2 + np.pi*(1 + 2*eps**2)*eps_t/((1 - eps**2)**2*cMath.sqrt(1 - eps**2)))
+    Ft = K*(np.pi*eps*w/(2*(1 - eps**2)*cMath.sqrt(1 - eps**2)) + 4*eps*eps_t/(1 - eps**2)**2)
+    return list(Fr*ur + Ft*ut)
+
+bShort = Journal(0, viscosity=mu, bearingModel=exu.JournalBearingModel.Short)
+bLong = Journal(0.1, omega=omegaLong, viscosity=mu, bearingModel=exu.JournalBearingModel.Long)
+bUser = Journal(0.2, viscosity=mu, forceUserFunction=UFshortBearing)
+bDry = Journal(0.3)
+mbs.Assemble()
+
+#the film force at the closed-form equilibrium of the short bearing: the journal placed at the eccentricity ratio of
+#the load capacity m g (by bisection) and the attitude angle, turning at omegaShort; the force carries m g along +y
+def LoadCapacityShort(eps):
+    return mu*omegaShort*R*L**3/(4*c**2)*eps/(1 - eps**2)**2*cMath.sqrt(np.pi**2*(1 - eps**2) + 16*eps**2)
+lo, hi = 0., 0.99
+for i in range(100):
+    epsEquilibrium = 0.5*(lo + hi)
+    if LoadCapacityShort(epsEquilibrium) < m*g: lo = epsEquilibrium
+    else: hi = epsEquilibrium
+attitudeEquilibrium = cMath.atan(np.pi*cMath.sqrt(1 - epsEquilibrium**2)/(4*epsEquilibrium))
+eEquilibrium = [cMath.sin(attitudeEquilibrium)*epsEquilibrium*c, -cMath.cos(attitudeEquilibrium)*epsEquilibrium*c]
+mbs.SetNodeParameter(mbs.GetObject(mbs.GetMarker(mbs.GetObject(bShort)['markerNumbers'][0])['bodyNumber'])['nodeNumber'],
+                     'referenceCoordinates', eEquilibrium + [0] + eulerParameters0)
+mbs.Assemble()
+fEquilibrium = np.array(mbs.GetObjectOutput(bShort, exu.OutputVariableType.Force))
+exu.Print('short bearing at the closed-form equilibrium eps =', epsEquilibrium, ': film force', fEquilibrium)
+checks += [cMath.norm(fEquilibrium - [0, m*g, 0]) < 1e-10*m*g]
+mbs.SetNodeParameter(mbs.GetObject(mbs.GetMarker(mbs.GetObject(bShort)['markerNumbers'][0])['bodyNumber'])['nodeNumber'],
+                     'referenceCoordinates', [0, 0, 0] + eulerParameters0)
+mbs.Assemble()
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 8000
+simulationSettings.timeIntegration.endTime = 2
+simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10 #the film forces are small against the contact of the dry journal
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
+mbs.SolveDynamic(simulationSettings)
+
+def Eccentricity(b):
+    return np.array(mbs.GetObjectOutput(b, exu.OutputVariableType.Displacement))
+eShort, eLong, eUser, eDry = [Eccentricity(b) for b in [bShort, bLong, bUser, bDry]]
+#the short bearing: the closed-form load capacity and the attitude angle, from the load direction -y
+eps = cMath.norm(eShort)/c
+W = mu*omegaShort*R*L**3/(4*c**2)*eps/(1 - eps**2)**2*cMath.sqrt(np.pi**2*(1 - eps**2) + 16*eps**2)
+attitude = cMath.atan2(eShort[0], -eShort[1])
+exu.Print('short bearing: eps =', eps, ', load capacity', W, 'against m g =', m*g, '; attitude angle', attitude,
+          'against', cMath.atan(np.pi*cMath.sqrt(1 - eps**2)/(4*eps)))
+checks += [abs(W - m*g) < 1e-3*m*g, abs(eps - epsEquilibrium) < 1e-4] #a small whirl about the equilibrium decays slowly
+#the long bearing: the steady force of Sommerfeld at its eccentricity
+epsL = cMath.norm(eLong)/c
+K = 12*mu*L*R**3/c**2
+Fr = -K*epsL**2*omegaLong/((2 + epsL**2)*(1 - epsL**2))
+Ft = K*np.pi*epsL*omegaLong/(2*(2 + epsL**2)*cMath.sqrt(1 - epsL**2))
+exu.Print('long bearing: eps =', epsL, ', force', cMath.sqrt(Fr**2 + Ft**2), 'against m g')
+checks += [abs(cMath.sqrt(Fr**2 + Ft**2) - m*g) < 1e-3*m*g]
+#the user function and the dry contact
+errorUser = cMath.norm(eUser - eShort)
+exu.Print('the user function against the built-in short bearing:', errorUser, '; dry: e - c =', cMath.norm(eDry) - c, 'against m g/k =', m*g/kc)
+checks += [errorUser < 1e-12, abs(cMath.norm(eDry) - c - m*g/kc) < 1e-10]
+
+if not testIsActive:
+    SC.visualizationSettings.contact.showCylinders = True
+    mbs.SolutionViewer()
+
+u = sum(checks) + eps + epsL
+exu.Print('checks:', checks)
+exu.Print('solution of journalBearingTest=', u)
+exu.sys['testResult'] = u

@@ -32,5 +32,6 @@ ObjectContactConeCone
 ObjectContactConeTriangle
 ObjectContactConvexConvex
 ObjectContactCylinderTriangle
+ObjectJournalBearing
 ObjectContactCurveCircles
 ```

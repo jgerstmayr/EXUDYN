@@ -731,6 +731,14 @@ class ContactImpactModel(Enum):
     """the mixed model of Gonthier et al. and Carvalho and Martins, much more accurate for the coefficient of restitution in the full range (0, 1]"""
 
 
+class JournalBearingModel(Enum):
+    """The enumeration type JournalBearingModel selects the model of the oil film of ObjectJournalBearing, the parameter bearingModel; the integers 0 and 1 are accepted for it as well (#3335)."""
+    Short = int
+    """the infinitely short bearing of Ocvirk, for a length/diameter ratio below about 0.5"""
+    Long = int
+    """the infinitely long bearing of Sommerfeld, with the half-film (Guembel) condition"""
+
+
 class MatrixContainer:
     """The MatrixContainer is a versatile representation for dense and sparse matrices.
 

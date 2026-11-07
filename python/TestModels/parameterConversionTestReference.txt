@@ -94,6 +94,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectJointSliding2D: markerNumbers(class,dict,set) slidingMarkerNumbers(class,dict,set)
   ObjectJointSpherical: markerNumbers(class,dict,set)
   ObjectJointUser: markerNumbers(class,dict,set)
+  ObjectJournalBearing: markerNumbers(class,dict,set)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list2=[0.0,1.0] !ExudynTypeError
   MarkerSuperElementPosition: meshNodeNumbers(class,dict,set)
@@ -223,6 +224,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectJointSliding: Vcolor(class,dict,set)
   ObjectJointSliding2D: Vcolor(class,dict,set)
   ObjectJointSpherical: Vcolor(class,dict,set)
+  ObjectJournalBearing: Vcolor(class,dict,set)
   ObjectKinematicTree: Vcolor(class,dict,set)
   VisualizationSettings.bodies: defaultColor(attribute,dict)
   VisualizationSettings.bodies.beams: drawVerticalColor(attribute,dict)
@@ -431,6 +433,7 @@ outcome: !ExudynTypeError int=0.0 !ExudynTypeError !ExudynTypeError !ExudynTypeE
   ObjectGround: VgraphicsDataUserFunction(class,dict,set)
   ObjectJointGeneric: offsetUserFunction(class,dict,set) offsetUserFunction_t(class,dict,set)
   ObjectJointUser: VgraphicsDataUserFunction(class,dict,set) constraintUserFunction(class,dict,set) jacobianUserFunction(class,dict,set)
+  ObjectJournalBearing: forceUserFunction(class,dict,set)
   ObjectKinematicTree: forceUserFunction(class,dict,set)
   ObjectRigidBody: VgraphicsDataUserFunction(class,dict,set)
   ObjectRigidBody2D: VgraphicsDataUserFunction(class,dict,set)
@@ -454,6 +457,7 @@ outcome: !ExudynValueError
   ObjectContactSphereCylinder: cylinderLength(omit) cylinderRadius(omit) sphereRadius(omit)
   ObjectContactSphereTorus: torusMajorRadius(omit) torusMinorRadius(omit)
   ObjectJointRollingDisc: discRadius(omit)
+  ObjectJournalBearing: bearingLength(omit) bearingRadius(omit) journalRadius(omit)
   SensorKinematicTree: linkNumber(omit)
   SensorSuperElement: meshNodeNumber(omit)
 
@@ -477,6 +481,7 @@ outcome: !ExudynValueError !ExudynValueError
   ObjectContactSphereTorus: (defaults)
   ObjectContactSphereTriangle: (defaults)
   ObjectJointRollingDisc: (defaults)
+  ObjectJournalBearing: (defaults)
   SensorKinematicTree: (defaults)
   SensorSuperElement: (defaults)
 
@@ -499,6 +504,7 @@ outcome: !ExudynValueError !ExudynValueError float=2.0 float=2.5 !ExudynTypeErro
   ObjectContactSphereTorus: contactStiffnessExponent(class,dict,set) radiusSphere(set) restitutionCoefficient(class,dict,set) sphereRadius(set) torusMajorRadius(class,dict,set) torusMinorRadius(class,dict,set)
   ObjectContactSphereTriangle: contactStiffnessExponent(class,dict,set) radiusSphere(set) restitutionCoefficient(class,dict,set) sphereRadius(set)
   ObjectJointRollingDisc: discRadius(class,dict,set)
+  ObjectJournalBearing: bearingLength(class,dict,set) bearingRadius(class,dict,set) journalRadius(class,dict,set) maximumEccentricityRatio(class,dict,set)
   SimulationSettings.staticSolver: loadStepDuration(attribute,dict) loadStepGeometricRange(attribute,dict) minimumStepSize(attribute,dict)
   SimulationSettings.staticSolver.newton: modifiedNewtonContractivity(attribute,dict)
   SimulationSettings.timeIntegration: minimumStepSize(attribute,dict) numberOfSteps(attribute,dict)
@@ -589,6 +595,7 @@ outcome: !ExudynValueError float=0.0 float=2.0 float=2.5 !ExudynTypeError float=
   ObjectContactSphereTorus: contactDamping(class,dict,set) contactStiffness(class,dict,set) dynamicFriction(class,dict,set) frictionProportionalZone(class,dict,set) minimumImpactVelocity(class,dict,set)
   ObjectContactSphereTriangle: contactDamping(class,dict,set) contactStiffness(class,dict,set) dynamicFriction(class,dict,set) frictionProportionalZone(class,dict,set) minimumImpactVelocity(class,dict,set)
   ObjectFFRFreducedOrder: mass(set) physicsMass(set)
+  ObjectJournalBearing: contactDamping(class,dict,set) contactStiffness(class,dict,set) viscosity(class,dict,set)
   ObjectMass1D: mass(set) physicsMass(set)
   ObjectMassPoint: mass(set) physicsMass(set)
   ObjectMassPoint2D: mass(set) physicsMass(set)
@@ -772,6 +779,9 @@ outcome: ContactImpactModel ContactImpactModel ContactImpactModel !RuntimeError 
   ObjectContactSphereSphere: impactModel(class,dict,set)
   ObjectContactSphereTorus: impactModel(class,dict,set)
   ObjectContactSphereTriangle: impactModel(class,dict,set)
+
+outcome: JournalBearingModel JournalBearingModel JournalBearingModel !RuntimeError !RuntimeError JournalBearingModel !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError JournalBearingModel JournalBearingModel !RuntimeError !RuntimeError
+  ObjectJournalBearing: bearingModel(class,dict,set)
 
 outcome: LoadIndex LoadIndex
   LoadCoordinate: (defaults)
@@ -1028,6 +1038,7 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !ExudynTypeError bool=1.0 !ExudynTy
   ObjectJointSliding2D: Vshow(class,dict,set) activeConnector(class,dict,set) classicalFormulation(set) constrainRotation(class,dict,set) useClassicalFormulation(set)
   ObjectJointSpherical: Vshow(class,dict,set) activeConnector(class,dict,set)
   ObjectJointUser: Vshow(class,dict,set) activeConnector(class,dict,set)
+  ObjectJournalBearing: Vshow(class,dict,set) activeConnector(class,dict,set)
   ObjectKinematicTree: Vshow(class,dict,set) VshowJoints(class,dict,set) VshowLinks(class,dict,set) jacobianMassMatrixDerivative(class,dict,set)
   ObjectMass1D: Vshow(class,dict,set)
   ObjectMassPoint: Vshow(class,dict,set)
@@ -1432,6 +1443,7 @@ outcome: str=default
   ObjectJointSliding2D: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) axialForce(omit) classicalFormulation(omit) constrainRotation(omit) markerNumbers(omit) nodeNumber(omit) slidingMarkerNumbers(omit) slidingMarkerOffsets(omit) useClassicalFormulation(omit)
   ObjectJointSpherical: Vcolor(omit) VjointRadius(omit) Vshow(omit) activeConnector(omit) constrainedAxes(omit) markerNumbers(omit)
   ObjectJointUser: VgraphicsDataUserFunction(omit) Vshow(omit) activeConnector(omit) constraintUserFunction(omit) jacobianUserFunction(omit) markerNumbers(omit) numberOfConstraints(omit) parameters(omit)
+  ObjectJournalBearing: Vcolor(omit) Vshow(omit) activeConnector(omit) bearingModel(omit) contactDamping(omit) contactStiffness(omit) forceUserFunction(omit) markerNumbers(omit) maximumEccentricityRatio(omit) viscosity(omit)
   ObjectKinematicTree: Vcolor(omit) VgraphicsDataList(omit) Vshow(omit) VshowJoints(omit) VshowLinks(omit) baseNodeNumber(omit) baseOffset(omit) forceUserFunction(omit) gravity(omit) jacobianMassMatrixDerivative(omit) jointDControlVector(omit) jointForceVector(omit) jointHTs(omit) jointOffsets(omit) jointPControlVector(omit) jointPositionOffsetVector(omit) jointTransformations(omit) jointTypes(omit) jointVelocityOffsetVector(omit) linkCOMs(omit) linkForces(omit) linkInertiasCOM(omit) linkMasses(omit) linkParents(omit) linkTorques(omit) nodeNumber(omit)
   ObjectMass1D: VgraphicsData(omit) Vshow(omit) mass(omit) nodeNumber(omit) referencePosition(omit) referenceRotation(omit)
   ObjectMassPoint: VgraphicsData(omit) Vshow(omit) mass(omit) nodeNumber(omit)

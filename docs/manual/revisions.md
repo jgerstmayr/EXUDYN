@@ -672,6 +672,9 @@ the position marker for a rotation, and the error stopped the drawing of all use
 **Contacts inside a hollow cylinder and a hollow cone** (#3334): `ObjectContactCylinderCylinder(isHollowCylinder1=True)`
 and `ObjectContactConeCone(isHollowCone1=True)` put shape 0 inside shape 1, a bore or a conical seat open at both ends -
 a shaft in a bore or through a ring, a taper in its seat; the data node needs 24 coordinates then.
+**A lubricated journal bearing** (#3335): `ObjectJournalBearing` is a revolute joint with clearance whose oil film
+carries the journal with the force of the infinitely short (Ocvirk) or long (Sommerfeld) bearing, `exu.JournalBearingModel`,
+and a contact where the eccentricity exceeds the clearance; a `forceUserFunction` adds further models.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

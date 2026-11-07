@@ -76,9 +76,9 @@ The settings: [`markers.show`](#sec-vsettingsmarkers), [`markers.defaultSize`](#
 |---|---|---|---|
 | [](#sec-item-markerbodymass) | a body | `BodyMass` | 1 item |
 | [](#sec-item-markerbodyposition) | a body | `Position` | 11 items |
-| [](#sec-item-markerbodyrigid) | a body | `Position`, `Orientation` | 30 items |
+| [](#sec-item-markerbodyrigid) | a body | `Position`, `Orientation` | 31 items |
 | [](#sec-item-markernodeposition) | a node with `Position` or `Position2D` | `Position` | 11 items |
-| [](#sec-item-markernoderigid) | a node with `Position` or `Position2D` and `Orientation` or `Orientation2D` | `Position`, `Orientation` | 30 items |
+| [](#sec-item-markernoderigid) | a node with `Position` or `Position2D` and `Orientation` or `Orientation2D` | `Position`, `Orientation` | 31 items |
 | [](#sec-item-markernodecoordinate) | a node | `Coordinate` | 5 items |
 | [](#sec-item-markernodecoordinates) | a node | `Coordinates` | 1 item |
 | [](#sec-item-markernodeode1coordinate) | a node | `Coordinate` | 5 items |
@@ -86,10 +86,10 @@ The settings: [`markers.show`](#sec-vsettingsmarkers), [`markers.defaultSize`](#
 | [](#sec-item-markerbodiesrelativetranslationcoordinate) | two bodies | `Coordinate` | 5 items |
 | [](#sec-item-markerbodiesrelativerotationcoordinate) | two bodies | `Coordinate` | 5 items |
 | [](#sec-item-markersuperelementposition) | mesh nodes of a super element | `Position` | 11 items |
-| [](#sec-item-markersuperelementrigid) | mesh nodes of a super element | `Position`, `Orientation` | 30 items |
-| [](#sec-item-markerkinematictreerigid) | a link of a kinematic tree | `Position`, `Orientation` | 30 items |
+| [](#sec-item-markersuperelementrigid) | mesh nodes of a super element | `Position`, `Orientation` | 31 items |
+| [](#sec-item-markerkinematictreerigid) | a link of a kinematic tree | `Position`, `Orientation` | 31 items |
 | [](#sec-item-markerobjectode2coordinates) | a body | `Coordinates` | 1 item |
 | [](#sec-item-markerbodycable2dshape) | a body | `Coordinate` | 5 items |
 | [](#sec-item-markerbodycable2dcoordinates) | a body | `Coordinate` | 5 items |
 | [](#sec-item-markerbodybeamshape) | a body | `Beam3DShape` | the items that name it |
-| [](#sec-item-markerbodyuser) | a body | `Position`, `Orientation` | 30 items |
+| [](#sec-item-markerbodyuser) | a body | `Position`, `Orientation` | 31 items |
