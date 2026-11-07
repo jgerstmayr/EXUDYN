@@ -93,7 +93,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (12 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (11 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -146,7 +146,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 18 | Structural core improvements |
+| RG9 | OPEN | 17 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1561,7 +1561,9 @@ CLOSED 2026-11-07 (#3315): docs/dev/design/contactPrimitives.md with the decisio
 
 CLOSED 2026-11-07 (#3317): src/Linalg/GeometryConvex.h - GJK, EPA with a connected visible set, alternating projections and an outward refinement for cylinders; cUtilities.ConvexShape and Distance; distances to rounding, with a cylinder to about 1e-7 of the size within 1e-6 of contact; convexDistanceTest.py. [log](exudynRevisionLog2026c.md#rg9-12-2)
 
-#### **OPEN_RG9.12.3** The Distance output of ObjectContactSphereSphere, SphereTriangle and SphereTorus, computed when inactive
+#### **CLOSED_RG9.12.3** The Distance output of ObjectContactSphereSphere, SphereTriangle and SphereTorus, computed when inactive
+
+CLOSED 2026-11-07 (#3319): Distance, the gap, for the three sphere contacts, computed with activeConnector = False as before; contactDistanceOutputTest.py. [log](exudynRevisionLog2026c.md#rg9-12-3)
 
 #### **OPEN_RG9.12.4** ObjectContactSphereCylinder, with a test against the analytic case and a drop test
 

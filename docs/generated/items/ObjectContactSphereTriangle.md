@@ -67,6 +67,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | output variable | symbol | description |
 |---|---|---|
+| Distance |  | the signed distance of the sphere surface and the triangle, the gap (< 0: penetration), from the current configuration, also with activeConnector = False; the same as DisplacementLocal, under the name of the other contact items and of exudyn.cUtilities.Distance |
 | Position |  | contact center point (also given for positive gap, when no contact occurs) |
 | Displacement |  | global vector from the sphere center (marker 0) to the closest point of the triangle |
 | Velocity |  | velocity of the closest point of the triangle, with the rotation of its body, relative to the sphere center |
@@ -142,4 +143,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactComparisonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactComparisonTest.py) (TM), [`inactiveConnectorForceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/inactiveConnectorForceTest.py) (TM), [`sphereTriangleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest.py) (TM), [`sphereTriangleTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest2.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactComparisonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactComparisonTest.py) (TM), [`contactDistanceOutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactDistanceOutputTest.py) (TM), [`inactiveConnectorForceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/inactiveConnectorForceTest.py) (TM), [`sphereTriangleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest.py) (TM), [`sphereTriangleTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest2.py) (TM)

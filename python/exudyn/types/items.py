@@ -1295,7 +1295,7 @@ items = {
     'requestedNodeTypes': ['GenericData'],
     'requestedMarkerTypes': ['Position'],
     'conditionalRequestedMarkerTypes': [['Orientation', 'dynamicFriction']],
-    'outputVariables': ['Position', 'Displacement', 'DisplacementLocal', 'Velocity', 'Force', 'Director1', 'Torque'],
+    'outputVariables': ['Distance', 'Position', 'Displacement', 'DisplacementLocal', 'Velocity', 'Force', 'Director1', 'Torque'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers representing centers of spheres, used in connector'},
@@ -1326,7 +1326,7 @@ items = {
     'types': ['Connector'],
     'requestedNodeTypes': ['GenericData'],
     'requestedMarkerTypes': ['Position', 'Orientation'],
-    'outputVariables': ['Position', 'Displacement', 'DisplacementLocal', 'Director1', 'Director2', 'Director3', 'Velocity', 'Force', 'Torque'],
+    'outputVariables': ['Distance', 'Position', 'Displacement', 'DisplacementLocal', 'Director1', 'Director2', 'Director3', 'Velocity', 'Force', 'Torque'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers representing centers of sphere (marker 0) and center of torus (marker 1)'},
@@ -1357,7 +1357,7 @@ items = {
     'requestedNodeTypes': ['GenericData'],
     'requestedMarkerTypes': ['Position'],
     'conditionalRequestedMarkerTypes': [['Orientation', 'dynamicFriction']],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'DisplacementLocal', 'Director1', 'Force', 'Torque'],
+    'outputVariables': ['Distance', 'Position', 'Displacement', 'Velocity', 'DisplacementLocal', 'Director1', 'Force', 'Torque'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers representing the center of the sphere (marker 0) and the reference point of the triangle (marker 1), where triangle nodal positions are defined in the local coordinates of marker 1.'},

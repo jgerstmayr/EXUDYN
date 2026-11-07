@@ -13298,6 +13298,7 @@ definitions.append(ItemDefinition(
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
     outputVariables=[
+        ItemOutputVariable(OVDistance, 'the signed distance of the two sphere surfaces, the gap (< 0: penetration), from the current configuration, also with activeConnector = False; the same as DisplacementLocal, under the name of the other contact items and of exudyn.cUtilities.Distance'),
         ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
         ItemOutputVariable(OVDisplacement, 'global displacement vector between the two spheres midpoints'),
         ItemOutputVariable(OVDisplacementLocal, '1D Vector, containing only gap'),
@@ -13530,6 +13531,7 @@ definitions.append(ItemDefinition(
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
     outputVariables=[
+        ItemOutputVariable(OVDistance, 'the signed distance of the sphere and the torus surface, the gap (< 0: penetration), from the current configuration, also with activeConnector = False; the same as DisplacementLocal, under the name of the other contact items and of exudyn.cUtilities.Distance'),
         ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
         ItemOutputVariable(OVDisplacement, 'global vector from marker 0 (sphere center) to marker 1 (torus center)'),
         ItemOutputVariable(OVDisplacementLocal, '1D Vector, containing only gap'),
@@ -13753,6 +13755,7 @@ definitions.append(ItemDefinition(
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
     outputVariables=[
+        ItemOutputVariable(OVDistance, 'the signed distance of the sphere surface and the triangle, the gap (< 0: penetration), from the current configuration, also with activeConnector = False; the same as DisplacementLocal, under the name of the other contact items and of exudyn.cUtilities.Distance'),
         ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
         ItemOutputVariable(OVDisplacement, 'global vector from the sphere center (marker 0) to the closest point of the triangle'),
         ItemOutputVariable(OVVelocity, 'velocity of the closest point of the triangle, with the rotation of its body, relative to the sphere center'),

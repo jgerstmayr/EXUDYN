@@ -6427,6 +6427,17 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-3"></a>
+### RG9.12.3 — the output variable Distance of the sphere contacts (2026-11-07, #3319)
+- OutputVariableType.Distance exists (bit 0, the connectors' distance); ObjectContactSphereSphere, SphereTriangle
+  and SphereTorus give their gap under it, the same value as DisplacementLocal. GetOutputVariableConnector of the
+  three computes the geometry independently of activeConnector (only the forces and the data node skip it), so the
+  distance of a deactivated contact is there without a change.
+- contactDistanceOutputTest.py (new): a ball falls past an inactive sphere, triangle and torus contact (the torus
+  contact is for a sphere inside its tube, so its distance is negative there) onto an active sphere: the distances
+  against closed forms (1e-16), the fall unaffected by the inactive contacts (1.6e-15), at rest Distance equal to
+  DisplacementLocal, -m g/k.
+
 <a id="rg9-12-2"></a>
 ### RG9.12.2 — the distance kernels of convex shapes: GJK, EPA, exudyn.cUtilities.Distance (2026-11-07, #3317)
 - Maintainer 2026-11-07: the design of contactPrimitives.md decided (#3315), the RG9.12 steps first.

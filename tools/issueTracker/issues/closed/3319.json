@@ -1,0 +1,17 @@
+{
+  "number": 3319,
+  "title": "the output variable Distance of ObjectContactSphereSphere, SphereTriangle and SphereTorus",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The contact primitives give their signed distance under OutputVariableType.Distance, the name of exudyn.cUtilities.Distance and of the coming primitive contacts; the sphere contacts have it only as the gap in DisplacementLocal. Decided: Distance, the signed gap (< 0: penetration) from the current configuration, also with activeConnector = False, for path planning and monitoring; revision2026c step RG9.12.3.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 10:57",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectContactSphereSphere.cpp",
+  "releaseNotes": "ObjectContactSphereSphere, ObjectContactSphereTriangle and ObjectContactSphereTorus have the output variable Distance, the signed gap, also when the contact is deactivated.",
+  "resolvedInVersion": "1.13.433"
+}

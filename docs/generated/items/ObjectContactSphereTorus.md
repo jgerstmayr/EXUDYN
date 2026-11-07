@@ -66,6 +66,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | output variable | symbol | description |
 |---|---|---|
+| Distance |  | the signed distance of the sphere and the torus surface, the gap (< 0: penetration), from the current configuration, also with activeConnector = False; the same as DisplacementLocal, under the name of the other contact items and of exudyn.cUtilities.Distance |
 | Position |  | contact center point (also given for positive gap, when no contact occurs) |
 | Displacement |  | global vector from marker 0 (sphere center) to marker 1 (torus center) |
 | DisplacementLocal |  | 1D Vector, containing only gap |
@@ -152,4 +153,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactSphereTorusMomentumTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactSphereTorusMomentumTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactDistanceOutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactDistanceOutputTest.py) (TM), [`contactSphereTorusMomentumTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactSphereTorusMomentumTest.py) (TM)

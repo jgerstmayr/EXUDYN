@@ -1,0 +1,96 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The output variable Distance of ObjectContactSphereSphere, ObjectContactSphereTriangle and
+#           ObjectContactSphereTorus (#3319): a ball falls freely past a large sphere, a triangle and a torus, whose
+#           contacts are deactivated (activeConnector=False), and onto a sphere with an active contact. The Distance
+#           of the inactive contacts follows the fall by the closed forms and adds no force; the active one is the gap,
+#           negative at rest, as DisplacementLocal. The result is the sum of the distances at the end.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-07
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import *
+from exudyn import cMath
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+oGround = mbs.CreateGround()
+
+r = 0.1
+z0 = 1.
+inertia = InertiaSphere(mass=1, radius=r)
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 0, z0] + eulerParameters0))
+ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
+mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0, 0, -9.81]))
+mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball))
+
+def DataNode():
+    return mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0, 0, 0, 0]))
+def GroundMarker(position):
+    return mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=position))
+
+#inactive: a sphere of radius 0.5 beside the path, a triangle in the plane x = 0.3, a torus about z around the path
+#(the torus contact is for a sphere inside its tube, so its distance is negative here)
+sphereCenter = [1, 0, 0.5]
+oSphere = mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[GroundMarker(sphereCenter), mBall], nodeNumber=DataNode(),
+                                                  spheresRadii=[0.5, r], contactStiffness=1e5, contactDamping=1e3,
+                                                  activeConnector=False))
+oTriangle = mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, GroundMarker([0.3, 0, 0])], nodeNumber=DataNode(),
+                                                      sphereRadius=r, trianglePoints=exu.Vector3DList([[0, -1, -1], [0, 1, -1], [0, 0, 2]]),
+                                                      contactStiffness=1e5, contactDamping=1e3, activeConnector=False))
+oTorus = mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mBall, GroundMarker([0, 0, 0.5])], nodeNumber=DataNode(),
+                                                sphereRadius=r, torusMajorRadius=0.4, torusMinorRadius=0.2, torusAxis=[0, 0, 1],
+                                                contactStiffness=1e5, contactDamping=1e3, activeConnector=False))
+#active: the ball lands on a sphere of radius 0.2 at the origin
+oFloor = mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[GroundMarker([0, 0, 0]), mBall], nodeNumber=DataNode(),
+                                                 spheresRadii=[0.2, r], contactStiffness=1e5, contactDamping=1e3))
+
+mbs.Assemble()
+
+def Distances():
+    return [mbs.GetObjectOutput(o, exu.OutputVariableType.Distance) for o in [oSphere, oTriangle, oTorus, oFloor]]
+def ClosedForms(z): #the ball at height z, on the z axis
+    return [cMath.sqrt(1 + (z - 0.5)**2) - 0.5 - r, #the sphere
+            0.3 - r, #the triangle in the plane x = 0.3, the ball beside its inside (z from -1 to 2)
+            0.2 - cMath.sqrt(0.4**2 + (z - 0.5)**2) - r, #the torus, for a sphere inside its tube: the ball on its axis, the minor circles at 0.4 from it, outside the tube
+            z - 0.2 - r]
+
+checks = []
+errorStart = max(abs(a - b) for a, b in zip(Distances(), ClosedForms(z0)))
+exu.Print('distances at the start', Distances(), 'error against the closed forms', errorStart)
+checks += [errorStart < 1e-14]
+
+#free fall over 0.25 s: the inactive contacts add no force
+tEnd = 0.25
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 250
+simulationSettings.timeIntegration.endTime = tEnd
+simulationSettings.solution.file.write = False
+mbs.SolveDynamic(simulationSettings)
+z = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
+errorFall = abs(z - (z0 - 0.5*9.81*tEnd**2))
+errorDistance = max(abs(a - b) for a, b in zip(Distances()[0:3], ClosedForms(z)[0:3]))
+exu.Print('free fall: z =', z, ', error', errorFall, '; error of the inactive distances', errorDistance)
+checks += [errorFall < 1e-10, errorDistance < 1e-14]
+
+#at rest on the floor sphere: the active contact penetrates by m g / k; Distance is DisplacementLocal
+simulationSettings.timeIntegration.numberOfSteps = 2000
+simulationSettings.timeIntegration.endTime = 2
+mbs.SolveDynamic(simulationSettings)
+distances = Distances()
+gap = mbs.GetObjectOutput(oFloor, exu.OutputVariableType.DisplacementLocal)
+exu.Print('at rest: Distance of the floor contact', distances[3], ', DisplacementLocal', gap, ', -m g/k =', -9.81/1e5)
+checks += [distances[3] == gap, abs(distances[3] + 9.81/1e5) < 1e-6]
+
+u = sum(checks) + sum(distances)
+exu.Print('checks:', checks)
+exu.Print('solution of contactDistanceOutputTest=', u)
+exu.sys['testResult'] = u

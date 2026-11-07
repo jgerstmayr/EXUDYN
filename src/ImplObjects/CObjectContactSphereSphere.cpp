@@ -250,6 +250,7 @@ void CObjectContactSphereSphere::GetOutputVariableConnector(OutputVariableType v
 	{
 	case OutputVariableType::Position: value.CopyFrom(p0 + (parameters.spheresRadii[0] + 0.5 * gap)*n0); break;
 	case OutputVariableType::Displacement: value.CopyFrom(deltaP); break;
+	case OutputVariableType::Distance: value.CopyFrom(Vector1D({gap})); break; //also with activeConnector = False (#3319)
 	case OutputVariableType::DisplacementLocal: value.CopyFrom(Vector1D({gap})); break;
 	case OutputVariableType::Velocity: value.CopyFrom(deltaV); break;
 	case OutputVariableType::Director1: value.CopyFrom(n0); break;

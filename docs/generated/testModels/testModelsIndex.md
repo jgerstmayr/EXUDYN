@@ -45,6 +45,7 @@ contactComparisonTest
 contactCoordinateTest
 contactCurveCirclesFrictionTest
 contactCurveExample
+contactDistanceOutputTest
 contactFrictionCircleCable2DnoFrictionTest
 contactSphereSphereTest
 contactSphereSphereTestEAPM

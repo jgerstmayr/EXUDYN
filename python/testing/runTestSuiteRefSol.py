@@ -249,6 +249,7 @@ def TestExamplesReferenceSolution():
         'createItemNumbersTest.py':10.515707884914624, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 10.51570788484358; new 2026-10-05: the Create functions take bodies, nodes or markers in itemNumbers, bodyNumbers deprecated (#2863)
         'implicitRungeKuttaSolversTest.py': 206.0, #new 2026-11-05: the C++ solvers TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3: their orders and the automatic step size (#3261)
         'implicitRungeKuttaSmallStepTest.py': 8004, #new 2026-11-06: LobattoIIIA4 and Radau3 with steps 1e-5 and the Newton tolerance 1e-12 (#3307)
+        'contactDistanceOutputTest.py':5.272467570487764, #new 2026-11-07: the output variable Distance of the sphere contacts, also when deactivated (#3319)
         'convexDistanceTest.py':13.364213562373093, #new 2026-11-07: exudyn.cUtilities.Distance of convex shapes by GJK and EPA against closed forms and random pairs (#3317)
         'kinematicChainTest.py':37.53287798230574, #new 2026-11-05: exudyn.cUtilities.KinematicChain against the Python functions of Robot (#3259)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)

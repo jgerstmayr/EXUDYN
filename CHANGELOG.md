@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 416 | 1.13.432 |
+| 1.13 | Newborn | 417 | 1.13.433 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.433** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the output variable Distance of ObjectContactSphereSphere, SphereTriangle and SphereTorus (#3319)
+  - description: The contact primitives give their signed distance under OutputVariableType.Distance, the name of exudyn.cUtilities.Distance and of the coming primitive contacts; the sphere contacts have it only as the gap in DisplacementLocal. Decided: Distance, the signed gap (\< 0: penetration) from the current configuration, also with activeConnector = False, for path planning and monitoring; revision2026c step RG9.12.3.
+  - **notes:** ObjectContactSphereSphere, ObjectContactSphereTriangle and ObjectContactSphereTorus have the output variable Distance, the signed gap, also when the contact is deactivated.
+  - date resolved: **2026-11-07 10:57**, date raised: 2026-11-07
 - **1.13.432** `EXTENSION` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` distance and penetration of convex primitives by GJK and EPA, in exudyn.cUtilities (#3317)
   - description: The kernels of the contact primitives and of the collision check of path planning: support functions of sphere, capsule, cylinder, box, triangle and convex point sets, the distance and the witness points by GJK, the penetration depth and normal by EPA, the analytic sphere-cylinder distance; exported as shapes and cUtilities.Distance(shape0, HT0, shape1, HT1). Decided: one implementation for the contact items and the planner, tested against analytic distances; revision2026c step RG9.12.2.
   - **notes:** exudyn.cUtilities.ConvexShape and Distance: the signed distance, closest points and normal of two convex shapes (sphere, capsule, cylinder, box, triangle, convex points) by GJK and EPA, the kernels of the coming contact primitives.

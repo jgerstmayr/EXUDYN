@@ -225,6 +225,7 @@ void CObjectContactSphereTorus::GetOutputVariableConnector(OutputVariableType va
 	{
 	case OutputVariableType::Position: value.CopyFrom(contactPoint); break;
 	case OutputVariableType::Displacement: value.CopyFrom(p1-p0); break;
+	case OutputVariableType::Distance: value.CopyFrom(Vector1D({gap})); break; //also with activeConnector = False (#3319)
 	case OutputVariableType::DisplacementLocal: value.CopyFrom(Vector1D({gap})); break;
 	case OutputVariableType::Velocity: value.CopyFrom(deltaV); break;
 	case OutputVariableType::Director1: {
