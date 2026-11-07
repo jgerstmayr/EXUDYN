@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 430 | 1.13.446 |
+| 1.13 | Newborn | 431 | 1.13.447 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.447** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The drawing of CreateCartesianSpringDamper of UserItemCreator fails for a mass point marker (#3333)
+  - description: Drawing a model with a Cartesian spring-damper of exudyn.symbolics.userItems.UserItemCreator between a mass point and a body (symbolicUserConnectorsTest.py) raises in VisualizationObjectConnectorUser::CallUserFunction: Invalid OutputVariableType 'RotationMatrix'; the marker 'marker7' cannot compute the requested variable type; only 2 lines are drawn. Found in RG2.12.2 (\#3322), which left this model without the SolutionViewer. Decided: the visualization user function reads the rotation only of markers that have one; the model then shows its simulation.
+  - **notes:** Systems with a Cartesian spring-damper of exudyn.symbolics.userItems.UserItemCreator on a mass point are drawn: its drawing asked the position marker for a rotation, and the error stopped the drawing of all user items.
+  - date resolved: **2026-11-07 17:24**, date raised: 2026-11-07
 - **1.13.446** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactConeCone and ObjectContactConeTriangle, penalty contacts of truncated cones (#3332)
   - description: Truncated cones - tapers, rollers, bevel-gear-like bodies - need the contacts of the design contactPrimitives.md section 8.2. Decided: ConvexShapeType::Cone (radius at z = -L/2, radius1 at z = +L/2, one of them may be 0) with its support, its closest point and the refinement of the curved side as the cylinder, also in cUtilities.ConvexShape; ObjectContactConeCone (conesRadii0, conesRadii1, conesLengths) and ObjectContactConeTriangle (coneRadii, coneLength, trianglePoints, infinitePlane) with the contact points of the cylinders - the face points with the radii of the rims, and along the side line of cone 0 the ends of the interval of penetration into cone 1 by bisection; drawn by DrawCylinder with radiusEnd and the settings contact.showCones and colorCones.
   - **notes:** ObjectContactConeCone and ObjectContactConeTriangle: penalty contacts of truncated cones, with the contact points of the cylinder contacts; ConvexShape('Cone') in exudyn.cUtilities; contact.showCones and colorCones.

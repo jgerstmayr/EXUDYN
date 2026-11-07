@@ -540,21 +540,21 @@ def _JointGraphics(markers, shape, size, length, color):
     'spherical' a sphere at marker 0, 'distance' a line - or a cylinder of diameter size > 0 - between the markers"""
     drawColor = list(color) if color[0] >= 0 else graphics.color.grey
 
-    def Frame(mbs, marker):
-        visualization = exudyn.ConfigurationType.Visualization
-        return (np.array(mbs.GetMarkerOutput(marker, exudyn.OutputVariableType.Position, configuration=visualization)),
-                np.array(mbs.GetMarkerOutput(marker, exudyn.OutputVariableType.RotationMatrix,
-                                             configuration=visualization)).reshape(3, 3))
+    visualization = exudyn.ConfigurationType.Visualization
+
+    def Position(mbs, marker):
+        return np.array(mbs.GetMarkerOutput(marker, exudyn.OutputVariableType.Position, configuration=visualization))
 
     def UFgraphics(mbs, itemNumber):
-        (p, A) = Frame(mbs, markers[0])
+        p = Position(mbs, markers[0])
         if shape == 'spherical':
             return [graphics.Sphere(point=p, radius=size, color=drawColor, nTiles=8)]
-        if shape == 'distance':
-            p1 = Frame(mbs, markers[1])[0]
+        if shape == 'distance': #the markers may be position markers, without a rotation (#3333)
+            p1 = Position(mbs, markers[1])
             if size > 0:
                 return [graphics.Cylinder(pAxis=p, vAxis=p1 - p, radius=0.5*size, color=drawColor, nTiles=8)]
             return [graphics.Lines([p, p1], color=drawColor)]
+        A = np.array(mbs.GetMarkerOutput(markers[0], exudyn.OutputVariableType.RotationMatrix, configuration=visualization)).reshape(3, 3)
         axis = A[:, 2] if shape == 'revolute' else A[:, 0]
         return [graphics.Cylinder(pAxis=p - 0.5*length*axis, vAxis=length*axis, radius=size, color=drawColor, nTiles=12)]
     return UFgraphics

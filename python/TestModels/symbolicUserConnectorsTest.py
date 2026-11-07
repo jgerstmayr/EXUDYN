@@ -8,7 +8,8 @@
 #           a rigid-body spring-damper, its z-coordinate constrained to that of a mass point and a torque on it; the
 #           Python user items, the recorded ones, and SymbolicSystem by SolveGeneralizedAlpha; both rigid-body
 #           spring-dampers in each formulation, and one of each in one system, which Record records once per formulation
-#           (#3203). The result is the final position of the second body plus the number of checks that pass.
+#           (#3203). The result is the final position of the second body plus the number of checks that pass. Run
+#           directly, the SolutionViewer shows the model of the Python user items.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-01
@@ -23,7 +24,10 @@ from exudyn.symbolics.userItems import UserItemCreator
 from exudyn.symbolics.systemModel import SymbolicSystem
 from exudyn.symbolics.solvers import SolveGeneralizedAlpha
 import exudyn.cMath as cMath
+import exudyn.graphics as graphics
 import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
 
 def UFtorque(mbs, t, loadVector):
     return cMath.sin(8*t)*loadVector
@@ -41,8 +45,10 @@ def Build(userItems, record=False, intrinsic=(True, True)):
     inertia = InertiaCuboid(density=1000, sideLengths=[0.3, 0.1, 0.08])
     bodies = [creator.CreateRigidBody(inertia=inertia, referencePosition=[0.3*(i + 1), 0, 0], referenceRotationMatrix=RotationMatrixZ(0.1*i),
                                       initialAngularVelocity=[0.3, -0.2*i, 0.5], initialVelocity=[0.05*i, 0.1, 0], gravity=[0, -9.81, 0],
-                                      nodeType=exu.NodeType.RotationRxyz) for i in range(2)]
-    point = creator.CreateMassPoint(referencePosition=[0.6, -0.2, 0], mass=0.5, gravity=[0, -9.81, 0])
+                                      nodeType=exu.NodeType.RotationRxyz,
+                                      graphicsDataList=[graphics.Brick(size=[0.3, 0.1, 0.08], color=graphics.color.steelblue, addEdges=True)]) for i in range(2)]
+    point = creator.CreateMassPoint(referencePosition=[0.6, -0.2, 0], mass=0.5, gravity=[0, -9.81, 0],
+                                    graphicsDataList=[graphics.Sphere(radius=0.03, color=graphics.color.orange)])
     creator.CreateRigidBodySpringDamper(itemNumbers=[ground, bodies[0]], localPosition0=[0.15, 0, 0], localPosition1=[-0.15, 0, 0],
                                         stiffness=K, damping=D, offset=offset, rotationMatrixJoint=RotationMatrixX(0.3),
                                         useIntrinsicFormulation=intrinsic[0])
@@ -93,5 +99,12 @@ for intrinsic in [(True, True), (True, False), (False, False)]:
     passed += int(difference < 1e-9)
 
 u = np.sum(results[0][0:3]) + passed
+
+if not testIsActive: #the Python user items, drawn: the bodies by CreateRigidBody, the connectors by their user functions
+    (mbs, bodies) = Build(True, False)
+    simulationSettings.solution.file.write = True
+    mbs.SolveDynamic(simulationSettings)
+    mbs.GetSystemContainer().visualizationSettings.general.renderWindowString = 'the Python user items, intrinsic formulation'
+    mbs.SolutionViewer()
 exu.Print('solution of symbolicUserConnectorsTest=', u)
 exu.sys['testResult'] = u

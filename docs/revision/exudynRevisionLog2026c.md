@@ -6427,6 +6427,17 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg7-15-9"></a>
+### RG7.15.9 — the drawing of CreateCartesianSpringDamper of UserItemCreator (2026-11-07, #3333)
+- _JointGraphics of userItems.py read the RotationMatrix of marker 0 for every shape; a Cartesian spring-damper on a
+  mass point has a position marker, and the exception ended the user-function drawing of the whole system: only the
+  lines drawn before remained (GetGraphicsData: 2 lines, none of the 24 triangles of the bodies). Now the rotation is
+  read only for the revolute and prismatic shapes: 115 lines, 24 triangles, 1 sphere.
+- Found while probing: a change in python/exudyn is in effect only after the build installs the package - the first
+  probes ran the old userItems.py.
+- symbolicUserConnectorsTest.py: bodies and mass point with graphics, the SolutionViewer of the Python user items when
+  run directly (result unchanged); test_graphicsData.py checks the drawing.
+
 <a id="rg9-12-11"></a>
 ### RG9.12.11 — truncated cones: ObjectContactConeCone and ObjectContactConeTriangle (2026-11-07, #3332)
 - ConvexShapeType::Cone (radius at -L/2, radius1 at +L/2, one may be 0): support of the farther rim, the closest point

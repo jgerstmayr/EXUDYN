@@ -667,6 +667,8 @@ contact of two convex shapes given by points and triangles (numpy arrays), with 
 box rests on its 4 corners. `ObjectContactConeCone` and `ObjectContactConeTriangle` (with `infinitePlane`) are the
 contacts of truncated cones, with the contact points of the cylinder contacts and `contact.showCones`.
 `exudyn.cUtilities.ConvexShape('Cone', radius, length, radius1=...)` gives their distance.
+**Systems with a Cartesian spring-damper of UserItemCreator on a mass point are drawn** (#3333): its drawing asked
+the position marker for a rotation, and the error stopped the drawing of all user items of the system.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

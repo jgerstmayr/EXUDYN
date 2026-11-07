@@ -318,3 +318,21 @@ def testTheCylindersAndConesOfCPlusPlusWindOutward():
     winding = np.cross(points[:, 1] - points[:, 0], points[:, 2] - points[:, 0])
     agree = np.einsum('ij,ij->i', winding, normals.mean(axis=1))
     assert np.all(agree[np.abs(agree) > 1e-12] > 0)
+
+
+def testTheUserItemsOfACartesianSpringDamperOnAMassPointAreDrawn():
+    """the drawing of CreateCartesianSpringDamper of UserItemCreator reads no rotation of a position marker, so the
+    whole system is drawn (#3333)"""
+    from exudyn.symbolics.userItems import UserItemCreator
+    from exudyn.utilities import InertiaCuboid as Inertia
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    creator = UserItemCreator(mbs)
+    body = creator.CreateRigidBody(inertia=Inertia(density=1000, sideLengths=[0.3, 0.1, 0.1]), referencePosition=[0, 0, 0],
+                                   graphicsDataList=[graphics.Brick(size=[0.3, 0.1, 0.1])])
+    point = creator.CreateMassPoint(referencePosition=[0.5, 0, 0], mass=1, graphicsDataList=[graphics.Sphere(radius=0.05)])
+    creator.CreateCartesianSpringDamper(itemNumbers=[point, body], stiffness=[10., 10., 10.])
+    mbs.variables['creator'] = creator
+    mbs.Assemble()
+    data = SC.renderer.GetGraphicsData()
+    assert len(data['triangles']['items']) == 12 and len(data['spheres']['items']) == 1 and len(data['lines']['items']) >= 1
