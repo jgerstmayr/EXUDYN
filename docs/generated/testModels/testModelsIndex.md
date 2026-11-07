@@ -50,6 +50,7 @@ contactFrictionCircleCable2DnoFrictionTest
 contactSphereSphereTest
 contactSphereSphereTestEAPM
 contactSphereTorusMomentumTest
+contactUserFunctionTest
 ConvexContactTest
 convexDistanceTest
 coordinateSpringDamperExt

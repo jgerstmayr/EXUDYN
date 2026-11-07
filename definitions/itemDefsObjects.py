@@ -13658,7 +13658,7 @@ definitions.append(ItemDefinition(
             description=r'return object type (for node treatment in computation)'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
-            implementation='return "ContactSphereSphere";',
+            implementation='return "ContactSphereTorus";',
             description=r"Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?"),
         ItemFunctionDef('IsActive',
             implementation='return parameters.activeConnector;'),
@@ -13679,6 +13679,32 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectContactSphereTriangle   +++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectContactSphereTriangle_contactForceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                                gap: Real, gap_t: Real, normal: Vector3D,
+                                                tangentialVelocity: Vector3D, impactVelocity: Real) -> Vector3D:
+    r"""A user function which replaces the contact law: it computes the contact force from the gap, its rate, the
+    contact normal, the tangential relative velocity and the impact velocity, while the item computes the geometry and
+    the contact state (#3324). It is called only in contact, as the data node of the last post Newton step says.
+    The force is the one on marker 0, the convention of the output variable Force; marker 1 gets its negative. A
+    penetration $\delta = -g$ pushes marker 0 against the normal: the normal force $f_N > 0$ gives $-f_N\, \nv$; a
+    friction force on marker 0 acts along the tangential velocity. The tangential velocity includes the rotation of
+    marker 0, and a tangential force acts with its torque on marker 0, only if dynamicFriction > 0, which needs a rigid
+    marker 0; its value is not used otherwise.
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        gap: $g$, the signed gap, negative in contact
+        gap_t: $\dot g$, its rate: the relative velocity along the normal, negative while approaching
+        normal: $\LU{0}{\nv}$, the unit contact normal from marker 0 towards marker 1 (the output Director1)
+        tangentialVelocity: $\LU{0}{\vv}_t$, the velocity of marker 1 relative to marker 0 at the contact point, normal to $\LU{0}{\nv}$
+        impactVelocity: the velocity of approach at the last impact, from the data node, for impact models
+    Returns:
+        the global contact force on marker 0, a list or numpy array of 3 values
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectContactSphereTriangle',
     drawing=r'The sphere with `contact.showSpheres` and the triangle with `contact.showTriangles`.',
@@ -13842,6 +13868,31 @@ definitions.append(ItemDefinition(
             pythonName='activeConnector',
             defaultValue=True,
             description=r'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='contactForceUserFunction',
+            defaultValue=0,
+            description=r'''$\mathrm{UF} \in \Rcal^3$A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used, except dynamicFriction > 0 for the rotation of marker 0; see description below (#3324)''',
+            userFunction=ObjectContactSphereTriangle_contactForceUserFunction,
+            userFunctionExample=r'''
+#the linear contact law with regularized friction as a user function: the same as contactStiffness, contactDamping,
+#dynamicFriction and frictionProportionalZone of the item
+def UFcontact(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity):
+    k, d, mu, vReg = 1e5, 1e3, 0.3, 1e-3
+    fN = -k*gap - d*gap_t                       #normal force, > 0 in compression
+    vt = tangentialVelocity
+    vtNorm = (vt[0]**2 + vt[1]**2 + vt[2]**2)**0.5
+    fT = mu*fN/max(vtNorm, vReg)                #regularized Coulomb friction
+    return [-fN*normal[i] + fT*vt[i] for i in range(3)]
+
+mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=0.1,
+              trianglePoints=exu.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]), dynamicFriction=0.3, contactForceUserFunction=UFcontact))
+'''),
+        ItemFunctionDef('HasUserFunction',
+            implementation='return (parameters.contactForceUserFunction!=0);'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionForce',
+            args='Vector3D& force, const MainSystemBase& mainSystem, Real t, Real gap, Real gap_t, const Vector3D& normal, const Vector3D& tangentialVelocity, Real impactVelocity',
+            description=r'call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places'),
         ItemFunctionDef('GetMarkerNumbers',
             cFlags=CFConst,
             implementation='return parameters.markerNumbers;'),
@@ -13887,7 +13938,7 @@ definitions.append(ItemDefinition(
             description=r'return object type (for node treatment in computation)'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
-            implementation='return "ContactSphereSphere";',
+            implementation='return "ContactSphereTriangle";',
             description=r"Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?"),
         ItemFunctionDef('IsActive',
             implementation='return parameters.activeConnector;'),
@@ -13908,6 +13959,32 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectContactSphereCylinder   +++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectContactSphereCylinder_contactForceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                                gap: Real, gap_t: Real, normal: Vector3D,
+                                                tangentialVelocity: Vector3D, impactVelocity: Real) -> Vector3D:
+    r"""A user function which replaces the contact law: it computes the contact force from the gap, its rate, the
+    contact normal, the tangential relative velocity and the impact velocity, while the item computes the geometry and
+    the contact state (#3324). It is called only in contact, as the data node of the last post Newton step says.
+    The force is the one on marker 0, the convention of the output variable Force; marker 1 gets its negative. A
+    penetration $\delta = -g$ pushes marker 0 against the normal: the normal force $f_N > 0$ gives $-f_N\, \nv$; a
+    friction force on marker 0 acts along the tangential velocity. The tangential velocity includes the rotation of
+    marker 0, and a tangential force acts with its torque on marker 0, only if dynamicFriction > 0, which needs a rigid
+    marker 0; its value is not used otherwise.
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        gap: $g$, the signed gap, negative in contact
+        gap_t: $\dot g$, its rate: the relative velocity along the normal, negative while approaching
+        normal: $\LU{0}{\nv}$, the unit contact normal from marker 0 towards marker 1 (the output Director1)
+        tangentialVelocity: $\LU{0}{\vv}_t$, the velocity of marker 1 relative to marker 0 at the contact point, normal to $\LU{0}{\nv}$
+        impactVelocity: the velocity of approach at the last impact, from the data node, for impact models
+    Returns:
+        the global contact force on marker 0, a list or numpy array of 3 values
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectContactSphereCylinder',
     drawing=r'The sphere with `contact.showSpheres` and the cylinder with `contact.showCylinders`.',
@@ -13996,7 +14073,7 @@ definitions.append(ItemDefinition(
         ItemOutputVariable(OVVelocity, 'velocity of the closest point of the cylinder, with the rotation of its body, relative to the sphere center'),
         ItemOutputVariable(OVDisplacementLocal, '1D Vector, containing only gap'),
         ItemOutputVariable(OVDirector1, 'the contact normal, the unit vector from the sphere center (marker 0) towards the cylinder'),
-        ItemOutputVariable(OVForce, 'global contact force vector on marker 1'),
+        ItemOutputVariable(OVForce, 'global contact force on marker 0, the sphere; marker 1 gets its negative'),
         ItemOutputVariable(OVTorque, 'global torque due to friction on marker 0'),
         ],
     visuParentClass=VisuParentClassVisualizationObject,
@@ -14061,6 +14138,31 @@ definitions.append(ItemDefinition(
             pythonName='activeConnector',
             defaultValue=True,
             description=r'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='contactForceUserFunction',
+            defaultValue=0,
+            description=r'''$\mathrm{UF} \in \Rcal^3$A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used, except dynamicFriction > 0 for the rotation of marker 0; see description below (#3324)''',
+            userFunction=ObjectContactSphereCylinder_contactForceUserFunction,
+            userFunctionExample=r'''
+#the linear contact law with regularized friction as a user function: the same as contactStiffness, contactDamping,
+#dynamicFriction and frictionProportionalZone of the item
+def UFcontact(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity):
+    k, d, mu, vReg = 1e5, 1e3, 0.3, 1e-3
+    fN = -k*gap - d*gap_t                       #normal force, > 0 in compression
+    vt = tangentialVelocity
+    vtNorm = (vt[0]**2 + vt[1]**2 + vt[2]**2)**0.5
+    fT = mu*fN/max(vtNorm, vReg)                #regularized Coulomb friction
+    return [-fN*normal[i] + fT*vt[i] for i in range(3)]
+
+mbs.AddObject(ObjectContactSphereCylinder(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=0.1,
+              cylinderRadius=0.2, cylinderLength=1, dynamicFriction=0.3, contactForceUserFunction=UFcontact))
+'''),
+        ItemFunctionDef('HasUserFunction',
+            implementation='return (parameters.contactForceUserFunction!=0);'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionForce',
+            args='Vector3D& force, const MainSystemBase& mainSystem, Real t, Real gap, Real gap_t, const Vector3D& normal, const Vector3D& tangentialVelocity, Real impactVelocity',
+            description=r'call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places'),
         ItemFunctionDef('GetMarkerNumbers',
             cFlags=CFConst,
             implementation='return parameters.markerNumbers;'),

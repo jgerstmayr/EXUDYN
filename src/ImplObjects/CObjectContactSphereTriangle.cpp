@@ -111,9 +111,17 @@ void CObjectContactSphereTriangle::ComputeConnectorProperties(const MarkerDataSt
 		//frictionRegularizedRegion is only used in case that contactFromData=true
 		bool frictionRegularizedRegion = data[dataIndexVtangent] < parameters.frictionProportionalZone;
 
-		//Real contactForce = 
-		ComputeContactForces<Real>(gap, n0, deltaVnormal, deltaV,
-			frictionCoeff, frictionRegularizedRegion, fVec, fFriction, contactFromData);
+		if (parameters.contactForceUserFunction) //the force by the user function (#3324)
+		{
+			EvaluateUserFunctionForce(fVec, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), gap, deltaVnormal, n0,
+				deltaV - deltaVnormal * n0, data[dataIndexImpactVel]);
+			fFriction = fVec - (fVec * n0) * n0;
+		}
+		else
+		{
+			ComputeContactForces<Real>(gap, n0, deltaVnormal, deltaV,
+				frictionCoeff, frictionRegularizedRegion, fVec, fFriction, contactFromData);
+		}
 		//pout << "** fVec=" << fVec << ", gap=" << gap << ",ff=" << fFriction <<	"\n";
 	}
 	else //no contact

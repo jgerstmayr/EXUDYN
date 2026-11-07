@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 420 | 1.13.436 |
+| 1.13 | Newborn | 422 | 1.13.438 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.438** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactSphereTriangle and ObjectContactSphereTorus report the type ContactSphereSphere (#3325)
+  - description: Found with \#3324: GetTypeName of both items returns ContactSphereSphere, copied from ObjectContactSphereSphere, so mbs.GetObject(i)\['objectType'\] names the wrong item - a dictionary of the item added again creates a sphere-sphere contact - and CreateSymbolicUserFunction looks up the user functions of the wrong item. Decided: ContactSphereTriangle and ContactSphereTorus; revision2026c step RG9.12.14.
+  - **notes:** ObjectContactSphereTriangle and ObjectContactSphereTorus report their own type in GetObject (objectType), instead of ContactSphereSphere.
+  - date resolved: **2026-11-07 12:34**, date raised: 2026-11-07
+- **1.13.437** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the contact force user function of ObjectContactSphereTriangle and ObjectContactSphereCylinder (#3324)
+  - description: Further contact laws (and later bearing models) without a new item: a user function that replaces the built-in law. Decided (contactPrimitives.md section 8.5): contactForceUserFunction(mbs, t, itemNumber, gap, gap\_t, normal, tangentialVelocity, impactVelocity) returning the global contact force on marker 0, the convention of the output Force; called while the data node says contact, the geometry and the active set stay in C++; also as a symbolic user function; for the primitive contacts on the shared law, the others as they come; revision2026c step RG9.12.14.
+  - **notes:** ObjectContactSphereTriangle and ObjectContactSphereCylinder have a contactForceUserFunction, also symbolic, which replaces their contact law.
+  - date resolved: **2026-11-07 12:34**, date raised: 2026-11-07
 - **1.13.436** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the option infinitePlane of ObjectContactSphereTriangle: contact with the plane of the triangle (#3323)
   - description: A floor or a wall is mostly a plane; the triangle limits the contact to its area and switches the normal at its edges. Decided (contactPrimitives.md section 8.1): a parameter infinitePlane, False by default, with which the contact is with the plane of the triangle - its normal by the order of the points, one-sided, any depth, the edges and includeEdges ignored; the same option for CylinderTriangle and ConeTriangle when they come; revision2026c step RG9.12.10.
   - **notes:** ObjectContactSphereTriangle has the option infinitePlane: the contact with the plane of the triangle, one-sided and without edges, for a floor or a wall.

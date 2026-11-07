@@ -48,7 +48,9 @@ __all__ = [
     'ObjectJointUserGraphicsDataUserFunction', 'ObjectConnectorCoordinateOffsetUserFunction',
     'ObjectConnectorCoordinateOffsetUserFunction_t',
     'ObjectConnectorCoordinateVectorConstraintUserFunction',
-    'ObjectConnectorCoordinateVectorJacobianUserFunction', 'ObjectJointGenericOffsetUserFunction',
+    'ObjectConnectorCoordinateVectorJacobianUserFunction',
+    'ObjectContactSphereTriangleContactForceUserFunction',
+    'ObjectContactSphereCylinderContactForceUserFunction', 'ObjectJointGenericOffsetUserFunction',
     'ObjectJointGenericOffsetUserFunction_t', 'MarkerBodyUserPositionUserFunction',
     'MarkerBodyUserPositionJacobianUserFunction', 'MarkerBodyUserRotationMatrixUserFunction',
     'MarkerBodyUserRotationJacobianUserFunction', 'LoadForceVectorLoadVectorUserFunction',
@@ -261,6 +263,8 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectConnectorCoordinate,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction_t']],
         'ObjectConnectorCoordinateVector,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'velocityLevel'], ['StdVector'], ['ObjectConnectorCoordinateVectorConstraintUserFunction']],
         'ObjectConnectorCoordinateVector,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'velocityLevel'], ['py::object'], ['ObjectConnectorCoordinateVectorJacobianUserFunction']],
+        'ObjectContactSphereTriangle,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactSphereTriangleContactForceUserFunction']],
+        'ObjectContactSphereCylinder,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactSphereCylinderContactForceUserFunction']],
         'ObjectJointGeneric,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 't', 'itemNumber', 'offsetUserFunctionParameters'], ['StdVector6D'], ['ObjectJointGenericOffsetUserFunction']],
         'ObjectJointGeneric,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 't', 'itemNumber', 'offsetUserFunctionParameters'], ['StdVector6D'], ['ObjectJointGenericOffsetUserFunction_t']],
         'MarkerBodyUser,positionUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['StdVector3D'], ['MarkerBodyUserPositionUserFunction']],
@@ -1634,6 +1638,72 @@ class ObjectConnectorCoordinateVectorJacobianUserFunction(Protocol):
         exudyn.MatrixContainer: returns special jacobian for connector, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; sparse triplets MAY NOT contain zero values!
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray, velocityLevel: bool) -> exudyn.MatrixContainer: ...
+
+class ObjectContactSphereTriangleContactForceUserFunction(Protocol):
+    r"""A user function which replaces the contact law: it computes the contact force from the gap, its rate, the.
+    
+    contact normal, the tangential relative velocity and the impact velocity, while the item computes the geometry and
+    the contact state (#3324). It is called only in contact, as the data node of the last post Newton step says.
+    The force is the one on marker 0, the convention of the output variable Force; marker 1 gets its negative. A
+    penetration :math:`\delta = -g` pushes marker 0 against the normal: the normal force :math:`f_N > 0` gives :math:`-f_N\, \nv`; a
+    friction force on marker 0 acts along the tangential velocity. The tangential velocity includes the rotation of
+    marker 0, and a tangential force acts with its torque on marker 0, only if dynamicFriction > 0, which needs a rigid
+    marker 0; its value is not used otherwise.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        gap (float): :math:`g`, the signed gap, negative in contact
+
+        gap_t (float): :math:`\dot g`, its rate: the relative velocity along the normal, negative while approaching
+
+        normal (np.ndarray): :math:`{}^{0}{\nv}`, the unit contact normal from marker 0 towards marker 1 (the output Director1)
+
+        tangentialVelocity (np.ndarray): :math:`{}^{0}{\vv}_t`, the velocity of marker 1 relative to marker 0 at the contact point, normal to :math:`{}^{0}{\nv}`
+
+        impactVelocity (float): the velocity of approach at the last impact, from the data node, for impact models
+
+    Returns:
+        np.ndarray: the global contact force on marker 0, a list or numpy array of 3 values
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, gap: float, gap_t: float, normal: np.ndarray, tangentialVelocity: np.ndarray, impactVelocity: float) -> np.ndarray: ...
+
+class ObjectContactSphereCylinderContactForceUserFunction(Protocol):
+    r"""A user function which replaces the contact law: it computes the contact force from the gap, its rate, the.
+    
+    contact normal, the tangential relative velocity and the impact velocity, while the item computes the geometry and
+    the contact state (#3324). It is called only in contact, as the data node of the last post Newton step says.
+    The force is the one on marker 0, the convention of the output variable Force; marker 1 gets its negative. A
+    penetration :math:`\delta = -g` pushes marker 0 against the normal: the normal force :math:`f_N > 0` gives :math:`-f_N\, \nv`; a
+    friction force on marker 0 acts along the tangential velocity. The tangential velocity includes the rotation of
+    marker 0, and a tangential force acts with its torque on marker 0, only if dynamicFriction > 0, which needs a rigid
+    marker 0; its value is not used otherwise.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        gap (float): :math:`g`, the signed gap, negative in contact
+
+        gap_t (float): :math:`\dot g`, its rate: the relative velocity along the normal, negative while approaching
+
+        normal (np.ndarray): :math:`{}^{0}{\nv}`, the unit contact normal from marker 0 towards marker 1 (the output Director1)
+
+        tangentialVelocity (np.ndarray): :math:`{}^{0}{\vv}_t`, the velocity of marker 1 relative to marker 0 at the contact point, normal to :math:`{}^{0}{\nv}`
+
+        impactVelocity (float): the velocity of approach at the last impact, from the data node, for impact models
+
+    Returns:
+        np.ndarray: the global contact force on marker 0, a list or numpy array of 3 values
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, gap: float, gap_t: float, normal: np.ndarray, tangentialVelocity: np.ndarray, impactVelocity: float) -> np.ndarray: ...
 
 class ObjectJointGenericOffsetUserFunction(Protocol):
     r"""A user function, which computes scalar offset for relative joint translation and joint rotation for the GenericJoint,.
@@ -7392,6 +7462,8 @@ class ObjectContactSphereTriangle:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
+        contactForceUserFunction: A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used, except dynamicFriction > 0 for the rotation of marker 0; see description below (#3324); type: ObjectContactSphereTriangleContactForceUserFunction
+
         radiusSphere: deprecated since 1.12.258, removed in 2031: use sphereRadius
 
         visualization: visualization data, see VObjectContactSphereTriangle
@@ -7404,7 +7476,7 @@ class ObjectContactSphereTriangle:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., trianglePoints = None, includeEdges = 7, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, radiusSphere = None, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., trianglePoints = None, includeEdges = 7, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, contactForceUserFunction: Union[ObjectContactSphereTriangleContactForceUserFunction, int] = 0, radiusSphere = None, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7421,6 +7493,7 @@ class ObjectContactSphereTriangle:
         self.minimumImpactVelocity = minimumImpactVelocity
         self.impactModel = impactModel
         self.activeConnector = activeConnector
+        self.contactForceUserFunction = contactForceUserFunction
         self.radiusSphere = radiusSphere
         self.visualization = CopyDictLevel1(visualization)
 
@@ -7442,6 +7515,7 @@ class ObjectContactSphereTriangle:
         yield 'minimumImpactVelocity', self.minimumImpactVelocity
         yield 'impactModel', self.impactModel
         yield 'activeConnector', self.activeConnector
+        yield 'contactForceUserFunction', self.contactForceUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
         if self.radiusSphere is not None:
@@ -7506,6 +7580,8 @@ class ObjectContactSphereCylinder:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
+        contactForceUserFunction: A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used, except dynamicFriction > 0 for the rotation of marker 0; see description below (#3324); type: ObjectContactSphereCylinderContactForceUserFunction
+
         visualization: visualization data, see VObjectContactSphereCylinder
 
     Notes:
@@ -7516,7 +7592,7 @@ class ObjectContactSphereCylinder:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., cylinderRadius = 0., cylinderLength = 0., dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., cylinderRadius = 0., cylinderLength = 0., dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, contactForceUserFunction: Union[ObjectContactSphereCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7532,6 +7608,7 @@ class ObjectContactSphereCylinder:
         self.minimumImpactVelocity = minimumImpactVelocity
         self.impactModel = impactModel
         self.activeConnector = activeConnector
+        self.contactForceUserFunction = contactForceUserFunction
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -7551,6 +7628,7 @@ class ObjectContactSphereCylinder:
         yield 'minimumImpactVelocity', self.minimumImpactVelocity
         yield 'impactModel', self.impactModel
         yield 'activeConnector', self.activeConnector
+        yield 'contactForceUserFunction', self.contactForceUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
 

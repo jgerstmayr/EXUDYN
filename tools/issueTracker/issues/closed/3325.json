@@ -1,0 +1,17 @@
+{
+  "number": 3325,
+  "title": "ObjectContactSphereTriangle and ObjectContactSphereTorus report the type ContactSphereSphere",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "Found with #3324: GetTypeName of both items returns ContactSphereSphere, copied from ObjectContactSphereSphere, so mbs.GetObject(i)['objectType'] names the wrong item - a dictionary of the item added again creates a sphere-sphere contact - and CreateSymbolicUserFunction looks up the user functions of the wrong item. Decided: ContactSphereTriangle and ContactSphereTorus; revision2026c step RG9.12.14.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 12:34",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "ObjectContactSphereTriangle and ObjectContactSphereTorus report their own type in GetObject (objectType), instead of ContactSphereSphere.",
+  "resolvedInVersion": "1.13.438"
+}

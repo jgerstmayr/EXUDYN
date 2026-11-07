@@ -39,6 +39,7 @@ The parameters of the item; in a dictionary, its type is 'ContactSphereTriangle'
 | **minimumImpactVelocity** | UReal |  | 0. | (symbol: $\dot\delta_\mathrm{-,min}$) minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact) |
 | **impactModel** | UInt |  | 0 | (symbol: $m_\mathrm{impact}$) number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero! |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
+| **contactForceUserFunction** | ObjectContactSphereTriangleContactForceUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^3$) A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used, except dynamicFriction > 0 for the rotation of marker 0; see description below (#3324) |
 | **visualization** | VObjectContactSphereTriangle |  |  | parameters for visualization of item |
 
 
@@ -123,6 +124,47 @@ on marker 1 is $\LU{0}{\fv}$, the force on marker 0 is $-\LU{0}{\fv}$; the frict
 torque about the centers. The data coordinates hold the gap, the tangential velocity and the impact
 velocity of the last post Newton step, which decide on contact and on the friction regime during the
 Newton iterations (active set).
+
+**Userfunction**: `contactForceUserFunction(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity)`
+A user function which replaces the contact law: it computes the contact force from the gap, its rate, the
+contact normal, the tangential relative velocity and the impact velocity, while the item computes the geometry and
+the contact state (#3324). It is called only in contact, as the data node of the last post Newton step says.
+The force is the one on marker 0, the convention of the output variable Force; marker 1 gets its negative. A
+penetration $\delta = -g$ pushes marker 0 against the normal: the normal force $f_N > 0$ gives $-f_N\, \nv$; a
+friction force on marker 0 acts along the tangential velocity. The tangential velocity includes the rotation of
+marker 0, and a tangential force acts with its torque on marker 0, only if dynamicFriction > 0, which needs a rigid
+marker 0; its value is not used otherwise.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
+| `t` | Real | current time in mbs |
+| `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+| `gap` | Real | $g$, the signed gap, negative in contact |
+| `gap_t` | Real | $\dot g$, its rate: the relative velocity along the normal, negative while approaching |
+| `normal` | Vector3D | $\LU{0}{\nv}$, the unit contact normal from marker 0 towards marker 1 (the output Director1) |
+| `tangentialVelocity` | Vector3D | $\LU{0}{\vv}_t$, the velocity of marker 1 relative to marker 0 at the contact point, normal to $\LU{0}{\nv}$ |
+| `impactVelocity` | Real | the velocity of approach at the last impact, from the data node, for impact models |
+| **return value** | Vector3D | the global contact force on marker 0, a list or numpy array of 3 values |
+
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
+*Example*:
+
+```python
+#the linear contact law with regularized friction as a user function: the same as contactStiffness, contactDamping,
+#dynamicFriction and frictionProportionalZone of the item
+def UFcontact(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity):
+    k, d, mu, vReg = 1e5, 1e3, 0.3, 1e-3
+    fN = -k*gap - d*gap_t                       #normal force, > 0 in compression
+    vt = tangentialVelocity
+    vtNorm = (vt[0]**2 + vt[1]**2 + vt[2]**2)**0.5
+    fT = mu*fN/max(vtNorm, vReg)                #regularized Coulomb friction
+    return [-fN*normal[i] + fT*vt[i] for i in range(3)]
+
+mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=0.1,
+              trianglePoints=exu.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]), dynamicFriction=0.3, contactForceUserFunction=UFcontact))
+```
 
 (miniexample-objectcontactspheretriangle)=
 ## Mini example

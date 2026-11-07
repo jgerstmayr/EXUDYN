@@ -1,0 +1,17 @@
+{
+  "number": 3324,
+  "title": "the contact force user function of ObjectContactSphereTriangle and ObjectContactSphereCylinder",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "Further contact laws (and later bearing models) without a new item: a user function that replaces the built-in law. Decided (contactPrimitives.md section 8.5): contactForceUserFunction(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity) returning the global contact force on marker 0, the convention of the output Force; called while the data node says contact, the geometry and the active set stay in C++; also as a symbolic user function; for the primitive contacts on the shared law, the others as they come; revision2026c step RG9.12.14.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 12:34",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/ContactPrimitiveForce.h",
+  "releaseNotes": "ObjectContactSphereTriangle and ObjectContactSphereCylinder have a contactForceUserFunction, also symbolic, which replaces their contact law.",
+  "resolvedInVersion": "1.13.437"
+}

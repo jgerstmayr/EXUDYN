@@ -1,0 +1,106 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The contactForceUserFunction of ObjectContactSphereCylinder and ObjectContactSphereTriangle (#3324): balls
+#           dropped with a horizontal velocity onto cylinders and triangles, slide with friction and roll; the
+#           built-in linear contact law with regularized friction against the same law as a Python user function and
+#           as a symbolic user function. The motions agree; run directly, the SolutionViewer shows the six balls. The
+#           result is the sum of the checks and of two final positions.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-07
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import *
+from exudyn import cMath
+import exudyn.graphics as graphics
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+esym = exu.symbolic
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+oGround = mbs.CreateGround()
+
+r = 0.1
+k, d, mu, vReg = 1e5, 1e3, 0.3, 1e-3
+g = 9.81
+
+#the built-in law of the item as a user function: the force on the ball (marker 0)
+def UFcontact(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity):
+    fN = -k*gap - d*gap_t #normal force, > 0 in compression
+    vt = tangentialVelocity
+    fT = mu*fN/max(cMath.norm(vt), vReg) #regularized Coulomb friction
+    return [-fN*normal[i] + fT*vt[i] for i in range(3)]
+
+def UFcontactSymbolic(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity):
+    fN = -k*gap - d*gap_t
+    vt = tangentialVelocity
+    fT = mu*fN/esym.max(esym.sqrt(vt[0]*vt[0] + vt[1]*vt[1] + vt[2]*vt[2]), vReg)
+    return [-fN*normal[0] + fT*vt[0], -fN*normal[1] + fT*vt[1], -fN*normal[2] + fT*vt[2]]
+
+def Ball(position, color):
+    inertia = InertiaSphere(mass=1, radius=r)
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=position + eulerParameters0, initialVelocities=[1, 0, 0] + [0]*4))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D(),
+                                         visualization=VObjectRigidBody(graphicsData=[graphics.Sphere(radius=r, color=color, nTiles=16, addEdges=True)])))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0, 0, -g]))
+    return node, mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball))
+
+def Contact(item, y, color, userFunction=0, **shape):
+    node, mBall = Ball([-0.4, y, 0.25], color)
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTtranslate([0, y, 0]) @
+                                            (HTrotateY(0.5*np.pi) if item == ObjectContactSphereCylinder else np.eye(4))))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3 if item == ObjectContactSphereCylinder else 4,
+                                        initialCoordinates=[1, 0, 0] + ([] if item == ObjectContactSphereCylinder else [0])))
+    contact = mbs.AddObject(item(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=r, contactStiffness=k,
+                                 contactDamping=d, dynamicFriction=mu, frictionProportionalZone=vReg,
+                                 contactForceUserFunction=userFunction, **shape))
+    return node, contact
+
+cylinder = {'cylinderRadius': 0.1, 'cylinderLength': 1.}
+triangle = {'trianglePoints': exu.Vector3DList([[-0.5, -0.4, 0.1], [0.5, -0.4, 0.1], [0, 0.4, 0.1]])}
+nodes = [Contact(ObjectContactSphereCylinder, 0, graphics.color.orange, **cylinder)[0],
+         Contact(ObjectContactSphereCylinder, 0.5, graphics.color.steelblue, UFcontact, **cylinder)[0]]
+node, cSymbolic = Contact(ObjectContactSphereCylinder, 1, graphics.color.green, **cylinder)
+nodes += [node,
+          Contact(ObjectContactSphereTriangle, 2, graphics.color.orange, **triangle)[0],
+          Contact(ObjectContactSphereTriangle, 2.5, graphics.color.steelblue, UFcontact, **triangle)[0]]
+node, tSymbolic = Contact(ObjectContactSphereTriangle, 3, graphics.color.green, **triangle)
+nodes += [node]
+for item, itemTypeName in [(cSymbolic, 'ObjectContactSphereCylinder'), (tSymbolic, 'ObjectContactSphereTriangle')]:
+    symbolicFunction = CreateSymbolicUserFunction(mbs, UFcontactSymbolic, 'contactForceUserFunction', item)
+    mbs.SetObjectParameter(item, 'contactForceUserFunction', symbolicFunction)
+mbs.Assemble()
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 2000
+simulationSettings.timeIntegration.endTime = 0.5
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
+mbs.SolveDynamic(simulationSettings)
+
+def State(node):
+    return np.array(list(mbs.GetNodeOutput(node, exu.OutputVariableType.Position)) + list(mbs.GetNodeOutput(node, exu.OutputVariableType.Velocity)))
+states = [State(n) - [0, y, 0, 0, 0, 0] for n, y in zip(nodes, [0, 0.5, 1, 2, 2.5, 3])]
+#the built-in law takes the friction regime (stick or slip) of the data node, the user function decides it from the
+#current tangential velocity: the two differ in the steps where the regime switches, on the triangle by 2e-5
+errorPython = max(cMath.norm(states[1] - states[0]), 1e-2*cMath.norm(states[4] - states[3]))
+errorSymbolic = max(cMath.norm(states[2] - states[1]), cMath.norm(states[5] - states[4]))
+exu.Print('after 0.5 s: ball on the cylinder at', states[0][0:3], ', velocity', states[0][3:6])
+exu.Print('difference of the Python user function to the built-in law', errorPython, ', of the symbolic to the Python one', errorSymbolic)
+checks = [errorPython < 1e-6, errorSymbolic < 1e-10, states[0][3] < 0.8 and states[0][3] > 0.6] #rolls after sliding
+
+if not testIsActive:
+    SC.visualizationSettings.contact.showCylinders = True
+    SC.visualizationSettings.contact.showTriangles = True
+    mbs.SolutionViewer()
+
+u = sum(checks) + states[0][0] + states[3][0]
+exu.Print('checks:', checks)
+exu.Print('solution of contactUserFunctionTest=', u)
+exu.sys['testResult'] = u

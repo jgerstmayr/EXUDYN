@@ -641,6 +641,12 @@ data node of 3 coordinates; `contact.showCylinders` draws its cylinder (#3320). 
 have the output variable `Distance`, the signed gap, also when the contact is deactivated (#3319).
 `ObjectContactSphereTriangle(infinitePlane=True)` contacts the plane of the triangle instead, one-sided along its
 normal and without edges, for a floor or a wall of any size (#3323).
+Both items take a `contactForceUserFunction(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity,
+impactVelocity)`, returning the contact force on marker 0, instead of their contact law; it can be a symbolic user
+function (#3324).
+**ObjectContactSphereTriangle and ObjectContactSphereTorus report their own type**: `mbs.GetObject(i)['objectType']`
+gave `ContactSphereSphere` for both, so that the dictionary of such an item, added again, created a sphere-sphere
+contact (#3325).
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  11:01:21 (last modified)
+* @date         2026-11-07  12:15:25 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,6 +22,9 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
+#include <functional> //! AUTO: needed for std::function
+#include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
+namespace py = pybind11;            //! AUTO: "py" used throughout in code
 
 //! AUTO: Parameters for class CObjectContactSphereCylinderParameters
 class CObjectContactSphereCylinderParameters // AUTO:
@@ -41,6 +44,7 @@ public: // AUTO:
     Real minimumImpactVelocity;                   //!< AUTO: must be >= 0; minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
     Index impactModel;                            //!< AUTO: must be >= 0;  number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+    PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,Real,Real,StdVector3D,StdVector3D,Real)> > contactForceUserFunction;//!< AUTO: A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used, except dynamicFriction > 0 for the rotation of marker 0; see description below (#3324)
     //! AUTO: default constructor with parameter initialization
     CObjectContactSphereCylinderParameters()
     {
@@ -58,6 +62,7 @@ public: // AUTO:
         minimumImpactVelocity = 0.;
         impactModel = 0;
         activeConnector = true;
+        contactForceUserFunction = 0;
     };
 };
 
@@ -99,6 +104,21 @@ public: // AUTO:
     virtual CObjectContactSphereCylinderParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
     virtual const CObjectContactSphereCylinderParameters& GetParameters() const { return parameters; }
+
+    //! AUTO: the user functions of the item, for the parallel computation (#2978)
+    virtual void GetUserFunctions(ResizableArray<const UserFunctionBase*>& list) const override
+    {
+        list.Append(&parameters.contactForceUserFunction);
+    }
+
+    //! AUTO:  return true, if object has a computation user function
+    virtual bool HasUserFunction() const override
+    {
+        return (parameters.contactForceUserFunction!=0);
+    }
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionForce(Vector3D& force, const MainSystemBase& mainSystem, Real t, Real gap, Real gap_t, const Vector3D& normal, const Vector3D& tangentialVelocity, Real impactVelocity) const;
 
     //! AUTO:  default (read) function to return Marker numbers
     virtual const ArrayIndex& GetMarkerNumbers() const override

@@ -6427,6 +6427,28 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-14"></a>
+### RG9.12.14 — the contact force user function; the type names of two sphere contacts (2026-11-07, #3324, #3325)
+- contactForceUserFunction(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity) of
+  ObjectContactSphereTriangle and ObjectContactSphereCylinder, the two items on the shared law. Changed against the
+  design (section 8.5): the normal is an argument and the result is the global force on marker 0 - the convention
+  of the output Force, checked: a ball at rest gives +m g - instead of [normal, tangential 1, tangential 2], which
+  would need tangential axes the items do not have; dataCoordinates left out, the impact velocity is the one value
+  of them a law needs. Called in contact as the data node says; the friction part (for the torque) is the tangential
+  part of the result; dynamicFriction > 0 still switches on the rotation of marker 0 and the friction torque, as it
+  needs a rigid marker 0.
+- The symbolic version came from the generator without further code (PySymbolicUserFunctionSet.h, one member for
+  the shared signature); symbolicUserFunctionSignaturesTest.py counts 2 more signatures (58.295 -> 60.295).
+- #3325 found on the way: CreateSymbolicUserFunction looked up ObjectContactSphereSphere for the triangle -
+  GetTypeName of ObjectContactSphereTriangle and SphereTorus returned ContactSphereSphere, copied from the
+  sphere-sphere item; mbs.GetObject(i)['objectType'] was wrong for both, and a dictionary of such an item added
+  again created a sphere-sphere contact. Corrected in the definitions.
+- contactUserFunctionTest.py (new, with the SolutionViewer): six balls dropped with a horizontal velocity onto
+  cylinders and triangles with friction; the Python user function of the built-in law against the law: 3e-12 on
+  the cylinder, 2.8e-5 on the triangle - the built-in law takes the stick/slip regime of the data node, the user
+  function the current one, which differ in the steps where it switches -, the symbolic against the Python user
+  function 1.5e-13; the ball rolls at 0.714 = 5/7 v0.
+
 <a id="rg9-12-10"></a>
 ### RG9.12.10 — infinitePlane of ObjectContactSphereTriangle (2026-11-07, #3323)
 - Maintainer 2026-11-07: the decisions of contactPrimitives.md section 8.6; the clear steps first (8.1 and 8.5 with

@@ -37,6 +37,7 @@ template class PythonUserFunctionBase<std::function<py::object(const MainSystem&
 template class PythonUserFunctionBase<std::function<Real(const MainSystem&,Real,Index,Real)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)>>;
 template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)>>;
+template class PythonUserFunctionBase<std::function<StdVector3D(const MainSystem&,Real,Index,Real,Real,StdVector3D,StdVector3D,Real)>>;
 template class PythonUserFunctionBase<std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>>;
 template class PythonUserFunctionBase<std::function<StdVector3D(const MainSystem&,Real,StdVector3D)>>;
 template class PythonUserFunctionBase<std::function<Real(const MainSystem&,Real,Real)>>;

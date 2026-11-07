@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (9 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (8 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 15 | Structural core improvements |
+| RG9 | OPEN | 14 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1604,7 +1604,9 @@ CLOSED 2026-11-07 (#3323): infinitePlane of ObjectContactSphereTriangle - the pl
 
 #### **OPEN_RG9.12.13** ObjectJournalBearing on the geometry of the cylinder inside a cylinder: short, long and finite bearing models
 
-#### **OPEN_RG9.12.14** User functions of the contact force for all primitive contacts, also symbolic
+#### **CLOSED_RG9.12.14** User functions of the contact force for all primitive contacts, also symbolic
+
+CLOSED 2026-11-07 (#3324, #3325): contactForceUserFunction(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity) of SphereTriangle and SphereCylinder, the force on marker 0, also symbolic; the items to come get it; the type names of SphereTriangle and SphereTorus corrected (#3325); contactUserFunctionTest.py. [log](exudynRevisionLog2026c.md#rg9-12-14)
 
 ## **CLOSED_RG10** Tooling and process
 

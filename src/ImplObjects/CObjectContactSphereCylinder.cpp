@@ -66,8 +66,17 @@ void CObjectContactSphereCylinder::ComputeConnectorProperties(const MarkerDataSt
 		Real deltaVnormal = n0 * deltaV; //relative velocity in normal direction
 		//frictionRegularizedRegion is only used in case that contactFromData=true
 		bool frictionRegularizedRegion = data[dataIndexVtangent] < parameters.frictionProportionalZone;
-		ContactPrimitiveForce<Real>(parameters, data[dataIndexImpactVel], "ObjectContactSphereCylinder", gap, n0, deltaVnormal,
-			deltaV, frictionCoeff, frictionRegularizedRegion, fVec, fFriction, contactFromData);
+		if (parameters.contactForceUserFunction) //the force by the user function (#3324)
+		{
+			EvaluateUserFunctionForce(fVec, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), gap, deltaVnormal, n0,
+				deltaV - deltaVnormal * n0, data[dataIndexImpactVel]);
+			fFriction = fVec - (fVec * n0) * n0;
+		}
+		else
+		{
+			ContactPrimitiveForce<Real>(parameters, data[dataIndexImpactVel], "ObjectContactSphereCylinder", gap, n0, deltaVnormal,
+				deltaV, frictionCoeff, frictionRegularizedRegion, fVec, fFriction, contactFromData);
+		}
 	}
 	else
 	{

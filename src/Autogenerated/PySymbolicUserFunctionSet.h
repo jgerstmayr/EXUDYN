@@ -37,6 +37,7 @@ public:
     std::function<Real(const MainSystem&,Real,Index,Real)> objectConnectorCoordinateOffsetUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)> objectConnectorCoordinateVectorConstraintUserFunction;
     std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)> objectConnectorCoordinateVectorJacobianUserFunction;
+    std::function<StdVector3D(const MainSystem&,Real,Index,Real,Real,StdVector3D,StdVector3D,Real)> objectContactSphereTriangleContactForceUserFunction;
     std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)> objectJointGenericOffsetUserFunction;
     std::function<StdVector3D(const MainSystem&,Real,StdVector3D)> loadForceVectorLoadVectorUserFunction;
     std::function<Real(const MainSystem&,Real,Real)> loadCoordinateLoadUserFunction;
@@ -395,6 +396,20 @@ public:
                     return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4);
                 };
         }
+        else if (itemTypeName == "ObjectContactSphereTriangle" && userFunctionName == "contactForceUserFunction")
+        {            //define the user function as lambda function of this
+            objectContactSphereTriangleContactForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, Real arg2, Real arg3, StdVector3D arg4, StdVector3D arg5, Real arg6)
+                {
+                    return this->EvaluateStdVector3D(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+                };
+        }
+        else if (itemTypeName == "ObjectContactSphereCylinder" && userFunctionName == "contactForceUserFunction")
+        {            //define the user function as lambda function of this
+            objectContactSphereTriangleContactForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, Real arg2, Real arg3, StdVector3D arg4, StdVector3D arg5, Real arg6)
+                {
+                    return this->EvaluateStdVector3D(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+                };
+        }
         else if (itemTypeName == "ObjectJointGeneric" && userFunctionName == "offsetUserFunction")
         {            //define the user function as lambda function of this
             objectJointGenericOffsetUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector6D arg2)
@@ -610,6 +625,10 @@ public:
         else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)>>)
 		{
 			return objectConnectorCoordinateVectorJacobianUserFunction;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector3D(const MainSystem&,Real,Index,Real,Real,StdVector3D,StdVector3D,Real)>>)
+		{
+			return objectContactSphereTriangleContactForceUserFunction;
 		}
         else if constexpr (std::is_same_v<UFT, std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>>)
 		{
