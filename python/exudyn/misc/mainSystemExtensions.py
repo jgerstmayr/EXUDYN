@@ -2560,7 +2560,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', itemNumbers=[None, None]
                                        impactModel = exu.ContactImpactModel.Linear,
                                        dataInitialCoordinates = [0,0,0,0],
                                        activeConnector=True,
-                                       localPosition1 = [0.,0.,0.], 
+                                       localPosition1 = [0.,0.,0.], infinitePlane = False,
                                        show=False, color=exudyn.graphics.color.default, radiusSphere=None, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """Create penalty-based sphere-triangle contact between two rigid bodies, mass points or according nodes; the contact is based on ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 
@@ -2570,7 +2570,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', itemNumbers=[None, None]
         itemNumbers: the item the sphere is attached to - a body (ObjectIndex) at localPosition0, a node (NodeIndex) or a marker (MarkerIndex), for which localPosition0 is [0,0,0]; with friction, a rigid one - and the body (ObjectIndex) of the triangle
         localPosition0: local position (as 3D list or numpy array) of sphere0 on body0, if not a node number
         sphereRadius: radius of sphere 0 [SI:m].
-        trianglePoints: triangle points as Vector3DList, list or numpy array to define the quad, defined in body1 local coordinates
+        trianglePoints: triangle points as Vector3DList, list or numpy array to define the triangle, defined in body1 local coordinates
         includeEdges: binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1, etc.
         dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section Module: physics
         frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), Section Module: physics
@@ -2583,6 +2583,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', itemNumbers=[None, None]
         dataInitialCoordinates: a list of four values for initialization of the data node, used for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused
         activeConnector: flag to activate or deactivate the connector
         localPosition1: local position (as 3D list or numpy array) of triangle1 on body1; this is usually not needed and adds simply an offset to the triangle coordinates
+        infinitePlane: if True, the contact is with the plane of the triangle, of any size, as a floor or a wall (#3347)
         show: if True, connector visualization is drawn
         color: color of connector
         radiusSphere: deprecated name of sphereRadius
@@ -2612,6 +2613,8 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', itemNumbers=[None, None]
             RaiseTypeError(where=where, argumentName='sphereRadius', received = sphereRadius, expectedType = ExpectedType.Real)
         if (type(trianglePoints) != exudyn.Vector3DList and not isinstance(trianglePoints, (list,np.ndarray))) or len(trianglePoints) != 3:
             RaiseTypeError(where=where, argumentName='trianglePoints', received = trianglePoints, expectedType = 'expected type=exudyn.Vector3DList or list with length 3, or numpy array with position vectors in rows')
+        if not IsValidBool(infinitePlane):
+            RaiseTypeError(where=where, argumentName='infinitePlane', received = infinitePlane, expectedType = ExpectedType.Bool)
         if not IsValidInt(includeEdges) or includeEdges < 0 or includeEdges > 7:
             RaiseTypeError(where=where, argumentName='includeEdges', received = includeEdges, expectedType = 'expected type=int in range[0,7]')
         if not IsValidURealInt(dynamicFriction):
@@ -2652,8 +2655,9 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', itemNumbers=[None, None]
     oContact = mbs.AddObject(eii.ObjectContactSphereTriangle(markerNumbers=[mBody0, mBody1],
                                                     nodeNumber=nGeneric,
                                                     sphereRadius=sphereRadius,
-                                                    trianglePoints=trianglePoints,
+                                                    trianglePoints=TrianglePointsArgument(where, trianglePoints), #a list as well (#3347)
                                                     includeEdges=includeEdges,
+                                                    infinitePlane=infinitePlane,
                                                     dynamicFriction = dynamicFriction,
                                                     frictionProportionalZone = frictionProportionalZone,
                                                     contactStiffness = contactStiffness,

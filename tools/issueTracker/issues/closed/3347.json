@@ -1,0 +1,17 @@
+{
+  "number": 3347,
+  "title": "CreateSphereTriangleContact: trianglePoints as a list, and the option infinitePlane",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "mbs.CreateSphereTriangleContact says that trianglePoints may be a Vector3DList, a list or a numpy array, but passes a list to ObjectContactSphereTriangle, which refuses it with an ExudynTypeError; and it has no argument infinitePlane, the option of the item since #3323, so a floor or a wall of any size needs the item itself. Found with the test of the shaken table (#3343). Decided: the triangle points converted as in the Create functions of #3342, and the argument infinitePlane; a test in createSphereTriangleContact.py.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 23:14",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/mainSystemExtensions.py",
+  "releaseNotes": "mbs.CreateSphereTriangleContact takes the triangle points as a list or a numpy array, as it said, and the option infinitePlane for a floor or a wall of any size.",
+  "resolvedInVersion": "1.13.459"
+}

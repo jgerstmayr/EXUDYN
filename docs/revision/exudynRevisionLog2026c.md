@@ -6427,6 +6427,17 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-27"></a>
+### RG9.12.27 — CreateSphereTriangleContact with a list and infinitePlane (2026-11-07, #3347)
+- Found writing the test of the shaken table: CreateSphereTriangleContact passed trianglePoints to the item as given,
+  and ObjectContactSphereTriangle refuses a list (ExudynTypeError), although the docstring promised a list or a numpy
+  array; and infinitePlane of the item (#3323) was no argument.
+- trianglePoints through TrianglePointsArgument of #3342 (a Vector3DList); infinitePlane after localPosition1, so that
+  the positions of the earlier arguments stay; its check; "the quad" of the docstring is "the triangle".
+- The test went into createPrimitiveContactsTest.py, with the other Create functions of the contacts (not into the
+  older createSphereTriangleContact.py): a ball on the plane of a triangle given as a list, 3 m outside the triangle,
+  at r - m g/k.
+
 <a id="rg9-12-22"></a>
 ### RG9.12.22 — Create functions of the primitive contacts (2026-11-07, #3342)
 - mbs.CreateSphereCylinderContact, CreateCylinderCylinderContact, CreateCylinderTriangleContact, CreateConeConeContact,

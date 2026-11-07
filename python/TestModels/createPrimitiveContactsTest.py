@@ -7,7 +7,8 @@
 #           a shaft along x in a fixed ring (CreateCylinderCylinderContact with isHollowCylinder1, on the 2 rims of the
 #           ring), a cone standing on the floor (CreateConeTriangleContact, on 3 points of its rim), a cone standing on
 #           the top of a fixed cone (CreateConeConeContact), a cube on a slab from the points and triangles of their
-#           graphics (CreateConvexConvexContact, on its 4 corners). The size of the data nodes, also with the plastic
+#           graphics (CreateConvexConvexContact, on its 4 corners), a ball on the plane of a triangle given as a list
+#           (CreateSphereTriangleContact with infinitePlane, #3347). The size of the data nodes, also with the plastic
 #           model, and two arguments refused. Run directly, the SolutionViewer shows the bodies. The result is the sum of
 #           the checks and of the heights.
 #
@@ -85,6 +86,12 @@ oCube = Body(cube, [0, 5, a/2], [cubeGraphics])
 oContactCube = mbs.CreateConvexConvexContact(itemNumbers=[oCube, oGround], points0=points0, triangles0=triangles0,
                                              points1=points1, triangles1=triangles1, localPosition1=[0, 5, -0.05], **law)
 expected[oCube] = a/2 - cube.Mass()*g/(4*k)
+
+#a ball on the plane of a triangle given as a list, far outside the triangle (#3347)
+oBall2 = Body(ball, [3, 6, r], [graphics.Sphere(radius=r, color=graphics.color.orange, nTiles=16)])
+mbs.CreateSphereTriangleContact(itemNumbers=[oBall2, oGround], sphereRadius=r, trianglePoints=[[0, 0, 0], [1, 0, 0], [0, 1, 0]],
+                                infinitePlane=True, contactStiffness=k, contactDamping=d)
+expected[oBall2] = r - ball.Mass()*g/k
 
 #the data nodes: 3 coordinates per contact point, 4 with the plastic model
 nodeSize = lambda contact: mbs.GetNode(mbs.GetObject(contact)['nodeNumber'])['numberOfDataCoordinates']

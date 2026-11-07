@@ -694,7 +694,8 @@ still work and warn that they are deprecated.
 **Create functions of the contacts between primitive shapes** (#3342): `mbs.CreateSphereCylinderContact`,
 `CreateCylinderCylinderContact`, `CreateCylinderTriangleContact`, `CreateConeConeContact`, `CreateConeTriangleContact` and
 `CreateConvexConvexContact` add the item with its markers and a data node of the right size; cylinders and cones are
-placed by a local position and a local axis on their body.
+placed by a local position and a local axis on their body. `CreateSphereTriangleContact` takes the triangle points as a list as well,
+as it said, and the option `infinitePlane` (#3347).
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

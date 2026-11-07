@@ -1708,6 +1708,12 @@ CLOSED 2026-11-07 (#3345): the wedge term of the radial film force takes |omega 
 
 CLOSED 2026-11-07 (#3346): EPA says whether it converged; if not, its result is refined by moving shape 1 out along the normal, as for the cylinders; the resting icosahedron of the showcase keeps the normal of its face; test in convexConvexContactTest.py. [log](exudynRevisionLog2026c.md#rg9-12-26)
 
+#### **CLOSED_RG9.12.27** CreateSphereTriangleContact with trianglePoints as a list and infinitePlane
+
+#3347. Found with the test of the shaken table (RG9.12.23): the list of triangle points is refused by the item, and infinitePlane of #3323 is not an argument.
+
+CLOSED 2026-11-07 (#3347): trianglePoints converted (a list or numpy array, as the docstring said) and the argument infinitePlane; a ball on an infinite plane given as a list in createPrimitiveContactsTest.py. [log](exudynRevisionLog2026c.md#rg9-12-27)
+
 ## **CLOSED_RG10** Tooling and process
 
 exudev, the issue tracker, the generators, the checks of the commit gate, CI. Open without a step: #2541 (`exudyn.config`

@@ -969,7 +969,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rendererNOG
 (sec-mainsystemextensions-createspheretrianglecontact)=
 #### Function: CreateSphereTriangleContact
 
-[`CreateSphereTriangleContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], sphereRadius = 0, trianglePoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]), includeEdges = 7, dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, dataInitialCoordinates = [0,0,0,0], activeConnector = True, localPosition1 = [0.,0.,0.], show = False, color = exudyn.graphics.color.default, radiusSphere = None, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2554)
+[`CreateSphereTriangleContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], sphereRadius = 0, trianglePoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]), includeEdges = 7, dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, dataInitialCoordinates = [0,0,0,0], activeConnector = True, localPosition1 = [0.,0.,0.], infinitePlane = False, show = False, color = exudyn.graphics.color.default, radiusSphere = None, bodyNumbers = None, bodyOrNodeList = None) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2554)
 
 - **function description**: Create penalty-based sphere-triangle contact between two rigid bodies, mass points or according nodes; the contact is based on ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems - NOTE that this function is added to MainSystem via Python function MainSystemCreateSphereTriangleContact.
 - **input**:
@@ -978,7 +978,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rendererNOG
   - `itemNumbers`: the item the sphere is attached to - a body (ObjectIndex) at localPosition0, a node (NodeIndex) or a marker (MarkerIndex), for which localPosition0 is [0,0,0]; with friction, a rigid one - and the body (ObjectIndex) of the triangle
   - `localPosition0`: local position (as 3D list or numpy array) of sphere0 on body0, if not a node number
   - `sphereRadius`: radius of sphere 0 [SI:m].
-  - `trianglePoints`: triangle points as Vector3DList, list or numpy array to define the quad, defined in body1 local coordinates
+  - `trianglePoints`: triangle points as Vector3DList, list or numpy array to define the triangle, defined in body1 local coordinates
   - `includeEdges`: binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1, etc.
   - `dynamicFriction`: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section Module: physics
   - `frictionProportionalZone`: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), Section Module: physics
@@ -991,6 +991,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rendererNOG
   - `dataInitialCoordinates`: a list of four values for initialization of the data node, used for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused
   - `activeConnector`: flag to activate or deactivate the connector
   - `localPosition1`: local position (as 3D list or numpy array) of triangle1 on body1; this is usually not needed and adds simply an offset to the triangle coordinates
+  - `infinitePlane`: if True, the contact is with the plane of the triangle, of any size, as a floor or a wall (#3347)
   - `show`: if True, connector visualization is drawn
   - `color`: color of connector
   - `radiusSphere`: deprecated name of sphereRadius
@@ -999,13 +1000,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rendererNOG
 - **output**: (type: ObjectIndex) returns index of created joint
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`createSphereQuadContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py) (TM), [`createSphereTriangleContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM), [`createSphereQuadContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py) (TM), [`createSphereTriangleContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py) (TM)
 
 
 (sec-mainsystemextensions-createspherecylindercontact)=
 #### Function: CreateSphereCylinderContact
 
-[`CreateSphereCylinderContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], localAxis1 = [0.,0.,1.], sphereRadius = 0., cylinderRadius = 0., cylinderLength = 0., contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2757)
+[`CreateSphereCylinderContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], localAxis1 = [0.,0.,1.], sphereRadius = 0., cylinderRadius = 0., cylinderLength = 0., contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2761)
 
 - **function description**: Create the penalty contact of a sphere and a finite cylinder, ObjectContactSphereCylinder, with its markers and its data node (#3342); for a few contacts, while GeneralContact is made for many bodies - NOTE that this function is added to MainSystem via Python function MainSystemCreateSphereCylinderContact.
 - **input**:
@@ -1057,7 +1058,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 (sec-mainsystemextensions-createcylindercylindercontact)=
 #### Function: CreateCylinderCylinderContact
 
-[`CreateCylinderCylinderContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localAxis0 = [0.,0.,1.], localPosition1 = [0.,0.,0.], localAxis1 = [0.,0.,1.], cylindersRadii = [0., 0.], cylindersLengths = [0., 0.], isHollowCylinder1 = False, contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2821)
+[`CreateCylinderCylinderContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localAxis0 = [0.,0.,1.], localPosition1 = [0.,0.,0.], localAxis1 = [0.,0.,1.], cylindersRadii = [0., 0.], cylindersLengths = [0., 0.], isHollowCylinder1 = False, contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2825)
 
 - **function description**: Create the penalty contact of two finite cylinders, or of a cylinder inside a hollow one, ObjectContactCylinderCylinder, with its markers and its data node of 4 contact points, 8 with isHollowCylinder1 (#3342) - NOTE that this function is added to MainSystem via Python function MainSystemCreateCylinderCylinderContact.
 - **input**:
@@ -1115,7 +1116,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 (sec-mainsystemextensions-createcylindertrianglecontact)=
 #### Function: CreateCylinderTriangleContact
 
-[`CreateCylinderTriangleContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localAxis0 = [0.,0.,1.], cylinderRadius = 0., cylinderLength = 0., trianglePoints = [[0.,0.,0.],[1.,0.,0.],[0.,1.,0.]], infinitePlane = False, localPosition1 = [0.,0.,0.], contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2898)
+[`CreateCylinderTriangleContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localAxis0 = [0.,0.,1.], cylinderRadius = 0., cylinderLength = 0., trianglePoints = [[0.,0.,0.],[1.,0.,0.],[0.,1.,0.]], infinitePlane = False, localPosition1 = [0.,0.,0.], contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2902)
 
 - **function description**: Create the penalty contact of a finite cylinder and a triangle or its plane, ObjectContactCylinderTriangle, with its markers and its data node of 4 contact points (#3342) - NOTE that this function is added to MainSystem via Python function MainSystemCreateCylinderTriangleContact.
 - **input**:
@@ -1173,7 +1174,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 (sec-mainsystemextensions-createconeconecontact)=
 #### Function: CreateConeConeContact
 
-[`CreateConeConeContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localAxis0 = [0.,0.,1.], localPosition1 = [0.,0.,0.], localAxis1 = [0.,0.,1.], conesRadii0 = [0., 0.], conesRadii1 = [0., 0.], conesLengths = [0., 0.], isHollowCone1 = False, contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2973)
+[`CreateConeConeContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localAxis0 = [0.,0.,1.], localPosition1 = [0.,0.,0.], localAxis1 = [0.,0.,1.], conesRadii0 = [0., 0.], conesRadii1 = [0., 0.], conesLengths = [0., 0.], isHollowCone1 = False, contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L2977)
 
 - **function description**: Create the penalty contact of two truncated cones, or of a cone inside a hollow one, ObjectContactConeCone, with its markers and its data node of 4 contact points, 8 with isHollowCone1 (#3342) - NOTE that this function is added to MainSystem via Python function MainSystemCreateConeConeContact.
 - **input**:
@@ -1231,7 +1232,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 (sec-mainsystemextensions-createconetrianglecontact)=
 #### Function: CreateConeTriangleContact
 
-[`CreateConeTriangleContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localAxis0 = [0.,0.,1.], coneRadii = [0., 0.], coneLength = 0., trianglePoints = [[0.,0.,0.],[1.,0.,0.],[0.,1.,0.]], infinitePlane = False, localPosition1 = [0.,0.,0.], contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3051)
+[`CreateConeTriangleContact(mbs, name = '', itemNumbers = [None, None], localPosition0 = [0.,0.,0.], localAxis0 = [0.,0.,1.], coneRadii = [0., 0.], coneLength = 0., trianglePoints = [[0.,0.,0.],[1.,0.,0.],[0.,1.,0.]], infinitePlane = False, localPosition1 = [0.,0.,0.], contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3055)
 
 - **function description**: Create the penalty contact of a truncated cone and a triangle or its plane, ObjectContactConeTriangle, with its markers and its data node of 4 contact points (#3342) - NOTE that this function is added to MainSystem via Python function MainSystemCreateConeTriangleContact.
 - **input**:
@@ -1289,7 +1290,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 (sec-mainsystemextensions-createconvexconvexcontact)=
 #### Function: CreateConvexConvexContact
 
-[`CreateConvexConvexContact(mbs, name = '', itemNumbers = [None, None], points0 = None, triangles0 = None, points1 = None, triangles1 = None, localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3129)
+[`CreateConvexConvexContact(mbs, name = '', itemNumbers = [None, None], points0 = None, triangles0 = None, points1 = None, triangles1 = None, localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffnessExponent = 1, restitutionCoefficient = 1, minimumImpactVelocity = 0, impactModel = exu.ContactImpactModel.Linear, contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., contactForceUserFunction = 0, activeConnector = True, show = False, color = exudyn.graphics.color.default) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3133)
 
 - **function description**: Create the penalty contact of two convex polytopes, ObjectContactConvexConvex, with its markers and its data node of 8 contact points (#3342); the points and triangles may come from graphics.ToPointsAndTrigs of the graphics of a body - NOTE that this function is added to MainSystem via Python function MainSystemCreateConvexConvexContact.
 - **input**:
@@ -1349,7 +1350,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createPrimi
 (sec-mainsystemextensions-createkinematictree)=
 #### Function: CreateKinematicTree
 
-[`CreateKinematicTree(mbs, name = '', listOfTreeLinks = [], referenceCoordinates = None, initialCoordinates = None, initialCoordinates_t = None, gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], linkForces = None, linkTorques = None, jointForceVector = None, jointPositionOffsetVector = None, jointVelocityOffsetVector = None, forceUserFunction = 0, jointRadius = 0.05, jointWidth = 0.12, colors = exudyn.graphics.color.default, colorsJoints = exudyn.graphics.color.default, baseGraphicsDataList = None, linkRoundness = 0.2, show = True) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3210)
+[`CreateKinematicTree(mbs, name = '', listOfTreeLinks = [], referenceCoordinates = None, initialCoordinates = None, initialCoordinates_t = None, gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], linkForces = None, linkTorques = None, jointForceVector = None, jointPositionOffsetVector = None, jointVelocityOffsetVector = None, forceUserFunction = 0, jointRadius = 0.05, jointWidth = 0.12, colors = exudyn.graphics.color.default, colorsJoints = exudyn.graphics.color.default, baseGraphicsDataList = None, linkRoundness = 0.2, show = True) -> exudyn.ObjectIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3214)
 
 - **function description**: helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint; uses TreeLink as defined in exudyn.rigidBodyUtilities - NOTE that this function is added to MainSystem via Python function MainSystemCreateKinematicTree.
 - **input**:
@@ -1386,7 +1387,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-mainsystemextensions-createffrfreducedorderobject)=
 #### Function: CreateFFRFReducedOrderObject
 
-[`CreateFFRFReducedOrderObject(mbs, name, femInterface, referencePosition = [0., 0., 0.], initialVelocity = [0., 0., 0.], referenceRotationMatrix = np.eye(3), initialAngularVelocity = [0., 0., 0.], massProportionalDamping = 0., stiffnessProportionalDamping = 0., gravity = [0., 0., 0.], color = exudyn.graphics.color.defaultFFRF, rigidBodyNodeType = exu.NodeType.RotationEulerParameters, superElementRigidMarkersOffsets = None, superElementRigidMarkersLocalHTs = None, showMarkers = True, verbose = False) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3512)
+[`CreateFFRFReducedOrderObject(mbs, name, femInterface, referencePosition = [0., 0., 0.], initialVelocity = [0., 0., 0.], referenceRotationMatrix = np.eye(3), initialAngularVelocity = [0., 0., 0.], massProportionalDamping = 0., stiffnessProportionalDamping = 0., gravity = [0., 0., 0.], color = exudyn.graphics.color.defaultFFRF, rigidBodyNodeType = exu.NodeType.RotationEulerParameters, superElementRigidMarkersOffsets = None, superElementRigidMarkersLocalHTs = None, showMarkers = True, verbose = False) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3516)
 
 - **function description**: Create an FFRF reduced order object; the function adds SuperElementRigid markers if boundaries are defined in the given femInterface and thus enables straightforward integration of flexible bodies into a multibody system - NOTE that this function is added to MainSystem via Python function MainSystemCreateFFRFReducedOrderObject.
 - **input**:
@@ -1456,7 +1457,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveCrea
 (sec-mainsystemextensions-createforce)=
 #### Function: CreateForce
 
-[`CreateForce(mbs, name = '', itemNumber = None, loadVector = [0.,0.,0.], localPosition = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None) -> exudyn.LoadIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3727)
+[`CreateForce(mbs, name = '', itemNumber = None, loadVector = [0.,0.,0.], localPosition = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None) -> exudyn.LoadIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3731)
 
 - **function description**: helper function to create force applied to a body, a node or a marker - NOTE that this function is added to MainSystem via Python function MainSystemCreateForce.
 - **input**:
@@ -1500,7 +1501,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 (sec-mainsystemextensions-createtorque)=
 #### Function: CreateTorque
 
-[`CreateTorque(mbs, name = '', itemNumber = None, loadVector = [0.,0.,0.], localPosition = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None) -> exudyn.LoadIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3811)
+[`CreateTorque(mbs, name = '', itemNumber = None, loadVector = [0.,0.,0.], localPosition = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, show = True, bodyNumber = None) -> exudyn.LoadIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3815)
 
 - **function description**: helper function to create torque applied to a body, a node or a marker - NOTE that this function is added to MainSystem via Python function MainSystemCreateTorque.
 - **input**:
@@ -1545,7 +1546,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 (sec-mainsystemextensions-createdistancesensorgeometry)=
 #### Function: CreateDistanceSensorGeometry
 
-[`CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize = [8,8,8]) -> int`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3968)
+[`CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize = [8,8,8]) -> int`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L3972)
 
 - **function description**: Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on; Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact - NOTE that this function is added to MainSystem via Python function CreateDistanceSensorGeometry.
 - **input**:
@@ -1564,7 +1565,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 (sec-mainsystemextensions-createdistancesensor)=
 #### Function: CreateDistanceSensor
 
-[`CreateDistanceSensor(mbs, generalContactIndex, positionOrMarker, dirSensor, minDistance = -1e7, maxDistance = 1e7, cylinderRadius = 0, selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList, storeInternal = False, fileName = '', measureVelocity = False, addGraphicsObject = False, drawDisplaced = True, color = exudyn.graphics.color.red) -> exudyn.SensorIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L4000)
+[`CreateDistanceSensor(mbs, generalContactIndex, positionOrMarker, dirSensor, minDistance = -1e7, maxDistance = 1e7, cylinderRadius = 0, selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList, storeInternal = False, fileName = '', measureVelocity = False, addGraphicsObject = False, drawDisplaced = True, color = exudyn.graphics.color.red) -> exudyn.SensorIndex`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/mainSystemExtensions.py#L4004)
 
 - **function description**: Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker - NOTE that this function is added to MainSystem via Python function CreateDistanceSensor.
 - **input**:

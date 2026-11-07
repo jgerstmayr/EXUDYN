@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 442 | 1.13.458 |
+| 1.13 | Newborn | 443 | 1.13.459 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.459** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CreateSphereTriangleContact: trianglePoints as a list, and the option infinitePlane (#3347)
+  - description: mbs.CreateSphereTriangleContact says that trianglePoints may be a Vector3DList, a list or a numpy array, but passes a list to ObjectContactSphereTriangle, which refuses it with an ExudynTypeError; and it has no argument infinitePlane, the option of the item since \#3323, so a floor or a wall of any size needs the item itself. Found with the test of the shaken table (\#3343). Decided: the triangle points converted as in the Create functions of \#3342, and the argument infinitePlane; a test in createSphereTriangleContact.py.
+  - **notes:** mbs.CreateSphereTriangleContact takes the triangle points as a list or a numpy array, as it said, and the option infinitePlane for a floor or a wall of any size.
+  - date resolved: **2026-11-07 23:14**, date raised: 2026-11-07
 - **1.13.458** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Create functions for the contacts between primitive shapes (#3342)
   - description: The design of the primitive contacts (docs/dev/design/contactPrimitives.md) proposes mbs.Create functions, which add the markers, the data node of the right size and the contact item for two bodies; a user now adds the data node with its initial coordinates by hand. Decided: Create functions for the sphere, cylinder, cone, triangle and convex contacts, with the shapes in the frames of the bodies, as the other Create functions.
   - **notes:** mbs.CreateSphereCylinderContact, CreateCylinderCylinderContact, CreateCylinderTriangleContact, CreateConeConeContact, CreateConeTriangleContact and CreateConvexConvexContact add a contact between primitive shapes with its markers and a data node of the right size; cylinders and cones are placed by a local position and a local axis on their body.
