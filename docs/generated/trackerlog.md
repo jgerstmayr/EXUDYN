@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.432.dev1
 - last change = 2026-11-07
-- Number of issues = 3318
+- Number of issues = 3319
 - Number of resolved issues = 3209 (432 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` Radau5: the implicit Runge-Kutta method Radau IIA with 3 stages, of order 5, in the C++ and the Python solvers (#3318)
+  - description: A reference method of higher order for the solver study instead of LobattoIIIC4GGL (\#3314): Radau IIA with 3 stages (c = (4 - sqrt 6)/10, (4 + sqrt 6)/10, 1), order 5, L-stable, three implicit stages without GGL multipliers, the constraints at the end of the step as in Radau3; the tableau of CSolverImplicitRungeKutta and of exudyn.symbolics.advancedSolvers, its error estimate, DynamicSolverType.Radau5. Decided: implemented with the Jacobian of the last stage for all stages, as the other methods, no W-method; its convergence orders measured on the model library, and as the reference of the study if it converges as expected; revision2026c step RG20.10.1.
+  - date raised: 2026-11-07
 - `CHECK` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` LobattoIIIC4GGL removed, or replaced by an implicit Runge-Kutta method of order 5 or 6 (#3314)
   - description: LobattoIIIC4GGL is not more accurate than LobattoIIIA4 in the solver study (rigidBodySpringDampers at 16 h0: 5.8e-5 against 1.0e-5; FFRFreducedOrder 2 to 3 times more accurate only at 4 to 8 h0) and costs 2.5 to 3 times its CPU time: three implicit stages, each with the multipliers of the GGL stabilization; its use is the reference of the study, with multipliers that do not alternate from step to step. Candidates of higher order with three implicit stages and no GGL multipliers: Radau IIA with 3 stages (order 5, stage order 3, L-stable, the constraints at the end of the step as in Radau3) and Lobatto IIIA with 4 stages (order 6, the first stage explicit, A-stable but not L-stable, so its multipliers alternate as those of LobattoIIIA4). The tableau of CSolverImplicitRungeKutta holds 3 stages; Lobatto IIIA with 4 needs 4. Open: the maintainer decides between removing LobattoIIIC4GGL (not released, no deprecation) and replacing it by Radau IIA of order 5 as the reference method; revision2026c step RG20.10.
   - date raised: 2026-11-07

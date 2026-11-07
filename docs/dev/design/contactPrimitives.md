@@ -167,3 +167,102 @@ Common to all four, with the names and meaning of ObjectContactSphereTriangle:
 | RG9.12.7 | the contact manifold for flat contacts (cylinder caps and sides, convex faces) |
 | RG9.12.8 | examples and the theory section of the contact manual |
 | RG9.12.9 | the plastic overlap and the adhesion as an option with a data block of 4 per point (section 3.3) |
+| RG9.12.10 | the option `infinitePlane` of the triangle contacts (section 8.1) |
+| RG9.12.11 | ObjectContactConeCone and ObjectContactConeTriangle, truncated cones (section 8.2) |
+| RG9.12.12 | the contact inside a hollow cylinder and a hollow cone: ObjectContactCylinderInCylinder, the inner cone (section 8.3) |
+| RG9.12.13 | ObjectJournalBearing on the geometry of RG9.12.12 (section 8.4) |
+| RG9.12.14 | user functions of the contact force for all primitive contacts, also symbolic (section 8.5) |
+
+## 8. Further primitives (maintainer 2026-11-07, to be decided)
+
+Requested: a cylinder inside a cylinder ring, cone-cone (truncated cones, also a cone inside a cone), cone-triangle
+(less relevant), the infinite plane of the triangle without its boundaries, a journal bearing on the cylinder in the
+ring, and user functions of the contact force.
+
+### 8.1 The infinite plane
+
+For SphereTriangle, CylinderTriangle and ConeTriangle a parameter `infinitePlane` (False by default): the plane of
+the triangle, its normal by the order of the points, without edges and boundaries. The distance is closed-form and
+one-sided - the support point of the other shape against the normal: $d = \nv\tp(\pv_c - \pv_0) - r$ for a sphere,
+$d = \nv\tp(\sv(-\nv) - \pv_0)$ for a cylinder or cone with its support point $\sv$; no GJK, no EPA, penetrations of
+any depth, the contact point the support point. It is the floor of most models (wheels, rolling cylinders, dropped
+parts), cheaper and smoother than a triangle, whose edges switch the normal. The existing `includeEdges` of
+SphereTriangle stays; `infinitePlane=True` ignores it. (An item ObjectContactSpherePlane would repeat the parameters
+of the triangle item, so an option is proposed.)
+
+### 8.2 Truncated cones
+
+`ConvexShapeType::Cone`: a frustum along the local z axis, centered, with `radius0` at $z=-L/2$, `radius1` at
+$z=+L/2$ and the length $L$ (a radius 0 gives a pointed cone, equal radii a cylinder). Support: the one of its two
+rims farther in the direction - convex, so GJK and EPA apply as for the cylinder, with the same refinements (the
+closest point to a point: in the half-plane through the axis, the closest point of the trapezoid). Items:
+
+- `ObjectContactConeCone`: two frustums from the outside; parameters `conesRadii0`, `conesRadii1`, `conesLengths`
+  (as `cylindersRadii`);
+- `ObjectContactConeTriangle`: a frustum and a triangle, with `infinitePlane`.
+
+### 8.3 Inside a hollow cylinder or cone
+
+A shaft in a bore, a pin in a ring, a taper in a conical seat: the inner shape is **inside** the outer one, and the
+gap is the distance to the inner surface of the outer shape - not a pair of convex shapes, so neither GJK nor EPA. It
+has a closed form: the inner cylinder (radius $r$, length $L$) in the bore (radius $R \ge r$, length $L_b$), axes
+misaligned and offset; the contact is where the inner surface comes closest to the bore, at the ends of the inner
+cylinder within the bore (edge loading when tilted), or along a line when aligned:
+
+- the rim circle of each end of the inner cylinder against the bore: the radial distance of a rim point from the bore
+  axis is a trigonometric function of the angle on the rim, its maximum by Newton from the direction of the
+  eccentricity; the gap $R - \rho_{max}$;
+- the parts of the inner cylinder outside the bore (`boreLength` exceeded) are clipped: there the contact is at the
+  edge of the bore, its rim against the side of the inner cylinder;
+- up to 2 contact points (one per end), with the data blocks of section 3.3 per point; aligned axes give 2 points of
+  equal gap, a line contact by its ends.
+
+`ObjectContactCylinderInCylinder` with `innerRadius`, `innerLength`, `boreRadius`, `boreLength` and the law of
+section 3.3. The cone inside a cone (a taper seat): the same with the radii of section 8.2, the gap normal to the cone
+surface; as an option `inside` of ObjectContactConeCone, or its own item - to be decided.
+
+### 8.4 The journal bearing
+
+The cylinder in the bore is the geometry of a lubricated revolute joint. The force models of multibody codes are
+closed forms of the dynamic Reynolds equation: the infinitely short bearing of Ocvirk (length/diameter below about
+0.5) and the infinitely long bearing of Sommerfeld, both as derived by Pinkus and Sternlicht, and approximations of
+finite bearings (correction functions of the short or long bearing, or the analytic approximation of Bastani and de
+Queiroz). Flores, Ambrosio, Claro, Lankarani and Koshy (2009) model the lubricated revolute joint as a force element:
+the hydrodynamic force while the film carries, a contact force where it breaks down; Machado, Costa, Seabra and Flores
+(2012) compare the force models in planar multibody systems. Simpack has a journal bearing element with nonlinear
+stiffness and damping, and an elastohydrodynamic element that solves the Reynolds equation. Proposed:
+
+- **two items**: the dry contact ObjectContactCylinderInCylinder (section 8.3), and `ObjectJournalBearing` on the same
+  geometry function (eccentricity vector, its rate, the relative angular velocity about the axis), with the
+  hydrodynamic force of a selectable model (`bearingModel`: short, long, finite) and the contact force of section 3.3
+  where the eccentricity exceeds a fraction of the clearance (Flores et al.); with its own data coordinates where a
+  model needs them, which the dry contact does not carry;
+- parameters: `journalRadius`, `bearingRadius` (the clearance is their difference), `bearingLength`, `viscosity`,
+  `contactEccentricityRatio`, the contact law; outputs: the eccentricity, the force, the minimum film thickness;
+- a test against the closed-form steady load of the short bearing (the Sommerfeld number), a rotor example.
+
+### 8.5 User functions of the contact force
+
+Each primitive contact gets `contactForceUserFunction(mbs, t, itemNumber, gap, gap_t, tangentialVelocity,
+impactVelocity, dataCoordinates)`, returning the contact force in the contact frame [normal, tangential 1,
+tangential 2]; it replaces the law of section 3.3, while the geometry and the active set stay in C++. As a symbolic
+user function (exudyn.symbolic) it is evaluated in C++ and costs about as much as the built-in law. The same signature
+for all primitive items; per contact point with the manifold.
+
+### 8.6 Decisions for the maintainer
+
+1. `infinitePlane` as an option of the triangle items, not an item of its own.
+2. The truncated cone as `ConvexShapeType::Cone`, the items ConeCone and ConeTriangle with these parameter names.
+3. The inside contacts: ObjectContactCylinderInCylinder; the cone inside a cone as an option `inside` of ConeCone, or
+   an item ObjectContactConeInCone.
+4. The journal bearing as a separate item on the geometry of the inside contact, with the models short, long and
+   finite and the contact force of Flores et al.; which finite model.
+5. The signature of `contactForceUserFunction`.
+6. The order: 8.1 and 8.5 with the first items (RG9.12.4/.5), 8.2 after RG9.12.6, then 8.3 and 8.4.
+
+References: P. Flores, J. Ambrosio, J.C.P. Claro, H.M. Lankarani, C.S. Koshy, Lubricated revolute joints in rigid
+multibody systems, Nonlinear Dynamics 56 (2009); M. Machado, J. Costa, E. Seabra, P. Flores, The effect of the
+lubricated revolute joint parameters and hydrodynamic force models on the dynamic response of planar multibody
+systems, Nonlinear Dynamics 69 (2012); O. Pinkus, B. Sternlicht, Theory of Hydrodynamic Lubrication, McGraw-Hill
+(1961); Y. Bastani, M. de Queiroz, A new analytic approximation for the hydrodynamic forces in finite-length journal
+bearings, ASME Journal of Tribology 132 (2010).
