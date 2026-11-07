@@ -1,0 +1,161 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  ObjectContactCylinderCylinder and ObjectContactCylinderTriangle (#3329): the Distance of deactivated
+#           contacts against exudyn.cUtilities.Distance for tilted cylinders and a triangle, and against the closed form
+#           for the infinite plane; then six bodies side by side, each in its own contact, which show the contact
+#           points: a roller on the infinite plane, sliding with friction until it rolls at 2/3 of its initial
+#           velocity and resting on the 2 ends of its line of contact (r - m g/(2k)); a cylinder standing on a triangle
+#           on 3 points of its rim (L/2 - m g/(3k)); a short cylinder dropped tilted onto the plane, which settles on
+#           its cap; the roller with the law as contactForceUserFunction; a cylinder crossing a fixed cylinder (one
+#           point, r0 + r1 - m g/k); a cylinder lying parallel on a fixed cylinder (two points, r0 + r1 - m g/(2k)).
+#           Run directly, the SolutionViewer shows the six bodies. The result is the sum of the checks and of the final
+#           heights.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-07
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import *
+from exudyn.cUtilities import ConvexShape, Distance
+from exudyn import cMath
+import exudyn.graphics as graphics
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+oGround = mbs.CreateGround()
+
+k, d = 1e5, 1e3     #contact stiffness and damping
+g = 9.81
+density = 1000.
+checks = []
+
+def Body(position, radius, length, axisHT, color, velocity=[0, 0, 0], rotation=np.eye(3)):
+    """a rigid cylinder whose axis is the local z axis of axisHT; returns the node, the mass and the marker of the cylinder"""
+    inertia = InertiaCylinder(density=density, length=length, outerRadius=radius, axis=2).Rotated(axisHT[0:3, 0:3])
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=list(position) + list(RotationMatrix2EulerParameters(rotation)),
+                                       initialVelocities=velocity + [0]*4))
+    cylinder = graphics.Cylinder(pAxis=-0.5*length*axisHT[0:3, 2], vAxis=length*axisHT[0:3, 2], radius=radius, color=color,
+                                 nTiles=24, addEdges=True)
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D(),
+                                         visualization=VObjectRigidBody(graphicsData=[cylinder])))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0, 0, -g]))
+    return node, inertia.Mass(), mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localHT=axisHT))
+
+def DataNode():
+    return mbs.AddNode(NodeGenericData(numberOfDataCoordinates=12, initialCoordinates=[1, 0, 0]*4)) #apart at the start
+
+def Triangle(points, offset, active=True, **contact):
+    return dict(nodeNumber=DataNode(), trianglePoints=exu.Vector3DList([list(np.array(p) + offset) for p in points]),
+                contactStiffness=k, contactDamping=d, activeConnector=active, visualization=VObjectContactCylinderTriangle(show=True), **contact)
+
+#the Distance of deactivated contacts: a tilted cylinder against a tilted cylinder and against a triangle
+rC, LC = 0.1, 0.4
+HTtilt = HTtranslate([0.05, 0.02, 0.]) @ HTrotateX(0.3) @ HTrotateY(0.2)
+trianglePoints = [[-0.5, -0.4, 0.], [0.5, -0.3, 0.1], [0., 0.5, -0.05]]
+mFixed = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTtranslate([0, 10, 0]) @ HTtilt))
+distanceItems = []
+for position in [[0.3, 10.1, 0.25], [0.1, 9.9, 0.12], [-0.2, 10.3, -0.3]]:
+    node, mass, marker = Body(position, rC, LC, HTrotateY(0.4), graphics.color.grey, rotation=RotationMatrixZ(0.7))
+    mbs.SetNodeParameter(node, 'initialVelocities', [0]*7)
+    cc = mbs.AddObject(ObjectContactCylinderCylinder(markerNumbers=[marker, mFixed], nodeNumber=DataNode(), cylindersRadii=[rC, 0.2],
+                                                     cylindersLengths=[LC, 0.6], contactStiffness=k, activeConnector=False))
+    ct = mbs.AddObject(ObjectContactCylinderTriangle(markerNumbers=[marker, mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))],
+                                                     cylinderRadius=rC, cylinderLength=LC, **Triangle(trianglePoints, [0, 10, 0], active=False)))
+    cp = mbs.AddObject(ObjectContactCylinderTriangle(markerNumbers=[marker, mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))],
+                                                     cylinderRadius=rC, cylinderLength=LC, infinitePlane=True,
+                                                     **Triangle(trianglePoints, [0, 10, 0], active=False)))
+    distanceItems += [(node, cc, ct, cp, position)]
+mbs.Assemble()
+
+errorDistance, errorPlane = 0., 0.
+cylinder0, cylinder1 = ConvexShape('Cylinder', radius=rC, length=LC), ConvexShape('Cylinder', radius=0.2, length=0.6)
+triangle = ConvexShape('Triangle', points=np.array(trianglePoints) + [0, 10, 0])
+for (node, cc, ct, cp, position) in distanceItems:
+    H0 = HTtranslate(position) @ HomogeneousTransformation(RotationMatrixZ(0.7), [0, 0, 0]) @ HTrotateY(0.4)
+    dCC = Distance(cylinder0, H0, cylinder1, HTtranslate([0, 10, 0]) @ HTtilt)[0]
+    dCT = Distance(cylinder0, H0, triangle, np.eye(4))[0]
+    errorDistance = max(errorDistance, abs(mbs.GetObjectOutput(cc, exu.OutputVariableType.Distance) - dCC),
+                        abs(mbs.GetObjectOutput(ct, exu.OutputVariableType.Distance) - dCT))
+    #the plane: the lowest point of the cylinder along the normal of the triangle
+    p = np.array(trianglePoints) + [0, 10, 0]
+    normal = np.cross(p[1] - p[0], p[2] - p[0]); normal /= cMath.norm(normal)
+    axis = H0[0:3, 2]
+    radial = -normal + (normal @ axis)*axis
+    lowest = H0[0:3, 3] - 0.5*LC*np.sign(normal @ axis)*axis + rC*radial/cMath.norm(radial)
+    errorPlane = max(errorPlane, abs(mbs.GetObjectOutput(cp, exu.OutputVariableType.Distance) - normal @ (lowest - p[0])))
+exu.Print('Distance of the deactivated contacts against cUtilities.Distance:', errorDistance, ', against the plane:', errorPlane)
+checks += [errorDistance < 1e-14, errorPlane < 1e-14]
+
+#six bodies side by side, each in its own contact
+plane = [[-5, -5, 0], [5, -5, 0], [0, 5, 0]]
+mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
+
+#a roller on the plane, sliding with friction until it rolls
+r, L, v0 = 0.1, 0.2, 1.
+nRoller, mRoller, marker = Body([0, 0, r], r, L, HTrotateX(0.5*np.pi), graphics.color.orange, velocity=[v0, 0, 0])
+mbs.AddObject(ObjectContactCylinderTriangle(markerNumbers=[marker, mGround], cylinderRadius=r, cylinderLength=L, infinitePlane=True,
+                                            **Triangle(plane, [0, 0, 0], dynamicFriction=0.5)))
+#the same roller with the law as contactForceUserFunction, called for each contact point
+def UFcontact(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity):
+    fN = -k*gap - d*gap_t #normal force, > 0 in compression
+    vt = tangentialVelocity
+    fT = 0.5*fN/max(cMath.norm(vt), 1e-3) #regularized Coulomb friction, frictionProportionalZone = 1e-3
+    return [-fN*normal[i] + fT*vt[i] for i in range(3)]
+nRollerUF, _, marker = Body([0, -1, r], r, L, HTrotateX(0.5*np.pi), graphics.color.orange, velocity=[v0, 0, 0])
+mbs.AddObject(ObjectContactCylinderTriangle(markerNumbers=[marker, mGround], cylinderRadius=r, cylinderLength=L, infinitePlane=True,
+                                            **Triangle(plane, [0, 0, 0], dynamicFriction=0.5, contactForceUserFunction=UFcontact)))
+#a cylinder standing on a triangle
+nStand, mStand, marker = Body([0, 1, 0.5*L + 0.01], r, L, np.eye(4), graphics.color.steelblue)
+mbs.AddObject(ObjectContactCylinderTriangle(markerNumbers=[marker, mGround], cylinderRadius=r, cylinderLength=L,
+                                            **Triangle([[-0.5, 0.5, 0], [0.5, 0.5, 0], [0, 1.5, 0]], [0, 0, 0], dynamicFriction=0.3)))
+#a short cylinder dropped tilted onto the plane, settles on its cap
+nDrop, mDrop, marker = Body([0, 2, 0.3], r, 0.5*L, np.eye(4), graphics.color.green, rotation=RotationMatrixX(0.4))
+mbs.AddObject(ObjectContactCylinderTriangle(markerNumbers=[marker, mGround], cylinderRadius=r, cylinderLength=0.5*L, infinitePlane=True,
+                                            **Triangle(plane, [0, 0, 0], dynamicFriction=0.3)))
+#a cylinder crossing a fixed cylinder, and one lying parallel on it
+r1 = 0.2
+mFixedX = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTtranslate([0, 3.5, 0]) @ HTrotateY(0.5*np.pi)))
+mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[graphics.Cylinder(pAxis=[-1, 3.5, 0], vAxis=[2, 0, 0], radius=r1,
+                                                                                       color=graphics.color.lightgrey, nTiles=32)])))
+nCross, mCross, marker = Body([0.5, 3.5, r + r1 + 0.01], r, 0.6, HTrotateX(0.5*np.pi), graphics.color.red)
+mbs.AddObject(ObjectContactCylinderCylinder(markerNumbers=[marker, mFixedX], nodeNumber=DataNode(), cylindersRadii=[r, r1],
+                                            cylindersLengths=[0.6, 2], contactStiffness=k, contactDamping=d))
+nParallel, mParallel, marker = Body([-0.5, 3.5, r + r1 + 0.01], r, 0.6, HTrotateY(0.5*np.pi), graphics.color.brown)
+mbs.AddObject(ObjectContactCylinderCylinder(markerNumbers=[marker, mFixedX], nodeNumber=DataNode(), cylindersRadii=[r, r1],
+                                            cylindersLengths=[0.6, 2], contactStiffness=k, contactDamping=d))
+mbs.Assemble()
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 4000
+simulationSettings.timeIntegration.endTime = 2
+simulationSettings.solution.file.write = not testIsActive #for the SolutionViewer
+mbs.SolveDynamic(simulationSettings)
+
+def Z(node):
+    return mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
+vRoller = mbs.GetNodeOutput(nRoller, exu.OutputVariableType.Velocity)[0]
+heights = [Z(n) for n in [nRoller, nStand, nDrop, nCross, nParallel]]
+expected = [r - mRoller*g/(2*k), 0.5*L - mStand*g/(3*k), 0.25*L - mDrop*g/(3*k), r + r1 - mCross*g/k, r + r1 - mParallel*g/(2*k)]
+stateRoller, stateRollerUF = [np.array(mbs.GetNodeOutput(n, exu.OutputVariableType.Position)) - [0, y, 0] for n, y in [(nRoller, 0), (nRollerUF, -1)]]
+errorUF = cMath.norm(stateRollerUF - stateRoller)
+exu.Print('roller: vx =', vRoller, ', 2/3 v0 =', 2/3*v0, '; the user function against the law:', errorUF)
+exu.Print('heights', heights, '\n expected', expected)
+checks += [abs(vRoller - 2/3*v0) < 2e-3, errorUF < 1e-5] + [abs(h - e) < 1e-6 for h, e in zip(heights, expected)]
+
+if not testIsActive:
+    SC.visualizationSettings.contact.showTriangles = True
+    SC.visualizationSettings.contact.colorTriangles = [0.6, 0.6, 0.6, 0.5]
+    mbs.SolutionViewer()
+
+u = sum(checks) + sum(heights)
+exu.Print('checks:', checks)
+exu.Print('solution of cylinderContactTest=', u)
+exu.sys['testResult'] = u

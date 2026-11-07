@@ -66,7 +66,8 @@ public:
 			for (py::ssize_t i = 0; i < array.shape(0); i++)
 			{
 				const Real* p = array.data() + 3 * i;
-				points.push_back(Vector3D({ p[0], p[1], p[2] }));
+				if (type == EGeometry::ConvexShapeType::Triangle) { triangle[i] = Vector3D({ p[0], p[1], p[2] }); }
+				else { points.push_back(Vector3D({ p[0], p[1], p[2] })); }
 			}
 		}
 		else if (!pointsInit.is_none()) { Refuse("has no points"); }
@@ -91,6 +92,7 @@ public:
 		if (Margin() != 0. || type == EGeometry::ConvexShapeType::Cylinder) { s += ", radius=" + EXUstd::ToString(radius); }
 		if (type == EGeometry::ConvexShapeType::Capsule || type == EGeometry::ConvexShapeType::Cylinder) { s += ", length=" + EXUstd::ToString(length); }
 		if (type == EGeometry::ConvexShapeType::Box) { s += ", size=" + EXUstd::ToString(2. * halfSize); }
+		if (type == EGeometry::ConvexShapeType::Triangle) { s += ", 3 points"; }
 		if (!points.empty()) { s += ", " + EXUstd::ToString((Index)points.size()) + " points"; }
 		return s + ")";
 	}

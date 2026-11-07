@@ -6427,6 +6427,35 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg9-12-5"></a>
+### RG9.12.5 — ObjectContactCylinderCylinder and ObjectContactCylinderTriangle, with contact points (2026-11-07, #3329)
+- First with one contact point, as the design said: crossed cylinders, a rim on a side and a tilted cylinder on a
+  plane without friction ran; a roller on the plane or the triangle (with and without friction, tilted or not), a disc
+  cap on a lying cylinder, two parallel cylinders failed within 0.2 s ("discontinuous iteration was not successful"):
+  the deepest point jumps between the ends of the line. Asked; the maintainer chose the contact points now.
+- Up to 4 points, a block of 3 data coordinates each (12); src/ImplObjects/CObjectContactCylinderCylinder.cpp holds
+  both items on one point generator (namespace ContactCylinder): a cylinder on a face by the deepest rim point, the
+  other end of its side line (clipped to the face), two rim points at +-120 degrees (MuJoCo's plane-cylinder scheme),
+  rim points beyond the face moved to its border along the cap radius; side on side by the closest axis point and the
+  ends of the interval of penetration, the closest point carrying only the penetration beyond the line of the ends.
+  Three things the probes found: (1) HomogeneousTransformation::GetRotation() returns a copy, so the frames given to
+  GJK were the identity - parallel cylinders came out 0.3 deep; the frame is now built from the marker. (2) The ends
+  of a penetration interval and the closest point of parallel sides have the gap 0 by construction, and its rounding
+  switched the contact state in every PostNewton; a gap within 1e-10 (r0 + r1) of zero counts as apart. (3) A
+  standing cylinder offset over the border of a cap: the radial direction of the points jumped from the marker's x
+  axis to the tilt direction at the first tilt, and Newton diverged; it now goes over continuously below a tilt of
+  1e-3 rad (share eps^2/(eps + tilt)), and the Distance of the plane is the exact support point, not the first point.
+- Probes, all with k = 1e5: disc cap on side 0.25 - m g/(2k), crossed 0.3 - m g/k, parallel 0.3 - m g/(2k), stacked
+  caps 0.3 - m g/(3k), skew 0.3 rad one point, parallel rolling and sliding with friction, roller on plane and on
+  triangle 0.1 - m g/(2k) and 2/3 v0, offset stacked caps (tips over, runs).
+- ConvexShape keeps the 3 points of a triangle in a fixed array (no allocation in the items); PyConvexShape fills it.
+  ContactPrimitiveForce.h said "force on marker 1"; it is the force on marker 0 (#3328).
+- cylinderContactTest.py (new, the SolutionViewer shows six bodies): Distance of deactivated contacts against
+  cUtilities.Distance 0.0 and against the plane 6e-17; the roller 0.66602 (2/3 v0 within the regularized friction),
+  heights within 6e-9 of r - m g/(2k), L/2 - m g/(3k) (standing on a triangle, and a tilted drop), r0 + r1 - m g/k,
+  r0 + r1 - m g/(2k); the user function against the law 4.3e-12. symbolicUserFunctionSignaturesTest 2 more
+  signatures (60.295 -> 62.295); parameterConversionTestReference re-recorded.
+
 <a id="rg9-12-16"></a>
 ### RG9.12.16 — the sign of the output Torque of the sphere contacts (2026-11-07, #3328)
 - Found while setting the conventions of RG9.12.5: a ball sliding in +x on a triangle, a large sphere and a large

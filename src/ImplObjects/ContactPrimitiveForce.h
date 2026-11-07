@@ -2,8 +2,9 @@
 * @brief		The contact law of the primitive contacts: the normal force of the penalty and impact models and the
 *				regularized dry friction (#3320)
 * @details		Details:
-*				- the law of ObjectContactSphereTriangle and ObjectContactSphereCylinder, the force on marker 1 for
-*				  the gap, the normal n0 from marker 0 to marker 1, the normal and the relative velocity
+*				- the law of ObjectContactSphereTriangle, SphereCylinder and the cylinder contacts (per contact point),
+*				  the force on marker 0 for the gap, the normal n0 from marker 0 to marker 1, the normal and the
+*				  relative velocity
 *				- parameters: an item parameter structure with contactStiffness, contactDamping,
 *				  contactStiffnessExponent, impactModel, minimumImpactVelocity, restitutionCoefficient and
 *				  frictionProportionalZone
@@ -17,7 +18,7 @@
 #ifndef CONTACTPRIMITIVEFORCE__H
 #define CONTACTPRIMITIVEFORCE__H
 
-//! the contact force fVec on marker 1 (with the friction force fFriction in it) and the normal force; impactVelocity
+//! the contact force fVec on marker 0 (with the friction force fFriction in it) and the normal force; impactVelocity
 //! the one of the data node, deltaVnormal the separation velocity, deltaVji the velocity of marker 1 relative to
 //! marker 0 at the contact point; with forceFrictionMode the friction regime is frictionRegularizedRegion (from the
 //! data node), else from the tangential velocity

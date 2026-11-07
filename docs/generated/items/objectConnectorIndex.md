@@ -27,5 +27,7 @@ ObjectContactSphereSphere
 ObjectContactSphereTorus
 ObjectContactSphereTriangle
 ObjectContactSphereCylinder
+ObjectContactCylinderCylinder
+ObjectContactCylinderTriangle
 ObjectContactCurveCircles
 ```

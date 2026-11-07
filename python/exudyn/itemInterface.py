@@ -50,7 +50,9 @@ __all__ = [
     'ObjectConnectorCoordinateVectorConstraintUserFunction',
     'ObjectConnectorCoordinateVectorJacobianUserFunction',
     'ObjectContactSphereTriangleContactForceUserFunction',
-    'ObjectContactSphereCylinderContactForceUserFunction', 'ObjectJointGenericOffsetUserFunction',
+    'ObjectContactSphereCylinderContactForceUserFunction',
+    'ObjectContactCylinderCylinderContactForceUserFunction',
+    'ObjectContactCylinderTriangleContactForceUserFunction', 'ObjectJointGenericOffsetUserFunction',
     'ObjectJointGenericOffsetUserFunction_t', 'MarkerBodyUserPositionUserFunction',
     'MarkerBodyUserPositionJacobianUserFunction', 'MarkerBodyUserRotationMatrixUserFunction',
     'MarkerBodyUserRotationJacobianUserFunction', 'LoadForceVectorLoadVectorUserFunction',
@@ -108,36 +110,37 @@ __all__ = [
     'ObjectContactFrictionCircleCable2D', 'VObjectContactSphereSphere', 'ObjectContactSphereSphere',
     'VObjectContactSphereTorus', 'ObjectContactSphereTorus', 'VObjectContactSphereTriangle',
     'ObjectContactSphereTriangle', 'VObjectContactSphereCylinder', 'ObjectContactSphereCylinder',
-    'VObjectContactCurveCircles', 'ObjectContactCurveCircles', 'CamFollowerContactPlanar',
-    'VCamFollowerContactPlanar', 'VObjectJointGeneric', 'ObjectJointGeneric', 'GenericJoint',
-    'VGenericJoint', 'VObjectJointRevoluteZ', 'ObjectJointRevoluteZ', 'RevoluteJointZ',
-    'VRevoluteJointZ', 'VObjectJointPrismaticX', 'ObjectJointPrismaticX', 'PrismaticJointX',
-    'VPrismaticJointX', 'VObjectJointSpherical', 'ObjectJointSpherical', 'SphericalJoint',
-    'VSphericalJoint', 'VObjectJointRollingDisc', 'ObjectJointRollingDisc', 'RollingDiscJoint',
-    'VRollingDiscJoint', 'VObjectJointRevolute2D', 'ObjectJointRevolute2D', 'RevoluteJoint2D',
-    'VRevoluteJoint2D', 'VObjectJointPrismatic2D', 'ObjectJointPrismatic2D', 'PrismaticJoint2D',
-    'VPrismaticJoint2D', 'VObjectJointSliding', 'ObjectJointSliding', 'SlidingJoint',
-    'VSlidingJoint', 'VObjectJointSliding2D', 'ObjectJointSliding2D', 'SlidingJoint2D',
-    'VSlidingJoint2D', 'VObjectJointALEMoving2D', 'ObjectJointALEMoving2D', 'ALEMovingJoint2D',
-    'VALEMovingJoint2D', 'VMarkerBodyMass', 'MarkerBodyMass', 'VMarkerBodyPosition',
-    'MarkerBodyPosition', 'VMarkerBodyRigid', 'MarkerBodyRigid', 'VMarkerNodePosition',
-    'MarkerNodePosition', 'VMarkerNodeRigid', 'MarkerNodeRigid', 'VMarkerNodeCoordinate',
-    'MarkerNodeCoordinate', 'VMarkerNodeCoordinates', 'MarkerNodeCoordinates',
-    'VMarkerNodeODE1Coordinate', 'MarkerNodeODE1Coordinate', 'VMarkerNodeRotationCoordinate',
-    'MarkerNodeRotationCoordinate', 'VMarkerBodiesRelativeTranslationCoordinate',
-    'MarkerBodiesRelativeTranslationCoordinate', 'VMarkerBodiesRelativeRotationCoordinate',
-    'MarkerBodiesRelativeRotationCoordinate', 'VMarkerSuperElementPosition',
-    'MarkerSuperElementPosition', 'VMarkerSuperElementRigid', 'MarkerSuperElementRigid',
-    'VMarkerKinematicTreeRigid', 'MarkerKinematicTreeRigid', 'VMarkerObjectODE2Coordinates',
-    'MarkerObjectODE2Coordinates', 'VMarkerBodyCable2DShape', 'MarkerBodyCable2DShape',
-    'VMarkerBodyCable2DCoordinates', 'MarkerBodyCable2DCoordinates', 'VMarkerBodyBeamShape',
-    'MarkerBodyBeamShape', 'VMarkerBodyUser', 'MarkerBodyUser', 'VLoadForceVector',
-    'LoadForceVector', 'Force', 'VForce', 'VLoadTorqueVector', 'LoadTorqueVector', 'Torque',
-    'VTorque', 'VLoadMassProportional', 'LoadMassProportional', 'Gravity', 'VGravity',
-    'VLoadCoordinate', 'LoadCoordinate', 'VSensorNode', 'SensorNode', 'VSensorObject',
-    'SensorObject', 'VSensorBody', 'SensorBody', 'VSensorSuperElement', 'SensorSuperElement',
-    'VSensorKinematicTree', 'SensorKinematicTree', 'VSensorMarker', 'SensorMarker', 'VSensorLoad',
-    'SensorLoad', 'VSensorUserFunction', 'SensorUserFunction',
+    'VObjectContactCylinderCylinder', 'ObjectContactCylinderCylinder',
+    'VObjectContactCylinderTriangle', 'ObjectContactCylinderTriangle', 'VObjectContactCurveCircles',
+    'ObjectContactCurveCircles', 'CamFollowerContactPlanar', 'VCamFollowerContactPlanar',
+    'VObjectJointGeneric', 'ObjectJointGeneric', 'GenericJoint', 'VGenericJoint',
+    'VObjectJointRevoluteZ', 'ObjectJointRevoluteZ', 'RevoluteJointZ', 'VRevoluteJointZ',
+    'VObjectJointPrismaticX', 'ObjectJointPrismaticX', 'PrismaticJointX', 'VPrismaticJointX',
+    'VObjectJointSpherical', 'ObjectJointSpherical', 'SphericalJoint', 'VSphericalJoint',
+    'VObjectJointRollingDisc', 'ObjectJointRollingDisc', 'RollingDiscJoint', 'VRollingDiscJoint',
+    'VObjectJointRevolute2D', 'ObjectJointRevolute2D', 'RevoluteJoint2D', 'VRevoluteJoint2D',
+    'VObjectJointPrismatic2D', 'ObjectJointPrismatic2D', 'PrismaticJoint2D', 'VPrismaticJoint2D',
+    'VObjectJointSliding', 'ObjectJointSliding', 'SlidingJoint', 'VSlidingJoint',
+    'VObjectJointSliding2D', 'ObjectJointSliding2D', 'SlidingJoint2D', 'VSlidingJoint2D',
+    'VObjectJointALEMoving2D', 'ObjectJointALEMoving2D', 'ALEMovingJoint2D', 'VALEMovingJoint2D',
+    'VMarkerBodyMass', 'MarkerBodyMass', 'VMarkerBodyPosition', 'MarkerBodyPosition',
+    'VMarkerBodyRigid', 'MarkerBodyRigid', 'VMarkerNodePosition', 'MarkerNodePosition',
+    'VMarkerNodeRigid', 'MarkerNodeRigid', 'VMarkerNodeCoordinate', 'MarkerNodeCoordinate',
+    'VMarkerNodeCoordinates', 'MarkerNodeCoordinates', 'VMarkerNodeODE1Coordinate',
+    'MarkerNodeODE1Coordinate', 'VMarkerNodeRotationCoordinate', 'MarkerNodeRotationCoordinate',
+    'VMarkerBodiesRelativeTranslationCoordinate', 'MarkerBodiesRelativeTranslationCoordinate',
+    'VMarkerBodiesRelativeRotationCoordinate', 'MarkerBodiesRelativeRotationCoordinate',
+    'VMarkerSuperElementPosition', 'MarkerSuperElementPosition', 'VMarkerSuperElementRigid',
+    'MarkerSuperElementRigid', 'VMarkerKinematicTreeRigid', 'MarkerKinematicTreeRigid',
+    'VMarkerObjectODE2Coordinates', 'MarkerObjectODE2Coordinates', 'VMarkerBodyCable2DShape',
+    'MarkerBodyCable2DShape', 'VMarkerBodyCable2DCoordinates', 'MarkerBodyCable2DCoordinates',
+    'VMarkerBodyBeamShape', 'MarkerBodyBeamShape', 'VMarkerBodyUser', 'MarkerBodyUser',
+    'VLoadForceVector', 'LoadForceVector', 'Force', 'VForce', 'VLoadTorqueVector',
+    'LoadTorqueVector', 'Torque', 'VTorque', 'VLoadMassProportional', 'LoadMassProportional',
+    'Gravity', 'VGravity', 'VLoadCoordinate', 'LoadCoordinate', 'VSensorNode', 'SensorNode',
+    'VSensorObject', 'SensorObject', 'VSensorBody', 'SensorBody', 'VSensorSuperElement',
+    'SensorSuperElement', 'VSensorKinematicTree', 'SensorKinematicTree', 'VSensorMarker',
+    'SensorMarker', 'VSensorLoad', 'SensorLoad', 'VSensorUserFunction', 'SensorUserFunction',
     ]
 
 
@@ -265,6 +268,8 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectConnectorCoordinateVector,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'velocityLevel'], ['py::object'], ['ObjectConnectorCoordinateVectorJacobianUserFunction']],
         'ObjectContactSphereTriangle,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactSphereTriangleContactForceUserFunction']],
         'ObjectContactSphereCylinder,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactSphereCylinderContactForceUserFunction']],
+        'ObjectContactCylinderCylinder,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactCylinderCylinderContactForceUserFunction']],
+        'ObjectContactCylinderTriangle,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactCylinderTriangleContactForceUserFunction']],
         'ObjectJointGeneric,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 't', 'itemNumber', 'offsetUserFunctionParameters'], ['StdVector6D'], ['ObjectJointGenericOffsetUserFunction']],
         'ObjectJointGeneric,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 't', 'itemNumber', 'offsetUserFunctionParameters'], ['StdVector6D'], ['ObjectJointGenericOffsetUserFunction_t']],
         'MarkerBodyUser,positionUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'qTotal', 'q_t', 'parameters'], ['StdVector3D'], ['MarkerBodyUserPositionUserFunction']],
@@ -1697,6 +1702,70 @@ class ObjectContactSphereCylinderContactForceUserFunction(Protocol):
         normal (np.ndarray): :math:`{}^{0}{\nv}`, the unit contact normal from marker 0 towards marker 1 (the output Director1)
 
         tangentialVelocity (np.ndarray): :math:`{}^{0}{\vv}_t`, the velocity of marker 1 relative to marker 0 at the contact point, normal to :math:`{}^{0}{\nv}`
+
+        impactVelocity (float): the velocity of approach at the last impact, from the data node, for impact models
+
+    Returns:
+        np.ndarray: the global contact force on marker 0, a list or numpy array of 3 values
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, gap: float, gap_t: float, normal: np.ndarray, tangentialVelocity: np.ndarray, impactVelocity: float) -> np.ndarray: ...
+
+class ObjectContactCylinderCylinderContactForceUserFunction(Protocol):
+    r"""A user function which replaces the contact law: it computes the contact force from the gap, its rate, the.
+    
+    contact normal, the tangential relative velocity and the impact velocity, while the item computes the geometry and
+    the contact state (#3324). It is called for each contact point in contact, as its block of the data node from the
+    last post Newton step says, and returns the force of that point.
+    The force is the one on marker 0 at the contact point, the convention of the output variable Force; marker 1 gets
+    its negative. A penetration :math:`\delta = -g` pushes marker 0 against the normal: the normal force :math:`f_N > 0` gives
+    :math:`-f_N\, \nv`; a friction force on marker 0 acts along the tangential velocity.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        gap (float): :math:`g`, the signed gap, negative in contact
+
+        gap_t (float): :math:`\dot g`, its rate: the relative velocity along the normal, negative while approaching
+
+        normal (np.ndarray): :math:`{}^{0}{\nv}`, the unit contact normal from marker 0 towards marker 1 (the output Director1)
+
+        tangentialVelocity (np.ndarray): :math:`{}^{0}{\vv}_t`, the velocity of the body of marker 1 relative to that of marker 0 at the contact point, normal to :math:`{}^{0}{\nv}`
+
+        impactVelocity (float): the velocity of approach at the last impact, from the data node, for impact models
+
+    Returns:
+        np.ndarray: the global contact force on marker 0, a list or numpy array of 3 values
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, gap: float, gap_t: float, normal: np.ndarray, tangentialVelocity: np.ndarray, impactVelocity: float) -> np.ndarray: ...
+
+class ObjectContactCylinderTriangleContactForceUserFunction(Protocol):
+    r"""A user function which replaces the contact law: it computes the contact force from the gap, its rate, the.
+    
+    contact normal, the tangential relative velocity and the impact velocity, while the item computes the geometry and
+    the contact state (#3324). It is called for each contact point in contact, as its block of the data node from the
+    last post Newton step says, and returns the force of that point.
+    The force is the one on marker 0, the cylinder, at the contact point, the convention of the output variable Force;
+    marker 1 gets its negative. A penetration :math:`\delta = -g` pushes marker 0 against the normal: the normal force
+    :math:`f_N > 0` gives :math:`-f_N\, \nv`; a friction force on marker 0 acts along the tangential velocity.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        gap (float): :math:`g`, the signed gap, negative in contact
+
+        gap_t (float): :math:`\dot g`, its rate: the relative velocity along the normal, negative while approaching
+
+        normal (np.ndarray): :math:`{}^{0}{\nv}`, the unit contact normal from the cylinder (marker 0) towards the triangle (marker 1), the output Director1
+
+        tangentialVelocity (np.ndarray): :math:`{}^{0}{\vv}_t`, the velocity of the body of marker 1 relative to that of marker 0 at the contact point, normal to :math:`{}^{0}{\nv}`
 
         impactVelocity (float): the velocity of approach at the last impact, from the data node, for impact models
 
@@ -7619,6 +7688,228 @@ class ObjectContactSphereCylinder:
         yield 'sphereRadius', self.sphereRadius
         yield 'cylinderRadius', self.cylinderRadius
         yield 'cylinderLength', self.cylinderLength
+        yield 'dynamicFriction', self.dynamicFriction
+        yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'restitutionCoefficient', self.restitutionCoefficient
+        yield 'minimumImpactVelocity', self.minimumImpactVelocity
+        yield 'impactModel', self.impactModel
+        yield 'activeConnector', self.activeConnector
+        yield 'contactForceUserFunction', self.contactForceUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+
+class VObjectContactCylinderCylinder:
+    """Visualization data for ObjectContactCylinderCylinder.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; draws the cylinders with the contact settings; type: bool
+
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
+
+    """
+    def __init__(self, show = False, color = [0.7,0.7,0.7,1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectContactCylinderCylinder:
+    r"""A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims; up to 4 contact points carry a line or a face of contact.
+    
+    Contact law and friction as for ObjectContactSphereTriangle.
+    
+    Args:
+        name: connector's unique name; type: str
+
+        markerNumbers: list of markers: the centers of cylinder 0 and cylinder 1, the local z axis of each marker the axis of its cylinder; type: ArrayMarkerIndex
+
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
+
+        cylindersRadii: the radii of cylinder 0 and cylinder 1, both > 0 [SI:m]; type: [float,float]
+
+        cylindersLengths: the lengths of cylinder 0 and cylinder 1 along the local z axes of their markers, from :math:`-L_i/2` to :math:`L_i/2`, both > 0 [SI:m]; type: [float,float]
+
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
+
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
+
+        contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
+
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+
+        contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
+
+        restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
+
+        minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
+
+        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
+
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        contactForceUserFunction: A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used; see description below (#3324); type: ObjectContactCylinderCylinderContactForceUserFunction
+
+        visualization: visualization data, see VObjectContactCylinderCylinder
+
+    Notes:
+        Object has/provides the following types: ``Connector``
+
+        Requested Marker type: ``Position`` + ``Orientation``
+
+        Requested Node type: ``GenericData``
+
+    """
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.nodeNumber = nodeNumber
+        self.cylindersRadii = np.array(cylindersRadii)
+        self.cylindersLengths = np.array(cylindersLengths)
+        self.dynamicFriction = dynamicFriction
+        self.frictionProportionalZone = frictionProportionalZone
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.contactStiffnessExponent = contactStiffnessExponent
+        self.restitutionCoefficient = restitutionCoefficient
+        self.minimumImpactVelocity = minimumImpactVelocity
+        self.impactModel = impactModel
+        self.activeConnector = activeConnector
+        self.contactForceUserFunction = contactForceUserFunction
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ContactCylinderCylinder'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'cylindersRadii', self.cylindersRadii
+        yield 'cylindersLengths', self.cylindersLengths
+        yield 'dynamicFriction', self.dynamicFriction
+        yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'restitutionCoefficient', self.restitutionCoefficient
+        yield 'minimumImpactVelocity', self.minimumImpactVelocity
+        yield 'impactModel', self.impactModel
+        yield 'activeConnector', self.activeConnector
+        yield 'contactForceUserFunction', self.contactForceUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+
+class VObjectContactCylinderTriangle:
+    """Visualization data for ObjectContactCylinderTriangle.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; draws the cylinder and the triangle with the contact settings; type: bool
+
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
+
+    """
+    def __init__(self, show = False, color = [0.7,0.7,0.7,1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectContactCylinderTriangle:
+    r"""A penalty contact between a finite cylinder (marker 0), centered at its marker along the local z axis, and a triangle (marker 1), or the infinite plane of the triangle; up to 4 contact points carry a line or a face of contact.
+    
+    Contact law and friction as for ObjectContactSphereTriangle.
+    
+    Args:
+        name: connector's unique name; type: str
+
+        markerNumbers: list of markers: the center of the cylinder (marker 0), whose local z axis is the axis of the cylinder, and the frame of the triangle points (marker 1); type: ArrayMarkerIndex
+
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; type: NodeIndex
+
+        cylinderRadius: radius of the cylinder [SI:m]; type: float
+
+        cylinderLength: length of the cylinder along the local z axis of marker 0, from :math:`-L/2` to :math:`L/2` [SI:m]; type: float
+
+        trianglePoints: the 3 triangle points, defined in marker 1 local coordinates; their order gives the normal of the triangle; type: Vector3DList
+
+        infinitePlane: if True, the contact is with the infinite plane of the triangle instead of the triangle: one-sided along the normal of the triangle by the order of its points, of any depth, without edges; type: bool
+
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
+
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
+
+        contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
+
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+
+        contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
+
+        restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
+
+        minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
+
+        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
+
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        contactForceUserFunction: A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used; see description below (#3324); type: ObjectContactCylinderTriangleContactForceUserFunction
+
+        visualization: visualization data, see VObjectContactCylinderTriangle
+
+    Notes:
+        Object has/provides the following types: ``Connector``
+
+        Requested Marker type: ``Position`` + ``Orientation``
+
+        Requested Node type: ``GenericData``
+
+    """
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylinderRadius = 0., cylinderLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderTriangleContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.nodeNumber = nodeNumber
+        self.cylinderRadius = cylinderRadius
+        self.cylinderLength = cylinderLength
+        self.trianglePoints = trianglePoints
+        self.infinitePlane = infinitePlane
+        self.dynamicFriction = dynamicFriction
+        self.frictionProportionalZone = frictionProportionalZone
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.contactStiffnessExponent = contactStiffnessExponent
+        self.restitutionCoefficient = restitutionCoefficient
+        self.minimumImpactVelocity = minimumImpactVelocity
+        self.impactModel = impactModel
+        self.activeConnector = activeConnector
+        self.contactForceUserFunction = contactForceUserFunction
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ContactCylinderTriangle'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'cylinderRadius', self.cylinderRadius
+        yield 'cylinderLength', self.cylinderLength
+        yield 'trianglePoints', self.trianglePoints
+        yield 'infinitePlane', self.infinitePlane
         yield 'dynamicFriction', self.dynamicFriction
         yield 'frictionProportionalZone', self.frictionProportionalZone
         yield 'contactStiffness', self.contactStiffness

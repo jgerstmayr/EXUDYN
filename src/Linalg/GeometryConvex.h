@@ -40,7 +40,8 @@ namespace EGeometry {
 		Real radius = 0.;				//!< Sphere, Capsule, Cylinder
 		Real length = 0.;				//!< Capsule: the segment between the centers of the caps, along z; Cylinder: along z
 		Vector3D halfSize = Vector3D({ 0., 0., 0. });	//!< Box: half the edge lengths along x, y, z
-		std::vector<Vector3D> points;	//!< Triangle: 3 points; Points: the points whose convex hull is the shape
+		Vector3D triangle[3];			//!< Triangle: its 3 points, without allocation, for the contact items
+		std::vector<Vector3D> points;	//!< Points: the points whose convex hull is the shape
 
 		//! the radius added to the core: the sphere is a point, the capsule a segment
 		Real Margin() const { return (type == ConvexShapeType::Sphere || type == ConvexShapeType::Capsule) ? radius : 0.; }
@@ -54,6 +55,8 @@ namespace EGeometry {
 			case ConvexShapeType::Capsule: return radius + 0.5 * length;
 			case ConvexShapeType::Cylinder: return sqrt(radius * radius + 0.25 * length * length);
 			case ConvexShapeType::Box: return halfSize.GetL2Norm();
+			case ConvexShapeType::Triangle:
+				return EXUstd::Maximum(triangle[0].GetL2Norm(), EXUstd::Maximum(triangle[1].GetL2Norm(), triangle[2].GetL2Norm()));
 			default:
 			{
 				Real r = 0.;
@@ -80,6 +83,12 @@ namespace EGeometry {
 			case ConvexShapeType::Box:
 				return Vector3D({ d[0] >= 0. ? halfSize[0] : -halfSize[0], d[1] >= 0. ? halfSize[1] : -halfSize[1],
 					d[2] >= 0. ? halfSize[2] : -halfSize[2] });
+			case ConvexShapeType::Triangle:
+			{
+				Real v0 = triangle[0] * d, v1 = triangle[1] * d, v2 = triangle[2] * d;
+				if (v0 >= v1 && v0 >= v2) { return triangle[0]; }
+				return v1 >= v2 ? triangle[1] : triangle[2];
+			}
 			default:
 			{
 				Index best = 0;
@@ -542,7 +551,7 @@ namespace EGeometry {
 		case ConvexShapeType::Triangle:
 		{
 			Vector3D lambda;
-			q = ClosestPointTriangle(x, shape.points[0], shape.points[1], shape.points[2], lambda);
+			q = ClosestPointTriangle(x, shape.triangle[0], shape.triangle[1], shape.triangle[2], lambda);
 			break;
 		}
 		default: //the hull of the points by GJK of the point against it, finite for a polytope

@@ -67,6 +67,23 @@ corners: the body rocks and the contact chatters. Two ways:
 
 Proposed: phase 1 for all four items, phase 2 for ConvexConvex and the cylinder caps and sides as a step of its own.
 
+Measured in RG9.12.5 (#3329): with one point, a cylinder lying on a plane or a triangle, a cap on a cylinder and two
+parallel cylinders fail within 0.2 s in every case - the deepest point jumps between the ends of the line, and the
+discontinuous iteration does not converge. Decided (maintainer 2026-11-07): the contact points of the cylinders in
+RG9.12.5, up to 4 with a data block of 3 each (12 data coordinates):
+
+- a cylinder against a face (the plane or the triangle, the cap of the other cylinder): the deepest point of the
+  lower rim and the other end of the side line through it, clipped to the face, and two points of the lower rim at
+  +-120 degrees (the scheme of MuJoCo's plane-cylinder collision); a rim point beyond the face moves along its radius
+  to the border of the face; below a tilt of 1e-3 rad the radial direction goes over into the local x axis of the
+  marker, so that the points of a standing cylinder do not jump;
+- side on side: the closest point of the axes and the two ends of the interval of penetration along axis 0; the
+  closest point carries only the penetration beyond the line of the ends, so crossed (1 point) and parallel (2 points)
+  cylinders go over into each other continuously; a gap within 1e-10 of zero counts as apart;
+- otherwise (rim on rim, rim on side) the one point of GJK and EPA.
+
+RG9.12.7 keeps the manifold of ConvexConvex.
+
 ### 3.3 The contact law
 
 As ObjectContactSphereTriangle: normal force $f_n = k_c \delta^{n_\mathrm{exp}} + f_d$ by `impactModel` 0 (linear
@@ -164,7 +181,7 @@ Common to all four, with the names and meaning of ObjectContactSphereTriangle:
 | RG9.12.4 | ObjectContactSphereCylinder, with a test against the analytic case and a drop test |
 | RG9.12.5 | ObjectContactCylinderCylinder and ObjectContactCylinderTriangle |
 | RG9.12.6 | ObjectContactConvexConvex |
-| RG9.12.7 | the contact manifold for flat contacts (cylinder caps and sides, convex faces) |
+| RG9.12.7 | the contact manifold for flat contacts of ConvexConvex (the cylinders have their points since RG9.12.5) |
 | RG9.12.8 | examples and the theory section of the contact manual |
 | RG9.12.9 | the plastic overlap and the adhesion as an option with a data block of 4 per point (section 3.3) |
 | RG9.12.10 | the option `infinitePlane` of the triangle contacts (section 8.1) |

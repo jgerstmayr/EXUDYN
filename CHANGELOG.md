@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 424 | 1.13.440 |
+| 1.13 | Newborn | 425 | 1.13.441 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.441** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactCylinderCylinder and ObjectContactCylinderTriangle, penalty contacts of finite cylinders (#3329)
+  - description: A cylinder in contact with a cylinder or a triangle needs the items of the design contactPrimitives.md: ObjectContactCylinderCylinder (cylindersRadii, cylindersLengths, each cylinder along the local z axis of its marker) and ObjectContactCylinderTriangle (cylinderRadius, cylinderLength, trianglePoints in the frame of marker 1). Decided: the distance by GJK and EPA of GeometryConvex.h, one contact point (the middle of the closest points), the contact law of ContactPrimitiveForce.h with 3 data coordinates, the output Distance also when inactive, contactForceUserFunction as the sphere contacts; CylinderTriangle with the option infinitePlane, the support point of the cylinder against the plane; both markers rigid; drawn with contact.showCylinders and showTriangles.
+  - **notes:** ObjectContactCylinderCylinder and ObjectContactCylinderTriangle (with the option infinitePlane) are penalty contacts of finite cylinders, with the contact law and friction of the sphere contacts, the output Distance and a contactForceUserFunction; up to 4 contact points carry a line or a face of contact, with a data node of 12 coordinates.
+  - date resolved: **2026-11-07 15:16**, date raised: 2026-11-07
 - **1.13.440** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The output Torque of the sphere contacts is the negative of the friction torque on marker 0 (#3328)
   - description: ObjectContactSphereSphere, SphereTriangle, SphereTorus and SphereCylinder give as output variable Torque the negative of the friction torque on marker 0, which their descriptions name, while their output Force is the force on marker 0 with the right sign: a ball sliding in +x on the ground gets the friction force -x, which Force shows, and starts to turn about +y, but Torque shows -y. The simulation is right; only the output is affected. The description of SphereCylinder also names the forces on the two markers with the wrong signs. Decided: Torque is the torque on marker 0 about its position, (p\_c - p\_0) x f with the contact point p\_c and the force f on marker 0, for the four items; the description of SphereCylinder corrected.
   - **notes:** The output variable Torque of ObjectContactSphereSphere, ObjectContactSphereTriangle, ObjectContactSphereTorus and ObjectContactSphereCylinder is the friction torque on marker 0; it had the opposite sign. The simulation was not affected.

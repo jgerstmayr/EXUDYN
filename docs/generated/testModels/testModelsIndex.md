@@ -70,6 +70,7 @@ createSphereQuadContact
 createSphereQuadContact2
 createSphereTriangleContact
 cUtilitiesTest
+cylinderContactTest
 deleteItemsTest
 distanceSensor
 driveTrainTest

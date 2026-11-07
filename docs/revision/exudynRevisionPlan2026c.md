@@ -94,7 +94,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
-  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (9 open sub-steps)
+  - RG9.12 Contact between primitives: sphere-cylinder, cylinder-cylinder, cylinder-triangle, convex-convex, with a distance output (8 open sub-steps)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -147,7 +147,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 15 | Structural core improvements |
+| RG9 | OPEN | 14 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1590,11 +1590,15 @@ CLOSED 2026-11-07 (#3319): Distance, the gap, for the three sphere contacts, com
 
 CLOSED 2026-11-07 (#3320): ObjectContactSphereCylinder with the analytic geometry, 3 data coordinates, the contact law shared with SphereTriangle in ContactPrimitiveForce.h, contact.showCylinders; sphereCylinderContactTest.py. [log](exudynRevisionLog2026c.md#rg9-12-4)
 
-#### **OPEN_RG9.12.5** ObjectContactCylinderCylinder and ObjectContactCylinderTriangle
+#### **CLOSED_RG9.12.5** ObjectContactCylinderCylinder and ObjectContactCylinderTriangle
+
+CLOSED 2026-11-07 (#3329): both items with GJK and EPA, infinitePlane, the output Distance and the contactForceUserFunction; one contact point failed for every line or face contact, so the maintainer decided on the contact points of the cylinders now (up to 4, 12 data coordinates, contactPrimitives.md 3.2); cylinderContactTest.py, two MiniExamples. [log](exudynRevisionLog2026c.md#rg9-12-5)
 
 #### **OPEN_RG9.12.6** ObjectContactConvexConvex
 
-#### **OPEN_RG9.12.7** The contact manifold for flat contacts: cylinder caps and sides, convex faces
+#### **OPEN_RG9.12.7** The contact manifold for flat contacts of ObjectContactConvexConvex
+
+The contact points of the cylinders (caps, sides, a cylinder on a face) came with RG9.12.5 (#3329); this step keeps the faces of convex shapes.
 
 #### **OPEN_RG9.12.8** Examples of the contact primitives and the theory section of the contact manual
 

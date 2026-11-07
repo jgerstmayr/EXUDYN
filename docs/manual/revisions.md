@@ -651,6 +651,11 @@ contact (#3325).
 SphereTriangle, SphereTorus and SphereCylinder gave the negative of the friction torque on marker 0 that their output
 Force goes with; a ball sliding in +x showed a torque about -y while it starts to turn about +y. The simulation was
 not affected; sensors of this output change their sign.
+**Contacts of cylinders with cylinders and triangles** (#3329): `ObjectContactCylinderCylinder` and
+`ObjectContactCylinderTriangle` (with `infinitePlane`) are penalty contacts of finite cylinders with the contact law of
+the sphere contacts, the output `Distance` and a `contactForceUserFunction`. Up to 4 contact points carry a line or a
+face of contact - a roller on the floor rests on the two ends of its line, a standing cylinder on three points of its
+rim -, each with its block of 3 coordinates in a data node of 12.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

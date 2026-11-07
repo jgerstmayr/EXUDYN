@@ -1,0 +1,17 @@
+{
+  "number": 3329,
+  "title": "ObjectContactCylinderCylinder and ObjectContactCylinderTriangle, penalty contacts of finite cylinders",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "A cylinder in contact with a cylinder or a triangle needs the items of the design contactPrimitives.md: ObjectContactCylinderCylinder (cylindersRadii, cylindersLengths, each cylinder along the local z axis of its marker) and ObjectContactCylinderTriangle (cylinderRadius, cylinderLength, trianglePoints in the frame of marker 1). Decided: the distance by GJK and EPA of GeometryConvex.h, one contact point (the middle of the closest points), the contact law of ContactPrimitiveForce.h with 3 data coordinates, the output Distance also when inactive, contactForceUserFunction as the sphere contacts; CylinderTriangle with the option infinitePlane, the support point of the cylinder against the plane; both markers rigid; drawn with contact.showCylinders and showTriangles.",
+  "dateRaised": "2026-11-07",
+  "deadline": "2027-05-06",
+  "dateResolved": "2026-11-07 15:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectContactCylinderCylinder.cpp",
+  "releaseNotes": "ObjectContactCylinderCylinder and ObjectContactCylinderTriangle (with the option infinitePlane) are penalty contacts of finite cylinders, with the contact law and friction of the sphere contacts, the output Distance and a contactForceUserFunction; up to 4 contact points carry a line or a face of contact, with a data node of 12 coordinates.",
+  "resolvedInVersion": "1.13.441"
+}

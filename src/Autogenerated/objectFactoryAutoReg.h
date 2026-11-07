@@ -737,6 +737,28 @@ bool MainObjectContactSphereCylinderIsRegistered = ClassFactoryItemsSystemData<M
 		return object;
 	});
 
+bool MainObjectContactCylinderCylinderIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactCylinderCylinder", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactCylinderCylinder();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactCylinderCylinder(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactCylinderCylinder* vObject = new VisualizationObjectContactCylinderCylinder();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
+bool MainObjectContactCylinderTriangleIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactCylinderTriangle", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactCylinderTriangle();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactCylinderTriangle(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactCylinderTriangle* vObject = new VisualizationObjectContactCylinderTriangle();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectContactCurveCirclesIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactCurveCircles", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectContactCurveCircles();
