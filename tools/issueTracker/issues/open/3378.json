@@ -1,0 +1,11 @@
+{
+  "number": 3378,
+  "title": "The C++ unit-test build does not compile, and a symbolic unit test fails",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "exudev build --unittests stops in src/Tests/UnitTestBase.cpp: Linalg/Symbolic.h needs pybind11 and py there. With that added, the test at SymbolicUnitTests.h line 154 (what Diff refuses) gets no exception; the other tests pass.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07"
+}

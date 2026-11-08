@@ -1,0 +1,15 @@
+{
+  "number": 3376,
+  "title": "Contact shapes transparent by default",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Contact forces are drawn inside the shapes and are visible only through transparent faces. Decided: the colors of contact.color have the alpha value 0.8 by default; the graphics of bodies stay with the user, said in the general page of the contact objects.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 22:49",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The colors of visualizationSettings.contact.color have the alpha value 0.8 by default, so that contact forces inside the shapes are visible.",
+  "resolvedInVersion": "1.13.481"
+}

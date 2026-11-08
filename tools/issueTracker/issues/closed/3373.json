@@ -1,0 +1,15 @@
+{
+  "number": 3373,
+  "title": "robotics.models as the definition without files: the values of the URDF in its frames, a test against the URDF",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "models.py and the URDF files differ in frames and inertias. Decided: each model holds the kinematics, masses, inertias and limits of its URDF in the joint frames of the URDF, plus what a URDF does not give (friction, PD values, simple collision shapes), urdfImport.RobotModelDictFromData writes the part from the URDF, and a test compares each model with its URDF; design robotics.md section 3.5(b).",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 23:52",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "robotics.models holds the UR5 and the Panda in the joint frames of their URDF, the former models with useDH=True; urdfImport.RobotModelDictFromData writes such a list of links, and a test compares the models with their URDF.",
+  "resolvedInVersion": "1.13.484"
+}

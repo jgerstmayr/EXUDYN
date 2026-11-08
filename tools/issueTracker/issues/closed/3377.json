@@ -1,0 +1,15 @@
+{
+  "number": 3377,
+  "title": "VelocityVerlet checked, its under-development warning removed, solver recommendations extended",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "The convergence of VelocityVerlet checked on a parabola (exact), an undamped oscillator (order 2), a damped oscillator and a free rigid body (order 1). Decided: the warning and the TEST phase mark removed; order 2 (1) in the solver overview, with the note on velocity-dependent forces; the recommendations say that it suits conservative systems, and that GeneralizedAlpha usually has the lowest accuracy.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 22:49",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "VelocityVerlet is no longer marked as under development; the solver page gives its order as 2, and 1 for forces depending on velocities.",
+  "resolvedInVersion": "1.13.482"
+}

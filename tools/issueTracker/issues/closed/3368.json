@@ -1,0 +1,15 @@
+{
+  "number": 3368,
+  "title": "FlatArray: the markers, forces and torques of the connector interface passed with their size",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "The connector interface passes raw pointers without their number (see the analysis, design flatArray.md). Proposed, to be decided: a class FlatArray with only operator[], NumberOfItems, iterators and the pointer, range checked; the virtual functions of CObjectConnector, their generated declarations and implementations on it in one commit; the speed of the fast module unchanged.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 23:15",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The markers, forces and torques of the connector interface are passed with their size by the new class FlatArray; the speed is unchanged.",
+  "resolvedInVersion": "1.13.483"
+}
