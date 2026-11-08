@@ -63,7 +63,10 @@ measured.
 | `Radau5` | implicit Runge-Kutta | 5 / 3 | positions and velocities at the end, velocities at the middle stage | L-stable | constant or automatic |
 | `ExplicitEuler`, `ExplicitMidpoint`, `RK33`, `RK44`, `RK67` | explicit Runge-Kutta | 1, 2, 3, 4, 6 | `CoordinateConstraint` to the ground only | none | constant |
 | `ODE23`, `DOPRI5` | explicit, embedded | 3, 5 | as above | none | automatic |
-| `VelocityVerlet` | explicit | 2 | as above | none | constant |
+| `VelocityVerlet` | explicit | 2 (1) | as above | none | constant |
+
+`VelocityVerlet` has order 2 for conservative systems, and only order 1 if the forces depend on the velocities, as for
+damping or the gyroscopic terms of rotating rigid bodies.
 
 The implicit solvers need the Jacobian of the system and solve a nonlinear system per step; they take steps far
 above the stability limit of the explicit solvers and handle constraints. The ODE1 coordinates are integrated by
@@ -998,11 +1001,12 @@ coordinate converges with the order of the solver
 
 Which solver to take, from the study above:
 
-- **`GeneralizedAlpha`**, the default: the general and robust method. Use it for a first run if nothing is known about the
+- **`GeneralizedAlpha`**, the default: the general and robust method, although it usually has the lowest accuracy of these solvers. Use it for a first run if nothing is known about the
   problem, and for hard problems with possible switching behavior, where its numerical damping helps (`spectralRadius`).
 - **`RK44`** with a fixed step for smooth problems without constraints, and **`VelocityVerlet`** with a fixed step for
-  contact and discontinuous problems without constraints; it is still under development and warns about that. The explicit
-  solvers are in general not compatible with constraints.
+  contact and discontinuous problems without constraints. `VelocityVerlet` is particularly interesting for conservative
+  systems, like the parabolic motion of particles, which it integrates exactly. The explicit solvers are in general not
+  compatible with constraints.
 - **`TrapezoidalGGL`** with automatic step size for nonlinear or discontinuous problems: `timeIntegration.automaticStepSize = True`,
   and only the local error tolerance `absoluteTolerance` and `relativeTolerance` is to be adjusted.
 - **`LobattoIIIA4`** and **`Radau5`** for high accuracy on mostly smooth problems, **`LobattoIIIC4GGL`** if the algebraic

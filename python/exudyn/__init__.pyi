@@ -597,7 +597,7 @@ class DynamicSolverType(Enum):
     DVERK6 = int
     """[NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 6th order with 5th order error estimation; includes adaptive step selection"""
     VelocityVerlet = int
-    """[TEST phase] a special explicit time integration scheme, the 'velocity Verlet' method (similar to leap frog method), with second order accuracy for conservative second order differential equations, often used for particle dynamics and contact; implementation uses Explicit Euler for ODE1 equations"""
+    """a special explicit time integration scheme, the 'velocity Verlet' method (similar to leap frog method), with second order accuracy for conservative second order differential equations and first order if forces depend on velocities (damping, gyroscopic terms), often used for particle dynamics and contact; implementation uses Explicit Euler for ODE1 equations"""
     TrapezoidalGGL = int
     """an implicit solver for index 3 problems: the trapezoidal rule with the constraints and the velocity constraints at the end of the step, the positions moved onto the constraints by a second multiplier (GGL stabilization); order 2, without numerical damping; automatic step size by the error of the embedded trapezoidal solution (#3261)"""
     LobattoIIIA4 = int
@@ -2092,7 +2092,7 @@ class VSettingsContactShow:
 
 
 class VSettingsContactColor:
-    """The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color (#3340)."""
+    """The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color; the default alpha value of 0.8 keeps the contact forces drawn inside the shapes visible (#3340)."""
     cones: Tuple[float,float,float,float]
     """RGBA color of the contact cones, see show.cones."""
     cylinders: Tuple[float,float,float,float]

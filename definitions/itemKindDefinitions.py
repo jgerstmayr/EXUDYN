@@ -343,7 +343,9 @@ definitions.append(ItemKindDefinition(
     overallDescription=r"""A Contact is a Connector that acts where the shapes on its markers touch: a penalty force of their penetration, with damping, an impact model and friction, whose contact state switches during the simulation.""",
     drawing=r"""A contact is drawn as a connector, if `connectors.show` and its own `show` are True: the shapes switched on in
     `contact.show`, in the colors of `contact.color` or its own `color`, and, for the contacts of primitive shapes, with
-    `contact.showContactForces` the force of each contact point; `connectors.showNumbers` writes its number.""",
+    `contact.showContactForces` the force of each contact point; `connectors.showNumbers` writes its number. The forces act
+    inside the shapes and are visible only through transparent faces: the colors of `contact.color` have the alpha value
+    0.8 by default, and the graphics of the bodies have to be made transparent by the alpha value of their colors.""",
     drawingSettings=['connectors.show', 'connectors.showNumbers', 'connectors.defaultColor', 'connectors.defaultSize'],
     detailedDescription=r"""
     ## The principle every contact follows

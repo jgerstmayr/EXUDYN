@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 463 | 1.13.480 |
+| 1.13 | Newborn | 465 | 1.13.482 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.482** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` VelocityVerlet checked, its under-development warning removed, solver recommendations extended (#3377)
+  - description: The convergence of VelocityVerlet checked on a parabola (exact), an undamped oscillator (order 2), a damped oscillator and a free rigid body (order 1). Decided: the warning and the TEST phase mark removed; order 2 (1) in the solver overview, with the note on velocity-dependent forces; the recommendations say that it suits conservative systems, and that GeneralizedAlpha usually has the lowest accuracy.
+  - **notes:** VelocityVerlet is no longer marked as under development; the solver page gives its order as 2, and 1 for forces depending on velocities.
+  - date resolved: **2026-11-08 22:49**, date raised: 2026-11-08
+- **1.13.481** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Contact shapes transparent by default (#3376)
+  - description: Contact forces are drawn inside the shapes and are visible only through transparent faces. Decided: the colors of contact.color have the alpha value 0.8 by default; the graphics of bodies stay with the user, said in the general page of the contact objects.
+  - **notes:** The colors of visualizationSettings.contact.color have the alpha value 0.8 by default, so that contact forces inside the shapes are visible.
+  - date resolved: **2026-11-08 22:49**, date raised: 2026-11-08
 - **1.13.480** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` urdfImport.ReduceURDFrobotData: locked joints and removed links of URDF robot data (#3372)
   - description: The import has no way to leave out links such as the fingers of the Panda. Decided: ReduceURDFrobotData(robotData, lockedJoints, removedLinks) on the data of GetURDFrobotData, a locked link merged into its parent with its mass, center of mass and inertia; design robotics.md section 3.5(a).
   - **notes:** urdfImport.ReduceURDFrobotData leaves out joints and links in the data of GetURDFrobotData: a locked joint merges its link into the link above with its mass, center of mass and inertia, a removed link goes with all links below it.

@@ -159,7 +159,6 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 
 	if (dynamicSolverType == DynamicSolverType::VelocityVerlet)
 	{
-		//pout << "************\nWARNING: VelocityVerlet: accelerations need to be initialized!!!\n************\n";
 		typedef ResizableVectorParallel CastVectorType;
 		CastVectorType& solutionODE2_tt = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
 		ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
@@ -180,7 +179,6 @@ void CSolverExplicitTimeInt::InitializeSolverData(CSystem& computationalSystem, 
 
 
 //**delete when finished!
-bool warnedVelocityVerlet = false;
 
 
 //! this function computes one explicit step, overloading the Newton method
@@ -352,13 +350,6 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 	{
 		//**************************************************************************************************************
 		//**************************************************************************************************************
-		if (!warnedVelocityVerlet)
-		{
-			pout << "WARNING: VelocityVerlet: still under development\n";
-			//pout << "************\nWARNING: VelocityVerlet: CHECK CONVERGENCE !!!\n************\n";
-			//pout << "************\nWARNING: VelocityVerlet: ADD Lie group formulas !!!\n************\n";
-			warnedVelocityVerlet = true;
-		}
 		//compute stage derivatives Ki:
 		STARTTIMER(timer.integrationFormula);
 

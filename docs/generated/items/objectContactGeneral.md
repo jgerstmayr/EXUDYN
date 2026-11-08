@@ -33,6 +33,8 @@ contact; the theory of the contacts between primitive shapes is in [](#sec-conta
 
 A contact is drawn as a connector, if `connectors.show` and its own `show` are True: the shapes switched on in
 `contact.show`, in the colors of `contact.color` or its own `color`, and, for the contacts of primitive shapes, with
-`contact.showContactForces` the force of each contact point; `connectors.showNumbers` writes its number.
+`contact.showContactForces` the force of each contact point; `connectors.showNumbers` writes its number. The forces act
+inside the shapes and are visible only through transparent faces: the colors of `contact.color` have the alpha value
+0.8 by default, and the graphics of the bodies have to be made transparent by the alpha value of their colors.
 
 The settings: [`connectors.show`](#sec-vsettingsconnectors), [`connectors.showNumbers`](#sec-vsettingsconnectors), [`connectors.defaultColor`](#sec-vsettingsconnectors), [`connectors.defaultSize`](#sec-vsettingsconnectors).

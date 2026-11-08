@@ -6427,6 +6427,14 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-10-5"></a>
+### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
+- Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
+    
+<a id="rg9-13-4"></a>
+### RG9.13.4 - contact shapes transparent by default (2026-11-08, #3376)
+- The five colors of contact.color with alpha 0.8; said on the general page of the contacts. No test result changed.
+    
 <a id="rg19-17-1"></a>
 ### RG19.17.1 - urdfImport.ReduceURDFrobotData (2026-11-08, #3372)
 - Locked joints merge the link into the joint link above (mass, center of mass, inertia by the parallel axis theorem, graphics moved, children attached there), removed links go with all below them; the names are those of joints or links, GetURDFrobotData now returns 'jointName'.

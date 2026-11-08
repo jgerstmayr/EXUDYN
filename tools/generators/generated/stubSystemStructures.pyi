@@ -859,7 +859,7 @@ class VSettingsContactShow:
 
 #information for VSettingsContactColor
 class VSettingsContactColor:
-    """The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color (#3340)."""
+    """The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color; the default alpha value of 0.8 keeps the contact forces drawn inside the shapes visible (#3340)."""
     cones: Tuple[float,float,float,float]
     """RGBA color of the contact cones, see show.cones."""
     cylinders: Tuple[float,float,float,float]

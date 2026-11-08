@@ -702,6 +702,8 @@ and `ObjectJournalBearing` are listed under Object (Contact), with a general pag
 and the Create functions.
 **A Robot from a URDF in one call** (#3356): `urdfImport.RobotFromURDFdata` creates the `Robot` from the data of
 `GetURDFrobotData`, and `Robot.SaveToHDF5` / `LoadFromHDF5` store it with its graphics. `urdfImport.ReduceURDFrobotData` leaves out joints and links, such as the fingers of a gripper (#3372).
+**Contact shapes are transparent by default**, the colors of `contact.color` with the alpha value 0.8, so that the contact forces inside them are visible; this changes the look of existing models with contact shapes (#3376).
+**`VelocityVerlet`** is no longer marked as under development (#3377).
 **Capsules in the contacts, and primitives against polytopes** (#3364, #3365, #3366): `ObjectContactCylinderCylinder` has the options
     `isCapsule0` and `isCapsule1`, and `ObjectContactPrimitiveConvex` with `mbs.CreatePrimitiveConvexContact` is the contact of a
     sphere, capsule, cylinder or truncated cone, `exu.ContactPrimitiveType`, with a convex polytope. `graphics.Capsule` draws a capsule.

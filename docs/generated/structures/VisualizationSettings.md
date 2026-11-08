@@ -422,7 +422,7 @@ VSettingsContactShow has the following items:
 (sec-vsettingscontactcolor)=
 ### VSettingsContactColor
 
-The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color (#3340).
+The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color; the default alpha value of 0.8 keeps the contact forces drawn inside the shapes visible (#3340).
 
 Reached as `SC.visualizationSettings.contact.contactColor`.
 
@@ -433,11 +433,11 @@ VSettingsContactColor has the following items:
 
 | name | type | default | description |
 |---|---|---|---|
-| `cones` | Float4 | [0.6,0.5,0.7,1.] | RGBA color of the contact cones, see show.cones |
-| `cylinders` | Float4 | [0.5,0.6,0.7,1.] | RGBA color of the contact cylinders, see show.cylinders |
-| `spheres` | Float4 | [0.8,0.5,0.2,1.] | RGBA color of the contact spheres, see show.spheres |
-| `tori` | Float4 | [0.8,0.2,0.8,1.] | RGBA color of the contact tori, see show.tori |
-| `triangles` | Float4 | [0.5,0.5,0.5,1.] | RGBA color of the contact triangles, see show.triangles |
+| `cones` | Float4 | [0.6,0.5,0.7,0.8] | RGBA color of the contact cones, see show.cones |
+| `cylinders` | Float4 | [0.5,0.6,0.7,0.8] | RGBA color of the contact cylinders, see show.cylinders |
+| `spheres` | Float4 | [0.8,0.5,0.2,0.8] | RGBA color of the contact spheres, see show.spheres |
+| `tori` | Float4 | [0.8,0.2,0.8,0.8] | RGBA color of the contact tori, see show.tori |
+| `triangles` | Float4 | [0.5,0.5,0.5,0.8] | RGBA color of the contact triangles, see show.triangles |
 
 
 

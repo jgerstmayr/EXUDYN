@@ -3700,7 +3700,7 @@ inline void SetDictionary(VSettingsContactShow& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsContactColor& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
-    structureDict["structureDescription"] = "The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color (#3340)";
+    structureDict["structureDescription"] = "The colors of the shapes of the contacts, of GeneralContact and of the contact items, unless an item has its own color; the default alpha value of 0.8 keeps the contact forces drawn inside the shapes visible (#3340)";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.cones);
