@@ -1,0 +1,13 @@
+{
+  "number": 3360,
+  "title": "The Spot model on the floating base of Robot, ANYmal and the Mars rover imported",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "spotModel.py builds Spot by its own code. Decided: adapted to the floating base of Robot; ANYmal and the Mars rover imported the same way.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "file": "python/Examples/FurtherExamples/spotModel.py"
+}

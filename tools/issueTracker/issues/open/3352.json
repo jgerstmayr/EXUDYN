@@ -1,0 +1,13 @@
+{
+  "number": 3352,
+  "title": "The URDF files of the examples in CommonData_git",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The URDF folders of the Staubli TX2-90, the UR5 and the Franka Emika Panda are stored in CommonData_git/data/Exudyn/robotics/URDF, beside the repository, and the examples find them by a relative path and say where to download them otherwise. Decided: not in the repository and not in tmp.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "file": "python/Examples/staubliTX2trajectories.py"
+}

@@ -1,0 +1,13 @@
+{
+  "number": 3362,
+  "title": "serialRobotInteractiveLimits.py with the new renderer features, checked by hand",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The example (sliders, mouse drag, end stops) has run only without windows. Decided: adapted later with new features of the renderer.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "file": "python/Examples/serialRobotInteractiveLimits.py"
+}

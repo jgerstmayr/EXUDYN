@@ -1,0 +1,13 @@
+{
+  "number": 3361,
+  "title": "Remove the deprecated joint torque loads of CreateRedundantCoordinateMBS at the end of their deprecation period",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "jointLoadUserFunctionList and createJointTorqueLoads are tested by serialRobotTest.py and movingGroundRobotTest.py. Decided: when the deprecation period ends they are removed and the two test models move to SetControl.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "file": "python/TestModels/serialRobotTest.py"
+}

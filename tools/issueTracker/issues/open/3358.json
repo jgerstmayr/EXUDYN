@@ -1,0 +1,13 @@
+{
+  "number": 3358,
+  "title": "The inertias of ManipulatorStaubliTX2_90L and the check of all models",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The masses and inertias of the model are estimates. To be taken from a URDF with inertias or estimated by the inertia workflow; all models checked for physical inertias.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "file": "python/exudyn/robotics/models.py"
+}

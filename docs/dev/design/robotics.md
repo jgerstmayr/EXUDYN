@@ -4,56 +4,32 @@ A design note of open steps: the open tasks, the maintainer's request as given, 
 is done. The analysis, the measurements and the details of each step are in the log (exudynRevisionLog2026c.md, the
 entries RG19.*). The note leaves the repository when the steps close (WORKFLOW.md §8.4).
 
-## 1. Open tasks (checked 2026-11-06)
+## 1. State (2026-11-08)
 
-The group is paused. The maintainer brings a solution for the storage of the URDF files and of the models saved as
-HDF5 (task 1) first; tasks 3 and 5 depend on it, tasks 2, 4 and 6 do not. Each line below was checked against the code
-on 2026-11-06.
+Everything of the first request is done (section 4). What remains are the steps below; each has its issue.
 
-1. **Storage of URDF files and HDF5 models** (to be decided by the maintainer). Now:
-   - the local data set (KUKA, Stäubli, ANYmal, Spot, the Mars rover) is in `EXUDYN_git/tmp/URDF`, ignored by git
-     (decision 7); staubliTX2trajectories.py and staubliTX2blending.py find it by `__file__` and run without meshes
-     when it is missing;
-   - Examples/FurtherExamples/spotModel.py loads `spotData.h5` (tracked, beside it) by a path relative to the working
-     directory, so it fails when run from elsewhere; the pattern of #3303 -
-     `os.path.join(os.path.dirname(os.path.abspath(__file__)), ...)`, which 20 test models and examples use and the
-     examples runner supports (#3284) - fixes it in one line, independently of the decision;
-   - humanRobotInteraction.py reads the articulated dummy from an absolute path of the maintainer's machine
-     (`C:/DATA/cpp/DocumentationAndInformation/STL/...`);
-   - serialRobotURDF.py has `saveHDF5`/`loadFromHDF5` writing `solution/robot<model>.h5`;
-   - staubliTX2trajectories.py saves the TX2-90L with its meshes to `solution/staubliTX2_90L.h5` (7 MB);
-   - the only robot of a URDF in the repository is the test robot of `python/TestModels/testData/urdf/testRobot`
-     with its import in `testRobot.h5` (56 kB, #3285).
-   Open with it: a variable or argument for the data path (`EXUDYN_ROBOT_DATA` was proposed), which models are kept
-   as HDF5 in the repository (< 1 MB each) and where, and how an example says what it needs and where to download it.
-2. **A Robot from the data of GetURDFrobotData**: serialRobotURDF.py and `TestRobotFromURDF` of
-   test_urdfRobotData.py each build the Robot by hand (links, parents by name, base graphics, the tool frame from
-   `flipHT` and the RTB frames). A function of urdfImport that does it - with the joint limits as end stops and the
-   friction of `<dynamics damping friction>` (in the link data as `motorViscousFriction`, `motorCoulombFriction`, not
-   used yet) as decision 3 says - would shorten both.
-3. **Mass properties of imported robots in an example**: `meshDensity` and `correctInertia` are tested on the test
-   robot only; the KUKA or TX2 models of the data set have no masses (TX2-90L at 2700 kg/m^3: 47, 36, 21, 17, 1.7,
-   0.07 kg). Depends on task 1.
-4. **The inertias of models.py**: the estimated masses and inertias of `ManipulatorStaubliTX2_90L` could come from its
-   meshes; all models checked by `urdfImport._InertiaProblems` (the Puma560 is corrected, #3255).
-5. **Legged and mobile robots from URDF**: ANYmal, Spot and the Mars rover are imported with the kinematics of the RTB,
-   but Robot has a fixed base; a floating base (ObjectKinematicTree has one, #1549) for them is not designed yet;
-   spotModel.py builds Spot by its own code from the HDF5 file.
-6. **The deprecated joint torque loads** of `CreateRedundantCoordinateMBS` (`jointLoadUserFunctionList`,
-   `createJointTorqueLoads`): serialRobotTest.py and movingGroundRobotTest.py test them; when they are removed, the
-   two test models move to `SetControl`.
-7. **Not revised**: exudyn.robotics.mobile (mecanum wheels), special.py (manipulability) and rosInterface.py, which is
-   untested (no ROS in the tests); ROSMobileManipulator.py keeps its state machine.
-8. **Checks by hand**: serialRobotInteractiveLimits.py (sliders, mouse drag, end stops) ran only without windows.
-9. **The plan**: RG19.1 to RG19.8 are open with all their 27 sub-steps closed, RG19.9 is closed; RG19.1 to RG19.8
-   close when the maintainer has decided task 1 and the tasks above that are wanted, each wanted task a sub-step with
-   an issue. The robotics step outside the group, RG11.8.20 (#2993, InverseKinematicsNumerical without PDcontrol), is
-   closed as superseded by #3269: the deprecated class calls the LM IK of KinematicChain, which needs no PDcontrol and
-   leaves the robot unchanged.
+### 1.1 Decided, to be done
 
-Suggested order when the group resumes: task 1 (the maintainer's solution) with the one-line fix of spotModel.py and
-the path of humanRobotInteraction.py; task 2, which also gives task 3 its function; task 4; task 6 when the
-deprecation period of the joint torque loads ends; task 5 as a design question of its own.
+| step | issue | what | depends on |
+|---|---|---|---|
+| RG19.10.2 | #3353 | the articulated dummy of humanRobotInteraction.py as a Robot in HDF5, in `RobotHDF5` of CommonData_git | - |
+| RG19.11.2 | #3355 | all other robot examples moved to `python/Examples/robotics` | - |
+| RG19.13.1 | #3357 | the inertia workflow of section 3.3: `densityForInertiaEstimation`, and the completion of partly given inertias as a function of its own | RG19.12.1 |
+| RG19.13.2 | #3358 | the masses and inertias of `ManipulatorStaubliTX2_90L` from a URDF with inertias, or estimated by RG19.13.1; all models checked by `_InertiaProblems` | RG19.13.1 |
+| RG19.14.1 | #3359 | a floating base for `Robot` by the one of `ObjectKinematicTree` (#1549) | - |
+| RG19.14.2 | #3360 | spotModel.py on the floating base and `RobotFromURDFdata`; ANYmal and the Mars rover imported the same way | RG19.14.1 |
+| RG19.15 | #3361 | when the deprecation period of `jointLoadUserFunctionList` and `createJointTorqueLoads` of `CreateRedundantCoordinateMBS` ends: remove them, serialRobotTest.py and movingGroundRobotTest.py on `SetControl` | the deprecation period |
+| RG19.16 | #3362 | serialRobotInteractiveLimits.py adapted to new features of the renderer and checked by hand (sliders, mouse drag, end stops); it has run only without windows so far | the renderer features |
+
+### 1.2 Open decisions of the maintainer
+
+1. **Which URDF files with correct inertias** are the sources for RG19.13.2: a TX2-90 URDF with inertials is not known here; the one of ros-industrial has none.
+2. **When RG19.1 to RG19.8 close**: all their sub-steps are closed and no task above belongs to them; proposed: close them now.
+
+### 1.3 Not revised, no step
+
+exudyn.robotics.mobile (mecanum wheels), special.py (manipulability) and rosInterface.py, which is untested (no ROS in
+the tests); ROSMobileManipulator.py keeps its state machine.
 
 ## 2. The request (maintainer 2026-11-04)
 
@@ -177,10 +153,37 @@ and the connection to the Robotics Toolbox for Python (RTB) of P. Corke are revi
    tree's domain.
 5. **Cartesian paths**: the IK at each evaluation, also for the numerical IK (ProfileCartesianLinear, #3262).
 6. **InverseKinematicsNumerical**: replaced by the LM IK, the class kept for a deprecation period, calling it.
-7. **The robot data set**: by a path given to the loading function; the folders of spot, the mars rover, anymal,
+7. **The robot data set** (for the examples replaced by decision 11): by a path given to the loading function; the folders of spot, the mars rover, anymal,
    KUKA and Staeubli copied to `EXUDYN_git/tmp/URDF` (inside the repository, not committed, as tmp/ is ignored);
    without the data an example says what is missing and where to download it (the ros-industrial repositories on
    GitHub, e.g. https://github.com/ros-industrial/staubli_experimental), and stops.
+
+### 3.3 Decisions of 2026-11-08 (maintainer)
+
+11. **The data of the robots**: the second repository `CommonData_git`, for the internal developers and users, lies
+    beside the Exudyn repository and is reached by a relative path. `CommonData_git/data/Exudyn/robotics/URDF` has the
+    URDF folders the examples use (Stäubli TX2-90, UR5, Franka Emika Panda), `.../RobotHDF5` the robots stored as HDF5
+    that are too large for the Exudyn repository (the data there must not grow without limit). An example runs when
+    CommonData_git is there, and says where to download its URDF otherwise. `EXUDYN_git/tmp` is a work folder only. The
+    test models use `python/TestModels/testData/urdf`. This replaces decision 7 for the examples.
+12. **Examples**: `python/Examples/robotics` holds all robot examples in the future, its data in `robotics/data`.
+13. **A Robot from the URDF data**: one function, `urdfImport.RobotFromURDFdata`; everything is then saved from the
+    class Robot, by `GetDictionary` and also by `SaveToHDF5` / `LoadFromHDF5`.
+14. **Legged and mobile robots** use a floating base; the Spot model is adapted to it.
+15. **The workflow of the inertias** of imported robots (proposed here on the maintainer's request):
+    1. *The inertials of the URDF come first*, and a URDF with correct inertials is what to look for. They are checked
+       by `_InertiaProblems` (positive mass, positive definite, triangle inequality) and reported per link.
+    2. *A mesh gives the surface, not the interior*: hollow arms, drive trains and cables are unknown, so a density of
+       a material gives nonsense. Only one overall density of the enclosed volume of a link makes sense, around
+       1 kg/dm^3; for robots with known masses a good value can be guessed from them. `GetURDFrobotData` gets
+       `densityForInertiaEstimation=None` (in place of `meshDensity`), used only when it is not None, for links without
+       any inertial data.
+    3. *Partly given data* (the mass but no inertia, or an inertia with missing components) is completed by a function
+       of its own, documented as an estimate: the shape's inertia from the meshes with that density, scaled to the given
+       mass where there is one, overrides the given values, and the principal moments are then adapted as little as
+       possible so that the triangle inequality holds (`_CorrectedInertia`). Every link reports what was changed in
+       `inertiaProblems`.
+    4. *The result is stored* with the Robot (HDF5), so the estimate is made once and can be read and corrected.
 
 ## 4. Done (2026-11-04 to 2026-11-06)
 

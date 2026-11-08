@@ -1,0 +1,13 @@
+{
+  "number": 3355,
+  "title": "All robot examples in Examples/robotics",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Decided: python/Examples/robotics holds all robot examples; the remaining ones are moved there.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "file": "python/Examples/"
+}

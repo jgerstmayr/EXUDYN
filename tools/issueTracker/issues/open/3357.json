@@ -1,0 +1,13 @@
+{
+  "number": 3357,
+  "title": "The inertia workflow of imported robots",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "A mesh gives the surface only. Decided: an option densityForInertiaEstimation=None with one overall density of a link, and a documented function of its own which completes partly given inertias from the meshes and adapts them to the triangle inequality.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "file": "python/exudyn/robotics/urdfImport.py"
+}

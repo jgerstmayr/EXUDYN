@@ -1,0 +1,13 @@
+{
+  "number": 3353,
+  "title": "The articulated dummy of humanRobotInteraction.py as a stored Robot",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The example reads the STL files of the dummy from an absolute path of one machine. Decided: stored as a Robot in HDF5 in CommonData_git/data/Exudyn/robotics/RobotHDF5.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "file": "python/Examples/humanRobotInteraction.py"
+}
