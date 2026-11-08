@@ -36,13 +36,13 @@ mbs = SC.AddSystem()
 
 robotDict = ManipulatorStaubliTX2_90L()
 robot = LinkDict2Robot(robotDict)
-robotDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tmp', 'URDF')
+robotDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'URDF') #the repository CommonData_git beside this one, if it is there (#3352)
 urdf = robotDict['urdfGraphics']
 urdfFile = os.path.join(robotDataPath, urdf['file'])
 if os.path.exists(urdfFile):
     AddURDFgraphics(robot, urdfFile, urdf['links'], baseLinkName=urdf['baseLink'])
 else:
-    exu.Print('the URDF meshes were not found at', urdfFile, '; the example continues with simple link graphics')
+    exu.Print('the URDF meshes were not found at', urdfFile, '; download the package from', urdf['source'], '; the example continues with simple link graphics')
     robot.base = RobotBase(visualization=VRobotBase(graphicsData=[graphics.Cylinder([0, 0, 0], [0, 0, 0.3], 0.12, graphics.color.grey)]))
 
 #the gripper: a disk at the flange and two plates; the tool frame (TCP) between the tips of the plates
