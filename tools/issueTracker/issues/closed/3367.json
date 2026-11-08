@@ -1,0 +1,15 @@
+{
+  "number": 3367,
+  "title": "Analyze the raw pointers of the connector interface and recommend a transport class",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "The functions ComputeConnectorForceRigid and its relatives of CObjectConnector pass markers, forces and torques as raw pointers without their number, and the items loop to a hardcoded 2. Decided: analyze the use and recommend a class FlatArray that only transports pointer and size.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 14:31",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The raw pointers of the connector interface are analyzed in docs/dev/design/flatArray.md; a class FlatArray is recommended.",
+  "resolvedInVersion": "1.13.472"
+}

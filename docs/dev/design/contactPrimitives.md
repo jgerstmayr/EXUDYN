@@ -306,3 +306,79 @@ lubricated revolute joint parameters and hydrodynamic force models on the dynami
 systems, Nonlinear Dynamics 69 (2012); O. Pinkus, B. Sternlicht, Theory of Hydrodynamic Lubrication, McGraw-Hill
 (1961); Y. Bastani, M. de Queiroz, A new analytic approximation for the hydrodynamic forces in finite-length journal
 bearings, ASME Journal of Tribology 132 (2010).
+
+## 9. Mesh collision shapes, polytopes against primitives, capsules (maintainer 2026-11-08, RG9.13)
+
+Recommendations for the maintainer to check.
+
+### 9.1 Are the collision meshes of a URDF convex?
+
+No: the URDF format allows any mesh in `<collision>`, and convexity is a convention of the file's author. Measured
+on the three robots of CommonData_git, the volume of each collision mesh divided by the volume of its convex hull
+(script of RG9.13.1; 1 is convex):
+
+| robot | collision meshes | volume / hull |
+|---|---|---|
+| Staubli TX2-90L | 7 STL | 0.993 to 1.000: convex |
+| Franka Emika Panda | 9 STL and the primitives of the fingers | 1.000: convex |
+| UR5 | 7 STL | 0.645 to 0.945: **not convex** |
+
+Other codes: MuJoCo and PyBullet (by default) replace a collision mesh by its convex hull, FCL (MoveIt) handles any
+triangle mesh by a bounding volume hierarchy. Recommended for Exudyn: the check of the volume against the hull at the
+import, and a convex hull with a warning giving this ratio where it is below 0.98 (`scipy.spatial.ConvexHull`,
+behind the optional import); a decomposition into several convex parts is not part of this step.
+
+### 9.2 A polytope against a sphere, a cylinder and a cone
+
+`ObjectContactConvexConvex` couples only two polytopes. The kernel is ready: `EGeometry::ConvexShape` has Sphere,
+Capsule, Cylinder, Box, Triangle, Points and Cone, and GJK/EPA take any pair. What is missing is the item and the
+contact points.
+
+Options:
+
+| | how | for | against |
+|---|---|---|---|
+| A | one item per pair: `ObjectContactSphereConvex`, `ObjectContactCylinderConvex`, `ObjectContactConeConvex` | the naming of the existing items, each page says exactly what it is | about 2000 lines of definitions (the items have 13 functions and a page each) and three times the Create function, tests, drawing, for one implementation |
+| B | **one item `ObjectContactPrimitiveConvex`**, marker 0 the primitive by `primitiveType` (`Sphere`, `Capsule`, `Cylinder`, `Cone`) with `radius`, `radius1` (cone), `length`, marker 1 the polytope by `points1`, `triangles1` | one implementation, one page; a further shape is an enum value | one item with parameters that depend on the type |
+| C | options in `ObjectContactConvexConvex`, a primitive instead of `points0` | no new item | the parameters of both kinds in every polytope contact |
+
+**Recommended: B**, with one Create function `CreatePrimitiveConvexContact`. The contact points of it:
+
+- sphere: the one closest point; a data block of 3, the size of the data node 3;
+- cylinder and cone: on a face of the polytope, the scheme of `ObjectContactCylinderTriangle` and `ConeTriangle` (the
+  deepest rim point, the other end of the side line, two rim points at +-120 degrees), clipped to the **polygon of
+  the face** of the polytope, which `ContactConvex` finds already for the face on face case; otherwise one point
+  by GJK and EPA. Up to 4 points, 12 data coordinates, the same for capsules, which have only the line of their side.
+
+### 9.3 The capsule in ObjectContactCylinderCylinder
+
+The item has no capsule; `ConvexShape` has it. Recommended: as the option `isHollowCylinder1`, the options
+**`isCapsule0`, `isCapsule1`**, False by default: a capsule of cylinder $i$ with its length `cylindersLengths[i]`
+between the centers of its spherical ends, so of the total length $L_i + 2 r_i$ - the same axis and marker frame as the
+cylinder.
+
+- Capsule on capsule: the distance of the two segments, closed form, minus $r_0 + r_1$, no EPA at any penetration
+  short of the axes crossing. The contact points are those of the side on side case of section 3.2 (the closest point,
+  the two ends of the interval along the axis), clipped to the segments, without caps and rims: parallel capsules on
+  two points, crossed on one.
+- Capsule on cylinder: GJK and EPA of the capsule's segment core against the cylinder, with the radius as margin; the
+  side-on-side and on-a-cap points of the item apply with the end of the capsule beyond the rim replaced by its
+  sphere.
+- Together with the hollow option: refused in `CheckPreAssembleConsistency` for the capsule that is the hollow one.
+- The capsules for robots (RG21.2) are the first users; a capsule against a triangle or the infinite plane is
+  `primitiveType Capsule` of section 9.2 with a polytope, or a later option of `ObjectContactCylinderTriangle`.
+
+### 9.4 graphics.Capsule
+
+`graphics.Capsule(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTiles=16)`, the arguments of
+`graphics.Cylinder`: the centers of the spherical ends are `pAxis` and `pAxis + vAxis`. It is one
+`SolidOfRevolution` of a contour of two quarter circles and a line (smooth normals, closed at both poles), so that it
+needs no new drawing code. A `length` of 0 gives a sphere.
+
+### 9.5 Steps (RG9.13)
+
+| step | issue | what |
+|---|---|---|
+| RG9.13.1 | #3364 | `ObjectContactPrimitiveConvex` (9.2) with `CreatePrimitiveConvexContact`, the check of the hull at the import (9.1) |
+| RG9.13.2 | #3365 | `isCapsule0`, `isCapsule1` of ObjectContactCylinderCylinder and of its Create function (9.3) |
+| RG9.13.3 | #3366 | `graphics.Capsule` (9.4) |

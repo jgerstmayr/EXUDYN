@@ -1,0 +1,11 @@
+{
+  "number": 3366,
+  "title": "graphics.Capsule",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "exudyn.graphics has no capsule for the shape of a contact or a collision shape. Proposed, to be decided: graphics.Capsule with the arguments of graphics.Cylinder, as one SolidOfRevolution, design contactPrimitives.md section 9.4.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07"
+}

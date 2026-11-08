@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.469.dev1
+- Exudyn version = 1.13.472.dev1
 - last change = 2026-11-08
-- Number of issues = 3363
-- Number of resolved issues = 3246 (469 in current version)
+- Number of issues = 3369
+- Number of resolved issues = 3249 (472 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,18 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` FlatArray: the markers, forces and torques of the connector interface passed with their size (#3368)
+  - description: The connector interface passes raw pointers without their number (see the analysis, design flatArray.md). Proposed, to be decided: a class FlatArray with only operator\[\], NumberOfItems, iterators and the pointer, range checked; the virtual functions of CObjectConnector, their generated declarations and implementations on it in one commit; the speed of the fast module unchanged.
+  - date raised: 2026-11-08
+- `EXTENSION` `LOW EFF` `raised by: Claude-JG` graphics.Capsule (#3366)
+  - description: exudyn.graphics has no capsule for the shape of a contact or a collision shape. Proposed, to be decided: graphics.Capsule with the arguments of graphics.Cylinder, as one SolidOfRevolution, design contactPrimitives.md section 9.4.
+  - date raised: 2026-11-08
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` The options isCapsule0 and isCapsule1 of ObjectContactCylinderCylinder (#3365)
+  - description: ObjectContactCylinderCylinder has cylinders only. Capsules are the usual collision shape of robot links, and ConvexShape has them. Proposed, to be decided: options as isHollowCylinder1, with the side on side contact points and the closed form of two segments, design contactPrimitives.md section 9.3.
+  - date raised: 2026-11-08
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` A contact between a convex polytope and a sphere, capsule, cylinder or cone (#3364)
+  - description: ObjectContactConvexConvex couples two polytopes only, while the kernel in EGeometry::ConvexShape takes any pair of convex shapes. The collision meshes of a URDF are convex only by convention (measured: the UR5 ones are not). Proposed, to be decided: one item ObjectContactPrimitiveConvex with the primitive by a type parameter and the check of the convex hull at the import, design contactPrimitives.md section 9.
+  - date raised: 2026-11-08
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` serialRobotInteractiveLimits.py with the new renderer features, checked by hand (#3362)
   - description: The example (sliders, mouse drag, end stops) has run only without windows. Decided: adapted later with new features of the renderer.
   - date raised: 2026-11-08
@@ -9050,9 +9062,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-08
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` A floating base for Robot (#3359)
   - description: Robot has a fixed base. Decided: legged and mobile robots use the floating base of ObjectKinematicTree (\#1549).
-  - date raised: 2026-11-08
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The inertias of ManipulatorStaubliTX2\_90L and the check of all models (#3358)
-  - description: The masses and inertias of the model are estimates. To be taken from a URDF with inertias or estimated by the inertia workflow; all models checked for physical inertias.
   - date raised: 2026-11-08
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The inertia workflow of imported robots (#3357)
   - description: A mesh gives the surface only. Decided: an option densityForInertiaEstimation=None with one overall density of a link, and a documented function of its own which completes partly given inertias from the meshes and adapts them to the triangle inequality.
@@ -9068,7 +9077,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-08
 - `CHECK` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` LobattoIIIC4GGL removed, or replaced by an implicit Runge-Kutta method of order 5 or 6 (#3314)
   - description: LobattoIIIC4GGL is not more accurate than LobattoIIIA4 in the solver study (rigidBodySpringDampers at 16 h0: 5.8e-5 against 1.0e-5; FFRFreducedOrder 2 to 3 times more accurate only at 4 to 8 h0) and costs 2.5 to 3 times its CPU time: three implicit stages, each with the multipliers of the GGL stabilization; its use is the reference of the study, with multipliers that do not alternate from step to step. Candidates of higher order with three implicit stages and no GGL multipliers: Radau IIA with 3 stages (order 5, stage order 3, L-stable, the constraints at the end of the step as in Radau3) and Lobatto IIIA with 4 stages (order 6, the first stage explicit, A-stable but not L-stable, so its multipliers alternate as those of LobattoIIIA4). The tableau of CSolverImplicitRungeKutta holds 3 stages; Lobatto IIIA with 4 needs 4. Open: the maintainer decides between removing LobattoIIIC4GGL (not released, no deprecation) and replacing it by Radau IIA of order 5 as the reference method; revision2026c step RG20.10.
-  - **remarks:** 2026-11-08: tried with Radau5 (\#3318) as the reference of the solver study; the removal kept as a patch, not committed. Radau5 serves for the ODE2, ODE2\_t and ODE1 groups (order 5 until the floor 1e-12), but not for the multipliers: its end multipliers at the fine steps of the reference scatter by 1e-4 relative (the rounding of the position constraints divided by h^2, \#3307), so every solver's AE error stops at 4.7e-4 (nPendulum), 6.9e-5 (sliderCrank3D), 6.1e-5 (FFRFreducedOrder), where the reference LobattoIIIC4GGL with its GGL multipliers resolved 1e-5 to 1e-8. Options for the maintainer: keep LobattoIIIC4GGL as the reference of the multipliers only; take the AE reference of Radau5 at coarser steps; or remove LobattoIIIC4GGL and accept the floor of the AE figures.
+  - **remarks:** 2026-11-08: tried with Radau5 (\#3318) as the reference of the solver study; the removal kept as a patch, not committed. Radau5 serves for the ODE2, ODE2\_t and ODE1 groups (order 5 until the floor 1e-12), but not for the multipliers: its end multipliers at the fine steps of the reference scatter by 1e-4 relative (the rounding of the position constraints divided by h^2, \#3307), so every solver's AE error stops at 4.7e-4 (nPendulum), 6.9e-5 (sliderCrank3D), 6.1e-5 (FFRFreducedOrder), where the reference LobattoIIIC4GGL with its GGL multipliers resolved 1e-5 to 1e-8. Options for the maintainer: keep LobattoIIIC4GGL as the reference of the multipliers only; take the AE reference of Radau5 at coarser steps; or remove LobattoIIIC4GGL and accept the floor of the AE figures.; Row scaling tested 2026-11-08 on sliderCrank3D and FFRFreducedOrder with LobattoIIIC4GGL, LobattoIIIA4, Radau3 and Radau5: the solver already scales position constraints by 1/h^2 and velocity constraints by 1/h. Without scaling, or with 1/h for all constraints, the error of the multipliers has the same floor at the same step sizes (h0/8 and smaller); a row scaling changes the conditioning and not the fixed point. Only LobattoIIIC4GGL has no floor down to h0/128.
   - date raised: 2026-11-07
 - `CHECK` `LOW EFF` `raised by: Claude-JG` Automatic step size of LobattoIIIA4 on the spatial slider crank: the error stays at 1e-7 for the tolerances 1e-5 to 1e-10 (#3313)
   - description: The solver study (solverConvergenceFigures.py, efficiency\_adaptive.png): LobattoIIIA4 with automatic step size on sliderCrank3D of modelLibrary.py takes 21 to 106 steps for the tolerances 1e-5 to 1e-10, but the relative error of the ODE2 coordinates stays at 1.2e-6 to 1.1e-7, while 106 constant steps give about 1e-10 and Radau3 with automatic steps reaches 2e-10. On the other models its error follows the tolerance. To be analyzed: the error estimate twoSteps with the Lie group nodes of the model, a single step with a large error (the first one, or one after a rejection), the interpolated output.

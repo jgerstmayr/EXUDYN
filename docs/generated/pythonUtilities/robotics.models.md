@@ -81,7 +81,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 
 - **function description**: generate the Staubli TX2-90L manipulator as robot dictionary, with the joint frames of its URDF (dhMode 'jointFrames': per link the joint type and the translation from the previous joint frame; all link frames parallel at q = 0, the arm upright); a 6R robot with a spherical wrist, for KinematicChain.InverseKinematicsAnalytic
 - **output**: robot dictionary for LinkDict2Robot
-- **notes**: the kinematics, the joint limits and the maximum joint velocities are those of tx2_90l.urdf of the ros-industrial staubli_experimental repository (https://github.com/ros-industrial/staubli_experimental, staubli_tx2_90_support); the URDF has no inertia data: the masses (about 77 kg of the arm without the base, of 114 kg in the data sheet) and the inertias of cylinders are estimates for simulation, not data of the manufacturer; the tool frame is the flange, 0.1 m after the wrist center; 'urdfGraphics' names the URDF file and its links for exudyn.robotics.urdfImport.AddURDFgraphics, which adds the meshes of the URDF
+- **notes**: the kinematics, the joint limits and the maximum joint velocities are those of tx2_90l.urdf of the ros-industrial staubli_experimental repository (https://github.com/ros-industrial/staubli_experimental, staubli_tx2_90_support); the URDF has no inertia data and the manufacturer gives only the total mass of 117 kg: the masses, centers of mass and inertias are those of the solids of the visual meshes with one density, 2032 kg/m^3, so that all links with the base (24.85 kg) have 117 kg; estimates for simulation; the tool frame is the flange, 0.1 m after the wrist center; 'urdfGraphics' names the URDF file and its links for exudyn.robotics.urdfImport.AddURDFgraphics, which adds the meshes of the URDF
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2blending.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2blending.py) (Ex), [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`robotCartesianPathsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCartesianPathsTest.py) (TM), [`robotDictionaryTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotDictionaryTest.py) (TM), [`robotFrictionEndStopsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotFrictionEndStopsTest.py) (TM), [`robotInverseDynamicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotInverseDynamicsTest.py) (TM), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM), [`trajectoryBlendingCartesianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/trajectoryBlendingCartesianTest.py) (TM), ...
@@ -90,7 +90,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2b
 (sec-models-linkdict2robot)=
 ## Function: LinkDict2Robot
 
-[`LinkDict2Robot(robotLinkDict, robotClass = None, initialConfiguration = None, friction = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L549)
+[`LinkDict2Robot(robotLinkDict, robotClass = None, initialConfiguration = None, friction = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L551)
 
 - **function description**: generate serial manipulator as robotClass object from robotLinkDict
 - **input**:
@@ -109,7 +109,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-models-linkdictmoddhkk2robot)=
 ## Function: LinkDictModDHKK2Robot
 
-[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L660)
+[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L662)
 
 - **function description**: special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
 - **input**:

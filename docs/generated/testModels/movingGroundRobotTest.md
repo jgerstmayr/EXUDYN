@@ -36,8 +36,6 @@ testIsActive = exu.sys.get('testIsActive', False)
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-#testIsActive = True
-sensorWriteToFile = False
 
 jointWidth=0.1
 jointRadius=0.06
@@ -118,83 +116,17 @@ baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPositio
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#build mbs robot model:
-robotDict = newRobot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker)
-    
-#   !!!!!IMPORTANT!!!!!:
-jointList = robotDict['jointList'] #must be stored there for the load user function
+#build mbs robot model, with the PD control of the links in the joints:
+for (i, link) in enumerate(newRobot.links):
+    link.SetPDcontrol(Pcontrol[i], Dcontrol[i])
+newRobot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
 
-unitTorques0 = robotDict['unitTorque0List'] #(left body)
-unitTorques1 = robotDict['unitTorque1List'] #(right body)
+#the control follows the trajectory, with the static torques compensated:
+newRobot.SetControl(trajectory, compensation='static')
+mbs.SetPreStepUserFunction(newRobot.PreStepControl)
 
-loadList0 = robotDict['jointTorque0List'] #(left body)
-loadList1 = robotDict['jointTorque1List'] #(right body)
-#print(loadList0, loadList1)
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#control robot
-compensateStaticTorques = True
-def ComputeMBSstaticRobotTorques(newRobot):
-    q=[]
-    for joint in jointList:
-        q += [mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2]] #z-rotation
-    HT=newRobot.JointHT(q)
-    return newRobot.StaticTorques(HT)
-
-#user function which is called only once per step, speeds up simulation drastically
-def PreStepUF(mbs, t):
-    if compensateStaticTorques:
-        staticTorques = ComputeMBSstaticRobotTorques(newRobot)
-    else:
-        staticTorques = np.zeros(len(jointList))
-    #compute load for joint number
-    for i in range(len(jointList)):
-        joint = i
-        phi = mbs.GetObjectOutput(jointList[joint], exu.OutputVariableType.Rotation)[2] #z-rotation
-        omega = mbs.GetObjectOutput(jointList[joint], exu.OutputVariableType.AngularVelocityLocal)[2] #z-angular velocity
-
-        #[u,v,a] = MotionInterpolator(t, robotTrajectory, joint) #OLD, until V1.1.135
-        [u,v,a] = trajectory.EvaluateCoordinate(t, joint)
-        
-    
-        torque = -(Pcontrol[joint]*(phi-u) + Dcontrol[joint]*(omega-v)) #negative sign in feedback control!
-        # torque = (Pcontrol[joint]*(phi+u) + Dcontrol[joint]*(omega+v)) #until V1.2.; but static Torque compensation is wrong in this case!
-        torque -= staticTorques[joint] #add static torque compensation
-        
-        load0 = torque * unitTorques0[i] #includes sign and correct unit-torque vector
-        load1 = torque * unitTorques1[i] #includes sign and correct unit-torque vector
-        
-    #     #write updated torque to joint loads, applied to left and right body
-        mbs.SetLoadParameter(loadList0[i], 'loadVector', list(load0))
-        mbs.SetLoadParameter(loadList1[i], 'loadVector', list(load1))
-    
-    return True
-
-mbs.SetPreStepUserFunction(PreStepUF)
-
-
-
-#add sensors:
-sJointRot = []
-sJointAngVel = []
-sJointTorque = []
-cnt = 0
-for jointLink in jointList:
-    sJointRot += [mbs.AddSensor(SensorObject(objectNumber=jointLink, 
-                               storeInternal=True,#fileName="solution/joint" + str(cnt) + "Rot.txt",
-                               outputVariableType=exu.OutputVariableType.Rotation,
-                               writeToFile = sensorWriteToFile))]
-    sJointAngVel += [mbs.AddSensor(SensorObject(objectNumber=jointLink, 
-                               storeInternal=True,#fileName="solution/joint" + str(cnt) + "AngVel.txt",
-                               outputVariableType=exu.OutputVariableType.AngularVelocityLocal,
-                               writeToFile = sensorWriteToFile))]
-    cnt+=1
-
-cnt = 0
-for load0 in robotDict['jointTorque0List']:
-    sJointTorque += [mbs.AddSensor(SensorLoad(loadNumber=load0,storeInternal=True,# fileName="solution/jointTorque" + str(cnt) + ".txt", 
-                                              writeToFile = sensorWriteToFile))]
-    cnt+=1
-
+#joint angles and joint torques, one sensor per quantity with the values of all joints:
+sensors = newRobot.AddSensors(mbs, [exu.OutputVariableType.Coordinates, exu.OutputVariableType.Force])
 
 
 mbs.Assemble()
@@ -253,75 +185,16 @@ if not testIsActive:
 
 lastRenderState = SC.renderer.GetState() #store model view
 
-#compute final torques:
-measuredTorques=[]
+#the torques at the end, scaled for the test:
+measuredTorques = 1e-2*np.array(mbs.GetSensorValues(sensors[exu.OutputVariableType.Force]))
+if not testIsActive:
+    exu.Print('joint torques =', mbs.GetSensorValues(sensors[exu.OutputVariableType.Force]))
+    exu.Print('joint angles =', mbs.GetSensorValues(sensors[exu.OutputVariableType.Coordinates]))
 
-for cnt, sensorNumber in enumerate(sJointTorque):
-    if not testIsActive:
-        exu.Print('sensor torque',cnt, '=', mbs.GetSensorValues(sensorNumber))
-    measuredTorques += [1e-2*mbs.GetSensorValues(sensorNumber)[2]]
+exu.Print("torques at tEnd=", 0.005*np.sum(measuredTorques))
+exu.sys['testResult'] = 0.005*np.sum(measuredTorques)
 
 if not testIsActive:
-    for cnt, sensorNumber in enumerate(sJointRot):
-        exu.Print('sensor rot ',cnt, '=', mbs.GetSensorValues(sensorNumber))
-
-
-fact=0.005 #to reach desired accuracy; #2026-09-09: switch 0.01->0.005 
-exu.Print("torques at tEnd=", fact*np.sum(measuredTorques))
-
-#add larger test tolerance for 32/64bits difference
-exu.sys['testResult'] = fact*np.sum(measuredTorques)   
-
-
-if not testIsActive:
-    
-    
-    mbs.PlotSensor(sJointTorque, components=2, closeAll=True, yLabel='joint torques (Nm)', title='joint torques')
-
-    mbs.PlotSensor(sJointRot, components=2, yLabel='joint angles (rad)', title='joint angles')
-
-    #V1.2.40, P39: with D[-1]=0.05: since 2022-04-22:
-    # sensor torque 0 = [  0.           0.         -12.68901871]
-    # sensor torque 1 = [-0.         -0.         76.45031947]
-    # sensor torque 2 = [-0.         -0.         12.97010176]
-    # sensor torque 3 = [ 0.00000000e+00  0.00000000e+00 -8.56924875e-05]
-    # sensor torque 4 = [-0.         -0.          0.08725323]
-    # sensor torque 5 = [ 0.0000000e+00  0.0000000e+00 -9.5769297e-07]
-    # sensor rot  0 = [-1.04899069e-15  3.05694259e-19 -3.19543456e-04]
-    # sensor rot  1 = [-4.57411886e-14 -1.77599905e-14  3.63829923e-01]
-    # sensor rot  2 = [ 4.68252006e-14 -1.78150803e-14  7.25569701e-01]
-    # sensor rot  3 = [-1.07990283e-13  1.95010674e-13  2.42757634e-07]
-    # sensor rot  4 = [ 1.07852866e-13 -2.06184741e-13  3.63658987e-01]
-    # sensor rot  5 = [ 1.84235149e-16 -6.26054764e-13 -5.07549126e-08]
-    # torques at tEnd= 0.7681856909852399 
-
-    #V1.2.40, P39: with D[-1]=0.1:
-    # sensor torque 0 = [  0.           0.         -12.68901812]
-    # sensor torque 1 = [-0.        -0.        76.4503195]
-    # sensor torque 2 = [-0.         -0.         12.97010177]
-    # sensor torque 3 = [ 0.0000000e+00  0.0000000e+00 -8.9097007e-05]
-    # sensor torque 4 = [-0.         -0.          0.08725323]
-    # sensor torque 5 = [-0.00000000e+00 -0.00000000e+00  1.09612342e-05]
-    # sensor rot  0 = [-1.04899069e-15  3.32799313e-19 -3.19543454e-04]
-    # sensor rot  1 = [-4.59632332e-14 -1.77794520e-14  3.63829923e-01]
-    # sensor rot  2 = [ 4.71643413e-14 -1.78734434e-14  7.25569701e-01]
-    # sensor rot  3 = [-1.07609037e-13  1.95343741e-13  2.42965135e-07]
-    # sensor rot  4 = [ 1.07471637e-13 -2.06279100e-13  3.63658987e-01]
-    # sensor rot  5 = [ 1.84106879e-16 -6.25874352e-13  8.28833899e-08]
-    # torques at tEnd= 0.7681857824086907 
-
-    #V1.2.37, P37: ==> uses wrong static torque compensation
-    # sensor torque 0 = [  0.           0.         -12.67938332]
-    # sensor torque 1 = [-0.         -0.         76.42613004]
-    # sensor torque 2 = [-0.         -0.         12.96641046]
-    # sensor torque 3 = [ 0.00000000e+00  0.00000000e+00 -8.93114211e-05]
-    # sensor torque 4 = [-0.         -0.          0.08723331]
-    # sensor torque 5 = [-0.0000000e+00 -0.0000000e+00  1.1143982e-05]
-    # sensor rot  0 = [ 1.60812265e-16 -2.71050543e-20  3.19257214e-04]
-    # sensor rot  1 = [ 5.06049354e-14 -1.91882065e-14 -3.63432530e-01]
-    # sensor rot  2 = [-4.07000942e-14  3.58791681e-14 -7.25182770e-01]
-    # sensor rot  3 = [ 9.91554982e-13  4.63740157e-13 -2.41708605e-07]
-    # sensor rot  4 = [-9.26617234e-13  3.52539928e-13 -3.63103888e-01]
-    # sensor rot  5 = [ 9.21913969e-18  3.74700271e-16 -8.34127775e-08]
-    # torques at tEnd= 0.7680031232065901
+    mbs.PlotSensor(sensors[exu.OutputVariableType.Force], components=list(range(6)), closeAll=True, yLabel='joint torques (Nm)', title='joint torques')
+    mbs.PlotSensor(sensors[exu.OutputVariableType.Coordinates], components=list(range(6)), yLabel='joint angles (rad)', title='joint angles')
 ```

@@ -1,0 +1,15 @@
+{
+  "number": 3363,
+  "title": "serialRobotTest.py and movingGroundRobotTest.py on Robot.SetControl",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "The two test models control their joints by the deprecated joint torque loads and their own PreStepUserFunction. Decided: both on the links PDcontrol, Robot.SetControl with the static compensation, PreStepControl and AddSensors now; the parameters themselves stay until the end of their deprecation period (#3361).",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 14:31",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "serialRobotTest.py and movingGroundRobotTest.py use the PD control of the links, Robot.SetControl with the static compensation, Robot.PreStepControl and Robot.AddSensors.",
+  "resolvedInVersion": "1.13.471"
+}

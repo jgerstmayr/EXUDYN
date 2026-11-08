@@ -431,7 +431,8 @@ def RobotFromURDFdata(robotData, gravity=[0, 0, -9.81], baseHT=None, toolHT=None
             toolLinkName of GetURDFrobotData), else the frame of the last link
         PDcontrol: (P, D), the same for all joints, or a list of one (P, D) per joint; (None, None): no control
         urdfFile: None or a URDF file (not xacro) from which the elements dynamics of the joints are read, as viscous
-            friction (damping) and Coulomb friction (friction) of the links; the Robotics Toolbox does not read them
+            friction (damping) and Coulomb friction (friction) of the links, since release 1.5 of the Robotics Toolbox does
+            not read them; this may change with a later release
         enableEndStops: enableEndStops of Robot; the limits of the joints are stored in the links in any case
 
     Returns:

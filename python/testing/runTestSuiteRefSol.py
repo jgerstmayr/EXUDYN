@@ -51,10 +51,10 @@ def TestExamplesReferenceSolution():
         'implicitRungeKuttaErrorEstimateTest.py': 2169, #new 2026-11-06: timeIntegration.errorEstimate, the step size of TrapezoidalGGL controlled (#3287)
         'solverOutputWithinStepTest.py': 5.000036595791131, #new 2026-11-06: the output of the C++ solvers at the multiples of the write periods, interpolated within the step (#3286)
         'urdfRobotHDF5Test.py': 11.896535862956235, #new 2026-11-06: a robot of a URDF file in the repository, its import stored as HDF5: masses from the meshes, corrected inertia, flipped joint, texture (#3285)
-        'robotInverseDynamicsTest.py': 14.002447714997835, #new 2026-11-05: KinematicChain.InverseDynamics, Robot.InverseDynamics, the dynamic compensation (#3276)
+        'robotInverseDynamicsTest.py': 14.00365089397392, #2026-11-08: the masses and inertias of ManipulatorStaubliTX2_90L from its meshes, 117 kg (#3358)
         'robotModelsTest.py': 14.429203529941592, #new 2026-11-05: the models of exudyn.robotics.models, their configurations and friction (#3277)
-        'robotDictionaryTest.py': 9.516012946428752, #new 2026-11-05: Robot.GetDictionary and SetDictionary, saved with SaveDictToHDF5 (#3267)
-        'robotFrictionEndStopsTest.py': 11.680923235698522, #new 2026-11-05: friction, end stops, q0, control and sensors of both models of Robot (#3270)
+        'robotDictionaryTest.py': 9.51611478174561, #2026-11-08: the masses and inertias of ManipulatorStaubliTX2_90L from its meshes, 117 kg (#3358)
+        'robotFrictionEndStopsTest.py': 11.67289361036345, #2026-11-08: the masses and inertias of ManipulatorStaubliTX2_90L from its meshes, 117 kg (#3358)
         'raytracerBackFaceTest.py': 0.7, #new 2026-11-05: raytracer.advanced.backFaceColor (#3275)
         'stlFileImportTest.py': 10.398437499999995, #2026-11-05: the file outward as Exudyn, a check of orientTriangles (#3275), before 9.398437499999998; new 2026-11-05: graphics.FromSTLfile without numpy-stl, the mass properties of the mesh (#3264)
         'appendSystemTest.py': 6.274157091191782,                     #new 2026-10-04: SC.AppendSystem of a copy and of the system of another container, deleted once (#2842)
@@ -298,7 +298,7 @@ def TestExamplesReferenceSolution():
         'manualExplicitIntegrator.py':2.0596986296922988,
         'matrixContainerTest.py':56.5,                              #new 2024-10-09
         'mecanumWheelRollingDiscTest.py':3.8895688162157533, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 3.8895688163077313; 2026-10-14: a Trajectory and TorsionalSpringDamper motors, 4 s (#948); before 0.2714267238324342 with torques controlled in a load user function, 0.5 s
-        'movingGroundRobotTest.py':0.003840899498205428, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 0.0038408994979840755; updated 2026-09-09, with factor 0.5 for tolerance too close
+        'movingGroundRobotTest.py':-0.003858384310591096, #2026-11-08: Robot.SetControl with the static compensation of the trajectory (#3363), the torques with the sign of the joint
         'NGsolveCMStest.py': 0.06953224923173146,                   #re-measured 2026-09-16 (#2466) against the COMMITTED testData/netgenTestMesh.pkl; the model rewrites that tracked file whenever its load fails, and the result then moves by 2.4e-8 (#2469); changed 2025-05-05 (new .pkl file with newer ngsolve); until 2024-10-11: 0.06953227339277462
         'objectFFRFreducedOrderAccelerations.py':0.10000570245889191,#before 2022-07-22 (because often small fails); 0.5000285122944431,#before 2022-02-20 (accuracy of internal sensors is higher): 0.5000285122930983,
         'objectFFRFreducedOrderTest.py':0.005355233268058772,      #until 2022-03-18 (div result by 5): 0.026776166340247865,
@@ -329,7 +329,7 @@ def TestExamplesReferenceSolution():
         'rotatingTableTest.py':7.838280050939175, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 7.838280045161607; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 7.838280044952864; 2026-10-15: step size 0.0025 instead of 0.005, the drift of TrapezoidalIndex2 below constraintDriftTolerance (#565); before 7.838680414273868; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 7.838680414273867;2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 7.838680375029852; until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
         'scissorPrismaticRevolute2D.py':26.722556541316987,          #2026-11-01: the analytic connector Jacobians, 48 Newton iterations fewer, as forODE2Connectors has no effect (#3205); 2022-07-11 (CState Parallel): 27.202556489044277
         'sensorUserFunctionTest.py':45.0,            
-        'serialRobotTest.py':0.7681856910283053, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 0.7681856909831933; until 2022-04-21: 0.7680031232063571 wrong static torque compensation
+        'serialRobotTest.py':-0.7716745035626993, #2026-11-08: Robot.SetControl with the static compensation of the trajectory (#3363), the torques with the sign of the joint
         #value changed 2026-09-18 (#2502): the joint helpers now
         #convert the joint position with a fixed summation order, so this result no longer
         #depends on which numpy release built the marker positions. It is the value numpy

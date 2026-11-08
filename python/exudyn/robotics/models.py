@@ -505,26 +505,28 @@ def ManipulatorStaubliTX2_90L():
     Note:
         the kinematics, the joint limits and the maximum joint velocities are those of tx2_90l.urdf of the
         ros-industrial staubli_experimental repository (https://github.com/ros-industrial/staubli_experimental,
-        staubli_tx2_90_support); the URDF has no inertia data: the masses (about 77 kg of the arm without the base, of
-        114 kg in the data sheet) and the inertias of cylinders are estimates for simulation, not data of the
-        manufacturer; the tool frame is the flange, 0.1 m after the wrist center; 'urdfGraphics' names the URDF file and
+        staubli_tx2_90_support); the URDF has no inertia data and the manufacturer gives only the total mass of 117 kg: the
+        masses, centers of mass and inertias are those of the solids of the visual meshes with one density, 2032 kg/m^3,
+        so that all links with the base (24.85 kg) have 117 kg; estimates for simulation; the tool frame is the flange, 0.1 m after the wrist center; 'urdfGraphics' names the URDF file and
         its links for exudyn.robotics.urdfImport.AddURDFgraphics, which adds the meshes of the URDF
     """
-    def Cylinder(mass, length, radius):
-        """the inertia of a cylinder along z about its center"""
-        Ixx = mass*(3*radius**2 + length**2)/12
-        return np.diag([Ixx, Ixx, 0.5*mass*radius**2])
-    #joint type, translation from the previous joint frame, mass, COM and length/radius of the cylinder, joint limits, max. velocity
-    data = [('Rz', [0, 0, 0.478],  35., [0, 0, -0.10],  0.30, 0.15, [-np.pi, np.pi], 3.927),
-            ('Ry', [0.050, 0, 0],  20., [0, 0, 0.25],   0.50, 0.09, [-2.269, 2.574], 3.142),
-            ('Ry', [0, 0.050, 0.500], 12., [0, 0, 0.10], 0.30, 0.08, [-2.531, 2.531], 4.712),
-            ('Rz', [0, 0, 0],      7.,  [0, 0, 0.30],   0.40, 0.06, [-4.712, 4.712], 7.854),
-            ('Ry', [0, 0, 0.550],  2.5, [0, 0, 0.04],   0.12, 0.05, [-2.007, 2.443], 6.458),
-            ('Rz', [0, 0, 0.100],  0.5, [0, 0, -0.01],  0.03, 0.04, [-4.712, 4.712], 10.996)]
+    #joint type, translation from the previous joint frame, mass, COM, inertia w.r.t. the COM, joint limits, max. velocity
+    data = [('Rz', [0, 0, 0.478], 35.43, [0.01892, 0.02473, -0.06493],
+             np.array([[0.477, -0.03419, -0.04824], [-0.03419, 0.4507, -0.06525], [-0.04824, -0.06525, 0.331]]), [-np.pi, np.pi], 3.927),
+            ('Ry', [0.050, 0, 0], 26.77, [0.002673, 0.2178, 0.1969],
+             np.array([[1.061, 0.0002005, -0.006268], [0.0002005, 1.116, 0.02207], [-0.006268, 0.02207, 0.1063]]), [-2.269, 2.574], 3.142),
+            ('Ry', [0, 0.050, 0.500], 15.73, [0.000000794, 0.02963, 0.01404],
+             np.array([[0.1288, 0.00001095, 0.00001438], [0.00001095, 0.09625, 0.01025], [0.00001438, 0.01025, 0.09174]]), [-2.531, 2.531], 4.712),
+            ('Rz', [0, 0, 0], 12.92, [-0.002375, 0.0002181, 0.3605],
+             np.array([[0.2049, 0.00006745, 0.004337], [0.00006745, 0.1935, -0.0005043], [0.004337, -0.0005043, 0.03803]]), [-4.712, 4.712], 7.854),
+            ('Ry', [0, 0, 0.550], 1.249, [0.00001963, -0.001016, 0.02131],
+             np.array([[0.002288, -0.000005246, 0.0000005301], [-0.000005246, 0.002431, -0.00002959], [0.0000005301, -0.00002959, 0.0009178]]), [-2.007, 2.443], 6.458),
+            ('Rz', [0, 0, 0.100], 0.05635, [-0.0002166, 0.000004719, -0.006105],
+             np.array([[0.00001704, 0.00000000008434, 0.00000002326], [0.00000000008434, 0.00001673, 0.0000000006083], [0.00000002326, 0.0000000006083, 0.00003236]]), [-4.712, 4.712], 10.996)]
     links = []
-    for (jointType, translation, mass, COM, length, radius, limits, maxVelocity) in data:
+    for (jointType, translation, mass, COM, inertia, limits, maxVelocity) in data:
         links += [{'jointType': jointType, 'preHT': exudyn.HT(translation=translation), 'mass': mass, 'COM': COM,
-                   'inertia': Cylinder(mass, length, radius), #w.r.t. COM
+                   'inertia': inertia,
                    'jointLimits': limits, 'maxVelocity': maxVelocity}]
     return {'links': links,
             'dhMode': 'jointFrames',

@@ -6427,6 +6427,27 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg11-14-1"></a>
+### RG11.14.1 - analysis of the raw pointers of the connector interface (2026-11-08, #3367)
+- 13 virtual functions of CObjectConnector, 33 generated declarations of the force functions, 18 implementation files and
+  about 15 places in CObjectConnector.cpp use raw pointers without the size; the hardcoded 2 is in 29 lines.
+- Compared: SlimArray with 2 items, std::span, FlatArray; recommended FlatArray<T> passed by value, FlatArray<const T> for
+  what is read, range checked like the other classes.
+
+<a id="rg19-15-1"></a>
+### RG19.15.1 - the two test models on Robot.SetControl (2026-11-08, #3363)
+- About 130 lines fewer in each file. The result changes from 0.76819 to -0.77167 (serialRobotTest): the sign of the joint
+  torque of AddSensors, and the compensation at the coordinates of the trajectory instead of the measured ones.
+- The friction note of RobotFromURDFdata names the release of the Robotics Toolbox (decision 18 of the design note).
+
+<a id="rg19-13-2"></a>
+### RG19.13.2 - the inertias of ManipulatorStaubliTX2_90L (2026-11-08, #3358)
+- The manual gives no inertias, only the total of 117 kg (taken with the base). The visual meshes enclose 0.05757 m^3 with
+  the base, so the density is 2032 kg/m^3; base 24.9 kg, links 35.4, 26.8, 15.7, 12.9, 1.24, 0.06 kg (arm 92.1 kg). The
+  convex collision meshes would give 1724 kg/m^3 and overestimate the slender parts.
+- All six fulfil `_InertiaProblems`. The inertias are numbers in models.py, so the model needs no files.
+- New references: robotInverseDynamicsTest, robotDictionaryTest, robotFrictionEndStopsTest; the sum of their checks is unchanged.
+
 <a id="rg19-12-1"></a>
 ### RG19.12.1 - RobotFromURDFdata, Robot.SaveToHDF5 and LoadFromHDF5 (2026-11-08, #3356)
 - `RobotFromURDFdata(robotData, gravity, baseHT, toolHT, PDcontrol, urdfFile, enableEndStops)`: replaces the loops of

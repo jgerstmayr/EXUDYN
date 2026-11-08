@@ -15,16 +15,14 @@ The steps of the first request are done (section 4). What remains are the steps 
 | RG19.10.2 | #3353 | the articulated dummy of humanRobotInteraction.py as a Robot in HDF5, in `RobotHDF5` of CommonData_git | - |
 | RG19.11.2 | #3355 | all other robot examples moved to `python/Examples/robotics` | - |
 | RG19.13.1 | #3357 | the inertia workflow of section 3.3: `densityForInertiaEstimation`, and the completion of partly given inertias as a function of its own | RG19.12.1 |
-| RG19.13.2 | #3358 | the masses and inertias of `ManipulatorStaubliTX2_90L` from a URDF with inertias, or estimated by RG19.13.1; all models checked by `_InertiaProblems` | RG19.13.1 |
 | RG19.14.1 | #3359 | a floating base for `Robot` by the one of `ObjectKinematicTree` (#1549) | - |
 | RG19.14.2 | #3360 | spotModel.py on the floating base and `RobotFromURDFdata`; ANYmal and the Mars rover imported the same way | RG19.14.1 |
-| RG19.15 | #3361 | when the deprecation period of `jointLoadUserFunctionList` and `createJointTorqueLoads` of `CreateRedundantCoordinateMBS` ends: remove them, serialRobotTest.py and movingGroundRobotTest.py on `SetControl` | the deprecation period |
+| RG19.15.2 | #3361 | when the deprecation period of `jointLoadUserFunctionList` and `createJointTorqueLoads` of `CreateRedundantCoordinateMBS` ends: remove them | the deprecation period |
 | RG19.16 | #3362 | serialRobotInteractiveLimits.py adapted to new features of the renderer and checked by hand (sliders, mouse drag, end stops); it has run only without windows so far | the renderer features |
 
 ### 1.2 Open decisions of the maintainer
 
-1. **Which URDF files with correct inertias** are the sources for RG19.13.2: a TX2-90 URDF with inertials is not known here; the one of ros-industrial has none.
-2. **When RG19.1 to RG19.8 close**: all their sub-steps are closed and no task above belongs to them; proposed: close them now.
+1. **The proposals of section 3.5**: leaving out links such as the fingers of the Panda, and one definition of models.py and the URDF files, with the robots to add.
 
 ### 1.3 Not revised, no step
 
@@ -184,6 +182,63 @@ and the connection to the Robotics Toolbox for Python (RTB) of P. Corke are revi
        possible so that the triangle inequality holds (`_CorrectedInertia`). Every link reports what was changed in
        `inertiaProblems`.
     4. *The result is stored* with the Robot (HDF5), so the estimate is made once and can be read and corrected.
+
+### 3.4 Decisions of 2026-11-08, second round (maintainer)
+
+16. **ManipulatorStaubliTX2_90L**: the manufacturer gives no inertias, only the total mass of 117 kg, taken as including
+    the base. The inertias are those of the solids of the visual meshes with one density, scaled to this mass:
+    2032 kg/m^3 (done, #3358).
+17. **The deprecated joint torque loads**: serialRobotTest.py and movingGroundRobotTest.py are on `SetControl` now
+    (RG19.15.1); the parameters are removed when the deprecation period ends (RG19.15.2, #3361).
+18. **The friction of a URDF** is read by `RobotFromURDFdata` because the Robotics Toolbox does not read it; the docstring
+    says so, as the toolbox may change.
+
+### 3.5 Proposals for the maintainer (2026-11-08)
+
+**(a) Leaving out links: the fingers of the Panda.** The import has no option for it; the URDF of the Panda gives 9
+joints with its two fingers, models.py gives 7 and no fingers. Recommended: one function on the data of
+GetURDFrobotData, without the toolbox and so testable in the suite,
+
+```python
+robotData = ReduceURDFrobotData(robotData, lockedJoints={'panda_finger_joint1':0.04, 'panda_finger_joint2':0.04},
+                                removedLinks=None)
+```
+
+- `lockedJoints` (the common case): the joint is fixed at the given value, the link is merged into its parent: the mass,
+  the center of mass and the inertia added by the parallel axis theorem, the graphics moved, its children reparented. The
+  gripper keeps its mass in the arm.
+- `removedLinks`: a link and all that hangs on it are left out, mass and graphics as well. "Only the first n links" is
+  `removedLinks=[name of link n+1]`, a list of link names rather than a number, since a tree has no first n.
+- The tool: unchanged, the frame of `toolLinkName` relative to the last joint link that remains; without a name
+  it is the frame of the last link (`toolHT` of `RobotFromURDFdata` can define it separately).
+- In models.py the same names: `ManipulatorFrankaEmikaPanda(gripper=None)` as now; see (b).
+
+**(b) The models and the URDF files as one definition.** Today the two differ: models.py has DH parameters for the
+Panda, UR5, Puma560, and the frames of the URDF for the TX2-90L, and other inertias. Proposed:
+
+1. *The role of models.py*: for each robot the definition that **runs without the toolbox and without files**: the
+   parameters of the URDF (kinematics, masses, inertias, limits, in the joint frames of the URDF: `dhMode='jointFrames'`)
+   and what a URDF does not give: friction, PD values, named configurations, maximum velocities where they are not in the
+   URDF, the source of estimated values, and simple collision shapes (spheres, capsules, boxes in the frames of the links)
+   instead of STL files. A DH table stays as an alternative where teaching needs it.
+2. *Generated once, kept by a test*: a function `urdfImport.RobotModelDictFromData(robotData)` writes the part from the
+   URDF as Python text to paste into the model; the additional parameters are added by hand in the same dict.
+3. *The workflow per robot*, the same each time:
+   URDF into CommonData_git, with its source in the README → `GetURDFrobotData` and `_InertiaProblems` → the inertias
+   by the workflow of decision 15 if they are missing, adjusted to the total mass → the dict for models.py by
+   `RobotModelDictFromData` → simple collision shapes fitted to the collision meshes (a capsule per link, by the
+   convex hull) → the additional parameters by hand.
+4. *The check*: a test `test_robotModelsAgainstURDF.py` for each model with `'urdfGraphics'`: forward kinematics at
+   random joints, masses, centers of mass, inertias, limits equal to the URDF read directly; skipped if CommonData_git is
+   not there. So the identity of model and URDF is measured instead of promised. The reading of the URDF for this check
+   needs no toolbox for a serial robot (`LoadURDFgraphics` reads the file already; kinematics from the `<joint>` elements).
+5. *The robots in models.py*, all running without shapes: the Puma560, UR5, Panda, TX2-90L now; proposed in addition:
+   **Spot** and **ANYmal** (floating base, RG19.14), the **Mars rover** (mobile base), **KUKA LBR iiwa** (a 7-axis arm in
+   the local data set), **Kinova Gen3**, **UR10**. A tree or a floating base needs `parent` in the link dict, which
+   `LinkDict2Robot` has to pass on.
+
+Proposed steps, not yet in the plan, in this order: `ReduceURDFrobotData`; the model of the Panda and UR5 on the frames of
+the URDF with the check; `RobotModelDictFromData`; simple collision shapes in the models; Spot and the others.
 
 ## 4. Done (2026-11-04 to 2026-11-06)
 

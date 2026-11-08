@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 453 | 1.13.469 |
+| 1.13 | Newborn | 456 | 1.13.472 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.472** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Analyze the raw pointers of the connector interface and recommend a transport class (#3367)
+  - description: The functions ComputeConnectorForceRigid and its relatives of CObjectConnector pass markers, forces and torques as raw pointers without their number, and the items loop to a hardcoded 2. Decided: analyze the use and recommend a class FlatArray that only transports pointer and size.
+  - **notes:** The raw pointers of the connector interface are analyzed in docs/dev/design/flatArray.md; a class FlatArray is recommended.
+  - date resolved: **2026-11-08 14:31**, date raised: 2026-11-08
+- **1.13.471** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` serialRobotTest.py and movingGroundRobotTest.py on Robot.SetControl (#3363)
+  - description: The two test models control their joints by the deprecated joint torque loads and their own PreStepUserFunction. Decided: both on the links PDcontrol, Robot.SetControl with the static compensation, PreStepControl and AddSensors now; the parameters themselves stay until the end of their deprecation period (\#3361).
+  - **notes:** serialRobotTest.py and movingGroundRobotTest.py use the PD control of the links, Robot.SetControl with the static compensation, Robot.PreStepControl and Robot.AddSensors.
+  - date resolved: **2026-11-08 14:31**, date raised: 2026-11-08
+- **1.13.470** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The inertias of ManipulatorStaubliTX2\_90L and the check of all models (#3358)
+  - description: The masses and inertias of the model are estimates. To be taken from a URDF with inertias or estimated by the inertia workflow; all models checked for physical inertias.
+  - **notes:** The masses, centers of mass and inertias of ManipulatorStaubliTX2\_90L are those of the solids of the visual meshes with one density, adjusted to the 117 kg of the manufacturer including the base.
+  - date resolved: **2026-11-08 14:31**, date raised: 2026-11-08
 - **1.13.469** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A Robot from the data of GetURDFrobotData; Robot saved to and loaded from HDF5 (#3356)
   - description: Scripts build the Robot of an imported URDF by hand. Decided: one function of urdfImport creates it with joint limits, friction and tool frame, and the class Robot saves and loads itself as HDF5.
   - **notes:** urdfImport.RobotFromURDFdata creates a Robot from the data of GetURDFrobotData, with joint limits, tool frame and the friction of the URDF file; Robot.SaveToHDF5 and LoadFromHDF5 store it with graphics and textures.
