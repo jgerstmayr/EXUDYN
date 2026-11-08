@@ -9,8 +9,8 @@
 #           Robot.PreStepControl, without compensation of gravity; sensors of the joint angles and of the tool
 #           position, the deviation of the tool from the straight line printed. The meshes of the URDF of the robot by
 #           urdfImport.AddURDFgraphics if the local robot data set is found; the robot with these graphics is then
-#           saved by Robot.GetDictionary and SaveDictToHDF5 to solution/staubliTX2_90L.h5, and loaded from there by
-#           LoadDictFromHDF5 and Robot.SetDictionary when the data set is not found (h5py and scipy needed); without
+#           saved by Robot.SaveToHDF5 to solution/staubliTX2_90L.h5, and loaded from there by
+#           Robot.LoadFromHDF5 when the data set is not found (h5py and scipy needed); without
 #           both, simple link graphics.
 #
 # Author:   Johannes Gerstmayr
@@ -37,26 +37,25 @@ mbs = SC.AddSystem()
 
 robotDict = ManipulatorStaubliTX2_90L()
 robot = LinkDict2Robot(robotDict)
-#the meshes of the URDF, if the local robot data set is there (tmp/URDF of the repository, or give its path here)
-robotDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tmp', 'URDF')
+#the meshes of the URDF, if the repository CommonData_git is beside this one (internal, #3352), or give the path here
+robotDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'URDF')
 urdf = robotDict['urdfGraphics']
 urdfFile = os.path.join(robotDataPath, urdf['file'])
-#the robot with its meshes as HDF5 file, a dict of Robot.GetDictionary
+#the robot with its meshes as HDF5 file
 robotFile = OutputFilePath('solution/staubliTX2_90L.h5', 'staubliTX2trajectories')
 try:
-    from exudyn.advancedUtilities import SaveDictToHDF5, LoadDictFromHDF5
-    import h5py, scipy #needed by SaveDictToHDF5 and LoadDictFromHDF5
+    import h5py, scipy #needed by Robot.SaveToHDF5 and LoadFromHDF5
     hasHDF5 = True
 except ImportError:
     hasHDF5 = False
 if os.path.exists(urdfFile):
     AddURDFgraphics(robot, urdfFile, urdf['links'], baseLinkName=urdf['baseLink'])
     if hasHDF5:
-        SaveDictToHDF5(robotFile, robot.GetDictionary())
+        robot.SaveToHDF5(robotFile)
         exu.Print('the robot with its meshes is saved to', robotFile)
 elif hasHDF5 and os.path.exists(robotFile):
     robot = Robot()
-    robot.SetDictionary(LoadDictFromHDF5(robotFile))
+    robot.LoadFromHDF5(robotFile)
     exu.Print('the robot with its meshes is loaded from', robotFile)
 else:
     exu.Print('the URDF meshes were not found at', urdfFile, '; download the package from', urdf['source'],

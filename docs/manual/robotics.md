@@ -45,9 +45,9 @@ gravity acts on all links. A robot is built in one of three ways:
   link before, for robots with branches;
 - from a URDF file, see {ref}`sec-robotics-urdf`.
 
-`robot.GetDictionary()` and `SetDictionary` store a robot with its graphics and textures as a dict, which
-`exudyn.advancedUtilities.SaveDictToHDF5` writes to a file; a robot read from a URDF is then loaded without the
-packages that read it.
+`robot.SaveToHDF5(file)` and `robot.LoadFromHDF5(file)` store a robot with its graphics and textures, the dict of
+`robot.GetDictionary()` and `SetDictionary`; a robot read from a URDF is then loaded without the packages that read
+it.
 
 ## Kinematics and dynamics without a model
 
@@ -122,8 +122,9 @@ frame turned by `flipHT`. The import gives the kinematics of the toolbox for the
 data sets tried (KUKA, Stäubli, ANYmal, Spot, a Mars rover). Many URDF files have no masses or inertias, which a
 dynamic model needs: every link reports the problems of its mass and inertia, `correctInertia=True` makes them
 physical, and `meshDensity` gives a link without mass that of its meshes. Textured meshes (.dae, .obj) are drawn with
-their texture. The example serialRobotURDF.py builds robots this way. `robot.GetDictionary()` saved as HDF5 keeps all of
-this, so that the robot loads without the toolbox; the test model urdfRobotHDF5Test.py loads a small robot of a URDF
+their texture. `RobotFromURDFdata` creates the `Robot` from these data, with the joint limits, the tool frame of the
+link named by `toolLinkName` and, from the URDF file, the friction of its joints. The example serialRobotURDF.py builds
+robots this way. `robot.SaveToHDF5` keeps all of this, so that the robot loads without the toolbox; the test model urdfRobotHDF5Test.py loads a small robot of a URDF
 file read with `meshDensity` and `correctInertia` this way.
 
 (sec-robotics-ros)=

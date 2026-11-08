@@ -6427,6 +6427,30 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg19-12-1"></a>
+### RG19.12.1 - RobotFromURDFdata, Robot.SaveToHDF5 and LoadFromHDF5 (2026-11-08, #3356)
+- `RobotFromURDFdata(robotData, gravity, baseHT, toolHT, PDcontrol, urdfFile, enableEndStops)`: replaces the loops of
+  serialRobotURDF.py and of `TestRobotFromURDF`; the stored testRobot.h5 is still equal to what the function creates
+  (run in venvP313rtb, which has no pytest: the test function called directly).
+- `GetURDFrobotData(toolLinkName=...)` gives 'toolHT', the calculation of the test moved into the import.
+- The Robotics Toolbox does not read `<dynamics damping friction>`: link.B and link.Tc stay at their defaults, against
+  decision 3 of the design note. The function reads these elements from `urdfFile` (a URDF, not xacro).
+
+<a id="rg19-11-1"></a>
+### RG19.11.1 - the Spot examples in Examples/robotics (2026-11-08, #3354)
+- git mv of the two files and of the data; spotModel.py opens `data/spotData.h5` beside its file, and runs from another
+  working directory (checked). The examples runner finds subfolders by itself.
+
+<a id="rg19-10-1"></a>
+### RG19.10.1 - the URDF files of the examples in CommonData_git (2026-11-08, #3352)
+- `CommonData_git/data/Exudyn/robotics/URDF`: staubli/staubli_tx2_90_support moved from tmp/URDF (4.7 MB), ur_description
+  (UR5 only, 6.7 MB) and panda_description (11 MB) copied from example-robot-data 4.0.9 in the cache of robot_descriptions;
+  67 files and a README with the sources. CommonData_git is not committed (the maintainer's repository).
+- The mesh names of the two URDF files of example-robot-data are `package://<folder>/...` there, so that LoadURDFrobot
+  finds them with the folder as package path.
+- staubliTX2trajectories.py and staubliTX2blending.py run with the meshes; serialRobotURDF.py reads UR5 and Panda from
+  there if it is present (checked in venvP313rtb: UR5 with 6 joints, the Panda with 9, its fingers included).
+
 <a id="rg20-10-1"></a>
 ### RG20.10.1 — Radau5, Radau IIA with three stages (2026-11-08, #3318)
 - C++: DynamicSolverType.Radau5 (16), the tableau of Radau IIA with c = ((4 - sqrt 6)/10, (4 + sqrt 6)/10, 1); the

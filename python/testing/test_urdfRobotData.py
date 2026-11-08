@@ -118,23 +118,10 @@ testRobotPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 def TestRobotFromURDF():
     """the Robot of testRobot.urdf, read by the toolbox: the masses of links without mass from their meshes (1000 kg/m^3),
     the inertias corrected, PD control, the tool frame of the link tool0 in the frame of the last Exudyn link"""
-    from exudyn.robotics.urdfImport import LoadURDFrobot
+    from exudyn.robotics.urdfImport import LoadURDFrobot, RobotFromURDFdata
     rtbRobot = LoadURDFrobot(os.path.join('urdf', 'testRobot.urdf'), testRobotPath)['robot']
-    data = GetURDFrobotData(rtbRobot, meshDensity=1000., correctInertia=True, verbose=0)
-    lastLink = data['linkList'][-1]
-    toolLink = [link for link in rtbRobot.links if link.name == 'tool0'][0]
-    zero = np.zeros(rtbRobot.n)
-    toolHT = lastLink['flipHT'] @ np.linalg.inv(np.array(rtbRobot.fkine(zero, end=lastLink['name']))) @ np.array(rtbRobot.fkine(zero, end=toolLink))
-    robot = Robot(gravity=[0, 0, -9.81], base=RobotBase(visualization=VRobotBase(graphicsData=data['graphicsBaseList'])),
-                  tool=RobotTool(HT=toolHT))
-    names = {'None': -1}
-    for (i, link) in enumerate(data['linkList']):
-        names[link['name']] = i
-        robot.AddLink(RobotLink(mass=link['mass'], COM=link['com'], inertia=link['inertiaCOM'], preHT=link['preHT'],
-                                jointType=link['jointType'], parent=names[link['parentName']], PDcontrol=(200., 4.),
-                                jointLimits=link['jointLimits'],
-                                visualization=VRobotLink(graphicsData=link['graphicsDataList'], showMBSjoint=False)))
-    return robot
+    data = GetURDFrobotData(rtbRobot, meshDensity=1000., correctInertia=True, verbose=0, toolLinkName='tool0')
+    return RobotFromURDFdata(data, PDcontrol=(200., 4.))
 
 def _Equal(a, b):
     """True if the two dicts of Robot.GetDictionary agree in keys, types and values, the numbers to 1e-12"""

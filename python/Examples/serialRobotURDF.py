@@ -21,9 +21,10 @@ import exudyn.graphics as graphics
 #from exudyn.rigidBodyUtilities import *
 from exudyn.robotics import *
 from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration, ProfilePTP
-from exudyn.robotics.urdfImport import GetRoboticsToolboxInternalModel, LoadURDFrobot, GetURDFrobotData
+from exudyn.robotics.urdfImport import GetRoboticsToolboxInternalModel, LoadURDFrobot, GetURDFrobotData, RobotFromURDFdata
 
 import numpy as np
+import os
 from numpy import linalg as LA
 from math import pi
 import sys
@@ -40,12 +41,20 @@ robotModels = ['UR3', 'UR5', 'UR10', 'Puma560', 'LBR', 'Panda', 'vx300', 'wx250'
 robotModels = ['Puma560'] #only one robot
 onlyShowModel = False #True: only graphics, no simulation
 listRobots = []
+#the URDF of UR5 and Panda in the repository CommonData_git beside this one (internal), if it is there (#3352); their
+#source is https://github.com/Gepetto/example-robot-data
+commonDataURDF = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'URDF')
+commonDataPackages = {'UR5': ('ur_description', 'urdf/ur5_robot.urdf'), 'Panda': ('panda_description', 'urdf/panda.urdf')}
 saveHDF5 = False        #use this to save robot data, allowing to load directly from there
 loadFromHDF5 = False#faster load; does not require roboticstoolbox, pymeshlab, etc.
 
 for modelCnt, modelName in enumerate(robotModels):
     if not loadFromHDF5:
-        urdfRobotDict = GetRoboticsToolboxInternalModel(modelName, ignoreURDFerrors=False)
+        if modelName in commonDataPackages and os.path.isdir(os.path.join(commonDataURDF, commonDataPackages[modelName][0])):
+            (package, urdfFile) = commonDataPackages[modelName]
+            urdfRobotDict = LoadURDFrobot(urdfFile, os.path.join(commonDataURDF, package))
+        else: #the Robotics Toolbox downloads the URDF of UR3, UR5, UR10 on first use (package robot_descriptions)
+            urdfRobotDict = GetRoboticsToolboxInternalModel(modelName, ignoreURDFerrors=False)
         
         urdf = urdfRobotDict['urdf']
         robot = urdfRobotDict['robot']
@@ -86,9 +95,6 @@ for modelCnt, modelName in enumerate(robotModels):
         raise ValueError('robot creation: inconsistent data!')
         
     
-    graphicsBaseList = robotDataDict['graphicsBaseList']
-    graphicsToolList = robotDataDict['graphicsToolList']
-    
     #some control parameters, per joint: (have to be replaced by real values)
     Pcontrol = np.array([1e5, 1e5, 1e5, 1e3, 1e3, 1e3]+[1e3]*(numberOfJoints-6))
     Dcontrol = np.array([1e3, 1e3, 1e2, 1e1, 1e1, 1e1]+[1e1]*(numberOfJoints-6))
@@ -98,54 +104,16 @@ for modelCnt, modelName in enumerate(robotModels):
         Pcontrol[-3:] *= 1e3 #we need stiffer controller!
         Dcontrol[-3:] *= 1e3
     
-    #changed to new robot structure July 2021:
-    mbsRobot = Robot(gravity=[0,0,9.81],
-                  base = RobotBase(HT = exu.HT(translation=offsetPosition),
-                                   visualization=VRobotBase(graphicsData=graphicsBaseList)),
-                  tool = RobotTool(HT=exu.HT(), visualization=VRobotTool(graphicsData=graphicsToolList)),
-                  referenceConfiguration = []) #referenceConfiguration created with 0s automatically
-    
-    
-    #++++++++++++++++++++++++++
-    #according numbering of links (0,1,2,...)
-    linkNumbers={'None':-1}
-    linkNumbers['base_link']=-1
+    #some robots have no mass and inertia: use some values to make them run
     for cnt, link in enumerate(linkList):
-        linkNumbers[link['name']] = cnt
-        
-    #++++++++++++++++++++++++++
-    print('*** load model '+modelName+', nJoints=',numberOfJoints)
-    for cnt, link in enumerate(linkList):
-        jointType = None
-        HT = link['preHT']
-        #if cnt <= 3: print('pos =',HT2translation(HT))
+        if link['mass'] == 0:
+            if cnt == 0: print('robot has mass=0: assuming some values instead!')
+            link['mass'] = 5/(1+2*cnt)
+            link['inertiaCOM'] = InertiaSphere(link['mass'], 0.25/(1+2*cnt)).InertiaCOM()
 
-        if len(link['graphicsDataList']) == 0: #no graphics loaded (no urdf, no pymeshlab)
-            visualization=VRobotLink(linkColor=graphics.colorList[cnt])
-        else:
-            jointWidth=0.1 #graphical parameters
-            jointRadius=0.06
-            visualization=VRobotLink(graphicsData=link['graphicsDataList'],
-                                     showMBSjoint=False,
-                                     jointWidth=0.12,jointRadius=0.01)
-        mass = link['mass']
-        inertia = link['inertiaCOM']
-        if mass == 0: #some robots have no mass/inertia => use some values to make it run
-            if cnt == 0 and mass == 0:
-                print('robot has mass=0: assuming some values instead!')
-            mass = 5/(1+2*cnt)
-            inertia = InertiaSphere(mass, 0.25/(1+2*cnt)).InertiaCOM()
-        # else:
-        #     print('mass',cnt,'=',mass)
-        mbsRobot.AddLink(RobotLink(mass=mass, 
-                                   parent = linkNumbers[link['parentName']],
-                                   COM=link['com'], 
-                                   inertia=inertia,
-                                   preHT=link['preHT'],
-                                   jointType=link['jointType'],
-                                   PDcontrol=(Pcontrol[cnt], Dcontrol[cnt]),
-                                   visualization=visualization
-                                   ))
+    print('*** load model '+modelName+', nJoints=',numberOfJoints)
+    mbsRobot = RobotFromURDFdata(robotDataDict, gravity=[0,0,9.81], baseHT=exu.HT(translation=offsetPosition),
+                                 PDcontrol=list(zip(Pcontrol, Dcontrol)))
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #configurations and trajectory

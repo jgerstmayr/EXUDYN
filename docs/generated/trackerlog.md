@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.466.dev1
+- Exudyn version = 1.13.469.dev1
 - last change = 2026-11-08
 - Number of issues = 3363
-- Number of resolved issues = 3243 (466 in current version)
+- Number of resolved issues = 3246 (469 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9057,20 +9057,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The inertia workflow of imported robots (#3357)
   - description: A mesh gives the surface only. Decided: an option densityForInertiaEstimation=None with one overall density of a link, and a documented function of its own which completes partly given inertias from the meshes and adapts them to the triangle inequality.
   - date raised: 2026-11-08
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A Robot from the data of GetURDFrobotData; Robot saved to and loaded from HDF5 (#3356)
-  - description: Scripts build the Robot of an imported URDF by hand. Decided: one function of urdfImport creates it with joint limits, friction and tool frame, and the class Robot saves and loads itself as HDF5.
-  - date raised: 2026-11-08
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` All robot examples in Examples/robotics (#3355)
   - description: Decided: python/Examples/robotics holds all robot examples; the remaining ones are moved there.
   - date raised: 2026-11-08
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The Spot examples and their data in Examples/robotics (#3354)
-  - description: spotModel.py opens spotData.h5 relative to the working directory. Decided: the Spot examples move to python/Examples/robotics, the data to robotics/data, read by a path relative to the file.
-  - date raised: 2026-11-08
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The articulated dummy of humanRobotInteraction.py as a stored Robot (#3353)
   - description: The example reads the STL files of the dummy from an absolute path of one machine. Decided: stored as a Robot in HDF5 in CommonData\_git/data/Exudyn/robotics/RobotHDF5.
-  - date raised: 2026-11-08
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The URDF files of the examples in CommonData\_git (#3352)
-  - description: The URDF folders of the Staubli TX2-90, the UR5 and the Franka Emika Panda are stored in CommonData\_git/data/Exudyn/robotics/URDF, beside the repository, and the examples find them by a relative path and say where to download them otherwise. Decided: not in the repository and not in tmp.
   - date raised: 2026-11-08
 - `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Two memory allocations per Jacobian evaluation with ObjectFFRFreducedOrder (#3351)
   - description: Found with \#3312: the system Jacobian of the model FFRFreducedOrder of modelLibrary.py (an ObjectFFRFreducedOrder on a generic joint) allocates 2 vectors per evaluation, with any factors of the positions and velocities; the implicit Runge-Kutta solvers evaluate it twice per step. To be located.

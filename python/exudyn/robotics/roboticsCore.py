@@ -593,6 +593,30 @@ class Robot:
         for texture in robotDict.get('textures', []):
             exudyn._compiledModule._SetTexture(texture)
 
+    def SaveToHDF5(self, fileName):
+        """save the robot with its graphics and textures to an HDF5 file, the dict of GetDictionary (#3356)
+
+        Args:
+            fileName: the file name, including its ending, usually .h5
+
+        Note:
+            requires h5py and scipy
+        """
+        from exudyn.advancedUtilities import SaveDictToHDF5
+        SaveDictToHDF5(fileName, self.GetDictionary())
+
+    def LoadFromHDF5(self, fileName):
+        """set the robot from an HDF5 file of SaveToHDF5, as SetDictionary does (#3356)
+
+        Args:
+            fileName: the file name, including its ending, usually .h5
+
+        Note:
+            requires h5py and scipy
+        """
+        from exudyn.advancedUtilities import LoadDictFromHDF5
+        self.SetDictionary(LoadDictFromHDF5(fileName))
+
     def AddLink(self, robotLink):
         """add a link to serial robot
         """

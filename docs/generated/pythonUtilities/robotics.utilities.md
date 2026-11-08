@@ -58,6 +58,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **function description**: DEPRECATED: moved to exudyn.robotics.urdfImport
 
 
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex)
+
+
 (sec-utilities-geturdfrobotdata)=
 ## Function: GetURDFrobotData
 

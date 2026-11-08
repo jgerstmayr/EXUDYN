@@ -22,7 +22,7 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'MakeCorkeRobot', 'LoadURDFgraphics',
+    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics',
     'AddURDFgraphics',
     ]
 
@@ -152,7 +152,8 @@ def GetURDFrobotData(robot,
                      exportMesh = False,
                      verbose=1,
                      meshDensity = 0.,
-                     correctInertia = False):
+                     correctInertia = False,
+                     toolLinkName = None):
     """Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
 
     Args:
@@ -169,6 +170,8 @@ def GetURDFrobotData(robot,
             triangle inequality gets its principal moments raised as little as possible, and a zero one that of the shape
             of the meshes with the mass of the link; every link reports the problems
             of its mass and inertia in 'inertiaProblems', and they are printed with verbose > 0 (#3282)
+        toolLinkName: if not None, the name of the link of the tool frame; the frame of this link relative to the last
+            joint link is returned in 'toolHT', for RobotFromURDFdata (#3356)
 
     Returns:
         returns dictionary with items linkList (the joint links, each with its preHT relative to the joint link above,
@@ -392,8 +395,83 @@ def GetURDFrobotData(robot,
             'staticJointValues': staticJointValues,
             'staticGraphicsList': staticGraphicsList}
     if exportMesh: robotData['meshSetList'] = meshSetList
+    if toolLinkName is not None:
+        toolLinks = [link for link in robot.links if link.name == toolLinkName]
+        if len(toolLinks) != 1:
+            raise ValueError('GetURDFrobotData: toolLinkName "' + str(toolLinkName) + '" is not a link of the robot')
+        zero = np.zeros(numberOfJoints)
+        robotData['toolHT'] = linkList[-1]['flipHT'] @ np.linalg.inv(np.array(robot.fkine(zero, end=linkList[-1]['name']))) @ np.array(robot.fkine(zero, end=toolLinks[0]))
 
     return robotData
+
+
+def _URDFjointDynamics(urdfFile):
+    """{name of the child link: (damping, friction)} of the joints of a URDF file with an element dynamics"""
+    import xml.etree.ElementTree as ElementTree
+    result = {}
+    for joint in ElementTree.parse(urdfFile).getroot().findall('joint'):
+        dynamics = joint.find('dynamics')
+        child = joint.find('child')
+        if dynamics is not None and child is not None:
+            result[child.get('link')] = (float(dynamics.get('damping', 0.)), float(dynamics.get('friction', 0.)))
+    return result
+
+
+def RobotFromURDFdata(robotData, gravity=[0, 0, -9.81], baseHT=None, toolHT=None, PDcontrol=(None, None), urdfFile=None,
+                      enableEndStops=False):
+    """Create a Robot from the data of GetURDFrobotData (or of a dict of it loaded from a file): the links with their
+    parents, masses, inertias, joint limits and graphics, the base graphics and the tool frame (#3356). A Robot is saved
+    with its graphics by Robot.SaveToHDF5, and loaded without the packages that read the URDF.
+
+    Args:
+        robotData: the dict of GetURDFrobotData
+        gravity: the gravity vector of the robot
+        baseHT: None or the homogeneous transformation of the base
+        toolHT: None or the frame of the tool relative to the last link; None: the 'toolHT' of robotData (argument
+            toolLinkName of GetURDFrobotData), else the frame of the last link
+        PDcontrol: (P, D), the same for all joints, or a list of one (P, D) per joint; (None, None): no control
+        urdfFile: None or a URDF file (not xacro) from which the elements dynamics of the joints are read, as viscous
+            friction (damping) and Coulomb friction (friction) of the links; the Robotics Toolbox does not read them
+        enableEndStops: enableEndStops of Robot; the limits of the joints are stored in the links in any case
+
+    Returns:
+        the Robot; a joint without limits (upper not larger than lower) has jointLimits=None
+
+    Example:
+        data = GetURDFrobotData(LoadURDFrobot('urdf/robot.urdf', packagePath)['robot'], toolLinkName='tool0')
+        robot = RobotFromURDFdata(data, PDcontrol=(1e4, 1e2))
+        robot.SaveToHDF5('robot.h5')
+    """
+    from exudyn.robotics.roboticsCore import Robot, RobotBase, RobotTool, RobotLink, VRobotBase, VRobotTool, VRobotLink
+    linkList = robotData['linkList']
+    #one (P, D) for all joints is a tuple or list of two numbers or None
+    perLink = len(PDcontrol) == len(linkList) and isinstance(PDcontrol[0], (list, tuple, np.ndarray))
+    if not perLink and len(PDcontrol) != 2:
+        raise ValueError('RobotFromURDFdata: PDcontrol must be (P, D) or a list of one (P, D) per joint, the robot has ' + str(len(linkList)) + ' joints')
+    if toolHT is None:
+        toolHT = robotData.get('toolHT', np.eye(4))
+    baseArguments = {} if baseHT is None else {'HT': baseHT}
+    robot = Robot(gravity=gravity, enableEndStops=enableEndStops,
+                  base=RobotBase(visualization=VRobotBase(graphicsData=list(robotData.get('graphicsBaseList', []))), **baseArguments),
+                  tool=RobotTool(HT=toolHT, visualization=VRobotTool(graphicsData=list(robotData.get('graphicsToolList', [])))))
+    dynamics = {} if urdfFile is None else _URDFjointDynamics(urdfFile)
+    linkNumbers = {'None': -1}
+    for (i, link) in enumerate(linkList):
+        linkNumbers[link['name']] = i
+        if link['parentName'] not in linkNumbers:
+            raise ValueError('RobotFromURDFdata: link ' + link['name'] + ': the parent "' + link['parentName'] + '" is not a joint link before it')
+        limits = link['jointLimits']
+        if len(link['graphicsDataList']) != 0:
+            visualization = VRobotLink(graphicsData=link['graphicsDataList'], showMBSjoint=False)
+        else:
+            visualization = VRobotLink(linkColor=graphics.colorList[i%16])
+        (damping, friction) = dynamics.get(link['name'], (0., 0.))
+        robot.AddLink(RobotLink(mass=link['mass'], COM=link['com'], inertia=link['inertiaCOM'], preHT=link['preHT'],
+                                jointType=link['jointType'], parent=linkNumbers[link['parentName']],
+                                PDcontrol=tuple(PDcontrol[i]) if perLink else tuple(PDcontrol),
+                                jointLimits=list(limits) if limits[1] > limits[0] else None,
+                                viscousFriction=damping, coulombFriction=friction, visualization=visualization))
+    return robot
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

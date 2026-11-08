@@ -6,7 +6,7 @@ entries RG19.*). The note leaves the repository when the steps close (WORKFLOW.m
 
 ## 1. State (2026-11-08)
 
-Everything of the first request is done (section 4). What remains are the steps below; each has its issue.
+The steps of the first request are done (section 4). What remains are the steps below; each has its issue.
 
 ### 1.1 Decided, to be done
 
@@ -202,3 +202,6 @@ and the connection to the Robotics Toolbox for Python (RTB) of P. Corke are revi
 | RG19.8.1, RG19.8.2 | #3279, #3284 | the serial robot examples on the revised interfaces; the examples runner gives `__file__` |
 | RG19.9 | #3281 | the chapter Robotics of the user manual and tutorialRobotics.ipynb |
 | RG11.8.20 | #2993 | closed as superseded by #3269 (see task 9) |
+| RG19.10.1 | #3352 | the URDF of the TX2-90, UR5 and Panda in CommonData_git, found by the examples |
+| RG19.11.1 | #3354 | the Spot examples and their data in Examples/robotics |
+| RG19.12.1 | #3356 | RobotFromURDFdata, Robot.SaveToHDF5 and LoadFromHDF5; the friction read from the URDF file, as the toolbox does not |

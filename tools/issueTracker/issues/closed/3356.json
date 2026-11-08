@@ -2,12 +2,16 @@
   "number": 3356,
   "title": "A Robot from the data of GetURDFrobotData; Robot saved to and loaded from HDF5",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "Scripts build the Robot of an imported URDF by hand. Decided: one function of urdfImport creates it with joint limits, friction and tool frame, and the class Robot saves and loads itself as HDF5.",
   "dateRaised": "2026-11-08",
   "deadline": "2027-05-07",
-  "file": "python/exudyn/robotics/urdfImport.py"
+  "dateResolved": "2026-11-08 12:59",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/robotics/urdfImport.py",
+  "releaseNotes": "urdfImport.RobotFromURDFdata creates a Robot from the data of GetURDFrobotData, with joint limits, tool frame and the friction of the URDF file; Robot.SaveToHDF5 and LoadFromHDF5 store it with graphics and textures.",
+  "resolvedInVersion": "1.13.469"
 }

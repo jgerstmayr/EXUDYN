@@ -197,6 +197,7 @@ RigidPendulumTest
 robotCartesianPathsTest
 robotDictionaryTest
 robotFrictionEndStopsTest
+robotFromURDFdataTest
 robotInverseDynamicsTest
 robotModelsTest
 robotTrajectoryProfilesTest
