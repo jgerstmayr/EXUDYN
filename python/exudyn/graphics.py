@@ -36,7 +36,7 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 __all__ = [
     'graphicsDataNormalsFactor', 'graphicsDataSwitchTriangleOrder', 'color', 'material',
     'colorList', 'Sphere', 'Spheres', 'Triangles6ToTriangles', 'SpheresToTriangleList', 'Lines',
-    'Circle', 'Text', 'Cuboid', 'BrickXYZ', 'Brick', 'Cylinder', 'Tube', 'Torus', 'RigidLink',
+    'Circle', 'Text', 'Cuboid', 'BrickXYZ', 'Brick', 'Cylinder', 'Tube', 'Torus', 'RigidLink', 'Capsule',
     'SolidOfRevolution', 'Arrow', 'Basis', 'Frame', 'Quad', 'CheckerBoard', 'SolidExtrusion',
     'LinkedCylinders', 'BallBearingRings', 'InvoluteGear', 'ToothedRack', 'BoundingBoxSingle',
     'BoundingBox', 'FromPointsAndTrigs', 'ToPointsAndTrigs', 'Transform', 'Move',
@@ -1303,6 +1303,37 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@_ReturnsRows
+def Capsule(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTiles=16, addEdges=False, edgeColor=color.black, addFaces=True):
+    """generate graphics data for a capsule, a cylinder closed by two half spheres: the shape of the option isCapsule0 of
+    ObjectContactCylinderCylinder and of ContactPrimitiveType.Capsule (#3366)
+
+    Args:
+        pAxis: the center of the first half sphere (3D list or np.array)
+        vAxis: the vector from pAxis to the center of the second half sphere; with length 0 the capsule is a sphere
+        radius: positive value representing the radius of the cylinder and of the half spheres
+        color: provided as list of 4 RGBA values
+        nTiles: used to determine the resolution around the axis, >= 3; the half spheres have nTiles/4 segments, at least 2
+        addEdges: True or number of edges along the mantle, see SolidOfRevolution
+        edgeColor: optional color for edges
+        addFaces: if False, no faces are added (only edges)
+
+    Returns:
+        graphicsData dictionary, to be used in visualization of EXUDYN objects
+    """
+    length = cMath.norm(vAxis)
+    if length == 0.:
+        return Sphere(point=pAxis, radius=radius, color=color, nTiles=nTiles)
+    nArc = max(2, int(nTiles/4)) #segments of each half sphere
+    contour = [[radius*cos(pi - 0.5*pi*i/nArc), radius*sin(pi - 0.5*pi*i/nArc)] for i in range(nArc + 1)]
+    contour += [[length + radius*cos(0.5*pi - 0.5*pi*i/nArc), radius*sin(0.5*pi - 0.5*pi*i/nArc)] for i in range(nArc + 1)]
+    contour[0][1] = 0. #exactly on the axis at the poles
+    contour[-1][1] = 0.
+    return SolidOfRevolution(pAxis=pAxis, vAxis=vAxis, contour=contour, color=color, nTiles=nTiles, smoothContour=True,
+                             addEdges=addEdges, edgeColor=edgeColor, addFaces=addFaces)
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   unused argument yet: contourNormals: if provided as list of 2D vectors, they prescribe the normals to the contour for smooth visualization; otherwise, contour is drawn flat
 @_ReturnsRows
 def SolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, smoothContour = False, 

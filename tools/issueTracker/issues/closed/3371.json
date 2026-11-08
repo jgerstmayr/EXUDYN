@@ -1,0 +1,15 @@
+{
+  "number": 3371,
+  "title": "ManipulatorStaubliTX2_90L: 0.4 kg of link 5 moved to link 6",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "The masses from the visual meshes give the last link only 0.06 kg, as the motor mass of the wrist is inside link 5 in the meshes. Decided: 0.4 kg moved from link 5 to link 6 by the densities of the two links; centers of mass unchanged, inertias scaled with the masses, the total mass unchanged.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 17:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ManipulatorStaubliTX2_90L: 0.4 kg of link 5 moved to link 6 by the densities of the two links.",
+  "resolvedInVersion": "1.13.479"
+}

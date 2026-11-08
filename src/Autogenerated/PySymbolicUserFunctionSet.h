@@ -439,6 +439,13 @@ public:
                     return this->EvaluateStdVector3D(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
                 };
         }
+        else if (itemTypeName == "ObjectContactPrimitiveConvex" && userFunctionName == "contactForceUserFunction")
+        {            //define the user function as lambda function of this
+            objectContactSphereTriangleContactForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, Real arg2, Real arg3, StdVector3D arg4, StdVector3D arg5, Real arg6)
+                {
+                    return this->EvaluateStdVector3D(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+                };
+        }
         else if (itemTypeName == "ObjectContactCylinderTriangle" && userFunctionName == "contactForceUserFunction")
         {            //define the user function as lambda function of this
             objectContactSphereTriangleContactForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, Real arg2, Real arg3, StdVector3D arg4, StdVector3D arg5, Real arg6)

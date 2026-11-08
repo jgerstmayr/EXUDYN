@@ -1,0 +1,11 @@
+{
+  "number": 3372,
+  "title": "urdfImport.ReduceURDFrobotData: locked joints and removed links of URDF robot data",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The import has no way to leave out links such as the fingers of the Panda. Decided: ReduceURDFrobotData(robotData, lockedJoints, removedLinks) on the data of GetURDFrobotData, a locked link merged into its parent with its mass, center of mass and inertia; design robotics.md section 3.5(a).",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07"
+}

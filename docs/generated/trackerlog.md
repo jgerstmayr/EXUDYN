@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.472.dev1
+- Exudyn version = 1.13.479.dev1
 - last change = 2026-11-08
-- Number of issues = 3369
-- Number of resolved issues = 3249 (472 in current version)
+- Number of issues = 3376
+- Number of resolved issues = 3256 (479 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,17 +9039,21 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` robotics.models: Spot, ANYmal, Mars rover, LBR iiwa and UR10 (#3375)
+  - description: Decided: these robots added to robotics.models, running without their shapes; a tree or a floating base needs parent in the link dict. Collision shapes only where the URDF offers them.
+  - date raised: 2026-11-08
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Simple collision shapes in robotics.models for Spot, UR5, Panda and the TX2-90L (#3374)
+  - description: The future trajectory planner needs collision shapes of the robots without STL files. Decided: spheres, capsules or boxes in the link frames, fitted to the collision meshes, for these four robots.
+  - **remarks:** Includes the check of the convex hull at the URDF import, volume against hull with a warning below 0.98, from design contactPrimitives.md section 9.1.
+  - date raised: 2026-11-08
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` robotics.models as the definition without files: the values of the URDF in its frames, a test against the URDF (#3373)
+  - description: models.py and the URDF files differ in frames and inertias. Decided: each model holds the kinematics, masses, inertias and limits of its URDF in the joint frames of the URDF, plus what a URDF does not give (friction, PD values, simple collision shapes), urdfImport.RobotModelDictFromData writes the part from the URDF, and a test compares each model with its URDF; design robotics.md section 3.5(b).
+  - date raised: 2026-11-08
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` urdfImport.ReduceURDFrobotData: locked joints and removed links of URDF robot data (#3372)
+  - description: The import has no way to leave out links such as the fingers of the Panda. Decided: ReduceURDFrobotData(robotData, lockedJoints, removedLinks) on the data of GetURDFrobotData, a locked link merged into its parent with its mass, center of mass and inertia; design robotics.md section 3.5(a).
+  - date raised: 2026-11-08
 - `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` FlatArray: the markers, forces and torques of the connector interface passed with their size (#3368)
   - description: The connector interface passes raw pointers without their number (see the analysis, design flatArray.md). Proposed, to be decided: a class FlatArray with only operator\[\], NumberOfItems, iterators and the pointer, range checked; the virtual functions of CObjectConnector, their generated declarations and implementations on it in one commit; the speed of the fast module unchanged.
-  - date raised: 2026-11-08
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` graphics.Capsule (#3366)
-  - description: exudyn.graphics has no capsule for the shape of a contact or a collision shape. Proposed, to be decided: graphics.Capsule with the arguments of graphics.Cylinder, as one SolidOfRevolution, design contactPrimitives.md section 9.4.
-  - date raised: 2026-11-08
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` The options isCapsule0 and isCapsule1 of ObjectContactCylinderCylinder (#3365)
-  - description: ObjectContactCylinderCylinder has cylinders only. Capsules are the usual collision shape of robot links, and ConvexShape has them. Proposed, to be decided: options as isHollowCylinder1, with the side on side contact points and the closed form of two segments, design contactPrimitives.md section 9.3.
-  - date raised: 2026-11-08
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` A contact between a convex polytope and a sphere, capsule, cylinder or cone (#3364)
-  - description: ObjectContactConvexConvex couples two polytopes only, while the kernel in EGeometry::ConvexShape takes any pair of convex shapes. The collision meshes of a URDF are convex only by convention (measured: the UR5 ones are not). Proposed, to be decided: one item ObjectContactPrimitiveConvex with the primitive by a type parameter and the check of the convex hull at the import, design contactPrimitives.md section 9.
   - date raised: 2026-11-08
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` serialRobotInteractiveLimits.py with the new renderer features, checked by hand (#3362)
   - description: The example (sliders, mouse drag, end stops) has run only without windows. Decided: adapted later with new features of the renderer.
@@ -9075,10 +9079,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Two memory allocations per Jacobian evaluation with ObjectFFRFreducedOrder (#3351)
   - description: Found with \#3312: the system Jacobian of the model FFRFreducedOrder of modelLibrary.py (an ObjectFFRFreducedOrder on a generic joint) allocates 2 vectors per evaluation, with any factors of the positions and velocities; the implicit Runge-Kutta solvers evaluate it twice per step. To be located.
   - date raised: 2026-11-08
-- `CHECK` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` LobattoIIIC4GGL removed, or replaced by an implicit Runge-Kutta method of order 5 or 6 (#3314)
-  - description: LobattoIIIC4GGL is not more accurate than LobattoIIIA4 in the solver study (rigidBodySpringDampers at 16 h0: 5.8e-5 against 1.0e-5; FFRFreducedOrder 2 to 3 times more accurate only at 4 to 8 h0) and costs 2.5 to 3 times its CPU time: three implicit stages, each with the multipliers of the GGL stabilization; its use is the reference of the study, with multipliers that do not alternate from step to step. Candidates of higher order with three implicit stages and no GGL multipliers: Radau IIA with 3 stages (order 5, stage order 3, L-stable, the constraints at the end of the step as in Radau3) and Lobatto IIIA with 4 stages (order 6, the first stage explicit, A-stable but not L-stable, so its multipliers alternate as those of LobattoIIIA4). The tableau of CSolverImplicitRungeKutta holds 3 stages; Lobatto IIIA with 4 needs 4. Open: the maintainer decides between removing LobattoIIIC4GGL (not released, no deprecation) and replacing it by Radau IIA of order 5 as the reference method; revision2026c step RG20.10.
-  - **remarks:** 2026-11-08: tried with Radau5 (\#3318) as the reference of the solver study; the removal kept as a patch, not committed. Radau5 serves for the ODE2, ODE2\_t and ODE1 groups (order 5 until the floor 1e-12), but not for the multipliers: its end multipliers at the fine steps of the reference scatter by 1e-4 relative (the rounding of the position constraints divided by h^2, \#3307), so every solver's AE error stops at 4.7e-4 (nPendulum), 6.9e-5 (sliderCrank3D), 6.1e-5 (FFRFreducedOrder), where the reference LobattoIIIC4GGL with its GGL multipliers resolved 1e-5 to 1e-8. Options for the maintainer: keep LobattoIIIC4GGL as the reference of the multipliers only; take the AE reference of Radau5 at coarser steps; or remove LobattoIIIC4GGL and accept the floor of the AE figures.; Row scaling tested 2026-11-08 on sliderCrank3D and FFRFreducedOrder with LobattoIIIC4GGL, LobattoIIIA4, Radau3 and Radau5: the solver already scales position constraints by 1/h^2 and velocity constraints by 1/h. Without scaling, or with 1/h for all constraints, the error of the multipliers has the same floor at the same step sizes (h0/8 and smaller); a row scaling changes the conditioning and not the fixed point. Only LobattoIIIC4GGL has no floor down to h0/128.
-  - date raised: 2026-11-07
 - `CHECK` `LOW EFF` `raised by: Claude-JG` Automatic step size of LobattoIIIA4 on the spatial slider crank: the error stays at 1e-7 for the tolerances 1e-5 to 1e-10 (#3313)
   - description: The solver study (solverConvergenceFigures.py, efficiency\_adaptive.png): LobattoIIIA4 with automatic step size on sliderCrank3D of modelLibrary.py takes 21 to 106 steps for the tolerances 1e-5 to 1e-10, but the relative error of the ODE2 coordinates stays at 1.2e-6 to 1.1e-7, while 106 constant steps give about 1e-10 and Radau3 with automatic steps reaches 2e-10. On the other models its error follows the tolerance. To be analyzed: the error estimate twoSteps with the Lie group nodes of the model, a single step with a large error (the first one, or one after a rejection), the interpolated output.
   - **remarks:** 2026-11-08 analysis: reproduced (sliderCrank3D, automatic steps from 2e-2, errorEstimate twoSteps): tol 1e-7..1e-10 end error 4.7e-7..1.4e-7 with 33..105 steps, while 105 constant steps would give 5e-10 (constant steps order 3.99). The error is in the rotation of the crank (1.4e-7), grows with time. Radau3 converges with the same nodes; LobattoIIIA4 converges on massOscillator, nPendulum, rigidBodyJoints and on the slider crank with Euler parameter nodes (1.9e-9 at 1e-10, 57 steps). So: LobattoIIIA4 + Lie group nodes (RotVecLG) + changing step size. Not the scaling of the carried-over first stage (a0, z0 are the unscaled last stage). Next: instrument the Lie group stage composition and the explicit first stage across a change of h. Also: both solvers halve the first step 10 times to the minimum 1e-8, the estimate of the first step does not shrink with h.

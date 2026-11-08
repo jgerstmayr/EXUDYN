@@ -6427,6 +6427,36 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg19-13-3"></a>
+### RG19.13.3 - 0.4 kg of link 5 moved to link 6 of the TX2-90L (2026-11-08, #3371)
+- The total of 117 kg unchanged; three test references.
+    
+<a id="rg20-10-4"></a>
+### RG20.10.4 - recommendations for the dynamic solvers (2026-11-08, #3370)
+- The recommendations of the maintainer; VelocityVerlet said to be still under development, the explicit solvers without constraints.
+    
+<a id="rg20-10-3"></a>
+### RG20.10.3 - the multipliers of the reference at acceleration level, the study extended (2026-11-08, #3369)
+- Measured on the end states at h0/512: the multipliers at acceleration level of LobattoIIIC4GGL, LobattoIIIA4 and Radau5 agree to 1e-12 (sliderCrank3D, FFRFreducedOrder), their own multipliers differ by 1e-3; no floor in any solver down to h0/128 (Radau5 order 5, LobattoIIIC4GGL order 4 on FFRFreducedOrder). tmp/ImplicitRK/accLevelReport.txt.
+    - No C++ change: MultipliersFromAccelerationLevel in the study script sets the end state as initial state and reads the initial-acceleration solve.
+    - LobattoIIIC4GGL stays the reference and a solver (#3314 closed); the figures show the solvers' own multipliers, with the V at small steps.
+    - VelocityVerlet has order 1 on both unconstrained models, as their forces depend on the velocities.
+    - 12 PNG replaced by SVG (HTML) and PDF (LaTeX) by the wildcard of the figure directive.
+    
+<a id="rg9-13-3"></a>
+### RG9.13.3 - graphics.Capsule (2026-11-08, #3366)
+- The arguments of graphics.Cylinder without those of partial cylinders; the volume of the surface within 2 % at 64 tiles, length 0 gives a sphere.
+    
+<a id="rg9-13-2"></a>
+### RG9.13.2 - isCapsule0 and isCapsule1 of ObjectContactCylinderCylinder (2026-11-08, #3365)
+- Two capsules by the closest points of their segments and the side points; a capsule on a cap by the two ends of its segment over the cap.
+    - A capsule together with isHollowCylinder1 is refused for both shapes, simpler than the recommendation of the design note (only the hollow one).
+    
+<a id="rg9-13-1"></a>
+### RG9.13.1 - ObjectContactPrimitiveConvex (2026-11-08, #3364)
+- Enum ContactPrimitiveType; a face of a polytope is clipped as the union of its coplanar triangles (Face::Polygon); the polytope class and its drawing moved to ContactPrimitivePoints.h.
+    - capsulePrimitiveContactTest.py: sphere, capsule, cylinder, cone on a box rest on 1, 2, 3, 3 points at the exact heights.
+    
 <a id="rg11-14-1"></a>
 ### RG11.14.1 - analysis of the raw pointers of the connector interface (2026-11-08, #3367)
 - 13 virtual functions of CObjectConnector, 33 generated declarations of the force functions, 18 implementation files and

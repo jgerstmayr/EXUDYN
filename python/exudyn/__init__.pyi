@@ -178,6 +178,7 @@ from exudyn.misc.mainSystemExtensions import MainSystemCreateCylinderTriangleCon
 from exudyn.misc.mainSystemExtensions import MainSystemCreateConeConeContact as _MainSystemCreateConeConeContact
 from exudyn.misc.mainSystemExtensions import MainSystemCreateConeTriangleContact as _MainSystemCreateConeTriangleContact
 from exudyn.misc.mainSystemExtensions import MainSystemCreateConvexConvexContact as _MainSystemCreateConvexConvexContact
+from exudyn.misc.mainSystemExtensions import MainSystemCreatePrimitiveConvexContact as _MainSystemCreatePrimitiveConvexContact
 from exudyn.misc.mainSystemExtensions import MainSystemCreateKinematicTree as _MainSystemCreateKinematicTree
 from exudyn.misc.mainSystemExtensions import MainSystemCreateFFRFReducedOrderObject as _MainSystemCreateFFRFReducedOrderObject
 from exudyn.misc.mainSystemExtensions import MainSystemCreateForce as _MainSystemCreateForce
@@ -745,6 +746,18 @@ class JournalBearingModel(Enum):
     """the infinitely short bearing of Ocvirk, for a length/diameter ratio below about 0.5"""
     Long = int
     """the infinitely long bearing of Sommerfeld, with the half-film (Guembel) condition"""
+
+
+class ContactPrimitiveType(Enum):
+    """The enumeration type ContactPrimitiveType selects the shape of marker 0 of ObjectContactPrimitiveConvex, the parameter primitiveType; the integers 0 to 3 are accepted for it as well (#3364)."""
+    Sphere = int
+    """a sphere of the radius"""
+    Capsule = int
+    """a capsule: the radius and the length between the centers of its half spheres"""
+    Cylinder = int
+    """a finite cylinder of the radius and the length"""
+    Cone = int
+    """a truncated cone with the length, the radius at -length/2 and radius1 at +length/2"""
 
 
 class MatrixContainer:
@@ -4337,6 +4350,7 @@ class MainSystem:
     CreateConeConeContact = _MainSystemCreateConeConeContact
     CreateConeTriangleContact = _MainSystemCreateConeTriangleContact
     CreateConvexConvexContact = _MainSystemCreateConvexConvexContact
+    CreatePrimitiveConvexContact = _MainSystemCreatePrimitiveConvexContact
     CreateKinematicTree = _MainSystemCreateKinematicTree
     CreateFFRFReducedOrderObject = _MainSystemCreateFFRFReducedOrderObject
     CreateForce = _MainSystemCreateForce

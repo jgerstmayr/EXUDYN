@@ -4,7 +4,7 @@
 * @details		Details:
 *				- a contact has up to N points, each with a block of 3 data coordinates: the gap, the norm of the
 *				  tangential velocity and the impact velocity of the last post Newton step
-*				- used by ObjectContactCylinderCylinder, CylinderTriangle and ConvexConvex
+*				- used by ObjectContactCylinderCylinder, CylinderTriangle, ConvexConvex and PrimitiveConvex
 *
 * @author		Gerstmayr Johannes
 * @date			2026-11-07
@@ -47,6 +47,93 @@ namespace ContactPoints {
 		Vector3D point0, point1, normal;
 		Real gap;
 	};
+
+	constexpr Real faceTolerance = 1e-6;	//!< a normal within this of the normal of a face is along it
+
+	//! a convex polytope: its points and triangles in the frame of its marker, and the frame
+	struct ConvexPolytope
+	{
+		const Matrix& points;
+		const MatrixI& triangles;
+		Matrix3D rotation;
+		Vector3D position;
+		ConvexPolytope(const Matrix& pointsInit, const MatrixI& trianglesInit, const MarkerData& marker) :
+			points(pointsInit), triangles(trianglesInit), rotation(marker.orientation), position(marker.position) {}
+
+		Vector3D LocalPoint(Index i) const { return Vector3D({ points(i, 0), points(i, 1), points(i, 2) }); }
+		Vector3D Point(Index i) const { return position + rotation * LocalPoint(i); }
+		//! the global unit normal of triangle t, by the order of its points
+		Vector3D TriangleNormal(Index t) const
+		{
+			Vector3D p0 = LocalPoint(triangles(t, 0));
+			Vector3D normal = (LocalPoint(triangles(t, 1)) - p0).CrossProduct(LocalPoint(triangles(t, 2)) - p0);
+			normal.Normalize();
+			return rotation * normal;
+		}
+		EGeometry::ConvexShape Convex() const
+		{
+			EGeometry::ConvexShape shape;
+			shape.type = EGeometry::ConvexShapeType::Points;
+			shape.pointRows = points.GetDataPointer();
+			shape.numberOfPointRows = points.NumberOfRows();
+			return shape;
+		}
+
+		//! the face whose outward normal is the direction within the tolerance: its normal and a point of it; false if there is none
+		bool Face(const Vector3D& direction, Vector3D& faceNormal, Vector3D& facePoint, Real tolerance = faceTolerance) const
+		{
+			Real best = -2.;
+			for (Index t = 0; t < triangles.NumberOfRows(); t++)
+			{
+				Vector3D normal = TriangleNormal(t);
+				Real along = normal * direction;
+				if (along > best) { best = along; faceNormal = normal; facePoint = Point(triangles(t, 0)); }
+			}
+			return best > 1. - tolerance;
+		}
+
+		//! true if x, projected along the faceNormal, lies in a triangle of the face with this normal
+		bool OverFace(const Vector3D& faceNormal, const Vector3D& x) const
+		{
+			for (Index t = 0; t < triangles.NumberOfRows(); t++)
+			{
+				if (TriangleNormal(t) * faceNormal <= 1. - faceTolerance) { continue; }
+				Vector3D p[3] = { Point(triangles(t, 0)), Point(triangles(t, 1)), Point(triangles(t, 2)) };
+				bool inside = true;
+				for (Index i = 0; i < 3 && inside; i++)
+				{
+					Vector3D edgeNormal = faceNormal.CrossProduct(p[(i + 1) % 3] - p[i]); //towards the inside for an outward normal
+					Real size = (p[(i + 1) % 3] - p[i]).GetL2NormSquared();
+					inside = edgeNormal * (x - p[i]) >= -1e-12 * size;
+				}
+				if (inside) { return true; }
+			}
+			return false;
+		}
+	};
+
+	//! the triangles of a polytope in the frame of a marker
+	inline void DrawPolytope(VisualizationSystem* vSystem, Index markerNumber, const Matrix& points, const MatrixI& triangles,
+		const Float4& color, Index itemID)
+	{
+		Vector3D position;
+		Matrix3D A;
+		vSystem->systemData->GetCMarkers()[markerNumber]->GetPosition(*vSystem->systemData, position, ConfigurationType::Visualization);
+		vSystem->systemData->GetCMarkers()[markerNumber]->GetRotationMatrix(*vSystem->systemData, A, ConfigurationType::Visualization);
+		std::array<Float4, 3> colors = { color, color, color };
+		for (Index t = 0; t < triangles.NumberOfRows(); t++)
+		{
+			std::array<Vector3D, 3> nodes;
+			for (Index k = 0; k < 3; k++)
+			{
+				Index p = triangles(t, k);
+				nodes[k] = position + A * Vector3D({ points(p, 0), points(p, 1), points(p, 2) });
+			}
+			Vector3D normal = EGeometry::ComputeTriangleNormal(nodes);
+			std::array<Vector3D, 3> normals = { normal, normal, normal };
+			vSystem->graphicsData.AddTriangle(nodes, normals, colors, itemID);
+		}
+	}
 
 	//! the contact points of the current configuration and the distance of the shapes
 	template<Index N>

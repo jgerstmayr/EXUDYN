@@ -511,6 +511,17 @@ class JournalBearingModel(Enum):
     Long = int
     """the infinitely long bearing of Sommerfeld, with the half-film (Guembel) condition"""
 
+class ContactPrimitiveType(Enum):
+    """The enumeration type ContactPrimitiveType selects the shape of marker 0 of ObjectContactPrimitiveConvex, the parameter primitiveType; the integers 0 to 3 are accepted for it as well (#3364)."""
+    Sphere = int
+    """a sphere of the radius"""
+    Capsule = int
+    """a capsule: the radius and the length between the centers of its half spheres"""
+    Cylinder = int
+    """a finite cylinder of the radius and the length"""
+    Cone = int
+    """a truncated cone with the length, the radius at -length/2 and radius1 at +length/2"""
+
 #stub information for class MatrixContainer functions
 class MatrixContainer:
     """The MatrixContainer is a versatile representation for dense and sparse matrices.

@@ -277,6 +277,13 @@
 		.value("Long", JournalBearingModel::Long, "the infinitely long bearing of Sommerfeld, with the half-film (Guembel) condition")
 		;
 
+  py::enum_<ContactPrimitiveType>(m, "ContactPrimitiveType")
+		.value("Sphere", ContactPrimitiveType::Sphere, "a sphere of the radius")
+		.value("Capsule", ContactPrimitiveType::Capsule, "a capsule: the radius and the length between the centers of its half spheres")
+		.value("Cylinder", ContactPrimitiveType::Cylinder, "a finite cylinder of the radius and the length")
+		.value("Cone", ContactPrimitiveType::Cone, "a truncated cone with the length, the radius at -length/2 and radius1 at +length/2")
+		;
+
 
         m.def("Help", &PyHelp, "Show basic help information");
         m.def("StartRenderer", &PyStartOpenGLRenderer, "DEPRECATED; Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g., Spyder; removed in 2029", py::arg("verbose") = 0, py::arg("deprecationWarning") = true);

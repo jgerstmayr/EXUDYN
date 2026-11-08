@@ -1,0 +1,11 @@
+{
+  "number": 3375,
+  "title": "robotics.models: Spot, ANYmal, Mars rover, LBR iiwa and UR10",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Decided: these robots added to robotics.models, running without their shapes; a tree or a floating base needs parent in the link dict. Collision shapes only where the URDF offers them.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07"
+}

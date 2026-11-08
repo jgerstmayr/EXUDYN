@@ -489,4 +489,12 @@ enum class JournalBearingModel {
     Long = 1   //!< the infinitely long bearing of Sommerfeld, with the half-film (Guembel) condition
 };
 
+//! the shape of ObjectContactPrimitiveConvex (#3364)
+enum class ContactPrimitiveType {
+    Sphere = 0,   //!< a sphere of the radius
+    Capsule = 1,  //!< a capsule: the radius and the length between the centers of its half spheres
+    Cylinder = 2, //!< a finite cylinder of the radius and the length
+    Cone = 3      //!< a truncated cone with the length, the radius at -length/2 and radius1 at +length/2
+};
+
 #endif //ENUMTYPES__H

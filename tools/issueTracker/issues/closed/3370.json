@@ -1,0 +1,15 @@
+{
+  "number": 3370,
+  "title": "Recommendations for the dynamic solvers in the solver manual",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The manual compares the dynamic solvers but does not say which to take. Decided: a section after the convergence and efficiency section, with the warning on the algebraic coordinates at small steps and how to repeat the study.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 17:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The solver manual recommends a dynamic solver per kind of problem and warns of the growth of the error of the algebraic coordinates at very small steps.",
+  "resolvedInVersion": "1.13.478"
+}

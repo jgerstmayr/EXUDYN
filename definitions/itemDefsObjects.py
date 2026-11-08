@@ -14260,7 +14260,7 @@ definitions.append(ItemDefinition(
 """,
     author=r'Gerstmayr Johannes',
     cParentClass=ParentClassCObjectConnector,
-    overallDescription=r'A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereTriangle.',
+    overallDescription=r'A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims, or capsules by the options isCapsule0 and isCapsule1; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereTriangle.',
     classType=ClassTypeObject,
     miniExample=r"""    #a short cylinder (a disc) dropped onto a cylinder lying along the x axis, fixed to the ground
     inertia = InertiaCylinder(density=1000, length=0.1, outerRadius=0.1, axis=2)
@@ -14315,6 +14315,13 @@ definitions.append(ItemDefinition(
     that of the body of marker 1 relative to that of marker 0,
     $\LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (\LU{0}{\pv}_{c,k} - \LU{0}{\pv}_{m1}) - \LU{0}{\vv}_{m0} -
     \LU{0}{\tomega}_{m0} \times (\LU{0}{\pv}_{c,k} - \LU{0}{\pv}_{m0})$.
+
+    With `isCapsule0 = True` or `isCapsule1 = True`, shape $i$ is a capsule (#3365): the segment of the length $L_i$ along the
+    axis, between the centers of two half spheres of the radius $r_i$, its total length $L_i + 2 r_i$, with the
+    marker at its middle. Two capsules are held by the closed form of the distance of their segments, minus $r_0 + r_1$:
+    their sides by the points of the side on side case, clipped to the segments, so parallel capsules on two points and
+    crossed ones on one. A capsule against a cylinder uses the distance of GJK and EPA and the side on side points; against
+    a cap, the two ends of its segment over the cap. The options cannot be combined with `isHollowCylinder1`.
 
     With `isHollowCylinder1 = True`, cylinder 1 is hollow - a bore or a seat, open at both ends, its wall at the radii of
     cylinder 1 - and cylinder 0 is inside it. On each rim of cylinder 0 - where cylinder 0 leaves the hollow
@@ -14377,6 +14384,14 @@ definitions.append(ItemDefinition(
             pythonName='isHollowCylinder1',
             defaultValue=False,
             description=r'if True, cylinder 1 is hollow, a bore or a seat with its radii and its length, open at both ends, and cylinder 0 is inside it: the contact is with the inner wall of cylinder 1 (#3334); then the data node needs 24 coordinates; checked at Assemble: the radius of cylinder 0 not larger than that of cylinder 1'),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='isCapsule0',
+            defaultValue=False,
+            description=r'if True, shape 0 is a capsule: cylindersLengths[0] is the length between the centers of its half spheres, so that its total length is cylindersLengths[0] + 2 cylindersRadii[0]; not together with isHollowCylinder1'),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='isCapsule1',
+            defaultValue=False,
+            description=r'if True, shape 1 is a capsule, as isCapsule0; not together with isHollowCylinder1'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='dynamicFriction',
             defaultValue=0.,
@@ -15329,6 +15344,291 @@ mbs.AddObject(ObjectContactConvexConvex(markerNumbers=[mCube, mGround], nodeNumb
             implementation='return 1;'),
         ItemFunctionDef('GetDataVariablesSize',
             implementation='return 8 * (parameters.contactPlasticityRatio != 0. ? 4 : 3);'),
+        ItemFunctionDef('HasDiscontinuousIteration',
+            implementation='return true;'),
+        ItemFunctionDef('PostNewtonStep'),
+        ItemFunctionDef('PostDiscontinuousIterationStep'),
+        ItemFunctionDef('IsPenaltyConnector',
+            implementation='return true;'),
+        ItemFunctionDef('GetAvailableJacobians',
+            implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);'),
+        *ItemConnectorInterface('Rigid', jacobian='numerical', velocityDerivative=True),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeConnectorForceRigid', args='const MarkerRigid<Real>* markers, Real t, Vector3D* forces, Vector3D* torques',
+            description=r'the force and torque on each marker from the kinematics of the two markers (#2745)'),
+        ItemFunctionDef('GetOutputVariableConnector'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
+        ItemRequestedTypes('Marker', ['Position', 'Orientation']),
+        ItemRequestedTypes('Node', ['GenericData']),
+        ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
+            pythonName='GetType',
+            implementation='return CObjectType::Connector;',
+            description=r'return object type (for node treatment in computation)'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
+            pythonName='GetTypeName',
+            implementation='return "ContactConvexConvex";',
+            description=r"Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?"),
+        ItemFunctionDef('IsActive',
+            implementation='return parameters.activeConnector;'),
+        ItemFunctionDef('UpdateGraphics'),
+        ItemFunctionDef('IsConnector',
+            implementation='return true;'),
+        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
+            pythonName='show',
+            defaultValue=False,
+            description=r'set true, if item is shown in visualization and false if it is not shown; draws the triangles of both shapes with the contact settings'),
+        ItemParameter(type=TFloat4, destination=DestVisu,
+            pythonName='color',
+            defaultValue='Float4({0.7f,0.7f,0.7f,1.f})',
+            description=r'RGBA connector color; if R==-1, use default color'),
+        ],
+    ))
+
+#++++++++++++++++   ObjectContactPrimitiveConvex   +++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectContactPrimitiveConvex_contactForceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                                gap: Real, gap_t: Real, normal: Vector3D,
+                                                tangentialVelocity: Vector3D, impactVelocity: Real) -> Vector3D:
+    r"""A user function which replaces the contact law: it computes the contact force from the gap, its rate, the
+    contact normal, the tangential relative velocity and the impact velocity, while the item computes the geometry and
+    the contact state (#3324). It is called for each contact point in contact, as its block of the data node from the
+    last post Newton step says, and returns the force of that point.
+    The force is the one on marker 0 at the contact point, the convention of the output variable Force; marker 1 gets
+    its negative. A penetration $\delta = -g$ pushes marker 0 against the normal: the normal force $f_N > 0$ gives
+    $-f_N\, \nv$; a friction force on marker 0 acts along the tangential velocity.
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        gap: $g$, the signed gap, negative in contact
+        gap_t: $\dot g$, its rate: the relative velocity along the normal, negative while approaching
+        normal: $\LU{0}{\nv}$, the unit contact normal from marker 0 towards marker 1 (the output Director1)
+        tangentialVelocity: $\LU{0}{\vv}_t$, the velocity of the body of marker 1 relative to that of marker 0 at the contact point, normal to $\LU{0}{\nv}$
+        impactVelocity: the velocity of approach at the last impact, from the data node, for impact models
+    Returns:
+        the global contact force on marker 0, a list or numpy array of 3 values
+    """
+
+definitions.append(ItemDefinition(
+    className='ObjectContactPrimitiveConvex',
+    createFunctions=['CreatePrimitiveConvexContact'],
+    drawing=r'The primitive with `contact.show.cylinders` and the triangles of the polytope with `contact.show.triangles`; with `contact.showContactForces`, the force of each contact point on marker 0 as a red and on marker 1 as a green arrow, meeting at the point (#3339).',
+    drawingSettings=['contact.color.cylinders', 'contact.color.triangles', 'contact.contactForcesFactor', 'contact.contactForcesRadius', 'contact.showContactForces', 'contact.show.cylinders', 'contact.show.triangles', 'general.cylinderTiling'],
+    addPublicC=r"""    static constexpr Index nDataVariables = 12; //!< a block of 3 per contact point (4): gap, tangential velocity, impact velocity
+""",
+    author=r'Gerstmayr Johannes',
+    cParentClass=ParentClassCObjectConnector,
+    overallDescription=r'A penalty contact between a primitive - a sphere, capsule, cylinder or truncated cone at marker 0 - and a convex polytope, given by its points and the triangles of its surface in the frame of marker 1; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereSphere.',
+    classType=ClassTypeObject,
+    miniExample=r"""    #a cylinder of radius 0.1 and length 0.2, along z, standing on a fixed box of height 0.4, whose top is at z = 0.2
+    def Box(size):
+        points = [[sx*size[0]/2, sy*size[1]/2, sz*size[2]/2] for sz in [-1,1] for sy in [-1,1] for sx in [-1,1]]
+        triangles = [[0,2,1],[1,2,3],[4,5,6],[5,7,6],[0,1,4],[1,5,4],[2,6,3],[3,6,7],[0,4,2],[2,4,6],[1,3,5],[3,7,5]]
+        return points, triangles
+    inertia = InertiaCylinder(density=1000, length=0.2, outerRadius=0.1, axis=2)
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0.31]+eulerParameters0))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0,0,-9.81]))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=12, initialCoordinates=[0]*12))
+    points1, triangles1 = Box([1,1,0.4])
+    mbs.AddObject(ObjectContactPrimitiveConvex(markerNumbers=[mBody, mGround], nodeNumber=nData, primitiveType=exu.ContactPrimitiveType.Cylinder,
+                                               radius=0.1, length=0.2, points1=points1, triangles1=triangles1, contactStiffness=1e5, contactDamping=1e3))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1000
+    mbs.SolveDynamic(simulationSettings)
+
+    #at rest on 3 points of its rim: 0.2 + 0.1 - m*g/(3*k)
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
+    """,
+    detailedDescription=r"""    #### Definition of quantities
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0, m1 positions | $\LU{0}{\pv}_{m0}$, $\LU{0}{\pv}_{m1}$ | the center of the primitive, the origin of the frame of the polytope |
+    | marker m0, m1 orientations | $\LU{0,m0}{\Rot}$, $\LU{0,m1}{\Rot}$ | the rotations of the frames of the shapes; the axis of the primitive is the local z axis of marker 0 |
+    | marker velocities | $\LU{0}{\vv}_{m0}$, $\LU{0}{\vv}_{m1}$, $\LU{0}{\tomega}_{m0}$, $\LU{0}{\tomega}_{m1}$ | global velocities and angular velocities |
+    | data coordinates | $\xv=[x_0,\,\ldots,\,x_{11}]\tp$ | for contact point $i$: the gap ($3i$), the norm of the tangential velocity ($3i+1$), the impact velocity ($3i+2$) |
+
+    #### Geometric relations
+
+    Shape 0 is the primitive given by `primitiveType`, centered at marker 0 along its local z axis: a sphere of the
+    `radius` $r$; a capsule of the `radius` and the `length` between the centers of its half spheres; a cylinder of the
+    `radius` and the `length`; a truncated cone of the `length`, the `radius` at $z=-L/2$ and `radius1` at $z=L/2$. Shape 1
+    is the convex hull of `points1`, given in the frame of marker 1; the triangles `triangles1` - the indices of three
+    points each, ordered so that their normal points out of the shape - are its surface. The signed distance $g$ of the
+    shapes - the output Distance -, the closest points - the deepest points of a penetration - and the unit normal
+    $\LU{0}{\nv}$ from shape 0 to shape 1 are computed by GJK and, for a penetration, EPA, the functions of
+    `exudyn.cUtilities.Distance`.
+
+    A sphere has one contact point, the closest point. Where $-\LU{0}{\nv}$ is the outward normal of a face of the
+    polytope, the triangles with this normal, a line or a face of contact is carried by up to 4 points clipped to this
+    face: for a cylinder or a cone the deepest point of its lower rim, the other end of the side line through it, and
+    two points of the lower rim at $\pm 120$ degrees, as in `ObjectContactCylinderTriangle`; for a capsule the two ends
+    of its segment. Otherwise, the closest points of GJK and EPA, one point: on an edge or a vertex of the polytope.
+
+    The contact point is the middle of the points on both shapes, $\LU{0}{\pv}_{c,k}$, and the relative velocity there
+    is that of the body of marker 1 relative to that of marker 0.
+
+    #### Connector forces
+
+    For each contact point, the normal force - from the penetration $\delta_k = -g_k$, with `contactStiffness`
+    $k_c$, the exponent $n_\mathrm{exp}$, `contactDamping` $d_c$ and the impact model `impactModel` with the
+    restitution coefficient - and the regularized dry friction with $\mu_d$ and `frictionProportionalZone` are
+    computed as for `ObjectContactSphereSphere`, see [](#sec-item-objectcontactspheresphere), with the normal
+    and the relative velocity at the contact point; the stiffness is that of each point. The force $\LU{0}{\fv}_k$
+    acts on marker 0 at the contact point, with the torque $(\LU{0}{\pv}_{c,k} - \LU{0}{\pv}_{m0}) \times \LU{0}{\fv}_k$,
+    and $-\LU{0}{\fv}_k$ on marker 1; the outputs Force and Torque are their sums on marker 0. The data coordinates of
+    each point hold its gap, tangential velocity and impact velocity of the last post Newton step, which decide on
+    contact and on the friction regime during the Newton iterations (active set).
+    """,
+    mainParentClass=MainParentClassMainObjectConnector,
+    objectType=ObjectTypeContact,
+    outputVariables=[
+        ItemOutputVariable(OVDistance, 'the signed distance of the two shapes, the gap (< 0: penetration), from the current configuration, also with activeConnector = False'),
+        ItemOutputVariable(OVPosition, 'the center of the contact points weighted by their normal forces; without contact force the middle of the closest points'),
+        ItemOutputVariable(OVDisplacement, 'global vector from the closest point of shape 0 to that of shape 1'),
+        ItemOutputVariable(OVVelocity, 'velocity of the body of marker 1 relative to that of marker 0 at Position'),
+        ItemOutputVariable(OVDisplacementLocal, '1D Vector, containing only gap'),
+        ItemOutputVariable(OVDirector1, 'the contact normal, the unit vector from shape 0 towards shape 1'),
+        ItemOutputVariable(OVForce, 'global contact force on marker 0, the sum of the contact points; marker 1 gets its negative'),
+        ItemOutputVariable(OVTorque, 'global torque of the contact forces on marker 0, about its position'),
+        ],
+    visuParentClass=VisuParentClassVisualizationObject,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"""connector's unique name"""),
+        ItemParameter(type=TArrayIndex(ItemMarker, size=2), destination=DestComp+DestParam,
+            pythonName='markerNumbers',
+            defaultValue='ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })',
+            description=r"""$[m0,m1]\tp$list of markers: the frame of the primitive, its axis the local z axis, and the frame of the polytope"""),
+        ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
+            pythonName='nodeNumber',
+            defaultValue=DVInvalidIndex,
+            description=r'$n_d$node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points $i$ holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; with contactPlasticityRatio > 0 a block of 4, the fourth the plastic overlap'),
+        ItemParameter(type=TContactPrimitiveType, destination=DestComp+DestParam,
+            pythonName='primitiveType',
+            defaultValue='ContactPrimitiveType::Sphere',
+            description=r'the shape at marker 0, see ContactPrimitiveType: Sphere, Capsule, Cylinder or Cone; the integers 0 to 3 are accepted as well'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='radius',
+            defaultValue=0.,
+            description=r'$r$the radius of the primitive; for the cone the radius at $z=-L/2$ [SI:m]'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='radius1',
+            defaultValue=0.,
+            description=r'$r_1$the radius of the cone at $z=L/2$ [SI:m]; only used for Cone'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='length',
+            defaultValue=0.,
+            description=r'$L$the length of the cylinder or the cone, along the local z axis of marker 0, or that of a capsule between the centers of its half spheres [SI:m]; not used for Sphere'),
+        ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
+            pythonName='points1',
+            defaultValue='Matrix()',
+            description=r"""$\LU{m1}{\pv}_{1,i}$the points of shape 1 in the frame of marker 1, rows of 3 coordinates; shape 1 is their convex hull"""),
+        ItemParameter(type=TNumpyMatrixI, destination=DestComp+DestParam,
+            pythonName='triangles1',
+            defaultValue='MatrixI()',
+            description=r"""the triangles of the surface of shape 1, rows of 3 indices into points1, ordered so that the normal points out of the shape; checked at Assemble"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='dynamicFriction',
+            defaultValue=0.,
+            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='frictionProportionalZone',
+            defaultValue=0.001,
+            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='contactStiffness',
+            defaultValue=0.,
+            description=r"""$k_c$normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$)"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='contactDamping',
+            defaultValue=0.,
+            description=r'$d_c$linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam,
+            pythonName='contactStiffnessExponent',
+            defaultValue=1.,
+            description=r'$n_\mathrm{exp}$exponent in normal contact model [SI:1]'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='contactPlasticityRatio',
+            defaultValue=0.,
+            description=r"""$\lambda_\mathrm{P}$ratio of contact stiffness for first loading and unloading/reloading [SI:1] of the Edinburgh adhesive elasto-plastic model, as in ObjectContactSphereSphere, with impactModel Linear: unloading and reloading with $K_2 = k_c/(1-\lambda_\mathrm{P})$ from the plastic overlap $\lambda_\mathrm{P}\,\delta_{max}$ of the contact; 0: the elastic law; not 0: each contact point has a block of 4 data coordinates, the fourth the plastic overlap (#3336)"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='adhesionCoefficient',
+            defaultValue=0.,
+            description=r"""$k_\mathrm{adh}$coefficient for adhesion [SI:N/m] (units in case that $n_\mathrm{adh}=1$) of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='adhesionExponent',
+            defaultValue=1.,
+            description=r"""$n_\mathrm{adh}$exponent for adhesion coefficient [SI:1] of the Edinburgh adhesive elasto-plastic model"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='constantPullOffForce',
+            defaultValue=0.,
+            description=r"""$f_\mathrm{adh}$constant adhesion force [SI:N] of each contact point in contact, of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0"""),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam,
+            pythonName='restitutionCoefficient',
+            defaultValue=1.,
+            description=r"""$e_\mathrm{res}$coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='minimumImpactVelocity',
+            defaultValue=0.,
+            description=r"""$\dot\delta_\mathrm{-,min}$minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)"""),
+        ItemParameter(type=TContactImpactModel, destination=DestComp+DestParam,
+            pythonName='impactModel',
+            defaultValue='ContactImpactModel::Linear',
+            description=r'$m_\mathrm{impact}$the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)'),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='activeConnector',
+            defaultValue=True,
+            description=r'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='contactForceUserFunction',
+            defaultValue=0,
+            description=r'''$\mathrm{UF} \in \Rcal^3$A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used; see description below (#3324)''',
+            userFunction=ObjectContactPrimitiveConvex_contactForceUserFunction,
+            userFunctionExample=r'''
+#the linear contact law with regularized friction as a user function: the same as contactStiffness, contactDamping,
+#dynamicFriction and frictionProportionalZone of the item
+def UFcontact(mbs, t, itemNumber, gap, gap_t, normal, tangentialVelocity, impactVelocity):
+    k, d, mu, vReg = 1e5, 1e3, 0.3, 1e-3
+    fN = -k*gap - d*gap_t                       #normal force, > 0 in compression
+    vt = tangentialVelocity
+    vtNorm = (vt[0]**2 + vt[1]**2 + vt[2]**2)**0.5
+    fT = mu*fN/max(vtNorm, vReg)                #regularized Coulomb friction
+    return [-fN*normal[i] + fT*vt[i] for i in range(3)]
+
+mbs.AddObject(ObjectContactPrimitiveConvex(markerNumbers=[mBody, mGround], nodeNumber=nData, primitiveType=exu.ContactPrimitiveType.Sphere,
+              radius=0.1, points1=points1, triangles1=triangles1, contactForceUserFunction=UFcontact))
+'''),
+        ItemFunctionDef('HasUserFunction',
+            implementation='return (parameters.contactForceUserFunction!=0);'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionForce',
+            args='Vector3D& force, const MainSystemBase& mainSystem, Real t, Real gap, Real gap_t, const Vector3D& normal, const Vector3D& tangentialVelocity, Real impactVelocity',
+            description=r'call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags=CFConst,
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags='',
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('GetNodeNumber',
+            implementation="""CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);
+        return parameters.nodeNumber;"""),
+        ItemFunctionDef('SetNodeNumber',
+            implementation='parameters.nodeNumber=nodeNumber;'),
+        ItemFunctionDef('GetNumberOfNodes',
+            implementation='return 1;'),
+        ItemFunctionDef('GetDataVariablesSize',
+            implementation='return 4 * (parameters.contactPlasticityRatio != 0. ? 4 : 3);'),
         ItemFunctionDef('HasDiscontinuousIteration',
             implementation='return true;'),
         ItemFunctionDef('PostNewtonStep'),

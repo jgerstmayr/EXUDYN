@@ -173,6 +173,7 @@ namedDefaultValues = {
     'Marker::_None': ('exudyn.MarkerType._None', 'MarkerType._None'),
     'ContactImpactModel::Linear': ('exudyn.ContactImpactModel.Linear', 'ContactImpactModel.Linear'),
     'JournalBearingModel::Short': ('exudyn.JournalBearingModel.Short', 'JournalBearingModel.Short'),
+    'ContactPrimitiveType::Sphere': ('exudyn.ContactPrimitiveType.Sphere', 'ContactPrimitiveType.Sphere'),
     #a C++ pointer member; it is not in the Python interface, and the page says what the C++ says
     'nullptr': ('nullptr', 'nullptr'),
 }
@@ -461,6 +462,7 @@ TPyObject                          = TypeSpec('PyObject')      #any Python objec
 TOutputVariableType                = TypeSpec('OutputVariableType')
 TContactImpactModel                = TypeSpec('ContactImpactModel')    #exu.ContactImpactModel or the int 0, 1, 2 (#3327)
 TJournalBearingModel               = TypeSpec('JournalBearingModel')   #exu.JournalBearingModel or the int 0, 1 (#3335)
+TContactPrimitiveType              = TypeSpec('ContactPrimitiveType')  #exu.ContactPrimitiveType or the int 0 to 3 (#3364)
 TMarkerType                        = TypeSpec('MarkerType')    #exu.MarkerType or the int of a combination by |, as Marker::Type (#3103)
 TResizableVector                   = TypeSpec('ResizableVector')
 

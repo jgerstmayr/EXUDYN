@@ -2,10 +2,14 @@
   "number": 3365,
   "title": "The options isCapsule0 and isCapsule1 of ObjectContactCylinderCylinder",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "ObjectContactCylinderCylinder has cylinders only. Capsules are the usual collision shape of robot links, and ConvexShape has them. Proposed, to be decided: options as isHollowCylinder1, with the side on side contact points and the closed form of two segments, design contactPrimitives.md section 9.3.",
   "dateRaised": "2026-11-08",
-  "deadline": "2027-05-07"
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 17:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The options isCapsule0 and isCapsule1 of ObjectContactCylinderCylinder and CreateCylinderCylinderContact.",
+  "resolvedInVersion": "1.13.475"
 }

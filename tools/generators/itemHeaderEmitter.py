@@ -117,7 +117,7 @@ def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDiction
     if typeCastStr == 'OutputVariableType' and fromDictionary:
         #Index64: the bits of OutputVariableType go beyond 32 (KineticEnergy is bit 32, #2766)
         return destStr + ' = (OutputVariableType)py::cast<Index64>(' + source + ');'
-    if typeName in ['ContactImpactModel', 'JournalBearingModel']: #an enumeration value or its int (#3327, #3335)
+    if typeName in ['ContactImpactModel', 'JournalBearingModel', 'ContactPrimitiveType']: #an enumeration value or its int (#3327, #3335, #3364)
         return destStr + ' = (' + typeName + ')py::cast<Index>(' + source + ');'
     if typeName == 'MarkerType': #an exu.MarkerType or the int that | gives for a combination (#3103)
         return destStr + ' = (Marker::Type)py::cast<Index>(' + source + ');'

@@ -237,8 +237,7 @@ Panda, UR5, Puma560, and the frames of the URDF for the TX2-90L, and other inert
    the local data set), **Kinova Gen3**, **UR10**. A tree or a floating base needs `parent` in the link dict, which
    `LinkDict2Robot` has to pass on.
 
-Proposed steps, not yet in the plan, in this order: `ReduceURDFrobotData`; the model of the Panda and UR5 on the frames of
-the URDF with the check; `RobotModelDictFromData`; simple collision shapes in the models; Spot and the others.
+Decided 2026-11-08 (maintainer): (a) and (b) as above, with Spot, ANYmal, the Mars rover, LBR iiwa and UR10; collision shapes for Spot, UR5, Panda and TX2-90L; steps RG19.17.1 to RG19.17.4 (#3372 to #3375).
 
 ## 4. Done (2026-11-04 to 2026-11-06)
 

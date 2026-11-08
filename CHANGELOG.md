@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 456 | 1.13.472 |
+| 1.13 | Newborn | 462 | 1.13.479 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,30 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.479** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ManipulatorStaubliTX2\_90L: 0.4 kg of link 5 moved to link 6 (#3371)
+  - description: The masses from the visual meshes give the last link only 0.06 kg, as the motor mass of the wrist is inside link 5 in the meshes. Decided: 0.4 kg moved from link 5 to link 6 by the densities of the two links; centers of mass unchanged, inertias scaled with the masses, the total mass unchanged.
+  - **notes:** ManipulatorStaubliTX2\_90L: 0.4 kg of link 5 moved to link 6 by the densities of the two links.
+  - date resolved: **2026-11-08 17:34**, date raised: 2026-11-08
+- **1.13.478** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Recommendations for the dynamic solvers in the solver manual (#3370)
+  - description: The manual compares the dynamic solvers but does not say which to take. Decided: a section after the convergence and efficiency section, with the warning on the algebraic coordinates at small steps and how to repeat the study.
+  - **notes:** The solver manual recommends a dynamic solver per kind of problem and warns of the growth of the error of the algebraic coordinates at very small steps.
+  - date resolved: **2026-11-08 17:34**, date raised: 2026-11-08
+- **1.13.477** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The solver study: the multipliers of the reference from the acceleration level, Radau5 and the low-order explicit solvers, the figures as vector graphics (#3369)
+  - description: The own multipliers of the implicit solvers have a floor at small steps (the rounding of the position constraints divided by h^2), which limits every reference taken from them. The multipliers computed from the end state by the solve of the initial accelerations, with its numerical (C\_q v)\_q, have no floor. Decided: the multipliers of the reference from this solve at the end state of LobattoIIIC4GGL; Radau5, ExplicitEuler, ExplicitMidpoint and VelocityVerlet in the figures; a figure of the algebraic coordinates down to h0/128 that shows the growth of the error at small steps; SVG and PDF instead of PNG.
+  - **notes:** The solver study: the multipliers of the reference from the acceleration level, Radau5 and the low-order explicit solvers, a figure of the algebraic coordinates down to h0/128, vector graphics.
+  - date resolved: **2026-11-08 17:34**, date raised: 2026-11-08
+- **1.13.476** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics.Capsule (#3366)
+  - description: exudyn.graphics has no capsule for the shape of a contact or a collision shape. Proposed, to be decided: graphics.Capsule with the arguments of graphics.Cylinder, as one SolidOfRevolution, design contactPrimitives.md section 9.4.
+  - **notes:** graphics.Capsule: a cylinder closed by two half spheres, as one SolidOfRevolution.
+  - date resolved: **2026-11-08 17:34**, date raised: 2026-11-08
+- **1.13.475** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The options isCapsule0 and isCapsule1 of ObjectContactCylinderCylinder (#3365)
+  - description: ObjectContactCylinderCylinder has cylinders only. Capsules are the usual collision shape of robot links, and ConvexShape has them. Proposed, to be decided: options as isHollowCylinder1, with the side on side contact points and the closed form of two segments, design contactPrimitives.md section 9.3.
+  - **notes:** The options isCapsule0 and isCapsule1 of ObjectContactCylinderCylinder and CreateCylinderCylinderContact.
+  - date resolved: **2026-11-08 17:34**, date raised: 2026-11-08
+- **1.13.474** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A contact between a convex polytope and a sphere, capsule, cylinder or cone (#3364)
+  - description: ObjectContactConvexConvex couples two polytopes only, while the kernel in EGeometry::ConvexShape takes any pair of convex shapes. The collision meshes of a URDF are convex only by convention (measured: the UR5 ones are not). Proposed, to be decided: one item ObjectContactPrimitiveConvex with the primitive by a type parameter and the check of the convex hull at the import, design contactPrimitives.md section 9.
+  - **notes:** ObjectContactPrimitiveConvex and CreatePrimitiveConvexContact: the penalty contact of a sphere, capsule, cylinder or truncated cone with a convex polytope, up to 4 contact points on a face.
+  - date resolved: **2026-11-08 17:34**, date raised: 2026-11-08
 - **1.13.472** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Analyze the raw pointers of the connector interface and recommend a transport class (#3367)
   - description: The functions ComputeConnectorForceRigid and its relatives of CObjectConnector pass markers, forces and torques as raw pointers without their number, and the items loop to a hardcoded 2. Decided: analyze the use and recommend a class FlatArray that only transports pointer and size.
   - **notes:** The raw pointers of the connector interface are analyzed in docs/dev/design/flatArray.md; a class FlatArray is recommended.

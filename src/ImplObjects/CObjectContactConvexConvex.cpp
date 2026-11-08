@@ -31,69 +31,8 @@ namespace ContactConvex {
 
 	constexpr Index maxPoints = 8;			//!< the contact points of a convex contact
 	using Points = ContactPoints::Points<maxPoints>;
-	constexpr Real faceTolerance = 1e-6;	//!< a normal within this of the normal of a face is along it
 
-	//! a shape: its points and triangles in the frame of its marker, and the frame
-	struct Shape
-	{
-		const Matrix& points;
-		const MatrixI& triangles;
-		Matrix3D rotation;
-		Vector3D position;
-		Shape(const Matrix& pointsInit, const MatrixI& trianglesInit, const MarkerData& marker) :
-			points(pointsInit), triangles(trianglesInit), rotation(marker.orientation), position(marker.position) {}
-
-		Vector3D LocalPoint(Index i) const { return Vector3D({ points(i, 0), points(i, 1), points(i, 2) }); }
-		Vector3D Point(Index i) const { return position + rotation * LocalPoint(i); }
-		//! the global unit normal of triangle t, by the order of its points
-		Vector3D TriangleNormal(Index t) const
-		{
-			Vector3D p0 = LocalPoint(triangles(t, 0));
-			Vector3D normal = (LocalPoint(triangles(t, 1)) - p0).CrossProduct(LocalPoint(triangles(t, 2)) - p0);
-			normal.Normalize();
-			return rotation * normal;
-		}
-		EGeometry::ConvexShape Convex() const
-		{
-			EGeometry::ConvexShape shape;
-			shape.type = EGeometry::ConvexShapeType::Points;
-			shape.pointRows = points.GetDataPointer();
-			shape.numberOfPointRows = points.NumberOfRows();
-			return shape;
-		}
-
-		//! the face whose outward normal is the direction: its normal and a point of it; false if there is none
-		bool Face(const Vector3D& direction, Vector3D& faceNormal, Vector3D& facePoint) const
-		{
-			Real best = -2.;
-			for (Index t = 0; t < triangles.NumberOfRows(); t++)
-			{
-				Vector3D normal = TriangleNormal(t);
-				Real along = normal * direction;
-				if (along > best) { best = along; faceNormal = normal; facePoint = Point(triangles(t, 0)); }
-			}
-			return best > 1. - faceTolerance;
-		}
-
-		//! true if x, projected along the faceNormal, lies in a triangle of the face with this normal
-		bool OverFace(const Vector3D& faceNormal, const Vector3D& x) const
-		{
-			for (Index t = 0; t < triangles.NumberOfRows(); t++)
-			{
-				if (TriangleNormal(t) * faceNormal <= 1. - faceTolerance) { continue; }
-				Vector3D p[3] = { Point(triangles(t, 0)), Point(triangles(t, 1)), Point(triangles(t, 2)) };
-				bool inside = true;
-				for (Index i = 0; i < 3 && inside; i++)
-				{
-					Vector3D edgeNormal = faceNormal.CrossProduct(p[(i + 1) % 3] - p[i]); //towards the inside for an outward normal
-					Real size = (p[(i + 1) % 3] - p[i]).GetL2NormSquared();
-					inside = edgeNormal * (x - p[i]) >= -1e-12 * size;
-				}
-				if (inside) { return true; }
-			}
-			return false;
-		}
-	};
+	using Shape = ContactPoints::ConvexPolytope;
 
 	//! the deepest candidates, at most maxPoints, given to the data blocks deepest first, equal gaps by their ids: the
 	//! points in contact take the first blocks whichever points are kept - with more candidates than blocks, points of
@@ -228,26 +167,8 @@ void VisualizationObjectContactConvexConvex::UpdateGraphics(const VisualizationS
 	{
 		Float4 triangleColor = visualizationSettings.contact.color.triangles;
 		if (color[0] != -1.f) { triangleColor = color; }
-		std::array<Float4, 3> colors = { triangleColor, triangleColor, triangleColor };
-		for (Index i = 0; i < 2; i++)
-		{
-			const Matrix& points = i == 0 ? parameters.points0 : parameters.points1;
-			const MatrixI& triangles = i == 0 ? parameters.triangles0 : parameters.triangles1;
-			Matrix3D A;
-			vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[i]]->GetRotationMatrix(*vSystem->systemData, A, ConfigurationType::Visualization);
-			for (Index t = 0; t < triangles.NumberOfRows(); t++)
-			{
-				std::array<Vector3D, 3> nodes;
-				for (Index k = 0; k < 3; k++)
-				{
-					Index p = triangles(t, k);
-					nodes[k] = pos[i] + A * Vector3D({ points(p, 0), points(p, 1), points(p, 2) });
-				}
-				Vector3D normal = EGeometry::ComputeTriangleNormal(nodes);
-				std::array<Vector3D, 3> normals = { normal, normal, normal };
-				vSystem->graphicsData.AddTriangle(nodes, normals, colors, itemID);
-			}
-		}
+		ContactPoints::DrawPolytope(vSystem, cItem->GetMarkerNumbers()[0], parameters.points0, parameters.triangles0, triangleColor, itemID);
+		ContactPoints::DrawPolytope(vSystem, cItem->GetMarkerNumbers()[1], parameters.points1, parameters.triangles1, triangleColor, itemID);
 	}
 	ContactPoints::DrawForces<CObjectContactConvexConvex, ContactConvex::Points>(*cItem, visualizationSettings, vSystem, itemID,
 		"ObjectContactConvexConvex", ContactConvex::ComputePoints);

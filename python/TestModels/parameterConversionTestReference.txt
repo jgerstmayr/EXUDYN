@@ -79,6 +79,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectContactCylinderCylinder: markerNumbers(class,dict,set)
   ObjectContactCylinderTriangle: markerNumbers(class,dict,set)
   ObjectContactFrictionCircleCable2D: markerNumbers(class,dict,set)
+  ObjectContactPrimitiveConvex: markerNumbers(class,dict,set)
   ObjectContactSphereCylinder: markerNumbers(class,dict,set)
   ObjectContactSphereSphere: markerNumbers(class,dict,set)
   ObjectContactSphereTorus: markerNumbers(class,dict,set)
@@ -207,6 +208,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectContactCylinderCylinder: Vcolor(class,dict,set)
   ObjectContactCylinderTriangle: Vcolor(class,dict,set)
   ObjectContactFrictionCircleCable2D: Vcolor(class,dict,set)
+  ObjectContactPrimitiveConvex: Vcolor(class,dict,set)
   ObjectContactSphereCylinder: Vcolor(class,dict,set)
   ObjectContactSphereSphere: Vcolor(class,dict,set)
   ObjectContactSphereTorus: Vcolor(class,dict,set)
@@ -424,6 +426,7 @@ outcome: !ExudynTypeError int=0.0 !ExudynTypeError !ExudynTypeError !ExudynTypeE
   ObjectContactConvexConvex: contactForceUserFunction(class,dict,set)
   ObjectContactCylinderCylinder: contactForceUserFunction(class,dict,set)
   ObjectContactCylinderTriangle: contactForceUserFunction(class,dict,set)
+  ObjectContactPrimitiveConvex: contactForceUserFunction(class,dict,set)
   ObjectContactSphereCylinder: contactForceUserFunction(class,dict,set)
   ObjectContactSphereTriangle: contactForceUserFunction(class,dict,set)
   ObjectFFRF: forceUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set)
@@ -500,6 +503,7 @@ outcome: !ExudynValueError !ExudynValueError float=2.0 float=2.5 !ExudynTypeErro
   ObjectContactCoordinate: contactStiffnessExponent(class,dict,set) restitutionCoefficient(class,dict,set)
   ObjectContactCylinderCylinder: contactStiffnessExponent(class,dict,set) restitutionCoefficient(class,dict,set)
   ObjectContactCylinderTriangle: contactStiffnessExponent(class,dict,set) cylinderLength(class,dict,set) cylinderRadius(class,dict,set) restitutionCoefficient(class,dict,set)
+  ObjectContactPrimitiveConvex: contactStiffnessExponent(class,dict,set) restitutionCoefficient(class,dict,set)
   ObjectContactSphereCylinder: contactStiffnessExponent(class,dict,set) cylinderLength(class,dict,set) cylinderRadius(class,dict,set) restitutionCoefficient(class,dict,set) sphereRadius(class,dict,set)
   ObjectContactSphereSphere: contactStiffnessExponent(class,dict,set) restitutionCoefficient(class,dict,set)
   ObjectContactSphereTorus: contactStiffnessExponent(class,dict,set) radiusSphere(set) restitutionCoefficient(class,dict,set) sphereRadius(set) torusMajorRadius(class,dict,set) torusMinorRadius(class,dict,set)
@@ -591,6 +595,7 @@ outcome: !ExudynValueError float=0.0 float=2.0 float=2.5 !ExudynTypeError float=
   ObjectContactCylinderCylinder: adhesionCoefficient(class,dict,set) adhesionExponent(class,dict,set) constantPullOffForce(class,dict,set) contactDamping(class,dict,set) contactPlasticityRatio(class,dict,set) contactStiffness(class,dict,set) dynamicFriction(class,dict,set) frictionProportionalZone(class,dict,set) minimumImpactVelocity(class,dict,set)
   ObjectContactCylinderTriangle: adhesionCoefficient(class,dict,set) adhesionExponent(class,dict,set) constantPullOffForce(class,dict,set) contactDamping(class,dict,set) contactPlasticityRatio(class,dict,set) contactStiffness(class,dict,set) dynamicFriction(class,dict,set) frictionProportionalZone(class,dict,set) minimumImpactVelocity(class,dict,set)
   ObjectContactFrictionCircleCable2D: circleRadius(class,dict,set) contactDamping(class,dict,set) contactStiffness(class,dict,set) frictionCoefficient(class,dict,set) frictionStiffness(class,dict,set) frictionVelocityPenalty(class,dict,set)
+  ObjectContactPrimitiveConvex: adhesionCoefficient(class,dict,set) adhesionExponent(class,dict,set) constantPullOffForce(class,dict,set) contactDamping(class,dict,set) contactPlasticityRatio(class,dict,set) contactStiffness(class,dict,set) dynamicFriction(class,dict,set) frictionProportionalZone(class,dict,set) length(class,dict,set) minimumImpactVelocity(class,dict,set) radius(class,dict,set) radius1(class,dict,set)
   ObjectContactSphereCylinder: contactDamping(class,dict,set) contactStiffness(class,dict,set) dynamicFriction(class,dict,set) frictionProportionalZone(class,dict,set) minimumImpactVelocity(class,dict,set)
   ObjectContactSphereSphere: adhesionCoefficient(class,dict,set) adhesionExponent(class,dict,set) constantPullOffForce(class,dict,set) contactDamping(class,dict,set) contactPlasticityRatio(class,dict,set) contactStiffness(class,dict,set) dynamicFriction(class,dict,set) frictionProportionalZone(class,dict,set) minimumImpactVelocity(class,dict,set)
   ObjectContactSphereTorus: contactDamping(class,dict,set) contactStiffness(class,dict,set) dynamicFriction(class,dict,set) frictionProportionalZone(class,dict,set) minimumImpactVelocity(class,dict,set)
@@ -708,6 +713,7 @@ outcome: !ExudynValueError int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int
 
 outcome: !InternalError !InternalError !InternalError !InternalError !RuntimeError !InternalError !InternalError !InternalError !InternalError !InternalError numpy2x2i=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !RuntimeError
   ObjectContactConvexConvex: triangles0(class) triangles1(class)
+  ObjectContactPrimitiveConvex: triangles1(class)
 
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
   ObjectKinematicTree: jointTypes(class,dict,set)
@@ -777,10 +783,14 @@ outcome: ContactImpactModel ContactImpactModel ContactImpactModel !RuntimeError 
   ObjectContactCoordinate: impactModel(class,dict,set)
   ObjectContactCylinderCylinder: impactModel(class,dict,set)
   ObjectContactCylinderTriangle: impactModel(class,dict,set)
+  ObjectContactPrimitiveConvex: impactModel(class,dict,set)
   ObjectContactSphereCylinder: impactModel(class,dict,set)
   ObjectContactSphereSphere: impactModel(class,dict,set)
   ObjectContactSphereTorus: impactModel(class,dict,set)
   ObjectContactSphereTriangle: impactModel(class,dict,set)
+
+outcome: ContactPrimitiveType ContactPrimitiveType ContactPrimitiveType !RuntimeError !RuntimeError ContactPrimitiveType !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError ContactPrimitiveType ContactPrimitiveType !RuntimeError !RuntimeError
+  ObjectContactPrimitiveConvex: primitiveType(class,dict,set)
 
 outcome: JournalBearingModel JournalBearingModel JournalBearingModel !RuntimeError !RuntimeError JournalBearingModel !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError JournalBearingModel JournalBearingModel !RuntimeError !RuntimeError
   ObjectJournalBearing: bearingModel(class,dict,set)
@@ -860,6 +870,7 @@ outcome: NodeIndex NodeIndex NodeIndex !ExudynTypeError !ExudynTypeError NodeInd
   ObjectContactCylinderCylinder: nodeNumber(class,dict,set)
   ObjectContactCylinderTriangle: nodeNumber(class,dict,set)
   ObjectContactFrictionCircleCable2D: nodeNumber(class,dict,set)
+  ObjectContactPrimitiveConvex: nodeNumber(class,dict,set)
   ObjectContactSphereCylinder: nodeNumber(class,dict,set)
   ObjectContactSphereSphere: nodeNumber(class,dict,set)
   ObjectContactSphereTorus: nodeNumber(class,dict,set)
@@ -901,6 +912,7 @@ outcome: ObjectIndex ObjectIndex
   ObjectContactCurveCircles: (defaults)
   ObjectContactCylinderCylinder: (defaults)
   ObjectContactFrictionCircleCable2D: (defaults)
+  ObjectContactPrimitiveConvex: (defaults)
   ObjectContactSphereSphere: (defaults)
   ObjectFFRF: (defaults)
   ObjectFFRFreducedOrder: (defaults)
@@ -1017,9 +1029,10 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !ExudynTypeError bool=1.0 !ExudynTy
   ObjectContactConvexRoll: Vshow(class,dict,set) activeConnector(class,dict,set)
   ObjectContactCoordinate: Vshow(class,dict,set) activeConnector(class,dict,set)
   ObjectContactCurveCircles: Vshow(class,dict,set) activeConnector(class,dict,set)
-  ObjectContactCylinderCylinder: Vshow(class,dict,set) activeConnector(class,dict,set) isHollowCylinder1(class,dict,set)
+  ObjectContactCylinderCylinder: Vshow(class,dict,set) activeConnector(class,dict,set) isCapsule0(class,dict,set) isCapsule1(class,dict,set) isHollowCylinder1(class,dict,set)
   ObjectContactCylinderTriangle: Vshow(class,dict,set) activeConnector(class,dict,set) infinitePlane(class,dict,set)
   ObjectContactFrictionCircleCable2D: Vshow(class,dict,set) VshowContactCircle(class,dict,set) activeConnector(class,dict,set) useSegmentNormals(class,dict,set)
+  ObjectContactPrimitiveConvex: Vshow(class,dict,set) activeConnector(class,dict,set)
   ObjectContactSphereCylinder: Vshow(class,dict,set) activeConnector(class,dict,set)
   ObjectContactSphereSphere: Vshow(class,dict,set) activeConnector(class,dict,set) isHollowSphere1(class,dict,set)
   ObjectContactSphereTorus: Vshow(class,dict,set) activeConnector(class,dict,set)
@@ -1326,6 +1339,7 @@ outcome: numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] !RuntimeError n
 outcome: numpy1x1f=[-1.0] numpy1x1f=[0.0] numpy1x1f=[2.0] numpy1x1f=[2.5] !RuntimeError numpy1x1f=[1.0] !InternalError !InternalError !InternalError !InternalError numpy2x2f=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !InternalError
   ObjectConnectorCoordinateVector: quadraticTermMarker0(class,dict) quadraticTermMarker1(class,dict) scalingMarker0(class,dict) scalingMarker1(class,dict)
   ObjectContactConvexConvex: points0(class,dict) points1(class,dict)
+  ObjectContactPrimitiveConvex: points1(class,dict)
   ObjectFFRFreducedOrder: mPhitTPsi(class,dict) mPhitTPsiTilde(class,dict) mPsiTildePsi(class,dict) mPsiTildePsiTilde(class,dict) mXRefTildePsi(class,dict) mXRefTildePsiTilde(class,dict) modeBasis(class,dict) outputVariableModeBasis(class,dict)
   ObjectGenericDAE: constraintMatrixODE1(class,dict) constraintMatrixODE2(class,dict) couplingMatrixODE1(class,dict) couplingMatrixODE2(class,dict) couplingMatrixODE2_t(class,dict) dampingMatrix(class,dict) massMatrix(class,dict) stiffnessMatrix(class,dict) systemMatrix(class,dict)
   ObjectGenericODE1: systemMatrix(class,dict)
@@ -1333,18 +1347,21 @@ outcome: numpy1x1f=[-1.0] numpy1x1f=[0.0] numpy1x1f=[2.0] numpy1x1f=[2.5] !Runti
 outcome: numpy1x1f=[-1.0] numpy1x1f=[0.0] numpy1x1f=[2.0] numpy1x1f=[2.5] !ValueError numpy1x1f=[1.0] !InternalError !InternalError !InternalError !InternalError numpy2x2f=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !InternalError
   ObjectConnectorCoordinateVector: quadraticTermMarker0(set) quadraticTermMarker1(set) scalingMarker0(set) scalingMarker1(set)
   ObjectContactConvexConvex: points0(set) points1(set)
+  ObjectContactPrimitiveConvex: points1(set)
   ObjectFFRFreducedOrder: mPhitTPsi(set) mPhitTPsiTilde(set) mPsiTildePsi(set) mPsiTildePsiTilde(set) mXRefTildePsi(set) mXRefTildePsiTilde(set) modeBasis(set) outputVariableModeBasis(set)
   ObjectGenericDAE: constraintMatrixODE1(set) constraintMatrixODE2(set) couplingMatrixODE1(set) couplingMatrixODE2(set) couplingMatrixODE2_t(set) dampingMatrix(set) massMatrix(set) stiffnessMatrix(set) systemMatrix(set)
   ObjectGenericODE1: systemMatrix(set)
 
 outcome: numpy1x1i=[-1.0] numpy1x1i=[0.0] numpy1x1i=[2.0] !RuntimeError !RuntimeError numpy1x1i=[1.0] !InternalError !InternalError !InternalError !InternalError numpy2x2i=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !RuntimeError
   ObjectContactConvexConvex: triangles0(dict) triangles1(dict)
+  ObjectContactPrimitiveConvex: triangles1(dict)
   ObjectFFRF: VtriangleMesh(class,dict)
   ObjectFFRFreducedOrder: VtriangleMesh(class,dict)
   ObjectGenericODE2: VtriangleMesh(class,dict)
 
 outcome: numpy1x1i=[-1.0] numpy1x1i=[0.0] numpy1x1i=[2.0] !RuntimeError !ValueError numpy1x1i=[1.0] !InternalError !InternalError !InternalError !InternalError numpy2x2i=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !TypeError
   ObjectContactConvexConvex: triangles0(set) triangles1(set)
+  ObjectContactPrimitiveConvex: triangles1(set)
   ObjectFFRF: VtriangleMesh(set)
   ObjectFFRFreducedOrder: VtriangleMesh(set)
   ObjectGenericODE2: VtriangleMesh(set)
@@ -1422,9 +1439,10 @@ outcome: str=default
   ObjectContactConvexRoll: Vcolor(omit) Vshow(omit) activeConnector(omit) coefficientsHull(omit) contactDamping(omit) contactStiffness(omit) dynamicFriction(omit) exponentialDecayStatic(omit) frictionProportionalZone(omit) markerNumbers(omit) nodeNumber(omit) rollLength(omit) staticFrictionOffset(omit) viscousFriction(omit)
   ObjectContactCoordinate: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) contactDamping(omit) contactStiffness(omit) contactStiffnessExponent(omit) impactModel(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) offset(omit) restitutionCoefficient(omit)
   ObjectContactCurveCircles: Vcolor(omit) Vshow(omit) activeConnector(omit) circlesRadii(omit) contactDamping(omit) contactModel(omit) contactStiffness(omit) dynamicFriction(omit) frictionProportionalZone(omit) markerNumbers(omit) nodeNumber(omit) polynomialData(omit) segmentsData(omit)
-  ObjectContactCylinderCylinder: Vcolor(omit) Vshow(omit) activeConnector(omit) adhesionCoefficient(omit) adhesionExponent(omit) constantPullOffForce(omit) contactDamping(omit) contactForceUserFunction(omit) contactPlasticityRatio(omit) contactStiffness(omit) contactStiffnessExponent(omit) cylindersLengths(omit) cylindersRadii(omit) dynamicFriction(omit) frictionProportionalZone(omit) impactModel(omit) isHollowCylinder1(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) restitutionCoefficient(omit)
+  ObjectContactCylinderCylinder: Vcolor(omit) Vshow(omit) activeConnector(omit) adhesionCoefficient(omit) adhesionExponent(omit) constantPullOffForce(omit) contactDamping(omit) contactForceUserFunction(omit) contactPlasticityRatio(omit) contactStiffness(omit) contactStiffnessExponent(omit) cylindersLengths(omit) cylindersRadii(omit) dynamicFriction(omit) frictionProportionalZone(omit) impactModel(omit) isCapsule0(omit) isCapsule1(omit) isHollowCylinder1(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) restitutionCoefficient(omit)
   ObjectContactCylinderTriangle: Vcolor(omit) Vshow(omit) activeConnector(omit) adhesionCoefficient(omit) adhesionExponent(omit) constantPullOffForce(omit) contactDamping(omit) contactForceUserFunction(omit) contactPlasticityRatio(omit) contactStiffness(omit) contactStiffnessExponent(omit) dynamicFriction(omit) frictionProportionalZone(omit) impactModel(omit) infinitePlane(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) restitutionCoefficient(omit) trianglePoints(omit)
   ObjectContactFrictionCircleCable2D: Vcolor(omit) VdrawSize(omit) Vshow(omit) VshowContactCircle(omit) activeConnector(omit) circleRadius(omit) contactDamping(omit) contactStiffness(omit) frictionCoefficient(omit) frictionStiffness(omit) frictionVelocityPenalty(omit) markerNumbers(omit) nodeNumber(omit) numberOfContactSegments(omit) useSegmentNormals(omit)
+  ObjectContactPrimitiveConvex: Vcolor(omit) Vshow(omit) activeConnector(omit) adhesionCoefficient(omit) adhesionExponent(omit) constantPullOffForce(omit) contactDamping(omit) contactForceUserFunction(omit) contactPlasticityRatio(omit) contactStiffness(omit) contactStiffnessExponent(omit) dynamicFriction(omit) frictionProportionalZone(omit) impactModel(omit) length(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) points1(omit) primitiveType(omit) radius(omit) radius1(omit) restitutionCoefficient(omit) triangles1(omit)
   ObjectContactSphereCylinder: Vcolor(omit) Vshow(omit) activeConnector(omit) contactDamping(omit) contactForceUserFunction(omit) contactStiffness(omit) contactStiffnessExponent(omit) dynamicFriction(omit) frictionProportionalZone(omit) impactModel(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) restitutionCoefficient(omit)
   ObjectContactSphereSphere: Vcolor(omit) Vshow(omit) activeConnector(omit) adhesionCoefficient(omit) adhesionExponent(omit) constantPullOffForce(omit) contactDamping(omit) contactPlasticityRatio(omit) contactStiffness(omit) contactStiffnessExponent(omit) dynamicFriction(omit) frictionProportionalZone(omit) impactModel(omit) isHollowSphere1(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) restitutionCoefficient(omit) spheresRadii(omit)
   ObjectContactSphereTorus: Vcolor(omit) Vshow(omit) activeConnector(omit) contactDamping(omit) contactStiffness(omit) contactStiffnessExponent(omit) dynamicFriction(omit) frictionProportionalZone(omit) impactModel(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) radiusSphere(omit) restitutionCoefficient(omit) sphereRadius(omit) torusAxis(omit)

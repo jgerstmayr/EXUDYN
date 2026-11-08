@@ -2,10 +2,14 @@
   "number": 3364,
   "title": "A contact between a convex polytope and a sphere, capsule, cylinder or cone",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "ObjectContactConvexConvex couples two polytopes only, while the kernel in EGeometry::ConvexShape takes any pair of convex shapes. The collision meshes of a URDF are convex only by convention (measured: the UR5 ones are not). Proposed, to be decided: one item ObjectContactPrimitiveConvex with the primitive by a type parameter and the check of the convex hull at the import, design contactPrimitives.md section 9.",
   "dateRaised": "2026-11-08",
-  "deadline": "2027-05-07"
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 17:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectContactPrimitiveConvex and CreatePrimitiveConvexContact: the penalty contact of a sphere, capsule, cylinder or truncated cone with a convex polytope, up to 4 contact points on a face.",
+  "resolvedInVersion": "1.13.474"
 }

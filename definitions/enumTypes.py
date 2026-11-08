@@ -320,4 +320,12 @@ enumTypes = [
               EnumValue('Long', 1, 'the infinitely long bearing of Sommerfeld, with the half-film (Guembel) condition'),
               ],
              cppNote='the model of the film of the journal bearing (#3335)'),
+    EnumType('ContactPrimitiveType', 'ContactPrimitiveType',
+             'The enumeration type ContactPrimitiveType selects the shape of marker 0 of ObjectContactPrimitiveConvex, the parameter primitiveType; the integers 0 to 3 are accepted for it as well (#3364).\n\n',
+             [EnumValue('Sphere', 0, 'a sphere of the radius'),
+              EnumValue('Capsule', 1, 'a capsule: the radius and the length between the centers of its half spheres'),
+              EnumValue('Cylinder', 2, 'a finite cylinder of the radius and the length'),
+              EnumValue('Cone', 3, 'a truncated cone with the length, the radius at -length/2 and radius1 at +length/2'),
+              ],
+             cppNote='the shape of ObjectContactPrimitiveConvex (#3364)'),
     ]

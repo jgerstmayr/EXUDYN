@@ -617,16 +617,17 @@ need no search; `GeneralContact` is the choice for many bodies.
 | `ObjectContactSphereTriangle` | sphere | triangle | `infinitePlane` |
 | `ObjectContactSphereTorus` | sphere | torus | sphere inside the tube |
 | `ObjectContactSphereCylinder` | sphere | cylinder | |
-| `ObjectContactCylinderCylinder` | cylinder | cylinder | `isHollowCylinder1` |
+| `ObjectContactCylinderCylinder` | cylinder or capsule | cylinder or capsule | `isHollowCylinder1`, `isCapsule0`, `isCapsule1` |
 | `ObjectContactCylinderTriangle` | cylinder | triangle | `infinitePlane` |
 | `ObjectContactConeCone` | truncated cone | truncated cone | `isHollowCone1` |
 | `ObjectContactConeTriangle` | truncated cone | triangle | `infinitePlane` |
 | `ObjectContactConvexConvex` | convex polytope | convex polytope | |
+| `ObjectContactPrimitiveConvex` | sphere, capsule, cylinder or truncated cone | convex polytope | `primitiveType` |
 | `ObjectJournalBearing` | journal | bearing | lubricated, see below |
 
 The Create functions `mbs.CreateSphereSphereContact`, `CreateSphereTriangleContact`, `CreateSphereCylinderContact`,
-`CreateCylinderCylinderContact`, `CreateCylinderTriangleContact`, `CreateConeConeContact`, `CreateConeTriangleContact` and
-`CreateConvexConvexContact` add an item with its markers and its data node, of the size the item needs: two bodies,
+`CreateCylinderCylinderContact`, `CreateCylinderTriangleContact`, `CreateConeConeContact`, `CreateConeTriangleContact`,
+`CreateConvexConvexContact` and `CreatePrimitiveConvexContact` add an item with its markers and its data node, of the size the item needs: two bodies,
 nodes or markers, the shapes at a local position on them, a cylinder or a cone along a local axis, the points of
 triangles and polytopes in the frame of their body - for a polytope, from `graphics.ToPointsAndTrigs` of its graphics.
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  19:12:28 (last modified)
+* @date         2026-11-08  17:11:13 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,6 +35,8 @@ public: // AUTO:
     Vector2D cylindersRadii;                      //!< AUTO: the radii of cylinder 0 and cylinder 1, both > 0 [SI:m]
     Vector2D cylindersLengths;                    //!< AUTO: the lengths of cylinder 0 and cylinder 1 along the local z axes of their markers, from \f$-L_i/2\f$ to \f$L_i/2\f$, both > 0 [SI:m]
     bool isHollowCylinder1;                       //!< AUTO: if True, cylinder 1 is hollow, a bore or a seat with its radii and its length, open at both ends, and cylinder 0 is inside it: the contact is with the inner wall of cylinder 1 (#3334); then the data node needs 24 coordinates; checked at Assemble: the radius of cylinder 0 not larger than that of cylinder 1
+    bool isCapsule0;                              //!< AUTO: if True, shape 0 is a capsule: cylindersLengths[0] is the length between the centers of its half spheres, so that its total length is cylindersLengths[0] + 2 cylindersRadii[0]; not together with isHollowCylinder1
+    bool isCapsule1;                              //!< AUTO: if True, shape 1 is a capsule, as isCapsule0; not together with isHollowCylinder1
     Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
     Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)
     Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m] (units in case that \f$n_\mathrm{exp}=1\f$)
@@ -57,6 +59,8 @@ public: // AUTO:
         cylindersRadii = Vector2D({0.,0.});
         cylindersLengths = Vector2D({0.,0.});
         isHollowCylinder1 = false;
+        isCapsule0 = false;
+        isCapsule1 = false;
         dynamicFriction = 0.;
         frictionProportionalZone = 0.001;
         contactStiffness = 0.;
@@ -77,7 +81,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectContactCylinderCylinder
-* @brief        A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereTriangle.
+* @brief        A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims, or capsules by the options isCapsule0 and isCapsule1; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereTriangle.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

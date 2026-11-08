@@ -6,7 +6,7 @@
 (sec-item-objectcontactcylindercylinder)=
 # ObjectContactCylinderCylinder
 
-A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereTriangle.
+A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims, or capsules by the options isCapsule0 and isCapsule1; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereTriangle.
 
 Author: Gerstmayr Johannes
 
@@ -29,6 +29,8 @@ The parameters of the item; in a dictionary, its type is 'ContactCylinderCylinde
 | **cylindersRadii** | Vector2D | 2 | [0.,0.] | (symbol: $[r_0,r_1]\tp$) the radii of cylinder 0 and cylinder 1, both > 0 [SI:m] |
 | **cylindersLengths** | Vector2D | 2 | [0.,0.] | (symbol: $[L_0,L_1]\tp$) the lengths of cylinder 0 and cylinder 1 along the local z axes of their markers, from $-L_i/2$ to $L_i/2$, both > 0 [SI:m] |
 | **isHollowCylinder1** | Bool |  | False | if True, cylinder 1 is hollow, a bore or a seat with its radii and its length, open at both ends, and cylinder 0 is inside it: the contact is with the inner wall of cylinder 1 (#3334); then the data node needs 24 coordinates; checked at Assemble: the radius of cylinder 0 not larger than that of cylinder 1 |
+| **isCapsule0** | Bool |  | False | if True, shape 0 is a capsule: cylindersLengths[0] is the length between the centers of its half spheres, so that its total length is cylindersLengths[0] + 2 cylindersRadii[0]; not together with isHollowCylinder1 |
+| **isCapsule1** | Bool |  | False | if True, shape 1 is a capsule, as isCapsule0; not together with isHollowCylinder1 |
 | **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
 | **frictionProportionalZone** | UReal |  | 0.001 | (symbol: $v_{reg}$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
 | **contactStiffness** | UReal |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$) |
@@ -115,6 +117,13 @@ $\LU{0}{\pv}_{c,k} = \frac{1}{2}(\LU{0}{\pv}_{C0,k} + \LU{0}{\pv}_{C1,k})$, and 
 that of the body of marker 1 relative to that of marker 0,
 $\LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (\LU{0}{\pv}_{c,k} - \LU{0}{\pv}_{m1}) - \LU{0}{\vv}_{m0} -
 \LU{0}{\tomega}_{m0} \times (\LU{0}{\pv}_{c,k} - \LU{0}{\pv}_{m0})$.
+
+With `isCapsule0 = True` or `isCapsule1 = True`, shape $i$ is a capsule (#3365): the segment of the length $L_i$ along the
+axis, between the centers of two half spheres of the radius $r_i$, its total length $L_i + 2 r_i$, with the
+marker at its middle. Two capsules are held by the closed form of the distance of their segments, minus $r_0 + r_1$:
+their sides by the points of the side on side case, clipped to the segments, so parallel capsules on two points and
+crossed ones on one. A capsule against a cylinder uses the distance of GJK and EPA and the side on side points; against
+a cap, the two ends of its segment over the cap. The options cannot be combined with `isHollowCylinder1`.
 
 With `isHollowCylinder1 = True`, cylinder 1 is hollow - a bore or a seat, open at both ends, its wall at the radii of
 cylinder 1 - and cylinder 0 is inside it. On each rim of cylinder 0 - where cylinder 0 leaves the hollow

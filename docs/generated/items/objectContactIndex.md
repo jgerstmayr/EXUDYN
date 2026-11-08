@@ -20,6 +20,7 @@ ObjectContactCylinderCylinder
 ObjectContactConeCone
 ObjectContactConeTriangle
 ObjectContactConvexConvex
+ObjectContactPrimitiveConvex
 ObjectContactCylinderTriangle
 ObjectJournalBearing
 ObjectContactCurveCircles

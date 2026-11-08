@@ -507,7 +507,8 @@ def ManipulatorStaubliTX2_90L():
         ros-industrial staubli_experimental repository (https://github.com/ros-industrial/staubli_experimental,
         staubli_tx2_90_support); the URDF has no inertia data and the manufacturer gives only the total mass of 117 kg: the
         masses, centers of mass and inertias are those of the solids of the visual meshes with one density, 2032 kg/m^3,
-        so that all links with the base (24.85 kg) have 117 kg; estimates for simulation; the tool frame is the flange, 0.1 m after the wrist center; 'urdfGraphics' names the URDF file and
+        so that all links with the base (24.85 kg) have 117 kg, with 0.4 kg of link 5 given to link 6, whose motor and flange the meshes
+        leave in link 5 (the densities of the two adjusted, #3371); estimates for simulation; the tool frame is the flange, 0.1 m after the wrist center; 'urdfGraphics' names the URDF file and
         its links for exudyn.robotics.urdfImport.AddURDFgraphics, which adds the meshes of the URDF
     """
     #joint type, translation from the previous joint frame, mass, COM, inertia w.r.t. the COM, joint limits, max. velocity
@@ -519,10 +520,10 @@ def ManipulatorStaubliTX2_90L():
              np.array([[0.1288, 0.00001095, 0.00001438], [0.00001095, 0.09625, 0.01025], [0.00001438, 0.01025, 0.09174]]), [-2.531, 2.531], 4.712),
             ('Rz', [0, 0, 0], 12.92, [-0.002375, 0.0002181, 0.3605],
              np.array([[0.2049, 0.00006745, 0.004337], [0.00006745, 0.1935, -0.0005043], [0.004337, -0.0005043, 0.03803]]), [-4.712, 4.712], 7.854),
-            ('Ry', [0, 0, 0.550], 1.249, [0.00001963, -0.001016, 0.02131],
-             np.array([[0.002288, -0.000005246, 0.0000005301], [-0.000005246, 0.002431, -0.00002959], [0.0000005301, -0.00002959, 0.0009178]]), [-2.007, 2.443], 6.458),
-            ('Rz', [0, 0, 0.100], 0.05635, [-0.0002166, 0.000004719, -0.006105],
-             np.array([[0.00001704, 0.00000000008434, 0.00000002326], [0.00000000008434, 0.00001673, 0.0000000006083], [0.00000002326, 0.0000000006083, 0.00003236]]), [-4.712, 4.712], 10.996)]
+            ('Ry', [0, 0, 0.550], 0.849, [0.00001963, -0.001016, 0.02131],
+             np.array([[0.001555, -0.000003566, 0.0000003603], [-0.000003566, 0.001652, -0.00002011], [0.0000003603, -0.00002011, 0.0006239]]), [-2.007, 2.443], 6.458),
+            ('Rz', [0, 0, 0.100], 0.45635, [-0.0002166, 0.000004719, -0.006105],
+             np.array([[0.000138, 0.0000000007, 0.0000001884], [0.0000000007, 0.0001355, 0.0000000049], [0.0000001884, 0.0000000049, 0.0002621]]), [-4.712, 4.712], 10.996)]
     links = []
     for (jointType, translation, mass, COM, inertia, limits, maxVelocity) in data:
         links += [{'jointType': jointType, 'preHT': exudyn.HT(translation=translation), 'mass': mass, 'COM': COM,

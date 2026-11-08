@@ -781,6 +781,17 @@ bool MainObjectContactConvexConvexIsRegistered = ClassFactoryItemsSystemData<Mai
 		return object;
 	});
 
+bool MainObjectContactPrimitiveConvexIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactPrimitiveConvex", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactPrimitiveConvex();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactPrimitiveConvex(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactPrimitiveConvex* vObject = new VisualizationObjectContactPrimitiveConvex();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectContactCylinderTriangleIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactCylinderTriangle", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectContactCylinderTriangle();

@@ -7,8 +7,10 @@
 #           their velocities, ODE1 coordinates, algebraic coordinates (Lagrange multipliers) - in the L2 norm, relative to the L2 norm of
 #           the group in the reference solution. The reference is LobattoIIIC4GGL (RK67 for the models without
 #           algebraic and ODE1 coordinates) with h0/2^k, the last two results extrapolated by Richardson with the order
-#           observed in the last three; the adaptive solvers run with the tolerances 1e-2 ... 1e-10. The CPU time is that of
-#           SolveDynamic, the minimum of three runs. Writes PNG files into docs/figures/solverStudy/ and the data into
+#           observed in the last three; its Lagrange multipliers are those of the acceleration level at the finest
+#           end state (#3314). The implicit solvers also run down to h0/128 for the figure of the algebraic coordinates; the
+#           adaptive solvers run with the tolerances 1e-2 ... 1e-10. The CPU time is that of
+#           SolveDynamic, the minimum of three runs. Writes SVG and PDF files into docs/figures/solverStudy/ and the data into
 #           solverStudy.json beside them; not part of the test suite.
 #
 # Usage:    python python/testing/solverConvergenceFigures.py               compute and write the figures
@@ -41,14 +43,16 @@ import modelLibrary                                                             
 outputDirectory = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'docs', 'figures', 'solverStudy')
 dataFile = os.path.join(outputDirectory, 'solverStudy.json')
 
-implicitSolvers = ['GeneralizedAlpha', 'TrapezoidalIndex2', 'TrapezoidalGGL', 'LobattoIIIA4', 'LobattoIIIC4GGL', 'Radau3']
-explicitSolvers = ['RK44', 'RK67']
+implicitSolvers = ['GeneralizedAlpha', 'TrapezoidalIndex2', 'TrapezoidalGGL', 'LobattoIIIA4', 'LobattoIIIC4GGL', 'Radau3', 'Radau5']
+lowOrderExplicitSolvers = ['ExplicitEuler', 'ExplicitMidpoint', 'VelocityVerlet'] #only in the figure of the explicit solvers
+explicitSolvers = lowOrderExplicitSolvers + ['RK44', 'RK67']
 explicitAdaptiveSolvers = ['ODE23', 'DOPRI5']
-implicitAdaptiveSolvers = ['TrapezoidalGGL', 'LobattoIIIA4', 'LobattoIIIC4GGL', 'Radau3']
+implicitAdaptiveSolvers = ['TrapezoidalGGL', 'LobattoIIIA4', 'LobattoIIIC4GGL', 'Radau3', 'Radau5']
 groups = ['ODE2', 'ODE2_t', 'ODE1', 'AE']
 groupTitles = {'ODE2': 'ODE2 coordinates', 'ODE2_t': 'ODE2 velocities', 'ODE1': 'ODE1 coordinates',
                'AE': 'algebraic coordinates'}
 stepFactors = [2., 1., 0.5, 0.25, 0.125, 0.0625]
+refinedFactors = [2.**-5, 2.**-6, 2.**-7] #only the figure of the algebraic coordinates
 vanishingReference = 1e-10 #the L2 norm below which a reference group counts as zero
 tolerances = [1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10]
 
@@ -57,14 +61,17 @@ tolerances = [1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10]
 convergenceModels = ['nPendulum', 'rigidBodyJoints', 'rigidBodySpringDampers', 'sliderCrank3D', 'kinematicTree',
                      'FFRFreducedOrder', 'genericDAE']
 efficiencyModels = ['nPendulum', 'sliderCrank3D', 'kinematicTree', 'genericDAE']
+algebraicModels = ['nPendulum', 'sliderCrank3D', 'FFRFreducedOrder', 'genericDAE']
 studyModels = ['massOscillator'] + convergenceModels
 
 #the categorical palette of the dataviz reference, in fixed order: one color per solver in every figure
 colors = {'GeneralizedAlpha': '#2a78d6', 'TrapezoidalIndex2': '#eb6834', 'TrapezoidalGGL': '#1baf7a',
-          'LobattoIIIA4': '#eda100', 'LobattoIIIC4GGL': '#e87ba4', 'Radau3': '#008300', 'RK44': '#6250d6',
-          'RK67': '#e34948', 'ODE23': '#555555', 'DOPRI5': '#222222'}
+          'LobattoIIIA4': '#eda100', 'LobattoIIIC4GGL': '#e87ba4', 'Radau3': '#008300', 'Radau5': '#6250d6',
+          'ExplicitEuler': '#e87ba4', 'ExplicitMidpoint': '#008300', 'VelocityVerlet': '#6250d6', 'RK44': '#eb6834',
+          'RK67': '#1baf7a', 'ODE23': '#555555', 'DOPRI5': '#222222'}
 markers = {'GeneralizedAlpha': 'o', 'TrapezoidalIndex2': 's', 'TrapezoidalGGL': '^', 'LobattoIIIA4': 'D',
-           'LobattoIIIC4GGL': 'v', 'Radau3': 'P', 'RK44': 'X', 'RK67': '*', 'ODE23': 'h', 'DOPRI5': 'p'}
+           'LobattoIIIC4GGL': 'v', 'Radau3': 'P', 'Radau5': 'X', 'ExplicitEuler': '<', 'ExplicitMidpoint': '>',
+           'VelocityVerlet': 'd', 'RK44': 'H', 'RK67': '*', 'ODE23': 'h', 'DOPRI5': 'p'}
 
 
 def Groups(mbs):
@@ -110,6 +117,29 @@ def Run(model, solverName, stepSize=None, tolerance=None, repeat=1):
     return best
 
 
+def MultipliersFromAccelerationLevel(model, state):
+    """the Lagrange multipliers of an end state from [M C_q^T; C_q 0][a; lambda] = [f; -(C_q v)_q v - ...], the solve of
+    the initial accelerations with its numerical (C_q v)_q; they do not contain the rounding of the position constraints
+    divided by h^2 that limits the multipliers of the solvers at small steps (#3314)"""
+    mbs = modelLibrary.GetModel(model)
+    info = mbs.variables['modelLibrary']
+    simulationSettings = modelLibrary.SimulationSettings(mbs)
+    timeIntegration = simulationSettings.timeIntegration
+    timeIntegration.startTime = info['endTime']
+    timeIntegration.endTime = info['endTime'] + 1e-3
+    timeIntegration.generalizedAlpha.computeInitialAccelerations = True
+    timeIntegration.generalizedAlpha.storeInitialAlgebraicCoordinates = True
+    timeIntegration.generalizedAlpha.checkInitialConstraints = False
+    systemData = mbs.systemData
+    systemData.SetODE2Coordinates(state['ODE2'], exu.ConfigurationType.Initial)
+    systemData.SetODE2Coordinates_t(state['ODE2_t'], exu.ConfigurationType.Initial)
+    if state['ODE1'] is not None:
+        systemData.SetODE1Coordinates(state['ODE1'], exu.ConfigurationType.Initial)
+    solver = exu.MainSolverImplicitSecondOrder()
+    solver.InitializeSolver(mbs, simulationSettings)
+    return np.array(systemData.GetAECoordinates())
+
+
 def Reference(model, levels=7):
     """the reference per group: halve the step, Richardson with the observed order of the last three results"""
     info = modelLibrary.GetModel(model).variables['modelLibrary']
@@ -132,6 +162,8 @@ def Reference(model, levels=7):
         (d1, d2) = (np.linalg.norm(b - a), np.linalg.norm(c - b))
         order = np.clip(np.log2(d1/d2), 1., 6.) if d2 > 0 and d1 > 0 else 6.
         reference[g] = (c + (c - b)/(2**order - 1)).tolist()
+    if reference['AE'] is not None:
+        reference['AE'] = MultipliersFromAccelerationLevel(model, results[-1]).tolist()
     return {'solver': solverName, 'step': info['stepSize']*0.5**levels, 'groups': reference}
 
 
@@ -157,12 +189,12 @@ def AdaptiveRuns(model, entry):
 def Compute(models):
     data = json.load(open(dataFile)) if os.path.exists(dataFile) else {} #a run continues where a previous one stopped
     for model in models:
-        if model in data and all(g in data[model]['reference']['groups'] for g in groups):
+        if model in data and 'refined' in data[model]:
             continue
         print('model', model, flush=True)
         reference = Reference(model)
         h0 = modelLibrary.GetModel(model).variables['modelLibrary']['stepSize']
-        entry = {'h0': h0, 'reference': reference, 'fixed': {}, 'adaptive': {}}
+        entry = {'h0': h0, 'reference': reference, 'fixed': {}, 'adaptive': {}, 'refined': {}}
         unconstrained = reference['groups']['AE'] is None
         solvers = implicitSolvers + (explicitSolvers if unconstrained else [])
         for solverName in solvers:
@@ -173,6 +205,13 @@ def Compute(models):
                              'time': run[1] if run else None, 'steps': run[2] if run else None})
             entry['fixed'][solverName] = rows
             print('  ', solverName, ['{:.1e}'.format(r['errors']['ODE2']) if r['errors'] else '-' for r in rows], flush=True)
+        if not unconstrained:
+            for solverName in implicitSolvers:
+                rows = []
+                for factor in refinedFactors:
+                    run = Run(model, solverName, stepSize=h0*factor)
+                    rows.append({'h': h0*factor, 'errors': Errors(run[0], reference['groups']) if run else None})
+                entry['refined'][solverName] = rows
         AdaptiveRuns(model, entry)
         data[model] = entry
         os.makedirs(outputDirectory, exist_ok=True)
@@ -190,13 +229,14 @@ def Plot(data):
     plt.rcParams.update({'font.size': 9, 'axes.edgecolor': '#888888', 'axes.labelcolor': '#333333',
                          'xtick.color': '#555555', 'ytick.color': '#555555', 'axes.grid': True, 'grid.color': '#e4e4e4',
                          'grid.linewidth': 0.6, 'lines.linewidth': 1.5, 'lines.markersize': 5,
-                         'legend.frameon': False})
+                         'legend.frameon': False, 'svg.hashsalt': 'solverStudy', 'pdf.fonttype': 42})
     written = []
 
     def Save(figure, name):
         for axis in figure.axes:
             axis.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
-        figure.savefig(os.path.join(outputDirectory, name + '.png'), dpi=110, bbox_inches='tight')
+        figure.savefig(os.path.join(outputDirectory, name + '.svg'), bbox_inches='tight', metadata={'Date': None})
+        figure.savefig(os.path.join(outputDirectory, name + '.pdf'), bbox_inches='tight', metadata={'CreationDate': None})
         plt.close(figure)
         written.append(name)
 
@@ -210,7 +250,7 @@ def Plot(data):
             reference = entry['reference']['groups'][g]
             if reference is not None and np.linalg.norm(reference) < vanishingReference:
                 entry['reference']['groups'][g] = None
-                for rows in list(entry['fixed'].values()) + list(entry['adaptive'].values()):
+                for rows in list(entry['fixed'].values()) + list(entry['adaptive'].values()) + list(entry['refined'].values()):
                     for row in rows:
                         if row['errors']:
                             row['errors'][g] = None
@@ -223,7 +263,7 @@ def Plot(data):
         return (figure, list(axes.flat), [row[0] for row in axes], axes[0][-1])
 
     def Line(axis, xs, ys, solverName, dashed=False, label=True):
-        points = [(x, y) for (x, y) in zip(xs, ys) if x is not None and y is not None and y > 0]
+        points = [(x, y) for (x, y) in zip(xs, ys) if x is not None and y is not None and 0 < y < 10] #above: diverged
         if points:
             axis.loglog(*zip(*points), color=colors[solverName], marker=markers[solverName], linestyle='--' if dashed else '-',
                         label=solverName if label else None)
@@ -242,7 +282,9 @@ def Plot(data):
         (figure, axes, leftAxes, legendAxis) = Subplots(len(present), 3.3, 3.2)
         for (axis, g) in zip(axes, present):
             for (solverName, rows) in entry['fixed'].items():
-                Line(axis, [r['h'] for r in rows], [r['errors'][g] if r['errors'] else None for r in rows], solverName)
+                if solverName not in lowOrderExplicitSolvers:
+                    Line(axis, [r['h'] for r in rows], [r['errors'][g] if r['errors'] else None for r in rows], solverName,
+                         dashed=solverName in explicitSolvers)
             OrderTriangles(axis, [r['h'] for r in rows], [2, 4])
             axis.set_title(groupTitles[g])
             axis.set_xlabel('step size h [s]')
@@ -264,8 +306,9 @@ def Plot(data):
     for (axis, model) in zip(axes[0], explicitModels):
         for solverName in ['GeneralizedAlpha', 'LobattoIIIA4'] + explicitSolvers:
             rows = data[model]['fixed'].get(solverName, [])
-            Line(axis, [r['h'] for r in rows], [r['errors']['ODE2'] if r['errors'] else None for r in rows], solverName)
-        OrderTriangles(axis, [r['h'] for r in rows], [2, 4, 6])
+            Line(axis, [r['h'] for r in rows], [r['errors']['ODE2'] if r['errors'] else None for r in rows], solverName,
+                 dashed=solverName in explicitSolvers)
+        OrderTriangles(axis, [r['h'] for r in rows], [1, 2, 4, 6])
         axis.set_title(model)
         axis.set_xlabel('step size h [s]')
     axes[0][0].set_ylabel('relative error, ODE2 coordinates')
@@ -298,7 +341,8 @@ def Plot(data):
         handles = {}
         for (axis, model) in zip(axes, efficiencyModels):
             for (solverName, rows) in data[model][kind].items():
-                Line(axis, [r['time'] for r in rows], [r['errors']['ODE2'] if r['errors'] else None for r in rows], solverName)
+                if solverName not in lowOrderExplicitSolvers:
+                    Line(axis, [r['time'] for r in rows], [r['errors']['ODE2'] if r['errors'] else None for r in rows], solverName)
             axis.set_title(model)
             axis.set_xlabel('CPU time [s]')
             for (handle, label) in zip(*axis.get_legend_handles_labels()):
@@ -334,6 +378,20 @@ def Plot(data):
     axis.set_ylabel('relative error, ODE2 (geometric mean)')
     axis.legend(loc='center left', bbox_to_anchor=(1.02, 0.5))
     Save(figure, 'efficiency_mean')
+
+    #6) the algebraic coordinates down to h0/128: the error of the solvers' own multipliers has a minimum and grows again
+    (figure, axes, leftAxes, legendAxis) = Subplots(len(algebraicModels), 3.3, 3.2)
+    for (axis, model) in zip(axes, algebraicModels):
+        for solverName in implicitSolvers:
+            rows = data[model]['fixed'][solverName] + data[model]['refined'][solverName]
+            Line(axis, [r['h'] for r in rows], [r['errors']['AE'] if r['errors'] else None for r in rows], solverName)
+        axis.set_title(model)
+        axis.set_xlabel('step size h [s]')
+    for axis in leftAxes:
+        axis.set_ylabel('relative error, algebraic coordinates')
+    legendAxis.legend(loc='center left', bbox_to_anchor=(1.02, 0.5))
+    figure.tight_layout()
+    Save(figure, 'convergence_algebraic')
     return written
 
 

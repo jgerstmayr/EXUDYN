@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  19:12:28 (last modified)
+* @date         2026-11-08  17:11:13 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectContactCylinderCylinder
-* @brief        A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereTriangle.
+* @brief        A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims, or capsules by the options isCapsule0 and isCapsule1; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereTriangle.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -120,6 +120,8 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "cylindersRadii")) { EPyUtils::FromPython(d["cylindersRadii"], cObjectContactCylinderCylinder->GetParameters().cylindersRadii); }
         if (EPyUtils::DictItemExists(d, "cylindersLengths")) { EPyUtils::FromPython(d["cylindersLengths"], cObjectContactCylinderCylinder->GetParameters().cylindersLengths); }
         if (EPyUtils::DictItemExists(d, "isHollowCylinder1")) { EPyUtils::FromPython(d["isHollowCylinder1"], cObjectContactCylinderCylinder->GetParameters().isHollowCylinder1, "ObjectContactCylinderCylinder.isHollowCylinder1"); }
+        if (EPyUtils::DictItemExists(d, "isCapsule0")) { EPyUtils::FromPython(d["isCapsule0"], cObjectContactCylinderCylinder->GetParameters().isCapsule0, "ObjectContactCylinderCylinder.isCapsule0"); }
+        if (EPyUtils::DictItemExists(d, "isCapsule1")) { EPyUtils::FromPython(d["isCapsule1"], cObjectContactCylinderCylinder->GetParameters().isCapsule1, "ObjectContactCylinderCylinder.isCapsule1"); }
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactCylinderCylinder->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactCylinderCylinder.dynamicFriction"); }
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { EPyUtils::FromPython(d["frictionProportionalZone"], cObjectContactCylinderCylinder->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactCylinderCylinder.frictionProportionalZone"); }
         if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactCylinderCylinder->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactCylinderCylinder.contactStiffness"); }
@@ -150,6 +152,8 @@ public: // AUTO:
         d["cylindersRadii"] = EPyUtils::ToPython(cObjectContactCylinderCylinder->GetParameters().cylindersRadii);
         d["cylindersLengths"] = EPyUtils::ToPython(cObjectContactCylinderCylinder->GetParameters().cylindersLengths);
         d["isHollowCylinder1"] = (bool)cObjectContactCylinderCylinder->GetParameters().isHollowCylinder1;
+        d["isCapsule0"] = (bool)cObjectContactCylinderCylinder->GetParameters().isCapsule0;
+        d["isCapsule1"] = (bool)cObjectContactCylinderCylinder->GetParameters().isCapsule1;
         d["dynamicFriction"] = (Real)cObjectContactCylinderCylinder->GetParameters().dynamicFriction;
         d["frictionProportionalZone"] = (Real)cObjectContactCylinderCylinder->GetParameters().frictionProportionalZone;
         d["contactStiffness"] = (Real)cObjectContactCylinderCylinder->GetParameters().contactStiffness;
@@ -179,6 +183,8 @@ public: // AUTO:
         else if (parameterName.compare("cylindersRadii") == 0) { return EPyUtils::ToPython(cObjectContactCylinderCylinder->GetParameters().cylindersRadii); } //! AUTO: get parameter
         else if (parameterName.compare("cylindersLengths") == 0) { return EPyUtils::ToPython(cObjectContactCylinderCylinder->GetParameters().cylindersLengths); } //! AUTO: get parameter
         else if (parameterName.compare("isHollowCylinder1") == 0) { return py::cast((bool)cObjectContactCylinderCylinder->GetParameters().isHollowCylinder1); } //! AUTO: get parameter
+        else if (parameterName.compare("isCapsule0") == 0) { return py::cast((bool)cObjectContactCylinderCylinder->GetParameters().isCapsule0); } //! AUTO: get parameter
+        else if (parameterName.compare("isCapsule1") == 0) { return py::cast((bool)cObjectContactCylinderCylinder->GetParameters().isCapsule1); } //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { return py::cast((Real)cObjectContactCylinderCylinder->GetParameters().dynamicFriction); } //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { return py::cast((Real)cObjectContactCylinderCylinder->GetParameters().frictionProportionalZone); } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectContactCylinderCylinder->GetParameters().contactStiffness); } //! AUTO: get parameter
@@ -209,6 +215,8 @@ public: // AUTO:
         else if (parameterName.compare("cylindersRadii") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderCylinder->GetParameters().cylindersRadii); } //! AUTO: set parameter
         else if (parameterName.compare("cylindersLengths") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderCylinder->GetParameters().cylindersLengths); } //! AUTO: set parameter
         else if (parameterName.compare("isHollowCylinder1") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderCylinder->GetParameters().isHollowCylinder1, "ObjectContactCylinderCylinder.isHollowCylinder1"); } //! AUTO: set parameter
+        else if (parameterName.compare("isCapsule0") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderCylinder->GetParameters().isCapsule0, "ObjectContactCylinderCylinder.isCapsule0"); } //! AUTO: set parameter
+        else if (parameterName.compare("isCapsule1") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderCylinder->GetParameters().isCapsule1, "ObjectContactCylinderCylinder.isCapsule1"); } //! AUTO: set parameter
         else if (parameterName.compare("dynamicFriction") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderCylinder->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactCylinderCylinder.dynamicFriction"); } //! AUTO: set parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderCylinder->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactCylinderCylinder.frictionProportionalZone"); } //! AUTO: set parameter
         else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactCylinderCylinder->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactCylinderCylinder.contactStiffness"); } //! AUTO: set parameter

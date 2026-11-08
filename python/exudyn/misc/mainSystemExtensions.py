@@ -60,7 +60,7 @@ __all__ = [
     'MainSystemCreateSphereQuadContact', 'MainSystemCreateSphereTriangleContact',
     'MainSystemCreateSphereCylinderContact', 'MainSystemCreateCylinderCylinderContact',
     'MainSystemCreateCylinderTriangleContact', 'MainSystemCreateConeConeContact',
-    'MainSystemCreateConeTriangleContact', 'MainSystemCreateConvexConvexContact',
+    'MainSystemCreateConeTriangleContact', 'MainSystemCreateConvexConvexContact', 'MainSystemCreatePrimitiveConvexContact',
     'MainSystemCreateKinematicTree', 'MainSystemCreateFFRFReducedOrderObject',
     'MainSystemCreateForce', 'MainSystemCreateTorque', 'CreateDistanceSensorGeometry',
     'CreateDistanceSensor',
@@ -2828,7 +2828,7 @@ def MainSystemCreateSphereCylinderContact(mbs, name='', itemNumbers=[None, None]
 @extends(exudyn.MainSystem)
 def MainSystemCreateCylinderCylinderContact(mbs, name='', itemNumbers=[None, None],
                                            localPosition0=[0.,0.,0.], localAxis0=[0.,0.,1.], localPosition1=[0.,0.,0.], localAxis1=[0.,0.,1.],
-                                           cylindersRadii=[0., 0.], cylindersLengths=[0., 0.], isHollowCylinder1=False,
+                                           cylindersRadii=[0., 0.], cylindersLengths=[0., 0.], isHollowCylinder1=False, isCapsule0=False, isCapsule1=False,
                                            contactStiffness=0., contactDamping=0., dynamicFriction=0., frictionProportionalZone=1e-3,
                                            contactStiffnessExponent=1, restitutionCoefficient=1, minimumImpactVelocity=0,
                                            impactModel=exu.ContactImpactModel.Linear, contactPlasticityRatio=0., adhesionCoefficient=0.,
@@ -2848,6 +2848,8 @@ def MainSystemCreateCylinderCylinderContact(mbs, name='', itemNumbers=[None, Non
         cylindersRadii: the radii of cylinder 0 and cylinder 1 [SI:m]; of the bore with isHollowCylinder1
         cylindersLengths: the lengths of cylinder 0 and cylinder 1 [SI:m], each centered at its local position
         isHollowCylinder1: if True, cylinder 0 moves inside cylinder 1, a hollow cylinder open at both ends
+        isCapsule0: if True, shape 0 is a capsule, cylindersLengths[0] the length between the centers of its half spheres (#3365)
+        isCapsule1: if True, shape 1 is a capsule, as isCapsule0
         contactStiffness: normal contact stiffness of each contact point [SI:N/m]
         contactDamping: linear normal contact damping of each contact point [SI:N/(m s)]
         dynamicFriction: dynamic friction coefficient of the regularized Coulomb friction
@@ -2891,15 +2893,17 @@ def MainSystemCreateCylinderCylinderContact(mbs, name='', itemNumbers=[None, Non
                constantPullOffForce=constantPullOffForce, contactForceUserFunction=contactForceUserFunction, activeConnector=activeConnector)
     if not exudyn.__useExudynFast and not (IsVector(cylindersRadii, 2) and IsVector(cylindersLengths, 2)):
         RaiseTypeError(where=where, argumentName='cylindersRadii, cylindersLengths', received = [cylindersRadii, cylindersLengths], expectedType = ExpectedType.Vector, dim=2)
-    if not exudyn.__useExudynFast and not IsValidBool(isHollowCylinder1):
-        RaiseTypeError(where=where, argumentName='isHollowCylinder1', received = isHollowCylinder1, expectedType = ExpectedType.Bool)
+    for (argumentName, value) in [('isHollowCylinder1', isHollowCylinder1), ('isCapsule0', isCapsule0), ('isCapsule1', isCapsule1)]:
+        if not exudyn.__useExudynFast and not IsValidBool(value):
+            RaiseTypeError(where=where, argumentName=argumentName, received = value, expectedType = ExpectedType.Bool)
     CheckPrimitiveContact(where, name, itemNumbers, [localPosition0, localPosition1], {0: localAxis0, 1: localAxis1},
                           {'cylindersRadii': cylindersRadii, 'cylindersLengths': cylindersLengths}, law, show, color)
     markers = [ShapeMarker(mbs, name, 0, itemNumbers[0], AxisHT(localPosition0, localAxis0)),
                ShapeMarker(mbs, name, 1, itemNumbers[1], AxisHT(localPosition1, localAxis1))]
     return AddPrimitiveContact(mbs, eii.ObjectContactCylinderCylinder, eii.VObjectContactCylinderCylinder, markers,
                                8 if isHollowCylinder1 else 4, law, show, color,
-                               dict(cylindersRadii=cylindersRadii, cylindersLengths=cylindersLengths, isHollowCylinder1=isHollowCylinder1))
+                               dict(cylindersRadii=cylindersRadii, cylindersLengths=cylindersLengths, isHollowCylinder1=isHollowCylinder1,
+                                    isCapsule0=isCapsule0, isCapsule1=isCapsule1))
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
@@ -3209,6 +3213,75 @@ def MainSystemCreateConvexConvexContact(mbs, name='', itemNumbers=[None, None],
     CheckPrimitiveContact(where, name, itemNumbers, [localPosition0, localPosition1], {}, {}, law, show, color)
     markers = [ShapeMarker(mbs, name, 0, itemNumbers[0], np.eye(4)), ShapeMarker(mbs, name, 1, itemNumbers[1], np.eye(4))]
     return AddPrimitiveContact(mbs, eii.ObjectContactConvexConvex, eii.VObjectContactConvexConvex, markers, 8, law, show, color, shape)
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@extends(exudyn.MainSystem)
+def MainSystemCreatePrimitiveConvexContact(mbs, name='', itemNumbers=[None, None], primitiveType=exu.ContactPrimitiveType.Sphere,
+                                          radius=0., radius1=0., length=0., points1=None, triangles1=None,
+                                          localPosition0=[0.,0.,0.], localAxis0=[0.,0.,1.], localPosition1=[0.,0.,0.],
+                                          contactStiffness=0., contactDamping=0., dynamicFriction=0., frictionProportionalZone=1e-3,
+                                          contactStiffnessExponent=1, restitutionCoefficient=1, minimumImpactVelocity=0,
+                                          impactModel=exu.ContactImpactModel.Linear, contactPlasticityRatio=0., adhesionCoefficient=0.,
+                                          adhesionExponent=1., constantPullOffForce=0., contactForceUserFunction=0,
+                                          activeConnector=True, show=False, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+    """Create the penalty contact of a sphere, capsule, cylinder or truncated cone with a convex polytope,
+    ObjectContactPrimitiveConvex, with its markers and its data node of 4 contact points (#3364).
+
+    Args:
+        mbs: the MainSystem where the markers, the data node and the contact are created
+        name: name of the item; the markers and the data node get names derived from it
+        itemNumbers: the two bodies, nodes or markers of the shapes, [primitive, polytope]; a body or node is given a marker
+        primitiveType: exu.ContactPrimitiveType: Sphere, Capsule, Cylinder or Cone; the integers 0 to 3 are accepted as well
+        radius: the radius of the primitive; of the cone at the start of its axis [SI:m]
+        radius1: the radius of the cone at the end of its axis [SI:m]; only used for Cone
+        length: the length of the cylinder or the cone, or that of a capsule between the centers of its half spheres [SI:m]
+        points1: the points of the polytope in the frame of item 1, an n x 3 list or numpy array, for example from graphics.ToPointsAndTrigs
+        triangles1: the triangles of the polytope, an n x 3 integer array of indices into points1, with the normal out of the shape
+        localPosition0: the center of the primitive on item 0; [0,0,0] for a marker
+        localAxis0: the axis of the primitive on item 0, need not have unit length; [0,0,1] for a marker, whose z axis is the axis
+        localPosition1: the offset added to points1
+        contactStiffness: normal contact stiffness of each contact point [SI:N/m]
+        contactDamping: linear normal contact damping of each contact point [SI:N/(m s)]
+        dynamicFriction: dynamic friction coefficient of the regularized Coulomb friction
+        frictionProportionalZone: velocity [SI:m/s] up to which the friction is proportional to the sliding velocity
+        contactStiffnessExponent: exponent of the penetration in the normal contact force
+        restitutionCoefficient: coefficient of restitution of the impact model
+        minimumImpactVelocity: lower bound of the impact velocity of the impact model [SI:m/s]
+        impactModel: exu.ContactImpactModel: Linear, HuntCrossley or GonthierCarvalhoMartins; the integers 0, 1, 2 are accepted as well
+        contactPlasticityRatio: ratio of the stiffness of first loading and of unloading of the adhesive elasto-plastic model; 0: elastic
+        adhesionCoefficient: coefficient of the adhesion of the adhesive elasto-plastic model [SI:N/m]
+        adhesionExponent: exponent of the adhesion of the adhesive elasto-plastic model
+        constantPullOffForce: constant adhesion force of each contact point of the adhesive elasto-plastic model [SI:N]
+        contactForceUserFunction: a Python or symbolic user function replacing the contact law, see ObjectContactPrimitiveConvex
+        activeConnector: False: no force, the output Distance is still computed
+        show: True: the shapes are drawn
+        color: the color of the shapes
+
+    Returns:
+        :ObjectIndex: returns the index of the contact item; its data node is mbs.GetObject(oContact)['nodeNumber']
+
+    Example:
+        mbs.CreatePrimitiveConvexContact(itemNumbers=[oBall, oGround], primitiveType=exu.ContactPrimitiveType.Sphere, radius=0.1,
+                                         points1=points, triangles1=triangles, contactStiffness=1e5, contactDamping=500)
+    """
+    where = 'MainSystem.CreatePrimitiveConvexContact(...)'
+    law = dict(contactStiffness=contactStiffness, contactDamping=contactDamping, dynamicFriction=dynamicFriction,
+               frictionProportionalZone=frictionProportionalZone, contactStiffnessExponent=contactStiffnessExponent,
+               restitutionCoefficient=restitutionCoefficient, minimumImpactVelocity=minimumImpactVelocity, impactModel=impactModel,
+               contactPlasticityRatio=contactPlasticityRatio, adhesionCoefficient=adhesionCoefficient, adhesionExponent=adhesionExponent,
+               constantPullOffForce=constantPullOffForce, contactForceUserFunction=contactForceUserFunction, activeConnector=activeConnector)
+    shape = {}
+    for (key, value, columns) in [('points1', points1, 'real'), ('triangles1', triangles1, 'int')]:
+        array = np.array(value) if value is not None else np.zeros((0, 3))
+        if not exudyn.__useExudynFast and (array.ndim != 2 or array.shape[1] != 3 or array.shape[0] < 4
+                                           or (columns == 'int' and not np.issubdtype(array.dtype, np.integer))):
+            RaiseTypeError(where=where, argumentName=key, received = value, expectedType = 'a list or numpy array of n x 3 ' + ('points, n >= 4' if columns == 'real' else 'integer indices, n >= 4'))
+        shape[key] = array if columns == 'int' else array + np.array(localPosition1)
+    CheckPrimitiveContact(where, name, itemNumbers, [localPosition0, localPosition1], {0: localAxis0}, {'radius': [radius if int(primitiveType) != 3 else max(radius, radius1)]}, law, show, color)
+    markers = [ShapeMarker(mbs, name, 0, itemNumbers[0], AxisHT(localPosition0, localAxis0)), ShapeMarker(mbs, name, 1, itemNumbers[1], np.eye(4))]
+    shape.update(primitiveType=primitiveType, radius=radius, radius1=radius1, length=length)
+    return AddPrimitiveContact(mbs, eii.ObjectContactPrimitiveConvex, eii.VObjectContactPrimitiveConvex, markers, 4, law, show, color, shape)
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

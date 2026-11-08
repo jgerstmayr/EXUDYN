@@ -702,7 +702,13 @@ and `ObjectJournalBearing` are listed under Object (Contact), with a general pag
 and the Create functions.
 **A Robot from a URDF in one call** (#3356): `urdfImport.RobotFromURDFdata` creates the `Robot` from the data of
 `GetURDFrobotData`, and `Robot.SaveToHDF5` / `LoadFromHDF5` store it with its graphics.
-**Radau5, an implicit Runge-Kutta solver of order 5** (#3318): `exu.DynamicSolverType.Radau5` and `'Radau5'` of
+**Capsules in the contacts, and primitives against polytopes** (#3364, #3365, #3366): `ObjectContactCylinderCylinder` has the options
+    `isCapsule0` and `isCapsule1`, and `ObjectContactPrimitiveConvex` with `mbs.CreatePrimitiveConvexContact` is the contact of a
+    sphere, capsule, cylinder or truncated cone, `exu.ContactPrimitiveType`, with a convex polytope. `graphics.Capsule` draws a capsule.
+    **Which dynamic solver to take** (#3370): the solver manual has recommendations, and warns that the error of the algebraic
+    coordinates, the constraint forces, grows again at very small steps (#3369).
+    **ManipulatorStaubliTX2_90L** (#3371): 0.4 kg of its link 5 moved to link 6, the total mass unchanged.
+    **Radau5, an implicit Runge-Kutta solver of order 5** (#3318): `exu.DynamicSolverType.Radau5` and `'Radau5'` of
 `SolveImplicitRungeKutta`, Radau IIA with three stages for index-3 constraints: order 5 in positions and velocities,
 order 3 in accelerations and multipliers, L-stable, with constant or automatic steps; a step costs about half a step of
 `LobattoIIIC4GGL`.

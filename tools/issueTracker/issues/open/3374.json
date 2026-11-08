@@ -1,0 +1,12 @@
+{
+  "number": 3374,
+  "title": "Simple collision shapes in robotics.models for Spot, UR5, Panda and the TX2-90L",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The future trajectory planner needs collision shapes of the robots without STL files. Decided: spheres, capsules or boxes in the link frames, fitted to the collision meshes, for these four robots.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "workingRemarks": "Includes the check of the convex hull at the URDF import, volume against hull with a warning below 0.98, from design contactPrimitives.md section 9.1."
+}

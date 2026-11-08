@@ -309,7 +309,7 @@ bearings, ASME Journal of Tribology 132 (2010).
 
 ## 9. Mesh collision shapes, polytopes against primitives, capsules (maintainer 2026-11-08, RG9.13)
 
-Recommendations for the maintainer to check.
+Decided 2026-11-08 (maintainer) as recommended, and done (#3364 to #3366), with these differences: a capsule cannot be combined with a hollow shape at all, and the check of the convex hull at the URDF import goes with #3374.
 
 ### 9.1 Are the collision meshes of a URDF convex?
 

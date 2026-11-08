@@ -28,6 +28,7 @@ appendSystemTest
 ballBearingTest
 binarySolutionFileTest
 bricardMechanism
+capsulePrimitiveContactTest
 carRollingDiscTest
 CartesianSpringDamperTest
 compareAbaqusAnsysRotorEigenfrequencies

@@ -24,6 +24,7 @@ from exudyn.misc.mainSystemExtensions import MainSystemCreateCylinderTriangleCon
 from exudyn.misc.mainSystemExtensions import MainSystemCreateConeConeContact as _MainSystemCreateConeConeContact
 from exudyn.misc.mainSystemExtensions import MainSystemCreateConeTriangleContact as _MainSystemCreateConeTriangleContact
 from exudyn.misc.mainSystemExtensions import MainSystemCreateConvexConvexContact as _MainSystemCreateConvexConvexContact
+from exudyn.misc.mainSystemExtensions import MainSystemCreatePrimitiveConvexContact as _MainSystemCreatePrimitiveConvexContact
 from exudyn.misc.mainSystemExtensions import MainSystemCreateKinematicTree as _MainSystemCreateKinematicTree
 from exudyn.misc.mainSystemExtensions import MainSystemCreateFFRFReducedOrderObject as _MainSystemCreateFFRFReducedOrderObject
 from exudyn.misc.mainSystemExtensions import MainSystemCreateForce as _MainSystemCreateForce
@@ -66,6 +67,7 @@ class MainSystem:
     CreateConeConeContact = _MainSystemCreateConeConeContact
     CreateConeTriangleContact = _MainSystemCreateConeTriangleContact
     CreateConvexConvexContact = _MainSystemCreateConvexConvexContact
+    CreatePrimitiveConvexContact = _MainSystemCreatePrimitiveConvexContact
     CreateKinematicTree = _MainSystemCreateKinematicTree
     CreateFFRFReducedOrderObject = _MainSystemCreateFFRFReducedOrderObject
     CreateForce = _MainSystemCreateForce

@@ -25,7 +25,7 @@ changed (active set strategy).
 
 `mbs.CreateSphereSphereContact`, `CreateSphereTriangleContact`, `CreateSphereCylinderContact`,
 `CreateCylinderCylinderContact`, `CreateCylinderTriangleContact`, `CreateConeConeContact`,
-`CreateConeTriangleContact` and `CreateConvexConvexContact` add the data node of the right size, the markers and the
+`CreateConeTriangleContact`, `CreateConvexConvexContact` and `CreatePrimitiveConvexContact` add the data node of the right size, the markers and the
 contact; the theory of the contacts between primitive shapes is in [](#sec-contact-primitives).
 
 (sec-drawing-objectscontact)=

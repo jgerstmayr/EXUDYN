@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectContactCylinderCylinder
-* @brief        A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereTriangle.
+* @brief        A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims, or capsules by the options isCapsule0 and isCapsule1; up to 4 contact points carry a line or a face of contact. Contact law and friction as for ObjectContactSphereTriangle.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  14:41:37 (last modified)
+* @date         2026-11-08  17:11:13 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

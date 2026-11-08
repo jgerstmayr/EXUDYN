@@ -68,7 +68,7 @@ mutableArgsFunctionsChecked = [
     'MainSystemCreateForce','MainSystemCreateTorque','MainSystemCreateCoordinateConstraint',
     'MainSystemCreateSphereSphereContact','MainSystemCreateSphereQuadContact','MainSystemCreateSphereTriangleContact',
     'MainSystemCreateSphereCylinderContact','MainSystemCreateCylinderCylinderContact','MainSystemCreateCylinderTriangleContact',
-    'MainSystemCreateConeConeContact','MainSystemCreateConeTriangleContact','MainSystemCreateConvexConvexContact',
+    'MainSystemCreateConeConeContact','MainSystemCreateConeTriangleContact','MainSystemCreateConvexConvexContact','MainSystemCreatePrimitiveConvexContact',
     'MainSystemCreateFFRFReducedOrderObject',
     #plot:
     'PlotSensor', 'DataArrayFromSensorList',

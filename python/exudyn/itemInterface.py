@@ -55,6 +55,7 @@ __all__ = [
     'ObjectContactConeConeContactForceUserFunction',
     'ObjectContactConeTriangleContactForceUserFunction',
     'ObjectContactConvexConvexContactForceUserFunction',
+    'ObjectContactPrimitiveConvexContactForceUserFunction',
     'ObjectContactCylinderTriangleContactForceUserFunction',
     'ObjectJournalBearingForceUserFunction', 'ObjectJointGenericOffsetUserFunction',
     'ObjectJointGenericOffsetUserFunction_t', 'MarkerBodyUserPositionUserFunction',
@@ -116,7 +117,8 @@ __all__ = [
     'ObjectContactSphereTriangle', 'VObjectContactSphereCylinder', 'ObjectContactSphereCylinder',
     'VObjectContactCylinderCylinder', 'ObjectContactCylinderCylinder', 'VObjectContactConeCone',
     'ObjectContactConeCone', 'VObjectContactConeTriangle', 'ObjectContactConeTriangle',
-    'VObjectContactConvexConvex', 'ObjectContactConvexConvex', 'VObjectContactCylinderTriangle',
+    'VObjectContactConvexConvex', 'ObjectContactConvexConvex', 'VObjectContactPrimitiveConvex',
+    'ObjectContactPrimitiveConvex', 'VObjectContactCylinderTriangle',
     'ObjectContactCylinderTriangle', 'VObjectJournalBearing', 'ObjectJournalBearing',
     'VObjectContactCurveCircles', 'ObjectContactCurveCircles', 'CamFollowerContactPlanar',
     'VCamFollowerContactPlanar', 'VObjectJointGeneric', 'ObjectJointGeneric', 'GenericJoint',
@@ -279,6 +281,7 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectContactConeCone,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactConeConeContactForceUserFunction']],
         'ObjectContactConeTriangle,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactConeTriangleContactForceUserFunction']],
         'ObjectContactConvexConvex,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactConvexConvexContactForceUserFunction']],
+        'ObjectContactPrimitiveConvex,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactPrimitiveConvexContactForceUserFunction']],
         'ObjectContactCylinderTriangle,contactForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'StdVector3D', 'StdVector3D', 'Real'], ['mbs', 't', 'itemNumber', 'gap', 'gap_t', 'normal', 'tangentialVelocity', 'impactVelocity'], ['StdVector3D'], ['ObjectContactCylinderTriangleContactForceUserFunction']],
         'ObjectJournalBearing,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector3D', 'Real', 'StdVector3D'], ['mbs', 't', 'itemNumber', 'eccentricity', 'eccentricity_t', 'angularVelocity', 'axis'], ['StdVector3D'], ['ObjectJournalBearingForceUserFunction']],
         'ObjectJointGeneric,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 't', 'itemNumber', 'offsetUserFunctionParameters'], ['StdVector6D'], ['ObjectJointGenericOffsetUserFunction']],
@@ -1818,6 +1821,38 @@ class ObjectContactConeTriangleContactForceUserFunction(Protocol):
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, gap: float, gap_t: float, normal: np.ndarray, tangentialVelocity: np.ndarray, impactVelocity: float) -> np.ndarray: ...
 
 class ObjectContactConvexConvexContactForceUserFunction(Protocol):
+    r"""A user function which replaces the contact law: it computes the contact force from the gap, its rate, the.
+    
+    contact normal, the tangential relative velocity and the impact velocity, while the item computes the geometry and
+    the contact state (#3324). It is called for each contact point in contact, as its block of the data node from the
+    last post Newton step says, and returns the force of that point.
+    The force is the one on marker 0 at the contact point, the convention of the output variable Force; marker 1 gets
+    its negative. A penetration :math:`\delta = -g` pushes marker 0 against the normal: the normal force :math:`f_N > 0` gives
+    :math:`-f_N\, \nv`; a friction force on marker 0 acts along the tangential velocity.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        gap (float): :math:`g`, the signed gap, negative in contact
+
+        gap_t (float): :math:`\dot g`, its rate: the relative velocity along the normal, negative while approaching
+
+        normal (np.ndarray): :math:`{}^{0}{\nv}`, the unit contact normal from marker 0 towards marker 1 (the output Director1)
+
+        tangentialVelocity (np.ndarray): :math:`{}^{0}{\vv}_t`, the velocity of the body of marker 1 relative to that of marker 0 at the contact point, normal to :math:`{}^{0}{\nv}`
+
+        impactVelocity (float): the velocity of approach at the last impact, from the data node, for impact models
+
+    Returns:
+        np.ndarray: the global contact force on marker 0, a list or numpy array of 3 values
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, gap: float, gap_t: float, normal: np.ndarray, tangentialVelocity: np.ndarray, impactVelocity: float) -> np.ndarray: ...
+
+class ObjectContactPrimitiveConvexContactForceUserFunction(Protocol):
     r"""A user function which replaces the contact law: it computes the contact force from the gap, its rate, the.
     
     contact normal, the tangential relative velocity and the impact velocity, while the item computes the geometry and
@@ -7859,7 +7894,7 @@ class VObjectContactCylinderCylinder:
         return str(dict(self))
 
 class ObjectContactCylinderCylinder:
-    r"""A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims; up to 4 contact points carry a line or a face of contact.
+    r"""A penalty contact between two finite cylinders, each centered at its marker along the local z axis of the marker, with their sides, caps and rims, or capsules by the options isCapsule0 and isCapsule1; up to 4 contact points carry a line or a face of contact.
     
     Contact law and friction as for ObjectContactSphereTriangle.
     
@@ -7875,6 +7910,10 @@ class ObjectContactCylinderCylinder:
         cylindersLengths: the lengths of cylinder 0 and cylinder 1 along the local z axes of their markers, from :math:`-L_i/2` to :math:`L_i/2`, both > 0 [SI:m]; type: [float,float]
 
         isHollowCylinder1: if True, cylinder 1 is hollow, a bore or a seat with its radii and its length, open at both ends, and cylinder 0 is inside it: the contact is with the inner wall of cylinder 1 (#3334); then the data node needs 24 coordinates; checked at Assemble: the radius of cylinder 0 not larger than that of cylinder 1; type: bool
+
+        isCapsule0: if True, shape 0 is a capsule: cylindersLengths[0] is the length between the centers of its half spheres, so that its total length is cylindersLengths[0] + 2 cylindersRadii[0]; not together with isHollowCylinder1; type: bool
+
+        isCapsule1: if True, shape 1 is a capsule, as isCapsule0; not together with isHollowCylinder1; type: bool
 
         dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
@@ -7914,13 +7953,15 @@ class ObjectContactCylinderCylinder:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], isHollowCylinder1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], isHollowCylinder1 = False, isCapsule0 = False, isCapsule1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
         self.cylindersRadii = np.array(cylindersRadii)
         self.cylindersLengths = np.array(cylindersLengths)
         self.isHollowCylinder1 = isHollowCylinder1
+        self.isCapsule0 = isCapsule0
+        self.isCapsule1 = isCapsule1
         self.dynamicFriction = dynamicFriction
         self.frictionProportionalZone = frictionProportionalZone
         self.contactStiffness = contactStiffness
@@ -7945,6 +7986,8 @@ class ObjectContactCylinderCylinder:
         yield 'cylindersRadii', self.cylindersRadii
         yield 'cylindersLengths', self.cylindersLengths
         yield 'isHollowCylinder1', self.isHollowCylinder1
+        yield 'isCapsule0', self.isCapsule0
+        yield 'isCapsule1', self.isCapsule1
         yield 'dynamicFriction', self.dynamicFriction
         yield 'frictionProportionalZone', self.frictionProportionalZone
         yield 'contactStiffness', self.contactStiffness
@@ -8336,6 +8379,145 @@ class ObjectContactConvexConvex:
         yield 'nodeNumber', self.nodeNumber
         yield 'points0', self.points0
         yield 'triangles0', self.triangles0
+        yield 'points1', self.points1
+        yield 'triangles1', self.triangles1
+        yield 'dynamicFriction', self.dynamicFriction
+        yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'contactPlasticityRatio', self.contactPlasticityRatio
+        yield 'adhesionCoefficient', self.adhesionCoefficient
+        yield 'adhesionExponent', self.adhesionExponent
+        yield 'constantPullOffForce', self.constantPullOffForce
+        yield 'restitutionCoefficient', self.restitutionCoefficient
+        yield 'minimumImpactVelocity', self.minimumImpactVelocity
+        yield 'impactModel', self.impactModel
+        yield 'activeConnector', self.activeConnector
+        yield 'contactForceUserFunction', self.contactForceUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+
+class VObjectContactPrimitiveConvex:
+    """Visualization data for ObjectContactPrimitiveConvex.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; draws the triangles of both shapes with the contact settings; type: bool
+
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
+
+    """
+    def __init__(self, show = False, color = [0.7,0.7,0.7,1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectContactPrimitiveConvex:
+    r"""A penalty contact between a primitive - a sphere, capsule, cylinder or truncated cone at marker 0 - and a convex polytope, given by its points and the triangles of its surface in the frame of marker 1; up to 4 contact points carry a line or a face of contact.
+    
+    Contact law and friction as for ObjectContactSphereSphere.
+    
+    Args:
+        name: connector's unique name; type: str
+
+        markerNumbers: list of markers: the frame of the primitive, its axis the local z axis, and the frame of the polytope; type: ArrayMarkerIndex
+
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 12, needed for the discontinuous iteration (friction and contact): a block of 3 for each of the up to 4 contact points :math:`i` holds the values of the last PostNewton iteration: data[3i] the gap, data[3i+1] the norm of the tangential velocity (stick or slip), data[3i+2] the impact velocity; with contactPlasticityRatio > 0 a block of 4, the fourth the plastic overlap; type: NodeIndex
+
+        primitiveType: the shape at marker 0, see ContactPrimitiveType: Sphere, Capsule, Cylinder or Cone; the integers 0 to 3 are accepted as well
+
+        radius: the radius of the primitive; for the cone the radius at :math:`z=-L/2` [SI:m]; type: float
+
+        radius1: the radius of the cone at :math:`z=L/2` [SI:m]; only used for Cone; type: float
+
+        length: the length of the cylinder or the cone, along the local z axis of marker 0, or that of a capsule between the centers of its half spheres [SI:m]; not used for Sphere; type: float
+
+        points1: the points of shape 1 in the frame of marker 1, rows of 3 coordinates; shape 1 is their convex hull; type: array_like
+
+        triangles1: the triangles of the surface of shape 1, rows of 3 indices into points1, ordered so that the normal points out of the shape; checked at Assemble; type: array_like
+
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
+
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
+
+        contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
+
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+
+        contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
+
+        contactPlasticityRatio: ratio of contact stiffness for first loading and unloading/reloading [SI:1] of the Edinburgh adhesive elasto-plastic model, as in ObjectContactSphereSphere, with impactModel Linear: unloading and reloading with :math:`K_2 = k_c/(1-\lambda_\mathrm{P})` from the plastic overlap :math:`\lambda_\mathrm{P}\,\delta_{max}` of the contact; 0: the elastic law; not 0: each contact point has a block of 4 data coordinates, the fourth the plastic overlap (#3336); type: float
+
+        adhesionCoefficient: coefficient for adhesion [SI:N/m] (units in case that :math:`n_\mathrm{adh}=1`) of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
+
+        adhesionExponent: exponent for adhesion coefficient [SI:1] of the Edinburgh adhesive elasto-plastic model; type: float
+
+        constantPullOffForce: constant adhesion force [SI:N] of each contact point in contact, of the Edinburgh adhesive elasto-plastic model; used with contactPlasticityRatio > 0; type: float
+
+        restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
+
+        minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
+
+        impactModel: the impact model, see ContactImpactModel: Linear (only the linear contactDamping), HuntCrossley or GonthierCarvalhoMartins, the latter much more accurate regarding the coefficient of restitution in the full range (0, 1]; the integers 0, 1, 2 are accepted as well; in all models, the linear contactDamping is added, if not set to zero (#3327)
+
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        contactForceUserFunction: A Python function which replaces the contact law and returns the contact force on marker 0, while the item computes the geometry and the contact state; the contact parameters of the item are then not used; see description below (#3324); type: ObjectContactPrimitiveConvexContactForceUserFunction
+
+        visualization: visualization data, see VObjectContactPrimitiveConvex
+
+    Notes:
+        Object has/provides the following types: ``Connector``
+
+        Requested Marker type: ``Position`` + ``Orientation``
+
+        Requested Node type: ``GenericData``
+
+    """
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), primitiveType = exudyn.ContactPrimitiveType.Sphere, radius = 0., radius1 = 0., length = 0., points1 = [], triangles1 = [], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactPrimitiveConvexContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.nodeNumber = nodeNumber
+        self.primitiveType = primitiveType
+        self.radius = radius
+        self.radius1 = radius1
+        self.length = length
+        self.points1 = CheckForValidNumpyArray(points1)
+        self.triangles1 = np.array(triangles1)
+        self.dynamicFriction = dynamicFriction
+        self.frictionProportionalZone = frictionProportionalZone
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.contactStiffnessExponent = contactStiffnessExponent
+        self.contactPlasticityRatio = contactPlasticityRatio
+        self.adhesionCoefficient = adhesionCoefficient
+        self.adhesionExponent = adhesionExponent
+        self.constantPullOffForce = constantPullOffForce
+        self.restitutionCoefficient = restitutionCoefficient
+        self.minimumImpactVelocity = minimumImpactVelocity
+        self.impactModel = impactModel
+        self.activeConnector = activeConnector
+        self.contactForceUserFunction = contactForceUserFunction
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ContactPrimitiveConvex'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'primitiveType', self.primitiveType
+        yield 'radius', self.radius
+        yield 'radius1', self.radius1
+        yield 'length', self.length
         yield 'points1', self.points1
         yield 'triangles1', self.triangles1
         yield 'dynamicFriction', self.dynamicFriction

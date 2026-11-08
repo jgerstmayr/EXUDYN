@@ -1,0 +1,15 @@
+{
+  "number": 3369,
+  "title": "The solver study: the multipliers of the reference from the acceleration level, Radau5 and the low-order explicit solvers, the figures as vector graphics",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "The own multipliers of the implicit solvers have a floor at small steps (the rounding of the position constraints divided by h^2), which limits every reference taken from them. The multipliers computed from the end state by the solve of the initial accelerations, with its numerical (C_q v)_q, have no floor. Decided: the multipliers of the reference from this solve at the end state of LobattoIIIC4GGL; Radau5, ExplicitEuler, ExplicitMidpoint and VelocityVerlet in the figures; a figure of the algebraic coordinates down to h0/128 that shows the growth of the error at small steps; SVG and PDF instead of PNG.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-08 17:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The solver study: the multipliers of the reference from the acceleration level, Radau5 and the low-order explicit solvers, a figure of the algebraic coordinates down to h0/128, vector graphics.",
+  "resolvedInVersion": "1.13.477"
+}
