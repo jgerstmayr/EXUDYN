@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  This file shows setup of model for quad-legged spot using URDF file; spotData.h5 has to be in same folder!
+# Details:  This file shows setup of model for quad-legged spot using URDF file, with the data of data/spotData.h5
 #
 # Author:   Johannes Gerstmayr, Janik Thentie
 # 
@@ -26,6 +26,7 @@ import numpy as np
 from numpy import linalg as LA
 from math import pi
 import sys
+import os
 
 #define function to create model which can be called from outside
 def GetModel(addShoulderContact = False):
@@ -97,7 +98,7 @@ def GetModel(addShoulderContact = False):
     modelCnt = 0
     #for modelCnt, modelName in enumerate(robotModels):
     from exudyn.advancedUtilities import LoadDictFromHDF5
-    robotDataDict = LoadDictFromHDF5('spotData.h5')
+    robotDataDict = LoadDictFromHDF5(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'spotData.h5'))
     
     
     offsetPosition = [0,0,0]

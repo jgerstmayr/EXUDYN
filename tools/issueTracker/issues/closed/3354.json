@@ -2,12 +2,16 @@
   "number": 3354,
   "title": "The Spot examples and their data in Examples/robotics",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "spotModel.py opens spotData.h5 relative to the working directory. Decided: the Spot examples move to python/Examples/robotics, the data to robotics/data, read by a path relative to the file.",
   "dateRaised": "2026-11-08",
   "deadline": "2027-05-07",
-  "file": "python/Examples/FurtherExamples/spotModel.py"
+  "dateResolved": "2026-11-08 12:59",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples/FurtherExamples/spotModel.py",
+  "releaseNotes": "spotModel.py and spotReinforcementLearning.py are in python/Examples/robotics, with spotData.h5 in robotics/data read relative to the file.",
+  "resolvedInVersion": "1.13.468"
 }

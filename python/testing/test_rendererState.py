@@ -88,7 +88,7 @@ def testTheOldIdiomIsGoneEverywhere():
     """crude on purpose: the replacement touched 85 files, and a
     single one left behind would keep teaching the form this function replaces"""
     left = []
-    for directory in ['python/TestModels', 'python/Examples', 'python/Examples/FurtherExamples',
+    for directory in ['python/TestModels', 'python/Examples', 'python/Examples/FurtherExamples', 'python/Examples/robotics',
                       'python/PerformanceModels', 'python/exudyn', 'python/MiniExamples',
                       'docs/manual']:
         pattern = os.path.join(repositoryRoot, directory, '*.py')
