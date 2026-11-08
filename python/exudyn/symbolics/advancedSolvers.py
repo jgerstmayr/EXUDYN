@@ -334,12 +334,16 @@ def SolveTrapezoidalGGL(system, simulationSettings=None, errorEstimate='oneStep'
 
 
 
-#the tableaus (A, c): the Lobatto methods of the stages 0, 1/2, 1, the trapezoidal rule (the 2-stage Lobatto IIIA) and
-#Radau IIA with 2 stages at 1/3, 1
+#the tableaus (A, c): the Lobatto methods of the stages 0, 1/2, 1, the trapezoidal rule (the 2-stage Lobatto IIIA),
+#Radau IIA with 2 stages at 1/3, 1 and with 3 stages at (4 -+ sqrt 6)/10, 1 (#3318)
 _rungeKuttaTableaus = {'LobattoIIIA': (np.array([[0., 0., 0.], [5./24., 1./3., -1./24.], [1./6., 2./3., 1./6.]]), np.array([0., 0.5, 1.])),
                        'LobattoIIIC': (np.array([[1./6., -1./3., 1./6.], [1./6., 5./12., -1./12.], [1./6., 2./3., 1./6.]]), np.array([0., 0.5, 1.])),
                        'Trapezoidal': (np.array([[0., 0.], [0.5, 0.5]]), np.array([0., 1.])),
-                       'RadauIIA': (np.array([[5./12., -1./12.], [3./4., 1./4.]]), np.array([1./3., 1.]))}
+                       'RadauIIA': (np.array([[5./12., -1./12.], [3./4., 1./4.]]), np.array([1./3., 1.])),
+                       'RadauIIA5': (np.array([[(88. - 7.*np.sqrt(6.))/360., (296. - 169.*np.sqrt(6.))/1800., (-2. + 3.*np.sqrt(6.))/225.],
+                                               [(296. + 169.*np.sqrt(6.))/1800., (88. + 7.*np.sqrt(6.))/360., (-2. - 3.*np.sqrt(6.))/225.],
+                                               [(16. - np.sqrt(6.))/36., (16. + np.sqrt(6.))/36., 1./9.]]),
+                                     np.array([(4. - np.sqrt(6.))/10., (4. + np.sqrt(6.))/10., 1.]))}
 
 def _QuadratureError(points, b, stageValues):
     """the error of the quadrature of the method, sum_j b_j stageValues_j, against the integral over the step of the
@@ -351,7 +355,7 @@ def _QuadratureError(points, b, stageValues):
 
 #the methods of SolveImplicitRungeKutta: (tableau, where the constraints are)
 implicitRungeKuttaMethods = {'LobattoIIIA4': ('LobattoIIIA', 'end'), 'LobattoIIIC4-GGL': ('LobattoIIIC', 'GGL'),
-                             'Radau3': ('RadauIIA', 'end')}
+                             'Radau3': ('RadauIIA', 'end'), 'Radau5': ('RadauIIA5', 'end')}
 
 
 def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name, errorEstimate='twoSteps'):
@@ -360,7 +364,8 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name, err
     start of the step (Lobatto IIIA). The constraints: 'GGL', c = 0 and C_q V_i + c_t = 0 at the implicit stages, with a
     multiplier z_i per implicit stage and the positions Q_i - C_q^T mu_i; 'end', c = 0 and C_q v + c_t = 0 at the end of
     the step only, with a multiplier z_i per stage after the start, the one of a stage at the start the multiplier of
-    the end of the previous step - an equation of each kind for the two unknown multipliers. With
+    the end of the previous step - an equation of each kind for the two unknown multipliers; with three unknown
+    multipliers (Radau5), also C_q v + c_t = 0 at the middle implicit stage (#3318). With
     timeIntegration.automaticStepSize the step by _ErrorStepSize: errorEstimate 'twoSteps', the error of the quadrature
     of the method against the polynomial through the stage values of the previous and this step (#3250), the first
     step as 'oneStep'; 'oneStep', the difference to the embedded trapezoidal solution of the first and the last stage
@@ -380,8 +385,8 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name, err
     ggl = constraints == 'GGL'
     implicit = [i for i in range(s) if np.any(A[i] != 0.)]
     unknownZ = implicit if ggl else [i for i in range(s) if c[i] > 0.] #the stages of unknown multipliers
-    if not ggl and len(unknownZ) != 2:
-        raise ValueError(name + ': the constraints at the end need two stages after the start')
+    if not ggl and len(unknownZ) not in (2, 3):
+        raise ValueError(name + ': the constraints at the end need two or three stages after the start')
     A2 = A @ A
     #the unknowns: per implicit stage A_i, the ODE1 velocities Yd_i, (z_i, mu_i with GGL); then the multipliers of the
     #end constraints
@@ -399,6 +404,8 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name, err
             sliceZ[i] = slice(index, index + nAE)
             index += nAE
         (rowsEndAE, rowsEndV) = (sliceZ[unknownZ[0]], sliceZ[unknownZ[1]])
+        middle = implicit[1] if len(unknownZ) == 3 else None #Radau5: the velocity constraints at the middle implicit stage
+        rowsMiddleV = sliceZ[unknownZ[2]] if middle is not None else None
     nUnknowns = index
     errorFactor = np.sqrt(nUnknowns) if (newton.weightTolerancePerCoordinate and nUnknowns) else 1.
     (colsODE2, colsODE1, colsAE) = (slice(0, nODE2), slice(nODE2, nODE2 + nODE1), slice(nODE2 + nODE1, nODE2 + nODE1 + nAE))
@@ -464,6 +471,9 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name, err
                     (ae, vRows) = (rowsAE[i], rowsV[i]) if ggl else (rowsEndAE, rowsEndV)
                     r[ae] = system.AlgebraicEquations(Q[i], V[i], Y[i], stageZ[i], times[i])
                     r[vRows] = h*(_ConstraintJacobian(system, Q[i], V[i], Y[i], times[i]) @ V[i] + TimeDerivative(Q[i], Y[i], times[i]))
+                if not ggl and nAE and middle is not None:
+                    i = middle
+                    r[rowsMiddleV] = h*(_ConstraintJacobian(system, Q[i], V[i], Y[i], times[i]) @ V[i] + TimeDerivative(Q[i], Y[i], times[i]))
                 return r
 
             def Jacobian():
@@ -507,6 +517,10 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name, err
                     for j in implicit:
                         J[rowsEndAE, sliceA[j]] = (h**2*A2[s - 1, j])*C_q
                         J[rowsEndV, sliceA[j]] = h*((h*A[s - 1, j])*C_q + (h**2*A2[s - 1, j])*H)
+                    if middle is not None:
+                        (C_q, H) = VelocityDerivative(Q[middle], V[middle], Y[middle], times[middle])
+                        for j in implicit:
+                            J[rowsMiddleV, sliceA[j]] = h*((h*A[middle, j])*C_q + (h**2*A2[middle, j])*H)
                 for i in sliceZ: #the multiplier columns scaled by 1/h^2, as the ODE2 rows by h^2
                     J[:, sliceZ[i]] /= h**2
                 return J
@@ -595,7 +609,7 @@ def _SolveRungeKutta(system, simulationSettings, tableau, constraints, name, err
 
 def SolveImplicitRungeKutta(system, simulationSettings=None, method='LobattoIIIA4', errorEstimate='twoSteps'):
     """the implicit time integration of a SymbolicSystemBase by an implicit Runge-Kutta method for index-3 constraints
-    (#3244, #3246, #3247), of implicitRungeKuttaMethods, each with two implicit stages:
+    (#3244, #3246, #3247), of implicitRungeKuttaMethods, with two implicit stages, Radau5 with three:
 
     - 'LobattoIIIA4': Lobatto IIIA with the stages at the start, the middle and the end of the step, the constraints and
       the velocity constraints at the end of the step only and a multiplier per stage after the start, the one of the
@@ -606,7 +620,9 @@ def SolveImplicitRungeKutta(system, simulationSettings=None, method='LobattoIIIA
       GGL stabilization, as SolveTrapezoidalGGL); of order 4 in q and v, L-stable: it damps fast modes, also with steps
       of 70/omega of the mode;
     - 'Radau3': Radau IIA with the stages at 1/3 and the end of the step, the constraints as LobattoIIIA4; of order 3,
-      L-stable.
+      L-stable;
+    - 'Radau5': Radau IIA with the stages at (4 - sqrt 6)/10, (4 + sqrt 6)/10 and the end of the step, the constraints as
+      LobattoIIIA4; of order 5, L-stable (#3318).
 
     All of order 2 in the accelerations and multipliers (measured on a pendulum and a slider crank) and stiffly
     accurate: the end of the step is the last stage. The ODE1 coordinates are integrated by the same method, with
@@ -631,7 +647,7 @@ def SolveImplicitRungeKutta(system, simulationSettings=None, method='LobattoIIIA
     Args:
         system: the system, a SymbolicSystemBase
         simulationSettings: exudyn.SimulationSettings; None: the defaults
-        method: 'LobattoIIIA4', 'LobattoIIIC4-GGL' or 'Radau3'
+        method: 'LobattoIIIA4', 'LobattoIIIC4-GGL', 'Radau3' or 'Radau5'
         errorEstimate: 'twoSteps' (the default) or 'oneStep', the error estimate of the automatic step size
 
     Returns:

@@ -60,6 +60,7 @@ measured.
 | `LobattoIIIA4` | implicit Runge-Kutta | 4 / 2 | positions and velocities at the end of the step | none | constant or automatic |
 | `LobattoIIIC4GGL` | implicit Runge-Kutta | 4 / 2 | positions and velocities at each stage (GGL) | L-stable | constant or automatic |
 | `Radau3` | implicit Runge-Kutta | 3 / 2 | positions and velocities at the end of the step | L-stable | constant or automatic |
+| `Radau5` | implicit Runge-Kutta | 5 / 3 | positions and velocities at the end, velocities at the middle stage | L-stable | constant or automatic |
 | `ExplicitEuler`, `ExplicitMidpoint`, `RK33`, `RK44`, `RK67` | explicit Runge-Kutta | 1, 2, 3, 4, 6 | `CoordinateConstraint` to the ground only | none | constant |
 | `ODE23`, `DOPRI5` | explicit, embedded | 3, 5 | as above | none | automatic |
 | `VelocityVerlet` | explicit | 2 | as above | none | constant |
@@ -744,7 +745,7 @@ mbs.Assemble()
 (sec-solver-implicitrungekutta)=
 ## Implicit Runge-Kutta solvers
 
-The solvers `TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL` and `Radau3` are implicit Runge-Kutta methods for
+The solvers `TrapezoidalGGL`, `LobattoIIIA4`, `LobattoIIIC4GGL`, `Radau3` and `Radau5` are implicit Runge-Kutta methods for
 the constrained equations of motion {eq}`eq-system-eom`, in one solver class with the method given by its tableau
 (#3261). They share the Newton iteration over all stages, the error estimates and the step size controller of
 {ref}`sec-explicitsolver`.
@@ -770,6 +771,8 @@ are updated by the post-Newton step as in the other solvers. The tableaus:
 - `LobattoIIIC4GGL`: Lobatto IIIC with the same $c$, all three stages implicit; L-stable, it damps fast modes.
 - `Radau3`: Radau IIA with $c = (\frac 1 3, 1)$, two implicit stages; order 3, L-stable, it also damps the slow motion
   slightly.
+- `Radau5`: Radau IIA with $c = (\frac{4 - \sqrt 6}{10}, \frac{4 + \sqrt 6}{10}, 1)$, three implicit stages; order 5,
+  L-stable (#3318).
 - `TrapezoidalGGL`: the trapezoidal rule, $\dot \qv_1 = \dot \qv_0 + \frac h 2 (\ddot \qv_0 + \ddot \qv_1)$ and
   $\qv_1 = \qv_0 + \frac h 2 (\dot \qv_0 + \dot \qv_1) - \Cm_q\tp \tmu$; order 2 in all quantities, no damping.
 
@@ -782,6 +785,9 @@ of the velocities and multipliers:
   $\Cm_q \dot \qv_1 + \gv_t = \Null$ at the end of the step, with a multiplier $\tlambda_i$ per implicit stage. Both
   hold to the Newton tolerance, nothing drifts, and the velocities keep the order of the positions; the
   multipliers and accelerations converge with order 2.
+- `Radau5` has a third multiplier, and imposes besides the constraints of the end the velocity constraint at its
+  middle stage; positions and velocities converge with order 5, multipliers and accelerations with order 3 (with the
+  position constraints at all three stages instead, the velocities converge with order 3 only).
 - `TrapezoidalGGL` and `LobattoIIIC4GGL` use the stabilization of Gear, Gupta and Leimkuhler (GGL): both constraint
   levels at each implicit stage, the positions moved onto $\gv = \Null$ by a second multiplier $\tmu_i$ along
   $\Cm_q\tp$.
@@ -789,7 +795,7 @@ of the velocities and multipliers:
 The velocity constraint needs nothing from the items beyond the Jacobian $\Cm_q$ of the reaction forces: it is
 $\Cm_q \dot \qv + \gv_t$, with $\gv_t$ the derivative of a constraint by the time. A constraint at velocity level - a
 rolling disc, a `CoordinateConstraint` with `velocityLevel = True` - enters with its own equation at the implicit
-stages. The unknowns per step are $2 n + 2 m$ for `LobattoIIIA4` and `Radau3`, $3 n + 6 m$ for `LobattoIIIC4GGL`,
+stages. The unknowns per step are $2 n + 2 m$ for `LobattoIIIA4` and `Radau3`, $3 n + 3 m$ for `Radau5`, $3 n + 6 m$ for `LobattoIIIC4GGL`,
 $n$ coordinates and $m$ constraints. Lie group nodes are treated as in {ref}`sec-implicittrapezoidalsolver`, the
 rotations of the stages by Runge-Kutta-Munthe-Kaas (#3290).
 
@@ -815,7 +821,7 @@ error of a step comes from the converged stages, without a further solve; `timeI
   the velocities the second difference of the mean accelerations $(\dot \qv_1 - \dot \qv_0)/h$ of the last three
   steps (the end accelerations alternate from step to step with constraints, their means do not).
 - `'twoSteps'`: the quadrature of the method against the integral of the polynomial through the stage velocities of
-  the previous and of this step - for the Lobatto methods five values, for `Radau3` four. It estimates the local
+  the previous and of this step - for the Lobatto methods five values, for `Radau3` four, for `Radau5` six. It estimates the local
   error of the method itself, of the order of the method plus one (for Lobatto with equal steps
   $\ev_q = \frac h {180} (\mathbf{V}_{-2} - 4 \mathbf{V}_{-1} + 6 \mathbf{V}_0 - 4 \mathbf{V}_1 + \mathbf{V}_2)$, Simpson's error); the first step, without a
   previous one, uses the one-step estimate. The stage accelerations of a constrained system are of order 2 only, so
@@ -873,7 +879,7 @@ coordinates against that of the CPU time, relative to generalized-alpha with the
 steps $2 h_0 \ldots h_0/16$
 ```
 
-A step costs about 2 (`TrapezoidalGGL`), 3 (`LobattoIIIA4`, `Radau3`) and 9 (`LobattoIIIC4GGL`) times a step of
+A step costs about 2 (`TrapezoidalGGL`), 3 (`LobattoIIIA4`, `Radau3`), 4 to 9 (`Radau5`) and 9 (`LobattoIIIC4GGL`) times a step of
 generalized-alpha. The higher order pays off nevertheless, {numref}`fig-solver-efficiency-mean`: at 1.6 times the
 CPU time of generalized-alpha with $h_0$, `LobattoIIIA4` with $2 h_0$ has a 600 times smaller error; below a
 relative error of about $10^{-4}$ it is the most efficient of these solvers on these models. Generalized-alpha remains the choice where the accuracy of

@@ -836,7 +836,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=TString,
             pythonName='errorEstimate',
             defaultValue='default',
-            description=r"""the error estimate of the automatic step size of the implicit Runge-Kutta solvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3): 'oneStep', against the trapezoidal rule of the first and the last stage, of order 3; 'twoSteps', the quadrature of the method against the polynomial through the stage velocities of the previous and this step, of the order of the method; 'default', twoSteps for the Runge-Kutta methods and oneStep for TrapezoidalGGL (#3287); the argument errorEstimate of the solvers of exudyn.symbolics.advancedSolvers"""),
+            description=r"""the error estimate of the automatic step size of the implicit Runge-Kutta solvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3, Radau5): 'oneStep', against the trapezoidal rule of the first and the last stage, of order 3; 'twoSteps', the quadrature of the method against the polynomial through the stage velocities of the previous and this step, of the order of the method; 'default', twoSteps for the Runge-Kutta methods and oneStep for TrapezoidalGGL (#3287); the argument errorEstimate of the solvers of exudyn.symbolics.advancedSolvers"""),
         StructureParameter(type=TReal(minimum=0),
             pythonName='stepSizeSafety',
             defaultValue=0.9,

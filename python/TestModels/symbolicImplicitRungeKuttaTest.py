@@ -3,7 +3,8 @@
 #
 # Details:  SolveImplicitRungeKutta of exudyn.symbolics.advancedSolvers (#3244, #3246, #3247), the Lobatto and Radau
 #           methods for index-3 constraints: on a pendulum, LobattoIIIA4 and LobattoIIIC4-GGL of order 4 in the
-#           positions and velocities, Radau3 of order 3, all of order 2 in the accelerations and the multiplier, the
+#           positions and velocities, Radau3 of order 3, all of order 2 in the accelerations and the multiplier, Radau5
+#           of order 5 and 3 (#3318), the
 #           constraints on both levels kept; the methods agree with fine steps, and the 2-stage Lobatto IIIA with GGL is
 #           SolveTrapezoidalGGL; on a slider crank of rigid bodies on the joints of UserItemCreator, LobattoIIIA4 of order
 #           4 against mbs.SolveDynamic with fine steps, and the automatic step size by the error estimate of the order of
@@ -60,7 +61,8 @@ difference = max(np.max(np.abs(SolveImplicitRungeKutta(pendulum, Settings(800), 
                  for method in implicitRungeKuttaMethods)
 Check(difference < 1e-7, 'the methods with fine steps (Radau3 of order 3): ' + str(difference))
 u = 0
-expected = {'LobattoIIIA4': [3.8, 3.8, 1.8, 1.8], 'LobattoIIIC4-GGL': [3.5, 3.8, 1.8, 1.8], 'Radau3': [2.8, 2.8, 1.8, 1.8]}
+expected = {'LobattoIIIA4': [3.8, 3.8, 1.8, 1.8], 'LobattoIIIC4-GGL': [3.5, 3.8, 1.8, 1.8], 'Radau3': [2.8, 2.8, 1.8, 1.8],
+            'Radau5': [4.8, 4.8, 2.8, 2.8]}
 for variant in implicitRungeKuttaMethods:
     errors = []
     for steps in [25, 50]:

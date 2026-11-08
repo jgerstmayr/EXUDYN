@@ -378,6 +378,8 @@ class DynamicSolverType(Enum):
     """an implicit Runge-Kutta solver for index 3 problems: Lobatto IIIC with three implicit stages, the constraints and velocity constraints at each stage with the GGL stabilization; order 4 in positions and velocities, L-stable (damps fast modes); automatic step size as LobattoIIIA4 (#3261)"""
     Radau3 = int
     """an implicit Runge-Kutta solver for index 3 problems: Radau IIA with the stages at 1/3 and the end of the step, the constraints as LobattoIIIA4; order 3, L-stable; automatic step size as LobattoIIIA4 (#3261)"""
+    Radau5 = int
+    """an implicit Runge-Kutta solver for index 3 problems: Radau IIA with three stages at (4 - sqrt 6)/10, (4 + sqrt 6)/10 and the end of the step, the constraints as LobattoIIIA4; order 5 in positions and velocities, L-stable; automatic step size as LobattoIIIA4 (#3318)"""
 
 class CrossSectionType(Enum):
     """The enumeration type  CrossSectionType is used for defining beam cross section types.

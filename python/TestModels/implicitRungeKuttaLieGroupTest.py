@@ -4,8 +4,8 @@
 # Details:  Lie group nodes in the implicit Runge-Kutta solvers (#3288): the spatial slider crank of modelLibrary.py
 #           with NodeRigidBodyRotVecLG at the small step 6.25e-5, at which the Newton iteration of LobattoIIIA4 and
 #           Radau3 stalled while the composition of rotation vectors rounded rotations below 1e-8 rad to zero; the
-#           four methods against the same model with Euler parameters; the composition keeps a rotation of 1e-12 rad.
-#           The result is the number of checks that pass plus the Newton iterations per step of the four methods.
+#           five methods (Radau5, #3318) against the same model with Euler parameters; the composition keeps a rotation of 1e-12 rad.
+#           The result is the number of checks that pass plus the Newton iterations per step of the five methods.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-06
@@ -48,7 +48,7 @@ def Solve(nodeType, solverType, h=6.25e-5, endTime=0.005):
 
 u = 0
 for solverType in [exu.DynamicSolverType.TrapezoidalGGL, exu.DynamicSolverType.LobattoIIIA4,
-                   exu.DynamicSolverType.LobattoIIIC4GGL, exu.DynamicSolverType.Radau3]:
+                   exu.DynamicSolverType.LobattoIIIC4GGL, exu.DynamicSolverType.Radau3, exu.DynamicSolverType.Radau5]:
     (lieGroup, iterations) = Solve('RotationRotationVector', solverType)
     eulerParameters = Solve('RotationEulerParameters', solverType)[0]
     difference = np.max(np.abs(lieGroup - eulerParameters))

@@ -605,6 +605,8 @@ class DynamicSolverType(Enum):
     """an implicit Runge-Kutta solver for index 3 problems: Lobatto IIIC with three implicit stages, the constraints and velocity constraints at each stage with the GGL stabilization; order 4 in positions and velocities, L-stable (damps fast modes); automatic step size as LobattoIIIA4 (#3261)"""
     Radau3 = int
     """an implicit Runge-Kutta solver for index 3 problems: Radau IIA with the stages at 1/3 and the end of the step, the constraints as LobattoIIIA4; order 3, L-stable; automatic step size as LobattoIIIA4 (#3261)"""
+    Radau5 = int
+    """an implicit Runge-Kutta solver for index 3 problems: Radau IIA with three stages at (4 - sqrt 6)/10, (4 + sqrt 6)/10 and the end of the step, the constraints as LobattoIIIA4; order 5 in positions and velocities, L-stable; automatic step size as LobattoIIIA4 (#3318)"""
 
 
 class CrossSectionType(Enum):
@@ -1517,7 +1519,7 @@ class TimeIntegrationSettings:
     endTime: float
     """: end time of time integration."""
     errorEstimate: str
-    """the error estimate of the automatic step size of the implicit Runge-Kutta solvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3): 'oneStep', against the trapezoidal rule of the first and the last stage, of order 3; 'twoSteps', the quadrature of the method against the polynomial through the stage velocities of the previous and this step, of the order of the method; 'default', twoSteps for the Runge-Kutta methods and oneStep for TrapezoidalGGL (#3287); the argument errorEstimate of the solvers of exudyn.symbolics.advancedSolvers."""
+    """the error estimate of the automatic step size of the implicit Runge-Kutta solvers (TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL, Radau3, Radau5): 'oneStep', against the trapezoidal rule of the first and the last stage, of order 3; 'twoSteps', the quadrature of the method against the polynomial through the stage velocities of the previous and this step, of the order of the method; 'default', twoSteps for the Runge-Kutta methods and oneStep for TrapezoidalGGL (#3287); the argument errorEstimate of the solvers of exudyn.symbolics.advancedSolvers."""
     initialStepSize: float
     """: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster."""
     minimumStepSize: float

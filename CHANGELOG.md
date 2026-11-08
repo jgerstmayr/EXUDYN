@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 449 | 1.13.465 |
+| 1.13 | Newborn | 450 | 1.13.466 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.466** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Radau5: the implicit Runge-Kutta method Radau IIA with 3 stages, of order 5, in the C++ and the Python solvers (#3318)
+  - description: A reference method of higher order for the solver study instead of LobattoIIIC4GGL (\#3314): Radau IIA with 3 stages (c = (4 - sqrt 6)/10, (4 + sqrt 6)/10, 1), order 5, L-stable, three implicit stages without GGL multipliers, the constraints at the end of the step as in Radau3; the tableau of CSolverImplicitRungeKutta and of exudyn.symbolics.advancedSolvers, its error estimate, DynamicSolverType.Radau5. Decided: implemented with the Jacobian of the last stage for all stages, as the other methods, no W-method; its convergence orders measured on the model library, and as the reference of the study if it converges as expected; revision2026c step RG20.10.1.
+  - **notes:** Radau5, exu.DynamicSolverType.Radau5 and 'Radau5' of SolveImplicitRungeKutta: Radau IIA with three stages for index-3 constraints, of order 5 in positions and velocities and 3 in accelerations and multipliers, L-stable, with constant or automatic steps.
+  - date resolved: **2026-11-08 01:02**, date raised: 2026-11-07
 - **1.13.465** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Memory allocations per step of the implicit Runge-Kutta solvers on rigid body spring-dampers (#3312)
   - description: rigidBodySpringDampers of modelLibrary.py with the step 3.125e-5 (16000 steps): TrapezoidalGGL, LobattoIIIA4 and LobattoIIIC4GGL warn of about 160000 memory allocations, 10 per step; generalized-alpha does not, nor the implicit Runge-Kutta solvers on rigidBodyJoints or nPendulum. To be located: ObjectConnectorRigidBodySpringDamper in an evaluation that only the Runge-Kutta solvers make (the Jacobian by the velocities or the stage states).
   - **notes:** The implicit Runge-Kutta solvers allocate no memory per step with rigid body spring-dampers: the Jacobian of ObjectRigidBody allocated a vector per marker and evaluation.

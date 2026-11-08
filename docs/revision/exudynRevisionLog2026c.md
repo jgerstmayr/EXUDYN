@@ -6427,6 +6427,29 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg20-10-1"></a>
+### RG20.10.1 — Radau5, Radau IIA with three stages (2026-11-08, #3318)
+- C++: DynamicSolverType.Radau5 (16), the tableau of Radau IIA with c = ((4 - sqrt 6)/10, (4 + sqrt 6)/10, 1); the
+  generic solver of the tableau (maxStages 3 suffices; the two-step estimate takes 6 points). Python:
+  'Radau5' of SolveImplicitRungeKutta, the tableau RadauIIA5; solver.py lists it among the implicit Runge-Kutta solvers.
+- The constraints 'end' were written for two implicit stages: the multipliers of 3 stages with 2 blocks of equations,
+  a singular Jacobian on the pendulum. A third block, three variants measured (nPendulum, rigidBodyJoints,
+  sliderCrank3D, constant steps n = 25..200, reference LobattoIIIA4 with 3200 steps):
+  A, the position constraints at the middle stage: order 4 in q and v; B, the position constraints at all three
+  stages (Hairer's index-3 Radau IIA): q order 5, v order 3; D, the velocity constraints at the middle stage: q and v
+  order 5.0 (the slider crank at the reference accuracy 1e-12 from 50 steps). Taken D, in C++ and Python; the special
+  rows (velocity-level constraints, multiplier equations) evaluated at that stage with its multipliers.
+- Orders: C++ implicitRungeKuttaSolversTest 5.01 and 5.0 (Radau5 with 5 h, at h it is at the Newton tolerance);
+  Python on the pendulum q 5.01, v 4.97, a and z 3.09, ODE1 coordinates 5.02; massOscillator without constraints 5.0.
+- Automatic steps (tolerance 1e-10, start 1/10 of the end time): the most accurate with the fewest steps on
+  massOscillator (3.3e-11, 311), nPendulum (1.3e-8, 188), rigidBodyJoints (1.1e-9, 110), sliderCrank3D with Lie group
+  nodes (8.1e-11, 58; LobattoIIIA4 1.4e-7 with 105, #3313).
+- CPU per step (2000 constant steps) relative to generalized-alpha: Radau5 4.4, 9.3, 7.2; LobattoIIIA4 2.6, 3.3, 2.6;
+  LobattoIIIC4GGL 7.4, 19.4, 15.4 (nPendulum, rigidBodyJoints, sliderCrank3D): half the cost of LobattoIIIC4GGL.
+- Tests: Radau5 in implicitRungeKuttaSolversTest.py (its reference now Radau5 with h/8), implicitRungeKuttaLieGroupTest.py,
+  symbolicImplicitRungeKuttaTest.py and test_implicitRungeKuttaAllocations.py (no allocation per step). solver.md,
+  symbolicSolvers.md, revisions.md.
+
 <a id="rg20-7-12"></a>
 ### RG20.7.12 — no allocations per step with rigid body spring-dampers (2026-11-08, #3312)
 - Measured with exu.special.InfoStat (difference of 200 and 400 steps): 10 vectors per step with TrapezoidalGGL,

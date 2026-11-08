@@ -700,6 +700,10 @@ as it said, and the option `infinitePlane` (#3347).
 **The contacts are a group of the reference manual** (#3344): the contact items, `ObjectConnectorRollingDiscPenalty`
 and `ObjectJournalBearing` are listed under Object (Contact), with a general page on the data node, the active set
 and the Create functions.
+**Radau5, an implicit Runge-Kutta solver of order 5** (#3318): `exu.DynamicSolverType.Radau5` and `'Radau5'` of
+`SolveImplicitRungeKutta`, Radau IIA with three stages for index-3 constraints: order 5 in positions and velocities,
+order 3 in accelerations and multipliers, L-stable, with constant or automatic steps; a step costs about half a step of
+`LobattoIIIC4GGL`.
 
 **The examples and test models run from any directory** (#3303): those that read data from `testData` - the FFRF
 and Abaqus test models, `texturesExample.py`, `pymeshlabFileImport.py`, `netgenSTLtest.py`, the slider crank of the

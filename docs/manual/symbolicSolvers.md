@@ -38,8 +38,10 @@ Exudyn's C++ solvers, written in Python with numpy and scipy:
   simplest form that solves index-3 constraints directly; it has no numerical damping and keeps the energy.
   `'LobattoIIIC4-GGL'`, Lobatto IIIC of order 4, enforces them at each stage, with a multiplier moving the positions
   onto the constraints; it damps fast modes, also where the step is 70 times longer than 1/omega of the mode.
-  `'Radau3'`, Radau IIA of order 3, has the constraints as `'LobattoIIIA4'` and damps as well. All are of order 2 in
-  the accelerations and multipliers. With `timeIntegration.automaticStepSize` (the default) the step size follows an
+  `'Radau3'`, Radau IIA of order 3, has the constraints as `'LobattoIIIA4'` and damps as well. These are of order 2 in
+  the accelerations and multipliers. `'Radau5'`, Radau IIA with three stages, has also the velocity constraint at its
+  middle stage; it is of order 5 in the positions and velocities and of order 3 in the accelerations and multipliers
+  (#3318). With `timeIntegration.automaticStepSize` (the default) the step size follows an
   estimate of the local error of the order of the method, with the PI controller of `SolveTrapezoidalGGL`: the
   quadrature of the method against the polynomial through the stage velocities of the previous and this step - for
   the Lobatto methods Simpson's error from the fourth difference of five values -, without an extra solve (#3250);

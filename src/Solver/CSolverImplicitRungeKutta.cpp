@@ -1,6 +1,6 @@
 /** ***********************************************************************************************
 * @brief		Implementation of CSolverImplicitRungeKutta, the implicit Runge-Kutta solvers TrapezoidalGGL,
-*				LobattoIIIA4, LobattoIIIC4GGL and Radau3 (#3261); see the header
+*				LobattoIIIA4, LobattoIIIC4GGL, Radau3 (#3261) and Radau5 (#3318); see the header
 *
 * @author		Gerstmayr Johannes
 * @date			2026-11-05
@@ -17,7 +17,7 @@
 #include "Main/CSystem.h"
 #include "Solver/CSolverImplicitSecondOrder.h"
 
-//! the four methods; the Python version is _rungeKuttaTableaus and implicitRungeKuttaMethods of exudyn.symbolics.advancedSolvers
+//! the five methods; the Python version is _rungeKuttaTableaus and implicitRungeKuttaMethods of exudyn.symbolics.advancedSolvers
 bool CSolverImplicitRungeKutta::GetMethod(DynamicSolverType type, ImplicitRungeKuttaMethod& m)
 {
 	m = ImplicitRungeKuttaMethod();
@@ -42,6 +42,16 @@ bool CSolverImplicitRungeKutta::GetMethod(DynamicSolverType type, ImplicitRungeK
 		m.name = "Radau3"; m.s = 2; m.order = 3;
 		m.A[0][0] = 5. / 12.; m.A[0][1] = -1. / 12.; m.A[1][0] = 0.75; m.A[1][1] = 0.25;
 		m.c[0] = 1. / 3.; m.c[1] = 1.;
+	}
+	else if (type == DynamicSolverType::Radau5) //Radau IIA with 3 stages (#3318)
+	{
+		m.name = "Radau5"; m.s = 3; m.order = 5;
+		const Real r6 = sqrt(6.);
+		const Real A3[3][3] = { {(88. - 7. * r6) / 360., (296. - 169. * r6) / 1800., (-2. + 3. * r6) / 225.},
+			{(296. + 169. * r6) / 1800., (88. + 7. * r6) / 360., (-2. - 3. * r6) / 225.},
+			{(16. - r6) / 36., (16. + r6) / 36., 1. / 9.} };
+		for (Index i = 0; i < 3; i++) { for (Index j = 0; j < 3; j++) { m.A[i][j] = A3[i][j]; } }
+		m.c[0] = (4. - r6) / 10.; m.c[1] = (4. + r6) / 10.; m.c[2] = 1.;
 	}
 	else { return false; }
 	return true;
@@ -279,6 +289,16 @@ Real CSolverImplicitRungeKutta::ComputeResidual(CSolverImplicitSecondOrderTimeIn
 		{
 			residual[offZ[0] + j] = specialRow[j] ? tempAEm[j] : ((fabs(tempAE[j]) <= constraintRoundoff) ? 0. : tempAE[j]);
 			residual[offZ[1] + j] = tempAEv[j];
+		}
+		if (implicitStages.NumberOfItems() == 3) //Radau5: the velocity constraints at the middle implicit stage, with its multipliers - order 5 in positions and velocities; the position constraints there gave order 4, at all stages order 3 in the velocities (#3318)
+		{
+			SetStageState(computationalSystem, implicitStages[1], t0, h);
+			computationalSystem.ComputeAlgebraicEquations(solver.data.tempCompDataArray, tempAEm, false);
+			computationalSystem.ComputeAlgebraicEquations(solver.data.tempCompDataArray, tempAEv, true);
+			for (Index j = 0; j < na; j++)
+			{
+				residual[offZ[2] + j] = specialRow[j] ? tempAEm[j] : tempAEv[j];
+			}
 		}
 	}
 	if (solver.IsVerboseCheck(3)) //the largest residual of each block of unknowns
@@ -586,6 +606,22 @@ void CSolverImplicitRungeKutta::ComputeJacobian(CSolverImplicitSecondOrderTimeIn
 		{
 			AddBlock(blockCaa, offZ[0], offZ[0], 1., c);
 			AddBlock(blockCaa, offZ[1], offZ[nImplicit - 1], 1., c);
+		}
+		if (nImplicit == 3) //Radau5: the rows offZ[2], the velocity constraints at the middle implicit stage, the special rows there (#3318)
+		{
+			const Index i2 = implicitStages[1];
+			for (Index l = 0; l < nImplicit; l++)
+			{
+				Index j = implicitStages[l];
+				AddBlock(blockCq, offZ[2], offA[l], h * method.A[i2][j], 0); //C_q V_i2
+				for (Index c = 1; c <= 2; c++)
+				{
+					AddBlock(blockCq, offZ[2], offA[l], h2 * A2[i2][j], c);
+					AddBlock(blockCy, offZ[2], offY[l], h * method.A[i2][j], c);
+					AddBlock(blockCv, offZ[2], offA[l], h * method.A[i2][j], c);
+				}
+			}
+			for (Index c = 1; c <= 2; c++) { AddBlock(blockCaa, offZ[2], offZ[1], 1., c); }
 		}
 	}
 	for (size_t k = 0; k < tripletValues.size(); k++) { tripletValues[k] *= rowScale[tripletRows[k]]; }

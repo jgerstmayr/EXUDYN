@@ -281,6 +281,7 @@ The class **DynamicSolverType** has the following **functions and structures**:
 - **`LobattoIIIA4`**: an implicit Runge-Kutta solver for index 3 problems: Lobatto IIIA with three stages (start, middle, end of the step), the constraints and the velocity constraints at the end of the step; order 4 in positions and velocities, without numerical damping; automatic step size by an error estimate of the order of the method (#3261)
 - **`LobattoIIIC4GGL`**: an implicit Runge-Kutta solver for index 3 problems: Lobatto IIIC with three implicit stages, the constraints and velocity constraints at each stage with the GGL stabilization; order 4 in positions and velocities, L-stable (damps fast modes); automatic step size as LobattoIIIA4 (#3261)
 - **`Radau3`**: an implicit Runge-Kutta solver for index 3 problems: Radau IIA with the stages at 1/3 and the end of the step, the constraints as LobattoIIIA4; order 3, L-stable; automatic step size as LobattoIIIA4 (#3261)
+- **`Radau5`**: an implicit Runge-Kutta solver for index 3 problems: Radau IIA with three stages at (4 - sqrt 6)/10, (4 + sqrt 6)/10 and the end of the step, the constraints as LobattoIIIA4; order 5 in positions and velocities, L-stable; automatic step size as LobattoIIIA4 (#3318)
 
 
 (sec-crosssectiontype)=

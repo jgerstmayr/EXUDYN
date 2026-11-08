@@ -1,14 +1,15 @@
 /** ***********************************************************************************************
 * @class		CSolverImplicitRungeKutta
 * @brief		The implicit Runge-Kutta solvers for index-3 constraints: TrapezoidalGGL, LobattoIIIA4, LobattoIIIC4GGL,
-*				Radau3 (#3261)
+*				Radau3 (#3261), Radau5 (#3318)
 * @details		Details:
-*				- one algorithm for the four methods, a stiffly accurate implicit Runge-Kutta method given by its
+*				- one algorithm for the five methods, a stiffly accurate implicit Runge-Kutta method given by its
 *				  tableau (A, c) and the place of its constraints: 'GGL', c = 0 and the velocity constraints at each
 *				  implicit stage with the positions moved onto the constraints by a multiplier mu; 'end', the two at
-*				  the end of the step only, with a multiplier per implicit stage
+*				  the end of the step only, with a multiplier per implicit stage; with three
+*				  implicit stages (Radau5) also the velocity constraints at the middle one
 *				- a component of CSolverImplicitSecondOrderTimeInt, which runs Step() in place of the Newton
-*				  iteration of generalized-alpha when timeIntegration.solverType is one of the four; the step loop,
+*				  iteration of generalized-alpha when timeIntegration.solverType is one of the five; the step loop,
 *				  the discontinuous iteration, the initial accelerations, the output and the restart are those of
 *				  the implicit solver
 *				- unknowns per implicit stage: the accelerations and the ODE1 velocities, the multipliers (and mu

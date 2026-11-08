@@ -38,7 +38,8 @@ def Allocations(model, solverType, steps, linearSolverType, automaticStepSize):
 
 
 @pytest.mark.parametrize('solverType', [exu.DynamicSolverType.TrapezoidalGGL, exu.DynamicSolverType.LobattoIIIA4,
-                                        exu.DynamicSolverType.LobattoIIIC4GGL, exu.DynamicSolverType.Radau3])
+                                        exu.DynamicSolverType.LobattoIIIC4GGL, exu.DynamicSolverType.Radau3,
+                                        exu.DynamicSolverType.Radau5])
 @pytest.mark.parametrize('linearSolverType', [exu.LinearSolverType.EXUdense, exu.LinearSolverType.EigenSparse])
 def testTheImplicitRungeKuttaSolversDoNotAllocatePerStep(solverType, linearSolverType):
     for model in ['nPendulum', 'rigidBodyJoints', 'rigidBodySpringDampers']:

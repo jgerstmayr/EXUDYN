@@ -298,7 +298,8 @@ def _SolveDynamic(mbs, simulationSettings, solverType, updateInitialValues, stor
 
     if solverType in [exudyn.DynamicSolverType.TrapezoidalIndex2, exudyn.DynamicSolverType.GeneralizedAlpha,
                       exudyn.DynamicSolverType.TrapezoidalGGL, exudyn.DynamicSolverType.LobattoIIIA4,
-                      exudyn.DynamicSolverType.LobattoIIIC4GGL, exudyn.DynamicSolverType.Radau3]: #the implicit Runge-Kutta methods in the implicit solver (#3261)
+                      exudyn.DynamicSolverType.LobattoIIIC4GGL, exudyn.DynamicSolverType.Radau3,
+                      exudyn.DynamicSolverType.Radau5]: #the implicit Runge-Kutta methods in the implicit solver (#3261)
     
         dynamicSolver = exudyn.MainSolverImplicitSecondOrder()
         if storeSolver:
