@@ -260,6 +260,7 @@ def TestExamplesReferenceSolution():
         'capsulePrimitiveContactTest.py':16.948902336288814, #new 2026-11-08: capsules and ObjectContactPrimitiveConvex (#3364, #3365, #3366)
         'createPrimitiveContactsTest.py':11.238989678562266, #2026-11-07: a ball on an infinite plane given as a list (#3347), before 10.139087778562265; new 2026-11-07: the Create functions of the primitive contacts, bodies resting at their closed-form heights (#3342)
         'robotFromURDFdataTest.py':7.795297300351321, #new 2026-11-08: a Robot from the data of the URDF import (#3356)
+        'reduceURDFrobotDataTest.py':18.366644415833562, #new 2026-11-08: locked joints and removed links of URDF data (#3372)
         'contactPrimitivesTableTest.py':10.5211014088147, #new 2026-11-07: all primitive contacts on a shaken table, the first 0.4 s, its own tolerance 1e-7 (#3343)
         'cylinderContactTest.py':9.846609913220105, #2026-11-07: the gap offset of the side points made continuous (#3332), before 9.846609913280105; new 2026-11-07: ObjectContactCylinderCylinder and ObjectContactCylinderTriangle, Distance, the contact points of line and face contacts, the user function (#3329)
         'sphereCylinderContactTest.py':8.613788897624327, #new 2026-11-07: ObjectContactSphereCylinder, its Distance against cUtilities.Distance, at rest on cap and side, rolling with friction (#3320) #new 2026-11-07: exudyn.cUtilities.Distance of convex shapes by GJK and EPA against closed forms and random pairs (#3317)

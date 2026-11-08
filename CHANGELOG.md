@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 462 | 1.13.479 |
+| 1.13 | Newborn | 463 | 1.13.480 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.480** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` urdfImport.ReduceURDFrobotData: locked joints and removed links of URDF robot data (#3372)
+  - description: The import has no way to leave out links such as the fingers of the Panda. Decided: ReduceURDFrobotData(robotData, lockedJoints, removedLinks) on the data of GetURDFrobotData, a locked link merged into its parent with its mass, center of mass and inertia; design robotics.md section 3.5(a).
+  - **notes:** urdfImport.ReduceURDFrobotData leaves out joints and links in the data of GetURDFrobotData: a locked joint merges its link into the link above with its mass, center of mass and inertia, a removed link goes with all links below it.
+  - date resolved: **2026-11-08 19:23**, date raised: 2026-11-08
 - **1.13.479** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ManipulatorStaubliTX2\_90L: 0.4 kg of link 5 moved to link 6 (#3371)
   - description: The masses from the visual meshes give the last link only 0.06 kg, as the motor mass of the wrist is inside link 5 in the meshes. Decided: 0.4 kg moved from link 5 to link 6 by the densities of the two links; centers of mass unchanged, inertias scaled with the masses, the total mass unchanged.
   - **notes:** ManipulatorStaubliTX2\_90L: 0.4 kg of link 5 moved to link 6 by the densities of the two links.

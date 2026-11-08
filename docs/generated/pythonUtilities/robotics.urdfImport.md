@@ -60,17 +60,42 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
   - `meshDensity`: if > 0, a joint link without mass gets the mass, center of mass and inertia of the solid its meshes enclose, with this density (kg/m^3); a mesh that does not close gives an estimate only (#3282)
   - `correctInertia`: if True, an inertia tensor that is not positive definite or whose principal moments violate the triangle inequality gets its principal moments raised as little as possible, and a zero one that of the shape of the meshes with the mass of the link; every link reports the problems of its mass and inertia in 'inertiaProblems', and they are printed with verbose > 0 (#3282)
   - `toolLinkName`: if not None, the name of the link of the tool frame; the frame of this link relative to the last joint link is returned in 'toolHT', for RobotFromURDFdata (#3356)
-- **output**: returns dictionary with items linkList (the joint links, each with its preHT relative to the joint link above, its parentName, mass, com, inertiaCOM, jointType, jointLimits and graphicsDataList), numberOfJoints, graphicsBaseList (the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint are in the graphics of that link), staticJointValues and staticGraphicsList; a link of the URDF without joint (a fixed joint) moves with the joint link above it, which gets its graphics and its mass (#3280); a flipped joint (axis -1 in the URDF) has the same joint coordinate in a link frame turned by pi, flipHT of the link (#3282)
+- **output**: returns dictionary with items linkList (the joint links, each with its name, jointName, preHT relative to the joint link above, its parentName, mass, com, inertiaCOM, jointType, jointLimits and graphicsDataList), numberOfJoints, graphicsBaseList (the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint are in the graphics of that link), staticJointValues and staticGraphicsList; a link of the URDF without joint (a fixed joint) moves with the joint link above it, which gets its graphics and its mass (#3280); a flipped joint (axis -1 in the URDF) has the same joint coordinate in a link frame turned by pi, flipHT of the link (#3282)
 - **notes**: requires installation (pip install) of roboticstoolbox-python and pymeshlab; if pymeshlab is not installed, a warning is raised and graphics is ignored
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex)
 
 
+(sec-urdfimport-reduceurdfrobotdata)=
+## Function: ReduceURDFrobotData
+
+[`ReduceURDFrobotData(robotData, lockedJoints = None, removedLinks = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L422)
+
+- **function description**: Leave out joints and links in the data of GetURDFrobotData, for example the fingers of a gripper (#3372); needs neither the Robotics Toolbox nor a file.
+- **input**:
+  - `robotData`: the dict of GetURDFrobotData; it is not changed
+  - `lockedJoints`: None or a dict {name: value}, name the joint of the URDF or its link, value the joint value at which it is fixed; the link is merged into the joint link above it: mass, center of mass and inertia added by the parallel axis theorem, the graphics moved, its children attached to that link. A locked link at the root has its graphics in the base, and its mass is lost as the base has none
+  - `removedLinks`: None or a list of names of links (or their joints) which are left out with all links below them, with their mass and graphics; only the first n links of a serial robot: the name of link n+1
+- **output**: a new dict of the same form, with numberOfJoints, staticJointValues and inertiaProblems updated; the 'toolHT' relative to the last remaining link, for the tool frame at zero joint values (a tool on a locked link at a value other than zero is not moved with it); staticGraphicsList is empty, as it shows the robot before the reduction
+
+*example*:
+
+```python
+  data = GetURDFrobotData(robot, toolLinkName='panda_hand')
+  data = ReduceURDFrobotData(data, lockedJoints={'panda_finger_joint1':0.04, 'panda_finger_joint2':0.04})
+  robot = RobotFromURDFdata(data, PDcontrol=(1e4, 1e2))
+```
+
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`reduceURDFrobotDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/reduceURDFrobotDataTest.py) (TM)
+
+
 (sec-urdfimport-robotfromurdfdata)=
 ## Function: RobotFromURDFdata
 
-[`RobotFromURDFdata(robotData, gravity = [0, 0, -9.81], baseHT = None, toolHT = None, PDcontrol = (None, None), urdfFile = None, enableEndStops = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L420)
+[`RobotFromURDFdata(robotData, gravity = [0, 0, -9.81], baseHT = None, toolHT = None, PDcontrol = (None, None), urdfFile = None, enableEndStops = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L529)
 
 - **function description**: Create a Robot from the data of GetURDFrobotData (or of a dict of it loaded from a file): the links with their parents, masses, inertias, joint limits and graphics, the base graphics and the tool frame (#3356). A Robot is saved with its graphics by Robot.SaveToHDF5, and loaded without the packages that read the URDF.
 - **input**:
@@ -93,13 +118,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex), [`robotFromURDFdataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotFromURDFdataTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex), [`reduceURDFrobotDataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/reduceURDFrobotDataTest.py) (TM), [`robotFromURDFdataTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotFromURDFdataTest.py) (TM)
 
 
 (sec-urdfimport-makecorkerobot)=
 ## Function: MakeCorkeRobot
 
-[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L480)
+[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L589)
 
 - **function description**: makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters
 - **input**:
@@ -112,7 +137,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-loadurdfgraphics)=
 ## Function: LoadURDFgraphics
 
-[`LoadURDFgraphics(urdfFile, packagePath = None, color = None, invertTriangles = False, orientTriangles = True, smoothNormals = True, smoothingAngle = 0.25*np.pi, addEdges = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L537)
+[`LoadURDFgraphics(urdfFile, packagePath = None, color = None, invertTriangles = False, orientTriangles = True, smoothNormals = True, smoothingAngle = 0.25*np.pi, addEdges = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L646)
 
 - **function description**: the visual meshes of the links of a URDF file as Exudyn graphics, without the Robotics Toolbox (#3263): for each <link> its <visual> elements with a mesh of an STL file (binary or text, read by graphics.FromSTLfile), their <origin> and scale, and the color of their <material>; meshes of other formats and the shapes box, cylinder, sphere are skipped with a warning. The triangles of STL files are often not oriented consistently, and their normals are those of the triangles: the options invert them, orient them (graphics.OrientTriangles) and smoothen the normals (graphics.AddEdgesAndSmoothenNormals), as the meshes of a URDF need
 - **input**:
@@ -130,7 +155,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-urdfimport-addurdfgraphics)=
 ## Function: AddURDFgraphics
 
-[`AddURDFgraphics(robot, urdfFile, linkNames, baseLinkName = None, packagePath = None, color = None, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L611)
+[`AddURDFgraphics(robot, urdfFile, linkNames, baseLinkName = None, packagePath = None, color = None, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L720)
 
 - **function description**: the graphics of a Robot from the visual meshes of a URDF file (#3263), for a robot whose link frames are the frames of the URDF links, as the models of exudyn.robotics.models with dhMode 'jointFrames' (e.g. ManipulatorStaubliTX2_90L, whose dict names the URDF and its links in 'urdfGraphics'); the joint and COM graphics of the links switched off; further keyword arguments go to LoadURDFgraphics (invertTriangles, orientTriangles, smoothNormals, smoothingAngle, addEdges)
 - **input**:

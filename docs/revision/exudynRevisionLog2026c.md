@@ -6427,6 +6427,12 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - solver.md (sec-explicitsolver) describes the PI controller; its old text had acceptance and rejection the wrong way
   round.
 
+<a id="rg19-17-1"></a>
+### RG19.17.1 - urdfImport.ReduceURDFrobotData (2026-11-08, #3372)
+- Locked joints merge the link into the joint link above (mass, center of mass, inertia by the parallel axis theorem, graphics moved, children attached there), removed links go with all below them; the names are those of joints or links, GetURDFrobotData now returns 'jointName'.
+    - reduceURDFrobotDataTest.py: mass, center of mass and inertia of the robot equal to link-by-link sums, without the toolbox. Checked on panda.urdf in venvP313rtb: 9 joints reduced to 7, 16.82 kg kept, the tool at panda_hand as fkine gives it.
+    - Measured for RG19.17.2: Panda URDF and models.py have the same masses and inertias (link 7 apart, which carries the hand in the URDF); the UR5 URDF has inertia traces of 0.44 (wrist 1 and 2, 1.2 kg) and 0.068 (wrist 3, 0.19 kg) against 0.0041 and 0.0003 in models.py, and 0.47 against 0.012 on the upper arm. Open for the maintainer.
+    
 <a id="rg19-13-3"></a>
 ### RG19.13.3 - 0.4 kg of link 5 moved to link 6 of the TX2-90L (2026-11-08, #3371)
 - The total of 117 kg unchanged; three test references.

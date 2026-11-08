@@ -22,7 +22,7 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics',
+    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'ReduceURDFrobotData', 'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics',
     'AddURDFgraphics',
     ]
 
@@ -174,7 +174,7 @@ def GetURDFrobotData(robot,
             joint link is returned in 'toolHT', for RobotFromURDFdata (#3356)
 
     Returns:
-        returns dictionary with items linkList (the joint links, each with its preHT relative to the joint link above,
+        returns dictionary with items linkList (the joint links, each with its name, jointName, preHT relative to the joint link above,
         its parentName, mass, com, inertiaCOM, jointType, jointLimits and graphicsDataList), numberOfJoints,
         graphicsBaseList (the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint
         are in the graphics of that link), staticJointValues and staticGraphicsList; a link of the URDF without joint
@@ -256,6 +256,7 @@ def GetURDFrobotData(robot,
             linkDict = {}
             #required fields:
             linkDict['name'] = link.name
+            linkDict['jointName'] = getattr(link, '_joint_name', None) #the name of the joint in the URDF
             linkDict['jointNumber'] = jointIndex
             linkDict['parentNumber'] = -1 if parent is None else parent.number
             linkDict['parentName'] = 'None' if parent is None else parent.name
@@ -403,6 +404,114 @@ def GetURDFrobotData(robot,
         robotData['toolHT'] = linkList[-1]['flipHT'] @ np.linalg.inv(np.array(robot.fkine(zero, end=linkList[-1]['name']))) @ np.array(robot.fkine(zero, end=toolLinks[0]))
 
     return robotData
+
+
+def _JointHT(jointType, q):
+    """the homogeneous transformation of a joint of type Rx, Ry, Rz, Px, Py or Pz at the joint value q"""
+    T = np.eye(4)
+    axis = 'xyz'.index(jointType[1])
+    if jointType[0] == 'P':
+        T[axis, 3] = q
+    else:
+        (i, j) = ((axis + 1) % 3, (axis + 2) % 3)
+        (c, s) = (cMath.cos(q), cMath.sin(q))
+        T[i, i], T[i, j], T[j, i], T[j, j] = c, -s, s, c
+    return T
+
+
+def ReduceURDFrobotData(robotData, lockedJoints=None, removedLinks=None):
+    """Leave out joints and links in the data of GetURDFrobotData, for example the fingers of a gripper (#3372); needs
+    neither the Robotics Toolbox nor a file.
+
+    Args:
+        robotData: the dict of GetURDFrobotData; it is not changed
+        lockedJoints: None or a dict {name: value}, name the joint of the URDF or its link, value the joint value at which
+            it is fixed; the link is merged into the joint link above it: mass, center of mass and inertia added by the
+            parallel axis theorem, the graphics moved, its children attached to that link. A locked link at the root
+            has its graphics in the base, and its mass is lost as the base has none
+        removedLinks: None or a list of names of links (or their joints) which are left out with all links below them,
+            with their mass and graphics; only the first n links of a serial robot: the name of link n+1
+
+    Returns:
+        a new dict of the same form, with numberOfJoints, staticJointValues and inertiaProblems updated; the 'toolHT' relative
+        to the last remaining link, for the tool frame at zero joint values (a tool on a locked link at a value other than
+        zero is not moved with it); staticGraphicsList is empty, as it shows the robot before the reduction
+
+    Example:
+        data = GetURDFrobotData(robot, toolLinkName='panda_hand')
+        data = ReduceURDFrobotData(data, lockedJoints={'panda_finger_joint1':0.04, 'panda_finger_joint2':0.04})
+        robot = RobotFromURDFdata(data, PDcontrol=(1e4, 1e2))
+    """
+    lockedJoints = {} if lockedJoints is None else lockedJoints
+    removedLinks = [] if removedLinks is None else removedLinks
+    oldLinks = robotData['linkList']
+    def Index(name):
+        for (i, link) in enumerate(oldLinks):
+            if name in (link['name'], link.get('jointName')):
+                return i
+        raise ValueError('ReduceURDFrobotData: "' + str(name) + '" is neither a joint nor a link with a joint of the robot, it has the links '
+                         + str([link['name'] for link in oldLinks]))
+    locked = {Index(name): value for (name, value) in lockedJoints.items()}
+    numberOfName = {link['name']: i for (i, link) in enumerate(oldLinks)}
+    numberOfName['None'] = -1
+
+    #the links left out: a parent comes before its children in linkList
+    removed = set(Index(name) for name in removedLinks)
+    for (i, link) in enumerate(oldLinks):
+        if numberOfName[link['parentName']] in removed:
+            removed.add(i)
+    if len(removed.intersection(locked)) != 0:
+        raise ValueError('ReduceURDFrobotData: a joint cannot be locked and removed, ' + str([oldLinks[i]['name'] for i in removed.intersection(locked)]))
+
+    #the frames of all links at zero joint values, for the tool frame
+    frames = []
+    for link in oldLinks:
+        parent = numberOfName[link['parentName']]
+        frames.append((np.eye(4) if parent < 0 else frames[parent]) @ np.array(link['preHT']))
+
+    links = {i: dict(link) for (i, link) in enumerate(oldLinks) if i not in removed}
+    graphicsBaseList = list(robotData.get('graphicsBaseList', []))
+    parentOf = {i: numberOfName[link['parentName']] for (i, link) in links.items()} #changes as links are merged
+    for i in sorted(locked):
+        link = links.pop(i)
+        A = np.array(link['preHT']) @ _JointHT(link['jointType'], locked[i]) #the merged link in the frame of its parent
+        (R, d) = (A[:3, :3], A[:3, 3])
+        parent = parentOf[i]
+        moved = [graphics.Move(g, list(d), R.tolist()) for g in link['graphicsDataList']]
+        if parent < 0:
+            graphicsBaseList += moved
+        else:
+            target = links[parent]
+            (m0, c0, I0) = (target['mass'], np.array(target['com'], dtype=float), np.array(target['inertiaCOM'], dtype=float))
+            (m1, c1, I1) = (link['mass'], R @ np.array(link['com'], dtype=float) + d, R @ np.array(link['inertiaCOM'], dtype=float) @ R.T)
+            m = m0 + m1
+            c = c0 if m <= 0 else (m0*c0 + m1*c1)/m
+            target['inertiaCOM'] = I0 + _Steiner(m0, c0 - c) + I1 + _Steiner(m1, c1 - c)
+            target['com'] = c
+            target['mass'] = m
+            target['graphicsDataList'] = list(target['graphicsDataList']) + moved
+            target['inertiaProblems'] = _InertiaProblems(m, target['inertiaCOM'])
+        for (j, child) in links.items():
+            if parentOf[j] == i:
+                child['preHT'] = A @ np.array(child['preHT'])
+                child['parentName'] = 'None' if parent < 0 else links[parent]['name']
+                parentOf[j] = parent
+
+    keep = sorted(links)
+    if len(keep) == 0:
+        raise ValueError('ReduceURDFrobotData: no link with a joint remains')
+    linkList = [links[i] for i in keep]
+    newNumber = {i: n for (n, i) in enumerate(keep)}
+    for (n, i) in enumerate(keep):
+        linkList[n]['jointNumber'] = n
+        linkList[n]['parentNumber'] = -1 if parentOf[i] < 0 else newNumber[parentOf[i]]
+
+    result = dict(robotData)
+    result.update({'linkList': linkList, 'numberOfJoints': len(linkList), 'graphicsBaseList': graphicsBaseList, 'staticGraphicsList': [],
+                   'staticJointValues': np.array(robotData['staticJointValues'])[keep] if 'staticJointValues' in robotData else np.zeros(len(linkList))})
+    if 'toolHT' in robotData:
+        result['toolHT'] = np.linalg.inv(frames[keep[-1]]) @ frames[-1] @ np.array(robotData['toolHT'])
+    return result
 
 
 def _URDFjointDynamics(urdfFile):

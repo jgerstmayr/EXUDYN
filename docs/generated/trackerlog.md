@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.479.dev1
+- Exudyn version = 1.13.480.dev1
 - last change = 2026-11-08
 - Number of issues = 3376
-- Number of resolved issues = 3256 (479 in current version)
+- Number of resolved issues = 3257 (480 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9048,9 +9048,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-08
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` robotics.models as the definition without files: the values of the URDF in its frames, a test against the URDF (#3373)
   - description: models.py and the URDF files differ in frames and inertias. Decided: each model holds the kinematics, masses, inertias and limits of its URDF in the joint frames of the URDF, plus what a URDF does not give (friction, PD values, simple collision shapes), urdfImport.RobotModelDictFromData writes the part from the URDF, and a test compares each model with its URDF; design robotics.md section 3.5(b).
-  - date raised: 2026-11-08
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` urdfImport.ReduceURDFrobotData: locked joints and removed links of URDF robot data (#3372)
-  - description: The import has no way to leave out links such as the fingers of the Panda. Decided: ReduceURDFrobotData(robotData, lockedJoints, removedLinks) on the data of GetURDFrobotData, a locked link merged into its parent with its mass, center of mass and inertia; design robotics.md section 3.5(a).
   - date raised: 2026-11-08
 - `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` FlatArray: the markers, forces and torques of the connector interface passed with their size (#3368)
   - description: The connector interface passes raw pointers without their number (see the analysis, design flatArray.md). Proposed, to be decided: a class FlatArray with only operator\[\], NumberOfItems, iterators and the pointer, range checked; the virtual functions of CObjectConnector, their generated declarations and implementations on it in one commit; the speed of the fast module unchanged.
