@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-11-08  22:55:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -159,10 +159,10 @@ public: // AUTO:
     }
 
     //! AUTO:  the generalized force on marker 1 from the values of the two markers (#2745)
-    virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real& force) const override;
+    virtual void ComputeConnectorForceCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, Real t, Real& force) const override;
 
     //! AUTO:  the same force with automatic differentiation, for the Jacobian (#2745)
-    virtual void ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t, DRealCoordinateMarkers& force) const override;
+    virtual void ComputeConnectorForceCoordinateDiff(FlatArray<const MarkerCoordinate<DRealCoordinateMarkers>> markers, Real t, DRealCoordinateMarkers& force) const override;
 
     //! AUTO:  the physics of the spring-damper, shared by the connector interface, its Jacobian and the output variables (#2745)
     template<class TReal> void ComputeSpringForce(TReal value0, TReal value1, TReal value0_t, TReal value1_t, Real t, TReal& relPos, TReal& relVel, TReal& force) const;

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 465 | 1.13.482 |
+| 1.13 | Newborn | 466 | 1.13.483 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.483** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` FlatArray: the markers, forces and torques of the connector interface passed with their size (#3368)
+  - description: The connector interface passes raw pointers without their number (see the analysis, design flatArray.md). Proposed, to be decided: a class FlatArray with only operator\[\], NumberOfItems, iterators and the pointer, range checked; the virtual functions of CObjectConnector, their generated declarations and implementations on it in one commit; the speed of the fast module unchanged.
+  - **notes:** The markers, forces and torques of the connector interface are passed with their size by the new class FlatArray; the speed is unchanged.
+  - date resolved: **2026-11-08 23:15**, date raised: 2026-11-08
 - **1.13.482** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` VelocityVerlet checked, its under-development warning removed, solver recommendations extended (#3377)
   - description: The convergence of VelocityVerlet checked on a parabola (exact), an undamped oscillator (order 2), a damped oscillator and a free rigid body (order 1). Decided: the warning and the TEST phase mark removed; order 2 (1) in the solver overview, with the note on velocity-dependent forces; the recommendations say that it suits conservative systems, and that GeneralizedAlpha usually has the lowest accuracy.
   - **notes:** VelocityVerlet is no longer marked as under development; the solver page gives its order as 2, and 1 for forces depending on velocities.

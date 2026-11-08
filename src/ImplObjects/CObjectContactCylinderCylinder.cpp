@@ -772,10 +772,11 @@ namespace ContactCylinder {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! the forces and torques of the connector interface (#2745)
-void CObjectContactCylinderCylinder::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
-	Vector3D* forces, Vector3D* torques) const
+void CObjectContactCylinderCylinder::ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t,
+	FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const
 {
-	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	for (auto& force : forces) { force.SetAll(0.); }
+	for (auto& torque : torques) { torque.SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
 	TemporaryMarkerDataStructure temporary; //the physics read a marker data structure, without Jacobians
 	MarkerDataStructure& markerData = temporary.Get();
@@ -858,10 +859,11 @@ void VisualizationObjectContactCylinderCylinder::UpdateGraphics(const Visualizat
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! the forces and torques of the connector interface (#2745)
-void CObjectContactCylinderTriangle::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
-	Vector3D* forces, Vector3D* torques) const
+void CObjectContactCylinderTriangle::ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t,
+	FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const
 {
-	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	for (auto& force : forces) { force.SetAll(0.); }
+	for (auto& torque : torques) { torque.SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
 	TemporaryMarkerDataStructure temporary; //the physics read a marker data structure, without Jacobians
 	MarkerDataStructure& markerData = temporary.Get();
@@ -936,10 +938,11 @@ void VisualizationObjectContactCylinderTriangle::UpdateGraphics(const Visualizat
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! the forces and torques of the connector interface (#2745)
-void CObjectContactConeCone::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
-	Vector3D* forces, Vector3D* torques) const
+void CObjectContactConeCone::ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t,
+	FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const
 {
-	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	for (auto& force : forces) { force.SetAll(0.); }
+	for (auto& torque : torques) { torque.SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
 	TemporaryMarkerDataStructure temporary; //the physics read a marker data structure, without Jacobians
 	MarkerDataStructure& markerData = temporary.Get();
@@ -972,10 +975,11 @@ void CObjectContactConeCone::PostDiscontinuousIterationStep()
 }
 
 //! the forces and torques of the connector interface (#2745)
-void CObjectContactConeTriangle::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
-	Vector3D* forces, Vector3D* torques) const
+void CObjectContactConeTriangle::ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t,
+	FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const
 {
-	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	for (auto& force : forces) { force.SetAll(0.); }
+	for (auto& torque : torques) { torque.SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
 	TemporaryMarkerDataStructure temporary; //the physics read a marker data structure, without Jacobians
 	MarkerDataStructure& markerData = temporary.Get();
@@ -1061,10 +1065,11 @@ void VisualizationObjectContactConeTriangle::UpdateGraphics(const VisualizationS
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! the forces and torques of the connector interface (#2745)
-void CObjectContactPrimitiveConvex::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
-	Vector3D* forces, Vector3D* torques) const
+void CObjectContactPrimitiveConvex::ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t,
+	FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const
 {
-	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	for (auto& force : forces) { force.SetAll(0.); }
+	for (auto& torque : torques) { torque.SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
 	TemporaryMarkerDataStructure temporary; //the physics read a marker data structure, without Jacobians
 	MarkerDataStructure& markerData = temporary.Get();

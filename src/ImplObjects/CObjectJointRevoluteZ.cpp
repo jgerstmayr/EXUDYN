@@ -27,7 +27,7 @@
 //! the equations on the connector interface (#2745), as ComputeAlgebraicEquations: the relative position, global, and the
 //! free axis of marker 0 perpendicular to the two locked axes of marker 1; at velocity level their time derivatives (Real)
 template<class TReal>
-void CObjectJointRevoluteZ::ComputeConstraintEquationsTemplate(const MarkerRigid<TReal>* markers, const LinkedDataVector& lambda,
+void CObjectJointRevoluteZ::ComputeConstraintEquationsTemplate(FlatArray<const MarkerRigid<TReal>> markers, const LinkedDataVector& lambda,
 	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	constexpr Index lockedAxis1 = 0; //x
@@ -71,12 +71,12 @@ void CObjectJointRevoluteZ::ComputeConstraintEquationsTemplate(const MarkerRigid
 	}
 }
 
-void CObjectJointRevoluteZ::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectJointRevoluteZ::ComputeConstraintEquationsRigid(FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
 }
 
-void CObjectJointRevoluteZ::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+void CObjectJointRevoluteZ::ComputeConstraintEquationsRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, const LinkedDataVector& lambda,
 	Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);

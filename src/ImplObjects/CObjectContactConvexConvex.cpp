@@ -117,10 +117,11 @@ namespace ContactConvex {
 }
 
 //! the forces and torques of the connector interface (#2745)
-void CObjectContactConvexConvex::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
-	Vector3D* forces, Vector3D* torques) const
+void CObjectContactConvexConvex::ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t,
+	FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const
 {
-	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	for (auto& force : forces) { force.SetAll(0.); }
+	for (auto& torque : torques) { torque.SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
 	TemporaryMarkerDataStructure temporary; //the physics read a marker data structure, without Jacobians
 	MarkerDataStructure& markerData = temporary.Get();

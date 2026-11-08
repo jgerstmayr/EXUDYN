@@ -33,7 +33,7 @@ void CObjectJointUser::ComputeJacobianIncrements(Matrix& jacobian, Real t, const
 
 //! the equations of the constraintUserFunction; at velocity level C [v0, omega0, v1, omega1] + dc/dt, the angular
 //! velocities global and dc/dt by central differences
-void CObjectJointUser::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t,
+void CObjectJointUser::ComputeConstraintEquationsRigid(FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t,
 	bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	const Index n = parameters.numberOfConstraints;
@@ -66,7 +66,7 @@ void CObjectJointUser::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* 
 
 //! the equations with their derivatives in the directions the markers are seeded with: per direction the increments of
 //! the translations and the rotation increments theta, skew(dtheta) = dA A^T, times dc/d[p0, theta0, p1, theta1]
-void CObjectJointUser::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+void CObjectJointUser::ComputeConstraintEquationsRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, const LinkedDataVector& lambda,
 	Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
 {
 	const Index n = parameters.numberOfConstraints;

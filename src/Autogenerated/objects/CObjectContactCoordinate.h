@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  15:39:40 (last modified)
+* @date         2026-11-08  22:55:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -160,7 +160,7 @@ public: // AUTO:
     }
 
     //! AUTO:  the contact force on marker 1 from the values of the two markers (#2745)
-    virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real& force) const override;
+    virtual void ComputeConnectorForceCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, Real t, Real& force) const override;
 
     //! AUTO:  the contact force on marker 1 for gap and its time derivative, with the contact state of the data node (#2745)
     Real ComputeContactForce(Real gap, Real gap_t) const;

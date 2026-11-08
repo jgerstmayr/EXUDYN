@@ -26,7 +26,7 @@ void CObjectConnectorGravity::ComputeConnectorProperties(const MarkerDataStructu
 }
 
 //! the force of the connector interface on position markers (#2745): on marker 1, global
-void CObjectConnectorGravity::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const
+void CObjectConnectorGravity::ComputeConnectorForcePosition(FlatArray<const MarkerPosition<Real>> markers, Real t, Vector3D& force) const
 {
 	Vector3D relPos, forceDirection;
 	Real forceScalar;
@@ -35,7 +35,7 @@ void CObjectConnectorGravity::ComputeConnectorForcePosition(const MarkerPosition
 }
 
 //! the force with automatic differentiation, for the Jacobian of the connector interface (#2745)
-void CObjectConnectorGravity::ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t,
+void CObjectConnectorGravity::ComputeConnectorForcePositionDiff(FlatArray<const MarkerPosition<DRealPositionMarkers>> markers, Real t,
 	SlimVectorBase<DRealPositionMarkers, 3>& force) const
 {
 	SlimVectorBase<DRealPositionMarkers, 3> relPos, forceDirection;

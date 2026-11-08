@@ -23,7 +23,7 @@
 //! the equation on the connector interface (#2745): the distance minus its value, or at velocity level its time derivative -
 //! as ComputeAlgebraicEquations
 template<class TReal>
-void CObjectConnectorDistance::ComputeConstraintEquationsTemplate(const MarkerPosition<TReal>* markers, const LinkedDataVector& lambda,
+void CObjectConnectorDistance::ComputeConstraintEquationsTemplate(FlatArray<const MarkerPosition<TReal>> markers, const LinkedDataVector& lambda,
 	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	using std::sqrt;
@@ -42,12 +42,12 @@ void CObjectConnectorDistance::ComputeConstraintEquationsTemplate(const MarkerPo
 	}
 }
 
-void CObjectConnectorDistance::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectConnectorDistance::ComputeConstraintEquationsPosition(FlatArray<const MarkerPosition<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
 }
 
-void CObjectConnectorDistance::ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
+void CObjectConnectorDistance::ComputeConstraintEquationsPositionDiff(FlatArray<const MarkerPosition<DRealPositionMarkers>> markers, const LinkedDataVector& lambda,
 	Real t, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);

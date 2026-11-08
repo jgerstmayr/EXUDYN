@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-07  15:39:40 (last modified)
+* @date         2026-11-08  22:55:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -200,7 +200,7 @@ public: // AUTO:
     }
 
     //! AUTO:  the force and torque on each marker from the kinematics of the two markers (#2745)
-    virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Vector3D* forces, Vector3D* torques) const override;
+    virtual void ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t, FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const override;
 
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;

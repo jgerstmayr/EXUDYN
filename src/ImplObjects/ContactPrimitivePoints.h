@@ -194,7 +194,7 @@ namespace ContactPoints {
 	//! marker 0 at each contact point and its negative on marker 1
 	template<class TItem, class TPoints>
 	void ForcesRigid(const TItem& item, const MarkerDataStructure& markerData, const TPoints& points, const char* itemName,
-		Vector3D* forces, Vector3D* torques)
+		FlatArray<Vector3D> forces, FlatArray<Vector3D> torques)
 	{
 		LinkedDataVector data = item.GetCNode(0)->GetCurrentCoordinateVector();
 		for (Index i = 0; i < points.count; i++)

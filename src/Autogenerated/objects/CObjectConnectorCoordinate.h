@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-11-08  22:55:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -157,13 +157,13 @@ public: // AUTO:
     }
 
     //! AUTO:  the algebraic equation from the values of the two markers (#2745)
-    virtual void ComputeConstraintEquationsCoordinate(const MarkerCoordinate<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const override;
+    virtual void ComputeConstraintEquationsCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const override;
 
     //! AUTO:  the same equation with automatic differentiation, for C_q (#2745)
-    virtual void ComputeConstraintEquationsCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, const LinkedDataVector& lambda, Real t, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations) const override;
+    virtual void ComputeConstraintEquationsCoordinateDiff(FlatArray<const MarkerCoordinate<DRealCoordinateMarkers>> markers, const LinkedDataVector& lambda, Real t, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations) const override;
 
     //! AUTO:  the equation of the constraint, for Real and AutoDiff (#2745)
-    template<class TReal> void ComputeConstraintEquationsTemplate(const MarkerCoordinate<TReal>* markers, Real t, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const;
+    template<class TReal> void ComputeConstraintEquationsTemplate(FlatArray<const MarkerCoordinate<TReal>> markers, Real t, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const;
 
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;

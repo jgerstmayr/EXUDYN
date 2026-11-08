@@ -41,7 +41,7 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorProperties(const M
 }
 
 //! the force of the connector interface on position markers (#2745): on marker 1, global
-void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const
+void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorForcePosition(FlatArray<const MarkerPosition<Real>> markers, Real t, Vector3D& force) const
 {
 	Vector3D relPos, relVel, forceDirection;
 	Real forceScalar, linearVelocity;
@@ -52,7 +52,7 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorForcePosition(cons
 
 //! the force with automatic differentiation by the kinematics of the markers, for the Jacobian of the connector
 //! interface (#3201); the pressures are constants here, their block is ComputeJacobianODE2_ODE1
-void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t,
+void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorForcePositionDiff(FlatArray<const MarkerPosition<DRealPositionMarkers>> markers, Real t,
 	SlimVectorBase<DRealPositionMarkers, 3>& force) const
 {
 	SlimVectorBase<DRealPositionMarkers, 3> relPos, relVel, forceDirection;

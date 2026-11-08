@@ -292,7 +292,7 @@ static const Real radialEpsilon = 1e-7;
 //! factorODE2 into temp.jacobianODE2Container - the system differentiates this direction, the chain of the marker
 //! Jacobians lacks it
 static void AddRadialDerivativePosition(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	const MarkerPosition<Real>* kinematics, const Vector3D& force0, Real factorODE2)
+	FlatArray<const MarkerPosition<Real>> kinematics, const Vector3D& force0, Real factorODE2)
 {
 	if (factorODE2 == 0.) { return; }
 	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();
@@ -396,7 +396,7 @@ void ConnectorODE2LHSRigidMarkers(const CSystemData& cSystemData, TemporaryCompu
 //! factorODE2 and factorODE2_t; block (i, k) is [J_pos; J_rot]_i^T K_ik [J_pos; J_rot]_k, plus the Jacobian derivative
 //! of the markers; dense, into temp.jacobianODE2Container; the stacked Jacobian of marker k stays in markerTemp[k].tempMatrix
 static void ChainConnectorJacobianRigid(const CSystemData& cSystemData, TemporaryComputationData& temp, const ArrayIndex& markerNumbers,
-	const SlimVectorBase<DRealRigidMarkers, 3>* forces, const SlimVectorBase<DRealRigidMarkers, 3>* torques, Real factorODE2,
+	FlatArray<const SlimVectorBase<DRealRigidMarkers, 3>> forces, FlatArray<const SlimVectorBase<DRealRigidMarkers, 3>> torques, Real factorODE2,
 	bool jacobianDerivativeNonZero)
 {
 	const Index n[2] = { temp.markerTemp[0].positionJacobian.NumberOfColumns(), temp.markerTemp[1].positionJacobian.NumberOfColumns() };
@@ -454,7 +454,7 @@ static void ChainConnectorJacobianRigid(const CSystemData& cSystemData, Temporar
 //! matrix by their derivatives, the global velocity and angular velocity kept, as for the rotation increments -,
 //! [J_pos; J_rot]_i^T d(f_i, tau_i) radial_q,k added with factorODE2; [J_pos; J_rot]_i is in markerTemp[i].tempMatrix
 static void AddRadialDerivativeRigid(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	const MarkerRigid<Real>* kinematics, const Vector3D* forces0, const Vector3D* torques0, Real factorODE2)
+	FlatArray<const MarkerRigid<Real>> kinematics, FlatArray<const Vector3D> forces0, FlatArray<const Vector3D> torques0, Real factorODE2)
 {
 	if (factorODE2 == 0.) { return; }
 	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();

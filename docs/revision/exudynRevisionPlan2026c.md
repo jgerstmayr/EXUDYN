@@ -2262,9 +2262,13 @@ Maintainer 2026-11-08: the raw pointers of ComputeConnectorForceRigid and its re
 
 CLOSED 2026-11-08 (#3367): the analysis and the recommendation of a class FlatArray in docs/dev/design/flatArray.md. [log](exudynRevisionLog2026c.md#rg11-14-1)
 
-#### **OPEN_RG11.14.2** The class FlatArray and the connector interface on it
+#### **CLOSED_RG11.14.2** The class FlatArray and the connector interface on it
 
 #3368.
+
+#### **OPEN_RG11.14.3** The C++ unit-test build repaired
+
+#3378.
 
 ## **OPEN_RG12** Symbolic
 

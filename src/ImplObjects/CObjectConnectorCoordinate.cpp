@@ -39,14 +39,14 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 		markers[k].value_t = withVelocities ? markerData.GetMarkerData(k).vectorValue_t[0] : 0.;
 	}
 	ConstSizeVector<maxConstraintEquations> equations;
-	ComputeConstraintEquationsTemplate(markers, t, velocityLevel, equations);
+	ComputeConstraintEquationsTemplate(FlatArray<const MarkerCoordinate<Real>>(markers), t, velocityLevel, equations);
 	algebraicEquations.CopyFrom(equations);
 }
 
 //! the equation on the connector interface (#2745), as ComputeAlgebraicEquations; the system takes it at position level
 //! only (UsesVelocityLevel: the path of the marker data)
 template<class TReal>
-void CObjectConnectorCoordinate::ComputeConstraintEquationsTemplate(const MarkerCoordinate<TReal>* markers, Real t,
+void CObjectConnectorCoordinate::ComputeConstraintEquationsTemplate(FlatArray<const MarkerCoordinate<TReal>> markers, Real t,
 	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	equations.SetNumberOfItems(1);
@@ -72,12 +72,12 @@ void CObjectConnectorCoordinate::ComputeConstraintEquationsTemplate(const Marker
 	}
 }
 
-void CObjectConnectorCoordinate::ComputeConstraintEquationsCoordinate(const MarkerCoordinate<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectConnectorCoordinate::ComputeConstraintEquationsCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, t, velocityLevel, equations);
 }
 
-void CObjectConnectorCoordinate::ComputeConstraintEquationsCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, const LinkedDataVector& lambda,
+void CObjectConnectorCoordinate::ComputeConstraintEquationsCoordinateDiff(FlatArray<const MarkerCoordinate<DRealCoordinateMarkers>> markers, const LinkedDataVector& lambda,
 	Real t, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, t, false, equations);

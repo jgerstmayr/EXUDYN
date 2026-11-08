@@ -263,6 +263,27 @@ const lest::test resizableArray_specific_test[] =
 const lest::test slimArray_specific_test[] =
 {
 
+    CASE("FlatArray: transports a local array, a SlimArray and a ResizableArray")
+    {
+        Real local[3] = { 1., 2., 3. };
+        FlatArray<Real> a(local);
+        EXPECT(a.NumberOfItems() == 3);
+        a[1] = 5.;
+        EXPECT(local[1] == 5.);
+        Real sum = 0.;
+        for (Real x : a) { sum += x; }
+        EXPECT(sum == 9.);
+        FlatArray<const Real> c(a); //adds const
+        EXPECT(c[2] == 3.);
+        EXPECT(c.GetDataPointer() == local);
+        EXPECT(FlatArray<Real>().GetDataPointer() == nullptr);
+        SlimArray<Real, 2> slim(2.);
+        EXPECT(FlatArray<Real>(slim).NumberOfItems() == 2);
+        ResizableArray<Real> resizable(4);
+        resizable.SetNumberOfItems(4);
+        EXPECT(FlatArray<Real>(resizable).NumberOfItems() == 4);
+    },
+
     CASE("SlimArray<Real>: constructor with scalar value, size 0")
     {
         SlimArray<Real, 2> x(2); //initalizes with 2 Reals

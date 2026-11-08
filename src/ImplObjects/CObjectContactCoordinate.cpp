@@ -62,7 +62,7 @@ Real CObjectContactCoordinate::ComputeContactForce(Real gap, Real gap_t) const
 }
 
 //! the force of the connector interface on coordinate markers (#2745), as ComputeODE2LHS: on marker 1, the reaction on marker 0
-void CObjectContactCoordinate::ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real& force) const
+void CObjectContactCoordinate::ComputeConnectorForceCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, Real t, Real& force) const
 {
 	force = 0.;
 	if (!parameters.activeConnector) { return; } //an inactive connector adds no force (#2735)

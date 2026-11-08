@@ -22,7 +22,7 @@
 
 //! the physics of the connector, for Real and AutoDiff (#2745); the user function is Real only
 template<class TReal>
-void CObjectConnectorLinearSpringDamper::ComputeSpringForce(const MarkerRigid<TReal>* markers, Real t,
+void CObjectConnectorLinearSpringDamper::ComputeSpringForce(FlatArray<const MarkerRigid<TReal>> markers, Real t,
 	ConstSizeMatrixBase<TReal, 9>& A0, TReal& displacement, TReal& velocity, TReal& force) const
 {
 	//spring is measured relative to marker0:
@@ -56,10 +56,11 @@ void CObjectConnectorLinearSpringDamper::ComputeSpringForce(const MarkerRigid<TR
 
 //! the forces of the connector interface on rigid markers (#2745): along the axis of marker 0, no torques
 template<class TReal>
-void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigidTemplate(const MarkerRigid<TReal>* markers, Real t,
-	SlimVectorBase<TReal, 3>* forces, SlimVectorBase<TReal, 3>* torques) const
+void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigidTemplate(FlatArray<const MarkerRigid<TReal>> markers, Real t,
+	FlatArray<SlimVectorBase<TReal, 3>> forces, FlatArray<SlimVectorBase<TReal, 3>> torques) const
 {
-	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	for (auto& force : forces) { force.SetAll(0.); }
+	for (auto& torque : torques) { torque.SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
 
 	TReal displacement, velocity, force;
@@ -81,14 +82,14 @@ JacobianType::Type CObjectConnectorLinearSpringDamper::GetAvailableJacobians() c
 	return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
 }
 
-void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
-	Vector3D* forces, Vector3D* torques) const
+void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t,
+	FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const
 {
 	ComputeConnectorForceRigidTemplate(markers, t, forces, torques);
 }
 
-void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t,
-	SlimVectorBase<DRealRigidMarkers, 3>* forces, SlimVectorBase<DRealRigidMarkers, 3>* torques) const
+void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, Real t,
+	FlatArray<SlimVectorBase<DRealRigidMarkers, 3>> forces, FlatArray<SlimVectorBase<DRealRigidMarkers, 3>> torques) const
 {
 	ComputeConnectorForceRigidTemplate(markers, t, forces, torques);
 }
@@ -103,7 +104,7 @@ void CObjectConnectorLinearSpringDamper::GetOutputVariableConnector(OutputVariab
 	//compute local torque
 	MarkerRigid<Real> markers[2];
 	GetMarkersRigid(markerData, markers);
-	ComputeSpringForce(markers, markerData.GetTime(), A0, displacement, velocity, force);
+	ComputeSpringForce(FlatArray<const MarkerRigid<Real>>(markers), markerData.GetTime(), A0, displacement, velocity, force);
 	if (!parameters.activeConnector) { force = 0.; } //an inactive connector reports no force (#984)
 	//Vector3D fTrans = A0 * (parameters.axisMarker0 * force);
 

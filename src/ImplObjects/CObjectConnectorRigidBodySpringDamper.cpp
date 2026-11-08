@@ -23,7 +23,7 @@
 //! compute joint frame, relative displacement, relative rotation, relative velocity and relative angular velocity; for Real
 //! and AutoDiff (#2745), except the intrinsic formulation and the user function, which are Real only
 template<class TReal>
-void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const MarkerRigid<TReal>* markers, Real t,
+void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(FlatArray<const MarkerRigid<TReal>> markers, Real t,
 	ConstSizeMatrixBase<TReal, 9>& Ajoint, SlimVectorBase<TReal, 3>& vLocPos, SlimVectorBase<TReal, 3>& vLocVel,
 	SlimVectorBase<TReal, 3>& vLocRot, SlimVectorBase<TReal, 3>& vLocAngVel, SlimVectorBase<TReal, 6>& fLocVec6D,
 	bool computeForceTorque) const
@@ -123,10 +123,11 @@ void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const Marke
 //! the forces and torques of the connector interface on rigid markers (#2745), as ComputeODE2LHS projects them: the
 //! intrinsic formulation adds the same torque of the offset force on both markers
 template<class TReal>
-void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidTemplate(const MarkerRigid<TReal>* markers, Real t,
-	SlimVectorBase<TReal, 3>* forces, SlimVectorBase<TReal, 3>* torques) const
+void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidTemplate(FlatArray<const MarkerRigid<TReal>> markers, Real t,
+	FlatArray<SlimVectorBase<TReal, 3>> forces, FlatArray<SlimVectorBase<TReal, 3>> torques) const
 {
-	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	for (auto& force : forces) { force.SetAll(0.); }
+	for (auto& torque : torques) { torque.SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
 
 	SlimVectorBase<TReal, 3> vLocPos, vLocVel, vLocRot, vLocAngVel;
@@ -161,14 +162,14 @@ JacobianType::Type CObjectConnectorRigidBodySpringDamper::GetAvailableJacobians(
 	return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
 }
 
-void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
-	Vector3D* forces, Vector3D* torques) const
+void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t,
+	FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const
 {
 	ComputeConnectorForceRigidTemplate(markers, t, forces, torques);
 }
 
-void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t,
-	SlimVectorBase<DRealRigidMarkers, 3>* forces, SlimVectorBase<DRealRigidMarkers, 3>* torques) const
+void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, Real t,
+	FlatArray<SlimVectorBase<DRealRigidMarkers, 3>> forces, FlatArray<SlimVectorBase<DRealRigidMarkers, 3>> torques) const
 {
 	ComputeConnectorForceRigidTemplate(markers, t, forces, torques);
 }
@@ -185,7 +186,7 @@ void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVar
 	Matrix3D Ajoint;
 	MarkerRigid<Real> markers[2];
 	GetMarkersRigid(markerData, markers);
-	ComputeSpringForceTorque(markers, markerData.GetTime(), Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D,
+	ComputeSpringForceTorque(FlatArray<const MarkerRigid<Real>>(markers), markerData.GetTime(), Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D,
 		(variableType == OutputVariableType::ForceLocal ||
 		variableType == OutputVariableType::TorqueLocal));
 	if (!parameters.activeConnector) { fLocVec6D.SetAll(0.); } //an inactive connector reports no force and torque (#984)
@@ -240,7 +241,7 @@ Real CObjectConnectorRigidBodySpringDamper::PostNewtonStep(const MarkerDataStruc
 		//adds some overhead ...
 		MarkerRigid<Real> markers[2];
 		GetMarkersRigid(markerDataCurrent, markers);
-		ComputeSpringForceTorque(markers, markerDataCurrent.GetTime(), Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D);
+		ComputeSpringForceTorque(FlatArray<const MarkerRigid<Real>>(markers), markerDataCurrent.GetTime(), Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D);
 
 		Vector returnValue(dataCoordinates.NumberOfItems() + overheadData); //return = [eps, deltaT_recommended, data[0], data[1], ...]
 

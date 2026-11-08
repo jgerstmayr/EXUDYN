@@ -17,6 +17,7 @@
 #include "Utilities/ReleaseAssert.h"
 #include <initializer_list>
 #include "Utilities/BasicDefinitions.h" //defines Real
+#include "Utilities/FlatArray.h"
 #include "Utilities/ResizableArray.h" 
 #include "Linalg/ResizableMatrix.h"
 #include "Utilities/AutomaticDifferentiation.h"
@@ -416,7 +417,7 @@ inline void MarkerDataFromKinematics(const MarkerPosition<Real>& kinematics, Mar
 
 //! the marker data structure of the two markers of a connector from their kinematics, at time t
 template<class TMarker>
-inline void MarkerDataFromKinematics(const TMarker* markers, Real t, MarkerDataStructure& markerData)
+inline void MarkerDataFromKinematics(FlatArray<const TMarker> markers, Real t, MarkerDataStructure& markerData)
 {
 	markerData.SetNumberOfMarkerData(2);
 	markerData.SetTime(t);

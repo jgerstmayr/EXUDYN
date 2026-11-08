@@ -63,14 +63,14 @@ void CObjectConnectorCoordinateSpringDamper::ComputeSpringForce(TReal value0, TR
 }
 
 //! the generalized force of the connector interface on coordinate markers (#2745): on marker 1
-void CObjectConnectorCoordinateSpringDamper::ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real& force) const
+void CObjectConnectorCoordinateSpringDamper::ComputeConnectorForceCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, Real t, Real& force) const
 {
 	Real relPos, relVel;
 	ComputeSpringForce(markers[0].value, markers[1].value, markers[0].value_t, markers[1].value_t, t, relPos, relVel, force);
 }
 
 //! the force with automatic differentiation, for the Jacobian of the connector interface (#2745)
-void CObjectConnectorCoordinateSpringDamper::ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t,
+void CObjectConnectorCoordinateSpringDamper::ComputeConnectorForceCoordinateDiff(FlatArray<const MarkerCoordinate<DRealCoordinateMarkers>> markers, Real t,
 	DRealCoordinateMarkers& force) const
 {
 	DRealCoordinateMarkers relPos, relVel;

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.482.dev1
+- Exudyn version = 1.13.483.dev1
 - last change = 2026-11-08
-- Number of issues = 3378
-- Number of resolved issues = 3259 (482 in current version)
+- Number of issues = 3379
+- Number of resolved issues = 3260 (483 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `FIX` `LOW EFF` `raised by: Claude-JG` The C++ unit-test build does not compile, and a symbolic unit test fails (#3378)
+  - description: exudev build --unittests stops in src/Tests/UnitTestBase.cpp: Linalg/Symbolic.h needs pybind11 and py there. With that added, the test at SymbolicUnitTests.h line 154 (what Diff refuses) gets no exception; the other tests pass.
+  - date raised: 2026-11-08
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` robotics.models: Spot, ANYmal, Mars rover, LBR iiwa and UR10 (#3375)
   - description: Decided: these robots added to robotics.models, running without their shapes; a tree or a floating base needs parent in the link dict. Collision shapes only where the URDF offers them.
   - date raised: 2026-11-08
@@ -9048,9 +9051,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-08
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` robotics.models as the definition without files: the values of the URDF in its frames, a test against the URDF (#3373)
   - description: models.py and the URDF files differ in frames and inertias. Decided: each model holds the kinematics, masses, inertias and limits of its URDF in the joint frames of the URDF, plus what a URDF does not give (friction, PD values, simple collision shapes), urdfImport.RobotModelDictFromData writes the part from the URDF, and a test compares each model with its URDF; design robotics.md section 3.5(b).
-  - date raised: 2026-11-08
-- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` FlatArray: the markers, forces and torques of the connector interface passed with their size (#3368)
-  - description: The connector interface passes raw pointers without their number (see the analysis, design flatArray.md). Proposed, to be decided: a class FlatArray with only operator\[\], NumberOfItems, iterators and the pointer, range checked; the virtual functions of CObjectConnector, their generated declarations and implementations on it in one commit; the speed of the fast module unchanged.
   - date raised: 2026-11-08
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` serialRobotInteractiveLimits.py with the new renderer features, checked by hand (#3362)
   - description: The example (sliders, mouse drag, end stops) has run only without windows. Decided: adapted later with new features of the renderer.

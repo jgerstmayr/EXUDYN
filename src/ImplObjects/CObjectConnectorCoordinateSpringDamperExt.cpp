@@ -229,8 +229,8 @@ void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForceRelative(Real 
 //  MODEL: f
 //! the forces of the connector interface on coordinate markers (#2745), as ComputeODE2LHS: factor1 times the force on
 //! marker 1, -factor0 times it on marker 0
-void CObjectConnectorCoordinateSpringDamperExt::ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t,
-	Real* forces) const
+void CObjectConnectorCoordinateSpringDamperExt::ComputeConnectorForcesCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, Real t,
+	FlatArray<Real> forces) const
 {
 	forces[0] = forces[1] = 0.;
 	if (!parameters.activeConnector) { return; }

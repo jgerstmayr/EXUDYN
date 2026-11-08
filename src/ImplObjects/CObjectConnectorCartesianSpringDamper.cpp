@@ -58,14 +58,14 @@ void CObjectConnectorCartesianSpringDamper::ComputeSpringForce(const SlimVectorB
 }
 
 //! the force of the connector interface on position markers (#2745): on marker 1, global
-void CObjectConnectorCartesianSpringDamper::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const
+void CObjectConnectorCartesianSpringDamper::ComputeConnectorForcePosition(FlatArray<const MarkerPosition<Real>> markers, Real t, Vector3D& force) const
 {
 	Vector3D vPos, vVel;
 	ComputeSpringForce(markers[0].position, markers[1].position, markers[0].velocity, markers[1].velocity, t, vPos, vVel, force);
 }
 
 //! the force with automatic differentiation, for the Jacobian of the connector interface (#2745)
-void CObjectConnectorCartesianSpringDamper::ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t,
+void CObjectConnectorCartesianSpringDamper::ComputeConnectorForcePositionDiff(FlatArray<const MarkerPosition<DRealPositionMarkers>> markers, Real t,
 	SlimVectorBase<DRealPositionMarkers, 3>& force) const
 {
 	SlimVectorBase<DRealPositionMarkers, 3> vPos, vVel;

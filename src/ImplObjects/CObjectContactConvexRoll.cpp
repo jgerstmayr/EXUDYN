@@ -245,10 +245,11 @@ void CObjectContactConvexRoll::ComputeContactForces(const MarkerDataStructure& m
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //! the forces and torques of the connector interface (#2745), as ComputeODE2LHS projects them
-void CObjectContactConvexRoll::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
-	Vector3D* forces, Vector3D* torques) const
+void CObjectContactConvexRoll::ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t,
+	FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const
 {
-	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	for (auto& force : forces) { force.SetAll(0.); }
+	for (auto& torque : torques) { torque.SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
 	TemporaryMarkerDataStructure temporary; //the physics read a marker data structure, without Jacobians
 	MarkerDataStructure& markerData = temporary.Get();

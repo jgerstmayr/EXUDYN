@@ -30,7 +30,7 @@ void CObjectConnectorSpringDamper::ComputeConnectorProperties(const MarkerDataSt
 }
 
 //! the force of the connector interface on position markers (#2745): on marker 1, global
-void CObjectConnectorSpringDamper::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const
+void CObjectConnectorSpringDamper::ComputeConnectorForcePosition(FlatArray<const MarkerPosition<Real>> markers, Real t, Vector3D& force) const
 {
 	Vector3D relPos, relVel, forceDirection;
 	Real forceScalar;
@@ -40,7 +40,7 @@ void CObjectConnectorSpringDamper::ComputeConnectorForcePosition(const MarkerPos
 }
 
 //! the force with automatic differentiation, for the Jacobian of the connector interface (#2745)
-void CObjectConnectorSpringDamper::ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t,
+void CObjectConnectorSpringDamper::ComputeConnectorForcePositionDiff(FlatArray<const MarkerPosition<DRealPositionMarkers>> markers, Real t,
 	SlimVectorBase<DRealPositionMarkers, 3>& force) const
 {
 	SlimVectorBase<DRealPositionMarkers, 3> relPos, relVel, forceDirection;

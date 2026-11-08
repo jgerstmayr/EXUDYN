@@ -52,7 +52,7 @@ void CObjectJointGenericLockedRotAxis(const ArrayIndex& constrainedAxes, Index& 
 //! all three are constrained, else in the frame of marker 0) minus the offset of the user function, the constrained
 //! rotations as rigid, revolute or universal joint, lambda_i = 0 on the free axes; the velocity level (index 2) for Real only
 template<class TReal>
-void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<TReal>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
+void CObjectJointGeneric::ComputeConstraintEquationsTemplate(FlatArray<const MarkerRigid<TReal>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	equations.SetNumberOfItems(nConstraints);
 	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
@@ -203,12 +203,12 @@ void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<T
 	}
 }
 
-void CObjectJointGeneric::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectJointGeneric::ComputeConstraintEquationsRigid(FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, t, velocityLevel, equations);
 }
 
-void CObjectJointGeneric::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+void CObjectJointGeneric::ComputeConstraintEquationsRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, const LinkedDataVector& lambda,
 	Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, t, false, equations);

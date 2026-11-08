@@ -6431,6 +6431,12 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg11-14-2"></a>
+### RG11.14.2 - the class FlatArray and the connector interface on it (2026-11-08, #3368)
+- src/Utilities/FlatArray.h as designed; the virtual functions of CObjectConnector, their generated declarations, implementations and templates of the items take FlatArray for markers, forces and torques; 16 loops over a hardcoded 2 replaced by loops over the arrays. A local array passed to a template function needs the explicit FlatArray, as a template argument is not deduced through a conversion (6 places).
+    - Speed, best of 7 runs of contactPrimitivesTableTest (test length), revoluteJointPrismaticJointTest, springDamperUserFunctionTest. Default module before 2.884 / 0.0262 / 0.136 s, after 2.886 / 0.0268 / 0.135 s; fast module before 3.69 / 0.0219 / 0.124 s, after 3.69 / 0.0221 / 0.127 s; within the spread of the runs.
+    - The unit test of FlatArray passes in a unit-test build, with the repair of #3378 applied locally; the build itself is step RG11.14.3.
+    
 <a id="rg9-13-4"></a>
 ### RG9.13.4 - contact shapes transparent by default (2026-11-08, #3376)
 - The five colors of contact.color with alpha 0.8; said on the general page of the contacts. No test result changed.

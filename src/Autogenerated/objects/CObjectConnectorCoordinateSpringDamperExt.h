@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-01  23:46:14 (last modified)
+* @date         2026-11-08  22:55:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -196,7 +196,7 @@ public: // AUTO:
     }
 
     //! AUTO:  the generalized forces on the two coordinates, with factor0 and factor1 (#2745)
-    virtual void ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real* forces) const override;
+    virtual void ComputeConnectorForcesCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, Real t, FlatArray<Real> forces) const override;
 
     //! AUTO:  the force of the connector from relative position and velocity (#2745)
     void ComputeSpringForceRelative(Real relPos, Real relVel, Real t, Real& force) const;

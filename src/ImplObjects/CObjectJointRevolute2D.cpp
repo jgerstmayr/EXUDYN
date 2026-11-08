@@ -23,7 +23,7 @@
 //! the equations on the connector interface (#2745): the relative position (or velocity) in x and y, global - as
 //! ComputeAlgebraicEquations
 template<class TReal>
-void CObjectJointRevolute2D::ComputeConstraintEquationsTemplate(const MarkerPosition<TReal>* markers, const LinkedDataVector& lambda,
+void CObjectJointRevolute2D::ComputeConstraintEquationsTemplate(FlatArray<const MarkerPosition<TReal>> markers, const LinkedDataVector& lambda,
 	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	equations.SetNumberOfItems(2);
@@ -32,12 +32,12 @@ void CObjectJointRevolute2D::ComputeConstraintEquationsTemplate(const MarkerPosi
 	equations[1] = relative[1];
 }
 
-void CObjectJointRevolute2D::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectJointRevolute2D::ComputeConstraintEquationsPosition(FlatArray<const MarkerPosition<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
 }
 
-void CObjectJointRevolute2D::ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
+void CObjectJointRevolute2D::ComputeConstraintEquationsPositionDiff(FlatArray<const MarkerPosition<DRealPositionMarkers>> markers, const LinkedDataVector& lambda,
 	Real t, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);

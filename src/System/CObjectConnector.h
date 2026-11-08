@@ -91,14 +91,14 @@ public:
 
 	//! L1 of a connector on position markers (#2745): its force on marker 1 from the kinematics of its two markers,
 	//! global; marker 0 gets the reaction; no system access and no Jacobians
-	virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const
+	virtual void ComputeConnectorForcePosition(FlatArray<const MarkerPosition<Real>> markers, Real t, Vector3D& force) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForcePosition: not implemented for this connector");
 	}
 
 	//! the same force with automatic differentiation, for the connector's Jacobian (#2745); a connector whose
 	//! GetAvailableJacobians() names the ODE2 Jacobian functions must implement it
-	virtual void ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t,
+	virtual void ComputeConnectorForcePositionDiff(FlatArray<const MarkerPosition<DRealPositionMarkers>> markers, Real t,
 		SlimVectorBase<DRealPositionMarkers, 3>& force) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForcePositionDiff: not implemented for this connector");
@@ -106,29 +106,29 @@ public:
 
 	//! L1 of a connector on rigid markers (#2745): the force and the torque on each marker, global, from the kinematics of
 	//! the two markers; not necessarily action and reaction (a torque from the offset of the force, for instance)
-	virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Vector3D* forces, Vector3D* torques) const
+	virtual void ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t, FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceRigid: not implemented for this connector");
 	}
 
 	//! the same forces and torques with automatic differentiation, for the connector's Jacobian (#2745); a connector on rigid
 	//! markers whose GetAvailableJacobians() names the ODE2 Jacobian functions must implement it
-	virtual void ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t,
-		SlimVectorBase<DRealRigidMarkers, 3>* forces, SlimVectorBase<DRealRigidMarkers, 3>* torques) const
+	virtual void ComputeConnectorForceRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, Real t,
+		FlatArray<SlimVectorBase<DRealRigidMarkers, 3>> forces, FlatArray<SlimVectorBase<DRealRigidMarkers, 3>> torques) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceRigidDiff: not implemented for this connector");
 	}
 
 	//! L1 of a connector on coordinate markers (#2745): its generalized force on the coordinate of marker 1 from the
 	//! values of its two markers; marker 0 gets the reaction
-	virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real& force) const
+	virtual void ComputeConnectorForceCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, Real t, Real& force) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceCoordinate: not implemented for this connector");
 	}
 
 	//! the generalized forces on the coordinates of the two markers (#2745); by default the force of
 	//! ComputeConnectorForceCoordinate on marker 1 and its reaction on marker 0; a connector with factors overrides it
-	virtual void ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real* forces) const
+	virtual void ComputeConnectorForcesCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, Real t, FlatArray<Real> forces) const
 	{
 		Real force;
 		ComputeConnectorForceCoordinate(markers, t, force);
@@ -137,7 +137,7 @@ public:
 	}
 
 	//! the same force with automatic differentiation, for the connector's Jacobian (#2745)
-	virtual void ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t,
+	virtual void ComputeConnectorForceCoordinateDiff(FlatArray<const MarkerCoordinate<DRealCoordinateMarkers>> markers, Real t,
 		DRealCoordinateMarkers& force) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceCoordinateDiff: not implemented for this connector");
@@ -295,13 +295,13 @@ public:
 	//! L1 of a constraint on position markers (#2745): its algebraic equations from the kinematics of its two markers -
 	//! the positions, or at velocityLevel the velocities - and its Lagrange multipliers (lambda_i = 0 for a free axis);
 	//! the system forms C_q from the same equations by automatic differentiation (ComputeConstraintEquationsPositionDiff)
-	virtual void ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+	virtual void ComputeConstraintEquationsPosition(FlatArray<const MarkerPosition<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsPosition: not implemented for this constraint");
 	}
 
 	//! the same equations at position level with automatic differentiation by the marker positions (#2745)
-	virtual void ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
+	virtual void ComputeConstraintEquationsPositionDiff(FlatArray<const MarkerPosition<DRealPositionMarkers>> markers, const LinkedDataVector& lambda,
 		Real t, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsPositionDiff: not implemented for this constraint");
@@ -309,13 +309,13 @@ public:
 
 	//! L1 of a constraint on coordinate markers (#2745): its algebraic equations from the values of its two markers (or their
 	//! time derivatives at velocityLevel); t and itemIndex for offsets given by user functions
-	virtual void ComputeConstraintEquationsCoordinate(const MarkerCoordinate<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+	virtual void ComputeConstraintEquationsCoordinate(FlatArray<const MarkerCoordinate<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsCoordinate: not implemented for this constraint");
 	}
 
 	//! the same equations at position level with automatic differentiation by the marker values (#2745)
-	virtual void ComputeConstraintEquationsCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, const LinkedDataVector& lambda,
+	virtual void ComputeConstraintEquationsCoordinateDiff(FlatArray<const MarkerCoordinate<DRealCoordinateMarkers>> markers, const LinkedDataVector& lambda,
 		Real t, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsCoordinateDiff: not implemented for this constraint");
@@ -323,14 +323,14 @@ public:
 
 	//! L1 of a constraint on rigid markers (#2745): its algebraic equations from the frames (and at velocityLevel the
 	//! velocities) of its two markers and its Lagrange multipliers
-	virtual void ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+	virtual void ComputeConstraintEquationsRigid(FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsRigid: not implemented for this constraint");
 	}
 
 	//! the same equations at position level with automatic differentiation by the translations and rotations of the markers
 	//! (#2745)
-	virtual void ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+	virtual void ComputeConstraintEquationsRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, const LinkedDataVector& lambda,
 		Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsRigidDiff: not implemented for this constraint");

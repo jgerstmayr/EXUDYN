@@ -24,7 +24,7 @@
 //! of marker 1, and the axis of marker 0 normal to it as well, unless the rotation is free (lambda = 0); at velocity
 //! level their time derivatives (Real)
 template<class TReal>
-void CObjectJointPrismatic2D::ComputeConstraintEquationsTemplate(const MarkerRigid<TReal>* markers, const LinkedDataVector& lambda,
+void CObjectJointPrismatic2D::ComputeConstraintEquationsTemplate(FlatArray<const MarkerRigid<TReal>> markers, const LinkedDataVector& lambda,
 	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	equations.SetNumberOfItems(2);
@@ -55,12 +55,12 @@ void CObjectJointPrismatic2D::ComputeConstraintEquationsTemplate(const MarkerRig
 	}
 }
 
-void CObjectJointPrismatic2D::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectJointPrismatic2D::ComputeConstraintEquationsRigid(FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
 }
 
-void CObjectJointPrismatic2D::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+void CObjectJointPrismatic2D::ComputeConstraintEquationsRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, const LinkedDataVector& lambda,
 	Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);

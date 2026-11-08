@@ -232,24 +232,24 @@
    "fingerprint": "cbcfab5aed91"
   },
   "ObjectConnectorCartesianSpringDamper": {
-   "checked": "2026-10-25",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "9f874c1e0f53"
+   "fingerprint": "8aef81d6571a"
   },
   "ObjectConnectorCoordinate": {
-   "checked": "2026-11-06",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "f57d344dea45"
+   "fingerprint": "ea3afa639235"
   },
   "ObjectConnectorCoordinateSpringDamper": {
-   "checked": "2026-10-25",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "d4284722fd84"
+   "fingerprint": "6de72236e80b"
   },
   "ObjectConnectorCoordinateSpringDamperExt": {
-   "checked": "2026-11-06",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "72101f465a4b"
+   "fingerprint": "769f07551bf6"
   },
   "ObjectConnectorCoordinateVector": {
    "checked": "2026-11-06",
@@ -257,24 +257,24 @@
    "fingerprint": "2535ceec972b"
   },
   "ObjectConnectorDistance": {
-   "checked": "2026-11-06",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "4a7d35eadcd4"
+   "fingerprint": "97318a0ba010"
   },
   "ObjectConnectorGravity": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "8a919c73015e"
+   "fingerprint": "157dee580794"
   },
   "ObjectConnectorHydraulicActuatorSimple": {
-   "checked": "2026-11-02",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "10093c7177ee"
+   "fingerprint": "a6b709969127"
   },
   "ObjectConnectorLinearSpringDamper": {
-   "checked": "2026-10-25",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "366064d045e5"
+   "fingerprint": "bc508d13c0bf"
   },
   "ObjectConnectorReevingSystemSprings": {
    "checked": "2026-11-06",
@@ -282,24 +282,24 @@
    "fingerprint": "c3ce4099e3a4"
   },
   "ObjectConnectorRigidBodySpringDamper": {
-   "checked": "2026-11-02",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "5121e5530f09"
+   "fingerprint": "5755fdb3a47a"
   },
   "ObjectConnectorRollingDiscPenalty": {
-   "checked": "2026-11-02",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "535c6fb86a88"
+   "fingerprint": "b894f56e5b78"
   },
   "ObjectConnectorSpringDamper": {
-   "checked": "2026-10-25",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "c6cefe52c43f"
+   "fingerprint": "a00ae9d905f4"
   },
   "ObjectConnectorTorsionalSpringDamper": {
-   "checked": "2026-10-25",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "95c62e36426e"
+   "fingerprint": "84c5613d8f71"
   },
   "ObjectConnectorUser": {
    "checked": "2026-11-06",
@@ -312,14 +312,14 @@
    "fingerprint": "718627597bfb"
   },
   "ObjectContactConvexRoll": {
-   "checked": "2026-11-02",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "59796370b0b5"
+   "fingerprint": "860473766dca"
   },
   "ObjectContactCoordinate": {
-   "checked": "2026-11-07",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "5e2d7d74df7b"
+   "fingerprint": "ef98b15b1ff5"
   },
   "ObjectContactCurveCircles": {
    "checked": "2026-11-06",
@@ -332,24 +332,24 @@
    "fingerprint": "3f8898cf229f"
   },
   "ObjectContactSphereCylinder": {
-   "checked": "2026-11-07",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "de58634b387c"
+   "fingerprint": "772f5706efe2"
   },
   "ObjectContactSphereSphere": {
-   "checked": "2026-11-07",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "5c0ee2c64b03"
+   "fingerprint": "046f5ffaf444"
   },
   "ObjectContactSphereTorus": {
-   "checked": "2026-11-07",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "92d753f6b893"
+   "fingerprint": "3063e9b2afb2"
   },
   "ObjectContactSphereTriangle": {
-   "checked": "2026-11-07",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "f2f9f5d24581"
+   "fingerprint": "ed50aee078c3"
   },
   "ObjectFFRF": {
    "checked": "2026-10-25",
@@ -382,29 +382,29 @@
    "fingerprint": "b53d16e676ed"
   },
   "ObjectJointGeneric": {
-   "checked": "2026-10-25",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "e7c68872b4db"
+   "fingerprint": "558750414514"
   },
   "ObjectJointPrismatic2D": {
-   "checked": "2026-11-06",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "334dd81a9ef8"
+   "fingerprint": "a0b5c45bf4fe"
   },
   "ObjectJointPrismaticX": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "f905b21608fe"
+   "fingerprint": "3fc33042157b"
   },
   "ObjectJointRevolute2D": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "1b0f9d608dbb"
+   "fingerprint": "49505848e157"
   },
   "ObjectJointRevoluteZ": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "e9b01d880689"
+   "fingerprint": "c4cfd7088766"
   },
   "ObjectJointRollingDisc": {
    "checked": "2026-11-06",
@@ -422,14 +422,14 @@
    "fingerprint": "1b398fb16ee0"
   },
   "ObjectJointSpherical": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "0e219eb55535"
+   "fingerprint": "bf51bee67108"
   },
   "ObjectJournalBearing": {
-   "checked": "2026-11-07",
+   "checked": "2026-11-08",
    "by": "Claude-JG",
-   "fingerprint": "fb2ce91146da"
+   "fingerprint": "0a9e911fba4d"
   },
   "ObjectKinematicTree": {
    "checked": "2026-11-06",

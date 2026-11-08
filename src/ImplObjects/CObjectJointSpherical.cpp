@@ -23,7 +23,7 @@
 //! the equations on the connector interface (#2745): the relative position (or velocity), global, on the constrained
 //! axes; lambda_i = 0 on the free ones - as ComputeAlgebraicEquations
 template<class TReal>
-void CObjectJointSpherical::ComputeConstraintEquationsTemplate(const MarkerPosition<TReal>* markers, const LinkedDataVector& lambda,
+void CObjectJointSpherical::ComputeConstraintEquationsTemplate(FlatArray<const MarkerPosition<TReal>> markers, const LinkedDataVector& lambda,
 	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	equations.SetNumberOfItems(nConstraints);
@@ -34,12 +34,12 @@ void CObjectJointSpherical::ComputeConstraintEquationsTemplate(const MarkerPosit
 	}
 }
 
-void CObjectJointSpherical::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectJointSpherical::ComputeConstraintEquationsPosition(FlatArray<const MarkerPosition<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
 }
 
-void CObjectJointSpherical::ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
+void CObjectJointSpherical::ComputeConstraintEquationsPositionDiff(FlatArray<const MarkerPosition<DRealPositionMarkers>> markers, const LinkedDataVector& lambda,
 	Real t, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);

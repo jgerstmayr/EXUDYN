@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-11-08  22:55:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -151,7 +151,7 @@ public: // AUTO:
     }
 
     //! AUTO:  the physics of the connector, for Real and AutoDiff (#2745)
-    template<class TReal> void ComputeSpringForce(const MarkerRigid<TReal>* markers, Real t, ConstSizeMatrixBase<TReal, 9>& A0, TReal& displacement, TReal& velocity, TReal& force) const;
+    template<class TReal> void ComputeSpringForce(FlatArray<const MarkerRigid<TReal>> markers, Real t, ConstSizeMatrixBase<TReal, 9>& A0, TReal& displacement, TReal& velocity, TReal& force) const;
 
     //! AUTO:  the right-hand side on the connector interface of rigid markers (#2745)
     virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const override
@@ -166,13 +166,13 @@ public: // AUTO:
     }
 
     //! AUTO:  the force and torque on each marker from the kinematics of the two markers (#2745)
-    virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Vector3D* forces, Vector3D* torques) const override;
+    virtual void ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t, FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const override;
 
     //! AUTO:  the same forces and torques with automatic differentiation, for the Jacobian (#2745)
-    virtual void ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t, SlimVectorBase<DRealRigidMarkers, 3>* forces, SlimVectorBase<DRealRigidMarkers, 3>* torques) const override;
+    virtual void ComputeConnectorForceRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, Real t, FlatArray<SlimVectorBase<DRealRigidMarkers, 3>> forces, FlatArray<SlimVectorBase<DRealRigidMarkers, 3>> torques) const override;
 
     //! AUTO:  the forces and torques of both, Real and AutoDiff (#2745)
-    template<class TReal> void ComputeConnectorForceRigidTemplate(const MarkerRigid<TReal>* markers, Real t, SlimVectorBase<TReal, 3>* forces, SlimVectorBase<TReal, 3>* torques) const;
+    template<class TReal> void ComputeConnectorForceRigidTemplate(FlatArray<const MarkerRigid<TReal>> markers, Real t, FlatArray<SlimVectorBase<TReal, 3>> forces, FlatArray<SlimVectorBase<TReal, 3>> torques) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
     void EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Real displacement, Real velocity) const;

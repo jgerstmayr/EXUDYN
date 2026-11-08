@@ -27,7 +27,7 @@
 //! the equations on the connector interface (#2745), as ComputeAlgebraicEquations: the relative position in the y and z axes
 //! of marker 0, and the three rotations locked; at velocity level their time derivatives (Real)
 template<class TReal>
-void CObjectJointPrismaticX::ComputeConstraintEquationsTemplate(const MarkerRigid<TReal>* markers, const LinkedDataVector& lambda,
+void CObjectJointPrismaticX::ComputeConstraintEquationsTemplate(FlatArray<const MarkerRigid<TReal>> markers, const LinkedDataVector& lambda,
 	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	equations.SetNumberOfItems(nConstraints);
@@ -74,12 +74,12 @@ void CObjectJointPrismaticX::ComputeConstraintEquationsTemplate(const MarkerRigi
 	}
 }
 
-void CObjectJointPrismaticX::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectJointPrismaticX::ComputeConstraintEquationsRigid(FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
 }
 
-void CObjectJointPrismaticX::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+void CObjectJointPrismaticX::ComputeConstraintEquationsRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, const LinkedDataVector& lambda,
 	Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);

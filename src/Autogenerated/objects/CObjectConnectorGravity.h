@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  13:37:10 (last modified)
+* @date         2026-11-08  22:55:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -144,10 +144,10 @@ public: // AUTO:
     }
 
     //! AUTO:  the force on marker 1 from the kinematics of the two markers (#2745)
-    virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const override;
+    virtual void ComputeConnectorForcePosition(FlatArray<const MarkerPosition<Real>> markers, Real t, Vector3D& force) const override;
 
     //! AUTO:  the same force with automatic differentiation, for the Jacobian (#2745)
-    virtual void ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, SlimVectorBase<DRealPositionMarkers, 3>& force) const override;
+    virtual void ComputeConnectorForcePositionDiff(FlatArray<const MarkerPosition<DRealPositionMarkers>> markers, Real t, SlimVectorBase<DRealPositionMarkers, 3>& force) const override;
 
     //! AUTO:  the physics of the connector, shared by the connector interface, its Jacobian and the output variables (#2745)
     template<class TReal> void ComputeGravityForce(const SlimVectorBase<TReal, 3>& position0, const SlimVectorBase<TReal, 3>& position1, SlimVectorBase<TReal, 3>& relPos, TReal& force, SlimVectorBase<TReal, 3>& forceDirection) const;
