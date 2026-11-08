@@ -3769,6 +3769,8 @@ CLOSED 2026-11-08 (#3318): Radau5 in C++ and Python; the third block of constrai
 
 #3314, after RG20.10.1 if Radau5 converges as expected; not released, no deprecation.
 
+Tried 2026-11-08: Radau5 serves as the reference for positions, velocities and ODE1 coordinates, not for the multipliers (a floor of 1e-4 relative at the fine reference steps, where the GGL multipliers of LobattoIIIC4GGL resolved 1e-5 to 1e-8); the removal waits for the maintainer's choice, see the remark of #3314.
+
 ## **OPEN_RG21** Path planning and navigation of robots
 
 Maintainer 2026-11-06: path and trajectory planning and navigation for mobile and serial robots in Python, on the C++ kinematics, in a new file of exudyn/robotics that can hold SLAM later; no MoveIt; collision shapes from the contact primitives of RG9.10 (sphere, cylinder, triangle, convex) with a distance output, optionally from the URDF; joint limits respected; 1 to 3 robust algorithms per kind of robot (a grid-based one, an RRT variant); the result as a Trajectory. Design docs/dev/design/robotPlanning.md; no issues before the evaluation is decided.
