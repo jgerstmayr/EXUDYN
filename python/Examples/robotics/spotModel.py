@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  This file shows setup of model for quad-legged spot using URDF file, with the data of data/spotData.h5
+# Details:  This file shows setup of model for quad-legged spot using URDF file, with the data of spotData.h5 in the repository CommonData_git beside this one (internal)
 #
 # Author:   Johannes Gerstmayr, Janik Thentie
 # 
@@ -98,7 +98,10 @@ def GetModel(addShoulderContact = False):
     modelCnt = 0
     #for modelCnt, modelName in enumerate(robotModels):
     from exudyn.advancedUtilities import LoadDictFromHDF5
-    robotDataDict = LoadDictFromHDF5(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'spotData.h5'))
+    spotDataFile = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'RobotHDF5', 'spotData.h5')
+    if not os.path.isfile(spotDataFile):
+        raise ValueError('spotModel.py needs spotData.h5 of the repository CommonData_git beside this one: ' + spotDataFile)
+    robotDataDict = LoadDictFromHDF5(spotDataFile)
     
     
     offsetPosition = [0,0,0]

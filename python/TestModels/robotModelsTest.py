@@ -29,7 +29,7 @@ checks = []
 robots = {}
 for Model in [Manipulator3RSimple, ManipulatorFrankaEmikaPanda, ManipulatorUR5, ManipulatorPuma560,
               ManipulatorStaubliTX2_90L]:
-    model = Model()
+    model = Model(useDH=True) if Model in [ManipulatorFrankaEmikaPanda, ManipulatorUR5] else Model()
     robots[Model.__name__] = LinkDict2Robot(model, initialConfiguration='model' if 'configurations' in model else None)
     checks += [len(robots[Model.__name__].links) == len(model['links'])]
 

@@ -557,6 +557,9 @@
     <ClInclude Include="..\src\Utilities\ResizableArray.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Utilities\FlatArray.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Utilities\SlimArray.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>

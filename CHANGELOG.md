@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 466 | 1.13.483 |
+| 1.13 | Newborn | 469 | 1.13.486 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.486** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics.models: Spot, ANYmal, Mars rover, LBR iiwa and UR10 (#3375)
+  - description: Decided: these robots added to robotics.models, running without their shapes; a tree or a floating base needs parent in the link dict. Collision shapes only where the URDF offers them.
+  - **notes:** New in robotics.models: ManipulatorUR10, ManipulatorKukaLBRiiwa14 and QuadrupedANYmalB. Spot and the Mars rover are not added, as they have no license file.
+  - date resolved: **2026-11-08 23:52**, date raised: 2026-11-08
+- **1.13.485** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Simple collision shapes in robotics.models for Spot, UR5, Panda and the TX2-90L (#3374)
+  - description: The future trajectory planner needs collision shapes of the robots without STL files. Decided: spheres, capsules or boxes in the link frames, fitted to the collision meshes, for these four robots.
+  - **notes:** The UR5, the Panda and the TX2-90L have a capsule per link as collision shape, by urdfImport.FitCapsuleToPoints; GetURDFrobotData(collisionMeshes=True) and ConvexHullOfMesh give the convex hulls of collision meshes and warn about meshes that are not convex.
+  - date resolved: **2026-11-08 23:52**, date raised: 2026-11-08
+- **1.13.484** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics.models as the definition without files: the values of the URDF in its frames, a test against the URDF (#3373)
+  - description: models.py and the URDF files differ in frames and inertias. Decided: each model holds the kinematics, masses, inertias and limits of its URDF in the joint frames of the URDF, plus what a URDF does not give (friction, PD values, simple collision shapes), urdfImport.RobotModelDictFromData writes the part from the URDF, and a test compares each model with its URDF; design robotics.md section 3.5(b).
+  - **notes:** robotics.models holds the UR5 and the Panda in the joint frames of their URDF, the former models with useDH=True; urdfImport.RobotModelDictFromData writes such a list of links, and a test compares the models with their URDF.
+  - date resolved: **2026-11-08 23:52**, date raised: 2026-11-08
 - **1.13.483** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` FlatArray: the markers, forces and torques of the connector interface passed with their size (#3368)
   - description: The connector interface passes raw pointers without their number (see the analysis, design flatArray.md). Proposed, to be decided: a class FlatArray with only operator\[\], NumberOfItems, iterators and the pointer, range checked; the virtual functions of CObjectConnector, their generated declarations and implementations on it in one commit; the speed of the fast module unchanged.
   - **notes:** The markers, forces and torques of the connector interface are passed with their size by the new class FlatArray; the speed is unchanged.

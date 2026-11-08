@@ -22,7 +22,7 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'ReduceURDFrobotData', 'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics',
+    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'ReduceURDFrobotData', 'RobotModelDictFromData', 'FitCapsuleToPoints', 'ConvexHullOfMesh', 'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics',
     'AddURDFgraphics',
     ]
 
@@ -153,7 +153,8 @@ def GetURDFrobotData(robot,
                      verbose=1,
                      meshDensity = 0.,
                      correctInertia = False,
-                     toolLinkName = None):
+                     toolLinkName = None,
+                     collisionMeshes = False):
     """Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
 
     Args:
@@ -172,6 +173,9 @@ def GetURDFrobotData(robot,
             of its mass and inertia in 'inertiaProblems', and they are printed with verbose > 0 (#3282)
         toolLinkName: if not None, the name of the link of the tool frame; the frame of this link relative to the last
             joint link is returned in 'toolHT', for RobotFromURDFdata (#3356)
+        collisionMeshes: if True, each joint link gets 'collisionMeshes', a list of the convex hulls [points, triangles] of its
+            collision meshes in the frame of the link, by ConvexHullOfMesh, with a warning for a mesh which is not convex;
+            needs scipy and pymeshlab (#3374)
 
     Returns:
         returns dictionary with items linkList (the joint links, each with its name, jointName, preHT relative to the joint link above,
@@ -360,6 +364,25 @@ def GetURDFrobotData(robot,
                 if returnStaticGraphicsList :
                     staticGraphicsList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT) )]
 
+    if collisionMeshes:
+        if not hasPymeshlab:
+            raise ImportError('GetURDFrobotData: collisionMeshes=True needs pymeshlab')
+        for link in robot.links:
+            (ancestor, HTancestor) = (link, FlipHT(link)) if link.isjoint else JointAncestor(link)
+            linkDict = None if ancestor is None else linkDictOfName.get(ancestor.name)
+            if linkDict is None:
+                continue
+            linkDict.setdefault('collisionMeshes', [])
+            for scene in link.collision:
+                if scene.stype == 'mesh' and scene.filename != '':
+                    ms = pymeshlab.MeshSet()
+                    ms.load_new_mesh(scene.filename)
+                    mesh = ms.current_mesh()
+                    T = HTancestor @ np.array(scene.T)
+                    points = T[:3, :3] @ (mesh.vertex_matrix() * scene.scale).T
+                    (hullPoints, hullTriangles, _) = ConvexHullOfMesh(points.T + T[:3, 3], mesh.face_matrix(), link.name, verbose)
+                    linkDict['collisionMeshes'] += [[hullPoints, hullTriangles]]
+
     def MeshMassProperties(linkDict, density): #[mass, COM, inertia at the COM] of the meshes of a link; mass 0 without meshes
         parts = []
         for g in linkDict['graphicsDataList']:
@@ -490,6 +513,8 @@ def ReduceURDFrobotData(robotData, lockedJoints=None, removedLinks=None):
             target['com'] = c
             target['mass'] = m
             target['graphicsDataList'] = list(target['graphicsDataList']) + moved
+            if 'collisionMeshes' in link:
+                target['collisionMeshes'] = target.get('collisionMeshes', []) + [[d + (R @ np.array(points).T).T, triangles] for (points, triangles) in link['collisionMeshes']]
             target['inertiaProblems'] = _InertiaProblems(m, target['inertiaCOM'])
         for (j, child) in links.items():
             if parentOf[j] == i:
@@ -512,6 +537,114 @@ def ReduceURDFrobotData(robotData, lockedJoints=None, removedLinks=None):
     if 'toolHT' in robotData:
         result['toolHT'] = np.linalg.inv(frames[keep[-1]]) @ frames[-1] @ np.array(robotData['toolHT'])
     return result
+
+
+def RobotModelDictFromData(robotData):
+    """The part of a model of robotics.models given by a URDF, as Python text, from the data of GetURDFrobotData (#3373): the
+    links in the joint frames of the URDF, for dhMode 'jointFrames'; what a URDF does not give is added by hand to the dict.
+
+    Args:
+        robotData: the dict of GetURDFrobotData, possibly reduced by ReduceURDFrobotData
+
+    Returns:
+        a string with the Python text of the list of the links, each with name, parent, jointType, jointLimits, preHT, mass, COM, inertia and, if the link has them, collisionShapes
+    """
+    def Text(x):
+        x = np.array(x, dtype=float)
+        if x.ndim > 1:
+            return '[' + ', '.join(Text(row) for row in x) + ']'
+        return '[' + ', '.join('%.12g' % (0. if abs(v) < 1e-10 else v) for v in x) + ']'
+    def TextHT(T):
+        T = np.array(T, dtype=float)
+        if np.max(np.abs(T[:3, :3] - np.eye(3))) < 1e-10:
+            return 'exudyn.HT(translation=%s)' % Text(T[:3, 3])
+        return 'exudyn.HT(rotation=%s, translation=%s)' % (Text(T[:3, :3]), Text(T[:3, 3]))
+    numberOfName = {link['name']: i for (i, link) in enumerate(robotData['linkList'])}
+    numberOfName['None'] = -1
+    lines = ['[']
+    for link in robotData['linkList']:
+        limits = link['jointLimits']
+        lines += ["    {'name': '%s', 'parent': %d, 'jointType': '%s', 'jointLimits': %s," % (link['name'], numberOfName[link['parentName']], link['jointType'], 'None' if limits[1] <= limits[0] else Text(limits)),
+                  "     'preHT': %s," % TextHT(link['preHT']),
+                  "     'mass': %.12g, 'COM': %s, 'inertia': np.array(%s)," % (link['mass'], Text(link['com']), Text(link['inertiaCOM']))]
+        if 'collisionShapes' in link:
+            lines += ["     'collisionShapes': %s," % repr(link['collisionShapes'])]
+        lines[-1] = lines[-1][:-1] + '},'
+    return '\n'.join(lines + [']'])
+
+
+def _EnclosingCircle(points):
+    """center and radius of a small circle containing all 2D points, by the iteration of Badoiu and Clarkson"""
+    center = points.mean(axis=0)
+    for i in range(1, 300):
+        center = center + (points[np.argmax(np.sum((points - center)**2, axis=1))] - center)/(i + 1)
+    return center, np.sqrt(np.max(np.sum((points - center)**2, axis=1)))
+
+
+def FitCapsuleToPoints(points):
+    """A small capsule that contains all given points, the simple collision shape of a link (#3374).
+
+    Args:
+        points: the points, an array of shape (n, 3), for example of a collision mesh
+
+    Returns:
+        dict with type 'capsule' and pAxis, vAxis, radius as for graphics.Capsule: pAxis and pAxis+vAxis are the centers of its two spheres; the
+        principal axis of the points giving the smallest volume is taken; vAxis is zero for a sphere
+    """
+    points = np.array(points, dtype=float)
+    mean = points.mean(axis=0)
+    axes = np.linalg.svd(points - mean, full_matrices=False)[2]
+    best = None
+    for k in range(3):
+        (axis, t1, t2) = (axes[k], axes[(k + 1) % 3], axes[(k + 2) % 3])
+        local = points - mean
+        (center, r) = _EnclosingCircle(np.stack([local @ t1, local @ t2], axis=1))
+        s = local @ axis
+        d2 = (local @ t1 - center[0])**2 + (local @ t2 - center[1])**2
+        h = np.sqrt(np.maximum(r*r - d2, 0.))
+        (a0, a1) = (np.min(s + h), np.max(s - h)) #the centers of the spheres must reach all points beyond them
+        if a1 < a0: #a sphere: the center between them, the radius such that it holds all points
+            a0 = a1 = 0.5*(a0 + a1)
+            r = np.sqrt(np.max(d2 + (s - a0)**2))
+        volume = np.pi*r*r*(a1 - a0) + 4/3*np.pi*r**3
+        if best is None or volume < best[0]:
+            best = (volume, mean + axis*a0 + t1*center[0] + t2*center[1], axis*(a1 - a0), r)
+    return {'type': 'capsule', 'pAxis': best[1].tolist(), 'vAxis': best[2].tolist(), 'radius': float(best[3])}
+
+
+def ConvexHullOfMesh(points, triangles, name='', verbose=1):
+    """The convex hull of a triangle mesh, as the contacts of polytopes need it, and how convex the mesh is (#3374).
+
+    Args:
+        points: the points of the mesh, an array of shape (n, 3)
+        triangles: the triangles of the closed mesh, an array of shape (m, 3) of point indices
+        name: the name written in the warning
+        verbose: if larger than 0, a warning is printed where the volume of the mesh is less than 0.98 of its hull
+
+    Returns:
+        [hullPoints, hullTriangles, ratio], the triangles oriented outward and ratio the volume of the mesh divided by that of the hull
+
+    Note:
+        requires scipy
+    """
+    try:
+        from scipy.spatial import ConvexHull
+    except ImportError:
+        raise ImportError('ConvexHullOfMesh: requires scipy (pip install scipy)')
+    points = np.array(points, dtype=float)
+    triangles = np.array(triangles, dtype=int)
+    hull = ConvexHull(points)
+    tri = points[triangles]
+    ratio = abs(np.sum(np.einsum('ij,ij->i', tri[:, 0], np.cross(tri[:, 1], tri[:, 2])))/6)/hull.volume
+    if ratio < 0.98 and verbose > 0:
+        exudyn.Print('WARNING: the collision mesh', name, 'is not convex: volume/hull =', round(ratio, 3), '; its convex hull is used')
+    indices = np.zeros(len(points), dtype=int)
+    indices[hull.vertices] = np.arange(len(hull.vertices))
+    hullTriangles = []
+    for (simplex, equation) in zip(hull.simplices, hull.equations):
+        (a, b, c) = points[simplex]
+        hullTriangles += [simplex[[0, 1, 2]] if np.cross(b - a, c - a) @ equation[:3] > 0 else simplex[[0, 2, 1]]]
+    return [points[hull.vertices], indices[np.array(hullTriangles)], ratio]
 
 
 def _URDFjointDynamics(urdfFile):

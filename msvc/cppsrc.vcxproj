@@ -717,6 +717,7 @@
     <ClInclude Include="..\src\Utilities\Physics.h" />
     <ClInclude Include="..\src\Utilities\ReleaseAssert.h" />
     <ClInclude Include="..\src\Utilities\ResizableArray.h" />
+    <ClInclude Include="..\src\Utilities\FlatArray.h" />
     <ClInclude Include="..\src\Utilities\SlimArray.h" />
     <ClInclude Include="..\src\Utilities\Threading.h" />
     <ClInclude Include="..\src\Utilities\TimerStructure.h" />

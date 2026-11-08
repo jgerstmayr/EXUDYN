@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.483.dev1
+- Exudyn version = 1.13.486.dev1
 - last change = 2026-11-08
 - Number of issues = 3379
-- Number of resolved issues = 3260 (483 in current version)
+- Number of resolved issues = 3263 (486 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9041,16 +9041,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `FIX` `LOW EFF` `raised by: Claude-JG` The C++ unit-test build does not compile, and a symbolic unit test fails (#3378)
   - description: exudev build --unittests stops in src/Tests/UnitTestBase.cpp: Linalg/Symbolic.h needs pybind11 and py there. With that added, the test at SymbolicUnitTests.h line 154 (what Diff refuses) gets no exception; the other tests pass.
-  - date raised: 2026-11-08
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` robotics.models: Spot, ANYmal, Mars rover, LBR iiwa and UR10 (#3375)
-  - description: Decided: these robots added to robotics.models, running without their shapes; a tree or a floating base needs parent in the link dict. Collision shapes only where the URDF offers them.
-  - date raised: 2026-11-08
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Simple collision shapes in robotics.models for Spot, UR5, Panda and the TX2-90L (#3374)
-  - description: The future trajectory planner needs collision shapes of the robots without STL files. Decided: spheres, capsules or boxes in the link frames, fitted to the collision meshes, for these four robots.
-  - **remarks:** Includes the check of the convex hull at the URDF import, volume against hull with a warning below 0.98, from design contactPrimitives.md section 9.1.
-  - date raised: 2026-11-08
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` robotics.models as the definition without files: the values of the URDF in its frames, a test against the URDF (#3373)
-  - description: models.py and the URDF files differ in frames and inertias. Decided: each model holds the kinematics, masses, inertias and limits of its URDF in the joint frames of the URDF, plus what a URDF does not give (friction, PD values, simple collision shapes), urdfImport.RobotModelDictFromData writes the part from the URDF, and a test compares each model with its URDF; design robotics.md section 3.5(b).
   - date raised: 2026-11-08
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` serialRobotInteractiveLimits.py with the new renderer features, checked by hand (#3362)
   - description: The example (sliders, mouse drag, end stops) has run only without windows. Decided: adapted later with new features of the renderer.

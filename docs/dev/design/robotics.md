@@ -237,7 +237,7 @@ Panda, UR5, Puma560, and the frames of the URDF for the TX2-90L, and other inert
    the local data set), **Kinova Gen3**, **UR10**. A tree or a floating base needs `parent` in the link dict, which
    `LinkDict2Robot` has to pass on.
 
-Decided 2026-11-08 (maintainer): (a) and (b) as above, with Spot, ANYmal, the Mars rover, LBR iiwa and UR10; collision shapes for Spot, UR5, Panda and TX2-90L; steps RG19.17.1 to RG19.17.4 (#3372 to #3375).
+Decided 2026-11-08 (maintainer): (a) and (b) as above, with Spot, ANYmal, the Mars rover, LBR iiwa and UR10; collision shapes for Spot, UR5, Panda and TX2-90L; steps RG19.17.1 to RG19.17.4 (#3372 to #3375). Decided afterwards: the UR5 inertias from its meshes, scaled to the masses of the URDF, since the URDF has unphysical wrist inertias; the Panda without the hand unless a gripper is requested; Spot and the Mars rover have no license file and stay out of the public repository, the data of Spot in CommonData_git, the Mars rover not added.
 
 ## 4. Done (2026-11-04 to 2026-11-06)
 

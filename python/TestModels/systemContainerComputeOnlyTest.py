@@ -53,7 +53,7 @@ del SCcompute, SCother
 gc.collect()
 
 #the inverse kinematics needs no container (#3269) and leaves the renderer with SC
-robotDef = ManipulatorUR5()
+robotDef = ManipulatorUR5(useDH=True)
 robot = Robot(base=RobotBase(HT=exu.HT()), tool=RobotTool(HT=exu.HT(translation=[0,0,0.1])))
 for link in robotDef['links']:
     robot.AddLink(RobotLink(mass=link['mass'], COM=link['COM'], inertia=link['inertia'],

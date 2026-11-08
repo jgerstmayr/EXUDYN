@@ -13,7 +13,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 (sec-models-manipulator3rsimple)=
 ## Function: Manipulator3RSimple
 
-[`Manipulator3RSimple()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L45)
+[`Manipulator3RSimple()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L46)
 
 - **function description**: generate 3R manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
@@ -27,9 +27,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`numericalIn
 (sec-models-manipulatorfrankaemikapanda)=
 ## Function: ManipulatorFrankaEmikaPanda
 
-[`ManipulatorFrankaEmikaPanda()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L139)
+[`ManipulatorFrankaEmikaPanda(useDH = False, gripper = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L140)
 
 - **function description**: generate Franka Emika Panda manipulator as myRobot dictionary, settings are done in function
+- **input**:
+  - `useDH`: False: the joint frames and the parameters of the URDF, with simple collision shapes (#3373); True: the modified DH parameters of Gaz et al.
+  - `gripper`: None: without the hand; 'hand': only with useDH=False, link 7 with the hand and its fingers (opening 0.04 each) and their collision shape
 - **output**: myRobot dictionary
 - **author**: Martin Sereinig
 - **notes**: all Parameter according to Gaz et. al [GazDeLuca2019] DH-parameters(std): [theta, d, a, alpha], according to P. Corke masses, inertias and COM according to Gaz et al., w.r.t. the frames of the modified DH parameters (modDHKK, the dhMode of the dictionary); the last link frame is the flange, 0.107 after joint 7, in both conventions, so the COM of the last link is moved by -0.107 in z against Gaz et al.; the standard DH parameters give the same kinematics, but the inertia parameters are not transformed to their frames; both checked against the RTB's Panda (#3255)
@@ -41,7 +44,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-models-manipulatorpanda)=
 ## Function: ManipulatorPANDA
 
-[`ManipulatorPANDA()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L287)
+[`ManipulatorPANDA()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L350)
 
 - **function description**: DEPRECATED: the former name of ManipulatorFrankaEmikaPanda (#3255)
 
@@ -49,9 +52,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-models-manipulatorur5)=
 ## Function: ManipulatorUR5
 
-[`ManipulatorUR5()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L296)
+[`ManipulatorUR5(useDH = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L359)
 
 - **function description**: generate UR5 manipulator as myRobot dictionary, settings are done in function
+- **input**:
+  - `useDH`: False: the joint frames, masses and limits of the URDF, with simple collision shapes; the centers of mass and inertias are those of the solids of its collision meshes, scaled to the masses of the links, as the inertias of the URDF are not physical for the wrist (#3373); True: the standard DH parameters of P. Corke
 - **output**: myRobot dictionary
 - **author**: Martin Sereinig
 - **notes**: define myRobot kinematics, UR5 Universal Robotics, Standard DH-parameters: [theta, d, a, alpha], according to P. Corke, Links modeld as cylindrical tubes, Inertia from Parham M. Kebria2016 / Kuefeta2014
@@ -63,7 +68,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKine
 (sec-models-manipulatorpuma560)=
 ## Function: ManipulatorPuma560
 
-[`ManipulatorPuma560()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L392)
+[`ManipulatorPuma560()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L507)
 
 - **function description**: generate puma560 manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
@@ -77,7 +82,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-models-manipulatorstaublitx2-90l)=
 ## Function: ManipulatorStaubliTX2_90L
 
-[`ManipulatorStaubliTX2_90L()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L497)
+[`ManipulatorStaubliTX2_90L()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L612)
 
 - **function description**: generate the Staubli TX2-90L manipulator as robot dictionary, with the joint frames of its URDF (dhMode 'jointFrames': per link the joint type and the translation from the previous joint frame; all link frames parallel at q = 0, the arm upright); a 6R robot with a spherical wrist, for KinematicChain.InverseKinematicsAnalytic
 - **output**: robot dictionary for LinkDict2Robot
@@ -87,10 +92,40 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2blending.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2blending.py) (Ex), [`staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/staubliTX2trajectories.py) (Ex), [`robotCartesianPathsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCartesianPathsTest.py) (TM), [`robotDictionaryTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotDictionaryTest.py) (TM), [`robotFrictionEndStopsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotFrictionEndStopsTest.py) (TM), [`robotInverseDynamicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotInverseDynamicsTest.py) (TM), [`robotTrajectoryProfilesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotTrajectoryProfilesTest.py) (TM), [`trajectoryBlendingCartesianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/trajectoryBlendingCartesianTest.py) (TM), ...
 
 
+(sec-models-manipulatorur10)=
+## Function: ManipulatorUR10
+
+[`ManipulatorUR10()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L666)
+
+- **function description**: generate the UR10 manipulator as robot dictionary, with the joint frames and the parameters of its URDF (#3375)
+- **output**: robot dictionary for LinkDict2Robot
+- **notes**: ur10_robot.urdf of example-robot-data, release 4.0.9; the control values are assumed; the tool frame is tool0
+
+
+(sec-models-manipulatorkukalbriiwa14)=
+## Function: ManipulatorKukaLBRiiwa14
+
+[`ManipulatorKukaLBRiiwa14()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L710)
+
+- **function description**: generate the KUKA LBR iiwa 14 R820, a 7-axis manipulator, as robot dictionary, with the joint frames and limits of its URDF (#3375)
+- **output**: robot dictionary for LinkDict2Robot
+- **notes**: lbr_iiwa_14_r820.urdf of the ROS-Industrial package kuka_experimental has no inertia data: the masses, centers of mass and inertias are those of the solids of the collision meshes with one density, 1232 kg/m^3, so that all links with the base (7.69 kg) have the 29.5 kg of the manufacturer; estimates for simulation; the control values are assumed; the tool frame is tool0
+
+
+(sec-models-quadrupedanymalb)=
+## Function: QuadrupedANYmalB
+
+[`QuadrupedANYmalB()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L758)
+
+- **function description**: generate the ANYmal B, a quadruped robot, as robot dictionary, a tree with 12 joints, with the joint frames and the parameters of its URDF (#3375)
+- **output**: robot dictionary for LinkDict2Robot; the link dicts have their parent; the base is fixed (a floating base is not yet available in Robot)
+- **notes**: anymal.urdf of anymal_b_simple_description of ANYbotics AG, BSD license; the control values are assumed
+
+
 (sec-models-linkdict2robot)=
 ## Function: LinkDict2Robot
 
-[`LinkDict2Robot(robotLinkDict, robotClass = None, initialConfiguration = None, friction = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L552)
+[`LinkDict2Robot(robotLinkDict, robotClass = None, initialConfiguration = None, friction = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L822)
 
 - **function description**: generate serial manipulator as robotClass object from robotLinkDict
 - **input**:
@@ -109,7 +144,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-models-linkdictmoddhkk2robot)=
 ## Function: LinkDictModDHKK2Robot
 
-[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L663)
+[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L934)
 
 - **function description**: special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
 - **input**:

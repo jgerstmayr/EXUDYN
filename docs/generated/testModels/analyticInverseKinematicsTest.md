@@ -41,7 +41,7 @@ def Robots():
     robots = {}
     for (name, Function, dhMode) in [('3R', Manipulator3RSimple, 'stdDH'), ('Puma560', ManipulatorPuma560, 'stdDH'),
                                      ('Puma560modDH', ManipulatorPuma560, 'modDHKK'), ('UR5', ManipulatorUR5, 'stdDH')]:
-        robotDict = Function()
+        robotDict = Function(useDH=True) if name == 'UR5' else Function()
         robotDict['dhMode'] = dhMode
         robot = LinkDict2Robot(robotDict, Robot(gravity=[0, 0, -9.81]))
         robot.base = RobotBase(HT=exu.HT(translation=[0.1, -0.2, 0.3]).SetRotationZ(0.4)*exu.HT().SetRotationX(0.2))
