@@ -2,12 +2,16 @@
   "number": 3359,
   "title": "A floating base for Robot",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "NORMAL",
   "effort": "HIGH",
   "description": "Robot has a fixed base. Decided: legged and mobile robots use the floating base of ObjectKinematicTree (#1549).",
   "dateRaised": "2026-11-08",
   "deadline": "2027-05-07",
-  "file": "python/exudyn/robotics/roboticsCore.py"
+  "dateResolved": "2026-11-09 01:43",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/robotics/roboticsCore.py",
+  "releaseNotes": "Robot.CreateKinematicTree(mbs, floatingBase=inertia) places the kinematic tree of the robot on a free rigid body.",
+  "resolvedInVersion": "1.13.490"
 }

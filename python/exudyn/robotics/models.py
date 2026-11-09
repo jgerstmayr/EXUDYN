@@ -759,7 +759,7 @@ def QuadrupedANYmalB():
     """generate the ANYmal B, a quadruped robot, as robot dictionary, a tree with 12 joints, with the joint frames and the parameters of its URDF (#3375)
 
     Returns:
-        robot dictionary for LinkDict2Robot; the link dicts have their parent; the base is fixed (a floating base is not yet available in Robot)
+        robot dictionary for LinkDict2Robot; the link dicts have their parent; 'baseInertia' is the inertia of the base for a floating base
 
     Note:
         anymal.urdf of anymal_b_simple_description of ANYbotics AG, BSD license; the control values are assumed
@@ -810,6 +810,9 @@ def QuadrupedANYmalB():
             'initialConfiguration': 'qr',
             'Pcontrol': np.array([200.]*12),
             'Dcontrol': np.array([5.]*12),
+            #the mass of the base, for Robot.CreateKinematicTree(..., floatingBase=...), and the points of the feet in the frames of the shanks
+            'baseInertia': {'mass': 16.793507758, 'COM': [-0.001960558279, -0.001413217745, 0.050207125344], 'inertia': np.array([[0.217391101503, -0.00132873239126, -0.00228200226173], [-0.00132873239126, 0.639432546734, -0.00138078263145], [-0.00228200226173, -0.00138078263145, 0.62414077654]])},
+            'feet': {'LF_SHANK': [0.1, -0.02, -0.32125], 'RF_SHANK': [0.1, 0.02, -0.32125], 'LH_SHANK': [-0.1, -0.02, -0.32125], 'RH_SHANK': [-0.1, 0.02, -0.32125]},
             'urdfGraphics': {'file': 'anymal_b_simple_description/urdf/anymal.urdf', 'baseLink': 'base',
                              'links': [link['name'] for link in links], 'source': 'https://github.com/ANYbotics/anymal_b_simple_description'},
             }

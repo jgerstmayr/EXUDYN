@@ -1275,7 +1275,7 @@ class Robot:
 
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def CreateKinematicTree(self, mbs, name = '', forceUserFunction = 0):
+    def CreateKinematicTree(self, mbs, name = '', forceUserFunction = 0, floatingBase = None):
         """Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class;
         Joints defined by the kinematics as well as links (and inertia) are transferred to the kinematic tree object;
         Current implementation only works for serial robots;
@@ -1286,10 +1286,12 @@ class Robot:
         Args:
             mbs: the multibody system, which will be extended
             name: object name in KinematicTree; transferred to KinematicTree, default = ''
+            floatingBase: None for a base fixed at base.HT; else a RigidBodyInertia of the base, which becomes a free rigid body with a Lie group node
+                at base.HT, with the graphics of the base, on which the tree moves (#3359); the initial velocity of the base is zero
             forceUserFunction: defines the user function for computation of joint forces in KinematicTree; transferred to KinematicTree, default = 0
 
         Returns:
-            the function returns a dictionary containing 'nodeGeneric': generic ODE2 node number ,'objectKinematicTree': the kinematic tree object, 'baseObject': the base object if created, otherwise None, 'jointFrictionList' and 'jointEndStopList': per link the CoordinateSpringDamperExt of its friction and of its end stops, or None
+            the function returns a dictionary containing 'nodeBase' and 'objectBase' with a floating base (else None), 'nodeGeneric': generic ODE2 node number ,'objectKinematicTree': the kinematic tree object, 'baseObject': the base object if created, otherwise None, 'jointFrictionList' and 'jointEndStopList': per link the CoordinateSpringDamperExt of its friction and of its end stops, or None
 
         Note:
             the initial joint coordinates are q0; the friction and the end stops of the links act by a CoordinateSpringDamperExt on the joint coordinate (#3270); PreStepControl and AddSensors act on this model until another one is created
@@ -1298,8 +1300,15 @@ class Robot:
         #add graphics for base:
         baseObject = None #if it does not exist
         baseOffset = self.base.HT.translation
+        nBase = None
 
-        if self.base.visualization.graphicsData != []:
+        if floatingBase is not None: #the root links are placed in the frame of the base node, the graphics of the base are on its body (#3359)
+            bodyDict = mbs.CreateRigidBody(inertia=floatingBase, referencePosition=baseOffset, referenceRotationMatrix=self.base.HT.rotation,
+                                           gravity=self.gravity, nodeType=exudyn.NodeType.RotationRotationVector,
+                                           graphicsDataList=list(self.base.visualization.graphicsData), returnDict=True)
+            (nBase, baseObject) = (bodyDict['nodeNumber'], bodyDict['bodyNumber'])
+            baseOffset = [0., 0., 0.]
+        elif self.base.visualization.graphicsData != []:
             #add a ground object at base position
             graphicsDataBase = []
             pOff = baseOffset
@@ -1428,7 +1437,8 @@ class Robot:
 
 
         #create KinematicTree
-        oKT = mbs.AddObject(eii.ObjectKinematicTree(nodeNumber=nGeneric, jointTypes=jointTypesList, linkParents=linkParents,
+        baseNodeArguments = {} if nBase is None else {'baseNodeNumber': nBase}
+        oKT = mbs.AddObject(eii.ObjectKinematicTree(nodeNumber=nGeneric, **baseNodeArguments, jointTypes=jointTypesList, linkParents=linkParents,
                                           jointHTs=jointHTs, 
                                           linkInertiasCOM=exudyn.Matrix3DList(linkInertiasCOM), 
                                           linkCOMs=exudyn.Vector3DList(linkCOMs), linkMasses=linkMasses, 
@@ -1450,7 +1460,7 @@ class Robot:
                 (jointFrictionList[i], jointEndStopList[i]) = self._AddJointConnectors(mbs, i, groundMarker, mCoordinate, -qRef[i])
 
         #return some needed variables for further use
-        d = {'nodeGeneric': nGeneric, 'objectKinematicTree': oKT, 'baseObject': baseObject,
+        d = {'nodeGeneric': nGeneric, 'objectKinematicTree': oKT, 'baseObject': baseObject, 'nodeBase': nBase, 'objectBase': None if nBase is None else baseObject,
              'jointFrictionList': jointFrictionList, 'jointEndStopList': jointEndStopList,
              }
         self.modelData = dict(d, modelType='kinematicTree') #for PreStepControl and AddSensors (#3262, #3270)

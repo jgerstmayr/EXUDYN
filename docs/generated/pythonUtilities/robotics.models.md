@@ -118,14 +118,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`staubliTX2b
 [`QuadrupedANYmalB()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L758)
 
 - **function description**: generate the ANYmal B, a quadruped robot, as robot dictionary, a tree with 12 joints, with the joint frames and the parameters of its URDF (#3375)
-- **output**: robot dictionary for LinkDict2Robot; the link dicts have their parent; the base is fixed (a floating base is not yet available in Robot)
+- **output**: robot dictionary for LinkDict2Robot; the link dicts have their parent; 'baseInertia' is the inertia of the base for a floating base
 - **notes**: anymal.urdf of anymal_b_simple_description of ANYbotics AG, BSD license; the control values are assumed
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotFloatingBaseTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotFloatingBaseTest.py) (TM)
 
 
 (sec-models-linkdict2robot)=
 ## Function: LinkDict2Robot
 
-[`LinkDict2Robot(robotLinkDict, robotClass = None, initialConfiguration = None, friction = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L822)
+[`LinkDict2Robot(robotLinkDict, robotClass = None, initialConfiguration = None, friction = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L825)
 
 - **function description**: generate serial manipulator as robotClass object from robotLinkDict
 - **input**:
@@ -144,7 +147,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-models-linkdictmoddhkk2robot)=
 ## Function: LinkDictModDHKK2Robot
 
-[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L934)
+[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L937)
 
 - **function description**: special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
 - **input**:

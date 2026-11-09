@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 472 | 1.13.489 |
+| 1.13 | Newborn | 474 | 1.13.491 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.491** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Spot model on the floating base of Robot, ANYmal and the Mars rover imported (#3360)
+  - description: spotModel.py builds Spot by its own code. Decided: adapted to the floating base of Robot; ANYmal and the Mars rover imported the same way.
+  - **notes:** The example quadrupedsFloatingBase.py has ANYmal and Spot on floating bases in one model, with contact at their feet. The Mars rover is not added, as it has no license file.
+  - date resolved: **2026-11-09 01:43**, date raised: 2026-11-08
+- **1.13.490** `EXTENSION` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A floating base for Robot (#3359)
+  - description: Robot has a fixed base. Decided: legged and mobile robots use the floating base of ObjectKinematicTree (\#1549).
+  - **notes:** Robot.CreateKinematicTree(mbs, floatingBase=inertia) places the kinematic tree of the robot on a free rigid body.
+  - date resolved: **2026-11-09 01:43**, date raised: 2026-11-08
 - **1.13.489** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Automatic step size of LobattoIIIA4 on the spatial slider crank: the error stays at 1e-7 for the tolerances 1e-5 to 1e-10 (#3313)
   - description: The solver study (solverConvergenceFigures.py, efficiency\_adaptive.png): LobattoIIIA4 with automatic step size on sliderCrank3D of modelLibrary.py takes 21 to 106 steps for the tolerances 1e-5 to 1e-10, but the relative error of the ODE2 coordinates stays at 1.2e-6 to 1.1e-7, while 106 constant steps give about 1e-10 and Radau3 with automatic steps reaches 2e-10. On the other models its error follows the tolerance. To be analyzed: the error estimate twoSteps with the Lie group nodes of the model, a single step with a large error (the first one, or one after a rejection), the interpolated output.
   - **notes:** The automatic step size of the implicit Runge-Kutta solvers with Lie group nodes: the error estimate of the first step leaves out the rotation coordinates, which brought the first step to the minimum step size and limited the error at about 1e-7.

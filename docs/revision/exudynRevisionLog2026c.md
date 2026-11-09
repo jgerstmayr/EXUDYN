@@ -6431,6 +6431,14 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg19-14-2"></a>
+### RG19.14.2 - ANYmal and Spot on the floating base in one model (2026-11-09, #3360)
+- quadrupedsFloatingBase.py: both as trees of 12 joints on floating bases, feet on spheres of GeneralContact with explicit integration, standing and lowering the body; Spot only if the data of CommonData_git are there, its masses assumed. The Mars rover is not added (no license). spotModel.py with its 6 dummy joints stays as it is.
+    
+<a id="rg19-14-1"></a>
+### RG19.14.1 - a floating base for Robot (2026-11-09, #3359)
+- CreateKinematicTree(mbs, floatingBase=RigidBodyInertia): a rigid body with a Lie group node at base.HT with the graphics of the base, baseNodeNumber of the tree. robotFloatingBaseTest.py: ANYmal in free fall follows the parabola to 1e-12, legs held. QuadrupedANYmalB has 'baseInertia' and 'feet'.
+    
 <a id="RG20-8-3"></a>
 ### RG20.8.3 - the automatic step size with Lie group nodes (2026-11-09, #3313)
 - Cause: the error estimate of the first step, which has no previous step, compared the positions with the integral of the velocities. The rotation coordinates of Lie group nodes are composed, so that term did not shrink beyond O(h): with a rod with a reference rotation the estimate was 1e5 times the tolerance at h = 1e-3, proportional to h, and the first step went to the minimum 1e-8. There the rounding of the position constraints divided by h^2 gave a velocity error of about 1e-8 which stayed for the whole run. The rotation coordinates are left out of this check.

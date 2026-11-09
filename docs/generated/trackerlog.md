@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.489.dev1
+- Exudyn version = 1.13.491.dev1
 - last change = 2026-11-09
 - Number of issues = 3380
-- Number of resolved issues = 3266 (489 in current version)
+- Number of resolved issues = 3268 (491 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9044,12 +9044,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-08
 - `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Remove the deprecated joint torque loads of CreateRedundantCoordinateMBS at the end of their deprecation period (#3361)
   - description: jointLoadUserFunctionList and createJointTorqueLoads are tested by serialRobotTest.py and movingGroundRobotTest.py. Decided: when the deprecation period ends they are removed and the two test models move to SetControl.
-  - date raised: 2026-11-08
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The Spot model on the floating base of Robot, ANYmal and the Mars rover imported (#3360)
-  - description: spotModel.py builds Spot by its own code. Decided: adapted to the floating base of Robot; ANYmal and the Mars rover imported the same way.
-  - date raised: 2026-11-08
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` A floating base for Robot (#3359)
-  - description: Robot has a fixed base. Decided: legged and mobile robots use the floating base of ObjectKinematicTree (\#1549).
   - date raised: 2026-11-08
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The inertia workflow of imported robots (#3357)
   - description: A mesh gives the surface only. Decided: an option densityForInertiaEstimation=None with one overall density of a link, and a documented function of its own which completes partly given inertias from the meshes and adapts them to the triangle inequality.
