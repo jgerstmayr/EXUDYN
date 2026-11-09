@@ -429,6 +429,7 @@
         .def("AddLinkShape", &PyCollisionModel::AddLinkShape, "add a shape on link linkIndex (-1 the base) in the frame HT relative to the link frame; None for the link frame", py::arg("linkIndex"), py::arg("shape"), py::arg("HT") = py::none())
         .def("AddObstacle", &PyCollisionModel::AddObstacle, "add a shape fixed in the world, in the global frame HT", py::arg("shape"), py::arg("HT") = py::none())
         .def("ExcludeLinkPair", &PyCollisionModel::ExcludeLinkPair, "the pair of links is not checked, in addition to each link and its parent; -1 the base", py::arg("link0"), py::arg("link1"))
+        .def("ExcludeCollidingPairs", &PyCollisionModel::ExcludeCollidingPairs, "exclude all pairs of links and base whose shapes are not farther than margin at the joint coordinates q, as the shapes of neighboring links usually overlap at any configuration; returns the number of shape pairs found", py::arg("q"), py::arg("margin") = 0.)
         .def("NumberOfShapes", &PyCollisionModel::NumberOfShapes, "the number of shapes on the links and the base and of obstacles")
         .def("MinimumDistance", &PyCollisionModel::MinimumDistance, "the smallest signed distance over all checked pairs at the joint coordinates q, negative for a penetration", py::arg("q"))
         .def("IsFree", &PyCollisionModel::IsFree, "True if all checked distances at the joint coordinates q are larger than margin", py::arg("q"), py::arg("margin") = 0.)

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 476 | 1.13.493 |
+| 1.13 | Newborn | 477 | 1.13.494 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.494** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` The collision geometries of a URDF and up to two capsules per link (#3382)
+  - description: GetURDFrobotData reads box, cylinder, sphere and mesh from the collision elements under the key collision and collisionBase; RobotFromURDFdata puts them into the shapes of the links and the base. Decided: a link holds up to two capsules, FitCapsulesToMesh divides the points by the distance to the axes, two capsules are taken where the union is smaller than one capsule.
+  - **notes:** The collision elements of a URDF are read by GetURDFrobotData(collision=True) and become the shapes of the links and the base; FitCapsulesToMesh gives up to two capsules per link; CollisionModel.ExcludeCollidingPairs.
+  - date resolved: **2026-11-09 08:02**, date raised: 2026-11-09
 - **1.13.493** `CHANGE` `raised by: Claude-JG` `resolved by: Claude-JG` spotReinforcementLearning.py on the floating base, spotModel.py removed (#3381)
   - description: The learning example of Spot used a tree with six dummy joints from spotModel.py. Decided: the model moves into spotReinforcementLearning.py on Robot.CreateKinematicTree(floatingBase=...), its state is position and rotation vector of the base and the joints; spotModel.py is removed, as quadrupedsFloatingBase.py shows Spot standing.
   - **notes:** spotReinforcementLearning.py uses a kinematic tree on a floating base; spotModel.py is removed.

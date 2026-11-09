@@ -6431,6 +6431,14 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg21-3"></a>
+### RG21.3 - collision geometries of a URDF, up to two capsules per link (2026-11-09, #3382)
+- GetURDFrobotData(collision=True) replaces collisionMeshes; keys 'collision' of the links, 'collisionBase'; ReduceURDFrobotData moves them; RobotFromURDFdata(collisionMeshesAs=). FitCapsulesToMesh (assignment by the distance to the axes; the two capsules are taken if the volume of their union is smaller; the points are sampled on long triangles, as a hull alone leaves out the middle of a straight link); the volumes of the union relative to one capsule: UR5 forearm 0.86, upper arm 0.89, Panda link 7 0.67, TX2 link 6 0.79, Spot lower leg 0.63; a link stays at one capsule only if the second brings nothing. UR5, Panda, TX2 and Spot (CommonData_git) re-fitted from the raw meshes. RobotBase.collisionShapes; CollisionModel.ExcludeCollidingPairs, as the capsules of the base and link 2 of the UR5 overlap at any configuration. The capsule of the URDF extensions is not read, the toolbox does not know it.
+    
+<a id="rg19-14-3"></a>
+### RG19.14.3 - spotReinforcementLearning.py on the floating base (2026-11-09, #3381)
+- GetSpotModel in the example, the state with position and rotation vector of the base; the 12 joints are set by PD. Checked without the packages gym and stable_baselines3 (not installed; stubbed): the environment stands, 60 RL steps; learning not run. spotModel.py removed.
+    
 <a id="rg21-2"></a>
 ### RG21.2 - the collision shapes of RobotLink and Robot, cUtilities.CollisionModel (2026-11-09, #3380)
 - RobotLink.collisionShapes (the capsules of robotics.models or tuples of ConvexShape and HT), Robot.GetCollisionModel(obstacles, baseShapes); C++ class PyCollisionModel on EGeometry::ConvexDistance: MinimumDistance, IsFree, IsEdgeFree, with a bounding sphere filter. 2.1 us per MinimumDistance of the UR5 with 2 obstacles at its ready configuration. robotCollisionModelTest.py. ShapesFromLinks of the design is left out for now.

@@ -298,37 +298,37 @@ def _FrankaEmikaPandaURDF(gripper):
         {'name': 'panda_link1', 'parent': -1, 'jointType': 'Rz', 'jointLimits': [-2.8973, 2.8973],
          'preHT': exudyn.HT(translation=[0, 0, 0.333]),
          'mass': 4.970684, 'COM': [0.003875, 0.002081, -0.04762], 'inertia': np.array([[0.70337, -0.000139, 0.006772], [-0.000139, 0.70661, 0.019169], [0.006772, 0.019169, 0.009117]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.0, -0.0704, -0.0027], 'vAxis': [-0.00185, 0.09135, -0.13983], 'radius': 0.0909}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [-0.00064, -0.05443, 0.00558], 'vAxis': [0.00447, 0.01571, -0.05292], 'radius': 0.0762}, {'type': 'capsule', 'pAxis': [0.00158, -0.00169, -0.15291], 'vAxis': [-0.00161, -0.02879, 0.08274], 'radius': 0.0696}]},
         {'name': 'panda_link2', 'parent': 0, 'jointType': 'Rz', 'jointLimits': [-1.7628, 1.7628],
          'preHT': exudyn.HT(rotation=[[1, 0, 0], [0, 0, 1], [0, -1, 0]], translation=[0, 0, 0]),
          'mass': 0.646926, 'COM': [-0.003141, -0.02872, 0.003495], 'inertia': np.array([[0.007962, -0.003925, 0.010254], [-0.003925, 0.02811, 0.000704], [0.010254, 0.000704, 0.025995]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [-0.00029, -0.14375, -0.0185], 'vAxis': [0.00023, 0.14508, 0.08981], 'radius': 0.0892}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.00039, 0.0166, 0.03297], 'vAxis': [-0.0029, -0.17862, -0.0522], 'radius': 0.0619}, {'type': 'capsule', 'pAxis': [-0.00056, -0.00064, 0.07368], 'vAxis': [0.00285, -0.18769, -0.07566], 'radius': 0.0583}]},
         {'name': 'panda_link3', 'parent': 1, 'jointType': 'Rz', 'jointLimits': [-2.8973, 2.8973],
          'preHT': exudyn.HT(rotation=[[1, 0, 0], [0, 0, -1], [0, 1, 0]], translation=[0, -0.316, 0]),
          'mass': 3.228604, 'COM': [0.027518, 0.039252, -0.066502], 'inertia': np.array([[0.037242, -0.004761, -0.011396], [-0.004761, 0.036155, -0.012805], [-0.011396, -0.012805, 0.01083]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.08064, 0.05527, -0.00591], 'vAxis': [-0.08515, -0.06624, -0.06454], 'radius': 0.0824}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.08424, 0.05113, -0.00308], 'vAxis': [-0.08634, -0.04354, -0.08406], 'radius': 0.0645}, {'type': 'capsule', 'pAxis': [7e-05, -0.00519, -0.08246], 'vAxis': [0.07967, 0.02911, 0.07946], 'radius': 0.0667}]},
         {'name': 'panda_link4', 'parent': 2, 'jointType': 'Rz', 'jointLimits': [-3.0718, -0.0698],
          'preHT': exudyn.HT(rotation=[[1, 0, 0], [0, 0, -1], [0, 1, 0]], translation=[0.0825, 0, 0]),
          'mass': 3.587895, 'COM': [-0.05317, 0.104419, 0.027454], 'inertia': np.array([[0.025853, 0.007796, -0.001332], [0.007796, 0.019552, 0.008641], [-0.001332, 0.008641, 0.028323]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.00282, 0.00189, 0.06016], 'vAxis': [-0.08394, 0.06492, -0.06397], 'radius': 0.0826}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [-0.00512, 0.00293, 0.02517], 'vAxis': [-0.07746, 0.08143, -0.02814], 'radius': 0.0675}, {'type': 'capsule', 'pAxis': [-0.00207, 0.0041, 0.05142], 'vAxis': [-0.0833, 0.08355, -0.04264], 'radius': 0.0657}]},
         {'name': 'panda_link5', 'parent': 3, 'jointType': 'Rz', 'jointLimits': [-2.8973, 2.8973],
          'preHT': exudyn.HT(rotation=[[1, 0, 0], [0, 0, 1], [0, -1, 0]], translation=[-0.0825, 0.384, 0]),
          'mass': 1.225946, 'COM': [-0.011953, 0.041065, -0.038437], 'inertia': np.array([[0.035549, -0.002117, -0.004037], [-0.002117, 0.029474, 0.000229], [-0.004037, 0.000229, 0.008627]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [4e-05, 0.0874, 0.00358], 'vAxis': [-0.00228, -0.09721, -0.20874], 'radius': 0.0849}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [-0.00242, 0.00406, -0.26124], 'vAxis': [0.00754, 0.08977, 0.25778], 'radius': 0.0583}, {'type': 'capsule', 'pAxis': [0.0009, 0.05048, 0.01274], 'vAxis': [0.00387, -0.06382, -0.25949], 'radius': 0.0584}]},
         {'name': 'panda_link6', 'parent': 4, 'jointType': 'Rz', 'jointLimits': [-0.0175, 3.7525],
          'preHT': exudyn.HT(rotation=[[1, 0, 0], [0, 0, -1], [0, 1, 0]], translation=[0, 0, 0]),
          'mass': 1.666555, 'COM': [0.060149, -0.014117, -0.010517], 'inertia': np.array([[0.001964, 0.000109, -0.001158], [0.000109, 0.004354, 0.000341], [-0.001158, 0.000341, 0.005433]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.01494, -0.01548, 0.01613], 'vAxis': [0.0728, 0.02638, -0.01616], 'radius': 0.0765}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [-0.01424, 0.01395, 0.01952], 'vAxis': [0.10247, 0.02748, -0.02052], 'radius': 0.0496}, {'type': 'capsule', 'pAxis': [0.00149, -0.0219, 0.00405], 'vAxis': [0.08963, 0.00343, -0.00113], 'radius': 0.0575}]},
         {'name': 'panda_link7', 'parent': 5, 'jointType': 'Rz', 'jointLimits': [-2.8973, 2.8973],
          'preHT': exudyn.HT(rotation=[[1, 0, 0], [0, 0, -1], [0, 1, 0]], translation=[0.088, 0, 0]),
          'mass': 0.735522, 'COM': [0.010517, -0.004252, 0.061597], 'inertia': np.array([[0.012516, -0.000428, -0.001196], [-0.000428, 0.010027, -0.000741], [-0.001196, -0.000741, 0.004815]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [-0.00487, -0.00473, 0.07419], 'vAxis': [0.03883, 0.0397, 0.00194], 'radius': 0.0495}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.02863, 0.05155, 0.08561], 'vAxis': [-0.05711, -0.05458, -0.01146], 'radius': 0.0369}, {'type': 'capsule', 'pAxis': [0.05579, 0.02391, 0.08564], 'vAxis': [-0.06115, -0.05554, -0.00882], 'radius': 0.0367}]},
     ]
-    baseCollisionShapes = [{'type': 'capsule', 'pAxis': [3e-05, -0.00015, 0.05053], 'vAxis': [-0.05778, 0.00036, -0.02771], 'radius': 0.1053}]
+    baseCollisionShapes = [{'type': 'capsule', 'pAxis': [-0.00042, -0.00026, 0.04957], 'vAxis': [-0.0617, 0.00171, -0.0145], 'radius': 0.1063}]
     if gripper == 'hand':
-        hand = {'mass': 1.495522, 'COM': [0.00172087429763, 0.00136035441716, 0.100485281149], 'inertia': [[0.0165538537126, 0.000370892297119, -0.000706695710615], [0.000370892297119, 0.0141312486422, -0.00105110532705], [-0.000706695710615, -0.00105110532705, 0.00672495555664]], 'collisionShape': {'type': 'capsule', 'pAxis': [0.05484, 0.05402, 0.13025], 'vAxis': [-0.11884, -0.11782, -0.00273], 'radius': 0.0473}}
+        hand = {'mass': 1.495522, 'COM': [0.00172087429763, 0.00136035441716, 0.100485281149], 'inertia': [[0.0165538537126, 0.000370892297119, -0.000706695710615], [0.000370892297119, 0.0141312486422, -0.00105110532705], [-0.000706695710615, -0.00105110532705, 0.00672495555664]], 'collisionShapes': [{'type': 'capsule', 'pAxis': [0.05465, 0.05289, 0.11507], 'vAxis': [-0.10888, -0.10571, -0.00369], 'radius': 0.0322}, {'type': 'capsule', 'pAxis': [0.05682, 0.05828, 0.14586], 'vAxis': [-0.12029, -0.1224, -0.00211], 'radius': 0.0327}]}
         links[-1].update({'mass': hand['mass'], 'COM': hand['COM'], 'inertia': np.array(hand['inertia'])})
-        links[-1]['collisionShapes'] = links[-1]['collisionShapes'] + [hand['collisionShape']]
+        links[-1]['collisionShapes'] = links[-1]['collisionShapes'] + hand['collisionShapes']
     elif gripper is not None:
         raise ValueError("ManipulatorFrankaEmikaPanda: gripper must be None or 'hand'")
     return {'links': links,
@@ -460,31 +460,31 @@ def _UR5URDF():
         {'name': 'shoulder_link', 'parent': -1, 'jointType': 'Rz', 'jointLimits': [-6.28318530718, 6.28318530718],
          'preHT': exudyn.HT(translation=[0, 0, 0.089159]),
          'mass': 3.7, 'COM': [-1.47994442346e-06, 0.00934441022834, -0.00187223328691], 'inertia': np.array([[0.00871988567029, 2.84486564759e-06, 1.49700127139e-06], [2.84486564759e-06, 0.00787441286667, -0.000265378015507], [1.49700127139e-06, -0.000265378015507, 0.00743493326195]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [4e-05, 0.01196, 0.0], 'vAxis': [0.00741, -0.01032, -0.01523], 'radius': 0.0827}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [5e-05, 0.0122, -2e-05], 'vAxis': [0.00033, -0.00893, -0.01066], 'radius': 0.0825}]},
         {'name': 'upper_arm_link', 'parent': 0, 'jointType': 'Ry', 'jointLimits': [-6.28318530718, 6.28318530718],
          'preHT': exudyn.HT(rotation=[[0, 0, 1], [0, 1, 0], [-1, 0, 0]], translation=[0, 0.13585, 0]),
          'mass': 8.393, 'COM': [-2.02627537152e-05, -0.00107444961099, 0.21259565165], 'inertia': np.array([[0.237613331679, -1.91676817992e-07, 6.60745033233e-06], [-1.91676817992e-07, 0.235927619483, 8.67459280378e-06], [6.60745033233e-06, 8.67459280378e-06, 0.0148332656762]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.00061, -0.0042, -0.00359], 'vAxis': [-0.00127, -0.00102, 0.42789], 'radius': 0.0846}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [-0.00179, 0.02744, 0.42404], 'vAxis': [0.00272, 0.00025, -0.42358], 'radius': 0.0647}, {'type': 'capsule', 'pAxis': [3e-05, -0.03142, 0.42735], 'vAxis': [-0.00025, -0.00108, -0.42743], 'radius': 0.0674}]},
         {'name': 'forearm_link', 'parent': 1, 'jointType': 'Ry', 'jointLimits': [-3.14159265359, 3.14159265359],
          'preHT': exudyn.HT(translation=[0, -0.1197, 0.425]),
          'mass': 2.275, 'COM': [-4.93170544396e-06, 0.004444703267, 0.184335249626], 'inertia': np.array([[0.0503478407767, 5.94817275059e-07, -1.77510008824e-06], [5.94817275059e-07, 0.0500610476125, 0.00255117467133], [-1.77510008824e-06, 0.00255117467133, 0.00232007461148]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [-7e-05, -0.00691, 0.39275], 'vAxis': [0.00067, 0.03819, -0.38899], 'radius': 0.0664}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.00058, 0.03183, -0.00306], 'vAxis': [0.0013, -0.02466, 0.13948], 'radius': 0.0629}, {'type': 'capsule', 'pAxis': [0.0014, 0.00527, 0.23968], 'vAxis': [-0.00175, -0.00786, 0.16189], 'radius': 0.062}]},
         {'name': 'wrist_1_link', 'parent': 2, 'jointType': 'Ry', 'jointLimits': [-6.28318530718, 6.28318530718],
          'preHT': exudyn.HT(rotation=[[0, 0, 1], [0, 1, 0], [-1, 0, 0]], translation=[0, 0, 0.39225]),
          'mass': 1.219, 'COM': [7.98010901952e-06, 0.0885932149389, -0.00355229750824], 'inertia': np.array([[0.00154735588331, 5.56397989345e-09, -1.51781147804e-07], [5.56397989345e-09, 0.00144040967321, 1.42410127537e-05], [-1.51781147804e-07, 1.42410127537e-05, 0.00100120667197]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [-0.00359, 0.09247, -0.00271], 'vAxis': [0.00503, 0.00051, -0.00019], 'radius': 0.0629}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [-0.00072, 0.08472, -0.02418], 'vAxis': [0.00063, -0.00398, 0.0233], 'radius': 0.0503}, {'type': 'capsule', 'pAxis': [0.00393, 0.05459, 0.01752], 'vAxis': [-0.0044, 0.04461, 0.00666], 'radius': 0.0447}]},
         {'name': 'wrist_2_link', 'parent': 3, 'jointType': 'Rz', 'jointLimits': [-6.28318530718, 6.28318530718],
          'preHT': exudyn.HT(translation=[0, 0.093, 0]),
          'mass': 1.219, 'COM': [-8.66349199153e-06, -0.0035615210189, 0.0900579445563], 'inertia': np.array([[0.00154349014458, -3.35918464407e-08, 2.21869468162e-07], [-3.35918464407e-08, 0.000997341270608, 7.1441089308e-06], [2.21869468162e-07, 7.1441089308e-06, 0.00144049746367]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.00013, -0.0029, 0.09464], 'vAxis': [-0.00014, 1e-05, 1e-05], 'radius': 0.0631}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.00012, -0.0333, 0.08018], 'vAxis': [-0.00017, 0.05151, 0.00866], 'radius': 0.0526}]},
         {'name': 'wrist_3_link', 'parent': 4, 'jointType': 'Ry', 'jointLimits': [-6.28318530718, 6.28318530718],
          'preHT': exudyn.HT(translation=[0, 0, 0.09465]),
          'mass': 0.1879, 'COM': [-8.43173270636e-06, 0.0630969616988, 0.000184273773823], 'inertia': np.array([[8.10446759361e-05, -8.12785973856e-09, -2.42999117854e-08], [-8.12785973856e-09, 0.000128826892644, 3.64930543481e-08], [-2.42999117854e-08, 3.64930543481e-08, 8.01063403273e-05]]),
-         'collisionShapes': [{'type': 'capsule', 'pAxis': [1e-05, 0.06099, 0.00324], 'vAxis': [0.00022, 0.00027, -0.0065], 'radius': 0.0402}]},
+         'collisionShapes': [{'type': 'capsule', 'pAxis': [0.00012, 0.06117, -0.00116], 'vAxis': [0.0, -6e-05, 0.00436], 'radius': 0.0402}]},
     ]
     return {'links': links,
             'dhMode': 'jointFrames',
-            'baseCollisionShapes': [{'type': 'capsule', 'pAxis': [-0.00061, -0.03619, 0.00643], 'vAxis': [0.00087, 0.04038, 0.00022], 'radius': 0.0742}],
+            'baseCollisionShapes': [{'type': 'capsule', 'pAxis': [0.00148, -0.03606, 0.0055], 'vAxis': [-0.00176, 0.03722, 0.00023], 'radius': 0.0743}],
             'tool': {'HT': exudyn.HT(rotation=[[1.0, 0.0, 0.0], [0.0, 0.0, 1.0], [0.0, -1.0, 0.0]], translation=[0.0, 0.0823, 0.0])}, #the frame tool0
             'gravity': [0, 0, -9.81],
             'referenceConfiguration': [0.]*6,
@@ -639,15 +639,15 @@ def ManipulatorStaubliTX2_90L():
              np.array([[0.001555, -0.000003566, 0.0000003603], [-0.000003566, 0.001652, -0.00002011], [0.0000003603, -0.00002011, 0.0006239]]), [-2.00712863979, 2.44346095279], 6.458),
             ('Rz', [0, 0, 0.100], 0.45635, [-0.0002166, 0.000004719, -0.006105],
              np.array([[0.000138, 0.0000000007, 0.0000001884], [0.0000000007, 0.0001355, 0.0000000049], [0.0000001884, 0.0000000049, 0.0002621]]), [-4.71238898038, 4.71238898038], 10.996)]
-    collisionShapes = [{'type': 'capsule', 'pAxis': [-0.00055, -0.00375, -0.1365], 'vAxis': [0.06194, 0.0636, 0.13736], 'radius': 0.1655}, {'type': 'capsule', 'pAxis': [-0.0013, 0.19977, 0.47108], 'vAxis': [0.00114, 0.00955, -0.47591], 'radius': 0.1278}, {'type': 'capsule', 'pAxis': [-0.0021, 0.0192, 0.05075], 'vAxis': [0.00164, 0.0284, -0.05071], 'radius': 0.1377}, {'type': 'capsule', 'pAxis': [-0.00341, -0.00095, 0.55258], 'vAxis': [0.00919, 0.00265, -0.33398], 'radius': 0.0959}, {'type': 'capsule', 'pAxis': [-0.00338, -0.00341, 0.07363], 'vAxis': [0.0033, -0.00016, -0.08854], 'radius': 0.0466}, {'type': 'capsule', 'pAxis': [-0.0004, -0.00297, -0.00679], 'vAxis': [0.00034, 0.00494, 1e-05], 'radius': 0.0395}] #capsules containing the collision meshes (#3374)
+    collisionShapes = [[{'type': 'capsule', 'pAxis': [0.00382, 0.00985, -0.15355], 'vAxis': [0.01833, 0.01126, 0.0831], 'radius': 0.155}, {'type': 'capsule', 'pAxis': [0.06202, 0.06822, -0.00377], 'vAxis': [-0.02648, -0.03634, -0.04622], 'radius': 0.1617}], [{'type': 'capsule', 'pAxis': [0.05517, 0.2233, -0.07708], 'vAxis': [0.00058, 0.00066, 0.63783], 'radius': 0.0878}, {'type': 'capsule', 'pAxis': [-0.05955, 0.22668, -0.09337], 'vAxis': [0.02071, -0.00266, 0.63958], 'radius': 0.089}], [{'type': 'capsule', 'pAxis': [-0.00419, 0.01489, 0.04946], 'vAxis': [0.0038, 0.03499, -0.05086], 'radius': 0.1361}], [{'type': 'capsule', 'pAxis': [0.0027, -0.00207, 0.21182], 'vAxis': [-0.0053, 0.00199, 0.16807], 'radius': 0.0895}, {'type': 'capsule', 'pAxis': [0.00022, -0.00416, 0.55208], 'vAxis': [6e-05, 0.00674, -0.14213], 'radius': 0.0966}], [{'type': 'capsule', 'pAxis': [0.00316, 0.002, 0.07525], 'vAxis': [-0.00404, -0.00547, -0.06151], 'radius': 0.045}, {'type': 'capsule', 'pAxis': [-0.00137, -0.00274, 0.00575], 'vAxis': [0.00426, -0.00169, -0.02215], 'radius': 0.0478}], [{'type': 'capsule', 'pAxis': [-0.01254, 0.03021, -0.00646], 'vAxis': [-0.01203, -0.05586, -0.00027], 'radius': 0.0205}, {'type': 'capsule', 'pAxis': [0.0134, -0.03422, -0.008], 'vAxis': [0.00964, 0.05822, 0.00091], 'radius': 0.0206}]] #capsules containing the collision meshes (#3374)
     links = []
     for (i, (jointType, translation, mass, COM, inertia, limits, maxVelocity)) in enumerate(data):
         links += [{'jointType': jointType, 'preHT': exudyn.HT(translation=translation), 'mass': mass, 'COM': COM,
                    'inertia': inertia,
-                   'jointLimits': limits, 'maxVelocity': maxVelocity, 'collisionShapes': [collisionShapes[i]]}]
+                   'jointLimits': limits, 'maxVelocity': maxVelocity, 'collisionShapes': collisionShapes[i]}]
     return {'links': links,
             'dhMode': 'jointFrames',
-            'baseCollisionShapes': [{'type': 'capsule', 'pAxis': [-0.00865, 0.0031, 0.09526], 'vAxis': [-1e-05, 0.00014, -0.0], 'radius': 0.1939}],
+            'baseCollisionShapes': [{'type': 'capsule', 'pAxis': [-0.0615, -0.00383, 0.1166], 'vAxis': [0.0849, 0.01236, -0.00362], 'radius': 0.1777}],
             'gravity': [0, 0, -9.81],
             'referenceConfiguration': [0.]*6,
             #the arm upright (qz), and bent with the tool pointing down (qr) (#3277)
@@ -914,6 +914,7 @@ def LinkDict2Robot(robotLinkDict, robotClass=None, initialConfiguration=None, fr
     else:
         raise ValueError('LinkDict2Robot: dhMode not set in robotLinkDict')
 
+    robotClass.base.collisionShapes = list(robotLinkDict.get('baseCollisionShapes', [])) #(#3382)
     if isinstance(initialConfiguration, str): #a name of the model's configurations (#3277)
         name = robotLinkDict.get('initialConfiguration') if initialConfiguration == 'model' else initialConfiguration
         configurations = robotLinkDict.get('configurations', {})

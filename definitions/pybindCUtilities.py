@@ -180,6 +180,7 @@ for (name, argList, defaultArgs, argTypes, cmReturnType, description) in [
     ('AddLinkShape', ['linkIndex', 'shape', 'HT'], ['', '', 'py::none()'], ['int', 'ConvexShape', 'HT'], 'None', 'add a shape on link linkIndex (-1 the base) in the frame HT relative to the link frame; None for the link frame'),
     ('AddObstacle', ['shape', 'HT'], ['', 'py::none()'], ['ConvexShape', 'HT'], 'None', 'add a shape fixed in the world, in the global frame HT'),
     ('ExcludeLinkPair', ['link0', 'link1'], [], ['int', 'int'], 'None', 'the pair of links is not checked, in addition to each link and its parent; -1 the base'),
+    ('ExcludeCollidingPairs', ['q', 'margin'], ['', '0.'], [vector, 'float'], 'int', 'exclude all pairs of links and base whose shapes are not farther than margin at the joint coordinates q, as the shapes of neighboring links usually overlap at any configuration; returns the number of shape pairs found'),
     ('NumberOfShapes', [], [], [], 'int', 'the number of shapes on the links and the base and of obstacles'),
     ('MinimumDistance', ['q'], [], [vector], 'float', 'the smallest signed distance over all checked pairs at the joint coordinates q, negative for a penetration'),
     ('IsFree', ['q', 'margin'], ['', '0.'], [vector, 'float'], 'bool', 'True if all checked distances at the joint coordinates q are larger than margin'),

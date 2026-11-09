@@ -134,6 +134,33 @@ def _Equal(a, b):
     (a, b) = (np.array(a), np.array(b))
     return a.shape == b.shape and (a.dtype.kind in 'iuf' and np.allclose(a, b, rtol=1e-12, atol=1e-12) or np.array_equal(a, b))
 
+def testCollisionGeometriesOfTheURDF():
+    #box, cylinder (on a fixed link, moved to the joint link above), sphere (on a link with a flipped joint) and a mesh on the base (#3382)
+    for package in ['roboticstoolbox', 'pymeshlab', 'scipy']:
+        pytest.importorskip(package)
+    from exudyn.robotics.urdfImport import LoadURDFrobot, RobotFromURDFdata
+    from exudyn.cUtilities import ConvexShape
+    rtbRobot = LoadURDFrobot(os.path.join('urdf', 'testRobot.urdf'), testRobotPath)['robot']
+    data = GetURDFrobotData(rtbRobot, verbose=0, collision=True, meshDensity=1000., correctInertia=True)
+    (link1, link2) = data['linkList']
+    assert [g['type'] for g in link1['collision']] == ['box', 'cylinder'] and [g['type'] for g in link2['collision']] == ['sphere']
+    assert [g['type'] for g in data['collisionBase']] == ['mesh']
+    (box, cylinder) = link1['collision']
+    assert np.allclose(box['size'], [0.3, 0.05, 0.04]) and np.allclose(box['HT'][:3, 3], [0.15, 0, 0])
+    assert abs(cylinder['radius'] - 0.03) < 1e-12 and abs(cylinder['length'] - 0.02) < 1e-12
+    assert np.allclose(cylinder['HT'][:3, 3], [0.3, -np.sin(0.4)*0.01, np.cos(0.4)*0.01])
+    assert np.allclose(link2['collision'][0]['HT'][:3, 3], [-0.2, -0.01, 0]) #the frame of the link is turned by the flip
+    points = data['collisionBase'][0]['points']
+    assert abs(points[:, 2].mean() - 0.05) < 0.1
+
+    robot = RobotFromURDFdata(data, PDcontrol=(200., 4.))
+    assert len(robot.links[0].collisionShapes) == 2 and len(robot.links[1].collisionShapes) == 1 and len(robot.base.collisionShapes) >= 1
+    (s, c) = (np.sin(0.4), np.cos(0.4))
+    center = np.array([0.5, -s*0.05 + c*0.01, 0.15 + c*0.05 + s*0.01]) #the sphere of link 2 at q=0
+    model = robot.GetCollisionModel(obstacles=[(ConvexShape('Sphere', radius=0.05), exu.HT(translation=center + [0.5, 0, 0]))])
+    model.ExcludeLinkPair(-1, 1) #the base is nearer to link 2 than the obstacle
+    assert abs(model.MinimumDistance([0, 0]) - (0.5 - 0.04 - 0.05)) < 1e-9
+
 def testTheStoredTestRobotIsTheImportOfItsURDF():
     for package in ['roboticstoolbox', 'pymeshlab', 'h5py', 'scipy']:
         pytest.importorskip(package)

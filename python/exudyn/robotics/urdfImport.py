@@ -22,7 +22,7 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'ReduceURDFrobotData', 'RobotModelDictFromData', 'FitCapsuleToPoints', 'ConvexHullOfMesh', 'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics',
+    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'ReduceURDFrobotData', 'RobotModelDictFromData', 'FitCapsuleToPoints', 'FitCapsulesToMesh', 'CollisionShapesFromGeometry', 'ConvexHullOfMesh', 'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics',
     'AddURDFgraphics',
     ]
 
@@ -154,7 +154,7 @@ def GetURDFrobotData(robot,
                      meshDensity = 0.,
                      correctInertia = False,
                      toolLinkName = None,
-                     collisionMeshes = False):
+                     collision = False):
     """Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
 
     Args:
@@ -173,9 +173,11 @@ def GetURDFrobotData(robot,
             of its mass and inertia in 'inertiaProblems', and they are printed with verbose > 0 (#3282)
         toolLinkName: if not None, the name of the link of the tool frame; the frame of this link relative to the last
             joint link is returned in 'toolHT', for RobotFromURDFdata (#3356)
-        collisionMeshes: if True, each joint link gets 'collisionMeshes', a list of the convex hulls [points, triangles] of its
-            collision meshes in the frame of the link, by ConvexHullOfMesh, with a warning for a mesh which is not convex;
-            needs scipy and pymeshlab (#3374)
+        collision: if True, each joint link gets 'collision' and the dict the key 'collisionBase' for the links fixed to the base: a list of the
+            collision geometries of the URDF in the frame of the link, also those of the links fixed to it: {'type': 'box', 'size': ...,
+            'HT': ...}, {'type': 'cylinder', 'radius': ..., 'length': ..., 'HT': ...}, {'type': 'sphere', 'radius': ..., 'HT': ...} and
+            {'type': 'mesh', 'points': ..., 'triangles': ...}; the box and the axis of the cylinder are centered in HT, a 4x4 matrix;
+            RobotFromURDFdata puts them into the collision shapes of the robot; a mesh needs pymeshlab (#3382)
 
     Returns:
         returns dictionary with items linkList (the joint links, each with its name, jointName, preHT relative to the joint link above,
@@ -364,24 +366,30 @@ def GetURDFrobotData(robot,
                 if returnStaticGraphicsList :
                     staticGraphicsList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT) )]
 
-    if collisionMeshes:
-        if not hasPymeshlab:
-            raise ImportError('GetURDFrobotData: collisionMeshes=True needs pymeshlab')
+    collisionBase = []
+    if collision:
         for link in robot.links:
             (ancestor, HTancestor) = (link, FlipHT(link)) if link.isjoint else JointAncestor(link)
             linkDict = None if ancestor is None else linkDictOfName.get(ancestor.name)
-            if linkDict is None:
-                continue
-            linkDict.setdefault('collisionMeshes', [])
+            target = collisionBase if linkDict is None else linkDict.setdefault('collision', [])
             for scene in link.collision:
-                if scene.stype == 'mesh' and scene.filename != '':
+                T = HTancestor @ np.array(scene.T)
+                if scene.stype == 'cuboid':
+                    target += [{'type': 'box', 'size': np.array(scene.scale, dtype=float), 'HT': T}]
+                elif scene.stype == 'cylinder':
+                    target += [{'type': 'cylinder', 'radius': float(scene.radius), 'length': float(scene.length), 'HT': T}]
+                elif scene.stype == 'sphere':
+                    target += [{'type': 'sphere', 'radius': float(scene.radius), 'HT': T}]
+                elif scene.stype == 'mesh':
+                    if not hasPymeshlab:
+                        raise ImportError('GetURDFrobotData: a collision mesh needs pymeshlab')
                     ms = pymeshlab.MeshSet()
                     ms.load_new_mesh(scene.filename)
                     mesh = ms.current_mesh()
-                    T = HTancestor @ np.array(scene.T)
-                    points = T[:3, :3] @ (mesh.vertex_matrix() * scene.scale).T
-                    (hullPoints, hullTriangles, _) = ConvexHullOfMesh(points.T + T[:3, 3], mesh.face_matrix(), link.name, verbose)
-                    linkDict['collisionMeshes'] += [[hullPoints, hullTriangles]]
+                    points = (T[:3, :3] @ (mesh.vertex_matrix() * scene.scale).T).T + T[:3, 3]
+                    target += [{'type': 'mesh', 'points': points, 'triangles': np.array(mesh.face_matrix())}]
+                elif verbose > 0:
+                    exudyn.Print('WARNING: GetURDFrobotData: collision geometry', scene.stype, 'of link', link.name, 'is ignored')
 
     def MeshMassProperties(linkDict, density): #[mass, COM, inertia at the COM] of the meshes of a link; mass 0 without meshes
         parts = []
@@ -419,6 +427,7 @@ def GetURDFrobotData(robot,
             'staticJointValues': staticJointValues,
             'staticGraphicsList': staticGraphicsList}
     if exportMesh: robotData['meshSetList'] = meshSetList
+    if collision: robotData['collisionBase'] = collisionBase
     if toolLinkName is not None:
         toolLinks = [link for link in robot.links if link.name == toolLinkName]
         if len(toolLinks) != 1:
@@ -427,6 +436,18 @@ def GetURDFrobotData(robot,
         robotData['toolHT'] = linkList[-1]['flipHT'] @ np.linalg.inv(np.array(robot.fkine(zero, end=linkList[-1]['name']))) @ np.array(robot.fkine(zero, end=toolLinks[0]))
 
     return robotData
+
+
+def _MovedCollisionGeometry(geometry, R, d):
+    """a collision geometry of a link given in a frame with rotation R and position d of the new frame of the link"""
+    moved = dict(geometry)
+    if geometry['type'] == 'mesh':
+        moved['points'] = d + (R @ np.array(geometry['points']).T).T
+    else:
+        T = np.eye(4)
+        (T[:3, :3], T[:3, 3]) = (R, d)
+        moved['HT'] = T @ np.array(geometry['HT'])
+    return moved
 
 
 def _JointHT(jointType, q):
@@ -513,8 +534,8 @@ def ReduceURDFrobotData(robotData, lockedJoints=None, removedLinks=None):
             target['com'] = c
             target['mass'] = m
             target['graphicsDataList'] = list(target['graphicsDataList']) + moved
-            if 'collisionMeshes' in link:
-                target['collisionMeshes'] = target.get('collisionMeshes', []) + [[d + (R @ np.array(points).T).T, triangles] for (points, triangles) in link['collisionMeshes']]
+            if 'collision' in link:
+                target['collision'] = target.get('collision', []) + [_MovedCollisionGeometry(g, R, d) for g in link['collision']]
             target['inertiaProblems'] = _InertiaProblems(m, target['inertiaCOM'])
         for (j, child) in links.items():
             if parentOf[j] == i:
@@ -612,6 +633,104 @@ def FitCapsuleToPoints(points):
     return {'type': 'capsule', 'pAxis': best[1].tolist(), 'vAxis': best[2].tolist(), 'radius': float(best[3])}
 
 
+def _PointsOnMesh(points, triangles, spacing):
+    """the points of a mesh and points on its triangles, so that long triangles are represented at the distance spacing"""
+    points = np.array(points, dtype=float)
+    result = [points]
+    for (a, b, c) in points[np.array(triangles, dtype=int)]:
+        n = int(np.ceil(max(cMath.norm(b - a), cMath.norm(c - b), cMath.norm(a - c))/spacing))
+        if n > 1:
+            result += [np.array([a + (b - a)*(i/n) + (c - a)*(j/n) for i in range(n + 1) for j in range(n + 1 - i)])]
+    return np.vstack(result)
+
+
+def _UnionVolume(capsules, numberOfGridPoints=40):
+    """the volume of the union of capsules, on a regular grid of points"""
+    ends = np.array([c['pAxis'] for c in capsules] + [np.array(c['pAxis']) + np.array(c['vAxis']) for c in capsules])
+    radius = max(c['radius'] for c in capsules)
+    (low, high) = (ends.min(axis=0) - radius, ends.max(axis=0) + radius)
+    h = (high - low)/numberOfGridPoints
+    axes = [low[i] + h[i]*(np.arange(numberOfGridPoints) + 0.5) for i in range(3)]
+    grid = np.stack(np.meshgrid(*axes, indexing='ij'), axis=-1).reshape(-1, 3)
+    inside = np.any(_DistanceToSegments(grid, capsules) <= np.array([c['radius'] for c in capsules]), axis=1)
+    return np.count_nonzero(inside)*np.prod(h)
+
+
+def _DistanceToSegments(points, capsules):
+    """the distances of the points to the axes of the capsules, one column per capsule"""
+    result = []
+    for capsule in capsules:
+        (p, v) = (np.array(capsule['pAxis']), np.array(capsule['vAxis']))
+        s = np.clip((points - p) @ v/max(v @ v, 1e-30), 0., 1.)
+        d = points - p - np.outer(s, v)
+        result += [np.sqrt(np.sum(d*d, axis=1))]
+    return np.array(result).T
+
+
+def FitCapsulesToMesh(points, triangles=None, numberOfCapsules=2, minimumGain=1.):
+    """Small capsules that together contain a mesh, for the collision shapes of a link: for a link that is bent, several capsules are
+    much closer to it than one (#3382). The points are divided by their distance to the axes of the capsules, which are fitted again;
+    all points on the surface are in one of the capsules.
+
+    Args:
+        points: the points of the mesh, an array of shape (n, 3)
+        triangles: None or the triangles of the mesh, an array of point indices: points are added on long triangles, as the capsules must also contain these
+        numberOfCapsules: the number of capsules
+        minimumGain: the capsules are only returned if the volume of their union is below minimumGain times the volume of a single capsule; else one capsule is returned
+
+    Returns:
+        the list of dicts as returned by FitCapsuleToPoints
+    """
+    points = np.array(points, dtype=float)
+    size = cMath.norm(np.max(points, axis=0) - np.min(points, axis=0))
+    samples = points if triangles is None else _PointsOnMesh(points, triangles, 0.03*size)
+    single = FitCapsuleToPoints(samples)
+    if numberOfCapsules < 2:
+        return [single]
+    def Divided(assignment, n):
+        return [FitCapsuleToPoints(samples[assignment == i]) for i in range(n) if np.any(assignment == i)]
+    best = None
+    axes = np.linalg.svd(samples - samples.mean(axis=0), full_matrices=False)[2]
+    for axis in axes[:2]: #the start: slices along the principal axes
+        s = samples @ axis
+        assignment = np.minimum(((s - s.min())/max(s.max() - s.min(), 1e-30)*numberOfCapsules).astype(int), numberOfCapsules - 1)
+        for iteration in range(12):
+            capsules = Divided(assignment, numberOfCapsules)
+            volume = _UnionVolume(capsules)
+            if best is None or volume < best[0]:
+                best = (volume, capsules)
+            next = np.argmin(_DistanceToSegments(samples, capsules) - np.array([c['radius'] for c in capsules]), axis=1)
+            if len(capsules) < numberOfCapsules or np.array_equal(next, assignment):
+                break
+            assignment = next
+    return best[1] if best[0] < minimumGain*_UnionVolume([single]) else [single]
+
+
+def CollisionShapesFromGeometry(geometry, meshesAs='capsules', numberOfCapsules=2):
+    """The collision shapes of a RobotLink from the collision geometries of GetURDFrobotData (#3382).
+
+    Args:
+        geometry: the list of the key 'collision' of a link, or 'collisionBase', of GetURDFrobotData
+        meshesAs: 'capsules': all meshes of the list together by FitCapsulesToMesh, for a fast check; 'convex': each mesh as the points of its convex hull, which requires scipy
+        numberOfCapsules: the number of capsules for the meshes of the list
+
+    Returns:
+        the list of shapes, the box, cylinder and sphere as they are
+    """
+    if meshesAs not in ['capsules', 'convex']:
+        raise ValueError("CollisionShapesFromGeometry: meshesAs must be 'capsules' or 'convex', not " + str(meshesAs))
+    shapes = [g for g in geometry if g['type'] != 'mesh']
+    meshes = [g for g in geometry if g['type'] == 'mesh']
+    if meshesAs == 'convex':
+        return shapes + [{'type': 'points', 'points': ConvexHullOfMesh(g['points'], g['triangles'], verbose=0)[0]} for g in meshes]
+    if len(meshes) != 0:
+        offsets = np.cumsum([0] + [len(g['points']) for g in meshes])
+        points = np.vstack([g['points'] for g in meshes])
+        triangles = np.vstack([np.array(g['triangles']) + offsets[i] for (i, g) in enumerate(meshes)])
+        shapes = shapes + FitCapsulesToMesh(points, triangles, numberOfCapsules)
+    return shapes
+
+
 def ConvexHullOfMesh(points, triangles, name='', verbose=1):
     """The convex hull of a triangle mesh, as the contacts of polytopes need it, and how convex the mesh is (#3374).
 
@@ -660,7 +779,7 @@ def _URDFjointDynamics(urdfFile):
 
 
 def RobotFromURDFdata(robotData, gravity=[0, 0, -9.81], baseHT=None, toolHT=None, PDcontrol=(None, None), urdfFile=None,
-                      enableEndStops=False):
+                      enableEndStops=False, collisionMeshesAs='capsules'):
     """Create a Robot from the data of GetURDFrobotData (or of a dict of it loaded from a file): the links with their
     parents, masses, inertias, joint limits and graphics, the base graphics and the tool frame (#3356). A Robot is saved
     with its graphics by Robot.SaveToHDF5, and loaded without the packages that read the URDF.
@@ -676,6 +795,7 @@ def RobotFromURDFdata(robotData, gravity=[0, 0, -9.81], baseHT=None, toolHT=None
             friction (damping) and Coulomb friction (friction) of the links, since release 1.5 of the Robotics Toolbox does
             not read them; this may change with a later release
         enableEndStops: enableEndStops of Robot; the limits of the joints are stored in the links in any case
+        collisionMeshesAs: how the collision meshes of robotData (argument collision of GetURDFrobotData) become collision shapes, see CollisionShapesFromGeometry
 
     Returns:
         the Robot; a joint without limits (upper not larger than lower) has jointLimits=None
@@ -695,7 +815,8 @@ def RobotFromURDFdata(robotData, gravity=[0, 0, -9.81], baseHT=None, toolHT=None
         toolHT = robotData.get('toolHT', np.eye(4))
     baseArguments = {} if baseHT is None else {'HT': baseHT}
     robot = Robot(gravity=gravity, enableEndStops=enableEndStops,
-                  base=RobotBase(visualization=VRobotBase(graphicsData=list(robotData.get('graphicsBaseList', []))), **baseArguments),
+                  base=RobotBase(visualization=VRobotBase(graphicsData=list(robotData.get('graphicsBaseList', []))),
+                                 collisionShapes=CollisionShapesFromGeometry(robotData.get('collisionBase', []), collisionMeshesAs), **baseArguments),
                   tool=RobotTool(HT=toolHT, visualization=VRobotTool(graphicsData=list(robotData.get('graphicsToolList', [])))))
     dynamics = {} if urdfFile is None else _URDFjointDynamics(urdfFile)
     linkNumbers = {'None': -1}
@@ -713,7 +834,8 @@ def RobotFromURDFdata(robotData, gravity=[0, 0, -9.81], baseHT=None, toolHT=None
                                 jointType=link['jointType'], parent=linkNumbers[link['parentName']],
                                 PDcontrol=tuple(PDcontrol[i]) if perLink else tuple(PDcontrol),
                                 jointLimits=list(limits) if limits[1] > limits[0] else None,
-                                viscousFriction=damping, coulombFriction=friction, visualization=visualization))
+                                viscousFriction=damping, coulombFriction=friction, visualization=visualization,
+                                collisionShapes=CollisionShapesFromGeometry(link.get('collision', []), collisionMeshesAs)))
     return robot
 
 

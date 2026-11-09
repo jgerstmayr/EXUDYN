@@ -170,6 +170,9 @@ class CollisionModel:
     def ExcludeLinkPair(self, link0: int, link1: int) -> None: 
         """The pair of links is not checked, in addition to each link and its parent; -1 the base."""
         ...
+    def ExcludeCollidingPairs(self, q: ArrayLike, margin: float=0.) -> int: 
+        """Exclude all pairs of links and base whose shapes are not farther than margin at the joint coordinates q, as the shapes of neighboring links usually overlap at any configuration; returns the number of shape pairs found."""
+        ...
     def NumberOfShapes(self) -> int: 
         """The number of shapes on the links and the base and of obstacles."""
         ...

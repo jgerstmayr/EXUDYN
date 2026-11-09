@@ -703,6 +703,7 @@ and the Create functions.
 **A Robot from a URDF in one call** (#3356): `urdfImport.RobotFromURDFdata` creates the `Robot` from the data of
 `GetURDFrobotData`, and `Robot.SaveToHDF5` / `LoadFromHDF5` store it with its graphics. `urdfImport.ReduceURDFrobotData` leaves out joints and links, such as the fingers of a gripper (#3372).
 **The robots of `robotics.models`** (#3373, #3374, #3375): `ManipulatorUR5` and `ManipulatorFrankaEmikaPanda` are by default in the joint frames of the URDF, with simple collision shapes; the former models with `useDH=True`. New are `ManipulatorUR10`, `ManipulatorKukaLBRiiwa14` and `QuadrupedANYmalB`.
+**Collision geometries from URDF files** (#3382): `GetURDFrobotData(collision=True)`, `RobotFromURDFdata`, and up to two capsules per link by `FitCapsulesToMesh`, also for the robots of `robotics.models`.
 **The collision check of a robot** (#3380): `Robot.GetCollisionModel` and `exudyn.cUtilities.CollisionModel` with `MinimumDistance`, `IsFree` and `IsEdgeFree`.
 **A floating base for robots** (#3359): `Robot.CreateKinematicTree(mbs, floatingBase=inertia)`.
 **Contact shapes are transparent by default**, the colors of `contact.color` with the alpha value 0.8, so that the contact forces inside them are visible; this changes the look of existing models with contact shapes (#3376).

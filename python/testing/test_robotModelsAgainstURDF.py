@@ -143,6 +143,14 @@ def InCapsule(points, capsule):
     s = np.clip(((points - p) @ v)/vv, 0, 1) if vv > 0 else np.zeros(len(points))
     return np.sqrt(np.max(np.sum((points - p - np.outer(s, v))**2, axis=1))) <= capsule['radius'] + 1e-6
 
+def InCapsules(points, capsules):
+    """True if every point is in one of the capsules"""
+    def Distances(capsule):
+        (p, v) = (np.array(capsule['pAxis']), np.array(capsule['vAxis']))
+        s = np.clip(((points - p) @ v)/max(v @ v, 1e-30), 0, 1)
+        return np.linalg.norm(points - p - np.outer(s, v), axis=1) - capsule['radius']
+    return np.max(np.min([Distances(c) for c in capsules], axis=0)) <= 1e-6
+
 @pytest.mark.parametrize('Model', [ManipulatorUR5, ManipulatorFrankaEmikaPanda, ManipulatorStaubliTX2_90L])
 def test_collisionShapesContainTheMeshes(Model):
     model = Model()
@@ -156,7 +164,7 @@ def test_collisionShapesContainTheMeshes(Model):
         file = mesh.get('filename').replace('package://', package + '/')
         points = BinarySTLpoints(file)
         if points is not None: #ASCII files are not read here
-            assert InCapsule(points, link['collisionShapes'][0]), name
+            assert InCapsules(points, link['collisionShapes']), name
             checked += 1
     assert 'baseCollisionShapes' in model
 
@@ -192,7 +200,7 @@ def test_convexHullOfMesh():
 def test_pandaGripperAndDH():
     model = ManipulatorFrankaEmikaPanda(gripper='hand')
     assert model['links'][-1]['mass'] > ManipulatorFrankaEmikaPanda()['links'][-1]['mass']
-    assert len(model['links'][-1]['collisionShapes']) == 2
+    assert len(model['links'][-1]['collisionShapes']) > len(ManipulatorFrankaEmikaPanda()['links'][-1]['collisionShapes'])
     with pytest.raises(ValueError):
         ManipulatorFrankaEmikaPanda(gripper='claw')
     with pytest.raises(ValueError):

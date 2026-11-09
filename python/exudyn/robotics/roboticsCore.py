@@ -254,10 +254,14 @@ class VRobotLink:
 
 
 def _ConvexShapeAndHT(shape):
-    """(ConvexShape, HT) of a collision shape, a dict of a capsule or a tuple which is returned as it is (#3380)"""
+    """(ConvexShape, HT) of a collision shape, a dict or a tuple which is returned as it is (#3380, #3382)"""
     if isinstance(shape, dict):
+        arguments = {'sphere': ('Sphere', ['radius']), 'box': ('Box', ['size']), 'cylinder': ('Cylinder', ['radius', 'length']), 'points': ('Points', ['points'])}
+        if shape['type'] in arguments:
+            (name, keys) = arguments[shape['type']]
+            return (exudyn.cUtilities.ConvexShape(name, **{key: shape[key] for key in keys}), exudyn.HT(shape['HT']) if 'HT' in shape else exudyn.HT())
         if shape['type'] != 'capsule':
-            raise ValueError("a collision shape given by a dict must be of type 'capsule', not " + str(shape['type']))
+            raise ValueError("a collision shape given by a dict must be of type 'capsule', 'sphere', 'box', 'cylinder' or 'points', not " + str(shape['type']))
         p = np.array(shape['pAxis'], dtype=float)
         v = np.array(shape['vAxis'], dtype=float)
         length = float(cMath.norm(v))
@@ -415,15 +419,17 @@ class VRobotBase:
 class RobotBase:
     """define base of robot: containing graphics and HT (may add features in future)
     """
-    def __init__(self, HT=None, visualization=None):
+    def __init__(self, HT=None, visualization=None, collisionShapes=None):
         """initialize robot base
 
         Args:
             HT: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot), stored as exudyn.HT; default (None) = identity
-            graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
+            visualization: VRobotBase with the graphics of the base
+            collisionShapes: None or a list of shapes on the base, in its frame, for Robot.GetCollisionModel; see there
         """
         self.HT = HT
         self.visualization = VRobotBase() if visualization is None else visualization
+        self.collisionShapes = [] if collisionShapes is None else list(collisionShapes) #(#3382)
 
     @property
     def HT(self):
@@ -880,28 +886,32 @@ class Robot:
                                                 baseHT=self.base.HT, toolHT=self.tool.HT, gravity=self.gravity,
                                                 inertias=[link.inertia for link in self.links])
 
-    def GetCollisionModel(self, obstacles=None, baseShapes=None):
+    def GetCollisionModel(self, obstacles=None, baseShapes=None, excludeCollidingAt=None):
         """the collision check of the robot and its environment in C++, an exudyn.cUtilities.CollisionModel, from the collisionShapes
         of its links (#3380); create it again after the robot is changed
 
         Args:
             obstacles: None or a list of shapes in the global frame
-            baseShapes: None or a list of shapes on the base, in its frame
+            baseShapes: None for the collisionShapes of the base, or a list of shapes on the base, in its frame
+            excludeCollidingAt: None or joint coordinates, a free configuration of the robot, at which overlapping pairs of links are found which are not checked, as the shapes of neighboring links overlap by their construction
 
         Returns:
             the CollisionModel
 
         Note:
-            a shape is a dict {'type': 'capsule', 'pAxis': ..., 'vAxis': ..., 'radius': ...} as in exudyn.robotics.models, or a tuple (ConvexShape, HT)
+            a shape is a tuple (ConvexShape, HT) or a dict: {'type': 'capsule', 'pAxis': ..., 'vAxis': ..., 'radius': ...} as in exudyn.robotics.models, or
+            {'type': 'sphere', 'radius': ...}, {'type': 'box', 'size': ...}, {'type': 'cylinder', 'radius': ..., 'length': ...}, {'type': 'points', 'points': ...}, each with an optional 'HT'
         """
         model = exudyn.cUtilities.CollisionModel(self.GetKinematicChain())
-        for shape in ([] if baseShapes is None else baseShapes):
+        for shape in (self.base.collisionShapes if baseShapes is None else baseShapes):
             model.AddLinkShape(-1, *_ConvexShapeAndHT(shape))
         for (i, link) in enumerate(self.links):
             for shape in link.collisionShapes:
                 model.AddLinkShape(i, *_ConvexShapeAndHT(shape))
         for shape in ([] if obstacles is None else obstacles):
             model.AddObstacle(*_ConvexShapeAndHT(shape))
+        if excludeCollidingAt is not None:
+            model.ExcludeCollidingPairs(excludeCollidingAt)
         return model
 
     def LinkHT(self, q):

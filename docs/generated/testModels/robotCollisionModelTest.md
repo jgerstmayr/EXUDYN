@@ -76,7 +76,9 @@ checks += [model3.MinimumDistance([0, np.pi, 0.]) > 1e300]
 ur5 = LinkDict2Robot(ManipulatorUR5(), initialConfiguration='model')
 obstacles = [(ConvexShape('Box', size=[0.1, 3, 3]), exu.HT(translation=[-1.5, 0, 0])), (ConvexShape('Sphere', radius=0.1), exu.HT(translation=[0.5, 0.5, 0.5]))]
 modelUR5 = ur5.GetCollisionModel(obstacles=obstacles)
-checks += [modelUR5.NumberOfShapes() == 8, modelUR5.IsFree(ur5.q0)]
+checks += [modelUR5.MinimumDistance(ur5.q0) < 0.] #the shapes of neighboring links overlap
+modelUR5.ExcludeCollidingPairs(ur5.q0)
+checks += [modelUR5.NumberOfShapes() == 3 + sum(len(link.collisionShapes) for link in ur5.links), modelUR5.IsFree(ur5.q0)]
 qCheck = np.array(ur5.q0)
 t0 = time.time()
 n = 2000

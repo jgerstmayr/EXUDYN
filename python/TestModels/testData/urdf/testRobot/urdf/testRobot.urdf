@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- A small robot for the tests of exudyn.robotics.urdfImport (#3285): a base with an STL mesh; link1 with a mass whose
      inertia violates the triangle inequality and an STL mesh scaled; a fixed link flange turned by rpy; link2 with a
-     flipped joint (axis 0 -1 0), no mass and a brick of an OBJ file with a texture; a fixed tool link. -->
+     flipped joint (axis 0 -1 0), no mass and a brick of an OBJ file with a texture; a fixed tool link; collision geometries of all kinds. -->
 <robot name="testRobot">
   <link name="base_link">
     <visual>
@@ -9,6 +9,10 @@
       <geometry><mesh filename="package://testRobot/meshes/base.stl"/></geometry>
       <material name="grey"><color rgba="0.5 0.5 0.5 1"/></material>
     </visual>
+    <collision>
+      <origin xyz="0 0 0.05"/>
+      <geometry><mesh filename="package://testRobot/meshes/base.stl"/></geometry>
+    </collision>
   </link>
   <joint name="joint1" type="revolute">
     <parent link="base_link"/>
@@ -28,13 +32,22 @@
       <geometry><mesh filename="package://testRobot/meshes/link1.stl" scale="1 1 1"/></geometry>
       <material name="red"><color rgba="0.8 0.2 0.2 1"/></material>
     </visual>
+    <collision>
+      <origin xyz="0.15 0 0"/>
+      <geometry><box size="0.3 0.05 0.04"/></geometry>
+    </collision>
   </link>
   <joint name="flangeJoint" type="fixed">
     <parent link="link1"/>
     <child link="flange"/>
     <origin xyz="0.3 0 0" rpy="0.4 0 0"/>
   </joint>
-  <link name="flange"/>
+  <link name="flange">
+    <collision>
+      <origin xyz="0 0 0.01"/>
+      <geometry><cylinder radius="0.03" length="0.02"/></geometry>
+    </collision>
+  </link>
   <joint name="joint2" type="revolute">
     <parent link="flange"/>
     <child link="link2"/>
@@ -47,6 +60,10 @@
       <origin xyz="0.1 0 0"/>
       <geometry><mesh filename="package://testRobot/meshes/arm.obj"/></geometry>
     </visual>
+    <collision>
+      <origin xyz="0.2 0.01 0"/>
+      <geometry><sphere radius="0.04"/></geometry>
+    </collision>
   </link>
   <joint name="toolJoint" type="fixed">
     <parent link="link2"/>

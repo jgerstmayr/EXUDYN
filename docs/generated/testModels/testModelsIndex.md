@@ -200,6 +200,7 @@ rigidBodySpringDamperIntrinsic
 RigidPendulumTest
 robotCartesianPathsTest
 robotCollisionModelTest
+robotCollisionShapesTest
 robotDictionaryTest
 robotFloatingBaseTest
 robotFrictionEndStopsTest

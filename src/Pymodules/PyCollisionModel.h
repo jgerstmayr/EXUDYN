@@ -54,18 +54,25 @@ class PyCollisionModel
 		return excluded.count({ EXUstd::Minimum(link0, link1), EXUstd::Maximum(link0, link1) }) == 0;
 	}
 
-	//! the smallest distance at q; stops if it finds one not larger than stopBelow
-	Real Compute(const Vector& q, Real stopBelow) const
+	//! the frames of all shapes at q
+	void Frames(const Vector& q, std::vector<HomogeneousTransformation>& frames) const
 	{
 		ResizableArray<HomogeneousTransformation> jointFrames, linkFrames;
 		chain.ComputeFrames(q, jointFrames, linkFrames);
-		const Index n = (Index)items.size();
-		std::vector<HomogeneousTransformation> frames(items.size());
-		for (Index i = 0; i < n; i++)
+		frames.resize(items.size());
+		for (Index i = 0; i < (Index)items.size(); i++)
 		{
 			const Item& item = items[i];
 			frames[i] = (item.link >= 0) ? linkFrames[item.link] * item.local : ((item.link == -1) ? chain.GetBaseHT() * item.local : item.local);
 		}
+	}
+
+	//! the smallest distance at q; stops if it finds one not larger than stopBelow
+	Real Compute(const Vector& q, Real stopBelow) const
+	{
+		std::vector<HomogeneousTransformation> frames;
+		Frames(q, frames);
+		const Index n = (Index)items.size();
 		Real minimum = std::numeric_limits<Real>::max();
 		for (Index i = 0; i < n; i++)
 		{
@@ -104,6 +111,29 @@ public:
 
 	//! this pair of links is not checked
 	void ExcludeLinkPair(Index link0, Index link1) { excluded.insert({ EXUstd::Minimum(link0, link1), EXUstd::Maximum(link0, link1) }); }
+
+	//! exclude all pairs of links and base whose shapes are nearer than margin at q, as the shapes of neighboring links overlap; returns the number of pairs excluded
+	Index ExcludeCollidingPairs(const py::object& qpy, Real margin)
+	{
+		std::vector<HomogeneousTransformation> frames;
+		Frames(chain.GetCoordinates(qpy, "CollisionModel.ExcludeCollidingPairs"), frames);
+		Index count = 0;
+		for (Index i = 0; i < (Index)items.size(); i++)
+		{
+			for (Index j = i + 1; j < (Index)items.size(); j++)
+			{
+				if (items[i].link == -2 || items[j].link == -2 || !PairChecked(items[i].link, items[j].link)) { continue; }
+				EGeometry::ConvexDistanceResult result;
+				EGeometry::ConvexDistance(items[i].shape, frames[i], items[j].shape, frames[j], result);
+				if (result.distance <= margin)
+				{
+					excluded.insert({ EXUstd::Minimum(items[i].link, items[j].link), EXUstd::Maximum(items[i].link, items[j].link) });
+					count++;
+				}
+			}
+		}
+		return count;
+	}
 
 	Index NumberOfShapes() const { return (Index)items.size(); }
 

@@ -1,0 +1,14 @@
+{
+  "number": 3382,
+  "title": "The collision geometries of a URDF and up to two capsules per link",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "GetURDFrobotData reads box, cylinder, sphere and mesh from the collision elements under the key collision and collisionBase; RobotFromURDFdata puts them into the shapes of the links and the base. Decided: a link holds up to two capsules, FitCapsulesToMesh divides the points by the distance to the axes, two capsules are taken where the union is smaller than one capsule.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 08:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The collision elements of a URDF are read by GetURDFrobotData(collision=True) and become the shapes of the links and the base; FitCapsulesToMesh gives up to two capsules per link; CollisionModel.ExcludeCollidingPairs.",
+  "resolvedInVersion": "1.13.494"
+}
